@@ -1,0 +1,12 @@
+{
+  "name": "@mindmake/renderer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "remotion": "4.0.518",
+    "zod": "4.4.3"
+  }
+}

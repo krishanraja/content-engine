@@ -1,0 +1,56 @@
+# Operations
+
+## Source and state
+
+GitHub is authoritative for source, configuration, schemas, tests, and skills. Runtime state defaults to `%LOCALAPPDATA%\MindmakeVideoStudio` and is never committed. Approved job folders may be copied to `MINDMAKE_ARCHIVE_ROOT`.
+
+Every job contains `job.json`, append-only `events.jsonl`, immutable stage artifacts, media, renders, and platform packages. If the SQLite index is lost, rebuild it with:
+
+```powershell
+npm run studio -- index rebuild
+```
+
+CLI success is exit code `0`. Stable failure categories are `10` validation, `20` policy or approval block, `30` external service, `40` media tool, `50` job state, and `1` unexpected. Stdout is machine-readable JSON; diagnostics and errors use stderr.
+
+## Setup
+
+1. Install Node 24, Python 3.12, Git, FFmpeg and FFprobe.
+2. Run `npm ci`.
+3. Run `npm run bootstrap:python`. It creates `.venv` and installs only hash-locked wheels from `requirements.lock.txt`.
+4. Confirm Remotion licence eligibility, then set `MINDMAKE_REMOTION_LICENSE_CONFIRMED=true`.
+5. Set the runtime and archive roots.
+6. Store provider tokens as Windows Generic Credentials:
+   - `MindmakeVideoStudio/mm-ctrl-radar-token`
+   - `MindmakeVideoStudio/control-center-radar-token`
+   - `MindmakeVideoStudio/youtube-access-token`
+7. Run `npm run studio -- doctor`.
+
+The YouTube credential is a short-lived OAuth access token. If it expires, replace the credential through the OAuth administration flow; never put it in a repository file or command argument.
+
+## Typical extracted-video run
+
+```powershell
+npm run studio -- job create --series money_of_ai --mode extract --source "C:\media\episode.mp4" --rights permissioned --consent-note "Guest promotional clipping cleared"
+npm run studio -- ingest --job <job-id>
+npm run studio -- transcribe --job <job-id>
+npm run studio -- candidates --job <job-id>
+npm run studio -- approve --job <job-id> --gate angle --artifact <candidate-json-path>
+npm run studio -- treatment --job <job-id> --candidate <candidate-json-path>
+npm run studio -- approve --job <job-id> --gate treatment --artifact <render-manifest-path>
+npm run studio -- render --job <job-id>
+npm run studio -- qa --job <job-id>
+npm run studio -- approve --job <job-id> --gate final --artifact <master-video-path>
+npm run studio -- package linkedin --job <job-id> --archive
+```
+
+## Recovery
+
+- `studio status` shows every stage and approval.
+- `studio resume` identifies the first pending or invalidated stage.
+- Stage artifacts are content-addressed. Do not edit them in place.
+- If an approved artifact is changed externally, import it through `studio feedback import`; then create a new downstream artifact.
+- Provider failure does not block supplied-source jobs. Radar output records the failed provider and source age.
+
+## Publishing boundary
+
+The LinkedIn command creates local files only. The YouTube command rejects every privacy value except `private`, requires final approval and passing QA, and checks the API response confirms private status.

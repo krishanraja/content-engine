@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "provider": "mm_ctrl",
+  "provider_version": "fixture",
+  "generated_at": "2026-08-28T09:00:00.000Z",
+  "source_age": 3600,
+  "candidates": [
+    {
+      "id": "mm:fixture-public",
+      "title": "AI costs move into workflow design",
+      "summary": "The operating model now matters more than a narrow model-price comparison.",
+      "source_kind": "public_signal",
+      "sensitivity": "public",
+      "occurred_at": "2026-08-28T08:00:00.000Z",
+      "source_urls": ["https://example.com/public-story"],
+      "corroboration": 2,
+      "evidence_status": "public_grounded",
+      "category": "economics",
+      "source_ref_hash": "fixture-mm-hash"
+    }
+  ]
+}
