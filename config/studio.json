@@ -11,6 +11,10 @@
     "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",
     "archive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Archive"
   },
+  "radar_providers": {
+    "mm_ctrl_url": "https://bkyuxvschuwngtcdhsyg.supabase.co/functions/v1/video-radar-export",
+    "control_center_url": "https://controlcenter.krishraja.com/api/video-studio/candidates"
+  },
   "licensing": {
     "remotion": {
       "eligible": true,
