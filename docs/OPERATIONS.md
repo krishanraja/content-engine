@@ -23,6 +23,7 @@ CLI success is exit code `0`. Stable failure categories are `10` validation, `20
    - `MindmakeVideoStudio/mm-ctrl-radar-token`
    - `MindmakeVideoStudio/control-center-radar-token`
    - `MindmakeVideoStudio/youtube-access-token`
+   Use `scripts/set-credential.ps1 -Target <target>` so the value is prompted securely rather than passed on the command line.
 7. Run `npm run studio -- doctor`.
 
 The YouTube credential is a short-lived OAuth access token. If it expires, replace the credential through the OAuth administration flow; never put it in a repository file or command argument.
