@@ -1,0 +1,11 @@
+{
+  "name": "@mindmake/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@mindmake/contracts": "*",
+    "@mindmake/core": "*",
+    "commander": "15.0.0"
+  }
+}

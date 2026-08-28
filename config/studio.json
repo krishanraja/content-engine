@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "upstream_contracts": {
+    "control_center": { "repository": "krishanraja/control-center", "main_commit_verified": "6becc962f3091857fb925280d40040f28b56746b", "adapter_pr": 244 },
+    "mm_ctrl": { "repository": "krishanraja/mm-ctrl", "main_commit_verified": "bac02d38e4e918cfc91392bcc7c01a6c5332ffec", "adapter_pr": 371 }
+  },
+  "output": { "width": 1080, "height": 1920, "fps": 30, "audio_hz": 48000, "lufs": -14, "true_peak_dbtp": -1 },
+  "transcription": { "local_model": "base.en", "maximum_realtime_factor": 1.5, "maximum_fixture_wer": 0.12 },
+  "cadence": { "shorts_per_week": 2, "radar_day": "monday", "radar_time": "11:00", "timezone": "Europe/London" },
+  "series": {
+    "money_of_ai": { "public_name": "The Money of AI", "accent": "#D7FF3F", "audience": "enterprise leaders, founders, and transformation buyers" },
+    "built_with_ai": { "public_name": "Built With AI", "accent": "#7DD3FC", "audience": "AI-native operators and hands-on builders" }
+  },
+  "gates": { "hard": ["truth", "rights", "confidentiality", "meaning", "canonical_naming"], "soft": ["clarity", "engagement", "novelty", "audience_fit"] },
+  "learning": { "broaden_after_confirmations": 3, "broaden_across_jobs": 2, "performance_replications": 3, "approval_required": true },
+  "approved_treatments": [],
+  "active_preferences": []
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@mindmake/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@mindmake/contracts": "*",
+    "@remotion/bundler": "4.0.518",
+    "@remotion/renderer": "4.0.518",
+    "csv-parse": "6.1.0"
+  }
+}

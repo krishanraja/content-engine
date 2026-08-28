@@ -1,0 +1,4 @@
+interface:
+  display_name: "Content Corpus"
+  short_description: "Route ideas into the right editorial system"
+  default_prompt: "Use $content-corpus to decide whether this belongs in The Money of AI or Built With AI and what proof it needs."

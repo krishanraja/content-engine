@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mindmake Video"
+  short_description: "Run the governed Mindmaker video engine"
+  default_prompt: "Use $mindmake-video to turn this source or idea into a governed short-form video job."

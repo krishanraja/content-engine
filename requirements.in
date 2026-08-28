@@ -1,0 +1,6 @@
+faster-whisper==1.2.0
+# faster-whisper imports requests at runtime but its wheel metadata omits it.
+requests==2.34.2
+scenedetect[opencv]==0.6.7.1
+mediapipe==0.10.21
+PyYAML==6.0.2
