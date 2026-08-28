@@ -1,8 +1,9 @@
-import { access, mkdir, readFile } from 'node:fs/promises'
+import { mkdir, readFile } from 'node:fs/promises'
 import { basename, dirname, join, resolve } from 'node:path'
 import { hashFile } from './hash.js'
 import { jobPath } from './paths.js'
 import { commandVersion, run, runBuffer } from './process.js'
+import { resolvePythonCommand } from './python-runtime.js'
 
 export interface MediaProbe {
   path: string
@@ -117,23 +118,15 @@ export async function extractClip(inputPath: string, outputPath: string, startMs
   return outputPath
 }
 
-export async function transcribeMedia(repoRoot: string, inputPath: string, outputPath: string, model = 'base.en'): Promise<unknown> {
+export async function transcribeMedia(repoRoot: string, inputPath: string, outputPath: string, model = 'base.en', vocabulary: string[] = []): Promise<unknown> {
   await mkdir(dirname(outputPath), { recursive: true })
-  let python = process.env.MINDMAKE_PYTHON || 'python'
-  if (!process.env.MINDMAKE_PYTHON && process.platform === 'win32') {
-    const localPython = join(repoRoot, '.venv', 'Scripts', 'python.exe')
-    try { await access(localPython); python = localPython } catch { /* Doctor reports a missing pinned runtime. */ }
-  }
-  await run(python, [join(repoRoot, 'scripts', 'transcribe.py'), '--input', inputPath, '--output', outputPath, '--model', model], { timeoutMs: 3_600_000 })
+  const python = await resolvePythonCommand(repoRoot)
+  await run(python, [join(repoRoot, 'scripts', 'transcribe.py'), '--input', inputPath, '--output', outputPath, '--model', model, '--vocabulary', vocabulary.join(', ')], { timeoutMs: 3_600_000 })
   return JSON.parse(await readFile(outputPath, 'utf8'))
 }
 
 export async function benchmarkTranscription(repoRoot: string, fixtures: string[], models: string[], maximumWer: number, maximumRealtimeFactor: number): Promise<unknown> {
-  let python = process.env.MINDMAKE_PYTHON || 'python'
-  if (!process.env.MINDMAKE_PYTHON && process.platform === 'win32') {
-    const localPython = join(repoRoot, '.venv', 'Scripts', 'python.exe')
-    try { await access(localPython); python = localPython } catch { /* Doctor reports a missing pinned runtime. */ }
-  }
+  const python = await resolvePythonCommand(repoRoot)
   const args = [
     join(repoRoot, 'scripts', 'benchmark-transcription.py'),
     ...fixtures.flatMap((fixture) => ['--fixture', fixture]),
@@ -161,11 +154,7 @@ export async function createContactSheet(inputPaths: string[], outputPath: strin
 }
 
 export async function trackFaceCrops(repoRoot: string, inputPath: string): Promise<Array<{ at_ms: number; x: number; y: number; width: number; height: number; confidence: number }>> {
-  let python = process.env.MINDMAKE_PYTHON || 'python'
-  if (!process.env.MINDMAKE_PYTHON && process.platform === 'win32') {
-    const localPython = join(repoRoot, '.venv', 'Scripts', 'python.exe')
-    try { await access(localPython); python = localPython } catch { /* Doctor reports a missing pinned runtime. */ }
-  }
+  const python = await resolvePythonCommand(repoRoot)
   const { stdout } = await run(python, [join(repoRoot, 'scripts', 'track-face.py'), '--input', inputPath], { timeoutMs: 1_800_000 })
   const parsed = JSON.parse(stdout) as Array<{ at_ms: number; x: number; y: number; width: number; height: number; confidence: number }>
   return parsed.filter((frame) => frame.confidence >= 0.55).sort((left, right) => left.at_ms - right.at_ms)

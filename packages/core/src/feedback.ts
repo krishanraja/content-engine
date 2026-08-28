@@ -7,7 +7,7 @@ import { studioPaths } from './paths.js'
 import { analyzeLoudness, detectSceneCuts, framePerceptualHashes, probeMedia, transcribeMedia } from './media.js'
 import { recordJobEvent } from './job-store.js'
 
-export async function analyzeMediaArtifactForFeedback(repoRoot: string, path: string, outputDirectory: string, label: string): Promise<Record<string, unknown>> {
+export async function analyzeMediaArtifactForFeedback(repoRoot: string, path: string, outputDirectory: string, label: string, transcriptionModel = 'base.en', vocabulary: string[] = []): Promise<Record<string, unknown>> {
   const [probe, loudness, cuts, frameHashes] = await Promise.all([
     probeMedia(path),
     analyzeLoudness(path),
@@ -17,7 +17,7 @@ export async function analyzeMediaArtifactForFeedback(repoRoot: string, path: st
   let transcript: unknown = null
   let transcriptStatus = 'complete'
   try {
-    transcript = await transcribeMedia(repoRoot, path, join(outputDirectory, `${label}-transcript.json`), 'base.en')
+    transcript = await transcribeMedia(repoRoot, path, join(outputDirectory, `${label}-transcript.json`), transcriptionModel, vocabulary)
   } catch { transcriptStatus = 'unavailable' }
   return {
     probe,
@@ -77,6 +77,7 @@ export interface CaptureFeedbackInput {
   artifactId: string
   stage: StageName
   action: 'accept' | 'reject' | 'revise' | 'praise'
+  origin?: 'user' | 'codex' | 'system'
   before: unknown
   after?: unknown
   note?: string
@@ -93,6 +94,7 @@ export async function captureFeedback(input: CaptureFeedbackInput): Promise<Feed
     artifact_id: input.artifactId,
     stage: input.stage,
     action: input.action,
+    origin: input.origin ?? 'user',
     before_hash: hashValue(input.before),
     ...(input.after === undefined ? {} : { after_hash: hashValue(input.after) }),
     delta_features: deltas,
@@ -100,7 +102,7 @@ export async function captureFeedback(input: CaptureFeedbackInput): Promise<Feed
     inferred_rationale: inference.rationale,
     confidence: inference.confidence,
     scope: input.scope,
-    confirmation: inference.confidence < 0.5 ? 'observation_only' : 'pending',
+    confirmation: input.origin && input.origin !== 'user' ? 'observation_only' : inference.confidence < 0.5 ? 'observation_only' : 'pending',
     occurred_at: new Date().toISOString(),
   })
   const path = join(studioPaths().runtimeRoot, 'learning', 'feedback.jsonl')
@@ -111,6 +113,7 @@ export async function captureFeedback(input: CaptureFeedbackInput): Promise<Feed
 }
 
 export async function proposeRule(event: FeedbackEventV1): Promise<PreferenceRuleV1> {
+  if (event.origin !== 'user') throw new Error('system and Codex observations cannot become taste preferences')
   if (event.confirmation !== 'confirmed' && event.confirmation !== 'corrected') throw new Error('feedback must be confirmed before a rule can be proposed')
   const rules = await listRules()
   const existing = rules.find((item) => item.assertion.toLowerCase() === event.inferred_rationale.toLowerCase() && item.scope.level === event.scope.level && item.scope.key === event.scope.key && item.status !== 'retired')
@@ -199,6 +202,7 @@ export async function promoteRule(ruleId: string, target: PreferenceRuleV1['stat
 }
 
 export async function confirmFeedback(event: FeedbackEventV1, correction?: string): Promise<FeedbackEventV1> {
+  if (event.origin !== 'user') throw new Error('only user feedback can be confirmed as a preference')
   const confirmed = FeedbackEventV1Schema.parse({
     ...event,
     inferred_rationale: correction?.trim() || event.inferred_rationale,

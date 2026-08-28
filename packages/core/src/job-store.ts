@@ -11,6 +11,7 @@ import {
   StudioEventV1Schema,
   type ApprovalGate,
   type JobManifestV1,
+  type JobPurpose,
   type Series,
   type SourceMode,
   type StageArtifactV1,
@@ -78,6 +79,7 @@ export interface CreateJobInput {
   sourceKind?: 'file' | 'youtube' | 'radar' | 'script'
   rights?: 'owned' | 'permissioned' | 'commentary_exception' | 'unverified'
   consentNote?: string
+  purpose?: JobPurpose
   configPath: string
   skillPaths: string[]
 }
@@ -120,6 +122,7 @@ export async function createJob(input: CreateJobInput): Promise<JobManifestV1> {
     updated_at: createdAt,
     series: input.series,
     mode: input.mode,
+    purpose: input.purpose ?? 'production',
     source,
     config_hash: configHash,
     skill_hashes: skillHashes,
@@ -232,6 +235,7 @@ export async function recordApproval(
   decision: 'approved' | 'rejected' | 'override',
   artifactHash: string,
   reason?: string,
+  actor: 'krish' | 'codex' | 'system' = 'krish',
 ): Promise<JobManifestV1> {
   ApprovalGateSchema.parse(gate)
   if (decision === 'override' && !reason?.trim()) throw new Error('override requires a reason')
@@ -241,7 +245,7 @@ export async function recordApproval(
     decision,
     artifact_hash: artifactHash,
     ...(reason ? { reason } : {}),
-    actor: 'krish',
+    actor,
     occurred_at: nowIso(),
   }
   job.approvals.push(approval)

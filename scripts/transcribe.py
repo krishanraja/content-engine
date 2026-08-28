@@ -12,18 +12,20 @@ def main() -> None:
     parser.add_argument("--input", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--model", default="base.en")
+    parser.add_argument("--vocabulary", default="")
     args = parser.parse_args()
 
     model = WhisperModel(args.model, device="cpu", compute_type="int8")
-    segments, info = model.transcribe(args.input, word_timestamps=True, vad_filter=True)
-    result = {"language": info.language, "source": "faster_whisper", "segments": []}
+    prompt = f"Names and terms that may occur: {args.vocabulary}." if args.vocabulary.strip() else None
+    segments, info = model.transcribe(args.input, word_timestamps=True, vad_filter=True, initial_prompt=prompt)
+    result = {"language": info.language, "source": "faster_whisper", "model": args.model, "verified": False, "segments": []}
     for segment in segments:
         result["segments"].append({
             "start_ms": round(segment.start * 1000),
             "end_ms": round(segment.end * 1000),
             "text": segment.text.strip(),
             "words": [
-                {"start_ms": round((word.start or segment.start) * 1000), "end_ms": round((word.end or segment.end) * 1000), "text": word.word.strip()}
+                {"start_ms": round((word.start or segment.start) * 1000), "end_ms": round((word.end or segment.end) * 1000), "text": word.word.strip(), "probability": word.probability}
                 for word in (segment.words or [])
             ],
         })

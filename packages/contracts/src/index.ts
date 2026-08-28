@@ -8,6 +8,9 @@ export type Series = z.infer<typeof SeriesSchema>
 export const SourceModeSchema = z.enum(['extract', 'solo', 'short_native'])
 export type SourceMode = z.infer<typeof SourceModeSchema>
 
+export const JobPurposeSchema = z.enum(['production', 'calibration'])
+export type JobPurpose = z.infer<typeof JobPurposeSchema>
+
 export const StageNameSchema = z.enum([
   'brief',
   'script',
@@ -47,7 +50,7 @@ export const ApprovalSchema = z.object({
   decision: z.enum(['approved', 'rejected', 'override']),
   artifact_hash: z.string(),
   reason: z.string().optional(),
-  actor: z.string().default('krish'),
+  actor: z.enum(['krish', 'codex', 'system']).default('krish'),
   occurred_at: z.string(),
 })
 
@@ -58,6 +61,7 @@ export const JobManifestV1Schema = z.object({
   updated_at: z.string(),
   series: SeriesSchema,
   mode: SourceModeSchema,
+  purpose: JobPurposeSchema.default('production'),
   source: JobSourceSchema,
   config_hash: z.string(),
   skill_hashes: z.record(z.string(), z.string()),
@@ -165,6 +169,7 @@ export const RenderManifestV1Schema = z.object({
   candidate_id: z.string(),
   hook: z.string(),
   series: SeriesSchema,
+  branding: z.enum(['series', 'none']).default('series'),
   treatment_id: z.string(),
   source_path: z.string(),
   source_hash: z.string(),
@@ -181,6 +186,12 @@ export const RenderManifestV1Schema = z.object({
     proof_motif: z.enum(['mechanism', 'evidence', 'artifact']),
   }),
   captions: z.array(CaptionCueSchema),
+  caption_provenance: z.object({
+    source: z.enum(['captions', 'faster_whisper', 'manual']),
+    transcript_hash: z.string(),
+    verified: z.boolean(),
+    alignment_similarity: z.number().min(0).max(1),
+  }).optional(),
   accent: z.string(),
   fixed_seed: z.string(),
   assets: z.array(AssetLedgerEntrySchema),
@@ -225,6 +236,7 @@ export const FeedbackEventV1Schema = z.object({
   artifact_id: z.string(),
   stage: StageNameSchema,
   action: z.enum(['accept', 'reject', 'revise', 'praise']),
+  origin: z.enum(['user', 'codex', 'system']).default('user'),
   before_hash: z.string(),
   after_hash: z.string().optional(),
   delta_features: z.array(z.object({ feature: z.string(), before: z.unknown(), after: z.unknown() })),
