@@ -8,3 +8,11 @@ export async function readWindowsCredential(repoRoot: string, target: string): P
   if (!secret) throw new Error(`credential ${target} is empty`)
   return secret
 }
+
+export async function windowsCredentialExists(repoRoot: string, target: string): Promise<boolean> {
+  try {
+    return (await readWindowsCredential(repoRoot, target)).length > 0
+  } catch {
+    return false
+  }
+}

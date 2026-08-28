@@ -19,6 +19,13 @@ MindmakeVideoStudio/mm-ctrl-radar-token
 MindmakeVideoStudio/control-center-radar-token
 ```
 
+Use the interactive writer so the value never appears in shell history:
+
+```powershell
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/mm-ctrl-radar-token
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-radar-token
+```
+
 Configure provider URLs through environment variables:
 
 ```text
@@ -44,4 +51,4 @@ If either provider is unavailable, the weekly run records the failure and uses a
 
 ## Publishing
 
-The YouTube credential must be a short-lived OAuth access token stored as `MindmakeVideoStudio/youtube-access-token`. The upload command requests and verifies `private` status. No public upload mode exists. LinkedIn stays a local package because the Posts API does not provide a native draft operation.
+The YouTube credential must be a short-lived OAuth access token stored as `MindmakeVideoStudio/youtube-access-token`. Store a refreshed token with the same interactive writer. The upload command requests and verifies `private` status. No public upload mode exists. LinkedIn stays a local package because the Posts API does not provide a native draft operation. `studio doctor` reports missing credentials without placing their values in diagnostics.

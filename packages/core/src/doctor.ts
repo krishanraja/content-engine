@@ -1,5 +1,6 @@
 import { access } from 'node:fs/promises'
 import { join } from 'node:path'
+import { windowsCredentialExists } from './credentials.js'
 import { commandVersion } from './process.js'
 import { studioPaths } from './paths.js'
 
@@ -37,10 +38,28 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
     try { await access(paths.archiveRoot); checks.push({ name: 'archive_root', status: 'pass', detail: paths.archiveRoot }) }
     catch { checks.push({ name: 'archive_root', status: 'warn', detail: `${paths.archiveRoot} is not currently reachable.` }) }
   }
-  checks.push({
-    name: 'radar_credentials',
-    status: process.platform === 'win32' ? 'pass' : 'warn',
-    detail: process.platform === 'win32' ? 'Windows Credential Manager supported.' : 'Live provider credentials require Windows Credential Manager.',
-  })
+  if (process.platform === 'win32' && repoRoot) {
+    const radarTargets = ['MindmakeVideoStudio/mm-ctrl-radar-token', 'MindmakeVideoStudio/control-center-radar-token'] as const
+    const [mmTarget, controlTarget] = radarTargets
+    const [mmRadar, controlRadar, youtube] = await Promise.all([
+      windowsCredentialExists(repoRoot, mmTarget),
+      windowsCredentialExists(repoRoot, controlTarget),
+      windowsCredentialExists(repoRoot, 'MindmakeVideoStudio/youtube-access-token'),
+    ])
+    const missingRadar = radarTargets.filter((_, index) => ![mmRadar, controlRadar][index])
+    checks.push({
+      name: 'radar_credentials',
+      status: missingRadar.length === 0 ? 'pass' : 'warn',
+      detail: missingRadar.length === 0 ? 'Both provider credentials are present.' : `Missing: ${missingRadar.join(', ')}`,
+    })
+    checks.push({
+      name: 'youtube_credential',
+      status: youtube ? 'pass' : 'warn',
+      detail: youtube ? 'Private-upload credential is present.' : 'MindmakeVideoStudio/youtube-access-token is missing.',
+    })
+  } else {
+    checks.push({ name: 'radar_credentials', status: 'warn', detail: 'Live provider credentials require Windows Credential Manager.' })
+    checks.push({ name: 'youtube_credential', status: 'warn', detail: 'Private YouTube upload requires Windows Credential Manager.' })
+  }
   return { ok: checks.every((check) => check.status !== 'block'), checks }
 }
