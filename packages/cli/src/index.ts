@@ -380,9 +380,10 @@ radar.command('pull')
     const feeds = []
     for (const path of options.file || []) feeds.push(await loadRadarFeed(path))
     const failures: Array<{ provider: string; error: string }> = []
+    const studioConfig = await readJson<{ radar_providers?: { mm_ctrl_url?: string; control_center_url?: string } }>(configPath)
     const liveProviders = [
-      { provider: 'mm_ctrl', url: process.env.MINDMAKE_MM_CTRL_URL, credential: 'MindmakeVideoStudio/mm-ctrl-radar-token' },
-      { provider: 'control_center', url: process.env.MINDMAKE_CONTROL_CENTER_URL, credential: 'MindmakeVideoStudio/control-center-radar-token' },
+      { provider: 'mm_ctrl', url: process.env.MINDMAKE_MM_CTRL_URL || studioConfig.radar_providers?.mm_ctrl_url, credential: 'MindmakeVideoStudio/mm-ctrl-radar-token' },
+      { provider: 'control_center', url: process.env.MINDMAKE_CONTROL_CENTER_URL || studioConfig.radar_providers?.control_center_url, credential: 'MindmakeVideoStudio/control-center-radar-token' },
     ]
     for (const provider of liveProviders) {
       if (!provider.url) continue
