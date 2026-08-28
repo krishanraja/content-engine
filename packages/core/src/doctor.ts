@@ -1,10 +1,24 @@
-import { access } from 'node:fs/promises'
+import { access, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { windowsCredentialExists } from './credentials.js'
 import { commandVersion } from './process.js'
 import { studioPaths } from './paths.js'
 
 export interface DoctorCheck { name: string; status: 'pass' | 'warn' | 'block'; detail: string }
+
+export async function remotionLicenceEligible(repoRoot?: string): Promise<boolean> {
+  if (/^(true|licensed|eligible)$/i.test(process.env.MINDMAKE_REMOTION_LICENSE_CONFIRMED || '')) return true
+  if (!repoRoot) return false
+  try {
+    const config = JSON.parse(await readFile(join(repoRoot, 'config', 'studio.json'), 'utf8')) as {
+      licensing?: { remotion?: { eligible?: boolean; basis?: string; confirmed_by?: string } }
+    }
+    const record = config.licensing?.remotion
+    return record?.eligible === true && Boolean(record.basis && record.confirmed_by)
+  } catch {
+    return false
+  }
+}
 
 export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; checks: DoctorCheck[] }> {
   const paths = studioPaths()
@@ -27,12 +41,18 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
   ])
   const names = ['node', 'npm', 'git', 'ffmpeg', 'ffprobe', 'python', 'python_media_runtime']
   const checks: DoctorCheck[] = names.map((name, index) => ({ name, status: versions[index] === 'missing' ? 'block' : 'pass', detail: versions[index] || 'missing' }))
+  const remotionEligible = await remotionLicenceEligible(repoRoot)
   checks.push({
     name: 'remotion_license',
-    status: /^(true|licensed|eligible)$/i.test(process.env.MINDMAKE_REMOTION_LICENSE_CONFIRMED || '') ? 'pass' : 'block',
-    detail: 'Set MINDMAKE_REMOTION_LICENSE_CONFIRMED=true only after confirming eligibility or purchasing a licence.',
+    status: remotionEligible ? 'pass' : 'block',
+    detail: remotionEligible ? 'Eligibility is explicitly recorded.' : 'Confirm eligibility or purchase a licence, then record that approval.',
   })
   checks.push({ name: 'runtime_root', status: 'pass', detail: paths.runtimeRoot })
+  if (!paths.mediaInbox) checks.push({ name: 'media_inbox', status: 'warn', detail: 'MINDMAKE_MEDIA_INBOX is not configured.' })
+  else {
+    try { await access(paths.mediaInbox); checks.push({ name: 'media_inbox', status: 'pass', detail: paths.mediaInbox }) }
+    catch { checks.push({ name: 'media_inbox', status: 'warn', detail: `${paths.mediaInbox} is not currently reachable.` }) }
+  }
   if (!paths.archiveRoot) checks.push({ name: 'archive_root', status: 'warn', detail: 'MINDMAKE_ARCHIVE_ROOT is not configured.' })
   else {
     try { await access(paths.archiveRoot); checks.push({ name: 'archive_root', status: 'pass', detail: paths.archiveRoot }) }

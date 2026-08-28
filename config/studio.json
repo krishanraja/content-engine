@@ -7,6 +7,19 @@
   "output": { "width": 1080, "height": 1920, "fps": 30, "audio_hz": 48000, "lufs": -14, "true_peak_dbtp": -1 },
   "transcription": { "local_model": "base.en", "maximum_realtime_factor": 1.5, "maximum_fixture_wer": 0.12 },
   "cadence": { "shorts_per_week": 2, "radar_day": "monday", "radar_time": "11:00", "timezone": "Europe/London" },
+  "runtime": {
+    "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",
+    "archive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Archive"
+  },
+  "licensing": {
+    "remotion": {
+      "eligible": true,
+      "basis": "individual",
+      "confirmed_by": "Krishan Raja",
+      "confirmed_at": "2026-08-28",
+      "terms_url": "https://www.remotion.dev/docs/license"
+    }
+  },
   "series": {
     "money_of_ai": { "public_name": "The Money of AI", "accent": "#D7FF3F", "audience": "enterprise leaders, founders, and transformation buyers" },
     "built_with_ai": { "public_name": "Built With AI", "accent": "#7DD3FC", "audience": "AI-native operators and hands-on builders" }

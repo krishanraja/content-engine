@@ -17,8 +17,8 @@ CLI success is exit code `0`. Stable failure categories are `10` validation, `20
 1. Install Node 24, Python 3.12, Git, FFmpeg and FFprobe.
 2. Run `npm ci`.
 3. Run `npm run bootstrap:python`. It creates `.venv` and installs only hash-locked wheels from `requirements.lock.txt`.
-4. Confirm Remotion licence eligibility, then set `MINDMAKE_REMOTION_LICENSE_CONFIRMED=true`.
-5. Set the runtime and archive roots.
+4. Confirm Remotion licence eligibility and record the approved basis in `config/studio.json`. `MINDMAKE_REMOTION_LICENSE_CONFIRMED=true` remains an emergency runtime override, not the durable authority.
+5. Set the runtime root if desired. The media base and archive defaults are versioned in `config/studio.json` and mirrored in `.env.example`.
 6. Store provider tokens as Windows Generic Credentials:
    - `MindmakeVideoStudio/mm-ctrl-radar-token`
    - `MindmakeVideoStudio/control-center-radar-token`

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Video Engine"
+  short_description: "Launch the Mindmaker video production engine"
+  default_prompt: "Use $video-engine to open the latest GitHub-authoritative Mindmaker Video Engine and recommend the strongest next action."
+policy:
+  allow_implicit_invocation: true
