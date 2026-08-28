@@ -1,11 +1,18 @@
 ---
 name: video-engine
-description: "Video engine: launch and operate Krishan Raja's Mindmaker video production system from any new Codex chat. Invoke when the initial prompt is, begins with, or clearly requests 'Video engine', including radar, new video jobs, review queues, feedback, analytics, rendering, or packaging for The Money of AI and Built With AI."
+description: "Launch Krishan Raja's Mindmaker Video Engine. Invoke only when the first user message, after trimming whitespace and terminal punctuation, is exactly 'Video engine' (case-insensitive), or when the user explicitly invokes $video-engine. Never invoke for ordinary requests that merely mention video, video editing, captions, rendering, Shorts, YouTube, or generating/editing a video."
 ---
 
 # Video Engine launcher
 
 Use this as a thin launcher. GitHub `krishanraja/mindmake-video-studio` `main` is the only authority for code, configuration, operational instructions, and durable learning.
+
+## Trigger contract
+
+- Start a new Video Engine session only when the first user message is exactly `Video engine`, ignoring case, surrounding whitespace, and terminal punctuation such as `Video engine!`, or when the user explicitly writes `$video-engine`.
+- Do not activate from phrases such as `video edit`, `edit this video`, `generate a video`, `my video engine`, `how does the video engine work?`, or any unrelated mention of video production.
+- If this skill was selected but the trigger contract is not satisfied, stop applying it immediately. Do not fetch the repository, run the CLI, inspect Video Engine state, or redirect the request. Handle the request normally with the relevant general capability.
+- After a valid launch, follow-up turns in that same chat may continue the active Video Engine workflow without repeating the launch phrase.
 
 ## Start every session
 
