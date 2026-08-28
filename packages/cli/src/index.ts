@@ -376,6 +376,7 @@ const radar = program.command('radar')
 radar.command('pull')
   .option('--file <paths...>', 'offline RadarFeedV1 JSON files')
   .action(async (options) => {
+    await ensureRuntime()
     const feeds = []
     for (const path of options.file || []) feeds.push(await loadRadarFeed(path))
     const failures: Array<{ provider: string; error: string }> = []
