@@ -5,7 +5,12 @@
     "mm_ctrl": { "repository": "krishanraja/mm-ctrl", "main_commit_verified": "5e86b920fd307af579e79d4cfcc181756f037b4a", "adapter_pr": 371 }
   },
   "output": { "width": 1080, "height": 1920, "fps": 30, "audio_hz": 48000, "lufs": -14, "true_peak_dbtp": -1 },
-  "transcription": { "local_model": "base.en", "maximum_realtime_factor": 1.5, "maximum_fixture_wer": 0.12 },
+  "transcription": {
+    "local_model": "base.en",
+    "maximum_realtime_factor": 1.5,
+    "maximum_fixture_wer": 0.12,
+    "vocabulary": ["Krish Raja", "Mindmaker", "The Money of AI", "Built With AI", "Meta", "AdFixus"]
+  },
   "cadence": { "shorts_per_week": 2, "radar_day": "monday", "radar_time": "11:00", "timezone": "Europe/London" },
   "runtime": {
     "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",

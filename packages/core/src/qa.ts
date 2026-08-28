@@ -34,6 +34,17 @@ export async function qaVideo(path: string, publicTextPaths: string[] = [], mani
   if (manifest) {
     const captionsValid = manifest.captions.every((cue) => cue.text.length <= 42 && cue.text.split(/\s+/).length <= 6 && cue.start_ms >= 0 && cue.end_ms <= manifest.duration_ms && cue.end_ms > cue.start_ms)
     checks.push({ name: 'caption_safe_zone', status: captionsValid ? 'pass' : 'fail', detail: captionsValid ? 'Phrase captions fit the two-line safe-zone budget.' : 'At least one caption exceeds timing or two-line safe-zone limits.' })
+    const provenance = manifest.caption_provenance
+    checks.push({
+      name: 'caption_alignment',
+      status: provenance && provenance.alignment_similarity >= 0.9 ? 'pass' : 'fail',
+      detail: provenance ? `Caption text alignment similarity is ${provenance.alignment_similarity.toFixed(3)}.` : 'Caption provenance and semantic alignment are missing.',
+    })
+    checks.push({
+      name: 'caption_verification',
+      status: provenance?.verified ? 'pass' : 'fail',
+      detail: provenance?.verified ? `Caption wording is tied to the approved transcript artifact (${provenance.source}).` : 'Caption wording has not been verified against an approved transcript artifact.',
+    })
   }
   for (const textPath of publicTextPaths) checks.push(...publicCopyChecks(await readFile(textPath, 'utf8')))
   return {

@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { windowsCredentialExists } from './credentials.js'
 import { commandVersion } from './process.js'
 import { studioPaths } from './paths.js'
+import { resolvePythonCommand } from './python-runtime.js'
 
 export interface DoctorCheck { name: string; status: 'pass' | 'warn' | 'block'; detail: string }
 
@@ -22,11 +23,7 @@ export async function remotionLicenceEligible(repoRoot?: string): Promise<boolea
 
 export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; checks: DoctorCheck[] }> {
   const paths = studioPaths()
-  let pythonCommand = process.env.MINDMAKE_PYTHON || 'python'
-  if (!process.env.MINDMAKE_PYTHON && repoRoot && process.platform === 'win32') {
-    const localPython = join(repoRoot, '.venv', 'Scripts', 'python.exe')
-    try { await access(localPython); pythonCommand = localPython } catch { /* Global Python remains a setup fallback. */ }
-  }
+  const pythonCommand = repoRoot ? await resolvePythonCommand(repoRoot) : process.env.MINDMAKE_PYTHON || 'python'
   const npmVersion = process.env.npm_execpath
     ? commandVersion(process.execPath, [process.env.npm_execpath, '--version'])
     : commandVersion(process.platform === 'win32' ? 'cmd.exe' : 'npm', process.platform === 'win32' ? ['/d', '/s', '/c', 'npm --version'] : ['--version'])
@@ -40,7 +37,11 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
     commandVersion(pythonCommand, ['-c', "import faster_whisper, mediapipe, scenedetect; print('available')"]),
   ])
   const names = ['node', 'npm', 'git', 'ffmpeg', 'ffprobe', 'python', 'python_media_runtime']
-  const checks: DoctorCheck[] = names.map((name, index) => ({ name, status: versions[index] === 'missing' ? 'block' : 'pass', detail: versions[index] || 'missing' }))
+  const checks: DoctorCheck[] = names.map((name, index) => ({
+    name,
+    status: versions[index] === 'missing' ? 'block' : 'pass',
+    detail: versions[index] || (name === 'python_media_runtime' ? 'missing; run npm run bootstrap:python once to create the shared runtime' : 'missing'),
+  }))
   const remotionEligible = await remotionLicenceEligible(repoRoot)
   checks.push({
     name: 'remotion_license',

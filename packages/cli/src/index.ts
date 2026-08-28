@@ -6,6 +6,7 @@ import { Command } from 'commander'
 import {
   ApprovalGateSchema,
   CandidateV1Schema,
+  JobPurposeSchema,
   RenderManifestV1Schema,
   SourceModeSchema,
   StageNameSchema,
@@ -16,6 +17,7 @@ import {
 import {
   archiveJob,
   analyzeMediaArtifactForFeedback,
+  assessTranscriptQuality,
   applyCorpusNovelty,
   benchmarkTranscription,
   broadenRule,
@@ -63,7 +65,6 @@ import {
   trackFaceCrops,
   uploadPrivateYoutubeVideo,
   verifyFinalForAnalytics,
-  wordTimedCaptionCues,
 } from '@mindmake/core'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
@@ -80,7 +81,11 @@ async function readJson<T = unknown>(path: string): Promise<T> {
 
 async function readArtifactForFeedback(path: string, jobId: string, label: string): Promise<unknown> {
   const extension = extname(path).toLowerCase()
-  if (['.mp4', '.mov', '.mkv'].includes(extension)) return analyzeMediaArtifactForFeedback(repoRoot, path, join(jobPath(jobId), 'feedback'), label)
+  if (['.mp4', '.mov', '.mkv'].includes(extension)) {
+    const manifest = await loadJob(jobId)
+    const config = await readJson<{ transcription: { local_model: string; vocabulary?: string[] } }>(pinnedConfigPath(manifest))
+    return analyzeMediaArtifactForFeedback(repoRoot, path, join(jobPath(jobId), 'feedback'), label, config.transcription.local_model, config.transcription.vocabulary || [])
+  }
   const body = await readFile(path, 'utf8')
   if (extension === '.json') return JSON.parse(body)
   return body
@@ -104,6 +109,7 @@ job.command('create')
   .requiredOption('--series <series>')
   .requiredOption('--mode <mode>')
   .requiredOption('--source <ref>')
+  .option('--purpose <purpose>', 'production or calibration', 'production')
   .option('--source-kind <kind>')
   .option('--rights <rights>', 'owned, permissioned, commentary_exception, or unverified', 'unverified')
   .option('--consent-note <note>')
@@ -113,6 +119,7 @@ job.command('create')
       series: normalizeSeries(options.series),
       mode: SourceModeSchema.parse(options.mode),
       sourceRef: options.source,
+      purpose: JobPurposeSchema.parse(options.purpose),
       sourceKind: options.sourceKind,
       rights: options.rights,
       consentNote: options.consentNote,
@@ -146,23 +153,33 @@ program.command('ingest')
 
 program.command('transcribe')
   .requiredOption('--job <jobId>')
-  .option('--model <model>', 'faster-whisper model', 'base.en')
+  .option('--model <model>', 'faster-whisper model; defaults to the job-pinned configuration')
   .option('--captions <path>', 'existing SRT or VTT for coarse long-form search')
+  .option('--verified <path>', 'human-verified TranscriptDocument JSON')
   .action(async (options) => {
+    if (options.captions && options.verified) throw new Error('choose either --captions or --verified, not both')
+    const manifest = await loadJob(options.job)
+    const config = await readJson<{ transcription: { local_model: string; vocabulary?: string[] } }>(pinnedConfigPath(manifest))
+    const model = options.model || config.transcription.local_model
     const normalized = await readStageArtifact<{ output_path: string; source_path?: string; probe: { file_hash: string } }>(options.job, 'normalize')
     const outputPath = join(jobPath(options.job), 'transcript', 'transcript.json')
-    const transcriptTool = options.captions ? { caption_import: extname(options.captions).slice(1).toLowerCase() } : { faster_whisper_model: options.model }
+    const transcriptTool = options.verified
+      ? { verified_transcript_hash: await hashFile(options.verified), transcript_pipeline: 'verified-v2' }
+      : options.captions
+        ? { caption_import: extname(options.captions).slice(1).toLowerCase(), transcript_pipeline: 'caption-import-v2' }
+        : { faster_whisper_model: model, vocabulary: (config.transcription.vocabulary || []).join('|'), transcript_pipeline: 'faster-whisper-v2' }
     const reusable = await readReusableStage(options.job, 'transcript', { normalize: normalized.artifact_hash }, transcriptTool)
     if (reusable) {
       try { await access(outputPath) } catch { await mkdir(dirname(outputPath), { recursive: true }); await writeFile(outputPath, `${JSON.stringify(reusable.payload, null, 2)}\n`, 'utf8') }
       out({ job_id: options.job, transcript_path: outputPath, artifact_hash: reusable.artifact_hash, reused: true })
       return
     }
-    const transcript = options.captions ? await loadCaptionTranscript(options.captions) : await transcribeMedia(repoRoot, normalized.payload.source_path || normalized.payload.output_path, outputPath, options.model)
-    if (options.captions) {
-      await mkdir(dirname(outputPath), { recursive: true })
-      await writeFile(outputPath, `${JSON.stringify(transcript, null, 2)}\n`, 'utf8')
-    }
+    const transcript = options.verified
+      ? { ...await readJson<Parameters<typeof assessTranscriptQuality>[0]>(options.verified), source: 'manual' as const, verified: true }
+      : options.captions ? await loadCaptionTranscript(options.captions) : await transcribeMedia(repoRoot, normalized.payload.source_path || normalized.payload.output_path, outputPath, model, config.transcription.vocabulary || []) as Parameters<typeof assessTranscriptQuality>[0]
+    transcript.quality = assessTranscriptQuality(transcript)
+    await mkdir(dirname(outputPath), { recursive: true })
+    await writeFile(outputPath, `${JSON.stringify(transcript, null, 2)}\n`, 'utf8')
     const artifact = await completeStage(options.job, 'transcript', transcript, { normalize: normalized.artifact_hash }, transcriptTool)
     out({ job_id: options.job, transcript_path: outputPath, artifact_hash: artifact.artifact_hash })
   })
@@ -203,11 +220,11 @@ program.command('candidates')
       return
     }
     const transcript = await readStageArtifact<Parameters<typeof generateCandidates>[1]>(options.job, 'transcript')
-    const reusable = await readReusableStage<{ candidates: Array<{ candidate: ReturnType<typeof CandidateV1Schema.parse> }> }>(options.job, 'candidates', { transcript: transcript.artifact_hash }, { generator: 'mindmake-heuristic-v1' })
+    const reusable = await readReusableStage<{ candidates: Array<{ candidate: ReturnType<typeof CandidateV1Schema.parse> }> }>(options.job, 'candidates', { transcript: transcript.artifact_hash }, { generator: 'mindmake-heuristic-v2' })
     if (reusable) {
       const claims = reusable.payload.candidates.flatMap((item) => item.candidate.claims.map((claim) => ({ candidate_id: item.candidate.candidate_id, ...claim })))
-      const claimsArtifact = await readReusableStage(options.job, 'claims', { candidates: reusable.artifact_hash }, { extractor: 'mindmake-claims-v1' })
-        || await completeStage(options.job, 'claims', { claims }, { candidates: reusable.artifact_hash }, { extractor: 'mindmake-claims-v1' })
+      const claimsArtifact = await readReusableStage(options.job, 'claims', { candidates: reusable.artifact_hash }, { extractor: 'mindmake-claims-v2' })
+        || await completeStage(options.job, 'claims', { claims }, { candidates: reusable.artifact_hash }, { extractor: 'mindmake-claims-v2' })
       out({ job_id: options.job, artifact_hash: reusable.artifact_hash, claims_artifact_hash: claimsArtifact.artifact_hash, candidates: reusable.payload.candidates, reused: true })
       return
     }
@@ -220,9 +237,9 @@ program.command('candidates')
       await writeFile(path, `${JSON.stringify(candidate, null, 2)}\n`, 'utf8')
       saved.push({ path, hash: await hashFile(path), candidate })
     }
-    const artifact = await completeStage(options.job, 'candidates', { candidates: saved }, { transcript: transcript.artifact_hash }, { generator: 'mindmake-heuristic-v1' })
+    const artifact = await completeStage(options.job, 'candidates', { candidates: saved }, { transcript: transcript.artifact_hash }, { generator: 'mindmake-heuristic-v2' })
     const claims = candidates.flatMap((candidate) => candidate.claims.map((claim) => ({ candidate_id: candidate.candidate_id, ...claim })))
-    const claimsArtifact = await completeStage(options.job, 'claims', { claims }, { candidates: artifact.artifact_hash }, { extractor: 'mindmake-claims-v1' })
+    const claimsArtifact = await completeStage(options.job, 'claims', { claims }, { candidates: artifact.artifact_hash }, { extractor: 'mindmake-claims-v2' })
     out({ job_id: options.job, artifact_hash: artifact.artifact_hash, claims_artifact_hash: claimsArtifact.artifact_hash, candidates: saved })
   })
 
@@ -232,6 +249,7 @@ program.command('approve')
   .requiredOption('--artifact <hashOrPath>')
   .option('--decision <decision>', 'approved, rejected, or override', 'approved')
   .option('--reason <reason>')
+  .option('--actor <actor>', 'krish, codex, or system', 'krish')
   .action(async (options) => {
     const gate = ApprovalGateSchema.parse(options.gate)
     if (gate === 'angle') {
@@ -248,13 +266,16 @@ program.command('approve')
       if (candidate.challenge.soft_blocks.length && options.decision === 'approved') throw new Error('soft editorial blocks require --decision override and a recorded --reason')
     }
     const artifactHash = await existingFileHashOrValue(options.artifact)
-    const manifest = await recordApproval(options.job, gate, options.decision, artifactHash, options.reason)
+    const actor = options.actor as 'krish' | 'codex' | 'system'
+    if (!['krish', 'codex', 'system'].includes(actor)) throw new Error('actor must be krish, codex, or system')
+    const manifest = await recordApproval(options.job, gate, options.decision, artifactHash, options.reason, actor)
     const stage = gate === 'angle' ? 'candidates' : gate === 'treatment' ? 'treatment' : 'render'
     const feedbackEvent = await captureFeedback({
       jobId: options.job,
       artifactId: artifactHash,
       stage,
       action: options.decision === 'rejected' ? 'reject' : 'accept',
+      origin: actor === 'krish' ? 'user' : actor,
       before: { artifact_hash: artifactHash },
       ...(options.reason ? { note: options.reason } : {}),
       scope: { level: 'job', key: options.job },
@@ -273,14 +294,17 @@ program.command('treatment')
     if (!hasApproval(manifest, 'angle', candidateHash)) throw new Error('the selected candidate does not have angle approval')
     const normalized = await readStageArtifact<{ output_path: string; source_path?: string }>(options.job, 'normalize')
     const config = await readJson<{ series: Record<string, { accent: string }>; transcription: { local_model: string } }>(pinnedConfigPath(manifest))
-    const recordedTranscript = manifest.mode === 'short_native'
-      ? (await readStageArtifact<Parameters<typeof generateCandidates>[1]>(options.job, 'transcript')).payload
-      : undefined
-    const treatment = await createTreatment(options.job, options.candidate, normalized.payload.source_path || normalized.payload.output_path, options.treatment, config.series[manifest.series]?.accent || '#D7FF3F', recordedTranscript)
+    const sourceTranscript = (await readStageArtifact<Parameters<typeof generateCandidates>[1]>(options.job, 'transcript')).payload
+    const treatment = await createTreatment(
+      options.job,
+      options.candidate,
+      normalized.payload.source_path || normalized.payload.output_path,
+      options.treatment,
+      config.series[manifest.series]?.accent || '#D7FF3F',
+      sourceTranscript,
+      manifest.purpose === 'calibration' ? 'none' : 'series',
+    )
     if (options.faceTrack) treatment.crop_keyframes = await trackFaceCrops(repoRoot, treatment.source_path)
-    const clipTranscriptPath = join(jobPath(options.job), 'transcript', `shortlist-${treatment.candidate_id}.json`)
-    const clipTranscript = await transcribeMedia(repoRoot, treatment.source_path, clipTranscriptPath, config.transcription.local_model)
-    treatment.captions = wordTimedCaptionCues(clipTranscript as Parameters<typeof wordTimedCaptionCues>[0], treatment.duration_ms)
     const path = join(jobPath(options.job), 'treatments', `${options.treatment}.json`)
     await mkdir(dirname(path), { recursive: true })
     await writeFile(path, `${JSON.stringify(treatment, null, 2)}\n`, 'utf8')
@@ -292,8 +316,11 @@ program.command('treatment')
 program.command('render')
   .requiredOption('--job <jobId>')
   .option('--preview', 'render a low-resolution treatment preview without completing the render stage')
+  .option('--preview-seconds <number>', 'representative preview duration', '12')
+  .option('--full-preview', 'render the full treatment at preview resolution')
   .action(async (options) => {
     const jobManifest = await loadJob(options.job)
+    if (jobManifest.purpose === 'calibration' && !options.preview) throw new Error('calibration jobs are analysis-only and cannot create a final render')
     const stage = await readStageArtifact<{ manifest_path: string; manifest_hash: string }>(options.job, 'treatment')
     const renderManifest = RenderManifestV1Schema.parse(await readJson(stage.payload.manifest_path))
     const unapprovedThirdParty = renderManifest.assets.filter((asset) => /third[_ -]?party/i.test(asset.rights) && !asset.approved)
@@ -310,7 +337,9 @@ program.command('render')
         }
       } catch { /* Re-render a missing or corrupted master. */ }
     }
-    const masterPath = await renderShort(repoRoot, renderManifest, Boolean(options.preview))
+    const previewDurationMs = options.fullPreview ? renderManifest.duration_ms : Number(options.previewSeconds) * 1000
+    if (!Number.isFinite(previewDurationMs) || previewDurationMs <= 0) throw new Error('--preview-seconds must be a positive number')
+    const masterPath = await renderShort(repoRoot, renderManifest, Boolean(options.preview), previewDurationMs)
     const masterHash = await hashFile(masterPath)
     if (options.preview) {
       out({ job_id: options.job, preview_path: masterPath, preview_hash: masterHash, treatment_manifest_hash: stage.payload.manifest_hash, next_gate: 'approve treatment manifest after pairwise review' })
@@ -324,12 +353,12 @@ program.command('qa')
   .requiredOption('--job <jobId>')
   .action(async (options) => {
     const render = await readStageArtifact<{ master_path: string; master_hash: string }>(options.job, 'render')
-    const reusable = await readReusableStage(options.job, 'qa', { render: render.payload.master_hash }, { qa: 'mindmake-qa-v1' })
+    const reusable = await readReusableStage(options.job, 'qa', { render: render.payload.master_hash }, { qa: 'mindmake-qa-v2' })
     if (reusable) { out({ job_id: options.job, artifact_hash: reusable.artifact_hash, ...reusable.payload as Record<string, unknown>, reused: true }); return }
     const treatment = await readStageArtifact<{ manifest_path: string }>(options.job, 'treatment')
     const renderManifest = RenderManifestV1Schema.parse(await readJson(treatment.payload.manifest_path))
     const verdict = await qaVideo(render.payload.master_path, [], renderManifest)
-    const artifact = await completeStage(options.job, 'qa', verdict, { render: render.payload.master_hash }, { qa: 'mindmake-qa-v1' })
+    const artifact = await completeStage(options.job, 'qa', verdict, { render: render.payload.master_hash }, { qa: 'mindmake-qa-v2' })
     out({ job_id: options.job, artifact_hash: artifact.artifact_hash, ...verdict })
   })
 
@@ -339,6 +368,7 @@ packageCommand.command('linkedin')
   .option('--archive')
   .action(async (options) => {
     const manifest = await loadJob(options.job)
+    if (manifest.purpose === 'calibration') throw new Error('calibration jobs are analysis-only and cannot create platform packages')
     const render = await readStageArtifact<{ master_path: string; master_hash: string; manifest_path: string }>(options.job, 'render')
     if (!hasApproval(manifest, 'final', render.payload.master_hash)) throw new Error('final render approval is required')
     const qa = await readStageArtifact<{ passed: boolean }>(options.job, 'qa')
@@ -359,6 +389,7 @@ publish.command('youtube')
   .action(async (options) => {
     if (options.privacy !== 'private') throw new Error('the engine only permits private YouTube uploads')
     const manifest = await loadJob(options.job)
+    if (manifest.purpose === 'calibration') throw new Error('calibration jobs are analysis-only and cannot be uploaded')
     const render = await readStageArtifact<{ master_path: string; master_hash: string; manifest_path: string }>(options.job, 'render')
     if (!hasApproval(manifest, 'final', render.payload.master_hash)) throw new Error('final render approval is required')
     const qa = await readStageArtifact<{ passed: boolean }>(options.job, 'qa')

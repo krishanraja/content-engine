@@ -42,11 +42,13 @@ export function MindmakeShort(props: ShortProps) {
     <AbsoluteFill style={{ backgroundColor: '#050505' }}>
       <OffthreadVideo src={staticFile(props.sourceFile)} style={videoStyle} />
       <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(0,0,0,.2) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.15) 55%, rgba(0,0,0,.62) 100%)' }} />
-      <div style={{ position: 'absolute', top: 82, left: 64, display: 'flex', alignItems: 'center', gap: 16, fontFamily: FONT_STACK, fontSize: 31, fontWeight: 800, letterSpacing: 0.4, color: '#fff' }}>
-        <span style={{ width: 14, height: 14, borderRadius: 999, background: props.accent, boxShadow: `0 0 24px ${props.accent}` }} />
-        {props.seriesName}
-        <span style={{ color: props.accent, fontSize: 22, letterSpacing: 1.4, textTransform: 'uppercase' }}>{props.treatmentStyle.proof_motif}</span>
-      </div>
+      {props.seriesName ? (
+        <div style={{ position: 'absolute', top: 82, left: 64, display: 'flex', alignItems: 'center', gap: 16, fontFamily: FONT_STACK, fontSize: 31, fontWeight: 800, letterSpacing: 0.4, color: '#fff' }}>
+          <span style={{ width: 14, height: 14, borderRadius: 999, background: props.accent, boxShadow: `0 0 24px ${props.accent}` }} />
+          {props.seriesName}
+          <span style={{ color: props.accent, fontSize: 22, letterSpacing: 1.4, textTransform: 'uppercase' }}>{props.treatmentStyle.proof_motif}</span>
+        </div>
+      ) : null}
       {props.captions.map((cue, index) => {
         const from = Math.max(0, Math.floor(cue.start_ms / 1000 * fps))
         const duration = Math.max(1, Math.ceil((cue.end_ms - cue.start_ms) / 1000 * fps))

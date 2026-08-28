@@ -5,6 +5,7 @@ import { hashFile, hashValue } from './hash.js'
 import { extractClip, probeMedia } from './media.js'
 import { jobPath } from './paths.js'
 import { alignScriptToTranscript, type TranscriptDocument } from './candidates.js'
+import { captionTranscriptSimilarity, sliceTranscript, verifiedTextCaptionCues } from './captions.js'
 
 function captionCues(text: string, durationMs: number): RenderManifestV1['captions'] {
   const words = text.split(/\s+/).filter(Boolean)
@@ -46,11 +47,19 @@ function styleFor(treatmentId: string): RenderManifestV1['style'] {
   return { caption_position: 'lower', caption_scale: 1, hook_card_ms: 0, proof_motif: 'artifact' }
 }
 
-export async function createTreatment(jobId: string, candidatePath: string, normalizedPath: string, treatmentId: string, accent: string, recordedTranscript?: TranscriptDocument): Promise<RenderManifestV1> {
+export async function createTreatment(
+  jobId: string,
+  candidatePath: string,
+  normalizedPath: string,
+  treatmentId: string,
+  accent: string,
+  sourceTranscript?: TranscriptDocument,
+  branding: 'series' | 'none' = 'series',
+): Promise<RenderManifestV1> {
   const candidate = CandidateV1Schema.parse(JSON.parse(await readFile(candidatePath, 'utf8')))
   if (candidate.challenge.hard_blocks.length) throw new Error(`candidate has hard blocks: ${candidate.challenge.hard_blocks.join('; ')}`)
-  const aligned = candidate.start_ms === undefined && candidate.end_ms === undefined && recordedTranscript
-    ? alignScriptToTranscript(candidate.transcript, recordedTranscript)
+  const aligned = candidate.start_ms === undefined && candidate.end_ms === undefined && sourceTranscript
+    ? alignScriptToTranscript(candidate.transcript, sourceTranscript)
     : undefined
   const startMs = candidate.start_ms ?? aligned?.start_ms ?? 0
   const endMs = candidate.end_ms ?? aligned?.end_ms ?? Math.min(60_000, Math.max(1_000, candidate.transcript.split(/\s+/).length / 2.5 * 1000))
@@ -58,12 +67,17 @@ export async function createTreatment(jobId: string, candidatePath: string, norm
   await extractClip(normalizedPath, clipPath, startMs, endMs)
   const probe = await probeMedia(clipPath)
   const durationMs = Math.round(probe.duration_seconds * 1000)
+  const timedTranscript = sourceTranscript ? sliceTranscript(sourceTranscript, startMs, endMs) : undefined
+  const captions = timedTranscript?.segments.length
+    ? verifiedTextCaptionCues(candidate.transcript, timedTranscript, durationMs)
+    : captionCues(candidate.transcript, durationMs)
   return RenderManifestV1Schema.parse({
     schema_version: SCHEMA_VERSION,
     job_id: jobId,
     candidate_id: candidate.candidate_id,
     hook: candidate.hook,
     series: candidate.series,
+    branding,
     treatment_id: treatmentId,
     source_path: clipPath,
     source_hash: await hashFile(clipPath),
@@ -74,7 +88,15 @@ export async function createTreatment(jobId: string, candidatePath: string, norm
     crop: cropFor(probe.width, probe.height, treatmentId),
     crop_keyframes: [],
     style: styleFor(treatmentId),
-    captions: captionCues(candidate.transcript, durationMs),
+    captions,
+    ...(sourceTranscript ? {
+      caption_provenance: {
+        source: sourceTranscript.source,
+        transcript_hash: hashValue(sourceTranscript),
+        verified: true,
+        alignment_similarity: captionTranscriptSimilarity(captions, candidate.transcript),
+      },
+    } : {}),
     accent,
     fixed_seed: hashValue({ jobId, candidate: candidate.candidate_id, treatmentId }).slice(0, 32),
     assets: [{ path: basename(clipPath), rights: 'inherited_from_source', purpose: 'presenter footage', generated: false, approved: false }],
@@ -91,7 +113,7 @@ export function rendererProps(manifest: RenderManifestV1) {
     hook: manifest.hook,
     treatmentStyle: manifest.style,
     durationMs: manifest.duration_ms,
-    seriesName: PUBLIC_SERIES_NAMES[manifest.series],
+    seriesName: manifest.branding === 'none' ? '' : PUBLIC_SERIES_NAMES[manifest.series],
     accent: manifest.accent,
     captions: manifest.captions,
   }

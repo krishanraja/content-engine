@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { afterEach, describe, expect, it } from 'vitest'
-import { alignScriptToTranscript, loadCaptionTranscript, wordTimedCaptionCues } from '@mindmake/core'
+import { alignScriptToTranscript, captionTranscriptSimilarity, loadCaptionTranscript, verifiedTextCaptionCues, wordTimedCaptionCues } from '@mindmake/core'
 
 describe('caption workflow', () => {
   let root = ''
@@ -35,5 +35,26 @@ describe('caption workflow', () => {
     expect(aligned.start_ms).toBe(3000)
     expect(aligned.end_ms).toBe(9000)
     expect(aligned.similarity).toBeGreaterThan(0.8)
+  })
+
+  it('preserves approved wording while reusing existing word timings', () => {
+    const transcript = {
+      language: 'en',
+      source: 'faster_whisper' as const,
+      segments: [{
+        start_ms: 0,
+        end_ms: 4000,
+        text: 'Chris built the workflow',
+        words: [
+          { start_ms: 0, end_ms: 800, text: 'Chris' },
+          { start_ms: 900, end_ms: 1600, text: 'built' },
+          { start_ms: 1700, end_ms: 2400, text: 'the' },
+          { start_ms: 2500, end_ms: 4000, text: 'workflow' },
+        ],
+      }],
+    }
+    const cues = verifiedTextCaptionCues('Krish built the workflow.', transcript, 4000)
+    expect(cues.map((cue) => cue.text).join(' ')).toBe('Krish built the workflow.')
+    expect(captionTranscriptSimilarity(cues, 'Krish built the workflow.')).toBe(1)
   })
 })

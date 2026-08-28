@@ -2,6 +2,10 @@ import { readFile } from 'node:fs/promises'
 import type { RenderManifestV1 } from '@mindmake/contracts'
 import type { TranscriptDocument, TranscriptSegment } from './candidates.js'
 
+function normalizedWords(value: string): string[] {
+  return value.toLowerCase().match(/[a-z0-9]+(?:['’-][a-z0-9]+)*/g) || []
+}
+
 function timestampMs(value: string): number {
   const normalized = value.trim().replace(',', '.')
   const parts = normalized.split(':').map(Number)
@@ -56,4 +60,73 @@ export function wordTimedCaptionCues(transcript: TranscriptDocument, durationMs:
   }
   flush()
   return cues.filter((cue) => cue.end_ms > cue.start_ms)
+}
+
+export function sliceTranscript(transcript: TranscriptDocument, startMs: number, endMs: number): TranscriptDocument {
+  const segments = transcript.segments
+    .filter((segment) => segment.end_ms > startMs && segment.start_ms < endMs)
+    .map((segment) => ({
+      ...segment,
+      start_ms: Math.max(0, segment.start_ms - startMs),
+      end_ms: Math.min(endMs - startMs, segment.end_ms - startMs),
+      ...(segment.words ? {
+        words: segment.words
+          .filter((word) => word.end_ms > startMs && word.start_ms < endMs)
+          .map((word) => ({
+            ...word,
+            start_ms: Math.max(0, word.start_ms - startMs),
+            end_ms: Math.min(endMs - startMs, word.end_ms - startMs),
+          }))
+          .filter((word) => word.end_ms > word.start_ms),
+      } : {}),
+    }))
+    .filter((segment) => segment.end_ms > segment.start_ms)
+  return { ...transcript, segments }
+}
+
+export function captionTranscriptSimilarity(captions: RenderManifestV1['captions'], expectedText: string): number {
+  const actual = normalizedWords(captions.map((cue) => cue.text).join(' '))
+  const expected = normalizedWords(expectedText)
+  if (!actual.length || !expected.length) return 0
+  const rows = new Array<number>(expected.length + 1).fill(0)
+  for (const word of actual) {
+    let diagonal = 0
+    for (let index = 1; index <= expected.length; index += 1) {
+      const above = rows[index] || 0
+      rows[index] = word === expected[index - 1] ? diagonal + 1 : Math.max(rows[index - 1] || 0, above)
+      diagonal = above
+    }
+  }
+  return (2 * (rows.at(-1) || 0)) / (actual.length + expected.length)
+}
+
+export function verifiedTextCaptionCues(text: string, timedTranscript: TranscriptDocument, durationMs: number): RenderManifestV1['captions'] {
+  const targetWords = text.split(/\s+/).filter(Boolean)
+  if (!targetWords.length) return []
+  const sourceWords = timedTranscript.segments.flatMap((segment) => segment.words?.length
+    ? segment.words
+    : segment.text.split(/\s+/).filter(Boolean).map((word, index, values) => ({
+      text: word,
+      start_ms: Math.round(segment.start_ms + (segment.end_ms - segment.start_ms) * index / values.length),
+      end_ms: Math.round(segment.start_ms + (segment.end_ms - segment.start_ms) * (index + 1) / values.length),
+    })))
+  const first = sourceWords[0]?.start_ms ?? 0
+  const last = sourceWords.at(-1)?.end_ms ?? durationMs
+  const span = Math.max(targetWords.length, last - first)
+  const aligned: TranscriptDocument = {
+    language: timedTranscript.language,
+    source: timedTranscript.source,
+    verified: true,
+    segments: [{
+      start_ms: first,
+      end_ms: last,
+      text,
+      words: targetWords.map((word, index) => ({
+        text: word,
+        start_ms: Math.round(first + span * index / targetWords.length),
+        end_ms: Math.max(Math.round(first + span * (index + 1) / targetWords.length), Math.round(first + span * index / targetWords.length) + 1),
+      })),
+    }],
+  }
+  return wordTimedCaptionCues(aligned, durationMs)
 }

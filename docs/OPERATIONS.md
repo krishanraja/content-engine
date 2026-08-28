@@ -16,7 +16,7 @@ CLI success is exit code `0`. Stable failure categories are `10` validation, `20
 
 1. Install Node 24, Python 3.12, Git, FFmpeg and FFprobe.
 2. Run `npm ci`.
-3. Run `npm run bootstrap:python`. It creates `.venv` and installs only hash-locked wheels from `requirements.lock.txt`.
+3. Run `npm run bootstrap:python`. It creates the reusable `%LOCALAPPDATA%\MindmakeVideoStudio\python` runtime and installs only hash-locked wheels from `requirements.lock.txt`. New disposable GitHub checkouts reuse this runtime.
 4. Confirm Remotion licence eligibility and record the approved basis in `config/studio.json`. `MINDMAKE_REMOTION_LICENSE_CONFIRMED=true` remains an emergency runtime override, not the durable authority.
 5. Set the runtime root if desired. The media base and archive defaults are versioned in `config/studio.json` and mirrored in `.env.example`.
 6. Store provider tokens as Windows Generic Credentials:
@@ -43,6 +43,10 @@ npm run studio -- qa --job <job-id>
 npm run studio -- approve --job <job-id> --gate final --artifact <master-video-path>
 npm run studio -- package linkedin --job <job-id> --archive
 ```
+
+If automatic transcription is uncertain, correct a copy of the `TranscriptDocument` and import it with `studio transcribe --job <job-id> --verified <transcript.json>`. The original content-addressed transcript remains in the job history. Proper nouns, numbers, products, legal wording, and consequential claims remain blocked until the approved candidate ledger records verification.
+
+For source or visual calibration, create the job with `--purpose calibration`. Calibration previews omit series branding and are technically blocked from final rendering, packaging, and upload. Preview renders use the first 12 seconds at 270x480 and are content-addressed in the local cache. Use `--preview-seconds <n>` or `--full-preview` deliberately when more footage is needed.
 
 ## Recovery
 

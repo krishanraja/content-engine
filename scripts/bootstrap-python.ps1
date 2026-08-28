@@ -1,6 +1,9 @@
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$venvPath = Join-Path $repoRoot '.venv'
+$runtimeRoot = if ($env:MINDMAKE_RUNTIME_ROOT) { $env:MINDMAKE_RUNTIME_ROOT } else { Join-Path $env:LOCALAPPDATA 'MindmakeVideoStudio' }
+$venvPath = Join-Path $runtimeRoot 'python'
+
+New-Item -ItemType Directory -Force -Path $runtimeRoot | Out-Null
 
 if (-not (Test-Path -LiteralPath $venvPath)) {
   & python -m venv $venvPath
