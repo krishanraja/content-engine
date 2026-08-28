@@ -21,7 +21,7 @@ npm run bootstrap:python
 .\scripts\studio.ps1 job create --series money_of_ai --mode extract --source "C:\media\episode.mp4" --rights permissioned
 ```
 
-The Python command creates one hash-locked media runtime under `%LOCALAPPDATA%\MindmakeVideoStudio\python`. Disposable GitHub checkouts reuse it rather than reinstalling transcription dependencies per session.
+The Python command creates one hash-locked media runtime under `%LOCALAPPDATA%\MindmakeVideoStudio\python`. Disposable GitHub checkouts reuse it rather than reinstalling transcription dependencies per session. The first renderer run also seeds a versioned shared Chrome Headless Shell under the same runtime root.
 
 Set `MINDMAKE_RUNTIME_ROOT` for fast local scratch storage. The versioned defaults use `G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine` as the media base and its `Archive` folder for approved deliverables. Rendering remains policy-blocked until Remotion licence eligibility is explicitly recorded.
 
@@ -51,7 +51,7 @@ studio resume
 studio index rebuild
 ```
 
-Use `studio job create --purpose calibration` for analysis-only source calibration. Those jobs render unbranded previews and cannot create finals, platform packages, or uploads. `studio render --preview` renders and caches a representative 12-second 270x480 preview by default; add `--full-preview` only after a treatment is shortlisted. Human-corrected timing documents can be imported with `studio transcribe --verified <transcript.json>`.
+Use `studio job create --purpose calibration` for analysis-only source calibration. Those jobs render unbranded previews and cannot create finals, platform packages, or uploads. `studio render --preview` renders and caches a representative six-second 270x480, 15 fps first-beat review proxy by default; request a longer window or add `--full-preview` only after a treatment is shortlisted. Human-corrected timing documents can be imported with `studio transcribe --verified <transcript.json>`.
 
 Stdout is JSON. Diagnostics use stderr. Stable failure codes are documented in [operations](docs/OPERATIONS.md).
 

@@ -316,7 +316,7 @@ program.command('treatment')
 program.command('render')
   .requiredOption('--job <jobId>')
   .option('--preview', 'render a low-resolution treatment preview without completing the render stage')
-  .option('--preview-seconds <number>', 'representative preview duration', '12')
+  .option('--preview-seconds <number>', 'representative preview duration', '6')
   .option('--full-preview', 'render the full treatment at preview resolution')
   .action(async (options) => {
     const jobManifest = await loadJob(options.job)
