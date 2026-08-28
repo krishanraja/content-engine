@@ -6,9 +6,10 @@ import type { RenderManifestV1 } from '@mindmake/contracts'
 import { jobPath } from './paths.js'
 import { rendererProps } from './treatment.js'
 import { run } from './process.js'
+import { remotionLicenceEligible } from './doctor.js'
 
 export async function renderShort(repoRoot: string, manifest: RenderManifestV1, preview = false): Promise<string> {
-  if (!/^(true|licensed|eligible)$/i.test(process.env.MINDMAKE_REMOTION_LICENSE_CONFIRMED || '')) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
+  if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
   const suffix = preview ? '.preview' : ''
   const outputPath = join(jobPath(manifest.job_id), 'renders', `${manifest.treatment_id}${suffix}.mp4`)
   const rawPath = join(jobPath(manifest.job_id), 'renders', `${manifest.treatment_id}${suffix}.raw.mp4`)

@@ -21,7 +21,9 @@ npm run bootstrap:python
 .\scripts\studio.ps1 job create --series money_of_ai --mode extract --source "C:\media\episode.mp4" --rights permissioned
 ```
 
-Set `MINDMAKE_RUNTIME_ROOT` for fast local scratch storage and `MINDMAKE_ARCHIVE_ROOT` for the approved Google Drive archive. Rendering remains policy-blocked until Remotion licence eligibility is explicitly confirmed.
+Set `MINDMAKE_RUNTIME_ROOT` for fast local scratch storage. The versioned defaults use `G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine` as the media base and its `Archive` folder for approved deliverables. Rendering remains policy-blocked until Remotion licence eligibility is explicitly recorded.
+
+In any new Codex chat, the installed `$video-engine` launcher is implicitly triggered by the initial prompt `Video engine`. It fetches the latest GitHub `main`, runs health and queue checks, and recommends the strongest next action.
 
 ## CLI surface
 

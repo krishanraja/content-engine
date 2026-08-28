@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { access, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { access, mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import { dirname, extname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Command } from 'commander'
@@ -68,7 +68,7 @@ import {
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 const configPath = join(repoRoot, 'config', 'studio.json')
-const skillPaths = ['mindmake-video', 'krish-voice', 'content-corpus'].map((name) => join(repoRoot, '.agents', 'skills', name))
+const skillPaths = ['mindmake-video', 'krish-voice', 'content-corpus', 'video-engine'].map((name) => join(repoRoot, '.agents', 'skills', name))
 
 function out(value: unknown): void {
   process.stdout.write(`${JSON.stringify(value, null, 2)}\n`)
@@ -510,7 +510,30 @@ experiment.command('evaluate')
 
 experiment.command('list').action(async () => out(await listExperiments()))
 
-program.command('status').requiredOption('--job <jobId>').action(async (options) => out(await loadJob(options.job)))
+program.command('status').option('--job <jobId>').action(async (options) => {
+  if (options.job) {
+    out(await loadJob(options.job))
+    return
+  }
+  const paths = studioPaths()
+  try {
+    const jobIds = (await readdir(paths.jobsRoot, { withFileTypes: true }))
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .sort()
+    const jobs = await Promise.all(jobIds.map(async (jobId) => {
+      try {
+        const manifest = await loadJob(jobId)
+        return { job_id: manifest.job_id, series: manifest.series, mode: manifest.mode, stages: manifest.stages }
+      } catch {
+        return { job_id: jobId, invalid: true }
+      }
+    }))
+    out({ runtime_root: paths.runtimeRoot, jobs })
+  } catch {
+    out({ runtime_root: paths.runtimeRoot, jobs: [] })
+  }
+})
 
 program.command('resume').requiredOption('--job <jobId>').action(async (options) => {
   const manifest = await loadJob(options.job)
