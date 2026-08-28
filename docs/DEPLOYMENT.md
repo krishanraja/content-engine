@@ -4,9 +4,9 @@
 
 The adapter implementation is split into independently reviewable pull requests:
 
-1. Control Center secure export: `krishanraja/control-center#244`.
-2. Control Center existing-route security follow-up: `krishanraja/control-center#245`, stacked on #244.
-3. mm-ctrl cached radar export: `krishanraja/mm-ctrl#371`.
+1. Control Center secure export: `krishanraja/control-center#244` (merged).
+2. Control Center existing-route security follow-up: `krishanraja/control-center#246` (merged). PR #245 was superseded to keep the security review independent after #244 merged.
+3. mm-ctrl cached radar export: `krishanraja/mm-ctrl#371` (merged).
 
 The verified upstream main commits are pinned in `config/studio.json`. Recheck main before merging if either pull request becomes stale.
 
