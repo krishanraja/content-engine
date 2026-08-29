@@ -2,6 +2,7 @@ import React from 'react'
 import { AbsoluteFill, Img, interpolate, OffthreadVideo, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
 import '@fontsource/inter/800.css'
 import type { ShortProps } from './props'
+import { evidenceIntentLabel } from './evidence-label'
 
 const FONT_STACK = 'Inter, sans-serif'
 
@@ -39,21 +40,22 @@ function EvidenceCard({ overlay, accent }: { overlay: ShortProps['evidenceOverla
   const { fps } = useVideoConfig()
   const entrance = spring({ frame, fps, config: { damping: 17, stiffness: 180, mass: 0.65 } })
   const imageScale = interpolate(frame, [0, fps * 4], [1.035, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-  const intentLabel = overlay.viewer_intent === 'inspect_artifact' ? 'LOOK AT THIS'
-    : overlay.viewer_intent === 'understand_mechanism' ? 'HOW IT WORKS'
-      : overlay.viewer_intent === 'maintain_connection' ? 'CONTEXT' : 'SOURCE'
+  const intentLabel = evidenceIntentLabel(overlay)
   if (overlay.presentation === 'evidence_cutaway') {
     return (
       <AbsoluteFill style={{ background: '#070707', alignItems: 'center', fontFamily: FONT_STACK, color: '#fff' }}>
         <div style={{ position: 'absolute', top: 84, left: 64, right: 64, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ padding: '12px 19px', borderRadius: 999, background: accent, color: '#050505', fontSize: 23, fontWeight: 800, letterSpacing: 1.8 }}>{intentLabel}</div>
-          <div style={{ fontSize: 21, fontWeight: 800, letterSpacing: 1.1, color: '#aaa', textTransform: 'uppercase' }}>{overlay.source_label}</div>
+          <div style={{ maxWidth: 650, fontSize: 21, fontWeight: 800, letterSpacing: 1.1, color: '#aaa', textTransform: 'uppercase', textAlign: 'right' }}>{overlay.source_label}</div>
         </div>
-        <div style={{ position: 'absolute', top: 164, width: 930, height: 1162, borderRadius: 30, overflow: 'hidden', background: '#f6f3ec', boxShadow: '0 28px 100px rgba(0,0,0,.72)', border: '2px solid rgba(255,255,255,.28)', opacity: entrance, transform: `translateY(${interpolate(entrance, [0, 1], [52, 0])}px) scale(${interpolate(entrance, [0, 1], [.94, 1])})` }}>
+        <div style={{ position: 'absolute', top: 214, width: 980, height: 430, borderRadius: 30, overflow: 'hidden', background: '#f6f3ec', boxShadow: '0 28px 100px rgba(0,0,0,.72)', border: '2px solid rgba(255,255,255,.28)', opacity: entrance, transform: `translateY(${interpolate(entrance, [0, 1], [52, 0])}px) scale(${interpolate(entrance, [0, 1], [.94, 1])})` }}>
           <Img src={staticFile(overlay.assetFile)} style={{ width: '100%', height: '100%', objectFit: 'contain', transform: `scale(${imageScale})` }} />
           <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.08)' }} />
         </div>
-        <div style={{ position: 'absolute', top: 1354, left: 76, right: 76, fontSize: 35, lineHeight: 1.06, fontWeight: 800, textAlign: 'center' }}>{overlay.title}</div>
+        <div style={{ position: 'absolute', top: 714, left: 76, right: 76, textAlign: 'center', opacity: entrance }}>
+          <div style={{ fontSize: 58, lineHeight: 1.04, fontWeight: 800, textWrap: 'balance' }}>{overlay.title}</div>
+          {overlay.published_at ? <div style={{ marginTop: 24, color: accent, fontSize: 23, fontWeight: 800, letterSpacing: 1.6, textTransform: 'uppercase' }}>Reported {overlay.published_at}</div> : null}
+        </div>
       </AbsoluteFill>
     )
   }
