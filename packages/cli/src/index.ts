@@ -348,6 +348,7 @@ program.command('approve')
       try { packet = await verifyEvidenceApprovalPacket(options.artifact) }
       catch (error) { throw new Error(`evidence approval requires an intact EvidenceApprovalPacketV1: ${error instanceof Error ? error.message : String(error)}`) }
       if (packet.job_id !== options.job) throw new Error('evidence packet belongs to a different job')
+      if (options.decision !== 'rejected' && packet.quality_gate_version !== 'editorial_v2') throw new Error('legacy evidence packets may be resumed only when they were already approved; new approval requires editorial quality gate v2')
       if (options.decision !== 'rejected' && actor !== 'krish') throw new Error('evidence screenshots require Krish approval')
     }
     const artifactHash = await existingFileHashOrValue(options.artifact)
@@ -396,6 +397,7 @@ evidence.command('prepare')
       packet_path: prepared.packetPath,
       packet_hash: prepared.packetHash,
       contact_sheet_path: prepared.packet.contact_sheet_path,
+      quality_gate_version: prepared.packet.quality_gate_version,
       screenshots: prepared.packet.items.map((item, index) => ({ order: index + 1, overlay_id: item.overlay.overlay_id, path: item.overlay.asset_path, sha256: item.asset_sha256, source_url: item.overlay.source_url })),
       next_gate: `studio approve --job ${options.job} --gate evidence --artifact ${prepared.packetPath}`,
     })
