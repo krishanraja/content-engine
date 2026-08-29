@@ -161,6 +161,6 @@ export function rendererProps(manifest: RenderManifestV1) {
     seriesName: manifest.branding === 'none' ? '' : PUBLIC_SERIES_NAMES[manifest.series],
     accent: manifest.accent,
     captions: manifest.captions,
-    evidenceOverlays: manifest.evidence_overlays.map((overlay) => ({ ...overlay, assetFile: basename(overlay.asset_path) })),
+    evidenceOverlays: manifest.evidence_overlays.map((overlay) => ({ ...overlay, presentation: overlay.presentation || 'legacy_overlay' as const, assetFile: basename(overlay.asset_path) })),
   }
 }

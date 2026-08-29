@@ -256,8 +256,8 @@ export async function recordApproval(
   return job
 }
 
-export function hasApproval(job: JobManifestV1, gate: ApprovalGate, artifactHash: string): boolean {
-  return job.approvals.some((approval) => approval.gate === gate && approval.artifact_hash === artifactHash && (approval.decision === 'approved' || approval.decision === 'override'))
+export function hasApproval(job: JobManifestV1, gate: ApprovalGate, artifactHash: string, actor?: 'krish' | 'codex' | 'system'): boolean {
+  return job.approvals.some((approval) => approval.gate === gate && approval.artifact_hash === artifactHash && (!actor || approval.actor === actor) && (approval.decision === 'approved' || approval.decision === 'override'))
 }
 
 export async function ensureRuntime(): Promise<void> {

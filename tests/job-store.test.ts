@@ -35,12 +35,14 @@ describe('event-sourced jobs', () => {
     expect(await readFile(join(process.env.MINDMAKE_RUNTIME_ROOT!, 'jobs', job.job_id, job.pinned_inputs.config_path), 'utf8')).toContain('schema_version')
     const artifact = await completeStage(job.job_id, 'ingest', { ok: true }, { source: 'abc' }, { ffprobe: 'test' })
     await recordApproval(job.job_id, 'angle', 'approved', artifact.artifact_hash, undefined, 'system')
+    await recordApproval(job.job_id, 'evidence', 'approved', 'evidence-packet-hash', 'Exact screenshots approved by Krish.', 'krish')
     const reloaded = await loadJob(job.job_id)
     expect(reloaded.stages.ingest.status).toBe('complete')
     expect(reloaded.approvals[0]?.artifact_hash).toBe(artifact.artifact_hash)
     expect(reloaded.approvals[0]?.actor).toBe('system')
+    expect(reloaded.approvals[1]?.gate).toBe('evidence')
     const events = await readFile(join(process.env.MINDMAKE_RUNTIME_ROOT!, 'jobs', job.job_id, 'events.jsonl'), 'utf8')
-    expect(events.trim().split('\n')).toHaveLength(3)
+    expect(events.trim().split('\n')).toHaveLength(4)
   })
 
   it('uses semantic stage hashes and invalidates completed descendants only when a stage changes', async () => {

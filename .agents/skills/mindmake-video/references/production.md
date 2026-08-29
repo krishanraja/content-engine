@@ -17,8 +17,9 @@ Short-native adds `brief → script → recording brief` before ingest.
 ## Approvals
 
 1. Angle: approve the exact candidate file hash after claims and rights review.
-2. Treatment: approve the exact render-manifest hash when the treatment is new.
-3. Final: approve the exact master-video hash after QA.
+2. Evidence: inspect the exact screenshot contact sheet and source files, then approve the packet hash. Treatment must fail closed if a screenshot changes after approval.
+3. Treatment: approve the exact render-manifest hash when the treatment is new.
+4. Final: approve the exact master-video hash after QA.
 
 Never substitute chat agreement for the recorded approval.
 
@@ -27,6 +28,14 @@ Never substitute chat agreement for the recorded approval.
 Keep the presenter or guest primary. Use interfaces, evidence, diagrams, headlines, and owned artifacts as supporting beats. The Money of AI is mechanism-led and commercially authoritative. Built With AI is tactile and operational. Use one shared Mindmaker skeleton with distinct accents.
 
 Every treatment must make an explicit supporting-visual decision against the spoken claims. Prefer short, timed evidence screenshots, interfaces, owned artifacts, or diagrams that explain the mechanism. Record attribution, source URL, editorial purpose, rights rationale, and approval for every third-party excerpt. If presenter-only footage is genuinely stronger, record why no overlay is needed. Never substitute generic decorative B-roll for missing proof.
+
+Orchestrate each beat around the viewer's immediate task:
+
+- `presenter_primary`: Krish's expression or delivery is the value. Use only a short, low-reading-load corner card in verified negative space.
+- `sidecar`: the viewer needs Krish and a simple artifact simultaneously. Reserve a deliberate side of frame; never float it over a face.
+- `evidence_cutaway`: the viewer needs to inspect or verify proof. Replace the presenter intentionally, keep captions clear of the proof, then return to Krish for connection and the ending.
+
+Do not make captions, presenter expression, and dense evidence compete for the same moment. Use sentence or claim boundaries for transitions. When a portrait shot has no trustworthy negative space, prefer a deliberate evidence cutaway over an overlay. Unless the ending itself is an essential artifact reveal, return to Krish for at least the final second.
 
 Captions should carry visual personality through an approved treatment preset: selective emphasis, purposeful movement, and series-specific accents while preserving safe zones and exact transcript-word fidelity. Avoid random word animation, permanent oversized blocks, or effects that compete with evidence. A new caption personality remains a treatment approval decision until Krish confirms it.
 

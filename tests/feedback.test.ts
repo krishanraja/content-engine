@@ -27,6 +27,30 @@ describe('feedback inference', () => {
     expect(deltas.map((delta) => delta.feature)).toEqual(expect.arrayContaining(['style.caption_personality', 'evidence_overlays[0].overlay_id']))
   })
 
+  it('round-trips additions and removals through JSONL-compatible JSON', () => {
+    const event = FeedbackEventV1Schema.parse({
+      schema_version: 1,
+      feedback_id: 'round-trip',
+      job_id: 'job-123456',
+      artifact_id: 'artifact',
+      stage: 'treatment',
+      action: 'revise',
+      origin: 'user',
+      before_hash: 'before',
+      after_hash: 'after',
+      delta_features: [
+        { feature: 'assets[1].path', after: 'proof.png' },
+        { feature: 'assets[0].legacy', before: true },
+      ],
+      inferred_rationale: 'The exact evidence asset changed and should remain reviewable after persistence.',
+      confidence: 1,
+      scope: { level: 'treatment', key: 'evidence-v1' },
+      confirmation: 'pending',
+      occurred_at: new Date().toISOString(),
+    })
+    expect(FeedbackEventV1Schema.parse(JSON.parse(JSON.stringify(event))).delta_features).toHaveLength(2)
+  })
+
   it('never promotes system diagnostics into taste memory', async () => {
     const event = FeedbackEventV1Schema.parse({
       schema_version: 1,
