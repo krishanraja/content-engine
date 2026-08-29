@@ -25,6 +25,24 @@ export function renderCacheKey(manifest: unknown, profile: string, rendererHash:
   return hashValue({ manifest, profile, renderer_hash: rendererHash, audio_normalization: 'loudnorm-two-pass-v2-aac-headroom' })
 }
 
+export function validateAudioDurationParity(videoDurationSeconds: number, audioDurationSeconds: number, toleranceSeconds = 0.15): string[] {
+  if (!Number.isFinite(videoDurationSeconds) || videoDurationSeconds <= 0) return ['rendered video duration is unavailable']
+  if (!Number.isFinite(audioDurationSeconds) || audioDurationSeconds <= 0) return ['rendered audio duration is unavailable']
+  const drift = Math.abs(videoDurationSeconds - audioDurationSeconds)
+  return drift > toleranceSeconds ? [`rendered audio duration differs from video by ${drift.toFixed(3)} seconds`] : []
+}
+
+async function verifyRenderedAudioDuration(path: string): Promise<void> {
+  const { stdout } = await run('ffprobe', [
+    '-v', 'error', '-show_entries', 'stream=codec_type,duration', '-show_entries', 'format=duration', '-of', 'json', path,
+  ])
+  const parsed = JSON.parse(stdout) as { streams?: Array<{ codec_type?: string; duration?: string }>; format?: { duration?: string } }
+  const videoDuration = Number(parsed.streams?.find((stream) => stream.codec_type === 'video')?.duration || parsed.format?.duration)
+  const audioDuration = Number(parsed.streams?.find((stream) => stream.codec_type === 'audio')?.duration)
+  const issues = validateAudioDurationParity(videoDuration, audioDuration)
+  if (issues.length) throw new Error(`rendered audio integrity failed: ${issues.join('; ')}`)
+}
+
 export function loudnormSecondPassFilter(stderr: string): string {
   const json = stderr.match(/\{\s*"input_i"[\s\S]*?\}/)?.[0]
   if (!json) throw new Error('FFmpeg loudness measurement did not return JSON')
@@ -85,7 +103,7 @@ export async function renderShort(repoRoot: string, manifest: RenderManifestV1, 
     captions: manifest.captions.filter((cue) => cue.start_ms < effectiveDurationMs).map((cue) => ({ ...cue, end_ms: Math.min(cue.end_ms, effectiveDurationMs) })),
     evidence_overlays: manifest.evidence_overlays.filter((overlay) => overlay.start_ms < effectiveDurationMs).map((overlay) => ({ ...overlay, end_ms: Math.min(overlay.end_ms, effectiveDurationMs) })),
   }
-  const previewProfile = previewScale === 1 ? 'review-hq-v3-30fps' : 'review-proxy-v5-15fps'
+  const previewProfile = previewScale === 1 ? 'review-hq-v3-30fps' : 'review-proxy-v6-30fps'
   const rendererHash = await rendererImplementationHash(repoRoot)
   const previewKey = renderCacheKey(renderManifest, preview ? previewProfile : 'master-v3', rendererHash).slice(0, 10)
   const suffix = preview ? `.preview-${previewScale === 1 ? 'hq' : 'proxy'}-${Math.ceil(effectiveDurationMs / 1000)}s-${previewKey}` : ''
@@ -110,10 +128,11 @@ export async function renderShort(repoRoot: string, manifest: RenderManifestV1, 
     pixelFormat: 'yuv420p',
     crf: preview && previewScale < 1 ? 28 : 18,
     scale: preview ? previewScale : 1,
-    ...(preview ? { concurrency: Math.max(1, Math.min(4, availableParallelism() - 1)), ...(previewScale < 1 ? { everyNthFrame: 2, jpegQuality: 70, x264Preset: 'veryfast' as const } : { jpegQuality: 90, x264Preset: 'medium' as const }) } : {}),
+    ...(preview ? { concurrency: Math.max(1, Math.min(4, availableParallelism() - 1)), ...(previewScale < 1 ? { jpegQuality: 70, x264Preset: 'veryfast' as const } : { jpegQuality: 90, x264Preset: 'medium' as const }) } : {}),
     logLevel: 'info',
   })
   await normalizeRenderedAudio(rawPath, outputPath)
+  await verifyRenderedAudioDuration(outputPath)
   await unlink(rawPath)
   return outputPath
 }

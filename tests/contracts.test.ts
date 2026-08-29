@@ -34,6 +34,7 @@ describe('canonical series contracts', () => {
     expect(() => EvidenceOverlayV1Schema.parse({ ...overlay, attribution: '' })).toThrow()
     expect(() => OrchestratedEvidenceOverlayV1Schema.parse(overlay)).toThrow('approved evidence requires viewer_intent')
     expect(OrchestratedEvidenceOverlayV1Schema.parse({ ...overlay, viewer_intent: 'verify_claim', presentation: 'evidence_cutaway', anchor: 'center', face_policy: 'intentional_substitution' }).presentation).toBe('evidence_cutaway')
+    expect(OrchestratedEvidenceOverlayV1Schema.parse({ ...overlay, viewer_intent: 'maintain_connection', presentation: 'evidence_ribbon', anchor: 'center', face_policy: 'avoid' }).presentation).toBe('evidence_ribbon')
     expect(() => OrchestratedEvidenceOverlayV1Schema.parse({ ...overlay, viewer_intent: 'verify_claim', presentation: 'evidence_cutaway', anchor: 'center', face_policy: 'avoid' })).toThrow('intentional presenter substitution')
   })
 

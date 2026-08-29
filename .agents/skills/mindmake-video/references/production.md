@@ -45,9 +45,10 @@ Orchestrate each beat around the viewer's immediate task:
 
 - `presenter_primary`: Krish's expression or delivery is the value. Use only a short, low-reading-load corner card in verified negative space.
 - `sidecar`: the viewer needs Krish and a simple artifact simultaneously. Reserve a deliberate side of frame; never float it over a face.
+- `evidence_ribbon`: default for a headline or compact screenshot that should remain inside a portrait presenter shot. Anchor it across the lower-middle torso/background area, preserve the full face and expression, and keep captions below it.
 - `evidence_cutaway`: the viewer needs to inspect or verify proof. Replace the presenter intentionally, keep captions clear of the proof, then return to Krish for connection and the ending.
 
-Do not make captions, presenter expression, and dense evidence compete for the same moment. Use sentence or claim boundaries for transitions. When a portrait shot has no trustworthy negative space, prefer a deliberate evidence cutaway over an overlay. Unless the ending itself is an essential artifact reveal, return to Krish for at least the final second.
+Do not make captions, presenter expression, and dense evidence compete for the same moment. Use sentence or claim boundaries for transitions. Prefer an evidence ribbon over a complete cutaway when the approved source remains legible at portrait width; reserve complete cutaways for proof that genuinely needs uninterrupted inspection. Unless the ending itself is an essential artifact reveal, return to an unobstructed Krish for at least the final second.
 
 Captions should carry visual personality through an approved treatment preset: selective emphasis, purposeful movement, and series-specific accents while preserving safe zones and exact transcript-word fidelity. Avoid random word animation, permanent oversized blocks, or effects that compete with evidence. A new caption personality remains a treatment approval decision until Krish confirms it.
 

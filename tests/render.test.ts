@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { loudnormSecondPassFilter, renderCacheKey } from '@mindmake/core'
+import { loudnormSecondPassFilter, renderCacheKey, validateAudioDurationParity } from '@mindmake/core'
 import { evidenceIntentLabel } from '../apps/renderer/src/evidence-label'
 
 describe('render audio normalization', () => {
@@ -33,6 +33,16 @@ describe('render cache invalidation', () => {
   it('changes when the renderer implementation changes', () => {
     const manifest = { treatment_id: 'evidence-kinetic-v2', fixed_seed: 'fixed' }
     expect(renderCacheKey(manifest, 'review-proxy', 'renderer-a')).not.toBe(renderCacheKey(manifest, 'review-proxy', 'renderer-b'))
+  })
+})
+
+describe('render audio integrity', () => {
+  it('rejects the half-duration audio produced by frame-skipping proxies', () => {
+    expect(validateAudioDurationParity(12.867, 6.5)).toContain('rendered audio duration differs from video by 6.367 seconds')
+  })
+
+  it('accepts normal container rounding differences', () => {
+    expect(validateAudioDurationParity(12.833, 12.82)).toEqual([])
   })
 })
 
