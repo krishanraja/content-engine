@@ -2,10 +2,11 @@ import { basename, join } from 'node:path'
 import { readFile } from 'node:fs/promises'
 import { CandidateV1Schema, PUBLIC_SERIES_NAMES, RenderManifestV1Schema, SCHEMA_VERSION, type RenderManifestV1 } from '@mindmake/contracts'
 import { hashFile, hashValue } from './hash.js'
-import { extractClip, probeMedia } from './media.js'
+import { assembleClip, probeMedia } from './media.js'
 import { jobPath } from './paths.js'
 import { alignScriptToTranscript, type TranscriptDocument } from './candidates.js'
 import { captionTranscriptSimilarity, sliceTranscript, verifiedTextCaptionCues } from './captions.js'
+import { composeEditTranscript, exactWordFidelity } from './editorial.js'
 
 function captionCues(text: string, durationMs: number): RenderManifestV1['captions'] {
   const words = text.split(/\s+/).filter(Boolean)
@@ -58,19 +59,32 @@ export async function createTreatment(
 ): Promise<RenderManifestV1> {
   const candidate = CandidateV1Schema.parse(JSON.parse(await readFile(candidatePath, 'utf8')))
   if (candidate.challenge.hard_blocks.length) throw new Error(`candidate has hard blocks: ${candidate.challenge.hard_blocks.join('; ')}`)
+  if (branding !== 'none' && candidate.editorial?.disposition !== 'publishable') throw new Error('production treatment requires a publishable editorial disposition')
   const aligned = candidate.start_ms === undefined && candidate.end_ms === undefined && sourceTranscript
     ? alignScriptToTranscript(candidate.transcript, sourceTranscript)
     : undefined
   const startMs = candidate.start_ms ?? aligned?.start_ms ?? 0
   const endMs = candidate.end_ms ?? aligned?.end_ms ?? Math.min(60_000, Math.max(1_000, candidate.transcript.split(/\s+/).length / 2.5 * 1000))
+  const editSegments = candidate.edit_plan?.segments || [{
+    segment_id: 'legacy-continuous',
+    start_ms: startMs,
+    end_ms: endMs,
+    role: 'ending' as const,
+    transcript: candidate.transcript,
+    selection_reason: 'Legacy continuous candidate retained for backward-compatible calibration.',
+  }]
   const clipPath = join(jobPath(jobId), 'media', `clip-${candidate.candidate_id}.mp4`)
-  await extractClip(normalizedPath, clipPath, startMs, endMs)
+  await assembleClip(normalizedPath, clipPath, editSegments)
   const probe = await probeMedia(clipPath)
   const durationMs = Math.round(probe.duration_seconds * 1000)
-  const timedTranscript = sourceTranscript ? sliceTranscript(sourceTranscript, startMs, endMs) : undefined
+  const timedTranscript = sourceTranscript
+    ? candidate.edit_plan ? composeEditTranscript(sourceTranscript, editSegments) : sliceTranscript(sourceTranscript, startMs, endMs)
+    : undefined
+  const captionScript = candidate.edit_plan?.caption_script || candidate.transcript
   const captions = timedTranscript?.segments.length
-    ? verifiedTextCaptionCues(candidate.transcript, timedTranscript, durationMs)
-    : captionCues(candidate.transcript, durationMs)
+    ? verifiedTextCaptionCues(captionScript, timedTranscript, durationMs)
+    : captionCues(captionScript, durationMs)
+  const fidelity = timedTranscript ? exactWordFidelity(captionScript, timedTranscript) : undefined
   return RenderManifestV1Schema.parse({
     schema_version: SCHEMA_VERSION,
     job_id: jobId,
@@ -89,12 +103,16 @@ export async function createTreatment(
     crop_keyframes: [],
     style: styleFor(treatmentId),
     captions,
+    edit_segments: editSegments,
     ...(sourceTranscript ? {
       caption_provenance: {
         source: sourceTranscript.source,
         transcript_hash: hashValue(sourceTranscript),
-        verified: true,
-        alignment_similarity: captionTranscriptSimilarity(captions, candidate.transcript),
+        verified: fidelity?.exact_word_fidelity === true,
+        alignment_similarity: fidelity?.exact_word_fidelity ? 1 : captionTranscriptSimilarity(captions, captionScript),
+        exact_word_fidelity: fidelity?.exact_word_fidelity === true,
+        source_token_count: fidelity?.source_token_count || 0,
+        caption_token_count: fidelity?.caption_token_count || 0,
       },
     } : {}),
     accent,

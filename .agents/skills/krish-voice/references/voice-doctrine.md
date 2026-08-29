@@ -22,6 +22,7 @@ Krish sounds like a founder-practitioner who has done the work and is willing to
 
 ## Boundaries
 
+- The presenter's name is always Krish. When verified identity metadata says the speaker is Krish, correct self-identification ASR variants such as Chris before any downstream edit. Do not rewrite a different speaker or guest who is actually named Chris.
 - Never invent personal experience or a quotation.
 - Never turn an inference into a fact.
 - Never use an em dash.

@@ -16,18 +16,24 @@ Short-native work adds the pre-recording path:
 radar/brief -> script candidates -> recording brief -> recorded ingest
 ```
 
-The approved candidate wording is aligned to the existing word-timed transcript before treatment. A shortlisted clip is not transcribed again for each treatment. A changed caption treatment invalidates render, QA, and package; it does not invalidate transcription or candidate selection. Short-native re-ingest does not invalidate the approved script.
+Discovery candidates are mechanical search windows and cannot be approved. Codex authors the publishable `CandidateV1` with an `EditPlanV1` and `EditorialAssessmentV1`. The edit may contain one continuous segment or a bounded set of stitched source segments; every cut, final order, source-order change, cold-open decision, throughline, and ending is explicit.
+
+Caption treatment is deletion-only: captions may omit filler, false starts, accidental duplicates, and redundant setup, but every remaining token must occur in the verified selected transcript and original spoken order. Punctuation, capitalisation, and identity corrections backed by known speaker metadata are the only transformations. The approved caption script reuses the matched word timings. A changed caption treatment invalidates render, QA, and package; it does not invalidate transcription or source discovery. Short-native re-ingest does not invalidate the approved script.
 
 ## Editorial gates
 
-Hard blocks cover truth, rights, confidentiality, meaning, and canonical naming. The approval command refuses to override them. Soft clarity, novelty, engagement, or audience-fit blocks require an explicit override reason tied to the exact candidate hash.
+Hard blocks cover truth, rights, confidentiality, meaning, canonical naming, transcript fidelity, identity, semantic coherence, publishable impact, audience value, and ending quality. The approval command independently recomputes them and refuses to override them. Soft clarity, novelty, engagement, or audience-fit blocks require an explicit override reason tied to the exact candidate hash.
+
+The default is one continuous cut. Stitched edits must be materially stronger, non-overlapping, and coherent as one argument. A source-order change must be declared and justified. Longer-than-30-second work records whether a roughly five-second source-grounded cold open helps; it is never added mechanically. When no edit passes, `rerecord` requires an actionable hook, missing proof, structure, delivery, ending, and duration brief.
+
+Short-native candidates pass the same quality floor before a recording brief exists. When every proposed script is blocked, the script and diagnoses remain recorded but the `recording_brief` stage stays pending. Cadence alone cannot advance the job into recording.
 
 The system stores facts, inferences, and judgments separately. Proper nouns, products, legal wording, numbers, and consequential factual claims enter `needs_review` and block treatment until the candidate ledger is edited with evidence and re-approved. Series fit requires both AI context and the series-specific commercial or implementation mechanism. It is not inferred from transcript length.
 
 ## Deterministic media decisions
 
 - Input timing is normalized to constant 30 fps and 48 kHz audio.
-- The manifest records exact trim, crop, caption cues, asset rights, series colour, and fixed seed.
+- The manifest records every source segment and final order, exact trim, crop, caption cues and provenance, asset rights, series colour, and fixed seed.
 - Inter 800 is pinned through npm rather than relying on a host font.
 - Source audio is transcribed once with faster-whisper INT8 and word confidence. Project vocabulary is passed as transcription context. Approved wording reuses those timings across treatments.
 - Final audio is normalized toward -14 LUFS and -1 dBTP.

@@ -62,6 +62,7 @@ export const JobManifestV1Schema = z.object({
   series: SeriesSchema,
   mode: SourceModeSchema,
   purpose: JobPurposeSchema.default('production'),
+  presenter_name: z.string().min(1).optional(),
   source: JobSourceSchema,
   config_hash: z.string(),
   skill_hashes: z.record(z.string(), z.string()),
@@ -124,6 +125,87 @@ export const ChallengePacketSchema = z.object({
   soft_blocks: z.array(z.string()),
 })
 
+export const EditSegmentV1Schema = z.object({
+  segment_id: z.string().min(1),
+  start_ms: z.number().int().nonnegative(),
+  end_ms: z.number().int().positive(),
+  role: z.enum(['hook', 'body', 'ending']),
+  transcript: z.string().min(1),
+  selection_reason: z.string().min(12),
+})
+export type EditSegmentV1 = z.infer<typeof EditSegmentV1Schema>
+
+export const EditPlanV1Schema = z.object({
+  structure: z.enum(['continuous', 'stitched']),
+  segments: z.array(EditSegmentV1Schema).min(1).max(8),
+  caption_script: z.string().min(1),
+  semantic_throughline: z.string().min(20),
+  continuity_rationale: z.string().min(20),
+  continuous_baseline: z.object({
+    start_ms: z.number().int().nonnegative(),
+    end_ms: z.number().int().positive(),
+    verdict: z.enum(['selected', 'rejected']),
+    rationale: z.string().min(20),
+  }),
+  cold_open: z.object({
+    decision: z.enum(['used', 'not_used']),
+    rationale: z.string().min(16),
+  }),
+  source_order: z.object({
+    decision: z.enum(['preserved', 'reordered']),
+    rationale: z.string().min(16),
+  }),
+  meaning_preservation: z.array(z.object({
+    removed_token: z.string().min(1),
+    category: z.enum(['negation', 'uncertainty', 'condition', 'contrast', 'quantity']),
+    rationale: z.string().min(20),
+  })).default([]),
+  retained_disfluencies: z.array(z.object({ phrase: z.string().min(1), rationale: z.string().min(12) })).default([]),
+  total_duration_ms: z.number().int().positive(),
+})
+
+const EditorialScoresV1Schema = z.object({
+  semantic_coherence: z.number().min(0).max(1),
+  impact: z.number().min(0).max(1),
+  relevance: z.number().min(0).max(1),
+  insight: z.number().min(0).max(1),
+  specificity: z.number().min(0).max(1),
+  audience_value: z.number().min(0).max(1),
+  hook_strength: z.number().min(0).max(1),
+  ending_strength: z.number().min(0).max(1),
+})
+
+export const RerecordGuidanceV1Schema = z.object({
+  reason: z.string().min(20),
+  hook: z.string().min(12),
+  missing_proof: z.string().min(12),
+  structure: z.string().min(12),
+  delivery: z.string().min(12),
+  ending: z.string().min(12),
+  target_duration_seconds: z.object({ min: z.number().int().positive(), max: z.number().int().positive() }),
+}).refine((value) => value.target_duration_seconds.max >= value.target_duration_seconds.min, { message: 'rerecord maximum duration must be at least the minimum' })
+
+export const EditorialAssessmentV1Schema = z.object({
+  disposition: z.enum(['publishable', 'revise', 'rerecord', 'reject', 'discovery_only']),
+  scores: EditorialScoresV1Schema,
+  semantic_checks: z.object({
+    standalone_without_source: z.boolean(),
+    referents_resolved: z.boolean(),
+    claim_boundaries_preserved: z.boolean(),
+    causal_chain_preserved: z.boolean(),
+    visual_dependencies_available: z.boolean(),
+    audience_payoff_specific: z.boolean(),
+    ending_complete: z.boolean(),
+  }),
+  semantic_failure_notes: z.array(z.string().min(12)).default([]),
+  strongest_reason_to_reject: z.string().min(12),
+  selection_rationale: z.string().min(20),
+  audience_payoff: z.string().min(16),
+  rerecord_guidance: RerecordGuidanceV1Schema.optional(),
+}).superRefine((value, context) => {
+  if (value.disposition === 'rerecord' && !value.rerecord_guidance) context.addIssue({ code: 'custom', path: ['rerecord_guidance'], message: 'rerecord disposition requires specific guidance' })
+})
+
 export const CandidateV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),
   candidate_id: z.string(),
@@ -138,6 +220,13 @@ export const CandidateV1Schema = z.object({
   scores: ScoreSetSchema,
   claims: z.array(ClaimSchema),
   challenge: ChallengePacketSchema,
+  edit_plan: EditPlanV1Schema.optional(),
+  editorial: EditorialAssessmentV1Schema.optional(),
+  identity_mentions: z.array(z.object({
+    name: z.string().min(1),
+    role: z.enum(['presenter', 'guest', 'subject']),
+    evidence: z.string().min(8),
+  })).default([]),
   source_refs: z.array(z.string()),
 })
 export type CandidateV1 = z.infer<typeof CandidateV1Schema>
@@ -186,11 +275,15 @@ export const RenderManifestV1Schema = z.object({
     proof_motif: z.enum(['mechanism', 'evidence', 'artifact']),
   }),
   captions: z.array(CaptionCueSchema),
+  edit_segments: z.array(EditSegmentV1Schema).default([]),
   caption_provenance: z.object({
     source: z.enum(['captions', 'faster_whisper', 'manual']),
     transcript_hash: z.string(),
     verified: z.boolean(),
     alignment_similarity: z.number().min(0).max(1),
+    exact_word_fidelity: z.boolean().default(false),
+    source_token_count: z.number().int().nonnegative().default(0),
+    caption_token_count: z.number().int().nonnegative().default(0),
   }).optional(),
   accent: z.string(),
   fixed_seed: z.string(),

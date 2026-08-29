@@ -110,9 +110,19 @@ export function verifiedTextCaptionCues(text: string, timedTranscript: Transcrip
       start_ms: Math.round(segment.start_ms + (segment.end_ms - segment.start_ms) * index / values.length),
       end_ms: Math.round(segment.start_ms + (segment.end_ms - segment.start_ms) * (index + 1) / values.length),
     })))
-  const first = sourceWords[0]?.start_ms ?? 0
-  const last = sourceWords.at(-1)?.end_ms ?? durationMs
-  const span = Math.max(targetWords.length, last - first)
+  const matchedWords: typeof sourceWords = []
+  let cursor = 0
+  for (const target of targetWords) {
+    const normalizedTarget = normalizedWords(target)[0] || ''
+    while (cursor < sourceWords.length && (normalizedWords(sourceWords[cursor]?.text || '')[0] || '') !== normalizedTarget) cursor += 1
+    if (cursor >= sourceWords.length) throw new Error(`caption word is not present in verified source order: ${target}`)
+    const source = sourceWords[cursor]
+    if (!source) throw new Error(`caption word timing is missing: ${target}`)
+    matchedWords.push({ ...source, text: target })
+    cursor += 1
+  }
+  const first = matchedWords[0]?.start_ms ?? 0
+  const last = matchedWords.at(-1)?.end_ms ?? durationMs
   const aligned: TranscriptDocument = {
     language: timedTranscript.language,
     source: timedTranscript.source,
@@ -121,11 +131,7 @@ export function verifiedTextCaptionCues(text: string, timedTranscript: Transcrip
       start_ms: first,
       end_ms: last,
       text,
-      words: targetWords.map((word, index) => ({
-        text: word,
-        start_ms: Math.round(first + span * index / targetWords.length),
-        end_ms: Math.max(Math.round(first + span * (index + 1) / targetWords.length), Math.round(first + span * index / targetWords.length) + 1),
-      })),
+      words: matchedWords,
     }],
   }
   return wordTimedCaptionCues(aligned, durationMs)

@@ -31,6 +31,7 @@ export interface TranscriptDocument {
   verified?: boolean
   segments: TranscriptSegment[]
   quality?: TranscriptQuality
+  corrections?: Array<{ from: string; to: string; reason: string; segment_index: number; word_index?: number }>
 }
 
 function words(value: string): string[] {
@@ -191,6 +192,7 @@ export function generateCandidates(job: JobManifestV1, transcript: TranscriptDoc
       const claims = extractClaims(window.text, job.source.ref)
       const scores = scoreText(window.text, job, claims)
       const hardBlocks = job.source.rights === 'unverified' ? ['source rights are unverified'] : []
+      hardBlocks.push('discovery candidate requires an authored editorial assessment and exact edit plan before angle approval')
       if (!transcriptQuality.acceptable) hardBlocks.push(`transcript quality gate failed: ${transcriptQuality.issues.join('; ') || 'manual verification required'}`)
       if (claims.length && transcript.source !== 'manual' && transcript.verified !== true) hardBlocks.push('proper nouns, numbers, products, legal wording, and consequential claims require human verification')
       const softBlocks: string[] = []

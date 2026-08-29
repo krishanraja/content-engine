@@ -10,7 +10,7 @@ Use the repository CLI as the system of record. Do not improvise job state in ch
 ## Route the request
 
 - For idea discovery or weekly planning, read [references/radar.md](references/radar.md).
-- For ingest, candidate selection, treatments, rendering, QA, or platform packages, read [references/production.md](references/production.md).
+- For ingest, candidate selection, treatments, rendering, QA, or platform packages, read [references/production.md](references/production.md). For any clip-selection or transcript-edit decision, also read [references/editorial-selection.md](references/editorial-selection.md).
 - For revisions, preferences, external edits, analytics, or rule changes, read [references/learning.md](references/learning.md).
 
 Always apply `$krish-voice` to public wording and `$content-corpus` to series/channel decisions.
@@ -24,6 +24,7 @@ Always apply `$krish-voice` to public wording and `$content-corpus` to series/ch
 - Never publish publicly. YouTube uploads are private-only; LinkedIn output is a local draft package.
 - Record every approval against the exact artifact hash.
 - Capture every user change as feedback, infer the likely reason, and ask for concise confirmation. Never activate a durable rule without explicit approval.
+- Publish no candidate unless it has an authored edit plan and editorial assessment that pass the deterministic gates. Heuristic windows are discovery material, not approval-ready recommendations.
 
 ## Operating shape
 

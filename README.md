@@ -53,6 +53,8 @@ studio index rebuild
 
 Use `studio job create --purpose calibration` for analysis-only source calibration. Those jobs render unbranded previews and cannot create finals, platform packages, or uploads. `studio render --preview` renders and caches a representative six-second 270x480, 15 fps first-beat review proxy by default; request a longer window or add `--full-preview` only after a treatment is shortlisted. Human-corrected timing documents can be imported with `studio transcribe --verified <transcript.json>`.
 
+`studio candidates` without `--input` produces discovery windows only. Codex must author a `CandidateV1` with an exact edit plan and editorial assessment before angle approval. The gate checks removal-only caption wording, semantic and audience-value scores, ending strength, cut boundaries, source-order decisions, and conditional cold-open logic. If the source cannot clear the bar, the candidate remains blocked and carries specific rerecord guidance instead of forcing a video.
+
 Stdout is JSON. Diagnostics use stderr. Stable failure codes are documented in [operations](docs/OPERATIONS.md).
 
 ## Design

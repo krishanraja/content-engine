@@ -6,6 +6,8 @@
 - `solo`: refine an existing direct-to-camera recording.
 - `short_native`: approve a radar angle, create a record-ready script and capture it in the weekly batch.
 
+Apply [editorial-selection.md](editorial-selection.md) before angle approval. The engine should return no publishable candidate when the source cannot support one. A transcript search result is not an editorial recommendation.
+
 ## Stage order
 
 `ingest → normalize → transcript → candidates/claims → treatment → render → QA → package`

@@ -1,5 +1,6 @@
 import { mkdir, readFile } from 'node:fs/promises'
 import { basename, dirname, join, resolve } from 'node:path'
+import type { EditSegmentV1 } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { jobPath } from './paths.js'
 import { commandVersion, run, runBuffer } from './process.js'
@@ -114,6 +115,32 @@ export async function extractClip(inputPath: string, outputPath: string, startMs
   await run('ffmpeg', [
     '-hide_banner', '-loglevel', 'error', '-y', '-ss', (startMs / 1000).toFixed(3), '-to', (endMs / 1000).toFixed(3), '-i', inputPath,
     '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', outputPath,
+  ], { timeoutMs: 1_800_000 })
+  return outputPath
+}
+
+export async function assembleClip(inputPath: string, outputPath: string, segments: EditSegmentV1[]): Promise<string> {
+  if (!segments.length) throw new Error('at least one edit segment is required')
+  if (segments.length === 1) {
+    const segment = segments[0] as EditSegmentV1
+    return extractClip(inputPath, outputPath, segment.start_ms, segment.end_ms)
+  }
+  await mkdir(dirname(outputPath), { recursive: true })
+  const filters = segments.flatMap((segment, index) => {
+    const start = (segment.start_ms / 1000).toFixed(3)
+    const end = (segment.end_ms / 1000).toFixed(3)
+    return [
+      `[0:v]trim=start=${start}:end=${end},setpts=PTS-STARTPTS[v${index}]`,
+      `[0:a]atrim=start=${start}:end=${end},asetpts=PTS-STARTPTS[a${index}]`,
+    ]
+  })
+  const inputs = segments.map((_, index) => `[v${index}][a${index}]`).join('')
+  filters.push(`${inputs}concat=n=${segments.length}:v=1:a=1[outv][outa]`)
+  await run('ffmpeg', [
+    '-hide_banner', '-loglevel', 'error', '-y', '-i', inputPath,
+    '-filter_complex', filters.join(';'), '-map', '[outv]', '-map', '[outa]',
+    '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p',
+    '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2', '-movflags', '+faststart', outputPath,
   ], { timeoutMs: 1_800_000 })
   return outputPath
 }

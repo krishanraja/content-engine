@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { afterEach, describe, expect, it } from 'vitest'
-import { alignScriptToTranscript, captionTranscriptSimilarity, loadCaptionTranscript, verifiedTextCaptionCues, wordTimedCaptionCues } from '@mindmake/core'
+import { alignScriptToTranscript, applyPresenterIdentityCorrections, captionTranscriptSimilarity, loadCaptionTranscript, verifiedTextCaptionCues, wordTimedCaptionCues } from '@mindmake/core'
 
 describe('caption workflow', () => {
   let root = ''
@@ -44,17 +44,32 @@ describe('caption workflow', () => {
       segments: [{
         start_ms: 0,
         end_ms: 4000,
-        text: 'Chris built the workflow',
+        text: "I'm Chris. Chris built the workflow",
         words: [
-          { start_ms: 0, end_ms: 800, text: 'Chris' },
-          { start_ms: 900, end_ms: 1600, text: 'built' },
-          { start_ms: 1700, end_ms: 2400, text: 'the' },
-          { start_ms: 2500, end_ms: 4000, text: 'workflow' },
+          { start_ms: 0, end_ms: 300, text: "I'm" },
+          { start_ms: 350, end_ms: 700, text: 'Chris' },
+          { start_ms: 900, end_ms: 1300, text: 'Chris' },
+          { start_ms: 1400, end_ms: 2000, text: 'built' },
+          { start_ms: 2100, end_ms: 2500, text: 'the' },
+          { start_ms: 2600, end_ms: 4000, text: 'workflow' },
         ],
       }],
     }
-    const cues = verifiedTextCaptionCues('Krish built the workflow.', transcript, 4000)
-    expect(cues.map((cue) => cue.text).join(' ')).toBe('Krish built the workflow.')
-    expect(captionTranscriptSimilarity(cues, 'Krish built the workflow.')).toBe(1)
+    const corrected = applyPresenterIdentityCorrections(transcript, 'Krish', ['Chris'])
+    const cues = verifiedTextCaptionCues("I'm Krish. Chris built the workflow.", corrected, 4000)
+    expect(cues.map((cue) => cue.text).join(' ')).toBe("I'm Krish. Chris built the workflow.")
+    expect(captionTranscriptSimilarity(cues, "I'm Krish. Chris built the workflow.")).toBe(1)
+    expect(corrected.segments[0]?.words?.[1]?.text).toBe('Krish')
+    expect(corrected.segments[0]?.words?.[2]?.text).toBe('Chris')
+  })
+
+  it('rejects invented or reordered caption words', () => {
+    const transcript = { language: 'en', source: 'manual' as const, verified: true, segments: [{ start_ms: 0, end_ms: 2000, text: 'Proof comes before context.', words: [
+      { start_ms: 0, end_ms: 400, text: 'Proof' },
+      { start_ms: 500, end_ms: 900, text: 'comes' },
+      { start_ms: 1000, end_ms: 1400, text: 'before' },
+      { start_ms: 1500, end_ms: 2000, text: 'context' },
+    ] }] }
+    expect(() => verifiedTextCaptionCues('Context before proof.', transcript, 2000)).toThrow('not present in verified source order')
   })
 })
