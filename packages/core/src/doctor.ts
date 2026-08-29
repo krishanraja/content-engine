@@ -1,5 +1,6 @@
 import { access, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { TreatmentRegistryV1Schema } from '@mindmake/contracts'
 import { windowsCredentialExists } from './credentials.js'
 import { commandVersion } from './process.js'
 import { studioPaths } from './paths.js'
@@ -34,7 +35,7 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
     commandVersion('ffmpeg', ['-version']),
     commandVersion('ffprobe', ['-version']),
     commandVersion(pythonCommand, ['--version']),
-    commandVersion(pythonCommand, ['-c', "import faster_whisper, mediapipe, scenedetect; print('available')"]),
+    commandVersion(pythonCommand, ['-c', "import faster_whisper, mediapipe, scenedetect; print('available')"], 60_000),
   ])
   const names = ['node', 'npm', 'git', 'ffmpeg', 'ffprobe', 'python', 'python_media_runtime']
   const checks: DoctorCheck[] = names.map((name, index) => ({
@@ -49,6 +50,16 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
     detail: remotionEligible ? 'Eligibility is explicitly recorded.' : 'Confirm eligibility or purchase a licence, then record that approval.',
   })
   checks.push({ name: 'runtime_root', status: 'pass', detail: paths.runtimeRoot })
+  if (repoRoot) {
+    try {
+      const config = TreatmentRegistryV1Schema.parse(JSON.parse(await readFile(join(repoRoot, 'config', 'studio.json'), 'utf8')))
+      const activeTheme = config.default_brand_theme ? config.brand_themes.find((theme) => theme.theme_id === config.default_brand_theme && theme.status === 'active') : undefined
+      if (config.default_brand_theme && !activeTheme) throw new Error(`default brand theme ${config.default_brand_theme} is missing or inactive`)
+      checks.push({ name: 'treatment_registry', status: 'pass', detail: `${config.approved_treatments.length} approved treatment; ${config.active_preferences.length} active preferences; theme ${activeTheme?.theme_id || 'none'}.` })
+    } catch (error) {
+      checks.push({ name: 'treatment_registry', status: 'block', detail: error instanceof Error ? error.message : 'invalid treatment registry' })
+    }
+  }
   if (!paths.mediaInbox) checks.push({ name: 'media_inbox', status: 'warn', detail: 'MINDMAKE_MEDIA_INBOX is not configured.' })
   else {
     try { await access(paths.mediaInbox); checks.push({ name: 'media_inbox', status: 'pass', detail: paths.mediaInbox }) }

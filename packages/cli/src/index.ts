@@ -11,6 +11,7 @@ import {
   RenderManifestV1Schema,
   SourceModeSchema,
   StageNameSchema,
+  TreatmentRegistryV1Schema,
   normalizeSeries,
   type FeedbackEventV1,
   type StageName,
@@ -40,6 +41,7 @@ import {
   hashFile,
   hasApproval,
   importAnalytics,
+  isApprovedTreatmentReuse,
   jobPath,
   loadJob,
   loadRadarFeed,
@@ -60,6 +62,8 @@ import {
   rebuildIndex,
   recordApproval,
   rendererImplementationHash,
+  resolveApprovedTreatmentPreset,
+  resolveBrandTheme,
   renderShort,
   runDoctor,
   selectWeeklyBrief,
@@ -407,7 +411,8 @@ evidence.command('prepare')
 program.command('treatment')
   .requiredOption('--job <jobId>')
   .requiredOption('--candidate <path>')
-  .option('--treatment <id>', 'named treatment', 'presenter-evidence-v1')
+  .option('--treatment <id>', 'named treatment; otherwise reuse the sole eligible approved preset')
+  .option('--brand-theme <id>', 'versioned visual theme; defaults to the pinned active theme')
   .option('--evidence-packet <path>', 'an exact EvidenceApprovalPacketV1 approved at the evidence gate')
   .option('--overlays <path>', 'deprecated; prepare and approve an evidence packet instead')
   .option('--face-track', 'use optional local presenter face tracking')
@@ -416,7 +421,9 @@ program.command('treatment')
     const candidateHash = await hashFile(options.candidate)
     if (!hasApproval(manifest, 'angle', candidateHash)) throw new Error('the selected candidate does not have angle approval')
     const normalized = await readStageArtifact<{ output_path: string; source_path?: string }>(options.job, 'normalize')
-    const config = await readJson<{ series: Record<string, { accent: string }>; transcription: { local_model: string } }>(pinnedConfigPath(manifest))
+    const configBody = await readJson(pinnedConfigPath(manifest))
+    const registry = TreatmentRegistryV1Schema.parse(configBody)
+    const config = configBody as { series: Record<string, { accent: string }>; transcription: { local_model: string } }
     const sourceTranscript = (await readStageArtifact<Parameters<typeof generateCandidates>[1]>(options.job, 'transcript')).payload
     if (options.overlays) throw new Error('direct evidence overlays are not accepted; run studio evidence prepare and approve the exact packet first')
     let evidenceOverlays: Array<ReturnType<typeof EvidenceOverlayV1Schema.parse>> = []
@@ -429,23 +436,29 @@ program.command('treatment')
       if (!hasApproval(manifest, 'evidence', evidencePacketHash, 'krish')) throw new Error('the exact evidence packet does not have Krish approval')
       evidenceOverlays = packet.items.map((item) => EvidenceOverlayV1Schema.parse({ ...item.overlay, approved: true }))
     }
+    const approvedPreset = resolveApprovedTreatmentPreset(registry.approved_treatments, manifest.series, manifest.mode, options.treatment, evidenceOverlays.length > 0)
+    const brandTheme = resolveBrandTheme(registry.brand_themes, registry.default_brand_theme, options.brandTheme)
+    const treatmentId = options.treatment || approvedPreset?.treatment_id || 'presenter-evidence-v1'
     const treatment = await createTreatment(
       options.job,
       options.candidate,
       normalized.payload.source_path || normalized.payload.output_path,
-      options.treatment,
+      treatmentId,
       config.series[manifest.series]?.accent || '#D7FF3F',
       sourceTranscript,
       manifest.purpose === 'calibration' ? 'none' : 'series',
       evidenceOverlays,
+      approvedPreset,
+      brandTheme,
     )
     if (options.faceTrack) treatment.crop_keyframes = await trackFaceCrops(repoRoot, treatment.source_path)
-    const path = join(jobPath(options.job), 'treatments', `${options.treatment}.json`)
+    const path = join(jobPath(options.job), 'treatments', `${treatmentId}.json`)
     await mkdir(dirname(path), { recursive: true })
     await writeFile(path, `${JSON.stringify(treatment, null, 2)}\n`, 'utf8')
     const manifestHash = await hashFile(path)
-    const artifact = await completeStage(options.job, 'treatment', { manifest_path: path, manifest_hash: manifestHash, candidate_path: resolve(options.candidate), evidence_overlay_count: evidenceOverlays.length, ...(options.evidencePacket ? { evidence_packet_path: resolve(options.evidencePacket) } : {}) }, { candidate: candidateHash, normalize: normalized.artifact_hash, ...(evidencePacketHash ? { evidence_packet: evidencePacketHash } : {}) }, { treatment: options.treatment })
-    out({ job_id: options.job, manifest_path: path, manifest_hash: manifestHash, artifact_hash: artifact.artifact_hash })
+    const approvedReuse = isApprovedTreatmentReuse(approvedPreset, treatment)
+    const artifact = await completeStage(options.job, 'treatment', { manifest_path: path, manifest_hash: manifestHash, candidate_path: resolve(options.candidate), treatment_preset_applied: Boolean(approvedPreset), treatment_approval_reused: approvedReuse, ...(approvedPreset ? { treatment_preset_id: approvedPreset.treatment_id, treatment_preset_version: approvedPreset.version } : {}), ...(brandTheme ? { brand_theme_id: brandTheme.theme_id, brand_theme_version: brandTheme.version } : {}), evidence_overlay_count: evidenceOverlays.length, ...(options.evidencePacket ? { evidence_packet_path: resolve(options.evidencePacket) } : {}) }, { candidate: candidateHash, normalize: normalized.artifact_hash, ...(evidencePacketHash ? { evidence_packet: evidencePacketHash } : {}) }, { treatment: treatmentId, ...(treatment.treatment_preset ? { treatment_preset: treatment.treatment_preset.preset_hash } : {}), ...(brandTheme ? { brand_theme: brandTheme.source.commit } : {}) })
+    out({ job_id: options.job, manifest_path: path, manifest_hash: manifestHash, artifact_hash: artifact.artifact_hash, treatment_id: treatmentId, treatment_preset_applied: Boolean(approvedPreset), treatment_approval_reused: approvedReuse, ...(brandTheme ? { brand_theme_id: brandTheme.theme_id } : {}), next_gate: approvedReuse ? 'render; this exact preset and brand theme are already approved for the job scope' : `studio approve --job ${options.job} --gate treatment --artifact ${path}` })
   })
 
 program.command('render')
@@ -463,8 +476,9 @@ program.command('render')
     const unapprovedThirdParty = renderManifest.assets.filter((asset) => /third[_ -]?party/i.test(asset.rights) && !asset.approved)
     if (unapprovedThirdParty.length) throw new Error('hard rights block: every third-party excerpt requires explicit asset approval')
     if (renderManifest.assets.some((asset) => asset.generated && /evidence|proof/i.test(asset.purpose))) throw new Error('hard truth block: generated illustration cannot be treated as evidence or proof')
-    const config = await readJson<{ approved_treatments: string[] }>(pinnedConfigPath(jobManifest))
-    if (!options.preview && !config.approved_treatments.includes(renderManifest.treatment_id) && !hasApproval(jobManifest, 'treatment', stage.payload.manifest_hash)) throw new Error('new visual treatment requires treatment approval')
+    const registry = TreatmentRegistryV1Schema.parse(await readJson(pinnedConfigPath(jobManifest)))
+    const approvedPreset = resolveApprovedTreatmentPreset(registry.approved_treatments, jobManifest.series, jobManifest.mode, renderManifest.treatment_id, renderManifest.evidence_overlays.length > 0)
+    if (!options.preview && !isApprovedTreatmentReuse(approvedPreset, renderManifest) && !hasApproval(jobManifest, 'treatment', stage.payload.manifest_hash)) throw new Error('new or modified visual treatment requires treatment approval')
     const rendererHash = await rendererImplementationHash(repoRoot)
     const renderToolVersions = { remotion: '4.0.518', renderer: rendererHash }
     const reusable = !options.preview ? await readReusableStage<{ master_path: string; master_hash: string }>(options.job, 'render', { treatment: stage.payload.manifest_hash }, renderToolVersions) : null

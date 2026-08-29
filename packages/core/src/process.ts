@@ -33,8 +33,8 @@ export function runBuffer(command: string, args: string[], options: { cwd?: stri
   })
 }
 
-export function commandVersion(command: string, args = ['--version']): Promise<string> {
-  return run(command, args, { timeoutMs: 15_000 })
+export function commandVersion(command: string, args = ['--version'], timeoutMs = 15_000): Promise<string> {
+  return run(command, args, { timeoutMs })
     .then(({ stdout, stderr }) => (stdout || stderr).split(/\r?\n/)[0]?.trim() || 'unknown')
     .catch(() => 'missing')
 }

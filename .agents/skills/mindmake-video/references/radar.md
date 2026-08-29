@@ -4,6 +4,8 @@ Pull the latest completed mm-ctrl public pool and the Control Center sanitized i
 
 Merge by canonical source URL first and normalized headline fingerprint second. Keep the more corroborated record. Mark source age and provider failures.
 
+The studio eligibility gate is stricter than the upstream score. Reject generic guides, listicles, service headlines, URL-like or title-only summaries, personnel appointments without a specific operating consequence, aggregator and discussion surfaces, news older than 72 hours, and single-source secondary reporting. A single-source primary authority may remain eligible when its summary states a concrete consequence. Return fewer than three ideas for a series rather than padding the brief with weak material.
+
 Produce three Money opportunities, three Built opportunities, and two credible stretch ideas. Each must contain:
 
 - audience problem and why now;
