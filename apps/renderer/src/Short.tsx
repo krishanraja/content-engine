@@ -85,6 +85,19 @@ function EvidenceCard({ overlay, accent }: { overlay: ShortProps['evidenceOverla
       </AbsoluteFill>
     )
   }
+  if (overlay.presentation === 'evidence_ribbon') {
+    return (
+      <div style={{ position: 'absolute', top: 1260, left: 52, right: 52, padding: '14px 18px 16px', borderRadius: 25, background: 'rgba(7,7,7,.94)', border: `3px solid ${accent}`, boxShadow: '0 24px 90px rgba(0,0,0,.68)', fontFamily: FONT_STACK, color: '#fff', opacity: entrance, transform: `translateY(${interpolate(entrance, [0, 1], [44, 0])}px) scale(${interpolate(entrance, [0, 1], [.94, 1])})` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 18, marginBottom: 10 }}>
+          <div style={{ padding: '9px 14px', borderRadius: 999, background: accent, color: '#050505', fontSize: 19, fontWeight: 800, letterSpacing: 1.5 }}>{intentLabel}</div>
+          <div style={{ maxWidth: 690, color: '#bbb', fontSize: 18, fontWeight: 800, letterSpacing: 1, textTransform: 'uppercase', textAlign: 'right' }}>{overlay.source_label}</div>
+        </div>
+        <div style={{ height: 180, overflow: 'hidden', borderRadius: 15, background: '#f6f3ec' }}>
+          <Img src={staticFile(overlay.assetFile)} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${imageScale})` }} />
+        </div>
+      </div>
+    )
+  }
   return (
     <AbsoluteFill style={{ alignItems: 'center', justifyContent: overlay.placement === 'center' ? 'center' : 'flex-start', paddingTop: overlay.placement === 'upper' ? 185 : 0, background: 'rgba(0,0,0,.18)' }}>
       <div style={{ width: 920, borderRadius: 34, overflow: 'hidden', background: '#f6f3ec', color: '#111', fontFamily: FONT_STACK, boxShadow: '0 26px 90px rgba(0,0,0,.62)', border: '2px solid rgba(255,255,255,.45)', opacity: entrance, transform: `translateY(${interpolate(entrance, [0, 1], [70, 0])}px) scale(${interpolate(entrance, [0, 1], [.91, 1])})` }}>
@@ -145,8 +158,8 @@ export function MindmakeShort(props: ShortProps) {
         const duration = Math.max(1, Math.ceil((cue.end_ms - cue.start_ms) / 1000 * fps))
         return (
           <Sequence key={`${cue.start_ms}-${index}`} from={from} durationInFrames={duration}>
-            <AbsoluteFill style={{ justifyContent: props.treatmentStyle.caption_position === 'middle' ? 'center' : 'flex-end', alignItems: 'center', paddingBottom: props.treatmentStyle.caption_position === 'middle' ? 0 : activeEvidence?.presentation === 'evidence_cutaway' ? 180 : 300 }}>
-              <Caption text={cue.text} accent={props.accent} emphasis={cue.emphasis} scale={props.treatmentStyle.caption_scale * (activeEvidence?.presentation === 'evidence_cutaway' ? .86 : 1)} personality={props.treatmentStyle.caption_personality} cueIndex={index} />
+            <AbsoluteFill style={{ justifyContent: props.treatmentStyle.caption_position === 'middle' ? 'center' : 'flex-end', alignItems: 'center', paddingBottom: props.treatmentStyle.caption_position === 'middle' ? 0 : activeEvidence?.presentation === 'evidence_cutaway' ? 180 : activeEvidence?.presentation === 'evidence_ribbon' ? 120 : 300 }}>
+              <Caption text={cue.text} accent={props.accent} emphasis={cue.emphasis} scale={props.treatmentStyle.caption_scale * (activeEvidence?.presentation === 'evidence_cutaway' ? .86 : activeEvidence?.presentation === 'evidence_ribbon' ? .92 : 1)} personality={props.treatmentStyle.caption_personality} cueIndex={index} />
             </AbsoluteFill>
           </Sequence>
         )

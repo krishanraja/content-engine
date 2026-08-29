@@ -285,7 +285,7 @@ export const EvidenceOverlayV1Schema = z.object({
   source_url: z.string().url().optional(),
   editorial_assessment: EvidenceEditorialAssessmentV1Schema.optional(),
   viewer_intent: z.enum(['maintain_connection', 'verify_claim', 'inspect_artifact', 'understand_mechanism']).optional(),
-  presentation: z.enum(['presenter_primary', 'sidecar', 'evidence_cutaway']).optional(),
+  presentation: z.enum(['presenter_primary', 'sidecar', 'evidence_ribbon', 'evidence_cutaway']).optional(),
   anchor: z.enum(['top_left', 'top_right', 'left', 'right', 'center']).optional(),
   face_policy: z.enum(['avoid', 'intentional_substitution']).optional(),
   placement: z.enum(['upper', 'center']).default('upper'),

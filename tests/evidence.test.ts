@@ -49,6 +49,12 @@ describe('evidence orchestration', () => {
     expect(validateEvidenceOrchestration([overlay()], { durationMs: 8_000, endingReturnToPresenter: true })).toEqual([])
   })
 
+  it('accepts a centered evidence ribbon that preserves the presenter', () => {
+    expect(validateEvidenceOrchestration([
+      overlay({ presentation: 'evidence_ribbon', anchor: 'center', face_policy: 'avoid' }),
+    ], { durationMs: 8_000, endingReturnToPresenter: true })).toEqual([])
+  })
+
   it('rejects accidental face coverage and evidence endings', () => {
     const issues = validateEvidenceOrchestration([
       overlay({ presentation: 'presenter_primary', anchor: 'center', face_policy: 'avoid', end_ms: 7_500 }),

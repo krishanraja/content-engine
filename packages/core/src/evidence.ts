@@ -35,12 +35,15 @@ export function validateEvidenceOrchestration(
     if (overlay.presentation === 'sidecar' && !['left', 'right'].includes(overlay.anchor!)) {
       issues.push(`${overlay.overlay_id}: sidecar evidence must use a left or right anchor`)
     }
+    if (overlay.presentation === 'evidence_ribbon' && overlay.anchor !== 'center') {
+      issues.push(`${overlay.overlay_id}: an evidence ribbon must use the center anchor and reserve the lower-middle torso area`)
+    }
     if (overlay.presentation === 'evidence_cutaway' && overlay.anchor !== 'center') {
       issues.push(`${overlay.overlay_id}: an evidence cutaway must be centered`)
     }
     const readingLoad = overlay.title.length + (overlay.excerpt?.length || 0)
     if (overlay.presentation === 'presenter_primary' && readingLoad > 105) {
-      issues.push(`${overlay.overlay_id}: the reading load is too high for a presenter-primary card; use a sidecar or evidence cutaway`)
+      issues.push(`${overlay.overlay_id}: the reading load is too high for a presenter-primary card; use a sidecar, evidence ribbon, or evidence cutaway`)
     }
   }
   if (options.endingReturnToPresenter && ordered.some((overlay) => overlay.end_ms > options.durationMs - 1_000)) {
