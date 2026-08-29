@@ -1,6 +1,6 @@
-import { basename, join } from 'node:path'
-import { readFile } from 'node:fs/promises'
-import { CandidateV1Schema, PUBLIC_SERIES_NAMES, RenderManifestV1Schema, SCHEMA_VERSION, type RenderManifestV1 } from '@mindmake/contracts'
+import { basename, extname, join, resolve } from 'node:path'
+import { copyFile, mkdir, readFile } from 'node:fs/promises'
+import { CandidateV1Schema, PUBLIC_SERIES_NAMES, RenderManifestV1Schema, SCHEMA_VERSION, type EvidenceOverlayV1, type RenderManifestV1 } from '@mindmake/contracts'
 import { hashFile, hashValue } from './hash.js'
 import { assembleClip, probeMedia } from './media.js'
 import { jobPath } from './paths.js'
@@ -42,10 +42,22 @@ function cropFor(width: number, height: number, treatmentId: string): RenderMani
 }
 
 function styleFor(treatmentId: string): RenderManifestV1['style'] {
-  if (/caption-led/i.test(treatmentId)) return { caption_position: 'middle', caption_scale: 1.12, hook_card_ms: 0, proof_motif: 'mechanism' }
-  if (/proof-first/i.test(treatmentId)) return { caption_position: 'lower', caption_scale: 0.95, hook_card_ms: 1200, proof_motif: 'evidence' }
-  if (/conversation/i.test(treatmentId)) return { caption_position: 'lower', caption_scale: 0.92, hook_card_ms: 0, proof_motif: 'evidence' }
-  return { caption_position: 'lower', caption_scale: 1, hook_card_ms: 0, proof_motif: 'artifact' }
+  if (/evidence-kinetic/i.test(treatmentId)) return { caption_position: 'lower', caption_scale: 1.02, hook_card_ms: 0, proof_motif: 'evidence', caption_personality: 'kinetic' }
+  if (/caption-led/i.test(treatmentId)) return { caption_position: 'middle', caption_scale: 1.12, hook_card_ms: 0, proof_motif: 'mechanism', caption_personality: 'kinetic' }
+  if (/proof-first/i.test(treatmentId)) return { caption_position: 'lower', caption_scale: 0.95, hook_card_ms: 1200, proof_motif: 'evidence', caption_personality: 'clean' }
+  if (/conversation/i.test(treatmentId)) return { caption_position: 'lower', caption_scale: 0.92, hook_card_ms: 0, proof_motif: 'evidence', caption_personality: 'clean' }
+  return { caption_position: 'lower', caption_scale: 1, hook_card_ms: 0, proof_motif: 'artifact', caption_personality: 'clean' }
+}
+
+async function stageEvidenceAssets(jobId: string, overlays: EvidenceOverlayV1[]): Promise<EvidenceOverlayV1[]> {
+  const mediaDirectory = join(jobPath(jobId), 'media')
+  await mkdir(mediaDirectory, { recursive: true })
+  return Promise.all(overlays.map(async (overlay) => {
+    const assetHash = await hashFile(overlay.asset_path)
+    const destination = join(mediaDirectory, `evidence-${assetHash.slice(0, 16)}${extname(overlay.asset_path) || '.png'}`)
+    if (resolve(overlay.asset_path) !== resolve(destination)) await copyFile(overlay.asset_path, destination)
+    return { ...overlay, asset_path: destination }
+  }))
 }
 
 export async function createTreatment(
@@ -56,6 +68,7 @@ export async function createTreatment(
   accent: string,
   sourceTranscript?: TranscriptDocument,
   branding: 'series' | 'none' = 'series',
+  evidenceOverlays: EvidenceOverlayV1[] = [],
 ): Promise<RenderManifestV1> {
   const candidate = CandidateV1Schema.parse(JSON.parse(await readFile(candidatePath, 'utf8')))
   if (candidate.challenge.hard_blocks.length) throw new Error(`candidate has hard blocks: ${candidate.challenge.hard_blocks.join('; ')}`)
@@ -85,6 +98,7 @@ export async function createTreatment(
     ? verifiedTextCaptionCues(captionScript, timedTranscript, durationMs)
     : captionCues(captionScript, durationMs)
   const fidelity = timedTranscript ? exactWordFidelity(captionScript, timedTranscript) : undefined
+  const stagedOverlays = await stageEvidenceAssets(jobId, evidenceOverlays)
   return RenderManifestV1Schema.parse({
     schema_version: SCHEMA_VERSION,
     job_id: jobId,
@@ -103,6 +117,7 @@ export async function createTreatment(
     crop_keyframes: [],
     style: styleFor(treatmentId),
     captions,
+    evidence_overlays: stagedOverlays,
     edit_segments: editSegments,
     ...(sourceTranscript ? {
       caption_provenance: {
@@ -117,7 +132,19 @@ export async function createTreatment(
     } : {}),
     accent,
     fixed_seed: hashValue({ jobId, candidate: candidate.candidate_id, treatmentId }).slice(0, 32),
-    assets: [{ path: basename(clipPath), rights: 'inherited_from_source', purpose: 'presenter footage', generated: false, approved: false }],
+    assets: [
+      { path: basename(clipPath), rights: 'inherited_from_source', purpose: 'presenter footage', generated: false, approved: false },
+      ...stagedOverlays.map((overlay) => ({
+        path: basename(overlay.asset_path),
+        rights: overlay.kind === 'diagram' ? 'generated_illustration' : 'third_party_commentary_excerpt',
+        purpose: `supporting ${overlay.kind}: ${overlay.title}`,
+        generated: overlay.kind === 'diagram',
+        ...(overlay.kind === 'diagram' ? { label: 'Illustration' } : {}),
+        attribution: overlay.attribution,
+        rights_rationale: overlay.rights_rationale,
+        approved: overlay.approved,
+      })),
+    ],
   })
 }
 
@@ -134,5 +161,6 @@ export function rendererProps(manifest: RenderManifestV1) {
     seriesName: manifest.branding === 'none' ? '' : PUBLIC_SERIES_NAMES[manifest.series],
     accent: manifest.accent,
     captions: manifest.captions,
+    evidenceOverlays: manifest.evidence_overlays.map((overlay) => ({ ...overlay, assetFile: basename(overlay.asset_path) })),
   }
 }

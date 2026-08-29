@@ -1,20 +1,59 @@
 import React from 'react'
-import { AbsoluteFill, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
+import { AbsoluteFill, Img, interpolate, OffthreadVideo, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
 import '@fontsource/inter/800.css'
 import type { ShortProps } from './props'
 
 const FONT_STACK = 'Inter, sans-serif'
 
-function Caption({ text, accent, emphasis, scale }: { text: string; accent: string; emphasis: string[]; scale: number }) {
+function Caption({ text, accent, emphasis, scale, personality, cueIndex }: { text: string; accent: string; emphasis: string[]; scale: number; personality: 'clean' | 'kinetic'; cueIndex: number }) {
+  const frame = useCurrentFrame()
+  const { fps } = useVideoConfig()
   const words = text.split(/\s+/)
+  const entrance = personality === 'kinetic' ? spring({ frame, fps, config: { damping: 18, stiffness: 220, mass: 0.55 } }) : 1
+  const rotation = personality === 'kinetic' ? (cueIndex % 2 === 0 ? -0.65 : 0.65) : 0
   return (
-    <div style={{ maxWidth: 930, padding: '22px 30px', borderRadius: 22, background: 'rgba(0,0,0,0.78)', boxShadow: '0 10px 50px rgba(0,0,0,0.35)', textAlign: 'center', fontFamily: FONT_STACK, fontSize: 68 * scale, fontWeight: 800, lineHeight: 1.04, color: '#fff' }}>
+    <div style={{
+      position: 'relative', maxWidth: 930, padding: personality === 'kinetic' ? '24px 34px 27px' : '22px 30px', borderRadius: personality === 'kinetic' ? 28 : 22,
+      background: personality === 'kinetic' ? 'linear-gradient(135deg, rgba(5,5,5,.94), rgba(18,18,18,.86))' : 'rgba(0,0,0,0.78)',
+      border: personality === 'kinetic' ? `2px solid ${accent}66` : undefined,
+      boxShadow: personality === 'kinetic' ? `0 18px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08), 0 8px 28px ${accent}22` : '0 10px 50px rgba(0,0,0,0.35)',
+      textAlign: 'center', fontFamily: FONT_STACK, fontSize: 68 * scale, fontWeight: 800, lineHeight: 1.04, color: '#fff',
+      opacity: interpolate(entrance, [0, 1], [0, 1]), transform: `translateY(${interpolate(entrance, [0, 1], [34, 0])}px) scale(${interpolate(entrance, [0, 1], [.9, 1])}) rotate(${rotation}deg)`,
+    }}>
+      {personality === 'kinetic' ? <div style={{ position: 'absolute', left: 32, right: 32, bottom: 12, height: 5, borderRadius: 10, background: `linear-gradient(90deg, ${accent}, ${accent}33)` }} /> : null}
       {words.map((word, index) => {
         const clean = word.replace(/[^a-z0-9]/gi, '').toLowerCase()
         const active = emphasis.some((item) => item.toLowerCase() === clean)
-        return <React.Fragment key={`${word}-${index}`}><span style={active ? { color: accent } : undefined}>{word}</span>{index < words.length - 1 ? ' ' : ''}</React.Fragment>
+        const wordEntrance = personality === 'kinetic' ? interpolate(frame - index * 1.25, [0, 5], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }) : 1
+        return <React.Fragment key={`${word}-${index}`}><span style={{
+          display: 'inline-block', opacity: wordEntrance, transform: `translateY(${(1 - wordEntrance) * 12}px)`,
+          ...(active ? (personality === 'kinetic' ? { color: '#050505', background: accent, borderRadius: 10, padding: '1px 9px 4px', margin: '0 2px', boxShadow: `0 4px 18px ${accent}55` } : { color: accent }) : {}),
+        }}>{word}</span>{index < words.length - 1 ? ' ' : ''}</React.Fragment>
       })}
     </div>
+  )
+}
+
+function EvidenceCard({ overlay, accent }: { overlay: ShortProps['evidenceOverlays'][number]; accent: string }) {
+  const frame = useCurrentFrame()
+  const { fps } = useVideoConfig()
+  const entrance = spring({ frame, fps, config: { damping: 17, stiffness: 180, mass: 0.65 } })
+  const imageScale = interpolate(frame, [0, fps * 4], [1.035, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+  return (
+    <AbsoluteFill style={{ alignItems: 'center', justifyContent: overlay.placement === 'center' ? 'center' : 'flex-start', paddingTop: overlay.placement === 'upper' ? 185 : 0, background: 'rgba(0,0,0,.18)' }}>
+      <div style={{ width: 920, borderRadius: 34, overflow: 'hidden', background: '#f6f3ec', color: '#111', fontFamily: FONT_STACK, boxShadow: '0 26px 90px rgba(0,0,0,.62)', border: '2px solid rgba(255,255,255,.45)', opacity: entrance, transform: `translateY(${interpolate(entrance, [0, 1], [70, 0])}px) scale(${interpolate(entrance, [0, 1], [.91, 1])})` }}>
+        <div style={{ position: 'relative', height: 540, overflow: 'hidden', background: '#e9e5db' }}>
+          <Img src={staticFile(overlay.assetFile)} style={{ width: '100%', height: '100%', objectFit: overlay.fit, transform: `scale(${imageScale})` }} />
+          <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 -120px 90px -90px rgba(0,0,0,.45)' }} />
+          <div style={{ position: 'absolute', top: 24, left: 24, padding: '11px 17px', borderRadius: 999, background: '#050505', color: accent, fontSize: 22, fontWeight: 800, letterSpacing: 1.8 }}>SOURCE</div>
+        </div>
+        <div style={{ padding: '28px 34px 32px', borderTop: `8px solid ${accent}` }}>
+          <div style={{ fontSize: 42, lineHeight: 1.02, fontWeight: 800 }}>{overlay.title}</div>
+          {overlay.excerpt ? <div style={{ marginTop: 15, fontFamily: 'Inter, sans-serif', fontSize: 29, lineHeight: 1.18, fontWeight: 600, color: '#333' }}>{overlay.excerpt}</div> : null}
+          <div style={{ marginTop: 20, fontSize: 21, fontWeight: 800, letterSpacing: 1.1, color: '#68635b', textTransform: 'uppercase' }}>{overlay.source_label}</div>
+        </div>
+      </div>
+    </AbsoluteFill>
   )
 }
 
@@ -49,13 +88,18 @@ export function MindmakeShort(props: ShortProps) {
           <span style={{ color: props.accent, fontSize: 22, letterSpacing: 1.4, textTransform: 'uppercase' }}>{props.treatmentStyle.proof_motif}</span>
         </div>
       ) : null}
+      {props.evidenceOverlays.map((overlay) => {
+        const from = Math.max(0, Math.floor(overlay.start_ms / 1000 * fps))
+        const duration = Math.max(1, Math.ceil((overlay.end_ms - overlay.start_ms) / 1000 * fps))
+        return <Sequence key={overlay.overlay_id} from={from} durationInFrames={duration}><EvidenceCard overlay={overlay} accent={props.accent} /></Sequence>
+      })}
       {props.captions.map((cue, index) => {
         const from = Math.max(0, Math.floor(cue.start_ms / 1000 * fps))
         const duration = Math.max(1, Math.ceil((cue.end_ms - cue.start_ms) / 1000 * fps))
         return (
           <Sequence key={`${cue.start_ms}-${index}`} from={from} durationInFrames={duration}>
             <AbsoluteFill style={{ justifyContent: props.treatmentStyle.caption_position === 'middle' ? 'center' : 'flex-end', alignItems: 'center', paddingBottom: props.treatmentStyle.caption_position === 'middle' ? 0 : 300 }}>
-              <Caption text={cue.text} accent={props.accent} emphasis={cue.emphasis} scale={props.treatmentStyle.caption_scale} />
+              <Caption text={cue.text} accent={props.accent} emphasis={cue.emphasis} scale={props.treatmentStyle.caption_scale} personality={props.treatmentStyle.caption_personality} cueIndex={index} />
             </AbsoluteFill>
           </Sequence>
         )

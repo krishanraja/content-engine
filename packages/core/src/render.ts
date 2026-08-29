@@ -13,6 +13,43 @@ import { studioPaths } from './paths.js'
 
 const REMOTION_VERSION = '4.0.518'
 
+export function loudnormSecondPassFilter(stderr: string): string {
+  const json = stderr.match(/\{\s*"input_i"[\s\S]*?\}/)?.[0]
+  if (!json) throw new Error('FFmpeg loudness measurement did not return JSON')
+  const measured = JSON.parse(json) as Record<string, string>
+  const fields = ['input_i', 'input_tp', 'input_lra', 'input_thresh', 'target_offset'] as const
+  for (const field of fields) if (!Number.isFinite(Number(measured[field]))) throw new Error(`FFmpeg loudness measurement is invalid: ${field}`)
+  return [
+    'loudnorm=I=-14:TP=-1.5:LRA=11',
+    `measured_I=${measured.input_i}`,
+    `measured_TP=${measured.input_tp}`,
+    `measured_LRA=${measured.input_lra}`,
+    `measured_thresh=${measured.input_thresh}`,
+    `offset=${measured.target_offset}`,
+    'linear=true',
+    'print_format=summary',
+  ].join(':')
+}
+
+async function measuredLoudnormFilter(path: string): Promise<string> {
+  const { stderr } = await run('ffmpeg', [
+    '-hide_banner', '-nostats', '-i', path,
+    '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json', '-f', 'null', '-',
+  ], { timeoutMs: 600_000 })
+  return loudnormSecondPassFilter(stderr)
+}
+
+export async function normalizeRenderedAudio(inputPath: string, outputPath: string): Promise<string> {
+  const loudnormFilter = await measuredLoudnormFilter(inputPath)
+  await run('ffmpeg', [
+    '-hide_banner', '-loglevel', 'error', '-y', '-i', inputPath,
+    '-map_metadata', '-1', '-c:v', 'copy',
+    '-af', loudnormFilter, '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2',
+    '-movflags', '+faststart', outputPath,
+  ], { timeoutMs: 1_800_000 })
+  return outputPath
+}
+
 async function sharedBrowserExecutable(): Promise<string> {
   const targetDirectory = join(studioPaths().runtimeRoot, 'browser', `remotion-${REMOTION_VERSION}`, 'headless-shell')
   const targetExecutable = join(targetDirectory, 'chrome-headless-shell.exe')
@@ -26,12 +63,19 @@ async function sharedBrowserExecutable(): Promise<string> {
   return copiedExecutable
 }
 
-export async function renderShort(repoRoot: string, manifest: RenderManifestV1, preview = false, previewDurationMs = 6_000): Promise<string> {
+export async function renderShort(repoRoot: string, manifest: RenderManifestV1, preview = false, previewDurationMs = 6_000, previewScale = 0.25): Promise<string> {
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
+  if (preview && ![0.25, 1].includes(previewScale)) throw new Error('preview scale must be 0.25 or 1')
   const effectiveDurationMs = preview ? Math.min(manifest.duration_ms, Math.max(1_000, previewDurationMs)) : manifest.duration_ms
-  const renderManifest = effectiveDurationMs === manifest.duration_ms ? manifest : { ...manifest, duration_ms: effectiveDurationMs, captions: manifest.captions.filter((cue) => cue.start_ms < effectiveDurationMs).map((cue) => ({ ...cue, end_ms: Math.min(cue.end_ms, effectiveDurationMs) })) }
-  const previewKey = hashValue({ manifest: renderManifest, profile: preview ? 'review-proxy-v3-15fps' : 'master-v1' }).slice(0, 10)
-  const suffix = preview ? `.preview-${Math.ceil(effectiveDurationMs / 1000)}s-${previewKey}` : ''
+  const renderManifest = effectiveDurationMs === manifest.duration_ms ? manifest : {
+    ...manifest,
+    duration_ms: effectiveDurationMs,
+    captions: manifest.captions.filter((cue) => cue.start_ms < effectiveDurationMs).map((cue) => ({ ...cue, end_ms: Math.min(cue.end_ms, effectiveDurationMs) })),
+    evidence_overlays: manifest.evidence_overlays.filter((overlay) => overlay.start_ms < effectiveDurationMs).map((overlay) => ({ ...overlay, end_ms: Math.min(overlay.end_ms, effectiveDurationMs) })),
+  }
+  const previewProfile = previewScale === 1 ? 'review-hq-v3-30fps' : 'review-proxy-v5-15fps'
+  const previewKey = hashValue({ manifest: renderManifest, profile: preview ? previewProfile : 'master-v3', audio_normalization: 'loudnorm-two-pass-v2-aac-headroom' }).slice(0, 10)
+  const suffix = preview ? `.preview-${previewScale === 1 ? 'hq' : 'proxy'}-${Math.ceil(effectiveDurationMs / 1000)}s-${previewKey}` : ''
   const outputPath = join(jobPath(manifest.job_id), 'renders', `${manifest.treatment_id}${suffix}.mp4`)
   const rawPath = join(jobPath(manifest.job_id), 'renders', `${manifest.treatment_id}${suffix}.raw.mp4`)
   await mkdir(dirname(outputPath), { recursive: true })
@@ -51,17 +95,12 @@ export async function renderShort(repoRoot: string, manifest: RenderManifestV1, 
     browserExecutable,
     imageFormat: 'jpeg',
     pixelFormat: 'yuv420p',
-    crf: preview ? 28 : 18,
-    scale: preview ? 0.25 : 1,
-    ...(preview ? { concurrency: Math.max(1, Math.min(4, availableParallelism() - 1)), everyNthFrame: 2, jpegQuality: 70, x264Preset: 'veryfast' as const } : {}),
+    crf: preview && previewScale < 1 ? 28 : 18,
+    scale: preview ? previewScale : 1,
+    ...(preview ? { concurrency: Math.max(1, Math.min(4, availableParallelism() - 1)), ...(previewScale < 1 ? { everyNthFrame: 2, jpegQuality: 70, x264Preset: 'veryfast' as const } : { jpegQuality: 90, x264Preset: 'medium' as const }) } : {}),
     logLevel: 'info',
   })
-  await run('ffmpeg', [
-    '-hide_banner', '-loglevel', 'error', '-y', '-i', rawPath,
-    '-map_metadata', '-1', '-c:v', 'copy',
-    '-af', 'loudnorm=I=-14:TP=-1:LRA=11', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2',
-    '-movflags', '+faststart', outputPath,
-  ], { timeoutMs: 1_800_000 })
+  await normalizeRenderedAudio(rawPath, outputPath)
   await unlink(rawPath)
   return outputPath
 }

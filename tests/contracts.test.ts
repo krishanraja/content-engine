@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { PUBLIC_SERIES_NAMES, RadarFeedV1Schema, normalizeSeries } from '@mindmake/contracts'
+import { EvidenceOverlayV1Schema, PUBLIC_SERIES_NAMES, RadarFeedV1Schema, normalizeSeries } from '@mindmake/contracts'
 import { readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -23,5 +23,14 @@ describe('canonical series contracts', () => {
       const feed = RadarFeedV1Schema.parse(JSON.parse(await readFile(join(fixtures, name), 'utf8')))
       expect(feed.schema_version).toBe(1)
     }
+  })
+
+  it('requires evidence overlays to carry timing, attribution, and rights provenance', () => {
+    const overlay = {
+      overlay_id: 'source-card', start_ms: 1000, end_ms: 4000, kind: 'screenshot', asset_path: 'source.png', title: 'Publishers take control', source_label: 'Industry source', source_url: 'https://example.com/evidence', attribution: 'Example evidence report', rights_rationale: 'Transformative excerpt used briefly to support the spoken editorial claim.', approved: true,
+    }
+    expect(EvidenceOverlayV1Schema.parse(overlay).placement).toBe('upper')
+    expect(() => EvidenceOverlayV1Schema.parse({ ...overlay, end_ms: 500 })).toThrow('evidence overlay must end after it starts')
+    expect(() => EvidenceOverlayV1Schema.parse({ ...overlay, attribution: '' })).toThrow()
   })
 })

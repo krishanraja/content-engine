@@ -17,7 +17,8 @@ function normalize(value: unknown): unknown {
 }
 
 export function stableJson(value: unknown): string {
-  return JSON.stringify(normalize(value))
+  const serialized = JSON.stringify(normalize(value))
+  return serialized === undefined ? 'undefined' : serialized
 }
 
 export function hashValue(value: unknown): string {

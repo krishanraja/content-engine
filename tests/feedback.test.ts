@@ -19,6 +19,14 @@ describe('feedback inference', () => {
     expect(inferred).toEqual({ rationale: 'The graphic competed with the proof.', confidence: 1 })
   })
 
+  it('diffs fields added by a new treatment without failing on missing values', () => {
+    const deltas = diffArtifacts(
+      { style: { caption_position: 'lower' } },
+      { style: { caption_position: 'lower', caption_personality: 'kinetic' }, evidence_overlays: [{ overlay_id: 'proof-card' }] },
+    )
+    expect(deltas.map((delta) => delta.feature)).toEqual(expect.arrayContaining(['style.caption_personality', 'evidence_overlays[0].overlay_id']))
+  })
+
   it('never promotes system diagnostics into taste memory', async () => {
     const event = FeedbackEventV1Schema.parse({
       schema_version: 1,

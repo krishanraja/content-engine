@@ -26,6 +26,10 @@ Never substitute chat agreement for the recorded approval.
 
 Keep the presenter or guest primary. Use interfaces, evidence, diagrams, headlines, and owned artifacts as supporting beats. The Money of AI is mechanism-led and commercially authoritative. Built With AI is tactile and operational. Use one shared Mindmaker skeleton with distinct accents.
 
+Every treatment must make an explicit supporting-visual decision against the spoken claims. Prefer short, timed evidence screenshots, interfaces, owned artifacts, or diagrams that explain the mechanism. Record attribution, source URL, editorial purpose, rights rationale, and approval for every third-party excerpt. If presenter-only footage is genuinely stronger, record why no overlay is needed. Never substitute generic decorative B-roll for missing proof.
+
+Captions should carry visual personality through an approved treatment preset: selective emphasis, purposeful movement, and series-specific accents while preserving safe zones and exact transcript-word fidelity. Avoid random word animation, permanent oversized blocks, or effects that compete with evidence. A new caption personality remains a treatment approval decision until Krish confirms it.
+
 Generated media is exceptional and must be labelled as illustration where it could be confused with evidence. Third-party excerpts require attribution, an editorial purpose, and a recorded rights rationale.
 
 ## Output

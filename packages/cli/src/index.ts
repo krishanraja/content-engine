@@ -6,6 +6,7 @@ import { Command } from 'commander'
 import {
   ApprovalGateSchema,
   CandidateV1Schema,
+  EvidenceOverlayV1Schema,
   JobPurposeSchema,
   RenderManifestV1Schema,
   SourceModeSchema,
@@ -360,6 +361,7 @@ program.command('treatment')
   .requiredOption('--job <jobId>')
   .requiredOption('--candidate <path>')
   .option('--treatment <id>', 'named treatment', 'presenter-evidence-v1')
+  .option('--overlays <path>', 'EvidenceOverlayV1 JSON object or array with timed supporting visuals')
   .option('--face-track', 'use optional local presenter face tracking')
   .action(async (options) => {
     const manifest = await loadJob(options.job)
@@ -368,6 +370,8 @@ program.command('treatment')
     const normalized = await readStageArtifact<{ output_path: string; source_path?: string }>(options.job, 'normalize')
     const config = await readJson<{ series: Record<string, { accent: string }>; transcription: { local_model: string } }>(pinnedConfigPath(manifest))
     const sourceTranscript = (await readStageArtifact<Parameters<typeof generateCandidates>[1]>(options.job, 'transcript')).payload
+    const overlayInput = options.overlays ? await readJson(options.overlays) : []
+    const evidenceOverlays = (Array.isArray(overlayInput) ? overlayInput : [overlayInput]).map((overlay) => EvidenceOverlayV1Schema.parse(overlay))
     const treatment = await createTreatment(
       options.job,
       options.candidate,
@@ -376,13 +380,14 @@ program.command('treatment')
       config.series[manifest.series]?.accent || '#D7FF3F',
       sourceTranscript,
       manifest.purpose === 'calibration' ? 'none' : 'series',
+      evidenceOverlays,
     )
     if (options.faceTrack) treatment.crop_keyframes = await trackFaceCrops(repoRoot, treatment.source_path)
     const path = join(jobPath(options.job), 'treatments', `${options.treatment}.json`)
     await mkdir(dirname(path), { recursive: true })
     await writeFile(path, `${JSON.stringify(treatment, null, 2)}\n`, 'utf8')
     const manifestHash = await hashFile(path)
-    const artifact = await completeStage(options.job, 'treatment', { manifest_path: path, manifest_hash: manifestHash, candidate_path: resolve(options.candidate) }, { candidate: candidateHash, normalize: normalized.artifact_hash }, { treatment: options.treatment })
+    const artifact = await completeStage(options.job, 'treatment', { manifest_path: path, manifest_hash: manifestHash, candidate_path: resolve(options.candidate), evidence_overlay_count: evidenceOverlays.length }, { candidate: candidateHash, normalize: normalized.artifact_hash, ...(options.overlays ? { overlays: await hashFile(options.overlays) } : {}) }, { treatment: options.treatment })
     out({ job_id: options.job, manifest_path: path, manifest_hash: manifestHash, artifact_hash: artifact.artifact_hash })
   })
 
@@ -391,8 +396,10 @@ program.command('render')
   .option('--preview', 'render a low-resolution treatment preview without completing the render stage')
   .option('--preview-seconds <number>', 'representative preview duration', '6')
   .option('--full-preview', 'render the full treatment at preview resolution')
+  .option('--high-quality-preview', 'render a full-resolution 1080x1920 review without completing the render stage')
   .action(async (options) => {
     const jobManifest = await loadJob(options.job)
+    if (options.highQualityPreview && !options.preview) throw new Error('--high-quality-preview requires --preview')
     if (jobManifest.purpose === 'calibration' && !options.preview) throw new Error('calibration jobs are analysis-only and cannot create a final render')
     const stage = await readStageArtifact<{ manifest_path: string; manifest_hash: string }>(options.job, 'treatment')
     const renderManifest = RenderManifestV1Schema.parse(await readJson(stage.payload.manifest_path))
@@ -412,7 +419,7 @@ program.command('render')
     }
     const previewDurationMs = options.fullPreview ? renderManifest.duration_ms : Number(options.previewSeconds) * 1000
     if (!Number.isFinite(previewDurationMs) || previewDurationMs <= 0) throw new Error('--preview-seconds must be a positive number')
-    const masterPath = await renderShort(repoRoot, renderManifest, Boolean(options.preview), previewDurationMs)
+    const masterPath = await renderShort(repoRoot, renderManifest, Boolean(options.preview), previewDurationMs, options.highQualityPreview ? 1 : 0.25)
     const masterHash = await hashFile(masterPath)
     if (options.preview) {
       out({ job_id: options.job, preview_path: masterPath, preview_hash: masterHash, treatment_manifest_hash: stage.payload.manifest_hash, next_gate: 'approve treatment manifest after pairwise review' })
