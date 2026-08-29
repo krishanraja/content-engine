@@ -252,6 +252,27 @@ export const AssetLedgerEntrySchema = z.object({
   if (/third[_ -]?party/i.test(asset.rights) && (!asset.attribution?.trim() || !asset.rights_rationale?.trim())) context.addIssue({ code: 'custom', path: ['rights'], message: 'third-party assets require attribution and a rights rationale' })
 })
 
+export const EvidenceEditorialAssessmentV1Schema = z.object({
+  published_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  source_class: z.enum(['primary_authority', 'tier_one_news', 'specialist_trade', 'owned_artifact', 'vendor_marketing', 'secondary_blog']),
+  editorial_form: z.enum(['reported_news', 'original_research', 'official_announcement', 'analysis', 'guide', 'marketing']),
+  source_role: z.enum(['news_hook', 'claim_evidence', 'mechanism_proof', 'context']),
+  temporality: z.enum(['fresh_news', 'current', 'evergreen', 'live_artifact']),
+  headline_form: z.enum(['reported_event', 'quantified_consequence', 'direct_conflict', 'structural_shift', 'generic_service', 'marketing_claim']),
+  scores: z.object({
+    source_authority: z.number().min(0).max(1),
+    headline_specificity: z.number().min(0).max(1),
+    consequence: z.number().min(0).max(1),
+    spoken_claim_match: z.number().min(0).max(1),
+    visual_legibility: z.number().min(0).max(1),
+  }),
+  claim_supported: z.string().min(20),
+  why_screenworthy: z.string().min(20),
+  strongest_objection: z.string().min(12),
+  corroborating_urls: z.array(z.string().url()).default([]),
+})
+export type EvidenceEditorialAssessmentV1 = z.infer<typeof EvidenceEditorialAssessmentV1Schema>
+
 export const EvidenceOverlayV1Schema = z.object({
   overlay_id: z.string().min(1),
   start_ms: z.number().int().nonnegative(),
@@ -262,6 +283,7 @@ export const EvidenceOverlayV1Schema = z.object({
   excerpt: z.string().max(180).optional(),
   source_label: z.string().min(1).max(80),
   source_url: z.string().url().optional(),
+  editorial_assessment: EvidenceEditorialAssessmentV1Schema.optional(),
   viewer_intent: z.enum(['maintain_connection', 'verify_claim', 'inspect_artifact', 'understand_mechanism']).optional(),
   presentation: z.enum(['presenter_primary', 'sidecar', 'evidence_cutaway']).optional(),
   anchor: z.enum(['top_left', 'top_right', 'left', 'right', 'center']).optional(),
@@ -289,6 +311,7 @@ export type OrchestratedEvidenceOverlayV1 = z.infer<typeof OrchestratedEvidenceO
 
 export const EvidenceApprovalPacketV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),
+  quality_gate_version: z.enum(['legacy_v1', 'editorial_v2']).default('legacy_v1'),
   packet_id: z.string().min(1),
   job_id: z.string().min(1),
   candidate_hash: z.string().regex(/^[a-f0-9]{64}$/),

@@ -29,6 +29,18 @@ Keep the presenter or guest primary. Use interfaces, evidence, diagrams, headlin
 
 Every treatment must make an explicit supporting-visual decision against the spoken claims. Prefer short, timed evidence screenshots, interfaces, owned artifacts, or diagrams that explain the mechanism. Record attribution, source URL, editorial purpose, rights rationale, and approval for every third-party excerpt. If presenter-only footage is genuinely stronger, record why no overlay is needed. Never substitute generic decorative B-roll for missing proof.
 
+Before capturing external evidence, show Krish a short source-and-headline shortlist. Recommend one option, state the strongest reason it may fail, and prefer one exceptional headline over two merely relevant pages. Do not spend time capturing or laying out a source that has not survived this editorial preflight.
+
+Headline evidence must earn the interruption:
+
+- Prefer primary authorities and tier-one reported news, then corroborated specialist trade reporting. Vendor marketing and secondary blogs cannot receive full-screen proof treatment.
+- Treat 60 days as the default ceiling for `fresh_news` and 180 days for `current`. Older material must be genuine primary research or evergreen evidence, not stale reported news relabelled as evergreen.
+- Reject generic service content, marketing claims, listicles, guides, SEO headlines, and pages whose relevance exists only in the body copy.
+- The visible headline must name a development, quantified consequence, conflict, or structural shift that directly matches the spoken claim.
+- Specialist trade claims require independent corroboration. Record the strongest objection even when the source passes.
+- Budget enough screen time to read the headline. In a short clip, use one strong headline if two would create rushed proof beats.
+- Capture only the useful source logo, exact headline, date, and decisive visual or statistic. Remove browser chrome, cookie banners, unrelated navigation, and unreadable body copy before the exact screenshot approval packet is created.
+
 Orchestrate each beat around the viewer's immediate task:
 
 - `presenter_primary`: Krish's expression or delivery is the value. Use only a short, low-reading-load corner card in verified negative space.

@@ -11,7 +11,7 @@ export const EXIT_CODES = {
 
 export function classifyError(error: unknown): { code: keyof typeof EXIT_CODES; exitCode: number; message: string } {
   const message = error instanceof Error ? error.message : String(error)
-  if (error instanceof ZodError || /schema|invalid|must match|requires --input/i.test(message)) return { code: 'validation', exitCode: EXIT_CODES.validation, message }
+  if (error instanceof ZodError || /schema|invalid|must match|requires --input|evidence orchestration failed|editorial source assessment/i.test(message)) return { code: 'validation', exitCode: EXIT_CODES.validation, message }
   if (/approval|hard (?:editorial )?block|rights|licen[cs]e|only permits private|truth|QA did not pass/i.test(message)) return { code: 'policy_block', exitCode: EXIT_CODES.policy_block, message }
   if (/YouTube|provider|credential|radar .*returned|upload|HTTP\s+\d/i.test(message)) return { code: 'external_service', exitCode: EXIT_CODES.external_service, message }
   if (/ffmpeg|ffprobe|transcrib|video|audio|caption timestamp|recorded take/i.test(message)) return { code: 'media_tool', exitCode: EXIT_CODES.media_tool, message }

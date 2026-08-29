@@ -24,6 +24,8 @@ Caption treatment is deletion-only: captions may omit filler, false starts, acci
 
 Hard blocks cover truth, rights, confidentiality, meaning, canonical naming, transcript fidelity, identity, semantic coherence, publishable impact, audience value, and ending quality. The approval command independently recomputes them and refuses to override them. Soft clarity, novelty, engagement, or audience-fit blocks require an explicit override reason tied to the exact candidate hash.
 
+External headline evidence has an independent editorial-quality gate. Fresh news defaults to a 60-day ceiling; current sources to 180 days. Full-screen evidence excludes vendor marketing, secondary blogs, guides, listicles, generic service copy, and marketing claims. It also enforces authority, specificity, consequence, spoken-claim match, visual legibility, corroboration for specialist trade reporting, and enough duration to read the visible headline. The evaluation date is frozen into the packet so an approved job remains resumable without silently becoming stale later.
+
 The default is one continuous cut. Stitched edits must be materially stronger, non-overlapping, and coherent as one argument. A source-order change must be declared and justified. Longer-than-30-second work records whether a roughly five-second source-grounded cold open helps; it is never added mechanically. When no edit passes, `rerecord` requires an actionable hook, missing proof, structure, delivery, ending, and duration brief.
 
 Short-native candidates pass the same quality floor before a recording brief exists. When every proposed script is blocked, the script and diagnoses remain recorded but the `recording_brief` stage stays pending. Cadence alone cannot advance the job into recording.

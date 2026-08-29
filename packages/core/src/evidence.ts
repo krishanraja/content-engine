@@ -49,6 +49,66 @@ export function validateEvidenceOrchestration(
   return issues
 }
 
+export function validateEvidenceEditorialQuality(
+  overlays: OrchestratedEvidenceOverlayV1[],
+  evaluatedAt = new Date(),
+): string[] {
+  const issues: string[] = []
+  for (const overlay of overlays) {
+    const assessment = overlay.editorial_assessment
+    if (!assessment) {
+      issues.push(`${overlay.overlay_id}: evidence needs an editorial source assessment`)
+      continue
+    }
+    const durationSeconds = (overlay.end_ms - overlay.start_ms) / 1000
+    const headlineWords = overlay.title.trim().split(/\s+/).filter(Boolean).length
+    const minimumReadSeconds = Math.max(1.8, headlineWords / 4)
+    if (durationSeconds < minimumReadSeconds) {
+      issues.push(`${overlay.overlay_id}: the ${headlineWords}-word headline needs at least ${minimumReadSeconds.toFixed(1)} seconds on screen`)
+    }
+    if (['vendor_marketing', 'secondary_blog'].includes(assessment.source_class) && overlay.presentation === 'evidence_cutaway') {
+      issues.push(`${overlay.overlay_id}: vendor marketing and secondary blogs do not earn full-screen evidence cutaways`)
+    }
+    if (['guide', 'marketing'].includes(assessment.editorial_form) && overlay.presentation === 'evidence_cutaway') {
+      issues.push(`${overlay.overlay_id}: guides and marketing pages are supporting research, not headline evidence`)
+    }
+    if (['generic_service', 'marketing_claim'].includes(assessment.headline_form)) {
+      issues.push(`${overlay.overlay_id}: a generic service or marketing headline does not earn screen time`)
+    }
+    if (/^(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(?:ways|strategies|tips|reasons|steps|things)\b/i.test(overlay.title.trim())) {
+      issues.push(`${overlay.overlay_id}: listicle-style headlines are not eligible as evidence cutaways`)
+    }
+    const scoreFloors: Array<[keyof typeof assessment.scores, number]> = [
+      ['source_authority', 0.72],
+      ['headline_specificity', 0.7],
+      ['consequence', 0.65],
+      ['spoken_claim_match', 0.75],
+      ['visual_legibility', 0.75],
+    ]
+    for (const [score, floor] of scoreFloors) {
+      if (assessment.scores[score] < floor) issues.push(`${overlay.overlay_id}: ${score} ${assessment.scores[score].toFixed(2)} is below ${floor.toFixed(2)}`)
+    }
+    if (assessment.source_class === 'specialist_trade' && ['news_hook', 'claim_evidence'].includes(assessment.source_role) && assessment.corroborating_urls.length < 1) {
+      issues.push(`${overlay.overlay_id}: specialist trade reporting needs at least one independent corroborating source`)
+    }
+    if (['fresh_news', 'current'].includes(assessment.temporality)) {
+      if (!assessment.published_at) {
+        issues.push(`${overlay.overlay_id}: current evidence requires a publication date`)
+      } else {
+        const publishedAt = new Date(`${assessment.published_at}T00:00:00.000Z`)
+        const ageDays = (evaluatedAt.getTime() - publishedAt.getTime()) / 86_400_000
+        if (ageDays < -1) issues.push(`${overlay.overlay_id}: publication date is in the future`)
+        const maximumAge = assessment.temporality === 'fresh_news' ? 60 : 180
+        if (ageDays > maximumAge) issues.push(`${overlay.overlay_id}: source is ${Math.floor(ageDays)} days old; ${assessment.temporality} allows ${maximumAge}`)
+      }
+    }
+    if (assessment.temporality === 'evergreen' && assessment.editorial_form === 'reported_news') {
+      issues.push(`${overlay.overlay_id}: reported news cannot be relabelled evergreen to bypass freshness`)
+    }
+  }
+  return issues
+}
+
 async function imageDimensions(path: string): Promise<{ width: number; height: number }> {
   const { stdout } = await run('ffprobe', [
     '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'json', path,
@@ -85,9 +145,13 @@ export async function prepareEvidenceApprovalPacket(input: {
   strategySummary: string
   endingReturnToPresenter?: boolean
 }): Promise<{ packet: EvidenceApprovalPacketV1; packetPath: string; packetHash: string }> {
+  const createdAt = new Date().toISOString()
   const endingReturnToPresenter = input.endingReturnToPresenter ?? true
   const parsed = input.overlays.map((overlay) => OrchestratedEvidenceOverlayV1Schema.parse(overlay))
-  const issues = validateEvidenceOrchestration(parsed, { durationMs: input.durationMs, endingReturnToPresenter })
+  const issues = [
+    ...validateEvidenceOrchestration(parsed, { durationMs: input.durationMs, endingReturnToPresenter }),
+    ...validateEvidenceEditorialQuality(parsed, new Date(createdAt)),
+  ]
   if (issues.length) throw new Error(`evidence orchestration failed:\n- ${issues.join('\n- ')}`)
 
   const proposedDirectory = join(jobPath(input.jobId), 'evidence', 'proposed')
@@ -122,11 +186,12 @@ export async function prepareEvidenceApprovalPacket(input: {
   const contactSheetSha256 = await hashFile(contactSheetPath)
   const packet = EvidenceApprovalPacketV1Schema.parse({
     schema_version: SCHEMA_VERSION,
+    quality_gate_version: 'editorial_v2',
     packet_id: packetId,
     job_id: input.jobId,
     candidate_hash: input.candidateHash,
     duration_ms: input.durationMs,
-    created_at: new Date().toISOString(),
+    created_at: createdAt,
     strategy_summary: input.strategySummary,
     ending_return_to_presenter: endingReturnToPresenter,
     contact_sheet_path: contactSheetPath,
@@ -146,6 +211,7 @@ export async function verifyEvidenceApprovalPacket(path: string): Promise<Eviden
     if (await hashFile(item.overlay.asset_path) !== item.asset_sha256) throw new Error(`approved evidence asset changed after approval: ${item.overlay.overlay_id}`)
   }
   const issues = validateEvidenceOrchestration(packet.items.map((item) => item.overlay), { durationMs: packet.duration_ms, endingReturnToPresenter: packet.ending_return_to_presenter })
+  if (packet.quality_gate_version === 'editorial_v2') issues.push(...validateEvidenceEditorialQuality(packet.items.map((item) => item.overlay), new Date(packet.created_at)))
   if (issues.length) throw new Error(`approved evidence orchestration is invalid:\n- ${issues.join('\n- ')}`)
   return packet
 }
