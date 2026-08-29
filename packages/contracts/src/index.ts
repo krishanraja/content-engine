@@ -330,6 +330,92 @@ export const EvidenceApprovalPacketV1Schema = z.object({
 })
 export type EvidenceApprovalPacketV1 = z.infer<typeof EvidenceApprovalPacketV1Schema>
 
+export const TreatmentStyleV1Schema = z.object({
+  caption_position: z.enum(['lower', 'middle']),
+  caption_scale: z.number().min(0.8).max(1.25),
+  hook_card_ms: z.number().int().nonnegative().max(3000),
+  proof_motif: z.enum(['mechanism', 'evidence', 'artifact']),
+  caption_personality: z.enum(['clean', 'kinetic']).default('clean'),
+})
+export type TreatmentStyleV1 = z.infer<typeof TreatmentStyleV1Schema>
+
+export const BrandThemeV1Schema = z.object({
+  schema_version: z.literal(SCHEMA_VERSION),
+  theme_id: z.string().min(1),
+  version: z.number().int().positive(),
+  status: z.enum(['candidate', 'active']),
+  source: z.object({
+    repository: z.string().min(1),
+    commit: z.string().regex(/^[a-f0-9]{40}$/),
+    contract_path: z.string().min(1),
+  }),
+  colors: z.object({
+    ink: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    surface: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    raised: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    line: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    text: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    secondary_text: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    muted_text: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    paper: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    mint: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    mint_ink: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    amber: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+  }),
+  typography: z.object({
+    structure: z.literal('Archivo Variable'),
+    claim: z.literal('Newsreader Variable'),
+    body: z.literal('Source Serif 4 Variable'),
+    data: z.literal('IBM Plex Mono'),
+  }),
+  rules: z.object({
+    mint_means_answer: z.literal(true),
+    amber_means_changed: z.literal(true),
+    mono_for_evidence_labels: z.literal(true),
+    serif_for_claims_only: z.literal(true),
+    progress_bar: z.literal('hidden'),
+    radius: z.literal('precise'),
+  }),
+})
+export type BrandThemeV1 = z.infer<typeof BrandThemeV1Schema>
+
+export const ApprovedTreatmentPresetV1Schema = z.object({
+  schema_version: z.literal(SCHEMA_VERSION),
+  treatment_id: z.string().min(1),
+  version: z.number().int().positive(),
+  status: z.literal('approved'),
+  approved_by: z.string().min(1),
+  approved_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  source_job_id: z.string().min(1),
+  source_manifest_sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  approved_brand_theme_sha256: z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  scope: z.object({
+    series: z.array(SeriesSchema).min(1),
+    modes: z.array(SourceModeSchema).min(1),
+  }),
+  priority: z.number().int().default(0),
+  style: TreatmentStyleV1Schema,
+  evidence_policy: z.object({
+    requires_approved_packet: z.boolean(),
+    allowed_presentations: z.array(z.enum(['presenter_primary', 'sidecar', 'evidence_ribbon', 'evidence_cutaway'])).min(1),
+    face_policy: z.enum(['avoid', 'intentional_substitution']),
+    minimum_clear_ending_ms: z.number().int().nonnegative(),
+    captions_below_evidence: z.boolean(),
+    placement_strategy: z.enum(['face_safe_lower_middle', 'approved_manifest']),
+    requires_per_job_layout_review: z.boolean(),
+  }),
+  invariants: z.array(z.enum([
+    'presenter_remains_primary',
+    'exact_evidence_asset_approval',
+    'face_safe_evidence',
+    'captions_below_evidence',
+    'transcript_word_fidelity',
+    'clear_presenter_ending',
+    'audio_duration_parity',
+  ])).min(1),
+})
+export type ApprovedTreatmentPresetV1 = z.infer<typeof ApprovedTreatmentPresetV1Schema>
+
 export const RenderManifestV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),
   job_id: z.string(),
@@ -346,13 +432,14 @@ export const RenderManifestV1Schema = z.object({
   duration_ms: z.number().int().positive(),
   crop: z.object({ x: z.number(), y: z.number(), width: z.number(), height: z.number() }),
   crop_keyframes: z.array(z.object({ at_ms: z.number().int().nonnegative(), x: z.number(), y: z.number(), width: z.number().positive(), height: z.number().positive(), confidence: z.number().min(0).max(1) })).default([]),
-  style: z.object({
-    caption_position: z.enum(['lower', 'middle']),
-    caption_scale: z.number().min(0.8).max(1.25),
-    hook_card_ms: z.number().int().nonnegative().max(3000),
-    proof_motif: z.enum(['mechanism', 'evidence', 'artifact']),
-    caption_personality: z.enum(['clean', 'kinetic']).default('clean'),
-  }),
+  style: TreatmentStyleV1Schema,
+  brand_theme: BrandThemeV1Schema.optional(),
+  treatment_preset: z.object({
+    treatment_id: z.string().min(1),
+    version: z.number().int().positive(),
+    preset_hash: z.string().regex(/^[a-f0-9]{64}$/),
+    source_manifest_sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  }).optional(),
   captions: z.array(CaptionCueSchema),
   evidence_overlays: z.array(EvidenceOverlayV1Schema).default([]),
   edit_segments: z.array(EditSegmentV1Schema).default([]),
@@ -435,6 +522,14 @@ export const PreferenceRuleV1Schema = z.object({
   approved_at: z.string().optional(),
 })
 export type PreferenceRuleV1 = z.infer<typeof PreferenceRuleV1Schema>
+
+export const TreatmentRegistryV1Schema = z.object({
+  approved_treatments: z.array(ApprovedTreatmentPresetV1Schema),
+  active_preferences: z.array(PreferenceRuleV1Schema),
+  brand_themes: z.array(BrandThemeV1Schema).default([]),
+  default_brand_theme: z.string().optional(),
+}).passthrough()
+export type TreatmentRegistryV1 = z.infer<typeof TreatmentRegistryV1Schema>
 
 export const ExperimentV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),

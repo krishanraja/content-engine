@@ -48,11 +48,101 @@
     }
   },
   "series": {
-    "money_of_ai": { "public_name": "The Money of AI", "accent": "#D7FF3F", "audience": "enterprise leaders, founders, and transformation buyers" },
-    "built_with_ai": { "public_name": "Built With AI", "accent": "#7DD3FC", "audience": "AI-native operators and hands-on builders" }
+    "money_of_ai": { "public_name": "The Money of AI", "accent": "#7FE3B4", "audience": "enterprise leaders, founders, and transformation buyers" },
+    "built_with_ai": { "public_name": "Built With AI", "accent": "#7FE3B4", "audience": "AI-native operators and hands-on builders" }
   },
   "gates": { "hard": ["truth", "rights", "confidentiality", "meaning", "canonical_naming"], "soft": ["clarity", "engagement", "novelty", "audience_fit"] },
   "learning": { "broaden_after_confirmations": 3, "broaden_across_jobs": 2, "performance_replications": 3, "approval_required": true },
-  "approved_treatments": [],
-  "active_preferences": []
+  "approved_treatments": [
+    {
+      "schema_version": 1,
+      "treatment_id": "evidence-kinetic-ribbon-v1",
+      "version": 1,
+      "status": "approved",
+      "approved_by": "Krish",
+      "approved_at": "2026-08-29",
+      "source_job_id": "20260829-built_with_ai-cc31d2f3",
+      "source_manifest_sha256": "9ff2d2c904ab8c676f369376de4ea4b1a058cfd6015a30da3b38a68e14987bf8",
+      "scope": { "series": ["built_with_ai"], "modes": ["solo"] },
+      "priority": 100,
+      "style": { "caption_position": "lower", "caption_scale": 1.02, "hook_card_ms": 0, "proof_motif": "evidence", "caption_personality": "kinetic" },
+      "evidence_policy": {
+        "requires_approved_packet": true,
+        "allowed_presentations": ["evidence_ribbon"],
+        "face_policy": "avoid",
+        "minimum_clear_ending_ms": 1000,
+        "captions_below_evidence": true,
+        "placement_strategy": "face_safe_lower_middle",
+        "requires_per_job_layout_review": true
+      },
+      "invariants": ["presenter_remains_primary", "exact_evidence_asset_approval", "face_safe_evidence", "captions_below_evidence", "transcript_word_fidelity", "clear_presenter_ending", "audio_duration_parity"]
+    }
+  ],
+  "active_preferences": [
+    {
+      "schema_version": 1,
+      "rule_id": "pref-evidence-ribbon-presenter-primary-v1",
+      "assertion": "Keep Krish visible while compact evidence appears, place it in verified face-safe space, and return to an unobstructed presenter for the ending.",
+      "scope": { "level": "treatment", "key": "evidence-kinetic-ribbon-v1" },
+      "evidence_feedback_ids": ["4f11400d-3328-4ccc-8c14-3a6018080d9d"],
+      "counterexamples": ["Use a deliberate evidence cutaway only when the viewer genuinely needs uninterrupted inspection and Krish approves the new treatment."],
+      "regression_cases": ["approved treatment rejects evidence cutaways", "approved treatment preserves a clear presenter ending"],
+      "status": "active",
+      "approved_by": "Krish",
+      "approved_at": "2026-08-29T14:42:01.530Z"
+    },
+    {
+      "schema_version": 1,
+      "rule_id": "pref-kinetic-caption-fidelity-v1",
+      "assertion": "Give captions selective visual personality while using only verified transcribed words in source order.",
+      "scope": { "level": "treatment", "key": "evidence-kinetic-ribbon-v1" },
+      "evidence_feedback_ids": ["4f11400d-3328-4ccc-8c14-3a6018080d9d"],
+      "counterexamples": ["Reduce movement when it competes with dense evidence, but do not substitute or invent spoken words."],
+      "regression_cases": ["approved treatment requires verified transcript-word caption fidelity", "caption-safe-zone QA remains mandatory"],
+      "status": "active",
+      "approved_by": "Krish",
+      "approved_at": "2026-08-29T14:42:01.530Z"
+    }
+  ],
+  "brand_themes": [
+    {
+      "schema_version": 1,
+      "theme_id": "mindmake-video-v1",
+      "version": 1,
+      "status": "active",
+      "source": {
+        "repository": "krishanraja/mindmake",
+        "commit": "c476e58fac5a3d7a6ff6bc54f41a2ddbc0e692aa",
+        "contract_path": "project-documentation/03_DESIGN_CONTRACT.md"
+      },
+      "colors": {
+        "ink": "#0A100D",
+        "surface": "#111A16",
+        "raised": "#1E2C26",
+        "line": "#22322B",
+        "text": "#E6EDE8",
+        "secondary_text": "#B0C0B7",
+        "muted_text": "#788C82",
+        "paper": "#F2F1EA",
+        "mint": "#7FE3B4",
+        "mint_ink": "#07110C",
+        "amber": "#E0A44A"
+      },
+      "typography": {
+        "structure": "Archivo Variable",
+        "claim": "Newsreader Variable",
+        "body": "Source Serif 4 Variable",
+        "data": "IBM Plex Mono"
+      },
+      "rules": {
+        "mint_means_answer": true,
+        "amber_means_changed": true,
+        "mono_for_evidence_labels": true,
+        "serif_for_claims_only": true,
+        "progress_bar": "hidden",
+        "radius": "precise"
+      }
+    }
+  ],
+  "default_brand_theme": "mindmake-video-v1"
 }

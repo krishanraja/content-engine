@@ -29,6 +29,36 @@ export interface RankedOpportunity {
 
 const MONEY_TERMS = /\b(costs?|revenue|margin|pricing|enterprise|buyer|procurement|roi|economic|economics|market|company|workforce|budget|capital)\b/i
 const BUILT_TERMS = /\b(build|ship|workflow|agent|tool|prototype|code|model|prompt|automation|operator|interface|product)\b/i
+const GENERIC_HEADLINE = /^(how to\b|a guide to\b|guide:\s|\d+\s+(ways|strategies|tips|steps|tools)\b|best\s+\w+\s+for\b)|\b(ultimate guide|everything you need to know)\b/i
+const PERSONNEL_HEADLINE = /\b(appoints?|hires?|names?|promotes?)\b.{0,45}\b(executive|chief|ceo|cto|cfo|president|leader|head)\b|\b(executive|chief|ceo|cto|cfo|president)\b.{0,45}\b(joins?|appointed|hired|named|promoted)\b/i
+const LOW_AUTHORITY_HOST = /(^|\.)(slashdot\.org|reddit\.com|medium\.com|quora\.com)$/i
+const PRIMARY_AUTHORITY_HOST = /(^|\.)(gov\.uk|europa\.eu|sec\.gov|justice\.gov|supremecourt\.gov|blog\.google|openai\.com|anthropic\.com|microsoft\.com|github\.com|huggingface\.co)$/i
+
+function sourceHost(candidate: RadarCandidateV1): string | undefined {
+  try { return new URL(candidate.source_urls[0] || '').hostname.toLowerCase() }
+  catch { return undefined }
+}
+
+function normalizedText(value: string): string {
+  return value.toLowerCase().replace(/&(?:#x?[a-f0-9]+|[a-z]+);/gi, ' ').replace(/[^a-z0-9]+/g, ' ').trim()
+}
+
+export function radarEditorialQualityBlocks(candidate: RadarCandidateV1, now = new Date()): string[] {
+  const blocks: string[] = []
+  if (candidate.source_kind !== 'public_signal') return blocks
+  const host = sourceHost(candidate)
+  const ageHours = Math.max(0, now.getTime() - Date.parse(candidate.occurred_at)) / 3_600_000
+  const normalizedTitle = normalizedText(candidate.title)
+  const normalizedSummary = normalizedText(candidate.summary)
+  if (ageHours > 72) blocks.push('weekly news candidate is older than 72 hours')
+  if (GENERIC_HEADLINE.test(candidate.title)) blocks.push('generic guide, listicle or service headline is not eligible for the weekly news brief')
+  if (PERSONNEL_HEADLINE.test(candidate.title)) blocks.push('personnel appointment is not an opportunity without a specific operating or commercial consequence')
+  if (!host) blocks.push('public source URL is missing or invalid')
+  else if (LOW_AUTHORITY_HOST.test(host)) blocks.push('aggregator or discussion surface is not acceptable headline evidence')
+  if (candidate.corroboration < 2 && (!host || !PRIMARY_AUTHORITY_HOST.test(host))) blocks.push('single-source public signal requires primary-authority evidence or independent corroboration')
+  if (normalizedSummary.length < 45 || normalizedSummary === normalizedTitle || /https?\s|twitter com|&#x/i.test(candidate.summary)) blocks.push('summary does not state a specific, intelligible consequence')
+  return blocks
+}
 
 function fingerprint(candidate: RadarCandidateV1): string {
   const source = candidate.source_urls[0] || `${candidate.title} ${candidate.summary}`
@@ -73,7 +103,8 @@ export function rankRadarOpportunities(candidates: RadarCandidateV1[], now = new
       const hardBlocks: string[] = []
       if (candidate.sensitivity === 'internal_sanitized' && candidate.evidence_status === 'public_evidence_required') hardBlocks.push('public evidence required before scripting factual claims')
       if (candidate.source_urls.length === 0 && candidate.evidence_status === 'public_grounded') hardBlocks.push('public provenance missing')
-      const hookLead = series === 'money_of_ai' ? 'The expensive part of AI is not the model.' : 'The useful part of this build is not the demo.'
+      hardBlocks.push(...radarEditorialQualityBlocks(candidate, now))
+      const hookLead = series === 'money_of_ai' ? 'The decision inside this headline:' : 'The workflow change inside this headline:'
       const objection = candidate.corroboration < 2 ? 'The signal may be a single-source announcement rather than a durable shift.' : 'The angle may be true but too familiar unless it includes an operator mechanism or artifact.'
       const publicEvidence = candidate.evidence_status === 'public_grounded'
       const dimensions = {
@@ -110,14 +141,15 @@ export function rankRadarOpportunities(candidates: RadarCandidateV1[], now = new
         recommendation: hardBlocks.length ? 'Hold until the evidence block is cleared.' : 'Lead with the consequence, prove the mechanism in the first half, and end on the operational implication.',
       } satisfies RankedOpportunity
     })
-    .sort((a, b) => b.growth_score - a.growth_score)
+    .sort((a, b) => Number(b.editorial_eligible) - Number(a.editorial_eligible) || b.growth_score - a.growth_score)
 }
 
 export function selectWeeklyBrief(ranked: RankedOpportunity[]): RankedOpportunity[] {
-  const money = ranked.filter((item) => item.series === 'money_of_ai').slice(0, 3)
-  const built = ranked.filter((item) => item.series === 'built_with_ai').slice(0, 3)
+  const eligible = ranked.filter((item) => item.editorial_eligible)
+  const money = eligible.filter((item) => item.series === 'money_of_ai').slice(0, 3)
+  const built = eligible.filter((item) => item.series === 'built_with_ai').slice(0, 3)
   const selected = new Set([...money, ...built].map((item) => item.candidate.id))
-  const stretch = ranked.filter((item) => !selected.has(item.candidate.id)).slice(0, 2)
+  const stretch = eligible.filter((item) => !selected.has(item.candidate.id)).slice(0, 2)
   return [...money, ...built, ...stretch]
 }
 

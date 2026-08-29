@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mergeRadarFeeds, rankRadarOpportunities, selectWeeklyBrief } from '@mindmake/core'
+import { mergeRadarFeeds, radarEditorialQualityBlocks, rankRadarOpportunities, selectWeeklyBrief } from '@mindmake/core'
 import type { RadarFeedV1 } from '@mindmake/contracts'
 
 function feed(provider: 'mm_ctrl' | 'control_center', candidates: RadarFeedV1['candidates']): RadarFeedV1 {
@@ -19,11 +19,31 @@ describe('radar', () => {
     const ranked = rankRadarOpportunities(candidates, new Date('2026-08-28T10:00:00.000Z'))
     expect(ranked[0]?.editorial_eligible).toBe(false)
     expect(ranked[0]?.hard_blocks[0]).toContain('public evidence')
-    expect(selectWeeklyBrief(ranked)).toHaveLength(1)
+    expect(selectWeeklyBrief(ranked)).toHaveLength(0)
   })
 
   it('routes economic workflow stories to The Money of AI', () => {
     const candidate = { id: 'economic', title: 'AI costs move into workflow design', summary: 'The operating model changes enterprise margin.', source_kind: 'public_signal' as const, sensitivity: 'public' as const, occurred_at: '2026-08-28T09:00:00.000Z', source_urls: ['https://example.com/economics'], corroboration: 2, evidence_status: 'public_grounded' as const, category: 'economics', source_ref_hash: 'economichash' }
     expect(rankRadarOpportunities([candidate], new Date('2026-08-28T10:00:00.000Z'))[0]?.series).toBe('money_of_ai')
+  })
+
+  it('rejects generic guides, weak sources and thin summaries from the weekly brief', () => {
+    const now = new Date('2026-08-29T10:00:00.000Z')
+    const guide = { id: 'guide', title: 'How to Run a Chatbot on Your Own Computer', summary: 'A practical walkthrough for installing and running a private chatbot on a personal computer.', source_kind: 'public_signal' as const, sensitivity: 'public' as const, occurred_at: '2026-08-29T09:00:00.000Z', source_urls: ['https://www.wired.com/story/local-chatbot'], corroboration: 2, evidence_status: 'public_grounded' as const, category: 'governance', source_ref_hash: 'guidehash' }
+    const aggregator = { ...guide, id: 'aggregator', title: 'Claude deletes a developer directory', source_urls: ['https://slashdot.org/story'], source_ref_hash: 'aggregatorhash' }
+    const thin = { ...guide, id: 'thin', title: 'Gemini Transcribe', summary: 'Gemini Transcribe', source_urls: ['https://blog.google/innovation-and-ai/models/gemini'], corroboration: 1, source_ref_hash: 'thinhash' }
+    const appointment = { ...guide, id: 'appointment', title: 'OpenAI appoints a Meta executive to lead a region', summary: 'The leadership change signals a general focus on regional growth and partnerships.', source_urls: ['https://www.bloomberg.com/news/appointment'], source_ref_hash: 'appointmenthash' }
+    expect(radarEditorialQualityBlocks(guide, now)).toContain('generic guide, listicle or service headline is not eligible for the weekly news brief')
+    expect(radarEditorialQualityBlocks(aggregator, now)).toContain('aggregator or discussion surface is not acceptable headline evidence')
+    expect(radarEditorialQualityBlocks(thin, now)).toContain('summary does not state a specific, intelligible consequence')
+    expect(radarEditorialQualityBlocks(appointment, now)).toContain('personnel appointment is not an opportunity without a specific operating or commercial consequence')
+    expect(selectWeeklyBrief(rankRadarOpportunities([guide, aggregator, thin, appointment], now))).toEqual([])
+  })
+
+  it('allows a substantive single-source primary announcement to remain eligible', () => {
+    const candidate = { id: 'primary', title: 'Google releases a new transcription model', summary: 'The release adds timestamped multilingual speech recognition and changes the available local workflow.', source_kind: 'public_signal' as const, sensitivity: 'public' as const, occurred_at: '2026-08-29T09:00:00.000Z', source_urls: ['https://blog.google/innovation-and-ai/models/transcription'], corroboration: 1, evidence_status: 'public_grounded' as const, category: 'model', source_ref_hash: 'primaryhash' }
+    const ranked = rankRadarOpportunities([candidate], new Date('2026-08-29T10:00:00.000Z'))
+    expect(ranked[0]?.editorial_eligible).toBe(true)
+    expect(selectWeeklyBrief(ranked)).toHaveLength(1)
   })
 })

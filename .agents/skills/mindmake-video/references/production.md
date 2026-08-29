@@ -25,7 +25,11 @@ Never substitute chat agreement for the recorded approval.
 
 ## Visual prior
 
-Keep the presenter or guest primary. Use interfaces, evidence, diagrams, headlines, and owned artifacts as supporting beats. The Money of AI is mechanism-led and commercially authoritative. Built With AI is tactile and operational. Use one shared Mindmaker skeleton with distinct accents.
+Keep the presenter or guest primary. Use interfaces, evidence, diagrams, headlines, and owned artifacts as supporting beats. The Money of AI is mechanism-led and commercially authoritative. Built With AI is tactile and operational. Use one shared Mindmaker skeleton with distinct proof motifs and editorial behaviour.
+
+The video brand system is pinned from `krishanraja/mindmake` at the commit recorded in `config/studio.json`. Current source roles are ink and paper grounds, mint for the answer, amber only for something that changed, Archivo for structure, Newsreader for claims, Source Serif 4 for body copy, and IBM Plex Mono for evidence labels, dates, sources and data. Do not reintroduce the legacy blue and lime series accents, generic rounded social cards, ornamental gradients, or a progress bar. Series identity comes from the name, editorial role and proof motif rather than extra colours. A brand-theme change creates a new treatment revision and requires treatment approval even when the underlying layout preset is already approved.
+
+`evidence-kinetic-ribbon-v1` is approved only for Built With AI solo footage. It is a source-agnostic layout preset, not a fixed timeline: retain its lower captions, kinetic selective emphasis, compact evidence ribbon, declared face-avoidance policy, exact screenshot approval and at least one clear final second with Krish unobstructed. Never copy the calibration clip's 7.00 to 11.44 second evidence timing into another job. The evidence begins and ends at the claim boundaries of the new source. Require a per-job treatment preview until automated face-occupancy proof exists, because a safe lower ribbon in one composition can cover a face in another.
 
 Every treatment must make an explicit supporting-visual decision against the spoken claims. Prefer short, timed evidence screenshots, interfaces, owned artifacts, or diagrams that explain the mechanism. Record attribution, source URL, editorial purpose, rights rationale, and approval for every third-party excerpt. If presenter-only footage is genuinely stronger, record why no overlay is needed. Never substitute generic decorative B-roll for missing proof.
 
