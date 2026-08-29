@@ -37,7 +37,7 @@ npm run studio -- transcribe --job <job-id>
 npm run studio -- candidates --job <job-id>
 npm run studio -- candidates --job <job-id> --input <codex-authored-candidate.json>
 npm run studio -- approve --job <job-id> --gate angle --artifact <candidate-json-path>
-npm run studio -- treatment --job <job-id> --candidate <candidate-json-path>
+npm run studio -- treatment --job <job-id> --candidate <candidate-json-path> --overlays <evidence-overlay-plan.json>
 npm run studio -- approve --job <job-id> --gate treatment --artifact <render-manifest-path>
 npm run studio -- render --job <job-id>
 npm run studio -- qa --job <job-id>
@@ -51,7 +51,7 @@ Solo and short-native jobs default the known presenter to Krish; use `--presente
 
 If automatic transcription is uncertain, correct a copy of the `TranscriptDocument` and import it with `studio transcribe --job <job-id> --verified <transcript.json>`. The original content-addressed transcript remains in the job history. Proper nouns, numbers, products, legal wording, and consequential claims remain blocked until the approved candidate ledger records verification.
 
-For source or visual calibration, create the job with `--purpose calibration`. Calibration previews omit series branding and are technically blocked from final rendering, packaging, and upload. Preview renders use the first six seconds at 270x480 and 15 fps, and are content-addressed in the local cache. Use `--preview-seconds <n>` or `--full-preview` deliberately when more footage is needed. Final renders remain 1080x1920 at 30 fps.
+For source or visual calibration, create the job with `--purpose calibration`. Calibration previews omit series branding and are technically blocked from final rendering, packaging, and upload. Preview renders use the first six seconds at 270x480 and 15 fps, and are content-addressed in the local cache. Use `--preview-seconds <n>` or `--full-preview` deliberately when more footage is needed. Add `--high-quality-preview` only after a treatment survives the proxy review; it produces a full-resolution 1080x1920, 30 fps review without converting the calibration job into a publishable final. Final renders remain 1080x1920 at 30 fps.
 
 ## Recovery
 

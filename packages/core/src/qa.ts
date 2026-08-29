@@ -50,6 +50,8 @@ export async function qaVideo(path: string, publicTextPaths: string[] = [], mani
       status: provenance?.exact_word_fidelity ? 'pass' : 'fail',
       detail: provenance?.exact_word_fidelity ? `All ${provenance.caption_token_count} caption tokens are drawn from ${provenance.source_token_count} verified source tokens in edit order.` : 'Captions contain changed, invented, or reordered words.',
     })
+    const overlaysValid = manifest.evidence_overlays.every((overlay) => overlay.start_ms >= 0 && overlay.end_ms <= manifest.duration_ms && overlay.end_ms > overlay.start_ms && overlay.attribution.trim() && overlay.rights_rationale.trim())
+    checks.push({ name: 'evidence_overlays', status: overlaysValid ? 'pass' : 'fail', detail: overlaysValid ? `${manifest.evidence_overlays.length} evidence overlays have bounded timing, attribution, and rights rationale.` : 'An evidence overlay has invalid timing or missing provenance.' })
   }
   for (const textPath of publicTextPaths) checks.push(...publicCopyChecks(await readFile(textPath, 'utf8')))
   return {

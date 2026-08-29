@@ -55,6 +55,8 @@ Use `studio job create --purpose calibration` for analysis-only source calibrati
 
 `studio candidates` without `--input` produces discovery windows only. Codex must author a `CandidateV1` with an exact edit plan and editorial assessment before angle approval. The gate checks removal-only caption wording, semantic and audience-value scores, ending strength, cut boundaries, source-order decisions, and conditional cold-open logic. If the source cannot clear the bar, the candidate remains blocked and carries specific rerecord guidance instead of forcing a video.
 
+Treatments may import a timed `EvidenceOverlayV1` plan with `studio treatment --overlays <plan.json>`. The renderer stages source screenshots beside the clip, records attribution and rights provenance, and supports deterministic clean or kinetic caption personalities. Use `studio render --preview --full-preview --high-quality-preview` only after the low-resolution proxy survives review.
+
 Stdout is JSON. Diagnostics use stderr. Stable failure codes are documented in [operations](docs/OPERATIONS.md).
 
 ## Design

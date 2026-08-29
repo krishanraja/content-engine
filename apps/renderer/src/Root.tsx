@@ -10,11 +10,12 @@ const defaultProps: ShortProps = {
   crop: { x: 0, y: 0, width: 1080, height: 1920 },
   cropKeyframes: [],
   hook: 'A precise opening earns attention.',
-  treatmentStyle: { caption_position: 'lower', caption_scale: 1, hook_card_ms: 0, proof_motif: 'mechanism' },
+  treatmentStyle: { caption_position: 'lower', caption_scale: 1, hook_card_ms: 0, proof_motif: 'mechanism', caption_personality: 'clean' },
   durationMs: 30_000,
   seriesName: 'The Money of AI',
   accent: '#D7FF3F',
   captions: [],
+  evidenceOverlays: [],
 }
 
 export function RemotionRoot() {

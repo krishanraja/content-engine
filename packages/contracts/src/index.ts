@@ -252,6 +252,24 @@ export const AssetLedgerEntrySchema = z.object({
   if (/third[_ -]?party/i.test(asset.rights) && (!asset.attribution?.trim() || !asset.rights_rationale?.trim())) context.addIssue({ code: 'custom', path: ['rights'], message: 'third-party assets require attribution and a rights rationale' })
 })
 
+export const EvidenceOverlayV1Schema = z.object({
+  overlay_id: z.string().min(1),
+  start_ms: z.number().int().nonnegative(),
+  end_ms: z.number().int().positive(),
+  kind: z.enum(['screenshot', 'document', 'diagram']),
+  asset_path: z.string().min(1),
+  title: z.string().min(1).max(90),
+  excerpt: z.string().max(180).optional(),
+  source_label: z.string().min(1).max(80),
+  source_url: z.string().url().optional(),
+  placement: z.enum(['upper', 'center']).default('upper'),
+  fit: z.enum(['contain', 'cover']).default('contain'),
+  attribution: z.string().min(1),
+  rights_rationale: z.string().min(20),
+  approved: z.boolean().default(false),
+}).refine((value) => value.end_ms > value.start_ms, { message: 'evidence overlay must end after it starts' })
+export type EvidenceOverlayV1 = z.infer<typeof EvidenceOverlayV1Schema>
+
 export const RenderManifestV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),
   job_id: z.string(),
@@ -273,8 +291,10 @@ export const RenderManifestV1Schema = z.object({
     caption_scale: z.number().min(0.8).max(1.25),
     hook_card_ms: z.number().int().nonnegative().max(3000),
     proof_motif: z.enum(['mechanism', 'evidence', 'artifact']),
+    caption_personality: z.enum(['clean', 'kinetic']).default('clean'),
   }),
   captions: z.array(CaptionCueSchema),
+  evidence_overlays: z.array(EvidenceOverlayV1Schema).default([]),
   edit_segments: z.array(EditSegmentV1Schema).default([]),
   caption_provenance: z.object({
     source: z.enum(['captions', 'faster_whisper', 'manual']),
