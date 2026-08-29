@@ -161,6 +161,13 @@ export function rendererProps(manifest: RenderManifestV1) {
     seriesName: manifest.branding === 'none' ? '' : PUBLIC_SERIES_NAMES[manifest.series],
     accent: manifest.accent,
     captions: manifest.captions,
-    evidenceOverlays: manifest.evidence_overlays.map((overlay) => ({ ...overlay, presentation: overlay.presentation || 'legacy_overlay' as const, assetFile: basename(overlay.asset_path) })),
+    evidenceOverlays: manifest.evidence_overlays.map((overlay) => ({
+      ...overlay,
+      presentation: overlay.presentation || 'legacy_overlay' as const,
+      assetFile: basename(overlay.asset_path),
+      source_role: overlay.editorial_assessment?.source_role,
+      temporality: overlay.editorial_assessment?.temporality,
+      published_at: overlay.editorial_assessment?.published_at,
+    })),
   }
 }

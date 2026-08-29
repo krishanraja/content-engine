@@ -59,6 +59,7 @@ import {
   readWindowsCredential,
   rebuildIndex,
   recordApproval,
+  rendererImplementationHash,
   renderShort,
   runDoctor,
   selectWeeklyBrief,
@@ -464,7 +465,9 @@ program.command('render')
     if (renderManifest.assets.some((asset) => asset.generated && /evidence|proof/i.test(asset.purpose))) throw new Error('hard truth block: generated illustration cannot be treated as evidence or proof')
     const config = await readJson<{ approved_treatments: string[] }>(pinnedConfigPath(jobManifest))
     if (!options.preview && !config.approved_treatments.includes(renderManifest.treatment_id) && !hasApproval(jobManifest, 'treatment', stage.payload.manifest_hash)) throw new Error('new visual treatment requires treatment approval')
-    const reusable = !options.preview ? await readReusableStage<{ master_path: string; master_hash: string }>(options.job, 'render', { treatment: stage.payload.manifest_hash }, { remotion: '4.0.518' }) : null
+    const rendererHash = await rendererImplementationHash(repoRoot)
+    const renderToolVersions = { remotion: '4.0.518', renderer: rendererHash }
+    const reusable = !options.preview ? await readReusableStage<{ master_path: string; master_hash: string }>(options.job, 'render', { treatment: stage.payload.manifest_hash }, renderToolVersions) : null
     if (reusable) {
       try {
         if (await hashFile(reusable.payload.master_path) === reusable.payload.master_hash) {
@@ -481,7 +484,7 @@ program.command('render')
       out({ job_id: options.job, preview_path: masterPath, preview_hash: masterHash, treatment_manifest_hash: stage.payload.manifest_hash, next_gate: 'approve treatment manifest after pairwise review' })
       return
     }
-    const artifact = await completeStage(options.job, 'render', { master_path: masterPath, master_hash: masterHash, manifest_path: stage.payload.manifest_path }, { treatment: stage.payload.manifest_hash }, { remotion: '4.0.518' })
+    const artifact = await completeStage(options.job, 'render', { master_path: masterPath, master_hash: masterHash, manifest_path: stage.payload.manifest_path }, { treatment: stage.payload.manifest_hash }, renderToolVersions)
     out({ job_id: options.job, master_path: masterPath, master_hash: masterHash, artifact_hash: artifact.artifact_hash })
   })
 

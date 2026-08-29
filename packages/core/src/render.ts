@@ -8,10 +8,22 @@ import { jobPath } from './paths.js'
 import { rendererProps } from './treatment.js'
 import { run } from './process.js'
 import { remotionLicenceEligible } from './doctor.js'
-import { hashValue } from './hash.js'
+import { hashFile, hashPath, hashValue } from './hash.js'
 import { studioPaths } from './paths.js'
 
 const REMOTION_VERSION = '4.0.518'
+
+export async function rendererImplementationHash(repoRoot: string): Promise<string> {
+  return hashValue({
+    renderer_source: await hashPath(join(repoRoot, 'apps', 'renderer', 'src')),
+    renderer_props: await hashFile(join(repoRoot, 'packages', 'core', 'src', 'treatment.ts')),
+    dependencies: await hashFile(join(repoRoot, 'package-lock.json')),
+  })
+}
+
+export function renderCacheKey(manifest: unknown, profile: string, rendererHash: string): string {
+  return hashValue({ manifest, profile, renderer_hash: rendererHash, audio_normalization: 'loudnorm-two-pass-v2-aac-headroom' })
+}
 
 export function loudnormSecondPassFilter(stderr: string): string {
   const json = stderr.match(/\{\s*"input_i"[\s\S]*?\}/)?.[0]
@@ -74,7 +86,8 @@ export async function renderShort(repoRoot: string, manifest: RenderManifestV1, 
     evidence_overlays: manifest.evidence_overlays.filter((overlay) => overlay.start_ms < effectiveDurationMs).map((overlay) => ({ ...overlay, end_ms: Math.min(overlay.end_ms, effectiveDurationMs) })),
   }
   const previewProfile = previewScale === 1 ? 'review-hq-v3-30fps' : 'review-proxy-v5-15fps'
-  const previewKey = hashValue({ manifest: renderManifest, profile: preview ? previewProfile : 'master-v3', audio_normalization: 'loudnorm-two-pass-v2-aac-headroom' }).slice(0, 10)
+  const rendererHash = await rendererImplementationHash(repoRoot)
+  const previewKey = renderCacheKey(renderManifest, preview ? previewProfile : 'master-v3', rendererHash).slice(0, 10)
   const suffix = preview ? `.preview-${previewScale === 1 ? 'hq' : 'proxy'}-${Math.ceil(effectiveDurationMs / 1000)}s-${previewKey}` : ''
   const outputPath = join(jobPath(manifest.job_id), 'renders', `${manifest.treatment_id}${suffix}.mp4`)
   const rawPath = join(jobPath(manifest.job_id), 'renders', `${manifest.treatment_id}${suffix}.raw.mp4`)
