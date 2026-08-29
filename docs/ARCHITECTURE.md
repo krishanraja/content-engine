@@ -33,7 +33,7 @@ The system stores facts, inferences, and judgments separately. Proper nouns, pro
 ## Deterministic media decisions
 
 - Input timing is normalized to constant 30 fps and 48 kHz audio.
-- The manifest records every source segment and final order, exact trim, crop, caption cues and personality, timed evidence overlays, asset rights and attribution, series colour, and fixed seed.
+- The manifest records every source segment and final order, exact trim, crop, caption cues and personality, timed evidence beats, their viewer intent and presentation mode, asset rights and attribution, series colour, and fixed seed.
 - Inter 800 is pinned through npm rather than relying on a host font.
 - Source audio is transcribed once with faster-whisper INT8 and word confidence. Project vocabulary is passed as transcription context. Approved wording reuses those timings across treatments.
 - Final audio uses measured two-pass normalization toward -14 LUFS with pre-codec headroom for a true peak at or below -1 dBTP.

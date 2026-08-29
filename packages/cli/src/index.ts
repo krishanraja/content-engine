@@ -29,6 +29,7 @@ import {
   confirmFeedback,
   createDraftPackage,
   createContactSheet,
+  prepareEvidenceApprovalPacket,
   createExperiment,
   createJob,
   createTreatment,
@@ -67,6 +68,7 @@ import {
   trackFaceCrops,
   uploadPrivateYoutubeVideo,
   verifyFinalForAnalytics,
+  verifyEvidenceApprovalPacket,
   validateEditorialCandidate,
   validateShortNativeEditorialCandidate,
 } from '@mindmake/core'
@@ -317,6 +319,8 @@ program.command('approve')
   .option('--actor <actor>', 'krish, codex, or system', 'krish')
   .action(async (options) => {
     const gate = ApprovalGateSchema.parse(options.gate)
+    const actor = options.actor as 'krish' | 'codex' | 'system'
+    if (!['krish', 'codex', 'system'].includes(actor)) throw new Error('actor must be krish, codex, or system')
     if (gate === 'angle') {
       let candidate: ReturnType<typeof CandidateV1Schema.parse>
       try { candidate = CandidateV1Schema.parse(await readJson(options.artifact)) }
@@ -339,11 +343,16 @@ program.command('approve')
       if (hardBlocks.length && options.decision !== 'rejected') throw new Error(`hard editorial block cannot be overridden: ${hardBlocks.join('; ')}`)
       if (candidate.challenge.soft_blocks.length && options.decision === 'approved') throw new Error('soft editorial blocks require --decision override and a recorded --reason')
     }
+    if (gate === 'evidence') {
+      let packet: Awaited<ReturnType<typeof verifyEvidenceApprovalPacket>>
+      try { packet = await verifyEvidenceApprovalPacket(options.artifact) }
+      catch (error) { throw new Error(`evidence approval requires an intact EvidenceApprovalPacketV1: ${error instanceof Error ? error.message : String(error)}`) }
+      if (packet.job_id !== options.job) throw new Error('evidence packet belongs to a different job')
+      if (options.decision !== 'rejected' && actor !== 'krish') throw new Error('evidence screenshots require Krish approval')
+    }
     const artifactHash = await existingFileHashOrValue(options.artifact)
-    const actor = options.actor as 'krish' | 'codex' | 'system'
-    if (!['krish', 'codex', 'system'].includes(actor)) throw new Error('actor must be krish, codex, or system')
     const manifest = await recordApproval(options.job, gate, options.decision, artifactHash, options.reason, actor)
-    const stage = gate === 'angle' ? 'candidates' : gate === 'treatment' ? 'treatment' : 'render'
+    const stage = gate === 'angle' ? 'candidates' : gate === 'final' ? 'render' : 'treatment'
     const feedbackEvent = await captureFeedback({
       jobId: options.job,
       artifactId: artifactHash,
@@ -357,11 +366,47 @@ program.command('approve')
     out({ job: manifest, feedback: feedbackEvent })
   })
 
+const evidence = program.command('evidence')
+evidence.command('prepare')
+  .requiredOption('--job <jobId>')
+  .requiredOption('--candidate <path>')
+  .requiredOption('--overlays <path>', 'orchestrated evidence overlay JSON object or array')
+  .requiredOption('--strategy <summary>', 'plain-language account of what the viewer should see and why')
+  .option('--allow-evidence-ending', 'allow the video to end on evidence rather than returning to Krish')
+  .action(async (options) => {
+    const manifest = await loadJob(options.job)
+    const candidate = CandidateV1Schema.parse(await readJson(options.candidate))
+    const candidateHash = await hashFile(options.candidate)
+    if (!hasApproval(manifest, 'angle', candidateHash)) throw new Error('the selected candidate does not have angle approval')
+    const overlayInput = await readJson(options.overlays)
+    const overlays = Array.isArray(overlayInput) ? overlayInput : [overlayInput]
+    const durationMs = candidate.edit_plan?.total_duration_ms
+      ?? (candidate.start_ms !== undefined && candidate.end_ms !== undefined ? candidate.end_ms - candidate.start_ms : 0)
+    if (durationMs <= 0) throw new Error('the selected candidate needs an exact duration before evidence can be orchestrated')
+    const prepared = await prepareEvidenceApprovalPacket({
+      jobId: options.job,
+      candidateHash,
+      overlays,
+      durationMs,
+      strategySummary: options.strategy,
+      endingReturnToPresenter: !options.allowEvidenceEnding,
+    })
+    out({
+      job_id: options.job,
+      packet_path: prepared.packetPath,
+      packet_hash: prepared.packetHash,
+      contact_sheet_path: prepared.packet.contact_sheet_path,
+      screenshots: prepared.packet.items.map((item, index) => ({ order: index + 1, overlay_id: item.overlay.overlay_id, path: item.overlay.asset_path, sha256: item.asset_sha256, source_url: item.overlay.source_url })),
+      next_gate: `studio approve --job ${options.job} --gate evidence --artifact ${prepared.packetPath}`,
+    })
+  })
+
 program.command('treatment')
   .requiredOption('--job <jobId>')
   .requiredOption('--candidate <path>')
   .option('--treatment <id>', 'named treatment', 'presenter-evidence-v1')
-  .option('--overlays <path>', 'EvidenceOverlayV1 JSON object or array with timed supporting visuals')
+  .option('--evidence-packet <path>', 'an exact EvidenceApprovalPacketV1 approved at the evidence gate')
+  .option('--overlays <path>', 'deprecated; prepare and approve an evidence packet instead')
   .option('--face-track', 'use optional local presenter face tracking')
   .action(async (options) => {
     const manifest = await loadJob(options.job)
@@ -370,8 +415,17 @@ program.command('treatment')
     const normalized = await readStageArtifact<{ output_path: string; source_path?: string }>(options.job, 'normalize')
     const config = await readJson<{ series: Record<string, { accent: string }>; transcription: { local_model: string } }>(pinnedConfigPath(manifest))
     const sourceTranscript = (await readStageArtifact<Parameters<typeof generateCandidates>[1]>(options.job, 'transcript')).payload
-    const overlayInput = options.overlays ? await readJson(options.overlays) : []
-    const evidenceOverlays = (Array.isArray(overlayInput) ? overlayInput : [overlayInput]).map((overlay) => EvidenceOverlayV1Schema.parse(overlay))
+    if (options.overlays) throw new Error('direct evidence overlays are not accepted; run studio evidence prepare and approve the exact packet first')
+    let evidenceOverlays: Array<ReturnType<typeof EvidenceOverlayV1Schema.parse>> = []
+    let evidencePacketHash: string | undefined
+    if (options.evidencePacket) {
+      const packet = await verifyEvidenceApprovalPacket(options.evidencePacket)
+      evidencePacketHash = await hashFile(options.evidencePacket)
+      if (packet.job_id !== options.job) throw new Error('evidence packet belongs to a different job')
+      if (packet.candidate_hash !== candidateHash) throw new Error('evidence packet belongs to a different candidate revision')
+      if (!hasApproval(manifest, 'evidence', evidencePacketHash, 'krish')) throw new Error('the exact evidence packet does not have Krish approval')
+      evidenceOverlays = packet.items.map((item) => EvidenceOverlayV1Schema.parse({ ...item.overlay, approved: true }))
+    }
     const treatment = await createTreatment(
       options.job,
       options.candidate,
@@ -387,7 +441,7 @@ program.command('treatment')
     await mkdir(dirname(path), { recursive: true })
     await writeFile(path, `${JSON.stringify(treatment, null, 2)}\n`, 'utf8')
     const manifestHash = await hashFile(path)
-    const artifact = await completeStage(options.job, 'treatment', { manifest_path: path, manifest_hash: manifestHash, candidate_path: resolve(options.candidate), evidence_overlay_count: evidenceOverlays.length }, { candidate: candidateHash, normalize: normalized.artifact_hash, ...(options.overlays ? { overlays: await hashFile(options.overlays) } : {}) }, { treatment: options.treatment })
+    const artifact = await completeStage(options.job, 'treatment', { manifest_path: path, manifest_hash: manifestHash, candidate_path: resolve(options.candidate), evidence_overlay_count: evidenceOverlays.length, ...(options.evidencePacket ? { evidence_packet_path: resolve(options.evidencePacket) } : {}) }, { candidate: candidateHash, normalize: normalized.artifact_hash, ...(evidencePacketHash ? { evidence_packet: evidencePacketHash } : {}) }, { treatment: options.treatment })
     out({ job_id: options.job, manifest_path: path, manifest_hash: manifestHash, artifact_hash: artifact.artifact_hash })
   })
 

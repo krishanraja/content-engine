@@ -14,6 +14,10 @@ export const ShortPropsSchema = z.object({
   captions: z.array(z.object({ start_ms: z.number(), end_ms: z.number(), text: z.string(), emphasis: z.array(z.string()) })),
   evidenceOverlays: z.array(z.object({
     overlay_id: z.string(), start_ms: z.number(), end_ms: z.number(), kind: z.enum(['screenshot', 'document', 'diagram']), assetFile: z.string(), title: z.string(), excerpt: z.string().optional(), source_label: z.string(), placement: z.enum(['upper', 'center']), fit: z.enum(['contain', 'cover']),
+    viewer_intent: z.enum(['maintain_connection', 'verify_claim', 'inspect_artifact', 'understand_mechanism']).optional(),
+    presentation: z.enum(['legacy_overlay', 'presenter_primary', 'sidecar', 'evidence_cutaway']),
+    anchor: z.enum(['top_left', 'top_right', 'left', 'right', 'center']).optional(),
+    face_policy: z.enum(['avoid', 'intentional_substitution']).optional(),
   })),
 })
 

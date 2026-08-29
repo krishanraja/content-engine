@@ -37,7 +37,9 @@ npm run studio -- transcribe --job <job-id>
 npm run studio -- candidates --job <job-id>
 npm run studio -- candidates --job <job-id> --input <codex-authored-candidate.json>
 npm run studio -- approve --job <job-id> --gate angle --artifact <candidate-json-path>
-npm run studio -- treatment --job <job-id> --candidate <candidate-json-path> --overlays <evidence-overlay-plan.json>
+npm run studio -- evidence prepare --job <job-id> --candidate <candidate-json-path> --overlays <evidence-overlay-plan.json> --strategy "What the viewer should see and why"
+npm run studio -- approve --job <job-id> --gate evidence --artifact <evidence-packet-path>
+npm run studio -- treatment --job <job-id> --candidate <candidate-json-path> --evidence-packet <evidence-packet-path>
 npm run studio -- approve --job <job-id> --gate treatment --artifact <render-manifest-path>
 npm run studio -- render --job <job-id>
 npm run studio -- qa --job <job-id>

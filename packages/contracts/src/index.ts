@@ -27,7 +27,7 @@ export const StageNameSchema = z.enum([
 ])
 export type StageName = z.infer<typeof StageNameSchema>
 
-export const ApprovalGateSchema = z.enum(['angle', 'treatment', 'final'])
+export const ApprovalGateSchema = z.enum(['angle', 'evidence', 'treatment', 'final'])
 export type ApprovalGate = z.infer<typeof ApprovalGateSchema>
 
 export const JobSourceSchema = z.object({
@@ -262,6 +262,10 @@ export const EvidenceOverlayV1Schema = z.object({
   excerpt: z.string().max(180).optional(),
   source_label: z.string().min(1).max(80),
   source_url: z.string().url().optional(),
+  viewer_intent: z.enum(['maintain_connection', 'verify_claim', 'inspect_artifact', 'understand_mechanism']).optional(),
+  presentation: z.enum(['presenter_primary', 'sidecar', 'evidence_cutaway']).optional(),
+  anchor: z.enum(['top_left', 'top_right', 'left', 'right', 'center']).optional(),
+  face_policy: z.enum(['avoid', 'intentional_substitution']).optional(),
   placement: z.enum(['upper', 'center']).default('upper'),
   fit: z.enum(['contain', 'cover']).default('contain'),
   attribution: z.string().min(1),
@@ -269,6 +273,39 @@ export const EvidenceOverlayV1Schema = z.object({
   approved: z.boolean().default(false),
 }).refine((value) => value.end_ms > value.start_ms, { message: 'evidence overlay must end after it starts' })
 export type EvidenceOverlayV1 = z.infer<typeof EvidenceOverlayV1Schema>
+
+export const OrchestratedEvidenceOverlayV1Schema = EvidenceOverlayV1Schema.superRefine((value, context) => {
+  for (const field of ['viewer_intent', 'presentation', 'anchor', 'face_policy'] as const) {
+    if (!value[field]) context.addIssue({ code: 'custom', path: [field], message: `approved evidence requires ${field}` })
+  }
+  if (value.presentation === 'evidence_cutaway' && value.face_policy !== 'intentional_substitution') {
+    context.addIssue({ code: 'custom', path: ['face_policy'], message: 'an evidence cutaway must explicitly declare intentional presenter substitution' })
+  }
+  if (value.presentation && value.presentation !== 'evidence_cutaway' && value.face_policy !== 'avoid') {
+    context.addIssue({ code: 'custom', path: ['face_policy'], message: 'presenter-visible evidence must explicitly avoid the presenter' })
+  }
+})
+export type OrchestratedEvidenceOverlayV1 = z.infer<typeof OrchestratedEvidenceOverlayV1Schema>
+
+export const EvidenceApprovalPacketV1Schema = z.object({
+  schema_version: z.literal(SCHEMA_VERSION),
+  packet_id: z.string().min(1),
+  job_id: z.string().min(1),
+  candidate_hash: z.string().regex(/^[a-f0-9]{64}$/),
+  duration_ms: z.number().int().positive(),
+  created_at: z.string(),
+  strategy_summary: z.string().min(20),
+  ending_return_to_presenter: z.boolean().default(true),
+  contact_sheet_path: z.string().min(1),
+  contact_sheet_sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  items: z.array(z.object({
+    overlay: OrchestratedEvidenceOverlayV1Schema,
+    asset_sha256: z.string().regex(/^[a-f0-9]{64}$/),
+    pixel_width: z.number().int().positive(),
+    pixel_height: z.number().int().positive(),
+  })).min(1).max(8),
+})
+export type EvidenceApprovalPacketV1 = z.infer<typeof EvidenceApprovalPacketV1Schema>
 
 export const RenderManifestV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),
@@ -352,7 +389,7 @@ export const FeedbackEventV1Schema = z.object({
   origin: z.enum(['user', 'codex', 'system']).default('user'),
   before_hash: z.string(),
   after_hash: z.string().optional(),
-  delta_features: z.array(z.object({ feature: z.string(), before: z.unknown(), after: z.unknown() })),
+  delta_features: z.array(z.object({ feature: z.string(), before: z.unknown().optional(), after: z.unknown().optional() })),
   user_note: z.string().optional(),
   inferred_rationale: z.string(),
   confidence: z.number().min(0).max(1),

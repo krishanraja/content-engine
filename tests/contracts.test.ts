@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { EvidenceOverlayV1Schema, PUBLIC_SERIES_NAMES, RadarFeedV1Schema, normalizeSeries } from '@mindmake/contracts'
+import { ApprovalGateSchema, EvidenceOverlayV1Schema, OrchestratedEvidenceOverlayV1Schema, PUBLIC_SERIES_NAMES, RadarFeedV1Schema, normalizeSeries } from '@mindmake/contracts'
 import { readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -32,5 +32,12 @@ describe('canonical series contracts', () => {
     expect(EvidenceOverlayV1Schema.parse(overlay).placement).toBe('upper')
     expect(() => EvidenceOverlayV1Schema.parse({ ...overlay, end_ms: 500 })).toThrow('evidence overlay must end after it starts')
     expect(() => EvidenceOverlayV1Schema.parse({ ...overlay, attribution: '' })).toThrow()
+    expect(() => OrchestratedEvidenceOverlayV1Schema.parse(overlay)).toThrow('approved evidence requires viewer_intent')
+    expect(OrchestratedEvidenceOverlayV1Schema.parse({ ...overlay, viewer_intent: 'verify_claim', presentation: 'evidence_cutaway', anchor: 'center', face_policy: 'intentional_substitution' }).presentation).toBe('evidence_cutaway')
+    expect(() => OrchestratedEvidenceOverlayV1Schema.parse({ ...overlay, viewer_intent: 'verify_claim', presentation: 'evidence_cutaway', anchor: 'center', face_policy: 'avoid' })).toThrow('intentional presenter substitution')
+  })
+
+  it('has a separate evidence approval gate', () => {
+    expect(ApprovalGateSchema.parse('evidence')).toBe('evidence')
   })
 })

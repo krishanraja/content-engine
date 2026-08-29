@@ -37,6 +37,7 @@ studio ingest
 studio transcribe
 studio candidates
 studio approve
+studio evidence prepare
 studio treatment
 studio render
 studio qa
@@ -55,7 +56,7 @@ Use `studio job create --purpose calibration` for analysis-only source calibrati
 
 `studio candidates` without `--input` produces discovery windows only. Codex must author a `CandidateV1` with an exact edit plan and editorial assessment before angle approval. The gate checks removal-only caption wording, semantic and audience-value scores, ending strength, cut boundaries, source-order decisions, and conditional cold-open logic. If the source cannot clear the bar, the candidate remains blocked and carries specific rerecord guidance instead of forcing a video.
 
-Treatments may import a timed `EvidenceOverlayV1` plan with `studio treatment --overlays <plan.json>`. The renderer stages source screenshots beside the clip, records attribution and rights provenance, and supports deterministic clean or kinetic caption personalities. Use `studio render --preview --full-preview --high-quality-preview` only after the low-resolution proxy survives review.
+Evidence is a separate approval gate. Run `studio evidence prepare --candidate <candidate.json> --overlays <plan.json> --strategy <summary>` to stage exact, content-addressed screenshots and create a contact sheet. After Krish approves that packet hash, pass it to `studio treatment --evidence-packet <packet.json>`. Direct overlays fail closed. Each beat declares whether the viewer should stay with Krish, share the frame with a simple artifact, or deliberately cut away to proof. The renderer records attribution and rights provenance and supports deterministic clean or kinetic captions. Use `studio render --preview --full-preview --high-quality-preview` only after the low-resolution proxy survives review.
 
 Stdout is JSON. Diagnostics use stderr. Stable failure codes are documented in [operations](docs/OPERATIONS.md).
 
