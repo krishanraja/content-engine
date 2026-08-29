@@ -17,6 +17,7 @@ import {
 import {
   archiveJob,
   analyzeMediaArtifactForFeedback,
+  applyPresenterIdentityCorrections,
   assessTranscriptQuality,
   applyCorpusNovelty,
   benchmarkTranscription,
@@ -65,6 +66,8 @@ import {
   trackFaceCrops,
   uploadPrivateYoutubeVideo,
   verifyFinalForAnalytics,
+  validateEditorialCandidate,
+  validateShortNativeEditorialCandidate,
 } from '@mindmake/core'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
@@ -110,16 +113,21 @@ job.command('create')
   .requiredOption('--mode <mode>')
   .requiredOption('--source <ref>')
   .option('--purpose <purpose>', 'production or calibration', 'production')
+  .option('--presenter <name>', 'known primary presenter identity')
   .option('--source-kind <kind>')
   .option('--rights <rights>', 'owned, permissioned, commentary_exception, or unverified', 'unverified')
   .option('--consent-note <note>')
   .action(async (options) => {
     await ensureRuntime()
+    const mode = SourceModeSchema.parse(options.mode)
+    const studioConfig = await readJson<{ identity?: { presenter_name: string; default_presenter_modes: string[] } }>(configPath)
+    const presenterName = options.presenter || (studioConfig.identity?.default_presenter_modes.includes(mode) ? studioConfig.identity.presenter_name : undefined)
     out(await createJob({
       series: normalizeSeries(options.series),
-      mode: SourceModeSchema.parse(options.mode),
+      mode,
       sourceRef: options.source,
       purpose: JobPurposeSchema.parse(options.purpose),
+      presenterName,
       sourceKind: options.sourceKind,
       rights: options.rights,
       consentNote: options.consentNote,
@@ -159,7 +167,7 @@ program.command('transcribe')
   .action(async (options) => {
     if (options.captions && options.verified) throw new Error('choose either --captions or --verified, not both')
     const manifest = await loadJob(options.job)
-    const config = await readJson<{ transcription: { local_model: string; vocabulary?: string[] } }>(pinnedConfigPath(manifest))
+    const config = await readJson<{ transcription: { local_model: string; vocabulary?: string[] }; identity?: { presenter_name: string; asr_aliases: string[] } }>(pinnedConfigPath(manifest))
     const model = options.model || config.transcription.local_model
     const normalized = await readStageArtifact<{ output_path: string; source_path?: string; probe: { file_hash: string } }>(options.job, 'normalize')
     const outputPath = join(jobPath(options.job), 'transcript', 'transcript.json')
@@ -174,9 +182,12 @@ program.command('transcribe')
       out({ job_id: options.job, transcript_path: outputPath, artifact_hash: reusable.artifact_hash, reused: true })
       return
     }
-    const transcript = options.verified
+    let transcript = options.verified
       ? { ...await readJson<Parameters<typeof assessTranscriptQuality>[0]>(options.verified), source: 'manual' as const, verified: true }
       : options.captions ? await loadCaptionTranscript(options.captions) : await transcribeMedia(repoRoot, normalized.payload.source_path || normalized.payload.output_path, outputPath, model, config.transcription.vocabulary || []) as Parameters<typeof assessTranscriptQuality>[0]
+    if (manifest.presenter_name && config.identity && manifest.presenter_name.toLowerCase() === config.identity.presenter_name.toLowerCase()) {
+      transcript = applyPresenterIdentityCorrections(transcript, config.identity.presenter_name, config.identity.asr_aliases)
+    }
     transcript.quality = assessTranscriptQuality(transcript)
     await mkdir(dirname(outputPath), { recursive: true })
     await writeFile(outputPath, `${JSON.stringify(transcript, null, 2)}\n`, 'utf8')
@@ -187,24 +198,30 @@ program.command('transcribe')
 program.command('candidates')
   .requiredOption('--job <jobId>')
   .option('--limit <number>', 'maximum candidates', '8')
-  .option('--input <path>', 'authored CandidateV1 JSON or array for short-native work')
+  .option('--input <path>', 'Codex-authored CandidateV1 JSON or array with editorial judgement')
   .action(async (options) => {
     const manifest = await loadJob(options.job)
     if (manifest.mode === 'short_native') {
       if (!options.input) throw new Error('short-native candidates require --input with Codex-authored CandidateV1 JSON')
       const parsed = await readJson(options.input)
-      const candidates = (Array.isArray(parsed) ? parsed : [parsed]).map((candidate) => CandidateV1Schema.parse(candidate))
-      for (const candidate of candidates) {
+      const config = await readJson<{ editorial_thresholds: Parameters<typeof validateShortNativeEditorialCandidate>[1] }>(pinnedConfigPath(manifest))
+      const candidates = (Array.isArray(parsed) ? parsed : [parsed]).map((value) => {
+        const candidate = CandidateV1Schema.parse(value)
         if (candidate.job_id !== manifest.job_id || candidate.series !== manifest.series || candidate.mode !== manifest.mode) throw new Error('short-native candidate job, series, and mode must match the job manifest')
-      }
+        const validation = validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name)
+        return CandidateV1Schema.parse({
+          ...candidate,
+          challenge: {
+            ...candidate.challenge,
+            hard_blocks: [...new Set([...candidate.challenge.hard_blocks, ...validation.hard_blocks])],
+            soft_blocks: [...new Set([...candidate.challenge.soft_blocks, ...validation.soft_blocks])],
+            recommendation: validation.hard_blocks.length ? 'Do not record. Revise or reject this script before creating a recording brief.' : candidate.challenge.recommendation,
+          },
+        })
+      })
       const briefHash = await existingFileHashOrValue(manifest.source.ref)
       const briefArtifact = await completeStage(manifest.job_id, 'brief', { source_ref: manifest.source.ref, source_ref_hash: sourceReferenceHash(manifest.source.ref) }, { source: briefHash }, { author: 'codex' })
       const scriptArtifact = await completeStage(manifest.job_id, 'script', { candidates }, { brief: briefArtifact.artifact_hash }, { author: 'codex' })
-      const recordingBrief = {
-        setup: 'Record 30 to 45 minutes in the approved presenter setup at constant framing and clean 48 kHz audio.',
-        takes: candidates.map((candidate) => ({ candidate_id: candidate.candidate_id, hook: candidate.hook, script: candidate.transcript, delivery: 'Land the hook in the first beat, pause before the mechanism, and finish on the concrete implication.' })),
-      }
-      const recordingArtifact = await completeStage(manifest.job_id, 'recording_brief', recordingBrief, { script: scriptArtifact.artifact_hash }, { generator: 'recording-brief-v1' })
       const directory = join(jobPath(manifest.job_id), 'candidates')
       await mkdir(directory, { recursive: true })
       const saved = []
@@ -216,10 +233,57 @@ program.command('candidates')
       const candidatesArtifact = await completeStage(manifest.job_id, 'candidates', { candidates: saved }, { script: scriptArtifact.artifact_hash }, { validator: 'candidate-v1' })
       const claims = candidates.flatMap((candidate) => candidate.claims.map((claim) => ({ candidate_id: candidate.candidate_id, ...claim })))
       const claimsArtifact = await completeStage(manifest.job_id, 'claims', { claims }, { candidates: candidatesArtifact.artifact_hash }, { extractor: 'mindmake-claims-v1' })
+      const recordable = candidates.filter((candidate) => !candidate.challenge.hard_blocks.length)
+      if (!recordable.length) {
+        out({
+          job_id: manifest.job_id,
+          candidates_artifact_hash: candidatesArtifact.artifact_hash,
+          claims_artifact_hash: claimsArtifact.artifact_hash,
+          candidates: saved,
+          recording_brief: null,
+          next_action: 'No script passed the editorial floor. Revise it using the candidate blocks or explicit rerecord guidance; do not record for content cadence.',
+        })
+        return
+      }
+      const recordingBrief = {
+        setup: 'Record 30 to 45 minutes in the approved presenter setup at constant framing and clean 48 kHz audio.',
+        takes: recordable.map((candidate) => ({ candidate_id: candidate.candidate_id, hook: candidate.hook, script: candidate.transcript, delivery: 'Land the hook in the first beat, pause before the mechanism, and finish on the concrete implication.' })),
+      }
+      const recordingArtifact = await completeStage(manifest.job_id, 'recording_brief', recordingBrief, { script: scriptArtifact.artifact_hash }, { generator: 'recording-brief-v2' })
       out({ job_id: manifest.job_id, recording_brief: recordingBrief, recording_artifact_hash: recordingArtifact.artifact_hash, candidates_artifact_hash: candidatesArtifact.artifact_hash, claims_artifact_hash: claimsArtifact.artifact_hash, candidates: saved })
       return
     }
     const transcript = await readStageArtifact<Parameters<typeof generateCandidates>[1]>(options.job, 'transcript')
+    if (options.input) {
+      const config = await readJson<{ editorial_thresholds: Parameters<typeof validateEditorialCandidate>[3] }>(pinnedConfigPath(manifest))
+      const parsed = await readJson(options.input)
+      const authored = (Array.isArray(parsed) ? parsed : [parsed]).map((value) => CandidateV1Schema.parse(value))
+      const candidates = authored.map((candidate) => {
+        const validation = validateEditorialCandidate(candidate, transcript.payload, manifest, config.editorial_thresholds)
+        return CandidateV1Schema.parse({
+          ...candidate,
+          challenge: {
+            ...candidate.challenge,
+            hard_blocks: [...new Set([...candidate.challenge.hard_blocks, ...validation.hard_blocks])],
+            soft_blocks: [...new Set([...candidate.challenge.soft_blocks, ...validation.soft_blocks])],
+            recommendation: validation.hard_blocks.length ? 'Do not proceed. Revise, reject, or request a specific rerecord.' : candidate.challenge.recommendation,
+          },
+        })
+      })
+      const directory = join(jobPath(options.job), 'candidates')
+      await mkdir(directory, { recursive: true })
+      const saved = []
+      for (const candidate of candidates) {
+        const path = join(directory, `${candidate.candidate_id}.json`)
+        await writeFile(path, `${JSON.stringify(candidate, null, 2)}\n`, 'utf8')
+        saved.push({ path, hash: await hashFile(path), candidate })
+      }
+      const artifact = await completeStage(options.job, 'candidates', { candidates: saved }, { transcript: transcript.artifact_hash }, { generator: 'codex-editorial-v1' })
+      const claims = candidates.flatMap((candidate) => candidate.claims.map((claim) => ({ candidate_id: candidate.candidate_id, ...claim })))
+      const claimsArtifact = await completeStage(options.job, 'claims', { claims }, { candidates: artifact.artifact_hash }, { extractor: 'mindmake-claims-v2' })
+      out({ job_id: options.job, artifact_hash: artifact.artifact_hash, claims_artifact_hash: claimsArtifact.artifact_hash, candidates: saved })
+      return
+    }
     const reusable = await readReusableStage<{ candidates: Array<{ candidate: ReturnType<typeof CandidateV1Schema.parse> }> }>(options.job, 'candidates', { transcript: transcript.artifact_hash }, { generator: 'mindmake-heuristic-v2' })
     if (reusable) {
       const claims = reusable.payload.candidates.flatMap((item) => item.candidate.claims.map((claim) => ({ candidate_id: item.candidate.candidate_id, ...claim })))
@@ -261,6 +325,15 @@ program.command('approve')
         ...(jobManifest.source.rights === 'unverified' ? ['source rights are unverified'] : []),
         ...(candidate.claims.some((claim) => claim.kind === 'fact' && claim.verification !== 'verified') ? ['factual claims remain unverified'] : []),
       ]
+      if (jobManifest.mode !== 'short_native') {
+        const transcript = await readStageArtifact<Parameters<typeof generateCandidates>[1]>(options.job, 'transcript')
+        const config = await readJson<{ editorial_thresholds: Parameters<typeof validateEditorialCandidate>[3] }>(pinnedConfigPath(jobManifest))
+        const validation = validateEditorialCandidate(candidate, transcript.payload, jobManifest, config.editorial_thresholds)
+        independentHardBlocks.push(...validation.hard_blocks)
+      } else {
+        const config = await readJson<{ editorial_thresholds: Parameters<typeof validateShortNativeEditorialCandidate>[1] }>(pinnedConfigPath(jobManifest))
+        independentHardBlocks.push(...validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, jobManifest.presenter_name).hard_blocks)
+      }
       const hardBlocks = [...new Set([...candidate.challenge.hard_blocks, ...independentHardBlocks])]
       if (hardBlocks.length && options.decision !== 'rejected') throw new Error(`hard editorial block cannot be overridden: ${hardBlocks.join('; ')}`)
       if (candidate.challenge.soft_blocks.length && options.decision === 'approved') throw new Error('soft editorial blocks require --decision override and a recorded --reason')

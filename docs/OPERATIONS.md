@@ -35,6 +35,7 @@ npm run studio -- job create --series money_of_ai --mode extract --source "C:\me
 npm run studio -- ingest --job <job-id>
 npm run studio -- transcribe --job <job-id>
 npm run studio -- candidates --job <job-id>
+npm run studio -- candidates --job <job-id> --input <codex-authored-candidate.json>
 npm run studio -- approve --job <job-id> --gate angle --artifact <candidate-json-path>
 npm run studio -- treatment --job <job-id> --candidate <candidate-json-path>
 npm run studio -- approve --job <job-id> --gate treatment --artifact <render-manifest-path>
@@ -43,6 +44,10 @@ npm run studio -- qa --job <job-id>
 npm run studio -- approve --job <job-id> --gate final --artifact <master-video-path>
 npm run studio -- package linkedin --job <job-id> --archive
 ```
+
+The first candidates call creates discovery material only. Inspect the verified transcript and author the strongest continuous or stitched `CandidateV1`, including `edit_plan`, `editorial`, and any rerecord guidance, then import it with `--input`. Angle approval re-runs the gate from the transcript, pinned configuration, and job identity, so editing away stored blocks does not bypass the policy.
+
+Solo and short-native jobs default the known presenter to Krish; use `--presenter` only when the source has another verified primary speaker. Identity correction is limited to self-introduction context so a real guest named Chris remains Chris.
 
 If automatic transcription is uncertain, correct a copy of the `TranscriptDocument` and import it with `studio transcribe --job <job-id> --verified <transcript.json>`. The original content-addressed transcript remains in the job history. Proper nouns, numbers, products, legal wording, and consequential claims remain blocked until the approved candidate ledger records verification.
 

@@ -45,6 +45,11 @@ export async function qaVideo(path: string, publicTextPaths: string[] = [], mani
       status: provenance?.verified ? 'pass' : 'fail',
       detail: provenance?.verified ? `Caption wording is tied to the approved transcript artifact (${provenance.source}).` : 'Caption wording has not been verified against an approved transcript artifact.',
     })
+    checks.push({
+      name: 'caption_word_fidelity',
+      status: provenance?.exact_word_fidelity ? 'pass' : 'fail',
+      detail: provenance?.exact_word_fidelity ? `All ${provenance.caption_token_count} caption tokens are drawn from ${provenance.source_token_count} verified source tokens in edit order.` : 'Captions contain changed, invented, or reordered words.',
+    })
   }
   for (const textPath of publicTextPaths) checks.push(...publicCopyChecks(await readFile(textPath, 'utf8')))
   return {

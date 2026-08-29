@@ -11,6 +11,24 @@
     "maximum_fixture_wer": 0.12,
     "vocabulary": ["Krish Raja", "Mindmaker", "The Money of AI", "Built With AI", "Meta", "AdFixus"]
   },
+  "identity": {
+    "presenter_name": "Krish",
+    "asr_aliases": ["Chris"],
+    "default_presenter_modes": ["solo", "short_native"]
+  },
+  "editorial_thresholds": {
+    "semantic_coherence": 0.82,
+    "impact": 0.72,
+    "relevance": 0.75,
+    "insight": 0.7,
+    "specificity": 0.65,
+    "audience_value": 0.75,
+    "hook_strength": 0.68,
+    "ending_strength": 0.78,
+    "cold_open_max_ms": 5500,
+    "long_video_ms": 30000,
+    "minimum_segment_ms": 500
+  },
   "cadence": { "shorts_per_week": 2, "radar_day": "monday", "radar_time": "11:00", "timezone": "Europe/London" },
   "runtime": {
     "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",

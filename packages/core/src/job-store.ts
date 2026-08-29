@@ -80,6 +80,7 @@ export interface CreateJobInput {
   rights?: 'owned' | 'permissioned' | 'commentary_exception' | 'unverified'
   consentNote?: string
   purpose?: JobPurpose
+  presenterName?: string
   configPath: string
   skillPaths: string[]
 }
@@ -123,6 +124,7 @@ export async function createJob(input: CreateJobInput): Promise<JobManifestV1> {
     series: input.series,
     mode: input.mode,
     purpose: input.purpose ?? 'production',
+    ...(input.presenterName ? { presenter_name: input.presenterName } : {}),
     source,
     config_hash: configHash,
     skill_hashes: skillHashes,
