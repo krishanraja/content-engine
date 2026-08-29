@@ -120,19 +120,25 @@ async function imageDimensions(path: string): Promise<{ width: number; height: n
   return { width, height }
 }
 
-export async function createEvidenceContactSheet(inputPaths: string[], outputPath: string): Promise<string> {
-  if (inputPaths.length < 1 || inputPaths.length > 8) throw new Error('evidence contact sheets require one to eight images')
-  await mkdir(dirname(outputPath), { recursive: true })
-  const columns = inputPaths.length === 1 ? 1 : 2
+export function evidenceContactSheetFilter(inputCount: number): string {
+  if (inputCount < 1 || inputCount > 8) throw new Error('evidence contact sheets require one to eight images')
+  const columns = inputCount === 1 ? 1 : 2
   const cellWidth = columns === 1 ? 1080 : 540
   const cellHeight = Math.round(cellWidth * 1.25)
-  const filters = inputPaths.map((_, index) => `[${index}:v]scale=${cellWidth}:${cellHeight}:force_original_aspect_ratio=decrease,pad=${cellWidth}:${cellHeight}:(ow-iw)/2:(oh-ih)/2:color=0x111111,setsar=1[v${index}]`)
-  const layout = inputPaths.map((_, index) => `${index % columns * cellWidth}_${Math.floor(index / columns) * cellHeight}`).join('|')
-  const stack = `${inputPaths.map((_, index) => `[v${index}]`).join('')}xstack=inputs=${inputPaths.length}:layout=${layout}:fill=0x111111[out]`
+  const filters = Array.from({ length: inputCount }, (_, index) => `[${index}:v]scale=${cellWidth}:${cellHeight}:force_original_aspect_ratio=decrease,pad=${cellWidth}:${cellHeight}:(ow-iw)/2:(oh-ih)/2:color=0x111111,setsar=1[v${index}]`)
+  if (inputCount === 1) return `${filters[0]};[v0]null[out]`
+  const layout = Array.from({ length: inputCount }, (_, index) => `${index % columns * cellWidth}_${Math.floor(index / columns) * cellHeight}`).join('|')
+  const stack = `${Array.from({ length: inputCount }, (_, index) => `[v${index}]`).join('')}xstack=inputs=${inputCount}:layout=${layout}:fill=0x111111[out]`
+  return [...filters, stack].join(';')
+}
+
+export async function createEvidenceContactSheet(inputPaths: string[], outputPath: string): Promise<string> {
+  const filterComplex = evidenceContactSheetFilter(inputPaths.length)
+  await mkdir(dirname(outputPath), { recursive: true })
   await run('ffmpeg', [
     '-hide_banner', '-loglevel', 'error', '-y',
     ...inputPaths.flatMap((path) => ['-i', resolve(path)]),
-    '-filter_complex', [...filters, stack].join(';'), '-map', '[out]', '-frames:v', '1', outputPath,
+    '-filter_complex', filterComplex, '-map', '[out]', '-frames:v', '1', outputPath,
   ], { timeoutMs: 300_000 })
   return outputPath
 }

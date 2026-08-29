@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { OrchestratedEvidenceOverlayV1 } from '@mindmake/contracts'
-import { validateEvidenceEditorialQuality, validateEvidenceOrchestration } from '@mindmake/core'
+import { evidenceContactSheetFilter, validateEvidenceEditorialQuality, validateEvidenceOrchestration } from '@mindmake/core'
 
 function overlay(overrides: Partial<OrchestratedEvidenceOverlayV1> = {}): OrchestratedEvidenceOverlayV1 {
   return {
@@ -39,6 +39,12 @@ function overlay(overrides: Partial<OrchestratedEvidenceOverlayV1> = {}): Orches
 }
 
 describe('evidence orchestration', () => {
+  it('renders a single strong source without passing one input to xstack', () => {
+    const filter = evidenceContactSheetFilter(1)
+    expect(filter).toContain('[v0]null[out]')
+    expect(filter).not.toContain('xstack')
+  })
+
   it('accepts deliberate proof cutaways that return to Krish for the ending', () => {
     expect(validateEvidenceOrchestration([overlay()], { durationMs: 8_000, endingReturnToPresenter: true })).toEqual([])
   })
