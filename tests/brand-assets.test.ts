@@ -31,8 +31,11 @@ describe('official brand wordmarks', () => {
 
   it('contains no live-text imitation fallback in the renderer', async () => {
     const shortSource = await readFile(join(fileURLToPath(new URL('..', import.meta.url)), 'apps', 'renderer', 'src', 'Short.tsx'), 'utf8')
-    expect(shortSource).toContain('<OfficialWordmark asset={props.brandWordmarks.mindmake}')
-    expect(shortSource).toContain('<OfficialWordmark asset={props.brandWordmarks.series}')
+    expect(shortSource).toContain('<BrandLockup wordmarks={props.brandWordmarks}')
+    expect(shortSource).toContain('<OfficialWordmark asset={wordmarks.mindmake} displayWidth={180}')
+    expect(shortSource).toContain('<OfficialWordmark asset={wordmarks.series} displayWidth={210}')
+    expect(shortSource).toContain('width: 250')
+    expect(shortSource).not.toContain("position: 'absolute', top: 54, right: 52")
     expect(shortSource).not.toContain('mind<span')
     expect(shortSource).not.toContain('>{props.seriesName}</')
   })

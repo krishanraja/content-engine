@@ -22,33 +22,51 @@ function themeFonts(theme: BrandTheme) {
   } : { structure: FONT_STACK, claim: FONT_STACK, body: FONT_STACK, data: FONT_STACK }
 }
 
-function OfficialWordmark({ asset, plateColor, lineColor }: { asset: RuntimeWordmark; plateColor: string; lineColor: string }) {
-  const scale = asset.display_width / asset.alpha_crop.width
+function OfficialWordmark({ asset, displayWidth }: { asset: RuntimeWordmark; displayWidth: number }) {
+  const scale = displayWidth / asset.alpha_crop.width
   const contentHeight = asset.alpha_crop.height * scale
   return (
     <div style={{
-      width: asset.display_width + 28,
-      height: contentHeight + 28,
-      padding: 14,
+      position: 'relative',
+      width: displayWidth,
+      height: contentHeight,
+      overflow: 'hidden',
+    }}>
+      <Img
+        src={staticFile(asset.assetFile)}
+        style={{
+          position: 'absolute',
+          width: asset.pixel_width * scale,
+          height: asset.pixel_height * scale,
+          left: -asset.alpha_crop.x * scale,
+          top: -asset.alpha_crop.y * scale,
+          maxWidth: 'none',
+        }}
+      />
+    </div>
+  )
+}
+
+function BrandLockup({ wordmarks, plateColor, lineColor }: { wordmarks: NonNullable<ShortProps['brandWordmarks']>; plateColor: string; lineColor: string }) {
+  return (
+    <div style={{
+      width: 250,
+      height: 250,
+      boxSizing: 'border-box',
+      padding: 20,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 14,
       overflow: 'hidden',
       borderRadius: 3,
       background: plateColor,
       border: `1px solid ${lineColor}`,
       boxShadow: '0 14px 42px rgba(0,0,0,.38)',
     }}>
-      <div style={{ position: 'relative', width: asset.display_width, height: contentHeight, overflow: 'hidden' }}>
-        <Img
-          src={staticFile(asset.assetFile)}
-          style={{
-            position: 'absolute',
-            width: asset.pixel_width * scale,
-            height: asset.pixel_height * scale,
-            left: -asset.alpha_crop.x * scale,
-            top: -asset.alpha_crop.y * scale,
-            maxWidth: 'none',
-          }}
-        />
-      </div>
+      <OfficialWordmark asset={wordmarks.mindmake} displayWidth={180} />
+      <OfficialWordmark asset={wordmarks.series} displayWidth={210} />
     </div>
   )
 }
@@ -197,14 +215,9 @@ export function MindmakeShort(props: ShortProps) {
       <OffthreadVideo src={staticFile(props.sourceFile)} style={videoStyle} />
       <AbsoluteFill style={{ background: props.brandTheme ? 'linear-gradient(180deg, rgba(10,16,13,.24) 0%, rgba(10,16,13,0) 24%, rgba(10,16,13,.18) 55%, rgba(10,16,13,.72) 100%)' : 'linear-gradient(180deg, rgba(0,0,0,.2) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.15) 55%, rgba(0,0,0,.62) 100%)' }} />
       {props.seriesName && props.brandTheme && props.brandWordmarks ? (
-        <>
-          <div style={{ position: 'absolute', top: 54, left: 52 }}>
-            <OfficialWordmark asset={props.brandWordmarks.mindmake} plateColor="rgba(10,16,13,.92)" lineColor={props.brandTheme.colors.line} />
-          </div>
-          <div style={{ position: 'absolute', top: 54, right: 52 }}>
-            <OfficialWordmark asset={props.brandWordmarks.series} plateColor="rgba(10,16,13,.92)" lineColor={props.brandTheme.colors.line} />
-          </div>
-        </>
+        <div style={{ position: 'absolute', top: 54, left: 52 }}>
+          <BrandLockup wordmarks={props.brandWordmarks} plateColor="rgba(10,16,13,.94)" lineColor={props.brandTheme.colors.line} />
+        </div>
       ) : null}
       {props.evidenceOverlays.map((overlay) => {
         const from = Math.max(0, Math.floor(overlay.start_ms / 1000 * fps))
