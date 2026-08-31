@@ -102,13 +102,25 @@
       "status": "active",
       "approved_by": "Krish",
       "approved_at": "2026-08-29T14:42:01.530Z"
+    },
+    {
+      "schema_version": 1,
+      "rule_id": "ac5c0d6e-b113-4003-9357-1d24d1fa9d44",
+      "assertion": "Use one compact black square in the top-left of every branded video, with the official Mindmake wordmark above the matching official series wordmark.",
+      "scope": { "level": "global", "key": "brand-lockup" },
+      "evidence_feedback_ids": ["2cecdb0b-efe0-400c-b39b-e843188932ee"],
+      "counterexamples": ["An explicitly unbranded calibration or analysis render does not display the lockup."],
+      "regression_cases": ["branded renders use one square top-left plate", "Mindmake appears above the matching series mark", "no second top-right wordmark plate is rendered"],
+      "status": "active",
+      "approved_by": "Krish",
+      "approved_at": "2026-08-31T10:49:13.638Z"
     }
   ],
   "brand_themes": [
     {
       "schema_version": 1,
       "theme_id": "mindmake-video-v1",
-      "version": 2,
+      "version": 3,
       "status": "active",
       "source": {
         "repository": "krishanraja/mindmake",
@@ -148,6 +160,22 @@
           "feedback_id": "448645f4-dadd-41fa-bfe7-53b630659eeb",
           "approved_by": "Krish",
           "approved_at": "2026-08-31T09:56:33.097Z"
+        },
+        "lockup": {
+          "approval": {
+            "feedback_id": "2cecdb0b-efe0-400c-b39b-e843188932ee",
+            "approved_by": "Krish",
+            "approved_at": "2026-08-31T10:47:20.970Z"
+          },
+          "layout": "stacked_square",
+          "corner": "top_left",
+          "plate_size": 250,
+          "offset_x": 52,
+          "offset_y": 54,
+          "padding": 20,
+          "gap": 14,
+          "mindmake_width": 180,
+          "series_width": 210
         },
         "mindmake": {
           "source_path": "src/assets/mindmake-wordmark-ink.png",

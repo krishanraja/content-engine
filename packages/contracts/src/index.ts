@@ -357,6 +357,28 @@ export const BrandWordmarkAssetV1Schema = z.object({
 })
 export type BrandWordmarkAssetV1 = z.infer<typeof BrandWordmarkAssetV1Schema>
 
+export const BrandWordmarkLockupV1Schema = z.object({
+  approval: z.object({
+    feedback_id: z.string().uuid(),
+    approved_by: z.literal('Krish'),
+    approved_at: z.string().datetime(),
+  }),
+  layout: z.literal('stacked_square'),
+  corner: z.literal('top_left'),
+  plate_size: z.number().int().min(220).max(300),
+  offset_x: z.number().int().min(32).max(100),
+  offset_y: z.number().int().min(32).max(100),
+  padding: z.number().int().min(12).max(32),
+  gap: z.number().int().min(8).max(24),
+  mindmake_width: z.number().int().min(160).max(220),
+  series_width: z.number().int().min(190).max(240),
+}).superRefine((lockup, context) => {
+  const innerWidth = lockup.plate_size - lockup.padding * 2
+  if (lockup.mindmake_width > innerWidth) context.addIssue({ code: 'custom', path: ['mindmake_width'], message: 'Mindmake wordmark exceeds lockup inner width' })
+  if (lockup.series_width > innerWidth) context.addIssue({ code: 'custom', path: ['series_width'], message: 'series wordmark exceeds lockup inner width' })
+})
+export type BrandWordmarkLockupV1 = z.infer<typeof BrandWordmarkLockupV1Schema>
+
 export const BrandThemeV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),
   theme_id: z.string().min(1),
@@ -401,6 +423,7 @@ export const BrandThemeV1Schema = z.object({
       approved_by: z.literal('Krish'),
       approved_at: z.string().datetime(),
     }),
+    lockup: BrandWordmarkLockupV1Schema.optional(),
     mindmake: BrandWordmarkAssetV1Schema,
     series: z.object({
       money_of_ai: BrandWordmarkAssetV1Schema,

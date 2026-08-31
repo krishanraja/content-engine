@@ -16,12 +16,16 @@ function activeTheme(): BrandThemeV1 {
 describe('official brand wordmarks', () => {
   it('pins the real GitHub assets and clears the deterministic legibility floor', () => {
     const theme = activeTheme()
-    expect(theme.version).toBe(2)
+    expect(theme.version).toBe(3)
     expect(theme.source.commit).toBe('e1d03892f8e8c52ad9f0d2d05275ab858fd151e5')
     const wordmarks = theme.wordmarks
     expect(wordmarks).toBeDefined()
     if (!wordmarks) throw new Error('active theme is missing official wordmarks')
     expect(wordmarks.approval).toEqual({ feedback_id: '448645f4-dadd-41fa-bfe7-53b630659eeb', approved_by: 'Krish', approved_at: '2026-08-31T09:56:33.097Z' })
+    expect(wordmarks.lockup).toEqual({
+      approval: { feedback_id: '2cecdb0b-efe0-400c-b39b-e843188932ee', approved_by: 'Krish', approved_at: '2026-08-31T10:47:20.970Z' },
+      layout: 'stacked_square', corner: 'top_left', plate_size: 250, offset_x: 52, offset_y: 54, padding: 20, gap: 14, mindmake_width: 180, series_width: 210,
+    })
     expect(wordmarks.mindmake.sha256).toBe('d2a0417df41119775d8f6c5c25134f2414ce2f5144b6e8b5433b2109d95645e1')
     expect(wordmarks.series.built_with_ai.sha256).toBe('271ab965dc51714be8c13c8a6bb8c7b2b60f4bf22caf51dda5a2928e295fd29f')
     expect(wordmarks.series.money_of_ai.sha256).toBe('1cdd6d7710c9970a1e86c8793b33acf6b3f63c81304aeb6efe84d392467322a6')
@@ -31,8 +35,12 @@ describe('official brand wordmarks', () => {
 
   it('contains no live-text imitation fallback in the renderer', async () => {
     const shortSource = await readFile(join(fileURLToPath(new URL('..', import.meta.url)), 'apps', 'renderer', 'src', 'Short.tsx'), 'utf8')
-    expect(shortSource).toContain('<OfficialWordmark asset={props.brandWordmarks.mindmake}')
-    expect(shortSource).toContain('<OfficialWordmark asset={props.brandWordmarks.series}')
+    expect(shortSource).toContain('<BrandLockup wordmarks={props.brandWordmarks}')
+    expect(shortSource).toContain('<OfficialWordmark asset={wordmarks.mindmake} displayWidth={layout.mindmake_width}')
+    expect(shortSource).toContain('<OfficialWordmark asset={wordmarks.series} displayWidth={layout.series_width}')
+    expect(shortSource).toContain('width: layout.plate_size')
+    expect(shortSource).toContain("top: layout.offset_y, left: layout.offset_x")
+    expect(shortSource).not.toContain("position: 'absolute', top: 54, right: 52")
     expect(shortSource).not.toContain('mind<span')
     expect(shortSource).not.toContain('>{props.seriesName}</')
   })
@@ -44,7 +52,7 @@ describe('official brand wordmarks', () => {
     if (!base.wordmarks) throw new Error('active theme is missing official wordmarks')
     const fixtureMindmake = { ...base.wordmarks.mindmake, source_path: 'src/assets/fixture.png', sha256 }
     const fixtureSeries = { ...base.wordmarks.series.built_with_ai, source_path: 'src/assets/fixture.png', sha256 }
-    const theme: BrandThemeV1 = { ...base, wordmarks: { approval: base.wordmarks.approval, mindmake: fixtureMindmake, series: { money_of_ai: fixtureSeries, built_with_ai: fixtureSeries } } }
+    const theme: BrandThemeV1 = { ...base, wordmarks: { ...base.wordmarks, mindmake: fixtureMindmake, series: { money_of_ai: fixtureSeries, built_with_ai: fixtureSeries } } }
     const manifest = { branding: 'series', brand_theme: theme, series: 'built_with_ai' } as RenderManifestV1
     const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-brand-test-'))
     const previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
@@ -79,15 +87,15 @@ describe('official brand wordmarks', () => {
     }
   })
 
-  it('keeps an older pinned theme readable but blocks it from branded rendering', async () => {
-    const legacyConfig = structuredClone(studioConfig) as unknown as { brand_themes: Array<{ wordmarks?: unknown; rules: Record<string, unknown> }> }
+  it('keeps the prior split-layout theme readable but blocks it from branded rendering', async () => {
+    const legacyConfig = structuredClone(studioConfig) as unknown as { brand_themes: Array<{ wordmarks?: { lockup?: unknown }; rules: Record<string, unknown> }> }
     const legacyTheme = legacyConfig.brand_themes[0]!
-    delete legacyTheme.wordmarks
-    delete legacyTheme.rules.official_wordmarks_only
+    if (!legacyTheme.wordmarks) throw new Error('fixture is missing wordmarks')
+    delete legacyTheme.wordmarks.lockup
     const parsed = TreatmentRegistryV1Schema.parse(legacyConfig)
     const theme = parsed.brand_themes[0]!
-    expect(brandWordmarkLegibilityIssues(theme)).toEqual(['official wordmark mapping is missing'])
+    expect(brandWordmarkLegibilityIssues(theme)).toEqual(['approved compact wordmark lockup is missing'])
     const manifest = { branding: 'series', brand_theme: theme, series: 'built_with_ai' } as RenderManifestV1
-    await expect(stageOfficialWordmarks(manifest, tmpdir())).rejects.toThrow('branded renders cannot use recreated or missing wordmarks')
+    await expect(stageOfficialWordmarks(manifest, tmpdir())).rejects.toThrow('branded renders require the approved compact wordmark lockup')
   })
 })
