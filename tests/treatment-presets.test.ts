@@ -37,6 +37,7 @@ describe('approved treatment registry', () => {
     const config = await registry()
     const theme = resolveBrandTheme(config.brand_themes, config.default_brand_theme)
     expect(theme?.theme_id).toBe('mindmake-video-v1')
+    expect(theme?.version).toBe(3)
     expect(theme?.source).toEqual({
       repository: 'krishanraja/mindmake',
       commit: 'e1d03892f8e8c52ad9f0d2d05275ab858fd151e5',
@@ -49,12 +50,16 @@ describe('approved treatment registry', () => {
     expect(theme?.wordmarks?.mindmake.source_path).toBe('src/assets/mindmake-wordmark-ink.png')
     expect(theme?.wordmarks?.series.built_with_ai.source_path).toBe('src/assets/builtwithai-logo-wordmark.png')
     expect(theme?.wordmarks?.series.money_of_ai.source_path).toBe('src/assets/moneyofai-logo-wordmark.png')
+    expect(theme?.wordmarks?.lockup?.layout).toBe('stacked_square')
+    expect(theme?.wordmarks?.lockup?.approval.feedback_id).toBe('2cecdb0b-efe0-400c-b39b-e843188932ee')
   })
 
-  it('keeps explicit taste memory narrow and approved', async () => {
+  it('keeps explicit taste memory approved and correctly scoped', async () => {
     const config = await registry()
-    expect(config.active_preferences).toHaveLength(2)
-    expect(config.active_preferences.every((rule) => rule.status === 'active' && rule.scope.level === 'treatment' && rule.scope.key === 'evidence-kinetic-ribbon-v1')).toBe(true)
+    expect(config.active_preferences).toHaveLength(3)
+    expect(config.active_preferences.every((rule) => rule.status === 'active')).toBe(true)
+    expect(config.active_preferences.filter((rule) => rule.scope.level === 'treatment' && rule.scope.key === 'evidence-kinetic-ribbon-v1')).toHaveLength(2)
+    expect(config.active_preferences.find((rule) => rule.scope.level === 'global' && rule.scope.key === 'brand-lockup')?.evidence_feedback_ids).toEqual(['2cecdb0b-efe0-400c-b39b-e843188932ee'])
     expect(config.active_preferences.every((rule) => rule.approved_by === 'Krish')).toBe(true)
   })
 

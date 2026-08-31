@@ -10,6 +10,19 @@ const RuntimeWordmarkSchema = z.object({
   display_width: z.number().positive(),
 })
 
+const RuntimeBrandLockupSchema = z.object({
+  approval: z.object({ feedback_id: z.string(), approved_by: z.literal('Krish'), approved_at: z.string() }),
+  layout: z.literal('stacked_square'),
+  corner: z.literal('top_left'),
+  plate_size: z.number().positive(),
+  offset_x: z.number().nonnegative(),
+  offset_y: z.number().nonnegative(),
+  padding: z.number().nonnegative(),
+  gap: z.number().nonnegative(),
+  mindmake_width: z.number().positive(),
+  series_width: z.number().positive(),
+})
+
 export const ShortPropsSchema = z.object({
   sourceFile: z.string(),
   sourceWidth: z.number().positive(),
@@ -29,7 +42,7 @@ export const ShortPropsSchema = z.object({
     typography: z.object({ structure: z.string(), claim: z.string(), body: z.string(), data: z.string() }),
     rules: z.object({ mint_means_answer: z.boolean(), amber_means_changed: z.boolean(), mono_for_evidence_labels: z.boolean(), serif_for_claims_only: z.boolean(), progress_bar: z.literal('hidden'), radius: z.literal('precise'), official_wordmarks_only: z.literal(true).optional() }),
   }).optional(),
-  brandWordmarks: z.object({ mindmake: RuntimeWordmarkSchema, series: RuntimeWordmarkSchema }).optional(),
+  brandWordmarks: z.object({ mindmake: RuntimeWordmarkSchema, series: RuntimeWordmarkSchema, lockup: RuntimeBrandLockupSchema }).optional(),
   captions: z.array(z.object({ start_ms: z.number(), end_ms: z.number(), text: z.string(), emphasis: z.array(z.string()) })),
   evidenceOverlays: z.array(z.object({
     overlay_id: z.string(), start_ms: z.number(), end_ms: z.number(), kind: z.enum(['screenshot', 'document', 'diagram']), assetFile: z.string(), title: z.string(), excerpt: z.string().optional(), source_label: z.string(), placement: z.enum(['upper', 'center']), fit: z.enum(['contain', 'cover']),

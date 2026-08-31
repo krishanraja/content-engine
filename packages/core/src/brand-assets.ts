@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { access, copyFile, mkdir, writeFile } from 'node:fs/promises'
 import { basename, dirname, join } from 'node:path'
-import type { BrandThemeV1, BrandWordmarkAssetV1, RenderManifestV1, Series } from '@mindmake/contracts'
+import type { BrandThemeV1, BrandWordmarkAssetV1, BrandWordmarkLockupV1, RenderManifestV1, Series } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { studioPaths } from './paths.js'
 
@@ -12,6 +12,7 @@ export interface StagedWordmarkAsset extends BrandWordmarkAssetV1 {
 export interface StagedBrandWordmarks {
   mindmake: StagedWordmarkAsset
   series: StagedWordmarkAsset
+  lockup: BrandWordmarkLockupV1
 }
 
 const MAX_BRAND_ASSET_BYTES = 2_000_000
@@ -70,6 +71,16 @@ export function brandWordmarkLegibilityIssues(theme: BrandThemeV1): string[] {
     const renderedHeight = asset.display_width * asset.alpha_crop.height / asset.alpha_crop.width
     if (asset.display_width < 250 || renderedHeight < 145) issues.push(`${series} wordmark renders below the series legibility floor`)
   }
+  const lockup = theme.wordmarks.lockup
+  if (!lockup) return [...issues, 'approved compact wordmark lockup is missing']
+  const innerSize = lockup.plate_size - lockup.padding * 2
+  const mindmakeLockupHeight = lockup.mindmake_width * theme.wordmarks.mindmake.alpha_crop.height / theme.wordmarks.mindmake.alpha_crop.width
+  if (lockup.mindmake_width < 180 || mindmakeLockupHeight < 29) issues.push('Mindmake lockup wordmark renders below the approved legibility floor')
+  for (const [series, asset] of Object.entries(theme.wordmarks.series)) {
+    const renderedHeight = lockup.series_width * asset.alpha_crop.height / asset.alpha_crop.width
+    if (lockup.series_width < 210 || renderedHeight < 122) issues.push(`${series} lockup wordmark renders below the approved legibility floor`)
+    if (mindmakeLockupHeight + lockup.gap + renderedHeight > innerSize) issues.push(`${series} lockup exceeds the approved square plate height`)
+  }
   return issues
 }
 
@@ -78,11 +89,13 @@ export async function stageOfficialWordmarks(manifest: RenderManifestV1, targetD
   const theme = manifest.brand_theme
   if (!theme) throw new Error('branded renders require a pinned brand theme with official wordmarks')
   if (!theme.rules.official_wordmarks_only || !theme.wordmarks) throw new Error('branded renders cannot use recreated or missing wordmarks')
+  if (!theme.wordmarks.lockup) throw new Error('branded renders require the approved compact wordmark lockup')
   const issues = brandWordmarkLegibilityIssues(theme)
   if (issues.length) throw new Error(`official wordmark legibility gate failed: ${issues.join('; ')}`)
   const seriesAsset = theme.wordmarks.series[manifest.series as Series]
   return {
     mindmake: await stageAsset(theme, theme.wordmarks.mindmake, targetDirectory, 'mindmake', fetchImpl),
     series: await stageAsset(theme, seriesAsset, targetDirectory, manifest.series, fetchImpl),
+    lockup: theme.wordmarks.lockup,
   }
 }
