@@ -339,6 +339,24 @@ export const TreatmentStyleV1Schema = z.object({
 })
 export type TreatmentStyleV1 = z.infer<typeof TreatmentStyleV1Schema>
 
+export const BrandWordmarkAssetV1Schema = z.object({
+  source_path: z.string().regex(/^src\/assets\/[a-zA-Z0-9._/-]+\.png$/).refine((value) => !value.split('/').includes('..'), { message: 'brand asset path cannot traverse directories' }),
+  sha256: z.string().regex(/^[a-f0-9]{64}$/),
+  pixel_width: z.number().int().positive(),
+  pixel_height: z.number().int().positive(),
+  alpha_crop: z.object({
+    x: z.number().int().nonnegative(),
+    y: z.number().int().nonnegative(),
+    width: z.number().int().positive(),
+    height: z.number().int().positive(),
+  }),
+  display_width: z.number().int().min(180).max(360),
+}).superRefine((asset, context) => {
+  if (asset.alpha_crop.x + asset.alpha_crop.width > asset.pixel_width) context.addIssue({ code: 'custom', path: ['alpha_crop', 'width'], message: 'alpha crop exceeds source width' })
+  if (asset.alpha_crop.y + asset.alpha_crop.height > asset.pixel_height) context.addIssue({ code: 'custom', path: ['alpha_crop', 'height'], message: 'alpha crop exceeds source height' })
+})
+export type BrandWordmarkAssetV1 = z.infer<typeof BrandWordmarkAssetV1Schema>
+
 export const BrandThemeV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),
   theme_id: z.string().min(1),
@@ -375,7 +393,20 @@ export const BrandThemeV1Schema = z.object({
     serif_for_claims_only: z.literal(true),
     progress_bar: z.literal('hidden'),
     radius: z.literal('precise'),
+    official_wordmarks_only: z.literal(true).optional(),
   }),
+  wordmarks: z.object({
+    approval: z.object({
+      feedback_id: z.string().uuid(),
+      approved_by: z.literal('Krish'),
+      approved_at: z.string().datetime(),
+    }),
+    mindmake: BrandWordmarkAssetV1Schema,
+    series: z.object({
+      money_of_ai: BrandWordmarkAssetV1Schema,
+      built_with_ai: BrandWordmarkAssetV1Schema,
+    }),
+  }).optional(),
 })
 export type BrandThemeV1 = z.infer<typeof BrandThemeV1Schema>
 

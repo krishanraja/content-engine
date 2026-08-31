@@ -108,11 +108,11 @@
     {
       "schema_version": 1,
       "theme_id": "mindmake-video-v1",
-      "version": 1,
+      "version": 2,
       "status": "active",
       "source": {
         "repository": "krishanraja/mindmake",
-        "commit": "c476e58fac5a3d7a6ff6bc54f41a2ddbc0e692aa",
+        "commit": "e1d03892f8e8c52ad9f0d2d05275ab858fd151e5",
         "contract_path": "project-documentation/03_DESIGN_CONTRACT.md"
       },
       "colors": {
@@ -140,7 +140,41 @@
         "mono_for_evidence_labels": true,
         "serif_for_claims_only": true,
         "progress_bar": "hidden",
-        "radius": "precise"
+        "radius": "precise",
+        "official_wordmarks_only": true
+      },
+      "wordmarks": {
+        "approval": {
+          "feedback_id": "448645f4-dadd-41fa-bfe7-53b630659eeb",
+          "approved_by": "Krish",
+          "approved_at": "2026-08-31T09:56:33.097Z"
+        },
+        "mindmake": {
+          "source_path": "src/assets/mindmake-wordmark-ink.png",
+          "sha256": "d2a0417df41119775d8f6c5c25134f2414ce2f5144b6e8b5433b2109d95645e1",
+          "pixel_width": 890,
+          "pixel_height": 165,
+          "alpha_crop": { "x": 10, "y": 8, "width": 866, "height": 144 },
+          "display_width": 230
+        },
+        "series": {
+          "money_of_ai": {
+            "source_path": "src/assets/moneyofai-logo-wordmark.png",
+            "sha256": "1cdd6d7710c9970a1e86c8793b33acf6b3f63c81304aeb6efe84d392467322a6",
+            "pixel_width": 1200,
+            "pixel_height": 630,
+            "alpha_crop": { "x": 256, "y": 90, "width": 686, "height": 400 },
+            "display_width": 270
+          },
+          "built_with_ai": {
+            "source_path": "src/assets/builtwithai-logo-wordmark.png",
+            "sha256": "271ab965dc51714be8c13c8a6bb8c7b2b60f4bf22caf51dda5a2928e295fd29f",
+            "pixel_width": 1200,
+            "pixel_height": 630,
+            "alpha_crop": { "x": 288, "y": 114, "width": 624, "height": 394 },
+            "display_width": 270
+          }
+        }
       }
     }
   ],

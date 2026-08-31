@@ -10,6 +10,7 @@ import { run } from './process.js'
 import { remotionLicenceEligible } from './doctor.js'
 import { hashFile, hashPath, hashValue } from './hash.js'
 import { studioPaths } from './paths.js'
+import { stageOfficialWordmarks } from './brand-assets.js'
 
 const REMOTION_VERSION = '4.0.518'
 
@@ -17,6 +18,8 @@ export async function rendererImplementationHash(repoRoot: string): Promise<stri
   return hashValue({
     renderer_source: await hashPath(join(repoRoot, 'apps', 'renderer', 'src')),
     renderer_props: await hashFile(join(repoRoot, 'packages', 'core', 'src', 'treatment.ts')),
+    renderer_runtime: await hashFile(join(repoRoot, 'packages', 'core', 'src', 'render.ts')),
+    brand_asset_runtime: await hashFile(join(repoRoot, 'packages', 'core', 'src', 'brand-assets.ts')),
     dependencies: await hashFile(join(repoRoot, 'package-lock.json')),
   })
 }
@@ -113,7 +116,8 @@ export async function renderShort(repoRoot: string, manifest: RenderManifestV1, 
   if (preview) {
     try { await access(outputPath); return outputPath } catch { /* Render a missing cached preview. */ }
   }
-  const inputProps = rendererProps(renderManifest)
+  const brandWordmarks = await stageOfficialWordmarks(renderManifest, dirname(manifest.source_path))
+  const inputProps = rendererProps(renderManifest, brandWordmarks)
   const browserExecutable = await sharedBrowserExecutable()
   const serveUrl = await bundle({ entryPoint: join(repoRoot, 'apps', 'renderer', 'src', 'index.ts'), publicDir: dirname(manifest.source_path) })
   const composition = await selectComposition({ serveUrl, id: 'MindmakeShort', inputProps, browserExecutable })

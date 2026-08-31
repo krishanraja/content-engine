@@ -11,6 +11,7 @@ import { evidenceIntentLabel } from './evidence-label'
 
 const FONT_STACK = 'Inter, sans-serif'
 type BrandTheme = ShortProps['brandTheme']
+type RuntimeWordmark = NonNullable<ShortProps['brandWordmarks']>['mindmake']
 
 function themeFonts(theme: BrandTheme) {
   return theme ? {
@@ -19,6 +20,37 @@ function themeFonts(theme: BrandTheme) {
     body: `"${theme.typography.body}", Georgia, serif`,
     data: `"${theme.typography.data}", ui-monospace, monospace`,
   } : { structure: FONT_STACK, claim: FONT_STACK, body: FONT_STACK, data: FONT_STACK }
+}
+
+function OfficialWordmark({ asset, plateColor, lineColor }: { asset: RuntimeWordmark; plateColor: string; lineColor: string }) {
+  const scale = asset.display_width / asset.alpha_crop.width
+  const contentHeight = asset.alpha_crop.height * scale
+  return (
+    <div style={{
+      width: asset.display_width + 28,
+      height: contentHeight + 28,
+      padding: 14,
+      overflow: 'hidden',
+      borderRadius: 3,
+      background: plateColor,
+      border: `1px solid ${lineColor}`,
+      boxShadow: '0 14px 42px rgba(0,0,0,.38)',
+    }}>
+      <div style={{ position: 'relative', width: asset.display_width, height: contentHeight, overflow: 'hidden' }}>
+        <Img
+          src={staticFile(asset.assetFile)}
+          style={{
+            position: 'absolute',
+            width: asset.pixel_width * scale,
+            height: asset.pixel_height * scale,
+            left: -asset.alpha_crop.x * scale,
+            top: -asset.alpha_crop.y * scale,
+            maxWidth: 'none',
+          }}
+        />
+      </div>
+    </div>
+  )
 }
 
 function Caption({ text, accent, emphasis, scale, personality, cueIndex, brandTheme }: { text: string; accent: string; emphasis: string[]; scale: number; personality: 'clean' | 'kinetic'; cueIndex: number; brandTheme?: BrandTheme }) {
@@ -141,6 +173,7 @@ export function MindmakeShort(props: ShortProps) {
   const { fps } = useVideoConfig()
   const fonts = themeFonts(props.brandTheme)
   const signal = props.brandTheme?.colors.mint || props.accent
+  if (props.seriesName && !props.brandWordmarks) throw new Error('branded videos require the official Mindmake and series wordmark assets')
   const atMs = frame / fps * 1000
   const activeEvidence = props.evidenceOverlays.find((overlay) => overlay.start_ms <= atMs && overlay.end_ms > atMs)
   const before = [...props.cropKeyframes].reverse().find((item) => item.at_ms <= atMs)
@@ -163,19 +196,15 @@ export function MindmakeShort(props: ShortProps) {
     <AbsoluteFill style={{ backgroundColor: props.brandTheme?.colors.ink || '#050505' }}>
       <OffthreadVideo src={staticFile(props.sourceFile)} style={videoStyle} />
       <AbsoluteFill style={{ background: props.brandTheme ? 'linear-gradient(180deg, rgba(10,16,13,.24) 0%, rgba(10,16,13,0) 24%, rgba(10,16,13,.18) 55%, rgba(10,16,13,.72) 100%)' : 'linear-gradient(180deg, rgba(0,0,0,.2) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.15) 55%, rgba(0,0,0,.62) 100%)' }} />
-      {props.seriesName && props.brandTheme ? (
-        <div style={{ position: 'absolute', top: 76, left: 58, right: 58, display: 'flex', alignItems: 'center', gap: 18, fontFamily: fonts.structure, color: props.brandTheme.colors.text }}>
-          <span style={{ fontSize: 27, fontWeight: 800, letterSpacing: '-0.035em' }}>mind<span style={{ color: signal }}>/</span>make</span>
-          <span style={{ width: 1, height: 27, background: props.brandTheme.colors.line }} />
-          <span style={{ fontSize: 24, fontWeight: 700, letterSpacing: '-0.025em' }}>{props.seriesName}</span>
-          <span style={{ marginLeft: 'auto', color: props.brandTheme.colors.muted_text, fontFamily: fonts.data, fontSize: 16, fontWeight: 500, letterSpacing: '.14em', textTransform: 'uppercase' }}>{props.treatmentStyle.proof_motif}</span>
-        </div>
-      ) : props.seriesName ? (
-        <div style={{ position: 'absolute', top: 82, left: 64, display: 'flex', alignItems: 'center', gap: 16, fontFamily: FONT_STACK, fontSize: 31, fontWeight: 800, letterSpacing: 0.4, color: '#fff' }}>
-          <span style={{ width: 14, height: 14, borderRadius: 999, background: props.accent, boxShadow: `0 0 24px ${props.accent}` }} />
-          {props.seriesName}
-          <span style={{ color: props.accent, fontSize: 22, letterSpacing: 1.4, textTransform: 'uppercase' }}>{props.treatmentStyle.proof_motif}</span>
-        </div>
+      {props.seriesName && props.brandTheme && props.brandWordmarks ? (
+        <>
+          <div style={{ position: 'absolute', top: 54, left: 52 }}>
+            <OfficialWordmark asset={props.brandWordmarks.mindmake} plateColor="rgba(10,16,13,.92)" lineColor={props.brandTheme.colors.line} />
+          </div>
+          <div style={{ position: 'absolute', top: 54, right: 52 }}>
+            <OfficialWordmark asset={props.brandWordmarks.series} plateColor="rgba(10,16,13,.92)" lineColor={props.brandTheme.colors.line} />
+          </div>
+        </>
       ) : null}
       {props.evidenceOverlays.map((overlay) => {
         const from = Math.max(0, Math.floor(overlay.start_ms / 1000 * fps))

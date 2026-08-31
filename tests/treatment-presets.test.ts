@@ -39,12 +39,16 @@ describe('approved treatment registry', () => {
     expect(theme?.theme_id).toBe('mindmake-video-v1')
     expect(theme?.source).toEqual({
       repository: 'krishanraja/mindmake',
-      commit: 'c476e58fac5a3d7a6ff6bc54f41a2ddbc0e692aa',
+      commit: 'e1d03892f8e8c52ad9f0d2d05275ab858fd151e5',
       contract_path: 'project-documentation/03_DESIGN_CONTRACT.md',
     })
     expect(theme?.colors.mint).toBe('#7FE3B4')
     expect(theme?.typography).toEqual({ structure: 'Archivo Variable', claim: 'Newsreader Variable', body: 'Source Serif 4 Variable', data: 'IBM Plex Mono' })
     expect(theme?.rules.progress_bar).toBe('hidden')
+    expect(theme?.rules.official_wordmarks_only).toBe(true)
+    expect(theme?.wordmarks?.mindmake.source_path).toBe('src/assets/mindmake-wordmark-ink.png')
+    expect(theme?.wordmarks?.series.built_with_ai.source_path).toBe('src/assets/builtwithai-logo-wordmark.png')
+    expect(theme?.wordmarks?.series.money_of_ai.source_path).toBe('src/assets/moneyofai-logo-wordmark.png')
   })
 
   it('keeps explicit taste memory narrow and approved', async () => {
