@@ -12,7 +12,7 @@ const defaultProps: ShortProps = {
   hook: 'A precise opening earns attention.',
   treatmentStyle: { caption_position: 'lower', caption_scale: 1, hook_card_ms: 0, proof_motif: 'mechanism', caption_personality: 'clean' },
   durationMs: 30_000,
-  seriesName: 'The Money of AI',
+  seriesName: '',
   accent: '#D7FF3F',
   captions: [],
   evidenceOverlays: [],

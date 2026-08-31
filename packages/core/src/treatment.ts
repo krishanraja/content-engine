@@ -18,6 +18,7 @@ import { jobPath } from './paths.js'
 import { alignScriptToTranscript, type TranscriptDocument } from './candidates.js'
 import { captionTranscriptSimilarity, sliceTranscript, verifiedTextCaptionCues } from './captions.js'
 import { composeEditTranscript, exactWordFidelity } from './editorial.js'
+import type { StagedBrandWordmarks } from './brand-assets.js'
 
 function captionCues(text: string, durationMs: number): RenderManifestV1['captions'] {
   const words = text.split(/\s+/).filter(Boolean)
@@ -245,7 +246,7 @@ export async function createTreatment(
   return manifest
 }
 
-export function rendererProps(manifest: RenderManifestV1) {
+export function rendererProps(manifest: RenderManifestV1, brandWordmarks?: StagedBrandWordmarks) {
   return {
     sourceFile: basename(manifest.source_path),
     sourceWidth: manifest.source_width,
@@ -258,6 +259,7 @@ export function rendererProps(manifest: RenderManifestV1) {
     seriesName: manifest.branding === 'none' ? '' : PUBLIC_SERIES_NAMES[manifest.series],
     accent: manifest.accent,
     brandTheme: manifest.brand_theme,
+    brandWordmarks,
     captions: manifest.captions,
     evidenceOverlays: manifest.evidence_overlays.map((overlay) => ({
       ...overlay,
