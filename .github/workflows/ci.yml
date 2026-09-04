@@ -20,13 +20,26 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install pinned FFmpeg and FFprobe
-        uses: FedericoCarboni/setup-ffmpeg@37062fbf7149fc5578d6c57e08aed62458b375d6 # v3.1
-        with:
-          ffmpeg-version: '7.0.2'
-          architecture: x64
-          linking-type: static
-          github-token: ${{ github.token }}
+      - name: Install hash-pinned FFmpeg and FFprobe on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $videoFfmpegVersion = '8.1.2'
+          $videoFfmpegSha256 = 'db580001caa24ac104c8cb856cd113a87b0a443f7bdf47d8c12b1d740584a2ec'
+          $videoFfmpegArchive = Join-Path $env:RUNNER_TEMP "ffmpeg-$videoFfmpegVersion-essentials_build.zip"
+          $videoFfmpegRoot = Join-Path $env:RUNNER_TEMP "ffmpeg-$videoFfmpegVersion"
+          Invoke-WebRequest -Uri "https://github.com/GyanD/codexffmpeg/releases/download/$videoFfmpegVersion/ffmpeg-$videoFfmpegVersion-essentials_build.zip" -OutFile $videoFfmpegArchive
+          $videoFfmpegActualSha256 = (Get-FileHash -LiteralPath $videoFfmpegArchive -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($videoFfmpegActualSha256 -ne $videoFfmpegSha256) { throw 'Downloaded FFmpeg archive failed its pinned SHA-256 check.' }
+          Expand-Archive -LiteralPath $videoFfmpegArchive -DestinationPath $videoFfmpegRoot
+          $videoFfmpegBin = Join-Path $videoFfmpegRoot "ffmpeg-$videoFfmpegVersion-essentials_build\bin"
+          if (-not (Test-Path -LiteralPath (Join-Path $videoFfmpegBin 'ffmpeg.exe'))) { throw 'Pinned FFmpeg binary is missing after extraction.' }
+          if (-not (Test-Path -LiteralPath (Join-Path $videoFfmpegBin 'ffprobe.exe'))) { throw 'Pinned FFprobe binary is missing after extraction.' }
+          Add-Content -LiteralPath $env:GITHUB_PATH -Value $videoFfmpegBin
+      - name: Verify media toolchain
+        run: |
+          ffmpeg -version
+          ffprobe -version
       - run: npm ci
       - run: npm run verify
 
