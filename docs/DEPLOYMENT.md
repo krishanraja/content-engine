@@ -37,6 +37,56 @@ Do not add the token, Supabase service-role key, OAuth credential, biometric des
 
 The optional Krish recognition key uses `MindmakeVideoStudio/krish-identity-key`. The identity-enrolment command can generate it inside Windows Credential Manager without displaying it. The encrypted face template remains under the ignored local runtime root. Only its fixed identity and version hash may appear in a manifest; guest identity data is never persisted beyond a job.
 
+## Independent runner setup
+
+Set the control-plane API base URL as environment configuration, never as a credential:
+
+```text
+MINDMAKE_CONTROL_PLANE_URL=https://controlcenter.krishraja.com/api/video-studio/runner
+MINDMAKE_PREVIEW_STORAGE_ORIGIN=https://<project-ref>.supabase.co
+```
+
+The Control Center URL is production-pinned and an override must be absent or exactly equal to that value. Set the preview origin to the exact public origin of the dedicated Supabase project, with no path, credentials, query, or fragment. The runner rejects HTTP, local/private destinations, cross-origin signed upload URLs, redirects, and upload routes outside Supabase Storage's signed-object path.
+
+The runner uses two separate Windows Generic Credentials:
+
+```text
+MindmakeVideoStudio/control-center-runner-token
+MindmakeVideoStudio/control-center-runner-signing-key
+```
+
+The first is the dedicated bearer accepted only by runner endpoints. The second must match the server-side `VIDEO_STUDIO_RUNNER_SIGNING_KEY` and signs receipt hashes. It is distinct from the bearer and from the durable local approval and decision ledger key:
+
+```text
+MindmakeVideoStudio/approval-signing-key
+```
+
+Enter all values interactively. The local ledger key never leaves the machine and must remain stable for the lifetime of the signed job history:
+
+```powershell
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-token
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-signing-key
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/approval-signing-key
+```
+
+After the matching Control Center API and server-side credentials are live, verify the local prerequisites and install the task:
+
+```powershell
+npm ci
+npm run studio -- doctor
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-runner-task.ps1
+Start-ScheduledTask -TaskName "Mindmake Video Studio Runner"
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode status
+```
+
+The task runs as the current interactive user without storing a Windows password. It starts at logon, starts when available, is hidden, restarts after failure, and ignores a second concurrent instance. It has no network-only start condition because it must report honest offline state and replay local receipts after connectivity returns.
+
+The runner also requires an exact clean checkout: its configured repository root must equal Git's actual top-level path, `HEAD` must be a real 40-character commit, `MINDMAKE_SOFTWARE_COMMIT` must be absent or equal to that commit, and no tracked or untracked source file may differ. Project publication and command claiming fail closed when provenance is unknown. Install from a clean committed revision, never from this implementation working tree.
+
+The implementation in this repository does not itself install the Scheduled Task, deploy Control Center, or configure any credential. Those remain explicit operator actions. A merged code change is not an installed runner, and an installed runner is not a verified live control-plane integration until `doctor`, task status, project bootstrap, claim, proxy upload, completion, and cloud readback all succeed.
+
+To rotate the bearer, stop the task, replace the server and local bearer values, then restart and read back runner status. To rotate the signing key, first require `pending_receipts: 0`; then stop the task, rotate the server and local signing values together, restart, and verify one signed completion. If an unacknowledged receipt exists, restore its prior signing key until reconciliation completes rather than discarding the journal.
+
 ## Deployment checks
 
 Before enabling the weekly radar:

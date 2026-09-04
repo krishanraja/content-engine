@@ -27,6 +27,44 @@ CLI success is exit code `0`. Stable failure categories are `10` validation, `20
    Use `scripts/set-credential.ps1 -Target <target>` so the value is prompted securely rather than passed on the command line.
 7. Run `npm run studio -- doctor`.
 
+## Windows background runner
+
+The v1 runner executes already-projected Control Center commands. It does not scan the Google Drive folder, discover new recordings, or create jobs automatically. Bootstrap each approved local treatment or QA-passing final explicitly:
+
+```powershell
+npm run studio -- v2 runner project --job <job-id> --platform youtube_shorts --gate treatment --safe-title "<non-sensitive title>" --safe-summary "<non-sensitive summary>"
+```
+
+The bootstrap validates gate-specific local provenance before it sends a strict redacted projection. Story binds the exact current candidate projection. Treatment binds the exact current treatment and its approval. Final binds the exact current platform master, render manifest, and passing platform QA. Learning binds an exact schema-validated persisted learning artifact supplied with `--review-artifact-hash`. It derives a deterministic UUID from every projection-semantic field, including safe title and summary, so retrying unchanged state is naturally idempotent. `--idempotency-key` exists only as an explicit recovery or contract-test override. It never sends media, transcript content, local or Drive paths, credentials, private sources, or raw diagnostics.
+
+Install and operate the task with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-runner-task.ps1
+Start-ScheduledTask -TaskName "Mindmake Video Studio Runner"
+Stop-ScheduledTask -TaskName "Mindmake Video Studio Runner"
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode status
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode once
+```
+
+The status output reports runner identity, source commit, Drive state, singleton activity, and only unacknowledged receipt count. The daemon checks Drive before every claim and during active heartbeats. When Drive is unavailable it reports `degraded`, leaves cloud commands queued, and resumes after the mount returns. It never turns mount loss into an avoidable terminal command failure.
+
+Each successful, editorial-route, or non-retryable failure result is signed and written under the ignored runner receipt journal before cloud completion. A lost completion response is retried before another claim, using the original command identity and prior lease token. Acknowledged receipts remain locally for audit but do not count as pending. Transient network, provider, timeout, or media-availability errors leave no terminal receipt; the lease expires so Control Center can perform a bounded retry.
+
+Every claimed command is also written once to an HMAC-authenticated local claim journal before dispatch. It contains the bounded command envelope and no lease token or credential. This proves the exact review lineage if all bounded attempts are exhausted without a terminal receipt and prevents a cloud recovery card from inventing a different source command.
+
+All local authority changes are fenced by the active command lease. A heartbeat renewal failure closes the fence: an already-running media process may finish writing disposable scratch output, but the runner will not publish proxies, append events, activate a treatment, or acknowledge completion. The command remains reclaimable under the server's bounded retry policy. The receipt journal deduplicates the browser idempotency UUID plus canonical semantic command hash even when the server issues a new command-attempt UUID. The attempt UUID is transport identity only. A signed decision event or recovered-review binding already made durable before a crash is reused under the new attempt only when its complete decision or recovery body and semantic command hash are unchanged. Any payload, parent, review, evidence, or target-map fork fails closed.
+
+Once per day, after command handling and never during an active edit, the daemon makes a best-effort retention request. Control Center alone selects review-bound preview objects older than its retention and grace periods. The runner supplies only its identity and a bounded batch limit, never an object path or cutoff. A retention outage is retried later and cannot block editing.
+
+Mobile review decisions are not authoritative until the `review_decision_record` command succeeds locally. The runner validates the exact current parent, target map, review artifact, platform master where applicable, and semantic command identity before appending one signed event. It then records any applicable Krish approval and returns the new revision plus a rebound target map. Reclaiming the same semantic command after a crash, including under a fresh command-attempt UUID, finishes any missing approval without appending another decision. `keep_current` leaves the media artifact and approvals unchanged while preserving the decision and feedback in the signed event.
+
+Control Center may make a failed review discoverable again only through `review_recovery_record`. The bridge clones an exact authenticated local review into a new review UUID, appends one signed recovery event, and never changes the active media or job revision. A runner failure requires the exact signed terminal failure receipt. Exhausted attempts require the exact signed claim journal and its review or activation lineage. A command that expired before any local claim requires that neither local proof exists. Recovery generations are capped at three and must continue the same signed root chain. Never create or edit a recovery binding by hand.
+
+Before rotating the receipt-signing key, stop the task and confirm `pending_receipts` is zero. If reconciliation is stuck, keep the journal intact, restore the matching old key, run one cycle, and verify the pending count reaches zero. Never delete or edit a receipt to clear status. Bearer and signing credentials are listed in [deployment](DEPLOYMENT.md).
+
+The singleton lock records both `acquired_at` and an operating-system process-instance identity. A live numeric PID is not enough because Windows can reuse it after a crash. The runner reclaims a lock only when the recorded process instance no longer exists or the live process demonstrably started after the legacy lock was acquired. An unavailable or ambiguous process-instance check fails closed as an active runner. Never edit `runner.lock` by hand while diagnosing a live task.
+
 The YouTube credential is a short-lived OAuth access token. If it expires, replace the credential through the OAuth administration flow; never put it in a repository file or command argument.
 
 ## Typical V2 extracted-video run

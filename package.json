@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "studio": "tsx packages/cli/src/index.ts",
+    "runner": "tsx apps/runner/src/index.ts",
     "bootstrap:python": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/bootstrap-python.ps1",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

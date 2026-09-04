@@ -6,18 +6,21 @@ import { ensureBrowser, renderMedia, renderStill, selectComposition } from '@rem
 import {
   PUBLIC_SERIES_NAMES,
   RenderManifestV2Schema,
+  SourceVisualAnalysisV1Schema,
   TreatmentRegistryV1Schema,
+  VisualNarrativePlanV1Schema,
   type BrandThemeV1,
   type RenderManifestV1,
   type RenderManifestV2,
+  type SourceVisualAnalysisV1,
   type TreatmentRegistryV1,
   type VisualAssetV1,
 } from '@mindmake/contracts'
 import type { V2RenderProps } from '../../../apps/renderer/src/v2/props.js'
-import { stageOfficialWordmarks, type StagedBrandWordmarks } from './brand-assets.js'
+import { brandWordmarkLegibilityReport, stageOfficialWordmarks, type BrandLockupMode, type StagedBrandWordmarks } from './brand-assets.js'
 import { remotionLicenceEligible } from './doctor.js'
 import { hashFile, hashPath, hashValue } from './hash.js'
-import { loadJobV2, pinnedConfigPathV2 } from './job-store-v2.js'
+import { loadJobV2, pinnedConfigPathV2, readStageArtifactV2 } from './job-store-v2.js'
 import { jobPath, studioPaths } from './paths.js'
 import { run } from './process.js'
 
@@ -32,6 +35,7 @@ export type V2ReviewOverlay = 'none' | 'styleframe' | 'animatic'
 
 export interface V2RenderOptions {
   profile?: V2RenderProfile
+  previewStartMs?: number
   previewDurationMs?: number
   previewScale?: 0.25 | 0.5 | 1
 }
@@ -96,8 +100,152 @@ function captionLineEstimate(text: string): number {
 
 interface NormalizedBounds { x: number; y: number; width: number; height: number }
 
+export interface BrandPlacementV2 {
+  mode: BrandLockupMode
+  corner: 'top_left' | 'top_right'
+  topPx: number
+  leftPx: number
+}
+
+export interface BrandCueV2 extends BrandPlacementV2 {
+  shotId: string
+  startMs: number
+  endMs: number
+}
+
+export interface BrandPlacementResolutionV2 {
+  placement?: BrandPlacementV2
+  issues: string[]
+}
+
+export interface BrandTimelineResolutionV2 {
+  cues: BrandCueV2[]
+  identity_cue?: BrandCueV2
+  issues: string[]
+}
+
+export interface BrandGeometryContextV2 {
+  analysis: SourceVisualAnalysisV1
+  artifactHash: string
+  expectedArtifactHash: string
+}
+
 function boundsOverlap(left: NormalizedBounds, right: NormalizedBounds): boolean {
   return left.x < right.x + right.width && left.x + left.width > right.x && left.y < right.y + right.height && left.y + left.height > right.y
+}
+
+const clamp = (value: number, minimum: number, maximum: number): number => Math.min(maximum, Math.max(minimum, value))
+
+function cameraEasingProgress(progress: number, easing: RenderManifestV2['shot_directives'][number]['camera_plan']['easing']): number {
+  const bounded = clamp(progress, 0, 1)
+  if (easing === 'hold') return 0
+  if (easing === 'ease_in') return bounded * bounded
+  if (easing === 'ease_out') return 1 - (1 - bounded) * (1 - bounded)
+  if (easing === 'ease_in_out' || easing === 'spring') return bounded * bounded * (3 - 2 * bounded)
+  return bounded
+}
+
+function cameraCropAtOutputTime(shot: RenderManifestV2['shot_directives'][number], atMs: number): NormalizedBounds & { rotationDegrees: number } {
+  const ordered = shot.camera_plan.keyframes
+  const before = [...ordered].reverse().find((keyframe) => keyframe.at_ms <= atMs) ?? ordered[0]!
+  const after = ordered.find((keyframe) => keyframe.at_ms >= atMs) ?? ordered.at(-1)!
+  const span = after.at_ms - before.at_ms
+  const progress = cameraEasingProgress(span <= 0 ? 0 : (atMs - before.at_ms) / span, shot.camera_plan.easing)
+  const between = (left: number, right: number) => left + (right - left) * progress
+  return {
+    x: between(before.crop.x, after.crop.x),
+    y: between(before.crop.y, after.crop.y),
+    width: between(before.crop.width, after.crop.width),
+    height: between(before.crop.height, after.crop.height),
+    rotationDegrees: between(before.rotation_degrees, after.rotation_degrees),
+  }
+}
+
+function cueFrameTimes(shot: RenderManifestV2['shot_directives'][number], fps: number, startMs: number, endMs: number): number[] {
+  const times = new Set<number>([startMs, Math.max(startMs, endMs - 0.001)])
+  const frameDurationMs = 1000 / fps
+  for (let atMs = shot.start_ms; atMs < shot.end_ms; atMs += frameDurationMs) {
+    if (atMs >= startMs && atMs < endMs) times.add(atMs)
+  }
+  for (let frame = Math.ceil(startMs / frameDurationMs); frame * frameDurationMs < endMs; frame += 1) times.add(frame * frameDurationMs)
+  return [...times].sort((left, right) => left - right)
+}
+
+function interpolateTimedBounds(
+  keyframes: SourceVisualAnalysisV1['subjects'][number]['face_keyframes'],
+  atMs: number,
+): NormalizedBounds | undefined {
+  if (!keyframes.length) return undefined
+  if (atMs < keyframes[0]!.at_ms || atMs > keyframes.at(-1)!.at_ms) return undefined
+  const before = [...keyframes].reverse().find((keyframe) => keyframe.at_ms <= atMs) ?? keyframes[0]!
+  const after = keyframes.find((keyframe) => keyframe.at_ms >= atMs) ?? keyframes.at(-1)!
+  const span = after.at_ms - before.at_ms
+  const progress = clamp(span <= 0 ? 0 : (atMs - before.at_ms) / span, 0, 1)
+  const between = (left: number, right: number) => left + (right - left) * progress
+  return {
+    x: between(before.bounds.x, after.bounds.x),
+    y: between(before.bounds.y, after.bounds.y),
+    width: between(before.bounds.width, after.bounds.width),
+    height: between(before.bounds.height, after.bounds.height),
+  }
+}
+
+function centeredCoverCrop(sourceWidth: number, sourceHeight: number, boxWidth: number, boxHeight: number): NormalizedBounds & { rotationDegrees: number } {
+  const sourceAspect = sourceWidth / sourceHeight
+  const boxAspect = boxWidth / boxHeight
+  if (sourceAspect > boxAspect) {
+    const width = boxAspect / sourceAspect
+    return { x: (1 - width) / 2, y: 0, width, height: 1, rotationDegrees: 0 }
+  }
+  const height = sourceAspect / boxAspect
+  return { x: 0, y: (1 - height) / 2, width: 1, height, rotationDegrees: 0 }
+}
+
+function projectedSourceBounds(
+  sourceBounds: NormalizedBounds,
+  crop: NormalizedBounds & { rotationDegrees: number },
+  sourceWidth: number,
+  sourceHeight: number,
+  layerBounds: NormalizedBounds,
+  outputWidth: number,
+  outputHeight: number,
+): NormalizedBounds | undefined {
+  const boxWidth = layerBounds.width * outputWidth
+  const boxHeight = layerBounds.height * outputHeight
+  const scale = Math.max(boxWidth / (crop.width * sourceWidth), boxHeight / (crop.height * sourceHeight))
+  const visibleWidth = crop.width * sourceWidth * scale
+  const visibleHeight = crop.height * sourceHeight * scale
+  const sourceLeft = (boxWidth - visibleWidth) / 2 - crop.x * sourceWidth * scale
+  const sourceTop = (boxHeight - visibleHeight) / 2 - crop.y * sourceHeight * scale
+  const originX = sourceLeft + (crop.x + crop.width / 2) * sourceWidth * scale
+  const originY = sourceTop + (crop.y + crop.height / 2) * sourceHeight * scale
+  const radians = crop.rotationDegrees * Math.PI / 180
+  const cosine = Math.cos(radians)
+  const sine = Math.sin(radians)
+  const corners = [
+    [sourceBounds.x, sourceBounds.y],
+    [sourceBounds.x + sourceBounds.width, sourceBounds.y],
+    [sourceBounds.x, sourceBounds.y + sourceBounds.height],
+    [sourceBounds.x + sourceBounds.width, sourceBounds.y + sourceBounds.height],
+  ].map(([x, y]) => {
+    const localX = sourceLeft + x! * sourceWidth * scale
+    const localY = sourceTop + y! * sourceHeight * scale
+    return {
+      x: originX + (localX - originX) * cosine - (localY - originY) * sine,
+      y: originY + (localX - originX) * sine + (localY - originY) * cosine,
+    }
+  })
+  const minimumX = Math.max(0, Math.min(...corners.map((point) => point.x)))
+  const maximumX = Math.min(boxWidth, Math.max(...corners.map((point) => point.x)))
+  const minimumY = Math.max(0, Math.min(...corners.map((point) => point.y)))
+  const maximumY = Math.min(boxHeight, Math.max(...corners.map((point) => point.y)))
+  if (maximumX <= minimumX || maximumY <= minimumY) return undefined
+  return {
+    x: layerBounds.x + minimumX / outputWidth,
+    y: layerBounds.y + minimumY / outputHeight,
+    width: (maximumX - minimumX) / outputWidth,
+    height: (maximumY - minimumY) / outputHeight,
+  }
 }
 
 function fallbackBounds(anchor: RenderManifestV2['shot_directives'][number]['layers'][number]['anchor']): NormalizedBounds {
@@ -112,19 +260,295 @@ function fallbackBounds(anchor: RenderManifestV2['shot_directives'][number]['lay
   return { x: 0, y: 0, width: 1, height: 1 }
 }
 
-export function brandLayerCollisionIssues(manifest: RenderManifestV2, theme: BrandThemeV1): string[] {
+function brandPlateDimensions(theme: BrandThemeV1, mode: BrandLockupMode): { width: number; height: number } {
   const lockup = theme.wordmarks?.lockup
-  if (!lockup || manifest.branding.mode === 'none') return []
-  const lockupBounds = { x: lockup.offset_x / 1080, y: lockup.offset_y / 1920, width: lockup.plate_size / 1080, height: lockup.plate_size / 1920 }
+  if (!lockup) return { width: 0, height: 0 }
+  if (mode === 'stacked_identity') return { width: lockup.identity.plate_width, height: lockup.identity.plate_height }
+  if (mode === 'series_only') return { width: lockup.series_only_fallback.plate_width, height: lockup.series_only_fallback.plate_height }
+  return { width: lockup.anchor.plate_width, height: lockup.anchor.plate_height }
+}
+
+function placementBounds(manifest: RenderManifestV2, theme: BrandThemeV1, mode: BrandLockupMode, corner: BrandPlacementV2['corner']): { placement: BrandPlacementV2; normalized: NormalizedBounds; insideSafeZone: boolean } {
+  const lockup = theme.wordmarks!.lockup!
+  const dimensions = brandPlateDimensions(theme, mode)
+  const safe = manifest.output.safe_zones
+  const topPx = Math.max(lockup.offset_y, safe.top_px)
+  const leftPx = corner === 'top_left'
+    ? Math.max(lockup.offset_x, safe.left_px)
+    : manifest.output.width - Math.max(lockup.offset_x, safe.right_px) - dimensions.width
+  const insideSafeZone = leftPx >= safe.left_px
+    && leftPx + dimensions.width <= manifest.output.width - safe.right_px
+    && topPx >= safe.top_px
+    && topPx + dimensions.height <= manifest.output.height - safe.bottom_px
+  return {
+    placement: { mode, corner, topPx, leftPx },
+    normalized: { x: leftPx / manifest.output.width, y: topPx / manifest.output.height, width: dimensions.width / manifest.output.width, height: dimensions.height / manifest.output.height },
+    insideSafeZone,
+  }
+}
+
+function layerVisibleDuring(
+  layer: RenderManifestV2['shot_directives'][number]['layers'][number],
+  shot: RenderManifestV2['shot_directives'][number],
+  startMs: number,
+  endMs: number,
+): boolean {
+  const layerStart = layer.visible_start_ms ?? shot.start_ms
+  const layerEnd = layer.visible_end_ms ?? shot.end_ms
+  return layer.opacity > 0 && startMs < layerEnd && endMs > layerStart
+}
+
+function layerVisibleAt(
+  layer: RenderManifestV2['shot_directives'][number]['layers'][number],
+  shot: RenderManifestV2['shot_directives'][number],
+  atMs: number,
+): boolean {
+  const layerStart = layer.visible_start_ms ?? shot.start_ms
+  const layerEnd = layer.visible_end_ms ?? shot.end_ms
+  return layer.opacity > 0 && atMs >= layerStart && atMs < layerEnd
+}
+
+function collidingBrandLayers(shot: RenderManifestV2['shot_directives'][number], bounds: NormalizedBounds, startMs: number, endMs: number): string[] {
+  return shot.layers.filter((layer) => {
+    if (layer.kind === 'branding' || !layerVisibleDuring(layer, shot, startMs, endMs)) return false
+    if ((layer.kind === 'source' || layer.kind === 'background') && !layer.protected) return false
+    return boundsOverlap(bounds, layer.bounds || fallbackBounds(layer.anchor))
+  }).map((layer) => layer.layer_id)
+}
+
+export function brandGeometryContextIssues(manifest: RenderManifestV2, context?: BrandGeometryContextV2): string[] {
+  if (manifest.branding.mode === 'none') return []
+  if (!context) return ['branded rendering requires the exact content-addressed source_analysis artifact']
+  const parsed = SourceVisualAnalysisV1Schema.safeParse(context.analysis)
+  if (!parsed.success) return ['source_analysis geometry is missing or invalid']
+  const analysis = parsed.data
   const issues: string[] = []
+  if (!/^[a-f0-9]{64}$/.test(context.artifactHash) || context.artifactHash !== context.expectedArtifactHash) issues.push('source_analysis artifact binding is stale or unknown')
+  if (analysis.job_id !== manifest.job_id) issues.push('source_analysis belongs to a different job')
+  const analyzedSources = new Map(analysis.sources.map((source) => [source.source_id, source]))
+  for (const source of manifest.sources.filter((item) => item.kind !== 'audio')) {
+    const analyzed = analyzedSources.get(source.source_id)
+    if (!analyzed) {
+      issues.push(`source_analysis has no geometry source ${source.source_id}`)
+      continue
+    }
+    if (
+      analyzed.source_hash !== source.sha256
+      || analyzed.duration_ms !== source.duration_ms
+      || analyzed.width !== source.width
+      || analyzed.height !== source.height
+      || analyzed.fps !== source.fps
+      || analyzed.canonical_offset_ms !== source.canonical_offset_ms
+    ) issues.push(`source_analysis geometry for ${source.source_id} is stale against the render source`)
+  }
+  const tracks = new Map(analysis.subjects.map((track) => [track.track_id, track]))
+  const regions = new Map<string, SourceVisualAnalysisV1['protected_regions']>()
+  for (const region of analysis.protected_regions) regions.set(region.region_id, [...(regions.get(region.region_id) ?? []), region])
   for (const shot of manifest.shot_directives) {
-    for (const layer of shot.layers) {
-      if (['source', 'background', 'branding'].includes(layer.kind) || layer.anchor === 'full') continue
-      const bounds = layer.bounds || fallbackBounds(layer.anchor)
-      if (boundsOverlap(lockupBounds, bounds)) issues.push(`shot ${shot.shot_id} layer ${layer.layer_id} collides with the approved top-left wordmark lockup`)
+    const referencedTracks = new Set([...shot.subject_track_ids, ...shot.camera_plan.subject_track_ids])
+    for (const trackId of referencedTracks) {
+      const track = tracks.get(trackId)
+      if (!track) issues.push(`shot ${shot.shot_id} references unknown subject geometry ${trackId}`)
+      else if (track.source_id !== shot.source_id) issues.push(`shot ${shot.shot_id} subject geometry ${trackId} belongs to a different source`)
+      else if (!track.face_keyframes.length && !track.body_keyframes.length) issues.push(`shot ${shot.shot_id} subject geometry ${trackId} has no face or body keyframes`)
+    }
+    if ((shot.primary_attention_target.kind === 'presenter' || shot.primary_attention_target.kind === 'guest') && !referencedTracks.size) {
+      const detected = analysis.subjects.some((track) => track.source_id === shot.source_id && track.start_ms < shot.source_end_ms && track.end_ms > shot.source_start_ms && (track.face_keyframes.length || track.body_keyframes.length))
+      if (!detected) issues.push(`shot ${shot.shot_id} has no known visible subject geometry`)
+    }
+    for (const regionId of shot.camera_plan.protected_region_ids) {
+      const matches = regions.get(regionId) ?? []
+      if (matches.length !== 1) issues.push(`shot ${shot.shot_id} references unknown protected geometry ${regionId}`)
+      else if (matches[0]!.source_id !== shot.source_id) issues.push(`shot ${shot.shot_id} protected geometry ${regionId} belongs to a different source`)
+    }
+    for (const layer of shot.layers.filter((item) => item.kind === 'source')) {
+      const sourceId = layer.target_id ?? shot.source_id
+      if (!analyzedSources.has(sourceId)) issues.push(`shot ${shot.shot_id} source layer ${layer.layer_id} has no exact analyzed geometry source`)
     }
   }
-  return issues
+  return [...new Set(issues)]
+}
+
+function sourceLocalTimeAt(
+  manifest: RenderManifestV2,
+  shot: RenderManifestV2['shot_directives'][number],
+  sourceId: string,
+  atMs: number,
+): number | undefined {
+  const primary = manifest.sources.find((source) => source.source_id === shot.source_id)
+  const target = manifest.sources.find((source) => source.source_id === sourceId)
+  if (!primary || !target) return undefined
+  return shot.source_start_ms + (atMs - shot.start_ms) + primary.canonical_offset_ms - target.canonical_offset_ms
+}
+
+function brandAnalysisCollisions(
+  manifest: RenderManifestV2,
+  shot: RenderManifestV2['shot_directives'][number],
+  brandBounds: NormalizedBounds,
+  startMs: number,
+  endMs: number,
+  context: BrandGeometryContextV2,
+): { labels: string[]; issues: string[] } {
+  const labels = new Set<string>()
+  const issues = new Set<string>()
+  const analysis = context.analysis
+  const analyzedSources = new Map(analysis.sources.map((source) => [source.source_id, source]))
+  const manifestSources = new Map(manifest.sources.map((source) => [source.source_id, source]))
+  const referencedTrackIds = new Set([...shot.subject_track_ids, ...shot.camera_plan.subject_track_ids])
+  const referencedRegions = shot.camera_plan.protected_region_ids.map((regionId) => analysis.protected_regions.find((region) => region.region_id === regionId)!)
+  const sourceLayers = shot.layers.filter((layer) => layer.kind === 'source')
+
+  for (const atMs of cueFrameTimes(shot, manifest.output.fps, startMs, endMs)) {
+    for (const layer of sourceLayers) {
+      if (!layerVisibleAt(layer, shot, atMs)) continue
+      const sourceId = layer.target_id ?? shot.source_id
+      const source = manifestSources.get(sourceId)
+      const analyzedSource = analyzedSources.get(sourceId)
+      const sourceTime = sourceLocalTimeAt(manifest, shot, sourceId, atMs)
+      if (!source || source.kind === 'audio' || !analyzedSource || sourceTime === undefined) {
+        issues.add(`shot ${shot.shot_id} has unknown source geometry at ${Math.round(atMs)} ms`)
+        continue
+      }
+      const layerBounds = layer.bounds || fallbackBounds(layer.anchor)
+      const crop = sourceId === shot.source_id
+        ? cameraCropAtOutputTime(shot, atMs)
+        : centeredCoverCrop(source.width, source.height, layerBounds.width * manifest.output.width, layerBounds.height * manifest.output.height)
+      const activeTracks = analysis.subjects.filter((track) => track.source_id === sourceId && sourceTime >= track.start_ms && sourceTime < track.end_ms)
+      const expectedTracks = [...referencedTrackIds].map((trackId) => analysis.subjects.find((track) => track.track_id === trackId)).filter((track) => track?.source_id === sourceId)
+      for (const track of expectedTracks) {
+        if (!track || sourceTime < track.start_ms || sourceTime >= track.end_ms) issues.add(`shot ${shot.shot_id} subject geometry ${track?.track_id ?? 'unknown'} does not cover ${Math.round(sourceTime)} ms`)
+      }
+      if ((shot.primary_attention_target.kind === 'presenter' || shot.primary_attention_target.kind === 'guest') && sourceId === shot.source_id && !activeTracks.length) {
+        issues.add(`shot ${shot.shot_id} has no visible subject geometry at source time ${Math.round(sourceTime)} ms`)
+      }
+      for (const track of activeTracks) {
+        const geometries = [
+          ['face', interpolateTimedBounds(track.face_keyframes, sourceTime)] as const,
+          ['body', interpolateTimedBounds(track.body_keyframes, sourceTime)] as const,
+        ]
+        if (!geometries.some(([, bounds]) => bounds)) issues.add(`shot ${shot.shot_id} subject geometry ${track.track_id} is unknown at source time ${Math.round(sourceTime)} ms`)
+        for (const [kind, sourceBounds] of geometries) {
+          if (!sourceBounds) continue
+          const projected = projectedSourceBounds(sourceBounds, crop, source.width, source.height, layerBounds, manifest.output.width, manifest.output.height)
+          if (projected && boundsOverlap(brandBounds, projected)) labels.add(`${track.track_id}:${kind}`)
+        }
+      }
+      if (sourceId === shot.source_id) {
+        for (const region of referencedRegions) {
+          if (!region || sourceTime < region.start_ms || sourceTime >= region.end_ms) continue
+          const projected = projectedSourceBounds(region.bounds, crop, source.width, source.height, layerBounds, manifest.output.width, manifest.output.height)
+          if (projected && boundsOverlap(brandBounds, projected)) labels.add(region.region_id)
+        }
+      }
+    }
+  }
+  return { labels: [...labels], issues: [...issues] }
+}
+
+export function resolveBrandPlacementForShot(
+  manifest: RenderManifestV2,
+  theme: BrandThemeV1,
+  shot: RenderManifestV2['shot_directives'][number],
+  mode: BrandLockupMode = 'mindmake_only',
+  startMs = shot.start_ms,
+  endMs = shot.end_ms,
+  geometryContext?: BrandGeometryContextV2,
+): BrandPlacementResolutionV2 {
+  if (manifest.branding.mode === 'none') return { issues: [] }
+  const geometryIssues = brandGeometryContextIssues(manifest, geometryContext)
+  if (geometryIssues.length) return { issues: geometryIssues }
+  const lockup = theme.wordmarks?.lockup
+  if (!lockup) return { issues: [`shot ${shot.shot_id} cannot place branding because the approved responsive lockup is missing`] }
+  const report = brandWordmarkLegibilityReport(theme)
+  if (report.failures.length) return { issues: report.failures }
+  const authored = shot.layers.filter((layer) => layer.kind === 'branding')
+  if (authored.length > 1) return { issues: [`shot ${shot.shot_id} has more than one branding placement directive`] }
+  const authoredAnchor = authored[0]?.anchor
+  if (authoredAnchor && authoredAnchor !== 'top_left' && authoredAnchor !== 'top_right') return { issues: [`shot ${shot.shot_id} branding placement must use top_left or top_right`] }
+  const inferredCorner: BrandPlacementV2['corner'] = shot.camera_plan.lead_room === 'right' ? 'top_right' : 'top_left'
+  const preferredCorner = (authoredAnchor || inferredCorner) as BrandPlacementV2['corner']
+  const corners = authoredAnchor
+    ? [preferredCorner]
+    : [preferredCorner, ...lockup.placement.allowed_corners.filter((corner) => corner !== preferredCorner)]
+  const modes: BrandLockupMode[] = mode === 'stacked_identity' ? ['stacked_identity', 'series_only'] : [mode]
+
+  for (const candidateMode of modes) {
+    for (const corner of corners) {
+      const candidate = placementBounds(manifest, theme, candidateMode, corner)
+      if (!candidate.insideSafeZone) continue
+      const authoredCollisions = collidingBrandLayers(shot, candidate.normalized, startMs, endMs)
+      const analysisCollisions = brandAnalysisCollisions(manifest, shot, candidate.normalized, startMs, endMs, geometryContext!)
+      if (analysisCollisions.issues.length) return { issues: analysisCollisions.issues }
+      if (!authoredCollisions.length && !analysisCollisions.labels.length) return { placement: candidate.placement, issues: [] }
+    }
+  }
+  const collisionLabels = modes.flatMap((candidateMode) => corners.flatMap((corner) => {
+    const candidate = placementBounds(manifest, theme, candidateMode, corner)
+    return [
+      ...collidingBrandLayers(shot, candidate.normalized, startMs, endMs),
+      ...brandAnalysisCollisions(manifest, shot, candidate.normalized, startMs, endMs, geometryContext!).labels,
+    ]
+  }))
+  return { issues: [`shot ${shot.shot_id} has no safe, legible wordmark placement${collisionLabels.length ? ` because it collides with ${[...new Set(collisionLabels)].join(', ')}` : ' inside the platform safe zone'}`] }
+}
+
+function identityWindows(manifest: RenderManifestV2, durationMs: number): Array<{ shot: RenderManifestV2['shot_directives'][number]; startMs: number; endMs: number }> {
+  const shots = [...manifest.shot_directives].sort((left, right) => left.start_ms - right.start_ms || left.end_ms - right.end_ms)
+  const first = shots[0]
+  const last = shots.at(-1)
+  const opening = first && first.end_ms - first.start_ms >= durationMs ? [{ shot: first, startMs: first.start_ms, endMs: first.start_ms + durationMs }] : []
+  const ending = last && last.end_ms - last.start_ms >= durationMs ? [{ shot: last, startMs: last.end_ms - durationMs, endMs: last.end_ms }] : []
+  const safeBeats = shots.filter((shot) => shot.end_ms - shot.start_ms >= durationMs).map((shot) => ({ shot, startMs: shot.start_ms, endMs: shot.start_ms + durationMs }))
+  const ordered = [...opening, ...ending, ...safeBeats]
+  const seen = new Set<string>()
+  return ordered.filter((item) => {
+    const key = `${item.shot.shot_id}:${item.startMs}:${item.endMs}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
+export function resolveBrandTimeline(manifest: RenderManifestV2, theme: BrandThemeV1, geometryContext?: BrandGeometryContextV2): BrandTimelineResolutionV2 {
+  if (manifest.branding.mode === 'none') return { cues: [], issues: [] }
+  const geometryIssues = brandGeometryContextIssues(manifest, geometryContext)
+  if (geometryIssues.length) return { cues: [], issues: geometryIssues }
+  const lockup = theme.wordmarks?.lockup
+  if (!lockup) return { cues: [], issues: ['approved responsive wordmark lockup is missing'] }
+  const report = brandWordmarkLegibilityReport(theme)
+  if (report.failures.length) return { cues: [], issues: report.failures }
+  const preferredIdentityMode = report.recommended_identity_mode[manifest.series]
+  let identityCue: BrandCueV2 | undefined
+  for (const window of identityWindows(manifest, lockup.identity.duration_ms)) {
+    const resolved = resolveBrandPlacementForShot(manifest, theme, window.shot, preferredIdentityMode, window.startMs, window.endMs, geometryContext)
+    if (resolved.placement) {
+      identityCue = { ...resolved.placement, shotId: window.shot.shot_id, startMs: window.startMs, endMs: window.endMs }
+      break
+    }
+  }
+  if (!identityCue) return { cues: [], issues: ['no opening, ending, or safe beat can host the required phone-legible series identity moment'] }
+
+  const cues: BrandCueV2[] = [identityCue]
+  const issues: string[] = []
+  for (const shot of manifest.shot_directives) {
+    const intervals: Array<{ startMs: number; endMs: number }> = identityCue.shotId !== shot.shot_id
+      ? [{ startMs: shot.start_ms, endMs: shot.end_ms }]
+      : [
+          { startMs: shot.start_ms, endMs: identityCue.startMs },
+          { startMs: identityCue.endMs, endMs: shot.end_ms },
+        ].filter((interval) => interval.endMs > interval.startMs)
+    for (const interval of intervals) {
+      const resolved = resolveBrandPlacementForShot(manifest, theme, shot, 'mindmake_only', interval.startMs, interval.endMs, geometryContext)
+      if (!resolved.placement) issues.push(...resolved.issues)
+      else cues.push({ ...resolved.placement, shotId: shot.shot_id, ...interval })
+    }
+  }
+  return { cues: cues.sort((left, right) => left.startMs - right.startMs || left.endMs - right.endMs), identity_cue: identityCue, issues: [...new Set(issues)] }
+}
+
+export function brandLayerCollisionIssues(manifest: RenderManifestV2, theme: BrandThemeV1, geometryContext?: BrandGeometryContextV2): string[] {
+  if (manifest.branding.mode === 'none') return []
+  return resolveBrandTimeline(manifest, theme, geometryContext).issues
 }
 
 function primaryLayerMatches(manifest: RenderManifestV2, shot: RenderManifestV2['shot_directives'][number]): string[] {
@@ -235,7 +659,8 @@ export function validateV2RenderReadiness(manifestInput: RenderManifestV2, revie
 }
 
 function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWordmarks | undefined, manifest: RenderManifestV2): V2RenderProps['branding'] {
-  if (!theme || manifest.branding.mode === 'none') return fallbackBranding
+  if (manifest.branding.mode === 'none') return fallbackBranding
+  if (!theme) throw new Error('branded V2 renders require their exact job-pinned brand theme')
   if (!staged) throw new Error('official wordmarks were not staged for a branded V2 render')
   return {
     mode: 'series',
@@ -262,6 +687,7 @@ function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWor
         pixelWidth: staged.mindmake.pixel_width,
         pixelHeight: staged.mindmake.pixel_height,
         alphaCrop: staged.mindmake.alpha_crop,
+        letterRegion: staged.mindmake.letter_region,
       },
       series: {
         assetFile: staged.series.assetFile,
@@ -270,15 +696,32 @@ function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWor
         pixelWidth: staged.series.pixel_width,
         pixelHeight: staged.series.pixel_height,
         alphaCrop: staged.series.alpha_crop,
+        letterRegion: staged.series.letter_region,
       },
       lockup: {
-        plateSize: staged.lockup.plate_size,
         offsetX: staged.lockup.offset_x,
         offsetY: staged.lockup.offset_y,
-        padding: staged.lockup.padding,
-        gap: staged.lockup.gap,
-        mindmakeWidth: staged.lockup.mindmake_width,
-        seriesWidth: staged.lockup.series_width,
+        identity: {
+          durationMs: staged.lockup.identity.duration_ms,
+          plateWidth: staged.lockup.identity.plate_width,
+          plateHeight: staged.lockup.identity.plate_height,
+          padding: staged.lockup.identity.padding,
+          gap: staged.lockup.identity.gap,
+          mindmakeWidth: staged.lockup.identity.mindmake_width,
+          seriesWidth: staged.lockup.identity.series_width,
+        },
+        seriesOnly: {
+          plateWidth: staged.lockup.series_only_fallback.plate_width,
+          plateHeight: staged.lockup.series_only_fallback.plate_height,
+          padding: staged.lockup.series_only_fallback.padding,
+          seriesWidth: staged.lockup.series_only_fallback.series_width,
+        },
+        anchor: {
+          plateWidth: staged.lockup.anchor.plate_width,
+          plateHeight: staged.lockup.anchor.plate_height,
+          padding: staged.lockup.anchor.padding,
+          mindmakeWidth: staged.lockup.anchor.mindmake_width,
+        },
       },
     },
   }
@@ -287,12 +730,16 @@ function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWor
 export function manifestToV2RenderProps(
   manifest: RenderManifestV2,
   staged: V2StagedMedia,
-  options: { durationMs?: number; reviewOverlay?: V2ReviewOverlay; theme?: BrandThemeV1; wordmarks?: StagedBrandWordmarks } = {},
+  options: { durationMs?: number; reviewOverlay?: V2ReviewOverlay; theme?: BrandThemeV1; wordmarks?: StagedBrandWordmarks; brandGeometry?: BrandGeometryContextV2 } = {},
 ): V2RenderProps {
   manifest = RenderManifestV2Schema.parse(manifest)
   const durationMs = Math.min(manifest.duration_ms, options.durationMs ?? manifest.duration_ms)
   const sourceFiles = staged.sourceFiles
   const assetFiles = staged.assetFiles
+  const brandGeometryIssues = brandGeometryContextIssues(manifest, options.brandGeometry)
+  if (brandGeometryIssues.length) throw new Error(`brand geometry gate failed: ${brandGeometryIssues.join('; ')}`)
+  const brandTimeline = options.theme && manifest.branding.mode === 'series' ? resolveBrandTimeline(manifest, options.theme, options.brandGeometry) : undefined
+  if (brandTimeline?.issues.length) throw new Error(`brand lockup placement gate failed: ${brandTimeline.issues.join('; ')}`)
   const audioTracks: V2RenderProps['audioTracks'] = []
   manifest.audio_plan.dialogue_edits.forEach((edit) => {
     const assetFile = sourceFiles[edit.source_id]
@@ -313,6 +760,14 @@ export function manifestToV2RenderProps(
     const endMs = Math.min(shot.end_ms, durationMs)
     let keyframes = shot.camera_plan.keyframes.filter((keyframe) => keyframe.at_ms <= endMs)
     if (!keyframes.length) keyframes = [{ ...shot.camera_plan.keyframes[0]!, at_ms: shot.start_ms }]
+    const brandCues = brandTimeline?.cues.filter((cue) => cue.shotId === shot.shot_id && cue.startMs < endMs).map((cue) => ({
+      startMs: cue.startMs,
+      endMs: Math.min(cue.endMs, endMs),
+      mode: cue.mode,
+      corner: cue.corner,
+      topPx: cue.topPx,
+      leftPx: cue.leftPx,
+    })).filter((cue) => cue.endMs > cue.startMs)
     return {
       shotId: shot.shot_id,
       startMs: shot.start_ms,
@@ -322,6 +777,7 @@ export function manifestToV2RenderProps(
       sourceEndMs: Math.min(shot.source_end_ms, shot.source_start_ms + endMs - shot.start_ms),
       primaryAttentionTarget: { kind: shot.primary_attention_target.kind, ...(shot.primary_attention_target.target_id ? { targetId: shot.primary_attention_target.target_id } : {}) },
       treatmentLane: manifest.treatment_lane,
+      ...(brandCues?.length ? { brandCues } : {}),
       camera: {
         keyframes: keyframes.map((keyframe) => ({ atMs: keyframe.at_ms, crop: keyframe.crop, zoom: keyframe.zoom, rotationDegrees: keyframe.rotation_degrees, confidence: keyframe.confidence })),
         easing: shot.camera_plan.easing,
@@ -336,6 +792,8 @@ export function manifestToV2RenderProps(
         opacity: layer.opacity,
         blendMode: layer.blend_mode,
         protected: layer.protected,
+        ...(layer.visible_start_ms === undefined ? {} : { visibleStartMs: layer.visible_start_ms }),
+        ...(layer.visible_end_ms === undefined ? {} : { visibleEndMs: layer.visible_end_ms }),
       })),
       transitionIn: shot.transition_in,
       transitionOut: shot.transition_out,
@@ -428,7 +886,34 @@ export async function loadPinnedRenderRegistryV2(manifest: RenderManifestV2): Pr
   return TreatmentRegistryV1Schema.parse(JSON.parse(await readFile(pinnedConfigPathV2(job), 'utf8')))
 }
 
-async function loadBrandTheme(config: TreatmentRegistryV1, manifest: RenderManifestV2, stagingDirectory: string): Promise<{ theme?: BrandThemeV1; wordmarks?: StagedBrandWordmarks }> {
+export async function loadExactBrandGeometryContextV2(manifest: RenderManifestV2): Promise<BrandGeometryContextV2 | undefined> {
+  if (manifest.branding.mode === 'none') return undefined
+  const job = await loadJobV2(manifest.job_id)
+  if (!job.source_bundle) throw new Error('branded rendering requires a current source bundle')
+  const visualPlanArtifact = await readStageArtifactV2(manifest.job_id, 'visual_plan')
+  if (visualPlanArtifact.artifact_hash !== manifest.visual_plan_artifact_hash) throw new Error('render manifest is not bound to the exact current visual_plan artifact')
+  const visualPlan = VisualNarrativePlanV1Schema.parse(visualPlanArtifact.payload)
+  if (visualPlan.job_id !== manifest.job_id) throw new Error('current visual_plan belongs to a different job')
+  const sourceAnalysisArtifact = await readStageArtifactV2(manifest.job_id, 'source_analysis')
+  if (visualPlan.source_analysis_artifact_hash !== sourceAnalysisArtifact.artifact_hash) throw new Error('current visual_plan is not bound to the exact current source_analysis artifact')
+  const analysis = SourceVisualAnalysisV1Schema.parse(sourceAnalysisArtifact.payload)
+  if (analysis.source_bundle_hash !== hashValue(job.source_bundle)) throw new Error('source_analysis is stale against the current source bundle')
+  const context = {
+    analysis,
+    artifactHash: sourceAnalysisArtifact.artifact_hash,
+    expectedArtifactHash: visualPlan.source_analysis_artifact_hash,
+  }
+  const issues = brandGeometryContextIssues(manifest, context)
+  if (issues.length) throw new Error(`brand geometry gate failed: ${issues.join('; ')}`)
+  return context
+}
+
+async function loadBrandTheme(
+  config: TreatmentRegistryV1,
+  manifest: RenderManifestV2,
+  stagingDirectory: string,
+  brandGeometry?: BrandGeometryContextV2,
+): Promise<{ theme?: BrandThemeV1; wordmarks?: StagedBrandWordmarks }> {
   if (manifest.branding.mode === 'none') return {}
   const theme = config.brand_themes.find((candidate) => candidate.theme_id === manifest.branding.theme_id)
   if (!theme) throw new Error(`brand theme ${manifest.branding.theme_id || 'missing'} is not available in the job-pinned configuration`)
@@ -439,7 +924,7 @@ async function loadBrandTheme(config: TreatmentRegistryV1, manifest: RenderManif
   const requiredWordmarkHashes = [theme.wordmarks.mindmake.sha256, theme.wordmarks.series[manifest.series].sha256].sort()
   const manifestWordmarkHashes = [...manifest.branding.wordmark_hashes].sort()
   if (requiredWordmarkHashes.join(':') !== manifestWordmarkHashes.join(':')) throw new Error('render manifest is not pinned to the exact official Mindmake and series wordmarks')
-  const collisionIssues = brandLayerCollisionIssues(manifest, theme)
+  const collisionIssues = brandLayerCollisionIssues(manifest, theme, brandGeometry)
   if (collisionIssues.length) throw new Error(`brand lockup collision gate failed: ${collisionIssues.join('; ')}`)
   const wordmarks = await stageOfficialWordmarks({ branding: 'series', brand_theme: theme, series: manifest.series } as unknown as RenderManifestV1, stagingDirectory)
   if (!wordmarks) throw new Error('official wordmark staging returned no assets')
@@ -456,8 +941,8 @@ export async function rendererImplementationHashV2(repoRoot: string): Promise<st
   })
 }
 
-export function renderV2CacheKey(manifest: unknown, profile: string, rendererHash: string, durationMs?: number): string {
-  return hashValue({ manifest, profile, renderer_hash: rendererHash, duration_ms: durationMs, audio_normalization: 'loudnorm-two-pass-v2-minus-one-dbtp' })
+export function renderV2CacheKey(manifest: unknown, profile: string, rendererHash: string, durationMs?: number, startMs?: number, sourceAnalysisArtifactHash?: string): string {
+  return hashValue({ manifest, profile, renderer_hash: rendererHash, duration_ms: durationMs, start_ms: startMs, source_analysis_artifact_hash: sourceAnalysisArtifactHash ?? null, audio_normalization: 'loudnorm-two-pass-v2-minus-one-dbtp' })
 }
 
 export function loudnormSecondPassFilterV2(stderr: string): string {
@@ -505,11 +990,14 @@ async function sharedBrowserExecutableV2(): Promise<string> {
   return copiedExecutable
 }
 
-function profileSettings(options: V2RenderOptions, manifest: RenderManifestV2): { profile: V2RenderProfile; durationMs: number; scale: 0.25 | 0.5 | 1; crf: number; overlay: V2ReviewOverlay } {
+function profileSettings(options: V2RenderOptions, manifest: RenderManifestV2): { profile: V2RenderProfile; startMs: number; durationMs: number; scale: 0.25 | 0.5 | 1; crf: number; overlay: V2ReviewOverlay } {
   const profile = options.profile ?? 'master'
-  if (profile === 'master') return { profile, durationMs: manifest.duration_ms, scale: 1, crf: 17, overlay: 'none' }
-  if (profile === 'animatic') return { profile, durationMs: manifest.duration_ms, scale: options.previewScale ?? 0.25, crf: 28, overlay: 'animatic' }
-  return { profile, durationMs: Math.min(manifest.duration_ms, Math.max(1_000, options.previewDurationMs ?? 6_000)), scale: options.previewScale ?? 0.5, crf: 24, overlay: 'none' }
+  if (profile === 'master') return { profile, startMs: 0, durationMs: manifest.duration_ms, scale: 1, crf: 17, overlay: 'none' }
+  if (profile === 'animatic') return { profile, startMs: 0, durationMs: manifest.duration_ms, scale: options.previewScale ?? 0.25, crf: 28, overlay: 'animatic' }
+  const requestedStart = Math.max(0, Math.floor(options.previewStartMs ?? 0))
+  const startMs = Math.min(requestedStart, Math.max(0, manifest.duration_ms - 1_000))
+  const previewDuration = Math.max(1_000, Math.floor(options.previewDurationMs ?? 6_000))
+  return { profile, startMs, durationMs: Math.min(manifest.duration_ms, startMs + previewDuration), scale: options.previewScale ?? 0.5, crf: 24, overlay: 'none' }
 }
 
 export async function renderStoryV2(repoRoot: string, manifestInput: RenderManifestV2, options: V2RenderOptions = {}): Promise<string> {
@@ -518,9 +1006,10 @@ export async function renderStoryV2(repoRoot: string, manifestInput: RenderManif
   const settings = profileSettings(options, manifest)
   const readinessIssues = validateV2RenderReadiness(manifest, settings.overlay)
   if (readinessIssues.length) throw new Error(`V2 render readiness failed: ${readinessIssues.join('; ')}`)
+  const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
   const rendererHash = await rendererImplementationHashV2(repoRoot)
-  const cacheKey = renderV2CacheKey(manifest, settings.profile, rendererHash, settings.durationMs).slice(0, 20)
+  const cacheKey = renderV2CacheKey(manifest, settings.profile, rendererHash, settings.durationMs, settings.startMs, brandGeometry?.artifactHash).slice(0, 20)
   const outputDirectory = join(jobPath(manifest.job_id), 'renders', 'v2', manifest.target_platform)
   const outputPath = join(outputDirectory, `${manifest.manifest_id}-${settings.profile}-${cacheKey}.mp4`)
   const rawPath = join(outputDirectory, `${manifest.manifest_id}-${settings.profile}-${cacheKey}.raw.mp4`)
@@ -528,8 +1017,8 @@ export async function renderStoryV2(repoRoot: string, manifestInput: RenderManif
   try { await access(outputPath); return outputPath } catch { /* Render a missing content-addressed output. */ }
 
   const { directory: stagingDirectory, staged } = await stageV2Media(manifest)
-  const { theme, wordmarks } = await loadBrandTheme(pinnedRegistry, manifest, stagingDirectory)
-  const inputProps = manifestToV2RenderProps(manifest, staged, { durationMs: settings.durationMs, reviewOverlay: settings.overlay, ...(theme ? { theme } : {}), ...(wordmarks ? { wordmarks } : {}) })
+  const { theme, wordmarks } = await loadBrandTheme(pinnedRegistry, manifest, stagingDirectory, brandGeometry)
+  const inputProps = manifestToV2RenderProps(manifest, staged, { durationMs: settings.durationMs, reviewOverlay: settings.overlay, ...(theme ? { theme } : {}), ...(wordmarks ? { wordmarks } : {}), ...(brandGeometry ? { brandGeometry } : {}) })
   const browserExecutable = await sharedBrowserExecutableV2()
   const serveUrl = await bundle({ entryPoint: join(repoRoot, 'apps', 'renderer', 'src', 'index.ts'), publicDir: stagingDirectory })
   const composition = await selectComposition({ serveUrl, id: COMPOSITION_ID, inputProps, browserExecutable })
@@ -549,6 +1038,12 @@ export async function renderStoryV2(repoRoot: string, manifestInput: RenderManif
       jpegQuality: settings.profile === 'master' ? 92 : 76,
       x264Preset: settings.profile === 'master' ? 'medium' : 'veryfast',
       logLevel: 'info',
+      ...(settings.startMs > 0 ? {
+        frameRange: [
+          Math.floor(settings.startMs * composition.fps / 1000),
+          Math.max(Math.floor(settings.startMs * composition.fps / 1000), Math.ceil(settings.durationMs * composition.fps / 1000) - 1),
+        ] as [number, number],
+      } : {}),
     })
     await normalizeRenderedAudioV2(rawPath, outputPath)
     await verifyRenderedAudioV2(outputPath)
@@ -570,14 +1065,15 @@ export async function renderV2Styleframes(repoRoot: string, manifestInput: Rende
   if (times.some((time) => time < 0 || time >= manifest.duration_ms)) throw new Error('styleframe time is outside the render duration')
   const readinessIssues = validateV2RenderReadiness(manifest, 'styleframe')
   if (readinessIssues.length) throw new Error(`V2 styleframe readiness failed: ${readinessIssues.join('; ')}`)
+  const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
   const rendererHash = await rendererImplementationHashV2(repoRoot)
-  const cacheKey = renderV2CacheKey(manifest, 'styleframes', rendererHash).slice(0, 20)
+  const cacheKey = renderV2CacheKey(manifest, 'styleframes', rendererHash, undefined, undefined, brandGeometry?.artifactHash).slice(0, 20)
   const outputDirectory = join(jobPath(manifest.job_id), 'styleframes', cacheKey)
   await mkdir(outputDirectory, { recursive: true })
   const { directory: stagingDirectory, staged } = await stageV2Media(manifest)
-  const { theme, wordmarks } = await loadBrandTheme(pinnedRegistry, manifest, stagingDirectory)
-  const inputProps = manifestToV2RenderProps(manifest, staged, { reviewOverlay: 'styleframe', ...(theme ? { theme } : {}), ...(wordmarks ? { wordmarks } : {}) })
+  const { theme, wordmarks } = await loadBrandTheme(pinnedRegistry, manifest, stagingDirectory, brandGeometry)
+  const inputProps = manifestToV2RenderProps(manifest, staged, { reviewOverlay: 'styleframe', ...(theme ? { theme } : {}), ...(wordmarks ? { wordmarks } : {}), ...(brandGeometry ? { brandGeometry } : {}) })
   const browserExecutable = await sharedBrowserExecutableV2()
   const serveUrl = await bundle({ entryPoint: join(repoRoot, 'apps', 'renderer', 'src', 'index.ts'), publicDir: stagingDirectory })
   const composition = await selectComposition({ serveUrl, id: COMPOSITION_ID, inputProps, browserExecutable })

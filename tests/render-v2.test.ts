@@ -2,8 +2,8 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { RenderManifestV2Schema, TreatmentRegistryV1Schema, type BrandThemeV1, type RenderManifestV2 } from '@mindmake/contracts'
-import { brandLayerCollisionIssues, createJobV2, hashValue, loadPinnedRenderRegistryV2, loudnormSecondPassFilterV2, manifestToV2RenderProps, renderV2CacheKey, validateV2RenderReadiness } from '@mindmake/core'
+import { RenderManifestV2Schema, SourceVisualAnalysisV1Schema, TreatmentRegistryV1Schema, VisualNarrativePlanV1Schema, type BrandThemeV1, type RenderManifestV2, type SourceVisualAnalysisV1 } from '@mindmake/contracts'
+import { brandGeometryContextIssues, brandLayerCollisionIssues, completeStageV2, createJobV2, hashValue, loadExactBrandGeometryContextV2, loadPinnedRenderRegistryV2, loudnormSecondPassFilterV2, manifestToV2RenderProps, renderV2CacheKey, resolveBrandPlacementForShot, resolveBrandTimeline, validateV2RenderReadiness, type BrandGeometryContextV2 } from '@mindmake/core'
 import studioConfig from '../config/studio.json'
 import { brandLockupRenderModel } from '../apps/renderer/src/v2/MindmakeStory'
 import { cameraCropAt, defaultLayerBounds, deterministicUnit, primaryAttentionLayerId, sourceStartForShot, transitionOpacity } from '../apps/renderer/src/v2/timeline'
@@ -120,11 +120,76 @@ function officialBrandFixture() {
   return {
     theme,
     wordmarks: {
-      mindmake: { ...theme.wordmarks.mindmake, assetFile: `brand-mindmake-${theme.wordmarks.mindmake.sha256.slice(0, 16)}.png` },
+      mindmake: { ...theme.wordmarks.mindmake, assetFile: `brand-mindmake-${theme.wordmarks.mindmake.sha256.slice(0, 16)}.svg` },
       series: { ...series, assetFile: `brand-built_with_ai-${series.sha256.slice(0, 16)}.png` },
       lockup: theme.wordmarks.lockup,
     },
   }
+}
+
+function brandableManifest(base: RenderManifestV2 = manifest()): RenderManifestV2 {
+  const { theme } = officialBrandFixture()
+  return RenderManifestV2Schema.parse({
+    ...base,
+    branding: {
+      mode: 'series',
+      theme_id: theme.theme_id,
+      theme_version: theme.version,
+      theme_hash: hashValue(theme),
+      wordmark_hashes: [theme.wordmarks!.mindmake.sha256, theme.wordmarks!.series[base.series].sha256],
+    },
+    shot_directives: base.shot_directives.map((shot) => ({
+      ...shot,
+      layers: shot.layers.map((layer) => layer.kind === 'source' ? { ...layer, protected: false } : layer),
+    })),
+  })
+}
+
+function sourceAnalysisFor(base: RenderManifestV2, overrides: Partial<SourceVisualAnalysisV1> = {}): SourceVisualAnalysisV1 {
+  const visualSources = base.sources.filter((source) => source.kind !== 'audio')
+  return SourceVisualAnalysisV1Schema.parse({
+    schema_version: 1,
+    analysis_id: 'analysis-render-v2',
+    job_id: base.job_id,
+    source_bundle_hash: HASH_A,
+    coordinate_space: 'normalized_0_1',
+    timebase: 'source_local_ms',
+    generated_at: '2026-09-04T10:00:00.000Z',
+    capabilities: { tier: 2, analyzers: { face_tracking: 'fixture-v1' }, unavailable: [], fallbacks: [] },
+    sources: visualSources.map((source) => ({ source_id: source.source_id, source_hash: source.sha256, duration_ms: source.duration_ms, width: source.width, height: source.height, fps: source.fps, audio_hz: source.audio_hz, canonical_offset_ms: source.canonical_offset_ms })),
+    shots: [],
+    subjects: [{
+      track_id: 'krish-track',
+      source_id: 'camera-main',
+      role: 'krish',
+      profile_id: 'krish-profile',
+      profile_version_hash: HASH_B,
+      start_ms: 0,
+      end_ms: 10_000,
+      face_keyframes: [
+        { at_ms: 0, bounds: { x: 0.45, y: 0.6, width: 0.1, height: 0.1 }, confidence: 0.99 },
+        { at_ms: 10_000, bounds: { x: 0.45, y: 0.6, width: 0.1, height: 0.1 }, confidence: 0.99 },
+      ],
+      body_keyframes: [
+        { at_ms: 0, bounds: { x: 0.4, y: 0.73, width: 0.2, height: 0.25 }, confidence: 0.99 },
+        { at_ms: 10_000, bounds: { x: 0.4, y: 0.73, width: 0.2, height: 0.25 }, confidence: 0.99 },
+      ],
+      hand_keyframes: [],
+      detection_confidence: 0.99,
+    }],
+    active_speakers: [],
+    gestures: [],
+    gaze: [],
+    negative_space: [],
+    protected_regions: [],
+    sidecars: [],
+    quality_issues: [],
+    ...overrides,
+  })
+}
+
+function brandGeometryFor(base: RenderManifestV2, analysis: SourceVisualAnalysisV1 = sourceAnalysisFor(base)): BrandGeometryContextV2 {
+  return { analysis, artifactHash: HASH_B, expectedArtifactHash: HASH_B }
 }
 
 describe('V2 render readiness', () => {
@@ -308,44 +373,307 @@ describe('V2 brand lockup protection', () => {
     }
   })
 
-  it('blocks a bounded visual from occupying the approved top-left lockup area', () => {
+  it('loads brand geometry only through the current content-addressed source-analysis lineage', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'mindmake-brand-analysis-v2-'))
+    const priorRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
+    process.env.MINDMAKE_RUNTIME_ROOT = join(root, 'runtime')
+    try {
+      const bundle = {
+        schema_version: 1 as const,
+        bundle_id: 'bundle-brand-analysis',
+        primary_source_id: 'camera-main',
+        sources: [{ source_id: 'camera-main', kind: 'video' as const, role: 'primary_camera' as const, ref: 'camera.mp4', content_hash: HASH_A, rights: 'owned' as const, sync: { strategy: 'already_mixed' as const, offset_ms: 0 }, include_in_edit: true }],
+      }
+      const job = await createJobV2({
+        series: 'built_with_ai',
+        mode: 'solo',
+        presenterName: 'Krish',
+        sourceBundle: bundle,
+        targetPlatforms: ['youtube_shorts'],
+        configPath: join(process.cwd(), 'config', 'studio.json'),
+        skillPaths: [],
+      })
+      const base = RenderManifestV2Schema.parse({ ...manifest(), job_id: job.job_id })
+      await completeStageV2(job.job_id, 'ingest', { fixture: true }, {}, { fixture: '1' })
+      await completeStageV2(job.job_id, 'normalize', { fixture: true }, { ingest: HASH_A }, { fixture: '1' })
+      await completeStageV2(job.job_id, 'transcript', { fixture: true }, { normalize: HASH_A }, { fixture: '1' })
+      await completeStageV2(job.job_id, 'candidates', { fixture: true }, { transcript: HASH_A }, { fixture: '1' })
+      await completeStageV2(job.job_id, 'claims', { fixture: true }, { candidates: HASH_A }, { fixture: '1' })
+      const analysis = sourceAnalysisFor(base, { job_id: job.job_id, source_bundle_hash: hashValue(bundle) })
+      const analysisArtifact = await completeStageV2(job.job_id, 'source_analysis', analysis, { normalize: HASH_A }, { fixture: '1' })
+      const visualPlan = VisualNarrativePlanV1Schema.parse({
+        schema_version: 1,
+        plan_id: 'plan-brand-analysis',
+        job_id: job.job_id,
+        candidate_id: base.candidate_id,
+        candidate_hash: base.candidate_hash,
+        claims_artifact_hash: HASH_A,
+        source_analysis_artifact_hash: analysisArtifact.artifact_hash,
+        technique_registry_hash: HASH_A,
+        preference_snapshot_hash: HASH_A,
+        duration_ms: base.duration_ms,
+        treatment_lane: base.treatment_lane,
+        beats: [{ beat_id: 'beat-main', start_ms: 0, end_ms: 2_000, transcript: 'This changes the outcome. Here is why.', source_spans: [{ source_id: 'camera-main', start_ms: 4_000, end_ms: 6_000 }], claim_ids: [], narrative_function: 'ending', viewer_task: 'land_payoff', emotional_function: 'trust', visual_density: 'rest', proof_dependency: false, primary_attention_target: { kind: 'presenter' }, rationale: 'Let the useful conclusion land clearly on Krish.' }],
+        asset_requirements: [],
+        resolved_assets: [],
+        shot_directives: base.shot_directives,
+        budget: { estimated_cost_gbp: 0, maximum_cost_gbp: 15, exception_approved: false },
+        disclosures: base.disclosures,
+        fallbacks: [],
+        strategy_summary: 'A restrained presenter-led close that keeps the conclusion clear.',
+      })
+      const planArtifact = await completeStageV2(job.job_id, 'visual_plan', visualPlan, { source_analysis: analysisArtifact.artifact_hash, candidate: HASH_A, claims: HASH_A }, { fixture: '1' })
+      const branded = brandableManifest(RenderManifestV2Schema.parse({ ...base, visual_plan_artifact_hash: planArtifact.artifact_hash }))
+      await expect(loadExactBrandGeometryContextV2(branded)).resolves.toMatchObject({ artifactHash: analysisArtifact.artifact_hash, expectedArtifactHash: analysisArtifact.artifact_hash, analysis: { analysis_id: 'analysis-render-v2', job_id: job.job_id } })
+      await expect(loadExactBrandGeometryContextV2(RenderManifestV2Schema.parse({ ...branded, visual_plan_artifact_hash: HASH_B }))).rejects.toThrow('render manifest is not bound to the exact current visual_plan artifact')
+    } finally {
+      if (priorRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
+      else process.env.MINDMAKE_RUNTIME_ROOT = priorRuntimeRoot
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
+  it('moves the compact Mindmake anchor to the other safe corner when evidence occupies top-left', () => {
+    const { theme } = officialBrandFixture()
     const base = evidenceManifest('approved')
+    const shot = base.shot_directives[0]!
+    const branded = brandableManifest(RenderManifestV2Schema.parse({
+      ...base,
+      shot_directives: [{ ...shot, layers: shot.layers.map((layer) => layer.layer_id === 'proof-layer' ? { ...layer, anchor: 'top_left', bounds: { x: 0.04, y: 0.04, width: 0.42, height: 0.34 } } : layer) }],
+    }))
+    expect(resolveBrandPlacementForShot(branded, theme, branded.shot_directives[0]!, 'mindmake_only', 0, 2_000, brandGeometryFor(branded))).toMatchObject({ placement: { mode: 'mindmake_only', corner: 'top_right', topPx: 140, leftPx: 720 }, issues: [] })
+  })
+
+  it('renders a phone-legible series identity moment, then collapses to the official Mindmake anchor', () => {
+    const { theme, wordmarks } = officialBrandFixture()
+    const expectedHashes = [wordmarks.mindmake.sha256, wordmarks.series.sha256].sort()
+    const branded = brandableManifest()
+    expect([...branded.branding.wordmark_hashes].sort()).toEqual(expectedHashes)
+    const brandGeometry = brandGeometryFor(branded)
+
+    for (const reviewOverlay of ['styleframe', 'none'] as const) {
+      const props = manifestToV2RenderProps(branded, { sourceFiles: { 'camera-main': 'source-camera.mp4' }, assetFiles: {} }, { theme, wordmarks, reviewOverlay, brandGeometry })
+      expect(props.reviewOverlay).toBe(reviewOverlay)
+      expect(props.branding.mode).toBe('series')
+      expect(props.branding.wordmarks?.mindmake).toMatchObject({ sourcePath: 'src/assets/mindmake-wordmark.svg', sha256: '57fd2cdef929de2035baf5b0405a152878b26f7eba39b17b1d4c03f2470b9737' })
+      expect(props.branding.wordmarks?.series).toMatchObject({ sourcePath: 'src/assets/builtwithai-logo-wordmark.png', sha256: '271ab965dc51714be8c13c8a6bb8c7b2b60f4bf22caf51dda5a2928e295fd29f' })
+      expect(props.shots[0]?.brandCues).toEqual([
+        { startMs: 0, endMs: 1_200, mode: 'stacked_identity', corner: 'top_left', topPx: 140, leftPx: 80 },
+        { startMs: 1_200, endMs: 2_000, mode: 'mindmake_only', corner: 'top_left', topPx: 140, leftPx: 80 },
+      ])
+      const model = brandLockupRenderModel(props.branding, props.shots[0]?.brandCues?.[0])
+      expect(model).not.toBeNull()
+      expect(model).toMatchObject({ mode: 'stacked_identity', corner: 'top_left', plate: { count: 1, width: 700, height: 520, top: 140, left: 80 }, wordmarks: [{ role: 'mindmake', displayWidth: 230 }, { role: 'series', displayWidth: 650 }] })
+      const [mindmake, series] = model!.wordmarks
+      const mindmakeHeight = mindmake!.displayWidth * mindmake!.asset.alphaCrop.height / mindmake!.asset.alphaCrop.width
+      const seriesLetterHeight = series!.displayWidth * series!.asset.letterRegion.height / series!.asset.alphaCrop.width
+      expect(mindmakeHeight).toBeGreaterThanOrEqual(32)
+      expect(seriesLetterHeight).toBeGreaterThanOrEqual(50)
+      expect(seriesLetterHeight * 375 / 1080).toBeGreaterThanOrEqual(17)
+      expect(brandLockupRenderModel(props.branding, props.shots[0]?.brandCues?.[1])).toMatchObject({
+        mode: 'mindmake_only',
+        plate: { width: 280, height: 90 },
+        wordmarks: [{ role: 'mindmake', displayWidth: 230 }],
+      })
+    }
+  })
+
+  it('reserves a clear identity moment and uses the compact Mindmake anchor while evidence is active', () => {
+    const { theme, wordmarks } = officialBrandFixture()
+    const base = evidenceManifest('approved')
+    const branded = brandableManifest(RenderManifestV2Schema.parse({
+      ...base,
+      shot_directives: base.shot_directives.map((shot) => ({ ...shot, layers: shot.layers.map((layer) => layer.layer_id === 'proof-layer' ? { ...layer, visible_start_ms: 1_200, visible_end_ms: 2_000 } : layer) })),
+    }))
+    const props = manifestToV2RenderProps(branded, { sourceFiles: { 'camera-main': 'source-camera.mp4' }, assetFiles: { 'proof-card': 'proof.png' } }, { theme, wordmarks, brandGeometry: brandGeometryFor(branded) })
+    expect(props.shots[0]?.brandCues).toEqual([
+      { startMs: 0, endMs: 1_200, mode: 'stacked_identity', corner: 'top_left', topPx: 140, leftPx: 80 },
+      { startMs: 1_200, endMs: 2_000, mode: 'mindmake_only', corner: 'top_left', topPx: 140, leftPx: 80 },
+    ])
+  })
+
+  it('uses the official series-only identity fallback without shrinking its lettering', () => {
+    const { theme } = officialBrandFixture()
+    const fallbackTheme = { ...theme, wordmarks: { ...theme.wordmarks!, lockup: { ...theme.wordmarks!.lockup!, identity: { ...theme.wordmarks!.lockup!.identity, series_width: 400 } } } } as BrandThemeV1
+    const base = brandableManifest()
+    const branded = RenderManifestV2Schema.parse({ ...base, branding: { mode: 'series', theme_id: fallbackTheme.theme_id, theme_version: fallbackTheme.version, theme_hash: hashValue(fallbackTheme), wordmark_hashes: [fallbackTheme.wordmarks!.mindmake.sha256, fallbackTheme.wordmarks!.series.built_with_ai.sha256] } })
+    const timeline = resolveBrandTimeline(branded, fallbackTheme, brandGeometryFor(branded))
+    expect(timeline.issues).toEqual([])
+    expect(timeline.identity_cue).toMatchObject({ mode: 'series_only', startMs: 0, endMs: 1_200 })
+    const letterHeight = fallbackTheme.wordmarks!.lockup!.series_only_fallback.series_width * fallbackTheme.wordmarks!.series.built_with_ai.letter_region.height / fallbackTheme.wordmarks!.series.built_with_ai.alpha_crop.width
+    expect(letterHeight).toBeGreaterThanOrEqual(50)
+    expect(letterHeight * 375 / 1080).toBeGreaterThanOrEqual(17)
+  })
+
+  it('uses authored lead room or a branding directive to keep the lockup away from the presenter', () => {
+    const { theme } = officialBrandFixture()
+    const base = brandableManifest()
+    const shot = base.shot_directives[0]!
+    const leadRoom = RenderManifestV2Schema.parse({ ...base, shot_directives: [{ ...shot, camera_plan: { ...shot.camera_plan, lead_room: 'right' } }] })
+    expect(resolveBrandPlacementForShot(leadRoom, theme, leadRoom.shot_directives[0]!, 'mindmake_only', 0, 2_000, brandGeometryFor(leadRoom)).placement?.corner).toBe('top_right')
+    const directed = RenderManifestV2Schema.parse({ ...base, shot_directives: [{ ...shot, layers: [...shot.layers, { layer_id: 'brand-placement', z_index: 30, kind: 'branding', anchor: 'top_right', opacity: 1, blend_mode: 'normal', protected: true }] }] })
+    expect(resolveBrandPlacementForShot(directed, theme, directed.shot_directives[0]!, 'mindmake_only', 0, 2_000, brandGeometryFor(directed)).placement?.corner).toBe('top_right')
+  })
+
+  it('fails the placement gate when protected visuals occupy both approved corners', () => {
+    const { theme } = officialBrandFixture()
+    const base = brandableManifest()
+    const shot = base.shot_directives[0]!
+    const blocked = RenderManifestV2Schema.parse({
+      ...base,
+      shot_directives: [{
+        ...shot,
+        layers: [
+          ...shot.layers,
+          { layer_id: 'protected-left', z_index: 30, kind: 'annotation', anchor: 'top_left', bounds: { x: 0.03, y: 0.05, width: 0.45, height: 0.4 }, opacity: 1, blend_mode: 'normal', protected: true },
+          { layer_id: 'protected-right', z_index: 31, kind: 'annotation', anchor: 'top_right', bounds: { x: 0.52, y: 0.05, width: 0.45, height: 0.4 }, opacity: 1, blend_mode: 'normal', protected: true },
+        ],
+      }],
+    })
+    expect(brandLayerCollisionIssues(blocked, theme, brandGeometryFor(blocked))).toEqual(['no opening, ending, or safe beat can host the required phone-legible series identity moment'])
+  })
+
+  it.each(['source', 'background'] as const)('fails closed when a protected full-frame %s layer would sit beneath the brand plate', (kind) => {
+    const { theme } = officialBrandFixture()
+    const base = brandableManifest()
+    const blocked = RenderManifestV2Schema.parse({
+      ...base,
+      shot_directives: base.shot_directives.map((shot) => ({
+        ...shot,
+        layers: shot.layers.map((layer) => layer.kind === kind ? { ...layer, protected: true } : layer),
+      })),
+    })
+    expect(brandLayerCollisionIssues(blocked, theme, brandGeometryFor(blocked))).toEqual(['no opening, ending, or safe beat can host the required phone-legible series identity moment'])
+  })
+
+  it('moves the identity cue away from analyzed face geometry', () => {
+    const { theme } = officialBrandFixture()
+    const branded = brandableManifest()
+    const baseline = sourceAnalysisFor(branded)
+    const subject = baseline.subjects[0]!
+    const leftFace = SourceVisualAnalysisV1Schema.parse({
+      ...baseline,
+      subjects: [{
+        ...subject,
+        face_keyframes: [
+          { at_ms: 0, bounds: { x: 0.35, y: 0.08, width: 0.08, height: 0.14 }, confidence: 0.99 },
+          { at_ms: 10_000, bounds: { x: 0.35, y: 0.08, width: 0.08, height: 0.14 }, confidence: 0.99 },
+        ],
+      }],
+    })
+    const timeline = resolveBrandTimeline(branded, theme, brandGeometryFor(branded, leftFace))
+    expect(timeline.issues).toEqual([])
+    expect(timeline.identity_cue?.corner).toBe('top_right')
+  })
+
+  it('moves the identity cue away from camera-plan protected geometry', () => {
+    const { theme } = officialBrandFixture()
+    const base = brandableManifest()
     const shot = base.shot_directives[0]!
     const branded = RenderManifestV2Schema.parse({
       ...base,
-      branding: { mode: 'series', theme_id: 'theme-v1', theme_version: 1, theme_hash: HASH_A, wordmark_hashes: [HASH_A, HASH_B] },
-      shot_directives: [{ ...shot, layers: shot.layers.map((layer) => layer.layer_id === 'proof-layer' ? { ...layer, anchor: 'top_left', bounds: { x: 0.04, y: 0.04, width: 0.42, height: 0.34 } } : layer) }],
+      shot_directives: [{ ...shot, camera_plan: { ...shot.camera_plan, protected_region_ids: ['headline-left'] } }],
     })
-    const theme = { wordmarks: { lockup: { offset_x: 52, offset_y: 54, plate_size: 250 } } } as unknown as BrandThemeV1
-    expect(brandLayerCollisionIssues(branded, theme)).toContain('shot shot-main layer proof-layer collides with the approved top-left wordmark lockup')
+    const analysis = sourceAnalysisFor(branded, {
+      protected_regions: [{ region_id: 'headline-left', source_id: 'camera-main', start_ms: 0, end_ms: 10_000, bounds: { x: 0.35, y: 0.08, width: 0.08, height: 0.14 }, reason: 'Keep the authored headline visible.', confidence: 0.99 }],
+    })
+    const timeline = resolveBrandTimeline(branded, theme, brandGeometryFor(branded, analysis))
+    expect(timeline.issues).toEqual([])
+    expect(timeline.identity_cue?.corner).toBe('top_right')
   })
 
-  it('carries the exact approved GitHub wordmarks through branded styleframe and render props in one legible stacked top-left plate', () => {
-    const { theme, wordmarks } = officialBrandFixture()
-    const expectedHashes = [wordmarks.mindmake.sha256, wordmarks.series.sha256].sort()
+  it('moves the identity moment to a later clear window when the opening is blocked', () => {
+    const { theme } = officialBrandFixture()
+    const base = brandableManifest()
+    const shot = base.shot_directives[0]!
     const branded = RenderManifestV2Schema.parse({
-      ...manifest(),
-      branding: { mode: 'series', theme_id: theme.theme_id, theme_version: theme.version, theme_hash: hashValue(theme), wordmark_hashes: expectedHashes },
+      ...base,
+      shot_directives: [{ ...shot, camera_plan: { ...shot.camera_plan, protected_region_ids: ['opening-centre'] } }],
     })
+    const analysis = sourceAnalysisFor(branded, {
+      protected_regions: [{ region_id: 'opening-centre', source_id: 'camera-main', start_ms: 4_000, end_ms: 4_600, bounds: { x: 0.48, y: 0.08, width: 0.04, height: 0.14 }, reason: 'Protect the central opening evidence.', confidence: 0.99 }],
+    })
+    const timeline = resolveBrandTimeline(branded, theme, brandGeometryFor(branded, analysis))
+    expect(timeline.issues).toEqual([])
+    expect(timeline.identity_cue).toMatchObject({ startMs: 800, endMs: 2_000 })
+  })
 
-    for (const reviewOverlay of ['styleframe', 'none'] as const) {
-      const props = manifestToV2RenderProps(branded, { sourceFiles: { 'camera-main': 'source-camera.mp4' }, assetFiles: {} }, { theme, wordmarks, reviewOverlay })
-      expect(props.reviewOverlay).toBe(reviewOverlay)
-      expect(props.branding.mode).toBe('series')
-      expect(props.branding.wordmarks?.mindmake).toMatchObject({ sourcePath: 'src/assets/mindmake-wordmark-ink.png', sha256: 'd2a0417df41119775d8f6c5c25134f2414ce2f5144b6e8b5433b2109d95645e1' })
-      expect(props.branding.wordmarks?.series).toMatchObject({ sourcePath: 'src/assets/builtwithai-logo-wordmark.png', sha256: '271ab965dc51714be8c13c8a6bb8c7b2b60f4bf22caf51dda5a2928e295fd29f' })
-      expect([...branded.branding.wordmark_hashes].sort()).toEqual(expectedHashes)
+  it('rejects a cue when different protected intervals occupy both corners', () => {
+    const { theme } = officialBrandFixture()
+    const base = brandableManifest()
+    const shot = base.shot_directives[0]!
+    const blocked = RenderManifestV2Schema.parse({
+      ...base,
+      shot_directives: [{ ...shot, camera_plan: { ...shot.camera_plan, protected_region_ids: ['left-beat', 'right-beat'] } }],
+    })
+    const analysis = sourceAnalysisFor(blocked, {
+      protected_regions: [
+        { region_id: 'left-beat', source_id: 'camera-main', start_ms: 4_000, end_ms: 5_000, bounds: { x: 0.35, y: 0.08, width: 0.08, height: 0.14 }, reason: 'Protect the left-side evidence beat.', confidence: 0.99 },
+        { region_id: 'right-beat', source_id: 'camera-main', start_ms: 5_000, end_ms: 6_000, bounds: { x: 0.57, y: 0.08, width: 0.08, height: 0.14 }, reason: 'Protect the right-side evidence beat.', confidence: 0.99 },
+      ],
+    })
+    expect(resolveBrandTimeline(blocked, theme, brandGeometryFor(blocked, analysis)).issues).toEqual(['no opening, ending, or safe beat can host the required phone-legible series identity moment'])
+  })
 
-      const model = brandLockupRenderModel(props.branding)
-      expect(model).not.toBeNull()
-      expect(model).toMatchObject({ corner: 'top_left', plate: { count: 1, width: 250, height: 250, top: 54, left: 52 }, wordmarks: [{ role: 'mindmake', displayWidth: 180 }, { role: 'series', displayWidth: 210 }] })
-      const [mindmake, series] = model!.wordmarks
-      const mindmakeHeight = mindmake!.displayWidth * mindmake!.asset.alphaCrop.height / mindmake!.asset.alphaCrop.width
-      const seriesHeight = series!.displayWidth * series!.asset.alphaCrop.height / series!.asset.alphaCrop.width
-      expect(mindmakeHeight).toBeGreaterThanOrEqual(29)
-      expect(seriesHeight).toBeGreaterThanOrEqual(122)
-      expect(mindmakeHeight + model!.plate.gap + seriesHeight).toBeLessThanOrEqual(model!.plate.height - model!.plate.padding * 2)
-    }
+  it('uses source-local subject timing and the authored moving camera crop for every cue frame', () => {
+    const { theme } = officialBrandFixture()
+    const base = brandableManifest()
+    const shot = base.shot_directives[0]!
+    const moving = RenderManifestV2Schema.parse({
+      ...base,
+      shot_directives: [{
+        ...shot,
+        camera_plan: {
+          ...shot.camera_plan,
+          movement: 'pan',
+          easing: 'linear',
+          keyframes: [
+            { at_ms: 0, crop: { x: 0.2, y: 0, width: 0.31640625, height: 1 }, zoom: 1, rotation_degrees: 0, confidence: 0.99 },
+            { at_ms: 2_000, crop: { x: 0.4, y: 0, width: 0.31640625, height: 1 }, zoom: 1, rotation_degrees: 0, confidence: 0.99 },
+          ],
+        },
+      }],
+    })
+    const baseline = sourceAnalysisFor(moving)
+    const subject = baseline.subjects[0]!
+    const timed = SourceVisualAnalysisV1Schema.parse({
+      ...baseline,
+      subjects: [{
+        ...subject,
+        face_keyframes: [
+          { at_ms: 0, bounds: { x: 0.8, y: 0.75, width: 0.04, height: 0.08 }, confidence: 0.99 },
+          { at_ms: 4_000, bounds: { x: 0.45, y: 0.08, width: 0.04, height: 0.1 }, confidence: 0.99 },
+          { at_ms: 6_000, bounds: { x: 0.45, y: 0.08, width: 0.04, height: 0.1 }, confidence: 0.99 },
+          { at_ms: 10_000, bounds: { x: 0.8, y: 0.75, width: 0.04, height: 0.08 }, confidence: 0.99 },
+        ],
+      }],
+    })
+    const geometry = brandGeometryFor(moving, timed)
+    expect(resolveBrandPlacementForShot(moving, theme, moving.shot_directives[0]!, 'mindmake_only', 0, 200, geometry).placement?.corner).toBe('top_left')
+    expect(resolveBrandPlacementForShot(moving, theme, moving.shot_directives[0]!, 'mindmake_only', 1_800, 2_000, geometry).placement?.corner).toBe('top_right')
+  })
+
+  it('blocks branded props without exact analysis and rejects stale or unknown geometry', () => {
+    const { theme, wordmarks } = officialBrandFixture()
+    const branded = brandableManifest()
+    expect(() => manifestToV2RenderProps(branded, { sourceFiles: { 'camera-main': 'source-camera.mp4' }, assetFiles: {} }, { theme, wordmarks })).toThrow('branded rendering requires the exact content-addressed source_analysis artifact')
+    expect(brandGeometryContextIssues(branded, { ...brandGeometryFor(branded), expectedArtifactHash: HASH_A })).toContain('source_analysis artifact binding is stale or unknown')
+    const missingTrack = sourceAnalysisFor(branded, { subjects: [] })
+    expect(brandGeometryContextIssues(branded, brandGeometryFor(branded, missingTrack))).toContain('shot shot-main references unknown subject geometry krish-track')
+    const baseline = sourceAnalysisFor(branded)
+    const subject = baseline.subjects[0]!
+    const incompleteTrack = SourceVisualAnalysisV1Schema.parse({
+      ...baseline,
+      subjects: [{
+        ...subject,
+        face_keyframes: [{ at_ms: 5_000, bounds: { x: 0.45, y: 0.08, width: 0.1, height: 0.12 }, confidence: 0.99 }],
+        body_keyframes: [{ at_ms: 5_000, bounds: { x: 0.4, y: 0.4, width: 0.2, height: 0.5 }, confidence: 0.99 }],
+      }],
+    })
+    expect(resolveBrandPlacementForShot(branded, theme, branded.shot_directives[0]!, 'mindmake_only', 0, 200, brandGeometryFor(branded, incompleteTrack)).issues).toContain('shot shot-main subject geometry krish-track is unknown at source time 4000 ms')
+    const shot = branded.shot_directives[0]!
+    const missingRegion = RenderManifestV2Schema.parse({ ...branded, shot_directives: [{ ...shot, camera_plan: { ...shot.camera_plan, protected_region_ids: ['missing-region'] } }] })
+    expect(brandGeometryContextIssues(missingRegion, brandGeometryFor(missingRegion))).toContain('shot shot-main references unknown protected geometry missing-region')
   })
 
   it('does not add branding to an explicitly unbranded calibration styleframe', () => {

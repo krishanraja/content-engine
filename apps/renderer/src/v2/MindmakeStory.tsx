@@ -25,6 +25,7 @@ const HEIGHT = 1920
 type RuntimeBranding = V2RenderProps['branding']
 type RuntimeSource = V2RenderProps['sources'][number]
 type RuntimeAsset = V2RenderProps['assets'][number]
+type RuntimeBrandCue = NonNullable<V2RuntimeShot['brandCues']>[number]
 
 const frameAt = (milliseconds: number, fps: number): number => Math.max(0, Math.round(milliseconds / 1000 * fps))
 const framesFor = (milliseconds: number, fps: number): number => Math.max(1, Math.round(milliseconds / 1000 * fps))
@@ -58,29 +59,36 @@ function OfficialWordmark({ asset, displayWidth }: { asset: NonNullable<RuntimeB
   )
 }
 
-export function brandLockupRenderModel(branding: RuntimeBranding) {
+export function brandLockupRenderModel(branding: RuntimeBranding, placement?: RuntimeBrandCue) {
   if (branding.mode === 'none' || !branding.wordmarks) return null
   const { lockup, mindmake, series } = branding.wordmarks
+  const mode = placement?.mode || 'stacked_identity'
+  const layout = mode === 'stacked_identity' ? lockup.identity : mode === 'series_only' ? lockup.seriesOnly : lockup.anchor
   return {
-    corner: 'top_left' as const,
+    mode,
+    corner: placement?.corner || 'top_left' as const,
     plate: {
       count: 1 as const,
-      width: lockup.plateSize,
-      height: lockup.plateSize,
-      top: lockup.offsetY,
-      left: lockup.offsetX,
-      padding: lockup.padding,
-      gap: lockup.gap,
+      width: layout.plateWidth,
+      height: layout.plateHeight,
+      top: placement?.topPx ?? lockup.offsetY,
+      left: placement?.leftPx ?? lockup.offsetX,
+      padding: layout.padding,
+      gap: mode === 'stacked_identity' ? lockup.identity.gap : 0,
     },
-    wordmarks: [
-      { role: 'mindmake' as const, asset: mindmake, displayWidth: lockup.mindmakeWidth },
-      { role: 'series' as const, asset: series, displayWidth: lockup.seriesWidth },
-    ],
+    wordmarks: mode === 'stacked_identity'
+      ? [
+          { role: 'mindmake' as const, asset: mindmake, displayWidth: lockup.identity.mindmakeWidth },
+          { role: 'series' as const, asset: series, displayWidth: lockup.identity.seriesWidth },
+        ]
+      : mode === 'series_only'
+        ? [{ role: 'series' as const, asset: series, displayWidth: lockup.seriesOnly.seriesWidth }]
+        : [{ role: 'mindmake' as const, asset: mindmake, displayWidth: lockup.anchor.mindmakeWidth }],
   }
 }
 
-function BrandLockup({ branding }: { branding: RuntimeBranding }) {
-  const model = brandLockupRenderModel(branding)
+function BrandLockup({ branding, placement }: { branding: RuntimeBranding; placement: RuntimeBrandCue | undefined }) {
+  const model = brandLockupRenderModel(branding, placement)
   if (!model) return null
   return (
     <div style={{ position: 'absolute', zIndex: 900, top: model.plate.top, left: model.plate.left }}>
@@ -199,9 +207,11 @@ function Layer({
   primary: boolean
   fixedSeed: string
 }) {
-  if (layer.kind === 'caption' || layer.kind === 'branding') return null
   const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
+  if (layer.kind === 'caption' || layer.kind === 'branding') return null
+  if (layer.visibleStartMs !== undefined && atMs < layer.visibleStartMs) return null
+  if (layer.visibleEndMs !== undefined && atMs >= layer.visibleEndMs) return null
   const bounds = defaultLayerBounds(layer)
   const source = sources.find((item) => item.sourceId === layer.targetId) ?? (layer.kind === 'source' ? sources.find((item) => item.sourceId === shot.sourceId) : undefined)
   const asset = assets.find((item) => item.assetId === layer.targetId)
@@ -388,9 +398,11 @@ export function MindmakeStoryV2(props: V2RenderProps) {
   const atMs = frame / fps * 1000
   const activeShots = props.shots.filter((shot) => shot.startMs <= atMs && shot.endMs > atMs)
   const captionShot = [...activeShots].sort((left, right) => right.startMs - left.startMs)[0]
+  const brandCue = captionShot?.brandCues?.find((cue) => cue.startMs <= atMs && cue.endMs > atMs)
   const captionLayer = captionShot?.layers.find((layer) => layer.kind === 'caption')
   const captionBounds = captionLayer?.bounds ? defaultLayerBounds(captionLayer) : undefined
   if (props.branding.mode === 'series' && !props.branding.wordmarks) throw new Error('branded V2 renders require staged official Mindmake and series wordmarks')
+  if (props.branding.mode === 'series' && !brandCue) throw new Error('branded V2 renders require a safe wordmark cue for every frame')
   return (
     <AbsoluteFill style={{ background: props.branding.colors.ink }}>
       {props.shots.map((shot) => (
@@ -398,7 +410,7 @@ export function MindmakeStoryV2(props: V2RenderProps) {
           <Shot shot={shot} props={props} />
         </Sequence>
       ))}
-      <BrandLockup branding={props.branding} />
+      <BrandLockup branding={props.branding} placement={brandCue} />
       {props.captions.map((cue, index) => (
         <Sequence key={`${cue.startMs}-${index}`} from={frameAt(cue.startMs, fps)} durationInFrames={framesFor(cue.endMs - cue.startMs, fps)}>
           <AbsoluteFill>

@@ -1,14 +1,19 @@
 import { access, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { TreatmentRegistryV1Schema } from '@mindmake/contracts'
-import { APPROVAL_SIGNING_CREDENTIAL, approvalSigningCredentialReady } from './approval-signing.js'
-import { windowsCredentialExists } from './credentials.js'
+import { APPROVAL_SIGNING_CREDENTIAL, RUNNER_RECEIPT_SIGNING_CREDENTIAL, approvalSigningCredentialReady, runnerReceiptSigningCredentialReady } from './approval-signing.js'
+import { CONTROL_CENTER_RUNNER_CREDENTIAL } from './control-plane-client.js'
+import { readWindowsCredential, windowsCredentialExists } from './credentials.js'
 import { commandVersion } from './process.js'
 import { studioPaths } from './paths.js'
 import { resolvePythonCommand } from './python-runtime.js'
 import { KRISH_IDENTITY_CREDENTIAL, krishIdentityStatus } from './identity.js'
 
 export interface DoctorCheck { name: string; status: 'pass' | 'warn' | 'block'; detail: string }
+
+export function credentialHasMinimumBytes(value: string, minimumBytes = 32): boolean {
+  return Buffer.byteLength(value, 'utf8') >= minimumBytes
+}
 
 export async function remotionLicenceEligible(repoRoot?: string): Promise<boolean> {
   if (/^(true|licensed|eligible)$/i.test(process.env.MINDMAKE_REMOTION_LICENSE_CONFIRMED || '')) return true
@@ -75,11 +80,13 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
   if (process.platform === 'win32' && repoRoot) {
     const radarTargets = ['MindmakeVideoStudio/mm-ctrl-radar-token', 'MindmakeVideoStudio/control-center-radar-token'] as const
     const [mmTarget, controlTarget] = radarTargets
-    const [mmRadar, controlRadar, youtube, approvalSigning, identityKey, identityProfile] = await Promise.all([
+    const [mmRadar, controlRadar, youtube, approvalSigning, runnerBearer, runnerSigning, identityKey, identityProfile] = await Promise.all([
       windowsCredentialExists(repoRoot, mmTarget),
       windowsCredentialExists(repoRoot, controlTarget),
       windowsCredentialExists(repoRoot, 'MindmakeVideoStudio/youtube-access-token'),
       approvalSigningCredentialReady(repoRoot),
+      readWindowsCredential(repoRoot, CONTROL_CENTER_RUNNER_CREDENTIAL).then((value) => credentialHasMinimumBytes(value)).catch(() => false),
+      runnerReceiptSigningCredentialReady(repoRoot),
       windowsCredentialExists(repoRoot, KRISH_IDENTITY_CREDENTIAL),
       krishIdentityStatus(),
     ])
@@ -100,6 +107,13 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
       detail: approvalSigning ? 'Approval receipts can be authenticated.' : `${APPROVAL_SIGNING_CREDENTIAL} is missing or shorter than 32 bytes; approval recording is disabled.`,
     })
     checks.push({
+      name: 'control_plane_runner_credentials',
+      status: runnerBearer && runnerSigning ? 'pass' : 'block',
+      detail: runnerBearer && runnerSigning
+        ? 'Dedicated bearer and receipt-signing credentials are present.'
+        : `Missing or invalid: ${[!runnerBearer ? CONTROL_CENTER_RUNNER_CREDENTIAL : '', !runnerSigning ? RUNNER_RECEIPT_SIGNING_CREDENTIAL : ''].filter(Boolean).join(', ')}.`,
+    })
+    checks.push({
       name: 'krish_identity',
       status: identityKey && identityProfile.enrolled ? 'pass' : 'warn',
       detail: identityKey && identityProfile.enrolled
@@ -110,6 +124,7 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
     checks.push({ name: 'radar_credentials', status: 'warn', detail: 'Live provider credentials require Windows Credential Manager.' })
     checks.push({ name: 'youtube_credential', status: 'warn', detail: 'Private YouTube upload requires Windows Credential Manager.' })
     checks.push({ name: 'approval_signing_credential', status: 'block', detail: 'Authenticated approval recording requires the Windows runner credential.' })
+    checks.push({ name: 'control_plane_runner_credentials', status: 'block', detail: 'The independent control-plane runner requires two dedicated Windows Credential Manager entries.' })
     checks.push({ name: 'krish_identity', status: 'warn', detail: 'Persistent Krish recognition requires the encrypted Windows runner profile; subject tracking will remain job-local.' })
   }
   return { ok: checks.every((check) => check.status !== 'block'), checks }

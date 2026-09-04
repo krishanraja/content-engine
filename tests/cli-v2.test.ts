@@ -6,6 +6,7 @@ import { Command } from 'commander'
 import { afterEach, describe, expect, it } from 'vitest'
 import { classifyError } from '@mindmake/core'
 import { assertCanonicalEvidencePacketPathV2, assertYoutubePrivateOnly, evidenceApprovalCurrentnessIssuesV2, evidenceClaimUrlIssues, qaPassed, registerV2Commands, resolveApprovalArtifactHash, type CurrentEvidencePacketRefV2, type EvidenceReviewPacketV2 } from '../packages/cli/src/v2.js'
+import { runStudioCli } from '../packages/cli/src/index.js'
 import type { JobManifestV2 } from '@mindmake/contracts'
 
 describe.sequential('V2 CLI', () => {
@@ -206,24 +207,54 @@ describe.sequential('V2 CLI', () => {
       })
       let stdout = ''
       let stderr = ''
+      let settled = false
+      const deadline = setTimeout(() => {
+        if (settled) return
+        settled = true
+        child.kill()
+        reject(new Error(`CLI probe did not exit within 10 seconds: ${args.join(' ')}`))
+      }, 10_000)
       child.stdout.on('data', (chunk) => { stdout += String(chunk) })
       child.stderr.on('data', (chunk) => { stderr += String(chunk) })
-      child.once('error', reject)
-      child.once('close', (code) => resolvePromise({ code, stdout, stderr }))
+      child.once('error', (error) => {
+        if (settled) return
+        settled = true
+        clearTimeout(deadline)
+        reject(error)
+      })
+      child.once('close', (code) => {
+        if (settled) return
+        settled = true
+        clearTimeout(deadline)
+        resolvePromise({ code, stdout, stderr })
+      })
     })
 
+    const runLoadedCli = async (args: string[]) => {
+      let stdout = ''
+      let stderr = ''
+      const code = await runStudioCli(['node', 'studio', ...args], {
+        stdout: (value) => { stdout += value },
+        stderr: (value) => { stderr += value },
+      })
+      return { code, stdout, stderr }
+    }
+
+    // One child process verifies the real entry point and exit code. Help and
+    // version then reuse the already-loaded command graph, avoiding two more
+    // multi-second TypeScript process startups without relaxing the hang limit.
     const invalid = await runCli(['v2', 'analytics', 'import'])
     expect(invalid.code).toBe(10)
     expect(JSON.parse(invalid.stdout)).toMatchObject({ ok: false, code: 'validation' })
     expect(JSON.parse(invalid.stderr)).toMatchObject({ ok: false, code: 'validation', diagnostic: 'command-line parsing failed' })
     expect(invalid.stderr).not.toContain('error: required option')
 
-    const help = await runCli(['--help'])
+    const help = await runLoadedCli(['--help'])
     expect(help.code).toBe(0)
     expect(help.stdout).toContain('Mindmaker deterministic video production engine')
     expect(help.stderr).toBe('')
 
-    const version = await runCli(['--version'])
+    const version = await runLoadedCli(['--version'])
     expect(version).toMatchObject({ code: 0, stdout: '0.1.0\n', stderr: '' })
   }, 15_000)
 })

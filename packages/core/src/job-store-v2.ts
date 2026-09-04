@@ -1,17 +1,22 @@
 import { randomUUID } from 'node:crypto'
-import { appendFile, cp, mkdir, readFile, realpath, rename, stat, writeFile } from 'node:fs/promises'
+import { AsyncLocalStorage } from 'node:async_hooks'
+import { cp, mkdir, open, readFile, realpath, rename, stat, unlink, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import {
   ApprovalV2Schema,
   ApprovalGateV2Schema,
   JobManifestV2Schema,
   JOB_SCHEMA_VERSION_V2,
+  ReviewDecisionRecordV1Schema,
+  ReviewRecoveryRecordV1Schema,
   SourceBundleV1Schema,
   StageArtifactV2Schema,
   StageNameV2Schema,
   StudioEventV2Schema,
   type ApprovalGateV2,
   type JobManifestV2,
+  type ReviewDecisionRecordV1,
+  type ReviewRecoveryRecordV1,
   type SourceBundleV1,
   type StageArtifactV2,
   type StageNameV2,
@@ -20,7 +25,7 @@ import {
   type VideoPlatformV1,
 } from '@mindmake/contracts'
 import type { JobPurpose, Series, SourceMode } from '@mindmake/contracts'
-import { loadApprovalSigningKey, signApprovalReceiptBody, verifyApprovalReceiptBody } from './approval-signing.js'
+import { loadApprovalSigningKey, signApprovalReceiptBody, signRunnerLedgerEventBody, verifyApprovalReceiptBody, verifyRunnerLedgerEventBody } from './approval-signing.js'
 import { hashFile, hashPath, hashValue, stableJson } from './hash.js'
 import { jobPath } from './paths.js'
 import { v2DescendantsFor, v2PrerequisitesFor, v2StageOrder } from './stage-graphs.js'
@@ -28,6 +33,98 @@ import { v2DescendantsFor, v2PrerequisitesFor, v2StageOrder } from './stage-grap
 function nowIso(): string { return new Date().toISOString() }
 
 const APPROVAL_EVENT_CHAIN_GENESIS = hashValue({ domain: 'MindmakeVideoStudio/EventChain/v1', schema_version: JOB_SCHEMA_VERSION_V2 })
+const JOB_EVENT_LOCK_TIMEOUT_MS = 15_000
+const JOB_EVENT_LOCK_INCOMPLETE_GRACE_MS = 2_000
+const heldJobLocks = new AsyncLocalStorage<Map<string, string>>()
+
+interface EventLedgerTailV2 {
+  event_count: number
+  last_event_id: string | null
+  event_chain_hash: string
+}
+
+function processIsAlive(pid: number): boolean {
+  if (!Number.isSafeInteger(pid) || pid <= 0) return false
+  try { process.kill(pid, 0); return true }
+  catch (error) { return (error as NodeJS.ErrnoException).code === 'EPERM' }
+}
+
+function jobEventLockPath(jobId: string): string {
+  return join(jobPath(jobId), '.events.lock')
+}
+
+export async function withJobEventLock<T>(jobId: string, callback: () => Promise<T>): Promise<T> {
+  const canonicalJobId = String(jobId)
+  const inherited = heldJobLocks.getStore()
+  if (inherited?.has(canonicalJobId)) return callback()
+  const path = jobEventLockPath(canonicalJobId)
+  await mkdir(dirname(path), { recursive: true })
+  const token = randomUUID()
+  const deadline = Date.now() + JOB_EVENT_LOCK_TIMEOUT_MS
+  let handle: Awaited<ReturnType<typeof open>> | undefined
+  while (!handle) {
+    try {
+      handle = await open(path, 'wx', 0o600)
+      await handle.writeFile(`${JSON.stringify({ schema_version: 1, pid: process.pid, token, acquired_at: new Date().toISOString() })}\n`, 'utf8')
+      await handle.sync()
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code
+      if (!['EEXIST', 'EACCES', 'EPERM'].includes(code ?? '')) throw error
+      try { await stat(path) }
+      catch (pathError) {
+        if ((pathError as NodeJS.ErrnoException).code === 'ENOENT') continue
+        throw error
+      }
+      let stale = false
+      let observedLock = ''
+      try {
+        observedLock = await readFile(path, 'utf8')
+        const lock = JSON.parse(observedLock) as { pid?: unknown; acquired_at?: unknown }
+        const pid = typeof lock.pid === 'number' ? lock.pid : 0
+        const acquiredAt = typeof lock.acquired_at === 'string' ? Date.parse(lock.acquired_at) : Number.NaN
+        if (processIsAlive(pid)) stale = false
+        else if (pid > 0) stale = true
+        else if (Number.isFinite(acquiredAt)) stale = Date.now() - acquiredAt > JOB_EVENT_LOCK_INCOMPLETE_GRACE_MS
+        else stale = Date.now() - (await stat(path)).mtimeMs > JOB_EVENT_LOCK_INCOMPLETE_GRACE_MS
+      } catch {
+        try { stale = Date.now() - (await stat(path)).mtimeMs > JOB_EVENT_LOCK_INCOMPLETE_GRACE_MS }
+        catch { stale = true }
+      }
+      if (stale) {
+        try {
+          const currentLock = await readFile(path, 'utf8')
+          if (currentLock === observedLock) await unlink(path)
+        }
+        catch (unlinkError) { if ((unlinkError as NodeJS.ErrnoException).code !== 'ENOENT') throw unlinkError }
+        continue
+      }
+      if (Date.now() >= deadline) throw new Error(`job ${canonicalJobId} event ledger lock timed out`)
+      await new Promise((resolveDelay) => setTimeout(resolveDelay, 15 + Math.floor(Math.random() * 25)))
+    }
+  }
+  const context = new Map(inherited ?? [])
+  context.set(canonicalJobId, token)
+  try {
+    return await heldJobLocks.run(context, callback)
+  } finally {
+    await handle.close()
+    try {
+      const current = JSON.parse(await readFile(path, 'utf8')) as { token?: unknown }
+      if (current.token === token) await unlink(path)
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    }
+  }
+}
+
+async function assertJobEventLockOwner(jobId: string): Promise<void> {
+  const expectedToken = heldJobLocks.getStore()?.get(jobId)
+  if (!expectedToken) throw new Error('job event append requires the per-job ledger lock')
+  let actualToken: unknown
+  try { actualToken = (JSON.parse(await readFile(jobEventLockPath(jobId), 'utf8')) as { token?: unknown }).token }
+  catch { throw new Error('job event ledger lock ownership could not be verified') }
+  if (actualToken !== expectedToken) throw new Error('job event ledger lock ownership changed before append')
+}
 
 type ApprovalRecordV2 = JobManifestV2['approvals'][number]
 
@@ -41,6 +138,25 @@ interface ApprovalReceiptV1 {
 interface SignedApprovalPayloadV1 {
   approval: ApprovalRecordV2
   receipt: ApprovalReceiptV1
+}
+
+interface RunnerLedgerReceiptV1 {
+  version: 1
+  algorithm: 'hmac-sha256'
+  prior_event_chain_hash: string
+  signature: string
+}
+
+interface SignedReviewDecisionPayloadV1 {
+  decision: ReviewDecisionRecordV1
+  command: { command_id: string; command_hash: string }
+  receipt: RunnerLedgerReceiptV1
+}
+
+interface SignedReviewRecoveryPayloadV1 {
+  recovery: ReviewRecoveryRecordV1
+  command: { command_id: string; command_hash: string }
+  receipt: RunnerLedgerReceiptV1
 }
 
 function pathIsInside(root: string, candidate: string): boolean {
@@ -105,18 +221,58 @@ async function writeJsonAtomic(path: string, value: unknown): Promise<void> {
   await rename(temp, path)
 }
 
-async function appendStudioEventV2(event: StudioEventV2): Promise<void> {
-  await appendFile(join(jobPath(event.job_id), 'events.jsonl'), `${stableJson(event)}\n`, 'utf8')
+function eventLedgerTailV2(events: StudioEventV2[]): EventLedgerTailV2 {
+  return { event_count: events.length, last_event_id: events.at(-1)?.event_id ?? null, event_chain_hash: eventChainHash(events) }
+}
+
+async function appendStudioEventV2(event: StudioEventV2, expectedTail: EventLedgerTailV2): Promise<void> {
+  await assertJobEventLockOwner(event.job_id)
+  const current = await readEventsV2(event.job_id, true)
+  if (hashValue(eventLedgerTailV2(current)) !== hashValue(expectedTail)) throw new Error('job event ledger tail changed before append')
+  await assertJobEventLockOwner(event.job_id)
+  const handle = await open(join(jobPath(event.job_id), 'events.jsonl'), 'a', 0o600)
+  try {
+    await handle.writeFile(`${stableJson(event)}\n`, 'utf8')
+    await handle.sync()
+  } finally { await handle.close() }
 }
 
 async function appendEventV2(jobId: string, type: StudioEventV2['type'], payload: Record<string, unknown>): Promise<void> {
+  const events = await readEventsV2(jobId, true)
   const event = StudioEventV2Schema.parse({ schema_version: JOB_SCHEMA_VERSION_V2, event_id: randomUUID(), job_id: jobId, type, occurred_at: nowIso(), payload })
-  await appendStudioEventV2(event)
+  await appendStudioEventV2(event, eventLedgerTailV2(events))
 }
 
-export async function recordJobEventV2(jobId: string, type: 'feedback_recorded' | 'rule_promoted' | 'capability_downgraded' | 'asset_approved' | 'identity_enrolled' | 'identity_revoked', payload: Record<string, unknown>): Promise<void> {
-  await loadJobV2(jobId)
-  await appendEventV2(jobId, type, payload)
+export async function recordJobEventV2(jobId: string, type: 'feedback_recorded' | 'rule_promoted' | 'capability_downgraded' | 'asset_approved' | 'identity_enrolled' | 'identity_revoked' | 'magic_edit_intent_received' | 'magic_edit_candidate_created' | 'magic_edit_activated', payload: Record<string, unknown>): Promise<StudioEventV2> {
+  return withJobEventLock(jobId, async () => {
+    await loadJobV2(jobId)
+    const events = await readEventsV2(jobId)
+    const event = StudioEventV2Schema.parse({ schema_version: JOB_SCHEMA_VERSION_V2, event_id: randomUUID(), job_id: jobId, type, occurred_at: nowIso(), payload })
+    await appendStudioEventV2(event, eventLedgerTailV2(events))
+    return event
+  })
+}
+
+export async function recordJobEventOnceV2(
+  jobId: string,
+  type: 'magic_edit_intent_received' | 'magic_edit_candidate_created' | 'magic_edit_activated',
+  idempotencyKey: string,
+  payload: Record<string, unknown>,
+): Promise<StudioEventV2> {
+  return withJobEventLock(jobId, async () => {
+    if (!idempotencyKey.trim()) throw new Error('job event idempotency key is required')
+    await loadJobV2(jobId)
+    const eventPayload = { ...payload, idempotency_key: idempotencyKey }
+    const events = await readEventsV2(jobId)
+    const existing = events.find((event) => event.type === type && event.payload.idempotency_key === idempotencyKey)
+    if (existing) {
+      if (hashValue(existing.payload) !== hashValue(eventPayload)) throw new Error('job event idempotency key was reused for different content')
+      return existing
+    }
+    const event = StudioEventV2Schema.parse({ schema_version: JOB_SCHEMA_VERSION_V2, event_id: randomUUID(), job_id: jobId, type, occurred_at: nowIso(), payload: eventPayload })
+    await appendStudioEventV2(event, eventLedgerTailV2(events))
+    return event
+  })
 }
 
 const AUDIT_TIMESTAMP_KEYS = new Set(['created_at', 'updated_at', 'generated_at', 'occurred_at', 'approved_at', 'confirmed_at', 'proposed_at'])
@@ -131,7 +287,7 @@ export function withoutAuditTimestamps(value: unknown): unknown {
   return value
 }
 
-function artifactSemanticHash(artifact: Pick<StageArtifactV2, 'schema_version' | 'job_id' | 'stage' | 'input_hashes' | 'config_hash' | 'tool_versions' | 'payload'>): string {
+export function stageArtifactSemanticHashV2(artifact: Pick<StageArtifactV2, 'schema_version' | 'job_id' | 'stage' | 'input_hashes' | 'config_hash' | 'tool_versions' | 'payload'>): string {
   return hashValue({
     schema_version: artifact.schema_version,
     job_id: artifact.job_id,
@@ -144,7 +300,7 @@ function artifactSemanticHash(artifact: Pick<StageArtifactV2, 'schema_version' |
 }
 
 function assertArtifactIdentity(artifact: StageArtifactV2, job: JobManifestV2, stage: StageNameV2, expectedHash?: string): void {
-  const recomputed = artifactSemanticHash(artifact)
+  const recomputed = stageArtifactSemanticHashV2(artifact)
   if (artifact.job_id !== job.job_id || artifact.stage !== stage) throw new Error(`stage ${stage} artifact belongs to a different job or stage`)
   if (artifact.config_hash !== job.config_hash) throw new Error(`stage ${stage} artifact is not bound to the job-pinned configuration`)
   if (artifact.artifact_hash !== recomputed) throw new Error(`stage ${stage} artifact content no longer matches its semantic hash`)
@@ -226,7 +382,7 @@ export async function createJobV2(input: CreateJobV2Input): Promise<JobManifestV
   })
   await writeJsonAtomic(join(root, 'job.json'), manifest)
   await writeFile(join(root, 'events.jsonl'), '', 'utf8')
-  await appendEventV2(jobId, 'job_created', {
+  await withJobEventLock(jobId, async () => appendEventV2(jobId, 'job_created', {
     series: manifest.series,
     mode: manifest.mode,
     purpose: manifest.purpose,
@@ -237,29 +393,31 @@ export async function createJobV2(input: CreateJobV2Input): Promise<JobManifestV
     config_hash: manifest.config_hash,
     skill_hashes: manifest.skill_hashes,
     pinned_inputs_hash: hashValue(manifest.pinned_inputs),
-  })
+  }))
   return manifest
 }
 
 export async function attachSourceBundleV2(jobId: string, input: SourceBundleV1): Promise<JobManifestV2> {
-  const bundle = SourceBundleV1Schema.parse(input)
-  const job = await loadJobV2(jobId)
-  const previousHash = job.source_bundle ? hashValue(job.source_bundle) : undefined
-  const nextHash = hashValue(bundle)
-  if (previousHash === nextHash) return job
-  if (job.mode !== 'short_native' && job.source_bundle) throw new Error('source bundles are immutable for extract and solo jobs; create a new job for different source media')
-  job.source_bundle = bundle
-  if (previousHash) {
-    job.stages.ingest = { status: 'pending', updated_at: nowIso(), reason: 'recorded source bundle replaced' }
-    for (const child of v2DescendantsFor('ingest', job.mode)) {
-      if (['pending', 'skipped'].includes(job.stages[child].status)) continue
-      job.stages[child] = { status: 'invalidated', updated_at: nowIso(), reason: 'recorded source bundle replaced' }
-      await appendEventV2(jobId, 'stage_invalidated', { stage: child, cause: 'ingest', reason: 'recorded source bundle replaced' })
+  return withJobEventLock(jobId, async () => {
+    const bundle = SourceBundleV1Schema.parse(input)
+    const job = await loadJobV2(jobId)
+    const previousHash = job.source_bundle ? hashValue(job.source_bundle) : undefined
+    const nextHash = hashValue(bundle)
+    if (previousHash === nextHash) return job
+    if (job.mode !== 'short_native' && job.source_bundle) throw new Error('source bundles are immutable for extract and solo jobs; create a new job for different source media')
+    job.source_bundle = bundle
+    if (previousHash) {
+      job.stages.ingest = { status: 'pending', updated_at: nowIso(), reason: 'recorded source bundle replaced' }
+      for (const child of v2DescendantsFor('ingest', job.mode)) {
+        if (['pending', 'skipped'].includes(job.stages[child].status)) continue
+        job.stages[child] = { status: 'invalidated', updated_at: nowIso(), reason: 'recorded source bundle replaced' }
+        await appendEventV2(jobId, 'stage_invalidated', { stage: child, cause: 'ingest', reason: 'recorded source bundle replaced' })
+      }
     }
-  }
-  await saveJobV2(job)
-  await appendEventV2(jobId, 'source_bundle_attached', { bundle_id: bundle.bundle_id, source_bundle_hash: nextHash, replaced: Boolean(previousHash) })
-  return job
+    await saveJobV2(job)
+    await appendEventV2(jobId, 'source_bundle_attached', { bundle_id: bundle.bundle_id, source_bundle_hash: nextHash, replaced: Boolean(previousHash) })
+    return job
+  })
 }
 
 function initialStageStates(mode: SourceMode, createdAt: string): JobManifestV2['stages'] {
@@ -267,7 +425,7 @@ function initialStageStates(mode: SourceMode, createdAt: string): JobManifestV2[
   return Object.fromEntries(v2StageOrder(mode).map((stage) => [stage, { status: skipped.has(stage) ? 'skipped' : 'pending', updated_at: createdAt }])) as JobManifestV2['stages']
 }
 
-async function readEventsV2(jobId: string): Promise<StudioEventV2[]> {
+async function readEventsV2(jobId: string, allowEmpty = false): Promise<StudioEventV2[]> {
   const body = await readFile(join(jobPath(jobId), 'events.jsonl'), 'utf8')
   const events: StudioEventV2[] = []
   const ids = new Set<string>()
@@ -281,6 +439,7 @@ async function readEventsV2(jobId: string): Promise<StudioEventV2[]> {
     ids.add(event.event_id)
     events.push(event)
   }
+  if (!events.length && allowEmpty) return events
   if (!events.length || events[0]?.type !== 'job_created') throw new Error('job event ledger must begin with exactly one job_created event')
   if (events.filter((event) => event.type === 'job_created').length !== 1) throw new Error('job event ledger must contain exactly one job_created event')
   return events
@@ -332,6 +491,90 @@ function approvalReceiptBody(event: Pick<StudioEventV2, 'schema_version' | 'even
   }
 }
 
+function signedReviewDecisionPayload(event: StudioEventV2): SignedReviewDecisionPayloadV1 | undefined {
+  if (event.type !== 'review_decision_recorded' || !hasExactKeys(event.payload, ['decision', 'command', 'receipt'])) return undefined
+  const decision = ReviewDecisionRecordV1Schema.safeParse(event.payload.decision)
+  const command = event.payload.command
+  const receipt = event.payload.receipt
+  if (!decision.success || !command || typeof command !== 'object' || Array.isArray(command) || !receipt || typeof receipt !== 'object' || Array.isArray(receipt)) return undefined
+  const commandRecord = command as Record<string, unknown>
+  const receiptRecord = receipt as Record<string, unknown>
+  if (!hasExactKeys(commandRecord, ['command_id', 'command_hash']) || !hasExactKeys(receiptRecord, ['version', 'algorithm', 'prior_event_chain_hash', 'signature'])) return undefined
+  if (typeof commandRecord.command_id !== 'string' || !zUuid(commandRecord.command_id) || typeof commandRecord.command_hash !== 'string' || !/^[a-f0-9]{64}$/.test(commandRecord.command_hash)) return undefined
+  if (receiptRecord.version !== 1 || receiptRecord.algorithm !== 'hmac-sha256'
+    || typeof receiptRecord.prior_event_chain_hash !== 'string' || !/^[a-f0-9]{64}$/.test(receiptRecord.prior_event_chain_hash)
+    || typeof receiptRecord.signature !== 'string' || !/^[a-f0-9]{64}$/.test(receiptRecord.signature)) return undefined
+  return {
+    decision: decision.data,
+    command: { command_id: commandRecord.command_id, command_hash: commandRecord.command_hash },
+    receipt: { version: 1, algorithm: 'hmac-sha256', prior_event_chain_hash: receiptRecord.prior_event_chain_hash, signature: receiptRecord.signature },
+  }
+}
+
+function signedReviewRecoveryPayload(event: StudioEventV2): SignedReviewRecoveryPayloadV1 | undefined {
+  if (event.type !== 'review_recovery_recorded' || !hasExactKeys(event.payload, ['recovery', 'command', 'receipt'])) return undefined
+  const recovery = ReviewRecoveryRecordV1Schema.safeParse(event.payload.recovery)
+  const command = event.payload.command
+  const receipt = event.payload.receipt
+  if (!recovery.success || !command || typeof command !== 'object' || Array.isArray(command) || !receipt || typeof receipt !== 'object' || Array.isArray(receipt)) return undefined
+  const commandRecord = command as Record<string, unknown>
+  const receiptRecord = receipt as Record<string, unknown>
+  if (!hasExactKeys(commandRecord, ['command_id', 'command_hash']) || !hasExactKeys(receiptRecord, ['version', 'algorithm', 'prior_event_chain_hash', 'signature'])) return undefined
+  if (typeof commandRecord.command_id !== 'string' || !zUuid(commandRecord.command_id) || typeof commandRecord.command_hash !== 'string' || !/^[a-f0-9]{64}$/.test(commandRecord.command_hash)) return undefined
+  if (receiptRecord.version !== 1 || receiptRecord.algorithm !== 'hmac-sha256'
+    || typeof receiptRecord.prior_event_chain_hash !== 'string' || !/^[a-f0-9]{64}$/.test(receiptRecord.prior_event_chain_hash)
+    || typeof receiptRecord.signature !== 'string' || !/^[a-f0-9]{64}$/.test(receiptRecord.signature)) return undefined
+  return {
+    recovery: recovery.data,
+    command: { command_id: commandRecord.command_id, command_hash: commandRecord.command_hash },
+    receipt: { version: 1, algorithm: 'hmac-sha256', prior_event_chain_hash: receiptRecord.prior_event_chain_hash, signature: receiptRecord.signature },
+  }
+}
+
+function zUuid(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
+}
+
+function reviewDecisionReceiptBody(
+  event: Pick<StudioEventV2, 'schema_version' | 'event_id' | 'job_id' | 'type' | 'occurred_at'>,
+  decision: ReviewDecisionRecordV1,
+  command: { command_id: string; command_hash: string },
+  priorEventChainHash: string,
+): unknown {
+  return {
+    schema_version: event.schema_version,
+    event_id: event.event_id,
+    job_id: event.job_id,
+    type: event.type,
+    occurred_at: event.occurred_at,
+    decision,
+    command,
+    prior_event_chain_hash: priorEventChainHash,
+  }
+}
+
+function reviewRecoveryReceiptBody(
+  event: Pick<StudioEventV2, 'schema_version' | 'event_id' | 'job_id' | 'type' | 'occurred_at'>,
+  recovery: ReviewRecoveryRecordV1,
+  command: { command_id: string; command_hash: string },
+  priorEventChainHash: string,
+): unknown {
+  return { schema_version: event.schema_version, event_id: event.event_id, job_id: event.job_id, type: event.type, occurred_at: event.occurred_at, recovery, command, prior_event_chain_hash: priorEventChainHash }
+}
+
+function verifiedReviewDecision(event: StudioEventV2, priorEventChainHash: string, key: Buffer | null): SignedReviewDecisionPayloadV1 | undefined {
+  const signed = signedReviewDecisionPayload(event)
+  if (!signed || !key || event.occurred_at !== signed.decision.occurred_at || signed.receipt.prior_event_chain_hash !== priorEventChainHash) return undefined
+  const body = reviewDecisionReceiptBody(event, signed.decision, signed.command, priorEventChainHash)
+  return verifyRunnerLedgerEventBody(key, body, signed.receipt.signature) ? signed : undefined
+}
+
+function verifiedReviewRecovery(event: StudioEventV2, priorEventChainHash: string, key: Buffer | null): SignedReviewRecoveryPayloadV1 | undefined {
+  const signed = signedReviewRecoveryPayload(event)
+  if (!signed || !key || event.occurred_at !== signed.recovery.occurred_at || signed.receipt.prior_event_chain_hash !== priorEventChainHash) return undefined
+  return verifyRunnerLedgerEventBody(key, reviewRecoveryReceiptBody(event, signed.recovery, signed.command, priorEventChainHash), signed.receipt.signature) ? signed : undefined
+}
+
 function createSignedApprovalEvent(jobId: string, approval: ApprovalRecordV2, previousEvents: StudioEventV2[], key: Buffer): StudioEventV2 {
   const priorEventChainHash = eventChainHash(previousEvents)
   const eventIdentity = {
@@ -348,6 +591,167 @@ function createSignedApprovalEvent(jobId: string, approval: ApprovalRecordV2, pr
     signature: signApprovalReceiptBody(key, approvalReceiptBody(eventIdentity, approval, priorEventChainHash)),
   }
   return StudioEventV2Schema.parse({ ...eventIdentity, payload: { approval, receipt } })
+}
+
+function createSignedReviewDecisionEvent(
+  jobId: string,
+  decision: ReviewDecisionRecordV1,
+  command: { command_id: string; command_hash: string },
+  previousEvents: StudioEventV2[],
+  key: Buffer,
+): StudioEventV2 {
+  const priorEventChainHash = eventChainHash(previousEvents)
+  const eventIdentity = {
+    schema_version: JOB_SCHEMA_VERSION_V2,
+    event_id: randomUUID(),
+    job_id: jobId,
+    type: 'review_decision_recorded' as const,
+    occurred_at: decision.occurred_at,
+  }
+  const receipt: RunnerLedgerReceiptV1 = {
+    version: 1,
+    algorithm: 'hmac-sha256',
+    prior_event_chain_hash: priorEventChainHash,
+    signature: signRunnerLedgerEventBody(key, reviewDecisionReceiptBody(eventIdentity, decision, command, priorEventChainHash)),
+  }
+  return StudioEventV2Schema.parse({ ...eventIdentity, payload: { decision, command, receipt } })
+}
+
+function createSignedReviewRecoveryEvent(
+  jobId: string,
+  recovery: ReviewRecoveryRecordV1,
+  command: { command_id: string; command_hash: string },
+  previousEvents: StudioEventV2[],
+  key: Buffer,
+): StudioEventV2 {
+  const priorEventChainHash = eventChainHash(previousEvents)
+  const eventIdentity = { schema_version: JOB_SCHEMA_VERSION_V2, event_id: randomUUID(), job_id: jobId, type: 'review_recovery_recorded' as const, occurred_at: recovery.occurred_at }
+  const receipt: RunnerLedgerReceiptV1 = {
+    version: 1,
+    algorithm: 'hmac-sha256',
+    prior_event_chain_hash: priorEventChainHash,
+    signature: signRunnerLedgerEventBody(key, reviewRecoveryReceiptBody(eventIdentity, recovery, command, priorEventChainHash)),
+  }
+  return StudioEventV2Schema.parse({ ...eventIdentity, payload: { recovery, command, receipt } })
+}
+
+export async function recordReviewDecisionV2(
+  jobId: string,
+  decisionInput: ReviewDecisionRecordV1,
+  commandInput: { command_id: string; command_hash: string },
+): Promise<StudioEventV2> {
+  return withJobEventLock(jobId, async () => {
+    const decision = ReviewDecisionRecordV1Schema.parse(decisionInput)
+    const command = {
+      command_id: typeof commandInput.command_id === 'string' && zUuid(commandInput.command_id) ? commandInput.command_id : '',
+      command_hash: typeof commandInput.command_hash === 'string' && /^[a-f0-9]{64}$/.test(commandInput.command_hash) ? commandInput.command_hash : '',
+    }
+    if (!command.command_id || !command.command_hash) throw new Error('review decision command identity is invalid')
+    const signingKey = await loadApprovalSigningKey()
+    if (!signingKey) throw new Error('review decision signing credential is unavailable or too short')
+    if (decision.job_id !== jobId) throw new Error('review decision belongs to a different job')
+    const existingEvent = await findRecordedReviewDecisionV2(jobId, decision, command)
+    if (existingEvent) return existingEvent
+    const job = await loadJobV2(jobId)
+    const events = await readEventsV2(jobId)
+    if (!job.target_platforms.includes(decision.platform)) throw new Error('review decision platform is not configured for the job')
+    if (jobRevisionHashV2(job) !== decision.expected_parent_revision_hash) throw new Error('review decision is stale against the exact current parent revision')
+    const event = createSignedReviewDecisionEvent(jobId, decision, command, events, signingKey)
+    await appendStudioEventV2(event, eventLedgerTailV2(events))
+    const appended = (await readEventsV2(jobId)).at(-1)
+    if (!appended || appended.event_id !== event.event_id || !verifiedReviewDecision(appended, eventChainHash(events), signingKey)) throw new Error('review decision event could not be authenticated after recording')
+    return event
+  })
+}
+
+export async function findRecordedReviewDecisionV2(
+  jobId: string,
+  decisionInput: ReviewDecisionRecordV1,
+  commandInput: { command_id: string; command_hash: string },
+): Promise<StudioEventV2 | null> {
+  return withJobEventLock(jobId, async () => {
+    const decision = ReviewDecisionRecordV1Schema.parse(decisionInput)
+    const command = { command_id: commandInput.command_id, command_hash: commandInput.command_hash }
+    if (!zUuid(command.command_id) || !/^[a-f0-9]{64}$/.test(command.command_hash)) throw new Error('review decision command identity is invalid')
+    const signingKey = await loadApprovalSigningKey()
+    if (!signingKey) throw new Error('review decision signing credential is unavailable or too short')
+    await loadJobV2(jobId)
+    const events = await readEventsV2(jobId)
+    let priorEventChainHash = APPROVAL_EVENT_CHAIN_GENESIS
+    for (const event of events) {
+      const existing = signedReviewDecisionPayload(event)
+      if (existing?.decision.decision_id === decision.decision_id) {
+        const verified = verifiedReviewDecision(event, priorEventChainHash, signingKey)
+        if (!verified) throw new Error('existing review decision event failed authentication')
+        // command_id identifies one delivery attempt. command_hash identifies the
+        // immutable semantic command and deliberately excludes the attempt UUID
+        // and delivery timestamps. A crash after this signed event is appended
+        // must therefore be replayable under a fresh attempt UUID, while any
+        // payload or lineage fork still changes command_hash and fails closed.
+        if (hashValue(verified.decision) !== hashValue(decision) || verified.command.command_hash !== command.command_hash) throw new Error('review decision idempotency key was reused for different semantic content')
+        return event
+      }
+      priorEventChainHash = nextEventChainHash(priorEventChainHash, event)
+    }
+    return null
+  })
+}
+
+export async function recordReviewRecoveryV2(
+  jobId: string,
+  recoveryInput: ReviewRecoveryRecordV1,
+  commandInput: { command_id: string; command_hash: string },
+): Promise<StudioEventV2> {
+  return withJobEventLock(jobId, async () => {
+    const recovery = ReviewRecoveryRecordV1Schema.parse(recoveryInput)
+    const command = { command_id: commandInput.command_id, command_hash: commandInput.command_hash }
+    if (!zUuid(command.command_id) || !/^[a-f0-9]{64}$/.test(command.command_hash)) throw new Error('review recovery command identity is invalid')
+    const signingKey = await loadApprovalSigningKey()
+    if (!signingKey) throw new Error('review recovery signing credential is unavailable or too short')
+    if (recovery.job_id !== jobId) throw new Error('review recovery belongs to a different job')
+    const existing = await findRecordedReviewRecoveryV2(jobId, recovery, command)
+    if (existing) return existing
+    const job = await loadJobV2(jobId)
+    if (!job.target_platforms.includes(recovery.platform)) throw new Error('review recovery platform is not configured for the job')
+    if (jobRevisionHashV2(job) !== recovery.expected_parent_revision_hash) throw new Error('review recovery is stale against the exact current parent revision')
+    const events = await readEventsV2(jobId)
+    const event = createSignedReviewRecoveryEvent(jobId, recovery, command, events, signingKey)
+    await appendStudioEventV2(event, eventLedgerTailV2(events))
+    const appended = (await readEventsV2(jobId)).at(-1)
+    if (!appended || appended.event_id !== event.event_id || !verifiedReviewRecovery(appended, eventChainHash(events), signingKey)) throw new Error('review recovery event could not be authenticated after recording')
+    return event
+  })
+}
+
+export async function findRecordedReviewRecoveryV2(
+  jobId: string,
+  recoveryInput: ReviewRecoveryRecordV1,
+  commandInput: { command_id: string; command_hash: string },
+): Promise<StudioEventV2 | null> {
+  return withJobEventLock(jobId, async () => {
+    const recovery = ReviewRecoveryRecordV1Schema.parse(recoveryInput)
+    const command = { command_id: commandInput.command_id, command_hash: commandInput.command_hash }
+    if (!zUuid(command.command_id) || !/^[a-f0-9]{64}$/.test(command.command_hash)) throw new Error('review recovery command identity is invalid')
+    const signingKey = await loadApprovalSigningKey()
+    if (!signingKey) throw new Error('review recovery signing credential is unavailable or too short')
+    await loadJobV2(jobId)
+    const events = await readEventsV2(jobId)
+    let priorEventChainHash = APPROVAL_EVENT_CHAIN_GENESIS
+    for (const event of events) {
+      const existing = signedReviewRecoveryPayload(event)
+      if (existing?.recovery.recovery_id === recovery.recovery_id) {
+        const verified = verifiedReviewRecovery(event, priorEventChainHash, signingKey)
+        if (!verified) throw new Error('existing review recovery event failed authentication')
+        // Recovery commands use the same semantic-attempt split as decisions.
+        // Keep the originally signed attempt as provenance, but accept a retry
+        // only when the complete recovery record and semantic hash are exact.
+        if (hashValue(verified.recovery) !== hashValue(recovery) || verified.command.command_hash !== command.command_hash) throw new Error('review recovery idempotency key was reused for different semantic content')
+        return event
+      }
+      priorEventChainHash = nextEventChainHash(priorEventChainHash, event)
+    }
+    return null
+  })
 }
 
 function verifiedSignedApproval(event: StudioEventV2, priorEventChainHash: string, key: Buffer | null): ApprovalRecordV2 | undefined {
@@ -379,9 +783,14 @@ async function reconcileJobEvents(job: JobManifestV2, events: StudioEventV2[]): 
   verifyCreationEvent(job, events[0] as StudioEventV2)
   const stages = initialStageStates(job.mode, job.created_at)
   const approvals: JobManifestV2['approvals'] = []
+  const reviewDecisionHashes: string[] = []
   let expectedSourceBundleHash = typeof events[0]?.payload.source_bundle_hash === 'string' ? events[0].payload.source_bundle_hash : undefined
   const hasSignedApproval = events.some((event) => event.type === 'approval_recorded' && signedApprovalPayload(event) !== undefined)
   const approvalKey = hasSignedApproval ? await loadApprovalSigningKey() : null
+  const hasRunnerDecision = events.some((event) => event.type === 'review_decision_recorded')
+  const hasRunnerRecovery = events.some((event) => event.type === 'review_recovery_recorded')
+  const runnerLedgerKey = hasRunnerDecision || hasRunnerRecovery ? (approvalKey ?? await loadApprovalSigningKey()) : null
+  if ((hasRunnerDecision || hasRunnerRecovery) && !runnerLedgerKey) throw new Error('runner ledger signing credential is unavailable; review decisions and recoveries cannot be authenticated')
   let priorEventChainHash = APPROVAL_EVENT_CHAIN_GENESIS
 
   for (const [index, event] of events.entries()) {
@@ -397,6 +806,12 @@ async function reconcileJobEvents(job: JobManifestV2, events: StudioEventV2[]): 
     } else if (event.type === 'approval_recorded') {
       const approval = verifiedSignedApproval(event, priorEventChainHash, approvalKey)
       if (approval) approvals.push(approval)
+    } else if (event.type === 'review_decision_recorded') {
+      const signedDecision = verifiedReviewDecision(event, priorEventChainHash, runnerLedgerKey)
+      if (!signedDecision) throw new Error('job event ledger contains an unauthenticated review decision')
+      reviewDecisionHashes.push(hashValue(signedDecision.decision))
+    } else if (event.type === 'review_recovery_recorded') {
+      if (!verifiedReviewRecovery(event, priorEventChainHash, runnerLedgerKey)) throw new Error('job event ledger contains an unauthenticated review recovery')
     } else if (['stage_started', 'stage_completed', 'stage_invalidated', 'stage_blocked'].includes(event.type)) {
       const stage = StageNameV2Schema.parse(requiredEventString(event, 'stage'))
       if (event.type === 'stage_started') stages[stage] = { status: 'running', updated_at: event.occurred_at }
@@ -416,46 +831,53 @@ async function reconcileJobEvents(job: JobManifestV2, events: StudioEventV2[]): 
   } else if (job.source_bundle) {
     throw new Error('job source bundle is not recorded in its event ledger')
   }
-  return JobManifestV2Schema.parse({ ...job, stages, approvals, updated_at: events.at(-1)?.occurred_at ?? job.created_at })
+  return JobManifestV2Schema.parse({ ...job, stages, approvals, review_decision_hashes: reviewDecisionHashes, updated_at: events.at(-1)?.occurred_at ?? job.created_at })
 }
 
 export async function loadJobV2(jobId: string): Promise<JobManifestV2> {
-  const raw = JSON.parse(await readFile(join(jobPath(jobId), 'job.json'), 'utf8')) as Record<string, unknown>
-  const createdAt = typeof raw.created_at === 'string' ? raw.created_at : ''
-  const mode = raw.mode as SourceMode
-  const job = JobManifestV2Schema.parse({ ...raw, updated_at: createdAt, stages: initialStageStates(mode, createdAt), approvals: [] })
-  if (job.job_id !== jobId) throw new Error('job manifest belongs to a different job directory')
-  await verifyPinnedInputsV2(job)
-  return reconcileJobEvents(job, await readEventsV2(jobId))
+  return withJobEventLock(jobId, async () => {
+    const raw = JSON.parse(await readFile(join(jobPath(jobId), 'job.json'), 'utf8')) as Record<string, unknown>
+    const createdAt = typeof raw.created_at === 'string' ? raw.created_at : ''
+    const mode = raw.mode as SourceMode
+    const job = JobManifestV2Schema.parse({ ...raw, updated_at: createdAt, stages: initialStageStates(mode, createdAt), approvals: [], review_decision_hashes: [] })
+    if (job.job_id !== jobId) throw new Error('job manifest belongs to a different job directory')
+    await verifyPinnedInputsV2(job)
+    return reconcileJobEvents(job, await readEventsV2(jobId))
+  })
 }
 
 export async function startStageV2(jobId: string, stage: StageNameV2): Promise<JobManifestV2> {
-  const job = await loadJobV2(jobId)
-  const parsedStage = StageNameV2Schema.parse(stage)
-  const incomplete = v2PrerequisitesFor(parsedStage, job.mode).filter((dependency) => !['complete', 'skipped'].includes(job.stages[dependency].status))
-  if (incomplete.length) throw new Error(`stage ${parsedStage} is waiting for: ${incomplete.join(', ')}`)
-  job.stages[parsedStage] = { status: 'running', updated_at: nowIso() }
-  await saveJobV2(job)
-  await appendEventV2(jobId, 'stage_started', { stage: parsedStage })
-  return job
+  return withJobEventLock(jobId, async () => {
+    const job = await loadJobV2(jobId)
+    const parsedStage = StageNameV2Schema.parse(stage)
+    const incomplete = v2PrerequisitesFor(parsedStage, job.mode).filter((dependency) => !['complete', 'skipped'].includes(job.stages[dependency].status))
+    if (incomplete.length) throw new Error(`stage ${parsedStage} is waiting for: ${incomplete.join(', ')}`)
+    job.stages[parsedStage] = { status: 'running', updated_at: nowIso() }
+    await saveJobV2(job)
+    await appendEventV2(jobId, 'stage_started', { stage: parsedStage })
+    return job
+  })
 }
 
 export async function blockStageV2(jobId: string, stage: StageNameV2, reason: string): Promise<JobManifestV2> {
-  if (!reason.trim()) throw new Error('blocked stage requires a reason')
-  const job = await loadJobV2(jobId)
-  job.stages[stage] = { status: 'blocked', updated_at: nowIso(), reason: reason.trim() }
-  await saveJobV2(job)
-  await appendEventV2(jobId, 'stage_blocked', { stage, reason: reason.trim() })
-  return job
+  return withJobEventLock(jobId, async () => {
+    if (!reason.trim()) throw new Error('blocked stage requires a reason')
+    const job = await loadJobV2(jobId)
+    job.stages[stage] = { status: 'blocked', updated_at: nowIso(), reason: reason.trim() }
+    await saveJobV2(job)
+    await appendEventV2(jobId, 'stage_blocked', { stage, reason: reason.trim() })
+    return job
+  })
 }
 
 export async function completeStageV2(jobId: string, stage: StageNameV2, payload: unknown, inputHashes: Record<string, string>, toolVersions: Record<string, string>): Promise<StageArtifactV2> {
+  return withJobEventLock(jobId, async () => {
   const job = await loadJobV2(jobId)
   const parsedStage = StageNameV2Schema.parse(stage)
   const incomplete = v2PrerequisitesFor(parsedStage, job.mode).filter((dependency) => !['complete', 'skipped'].includes(job.stages[dependency].status))
   if (incomplete.length) throw new Error(`stage ${parsedStage} is waiting for: ${incomplete.join(', ')}`)
   const artifactBody = { schema_version: JOB_SCHEMA_VERSION_V2, job_id: jobId, stage: parsedStage, input_hashes: inputHashes, config_hash: job.config_hash, tool_versions: toolVersions, payload }
-  const artifactHash = artifactSemanticHash(artifactBody)
+  const artifactHash = stageArtifactSemanticHashV2(artifactBody)
   let artifact = StageArtifactV2Schema.parse({ ...artifactBody, created_at: nowIso(), artifact_hash: artifactHash })
   const stageDir = join(jobPath(jobId), 'artifacts', parsedStage)
   await mkdir(stageDir, { recursive: true })
@@ -480,20 +902,23 @@ export async function completeStageV2(jobId: string, stage: StageNameV2, payload
   await saveJobV2(job)
   await appendEventV2(jobId, 'stage_completed', { stage: parsedStage, artifact_hash: artifact.artifact_hash })
   return artifact
+  })
 }
 
 function rootPath(jobId: string): string { return jobPath(jobId) }
 
 export async function readStageArtifactV2<T = unknown>(jobId: string, stage: StageNameV2): Promise<StageArtifactV2 & { payload: T }> {
-  const job = await loadJobV2(jobId)
-  const state = job.stages[stage]
-  if (state.status !== 'complete' || !state.artifact_path || !state.artifact_hash) throw new Error(`stage ${stage} is not complete`)
-  const root = resolve(jobPath(jobId))
-  const artifactPath = resolve(root, state.artifact_path)
-  if (!artifactPath.startsWith(`${root}${sep}`) || basename(artifactPath) !== `${state.artifact_hash}.json`) throw new Error(`stage ${stage} artifact path is outside its content-addressed job location`)
-  const artifact = StageArtifactV2Schema.parse(JSON.parse(await readFile(artifactPath, 'utf8')))
-  assertArtifactIdentity(artifact, job, stage, state.artifact_hash)
-  return artifact as StageArtifactV2 & { payload: T }
+  return withJobEventLock(jobId, async () => {
+    const job = await loadJobV2(jobId)
+    const state = job.stages[stage]
+    if (state.status !== 'complete' || !state.artifact_path || !state.artifact_hash) throw new Error(`stage ${stage} is not complete`)
+    const root = resolve(jobPath(jobId))
+    const artifactPath = resolve(root, state.artifact_path)
+    if (!artifactPath.startsWith(`${root}${sep}`) || basename(artifactPath) !== `${state.artifact_hash}.json`) throw new Error(`stage ${stage} artifact path is outside its content-addressed job location`)
+    const artifact = StageArtifactV2Schema.parse(JSON.parse(await readFile(artifactPath, 'utf8')))
+    assertArtifactIdentity(artifact, job, stage, state.artifact_hash)
+    return artifact as StageArtifactV2 & { payload: T }
+  })
 }
 
 export async function readReusableStageV2<T = unknown>(jobId: string, stage: StageNameV2, inputHashes: Record<string, string>, toolVersions: Record<string, string> = {}): Promise<(StageArtifactV2 & { payload: T }) | null> {
@@ -506,41 +931,49 @@ export async function readReusableStageV2<T = unknown>(jobId: string, stage: Sta
 }
 
 export async function recordApprovalV2(jobId: string, gate: ApprovalGateV2, decision: 'approved' | 'rejected' | 'override', artifactHash: string, reason?: string, actor: 'krish' | 'codex' | 'system' = 'krish', confirmationRef?: string): Promise<JobManifestV2> {
+  return withJobEventLock(jobId, async () => {
   ApprovalGateV2Schema.parse(gate)
   if (decision === 'override' && !reason?.trim()) throw new Error('override requires a reason')
   if (['evidence', 'visual_plan', 'storyboard', 'animatic', 'final', 'package'].includes(gate) && actor !== 'krish' && decision !== 'rejected') throw new Error(`${gate} requires Krish approval`)
   if (actor === 'krish' && decision !== 'rejected') {
-    const expectedPrefix = `codex-user-confirmation:${gate}:${artifactHash}:`
-    if (!confirmationRef?.startsWith(expectedPrefix) || !confirmationRef.slice(expectedPrefix.length).trim()) throw new Error(`Krish approval requires an artifact-bound confirmation reference beginning ${expectedPrefix}`)
+    const prefixes = [`codex-user-confirmation:${gate}:${artifactHash}:`, `control-center-confirmation:${gate}:${artifactHash}:`]
+    if (!confirmationRef || !prefixes.some((prefix) => confirmationRef.startsWith(prefix) && confirmationRef.slice(prefix.length).trim())) throw new Error(`Krish approval requires an artifact-bound confirmation reference beginning ${prefixes.join(' or ')}`)
   }
   await loadJobV2(jobId)
   const signingKey = await loadApprovalSigningKey()
   if (!signingKey) throw new Error('approval signing credential is unavailable or too short; approval was not recorded')
   const approval = ApprovalV2Schema.parse({ gate, decision, artifact_hash: artifactHash, ...(reason ? { reason } : {}), actor, ...(confirmationRef ? { confirmation_ref: confirmationRef } : {}), occurred_at: nowIso() })
-  const event = createSignedApprovalEvent(jobId, approval, await readEventsV2(jobId), signingKey)
-  await appendStudioEventV2(event)
+  const events = await readEventsV2(jobId)
+  const event = createSignedApprovalEvent(jobId, approval, events, signingKey)
+  await appendStudioEventV2(event, eventLedgerTailV2(events))
   const updated = await loadJobV2(jobId)
   if (!updated.approvals.some((candidate) => hashValue(candidate) === hashValue(approval))) throw new Error('approval event could not be authenticated after recording')
   await saveJobV2(updated)
   return updated
+  })
 }
 
 export function hasApprovalV2(job: JobManifestV2, gate: ApprovalGateV2, artifactHash: string, actor?: 'krish' | 'codex' | 'system'): boolean {
   const latest = [...job.approvals].reverse().find((approval) => approval.gate === gate && approval.artifact_hash === artifactHash)
   if (!latest || (actor && latest.actor !== actor) || !['approved', 'override'].includes(latest.decision)) return false
-  if (latest.actor === 'krish') return Boolean(latest.confirmation_ref?.startsWith(`codex-user-confirmation:${gate}:${artifactHash}:`))
+  if (latest.actor === 'krish') return Boolean(
+    latest.confirmation_ref?.startsWith(`codex-user-confirmation:${gate}:${artifactHash}:`)
+    || latest.confirmation_ref?.startsWith(`control-center-confirmation:${gate}:${artifactHash}:`),
+  )
   return true
 }
 
 export async function invalidateAfterV2(jobId: string, stage: StageNameV2, reason: string): Promise<JobManifestV2> {
-  const job = await loadJobV2(jobId)
-  for (const child of v2DescendantsFor(stage, job.mode)) {
-    if (job.stages[child].status === 'pending') continue
-    job.stages[child] = { status: 'invalidated', updated_at: nowIso(), reason }
-    await appendEventV2(jobId, 'stage_invalidated', { stage: child, cause: stage, reason })
-  }
-  await saveJobV2(job)
-  return job
+  return withJobEventLock(jobId, async () => {
+    const job = await loadJobV2(jobId)
+    for (const child of v2DescendantsFor(stage, job.mode)) {
+      if (job.stages[child].status === 'pending') continue
+      job.stages[child] = { status: 'invalidated', updated_at: nowIso(), reason }
+      await appendEventV2(jobId, 'stage_invalidated', { stage: child, cause: stage, reason })
+    }
+    await saveJobV2(job)
+    return job
+  })
 }
 
 export function pinnedConfigPathV2(job: JobManifestV2): string {
@@ -551,4 +984,33 @@ export function pinnedTechniqueRegistryPathV2(job: JobManifestV2): string | unde
   return job.pinned_inputs.technique_registry_path
     ? resolvePinnedPath(job, job.pinned_inputs.technique_registry_path, 'pinned', 'pinned technique registry path')
     : undefined
+}
+
+export function jobRevisionHashV2(job: JobManifestV2): string {
+  return hashValue({
+    schema_version: job.schema_version,
+    job_id: job.job_id,
+    series: job.series,
+    mode: job.mode,
+    purpose: job.purpose,
+    source_bundle_hash: job.source_bundle ? hashValue(job.source_bundle) : null,
+    target_platforms: job.target_platforms,
+    treatment_lane: job.treatment_lane,
+    config_hash: job.config_hash,
+    skill_hashes: job.skill_hashes,
+    stages: v2StageOrder(job.mode).map((stage) => ({
+      stage,
+      status: job.stages[stage].status,
+      artifact_hash: job.stages[stage].artifact_hash ?? null,
+    })),
+    approvals: job.approvals.map((approval) => ({
+      gate: approval.gate,
+      decision: approval.decision,
+      artifact_hash: approval.artifact_hash,
+      reason: approval.reason ?? null,
+      actor: approval.actor,
+      confirmation_ref: approval.confirmation_ref ?? null,
+    })),
+    ...(job.review_decision_hashes.length ? { review_decision_hashes: job.review_decision_hashes } : {}),
+  })
 }
