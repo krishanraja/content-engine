@@ -6,7 +6,11 @@ on:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -16,10 +20,50 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install hash-pinned FFmpeg and FFprobe on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $videoFfmpegBuild = 'ffmpeg-n8.1.2-50-g1a748fe2cd-win64-gpl-8.1'
+          $videoFfmpegSha256 = 'b0b50337bdd4e7797caa874fbd000435864361b71ceb6aa26525d8df0c9c86a6'
+          $videoFfmpegArchive = Join-Path $env:RUNNER_TEMP "$videoFfmpegBuild.zip"
+          $videoFfmpegRoot = Join-Path $env:RUNNER_TEMP 'mindmake-ffmpeg'
+          Invoke-WebRequest -Uri "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-03-13-17/$videoFfmpegBuild.zip" -OutFile $videoFfmpegArchive
+          $videoFfmpegActualSha256 = (Get-FileHash -LiteralPath $videoFfmpegArchive -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($videoFfmpegActualSha256 -ne $videoFfmpegSha256) { throw 'Downloaded FFmpeg archive failed its pinned SHA-256 check.' }
+          Expand-Archive -LiteralPath $videoFfmpegArchive -DestinationPath $videoFfmpegRoot
+          $videoFfmpegBin = Join-Path $videoFfmpegRoot "$videoFfmpegBuild\bin"
+          if (-not (Test-Path -LiteralPath (Join-Path $videoFfmpegBin 'ffmpeg.exe'))) { throw 'Pinned FFmpeg binary is missing after extraction.' }
+          if (-not (Test-Path -LiteralPath (Join-Path $videoFfmpegBin 'ffprobe.exe'))) { throw 'Pinned FFprobe binary is missing after extraction.' }
+          Add-Content -LiteralPath $env:GITHUB_PATH -Value $videoFfmpegBin
+      - name: Install hash-pinned FFmpeg and FFprobe on Linux
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          video_ffmpeg_build='ffmpeg-n8.1.2-50-g1a748fe2cd-linux64-gpl-8.1'
+          video_ffmpeg_sha256='226d1e25cdc67ba195baf09e43a0c91a5af9262455ddad9e2e10c30d7c77b40d'
+          video_ffmpeg_archive="$RUNNER_TEMP/$video_ffmpeg_build.tar.xz"
+          curl --fail --location --retry 3 --output "$video_ffmpeg_archive" "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-03-13-17/$video_ffmpeg_build.tar.xz"
+          echo "$video_ffmpeg_sha256  $video_ffmpeg_archive" | sha256sum --check --strict
+          tar -xJf "$video_ffmpeg_archive" -C "$RUNNER_TEMP"
+          video_ffmpeg_bin="$RUNNER_TEMP/$video_ffmpeg_build/bin"
+          test -x "$video_ffmpeg_bin/ffmpeg"
+          test -x "$video_ffmpeg_bin/ffprobe"
+          echo "$video_ffmpeg_bin" >> "$GITHUB_PATH"
+      - name: Verify media toolchain
+        run: |
+          ffmpeg -version
+          ffprobe -version
+      - run: npm ci
+      - run: npm run verify
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
       - run: npm ci
       - run: npm audit --audit-level=high
-      - run: npm run typecheck
-      - run: npm run test
-      - run: npm run skills:validate
-      - run: npm run check:public-copy
-      - run: npm run check:renderer

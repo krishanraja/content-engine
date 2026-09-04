@@ -38,8 +38,18 @@ function words(value: string): string[] {
   return value.toLowerCase().match(/[a-z0-9]+(?:['’-][a-z0-9]+)*/g) || []
 }
 
-function tokens(value: string): Set<string> {
-  return new Set(words(value).filter((word) => word.length > 2))
+function orderedSimilarity(left: string[], right: string[]): number {
+  if (!left.length || !right.length) return 0
+  const row = new Array<number>(right.length + 1).fill(0)
+  for (const token of left) {
+    let diagonal = 0
+    for (let index = 1; index <= right.length; index += 1) {
+      const above = row[index] || 0
+      row[index] = token === right[index - 1] ? diagonal + 1 : Math.max(row[index - 1] || 0, above)
+      diagonal = above
+    }
+  }
+  return (2 * (row.at(-1) || 0)) / (left.length + right.length)
 }
 
 export function transcriptText(transcript: TranscriptDocument): string {
@@ -76,9 +86,9 @@ export function assessTranscriptQuality(transcript: TranscriptDocument): Transcr
 }
 
 export function alignScriptToTranscript(script: string, transcript: TranscriptDocument): { start_ms: number; end_ms: number; similarity: number } {
-  const wanted = tokens(script)
-  if (!wanted.size || !transcript.segments.length) throw new Error('cannot align an empty script or transcript')
-  const targetWords = Math.max(8, words(script).length)
+  const wanted = words(script)
+  if (!wanted.length || !transcript.segments.length) throw new Error('cannot align an empty script or transcript')
+  const targetWords = Math.max(8, wanted.length)
   let best = { start_ms: 0, end_ms: 0, similarity: 0 }
   for (let startIndex = 0; startIndex < transcript.segments.length; startIndex += 1) {
     let text = ''
@@ -88,9 +98,8 @@ export function alignScriptToTranscript(script: string, transcript: TranscriptDo
       text = `${text} ${segment.text}`.trim()
       const count = words(text).length
       if (count < targetWords * 0.65) continue
-      const found = tokens(text)
-      const overlap = [...wanted].filter((word) => found.has(word)).length
-      const similarity = (2 * overlap) / (wanted.size + found.size)
+      const found = words(text)
+      const similarity = orderedSimilarity(wanted, found)
       if (similarity > best.similarity) best = { start_ms: transcript.segments[startIndex]?.start_ms ?? 0, end_ms: segment.end_ms, similarity }
       if (count > targetWords * 1.45) break
     }
@@ -141,12 +150,16 @@ function claimLike(sentence: string): boolean {
   return properNoun || quantified || consequential
 }
 
-function extractClaims(text: string, sourceRef: string): CandidateV1['claims'] {
-  const sourceUrls = /^https?:\/\//i.test(sourceRef) ? [sourceRef] : []
+export function detectClaimLikeSentences(text: string): string[] {
   return text
     .split(/(?<=[.!?])\s+/)
     .map((sentence) => sentence.trim())
-    .filter((sentence) => sentence && claimLike(sentence))
+    .filter((sentence) => sentence.length > 0 && claimLike(sentence))
+}
+
+function extractClaims(text: string, sourceRef: string): CandidateV1['claims'] {
+  const sourceUrls = /^https?:\/\//i.test(sourceRef) ? [sourceRef] : []
+  return detectClaimLikeSentences(text)
     .slice(0, 8)
     .map((sentence) => ({ text: sentence, kind: 'fact' as const, evidence_urls: sourceUrls, verification: 'needs_review' as const }))
 }

@@ -213,7 +213,8 @@ export async function prepareEvidenceApprovalPacket(input: {
   return { packet, packetPath, packetHash: await hashFile(packetPath) }
 }
 
-export async function verifyEvidenceApprovalPacket(path: string): Promise<EvidenceApprovalPacketV1> {
+export async function verifyEvidenceApprovalPacket(path: string, expectedPacketHash?: string): Promise<EvidenceApprovalPacketV1> {
+  if (expectedPacketHash && await hashFile(path) !== expectedPacketHash) throw new Error('evidence approval packet changed after exact approval')
   const packet = EvidenceApprovalPacketV1Schema.parse(JSON.parse(await readFile(path, 'utf8')))
   if (await hashFile(packet.contact_sheet_path) !== packet.contact_sheet_sha256) throw new Error('evidence contact sheet changed after packet preparation')
   for (const item of packet.items) {

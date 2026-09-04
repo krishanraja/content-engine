@@ -1,6 +1,6 @@
 import { mkdir, readFile } from 'node:fs/promises'
 import { basename, dirname, join, resolve } from 'node:path'
-import type { EditSegmentV1 } from '@mindmake/contracts'
+import type { EditSegmentV1, MediaSourceV1 } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { jobPath } from './paths.js'
 import { commandVersion, run, runBuffer } from './process.js'
@@ -16,6 +16,36 @@ export interface MediaProbe {
   video_codec: string
   audio_codec: string | null
   file_hash: string
+}
+
+export interface MediaSourceProbeV2 {
+  path: string
+  duration_seconds: number
+  width: number | null
+  height: number | null
+  average_fps: number | null
+  audio_hz: number | null
+  video_codec: string | null
+  audio_codec: string | null
+  file_hash: string
+}
+
+export interface NormalizedMediaSourceV2 {
+  source_id: string
+  kind: MediaSourceV1['kind']
+  input_path: string
+  input_hash: string
+  normalized_path: string
+  normalized_hash: string
+  duration_ms: number
+  width: number | null
+  height: number | null
+  fps: number | null
+  audio_hz: number | null
+  video_codec: string | null
+  audio_codec: string | null
+  canonical_offset_ms: number
+  ffmpeg_version: string
 }
 
 export interface LoudnessProbe {
@@ -47,6 +77,69 @@ export async function probeMedia(path: string): Promise<MediaProbe> {
     video_codec: String(video.codec_name || 'unknown'),
     audio_codec: audio ? String(audio.codec_name || 'unknown') : null,
     file_hash: await hashFile(absolute),
+  }
+}
+
+export async function probeMediaSourceV2(path: string): Promise<MediaSourceProbeV2> {
+  const absolute = resolve(path)
+  const { stdout } = await run('ffprobe', ['-v', 'error', '-show_entries', 'format=duration:stream=index,codec_type,codec_name,width,height,avg_frame_rate,sample_rate', '-of', 'json', absolute])
+  const data = JSON.parse(stdout) as { format?: { duration?: string }; streams?: Array<Record<string, string | number>> }
+  const video = data.streams?.find((stream) => stream.codec_type === 'video')
+  const audio = data.streams?.find((stream) => stream.codec_type === 'audio')
+  if (!video && !audio) throw new Error('input has no usable video or audio stream')
+  return {
+    path: absolute,
+    duration_seconds: Number(data.format?.duration || 0),
+    width: video ? Number(video.width || 0) : null,
+    height: video ? Number(video.height || 0) : null,
+    average_fps: video ? ratio(String(video.avg_frame_rate || '0')) : null,
+    audio_hz: audio?.sample_rate ? Number(audio.sample_rate) : null,
+    video_codec: video ? String(video.codec_name || 'unknown') : null,
+    audio_codec: audio ? String(audio.codec_name || 'unknown') : null,
+    file_hash: await hashFile(absolute),
+  }
+}
+
+export async function normalizeMediaSourceV2(jobId: string, source: MediaSourceV1): Promise<NormalizedMediaSourceV2> {
+  const input = await probeMediaSourceV2(source.ref)
+  if (source.content_hash && source.content_hash !== input.file_hash) throw new Error(`source hash changed for ${source.source_id}`)
+  if (source.kind === 'audio' && !input.audio_hz) throw new Error(`audio source ${source.source_id} has no audio stream`)
+  if (source.kind !== 'audio' && (!input.width || !input.height)) throw new Error(`visual source ${source.source_id} has no video stream`)
+  const outputDirectory = join(jobPath(jobId), 'media', 'v2', source.source_id)
+  const outputPath = join(outputDirectory, source.kind === 'audio' ? 'normalized.m4a' : 'normalized.mp4')
+  await mkdir(outputDirectory, { recursive: true })
+  if (source.kind === 'audio') {
+    await run('ffmpeg', [
+      '-hide_banner', '-loglevel', 'error', '-y', '-i', input.path,
+      '-map_metadata', '-1', '-vn', '-map', '0:a:0', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2', outputPath,
+    ], { timeoutMs: 3_600_000 })
+  } else {
+    await run('ffmpeg', [
+      '-hide_banner', '-loglevel', 'error', '-y', '-i', input.path,
+      '-map_metadata', '-1', '-map', '0:v:0', ...(input.audio_hz ? ['-map', '0:a:0?'] : []),
+      '-vf', 'fps=30,scale=trunc(iw/2)*2:trunc(ih/2)*2', '-r', '30',
+      '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p',
+      ...(input.audio_hz ? ['-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2'] : ['-an']),
+      '-movflags', '+faststart', outputPath,
+    ], { timeoutMs: 3_600_000 })
+  }
+  const normalized = await probeMediaSourceV2(outputPath)
+  return {
+    source_id: source.source_id,
+    kind: source.kind,
+    input_path: input.path,
+    input_hash: input.file_hash,
+    normalized_path: normalized.path,
+    normalized_hash: normalized.file_hash,
+    duration_ms: Math.max(1, Math.round(normalized.duration_seconds * 1000)),
+    width: normalized.width,
+    height: normalized.height,
+    fps: normalized.average_fps,
+    audio_hz: normalized.audio_hz,
+    video_codec: normalized.video_codec,
+    audio_codec: normalized.audio_codec,
+    canonical_offset_ms: source.sync.offset_ms,
+    ffmpeg_version: await commandVersion('ffmpeg', ['-version']),
   }
 }
 

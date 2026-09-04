@@ -1,6 +1,9 @@
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import type { OrchestratedEvidenceOverlayV1 } from '@mindmake/contracts'
-import { evidenceContactSheetFilter, validateEvidenceEditorialQuality, validateEvidenceOrchestration } from '@mindmake/core'
+import { AssetsStagePayloadV2Schema, type OrchestratedEvidenceOverlayV1 } from '@mindmake/contracts'
+import { evidenceContactSheetFilter, hashFile, prepareEvidenceApprovalPacket, validateEvidenceEditorialQuality, validateEvidenceOrchestration, verifyEvidenceApprovalPacket } from '@mindmake/core'
 
 function overlay(overrides: Partial<OrchestratedEvidenceOverlayV1> = {}): OrchestratedEvidenceOverlayV1 {
   return {
@@ -114,4 +117,67 @@ describe('evidence orchestration', () => {
     ], new Date('2026-08-29T00:00:00.000Z'))
     expect(issues).toContain('proof: specialist trade reporting needs at least one independent corroborating source')
   })
+
+  it('pins the exact V2 evidence screenshot packet, contact sheet and source bytes against post-approval mutation', async () => {
+    const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-evidence-v2-'))
+    const previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
+    process.env.MINDMAKE_RUNTIME_ROOT = runtimeRoot
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64')
+    const sourcePath = join(runtimeRoot, 'headline-proof.png')
+    try {
+      await writeFile(sourcePath, png)
+      const proposed = overlay({
+        asset_path: sourcePath,
+        title: 'Regulator changes AI reporting rules',
+        editorial_assessment: {
+          ...overlay().editorial_assessment!,
+          source_class: 'primary_authority',
+          editorial_form: 'official_announcement',
+          source_role: 'claim_evidence',
+          temporality: 'live_artifact',
+          headline_form: 'reported_event',
+          corroborating_urls: [],
+        },
+      })
+      const prepared = await prepareEvidenceApprovalPacket({
+        jobId: 'job-evidence-v2',
+        candidateHash: 'a'.repeat(64),
+        overlays: [proposed],
+        durationMs: 8_000,
+        strategySummary: 'Show the exact authoritative headline briefly, then return to Krish.',
+      })
+      const pinned = AssetsStagePayloadV2Schema.parse({
+        visual_plan_artifact_hash: 'b'.repeat(64),
+        assets: [],
+        generated_shots: [],
+        editorial_evidence: {
+          packet_path: prepared.packetPath,
+          packet_hash: prepared.packetHash,
+          contact_sheet_path: prepared.packet.contact_sheet_path,
+          contact_sheet_hash: prepared.packet.contact_sheet_sha256,
+        },
+      }).editorial_evidence!
+      await expect(verifyEvidenceApprovalPacket(pinned.packet_path, pinned.packet_hash)).resolves.toMatchObject({ packet_id: prepared.packet.packet_id, candidate_hash: 'a'.repeat(64) })
+
+      const stagedScreenshotPath = prepared.packet.items[0]!.overlay.asset_path
+      await writeFile(stagedScreenshotPath, Buffer.concat([png, Buffer.from('mutated')]))
+      await expect(verifyEvidenceApprovalPacket(pinned.packet_path, pinned.packet_hash)).rejects.toThrow('approved evidence asset changed after approval')
+      await writeFile(stagedScreenshotPath, png)
+
+      const contactSheetBytes = await readFile(pinned.contact_sheet_path)
+      await writeFile(pinned.contact_sheet_path, Buffer.concat([contactSheetBytes, Buffer.from('mutated')]))
+      await expect(verifyEvidenceApprovalPacket(pinned.packet_path, pinned.packet_hash)).rejects.toThrow('evidence contact sheet changed after packet preparation')
+      await writeFile(pinned.contact_sheet_path, contactSheetBytes)
+
+      const packet = JSON.parse(await readFile(pinned.packet_path, 'utf8')) as { strategy_summary: string }
+      packet.strategy_summary = 'A mutated strategy that was never approved by Krish.'
+      await writeFile(pinned.packet_path, `${JSON.stringify(packet, null, 2)}\n`, 'utf8')
+      expect(await hashFile(pinned.packet_path)).not.toBe(pinned.packet_hash)
+      await expect(verifyEvidenceApprovalPacket(pinned.packet_path, pinned.packet_hash)).rejects.toThrow('evidence approval packet changed after exact approval')
+    } finally {
+      if (previousRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
+      else process.env.MINDMAKE_RUNTIME_ROOT = previousRuntimeRoot
+      await rm(runtimeRoot, { recursive: true, force: true })
+    }
+  }, 30_000)
 })

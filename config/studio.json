@@ -1,20 +1,58 @@
 {
   "schema_version": 1,
   "upstream_contracts": {
-    "control_center": { "repository": "krishanraja/control-center", "main_commit_verified": "e203053ec69ac8351a1866359990dd45cee3e718", "adapter_pr": 244, "security_pr": 246 },
-    "mm_ctrl": { "repository": "krishanraja/mm-ctrl", "main_commit_verified": "5e86b920fd307af579e79d4cfcc181756f037b4a", "adapter_pr": 371 }
+    "control_center": { "repository": "krishanraja/control-center", "main_commit_verified": "f25daafcbb2fda06416be0973ea40444d520d893", "verified_at": "2026-09-04", "adapter_pr": 244, "security_pr": 246 },
+    "mm_ctrl": { "repository": "krishanraja/mm-ctrl", "main_commit_verified": "e5868aad38c5508894d395bcedf220e768569f05", "verified_at": "2026-09-04", "adapter_pr": 371 }
   },
   "output": { "width": 1080, "height": 1920, "fps": 30, "audio_hz": 48000, "lufs": -14, "true_peak_dbtp": -1 },
   "transcription": {
     "local_model": "base.en",
     "maximum_realtime_factor": 1.5,
     "maximum_fixture_wer": 0.12,
-    "vocabulary": ["Krish Raja", "Mindmaker", "The Money of AI", "Built With AI", "Meta", "AdFixus"]
+    "vocabulary": ["Krish", "Mindmaker", "The Money of AI", "Built With AI", "Meta", "AdFixus"]
   },
   "identity": {
     "presenter_name": "Krish",
     "asr_aliases": ["Chris"],
-    "default_presenter_modes": ["solo", "short_native"]
+    "default_presenter_modes": ["solo", "short_native"],
+    "durable_profile": {
+      "profile_id": "krish-face-v1",
+      "credential_target": "MindmakeVideoStudio/krish-identity-key",
+      "encrypted_runtime_path": "identity/krish-face-v1.enc.json",
+      "guest_profiles": "job_local_only",
+      "uncertain_match_policy": "do_not_assign_identity"
+    }
+  },
+  "visual_story_director": {
+    "job_schema_version": 2,
+    "design_authority": {
+      "repository": "krishanraja/mindmake",
+      "main_commit_verified": "f7f6889d67e86faadfce55dff0a29fbe856ba504",
+      "contract_path": "project-documentation/03_DESIGN_CONTRACT.md"
+    },
+    "stage_graph": ["brief", "script", "candidates", "claims", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "technique_registry": {
+      "path": "config/techniques.json",
+      "version": 1,
+      "sha256": "a0fac8ed46fcbe3b98a708344296f4d939e2ea6c22c623904c10f478bd27058d"
+    },
+    "treatment_lanes": ["restrained", "premium", "experimental"],
+    "default_lane": "premium",
+    "normal_duration_ms": { "minimum": 20000, "maximum": 60000 },
+    "cloud": {
+      "policy": "local_first_exact_clip_only",
+      "default_job_ceiling_gbp": 15,
+      "above_ceiling_requires_krish_approval": true,
+      "synthetic_speech_allowed": false,
+      "generated_media_truth_role": "illustration_only"
+    },
+    "review_gates": ["angle", "visual_plan", "evidence", "storyboard", "animatic", "treatment", "final", "package"],
+    "platforms": {
+      "youtube_shorts": { "delivery": "private_upload_or_local", "safe_zones": { "top_px": 140, "right_px": 120, "bottom_px": 360, "left_px": 80 } },
+      "linkedin": { "delivery": "local_package", "safe_zones": { "top_px": 120, "right_px": 100, "bottom_px": 260, "left_px": 100 } },
+      "tiktok": { "delivery": "local_package", "safe_zones": { "top_px": 160, "right_px": 180, "bottom_px": 420, "left_px": 80 } },
+      "instagram_reels": { "delivery": "local_package", "safe_zones": { "top_px": 180, "right_px": 140, "bottom_px": 420, "left_px": 80 } }
+    }
   },
   "editorial_thresholds": {
     "semantic_coherence": 0.82,
@@ -31,8 +69,8 @@
   },
   "cadence": { "shorts_per_week": 2, "radar_day": "monday", "radar_time": "11:00", "timezone": "Europe/London" },
   "runtime": {
-    "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",
-    "archive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Archive"
+    "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04\\_Content\\Video Engine",
+    "archive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04\\_Content\\Video Engine\\Archive"
   },
   "radar_providers": {
     "mm_ctrl_url": "https://bkyuxvschuwngtcdhsyg.supabase.co/functions/v1/video-radar-export",
@@ -42,7 +80,7 @@
     "remotion": {
       "eligible": true,
       "basis": "individual",
-      "confirmed_by": "Krishan Raja",
+      "confirmed_by": "Krish",
       "confirmed_at": "2026-08-28",
       "terms_url": "https://www.remotion.dev/docs/license"
     }
@@ -124,7 +162,7 @@
       "status": "active",
       "source": {
         "repository": "krishanraja/mindmake",
-        "commit": "e1d03892f8e8c52ad9f0d2d05275ab858fd151e5",
+        "commit": "f7f6889d67e86faadfce55dff0a29fbe856ba504",
         "contract_path": "project-documentation/03_DESIGN_CONTRACT.md"
       },
       "colors": {

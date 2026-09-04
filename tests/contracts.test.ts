@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ApprovalGateSchema, EvidenceOverlayV1Schema, OrchestratedEvidenceOverlayV1Schema, PUBLIC_SERIES_NAMES, RadarFeedV1Schema, normalizeSeries } from '@mindmake/contracts'
+import { ApprovalGateSchema, ClaimSchema, EvidenceOverlayV1Schema, OrchestratedEvidenceOverlayV1Schema, PUBLIC_SERIES_NAMES, RadarFeedV1Schema, normalizeSeries } from '@mindmake/contracts'
 import { readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -40,5 +40,10 @@ describe('canonical series contracts', () => {
 
   it('has a separate evidence approval gate', () => {
     expect(ApprovalGateSchema.parse('evidence')).toBe('evidence')
+  })
+
+  it('does not accept an evidence-free factual claim as verified', () => {
+    expect(() => ClaimSchema.parse({ text: 'Revenue increased by 30%.', kind: 'fact', evidence_urls: [], verification: 'verified' })).toThrow('evidence URL')
+    expect(ClaimSchema.parse({ text: 'Revenue increased by 30%.', kind: 'fact', evidence_urls: ['https://example.com/report'], verification: 'verified' }).verification).toBe('verified')
   })
 })

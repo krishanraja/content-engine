@@ -40,7 +40,7 @@ describe('approved treatment registry', () => {
     expect(theme?.version).toBe(3)
     expect(theme?.source).toEqual({
       repository: 'krishanraja/mindmake',
-      commit: 'e1d03892f8e8c52ad9f0d2d05275ab858fd151e5',
+      commit: 'f7f6889d67e86faadfce55dff0a29fbe856ba504',
       contract_path: 'project-documentation/03_DESIGN_CONTRACT.md',
     })
     expect(theme?.colors.mint).toBe('#7FE3B4')

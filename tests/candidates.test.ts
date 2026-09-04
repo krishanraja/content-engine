@@ -1,5 +1,5 @@
 import { JobManifestV1Schema, StageNameSchema } from '@mindmake/contracts'
-import { assessTranscriptQuality, generateCandidates, seriesFit } from '@mindmake/core'
+import { assessTranscriptQuality, detectClaimLikeSentences, generateCandidates, seriesFit } from '@mindmake/core'
 import { describe, expect, it } from 'vitest'
 
 function job(series: 'money_of_ai' | 'built_with_ai', purpose: 'production' | 'calibration' = 'production') {
@@ -63,5 +63,12 @@ describe('editorial candidate gates', () => {
   it('marks calibration output as analysis-only', () => {
     const candidate = generateCandidates(job('built_with_ai', 'calibration'), publisherTranscript, 1)[0]
     expect(candidate?.challenge.soft_blocks).toContain('calibration jobs are analysis-only and cannot create publishable packages')
+  })
+
+  it('independently detects claim-like statements instead of trusting an authored ledger', () => {
+    expect(detectClaimLikeSentences('This is an opinion. Revenue increased by 30%. Microsoft requires a new policy.')).toEqual([
+      'Revenue increased by 30%.',
+      'Microsoft requires a new policy.',
+    ])
   })
 })

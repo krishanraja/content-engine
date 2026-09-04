@@ -1,10 +1,25 @@
-param([Parameter(Mandatory = $true)][string]$Target)
+param(
+  [Parameter(Mandatory = $true)][string]$Target,
+  [switch]$Generate
+)
 
 if (-not $Target.StartsWith('MindmakeVideoStudio/', [System.StringComparison]::Ordinal)) {
   throw 'Credential target must begin with MindmakeVideoStudio/'
 }
 
-$secret = Read-Host -Prompt "Secret for $Target" -AsSecureString
+$secret = if ($Generate) {
+  $bytes = New-Object byte[] 48
+  $generator = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+  try {
+    $generator.GetBytes($bytes)
+    ConvertTo-SecureString -String ([Convert]::ToBase64String($bytes)) -AsPlainText -Force
+  } finally {
+    $generator.Dispose()
+    [Array]::Clear($bytes, 0, $bytes.Length)
+  }
+} else {
+  Read-Host -Prompt "Secret for $Target" -AsSecureString
+}
 if ($secret.Length -eq 0) { throw 'Credential cannot be empty' }
 
 Add-Type @"

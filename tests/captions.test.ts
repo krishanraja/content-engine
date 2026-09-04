@@ -37,6 +37,14 @@ describe('caption workflow', () => {
     expect(aligned.similarity).toBeGreaterThan(0.8)
   })
 
+  it('does not mistake the same words in a different order for the approved take', () => {
+    expect(() => alignScriptToTranscript('Proof comes before context because order preserves meaning.', {
+      language: 'en',
+      source: 'manual',
+      segments: [{ start_ms: 0, end_ms: 5000, text: 'Meaning preserves order because context before comes proof.' }],
+    })).toThrow(/could not be matched confidently/i)
+  })
+
   it('preserves approved wording while reusing existing word timings', () => {
     const transcript = {
       language: 'en',
