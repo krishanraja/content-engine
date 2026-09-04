@@ -20,6 +20,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install pinned FFmpeg and FFprobe
+        uses: FedericoCarboni/setup-ffmpeg@37062fbf7149fc5578d6c57e08aed62458b375d6 # v3.1
+        with:
+          ffmpeg-version: '8.0.1'
+          architecture: x64
+          linking-type: static
+          github-token: ${{ github.token }}
       - run: npm ci
       - run: npm run verify
 
