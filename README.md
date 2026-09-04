@@ -1,6 +1,6 @@
 # Mindmaker Video Studio
 
-A deterministic, Codex-operated production and learning system for The Money of AI and Built With AI.
+A deterministic production and learning system for The Money of AI and Built With AI. Codex can direct editorial work, while the Windows runner executes governed Control Center commands without an active Codex session.
 
 The studio optimizes honest reach, retention, sharing, and qualified action. It does not promise virality, invent counterarguments, publish publicly, or turn performance data into taste rules.
 
@@ -68,11 +68,15 @@ studio v2 qa
 studio v2 approve
 studio v2 feedback import|confirm
 studio v2 package create|archive
+studio v2 magic targets|prepare|activate|return-to-parent
+studio v2 runner once|status|daemon|project
 studio v2 publish youtube --privacy private
 studio v2 analytics import
 studio v2 experiment create|evaluate|list
 studio index rebuild
 ```
+
+The independent runner is a hidden, current-user Windows Scheduled Task. It does not watch the Drive inbox or discover new jobs in v1. Bootstrap an exact approved local treatment into Control Center once with `studio v2 runner project`, then the daemon claims only its queued, schema-bounded commands. Mobile story, final, learning, and keep-current decisions return through a signed, idempotent review-decision command before Control Center advances its projection. Setup, credential targets, recovery, and the precise shipped-versus-installed boundary are documented in [deployment](docs/DEPLOYMENT.md) and [operations](docs/OPERATIONS.md).
 
 V2 is the production surface for new work. The V1 commands remain only so existing V1 jobs can be resumed. Run `studio --help` and `studio v2 --help` for the machine-readable command groups.
 
@@ -82,7 +86,7 @@ Use `studio v2 job create --purpose calibration` for analysis-only source calibr
 
 Approved treatments are structured, scoped presets rather than globally trusted string IDs. The studio can apply `evidence-kinetic-ribbon-v1` only to Built With AI solo work with an approved evidence packet and verified transcript-word captions. The preset still requires a per-job layout review because presenter composition changes. The active `mindmake-video-v1` theme is pinned to the current `krishanraja/mindmake` design contract and was added after the calibration approval. The approval is for the exact combined layout, composition and theme, not a promise that a matching name is safe.
 
-Every branded render uses the official GitHub-pinned Mindmake wordmark plus the official wordmark for its series. The renderer downloads the exact assets from the pinned `krishanraja/mindmake` commit, verifies their SHA-256 values, caches them locally, and fails closed rather than recreating either mark as text. Alpha-bound cropping removes transparent padding without altering the asset pixels. The approved lockup stacks Mindmake above the matching series mark inside one compact ink square in the top-left. Minimum rendered dimensions and square fit are validated before rendering.
+Every branded render uses the official GitHub-pinned Mindmake wordmark and the official wordmark for its series. The renderer downloads the exact source assets from the pinned `krishanraja/mindmake` commit, verifies their SHA-256 values, caches them locally, and fails closed rather than recreating either mark as text. Alpha-bound cropping removes transparent padding without altering the asset pixels. A frozen `letter_region` measures the complete real lettering inside each series asset, including its antialiased edge pixels, not its much larger transparent or logo bounds. Every 1080×1920 video reserves a 1.2 second opening, ending, or safe-beat identity moment where that region is at least 50 render pixels and 17 CSS pixels in a 375-pixel preview. This is calibrated to preserve at least 16 CSS pixels of high-contrast letter ink. The wider official asset for The Money of AI therefore renders at 650 px wide. Dense story moments collapse to a compact official Mindmake-only anchor. Every plate stays inside the platform safe zone, follows authored face-safe lead room when supplied, and tries the other approved top corner or a later safe beat when a protected story visual collides. If the expanded stack cannot fit, the official series-only fallback must clear the same lettering and containment floor. If no official-asset arrangement is legible and collision-free, rendering and QA fail rather than obscuring Krish or shrinking the mark.
 
 `studio v2 candidates` without `--input` produces discovery windows only. Codex must author a `CandidateV1` with an exact edit plan and editorial assessment before angle approval. The gate checks removal-only caption wording, semantic and audience-value scores, ending strength, cut boundaries, source-order decisions, and conditional cold-open logic. If the source cannot clear the bar, the candidate remains blocked and carries specific rerecord guidance instead of forcing a video.
 

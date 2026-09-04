@@ -47,28 +47,33 @@ function OfficialWordmark({ asset, displayWidth }: { asset: RuntimeWordmark; dis
   )
 }
 
-function BrandLockup({ wordmarks, plateColor, lineColor }: { wordmarks: NonNullable<ShortProps['brandWordmarks']>; plateColor: string; lineColor: string }) {
+function BrandLockup({ wordmarks, plateColor, lineColor, durationMs }: { wordmarks: NonNullable<ShortProps['brandWordmarks']>; plateColor: string; lineColor: string; durationMs: number }) {
+  const frame = useCurrentFrame()
+  const { fps } = useVideoConfig()
   const layout = wordmarks.lockup
+  const atMs = frame / fps * 1000
+  const identity = atMs < layout.identity.duration_ms || atMs >= Math.max(layout.identity.duration_ms, durationMs - layout.identity.duration_ms)
+  const plate = identity ? layout.identity : layout.anchor
   return (
     <div style={{ position: 'absolute', top: layout.offset_y, left: layout.offset_x }}>
       <div style={{
-        width: layout.plate_size,
-        height: layout.plate_size,
+        width: plate.plate_width,
+        height: plate.plate_height,
         boxSizing: 'border-box',
-        padding: layout.padding,
+        padding: plate.padding,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: layout.gap,
+        gap: identity ? layout.identity.gap : 0,
         overflow: 'hidden',
         borderRadius: 3,
         background: plateColor,
         border: `1px solid ${lineColor}`,
         boxShadow: '0 14px 42px rgba(0,0,0,.38)',
       }}>
-        <OfficialWordmark asset={wordmarks.mindmake} displayWidth={layout.mindmake_width} />
-        <OfficialWordmark asset={wordmarks.series} displayWidth={layout.series_width} />
+        <OfficialWordmark asset={wordmarks.mindmake} displayWidth={identity ? layout.identity.mindmake_width : layout.anchor.mindmake_width} />
+        {identity ? <OfficialWordmark asset={wordmarks.series} displayWidth={layout.identity.series_width} /> : null}
       </div>
     </div>
   )
@@ -218,7 +223,7 @@ export function MindmakeShort(props: ShortProps) {
       <OffthreadVideo src={staticFile(props.sourceFile)} style={videoStyle} />
       <AbsoluteFill style={{ background: props.brandTheme ? 'linear-gradient(180deg, rgba(10,16,13,.24) 0%, rgba(10,16,13,0) 24%, rgba(10,16,13,.18) 55%, rgba(10,16,13,.72) 100%)' : 'linear-gradient(180deg, rgba(0,0,0,.2) 0%, rgba(0,0,0,0) 24%, rgba(0,0,0,.15) 55%, rgba(0,0,0,.62) 100%)' }} />
       {props.seriesName && props.brandTheme && props.brandWordmarks ? (
-        <BrandLockup wordmarks={props.brandWordmarks} plateColor="rgba(10,16,13,.94)" lineColor={props.brandTheme.colors.line} />
+        <BrandLockup wordmarks={props.brandWordmarks} plateColor="rgba(10,16,13,.94)" lineColor={props.brandTheme.colors.line} durationMs={props.durationMs} />
       ) : null}
       {props.evidenceOverlays.map((overlay) => {
         const from = Math.max(0, Math.floor(overlay.start_ms / 1000 * fps))

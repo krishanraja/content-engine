@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { DraftPackageV2Schema, JobManifestV2Schema, RenderManifestV2Schema, StageArtifactV2Schema, StudioEventV2Schema } from './v2.js'
 export * from './v2.js'
+export * from './control-plane-v1.js'
 
 export const SCHEMA_VERSION = 1 as const
 
@@ -346,20 +347,30 @@ export const TreatmentStyleV1Schema = z.object({
 export type TreatmentStyleV1 = z.infer<typeof TreatmentStyleV1Schema>
 
 export const BrandWordmarkAssetV1Schema = z.object({
-  source_path: z.string().regex(/^src\/assets\/[a-zA-Z0-9._/-]+\.png$/).refine((value) => !value.split('/').includes('..'), { message: 'brand asset path cannot traverse directories' }),
+  source_path: z.string().regex(/^src\/assets\/[a-zA-Z0-9._/-]+\.(?:png|svg)$/).refine((value) => !value.split('/').includes('..'), { message: 'brand asset path cannot traverse directories' }),
   sha256: z.string().regex(/^[a-f0-9]{64}$/),
-  pixel_width: z.number().int().positive(),
-  pixel_height: z.number().int().positive(),
+  pixel_width: z.number().positive(),
+  pixel_height: z.number().positive(),
   alpha_crop: z.object({
-    x: z.number().int().nonnegative(),
-    y: z.number().int().nonnegative(),
-    width: z.number().int().positive(),
-    height: z.number().int().positive(),
+    x: z.number().nonnegative(),
+    y: z.number().nonnegative(),
+    width: z.number().positive(),
+    height: z.number().positive(),
   }),
-  display_width: z.number().int().min(180).max(360),
+  letter_region: z.object({
+    x: z.number().nonnegative(),
+    y: z.number().nonnegative(),
+    width: z.number().positive(),
+    height: z.number().positive(),
+  }),
+  display_width: z.number().int().min(180).max(700),
 }).superRefine((asset, context) => {
   if (asset.alpha_crop.x + asset.alpha_crop.width > asset.pixel_width) context.addIssue({ code: 'custom', path: ['alpha_crop', 'width'], message: 'alpha crop exceeds source width' })
   if (asset.alpha_crop.y + asset.alpha_crop.height > asset.pixel_height) context.addIssue({ code: 'custom', path: ['alpha_crop', 'height'], message: 'alpha crop exceeds source height' })
+  if (asset.letter_region.x + asset.letter_region.width > asset.pixel_width) context.addIssue({ code: 'custom', path: ['letter_region', 'width'], message: 'letter region exceeds source width' })
+  if (asset.letter_region.y + asset.letter_region.height > asset.pixel_height) context.addIssue({ code: 'custom', path: ['letter_region', 'height'], message: 'letter region exceeds source height' })
+  if (asset.letter_region.x < asset.alpha_crop.x || asset.letter_region.x + asset.letter_region.width > asset.alpha_crop.x + asset.alpha_crop.width) context.addIssue({ code: 'custom', path: ['letter_region', 'width'], message: 'letter region must be fully contained by the alpha crop' })
+  if (asset.letter_region.y < asset.alpha_crop.y || asset.letter_region.y + asset.letter_region.height > asset.alpha_crop.y + asset.alpha_crop.height) context.addIssue({ code: 'custom', path: ['letter_region', 'height'], message: 'letter region must be fully contained by the alpha crop' })
 })
 export type BrandWordmarkAssetV1 = z.infer<typeof BrandWordmarkAssetV1Schema>
 
@@ -369,19 +380,57 @@ export const BrandWordmarkLockupV1Schema = z.object({
     approved_by: z.literal('Krish'),
     approved_at: z.string().datetime(),
   }),
-  layout: z.literal('stacked_square'),
+  layout: z.literal('responsive_identity_anchor'),
   corner: z.literal('top_left'),
-  plate_size: z.number().int().min(220).max(300),
+  reference_canvas: z.object({
+    width: z.literal(1080),
+    height: z.literal(1920),
+  }).strict(),
   offset_x: z.number().int().min(32).max(100),
-  offset_y: z.number().int().min(32).max(100),
-  padding: z.number().int().min(12).max(32),
-  gap: z.number().int().min(8).max(24),
-  mindmake_width: z.number().int().min(160).max(220),
-  series_width: z.number().int().min(190).max(240),
+  offset_y: z.number().int().min(32).max(220),
+  minimum_effective: z.object({
+    mindmake_width_px: z.number().int().min(180).max(300),
+    mindmake_height_px: z.number().int().min(28).max(80),
+    series_letter_height_px: z.number().int().min(32).max(80),
+    preview_width_css_px: z.literal(375),
+    series_letter_height_css_px: z.number().min(12).max(24),
+  }).strict(),
+  identity: z.object({
+    mode: z.literal('stacked_official'),
+    duration_ms: z.number().int().min(800).max(2500),
+    plate_width: z.number().int().min(480).max(700),
+    plate_height: z.number().int().min(340).max(600),
+    padding: z.number().int().min(12).max(40),
+    gap: z.number().int().min(8).max(32),
+    mindmake_width: z.number().int().min(180).max(300),
+    series_width: z.number().int().min(400).max(700),
+  }).strict(),
+  series_only_fallback: z.object({
+    mode: z.literal('official_series_only'),
+    plate_width: z.number().int().min(480).max(700),
+    plate_height: z.number().int().min(300).max(500),
+    padding: z.number().int().min(12).max(40),
+    series_width: z.number().int().min(400).max(700),
+  }).strict(),
+  anchor: z.object({
+    mode: z.literal('official_mindmake_only'),
+    plate_width: z.number().int().min(240).max(380),
+    plate_height: z.number().int().min(70).max(160),
+    padding: z.number().int().min(8).max(28),
+    mindmake_width: z.number().int().min(180).max(300),
+  }).strict(),
+  placement: z.object({
+    allowed_corners: z.tuple([z.literal('top_left'), z.literal('top_right')]),
+    identity_priority: z.tuple([z.literal('opening'), z.literal('ending'), z.literal('safe_beat')]),
+    collision_policy: z.literal('alternate_corner_then_series_only_then_block'),
+    dense_story_mode: z.literal('official_mindmake_only'),
+  }).strict(),
 }).superRefine((lockup, context) => {
-  const innerWidth = lockup.plate_size - lockup.padding * 2
-  if (lockup.mindmake_width > innerWidth) context.addIssue({ code: 'custom', path: ['mindmake_width'], message: 'Mindmake wordmark exceeds lockup inner width' })
-  if (lockup.series_width > innerWidth) context.addIssue({ code: 'custom', path: ['series_width'], message: 'series wordmark exceeds lockup inner width' })
+  if (lockup.identity.mindmake_width > lockup.identity.plate_width - lockup.identity.padding * 2) context.addIssue({ code: 'custom', path: ['identity', 'mindmake_width'], message: 'Mindmake identity wordmark exceeds plate inner width' })
+  if (lockup.identity.series_width > lockup.identity.plate_width - lockup.identity.padding * 2) context.addIssue({ code: 'custom', path: ['identity', 'series_width'], message: 'series identity wordmark exceeds plate inner width' })
+  if (lockup.series_only_fallback.series_width > lockup.series_only_fallback.plate_width - lockup.series_only_fallback.padding * 2) context.addIssue({ code: 'custom', path: ['series_only_fallback', 'series_width'], message: 'series-only wordmark exceeds plate inner width' })
+  if (lockup.anchor.mindmake_width > lockup.anchor.plate_width - lockup.anchor.padding * 2) context.addIssue({ code: 'custom', path: ['anchor', 'mindmake_width'], message: 'Mindmake anchor exceeds plate inner width' })
+  if (lockup.minimum_effective.mindmake_width_px > Math.min(lockup.identity.mindmake_width, lockup.anchor.mindmake_width)) context.addIssue({ code: 'custom', path: ['minimum_effective', 'mindmake_width_px'], message: 'a Mindmake rendering mode is below its declared minimum width' })
 })
 export type BrandWordmarkLockupV1 = z.infer<typeof BrandWordmarkLockupV1Schema>
 

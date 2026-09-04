@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "upstream_contracts": {
-    "control_center": { "repository": "krishanraja/control-center", "main_commit_verified": "f25daafcbb2fda06416be0973ea40444d520d893", "verified_at": "2026-09-04", "adapter_pr": 244, "security_pr": 246 },
+    "control_center": { "repository": "krishanraja/control-center", "main_commit_verified": "6759bf51380bc8805640b03ab5c0a8fd5505dabe", "verified_at": "2026-09-04", "adapter_pr": 244, "security_pr": 246 },
     "mm_ctrl": { "repository": "krishanraja/mm-ctrl", "main_commit_verified": "e5868aad38c5508894d395bcedf220e768569f05", "verified_at": "2026-09-04", "adapter_pr": 371 }
   },
   "output": { "width": 1080, "height": 1920, "fps": 30, "audio_hz": 48000, "lufs": -14, "true_peak_dbtp": -1 },
@@ -27,7 +27,7 @@
     "job_schema_version": 2,
     "design_authority": {
       "repository": "krishanraja/mindmake",
-      "main_commit_verified": "f7f6889d67e86faadfce55dff0a29fbe856ba504",
+      "main_commit_verified": "54ea43b9771d3b263718a4d40cecc68167b7a718",
       "contract_path": "project-documentation/03_DESIGN_CONTRACT.md"
     },
     "stage_graph": ["brief", "script", "candidates", "claims", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
@@ -144,25 +144,25 @@
     {
       "schema_version": 1,
       "rule_id": "ac5c0d6e-b113-4003-9357-1d24d1fa9d44",
-      "assertion": "Use one compact black square in the top-left of every branded video, with the official Mindmake wordmark above the matching official series wordmark.",
+      "assertion": "Give the official series identity one deliberately large opening, ending, or safe-beat moment where its complete actual lettering is comfortably phone-legible, then collapse to a compact official Mindmake-only anchor during dense storytelling. Preserve the readable size, move corners or beats when needed, use a verified face-safe placement, and never recreate either mark as text.",
       "scope": { "level": "global", "key": "brand-lockup" },
-      "evidence_feedback_ids": ["2cecdb0b-efe0-400c-b39b-e843188932ee"],
+      "evidence_feedback_ids": ["2cecdb0b-efe0-400c-b39b-e843188932ee", "fc37225c-d396-4447-9343-680038c7e3d8"],
       "counterexamples": ["An explicitly unbranded calibration or analysis render does not display the lockup."],
-      "regression_cases": ["branded renders use one square top-left plate", "Mindmake appears above the matching series mark", "no second top-right wordmark plate is rendered"],
+      "regression_cases": ["every branded render contains a comfortably phone-legible series identity moment", "The Money of AI letter-bearing region is at least 50 render pixels and 17 CSS pixels in a 375-pixel preview, calibrated to keep at least 16 CSS pixels of high-contrast letter ink", "the complete official letter-bearing width remains visible", "dense story moments use the official Mindmake-only anchor", "the plate moves to the other approved top corner or a later safe beat instead of shrinking when the preferred placement collides", "no duplicate or live-text wordmark is rendered"],
       "status": "active",
       "approved_by": "Krish",
-      "approved_at": "2026-08-31T10:49:13.638Z"
+      "approved_at": "2026-09-04T14:03:15.556Z"
     }
   ],
   "brand_themes": [
     {
       "schema_version": 1,
       "theme_id": "mindmake-video-v1",
-      "version": 3,
+      "version": 6,
       "status": "active",
       "source": {
         "repository": "krishanraja/mindmake",
-        "commit": "f7f6889d67e86faadfce55dff0a29fbe856ba504",
+        "commit": "54ea43b9771d3b263718a4d40cecc68167b7a718",
         "contract_path": "project-documentation/03_DESIGN_CONTRACT.md"
       },
       "colors": {
@@ -201,26 +201,60 @@
         },
         "lockup": {
           "approval": {
-            "feedback_id": "2cecdb0b-efe0-400c-b39b-e843188932ee",
+            "feedback_id": "fc37225c-d396-4447-9343-680038c7e3d8",
             "approved_by": "Krish",
-            "approved_at": "2026-08-31T10:47:20.970Z"
+            "approved_at": "2026-09-04T14:03:15.556Z"
           },
-          "layout": "stacked_square",
+          "layout": "responsive_identity_anchor",
           "corner": "top_left",
-          "plate_size": 250,
-          "offset_x": 52,
-          "offset_y": 54,
-          "padding": 20,
-          "gap": 14,
-          "mindmake_width": 180,
-          "series_width": 210
+          "reference_canvas": { "width": 1080, "height": 1920 },
+          "offset_x": 80,
+          "offset_y": 140,
+          "minimum_effective": {
+            "mindmake_width_px": 200,
+            "mindmake_height_px": 32,
+            "series_letter_height_px": 50,
+            "preview_width_css_px": 375,
+            "series_letter_height_css_px": 17
+          },
+          "identity": {
+            "mode": "stacked_official",
+            "duration_ms": 1200,
+            "plate_width": 700,
+            "plate_height": 520,
+            "padding": 20,
+            "gap": 16,
+            "mindmake_width": 230,
+            "series_width": 650
+          },
+          "series_only_fallback": {
+            "mode": "official_series_only",
+            "plate_width": 700,
+            "plate_height": 470,
+            "padding": 20,
+            "series_width": 650
+          },
+          "anchor": {
+            "mode": "official_mindmake_only",
+            "plate_width": 280,
+            "plate_height": 90,
+            "padding": 16,
+            "mindmake_width": 230
+          },
+          "placement": {
+            "allowed_corners": ["top_left", "top_right"],
+            "identity_priority": ["opening", "ending", "safe_beat"],
+            "collision_policy": "alternate_corner_then_series_only_then_block",
+            "dense_story_mode": "official_mindmake_only"
+          }
         },
         "mindmake": {
-          "source_path": "src/assets/mindmake-wordmark-ink.png",
-          "sha256": "d2a0417df41119775d8f6c5c25134f2414ce2f5144b6e8b5433b2109d95645e1",
-          "pixel_width": 890,
-          "pixel_height": 165,
-          "alpha_crop": { "x": 10, "y": 8, "width": 866, "height": 144 },
+          "source_path": "src/assets/mindmake-wordmark.svg",
+          "sha256": "57fd2cdef929de2035baf5b0405a152878b26f7eba39b17b1d4c03f2470b9737",
+          "pixel_width": 648.043,
+          "pixel_height": 109.156,
+          "alpha_crop": { "x": 0, "y": 0, "width": 648.043, "height": 109.156 },
+          "letter_region": { "x": 0, "y": 0, "width": 648.043, "height": 109.156 },
           "display_width": 230
         },
         "series": {
@@ -229,16 +263,18 @@
             "sha256": "1cdd6d7710c9970a1e86c8793b33acf6b3f63c81304aeb6efe84d392467322a6",
             "pixel_width": 1200,
             "pixel_height": 630,
-            "alpha_crop": { "x": 256, "y": 90, "width": 686, "height": 400 },
-            "display_width": 270
+            "alpha_crop": { "x": 254, "y": 89, "width": 689, "height": 402 },
+            "letter_region": { "x": 254, "y": 438, "width": 689, "height": 53 },
+            "display_width": 650
           },
           "built_with_ai": {
             "source_path": "src/assets/builtwithai-logo-wordmark.png",
             "sha256": "271ab965dc51714be8c13c8a6bb8c7b2b60f4bf22caf51dda5a2928e295fd29f",
             "pixel_width": 1200,
             "pixel_height": 630,
-            "alpha_crop": { "x": 288, "y": 114, "width": 624, "height": 394 },
-            "display_width": 270
+            "alpha_crop": { "x": 287, "y": 114, "width": 626, "height": 395 },
+            "letter_region": { "x": 287, "y": 452, "width": 626, "height": 57 },
+            "display_width": 650
           }
         }
       }

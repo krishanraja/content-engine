@@ -25,8 +25,8 @@ export function hashValue(value: unknown): string {
   return createHash('sha256').update(stableJson(value)).digest('hex')
 }
 
-export async function hashFile(path: string): Promise<string> {
-  const hash = createHash('sha256')
+async function hashFileWithAlgorithm(path: string, algorithm: 'sha256' | 'md5'): Promise<string> {
+  const hash = createHash(algorithm)
   await new Promise<void>((resolve, reject) => {
     const stream = createReadStream(path)
     stream.on('data', (chunk) => hash.update(chunk))
@@ -34,6 +34,14 @@ export async function hashFile(path: string): Promise<string> {
     stream.on('end', resolve)
   })
   return hash.digest('hex')
+}
+
+export async function hashFile(path: string): Promise<string> {
+  return hashFileWithAlgorithm(path, 'sha256')
+}
+
+export async function hashFileMd5(path: string): Promise<string> {
+  return hashFileWithAlgorithm(path, 'md5')
 }
 
 export async function hashPath(path: string): Promise<string> {

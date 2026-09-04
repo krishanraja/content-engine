@@ -83,8 +83,19 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 const configPath = join(repoRoot, 'config', 'studio.json')
 const skillPaths = ['mindmake-video', 'krish-voice', 'content-corpus', 'video-engine'].map((name) => join(repoRoot, '.agents', 'skills', name))
 
+export interface StudioCliOutput {
+  stdout: (value: string) => void
+  stderr: (value: string) => void
+}
+
+const processOutput: StudioCliOutput = {
+  stdout: (value) => process.stdout.write(value),
+  stderr: (value) => process.stderr.write(value),
+}
+let activeOutput = processOutput
+
 function out(value: unknown): void {
-  process.stdout.write(`${JSON.stringify(value, null, 2)}\n`)
+  activeOutput.stdout(`${JSON.stringify(value, null, 2)}\n`)
 }
 
 async function readJson<T = unknown>(path: string): Promise<T> {
@@ -738,19 +749,30 @@ index.command('rebuild').action(async () => out(await rebuildIndex()))
 
 registerV2Commands(program, { repoRoot, configPath, skillPaths, out })
 
-program.parseAsync(process.argv).catch((error: unknown) => {
-  if (error instanceof CommanderError) {
-    if (error.exitCode === 0) {
-      process.exitCode = 0
-      return
+export async function runStudioCli(argv: string[], output: StudioCliOutput = processOutput): Promise<number> {
+  const previousOutput = activeOutput
+  activeOutput = output
+  program.configureOutput({ writeOut: output.stdout, writeErr: () => undefined })
+  try {
+    await program.parseAsync(argv)
+    return 0
+  } catch (error: unknown) {
+    if (error instanceof CommanderError) {
+      if (error.exitCode === 0) return 0
+      const payload = { ok: false, code: 'validation', error: error.message.replace(/^error:\s*/i, '') }
+      output.stdout(`${JSON.stringify(payload)}\n`)
+      output.stderr(`${JSON.stringify({ ...payload, diagnostic: 'command-line parsing failed' })}\n`)
+      return 10
     }
-    const payload = { ok: false, code: 'validation', error: error.message.replace(/^error:\s*/i, '') }
-    process.stdout.write(`${JSON.stringify(payload)}\n`)
-    process.stderr.write(`${JSON.stringify({ ...payload, diagnostic: 'command-line parsing failed' })}\n`)
-    process.exitCode = 10
-    return
+    const classified = classifyError(error)
+    output.stderr(`${JSON.stringify({ ok: false, code: classified.code, error: classified.message })}\n`)
+    return classified.exitCode
+  } finally {
+    activeOutput = previousOutput
   }
-  const classified = classifyError(error)
-  process.stderr.write(`${JSON.stringify({ ok: false, code: classified.code, error: classified.message })}\n`)
-  process.exitCode = classified.exitCode
-})
+}
+
+const directEntry = process.argv[1] ? resolve(process.argv[1]) === fileURLToPath(import.meta.url) : false
+if (directEntry) {
+  void runStudioCli(process.argv).then((exitCode) => { process.exitCode = exitCode })
+}

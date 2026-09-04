@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { appendFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { appendFile, mkdir, mkdtemp, readFile, rm, utimes, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
@@ -58,6 +58,39 @@ describe('V2 event-sourced jobs', () => {
     expect(JSON.stringify(approvalEvent)).not.toContain(TEST_APPROVAL_KEY)
     await expect(recordApprovalV2(job.job_id, 'animatic', 'approved', H, undefined, 'system')).rejects.toThrow('requires Krish approval')
     await expect(recordApprovalV2(job.job_id, 'package', 'approved', H, undefined, 'system')).rejects.toThrow('requires Krish approval')
+  })
+
+  it('serializes six concurrent signed appends without corrupting the authenticated event chain', async () => {
+    const job = await createJobV2({ series: 'built_with_ai', mode: 'short_native', presenterName: 'Krish', configPath: config, skillPaths: skills })
+    const hashes = ['1', '2', '3', '4', '5', '6'].map((digit) => digit.repeat(64))
+    await Promise.all(hashes.map((artifactHash, index) => recordApprovalV2(
+      job.job_id,
+      'visual_plan',
+      'approved',
+      artifactHash,
+      undefined,
+      'krish',
+      `codex-user-confirmation:visual_plan:${artifactHash}:concurrent approval ${index + 1}`,
+    )))
+    const reloaded = await loadJobV2(job.job_id)
+    expect(reloaded.approvals.filter((approval) => hashes.includes(approval.artifact_hash))).toHaveLength(6)
+    const events = (await readFile(join(process.env.MINDMAKE_RUNTIME_ROOT!, 'jobs', job.job_id, 'events.jsonl'), 'utf8'))
+      .trim().split(/\r?\n/).map((line) => JSON.parse(line) as { event_id: string; type: string })
+    const approvalEvents = events.filter((event) => event.type === 'approval_recorded')
+    expect(approvalEvents).toHaveLength(6)
+    expect(new Set(approvalEvents.map((event) => event.event_id)).size).toBe(6)
+  })
+
+  it('recovers an old empty or truncated event lock left before ownership was written', async () => {
+    const job = await createJobV2({ series: 'built_with_ai', mode: 'short_native', presenterName: 'Krish', configPath: config, skillPaths: skills })
+    const lockPath = join(process.env.MINDMAKE_RUNTIME_ROOT!, 'jobs', job.job_id, '.events.lock')
+    const old = new Date(Date.now() - 5_000)
+    await writeFile(lockPath, '')
+    await utimes(lockPath, old, old)
+    await expect(recordApprovalV2(job.job_id, 'visual_plan', 'approved', H, undefined, 'krish', `codex-user-confirmation:visual_plan:${H}:empty lock recovery`)).resolves.toBeTruthy()
+    await writeFile(lockPath, '{"schema_version":1')
+    await utimes(lockPath, old, old)
+    await expect(recordApprovalV2(job.job_id, 'storyboard', 'approved', H, undefined, 'krish', `codex-user-confirmation:storyboard:${H}:truncated lock recovery`)).resolves.toBeTruthy()
   })
 
   it('keeps unsigned legacy approval events readable but never grants them', async () => {

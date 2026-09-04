@@ -8,6 +8,9 @@ import {
   FeedbackEventV2Schema,
   GeneratedShotV1Schema,
   JobPurposeSchema,
+  MagicEditActivationV1Schema,
+  MagicEditDirectionV1Schema,
+  MagicEditReturnToParentV1Schema,
   RenderManifestV2Schema,
   SourceBundleV1Schema,
   SourceModeSchema,
@@ -36,6 +39,8 @@ import {
   analyzeSourceBundle,
   analyzeMediaArtifactForFeedback,
   analyzeLoudness,
+  brandLayerCollisionIssues,
+  brandWordmarkLegibilityReport,
   alignScriptToTranscript,
   applyPresenterIdentityCorrections,
   archiveJob,
@@ -49,6 +54,7 @@ import {
   createDraftPackageV2,
   createExperimentV2,
   createJobV2,
+  createMagicEditTargetMap,
   detectClaimLikeSentences,
   draftPackageFileIssuesV2,
   enrollKrishIdentity,
@@ -67,8 +73,11 @@ import {
   krishIdentityStatus,
   loadCaptionTranscript,
   loadJobV2,
+  loadExactBrandGeometryContextV2,
   loadKrishIdentity,
+  loadPinnedRenderRegistryV2,
   loadTechniqueRegistry,
+  activateMagicEditCandidate,
   listExperimentsV2,
   normalizeMediaSourceV2,
   importAnalyticsV2,
@@ -83,10 +92,16 @@ import {
   readWindowsCredential,
   recordApprovalV2,
   renderStoryV2,
+  prepareMagicEditCandidate,
+  publishRunnerProject,
   rendererImplementationHashV2,
   renderV2Animatic,
   renderV2Styleframes,
   revokeKrishIdentity,
+  returnMagicEditToParent,
+  runRunnerDaemon,
+  runRunnerOnce,
+  runnerStatus,
   reviewVisualPlan,
   sliceTranscript,
   solveVisualPlanCameras,
@@ -671,6 +686,7 @@ async function assertCurrentRenderLineage(job: JobManifestV2, manifest: RenderMa
     readStageArtifactV2<{ visual_plan_artifact_hash: string; assets: VisualAssetV1[]; generated_shots: GeneratedShotV1[] }>(job.job_id, 'assets'),
   ])
   assertRenderLineageV2({ job, manifest, candidateArtifact, visualPlanArtifact, normalizeArtifact, transcriptArtifact, assetsArtifact })
+  if (manifest.branding.mode === 'series') await loadExactBrandGeometryContextV2(manifest)
 }
 
 async function loadReviewManifest(job: JobManifestV2, manifestPath: string, storyboardHash?: string): Promise<{ manifest: RenderManifestV2; manifestHash: string }> {
@@ -1697,6 +1713,21 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           framePerceptualHashes(rendered.master_path),
         ])
         const readiness = validateV2RenderReadiness(manifest)
+        const pinnedRegistry = await loadPinnedRenderRegistryV2(manifest)
+        const brandTheme = manifest.branding.mode === 'series'
+          ? pinnedRegistry.brand_themes.find((theme) => theme.theme_id === manifest.branding.theme_id && theme.version === manifest.branding.theme_version && hashValue(theme) === manifest.branding.theme_hash)
+          : undefined
+        const brandFailures: string[] = []
+        const brandWarnings: string[] = []
+        if (manifest.branding.mode === 'series') {
+          const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
+          if (!brandTheme) brandFailures.push('manifest brand theme does not match the exact job-pinned active theme')
+          else {
+            const report = brandWordmarkLegibilityReport(brandTheme)
+            brandFailures.push(...report.failures, ...brandLayerCollisionIssues(manifest, brandTheme, brandGeometry))
+            brandWarnings.push(...report.warnings)
+          }
+        }
         const checks = [
           { name: 'master_hash', passed: actualHash === rendered.master_hash, detail: actualHash },
           { name: 'dimensions', passed: probe.width === 1080 && probe.height === 1920, detail: `${probe.width}x${probe.height}` },
@@ -1706,6 +1737,12 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           { name: 'integrated_loudness', passed: loudness.integrated_lufs !== null && Math.abs(loudness.integrated_lufs + 14) <= 1, detail: `${loudness.integrated_lufs ?? 'unmeasured'} LUFS` },
           { name: 'true_peak', passed: loudness.true_peak_dbtp !== null && loudness.true_peak_dbtp <= -0.8, detail: `${loudness.true_peak_dbtp ?? 'unmeasured'} dBTP` },
           { name: 'manifest_readiness', passed: readiness.length === 0, detail: readiness.length ? readiness.join('; ') : 'passed' },
+          {
+            name: 'brand_wordmark_legibility',
+            passed: brandFailures.length === 0,
+            status: brandFailures.length ? 'fail' : brandWarnings.length ? 'warn' : 'pass',
+            detail: brandFailures.length ? brandFailures.join('; ') : brandWarnings.length ? brandWarnings.join('; ') : manifest.branding.mode === 'series' ? 'official responsive wordmarks are legible and safely placed' : 'not applicable to unbranded calibration',
+          },
         ]
         results.push({ platform: rendered.platform, passed: checks.every((check) => check.passed), checks, functional_fingerprint: { frame_ahashes: frameHashes, integrated_lufs: loudness.integrated_lufs, true_peak_dbtp: loudness.true_peak_dbtp } })
       }
@@ -1970,6 +2007,81 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       const result = await uploadPrivateYoutubeVideo({ accessToken, videoPath: draft.master_path, title: draft.titles[0]!, description: draft.description })
       context.out({ job_id: options.job, platform: 'youtube_shorts', privacy: 'private', result })
     })
+
+  const magic = v2.command('magic').description('Exact-hash, schema-bounded presentation edits; editorial changes use the full workflow')
+  magic.command('targets')
+    .requiredOption('--job <jobId>')
+    .requiredOption('--platform <platform>')
+    .action(async (options) => context.out(await createMagicEditTargetMap(options.job, VideoPlatformV1Schema.parse(options.platform))))
+
+  magic.command('prepare')
+    .requiredOption('--job <jobId>')
+    .requiredOption('--direction <path>', 'MagicEditDirectionV1 JSON')
+    .action(async (options) => context.out(await prepareMagicEditCandidate(options.job, MagicEditDirectionV1Schema.parse(await readJson(resolve(options.direction))))))
+
+  magic.command('activate')
+    .requiredOption('--job <jobId>')
+    .requiredOption('--activation <path>', 'MagicEditActivationV1 JSON')
+    .requiredOption('--command-id <uuid>', 'Control Center command UUID')
+    .requiredOption('--command-hash <sha256>', 'canonical Control Center command hash')
+    .action(async (options) => {
+      if (!SHA256.test(options.commandHash)) throw new Error('--command-hash must be lowercase SHA-256')
+      const activation = MagicEditActivationV1Schema.parse(await readJson(resolve(options.activation)))
+      context.out(await activateMagicEditCandidate(options.job, activation, {
+        expected_parent_revision_hash: activation.expected_parent_revision_hash,
+        expected_parent_artifact_hash: activation.expected_parent_artifact_hash,
+        command_id: options.commandId,
+        command_hash: options.commandHash,
+      }))
+    })
+
+  magic.command('return-to-parent')
+    .requiredOption('--job <jobId>')
+    .requiredOption('--request <path>', 'MagicEditReturnToParentV1 JSON')
+    .requiredOption('--command-id <uuid>', 'Control Center command UUID')
+    .requiredOption('--command-hash <sha256>', 'canonical Control Center command hash')
+    .action(async (options) => {
+      if (!SHA256.test(options.commandHash)) throw new Error('--command-hash must be lowercase SHA-256')
+      const request = MagicEditReturnToParentV1Schema.parse(await readJson(resolve(options.request)))
+      context.out(await returnMagicEditToParent(options.job, request.expected_parent_revision_hash, request.expected_parent_artifact_hash, request, options.commandId, options.commandHash))
+    })
+
+  const runner = v2.command('runner').description('Codex-independent Windows control-plane runner')
+  runner.command('once').action(async () => context.out(await runRunnerOnce(context.repoRoot)))
+  runner.command('status').action(async () => context.out(await runnerStatus()))
+  runner.command('project')
+    .description('Publish one redacted, exact-hash local review launcher to Control Center')
+    .requiredOption('--job <jobId>')
+    .requiredOption('--platform <platform>')
+    .requiredOption('--gate <gate>', 'story, treatment, final, or learning')
+    .option('--review-artifact-hash <sha256>', 'required exact persisted learning artifact hash for the learning gate')
+    .option('--idempotency-key <uuid>', 'optional stable UUID override for recovery or contract testing')
+    .requiredOption('--safe-title <title>', 'non-sensitive review title')
+    .requiredOption('--safe-summary <summary>', 'non-sensitive review summary')
+    .action(async (options) => {
+      if (!['story', 'treatment', 'final', 'learning'].includes(options.gate)) throw new Error('--gate must be story, treatment, final, or learning')
+      if (options.reviewArtifactHash && !SHA256.test(options.reviewArtifactHash)) throw new Error('--review-artifact-hash must be lowercase SHA-256')
+      context.out(await publishRunnerProject({
+        job_id: options.job,
+        platform: VideoPlatformV1Schema.parse(options.platform),
+        gate: options.gate as 'story' | 'treatment' | 'final' | 'learning',
+        ...(options.idempotencyKey ? { idempotency_key: options.idempotencyKey } : {}),
+        ...(options.reviewArtifactHash ? { review_artifact_hash: options.reviewArtifactHash } : {}),
+        safe_title: options.safeTitle,
+        safe_summary: options.safeSummary,
+      }, context.repoRoot))
+    })
+  runner.command('daemon').action(async () => {
+    const controller = new AbortController()
+    const stop = () => controller.abort()
+    process.once('SIGINT', stop)
+    process.once('SIGTERM', stop)
+    try { await runRunnerDaemon({ repoRoot: context.repoRoot, signal: controller.signal, onStatus: context.out }) }
+    finally {
+      process.removeListener('SIGINT', stop)
+      process.removeListener('SIGTERM', stop)
+    }
+  })
 
   const analytics = v2.command('analytics')
   analytics.command('import')

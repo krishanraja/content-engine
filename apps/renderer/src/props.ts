@@ -7,20 +7,22 @@ const RuntimeWordmarkSchema = z.object({
   pixel_width: z.number().positive(),
   pixel_height: z.number().positive(),
   alpha_crop: z.object({ x: z.number().nonnegative(), y: z.number().nonnegative(), width: z.number().positive(), height: z.number().positive() }),
+  letter_region: z.object({ x: z.number().nonnegative(), y: z.number().nonnegative(), width: z.number().positive(), height: z.number().positive() }),
   display_width: z.number().positive(),
 })
 
 const RuntimeBrandLockupSchema = z.object({
   approval: z.object({ feedback_id: z.string(), approved_by: z.literal('Krish'), approved_at: z.string() }),
-  layout: z.literal('stacked_square'),
+  layout: z.literal('responsive_identity_anchor'),
   corner: z.literal('top_left'),
-  plate_size: z.number().positive(),
+  reference_canvas: z.object({ width: z.literal(1080), height: z.literal(1920) }),
   offset_x: z.number().nonnegative(),
   offset_y: z.number().nonnegative(),
-  padding: z.number().nonnegative(),
-  gap: z.number().nonnegative(),
-  mindmake_width: z.number().positive(),
-  series_width: z.number().positive(),
+  minimum_effective: z.object({ mindmake_width_px: z.number().positive(), mindmake_height_px: z.number().positive(), series_letter_height_px: z.number().positive(), preview_width_css_px: z.literal(375), series_letter_height_css_px: z.number().positive() }),
+  identity: z.object({ mode: z.literal('stacked_official'), duration_ms: z.number().positive(), plate_width: z.number().positive(), plate_height: z.number().positive(), padding: z.number().nonnegative(), gap: z.number().nonnegative(), mindmake_width: z.number().positive(), series_width: z.number().positive() }),
+  series_only_fallback: z.object({ mode: z.literal('official_series_only'), plate_width: z.number().positive(), plate_height: z.number().positive(), padding: z.number().nonnegative(), series_width: z.number().positive() }),
+  anchor: z.object({ mode: z.literal('official_mindmake_only'), plate_width: z.number().positive(), plate_height: z.number().positive(), padding: z.number().nonnegative(), mindmake_width: z.number().positive() }),
+  placement: z.object({ allowed_corners: z.tuple([z.literal('top_left'), z.literal('top_right')]), identity_priority: z.tuple([z.literal('opening'), z.literal('ending'), z.literal('safe_beat')]), collision_policy: z.literal('alternate_corner_then_series_only_then_block'), dense_story_mode: z.literal('official_mindmake_only') }),
 })
 
 export const ShortPropsSchema = z.object({

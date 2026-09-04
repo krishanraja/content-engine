@@ -37,21 +37,22 @@ describe('approved treatment registry', () => {
     const config = await registry()
     const theme = resolveBrandTheme(config.brand_themes, config.default_brand_theme)
     expect(theme?.theme_id).toBe('mindmake-video-v1')
-    expect(theme?.version).toBe(3)
+    expect(theme?.version).toBe(6)
     expect(theme?.source).toEqual({
       repository: 'krishanraja/mindmake',
-      commit: 'f7f6889d67e86faadfce55dff0a29fbe856ba504',
+      commit: '54ea43b9771d3b263718a4d40cecc68167b7a718',
       contract_path: 'project-documentation/03_DESIGN_CONTRACT.md',
     })
     expect(theme?.colors.mint).toBe('#7FE3B4')
     expect(theme?.typography).toEqual({ structure: 'Archivo Variable', claim: 'Newsreader Variable', body: 'Source Serif 4 Variable', data: 'IBM Plex Mono' })
     expect(theme?.rules.progress_bar).toBe('hidden')
     expect(theme?.rules.official_wordmarks_only).toBe(true)
-    expect(theme?.wordmarks?.mindmake.source_path).toBe('src/assets/mindmake-wordmark-ink.png')
+    expect(theme?.wordmarks?.mindmake.source_path).toBe('src/assets/mindmake-wordmark.svg')
     expect(theme?.wordmarks?.series.built_with_ai.source_path).toBe('src/assets/builtwithai-logo-wordmark.png')
     expect(theme?.wordmarks?.series.money_of_ai.source_path).toBe('src/assets/moneyofai-logo-wordmark.png')
-    expect(theme?.wordmarks?.lockup?.layout).toBe('stacked_square')
-    expect(theme?.wordmarks?.lockup?.approval.feedback_id).toBe('2cecdb0b-efe0-400c-b39b-e843188932ee')
+    expect(theme?.wordmarks?.lockup?.layout).toBe('responsive_identity_anchor')
+    expect(theme?.wordmarks?.lockup?.minimum_effective).toEqual({ mindmake_width_px: 200, mindmake_height_px: 32, series_letter_height_px: 50, preview_width_css_px: 375, series_letter_height_css_px: 17 })
+    expect(theme?.wordmarks?.lockup?.approval.feedback_id).toBe('fc37225c-d396-4447-9343-680038c7e3d8')
   })
 
   it('keeps explicit taste memory approved and correctly scoped', async () => {
@@ -59,7 +60,7 @@ describe('approved treatment registry', () => {
     expect(config.active_preferences).toHaveLength(3)
     expect(config.active_preferences.every((rule) => rule.status === 'active')).toBe(true)
     expect(config.active_preferences.filter((rule) => rule.scope.level === 'treatment' && rule.scope.key === 'evidence-kinetic-ribbon-v1')).toHaveLength(2)
-    expect(config.active_preferences.find((rule) => rule.scope.level === 'global' && rule.scope.key === 'brand-lockup')?.evidence_feedback_ids).toEqual(['2cecdb0b-efe0-400c-b39b-e843188932ee'])
+    expect(config.active_preferences.find((rule) => rule.scope.level === 'global' && rule.scope.key === 'brand-lockup')?.evidence_feedback_ids).toEqual(['2cecdb0b-efe0-400c-b39b-e843188932ee', 'fc37225c-d396-4447-9343-680038c7e3d8'])
     expect(config.active_preferences.every((rule) => rule.approved_by === 'Krish')).toBe(true)
   })
 

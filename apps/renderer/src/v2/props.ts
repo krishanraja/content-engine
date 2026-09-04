@@ -27,6 +27,12 @@ const RuntimeWordmarkSchema = z.object({
     width: z.number().positive(),
     height: z.number().positive(),
   }),
+  letterRegion: z.object({
+    x: z.number().nonnegative(),
+    y: z.number().nonnegative(),
+    width: z.number().positive(),
+    height: z.number().positive(),
+  }),
 })
 
 const RuntimeBrandingSchema = z.object({
@@ -55,13 +61,11 @@ const RuntimeBrandingSchema = z.object({
     mindmake: RuntimeWordmarkSchema,
     series: RuntimeWordmarkSchema,
     lockup: z.object({
-      plateSize: z.number().positive(),
       offsetX: z.number().nonnegative(),
       offsetY: z.number().nonnegative(),
-      padding: z.number().nonnegative(),
-      gap: z.number().nonnegative(),
-      mindmakeWidth: z.number().positive(),
-      seriesWidth: z.number().positive(),
+      identity: z.object({ durationMs: z.number().positive(), plateWidth: z.number().positive(), plateHeight: z.number().positive(), padding: z.number().nonnegative(), gap: z.number().nonnegative(), mindmakeWidth: z.number().positive(), seriesWidth: z.number().positive() }),
+      seriesOnly: z.object({ plateWidth: z.number().positive(), plateHeight: z.number().positive(), padding: z.number().nonnegative(), seriesWidth: z.number().positive() }),
+      anchor: z.object({ plateWidth: z.number().positive(), plateHeight: z.number().positive(), padding: z.number().nonnegative(), mindmakeWidth: z.number().positive() }),
     }),
   }).optional(),
 })
@@ -97,6 +101,8 @@ const RuntimeLayerSchema = z.object({
   opacity: z.number().min(0).max(1),
   blendMode: z.enum(['normal', 'multiply', 'screen', 'overlay']),
   protected: z.boolean(),
+  visibleStartMs: z.number().nonnegative().optional(),
+  visibleEndMs: z.number().positive().optional(),
 })
 
 const RuntimeShotSchema = z.object({
@@ -111,6 +117,14 @@ const RuntimeShotSchema = z.object({
     targetId: z.string().optional(),
   }),
   treatmentLane: z.enum(['restrained', 'premium', 'experimental']),
+  brandCues: z.array(z.object({
+    startMs: z.number().nonnegative(),
+    endMs: z.number().positive(),
+    mode: z.enum(['stacked_identity', 'series_only', 'mindmake_only']),
+    corner: z.enum(['top_left', 'top_right']),
+    topPx: z.number().nonnegative(),
+    leftPx: z.number().nonnegative(),
+  })).optional(),
   camera: z.object({
     keyframes: z.array(CameraKeyframeSchema).min(1),
     easing: z.enum(['linear', 'ease_in', 'ease_out', 'ease_in_out', 'spring', 'hold']),
