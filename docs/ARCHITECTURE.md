@@ -4,17 +4,27 @@
 
 Each job freezes its current studio configuration and complete skill directories under `pinned/`. `job.json` is the materialized state; `events.jsonl` is append-only. Every stage artifact is schema-validated, content-addressed from semantic inputs, and immutable. Timestamps are audit metadata and do not affect semantic hashes.
 
-Extracted work follows:
+V1 extracted jobs remain resumable. New V2 work follows:
 
 ```text
-ingest -> normalize -> transcript -> candidates -> claims -> treatment -> render -> QA -> package
+ingest -> normalize -> transcript + source_analysis
+       -> candidates -> claims -> visual_plan -> assets
+       -> styleframes -> animatic -> treatment -> render -> QA -> package
 ```
 
 Short-native work adds the pre-recording path:
 
 ```text
-radar/brief -> script candidates -> recording brief -> recorded ingest
+radar/brief -> script -> candidates -> claims -> recording brief -> recorded ingest
 ```
+
+An approved short-native script stays upstream when a recording is replaced. Re-ingest invalidates transcript, visual analysis, and visual descendants without discarding the editorial decision that caused the recording.
+
+`SourceBundleV1` holds up to 32 aligned camera, audio, and screen sources. `SourceVisualAnalysisV1` records normalized tracks, shot boundaries, active-speaker confidence, gesture and gaze intervals, safe negative space, protected presenter regions, capability downgrades, and conservative fallbacks. A Krish face template is encrypted in Windows-runner state and supplied to the analyzer over stdin; neither its descriptors nor source images enter Git, a job manifest, command arguments, or logs. Its manifest reference contains only the fixed profile ID and content hash. Guests receive job-local labels only. An ambiguous identity match remains unknown.
+
+`VisualNarrativePlanV1` is the editorial-to-render boundary. It binds the exact candidate, claims, source analysis, technique registry, and preference snapshot; gives every beat one primary attention target and narrative function; specifies layered shot and camera decisions; links proof to exact assets; declares fallbacks; and enforces the local-first £15 cloud ceiling. Generated media has the truth role `illustration`, never `evidence`, and synthetic speech is not supported.
+
+New visual treatments must pass exact-asset review, phone-size styleframes, and an audio animatic. The renderer consumes only the resulting immutable `RenderManifestV2`. Four platform manifests share the approved edit but have platform-specific safe zones, copy, covers, and delivery records. After all target masters pass QA and receive exact final approval, the complete package artifact receives a separate Krish approval before archive or private upload.
 
 Discovery candidates are mechanical search windows and cannot be approved. Codex authors the publishable `CandidateV1` with an `EditPlanV1` and `EditorialAssessmentV1`. The edit may contain one continuous segment or a bounded set of stitched source segments; every cut, final order, source-order change, cold-open decision, throughline, and ending is explicit.
 
@@ -47,7 +57,7 @@ MP4 bytes are not expected to match across different hardware. Functional equiva
 
 Feedback is captured from approvals, explicit comments, exact structured diffs, and re-imported external finals. Every event records whether it came from the user, Codex, or the system. Codex and system diagnostics remain observations and cannot become taste rules. External-video comparison records transcript, scene cuts, crop-sensitive frame fingerprints, duration, and loudness; optional SRT, EDL, and FCPXML sidecars preserve exact editor decisions.
 
-Feedback moves through `observed -> inferred -> confirmed -> trial -> eligible -> user_approved -> active -> retired`. Runtime observations and rule proposals are derived state. Activation requires an explicit command with an approver and writes the rule into versioned `config/studio.json`, ready for GitHub review. A broader scope requires three confirmed instances across at least two jobs.
+Feedback moves through `observed -> inferred -> confirmed -> trial -> eligible -> user_approved -> active -> retired`. Runtime observations and rule proposals are derived state. Approval creates a content-addressed configuration-change proposal; it does not mutate active configuration. A rule becomes active only after the exact rule appears in reviewed Git configuration. A broader scope requires three confirmed instances across at least two jobs.
 
 Performance experiments must name one primary variable. Views cannot make a rule eligible. Three comparable control and treatment observations must improve the target without degrading qualified action; the result remains a proposal until user approval.
 

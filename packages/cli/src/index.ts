@@ -2,7 +2,7 @@
 import { access, mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import { dirname, extname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { Command } from 'commander'
+import { Command, CommanderError } from 'commander'
 import {
   ApprovalGateSchema,
   CandidateV1Schema,
@@ -77,6 +77,7 @@ import {
   validateEditorialCandidate,
   validateShortNativeEditorialCandidate,
 } from '@mindmake/core'
+import { registerV2Commands } from './v2.js'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 const configPath = join(repoRoot, 'config', 'studio.json')
@@ -108,6 +109,8 @@ async function existingFileHashOrValue(value: string): Promise<string> {
 
 const program = new Command()
 program.name('studio').description('Mindmaker deterministic video production engine').version('0.1.0')
+program.exitOverride()
+program.configureOutput({ writeErr: () => undefined })
 
 program.command('doctor').action(async () => {
   const result = await runDoctor(repoRoot)
@@ -733,7 +736,20 @@ program.command('resume').requiredOption('--job <jobId>').action(async (options)
 const index = program.command('index')
 index.command('rebuild').action(async () => out(await rebuildIndex()))
 
+registerV2Commands(program, { repoRoot, configPath, skillPaths, out })
+
 program.parseAsync(process.argv).catch((error: unknown) => {
+  if (error instanceof CommanderError) {
+    if (error.exitCode === 0) {
+      process.exitCode = 0
+      return
+    }
+    const payload = { ok: false, code: 'validation', error: error.message.replace(/^error:\s*/i, '') }
+    process.stdout.write(`${JSON.stringify(payload)}\n`)
+    process.stderr.write(`${JSON.stringify({ ...payload, diagnostic: 'command-line parsing failed' })}\n`)
+    process.exitCode = 10
+    return
+  }
   const classified = classifyError(error)
   process.stderr.write(`${JSON.stringify({ ok: false, code: classified.code, error: classified.message })}\n`)
   process.exitCode = classified.exitCode

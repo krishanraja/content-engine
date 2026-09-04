@@ -14,10 +14,12 @@ This yields two observations in every series and source-mode cell. It is a basel
 For every video:
 
 1. Approve angle, claims, hook, and exact candidate hash.
-2. Approve a new treatment manifest, or use a treatment already approved in versioned config.
-3. Approve the final master hash and platform package.
-4. Re-import any post-engine edit before attaching analytics.
-5. Record one primary experiment variable and unavoidable confounds.
+2. Approve the exact evidence assets and visual narrative plan.
+3. Approve phone-size styleframes and the audio animatic for a new treatment.
+4. Approve every exact platform master hash after QA.
+5. Create and review the four platform packages, then approve the exact package artifact before archive or private upload.
+6. Re-import any post-engine edit before attaching analytics.
+7. Record one primary experiment variable and unavoidable confounds.
 
 Import platform CSVs without filling unavailable fields. Review distribution, resonance, and qualification together. Views alone never justify a creative rule. Qualified actions include relevant inbound responses and Mindmaker Live UTM actions; keep their source notes alongside the CSV.
 

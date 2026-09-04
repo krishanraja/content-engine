@@ -1,6 +1,6 @@
 ---
 name: krish-voice
-description: Apply Krish Raja's established voice to public scripts, captions, titles, posts, and narration. Use for Mindmaker editorial wording after strategy and evidence are settled; do not use it to invent facts or choose the content strategy.
+description: Apply Krish's established voice to public scripts, captions, titles, posts, and narration. Use for Mindmaker editorial wording after strategy and evidence are settled; do not use it to invent facts or choose the content strategy.
 ---
 
 # Krish Voice

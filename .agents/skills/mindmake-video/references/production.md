@@ -10,16 +10,19 @@ Apply [editorial-selection.md](editorial-selection.md) before angle approval. Th
 
 ## Stage order
 
-`ingest → normalize → transcript → candidates/claims → treatment → render → QA → package`
+`ingest → normalize → transcript + source analysis → candidates → claims → visual plan → assets → styleframes → animatic → treatment → render → QA → package`
 
-Short-native adds `brief → script → recording brief` before ingest.
+Short-native begins before recording: `brief → script → candidates → claims → angle approval → recording brief → recorded ingest`. A replaced take invalidates only media-dependent descendants.
 
 ## Approvals
 
 1. Angle: approve the exact candidate file hash after claims and rights review.
-2. Evidence: inspect the exact screenshot contact sheet and source files, then approve the packet hash. Treatment must fail closed if a screenshot changes after approval.
-3. Treatment: approve the exact render-manifest hash when the treatment is new.
-4. Final: approve the exact master-video hash after QA.
+2. Visual plan: approve the exact attention, camera, proof, and fallback plan; soft blocks require a recorded override reason.
+3. Evidence: inspect the exact screenshot contact sheet, source-quality assessment, and source files, then approve the packet hash. Downstream work fails closed if any screenshot changes.
+4. Storyboard and animatic: approve exact phone-size styleframes and the timed low-resolution argument before committing to the treatment.
+5. Treatment: approve the exact set of platform render manifests.
+6. Final: approve each exact platform master-video hash after QA.
+7. Package: review the titles, copy, cover, captions, disclosures, ledgers, provenance, and delivery settings together; approve the exact current package artifact before archive or private upload.
 
 Never substitute chat agreement for the recorded approval.
 

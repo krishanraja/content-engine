@@ -1,10 +1,12 @@
 import { access, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { TreatmentRegistryV1Schema } from '@mindmake/contracts'
+import { APPROVAL_SIGNING_CREDENTIAL, approvalSigningCredentialReady } from './approval-signing.js'
 import { windowsCredentialExists } from './credentials.js'
 import { commandVersion } from './process.js'
 import { studioPaths } from './paths.js'
 import { resolvePythonCommand } from './python-runtime.js'
+import { KRISH_IDENTITY_CREDENTIAL, krishIdentityStatus } from './identity.js'
 
 export interface DoctorCheck { name: string; status: 'pass' | 'warn' | 'block'; detail: string }
 
@@ -73,10 +75,13 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
   if (process.platform === 'win32' && repoRoot) {
     const radarTargets = ['MindmakeVideoStudio/mm-ctrl-radar-token', 'MindmakeVideoStudio/control-center-radar-token'] as const
     const [mmTarget, controlTarget] = radarTargets
-    const [mmRadar, controlRadar, youtube] = await Promise.all([
+    const [mmRadar, controlRadar, youtube, approvalSigning, identityKey, identityProfile] = await Promise.all([
       windowsCredentialExists(repoRoot, mmTarget),
       windowsCredentialExists(repoRoot, controlTarget),
       windowsCredentialExists(repoRoot, 'MindmakeVideoStudio/youtube-access-token'),
+      approvalSigningCredentialReady(repoRoot),
+      windowsCredentialExists(repoRoot, KRISH_IDENTITY_CREDENTIAL),
+      krishIdentityStatus(),
     ])
     const missingRadar = radarTargets.filter((_, index) => ![mmRadar, controlRadar][index])
     checks.push({
@@ -89,9 +94,23 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
       status: youtube ? 'pass' : 'warn',
       detail: youtube ? 'Private-upload credential is present.' : 'MindmakeVideoStudio/youtube-access-token is missing.',
     })
+    checks.push({
+      name: 'approval_signing_credential',
+      status: approvalSigning ? 'pass' : 'block',
+      detail: approvalSigning ? 'Approval receipts can be authenticated.' : `${APPROVAL_SIGNING_CREDENTIAL} is missing or shorter than 32 bytes; approval recording is disabled.`,
+    })
+    checks.push({
+      name: 'krish_identity',
+      status: identityKey && identityProfile.enrolled ? 'pass' : 'warn',
+      detail: identityKey && identityProfile.enrolled
+        ? `Encrypted ${identityProfile.profile_id} profile is available.`
+        : `Optional Krish recognition is unavailable. ${identityKey ? 'Enroll the local profile.' : `Store ${KRISH_IDENTITY_CREDENTIAL}, then enroll the local profile.`} Subject tracking will remain job-local.`,
+    })
   } else {
     checks.push({ name: 'radar_credentials', status: 'warn', detail: 'Live provider credentials require Windows Credential Manager.' })
     checks.push({ name: 'youtube_credential', status: 'warn', detail: 'Private YouTube upload requires Windows Credential Manager.' })
+    checks.push({ name: 'approval_signing_credential', status: 'block', detail: 'Authenticated approval recording requires the Windows runner credential.' })
+    checks.push({ name: 'krish_identity', status: 'warn', detail: 'Persistent Krish recognition requires the encrypted Windows runner profile; subject tracking will remain job-local.' })
   }
   return { ok: checks.every((check) => check.status !== 'block'), checks }
 }

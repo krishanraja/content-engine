@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { DraftPackageV2Schema, JobManifestV2Schema, RenderManifestV2Schema, StageArtifactV2Schema, StudioEventV2Schema } from './v2.js'
+export * from './v2.js'
 
 export const SCHEMA_VERSION = 1 as const
 
@@ -114,6 +116,10 @@ export const ClaimSchema = z.object({
   kind: z.enum(['fact', 'inference', 'judgment']),
   evidence_urls: z.array(z.string().url()),
   verification: z.enum(['verified', 'needs_review', 'unsupported']),
+}).superRefine((claim, context) => {
+  if (claim.kind === 'fact' && claim.verification === 'verified' && claim.evidence_urls.length === 0) {
+    context.addIssue({ code: 'custom', path: ['evidence_urls'], message: 'verified factual claims require at least one public or explicitly approved evidence URL' })
+  }
 })
 
 export const ChallengePacketSchema = z.object({
@@ -655,3 +661,14 @@ export const PUBLIC_SERIES_NAMES: Record<Series, string> = {
   money_of_ai: 'The Money of AI',
   built_with_ai: 'Built With AI',
 }
+
+export const AnyJobManifestSchema=z.discriminatedUnion('schema_version',[JobManifestV1Schema,JobManifestV2Schema])
+export type AnyJobManifest=z.infer<typeof AnyJobManifestSchema>
+export const AnyStudioEventSchema=z.discriminatedUnion('schema_version',[StudioEventV1Schema,StudioEventV2Schema])
+export type AnyStudioEvent=z.infer<typeof AnyStudioEventSchema>
+export const AnyStageArtifactSchema=z.union([StageArtifactV1Schema,StageArtifactV2Schema])
+export type AnyStageArtifact=z.infer<typeof AnyStageArtifactSchema>
+export const AnyRenderManifestSchema=z.union([RenderManifestV1Schema,RenderManifestV2Schema])
+export type AnyRenderManifest=z.infer<typeof AnyRenderManifestSchema>
+export const AnyDraftPackageSchema=z.union([DraftPackageV1Schema,DraftPackageV2Schema])
+export type AnyDraftPackage=z.infer<typeof AnyDraftPackageSchema>

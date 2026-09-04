@@ -1,4 +1,4 @@
 interface:
   display_name: "Krish Voice"
-  short_description: "Write in Krish Raja's proven register"
-  default_prompt: "Use $krish-voice to rewrite this in Krish Raja's established voice without changing the facts."
+  short_description: "Write in Krish's proven register"
+  default_prompt: "Use $krish-voice to rewrite this in Krish's established voice without changing the facts."

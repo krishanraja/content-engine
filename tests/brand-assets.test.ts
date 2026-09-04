@@ -17,7 +17,7 @@ describe('official brand wordmarks', () => {
   it('pins the real GitHub assets and clears the deterministic legibility floor', () => {
     const theme = activeTheme()
     expect(theme.version).toBe(3)
-    expect(theme.source.commit).toBe('e1d03892f8e8c52ad9f0d2d05275ab858fd151e5')
+    expect(theme.source.commit).toBe('f7f6889d67e86faadfce55dff0a29fbe856ba504')
     const wordmarks = theme.wordmarks
     expect(wordmarks).toBeDefined()
     if (!wordmarks) throw new Error('active theme is missing official wordmarks')
@@ -29,7 +29,7 @@ describe('official brand wordmarks', () => {
     expect(wordmarks.mindmake.sha256).toBe('d2a0417df41119775d8f6c5c25134f2414ce2f5144b6e8b5433b2109d95645e1')
     expect(wordmarks.series.built_with_ai.sha256).toBe('271ab965dc51714be8c13c8a6bb8c7b2b60f4bf22caf51dda5a2928e295fd29f')
     expect(wordmarks.series.money_of_ai.sha256).toBe('1cdd6d7710c9970a1e86c8793b33acf6b3f63c81304aeb6efe84d392467322a6')
-    expect(officialWordmarkUrl(theme, wordmarks.series.built_with_ai)).toBe('https://raw.githubusercontent.com/krishanraja/mindmake/e1d03892f8e8c52ad9f0d2d05275ab858fd151e5/src/assets/builtwithai-logo-wordmark.png')
+    expect(officialWordmarkUrl(theme, wordmarks.series.built_with_ai)).toBe('https://raw.githubusercontent.com/krishanraja/mindmake/f7f6889d67e86faadfce55dff0a29fbe856ba504/src/assets/builtwithai-logo-wordmark.png')
     expect(brandWordmarkLegibilityIssues(theme)).toEqual([])
   })
 

@@ -6,7 +6,11 @@ on:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -17,9 +21,15 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm ci
+      - run: npm run verify
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
       - run: npm audit --audit-level=high
-      - run: npm run typecheck
-      - run: npm run test
-      - run: npm run skills:validate
-      - run: npm run check:public-copy
-      - run: npm run check:renderer
