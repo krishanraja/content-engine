@@ -7,7 +7,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
 import { RunnerCommandEnvelopeV1Schema, type RunnerCommandEnvelopeV1, type RunnerHeartbeatV1, type RunnerReceiptV1 } from '@mindmake/contracts'
-import { acquireRunnerLock, DEFAULT_CONTROL_PLANE_URL, hashValue, inspectRunnerSourceProvenance, loadOrCreateRunnerIdentity, resolveProductionControlPlaneUrl, runRunnerCycle, signRunnerReceipt, type RunnerControlPlane } from '@mindmake/core'
+import { acquireRunnerLock, DEFAULT_CONTROL_PLANE_URL, hashValue, inspectRunnerSourceProvenance, inspectWindowsProcessInstance, loadOrCreateRunnerIdentity, resolveProductionControlPlaneUrl, runRunnerCycle, signRunnerReceipt, type RunnerControlPlane } from '@mindmake/core'
 
 const SIGNING_KEY = Buffer.from('unit-test-runner-signing-material-at-least-32-bytes')
 const FIXTURE_PATH = join(fileURLToPath(new URL('.', import.meta.url)), 'fixtures', 'control-plane', 'runner-command-prepare-v1.json')
@@ -54,6 +54,62 @@ describe('Codex-independent runner', () => {
     expect(JSON.stringify(receipt)).not.toContain(SIGNING_KEY.toString('utf8'))
   })
 
+  it('normalizes the direct Windows process query without starting PowerShell', async () => {
+    const commands: string[] = []
+    const instance = await inspectWindowsProcessInstance(1234, async (command) => {
+      commands.push(command)
+      return { stdout: '\r\nCreationDate=20260904222647.599266+060\r\n', stderr: '' }
+    })
+    expect(commands).toEqual(['wmic.exe'])
+    expect(instance).toEqual({
+      alive: true,
+      instance_id: 'win32:639241540075992660',
+      started_at_ms: Date.parse('2026-09-04T21:26:47.599Z'),
+    })
+  })
+
+  it('keeps one Windows process identity across direct and PowerShell 7 providers', async () => {
+    const direct = await inspectWindowsProcessInstance(1234, async () => ({ stdout: '\r\nCreationDate=20260904222647.599266+060\r\n', stderr: '' }))
+    const commands: string[] = []
+    const fallback = await inspectWindowsProcessInstance(1234, async (command) => {
+      commands.push(command)
+      if (command === 'wmic.exe') throw Object.assign(new Error('not installed'), { code: 'ENOENT' })
+      return { stdout: '639241540075992662', stderr: '' }
+    })
+    expect(commands).toEqual(['wmic.exe', 'pwsh.exe'])
+    expect(fallback).toEqual(direct)
+  })
+
+  it('uses legacy Windows PowerShell only when PowerShell 7 is unavailable', async () => {
+    const commands: string[] = []
+    const instance = await inspectWindowsProcessInstance(1234, async (command) => {
+      commands.push(command)
+      if (command !== 'powershell.exe') throw Object.assign(new Error('not installed'), { code: 'ENOENT' })
+      return { stdout: '639241540075992662', stderr: '' }
+    })
+    expect(commands).toEqual(['wmic.exe', 'pwsh.exe', 'powershell.exe'])
+    expect(instance.instance_id).toBe('win32:639241540075992660')
+  })
+
+  it('does not compound a failed PowerShell 7 inspection with a legacy shell retry', async () => {
+    const commands: string[] = []
+    await expect(inspectWindowsProcessInstance(1234, async (command) => {
+      commands.push(command)
+      if (command === 'wmic.exe') throw Object.assign(new Error('not installed'), { code: 'ENOENT' })
+      throw Object.assign(new Error('process inspection timed out'), { code: 'ETIMEDOUT' })
+    })).rejects.toThrow('timed out')
+    expect(commands).toEqual(['wmic.exe', 'pwsh.exe'])
+  })
+
+  it('rejects an invalid Windows process ID before constructing a process query', async () => {
+    let executed = false
+    await expect(inspectWindowsProcessInstance(Number.NaN, async () => {
+      executed = true
+      return { stdout: '', stderr: '' }
+    })).rejects.toThrow('process ID is invalid')
+    expect(executed).toBe(false)
+  })
+
   it('enforces one local runner process and releases the singleton lock cleanly', async () => {
     runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-lock-'))
     const first = await acquireRunnerLock(runtimeRoot)
@@ -61,6 +117,19 @@ describe('Codex-independent runner', () => {
     await first.release()
     const next = await acquireRunnerLock(runtimeRoot)
     await next.release()
+  })
+
+  it.runIf(process.platform === 'win32')('keeps a live lock written with prior-revision Windows precision', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-prior-windows-lock-'))
+    const runnerLock = join(runtimeRoot, 'runner', 'runner.lock')
+    const owned = await acquireRunnerLock(runtimeRoot)
+    const current = JSON.parse(await readFile(runnerLock, 'utf8')) as { process_instance_id: string; process_started_at: string }
+    await owned.release()
+
+    const normalizedTicks = BigInt(current.process_instance_id.slice('win32:'.length))
+    await writeFile(runnerLock, `${JSON.stringify({ schema_version: 2, pid: process.pid, token: 'prior-revision-owner', acquired_at: new Date().toISOString(), process_instance_id: `win32:${normalizedTicks + 2n}`, process_started_at: current.process_started_at })}\n`)
+    await expect(acquireRunnerLock(runtimeRoot)).rejects.toThrow('already active')
+    await rm(runnerLock, { force: true })
   })
 
   it('reclaims a crashed lock after PID reuse while failing closed for the genuine process instance', async () => {
