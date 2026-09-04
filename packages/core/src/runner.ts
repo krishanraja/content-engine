@@ -323,10 +323,92 @@ function processIsAlive(pid: number): boolean {
   catch (error) { return (error as NodeJS.ErrnoException).code === 'EPERM' }
 }
 
-interface ProcessInstance {
+export interface ProcessInstance {
   alive: boolean
   instance_id?: string
   started_at_ms?: number
+}
+
+type ProcessInstanceCommand = typeof run
+
+const WINDOWS_EPOCH_TICKS = 621_355_968_000_000_000n
+
+function windowsProcessInstanceFromTicks(ticksText: string): ProcessInstance {
+  if (!/^\d{17,19}$/.test(ticksText)) throw new Error('Windows process start identity is invalid')
+  const ticks = BigInt(ticksText)
+  const normalizedTicks = ticks - ticks % 10n
+  const unixMilliseconds = Number((normalizedTicks - WINDOWS_EPOCH_TICKS) / 10_000n)
+  if (!Number.isFinite(unixMilliseconds) || unixMilliseconds <= 0) throw new Error('Windows process start time is invalid')
+  return { alive: true, instance_id: `win32:${normalizedTicks}`, started_at_ms: unixMilliseconds }
+}
+
+function windowsManagementCreationDateToTicks(stdout: string): string {
+  const match = stdout.match(/(?:^|[\r\n])CreationDate=(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\.(\d{6})([+-])(\d{3})(?:[\r\n]|$)/)
+  if (!match) throw new Error('Windows Management Instrumentation process start identity is invalid')
+  const year = Number(match[1])
+  const month = Number(match[2])
+  const day = Number(match[3])
+  const hour = Number(match[4])
+  const minute = Number(match[5])
+  const second = Number(match[6])
+  const microsecondsText = match[7]!
+  const offsetSign = match[8]!
+  const offsetText = match[9]!
+  const parts = [year, month, day, hour, minute, second]
+  if (parts.some((part) => !Number.isSafeInteger(part))) throw new Error('Windows Management Instrumentation process start time is invalid')
+  const localWholeSecondMs = Date.UTC(year, month - 1, day, hour, minute, second)
+  const roundTrip = new Date(localWholeSecondMs)
+  if (roundTrip.getUTCFullYear() !== year || roundTrip.getUTCMonth() !== month - 1 || roundTrip.getUTCDate() !== day
+    || roundTrip.getUTCHours() !== hour || roundTrip.getUTCMinutes() !== minute || roundTrip.getUTCSeconds() !== second) {
+    throw new Error('Windows Management Instrumentation process start time is invalid')
+  }
+  const offsetMinutes = Number(offsetText) * (offsetSign === '+' ? 1 : -1)
+  const utcWholeSecondMs = localWholeSecondMs - offsetMinutes * 60_000
+  return (WINDOWS_EPOCH_TICKS + BigInt(utcWholeSecondMs) * 10_000n + BigInt(microsecondsText) * 10n).toString()
+}
+
+function commandWasNotFound(error: unknown): boolean {
+  return (error as NodeJS.ErrnoException).code === 'ENOENT'
+}
+
+function processInstanceIdsMatch(recorded: string, observed: string): boolean {
+  if (recorded === observed) return true
+  const recordedWindowsTicks = recorded.match(/^win32:(\d{17,19})$/)?.[1]
+  const observedWindowsTicks = observed.match(/^win32:(\d{17,19})$/)?.[1]
+  if (!recordedWindowsTicks || !observedWindowsTicks) return false
+  // Older runner revisions persisted all 100-nanosecond ticks from
+  // Get-Process. WMIC exposes the same value at microsecond precision.
+  const recordedTicks = BigInt(recordedWindowsTicks)
+  const observedTicks = BigInt(observedWindowsTicks)
+  return recordedTicks - recordedTicks % 10n === observedTicks - observedTicks % 10n
+}
+
+/**
+ * Query Windows process creation time without making legacy Windows PowerShell
+ * startup part of the normal runner-lock path. Every provider is normalized to
+ * the same .NET tick identity so a later inspection can use a different
+ * available provider without making a live lock look stale.
+ */
+export async function inspectWindowsProcessInstance(pid: number, execute: ProcessInstanceCommand = run): Promise<ProcessInstance> {
+  if (!Number.isSafeInteger(pid) || pid <= 0) throw new Error('Windows process ID is invalid')
+  try {
+    const { stdout } = await execute('wmic.exe', ['process', 'where', `ProcessId=${pid}`, 'get', 'CreationDate', '/value'], { timeoutMs: 1_500 })
+    return windowsProcessInstanceFromTicks(windowsManagementCreationDateToTicks(stdout))
+  } catch {
+    // WMIC is absent by default on some current Windows editions. PowerShell 7
+    // remains the fast supported path on those systems and in hosted CI.
+  }
+
+  const script = `$process = Get-Process -Id ${pid} -ErrorAction Stop; [Console]::Out.Write($process.StartTime.ToUniversalTime().Ticks.ToString([System.Globalization.CultureInfo]::InvariantCulture))`
+  try {
+    const { stdout } = await execute('pwsh.exe', ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', script], { timeoutMs: 2_500 })
+    return windowsProcessInstanceFromTicks(stdout.trim())
+  } catch (error) {
+    if (!commandWasNotFound(error)) throw error
+  }
+
+  const { stdout } = await execute('powershell.exe', ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', script], { timeoutMs: 5_000 })
+  return windowsProcessInstanceFromTicks(stdout.trim())
 }
 
 interface RunnerLockMetadata {
@@ -346,14 +428,7 @@ async function inspectProcessInstanceUncached(pid: number): Promise<ProcessInsta
   if (!processIsAlive(pid)) return { alive: false }
   try {
     if (process.platform === 'win32') {
-      const script = `$process = Get-Process -Id ${pid} -ErrorAction Stop; [Console]::Out.Write($process.StartTime.ToUniversalTime().Ticks.ToString([System.Globalization.CultureInfo]::InvariantCulture))`
-      const { stdout } = await run('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', script], { timeoutMs: 5_000 })
-      const ticksText = stdout.trim()
-      if (!/^\d{17,19}$/.test(ticksText)) throw new Error('Windows process start identity is invalid')
-      const ticks = BigInt(ticksText)
-      const unixMilliseconds = Number((ticks - 621_355_968_000_000_000n) / 10_000n)
-      if (!Number.isFinite(unixMilliseconds) || unixMilliseconds <= 0) throw new Error('Windows process start time is invalid')
-      return { alive: true, instance_id: `win32:${ticksText}`, started_at_ms: unixMilliseconds }
+      return await inspectWindowsProcessInstance(pid)
     }
 
     if (process.platform === 'linux') {
@@ -403,7 +478,7 @@ async function lockOwnerIsActive(lock: RunnerLockMetadata): Promise<boolean | 'u
 
   if (typeof lock.process_instance_id === 'string' && lock.process_instance_id.length > 0) {
     if (!observed.instance_id) return 'unknown'
-    return observed.instance_id === lock.process_instance_id
+    return processInstanceIdsMatch(lock.process_instance_id, observed.instance_id)
   }
 
   // Legacy locks have no process instance ID. They are reclaimable only when
