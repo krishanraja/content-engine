@@ -8,7 +8,7 @@ The studio optimizes honest reach, retention, sharing, and qualified action. It 
 
 - GitHub owns code, schemas, configuration, tests, and repo-scoped skills.
 - Local runtime folders hold replaceable media, caches, OAuth state, immutable job artifacts, and the rebuildable SQLite index.
-- Approved job folders can be archived to Google Drive with masters, captions, cover, manifests, approvals, claims, assets, provenance, and platform packages.
+- A dedicated mounted Google Drive `Inbox` is scanned into local, review-only intake candidates. Approved job folders can be archived separately with masters, captions, cover, manifests, approvals, claims, assets, provenance, and platform packages.
 - Secrets are read from Windows Credential Manager. They never enter Git, media manifests, or command arguments.
 - Every approved master can produce native YouTube Shorts, LinkedIn, TikTok, and Instagram Reels packages. YouTube upload is private-only; the other three remain local packages for human posting.
 
@@ -24,7 +24,7 @@ npm run bootstrap:python
 
 The Python command creates one hash-locked media runtime under `%LOCALAPPDATA%\MindmakeVideoStudio\python`. Disposable GitHub checkouts reuse it rather than reinstalling transcription dependencies per session. The first renderer run also seeds a versioned shared Chrome Headless Shell under the same runtime root.
 
-Set `MINDMAKE_RUNTIME_ROOT` for fast local scratch storage. The versioned defaults use `G:\My Drive\Ventures\Active\Mindmaker\04\_Content\Video Engine` as the media base and its `Archive` folder for approved deliverables. Rendering remains policy-blocked until Remotion licence eligibility is explicitly recorded.
+Set `MINDMAKE_RUNTIME_ROOT` for fast local scratch storage. The versioned defaults use `G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine` as the Drive root, its dedicated `Inbox` for recording discovery, and its separate `Archive` for approved deliverables. Rendering remains policy-blocked until Remotion licence eligibility is explicitly recorded.
 
 In any new Codex chat, launch the workflow by making the complete first message `Video engine` (case-insensitive, with surrounding whitespace allowed). The launcher deliberately does not trigger for `$video-engine`, punctuation, extra words or lines, a later message, or a generic request to edit a video. It fetches the latest GitHub `main`, runs health and queue checks, and recommends the strongest next action.
 
@@ -70,13 +70,14 @@ studio v2 feedback import|confirm
 studio v2 package create|archive
 studio v2 magic targets|prepare|activate|return-to-parent
 studio v2 runner once|status|daemon|project
+studio v2 inbox init|scan|status|rebind|candidate|review|source-bundle
 studio v2 publish youtube --privacy private
 studio v2 analytics import
 studio v2 experiment create|evaluate|list
 studio index rebuild
 ```
 
-The independent runner is a hidden, current-user Windows Scheduled Task. It does not watch the Drive inbox or discover new jobs in v1. Bootstrap an exact approved local treatment into Control Center once with `studio v2 runner project`, then the daemon claims only its queued, schema-bounded commands. Mobile story, final, learning, and keep-current decisions return through a signed, idempotent review-decision command before Control Center advances its projection. Setup, credential targets, recovery, and the precise shipped-versus-installed boundary are documented in [deployment](docs/DEPLOYMENT.md) and [operations](docs/OPERATIONS.md).
+The independent runner is a hidden, current-user Windows Scheduled Task. Before every command claim it sends a live mount heartbeat, performs one bounded Drive Inbox scan, then sends the resulting ready or degraded state before claiming. It continues heartbeat updates during a long first hash. A recording must remain unchanged across at least two scans and the configured stability interval before it is hashed and surfaced as an intake candidate. A total hash-byte budget advances large backlogs across scans, while oversized files and sidecars remain explicit review items. Unchanged production snapshots are coalesced, and stable content is periodically rehashed. Discovery never creates production decisions, renders, packages, uploads, or publishes. Krish reviews the exact candidate, then an exact `SourceBundleV1` is authored with rights, consent, roles, sync, and intake provenance before job creation. Bootstrap an exact approved local treatment into Control Center with `studio v2 runner project`, then the daemon claims only its queued, schema-bounded commands. Mobile story, final, learning, and keep-current decisions return through a signed, idempotent review-decision command before Control Center advances its projection. Setup, credential targets, recovery, and the precise shipped-versus-installed boundary are documented in [deployment](docs/DEPLOYMENT.md) and [operations](docs/OPERATIONS.md).
 
 V2 is the production surface for new work. The V1 commands remain only so existing V1 jobs can be resumed. Run `studio --help` and `studio v2 --help` for the machine-readable command groups.
 

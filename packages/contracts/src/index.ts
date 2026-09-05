@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { DraftPackageV2Schema, JobManifestV2Schema, RenderManifestV2Schema, StageArtifactV2Schema, StudioEventV2Schema } from './v2.js'
 export * from './v2.js'
 export * from './control-plane-v1.js'
+export * from './drive-discovery-v1.js'
 
 export const SCHEMA_VERSION = 1 as const
 

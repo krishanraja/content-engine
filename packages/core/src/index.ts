@@ -19,6 +19,7 @@ export {
   verifyRunnerReceiptHash,
 } from './approval-signing.js'
 export * from './doctor.js'
+export * from './drive-discovery.js'
 export * from './evidence.js'
 export * from './errors.js'
 export * from './editorial.js'

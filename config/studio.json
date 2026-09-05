@@ -69,8 +69,9 @@
   },
   "cadence": { "shorts_per_week": 2, "radar_day": "monday", "radar_time": "11:00", "timezone": "Europe/London" },
   "runtime": {
-    "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04\\_Content\\Video Engine",
-    "archive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04\\_Content\\Video Engine\\Archive"
+    "drive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",
+    "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Inbox",
+    "archive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Archive"
   },
   "radar_providers": {
     "mm_ctrl_url": "https://bkyuxvschuwngtcdhsyg.supabase.co/functions/v1/video-radar-export",

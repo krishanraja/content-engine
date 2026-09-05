@@ -24,9 +24,10 @@ Maintainers must run `npx tsx scripts/check-video-engine-trigger.ts` and the rep
 
 1. Obtain the latest `main` commit from GitHub into a disposable checkout under the current task's `work/` directory. Never use an unrelated or stale local clone as authority.
 2. Read the checkout's `AGENTS.md` and `.agents/skills/mindmake-video/SKILL.md` completely before operating the engine.
-3. Use `G:\My Drive\Ventures\Active\Mindmaker\04\_Content\Video Engine` as the media inbox and base path. Media stays outside GitHub.
-4. Run `studio doctor` and the job-list form of `studio v2 job status`. Report blockers plainly and never bypass a hard gate.
-5. Return a concise operating brief with current health and the strongest next action from: weekly radar, create a video, resume or review a job, or import feedback or analytics.
+3. Use `G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine` as the mounted Drive root and only its `Inbox` subfolder for automatic recording discovery. Media stays outside GitHub. Never scan or move media already in the root.
+4. Treat the first healthy Inbox identity as bound. Preserve its local history through outages, and require Krish's exact old/new fingerprint confirmation through `studio v2 inbox rebind` before trusting a different resolved folder or mounted account.
+5. Run `studio doctor`, `studio v2 inbox status`, and the job-list form of `studio v2 job status`. Report blockers plainly and never bypass a hard gate.
+6. Return a concise operating brief with current health and the strongest next action from: weekly radar, create a video, resume or review a job, or import feedback or analytics.
 
 ## Authority and safety
 

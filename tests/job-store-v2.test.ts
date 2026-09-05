@@ -307,7 +307,13 @@ describe('V2 event-sourced jobs', () => {
     expect(attached.stages.candidates.status).toBe('complete')
     expect(attached.stages.recording_brief.status).toBe('complete')
     expect(attached.stages.ingest.status).toBe('pending')
-    expect((await readFile(join(process.env.MINDMAKE_RUNTIME_ROOT!, 'jobs', job.job_id, 'events.jsonl'), 'utf8')).toString()).toContain('source_bundle_attached')
+    const eventsPath = join(process.env.MINDMAKE_RUNTIME_ROOT!, 'jobs', job.job_id, 'events.jsonl')
+    const events = (await readFile(eventsPath, 'utf8')).trim().split(/\r?\n/).map((line) => JSON.parse(line))
+    expect(events.some((event) => event.type === 'source_bundle_attached')).toBe(true)
+    const legacyAttachment = events.find((event) => event.type === 'source_bundle_attached')
+    delete legacyAttachment.payload.intake_proof_hash
+    await writeFile(eventsPath, `${events.map((event) => JSON.stringify(event)).join('\n')}\n`)
+    await expect(loadJobV2(job.job_id)).resolves.toMatchObject({ source_bundle: { bundle_id: 'recorded-take-1' } })
   })
 
   it('enforces prerequisites and invalidates only visual descendants', async () => {

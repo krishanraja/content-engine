@@ -5,6 +5,7 @@ import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } 
 import {
   ApprovalV2Schema,
   ApprovalGateV2Schema,
+  DriveIntakeProofV1Schema,
   JobManifestV2Schema,
   JOB_SCHEMA_VERSION_V2,
   ReviewDecisionRecordV1Schema,
@@ -15,6 +16,7 @@ import {
   StudioEventV2Schema,
   type ApprovalGateV2,
   type JobManifestV2,
+  type DriveIntakeProofV1,
   type ReviewDecisionRecordV1,
   type ReviewRecoveryRecordV1,
   type SourceBundleV1,
@@ -27,6 +29,7 @@ import {
 import type { JobPurpose, Series, SourceMode } from '@mindmake/contracts'
 import { loadApprovalSigningKey, signApprovalReceiptBody, signRunnerLedgerEventBody, verifyApprovalReceiptBody, verifyRunnerLedgerEventBody } from './approval-signing.js'
 import { hashFile, hashPath, hashValue, stableJson } from './hash.js'
+import { assertDriveSourceBundleProvenance, assertPortableDriveIntakeProof } from './drive-discovery.js'
 import { jobPath } from './paths.js'
 import { v2DescendantsFor, v2PrerequisitesFor, v2StageOrder } from './stage-graphs.js'
 
@@ -221,6 +224,56 @@ async function writeJsonAtomic(path: string, value: unknown): Promise<void> {
   await rename(temp, path)
 }
 
+function intakeProofPath(root: string, proofHash: string): string {
+  if (!/^[a-f0-9]{64}$/.test(proofHash)) throw new Error('job intake proof hash is invalid')
+  return join(root, 'intake-proofs', `${proofHash}.json`)
+}
+
+async function persistIntakeProof(root: string, proof: DriveIntakeProofV1): Promise<string> {
+  const validated = DriveIntakeProofV1Schema.parse(proof)
+  const proofHash = hashValue(validated)
+  const path = intakeProofPath(root, proofHash)
+  await mkdir(dirname(path), { recursive: true })
+  try {
+    const existing = DriveIntakeProofV1Schema.parse(JSON.parse(await readFile(path, 'utf8')))
+    if (hashValue(existing) !== proofHash) throw new Error('content-addressed job intake proof no longer matches its filename')
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    await writeJsonAtomic(path, validated)
+  }
+  return proofHash
+}
+
+async function loadIntakeProof(jobId: string, expectedHash: string): Promise<DriveIntakeProofV1> {
+  const root = jobPath(jobId)
+  let body: string
+  try { body = await readFile(intakeProofPath(root, expectedHash), 'utf8') }
+  catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    try { body = await readFile(join(root, 'intake-proof.json'), 'utf8') }
+    catch (legacyError) {
+      if ((legacyError as NodeJS.ErrnoException).code === 'ENOENT') throw new Error('job intake proof is missing')
+      throw legacyError
+    }
+  }
+  const proof = DriveIntakeProofV1Schema.parse(JSON.parse(body))
+  if (hashValue(proof) !== expectedHash) throw new Error('job intake proof differs from its event-ledger hash')
+  return proof
+}
+
+async function migrateLegacyIntakeProof(jobId: string): Promise<void> {
+  const root = jobPath(jobId)
+  const legacyPath = join(root, 'intake-proof.json')
+  let proof: DriveIntakeProofV1
+  try { proof = DriveIntakeProofV1Schema.parse(JSON.parse(await readFile(legacyPath, 'utf8'))) }
+  catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return
+    throw error
+  }
+  await persistIntakeProof(root, proof)
+  await unlink(legacyPath)
+}
+
 function eventLedgerTailV2(events: StudioEventV2[]): EventLedgerTailV2 {
   return { event_count: events.length, last_event_id: events.at(-1)?.event_id ?? null, event_chain_hash: eventChainHash(events) }
 }
@@ -317,6 +370,7 @@ export interface CreateJobV2Input {
   mode: SourceMode
   purpose?: JobPurpose
   sourceBundle?: SourceBundleV1
+  discoveryRuntimeRoot?: string
   targetPlatforms?: VideoPlatformV1[]
   treatmentLane?: TreatmentLaneV1
   presenterName?: 'Krish'
@@ -330,6 +384,7 @@ export interface CreateJobV2Input {
 export async function createJobV2(input: CreateJobV2Input): Promise<JobManifestV2> {
   const sourceBundle = input.sourceBundle === undefined ? undefined : SourceBundleV1Schema.parse(input.sourceBundle)
   if (input.mode !== 'short_native' && !sourceBundle) throw new Error('extract and solo jobs require a source bundle')
+  const intakeProof = sourceBundle?.intake_provenance ? await assertDriveSourceBundleProvenance(sourceBundle, input.discoveryRuntimeRoot) : undefined
   const createdAt = nowIso()
   const jobId = `${createdAt.slice(0, 10).replaceAll('-', '')}-${input.series}-${randomUUID().slice(0, 8)}`
   const root = jobPath(jobId)
@@ -381,6 +436,7 @@ export async function createJobV2(input: CreateJobV2Input): Promise<JobManifestV
     approvals: [],
   })
   await writeJsonAtomic(join(root, 'job.json'), manifest)
+  const intakeProofHash = intakeProof ? await persistIntakeProof(root, intakeProof) : undefined
   await writeFile(join(root, 'events.jsonl'), '', 'utf8')
   await withJobEventLock(jobId, async () => appendEventV2(jobId, 'job_created', {
     series: manifest.series,
@@ -388,6 +444,7 @@ export async function createJobV2(input: CreateJobV2Input): Promise<JobManifestV
     purpose: manifest.purpose,
     presenter_name: manifest.presenter_name ?? null,
     ...(sourceBundle ? { source_bundle_id: sourceBundle.bundle_id, source_bundle_hash: hashValue(sourceBundle) } : {}),
+    intake_proof_hash: intakeProofHash ?? null,
     target_platforms: manifest.target_platforms,
     treatment_lane: manifest.treatment_lane,
     config_hash: manifest.config_hash,
@@ -397,10 +454,12 @@ export async function createJobV2(input: CreateJobV2Input): Promise<JobManifestV
   return manifest
 }
 
-export async function attachSourceBundleV2(jobId: string, input: SourceBundleV1): Promise<JobManifestV2> {
+export async function attachSourceBundleV2(jobId: string, input: SourceBundleV1, discoveryRuntimeRoot?: string): Promise<JobManifestV2> {
   return withJobEventLock(jobId, async () => {
     const bundle = SourceBundleV1Schema.parse(input)
+    const intakeProof = bundle.intake_provenance ? await assertDriveSourceBundleProvenance(bundle, discoveryRuntimeRoot) : undefined
     const job = await loadJobV2(jobId)
+    await migrateLegacyIntakeProof(jobId)
     const previousHash = job.source_bundle ? hashValue(job.source_bundle) : undefined
     const nextHash = hashValue(bundle)
     if (previousHash === nextHash) return job
@@ -414,8 +473,9 @@ export async function attachSourceBundleV2(jobId: string, input: SourceBundleV1)
         await appendEventV2(jobId, 'stage_invalidated', { stage: child, cause: 'ingest', reason: 'recorded source bundle replaced' })
       }
     }
+    const intakeProofHash = intakeProof ? await persistIntakeProof(jobPath(jobId), intakeProof) : undefined
     await saveJobV2(job)
-    await appendEventV2(jobId, 'source_bundle_attached', { bundle_id: bundle.bundle_id, source_bundle_hash: nextHash, replaced: Boolean(previousHash) })
+    await appendEventV2(jobId, 'source_bundle_attached', { bundle_id: bundle.bundle_id, source_bundle_hash: nextHash, intake_proof_hash: intakeProofHash ?? null, replaced: Boolean(previousHash) })
     return job
   })
 }
@@ -785,6 +845,7 @@ async function reconcileJobEvents(job: JobManifestV2, events: StudioEventV2[]): 
   const approvals: JobManifestV2['approvals'] = []
   const reviewDecisionHashes: string[] = []
   let expectedSourceBundleHash = typeof events[0]?.payload.source_bundle_hash === 'string' ? events[0].payload.source_bundle_hash : undefined
+  let expectedIntakeProofHash = typeof events[0]?.payload.intake_proof_hash === 'string' ? events[0].payload.intake_proof_hash : undefined
   const hasSignedApproval = events.some((event) => event.type === 'approval_recorded' && signedApprovalPayload(event) !== undefined)
   const approvalKey = hasSignedApproval ? await loadApprovalSigningKey() : null
   const hasRunnerDecision = events.some((event) => event.type === 'review_decision_recorded')
@@ -802,6 +863,9 @@ async function reconcileJobEvents(job: JobManifestV2, events: StudioEventV2[]): 
       const bundleHash = requiredEventString(event, 'source_bundle_hash')
       if (!/^[a-f0-9]{64}$/.test(bundleHash)) throw new Error('source bundle event contains an invalid hash')
       expectedSourceBundleHash = bundleHash
+      const proofHash = event.payload.intake_proof_hash
+      if (proofHash !== undefined && proofHash !== null && (typeof proofHash !== 'string' || !/^[a-f0-9]{64}$/.test(proofHash))) throw new Error('source bundle event contains an invalid intake proof hash')
+      expectedIntakeProofHash = typeof proofHash === 'string' ? proofHash : undefined
       if (event.payload.replaced === true) stages.ingest = { status: 'pending', updated_at: event.occurred_at, reason: 'recorded source bundle replaced' }
     } else if (event.type === 'approval_recorded') {
       const approval = verifiedSignedApproval(event, priorEventChainHash, approvalKey)
@@ -830,6 +894,13 @@ async function reconcileJobEvents(job: JobManifestV2, events: StudioEventV2[]): 
     if (!job.source_bundle || hashValue(job.source_bundle) !== expectedSourceBundleHash) throw new Error('job source bundle differs from its event-ledger hash')
   } else if (job.source_bundle) {
     throw new Error('job source bundle is not recorded in its event ledger')
+  }
+  if (job.source_bundle?.intake_provenance) {
+    if (!expectedIntakeProofHash) throw new Error('provenance-bound job source bundle has no portable intake proof')
+    const proof = await loadIntakeProof(job.job_id, expectedIntakeProofHash)
+    assertPortableDriveIntakeProof(job.source_bundle, proof)
+  } else if (expectedIntakeProofHash) {
+    throw new Error('job event ledger records an intake proof without provenance-bound source media')
   }
   return JobManifestV2Schema.parse({ ...job, stages, approvals, review_decision_hashes: reviewDecisionHashes, updated_at: events.at(-1)?.occurred_at ?? job.created_at })
 }

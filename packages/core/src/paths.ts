@@ -6,36 +6,41 @@ export interface StudioPaths {
   jobsRoot: string
   cacheRoot: string
   indexPath: string
+  driveRoot: string | null
   mediaInbox: string | null
   archiveRoot: string | null
 }
 
-const WINDOWS_MEDIA_BASE = 'G:\\My Drive\\Ventures\\Active\\Mindmaker\\04\\_Content\\Video Engine'
-const LEGACY_WINDOWS_MEDIA_BASE = 'G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine'
+export const DEFAULT_WINDOWS_DRIVE_ROOT = 'G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine'
+const INVALID_WINDOWS_DRIVE_ROOT = 'G:\\My Drive\\Ventures\\Active\\Mindmaker\\04\\_Content\\Video Engine'
 
-function configuredWindowsPath(value: string | undefined, fallback: string): string {
+export function canonicalWindowsDrivePath(value: string | undefined, fallback: string): string {
   const configured = value?.trim()
   if (!configured) return fallback
   const lower = configured.toLowerCase()
-  const legacy = LEGACY_WINDOWS_MEDIA_BASE.toLowerCase()
-  if (lower === legacy || lower.startsWith(`${legacy}\\`)) return fallback
+  const invalid = INVALID_WINDOWS_DRIVE_ROOT.toLowerCase()
+  if (lower === invalid || lower.startsWith(`${invalid}\\`)) return fallback
   return configured
 }
 
 export function studioPaths(): StudioPaths {
   const localAppData = process.env.LOCALAPPDATA || join(homedir(), 'AppData', 'Local')
   const runtimeRoot = resolve(process.env.MINDMAKE_RUNTIME_ROOT || join(localAppData, 'MindmakeVideoStudio'))
+  const driveRoot = process.platform === 'win32'
+    ? canonicalWindowsDrivePath(process.env.MINDMAKE_DRIVE_ROOT, DEFAULT_WINDOWS_DRIVE_ROOT)
+    : process.env.MINDMAKE_DRIVE_ROOT?.trim() || ''
   const mediaInbox = process.platform === 'win32'
-    ? configuredWindowsPath(process.env.MINDMAKE_MEDIA_INBOX, WINDOWS_MEDIA_BASE)
+    ? canonicalWindowsDrivePath(process.env.MINDMAKE_MEDIA_INBOX, join(driveRoot, 'Inbox'))
     : process.env.MINDMAKE_MEDIA_INBOX?.trim() || ''
   const archive = process.platform === 'win32'
-    ? configuredWindowsPath(process.env.MINDMAKE_ARCHIVE_ROOT, join(mediaInbox, 'Archive'))
-    : process.env.MINDMAKE_ARCHIVE_ROOT?.trim() || (mediaInbox ? join(mediaInbox, 'Archive') : '')
+    ? canonicalWindowsDrivePath(process.env.MINDMAKE_ARCHIVE_ROOT, join(driveRoot, 'Archive'))
+    : process.env.MINDMAKE_ARCHIVE_ROOT?.trim() || (driveRoot ? join(driveRoot, 'Archive') : '')
   return {
     runtimeRoot,
     jobsRoot: join(runtimeRoot, 'jobs'),
     cacheRoot: join(runtimeRoot, 'cache'),
     indexPath: join(runtimeRoot, 'studio.sqlite'),
+    driveRoot: driveRoot ? resolve(driveRoot) : null,
     mediaInbox: mediaInbox ? resolve(mediaInbox) : null,
     archiveRoot: archive ? resolve(archive) : null,
   }

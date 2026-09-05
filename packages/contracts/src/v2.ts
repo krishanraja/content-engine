@@ -53,13 +53,39 @@ export type MediaSourceV1 = z.infer<typeof MediaSourceV1Schema>
 export function mediaSourceParticipantRoster(source: Pick<MediaSourceV1, 'participant' | 'participants'>): ParticipantReferenceV1[] {
   return source.participants?.length ? source.participants : source.participant ? [source.participant] : []
 }
-export const SourceBundleV1Schema = z.object({ schema_version:z.literal(1), bundle_id:IdentifierV1Schema, primary_source_id:IdentifierV1Schema, sources:z.array(MediaSourceV1Schema).min(1).max(32) }).strict().superRefine((v,c) => {
+export const SourceSidecarV1Schema = z.object({
+  sidecar_id:IdentifierV1Schema,
+  source_id:IdentifierV1Schema,
+  kind:z.enum(['captions','edit_decisions']),
+  format:z.enum(['srt','vtt','edl','fcpxml']),
+  ref:z.string().min(1),
+  content_hash:Sha256V1Schema,
+}).strict().superRefine((value,context)=>{
+  if (value.kind==='captions'&&!['srt','vtt'].includes(value.format)) context.addIssue({ code:'custom', path:['format'], message:'caption sidecars must use SRT or VTT' })
+  if (value.kind==='edit_decisions'&&!['edl','fcpxml'].includes(value.format)) context.addIssue({ code:'custom', path:['format'], message:'edit-decision sidecars must use EDL or FCPXML' })
+})
+export type SourceSidecarV1 = z.infer<typeof SourceSidecarV1Schema>
+
+export const SourceBundleV1Schema = z.object({ schema_version:z.literal(1), bundle_id:IdentifierV1Schema, primary_source_id:IdentifierV1Schema, sources:z.array(MediaSourceV1Schema).min(1).max(32), sidecars:z.array(SourceSidecarV1Schema).max(32).optional(), intake_provenance:z.object({candidate_id:z.string().regex(/^intake_[a-f0-9]{24}$/),candidate_hash:Sha256V1Schema,review_id:z.string().uuid(),review_hash:Sha256V1Schema,inbox_fingerprint:Sha256V1Schema,discovery_event_hash:Sha256V1Schema,media_hashes:z.array(Sha256V1Schema).min(1).max(32),sidecar_hashes:z.array(Sha256V1Schema).max(32),verified_at:z.string().datetime()}).strict().optional() }).strict().superRefine((v,c) => {
   const ids=v.sources.map(x=>x.source_id)
   if (new Set(ids).size !== ids.length) c.addIssue({ code:'custom', path:['sources'], message:'source IDs must be unique' })
   const primary=v.sources.find(x=>x.source_id===v.primary_source_id)
   if (!primary) c.addIssue({ code:'custom', path:['primary_source_id'], message:'primary source must exist' })
   else if (primary.kind==='audio') c.addIssue({ code:'custom', path:['primary_source_id'], message:'primary source must contain video' })
   v.sources.forEach((x,i)=>{ if(x.sync.reference_source_id && !ids.includes(x.sync.reference_source_id)) c.addIssue({ code:'custom', path:['sources',i,'sync','reference_source_id'], message:'sync reference must exist' }) })
+  const sidecarIds=(v.sidecars??[]).map(sidecar=>sidecar.sidecar_id)
+  if (new Set(sidecarIds).size!==sidecarIds.length) c.addIssue({ code:'custom', path:['sidecars'], message:'sidecar IDs must be unique' })
+  ;(v.sidecars??[]).forEach((sidecar,index)=>{ if(!ids.includes(sidecar.source_id)) c.addIssue({ code:'custom', path:['sidecars',index,'source_id'], message:'sidecar source must exist' }) })
+  if (v.intake_provenance) {
+    const sourceHashes=v.sources.map(source=>source.content_hash)
+    if (sourceHashes.some(hash=>!hash)) c.addIssue({ code:'custom', path:['sources'], message:'Drive intake source bundles require a content hash for every source' })
+    const declared=[...v.intake_provenance.media_hashes].sort()
+    const actual=sourceHashes.filter((hash):hash is string=>Boolean(hash)).sort()
+    if (JSON.stringify(declared)!==JSON.stringify(actual)) c.addIssue({ code:'custom', path:['intake_provenance','media_hashes'], message:'Drive intake provenance media hashes must exactly match source content hashes' })
+    const declaredSidecars=[...v.intake_provenance.sidecar_hashes].sort()
+    const actualSidecars=(v.sidecars??[]).map(sidecar=>sidecar.content_hash).sort()
+    if (JSON.stringify(declaredSidecars)!==JSON.stringify(actualSidecars)) c.addIssue({ code:'custom', path:['intake_provenance','sidecar_hashes'], message:'Drive intake provenance sidecar hashes must exactly match typed sidecars' })
+  }
 })
 export type SourceBundleV1 = z.infer<typeof SourceBundleV1Schema>
 

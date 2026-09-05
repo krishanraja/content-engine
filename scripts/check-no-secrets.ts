@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { readFile } from 'node:fs/promises'
 
 const files = execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard'], { encoding: 'utf8' }).split(/\r?\n/).filter(Boolean)
-const media = files.filter((file) => /\.(?:mp4|mov|mkv|webm|avi|m4v|wav|mp3|m4a|aac|flac|ogg|opus|srt|vtt|edl|fcpxml|png|jpe?g|webp|gif|avif|heic|tiff?|bmp|sqlite)$/i.test(file))
+const media = files.filter((file) => /\.(?:mp4|mov|mkv|webm|avi|m4v|m2ts|mts|mxf|wav|mp3|m4a|aac|flac|ogg|opus|srt|vtt|edl|fcpxml|png|jpe?g|webp|gif|avif|heic|tiff?|bmp|sqlite)$/i.test(file))
 if (media.length) throw new Error(`runtime media or database files are tracked: ${media.join(', ')}`)
 
 const patterns = [

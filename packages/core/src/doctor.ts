@@ -1,5 +1,5 @@
 import { access, readFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { join, resolve, sep } from 'node:path'
 import { TreatmentRegistryV1Schema } from '@mindmake/contracts'
 import { APPROVAL_SIGNING_CREDENTIAL, RUNNER_RECEIPT_SIGNING_CREDENTIAL, approvalSigningCredentialReady, runnerReceiptSigningCredentialReady } from './approval-signing.js'
 import { CONTROL_CENTER_RUNNER_CREDENTIAL } from './control-plane-client.js'
@@ -13,6 +13,14 @@ export interface DoctorCheck { name: string; status: 'pass' | 'warn' | 'block'; 
 
 export function credentialHasMinimumBytes(value: string, minimumBytes = 32): boolean {
   return Buffer.byteLength(value, 'utf8') >= minimumBytes
+}
+
+function configuredFoldersOverlap(left: string, right: string): boolean {
+  const canonicalLeft = resolve(left).toLocaleLowerCase('en-GB')
+  const canonicalRight = resolve(right).toLocaleLowerCase('en-GB')
+  return canonicalLeft === canonicalRight
+    || canonicalLeft.startsWith(`${canonicalRight}${sep}`)
+    || canonicalRight.startsWith(`${canonicalLeft}${sep}`)
 }
 
 export async function remotionLicenceEligible(repoRoot?: string): Promise<boolean> {
@@ -76,6 +84,15 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
   else {
     try { await access(paths.archiveRoot); checks.push({ name: 'archive_root', status: 'pass', detail: paths.archiveRoot }) }
     catch { checks.push({ name: 'archive_root', status: 'warn', detail: `${paths.archiveRoot} is not currently reachable.` }) }
+  }
+  if (paths.mediaInbox && paths.archiveRoot) {
+    checks.push({
+      name: 'inbox_archive_boundary',
+      status: configuredFoldersOverlap(paths.mediaInbox, paths.archiveRoot) ? 'block' : 'pass',
+      detail: configuredFoldersOverlap(paths.mediaInbox, paths.archiveRoot)
+        ? 'Inbox and Archive must be separate, non-overlapping folders.'
+        : 'Inbox and Archive use separate configured folders.',
+    })
   }
   if (process.platform === 'win32' && repoRoot) {
     const radarTargets = ['MindmakeVideoStudio/mm-ctrl-radar-token', 'MindmakeVideoStudio/control-center-radar-token'] as const

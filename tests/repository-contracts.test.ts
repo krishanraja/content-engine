@@ -15,16 +15,17 @@ describe('repository operating contracts', () => {
     const studio = await json<{
       transcription: { vocabulary: string[] }
       visual_story_director: { review_gates: string[] }
-      runtime: { media_inbox: string; archive_root: string }
+      runtime: { drive_root: string; media_inbox: string; archive_root: string }
     }>('config/studio.json')
-    const exactMediaRoot = String.raw`G:\My Drive\Ventures\Active\Mindmaker\04\_Content\Video Engine`
+    const exactMediaRoot = String.raw`G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine`
 
     expect(studio.transcription.vocabulary).toContain('Krish')
     expect(studio.transcription.vocabulary).not.toContain('Krish Raja')
     expect(studio.visual_story_director.review_gates).toEqual([
       'angle', 'visual_plan', 'evidence', 'storyboard', 'animatic', 'treatment', 'final', 'package',
     ])
-    expect(studio.runtime.media_inbox).toBe(exactMediaRoot)
+    expect(studio.runtime.drive_root).toBe(exactMediaRoot)
+    expect(studio.runtime.media_inbox).toBe(`${exactMediaRoot}\\Inbox`)
     expect(studio.runtime.archive_root).toBe(`${exactMediaRoot}\\Archive`)
 
     const environment = await readFile(join(repoRoot, '.env.example'), 'utf8')
@@ -32,12 +33,13 @@ describe('repository operating contracts', () => {
     const voiceSkill = await readFile(join(repoRoot, '.agents', 'skills', 'krish-voice', 'SKILL.md'), 'utf8')
     const voiceMetadata = await readFile(join(repoRoot, '.agents', 'skills', 'krish-voice', 'agents', 'openai.yaml'), 'utf8')
     const pathSource = await readFile(join(repoRoot, 'packages', 'core', 'src', 'paths.ts'), 'utf8')
-    expect(environment).toContain(`MINDMAKE_MEDIA_INBOX=${exactMediaRoot}`)
+    expect(environment).toContain(`MINDMAKE_DRIVE_ROOT=${exactMediaRoot}`)
+    expect(environment).toContain(`MINDMAKE_MEDIA_INBOX=${exactMediaRoot}\\Inbox`)
     expect(launcher).toContain(exactMediaRoot)
     expect(launcher).not.toMatch(/Krish(?:an)? Raja/)
     expect(`${voiceSkill}\n${voiceMetadata}`).not.toMatch(/Krish(?:an)? Raja/)
-    expect(pathSource).toContain("const WINDOWS_MEDIA_BASE = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04\\\\_Content\\\\Video Engine'")
-    expect(pathSource).toContain("const LEGACY_WINDOWS_MEDIA_BASE = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04_Content\\\\Video Engine'")
+    expect(pathSource).toContain("export const DEFAULT_WINDOWS_DRIVE_ROOT = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04_Content\\\\Video Engine'")
+    expect(pathSource).toContain("const INVALID_WINDOWS_DRIVE_ROOT = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04\\\\_Content\\\\Video Engine'")
   })
 
   it('pins the proactive radar heartbeat to Monday at 11:00 Europe/London', async () => {
@@ -87,7 +89,7 @@ describe('repository operating contracts', () => {
 
   it('keeps every supported media and edit-sidecar format out of Git', async () => {
     const extensions = [
-      'mp4', 'mov', 'mkv', 'webm', 'avi', 'm4v',
+      'mp4', 'mov', 'mkv', 'webm', 'avi', 'm4v', 'm2ts', 'mts', 'mxf',
       'wav', 'mp3', 'm4a', 'aac', 'flac', 'ogg', 'opus',
       'srt', 'vtt', 'edl', 'fcpxml',
       'png', 'jpg', 'jpeg', 'webp', 'gif', 'avif', 'heic', 'tif', 'tiff', 'bmp',
@@ -102,7 +104,7 @@ describe('repository operating contracts', () => {
     expect(ignored).toEqual(candidates)
 
     const scanner = await readFile(join(repoRoot, 'scripts', 'check-no-secrets.ts'), 'utf8')
-    for (const extension of ['webm', 'm4a', 'aac', 'flac', 'ogg', 'opus', 'srt', 'vtt', 'edl', 'fcpxml']) {
+    for (const extension of ['webm', 'm2ts', 'mts', 'mxf', 'm4a', 'aac', 'flac', 'ogg', 'opus', 'srt', 'vtt', 'edl', 'fcpxml']) {
       expect(scanner).toContain(extension)
     }
   })
