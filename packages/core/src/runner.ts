@@ -31,6 +31,7 @@ import {
 import { loadRunnerReceiptSigningKey, signRunnerReceiptHash, verifyRunnerReceiptHash } from './approval-signing.js'
 import { CONTROL_CENTER_RUNNER_CREDENTIAL, ControlPlaneClient, type ClaimedRunnerCommand } from './control-plane-client.js'
 import { readWindowsCredential } from './credentials.js'
+import { driveDiscoveryStatus, sanitizedDriveDiscoverySummary, scanDriveInbox, type SanitizedDriveDiscoverySummary } from './drive-discovery.js'
 import { hashFile, hashFileMd5, hashValue } from './hash.js'
 import { findRecordedReviewDecisionV2, hasApprovalV2, jobRevisionHashV2, loadJobV2, readStageArtifactV2, recordApprovalV2, recordReviewDecisionV2, recordReviewRecoveryV2, withJobEventLock } from './job-store-v2.js'
 import {
@@ -129,6 +130,7 @@ export interface RunnerCycleOptions {
   runtimeRoot?: string
   repoRoot?: string
   verifySourceProvenance?: () => Promise<string>
+  discoverInbox?: () => Promise<SanitizedDriveDiscoverySummary>
 }
 
 export interface RunnerCycleResult {
@@ -136,6 +138,7 @@ export interface RunnerCycleResult {
   command_id?: string
   receipt_status?: RunnerReceiptV1['status']
   duplicate?: boolean
+  discovery?: SanitizedDriveDiscoverySummary
 }
 
 export interface RunnerProjectBootstrapInput {
@@ -1409,15 +1412,35 @@ export async function runRunnerCycle(options: RunnerCycleOptions): Promise<Runne
   const now = options.now ?? (() => new Date())
   await reconcilePendingReceipts(options)
   const pendingBefore = await pendingReceiptCount(options.runtimeRoot)
-  const initialDriveState = await currentDriveState(options)
-  await options.client.heartbeat(heartbeat(options, initialDriveState, initialDriveState === 'ready' ? 'idle' : 'degraded', pendingBefore, now().toISOString()))
-  if (initialDriveState !== 'ready') return { state: 'idle' }
+  const preflightDriveState = await currentDriveState(options)
+  await options.client.heartbeat(heartbeat(options, preflightDriveState, preflightDriveState === 'ready' ? 'idle' : 'degraded', pendingBefore, now().toISOString()))
+  let discovery: SanitizedDriveDiscoverySummary | undefined
+  if (options.discoverInbox) {
+    let discoveryHeartbeatTail = Promise.resolve()
+    const discoveryHeartbeat = setInterval(() => {
+      discoveryHeartbeatTail = discoveryHeartbeatTail.then(async () => {
+        const driveState = await currentDriveState(options)
+        await options.client.heartbeat(heartbeat(options, driveState, driveState === 'ready' ? 'working' : 'degraded', pendingBefore, now().toISOString()))
+      }).catch(() => undefined)
+    }, options.heartbeatIntervalMs ?? DEFAULT_HEARTBEAT_INTERVAL_MS)
+    discoveryHeartbeat.unref?.()
+    try { discovery = await options.discoverInbox() }
+    finally {
+      clearInterval(discoveryHeartbeat)
+      await discoveryHeartbeatTail
+    }
+  }
+  const initialDriveState = discovery
+    ? discovery.drive_state === 'ready' ? await currentDriveState(options) : discovery.drive_state
+    : preflightDriveState
+  if (discovery) await options.client.heartbeat(heartbeat(options, initialDriveState, initialDriveState === 'ready' ? 'idle' : 'degraded', pendingBefore, now().toISOString()))
+  if (initialDriveState !== 'ready') return { state: 'idle', ...(discovery ? { discovery } : {}) }
   if (options.verifySourceProvenance) {
     const currentCommit = await options.verifySourceProvenance()
     if (currentCommit !== options.softwareCommit) throw new Error('runner source commit changed after startup')
   }
   const claim = await options.client.claim({ runner_id: options.runnerId, software_commit: options.softwareCommit, lease_seconds: options.leaseSeconds ?? DEFAULT_LEASE_SECONDS })
-  if (!claim) return { state: 'idle' }
+  if (!claim) return { state: 'idle', ...(discovery ? { discovery } : {}) }
   const command = validateClaimedCommand(claim, now())
   await persistClaimedCommandJournal(command, options.runnerId, options.signingKey, now().toISOString(), options.runtimeRoot)
   let heartbeatFailed = false
@@ -1498,7 +1521,7 @@ export async function runRunnerCycle(options: RunnerCycleOptions): Promise<Runne
     const completed = await options.client.complete({ runner_id: options.runnerId, lease_token: claim.lease.token, receipt })
     validateCompletionAcknowledgement(receipt, completed)
     await acknowledgeReceipt(command.idempotency_key, receipt, options.signingKey, options.runtimeRoot)
-    return { state: 'completed', command_id: command.command_id, receipt_status: receipt.status, duplicate: completed.duplicate }
+    return { state: 'completed', command_id: command.command_id, receipt_status: receipt.status, duplicate: completed.duplicate, ...(discovery ? { discovery } : {}) }
   } finally {
     clearInterval(interval)
     await heartbeatTail
@@ -1578,6 +1601,18 @@ function projectedJobStatus(job: Awaited<ReturnType<typeof loadJobV2>>): RunnerP
   if (job.stages.package.status === 'complete') return 'completed'
   if (StageNameV2Schema.options.some((stage) => job.stages[stage].status === 'blocked')) return 'blocked'
   return 'active'
+}
+
+function unavailableDiscoverySummary(safeCode: string): SanitizedDriveDiscoverySummary {
+  return {
+    schema_version: 1,
+    scan_sequence: null,
+    scanned_at: null,
+    status: 'not_scanned',
+    drive_state: 'unavailable',
+    safe_codes: [safeCode],
+    counts: { files_seen: 0, partial_files: 0, stable_files: 0, unsupported_files: 0, duplicate_files: 0, ready_candidates: 0, attention_candidates: 0, reviewed_candidates: 0 },
+  }
 }
 
 function qaPayloadPassed(payload: unknown, platform?: RunnerProjectProjectionV1['platform_state']['platform']): boolean {
@@ -1773,6 +1808,10 @@ async function productionRunnerOptions(repoRoot = REPO_ROOT): Promise<Omit<Runne
     softwareCommit,
     signingKey,
     driveState: detectRunnerDriveState,
+    discoverInbox: async () => {
+      try { return sanitizedDriveDiscoverySummary(await scanDriveInbox({ softwareCommit, recordUnchanged: false })) }
+      catch { return unavailableDiscoverySummary('discovery_scan_failed') }
+    },
     repoRoot,
     verifySourceProvenance: () => requireRunnerSourceProvenance(repoRoot),
   }
@@ -1793,7 +1832,7 @@ export async function runRunnerDaemon(input: { repoRoot?: string; signal?: Abort
     while (!input.signal?.aborted) {
       try {
         const result = await runRunnerCycle(options)
-        input.onStatus?.({ ok: true, state: result.state, ...(result.command_id ? { command_id: result.command_id, receipt_status: result.receipt_status } : {}) })
+        input.onStatus?.({ ok: true, state: result.state, ...(result.command_id ? { command_id: result.command_id, receipt_status: result.receipt_status } : {}), ...(result.discovery ? { discovery: result.discovery } : {}) })
         backoffMs = DEFAULT_IDLE_INTERVAL_MS
       } catch {
         input.onStatus?.({ ok: false, state: 'degraded', safe_code: 'runner_cycle_failed' })
@@ -1830,6 +1869,19 @@ export async function runnerStatus(): Promise<Record<string, unknown>> {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') active = false
   }
   const provenance = await inspectRunnerSourceProvenance()
+  let discovery: SanitizedDriveDiscoverySummary
+  let discoveryStateInvalid = false
+  try { discovery = await driveDiscoveryStatus() }
+  catch {
+    discoveryStateInvalid = true
+    discovery = unavailableDiscoverySummary('discovery_state_invalid')
+  }
+  const mountedDriveState = await detectRunnerDriveState()
+  const effectiveDriveState = discoveryStateInvalid
+    ? 'unavailable'
+    : discovery.status === 'not_scanned'
+    ? mountedDriveState
+    : discovery.drive_state === 'ready' ? mountedDriveState : discovery.drive_state
   return {
     schema_version: 1,
     runner_id: identity.runner_id,
@@ -1837,7 +1889,8 @@ export async function runnerStatus(): Promise<Record<string, unknown>> {
     software_commit: provenance.software_commit,
     source_provenance: provenance.status,
     ...(provenance.reason ? { source_provenance_reason: provenance.reason } : {}),
-    drive_state: await detectRunnerDriveState(),
+    drive_state: effectiveDriveState,
+    discovery,
     pending_receipts: await pendingReceiptCount(),
   }
 }

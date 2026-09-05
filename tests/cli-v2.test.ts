@@ -1,13 +1,16 @@
 import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises'
-import { spawn } from 'node:child_process'
+import { execFile, spawn } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
+import { promisify } from 'node:util'
 import { Command } from 'commander'
 import { afterEach, describe, expect, it } from 'vitest'
-import { classifyError } from '@mindmake/core'
+import { assertDriveSourceBundleProvenance, classifyError } from '@mindmake/core'
 import { assertCanonicalEvidencePacketPathV2, assertYoutubePrivateOnly, evidenceApprovalCurrentnessIssuesV2, evidenceClaimUrlIssues, qaPassed, registerV2Commands, resolveApprovalArtifactHash, type CurrentEvidencePacketRefV2, type EvidenceReviewPacketV2 } from '../packages/cli/src/v2.js'
 import { runStudioCli } from '../packages/cli/src/index.js'
 import type { JobManifestV2 } from '@mindmake/contracts'
+
+const execFileAsync = promisify(execFile)
 
 describe.sequential('V2 CLI', () => {
   const roots: string[] = []
@@ -197,6 +200,63 @@ describe.sequential('V2 CLI', () => {
     ])
     expect((confirmOutput[0] as { feedback: { confirmation: string } }).feedback.confirmation).toBe('confirmed')
   })
+
+  it('pins Inbox review and portable proof to the exact clean CLI checkout without an environment override', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'mindmake-cli-drive-provenance-'))
+    roots.push(root)
+    const repository = join(root, 'repo')
+    const driveRoot = join(root, 'drive')
+    const inbox = join(driveRoot, 'Inbox')
+    const archive = join(driveRoot, 'Archive')
+    const runtimeRoot = join(root, 'runtime')
+    const configPath = join(repository, 'studio.json')
+    await Promise.all([mkdir(repository), mkdir(inbox, { recursive: true }), mkdir(archive, { recursive: true })])
+    await writeFile(configPath, '{"schema_version":1}\n')
+    await execFileAsync('git', ['init'], { cwd: repository })
+    await execFileAsync('git', ['config', 'user.email', 'drive-cli-test@example.invalid'], { cwd: repository })
+    await execFileAsync('git', ['config', 'user.name', 'Drive CLI Test'], { cwd: repository })
+    await execFileAsync('git', ['add', 'studio.json'], { cwd: repository })
+    await execFileAsync('git', ['commit', '-m', 'fixture'], { cwd: repository })
+    const commit = (await execFileAsync('git', ['rev-parse', 'HEAD'], { cwd: repository })).stdout.trim().toLowerCase()
+    await writeFile(join(inbox, 'recording.mp4'), 'owned-video')
+
+    const names = ['MINDMAKE_RUNTIME_ROOT', 'MINDMAKE_DRIVE_ROOT', 'MINDMAKE_MEDIA_INBOX', 'MINDMAKE_ARCHIVE_ROOT', 'MINDMAKE_DISCOVERY_STABILITY_SECONDS', 'MINDMAKE_SOFTWARE_COMMIT'] as const
+    const prior = Object.fromEntries(names.map((name) => [name, process.env[name]]))
+    const outputs: unknown[] = []
+    const invokeInbox = async (args: string[]) => {
+      const program = new Command().exitOverride()
+      registerV2Commands(program, { repoRoot: repository, configPath, skillPaths: [], out: (value) => outputs.push(value) })
+      await program.parseAsync(['node', 'studio', 'v2', 'inbox', ...args])
+    }
+    try {
+      process.env.MINDMAKE_RUNTIME_ROOT = runtimeRoot
+      process.env.MINDMAKE_DRIVE_ROOT = driveRoot
+      process.env.MINDMAKE_MEDIA_INBOX = inbox
+      process.env.MINDMAKE_ARCHIVE_ROOT = archive
+      process.env.MINDMAKE_DISCOVERY_STABILITY_SECONDS = '0'
+      delete process.env.MINDMAKE_SOFTWARE_COMMIT
+      await invokeInbox(['scan'])
+      await invokeInbox(['scan'])
+      const stableOutput = outputs.at(-1) as { candidates: Array<{ candidate_id: string; candidate_hash: string }> }
+      const candidate = stableOutput.candidates[0]!
+      await invokeInbox([
+        'review', '--candidate', candidate.candidate_id, '--hash', candidate.candidate_hash, '--decision', 'accepted',
+        '--note', 'Use this exact owned recording.', '--confirmation-ref', `codex-user-confirmation:intake:${candidate.candidate_hash}:Krish approved the CLI fixture`,
+      ])
+      await invokeInbox(['source-bundle', '--candidate', candidate.candidate_id, '--hash', candidate.candidate_hash, '--rights', 'owned'])
+      const bundleOutput = outputs.at(-1) as { source_bundle: Parameters<typeof assertDriveSourceBundleProvenance>[0] }
+      const proof = await assertDriveSourceBundleProvenance(bundleOutput.source_bundle, runtimeRoot)
+      expect(commit).toMatch(/^[a-f0-9]{40}$/)
+      expect(proof?.scan_attestation.software_commit).toBe(commit)
+      const events = (await readFile(join(runtimeRoot, 'discovery', 'events.jsonl'), 'utf8')).trim().split(/\r?\n/).map((line) => JSON.parse(line))
+      expect(events.filter((event) => event.type === 'scan_completed').every((event) => event.scan.settings.software_commit === commit)).toBe(true)
+    } finally {
+      for (const name of names) {
+        if (prior[name] === undefined) delete process.env[name]
+        else process.env[name] = prior[name]
+      }
+    }
+  }, 30_000)
 
   it('emits machine-readable parser failures while preserving help and version exits', async () => {
     const runCli = (args: string[]) => new Promise<{ code: number | null; stdout: string; stderr: string }>((resolvePromise, reject) => {

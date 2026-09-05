@@ -15,6 +15,9 @@ oauth/
 *.webm
 *.avi
 *.m4v
+*.m2ts
+*.mts
+*.mxf
 *.wav
 *.mp3
 *.m4a

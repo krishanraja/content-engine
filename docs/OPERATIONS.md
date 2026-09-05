@@ -29,7 +29,7 @@ CLI success is exit code `0`. Stable failure categories are `10` validation, `20
 
 ## Windows background runner
 
-The v1 runner executes already-projected Control Center commands. It does not scan the Google Drive folder, discover new recordings, or create jobs automatically. Bootstrap each approved local treatment or QA-passing final explicitly:
+The v1 runner executes already-projected Control Center commands and performs bounded discovery in the dedicated Google Drive `Inbox`. It never creates a job automatically. Bootstrap each approved local treatment or QA-passing final explicitly:
 
 ```powershell
 npm run studio -- v2 runner project --job <job-id> --platform youtube_shorts --gate treatment --safe-title "<non-sensitive title>" --safe-summary "<non-sensitive summary>"
@@ -47,7 +47,61 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode sta
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode once
 ```
 
-The status output reports runner identity, source commit, Drive state, singleton activity, and only unacknowledged receipt count. The daemon checks Drive before every claim and during active heartbeats. When Drive is unavailable it reports `degraded`, leaves cloud commands queued, and resumes after the mount returns. It never turns mount loss into an avoidable terminal command failure.
+The status output reports runner identity, source commit, Drive state, singleton activity, unacknowledged receipt count, and path-free discovery counts. The daemon heartbeats the live mount before scanning, scans the dedicated Inbox before every claim, continues heartbeats during a long first hash, and checks Drive during active command heartbeats. When Drive is unavailable, inaccessible, scan-limited, or permission-blocked it reports `degraded`, leaves cloud commands queued, and resumes only after a complete healthy scan. It never turns mount loss into an avoidable terminal command failure. Cloud heartbeats carry only the safe Drive state; local runner status and cycle output carry path-free safe codes and counts.
+
+## Google Drive Inbox
+
+The default directories are:
+
+```text
+G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
+G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
+```
+
+Initialize the Inbox only after confirming the Drive mount points at the intended Mindmaker folder:
+
+```powershell
+npm run studio -- v2 inbox init
+npm run studio -- v2 inbox scan
+npm run studio -- v2 inbox status
+```
+
+Scan, review, source-bundle, and confirmed rebind commands resolve the exact 40-character commit from the configured repository and fail closed if the checkout is dirty, redirected, or does not match an optional commit override. Discovery proofs therefore never record `unknown` during the normal CLI workflow.
+
+The first healthy scan binds the resolved Inbox identity. A transient mount outage preserves the last trusted inventory and dedupe history while making every candidate unavailable. If another folder or Drive account later resolves at the configured path, scans remain blocked with `inbox_identity_changed_requires_rebind`. Inspect the exact old/new hash proposal, verify the mounted account and folder outside the engine, then record Krish's explicit confirmation:
+
+```powershell
+npm run studio -- v2 inbox rebind
+npm run studio -- v2 inbox rebind --confirmation-ref "codex-user-confirmation:inbox-rebind:<old-fingerprint>:<new-fingerprint>:<exact Krish confirmation>"
+```
+
+Rebinding is append-only, does not accept any recording, and restarts the normal stability scans against an empty trusted observation set.
+
+The first scan marks new supported files `partial`. A later scan can mark them stable only after size and modification time remain unchanged for `MINDMAKE_DISCOVERY_STABILITY_SECONDS`, with two safe access checks around hashing. The defaults cap scanning at 500 files, 2,000 directory entries, four directory levels, 64 GiB of new or expired content hashing per scan, and 16 MiB per sidecar. The 64 GiB budget accommodates a 30–45 minute high-bitrate DJI recording while remaining a deliberate bounded scan. Completed hashes are reused so a backlog advances deterministically across scans without stopping unrelated runner commands. `hash_byte_budget_deferred` means the next unchanged scan can continue the queue. `file_exceeds_hash_budget` requires an intentional increase to `MINDMAKE_DISCOVERY_MAX_HASH_BYTES_PER_SCAN` after checking the source; it is not retried as though progress were possible. `sidecar_size_limit_exceeded` prevents oversized text or edit files from reaching an in-memory parser.
+
+`inbox scan` prints candidate IDs, exact candidate hashes, classifications, and safe codes without absolute paths. Inspect one candidate locally with:
+
+```powershell
+npm run studio -- v2 inbox candidate --id <candidate-id>
+```
+
+Record an exact-hash decision with the artifact-bound confirmation receipt shown at the review surface:
+
+```powershell
+npm run studio -- v2 inbox review --candidate <candidate-id> --hash <candidate-hash> --decision accepted --note "<Krish's exact note>" --confirmation-ref "codex-user-confirmation:intake:<candidate-hash>:<exact Krish confirmation>"
+```
+
+Acceptance is intake approval only. It triggers a fresh bounded scan and a full component hash check, and records the Inbox fingerprint, scan event, candidate hash, and verification hash. It never creates a job. For an accepted recording with one video, optional exact-stem audio, and unambiguous exact-stem sidecars, create a provenance-bound local draft:
+
+```powershell
+npm run studio -- v2 inbox source-bundle --candidate <candidate-id> --hash <candidate-hash> --rights owned
+```
+
+Inspect that JSON before `studio v2 job create`. SRT, VTT, EDL, and FCPXML remain typed, hash-bound SourceBundle sidecars; ingest verifies them and transcription automatically uses the sole matching caption sidecar unless an explicit caption or verified transcript is supplied. DJI telemetry-like SRT content is held for manual review and is never auto-imported as speech. A split DJI sequence still needs explicit SourceBundle authoring. Ambiguous sequences, duplicates, partial associations, shared sidecars, unsupported files, and unavailable mounts remain blocked from acceptance. Keep source components at their accepted paths until the job and its recovery window are complete, then move them manually under the archive policy. Discovery never moves or deletes media.
+
+An accepted source stores a candidate-scoped proof at `intake-proofs/<proof-hash>.json` with the job. It includes no unrelated Inbox filenames or inventory. Proofs are immutable across re-recordings; the latest `job_created` or `source_bundle_attached` event names the exact current proof hash, and an explicit `null` attachment value means the current source has no Drive intake proof. Older root-level `intake-proof.json` files remain readable and are migrated into the content-addressed store on the next source attachment. Its compact health, configuration, and software values are audit anchors captured from the fully verified discovery ledger and are protected by the proof hash in the job event. The review must immediately follow the exact attested scan, so an intervening scan or action cannot be hidden. Do not edit a proof or job event by hand.
+
+The scan limits are configurable through `MINDMAKE_DISCOVERY_MAX_FILES`, `MINDMAKE_DISCOVERY_MAX_ENTRIES`, `MINDMAKE_DISCOVERY_MAX_DEPTH`, `MINDMAKE_DISCOVERY_MAX_HASH_BYTES_PER_SCAN`, and `MINDMAKE_DISCOVERY_MAX_SIDECAR_BYTES`. `MINDMAKE_DISCOVERY_HISTORY_RETENTION_DAYS` bounds dedupe memory and `MINDMAKE_DISCOVERY_REVERIFY_SECONDS` bounds reuse of a previous content hash. Every snapshot records the exact settings, algorithm version, software commit, and configuration hash.
 
 Each successful, editorial-route, or non-retryable failure result is signed and written under the ignored runner receipt journal before cloud completion. A lost completion response is retried before another claim, using the original command identity and prior lease token. Acknowledged receipts remain locally for audit but do not count as pending. Transient network, provider, timeout, or media-availability errors leave no terminal receipt; the lease expires so Control Center can perform a bounded retry.
 

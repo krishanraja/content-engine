@@ -52,10 +52,16 @@ import {
   confirmFeedbackV2,
   captureFeedbackV2,
   createDraftPackageV2,
+  createDriveSourceBundleDraft,
   createExperimentV2,
   createJobV2,
   createMagicEditTargetMap,
+  captionSidecarLooksLikeDjiTelemetry,
   detectClaimLikeSentences,
+  driveDiscoveryStatus,
+  driveDiscoverySidecarByteLimit,
+  driveInboxRebindProposal,
+  driveIntakeCandidateDetail,
   draftPackageFileIssuesV2,
   enrollKrishIdentity,
   ensureRuntime,
@@ -81,6 +87,7 @@ import {
   listExperimentsV2,
   normalizeMediaSourceV2,
   importAnalyticsV2,
+  initializeDriveInbox,
   pinnedConfigPathV2,
   pinnedTechniqueRegistryPathV2,
   prepareEvidenceApprovalPacket,
@@ -91,17 +98,22 @@ import {
   readReusableStageV2,
   readWindowsCredential,
   recordApprovalV2,
+  requireRunnerSourceProvenance,
   renderStoryV2,
   prepareMagicEditCandidate,
   publishRunnerProject,
   rendererImplementationHashV2,
   renderV2Animatic,
   renderV2Styleframes,
+  reviewDriveIntakeCandidate,
+  rebindDriveInbox,
   revokeKrishIdentity,
   returnMagicEditToParent,
   runRunnerDaemon,
   runRunnerOnce,
   runnerStatus,
+  sanitizedDriveDiscoverySummary,
+  scanDriveInbox,
   reviewVisualPlan,
   sliceTranscript,
   solveVisualPlanCameras,
@@ -168,6 +180,14 @@ interface IngestPayloadV2 {
     file_hash: string
     duration_ms: number
     kind: 'video' | 'audio' | 'screen_recording'
+  }>
+  sidecars?: Array<{
+    sidecar_id: string
+    source_id: string
+    path: string
+    file_hash: string
+    kind: 'captions' | 'edit_decisions'
+    format: 'srt' | 'vtt' | 'edl' | 'fcpxml'
   }>
 }
 
@@ -315,9 +335,10 @@ function sourceRightsIssues(job: JobManifestV2): string[] {
 
 function normalizedSourceBundle(job: JobManifestV2, normalized: NormalizePayloadV2): NonNullable<JobManifestV2['source_bundle']> {
   const originals = requireSourceBundle(job)
+  const { intake_provenance: _intakeProvenance, ...normalizedBase } = originals
   const outputs = new Map(normalized.sources.map((source) => [source.source_id, source]))
   return SourceBundleV1Schema.parse({
-    ...originals,
+    ...normalizedBase,
     sources: originals.sources.map((source) => {
       const output = outputs.get(source.source_id)
       return output ? { ...source, ref: output.normalized_path, content_hash: output.normalized_hash } : source
@@ -899,11 +920,31 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           kind: sourceItem.kind,
         })
       }
+      const verifiedSidecars: NonNullable<IngestPayloadV2['sidecars']> = []
+      for (const sidecar of bundle.sidecars ?? []) {
+        const sidecarPath = resolve(sidecar.ref)
+        const sidecarInfo = await lstat(sidecarPath)
+        if (!sidecarInfo.isFile()) throw new Error(`sidecar ${sidecar.sidecar_id} is not a regular file`)
+        if (sidecarInfo.size > driveDiscoverySidecarByteLimit()) throw new Error(`sidecar ${sidecar.sidecar_id} exceeds the configured safe byte limit`)
+        const fileHash = await hashFile(sidecarPath)
+        if (fileHash !== sidecar.content_hash) throw new Error(`sidecar hash changed for ${sidecar.sidecar_id}`)
+        verifiedSidecars.push({
+          sidecar_id: sidecar.sidecar_id,
+          source_id: sidecar.source_id,
+          path: sidecarPath,
+          file_hash: fileHash,
+          kind: sidecar.kind,
+          format: sidecar.format,
+        })
+      }
       const bundleHash = hashValue(bundle)
-      const sourceFilesHash = hashValue(probed.map(({ source_id, file_hash }) => ({ source_id, file_hash })).sort((left, right) => left.source_id.localeCompare(right.source_id)))
+      const sourceFilesHash = hashValue({
+        sources: probed.map(({ source_id, file_hash }) => ({ source_id, file_hash })).sort((left, right) => left.source_id.localeCompare(right.source_id)),
+        sidecars: verifiedSidecars.map(({ sidecar_id, file_hash }) => ({ sidecar_id, file_hash })).sort((left, right) => left.sidecar_id.localeCompare(right.sidecar_id)),
+      })
       const ingestInputs = { source_bundle: bundleHash, source_files: sourceFilesHash }
       const ingestTools = { probe: 'ffprobe-system', cli: V2_CLI_VERSION }
-      const ingestPayload: IngestPayloadV2 = { source_bundle_hash: bundleHash, sources: probed }
+      const ingestPayload: IngestPayloadV2 = { source_bundle_hash: bundleHash, sources: probed, ...(verifiedSidecars.length ? { sidecars: verifiedSidecars } : {}) }
       const ingestArtifact = await readReusableStageV2<IngestPayloadV2>(manifest.job_id, 'ingest', ingestInputs, ingestTools)
         || await completeStageV2(manifest.job_id, 'ingest', ingestPayload, ingestInputs, ingestTools)
 
@@ -956,6 +997,25 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         ? bundle.sources.find((sourceItem) => sourceItem.source_id === options.sourceId)
         : isolatedAudio || primaryWithAudio || fallback
       if (!selected || !selected.include_in_edit) throw new Error('the selected transcript source is missing or excluded from the edit')
+      const captionTimelineSourceIds = new Set([
+        selected.source_id,
+        ...(selected.role === 'isolated_audio' && selected.sync.reference_source_id ? [selected.sync.reference_source_id] : []),
+      ])
+      const bundledCaptions = (bundle.sidecars ?? []).filter((sidecar) => sidecar.kind === 'captions' && captionTimelineSourceIds.has(sidecar.source_id))
+      if (!options.captions && !options.verified && bundledCaptions.length > 1) throw new Error('multiple bundled caption sidecars match the transcript source; choose one explicitly with --captions')
+      const bundledCaption = !options.captions && !options.verified ? bundledCaptions[0] : undefined
+      const captionPath = options.captions ? resolve(options.captions) : bundledCaption?.ref
+      if (captionPath) {
+        const captionInfo = await lstat(resolve(captionPath))
+        if (!captionInfo.isFile()) throw new Error('caption input is not a regular file')
+        if (captionInfo.size > driveDiscoverySidecarByteLimit()) throw new Error('caption input exceeds the configured safe byte limit')
+      }
+      if (bundledCaption && await captionSidecarLooksLikeDjiTelemetry(resolve(bundledCaption.ref))) {
+        throw new Error(`bundled caption ${bundledCaption.sidecar_id} resembles DJI telemetry rather than speech; inspect it and supply an explicit --captions file or a human-verified transcript`)
+      }
+      if (bundledCaption && await hashFile(resolve(bundledCaption.ref)) !== bundledCaption.content_hash) {
+        throw new Error(`bundled caption ${bundledCaption.sidecar_id} changed after ingest; restore it or rerun ingest with an explicitly reviewed SourceBundle`)
+      }
       const normalized = normalizedById.get(selected.source_id)
       if (!normalized) throw new Error(`normalized source ${selected.source_id} is unavailable`)
       if (await hashFile(resolve(normalized.normalized_path)) !== normalized.normalized_hash) throw new Error(`normalized source ${selected.source_id} changed after the normalize stage; rerun ingest instead of transcribing untracked bytes`)
@@ -967,12 +1027,12 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       const config = await readJson<PinnedStudioConfigV2>(pinnedConfigPathV2(manifest))
       const model = options.model || config.transcription?.local_model || 'base.en'
       const vocabulary = config.transcription?.vocabulary || []
-      const importHash = options.verified ? await hashFile(options.verified) : options.captions ? await hashFile(options.captions) : normalized.normalized_hash
+      const importHash = options.verified ? await hashFile(options.verified) : captionPath ? await hashFile(captionPath) : normalized.normalized_hash
       const inputs = { normalize: normalizedArtifact.artifact_hash, transcript_source: normalized.normalized_hash, import: importHash }
       const tools = options.verified
         ? { transcript_pipeline: 'human-verified-v2', cli: V2_CLI_VERSION }
-        : options.captions
-          ? { transcript_pipeline: `caption-import-${extname(options.captions).slice(1).toLowerCase()}-v2`, cli: V2_CLI_VERSION }
+        : captionPath
+          ? { transcript_pipeline: `caption-import-${extname(captionPath).slice(1).toLowerCase()}-v2`, cli: V2_CLI_VERSION }
           : { transcript_pipeline: 'faster-whisper-int8-v2', model, vocabulary: vocabulary.join('|'), cli: V2_CLI_VERSION }
       const outputPath = join(jobPath(manifest.job_id), 'transcript', `${selected.source_id}.json`)
       const reusable = await readReusableStageV2<TranscriptStagePayloadV2>(manifest.job_id, 'transcript', inputs, tools)
@@ -984,8 +1044,8 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
 
       const imported = options.verified
         ? await readJson(options.verified)
-        : options.captions
-          ? await loadCaptionTranscript(resolve(options.captions))
+        : captionPath
+          ? await loadCaptionTranscript(resolve(captionPath))
           : await transcribeMedia(context.repoRoot, normalized.normalized_path, outputPath, model, vocabulary)
       const importedTranscript = imported && typeof imported === 'object' && 'transcript' in imported
         ? (imported as { transcript: unknown }).transcript
@@ -2044,6 +2104,118 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       if (!SHA256.test(options.commandHash)) throw new Error('--command-hash must be lowercase SHA-256')
       const request = MagicEditReturnToParentV1Schema.parse(await readJson(resolve(options.request)))
       context.out(await returnMagicEditToParent(options.job, request.expected_parent_revision_hash, request.expected_parent_artifact_hash, request, options.commandId, options.commandHash))
+    })
+
+  const inbox = v2.command('inbox').description('Mounted Google Drive intake discovery with explicit human review')
+  inbox.command('init')
+    .description('Create the dedicated Inbox only when its configured Drive root is reachable')
+    .action(async () => context.out({ schema_version: 1, ...await initializeDriveInbox() }))
+  inbox.command('scan')
+    .description('Record one bounded stability scan without starting production')
+    .action(async () => {
+      const softwareCommit = await requireRunnerSourceProvenance(context.repoRoot)
+      const state = await scanDriveInbox({ softwareCommit })
+      context.out({
+        discovery: sanitizedDriveDiscoverySummary(state),
+        candidates: (state.scan?.candidates ?? []).map((candidate) => ({
+          candidate_id: candidate.candidate_id,
+          candidate_hash: candidate.candidate_hash,
+          display_name: candidate.display_name,
+          classification: candidate.classification,
+          availability: candidate.availability,
+          sequence_kind: candidate.sequence_kind,
+          media_files: candidate.total_media_files,
+          sidecar_files: candidate.total_sidecar_files,
+          omitted_components: candidate.omitted_component_count,
+          safe_codes: candidate.safe_codes,
+          review: state.reviews[candidate.candidate_id]?.candidate_hash === candidate.candidate_hash
+            ? state.reviews[candidate.candidate_id]?.decision
+            : null,
+        })),
+        next_action: 'Review a ready candidate explicitly. Discovery never renders, packages, uploads, or publishes media.',
+      })
+    })
+  inbox.command('status')
+    .description('Show cached, path-free discovery health')
+    .action(async () => context.out(await driveDiscoveryStatus()))
+  inbox.command('rebind')
+    .description('Inspect or explicitly approve a changed resolved Inbox identity')
+    .option('--confirmation-ref <receipt>', 'exact old-and-new identity confirmation returned by the proposal')
+    .action(async (options) => {
+      const softwareCommit = await requireRunnerSourceProvenance(context.repoRoot)
+      const proposal = await driveInboxRebindProposal({ softwareCommit })
+      if (!options.confirmationRef) {
+        context.out({
+          ...proposal,
+          next_action: `After verifying the mounted Drive account and folder, rerun with --confirmation-ref "${proposal.confirmation_prefix}<Krish confirmation>".`,
+        })
+        return
+      }
+      const result = await rebindDriveInbox({ confirmation_ref: options.confirmationRef }, { softwareCommit })
+      context.out({
+        schema_version: 1,
+        rebind: result.rebind,
+        discovery: sanitizedDriveDiscoverySummary(result.state),
+        next_action: 'Leave all files unchanged for the configured stability interval, then scan again. Rebinding does not accept a candidate or create a job.',
+      })
+    })
+  inbox.command('candidate')
+    .description('Show one local candidate and its inbox-relative files')
+    .requiredOption('--id <candidateId>')
+    .option('--hash <sha256>', 'load an exact historical content-addressed candidate')
+    .action(async (options) => context.out(await driveIntakeCandidateDetail(options.id, undefined, options.hash)))
+  inbox.command('review')
+    .description('Record Krish\'s exact-hash intake decision without starting production')
+    .requiredOption('--candidate <candidateId>')
+    .requiredOption('--hash <sha256>')
+    .requiredOption('--decision <decision>', 'accepted, rejected, or held')
+    .requiredOption('--note <text>')
+    .requiredOption('--confirmation-ref <receipt>', 'artifact-bound Codex or Control Center confirmation receipt')
+    .action(async (options) => {
+      if (!SHA256.test(options.hash)) throw new Error('--hash must be lowercase SHA-256')
+      if (!['accepted', 'rejected', 'held'].includes(options.decision)) throw new Error('--decision must be accepted, rejected, or held')
+      const softwareCommit = await requireRunnerSourceProvenance(context.repoRoot)
+      const state = await reviewDriveIntakeCandidate({
+        candidate_id: options.candidate,
+        candidate_hash: options.hash,
+        decision: options.decision as 'accepted' | 'rejected' | 'held',
+        note: options.note,
+        confirmation_ref: options.confirmationRef,
+      }, { softwareCommit })
+      context.out({
+        discovery: sanitizedDriveDiscoverySummary(state),
+        review: state.reviews[options.candidate],
+        next_action: options.decision === 'accepted'
+          ? 'Use inbox source-bundle for one video, optional audio, and unambiguous typed sidecars. Explicitly author split-file bundles. Inspect the result before creating a job.'
+          : 'No production job was created.',
+      })
+    })
+  inbox.command('source-bundle')
+    .description('Create a local SourceBundleV1 draft only from an accepted current intake candidate')
+    .requiredOption('--candidate <candidateId>')
+    .requiredOption('--hash <sha256>')
+    .requiredOption('--rights <rights>', 'owned or permissioned')
+    .option('--consent-ref <text>', 'optional recorded consent reference')
+    .option('--output <path>', 'local JSON output path; defaults to ignored runtime storage')
+    .action(async (options) => {
+      if (!SHA256.test(options.hash)) throw new Error('--hash must be lowercase SHA-256')
+      if (!['owned', 'permissioned'].includes(options.rights)) throw new Error('--rights must be owned or permissioned')
+      const softwareCommit = await requireRunnerSourceProvenance(context.repoRoot)
+      const bundle = await createDriveSourceBundleDraft({
+        candidate_id: options.candidate,
+        candidate_hash: options.hash,
+        rights: options.rights as 'owned' | 'permissioned',
+        ...(options.consentRef ? { consent_ref: options.consentRef } : {}),
+      }, { softwareCommit })
+      const outputPath = resolve(options.output ?? join(studioPaths().runtimeRoot, 'discovery', 'source-bundles', `${bundle.bundle_id}.json`))
+      await writeJsonAtomic(outputPath, bundle)
+      context.out({
+        schema_version: 1,
+        bundle_path: outputPath,
+        bundle_hash: hashValue(bundle),
+        source_bundle: bundle,
+        next_action: 'Inspect the rights, consent, roles, sync, and intake provenance before explicitly creating or attaching a job.',
+      })
     })
 
   const runner = v2.command('runner').description('Codex-independent Windows control-plane runner')

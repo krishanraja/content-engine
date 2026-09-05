@@ -7,7 +7,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
 import { RunnerCommandEnvelopeV1Schema, type RunnerCommandEnvelopeV1, type RunnerHeartbeatV1, type RunnerReceiptV1 } from '@mindmake/contracts'
-import { acquireRunnerLock, DEFAULT_CONTROL_PLANE_URL, hashValue, inspectRunnerSourceProvenance, inspectWindowsProcessInstance, loadOrCreateRunnerIdentity, resolveProductionControlPlaneUrl, runRunnerCycle, signRunnerReceipt, type RunnerControlPlane } from '@mindmake/core'
+import { acquireRunnerLock, DEFAULT_CONTROL_PLANE_URL, hashValue, inspectRunnerSourceProvenance, inspectWindowsProcessInstance, loadOrCreateRunnerIdentity, resolveProductionControlPlaneUrl, runnerStatus, runRunnerCycle, signRunnerReceipt, type RunnerControlPlane } from '@mindmake/core'
 
 const SIGNING_KEY = Buffer.from('unit-test-runner-signing-material-at-least-32-bytes')
 const FIXTURE_PATH = join(fileURLToPath(new URL('.', import.meta.url)), 'fixtures', 'control-plane', 'runner-command-prepare-v1.json')
@@ -286,6 +286,90 @@ describe('Codex-independent runner', () => {
     expect(heartbeats.at(-1)).toMatchObject({ drive_state: 'ready', status: 'idle' })
   })
 
+  it('finishes Inbox discovery before claim and pauses claims on degraded discovery', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-discovery-order-'))
+    const calls: string[] = []
+    let claims = 0
+    const client: RunnerControlPlane = {
+      claim: async () => { calls.push('claim'); claims += 1; return null },
+      heartbeat: async () => { calls.push('heartbeat'); return {} },
+      complete: async ({ receipt }) => ({ duplicate: false, command_id: receipt.command_id, receipt_hash: receipt.receipt_hash, command_status: 'succeeded' }),
+    }
+    const unavailableDiscovery = {
+      schema_version: 1 as const,
+      scan_sequence: 4,
+      scanned_at: '2026-09-04T10:00:00.000Z',
+      status: 'permission_denied' as const,
+      drive_state: 'unavailable' as const,
+      safe_codes: ['file_permission_denied'],
+      counts: { files_seen: 1, partial_files: 0, stable_files: 0, unsupported_files: 0, duplicate_files: 0, ready_candidates: 0, attention_candidates: 0, reviewed_candidates: 0 },
+    }
+    const result = await runRunnerCycle({
+      client,
+      runnerId: 'runner-discovery-test',
+      softwareCommit: 'a'.repeat(40),
+      signingKey: SIGNING_KEY,
+      driveState: async () => { calls.push('drive'); return 'ready' },
+      discoverInbox: async () => { calls.push('discover'); return unavailableDiscovery },
+      now: () => new Date('2026-09-04T10:00:00.000Z'),
+      runtimeRoot,
+    })
+    expect(result).toEqual({ state: 'idle', discovery: unavailableDiscovery })
+    expect(calls).toEqual(['drive', 'heartbeat', 'discover', 'heartbeat'])
+    expect(claims).toBe(0)
+
+    calls.length = 0
+    const readyDiscovery = { ...unavailableDiscovery, status: 'ready' as const, drive_state: 'ready' as const, safe_codes: [], scan_sequence: 5 }
+    await runRunnerCycle({
+      client,
+      runnerId: 'runner-discovery-test',
+      softwareCommit: 'a'.repeat(40),
+      signingKey: SIGNING_KEY,
+      driveState: async () => { calls.push('drive'); return 'ready' },
+      discoverInbox: async () => { calls.push('discover'); return readyDiscovery },
+      now: () => new Date('2026-09-04T10:00:01.000Z'),
+      runtimeRoot,
+    })
+    expect(calls).toEqual(['drive', 'heartbeat', 'discover', 'drive', 'heartbeat', 'claim'])
+    expect(claims).toBe(1)
+  })
+
+  it('heartbeats before and during a slow Inbox scan so discovery cannot make the runner appear offline', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-slow-discovery-'))
+    const heartbeats: RunnerHeartbeatV1[] = []
+    let claims = 0
+    const client: RunnerControlPlane = {
+      claim: async () => { claims += 1; return null },
+      heartbeat: async (value) => { heartbeats.push(value); return {} },
+      complete: async ({ receipt }) => ({ duplicate: false, command_id: receipt.command_id, receipt_hash: receipt.receipt_hash, command_status: 'succeeded' }),
+    }
+    const result = await runRunnerCycle({
+      client,
+      runnerId: 'runner-slow-discovery-test',
+      softwareCommit: 'a'.repeat(40),
+      signingKey: SIGNING_KEY,
+      driveState: 'ready',
+      heartbeatIntervalMs: 2,
+      discoverInbox: async () => {
+        await new Promise((resolve) => setTimeout(resolve, 15))
+        return {
+          schema_version: 1,
+          scan_sequence: 2,
+          scanned_at: '2026-09-04T10:00:00.000Z',
+          status: 'ready',
+          drive_state: 'ready',
+          safe_codes: [],
+          counts: { files_seen: 1, partial_files: 0, stable_files: 1, unsupported_files: 0, duplicate_files: 0, ready_candidates: 1, attention_candidates: 0, reviewed_candidates: 0 },
+        }
+      },
+      runtimeRoot,
+    })
+    expect(result.state).toBe('idle')
+    expect(claims).toBe(1)
+    expect(heartbeats[0]).toMatchObject({ status: 'idle', drive_state: 'ready' })
+    expect(heartbeats.some((value) => value.status === 'working' && !value.active_command_id)).toBe(true)
+  })
+
   it('lets a transient dispatch lease expire and succeeds when the same command is reclaimed', async () => {
     runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-reclaim-'))
     const command = await commandFixture()
@@ -393,6 +477,31 @@ describe('Codex-independent runner', () => {
     await mkdir(nested)
     await expect(inspectRunnerSourceProvenance(nested)).resolves.toMatchObject({ status: 'unknown', reason: expect.stringContaining('does not equal') })
   }, 20_000)
+
+  it('reports an invalid discovery ledger as unavailable even when the mounted folders are reachable', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-invalid-discovery-'))
+    const driveRoot = join(runtimeRoot, 'drive')
+    const inbox = join(driveRoot, 'Inbox')
+    const archive = join(driveRoot, 'Archive')
+    await Promise.all([mkdir(inbox, { recursive: true }), mkdir(archive, { recursive: true }), mkdir(join(runtimeRoot, 'discovery'), { recursive: true })])
+    await writeFile(join(runtimeRoot, 'discovery', 'events.jsonl'), '{"tampered":true}\n')
+    const names = ['MINDMAKE_RUNTIME_ROOT', 'MINDMAKE_DRIVE_ROOT', 'MINDMAKE_MEDIA_INBOX', 'MINDMAKE_ARCHIVE_ROOT'] as const
+    const prior = Object.fromEntries(names.map((name) => [name, process.env[name]]))
+    try {
+      process.env.MINDMAKE_RUNTIME_ROOT = runtimeRoot
+      process.env.MINDMAKE_DRIVE_ROOT = driveRoot
+      process.env.MINDMAKE_MEDIA_INBOX = inbox
+      process.env.MINDMAKE_ARCHIVE_ROOT = archive
+      const status = await runnerStatus() as { drive_state: string; discovery: { drive_state: string; safe_codes: string[] } }
+      expect(status.drive_state).toBe('unavailable')
+      expect(status.discovery).toMatchObject({ drive_state: 'unavailable', safe_codes: ['discovery_state_invalid'] })
+    } finally {
+      for (const name of names) {
+        if (prior[name] === undefined) delete process.env[name]
+        else process.env[name] = prior[name]
+      }
+    }
+  })
 
   it('pins the production Control Center runner origin instead of accepting an environment redirect', () => {
     const prior = process.env.MINDMAKE_CONTROL_PLANE_URL

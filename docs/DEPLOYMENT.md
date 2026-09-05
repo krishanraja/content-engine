@@ -44,9 +44,20 @@ Set the control-plane API base URL as environment configuration, never as a cred
 ```text
 MINDMAKE_CONTROL_PLANE_URL=https://controlcenter.krishraja.com/api/video-studio/runner
 MINDMAKE_PREVIEW_STORAGE_ORIGIN=https://<project-ref>.supabase.co
+MINDMAKE_DRIVE_ROOT=G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine
+MINDMAKE_MEDIA_INBOX=G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
+MINDMAKE_ARCHIVE_ROOT=G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
+MINDMAKE_DISCOVERY_STABILITY_SECONDS=30
+MINDMAKE_DISCOVERY_MAX_FILES=500
+MINDMAKE_DISCOVERY_MAX_ENTRIES=2000
+MINDMAKE_DISCOVERY_MAX_DEPTH=4
+MINDMAKE_DISCOVERY_HISTORY_RETENTION_DAYS=365
+MINDMAKE_DISCOVERY_REVERIFY_SECONDS=86400
 ```
 
 The Control Center URL is production-pinned and an override must be absent or exactly equal to that value. Set the preview origin to the exact public origin of the dedicated Supabase project, with no path, credentials, query, or fragment. The runner rejects HTTP, local/private destinations, cross-origin signed upload URLs, redirects, and upload routes outside Supabase Storage's signed-object path.
+
+Before installing the task, run `studio v2 inbox init`, then two scans separated by the configured stability interval against a harmless owned fixture. Confirm the local status contains no absolute path and that a candidate remains review-only. A missing mount, missing Inbox, permission failure, or bounded-scan limit must keep cloud claims paused.
 
 The runner uses two separate Windows Generic Credentials:
 

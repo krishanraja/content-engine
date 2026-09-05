@@ -42,8 +42,8 @@ export async function checkVideoEngineTrigger(repoRoot = resolve(dirname(fileURL
   if (/Krish(?:an)? Raja/.test(skill)) {
     throw new Error('Video Engine launcher must use Krish as the human-facing name')
   }
-  if (!skill.includes(String.raw`G:\My Drive\Ventures\Active\Mindmaker\04\_Content\Video Engine`)) {
-    throw new Error('Video Engine launcher must use the exact approved media inbox path')
+  if (!skill.includes(String.raw`G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine`) || !skill.includes('`Inbox` subfolder')) {
+    throw new Error('Video Engine launcher must use the exact mounted Drive root and dedicated Inbox')
   }
   if (!/allow_implicit_invocation:\s*true/.test(metadata)) {
     throw new Error('Video Engine must allow implicit selection so the exact bare first prompt can launch it')
