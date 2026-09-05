@@ -23,6 +23,8 @@ $trigger = New-ScheduledTaskTrigger -AtLogOn -User $userId
 $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
 $settings = New-ScheduledTaskSettingsSet `
   -StartWhenAvailable `
+  -AllowStartIfOnBatteries `
+  -DontStopIfGoingOnBatteries `
   -RestartCount 12 `
   -RestartInterval (New-TimeSpan -Minutes 1) `
   -MultipleInstances IgnoreNew `
@@ -31,4 +33,11 @@ $settings = New-ScheduledTaskSettingsSet `
 
 $task = New-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description 'Runs the local Mindmake Video Studio control-plane worker without requiring Codex.'
 Register-ScheduledTask -TaskName $TaskName -InputObject $task -Force | Out-Null
+$installed = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop
+if ($installed.Settings.DisallowStartIfOnBatteries -ne $false) {
+  throw 'Runner task must be allowed to start while the device is on battery power.'
+}
+if ($installed.Settings.StopIfGoingOnBatteries -ne $false) {
+  throw 'Runner task must continue running when the device switches to battery power.'
+}
 Write-Output "Installed scheduled task: $TaskName"

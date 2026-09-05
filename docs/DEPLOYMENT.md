@@ -79,7 +79,7 @@ Start-ScheduledTask -TaskName "Mindmake Video Studio Runner"
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode status
 ```
 
-The task runs as the current interactive user without storing a Windows password. It starts at logon, starts when available, is hidden, restarts after failure, and ignores a second concurrent instance. It has no network-only start condition because it must report honest offline state and replay local receipts after connectivity returns.
+The task runs as the current interactive user without storing a Windows password. It starts at logon, starts when available, may start on battery power, continues when the device switches to battery, is hidden, restarts after failure, and ignores a second concurrent instance. Installation reads the registered task back and fails if either battery setting drifted. It has no network-only start condition because it must report honest offline state and replay local receipts after connectivity returns. It still requires the user to be signed in and the device to be awake; battery resilience does not turn the Windows host into an always-on cloud worker.
 
 The runner also requires an exact clean checkout: its configured repository root must equal Git's actual top-level path, `HEAD` must be a real 40-character commit, `MINDMAKE_SOFTWARE_COMMIT` must be absent or equal to that commit, and no tracked or untracked source file may differ. Project publication and command claiming fail closed when provenance is unknown. Install from a clean committed revision, never from this implementation working tree.
 
