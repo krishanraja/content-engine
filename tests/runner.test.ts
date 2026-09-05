@@ -7,7 +7,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
 import { RunnerCommandEnvelopeV1Schema, type RunnerCommandEnvelopeV1, type RunnerHeartbeatV1, type RunnerReceiptV1 } from '@mindmake/contracts'
-import { acquireRunnerLock, DEFAULT_CONTROL_PLANE_URL, hashValue, inspectRunnerSourceProvenance, inspectWindowsProcessInstance, loadOrCreateRunnerIdentity, persistClaimedCommandJournal, resetRunnerReceiptSigningKeyProviderForTests, resolveProductionControlPlaneUrl, runnerStatus, runRunnerCycle, setRunnerReceiptSigningKeyProviderForTests, signRunnerReceipt, withAuthenticatedRunnerAuthority, withDurableFileLock, type RunnerControlPlane } from '@mindmake/core'
+import { acquireRunnerLock, DEFAULT_CONTROL_PLANE_URL, hashValue, inspectRunnerSourceProvenance, inspectWindowsProcessInstance, loadOrCreateRunnerIdentity, persistClaimedCommandJournal, resetRunnerReceiptSigningKeyProviderForTests, resolveProductionControlPlaneUrl, runnerStatus, runnerStopPreflight, runRunnerCycle, setRunnerReceiptSigningKeyProviderForTests, signRunnerReceipt, withAuthenticatedRunnerAuthority, withDurableFileLock, type RunnerControlPlane } from '@mindmake/core'
 
 const SIGNING_KEY = Buffer.from('unit-test-runner-signing-material-at-least-32-bytes')
 const FIXTURE_PATH = join(fileURLToPath(new URL('.', import.meta.url)), 'fixtures', 'control-plane', 'runner-command-prepare-v1.json')
@@ -270,6 +270,55 @@ describe('Codex-independent runner', () => {
     for (const path of ['claims', 'receipts/pending', 'receipts/acknowledged', 'receipts/conflicted', 'project-state']) {
       await expect(access(join(runtimeRoot, 'runner', ...path.split('/')))).resolves.toBeUndefined()
     }
+  })
+
+  it('proves singleton inactivity without initializing or migrating legacy authority state', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-stop-preflight-'))
+    await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: false })
+    await expect(readdir(runtimeRoot)).resolves.toEqual([])
+
+    const runnerRoot = join(runtimeRoot, 'runner')
+    const legacyIdentity = { schema_version: 1, runner_id: 'runner-77777777-7777-4777-8777-777777777777', created_at: '2026-09-05T09:00:00.000Z' }
+    await mkdir(runnerRoot)
+    await writeFile(join(runnerRoot, 'identity.json'), `${JSON.stringify(legacyIdentity)}\n`)
+    const lock = await acquireRunnerLock(runtimeRoot)
+    try {
+      const beforeNames = await readdir(runnerRoot)
+      const beforeIdentity = await readFile(join(runnerRoot, 'identity.json'), 'utf8')
+      const beforeLock = await readFile(join(runnerRoot, 'runner.lock'), 'utf8')
+      await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: true })
+      await expect(readdir(runnerRoot)).resolves.toEqual(beforeNames)
+      await expect(readFile(join(runnerRoot, 'identity.json'), 'utf8')).resolves.toBe(beforeIdentity)
+      await expect(readFile(join(runnerRoot, 'runner.lock'), 'utf8')).resolves.toBe(beforeLock)
+      await expect(access(join(runtimeRoot, 'runner-authority.json'))).rejects.toMatchObject({ code: 'ENOENT' })
+      await expect(access(join(runtimeRoot, 'runner-staging'))).rejects.toMatchObject({ code: 'ENOENT' })
+    } finally {
+      await lock.release()
+    }
+
+    const stale = `${JSON.stringify({ schema_version: 2, pid: 2_147_483_647, token: 'stale-lock-token', acquired_at: '2026-09-05T09:00:00.000Z', process_instance_id: 'stale:instance' })}\n`
+    await writeFile(join(runnerRoot, 'runner.lock'), stale)
+    await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: false })
+    await expect(readFile(join(runnerRoot, 'runner.lock'), 'utf8')).resolves.toBe(stale)
+
+    await writeFile(join(runnerRoot, 'runner.lock'), 'not-json\n')
+    await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: 'unknown' })
+    await expect(readFile(join(runnerRoot, 'runner.lock'), 'utf8')).resolves.toBe('not-json\n')
+
+    const inspectable = `${JSON.stringify({ schema_version: 2, pid: process.pid, token: 'ambiguous-lock-token', acquired_at: new Date().toISOString() })}\n`
+    await writeFile(join(runnerRoot, 'runner.lock'), inspectable)
+    await expect(runnerStopPreflight(runtimeRoot, async () => 'unknown')).resolves.toEqual({ schema_version: 1, active: 'unknown' })
+    await expect(readFile(join(runnerRoot, 'runner.lock'), 'utf8')).resolves.toBe(inspectable)
+
+    await rm(join(runnerRoot, 'runner.lock'))
+    const linkedTarget = join(runtimeRoot, 'linked-lock-target')
+    await mkdir(linkedTarget)
+    await symlink(linkedTarget, join(runnerRoot, 'runner.lock'), 'junction')
+    await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: 'unknown' })
+    await expect(readdir(runnerRoot)).resolves.toEqual(['identity.json', 'runner.lock'])
+    await expect(readFile(join(runnerRoot, 'identity.json'), 'utf8')).resolves.toBe(`${JSON.stringify(legacyIdentity)}\n`)
+    await expect(access(join(runtimeRoot, 'runner-authority.json'))).rejects.toMatchObject({ code: 'ENOENT' })
+    await expect(access(join(runtimeRoot, 'runner-staging'))).rejects.toMatchObject({ code: 'ENOENT' })
   })
 
   it('migrates a valid legacy identity into one authenticated complete authority layout', async () => {

@@ -1,9 +1,9 @@
-import { execFile } from 'node:child_process'
+import { execFile, spawn } from 'node:child_process'
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
@@ -24,21 +24,104 @@ describe('Windows runner entry point', () => {
     expect(source).toContain('-RestartInterval (New-TimeSpan -Minutes 1)')
     expect(source).toContain('-MultipleInstances IgnoreNew')
     expect(source).toContain('-Hidden')
-    expect(source).toContain('-NonInteractive -WindowStyle Hidden')
+    expect(source).toContain('(Get-Command node.exe -ErrorAction Stop).Source')
+    expect(source).toContain("node_modules\\tsx\\dist\\loader.mjs")
+    expect(source).toContain("apps\\runner\\src\\index.ts")
+    expect(source).toContain('[System.Uri]::new($tsxLoader).AbsoluteUri')
+    expect(source).toContain('$arguments = "--import `"$loaderUri`" `"$runnerEntry`" daemon"')
+    expect(source).toContain('$action = New-ScheduledTaskAction -Execute $node -Argument $arguments -WorkingDirectory $repoRoot')
+    expect(source).not.toContain('New-ScheduledTaskAction -Execute $powerShell')
+    expect(source).not.toContain('tsx\\dist\\cli.mjs')
+    expect(source).toContain("$runnerStatus.active -ne $false")
+    expect(source.indexOf('$runnerStatus.active -ne $false')).toBeLessThan(source.indexOf('Register-ScheduledTask'))
+    expect(source).toContain('$stopPreflight.active -ne $false')
+    expect(source.indexOf('$stopPreflight.active -ne $false')).toBeLessThan(source.indexOf('$statusOutput = @('))
+    const inactiveChecks = [...source.matchAll(/Assert-RunnerInactive/g)].map((match) => match.index)
+    expect(inactiveChecks).toHaveLength(3)
+    const disableBeforeMigration = source.indexOf('Disable-ScheduledTask -TaskName $TaskName -ErrorAction Stop')
+    expect(inactiveChecks[1]).toBeLessThan(disableBeforeMigration)
+    expect(disableBeforeMigration).toBeLessThan(inactiveChecks[2]!)
+    expect(inactiveChecks[2]).toBeLessThan(source.indexOf('$statusOutput = @('))
+    expect(source).toContain("$disabledTask.State -ne 'Disabled'")
     expect(source).toContain('Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop')
+    expect(source).toContain('$installedActions = @($installed.Actions)')
+    expect(source).toContain("Runner task action readback does not match the direct Node daemon contract")
     expect(source).toContain('$installed.Settings.DisallowStartIfOnBatteries -ne $false')
     expect(source).toContain('$installed.Settings.StopIfGoingOnBatteries -ne $false')
+    expect(source).toContain('$installed.Settings.AllowHardTerminate -ne $true')
+    expect(source).toContain('$installed.Settings.Enabled -ne $true')
+    expect(source).toContain("$installed.State -eq 'Disabled'")
+    expect(source).toContain('The replacement runner task was not re-enabled after registration')
     expect(source.match(/Disable-ScheduledTask -TaskName \$TaskName/g)).toHaveLength(2)
     expect(source).not.toMatch(/-Password|-RunOnlyIfNetworkAvailable|-NetworkId/)
   })
 
+  it.skipIf(process.platform !== 'win32')('keeps the in-process TypeScript runner in the directly owned Node process and stops cleanly', async () => {
+    const fixtureRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-direct-node-'))
+    const probe = join(fixtureRoot, 'probe.ts')
+    const loader = pathToFileURL(join(ROOT, 'node_modules', 'tsx', 'dist', 'loader.mjs')).href
+    await writeFile(probe, "process.stdout.write(`${JSON.stringify({ pid: process.pid })}\\n`); setInterval(() => {}, 1_000)\n")
+    const child = spawn(process.execPath, ['--import', loader, probe], {
+      cwd: ROOT,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      windowsHide: true,
+    })
+    const childPid = child.pid
+    if (!childPid) throw new Error('direct Node probe did not start')
+    try {
+      const firstLine = await new Promise<string>((resolveLine, rejectLine) => {
+        let stdout = ''
+        const timer = setTimeout(() => rejectLine(new Error('direct Node probe did not become ready')), 10_000)
+        child.stdout.on('data', (chunk) => {
+          stdout += chunk.toString()
+          const newline = stdout.indexOf('\n')
+          if (newline < 0) return
+          clearTimeout(timer)
+          resolveLine(stdout.slice(0, newline))
+        })
+        child.once('error', (error) => { clearTimeout(timer); rejectLine(error) })
+        child.once('exit', (code) => { clearTimeout(timer); rejectLine(new Error(`direct Node probe exited early with ${code}`)) })
+      })
+      expect(JSON.parse(firstLine)).toEqual({ pid: childPid })
+      const descendantScript = [
+        `$all = @(Get-CimInstance Win32_Process | Select-Object ProcessId, ParentProcessId, Name)`,
+        `$frontier = @(${childPid})`,
+        '$descendants = @()',
+        'while ($frontier.Count -gt 0) {',
+        '  $next = @($all | Where-Object { $frontier -contains $_.ParentProcessId })',
+        '  $descendants += $next',
+        '  $frontier = @($next | ForEach-Object { $_.ProcessId })',
+        '}',
+        '$owned = @($descendants | Where-Object { $_.Name -match "^(?:cmd|npm|node|powershell|pwsh)\\.exe$" } | Select-Object ProcessId, ParentProcessId, Name)',
+        '[Console]::Out.Write((ConvertTo-Json -Compress -InputObject $owned))',
+      ].join('; ')
+      const descendants = JSON.parse((await execFileAsync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', descendantScript])).stdout || '[]')
+      expect(descendants).toEqual([])
+
+      const exited = new Promise<void>((resolveExit) => child.once('exit', () => resolveExit()))
+      expect(child.kill()).toBe(true)
+      await expect(Promise.race([exited, new Promise((_, reject) => setTimeout(() => reject(new Error('direct Node probe did not stop')), 10_000))])).resolves.toBeUndefined()
+      await expect(execFileAsync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', `Get-Process -Id ${childPid} -ErrorAction Stop | Out-Null`])).rejects.toBeTruthy()
+    } finally {
+      if (child.exitCode === null) await execFileAsync('taskkill.exe', ['/PID', String(childPid), '/T', '/F']).catch(() => undefined)
+      await rm(fixtureRoot, { recursive: true, force: true })
+    }
+  }, 30_000)
+
   it('uses the repository runner app without embedding a credential or path to media', async () => {
     const source = await readFile(join(ROOT, 'scripts', 'runner.ps1'), 'utf8')
+    const app = await readFile(join(ROOT, 'apps', 'runner', 'src', 'index.ts'), 'utf8')
     expect(source).toContain('npm.cmd')
     expect(source).toContain('run --silent runner -- $Mode')
+    expect(source).toContain("'stop-preflight'")
     expect(source).toContain("Documents\\MindmakeVideoStudio\\runtime")
     expect(source).toContain('MINDMAKE_RUNTIME_ROOT')
     expect(source).not.toMatch(/Bearer|signing-key|My Drive|VIDEO_STUDIO_RUNNER_SIGNING_KEY/)
+    expect(app).toContain("resolve(homedir(), 'Documents', 'MindmakeVideoStudio', 'runtime')")
+    expect(app).toContain('process.env.MINDMAKE_RUNTIME_ROOT = expected')
+    expect(app).toContain('configured.toLocaleLowerCase')
+    expect(app).toContain("command === 'stop-preflight'")
+    expect(app).toContain('runnerStopPreflight()')
   })
 
   it('rejects virtualized sources and verifies every workspace before CLI startup', async () => {

@@ -106,6 +106,12 @@ describe('repository operating contracts', () => {
     expect(requiredPreflight).toBeGreaterThan(firstMigration)
     expect(deployment).toContain('scripts/migrate-runner-runtime.ps1 -CheckOnly')
     expect(deployment).toContain('.\\scripts\\studio.ps1 index rebuild')
+    const stopPreflight = deployment.indexOf('scripts/runner.ps1 -Mode stop-preflight')
+    const disableTask = deployment.indexOf('Disable-ScheduledTask -TaskName "Mindmake Video Studio Runner"', stopPreflight)
+    const repeatedStopPreflight = deployment.indexOf('scripts/runner.ps1 -Mode stop-preflight', stopPreflight + 1)
+    expect(stopPreflight).toBeGreaterThan(-1)
+    expect(disableTask).toBeGreaterThan(stopPreflight)
+    expect(repeatedStopPreflight).toBeGreaterThan(disableTask)
   })
 
   it('keeps every supported media and edit-sidecar format out of Git', async () => {

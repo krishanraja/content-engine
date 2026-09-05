@@ -2884,17 +2884,39 @@ export async function runRunnerDaemon(input: { repoRoot?: string; signal?: Abort
   }
 }
 
+export interface RunnerStopPreflightV1 {
+  schema_version: 1
+  active: boolean | 'unknown'
+}
+
+/**
+ * Inspect only the singleton lock. This intentionally does not load a signing
+ * key, create an identity, migrate authority state, or touch any journal. Task
+ * installation uses it before the full status command so a detached legacy
+ * daemon cannot race an authority migration.
+ */
+export async function runnerStopPreflight(
+  runtimeRoot?: string,
+  inspectOwner: (lock: Record<string, unknown>) => Promise<boolean | 'unknown'> = (lock) => lockOwnerIsActive(lock as RunnerLockMetadata),
+): Promise<RunnerStopPreflightV1> {
+  const path = lockPath(runtimeRoot)
+  try {
+    const info = await lstat(path)
+    if (!info.isFile() || info.isSymbolicLink()) return { schema_version: 1, active: 'unknown' }
+    const value = JSON.parse(await readFile(path, 'utf8')) as RunnerLockMetadata
+    if (typeof value.token !== 'string' || value.token.length < 1) return { schema_version: 1, active: 'unknown' }
+    return { schema_version: 1, active: await inspectOwner(value as Record<string, unknown>) }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return { schema_version: 1, active: false }
+    return { schema_version: 1, active: 'unknown' }
+  }
+}
+
 export async function runnerStatus(): Promise<Record<string, unknown>> {
   const signingKey = await loadRunnerReceiptSigningKey()
   if (!signingKey) throw new Error('runner receipt signing credential is unavailable or too short')
   const identity = await loadOrCreateRunnerIdentity(undefined, signingKey)
-  let active: boolean | 'unknown' = 'unknown'
-  try {
-    const value = JSON.parse(await readFile(lockPath(), 'utf8')) as RunnerLockMetadata
-    active = typeof value.token === 'string' ? await lockOwnerIsActive(value) : 'unknown'
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') active = false
-  }
+  const { active } = await runnerStopPreflight()
   const provenance = await inspectRunnerSourceProvenance()
   let discovery: SanitizedDriveDiscoverySummary
   let discoveryStateInvalid = false
