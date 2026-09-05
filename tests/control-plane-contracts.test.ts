@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   MagicEditActivationV1Schema,
+  LegacyStoredRunnerReceiptV1Schema,
   ReviewDecisionRecordV1Schema,
   ReviewRecoveryRecordV1Schema,
   RunnerCommandEnvelopeV1Schema,
@@ -36,6 +37,9 @@ function projectProjection() {
   return {
     job: {
       job_id: 'job-video-fixture',
+      source_event_count: 7,
+      source_event_chain_hash: H.map,
+      source_revision_hash: H.revision,
       series: 'built_with_ai' as const,
       mode: 'solo' as const,
       target_platforms: ['youtube_shorts' as const],
@@ -273,6 +277,9 @@ describe('control-plane v1 contracts', () => {
       result_revision_hash: H.candidate,
       result_artifact_hash: H.artifact,
       result_refs: {
+        result_source_event_count: 8,
+        result_source_event_chain_hash: H.map,
+        result_source_revision_hash: H.revision,
         review_id: '55555555-5555-4555-8555-555555555555',
         candidate_hash: H.candidate,
         safe_title: 'Proof timing adjusted',
@@ -306,6 +313,37 @@ describe('control-plane v1 contracts', () => {
     expect(() => RunnerReceiptV1Schema.parse({ ...receipt, result_refs: { ...receipt.result_refs, comparison_alignment: 'unavailable' } })).toThrow('cannot contain timing bounds')
   })
 
+  it('keeps the pre-cursor receipt shape storage-only and exact', () => {
+    const current = RunnerReceiptV1Schema.parse({
+      schema_version: 1,
+      command_id: '41414141-4141-4141-8141-414141414141',
+      command_hash: H.revision,
+      job_id: 'job-video-fixture',
+      status: 'succeeded',
+      result_revision_hash: H.revision,
+      result_artifact_hash: H.artifact,
+      result_refs: {
+        result_source_event_count: 8,
+        result_source_event_chain_hash: H.map,
+        result_source_revision_hash: H.revision,
+        comparison_alignment: 'unavailable',
+      },
+      hard_gates: hardGates,
+      retryable: false,
+      safe_code: null,
+      started_at: '2026-09-04T10:00:00.000Z',
+      finished_at: '2026-09-04T10:00:01.000Z',
+      receipt_hash: '1'.repeat(64),
+      receipt_signature: '2'.repeat(64),
+    })
+    const { result_source_event_count: _count, result_source_event_chain_hash: _chain, result_source_revision_hash: _sourceRevision, ...legacyRefs } = current.result_refs!
+    const legacy = { ...current, result_refs: legacyRefs }
+    expect(() => RunnerReceiptV1Schema.parse(legacy)).toThrow('post-dispatch source event count')
+    expect(LegacyStoredRunnerReceiptV1Schema.parse(legacy).result_refs).toEqual({ comparison_alignment: 'unavailable' })
+    expect(() => LegacyStoredRunnerReceiptV1Schema.parse(current)).toThrow()
+    expect(() => LegacyStoredRunnerReceiptV1Schema.parse({ ...legacy, untrusted_field: true })).toThrow()
+  })
+
   it('bounds preview retention without accepting caller-selected paths or cutoffs', () => {
     expect(RunnerPreviewRetentionRequestV1Schema.parse({ schema_version: 1, runner_id: 'runner-contract-test', limit: 100 })).toMatchObject({ limit: 100 })
     expect(() => RunnerPreviewRetentionRequestV1Schema.parse({ schema_version: 1, runner_id: 'runner-contract-test', limit: 101 })).toThrow()
@@ -333,6 +371,7 @@ describe('control-plane v1 contracts', () => {
     const base = projectProjection()
     const firstCandidate = RunnerProjectProjectionV1Schema.parse({
       ...base,
+      job: { ...base.job, source_revision_hash: 'e'.repeat(64) },
       platform_state: { ...base.platform_state, active_revision_hash: 'e'.repeat(64), active_artifact_hash: 'f'.repeat(64), active_candidate_hash: H.candidate, parent_revision_hash: H.revision, parent_artifact_hash: H.artifact, parent_candidate_hash: null },
       review: { ...base.review, parent_revision_hash: 'e'.repeat(64), parent_artifact_hash: 'f'.repeat(64), revision_hash: 'e'.repeat(64), artifact_hash: 'f'.repeat(64) },
     })
@@ -340,6 +379,7 @@ describe('control-plane v1 contracts', () => {
 
     const nextCandidate = RunnerProjectProjectionV1Schema.parse({
       ...base,
+      job: { ...base.job, source_revision_hash: '1'.repeat(64) },
       platform_state: { ...base.platform_state, active_revision_hash: '1'.repeat(64), active_artifact_hash: '2'.repeat(64), active_candidate_hash: '3'.repeat(64), parent_revision_hash: 'e'.repeat(64), parent_artifact_hash: 'f'.repeat(64), parent_candidate_hash: H.candidate },
       review: { ...base.review, parent_revision_hash: '1'.repeat(64), parent_artifact_hash: '2'.repeat(64), revision_hash: '1'.repeat(64), artifact_hash: '2'.repeat(64) },
     })
@@ -347,10 +387,15 @@ describe('control-plane v1 contracts', () => {
 
     const returned = RunnerProjectProjectionV1Schema.parse({
       ...base,
-      platform_state: { ...base.platform_state, active_revision_hash: '4'.repeat(64), active_artifact_hash: H.artifact, active_candidate_hash: null, parent_revision_hash: '1'.repeat(64), parent_artifact_hash: '2'.repeat(64), parent_candidate_hash: '3'.repeat(64) },
-      review: { ...base.review, parent_revision_hash: '4'.repeat(64), parent_artifact_hash: H.artifact, revision_hash: '4'.repeat(64), artifact_hash: H.artifact },
+      job: { ...base.job, source_revision_hash: '4'.repeat(64) },
+      platform_state: { ...base.platform_state, active_revision_hash: '4'.repeat(64), active_artifact_hash: 'f'.repeat(64), active_candidate_hash: H.candidate, parent_revision_hash: H.revision, parent_artifact_hash: H.artifact, parent_candidate_hash: null },
+      review: { ...base.review, parent_revision_hash: '4'.repeat(64), parent_artifact_hash: 'f'.repeat(64), revision_hash: '4'.repeat(64), artifact_hash: 'f'.repeat(64) },
     })
-    expect(returned.platform_state).toMatchObject({ active_revision_hash: '4'.repeat(64), active_artifact_hash: H.artifact, active_candidate_hash: null, parent_candidate_hash: '3'.repeat(64) })
+    expect(returned.platform_state).toMatchObject({ active_revision_hash: '4'.repeat(64), active_artifact_hash: 'f'.repeat(64), active_candidate_hash: H.candidate, parent_revision_hash: H.revision, parent_artifact_hash: H.artifact, parent_candidate_hash: null })
     expect(returned.platform_state.active_revision_hash).not.toBe(H.revision)
+    expect(() => RunnerProjectProjectionV1Schema.parse({
+      ...base,
+      platform_state: { ...base.platform_state, parent_revision_hash: H.revision, parent_artifact_hash: H.artifact },
+    })).toThrow('base platform state cannot retain')
   })
 })

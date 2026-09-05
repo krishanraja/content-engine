@@ -42,31 +42,44 @@ describe('repository operating contracts', () => {
     expect(pathSource).toContain("const INVALID_WINDOWS_DRIVE_ROOT = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04\\\\_Content\\\\Video Engine'")
   })
 
-  it('pins the proactive radar heartbeat to Monday at 11:00 Europe/London', async () => {
+  it('pins one daily Video Engine pulse with Monday radar at 11:00 Europe/London', async () => {
     const studio = await json<{ cadence: { radar_day: string; radar_time: string; timezone: string } }>('config/studio.json')
     const heartbeat = await json<{
+      automation_id: string
       kind: string
+      name: string
       source: { repository: string; branch: string }
-      schedule: { rrule: string; day: string; local_time: string; timezone: string }
-      delivery: { surface: string; thread_binding: string; notification_behavior: string; public_publish_allowed: boolean }
+      schedule: { rrule: string; local_time: string; timezone: string; radar_day: string }
+      delivery: { surface: string; thread_binding: string; healthy_behavior: string; attention_behavior: string; public_publish_allowed: boolean }
       prompt: string
-    }>('config/weekly-radar-heartbeat.json')
+    }>('config/video-engine-pulse-heartbeat.json')
 
+    expect(heartbeat.automation_id).toBe('mindmaker-weekly-radar')
     expect(heartbeat.kind).toBe('heartbeat')
+    expect(heartbeat.name).toBe('Mindmaker Video Engine pulse')
     expect(heartbeat.source).toEqual({ repository: 'krishanraja/mindmake-video-studio', branch: 'main' })
     expect(heartbeat.schedule).toEqual({
-      rrule: 'RRULE:FREQ=WEEKLY;BYDAY=MO;BYHOUR=11;BYMINUTE=0;BYSECOND=0',
-      day: studio.cadence.radar_day,
+      rrule: 'RRULE:FREQ=DAILY;BYHOUR=11;BYMINUTE=0;BYSECOND=0',
       local_time: studio.cadence.radar_time,
       timezone: studio.cadence.timezone,
+      radar_day: studio.cadence.radar_day,
     })
     expect(heartbeat.delivery).toEqual({
       surface: 'attached_codex_thread',
       thread_binding: 'operator_managed_runtime_state',
-      notification_behavior: 'codex_app_settings',
+      healthy_behavior: 'silent',
+      attention_behavior: 'codex_app_settings',
       public_publish_allowed: false,
     })
     expect(heartbeat.prompt).toContain('latest GitHub main branch of krishanraja/mindmake-video-studio')
+    expect(heartbeat.prompt).toContain('single heartbeat attached to this Codex thread')
+    expect(heartbeat.prompt).toContain('On every daily run')
+    expect(heartbeat.prompt).toContain('receipt_journals and project_journals')
+    expect(heartbeat.prompt).toContain('path-free pending and conflicted counts plus safe attention codes')
+    expect(heartbeat.prompt).toContain('governed Inbox discovery scan')
+    expect(heartbeat.prompt).toContain('Remain silent when health is unchanged')
+    expect(heartbeat.prompt).toContain('Do not create a job, inspect editorial media, move a file, upload, publish, or change an approval')
+    expect(heartbeat.prompt).toContain('On Monday')
     expect(heartbeat.prompt).toContain('do not start a second scraping system')
     expect(heartbeat.prompt).toContain('Label every stale or unavailable provider')
     expect(heartbeat.prompt).toContain('exact evidence screenshot')

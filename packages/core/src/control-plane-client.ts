@@ -40,6 +40,17 @@ export interface ClaimedRunnerCommand {
   lease: { token: string; expires_at: string }
 }
 
+export class ControlPlaneRequestError extends Error {
+  constructor(
+    public readonly path: string,
+    public readonly status: number,
+    public readonly safeCode: string | null,
+  ) {
+    super(`control-plane ${path} returned HTTP ${status}${safeCode ? ` (${safeCode})` : ''}`)
+    this.name = 'ControlPlaneRequestError'
+  }
+}
+
 function normalizedBaseUrl(value: string): string {
   const url = new URL(value)
   const local = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)
@@ -106,7 +117,14 @@ export class ControlPlaneClient {
       signal: AbortSignal.timeout(30_000),
       redirect: 'error',
     })
-    if (!response.ok) throw new Error(`control-plane ${path} returned HTTP ${response.status}`)
+    if (!response.ok) {
+      let safeCode: string | null = null
+      try {
+        const value = await response.json() as { error?: { code?: unknown } }
+        if (typeof value.error?.code === 'string' && /^[a-z][a-z0-9_]{0,79}$/.test(value.error.code)) safeCode = value.error.code
+      } catch { /* HTTP status remains authoritative when the error body is unavailable. */ }
+      throw new ControlPlaneRequestError(path, response.status, safeCode)
+    }
     try { return await response.json() }
     catch { throw new Error(`control-plane ${path} returned invalid JSON`) }
   }

@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { ControlPlaneClient, hashValue } from '@mindmake/core'
-import type { RunnerPreviewUploadRequestV1, RunnerProjectProjectionV1 } from '@mindmake/contracts'
+import type { RunnerPreviewUploadRequestV1, RunnerProjectProjectionV1, RunnerReceiptV1 } from '@mindmake/contracts'
 
 const TOKEN = 'unit-test-runner-token-not-a-live-secret'
 const COMMAND_ID = '11111111-1111-4111-8111-111111111111'
@@ -18,7 +18,7 @@ function projection(): RunnerProjectProjectionV1 {
   const artifact = 'b'.repeat(64)
   const map = 'c'.repeat(64)
   return {
-    job: { job_id: 'job-client-test', series: 'built_with_ai', mode: 'solo', target_platforms: ['youtube_shorts'], stage: 'treatment', status: 'active', safe_title: 'Ready', safe_summary: 'A safe summary for mobile review.' },
+    job: { job_id: 'job-client-test', source_event_count: 7, source_event_chain_hash: map, source_revision_hash: revision, series: 'built_with_ai', mode: 'solo', target_platforms: ['youtube_shorts'], stage: 'treatment', status: 'active', safe_title: 'Ready', safe_summary: 'A safe summary for mobile review.' },
     platform_state: { platform: 'youtube_shorts', active_revision_hash: revision, active_artifact_hash: artifact, active_candidate_hash: null, parent_revision_hash: null, parent_artifact_hash: null, parent_candidate_hash: null, semantic_target_map_hash: map, editorial_state: 'approved', route_state: 'standard' },
     review: {
       id: '22222222-2222-4222-8222-222222222222', gate: 'treatment', safe_title: 'Ready', safe_summary: 'A safe summary for mobile review.', parent_revision_hash: revision, parent_artifact_hash: artifact, revision_hash: revision, artifact_hash: artifact, candidate_hash: null, route_state: 'standard', created_at: '2026-09-04T10:00:00.000Z', hard_gates: hardGates,
@@ -137,13 +137,41 @@ describe('ControlPlaneClient', () => {
   it('accepts completion only when command, receipt hash, and mapped status are echoed exactly', async () => {
     const receipt = {
       schema_version: 1 as const, command_id: COMMAND_ID, command_hash: 'a'.repeat(64), job_id: 'job-client-test', status: 'succeeded' as const,
-      result_revision_hash: 'b'.repeat(64), result_artifact_hash: 'c'.repeat(64), hard_gates: hardGates, retryable: false as const, safe_code: null,
+      result_revision_hash: 'b'.repeat(64), result_artifact_hash: 'c'.repeat(64), result_refs: { result_source_event_count: 8, result_source_event_chain_hash: 'f'.repeat(64), result_source_revision_hash: 'b'.repeat(64), comparison_alignment: 'unavailable' as const }, hard_gates: hardGates, retryable: false as const, safe_code: null,
       started_at: '2026-09-04T10:00:00.000Z', finished_at: '2026-09-04T10:00:01.000Z', receipt_hash: 'd'.repeat(64), receipt_signature: 'e'.repeat(64),
     }
     const valid = new ControlPlaneClient({ baseUrl: 'https://control.example/api/video-studio/runner', token: TOKEN, fetchImpl: (async () => Response.json({ ok: true, schema_version: 1, duplicate: false, command_id: COMMAND_ID, receipt_hash: receipt.receipt_hash, command_status: 'succeeded' })) as typeof fetch })
     await expect(valid.complete({ runner_id: 'runner-client-test', lease_token: 'lease-token-long-enough-for-test', receipt })).resolves.toMatchObject({ command_id: COMMAND_ID, receipt_hash: receipt.receipt_hash })
     const mismatch = new ControlPlaneClient({ baseUrl: 'https://control.example/api/video-studio/runner', token: TOKEN, fetchImpl: (async () => Response.json({ ok: true, schema_version: 1, duplicate: false, command_id: COMMAND_ID, receipt_hash: 'f'.repeat(64), command_status: 'succeeded' })) as typeof fetch })
     await expect(mismatch.complete({ runner_id: 'runner-client-test', lease_token: 'lease-token-long-enough-for-test', receipt })).rejects.toThrow('does not match')
+  })
+
+  it('rejects a legacy non-failed receipt before making a completion request', async () => {
+    let fetches = 0
+    const client = new ControlPlaneClient({
+      baseUrl: 'https://control.example/api/video-studio/runner',
+      token: TOKEN,
+      fetchImpl: (async () => { fetches += 1; throw new Error('fetch must not run') }) as typeof fetch,
+    })
+    const legacyReceipt = {
+      schema_version: 1,
+      command_id: COMMAND_ID,
+      command_hash: 'a'.repeat(64),
+      job_id: 'job-client-test',
+      status: 'succeeded',
+      result_revision_hash: 'b'.repeat(64),
+      result_artifact_hash: 'c'.repeat(64),
+      result_refs: { comparison_alignment: 'unavailable' },
+      hard_gates: hardGates,
+      retryable: false,
+      safe_code: null,
+      started_at: '2026-09-04T10:00:00.000Z',
+      finished_at: '2026-09-04T10:00:01.000Z',
+      receipt_hash: 'd'.repeat(64),
+      receipt_signature: 'e'.repeat(64),
+    } as unknown as RunnerReceiptV1
+    await expect(client.complete({ runner_id: 'runner-client-test', lease_token: 'lease-token-long-enough-for-test', receipt: legacyReceipt })).rejects.toThrow('post-dispatch source event count')
+    expect(fetches).toBe(0)
   })
 
   it('requests only server-selected preview retention with a bounded limit', async () => {

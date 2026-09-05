@@ -414,7 +414,7 @@ export const RunnerReviewPayloadV1Schema = z.object({
   editorial_note: z.string().trim().min(1).max(600).optional(),
 }).strict()
 
-export const RunnerResultRefsV1Schema = z.object({
+const RunnerResultRefsSharedShapeV1 = {
   review_id: z.string().uuid().optional(),
   candidate_hash: Sha256V1Schema.optional(),
   semantic_target_map_hash: Sha256V1Schema.optional(),
@@ -432,7 +432,16 @@ export const RunnerResultRefsV1Schema = z.object({
   comparison_alignment: z.enum(['exact', 'unavailable']),
   comparison_start_ms: z.number().int().nonnegative().max(86_400_000).optional(),
   comparison_end_ms: z.number().int().positive().max(86_400_000).optional(),
-}).strict().superRefine((value, context) => {
+}
+
+const RunnerResultRefsV1ShapeSchema = z.object({
+  result_source_event_count: z.number().int().positive().max(Number.MAX_SAFE_INTEGER).optional(),
+  result_source_event_chain_hash: Sha256V1Schema.optional(),
+  result_source_revision_hash: Sha256V1Schema.optional(),
+  ...RunnerResultRefsSharedShapeV1,
+}).strict()
+
+function refineRunnerResultRefsV1(value: z.infer<typeof RunnerResultRefsV1ShapeSchema>, context: z.RefinementCtx): void {
   if ((value.comparison_start_ms === undefined) !== (value.comparison_end_ms === undefined)) context.addIssue({ code: 'custom', path: ['comparison_start_ms'], message: 'comparison range requires both bounds' })
   if (value.comparison_start_ms !== undefined && value.comparison_end_ms !== undefined && value.comparison_end_ms <= value.comparison_start_ms) context.addIssue({ code: 'custom', path: ['comparison_end_ms'], message: 'comparison range must end after it starts' })
   if (value.comparison_alignment === 'exact' && (value.comparison_start_ms === undefined || value.comparison_end_ms === undefined)) context.addIssue({ code: 'custom', path: ['comparison_alignment'], message: 'exact comparison alignment requires both timing bounds' })
@@ -443,8 +452,12 @@ export const RunnerResultRefsV1Schema = z.object({
   if (afterGroup.some((item) => item !== undefined) && afterGroup.some((item) => item === undefined)) context.addIssue({ code: 'custom', path: ['after_preview_object_key'], message: 'after preview reference requires object key, hashes, and byte size' })
   if (Boolean(value.review_id) !== Boolean(value.review_payload)) context.addIssue({ code: 'custom', path: ['review_id'], message: 'review ID and review payload must be supplied together' })
   if (value.candidate_hash && (!value.review_id || !value.review_payload || beforeGroup.some((item) => item === undefined) || afterGroup.some((item) => item === undefined) || value.comparison_alignment !== 'exact')) context.addIssue({ code: 'custom', path: ['candidate_hash'], message: 'candidate review references require an exact review ID, before and after previews, and review payload' })
-})
+}
+
+export const RunnerResultRefsV1Schema = RunnerResultRefsV1ShapeSchema.superRefine(refineRunnerResultRefsV1)
 export type RunnerResultRefsV1 = z.infer<typeof RunnerResultRefsV1Schema>
+
+export const LegacyStoredRunnerResultRefsV1Schema = z.object(RunnerResultRefsSharedShapeV1).strict().superRefine(refineRunnerResultRefsV1)
 
 export const RunnerPreviewUploadRequestV1Schema = z.object({
   schema_version: z.literal(CONTROL_PLANE_SCHEMA_VERSION_V1),
@@ -503,7 +516,7 @@ export const RunnerPreviewRetentionResponseV1Schema = z.object({
 }).strict()
 export type RunnerPreviewRetentionResponseV1 = z.infer<typeof RunnerPreviewRetentionResponseV1Schema>
 
-export const RunnerReceiptV1Schema = z.object({
+const RunnerReceiptShapeV1Schema = z.object({
   schema_version: z.literal(CONTROL_PLANE_SCHEMA_VERSION_V1),
   command_id: z.string().uuid(),
   command_hash: Sha256V1Schema,
@@ -519,16 +532,33 @@ export const RunnerReceiptV1Schema = z.object({
   finished_at: z.string().datetime(),
   receipt_hash: Sha256V1Schema,
   receipt_signature: Sha256V1Schema,
-}).strict().superRefine((value, context) => {
+}).strict()
+
+function refineStoredRunnerReceiptV1(
+  value: z.infer<typeof RunnerReceiptShapeV1Schema>,
+  context: z.RefinementCtx,
+  requireSourceCursor: boolean,
+): void {
   if (Date.parse(value.finished_at) < Date.parse(value.started_at)) context.addIssue({ code: 'custom', path: ['finished_at'], message: 'runner receipt cannot finish before it starts' })
   if (value.status !== 'failed' && (!value.result_revision_hash || !value.result_artifact_hash)) context.addIssue({ code: 'custom', path: ['result_revision_hash'], message: 'non-failed runner receipts require both result hashes' })
+  if (requireSourceCursor && value.status !== 'failed' && (!value.result_refs?.result_source_event_count || !value.result_refs.result_source_event_chain_hash || !value.result_refs.result_source_revision_hash)) context.addIssue({ code: 'custom', path: ['result_refs', 'result_source_event_count'], message: 'non-failed runner receipts require the exact post-dispatch source event count, chain hash, and revision hash' })
+  if (value.status === 'failed' && (value.result_refs?.result_source_event_count !== undefined || value.result_refs?.result_source_event_chain_hash !== undefined || value.result_refs?.result_source_revision_hash !== undefined)) context.addIssue({ code: 'custom', path: ['result_refs', 'result_source_event_count'], message: 'failed runner receipts cannot claim post-dispatch source event state' })
   if (value.status === 'failed' && (value.result_revision_hash || value.result_artifact_hash)) context.addIssue({ code: 'custom', path: ['result_revision_hash'], message: 'failed runner receipts cannot claim result hashes' })
   if (value.status === 'succeeded' && value.safe_code !== null) context.addIssue({ code: 'custom', path: ['safe_code'], message: 'successful runner receipt cannot contain an error code' })
   if (value.status === 'requires_editorial_route' && value.safe_code !== 'requires_editorial_route') context.addIssue({ code: 'custom', path: ['safe_code'], message: 'editorial routing must use its safe code' })
   if (value.result_refs?.before_preview_object_key && value.result_refs.before_preview_object_key !== `commands/${value.command_id}/previews/before/${value.result_refs.before_preview_hash}.mp4`) context.addIssue({ code: 'custom', path: ['result_refs', 'before_preview_object_key'], message: 'before preview key must bind the receipt command and content hash' })
   if (value.result_refs?.after_preview_object_key && value.result_refs.after_preview_object_key !== `commands/${value.command_id}/previews/after/${value.result_refs.after_preview_hash}.mp4`) context.addIssue({ code: 'custom', path: ['result_refs', 'after_preview_object_key'], message: 'after preview key must bind the receipt command and content hash' })
-})
+}
+
+export const RunnerReceiptV1Schema = RunnerReceiptShapeV1Schema.superRefine((value, context) => refineStoredRunnerReceiptV1(value, context, true))
 export type RunnerReceiptV1 = z.infer<typeof RunnerReceiptV1Schema>
+
+// Storage-only compatibility for immutable receipts produced before the source
+// event cursor became mandatory. Never use this schema for network input.
+export const LegacyStoredRunnerReceiptV1Schema = RunnerReceiptShapeV1Schema.extend({
+  result_refs: LegacyStoredRunnerResultRefsV1Schema.optional(),
+}).strict().superRefine((value, context) => refineStoredRunnerReceiptV1(value, context, false))
+export type LegacyStoredRunnerReceiptV1 = z.infer<typeof LegacyStoredRunnerReceiptV1Schema>
 
 export const RunnerHeartbeatV1Schema = z.object({
   schema_version: z.literal(CONTROL_PLANE_SCHEMA_VERSION_V1),
@@ -577,6 +607,9 @@ export type VideoJobProjectionV1 = z.infer<typeof VideoJobProjectionV1Schema>
 
 export const RunnerProjectJobV1Schema = z.object({
   job_id: IdentifierV1Schema,
+  source_event_count: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  source_event_chain_hash: Sha256V1Schema,
+  source_revision_hash: Sha256V1Schema,
   series: SeriesV2Schema,
   mode: SourceModeV2Schema,
   target_platforms: z.array(VideoPlatformV1Schema).min(1).max(4).refine((platforms) => new Set(platforms).size === platforms.length, { message: 'project target platforms must be unique' }),
@@ -587,8 +620,7 @@ export const RunnerProjectJobV1Schema = z.object({
 }).strict()
 export type RunnerProjectJobV1 = z.infer<typeof RunnerProjectJobV1Schema>
 
-export const RunnerProjectPlatformStateV1Schema = z.object({
-  platform: VideoPlatformV1Schema,
+const RunnerProjectExpectedPlatformStateShapeV1 = {
   active_revision_hash: Sha256V1Schema,
   active_artifact_hash: Sha256V1Schema,
   active_candidate_hash: Sha256V1Schema.nullable(),
@@ -596,13 +628,25 @@ export const RunnerProjectPlatformStateV1Schema = z.object({
   parent_artifact_hash: Sha256V1Schema.nullable(),
   parent_candidate_hash: Sha256V1Schema.nullable(),
   semantic_target_map_hash: Sha256V1Schema,
-  editorial_state: z.enum(['ingesting', 'needs_story_review', 'needs_visual_review', 'needs_final_review', 'needs_learning_confirmation', 'approved', 'blocked']),
-  route_state: z.enum(['standard', 'requires_editorial_route']),
-}).strict().superRefine((value, context) => {
+}
+
+function refineRunnerProjectParentPair(value: { active_candidate_hash: string | null; parent_revision_hash: string | null; parent_artifact_hash: string | null; parent_candidate_hash: string | null }, context: z.RefinementCtx): void {
   if ((value.parent_revision_hash === null) !== (value.parent_artifact_hash === null)) context.addIssue({ code: 'custom', path: ['parent_revision_hash'], message: 'project parent revision and artifact hashes must be a complete pair' })
   if (value.parent_revision_hash === null && value.parent_candidate_hash !== null) context.addIssue({ code: 'custom', path: ['parent_candidate_hash'], message: 'project parent candidate cannot exist without parent revision and artifact hashes' })
-})
+  if (value.active_candidate_hash === null && (value.parent_revision_hash !== null || value.parent_artifact_hash !== null || value.parent_candidate_hash !== null)) context.addIssue({ code: 'custom', path: ['active_candidate_hash'], message: 'a base platform state cannot retain magic-edit parent lineage' })
+  if (value.active_candidate_hash !== null && (value.parent_revision_hash === null || value.parent_artifact_hash === null)) context.addIssue({ code: 'custom', path: ['active_candidate_hash'], message: 'an active magic-edit candidate requires its complete immediate parent lineage' })
+}
+
+export const RunnerProjectPlatformStateV1Schema = z.object({
+  platform: VideoPlatformV1Schema,
+  ...RunnerProjectExpectedPlatformStateShapeV1,
+  editorial_state: z.enum(['ingesting', 'needs_story_review', 'needs_visual_review', 'needs_final_review', 'needs_learning_confirmation', 'approved', 'blocked']),
+  route_state: z.enum(['standard', 'requires_editorial_route']),
+}).strict().superRefine(refineRunnerProjectParentPair)
 export type RunnerProjectPlatformStateV1 = z.infer<typeof RunnerProjectPlatformStateV1Schema>
+
+export const RunnerProjectExpectedPlatformStateV1Schema = RunnerProjectPlatformStateV1Schema
+export type RunnerProjectExpectedPlatformStateV1 = z.infer<typeof RunnerProjectExpectedPlatformStateV1Schema>
 
 export const RunnerProjectReviewV1Schema = z.object({
   id: z.string().uuid(),
@@ -690,10 +734,13 @@ export type RunnerLocalReviewBindingV1 = z.infer<typeof RunnerLocalReviewBinding
 
 export const RunnerProjectProjectionV1Schema = z.object({
   job: RunnerProjectJobV1Schema,
+  expected_platform_state: RunnerProjectExpectedPlatformStateV1Schema.nullable().optional(),
   platform_state: RunnerProjectPlatformStateV1Schema,
   review: RunnerProjectReviewV1Schema,
 }).strict().superRefine((value, context) => {
   if (!value.job.target_platforms.includes(value.platform_state.platform)) context.addIssue({ code: 'custom', path: ['platform_state', 'platform'], message: 'project platform must be one of the job target platforms' })
+  if (value.job.source_revision_hash !== value.platform_state.active_revision_hash) context.addIssue({ code: 'custom', path: ['job', 'source_revision_hash'], message: 'project source revision must match the active platform revision' })
+  if (value.expected_platform_state && value.expected_platform_state.platform !== value.platform_state.platform) context.addIssue({ code: 'custom', path: ['expected_platform_state', 'platform'], message: 'expected project platform must match the desired platform state' })
   if (value.review.parent_revision_hash !== value.platform_state.active_revision_hash) context.addIssue({ code: 'custom', path: ['review', 'parent_revision_hash'], message: 'project review parent revision must match the active platform revision' })
   if (value.review.parent_artifact_hash !== value.platform_state.active_artifact_hash) context.addIssue({ code: 'custom', path: ['review', 'parent_artifact_hash'], message: 'project review parent artifact must match the active platform artifact' })
   if (value.review.route_state !== value.platform_state.route_state) context.addIssue({ code: 'custom', path: ['review', 'route_state'], message: 'project review route state must match the platform state' })

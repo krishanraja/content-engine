@@ -3,8 +3,13 @@ import { appendFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/pro
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { FeedbackEventV1Schema, MagicEditActivationV1Schema, MagicEditDirectionV1Schema, MagicEditReturnToParentV1Schema, RenderManifestV2Schema, RunnerCommandEnvelopeV1Schema, StageArtifactV2Schema, runnerCommandHashInputV1, type ReviewDecisionRecordV1, type ReviewRecoveryRecordV1 } from '@mindmake/contracts'
+import { FeedbackEventV1Schema, MagicEditActivationV1Schema, MagicEditDirectionV1Schema, MagicEditReturnToParentV1Schema, RenderManifestV2Schema, RunnerCommandEnvelopeV1Schema, RunnerProjectRequestV1Schema, StageArtifactV2Schema, runnerCommandHashInputV1, runnerProjectProjectionHashInputV1, type ReviewDecisionRecordV1, type ReviewRecoveryRecordV1, type RunnerCommandEnvelopeV1, type VideoPlatformV1 } from '@mindmake/contracts'
 import {
+  acknowledgeRunnerCommandPlatformState,
+  acknowledgeRunnerProject,
+  assertRunnerCommandHasAcknowledgedCursor,
+  assertRunnerPlatformCanProject,
+  bindDispatchResultToEventLedger,
   buildRunnerProjectProjection,
   completeStageV2,
   createJobV2,
@@ -15,18 +20,22 @@ import {
   jobPath,
   jobRevisionHashV2,
   loadJobV2,
+  loadJobProjectionSnapshotV2,
   loadLocalReviewBinding,
   prepareMagicEditCandidate,
   persistLocalReviewBinding,
+  persistPendingRunnerProject,
   persistClaimedCommandJournal,
   readTreatmentArtifactByHash,
   recordApprovalV2,
+  recordJobEventOnceV2,
   recordReviewDecisionV2,
   resetApprovalSigningKeyProviderForTests,
   resetRunnerReceiptSigningKeyProviderForTests,
   setApprovalSigningKeyProviderForTests,
   setRunnerReceiptSigningKeyProviderForTests,
   signRunnerReceipt,
+  signRunnerReceiptHash,
   stageArtifactSemanticHashV2,
 } from '@mindmake/core'
 
@@ -34,10 +43,10 @@ const HASH_A = 'a'.repeat(64)
 const HASH_B = 'b'.repeat(64)
 const APPROVAL_KEY = 'unit-test-only-project-approval-key-at-least-32-bytes'
 
-function renderManifest(jobId: string) {
+function renderManifest(jobId: string, platform: VideoPlatformV1 = 'youtube_shorts') {
   return RenderManifestV2Schema.parse({
     schema_version: 2,
-    manifest_id: 'manifest-project-bootstrap',
+    manifest_id: `manifest-project-bootstrap-${platform}`,
     job_id: jobId,
     candidate_id: 'candidate-project-bootstrap',
     candidate_hash: HASH_A,
@@ -45,8 +54,8 @@ function renderManifest(jobId: string) {
     series: 'built_with_ai',
     treatment_id: 'premium-project-bootstrap',
     treatment_lane: 'premium',
-    target_platform: 'youtube_shorts',
-    output: { platform: 'youtube_shorts', width: 1080, height: 1920, fps: 30, audio_hz: 48000, safe_zones: { top_px: 100, right_px: 70, bottom_px: 300, left_px: 70 }, maximum_duration_ms: 180_000 },
+    target_platform: platform,
+    output: { platform, width: 1080, height: 1920, fps: 30, audio_hz: 48000, safe_zones: { top_px: 100, right_px: 70, bottom_px: 300, left_px: 70 }, maximum_duration_ms: 180_000 },
     duration_ms: 2_000,
     sources: [{ source_id: 'camera-main', kind: 'video', path: 'G:\\private-media\\source.mp4', sha256: HASH_A, duration_ms: 10_000, width: 3840, height: 2160, fps: 30, audio_hz: 48000, canonical_offset_ms: 0 }],
     shot_directives: [{
@@ -59,7 +68,7 @@ function renderManifest(jobId: string) {
     caption_provenance: { transcript_hash: HASH_A, verified: true, exact_word_fidelity: true, source_token_count: 4, caption_token_count: 4 },
     audio_plan: { dialogue_source_ids: ['camera-main'], dialogue_master_source_id: 'camera-main', dialogue_edits: [{ edit_id: 'dialogue-main', source_id: 'camera-main', output_start_ms: 0, output_end_ms: 2_000, source_start_ms: 4_000, source_end_ms: 6_000, gain_db: 0, fade_in_ms: 0, fade_out_ms: 0 }], transitions: [], music: [], effects: [], target_lufs: -14, maximum_true_peak_dbtp: -1 },
     branding: { mode: 'none', wordmark_hashes: [] },
-    disclosures: [{ platform: 'youtube_shorts', decision: 'not_required', rationale: 'No synthetic or meaningfully altered material is used.' }],
+    disclosures: [{ platform, decision: 'not_required', rationale: 'No synthetic or meaningfully altered material is used.' }],
     fixed_seed: 'project-bootstrap-fixed-seed',
   })
 }
@@ -123,9 +132,28 @@ describe('runner project bootstrap', () => {
     await rm(root, { recursive: true, force: true })
   })
 
+  it('never terminalizes a cursorless failure after any state-changing command advances local event authority', async () => {
+    const job = await createJobV2({ series: 'built_with_ai', mode: 'short_native', configPath: config, skillPaths: skills })
+    const commandKinds = ['review_decision_record', 'magic_edit_activate', 'magic_edit_return_to_parent', 'review_recovery_record'] as const
+    for (const [index, commandKind] of commandKinds.entries()) {
+      const command = { job_id: job.job_id, command_kind: commandKind } as RunnerCommandEnvelopeV1
+      const before = await loadJobProjectionSnapshotV2(job.job_id)
+      await expect(bindDispatchResultToEventLedger(command, async () => {
+        await recordJobEventOnceV2(job.job_id, 'magic_edit_activated', `post-mutation-${commandKind}`, { command_kind: commandKind, test_index: index })
+        throw new Error(`${commandKind} post-mutation target-map validation failed`)
+      })).rejects.toThrow(`runner command ${commandKind} changed local event authority before dispatch failed`)
+      const after = await loadJobProjectionSnapshotV2(job.job_id)
+      expect(after.source_event_count).toBe(before.source_event_count + 1)
+      expect(after.event_chain_hash).not.toBe(before.event_chain_hash)
+    }
+
+    const unchanged = { job_id: job.job_id, command_kind: 'review_decision_record' } as RunnerCommandEnvelopeV1
+    await expect(bindDispatchResultToEventLedger(unchanged, async () => { throw new Error('validation failed before mutation') })).rejects.toThrow('validation failed before mutation')
+  })
+
   it('projects an exact approved local treatment without media, transcript, or path fields', async () => {
     const job = await createJobV2({
-      series: 'built_with_ai', mode: 'solo', presenterName: 'Krish', configPath: config, skillPaths: skills, targetPlatforms: ['youtube_shorts'],
+      series: 'built_with_ai', mode: 'solo', presenterName: 'Krish', configPath: config, skillPaths: skills, targetPlatforms: ['youtube_shorts', 'linkedin'],
       sourceBundle: { schema_version: 1, bundle_id: 'bundle-project', primary_source_id: 'camera-main', sources: [{ source_id: 'camera-main', kind: 'video', role: 'primary_camera', ref: 'G:\\private-media\\source.mp4', rights: 'owned', sync: { strategy: 'already_mixed', offset_ms: 0 }, include_in_edit: true }] },
     })
     const rootPath = jobPath(job.job_id)
@@ -133,7 +161,10 @@ describe('runner project bootstrap', () => {
     await mkdir(join(rootPath, 'media'), { recursive: true })
     await writeFile(manifestPath, `${JSON.stringify(renderManifest(job.job_id), null, 2)}\n`)
     const manifestHash = await hashFile(manifestPath)
-    const payload = { manifests: [{ platform: 'youtube_shorts' as const, manifest_path: manifestPath, manifest_hash: manifestHash }] }
+    const linkedInManifestPath = join(rootPath, 'media', 'project-render-manifest-linkedin.json')
+    await writeFile(linkedInManifestPath, `${JSON.stringify(renderManifest(job.job_id, 'linkedin'), null, 2)}\n`)
+    const linkedInManifestHash = await hashFile(linkedInManifestPath)
+    const payload = { manifests: [{ platform: 'youtube_shorts' as const, manifest_path: manifestPath, manifest_hash: manifestHash }, { platform: 'linkedin' as const, manifest_path: linkedInManifestPath, manifest_hash: linkedInManifestHash }] }
     const artifactBody = { schema_version: 2 as const, job_id: job.job_id, stage: 'treatment' as const, created_at: '2026-09-04T10:00:00.000Z', input_hashes: { manifest: manifestHash }, config_hash: job.config_hash, tool_versions: { fixture: '1' }, payload }
     const artifact = StageArtifactV2Schema.parse({ ...artifactBody, artifact_hash: stageArtifactSemanticHashV2(artifactBody) })
     const artifactPath = join(rootPath, 'artifacts', 'treatment', `${artifact.artifact_hash}.json`)
@@ -337,6 +368,54 @@ describe('runner project bootstrap', () => {
       expected_parent_artifact_hash: recoverySource.review.parent_artifact_hash, review_revision_hash: recoverySource.review.revision_hash, review_artifact_hash: recoverySource.review.artifact_hash,
       candidate_hash: null, semantic_target_map_hash: recoverySource.review.safe_payload.semantic_target_map_hash, recovered_by: 'Krish', occurred_at: '2026-09-04T10:02:52.000Z',
     }
+    const legacySourceCommand = reviewDecisionCommand(learningPayload, '41414141-4141-4141-8141-414141414141')
+    await persistClaimedCommandJournal(legacySourceCommand, 'runner-project-bootstrap', signingKey, '2026-09-04T10:02:51.000Z', process.env.MINDMAKE_RUNTIME_ROOT!)
+    const legacyBody = {
+      schema_version: 1 as const,
+      command_id: legacySourceCommand.command_id,
+      command_hash: legacySourceCommand.command_hash,
+      job_id: job.job_id,
+      status: 'succeeded' as const,
+      result_revision_hash: HASH_A,
+      result_artifact_hash: artifact.artifact_hash,
+      result_refs: { comparison_alignment: 'unavailable' as const },
+      hard_gates: recoverySource.review.hard_gates,
+      retryable: false as const,
+      safe_code: null,
+      started_at: '2026-09-04T10:02:51.000Z',
+      finished_at: '2026-09-04T10:02:52.000Z',
+    }
+    const legacyHash = hashValue(legacyBody)
+    const legacyReceipt = { ...legacyBody, receipt_hash: legacyHash, receipt_signature: signRunnerReceiptHash(signingKey, legacyHash) }
+    const legacyDirectory = join(process.env.MINDMAKE_RUNTIME_ROOT!, 'runner', 'receipts', 'acknowledged', legacySourceCommand.idempotency_key)
+    await mkdir(legacyDirectory, { recursive: true })
+    await writeFile(join(legacyDirectory, `${legacySourceCommand.command_id}.json`), `${JSON.stringify(legacyReceipt, null, 2)}\n`)
+    const legacyRecoveryBase = {
+      ...recoveryPayload,
+      source_command_id: legacySourceCommand.command_id,
+      source_command_hash: legacySourceCommand.command_hash,
+      recovery_root_command_id: legacySourceCommand.command_id,
+    }
+    const beforeLegacyRecovery = await loadJobProjectionSnapshotV2(job.job_id)
+    await expect(dispatchRunnerCommand(reviewRecoveryCommand({
+      ...legacyRecoveryBase,
+      recovery_id: '42424242-4242-4242-8242-424242424242',
+      recovery_review_id: '43434343-4343-4343-8343-434343434343',
+    }, '44444444-4444-4444-8444-444444444444'), { repoRoot: root, signingKey, publishPreview: async () => { throw new Error('not used') } })).rejects.toThrow('not an exact terminal failed receipt')
+    for (const [reason, recoveryId, reviewId, commandId] of [
+      ['attempts_exhausted', '45454545-4545-4545-8545-454545454545', '46464646-4646-4646-8646-464646464646', '47474747-4747-4747-8747-474747474747'],
+      ['command_expired', '48484848-4848-4848-8848-484848484848', '49494949-4949-4949-8949-494949494949', '50505050-5050-4050-8050-505050505050'],
+    ] as const) {
+      await expect(dispatchRunnerCommand(reviewRecoveryCommand({
+        ...legacyRecoveryBase,
+        recovery_id: recoveryId,
+        recovery_review_id: reviewId,
+        source_terminal_reason: reason,
+      }, commandId), { repoRoot: root, signingKey, publishPreview: async () => { throw new Error('not used') } })).rejects.toThrow('cannot substitute for a signed terminal receipt')
+    }
+    const afterLegacyRecovery = await loadJobProjectionSnapshotV2(job.job_id)
+    expect(afterLegacyRecovery.source_event_count).toBe(beforeLegacyRecovery.source_event_count)
+    await expect(loadLocalReviewBinding(job.job_id, '43434343-4343-4343-8343-434343434343')).rejects.toMatchObject({ code: 'ENOENT' })
     const missingSourceRecovery = { ...recoveryPayload, recovery_id: '24242424-2424-4424-8424-242424242424', source_review_id: '25252525-2525-4525-8525-252525252525', recovery_review_id: '26262626-2626-4626-8626-262626262626' }
     await expect(dispatchRunnerCommand(reviewRecoveryCommand(missingSourceRecovery, '27272727-2727-4727-8727-272727272727'), { repoRoot: root, signingKey, publishPreview: async () => { throw new Error('not used') } })).rejects.toMatchObject({ code: 'ENOENT' })
     const tamperedRecovery = { ...recoveryPayload, recovery_id: '34343434-3434-4434-8434-343434343434', recovery_review_id: '35353535-3535-4535-8535-353535353535', review_artifact_hash: storyArtifact.artifact_hash }
@@ -467,8 +546,29 @@ describe('runner project bootstrap', () => {
       submitted_by: 'Krish',
       submitted_at: '2026-09-04T10:03:00.000Z',
     })
+    let mutationFenceCalls = 0
+    await expect(prepareMagicEditCandidate(job.job_id, firstDirection, { assertMutationAllowed: () => {
+      mutationFenceCalls += 1
+      if (mutationFenceCalls === 3) throw new Error('fixture crash after candidate write')
+    } })).rejects.toThrow('crash after candidate write')
+    let magicEvents = (await readFile(join(rootPath, 'events.jsonl'), 'utf8')).split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line) as { type: string })
+    expect(magicEvents.filter((event) => event.type === 'magic_edit_intent_received')).toHaveLength(0)
+    expect(magicEvents.filter((event) => event.type === 'magic_edit_candidate_created')).toHaveLength(0)
+
+    mutationFenceCalls = 0
+    await expect(prepareMagicEditCandidate(job.job_id, firstDirection, { assertMutationAllowed: () => {
+      mutationFenceCalls += 1
+      if (mutationFenceCalls === 3) throw new Error('fixture crash after intent event')
+    } })).rejects.toThrow('crash after intent event')
+    magicEvents = (await readFile(join(rootPath, 'events.jsonl'), 'utf8')).split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line) as { type: string })
+    expect(magicEvents.filter((event) => event.type === 'magic_edit_intent_received')).toHaveLength(1)
+    expect(magicEvents.filter((event) => event.type === 'magic_edit_candidate_created')).toHaveLength(0)
+
     const prepared = await prepareMagicEditCandidate(job.job_id, firstDirection)
     if ('status' in prepared) throw new Error(`expected prepared magic candidate, got ${prepared.status}`)
+    magicEvents = (await readFile(join(rootPath, 'events.jsonl'), 'utf8')).split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line) as { type: string })
+    expect(magicEvents.filter((event) => event.type === 'magic_edit_intent_received')).toHaveLength(1)
+    expect(magicEvents.filter((event) => event.type === 'magic_edit_candidate_created')).toHaveLength(1)
     await persistLocalReviewBinding({
       schema_version: 1,
       review_id: 'aaaaaaaa-aaaa-8aaa-8aaa-aaaaaaaaaaaa',
@@ -486,6 +586,15 @@ describe('runner project bootstrap', () => {
       provenance: { kind: 'magic_candidate', candidate_hash: prepared.candidate_hash, prepared_treatment_artifact_hash: prepared.prepared_treatment_artifact_hash },
       created_at: prepared.created_at,
     })
+    const acknowledgeProjection = async (platform: VideoPlatformV1, idempotencyKey: string) => {
+      const projected = await buildRunnerProjectProjection({ job_id: job.job_id, platform, gate: 'treatment', idempotency_key: idempotencyKey, safe_title: 'Current approved treatment', safe_summary: 'Ready for bounded mobile presentation edits.' })
+      const projectionHash = hashValue(runnerProjectProjectionHashInputV1(projected))
+      const request = RunnerProjectRequestV1Schema.parse({ schema_version: 1, runner_id: 'runner-project-bootstrap', software_commit: 'a'.repeat(40), idempotency_key: idempotencyKey, projection_hash: projectionHash, projection: projected })
+      const pending = await persistPendingRunnerProject(request, signingKey, '2026-09-04T10:03:30.000Z', process.env.MINDMAKE_RUNTIME_ROOT!)
+      return acknowledgeRunnerProject(pending, signingKey, '2026-09-04T10:03:31.000Z', process.env.MINDMAKE_RUNTIME_ROOT!)
+    }
+    await acknowledgeProjection('youtube_shorts', '56565656-5656-4656-8656-565656565656')
+    await acknowledgeProjection('linkedin', '57575757-5757-4757-8757-575757575757')
     const activation = MagicEditActivationV1Schema.parse({
       schema_version: 1,
       activation_id: '99999999-9999-4999-8999-999999999999',
@@ -508,6 +617,28 @@ describe('runner project bootstrap', () => {
     const activationCommand = RunnerCommandEnvelopeV1Schema.parse({ ...activationDraft, command_hash: hashValue(runnerCommandHashInputV1(activationDraft)) })
     const activated = await dispatchRunnerCommand(activationCommand, { repoRoot: root, signingKey, publishPreview: async () => { throw new Error('not used') } })
     expect(activated.result_artifact_hash).toBe(prepared.prepared_treatment_artifact_hash)
+    const activatedSnapshot = await loadJobProjectionSnapshotV2(job.job_id)
+    const activationReceipt = signRunnerReceipt({
+      schema_version: 1,
+      command_id: activationCommand.command_id,
+      command_hash: activationCommand.command_hash,
+      job_id: job.job_id,
+      status: activated.status,
+      result_revision_hash: activated.result_revision_hash,
+      result_artifact_hash: activated.result_artifact_hash,
+      result_refs: { ...activated.result_refs!, result_source_event_count: activatedSnapshot.source_event_count, result_source_event_chain_hash: activatedSnapshot.event_chain_hash, result_source_revision_hash: jobRevisionHashV2(activatedSnapshot.job) },
+      hard_gates: activated.hard_gates,
+      retryable: false,
+      safe_code: null,
+      started_at: '2026-09-04T10:04:00.000Z',
+      finished_at: '2026-09-04T10:04:01.000Z',
+    }, signingKey)
+    await acknowledgeRunnerCommandPlatformState(activationCommand, activationReceipt, signingKey, process.env.MINDMAKE_RUNTIME_ROOT!)
+    const activatedTreatment = await readTreatmentArtifactByHash(job.job_id, activated.result_artifact_hash)
+    expect(activatedTreatment.payload.manifests.find((item) => item.platform === 'linkedin')).toEqual({ platform: 'linkedin', manifest_path: linkedInManifestPath, manifest_hash: linkedInManifestHash })
+    const beforeBlockedProjection = jobRevisionHashV2(await loadJobV2(job.job_id))
+    await expect(assertRunnerPlatformCanProject(job.job_id, 'linkedin', signingKey, process.env.MINDMAKE_RUNTIME_ROOT!)).rejects.toThrow('blocked until return to root')
+    expect(jobRevisionHashV2(await loadJobV2(job.job_id))).toBe(beforeBlockedProjection)
     const reboundHash = activated.result_refs?.semantic_target_map_hash
     expect(reboundHash).toMatch(/^[a-f0-9]{64}$/)
     const reboundMap = await createMagicEditTargetMap(job.job_id, 'youtube_shorts')
@@ -538,12 +669,14 @@ describe('runner project bootstrap', () => {
       idempotency_key: returnPayload.return_id, payload_hash: hashValue(returnPayload), command_hash: '0'.repeat(64), issued_at: '2026-09-04T10:06:00.000Z', expires_at: '2026-09-04T12:00:00.000Z', payload: returnPayload,
     })
     const returnCommand = RunnerCommandEnvelopeV1Schema.parse({ ...returnDraft, command_hash: hashValue(runnerCommandHashInputV1(returnDraft)) })
+    await expect(assertRunnerCommandHasAcknowledgedCursor(returnCommand, signingKey, process.env.MINDMAKE_RUNTIME_ROOT!)).resolves.toMatchObject({ acknowledged_platform_state: { active_candidate_hash: prepared.candidate_hash } })
     const parentTreatment = await readTreatmentArtifactByHash(job.job_id, prepared.expected_parent_artifact_hash)
     await completeStageV2(job.job_id, 'treatment', parentTreatment.payload, parentTreatment.input_hashes, parentTreatment.tool_versions)
     const returned = await dispatchRunnerCommand(returnCommand, { repoRoot: root, signingKey, publishPreview: async () => { throw new Error('not used') } })
     expect(returned.result_artifact_hash).toBe(prepared.expected_parent_artifact_hash)
     expect(returned.result_revision_hash).not.toBe(prepared.expected_parent_revision_hash)
     expect(returned.result_refs?.semantic_target_map_hash).toMatch(/^[a-f0-9]{64}$/)
+    expect((await readTreatmentArtifactByHash(job.job_id, returned.result_artifact_hash)).payload.manifests.find((item) => item.platform === 'linkedin')).toEqual({ platform: 'linkedin', manifest_path: linkedInManifestPath, manifest_hash: linkedInManifestHash })
     expect(await dispatchRunnerCommand(returnCommand, { repoRoot: root, signingKey, publishPreview: async () => { throw new Error('not used') } })).toEqual(returned)
 
     const eventLines = (await readFile(join(rootPath, 'events.jsonl'), 'utf8')).split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line) as { type: string; payload: Record<string, unknown> })

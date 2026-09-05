@@ -577,20 +577,23 @@ export async function prepareMagicEditCandidate(jobId: string, directionInput: M
     created_at: new Date().toISOString(),
   })
   const candidatePath = join(controlPlaneRoot(jobId), 'magic-edits', 'candidates', `${candidateHash}.json`)
+  let persistedCandidate = candidate
   try {
     const existing = MagicEditCandidateV1Schema.parse(await readJson(candidatePath))
     if (existing.candidate_hash !== candidateHash) throw new Error('stored magic-edit candidate does not match its expected hash')
-    return existing
+    const { candidate_id: _id, candidate_hash: _hash, created_at: _created, ...existingCore } = existing
+    if (hashValue(existingCore) !== candidateHash) throw new Error('stored magic-edit candidate content no longer matches its semantic hash')
+    persistedCandidate = existing
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    options.assertMutationAllowed?.()
+    await writeJsonAtomic(candidatePath, candidate)
   }
-  options.assertMutationAllowed?.()
-  await writeJsonAtomic(candidatePath, candidate)
   options.assertMutationAllowed?.()
   await recordJobEventOnceV2(jobId, 'magic_edit_intent_received', direction.direction_id, { intent_hash: compiled.intent_hash, status: compiled.status, semantic_target_map_hash: targetMap.semantic_target_map_hash })
   options.assertMutationAllowed?.()
   await recordJobEventOnceV2(jobId, 'magic_edit_candidate_created', candidateHash, { candidate_hash: candidateHash, parent_artifact_hash: context.treatment.artifact_hash, prepared_treatment_artifact_hash: identity.artifactHash })
-  return candidate
+  return persistedCandidate
   })
 }
 

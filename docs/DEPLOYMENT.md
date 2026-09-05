@@ -118,11 +118,19 @@ The runner also requires an exact clean checkout: its configured repository root
 
 The implementation in this repository does not itself install the Scheduled Task, deploy Control Center, or configure any credential. Those remain explicit operator actions. A merged code change is not an installed runner, and an installed runner is not a verified live control-plane integration until `doctor`, task status, project bootstrap, claim, proxy upload, completion, and cloud readback all succeed.
 
-To rotate the bearer, stop the task, replace the server and local bearer values, then restart and read back runner status. To rotate the signing key, first require `pending_receipts: 0`; then stop the task, rotate the server and local signing values together, restart, and verify one signed completion. If an unacknowledged receipt exists, restore its prior signing key until reconciliation completes rather than discarding the journal.
+To rotate the bearer, stop the task, replace the server and local bearer values, then restart and read back runner status. Protocol v1 does not support an in-place signing-key rotation: the same key authenticates retained claims, receipts, project journals, conflict records, acknowledged cursors, and the external runner-authority marker, and v1 signatures have no key identifier. If the signing credential is missing or changed accidentally, stop the task and restore the exact prior value. The runner fails closed without silently recreating the marker or identity. Never discard or re-sign records by hand. A deliberate rotation requires a coordinated schema-major migration with key identifiers and an audited old-key-to-new-key transition, or an operator-approved retirement of the runner identity after every platform is at root and cloud state has been reconciled. A compromised signing key is therefore an incident that keeps the runner stopped until that migration or retirement is complete.
+
+## Projection cursor protocol rollout
+
+Deploy the matching Control Center migration and API first. Stop the old Scheduled Task before enabling the new Studio runner. Confirm every existing platform row is at a root state with no active candidate or parent lineage, and confirm there is no queued or leased command. Then update the clean runner checkout, run `npm ci`, run the full repository verification, and start the new task.
+
+The first projection from a new runner release sends the authenticated local source event count, event-chain hash, and semantic source revision. A pre-existing root platform row may adopt that tuple only when its complete protected state already equals the requested base state. Further pre-existing platforms may adopt the same exact source tuple under the same exact-state rule. Active, mismatched, partial, or in-flight states fail closed. After adoption, every projection uses the exact signed acknowledged platform cursor as its compare-and-swap predecessor.
+
+The temporary omitted-expectation compatibility branch exists only for the controlled rollout from the prior runner. Remove it in the next control-plane schema major after all installed runners have an acknowledged cursor. Do not restart an older runner after the source tuple has been adopted.
 
 ## Deployment checks
 
-Before enabling the weekly radar:
+Before enabling the daily Video Engine pulse:
 
 1. Merge the adapter PRs after CI and review.
 2. Configure the dedicated secret in Vercel and Supabase.
@@ -130,15 +138,15 @@ Before enabling the weekly radar:
 4. Confirm missing, empty, and incorrect bearer values return 401.
 5. Confirm authenticated responses set `Cache-Control: no-store`, do not set wildcard CORS, and contain no raw database IDs or private canaries.
 6. Run `studio radar pull` against both providers and against the committed offline fixtures.
-7. Compare the prepared automation with `config/weekly-radar-heartbeat.json`, then activate the Monday 11:00 Europe/London heartbeat only after these checks pass. Update the existing automation rather than creating a duplicate.
+7. Compare the prepared automation with `config/video-engine-pulse-heartbeat.json`, then update the existing automation in place to the daily 11:00 Europe/London pulse. Preserve its automation ID and attached thread; do not create a duplicate.
 
-If either provider is unavailable, the weekly run records the failure and uses any available feed. It never starts a replacement scraping path.
+If either radar provider is unavailable, Monday's run records the failure and uses any available feed. It never starts a replacement scraping path.
 
 ## Proactive delivery
 
-`config/weekly-radar-heartbeat.json` is the GitHub authority for the schedule, source branch, delivery policy, and replayed prompt. The runtime automation stores only operational state such as active or paused status and its attached Codex thread ID.
+`config/video-engine-pulse-heartbeat.json` is the GitHub authority for the schedule, source branch, delivery policy, and replayed prompt. The runtime automation stores only operational state such as active or paused status and its attached Codex thread ID. Keep exactly one heartbeat attached to that thread.
 
-At 11:00 Europe/London each Monday, the heartbeat posts its brief into that attached Codex thread. The Codex app then applies Krish's normal notification settings to the thread update. A new chat launched with `Video engine` does not automatically take ownership of the heartbeat, so the delivery location stays predictable. Moving it to another thread is an explicit automation update; do not create a second weekly radar.
+At 11:00 Europe/London every day, `Mindmaker Video Engine pulse` performs read-only runner health and Drive intake checks. It reads only path-free pending and conflict counts plus safe attention codes from `receipt_journals` and `project_journals`; it never emits a local journal path or payload. It reports a new or changed intake candidate or a health failure, and remains silent when health and intake are unchanged. Monday's pulse additionally runs the combined editorial radar. The Codex app applies Krish's normal notification settings to attention updates. A new chat launched with `Video engine` does not automatically take ownership of the heartbeat, so the delivery location stays predictable. Moving it to another thread is an explicit automation update; do not create a second pulse. The pulse never creates a job, inspects editorial media, moves a file, uploads, publishes, or changes an approval.
 
 ## Publishing
 
