@@ -1,6 +1,11 @@
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$runtimeRoot = if ($env:MINDMAKE_RUNTIME_ROOT) { $env:MINDMAKE_RUNTIME_ROOT } else { Join-Path $env:LOCALAPPDATA 'MindmakeVideoStudio' }
+$defaultRuntimeRoot = Join-Path $env:USERPROFILE 'Documents\MindmakeVideoStudio\runtime'
+$runtimeRoot = if ($env:MINDMAKE_RUNTIME_ROOT) { $env:MINDMAKE_RUNTIME_ROOT } else { $defaultRuntimeRoot }
+
+if (-not [string]::Equals([System.IO.Path]::GetFullPath($runtimeRoot), [System.IO.Path]::GetFullPath($defaultRuntimeRoot), [System.StringComparison]::OrdinalIgnoreCase)) {
+  throw "The Windows runner runtime must remain at $defaultRuntimeRoot so Codex and the Scheduled Task share one state root."
+}
 $venvPath = Join-Path $runtimeRoot 'python'
 
 New-Item -ItemType Directory -Force -Path $runtimeRoot | Out-Null

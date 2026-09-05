@@ -12,7 +12,7 @@ The verified upstream main commits are pinned in `config/studio.json`. Recheck m
 
 ## Secrets
 
-Create one strong random `VIDEO_STUDIO_EXPORT_TOKEN` value. Configure it server-side in both upstream deployments. Store the same value locally as two separate Windows Generic Credentials so each provider can rotate independently later:
+Create two separate strong random provider-token values. Configure the mm-ctrl value as `VIDEO_STUDIO_EXPORT_TOKEN` only in its Supabase project, and configure the different Control Center value under that same provider-local key only in its Vercel project. Store each matching value locally in its own Windows Generic Credential:
 
 ```text
 MindmakeVideoStudio/mm-ctrl-radar-token
@@ -44,6 +44,7 @@ Set the control-plane API base URL as environment configuration, never as a cred
 ```text
 MINDMAKE_CONTROL_PLANE_URL=https://controlcenter.krishraja.com/api/video-studio/runner
 MINDMAKE_PREVIEW_STORAGE_ORIGIN=https://<project-ref>.supabase.co
+MINDMAKE_RUNTIME_ROOT=%USERPROFILE%\Documents\MindmakeVideoStudio\runtime
 MINDMAKE_DRIVE_ROOT=G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine
 MINDMAKE_MEDIA_INBOX=G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
 MINDMAKE_ARCHIVE_ROOT=G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
@@ -56,6 +57,19 @@ MINDMAKE_DISCOVERY_REVERIFY_SECONDS=86400
 ```
 
 The Control Center URL is production-pinned and an override must be absent or exactly equal to that value. Set the preview origin to the exact public origin of the dedicated Supabase project, with no path, credentials, query, or fragment. The runner rejects HTTP, local/private destinations, cross-origin signed upload URLs, redirects, and upload routes outside Supabase Storage's signed-object path.
+
+Use a dedicated, non-virtualized checkout for the background runner. The supported source location is `%USERPROFILE%\Documents\MindmakeVideoStudio\runner-source`:
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\Documents\MindmakeVideoStudio"
+git clone https://github.com/krishanraja/mindmake-video-studio.git "$env:USERPROFILE\Documents\MindmakeVideoStudio\runner-source"
+Set-Location "$env:USERPROFILE\Documents\MindmakeVideoStudio\runner-source"
+git switch --detach <approved-40-character-commit>
+npm ci
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/verify-runner-source.ps1 -RequirePersistentLocation
+```
+
+Do not install source or keep runtime state in `%LOCALAPPDATA%`, a Codex worktree, or another application-managed location. Packaged applications can virtualize LocalAppData while npm records workspace junctions and runtime state against the logical path. The resulting checkout can look complete while Node cannot traverse its internal packages, and an outside Scheduled Task can see a different Python or job root. The preflight rejects LocalAppData, requires the dedicated Documents source and runtime locations for task installation, verifies a clean exact Git commit, checks every workspace link and package hash, and starts the CLI before it permits task registration.
 
 Before installing the task, run `studio v2 inbox init`, then two scans separated by the configured stability interval against a harmless owned fixture. Confirm the local status contains no absolute path and that a candidate remains review-only. A missing mount, missing Inbox, permission failure, or bounded-scan limit must keep cloud claims paused.
 
@@ -80,17 +94,22 @@ powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStud
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/approval-signing-key
 ```
 
-After the matching Control Center API and server-side credentials are live, verify the local prerequisites and install the task:
+After the matching Control Center API and server-side credentials are live, verify the local prerequisites from that dedicated checkout and install the task:
 
 ```powershell
+$env:MINDMAKE_RUNTIME_ROOT = "$env:USERPROFILE\Documents\MindmakeVideoStudio\runtime"
 npm ci
-npm run studio -- doctor
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/migrate-runner-runtime.ps1
+npm run bootstrap:python
+.\scripts\studio.ps1 doctor
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-runner-task.ps1
 Start-ScheduledTask -TaskName "Mindmake Video Studio Runner"
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode status
 ```
 
-The task runs as the current interactive user without storing a Windows password. It starts at logon, starts when available, may start on battery power, continues when the device switches to battery, is hidden, restarts after failure, and ignores a second concurrent instance. Installation reads the registered task back and fails if either battery setting drifted. It has no network-only start condition because it must report honest offline state and replay local receipts after connectivity returns. It still requires the user to be signed in and the device to be awake; battery resilience does not turn the Windows host into an always-on cloud worker.
+The runtime migration is copy-only. It never deletes or overwrites either root. Existing target files must match the legacy file byte-for-byte or migration stops for manual review. It preserves jobs, signed events, learning, reviews, radar data, runner identity and receipts, plus unknown future state. It skips only pinned Python, browser binaries, caches, the rebuildable SQLite index, and the obsolete LocalAppData source clone. The task preflight reruns the migration in check-only mode, so a legacy file added or changed after migration blocks installation instead of silently forking history.
+
+The task runs as the current interactive user without storing a Windows password. Its wrapper pins the same non-virtualized runtime used by the interactive CLI. It starts at logon, starts when available, may start on battery power, continues when the device switches to battery, is hidden, restarts after failure, and ignores a second concurrent instance. Installation reads the registered task back and fails if either battery setting drifted. It has no network-only start condition because it must report honest offline state and replay local receipts after connectivity returns. It still requires the user to be signed in and the device to be awake; battery resilience does not turn the Windows host into an always-on cloud worker.
 
 The runner also requires an exact clean checkout: its configured repository root must equal Git's actual top-level path, `HEAD` must be a real 40-character commit, `MINDMAKE_SOFTWARE_COMMIT` must be absent or equal to that commit, and no tracked or untracked source file may differ. Project publication and command claiming fail closed when provenance is unknown. Install from a clean committed revision, never from this implementation working tree.
 

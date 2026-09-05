@@ -579,6 +579,21 @@ describe('mounted Google Drive discovery', () => {
     expect(state.scan?.files[0]).toMatchObject({ extension: '.other', kind: 'unsupported', status: 'unsupported' })
   })
 
+  it('ignores only the exact case-insensitive Windows desktop marker while surfacing other unsupported files', async () => {
+    const item = await fixture()
+    await Promise.all([
+      writeFile(join(item.inbox, 'DeSkToP.InI'), '[.ShellClassInfo]'),
+      writeFile(join(item.inbox, 'desktop.ini.backup'), 'unsupported'),
+    ])
+    const state = await scanAt(item, '2026-09-04T10:00:00.000Z')
+    expect(state.scan?.files.map((file) => file.display_name)).toEqual(['desktop.ini.backup'])
+    expect(state.scan?.health).toMatchObject({
+      files_seen: 1,
+      unsupported_files: 1,
+      safe_codes: expect.arrayContaining(['unsupported_files_present']),
+    })
+  })
+
   it('drafts a provenance-bound SourceBundle only after current exact-hash acceptance', async () => {
     const item = await fixture()
     await Promise.all([

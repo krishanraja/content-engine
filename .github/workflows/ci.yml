@@ -55,6 +55,10 @@ jobs:
           ffmpeg -version
           ffprobe -version
       - run: npm ci
+      - name: Smoke-test the Windows runner source install
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/verify-runner-source.ps1
       - run: npm run verify
 
   dependency-audit:

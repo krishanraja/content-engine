@@ -25,7 +25,10 @@ export function canonicalWindowsDrivePath(value: string | undefined, fallback: s
 
 export function studioPaths(): StudioPaths {
   const localAppData = process.env.LOCALAPPDATA || join(homedir(), 'AppData', 'Local')
-  const runtimeRoot = resolve(process.env.MINDMAKE_RUNTIME_ROOT || join(localAppData, 'MindmakeVideoStudio'))
+  const defaultRuntimeRoot = process.platform === 'win32'
+    ? join(homedir(), 'Documents', 'MindmakeVideoStudio', 'runtime')
+    : join(localAppData, 'MindmakeVideoStudio')
+  const runtimeRoot = resolve(process.env.MINDMAKE_RUNTIME_ROOT || defaultRuntimeRoot)
   const driveRoot = process.platform === 'win32'
     ? canonicalWindowsDrivePath(process.env.MINDMAKE_DRIVE_ROOT, DEFAULT_WINDOWS_DRIVE_ROOT)
     : process.env.MINDMAKE_DRIVE_ROOT?.trim() || ''

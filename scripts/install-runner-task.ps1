@@ -5,12 +5,18 @@ param(
 $ErrorActionPreference = 'Stop'
 $repoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $runnerScript = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'runner.ps1'))
+$sourcePreflight = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'verify-runner-source.ps1'))
 if (-not $runnerScript.StartsWith($repoRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
   throw 'Runner entry point must remain inside the repository.'
 }
 if (-not (Test-Path -LiteralPath $runnerScript -PathType Leaf)) {
   throw 'Runner entry point is missing.'
 }
+if (-not (Test-Path -LiteralPath $sourcePreflight -PathType Leaf)) {
+  throw 'Runner source preflight is missing.'
+}
+
+& $sourcePreflight -RepoRoot $repoRoot -RequirePersistentLocation | Out-Null
 
 $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $userId = $identity.Name

@@ -82,9 +82,10 @@ describe('repository operating contracts', () => {
     expect(operations).toContain('540x960 and 30 fps')
     expect(operations).toContain('V2 has no `--full-preview` or `--high-quality-preview` flags')
     expect(operations.match(/--gate final --artifact <[^>]+-master-path>/g)).toHaveLength(4)
-    expect(operations).toContain('studio -- v2 approve --job <job-id> --gate package --artifact <package-artifact-hash>')
-    expect(operations).toContain('studio -- v2 package archive --job <job-id>')
-    expect(operations).not.toContain('studio -- v2 package create --job <job-id> --candidate <candidate-json-path> --archive')
+    expect(operations).toContain('.\\scripts\\studio.ps1 v2 approve --job <job-id> --gate package --artifact <package-artifact-hash>')
+    expect(operations).toContain('.\\scripts\\studio.ps1 v2 package archive --job <job-id>')
+    expect(operations).not.toContain('.\\scripts\\studio.ps1 v2 package create --job <job-id> --candidate <candidate-json-path> --archive')
+    expect(operations).not.toContain('npm run studio --')
   })
 
   it('keeps every supported media and edit-sidecar format out of Git', async () => {

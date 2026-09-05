@@ -608,6 +608,7 @@ async function walkInbox(root: string, maximumFiles: number, maximumEntries: num
     const entries = []
     const directoryHandle = await opendir(directory)
     for await (const entry of directoryHandle) {
+      if (entry.isFile() && entry.name.toLocaleLowerCase('en-GB') === 'desktop.ini') continue
       entriesSeen += 1
       if (entriesSeen > maximumEntries) { limited = true; safeCodes.add('scan_entry_limit_reached'); break }
       entries.push(entry)
