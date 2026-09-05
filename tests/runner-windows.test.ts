@@ -21,6 +21,7 @@ describe('Windows runner entry point', () => {
     expect(source).toContain('Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop')
     expect(source).toContain('$installed.Settings.DisallowStartIfOnBatteries -ne $false')
     expect(source).toContain('$installed.Settings.StopIfGoingOnBatteries -ne $false')
+    expect(source.match(/Disable-ScheduledTask -TaskName \$TaskName/g)).toHaveLength(2)
     expect(source).not.toMatch(/-Password|-RunOnlyIfNetworkAvailable|-NetworkId/)
   })
 
