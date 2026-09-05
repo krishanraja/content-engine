@@ -1,5 +1,5 @@
 param(
-  [ValidateSet('daemon', 'once', 'status')][string]$Mode = 'daemon'
+  [ValidateSet('daemon', 'once', 'status', 'stop-preflight')][string]$Mode = 'daemon'
 )
 
 $ErrorActionPreference = 'Stop'

@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { access, mkdir, open, readFile, readdir, realpath, rename, stat, unlink } from 'node:fs/promises'
+import { access, lstat, mkdir, open, readFile, readdir, realpath, stat, unlink } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { ZodError } from 'zod'
@@ -7,14 +7,17 @@ import {
   MagicEditCandidateV1Schema,
   FeedbackEventV1Schema,
   FeedbackEventV2Schema,
+  LegacyStoredRunnerReceiptV1Schema,
   PreferenceRuleV1Schema,
   RenderStagePayloadV2Schema,
   RunnerCommandEnvelopeV1Schema,
   RunnerProjectProjectionV1Schema,
+  RunnerProjectRequestV1Schema,
   RunnerReceiptV1Schema,
   StageNameV2Schema,
   VideoPlatformV1Schema,
   runnerCommandHashInputV1,
+  runnerProjectProjectionHashInputV1,
   type MagicEditCandidateV1,
   type MagicEditGateResultsV1,
   type ReviewDecisionRecordV1,
@@ -24,16 +27,19 @@ import {
   type RunnerHeartbeatV1,
   type RunnerLocalReviewBindingV1,
   type RunnerProjectProjectionV1,
+  type RunnerProjectPlatformStateV1,
+  type RunnerProjectRequestV1,
   type RunnerReceiptV1,
   type RunnerResultRefsV1,
   type RunnerReviewTargetV1,
 } from '@mindmake/contracts'
 import { loadRunnerReceiptSigningKey, signRunnerReceiptHash, verifyRunnerReceiptHash } from './approval-signing.js'
-import { CONTROL_CENTER_RUNNER_CREDENTIAL, ControlPlaneClient, type ClaimedRunnerCommand } from './control-plane-client.js'
+import { CONTROL_CENTER_RUNNER_CREDENTIAL, ControlPlaneClient, ControlPlaneRequestError, type ClaimedRunnerCommand } from './control-plane-client.js'
 import { readWindowsCredential } from './credentials.js'
+import { durableLockOwnerIsActive, withDurableFileLock } from './durable-lock.js'
 import { driveDiscoveryStatus, sanitizedDriveDiscoverySummary, scanDriveInbox, type SanitizedDriveDiscoverySummary } from './drive-discovery.js'
 import { hashFile, hashFileMd5, hashValue } from './hash.js'
-import { findRecordedReviewDecisionV2, hasApprovalV2, jobRevisionHashV2, loadJobV2, readStageArtifactV2, recordApprovalV2, recordReviewDecisionV2, recordReviewRecoveryV2, withJobEventLock } from './job-store-v2.js'
+import { findRecordedReviewDecisionV2, hasApprovalV2, jobRevisionHashV2, loadJobProjectionSnapshotV2, loadJobV2, readStageArtifactV2, recordApprovalV2, recordReviewDecisionV2, recordReviewRecoveryV2, withJobEventLock } from './job-store-v2.js'
 import {
   activateMagicEditCandidate,
   loadMagicEditCandidate,
@@ -45,6 +51,27 @@ import {
 import { studioPaths } from './paths.js'
 import { run } from './process.js'
 import { createLocalReviewSemanticMap, deterministicRunnerReviewId, loadLocalReviewBinding, persistLocalReviewBinding } from './review-bindings.js'
+import { clearRunnerAuthorityStaging, ensureRunnerAuthorityStagingRoot, writeRunnerAuthorityJsonAtomic } from './runner-authority-files.js'
+import {
+  acknowledgeRunnerCommandPlatformState,
+  acknowledgeRunnerProject,
+  assertRunnerCommandHasAcknowledgedCursor,
+  assertRunnerPlatformCanProject,
+  desiredRunnerProjectPlatformState,
+  discardPendingRunnerProject,
+  listPendingRunnerProjects,
+  loadAcknowledgedRunnerProjectCursor,
+  loadPendingRunnerProject,
+  persistPendingRunnerProject,
+  quarantinePendingRunnerProject,
+  replacePendingRunnerProject,
+  resolveRunnerProjectConflict as recordRunnerProjectConflictResolution,
+  RunnerProjectGlobalLineageError,
+  runnerProjectJournalStatus,
+  type RunnerProjectJournalStatusV1,
+  type SignedRunnerProjectCursorV1,
+  withRunnerProjectStateLock,
+} from './runner-projection-state.js'
 
 export const DEFAULT_CONTROL_PLANE_URL = 'https://controlcenter.krishraja.com/api/video-studio/runner'
 const DEFAULT_LEASE_SECONDS = 120
@@ -59,10 +86,31 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 
 type ReceiptBody = Omit<RunnerReceiptV1, 'receipt_hash' | 'receipt_signature'>
 
-interface RunnerIdentityFile {
+interface LegacyRunnerIdentityFileV1 {
   schema_version: 1
   runner_id: string
   created_at: string
+}
+
+interface RunnerIdentityFile {
+  schema_version: 2
+  layout_version: 1
+  runner_id: string
+  created_at: string
+}
+
+interface RunnerAuthorityMarkerBodyV1 {
+  schema_version: 1
+  layout_version: 1
+  state: 'initializing' | 'finalized'
+  runner_id: string
+  identity_hash: string
+  initialized_at: string
+}
+
+interface SignedRunnerAuthorityMarkerV1 extends RunnerAuthorityMarkerBodyV1 {
+  marker_hash: string
+  marker_signature: string
 }
 
 interface PendingRunnerReceiptJournalV1 {
@@ -71,6 +119,63 @@ interface PendingRunnerReceiptJournalV1 {
   runner_id: string
   lease_token: string
   receipt: RunnerReceiptV1
+}
+
+const CLOUD_RECEIPT_AUTHORITY_CONFLICT_SAFE_CODES = [
+  'receipt_conflict',
+  'command_not_found',
+  'job_not_found',
+  'command_in_flight',
+  'stale_parent',
+  'stale_event_count',
+  'recovery_exists',
+  'cross_platform_magic_lineage',
+  'invalid_lineage',
+  'source_review_conflict',
+  'invalid_recovery_receipt',
+  'invalid_review_binding_transition',
+  'invalid_receipt',
+  'invalid_editorial_route',
+  'invalid_preview_refs',
+  'preview_slot_missing',
+  'preview_object_conflict',
+] as const
+
+type CloudRunnerReceiptAuthorityConflictSafeCode = typeof CLOUD_RECEIPT_AUTHORITY_CONFLICT_SAFE_CODES[number]
+type RunnerReceiptAuthorityConflictSafeCode = CloudRunnerReceiptAuthorityConflictSafeCode | 'legacy_receipt_missing_source_cursor'
+const cloudReceiptAuthorityConflictSafeCodes = new Set<string>(CLOUD_RECEIPT_AUTHORITY_CONFLICT_SAFE_CODES)
+const receiptAuthorityConflictSafeCodes = new Set<string>([...CLOUD_RECEIPT_AUTHORITY_CONFLICT_SAFE_CODES, 'legacy_receipt_missing_source_cursor'])
+
+interface RunnerReceiptConflictBodyV1 {
+  schema_version: 1
+  safe_code: RunnerReceiptAuthorityConflictSafeCode
+  quarantined_at: string
+  idempotency_key: string
+  runner_id: string
+  lease_token_hash: string
+  receipt: RunnerReceiptV1
+}
+
+interface SignedRunnerReceiptConflictV1 extends RunnerReceiptConflictBodyV1 {
+  conflict_hash: string
+  conflict_signature: string
+}
+
+interface RunnerReceiptJournalStatusV1 {
+  pending_receipts: number
+  conflicted_receipts: number
+  recovery_conflicts: number
+  authority_conflicts: number
+  receipt_attention_code: 'runner_receipt_recovery_conflict' | 'runner_receipt_authority_conflict' | null
+}
+
+export function runnerJournalsPermitPreviewRetention(
+  receiptJournals: Pick<RunnerReceiptJournalStatusV1, 'pending_receipts' | 'receipt_attention_code'>,
+  projectJournals: Pick<RunnerProjectJournalStatusV1, 'project_attention_code'>,
+): boolean {
+  return receiptJournals.pending_receipts === 0
+    && receiptJournals.receipt_attention_code === null
+    && projectJournals.project_attention_code === null
 }
 
 interface ClaimedRunnerCommandJournalBodyV1 {
@@ -127,10 +232,12 @@ export interface RunnerCycleOptions {
   heartbeatIntervalMs?: number
   now?: () => Date
   dispatch?: (command: RunnerCommandEnvelopeV1, leaseFence: { assertActive: () => void }) => Promise<RunnerDispatchResult>
+  enforceProjectState?: boolean
   runtimeRoot?: string
   repoRoot?: string
   verifySourceProvenance?: () => Promise<string>
   discoverInbox?: () => Promise<SanitizedDriveDiscoverySummary>
+  renderComparisonPreview?: typeof renderMagicEditComparisonPreview
 }
 
 export interface RunnerCycleResult {
@@ -139,6 +246,7 @@ export interface RunnerCycleResult {
   receipt_status?: RunnerReceiptV1['status']
   duplicate?: boolean
   discovery?: SanitizedDriveDiscoverySummary
+  project_journals?: RunnerProjectJournalStatusV1
 }
 
 export interface RunnerProjectBootstrapInput {
@@ -149,6 +257,11 @@ export interface RunnerProjectBootstrapInput {
   safe_title: string
   safe_summary: string
   review_artifact_hash?: string
+}
+
+export interface RunnerProjectBuildOptions {
+  acknowledgedCursor?: SignedRunnerProjectCursorV1 | null
+  omitExpectedPlatformState?: boolean
 }
 
 function deterministicUuidFromHash(hash: string): string {
@@ -167,25 +280,135 @@ function lockPath(runtimeRoot?: string): string {
   return join(runnerRoot(runtimeRoot), 'runner.lock')
 }
 
+function authorityLockPath(runtimeRoot?: string): string {
+  return join(runtimeRoot ?? studioPaths().runtimeRoot, 'runner-authority.lock')
+}
+
+function authorityMarkerPath(runtimeRoot?: string): string {
+  return join(runtimeRoot ?? studioPaths().runtimeRoot, 'runner-authority.json')
+}
+
+export async function withRunnerAuthorityLock<T>(runtimeRoot: string | undefined, callback: () => Promise<T>): Promise<T> {
+  const path = authorityLockPath(runtimeRoot)
+  try {
+    const info = await lstat(path)
+    if (!info.isFile() || info.isSymbolicLink()) throw new Error('runner authority lock has an invalid type')
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+  }
+  return withDurableFileLock(path, callback)
+}
+
 function receiptPath(state: 'pending' | 'acknowledged', idempotencyKey: string, commandId: string, runtimeRoot?: string): string {
   return join(runnerRoot(runtimeRoot), 'receipts', state, idempotencyKey, `${commandId}.json`)
+}
+
+function receiptConflictPath(idempotencyKey: string, commandId: string, runtimeRoot?: string): string {
+  return join(runnerRoot(runtimeRoot), 'receipts', 'conflicted', idempotencyKey, `${commandId}.json`)
 }
 
 function claimedCommandPath(commandId: string, runtimeRoot?: string): string {
   return join(runnerRoot(runtimeRoot), 'claims', `${commandId}.json`)
 }
 
-async function writeJsonAtomic(path: string, value: unknown): Promise<void> {
-  await mkdir(dirname(path), { recursive: true })
-  const temporary = `${path}.${randomUUID()}.tmp`
-  const handle = await open(temporary, 'wx', 0o600)
+async function assertRunnerLayout(input: { runtimeRoot?: string; requireComplete: boolean; requireIdentity: boolean; allowLegacyIdentityLock?: boolean }): Promise<void> {
+  const root = runnerRoot(input.runtimeRoot)
   try {
-    await handle.writeFile(`${JSON.stringify(value, null, 2)}\n`, 'utf8')
-    await handle.sync()
-  } finally {
-    await handle.close()
+    const rootInfo = await lstat(root)
+    if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) throw new Error('runner authority root has an invalid type')
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT' && !input.requireComplete && !input.requireIdentity) return
+    throw error
   }
-  await rename(temporary, path)
+  let entries
+  try { entries = await readdir(root, { withFileTypes: true }) }
+  catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT' && !input.requireComplete && !input.requireIdentity) return
+    throw error
+  }
+  const byName = new Map(entries.map((entry) => [entry.name, entry]))
+  const allowedFiles = new Set(['identity.json', 'runner.lock', ...(input.allowLegacyIdentityLock ? ['identity.json.lock'] : [])])
+  const allowedDirectories = new Set(['claims', 'receipts', 'project-state'])
+  for (const entry of entries) {
+    if (allowedFiles.has(entry.name)) {
+      if (!entry.isFile()) throw new Error('runner authority file has an invalid type')
+      continue
+    }
+    if (allowedDirectories.has(entry.name)) {
+      if (!entry.isDirectory()) throw new Error('runner authority directory has an invalid type')
+      continue
+    }
+    throw new Error('runner authority root contains an unexpected entry')
+  }
+  if (input.requireIdentity && !byName.get('identity.json')?.isFile()) throw new Error('runner authority identity is missing')
+  if (input.requireComplete) {
+    for (const directory of allowedDirectories) if (!byName.get(directory)?.isDirectory()) throw new Error(`runner authority directory is missing: ${directory}`)
+  }
+  const receipts = byName.get('receipts')
+  if (!receipts) return
+  const receiptEntries = await readdir(join(root, 'receipts'), { withFileTypes: true })
+  const allowedReceiptDirectories = new Set(['pending', 'acknowledged', 'conflicted'])
+  const receiptNames = new Set<string>()
+  for (const entry of receiptEntries) {
+    if (!allowedReceiptDirectories.has(entry.name) || !entry.isDirectory()) throw new Error('runner receipt authority root contains an unexpected entry')
+    receiptNames.add(entry.name)
+  }
+  if (input.requireComplete) {
+    for (const directory of allowedReceiptDirectories) if (!receiptNames.has(directory)) throw new Error(`runner receipt authority directory is missing: ${directory}`)
+  }
+}
+
+async function assertRuntimeAuthorityTopology(runtimeRoot?: string): Promise<{ markerExists: boolean; runnerExists: boolean; stagingExists: boolean }> {
+  const root = runtimeRoot ?? studioPaths().runtimeRoot
+  let entries
+  try { entries = await readdir(root, { withFileTypes: true }) }
+  catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return { markerExists: false, runnerExists: false, stagingExists: false }
+    throw error
+  }
+  let markerExists = false
+  let runnerExists = false
+  let stagingExists = false
+  for (const entry of entries) {
+    const normalized = entry.name.toLocaleLowerCase('en-GB')
+    if (normalized === 'runner') {
+      if (!entry.isDirectory() || entry.isSymbolicLink()) throw new Error('runner authority root has an invalid type')
+      runnerExists = true
+      continue
+    }
+    if (normalized === 'runner-authority.json') {
+      if (!entry.isFile() || entry.isSymbolicLink()) throw new Error('runner authority marker has an invalid type')
+      markerExists = true
+      continue
+    }
+    if (normalized === 'runner-authority.lock') {
+      if (!entry.isFile() || entry.isSymbolicLink()) throw new Error('runner authority lock has an invalid type')
+      continue
+    }
+    if (normalized === 'runner-staging') {
+      if (!entry.isDirectory() || entry.isSymbolicLink()) throw new Error('runner authority staging root has an invalid type')
+      stagingExists = true
+      continue
+    }
+    if (/^runner(?:[-_.](?:old|bak|backup|copy|previous|stale)(?:[-_.].*)?)$/i.test(entry.name)
+      || /^runner-staging(?:[-_.].+)$/i.test(entry.name)
+      || normalized.startsWith('runner-authority.')) throw new Error('runtime root contains an unexpected runner authority entry')
+  }
+  return { markerExists, runnerExists, stagingExists }
+}
+
+async function createCompleteRunnerLayout(runtimeRoot?: string): Promise<void> {
+  await mkdir(runnerRoot(runtimeRoot), { recursive: true })
+  await assertRunnerLayout({ ...(runtimeRoot ? { runtimeRoot } : {}), requireComplete: false, requireIdentity: false, allowLegacyIdentityLock: true })
+  await retireLegacyIdentityLock(runtimeRoot)
+  await Promise.all([
+    mkdir(join(runnerRoot(runtimeRoot), 'claims'), { recursive: true }),
+    mkdir(join(runnerRoot(runtimeRoot), 'receipts', 'pending'), { recursive: true }),
+    mkdir(join(runnerRoot(runtimeRoot), 'receipts', 'acknowledged'), { recursive: true }),
+    mkdir(join(runnerRoot(runtimeRoot), 'receipts', 'conflicted'), { recursive: true }),
+    mkdir(join(runnerRoot(runtimeRoot), 'project-state'), { recursive: true }),
+  ])
+  await assertRunnerLayout({ ...(runtimeRoot ? { runtimeRoot } : {}), requireComplete: true, requireIdentity: false })
 }
 
 function verifyClaimedCommandJournal(value: unknown, signingKey: Buffer): SignedClaimedRunnerCommandJournalV1 {
@@ -230,7 +453,7 @@ export async function persistClaimedCommandJournal(
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
   }
-  await writeJsonAtomic(path, journal)
+  await writeRunnerAuthorityJsonAtomic(path, journal, runtimeRoot)
   return journal
 }
 
@@ -246,78 +469,233 @@ export async function loadClaimedCommandJournal(commandId: string, signingKey: B
   }
 }
 
-function isRunnerIdentity(value: unknown): value is RunnerIdentityFile {
+function isLegacyRunnerIdentity(value: unknown): value is LegacyRunnerIdentityFileV1 {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false
   const record = value as Record<string, unknown>
-  return record.schema_version === 1
+  return Object.keys(record).sort().join(',') === ['schema_version', 'runner_id', 'created_at'].sort().join(',')
+    && record.schema_version === 1
     && typeof record.runner_id === 'string'
     && /^runner-[0-9a-f-]{36}$/.test(record.runner_id)
     && typeof record.created_at === 'string'
     && Number.isFinite(Date.parse(record.created_at))
 }
 
-export async function loadOrCreateRunnerIdentity(runtimeRoot?: string): Promise<RunnerIdentityFile> {
-  const path = identityPath(runtimeRoot)
-  const identityLockPath = `${path}.lock`
-  const identityLockToken = randomUUID()
-  await mkdir(dirname(path), { recursive: true })
-  const deadline = Date.now() + 10_000
-  let lockHandle: Awaited<ReturnType<typeof open>> | undefined
-  while (!lockHandle) {
-    try {
-      lockHandle = await open(identityLockPath, 'wx', 0o600)
-      await lockHandle.writeFile(`${JSON.stringify({ schema_version: 1, pid: process.pid, token: identityLockToken, acquired_at: new Date().toISOString() })}\n`, 'utf8')
-      await lockHandle.sync()
-    } catch (error) {
-      const code = (error as NodeJS.ErrnoException).code
-      if (!['EEXIST', 'EACCES', 'EPERM'].includes(code ?? '')) throw error
-      try { await stat(identityLockPath) }
-      catch (pathError) {
-        if ((pathError as NodeJS.ErrnoException).code === 'ENOENT') continue
-        throw error
-      }
-      let ownerAlive = true
-      let observedLock = ''
-      try {
-        observedLock = await readFile(identityLockPath, 'utf8')
-        const lock = JSON.parse(observedLock) as { pid?: unknown }
-        if (typeof lock.pid === 'number' && lock.pid > 0) ownerAlive = processIsAlive(lock.pid)
-        else ownerAlive = Date.now() - (await stat(identityLockPath)).mtimeMs < RUNNER_LOCK_INCOMPLETE_GRACE_MS
-      } catch {
-        try { ownerAlive = Date.now() - (await stat(identityLockPath)).mtimeMs < RUNNER_LOCK_INCOMPLETE_GRACE_MS }
-        catch { ownerAlive = false }
-      }
-      if (!ownerAlive) {
-        try {
-          const currentLock = await readFile(identityLockPath, 'utf8')
-          if (currentLock === observedLock) await unlink(identityLockPath)
-        }
-        catch (unlinkError) { if ((unlinkError as NodeJS.ErrnoException).code !== 'ENOENT') throw unlinkError }
-        continue
-      }
-      if (Date.now() >= deadline) throw new Error('runner identity creation lock timed out')
-      await new Promise((resolveDelay) => setTimeout(resolveDelay, 20))
-    }
+function isRunnerIdentity(value: unknown): value is RunnerIdentityFile {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const record = value as Record<string, unknown>
+  return Object.keys(record).sort().join(',') === ['schema_version', 'layout_version', 'runner_id', 'created_at'].sort().join(',')
+    && record.schema_version === 2
+    && record.layout_version === 1
+    && typeof record.runner_id === 'string'
+    && /^runner-[0-9a-f-]{36}$/.test(record.runner_id)
+    && typeof record.created_at === 'string'
+    && Number.isFinite(Date.parse(record.created_at))
+}
+
+function authorityMarkerBody(identity: RunnerIdentityFile, state: RunnerAuthorityMarkerBodyV1['state']): RunnerAuthorityMarkerBodyV1 {
+  return {
+    schema_version: 1,
+    layout_version: identity.layout_version,
+    state,
+    runner_id: identity.runner_id,
+    identity_hash: hashValue(identity),
+    initialized_at: identity.created_at,
   }
+}
+
+function signedAuthorityMarker(identity: RunnerIdentityFile, state: RunnerAuthorityMarkerBodyV1['state'], signingKey: Buffer): SignedRunnerAuthorityMarkerV1 {
+  const body = authorityMarkerBody(identity, state)
+  const markerHash = hashValue(body)
+  return { ...body, marker_hash: markerHash, marker_signature: signRunnerReceiptHash(signingKey, markerHash) }
+}
+
+function verifyAuthorityMarker(value: unknown, signingKey: Buffer): SignedRunnerAuthorityMarkerV1 {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('runner authority marker is invalid')
+  const record = value as Record<string, unknown>
+  if (Object.keys(record).sort().join(',') !== [
+    'schema_version',
+    'layout_version',
+    'state',
+    'runner_id',
+    'identity_hash',
+    'initialized_at',
+    'marker_hash',
+    'marker_signature',
+  ].sort().join(',')) throw new Error('runner authority marker contains unsupported fields')
+  if (record.schema_version !== 1
+    || record.layout_version !== 1
+    || !['initializing', 'finalized'].includes(String(record.state))
+    || typeof record.runner_id !== 'string' || !/^runner-[0-9a-f-]{36}$/.test(record.runner_id)
+    || typeof record.identity_hash !== 'string' || !/^[a-f0-9]{64}$/.test(record.identity_hash)
+    || typeof record.initialized_at !== 'string' || !Number.isFinite(Date.parse(record.initialized_at))
+    || typeof record.marker_hash !== 'string' || !/^[a-f0-9]{64}$/.test(record.marker_hash)
+    || typeof record.marker_signature !== 'string' || !/^[a-f0-9]{64}$/.test(record.marker_signature)) throw new Error('runner authority marker metadata is invalid')
+  const body: RunnerAuthorityMarkerBodyV1 = {
+    schema_version: 1,
+    layout_version: 1,
+    state: record.state as RunnerAuthorityMarkerBodyV1['state'],
+    runner_id: record.runner_id,
+    identity_hash: record.identity_hash,
+    initialized_at: record.initialized_at,
+  }
+  if (hashValue(body) !== record.marker_hash
+    || !verifyRunnerReceiptHash(signingKey, record.marker_hash, record.marker_signature)) throw new Error('runner authority marker failed authentication')
+  return { ...body, marker_hash: record.marker_hash, marker_signature: record.marker_signature }
+}
+
+async function loadAuthorityMarker(signingKey: Buffer, runtimeRoot?: string): Promise<SignedRunnerAuthorityMarkerV1 | null> {
+  const path = authorityMarkerPath(runtimeRoot)
   try {
-    try {
-      const value: unknown = JSON.parse(await readFile(path, 'utf8'))
-      if (!isRunnerIdentity(value)) throw new Error('runner identity is invalid')
-      return value
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
-    }
-    const identity: RunnerIdentityFile = { schema_version: 1, runner_id: `runner-${randomUUID()}`, created_at: new Date().toISOString() }
-    await writeJsonAtomic(path, identity)
-    return identity
-  } finally {
-    await lockHandle.close()
-    try {
-      const current = JSON.parse(await readFile(identityLockPath, 'utf8')) as { token?: unknown }
-      if (current.token === identityLockToken) await unlink(identityLockPath)
-    }
-    catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
+    const info = await lstat(path)
+    if (!info.isFile() || info.isSymbolicLink()) throw new Error('runner authority marker has an invalid type')
+    return verifyAuthorityMarker(JSON.parse(await readFile(path, 'utf8')), signingKey)
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null
+    throw error
   }
+}
+
+function assertMarkerMatchesIdentity(marker: SignedRunnerAuthorityMarkerV1, identity: RunnerIdentityFile): void {
+  if (marker.runner_id !== identity.runner_id
+    || marker.layout_version !== identity.layout_version
+    || marker.identity_hash !== hashValue(identity)
+    || marker.initialized_at !== identity.created_at) throw new Error('runner authority marker does not match the runner identity')
+}
+
+async function readRunnerIdentity(runtimeRoot?: string): Promise<RunnerIdentityFile | LegacyRunnerIdentityFileV1 | null> {
+  try {
+    const value: unknown = JSON.parse(await readFile(identityPath(runtimeRoot), 'utf8'))
+    if (isRunnerIdentity(value) || isLegacyRunnerIdentity(value)) return value
+    throw new Error('runner identity is invalid')
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null
+    throw error
+  }
+}
+
+async function assertFreshRunnerRoot(runtimeRoot?: string): Promise<void> {
+  const root = runnerRoot(runtimeRoot)
+  let entries
+  try { entries = await readdir(root, { withFileTypes: true }) }
+  catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return; throw error }
+  const transientFiles = new Set(['runner.lock', 'identity.json.lock'])
+  for (const entry of entries) {
+    if (!transientFiles.has(entry.name) || !entry.isFile() || entry.isSymbolicLink()) throw new Error('runner authority cannot initialize over unowned durable state')
+  }
+}
+
+async function retireLegacyIdentityLock(runtimeRoot?: string): Promise<void> {
+  const path = `${identityPath(runtimeRoot)}.lock`
+  let observed = ''
+  try {
+    const info = await lstat(path)
+    if (!info.isFile() || info.isSymbolicLink()) throw new Error('legacy runner identity lock has an invalid type')
+    observed = await readFile(path, 'utf8')
+    let active: boolean | 'unknown' = 'unknown'
+    let hasPid = false
+    try {
+      const lock = JSON.parse(observed) as Record<string, unknown>
+      hasPid = typeof lock.pid === 'number' && Number.isSafeInteger(lock.pid) && lock.pid > 0
+      active = await durableLockOwnerIsActive(lock)
+    } catch { /* An old incomplete lock is judged only by its age below. */ }
+    const fresh = Date.now() - info.mtimeMs < RUNNER_LOCK_INCOMPLETE_GRACE_MS
+    if (active === true || active === 'unknown' && (hasPid || fresh)) throw new Error('legacy runner identity initialization is still active or ambiguous')
+    if (await readFile(path, 'utf8') === observed) await unlink(path)
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+  }
+}
+
+async function assertCurrentRunnerAuthority(signingKey: Buffer, runnerId: string, runtimeRoot?: string): Promise<void> {
+  const topology = await assertRuntimeAuthorityTopology(runtimeRoot)
+  const marker = await loadAuthorityMarker(signingKey, runtimeRoot)
+  if (marker) {
+    if (!topology.stagingExists) throw new Error('authenticated runner authority staging root is missing')
+    await clearRunnerAuthorityStaging(runtimeRoot)
+    if (marker.state !== 'finalized') throw new Error('runner authority initialization is incomplete')
+    if (!topology.runnerExists) throw new Error('authenticated runner authority root is missing')
+    const identity = await readRunnerIdentity(runtimeRoot)
+    if (!identity || !isRunnerIdentity(identity)) throw new Error('authenticated runner authority identity is missing or legacy')
+    assertMarkerMatchesIdentity(marker, identity)
+    if (identity.runner_id !== runnerId) throw new Error('runner identity does not match authenticated authority')
+    await assertRunnerLayout({ ...(runtimeRoot ? { runtimeRoot } : {}), requireComplete: true, requireIdentity: true })
+    return
+  }
+  if (topology.markerExists) throw new Error('runner authority marker could not be authenticated')
+  const identity = await readRunnerIdentity(runtimeRoot)
+  if (identity && isRunnerIdentity(identity)) throw new Error('runner authority marker is missing for a current runner identity')
+  if (identity && identity.runner_id !== runnerId) throw new Error('legacy runner identity does not match configured runner')
+  await assertRunnerLayout({ ...(runtimeRoot ? { runtimeRoot } : {}), requireComplete: false, requireIdentity: identity !== null })
+}
+
+export async function withAuthenticatedRunnerAuthority<T>(runtimeRoot: string | undefined, signingKey: Buffer, runnerId: string, callback: () => Promise<T>): Promise<T> {
+  return withRunnerAuthorityLock(runtimeRoot, async () => {
+    await assertCurrentRunnerAuthority(signingKey, runnerId, runtimeRoot)
+    return callback()
+  })
+}
+
+export async function loadOrCreateRunnerIdentity(runtimeRoot: string | undefined, signingKey: Buffer): Promise<RunnerIdentityFile> {
+  if (!Buffer.isBuffer(signingKey) || signingKey.byteLength < 32) throw new Error('runner receipt signing credential is unavailable or too short')
+  return withRunnerAuthorityLock(runtimeRoot, async () => {
+    const topology = await assertRuntimeAuthorityTopology(runtimeRoot)
+    const marker = await loadAuthorityMarker(signingKey, runtimeRoot)
+    const existing = await readRunnerIdentity(runtimeRoot)
+
+    if (marker) {
+      if (!topology.stagingExists) throw new Error('authenticated runner authority staging root is missing')
+      await clearRunnerAuthorityStaging(runtimeRoot)
+      if (marker.state === 'finalized') {
+        if (!topology.runnerExists) throw new Error('authenticated runner authority root is missing')
+        await assertRunnerLayout({ ...(runtimeRoot ? { runtimeRoot } : {}), requireComplete: true, requireIdentity: true })
+        if (!existing || !isRunnerIdentity(existing)) throw new Error('authenticated runner authority identity is missing or legacy')
+        assertMarkerMatchesIdentity(marker, existing)
+        return existing
+      }
+
+      await assertRunnerLayout({ ...(runtimeRoot ? { runtimeRoot } : {}), requireComplete: false, requireIdentity: false, allowLegacyIdentityLock: true })
+      const resuming: RunnerIdentityFile = existing && isLegacyRunnerIdentity(existing)
+        ? { schema_version: 2, layout_version: 1, runner_id: existing.runner_id, created_at: existing.created_at }
+        : existing && isRunnerIdentity(existing)
+          ? existing
+          : { schema_version: 2, layout_version: 1, runner_id: marker.runner_id, created_at: marker.initialized_at }
+      assertMarkerMatchesIdentity(marker, resuming)
+      await createCompleteRunnerLayout(runtimeRoot)
+      await writeRunnerAuthorityJsonAtomic(identityPath(runtimeRoot), resuming, runtimeRoot)
+      await writeRunnerAuthorityJsonAtomic(authorityMarkerPath(runtimeRoot), signedAuthorityMarker(resuming, 'finalized', signingKey), runtimeRoot)
+      await assertCurrentRunnerAuthority(signingKey, resuming.runner_id, runtimeRoot)
+      return resuming
+    }
+
+    if (topology.markerExists) throw new Error('runner authority marker could not be authenticated')
+    if (existing && isRunnerIdentity(existing)) throw new Error('runner authority marker is missing for a current runner identity')
+    if (existing) await assertRunnerLayout({ ...(runtimeRoot ? { runtimeRoot } : {}), requireComplete: false, requireIdentity: true, allowLegacyIdentityLock: true })
+    else await assertFreshRunnerRoot(runtimeRoot)
+
+    let legacyInventory: RunnerReceiptAuthorityInventoryV1 | undefined
+    if (existing) {
+      legacyInventory = await inspectRunnerReceiptAuthority(signingKey, runtimeRoot, existing.runner_id)
+    }
+    if (!topology.stagingExists) await ensureRunnerAuthorityStagingRoot(runtimeRoot)
+    await clearRunnerAuthorityStaging(runtimeRoot)
+    if (legacyInventory) {
+      for (const pending of legacyInventory.pending.filter((value) => value.legacy_source_cursor)) {
+        await quarantinePendingReceiptConflict(pending, signingKey, 'legacy_receipt_missing_source_cursor', new Date().toISOString(), runtimeRoot)
+      }
+    }
+
+    const identity: RunnerIdentityFile = existing
+      ? { schema_version: 2, layout_version: 1, runner_id: existing.runner_id, created_at: existing.created_at }
+      : { schema_version: 2, layout_version: 1, runner_id: `runner-${randomUUID()}`, created_at: new Date().toISOString() }
+    await mkdir(runtimeRoot ?? studioPaths().runtimeRoot, { recursive: true })
+    await writeRunnerAuthorityJsonAtomic(authorityMarkerPath(runtimeRoot), signedAuthorityMarker(identity, 'initializing', signingKey), runtimeRoot)
+    await createCompleteRunnerLayout(runtimeRoot)
+    await writeRunnerAuthorityJsonAtomic(identityPath(runtimeRoot), identity, runtimeRoot)
+    await writeRunnerAuthorityJsonAtomic(authorityMarkerPath(runtimeRoot), signedAuthorityMarker(identity, 'finalized', signingKey), runtimeRoot)
+    await assertRuntimeAuthorityTopology(runtimeRoot)
+    await assertCurrentRunnerAuthority(signingKey, identity.runner_id, runtimeRoot)
+    return identity
+  })
 }
 
 function processIsAlive(pid: number): boolean {
@@ -501,32 +879,17 @@ export async function acquireRunnerLock(runtimeRoot?: string): Promise<RunnerLoc
   const token = randomUUID()
   const ownerProcess = await inspectProcessInstance(process.pid)
   if (!ownerProcess.alive || !ownerProcess.instance_id || ownerProcess.started_at_ms === undefined) throw new Error('video studio runner could not establish a robust process instance identity')
+  try {
+    const rootInfo = await lstat(runnerRoot(runtimeRoot))
+    if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) throw new Error('runner authority root has an invalid type')
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+  }
   await mkdir(dirname(path), { recursive: true })
   for (let attempt = 0; attempt < 2; attempt += 1) {
+    let handle: Awaited<ReturnType<typeof open>>
     try {
-      const handle = await open(path, 'wx', 0o600)
-      await handle.writeFile(`${JSON.stringify({
-        schema_version: 2,
-        pid: process.pid,
-        token,
-        acquired_at: new Date().toISOString(),
-        process_instance_id: ownerProcess.instance_id,
-        process_started_at: new Date(ownerProcess.started_at_ms).toISOString(),
-      })}\n`, 'utf8')
-      await handle.sync()
-      let released = false
-      return {
-        release: async () => {
-          if (released) return
-          released = true
-          await handle.close()
-          try {
-            const current = JSON.parse(await readFile(path, 'utf8')) as { token?: unknown }
-            if (current.token === token) await unlink(path)
-          }
-          catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
-        },
-      }
+      handle = await open(path, 'wx', 0o600)
     } catch (error) {
       const code = (error as NodeJS.ErrnoException).code
       if (!['EEXIST', 'EACCES', 'EPERM'].includes(code ?? '')) throw error
@@ -560,25 +923,322 @@ export async function acquireRunnerLock(runtimeRoot?: string): Promise<RunnerLoc
         if (currentLock === observedLock) await unlink(path)
       }
       catch (unlinkError) { if ((unlinkError as NodeJS.ErrnoException).code !== 'ENOENT') throw unlinkError }
+      continue
+    }
+    let createdIdentity: { dev: bigint; ino: bigint } | undefined
+    try {
+      const created = await handle.stat({ bigint: true })
+      createdIdentity = { dev: created.dev, ino: created.ino }
+      await handle.writeFile(`${JSON.stringify({
+        schema_version: 2,
+        pid: process.pid,
+        token,
+        acquired_at: new Date().toISOString(),
+        process_instance_id: ownerProcess.instance_id,
+        process_started_at: new Date(ownerProcess.started_at_ms).toISOString(),
+      })}\n`, 'utf8')
+      await handle.sync()
+    } catch (error) {
+      try { await handle.close() } catch { /* The persistence failure is authoritative. */ }
+      try {
+        const current = await stat(path, { bigint: true })
+        if (createdIdentity && current.dev === createdIdentity.dev && current.ino === createdIdentity.ino) await unlink(path)
+      } catch (cleanupError) {
+        if ((cleanupError as NodeJS.ErrnoException).code !== 'ENOENT') throw new AggregateError([error, cleanupError], 'runner lock persistence and cleanup failed')
+      }
+      throw error
+    }
+    let released = false
+    return {
+      release: async () => {
+        if (released) return
+        released = true
+        await handle.close()
+        try {
+          const current = JSON.parse(await readFile(path, 'utf8')) as { token?: unknown }
+          if (current.token === token) await unlink(path)
+        }
+        catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
+      },
     }
   }
   throw new Error('video studio runner lock could not be acquired')
 }
 
-async function pendingReceiptCount(runtimeRoot?: string): Promise<number> {
-  const root = join(runnerRoot(runtimeRoot), 'receipts', 'pending')
-  try {
-    const idempotencyDirectories = await readdir(root, { withFileTypes: true })
-    let count = 0
-    for (const directory of idempotencyDirectories.filter((entry) => entry.isDirectory())) {
-      count += (await readdir(join(root, directory.name))).filter((name) => /^[0-9a-f-]{36}\.json$/.test(name)).length
-    }
-    return count
+interface AuthenticatedPendingReceiptJournalV1 extends PendingRunnerReceiptJournalV1 {
+  path: string
+  command: RunnerCommandEnvelopeV1
+  legacy_source_cursor: boolean
+}
+
+interface AuthenticatedReceiptConflictV1 extends SignedRunnerReceiptConflictV1 {
+  path: string
+  command: RunnerCommandEnvelopeV1
+}
+
+interface AuthenticatedAcknowledgedReceiptV1 {
+  path: string
+  idempotency_key: string
+  receipt: RunnerReceiptV1
+  command: RunnerCommandEnvelopeV1 | null
+  legacy_source_cursor: boolean
+}
+
+interface AuthenticatedClaimV1 {
+  path: string
+  journal: SignedClaimedRunnerCommandJournalV1
+}
+
+const EXACT_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+
+async function listAuthenticatedClaims(signingKey: Buffer, runtimeRoot?: string, runnerId?: string): Promise<Map<string, AuthenticatedClaimV1>> {
+  const root = join(runnerRoot(runtimeRoot), 'claims')
+  let entries
+  try { entries = await readdir(root, { withFileTypes: true }) }
+  catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return new Map(); throw error }
+  const claims = new Map<string, AuthenticatedClaimV1>()
+  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+    const commandId = entry.name.endsWith('.json') ? entry.name.slice(0, -5) : ''
+    if (!entry.isFile() || !EXACT_UUID.test(commandId)) throw new Error('runner claim authority root contains an unexpected entry')
+    const path = join(root, entry.name)
+    const journal = verifyClaimedCommandJournal(JSON.parse(await readFile(path, 'utf8')), signingKey)
+    if (journal.command.command_id !== commandId || runnerId !== undefined && journal.runner_id !== runnerId) throw new Error('claimed command journal failed identity validation')
+    claims.set(commandId, { path, journal })
   }
-  catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return 0
+  return claims
+}
+
+function assertReceiptClaimBinding(
+  receipt: RunnerReceiptV1,
+  idempotencyKey: string,
+  claim: AuthenticatedClaimV1 | undefined,
+  runnerId?: string,
+): RunnerCommandEnvelopeV1 {
+  if (!claim
+    || claim.journal.command.command_id !== receipt.command_id
+    || claim.journal.command.command_hash !== receipt.command_hash
+    || claim.journal.command.idempotency_key !== idempotencyKey
+    || claim.journal.command.job_id !== receipt.job_id
+    || runnerId !== undefined && claim.journal.runner_id !== runnerId) throw new Error('stored runner receipt has no matching authenticated command claim')
+  return claim.journal.command
+}
+
+async function listAuthenticatedAcknowledgedReceipts(
+  signingKey: Buffer,
+  runtimeRoot?: string,
+  runnerId?: string,
+  claimInventory?: Map<string, AuthenticatedClaimV1>,
+): Promise<AuthenticatedAcknowledgedReceiptV1[]> {
+  const claims = claimInventory ?? await listAuthenticatedClaims(signingKey, runtimeRoot, runnerId)
+  const root = join(runnerRoot(runtimeRoot), 'receipts', 'acknowledged')
+  let directories
+  try { directories = await readdir(root, { withFileTypes: true }) }
+  catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return []; throw error }
+  const acknowledged: AuthenticatedAcknowledgedReceiptV1[] = []
+  const seenCommands = new Set<string>()
+  for (const directory of directories.sort((left, right) => left.name.localeCompare(right.name))) {
+    if (!directory.isDirectory() || !EXACT_UUID.test(directory.name)) throw new Error('acknowledged runner receipt root contains an unexpected entry')
+    const entries = await readdir(join(root, directory.name), { withFileTypes: true })
+    for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+      const commandId = entry.name.endsWith('.json') ? entry.name.slice(0, -5) : ''
+      if (!entry.isFile() || !EXACT_UUID.test(commandId)) throw new Error('acknowledged runner receipt directory contains an unexpected entry')
+      if (seenCommands.has(commandId)) throw new Error('acknowledged runner receipt command appears more than once')
+      const path = join(root, directory.name, entry.name)
+      const stored = verifyStoredRunnerReceipt(JSON.parse(await readFile(path, 'utf8')), signingKey)
+      if (stored.receipt.command_id !== commandId) throw new Error('acknowledged runner receipt identity does not match its location')
+      const matchingClaim = claims.get(commandId)
+      if (!matchingClaim && stored.receipt.status !== 'failed') throw new Error('acknowledged non-failed runner receipt has no matching authenticated command claim')
+      const command = matchingClaim ? assertReceiptClaimBinding(stored.receipt, directory.name, matchingClaim, runnerId) : null
+      acknowledged.push({ path, idempotency_key: directory.name, receipt: stored.receipt, command, legacy_source_cursor: stored.legacy_source_cursor })
+      seenCommands.add(commandId)
+    }
+  }
+  return acknowledged
+}
+
+async function listAuthenticatedPendingReceipts(signingKey: Buffer, runtimeRoot?: string, runnerId?: string, claimInventory?: Map<string, AuthenticatedClaimV1>): Promise<AuthenticatedPendingReceiptJournalV1[]> {
+  const claims = claimInventory ?? await listAuthenticatedClaims(signingKey, runtimeRoot, runnerId)
+  const root = join(runnerRoot(runtimeRoot), 'receipts', 'pending')
+  let directories
+  try {
+    directories = await readdir(root, { withFileTypes: true })
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return []
     throw error
   }
+  const pending: AuthenticatedPendingReceiptJournalV1[] = []
+  for (const directory of directories.sort((left, right) => left.name.localeCompare(right.name))) {
+    if (!directory.isDirectory() || !EXACT_UUID.test(directory.name)) throw new Error('pending runner receipt root contains an unexpected entry')
+    const entries = await readdir(join(root, directory.name), { withFileTypes: true })
+    for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+      const commandId = entry.name.endsWith('.json') ? entry.name.slice(0, -5) : ''
+      if (!entry.isFile() || !EXACT_UUID.test(commandId)) throw new Error('pending runner receipt directory contains an unexpected entry')
+      const path = join(root, directory.name, entry.name)
+      const value: unknown = JSON.parse(await readFile(path, 'utf8'))
+      if (!isPendingJournal(value)
+        || value.idempotency_key !== directory.name
+        || value.receipt.command_id !== commandId
+        || runnerId !== undefined && value.runner_id !== runnerId) throw new Error('pending runner receipt journal failed identity validation')
+      const stored = verifyStoredRunnerReceipt(value.receipt, signingKey)
+      const claim = claims.get(stored.receipt.command_id)
+      if (claim?.journal.runner_id !== value.runner_id) throw new Error('pending runner receipt has no matching authenticated command claim')
+      const command = assertReceiptClaimBinding(stored.receipt, value.idempotency_key, claim, runnerId)
+      pending.push({ ...value, receipt: stored.receipt, path, command, legacy_source_cursor: stored.legacy_source_cursor })
+    }
+  }
+  const seenJobs = new Set<string>()
+  for (const journal of pending) {
+    if (seenJobs.has(journal.command.job_id)) throw new Error('multiple authenticated pending runner receipts exist for one job')
+    seenJobs.add(journal.command.job_id)
+  }
+  return pending
+}
+
+function receiptConflictHashInput(value: RunnerReceiptConflictBodyV1): RunnerReceiptConflictBodyV1 {
+  return value
+}
+
+function verifyReceiptConflict(value: unknown, signingKey: Buffer): SignedRunnerReceiptConflictV1 {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('runner receipt conflict journal is invalid')
+  const record = value as Record<string, unknown>
+  if (Object.keys(record).sort().join(',') !== [
+    'schema_version',
+    'safe_code',
+    'quarantined_at',
+    'idempotency_key',
+    'runner_id',
+    'lease_token_hash',
+    'receipt',
+    'conflict_hash',
+    'conflict_signature',
+  ].sort().join(',')) throw new Error('runner receipt conflict journal has unexpected fields')
+  if (record.schema_version !== 1
+    || typeof record.safe_code !== 'string' || !receiptAuthorityConflictSafeCodes.has(record.safe_code)
+    || typeof record.quarantined_at !== 'string' || !Number.isFinite(Date.parse(record.quarantined_at))
+    || typeof record.idempotency_key !== 'string' || !EXACT_UUID.test(record.idempotency_key)
+    || typeof record.runner_id !== 'string' || !/^[A-Za-z0-9:_-]{1,160}$/.test(record.runner_id)
+    || typeof record.lease_token_hash !== 'string' || !/^[a-f0-9]{64}$/.test(record.lease_token_hash)
+    || typeof record.conflict_hash !== 'string' || !/^[a-f0-9]{64}$/.test(record.conflict_hash)
+    || typeof record.conflict_signature !== 'string' || !/^[a-f0-9]{64}$/.test(record.conflict_signature)) throw new Error('runner receipt conflict journal metadata is invalid')
+  const receipt = verifyStoredRunnerReceipt(record.receipt, signingKey).receipt
+  const body: RunnerReceiptConflictBodyV1 = {
+    schema_version: 1,
+    safe_code: record.safe_code as RunnerReceiptAuthorityConflictSafeCode,
+    quarantined_at: record.quarantined_at,
+    idempotency_key: record.idempotency_key,
+    runner_id: record.runner_id,
+    lease_token_hash: record.lease_token_hash,
+    receipt,
+  }
+  if (hashValue(receiptConflictHashInput(body)) !== record.conflict_hash
+    || !verifyRunnerReceiptHash(signingKey, record.conflict_hash, record.conflict_signature)) throw new Error('runner receipt conflict journal failed authentication')
+  return { ...body, conflict_hash: record.conflict_hash, conflict_signature: record.conflict_signature }
+}
+
+async function listAuthenticatedReceiptConflicts(signingKey: Buffer, runtimeRoot?: string, runnerId?: string, claimInventory?: Map<string, AuthenticatedClaimV1>): Promise<AuthenticatedReceiptConflictV1[]> {
+  const claims = claimInventory ?? await listAuthenticatedClaims(signingKey, runtimeRoot, runnerId)
+  const root = join(runnerRoot(runtimeRoot), 'receipts', 'conflicted')
+  let directories
+  try { directories = await readdir(root, { withFileTypes: true }) }
+  catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return []; throw error }
+  const conflicts: AuthenticatedReceiptConflictV1[] = []
+  for (const directory of directories.sort((left, right) => left.name.localeCompare(right.name))) {
+    if (!directory.isDirectory() || !EXACT_UUID.test(directory.name)) throw new Error('conflicted runner receipt root contains an unexpected entry')
+    const entries = await readdir(join(root, directory.name), { withFileTypes: true })
+    for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+      const commandId = entry.name.endsWith('.json') ? entry.name.slice(0, -5) : ''
+      if (!entry.isFile() || !EXACT_UUID.test(commandId)) throw new Error('conflicted runner receipt directory contains an unexpected entry')
+      const path = join(root, directory.name, entry.name)
+      const conflict = verifyReceiptConflict(JSON.parse(await readFile(path, 'utf8')), signingKey)
+      if (conflict.idempotency_key !== directory.name
+        || conflict.receipt.command_id !== commandId
+        || runnerId !== undefined && conflict.runner_id !== runnerId) throw new Error('conflicted runner receipt journal failed identity validation')
+      const claim = claims.get(commandId)
+      if (claim?.journal.runner_id !== conflict.runner_id) throw new Error('conflicted runner receipt has no matching authenticated command claim')
+      const command = assertReceiptClaimBinding(conflict.receipt, conflict.idempotency_key, claim, runnerId)
+      conflicts.push({ ...conflict, path, command })
+    }
+  }
+  return conflicts
+}
+
+async function quarantinePendingReceiptConflict(
+  pending: AuthenticatedPendingReceiptJournalV1,
+  signingKey: Buffer,
+  safeCode: RunnerReceiptAuthorityConflictSafeCode,
+  quarantinedAt: string,
+  runtimeRoot?: string,
+): Promise<SignedRunnerReceiptConflictV1> {
+  const body: RunnerReceiptConflictBodyV1 = {
+    schema_version: 1,
+    safe_code: safeCode,
+    quarantined_at: quarantinedAt,
+    idempotency_key: pending.idempotency_key,
+    runner_id: pending.runner_id,
+    lease_token_hash: hashValue(pending.lease_token),
+    receipt: pending.receipt,
+  }
+  const conflictHash = hashValue(receiptConflictHashInput(body))
+  const conflict: SignedRunnerReceiptConflictV1 = {
+    ...body,
+    conflict_hash: conflictHash,
+    conflict_signature: signRunnerReceiptHash(signingKey, conflictHash),
+  }
+  const path = receiptConflictPath(pending.idempotency_key, pending.receipt.command_id, runtimeRoot)
+  try {
+    const existing = verifyReceiptConflict(JSON.parse(await readFile(path, 'utf8')), signingKey)
+    if (existing.receipt.receipt_hash !== pending.receipt.receipt_hash
+      || existing.runner_id !== pending.runner_id
+      || existing.idempotency_key !== pending.idempotency_key
+      || existing.safe_code !== safeCode) throw new Error('runner receipt conflict location contains different authenticated evidence')
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    await writeRunnerAuthorityJsonAtomic(path, conflict, runtimeRoot)
+  }
+  try { await unlink(pending.path) }
+  catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
+  return conflict
+}
+
+interface RunnerReceiptAuthorityInventoryV1 {
+  claims: Map<string, AuthenticatedClaimV1>
+  pending: AuthenticatedPendingReceiptJournalV1[]
+  acknowledged: AuthenticatedAcknowledgedReceiptV1[]
+  conflicts: AuthenticatedReceiptConflictV1[]
+}
+
+async function inspectRunnerReceiptAuthority(signingKey: Buffer, runtimeRoot?: string, runnerId?: string): Promise<RunnerReceiptAuthorityInventoryV1> {
+  const claims = await listAuthenticatedClaims(signingKey, runtimeRoot, runnerId)
+  const [pending, acknowledged, conflicts] = await Promise.all([
+    listAuthenticatedPendingReceipts(signingKey, runtimeRoot, runnerId, claims),
+    listAuthenticatedAcknowledgedReceipts(signingKey, runtimeRoot, runnerId, claims),
+    listAuthenticatedReceiptConflicts(signingKey, runtimeRoot, runnerId, claims),
+  ])
+  const receipts = [...pending, ...acknowledged, ...conflicts].map((value) => ({ command_id: value.receipt.command_id, receipt_hash: value.receipt.receipt_hash }))
+  const byCommand = new Map<string, string>()
+  for (const receipt of receipts) {
+    const existing = byCommand.get(receipt.command_id)
+    if (existing && existing !== receipt.receipt_hash) throw new Error('runner receipt authority contains conflicting results for one command')
+    byCommand.set(receipt.command_id, receipt.receipt_hash)
+  }
+  return { claims, pending, acknowledged, conflicts }
+}
+
+async function runnerReceiptJournalStatus(signingKey: Buffer, runtimeRoot?: string, runnerId?: string): Promise<RunnerReceiptJournalStatusV1> {
+  const { pending, conflicts } = await inspectRunnerReceiptAuthority(signingKey, runtimeRoot, runnerId)
+  return {
+    pending_receipts: pending.length,
+    conflicted_receipts: conflicts.length,
+    recovery_conflicts: conflicts.filter((conflict) => conflict.safe_code === 'recovery_exists').length,
+    authority_conflicts: conflicts.filter((conflict) => conflict.safe_code !== 'recovery_exists').length,
+    receipt_attention_code: conflicts.some((conflict) => conflict.safe_code !== 'recovery_exists')
+      ? 'runner_receipt_authority_conflict'
+      : conflicts.length > 0 ? 'runner_receipt_recovery_conflict' : null,
+  }
+}
+
+export async function assertRunnerProjectHasNoPendingCommandReceipt(jobId: string, signingKey: Buffer, runtimeRoot?: string): Promise<void> {
+  if ((await listAuthenticatedPendingReceipts(signingKey, runtimeRoot)).some((pending) => pending.command.job_id === jobId)) throw new Error('runner project is blocked until every pending command receipt for its job is acknowledged')
 }
 
 function heartbeat(
@@ -1150,6 +1810,7 @@ export async function dispatchRunnerCommand(commandInput: RunnerCommandEnvelopeV
 
 function safeFailure(error: unknown): { safeCode: string; retryable: boolean } {
   const message = error instanceof Error ? error.message : ''
+  if (error instanceof RunnerLocalAuthorityAdvancedError) return { safeCode: 'local_authority_pending_reconciliation', retryable: true }
   if (error instanceof ZodError || /invalid|payload hash|expired|different job|does not bind|no render change|unsupported/i.test(message)) return { safeCode: 'invalid_command', retryable: false }
   if (/stale|exact current parent|immediate parent|lineage/i.test(message)) return { safeCode: 'stale_parent', retryable: false }
   if (/approval|non-passing gates|hard blocks|rights|truth|confidential|policy/i.test(message)) return { safeCode: 'policy_block', retryable: false }
@@ -1197,6 +1858,41 @@ function receiptBody(command: RunnerCommandEnvelopeV1, startedAt: string, finish
   }
 }
 
+class RunnerLocalAuthorityAdvancedError extends Error {
+  constructor(command: RunnerCommandEnvelopeV1, cause: unknown) {
+    super(`runner command ${command.command_kind} changed local event authority before dispatch failed; the exact command must be reclaimed`)
+    this.name = 'RunnerLocalAuthorityAdvancedError'
+    this.cause = cause
+  }
+}
+
+export async function bindDispatchResultToEventLedger(command: RunnerCommandEnvelopeV1, dispatch: () => Promise<RunnerDispatchResult>): Promise<RunnerDispatchResult> {
+  return withJobEventLock(command.job_id, async () => {
+    const before = await loadJobProjectionSnapshotV2(command.job_id)
+    let outcome: RunnerDispatchResult
+    try { outcome = await dispatch() }
+    catch (error) {
+      let after
+      try { after = await loadJobProjectionSnapshotV2(command.job_id) }
+      catch { throw new RunnerLocalAuthorityAdvancedError(command, error) }
+      if (after.source_event_count !== before.source_event_count
+        || after.event_chain_hash !== before.event_chain_hash
+        || jobRevisionHashV2(after.job) !== jobRevisionHashV2(before.job)) throw new RunnerLocalAuthorityAdvancedError(command, error)
+      throw error
+    }
+    const snapshot = await loadJobProjectionSnapshotV2(command.job_id)
+    return {
+      ...outcome,
+      result_refs: {
+        ...(outcome.result_refs ?? { comparison_alignment: 'unavailable' as const }),
+        result_source_event_count: snapshot.source_event_count,
+        result_source_event_chain_hash: snapshot.event_chain_hash,
+        result_source_revision_hash: jobRevisionHashV2(snapshot.job),
+      },
+    }
+  })
+}
+
 export function signRunnerReceipt(body: ReceiptBody, signingKey: Buffer): RunnerReceiptV1 {
   const receiptHash = hashValue(body)
   return RunnerReceiptV1Schema.parse({
@@ -1213,26 +1909,22 @@ export function verifySignedRunnerReceipt(receiptInput: RunnerReceiptV1, signing
   return receipt
 }
 
+function verifyStoredRunnerReceipt(receiptInput: unknown, signingKey: Buffer): { receipt: RunnerReceiptV1; legacy_source_cursor: boolean } {
+  const current = RunnerReceiptV1Schema.safeParse(receiptInput)
+  const legacy = current.success ? null : LegacyStoredRunnerReceiptV1Schema.safeParse(receiptInput)
+  if (!current.success && !legacy?.success) throw new Error('stored runner receipt has an unsupported shape')
+  const receipt = (current.success ? current.data : legacy!.data) as RunnerReceiptV1
+  const { receipt_hash: receiptHash, receipt_signature: receiptSignature, ...body } = receipt
+  if (hashValue(body) !== receiptHash || !verifyRunnerReceiptHash(signingKey, receiptHash, receiptSignature)) throw new Error('stored runner receipt failed authentication')
+  return { receipt, legacy_source_cursor: !current.success }
+}
+
 async function signedReceiptsByCommandIdentity(commandId: string, commandHash: string, jobId: string, signingKey: Buffer, runtimeRoot?: string): Promise<RunnerReceiptV1[]> {
-  const matches: RunnerReceiptV1[] = []
-  for (const state of ['pending', 'acknowledged'] as const) {
-    const root = join(runnerRoot(runtimeRoot), 'receipts', state)
-    let directories
-    try { directories = await readdir(root, { withFileTypes: true }) }
-    catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') continue; throw error }
-    for (const directory of directories.filter((entry) => entry.isDirectory())) {
-      const path = join(root, directory.name, `${commandId}.json`)
-      try {
-        const stored: unknown = JSON.parse(await readFile(path, 'utf8'))
-        const candidate = state === 'pending' && stored && typeof stored === 'object' && !Array.isArray(stored) && 'receipt' in stored
-          ? (stored as { receipt: unknown }).receipt
-          : stored
-        const receipt = verifySignedRunnerReceipt(RunnerReceiptV1Schema.parse(candidate), signingKey)
-        if (receipt.command_hash !== commandHash || receipt.job_id !== jobId) throw new Error('review recovery source receipt does not match its declared command identity')
-        matches.push(receipt)
-      } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
-    }
-  }
+  const inventory = await inspectRunnerReceiptAuthority(signingKey, runtimeRoot)
+  const matches = [...inventory.pending, ...inventory.acknowledged]
+    .filter((value) => value.receipt.command_id === commandId)
+    .map((value) => value.receipt)
+  for (const receipt of matches) if (receipt.command_hash !== commandHash || receipt.job_id !== jobId) throw new Error('review recovery source receipt does not match its declared command identity')
   return [...new Map(matches.map((receipt) => [receipt.receipt_hash, receipt])).values()]
 }
 
@@ -1249,26 +1941,12 @@ async function optionallyFindSignedReceiptByCommandIdentity(commandId: string, c
 }
 
 async function persistedReceiptsForIdempotency(command: RunnerCommandEnvelopeV1, signingKey: Buffer, runtimeRoot?: string): Promise<RunnerReceiptV1[]> {
-  const receipts: RunnerReceiptV1[] = []
-  for (const state of ['pending', 'acknowledged'] as const) {
-    const directory = join(runnerRoot(runtimeRoot), 'receipts', state, command.idempotency_key)
-    let names: string[]
-    try {
-      names = (await readdir(directory)).filter((name) => /^[0-9a-f-]{36}\.json$/.test(name)).sort()
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') continue
-      throw error
-    }
-    for (const name of names) {
-      const stored: unknown = JSON.parse(await readFile(join(directory, name), 'utf8'))
-      const receiptInput = state === 'pending' && stored && typeof stored === 'object' && !Array.isArray(stored) && 'receipt' in stored
-        ? (stored as { receipt: unknown }).receipt
-        : stored
-      const receipt = verifySignedRunnerReceipt(RunnerReceiptV1Schema.parse(receiptInput), signingKey)
-      if (`${receipt.command_id}.json` !== name || receipt.command_hash !== commandSemanticHash(command) || receipt.job_id !== command.job_id) throw new Error('runner idempotency key was reused for a different semantic command')
-      receipts.push(receipt)
-    }
-  }
+  const inventory = await inspectRunnerReceiptAuthority(signingKey, runtimeRoot)
+  const stored = [...inventory.pending, ...inventory.acknowledged]
+    .filter((value) => value.idempotency_key === command.idempotency_key)
+  if (stored.some((value) => value.legacy_source_cursor)) throw new Error('legacy acknowledged runner receipt cannot be replayed under the source-cursor protocol')
+  const receipts = stored.map((value) => value.receipt)
+  for (const receipt of receipts) if (receipt.command_hash !== commandSemanticHash(command) || receipt.job_id !== command.job_id) throw new Error('runner idempotency key was reused for a different semantic command')
   return receipts
 }
 
@@ -1291,6 +1969,18 @@ async function persistReceipt(
   const persisted = await loadPersistedReceipt(command, signingKey, runtimeRoot)
   if (persisted?.exact_attempt) {
     if (persisted.receipt.receipt_hash !== receipt.receipt_hash) throw new Error('runner receipt is immutable for its command attempt')
+    try {
+      const existing: unknown = JSON.parse(await readFile(path, 'utf8'))
+      if (!isPendingJournal(existing)
+        || existing.idempotency_key !== command.idempotency_key
+        || existing.runner_id !== runnerId
+        || existing.receipt.command_id !== command.command_id) throw new Error('pending runner receipt cannot be rebound to this claim')
+      const authenticated = verifySignedRunnerReceipt(existing.receipt, signingKey)
+      if (authenticated.receipt_hash !== receipt.receipt_hash) throw new Error('pending runner receipt changed before lease rebinding')
+      await writeRunnerAuthorityJsonAtomic(path, { ...existing, lease_token: leaseToken }, runtimeRoot)
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    }
     return
   }
   const journal: PendingRunnerReceiptJournalV1 = {
@@ -1300,7 +1990,7 @@ async function persistReceipt(
     lease_token: leaseToken,
     receipt,
   }
-  await writeJsonAtomic(path, journal)
+  await writeRunnerAuthorityJsonAtomic(path, journal, runtimeRoot)
 }
 
 async function acknowledgeReceipt(idempotencyKey: string, receipt: RunnerReceiptV1, signingKey: Buffer, runtimeRoot?: string): Promise<void> {
@@ -1314,7 +2004,7 @@ async function acknowledgeReceipt(idempotencyKey: string, receipt: RunnerReceipt
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
   }
-  await writeJsonAtomic(acknowledgedPath, receipt)
+  await writeRunnerAuthorityJsonAtomic(acknowledgedPath, receipt, runtimeRoot)
   try { await unlink(pendingPath) }
   catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
 }
@@ -1322,13 +2012,14 @@ async function acknowledgeReceipt(idempotencyKey: string, receipt: RunnerReceipt
 function isPendingJournal(value: unknown): value is PendingRunnerReceiptJournalV1 {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false
   const record = value as Record<string, unknown>
-  return record.schema_version === 1
+  return Object.keys(record).sort().join(',') === ['schema_version', 'idempotency_key', 'runner_id', 'lease_token', 'receipt'].sort().join(',')
+    && record.schema_version === 1
     && typeof record.idempotency_key === 'string'
-    && /^[0-9a-f-]{36}$/.test(record.idempotency_key)
+    && EXACT_UUID.test(record.idempotency_key)
     && typeof record.runner_id === 'string'
     && typeof record.lease_token === 'string'
     && record.lease_token.length >= 24
-    && RunnerReceiptV1Schema.safeParse(record.receipt).success
+    && (RunnerReceiptV1Schema.safeParse(record.receipt).success || LegacyStoredRunnerReceiptV1Schema.safeParse(record.receipt).success)
 }
 
 function validateCompletionAcknowledgement(receipt: RunnerReceiptV1, response: Awaited<ReturnType<RunnerControlPlane['complete']>>): void {
@@ -1336,30 +2027,151 @@ function validateCompletionAcknowledgement(receipt: RunnerReceiptV1, response: A
   if (response.command_id !== receipt.command_id || response.receipt_hash !== receipt.receipt_hash || response.command_status !== expectedStatus) throw new Error('control-plane completion acknowledgement does not match the submitted receipt')
 }
 
-async function reconcilePendingReceipts(options: RunnerCycleOptions): Promise<void> {
-  const root = join(runnerRoot(options.runtimeRoot), 'receipts', 'pending')
-  let directories
-  try { directories = await readdir(root, { withFileTypes: true }) }
-  catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return
-    throw error
+function legacyRootAdoptionRequest(pending: Awaited<ReturnType<typeof loadPendingRunnerProject>>): RunnerProjectRequestV1 | null {
+  if (!pending) return null
+  const projection = pending.request.projection
+  const desired = projection.platform_state
+  if (projection.expected_platform_state !== null
+    || desired.active_candidate_hash !== null
+    || desired.parent_revision_hash !== null
+    || desired.parent_artifact_hash !== null
+    || desired.parent_candidate_hash !== null) return null
+  const { expected_platform_state: _expected, ...legacyProjectionInput } = projection
+  const legacyProjection = RunnerProjectProjectionV1Schema.parse(legacyProjectionInput)
+  return RunnerProjectRequestV1Schema.parse({
+    ...pending.request,
+    projection_hash: hashValue(runnerProjectProjectionHashInputV1(legacyProjection)),
+    projection: legacyProjection,
+  })
+}
+
+async function submitPendingRunnerProjectWithAdoption(input: {
+  pending: NonNullable<Awaited<ReturnType<typeof loadPendingRunnerProject>>>
+  project: NonNullable<RunnerControlPlane['project']>
+  signingKey: Buffer
+  runtimeRoot?: string
+  now: () => Date
+}): Promise<{ pending: NonNullable<Awaited<ReturnType<typeof loadPendingRunnerProject>>>; response: Awaited<ReturnType<NonNullable<RunnerControlPlane['project']>>> }> {
+  let pending = input.pending
+  const submit = (request: RunnerProjectRequestV1) => input.project({
+    runner_id: request.runner_id,
+    software_commit: request.software_commit,
+    idempotency_key: request.idempotency_key,
+    projection: request.projection,
+  })
+  try {
+    return { pending, response: await submit(pending.request) }
+  } catch (error) {
+    if (!(error instanceof ControlPlaneRequestError) || error.status !== 409 || error.safeCode !== 'projection_conflict') throw error
+    const adoptionRequest = legacyRootAdoptionRequest(pending)
+    if (!adoptionRequest) throw error
+    const jobId = pending.request.projection.job.job_id
+    const platform = pending.request.projection.platform_state.platform
+    if (await loadAcknowledgedRunnerProjectCursor(jobId, platform, input.signingKey, input.runtimeRoot)) throw error
+    pending = await replacePendingRunnerProject(pending, adoptionRequest, input.signingKey, input.now().toISOString(), input.runtimeRoot)
+    return { pending, response: await submit(pending.request) }
   }
-  for (const directory of directories.filter((entry) => entry.isDirectory()).sort((left, right) => left.name.localeCompare(right.name))) {
-    const idempotencyKey = directory.name
-    const names = (await readdir(join(root, idempotencyKey))).filter((name) => /^[0-9a-f-]{36}\.json$/.test(name)).sort()
-    for (const name of names) {
-      const path = join(root, idempotencyKey, name)
-      const value: unknown = JSON.parse(await readFile(path, 'utf8'))
-      if (!isPendingJournal(value) || value.idempotency_key !== idempotencyKey || value.runner_id !== options.runnerId || `${value.receipt.command_id}.json` !== name) throw new Error('pending runner receipt journal failed identity validation')
-      const receipt = verifySignedRunnerReceipt(value.receipt, options.signingKey)
-      let completed = false
-      try {
-        const response = await options.client.complete({ runner_id: options.runnerId, lease_token: value.lease_token, receipt })
-        validateCompletionAcknowledgement(receipt, response)
-        completed = true
-      } catch { /* The command may need to be reclaimed with a fresh lease. */ }
-      if (completed) await acknowledgeReceipt(idempotencyKey, receipt, options.signingKey, options.runtimeRoot)
+}
+
+function usesRunnerProjectState(options: RunnerCycleOptions): boolean {
+  return !options.dispatch || options.enforceProjectState === true
+}
+
+async function reconcilePendingRunnerProjects(options: RunnerCycleOptions, onlyJobId?: string, blockedJobIds: ReadonlySet<string> = new Set()): Promise<void> {
+  if (!usesRunnerProjectState(options)) return
+  const pendingProjects = (await listPendingRunnerProjects(options.signingKey, options.runtimeRoot))
+    .filter((pending) => (onlyJobId === undefined || pending.request.projection.job.job_id === onlyJobId)
+      && !blockedJobIds.has(pending.request.projection.job.job_id))
+  if (pendingProjects.length && !options.client.project) throw new Error('control-plane project provider is unavailable for pending projection reconciliation')
+  for (const discovered of pendingProjects) {
+    const discoveredRequest = discovered.request
+    if (discoveredRequest.runner_id !== options.runnerId) {
+      await quarantinePendingRunnerProject(discovered, options.signingKey, 'runner_identity_conflict', new Date().toISOString(), options.runtimeRoot)
+      continue
     }
+    const jobId = discoveredRequest.projection.job.job_id
+    const platform = discoveredRequest.projection.platform_state.platform
+    await withRunnerProjectStateLock(jobId, platform, options.runtimeRoot, async () => {
+      const pending = await loadPendingRunnerProject(jobId, platform, options.signingKey, options.runtimeRoot)
+      if (!pending) return
+      if (pending.journal_hash !== discovered.journal_hash) throw new Error('pending runner project changed during reconciliation')
+      const request = pending.request
+      await assertRunnerProjectHasNoPendingCommandReceipt(jobId, options.signingKey, options.runtimeRoot)
+      try { await assertRunnerPlatformCanProject(jobId, platform, options.signingKey, options.runtimeRoot) }
+      catch (error) {
+        if (error instanceof RunnerProjectGlobalLineageError) {
+          await quarantinePendingRunnerProject(pending, options.signingKey, 'global_lineage_conflict', new Date().toISOString(), options.runtimeRoot)
+          return
+        }
+        throw error
+      }
+      try {
+        const submitted = await submitPendingRunnerProjectWithAdoption({
+          pending,
+          project: options.client.project!,
+          signingKey: options.signingKey,
+          ...(options.runtimeRoot ? { runtimeRoot: options.runtimeRoot } : {}),
+          now: options.now ?? (() => new Date()),
+        })
+        await acknowledgeRunnerProject(submitted.pending, options.signingKey, (options.now ?? (() => new Date()))().toISOString(), options.runtimeRoot)
+      } catch (error) {
+        if (error instanceof ControlPlaneRequestError && error.status === 409 && error.safeCode === 'command_in_flight') {
+          const current = await loadPendingRunnerProject(jobId, platform, options.signingKey, options.runtimeRoot)
+          if (current) await discardPendingRunnerProject(current, options.signingKey, options.runtimeRoot)
+          return
+        }
+        if (error instanceof ControlPlaneRequestError && error.status === 409 && ['projection_conflict', 'idempotency_conflict'].includes(error.safeCode ?? '')) {
+          const current = await loadPendingRunnerProject(jobId, platform, options.signingKey, options.runtimeRoot)
+          if (current) await quarantinePendingRunnerProject(current, options.signingKey, error.safeCode as 'projection_conflict' | 'idempotency_conflict', (options.now ?? (() => new Date()))().toISOString(), options.runtimeRoot)
+          return
+        }
+        throw error
+      }
+    })
+  }
+}
+
+function receiptAuthorityConflictCode(error: unknown): CloudRunnerReceiptAuthorityConflictSafeCode | null {
+  if (!(error instanceof ControlPlaneRequestError)
+    || !error.safeCode
+    || !cloudReceiptAuthorityConflictSafeCodes.has(error.safeCode)
+    || !(error.status === 409
+      || error.status === 404 && error.safeCode === 'command_not_found'
+      || error.status === 503 && error.safeCode === 'job_not_found')) return null
+  return error.safeCode as CloudRunnerReceiptAuthorityConflictSafeCode
+}
+
+async function reconcilePendingReceipts(options: RunnerCycleOptions): Promise<void> {
+  const pendingReceipts = await listAuthenticatedPendingReceipts(options.signingKey, options.runtimeRoot, options.runnerId)
+  for (const value of pendingReceipts) {
+      if (value.legacy_source_cursor) {
+        await quarantinePendingReceiptConflict(value, options.signingKey, 'legacy_receipt_missing_source_cursor', (options.now ?? (() => new Date()))().toISOString(), options.runtimeRoot)
+        continue
+      }
+      const receipt = value.receipt
+      const reconcile = async () => {
+        let response: Awaited<ReturnType<RunnerControlPlane['complete']>> | null = null
+        try {
+          response = await options.client.complete({ runner_id: options.runnerId, lease_token: value.lease_token, receipt })
+        } catch (error) {
+          const safeCode = receiptAuthorityConflictCode(error)
+          if (safeCode) await quarantinePendingReceiptConflict(value, options.signingKey, safeCode, (options.now ?? (() => new Date()))().toISOString(), options.runtimeRoot)
+          return /* The command may need to be reclaimed with a fresh lease or requires explicit recovery attention. */
+        }
+        validateCompletionAcknowledgement(receipt, response)
+        if (usesRunnerProjectState(options)) {
+          const claimJournal = await loadClaimedCommandJournal(receipt.command_id, options.signingKey, options.runtimeRoot)
+          if (!claimJournal) throw new Error('pending runner receipt has no authenticated claimed-command journal')
+          await acknowledgeRunnerCommandPlatformState(claimJournal.command, receipt, options.signingKey, options.runtimeRoot)
+        }
+        await acknowledgeReceipt(value.idempotency_key, receipt, options.signingKey, options.runtimeRoot)
+      }
+      if (!usesRunnerProjectState(options)) await reconcile()
+      else {
+        const claimJournal = await loadClaimedCommandJournal(receipt.command_id, options.signingKey, options.runtimeRoot)
+        if (!claimJournal) throw new Error('pending runner receipt has no authenticated claimed-command journal')
+        await withRunnerProjectStateLock(claimJournal.command.job_id, claimJournal.command.platform, options.runtimeRoot, reconcile)
+      }
   }
 }
 
@@ -1382,7 +2194,7 @@ async function receiptForNewAttempt(
   let resultRefs = prior.result_refs
   if (resultRefs?.before_preview_object_key || resultRefs?.after_preview_object_key) {
     if (command.command_kind !== 'magic_edit_prepare' || !resultRefs.candidate_hash || !options.client.uploadPreviewFile) throw new Error('command-bound preview replay is unavailable without the exact prepared candidate')
-    const previews = await renderMagicEditComparisonPreview(options.repoRoot ?? REPO_ROOT, command.job_id, resultRefs.candidate_hash)
+    const previews = await (options.renderComparisonPreview ?? renderMagicEditComparisonPreview)(options.repoRoot ?? REPO_ROOT, command.job_id, resultRefs.candidate_hash)
     const [beforeInfo, afterInfo, beforeMd5, afterMd5] = await Promise.all([
       stat(previews.before_path),
       stat(previews.after_path),
@@ -1408,19 +2220,46 @@ async function receiptForNewAttempt(
   return signRunnerReceipt({ ...priorBody, command_id: command.command_id, ...(resultRefs ? { result_refs: resultRefs } : {}) }, options.signingKey)
 }
 
-export async function runRunnerCycle(options: RunnerCycleOptions): Promise<RunnerCycleResult> {
+async function runRunnerCycleUnderAuthority(options: RunnerCycleOptions): Promise<RunnerCycleResult> {
   const now = options.now ?? (() => new Date())
+  await assertCurrentRunnerAuthority(options.signingKey, options.runnerId, options.runtimeRoot)
+  await inspectRunnerReceiptAuthority(options.signingKey, options.runtimeRoot, options.runnerId)
   await reconcilePendingReceipts(options)
-  const pendingBefore = await pendingReceiptCount(options.runtimeRoot)
+  const pendingAfterReceiptReconciliation = await listAuthenticatedPendingReceipts(options.signingKey, options.runtimeRoot, options.runnerId)
+  const receiptConflicts = await listAuthenticatedReceiptConflicts(options.signingKey, options.runtimeRoot, options.runnerId)
+  const pendingBefore = pendingAfterReceiptReconciliation.length
+  const receiptAttention = receiptConflicts.length > 0
+  if (receiptAttention) {
+    const preflightDriveState = await currentDriveState(options)
+    try { await options.client.heartbeat(heartbeat(options, preflightDriveState, 'degraded', pendingBefore, now().toISOString())) }
+    catch { /* Receipt conflict attention remains locally authoritative when heartbeat delivery fails. */ }
+    return { state: 'idle' }
+  }
+  const projectStatusBefore = await runnerProjectJournalStatus(options.signingKey, options.runtimeRoot)
+  if (projectStatusBefore.project_attention_code) {
+    const preflightDriveState = await currentDriveState(options)
+    try { await options.client.heartbeat(heartbeat(options, preflightDriveState, 'degraded', pendingBefore, now().toISOString())) }
+    catch { /* Project conflict attention remains locally authoritative when heartbeat delivery fails. */ }
+    return { state: 'idle' }
+  }
+  const pendingReceiptJobIds = new Set(pendingAfterReceiptReconciliation.map((pending) => pending.command.job_id))
+  await reconcilePendingRunnerProjects(options, undefined, pendingReceiptJobIds)
+  const projectStatusAfter = await runnerProjectJournalStatus(options.signingKey, options.runtimeRoot)
+  if (projectStatusAfter.project_attention_code) {
+    const preflightDriveState = await currentDriveState(options)
+    try { await options.client.heartbeat(heartbeat(options, preflightDriveState, 'degraded', pendingBefore, now().toISOString())) }
+    catch { /* Newly quarantined project conflict remains locally authoritative. */ }
+    return { state: 'idle' }
+  }
   const preflightDriveState = await currentDriveState(options)
-  await options.client.heartbeat(heartbeat(options, preflightDriveState, preflightDriveState === 'ready' ? 'idle' : 'degraded', pendingBefore, now().toISOString()))
+  await options.client.heartbeat(heartbeat(options, preflightDriveState, preflightDriveState === 'ready' && pendingBefore === 0 ? 'idle' : 'degraded', pendingBefore, now().toISOString()))
   let discovery: SanitizedDriveDiscoverySummary | undefined
   if (options.discoverInbox) {
     let discoveryHeartbeatTail = Promise.resolve()
     const discoveryHeartbeat = setInterval(() => {
       discoveryHeartbeatTail = discoveryHeartbeatTail.then(async () => {
         const driveState = await currentDriveState(options)
-        await options.client.heartbeat(heartbeat(options, driveState, driveState === 'ready' ? 'working' : 'degraded', pendingBefore, now().toISOString()))
+        await options.client.heartbeat(heartbeat(options, driveState, driveState === 'ready' && pendingBefore === 0 && !receiptAttention ? 'working' : 'degraded', pendingBefore, now().toISOString()))
       }).catch(() => undefined)
     }, options.heartbeatIntervalMs ?? DEFAULT_HEARTBEAT_INTERVAL_MS)
     discoveryHeartbeat.unref?.()
@@ -1433,7 +2272,7 @@ export async function runRunnerCycle(options: RunnerCycleOptions): Promise<Runne
   const initialDriveState = discovery
     ? discovery.drive_state === 'ready' ? await currentDriveState(options) : discovery.drive_state
     : preflightDriveState
-  if (discovery) await options.client.heartbeat(heartbeat(options, initialDriveState, initialDriveState === 'ready' ? 'idle' : 'degraded', pendingBefore, now().toISOString()))
+  if (discovery) await options.client.heartbeat(heartbeat(options, initialDriveState, initialDriveState === 'ready' && pendingBefore === 0 && !receiptAttention ? 'idle' : 'degraded', pendingBefore, now().toISOString()))
   if (initialDriveState !== 'ready') return { state: 'idle', ...(discovery ? { discovery } : {}) }
   if (options.verifySourceProvenance) {
     const currentCommit = await options.verifySourceProvenance()
@@ -1442,7 +2281,18 @@ export async function runRunnerCycle(options: RunnerCycleOptions): Promise<Runne
   const claim = await options.client.claim({ runner_id: options.runnerId, software_commit: options.softwareCommit, lease_seconds: options.leaseSeconds ?? DEFAULT_LEASE_SECONDS })
   if (!claim) return { state: 'idle', ...(discovery ? { discovery } : {}) }
   const command = validateClaimedCommand(claim, now())
+  const executeClaimedCommand = async (): Promise<RunnerCycleResult> => {
+  const pendingForClaimedJob = (await listAuthenticatedPendingReceipts(options.signingKey, options.runtimeRoot, options.runnerId))
+    .filter((pending) => pending.command.job_id === command.job_id)
+  if (pendingForClaimedJob.length > 0) {
+    if (pendingForClaimedJob.length !== 1
+      || pendingForClaimedJob[0]!.command.command_id !== command.command_id
+      || pendingForClaimedJob[0]!.command.idempotency_key !== command.idempotency_key
+      || pendingForClaimedJob[0]!.command.command_hash !== command.command_hash) throw new Error('claimed runner command conflicts with an authenticated pending receipt for its job')
+  } else if (usesRunnerProjectState(options)) await reconcilePendingRunnerProjects(options, command.job_id)
+  if (usesRunnerProjectState(options) && (await runnerProjectJournalStatus(options.signingKey, options.runtimeRoot)).project_attention_code) throw new Error('runner project conflict requires operator attention before command dispatch')
   await persistClaimedCommandJournal(command, options.runnerId, options.signingKey, now().toISOString(), options.runtimeRoot)
+  if (usesRunnerProjectState(options)) await assertRunnerCommandHasAcknowledgedCursor(command, options.signingKey, options.runtimeRoot)
   let heartbeatFailed = false
   let leaseExpiresAt = Date.parse(claim.lease.expires_at)
   const leaseFence = {
@@ -1467,6 +2317,18 @@ export async function runRunnerCycle(options: RunnerCycleOptions): Promise<Runne
   try {
     const persisted = await loadPersistedReceipt(command, options.signingKey, options.runtimeRoot)
     let receipt = persisted?.receipt ?? null
+    if (persisted?.exact_attempt) {
+      await persistReceipt(command, persisted.receipt, options.signingKey, options.runnerId, claim.lease.token, options.runtimeRoot)
+      if (command.command_kind === 'magic_edit_prepare' && persisted.receipt.status === 'succeeded') {
+        const refs = persisted.receipt.result_refs
+        if (!refs?.candidate_hash
+          || !refs.before_preview_object_key || !refs.before_preview_hash || !refs.before_preview_md5 || refs.before_preview_byte_size === undefined
+          || !refs.after_preview_object_key || !refs.after_preview_hash || !refs.after_preview_md5 || refs.after_preview_byte_size === undefined) throw new Error('persisted prepare receipt lacks immutable preview restoration references')
+        const restored = await receiptForNewAttempt(command, persisted.receipt, options, claim.lease.token, leaseFence)
+        if (restored.receipt_hash !== persisted.receipt.receipt_hash
+          || restored.receipt_signature !== persisted.receipt.receipt_signature) throw new Error('restored prepare previews changed the immutable signed receipt')
+      }
+    }
     if (persisted && !persisted.exact_attempt) {
       receipt = await receiptForNewAttempt(command, persisted.receipt, options, claim.lease.token, leaseFence)
       await persistReceipt(command, receipt, options.signingKey, options.runnerId, claim.lease.token, options.runtimeRoot)
@@ -1479,30 +2341,30 @@ export async function runRunnerCycle(options: RunnerCycleOptions): Promise<Runne
         if (options.dispatch) outcome = await options.dispatch(command, leaseFence)
         else {
           if (!options.client.uploadPreviewFile) throw new Error('preview upload provider is unavailable')
-          outcome = await dispatchRunnerCommand(command, {
-            repoRoot: options.repoRoot ?? REPO_ROOT,
-            ...(options.runtimeRoot ? { runtimeRoot: options.runtimeRoot } : {}),
-            signingKey: options.signingKey,
-            assertLeaseActive: leaseFence.assertActive,
-            publishPreview: async (side, path, sha256, byteSize) => {
-              leaseFence.assertActive()
-              const md5 = await hashFileMd5(path)
-              const uploaded = await options.client.uploadPreviewFile!({
-                schema_version: 1,
-                runner_id: options.runnerId,
-                command_id: command.command_id,
-                command_hash: command.command_hash,
-                lease_token: claim.lease.token,
-                side,
-                sha256,
-                md5,
-                content_type: 'video/mp4',
-                byte_size: byteSize,
-              }, path)
-              leaseFence.assertActive()
-              return { object_key: uploaded.object_key, sha256, md5, byte_size: byteSize }
-            },
-          })
+          outcome = await bindDispatchResultToEventLedger(command, () => dispatchRunnerCommand(command, {
+              repoRoot: options.repoRoot ?? REPO_ROOT,
+              ...(options.runtimeRoot ? { runtimeRoot: options.runtimeRoot } : {}),
+              signingKey: options.signingKey,
+              assertLeaseActive: leaseFence.assertActive,
+              publishPreview: async (side, path, sha256, byteSize) => {
+                leaseFence.assertActive()
+                const md5 = await hashFileMd5(path)
+                const uploaded = await options.client.uploadPreviewFile!({
+                  schema_version: 1,
+                  runner_id: options.runnerId,
+                  command_id: command.command_id,
+                  command_hash: command.command_hash,
+                  lease_token: claim.lease.token,
+                  side,
+                  sha256,
+                  md5,
+                  content_type: 'video/mp4',
+                  byte_size: byteSize,
+                }, path)
+                leaseFence.assertActive()
+                return { object_key: uploaded.object_key, sha256, md5, byte_size: byteSize }
+              },
+            }))
         }
         leaseFence.assertActive()
       }
@@ -1518,18 +2380,42 @@ export async function runRunnerCycle(options: RunnerCycleOptions): Promise<Runne
     clearInterval(interval)
     await heartbeatTail
     leaseFence.assertActive()
-    const completed = await options.client.complete({ runner_id: options.runnerId, lease_token: claim.lease.token, receipt })
-    validateCompletionAcknowledgement(receipt, completed)
-    await acknowledgeReceipt(command.idempotency_key, receipt, options.signingKey, options.runtimeRoot)
+    const completeAndAcknowledge = async () => {
+      let completed: Awaited<ReturnType<RunnerControlPlane['complete']>>
+      try { completed = await options.client.complete({ runner_id: options.runnerId, lease_token: claim.lease.token, receipt }) }
+      catch (error) {
+        const safeCode = receiptAuthorityConflictCode(error)
+        if (safeCode) {
+          const pending = (await listAuthenticatedPendingReceipts(options.signingKey, options.runtimeRoot, options.runnerId))
+            .find((candidate) => candidate.receipt.command_id === receipt.command_id)
+          if (!pending) throw new Error('runner receipt authority conflict has no authenticated pending journal')
+          await quarantinePendingReceiptConflict(pending, options.signingKey, safeCode, now().toISOString(), options.runtimeRoot)
+        }
+        throw error
+      }
+      validateCompletionAcknowledgement(receipt, completed)
+      if (usesRunnerProjectState(options)) await acknowledgeRunnerCommandPlatformState(command, receipt, options.signingKey, options.runtimeRoot)
+      await acknowledgeReceipt(command.idempotency_key, receipt, options.signingKey, options.runtimeRoot)
+      return completed
+    }
+    const completed = await completeAndAcknowledge()
     return { state: 'completed', command_id: command.command_id, receipt_status: receipt.status, duplicate: completed.duplicate, ...(discovery ? { discovery } : {}) }
   } finally {
     clearInterval(interval)
     await heartbeatTail
     if (heartbeatFailed) {
-      try { await options.client.heartbeat(heartbeat(options, await currentDriveState(options), 'degraded', await pendingReceiptCount(options.runtimeRoot), now().toISOString())) }
+      try { await options.client.heartbeat(heartbeat(options, await currentDriveState(options), 'degraded', (await listAuthenticatedPendingReceipts(options.signingKey, options.runtimeRoot, options.runnerId)).length, now().toISOString())) }
       catch { /* A safe degraded heartbeat is best effort after lease processing. */ }
     }
   }
+  }
+  return usesRunnerProjectState(options)
+    ? withRunnerProjectStateLock(command.job_id, command.platform, options.runtimeRoot, executeClaimedCommand)
+    : executeClaimedCommand()
+}
+
+export async function runRunnerCycle(options: RunnerCycleOptions): Promise<RunnerCycleResult> {
+  return withRunnerAuthorityLock(options.runtimeRoot, () => runRunnerCycleUnderAuthority(options))
 }
 
 export async function detectRunnerDriveState(): Promise<RunnerHeartbeatV1['drive_state']> {
@@ -1624,9 +2510,12 @@ function qaPayloadPassed(payload: unknown, platform?: RunnerProjectProjectionV1[
   return Boolean(children?.length && children.every((item) => item.passed === true))
 }
 
-export async function buildRunnerProjectProjection(input: RunnerProjectBootstrapInput): Promise<RunnerProjectProjectionV1> {
+export async function buildRunnerProjectProjection(input: RunnerProjectBootstrapInput, options: RunnerProjectBuildOptions = {}): Promise<RunnerProjectProjectionV1> {
   const platform = VideoPlatformV1Schema.parse(input.platform)
-  const job = await loadJobV2(input.job_id)
+  if (options.omitExpectedPlatformState && options.acknowledgedCursor) throw new Error('legacy project bootstrap cannot be used with an acknowledged platform cursor')
+  if (options.acknowledgedCursor && (options.acknowledgedCursor.job_id !== input.job_id || options.acknowledgedCursor.platform !== platform)) throw new Error('acknowledged project cursor belongs to another job or platform')
+  const snapshot = await loadJobProjectionSnapshotV2(input.job_id)
+  const job = snapshot.job
   const currentRevisionHash = jobRevisionHashV2(job)
   let parentArtifactHash: string
   let reviewRevisionHash = currentRevisionHash
@@ -1709,6 +2598,9 @@ export async function buildRunnerProjectProjection(input: RunnerProjectBootstrap
   const hardGates = passedHardGates()
   const projectedJob = {
       job_id: job.job_id,
+      source_event_count: snapshot.source_event_count,
+      source_event_chain_hash: snapshot.event_chain_hash,
+      source_revision_hash: currentRevisionHash,
       series: job.series,
       mode: job.mode,
       target_platforms: job.target_platforms,
@@ -1717,18 +2609,15 @@ export async function buildRunnerProjectProjection(input: RunnerProjectBootstrap
       safe_title: input.safe_title,
       safe_summary: input.safe_summary,
   }
-  const platformState = {
-      platform,
-      active_revision_hash: currentRevisionHash,
-      active_artifact_hash: parentArtifactHash,
-      active_candidate_hash: null,
-      parent_revision_hash: null,
-      parent_artifact_hash: null,
-      parent_candidate_hash: null,
-      semantic_target_map_hash: semanticTargetMapHash,
-      editorial_state: editorialState,
-      route_state: 'standard' as const,
-  }
+  const platformState: RunnerProjectPlatformStateV1 = desiredRunnerProjectPlatformState({
+    platform,
+    active_revision_hash: currentRevisionHash,
+    active_artifact_hash: parentArtifactHash,
+    semantic_target_map_hash: semanticTargetMapHash,
+    editorial_state: editorialState,
+    route_state: 'standard',
+  }, options.acknowledgedCursor ?? null)
+  const expectedPlatformState = options.acknowledgedCursor?.acknowledged_platform_state ?? null
   const reviewWithoutId = {
       gate: input.gate,
       safe_title: input.safe_title,
@@ -1756,10 +2645,16 @@ export async function buildRunnerProjectProjection(input: RunnerProjectBootstrap
     schema_version: 1,
     kind: 'runner_project_bootstrap',
     job: projectedJob,
+    ...(options.omitExpectedPlatformState ? {} : { expected_platform_state: expectedPlatformState }),
     platform_state: platformState,
     review: reviewWithoutId,
   })
-  const projection = RunnerProjectProjectionV1Schema.parse({ job: projectedJob, platform_state: platformState, review: { id: reviewId, ...reviewWithoutId } })
+  const projection = RunnerProjectProjectionV1Schema.parse({
+    job: projectedJob,
+    ...(options.omitExpectedPlatformState ? {} : { expected_platform_state: expectedPlatformState }),
+    platform_state: platformState,
+    review: { id: reviewId, ...reviewWithoutId },
+  })
   await persistLocalReviewBinding({
     schema_version: 1,
     review_id: reviewId,
@@ -1780,26 +2675,116 @@ export async function buildRunnerProjectProjection(input: RunnerProjectBootstrap
   return projection
 }
 
+function runnerProjectIntentHash(projection: RunnerProjectProjectionV1): string {
+  const { expected_platform_state: _expected, review, ...shared } = projection
+  const { id: _reviewId, ...reviewIntent } = review
+  return hashValue({ ...shared, review: reviewIntent })
+}
+
+export async function acknowledgeRunnerProjectConflict(input: {
+  job_id: string
+  platform: RunnerProjectProjectionV1['platform_state']['platform']
+  journal_hash: string
+  operator_confirmation_ref: string
+}): Promise<Record<string, unknown>> {
+  const signingKey = await loadRunnerReceiptSigningKey()
+  if (!signingKey) throw new Error('runner receipt signing credential is unavailable or too short')
+  const identity = await loadOrCreateRunnerIdentity(undefined, signingKey)
+  return withAuthenticatedRunnerAuthority(undefined, signingKey, identity.runner_id, async () => {
+    const resolution = await recordRunnerProjectConflictResolution({
+      job_id: input.job_id,
+      platform: input.platform,
+      runner_id: identity.runner_id,
+      journal_hash: input.journal_hash,
+      operator_confirmation_ref: input.operator_confirmation_ref,
+      resolved_at: new Date().toISOString(),
+    }, signingKey)
+    return {
+      schema_version: 1,
+      status: 'resolved',
+      job_id: input.job_id,
+      platform: input.platform,
+      journal_hash: input.journal_hash,
+      acknowledged_cursor_hash: resolution.acknowledged_cursor.cursor_hash,
+      resolution_hash: resolution.resolution_hash,
+    }
+  })
+}
+
 export async function publishRunnerProject(input: RunnerProjectBootstrapInput, repoRoot = REPO_ROOT): Promise<Record<string, unknown>> {
   const softwareCommit = await requireRunnerSourceProvenance(repoRoot)
-  const identity = await loadOrCreateRunnerIdentity()
+  const signingKey = await loadRunnerReceiptSigningKey()
+  if (!signingKey) throw new Error('runner receipt signing credential is unavailable or too short')
+  const identity = await loadOrCreateRunnerIdentity(undefined, signingKey)
   const token = await readWindowsCredential(repoRoot, CONTROL_CENTER_RUNNER_CREDENTIAL)
   const client = new ControlPlaneClient({ baseUrl: resolveProductionControlPlaneUrl(), token, previewStorageOrigin: resolveProductionPreviewStorageOrigin() })
-  const projection = await buildRunnerProjectProjection(input)
-  const response = await client.project({
-    runner_id: identity.runner_id,
-    software_commit: softwareCommit,
-    idempotency_key: projection.review.id,
-    projection,
-  })
-  return { schema_version: 1, ...response }
+  const platform = VideoPlatformV1Schema.parse(input.platform)
+  return withAuthenticatedRunnerAuthority(undefined, signingKey, identity.runner_id, () => withRunnerProjectStateLock(input.job_id, platform, undefined, async () => {
+    let response: Awaited<ReturnType<ControlPlaneClient['project']>> | null = null
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      let pending = await loadPendingRunnerProject(input.job_id, platform, signingKey)
+      if (pending && pending.request.runner_id !== identity.runner_id) {
+        await quarantinePendingRunnerProject(pending, signingKey, 'runner_identity_conflict', new Date().toISOString())
+        throw new Error('pending runner project belongs to another runner identity and was quarantined')
+      }
+      await assertRunnerProjectHasNoPendingCommandReceipt(input.job_id, signingKey)
+      try { await assertRunnerPlatformCanProject(input.job_id, platform, signingKey) }
+      catch (error) {
+        if (error instanceof RunnerProjectGlobalLineageError && pending) await quarantinePendingRunnerProject(pending, signingKey, 'global_lineage_conflict', new Date().toISOString())
+        throw error
+      }
+      if (!pending) {
+        const cursor = await loadAcknowledgedRunnerProjectCursor(input.job_id, platform, signingKey)
+        const projection = await buildRunnerProjectProjection(input, { acknowledgedCursor: cursor })
+        const projectionHash = hashValue(runnerProjectProjectionHashInputV1(projection))
+        const request = RunnerProjectRequestV1Schema.parse({
+          schema_version: 1,
+          runner_id: identity.runner_id,
+          software_commit: softwareCommit,
+          idempotency_key: projection.review.id,
+          projection_hash: projectionHash,
+          projection,
+        })
+        pending = await persistPendingRunnerProject(request, signingKey, new Date().toISOString())
+      }
+
+      try {
+        const submitted = await submitPendingRunnerProjectWithAdoption({
+          pending,
+          project: client.project.bind(client),
+          signingKey,
+          now: () => new Date(),
+        })
+        pending = submitted.pending
+        response = submitted.response
+      } catch (error) {
+        if (error instanceof ControlPlaneRequestError && error.status === 409 && error.safeCode === 'command_in_flight') {
+          const current = await loadPendingRunnerProject(input.job_id, platform, signingKey)
+          if (current) await discardPendingRunnerProject(current, signingKey)
+          throw error
+        }
+        if (error instanceof ControlPlaneRequestError && error.status === 409 && ['projection_conflict', 'idempotency_conflict'].includes(error.safeCode ?? '')) {
+          const current = await loadPendingRunnerProject(input.job_id, platform, signingKey)
+          if (current) await quarantinePendingRunnerProject(current, signingKey, error.safeCode as 'projection_conflict' | 'idempotency_conflict', new Date().toISOString())
+        }
+        throw error
+      }
+
+      const acknowledged = await acknowledgeRunnerProject(pending, signingKey, new Date().toISOString())
+      const currentProjection = await buildRunnerProjectProjection(input, { acknowledgedCursor: acknowledged })
+      const fulfillsCurrentIntent = runnerProjectIntentHash(currentProjection) === runnerProjectIntentHash(pending.request.projection)
+        && (input.idempotency_key === undefined || input.idempotency_key === pending.request.idempotency_key)
+      if (fulfillsCurrentIntent) return { schema_version: 1, ...response }
+    }
+    throw new Error('runner project could not reconcile the pending projection to the current requested review')
+  }))
 }
 
 async function productionRunnerOptions(repoRoot = REPO_ROOT): Promise<Omit<RunnerCycleOptions, 'client'> & { client: ControlPlaneClient }> {
   const softwareCommit = await requireRunnerSourceProvenance(repoRoot)
-  const identity = await loadOrCreateRunnerIdentity()
   const signingKey = await loadRunnerReceiptSigningKey()
   if (!signingKey) throw new Error('runner receipt signing credential is unavailable or too short')
+  const identity = await loadOrCreateRunnerIdentity(undefined, signingKey)
   const token = await readWindowsCredential(repoRoot, CONTROL_CENTER_RUNNER_CREDENTIAL)
   const client = new ControlPlaneClient({ baseUrl: resolveProductionControlPlaneUrl(), token, previewStorageOrigin: resolveProductionPreviewStorageOrigin() })
   return {
@@ -1823,6 +2808,34 @@ export async function runRunnerOnce(repoRoot = REPO_ROOT): Promise<RunnerCycleRe
   finally { await lock.release() }
 }
 
+export interface RunnerMaintenanceResult {
+  receipt_journals: RunnerReceiptJournalStatusV1
+  project_journals: RunnerProjectJournalStatusV1
+  retention_permitted: boolean
+  retention?: Awaited<ReturnType<NonNullable<RunnerControlPlane['previewRetention']>>>
+  retention_failed?: true
+}
+
+export async function runRunnerMaintenanceUnderAuthority(
+  options: Pick<RunnerCycleOptions, 'client' | 'runnerId' | 'signingKey' | 'runtimeRoot'>,
+  requestRetention: boolean,
+): Promise<RunnerMaintenanceResult> {
+  return withAuthenticatedRunnerAuthority(options.runtimeRoot, options.signingKey, options.runnerId, async () => {
+    const receiptJournals = await runnerReceiptJournalStatus(options.signingKey, options.runtimeRoot, options.runnerId)
+    const projectJournals = await runnerProjectJournalStatus(options.signingKey, options.runtimeRoot)
+    const retentionPermitted = runnerJournalsPermitPreviewRetention(receiptJournals, projectJournals)
+    if (!requestRetention || !retentionPermitted || !options.client.previewRetention) {
+      return { receipt_journals: receiptJournals, project_journals: projectJournals, retention_permitted: retentionPermitted }
+    }
+    try {
+      const retention = await options.client.previewRetention({ runner_id: options.runnerId, limit: 100 })
+      return { receipt_journals: receiptJournals, project_journals: projectJournals, retention_permitted: true, retention }
+    } catch {
+      return { receipt_journals: receiptJournals, project_journals: projectJournals, retention_permitted: true, retention_failed: true }
+    }
+  })
+}
+
 export async function runRunnerDaemon(input: { repoRoot?: string; signal?: AbortSignal; onStatus?: (status: Record<string, unknown>) => void } = {}): Promise<void> {
   const lock = await acquireRunnerLock()
   let backoffMs = DEFAULT_IDLE_INTERVAL_MS
@@ -1832,21 +2845,33 @@ export async function runRunnerDaemon(input: { repoRoot?: string; signal?: Abort
     while (!input.signal?.aborted) {
       try {
         const result = await runRunnerCycle(options)
-        input.onStatus?.({ ok: true, state: result.state, ...(result.command_id ? { command_id: result.command_id, receipt_status: result.receipt_status } : {}), ...(result.discovery ? { discovery: result.discovery } : {}) })
+        const maintenance = await runRunnerMaintenanceUnderAuthority(
+          options,
+          !input.signal?.aborted && Date.now() >= nextPreviewRetentionAt,
+        )
+        const projectJournals = maintenance.project_journals
+        const receiptJournals = maintenance.receipt_journals
+        const attentionCode = receiptJournals.receipt_attention_code ?? projectJournals.project_attention_code
+        input.onStatus?.({
+          ok: attentionCode === null,
+          state: attentionCode ? 'attention' : result.state,
+          ...(attentionCode ? { safe_code: attentionCode } : {}),
+          receipt_journals: receiptJournals,
+          project_journals: projectJournals,
+          ...(result.command_id ? { command_id: result.command_id, receipt_status: result.receipt_status } : {}),
+          ...(result.discovery ? { discovery: result.discovery } : {}),
+        })
+        if (maintenance.retention) {
+          nextPreviewRetentionAt = Date.now() + PREVIEW_RETENTION_INTERVAL_MS
+          input.onStatus?.({ ok: true, state: 'retention_checked', reviewed: maintenance.retention.reviewed, deleted_objects: maintenance.retention.deleted_objects, cutoff: maintenance.retention.cutoff })
+        } else if (maintenance.retention_failed) {
+          nextPreviewRetentionAt = Date.now() + PREVIEW_RETENTION_RETRY_MS
+          input.onStatus?.({ ok: false, state: 'retention_degraded', safe_code: 'preview_retention_unavailable' })
+        }
         backoffMs = DEFAULT_IDLE_INTERVAL_MS
       } catch {
         input.onStatus?.({ ok: false, state: 'degraded', safe_code: 'runner_cycle_failed' })
         backoffMs = Math.min(MAX_BACKOFF_MS, Math.max(DEFAULT_IDLE_INTERVAL_MS, backoffMs * 2))
-      }
-      if (!input.signal?.aborted && options.client.previewRetention && Date.now() >= nextPreviewRetentionAt) {
-        try {
-          const retained = await options.client.previewRetention({ runner_id: options.runnerId, limit: 100 })
-          nextPreviewRetentionAt = Date.now() + PREVIEW_RETENTION_INTERVAL_MS
-          input.onStatus?.({ ok: true, state: 'retention_checked', reviewed: retained.reviewed, deleted_objects: retained.deleted_objects, cutoff: retained.cutoff })
-        } catch {
-          nextPreviewRetentionAt = Date.now() + PREVIEW_RETENTION_RETRY_MS
-          input.onStatus?.({ ok: false, state: 'retention_degraded', safe_code: 'preview_retention_unavailable' })
-        }
       }
       if (input.signal?.aborted) break
       await new Promise<void>((resolveSleep) => {
@@ -1859,15 +2884,39 @@ export async function runRunnerDaemon(input: { repoRoot?: string; signal?: Abort
   }
 }
 
-export async function runnerStatus(): Promise<Record<string, unknown>> {
-  const identity = await loadOrCreateRunnerIdentity()
-  let active: boolean | 'unknown' = 'unknown'
+export interface RunnerStopPreflightV1 {
+  schema_version: 1
+  active: boolean | 'unknown'
+}
+
+/**
+ * Inspect only the singleton lock. This intentionally does not load a signing
+ * key, create an identity, migrate authority state, or touch any journal. Task
+ * installation uses it before the full status command so a detached legacy
+ * daemon cannot race an authority migration.
+ */
+export async function runnerStopPreflight(
+  runtimeRoot?: string,
+  inspectOwner: (lock: Record<string, unknown>) => Promise<boolean | 'unknown'> = (lock) => lockOwnerIsActive(lock as RunnerLockMetadata),
+): Promise<RunnerStopPreflightV1> {
+  const path = lockPath(runtimeRoot)
   try {
-    const value = JSON.parse(await readFile(lockPath(), 'utf8')) as RunnerLockMetadata
-    active = typeof value.token === 'string' ? await lockOwnerIsActive(value) : 'unknown'
+    const info = await lstat(path)
+    if (!info.isFile() || info.isSymbolicLink()) return { schema_version: 1, active: 'unknown' }
+    const value = JSON.parse(await readFile(path, 'utf8')) as RunnerLockMetadata
+    if (typeof value.token !== 'string' || value.token.length < 1) return { schema_version: 1, active: 'unknown' }
+    return { schema_version: 1, active: await inspectOwner(value as Record<string, unknown>) }
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') active = false
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return { schema_version: 1, active: false }
+    return { schema_version: 1, active: 'unknown' }
   }
+}
+
+export async function runnerStatus(): Promise<Record<string, unknown>> {
+  const signingKey = await loadRunnerReceiptSigningKey()
+  if (!signingKey) throw new Error('runner receipt signing credential is unavailable or too short')
+  const identity = await loadOrCreateRunnerIdentity(undefined, signingKey)
+  const { active } = await runnerStopPreflight()
   const provenance = await inspectRunnerSourceProvenance()
   let discovery: SanitizedDriveDiscoverySummary
   let discoveryStateInvalid = false
@@ -1877,6 +2926,8 @@ export async function runnerStatus(): Promise<Record<string, unknown>> {
     discovery = unavailableDiscoverySummary('discovery_state_invalid')
   }
   const mountedDriveState = await detectRunnerDriveState()
+  const projectJournals = await runnerProjectJournalStatus(signingKey)
+  const receiptJournals = await runnerReceiptJournalStatus(signingKey, undefined, identity.runner_id)
   const effectiveDriveState = discoveryStateInvalid
     ? 'unavailable'
     : discovery.status === 'not_scanned'
@@ -1891,6 +2942,8 @@ export async function runnerStatus(): Promise<Record<string, unknown>> {
     ...(provenance.reason ? { source_provenance_reason: provenance.reason } : {}),
     drive_state: effectiveDriveState,
     discovery,
-    pending_receipts: await pendingReceiptCount(),
+    pending_receipts: receiptJournals.pending_receipts,
+    receipt_journals: receiptJournals,
+    project_journals: projectJournals,
   }
 }

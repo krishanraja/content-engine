@@ -466,11 +466,9 @@ async function withDiscoveryLock<T>(runtimeRoot: string | undefined, callback: (
   const deadline = Date.now() + 10_000
   let handle: Awaited<ReturnType<typeof open>> | undefined
   while (!handle) {
+    let candidate: Awaited<ReturnType<typeof open>> | undefined
     try {
-      handle = await open(paths.lock, 'wx', 0o600)
-      await handle.writeFile(`${JSON.stringify({ schema_version: 1, pid: process.pid, process_instance_id: instanceId, token, acquired_at: new Date().toISOString() })}\n`, 'utf8')
-      await handle.sync()
-      activeDiscoveryLockTokens.add(token)
+      candidate = await open(paths.lock, 'wx', 0o600)
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error
       let stale = false
@@ -497,6 +495,25 @@ async function withDiscoveryLock<T>(runtimeRoot: string | undefined, callback: (
       }
       if (Date.now() >= deadline) throw new Error('Drive discovery scan is already active')
       await new Promise((resolveDelay) => setTimeout(resolveDelay, 50))
+      continue
+    }
+    let createdIdentity: { dev: bigint; ino: bigint } | undefined
+    try {
+      const created = await candidate.stat({ bigint: true })
+      createdIdentity = { dev: created.dev, ino: created.ino }
+      await candidate.writeFile(`${JSON.stringify({ schema_version: 1, pid: process.pid, process_instance_id: instanceId, token, acquired_at: new Date().toISOString() })}\n`, 'utf8')
+      await candidate.sync()
+      handle = candidate
+      activeDiscoveryLockTokens.add(token)
+    } catch (error) {
+      try { await candidate.close() } catch { /* The persistence failure is authoritative. */ }
+      try {
+        const current = await stat(paths.lock, { bigint: true })
+        if (createdIdentity && current.dev === createdIdentity.dev && current.ino === createdIdentity.ino) await unlink(paths.lock)
+      } catch (cleanupError) {
+        if ((cleanupError as NodeJS.ErrnoException).code !== 'ENOENT') throw new AggregateError([error, cleanupError], 'Drive discovery lock persistence and cleanup failed')
+      }
+      throw error
     }
   }
   try { return await callback() }

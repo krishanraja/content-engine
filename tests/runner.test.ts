@@ -1,13 +1,13 @@
 import { createHmac } from 'node:crypto'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
-import { access, mkdir, mkdtemp, readFile, rm, utimes, writeFile } from 'node:fs/promises'
+import { access, mkdir, mkdtemp, readFile, readdir, rename, rm, symlink, utimes, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
 import { RunnerCommandEnvelopeV1Schema, type RunnerCommandEnvelopeV1, type RunnerHeartbeatV1, type RunnerReceiptV1 } from '@mindmake/contracts'
-import { acquireRunnerLock, DEFAULT_CONTROL_PLANE_URL, hashValue, inspectRunnerSourceProvenance, inspectWindowsProcessInstance, loadOrCreateRunnerIdentity, resolveProductionControlPlaneUrl, runnerStatus, runRunnerCycle, signRunnerReceipt, type RunnerControlPlane } from '@mindmake/core'
+import { acquireRunnerLock, DEFAULT_CONTROL_PLANE_URL, hashValue, inspectRunnerSourceProvenance, inspectWindowsProcessInstance, loadOrCreateRunnerIdentity, persistClaimedCommandJournal, resetRunnerReceiptSigningKeyProviderForTests, resolveProductionControlPlaneUrl, runnerStatus, runnerStopPreflight, runRunnerCycle, setRunnerReceiptSigningKeyProviderForTests, signRunnerReceipt, withAuthenticatedRunnerAuthority, withDurableFileLock, type RunnerControlPlane } from '@mindmake/core'
 
 const SIGNING_KEY = Buffer.from('unit-test-runner-signing-material-at-least-32-bytes')
 const FIXTURE_PATH = join(fileURLToPath(new URL('.', import.meta.url)), 'fixtures', 'control-plane', 'runner-command-prepare-v1.json')
@@ -22,13 +22,59 @@ async function commandFixture(): Promise<RunnerCommandEnvelopeV1> {
 }
 
 function dispatchResult() {
-  return { status: 'succeeded' as const, result_revision_hash: 'd'.repeat(64), result_artifact_hash: 'e'.repeat(64), hard_gates: hardGates }
+  return { status: 'succeeded' as const, result_revision_hash: 'd'.repeat(64), result_artifact_hash: 'e'.repeat(64), result_refs: { result_source_event_count: 2, result_source_event_chain_hash: 'f'.repeat(64), result_source_revision_hash: 'd'.repeat(64), comparison_alignment: 'unavailable' as const }, hard_gates: hardGates }
+}
+
+function legacySucceededReceipt(command: RunnerCommandEnvelopeV1): RunnerReceiptV1 {
+  const body = {
+    schema_version: 1 as const,
+    command_id: command.command_id,
+    command_hash: command.command_hash,
+    job_id: command.job_id,
+    status: 'succeeded' as const,
+    result_revision_hash: 'd'.repeat(64),
+    result_artifact_hash: 'e'.repeat(64),
+    result_refs: { comparison_alignment: 'unavailable' as const },
+    hard_gates: hardGates,
+    retryable: false as const,
+    safe_code: null,
+    started_at: '2026-09-04T10:00:00.000Z',
+    finished_at: '2026-09-04T10:00:01.000Z',
+  }
+  const receiptHash = hashValue(body)
+  return { ...body, receipt_hash: receiptHash, receipt_signature: createHmac('sha256', SIGNING_KEY).update(receiptHash).digest('hex') } as RunnerReceiptV1
+}
+
+function currentSucceededReceipt(command: RunnerCommandEnvelopeV1): RunnerReceiptV1 {
+  const result = dispatchResult()
+  return signRunnerReceipt({
+    schema_version: 1,
+    command_id: command.command_id,
+    command_hash: command.command_hash,
+    job_id: command.job_id,
+    status: result.status,
+    result_revision_hash: result.result_revision_hash,
+    result_artifact_hash: result.result_artifact_hash,
+    result_refs: result.result_refs,
+    hard_gates: result.hard_gates,
+    retryable: false,
+    safe_code: null,
+    started_at: '2026-09-04T10:00:00.000Z',
+    finished_at: '2026-09-04T10:00:01.000Z',
+  }, SIGNING_KEY)
+}
+
+function signedAuthorityMarker(identity: { schema_version: 2; layout_version: 1; runner_id: string; created_at: string }, state: 'initializing' | 'finalized' = 'initializing') {
+  const body = { schema_version: 1, layout_version: 1, state, runner_id: identity.runner_id, identity_hash: hashValue(identity), initialized_at: identity.created_at }
+  const markerHash = hashValue(body)
+  return { ...body, marker_hash: markerHash, marker_signature: createHmac('sha256', SIGNING_KEY).update(markerHash).digest('hex') }
 }
 
 describe('Codex-independent runner', () => {
   let runtimeRoot = ''
 
   afterEach(async () => {
+    resetRunnerReceiptSigningKeyProviderForTests()
     if (runtimeRoot) await rm(runtimeRoot, { recursive: true, force: true })
     runtimeRoot = ''
   })
@@ -42,6 +88,7 @@ describe('Codex-independent runner', () => {
       status: 'succeeded' as const,
       result_revision_hash: 'b'.repeat(64),
       result_artifact_hash: 'c'.repeat(64),
+      result_refs: { result_source_event_count: 2, result_source_event_chain_hash: 'd'.repeat(64), result_source_revision_hash: 'b'.repeat(64), comparison_alignment: 'unavailable' as const },
       hard_gates: hardGates,
       retryable: false as const,
       safe_code: null,
@@ -119,6 +166,24 @@ describe('Codex-independent runner', () => {
     await next.release()
   })
 
+  it('never owns a durable lock when metadata persistence fails after exclusive open', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-durable-lock-persist-'))
+    for (const code of ['EACCES', 'ENOSPC'] as const) {
+      const path = join(runtimeRoot, `${code.toLocaleLowerCase('en-GB')}.lock`)
+      let callbacks = 0
+      await expect(withDurableFileLock(path, async () => { callbacks += 1 }, {
+        persistMetadata: async (handle, content) => {
+          await handle.writeFile(content, 'utf8')
+          throw Object.assign(new Error(`injected ${code}`), { code })
+        },
+      })).rejects.toMatchObject({ code })
+      expect(callbacks).toBe(0)
+      await expect(access(path)).rejects.toMatchObject({ code: 'ENOENT' })
+      await expect(withDurableFileLock(path, async () => 'recovered')).resolves.toBe('recovered')
+      await expect(access(path)).rejects.toMatchObject({ code: 'ENOENT' })
+    }
+  })
+
   it.runIf(process.platform === 'win32')('keeps a live lock written with prior-revision Windows precision', async () => {
     runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-prior-windows-lock-'))
     const runnerLock = join(runtimeRoot, 'runner', 'runner.lock')
@@ -171,7 +236,7 @@ describe('Codex-independent runner', () => {
     const old = new Date(Date.now() - 5_000)
     await utimes(runnerLock, old, old)
     await utimes(identityLock, old, old)
-    const [lock, identity] = await Promise.all([acquireRunnerLock(runtimeRoot), loadOrCreateRunnerIdentity(runtimeRoot)])
+    const [lock, identity] = await Promise.all([acquireRunnerLock(runtimeRoot), loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)])
     expect(identity.runner_id).toMatch(/^runner-/)
     await lock.release()
 
@@ -194,9 +259,372 @@ describe('Codex-independent runner', () => {
 
   it('creates one stable runner identity under concurrent first start', async () => {
     runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-identity-'))
-    const identities = await Promise.all(Array.from({ length: 12 }, () => loadOrCreateRunnerIdentity(runtimeRoot)))
+    const identities = await Promise.all(Array.from({ length: 12 }, () => loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)))
     expect(new Set(identities.map((identity) => identity.runner_id)).size).toBe(1)
     expect(JSON.parse(await readFile(join(runtimeRoot, 'runner', 'identity.json'), 'utf8'))).toEqual(identities[0])
+    const marker = JSON.parse(await readFile(join(runtimeRoot, 'runner-authority.json'), 'utf8')) as Record<string, unknown>
+    const { marker_hash: markerHash, marker_signature: markerSignature, ...markerBody } = marker
+    expect(marker).toMatchObject({ schema_version: 1, layout_version: 1, state: 'finalized', runner_id: identities[0]!.runner_id, identity_hash: hashValue(identities[0]), initialized_at: identities[0]!.created_at })
+    expect(markerHash).toBe(hashValue(markerBody))
+    expect(markerSignature).toBe(createHmac('sha256', SIGNING_KEY).update(String(markerHash)).digest('hex'))
+    for (const path of ['claims', 'receipts/pending', 'receipts/acknowledged', 'receipts/conflicted', 'project-state']) {
+      await expect(access(join(runtimeRoot, 'runner', ...path.split('/')))).resolves.toBeUndefined()
+    }
+  })
+
+  it('proves singleton inactivity without initializing or migrating legacy authority state', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-stop-preflight-'))
+    await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: false })
+    await expect(readdir(runtimeRoot)).resolves.toEqual([])
+
+    const runnerRoot = join(runtimeRoot, 'runner')
+    const legacyIdentity = { schema_version: 1, runner_id: 'runner-77777777-7777-4777-8777-777777777777', created_at: '2026-09-05T09:00:00.000Z' }
+    await mkdir(runnerRoot)
+    await writeFile(join(runnerRoot, 'identity.json'), `${JSON.stringify(legacyIdentity)}\n`)
+    const lock = await acquireRunnerLock(runtimeRoot)
+    try {
+      const beforeNames = await readdir(runnerRoot)
+      const beforeIdentity = await readFile(join(runnerRoot, 'identity.json'), 'utf8')
+      const beforeLock = await readFile(join(runnerRoot, 'runner.lock'), 'utf8')
+      await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: true })
+      await expect(readdir(runnerRoot)).resolves.toEqual(beforeNames)
+      await expect(readFile(join(runnerRoot, 'identity.json'), 'utf8')).resolves.toBe(beforeIdentity)
+      await expect(readFile(join(runnerRoot, 'runner.lock'), 'utf8')).resolves.toBe(beforeLock)
+      await expect(access(join(runtimeRoot, 'runner-authority.json'))).rejects.toMatchObject({ code: 'ENOENT' })
+      await expect(access(join(runtimeRoot, 'runner-staging'))).rejects.toMatchObject({ code: 'ENOENT' })
+    } finally {
+      await lock.release()
+    }
+
+    const stale = `${JSON.stringify({ schema_version: 2, pid: 2_147_483_647, token: 'stale-lock-token', acquired_at: '2026-09-05T09:00:00.000Z', process_instance_id: 'stale:instance' })}\n`
+    await writeFile(join(runnerRoot, 'runner.lock'), stale)
+    await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: false })
+    await expect(readFile(join(runnerRoot, 'runner.lock'), 'utf8')).resolves.toBe(stale)
+
+    await writeFile(join(runnerRoot, 'runner.lock'), 'not-json\n')
+    await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: 'unknown' })
+    await expect(readFile(join(runnerRoot, 'runner.lock'), 'utf8')).resolves.toBe('not-json\n')
+
+    const inspectable = `${JSON.stringify({ schema_version: 2, pid: process.pid, token: 'ambiguous-lock-token', acquired_at: new Date().toISOString() })}\n`
+    await writeFile(join(runnerRoot, 'runner.lock'), inspectable)
+    await expect(runnerStopPreflight(runtimeRoot, async () => 'unknown')).resolves.toEqual({ schema_version: 1, active: 'unknown' })
+    await expect(readFile(join(runnerRoot, 'runner.lock'), 'utf8')).resolves.toBe(inspectable)
+
+    await rm(join(runnerRoot, 'runner.lock'))
+    const linkedTarget = join(runtimeRoot, 'linked-lock-target')
+    await mkdir(linkedTarget)
+    await symlink(linkedTarget, join(runnerRoot, 'runner.lock'), 'junction')
+    await expect(runnerStopPreflight(runtimeRoot)).resolves.toEqual({ schema_version: 1, active: 'unknown' })
+    await expect(readdir(runnerRoot)).resolves.toEqual(['identity.json', 'runner.lock'])
+    await expect(readFile(join(runnerRoot, 'identity.json'), 'utf8')).resolves.toBe(`${JSON.stringify(legacyIdentity)}\n`)
+    await expect(access(join(runtimeRoot, 'runner-authority.json'))).rejects.toMatchObject({ code: 'ENOENT' })
+    await expect(access(join(runtimeRoot, 'runner-staging'))).rejects.toMatchObject({ code: 'ENOENT' })
+  })
+
+  it('migrates a valid legacy identity into one authenticated complete authority layout', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-identity-migration-'))
+    const legacy = { schema_version: 1, runner_id: 'runner-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', created_at: '2026-09-05T09:00:00.000Z' }
+    await mkdir(join(runtimeRoot, 'runner'), { recursive: true })
+    await writeFile(join(runtimeRoot, 'runner', 'identity.json'), `${JSON.stringify(legacy)}\n`)
+    const command = await commandFixture()
+    await persistClaimedCommandJournal(command, legacy.runner_id, SIGNING_KEY, '2026-09-05T09:00:01.000Z', runtimeRoot)
+    const receipt = legacySucceededReceipt(command)
+    const acknowledgedPath = join(runtimeRoot, 'runner', 'receipts', 'acknowledged', command.idempotency_key, `${command.command_id}.json`)
+    await mkdir(join(acknowledgedPath, '..'), { recursive: true })
+    await writeFile(acknowledgedPath, `${JSON.stringify(receipt, null, 2)}\n`)
+    const identityBefore = await readFile(join(runtimeRoot, 'runner', 'identity.json'), 'utf8')
+    const claimBefore = await readFile(join(runtimeRoot, 'runner', 'claims', `${command.command_id}.json`), 'utf8')
+    const receiptBefore = await readFile(acknowledgedPath, 'utf8')
+    await expect(loadOrCreateRunnerIdentity(runtimeRoot, Buffer.from('different-authority-signing-key-material-32'))).rejects.toThrow('authentication')
+    await expect(access(join(runtimeRoot, 'runner-authority.json'))).rejects.toMatchObject({ code: 'ENOENT' })
+    await expect(readFile(join(runtimeRoot, 'runner', 'identity.json'), 'utf8')).resolves.toBe(identityBefore)
+    await expect(readFile(join(runtimeRoot, 'runner', 'claims', `${command.command_id}.json`), 'utf8')).resolves.toBe(claimBefore)
+    await expect(readFile(acknowledgedPath, 'utf8')).resolves.toBe(receiptBefore)
+    const priorRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
+    let migratedStatus: Record<string, unknown> | undefined
+    try {
+      process.env.MINDMAKE_RUNTIME_ROOT = runtimeRoot
+      setRunnerReceiptSigningKeyProviderForTests(() => SIGNING_KEY.toString('utf8'))
+      migratedStatus = await runnerStatus()
+    } finally {
+      resetRunnerReceiptSigningKeyProviderForTests()
+      if (priorRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
+      else process.env.MINDMAKE_RUNTIME_ROOT = priorRuntimeRoot
+    }
+    expect(migratedStatus).toMatchObject({ runner_id: legacy.runner_id, pending_receipts: 0 })
+    const identity = await loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)
+    expect(identity).toEqual({ ...legacy, schema_version: 2, layout_version: 1 })
+    await expect(loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)).resolves.toEqual(identity)
+    const identityText = await readFile(join(runtimeRoot, 'runner', 'identity.json'), 'utf8')
+    const markerText = await readFile(join(runtimeRoot, 'runner-authority.json'), 'utf8')
+    await expect(loadOrCreateRunnerIdentity(runtimeRoot, Buffer.from('different-authority-signing-key-material-32'))).rejects.toThrow('authentication')
+    await expect(loadOrCreateRunnerIdentity(runtimeRoot, Buffer.from('too-short'))).rejects.toThrow('unavailable or too short')
+    await expect(readFile(join(runtimeRoot, 'runner', 'identity.json'), 'utf8')).resolves.toBe(identityText)
+    await expect(readFile(join(runtimeRoot, 'runner-authority.json'), 'utf8')).resolves.toBe(markerText)
+  })
+
+  it('authenticates immutable legacy success and failed receipts without rewriting history', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-legacy-receipts-'))
+    const identity = await loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)
+    const command = await commandFixture()
+    await persistClaimedCommandJournal(command, identity.runner_id, SIGNING_KEY, '2026-09-05T09:00:00.000Z', runtimeRoot)
+    const legacyReceipt = legacySucceededReceipt(command)
+    const legacyPath = join(runtimeRoot, 'runner', 'receipts', 'acknowledged', command.idempotency_key, `${command.command_id}.json`)
+    await mkdir(join(legacyPath, '..'), { recursive: true })
+    await writeFile(legacyPath, `${JSON.stringify(legacyReceipt, null, 2)}\n`)
+    const failedIdempotency = '42424242-4242-4242-8242-424242424242'
+    const failedReceipt = signRunnerReceipt({
+      schema_version: 1,
+      command_id: '43434343-4343-4343-8343-434343434343',
+      command_hash: '4'.repeat(64),
+      job_id: command.job_id,
+      status: 'failed',
+      result_revision_hash: null,
+      result_artifact_hash: null,
+      hard_gates: hardGates,
+      retryable: false,
+      safe_code: 'stale_parent',
+      started_at: '2026-09-05T09:00:00.000Z',
+      finished_at: '2026-09-05T09:00:01.000Z',
+    }, SIGNING_KEY)
+    const failedPath = join(runtimeRoot, 'runner', 'receipts', 'acknowledged', failedIdempotency, `${failedReceipt.command_id}.json`)
+    await mkdir(join(failedPath, '..'), { recursive: true })
+    await writeFile(failedPath, `${JSON.stringify(failedReceipt, null, 2)}\n`)
+    const before = await readFile(legacyPath, 'utf8')
+    let claims = 0
+    const client: RunnerControlPlane = {
+      heartbeat: async () => ({}),
+      claim: async () => { claims += 1; return null },
+      complete: async ({ receipt }) => ({ duplicate: false, command_id: receipt.command_id, receipt_hash: receipt.receipt_hash, command_status: 'succeeded' }),
+    }
+    await expect(runRunnerCycle({ client, runnerId: identity.runner_id, softwareCommit: 'a'.repeat(40), signingKey: SIGNING_KEY, driveState: 'ready', runtimeRoot, dispatch: async () => dispatchResult() })).resolves.toEqual({ state: 'idle' })
+    expect(claims).toBe(1)
+    await expect(readFile(legacyPath, 'utf8')).resolves.toBe(before)
+
+    const reissued = RunnerCommandEnvelopeV1Schema.parse({ ...command, command_id: '44444444-4444-4444-8444-444444444444' })
+    let dispatches = 0
+    let completions = 0
+    const replayClient: RunnerControlPlane = {
+      heartbeat: async () => ({}),
+      claim: async () => ({ command: reissued, lease: { token: 'legacy-reissue-token-long-enough-test', expires_at: '2026-09-04T10:10:00.000Z' } }),
+      complete: async ({ receipt: submitted }) => { completions += 1; return { duplicate: false, command_id: submitted.command_id, receipt_hash: submitted.receipt_hash, command_status: 'succeeded' } },
+    }
+    await expect(runRunnerCycle({ client: replayClient, runnerId: identity.runner_id, softwareCommit: 'a'.repeat(40), signingKey: SIGNING_KEY, driveState: 'ready', runtimeRoot, now: () => new Date('2026-09-04T10:00:00.000Z'), dispatch: async () => { dispatches += 1; return dispatchResult() } })).rejects.toThrow('legacy acknowledged runner receipt cannot be replayed')
+    expect({ dispatches, completions }).toEqual({ dispatches: 0, completions: 0 })
+  })
+
+  it('quarantines an authenticated legacy pending success before any network or discovery work', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-legacy-pending-'))
+    const identity = await loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)
+    const command = await commandFixture()
+    await persistClaimedCommandJournal(command, identity.runner_id, SIGNING_KEY, '2026-09-05T09:00:00.000Z', runtimeRoot)
+    const receipt = legacySucceededReceipt(command)
+    const pendingPath = join(runtimeRoot, 'runner', 'receipts', 'pending', command.idempotency_key, `${command.command_id}.json`)
+    await mkdir(join(pendingPath, '..'), { recursive: true })
+    await writeFile(pendingPath, `${JSON.stringify({ schema_version: 1, idempotency_key: command.idempotency_key, runner_id: identity.runner_id, lease_token: 'legacy-lease-token-long-enough-for-test', receipt }, null, 2)}\n`)
+    const calls = { complete: 0, heartbeat: 0, project: 0, discovery: 0, claim: 0, dispatch: 0 }
+    const client: RunnerControlPlane = {
+      complete: async ({ receipt: submitted }) => { calls.complete += 1; return { duplicate: false, command_id: submitted.command_id, receipt_hash: submitted.receipt_hash, command_status: 'succeeded' } },
+      heartbeat: async () => { calls.heartbeat += 1; return {} },
+      project: async () => { calls.project += 1; throw new Error('legacy pending receipt must stop projection') },
+      claim: async () => { calls.claim += 1; return null },
+    }
+    await expect(runRunnerCycle({ client, runnerId: identity.runner_id, softwareCommit: 'a'.repeat(40), signingKey: SIGNING_KEY, driveState: 'ready', runtimeRoot, enforceProjectState: true, discoverInbox: async () => { calls.discovery += 1; throw new Error('legacy pending receipt must stop discovery') }, dispatch: async () => { calls.dispatch += 1; return dispatchResult() } })).resolves.toEqual({ state: 'idle' })
+    expect(calls).toEqual({ complete: 0, heartbeat: 1, project: 0, discovery: 0, claim: 0, dispatch: 0 })
+    await expect(access(pendingPath)).rejects.toMatchObject({ code: 'ENOENT' })
+    const conflictPath = join(runtimeRoot, 'runner', 'receipts', 'conflicted', command.idempotency_key, `${command.command_id}.json`)
+    await expect(readFile(conflictPath, 'utf8')).resolves.toContain('legacy_receipt_missing_source_cursor')
+  })
+
+  it('strictly authenticates every retained claim and acknowledged receipt before network work', async () => {
+    const scenarios = ['unexpected_claim', 'renamed_claim', 'tampered_claim', 'unexpected_acknowledged', 'renamed_acknowledged_directory', 'linked_acknowledged_directory', 'renamed_acknowledged_receipt', 'tampered_acknowledged_receipt', 'mismatched_idempotency'] as const
+    for (const scenario of scenarios) {
+      runtimeRoot = await mkdtemp(join(tmpdir(), `mindmake-runner-retained-${scenario}-`))
+      const identity = await loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)
+      const command = await commandFixture()
+      await persistClaimedCommandJournal(command, identity.runner_id, SIGNING_KEY, '2026-09-05T09:00:00.000Z', runtimeRoot)
+      const claimPath = join(runtimeRoot, 'runner', 'claims', `${command.command_id}.json`)
+      const acknowledgedRoot = join(runtimeRoot, 'runner', 'receipts', 'acknowledged')
+      const acknowledgedDirectory = join(acknowledgedRoot, command.idempotency_key)
+      const acknowledgedPath = join(acknowledgedDirectory, `${command.command_id}.json`)
+      await mkdir(acknowledgedDirectory, { recursive: true })
+      await writeFile(acknowledgedPath, `${JSON.stringify(currentSucceededReceipt(command), null, 2)}\n`)
+      if (scenario === 'unexpected_claim') await writeFile(join(runtimeRoot, 'runner', 'claims', 'leftover.tmp'), 'unexpected\n')
+      if (scenario === 'renamed_claim') await rename(claimPath, `${claimPath}.old`)
+      if (scenario === 'tampered_claim') {
+        const claim = JSON.parse(await readFile(claimPath, 'utf8'))
+        claim.journal_signature = 'f'.repeat(64)
+        await writeFile(claimPath, `${JSON.stringify(claim)}\n`)
+      }
+      if (scenario === 'unexpected_acknowledged') await writeFile(join(acknowledgedRoot, 'leftover.tmp'), 'unexpected\n')
+      if (scenario === 'renamed_acknowledged_directory') await rename(acknowledgedDirectory, `${acknowledgedDirectory}-old`)
+      if (scenario === 'linked_acknowledged_directory') {
+        const target = join(runtimeRoot, 'acknowledged-target')
+        await rename(acknowledgedDirectory, target)
+        await symlink(target, acknowledgedDirectory, 'junction')
+      }
+      if (scenario === 'renamed_acknowledged_receipt') await rename(acknowledgedPath, `${acknowledgedPath}.old`)
+      if (scenario === 'tampered_acknowledged_receipt') {
+        const receipt = JSON.parse(await readFile(acknowledgedPath, 'utf8'))
+        receipt.receipt_signature = 'f'.repeat(64)
+        await writeFile(acknowledgedPath, `${JSON.stringify(receipt)}\n`)
+      }
+      if (scenario === 'mismatched_idempotency') await rename(acknowledgedDirectory, join(acknowledgedRoot, '45454545-4545-4545-8545-454545454545'))
+      const calls = { heartbeat: 0, discovery: 0, claim: 0, complete: 0 }
+      const client: RunnerControlPlane = {
+        heartbeat: async () => { calls.heartbeat += 1; return {} },
+        claim: async () => { calls.claim += 1; return null },
+        complete: async ({ receipt }) => { calls.complete += 1; return { duplicate: false, command_id: receipt.command_id, receipt_hash: receipt.receipt_hash, command_status: 'succeeded' } },
+      }
+      await expect(runRunnerCycle({ client, runnerId: identity.runner_id, softwareCommit: 'a'.repeat(40), signingKey: SIGNING_KEY, driveState: 'ready', runtimeRoot, discoverInbox: async () => { calls.discovery += 1; throw new Error('must not discover') } })).rejects.toThrow()
+      expect(calls).toEqual({ heartbeat: 0, discovery: 0, claim: 0, complete: 0 })
+      await rm(runtimeRoot, { recursive: true, force: true })
+      runtimeRoot = ''
+    }
+  })
+
+  it('resumes every authenticated first-start initialization crash phase without changing identity', async () => {
+    for (const phase of ['before_marker', 'marker_staged', 'after_marker', 'partial_layout', 'identity_staged', 'identity_written', 'legacy_identity_retained'] as const) {
+      runtimeRoot = await mkdtemp(join(tmpdir(), `mindmake-runner-init-${phase}-`))
+      const identity = { schema_version: 2 as const, layout_version: 1 as const, runner_id: 'runner-bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb', created_at: '2026-09-05T09:00:00.000Z' }
+      const markerCommitted = !['before_marker', 'marker_staged'].includes(phase)
+      if (phase !== 'before_marker') await mkdir(join(runtimeRoot, 'runner-staging'), { recursive: true })
+      if (phase === 'marker_staged') await writeFile(join(runtimeRoot, 'runner-staging', '11111111-1111-4111-8111-111111111111.tmp'), `${JSON.stringify(signedAuthorityMarker(identity))}\n`)
+      if (markerCommitted) await writeFile(join(runtimeRoot, 'runner-authority.json'), `${JSON.stringify(signedAuthorityMarker(identity))}\n`)
+      if (phase === 'partial_layout') await mkdir(join(runtimeRoot, 'runner', 'claims'), { recursive: true })
+      if (phase === 'identity_staged') await writeFile(join(runtimeRoot, 'runner-staging', '22222222-2222-4222-8222-222222222222.tmp'), `${JSON.stringify(identity)}\n`)
+      if (phase === 'identity_written') {
+        await mkdir(join(runtimeRoot, 'runner'), { recursive: true })
+        await writeFile(join(runtimeRoot, 'runner', 'identity.json'), `${JSON.stringify(identity)}\n`)
+      }
+      if (phase === 'legacy_identity_retained') {
+        await mkdir(join(runtimeRoot, 'runner'), { recursive: true })
+        await writeFile(join(runtimeRoot, 'runner', 'identity.json'), `${JSON.stringify({ schema_version: 1, runner_id: identity.runner_id, created_at: identity.created_at })}\n`)
+      }
+      const loaded = await loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)
+      if (['before_marker', 'marker_staged'].includes(phase)) expect(loaded.runner_id).toMatch(/^runner-/)
+      else expect(loaded).toEqual(identity)
+      await expect(loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)).resolves.toEqual(loaded)
+      await expect(readFile(join(runtimeRoot, 'runner-authority.json'), 'utf8')).resolves.toContain('"state": "finalized"')
+      await expect(readdir(join(runtimeRoot, 'runner-staging'))).resolves.toEqual([])
+      await rm(runtimeRoot, { recursive: true, force: true })
+      runtimeRoot = ''
+    }
+  })
+
+  it('fails closed when authenticated authority is hidden, deleted, replaced, or tampered', async () => {
+    for (const scenario of ['renamed_root', 'deleted_root', 'root_junction', 'renamed_marker', 'deleted_marker', 'marker_junction', 'renamed_identity', 'deleted_identity', 'tampered_marker'] as const) {
+      runtimeRoot = await mkdtemp(join(tmpdir(), `mindmake-runner-authority-${scenario}-`))
+      await loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)
+      const runner = join(runtimeRoot, 'runner')
+      const marker = join(runtimeRoot, 'runner-authority.json')
+      if (scenario === 'renamed_root') await rename(runner, join(runtimeRoot, 'runner-old'))
+      if (scenario === 'deleted_root') await rm(runner, { recursive: true, force: true })
+      if (scenario === 'root_junction') {
+        const target = join(runtimeRoot, 'authority-root-target')
+        await rename(runner, target)
+        await symlink(target, runner, 'junction')
+      }
+      if (scenario === 'marker_junction') {
+        await rm(marker)
+        const target = join(runtimeRoot, 'authority-marker-target')
+        await mkdir(target)
+        await symlink(target, marker, 'junction')
+      }
+      if (scenario === 'renamed_marker') await rename(marker, join(runtimeRoot, 'runner-authority.json-old'))
+      if (scenario === 'deleted_marker') await rm(marker)
+      if (scenario === 'renamed_identity') await rename(join(runner, 'identity.json'), join(runner, 'identity-old.json'))
+      if (scenario === 'deleted_identity') await rm(join(runner, 'identity.json'))
+      if (scenario === 'tampered_marker') {
+        const value = JSON.parse(await readFile(marker, 'utf8'))
+        value.initialized_at = '2026-09-05T10:00:00.000Z'
+        await writeFile(marker, `${JSON.stringify(value)}\n`)
+      }
+      await expect(loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)).rejects.toThrow()
+      if (!['deleted_root', 'renamed_marker', 'deleted_marker'].includes(scenario)) await expect(access(marker)).resolves.toBeUndefined()
+      await rm(runtimeRoot, { recursive: true, force: true })
+      runtimeRoot = ''
+    }
+  })
+
+  it('revalidates authority after reacquiring the manual-operation gate', async () => {
+    runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-runner-authority-recheck-'))
+    const identity = await loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)
+    const markerPath = join(runtimeRoot, 'runner-authority.json')
+    const marker = JSON.parse(await readFile(markerPath, 'utf8'))
+    marker.identity_hash = 'f'.repeat(64)
+    await writeFile(markerPath, `${JSON.stringify(marker)}\n`)
+    let mutations = 0
+    await expect(withAuthenticatedRunnerAuthority(runtimeRoot, SIGNING_KEY, identity.runner_id, async () => { mutations += 1 })).rejects.toThrow('authentication')
+    expect(mutations).toBe(0)
+  })
+
+  it('rejects missing, renamed, or linked authority roots before any runner network or discovery work', async () => {
+    const authorityRoots = ['staging', 'claims', 'receipts', 'receipts_pending', 'receipts_acknowledged', 'receipts_conflicted', 'project_state'] as const
+    const mutations = ['missing', 'renamed', 'linked'] as const
+    for (const rootName of authorityRoots) for (const mutation of mutations) {
+      const scenario = `${mutation}_${rootName}`
+      runtimeRoot = await mkdtemp(join(tmpdir(), `mindmake-runner-layout-${scenario}-`))
+      const identity = await loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)
+      const segments = rootName === 'staging'
+        ? ['runner-staging']
+        : rootName === 'project_state'
+        ? ['project-state']
+        : rootName.startsWith('receipts_') ? ['receipts', rootName.slice('receipts_'.length)] : [rootName]
+      const authorityPath = rootName === 'staging' ? join(runtimeRoot, ...segments) : join(runtimeRoot, 'runner', ...segments)
+      const parent = join(authorityPath, '..')
+      const name = segments.at(-1)!
+      if (mutation === 'missing') await rm(authorityPath, { recursive: true, force: true })
+      if (mutation === 'renamed') await rename(authorityPath, join(parent, `${name}-old`))
+      if (mutation === 'linked') {
+        await rm(authorityPath, { recursive: true, force: true })
+        const target = join(runtimeRoot, `${rootName}-target`)
+        await mkdir(target)
+        await symlink(target, authorityPath, 'junction')
+      }
+      const calls = { heartbeat: 0, discovery: 0, claim: 0, complete: 0 }
+      const client: RunnerControlPlane = {
+        heartbeat: async () => { calls.heartbeat += 1; return {} },
+        claim: async () => { calls.claim += 1; return null },
+        complete: async ({ receipt }) => { calls.complete += 1; return { duplicate: false, command_id: receipt.command_id, receipt_hash: receipt.receipt_hash, command_status: 'succeeded' } },
+      }
+      await expect(runRunnerCycle({ client, runnerId: identity.runner_id, softwareCommit: 'a'.repeat(40), signingKey: SIGNING_KEY, driveState: 'ready', runtimeRoot, discoverInbox: async () => { calls.discovery += 1; throw new Error('must not discover') } })).rejects.toThrow()
+      expect(calls).toEqual({ heartbeat: 0, discovery: 0, claim: 0, complete: 0 })
+      await rm(runtimeRoot, { recursive: true, force: true })
+      runtimeRoot = ''
+    }
+  })
+
+  it('rejects misnamed or linked authority staging residue before any runner network or discovery work', async () => {
+    for (const scenario of ['misnamed', 'linked'] as const) {
+      runtimeRoot = await mkdtemp(join(tmpdir(), `mindmake-runner-staging-residue-${scenario}-`))
+      const identity = await loadOrCreateRunnerIdentity(runtimeRoot, SIGNING_KEY)
+      const stagingRoot = join(runtimeRoot, 'runner-staging')
+      if (scenario === 'misnamed') await writeFile(join(stagingRoot, 'not-an-authority-uuid.tmp'), 'unexpected\n')
+      else {
+        const target = join(runtimeRoot, 'staging-residue-target')
+        await mkdir(target)
+        await symlink(target, join(stagingRoot, '11111111-1111-4111-8111-111111111111.tmp'), 'junction')
+      }
+      const calls = { heartbeat: 0, discovery: 0, claim: 0, complete: 0 }
+      const client: RunnerControlPlane = {
+        heartbeat: async () => { calls.heartbeat += 1; return {} },
+        claim: async () => { calls.claim += 1; return null },
+        complete: async ({ receipt }) => { calls.complete += 1; return { duplicate: false, command_id: receipt.command_id, receipt_hash: receipt.receipt_hash, command_status: 'succeeded' } },
+      }
+      await expect(runRunnerCycle({
+        client,
+        runnerId: identity.runner_id,
+        softwareCommit: 'a'.repeat(40),
+        signingKey: SIGNING_KEY,
+        driveState: 'ready',
+        runtimeRoot,
+        discoverInbox: async () => { calls.discovery += 1; throw new Error('must not discover') },
+      })).rejects.toThrow('unexpected entry')
+      expect(calls).toEqual({ heartbeat: 0, discovery: 0, claim: 0, complete: 0 })
+      await rm(runtimeRoot, { recursive: true, force: true })
+      runtimeRoot = ''
+    }
   })
 
   it('executes one semantic idempotency key once even when the server issues a new command attempt ID', async () => {
@@ -492,6 +920,7 @@ describe('Codex-independent runner', () => {
       process.env.MINDMAKE_DRIVE_ROOT = driveRoot
       process.env.MINDMAKE_MEDIA_INBOX = inbox
       process.env.MINDMAKE_ARCHIVE_ROOT = archive
+      setRunnerReceiptSigningKeyProviderForTests(() => SIGNING_KEY.toString('utf8'))
       const status = await runnerStatus() as { drive_state: string; discovery: { drive_state: string; safe_codes: string[] } }
       expect(status.drive_state).toBe('unavailable')
       expect(status.discovery).toMatchObject({ drive_state: 'unavailable', safe_codes: ['discovery_state_invalid'] })

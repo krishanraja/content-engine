@@ -43,6 +43,7 @@ import {
   brandWordmarkLegibilityReport,
   alignScriptToTranscript,
   applyPresenterIdentityCorrections,
+  acknowledgeRunnerProjectConflict,
   archiveJob,
   assessTranscriptQuality,
   assertRenderLineageV2,
@@ -2221,6 +2222,21 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
   const runner = v2.command('runner').description('Codex-independent Windows control-plane runner')
   runner.command('once').action(async () => context.out(await runRunnerOnce(context.repoRoot)))
   runner.command('status').action(async () => context.out(await runnerStatus()))
+  runner.command('resolve-project-conflict')
+    .description('Acknowledge one reconciled signed project conflict without deleting its evidence')
+    .requiredOption('--job <jobId>')
+    .requiredOption('--platform <platform>')
+    .requiredOption('--journal-hash <sha256>')
+    .requiredOption('--confirmation-ref <reference>', 'explicit operator confirmation after cloud and local cursor verification')
+    .action(async (options) => {
+      if (!SHA256.test(options.journalHash)) throw new Error('--journal-hash must be lowercase SHA-256')
+      context.out(await acknowledgeRunnerProjectConflict({
+        job_id: options.job,
+        platform: VideoPlatformV1Schema.parse(options.platform),
+        journal_hash: options.journalHash,
+        operator_confirmation_ref: options.confirmationRef,
+      }))
+    })
   runner.command('project')
     .description('Publish one redacted, exact-hash local review launcher to Control Center')
     .requiredOption('--job <jobId>')

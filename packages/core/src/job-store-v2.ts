@@ -30,6 +30,7 @@ import type { JobPurpose, Series, SourceMode } from '@mindmake/contracts'
 import { loadApprovalSigningKey, signApprovalReceiptBody, signRunnerLedgerEventBody, verifyApprovalReceiptBody, verifyRunnerLedgerEventBody } from './approval-signing.js'
 import { hashFile, hashPath, hashValue, stableJson } from './hash.js'
 import { assertDriveSourceBundleProvenance, assertPortableDriveIntakeProof } from './drive-discovery.js'
+import { withDurableFileLock } from './durable-lock.js'
 import { jobPath } from './paths.js'
 import { v2DescendantsFor, v2PrerequisitesFor, v2StageOrder } from './stage-graphs.js'
 
@@ -46,10 +47,10 @@ interface EventLedgerTailV2 {
   event_chain_hash: string
 }
 
-function processIsAlive(pid: number): boolean {
-  if (!Number.isSafeInteger(pid) || pid <= 0) return false
-  try { process.kill(pid, 0); return true }
-  catch (error) { return (error as NodeJS.ErrnoException).code === 'EPERM' }
+export interface JobProjectionSnapshotV2 {
+  job: JobManifestV2
+  source_event_count: number
+  event_chain_hash: string
 }
 
 function jobEventLockPath(jobId: string): string {
@@ -61,63 +62,14 @@ export async function withJobEventLock<T>(jobId: string, callback: () => Promise
   const inherited = heldJobLocks.getStore()
   if (inherited?.has(canonicalJobId)) return callback()
   const path = jobEventLockPath(canonicalJobId)
-  await mkdir(dirname(path), { recursive: true })
-  const token = randomUUID()
-  const deadline = Date.now() + JOB_EVENT_LOCK_TIMEOUT_MS
-  let handle: Awaited<ReturnType<typeof open>> | undefined
-  while (!handle) {
-    try {
-      handle = await open(path, 'wx', 0o600)
-      await handle.writeFile(`${JSON.stringify({ schema_version: 1, pid: process.pid, token, acquired_at: new Date().toISOString() })}\n`, 'utf8')
-      await handle.sync()
-    } catch (error) {
-      const code = (error as NodeJS.ErrnoException).code
-      if (!['EEXIST', 'EACCES', 'EPERM'].includes(code ?? '')) throw error
-      try { await stat(path) }
-      catch (pathError) {
-        if ((pathError as NodeJS.ErrnoException).code === 'ENOENT') continue
-        throw error
-      }
-      let stale = false
-      let observedLock = ''
-      try {
-        observedLock = await readFile(path, 'utf8')
-        const lock = JSON.parse(observedLock) as { pid?: unknown; acquired_at?: unknown }
-        const pid = typeof lock.pid === 'number' ? lock.pid : 0
-        const acquiredAt = typeof lock.acquired_at === 'string' ? Date.parse(lock.acquired_at) : Number.NaN
-        if (processIsAlive(pid)) stale = false
-        else if (pid > 0) stale = true
-        else if (Number.isFinite(acquiredAt)) stale = Date.now() - acquiredAt > JOB_EVENT_LOCK_INCOMPLETE_GRACE_MS
-        else stale = Date.now() - (await stat(path)).mtimeMs > JOB_EVENT_LOCK_INCOMPLETE_GRACE_MS
-      } catch {
-        try { stale = Date.now() - (await stat(path)).mtimeMs > JOB_EVENT_LOCK_INCOMPLETE_GRACE_MS }
-        catch { stale = true }
-      }
-      if (stale) {
-        try {
-          const currentLock = await readFile(path, 'utf8')
-          if (currentLock === observedLock) await unlink(path)
-        }
-        catch (unlinkError) { if ((unlinkError as NodeJS.ErrnoException).code !== 'ENOENT') throw unlinkError }
-        continue
-      }
-      if (Date.now() >= deadline) throw new Error(`job ${canonicalJobId} event ledger lock timed out`)
-      await new Promise((resolveDelay) => setTimeout(resolveDelay, 15 + Math.floor(Math.random() * 25)))
-    }
-  }
-  const context = new Map(inherited ?? [])
-  context.set(canonicalJobId, token)
-  try {
-    return await heldJobLocks.run(context, callback)
-  } finally {
-    await handle.close()
-    try {
-      const current = JSON.parse(await readFile(path, 'utf8')) as { token?: unknown }
-      if (current.token === token) await unlink(path)
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
-    }
-  }
+  return withDurableFileLock(path, async (token) => {
+    const context = new Map(inherited ?? [])
+    context.set(canonicalJobId, token)
+    return heldJobLocks.run(context, callback)
+  }, {
+    timeoutMs: JOB_EVENT_LOCK_TIMEOUT_MS,
+    incompleteGraceMs: JOB_EVENT_LOCK_INCOMPLETE_GRACE_MS,
+  })
 }
 
 async function assertJobEventLockOwner(jobId: string): Promise<void> {
@@ -914,6 +866,15 @@ export async function loadJobV2(jobId: string): Promise<JobManifestV2> {
     if (job.job_id !== jobId) throw new Error('job manifest belongs to a different job directory')
     await verifyPinnedInputsV2(job)
     return reconcileJobEvents(job, await readEventsV2(jobId))
+  })
+}
+
+export async function loadJobProjectionSnapshotV2(jobId: string): Promise<JobProjectionSnapshotV2> {
+  return withJobEventLock(jobId, async () => {
+    const job = await loadJobV2(jobId)
+    const tail = eventLedgerTailV2(await readEventsV2(jobId))
+    if (tail.event_count < 1) throw new Error('job projection requires its append-only creation event')
+    return { job, source_event_count: tail.event_count, event_chain_hash: tail.event_chain_hash }
   })
 }
 
