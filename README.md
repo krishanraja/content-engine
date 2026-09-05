@@ -16,15 +16,16 @@ The studio optimizes honest reach, retention, sharing, and qualified action. It 
 
 ```powershell
 npm ci
+.\scripts\migrate-runner-runtime.ps1
 npm run bootstrap:python
 .\scripts\studio.ps1 doctor
 .\scripts\studio.ps1 v2 job create --series money_of_ai --mode extract --source-bundle "C:\media\episode.source-bundle.json"
 .\scripts\studio.ps1 v2 ingest --job <job-id>
 ```
 
-The Python command creates one hash-locked media runtime under `%LOCALAPPDATA%\MindmakeVideoStudio\python`. Disposable GitHub checkouts reuse it rather than reinstalling transcription dependencies per session. The first renderer run also seeds a versioned shared Chrome Headless Shell under the same runtime root.
+The Python command creates one hash-locked media runtime under `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime\python` on Windows. Disposable GitHub checkouts and the independent Scheduled Task reuse it rather than reinstalling transcription dependencies per session. The first renderer run also seeds a versioned shared Chrome Headless Shell under the same runtime root.
 
-Set `MINDMAKE_RUNTIME_ROOT` for fast local scratch storage. The versioned defaults use `G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine` as the Drive root, its dedicated `Inbox` for recording discovery, and its separate `Archive` for approved deliverables. Rendering remains policy-blocked until Remotion licence eligibility is explicitly recorded.
+The Windows runner wrappers accept only that explicit runtime root so Codex and the outside Scheduled Task cannot fork job or receipt state. The versioned defaults use `G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine` as the Drive root, its dedicated `Inbox` for recording discovery, and its separate `Archive` for approved deliverables. Rendering remains policy-blocked until Remotion licence eligibility is explicitly recorded.
 
 In any new Codex chat, launch the workflow by making the complete first message `Video engine` (case-insensitive, with surrounding whitespace allowed). The launcher deliberately does not trigger for `$video-engine`, punctuation, extra words or lines, a later message, or a generic request to edit a video. It fetches the latest GitHub `main`, runs health and queue checks, and recommends the strongest next action.
 
