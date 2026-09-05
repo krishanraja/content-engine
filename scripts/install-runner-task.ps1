@@ -35,9 +35,11 @@ $task = New-ScheduledTask -Action $action -Trigger $trigger -Principal $principa
 Register-ScheduledTask -TaskName $TaskName -InputObject $task -Force | Out-Null
 $installed = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop
 if ($installed.Settings.DisallowStartIfOnBatteries -ne $false) {
+  Disable-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue | Out-Null
   throw 'Runner task must be allowed to start while the device is on battery power.'
 }
 if ($installed.Settings.StopIfGoingOnBatteries -ne $false) {
+  Disable-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue | Out-Null
   throw 'Runner task must continue running when the device switches to battery power.'
 }
 Write-Output "Installed scheduled task: $TaskName"
