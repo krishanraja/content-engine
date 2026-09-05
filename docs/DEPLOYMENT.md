@@ -66,6 +66,8 @@ git clone https://github.com/krishanraja/mindmake-video-studio.git "$env:USERPRO
 Set-Location "$env:USERPROFILE\Documents\MindmakeVideoStudio\runner-source"
 git switch --detach <approved-40-character-commit>
 npm ci
+$env:MINDMAKE_RUNTIME_ROOT = "$env:USERPROFILE\Documents\MindmakeVideoStudio\runtime"
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/migrate-runner-runtime.ps1
 powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/verify-runner-source.ps1 -RequirePersistentLocation
 ```
 
@@ -99,9 +101,10 @@ After the matching Control Center API and server-side credentials are live, veri
 ```powershell
 $env:MINDMAKE_RUNTIME_ROOT = "$env:USERPROFILE\Documents\MindmakeVideoStudio\runtime"
 npm ci
-powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/migrate-runner-runtime.ps1
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/migrate-runner-runtime.ps1 -CheckOnly
 npm run bootstrap:python
 .\scripts\studio.ps1 doctor
+.\scripts\studio.ps1 index rebuild
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-runner-task.ps1
 Start-ScheduledTask -TaskName "Mindmake Video Studio Runner"
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode status

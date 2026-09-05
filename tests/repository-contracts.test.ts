@@ -75,6 +75,7 @@ describe('repository operating contracts', () => {
 
   it('documents only the real V2 recovery, transcription and preview surface', async () => {
     const operations = await readFile(join(repoRoot, 'docs', 'OPERATIONS.md'), 'utf8')
+    const deployment = await readFile(join(repoRoot, 'docs', 'DEPLOYMENT.md'), 'utf8')
     expect(operations).toContain('studio v2 transcribe --job <job-id> --verified <transcript.json>')
     expect(operations).toContain('studio v2 job status')
     expect(operations).toContain('studio v2 job resume --job <job-id>')
@@ -86,6 +87,12 @@ describe('repository operating contracts', () => {
     expect(operations).toContain('.\\scripts\\studio.ps1 v2 package archive --job <job-id>')
     expect(operations).not.toContain('.\\scripts\\studio.ps1 v2 package create --job <job-id> --candidate <candidate-json-path> --archive')
     expect(operations).not.toContain('npm run studio --')
+    const firstMigration = deployment.indexOf('scripts/migrate-runner-runtime.ps1')
+    const requiredPreflight = deployment.indexOf('scripts/verify-runner-source.ps1 -RequirePersistentLocation')
+    expect(firstMigration).toBeGreaterThan(-1)
+    expect(requiredPreflight).toBeGreaterThan(firstMigration)
+    expect(deployment).toContain('scripts/migrate-runner-runtime.ps1 -CheckOnly')
+    expect(deployment).toContain('.\\scripts\\studio.ps1 index rebuild')
   })
 
   it('keeps every supported media and edit-sidecar format out of Git', async () => {
