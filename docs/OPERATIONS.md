@@ -85,6 +85,15 @@ Scan, review, source-bundle, and confirmed rebind commands resolve the exact 40-
 
 The first healthy scan binds the resolved Inbox identity. A transient mount outage preserves the last trusted inventory and dedupe history while making every candidate unavailable. If another folder or Drive account later resolves at the configured path, scans remain blocked with `inbox_identity_changed_requires_rebind`. Inspect the exact old/new hash proposal, verify the mounted account and folder outside the engine, then record Krish's explicit confirmation:
 
+`inbox init` creates a small, non-secret identity marker inside the dedicated
+Inbox. Google Drive syncs that marker with the folder, so a normal virtual-drive
+remount does not look like a replacement merely because Windows assigned new
+filesystem metadata. The marker is excluded from intake inventory. A missing,
+different, malformed, or relocated marker still fails closed and requires the
+explicit rebind below. Older installations without a marker continue using the
+legacy filesystem identity until `inbox init` creates the marker. That one-time
+identity change requires the same exact rebind flow below.
+
 ```powershell
 .\scripts\studio.ps1 v2 inbox rebind
 .\scripts\studio.ps1 v2 inbox rebind --confirmation-ref "codex-user-confirmation:inbox-rebind:<old-fingerprint>:<new-fingerprint>:<exact Krish confirmation>"
