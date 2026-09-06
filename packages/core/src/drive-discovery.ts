@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { access, mkdir, open, opendir, readFile, realpath, rename, stat, truncate, unlink } from 'node:fs/promises'
+import { access, lstat, mkdir, open, opendir, readFile, realpath, rename, stat, truncate, unlink } from 'node:fs/promises'
 import { basename, dirname, extname, join, parse, relative, resolve, sep } from 'node:path'
 import {
   DRIVE_DISCOVERY_SCHEMA_VERSION_V1,
@@ -46,6 +46,8 @@ const VIDEO_EXTENSIONS = new Set(['.avi', '.m2ts', '.m4v', '.mkv', '.mov', '.mp4
 const AUDIO_EXTENSIONS = new Set(['.aac', '.flac', '.m4a', '.mp3', '.ogg', '.opus', '.wav'])
 const CAPTION_SIDECAR_EXTENSIONS = new Set(['.srt', '.vtt'])
 const EDIT_SIDECAR_EXTENSIONS = new Set(['.edl', '.fcpxml'])
+const INBOX_IDENTITY_MARKER = '.mindmake-inbox-id-v1.json'
+const INBOX_IDENTITY_MARKER_MAX_BYTES = 4_096
 
 type FileKind = DriveDiscoveryFileV1['kind']
 
@@ -560,18 +562,77 @@ function inboxFingerprint(inboxPath: string | null): string {
   return hashValue({ domain: 'MindmakeVideoStudio/Inbox/v1', configured: Boolean(inboxPath), path: inboxPath ? resolve(inboxPath).toLocaleLowerCase('en-GB') : null })
 }
 
+interface InboxIdentityMarkerV1 {
+  schema_version: 1
+  inbox_id: string
+  created_at: string
+}
+
+function parseInboxIdentityMarker(value: unknown): InboxIdentityMarkerV1 {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Drive Inbox identity marker is invalid')
+  const marker = value as Record<string, unknown>
+  if (Object.keys(marker).sort().join(',') !== 'created_at,inbox_id,schema_version') throw new Error('Drive Inbox identity marker contains unexpected fields')
+  if (marker.schema_version !== 1 || typeof marker.inbox_id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(marker.inbox_id)) {
+    throw new Error('Drive Inbox identity marker is invalid')
+  }
+  if (typeof marker.created_at !== 'string' || !Number.isFinite(Date.parse(marker.created_at))) throw new Error('Drive Inbox identity marker timestamp is invalid')
+  return { schema_version: 1, inbox_id: marker.inbox_id.toLowerCase(), created_at: marker.created_at }
+}
+
+async function readInboxIdentityMarker(inboxPath: string): Promise<InboxIdentityMarkerV1 | null> {
+  const markerPath = join(inboxPath, INBOX_IDENTITY_MARKER)
+  try {
+    const info = await lstat(markerPath)
+    if (!info.isFile() || info.isSymbolicLink() || info.size < 2 || info.size > INBOX_IDENTITY_MARKER_MAX_BYTES) throw new Error('Drive Inbox identity marker is not a bounded regular file')
+    return parseInboxIdentityMarker(JSON.parse(await readFile(markerPath, 'utf8')))
+  } catch (error) {
+    if (errorCode(error) === 'ENOENT') return null
+    throw error
+  }
+}
+
+async function ensureInboxIdentityMarker(inboxPath: string): Promise<InboxIdentityMarkerV1> {
+  const existing = await readInboxIdentityMarker(inboxPath)
+  if (existing) return existing
+  const marker: InboxIdentityMarkerV1 = { schema_version: 1, inbox_id: randomUUID(), created_at: new Date().toISOString() }
+  const markerPath = join(inboxPath, INBOX_IDENTITY_MARKER)
+  let handle
+  try {
+    handle = await open(markerPath, 'wx', 0o600)
+  } catch (error) {
+    if (errorCode(error) === 'EEXIST') {
+      const concurrentlyCreated = await readInboxIdentityMarker(inboxPath)
+      if (concurrentlyCreated) return concurrentlyCreated
+    }
+    throw error
+  }
+  try {
+    await handle.writeFile(`${JSON.stringify(marker, null, 2)}\n`, 'utf8')
+    await handle.sync()
+  } catch (error) {
+    await handle.close()
+    await unlink(markerPath).catch(() => undefined)
+    throw error
+  }
+  await handle.close()
+  return marker
+}
+
 async function resolvedInboxFingerprint(inboxPath: string): Promise<string> {
   const actualPath = await realpath(inboxPath)
   const info = await stat(actualPath)
   if (!info.isDirectory()) throw new Error('configured Drive inbox is not a directory')
+  const marker = await readInboxIdentityMarker(actualPath)
   return hashValue({
     domain: 'MindmakeVideoStudio/Inbox/v1',
     configured: true,
     path: resolve(inboxPath).toLocaleLowerCase('en-GB'),
     actual_path: resolve(actualPath).toLocaleLowerCase('en-GB'),
-    device: String(info.dev),
-    inode: String(info.ino),
-    created_ms: Math.trunc(Number(info.birthtimeMs)),
+    ...(marker ? { marker: marker.inbox_id } : {
+      legacy_device: String(info.dev),
+      legacy_inode: String(info.ino),
+      legacy_created_ms: Math.trunc(Number(info.birthtimeMs)),
+    }),
   })
 }
 
@@ -625,7 +686,7 @@ async function walkInbox(root: string, maximumFiles: number, maximumEntries: num
     const entries = []
     const directoryHandle = await opendir(directory)
     for await (const entry of directoryHandle) {
-      if (entry.isFile() && entry.name.toLocaleLowerCase('en-GB') === 'desktop.ini') continue
+      if (entry.isFile() && ['desktop.ini', INBOX_IDENTITY_MARKER].includes(entry.name.toLocaleLowerCase('en-GB'))) continue
       entriesSeen += 1
       if (entriesSeen > maximumEntries) { limited = true; safeCodes.add('scan_entry_limit_reached'); break }
       entries.push(entry)
@@ -1739,5 +1800,6 @@ export async function initializeDriveInbox(input: { inboxPath?: string | null; d
   const [actualRoot, actualInbox] = await Promise.all([realpath(resolvedRoot), realpath(resolvedInbox)])
   if (!pathIsInside(actualRoot, actualInbox)) throw new Error('configured Drive inbox resolves outside the Drive root')
   if (await inboxOverlapsArchive(actualInbox, archiveRoot)) throw new Error('Drive Inbox and Archive resolve to overlapping folders')
+  await ensureInboxIdentityMarker(actualInbox)
   return { created, inbox_fingerprint: await resolvedInboxFingerprint(resolvedInbox) }
 }

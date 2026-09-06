@@ -1,4 +1,4 @@
-import { appendFile, mkdtemp, mkdir, readFile, rename, rm, stat, unlink, utimes, writeFile } from 'node:fs/promises'
+import { appendFile, copyFile, mkdtemp, mkdir, readFile, rename, rm, stat, unlink, utimes, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -12,6 +12,7 @@ import {
   createDriveSourceBundleDraft,
   createJobV2,
   hashValue,
+  initializeDriveInbox,
   loadDriveDiscoveryState,
   loadJobV2,
   reviewDriveIntakeCandidate,
@@ -310,6 +311,30 @@ describe('mounted Google Drive discovery', () => {
     expect(replaced.scan?.inbox_fingerprint).toBe(stable.scan?.inbox_fingerprint)
     expect(replaced.scan?.health).toMatchObject({ status: 'error', safe_codes: ['inbox_identity_changed_requires_rebind'] })
     expect(replaced.scan?.candidates.every((candidate) => candidate.classification === 'attention' && candidate.availability === 'missing')).toBe(true)
+  })
+
+  it('uses the synced identity marker across a same-path virtual-drive remount without discovering the marker as media', async () => {
+    const item = await fixture()
+    const initialized = await initializeDriveInbox({ inboxPath: item.inbox, driveRoot: item.root, archiveRoot: join(item.root, 'Archive') })
+    await writeFile(join(item.inbox, 'source.mp4'), 'video')
+    await scanAt(item, '2026-09-04T10:00:00.000Z')
+    const stable = await scanAt(item, '2026-09-04T10:00:11.000Z')
+    expect(stable.scan?.inbox_fingerprint).toBe(initialized.inbox_fingerprint)
+    expect(stable.scan?.health.files_seen).toBe(1)
+
+    const parked = join(item.root, 'Virtual-Drive-Offline')
+    await rename(item.inbox, parked)
+    await scanAt(item, '2026-09-04T10:00:12.000Z')
+    await mkdir(item.inbox)
+    await Promise.all([
+      copyFile(join(parked, '.mindmake-inbox-id-v1.json'), join(item.inbox, '.mindmake-inbox-id-v1.json')),
+      copyFile(join(parked, 'source.mp4'), join(item.inbox, 'source.mp4')),
+    ])
+    const remounted = await scanAt(item, '2026-09-04T10:00:22.000Z')
+    expect(remounted.scan?.inbox_fingerprint).toBe(initialized.inbox_fingerprint)
+    expect(remounted.scan?.health.status).toBe('ready')
+    expect(remounted.scan?.health.safe_codes).not.toContain('inbox_identity_changed_requires_rebind')
+    expect(remounted.scan?.health.files_seen).toBe(1)
   })
 
   it('refuses to scan a configured folder outside the dedicated Drive root', async () => {
