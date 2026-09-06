@@ -110,6 +110,11 @@ Start-ScheduledTask -TaskName "Mindmake Video Studio Runner"
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode status
 ```
 
+The installed task combines an at-logon trigger with a five-minute recovery
+trigger. The latter is a local watchdog only: `IgnoreNew` prevents duplicate
+daemons, while an interrupted daemon is restarted inside the current
+interactive session without waiting for another logon or a Codex session.
+
 Before replacing an existing task, stop it and require the runner singleton to become explicitly inactive:
 
 ```powershell

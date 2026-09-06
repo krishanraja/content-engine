@@ -66,12 +66,24 @@ if ($runnerStatus.active -ne $false) {
 # PowerShell wrapper all create child process chains that Task Scheduler can
 # leave running after Stop-ScheduledTask.
 $action = New-ScheduledTaskAction -Execute $node -Argument $arguments -WorkingDirectory $repoRoot
-$trigger = New-ScheduledTaskTrigger -AtLogOn -User $userId
+$logonTrigger = New-ScheduledTaskTrigger -AtLogOn -User $userId
+# Windows can terminate an interactive task while the machine sleeps, updates,
+# or closes a session without producing a fresh logon trigger afterwards. The
+# recovery trigger is deliberately local and single-instance: while the daemon
+# is healthy Task Scheduler ignores it, and after an interruption it restores
+# the runner within five minutes. Reinstalling a release refreshes the ten-year
+# horizon.
+$recoveryTrigger = New-ScheduledTaskTrigger `
+  -Once `
+  -At ((Get-Date).AddMinutes(1)) `
+  -RepetitionInterval (New-TimeSpan -Minutes 5) `
+  -RepetitionDuration (New-TimeSpan -Days 3650)
 $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
 $settings = New-ScheduledTaskSettingsSet `
   -StartWhenAvailable `
   -AllowStartIfOnBatteries `
   -DontStopIfGoingOnBatteries `
+  -DontStopOnIdleEnd `
   -RestartCount 12 `
   -RestartInterval (New-TimeSpan -Minutes 1) `
   -MultipleInstances IgnoreNew `
@@ -79,7 +91,7 @@ $settings = New-ScheduledTaskSettingsSet `
   -ExecutionTimeLimit ([TimeSpan]::Zero)
 
 try {
-  $task = New-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description 'Runs the local Mindmake Video Studio control-plane worker without requiring Codex.'
+  $task = New-ScheduledTask -Action $action -Trigger @($logonTrigger, $recoveryTrigger) -Principal $principal -Settings $settings -Description 'Runs the local Mindmake Video Studio control-plane worker without requiring Codex.'
   Register-ScheduledTask -TaskName $TaskName -InputObject $task -Force | Out-Null
   $installed = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop
   $installedActions = @($installed.Actions)
@@ -94,11 +106,24 @@ try {
   if (-not $actionMatches) {
     throw 'Runner task action readback does not match the direct Node daemon contract.'
   }
+  $installedTriggers = @($installed.Triggers)
+  $hasLogonTrigger = @($installedTriggers | Where-Object { $_.CimClass.CimClassName -eq 'MSFT_TaskLogonTrigger' }).Count -eq 1
+  $hasRecoveryTrigger = @($installedTriggers | Where-Object {
+    $_.CimClass.CimClassName -eq 'MSFT_TaskTimeTrigger' `
+      -and $_.Repetition.Interval -eq 'PT5M' `
+      -and $_.Repetition.Duration -eq 'P3650D'
+  }).Count -eq 1
+  if (-not $hasLogonTrigger -or -not $hasRecoveryTrigger -or $installedTriggers.Count -ne 2) {
+    throw 'Runner task triggers do not match the logon plus five-minute recovery contract.'
+  }
   if ($installed.Settings.DisallowStartIfOnBatteries -ne $false) {
     throw 'Runner task must be allowed to start while the device is on battery power.'
   }
   if ($installed.Settings.StopIfGoingOnBatteries -ne $false) {
     throw 'Runner task must continue running when the device switches to battery power.'
+  }
+  if ($installed.Settings.IdleSettings.StopOnIdleEnd -ne $false) {
+    throw 'Runner task must continue running when Windows leaves an idle state.'
   }
   if ($installed.Settings.AllowHardTerminate -ne $true) {
     throw 'Runner task must allow Task Scheduler to terminate its directly owned daemon process.'

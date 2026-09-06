@@ -51,6 +51,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode sto
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/runner.ps1 -Mode once
 ```
 
+The task starts at logon and carries a five-minute recovery trigger for the
+same current-user session. `IgnoreNew` keeps one daemon process while it is
+healthy. If Windows terminates the process during sleep, an update, or a
+session transition, the recovery trigger starts it again without Codex. The
+task is also configured to continue across battery and idle-state changes. The
+Drive mount still requires the user's interactive Google Drive session.
+
 `Stop-ScheduledTask` is complete only when the registered task is no longer `Running` and `runner.ps1 -Mode stop-preflight` reports `active: false`. This preflight reads only the singleton lock; it must run before full status during a legacy upgrade because full status can initialize or migrate authority state. Stop only while the already-established cloud and local status are idle with zero pending or conflicted receipt and project journals. The installed action is the actual Node daemon with tsx imported in-process, not a PowerShell, npm, cmd, or tsx-CLI wrapper, and the task must read back `AllowHardTerminate: true`. If a stopped legacy task still reports an active or unknown singleton, do not run full status, install, or start another runner. Confirm the exact process is the old daemon and use an explicit audited remediation. Never kill a PID based only on its number or delete `runner.lock` by hand. Protocol v1 does not claim to terminate an FFmpeg, Python, or Remotion child in the middle of media work; cooperative drain and a Windows Job Object remain a follow-up after activation.
 
 The task installer accepts only the clean, exact Git checkout at `%USERPROFILE%\Documents\MindmakeVideoStudio\runner-source`. It rejects LocalAppData and other application-managed source locations before changing the Scheduled Task. Runtime state, reusable Python, browser binaries, receipts, and caches use `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime`. Keeping both roots explicit prevents an application-virtualized shell and the outside Scheduled Task from seeing different files. Before the first install, the copy-only migration preserves durable legacy LocalAppData state without deleting or overwriting either root. The preflight then proves every still-visible legacy file has an identical canonical copy.
