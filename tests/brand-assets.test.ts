@@ -17,7 +17,7 @@ describe('official brand wordmarks', () => {
   it('pins the real GitHub assets and clears the deterministic legibility floor', () => {
     const theme = activeTheme()
     expect(theme.version).toBe(6)
-    expect(theme.source.commit).toBe('54ea43b9771d3b263718a4d40cecc68167b7a718')
+    expect(theme.source.commit).toBe('2d24032681e41ef12ec46ce49780408d5c4eb405')
     expect(studioConfig.visual_story_director.design_authority.main_commit_verified).toBe(theme.source.commit)
     const wordmarks = theme.wordmarks
     expect(wordmarks).toBeDefined()
@@ -55,7 +55,7 @@ describe('official brand wordmarks', () => {
       expect(lockup.identity.series_width).toBeLessThanOrEqual(lockup.identity.plate_width - lockup.identity.padding * 2)
       expect(lockup.series_only_fallback.series_width).toBeLessThanOrEqual(lockup.series_only_fallback.plate_width - lockup.series_only_fallback.padding * 2)
     }
-    expect(officialWordmarkUrl(theme, wordmarks.series.built_with_ai)).toBe('https://raw.githubusercontent.com/krishanraja/mindmake/54ea43b9771d3b263718a4d40cecc68167b7a718/src/assets/builtwithai-logo-wordmark.png')
+    expect(officialWordmarkUrl(theme, wordmarks.series.built_with_ai)).toBe('https://raw.githubusercontent.com/krishanraja/mindmake/2d24032681e41ef12ec46ce49780408d5c4eb405/src/assets/builtwithai-logo-wordmark.png')
     expect(brandWordmarkLegibilityIssues(theme)).toEqual([])
     const report = brandWordmarkLegibilityReport(theme)
     expect(report.recommended_identity_mode).toEqual({ money_of_ai: 'stacked_identity', built_with_ai: 'stacked_identity' })

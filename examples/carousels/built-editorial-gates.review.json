@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "story_id": "built-editorial-gates-v1",
+  "title": "The AI editor that can reject the brief",
+  "series": "built_with_ai",
+  "source_format": "build_itself",
+  "target_audience": "AI-native operators building repeatable content systems",
+  "source_artifact": {
+    "kind": "owned",
+    "ref": "github.com/krishanraja/mindmake-video-studio@7762a4f6b4b5661da9c55c17a6441a95e17f04e9",
+    "source_hash": "a6d47ee126e2b69f8a074d93796db795f184be105fc6af01b856f6dbf6a072a0"
+  },
+  "platforms": ["linkedin_document", "instagram"],
+  "fixed_seed": "built-editorial-gates-v1",
+  "brand_theme": {
+    "theme_id": "mindmake-video-v1",
+    "theme_hash": "9d1f8cb1382181e5724482798cad9db099793b3adaf72df5b3a363ef14d27f52",
+    "design_repository": "krishanraja/mindmake",
+    "design_commit": "2d24032681e41ef12ec46ce49780408d5c4eb405",
+    "design_contract_path": "project-documentation/03_DESIGN_CONTRACT.md"
+  },
+  "claims": [
+    {
+      "claim_id": "owned-gates",
+      "text": "The engine separates non-negotiable editorial gates from growth potential.",
+      "kind": "fact",
+      "evidence_urls": ["https://github.com/krishanraja/mindmake-video-studio"],
+      "verification": "verified"
+    }
+  ],
+  "assets": [],
+  "slides": [
+    {
+      "slide_id": "cover",
+      "position": 1,
+      "role": "cover",
+      "layout": "cover",
+      "question_answered": "What makes this editor unusual?",
+      "headline": "This AI editor is allowed to say no.",
+      "claim_ids": [],
+      "asset_ids": [],
+      "visual_items": [],
+      "accent": "mint_answer"
+    },
+    {
+      "slide_id": "scene",
+      "position": 2,
+      "role": "scene",
+      "layout": "statement",
+      "question_answered": "Why is producing the brief not enough?",
+      "headline": "A brief does not become good because it arrived.",
+      "body": "Content for content's sake is still pointless when a machine makes it faster.",
+      "claim_ids": [],
+      "asset_ids": [],
+      "visual_items": [],
+      "accent": "none"
+    },
+    {
+      "slide_id": "mechanism",
+      "position": 3,
+      "role": "mechanism",
+      "layout": "split_gate",
+      "question_answered": "How does the engine judge an idea?",
+      "headline": "The engine asks two different questions.",
+      "body": "First, can this be said? Then, is it worth saying?",
+      "claim_ids": ["owned-gates"],
+      "asset_ids": [],
+      "visual_items": ["Truth, rights and meaning", "Clarity, surprise and payoff"],
+      "accent": "none"
+    },
+    {
+      "slide_id": "proof",
+      "position": 4,
+      "role": "proof",
+      "layout": "flow",
+      "question_answered": "What has to happen before rendering?",
+      "headline": "Rendering comes after the thinking.",
+      "claim_ids": ["owned-gates"],
+      "asset_ids": [],
+      "visual_items": ["Brief", "Evidence", "Challenge", "Approval", "Render"],
+      "accent": "mint_answer"
+    },
+    {
+      "slide_id": "counterpoint",
+      "position": 5,
+      "role": "counterpoint",
+      "layout": "evidence",
+      "question_answered": "Do the gates slow production down?",
+      "headline": "More gates add friction. Weak content burns more time.",
+      "body": "The useful automation is not the one that makes the most. It is the one that knows what deserves making.",
+      "claim_ids": [],
+      "asset_ids": [],
+      "visual_items": ["Weak idea stopped early", "Evidence approved before use", "Final output stays human-controlled"],
+      "accent": "amber_changed"
+    },
+    {
+      "slide_id": "resolution",
+      "position": 6,
+      "role": "resolution",
+      "layout": "verdict",
+      "question_answered": "What is the operating principle?",
+      "headline": "The render is the last step, not the first.",
+      "claim_ids": [],
+      "asset_ids": [],
+      "visual_items": [],
+      "accent": "mint_answer"
+    }
+  ],
+  "editorial": {
+    "disposition": "publishable",
+    "unique": true,
+    "researched": true,
+    "thoughtful": true,
+    "kind": true,
+    "helpful": true,
+    "strongest_reason_to_reject": "The example is system-led, so it needs a concrete owned artifact to avoid reading as process theatre.",
+    "audience_payoff": "Operators get a repeatable way to stop weak content before production cost compounds.",
+    "countercase": "Extra gates can slow low-risk work, so the system keeps engagement warnings overridable while truth and rights remain fixed."
+  },
+  "approvals": []
+}

@@ -226,3 +226,11 @@ export async function stageOfficialWordmarks(manifest: RenderManifestV1, targetD
     lockup: theme.wordmarks.lockup,
   }
 }
+
+export async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: Series, targetDirectory: string, fetchImpl: typeof fetch = fetch): Promise<Pick<StagedBrandWordmarks, 'mindmake' | 'series'>> {
+  if (!theme.rules.official_wordmarks_only || !theme.wordmarks) throw new Error('branded carousel renders require official wordmarks')
+  return {
+    mindmake: await stageAsset(theme, theme.wordmarks.mindmake, targetDirectory, 'mindmake', fetchImpl),
+    series: await stageAsset(theme, theme.wordmarks.series[series], targetDirectory, series, fetchImpl),
+  }
+}

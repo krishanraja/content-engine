@@ -3,6 +3,7 @@ export * from './brand-assets.js'
 export * from './candidates.js'
 export * from './caption-analysis.js'
 export * from './captions.js'
+export * from './carousel.js'
 export * from './credentials.js'
 export * from './control-plane-client.js'
 export {

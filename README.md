@@ -76,7 +76,19 @@ studio v2 publish youtube --privacy private
 studio v2 analytics import
 studio v2 experiment create|evaluate|list
 studio index rebuild
+studio carousel validate
+studio carousel render --review
+studio carousel render
+studio carousel package
 ```
+
+## Carousel director
+
+The Carousel Director shares the studio's evidence, approval and learning rules while using its own swipe-story contracts. It renders 1080 by 1350 PNG slides for Instagram and produces the same PNG set plus a PDF document for LinkedIn. It never publishes.
+
+Each story pins its source artifact, design commit, exact brand theme and fixed seed. The first render is an approval candidate. Production rendering needs exact story and visual-direction approvals, and packaging needs exact final approval. Screenshots and evidence images must be approved against their file hash. Generated media is illustration only and must say so.
+
+The current boundary, workflow and provisional visual system live in [Carousel Engine current state](docs/CAROUSEL_ENGINE_STATE.md). Decisions are recorded separately in [Carousel Engine decision record](docs/CAROUSEL_DECISIONS.md).
 
 The independent runner is a hidden, current-user Windows Scheduled Task. Before every command claim it sends a live mount heartbeat, performs one bounded Drive Inbox scan, then sends the resulting ready or degraded state before claiming. It continuously discovers safe file metadata from the dedicated Inbox, but a recording must remain unchanged across at least two scans and for at least 30 seconds before it is hashed and surfaced as an intake candidate. It continues heartbeat updates during a long first hash. A total hash-byte budget advances large backlogs across scans, while oversized files and sidecars remain explicit review items. Unchanged production snapshots are coalesced, and stable content is periodically rehashed. Discovery never creates a job or production decision, inspects editorial media, moves a file, renders, packages, uploads, or publishes. Krish explicitly reviews the exact candidate, then an exact `SourceBundleV1` is authored with rights, consent, roles, sync, and intake provenance before job creation. Bootstrap an exact approved local treatment into Control Center with `studio v2 runner project`, then the daemon claims only its queued, schema-bounded commands. Mobile story, final, learning, and keep-current decisions return through a signed, idempotent review-decision command before Control Center advances its projection. Setup, credential targets, recovery, and the precise shipped-versus-installed boundary are documented in [deployment](docs/DEPLOYMENT.md) and [operations](docs/OPERATIONS.md).
 
