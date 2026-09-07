@@ -14,6 +14,14 @@
 - Free-form magic-edit directions may compile only into schema-bounded presentation operations. Meaning, claims, evidence content, story structure, and unsupported changes return to the full editorial route.
 - Use plain English and no em dashes in public copy.
 
+## Portable engine sessions
+
+- This repository is a client-neutral engine, not a Codex-only workflow. Read `docs/ENGINE_SESSION.md` before using any Studio tool or recording feedback.
+- A repository checkout provides instructions, not production authority. Mutations and durable learning are supported only when the Mindmake Studio remote MCP gateway reports a tracked session with the required capability.
+- Never claim that an ordinary chat turn was captured. The gateway records structured engine actions, exact feedback excerpts supplied to a feedback tool, and artifact differences. It never stores whole third-party chat transcripts.
+- If the gateway is unavailable, remain read-only and say that the session is untracked. Do not create local shadow memory.
+- The global `video-engine` launcher retains its exact first-message trigger. Opening this repository makes engine tools discoverable but must not make unrelated video questions invoke the production workflow.
+
 ## Verification
 
 Run `npm run verify` before pushing. Validate all repo-scoped skills with `npm run skills:validate`.

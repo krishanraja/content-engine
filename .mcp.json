@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mindmake-studio": {
+      "type": "http",
+      "url": "https://controlcenter.krishraja.com/api/video-studio/mcp",
+      "headers": {
+        "Authorization": "Bearer ${VIDEO_STUDIO_MCP_TOKEN}"
+      }
+    }
+  }
+}
