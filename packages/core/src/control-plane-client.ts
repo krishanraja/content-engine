@@ -1,6 +1,10 @@
 import { readFile, stat } from 'node:fs/promises'
 import { isIP } from 'node:net'
 import {
+  ProductionBriefClaimRequestV1Schema,
+  ProductionBriefClaimResponseV1Schema,
+  ProductionBriefCompleteRequestV1Schema,
+  ProductionBriefCompleteResponseV1Schema,
   RunnerClaimRequestV1Schema,
   RunnerClaimResponseV1Schema,
   RunnerCompleteResponseV1Schema,
@@ -21,6 +25,8 @@ import {
   type RunnerPreviewUploadRequestV1,
   type RunnerPreviewUploadResponseV1,
   type RunnerProjectProjectionV1,
+  type ClaimedProductionBriefV1,
+  type ProductionBriefCompleteRequestV1,
 } from '@mindmake/contracts'
 import { hashFile, hashFileMd5, hashValue } from './hash.js'
 
@@ -104,7 +110,7 @@ export class ControlPlaneClient {
     this.fetchImpl = options.fetchImpl ?? fetch
   }
 
-  private async post(path: 'claim' | 'heartbeat' | 'complete' | 'preview-upload' | 'preview-retention' | 'project', body: unknown): Promise<unknown> {
+  private async post(path: 'claim' | 'heartbeat' | 'complete' | 'preview-upload' | 'preview-retention' | 'project' | 'production-brief-claim' | 'production-brief-complete', body: unknown): Promise<unknown> {
     const response = await this.fetchImpl(`${this.baseUrl}/${path}`, {
       method: 'POST',
       headers: {
@@ -139,6 +145,30 @@ export class ControlPlaneClient {
     })
     const response = RunnerClaimResponseV1Schema.parse(await this.post('claim', request))
     return response.command && response.lease ? { command: response.command, lease: response.lease } : null
+  }
+
+  async claimProductionBrief(input: { runner_id: string; software_commit: string; lease_seconds?: number }): Promise<ClaimedProductionBriefV1 | null> {
+    const request = ProductionBriefClaimRequestV1Schema.parse({
+      schema_version: 1,
+      runner_id: input.runner_id,
+      software_commit: input.software_commit,
+      command_schema_versions: [1],
+      ...(input.lease_seconds === undefined ? {} : { lease_seconds: input.lease_seconds }),
+    })
+    const response = ProductionBriefClaimResponseV1Schema.parse(await this.post('production-brief-claim', request))
+    if (!response.item) return null
+    if (hashValue(response.item.brief) !== response.item.brief_hash) throw new Error('claimed production brief hash does not match its payload')
+    if (Date.parse(response.item.lease.expires_at) <= Date.now()) throw new Error('claimed production brief lease is already expired')
+    return response.item
+  }
+
+  async completeProductionBrief(input: ProductionBriefCompleteRequestV1): Promise<{ duplicate: boolean; brief_id: string; status: ProductionBriefCompleteRequestV1['status']; job_id: string | null }> {
+    const request = ProductionBriefCompleteRequestV1Schema.parse(input)
+    const response = ProductionBriefCompleteResponseV1Schema.parse(await this.post('production-brief-complete', request))
+    if (response.brief_id !== request.brief_id || response.status !== request.status || response.job_id !== request.job_id) {
+      throw new Error('control-plane production brief acknowledgement does not match the submitted result')
+    }
+    return response
   }
 
   async heartbeat(heartbeatInput: RunnerHeartbeatV1, leaseToken?: string): Promise<{ lease_expires_at?: string }> {

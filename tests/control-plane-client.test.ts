@@ -42,6 +42,40 @@ describe('ControlPlaneClient', () => {
     expect(() => new ControlPlaneClient({ baseUrl: 'https://control.example/api/video-studio/runner', token: 'under-thirty-two-bytes' })).toThrow('too short')
   })
 
+  it('claims and acknowledges an exact content-addressed production brief', async () => {
+    const brief = {
+      schema_version: 1 as const,
+      brief_id: 'brief_client_1',
+      content_idea_id: '00000000-0000-4000-8000-000000000001',
+      content_revision_hash: 'a'.repeat(64),
+      series: 'built_with_ai' as const,
+      production_kinds: ['carousel'] as const,
+      source_mode: 'written' as const,
+      content: { title: 'A precise title', thesis: 'A sufficiently specific approved thesis.', approved_text: 'A sufficiently specific approved body for production.', audience: 'AI operators', intended_payoff: 'A useful and sufficiently specific reader payoff.' },
+      claims: [], visual_opportunities: [],
+      hard_gates: { truth: 'passed' as const, rights: 'passed' as const, confidentiality: 'passed' as const, meaning: 'passed' as const, naming: 'passed' as const },
+      editorial_approval: { approved_by: 'Krish' as const, approved_at: '2026-09-07T12:00:00.000Z', approval_revision_hash: 'a'.repeat(64) },
+    }
+    const briefHash = hashValue(brief)
+    const calls: string[] = []
+    const client = new ControlPlaneClient({
+      baseUrl: 'https://control.example/api/video-studio/runner', token: TOKEN,
+      fetchImpl: (async (input, init) => {
+        calls.push(String(input))
+        if (String(input).endsWith('/production-brief-claim')) return Response.json({ ok: true, schema_version: 1, item: { content_idea_id: brief.content_idea_id, brief, brief_hash: briefHash, lease: { token: 'lease-token-long-enough-for-production', expires_at: new Date(Date.now() + 60_000).toISOString() } } })
+        const request = JSON.parse(String(init?.body))
+        return Response.json({ ok: true, schema_version: 1, duplicate: false, brief_id: request.brief_id, status: request.status, job_id: request.job_id })
+      }) as typeof fetch,
+    })
+    const claim = await client.claimProductionBrief({ runner_id: 'runner-client-test', software_commit: 'a'.repeat(40) })
+    expect(claim?.brief_hash).toBe(briefHash)
+    await expect(client.completeProductionBrief({ schema_version: 1, runner_id: 'runner-client-test', content_idea_id: brief.content_idea_id, brief_id: brief.brief_id, brief_hash: briefHash, lease_token: claim!.lease.token, status: 'imported', job_id: null, safe_code: null })).resolves.toMatchObject({ brief_id: brief.brief_id, status: 'imported' })
+    expect(calls).toEqual([
+      'https://control.example/api/video-studio/runner/production-brief-claim',
+      'https://control.example/api/video-studio/runner/production-brief-complete',
+    ])
+  })
+
   it('publishes the exact canonical redacted projection with bearer auth', async () => {
     const calls: Array<{ url: string; init?: RequestInit }> = []
     const value = projection()
