@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "method_id": "mindmake-carousel-visual-direction-v1",
+  "default_mode": "standard",
+  "boundary": {
+    "input": "completed_content_idea",
+    "topic_ideation_allowed": false,
+    "recording_ideation_allowed": false,
+    "incomplete_action": "return_to_content_owner",
+    "engine_may": [
+      "challenge_visualizability",
+      "request_evidence",
+      "flag_ambiguity"
+    ]
+  },
+  "modes": {
+    "fast": {
+      "stages": [
+        "visual_casting",
+        "territory_audition",
+        "storyboard_asset_gate",
+        "final"
+      ],
+      "decision_points": [
+        "combined_visual_route",
+        "final"
+      ]
+    },
+    "standard": {
+      "stages": [
+        "meaning_map",
+        "visual_casting",
+        "territory_audition",
+        "storyboard_asset_gate",
+        "final"
+      ],
+      "decision_points": [
+        "meaning",
+        "territory",
+        "storyboard_and_assets",
+        "final"
+      ]
+    },
+    "exploratory": {
+      "stages": [
+        "meaning_map",
+        "visual_casting",
+        "territory_audition",
+        "storyboard_asset_gate",
+        "final"
+      ],
+      "decision_points": [
+        "meaning",
+        "casting",
+        "territory",
+        "storyboard_and_assets",
+        "final"
+      ]
+    }
+  },
+  "casting_lanes": [
+    "real_world_evidence",
+    "infographic",
+    "physical_analogy",
+    "cultural_restage",
+    "handmade",
+    "surreal_wildcard"
+  ],
+  "territory_audition": {
+    "candidate_count": 3,
+    "styleframes_per_candidate": 2,
+    "required_territories": [
+      "evidence_led",
+      "explanatory",
+      "unexpected"
+    ]
+  },
+  "choice_rules": {
+    "analogy_must_clarify": true,
+    "shock_must_carry_meaning": true,
+    "proof_separate_from_illustration": true,
+    "meme_requires_rights_path": true,
+    "genericness_penalty": true
+  },
+  "learning": {
+    "store_contextual_reason": true,
+    "infer_object_preference": false,
+    "record_rejections": true,
+    "novelty_against_own_corpus": true,
+    "durable_rule_requires_approval": true
+  },
+  "branding": {
+    "series_wordmark": "top_left_channel_signpost",
+    "mindmake_wordmark": "bottom_left_publisher_signature",
+    "official_assets_only": true,
+    "one_of_each_per_card": true
+  }
+}

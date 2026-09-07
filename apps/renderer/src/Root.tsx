@@ -4,6 +4,8 @@ import { MindmakeShort } from './Short'
 import { ShortPropsSchema, type ShortProps } from './props'
 import { MindmakeStoryV2 } from './v2/MindmakeStory'
 import { V2RenderPropsSchema, type V2RenderProps } from './v2/props'
+import { MindmakeCarouselSlide } from './carousel/MindmakeCarouselSlide'
+import { CarouselRenderPropsSchema, type CarouselRenderProps } from './carousel/props'
 
 const defaultProps: ShortProps = {
   sourceFile: 'placeholder.mp4',
@@ -56,6 +58,24 @@ const v2DefaultProps: V2RenderProps = {
   reviewOverlay: 'none',
 }
 
+const carouselDefaultProps: CarouselRenderProps = {
+  reviewMode: true,
+  storyId: 'carousel-placeholder',
+  series: 'built_with_ai',
+  seriesName: 'Built With AI',
+  slideCount: 5,
+  slide: { position: 1, role: 'cover', layout: 'cover', scene: 'signal_room', headline: 'A green tick can outlive the thing it checked.', visualItems: [], assetIds: [], accent: 'none' },
+  branding: {
+    colors: { ink: '#0A100D', surface: '#111A16', raised: '#1E2C26', line: '#22322B', text: '#E6EDE8', secondaryText: '#B0C0B7', mutedText: '#788C82', paper: '#F2F1EA', mint: '#7FE3B4', mintInk: '#07110C', amber: '#E0A44A' },
+    typography: { structure: 'Archivo Variable', claim: 'Newsreader Variable', body: 'Source Serif 4 Variable', data: 'IBM Plex Mono' },
+    wordmarks: {
+      mindmake: { assetFile: 'placeholder.svg', pixelWidth: 648, pixelHeight: 109, alphaCrop: { x: 0, y: 0, width: 648, height: 109 }, letterRegion: { x: 0, y: 0, width: 648, height: 109 } },
+      series: { assetFile: 'placeholder.png', pixelWidth: 1200, pixelHeight: 630, alphaCrop: { x: 287, y: 114, width: 626, height: 395 }, letterRegion: { x: 287, y: 452, width: 626, height: 57 } },
+    },
+    assets: [],
+  },
+}
+
 export function RemotionRoot() {
   return (
     <>
@@ -69,6 +89,16 @@ export function RemotionRoot() {
         schema={ShortPropsSchema}
         defaultProps={defaultProps}
         calculateMetadata={({ props }) => ({ durationInFrames: Math.max(1, Math.ceil(props.durationMs / 1000 * 30)) })}
+      />
+      <Composition
+        id="MindmakeCarouselSlide"
+        component={MindmakeCarouselSlide}
+        width={1080}
+        height={1350}
+        fps={30}
+        durationInFrames={1}
+        schema={CarouselRenderPropsSchema}
+        defaultProps={carouselDefaultProps}
       />
       <Composition
         id="MindmakeStoryV2"

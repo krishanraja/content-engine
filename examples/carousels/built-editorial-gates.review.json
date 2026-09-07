@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "story_id": "built-approval-interlock-v2",
+  "title": "When approval stops fitting",
+  "series": "built_with_ai",
+  "source_format": "build_itself",
+  "target_audience": "AI-native operators building reviewable production systems",
+  "source_artifact": {
+    "kind": "owned",
+    "ref": "github.com/krishanraja/mindmake-video-studio@9797a03b768c4b2287776578a264af05a907ecbd",
+    "source_hash": "a6d47ee126e2b69f8a074d93796db795f184be105fc6af01b856f6dbf6a072a0"
+  },
+  "platforms": ["linkedin_document", "instagram"],
+  "fixed_seed": "built-approval-interlock-v2",
+  "brand_theme": {
+    "theme_id": "mindmake-video-v1",
+    "theme_hash": "9d1f8cb1382181e5724482798cad9db099793b3adaf72df5b3a363ef14d27f52",
+    "design_repository": "krishanraja/mindmake",
+    "design_commit": "2d24032681e41ef12ec46ce49780408d5c4eb405",
+    "design_contract_path": "project-documentation/03_DESIGN_CONTRACT.md"
+  },
+  "claims": [
+    {
+      "claim_id": "exact-story-approval",
+      "text": "Story and visual-direction approvals must match the exact carousel story content hash.",
+      "kind": "fact",
+      "evidence_urls": ["https://github.com/krishanraja/mindmake-video-studio/blob/9797a03b768c4b2287776578a264af05a907ecbd/packages/core/src/carousel.ts"],
+      "verification": "verified"
+    },
+    {
+      "claim_id": "exact-final-approval",
+      "text": "Carousel packaging requires final approval matching the exact current story hash.",
+      "kind": "fact",
+      "evidence_urls": ["https://github.com/krishanraja/mindmake-video-studio/blob/9797a03b768c4b2287776578a264af05a907ecbd/packages/core/src/carousel.ts"],
+      "verification": "verified"
+    },
+    {
+      "claim_id": "evidence-gates",
+      "text": "The carousel contract blocks unapproved screenshots and generated media presented as evidence.",
+      "kind": "fact",
+      "evidence_urls": ["https://github.com/krishanraja/mindmake-video-studio/blob/9797a03b768c4b2287776578a264af05a907ecbd/packages/contracts/src/carousel.ts"],
+      "verification": "verified"
+    }
+  ],
+  "assets": [],
+  "slides": [
+    {
+      "slide_id": "cover",
+      "position": 1,
+      "role": "cover",
+      "layout": "cover",
+      "scene": "signal_room",
+      "question_answered": "What goes wrong with ordinary approval states?",
+      "headline": "A green tick can outlive the thing it checked.",
+      "claim_ids": [],
+      "asset_ids": [],
+      "visual_items": ["APPROVED", "VERSION A"],
+      "accent": "none"
+    },
+    {
+      "slide_id": "exact-story",
+      "position": 2,
+      "role": "scene",
+      "layout": "statement",
+      "scene": "inspection_table",
+      "question_answered": "What does an approval belong to?",
+      "headline": "Here, approval belongs to one exact story.",
+      "body": "Source, claims, assets and slides are fingerprinted before review.",
+      "data_label": "APPROVAL.HASH === STORY.HASH",
+      "claim_ids": ["exact-story-approval"],
+      "asset_ids": [],
+      "visual_items": ["SOURCE", "CLAIMS", "SLIDES", "ASSETS"],
+      "accent": "mint_answer"
+    },
+    {
+      "slide_id": "changed-line",
+      "position": 3,
+      "role": "mechanism",
+      "layout": "flow",
+      "scene": "engraving_bench",
+      "question_answered": "What happens when the story is edited?",
+      "headline": "Change one line and the fingerprint changes with it.",
+      "claim_ids": ["exact-story-approval"],
+      "asset_ids": [],
+      "visual_items": ["VERSION A", "VERSION B"],
+      "accent": "amber_changed"
+    },
+    {
+      "slide_id": "mismatch",
+      "position": 4,
+      "role": "mechanism",
+      "layout": "split_gate",
+      "scene": "lever_cutaway",
+      "question_answered": "Can the old approval pass to the revision?",
+      "headline": "The old approval no longer fits.",
+      "body": "The decision stays on record. The revised story returns to review.",
+      "claim_ids": ["exact-story-approval"],
+      "asset_ids": [],
+      "visual_items": ["APPROVAL A", "STORY B"],
+      "accent": "amber_changed"
+    },
+    {
+      "slide_id": "three-reviews",
+      "position": 5,
+      "role": "proof",
+      "layout": "evidence",
+      "scene": "xray_mismatch",
+      "question_answered": "Where is the same rule applied?",
+      "headline": "Story, visual direction and final file are approved separately.",
+      "data_label": "EXACT APPROVAL RECORDS",
+      "claim_ids": ["exact-story-approval", "exact-final-approval"],
+      "asset_ids": [],
+      "visual_items": ["STORY", "VISUAL DIRECTION", "FINAL FILE"],
+      "accent": "none"
+    },
+    {
+      "slide_id": "friction",
+      "position": 6,
+      "role": "counterpoint",
+      "layout": "evidence",
+      "scene": "shutter_cabinet",
+      "question_answered": "What does the extra review cost and protect?",
+      "headline": "Repeating the check adds friction.",
+      "body": "It stops an old decision travelling with changed work.",
+      "claim_ids": ["evidence-gates"],
+      "asset_ids": [],
+      "visual_items": ["TRUTH", "RIGHTS", "RELEASE"],
+      "accent": "amber_changed"
+    },
+    {
+      "slide_id": "resolution",
+      "position": 7,
+      "role": "resolution",
+      "layout": "verdict",
+      "scene": "output_tray",
+      "question_answered": "What is the reusable operating principle?",
+      "headline": "Good review expires with the version it checked.",
+      "claim_ids": ["exact-story-approval", "exact-final-approval"],
+      "asset_ids": [],
+      "visual_items": ["CURRENT VERSION", "APPROVED"],
+      "accent": "mint_answer"
+    }
+  ],
+  "editorial": {
+    "disposition": "publishable",
+    "unique": true,
+    "researched": true,
+    "thoughtful": true,
+    "kind": true,
+    "helpful": true,
+    "strongest_reason_to_reject": "The physical interlock may feel over-engineered if the exact approval mismatch is not legible without railway knowledge.",
+    "audience_payoff": "Operators get one concrete test for whether human review remains attached to the work that was actually reviewed.",
+    "countercase": "Exact reapproval adds friction after small changes, so the system should invalidate only the stages affected by the change."
+  },
+  "approvals": []
+}
