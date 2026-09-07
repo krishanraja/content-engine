@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { CarouselStoryV1Schema, CarouselVisualDirectionMethodV1Schema } from '@mindmake/contracts'
-import { carouselProductionIssues, carouselStoryContentHash } from '@mindmake/core'
+import { carouselApprovalBinds, carouselProductionIssues, carouselStoryContentHash } from '@mindmake/core'
 
 const fixturePath = resolve('examples/carousels/built-editorial-gates.review.json')
 
@@ -20,6 +20,40 @@ describe('carousel engine', () => {
       'visual_direction approval for the exact story is missing',
     ])
     expect(carouselStoryContentHash(story)).toMatch(/^[a-f0-9]{64}$/)
+  })
+
+  it('rejects a carousel approval without a confirmation reference', async () => {
+    const input = await fixture()
+    const contentHash = carouselStoryContentHash(CarouselStoryV1Schema.parse(input))
+    input.approvals = [{ gate: 'story', decision: 'approved', approved_by: 'Krish', approved_at: '2026-09-07T00:00:00.000Z', artifact_hash: contentHash }]
+    expect(() => CarouselStoryV1Schema.parse(input)).toThrow(/confirmation_ref/)
+  })
+
+  it('counts an approval only when its confirmation binds the same gate and story hash', async () => {
+    const input = await fixture()
+    const contentHash = carouselStoryContentHash(CarouselStoryV1Schema.parse(input))
+    const approval = (gate: 'story' | 'visual_direction' | 'final', artifactHash: string, confirmationRef: string) => ({
+      gate, decision: 'approved' as const, approved_by: 'Krish' as const, approved_at: '2026-09-07T00:00:00.000Z', artifact_hash: artifactHash, confirmation_ref: confirmationRef,
+    })
+    input.approvals = [
+      approval('story', contentHash, `studio-user-confirmation:claude-code:story:${contentHash}:Krish approved the story`),
+      approval('visual_direction', contentHash, `codex-user-confirmation:visual_direction:${contentHash}:Krish approved the visual direction`),
+    ]
+    const story = CarouselStoryV1Schema.parse(input)
+    expect(carouselProductionIssues(story)).toEqual([])
+    expect(carouselApprovalBinds(story.approvals[0]!, 'story', contentHash)).toBe(true)
+    expect(carouselApprovalBinds(story.approvals[0]!, 'visual_direction', contentHash)).toBe(false)
+    expect(carouselApprovalBinds(story.approvals[1]!, 'final', contentHash)).toBe(false)
+
+    const staleHash = 'a'.repeat(64)
+    input.approvals = [
+      approval('story', staleHash, `studio-user-confirmation:claude-code:story:${staleHash}:Krish approved an earlier story`),
+      approval('visual_direction', contentHash, `studio-user-confirmation:claude-code:visual_direction:${contentHash}:Krish approved the visual direction`),
+    ]
+    expect(carouselProductionIssues(CarouselStoryV1Schema.parse(input))).toEqual(['story approval for the exact story is missing'])
+
+    input.approvals = [approval('story', contentHash, `studio-user-confirmation:claude-code:final:${contentHash}:receipt bound to another gate`)]
+    expect(() => CarouselStoryV1Schema.parse(input)).toThrow(/same gate and artifact hash/)
   })
 
   it('binds source formats to the canonical publication series', async () => {

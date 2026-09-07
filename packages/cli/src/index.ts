@@ -23,7 +23,6 @@ import {
   analyzeMediaArtifactForFeedback,
   applyPresenterIdentityCorrections,
   assessTranscriptQuality,
-  applyCorpusNovelty,
   benchmarkTranscription,
   broadenRule,
   carouselProductionIssues,
@@ -60,7 +59,6 @@ import {
   proposeRule,
   promoteRule,
   qaVideo,
-  rankRadarOpportunities,
   readStageArtifact,
   readReusableStage,
   readWindowsCredential,
@@ -72,7 +70,6 @@ import {
   renderShort,
   renderCarousel,
   runDoctor,
-  selectWeeklyBrief,
   sourceReferenceHash,
   studioPaths,
   transcribeMedia,
@@ -578,6 +575,7 @@ publish.command('youtube')
 
 const radar = program.command('radar')
 radar.command('pull')
+  .description('Fetch, validate and write the raw radar evidence feed. This command imports feeds only; it never ranks, selects or prepares editorial opportunities.')
   .option('--file <paths...>', 'offline RadarFeedV1 JSON files')
   .action(async (options) => {
     await ensureRuntime()
@@ -595,14 +593,12 @@ radar.command('pull')
       catch (error) { failures.push({ provider: provider.provider, error: error instanceof Error ? error.message : String(error) }) }
     }
     if (!feeds.length) throw new Error(`no radar feeds available${failures.length ? `: ${failures.map((item) => `${item.provider} ${item.error}`).join('; ')}` : ''}`)
-    await rebuildIndex()
-    const ranked = await applyCorpusNovelty(rankRadarOpportunities(mergeRadarFeeds(feeds)))
-    const brief = selectWeeklyBrief(ranked)
+    const candidates = mergeRadarFeeds(feeds)
     const outputPath = join(studioPaths().runtimeRoot, 'radar', `${new Date().toISOString().slice(0, 10)}.json`)
     await mkdir(dirname(outputPath), { recursive: true })
     const feedStatus = feeds.map((feed) => ({ provider: feed.provider, provider_version: feed.provider_version, source_age: feed.source_age, stale: feed.source_age > 7 * 24 * 60 * 60 }))
-    await writeFile(outputPath, `${JSON.stringify({ generated_at: new Date().toISOString(), feeds: feedStatus, failures, opportunities: brief }, null, 2)}\n`, 'utf8')
-    out({ output_path: outputPath, feeds: feedStatus, failures, opportunities: brief })
+    await writeFile(outputPath, `${JSON.stringify({ generated_at: new Date().toISOString(), feeds: feedStatus, failures, candidates }, null, 2)}\n`, 'utf8')
+    out({ output_path: outputPath, feeds: feedStatus, failures, candidate_count: candidates.length })
   })
 
 const feedback = program.command('feedback')

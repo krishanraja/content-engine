@@ -161,7 +161,7 @@ Before enabling Control Center editorial radar refresh:
 6. Run `studio radar pull` against both providers and against the committed offline fixtures.
 7. Confirm the Control Center refresh schedule writes prepared opportunities to Content without chat delivery.
 
-If either radar provider is unavailable, Monday's run records the failure and uses any available feed. It never starts a replacement scraping path.
+If either radar provider is unavailable, `studio radar pull` records the failure and imports any available feed. The Studio holds no schedule of its own; the refresh cadence belongs to the Control Center schedule. Neither side starts a replacement scraping path.
 
 ## Proactive delivery
 

@@ -1240,7 +1240,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         candidates: saved,
         claim_ledger: claimLedger,
         next_actions: recordable.length
-          ? recordable.map(({ path, hash }) => `studio v2 approve --job ${manifest.job_id} --gate angle --artifact "${path}" --confirmation-ref "codex-user-confirmation:angle:${hash}:<exact Krish approval message>"`)
+          ? recordable.map(({ path, hash }) => `studio v2 approve --job ${manifest.job_id} --gate angle --artifact "${path}" --confirmation-ref "studio-user-confirmation:<client>:angle:${hash}:<exact Krish approval message>"`)
           : [manifest.mode === 'short_native'
               ? 'Do not record. Revise the script against its hard blocks or reject the idea.'
               : 'These are discovery windows only. Author an exact semantic edit plan and editorial assessment, then rerun with --input.'],
@@ -1495,8 +1495,8 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         review: reviewed.review,
         review_path: reviewPath,
         next_gate: reviewed.review.soft_blocks.length
-          ? `studio v2 approve --job ${options.job} --gate visual_plan --artifact ${artifact.artifact_hash} --decision override --reason <editorial reason> --confirmation-ref "codex-user-confirmation:visual_plan:${artifact.artifact_hash}:<exact Krish approval message>"`
-          : `studio v2 approve --job ${options.job} --gate visual_plan --artifact ${artifact.artifact_hash} --confirmation-ref "codex-user-confirmation:visual_plan:${artifact.artifact_hash}:<exact Krish approval message>"`,
+          ? `studio v2 approve --job ${options.job} --gate visual_plan --artifact ${artifact.artifact_hash} --decision override --reason <editorial reason> --confirmation-ref "studio-user-confirmation:<client>:visual_plan:${artifact.artifact_hash}:<exact Krish approval message>"`
+          : `studio v2 approve --job ${options.job} --gate visual_plan --artifact ${artifact.artifact_hash} --confirmation-ref "studio-user-confirmation:<client>:visual_plan:${artifact.artifact_hash}:<exact Krish approval message>"`,
       })
     })
 
@@ -1609,7 +1609,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         assets: packet.assets,
         generated_shots: packet.generated_shots,
         ...(packet.editorial_evidence ? { contact_sheet_path: packet.editorial_evidence.contact_sheet_path, source_quality_packet_path: packet.editorial_evidence.packet_path } : {}),
-        next_gate: `studio v2 approve --job ${options.job} --gate evidence --artifact "${packetPath}" --confirmation-ref "codex-user-confirmation:evidence:${packetHash}:<exact Krish approval message>"`,
+        next_gate: `studio v2 approve --job ${options.job} --gate evidence --artifact "${packetPath}" --confirmation-ref "studio-user-confirmation:<client>:evidence:${packetHash}:<exact Krish approval message>"`,
       })
     })
 
@@ -1686,7 +1686,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       const packet = StoryboardReviewPacketV1Schema.parse({ ...packetCore, packet_id: `styleframes-${hashValue(packetCore).slice(0, 16)}` })
       const rendererHash = await rendererImplementationHashV2(context.repoRoot)
       const artifact = await completeStageV2(job.job_id, 'styleframes', packet, { visual_plan: visualPlan.artifact_hash, assets: assetsArtifact.artifact_hash, manifest: manifestHash }, { renderer: rendererHash, profile: 'styleframes' })
-      context.out({ job_id: job.job_id, artifact_hash: artifact.artifact_hash, packet, next_gate: `studio v2 approve --job ${job.job_id} --gate storyboard --artifact ${artifact.artifact_hash} --confirmation-ref "codex-user-confirmation:storyboard:${artifact.artifact_hash}:<exact Krish approval message>"` })
+      context.out({ job_id: job.job_id, artifact_hash: artifact.artifact_hash, packet, next_gate: `studio v2 approve --job ${job.job_id} --gate storyboard --artifact ${artifact.artifact_hash} --confirmation-ref "studio-user-confirmation:<client>:storyboard:${artifact.artifact_hash}:<exact Krish approval message>"` })
     })
 
   const animatic = v2.command('animatic')
@@ -1725,7 +1725,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       const packet = StoryboardReviewPacketV1Schema.parse({ ...packetCore, packet_id: `animatic-${hashValue(packetCore).slice(0, 16)}` })
       const rendererHash = await rendererImplementationHashV2(context.repoRoot)
       const artifact = await completeStageV2(job.job_id, 'animatic', packet, { styleframes: styleframeArtifact.artifact_hash, manifest: manifestHash }, { renderer: rendererHash, profile: 'animatic' })
-      context.out({ job_id: job.job_id, artifact_hash: artifact.artifact_hash, packet, next_gate: `studio v2 approve --job ${job.job_id} --gate animatic --artifact ${artifact.artifact_hash} --confirmation-ref "codex-user-confirmation:animatic:${artifact.artifact_hash}:<exact Krish approval message>"` })
+      context.out({ job_id: job.job_id, artifact_hash: artifact.artifact_hash, packet, next_gate: `studio v2 approve --job ${job.job_id} --gate animatic --artifact ${artifact.artifact_hash} --confirmation-ref "studio-user-confirmation:<client>:animatic:${artifact.artifact_hash}:<exact Krish approval message>"` })
     })
 
   const treatment = v2.command('treatment')
@@ -1749,7 +1749,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       if (hashValue(manifests.map((item) => item.platform).sort()) !== hashValue([...job.target_platforms].sort())) throw new Error('treatment registration requires exactly one manifest for every target platform')
       const payload: TreatmentPayload = { manifests: manifests.sort((left, right) => left.platform.localeCompare(right.platform)) }
       const artifact = await completeStageV2(job.job_id, 'treatment', payload, { animatic: animaticArtifact.artifact_hash, manifests: hashValue(payload) }, { registrar: V2_CLI_VERSION })
-      context.out({ job_id: job.job_id, artifact_hash: artifact.artifact_hash, manifests: payload.manifests, preview_command: `studio v2 render --job ${job.job_id} --profile preview`, next_gate: `studio v2 approve --job ${job.job_id} --gate treatment --artifact ${artifact.artifact_hash} --confirmation-ref "codex-user-confirmation:treatment:${artifact.artifact_hash}:<exact Krish approval message>"` })
+      context.out({ job_id: job.job_id, artifact_hash: artifact.artifact_hash, manifests: payload.manifests, preview_command: `studio v2 render --job ${job.job_id} --profile preview`, next_gate: `studio v2 approve --job ${job.job_id} --gate treatment --artifact ${artifact.artifact_hash} --confirmation-ref "studio-user-confirmation:<client>:treatment:${artifact.artifact_hash}:<exact Krish approval message>"` })
     })
 
   v2.command('render')
@@ -1794,7 +1794,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         rendered.push({ platform: item.platform, master_path: masterPath, master_hash: await hashFile(masterPath), manifest_path: resolve(item.manifest_path), manifest_hash: item.manifest_hash })
       }
       if (options.profile === 'preview') {
-        context.out({ job_id: job.job_id, profile: 'preview', renders: rendered, next_gate: `studio v2 approve --job ${job.job_id} --gate treatment --artifact ${treatment.artifact_hash} --confirmation-ref "codex-user-confirmation:treatment:${treatment.artifact_hash}:<exact Krish approval message>"` })
+        context.out({ job_id: job.job_id, profile: 'preview', renders: rendered, next_gate: `studio v2 approve --job ${job.job_id} --gate treatment --artifact ${treatment.artifact_hash} --confirmation-ref "studio-user-confirmation:<client>:treatment:${treatment.artifact_hash}:<exact Krish approval message>"` })
         return
       }
       if (hashValue(rendered.map((item) => item.platform).sort()) !== hashValue([...job.target_platforms].sort())) throw new Error('master render must produce every target platform')
@@ -1880,7 +1880,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
     .option('--decision <decision>', 'approved, rejected, or override', 'approved')
     .option('--reason <reason>')
     .option('--actor <actor>', 'krish, codex, or system', 'krish')
-    .option('--confirmation-ref <reference>', 'artifact-bound Codex user-confirmation receipt for a positive Krish decision')
+    .option('--confirmation-ref <reference>', 'artifact-bound user-confirmation receipt from the studio client for a positive Krish decision')
     .action(async (options) => {
       const gate = ApprovalGateV2Schema.parse(options.gate)
       if (!['approved', 'rejected', 'override'].includes(options.decision)) throw new Error('decision must be approved, rejected, or override')
@@ -1968,7 +1968,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         approval_count: updated.approvals.length,
         feedback,
         feedback_path: feedbackPath,
-        ...(feedback.confirmation === 'pending' ? { confirmation_prompt: feedback.inferred_rationale, next_step: `studio v2 feedback confirm --event "${feedbackPath}" --confirmation-ref "codex-user-confirmation:feedback:${feedbackHash}:<exact Krish confirmation message>"` } : {}),
+        ...(feedback.confirmation === 'pending' ? { confirmation_prompt: feedback.inferred_rationale, next_step: `studio v2 feedback confirm --event "${feedbackPath}" --confirmation-ref "studio-user-confirmation:<client>:feedback:${feedbackHash}:<exact Krish confirmation message>"` } : {}),
       })
     })
 
@@ -2022,12 +2022,12 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       const eventPath = join(jobPath(job.job_id), 'feedback', `${event.feedback_id}.json`)
       await writeJson(eventPath, event)
       const eventHash = feedbackEventHashV2(event)
-      context.out({ feedback: event, event_path: eventPath, event_hash: eventHash, confirmation_prompt: event.inferred_rationale, next_step: `studio v2 feedback confirm --event "${eventPath}" --confirmation-ref "codex-user-confirmation:feedback:${eventHash}:<exact Krish confirmation message>"` })
+      context.out({ feedback: event, event_path: eventPath, event_hash: eventHash, confirmation_prompt: event.inferred_rationale, next_step: `studio v2 feedback confirm --event "${eventPath}" --confirmation-ref "studio-user-confirmation:<client>:feedback:${eventHash}:<exact Krish confirmation message>"` })
     })
 
   feedback.command('confirm')
     .requiredOption('--event <path>')
-    .requiredOption('--confirmation-ref <reference>', 'event-bound Codex user-confirmation receipt')
+    .requiredOption('--confirmation-ref <reference>', 'event-bound user-confirmation receipt from the studio client')
     .option('--correction <text>')
     .option('--propose-rule', 'create a narrowly scoped candidate rule after explicit confirmation')
     .action(async (options) => {
@@ -2093,7 +2093,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         artifact_hash: artifact.artifact_hash,
         packages: created,
         public_publish_allowed: false,
-        next_gate: `studio v2 approve --job ${options.job} --gate package --artifact ${artifact.artifact_hash} --confirmation-ref "codex-user-confirmation:package:${artifact.artifact_hash}:<exact Krish approval message>"`,
+        next_gate: `studio v2 approve --job ${options.job} --gate package --artifact ${artifact.artifact_hash} --confirmation-ref "studio-user-confirmation:<client>:package:${artifact.artifact_hash}:<exact Krish approval message>"`,
       })
     })
 
@@ -2231,7 +2231,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
     .requiredOption('--hash <sha256>')
     .requiredOption('--decision <decision>', 'accepted, rejected, or held')
     .requiredOption('--note <text>')
-    .requiredOption('--confirmation-ref <receipt>', 'artifact-bound Codex or Control Center confirmation receipt')
+    .requiredOption('--confirmation-ref <receipt>', 'artifact-bound studio client or Control Center confirmation receipt')
     .action(async (options) => {
       if (!SHA256.test(options.hash)) throw new Error('--hash must be lowercase SHA-256')
       if (!['accepted', 'rejected', 'held'].includes(options.decision)) throw new Error('--decision must be accepted, rejected, or held')

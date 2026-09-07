@@ -84,7 +84,6 @@
     "long_video_ms": 30000,
     "minimum_segment_ms": 500
   },
-  "cadence": { "shorts_per_week": 2, "radar_day": "monday", "radar_time": "11:00", "timezone": "Europe/London" },
   "runtime": {
     "drive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",
     "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Inbox",

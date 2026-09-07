@@ -60,6 +60,40 @@ describe('V2 event-sourced jobs', () => {
     await expect(recordApprovalV2(job.job_id, 'package', 'approved', H, undefined, 'system')).rejects.toThrow('requires Krish approval')
   })
 
+  it('accepts portable, legacy and Control Center confirmation receipts at the angle gate and rejects a malformed client', async () => {
+    const job = await createJobV2({
+      series: 'built_with_ai', mode: 'solo', presenterName: 'Krish', configPath: config, skillPaths: skills, techniqueRegistryPath: techniques,
+      sourceBundle: { schema_version: 1, bundle_id: 'bundle-1', primary_source_id: 'camera-main', sources: [{ source_id: 'camera-main', kind: 'video', role: 'primary_camera', ref: 'source.mp4', rights: 'owned', sync: { strategy: 'already_mixed', offset_ms: 0 }, include_in_edit: true }] },
+    })
+    const portable = 'b'.repeat(64)
+    const legacy = 'c'.repeat(64)
+    const controlCenter = 'd'.repeat(64)
+    await recordApprovalV2(job.job_id, 'angle', 'approved', portable, undefined, 'krish', `studio-user-confirmation:claude-code:angle:${portable}:Krish approved this angle`)
+    await recordApprovalV2(job.job_id, 'angle', 'approved', legacy, undefined, 'krish', `codex-user-confirmation:angle:${legacy}:Krish approved this angle`)
+    await recordApprovalV2(job.job_id, 'angle', 'approved', controlCenter, undefined, 'krish', `control-center-confirmation:angle:${controlCenter}:review:decision`)
+    const reloaded = await loadJobV2(job.job_id)
+    expect(hasApprovalV2(reloaded, 'angle', portable, 'krish')).toBe(true)
+    expect(hasApprovalV2(reloaded, 'angle', legacy, 'krish')).toBe(true)
+    expect(hasApprovalV2(reloaded, 'angle', controlCenter, 'krish')).toBe(true)
+
+    const other = 'e'.repeat(64)
+    for (const malformed of [
+      `studio-user-confirmation:Claude-Code:angle:${other}:uppercase client`,
+      `studio-user-confirmation:1claude:angle:${other}:leading digit`,
+      `studio-user-confirmation:c:angle:${other}:one character client`,
+      `studio-user-confirmation:${'c'.repeat(41)}:angle:${other}:overlong client`,
+      `studio-user-confirmation::angle:${other}:empty client`,
+      `studio-user-confirmation:claude-code:angle:${other}:`,
+      `studio-user-confirmation:claude-code:angle:${other}:   `,
+      `studio-user-confirmation:claude-code:visual_plan:${other}:wrong gate`,
+      `studio-user-confirmation:claude-code:angle:${'f'.repeat(64)}:wrong hash`,
+      `studio-user-confirmation:angle:${other}:missing client segment`,
+    ]) {
+      await expect(recordApprovalV2(job.job_id, 'angle', 'approved', other, undefined, 'krish', malformed)).rejects.toThrow('artifact-bound confirmation reference')
+    }
+    expect(hasApprovalV2(await loadJobV2(job.job_id), 'angle', other, 'krish')).toBe(false)
+  })
+
   it('serializes six concurrent signed appends without corrupting the authenticated event chain', async () => {
     const job = await createJobV2({ series: 'built_with_ai', mode: 'short_native', presenterName: 'Krish', configPath: config, skillPaths: skills })
     const hashes = ['1', '2', '3', '4', '5', '6'].map((digit) => digit.repeat(64))
