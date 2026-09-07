@@ -42,6 +42,32 @@ describe('repository operating contracts', () => {
     expect(pathSource).toContain("const INVALID_WINDOWS_DRIVE_ROOT = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04\\\\_Content\\\\Video Engine'")
   })
 
+  it('boots Codex and Claude into the same tracked session protocol without weakening the launcher trigger', async () => {
+    const agents = await readFile(join(repoRoot, 'AGENTS.md'), 'utf8')
+    const claude = await readFile(join(repoRoot, 'CLAUDE.md'), 'utf8')
+    const protocol = await readFile(join(repoRoot, 'docs', 'ENGINE_SESSION.md'), 'utf8')
+    const claudeMcp = await json<{ mcpServers: { 'mindmake-studio': { type: string; url: string; headers: { Authorization: string } } } }>('.mcp.json')
+    const codexMcp = await readFile(join(repoRoot, '.codex', 'config.toml'), 'utf8')
+    const endpoint = 'https://controlcenter.krishraja.com/api/video-studio/mcp'
+
+    expect(agents).toContain('docs/ENGINE_SESSION.md')
+    expect(claude).toContain('studio.session.open')
+    expect(protocol).toContain('tool-backed actions')
+    expect(protocol).toContain('Never capture:')
+    expect(protocol).toContain('whole ChatGPT, Claude, Codex, or Control Center transcript')
+    expect(claudeMcp.mcpServers['mindmake-studio']).toEqual({
+      type: 'http',
+      url: endpoint,
+      headers: { Authorization: 'Bearer ${VIDEO_STUDIO_MCP_TOKEN}' },
+    })
+    expect(codexMcp).toContain(endpoint)
+    expect(codexMcp).toContain('bearer_token_env_var = "VIDEO_STUDIO_MCP_TOKEN"')
+
+    const launcher = await readFile(join(repoRoot, '.agents', 'skills', 'video-engine', 'SKILL.md'), 'utf8')
+    expect(launcher).toContain("equals 'Video engine' case-insensitively")
+    expect(launcher).toContain('Everything else fails')
+  })
+
   it('pins one daily Video Engine pulse with Monday radar at 11:00 Europe/London', async () => {
     const studio = await json<{ cadence: { radar_day: string; radar_time: string; timezone: string } }>('config/studio.json')
     const heartbeat = await json<{
