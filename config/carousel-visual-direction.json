@@ -91,7 +91,7 @@
   },
   "branding": {
     "series_wordmark": "top_left_channel_signpost",
-    "mindmake_wordmark": "bottom_right_publisher_signature",
+    "mindmake_wordmark": "bottom_left_publisher_signature",
     "official_assets_only": true,
     "one_of_each_per_card": true
   }

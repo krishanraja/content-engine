@@ -3,6 +3,8 @@ import { z } from 'zod'
 const RuntimeWordmarkSchema = z.object({
   assetFile: z.string().min(1),
   assetDataUrl: z.string().min(1).optional(),
+  alphaCropDataUrl: z.string().min(1).optional(),
+  letterCropDataUrl: z.string().min(1).optional(),
   pixelWidth: z.number().positive(),
   pixelHeight: z.number().positive(),
   alphaCrop: z.object({ x: z.number().nonnegative(), y: z.number().nonnegative(), width: z.number().positive(), height: z.number().positive() }),

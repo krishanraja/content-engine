@@ -31,7 +31,7 @@ Each slide answers one audience question. The design carries information that th
 
 The first generic editorial-gates treatment was rejected. The current candidate uses a mechanical approval interlock to show one exact mechanism: an approval stops fitting when the story it checked changes. Every card uses a distinct narrative scene while the moving key, fixed alignment grid and material palette preserve coherence. Deep ink is the operating environment, cream changes the reading mode, mint means a current match and amber means changed or held. Archivo carries structure, Newsreader carries the final claim, Source Serif 4 carries short explanation and IBM Plex Mono carries source or object labels.
 
-The mechanical interlock is approved as an infographic treatment lane, not as a universal house style. Future stories can use documentary evidence, physical analogy, cultural restage, handmade, cinematic or surreal visual grammar when the meaning earns it. The official series lettering appears once at top-left as the channel signpost. The official Mindmake wordmark appears once at bottom-right as the publisher signature. Neither mark may be recreated as live text or repeated elsewhere. The revised placement remains provisional until Krish approves the rendered review set.
+The mechanical interlock is approved as an infographic treatment lane, not as a universal house style. Future stories can use documentary evidence, physical analogy, cultural restage, handmade, cinematic or surreal visual grammar when the meaning earns it. The official series lettering appears once at top-left as the channel signpost. The official Mindmake wordmark appears once at bottom-left as the publisher signature, with a reserved clear zone above it. Both assets crop to configured visible bounds and align their visible letters to the same content edge. Neither mark may be recreated as live text or repeated elsewhere. The revised placement remains provisional until Krish approves the rendered review set.
 
 ## Determinism and safety
 
@@ -59,8 +59,8 @@ The first review fixture is `examples/carousels/built-editorial-gates.review.jso
 - Product method: locked by Krish on 2026-09-07 and encoded in `config/carousel-visual-direction.json`.
 - Infographic treatment: approved as one available lane, not as a universal carousel style.
 - Current rendered story: `built-approval-interlock-v2`, story hash `e4d529951caa165c2cc7da7fc03d1fd1a63cc5f1c4da59d9678dc778e63cfd14`.
-- Current review render manifest SHA-256: `daf1e34bee34efa633253ffcc26c4329e4b51f8e05ca6f5834b75d6432b02afc`.
-- Verification: 42 test files and 367 tests passed; skill, trigger, renderer, public-copy and no-secrets checks passed; an unchanged rerender reproduced all seven slide hashes.
-- Provisional: the revised top-left series signpost and bottom-right Mindmake signature need Krish's rendered visual approval.
+- Current review render manifest SHA-256: `398223aa1413e548cbd25ae4d0375cace182387f44a7484e6b0fb76d1773efd7`.
+- Verification: 42 test files and 368 tests passed; skill, trigger, renderer, public-copy and no-secrets checks passed; an unchanged rerender reproduced all seven slide hashes.
+- Provisional: the revised top-left series signpost and bottom-left Mindmake signature need Krish's rendered visual approval.
 - Next owner: Krish.
 - Next action: review the refreshed seven-card browser candidate and approve or revise the brand placement.

@@ -51,3 +51,11 @@ Decision: use the official series wordmark once at top-left as the channel signp
 Why: Built With AI and The Money of AI explain the channel while repeated, invariant Mindmake placement builds publisher recognition. Do not stack or duplicate the identities.
 
 Carry-forward: the placement rule is approved. The revised frame execution still requires rendered visual approval.
+
+## 2026-09-07: carousel publisher signature moved left
+
+Decision: supersede only the bottom-right part of the preceding carousel brand hierarchy. Mindmake now sits bottom-left, while the official series wordmark remains top-left. Both marks crop to their visible bounds and align to the same content edge, with a reserved clear zone above the footer signature.
+
+Why: the publisher signature reads more naturally as a footer on the left and the visible letterforms should align, not the transparent source canvases or their surrounding plates.
+
+Carry-forward: this is a carousel-only frame rule. The exact revised render still requires visual approval.

@@ -32,4 +32,4 @@ Store contextual learning. Do not infer that Krish likes an object, animal, colo
 
 ## Carousel branding
 
-Use the official series wordmark once in the top-left as the channel signpost. Use the official Mindmake wordmark once in the bottom-right as the publisher signature. Keep both phone-legible, inside safe margins and on a contrast-safe plate. Do not stack them, recreate them as text or repeat either identity elsewhere on the card.
+Use the official series wordmark once in the top-left as the channel signpost. Use the official Mindmake wordmark once in the bottom-left as the publisher signature. Crop both assets to their configured visible letter bounds so the marks share the content left edge rather than aligning invisible transparent padding. Reserve clear space above the Mindmake signature. Keep both phone-legible, inside safe margins and on a contrast-safe plate. Do not stack them, recreate them as text or repeat either identity elsewhere on the card.

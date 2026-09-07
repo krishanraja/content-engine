@@ -58,9 +58,15 @@ async function loadPinnedTheme(configPath: string, story: CarouselStoryV1): Prom
 async function runtimeWordmark(asset: StagedWordmarkAsset, stagingDirectory: string) {
   const mimeType = extname(asset.assetFile).toLowerCase() === '.svg' ? 'image/svg+xml' : 'image/png'
   const assetDataUrl = `data:${mimeType};base64,${(await readFile(join(stagingDirectory, asset.assetFile))).toString('base64')}`
+  const cropDataUrl = (crop: StagedWordmarkAsset['alpha_crop']) => {
+    const wrapper = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${crop.x} ${crop.y} ${crop.width} ${crop.height}"><image href="${assetDataUrl}" x="0" y="0" width="${asset.pixel_width}" height="${asset.pixel_height}"/></svg>`
+    return `data:image/svg+xml;base64,${Buffer.from(wrapper).toString('base64')}`
+  }
   return {
     assetFile: asset.assetFile,
     assetDataUrl,
+    alphaCropDataUrl: cropDataUrl(asset.alpha_crop),
+    letterCropDataUrl: cropDataUrl(asset.letter_region),
     pixelWidth: asset.pixel_width,
     pixelHeight: asset.pixel_height,
     alphaCrop: { x: asset.alpha_crop.x, y: asset.alpha_crop.y, width: asset.alpha_crop.width, height: asset.alpha_crop.height },

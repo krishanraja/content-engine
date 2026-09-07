@@ -78,7 +78,7 @@ export const CarouselVisualDirectionMethodV1Schema = z.object({
   }).strict(),
   branding: z.object({
     series_wordmark: z.literal('top_left_channel_signpost'),
-    mindmake_wordmark: z.literal('bottom_right_publisher_signature'),
+    mindmake_wordmark: z.literal('bottom_left_publisher_signature'),
     official_assets_only: z.literal(true),
     one_of_each_per_card: z.literal(true),
   }).strict(),

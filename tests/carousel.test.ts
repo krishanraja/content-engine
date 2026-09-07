@@ -101,12 +101,22 @@ describe('carousel engine', () => {
     expect(renderer).toContain('data-brand-slot="mindmake-publisher-signature"')
   })
 
+  it('left-aligns cropped wordmarks and reserves a footer clear zone', async () => {
+    const renderer = await readFile(resolve('apps/renderer/src/carousel/MindmakeCarouselSlide.tsx'), 'utf8')
+    expect(renderer).toContain('const BRAND_PLATE_LEFT = CONTENT_LEFT - BRAND_PLATE_PADDING_X')
+    expect(renderer.match(/left: BRAND_PLATE_LEFT/g)).toHaveLength(2)
+    expect(renderer).toContain("data-crop={lettersOnly ? 'letter-region' : 'alpha-crop'}")
+    expect(renderer).toContain('const FOOTER_CLEARANCE = 128')
+    expect(renderer.match(/bottom: FOOTER_CLEARANCE/g)).toHaveLength(7)
+  })
+
   it('locks visual production to completed content with three collaboration speeds', async () => {
     const input = JSON.parse(await readFile(resolve('config/carousel-visual-direction.json'), 'utf8')) as Record<string, unknown>
     const method = CarouselVisualDirectionMethodV1Schema.parse(input)
     expect(method.boundary.input).toBe('completed_content_idea')
     expect(method.boundary.topic_ideation_allowed).toBe(false)
     expect(method.boundary.recording_ideation_allowed).toBe(false)
+    expect(method.branding.mindmake_wordmark).toBe('bottom_left_publisher_signature')
     expect(method.modes.fast.decision_points).toHaveLength(2)
     expect(method.modes.standard.decision_points).toHaveLength(4)
     expect(method.modes.exploratory.decision_points).toHaveLength(5)

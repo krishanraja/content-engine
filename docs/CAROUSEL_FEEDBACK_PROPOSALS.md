@@ -27,3 +27,12 @@ Capture records method evidence without changing a durable standard automaticall
 - Learning rule: store why an image or analogy worked in context. Do not infer a general preference for a pictured object, meme, animal, colour or style.
 - Validation: a versioned method contract, CLI parse, skill instructions, schema regression tests and a revised rendered carousel.
 - Remaining gate: Krish must approve the revised brand placement in the rendered review set. No public package or durable cross-product rule is authorised by this record.
+
+## CAROUSEL-METHOD-2026-09-07-03 / v1 / owner directed
+
+- Owner and decision rights: Krish Raja, directed in the carousel review session on 2026-09-07.
+- Class, surface and situation: frame execution; carousel wordmark placement, crop and spacing.
+- Evidence: Krish preferred Mindmake at bottom-left, requested more breathing space above the footer mark and identified transparent source-canvas edges as the cause of false visual alignment.
+- Bounded change: move the carousel Mindmake signature to bottom-left, crop both official wordmarks through their configured visible regions, align their visible letterforms to the content grid and reserve a footer clear zone. Do not change the separate video lockup.
+- Validation: render all seven cards, inspect full-resolution pixels, verify both official marks appear on every card, verify the footer clear zone and rerun deterministic checks.
+- Remaining gate: Krish's exact visual approval of the revised render.
