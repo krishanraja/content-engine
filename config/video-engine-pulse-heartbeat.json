@@ -1,24 +1,16 @@
 {
   "schema_version": 1,
-  "automation_id": "mindmaker-weekly-radar",
-  "kind": "heartbeat",
-  "name": "Mindmaker Video Engine pulse",
+  "status": "retired",
+  "retired_at": "2026-09-07",
+  "reason": "Editorial opportunities and runner attention belong in the pull-only Control Center Content surface, not an attached chat.",
   "source": {
     "repository": "krishanraja/mindmake-video-studio",
     "branch": "main"
   },
-  "schedule": {
-    "rrule": "RRULE:FREQ=DAILY;BYHOUR=11;BYMINUTE=0;BYSECOND=0",
-    "local_time": "11:00",
-    "timezone": "Europe/London",
-    "radar_day": "monday"
-  },
-  "delivery": {
-    "surface": "attached_codex_thread",
-    "thread_binding": "operator_managed_runtime_state",
-    "healthy_behavior": "silent",
-    "attention_behavior": "codex_app_settings",
+  "replacement": {
+    "surface": "control_center_content",
+    "delivery": "pull_only",
+    "scheduled_work": "server_side_rows",
     "public_publish_allowed": false
-  },
-  "prompt": "Run the Mindmaker Video Engine pulse from the latest GitHub main branch of krishanraja/mindmake-video-studio. This is the single heartbeat attached to this Codex thread. On every daily run, perform read-only health and intake checks: read the independent runner heartbeat and status; inspect the signed receipt_journals and project_journals using only their path-free pending and conflicted counts plus safe attention codes; verify the Google Drive mount; and run the governed Inbox discovery scan. Report only a new or changed intake candidate, a health failure, stale runner state, unavailable Drive state, or journal attention. Remain silent when health is unchanged and there is no new or changed intake. Never include a local path, journal payload, secret, or raw private record. Do not create a job, inspect editorial media, move a file, upload, publish, or change an approval. On Monday, also run studio doctor and the authenticated combined radar pull. Read only the latest mm-ctrl public-signal pool and Control Center owned or sanitized feed; do not start a second scraping system. Label every stale or unavailable provider and fail closed on authentication or an unsupported schema major. Apply the engine's strict editorial-eligibility and qualified-growth gates, returning fewer ideas rather than padding the brief with weak material. Notify Krish with up to three The Money of AI opportunities, up to three Built With AI opportunities, and up to two credible stretch ideas. For each, include why now, the audience problem, a compelling honest hook, payoff, evidence sources, visual proof, best source mode, effort, risk, novelty, separate editorial and growth evaluations, the strongest credible reason it may fail, a safer version, a more ambitious version, and the recommended version. Write “No credible contradiction found” when dissent would be manufactured. Treat generic guides, listicles, personnel news without operating consequence, stale news, weak sources, and thin summaries as ineligible. Never publish. When an idea advances, present the exact evidence screenshot and its proposed face-safe placement for approval before it can enter a render."
+  }
 }

@@ -4,6 +4,8 @@ export * from './v2.js'
 export * from './control-plane-v1.js'
 export * from './drive-discovery-v1.js'
 export * from './carousel.js'
+export * from './session-v1.js'
+export * from './editorial-v1.js'
 
 export const SCHEMA_VERSION = 1 as const
 

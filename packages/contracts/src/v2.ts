@@ -112,9 +112,14 @@ export const FeedbackConfirmationV2Schema = z.object({
   confirmation_ref: z.string().min(12).max(800),
   confirmed_at: z.string().min(1),
 }).strict().superRefine((value, context) => {
-  const prefix = `codex-user-confirmation:feedback:${value.event_hash}:`
-  if (!value.confirmation_ref.startsWith(prefix) || !value.confirmation_ref.slice(prefix.length).trim()) {
-    context.addIssue({ code: 'custom', path: ['confirmation_ref'], message: `feedback confirmation requires an event-bound user receipt beginning ${prefix}` })
+  const legacyPrefix = `codex-user-confirmation:feedback:${value.event_hash}:`
+  const portablePrefix = /^studio-user-confirmation:(?:control_center|codex_desktop|codex_cli|codex_cloud|claude_desktop|claude_code|claude_ai|chatgpt|other_mcp):feedback:[a-f0-9]{64}:/
+  const portableMatch = value.confirmation_ref.match(portablePrefix)?.[0]
+  const portableHash = portableMatch?.split(':')[3]
+  const legacyValid = value.confirmation_ref.startsWith(legacyPrefix) && Boolean(value.confirmation_ref.slice(legacyPrefix.length).trim())
+  const portableValid = portableHash === value.event_hash && Boolean(portableMatch && value.confirmation_ref.slice(portableMatch.length).trim())
+  if (!legacyValid && !portableValid) {
+    context.addIssue({ code: 'custom', path: ['confirmation_ref'], message: 'feedback confirmation requires an event-bound user receipt from a supported studio client' })
   }
 })
 export type FeedbackConfirmationV2 = z.infer<typeof FeedbackConfirmationV2Schema>
