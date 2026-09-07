@@ -22,9 +22,13 @@ describe('radar', () => {
     expect(selectWeeklyBrief(ranked)).toHaveLength(0)
   })
 
-  it('routes economic workflow stories to The Money of AI', () => {
+  it('keeps raw signals neutral and opens independent series lenses without a Built default', () => {
     const candidate = { id: 'economic', title: 'AI costs move into workflow design', summary: 'The operating model changes enterprise margin.', source_kind: 'public_signal' as const, sensitivity: 'public' as const, occurred_at: '2026-08-28T09:00:00.000Z', source_urls: ['https://example.com/economics'], corroboration: 2, evidence_status: 'public_grounded' as const, category: 'economics', source_ref_hash: 'economichash' }
-    expect(rankRadarOpportunities([candidate], new Date('2026-08-28T10:00:00.000Z'))[0]?.series).toBe('money_of_ai')
+    const ranked = rankRadarOpportunities([candidate], new Date('2026-08-28T10:00:00.000Z'))
+    expect(ranked.map((item) => item.series).sort()).toEqual(['built_with_ai', 'money_of_ai'])
+    expect(ranked.every((item) => !item.editorial_eligible)).toBe(true)
+    expect(ranked.every((item) => item.hard_blocks.includes('raw radar signal requires an approved Control Center editorial opportunity before production'))).toBe(true)
+    expect(ranked.every((item) => !item.proposed_hook.includes('inside this headline'))).toBe(true)
   })
 
   it('rejects generic guides, weak sources and thin summaries from the weekly brief', () => {
@@ -40,10 +44,12 @@ describe('radar', () => {
     expect(selectWeeklyBrief(rankRadarOpportunities([guide, aggregator, thin, appointment], now))).toEqual([])
   })
 
-  it('allows a substantive single-source primary announcement to remain eligible', () => {
+  it('retains a substantive primary signal but does not turn it into production copy', () => {
     const candidate = { id: 'primary', title: 'Google releases a new transcription model', summary: 'The release adds timestamped multilingual speech recognition and changes the available local workflow.', source_kind: 'public_signal' as const, sensitivity: 'public' as const, occurred_at: '2026-08-29T09:00:00.000Z', source_urls: ['https://blog.google/innovation-and-ai/models/transcription'], corroboration: 1, evidence_status: 'public_grounded' as const, category: 'model', source_ref_hash: 'primaryhash' }
     const ranked = rankRadarOpportunities([candidate], new Date('2026-08-29T10:00:00.000Z'))
-    expect(ranked[0]?.editorial_eligible).toBe(true)
-    expect(selectWeeklyBrief(ranked)).toHaveLength(1)
+    expect(radarEditorialQualityBlocks(candidate, new Date('2026-08-29T10:00:00.000Z'))).toEqual([])
+    expect(ranked).toHaveLength(2)
+    expect(ranked.every((item) => !item.editorial_eligible)).toBe(true)
+    expect(selectWeeklyBrief(ranked)).toHaveLength(0)
   })
 })
