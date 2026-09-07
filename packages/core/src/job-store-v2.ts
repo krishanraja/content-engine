@@ -6,6 +6,7 @@ import {
   ApprovalV2Schema,
   ApprovalGateV2Schema,
   DriveIntakeProofV1Schema,
+  IdentifierV1Schema,
   JobManifestV2Schema,
   JOB_SCHEMA_VERSION_V2,
   ReviewDecisionRecordV1Schema,
@@ -318,6 +319,8 @@ async function saveJobV2(job: JobManifestV2): Promise<void> {
 }
 
 export interface CreateJobV2Input {
+  /** Deterministic external intake identity. Omit for an operator-created job. */
+  jobId?: string
   series: Series
   mode: SourceMode
   purpose?: JobPurpose
@@ -338,8 +341,21 @@ export async function createJobV2(input: CreateJobV2Input): Promise<JobManifestV
   if (input.mode !== 'short_native' && !sourceBundle) throw new Error('extract and solo jobs require a source bundle')
   const intakeProof = sourceBundle?.intake_provenance ? await assertDriveSourceBundleProvenance(sourceBundle, input.discoveryRuntimeRoot) : undefined
   const createdAt = nowIso()
-  const jobId = `${createdAt.slice(0, 10).replaceAll('-', '')}-${input.series}-${randomUUID().slice(0, 8)}`
+  const jobId = input.jobId
+    ? IdentifierV1Schema.parse(input.jobId)
+    : `${createdAt.slice(0, 10).replaceAll('-', '')}-${input.series}-${randomUUID().slice(0, 8)}`
   const root = jobPath(jobId)
+  if (input.jobId) {
+    try {
+      const existing = await loadJobV2(jobId)
+      if (existing.series !== input.series || existing.mode !== input.mode || existing.purpose !== (input.purpose ?? 'production')) {
+        throw new Error('deterministic job id is already bound to different production inputs')
+      }
+      return existing
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    }
+  }
   const pinsRoot = join(root, 'pinned')
   const pinnedSkillsRoot = join(pinsRoot, 'skills')
   await mkdir(join(root, 'artifacts'), { recursive: true })

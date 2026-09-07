@@ -26,7 +26,7 @@ describe.sequential('V2 CLI', () => {
     const program = new Command().exitOverride()
     registerV2Commands(program, { repoRoot: '.', configPath: 'config.json', skillPaths: [], out: () => undefined })
     const v2 = program.commands.find((command) => command.name() === 'v2')!
-    expect(v2.commands.map((command) => command.name())).toEqual(expect.arrayContaining(['identity', 'job', 'ingest', 'transcribe', 'candidates', 'recording-brief', 'source', 'visual-plan', 'assets', 'styleframes', 'animatic', 'treatment', 'render', 'qa', 'approve', 'feedback', 'package', 'publish', 'analytics', 'experiment']))
+    expect(v2.commands.map((command) => command.name())).toEqual(expect.arrayContaining(['production-brief', 'identity', 'job', 'ingest', 'transcribe', 'candidates', 'recording-brief', 'source', 'visual-plan', 'assets', 'styleframes', 'animatic', 'treatment', 'render', 'qa', 'approve', 'feedback', 'package', 'publish', 'analytics', 'experiment']))
     const publish = v2.commands.find((command) => command.name() === 'publish')!
     expect(publish.commands.map((command) => command.name())).toEqual(['youtube'])
     expect(() => assertYoutubePrivateOnly('youtube_shorts', 'private')).not.toThrow()
@@ -272,8 +272,11 @@ describe.sequential('V2 CLI', () => {
         if (settled) return
         settled = true
         child.kill()
-        reject(new Error(`CLI probe did not exit within 10 seconds: ${args.join(' ')}`))
-      }, 10_000)
+        reject(new Error(`CLI probe did not exit within 20 seconds: ${args.join(' ')}`))
+      // Windows Defender and a cold tsx graph can add several seconds without
+      // indicating a hung parser. Keep the bound finite, but above the measured
+      // 10.1s cold-start tail seen in the complete verification suite.
+      }, 20_000)
       child.stdout.on('data', (chunk) => { stdout += String(chunk) })
       child.stderr.on('data', (chunk) => { stderr += String(chunk) })
       child.once('error', (error) => {
@@ -316,5 +319,5 @@ describe.sequential('V2 CLI', () => {
 
     const version = await runLoadedCli(['--version'])
     expect(version).toMatchObject({ code: 0, stdout: '0.1.0\n', stderr: '' })
-  }, 15_000)
+  }, 30_000)
 })

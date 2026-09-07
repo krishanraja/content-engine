@@ -32,6 +32,7 @@ import {
   type RunnerReceiptV1,
   type RunnerResultRefsV1,
   type RunnerReviewTargetV1,
+  type ClaimedProductionBriefV1,
 } from '@mindmake/contracts'
 import { loadRunnerReceiptSigningKey, signRunnerReceiptHash, verifyRunnerReceiptHash } from './approval-signing.js'
 import { CONTROL_CENTER_RUNNER_CREDENTIAL, ControlPlaneClient, ControlPlaneRequestError, type ClaimedRunnerCommand } from './control-plane-client.js'
@@ -49,6 +50,7 @@ import {
   returnMagicEditToParent,
 } from './magic-edits.js'
 import { studioPaths } from './paths.js'
+import { importProductionBrief, materializeProductionBriefJob } from './production-brief.js'
 import { run } from './process.js'
 import { createLocalReviewSemanticMap, deterministicRunnerReviewId, loadLocalReviewBinding, persistLocalReviewBinding } from './review-bindings.js'
 import { clearRunnerAuthorityStaging, ensureRunnerAuthorityStagingRoot, writeRunnerAuthorityJsonAtomic } from './runner-authority-files.js'
@@ -220,6 +222,8 @@ export interface RunnerControlPlane {
   uploadPreviewFile?: ControlPlaneClient['uploadPreviewFile']
   previewRetention?: ControlPlaneClient['previewRetention']
   project?: ControlPlaneClient['project']
+  claimProductionBrief?: ControlPlaneClient['claimProductionBrief']
+  completeProductionBrief?: ControlPlaneClient['completeProductionBrief']
 }
 
 export interface RunnerCycleOptions {
@@ -247,6 +251,9 @@ export interface RunnerCycleResult {
   duplicate?: boolean
   discovery?: SanitizedDriveDiscoverySummary
   project_journals?: RunnerProjectJournalStatusV1
+  production_brief_id?: string
+  production_brief_status?: 'imported' | 'awaiting_source_bundle'
+  production_job_id?: string
 }
 
 export interface RunnerProjectBootstrapInput {
@@ -2220,6 +2227,56 @@ async function receiptForNewAttempt(
   return signRunnerReceipt({ ...priorBody, command_id: command.command_id, ...(resultRefs ? { result_refs: resultRefs } : {}) }, options.signingKey)
 }
 
+function productionBriefSkillPaths(repoRoot: string): string[] {
+  return ['mindmake-video', 'krish-voice', 'content-corpus', 'video-engine']
+    .map(name => join(repoRoot, '.agents', 'skills', name))
+}
+
+export async function processClaimedProductionBrief(
+  claim: ClaimedProductionBriefV1,
+  options: Pick<RunnerCycleOptions, 'client' | 'runnerId' | 'runtimeRoot' | 'repoRoot'>,
+): Promise<Pick<RunnerCycleResult, 'production_brief_id' | 'production_brief_status' | 'production_job_id'>> {
+  if (!options.client.completeProductionBrief) throw new Error('control-plane production brief completion provider is unavailable')
+  if (hashValue(claim.brief) !== claim.brief_hash) throw new Error('claimed production brief hash does not match its payload')
+  if (Date.parse(claim.lease.expires_at) <= Date.now()) throw new Error('production brief lease expired before local import')
+
+  const repoRoot = options.repoRoot ?? REPO_ROOT
+  const imported = await importProductionBrief(claim.brief)
+  if (imported.brief_hash !== claim.brief_hash) throw new Error('imported production brief does not match the claimed hash')
+
+  let status: 'imported' | 'awaiting_source_bundle' = 'imported'
+  let jobId: string | null = null
+  if (claim.brief.production_kinds.includes('video')) {
+    if (claim.brief.source_mode === 'short_native') {
+      const materialized = await materializeProductionBriefJob({
+        imported,
+        configPath: join(repoRoot, 'config', 'studio.json'),
+        skillPaths: productionBriefSkillPaths(repoRoot),
+        techniqueRegistryPath: join(repoRoot, 'config', 'techniques.json'),
+      })
+      jobId = materialized.job.job_id
+    } else {
+      status = 'awaiting_source_bundle'
+    }
+  }
+  await options.client.completeProductionBrief({
+    schema_version: 1,
+    runner_id: options.runnerId,
+    content_idea_id: claim.content_idea_id,
+    brief_id: claim.brief.brief_id,
+    brief_hash: claim.brief_hash,
+    lease_token: claim.lease.token,
+    status,
+    job_id: jobId,
+    safe_code: null,
+  })
+  return {
+    production_brief_id: claim.brief.brief_id,
+    production_brief_status: status,
+    ...(jobId ? { production_job_id: jobId } : {}),
+  }
+}
+
 async function runRunnerCycleUnderAuthority(options: RunnerCycleOptions): Promise<RunnerCycleResult> {
   const now = options.now ?? (() => new Date())
   await assertCurrentRunnerAuthority(options.signingKey, options.runnerId, options.runtimeRoot)
@@ -2277,6 +2334,17 @@ async function runRunnerCycleUnderAuthority(options: RunnerCycleOptions): Promis
   if (options.verifySourceProvenance) {
     const currentCommit = await options.verifySourceProvenance()
     if (currentCommit !== options.softwareCommit) throw new Error('runner source commit changed after startup')
+  }
+  if (options.client.claimProductionBrief) {
+    const productionBrief = await options.client.claimProductionBrief({
+      runner_id: options.runnerId,
+      software_commit: options.softwareCommit,
+      lease_seconds: options.leaseSeconds ?? DEFAULT_LEASE_SECONDS,
+    })
+    if (productionBrief) {
+      const result = await processClaimedProductionBrief(productionBrief, options)
+      return { state: 'completed', ...(discovery ? { discovery } : {}), ...result }
+    }
   }
   const claim = await options.client.claim({ runner_id: options.runnerId, software_commit: options.softwareCommit, lease_seconds: options.leaseSeconds ?? DEFAULT_LEASE_SECONDS })
   if (!claim) return { state: 'idle', ...(discovery ? { discovery } : {}) }
@@ -2859,6 +2927,11 @@ export async function runRunnerDaemon(input: { repoRoot?: string; signal?: Abort
           receipt_journals: receiptJournals,
           project_journals: projectJournals,
           ...(result.command_id ? { command_id: result.command_id, receipt_status: result.receipt_status } : {}),
+          ...(result.production_brief_id ? {
+            production_brief_id: result.production_brief_id,
+            production_brief_status: result.production_brief_status,
+            ...(result.production_job_id ? { production_job_id: result.production_job_id } : {}),
+          } : {}),
           ...(result.discovery ? { discovery: result.discovery } : {}),
         })
         if (maintenance.retention) {

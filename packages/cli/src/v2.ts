@@ -79,15 +79,18 @@ import {
   KRISH_IDENTITY_CREDENTIAL,
   krishIdentityStatus,
   loadCaptionTranscript,
+  loadImportedProductionBrief,
   loadJobV2,
   loadExactBrandGeometryContextV2,
   loadKrishIdentity,
   loadPinnedRenderRegistryV2,
   loadTechniqueRegistry,
+  materializeProductionBriefJob,
   activateMagicEditCandidate,
   listExperimentsV2,
   normalizeMediaSourceV2,
   importAnalyticsV2,
+  importProductionBrief,
   initializeDriveInbox,
   pinnedConfigPathV2,
   pinnedTechniqueRegistryPathV2,
@@ -758,6 +761,63 @@ function stageHint(stage: StageNameV2, jobId: string): string {
 
 export function registerV2Commands(program: Command, context: V2CliContext): void {
   const v2 = program.command('v2').description('V2 deterministic visual-story director')
+
+  const productionBrief = v2.command('production-brief').description('Import an exact approved Control Center production brief')
+  productionBrief.command('import')
+    .requiredOption('--input <path>', 'ProductionBriefV1 JSON exported by Control Center')
+    .action(async (options) => {
+      await ensureRuntime()
+      const imported = await importProductionBrief(await readJson(resolve(options.input)))
+      let materialized: Awaited<ReturnType<typeof materializeProductionBriefJob>> | null = null
+      if (imported.brief.production_kinds.includes('video') && imported.brief.source_mode === 'short_native') {
+        materialized = await materializeProductionBriefJob({
+          imported,
+          configPath: context.configPath,
+          skillPaths: context.skillPaths,
+          techniqueRegistryPath: join(context.repoRoot, 'config', 'techniques.json'),
+        })
+      }
+      context.out({
+        brief_id: imported.brief.brief_id,
+        brief_hash: imported.brief_hash,
+        imported: imported.created,
+        production_kinds: imported.brief.production_kinds,
+        source_mode: imported.brief.source_mode,
+        ...(materialized ? {
+          job_id: materialized.job.job_id,
+          brief_artifact_hash: materialized.brief_artifact_hash,
+          next_stage: 'script',
+        } : imported.brief.production_kinds.includes('video') ? {
+          next_stage: 'source_bundle',
+          next_command: `studio v2 production-brief materialize --brief-id ${imported.brief.brief_id} --source-bundle <source-bundle.json>`,
+        } : {
+          next_stage: 'carousel_direction',
+        }),
+      })
+    })
+
+  productionBrief.command('materialize')
+    .requiredOption('--brief-id <briefId>')
+    .option('--source-bundle <path>', 'reviewed SourceBundleV1 for extract or solo production')
+    .action(async (options) => {
+      await ensureRuntime()
+      const imported = await loadImportedProductionBrief(options.briefId)
+      const sourceBundle = options.sourceBundle ? SourceBundleV1Schema.parse(await readJson(resolve(options.sourceBundle))) : undefined
+      const materialized = await materializeProductionBriefJob({
+        imported,
+        ...(sourceBundle ? { sourceBundle } : {}),
+        configPath: context.configPath,
+        skillPaths: context.skillPaths,
+        techniqueRegistryPath: join(context.repoRoot, 'config', 'techniques.json'),
+      })
+      context.out({
+        brief_id: imported.brief.brief_id,
+        brief_hash: imported.brief_hash,
+        job_id: materialized.job.job_id,
+        brief_artifact_hash: materialized.brief_artifact_hash,
+        next_stage: v2RunnableStages(materialized.job.stages, materialized.job.mode)[0] || null,
+      })
+    })
 
   const identity = v2.command('identity').description('Encrypted, Krish-only persistent face identity')
   identity.command('status').action(async () => {

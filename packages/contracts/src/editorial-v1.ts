@@ -58,3 +58,66 @@ export const ProductionBriefV1Schema = z.object({
 })
 
 export type ProductionBriefV1 = z.infer<typeof ProductionBriefV1Schema>
+
+const RunnerIdentityV1Schema = z.string().regex(/^[a-z0-9][a-z0-9_-]{1,95}$/i)
+const RunnerCommitV1Schema = z.string().regex(/^(?:[a-f0-9]{40}|unknown)$/)
+const LeaseTokenV1Schema = z.string().min(24).max(256)
+
+export const ProductionBriefClaimRequestV1Schema = z.object({
+  schema_version: z.literal(1),
+  runner_id: RunnerIdentityV1Schema,
+  software_commit: RunnerCommitV1Schema,
+  command_schema_versions: z.tuple([z.literal(1)]),
+  lease_seconds: z.number().int().min(30).max(300).optional(),
+}).strict()
+export type ProductionBriefClaimRequestV1 = z.infer<typeof ProductionBriefClaimRequestV1Schema>
+
+export const ClaimedProductionBriefV1Schema = z.object({
+  content_idea_id: z.string().uuid(),
+  brief: ProductionBriefV1Schema,
+  brief_hash: Sha256V1Schema,
+  lease: z.object({
+    token: LeaseTokenV1Schema,
+    expires_at: z.string().datetime(),
+  }).strict(),
+}).strict().superRefine((value, context) => {
+  if (value.content_idea_id !== value.brief.content_idea_id) {
+    context.addIssue({ code: 'custom', path: ['content_idea_id'], message: 'claimed content idea must match its brief' })
+  }
+})
+export type ClaimedProductionBriefV1 = z.infer<typeof ClaimedProductionBriefV1Schema>
+
+export const ProductionBriefClaimResponseV1Schema = z.object({
+  ok: z.literal(true),
+  schema_version: z.literal(1),
+  item: ClaimedProductionBriefV1Schema.nullable(),
+}).strict()
+
+export const ProductionBriefCompleteRequestV1Schema = z.object({
+  schema_version: z.literal(1),
+  runner_id: RunnerIdentityV1Schema,
+  content_idea_id: z.string().uuid(),
+  brief_id: IdentifierV1Schema,
+  brief_hash: Sha256V1Schema,
+  lease_token: LeaseTokenV1Schema,
+  status: z.enum(['imported', 'awaiting_source_bundle', 'failed']),
+  job_id: IdentifierV1Schema.nullable(),
+  safe_code: z.string().regex(/^[a-z][a-z0-9_]{0,79}$/).nullable(),
+}).strict().superRefine((value, context) => {
+  if (value.status === 'failed' && value.safe_code === null) {
+    context.addIssue({ code: 'custom', path: ['safe_code'], message: 'failed production brief completion requires a safe code' })
+  }
+  if (value.status !== 'failed' && value.safe_code !== null) {
+    context.addIssue({ code: 'custom', path: ['safe_code'], message: 'successful production brief completion cannot carry a failure code' })
+  }
+})
+export type ProductionBriefCompleteRequestV1 = z.infer<typeof ProductionBriefCompleteRequestV1Schema>
+
+export const ProductionBriefCompleteResponseV1Schema = z.object({
+  ok: z.literal(true),
+  schema_version: z.literal(1),
+  duplicate: z.boolean(),
+  brief_id: IdentifierV1Schema,
+  status: z.enum(['imported', 'awaiting_source_bundle', 'failed']),
+  job_id: IdentifierV1Schema.nullable(),
+}).strict()

@@ -32,6 +32,8 @@ Read only the references relevant to the current operation. Apply `$krish-voice`
 - Capture every user change as feedback, infer the likely reason, and ask for concise confirmation. Never activate a durable rule without explicit user approval.
 - Publish no candidate unless it has an authored edit plan and editorial assessment that pass deterministic gates. Heuristic windows are discovery material, not approval-ready recommendations.
 - Do not turn a raw radar signal into production copy. New short-native work requires an exact approved `ProductionBriefV1` from Control Center.
+- Import that artifact with `studio v2 production-brief import --input <brief.json>`. Repeating the same import reuses its content address and deterministic job; reusing a brief ID for changed semantic content fails closed. Extract and solo work wait for a reviewed `SourceBundleV1` before materialising a job.
+- In the installed environment, prefer the authenticated runner intake: it claims the saved brief directly from Control Center, materialises short-native video jobs, and reports solo or podcast work as `awaiting_source_bundle`. Use the manual import only for offline recovery or a supplied contract fixture.
 
 ## Operating shape
 

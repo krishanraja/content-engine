@@ -157,10 +157,45 @@ The singleton lock records both `acquired_at` and an operating-system process-in
 
 The YouTube credential is a short-lived OAuth access token. If it expires, replace the credential through the OAuth administration flow; never put it in a repository file or command argument.
 
+## Control Center production intake
+
+Every production run begins with the exact `ProductionBriefV1` created from an
+approved Content revision. The import is content-addressed and idempotent. A
+changed brief cannot reuse an existing brief ID.
+
+The installed runner now claims one ready brief through the same fail-closed
+bearer boundary it uses for edit commands. It verifies the semantic hash,
+stores the immutable brief locally, and acknowledges the result back onto the
+originating `content_ideas` row. Short-native video briefs materialize their
+deterministic job immediately, including the exact brief-stage artifact.
+Carousel-only briefs are imported without inventing a video job. Solo and
+podcast briefs stop at `awaiting_source_bundle` until Krish has accepted the
+exact Drive candidate and produced a reviewed `SourceBundleV1`. This polling
+and import path runs in the Windows Scheduled Task and does not require Codex,
+Claude, ChatGPT or another live chat session.
+
+The manual command remains the recovery and offline-import path:
+
+```powershell
+.\scripts\studio.ps1 v2 production-brief import --input <production-brief.json>
+```
+
+Short-native briefs create their deterministic job immediately. Extract and
+solo briefs remain safe intake artifacts until Drive discovery has produced a
+reviewed `SourceBundleV1`:
+
+```powershell
+.\scripts\studio.ps1 v2 production-brief materialize --brief-id <brief-id> --source-bundle <source-bundle.json>
+```
+
+Carousel-only briefs enter the same intake ledger and continue to visual
+direction without creating a video job. Import does not re-ideate, rewrite or
+relax the approved argument.
+
 ## Typical V2 extracted-video run
 
 ```powershell
-.\scripts\studio.ps1 v2 job create --series money_of_ai --mode extract --source-bundle <source-bundle.json>
+.\scripts\studio.ps1 v2 production-brief materialize --brief-id <brief-id> --source-bundle <source-bundle.json>
 .\scripts\studio.ps1 v2 ingest --job <job-id>
 .\scripts\studio.ps1 v2 transcribe --job <job-id>
 .\scripts\studio.ps1 v2 source analyze --job <job-id>
@@ -196,7 +231,7 @@ The first candidates call creates discovery material only. Inspect the verified 
 ## Typical V2 short-native run
 
 ```powershell
-.\scripts\studio.ps1 v2 job create --series built_with_ai --mode short_native
+.\scripts\studio.ps1 v2 production-brief import --input <production-brief.json>
 .\scripts\studio.ps1 v2 candidates --job <job-id> --brief <brief.json> --input <codex-authored-candidate.json>
 .\scripts\studio.ps1 v2 approve --job <job-id> --gate angle --artifact <candidate-json-path> --confirmation-ref "codex-user-confirmation:angle:<candidate-semantic-hash>:<exact-Krish-approval-message>"
 .\scripts\studio.ps1 v2 recording-brief create --job <job-id> --candidate <candidate-json-path>
