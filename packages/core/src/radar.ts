@@ -27,8 +27,6 @@ export interface RankedOpportunity {
   recommendation: string
 }
 
-const MONEY_TERMS = /\b(costs?|revenue|margin|pricing|enterprise|buyer|procurement|roi|economic|economics|market|company|workforce|budget|capital)\b/i
-const BUILT_TERMS = /\b(build|ship|workflow|agent|tool|prototype|code|model|prompt|automation|operator|interface|product)\b/i
 const GENERIC_HEADLINE = /^(how to\b|a guide to\b|guide:\s|\d+\s+(ways|strategies|tips|steps|tools)\b|best\s+\w+\s+for\b)|\b(ultimate guide|everything you need to know)\b/i
 const PERSONNEL_HEADLINE = /\b(appoints?|hires?|names?|promotes?)\b.{0,45}\b(executive|chief|ceo|cto|cfo|president|leader|head)\b|\b(executive|chief|ceo|cto|cfo|president)\b.{0,45}\b(joins?|appointed|hired|named|promoted)\b/i
 const LOW_AUTHORITY_HOST = /(^|\.)(slashdot\.org|reddit\.com|medium\.com|quora\.com)$/i
@@ -78,15 +76,6 @@ export function mergeRadarFeeds(feeds: RadarFeedV1[]): RadarCandidateV1[] {
   return [...byFingerprint.values()]
 }
 
-function chooseSeries(candidate: RadarCandidateV1): Series {
-  const body = `${candidate.title} ${candidate.summary} ${candidate.category}`
-  const money = MONEY_TERMS.test(body)
-  const built = BUILT_TERMS.test(body)
-  if (money && !built) return 'money_of_ai'
-  if (built && !money) return 'built_with_ai'
-  return candidate.category.toLowerCase().includes('economic') ? 'money_of_ai' : 'built_with_ai'
-}
-
 function growthScore(candidate: RadarCandidateV1, nowMs: number): number {
   const ageHours = Math.max(0, nowMs - Date.parse(candidate.occurred_at)) / 3_600_000
   const freshness = 1 / (1 + ageHours / 72)
@@ -98,49 +87,47 @@ function growthScore(candidate: RadarCandidateV1, nowMs: number): number {
 
 export function rankRadarOpportunities(candidates: RadarCandidateV1[], now = new Date()): RankedOpportunity[] {
   return candidates
-    .map((candidate) => {
-      const series = chooseSeries(candidate)
+    .flatMap((candidate) => (['money_of_ai', 'built_with_ai'] as const).map((series) => {
       const hardBlocks: string[] = []
       if (candidate.sensitivity === 'internal_sanitized' && candidate.evidence_status === 'public_evidence_required') hardBlocks.push('public evidence required before scripting factual claims')
       if (candidate.source_urls.length === 0 && candidate.evidence_status === 'public_grounded') hardBlocks.push('public provenance missing')
       hardBlocks.push(...radarEditorialQualityBlocks(candidate, now))
-      const hookLead = series === 'money_of_ai' ? 'The decision inside this headline:' : 'The workflow change inside this headline:'
-      const objection = candidate.corroboration < 2 ? 'The signal may be a single-source announcement rather than a durable shift.' : 'The angle may be true but too familiar unless it includes an operator mechanism or artifact.'
-      const publicEvidence = candidate.evidence_status === 'public_grounded'
+      hardBlocks.push('raw radar signal requires an approved Control Center editorial opportunity before production')
+      const objection = candidate.corroboration < 2 ? 'The signal may be a single-source announcement rather than a durable shift.' : 'The eventual angle may still be too familiar unless it establishes a specific mechanism and useful proof.'
       const dimensions = {
-        first_beat_tension: /\b(but|instead|fails?|wrong|shift|replace|cost|risk|why|how)\b/i.test(`${candidate.title} ${candidate.summary}`) ? 0.9 : 0.55,
-        clarity: candidate.summary.length >= 60 && candidate.summary.length <= 240 ? 0.82 : 0.58,
-        surprise: /\b(not|instead|opposite|unexpected|shift)\b/i.test(`${candidate.title} ${candidate.summary}`) ? 0.84 : 0.56,
-        payoff: candidate.summary.length >= 80 ? 0.8 : 0.6,
-        visual_proof: candidate.source_urls.length ? 0.82 : 0.25,
-        share_save_value: /\b(how|why|workflow|cost|risk|framework|mechanism)\b/i.test(`${candidate.title} ${candidate.summary}`) ? 0.82 : 0.57,
-        qualified_fit: series === 'money_of_ai' ? 0.84 : 0.82,
-        novelty: candidate.corroboration >= 3 ? 0.72 : 0.62,
+        first_beat_tension: 0,
+        clarity: 0,
+        surprise: 0,
+        payoff: 0,
+        visual_proof: candidate.source_urls.length ? 0.5 : 0,
+        share_save_value: 0,
+        qualified_fit: 0,
+        novelty: 0,
       }
       return {
         candidate,
         series,
-        editorial_eligible: hardBlocks.length === 0,
+        editorial_eligible: false,
         hard_blocks: hardBlocks,
         growth_score: growthScore(candidate, now.getTime()),
         growth_dimensions: dimensions,
-        audience_problem: series === 'money_of_ai' ? 'Leaders need to know which mechanism changes cost, control, or advantage.' : 'Builders need to know what changes in the actual workflow, not the launch copy.',
-        why_now: `The source was observed ${candidate.occurred_at} and carries ${candidate.corroboration} corroborating source${candidate.corroboration === 1 ? '' : 's'}.`,
-        proposed_hook: `${hookLead} ${candidate.title}`,
-        honest_payoff: candidate.summary,
-        visual_proof: candidate.source_urls.length ? 'Show the source, the operative claim, then the mechanism or working artifact.' : 'Acquire a public source or owned artifact before treatment approval.',
-        source_mode: /build|workflow|tool|prototype/i.test(`${candidate.title} ${candidate.summary}`) ? 'short_native' : 'extract',
+        audience_problem: series === 'money_of_ai' ? 'Control Center must establish a second-order commercial or labour mechanism.' : 'Control Center must establish a specific workflow, implementation or artifact mechanism.',
+        why_now: `The signal was observed ${candidate.occurred_at} and carries ${candidate.corroboration} corroborating source${candidate.corroboration === 1 ? '' : 's'}.`,
+        proposed_hook: 'Pending approved Control Center editorial development.',
+        honest_payoff: 'Pending approved Control Center editorial development.',
+        visual_proof: candidate.source_urls.length ? 'Source evidence is available for Control Center to assess.' : 'Public or approved owned evidence is still required.',
+        source_mode: 'extract',
         production_effort: candidate.source_urls.length > 1 ? 'medium' : 'low',
-        confidentiality_rights_risk: candidate.sensitivity === 'internal_sanitized' ? 'High until replaced with public evidence or explicitly approved case material.' : candidate.sensitivity === 'owned' ? 'Confirm consent and artifact rights at angle approval.' : 'Low for factual reference; third-party excerpts still require attribution and a recorded transformative purpose.',
-        novelty_note: 'Compare this mechanism and hook against the indexed Mindmaker corpus before angle approval; the feed score is only a prior.',
-        recommended_platform_treatment: series === 'money_of_ai' ? 'YouTube: mechanism-first evidence Short. LinkedIn: lead with the commercial consequence and one decision implication.' : 'YouTube: artifact-first build reveal. LinkedIn: lead with the operational change and the reusable lesson.',
+        confidentiality_rights_risk: candidate.sensitivity === 'internal_sanitized' ? 'High until replaced with public evidence or explicitly approved case material.' : candidate.sensitivity === 'owned' ? 'Confirm consent and artifact rights during editorial approval.' : 'Third-party excerpts require attribution and a recorded transformative purpose.',
+        novelty_note: 'Novelty is not scored until Control Center has produced a concrete angle.',
+        recommended_platform_treatment: 'No production treatment is selected from a raw signal.',
         strongest_objection: objection,
-        credible_contradiction: publicEvidence && candidate.corroboration >= 3 ? 'No credible contradiction found.' : 'The current evidence is too thin to claim there is no credible contradiction.',
-        safer_version: `Explain only the verified mechanism behind: ${candidate.title}`,
-        stretch_version: `Challenge the default interpretation of ${candidate.title} and prove the alternative with a concrete artifact.`,
-        recommendation: hardBlocks.length ? 'Hold until the evidence block is cleared.' : 'Lead with the consequence, prove the mechanism in the first half, and end on the operational implication.',
+        credible_contradiction: 'Contradiction is assessed against the developed angle, not the source event.',
+        safer_version: 'Return the signal to Control Center and develop the narrowest evidence-backed angle.',
+        stretch_version: 'Return the signal to Control Center and test a more ambitious mechanism without exceeding the evidence.',
+        recommendation: 'Do not produce this signal. Wait for an approved ProductionBriefV1 from Control Center.',
       } satisfies RankedOpportunity
-    })
+    }))
     .sort((a, b) => Number(b.editorial_eligible) - Number(a.editorial_eligible) || b.growth_score - a.growth_score)
 }
 

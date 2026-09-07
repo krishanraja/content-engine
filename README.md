@@ -29,7 +29,7 @@ The Windows runner wrappers accept only that explicit runtime root so Codex and 
 
 In any new Codex chat, launch the workflow by making the complete first message `Video engine` (case-insensitive, with surrounding whitespace allowed). The launcher deliberately does not trigger for `$video-engine`, punctuation, extra words or lines, a later message, or a generic request to edit a video. It fetches the latest GitHub `main`, runs health and queue checks, and recommends the strongest next action.
 
-The proactive surface is one active Codex heartbeat whose GitHub contract is [config/video-engine-pulse-heartbeat.json](config/video-engine-pulse-heartbeat.json). It runs daily at 11:00 Europe/London. Every run reads the runner's path-free health and journal attention, verifies the Drive mount, and performs governed Inbox discovery; it reports only changed intake or attention and remains silent when healthy. Monday's run also produces the combined editorial radar. The heartbeat remains attached to one explicit Codex thread, and Codex app notification settings govern its attention updates. Starting a new Video Engine chat does not silently move it; changing its destination is an explicit automation update.
+The retired Codex pulse is recorded in [config/video-engine-pulse-heartbeat.json](config/video-engine-pulse-heartbeat.json). Scheduled discovery and editorial preparation now write quietly into the Control Center Content surface. They do not post into a chat or initiate contact. Studio radar pull remains a diagnostic and offline-import command for the underlying evidence feed, not an editorial recommender.
 
 ## V2 visual story director
 

@@ -151,7 +151,7 @@ The temporary omitted-expectation compatibility branch exists only for the contr
 
 ## Deployment checks
 
-Before enabling the daily Video Engine pulse:
+Before enabling Control Center editorial radar refresh:
 
 1. Merge the adapter PRs after CI and review.
 2. Configure the dedicated secret in Vercel and Supabase.
@@ -159,15 +159,15 @@ Before enabling the daily Video Engine pulse:
 4. Confirm missing, empty, and incorrect bearer values return 401.
 5. Confirm authenticated responses set `Cache-Control: no-store`, do not set wildcard CORS, and contain no raw database IDs or private canaries.
 6. Run `studio radar pull` against both providers and against the committed offline fixtures.
-7. Compare the prepared automation with `config/video-engine-pulse-heartbeat.json`, then update the existing automation in place to the daily 11:00 Europe/London pulse. Preserve its automation ID and attached thread; do not create a duplicate.
+7. Confirm the Control Center refresh schedule writes prepared opportunities to Content without chat delivery.
 
 If either radar provider is unavailable, Monday's run records the failure and uses any available feed. It never starts a replacement scraping path.
 
 ## Proactive delivery
 
-`config/video-engine-pulse-heartbeat.json` is the GitHub authority for the schedule, source branch, delivery policy, and replayed prompt. The runtime automation stores only operational state such as active or paused status and its attached Codex thread ID. Keep exactly one heartbeat attached to that thread.
+There is no chat pulse. `config/video-engine-pulse-heartbeat.json` records the retired automation and its pull-only replacement. Scheduled discovery and editorial preparation write rows into the Control Center Content surface. Krish sees new opportunities and runner attention when he opens Control Center. No scheduled job initiates a conversation or posts into an LLM thread.
 
-At 11:00 Europe/London every day, `Mindmaker Video Engine pulse` performs read-only runner health and Drive intake checks. It reads only path-free pending and conflict counts plus safe attention codes from `receipt_journals` and `project_journals`; it never emits a local journal path or payload. It reports a new or changed intake candidate or a health failure, and remains silent when health and intake are unchanged. Monday's pulse additionally runs the combined editorial radar. The Codex app applies Krish's normal notification settings to attention updates. A new chat launched with `Video engine` does not automatically take ownership of the heartbeat, so the delivery location stays predictable. Moving it to another thread is an explicit automation update; do not create a second pulse. The pulse never creates a job, inspects editorial media, moves a file, uploads, publishes, or changes an approval.
+The Control Center refresh remains preparation-only. It never creates a Studio job, inspects editorial media, moves a file, uploads, publishes, or changes an approval. `studio radar pull` remains available for authenticated evidence diagnostics and offline fixture recovery, not as a second editorial ranking system.
 
 ## Publishing
 

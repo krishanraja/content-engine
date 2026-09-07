@@ -1,6 +1,6 @@
 ---
 name: mindmake-video
-description: Operate Mindmaker's deterministic video studio for idea radar, editorial selection, visual direction, approvals, rendering, platform packaging, analytics, and controlled learning. Use only inside an already valid Mindmake Video Engine workflow.
+description: Operate Mindmaker's deterministic video studio from an approved Control Center production brief through editorial selection, visual direction, approvals, rendering, platform packaging, analytics, and controlled learning. Use only inside an already valid Mindmake Video Engine workflow.
 ---
 
 # Mindmake Video
@@ -9,7 +9,7 @@ Use the repository CLI as the system of record. Do not improvise job state in ch
 
 ## Route the request
 
-- For idea discovery or weekly planning, read [references/radar.md](references/radar.md).
+- For evidence-feed diagnostics or offline import, read [references/radar.md](references/radar.md). Idea discovery and weekly editorial planning belong to Control Center.
 - For ingest, candidate selection, treatments, rendering, QA, or platform packages, read [references/production.md](references/production.md). For any clip-selection or transcript-edit decision, also read [references/editorial-selection.md](references/editorial-selection.md).
 - For narrative beats, dense visual stories, virtual-camera decisions, styleframes, animatics, or cinematography, read [references/visual-direction.md](references/visual-direction.md).
 - For screenshots, archives, licensed media, sketches, generated assets, likeness changes, rights, provenance, or disclosure, read [references/asset-safety.md](references/asset-safety.md).
@@ -30,6 +30,7 @@ Read only the references relevant to the current operation. Apply `$krish-voice`
 - Treat platform titles, copy, covers, captions, disclosures, and delivery settings as one package artifact. Archive or private-upload it only after Krish approves that exact package hash.
 - Capture every user change as feedback, infer the likely reason, and ask for concise confirmation. Never activate a durable rule without explicit user approval.
 - Publish no candidate unless it has an authored edit plan and editorial assessment that pass deterministic gates. Heuristic windows are discovery material, not approval-ready recommendations.
+- Do not turn a raw radar signal into production copy. New short-native work requires an exact approved `ProductionBriefV1` from Control Center.
 
 ## Operating shape
 
