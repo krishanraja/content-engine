@@ -72,7 +72,6 @@ Lifecycle: building. Nothing in the repo records a live render, an installed run
 - Waiting on Krish, operator actions outside this repo: install the Scheduled Task from a clean committed checkout, enter the credentials, prove the start-stop lifecycle and the seven-step live readback (`docs/DEPLOYMENT.md`). Until then the runner is built, not installed.
 - Waiting on a separate release: the remote MCP gateway and the OAuth connector for Claude.ai and ChatGPT (`docs/ENGINE_SESSION.md`).
 - Waiting on Krish, naming: `README.md` is titled "Mindmaker Video Studio" and the four skill descriptions say "Mindmaker", while `CLAUDE.md`, `AGENTS.md`, the pinned theme and this file say Mindmake. Canonical naming is a hard gate (`AGENTS.md`); the steward does not rename.
-- Waiting on Krish: `CLAUDE_CODE_OAUTH_TOKEN` as an Actions secret on this repo so the docs steward can run unattended.
 
 ## Read next
 
