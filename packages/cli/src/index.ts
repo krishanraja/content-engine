@@ -7,6 +7,7 @@ import {
   ApprovalGateSchema,
   CandidateV1Schema,
   CarouselStoryV1Schema,
+  CarouselVisualDirectionMethodV1Schema,
   EvidenceOverlayV1Schema,
   JobPurposeSchema,
   RenderManifestV1Schema,
@@ -691,6 +692,12 @@ calibration.command('contact-sheet')
   })
 
 const carousel = program.command('carousel').description('Create deterministic Mindmake social carousels')
+carousel.command('method')
+  .option('--config <path>', 'visual direction method contract', 'config/carousel-visual-direction.json')
+  .action(async (options) => {
+    const method = CarouselVisualDirectionMethodV1Schema.parse(await readJson(resolve(options.config)))
+    out({ ok: true, method })
+  })
 carousel.command('validate')
   .requiredOption('--story <path>')
   .action(async (options) => {

@@ -55,12 +55,16 @@ async function loadPinnedTheme(configPath: string, story: CarouselStoryV1): Prom
   return theme
 }
 
-function runtimeWordmark(asset: StagedWordmarkAsset) {
+async function runtimeWordmark(asset: StagedWordmarkAsset, stagingDirectory: string) {
+  const mimeType = extname(asset.assetFile).toLowerCase() === '.svg' ? 'image/svg+xml' : 'image/png'
+  const assetDataUrl = `data:${mimeType};base64,${(await readFile(join(stagingDirectory, asset.assetFile))).toString('base64')}`
   return {
     assetFile: asset.assetFile,
+    assetDataUrl,
     pixelWidth: asset.pixel_width,
     pixelHeight: asset.pixel_height,
     alphaCrop: { x: asset.alpha_crop.x, y: asset.alpha_crop.y, width: asset.alpha_crop.width, height: asset.alpha_crop.height },
+    letterRegion: { x: asset.letter_region.x, y: asset.letter_region.y, width: asset.letter_region.width, height: asset.letter_region.height },
   }
 }
 
@@ -89,6 +93,10 @@ export async function renderCarousel(repoRoot: string, configPath: string, story
   const slidesDirectory = join(target, 'slides')
   await Promise.all([mkdir(staging, { recursive: true }), mkdir(slidesDirectory, { recursive: true })])
   const wordmarks = await stageOfficialSeriesWordmarks(theme, story.series, staging)
+  const runtimeWordmarks = {
+    mindmake: await runtimeWordmark(wordmarks.mindmake, staging),
+    series: await runtimeWordmark(wordmarks.series, staging),
+  }
   const assets = await stageStoryAssets(story, staging)
   const browser = await ensureBrowser({ chromeMode: 'headless-shell', logLevel: 'warn' })
   if (browser.type !== 'local-puppeteer-browser' && browser.type !== 'user-defined-path') throw new Error('Remotion browser could not be installed')
@@ -106,6 +114,7 @@ export async function renderCarousel(repoRoot: string, configPath: string, story
         position: slide.position,
         role: slide.role,
         layout: slide.layout,
+        scene: slide.scene,
         headline: slide.headline,
         ...(slide.body ? { body: slide.body } : {}),
         ...(slide.data_label ? { dataLabel: slide.data_label } : {}),
@@ -116,7 +125,7 @@ export async function renderCarousel(repoRoot: string, configPath: string, story
       branding: {
         colors: { ink: theme.colors.ink, surface: theme.colors.surface, raised: theme.colors.raised, line: theme.colors.line, text: theme.colors.text, secondaryText: theme.colors.secondary_text, mutedText: theme.colors.muted_text, paper: theme.colors.paper, mint: theme.colors.mint, mintInk: theme.colors.mint_ink, amber: theme.colors.amber },
         typography: theme.typography,
-        wordmarks: { mindmake: runtimeWordmark(wordmarks.mindmake), series: runtimeWordmark(wordmarks.series) },
+        wordmarks: runtimeWordmarks,
         assets,
       },
     }

@@ -1,6 +1,6 @@
 ---
 name: mindmake-video
-description: Operate Mindmaker's deterministic video studio for idea radar, editorial selection, visual direction, approvals, rendering, platform packaging, analytics, and controlled learning. Use only inside an already valid Mindmake Video Engine workflow.
+description: Operate Mindmaker's deterministic video and carousel studio for idea radar, editorial selection, visual direction, approvals, rendering, platform packaging, analytics, and controlled learning. Use only inside an already valid Mindmake Video Engine workflow.
 ---
 
 # Mindmake Video
@@ -15,6 +15,7 @@ Use the repository CLI as the system of record. Do not improvise job state in ch
 - For screenshots, archives, licensed media, sketches, generated assets, likeness changes, rights, provenance, or disclosure, read [references/asset-safety.md](references/asset-safety.md).
 - For podcasts, guests, multiple cameras, identity, diarisation, active speakers, or reaction shots, read [references/conversation-direction.md](references/conversation-direction.md).
 - For revisions, preferences, external edits, analytics, or rule changes, read [references/learning.md](references/learning.md).
+- For carousel visual production from a completed content idea, read [references/carousel-direction.md](references/carousel-direction.md). Do not use the carousel route for topic, recording, argument, or content ideation.
 
 Read only the references relevant to the current operation. Apply `$krish-voice` to public wording and `$content-corpus` to series and channel decisions.
 

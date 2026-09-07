@@ -2,6 +2,103 @@ import { z } from 'zod'
 
 export const CAROUSEL_SCHEMA_VERSION = 1 as const
 const CarouselSeriesSchema = z.enum(['money_of_ai', 'built_with_ai'])
+
+const CarouselVisualStageSchema = z.enum([
+  'meaning_map',
+  'visual_casting',
+  'territory_audition',
+  'storyboard_asset_gate',
+  'final',
+])
+
+const CarouselDecisionPointSchema = z.enum([
+  'combined_visual_route',
+  'meaning',
+  'casting',
+  'territory',
+  'storyboard_and_assets',
+  'final',
+])
+
+const CarouselCollaborationModeSchema = z.object({
+  stages: z.array(CarouselVisualStageSchema).min(2),
+  decision_points: z.array(CarouselDecisionPointSchema).min(2),
+}).strict()
+
+export const CarouselVisualDirectionMethodV1Schema = z.object({
+  schema_version: z.literal(CAROUSEL_SCHEMA_VERSION),
+  method_id: z.literal('mindmake-carousel-visual-direction-v1'),
+  default_mode: z.literal('standard'),
+  boundary: z.object({
+    input: z.literal('completed_content_idea'),
+    topic_ideation_allowed: z.literal(false),
+    recording_ideation_allowed: z.literal(false),
+    incomplete_action: z.literal('return_to_content_owner'),
+    engine_may: z.tuple([
+      z.literal('challenge_visualizability'),
+      z.literal('request_evidence'),
+      z.literal('flag_ambiguity'),
+    ]),
+  }).strict(),
+  modes: z.object({
+    fast: CarouselCollaborationModeSchema,
+    standard: CarouselCollaborationModeSchema,
+    exploratory: CarouselCollaborationModeSchema,
+  }).strict(),
+  casting_lanes: z.tuple([
+    z.literal('real_world_evidence'),
+    z.literal('infographic'),
+    z.literal('physical_analogy'),
+    z.literal('cultural_restage'),
+    z.literal('handmade'),
+    z.literal('surreal_wildcard'),
+  ]),
+  territory_audition: z.object({
+    candidate_count: z.literal(3),
+    styleframes_per_candidate: z.literal(2),
+    required_territories: z.tuple([
+      z.literal('evidence_led'),
+      z.literal('explanatory'),
+      z.literal('unexpected'),
+    ]),
+  }).strict(),
+  choice_rules: z.object({
+    analogy_must_clarify: z.literal(true),
+    shock_must_carry_meaning: z.literal(true),
+    proof_separate_from_illustration: z.literal(true),
+    meme_requires_rights_path: z.literal(true),
+    genericness_penalty: z.literal(true),
+  }).strict(),
+  learning: z.object({
+    store_contextual_reason: z.literal(true),
+    infer_object_preference: z.literal(false),
+    record_rejections: z.literal(true),
+    novelty_against_own_corpus: z.literal(true),
+    durable_rule_requires_approval: z.literal(true),
+  }).strict(),
+  branding: z.object({
+    series_wordmark: z.literal('top_left_channel_signpost'),
+    mindmake_wordmark: z.literal('bottom_right_publisher_signature'),
+    official_assets_only: z.literal(true),
+    one_of_each_per_card: z.literal(true),
+  }).strict(),
+}).strict().superRefine((method, context) => {
+  const expectedStages = ['meaning_map', 'visual_casting', 'territory_audition', 'storyboard_asset_gate', 'final']
+  const expected = {
+    fast: ['combined_visual_route', 'final'],
+    standard: ['meaning', 'territory', 'storyboard_and_assets', 'final'],
+    exploratory: ['meaning', 'casting', 'territory', 'storyboard_and_assets', 'final'],
+  } as const
+  if (method.modes.fast.stages.join(':') !== ['visual_casting', 'territory_audition', 'storyboard_asset_gate', 'final'].join(':')) context.addIssue({ code: 'custom', path: ['modes', 'fast', 'stages'], message: 'fast mode must preserve casting, audition, asset and final stages' })
+  for (const mode of ['standard', 'exploratory'] as const) {
+    if (method.modes[mode].stages.join(':') !== expectedStages.join(':')) context.addIssue({ code: 'custom', path: ['modes', mode, 'stages'], message: `${mode} mode must preserve the full visual direction sequence` })
+  }
+  for (const mode of ['fast', 'standard', 'exploratory'] as const) {
+    if (method.modes[mode].decision_points.join(':') !== expected[mode].join(':')) context.addIssue({ code: 'custom', path: ['modes', mode, 'decision_points'], message: `${mode} mode has the wrong human decision sequence` })
+  }
+})
+
+export type CarouselVisualDirectionMethodV1 = z.infer<typeof CarouselVisualDirectionMethodV1Schema>
 const CarouselClaimSchema = z.object({
   claim_id: z.string().min(1),
   text: z.string().min(1),
@@ -18,6 +115,15 @@ export const CarouselSourceFormatSchema = z.enum([
 ])
 export const CarouselSlideRoleSchema = z.enum(['cover', 'scene', 'mechanism', 'proof', 'counterpoint', 'resolution'])
 export const CarouselLayoutSchema = z.enum(['cover', 'statement', 'split_gate', 'flow', 'evidence', 'verdict'])
+export const CarouselSceneSchema = z.enum([
+  'signal_room',
+  'inspection_table',
+  'engraving_bench',
+  'lever_cutaway',
+  'xray_mismatch',
+  'shutter_cabinet',
+  'output_tray',
+])
 
 export const CarouselAssetV1Schema = z.object({
   asset_id: z.string().min(1),
@@ -45,6 +151,7 @@ export const CarouselSlideV1Schema = z.object({
   position: z.number().int().min(1).max(10),
   role: CarouselSlideRoleSchema,
   layout: CarouselLayoutSchema,
+  scene: CarouselSceneSchema,
   question_answered: z.string().min(8).max(160),
   headline: z.string().min(3).max(120),
   body: z.string().min(3).max(300).optional(),
@@ -105,6 +212,8 @@ export const CarouselStoryV1Schema = z.object({
   const positions = story.slides.map((slide) => slide.position)
   if (new Set(positions).size !== positions.length || positions.some((position, index) => position !== index + 1)) context.addIssue({ code: 'custom', path: ['slides'], message: 'slide positions must be unique and contiguous from 1' })
   if (story.slides[0]?.role !== 'cover' || story.slides.at(-1)?.role !== 'resolution') context.addIssue({ code: 'custom', path: ['slides'], message: 'story must open with a cover and end with a resolution' })
+  const scenes = story.slides.map((slide) => slide.scene)
+  if (new Set(scenes).size !== scenes.length) context.addIssue({ code: 'custom', path: ['slides'], message: 'each carousel slide requires a unique narrative scene' })
   const claimIds = new Set(story.claims.map((claim) => claim.claim_id))
   const assetIds = new Set(story.assets.map((asset) => asset.asset_id))
   for (const [index, slide] of story.slides.entries()) {

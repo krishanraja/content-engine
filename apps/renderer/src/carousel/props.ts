@@ -2,9 +2,11 @@ import { z } from 'zod'
 
 const RuntimeWordmarkSchema = z.object({
   assetFile: z.string().min(1),
+  assetDataUrl: z.string().min(1).optional(),
   pixelWidth: z.number().positive(),
   pixelHeight: z.number().positive(),
   alphaCrop: z.object({ x: z.number().nonnegative(), y: z.number().nonnegative(), width: z.number().positive(), height: z.number().positive() }),
+  letterRegion: z.object({ x: z.number().nonnegative(), y: z.number().nonnegative(), width: z.number().positive(), height: z.number().positive() }),
 })
 
 export const CarouselRenderPropsSchema = z.object({
@@ -17,6 +19,7 @@ export const CarouselRenderPropsSchema = z.object({
     position: z.number().int().positive(),
     role: z.enum(['cover', 'scene', 'mechanism', 'proof', 'counterpoint', 'resolution']),
     layout: z.enum(['cover', 'statement', 'split_gate', 'flow', 'evidence', 'verdict']),
+    scene: z.enum(['signal_room', 'inspection_table', 'engraving_bench', 'lever_cutaway', 'xray_mismatch', 'shutter_cabinet', 'output_tray']),
     headline: z.string(),
     body: z.string().optional(),
     dataLabel: z.string().optional(),
