@@ -13,7 +13,8 @@ const otherHash = 'b'.repeat(64)
 
 describe('confirmationRefMatches', () => {
   it('accepts the portable prefix from any well-formed client token', () => {
-    for (const client of ['claude-code', 'codex-cli', 'control-center', 'chatgpt', 'x9', 'a-'.repeat(20)]) {
+    // Underscore clients match the StudioClientV1 session enum (claude_code, control_center).
+    for (const client of ['claude-code', 'claude_code', 'control_center', 'codex-cli', 'chatgpt', 'x9', 'a-'.repeat(20)]) {
       expect(confirmationRefMatches(`studio-user-confirmation:${client}:angle:${hash}:Krish approved`, 'angle', hash)).toBe(true)
     }
   })
@@ -26,7 +27,6 @@ describe('confirmationRefMatches', () => {
   it('rejects a malformed client segment, a missing receipt, or a reference bound elsewhere', () => {
     for (const reference of [
       `studio-user-confirmation:Claude-Code:angle:${hash}:receipt`,
-      `studio-user-confirmation:claude_code:angle:${hash}:receipt`,
       `studio-user-confirmation:1claude:angle:${hash}:receipt`,
       `studio-user-confirmation:c:angle:${hash}:receipt`,
       `studio-user-confirmation:${'c'.repeat(41)}:angle:${hash}:receipt`,
@@ -82,7 +82,6 @@ describe('schema gates that use the shared helper', () => {
     const parse = (confirmation_ref: string) => DriveIntakeReviewV1Schema.safeParse({ ...base, confirmation_ref })
     expect(parse(`studio-user-confirmation:claude-code:intake:${hash}:Krish approved this intake recording`).success).toBe(true)
     expect(parse(`codex-user-confirmation:intake:${hash}:Krish approved this intake recording`).success).toBe(true)
-    expect(parse(`studio-user-confirmation:claude_code:intake:${hash}:Krish approved this intake recording`).success).toBe(false)
     expect(parse(`studio-user-confirmation:claude-code:intake:${otherHash}:Krish approved this intake recording`).success).toBe(false)
   })
 

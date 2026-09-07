@@ -79,7 +79,6 @@ describe('V2 event-sourced jobs', () => {
     const other = 'e'.repeat(64)
     for (const malformed of [
       `studio-user-confirmation:Claude-Code:angle:${other}:uppercase client`,
-      `studio-user-confirmation:claude_code:angle:${other}:underscore client`,
       `studio-user-confirmation:1claude:angle:${other}:leading digit`,
       `studio-user-confirmation:c:angle:${other}:one character client`,
       `studio-user-confirmation:${'c'.repeat(41)}:angle:${other}:overlong client`,
