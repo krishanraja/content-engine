@@ -10,6 +10,7 @@ import {
   SCHEMA_VERSION,
   Sha256V1Schema,
   VideoPlatformV1Schema,
+  confirmationRefMatches,
   type AnalyticsObservationV1,
   type AnalyticsObservationV2,
   type JobManifestV2,
@@ -123,7 +124,7 @@ export function hasCurrentApprovedFinalForPlatformV2(
   const latest = [...job.approvals].reverse().find((approval) => approval.gate === 'final' && approval.artifact_hash === artifactHash)
   return Boolean(latest?.actor === 'krish'
     && ['approved', 'override'].includes(latest.decision)
-    && latest.confirmation_ref?.startsWith(`codex-user-confirmation:final:${artifactHash}:`))
+    && confirmationRefMatches(latest.confirmation_ref, 'final', artifactHash))
 }
 
 export async function verifyFinalForAnalyticsV2(jobId: string, platformInput: string, publishedArtifactHash: string): Promise<string> {

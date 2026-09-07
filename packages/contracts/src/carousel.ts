@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { confirmationRefMatches } from './confirmation-v1.js'
 
 export const CAROUSEL_SCHEMA_VERSION = 1 as const
 const CarouselSeriesSchema = z.enum(['money_of_ai', 'built_with_ai'])
@@ -180,7 +181,13 @@ export const CarouselApprovalV1Schema = z.object({
   approved_by: z.literal('Krish'),
   approved_at: z.string().datetime(),
   artifact_hash: z.string().regex(/^[a-f0-9]{64}$/),
-}).strict()
+  confirmation_ref: z.string().trim().min(20).max(1000),
+}).strict().superRefine((approval, context) => {
+  if (!confirmationRefMatches(approval.confirmation_ref, approval.gate, approval.artifact_hash)) {
+    context.addIssue({ code: 'custom', path: ['confirmation_ref'], message: 'carousel approval must carry a user confirmation bound to the same gate and artifact hash' })
+  }
+})
+export type CarouselApprovalV1 = z.infer<typeof CarouselApprovalV1Schema>
 
 export const CarouselStoryV1Schema = z.object({
   schema_version: z.literal(CAROUSEL_SCHEMA_VERSION),

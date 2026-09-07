@@ -26,6 +26,8 @@ import {
   type StudioEventV2,
   type TreatmentLaneV1,
   type VideoPlatformV1,
+  confirmationRefMatches,
+  confirmationRefPrefixes,
 } from '@mindmake/contracts'
 import type { JobPurpose, Series, SourceMode } from '@mindmake/contracts'
 import { loadApprovalSigningKey, signApprovalReceiptBody, signRunnerLedgerEventBody, verifyApprovalReceiptBody, verifyRunnerLedgerEventBody } from './approval-signing.js'
@@ -984,8 +986,7 @@ export async function recordApprovalV2(jobId: string, gate: ApprovalGateV2, deci
   if (decision === 'override' && !reason?.trim()) throw new Error('override requires a reason')
   if (['evidence', 'visual_plan', 'storyboard', 'animatic', 'final', 'package'].includes(gate) && actor !== 'krish' && decision !== 'rejected') throw new Error(`${gate} requires Krish approval`)
   if (actor === 'krish' && decision !== 'rejected') {
-    const prefixes = [`codex-user-confirmation:${gate}:${artifactHash}:`, `control-center-confirmation:${gate}:${artifactHash}:`]
-    if (!confirmationRef || !prefixes.some((prefix) => confirmationRef.startsWith(prefix) && confirmationRef.slice(prefix.length).trim())) throw new Error(`Krish approval requires an artifact-bound confirmation reference beginning ${prefixes.join(' or ')}`)
+    if (!confirmationRefMatches(confirmationRef, gate, artifactHash)) throw new Error(`Krish approval requires an artifact-bound confirmation reference beginning ${confirmationRefPrefixes(gate, artifactHash).join(' or ')}`)
   }
   await loadJobV2(jobId)
   const signingKey = await loadApprovalSigningKey()
@@ -1004,10 +1005,7 @@ export async function recordApprovalV2(jobId: string, gate: ApprovalGateV2, deci
 export function hasApprovalV2(job: JobManifestV2, gate: ApprovalGateV2, artifactHash: string, actor?: 'krish' | 'codex' | 'system'): boolean {
   const latest = [...job.approvals].reverse().find((approval) => approval.gate === gate && approval.artifact_hash === artifactHash)
   if (!latest || (actor && latest.actor !== actor) || !['approved', 'override'].includes(latest.decision)) return false
-  if (latest.actor === 'krish') return Boolean(
-    latest.confirmation_ref?.startsWith(`codex-user-confirmation:${gate}:${artifactHash}:`)
-    || latest.confirmation_ref?.startsWith(`control-center-confirmation:${gate}:${artifactHash}:`),
-  )
+  if (latest.actor === 'krish') return confirmationRefMatches(latest.confirmation_ref, gate, artifactHash)
   return true
 }
 

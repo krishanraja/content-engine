@@ -54,6 +54,8 @@ Portable feedback receipts use:
 
 Previously stored `codex-user-confirmation` receipts remain valid. A new client must never generate the legacy prefix.
 
+The same portable form is accepted at every approval gate: `studio-user-confirmation:<client>:<gate>:<artifact_hash>:<human-readable receipt>`, where `<client>` is a lowercase token (a letter followed by 1 to 39 letters, digits or hyphens). Legacy `codex-user-confirmation:<gate>:<hash>:` and `control-center-confirmation:<gate>:<hash>:` receipts remain valid. A reference bound to another gate or hash, or with a malformed client segment, is not a confirmation. The shared check is `confirmationRefMatches` in `@mindmake/contracts`.
+
 Low-confidence inference remains `observation_only`. A confirmed correction may create a narrow rule proposal. Scope broadening still requires three confirmed instances across at least two jobs plus separate approval. Performance proposals require three comparable tests and may never infer personal taste.
 
 ## Session close and recovery

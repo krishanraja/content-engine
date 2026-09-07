@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { confirmationRefMatches } from './confirmation-v1.js'
 
 export const DRIVE_DISCOVERY_SCHEMA_VERSION_V1 = 1 as const
 export const DriveDiscoverySha256V1Schema = z.string().regex(/^[a-f0-9]{64}$/)
@@ -131,11 +132,7 @@ export const DriveIntakeReviewV1Schema = z.object({
   confirmation_ref: z.string().trim().min(20).max(1000),
   reviewed_at: z.string().datetime(),
 }).strict().superRefine((value, context) => {
-  const prefixes = [
-    `codex-user-confirmation:intake:${value.candidate_hash}:`,
-    `control-center-confirmation:intake:${value.candidate_hash}:`,
-  ]
-  if (!prefixes.some((prefix) => value.confirmation_ref.startsWith(prefix) && value.confirmation_ref.slice(prefix.length).trim())) {
+  if (!confirmationRefMatches(value.confirmation_ref, 'intake', value.candidate_hash)) {
     context.addIssue({ code: 'custom', path: ['confirmation_ref'], message: 'intake review must bind the exact current candidate hash' })
   }
 })
@@ -226,8 +223,7 @@ export const DriveInboxRebindV1Schema = z.object({
   if (value.previous_inbox_fingerprint === value.next_inbox_fingerprint) {
     context.addIssue({ code: 'custom', path: ['next_inbox_fingerprint'], message: 'Inbox rebind requires a different resolved identity' })
   }
-  const prefix = `codex-user-confirmation:inbox-rebind:${value.previous_inbox_fingerprint}:${value.next_inbox_fingerprint}:`
-  if (!value.confirmation_ref.startsWith(prefix) || !value.confirmation_ref.slice(prefix.length).trim()) {
+  if (!confirmationRefMatches(value.confirmation_ref, 'inbox-rebind', `${value.previous_inbox_fingerprint}:${value.next_inbox_fingerprint}`)) {
     context.addIssue({ code: 'custom', path: ['confirmation_ref'], message: 'Inbox rebind confirmation must bind both resolved identities' })
   }
 })

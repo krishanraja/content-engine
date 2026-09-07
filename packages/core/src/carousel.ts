@@ -7,7 +7,9 @@ import {
   BrandThemeV1Schema,
   CarouselDraftPackageV1Schema,
   CarouselStoryV1Schema,
+  confirmationRefMatches,
   type BrandThemeV1,
+  type CarouselApprovalV1,
   type CarouselDraftPackageV1,
   type CarouselStoryV1,
 } from '@mindmake/contracts'
@@ -34,13 +36,24 @@ export function carouselStoryContentHash(input: CarouselStoryV1): string {
   return hashValue({ ...story, approvals: [] })
 }
 
+/**
+ * An approval counts only when it names the gate, binds the exact story content hash, and carries a user
+ * confirmation reference bound to that same gate and hash. Anything else is not an approval.
+ */
+export function carouselApprovalBinds(approval: CarouselApprovalV1, gate: CarouselApprovalV1['gate'], contentHash: string): boolean {
+  return approval.gate === gate
+    && approval.decision === 'approved'
+    && approval.artifact_hash === contentHash
+    && confirmationRefMatches(approval.confirmation_ref, gate, contentHash)
+}
+
 export function carouselProductionIssues(input: CarouselStoryV1): string[] {
   const story = CarouselStoryV1Schema.parse(input)
   const contentHash = carouselStoryContentHash(story)
   const issues: string[] = []
   if (story.editorial.disposition !== 'publishable') issues.push(`editorial disposition is ${story.editorial.disposition}`)
   for (const gate of ['story', 'visual_direction'] as const) {
-    if (!story.approvals.some((approval) => approval.gate === gate && approval.artifact_hash === contentHash)) issues.push(`${gate} approval for the exact story is missing`)
+    if (!story.approvals.some((approval) => carouselApprovalBinds(approval, gate, contentHash))) issues.push(`${gate} approval for the exact story is missing`)
   }
   return issues
 }
@@ -164,7 +177,7 @@ async function writeLinkedInPdf(slides: CarouselRenderResult['slides'], outputPa
 export async function packageCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string): Promise<CarouselDraftPackageV1> {
   const story = CarouselStoryV1Schema.parse(storyInput)
   const storyHash = carouselStoryContentHash(story)
-  if (!story.approvals.some((approval) => approval.gate === 'final' && approval.artifact_hash === storyHash)) throw new Error('final approval for the exact carousel story is missing')
+  if (!story.approvals.some((approval) => carouselApprovalBinds(approval, 'final', storyHash))) throw new Error('final approval for the exact carousel story is missing')
   const rendered = await renderCarousel(repoRoot, configPath, story, outputDirectory, false)
   const target = dirname(dirname(rendered.slides[0]!.path))
   const pdfPath = join(target, `${story.story_id}-linkedin.pdf`)
