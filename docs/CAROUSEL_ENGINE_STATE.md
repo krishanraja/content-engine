@@ -4,7 +4,7 @@ This is the single current-state artifact for the Mindmake Carousel Engine. GitH
 
 The decision record, the feedback proposals and the visual reset trace live in the appendices at the end of this document: Appendix A (Decisions), Appendix B (Feedback proposals) and Appendix C (Reset trace).
 
-Last verified: 2026-09-07 against main at 8477f04
+Last verified: 2026-09-07 against main at c90397b
 
 ## Product boundary
 
