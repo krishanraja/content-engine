@@ -2,6 +2,8 @@
 
 This is the single current-state artifact for the Mindmake Carousel Engine. GitHub `main` remains authoritative. This document does not approve a visual direction or authorise publication.
 
+Last verified: 2026-09-07 against main at 8477f04
+
 ## Product boundary
 
 The Carousel Director is a sibling of the Video Director inside `mindmake-video-studio`. It shares radar inputs, evidence handling, canonical series, approvals, feedback memory, analytics discipline and public-action limits. It has separate story, slide and render contracts because a swipe document is not a cut-down video.

@@ -25,7 +25,7 @@ npm run bootstrap:python
 
 The Python command creates one hash-locked media runtime under `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime\python` on Windows. Disposable GitHub checkouts and the independent Scheduled Task reuse it rather than reinstalling transcription dependencies per session. The first renderer run also seeds a versioned shared Chrome Headless Shell under the same runtime root.
 
-The Windows runner wrappers accept only that explicit runtime root so Codex and the outside Scheduled Task cannot fork job or receipt state. The versioned defaults use `G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine` as the Drive root, its dedicated `Inbox` for recording discovery, and its separate `Archive` for approved deliverables. Rendering remains policy-blocked until Remotion licence eligibility is explicitly recorded.
+The Windows runner wrappers accept only that explicit runtime root so Codex and the outside Scheduled Task cannot fork job or receipt state. The versioned defaults use `G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine` as the Drive root, its dedicated `Inbox` for recording discovery, and its separate `Archive` for approved deliverables. Rendering fails closed unless Remotion licence eligibility is explicitly recorded in `config/studio.json`; `studio doctor` reports that check.
 
 In any new Codex chat, launch the workflow by making the complete first message `Video engine` (case-insensitive, with surrounding whitespace allowed). The launcher deliberately does not trigger for `$video-engine`, punctuation, extra words or lines, a later message, or a generic request to edit a video. It fetches the latest GitHub `main`, runs health and queue checks, and recommends the strongest next action.
 

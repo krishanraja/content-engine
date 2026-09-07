@@ -47,3 +47,4 @@ oauth/
 .env.*
 !.env.example
 apps/renderer/public/runtime/
+.steward/
