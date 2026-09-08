@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { createHash } from 'node:crypto'
 import { guardSensitiveRead } from '../_auth.js'
-import { supabase } from '../_supabase.js'
 import { CONTENT_ENGINE_JOBS, contentEngineAttention, type ContentEngineRunRow } from '../../lib/contentEngineSchedule.js'
+import { envReadiness } from './_required.js'
 
 // The engine says how it is. One read for the dashboard's obligation strip
 // and for a person with curl: the deploy commit, whether the operator guard
@@ -29,6 +29,29 @@ function operatorAuthConfigured(): boolean {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardSensitiveRead(req, res, ['GET'])) return
 
+  const now = new Date()
+  const commit = process.env.VERCEL_GIT_COMMIT_SHA || 'development'
+  const env = envReadiness()
+
+  // api/_supabase.ts throws at module load when the database is unconfigured,
+  // which is right for a route that cannot work without it and wrong for the
+  // one route whose job is to say what is missing. Import it only once the
+  // variables are there, so a half-configured deployment answers with a
+  // diagnosis instead of a 500 nobody can read.
+  if (!env.ready) {
+    res.setHeader('Cache-Control', 'no-store')
+    return res.status(503).json({
+      ok: false,
+      schema_version: 1,
+      engine: 'content-engine/control-plane',
+      commit,
+      server_time: now.toISOString(),
+      error: 'not_configured',
+      ...env,
+    })
+  }
+  const { supabase } = await import('../_supabase.js')
+
   const [runsResult, heartbeatResult] = await Promise.all([
     supabase
       .from('content_engine_runs')
@@ -43,7 +66,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   ])
 
   const rows = (runsResult.data || []) as ContentEngineRunRow[]
-  const now = new Date()
   const { attention, unrecorded } = contentEngineAttention(rows, now)
   const lastRun = new Map<string, ContentEngineRunRow>()
   for (const row of rows) if (!lastRun.has(row.job)) lastRun.set(row.job, row)
@@ -56,7 +78,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ? 'never'
     : heartbeatAgeHours > RUNNER_ABSENT_AFTER_HOURS ? 'absent' : heartbeatAgeHours > 24 ? 'quiet' : 'present'
 
-  const commit = process.env.VERCEL_GIT_COMMIT_SHA || 'development'
   const jobs = CONTENT_ENGINE_JOBS.map(job => ({
     job: job.job,
     path: job.path,
@@ -75,6 +96,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     commit,
     server_time: now.toISOString(),
     operator_auth_configured: operatorAuthConfigured(),
+    ...env,
     cron_secret_configured: Boolean(process.env.CRON_SECRET),
     runner: { state: runner, heartbeat_age_hours: heartbeatAgeHours, status: heartbeat?.status ?? null },
     schedule_hash: scheduleHash,
