@@ -152,6 +152,21 @@ signed receipt is accepted rather than rejected.
   its pool.
 - The three values above, on the cloud side only.
 
+## CRON_SECRET was rotated on 2026-09-08
+
+Deliberately, to exercise `POST /api/content-engine/runs/replay` end to end. It
+could not be verified otherwise: Vercel stores it `sensitive` and returns it to
+nothing.
+
+Nothing needs the value by hand. Vercel's scheduler injects it from the
+environment, and the replay route reads it the same way. It was safe to rotate
+because nothing else holds it: every n8n HTTP node in the inspiration sweep
+calls Supabase or a third-party API, and none calls the engine.
+
+If you ever want to drive the recovery routes from a script rather than the
+dashboard, rotate it again to a value you keep. The route takes either that
+bearer or the dashboard cookie.
+
 ## Rotate
 
 The Supabase, Vercel, GitHub and n8n tokens used to build this sit in a chat
