@@ -1,12 +1,13 @@
 import { readFile } from 'node:fs/promises'
 import {
   VisualNarrativePlanV1Schema,
+  type EditorialFormatV1,
   type PreferenceRuleV1,
   type SourceVisualAnalysisV1,
   type VisualNarrativePlanV1,
 } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
-import { INVESTIGATIVE_SHORT_REFERENCE_RULE_ID } from './editorial.js'
+import { BUILT_WITH_AI_EDITORIAL_RULE_ID, MONEY_OF_AI_EDITORIAL_RULE_ID } from './editorial.js'
 import { solveVirtualCamera } from './virtual-camera.js'
 
 export interface TechniqueDefinitionV1 {
@@ -93,28 +94,28 @@ export interface ReviewVisualPlanInput {
   techniqueRegistryHash: string
   preferenceSnapshotHash: string
   activePreferences?: PreferenceRuleV1[]
-  preferenceContext?: { series: string; mode: string; jobId: string }
+  preferenceContext?: { series: string; mode: string; jobId: string; editorialFormat?: EditorialFormatV1 }
   production?: boolean
   provenTreatment?: boolean
 }
 
-function investigativePreferenceApplies(input: ReviewVisualPlanInput): boolean {
+function activeEditorialStandards(input: ReviewVisualPlanInput): Set<string> {
   const context = input.preferenceContext
-  if (!context) return false
-  return (input.activePreferences || []).some((rule) => {
-    if (rule.rule_id !== INVESTIGATIVE_SHORT_REFERENCE_RULE_ID || rule.status !== 'active') return false
+  if (!context) return new Set()
+  return new Set((input.activePreferences || []).filter((rule) => {
+    if (![MONEY_OF_AI_EDITORIAL_RULE_ID, BUILT_WITH_AI_EDITORIAL_RULE_ID].includes(rule.rule_id) || rule.status !== 'active') return false
     if (rule.scope.level === 'global') return true
     if (rule.scope.level === 'series') return rule.scope.key === context.series
     if (rule.scope.level === 'mode') return rule.scope.key === context.mode
     if (rule.scope.level === 'job') return rule.scope.key === context.jobId
     return false
-  })
+  }).map((rule) => rule.rule_id))
 }
 
-function investigativeVisualIssues(plan: VisualNarrativePlanV1): string[] {
+function editorialStandardVisualIssues(plan: VisualNarrativePlanV1, input: ReviewVisualPlanInput, standards: Set<string>): string[] {
   const requirements = new Map(plan.asset_requirements.map((item) => [item.asset_id, item]))
-  const openingEvidence = plan.beats.some((beat) => {
-    if (beat.start_ms >= 5_000 || !beat.proof_dependency) return false
+  const openingEvidence = (deadlineMs: number) => plan.beats.some((beat) => {
+    if (beat.start_ms >= deadlineMs) return false
     const placed = plan.shot_directives
       .filter((shot) => shot.beat_id === beat.beat_id)
       .flatMap((shot) => shot.layers)
@@ -131,10 +132,12 @@ function investigativeVisualIssues(plan: VisualNarrativePlanV1): string[] {
       return requirement?.content_kind === 'licensed_b_roll' && requirement.truth_role !== 'evidence'
     })
   })
-  return [
-    ...(!openingEvidence ? ['confirmed investigative preference expects a sourced receipt or artifact in the first five seconds'] : []),
-    ...(genericBrollBeats.length ? [`confirmed investigative preference rejects generic licensed B-roll as proof in beats: ${genericBrollBeats.map((beat) => beat.beat_id).join(', ')}`] : []),
-  ]
+  const issues: string[] = []
+  if (standards.has(MONEY_OF_AI_EDITORIAL_RULE_ID) && !openingEvidence(5_000)) issues.push('The Money of AI standard expects a sourced receipt or artifact in the first five seconds')
+  const builtArtifactLed = standards.has(BUILT_WITH_AI_EDITORIAL_RULE_ID) && ['build_itself', 'first_version'].includes(input.preferenceContext?.editorialFormat || '')
+  if (builtArtifactLed && !openingEvidence(8_000)) issues.push(`${input.preferenceContext?.editorialFormat} expects a concrete build or artifact in the first eight seconds`)
+  if (genericBrollBeats.length) issues.push(`confirmed editorial standard rejects generic licensed B-roll as proof in beats: ${genericBrollBeats.map((beat) => beat.beat_id).join(', ')}`)
+  return issues
 }
 
 export function reviewVisualPlan(input: ReviewVisualPlanInput): { plan: VisualNarrativePlanV1; review: VisualPlanReview } {
@@ -198,7 +201,8 @@ export function reviewVisualPlan(input: ReviewVisualPlanInput): { plan: VisualNa
   softBlocks.push(...attentionCollisionIssues(plan, input.analysis))
   if (input.production !== false && (plan.duration_ms < 20_000 || plan.duration_ms > 60_000)) softBlocks.push('story duration falls outside the normal 20 to 60 second range and needs a recorded editorial reason')
   for (const issue of input.analysis.quality_issues.filter((item) => item.severity === 'block')) hardBlocks.push(issue.detail)
-  if (investigativePreferenceApplies(input)) softBlocks.push(...investigativeVisualIssues(plan))
+  const editorialStandards = activeEditorialStandards(input)
+  if (editorialStandards.size) softBlocks.push(...editorialStandardVisualIssues(plan, input, editorialStandards))
   for (const fallback of input.analysis.capabilities.fallbacks) fallbacks.add(fallback)
 
   const requiresStyleframes = !input.provenTreatment || plan.treatment_lane !== 'restrained' || experimental.length > 0

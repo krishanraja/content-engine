@@ -25,7 +25,9 @@ export interface EditorialValidation {
   removed_source_tokens: string[]
 }
 
-export const INVESTIGATIVE_SHORT_REFERENCE_RULE_ID = 'pref-money-investigative-receipts-v1'
+export const MONEY_OF_AI_EDITORIAL_RULE_ID = 'pref-money-investigative-receipts-v1'
+export const BUILT_WITH_AI_EDITORIAL_RULE_ID = 'pref-built-concrete-story-v1'
+export const INVESTIGATIVE_SHORT_REFERENCE_RULE_ID = MONEY_OF_AI_EDITORIAL_RULE_ID
 
 function preferenceAppliesToCandidate(rule: PreferenceRuleV1, candidate: CandidateV1): boolean {
   if (rule.status !== 'active') return false
@@ -36,21 +38,32 @@ function preferenceAppliesToCandidate(rule: PreferenceRuleV1, candidate: Candida
   return false
 }
 
-export function investigativeShortPreferenceIssues(candidate: CandidateV1, preferences: PreferenceRuleV1[] = []): string[] {
-  const enabled = preferences.some((rule) => rule.rule_id === INVESTIGATIVE_SHORT_REFERENCE_RULE_ID && preferenceAppliesToCandidate(rule, candidate))
-  if (!enabled) return []
+export function editorialPreferenceIssues(candidate: CandidateV1, preferences: PreferenceRuleV1[] = []): string[] {
+  const moneyEnabled = preferences.some((rule) => rule.rule_id === MONEY_OF_AI_EDITORIAL_RULE_ID && preferenceAppliesToCandidate(rule, candidate))
+  const builtEnabled = preferences.some((rule) => rule.rule_id === BUILT_WITH_AI_EDITORIAL_RULE_ID && preferenceAppliesToCandidate(rule, candidate))
+  if (!moneyEnabled && !builtEnabled) return []
 
   const text = `${candidate.hook} ${candidate.transcript} ${candidate.payoff}`.toLowerCase()
   const issues: string[] = []
   const sensationalTerms = [...new Set(text.match(/\b(?:insane|unbelievable|shocking|mind[- ]?blowing|terrifying|crazy|game[- ]?changer)\b/g) || [])]
-  if (sensationalTerms.length) issues.push(`confirmed investigative preference rejects unsupported sensational framing: ${sensationalTerms.join(', ')}`)
-  if (/\b(?:follow (?:me|us|for)|subscribe|smash (?:the )?like|hit (?:the )?follow)\b/i.test(text)) issues.push('confirmed investigative preference rejects follow or subscribe requests inside the story')
-  if (/\b(?:comment below|drop (?:a )?comment|let me know in the comments|what do you think\??)\b/i.test(text)) issues.push('confirmed investigative preference rejects empty comment prompts in place of an earned ending')
-  if (candidate.scores.evidence < 0.8) issues.push('confirmed investigative preference requires stronger source receipts before this angle is approved')
-  if (candidate.scores.visual_proof < 0.75) issues.push('confirmed investigative preference requires a more concrete visual proof plan')
-  if (!candidate.claims.length) issues.push('confirmed investigative preference requires at least one explicit claim boundary for investigative work')
+  if (sensationalTerms.length) issues.push(`confirmed editorial standard rejects unsupported sensational framing: ${sensationalTerms.join(', ')}`)
+  if (/\b(?:follow (?:me|us|for)|subscribe|smash (?:the )?like|hit (?:the )?follow)\b/i.test(text)) issues.push('confirmed editorial standard rejects follow or subscribe requests inside the story')
+  if (/\b(?:comment below|drop (?:a )?comment|let me know in the comments|what do you think\??)\b/i.test(text)) issues.push('confirmed editorial standard rejects empty comment prompts in place of an earned ending')
+
+  if (moneyEnabled) {
+    if (candidate.scores.evidence < 0.8) issues.push('The Money of AI standard requires stronger source receipts before this angle is approved')
+    if (candidate.scores.visual_proof < 0.75) issues.push('The Money of AI standard requires a more concrete visual proof plan')
+    if (!candidate.claims.length) issues.push('The Money of AI standard requires at least one explicit claim boundary')
+  }
+
+  if (builtEnabled && ['build_itself', 'first_version'].includes(candidate.editorial_format || '')) {
+    if (candidate.scores.visual_proof < 0.75) issues.push(`${candidate.editorial_format} requires a more concrete build or artifact proof plan`)
+    if (!candidate.source_refs.length && !candidate.claims.length) issues.push(`${candidate.editorial_format} requires a concrete build, artifact, or recorded source reference`)
+  }
   return [...new Set(issues)]
 }
+
+export const investigativeShortPreferenceIssues = editorialPreferenceIssues
 
 export function normalizeSpokenToken(value: string): string {
   return value.toLowerCase().replace(/[’]/g, "'").replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, '')
@@ -282,7 +295,7 @@ export function validateEditorialCandidate(candidate: CandidateV1, transcript: T
   if (plan.structure === 'stitched' && plan.segments.length > 4) softBlocks.push('more than four stitched sections risks a choppy result; justify every additional cut at treatment review')
   const averageSegment = plan.total_duration_ms / plan.segments.length
   if (plan.structure === 'stitched' && averageSegment < 2500) softBlocks.push('average stitched section is under 2.5 seconds; check comprehension, jump cuts, and audio continuity')
-  softBlocks.push(...investigativeShortPreferenceIssues(candidate, preferences))
+  softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
 
   return { hard_blocks: [...new Set(hardBlocks)], soft_blocks: [...new Set(softBlocks)], ...fidelity }
 }
@@ -313,6 +326,6 @@ export function validateShortNativeEditorialCandidate(candidate: CandidateV1, th
   const declaredNonPresenterChris = candidate.identity_mentions.some((mention) => normalizeSpokenToken(mention.name) === 'chris' && mention.role !== 'presenter')
   if (presenterName?.toLowerCase() === 'krish' && /\bchris\b/i.test(`${candidate.transcript} ${candidate.hook} ${candidate.payoff}`) && !declaredNonPresenterChris) hardBlocks.push('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
   if (candidate.transcript.split(/\s+/).length > 180) softBlocks.push('short-native script may exceed the intended short-form duration; verify delivery time before recording')
-  softBlocks.push(...investigativeShortPreferenceIssues(candidate, preferences))
+  softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
   return { hard_blocks: [...new Set(hardBlocks)], soft_blocks: [...new Set(softBlocks)] }
 }

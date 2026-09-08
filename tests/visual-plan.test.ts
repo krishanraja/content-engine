@@ -8,7 +8,7 @@ import {
   type SourceVisualAnalysisV1,
   type VisualNarrativePlanV1,
 } from '@mindmake/contracts'
-import { hashFile, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, loadTechniqueRegistry, reviewVisualPlan, verifyVisualAssets } from '@mindmake/core'
+import { BUILT_WITH_AI_EDITORIAL_RULE_ID, hashFile, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, loadTechniqueRegistry, reviewVisualPlan, verifyVisualAssets } from '@mindmake/core'
 
 const H = 'a'.repeat(64)
 
@@ -147,7 +147,7 @@ describe('visual narrative planning gates', () => {
       activePreferences: [preference], preferenceContext: { series: 'money_of_ai', mode: 'solo', jobId: 'job-1' },
     }
     const missingReceipt = reviewVisualPlan({ ...reviewInput, plan: plan() })
-    expect(missingReceipt.review.soft_blocks).toContain('confirmed investigative preference expects a sourced receipt or artifact in the first five seconds')
+    expect(missingReceipt.review.soft_blocks).toContain('The Money of AI standard expects a sourced receipt or artifact in the first five seconds')
 
     const base = plan()
     const evidenceRequirement = { asset_id: 'opening-receipt', content_kind: 'evidence_screenshot' as const, truth_role: 'evidence' as const, narrative_job: 'prove' as const, claim_ids: ['claim-a'], brief: 'Show the exact source receipt for the opening claim.', generated_allowed: false, required: true, fallback: 'Remove the unsupported opening claim.' }
@@ -156,14 +156,24 @@ describe('visual narrative planning gates', () => {
       asset_requirements: [evidenceRequirement],
       shot_directives: [{ ...base.shot_directives[0]!, layers: [...base.shot_directives[0]!.layers, { layer_id: 'opening-receipt-layer', z_index: 1, kind: 'asset', target_id: 'opening-receipt', anchor: 'right', opacity: 1, blend_mode: 'normal', protected: true }] }],
     })
-    expect(reviewVisualPlan({ ...reviewInput, plan: evidencePlan }).review.soft_blocks).not.toContain('confirmed investigative preference expects a sourced receipt or artifact in the first five seconds')
+    expect(reviewVisualPlan({ ...reviewInput, plan: evidencePlan }).review.soft_blocks).not.toContain('The Money of AI standard expects a sourced receipt or artifact in the first five seconds')
 
     const genericPlan = plan({
       beats: [{ ...base.beats[0]!, proof_dependency: true }],
       asset_requirements: [{ ...evidenceRequirement, asset_id: 'generic-ai', content_kind: 'licensed_b_roll', truth_role: 'illustration', narrative_job: 'evoke', claim_ids: [] }],
       shot_directives: [{ ...base.shot_directives[0]!, layers: [...base.shot_directives[0]!.layers, { layer_id: 'generic-ai-layer', z_index: 1, kind: 'asset', target_id: 'generic-ai', anchor: 'right', opacity: 1, blend_mode: 'normal', protected: false }] }],
     })
-    expect(reviewVisualPlan({ ...reviewInput, plan: genericPlan }).review.soft_blocks).toContain('confirmed investigative preference rejects generic licensed B-roll as proof in beats: beat-1')
+    expect(reviewVisualPlan({ ...reviewInput, plan: genericPlan }).review.soft_blocks).toContain('confirmed editorial standard rejects generic licensed B-roll as proof in beats: beat-1')
+  })
+
+  it('requires early artifacts for build formats but permits a human-led Third Why opening', async () => {
+    const registry = await loadTechniqueRegistry(resolve('config/techniques.json'))
+    const preference = { schema_version: 1 as const, rule_id: BUILT_WITH_AI_EDITORIAL_RULE_ID, assertion: 'Make the build concrete.', scope: { level: 'series' as const, key: 'built_with_ai' }, evidence_feedback_ids: ['feedback-cross-series-format-expansion-20260908-01'], counterexamples: [], regression_cases: [], status: 'active' as const, approved_by: 'Krish', approved_at: '2026-09-08T12:00:00.000Z' }
+    const baseInput = { plan: plan(), analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H, activePreferences: [preference] }
+    const build = reviewVisualPlan({ ...baseInput, preferenceContext: { series: 'built_with_ai', mode: 'solo', jobId: 'job-1', editorialFormat: 'build_itself' } })
+    expect(build.review.soft_blocks).toContain('build_itself expects a concrete build or artifact in the first eight seconds')
+    const human = reviewVisualPlan({ ...baseInput, preferenceContext: { series: 'built_with_ai', mode: 'extract', jobId: 'job-1', editorialFormat: 'third_why' } })
+    expect(human.review.soft_blocks).not.toContain('third_why expects a concrete build or artifact in the first eight seconds')
   })
 
   it('binds asset approval to the exact file hash', async () => {

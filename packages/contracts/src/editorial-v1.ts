@@ -3,12 +3,48 @@ import { IdentifierV1Schema, Sha256V1Schema } from './v2.js'
 
 export const PRODUCTION_BRIEF_SCHEMA_VERSION_V1 = 1 as const
 
+export const MONEY_OF_AI_FORMATS_V1 = ['money_trace', 'artifact', 'verdict', 'cold_open_cutdown'] as const
+export const BUILT_WITH_AI_FORMATS_V1 = ['builder_conversation', 'build_itself', 'third_why', 'first_version'] as const
+export const EditorialFormatV1Schema = z.enum([...MONEY_OF_AI_FORMATS_V1, ...BUILT_WITH_AI_FORMATS_V1])
+export type EditorialFormatV1 = z.infer<typeof EditorialFormatV1Schema>
+
+const EDITORIAL_FORMAT_IMPORT_ALIASES = new Map<string, EditorialFormatV1>([
+  ['money trace', 'money_trace'],
+  ['the money trace', 'money_trace'],
+  ['artifact', 'artifact'],
+  ['the artifact', 'artifact'],
+  ['teardown', 'artifact'],
+  ['the teardown', 'artifact'],
+  ['verdict', 'verdict'],
+  ['the verdict', 'verdict'],
+  ['cold open cutdown', 'cold_open_cutdown'],
+  ['builder conversation', 'builder_conversation'],
+  ['the builder conversation', 'builder_conversation'],
+  ['build itself', 'build_itself'],
+  ['the build itself', 'build_itself'],
+  ['third why', 'third_why'],
+  ['the third why', 'third_why'],
+  ['first version', 'first_version'],
+])
+
+export function normalizeEditorialFormatV1(input: string): EditorialFormatV1 {
+  const normalized = input.trim().toLowerCase().replace(/[_-]+/g, ' ').replace(/\s+/g, ' ')
+  const alias = EDITORIAL_FORMAT_IMPORT_ALIASES.get(normalized)
+  if (!alias) throw new Error(`unsupported editorial format: ${input}`)
+  return alias
+}
+
+export function editorialFormatBelongsToSeriesV1(series: 'money_of_ai' | 'built_with_ai', format: EditorialFormatV1): boolean {
+  return (series === 'money_of_ai' ? MONEY_OF_AI_FORMATS_V1 : BUILT_WITH_AI_FORMATS_V1).includes(format as never)
+}
+
 export const ProductionBriefV1Schema = z.object({
   schema_version: z.literal(PRODUCTION_BRIEF_SCHEMA_VERSION_V1),
   brief_id: IdentifierV1Schema,
   content_idea_id: z.string().uuid(),
   content_revision_hash: Sha256V1Schema,
   series: z.enum(['money_of_ai', 'built_with_ai']),
+  editorial_format: EditorialFormatV1Schema.optional(),
   production_kinds: z.array(z.enum(['video', 'carousel'])).min(1).max(2).refine((value) => new Set(value).size === value.length, { message: 'production kinds must be unique' }),
   source_mode: z.enum(['extract', 'solo', 'short_native', 'written']),
   content: z.object({
@@ -49,6 +85,9 @@ export const ProductionBriefV1Schema = z.object({
   }
   if (value.production_kinds.includes('video') && value.source_mode === 'written') {
     context.addIssue({ code: 'custom', path: ['source_mode'], message: 'video production needs extract, solo or short_native source mode' })
+  }
+  if (value.editorial_format && !editorialFormatBelongsToSeriesV1(value.series, value.editorial_format)) {
+    context.addIssue({ code: 'custom', path: ['editorial_format'], message: 'editorial format does not belong to this series' })
   }
   for (const [index, claim] of value.claims.entries()) {
     if (claim.verification === 'verified' && claim.evidence_urls.length === 0 && !claim.approved_case_material) {

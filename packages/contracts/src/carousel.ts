@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { confirmationRefMatches } from './confirmation-v1.js'
+import { EditorialFormatV1Schema, editorialFormatBelongsToSeriesV1 } from './editorial-v1.js'
 
 export const CAROUSEL_SCHEMA_VERSION = 1 as const
 const CarouselSeriesSchema = z.enum(['money_of_ai', 'built_with_ai'])
@@ -110,10 +111,7 @@ const CarouselClaimSchema = z.object({
   if (claim.kind === 'fact' && claim.verification === 'verified' && claim.evidence_urls.length === 0) context.addIssue({ code: 'custom', path: ['evidence_urls'], message: 'verified facts require evidence URLs' })
 })
 export const CarouselPlatformSchema = z.enum(['linkedin_document', 'instagram'])
-export const CarouselSourceFormatSchema = z.enum([
-  'money_trace', 'artifact', 'verdict', 'cold_open_cutdown',
-  'builder_conversation', 'build_itself', 'third_why', 'first_version',
-])
+export const CarouselSourceFormatSchema = EditorialFormatV1Schema
 export const CarouselSlideRoleSchema = z.enum(['cover', 'scene', 'mechanism', 'proof', 'counterpoint', 'resolution'])
 export const CarouselLayoutSchema = z.enum(['cover', 'statement', 'split_gate', 'flow', 'evidence', 'verdict'])
 export const CarouselSceneSchema = z.enum([
@@ -212,10 +210,7 @@ export const CarouselStoryV1Schema = z.object({
   editorial: CarouselEditorialAssessmentV1Schema,
   approvals: z.array(CarouselApprovalV1Schema).default([]),
 }).strict().superRefine((story, context) => {
-  const allowedFormats = story.series === 'money_of_ai'
-    ? new Set(['money_trace', 'artifact', 'verdict', 'cold_open_cutdown'])
-    : new Set(['builder_conversation', 'build_itself', 'third_why', 'first_version'])
-  if (!allowedFormats.has(story.source_format)) context.addIssue({ code: 'custom', path: ['source_format'], message: 'source format does not belong to this series' })
+  if (!editorialFormatBelongsToSeriesV1(story.series, story.source_format)) context.addIssue({ code: 'custom', path: ['source_format'], message: 'source format does not belong to this series' })
   const positions = story.slides.map((slide) => slide.position)
   if (new Set(positions).size !== positions.length || positions.some((position, index) => position !== index + 1)) context.addIssue({ code: 'custom', path: ['slides'], message: 'slide positions must be unique and contiguous from 1' })
   if (story.slides[0]?.role !== 'cover' || story.slides.at(-1)?.role !== 'resolution') context.addIssue({ code: 'custom', path: ['slides'], message: 'story must open with a cover and end with a resolution' })

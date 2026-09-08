@@ -4,6 +4,7 @@ import {
   IdentifierV1Schema,
   ProductionBriefV1Schema,
   SourceBundleV1Schema,
+  normalizeEditorialFormatV1,
   type JobManifestV2,
   type ProductionBriefV1,
   type SourceBundleV1,
@@ -39,7 +40,10 @@ async function writeJsonAtomic(path: string, value: unknown): Promise<void> {
 }
 
 export async function importProductionBrief(input: unknown): Promise<ImportedProductionBriefV1> {
-  const brief = ProductionBriefV1Schema.parse(input)
+  const normalizedInput = input && typeof input === 'object' && !Array.isArray(input) && typeof (input as { editorial_format?: unknown }).editorial_format === 'string'
+    ? { ...input, editorial_format: normalizeEditorialFormatV1((input as { editorial_format: string }).editorial_format) }
+    : input
+  const brief = ProductionBriefV1Schema.parse(normalizedInput)
   const briefHash = hashValue(brief)
   const root = briefRoot(brief.brief_id)
   await mkdir(root, { recursive: true })

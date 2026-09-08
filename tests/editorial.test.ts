@@ -1,5 +1,5 @@
 import { CandidateV1Schema, JobManifestV1Schema, StageNameSchema } from '@mindmake/contracts'
-import { applyPresenterIdentityCorrections, captionTreatmentIssues, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
+import { applyPresenterIdentityCorrections, BUILT_WITH_AI_EDITORIAL_RULE_ID, captionTreatmentIssues, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
 import { describe, expect, it } from 'vitest'
 
 const thresholds: EditorialThresholds = {
@@ -216,13 +216,33 @@ describe('editorial judgement gates', () => {
 
     const money = CandidateV1Schema.parse({ ...built, series: 'money_of_ai' })
     expect(validateShortNativeEditorialCandidate(money, thresholds, 'Krish', [preference]).soft_blocks).toEqual(expect.arrayContaining([
-      'confirmed investigative preference rejects unsupported sensational framing: insane',
-      'confirmed investigative preference rejects follow or subscribe requests inside the story',
-      'confirmed investigative preference rejects empty comment prompts in place of an earned ending',
-      'confirmed investigative preference requires at least one explicit claim boundary for investigative work',
+      'confirmed editorial standard rejects unsupported sensational framing: insane',
+      'confirmed editorial standard rejects follow or subscribe requests inside the story',
+      'confirmed editorial standard rejects empty comment prompts in place of an earned ending',
+      'The Money of AI standard requires at least one explicit claim boundary',
     ]))
 
     const cleanMoney = CandidateV1Schema.parse({ ...money, transcript: 'Here is the source. It shows the workflow reduces handoff time.', hook: 'Here is the source.', payoff: 'The workflow reduces handoff time.', claims: [cleanClaim] })
     expect(validateShortNativeEditorialCandidate(cleanMoney, thresholds, 'Krish', [preference]).soft_blocks).toEqual([])
+  })
+
+  it('adapts the Built With AI proof requirement to the canonical format', () => {
+    const preference = {
+      schema_version: 1 as const,
+      rule_id: BUILT_WITH_AI_EDITORIAL_RULE_ID,
+      assertion: 'Make the build or human consequence concrete.',
+      scope: { level: 'series' as const, key: 'built_with_ai' },
+      evidence_feedback_ids: ['feedback-cross-series-format-expansion-20260908-01'],
+      counterexamples: [], regression_cases: [], status: 'active' as const,
+      approved_by: 'Krish', approved_at: '2026-09-08T12:00:00.000Z',
+    }
+    const humanLed = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined, editorial_format: 'third_why', source_refs: [], claims: [], scores: { truth: 0.9, evidence: 0.5, clarity: 0.9, tension: 0.8, payoff: 0.9, visual_proof: 0.5, qualified_fit: 0.9, novelty: 0.8 } })
+    expect(validateShortNativeEditorialCandidate(humanLed, thresholds, 'Krish', [preference]).soft_blocks).toEqual([])
+
+    const build = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined, editorial_format: 'build_itself', source_refs: [], claims: [], scores: { truth: 0.9, evidence: 0.8, clarity: 0.9, tension: 0.8, payoff: 0.9, visual_proof: 0.5, qualified_fit: 0.9, novelty: 0.8 } })
+    expect(validateShortNativeEditorialCandidate(build, thresholds, 'Krish', [preference]).soft_blocks).toEqual(expect.arrayContaining([
+      'build_itself requires a more concrete build or artifact proof plan',
+      'build_itself requires a concrete build, artifact, or recorded source reference',
+    ]))
   })
 })

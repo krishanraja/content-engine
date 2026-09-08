@@ -11,6 +11,7 @@ import {
   MagicEditActivationV1Schema,
   MagicEditDirectionV1Schema,
   MagicEditReturnToParentV1Schema,
+  ProductionBriefV1Schema,
   RenderManifestV2Schema,
   SourceBundleV1Schema,
   SourceModeSchema,
@@ -21,6 +22,7 @@ import {
   VisualAssetV1Schema,
   VisualNarrativePlanV1Schema,
   mediaSourceParticipantRoster,
+  normalizeEditorialFormatV1,
   normalizeSeries,
   type CandidateV1,
   type DraftPackageV2,
@@ -615,7 +617,10 @@ function candidatesInPayload(payload: unknown): CandidateV1[] {
   const candidates: CandidateV1[] = []
   for (const value of rootValues) {
     const nested = value && typeof value === 'object' && 'candidate' in value ? (value as { candidate: unknown }).candidate : value
-    const parsed = CandidateV1Schema.safeParse(nested)
+    const normalized = nested && typeof nested === 'object' && !Array.isArray(nested) && typeof (nested as { editorial_format?: unknown }).editorial_format === 'string'
+      ? { ...nested, editorial_format: normalizeEditorialFormatV1((nested as { editorial_format: string }).editorial_format) }
+      : nested
+    const parsed = CandidateV1Schema.safeParse(normalized)
     if (parsed.success) candidates.push(parsed.data)
   }
   return candidates
@@ -1199,7 +1204,13 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         if (!parsed.length) throw new Error('short-native input contains no valid CandidateV1 scripts')
         candidates = parsed.map((candidate) => {
           if (candidate.job_id !== manifest.job_id || candidate.series !== manifest.series || candidate.mode !== manifest.mode) throw new Error('short-native candidate job, series, and mode must match the job manifest')
-          return withEditorialValidation(candidate, validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences), true)
+          const briefPayload = briefArtifact.payload as Record<string, unknown>
+          const productionBrief = ProductionBriefV1Schema.safeParse(briefPayload.production_brief || briefPayload.brief)
+          if (productionBrief.success && productionBrief.data.editorial_format && candidate.editorial_format && productionBrief.data.editorial_format !== candidate.editorial_format) throw new Error('candidate editorial format must match the approved production brief')
+          const formattedCandidate = productionBrief.success && productionBrief.data.editorial_format
+            ? CandidateV1Schema.parse({ ...candidate, editorial_format: productionBrief.data.editorial_format })
+            : candidate
+          return withEditorialValidation(formattedCandidate, validateShortNativeEditorialCandidate(formattedCandidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences), true)
         })
         const inputHash = await hashFile(options.input)
         const scriptArtifact = await completeStageV2(manifest.job_id, 'script', {
@@ -1472,7 +1483,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         techniqueRegistryHash,
         preferenceSnapshotHash: preferencesHash,
         ...(pinnedConfig.active_preferences ? { activePreferences: pinnedConfig.active_preferences } : {}),
-        preferenceContext: { series: manifest.series, mode: manifest.mode, jobId: manifest.job_id },
+        preferenceContext: { series: manifest.series, mode: manifest.mode, jobId: manifest.job_id, ...(candidate.editorial_format ? { editorialFormat: candidate.editorial_format } : {}) },
         production: manifest.purpose === 'production',
         provenTreatment: Boolean(options.provenTreatment),
       })

@@ -22,6 +22,7 @@ Read only the references relevant to the current operation. Apply `$krish-voice`
 ## Non-negotiable boundaries
 
 - Krish is always named Krish. Public series names are The Money of AI and Built With AI. Never publish Paid or bare Built as a series name.
+- Use only the eight canonical publication formats. The Money of AI uses Money Trace, The Artifact, Verdict and Cold-open cutdown. Built With AI uses Builder conversation, The Build Itself, The Third Why and First Version. Teardown is a retired import alias for The Artifact and must never appear in a public artifact.
 - Hard-block unsupported truth claims, unclear rights, exposed private information, meaning-changing edits, naming violations, or generated media presented as evidence.
 - Soft-block weak clarity, audience fit, novelty, engagement, enjoyment, or visual contribution. Proceed only with a recorded override reason.
 - Give every visual beat one primary attention target and a declared purpose. Reject decoration that competes with the argument.

@@ -14,6 +14,8 @@ import {
   SourceModeSchema,
   StageNameSchema,
   TreatmentRegistryV1Schema,
+  PreferenceRuleV1Schema,
+  normalizeEditorialFormatV1,
   normalizeSeries,
   type FeedbackEventV1,
   type StageName,
@@ -26,6 +28,7 @@ import {
   benchmarkTranscription,
   broadenRule,
   carouselProductionIssues,
+  carouselEditorialPreferenceIssues,
   carouselStoryContentHash,
   captureFeedback,
   classifyError,
@@ -697,8 +700,11 @@ carousel.command('method')
 carousel.command('validate')
   .requiredOption('--story <path>')
   .action(async (options) => {
-    const story = CarouselStoryV1Schema.parse(await readJson(options.story))
-    out({ ok: true, story_id: story.story_id, story_hash: carouselStoryContentHash(story), production_issues: carouselProductionIssues(story) })
+    const rawStory = await readJson<Record<string, unknown>>(options.story)
+    const story = CarouselStoryV1Schema.parse(typeof rawStory.source_format === 'string' ? { ...rawStory, source_format: normalizeEditorialFormatV1(rawStory.source_format) } : rawStory)
+    const studioConfig = await readJson<{ active_preferences?: unknown[] }>(configPath)
+    const preferences = (studioConfig.active_preferences || []).map((value) => PreferenceRuleV1Schema.parse(value))
+    out({ ok: true, story_id: story.story_id, story_hash: carouselStoryContentHash(story), editorial_preference_issues: carouselEditorialPreferenceIssues(story, preferences), production_issues: carouselProductionIssues(story) })
   })
 
 carousel.command('render')

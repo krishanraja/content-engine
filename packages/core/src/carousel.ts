@@ -8,12 +8,15 @@ import {
   CarouselDraftPackageV1Schema,
   CarouselStoryV1Schema,
   confirmationRefMatches,
+  normalizeEditorialFormatV1,
   type BrandThemeV1,
   type CarouselApprovalV1,
   type CarouselDraftPackageV1,
   type CarouselStoryV1,
+  type PreferenceRuleV1,
 } from '@mindmake/contracts'
 import { stageOfficialSeriesWordmarks, type StagedWordmarkAsset } from './brand-assets.js'
+import { BUILT_WITH_AI_EDITORIAL_RULE_ID, MONEY_OF_AI_EDITORIAL_RULE_ID } from './editorial.js'
 import { hashFile, hashValue } from './hash.js'
 
 const COMPOSITION_ID = 'MindmakeCarouselSlide'
@@ -29,6 +32,55 @@ export interface CarouselRenderResult {
 interface StudioBrandConfig {
   default_brand_theme?: string
   brand_themes?: unknown[]
+}
+
+function parseCarouselStoryInput(input: unknown): CarouselStoryV1 {
+  const normalized = input && typeof input === 'object' && !Array.isArray(input) && typeof (input as { source_format?: unknown }).source_format === 'string'
+    ? { ...input, source_format: normalizeEditorialFormatV1((input as { source_format: string }).source_format) }
+    : input
+  return CarouselStoryV1Schema.parse(normalized)
+}
+
+function seriesPreferenceActive(story: CarouselStoryV1, preferences: PreferenceRuleV1[], ruleId: string): boolean {
+  return preferences.some((rule) => rule.rule_id === ruleId && rule.status === 'active' && (
+    rule.scope.level === 'global' || (rule.scope.level === 'series' && rule.scope.key === story.series)
+  ))
+}
+
+export function carouselEditorialPreferenceIssues(input: CarouselStoryV1, preferences: PreferenceRuleV1[] = []): string[] {
+  const story = CarouselStoryV1Schema.parse(input)
+  const moneyEnabled = seriesPreferenceActive(story, preferences, MONEY_OF_AI_EDITORIAL_RULE_ID)
+  const builtEnabled = seriesPreferenceActive(story, preferences, BUILT_WITH_AI_EDITORIAL_RULE_ID)
+  if (!moneyEnabled && !builtEnabled) return []
+
+  const text = story.slides.map((slide) => `${slide.headline} ${slide.body || ''}`).join(' ').toLowerCase()
+  const issues: string[] = []
+  const sensationalTerms = [...new Set(text.match(/\b(?:insane|unbelievable|shocking|mind[- ]?blowing|terrifying|crazy|game[- ]?changer)\b/g) || [])]
+  if (sensationalTerms.length) issues.push(`confirmed editorial standard rejects unsupported sensational framing: ${sensationalTerms.join(', ')}`)
+  if (/\b(?:follow (?:me|us|for)|subscribe|smash (?:the )?like|hit (?:the )?follow)\b/i.test(text)) issues.push('confirmed editorial standard rejects follow or subscribe requests inside the story')
+  if (/\b(?:comment below|drop (?:a )?comment|let me know in the comments|what do you think\??)\b/i.test(text)) issues.push('confirmed editorial standard rejects empty comment prompts in place of an earned ending')
+
+  const assets = new Map(story.assets.map((asset) => [asset.asset_id, asset]))
+  const proofSlides = story.slides.filter((slide) => ['mechanism', 'proof'].includes(slide.role))
+  for (const slide of proofSlides) {
+    const placed = slide.asset_ids.map((id) => assets.get(id)).filter(Boolean)
+    if (slide.claim_ids.length && placed.length && placed.every((asset) => ['illustration', 'decoration'].includes(asset!.truth_role))) {
+      issues.push(`slide ${slide.position} uses illustration or decoration as the only visual support for a claim`)
+    }
+  }
+
+  if (moneyEnabled) {
+    if (!story.claims.length) issues.push('The Money of AI standard requires at least one explicit claim boundary')
+    const earlyProof = story.slides.slice(0, 3).some((slide) => slide.role === 'proof' || slide.asset_ids.some((id) => ['evidence', 'owned_artifact'].includes(assets.get(id)?.truth_role || '')))
+    if (!earlyProof) issues.push('The Money of AI standard expects a receipt, artifact, or proof beat in the first three slides')
+  }
+
+  if (builtEnabled && ['build_itself', 'first_version'].includes(story.source_format)) {
+    const earlyArtifact = story.slides.slice(0, 3).some((slide) => slide.asset_ids.some((id) => ['evidence', 'owned_artifact'].includes(assets.get(id)?.truth_role || '')))
+    if (!earlyArtifact) issues.push(`${story.source_format} expects a concrete build or artifact in the first three slides`)
+  }
+
+  return [...new Set(issues)]
 }
 
 export function carouselStoryContentHash(input: CarouselStoryV1): string {
@@ -99,7 +151,7 @@ async function stageStoryAssets(story: CarouselStoryV1, directory: string) {
 }
 
 export async function renderCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string, reviewMode = false): Promise<CarouselRenderResult> {
-  const story = CarouselStoryV1Schema.parse(storyInput)
+  const story = parseCarouselStoryInput(storyInput)
   if (!reviewMode) {
     const issues = carouselProductionIssues(story)
     if (issues.length) throw new Error(`carousel production gate failed: ${issues.join('; ')}`)
@@ -175,7 +227,7 @@ async function writeLinkedInPdf(slides: CarouselRenderResult['slides'], outputPa
 }
 
 export async function packageCarousel(repoRoot: string, configPath: string, storyInput: unknown, outputDirectory: string): Promise<CarouselDraftPackageV1> {
-  const story = CarouselStoryV1Schema.parse(storyInput)
+  const story = parseCarouselStoryInput(storyInput)
   const storyHash = carouselStoryContentHash(story)
   if (!story.approvals.some((approval) => carouselApprovalBinds(approval, 'final', storyHash))) throw new Error('final approval for the exact carousel story is missing')
   const rendered = await renderCarousel(repoRoot, configPath, story, outputDirectory, false)

@@ -1,8 +1,8 @@
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { CarouselStoryV1Schema, CarouselVisualDirectionMethodV1Schema } from '@mindmake/contracts'
-import { carouselApprovalBinds, carouselProductionIssues, carouselStoryContentHash } from '@mindmake/core'
+import { CarouselStoryV1Schema, CarouselVisualDirectionMethodV1Schema, EditorialFormatV1Schema, normalizeEditorialFormatV1 } from '@mindmake/contracts'
+import { carouselApprovalBinds, carouselEditorialPreferenceIssues, carouselProductionIssues, carouselStoryContentHash } from '@mindmake/core'
 
 const fixturePath = resolve('examples/carousels/built-editorial-gates.review.json')
 
@@ -60,6 +60,22 @@ describe('carousel engine', () => {
     const input = await fixture()
     input.series = 'money_of_ai'
     expect(() => CarouselStoryV1Schema.parse(input)).toThrow(/source format does not belong/)
+  })
+
+  it('keeps the retired Teardown label at the import boundary', async () => {
+    expect(normalizeEditorialFormatV1('teardown')).toBe('artifact')
+    expect(EditorialFormatV1Schema.safeParse('teardown').success).toBe(false)
+    const input = await fixture()
+    input.source_format = 'teardown'
+    expect(() => CarouselStoryV1Schema.parse(input)).toThrow()
+  })
+
+  it('uses format-aware editorial preferences for Built carousels', async () => {
+    const preference = { schema_version: 1 as const, rule_id: 'pref-built-concrete-story-v1', assertion: 'Make the build concrete.', scope: { level: 'series' as const, key: 'built_with_ai' }, evidence_feedback_ids: ['feedback-cross-series-format-expansion-20260908-01'], counterexamples: [], regression_cases: [], status: 'active' as const, approved_by: 'Krish' as const, approved_at: '2026-09-08T12:00:00.000Z' }
+    const build = CarouselStoryV1Schema.parse(await fixture())
+    expect(carouselEditorialPreferenceIssues(build, [preference])).toContain('build_itself expects a concrete build or artifact in the first three slides')
+    const human = CarouselStoryV1Schema.parse({ ...(await fixture()), source_format: 'third_why' })
+    expect(carouselEditorialPreferenceIssues(human, [preference])).not.toContain('third_why expects a concrete build or artifact in the first three slides')
   })
 
   it('blocks unapproved screenshots from acting as evidence', async () => {
