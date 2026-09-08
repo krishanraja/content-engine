@@ -1,20 +1,43 @@
 {
   "schema_version": 1,
   "upstream_contracts": {
-    "control_center": { "repository": "krishanraja/control-center", "main_commit_verified": "6759bf51380bc8805640b03ab5c0a8fd5505dabe", "verified_at": "2026-09-04", "adapter_pr": 244, "security_pr": 246 },
-    "mm_ctrl": { "repository": "krishanraja/mm-ctrl", "main_commit_verified": "e5868aad38c5508894d395bcedf220e768569f05", "verified_at": "2026-09-04", "adapter_pr": 371 }
+    "mm_ctrl": {
+      "repository": "krishanraja/mm-ctrl",
+      "main_commit_verified": "e5868aad38c5508894d395bcedf220e768569f05",
+      "verified_at": "2026-09-04",
+      "adapter_pr": 371
+    }
   },
-  "output": { "width": 1080, "height": 1920, "fps": 30, "audio_hz": 48000, "lufs": -14, "true_peak_dbtp": -1 },
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "audio_hz": 48000,
+    "lufs": -14,
+    "true_peak_dbtp": -1
+  },
   "transcription": {
     "local_model": "base.en",
     "maximum_realtime_factor": 1.5,
     "maximum_fixture_wer": 0.12,
-    "vocabulary": ["Krish", "Mindmaker", "The Money of AI", "Built With AI", "Meta", "AdFixus"]
+    "vocabulary": [
+      "Krish",
+      "Mindmaker",
+      "The Money of AI",
+      "Built With AI",
+      "Meta",
+      "AdFixus"
+    ]
   },
   "identity": {
     "presenter_name": "Krish",
-    "asr_aliases": ["Chris"],
-    "default_presenter_modes": ["solo", "short_native"],
+    "asr_aliases": [
+      "Chris"
+    ],
+    "default_presenter_modes": [
+      "solo",
+      "short_native"
+    ],
     "durable_profile": {
       "profile_id": "krish-face-v1",
       "credential_target": "MindmakeVideoStudio/krish-identity-key",
@@ -30,15 +53,40 @@
       "main_commit_verified": "2d24032681e41ef12ec46ce49780408d5c4eb405",
       "contract_path": "project-documentation/03_DESIGN_CONTRACT.md"
     },
-    "stage_graph": ["brief", "script", "candidates", "claims", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "stage_graph": [
+      "brief",
+      "script",
+      "candidates",
+      "claims",
+      "recording_brief",
+      "ingest",
+      "normalize",
+      "transcript",
+      "source_analysis",
+      "visual_plan",
+      "assets",
+      "styleframes",
+      "animatic",
+      "treatment",
+      "render",
+      "qa",
+      "package"
+    ],
     "technique_registry": {
       "path": "config/techniques.json",
       "version": 1,
       "sha256": "a0fac8ed46fcbe3b98a708344296f4d939e2ea6c22c623904c10f478bd27058d"
     },
-    "treatment_lanes": ["restrained", "premium", "experimental"],
+    "treatment_lanes": [
+      "restrained",
+      "premium",
+      "experimental"
+    ],
     "default_lane": "premium",
-    "normal_duration_ms": { "minimum": 20000, "maximum": 60000 },
+    "normal_duration_ms": {
+      "minimum": 20000,
+      "maximum": 60000
+    },
     "cloud": {
       "policy": "local_first_exact_clip_only",
       "default_job_ceiling_gbp": 15,
@@ -46,23 +94,81 @@
       "synthetic_speech_allowed": false,
       "generated_media_truth_role": "illustration_only"
     },
-    "review_gates": ["angle", "visual_plan", "evidence", "storyboard", "animatic", "treatment", "final", "package"],
+    "review_gates": [
+      "angle",
+      "visual_plan",
+      "evidence",
+      "storyboard",
+      "animatic",
+      "treatment",
+      "final",
+      "package"
+    ],
     "platforms": {
-      "youtube_shorts": { "delivery": "private_upload_or_local", "safe_zones": { "top_px": 140, "right_px": 120, "bottom_px": 360, "left_px": 80 } },
-      "linkedin": { "delivery": "local_package", "safe_zones": { "top_px": 120, "right_px": 100, "bottom_px": 260, "left_px": 100 } },
-      "tiktok": { "delivery": "local_package", "safe_zones": { "top_px": 160, "right_px": 180, "bottom_px": 420, "left_px": 80 } },
-      "instagram_reels": { "delivery": "local_package", "safe_zones": { "top_px": 180, "right_px": 140, "bottom_px": 420, "left_px": 80 } }
+      "youtube_shorts": {
+        "delivery": "private_upload_or_local",
+        "safe_zones": {
+          "top_px": 140,
+          "right_px": 120,
+          "bottom_px": 360,
+          "left_px": 80
+        }
+      },
+      "linkedin": {
+        "delivery": "local_package",
+        "safe_zones": {
+          "top_px": 120,
+          "right_px": 100,
+          "bottom_px": 260,
+          "left_px": 100
+        }
+      },
+      "tiktok": {
+        "delivery": "local_package",
+        "safe_zones": {
+          "top_px": 160,
+          "right_px": 180,
+          "bottom_px": 420,
+          "left_px": 80
+        }
+      },
+      "instagram_reels": {
+        "delivery": "local_package",
+        "safe_zones": {
+          "top_px": 180,
+          "right_px": 140,
+          "bottom_px": 420,
+          "left_px": 80
+        }
+      }
     }
   },
   "carousel_director": {
     "schema_version": 1,
-    "canvas": { "width": 1080, "height": 1350 },
-    "slide_count": { "minimum": 5, "maximum": 10 },
-    "platforms": {
-      "linkedin_document": { "delivery": "local_pdf_and_png", "public_posting": false },
-      "instagram": { "delivery": "local_png", "public_posting": false }
+    "canvas": {
+      "width": 1080,
+      "height": 1350
     },
-    "review_gates": ["story", "asset", "visual_direction", "final"],
+    "slide_count": {
+      "minimum": 5,
+      "maximum": 10
+    },
+    "platforms": {
+      "linkedin_document": {
+        "delivery": "local_pdf_and_png",
+        "public_posting": false
+      },
+      "instagram": {
+        "delivery": "local_png",
+        "public_posting": false
+      }
+    },
+    "review_gates": [
+      "story",
+      "asset",
+      "visual_direction",
+      "final"
+    ],
     "design_authority": {
       "repository": "krishanraja/mindmake",
       "main_commit_verified": "2d24032681e41ef12ec46ce49780408d5c4eb405",
@@ -103,11 +209,38 @@
     }
   },
   "series": {
-    "money_of_ai": { "public_name": "The Money of AI", "accent": "#7FE3B4", "audience": "enterprise leaders, founders, and transformation buyers" },
-    "built_with_ai": { "public_name": "Built With AI", "accent": "#7FE3B4", "audience": "AI-native operators and hands-on builders" }
+    "money_of_ai": {
+      "public_name": "The Money of AI",
+      "accent": "#7FE3B4",
+      "audience": "enterprise leaders, founders, and transformation buyers"
+    },
+    "built_with_ai": {
+      "public_name": "Built With AI",
+      "accent": "#7FE3B4",
+      "audience": "AI-native operators and hands-on builders"
+    }
   },
-  "gates": { "hard": ["truth", "rights", "confidentiality", "meaning", "canonical_naming"], "soft": ["clarity", "engagement", "novelty", "audience_fit"] },
-  "learning": { "broaden_after_confirmations": 3, "broaden_across_jobs": 2, "performance_replications": 3, "approval_required": true },
+  "gates": {
+    "hard": [
+      "truth",
+      "rights",
+      "confidentiality",
+      "meaning",
+      "canonical_naming"
+    ],
+    "soft": [
+      "clarity",
+      "engagement",
+      "novelty",
+      "audience_fit"
+    ]
+  },
+  "learning": {
+    "broaden_after_confirmations": 3,
+    "broaden_across_jobs": 2,
+    "performance_replications": 3,
+    "approval_required": true
+  },
   "approved_treatments": [
     {
       "schema_version": 1,
@@ -118,19 +251,42 @@
       "approved_at": "2026-08-29",
       "source_job_id": "20260829-built_with_ai-cc31d2f3",
       "source_manifest_sha256": "9ff2d2c904ab8c676f369376de4ea4b1a058cfd6015a30da3b38a68e14987bf8",
-      "scope": { "series": ["built_with_ai"], "modes": ["solo"] },
+      "scope": {
+        "series": [
+          "built_with_ai"
+        ],
+        "modes": [
+          "solo"
+        ]
+      },
       "priority": 100,
-      "style": { "caption_position": "lower", "caption_scale": 1.02, "hook_card_ms": 0, "proof_motif": "evidence", "caption_personality": "kinetic" },
+      "style": {
+        "caption_position": "lower",
+        "caption_scale": 1.02,
+        "hook_card_ms": 0,
+        "proof_motif": "evidence",
+        "caption_personality": "kinetic"
+      },
       "evidence_policy": {
         "requires_approved_packet": true,
-        "allowed_presentations": ["evidence_ribbon"],
+        "allowed_presentations": [
+          "evidence_ribbon"
+        ],
         "face_policy": "avoid",
         "minimum_clear_ending_ms": 1000,
         "captions_below_evidence": true,
         "placement_strategy": "face_safe_lower_middle",
         "requires_per_job_layout_review": true
       },
-      "invariants": ["presenter_remains_primary", "exact_evidence_asset_approval", "face_safe_evidence", "captions_below_evidence", "transcript_word_fidelity", "clear_presenter_ending", "audio_duration_parity"]
+      "invariants": [
+        "presenter_remains_primary",
+        "exact_evidence_asset_approval",
+        "face_safe_evidence",
+        "captions_below_evidence",
+        "transcript_word_fidelity",
+        "clear_presenter_ending",
+        "audio_duration_parity"
+      ]
     }
   ],
   "active_preferences": [
@@ -138,10 +294,20 @@
       "schema_version": 1,
       "rule_id": "pref-evidence-ribbon-presenter-primary-v1",
       "assertion": "Keep Krish visible while compact evidence appears, place it in verified face-safe space, and return to an unobstructed presenter for the ending.",
-      "scope": { "level": "treatment", "key": "evidence-kinetic-ribbon-v1" },
-      "evidence_feedback_ids": ["4f11400d-3328-4ccc-8c14-3a6018080d9d"],
-      "counterexamples": ["Use a deliberate evidence cutaway only when the viewer genuinely needs uninterrupted inspection and Krish approves the new treatment."],
-      "regression_cases": ["approved treatment rejects evidence cutaways", "approved treatment preserves a clear presenter ending"],
+      "scope": {
+        "level": "treatment",
+        "key": "evidence-kinetic-ribbon-v1"
+      },
+      "evidence_feedback_ids": [
+        "4f11400d-3328-4ccc-8c14-3a6018080d9d"
+      ],
+      "counterexamples": [
+        "Use a deliberate evidence cutaway only when the viewer genuinely needs uninterrupted inspection and Krish approves the new treatment."
+      ],
+      "regression_cases": [
+        "approved treatment rejects evidence cutaways",
+        "approved treatment preserves a clear presenter ending"
+      ],
       "status": "active",
       "approved_by": "Krish",
       "approved_at": "2026-08-29T14:42:01.530Z"
@@ -150,10 +316,20 @@
       "schema_version": 1,
       "rule_id": "pref-kinetic-caption-fidelity-v1",
       "assertion": "Give captions selective visual personality while using only verified transcribed words in source order.",
-      "scope": { "level": "treatment", "key": "evidence-kinetic-ribbon-v1" },
-      "evidence_feedback_ids": ["4f11400d-3328-4ccc-8c14-3a6018080d9d"],
-      "counterexamples": ["Reduce movement when it competes with dense evidence, but do not substitute or invent spoken words."],
-      "regression_cases": ["approved treatment requires verified transcript-word caption fidelity", "caption-safe-zone QA remains mandatory"],
+      "scope": {
+        "level": "treatment",
+        "key": "evidence-kinetic-ribbon-v1"
+      },
+      "evidence_feedback_ids": [
+        "4f11400d-3328-4ccc-8c14-3a6018080d9d"
+      ],
+      "counterexamples": [
+        "Reduce movement when it competes with dense evidence, but do not substitute or invent spoken words."
+      ],
+      "regression_cases": [
+        "approved treatment requires verified transcript-word caption fidelity",
+        "caption-safe-zone QA remains mandatory"
+      ],
       "status": "active",
       "approved_by": "Krish",
       "approved_at": "2026-08-29T14:42:01.530Z"
@@ -162,10 +338,25 @@
       "schema_version": 1,
       "rule_id": "ac5c0d6e-b113-4003-9357-1d24d1fa9d44",
       "assertion": "Give the official series identity one deliberately large opening, ending, or safe-beat moment where its complete actual lettering is comfortably phone-legible, then collapse to a compact official Mindmake-only anchor during dense storytelling. Preserve the readable size, move corners or beats when needed, use a verified face-safe placement, and never recreate either mark as text.",
-      "scope": { "level": "global", "key": "brand-lockup" },
-      "evidence_feedback_ids": ["2cecdb0b-efe0-400c-b39b-e843188932ee", "fc37225c-d396-4447-9343-680038c7e3d8"],
-      "counterexamples": ["An explicitly unbranded calibration or analysis render does not display the lockup."],
-      "regression_cases": ["every branded render contains a comfortably phone-legible series identity moment", "The Money of AI letter-bearing region is at least 50 render pixels and 17 CSS pixels in a 375-pixel preview, calibrated to keep at least 16 CSS pixels of high-contrast letter ink", "the complete official letter-bearing width remains visible", "dense story moments use the official Mindmake-only anchor", "the plate moves to the other approved top corner or a later safe beat instead of shrinking when the preferred placement collides", "no duplicate or live-text wordmark is rendered"],
+      "scope": {
+        "level": "global",
+        "key": "brand-lockup"
+      },
+      "evidence_feedback_ids": [
+        "2cecdb0b-efe0-400c-b39b-e843188932ee",
+        "fc37225c-d396-4447-9343-680038c7e3d8"
+      ],
+      "counterexamples": [
+        "An explicitly unbranded calibration or analysis render does not display the lockup."
+      ],
+      "regression_cases": [
+        "every branded render contains a comfortably phone-legible series identity moment",
+        "The Money of AI letter-bearing region is at least 50 render pixels and 17 CSS pixels in a 375-pixel preview, calibrated to keep at least 16 CSS pixels of high-contrast letter ink",
+        "the complete official letter-bearing width remains visible",
+        "dense story moments use the official Mindmake-only anchor",
+        "the plate moves to the other approved top corner or a later safe beat instead of shrinking when the preferred placement collides",
+        "no duplicate or live-text wordmark is rendered"
+      ],
       "status": "active",
       "approved_by": "Krish",
       "approved_at": "2026-09-04T14:03:15.556Z"
@@ -174,10 +365,30 @@
       "schema_version": 1,
       "rule_id": "pref-money-investigative-receipts-v1",
       "assertion": "Across every The Money of AI format, open with a legible promise and visible receipts, use concrete scenes and progression to trace one mechanism, preserve every source qualifier, treat the countercase fairly, keep visual moves story-motivated, and end on an earned verdict. Do not use unsupported drama, generic technology B-roll, all-caps word-by-word captions, mid-story follow requests, or empty comment prompts.",
-      "scope": { "level": "series", "key": "money_of_ai" },
-      "evidence_feedback_ids": ["feedback-reference-videos-20260908-01", "feedback-cross-series-format-expansion-20260908-01"],
-      "counterexamples": ["A human-led opening may precede the first receipt only when the source moment is itself the evidence and the receipt still appears inside the first five seconds."],
-      "regression_cases": ["all four canonical Money formats use the same editorial floor", "source qualifiers and claim boundaries remain intact", "a sourced receipt or owned artifact appears in the first five seconds", "the story traces one intelligible mechanism", "the strongest credible countercase is treated fairly", "camera moves and overlays have a declared narrative job", "generic technology B-roll is not used as proof", "captions avoid all-caps word-by-word treatment", "no follow request interrupts the story", "the ending lands an earned verdict rather than an empty comment prompt", "the retired Teardown name never appears in a public artifact"],
+      "scope": {
+        "level": "series",
+        "key": "money_of_ai"
+      },
+      "evidence_feedback_ids": [
+        "feedback-reference-videos-20260908-01",
+        "feedback-cross-series-format-expansion-20260908-01"
+      ],
+      "counterexamples": [
+        "A human-led opening may precede the first receipt only when the source moment is itself the evidence and the receipt still appears inside the first five seconds."
+      ],
+      "regression_cases": [
+        "all four canonical Money formats use the same editorial floor",
+        "source qualifiers and claim boundaries remain intact",
+        "a sourced receipt or owned artifact appears in the first five seconds",
+        "the story traces one intelligible mechanism",
+        "the strongest credible countercase is treated fairly",
+        "camera moves and overlays have a declared narrative job",
+        "generic technology B-roll is not used as proof",
+        "captions avoid all-caps word-by-word treatment",
+        "no follow request interrupts the story",
+        "the ending lands an earned verdict rather than an empty comment prompt",
+        "the retired Teardown name never appears in a public artifact"
+      ],
       "status": "active",
       "approved_by": "Krish",
       "approved_at": "2026-09-08T07:35:45.761Z"
@@ -186,10 +397,28 @@
       "schema_version": 1,
       "rule_id": "pref-built-concrete-story-v1",
       "assertion": "Across every Built With AI format, make the build, decision, constraint, recorded moment, or human consequence concrete. Use actual artifacts when the format promises the build itself, preserve every qualifier, keep visual moves story-motivated, and finish on a useful earned insight. Do not use unsupported drama, generic technology B-roll as proof, all-caps word-by-word captions, mid-story follow requests, or empty comment prompts.",
-      "scope": { "level": "series", "key": "built_with_ai" },
-      "evidence_feedback_ids": ["feedback-reference-videos-20260908-01", "feedback-cross-series-format-expansion-20260908-01"],
-      "counterexamples": ["The Third Why and Builder Conversation may open on a revealing human moment without forcing a screenshot into the first beat.", "An illustration may create texture or clarify an analogy, but it cannot impersonate proof."],
-      "regression_cases": ["all four canonical Built formats use the same anti-slop floor", "The Build Itself and First Version show a concrete build or artifact in the first eight seconds", "The Third Why can remain human-led when that is the strongest truthful opening", "Builder Conversation preserves guest context and does not manufacture causality", "generic technology B-roll is not used as proof", "captions avoid all-caps word-by-word treatment", "no follow request interrupts the story", "the ending lands a useful insight rather than an empty comment prompt"],
+      "scope": {
+        "level": "series",
+        "key": "built_with_ai"
+      },
+      "evidence_feedback_ids": [
+        "feedback-reference-videos-20260908-01",
+        "feedback-cross-series-format-expansion-20260908-01"
+      ],
+      "counterexamples": [
+        "The Third Why and Builder Conversation may open on a revealing human moment without forcing a screenshot into the first beat.",
+        "An illustration may create texture or clarify an analogy, but it cannot impersonate proof."
+      ],
+      "regression_cases": [
+        "all four canonical Built formats use the same anti-slop floor",
+        "The Build Itself and First Version show a concrete build or artifact in the first eight seconds",
+        "The Third Why can remain human-led when that is the strongest truthful opening",
+        "Builder Conversation preserves guest context and does not manufacture causality",
+        "generic technology B-roll is not used as proof",
+        "captions avoid all-caps word-by-word treatment",
+        "no follow request interrupts the story",
+        "the ending lands a useful insight rather than an empty comment prompt"
+      ],
       "status": "active",
       "approved_by": "Krish",
       "approved_at": "2026-09-08T12:00:00.000Z"
@@ -248,7 +477,10 @@
           },
           "layout": "responsive_identity_anchor",
           "corner": "top_left",
-          "reference_canvas": { "width": 1080, "height": 1920 },
+          "reference_canvas": {
+            "width": 1080,
+            "height": 1920
+          },
           "offset_x": 80,
           "offset_y": 140,
           "minimum_effective": {
@@ -283,8 +515,15 @@
             "mindmake_width": 230
           },
           "placement": {
-            "allowed_corners": ["top_left", "top_right"],
-            "identity_priority": ["opening", "ending", "safe_beat"],
+            "allowed_corners": [
+              "top_left",
+              "top_right"
+            ],
+            "identity_priority": [
+              "opening",
+              "ending",
+              "safe_beat"
+            ],
             "collision_policy": "alternate_corner_then_series_only_then_block",
             "dense_story_mode": "official_mindmake_only"
           }
@@ -294,8 +533,18 @@
           "sha256": "57fd2cdef929de2035baf5b0405a152878b26f7eba39b17b1d4c03f2470b9737",
           "pixel_width": 648.043,
           "pixel_height": 109.156,
-          "alpha_crop": { "x": 0, "y": 0, "width": 648.043, "height": 109.156 },
-          "letter_region": { "x": 0, "y": 0, "width": 648.043, "height": 109.156 },
+          "alpha_crop": {
+            "x": 0,
+            "y": 0,
+            "width": 648.043,
+            "height": 109.156
+          },
+          "letter_region": {
+            "x": 0,
+            "y": 0,
+            "width": 648.043,
+            "height": 109.156
+          },
           "display_width": 230
         },
         "series": {
@@ -304,8 +553,18 @@
             "sha256": "1cdd6d7710c9970a1e86c8793b33acf6b3f63c81304aeb6efe84d392467322a6",
             "pixel_width": 1200,
             "pixel_height": 630,
-            "alpha_crop": { "x": 254, "y": 89, "width": 689, "height": 402 },
-            "letter_region": { "x": 254, "y": 438, "width": 689, "height": 53 },
+            "alpha_crop": {
+              "x": 254,
+              "y": 89,
+              "width": 689,
+              "height": 402
+            },
+            "letter_region": {
+              "x": 254,
+              "y": 438,
+              "width": 689,
+              "height": 53
+            },
             "display_width": 650
           },
           "built_with_ai": {
@@ -313,8 +572,18 @@
             "sha256": "271ab965dc51714be8c13c8a6bb8c7b2b60f4bf22caf51dda5a2928e295fd29f",
             "pixel_width": 1200,
             "pixel_height": 630,
-            "alpha_crop": { "x": 287, "y": 114, "width": 626, "height": 395 },
-            "letter_region": { "x": 287, "y": 452, "width": 626, "height": 57 },
+            "alpha_crop": {
+              "x": 287,
+              "y": 114,
+              "width": 626,
+              "height": 395
+            },
+            "letter_region": {
+              "x": 287,
+              "y": 452,
+              "width": 626,
+              "height": 57
+            },
             "display_width": 650
           }
         }

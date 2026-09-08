@@ -50,7 +50,7 @@ const expected: Record<string, string> = {
   'krishanraja/mindmake': 'the Mindmake site',
   'krishanraja/mm-ctrl': 'CTRL',
   'krishanraja/contentarchives': 'contentarchives',
-  'krishanraja/mindmake-video-studio': 'video-studio',
+  'krishanraja/content-engine': 'video-studio',
 }
 assert.equal(NAMED_BUILD_PRODUCTS.length, 5, 'exactly five products may be named in content')
 for (const p of NAMED_BUILD_PRODUCTS) {

@@ -45,7 +45,19 @@ export const StudioSessionV1Schema = z.object({
   }).strict(),
   capabilities: z.array(StudioCapabilityV1Schema).min(1).refine((items) => new Set(items).size === items.length, { message: 'session capabilities must be unique' }),
   repository: z.object({
-    name: z.literal('krishanraja/mindmake-video-studio'),
+    // Both names, on purpose, and not forever.
+    //
+    // The repository is `krishanraja/content-engine` now. This was a z.literal
+    // of the old name, and a literal is a flag day: the moment the control
+    // plane required the new one, the Windows runner, which is pinned to an
+    // older checkout and is reinstalled by hand, would have had every session
+    // it opened refused. Nothing would have said why except a schema error on
+    // a machine nobody is watching.
+    //
+    // So the schema accepts either and the engine emits the new one. Narrow
+    // this back to a single literal once the runner has been reinstalled from a
+    // commit that emits it, which is a deliberate step, not a cleanup.
+    name: z.enum(['krishanraja/content-engine', 'krishanraja/mindmake-video-studio']),
     revision: z.string().regex(/^[a-f0-9]{40}$/),
   }).strict(),
   linked_job_ids: z.array(IdentifierV1Schema).max(100).refine((items) => new Set(items).size === items.length, { message: 'linked job IDs must be unique' }),

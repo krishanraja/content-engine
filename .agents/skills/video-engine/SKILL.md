@@ -5,7 +5,7 @@ description: "Launch Krish's Mindmaker Video Engine only when the complete first
 
 # Video Engine launcher
 
-Use this only as a thin launcher. GitHub `krishanraja/mindmake-video-studio` `main` is the sole authority for code, configuration, operating instructions, and durable learning.
+Use this only as a thin launcher. GitHub `krishanraja/content-engine` `main` is the sole authority for code, configuration, operating instructions, and durable learning.
 
 ## Exact trigger contract
 

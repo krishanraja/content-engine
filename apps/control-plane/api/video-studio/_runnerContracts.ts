@@ -1,3 +1,21 @@
+// Relative into the workspace source, NOT the package name.
+//
+// `@mindmake/contracts` resolves at build time and fails at runtime: npm links
+// it, the tracer resolves to its raw ./src/index.ts under node_modules, and
+// neither ships that file nor could Node execute TypeScript from there. Proved
+// on a preview deployment, which answered ERR_MODULE_NOT_FOUND for
+// /var/task/node_modules/@mindmake/contracts/src/index.ts behind a green build.
+//
+// The whole repo is the deployment root, so this path is a .ts file Vercel's
+// builder compiles exactly like a route. check-run-recovery.ts refuses the
+// package-name form so the green-build-broken-function failure cannot come back.
+import {
+  RunnerClaimRequestV1Schema,
+  RunnerCompleteRequestV1Schema,
+  RunnerHeartbeatRequestV1Schema,
+  RunnerPreviewRetentionRequestV1Schema,
+  RunnerPreviewUploadRequestV1Schema,
+} from '../../../../packages/contracts/src/index.js'
 import {
   VIDEO_PLATFORMS,
   UUID_RE,
@@ -465,31 +483,14 @@ export interface RunnerPreviewUploadRequestV1 {
 }
 
 export function parseRunnerPreviewUploadRequest(value: unknown): RunnerPreviewUploadRequestV1 | null {
-  if (!isRecord(value) || !exactKeys(value, [
-    'schema_version', 'runner_id', 'command_id', 'command_hash', 'lease_token',
-    'side', 'sha256', 'md5', 'content_type', 'byte_size',
-  ]) || value.schema_version !== VIDEO_STUDIO_CONTROL_SCHEMA_VERSION) return null
-  if (!RUNNER_ID_RE.test(String(value.runner_id || ''))) return null
-  if (!UUID_RE.test(String(value.command_id || '')) || !isSha256(value.command_hash)) return null
-  const leaseToken = boundedString(value.lease_token, 256, 24)
-  if (!leaseToken || !VIDEO_STUDIO_PREVIEW_SIDES.includes(value.side as typeof VIDEO_STUDIO_PREVIEW_SIDES[number])) {
-    return null
-  }
-  if (!isSha256(value.sha256) || !MD5_RE.test(String(value.md5 || '')) || value.content_type !== VIDEO_STUDIO_PREVIEW_CONTENT_TYPE) return null
-  if (!Number.isSafeInteger(value.byte_size) || Number(value.byte_size) < 1 || Number(value.byte_size) > VIDEO_STUDIO_PREVIEW_MAX_BYTES) {
-    return null
-  }
+  const parsed = RunnerPreviewUploadRequestV1Schema.safeParse(value)
+  if (!parsed.success) return null
   return {
+    ...parsed.data,
     schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
-    runner_id: String(value.runner_id),
-    command_id: String(value.command_id).toLowerCase(),
-    command_hash: value.command_hash,
-    lease_token: leaseToken,
-    side: value.side as RunnerPreviewUploadRequestV1['side'],
-    sha256: value.sha256,
-    md5: String(value.md5),
-    content_type: VIDEO_STUDIO_PREVIEW_CONTENT_TYPE,
-    byte_size: Number(value.byte_size),
+    // Lowercased because the object key derived from it downstream must be
+    // stable, and a UUID that differs only by case would address a second one.
+    command_id: parsed.data.command_id.toLowerCase(),
   }
 }
 
@@ -500,19 +501,9 @@ export interface RunnerPreviewRetentionRequestV1 {
 }
 
 export function parseRunnerPreviewRetentionRequest(value: unknown): RunnerPreviewRetentionRequestV1 | null {
-  if (!isRecord(value) || !exactKeys(value, ['schema_version', 'runner_id', 'limit'])) return null
-  if (
-    value.schema_version !== VIDEO_STUDIO_CONTROL_SCHEMA_VERSION
-    || !RUNNER_ID_RE.test(String(value.runner_id || ''))
-    || !Number.isSafeInteger(value.limit)
-    || Number(value.limit) < 1
-    || Number(value.limit) > 100
-  ) return null
-  return {
-    schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
-    runner_id: String(value.runner_id),
-    limit: Number(value.limit),
-  }
+  const parsed = RunnerPreviewRetentionRequestV1Schema.safeParse(value)
+  if (!parsed.success) return null
+  return { ...parsed.data, schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION }
 }
 
 const PROJECT_STAGES = [
@@ -898,23 +889,17 @@ export interface RunnerClaimRequestV1 {
 }
 
 export function parseRunnerClaimRequest(value: unknown): RunnerClaimRequestV1 | null {
-  if (!isRecord(value)) return null
-  const claimKeys = value.lease_seconds === undefined
-    ? ['schema_version', 'runner_id', 'software_commit', 'command_schema_versions']
-    : ['schema_version', 'runner_id', 'software_commit', 'command_schema_versions', 'lease_seconds']
-  if (!exactKeys(value, claimKeys) || value.schema_version !== VIDEO_STUDIO_CONTROL_SCHEMA_VERSION) return null
-  if (!RUNNER_ID_RE.test(String(value.runner_id || '')) || !COMMIT_RE.test(String(value.software_commit || ''))) return null
-  if (!Array.isArray(value.command_schema_versions)) return null
-  const versions = value.command_schema_versions
-  if (versions.length !== 1 || versions[0] !== VIDEO_STUDIO_CONTROL_SCHEMA_VERSION) return null
-  const leaseSeconds = value.lease_seconds === undefined ? 120 : Number(value.lease_seconds)
-  if (!Number.isSafeInteger(leaseSeconds) || leaseSeconds < 30 || leaseSeconds > 300) return null
+  const parsed = RunnerClaimRequestV1Schema.safeParse(value)
+  if (!parsed.success) return null
   return {
     schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
-    runner_id: String(value.runner_id),
-    software_commit: String(value.software_commit),
+    runner_id: parsed.data.runner_id,
+    software_commit: parsed.data.software_commit,
     command_schema_versions: [VIDEO_STUDIO_CONTROL_SCHEMA_VERSION],
-    lease_seconds: leaseSeconds,
+    // The default lives here, not in the schema. On the wire the field is
+    // genuinely optional, and a schema that filled it in would make the runner
+    // send a number it never chose.
+    lease_seconds: parsed.data.lease_seconds ?? 120,
   }
 }
 
@@ -932,40 +917,34 @@ export interface RunnerHeartbeatRequestV1 {
 }
 
 export function parseRunnerHeartbeatRequest(value: unknown, now = Date.now()): RunnerHeartbeatRequestV1 | null {
-  if (!isRecord(value)) return null
-  const heartbeatKeys = [
-    'schema_version', 'runner_id', 'status', 'software_commit',
-    'command_schema_versions', 'drive_state', 'pending_receipts', 'occurred_at',
-    ...(value.active_command_id === undefined ? [] : ['active_command_id']),
-    ...(value.lease_token === undefined ? [] : ['lease_token']),
-  ]
-  if (!exactKeys(value, heartbeatKeys) || value.schema_version !== VIDEO_STUDIO_CONTROL_SCHEMA_VERSION) return null
-  if (!RUNNER_ID_RE.test(String(value.runner_id || '')) || !COMMIT_RE.test(String(value.software_commit || ''))) return null
-  if (!['idle', 'working', 'degraded'].includes(String(value.status || ''))) return null
-  if (!['ready', 'unavailable', 'not_configured'].includes(String(value.drive_state || ''))) return null
-  if (!Array.isArray(value.command_schema_versions) || value.command_schema_versions.length !== 1 || value.command_schema_versions[0] !== 1) return null
-  if (!Number.isSafeInteger(value.pending_receipts) || Number(value.pending_receipts) < 0 || Number(value.pending_receipts) > 10_000) return null
-  if (!validDate(value.occurred_at) || Math.abs(Date.parse(value.occurred_at) - now) > 10 * 60 * 1000) return null
-  const activeCommandId = value.active_command_id === undefined
-    ? null
-    : String(value.active_command_id)
-  if (activeCommandId && !UUID_RE.test(activeCommandId)) return null
-  const leaseToken = value.lease_token === null || value.lease_token === undefined
-    ? null
-    : boundedString(value.lease_token, 256, 24)
-  if (activeCommandId && !leaseToken) return null
-  if (!activeCommandId && leaseToken) return null
+  // Shape and field rules come from the contract the runner sends with, so
+  // there is one definition of this wire format rather than two that can drift.
+  // tests/control-plane/contract-equivalence.test.ts pins that this refuses
+  // everything the hand-written parser refused.
+  const parsed = RunnerHeartbeatRequestV1Schema.safeParse(value)
+  if (!parsed.success) return null
+  const heartbeat = parsed.data
+
+  // Freshness stays here, deliberately. It is the only rule that needs a clock,
+  // and it bounds replay: a heartbeat is evidence the runner was alive at a
+  // moment, so one carrying last week's timestamp is either a replay or a
+  // machine whose clock cannot be trusted to order anything else it says.
+  if (Math.abs(Date.parse(heartbeat.occurred_at) - now) > 10 * 60 * 1000) return null
+
   return {
     schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
-    runner_id: String(value.runner_id),
-    status: value.status as RunnerHeartbeatRequestV1['status'],
-    software_commit: String(value.software_commit),
+    runner_id: heartbeat.runner_id,
+    status: heartbeat.status,
+    software_commit: heartbeat.software_commit,
     command_schema_versions: [VIDEO_STUDIO_CONTROL_SCHEMA_VERSION],
-    drive_state: value.drive_state as RunnerHeartbeatRequestV1['drive_state'],
-    active_command_id: activeCommandId,
-    pending_receipts: Number(value.pending_receipts),
-    occurred_at: value.occurred_at,
-    lease_token: leaseToken,
+    drive_state: heartbeat.drive_state,
+    // Absent stays absent as null, which is what every reader downstream and
+    // the database column expect. The schema uses optional because that is what
+    // travels on the wire; the difference is only in this boundary.
+    active_command_id: heartbeat.active_command_id ?? null,
+    pending_receipts: heartbeat.pending_receipts,
+    occurred_at: heartbeat.occurred_at,
+    lease_token: heartbeat.lease_token ?? null,
   }
 }
 
@@ -993,57 +972,25 @@ export interface RunnerCompleteRequestV1 {
 }
 
 export function parseRunnerCompleteRequest(value: unknown): RunnerCompleteRequestV1 | null {
-  if (
-    !isRecord(value)
-    || !exactKeys(value, ['schema_version', 'runner_id', 'lease_token', 'receipt'])
-    || value.schema_version !== VIDEO_STUDIO_CONTROL_SCHEMA_VERSION
-    || !isRecord(value.receipt)
-  ) return null
-  if (!RUNNER_ID_RE.test(String(value.runner_id || ''))) return null
-  const leaseToken = boundedString(value.lease_token, 256, 24)
-  if (!leaseToken) return null
+  // Shape, field rules and every cross-field invariant on the receipt come from
+  // the contract the runner signs and sends with. The hand-written version
+  // reimplemented all of it, including the status/safe_code coupling and the
+  // preview-key binding, so a rule tightened on one side silently was not on
+  // the other.
+  //
+  // The schema is stricter in one place and it is worth naming: it binds
+  // result_refs preview object keys to the receipt's own command_id and content
+  // hash, so a receipt cannot point at another command's preview.
+  const parsed = RunnerCompleteRequestV1Schema.safeParse(value)
+  if (!parsed.success) return null
+  const { runner_id, lease_token, receipt } = parsed.data
 
-  const receipt = value.receipt
-  const receiptKeys = [
-    'schema_version', 'command_id', 'command_hash', 'job_id', 'status',
-    'result_revision_hash', 'result_artifact_hash',
-    ...(receipt.result_refs === undefined ? [] : ['result_refs']),
-    'hard_gates', 'retryable', 'safe_code', 'started_at', 'finished_at',
-    'receipt_hash', 'receipt_signature',
-  ]
-  if (!exactKeys(receipt, receiptKeys)) return null
-  if (receipt.schema_version !== VIDEO_STUDIO_CONTROL_SCHEMA_VERSION) return null
-  if (!UUID_RE.test(String(receipt.command_id || '')) || !identifier(receipt.job_id)) return null
-  if (!isSha256(receipt.command_hash) || !isSha256(receipt.receipt_hash)) return null
-  if (!SIGNATURE_RE.test(String(receipt.receipt_signature || ''))) return null
-  if (!['succeeded', 'requires_editorial_route', 'failed'].includes(String(receipt.status || ''))) return null
-  if (receipt.retryable !== false) return null
-  if (!validDate(receipt.started_at) || !validDate(receipt.finished_at) || Date.parse(receipt.finished_at) < Date.parse(receipt.started_at)) return null
-  const safeCode = receipt.safe_code === null || receipt.safe_code === undefined ? null : String(receipt.safe_code)
-  if (safeCode && !SAFE_CODE_RE.test(safeCode)) return null
-
-  const resultRevisionHash = receipt.result_revision_hash === null || receipt.result_revision_hash === undefined
-    ? null
-    : String(receipt.result_revision_hash)
-  const resultArtifactHash = receipt.result_artifact_hash === null || receipt.result_artifact_hash === undefined
-    ? null
-    : String(receipt.result_artifact_hash)
-  if (resultRevisionHash && !isSha256(resultRevisionHash)) return null
-  if (resultArtifactHash && !isSha256(resultArtifactHash)) return null
-  if (receipt.status !== 'failed' && (!resultRevisionHash || !resultArtifactHash)) return null
-  if (receipt.status === 'failed' && (resultRevisionHash || resultArtifactHash)) return null
-  if (receipt.status === 'succeeded' && safeCode !== null) return null
-  if (receipt.status === 'requires_editorial_route' && safeCode !== 'requires_editorial_route') return null
-
+  // Cross-checks the schema cannot express, because they compare the receipt
+  // against a redaction pass rather than against itself.
   const refs = receipt.result_refs === undefined
     ? undefined
-    : safeResultRefs(receipt.result_refs, String(receipt.command_id))
+    : safeResultRefs(receipt.result_refs as UnknownRecord, receipt.command_id)
   if (receipt.result_refs !== undefined && !refs) return null
-  const hasResultSourceCursor = refs?.result_source_event_count !== undefined
-  if (
-    (receipt.status === 'failed' && hasResultSourceCursor)
-    || (receipt.status !== 'failed' && !hasResultSourceCursor)
-  ) return null
   const hardGates = parseHardGates(receipt.hard_gates)
   if (!hardGates) return null
   if (refs?.review_payload) {
@@ -1066,24 +1013,24 @@ export function parseRunnerCompleteRequest(value: unknown): RunnerCompleteReques
 
   return {
     schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
-    runner_id: String(value.runner_id),
-    lease_token: leaseToken,
+    runner_id,
+    lease_token,
     receipt: {
       schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION,
-      command_id: String(receipt.command_id).toLowerCase(),
+      command_id: receipt.command_id.toLowerCase(),
       command_hash: receipt.command_hash,
-      job_id: String(receipt.job_id),
-      status: receipt.status as RunnerCompleteRequestV1['receipt']['status'],
-      result_revision_hash: resultRevisionHash,
-      result_artifact_hash: resultArtifactHash,
-      ...(refs ? { result_refs: refs } : {}),
+      job_id: receipt.job_id,
+      status: receipt.status,
+      result_revision_hash: receipt.result_revision_hash,
+      result_artifact_hash: receipt.result_artifact_hash,
+      ...(refs === undefined ? {} : { result_refs: refs }),
       hard_gates: hardGates,
-      retryable: receipt.retryable,
-      safe_code: safeCode,
+      retryable: false,
+      safe_code: receipt.safe_code,
       started_at: receipt.started_at,
       finished_at: receipt.finished_at,
       receipt_hash: receipt.receipt_hash,
-      receipt_signature: String(receipt.receipt_signature),
+      receipt_signature: receipt.receipt_signature,
     },
   }
 }

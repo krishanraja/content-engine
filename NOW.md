@@ -1,5 +1,5 @@
 ---
-repo: krishanraja/mindmake-video-studio
+repo: krishanraja/content-engine
 product: Mindmake Video and Carousel Studio
 as_of: 2026-09-07
 head: c90397b
