@@ -50,13 +50,13 @@ test('a weekly job gets a week plus a day before it is stale', () => {
 
 // The ledger row is written BEFORE the response is sent.
 //
-// This was found in production, not in a test: the first real run of the Drive
-// scan did sixty seconds of work, answered 200, and recorded nothing, while
-// three sub-second failures either side of it recorded fine. A serverless
-// function can be frozen the moment its response is finished, so anything
-// after that is a race. A job that runs and does not record is worse than one
-// that does not run, because the tab then says it is stale and the ledger
-// agrees with it.
+// A serverless function can be frozen the moment its response is finished, so
+// recording after answering is a race. No run has been observed lost: a 113
+// second scan looked unrecorded and had simply been read while its insert was
+// still in flight. The ordering is still worth pinning, because the failure it
+// risks is the one the ledger exists to prevent: a job that runs and does not
+// record is worse than one that does not run, since the tab then says it is
+// stale and the ledger agrees with it.
 test('the run is recorded before the response is answered', async () => {
   const order: string[] = []
   const res = {
