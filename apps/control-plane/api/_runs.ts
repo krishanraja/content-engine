@@ -70,8 +70,27 @@ export function withContentRun(job: string, handler: Handler): Handler {
   return async (req, res) => {
     const startedAt = new Date()
     let payload: unknown = null
+    let answered = false
+
+    // The response is BUFFERED, not sent, until the ledger row is written.
+    //
+    // This used to send first and record after. On a fast job that works; on a
+    // slow one it does not, because a serverless function may be frozen the
+    // moment its response is finished and anything after that is a race the
+    // platform is under no obligation to let you win. The first real run of the
+    // Drive scan, sixty seconds of downloads and one vision call, did all of its
+    // work, answered 200, and recorded nothing: three fast failures either side
+    // of it were recorded fine, which is exactly the pattern that makes this
+    // hard to notice.
+    //
+    // A job that runs and does not record is worse than a job that does not
+    // run, because the obligation strip then says it is stale and the ledger
+    // agrees. The cost of the fix is that a cron's HTTP response waits for one
+    // insert; nothing is waiting on that response interactively.
     const originalJson = res.json.bind(res)
-    res.json = ((body: unknown) => { payload = body; return originalJson(body) }) as VercelResponse['json']
+    res.json = ((body: unknown) => { payload = body; answered = true; return res }) as VercelResponse['json']
+    const flush = () => { if (answered) originalJson(payload) }
+
     let threw: Error | null = null
     try {
       await handler(req, res)
@@ -81,6 +100,7 @@ export function withContentRun(job: string, handler: Handler): Handler {
     const statusCode = res.statusCode
     // Not a run: the caller was refused before the job did anything.
     if (!threw && (statusCode === 401 || statusCode === 403 || statusCode === 405 || statusCode === 204)) {
+      flush()
       return
     }
     const { status, reason } = classifyRun(threw ? 500 : statusCode, payload, threw)
@@ -93,6 +113,7 @@ export function withContentRun(job: string, handler: Handler): Handler {
       started_at: startedAt.toISOString(),
       finished_at: new Date().toISOString(),
     })
+    flush()
     if (threw) throw threw
   }
 }

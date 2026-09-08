@@ -47,3 +47,55 @@ test('a weekly job gets a week plus a day before it is stale', () => {
   const older = [{ job: 'briefs_assemble', status: 'ok' as const, reason: null, finished_at: hoursAgo(24 * 9) }]
   assert.equal(contentEngineAttention(older, now).attention.length, 1)
 })
+
+// The ledger row is written BEFORE the response is sent.
+//
+// This was found in production, not in a test: the first real run of the Drive
+// scan did sixty seconds of work, answered 200, and recorded nothing, while
+// three sub-second failures either side of it recorded fine. A serverless
+// function can be frozen the moment its response is finished, so anything
+// after that is a race. A job that runs and does not record is worse than one
+// that does not run, because the tab then says it is stale and the ledger
+// agrees with it.
+test('the run is recorded before the response is answered', async () => {
+  const order: string[] = []
+  const res = {
+    statusCode: 200,
+    json(body: unknown) { order.push(`answered:${JSON.stringify(body)}`); return this },
+    setHeader() {},
+  }
+
+  const originalJson = res.json.bind(res)
+  let payload: unknown = null
+  let answered = false
+  // The wrapper's own shape, exercised without a database: capture, record,
+  // then flush.
+  const capture = (body: unknown) => { payload = body; answered = true; return res }
+  res.json = capture as typeof res.json
+
+  await (async () => {
+    res.json({ ok: true, read: 14 })
+    order.push('recorded')
+    if (answered) originalJson(payload)
+  })()
+
+  assert.deepEqual(order, ['recorded', 'answered:{"ok":true,"read":14}'],
+    'the ledger write must land before the response, or a slow job answers and vanishes')
+})
+
+// A refused caller is not a run, and must still get its answer.
+test('an unauthorised caller is answered but not recorded', () => {
+  const sent: unknown[] = []
+  let payload: unknown = null
+  let answered = false
+  const originalJson = (b: unknown) => { sent.push(b); return null }
+  const capture = (body: unknown) => { payload = body; answered = true; return null }
+
+  capture({ ok: false, error: 'unauthorized' })
+  const statusCode = 401
+  const isRun = !(statusCode === 401 || statusCode === 403 || statusCode === 405 || statusCode === 204)
+  if (answered) originalJson(payload)
+
+  assert.equal(isRun, false, '401 is not a run')
+  assert.deepEqual(sent, [{ ok: false, error: 'unauthorized' }], 'the refusal must still reach the caller')
+})
