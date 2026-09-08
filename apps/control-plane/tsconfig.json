@@ -1,0 +1,27 @@
+{
+  // The serverless tree, and ONLY the serverless tree.
+  //
+  // These files run on Vercel under real Node ESM ("type": "module"), so the
+  // module settings are NodeNext rather than the engine root's Bundler
+  // resolution: it is the only configuration that reproduces how the code is
+  // resolved in production. A bad specifier is not a compile failure at deploy
+  // time; the function builds, ships, and fails to load on the first request
+  // with FUNCTION_INVOCATION_FAILED. Keep this at zero errors.
+  //
+  // strict is off because the routes were lifted from Control Center's
+  // tsconfig.api.json as-is (decision 3 of the unification plan: move first,
+  // unify second). Ratchet it up once parity is proven in production.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node"],
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "strict": false,
+    "allowJs": false
+  },
+  "include": ["api", "lib", "types"]
+}

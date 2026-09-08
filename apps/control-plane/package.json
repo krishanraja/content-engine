@@ -1,0 +1,21 @@
+{
+  "name": "@mindmake/control-plane",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The Content Engine control plane: the editorial, production-brief, video and carousel studio routes and crons that Control Center drives. Deployed as its own Vercel project from this directory.",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck:scripts": "tsc --noEmit -p tsconfig.scripts.json",
+    "check:env-example": "tsx scripts/check-env-example.ts",
+    "check:schedule": "tsx scripts/check-content-engine-schedule.ts",
+    "eval": "tsx scripts/eval/run.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.3.0",
+    "typescript": "5.9.2"
+  }
+}
