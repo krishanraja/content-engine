@@ -309,6 +309,17 @@ create policy panel_runs_service_all on public.panel_runs for all to service_rol
 create policy judge_verdicts_anon_read on public.judge_verdicts for select to anon using (true);
 create policy judge_verdicts_service_all on public.judge_verdicts for all to service_role using (true) with check (true);
 
+-- The append-only triggers are SECURITY DEFINER, which is right for a trigger
+-- and wrong as an RPC: without this they are callable by anon through
+-- /rest/v1/rpc and do nothing but raise. Triggers fire regardless of EXECUTE.
+revoke execute on function public.content_edit_events_reject_mutation() from public, anon, authenticated;
+revoke execute on function public.judge_verdicts_reject_mutation() from public, anon, authenticated;
+
+-- Read with the caller's permissions, not the creator's, so the anon key's RLS
+-- actually applies to what the dashboard reads back.
+alter view public.judge_calibration set (security_invoker = true);
+alter view public.piece_timeline set (security_invoker = true);
+
 comment on table public.content_edit_events is
   'Append-only record of what Krish did to a piece: which edit he ran, whether he kept it, what he typed over it, what he approved. Joined to panel_runs it measures the judges.';
 comment on table public.panel_runs is

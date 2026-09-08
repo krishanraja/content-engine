@@ -193,6 +193,10 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
     assert.match(migration, new RegExp(`${table}_append_only`), `${table} must be append-only: a ledger you can edit is a story`)
   }
   assert.match(migration, /create or replace view public\.judge_calibration/, 'the panel must be measurable against Krish')
+  // The advisor caught both of these on the live database minutes after they
+  // were created; keep them from coming back.
+  assert.match(migration, /security_invoker = true/, 'the ledger views must read with the caller permissions, not the creator\'s')
+  assert.match(migration, /revoke execute on function public\.content_edit_events_reject_mutation/, 'the append-only trigger must not also be an anon-callable RPC')
   assert.match(migration, /abstention is not a wrong answer/, 'an abstention must not read as disagreement')
   assert.match(migration, /v\.verdict not in \('pass', 'kill'\) then null/, 'only a pass or a kill is a prediction the action settles')
   // Every action and artifact kind the route accepts must exist in the CHECK,
