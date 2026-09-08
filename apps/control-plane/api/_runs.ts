@@ -74,19 +74,18 @@ export function withContentRun(job: string, handler: Handler): Handler {
 
     // The response is BUFFERED, not sent, until the ledger row is written.
     //
-    // This used to send first and record after. On a fast job that works; on a
-    // slow one it does not, because a serverless function may be frozen the
-    // moment its response is finished and anything after that is a race the
-    // platform is under no obligation to let you win. The first real run of the
-    // Drive scan, sixty seconds of downloads and one vision call, did all of its
-    // work, answered 200, and recorded nothing: three fast failures either side
-    // of it were recorded fine, which is exactly the pattern that makes this
-    // hard to notice.
+    // This used to send first and record after, which is a race: a serverless
+    // function may be frozen the moment its response is finished, and anything
+    // after that is work the platform is under no obligation to let you finish.
     //
-    // A job that runs and does not record is worse than a job that does not
-    // run, because the obligation strip then says it is stale and the ledger
-    // agrees. The cost of the fix is that a cron's HTTP response waits for one
-    // insert; nothing is waiting on that response interactively.
+    // Honest about the evidence, because the first version of this comment was
+    // not: no run has been observed lost. A 113 second scan looked unrecorded
+    // and was simply read too early, while its insert was still in flight. The
+    // ordering is worth fixing anyway, because the failure it risks is the one
+    // the ledger exists to prevent: a job that runs and does not record is
+    // worse than one that does not run, since the obligation strip then says
+    // it is stale and the ledger agrees with it. The cost is that a cron's HTTP
+    // response waits on one insert, and nothing waits on that response.
     const originalJson = res.json.bind(res)
     res.json = ((body: unknown) => { payload = body; answered = true; return res }) as VercelResponse['json']
     const flush = () => { if (answered) originalJson(payload) }
