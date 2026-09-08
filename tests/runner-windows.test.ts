@@ -212,4 +212,25 @@ describe('Windows runner entry point', () => {
       await rm(fixtureRoot, { recursive: true, force: true })
     }
   }, 30_000)
+
+  it('reports on credentials without ever emitting one', async () => {
+    const source = await readFile(join(ROOT, 'scripts', 'inspect-credentials.ps1'), 'utf8')
+
+    // The script exists to be run when a credential has gone wrong, which is
+    // exactly when someone is most likely to paste its output somewhere. The
+    // decoded blob must reach a hash and nothing else.
+    expect(source).toContain('Substring(0, 12)')
+    expect(source).toMatch(/Chars\s*=\s*value\.Length/)
+    expect(source).not.toMatch(/=\s*value\s*[,;}]/)
+    for (const sink of ['Write-Output $value', 'Write-Host', '$entry.Value', 'Value =']) {
+      expect(source).not.toContain(sink)
+    }
+
+    // Persist 3 can be overwritten from outside the machine and Comment is the
+    // only marker distinguishing our writes from a foreign tool's. Both are the
+    // reason the script exists, so neither may be quietly dropped.
+    expect(source).toContain('Enterprise (roams)')
+    expect(source).toContain('Mindmake Video Studio')
+    expect(source).toContain('CredEnumerateW')
+  })
 })

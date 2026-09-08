@@ -49,6 +49,47 @@ leaves the machine and must stay stable for the life of the signed job history.
 The middle row is the one that fails quietly, which is why it is worth checking
 a receipt lands and not just a heartbeat.
 
+## Where the runner actually is
+
+`SURFACE`. Checkout at `C:\Users\krish\Documents\MindmakeVideoStudio\runner-source`,
+scheduled task `Mindmake Video Studio Runner`, running `node.exe` directly.
+
+Two things there look wrong and are not:
+
+- The runner talks to `https://controlcenter.krishraja.com/api/video-studio/runner`,
+  not the engine domain. That is `DEFAULT_CONTROL_PLANE_URL` in
+  `packages/core/src/runner.ts:78`, and Control Center rewrites the path through
+  to the engine. Repointing it is a later change needing a source reinstall, not
+  an env edit. Do not "correct" it.
+- There is no separate `content-engine` checkout. The control plane is
+  `apps/control-plane` in this repo.
+
+The task principal is `LogonType Interactive` on purpose
+(`scripts/install-runner-task.ps1:81`, asserted by `tests/runner-windows.test.ts:23`).
+An S4U principal runs without the user's password, DPAPI never unlocks, and the
+runner cannot read any of the credentials below. Never change it.
+
+The consequence, which is real: with an At-Logon trigger, Interactive logon and no
+automatic logon configured, **the runner does not come back after a reboot** until
+someone signs in at the console. The five-minute recovery trigger cannot help at a
+lock screen; it exists for sleep and session interruption while signed in.
+
+## The credentials reverted once, on 2026-09-08
+
+`control-center-runner-token` and `control-center-runner-signing-key` were written
+and verified at 14:28, and by 15:42 both held their previous values again.
+`control-center-radar-token` kept its new value. Nothing in this repo writes
+credentials outside `scripts/set-credential.ps1`, which is interactive only.
+
+Cause not established. If it happens again, the four facts that identify it are the
+credential's `Persist` and `Comment` fields, its `LastWritten` timestamp, and
+whether the old value exists in any file on disk. `scripts/inspect-credentials.ps1`
+reads all four without printing a secret.
+
+The failure is silent and delayed, which is what makes it worth writing down. A
+daemon already running holds its key in memory and keeps working; only the next
+start reads the store, fails marker verification, and refuses to come up.
+
 ## The readback
 
 ```
