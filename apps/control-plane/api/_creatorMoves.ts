@@ -47,10 +47,26 @@ export interface CreatorMove {
   rejection_reason: string | null
 }
 
+export interface CreatorYieldRow {
+  slug: string | null
+  name: string | null
+  moves: number
+  advanced: number
+  published: number
+  buried: number
+}
+
 export interface CreatorMoveCtx {
   pillars: { id: string; name: string; description: string }[]
   /** Recent idea headlines (60d, buried included): the novelty floor. */
   recentAngles: string[]
+  /** What each creator's moves have actually come to (creator_yield). The same
+   *  feedback newsletter_source_yield already gives the inspiration sweep: a
+   *  creator whose moves keep getting buried gets a higher bar, never a
+   *  deletion. Krish curated these people; the engine's job is to notice which
+   *  of their moves travel, not to overrule the list. One mechanism, in the
+   *  prompt, rather than a second one silently skipping creators. */
+  creatorYield?: CreatorYieldRow[]
   minBrandFit: number
 }
 
@@ -77,6 +93,11 @@ function buildSystem(ctx: CreatorMoveCtx, creators: CreatorRow[]): string {
   const recentBlock = ctx.recentAngles.length
     ? ctx.recentAngles.map(a => `- ${a}`).join('\n')
     : '- (none on record)'
+  const known = new Set(creators.map(c => c.slug))
+  const yieldRows = (ctx.creatorYield || []).filter(r => r.slug && known.has(r.slug) && r.moves > 0)
+  const yieldBlock = yieldRows.length
+    ? yieldRows.map(r => `- ${r.name || r.slug}: ${r.moves} moves taken, ${r.advanced} advanced, ${r.published} published, ${r.buried} buried`).join('\n')
+    : '- (no track record yet)'
 
   return [
     'You read recent LinkedIn posts by creators Krish Raja explicitly rates. Your job is NOT to summarise the posts. For each post, extract the transferable MOVE and propose Krish\'s differentiated take on that move for his own publication.',
@@ -97,6 +118,10 @@ function buildSystem(ctx: CreatorMoveCtx, creators: CreatorRow[]): string {
     '- Two channels only. lane_slot is "money_of_ai" (second-order economics of AI: pricing, margins, labour, positioning, unit economics; never the launch or benchmark itself) or "built_with_ai" (someone actually built and shipped something).',
     `- Score brand_fit_score 1-10 against the pillar bar. Below ${ctx.minBrandFit} is a REJECT: is_move=false, rejection_reason="low_fit".`,
     '- temporal_class: ephemeral (dies in days), developing (weeks), durable (evergreen). expires_in_days only for ephemeral or developing.',
+    '',
+    '## TRACK RECORD (what these creators\' moves have actually come to)',
+    yieldBlock,
+    'A creator whose moves keep getting buried is not a worse creator, but their moves have not been travelling: raise the bar on those, and read the ones whose moves advance more closely. Never reject a post for its creator alone.',
     '',
     '## ALREADY SAID (hard novelty floor, last 60 days)',
     recentBlock,

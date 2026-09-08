@@ -4,7 +4,8 @@ import { supabase } from './_supabase.js'
 import { runActor } from './_apify.js'
 import { isOnDirection } from './_judgmentLens.js'
 import { loadScrapeableCreators, markScraped } from './_creators.js'
-import { extractCreatorMoves, type CreatorPost, type CreatorMove } from './_creatorMoves.js'
+import { postHash, verbatimCheck } from './_creatorFingerprint.js'
+import { extractCreatorMoves, type CreatorYieldRow, type CreatorPost, type CreatorMove } from './_creatorMoves.js'
 import { checkDuplicate } from './_dedup.js'
 import { canonicalUrl } from './_text.js'
 import { onTeardownBeat } from './_beat.js'
@@ -196,12 +197,13 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // ── Extract moves ───────────────────────────────────────────────────────
-    const [{ data: pillarRows }, { data: angleRows }, config] = await Promise.all([
+    const [{ data: pillarRows }, { data: angleRows }, { data: yieldRows }, config] = await Promise.all([
       supabase.from('content_pillars').select('id, name, description').eq('active', true),
       supabase.from('content_ideas').select('idea')
         .gte('created_at', new Date(Date.now() - 60 * 86_400_000).toISOString())
         .order('created_at', { ascending: false })
         .limit(120),
+      supabase.from('creator_yield').select('slug, name, moves, advanced, published, buried'),
       loadConfig(['creator_move_min_brand_fit', 'cleo_inspiration_min_brand_fit']),
     ])
     const minBrandFit = Number(config['creator_move_min_brand_fit'])
@@ -210,6 +212,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     const moves = await extractCreatorMoves(fresh.slice(0, MAX_EXTRACT), {
       pillars: (pillarRows || []) as { id: string; name: string; description: string }[],
       recentAngles: ((angleRows || []) as { idea: string | null }[]).map(r => r.idea || '').filter(Boolean),
+      creatorYield: (yieldRows || []) as unknown as CreatorYieldRow[],
       minBrandFit,
     })
 
@@ -225,6 +228,12 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       if (m.confidence != null && m.confidence < 0.5) { bump(dropped, 'low_confidence'); continue } // the capture contract: confidence >= 0.5 to insert
       if (!m.lane_slot) { bump(dropped, 'off_channel'); continue }
       if (m.lane_slot === 'money_of_ai' && !onTeardownBeat(m.idea, m.thesis)) { bump(dropped, 'off_beat'); continue }
+      // The premise of taking inspiration from a named creator is that the MOVE
+      // transfers and the wording does not. Until now that line was held by a
+      // prompt asking a model not to paraphrase, which is not a control. This
+      // measures it.
+      const lift = verbatimCheck(`${m.idea} ${m.thesis} ${m.krish_angle}`, post.text)
+      if (!lift.ok) { bump(dropped, 'verbatim_overlap'); continue }
       const dup = await checkDuplicate('content_ideas', { url: m.post_url, title: m.idea, text: `${m.thesis} ${m.krish_angle}` })
       if (dup.is_duplicate) { bump(dropped, 'duplicate_angle'); continue }
       keep.push({ m, post, keys: dup.keys })
@@ -284,9 +293,33 @@ async function handler(req: VercelRequest, res: VercelResponse) {
           generated_by: 'creator_scout',
         },
       })
-      if (!error) written++
-      else if (error.code === '23505') bump(dropped, 'duplicate_race')
-      else throw new Error(error.message)
+      if (error) {
+        if (error.code === '23505') { bump(dropped, 'duplicate_race'); continue }
+        throw new Error(error.message)
+      }
+      written++
+
+      // The move itself, as a record rather than a field in meta nothing reads.
+      // Keyed by the post so a screenshot Krish saves of the same post lands on
+      // this row instead of minting a second idea. Best-effort: the idea is the
+      // product, and a move that fails to record must not cost the seed.
+      try {
+        const { data: idea } = await supabase.from('content_ideas')
+          .select('id').eq('source_type', 'creator_move').eq('source_url', m.post_url)
+          .is('buried_at', null).is('parent_idea_id', null).order('created_at').limit(1).maybeSingle()
+        await supabase.from('creator_moves').upsert({
+          creator_id: post.creator.id,
+          creator_slug: m.creator_slug,
+          post_url: m.post_url,
+          post_hash: postHash(post.text),
+          move: m.move ?? {},
+          why_it_works: m.why_it_works,
+          krish_angle: m.krish_angle,
+          excerpt: post.text.slice(0, 400),
+          seen_via: 'scout',
+          content_idea_id: (idea as { id?: string } | null)?.id ?? null,
+        }, { onConflict: 'post_hash' })
+      } catch { /* the seed is the product */ }
     }
 
     await audit({ open, creatorsScraped, postsFetched, gated, extracted: moves.length, dropped, written, degradedNote })

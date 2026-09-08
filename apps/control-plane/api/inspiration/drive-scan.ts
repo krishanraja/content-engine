@@ -4,6 +4,7 @@ import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
 import { loadConfig, callClaudeBlocks } from '../_content.js'
 import { driveListFolder, driveDownloadFile, googleConfigured } from '../_google.js'
+import { postHash, verbatimCheck } from '../_creatorFingerprint.js'
 import { buildSystemPrompt, buildUserContent, type Pillar, type CreatorRow, type YieldRow, type ReadableDoc, type ReadableBinary } from './_prompt.js'
 import {
   toCandidates, selectWithinBudget, parseSeedArray, filterSeeds,
@@ -284,6 +285,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   let inserted = 0
   let recurrence = 0
   const creatorHits: string[] = []
+  // Counted rather than hidden: a lane that keeps producing near-copies is
+  // something Krish should see, not something the engine quietly filters.
+  let verbatimRejects = 0
 
   for (const seed of survivors as Seed[]) {
     const file = typeof seed.image_source === 'string' ? fileByName.get(seed.image_source) : undefined
@@ -331,6 +335,24 @@ async function handler(req: VercelRequest, res: VercelResponse) {
           .update({ posts_seen: (match.posts_seen || 0) + 1, last_post_url: url, last_post_at: new Date().toISOString() })
           .eq('id', match.id)
         creatorHits.push(match.name)
+
+        // The same record the Tuesday scout writes, keyed by the post. If the
+        // scout already found this post, the upsert lands on its row and Krish
+        // saving a screenshot of it is one move rather than a second idea.
+        const excerpt = String(seed.source_excerpt || '').slice(0, MAX_EXCERPT)
+        const lift = verbatimCheck(`${seed.idea} ${seed.thesis}`, excerpt)
+        if (!lift.ok) verbatimRejects++
+        await supabase.from('creator_moves').upsert({
+          creator_id: match.id,
+          creator_slug: normaliseHandle(match.linkedin_slug) || handle,
+          post_url: url,
+          post_hash: postHash(excerpt),
+          move: {},
+          krish_angle: lift.ok ? String(seed.thesis || '').slice(0, 600) : null,
+          excerpt,
+          seen_via: 'screenshot',
+          content_idea_id: ideaId,
+        }, { onConflict: 'post_hash' })
       }
     }
   }
@@ -356,6 +378,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     inserted,
     recurrence,
     creator_matches: creatorHits,
+    verbatim_rejects: verbatimRejects,
   })
 }
 
