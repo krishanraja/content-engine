@@ -23,5 +23,5 @@
     "strict": false,
     "allowJs": false
   },
-  "include": ["api", "lib"]
+  "include": ["api", "lib", "types"]
 }

@@ -13,5 +13,5 @@
     "noEmit": true,
     "strict": false
   },
-  "include": ["scripts/**/*.ts", "scripts/**/*.ts"]
+  "include": ["scripts/**/*.ts", "types"]
 }
