@@ -89,6 +89,9 @@
     },
     "api/inspiration/drive-scan.ts": {
       "maxDuration": 300
+    },
+    "api/aeo/ingest.ts": {
+      "maxDuration": 120
     }
   }
 }

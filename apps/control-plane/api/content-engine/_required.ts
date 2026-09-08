@@ -36,6 +36,7 @@ export const REQUIRED_VARS: RequiredVar[] = [
   { name: 'N8N_CONTENT_FACTORY_WEBHOOK_URL', why: 'Save Draft and the brief push', kind: 'feature' },
   { name: 'NEWSAPI_KEY', why: 'dated proof in Challenge this', kind: 'feature' },
   { name: 'LENS_RADAR_SECRET', why: 'the lens radar accepts this alongside CRON_SECRET', kind: 'feature' },
+  { name: 'AEO_DISPATCH_TOKEN', why: 'the Run now button that fires the AEO engine workflow', kind: 'feature' },
   { name: 'GOOGLE_SERVICE_ACCOUNT_EMAIL', why: 'Drive and Workspace access', kind: 'feature' },
   { name: 'GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY', why: 'Drive and Workspace access', kind: 'feature' },
 ]

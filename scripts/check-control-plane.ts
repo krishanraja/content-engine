@@ -17,6 +17,7 @@ const GUARDS = [
   'check-judges',
   'check-inspiration-lane',
   'check-creator-moves',
+  'check-aeo-packet-schema',
   'check-content-window',
   'check-unified-content-spine',
   'check-content-chain',
