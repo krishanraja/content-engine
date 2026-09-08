@@ -4,7 +4,7 @@
   "retired_at": "2026-09-07",
   "reason": "Editorial opportunities and runner attention belong in the pull-only Control Center Content surface, not an attached chat.",
   "source": {
-    "repository": "krishanraja/mindmake-video-studio",
+    "repository": "krishanraja/content-engine",
     "branch": "main"
   },
   "replacement": {

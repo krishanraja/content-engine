@@ -62,7 +62,7 @@ Use a dedicated, non-virtualized checkout for the background runner. The support
 
 ```powershell
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\Documents\MindmakeVideoStudio"
-git clone https://github.com/krishanraja/mindmake-video-studio.git "$env:USERPROFILE\Documents\MindmakeVideoStudio\runner-source"
+git clone https://github.com/krishanraja/content-engine.git "$env:USERPROFILE\Documents\MindmakeVideoStudio\runner-source"
 Set-Location "$env:USERPROFILE\Documents\MindmakeVideoStudio\runner-source"
 git switch --detach <approved-40-character-commit>
 npm ci

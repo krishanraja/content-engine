@@ -464,7 +464,11 @@ export const RunnerPreviewUploadRequestV1Schema = z.object({
   runner_id: IdentifierV1Schema,
   command_id: z.string().uuid(),
   command_hash: Sha256V1Schema,
-  lease_token: z.string().min(24),
+  // Bounded above as well as below. The server's hand-written parser capped
+  // this at 256 and the schema did not, so a runner could build a request with
+  // a megabyte lease token that validated locally and was refused on arrival.
+  // Every other lease_token in this file is bounded the same way.
+  lease_token: z.string().min(24).max(256),
   side: z.enum(['before', 'after']),
   sha256: Sha256V1Schema,
   md5: z.string().regex(/^[a-f0-9]{32}$/),
@@ -553,6 +557,20 @@ function refineStoredRunnerReceiptV1(
 export const RunnerReceiptV1Schema = RunnerReceiptShapeV1Schema.superRefine((value, context) => refineStoredRunnerReceiptV1(value, context, true))
 export type RunnerReceiptV1 = z.infer<typeof RunnerReceiptV1Schema>
 
+// What actually goes over the wire on POST /runner/complete.
+//
+// Same story as the heartbeat request: the body was an object literal built in
+// one client method, with a response schema named and the request not. The
+// receipt inside it carries the signature the control plane verifies, so the
+// envelope around it is worth naming rather than reconstructing at both ends.
+export const RunnerCompleteRequestV1Schema = z.object({
+  schema_version: z.literal(CONTROL_PLANE_SCHEMA_VERSION_V1),
+  runner_id: IdentifierV1Schema,
+  lease_token: z.string().min(24).max(256),
+  receipt: RunnerReceiptV1Schema,
+}).strict()
+export type RunnerCompleteRequestV1 = z.infer<typeof RunnerCompleteRequestV1Schema>
+
 // Storage-only compatibility for immutable receipts produced before the source
 // event cursor became mandatory. Never use this schema for network input.
 export const LegacyStoredRunnerReceiptV1Schema = RunnerReceiptShapeV1Schema.extend({
@@ -572,6 +590,39 @@ export const RunnerHeartbeatV1Schema = z.object({
   occurred_at: z.string().datetime(),
 }).strict()
 export type RunnerHeartbeatV1 = z.infer<typeof RunnerHeartbeatV1Schema>
+
+// What actually goes over the wire on POST /runner/heartbeat.
+//
+// RunnerHeartbeatV1Schema is the runner's own state; the request is that plus
+// the lease it is holding. Until this existed the wire shape was an object
+// literal spread inside one client method and a hand-written parser on the
+// server, which is two definitions of one format and no name for either. A
+// server switched to RunnerHeartbeatV1Schema would have rejected every
+// heartbeat from a runner working a command, because that schema is strict and
+// has no lease_token.
+//
+// The coupling is a real rule, not tidiness: a runner reporting an active
+// command without its lease is either lying about the claim or has lost it,
+// and a lease with no command is a lease nobody can be holding. Both were
+// enforced on the server and nowhere else, so the runner could build one and
+// only find out over HTTP.
+//
+// Freshness is deliberately NOT here. The server bounds |occurred_at - now| to
+// ten minutes to limit replay, and that needs a clock: a schema that consults
+// wall-clock time stops being a description of the format and starts failing
+// differently depending on when it runs.
+export const RunnerHeartbeatRequestV1Schema = RunnerHeartbeatV1Schema.extend({
+  lease_token: z.string().min(24).max(256).optional(),
+}).strict().superRefine((value, context) => {
+  if (Boolean(value.active_command_id) !== Boolean(value.lease_token)) {
+    context.addIssue({
+      code: 'custom',
+      path: ['lease_token'],
+      message: 'an active command requires the lease it was claimed under, and a lease requires the command it was claimed for',
+    })
+  }
+})
+export type RunnerHeartbeatRequestV1 = z.infer<typeof RunnerHeartbeatRequestV1Schema>
 
 export const MagicEditCandidateProjectionV1Schema = z.object({
   schema_version: z.literal(CONTROL_PLANE_SCHEMA_VERSION_V1),
@@ -630,7 +681,31 @@ const RunnerProjectExpectedPlatformStateShapeV1 = {
   semantic_target_map_hash: Sha256V1Schema,
 }
 
-function refineRunnerProjectParentPair(value: { active_candidate_hash: string | null; parent_revision_hash: string | null; parent_artifact_hash: string | null; parent_candidate_hash: string | null }, context: z.RefinementCtx): void {
+// The parameter is optional-and-nullable, and the body normalises before it
+// compares, so this refinement typechecks under strict and non-strict alike.
+//
+// It used to annotate the fields as required `string | null`, which only
+// matches what zod infers with strictNullChecks on. The control plane compiles
+// with strict off, where the same schema infers them optional, so importing
+// this file there failed to typecheck even though the runtime is identical.
+// The fields are always present at runtime, both being required in the schema;
+// the `?? null` exists so the comparisons stay correct either way rather than
+// relying on that.
+function refineRunnerProjectParentPair(
+  input: {
+    active_candidate_hash?: string | null
+    parent_revision_hash?: string | null
+    parent_artifact_hash?: string | null
+    parent_candidate_hash?: string | null
+  },
+  context: z.RefinementCtx,
+): void {
+  const value = {
+    active_candidate_hash: input.active_candidate_hash ?? null,
+    parent_revision_hash: input.parent_revision_hash ?? null,
+    parent_artifact_hash: input.parent_artifact_hash ?? null,
+    parent_candidate_hash: input.parent_candidate_hash ?? null,
+  }
   if ((value.parent_revision_hash === null) !== (value.parent_artifact_hash === null)) context.addIssue({ code: 'custom', path: ['parent_revision_hash'], message: 'project parent revision and artifact hashes must be a complete pair' })
   if (value.parent_revision_hash === null && value.parent_candidate_hash !== null) context.addIssue({ code: 'custom', path: ['parent_candidate_hash'], message: 'project parent candidate cannot exist without parent revision and artifact hashes' })
   if (value.active_candidate_hash === null && (value.parent_revision_hash !== null || value.parent_artifact_hash !== null || value.parent_candidate_hash !== null)) context.addIssue({ code: 'custom', path: ['active_candidate_hash'], message: 'a base platform state cannot retain magic-edit parent lineage' })

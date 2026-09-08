@@ -147,6 +147,50 @@ check(
   'replay.ts must use guardOperatorOrCron: plain guard() fails open when ACCESS_CODE is unset, and this route can invoke every job in the engine',
 )
 
+// ------------------------------------------------- how contracts are imported ---
+// `@mindmake/contracts` resolves at build time and fails at runtime. npm links
+// the workspace package, the tracer resolves to its raw ./src/index.ts under
+// node_modules, and that file is neither bundled nor executable by Node.
+// Verified on a preview deployment: ERR_MODULE_NOT_FOUND for
+// /var/task/node_modules/@mindmake/contracts/src/index.ts, behind a green build.
+//
+// This is the Phase 1 failure exactly: a control plane that builds clean and
+// ships functions that cannot run. It cost a production readback to find once.
+// The relative path works because the whole repo is the deployment root, so the
+// file is compiled like any route.
+for (const file of walk('api')) {
+  const source = readFileSync(join(ROOT, file), 'utf8')
+  // Any import form, not just `from '…'`. The first version of this check only
+  // matched the `from` form and passed a bare side-effect import, which is the
+  // same runtime failure. Caught by testing the guard against the bad code.
+  check(
+    !/['"]@mindmake\/contracts(?:\/[^'"]*)?['"]/.test(source),
+    `${file} names @mindmake/contracts. That resolves during the build and throws ERR_MODULE_NOT_FOUND at runtime. Import the source relatively instead, the way _runnerContracts.ts does.`,
+  )
+}
+
+// --------------------------------- contracts dependencies are declared here ---
+// Vercel installs this app's package.json, not the workspace root's, so a
+// package the contracts source imports is absent at runtime unless the control
+// plane declares it too. The five runner routes shipped a green build and then
+// answered 500 to everything with
+// "Cannot find package 'zod' imported from /var/task/packages/contracts/src/index.js":
+// the contracts file compiled and shipped, its dependency did not.
+//
+// Versions must match exactly. Two copies of zod would mean a schema built by
+// one and parsed by the other, which fails in ways that look like bad data.
+{
+  const contractsPkg = JSON.parse(readFileSync(join(ROOT, '..', '..', 'packages', 'contracts', 'package.json'), 'utf8'))
+  const appPkg = JSON.parse(read('package.json'))
+  const appDeps: Record<string, string> = { ...appPkg.dependencies, ...appPkg.devDependencies }
+  for (const [name, version] of Object.entries(contractsPkg.dependencies || {}) as [string, string][]) {
+    check(
+      appDeps[name] === version,
+      `apps/control-plane/package.json must declare ${name}@${version}, the version @mindmake/contracts uses. It is ${appDeps[name] ? `pinned to ${appDeps[name]}` : 'absent'}, so the deployed function cannot load the schemas it imports.`,
+    )
+  }
+}
+
 if (failures.length > 0) {
   console.error(`FAIL ${failures.length} of ${checks} run recovery checks`)
   for (const failure of failures) console.error(`  - ${failure}`)

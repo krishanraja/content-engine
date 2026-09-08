@@ -6,6 +6,8 @@ import {
   ProductionBriefCompleteRequestV1Schema,
   ProductionBriefCompleteResponseV1Schema,
   RunnerClaimRequestV1Schema,
+  RunnerCompleteRequestV1Schema,
+  RunnerHeartbeatRequestV1Schema,
   RunnerClaimResponseV1Schema,
   RunnerCompleteResponseV1Schema,
   RunnerHeartbeatResponseV1Schema,
@@ -172,22 +174,30 @@ export class ControlPlaneClient {
   }
 
   async heartbeat(heartbeatInput: RunnerHeartbeatV1, leaseToken?: string): Promise<{ lease_expires_at?: string }> {
-    const heartbeat = RunnerHeartbeatV1Schema.parse(heartbeatInput)
-    const response = RunnerHeartbeatResponseV1Schema.parse(await this.post('heartbeat', {
-      ...heartbeat,
+    // Validated as the request it actually is, not as the runner state plus an
+    // untyped spread. The old shape was assembled here and hand-parsed on the
+    // server, so the rule that an active command must carry its lease lived on
+    // one side only: this could build a body the server would refuse and find
+    // out over HTTP.
+    const request = RunnerHeartbeatRequestV1Schema.parse({
+      ...heartbeatInput,
       ...(leaseToken ? { lease_token: leaseToken } : {}),
-    }))
+    })
+    const response = RunnerHeartbeatResponseV1Schema.parse(await this.post('heartbeat', request))
     return response.lease_expires_at ? { lease_expires_at: response.lease_expires_at } : {}
   }
 
   async complete(input: { runner_id: string; lease_token: string; receipt: RunnerReceiptV1 }): Promise<{ duplicate: boolean; command_id: string; receipt_hash: string; command_status: 'succeeded' | 'failed' | 'attention' }> {
-    const receipt = RunnerReceiptV1Schema.parse(input.receipt)
-    const response = RunnerCompleteResponseV1Schema.parse(await this.post('complete', {
+    // Same reason as heartbeat: the envelope around a signed receipt is worth a
+    // name, so both ends agree on it rather than rebuilding it independently.
+    const request = RunnerCompleteRequestV1Schema.parse({
       schema_version: 1,
       runner_id: input.runner_id,
       lease_token: input.lease_token,
-      receipt,
-    }))
+      receipt: input.receipt,
+    })
+    const receipt = request.receipt
+    const response = RunnerCompleteResponseV1Schema.parse(await this.post('complete', request))
     const expectedStatus = receipt.status === 'requires_editorial_route' ? 'attention' : receipt.status
     if (response.command_id !== receipt.command_id || response.receipt_hash !== receipt.receipt_hash || response.command_status !== expectedStatus) {
       throw new Error('control-plane completion acknowledgement does not match the submitted receipt')

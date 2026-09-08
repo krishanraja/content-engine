@@ -1,7 +1,6 @@
 {
   "schema_version": 1,
   "upstream_contracts": {
-    "control_center": { "repository": "krishanraja/control-center", "main_commit_verified": "6759bf51380bc8805640b03ab5c0a8fd5505dabe", "verified_at": "2026-09-04", "adapter_pr": 244, "security_pr": 246 },
     "mm_ctrl": { "repository": "krishanraja/mm-ctrl", "main_commit_verified": "e5868aad38c5508894d395bcedf220e768569f05", "verified_at": "2026-09-04", "adapter_pr": 371 }
   },
   "output": { "width": 1080, "height": 1920, "fps": 30, "audio_hz": 48000, "lufs": -14, "true_peak_dbtp": -1 },

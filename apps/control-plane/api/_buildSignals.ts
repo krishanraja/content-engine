@@ -90,7 +90,7 @@ export const NAMED_BUILD_PRODUCTS: readonly BuildProduct[] = Object.freeze([
     never_reveal: 'family names, personal folder names, identity or medical documents, local paths with a user name',
   },
   {
-    repo: 'krishanraja/mindmake-video-studio',
+    repo: 'krishanraja/content-engine',
     key: 'video_studio',
     public_name: 'video-studio',
     role: 'the bespoke AI video production agency: a governed render engine, carousel engine and review surface',

@@ -80,7 +80,7 @@ describe('repository operating contracts', () => {
     expect(heartbeat.status).toBe('retired')
     expect(heartbeat.retired_at).toBe('2026-09-07')
     expect(heartbeat.reason).toContain('not an attached chat')
-    expect(heartbeat.source).toEqual({ repository: 'krishanraja/mindmake-video-studio', branch: 'main' })
+    expect(heartbeat.source).toEqual({ repository: 'krishanraja/content-engine', branch: 'main' })
     expect(heartbeat.replacement).toEqual({
       surface: 'control_center_content',
       delivery: 'pull_only',

@@ -30,7 +30,7 @@ function publicSession(row: RecordValue): RecordValue {
     client: row.client,
     actor: { actor_id: row.actor_id, display_name: row.display_name },
     capabilities: row.capabilities,
-    repository: { name: 'krishanraja/mindmake-video-studio', revision: row.repository_revision },
+    repository: { name: 'krishanraja/content-engine', revision: row.repository_revision },
     linked_job_ids: row.linked_job_ids,
     privacy_mode: row.privacy_mode,
     tracking_state: row.tracking_state,
