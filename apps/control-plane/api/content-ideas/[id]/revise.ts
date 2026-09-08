@@ -1,4 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { randomUUID } from 'node:crypto'
+import { sha256 } from '../../content-edits.js'
 import { supabase } from '../../_supabase.js'
 import { openStream, send, fail, streamClaude } from '../../_stream.js'
 import { corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId, preamble, readMaterials, sanitizeVoice } from '../../_content.js'
@@ -27,7 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const b = (req.body || {}) as {
     mode?: string; value?: string; instruction?: string; hint?: string
-    source_text?: string; selection?: string
+    source_text?: string; selection?: string; client?: string
   }
   const mode = b.mode || 'feedback'
   const sourceText = (b.source_text || '').trim()
@@ -111,7 +113,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .update({ meta: { ...meta, revisions: revisions.slice(0, 20) }, updated_at: new Date().toISOString() })
     .eq('id', id)
 
-  send(res, 'done', { ok: true, revised, mode, value: b.value || null })
+  // The ledger half. meta.revisions[] records that the button was pressed;
+  // this records what it was pressed ON, so the composer can later resolve the
+  // same event to accepted or rejected. Without the pairing we are back to
+  // knowing which edits Krish tried and never which ones survived, which is the
+  // gap that made meta.revisions[] unreadable for a year.
+  //
+  // Best effort on purpose: a ledger write must never cost him the rewrite he
+  // just waited twenty seconds for.
+  const editEventId = randomUUID()
+  try {
+    await supabase.from('content_edit_events').insert({
+      idempotency_key: editEventId,
+      subject_table: 'content_ideas',
+      subject_id: id,
+      artifact_kind: 'draft',
+      action: 'magic_invoked',
+      mode,
+      value: b.value ? String(b.value).slice(0, 120) : null,
+      instruction: b.instruction ? String(b.instruction).slice(0, 1600) : null,
+      selection_hash: b.selection ? sha256(String(b.selection)) : null,
+      before_hash: sha256(sourceText),
+      chars_before: sourceText.length,
+      chars_after: revised.length,
+      confirmation_state: 'pending',
+      surface: 'composer',
+      client: typeof b.client === 'string' && b.client === 'mobile' ? 'mobile' : 'desktop',
+    })
+  } catch { /* the rewrite is the product; the ledger is the record of it */ }
+
+  // The client returns this to resolve the event when Krish accepts or keeps
+  // the current version.
+  send(res, 'done', { ok: true, revised, mode, value: b.value || null, edit_event_id: editEventId })
   return res.end()
 }
 

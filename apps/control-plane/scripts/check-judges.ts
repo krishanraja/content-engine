@@ -162,7 +162,27 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.doesNotMatch(route, /\bbody_text\b|\bfull_text\b|transcript/, 'the ledger must never carry a body or a transcript')
 }
 
-// ── 8. The migration matches the code ───────────────────────────────────────
+// ── 8. The ledger is actually written from the paths that matter ────────────
+// A ledger nothing writes to is worse than no ledger: it reads as evidence of
+// absence. These are the three paths that carry the signal, and each one has
+// gone unrecorded before.
+{
+  const patch = read('api/content-ideas.ts')
+  assert.match(patch, /content_edit_events/, 'the PATCH choke point must record manual edits: it is the only place that sees what Krish typed over the machine')
+  assert.match(patch, /action: 'manual_edit'/, 'a body change must be recorded as a manual edit')
+  assert.match(patch, /stateAction === 'published' \? 'published'|updates\.state === 'published' \? 'published'/, 'a publish must be recorded')
+  assert.match(patch, /panel_run_id: panelRunId/, 'a decision must bind to the panel that preceded it, or calibration is guesswork')
+
+  const revise = read('api/content-ideas/[id]/revise.ts')
+  assert.match(revise, /action: 'magic_invoked'/, 'an invoked edit must be recorded')
+  assert.match(revise, /confirmation_state: 'pending'/, 'an invocation is pending until Krish keeps or discards it')
+  assert.match(revise, /edit_event_id/, 'the client needs the event id to resolve the invocation to accepted or rejected')
+  // Both must be best-effort: the rewrite and the save are the product.
+  assert.match(revise, /catch \{ \/\* the rewrite is the product/, 'a ledger failure must never cost the rewrite')
+  assert.match(patch, /catch \{ \/\* the edit is the product/, 'a ledger failure must never cost the edit')
+}
+
+// ── 9. The migration matches the code ───────────────────────────────────────
 {
   const migration = readFileSync(new URL('../../../supabase/migrations/20260909090000_edit_ledger_and_judge_panel.sql', import.meta.url), 'utf8')
   for (const table of ['content_edit_events', 'judge_verdicts', 'panel_runs', 'composer_sessions']) {

@@ -7,7 +7,9 @@ import { canonicalUrl, titleNorm, contentHash } from './_text.js'
 import { classifyRelevance, relevanceReasonCode } from './_relevance.js'
 import { SYNTHESIS_MODEL } from './_models.js'
 import { recordShip } from './_ships.js'
+import { randomUUID } from 'node:crypto'
 import { contentRevisionHash, createProductionApproval, jsonRecord, readProductionApproval } from './_productionBrief.js'
+import { sha256 } from './content-edits.js'
 
 // Content ideas inbox endpoint.
 //
@@ -428,6 +430,61 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(409).json({ ok: false, error: 'content_changed_retry' })
       }
       return res.status(500).json({ ok: false, error: error.message })
+    }
+
+    // The edit ledger. This PATCH is the single choke point for every manual
+    // edit and every state move on a piece, which makes it the one place that
+    // can close the product's biggest blind spot: the composer's autosave
+    // overwrote body in place with no prior value, so what Krish typed over
+    // the machine's output was invisible. `current` is already read and the
+    // revision hash is already computed for the approval interlock, so the
+    // record costs one insert and no extra work.
+    //
+    // Best effort, always: his edit has already saved, and losing the write he
+    // just made because a ledger insert failed would be the wrong trade.
+    if (current) {
+      const beforeText = String(current.body ?? '')
+      const afterText = typeof updates.body === 'string' ? updates.body : beforeText
+      const bodyChanged = typeof updates.body === 'string' && updates.body !== beforeText
+      const stateAction = updates.state === 'approved' ? 'approved'
+        : updates.state === 'dropped' ? 'binned'
+        : updates.state === 'published' ? 'published'
+        : null
+
+      const events: Record<string, unknown>[] = []
+      const surface = typeof body.surface === 'string' && body.surface === 'mobile_deck' ? 'mobile_deck' : 'composer'
+      const client = typeof body.client === 'string' && body.client === 'mobile' ? 'mobile' : 'desktop'
+      const panelRunId = typeof body.panel_run_id === 'string' ? body.panel_run_id : null
+
+      if (bodyChanged) {
+        events.push({
+          idempotency_key: randomUUID(),
+          subject_table: 'content_ideas', subject_id: id, artifact_kind: 'draft',
+          action: 'manual_edit',
+          before_hash: sha256(beforeText), after_hash: sha256(afterText),
+          chars_before: beforeText.length, chars_after: afterText.length,
+          // Bounded and structured: what moved, never the two bodies again.
+          delta_features: [{ feature: 'chars', before: beforeText.length, after: afterText.length }],
+          surface, client,
+        })
+      }
+      if (stateAction) {
+        events.push({
+          idempotency_key: randomUUID(),
+          subject_table: 'content_ideas', subject_id: id, artifact_kind: 'draft',
+          action: stateAction,
+          before_hash: sha256(beforeText),
+          ...(stateAction === 'published' || stateAction === 'approved' ? { after_hash: sha256(afterText) } : {}),
+          // Binds the decision to the panel that preceded it, so calibration is
+          // a join and not a guess about which verdict came before which call.
+          ...(panelRunId ? { panel_run_id: panelRunId } : {}),
+          ...(typeof body.reason_code === 'string' ? { reason_code: body.reason_code } : {}),
+          surface, client,
+        })
+      }
+      if (events.length) {
+        try { await supabase.from('content_edit_events').insert(events) } catch { /* the edit is the product */ }
+      }
     }
 
     // A published piece left the machine toward readers: it is a ship on the
