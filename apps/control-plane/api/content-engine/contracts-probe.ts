@@ -12,7 +12,10 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
   res.setHeader('Cache-Control', 'no-store')
   try {
-    const mod = await import('@mindmake/contracts')
+    // Relative into the workspace source, not the package name. The whole repo
+    // is the deployment root (/var/task), so this is a .ts file Vercel's builder
+    // compiles like any route, rather than raw TypeScript under node_modules.
+    const mod = await import('../../../../packages/contracts/src/index.js')
     const names = Object.keys(mod).filter(k => /Schema$/.test(k)).sort()
     let parsed: unknown = 'not attempted'
     const schema = (mod as Record<string, unknown>).ProductionBriefV1Schema as

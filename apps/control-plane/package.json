@@ -12,8 +12,7 @@
     "eval": "tsx scripts/eval/run.ts"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.103.0",
-    "@mindmake/contracts": "*"
+    "@supabase/supabase-js": "^2.103.0"
   },
   "devDependencies": {
     "@types/node": "24.3.0",
