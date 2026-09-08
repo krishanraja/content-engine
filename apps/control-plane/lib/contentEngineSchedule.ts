@@ -37,6 +37,7 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   { job: 'briefs_assemble',  path: '/api/briefs/assemble',               label: 'Weekly brief',          everyHours: WEEK, graceHours: DAY },
   { job: 'purge',            path: '/api/purge/run',                     label: 'Monday purge',          everyHours: WEEK, graceHours: DAY },
   { job: 'runner_watch',     path: '/api/video-studio/runner/watch',     label: 'Studio runner watch',   everyHours: DAY,  graceHours: 12 },
+  { job: 'learning_compile', path: '/api/learning/compile',              label: 'Learning compiler',     everyHours: WEEK, graceHours: DAY },
 ]
 
 export interface ContentEngineRunRow {
