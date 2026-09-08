@@ -111,6 +111,7 @@ Stdout is JSON. Diagnostics use stderr. Stable failure codes are documented in [
 ## Design
 
 - [Architecture and contracts](docs/ARCHITECTURE.md)
+- [Reference video calibration](docs/REFERENCE_VIDEO_CALIBRATION.md)
 - [Deployment and secret setup](docs/DEPLOYMENT.md)
 - [Four-week pilot](docs/PILOT.md)
 - [Operations and recovery](docs/OPERATIONS.md)

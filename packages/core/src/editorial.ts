@@ -1,4 +1,4 @@
-import type { CandidateV1, EditSegmentV1, JobManifestV1 } from '@mindmake/contracts'
+import type { CandidateV1, EditSegmentV1, JobManifestV1, PreferenceRuleV1 } from '@mindmake/contracts'
 import type { TranscriptDocument, TranscriptWord } from './candidates.js'
 import { sliceTranscript } from './captions.js'
 
@@ -23,6 +23,33 @@ export interface EditorialValidation {
   source_token_count: number
   caption_token_count: number
   removed_source_tokens: string[]
+}
+
+export const INVESTIGATIVE_SHORT_REFERENCE_RULE_ID = 'pref-money-investigative-receipts-v1'
+
+function preferenceAppliesToCandidate(rule: PreferenceRuleV1, candidate: CandidateV1): boolean {
+  if (rule.status !== 'active') return false
+  if (rule.scope.level === 'global') return true
+  if (rule.scope.level === 'series') return rule.scope.key === candidate.series
+  if (rule.scope.level === 'mode') return rule.scope.key === candidate.mode
+  if (rule.scope.level === 'job') return rule.scope.key === candidate.job_id
+  return false
+}
+
+export function investigativeShortPreferenceIssues(candidate: CandidateV1, preferences: PreferenceRuleV1[] = []): string[] {
+  const enabled = preferences.some((rule) => rule.rule_id === INVESTIGATIVE_SHORT_REFERENCE_RULE_ID && preferenceAppliesToCandidate(rule, candidate))
+  if (!enabled) return []
+
+  const text = `${candidate.hook} ${candidate.transcript} ${candidate.payoff}`.toLowerCase()
+  const issues: string[] = []
+  const sensationalTerms = [...new Set(text.match(/\b(?:insane|unbelievable|shocking|mind[- ]?blowing|terrifying|crazy|game[- ]?changer)\b/g) || [])]
+  if (sensationalTerms.length) issues.push(`confirmed investigative preference rejects unsupported sensational framing: ${sensationalTerms.join(', ')}`)
+  if (/\b(?:follow (?:me|us|for)|subscribe|smash (?:the )?like|hit (?:the )?follow)\b/i.test(text)) issues.push('confirmed investigative preference rejects follow or subscribe requests inside the story')
+  if (/\b(?:comment below|drop (?:a )?comment|let me know in the comments|what do you think\??)\b/i.test(text)) issues.push('confirmed investigative preference rejects empty comment prompts in place of an earned ending')
+  if (candidate.scores.evidence < 0.8) issues.push('confirmed investigative preference requires stronger source receipts before this angle is approved')
+  if (candidate.scores.visual_proof < 0.75) issues.push('confirmed investigative preference requires a more concrete visual proof plan')
+  if (!candidate.claims.length) issues.push('confirmed investigative preference requires at least one explicit claim boundary for investigative work')
+  return [...new Set(issues)]
 }
 
 export function normalizeSpokenToken(value: string): string {
@@ -169,7 +196,7 @@ export function suggestCaptionTreatment(source: string): string {
   return /[.!?]$/.test(joined) ? joined : `${joined}.`
 }
 
-export function validateEditorialCandidate(candidate: CandidateV1, transcript: TranscriptDocument, job: JobManifestV1, thresholds: EditorialThresholds): EditorialValidation {
+export function validateEditorialCandidate(candidate: CandidateV1, transcript: TranscriptDocument, job: JobManifestV1, thresholds: EditorialThresholds, preferences: PreferenceRuleV1[] = []): EditorialValidation {
   const hardBlocks: string[] = []
   const softBlocks: string[] = []
   if (candidate.job_id !== job.job_id || candidate.series !== job.series || candidate.mode !== job.mode) hardBlocks.push('candidate job, series, and mode must match the job manifest')
@@ -255,11 +282,12 @@ export function validateEditorialCandidate(candidate: CandidateV1, transcript: T
   if (plan.structure === 'stitched' && plan.segments.length > 4) softBlocks.push('more than four stitched sections risks a choppy result; justify every additional cut at treatment review')
   const averageSegment = plan.total_duration_ms / plan.segments.length
   if (plan.structure === 'stitched' && averageSegment < 2500) softBlocks.push('average stitched section is under 2.5 seconds; check comprehension, jump cuts, and audio continuity')
+  softBlocks.push(...investigativeShortPreferenceIssues(candidate, preferences))
 
   return { hard_blocks: [...new Set(hardBlocks)], soft_blocks: [...new Set(softBlocks)], ...fidelity }
 }
 
-export function validateShortNativeEditorialCandidate(candidate: CandidateV1, thresholds: EditorialThresholds, presenterName?: string): { hard_blocks: string[]; soft_blocks: string[] } {
+export function validateShortNativeEditorialCandidate(candidate: CandidateV1, thresholds: EditorialThresholds, presenterName?: string, preferences: PreferenceRuleV1[] = []): { hard_blocks: string[]; soft_blocks: string[] } {
   const hardBlocks: string[] = []
   const softBlocks: string[] = []
   const editorial = candidate.editorial
@@ -285,5 +313,6 @@ export function validateShortNativeEditorialCandidate(candidate: CandidateV1, th
   const declaredNonPresenterChris = candidate.identity_mentions.some((mention) => normalizeSpokenToken(mention.name) === 'chris' && mention.role !== 'presenter')
   if (presenterName?.toLowerCase() === 'krish' && /\bchris\b/i.test(`${candidate.transcript} ${candidate.hook} ${candidate.payoff}`) && !declaredNonPresenterChris) hardBlocks.push('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
   if (candidate.transcript.split(/\s+/).length > 180) softBlocks.push('short-native script may exceed the intended short-form duration; verify delivery time before recording')
-  return { hard_blocks: [...new Set(hardBlocks)], soft_blocks: softBlocks }
+  softBlocks.push(...investigativeShortPreferenceIssues(candidate, preferences))
+  return { hard_blocks: [...new Set(hardBlocks)], soft_blocks: [...new Set(softBlocks)] }
 }
