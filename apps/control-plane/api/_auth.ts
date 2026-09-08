@@ -172,6 +172,42 @@ export function guardSensitiveRead(req: VercelRequest, res: VercelResponse, meth
   return false
 }
 
+/** Fail-closed gate for the recovery routes: the dashboard's cookie, or the
+ *  `CRON_SECRET` bearer.
+ *
+ *  Not `guard`, for two reasons. `guard` fails OPEN when ACCESS_CODE is unset,
+ *  which is right for a dashboard read and wrong for a route that can invoke
+ *  every job in the engine; a dropped env var would make it world-callable.
+ *  And `guard` has no bearer arm, so nothing without a browser could reach it,
+ *  which left the replay path unexercisable by a script and unreachable by any
+ *  scheduled caller.
+ *
+ *  Not `guardCronRoute` either: its GET arm demands the secret, and the
+ *  dashboard needs GET with a cookie to list what it may replay. */
+export function guardOperatorOrCron(req: VercelRequest, res: VercelResponse, methods = ['GET', 'POST']): boolean {
+  applyGatedHeaders(res)
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  if (req.method === 'OPTIONS') { res.status(204).end(); return true }
+  if (!methods.includes(req.method || '')) {
+    res.status(405).json({ ok: false, error: 'method_not_allowed' })
+    return true
+  }
+  const accessCode = process.env.ACCESS_CODE || ''
+  const expectedCookie = accessCode ? createHash('sha256').update(accessCode).digest('hex') : ''
+  const suppliedCookie = parseCookies(req.headers.cookie)[COOKIE] || ''
+  const browserAllowed = Boolean(expectedCookie) && safeEqual(suppliedCookie, expectedCookie)
+
+  const cronSecret = process.env.CRON_SECRET || ''
+  const authorization = req.headers.authorization || ''
+  const bearerAllowed = Boolean(cronSecret) && safeEqual(authorization, `Bearer ${cronSecret}`)
+
+  if (!browserAllowed && !bearerAllowed) {
+    res.status(401).json({ ok: false, error: 'unauthorized' })
+    return true
+  }
+  return false
+}
+
 /** Guard for the cron-driven routes: `GET` from Vercel's scheduler with the
  *  CRON_SECRET, or a manual `POST` from someone who is already through the edge
  *  gate (or who holds the secret).

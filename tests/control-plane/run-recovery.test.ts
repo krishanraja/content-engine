@@ -95,6 +95,64 @@ describe('replay url', () => {
   })
 })
 
+describe('the replay gate', () => {
+  // Exercised against the real _auth.ts, with env set per case. The property
+  // that matters is the one plain guard() does NOT have: an unset ACCESS_CODE
+  // must not open a route that can invoke every job in the engine.
+  const call = async (env: Record<string, string | undefined>, req: Record<string, unknown>) => {
+    const previous = { ACCESS_CODE: process.env.ACCESS_CODE, CRON_SECRET: process.env.CRON_SECRET }
+    Object.assign(process.env, env)
+    for (const [k, v] of Object.entries(env)) if (v === undefined) delete process.env[k]
+    try {
+      const { guardOperatorOrCron } = await import('../../apps/control-plane/api/_auth.js')
+      let status = 0
+      const res = {
+        statusCode: 200,
+        setHeader() {},
+        status(code: number) { status = code; return res },
+        json() { return res },
+        end() { return res },
+      }
+      const stopped = guardOperatorOrCron(
+        { method: 'POST', headers: {}, ...req } as never,
+        res as never,
+      )
+      return { stopped, status }
+    } finally {
+      Object.assign(process.env, previous)
+      for (const [k, v] of Object.entries(previous)) if (v === undefined) delete process.env[k]
+    }
+  }
+
+  test('an absent ACCESS_CODE does not open the route', async () => {
+    // guard() returns true from hasAccess here, deliberately, so the dashboard
+    // survives a dropped env var. This route must not inherit that.
+    const result = await call({ ACCESS_CODE: undefined, CRON_SECRET: undefined }, { headers: {} })
+    assert.equal(result.stopped, true, 'a route that can run purge must never fail open')
+    assert.equal(result.status, 401)
+  })
+
+  test('the cron secret is accepted, a wrong one is not', async () => {
+    const secret = 'cs_' + 'a'.repeat(32)
+    const good = await call({ CRON_SECRET: secret }, { headers: { authorization: `Bearer ${secret}` } })
+    assert.equal(good.stopped, false, 'the bearer arm is what makes this reachable by a script')
+
+    const bad = await call({ CRON_SECRET: secret }, { headers: { authorization: 'Bearer cs_wrong' } })
+    assert.equal(bad.stopped, true)
+    assert.equal(bad.status, 401)
+
+    // An empty configured secret must never match an empty header.
+    const unset = await call({ CRON_SECRET: '' }, { headers: { authorization: 'Bearer ' } })
+    assert.equal(unset.stopped, true)
+  })
+
+  test('a wrong method is refused before any credential is looked at', async () => {
+    const result = await call({ CRON_SECRET: 'x'.repeat(40) }, { method: 'DELETE', headers: {} })
+    assert.equal(result.stopped, true)
+    assert.equal(result.status, 405)
+  })
+})
+
 describe('failure artifacts', () => {
   test('only a failure leaves one', () => {
     assert.equal(artifactForFailure('feed_ingest', 'ok', null, { inserted: 3 }), null)
