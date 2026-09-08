@@ -26,10 +26,10 @@
 
 Run `npm run verify` before pushing. Validate all repo-scoped skills with `npm run skills:validate`.
 
-<!-- krish-canon:start release=v2026.08.29.3 sha=aa8d9ffa99fb rendered=2026-09-08 -->
+<!-- krish-canon:start release=v2026.09.08.1 sha=b11115ad1783 rendered=2026-09-08 -->
 ## Krish canon
 
-Rendered from `krishanraja/ai-harness` at release v2026.08.29.3. Nothing inside these
+Rendered from `krishanraja/ai-harness` at release v2026.09.08.1. Nothing inside these
 markers is hand-maintained: an edit here is detected and proposed back to the canon,
 never silently overwritten, and never lost. Everything outside the markers belongs to
 this repository and is never read or rewritten by the harness.
