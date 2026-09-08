@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
-import { sha256 } from '../../content-edits.js'
+import { sha256 } from '../../_editEvents.js'
 import { supabase } from '../../_supabase.js'
 import { openStream, send, fail, streamClaude } from '../../_stream.js'
 import { corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId, preamble, readMaterials, sanitizeVoice } from '../../_content.js'

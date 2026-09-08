@@ -143,7 +143,7 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
 
 // ── 7. The ledger refuses a row it cannot attribute ─────────────────────────
 {
-  const { validateEditEvent } = await import('../api/content-edits.js')
+  const { validateEditEvent } = await import('../api/_editEvents.js')
   const base = {
     idempotency_key: '11111111-1111-4111-8111-111111111111',
     subject_table: 'content_ideas', subject_id: 'abc', artifact_kind: 'draft',
@@ -157,9 +157,21 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.equal(validateEditEvent({ ...base, action: 'manual_edit', after_hash: 'not-a-hash' }).ok, false)
   assert.equal(validateEditEvent({ ...base, action: 'manual_edit', after_hash: hash, instruction: 'x'.repeat(2000) }).ok, false, 'the excerpt bound must hold')
 
-  // The privacy line: the route stores hashes and a bounded diff, never bodies.
+  // The privacy line: the ledger stores hashes and a bounded diff, never bodies.
+  const rules = read('api/_editEvents.ts')
   const route = read('api/content-edits.ts')
-  assert.doesNotMatch(route, /\bbody_text\b|\bfull_text\b|transcript/, 'the ledger must never carry a body or a transcript')
+  assert.doesNotMatch(rules + route, /\bbody_text\b|\bfull_text\b|transcript/, 'the ledger must never carry a body or a transcript')
+
+  // What decides the evidence must be checkable without the evidence store.
+  // Both of these once lived in their route, which imports the database client
+  // at module load, so the guard and the test that cover them could only run on
+  // a machine that happened to have credentials in its shell. That is not a
+  // passing check, it is an unrun one.
+  for (const rel of ['api/_editEvents.ts', 'api/learning/_patterns.ts']) {
+    const imports = [...read(rel).matchAll(/^\s*import\s[^\n]*?from\s+'([^']+)'/gm)].map(m => m[1])
+    const impure = imports.filter(spec => !spec.startsWith('node:'))
+    assert.deepEqual(impure, [], `${rel} must import nothing but the node standard library: it has to run with no database, no network and no key`)
+  }
 }
 
 // ── 8. The ledger is actually written from the paths that matter ────────────
@@ -199,15 +211,13 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.match(migration, /revoke execute on function public\.content_edit_events_reject_mutation/, 'the append-only trigger must not also be an anon-callable RPC')
   assert.match(migration, /abstention is not a wrong answer/, 'an abstention must not read as disagreement')
   assert.match(migration, /v\.verdict not in \('pass', 'kill'\) then null/, 'only a pass or a kill is a prediction the action settles')
-  // Every action and artifact kind the route accepts must exist in the CHECK,
+  // Every action and artifact kind the ledger accepts must exist in the CHECK,
   // or a valid write fails in production and nowhere else.
-  const route = read('api/content-edits.ts')
-  const actions = [...route.matchAll(/'([a-z_]+)',?\s*(?=\/\/|$)/gm)].map(m => m[1])
+  const rules = read('api/_editEvents.ts')
   for (const action of ['manual_edit', 'magic_invoked', 'magic_accepted', 'magic_rejected', 'section_kept', 'section_dropped', 'approved', 'binned', 'published', 'external_final_captured']) {
-    assert.ok(route.includes(`'${action}'`), `the route does not accept ${action}`)
+    assert.ok(rules.includes(`'${action}'`), `the ledger does not accept ${action}`)
     assert.ok(migration.includes(`'${action}'`), `the migration does not allow ${action}`)
   }
-  void actions
 }
 
 console.log(`PASS  ${IDEA_JUDGES.length} idea judges and ${DRAFT_JUDGES.length} draft judges, each owning one question, evidence mandatory, spread preserved, the panel does not decide, anti-echo held`)

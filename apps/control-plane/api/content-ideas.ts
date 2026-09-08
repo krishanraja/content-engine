@@ -9,7 +9,7 @@ import { SYNTHESIS_MODEL } from './_models.js'
 import { recordShip } from './_ships.js'
 import { randomUUID } from 'node:crypto'
 import { contentRevisionHash, createProductionApproval, jsonRecord, readProductionApproval } from './_productionBrief.js'
-import { sha256 } from './content-edits.js'
+import { sha256 } from './_editEvents.js'
 
 // Content ideas inbox endpoint.
 //
