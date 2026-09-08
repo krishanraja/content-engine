@@ -8,7 +8,7 @@ import {
   type SourceVisualAnalysisV1,
   type VisualNarrativePlanV1,
 } from '@mindmake/contracts'
-import { hashFile, loadTechniqueRegistry, reviewVisualPlan, verifyVisualAssets } from '@mindmake/core'
+import { hashFile, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, loadTechniqueRegistry, reviewVisualPlan, verifyVisualAssets } from '@mindmake/core'
 
 const H = 'a'.repeat(64)
 
@@ -125,6 +125,45 @@ describe('visual narrative planning gates', () => {
     })
     const fullyLinkedReview = reviewVisualPlan({ plan: fullyLinkedPlan, analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H })
     expect(fullyLinkedReview.review.hard_blocks).toEqual([])
+  })
+
+  it('requires early receipts and rejects generic B-roll as proof for the confirmed investigative rule', async () => {
+    const registry = await loadTechniqueRegistry(resolve('config/techniques.json'))
+    const preference = {
+      schema_version: 1 as const,
+      rule_id: INVESTIGATIVE_SHORT_REFERENCE_RULE_ID,
+      assertion: 'Lead with receipts and finish on an earned verdict.',
+      scope: { level: 'series' as const, key: 'money_of_ai' },
+      evidence_feedback_ids: ['feedback-reference-videos-20260908-01'],
+      counterexamples: [],
+      regression_cases: [],
+      status: 'active' as const,
+      approved_by: 'Krish',
+      approved_at: '2026-09-08T07:35:45.761Z',
+    }
+    const reviewInput = {
+      analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H,
+      techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H,
+      activePreferences: [preference], preferenceContext: { series: 'money_of_ai', mode: 'solo', jobId: 'job-1' },
+    }
+    const missingReceipt = reviewVisualPlan({ ...reviewInput, plan: plan() })
+    expect(missingReceipt.review.soft_blocks).toContain('confirmed investigative preference expects a sourced receipt or artifact in the first five seconds')
+
+    const base = plan()
+    const evidenceRequirement = { asset_id: 'opening-receipt', content_kind: 'evidence_screenshot' as const, truth_role: 'evidence' as const, narrative_job: 'prove' as const, claim_ids: ['claim-a'], brief: 'Show the exact source receipt for the opening claim.', generated_allowed: false, required: true, fallback: 'Remove the unsupported opening claim.' }
+    const evidencePlan = plan({
+      beats: [{ ...base.beats[0]!, claim_ids: ['claim-a'], proof_dependency: true }],
+      asset_requirements: [evidenceRequirement],
+      shot_directives: [{ ...base.shot_directives[0]!, layers: [...base.shot_directives[0]!.layers, { layer_id: 'opening-receipt-layer', z_index: 1, kind: 'asset', target_id: 'opening-receipt', anchor: 'right', opacity: 1, blend_mode: 'normal', protected: true }] }],
+    })
+    expect(reviewVisualPlan({ ...reviewInput, plan: evidencePlan }).review.soft_blocks).not.toContain('confirmed investigative preference expects a sourced receipt or artifact in the first five seconds')
+
+    const genericPlan = plan({
+      beats: [{ ...base.beats[0]!, proof_dependency: true }],
+      asset_requirements: [{ ...evidenceRequirement, asset_id: 'generic-ai', content_kind: 'licensed_b_roll', truth_role: 'illustration', narrative_job: 'evoke', claim_ids: [] }],
+      shot_directives: [{ ...base.shot_directives[0]!, layers: [...base.shot_directives[0]!.layers, { layer_id: 'generic-ai-layer', z_index: 1, kind: 'asset', target_id: 'generic-ai', anchor: 'right', opacity: 1, blend_mode: 'normal', protected: false }] }],
+    })
+    expect(reviewVisualPlan({ ...reviewInput, plan: genericPlan }).review.soft_blocks).toContain('confirmed investigative preference rejects generic licensed B-roll as proof in beats: beat-1')
   })
 
   it('binds asset approval to the exact file hash', async () => {

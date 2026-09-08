@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "feedback_id": "feedback-reference-videos-20260908-01",
+  "recorded_at": "2026-09-08T07:35:45.761Z",
+  "owner": "Krish",
+  "decision": "confirmed",
+  "scope": {
+    "level": "series",
+    "key": "money_of_ai",
+    "reason": "The first release is deliberately narrower than all Mindmake Shorts. Scope expansion still needs the normal cross-job evidence and a separate approval."
+  },
+  "references": [
+    {
+      "role": "positive_narrative_reference",
+      "sha256": "d9db62ae726c0c5788142ee775370223e52ee67f7fa6abca166df802f72f895d",
+      "duration_ms": 59950,
+      "analysis_only": true
+    },
+    {
+      "role": "negative_sensationalism_reference",
+      "sha256": "e29c15e49780db31e2d635e970961922e80b651d8078cda9b995ab616d444f80",
+      "duration_ms": 80750,
+      "analysis_only": true
+    }
+  ],
+  "confirmed_inference": "Krish likes immediately legible promises, concrete scenes, visible progression and scripts that keep changing the audience's mental model. He rejects exaggerated adjectives, removed qualifiers, unsupported causality, arbitrary punch-ins, generic technology B-roll, all-caps word-by-word captions, mid-video follow requests and empty comment CTAs. Mindmake Shorts should lead with receipts, trace one mechanism, treat the countercase fairly and finish with a hard earned verdict.",
+  "confirmation_excerpt": "Confirmed",
+  "capture_boundary": "This is a minimal Git release record for an explicitly approved change. It does not claim that the surrounding chat was captured as a tracked portable Studio session."
+}

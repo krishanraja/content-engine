@@ -169,6 +169,18 @@
       "status": "active",
       "approved_by": "Krish",
       "approved_at": "2026-09-04T14:03:15.556Z"
+    },
+    {
+      "schema_version": 1,
+      "rule_id": "pref-money-investigative-receipts-v1",
+      "assertion": "For The Money of AI investigative Shorts, open with a legible promise and visible receipts, use concrete scenes and progression to trace one mechanism, preserve every source qualifier, treat the countercase fairly, keep visual moves story-motivated, and end on an earned verdict. Do not use unsupported drama, generic technology B-roll, all-caps word-by-word captions, mid-story follow requests, or empty comment prompts.",
+      "scope": { "level": "series", "key": "money_of_ai" },
+      "evidence_feedback_ids": ["feedback-reference-videos-20260908-01"],
+      "counterexamples": ["A non-investigative Built With AI artifact demo may use a looser visual rhythm, but it may not alter factual qualifiers or present generic B-roll as evidence."],
+      "regression_cases": ["source qualifiers and claim boundaries remain intact", "a sourced receipt or owned artifact appears in the first five seconds", "the story traces one intelligible mechanism", "the strongest credible countercase is treated fairly", "camera moves and overlays have a declared narrative job", "generic technology B-roll is not used as proof", "captions avoid all-caps word-by-word treatment", "no follow request interrupts the story", "the ending lands an earned verdict rather than an empty comment prompt"],
+      "status": "active",
+      "approved_by": "Krish",
+      "approved_at": "2026-09-08T07:35:45.761Z"
     }
   ],
   "brand_themes": [

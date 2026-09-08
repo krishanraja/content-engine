@@ -28,6 +28,7 @@ import {
   type GeneratedShotV1,
   type JobManifestV2,
   type JobManifestV1,
+  type PreferenceRuleV1,
   type RenderManifestV2,
   type StoryboardReviewPacketV1,
   type StageNameV2,
@@ -243,6 +244,7 @@ interface PinnedStudioConfigV2 {
   transcription?: { local_model?: string; vocabulary?: string[] }
   identity?: { presenter_name?: string; asr_aliases?: string[] }
   editorial_thresholds: EditorialThresholds
+  active_preferences?: PreferenceRuleV1[]
 }
 
 async function readJson<T = unknown>(path: string): Promise<T> {
@@ -1197,7 +1199,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         if (!parsed.length) throw new Error('short-native input contains no valid CandidateV1 scripts')
         candidates = parsed.map((candidate) => {
           if (candidate.job_id !== manifest.job_id || candidate.series !== manifest.series || candidate.mode !== manifest.mode) throw new Error('short-native candidate job, series, and mode must match the job manifest')
-          return withEditorialValidation(candidate, validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name), true)
+          return withEditorialValidation(candidate, validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences), true)
         })
         const inputHash = await hashFile(options.input)
         const scriptArtifact = await completeStageV2(manifest.job_id, 'script', {
@@ -1217,7 +1219,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           const compatibilityJob = candidateCompatibilityJob(manifest, transcriptArtifact.payload.source_id)
           candidates = parsed.map((candidate) => {
             if (candidate.job_id !== manifest.job_id || candidate.series !== manifest.series || candidate.mode !== manifest.mode) throw new Error('candidate job, series, and mode must match the job manifest')
-            return withEditorialValidation(candidate, validateEditorialCandidate(candidate, transcript, compatibilityJob, config.editorial_thresholds), false)
+            return withEditorialValidation(candidate, validateEditorialCandidate(candidate, transcript, compatibilityJob, config.editorial_thresholds, config.active_preferences), false)
           })
           candidatesInputs = { transcript: transcriptArtifact.artifact_hash, candidate_file: await hashFile(options.input) }
           generator = 'codex-excerpt-editorial-v2'
@@ -1459,6 +1461,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       const techniqueRegistry = await loadTechniqueRegistry(techniquePath)
       const techniqueRegistryHash = await hashFile(techniquePath)
       const preferencesHash = await preferenceSnapshotHash(manifest)
+      const pinnedConfig = await readJson<PinnedStudioConfigV2>(pinnedConfigPathV2(manifest))
       const reviewed = reviewVisualPlan({
         plan: await readJson(options.input),
         analysis,
@@ -1468,6 +1471,8 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         techniqueRegistry,
         techniqueRegistryHash,
         preferenceSnapshotHash: preferencesHash,
+        ...(pinnedConfig.active_preferences ? { activePreferences: pinnedConfig.active_preferences } : {}),
+        preferenceContext: { series: manifest.series, mode: manifest.mode, jobId: manifest.job_id },
         production: manifest.purpose === 'production',
         provenTreatment: Boolean(options.provenTreatment),
       })
@@ -1897,12 +1902,13 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         const config = await readJson<PinnedStudioConfigV2>(pinnedConfigPathV2(manifest))
         if (!config.editorial_thresholds) throw new Error('job-pinned configuration is missing editorial_thresholds')
         const independentEditorial = manifest.mode === 'short_native'
-          ? validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name)
+          ? validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences)
           : validateEditorialCandidate(
               candidate,
               parseTranscriptDocument((await readStageArtifactV2<TranscriptStagePayloadV2>(manifest.job_id, 'transcript')).payload.transcript),
               candidateCompatibilityJob(manifest),
               config.editorial_thresholds,
+              config.active_preferences,
             )
         const hardBlocks = [
           ...candidate.challenge.hard_blocks,

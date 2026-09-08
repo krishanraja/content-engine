@@ -1,10 +1,12 @@
 import { readFile } from 'node:fs/promises'
 import {
   VisualNarrativePlanV1Schema,
+  type PreferenceRuleV1,
   type SourceVisualAnalysisV1,
   type VisualNarrativePlanV1,
 } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
+import { INVESTIGATIVE_SHORT_REFERENCE_RULE_ID } from './editorial.js'
 import { solveVirtualCamera } from './virtual-camera.js'
 
 export interface TechniqueDefinitionV1 {
@@ -90,8 +92,49 @@ export interface ReviewVisualPlanInput {
   techniqueRegistry: TechniqueRegistryV1
   techniqueRegistryHash: string
   preferenceSnapshotHash: string
+  activePreferences?: PreferenceRuleV1[]
+  preferenceContext?: { series: string; mode: string; jobId: string }
   production?: boolean
   provenTreatment?: boolean
+}
+
+function investigativePreferenceApplies(input: ReviewVisualPlanInput): boolean {
+  const context = input.preferenceContext
+  if (!context) return false
+  return (input.activePreferences || []).some((rule) => {
+    if (rule.rule_id !== INVESTIGATIVE_SHORT_REFERENCE_RULE_ID || rule.status !== 'active') return false
+    if (rule.scope.level === 'global') return true
+    if (rule.scope.level === 'series') return rule.scope.key === context.series
+    if (rule.scope.level === 'mode') return rule.scope.key === context.mode
+    if (rule.scope.level === 'job') return rule.scope.key === context.jobId
+    return false
+  })
+}
+
+function investigativeVisualIssues(plan: VisualNarrativePlanV1): string[] {
+  const requirements = new Map(plan.asset_requirements.map((item) => [item.asset_id, item]))
+  const openingEvidence = plan.beats.some((beat) => {
+    if (beat.start_ms >= 5_000 || !beat.proof_dependency) return false
+    const placed = plan.shot_directives
+      .filter((shot) => shot.beat_id === beat.beat_id)
+      .flatMap((shot) => shot.layers)
+      .filter((layer) => layer.kind === 'asset' && layer.target_id)
+    return placed.some((layer) => ['evidence', 'owned_artifact'].includes(requirements.get(layer.target_id!)?.truth_role || ''))
+  })
+  const genericBrollBeats = plan.beats.filter((beat) => beat.proof_dependency || ['evidence', 'mechanism'].includes(beat.narrative_function)).filter((beat) => {
+    const placed = plan.shot_directives
+      .filter((shot) => shot.beat_id === beat.beat_id)
+      .flatMap((shot) => shot.layers)
+      .filter((layer) => layer.kind === 'asset' && layer.target_id)
+    return placed.some((layer) => {
+      const requirement = requirements.get(layer.target_id!)
+      return requirement?.content_kind === 'licensed_b_roll' && requirement.truth_role !== 'evidence'
+    })
+  })
+  return [
+    ...(!openingEvidence ? ['confirmed investigative preference expects a sourced receipt or artifact in the first five seconds'] : []),
+    ...(genericBrollBeats.length ? [`confirmed investigative preference rejects generic licensed B-roll as proof in beats: ${genericBrollBeats.map((beat) => beat.beat_id).join(', ')}`] : []),
+  ]
 }
 
 export function reviewVisualPlan(input: ReviewVisualPlanInput): { plan: VisualNarrativePlanV1; review: VisualPlanReview } {
@@ -155,6 +198,7 @@ export function reviewVisualPlan(input: ReviewVisualPlanInput): { plan: VisualNa
   softBlocks.push(...attentionCollisionIssues(plan, input.analysis))
   if (input.production !== false && (plan.duration_ms < 20_000 || plan.duration_ms > 60_000)) softBlocks.push('story duration falls outside the normal 20 to 60 second range and needs a recorded editorial reason')
   for (const issue of input.analysis.quality_issues.filter((item) => item.severity === 'block')) hardBlocks.push(issue.detail)
+  if (investigativePreferenceApplies(input)) softBlocks.push(...investigativeVisualIssues(plan))
   for (const fallback of input.analysis.capabilities.fallbacks) fallbacks.add(fallback)
 
   const requiresStyleframes = !input.provenTreatment || plan.treatment_lane !== 'restrained' || experimental.length > 0
