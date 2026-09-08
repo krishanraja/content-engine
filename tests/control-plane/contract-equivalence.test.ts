@@ -281,3 +281,88 @@ describe('the invariants that only existed on the server', () => {
     assert.equal(RunnerHeartbeatRequestV1Schema.safeParse(value).success, false)
   })
 })
+
+// The body the runner actually builds, parsed by the server that actually
+// receives it, in one process.
+//
+// Everything above tests each side against a corpus. This tests the join, which
+// is the thing that breaks in production and nowhere else. A live runner is
+// heartbeating into this route right now; the cost of getting it wrong is a
+// machine that goes quiet and says nothing about why.
+describe('a real heartbeat, built the way the runner builds it', () => {
+  // Copied from heartbeat() in packages/core/src/runner.ts. Deliberately a copy
+  // rather than an import: importing the runner would prove the two agree with
+  // each other, not that the shape on the wire is the one written down there.
+  function runnerHeartbeat(
+    driveState: 'ready' | 'unavailable' | 'not_configured',
+    status: 'idle' | 'working' | 'degraded',
+    pendingReceipts: number,
+    occurredAt: string,
+    activeCommandId?: string,
+  ): Record<string, unknown> {
+    return {
+      schema_version: 1,
+      runner_id: 'runner-29b875c1',
+      software_commit: COMMIT,
+      command_schema_versions: [1],
+      status,
+      drive_state: driveState,
+      ...(activeCommandId ? { active_command_id: activeCommandId } : {}),
+      pending_receipts: pendingReceipts,
+      occurred_at: occurredAt,
+    }
+  }
+
+  const now = '2026-09-08T10:00:00.000Z'
+  const at = Date.parse(now)
+
+  test('idle with no lease, which is what it sends most of the time', () => {
+    const body = runnerHeartbeat('ready', 'idle', 0, now)
+    const parsed = parseRunnerHeartbeatRequest(body, at)
+    assert.notEqual(parsed, null, 'the server must accept the ordinary heartbeat')
+    assert.deepEqual(parsed, {
+      schema_version: 1,
+      runner_id: 'runner-29b875c1',
+      status: 'idle',
+      software_commit: COMMIT,
+      command_schema_versions: [1],
+      drive_state: 'ready',
+      // Absent on the wire, null to every reader downstream and to the column.
+      active_command_id: null,
+      pending_receipts: 0,
+      occurred_at: now,
+      lease_token: null,
+    })
+  })
+
+  test('working on a command, with the lease spread on the way the client does it', () => {
+    const commandId = uuid()
+    const body = { ...runnerHeartbeat('ready', 'working', 2, now, commandId), lease_token: LEASE }
+    const parsed = parseRunnerHeartbeatRequest(body, at) as Record<string, unknown> | null
+    assert.notEqual(parsed, null, 'the server must accept a heartbeat from a runner holding a lease')
+    assert.equal(parsed?.active_command_id, commandId)
+    assert.equal(parsed?.lease_token, LEASE)
+    assert.equal(parsed?.status, 'working')
+  })
+
+  test('every drive state and status the runner can report is accepted', () => {
+    for (const drive of ['ready', 'unavailable', 'not_configured'] as const) {
+      for (const status of ['idle', 'working', 'degraded'] as const) {
+        assert.notEqual(
+          parseRunnerHeartbeatRequest(runnerHeartbeat(drive, status, 0, now), at),
+          null,
+          `the server refused drive_state=${drive} status=${status}, which the runner can and does send`,
+        )
+      }
+    }
+  })
+
+  test('the client never sends lease_token as null, and the server would refuse it if it did', () => {
+    // Guarding an assumption rather than trusting it: the swap moved from a
+    // parser that mapped explicit null to absent, to a schema where optional
+    // means absent and null is a type error. That is only safe because the
+    // client omits the key.
+    const body = { ...runnerHeartbeat('ready', 'idle', 0, now), lease_token: null }
+    assert.equal(parseRunnerHeartbeatRequest(body, at), null)
+  })
+})
