@@ -79,6 +79,10 @@ const read = (rel: string) => readFileSync(new URL(`../${rel}`, import.meta.url)
 
   const route = read('api/inspiration/drive-scan.ts')
   assert.match(route, /deferred_files: selection\.deferred\.map/, 'the response must name what is waiting')
+  // A quiet fortnight is the ordinary reason for zero once the folder is
+  // shared. The first version of this message named only the unshared case and
+  // read as a fault when the lane was simply not fed.
+  assert.match(route, /nothing modified in the folder in the last \$\{lookbackDays\} days/, 'a quiet window must not read as a misconfiguration')
   // A deferred file must NOT be written to the ledger, or it never returns.
   assert.doesNotMatch(route, /markLedger\([^)]*deferred/, 'a deferred file must stay out of the ledger')
 }

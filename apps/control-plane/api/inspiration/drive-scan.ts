@@ -157,14 +157,18 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { candidates, listed, unreadable } = toCandidates(listing.files)
   if (!candidates.length) {
-    // A zero here is usually the folder not being shared with the service
-    // account, which lists clean rather than erroring. Say the difference.
+    // Two very different things both list zero, and the first message here
+    // named only the rarer one. An unshared folder lists clean rather than
+    // erroring, so it does have to be said; but once the folder IS shared, the
+    // ordinary reason for zero is that nothing has been dropped in the lookback
+    // window, and a quiet fortnight is not a fault. Name the window first,
+    // with the number, so the common case reads as the common case.
     return res.status(200).json({
       ok: true,
       skipped: listed === 0
-        ? 'folder_listed_nothing: check the folder is shared with GOOGLE_SERVICE_ACCOUNT_EMAIL'
+        ? `nothing modified in the folder in the last ${lookbackDays} days. If that is wrong, check the folder is shared with GOOGLE_SERVICE_ACCOUNT_EMAIL: an unshared folder also lists zero`
         : 'nothing_readable_in_folder',
-      listed, unreadable,
+      listed, unreadable, lookback_days: lookbackDays,
     })
   }
 
