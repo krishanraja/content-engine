@@ -8,7 +8,7 @@ import { postHash, verbatimCheck } from '../_creatorFingerprint.js'
 import { buildSystemPrompt, buildUserContent, type Pillar, type CreatorRow, type YieldRow, type ReadableDoc, type ReadableBinary } from './_prompt.js'
 import {
   toCandidates, selectWithinBudget, parseSeedArray, filterSeeds,
-  fileHash, artifactKey, storyUrl, normaliseHandle,
+  fileHash, artifactKey, storyUrl, normaliseHandle, artifactInputKind,
   TEXT_MIMES, IMAGE_MIMES, PDF_MIME, TRANSIENT_SKIPS,
   RETRY_AFTER_MINUTES, MAX_DOWNLOAD_ATTEMPTS,
   DEFAULT_LOOKBACK_DAYS, DEFAULT_MAX_IMAGES, DEFAULT_MAX_IMAGE_BYTES,
@@ -93,12 +93,15 @@ interface ReadFile { hash: string; candidate: Candidate; mime: string; bytes: nu
  *  the url the model claims it read, and one line each of idea and reason.
  *  Never the whole response, and never an unbounded transcription. */
 async function writeArtifact(file: ReadFile, seed: Seed, storyRef: string, model: string, ideaId: string | null) {
-  const kind = file.mime === PDF_MIME ? 'pdf' : IMAGE_MIMES.has(file.mime) ? 'screenshot' : 'document'
   await supabase.from('content_inspiration_artifacts').upsert({
     canonical_key: `drive:${file.hash}`,
-    input_kind: kind,
-    status: 'analyzed',
-    scope: 'content',
+    // These three are CHECK-constrained on the table. The first draft of this
+    // route used 'screenshot', 'analyzed' and 'content', none of which are
+    // allowed values, and every write would have failed in production only. The
+    // permitted sets are pinned in _scan.ts against the live constraints.
+    input_kind: artifactInputKind(file.mime),
+    status: 'complete',
+    scope: 'everything',
     source_url: storyRef,
     source_label: file.candidate.name,
     storage_bucket: BUCKET,

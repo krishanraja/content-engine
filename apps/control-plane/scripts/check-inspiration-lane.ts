@@ -25,6 +25,7 @@ import {
   toCandidates, selectWithinBudget, storyUrl, parseSeedArray, filterSeeds,
   normaliseHandle, artifactKey, READABLE_MIMES, TRANSIENT_SKIPS,
   MAX_DOWNLOAD_ATTEMPTS, BLACKLISTED_FRAMINGS,
+  ARTIFACT_INPUT_KINDS, ARTIFACT_STATUSES, ARTIFACT_SCOPES, artifactInputKind,
 } from '../api/inspiration/_scan.js'
 import { buildSystemPrompt, buildUserContent } from '../api/inspiration/_prompt.js'
 
@@ -189,6 +190,19 @@ const read = (rel: string) => readFileSync(new URL(`../${rel}`, import.meta.url)
   // rather than inventing a second identity beside it.
   assert.match(route, /canonical_key: `drive:\$\{file\.hash\}`/, 'the artifact must be keyed by its content hash')
   assert.match(route, /onConflict: 'canonical_key'/, 'the same bytes saved twice must be one artifact')
+
+  // The three CHECK-constrained columns. The first draft of this route used
+  // 'screenshot', 'analyzed' and 'content', none of which the table allows, and
+  // nothing here or in CI could have caught it: a live probe did. So the
+  // permitted sets are pinned, and the values the route writes must be in them.
+  assert.equal(artifactInputKind('image/png'), 'image')
+  assert.equal(artifactInputKind('application/pdf'), 'file')
+  assert.equal(artifactInputKind('text/plain'), 'text')
+  for (const kind of ARTIFACT_INPUT_KINDS) assert.match(kind, /^[a-z]+$/)
+  const status = route.match(/status: '([a-z_]+)'/)?.[1]
+  const scope = route.match(/scope: '([a-z_]+)'/)?.[1]
+  assert.ok(status && (ARTIFACT_STATUSES as readonly string[]).includes(status), `status '${status}' is not one the table allows`)
+  assert.ok(scope && (ARTIFACT_SCOPES as readonly string[]).includes(scope), `scope '${scope}' is not one the table allows`)
 }
 
 console.log('PASS  the screenshot lane dedupes on the story, retries only what can recover, defers visibly, and keeps its floors')

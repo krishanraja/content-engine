@@ -143,6 +143,28 @@ export function selectWithinBudget(input: SelectionInput): Selection {
   }
 }
 
+/** The artifact store's own CHECK constraints, restated here because the route
+ *  cannot see them and a wrong value fails only in production. Verified against
+ *  content_inspiration_artifacts_input_kind_check, _status_check and
+ *  _scope_check on 2026-09-08. Widening one of these means altering the
+ *  constraint first.
+ *
+ *  This lane predates none of it: the table was created for a general capture
+ *  route, so a screenshot is an 'image' and a PDF is a 'file'. */
+export const ARTIFACT_INPUT_KINDS = ['url', 'collection', 'image', 'text', 'file'] as const
+export const ARTIFACT_STATUSES = ['queued', 'processing', 'complete', 'failed'] as const
+export const ARTIFACT_SCOPES = ['everything', 'money_of_ai', 'built_with_ai'] as const
+
+export type ArtifactInputKind = (typeof ARTIFACT_INPUT_KINDS)[number]
+
+/** Which of those a downloaded file is. */
+export function artifactInputKind(mime: string): ArtifactInputKind {
+  if (IMAGE_MIMES.has(mime)) return 'image'
+  if (mime === PDF_MIME) return 'file'
+  if (TEXT_MIMES.has(mime)) return 'text'
+  return 'file'
+}
+
 export function fileHash(bytes: Uint8Array): string {
   return createHash('sha256').update(bytes).digest('hex')
 }
