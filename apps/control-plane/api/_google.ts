@@ -23,11 +23,28 @@ export function googleConfigured(): boolean {
   return !!(process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY)
 }
 
-export async function googleAccessToken(scopes: string[]): Promise<string | null> {
+export interface TokenOptions {
+  /** Act as GOOGLE_IMPERSONATE_SUBJECT rather than as the service account
+   *  itself. Gmail needs this: a service account has no mailbox, so it must
+   *  borrow a Workspace user's, which requires domain-wide delegation.
+   *
+   *  Drive does not, and must not. A folder shared directly with the service
+   *  account address is readable AS that account; asking for an impersonated
+   *  token when delegation is not configured for the Drive scope fails the
+   *  whole request with unauthorized_client, which reads as "no service
+   *  account" and sends you looking in the wrong place. */
+  impersonate?: boolean
+  /** Surface why a token could not be issued. Callers that report to a human
+   *  pass this; the ones that fall back silently do not. */
+  onError?: (reason: string) => void
+}
+
+export async function googleAccessToken(scopes: string[], options: TokenOptions = {}): Promise<string | null> {
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
   let key = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY
-  const subject = process.env.GOOGLE_IMPERSONATE_SUBJECT
-  if (!email || !key) return null
+  const subject = options.impersonate === false ? undefined : process.env.GOOGLE_IMPERSONATE_SUBJECT
+  const fail = (reason: string) => { options.onError?.(reason); return null }
+  if (!email || !key) return fail('service account email or private key is unset')
   key = key.replace(/\\n/g, '\n') // env stores PEM newlines escaped
 
   const scopeKey = scopes.join(' ') + (subject ? `|${subject}` : '')
@@ -51,8 +68,8 @@ export async function googleAccessToken(scopes: string[]): Promise<string | null
     const signer = crypto.createSign('RSA-SHA256')
     signer.update(`${header}.${payload}`)
     assertion = `${header}.${payload}.${b64url(signer.sign(key))}`
-  } catch {
-    return null // malformed key
+  } catch (e) {
+    return fail(`private key would not sign: ${(e as Error)?.message?.slice(0, 120)}`)
   }
 
   try {
@@ -62,11 +79,16 @@ export async function googleAccessToken(scopes: string[]): Promise<string | null
       body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion }),
     })
     const j: any = await r.json().catch(() => ({}))
-    if (!r.ok || !j?.access_token) return null
+    if (!r.ok || !j?.access_token) {
+      // The two that actually happen: unauthorized_client means domain-wide
+      // delegation is not configured for these scopes (so stop impersonating),
+      // invalid_grant usually means the clock or the key is wrong.
+      return fail(`google_oauth_${r.status}:${j?.error || 'no_access_token'}${j?.error_description ? ` (${String(j.error_description).slice(0, 120)})` : ''}`)
+    }
     tokenCache.set(scopeKey, { token: j.access_token, exp: now + (j.expires_in || 3600) })
     return j.access_token
-  } catch {
-    return null
+  } catch (e) {
+    return fail(`token request failed: ${(e as Error)?.message?.slice(0, 120)}`)
   }
 }
 
@@ -177,8 +199,14 @@ export interface DriveListResult {
 
 /** Newest first, so the freshest drop wins the request budget. */
 export async function driveListFolder(folderId: string, lookbackDays: number): Promise<DriveListResult> {
-  const token = await googleAccessToken([DRIVE_READONLY_SCOPE])
-  if (!token) return { ok: false, files: [], reason: 'google_service_account_not_configured' }
+  // impersonate: false. The inspiration folder is shared directly with the
+  // service account address, so it is readable as that account. Borrowing a
+  // Workspace user's identity would need domain-wide delegation for the Drive
+  // scope, which is not configured, and the failure looks like a missing
+  // service account rather than a delegation problem.
+  let why = 'google_service_account_not_configured'
+  const token = await googleAccessToken([DRIVE_READONLY_SCOPE], { impersonate: false, onError: r => { why = r } })
+  if (!token) return { ok: false, files: [], reason: why }
   const since = new Date(Date.now() - Math.max(1, lookbackDays) * 86_400_000).toISOString()
   const params = new URLSearchParams({
     q: `'${folderId}' in parents and trashed = false and modifiedTime > '${since}'`,
@@ -204,7 +232,7 @@ export async function driveListFolder(folderId: string, lookbackDays: number): P
  *  Returns null on any failure so the caller can mark the file for retry
  *  rather than treat a transient 5xx as "this file is unreadable". */
 export async function driveDownloadFile(fileId: string, mimeType: string): Promise<Uint8Array | null> {
-  const token = await googleAccessToken([DRIVE_READONLY_SCOPE])
+  const token = await googleAccessToken([DRIVE_READONLY_SCOPE], { impersonate: false })
   if (!token) return null
   const native = mimeType.startsWith('application/vnd.google-apps.')
   const url = native
