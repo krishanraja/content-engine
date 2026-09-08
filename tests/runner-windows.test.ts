@@ -233,4 +233,33 @@ describe('Windows runner entry point', () => {
     expect(source).toContain('Mindmake Video Studio')
     expect(source).toContain('CredEnumerateW')
   })
+
+  it('writes a credential onto nothing and refuses to claim success without a readback', async () => {
+    const source = await readFile(join(ROOT, 'scripts', 'set-credential.ps1'), 'utf8')
+
+    // A roaming-persisted entry under the same name survived a write once and
+    // reverted it hours later. The delete has to happen before the write, and the
+    // write has to be checked, or the script reports success for a value the store
+    // will not be holding by the time anything reads it.
+    const removed = source.indexOf('DeleteExisting($Target)')
+    const written = source.indexOf('::Write($Target, $secret)')
+    const readback = source.indexOf('Readback($Target)')
+    const success = source.indexOf('Stored credential:')
+    expect(removed).toBeGreaterThan(-1)
+    expect(removed).toBeLessThan(written)
+    expect(written).toBeLessThan(readback)
+    expect(readback).toBeLessThan(success)
+
+    expect(source).toContain('Persist = 2')
+    expect(source).toMatch(/if \(\$persist -ne 2\)/)
+    expect(source).toMatch(/if \(\$length -ne \$secret\.Length\)/)
+
+    // -Generate stays available to packages/core/src/credentials.ts, which runs
+    // this script -NonInteractive, and -FromStdin gives a caller with no console a
+    // way in that is not a -Value parameter landing in shell history.
+    expect(source).toContain('[switch]$Generate')
+    expect(source).toContain('[switch]$FromStdin')
+    expect(source).not.toMatch(/\[string\]\$Value/)
+    expect(source).toContain('[Console]::In.ReadLine()')
+  })
 })

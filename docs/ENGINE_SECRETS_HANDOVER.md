@@ -74,21 +74,38 @@ automatic logon configured, **the runner does not come back after a reboot** unt
 someone signs in at the console. The five-minute recovery trigger cannot help at a
 lock screen; it exists for sleep and session interruption while signed in.
 
-## The credentials reverted once, on 2026-09-08
+## Windows credential roaming silently reverted two of these
 
-`control-center-runner-token` and `control-center-runner-signing-key` were written
-and verified at 14:28, and by 15:42 both held their previous values again.
-`control-center-radar-token` kept its new value. Nothing in this repo writes
-credentials outside `scripts/set-credential.ps1`, which is interactive only.
+On 2026-09-08 `control-center-runner-token` and `control-center-runner-signing-key`
+were written and verified at 14:28. By 15:42 both held their 2026-09-04 values
+again, with `Persist = 3` (Enterprise, roams), an empty `Comment`, and a
+`LastWritten` of Sept 4. They were not copies pasted back by some tool; they were
+the original entries restored by Windows credential roaming, metadata included.
 
-Cause not established. If it happens again, the four facts that identify it are the
-credential's `Persist` and `Comment` fields, its `LastWritten` timestamp, and
-whether the old value exists in any file on disk. `scripts/inspect-credentials.ps1`
-reads all four without printing a secret.
+Two things about this are worth keeping.
 
-The failure is silent and delayed, which is what makes it worth writing down. A
-daemon already running holds its key in memory and keeps working; only the next
-start reads the store, fails marker verification, and refuses to come up.
+**A successful write proves nothing.** `CredWrite` returned true, the read back
+matched, and a live call authenticated. Hours later a sync replaced the entry.
+`set-credential.ps1` now deletes any existing entry before writing and refuses to
+report success unless the read back shows the right length and `Persist = 2`.
+
+**`Persist = 2` on the write does not make it safe.** The 14:28 write was already
+LocalMachine and was still overwritten: an inbound roam replaces an entry by target
+name and type whatever the local entry's class. `control-center-radar-token`
+survived because it is a newer name with no copy in the roaming store, not because
+LocalMachine protected it. So the durable fix is at the source: stop the sync
+(Settings, Accounts, Windows backup, Remember my preferences, Passwords) or purge
+the roaming copies of those two names. Rewriting them locally buys time.
+
+The failure is silent and delayed, which is what makes it dangerous. A daemon
+already running holds its key in memory and keeps heartbeating; only the next start
+reads the store, fails marker verification, and refuses to come up. On 2026-09-08
+the machine had been up nine days, so nothing had exercised it.
+
+`scripts/inspect-credentials.ps1` reports `Persist`, `Comment`, `LastWritten` and a
+one-way fingerprint for every `MindmakeVideoStudio/*` entry, and warns on any that
+is Enterprise-persisted or that our own script did not write. It prints no secret,
+because the moment to run it is the moment someone pastes the output somewhere.
 
 ## The readback
 
