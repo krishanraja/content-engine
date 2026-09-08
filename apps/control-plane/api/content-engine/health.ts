@@ -35,10 +35,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // api/_supabase.ts throws at module load when the database is unconfigured,
   // which is right for a route that cannot work without it and wrong for the
-  // one route whose job is to say what is missing. Import it only once the
-  // variables are there, so a half-configured deployment answers with a
+  // one route whose job is to say what is missing. Import it only once those
+  // two variables are there, so a half-configured deployment answers with a
   // diagnosis instead of a 500 nobody can read.
-  if (!env.ready) {
+  //
+  // Gate on the database alone, not on overall readiness. A deployment missing
+  // only the runner token is perfectly able to report that fact, and refusing
+  // to answer until everything is set would make this route useless exactly
+  // when it is needed.
+  const databaseConfigured = Boolean((process.env.SUPABASE_URL || '').trim())
+    && Boolean((process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim())
+  if (!databaseConfigured) {
     res.setHeader('Cache-Control', 'no-store')
     return res.status(503).json({
       ok: false,
@@ -46,7 +53,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       engine: 'content-engine/control-plane',
       commit,
       server_time: now.toISOString(),
-      error: 'not_configured',
+      error: 'database_not_configured',
+      database_configured: false,
+      operator_auth_configured: operatorAuthConfigured(),
+      cron_secret_configured: Boolean(process.env.CRON_SECRET),
       ...env,
     })
   }
@@ -96,6 +106,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     commit,
     server_time: now.toISOString(),
     operator_auth_configured: operatorAuthConfigured(),
+    database_configured: true,
     ...env,
     cron_secret_configured: Boolean(process.env.CRON_SECRET),
     runner: { state: runner, heartbeat_age_hours: heartbeatAgeHours, status: heartbeat?.status ?? null },
