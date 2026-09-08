@@ -70,6 +70,10 @@
     {
       "path": "/api/discover-build-signals",
       "schedule": "0 5 * * 6"
+    },
+    {
+      "path": "/api/learning/compile",
+      "schedule": "0 16 * * 0"
     }
   ],
   "functions": {
