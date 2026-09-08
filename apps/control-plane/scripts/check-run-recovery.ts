@@ -169,6 +169,28 @@ for (const file of walk('api')) {
   )
 }
 
+// --------------------------------- contracts dependencies are declared here ---
+// Vercel installs this app's package.json, not the workspace root's, so a
+// package the contracts source imports is absent at runtime unless the control
+// plane declares it too. The five runner routes shipped a green build and then
+// answered 500 to everything with
+// "Cannot find package 'zod' imported from /var/task/packages/contracts/src/index.js":
+// the contracts file compiled and shipped, its dependency did not.
+//
+// Versions must match exactly. Two copies of zod would mean a schema built by
+// one and parsed by the other, which fails in ways that look like bad data.
+{
+  const contractsPkg = JSON.parse(readFileSync(join(ROOT, '..', '..', 'packages', 'contracts', 'package.json'), 'utf8'))
+  const appPkg = JSON.parse(read('package.json'))
+  const appDeps: Record<string, string> = { ...appPkg.dependencies, ...appPkg.devDependencies }
+  for (const [name, version] of Object.entries(contractsPkg.dependencies || {}) as [string, string][]) {
+    check(
+      appDeps[name] === version,
+      `apps/control-plane/package.json must declare ${name}@${version}, the version @mindmake/contracts uses. It is ${appDeps[name] ? `pinned to ${appDeps[name]}` : 'absent'}, so the deployed function cannot load the schemas it imports.`,
+    )
+  }
+}
+
 if (failures.length > 0) {
   console.error(`FAIL ${failures.length} of ${checks} run recovery checks`)
   for (const failure of failures) console.error(`  - ${failure}`)
