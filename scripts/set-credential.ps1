@@ -1,7 +1,8 @@
 param(
   [Parameter(Mandatory = $true)][string]$Target,
   [switch]$Generate,
-  [switch]$FromStdin
+  [switch]$FromStdin,
+  [switch]$Roaming
 )
 
 # Writes one Mindmake credential and then proves the store actually holds what was
@@ -14,6 +15,19 @@ param(
 # write, so a roaming-persisted entry cannot survive underneath. And the value is
 # read straight back out of the store and checked, including its persistence class,
 # because CredWrite returning true only means the call was accepted.
+#
+# -Roaming writes Persist = 3 (Enterprise) instead of 2 (LocalMachine). That is
+# not a fallback, it is the fix for one specific situation. This device is
+# WorkplaceJoined to a tenant, and the two runner credentials were originally
+# written as Enterprise, so tenant-side credential roaming holds a copy and
+# restores it wholesale, metadata and Sept-4 LastWritten included, over any local
+# write. Two verified LocalMachine writes were rolled back inside 25 minutes each.
+#
+# Writing the correct value as Enterprise makes the sync carry it: the roaming
+# copy becomes right rather than stale, so a restore restores what we want. The
+# trade, stated because it is real: an Enterprise credential syncs to the tenant
+# and to the account's other joined devices. These two already do, at their old
+# values. This changes what roams, not whether.
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
@@ -91,7 +105,7 @@ public static class MindmakeCredentialWriter {
     throw new Win32Exception(err);
   }
 
-  public static void Write(string target, SecureString secret) {
+  public static void Write(string target, SecureString secret, uint persist) {
     IntPtr blob = Marshal.SecureStringToCoTaskMemUnicode(secret);
     try {
       CREDENTIAL credential = new CREDENTIAL {
@@ -100,7 +114,7 @@ public static class MindmakeCredentialWriter {
         Comment = "Mindmake Video Studio",
         CredentialBlobSize = checked((UInt32)(secret.Length * 2)),
         CredentialBlob = blob,
-        Persist = 2,
+        Persist = persist,
         UserName = "MindmakeVideoStudio"
       };
       if (!CredWrite(ref credential, 0)) throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -134,8 +148,9 @@ public static class MindmakeCredentialWriter {
 }
 "@
 
+$expectedPersist = if ($Roaming) { 3 } else { 2 }
 $removed = [MindmakeCredentialWriter]::DeleteExisting($Target)
-[MindmakeCredentialWriter]::Write($Target, $secret)
+[MindmakeCredentialWriter]::Write($Target, $secret, $expectedPersist)
 
 $parts = ([MindmakeCredentialWriter]::Readback($Target)).Split(':')
 $persist = [int]$parts[0]
@@ -145,9 +160,13 @@ $fingerprint = $parts[2]
 if ($length -ne $secret.Length) {
   throw "Readback length $length does not match the $($secret.Length) characters written. The store did not accept this value."
 }
-if ($persist -ne 2) {
-  throw "Credential persisted as $persist, not 2 (LocalMachine). A persistence class other than LocalMachine can be replaced from outside this machine."
+if ($persist -ne $expectedPersist) {
+  throw "Credential persisted as $persist, not the requested $expectedPersist. The store did not honour the persistence class, so nothing here can be relied on."
+}
+if (-not $Roaming -and $persist -eq 3) {
+  throw "Credential is Enterprise-persisted without -Roaming. It can be replaced from outside this machine."
 }
 
 if ($removed) { Write-Output "Replaced existing credential: $Target" }
-Write-Output "Stored credential: $Target (chars $length, fingerprint $fingerprint)"
+$class = if ($Roaming) { "Enterprise, syncs to the tenant" } else { "LocalMachine" }
+Write-Output "Stored credential: $Target (chars $length, fingerprint $fingerprint, $class)"

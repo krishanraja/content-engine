@@ -89,13 +89,38 @@ matched, and a live call authenticated. Hours later a sync replaced the entry.
 `set-credential.ps1` now deletes any existing entry before writing and refuses to
 report success unless the read back shows the right length and `Persist = 2`.
 
-**`Persist = 2` on the write does not make it safe.** The 14:28 write was already
-LocalMachine and was still overwritten: an inbound roam replaces an entry by target
-name and type whatever the local entry's class. `control-center-radar-token`
-survived because it is a newer name with no copy in the roaming store, not because
-LocalMachine protected it. So the durable fix is at the source: stop the sync
-(Settings, Accounts, Windows backup, Remember my preferences, Passwords) or purge
-the roaming copies of those two names. Rewriting them locally buys time.
+**`Persist = 2` on the write does not make it safe.** Confirmed twice: two
+LocalMachine writes, each verified by fingerprint, each rolled back inside 25
+minutes. An inbound roam re-creates the entry wholesale, class and metadata
+included, whatever the local entry was. `control-center-radar-token` survives
+because it is a newer name with no copy in the roaming store, not because
+LocalMachine defends it.
+
+SURFACE is `WorkplaceJoined` to the `krishraja.com` tenant, with no local roaming
+policy keys set, so the copy lives tenant-side. The `LastWritten` on a reverted
+entry reads Sept 4, not the time of the overwrite, which is the tell: a sync
+replicating a stored blob, not a tool writing a fresh one.
+
+**The fix is to make the sync carry the right value, not to fight it.** These two
+names roam whatever we do, and the only writable end is the local one, so writing
+the correct value as Enterprise propagates it and a later restore restores what we
+want:
+
+```powershell
+powershell -NoProfile -File scripts/set-credential.ps1 -Roaming -Target MindmakeVideoStudio/control-center-runner-token
+powershell -NoProfile -File scripts/set-credential.ps1 -Roaming -Target MindmakeVideoStudio/control-center-runner-signing-key
+```
+
+`-Roaming` is never a default and the script refuses an Enterprise readback
+without it. The trade is real and worth saying once: these two then sync to the
+tenant and to the account's other joined devices. They already did, at their old
+values. This changes what roams, not whether.
+
+Rejected, and worth recording so it is not revisited: unregistering the workplace
+join or disabling roaming tenant-wide, which carries blast radius across all of
+Microsoft 365 to fix a video runner; and renaming the credentials to dodge the
+roaming set, which works but needs a source pull and a task reinstall on SURFACE
+to buy the same outcome.
 
 The failure is silent and delayed, which is what makes it dangerous. A daemon
 already running holds its key in memory and keeps heartbeating; only the next start

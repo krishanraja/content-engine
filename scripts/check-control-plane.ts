@@ -15,6 +15,7 @@ const GUARDS = [
   'check-env-example',
   'check-content-engine-schedule',
   'check-judges',
+  'check-run-recovery',
   'check-inspiration-lane',
   'check-creator-moves',
   'check-aeo-packet-schema',

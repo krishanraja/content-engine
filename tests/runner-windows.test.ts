@@ -242,7 +242,7 @@ describe('Windows runner entry point', () => {
     // write has to be checked, or the script reports success for a value the store
     // will not be holding by the time anything reads it.
     const removed = source.indexOf('DeleteExisting($Target)')
-    const written = source.indexOf('::Write($Target, $secret)')
+    const written = source.indexOf('::Write($Target, $secret,')
     const readback = source.indexOf('Readback($Target)')
     const success = source.indexOf('Stored credential:')
     expect(removed).toBeGreaterThan(-1)
@@ -250,9 +250,15 @@ describe('Windows runner entry point', () => {
     expect(written).toBeLessThan(readback)
     expect(readback).toBeLessThan(success)
 
-    expect(source).toContain('Persist = 2')
-    expect(source).toMatch(/if \(\$persist -ne 2\)/)
+    expect(source).toMatch(/if \(\$persist -ne \$expectedPersist\)/)
     expect(source).toMatch(/if \(\$length -ne \$secret\.Length\)/)
+
+    // LocalMachine unless -Roaming is asked for explicitly, and an Enterprise
+    // readback without it is an error rather than a shrug. Enterprise means the
+    // entry can be replaced from off the machine, which is how two verified
+    // writes were rolled back; it is a deliberate choice, never a default.
+    expect(source).toContain('$expectedPersist = if ($Roaming) { 3 } else { 2 }')
+    expect(source).toMatch(/if \(-not \$Roaming -and \$persist -eq 3\)/)
 
     // -Generate stays available to packages/core/src/credentials.ts, which runs
     // this script -NonInteractive, and -FromStdin gives a caller with no console a

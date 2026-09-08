@@ -256,6 +256,70 @@ For source or visual calibration, create the V2 job with `--purpose calibration`
 - If an approved artifact is changed externally, import it through `studio v2 feedback import`; confirm the inferred reason, then create a new downstream artifact.
 - Provider failure does not block supplied-source jobs. Radar output records the failed provider and source age.
 
+## Cloud engine recovery
+
+The control plane runs 16 scheduled jobs from `apps/control-plane/vercel.json`.
+Everything here works with the Windows machine off. Only rendering, packaging
+and upload need it, and those wait rather than fail.
+
+**A job failed, or the obligation strip says one is stale.**
+
+```
+GET  /api/content-engine/runs/replay              what can be replayed, and why not
+POST /api/content-engine/runs/replay {"job":"…"}  run it now
+```
+
+Both are behind the operator cookie, so a browser already signed into Control
+Center can call them. Optional `"since"` is an ISO timestamp for the jobs that
+backfill a window. The replayed job records its own ledger row under the
+`manual` trigger, which is deliberate: a job that is only ever green because
+someone pressed a button is a broken schedule wearing a working one's clothes,
+and the `trigger` column is what tells the two apart.
+
+Two jobs refuse to replay and say why. `purge` hard-deletes, so its recovery is
+`POST /api/purge/restore` with the archive key, never a second run. `aeo_ingest`
+spends roughly $0.70 of probe budget per run and has no schedule at all.
+
+A replay that outlives 60 seconds returns `202 still_running`, not an error.
+`briefs/assemble` and `investigations/run` both routinely take longer; their
+ledger row appears when they finish.
+
+**Why did it fail.**
+
+A failed run now writes one `content_engine_run_artifacts` row: the bounded,
+redacted response or error, classified as `llm_parse_failure`,
+`schema_rejection`, `http_failure` or `handler_error`. Before this, a failure
+recorded `counts: {}` and a reason string, and understanding it meant
+reproducing it against live data.
+
+```sql
+select job, kind, reason, payload, created_at
+from content_engine_run_artifacts
+where promoted_at is null
+order by created_at desc limit 20;
+```
+
+Redaction happens in `apps/control-plane/api/_runArtifacts.ts` before the
+insert, by key name and by token shape, capped at 4kB and two levels deep.
+`check-run-recovery.ts` holds that redaction, the job registry, the cron list
+and the table's CHECK constraint in step with each other.
+
+**The runner is quiet.**
+
+`GET /api/content-engine/health` reports `runner.state` and
+`heartbeat_age_hours`. The `runner_watch` cron runs daily at 06:30 UTC and
+records `silent_hours` alongside what is queued. Silence with nothing queued is
+not a problem; silence with work waiting is. See "Windows background runner"
+above, and `docs/ENGINE_SECRETS_HANDOVER.md` for the credential failure mode
+that lets a running daemon look healthy while no new one can start.
+
+**A cron ran but the ledger says `manual`.**
+
+That is the honest answer, not a bug: someone invoked it. Vercel's scheduler is
+identified by `x-vercel-cron` or a `vercel-cron` user agent, either of which is
+enough (`isScheduled` in `api/_runs.ts`). A person holding `CRON_SECRET` is
+still recorded as `manual` on purpose.
+
 ## Publishing boundary
 
 LinkedIn, TikTok, and Instagram Reels commands create local files only. The YouTube command rejects every privacy value except `private`, requires final approval and passing QA, and checks the API response confirms private status. Public posting is always a separate human action.
