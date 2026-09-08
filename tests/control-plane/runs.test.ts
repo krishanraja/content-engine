@@ -99,3 +99,29 @@ test('an unauthorised caller is answered but not recorded', () => {
   assert.equal(isRun, false, '401 is not a run')
   assert.deepEqual(sent, [{ ok: false, error: 'unauthorized' }], 'the refusal must still reach the caller')
 })
+
+// Telling a scheduled run from a hand-poked one.
+//
+// The first live cron after the cutover recorded itself as `manual`. The check
+// read only x-vercel-cron and that request did not carry it, which made the one
+// column that exists to answer "did this job run on its own?" always say no.
+test('a scheduled run is recognised by either signal the platform sends', async () => {
+  const { isScheduled } = await import('../../apps/control-plane/api/_runs.ts')
+
+  assert.equal(isScheduled({ headers: { 'x-vercel-cron': '1' } }), true)
+  assert.equal(isScheduled({ headers: { 'user-agent': 'vercel-cron/1.0' } }), true,
+    'the user agent alone must be enough: the first real cron arrived with no x-vercel-cron header')
+  assert.equal(isScheduled({ headers: { 'x-vercel-cron': '1', 'user-agent': 'vercel-cron/1.0' } }), true)
+})
+
+test('a person with the cron secret is still recorded as manual', () => {
+  // Krish running a job by hand is a real and useful thing to see in the
+  // ledger; collapsing it into 'cron' would hide that a job only ever runs
+  // because someone pokes it.
+  const isScheduled = (headers: Record<string, unknown>) =>
+    Boolean(headers['x-vercel-cron']) || (typeof headers['user-agent'] === 'string' && /vercel-cron/i.test(headers['user-agent'] as string))
+
+  assert.equal(isScheduled({ 'user-agent': 'curl/8.4.0' }), false)
+  assert.equal(isScheduled({}), false)
+  assert.equal(isScheduled({ 'user-agent': 'Mozilla/5.0' }), false)
+})
