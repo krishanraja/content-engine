@@ -14,6 +14,8 @@ const appRoot = resolve(fileURLToPath(new URL('../apps/control-plane/', import.m
 const GUARDS = [
   'check-env-example',
   'check-content-engine-schedule',
+  'check-content-window',
+  'check-unified-content-spine',
   'check-content-chain',
   'check-content-expiry',
   'check-content-vocabulary',
