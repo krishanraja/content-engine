@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'vitest'
-import { presetProposals, judgeProposals, handRewriteProposals } from '../../apps/control-plane/api/learning/compile.ts'
+import { presetProposals, judgeProposals, handRewriteProposals } from '../../apps/control-plane/api/learning/_patterns.ts'
 
 // What the compiler is allowed to say, and what it must stay quiet about.
 //
