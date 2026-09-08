@@ -23,7 +23,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import {
   toCandidates, selectWithinBudget, storyUrl, parseSeedArray, filterSeeds,
-  normaliseHandle, artifactKey, READABLE_MIMES, TRANSIENT_SKIPS,
+  normaliseHandle, handleKey, creatorMatches, artifactKey, READABLE_MIMES, TRANSIENT_SKIPS,
   MAX_DOWNLOAD_ATTEMPTS, BLACKLISTED_FRAMINGS,
   ARTIFACT_INPUT_KINDS, ARTIFACT_STATUSES, ARTIFACT_SCOPES, artifactInputKind,
 } from '../api/inspiration/_scan.js'
@@ -162,6 +162,18 @@ const read = (rel: string) => readFileSync(new URL(`../${rel}`, import.meta.url)
     assert.equal(normaliseHandle(form), 'krishraja', `${form} must resolve to one person`)
   }
   assert.equal(normaliseHandle(null), '')
+
+  // The live registry's most-screenshotted creator has no linkedin_slug at all,
+  // so the Tuesday scout can never reach him and a screenshot is the only way
+  // he is ever seen. Matching on the slug alone left him at zero posts seen.
+  const noSlug = { slug: 'aaron-levie', linkedin_slug: null, name: 'Aaron Levie' }
+  assert.ok(creatorMatches(noSlug, { poster_name: 'Aaron Levie' }), 'a creator with no handle must still match on his name')
+  assert.ok(creatorMatches(noSlug, { poster_handle: 'aaronlevie' }), 'a handle must match the slug it is spelled from')
+  assert.ok(creatorMatches(noSlug, { poster_handle: '@AaronLevie' }))
+  assert.ok(!creatorMatches(noSlug, { poster_name: 'Someone Else' }))
+  // Two initials must not match half the registry.
+  assert.ok(!creatorMatches({ slug: 'al', linkedin_slug: null, name: 'AL' }, { poster_handle: 'al' }), 'a very short key is not evidence')
+  assert.equal(handleKey('Aaron Levie'), 'aaronlevie')
 }
 
 // ── 8. The decisions run without Drive, a model or a database ───────────────

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   toCandidates, selectWithinBudget, storyUrl, parseSeedArray, filterSeeds,
-  normaliseHandle, fileHash, artifactKey,
+  normaliseHandle, handleKey, creatorMatches, fileHash, artifactKey,
   DEFAULT_MAX_IMAGE_BYTES, DEFAULT_MAX_IMAGES,
 } from '../../apps/control-plane/api/inspiration/_scan.js'
 
@@ -166,5 +166,37 @@ describe('joining a screenshot to a creator', () => {
     expect(normaliseHandle(null)).toBe('')
     expect(normaliseHandle(undefined)).toBe('')
     expect(normaliseHandle(42)).toBe('')
+  })
+
+  // The live registry holds a creator with no linkedin_slug. The Tuesday scout
+  // needs a slug to scrape, so it can never reach him, and a screenshot is the
+  // only way he is ever seen. He had been screenshotted and his posts_seen was
+  // still zero.
+  const unscrapeable = { slug: 'aaron-levie', linkedin_slug: null, name: 'Aaron Levie' }
+
+  it('matches on the name when there is no handle to match on', () => {
+    expect(creatorMatches(unscrapeable, { poster_name: 'Aaron Levie' })).toBe(true)
+    expect(creatorMatches(unscrapeable, { poster_name: 'aaron levie' })).toBe(true)
+  })
+
+  it('matches a handle against the slug it is spelled from', () => {
+    expect(creatorMatches(unscrapeable, { poster_handle: 'aaronlevie' })).toBe(true)
+    expect(creatorMatches(unscrapeable, { poster_handle: '@AaronLevie' })).toBe(true)
+    expect(creatorMatches(unscrapeable, { poster_handle: 'https://www.linkedin.com/in/aaron-levie/' })).toBe(true)
+  })
+
+  it('does not match someone else', () => {
+    expect(creatorMatches(unscrapeable, { poster_name: 'Someone Else' })).toBe(false)
+    expect(creatorMatches(unscrapeable, {})).toBe(false)
+  })
+
+  it('refuses a key too short to be evidence', () => {
+    expect(creatorMatches({ slug: 'al', linkedin_slug: null, name: 'AL' }, { poster_handle: 'al' })).toBe(false)
+  })
+
+  it('strips every separator so three spellings agree', () => {
+    expect(handleKey('Aaron Levie')).toBe('aaronlevie')
+    expect(handleKey('aaron-levie')).toBe('aaronlevie')
+    expect(handleKey('@aaronlevie')).toBe('aaronlevie')
   })
 })

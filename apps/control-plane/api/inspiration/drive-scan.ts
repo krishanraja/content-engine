@@ -8,7 +8,7 @@ import { postHash, verbatimCheck } from '../_creatorFingerprint.js'
 import { buildSystemPrompt, buildUserContent, type Pillar, type CreatorRow, type YieldRow, type ReadableDoc, type ReadableBinary } from './_prompt.js'
 import {
   toCandidates, selectWithinBudget, parseSeedArray, filterSeeds,
-  fileHash, artifactKey, storyUrl, normaliseHandle, artifactInputKind,
+  fileHash, artifactKey, storyUrl, handleKey, creatorMatches, artifactInputKind,
   TEXT_MIMES, IMAGE_MIMES, PDF_MIME, TRANSIENT_SKIPS,
   RETRY_AFTER_MINUTES, MAX_DOWNLOAD_ATTEMPTS,
   DEFAULT_LOOKBACK_DAYS, DEFAULT_MAX_IMAGES, DEFAULT_MAX_IMAGE_BYTES,
@@ -251,12 +251,12 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   const [pillarsRes, briefRes, creatorsRes, anglesRes, yieldRes] = await Promise.all([
     supabase.from('content_pillars').select('id,name,description,good_looks_like,anti_patterns,evidence_required').eq('active', true).order('id'),
     supabase.from('agents').select('brief_content').eq('id', 'cleo').maybeSingle(),
-    supabase.from('content_creators').select('id,name,linkedin_slug,why,posts_seen').eq('active', true).order('name'),
+    supabase.from('content_creators').select('id,slug,name,linkedin_slug,why,posts_seen').eq('active', true).order('name'),
     supabase.from('content_ideas').select('idea').gte('created_at', new Date(Date.now() - 60 * 86_400_000).toISOString()).order('created_at', { ascending: false }).limit(120),
     supabase.from('newsletter_source_yield').select('newsletter_key,seeds,advanced,buried,recurrences').limit(60),
   ])
 
-  const creators = (creatorsRes.data || []) as Array<CreatorRow & { id: string; posts_seen: number | null }>
+  const creators = (creatorsRes.data || []) as Array<CreatorRow & { id: string; slug: string | null; posts_seen: number | null }>
   const system = buildSystemPrompt({
     brief: String((briefRes.data as Record<string, unknown> | null)?.brief_content || ''),
     pillars: (pillarsRes.data || []) as unknown as Pillar[],
@@ -330,9 +330,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // The creator join. A screenshot of a curated creator's post is the same
     // event the Tuesday scout would have found, so it counts on the same
     // register rather than in a second private tally.
-    const handle = normaliseHandle(seed.poster_handle)
+    const handle = handleKey(seed.poster_handle) || handleKey(seed.poster_name)
     if (handle) {
-      const match = creators.find(c => normaliseHandle(c.linkedin_slug) === handle || normaliseHandle(c.name) === handle)
+      const match = creators.find(c => creatorMatches(c, seed))
       if (match) {
         await supabase.from('content_creators')
           .update({ posts_seen: (match.posts_seen || 0) + 1, last_post_url: url, last_post_at: new Date().toISOString() })
@@ -347,7 +347,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         if (!lift.ok) verbatimRejects++
         await supabase.from('creator_moves').upsert({
           creator_id: match.id,
-          creator_slug: normaliseHandle(match.linkedin_slug) || handle,
+          creator_slug: match.slug || handleKey(match.linkedin_slug) || handle,
           post_url: url,
           post_hash: postHash(excerpt),
           move: {},

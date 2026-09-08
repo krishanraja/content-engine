@@ -292,3 +292,30 @@ export function normaliseHandle(handle: unknown): string {
     .replace(/\/+$/, '')
     .slice(0, 120)
 }
+
+/** The comparable form. A creator is on file under three spellings that never
+ *  agree: a slug ('aaron-levie'), a display name ('Aaron Levie') and sometimes
+ *  a LinkedIn handle ('aaronlevie'). A screenshot shows whichever of those the
+ *  post happened to display, usually the name.
+ *
+ *  This matters more than it looks. The registry's most-screenshotted creator
+ *  has no LinkedIn slug at all, which means the Tuesday scout can never reach
+ *  him: a screenshot is the ONLY way he is ever seen. Matching on the slug
+ *  alone would have left him at zero posts seen forever, which is exactly the
+ *  state the live registry was in. */
+export function handleKey(value: unknown): string {
+  return normaliseHandle(value).replace(/[^a-z0-9]/g, '')
+}
+
+/** Does this screenshot's poster match this creator? Compares every spelling
+ *  the registry holds against both the handle and the name the model read. */
+export function creatorMatches(
+  creator: { slug?: string | null; linkedin_slug?: string | null; name?: string | null },
+  seen: { poster_handle?: unknown; poster_name?: unknown },
+): boolean {
+  const known = new Set([creator.slug, creator.linkedin_slug, creator.name].map(handleKey).filter(Boolean))
+  if (!known.size) return false
+  const candidates = [handleKey(seen.poster_handle), handleKey(seen.poster_name)].filter(Boolean)
+  // A very short key is not evidence: two initials would match half a registry.
+  return candidates.some(c => c.length >= 4 && known.has(c))
+}
