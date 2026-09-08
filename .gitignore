@@ -1,15 +1,19 @@
 node_modules/
-dist/
-coverage/
+/dist/
+/coverage/
 .venv/
 __pycache__/
 *.pyc
-.cache/
-.runtime/
-.artifacts/
-jobs/
-archive/
-oauth/
+/.cache/
+/.runtime/
+/.artifacts/
+# Local runtime state at the repository root only. These were unanchored, and
+# `jobs/` silently swallowed apps/control-plane/api/video-studio/jobs/[id]/,
+# so two live routes were never committed and CI caught it on a clean checkout.
+# Anchor them: they mean the runtime directories here, not any path segment.
+/jobs/
+/archive/
+/oauth/
 *.mp4
 *.mov
 *.mkv
