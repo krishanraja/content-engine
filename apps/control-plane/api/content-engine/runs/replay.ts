@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { guard } from '../../_auth.js'
+import { guardOperatorOrCron } from '../../_auth.js'
 import { JOBS, JOB_NAMES, replayUrl, resolveReplay } from '../_jobs.js'
 
 // Run one cron job again, now.
@@ -19,7 +19,7 @@ import { JOBS, JOB_NAMES, replayUrl, resolveReplay } from '../_jobs.js'
 const REPLAY_TIMEOUT_MS = 60_000
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guard(req, res, ['GET', 'POST'])) return
+  if (guardOperatorOrCron(req, res, ['GET', 'POST'])) return
 
   if (req.method === 'GET') {
     return res.status(200).json({

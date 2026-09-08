@@ -143,8 +143,8 @@ check(
   'replay.ts must take its host from the platform',
 )
 check(
-  /guard\(req, res/.test(replaySource),
-  'replay.ts must be behind the operator guard; it can invoke every job in the engine',
+  /guardOperatorOrCron\(req, res/.test(replaySource),
+  'replay.ts must use guardOperatorOrCron: plain guard() fails open when ACCESS_CODE is unset, and this route can invoke every job in the engine',
 )
 
 if (failures.length > 0) {
