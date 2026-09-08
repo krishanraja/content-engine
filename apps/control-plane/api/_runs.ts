@@ -53,13 +53,23 @@ export function classifyRun(statusCode: number, body: unknown, threw: Error | nu
   return { status: 'ok', reason: null }
 }
 
-export async function recordContentRun(row: ContentRunRecord): Promise<void> {
+export async function recordContentRun(row: ContentRunRecord, body: unknown = null): Promise<void> {
   try {
     // Loaded here, not at module top: _supabase.js throws at import when the
     // env is unset, which is correct for a route and fatal for the pure
     // halves (classifyRun, countsFrom) that tests and guards import.
     const { supabase } = await import('./_supabase.js')
-    await supabase.from('content_engine_runs').insert(row)
+    const { data, error } = await supabase.from('content_engine_runs').insert(row).select('id').single()
+    if (error || !data) return
+
+    // A failure that records only "something broke" costs a reproduction
+    // against live data to fix. The artifact is bounded and redacted by
+    // _runArtifacts.ts, and is written after the run row so a failure to store
+    // evidence can never lose the run itself.
+    const { artifactForFailure } = await import('./_runArtifacts.js')
+    const artifact = artifactForFailure(row.job, row.status, row.reason, body)
+    if (!artifact) return
+    await supabase.from('content_engine_run_artifacts').insert({ run_id: (data as { id: string }).id, ...artifact })
   } catch {
     // Best effort by design: the ledger must never be the reason a cron fails.
   }
@@ -128,7 +138,7 @@ export function withContentRun(job: string, handler: Handler): Handler {
       counts: countsFrom(payload),
       started_at: startedAt.toISOString(),
       finished_at: new Date().toISOString(),
-    })
+    }, threw ?? payload)
     flush()
     if (threw) throw threw
   }

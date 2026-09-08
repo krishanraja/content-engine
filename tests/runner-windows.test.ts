@@ -212,4 +212,60 @@ describe('Windows runner entry point', () => {
       await rm(fixtureRoot, { recursive: true, force: true })
     }
   }, 30_000)
+
+  it('reports on credentials without ever emitting one', async () => {
+    const source = await readFile(join(ROOT, 'scripts', 'inspect-credentials.ps1'), 'utf8')
+
+    // The script exists to be run when a credential has gone wrong, which is
+    // exactly when someone is most likely to paste its output somewhere. The
+    // decoded blob must reach a hash and nothing else.
+    expect(source).toContain('Substring(0, 12)')
+    expect(source).toMatch(/Chars\s*=\s*value\.Length/)
+    expect(source).not.toMatch(/=\s*value\s*[,;}]/)
+    for (const sink of ['Write-Output $value', 'Write-Host', '$entry.Value', 'Value =']) {
+      expect(source).not.toContain(sink)
+    }
+
+    // Persist 3 can be overwritten from outside the machine and Comment is the
+    // only marker distinguishing our writes from a foreign tool's. Both are the
+    // reason the script exists, so neither may be quietly dropped.
+    expect(source).toContain('Enterprise (roams)')
+    expect(source).toContain('Mindmake Video Studio')
+    expect(source).toContain('CredEnumerateW')
+  })
+
+  it('writes a credential onto nothing and refuses to claim success without a readback', async () => {
+    const source = await readFile(join(ROOT, 'scripts', 'set-credential.ps1'), 'utf8')
+
+    // A roaming-persisted entry under the same name survived a write once and
+    // reverted it hours later. The delete has to happen before the write, and the
+    // write has to be checked, or the script reports success for a value the store
+    // will not be holding by the time anything reads it.
+    const removed = source.indexOf('DeleteExisting($Target)')
+    const written = source.indexOf('::Write($Target, $secret,')
+    const readback = source.indexOf('Readback($Target)')
+    const success = source.indexOf('Stored credential:')
+    expect(removed).toBeGreaterThan(-1)
+    expect(removed).toBeLessThan(written)
+    expect(written).toBeLessThan(readback)
+    expect(readback).toBeLessThan(success)
+
+    expect(source).toMatch(/if \(\$persist -ne \$expectedPersist\)/)
+    expect(source).toMatch(/if \(\$length -ne \$secret\.Length\)/)
+
+    // LocalMachine unless -Roaming is asked for explicitly, and an Enterprise
+    // readback without it is an error rather than a shrug. Enterprise means the
+    // entry can be replaced from off the machine, which is how two verified
+    // writes were rolled back; it is a deliberate choice, never a default.
+    expect(source).toContain('$expectedPersist = if ($Roaming) { 3 } else { 2 }')
+    expect(source).toMatch(/if \(-not \$Roaming -and \$persist -eq 3\)/)
+
+    // -Generate stays available to packages/core/src/credentials.ts, which runs
+    // this script -NonInteractive, and -FromStdin gives a caller with no console a
+    // way in that is not a -Value parameter landing in shell history.
+    expect(source).toContain('[switch]$Generate')
+    expect(source).toContain('[switch]$FromStdin')
+    expect(source).not.toMatch(/\[string\]\$Value/)
+    expect(source).toContain('[Console]::In.ReadLine()')
+  })
 })

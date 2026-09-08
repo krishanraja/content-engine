@@ -49,6 +49,89 @@ leaves the machine and must stay stable for the life of the signed job history.
 The middle row is the one that fails quietly, which is why it is worth checking
 a receipt lands and not just a heartbeat.
 
+## Where the runner actually is
+
+`SURFACE`. Checkout at `C:\Users\krish\Documents\MindmakeVideoStudio\runner-source`,
+scheduled task `Mindmake Video Studio Runner`, running `node.exe` directly.
+
+Two things there look wrong and are not:
+
+- The runner talks to `https://controlcenter.krishraja.com/api/video-studio/runner`,
+  not the engine domain. That is `DEFAULT_CONTROL_PLANE_URL` in
+  `packages/core/src/runner.ts:78`, and Control Center rewrites the path through
+  to the engine. Repointing it is a later change needing a source reinstall, not
+  an env edit. Do not "correct" it.
+- There is no separate `content-engine` checkout. The control plane is
+  `apps/control-plane` in this repo.
+
+The task principal is `LogonType Interactive` on purpose
+(`scripts/install-runner-task.ps1:81`, asserted by `tests/runner-windows.test.ts:23`).
+An S4U principal runs without the user's password, DPAPI never unlocks, and the
+runner cannot read any of the credentials below. Never change it.
+
+The consequence, which is real: with an At-Logon trigger, Interactive logon and no
+automatic logon configured, **the runner does not come back after a reboot** until
+someone signs in at the console. The five-minute recovery trigger cannot help at a
+lock screen; it exists for sleep and session interruption while signed in.
+
+## Windows credential roaming silently reverted two of these
+
+On 2026-09-08 `control-center-runner-token` and `control-center-runner-signing-key`
+were written and verified at 14:28. By 15:42 both held their 2026-09-04 values
+again, with `Persist = 3` (Enterprise, roams), an empty `Comment`, and a
+`LastWritten` of Sept 4. They were not copies pasted back by some tool; they were
+the original entries restored by Windows credential roaming, metadata included.
+
+Two things about this are worth keeping.
+
+**A successful write proves nothing.** `CredWrite` returned true, the read back
+matched, and a live call authenticated. Hours later a sync replaced the entry.
+`set-credential.ps1` now deletes any existing entry before writing and refuses to
+report success unless the read back shows the right length and `Persist = 2`.
+
+**`Persist = 2` on the write does not make it safe.** Confirmed twice: two
+LocalMachine writes, each verified by fingerprint, each rolled back inside 25
+minutes. An inbound roam re-creates the entry wholesale, class and metadata
+included, whatever the local entry was. `control-center-radar-token` survives
+because it is a newer name with no copy in the roaming store, not because
+LocalMachine defends it.
+
+SURFACE is `WorkplaceJoined` to the `krishraja.com` tenant, with no local roaming
+policy keys set, so the copy lives tenant-side. The `LastWritten` on a reverted
+entry reads Sept 4, not the time of the overwrite, which is the tell: a sync
+replicating a stored blob, not a tool writing a fresh one.
+
+**The fix is to make the sync carry the right value, not to fight it.** These two
+names roam whatever we do, and the only writable end is the local one, so writing
+the correct value as Enterprise propagates it and a later restore restores what we
+want:
+
+```powershell
+powershell -NoProfile -File scripts/set-credential.ps1 -Roaming -Target MindmakeVideoStudio/control-center-runner-token
+powershell -NoProfile -File scripts/set-credential.ps1 -Roaming -Target MindmakeVideoStudio/control-center-runner-signing-key
+```
+
+`-Roaming` is never a default and the script refuses an Enterprise readback
+without it. The trade is real and worth saying once: these two then sync to the
+tenant and to the account's other joined devices. They already did, at their old
+values. This changes what roams, not whether.
+
+Rejected, and worth recording so it is not revisited: unregistering the workplace
+join or disabling roaming tenant-wide, which carries blast radius across all of
+Microsoft 365 to fix a video runner; and renaming the credentials to dodge the
+roaming set, which works but needs a source pull and a task reinstall on SURFACE
+to buy the same outcome.
+
+The failure is silent and delayed, which is what makes it dangerous. A daemon
+already running holds its key in memory and keeps heartbeating; only the next start
+reads the store, fails marker verification, and refuses to come up. On 2026-09-08
+the machine had been up nine days, so nothing had exercised it.
+
+`scripts/inspect-credentials.ps1` reports `Persist`, `Comment`, `LastWritten` and a
+one-way fingerprint for every `MindmakeVideoStudio/*` entry, and warns on any that
+is Enterprise-persisted or that our own script did not write. It prints no secret,
+because the moment to run it is the moment someone pastes the output somewhere.
+
 ## The readback
 
 ```
