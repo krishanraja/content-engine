@@ -65,6 +65,23 @@ export async function recordContentRun(row: ContentRunRecord): Promise<void> {
   }
 }
 
+/** Did the platform's scheduler make this request, or did a person?
+ *
+ *  The first live scheduled run after the cutover recorded itself as `manual`,
+ *  because this read only `x-vercel-cron` and the request did not carry it.
+ *  Vercel's scheduler identifies itself two ways and does not promise both;
+ *  reading one made the column that exists to tell cron from hand useless, and
+ *  a ledger that cannot tell them apart cannot answer "did that job run on its
+ *  own, or only because someone poked it".
+ *
+ *  Nothing else depends on this: an unauthenticated caller is refused long
+ *  before here, so the worst a wrong answer costs is a mislabel. */
+export function isScheduled(req: { headers: Record<string, unknown> }): boolean {
+  if (req.headers['x-vercel-cron']) return true
+  const agent = req.headers['user-agent']
+  return typeof agent === 'string' && /vercel-cron/i.test(agent)
+}
+
 export function withContentRun(job: string, handler: Handler): Handler {
   if (!JOB_PATTERN.test(job)) throw new Error(`content run job name is invalid: ${job}`)
   return async (req, res) => {
@@ -105,7 +122,7 @@ export function withContentRun(job: string, handler: Handler): Handler {
     const { status, reason } = classifyRun(threw ? 500 : statusCode, payload, threw)
     await recordContentRun({
       job,
-      trigger: req.headers['x-vercel-cron'] ? 'cron' : 'manual',
+      trigger: isScheduled(req) ? 'cron' : 'manual',
       status,
       reason,
       counts: countsFrom(payload),
