@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ProductionBriefV1Schema } from '@mindmake/contracts'
+import { BUILT_WITH_AI_FORMATS_V1, CandidateV1Schema, EditorialFormatV1Schema, MONEY_OF_AI_FORMATS_V1, ProductionBriefV1Schema, normalizeEditorialFormatV1 } from '@mindmake/contracts'
 
 const hash = 'a'.repeat(64)
 const base = {
@@ -44,5 +44,18 @@ describe('ProductionBriefV1', () => {
   it('does not let written-only input masquerade as a video source', () => {
     const parsed = ProductionBriefV1Schema.safeParse({ ...base, source_mode: 'written' })
     expect(parsed.success).toBe(false)
+  })
+
+  it('uses one strict canonical format registry across both series', () => {
+    expect(EditorialFormatV1Schema.options).toEqual([...MONEY_OF_AI_FORMATS_V1, ...BUILT_WITH_AI_FORMATS_V1])
+    for (const editorial_format of MONEY_OF_AI_FORMATS_V1) expect(ProductionBriefV1Schema.safeParse({ ...base, editorial_format }).success).toBe(true)
+    expect(ProductionBriefV1Schema.safeParse({ ...base, editorial_format: 'third_why' }).success).toBe(false)
+    expect(CandidateV1Schema.safeParse({ schema_version: 1, candidate_id: 'candidate-1', job_id: 'job-1', series: 'built_with_ai', editorial_format: 'verdict', mode: 'solo', transcript: 'A complete thought.', hook: 'A complete thought.', payoff: 'A complete thought.', scores: { truth: 1, evidence: 1, clarity: 1, tension: 1, payoff: 1, visual_proof: 1, qualified_fit: 1, novelty: 1 }, claims: [], challenge: { strongest_objection: 'A sufficiently specific objection.', safer_version: 'A safer version of the same idea.', stretch_version: 'A more ambitious version of the idea.', recommendation: 'Use the strongest truthful version of this idea.', hard_blocks: [], soft_blocks: [] }, identity_mentions: [], source_refs: [] }).success).toBe(false)
+  })
+
+  it('normalises retired input names without admitting them to public artifacts', () => {
+    expect(normalizeEditorialFormatV1('The Teardown')).toBe('artifact')
+    expect(normalizeEditorialFormatV1('Build-Itself')).toBe('build_itself')
+    expect(EditorialFormatV1Schema.safeParse('teardown').success).toBe(false)
   })
 })

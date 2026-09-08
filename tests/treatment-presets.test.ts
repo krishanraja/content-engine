@@ -57,11 +57,12 @@ describe('approved treatment registry', () => {
 
   it('keeps explicit taste memory approved and correctly scoped', async () => {
     const config = await registry()
-    expect(config.active_preferences).toHaveLength(4)
+    expect(config.active_preferences).toHaveLength(5)
     expect(config.active_preferences.every((rule) => rule.status === 'active')).toBe(true)
     expect(config.active_preferences.filter((rule) => rule.scope.level === 'treatment' && rule.scope.key === 'evidence-kinetic-ribbon-v1')).toHaveLength(2)
     expect(config.active_preferences.find((rule) => rule.scope.level === 'global' && rule.scope.key === 'brand-lockup')?.evidence_feedback_ids).toEqual(['2cecdb0b-efe0-400c-b39b-e843188932ee', 'fc37225c-d396-4447-9343-680038c7e3d8'])
-    expect(config.active_preferences.find((rule) => rule.rule_id === 'pref-money-investigative-receipts-v1')).toMatchObject({ scope: { level: 'series', key: 'money_of_ai' }, evidence_feedback_ids: ['feedback-reference-videos-20260908-01'] })
+    expect(config.active_preferences.find((rule) => rule.rule_id === 'pref-money-investigative-receipts-v1')).toMatchObject({ scope: { level: 'series', key: 'money_of_ai' }, evidence_feedback_ids: ['feedback-reference-videos-20260908-01', 'feedback-cross-series-format-expansion-20260908-01'] })
+    expect(config.active_preferences.find((rule) => rule.rule_id === 'pref-built-concrete-story-v1')).toMatchObject({ scope: { level: 'series', key: 'built_with_ai' }, evidence_feedback_ids: ['feedback-reference-videos-20260908-01', 'feedback-cross-series-format-expansion-20260908-01'] })
     expect(config.active_preferences.every((rule) => rule.approved_by === 'Krish')).toBe(true)
   })
 
@@ -75,6 +76,18 @@ describe('approved treatment registry', () => {
     expect(evidence.references.every((item) => /^[a-f0-9]{64}$/.test(item.sha256) && item.analysis_only)).toBe(true)
     expect(raw).not.toMatch(/[A-Z]:\\|\/Users\//)
     expect(rule?.evidence_feedback_ids).toContain(evidence.feedback_id)
+  })
+
+  it('links both series rules to the canonical format expansion', async () => {
+    const config = await registry()
+    const raw = await readFile(join(repoRoot, 'fixtures', 'feedback', 'cross-series-format-expansion-20260908.json'), 'utf8')
+    const evidence = JSON.parse(raw) as { feedback_id: string; decision: string; owner: string; scope: { formats: string[] }; canon: { retired_import_alias: Record<string, string> } }
+    expect(evidence).toMatchObject({ feedback_id: 'feedback-cross-series-format-expansion-20260908-01', decision: 'confirmed', owner: 'Krish', canon: { retired_import_alias: { teardown: 'artifact' } } })
+    expect(evidence.scope.formats).toHaveLength(8)
+    expect(raw).not.toMatch(/[A-Z]:\\|\/Users\//)
+    for (const ruleId of ['pref-money-investigative-receipts-v1', 'pref-built-concrete-story-v1']) {
+      expect(config.active_preferences.find((item) => item.rule_id === ruleId)?.evidence_feedback_ids).toContain(evidence.feedback_id)
+    }
   })
 
   it('accepts the locked layout and rejects cutaways, late evidence and unverified captions', async () => {

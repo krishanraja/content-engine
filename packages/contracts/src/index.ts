@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { DraftPackageV2Schema, JobManifestV2Schema, RenderManifestV2Schema, StageArtifactV2Schema, StudioEventV2Schema } from './v2.js'
+import { EditorialFormatV1Schema, editorialFormatBelongsToSeriesV1 } from './editorial-v1.js'
 export * from './v2.js'
 export * from './control-plane-v1.js'
 export * from './drive-discovery-v1.js'
@@ -223,6 +224,7 @@ export const CandidateV1Schema = z.object({
   candidate_id: z.string(),
   job_id: z.string(),
   series: SeriesSchema,
+  editorial_format: EditorialFormatV1Schema.optional(),
   mode: SourceModeSchema,
   start_ms: z.number().int().nonnegative().optional(),
   end_ms: z.number().int().positive().optional(),
@@ -240,6 +242,10 @@ export const CandidateV1Schema = z.object({
     evidence: z.string().min(8),
   })).default([]),
   source_refs: z.array(z.string()),
+}).superRefine((candidate, context) => {
+  if (candidate.editorial_format && !editorialFormatBelongsToSeriesV1(candidate.series, candidate.editorial_format)) {
+    context.addIssue({ code: 'custom', path: ['editorial_format'], message: 'editorial format does not belong to this series' })
+  }
 })
 export type CandidateV1 = z.infer<typeof CandidateV1Schema>
 

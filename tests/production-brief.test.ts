@@ -67,10 +67,16 @@ describe('Control Center production brief intake', () => {
     })).rejects.toThrow(/already bound to different semantic content/)
   }, 15_000)
 
+  it('normalises retired format aliases before storing the authoritative brief', async () => {
+    const imported = await importProductionBrief({ ...base, brief_id: 'brief_retired_alias_1', editorial_format: 'The Teardown' })
+    expect(imported.brief.editorial_format).toBe('artifact')
+    expect(JSON.parse(await readFile(imported.path, 'utf8')).editorial_format).toBe('artifact')
+  })
+
   it('accepts the exact shared Control Center contract fixture and hash', async () => {
     const fixture = JSON.parse(await readFile(join(process.cwd(), 'fixtures', 'contracts', 'production-brief-v1.json'), 'utf8'))
-    expect(hashValue(fixture)).toBe('84da9d78420f15d5068c43b93774c76dbeaefded45665ba0bd0005a096f12ca3')
-    await expect(importProductionBrief(fixture)).resolves.toMatchObject({ brief_hash: '84da9d78420f15d5068c43b93774c76dbeaefded45665ba0bd0005a096f12ca3' })
+    expect(hashValue(fixture)).toBe('93ca6cd821a3d2faa50002474ca6ddbd50e3cb85f7b26e903a5b147108f355d9')
+    await expect(importProductionBrief(fixture)).resolves.toMatchObject({ brief_hash: '93ca6cd821a3d2faa50002474ca6ddbd50e3cb85f7b26e903a5b147108f355d9' })
   })
 
   it('materializes a short-native job once and pins the exact brief artifact', async () => {

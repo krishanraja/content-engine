@@ -1,10 +1,15 @@
-# Reference video calibration
+# Reference video calibration and publication-wide expansion
 
 ## Decision
 
-`feedback-reference-videos-20260908-01` is an owner-confirmed taste rule for The Money of AI investigative Shorts. It is active in `config/studio.json` as `pref-money-investigative-receipts-v1`.
+`feedback-reference-videos-20260908-01` records the reference-video judgement. `feedback-cross-series-format-expansion-20260908-01` records Krish's explicit approval to extend the underlying standard across both publication series and every canonical format.
 
-The release starts at series scope because both supplied examples are presenter-led, claim-led stories that fit The Money of AI. It does not silently change Built With AI, carousels, Substack, or non-investigative formats. Broader application still requires three confirmed instances across at least two jobs, regression review, and a separate approval from Krish.
+Two active series rules now carry one shared anti-slop floor with different proof interpretations:
+
+- `pref-money-investigative-receipts-v1` covers Money Trace, The Artifact, Verdict and Cold-open cutdown.
+- `pref-built-concrete-story-v1` covers Builder conversation, The Build Itself, The Third Why and First Version.
+
+The Artifact is the canonical public name. Teardown is retired. The import normaliser accepts the retired word only to map old input to `artifact`; strict production schemas reject it.
 
 ## What the references teach
 
@@ -12,28 +17,26 @@ The positive reference earns attention through an immediate promise, visible pro
 
 The negative reference contains a useful investigative spine: source claim, explanation, evidence, contradiction, incentive and verdict. Its execution weakens that spine by stripping qualifiers, overclaiming causality, using generic montage as proof, adding arbitrary punch-ins, interrupting the story with a follow request and ending on an empty comment prompt.
 
-The governing rule is therefore:
+The shared governing rule is therefore:
 
 > Open with a legible promise and visible receipts. Trace one mechanism through concrete scenes and fair contradiction. Preserve qualifiers. Make every visual move do a narrative job. Finish on an earned verdict.
 
-## Enforced now
+## Format-aware enforcement
 
-At candidate review, the engine raises a soft block that needs a recorded override when the active scoped rule finds:
+At candidate review, both series raise a soft block that needs a recorded override for unsupported sensational framing, interrupted follow requests and empty comment prompts.
 
-- unsupported sensational terms;
-- follow or subscribe requests inside the story;
-- empty comment prompts;
-- evidence or visual-proof scores below the calibrated floor;
-- no explicit claim boundary for investigative work.
+Every The Money of AI format also requires strong source receipts, concrete visual proof and at least one explicit claim boundary. Its visual plan expects evidence or an owned artifact inside the first five seconds.
 
-At visual-plan review, the engine raises a soft block when no sourced receipt or artifact is placed in the first five seconds, or when generic licensed B-roll is used as proof in an evidence or mechanism beat.
+The Build Itself and First Version require a concrete build, artifact or recorded source and expect that proof inside the first eight seconds of video or first three carousel slides. Builder conversation and The Third Why may open on the person when the revealing human moment is the strongest truthful evidence. They are not forced to imitate an investigative screenshot opening.
 
-Existing hard gates already protect source qualifiers, claim boundaries, causal-chain preservation, factual verification, semantic coherence and ending strength. Caption styling, camera motivation, countercase fairness and the earned quality of the verdict remain human review items until they have reliable machine-readable signals.
+Generic licensed B-roll cannot act as proof in either series. Carousel validation separately reports preference issues before production approvals are recorded, so Krish can revise or explicitly approve the exact story with the issue visible.
+
+Existing hard gates protect source qualifiers, claim boundaries, causal-chain preservation, factual verification, semantic coherence and ending strength. Caption styling, camera motivation, countercase fairness and the earned quality of the ending remain human review items until they have reliable machine-readable signals.
 
 ## Evidence and privacy
 
-The reference media remains outside GitHub. The repository stores only cryptographic hashes, durations, analytical roles, the confirmed inference and the minimal confirmation excerpt in `fixtures/feedback/reference-video-preference-20260908.json`.
+The reference media remains outside GitHub. The repository stores only cryptographic hashes, durations, analytical roles, the confirmed inference and minimal decision records in `fixtures/feedback`.
 
 ## Rollback
 
-Retire the active preference in a reviewed Git change and remove its deterministic soft-block checks from the pinned preference snapshot for new jobs. Existing jobs retain the configuration hash they were created with.
+Retire either active series preference in a reviewed Git change and remove its deterministic soft-block checks from the pinned preference snapshot for new jobs. Existing jobs retain the configuration hash they were created with.

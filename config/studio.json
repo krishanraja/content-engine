@@ -173,14 +173,26 @@
     {
       "schema_version": 1,
       "rule_id": "pref-money-investigative-receipts-v1",
-      "assertion": "For The Money of AI investigative Shorts, open with a legible promise and visible receipts, use concrete scenes and progression to trace one mechanism, preserve every source qualifier, treat the countercase fairly, keep visual moves story-motivated, and end on an earned verdict. Do not use unsupported drama, generic technology B-roll, all-caps word-by-word captions, mid-story follow requests, or empty comment prompts.",
+      "assertion": "Across every The Money of AI format, open with a legible promise and visible receipts, use concrete scenes and progression to trace one mechanism, preserve every source qualifier, treat the countercase fairly, keep visual moves story-motivated, and end on an earned verdict. Do not use unsupported drama, generic technology B-roll, all-caps word-by-word captions, mid-story follow requests, or empty comment prompts.",
       "scope": { "level": "series", "key": "money_of_ai" },
-      "evidence_feedback_ids": ["feedback-reference-videos-20260908-01"],
-      "counterexamples": ["A non-investigative Built With AI artifact demo may use a looser visual rhythm, but it may not alter factual qualifiers or present generic B-roll as evidence."],
-      "regression_cases": ["source qualifiers and claim boundaries remain intact", "a sourced receipt or owned artifact appears in the first five seconds", "the story traces one intelligible mechanism", "the strongest credible countercase is treated fairly", "camera moves and overlays have a declared narrative job", "generic technology B-roll is not used as proof", "captions avoid all-caps word-by-word treatment", "no follow request interrupts the story", "the ending lands an earned verdict rather than an empty comment prompt"],
+      "evidence_feedback_ids": ["feedback-reference-videos-20260908-01", "feedback-cross-series-format-expansion-20260908-01"],
+      "counterexamples": ["A human-led opening may precede the first receipt only when the source moment is itself the evidence and the receipt still appears inside the first five seconds."],
+      "regression_cases": ["all four canonical Money formats use the same editorial floor", "source qualifiers and claim boundaries remain intact", "a sourced receipt or owned artifact appears in the first five seconds", "the story traces one intelligible mechanism", "the strongest credible countercase is treated fairly", "camera moves and overlays have a declared narrative job", "generic technology B-roll is not used as proof", "captions avoid all-caps word-by-word treatment", "no follow request interrupts the story", "the ending lands an earned verdict rather than an empty comment prompt", "the retired Teardown name never appears in a public artifact"],
       "status": "active",
       "approved_by": "Krish",
       "approved_at": "2026-09-08T07:35:45.761Z"
+    },
+    {
+      "schema_version": 1,
+      "rule_id": "pref-built-concrete-story-v1",
+      "assertion": "Across every Built With AI format, make the build, decision, constraint, recorded moment, or human consequence concrete. Use actual artifacts when the format promises the build itself, preserve every qualifier, keep visual moves story-motivated, and finish on a useful earned insight. Do not use unsupported drama, generic technology B-roll as proof, all-caps word-by-word captions, mid-story follow requests, or empty comment prompts.",
+      "scope": { "level": "series", "key": "built_with_ai" },
+      "evidence_feedback_ids": ["feedback-reference-videos-20260908-01", "feedback-cross-series-format-expansion-20260908-01"],
+      "counterexamples": ["The Third Why and Builder Conversation may open on a revealing human moment without forcing a screenshot into the first beat.", "An illustration may create texture or clarify an analogy, but it cannot impersonate proof."],
+      "regression_cases": ["all four canonical Built formats use the same anti-slop floor", "The Build Itself and First Version show a concrete build or artifact in the first eight seconds", "The Third Why can remain human-led when that is the strongest truthful opening", "Builder Conversation preserves guest context and does not manufacture causality", "generic technology B-roll is not used as proof", "captions avoid all-caps word-by-word treatment", "no follow request interrupts the story", "the ending lands a useful insight rather than an empty comment prompt"],
+      "status": "active",
+      "approved_by": "Krish",
+      "approved_at": "2026-09-08T12:00:00.000Z"
     }
   ],
   "brand_themes": [

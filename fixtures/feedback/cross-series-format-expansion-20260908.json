@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "feedback_id": "feedback-cross-series-format-expansion-20260908-01",
+  "recorded_at": "2026-09-08T12:00:00.000Z",
+  "owner": "Krish",
+  "decision": "confirmed",
+  "scope": {
+    "level": "publication_formats",
+    "series": ["money_of_ai", "built_with_ai"],
+    "formats": [
+      "money_trace",
+      "artifact",
+      "verdict",
+      "cold_open_cutdown",
+      "builder_conversation",
+      "build_itself",
+      "third_why",
+      "first_version"
+    ]
+  },
+  "canon": {
+    "repository": "krishanraja/mindmake",
+    "commit": "280e03e9421fda7b2bbda89b0af64b7174cbd82e",
+    "path": "project-documentation/02_PUBLICATION.md",
+    "retired_import_alias": { "teardown": "artifact" }
+  },
+  "confirmed_inference": "Use one high editorial floor across both series and all canonical formats, then adapt the proof requirement to the promise of the format. Money formats lead with receipts and mechanism. Artifact-led Built formats show the build early. Human-led Built formats can lead with the person when the moment itself is the evidence.",
+  "confirmation_excerpt": "expand to Built with ai, and any other sub sections like the verdict, teardown etc",
+  "capture_boundary": "This record captures Krish's explicit scope expansion. It does not revive Teardown as a public format name."
+}

@@ -10,6 +10,8 @@ AI-native business decision-makers. The content should help someone make a conse
 - Required question: what changes economically or organisationally?
 - Useful proof: pricing, workflow economics, adoption evidence, decision rights, incentives, coordination, credibility, or operator experience.
 - Avoid: generic market-size narration, funding news without mechanism, and model launches without business consequence.
+- Canonical formats: Money Trace, The Artifact, Verdict, and Cold-open cutdown.
+- The Artifact is the public format name. Never emit Teardown. Treat that retired term only as an import alias for The Artifact.
 
 ## Built With AI
 
@@ -17,6 +19,8 @@ AI-native business decision-makers. The content should help someone make a conse
 - Required question: what was built, changed, tested, or learned?
 - Useful proof: interfaces, code, prompts, workflows, diagrams, before/after behaviour, constraints, and failure modes.
 - Avoid: generic tool lists, tutorials without a real outcome, and simulated expertise.
+- Canonical formats: Builder conversation, The Build Itself, The Third Why, and First Version.
+- The Build Itself and First Version are artifact-led. Builder conversation and The Third Why may be human-led when the recorded moment carries the truth of the story.
 
 ## Source modes
 
