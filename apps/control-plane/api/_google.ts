@@ -157,3 +157,64 @@ export async function createDriveDoc(input: { name: string; content: string }): 
     return null
   }
 }
+
+// ── Drive reads for the inspiration lane ────────────────────────────────────
+//
+// The n8n sweep used an OAuth Drive credential to list Krish's inspiration
+// folder. The service account can do the same, but only once the folder has
+// been SHARED with GOOGLE_SERVICE_ACCOUNT_EMAIL: drive.readonly grants the
+// right to read what this identity can already see, not the right to see
+// everything. An unshared folder lists zero files and does not error, so the
+// scan reports the distinction rather than showing a quiet zero.
+
+export const DRIVE_READONLY_SCOPE = 'https://www.googleapis.com/auth/drive.readonly'
+
+export interface DriveListResult {
+  ok: boolean
+  files: Array<{ id: string; name?: string; mimeType?: string; modifiedTime?: string; size?: string }>
+  reason?: string
+}
+
+/** Newest first, so the freshest drop wins the request budget. */
+export async function driveListFolder(folderId: string, lookbackDays: number): Promise<DriveListResult> {
+  const token = await googleAccessToken([DRIVE_READONLY_SCOPE])
+  if (!token) return { ok: false, files: [], reason: 'google_service_account_not_configured' }
+  const since = new Date(Date.now() - Math.max(1, lookbackDays) * 86_400_000).toISOString()
+  const params = new URLSearchParams({
+    q: `'${folderId}' in parents and trashed = false and modifiedTime > '${since}'`,
+    fields: 'files(id,name,mimeType,modifiedTime,size)',
+    orderBy: 'modifiedTime desc',
+    pageSize: '100',
+    supportsAllDrives: 'true',
+    includeItemsFromAllDrives: 'true',
+  })
+  try {
+    const r = await fetch(`https://www.googleapis.com/drive/v3/files?${params}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const j: any = await r.json().catch(() => ({}))
+    if (!r.ok) return { ok: false, files: [], reason: `drive_${r.status}:${String(j?.error?.message || '').slice(0, 160)}` }
+    return { ok: true, files: Array.isArray(j?.files) ? j.files : [] }
+  } catch (e) {
+    return { ok: false, files: [], reason: (e as Error)?.message?.slice(0, 160) || 'drive_list_threw' }
+  }
+}
+
+/** Bytes for a binary file, or the exported text of a native Google doc.
+ *  Returns null on any failure so the caller can mark the file for retry
+ *  rather than treat a transient 5xx as "this file is unreadable". */
+export async function driveDownloadFile(fileId: string, mimeType: string): Promise<Uint8Array | null> {
+  const token = await googleAccessToken([DRIVE_READONLY_SCOPE])
+  if (!token) return null
+  const native = mimeType.startsWith('application/vnd.google-apps.')
+  const url = native
+    ? `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}/export?mimeType=text/plain&supportsAllDrives=true`
+    : `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media&supportsAllDrives=true`
+  try {
+    const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } })
+    if (!r.ok) return null
+    return new Uint8Array(await r.arrayBuffer())
+  } catch {
+    return null
+  }
+}

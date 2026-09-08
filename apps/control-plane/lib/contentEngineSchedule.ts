@@ -38,6 +38,10 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   { job: 'purge',            path: '/api/purge/run',                     label: 'Monday purge',          everyHours: WEEK, graceHours: DAY },
   { job: 'runner_watch',     path: '/api/video-studio/runner/watch',     label: 'Studio runner watch',   everyHours: DAY,  graceHours: 12 },
   { job: 'learning_compile', path: '/api/learning/compile',              label: 'Learning compiler',     everyHours: WEEK, graceHours: DAY },
+  // Every two hours, but a screenshot dropped on a quiet day is still a quiet
+  // day: the expectation is that it succeeds daily, not that Krish saves
+  // something twelve times.
+  { job: 'inspiration_scan', path: '/api/inspiration/drive-scan',         label: 'Drive inspiration scan', everyHours: DAY, graceHours: 12 },
 ]
 
 export interface ContentEngineRunRow {
