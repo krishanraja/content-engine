@@ -1,0 +1,83 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "",
+  "outputDirectory": "public",
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/triage/sweep",
+      "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/content-ideas/cluster",
+      "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/discover-lens-radar",
+      "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/discover-creator-posts",
+      "schedule": "0 8 * * 2"
+    },
+    {
+      "path": "/api/feed/ingest",
+      "schedule": "30 11 * * *"
+    },
+    {
+      "path": "/api/content-opportunities/refresh",
+      "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/investigations/run",
+      "schedule": "0 21 * * 4"
+    },
+    {
+      "path": "/api/shifts/detect",
+      "schedule": "30 17 * * 5"
+    },
+    {
+      "path": "/api/arcs/surface",
+      "schedule": "50 17 * * 5"
+    },
+    {
+      "path": "/api/briefs/assemble",
+      "schedule": "0 18 * * 5"
+    },
+    {
+      "path": "/api/purge/run",
+      "schedule": "0 14 * * 1"
+    },
+    {
+      "path": "/api/video-studio/runner/watch",
+      "schedule": "30 6 * * *"
+    },
+    {
+      "path": "/api/content-ideas/archive-stale",
+      "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/discover-build-signals",
+      "schedule": "0 5 * * 6"
+    }
+  ],
+  "functions": {
+    "api/content-opportunities/refresh.ts": {
+      "maxDuration": 300
+    },
+    "api/discover-build-signals.ts": {
+      "maxDuration": 120
+    }
+  }
+}

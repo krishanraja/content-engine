@@ -1,0 +1,17 @@
+{
+  // scripts/ runs under tsx, where extensionless and .ts-suffixed imports are
+  // correct, so it is not held to the api tree's NodeNext resolution.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "types": ["node"],
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "strict": false
+  },
+  "include": ["scripts/**/*.ts", "scripts/**/*.ts"]
+}
