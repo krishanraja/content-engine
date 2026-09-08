@@ -1,57 +1,53 @@
-# The two runner secrets, and what to do with them
+# The Windows side of the cutover
 
-## What they are
+## The thing that was confusing, said plainly
 
-Two shared passwords between the Windows machine and the cloud.
+There is no vault these values come from. They are **passwords you choose**,
+shared between two machines: the cloud (Vercel) and the Windows box. Both sides
+must hold the same string. That is the whole idea.
 
-- `VIDEO_STUDIO_RUNNER_TOKEN` is the bearer the runner sends to prove a request
-  is from your machine.
-- `VIDEO_STUDIO_RUNNER_SIGNING_KEY` signs the receipts the runner sends back, so
-  the cloud knows a receipt is genuine and unaltered.
+Nobody can read the old ones back. Vercel stores them `sensitive`, which means
+no API call, no `vercel env pull`, and no dashboard view will ever show them
+again. So the move is not "find them", it is "pick new ones and set both sides".
 
-Each exists in two copies that must be byte-identical: one in Vercel, one in
-Windows Credential Manager. The engine is now the side that checks them, so the
-engine project needs the same two values the machine holds.
+The cloud side is **already done**. Three values were generated and set on the
+`content-engine` project, and each was tested against the live route that checks
+it. `GET /api/content-engine/ping` reports `ready: true`.
 
-A mismatch does not fail loudly. The runner authenticates fine and every receipt
-it signs is then rejected, which reads like the Studio quietly not working.
+What is left is the Windows box, because nothing outside it can write to its
+Credential Manager.
 
-## Just do this (recommended): set new values on both sides
+## Paste this on the Windows machine
 
-Nothing needs to be read out of anywhere. These are shared passwords, so any two
-strong random strings work as long as both sides get the same ones. This also
-rotates a pair that has been sitting unchanged.
-
-**1. Generate two values.** On the Windows machine, in PowerShell:
-
-```powershell
-$t = -join ((48..57) + (97..122) | Get-Random -Count 48 | % {[char]$_})
-$k = -join ((48..57) + (97..122) | Get-Random -Count 48 | % {[char]$_})
-$t; $k   # read these two lines; you will paste them twice each
-```
-
-**2. Put them in Vercel.** Go to the `content-engine` project (not
-`control-center`), Settings, Environment Variables, and add both for
-**Production**, ticking **Sensitive**:
-
-- `VIDEO_STUDIO_RUNNER_TOKEN` = the first value
-- `VIDEO_STUDIO_RUNNER_SIGNING_KEY` = the second value
-
-Then redeploy production so the running functions pick them up.
-
-**3. Put the same two on the Windows machine.** From the Studio checkout, these
-prompt interactively so the values never land in shell history:
+From the Studio checkout. Each command prompts for the value, so nothing lands
+in shell history.
 
 ```powershell
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-token
+# paste: rt_d26867dedb995704ec05f4278b8a5cefed9ba49aab49fe82
+
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-signing-key
+# paste: sk_90cf45cb7cb114cd84f7259c458172842cb47d6ed66c1d40
+
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-radar-token
+# paste: ex_8d91781f9833c86a9188b51ac0c2c71a4cec87ded17bcaea
 ```
 
-Paste the first value into the first, the second into the second. Do **not**
-touch `MindmakeVideoStudio/approval-signing-key`: that one never leaves the
-machine and must stay stable for the life of the signed job history.
+Then restart the runner scheduled task.
 
-**4. Restart the runner scheduled task**, then check the readback below.
+**Do not touch** `MindmakeVideoStudio/approval-signing-key`. That one never
+leaves the machine and must stay stable for the life of the signed job history.
+
+## What each pair is for
+
+| Windows credential | Engine variable | What breaks without it |
+|---|---|---|
+| `control-center-runner-token` | `VIDEO_STUDIO_RUNNER_TOKEN` | the runner cannot talk to the cloud at all |
+| `control-center-runner-signing-key` | `VIDEO_STUDIO_RUNNER_SIGNING_KEY` | the runner talks fine and every receipt it signs is rejected |
+| `control-center-radar-token` | `VIDEO_STUDIO_EXPORT_TOKEN` | the Studio radar cannot read the candidates export |
+
+The middle row is the one that fails quietly, which is why it is worth checking
+a receipt lands and not just a heartbeat.
 
 ## The readback
 
@@ -59,36 +55,23 @@ machine and must stay stable for the life of the signed job history.
 curl -s https://content-engine-flame-nu.vercel.app/api/content-engine/ping
 ```
 
-`"ready": true` means both are set. While either is missing it stays `false`,
-and the authenticated health route names exactly which one.
+Already `ready: true`: that means the cloud half is configured, not that the
+runner works. The proof of the round trip is that
+`video_studio_runner_heartbeats` advances after the restart, and then that a
+signed receipt is accepted rather than rejected.
 
-Then confirm the round trip actually works: the runner's next heartbeat should
-advance `video_studio_runner_heartbeats`. If the token is right but the signing
-key is not, heartbeats arrive and receipts are rejected, so check a receipt
-lands too before calling it done.
+## Done without you
 
-## The alternative, if you would rather not rotate
+- `CRON_SECRET`, generated and set. All 16 engine crons are registered and one
+  was run end to end against the live database.
+- `CTRL_SUPABASE_URL` and `CTRL_SUPABASE_SERVICE_KEY`, read from the Mindmaker
+  AI project (the one holding `live_headlines_cache`) and set. Feed ingest has
+  its pool.
+- The three values above, on the cloud side only.
 
-Read the two existing values out of Windows Credential Manager and paste them
-into Vercel unchanged. Credential Manager will not show a password in its UI, so
-this needs PowerShell and the `CredentialManager` module, which is more work
-than generating new ones. There is no way to read them back from Vercel: they
-are stored `sensitive`, and no API call, `vercel env pull`, or dashboard view
-will return the plaintext. That is why this is yours to do and not something the
-deployment can copy for itself.
-
-## The other three values, and the one to leave alone
-
-Also owed on the `content-engine` project, all copyable from `control-center`:
-
-- `CTRL_SUPABASE_URL` and `CTRL_SUPABASE_SERVICE_KEY`: feed ingest reads the
-  CTRL headlines pool. Without them that one job fails its run and says so.
-- `VIDEO_STUDIO_EXPORT_TOKEN`: the candidates export the Studio radar reads.
-
-**Do not set `CRON_SECRET` until Control Center has stopped scheduling.** Two
-schedulers against one database would run the Monday purge twice.
-
-## Rotate afterwards
+## Rotate
 
 The Supabase, Vercel, GitHub and n8n tokens used to build this sit in a chat
-transcript. Rotate all four once the cutover reads green.
+transcript, as do the three values above. Rotating the three means repeating
+this page with new strings; rotating the four API tokens is independent and
+worth doing sooner.
