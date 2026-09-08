@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
+import { exportBeforeDelete } from './_archive.js'
 import { isoWeekLabel, queueWindowStart } from '../_weeks.js'
 import { withContentRun } from '../_runs.js'
 
@@ -28,6 +29,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const nowIso = new Date().toISOString()
+    // Needed before the expiry sweep so the export can be keyed by week; the
+    // archive filename is the only handle a restore has.
+    const week = isoWeekLabel()
 
     // Fate 1: expire. Count first so the audit row is honest even though the
     // rows are gone afterwards.
@@ -45,7 +49,37 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     const { count: toExpire } = await expiredQuery()
 
     let expired = 0
+    let archived_to: string | null = null
     if (toExpire) {
+      // Export before deleting. This is the only hard delete in the engine and
+      // it runs unattended every Monday, so "we purged the wrong thing" has
+      // until now been unrecoverable. The rows go to a private bucket keyed by
+      // week; POST /api/purge/restore?week= puts them back.
+      //
+      // Best effort with one exception: if the export FAILS we do not delete.
+      // A week of un-purged rows is a tidiness problem. A week of deleted rows
+      // with no copy is the thing this exists to prevent.
+      const { data: doomed } = await supabase
+        .from('content_ideas')
+        .select('*')
+        .not('expires_at', 'is', null)
+        .lte('expires_at', nowIso)
+        .is('shift_id', null)
+        .is('library_at', null)
+        .not('state', 'in', '("drafting","review","approved","published")')
+      const exported = await exportBeforeDelete(week, doomed || [])
+      if (!exported.ok) {
+        return res.status(200).json({
+          ok: false,
+          week,
+          error: 'purge_export_failed',
+          reason: exported.reason,
+          expired: 0,
+          note: 'nothing was deleted: the engine will not hard-delete rows it could not copy first',
+        })
+      }
+      archived_to = exported.key
+
       const { error: delErr, count } = await supabase
         .from('content_ideas')
         .delete({ count: 'exact' })
@@ -78,7 +112,6 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // week. Archiving at `< week` would bury Friday's brief on Monday and
     // leave the tab with no brief at all until the next Friday; this way the
     // brief stays readable until its successor arrives.
-    const week = isoWeekLabel()
     const windowStart = queueWindowStart()
     const { data: archived } = await supabase
       .from('weekly_briefs')
@@ -136,7 +169,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       event_type: 'content_purge',
       actor: 'content-engine-v2',
       details: {
-        week, expired,
+        week, expired, archived_to,
         briefs_archived: (archived || []).map(a => a.week),
         decisions_swept: (sweptRows || []).length + (sweptPreviews || []).length,
         swept_by_kind: swept,
@@ -144,7 +177,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     })
 
     return res.json({
-      ok: true, week, expired,
+      ok: true, week, expired, archived_to,
       briefs_archived: (archived || []).length,
       decisions_swept: (sweptRows || []).length + (sweptPreviews || []).length,
       swept_by_kind: swept,
