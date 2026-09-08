@@ -6,7 +6,7 @@ import { priceUsd } from './_prices.js'
 import * as meter from './_meter.js'
 
 
-import { UTILITY_MODEL, MODEL_PRICES, thinkingParam } from './_models.js'
+import { UTILITY_MODEL, SYNTHESIS_MODEL, MODEL_PRICES, thinkingParam } from './_models.js'
 
 /** Strip the cardinal sin — em dashes (and their lookalikes) — anywhere,
  *  replacing them with the comma/period Krish would actually use. Safe to run
@@ -506,3 +506,35 @@ export const VOICE_GUARDRAILS = [
   'End on a hard, forward-looking verdict — never a summary, rhetorical question, or CTA.',
   'Specific over general. Never invent numbers, outcomes, or quotes; flag gaps instead.',
 ].join('\n')
+
+/** One Anthropic call whose user turn carries native image and document
+ *  blocks. callClaudeMessages takes strings, which is all the Composer needs;
+ *  the inspiration lane reads screenshots, so it needs the block form. Metered
+ *  the same way, because vision requests are the most expensive thing the
+ *  engine does unattended. */
+export async function callClaudeBlocks(
+  system: string,
+  content: Array<Record<string, unknown>>,
+  opts: { model?: string; maxTokens?: number; temperature?: number; agent?: string } = {},
+): Promise<{ text: string; inputTokens: number; outputTokens: number; model: string }> {
+  const apiKey = process.env.ANTHROPIC_API_KEY
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not configured')
+  const model = opts.model || SYNTHESIS_MODEL
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+    body: JSON.stringify({
+      model,
+      max_tokens: opts.maxTokens ?? 8000,
+      ...(supportsSampling(model) ? { temperature: opts.temperature ?? 0.2 } : {}),
+      system,
+      messages: [{ role: 'user', content }],
+    }),
+  })
+  const j: any = await r.json().catch(() => ({}))
+  if (!r.ok) throw new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`)
+  const inputTokens = Number(j?.usage?.input_tokens) || 0
+  const outputTokens = Number(j?.usage?.output_tokens) || 0
+  await meter.anthropicCall({ agent: opts.agent, model, inputTokens, outputTokens })
+  return { text: firstText(j), inputTokens, outputTokens, model }
+}
