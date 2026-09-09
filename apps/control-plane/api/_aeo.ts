@@ -352,7 +352,11 @@ export interface AeoSignalRow {
   state: 'seeded'
   origin: 'agent'
   assigned_to: 'cleo'
-  lane: 'publication'
+  /** 'publication' only for a subject on EDITORIAL_AEO_SUBJECTS. Null
+   *  otherwise, because an answer-engine recommendation for a venture's search
+   *  surface is growth work and claiming otherwise is what put fractional-exec
+   *  directory copy in the editorial review queue. */
+  lane: 'publication' | null
   horizon: 'news'
   expires_at: string
   distribution: string[]
@@ -386,6 +390,32 @@ const cut = (s: string, max: number) => (s.length > max ? `${s.slice(0, max - 1)
 
 /** The row the content spine receives, shaped like buildSignalRow so the
  *  radar, the route and the card treat it as one more owned source. */
+/**
+ * AEO subjects whose recommendations are genuinely editorial.
+ *
+ * Every AEO recommendation used to be stamped `lane: 'publication'` regardless
+ * of subject, and `aeo_signal` sits in RADAR_SOURCE_TYPES, so answer-engine
+ * copy for every venture was fed to the Money of AI and Built with AI lenses
+ * and landed in the editorial review queue. On 2026-09-09 that queue's six
+ * review-state pieces were ALL aeo_signal, beside recommendations reading
+ * "Finding a fractional executive who has actually run your function" and
+ * "Why a daily football podcast beats a weekly one". Three of the five active
+ * subjects are Fractionl products; none of them is a publication.
+ *
+ * Empty on purpose. AEO is optimisation against search queries for a named
+ * venture, and the two publications are a different job with a different
+ * standard, so a subject earns a place here by an explicit decision rather than
+ * by defaulting in. Nothing else about the AEO pipeline changes: the rows are
+ * still written, the Growth tab still opens them, they simply stop claiming to
+ * be publication stories.
+ */
+export const EDITORIAL_AEO_SUBJECTS: readonly string[] = []
+
+/** True when this subject's AEO output belongs in the editorial pipeline. */
+export function isEditorialAeoSubject(slug: string | null | undefined): boolean {
+  return Boolean(slug && EDITORIAL_AEO_SUBJECTS.includes(slug))
+}
+
 export function aeoSignalRow(packet: AeoPacket, rec: AeoRecommendation, subjectName: string, now = new Date()): AeoSignalRow {
   const query = packet.queries.find(q => q.query_id === rec.query_id)
   const kindLabel = packet.subject.kind === 'venture' ? subjectName
@@ -402,7 +432,7 @@ export function aeoSignalRow(packet: AeoPacket, rec: AeoRecommendation, subjectN
     state: 'seeded',
     origin: 'agent',
     assigned_to: 'cleo',
-    lane: 'publication',
+    lane: isEditorialAeoSubject(packet.subject.slug) ? 'publication' : null,
     horizon: 'news',
     expires_at: new Date(now.getTime() + SIGNAL_TTL_DAYS * 86_400_000).toISOString(),
     distribution: [],

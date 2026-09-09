@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'vitest'
 import {
-  MAX_IDEAS_PER_SUBJECT, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef, probeRows, queryRows, validatePacket,
+  EDITORIAL_AEO_SUBJECTS, MAX_IDEAS_PER_SUBJECT, SIGNAL_TTL_DAYS, aeoSignalRow, aeoSignalSummary, aeoSourceRef,
+  isEditorialAeoSubject, probeRows, queryRows, validatePacket,
   type AeoPacket,
 } from '../../apps/control-plane/api/_aeo.ts'
 import { CONTENT_ENGINE_JOBS, contentEngineAttention } from '../../apps/control-plane/lib/contentEngineSchedule.ts'
@@ -98,7 +99,14 @@ test('the content row mirrors a build signal and never claims an evergreen expir
   assert.equal(row.source_type, 'aeo_signal')
   assert.equal(row.source_ref, aeoSourceRef('venture', 'ctrl', '2026-09-07', 1))
   assert.equal(row.source_ref, 'aeo:venture:ctrl:2026-09-07:1')
-  assert.equal(row.lane, 'publication')
+  // Not 'publication'. An answer-engine recommendation is growth work for one
+  // venture's search surface, and every subject used to be stamped as a
+  // publication story regardless: `aeo_signal` is a radar source type, so that
+  // stamp fed fractional-exec directory copy to the Money of AI and Built with
+  // AI lenses and filled the editorial review queue with it. A subject earns
+  // 'publication' only by appearing on EDITORIAL_AEO_SUBJECTS, which is empty
+  // by default. See the next test for that branch.
+  assert.equal(row.lane, null)
   assert.equal(row.horizon, 'news')
   assert.equal(row.state, 'seeded')
   assert.equal(row.expires_at, new Date(Date.parse('2026-09-13T05:00:00.000Z') + SIGNAL_TTL_DAYS * 86_400_000).toISOString())
@@ -109,6 +117,25 @@ test('the content row mirrors a build signal and never claims an evergreen expir
   assert.match(prospect.meta.source_label, /in front of Acme Media/)
   assert.match(aeoSignalSummary(row.meta.aeo, row.thesis), /Target query: best AI decision tools for founders/)
   assert.ok(MAX_IDEAS_PER_SUBJECT <= 5)
+})
+
+test('only a subject on the editorial allowlist is stamped as a publication story', () => {
+  // The allowlist ships empty, so this asserts the rule rather than today's
+  // membership: whatever is on it gets 'publication', everything else gets null.
+  assert.equal(EDITORIAL_AEO_SUBJECTS.length, 0)
+  assert.equal(isEditorialAeoSubject('ctrl'), false)
+  assert.equal(isEditorialAeoSubject('circle'), false)
+  assert.equal(isEditorialAeoSubject(null), false)
+
+  const p = packet()
+  for (const slug of ['ctrl', 'circle', 'pulse', 'full-time', 'mindmake']) {
+    const row = aeoSignalRow(packet({ subject: { id: SUBJECT, kind: 'venture', slug, product_slug: slug } }), p.recommendations[0], slug)
+    assert.equal(row.lane, isEditorialAeoSubject(slug) ? 'publication' : null, `lane for ${slug}`)
+    // The row is still written and still carries its subject, so the Growth
+    // tab keeps working. Only the editorial claim is withdrawn.
+    assert.equal(row.source_type, 'aeo_signal')
+    assert.equal(row.meta.aeo.subject_slug, slug)
+  }
 })
 
 test('probe and query rows carry the subject, the run and the query', () => {
