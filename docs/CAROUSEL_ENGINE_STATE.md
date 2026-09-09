@@ -4,7 +4,7 @@ This is the single current-state artifact for the Mindmake Carousel Engine. GitH
 
 The decision record, the feedback proposals and the visual reset trace live in the appendices at the end of this document: Appendix A (Decisions), Appendix B (Feedback proposals) and Appendix C (Reset trace).
 
-Last verified: 2026-09-07 against main at c90397b
+Last verified: 2026-09-09 against main at 733121f
 
 ## Product boundary
 
@@ -30,6 +30,8 @@ It serves The Money of AI and Built With AI only. Source formats remain the publ
 Every story must be unique, researched, thoughtful, kind and helpful. The Money of AI follows the money or operating mechanism behind an event. Built With AI starts from the human reason for building and shows a usable beginning. A topic without a claim, proof or audience consequence does not reach rendering.
 
 Each slide answers one audience question. The design carries information that the copy does not need to repeat. Headlines state the point plainly. Evidence stays humourless. Wit may point at hype or the machine, never the reader or a named person's competence.
+
+Since 2026-09-08 (PR #44, `feedback-cross-series-format-expansion-20260908-01`, `docs/REFERENCE_VIDEO_CALIBRATION.md`) the confirmed standard is enforced in code, not only in prompt guidance: `carouselEditorialPreferenceIssues` (`packages/core/src/carousel.ts`) rejects sensational framing ("insane", "unbelievable", "game-changer" and similar), follow or subscribe requests, and empty comment prompts once the matching preference rule is active for a series. It also flags a proof or mechanism slide whose only visual support is illustration or decoration, requires The Money of AI to open with a claim boundary and an early proof beat, and requires a `build_itself` or `first_version` Built With AI story to show a concrete artifact in its first three slides. `source_format` now comes from the shared `EditorialFormatV1Schema` (`packages/contracts/src/editorial-v1.ts`) rather than a carousel-only enum, so a format added for one canonical output is available to the other without redefinition.
 
 ## Visual system
 
@@ -64,7 +66,7 @@ The first review fixture is `examples/carousels/built-editorial-gates.review.jso
 - Infographic treatment: approved as one available lane, not as a universal carousel style.
 - Current rendered story: `built-approval-interlock-v2`, story hash `e4d529951caa165c2cc7da7fc03d1fd1a63cc5f1c4da59d9678dc778e63cfd14`.
 - Current review render manifest SHA-256: `398223aa1413e548cbd25ae4d0375cace182387f44a7484e6b0fb76d1773efd7`.
-- Verification: 42 test files and 368 tests passed; skill, trigger, renderer, public-copy and no-secrets checks passed; an unchanged rerender reproduced all seven slide hashes.
+- Verification: 519 tests passed at `733121f` (two pre-existing environmental failures, ffprobe not installed); skill, trigger, renderer, public-copy and no-secrets checks passed; an unchanged rerender reproduced all seven slide hashes.
 - Provisional: the revised top-left series signpost and bottom-left Mindmake signature need Krish's rendered visual approval.
 - Next owner: Krish.
 - Next action: review the refreshed seven-card browser candidate and approve or revise the brand placement.
