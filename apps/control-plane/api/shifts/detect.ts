@@ -16,6 +16,7 @@ import {
   type CorpusItem, type ProposedShift, type VerifiedShift,
 } from '../_trendGate.js'
 import { withContentRun } from '../_runs.js'
+import { onTeardownBeat } from '../_beat.js'
 
 // Weekly shift detection (Content Engine v2, spec §4).
 //
@@ -73,6 +74,18 @@ async function loadCorpus(): Promise<CorpusItem[]> {
     // folded into their keeper's meta.recurrences and would be double-counted.
     const buried = (r as any).buried_at
     if (buried && !String((r as any).buried_reason || '').startsWith('stale:')) continue
+    // The beat gate, applied to the corpus this clusters (2026-09-09).
+    //
+    // feed/ingest now gates on the way in, but this window reaches back over
+    // rows written before that and over inspiration_sweep, which arrives from
+    // an n8n workflow outside this repo and has no gate of its own. Without
+    // this, the classifier downstream kept doing the filtering by hand and
+    // paying for it: 28 of 47 live arcs discarded, a 60 percent rate sitting
+    // exactly on DISCARD_ALARM, whose own message says to change the sources.
+    // An off-beat story is not evidence of a shift in Krish's beat no matter
+    // how many outlets ran it, and a corpus of them produces arcs like
+    // "Safety incidents are now routine, not exceptional".
+    if (!onTeardownBeat((r as any).idea || '', (r as any).thesis || (r as any).source_snippet || null)) continue
     const pool = (r as any).meta?.pool || {}
     // For sweep rows source_captured_at moves on recurrence; created_at is the
     // honest first-citation day. Other sources keep the original semantics.

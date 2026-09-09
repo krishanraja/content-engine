@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { fetchPoolDays, poolConfigured } from '../_pool.js'
+import { onTeardownBeat } from '../_beat.js'
 import { purgeBoundary } from '../_weeks.js'
 import { withContentRun } from '../_runs.js'
 
@@ -17,6 +18,23 @@ import { withContentRun } from '../_runs.js'
 //   POST               — on-demand backstop
 //
 // Newsletters keep arriving via the n8n Inspiration Sweep; Zara via her sweep.
+//
+// ── The beat gate, wired in 2026-09-09 ───────────────────────────────────
+//
+// This route inserted every story the pool handed it. The gate in api/_beat.ts
+// existed the whole time, written from Krish's own definition of the beat, and
+// three other routes called it; this one, the one that actually fills the
+// corpus, did not. So the pile the shift detector clusters and the brief
+// assembles from was ungated, and the detector's own classifier was discarding
+// 60 percent of what it found: exactly its DISCARD_ALARM threshold, whose
+// message reads "the corpus is wrong, not the ontology. Change the sources, not
+// the lenses." This is that change.
+//
+// Off-beat stories are not inserted rather than inserted-and-marked. The pool
+// is a rolling feed with a Monday expiry, not a record anybody audits, and a
+// corpus that keeps its own noise makes every downstream reader responsible for
+// remembering to filter it. The count comes back in the response and lands in
+// content_engine_runs, so the discard is still visible.
 
 const LOOKBACK_DAYS = 2
 
@@ -34,7 +52,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const since = new Date(Date.now() - LOOKBACK_DAYS * 86_400_000).toISOString().slice(0, 10)
     const { days, stories } = await fetchPoolDays(since)
-    if (!stories.length) return res.json({ ok: true, days, fetched: 0, inserted: 0 })
+    if (!stories.length) return res.json({ ok: true, days, fetched: 0, inserted: 0, off_beat: 0 })
 
     // Dedupe by URL (primary) and normalized headline (fallback) against the
     // last 14 days of pool-sourced rows.
@@ -53,9 +71,13 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     const expiresAt = purgeBoundary(new Date()).toISOString()
 
     const rows: Record<string, unknown>[] = []
+    let offBeat = 0
     for (const s of stories) {
       const titleNorm = norm(s.headline)
       if ((s.url && seenUrls.has(s.url)) || seenTitles.has(titleNorm)) continue
+      // `say` is the pool's one-line reading of the story, which is the number
+      // sentence the gate's middle tier is built to be rescued by.
+      if (!onTeardownBeat(s.headline, s.say)) { offBeat++; continue }
       if (s.url) seenUrls.add(s.url)
       seenTitles.add(titleNorm)
       rows.push({
@@ -83,7 +105,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       if (insErr) throw new Error(insErr.message)
       inserted = count ?? rows.length
     }
-    return res.json({ ok: true, days, fetched: stories.length, inserted })
+    return res.json({ ok: true, days, fetched: stories.length, inserted, off_beat: offBeat })
   } catch (e: any) {
     return res.status(500).json({ ok: false, error: String(e?.message || e) })
   }
