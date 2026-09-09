@@ -116,6 +116,14 @@ without it. The trade is real and worth saying once: these two then sync to the
 tenant and to the account's other joined devices. They already did, at their old
 values. This changes what roams, not whether.
 
+**Done, and proven rather than assumed, on 2026-09-08.** Both values were written
+as Enterprise and then left alone for thirty minutes. The two previous attempts
+were reverted inside twenty-five, so surviving that window is the actual test, not
+the write succeeding: a write that reports success and a write that lasts had
+looked identical twice already. A runner started fresh afterwards came up healthy,
+which is the half a running daemon cannot tell you, because it holds its key in
+memory and keeps heartbeating over a store that would refuse the next start.
+
 Rejected, and worth recording so it is not revisited: unregistering the workplace
 join or disabling roaming tenant-wide, which carries blast radius across all of
 Microsoft 365 to fix a video runner; and renaming the credentials to dodge the
