@@ -6,14 +6,16 @@ import {
   buildEditorialLensSystemPrompt,
   buildEditorialLensUserPrompt,
   editorialSignalHash,
+  isUnjudged,
   parseEditorialLensResponse,
+  unjudged,
   type EditorialSeries,
   type EditorialSignalV2,
 } from '../_editorialRadar.js'
 import { SYNTHESIS_MODEL } from '../_models.js'
 import { supabase } from '../_supabase.js'
 import { buildSignalSummary, forbiddenTermsFor, buildProductFor, type BuildMeta } from '../_buildSignals.js'
-import { aeoSignalSummary, type AeoSignalRow } from '../_aeo.js'
+import { aeoSignalSummary, isEditorialAeoSubject, type AeoSignalRow } from '../_aeo.js'
 import { withContentRun } from '../_runs.js'
 
 type JsonRecord = Record<string, unknown>
@@ -31,6 +33,22 @@ interface PoolIdeaRow {
 }
 
 const MAX_SIGNALS = 20
+
+// How many signals go into one lens call, and what that call is allowed to
+// spend answering.
+//
+// One call for all 20 was the bug. Each opportunity is roughly twenty fields,
+// several of them free text, plus a nine-field growth object: call it 450
+// output tokens each, so 20 of them need about 9,000 before adaptive thinking
+// takes its share of the same budget. max_tokens was 8,000. Every response
+// truncated mid-JSON, robustJson returned null, and all 20 signals fell through
+// to a fabricated rejection. It never once succeeded, on either lens.
+//
+// Five per call fits inside 12,000 with room for thinking. It costs four calls
+// per lens where there was one, which is the correct trade against a job that
+// cost two calls and produced nothing usable.
+const LENS_BATCH = 5
+const LENS_MAX_TOKENS = 12_000
 const LOOKBACK_HOURS = 96
 const REUSE_HOURS = 20
 /** The neutral source types the radar judges. A pool headline is the news
@@ -129,21 +147,44 @@ function needsRefresh(row: PoolIdeaRow, signal: EditorialSignalV2, now: Date): b
   const radar = asRecord(asRecord(row.meta).editorial_radar)
   if (radar.generator_revision !== EDITORIAL_RADAR_GENERATOR_REVISION) return true
   if (radar.source_hash !== editorialSignalHash(signal)) return true
+  // A lens that did not answer is not a result to reuse. Without this the 20
+  // hour window cached the failure, so a signal the model never saw stayed
+  // marked as judged until its source hash changed, which for a headline is
+  // never. That is how 35 ideas came to be permanently no_angle on both lenses.
+  const lenses = asRecord(radar.lenses)
+  if (isUnjudged(lenses.money_of_ai) || isUnjudged(lenses.built_with_ai)) return true
   const generated = typeof radar.generated_at === 'string' ? Date.parse(radar.generated_at) : Number.NaN
   return !Number.isFinite(generated) || now.getTime() - generated >= REUSE_HOURS * 3_600_000
 }
 
-async function runLens(series: EditorialSeries, signals: EditorialSignalV2[], voice: string, corpus: string) {
+async function runLensBatch(series: EditorialSeries, signals: EditorialSignalV2[], voice: string, corpus: string) {
   const hasBuild = signals.some((signal) => Boolean(signal.build))
   const raw = await callClaude({
     agent: `editorial-radar-${series}`,
     model: SYNTHESIS_MODEL,
-    maxTokens: 8000,
+    maxTokens: LENS_MAX_TOKENS,
     think: true,
     system: buildEditorialLensSystemPrompt(series, voice, corpusForChannel(corpus, series), hasBuild),
     user: buildEditorialLensUserPrompt(signals),
   })
   return parseEditorialLensResponse(robustJson(raw), series, signals)
+}
+
+async function runLens(series: EditorialSeries, signals: EditorialSignalV2[], voice: string, corpus: string) {
+  const out: Awaited<ReturnType<typeof runLensBatch>> = []
+  for (let i = 0; i < signals.length; i += LENS_BATCH) {
+    const batch = signals.slice(i, i + LENS_BATCH)
+    try {
+      out.push(...await runLensBatch(series, batch, voice, corpus))
+    } catch (error) {
+      // One bad batch must not cost the other three. The signals in it come
+      // back as unjudged, which the next run retries, rather than as
+      // rejections nobody would ever revisit.
+      console.error(`editorial radar batch failed (${series})`, error)
+      out.push(...batch.map((signal) => unjudged(signal, series, `The lens call failed: ${String((error as Error)?.message || error).slice(0, 200)}`)))
+    }
+  }
+  return out
 }
 
 async function handler(req: VercelRequest, res: VercelResponse) {
@@ -177,7 +218,20 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     if (builds.error) throw new Error(`content_opportunity_read_failed:${builds.error.message}`)
 
     // Builds first: they are few, owned, and the reason the solo variant exists.
+    //
+    // AEO rows are filtered by subject on the way in. `aeo_signal` is a radar
+    // source type, so before this every venture's answer-engine copy was judged
+    // for The Money of AI and Built with AI: the editorial review queue filled
+    // with fractional-exec directory recommendations. A subject qualifies only
+    // by appearing on EDITORIAL_AEO_SUBJECTS, which is empty until Krish puts
+    // something in it. Historic rows written before the lane fix are caught by
+    // the same check, so this does not depend on a backfill.
     const rows = [...((builds.data || []) as PoolIdeaRow[]), ...((headlines.data || []) as PoolIdeaRow[])]
+      .filter((row) => {
+        if (row.source_type !== 'aeo_signal') return true
+        const aeo = asRecord(asRecord(row.meta).aeo)
+        return isEditorialAeoSubject(typeof aeo.subject_slug === 'string' ? aeo.subject_slug : null)
+      })
     const selected = rows
       .map((row) => ({ row, signal: toSignal(row) }))
       .filter(({ row, signal }) => needsRefresh(row, signal, now))
@@ -231,6 +285,16 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         money_of_ai: money.filter((item) => item.status === 'near_miss').length,
         built_with_ai: built.filter((item) => item.status === 'near_miss').length,
       },
+      // Surfaced deliberately. A lens that answers for nothing used to look
+      // identical in this payload to a lens that rejected everything, so the
+      // job reported ok while writing fabricated rejections for months.
+      unjudged: {
+        money_of_ai: money.filter((item) => item.status === 'unjudged').length,
+        built_with_ai: built.filter((item) => item.status === 'unjudged').length,
+      },
+      ...(money.every((item) => item.status === 'unjudged') || built.every((item) => item.status === 'unjudged')
+        ? { alarm: 'a lens answered for no signal at all: check max_tokens against the batch size before trusting any verdict from this run' }
+        : {}),
     })
   } catch (error) {
     console.error('content opportunity refresh failed', error)

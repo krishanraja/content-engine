@@ -54,7 +54,10 @@ export interface EditorialOpportunityV2 {
   schema_version: typeof EDITORIAL_RADAR_SCHEMA_VERSION
   series: EditorialSeries
   signal_id: string
-  status: 'eligible' | 'near_miss' | 'rejected' | 'no_angle'
+  /** 'unjudged' is not a verdict. It means the lens returned no entry for this
+   *  signal, which is a failure of the call and must never be cached or read as
+   *  a rejection. See `unjudged()` below. */
+  status: 'eligible' | 'near_miss' | 'rejected' | 'no_angle' | 'unjudged'
   title: string | null
   angle: string | null
   audience_problem: string | null
@@ -205,14 +208,19 @@ export function buildEditorialLensUserPrompt(signals: EditorialSignalV2[]): stri
   })
 }
 
-function noAngle(signal: EditorialSignalV2, series: EditorialSeries, reason: string): EditorialOpportunityV2 {
+function blank(
+  signal: EditorialSignalV2,
+  series: EditorialSeries,
+  reason: string,
+  status: 'no_angle' | 'unjudged',
+): EditorialOpportunityV2 {
   const gates = { truth: false, evidence: false, confidentiality: true, rights: true, series_fit: false, meaningful_mechanism: false }
   const growth = { first_beat_tension: 0, clarity: 0, surprise: 0, payoff: 0, delivery_strength: 0, visual_proof: 0, share_save_usefulness: 0, qualified_audience_fit: 0, novelty: 0 }
   return {
     schema_version: 2,
     series,
     signal_id: signal.id,
-    status: 'no_angle',
+    status,
     title: null,
     angle: null,
     audience_problem: null,
@@ -238,6 +246,36 @@ function noAngle(signal: EditorialSignalV2, series: EditorialSeries, reason: str
   }
 }
 
+/** The lens read this signal and found no angle. A real verdict. */
+function noAngle(signal: EditorialSignalV2, series: EditorialSeries, reason: string): EditorialOpportunityV2 {
+  return blank(signal, series, reason, 'no_angle')
+}
+
+/**
+ * The lens did not answer for this signal at all.
+ *
+ * This used to be recorded as `no_angle`, which made a failed call
+ * indistinguishable from a rejection, and the difference is the whole ball
+ * game. On 2026-09-09 every one of 35 judged ideas carried `no_angle` on BOTH
+ * lenses with this exact fallback reason, so the radar had never once returned
+ * a usable entry and the Content tab's "Ideas ready to shape" was structurally
+ * incapable of listing anything. The cause was `runLens` asking for 20 signals
+ * of roughly twenty fields each inside max_tokens 8000 with adaptive thinking
+ * on: the JSON truncated, `robustJson` returned null, and 20 fabricated
+ * rejections were written to the rows as if a judgement had happened.
+ *
+ * Recorded as its own status so the refresh job retries it instead of caching
+ * it for twenty hours, and so it is greppable in the corpus.
+ */
+export function unjudged(signal: EditorialSignalV2, series: EditorialSeries, reason: string): EditorialOpportunityV2 {
+  return blank(signal, series, reason, 'unjudged')
+}
+
+/** True when the stored lens result is an absence rather than a verdict. */
+export function isUnjudged(value: unknown): boolean {
+  return Boolean(value && typeof value === 'object' && (value as JsonRecord).status === 'unjudged')
+}
+
 export function parseEditorialLensResponse(
   value: unknown,
   series: EditorialSeries,
@@ -253,7 +291,8 @@ export function parseEditorialLensResponse(
 
   return signals.map((signal) => {
     const raw = rawById.get(signal.id)
-    if (!raw) return noAngle(signal, series, 'The lens returned no grounded assessment for this signal.')
+    // Absence is not rejection. See `unjudged` above for what this cost.
+    if (!raw) return unjudged(signal, series, 'The lens returned no entry for this signal, so it has not been judged yet.')
     if (raw.status === 'no_angle') {
       return noAngle(signal, series, text(raw.no_angle_reason, 500) || 'No credible angle passed this lens.')
     }
