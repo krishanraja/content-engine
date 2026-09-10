@@ -4,7 +4,7 @@ This is the single current-state artifact for the Mindmake Carousel Engine. GitH
 
 The decision record, the feedback proposals and the visual reset trace live in the appendices at the end of this document: Appendix A (Decisions), Appendix B (Feedback proposals) and Appendix C (Reset trace).
 
-Last verified: 2026-09-07 against main at c90397b
+Last verified: 2026-09-10 against main at 733121f
 
 ## Product boundary
 
@@ -28,6 +28,8 @@ It serves The Money of AI and Built With AI only. Source formats remain the publ
 ## Editorial standard
 
 Every story must be unique, researched, thoughtful, kind and helpful. The Money of AI follows the money or operating mechanism behind an event. Built With AI starts from the human reason for building and shows a usable beginning. A topic without a claim, proof or audience consequence does not reach rendering.
+
+Krish's explicit approval on 2026-09-08 (`feedback-cross-series-format-expansion-20260908-01`, `docs/REFERENCE_VIDEO_CALIBRATION.md`) extended the anti-slop floor to every canonical carousel format under two active series rules, `pref-money-investigative-receipts-v1` and `pref-built-concrete-story-v1`. `carouselEditorialPreferenceIssues` (`packages/core/src/carousel.ts`) checks a story against whichever rule is active for its series and flags unsupported sensational framing, follow or subscribe requests, empty comment prompts in place of an earned ending, and a proof or mechanism slide whose only visual support is illustration or decoration. The Money of AI standard also expects a claim boundary and a receipt, artifact or proof beat in the first three slides; Built With AI's `build_itself` and `first_version` formats expect a concrete artifact there instead. Carousel validation reports these as preference issues before production approvals are recorded, so Krish can revise or explicitly approve the exact story with the issue visible.
 
 Each slide answers one audience question. The design carries information that the copy does not need to repeat. Headlines state the point plainly. Evidence stays humourless. Wit may point at hype or the machine, never the reader or a named person's competence.
 

@@ -24,13 +24,15 @@ in shell history.
 
 ```powershell
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-token
-# paste: rt_d26867dedb995704ec05f4278b8a5cefed9ba49aab49fe82
+# paste: [REDACTED by docs steward, 2026-09-10. The value committed here at `fa44b7d` (2026-09-08)
+#   is exposed in git history and must be treated as compromised. Rotate it and paste the new
+#   value only into Credential Manager, never back into this file.]
 
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-signing-key
-# paste: sk_90cf45cb7cb114cd84f7259c458172842cb47d6ed66c1d40
+# paste: [REDACTED by docs steward, 2026-09-10. Same exposure and same instruction as above.]
 
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-radar-token
-# paste: ex_8d91781f9833c86a9188b51ac0c2c71a4cec87ded17bcaea
+# paste: [REDACTED by docs steward, 2026-09-10. Same exposure and same instruction as above.]
 ```
 
 Then restart the runner scheduled task.
