@@ -4,7 +4,7 @@ This is the single current-state artifact for the Mindmake Carousel Engine. GitH
 
 The decision record, the feedback proposals and the visual reset trace live in the appendices at the end of this document: Appendix A (Decisions), Appendix B (Feedback proposals) and Appendix C (Reset trace).
 
-Last verified: 2026-09-07 against main at c90397b
+Last verified: 2026-09-11 against main at 733121f
 
 ## Product boundary
 
@@ -42,6 +42,8 @@ The mechanical interlock is approved as an infographic treatment lane, not as a 
 Stories pin their source artifact hash, brand-theme hash, design repository commit and fixed seed. Outputs are content-addressed. Unsupported series names, mismatched source formats, discontinuous slide numbers, repeated narrative scenes, missing end resolution, unapproved evidence images and generated evidence fail schema validation. Generated media can only be labelled illustration.
 
 Production rendering needs exact story and visual-direction approvals. Packaging also needs exact final approval. Every carousel approval carries a `confirmation_ref` bound to its own gate and the exact story content hash; an approval whose reference binds another gate or hash is not an approval. The CLI never posts publicly.
+
+Since 2026-09-08 (`packages/core/src/carousel.ts`), `studio carousel validate` also reports confirmed editorial preference issues before production approvals are recorded: unsupported sensational framing, follow or subscribe requests, empty comment prompts, illustration-only support for a claimed proof slide, and a missing early proof or artifact beat for a format an active `pref-money-investigative-receipts-v1` or `pref-built-concrete-story-v1` rule covers. The shared standard is `docs/REFERENCE_VIDEO_CALIBRATION.md`.
 
 ## Interfaces implemented in the first vertical slice
 

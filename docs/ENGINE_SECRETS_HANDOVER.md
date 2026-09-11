@@ -22,15 +22,25 @@ Credential Manager.
 From the Studio checkout. Each command prompts for the value, so nothing lands
 in shell history.
 
+**Redacted by the docs steward, 2026-09-11.** The three values below were
+committed to this file in plain text and merged to `main`. That makes them
+compromised regardless of whether the Windows side ever pasted them: they are
+readable by anyone with read access to this repository's git history. Treat
+`control-center-runner-token`, `control-center-runner-signing-key` and
+`control-center-radar-token` as burned, generate three new values, set them on
+both Vercel and Windows Credential Manager, and have Krish decide whether the
+git history needs scrubbing. This is reported, not fixed: rotating a live
+credential is an action outside the docs steward's authority.
+
 ```powershell
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-token
-# paste: rt_d26867dedb995704ec05f4278b8a5cefed9ba49aab49fe82
+# paste: [redacted, see note above, this value is compromised]
 
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-signing-key
-# paste: sk_90cf45cb7cb114cd84f7259c458172842cb47d6ed66c1d40
+# paste: [redacted, see note above, this value is compromised]
 
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-radar-token
-# paste: ex_8d91781f9833c86a9188b51ac0c2c71a4cec87ded17bcaea
+# paste: [redacted, see note above, this value is compromised]
 ```
 
 Then restart the runner scheduled task.
