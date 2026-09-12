@@ -20,6 +20,7 @@ const NEW = Buffer.from('b'.repeat(48), 'utf8')
 const HASH = 'c'.repeat(64)
 
 const HEX64 = /^[a-f0-9]{64}$/
+const BODY_SIGNATURE_FIELDS = new Set(['binding_signature'])
 
 interface Pair { path: string; hash: string; signature: string; set: (v: string) => void }
 
@@ -31,6 +32,7 @@ function findSignaturePairs(node: unknown, path: string, out: Pair[], orphans: s
   if (!node || typeof node !== 'object') return
   const record = node as Record<string, unknown>
   for (const [key, value] of Object.entries(record)) {
+    if (BODY_SIGNATURE_FIELDS.has(key)) continue
     if (key.endsWith('_signature') && typeof value === 'string') {
       const hash = record[`${key.slice(0, -'_signature'.length)}_hash`]
       const here = path ? `${path}.${key}` : key
@@ -87,6 +89,14 @@ test('a signature with no hash beside it is an orphan, never silently skipped', 
     'skipping it would leave the runtime half-signed, which is exactly the state that stops the runner starting')
 })
 
+test('body-signed review bindings are excluded from hash-bound runner rotation', () => {
+  const pairs: Pair[] = []
+  const orphans: string[] = []
+  findSignaturePairs({ binding_hash: HASH, binding_signature: 'd'.repeat(64) }, '', pairs, orphans)
+  assert.deepEqual(pairs, [])
+  assert.deepEqual(orphans, [])
+})
+
 test('one signature that fails under the old key condemns the whole run', () => {
   const good = { a_hash: HASH, a_signature: signRunnerReceiptHash(OLD, HASH) }
   const bad = { a_hash: HASH, a_signature: signRunnerReceiptHash(Buffer.from('z'.repeat(48)), HASH) }
@@ -134,4 +144,13 @@ test('a key under 32 bytes is refused, because the loader would silently drop it
   const short = Buffer.from('short', 'utf8')
   assert.ok(short.byteLength < 32)
   assert.ok(Buffer.from('b'.repeat(48), 'utf8').byteLength >= 32)
+})
+
+test('the operator script reads a new key from Credential Manager and never prints it', () => {
+  const source = readFileSync(join(process.cwd(), 'scripts', 'rotate-runner-signing-key.ts'), 'utf8')
+  assert.match(source, /--new-credential-target/)
+  assert.doesNotMatch(source, /--new-key/)
+  assert.doesNotMatch(source, /console\.log\(`\s*\$\{newSecret\}/)
+  assert.match(source, /BODY_SIGNATURE_FIELDS/)
+  assert.match(source, /control-center-runner-signing-key-v/)
 })

@@ -16,14 +16,14 @@ Create two separate strong random provider-token values. Configure the mm-ctrl v
 
 ```text
 MindmakeVideoStudio/mm-ctrl-radar-token
-MindmakeVideoStudio/control-center-radar-token
+MindmakeVideoStudio/control-center-radar-token-v2
 ```
 
 Use the interactive writer so the value never appears in shell history:
 
 ```powershell
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/mm-ctrl-radar-token
-powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-radar-token
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-radar-token-v2
 ```
 
 Configure provider URLs through environment variables:
@@ -78,8 +78,8 @@ Before installing the task, run `studio v2 inbox init`, then two scans separated
 The runner uses two separate Windows Generic Credentials:
 
 ```text
-MindmakeVideoStudio/control-center-runner-token
-MindmakeVideoStudio/control-center-runner-signing-key
+MindmakeVideoStudio/control-center-runner-token-v2
+MindmakeVideoStudio/control-center-runner-signing-key-v2
 ```
 
 The first is the dedicated bearer accepted only by runner endpoints. The second must match the server-side `VIDEO_STUDIO_RUNNER_SIGNING_KEY` and signs receipt hashes. It is distinct from the bearer and from the durable local approval and decision ledger key:
@@ -91,8 +91,8 @@ MindmakeVideoStudio/approval-signing-key
 Enter all values interactively. The local ledger key never leaves the machine and must remain stable for the lifetime of the signed job history:
 
 ```powershell
-powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-token
-powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-signing-key
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-token-v2
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-signing-key-v2
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/approval-signing-key
 ```
 
@@ -137,9 +137,11 @@ After installation, prove the lifecycle before activation: start the task, requi
 
 The runner also requires an exact clean checkout: its configured repository root must equal Git's actual top-level path, `HEAD` must be a real 40-character commit, `MINDMAKE_SOFTWARE_COMMIT` must be absent or equal to that commit, and no tracked or untracked source file may differ. Project publication and command claiming fail closed when provenance is unknown. Install from a clean committed revision, never from this implementation working tree.
 
-The implementation in this repository does not itself install the Scheduled Task, deploy Control Center, or configure any credential. Those remain explicit operator actions. A merged code change is not an installed runner, and an installed runner is not a verified live control-plane integration until `doctor`, task status, project bootstrap, claim, proxy upload, completion, and cloud readback all succeed.
+The implementation in this repository does not itself install the Scheduled Task, deploy Control Center, or configure any credential. Those remain explicit operator actions. A merged code change is not an installed runner. After any credential change, `npm run probe:runner-credentials` proves the bearer and signing key against production without leasing or writing work. An installed runner is not a verified live control-plane integration until that probe, `doctor`, task status, project bootstrap, claim, proxy upload, completion, and cloud readback all succeed.
 
-To rotate the bearer, stop the task, replace the server and local bearer values, then restart and read back runner status. Protocol v1 does not support an in-place signing-key rotation: the same key authenticates retained claims, receipts, project journals, conflict records, acknowledged cursors, and the external runner-authority marker, and v1 signatures have no key identifier. If the signing credential is missing or changed accidentally, stop the task and restore the exact prior value. The runner fails closed without silently recreating the marker or identity. Never discard or re-sign records by hand. A deliberate rotation requires a coordinated schema-major migration with key identifiers and an audited old-key-to-new-key transition, or an operator-approved retirement of the runner identity after every platform is at root and cloud state has been reconciled. A compromised signing key is therefore an incident that keeps the runner stopped until that migration or retirement is complete.
+To rotate the bearer, stop and disable the task, create a fresh versioned LocalMachine credential target, replace the matching Vercel Secret, update the active constant, then reinstall the exact clean commit and verify runner status. Never reuse the three quarantined unversioned names.
+
+The signing key authenticates retained claims, receipts, project journals, conflict records, acknowledged cursors, and the external runner-authority marker. A deliberate change must use `scripts/rotate-runner-signing-key.ts --commit --new-credential-target <new-versioned-target>` while the task is disabled. The script verifies every old signature, creates a full backup, changes only hash-bound runner signatures, rereads them under the new key and never accepts or prints a key value. It deliberately excludes approval-ledger and review-binding signatures because those use a separate body-signing trust root. After migration, update the active constant and deploy the matching Vercel Secret before restarting. Never delete, edit or re-sign authority records by hand.
 
 ## Projection cursor protocol rollout
 

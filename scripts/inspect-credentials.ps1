@@ -1,5 +1,6 @@
 param(
-  [string]$Filter = 'MindmakeVideoStudio/*'
+  [string]$Filter = 'MindmakeVideoStudio/*',
+  [switch]$EnforceActiveContract
 )
 
 # Reads every Mindmake credential and reports the four fields that identify what
@@ -110,6 +111,7 @@ $typeNames = @{ 1 = 'Generic'; 2 = 'DomainPassword' }
 $entries = [MindmakeCredentialInspector]::Enumerate($Filter)
 if ($entries.Count -eq 0) {
   Write-Output "No credentials match $Filter"
+  if ($EnforceActiveContract) { throw 'Active credential contract cannot pass with an empty store.' }
   return
 }
 
@@ -131,6 +133,42 @@ $report = foreach ($entry in $entries) {
 }
 
 $report | Sort-Object Target | Format-List
+
+$activeLocalTargets = @(
+  'MindmakeVideoStudio/control-center-runner-token-v2',
+  'MindmakeVideoStudio/control-center-runner-signing-key-v2',
+  'MindmakeVideoStudio/control-center-radar-token-v2',
+  'MindmakeVideoStudio/studio-mcp-token'
+)
+$quarantinedTargets = @(
+  'MindmakeVideoStudio/control-center-runner-token',
+  'MindmakeVideoStudio/control-center-runner-signing-key',
+  'MindmakeVideoStudio/control-center-radar-token'
+)
+
+$quarantined = @($report | Where-Object { $quarantinedTargets -contains $_.Target })
+if ($quarantined.Count -gt 0) {
+  Write-Output 'NOTICE: quarantined legacy credential names remain in the store and must never be used by active code:'
+  foreach ($item in $quarantined) { Write-Output "  $($item.Target)" }
+}
+
+if ($EnforceActiveContract) {
+  $failures = @()
+  foreach ($target in $activeLocalTargets) {
+    $entry = $report | Where-Object { $_.Target -eq $target } | Select-Object -First 1
+    if ($null -eq $entry) {
+      $failures += "$target is missing"
+      continue
+    }
+    if ($entry.Chars -lt 32) { $failures += "$target is shorter than 32 characters" }
+    if ($entry.Persist -ne 'LocalMachine') { $failures += "$target is not LocalMachine" }
+    if ($entry.Comment -ne 'Mindmake Video Studio') { $failures += "$target has a foreign writer marker" }
+  }
+  if ($failures.Count -gt 0) {
+    throw "Active credential contract failed: $($failures -join '; ')"
+  }
+  Write-Output 'Active credential contract passed.'
+}
 
 # Persist 3 is the one that can be overwritten by something other than a local
 # write, so it is called out rather than left for the reader to notice.

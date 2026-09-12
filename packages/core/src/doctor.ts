@@ -95,7 +95,7 @@ export async function runDoctor(repoRoot?: string): Promise<{ ok: boolean; check
     })
   }
   if (process.platform === 'win32' && repoRoot) {
-    const radarTargets = ['MindmakeVideoStudio/mm-ctrl-radar-token', 'MindmakeVideoStudio/control-center-radar-token'] as const
+    const radarTargets = ['MindmakeVideoStudio/mm-ctrl-radar-token', 'MindmakeVideoStudio/control-center-radar-token-v2'] as const
     const [mmTarget, controlTarget] = radarTargets
     const [mmRadar, controlRadar, youtube, approvalSigning, runnerBearer, runnerSigning, identityKey, identityProfile] = await Promise.all([
       windowsCredentialExists(repoRoot, mmTarget),

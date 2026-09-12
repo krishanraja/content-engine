@@ -20,6 +20,7 @@
     "skills:validate": "python scripts/validate-skills.py",
     "check:public-copy": "tsx scripts/check-public-copy.ts",
     "check:no-secrets": "tsx scripts/check-no-secrets.ts",
+    "probe:runner-credentials": "tsx scripts/probe-runner-credentials.ts",
     "check:renderer": "tsx scripts/check-renderer.ts",
     "check:video-engine-trigger": "tsx scripts/check-video-engine-trigger.ts",
     "verify": "npm run typecheck && npm run typecheck:control-plane && npm run test && npm run skills:validate && npm run check:video-engine-trigger && npm run check:renderer && npm run check:public-copy && npm run check:no-secrets && npm run check:control-plane",

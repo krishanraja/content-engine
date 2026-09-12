@@ -5,7 +5,7 @@ import { readWindowsCredential } from './credentials.js'
 import { stableJson } from './hash.js'
 
 export const APPROVAL_SIGNING_CREDENTIAL = 'MindmakeVideoStudio/approval-signing-key'
-export const RUNNER_RECEIPT_SIGNING_CREDENTIAL = 'MindmakeVideoStudio/control-center-runner-signing-key'
+export const RUNNER_RECEIPT_SIGNING_CREDENTIAL = 'MindmakeVideoStudio/control-center-runner-signing-key-v2'
 const APPROVAL_SIGNATURE_DOMAIN = 'MindmakeVideoStudio/ApprovalReceipt/v1'
 const RUNNER_LEDGER_SIGNATURE_DOMAIN = 'MindmakeVideoStudio/RunnerLedgerEvent/v1'
 const DEFAULT_REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')

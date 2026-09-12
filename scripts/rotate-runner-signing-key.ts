@@ -1,5 +1,5 @@
-// Rotate MindmakeVideoStudio/control-center-runner-signing-key without killing
-// the runner.
+// Rotate the active runner receipt-signing credential without losing the
+// authenticated runtime history.
 //
 // Why this exists: on 2026-09-08 that credential was rotated as though it were
 // an ordinary cloud secret. It is not. It is also
@@ -27,14 +27,14 @@
 // one artifact the whole hash-bound approval story rests on. See the note at
 // the bottom of this file.
 //
-//   npx tsx scripts/rotate-runner-signing-key.ts                # dry run, default
-//   npx tsx scripts/rotate-runner-signing-key.ts --commit       # rotate for real
-//   npx tsx scripts/rotate-runner-signing-key.ts --commit --new-key <value>
+//   npx tsx scripts/rotate-runner-signing-key.ts
+//   npx tsx scripts/rotate-runner-signing-key.ts --commit \
+//     --new-credential-target MindmakeVideoStudio/control-center-runner-signing-key-v2
 //
 // Windows only: the credential lives in Credential Manager and the runtime root
 // is a Windows path.
 
-import { randomBytes } from 'node:crypto'
+import { createHash } from 'node:crypto'
 import { mkdirSync, cpSync, readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import {
@@ -47,6 +47,7 @@ import { readWindowsCredential } from '../packages/core/src/credentials.js'
 const HEX64 = /^[a-f0-9]{64}$/
 const SIGNATURE_SUFFIX = '_signature'
 const HASH_SUFFIX = '_hash'
+const BODY_SIGNATURE_FIELDS = new Set(['binding_signature'])
 
 interface SignaturePair {
   /** Dotted path to the signature field, for the report. */
@@ -74,6 +75,7 @@ function findSignaturePairs(node: unknown, path: string, out: SignaturePair[], o
   const record = node as Record<string, unknown>
 
   for (const [key, value] of Object.entries(record)) {
+    if (BODY_SIGNATURE_FIELDS.has(key)) continue
     if (key.endsWith(SIGNATURE_SUFFIX) && typeof value === 'string') {
       const stem = key.slice(0, -SIGNATURE_SUFFIX.length)
       const hashKey = `${stem}${HASH_SUFFIX}`
@@ -137,8 +139,7 @@ async function main(): Promise<void> {
   const commit = args.includes('--commit')
 
   /** A flag given without a value is an operator mistake worth stopping on, not
-   *  a reason to fall back to a default: --new-key with nothing after it would
-   *  otherwise generate a random key the operator never saw. */
+   *  a reason to fall back to a default. */
   const valueOf = (flag: string): string | null => {
     const at = args.indexOf(flag)
     if (at < 0) return null
@@ -159,6 +160,19 @@ async function main(): Promise<void> {
     ?? join(process.env.USERPROFILE || '', 'Documents', 'MindmakeVideoStudio', 'runtime'))
 
   const repoRoot = resolve(new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'))
+  const newCredentialTarget = valueOf('--new-credential-target')
+  if (newCredentialTarget && !/^MindmakeVideoStudio\/control-center-runner-signing-key-v(?:[2-9]|[1-9][0-9]+)$/.test(newCredentialTarget)) {
+    console.error('--new-credential-target must name a versioned control-center runner-signing credential.')
+    process.exit(2)
+  }
+  if (commit && !newCredentialTarget) {
+    console.error('--commit requires --new-credential-target. A signing key must never be passed on the command line.')
+    process.exit(2)
+  }
+  if (newCredentialTarget === RUNNER_RECEIPT_SIGNING_CREDENTIAL) {
+    console.error('The new credential target must differ from the active target. Reusing a roaming-contaminated name is not a rotation.')
+    process.exit(2)
+  }
 
   console.log(`runtime root : ${runtimeRoot}`)
   console.log(`credential   : ${RUNNER_RECEIPT_SIGNING_CREDENTIAL}`)
@@ -172,14 +186,16 @@ async function main(): Promise<void> {
     process.exit(2)
   }
 
-  const newSecret = valueOf('--new-key') ?? randomBytes(48).toString('base64')
-  const newKey = Buffer.from(newSecret, 'utf8')
-  if (newKey.byteLength < 32) {
-    console.error('The new key must be at least 32 bytes; normalizedKey() in approval-signing.ts refuses anything shorter and the runner would silently lose its signing key.')
+  const newSecret = newCredentialTarget
+    ? await readWindowsCredential(repoRoot, newCredentialTarget)
+    : null
+  const newKey = newSecret ? Buffer.from(newSecret, 'utf8') : null
+  if (newKey && newKey.byteLength < 32) {
+    console.error('The new credential is shorter than 32 bytes; the runner would reject it.')
     process.exit(2)
   }
-  if (newKey.equals(oldKey)) {
-    console.error('The new key is the same as the current one. Nothing to rotate.')
+  if (newKey?.equals(oldKey)) {
+    console.error('The new credential is the same as the current one. Nothing to rotate.')
     process.exit(2)
   }
 
@@ -213,9 +229,11 @@ async function main(): Promise<void> {
 
   if (!commit) {
     console.log('')
-    console.log('Dry run. Re-run with --commit to back up, re-sign and write the new credential.')
+    console.log('Dry run. Re-run with --commit and --new-credential-target to back up and re-sign the runtime.')
     return
   }
+
+  if (!newKey || !newCredentialTarget || !newSecret) throw new Error('new credential preflight did not complete')
 
   // ── 2. Back up before touching anything ──────────────────────────────────
   const stamp = new Date().toISOString().replace(/[:.]/g, '-')
@@ -248,20 +266,11 @@ async function main(): Promise<void> {
   }
   console.log(`OK: all ${afterCount} signatures verify under the new key.`)
 
-  // ── 5. Only now does the credential change ───────────────────────────────
-  // Last, deliberately. If anything above fails the runtime is untouched or
-  // restorable and the runner keeps working on the old key.
+  // ── 5. Report the already-stored target without revealing it ─────────────
   console.log('')
-  console.log('The runtime is re-signed. Write the new credential with:')
-  console.log('')
-  console.log(`  powershell -NoProfile -File scripts/set-credential.ps1 -Target ${RUNNER_RECEIPT_SIGNING_CREDENTIAL}`)
-  console.log('')
-  console.log('and paste this value, then set the SAME value as VIDEO_STUDIO_RUNNER_SIGNING_KEY')
-  console.log('on the content-engine Vercel project, then restart the runner task:')
-  console.log('')
-  console.log(`  ${newSecret}`)
-  console.log('')
-  console.log('The cloud half matters as much as this one: the runner signs receipts with this key and the control plane verifies them with its copy. A runtime re-signed here with a cloud that still holds the old value produces receipts that are rejected, which is the failure mode that looks like the runner working.')
+  const fingerprint = createHash('sha256').update(newSecret).digest('hex').slice(0, 12)
+  console.log(`The runtime now verifies under ${newCredentialTarget} (fingerprint ${fingerprint}).`)
+  console.log('Deploy the matching VIDEO_STUDIO_RUNNER_SIGNING_KEY, update the active credential constant, reinstall the clean runner checkout, and prove a signed receipt round trip before restarting normal work.')
 }
 
 main().catch(error => {
