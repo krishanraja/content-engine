@@ -4,7 +4,7 @@ This is the single current-state artifact for the Mindmake Carousel Engine. GitH
 
 The decision record, the feedback proposals and the visual reset trace live in the appendices at the end of this document: Appendix A (Decisions), Appendix B (Feedback proposals) and Appendix C (Reset trace).
 
-Last verified: 2026-09-07 against main at c90397b
+Last verified: 2026-09-12 against main at 8bd71ad
 
 ## Product boundary
 
@@ -130,6 +130,12 @@ Decision: supersede only the bottom-right part of the preceding carousel brand h
 Why: the publisher signature reads more naturally as a footer on the left and the visible letterforms should align, not the transparent source canvases or their surrounding plates.
 
 Carry-forward: this is a carousel-only frame rule. The exact revised render still requires visual approval.
+
+### 2026-09-08: carousel stories check against the shared cross-series editorial-preference gate
+
+Decision: carousel validation now runs `carouselEditorialPreferenceIssues` against the confirmed editorial standard whenever `pref-money-investigative-receipts-v1` or `pref-built-concrete-story-v1` is active, and `CarouselSourceFormatSchema` now shares its enum with the video engine's canonical formats instead of keeping its own copy.
+
+Why: Krish's confirmed reference-video judgement (`docs/REFERENCE_VIDEO_CALIBRATION.md`) was extended across both series and every canonical format, not kept video-only. A carousel story can now be flagged for unsupported sensational framing, an interrupted follow or subscribe request, an empty comment prompt, or a missing evidence or artifact beat in its first three slides, before a production approval is recorded.
 
 ## Appendix B: Feedback proposals
 

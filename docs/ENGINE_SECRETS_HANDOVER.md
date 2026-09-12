@@ -24,14 +24,16 @@ in shell history.
 
 ```powershell
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-token
-# paste: rt_d26867dedb995704ec05f4278b8a5cefed9ba49aab49fe82
+# paste: [redacted by the docs steward, 2026-09-12; treat the original value as compromised and rotate it]
 
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-signing-key
-# paste: sk_90cf45cb7cb114cd84f7259c458172842cb47d6ed66c1d40
+# paste: [redacted by the docs steward, 2026-09-12; treat the original value as compromised and rotate it]
 
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-radar-token
-# paste: ex_8d91781f9833c86a9188b51ac0c2c71a4cec87ded17bcaea
+# paste: [redacted by the docs steward, 2026-09-12; treat the original value as compromised and rotate it]
 ```
+
+**These three values were committed in plaintext in this file (PR #52, 2026-09-08) and were removed from this copy by the docs steward on 2026-09-12.** Redacting the working copy does not remove them from git history. Treat all three as compromised, rotate them, and generate new values through `scripts/set-credential.ps1` rather than pasting a value into any file again.
 
 Then restart the runner scheduled task.
 
