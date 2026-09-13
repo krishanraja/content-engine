@@ -44,6 +44,14 @@ The foundation includes shot-size progression, inserts, cutaways, reactions, mon
 
 The first Mindmake signature pack is evidence-led: living evidence theatre, gesture-directed composition, guided screenshot pans and magnifiers, animated owned sketches, vertical evidence descent, and evidence-to-illustration handoffs. More experimental devices such as depth layering, portals, camera-motion relays, stylised duplicates, or reality ruptures remain exact-shot approval decisions.
 
+Use `config/techniques.json` as the single repertoire authority. Before authoring production shot directives, run `studio v2 repertoire propose` for every beat and persist its `DeviceSelectionTraceV1` in `device_selection_traces`. Hard eligibility precedes scoring. Use one primary device and at most two supports. Equal scores resolve by stable device ID. Never select a device whose required governed inputs are missing.
+
+The registry also contains recipes and analysis-only reference observations. A recipe is a recurring narrative sequence, not a house style. A reference observation may teach a principle but never grants permission to copy, trace or publish the reference media.
+
+The current device pack adds noun-to-proof cut, tracked object label, progressive value reveal and embodied closing action. The Evidence Walkthrough recipe combines these with guided inspection and a clean return to Krish. Tracked labels require ordered layer tracking keyframes. Progressive reveals require at least two staged reveal moments. Embodied closing actions belong only in the final payoff or ending beat.
+
+If no existing device clears the repertoire threshold, do not lower the threshold or choose decorative filler. The sharp alternative is exactly one job-local `DeviceInventionProposalV1`. It must use the experimental lane, name a conservative existing fallback, receive phone-size styleframe and timed animatic review, and receive exact approval from Krish before treatment. It cannot promote itself into the registry.
+
 ## Review and rejection
 
 Review new work through phone-size entry, middle, and exit styleframes, then a timed low-resolution animatic. Premium and experimental work always requires the animatic gate. A proven restrained treatment may skip it only when risk and confidence checks pass.

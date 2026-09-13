@@ -8,6 +8,7 @@ export * from './carousel.js'
 export * from './session-v1.js'
 export * from './confirmation-v1.js'
 export * from './editorial-v1.js'
+export * from './art-director-v1.js'
 
 export const SCHEMA_VERSION = 1 as const
 

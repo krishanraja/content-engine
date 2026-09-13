@@ -100,3 +100,15 @@ Cloud heartbeats receive only the existing `ready`, `unavailable`, or `not_confi
 ## Radar boundary
 
 The studio does no gathering. It reads `RadarFeedV1` from the existing mm-ctrl public pool and Control Center owned/operator patterns. Offline JSON fixtures use the same schema. Internal sanitized patterns are research prompts only and are hard-blocked from factual scripting until replaced with public evidence or approved case material.
+
+## Art director repertoire
+
+The art director extends the one versioned registry at `config/techniques.json`; it does not create a competing effects system. Reference work is reduced to analysis-only observations, atomic devices and optional recipes. Every device declares its narrative jobs, eligible series and formats, required inputs, contraindications, implementation state, render adapter, QA checks, production cost and fallback.
+
+For each beat, eligibility fails closed before deterministic weighted scoring. The trace records every rejected and eligible candidate, exact scores, one primary device, at most two supporting devices and its fallback. Production visual plans bind one trace to every beat. A Short may carry at most one signature device and one experimental or invented device.
+
+The sharp alternative is available only when no existing device clears the recorded threshold. It creates one bounded invention proposal in the experimental lane. It cannot enter treatment without exact Krish approval, phone-size styleframes and an animatic. Reference frames, compositions, copy and creator likeness remain prohibited production inputs.
+
+Device feedback is append-only and scoped by job, session, series, mode, treatment or platform. Weekly aggregation can make a narrow strong correction or a repeated cross-job pattern eligible for promotion, but it cannot activate a rule. Conflicting evidence leaves the pattern observational. Active repertoire changes still require exact Krish approval and reviewed Git configuration.
+
+The repertoire owns pre-treatment selection; `film-jury-v1` owns independent evaluation of the rendered evidence. Jury packets bind the same registry hash and selection traces so verdicts can cite the mechanism actually used. Jury scores, platform performance and Krish's taste remain separate evidence classes. None can silently promote a device.

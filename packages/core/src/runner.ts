@@ -16,6 +16,7 @@ import {
   RunnerReceiptV1Schema,
   StageNameV2Schema,
   VideoPlatformV1Schema,
+  VisualNarrativePlanV1Schema,
   runnerCommandHashInputV1,
   runnerProjectProjectionHashInputV1,
   type MagicEditCandidateV1,
@@ -24,6 +25,7 @@ import {
   type ReviewRecoveryRecordV1,
   type RunnerCommandEnvelopeV1,
   type RunnerHardGatesV1,
+  type RunnerArtDirectionV1,
   type RunnerHeartbeatV1,
   type RunnerLocalReviewBindingV1,
   type RunnerProjectProjectionV1,
@@ -40,7 +42,7 @@ import { readWindowsCredential } from './credentials.js'
 import { durableLockOwnerIsActive, withDurableFileLock } from './durable-lock.js'
 import { driveDiscoveryStatus, sanitizedDriveDiscoverySummary, scanDriveInbox, type SanitizedDriveDiscoverySummary } from './drive-discovery.js'
 import { hashFile, hashFileMd5, hashValue } from './hash.js'
-import { findRecordedReviewDecisionV2, hasApprovalV2, jobRevisionHashV2, loadJobProjectionSnapshotV2, loadJobV2, readStageArtifactV2, recordApprovalV2, recordReviewDecisionV2, recordReviewRecoveryV2, withJobEventLock } from './job-store-v2.js'
+import { findRecordedReviewDecisionV2, hasApprovalV2, jobRevisionHashV2, loadJobProjectionSnapshotV2, loadJobV2, pinnedTechniqueRegistryPathV2, readStageArtifactV2, recordApprovalV2, recordReviewDecisionV2, recordReviewRecoveryV2, withJobEventLock } from './job-store-v2.js'
 import {
   activateMagicEditCandidate,
   loadMagicEditCandidate,
@@ -50,6 +52,7 @@ import {
   returnMagicEditToParent,
 } from './magic-edits.js'
 import { studioPaths } from './paths.js'
+import { loadTechniqueRegistry } from './visual-plan.js'
 import { importProductionBrief, materializeProductionBriefJob } from './production-brief.js'
 import { run } from './process.js'
 import { createLocalReviewSemanticMap, deterministicRunnerReviewId, loadLocalReviewBinding, persistLocalReviewBinding } from './review-bindings.js'
@@ -2578,6 +2581,53 @@ function qaPayloadPassed(payload: unknown, platform?: RunnerProjectProjectionV1[
   return Boolean(children?.length && children.every((item) => item.passed === true))
 }
 
+async function artDirectionReviewProjection(jobId: string): Promise<RunnerArtDirectionV1 | undefined> {
+  let artifact
+  try { artifact = await readStageArtifactV2(jobId, 'visual_plan') } catch { return undefined }
+  const plan = VisualNarrativePlanV1Schema.parse(artifact.payload)
+  if (!plan.device_selection_traces.length) return undefined
+  const job = await loadJobV2(jobId)
+  const registryPath = pinnedTechniqueRegistryPathV2(job)
+  if (!registryPath) return undefined
+  const registry = await loadTechniqueRegistry(registryPath)
+  const devices = new Map(registry.techniques.map((device) => [device.technique_id, device]))
+  return {
+    policy_version: 'art-director-v1',
+    registry_version: registry.version,
+    beats: plan.device_selection_traces.map((trace, index) => {
+      const primary = trace.selected_primary ? devices.get(trace.selected_primary) : undefined
+      const supporting = trace.selected_support.map((techniqueId) => {
+        const device = devices.get(techniqueId)!
+        const candidate = trace.candidates.find((item) => item.technique_id === techniqueId)!
+        return { technique_id: device.technique_id, name: device.name, rationale: candidate.rationale, experimental: device.experimental }
+      })
+      const alternatives = trace.candidates
+        .filter((candidate) => candidate.eligible && candidate.technique_id !== trace.selected_primary && !trace.selected_support.includes(candidate.technique_id))
+        .slice(0, 2)
+        .map((candidate) => {
+          const device = devices.get(candidate.technique_id)!
+          return { technique_id: device.technique_id, name: device.name, rationale: candidate.rationale, experimental: device.experimental }
+        })
+      return {
+        beat_id: trace.beat_id,
+        beat_label: `Beat ${index + 1}: ${plan.beats.find((beat) => beat.beat_id === trace.beat_id)?.narrative_function || 'visual direction'}`,
+        primary: primary ? { technique_id: primary.technique_id, name: primary.name, rationale: trace.candidates.find((item) => item.technique_id === primary.technique_id)!.rationale, experimental: primary.experimental } : null,
+        supporting,
+        alternatives,
+        invention: trace.invention ? {
+          proposal_id: trace.invention.proposal_id,
+          name: trace.invention.name,
+          gap: trace.invention.gap,
+          mechanism: trace.invention.mechanism,
+          approval_state: trace.invention.approval_state,
+          requires_styleframes: true,
+          requires_animatic: true,
+        } : null,
+      }
+    }),
+  }
+}
+
 export async function buildRunnerProjectProjection(input: RunnerProjectBootstrapInput, options: RunnerProjectBuildOptions = {}): Promise<RunnerProjectProjectionV1> {
   const platform = VideoPlatformV1Schema.parse(input.platform)
   if (options.omitExpectedPlatformState && options.acknowledgedCursor) throw new Error('legacy project bootstrap cannot be used with an acknowledged platform cursor')
@@ -2596,6 +2646,7 @@ export async function buildRunnerProjectProjection(input: RunnerProjectBootstrap
   let change = 'The current approved treatment is ready for bounded mobile presentation edits.'
   let direction = 'Review the current approved treatment and open bounded mobile presentation edits.'
   let provenance: RunnerLocalReviewBindingV1['provenance']
+  let artDirection: RunnerArtDirectionV1 | undefined
 
   if (input.gate === 'story') {
     const candidates = await readStageArtifactV2(input.job_id, 'candidates')
@@ -2622,6 +2673,7 @@ export async function buildRunnerProjectProjection(input: RunnerProjectBootstrap
     reviewTarget = { kind: 'range', start_ms: 0, end_ms: targetMap.duration_ms }
     rangeLabel = `Full ${(targetMap.duration_ms / 1000).toFixed(1)} second treatment`
     provenance = { kind: 'treatment', treatment_artifact_hash: treatment.artifact_hash }
+    artDirection = await artDirectionReviewProjection(input.job_id)
 
     if (input.gate === 'final') {
     const render = await readStageArtifactV2(input.job_id, 'render')
@@ -2705,6 +2757,7 @@ export async function buildRunnerProjectProjection(input: RunnerProjectBootstrap
         blocking_gates: hardGates,
         target: reviewTarget,
         semantic_target_map_hash: semanticTargetMapHash,
+        ...(artDirection ? { art_direction: artDirection } : {}),
       },
       hard_gates: hardGates,
       created_at: reviewCreatedAt,

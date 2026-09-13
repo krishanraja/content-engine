@@ -120,6 +120,10 @@ function boundedString(value: unknown, max: number, min = 0): string | null {
   return normalized
 }
 
+function isIdentifier(value: unknown): value is string {
+  return typeof value === 'string' && /^[a-z0-9][a-z0-9_-]{1,95}$/i.test(value)
+}
+
 const UNSAFE_REDACTED_TEXT = [
   /(?:[a-z]:\\|\\\\[^\s\\]+\\)/i,
   /\bfile:\/\/\S+/i,
@@ -389,13 +393,55 @@ export function hardGatesPassed(gates: HardGateSetV1): boolean {
   return HARD_GATE_KEYS.every((key) => gates[key].status === 'passed')
 }
 
+function parseArtDirectionDevice(value: unknown): UnknownRecord | null {
+  if (!isRecord(value) || !exactKeys(value, ['technique_id', 'name', 'rationale', 'experimental'])) return null
+  const name = safeRedactedText(value.name, 120, 1)
+  const rationale = safeRedactedText(value.rationale, 300, 8)
+  if (!isIdentifier(value.technique_id) || !name || !rationale || typeof value.experimental !== 'boolean') return null
+  return { technique_id: value.technique_id, name, rationale, experimental: value.experimental }
+}
+
+function parseArtDirection(value: unknown): UnknownRecord | null {
+  if (!isRecord(value) || !exactKeys(value, ['policy_version', 'registry_version', 'beats'])) return null
+  if (value.policy_version !== 'art-director-v1' || !Number.isSafeInteger(value.registry_version) || Number(value.registry_version) < 1) return null
+  if (!Array.isArray(value.beats) || value.beats.length < 1 || value.beats.length > 20) return null
+  const beats: UnknownRecord[] = []
+  for (const beat of value.beats) {
+    if (!isRecord(beat) || !exactKeys(beat, ['beat_id', 'beat_label', 'primary', 'supporting', 'alternatives', 'invention'])) return null
+    const beatLabel = safeRedactedText(beat.beat_label, 120, 1)
+    const primary = beat.primary === null ? null : parseArtDirectionDevice(beat.primary)
+    if (!isIdentifier(beat.beat_id) || !beatLabel || (beat.primary !== null && !primary)) return null
+    if (!Array.isArray(beat.supporting) || beat.supporting.length > 2 || !Array.isArray(beat.alternatives) || beat.alternatives.length > 2) return null
+    const supporting = beat.supporting.map(parseArtDirectionDevice)
+    const alternatives = beat.alternatives.map(parseArtDirectionDevice)
+    if (supporting.some((item) => !item) || alternatives.some((item) => !item)) return null
+    let invention: UnknownRecord | null = null
+    if (beat.invention !== null) {
+      const raw = beat.invention
+      if (!isRecord(raw) || !exactKeys(raw, ['proposal_id', 'name', 'gap', 'mechanism', 'approval_state', 'requires_styleframes', 'requires_animatic'])) return null
+      const name = safeRedactedText(raw.name, 120, 1)
+      const gap = safeRedactedText(raw.gap, 300, 8)
+      const mechanism = safeRedactedText(raw.mechanism, 500, 12)
+      if (!isIdentifier(raw.proposal_id) || !name || !gap || !mechanism || !oneOf(raw.approval_state, ['proposed', 'approved', 'rejected']) || raw.requires_styleframes !== true || raw.requires_animatic !== true) return null
+      invention = { proposal_id: raw.proposal_id, name, gap, mechanism, approval_state: raw.approval_state, requires_styleframes: true, requires_animatic: true }
+    }
+    if ((!primary && !invention) || (primary && invention)) return null
+    beats.push({ beat_id: beat.beat_id, beat_label: beatLabel, primary, supporting, alternatives, invention })
+  }
+  return { policy_version: 'art-director-v1', registry_version: value.registry_version, beats }
+}
+
 export function parseReviewPayload(value: unknown): UnknownRecord | null {
   if (!isRecord(value)) return null
   const required = [
     'direction', 'change_title', 'change_summary', 'range_label', 'changes',
     'blocking_gates', 'target', 'semantic_target_map_hash',
   ]
-  const allowed = value.editorial_note === undefined ? required : [...required, 'editorial_note']
+  const allowed = [
+    ...required,
+    ...(value.editorial_note === undefined ? [] : ['editorial_note']),
+    ...(value.art_direction === undefined ? [] : ['art_direction']),
+  ]
   if (!exactKeys(value, allowed)) return null
   const direction = safeRedactedText(value.direction, 600, 1)
   const title = safeRedactedText(value.change_title, 200, 1)
@@ -406,10 +452,12 @@ export function parseReviewPayload(value: unknown): UnknownRecord | null {
     : safeRedactedText(value.editorial_note, 600, 1)
   const gates = parseHardGates(value.blocking_gates)
   const target = parseCommandTarget(value.target)
+  const artDirection = value.art_direction === undefined ? undefined : parseArtDirection(value.art_direction)
   if (
     !direction || !title || !summary || !rangeLabel || !gates || !target
     || !isSha256(value.semantic_target_map_hash)
     || (value.editorial_note !== undefined && !editorialNote)
+    || (value.art_direction !== undefined && !artDirection)
     || !Array.isArray(value.changes)
     || value.changes.length > 4
   ) return null
@@ -425,6 +473,7 @@ export function parseReviewPayload(value: unknown): UnknownRecord | null {
     target,
     semantic_target_map_hash: value.semantic_target_map_hash,
     ...(editorialNote ? { editorial_note: editorialNote } : {}),
+    ...(artDirection ? { art_direction: artDirection } : {}),
   }
 }
 

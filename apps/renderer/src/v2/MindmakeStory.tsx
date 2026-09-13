@@ -188,6 +188,23 @@ function AnnotationLayer({ layer, asset, branding }: { layer: V2RuntimeLayer; as
   )
 }
 
+function trackedLayerBounds(layer: V2RuntimeLayer, atMs: number) {
+  const keyframes = layer.trackingKeyframes
+  if (!keyframes?.length) return defaultLayerBounds(layer)
+  const before = [...keyframes].reverse().find((keyframe) => keyframe.atMs <= atMs) || keyframes[0]!
+  const after = keyframes.find((keyframe) => keyframe.atMs >= atMs) || keyframes.at(-1)!
+  const span = after.atMs - before.atMs
+  const progress = span <= 0 ? 0 : Math.max(0, Math.min(1, (atMs - before.atMs) / span))
+  const between = (left: number, right: number) => left + (right - left) * progress
+  return {
+    x: between(before.bounds.x, after.bounds.x),
+    y: between(before.bounds.y, after.bounds.y),
+    width: between(before.bounds.width, after.bounds.width),
+    height: between(before.bounds.height, after.bounds.height),
+    rotationDegrees: 0,
+  }
+}
+
 function Layer({
   layer,
   shot,
@@ -207,16 +224,16 @@ function Layer({
   primary: boolean
   fixedSeed: string
 }) {
-  const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
   if (layer.kind === 'caption' || layer.kind === 'branding') return null
   if (layer.visibleStartMs !== undefined && atMs < layer.visibleStartMs) return null
   if (layer.visibleEndMs !== undefined && atMs >= layer.visibleEndMs) return null
-  const bounds = defaultLayerBounds(layer)
+  const bounds = trackedLayerBounds(layer, atMs)
   const source = sources.find((item) => item.sourceId === layer.targetId) ?? (layer.kind === 'source' ? sources.find((item) => item.sourceId === shot.sourceId) : undefined)
   const asset = assets.find((item) => item.assetId === layer.targetId)
   const full = layer.anchor === 'full' && !layer.bounds
-  const localEntrance = spring({ frame, fps, config: { damping: 22, stiffness: 190, mass: 0.7 }, durationInFrames: Math.max(8, Math.round(fps * 0.42)) })
+  const entranceFrame = frameAt(Math.max(0, atMs - (layer.visibleStartMs ?? shot.startMs)), fps)
+  const localEntrance = spring({ frame: entranceFrame, fps, config: { damping: 22, stiffness: 190, mass: 0.7 }, durationInFrames: Math.max(8, Math.round(fps * 0.42)) })
   const laneMotion = shot.treatmentLane === 'restrained' ? 1 : interpolate(localEntrance, [0, 1], [0.965, 1])
   const random = deterministicUnit(`${fixedSeed}:${shot.shotId}:${layer.layerId}`)
   const rotation = shot.treatmentLane === 'experimental' && !full ? (random - 0.5) * 1.1 * (1 - localEntrance) : 0

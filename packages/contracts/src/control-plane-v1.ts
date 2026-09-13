@@ -402,6 +402,40 @@ export const RunnerReviewTargetV1Schema = z.discriminatedUnion('kind', [
 ])
 export type RunnerReviewTargetV1 = z.infer<typeof RunnerReviewTargetV1Schema>
 
+export const RunnerArtDirectionDeviceV1Schema = z.object({
+  technique_id: IdentifierV1Schema,
+  name: z.string().trim().min(1).max(120),
+  rationale: z.string().trim().min(8).max(300),
+  experimental: z.boolean(),
+}).strict()
+
+export const RunnerArtDirectionBeatV1Schema = z.object({
+  beat_id: IdentifierV1Schema,
+  beat_label: z.string().trim().min(1).max(120),
+  primary: RunnerArtDirectionDeviceV1Schema.nullable(),
+  supporting: z.array(RunnerArtDirectionDeviceV1Schema).max(2),
+  alternatives: z.array(RunnerArtDirectionDeviceV1Schema).max(2),
+  invention: z.object({
+    proposal_id: IdentifierV1Schema,
+    name: z.string().trim().min(1).max(120),
+    gap: z.string().trim().min(8).max(300),
+    mechanism: z.string().trim().min(12).max(500),
+    approval_state: z.enum(['proposed', 'approved', 'rejected']),
+    requires_styleframes: z.literal(true),
+    requires_animatic: z.literal(true),
+  }).strict().nullable(),
+}).strict().superRefine((value, context) => {
+  if (!value.primary && !value.invention) context.addIssue({ code: 'custom', path: ['primary'], message: 'art direction beat requires a device or invention proposal' })
+  if (value.primary && value.invention) context.addIssue({ code: 'custom', path: ['invention'], message: 'invention is only shown when no existing device fits' })
+})
+
+export const RunnerArtDirectionV1Schema = z.object({
+  policy_version: z.literal('art-director-v1'),
+  registry_version: z.number().int().positive(),
+  beats: z.array(RunnerArtDirectionBeatV1Schema).min(1).max(20),
+}).strict()
+export type RunnerArtDirectionV1 = z.infer<typeof RunnerArtDirectionV1Schema>
+
 export const RunnerReviewPayloadV1Schema = z.object({
   direction: z.string().trim().min(1).max(600),
   change_title: z.string().trim().min(1).max(200),
@@ -412,6 +446,7 @@ export const RunnerReviewPayloadV1Schema = z.object({
   target: RunnerReviewTargetV1Schema,
   semantic_target_map_hash: Sha256V1Schema,
   editorial_note: z.string().trim().min(1).max(600).optional(),
+  art_direction: RunnerArtDirectionV1Schema.optional(),
 }).strict()
 
 const RunnerResultRefsSharedShapeV1 = {

@@ -1,8 +1,17 @@
 {
   "schema_version": 1,
   "registry_id": "mindmake-visual-techniques",
-  "version": 1,
+  "version": 2,
   "principle": "Every technique must prove, explain, orient, compare, evoke, or deliberately delight without competing with the argument.",
+  "selection_policy": {
+    "version": "art-director-v1",
+    "minimum_score": 68,
+    "maximum_support_devices": 2,
+    "maximum_signature_devices_per_short": 1,
+    "maximum_experimental_devices_per_short": 1,
+    "invention_requires_no_credible_fit": true,
+    "invention_requires_krish_approval": true
+  },
   "techniques": [
     {
       "technique_id": "stable-semantic-crop",
@@ -198,6 +207,146 @@
       "fallback": "Use a smash cut and sound bridge.",
       "experimental": true,
       "signature": false
+    },
+    {
+      "technique_id": "noun-to-proof-cut",
+      "version": 1,
+      "name": "Noun to proof cut",
+      "purpose": "Replace the frame with the exact approved person, place, object, interface, document, or event when the spoken noun first becomes meaningful.",
+      "narrative_jobs": ["prove", "orient"],
+      "required_inputs": ["approved_asset", "narrative_beats"],
+      "parameters": ["noun_cue", "entry_ms", "hold_ms", "return_ms"],
+      "accessibility": ["phone_legible", "persistent_attribution", "minimum_read_time"],
+      "cost_class": "local",
+      "fallback": "Keep Krish primary and place the approved proof in clear negative space.",
+      "experimental": false,
+      "signature": false,
+      "eligibility": {
+        "series": ["money_of_ai", "built_with_ai"],
+        "source_modes": ["extract", "solo", "short_native"],
+        "editorial_formats": [],
+        "narrative_functions": ["hook", "evidence", "mechanism", "context"],
+        "viewer_tasks": ["verify_claim", "identify_subject", "understand_mechanism", "orient"],
+        "requires": ["approved_asset"],
+        "contraindications": ["Do not substitute generic stock imagery for a specific spoken noun."]
+      },
+      "implementation_state": "implemented",
+      "render_adapter": "evidence_overlay",
+      "qa_checks": ["asset_hash_bound", "rights_approved", "attribution_legible", "protected_region_clear"]
+    },
+    {
+      "technique_id": "tracked-object-label",
+      "version": 1,
+      "name": "Tracked object label",
+      "purpose": "Attach a restrained label, value, or causal annotation to the real object it describes as that object moves through the frame.",
+      "narrative_jobs": ["orient", "explain"],
+      "required_inputs": ["object_track", "narrative_beats"],
+      "parameters": ["track_id", "label", "offset", "leader_line", "confidence_floor"],
+      "accessibility": ["bounded_motion", "caption_collision_avoidance", "protected_region_clear"],
+      "cost_class": "local",
+      "fallback": "Freeze on the clearest frame and use one static annotation.",
+      "experimental": false,
+      "signature": false,
+      "eligibility": {
+        "series": ["money_of_ai", "built_with_ai"],
+        "source_modes": ["extract", "solo", "short_native"],
+        "editorial_formats": [],
+        "narrative_functions": ["mechanism", "evidence", "context", "payoff"],
+        "viewer_tasks": ["understand_mechanism", "identify_subject", "compare"],
+        "requires": ["object_track"],
+        "contraindications": ["Do not label an inferred object identity as fact."]
+      },
+      "implementation_state": "implemented",
+      "render_adapter": "tracked_annotation",
+      "qa_checks": ["track_confidence", "caption_collision_avoidance", "face_collision_avoidance"]
+    },
+    {
+      "technique_id": "progressive-value-reveal",
+      "version": 1,
+      "name": "Progressive value reveal",
+      "purpose": "Reveal a quantity, comparison, or consequence in deliberate stages so the viewer understands the mechanism before receiving the final number.",
+      "narrative_jobs": ["explain", "compare", "prove"],
+      "required_inputs": ["verified_values", "narrative_beats"],
+      "parameters": ["reveal_sequence", "unit", "hold_ms", "source_label"],
+      "accessibility": ["never_colour_only", "phone_legible", "minimum_read_time"],
+      "cost_class": "local",
+      "fallback": "Show the verified final value with its source after the explanation lands.",
+      "experimental": false,
+      "signature": true,
+      "eligibility": {
+        "series": ["money_of_ai", "built_with_ai"],
+        "source_modes": ["extract", "solo", "short_native"],
+        "editorial_formats": [],
+        "narrative_functions": ["hook", "mechanism", "evidence", "payoff"],
+        "viewer_tasks": ["understand_mechanism", "compare", "verify_claim", "land_payoff"],
+        "requires": ["verified_values"],
+        "contraindications": ["Do not animate an estimated or unavailable value as measured fact."]
+      },
+      "implementation_state": "implemented",
+      "render_adapter": "progressive_value",
+      "qa_checks": ["claim_value_verified", "unit_persistent", "source_legible"]
+    },
+    {
+      "technique_id": "embodied-closing-action",
+      "version": 1,
+      "name": "Embodied closing action",
+      "purpose": "Finish on a real physical action, look, object interaction, or visual consequence that resolves the spoken point instead of decorating the final beat.",
+      "narrative_jobs": ["evoke", "delight", "orient"],
+      "required_inputs": ["closing_action", "narrative_beats"],
+      "parameters": ["action_cue", "hold_ms", "caption_release_ms", "end_frame"],
+      "accessibility": ["meaning_clear_without_sound", "stable_final_hold"],
+      "cost_class": "local",
+      "fallback": "End on Krish with a stable crop and enough silence for the conclusion to land.",
+      "experimental": false,
+      "signature": true,
+      "eligibility": {
+        "series": ["money_of_ai", "built_with_ai"],
+        "source_modes": ["extract", "solo", "short_native"],
+        "editorial_formats": [],
+        "narrative_functions": ["payoff"],
+        "viewer_tasks": ["land_payoff"],
+        "requires": ["closing_action"],
+        "contraindications": ["Do not manufacture an action that changes what actually happened."]
+      },
+      "implementation_state": "implemented",
+      "render_adapter": "closing_action",
+      "qa_checks": ["ending_complete", "caption_release", "stable_final_frame"]
+    }
+  ],
+  "recipes": [
+    {
+      "recipe_id": "evidence-walkthrough",
+      "version": 1,
+      "name": "Evidence walkthrough",
+      "purpose": "Move from a specific spoken claim into authentic proof, guide the eye through the decisive detail, then return to Krish for the earned interpretation.",
+      "device_sequence": ["noun-to-proof-cut", "guided-evidence-pan", "progressive-value-reveal", "stable-semantic-crop"],
+      "eligible_series": ["money_of_ai", "built_with_ai"],
+      "eligible_formats": [],
+      "recurrence_cap_jobs": 4,
+      "required_inputs": ["approved_asset", "approved_evidence", "claim_link", "focal_regions", "narrative_beats", "verified_values", "subject_tracks", "shot_boundaries"],
+      "fallback": "Use one attributed evidence card followed by a clean return to Krish.",
+      "experimental": false
+    }
+  ],
+  "reference_observations": [
+    {
+      "reference_id": "instagram-reel-dchp2rlixmt",
+      "title": "Instagram Reel visual device study",
+      "source_ref": "repo:inspo/README.md#igexport-DCHp2RLIxMt.mp4",
+      "source_hash": "acd429d8fd6edc62e2bd18b9b506008149622799fcc6035d4393b2451f17402f",
+      "rights_role": "analysis_only",
+      "observed_devices": ["noun-to-proof-cut", "tracked-object-label", "progressive-value-reveal", "embodied-closing-action"],
+      "observations": [
+        "A spoken noun earns an immediate visual answer rather than generic B-roll.",
+        "Labels feel integrated when they belong to moving objects and preserve the viewer's primary attention target.",
+        "Quantities become more memorable when the mechanism is revealed before the final value.",
+        "The last physical action can complete the argument and create a clean loop without a generic call to action."
+      ],
+      "prohibited_uses": [
+        "Do not publish, redistribute, trace, or copy frames from the reference.",
+        "Do not reproduce its composition, timing, copy, or creator likeness as a template."
+      ],
+      "recorded_at": "2026-09-12T00:00:00.000Z"
     }
   ]
 }

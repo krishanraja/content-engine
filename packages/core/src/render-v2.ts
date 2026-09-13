@@ -789,6 +789,7 @@ export function manifestToV2RenderProps(
         ...(layer.target_id ? { targetId: layer.target_id } : {}),
         anchor: layer.anchor,
         ...(layer.bounds ? { bounds: layer.bounds } : {}),
+        ...(layer.tracking_keyframes ? { trackingKeyframes: layer.tracking_keyframes.map((keyframe) => ({ atMs: keyframe.at_ms, bounds: keyframe.bounds, confidence: keyframe.confidence })) } : {}),
         opacity: layer.opacity,
         blendMode: layer.blend_mode,
         protected: layer.protected,
