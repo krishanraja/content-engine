@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake Video and Carousel Studio
-as_of: 2026-09-07
-head: c90397b
+as_of: 2026-09-13
+head: 34a085a
 lifecycle: building
 production_url: none
 state_doc: docs/CAROUSEL_ENGINE_STATE.md
@@ -43,6 +43,8 @@ Lifecycle: building. Nothing in the repo records a live render, an installed run
 - **Verification.** `npm run verify` runs typecheck, tests, skill validation, trigger, renderer, public-copy and no-secrets checks on Ubuntu and Windows with hash-pinned FFmpeg (`.github/workflows/ci.yml`). At `efb3f80`: 42 test files, 368 tests (`docs/CAROUSEL_ENGINE_STATE.md`); PR #39 reports a 383-test suite at `8477f04`.
 
 ## What changed recently
+
+- 2026-09-13 **Art director repertoire and governed sharp alternative** (`codex/art-director-repertoire`, awaiting PR). Why: the engine needs reusable visual judgement rather than a growing bag of effects. The single technique registry now carries deterministic eligibility and scoring, recipes, render and QA contracts, analysis-only reference observations, compact Control Center review data and scoped usage feedback. Four devices and the Evidence Walkthrough recipe encode the useful principles observed in the supplied Reel without copying it. When no existing device can do the narrative job, the engine may propose one new experimental mechanism, but only exact Krish approval plus styleframes and an animatic can move it into treatment. Weekly device-learning proposals remain inactive until approved and committed.
 
 - 2026-09-07 **Portable confirmation refs at every gate, radar as importer, one carousel doc** (PR #40, `867a88e`, `8e42b15`). Why: the engine "said it was client-neutral but every production gate accepted only a codex-user-confirmation prefix, so a Claude session had to claim to be Codex to approve anything"; one shared helper now accepts the portable `studio-user-confirmation:<client>:<gate>:<hash>:` form alongside the legacy and Control Center prefixes "at the angle, visual plan, evidence, storyboard, animatic, treatment, final, package, intake and rebind gates". The radar "returned editorial_eligible: false for every input by construction, which made it a live-looking API with nothing behind it"; editorial judgement lives in Control Center now, so the radar is "a feed importer: fetch, validate, merge, write", and the unread `cadence` block left `config/studio.json`. Carousel approvals "were a plain array in the story file with no binding to the gate or artifact" and now require a `confirmation_ref` bound to both. The three same-day carousel documents became appendices of `docs/CAROUSEL_ENGINE_STATE.md` (`docs/history/LOG.md`).
 - 2026-09-07 **Runner consumes approved production briefs** (PR #39, `8477f04`). Why: production had to start from an approved Content revision without a person in a chat; the change "lets the installed runner claim briefs without a live Codex, Claude, or ChatGPT session", "materializes deterministic short-native jobs and pauses extract/solo work for a reviewed Drive source bundle", and "preserves manual CLI import as offline recovery". Import is content-addressed and idempotent, so "a changed brief cannot reuse an existing brief ID", and carousel-only briefs are "imported without inventing a video job" (`docs/OPERATIONS.md`). Verification note from the PR: "383-test suite: 382 pass; one 10.1s Windows cold-start timeout corrected to a finite 20s bound, then the CLI suite passed."

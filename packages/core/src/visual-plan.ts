@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises'
 import {
+  ArtDirectorRepertoireV1Schema,
   VisualNarrativePlanV1Schema,
+  type ArtDirectorRepertoireV1,
   type EditorialFormatV1,
   type PreferenceRuleV1,
   type SourceVisualAnalysisV1,
@@ -8,29 +10,10 @@ import {
 } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { BUILT_WITH_AI_EDITORIAL_RULE_ID, MONEY_OF_AI_EDITORIAL_RULE_ID } from './editorial.js'
+import { validateShortDeviceSelections } from './art-director.js'
 import { solveVirtualCamera } from './virtual-camera.js'
 
-export interface TechniqueDefinitionV1 {
-  technique_id: string
-  version: number
-  name: string
-  purpose: string
-  required_inputs: string[]
-  parameters: string[]
-  accessibility: string[]
-  cost_class: 'local' | 'hybrid' | 'cloud_optional'
-  fallback: string
-  experimental: boolean
-  signature: boolean
-}
-
-export interface TechniqueRegistryV1 {
-  schema_version: 1
-  registry_id: string
-  version: number
-  principle: string
-  techniques: TechniqueDefinitionV1[]
-}
+export type TechniqueRegistryV1 = ArtDirectorRepertoireV1
 
 export interface VisualPlanReview {
   passed: boolean
@@ -42,26 +25,8 @@ export interface VisualPlanReview {
   requires_animatic: boolean
 }
 
-function assertString(value: unknown, name: string): asserts value is string {
-  if (typeof value !== 'string' || !value.trim()) throw new Error(`${name} must be a non-empty string`)
-}
-
 export async function loadTechniqueRegistry(path: string): Promise<TechniqueRegistryV1> {
-  const value = JSON.parse(await readFile(path, 'utf8')) as Partial<TechniqueRegistryV1>
-  if (value.schema_version !== 1 || !Array.isArray(value.techniques)) throw new Error('unsupported technique registry')
-  assertString(value.registry_id, 'registry_id')
-  assertString(value.principle, 'principle')
-  if (!Number.isInteger(value.version) || Number(value.version) < 1) throw new Error('technique registry version must be positive')
-  const ids = new Set<string>()
-  for (const technique of value.techniques) {
-    assertString(technique.technique_id, 'technique_id')
-    assertString(technique.name, 'technique name')
-    assertString(technique.purpose, 'technique purpose')
-    assertString(technique.fallback, 'technique fallback')
-    if (ids.has(technique.technique_id)) throw new Error(`duplicate technique ID ${technique.technique_id}`)
-    ids.add(technique.technique_id)
-  }
-  return value as TechniqueRegistryV1
+  return ArtDirectorRepertoireV1Schema.parse(JSON.parse(await readFile(path, 'utf8')))
 }
 
 function intersectionArea(left: { x: number; y: number; width: number; height: number }, right: { x: number; y: number; width: number; height: number }): number {
@@ -79,6 +44,32 @@ function attentionCollisionIssues(plan: VisualNarrativePlanV1, analysis: SourceV
       if (!layer.bounds) continue
       const collisions = protectedRegions.filter((region) => intersectionArea(layer.bounds!, region.bounds) > Math.min(layer.bounds!.width * layer.bounds!.height, region.bounds.width * region.bounds.height) * 0.08)
       if (collisions.length && shot.primary_attention_target.kind === 'presenter') issues.push(`shot ${shot.shot_id} places ${layer.layer_id} over protected presenter space`)
+    }
+  }
+  return issues
+}
+
+function deviceImplementationIssues(plan: VisualNarrativePlanV1): string[] {
+  const issues: string[] = []
+  for (const shot of plan.shot_directives) {
+    const ids = new Set(shot.technique_ids)
+    if (ids.has('noun-to-proof-cut') && !shot.layers.some((layer) => layer.kind === 'asset' && layer.target_id)) {
+      issues.push(`shot ${shot.shot_id} uses noun-to-proof-cut without an approved asset layer`)
+    }
+    if (ids.has('tracked-object-label') && !shot.layers.some((layer) => layer.kind === 'annotation' && layer.anchor === 'tracked_region' && (layer.tracking_keyframes?.length || 0) >= 2)) {
+      issues.push(`shot ${shot.shot_id} uses tracked-object-label without ordered tracking keyframes on an annotation layer`)
+    }
+    if (ids.has('progressive-value-reveal')) {
+      const reveals = shot.layers
+        .filter((layer) => (layer.kind === 'annotation' || layer.kind === 'asset') && layer.visible_start_ms !== undefined)
+        .map((layer) => layer.visible_start_ms!)
+      if (new Set(reveals).size < 2) issues.push(`shot ${shot.shot_id} uses progressive-value-reveal without at least two staged reveal moments`)
+    }
+    if (ids.has('embodied-closing-action')) {
+      const beat = plan.beats.find((item) => item.beat_id === shot.beat_id)
+      if (!beat || !['payoff', 'ending'].includes(beat.narrative_function) || shot.end_ms < plan.duration_ms - 50) {
+        issues.push(`shot ${shot.shot_id} uses embodied-closing-action outside the final payoff or ending beat`)
+      }
     }
   }
   return issues
@@ -152,9 +143,30 @@ export function reviewVisualPlan(input: ReviewVisualPlanInput): { plan: VisualNa
   if (plan.preference_snapshot_hash !== input.preferenceSnapshotHash) hardBlocks.push('visual plan is not bound to the pinned preference snapshot')
 
   const techniques = new Map(input.techniqueRegistry.techniques.map((technique) => [technique.technique_id, technique]))
+  if (input.production === true && input.techniqueRegistry.version >= 2 && plan.device_selection_traces.length !== plan.beats.length) {
+    hardBlocks.push('production visual plans require one deterministic device selection trace per beat')
+  }
+  if (plan.device_selection_traces.length) {
+    hardBlocks.push(...validateShortDeviceSelections(input.techniqueRegistry, plan.device_selection_traces))
+    if (plan.device_selection_traces.some((trace) => trace.invention) && plan.treatment_lane !== 'experimental') hardBlocks.push('invented devices require the experimental treatment lane')
+    const beatIds = new Set(plan.beats.map((beat) => beat.beat_id))
+    const tracedBeatIds = plan.device_selection_traces.map((trace) => trace.beat_id)
+    if (new Set(tracedBeatIds).size !== tracedBeatIds.length) hardBlocks.push('device selection traces must bind unique beats')
+    for (const trace of plan.device_selection_traces) {
+      if (!beatIds.has(trace.beat_id)) hardBlocks.push(`device selection trace ${trace.trace_id} references an unknown beat`)
+      if (trace.registry_id !== input.techniqueRegistry.registry_id || trace.registry_version !== input.techniqueRegistry.version) hardBlocks.push(`device selection trace ${trace.trace_id} references a different technique registry`)
+      if (trace.registry_hash && trace.registry_hash !== input.techniqueRegistryHash) hardBlocks.push(`device selection trace ${trace.trace_id} references a different technique registry hash`)
+      if (input.production === true && !trace.registry_hash) hardBlocks.push(`production device selection trace ${trace.trace_id} is missing its registry hash`)
+      const placed = new Set(plan.shot_directives.filter((shot) => shot.beat_id === trace.beat_id).flatMap((shot) => shot.technique_ids))
+      for (const selected of [trace.selected_primary, ...trace.selected_support].filter((id): id is string => Boolean(id))) {
+        if (!placed.has(selected)) hardBlocks.push(`device selection trace ${trace.trace_id} selected ${selected} but no shot for its beat uses it`)
+      }
+    }
+  }
   const usedIds = [...new Set(plan.shot_directives.flatMap((shot) => shot.technique_ids))]
   const unknown = usedIds.filter((id) => !techniques.has(id))
   if (unknown.length) hardBlocks.push(`unknown visual techniques: ${unknown.join(', ')}`)
+  hardBlocks.push(...deviceImplementationIssues(plan))
   const experimental = usedIds.filter((id) => techniques.get(id)?.experimental)
   if (experimental.length > 1) hardBlocks.push('experimental lane permits one principal unproven hero technique per Short')
   if (experimental.length && plan.treatment_lane !== 'experimental') hardBlocks.push('experimental techniques require the experimental treatment lane')
@@ -205,8 +217,9 @@ export function reviewVisualPlan(input: ReviewVisualPlanInput): { plan: VisualNa
   if (editorialStandards.size) softBlocks.push(...editorialStandardVisualIssues(plan, input, editorialStandards))
   for (const fallback of input.analysis.capabilities.fallbacks) fallbacks.add(fallback)
 
-  const requiresStyleframes = !input.provenTreatment || plan.treatment_lane !== 'restrained' || experimental.length > 0
-  const requiresAnimatic = plan.treatment_lane !== 'restrained' || experimental.length > 0 || !input.provenTreatment
+  const hasInvention = plan.device_selection_traces.some((trace) => trace.invention)
+  const requiresStyleframes = !input.provenTreatment || plan.treatment_lane !== 'restrained' || experimental.length > 0 || hasInvention
+  const requiresAnimatic = plan.treatment_lane !== 'restrained' || experimental.length > 0 || hasInvention || !input.provenTreatment
   return {
     plan,
     review: {

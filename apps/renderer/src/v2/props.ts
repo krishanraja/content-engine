@@ -98,6 +98,11 @@ const RuntimeLayerSchema = z.object({
   targetId: z.string().optional(),
   anchor: z.enum(['full', 'top_left', 'top_right', 'left', 'right', 'center', 'bottom', 'gesture', 'tracked_region']),
   bounds: NormalizedRectSchema.optional(),
+  trackingKeyframes: z.array(z.object({
+    atMs: z.number().nonnegative(),
+    bounds: NormalizedRectSchema,
+    confidence: z.number().min(0).max(1),
+  })).min(2).optional(),
   opacity: z.number().min(0).max(1),
   blendMode: z.enum(['normal', 'multiply', 'screen', 'overlay']),
   protected: z.boolean(),

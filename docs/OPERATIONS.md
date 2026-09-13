@@ -320,6 +320,14 @@ identified by `x-vercel-cron` or a `vercel-cron` user agent, either of which is
 enough (`isScheduled` in `api/_runs.ts`). A person holding `CRON_SECRET` is
 still recorded as `manual` on purpose.
 
+## Art direction repertoire
+
+Inspect the approved device library with `studio v2 repertoire inspect`. Use `studio v2 repertoire propose` with the beat, series, source mode, narrative function, viewer task, narrative job, treatment lane and available inputs to produce the deterministic selection trace. Store that trace in the visual plan before production review.
+
+Use `studio v2 repertoire record-feedback` to append a confirmed device decision to the job-local JSONL ledger. Use `studio v2 repertoire learning-proposals` during the weekly learning run. Every returned proposal has `activation_allowed: false`; review it in Control Center and promote it through an approved Git change only.
+
+If selection returns an invention, treatment remains blocked. Review the stated repertoire gap and fallback first. If the new mechanism is genuinely worthwhile, Krish must approve the exact proposal, then approve its phone-size styleframes and animatic before rendering. Only one invented or experimental mechanism may appear in a Short.
+
 ## Publishing boundary
 
 LinkedIn, TikTok, and Instagram Reels commands create local files only. The YouTube command rejects every privacy value except `private`, requires final approval and passing QA, and checks the API response confirms private status. Public posting is always a separate human action.

@@ -1,4 +1,5 @@
 export * from './analytics.js'
+export * from './art-director.js'
 export * from './brand-assets.js'
 export * from './candidates.js'
 export * from './caption-analysis.js'

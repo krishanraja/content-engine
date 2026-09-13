@@ -5,6 +5,7 @@ import type { Command } from 'commander'
 import {
   ApprovalGateV2Schema,
   CandidateV1Schema,
+  DeviceUsageEventV1Schema,
   FeedbackEventV2Schema,
   GeneratedShotV1Schema,
   JobPurposeSchema,
@@ -40,6 +41,8 @@ import {
 } from '@mindmake/contracts'
 import {
   analyzeSourceBundle,
+  aggregateDeviceLearning,
+  appendDeviceUsageEvent,
   analyzeMediaArtifactForFeedback,
   analyzeLoudness,
   brandLayerCollisionIssues,
@@ -88,6 +91,10 @@ import {
   loadKrishIdentity,
   loadPinnedRenderRegistryV2,
   loadTechniqueRegistry,
+  loadDeviceUsageLedger,
+  resolveVisualRecipe,
+  selectDevicesForBeat,
+  validateShortDeviceSelections,
   materializeProductionBriefJob,
   activateMagicEditCandidate,
   listExperimentsV2,
@@ -1415,6 +1422,109 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       })
       const artifact = await completeStageV2(options.job, 'source_analysis', analysis, inputs, tools)
       context.out({ job_id: options.job, artifact_hash: artifact.artifact_hash, analysis, unavailable_capabilities: analysis.capabilities.unavailable, fallbacks: analysis.capabilities.fallbacks })
+    })
+
+  const repertoire = v2.command('repertoire').description('Inspect and apply the deterministic art director device library')
+  repertoire.command('inspect')
+    .action(async () => {
+      const path = join(context.repoRoot, 'config', 'techniques.json')
+      const registry = await loadTechniqueRegistry(path)
+      context.out({
+        registry_id: registry.registry_id,
+        version: registry.version,
+        registry_hash: await hashFile(path),
+        selection_policy: registry.selection_policy,
+        devices: registry.techniques.map((device) => ({
+          technique_id: device.technique_id,
+          version: device.version,
+          name: device.name,
+          narrative_jobs: device.narrative_jobs,
+          experimental: device.experimental,
+          signature: device.signature,
+          implementation_state: device.implementation_state,
+        })),
+        recipes: registry.recipes,
+        references: registry.reference_observations.map((reference) => ({
+          reference_id: reference.reference_id,
+          title: reference.title,
+          rights_role: reference.rights_role,
+          observed_devices: reference.observed_devices,
+        })),
+      })
+    })
+  repertoire.command('propose')
+    .requiredOption('--beat <beatId>')
+    .requiredOption('--series <series>')
+    .requiredOption('--mode <mode>')
+    .requiredOption('--narrative-function <value>')
+    .requiredOption('--viewer-task <value>')
+    .requiredOption('--narrative-job <value>', 'prove, explain, orient, compare, evoke, or delight')
+    .requiredOption('--lane <lane>', 'restrained, premium, or experimental')
+    .option('--format <format>')
+    .option('--inputs <inputs...>', 'available governed inputs', [])
+    .option('--proof-required')
+    .option('--preferred <ids...>', 'preferred device IDs', [])
+    .option('--recent <ids...>', 'recently used device IDs', [])
+    .option('--prohibited <ids...>', 'prohibited device IDs', [])
+    .option('--invention-name <name>')
+    .option('--invention-mechanism <mechanism>')
+    .action(async (options) => {
+      if (!['prove', 'explain', 'orient', 'compare', 'evoke', 'delight'].includes(options.narrativeJob)) throw new Error('--narrative-job is unsupported')
+      const path = join(context.repoRoot, 'config', 'techniques.json')
+      const registry = await loadTechniqueRegistry(path)
+      const registryHash = await hashFile(path)
+      const trace = selectDevicesForBeat(registry, {
+        traceId: `trace-${options.beat}`,
+        beatId: options.beat,
+        series: normalizeSeries(options.series),
+        sourceMode: SourceModeSchema.parse(options.mode),
+        ...(options.format ? { editorialFormat: normalizeEditorialFormatV1(options.format) } : {}),
+        narrativeFunction: options.narrativeFunction,
+        viewerTask: options.viewerTask,
+        narrativeJob: options.narrativeJob,
+        treatmentLane: TreatmentLaneV1Schema.parse(options.lane),
+        availableInputs: options.inputs || [],
+        proofRequired: Boolean(options.proofRequired),
+        preferredTechniqueIds: options.preferred || [],
+        recentlyUsedTechniqueIds: options.recent || [],
+        prohibitedTechniqueIds: options.prohibited || [],
+        registryHash,
+        ...(options.inventionName && options.inventionMechanism
+          ? { inventionBrief: { name: options.inventionName, mechanism: options.inventionMechanism } }
+          : {}),
+      })
+      context.out({ trace, plan_issues: validateShortDeviceSelections(registry, [trace]) })
+    })
+  repertoire.command('recipe')
+    .requiredOption('--recipe <recipeId>')
+    .requiredOption('--series <series>')
+    .requiredOption('--lane <lane>', 'restrained, premium, or experimental')
+    .option('--format <format>')
+    .option('--inputs <inputs...>', 'available governed inputs', [])
+    .option('--recent-use-count <count>', 'number of recent jobs using this recipe', '0')
+    .action(async (options) => {
+      const registry = await loadTechniqueRegistry(join(context.repoRoot, 'config', 'techniques.json'))
+      const recentUseCount = Number(options.recentUseCount)
+      context.out(resolveVisualRecipe(registry, options.recipe, {
+        series: normalizeSeries(options.series),
+        treatmentLane: TreatmentLaneV1Schema.parse(options.lane),
+        ...(options.format ? { editorialFormat: normalizeEditorialFormatV1(options.format) } : {}),
+        availableInputs: options.inputs || [],
+        recentUseCount,
+      }))
+    })
+  repertoire.command('record-feedback')
+    .requiredOption('--input <path>', 'DeviceUsageEventV1 JSON')
+    .requiredOption('--ledger <path>', 'job-local device usage JSONL ledger')
+    .action(async (options) => {
+      const event = DeviceUsageEventV1Schema.parse(await readJson(options.input))
+      context.out(await appendDeviceUsageEvent(resolve(options.ledger), event))
+    })
+  repertoire.command('learning-proposals')
+    .requiredOption('--ledger <path>', 'device usage JSONL ledger')
+    .action(async (options) => {
+      const events = await loadDeviceUsageLedger(resolve(options.ledger))
+      context.out({ proposals: aggregateDeviceLearning(events) })
     })
 
   const visualPlan = v2.command('visual-plan')

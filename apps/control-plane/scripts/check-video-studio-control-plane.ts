@@ -75,6 +75,22 @@ assert.equal(parseReviewPayload({ ...reviewPayload, change_summary: 'Open C:\\Us
 assert.equal(parseReviewPayload({ ...reviewPayload, change_summary: 'api_key=abcdefghijklmnop' }), null)
 assert.ok(parseReviewPayload({ ...reviewPayload, change_summary: 'The API key decision made the story clearer.' }))
 assert.equal(parseReviewPayload({ ...reviewPayload, target: { kind: 'moment', start_ms: 10, end_ms: 20 } }), null)
+const artDirection = {
+  policy_version: 'art-director-v1',
+  registry_version: 2,
+  beats: [{
+    beat_id: 'beat-one',
+    beat_label: 'Beat 1: evidence',
+    primary: { technique_id: 'noun-to-proof-cut', name: 'Noun to proof cut', rationale: 'The approved proof answers the spoken noun immediately.', experimental: false },
+    supporting: [{ technique_id: 'stable-semantic-crop', name: 'Stable semantic crop', rationale: 'Keep Krish visible while the proof remains legible.', experimental: false }],
+    alternatives: [{ technique_id: 'guided-evidence-pan', name: 'Guided evidence pan', rationale: 'Use when one dense source needs guided inspection.', experimental: false }],
+    invention: null,
+  }],
+}
+assert.ok(parseReviewPayload({ ...reviewPayload, art_direction: artDirection }))
+assert.equal(parseReviewPayload({ ...reviewPayload, art_direction: { ...artDirection, local_path: 'forbidden' } }), null)
+assert.equal(parseReviewPayload({ ...reviewPayload, art_direction: { ...artDirection, beats: [{ ...artDirection.beats[0], primary: null, invention: null }] } }), null)
+assert.equal(parseReviewPayload({ ...reviewPayload, art_direction: { ...artDirection, beats: [{ ...artDirection.beats[0], alternatives: [...artDirection.beats[0].alternatives, ...artDirection.beats[0].alternatives, ...artDirection.beats[0].alternatives] }] } }), null)
 
 const browserPrepare = {
   schema_version: 1,
