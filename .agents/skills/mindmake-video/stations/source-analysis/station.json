@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "source_analysis",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Describe shots, speakers, faces, gestures and safe space without making editorial choices.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/source-analysis/STATION.md",
+  "implementation_owners": ["packages/core/src/source-analysis.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts"],
+  "prerequisites": { "extract": ["normalize"], "solo": ["normalize"], "short_native": ["normalize"] },
+  "consumes": ["normalized_media_artifact", "identity_profile"],
+  "produces": ["source_analysis_artifact"],
+  "approval_gate": null,
+  "hard_gates": ["Unknown identity, low-confidence tracking and unavailable capabilities must remain explicit."],
+  "soft_gates": ["Tracks and safe regions should be stable enough to support camera and layout decisions."],
+  "invalidates_on_change": {
+    "extract": ["visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "solo": ["visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "stable_fallback", "fallback": "Declare the capability downgrade and use conservative static framing that never guesses identity." },
+  "learning": { "reads_active_preferences": false, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/source-analysis.test.ts", "tests/identity.test.ts"],
+    "regression_cases": ["Ambiguous face matching remains unknown rather than Krish.", "Low-confidence gesture tracking cannot trigger a gesture-led crop."]
+  }
+}

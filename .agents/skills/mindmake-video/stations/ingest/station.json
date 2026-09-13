@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "ingest",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Bind every accepted source component to the job without copying media into Git.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/ingest/STATION.md",
+  "implementation_owners": ["packages/core/src/job-store-v2.ts", "packages/core/src/drive-discovery.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts", "packages/contracts/src/drive-discovery-v1.ts"],
+  "prerequisites": { "extract": [], "solo": [], "short_native": ["recording_brief"] },
+  "consumes": ["source_bundle", "intake_proof"],
+  "produces": ["ingest_artifact"],
+  "approval_gate": null,
+  "hard_gates": ["Source hashes, rights, consent, stable file identity and intake lineage must validate."],
+  "soft_gates": ["Source roles and synchronisation notes should minimise later ambiguity."],
+  "invalidates_on_change": {
+    "extract": ["normalize", "transcript", "source_analysis", "candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "solo": ["normalize", "transcript", "source_analysis", "candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "retry", "fallback": "Leave media untouched, preserve the prior artifact and retry only after the source becomes stable." },
+  "learning": { "reads_active_preferences": false, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/job-store-v2.test.ts", "tests/drive-discovery.test.ts"],
+    "regression_cases": ["A changed source hash invalidates only media-dependent descendants.", "An ambiguous split sequence remains blocked for explicit authoring."]
+  }
+}

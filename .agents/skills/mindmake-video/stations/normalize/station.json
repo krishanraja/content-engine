@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "normalize",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Create deterministic editorial media at the canonical frame rate and audio sample rate.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/normalize/STATION.md",
+  "implementation_owners": ["packages/core/src/media.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts"],
+  "prerequisites": { "extract": ["ingest"], "solo": ["ingest"], "short_native": ["ingest"] },
+  "consumes": ["ingest_artifact"],
+  "produces": ["normalized_media_artifact"],
+  "approval_gate": null,
+  "hard_gates": ["Output timing, source lineage, dimensions and audio stream integrity must validate."],
+  "soft_gates": ["The smallest sufficient intermediate should be used without degrading later analysis."],
+  "invalidates_on_change": {
+    "extract": ["transcript", "source_analysis", "candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "solo": ["transcript", "source_analysis", "candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "retry", "fallback": "Preserve ingest authority and stop before analysis until a valid normalized artifact exists." },
+  "learning": { "reads_active_preferences": false, "emits_observations": false, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/qa.test.ts", "tests/job-store-v2.test.ts"],
+    "regression_cases": ["Variable-frame-rate portrait input becomes constant 30 fps.", "An input without usable audio remains an explicit capability state."]
+  }
+}

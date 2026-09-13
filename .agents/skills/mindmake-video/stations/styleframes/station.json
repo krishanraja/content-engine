@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "styleframes",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Show exact phone-size compositions before motion and full rendering consume production time.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/styleframes/STATION.md",
+  "implementation_owners": ["packages/core/src/visual-plan.ts", "packages/core/src/virtual-camera.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts"],
+  "prerequisites": { "extract": ["visual_plan", "assets"], "solo": ["visual_plan", "assets"], "short_native": ["visual_plan", "assets"] },
+  "consumes": ["visual_plan_artifact", "asset_stage_artifact"],
+  "produces": ["styleframe_review_packet"],
+  "approval_gate": "storyboard",
+  "hard_gates": ["Frames must bind exact assets, safe zones, protected faces, captions and brand identities."],
+  "soft_gates": ["Hierarchy, legibility, rhythm and emotional tone should survive a phone-size preview."],
+  "invalidates_on_change": {
+    "extract": ["animatic", "treatment", "render", "qa", "package"],
+    "solo": ["animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "block", "fallback": "Revise the visual plan or exact asset layout before introducing timing or motion." },
+  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/visual-plan.test.ts", "tests/virtual-camera.test.ts"],
+    "regression_cases": ["Wordmarks remain legible and collision-free at a 375 pixel preview width.", "No approved frame truncates visible editorial text."]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "render",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Render only exact manifests into deterministic platform masters and measurable media outputs.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/render/STATION.md",
+  "implementation_owners": ["packages/core/src/render-v2.ts", "apps/renderer/src"],
+  "contract_owners": ["packages/contracts/src/v2.ts"],
+  "prerequisites": { "extract": ["treatment"], "solo": ["treatment"], "short_native": ["treatment"] },
+  "consumes": ["treatment_artifact", "render_manifests"],
+  "produces": ["render_artifact", "platform_masters"],
+  "approval_gate": null,
+  "hard_gates": ["The renderer must consume exact approved manifests and preserve source audio duration and lineage."],
+  "soft_gates": ["Output should be perceptually equivalent across supported hardware even when MP4 bytes differ."],
+  "invalidates_on_change": {
+    "extract": ["qa", "package"],
+    "solo": ["qa", "package"],
+    "short_native": ["qa", "package"]
+  },
+  "failure": { "behavior": "retry", "fallback": "Preserve the manifest and prior artifacts, report the capability failure and resume from render." },
+  "learning": { "reads_active_preferences": false, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/render-v2.test.ts", "tests/render.test.ts"],
+    "regression_cases": ["The same manifest yields the same edit decisions and perceptually equivalent output.", "A render failure cannot erase the approved local package inputs."]
+  }
+}

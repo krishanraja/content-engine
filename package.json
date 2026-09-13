@@ -23,7 +23,8 @@
     "probe:runner-credentials": "tsx scripts/probe-runner-credentials.ts",
     "check:renderer": "tsx scripts/check-renderer.ts",
     "check:video-engine-trigger": "tsx scripts/check-video-engine-trigger.ts",
-    "verify": "npm run typecheck && npm run typecheck:control-plane && npm run test && npm run skills:validate && npm run check:video-engine-trigger && npm run check:renderer && npm run check:public-copy && npm run check:no-secrets && npm run check:control-plane",
+    "check:stations": "tsx scripts/check-station-harnesses.ts",
+    "verify": "npm run typecheck && npm run typecheck:control-plane && npm run test && npm run skills:validate && npm run check:stations && npm run check:video-engine-trigger && npm run check:renderer && npm run check:public-copy && npm run check:no-secrets && npm run check:control-plane",
     "typecheck:control-plane": "tsc --noEmit -p apps/control-plane/tsconfig.json && tsc --noEmit -p apps/control-plane/tsconfig.scripts.json",
     "check:control-plane": "tsx scripts/check-control-plane.ts"
   },

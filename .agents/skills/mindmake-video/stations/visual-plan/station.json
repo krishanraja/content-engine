@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "station_id": "visual_plan",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Convert the approved argument into viewer-attention, camera, proof and fallback decisions.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/visual-plan/STATION.md",
+  "implementation_owners": ["packages/core/src/visual-plan.ts", "packages/core/src/art-director.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts", "packages/contracts/src/art-director-v1.ts"],
+  "prerequisites": {
+    "extract": ["source_analysis", "candidates", "claims"],
+    "solo": ["source_analysis", "candidates", "claims"],
+    "short_native": ["transcript", "source_analysis", "candidates", "claims"]
+  },
+  "consumes": ["source_analysis_artifact", "candidate_artifact", "claim_ledger", "technique_registry"],
+  "produces": ["visual_plan_artifact"],
+  "approval_gate": "visual_plan",
+  "hard_gates": ["Every beat needs one primary attention target, truth role, safe fallback and exact lineage."],
+  "soft_gates": ["Every visual should strengthen comprehension, emotion, proof or narrative momentum."],
+  "invalidates_on_change": {
+    "extract": ["assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "solo": ["assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "stable_fallback", "fallback": "Prefer presenter-primary conservative framing and surface the missing visual proof for review." },
+  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/visual-plan.test.ts", "tests/art-director.test.ts"],
+    "regression_cases": ["Dense proof cannot compete with captions and Krish's face at the same moment.", "A new signature device requires styleframe and animatic review."]
+  }
+}
