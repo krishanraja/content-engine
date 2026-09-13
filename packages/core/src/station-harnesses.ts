@@ -44,6 +44,12 @@ export type LoadedStationRegistryV1 = {
   stations: Map<StationDefinitionV1['station_id'], LoadedStationHarnessV1>
 }
 
+export function stationInstructionMetadataMatches(instructionSource: string, definition: StationDefinitionV1): boolean {
+  const normalized = instructionSource.replace(/\r\n?/g, '\n')
+  const frontmatter = `station_id: ${definition.station_id}\nstation_version: ${definition.station_version}\nstatus: ${definition.status}`
+  return normalized.includes(frontmatter)
+}
+
 export function loadStationHarnessRegistry(repoRoot: string): LoadedStationRegistryV1 {
   const registryPath = resolveRepoPath(repoRoot, STATION_REGISTRY_PATH)
   const registrySource = readFileSync(registryPath, 'utf8')
@@ -58,8 +64,7 @@ export function loadStationHarnessRegistry(repoRoot: string): LoadedStationRegis
 
     const instructionPath = resolveRepoPath(repoRoot, definition.instruction_path)
     const instructionSource = readFileSync(instructionPath, 'utf8')
-    const frontmatter = `station_id: ${definition.station_id}\nstation_version: ${definition.station_version}\nstatus: ${definition.status}`
-    if (!instructionSource.includes(frontmatter)) throw new Error(`station instructions do not match definition metadata: ${definition.station_id}`)
+    if (!stationInstructionMetadataMatches(instructionSource, definition)) throw new Error(`station instructions do not match definition metadata: ${definition.station_id}`)
     for (const heading of REQUIRED_STATION_HEADINGS) {
       if (!instructionSource.includes(heading)) throw new Error(`station instructions are missing ${heading}: ${definition.station_id}`)
     }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { StageNameV2Schema } from '@mindmake/contracts'
-import { loadStationHarnessRegistry, v2DescendantsFor, v2PrerequisitesFor, v2StageOrder } from '@mindmake/core'
+import { loadStationHarnessRegistry, stationInstructionMetadataMatches, v2DescendantsFor, v2PrerequisitesFor, v2StageOrder } from '@mindmake/core'
 
 describe('station harness registry', () => {
   const loaded = loadStationHarnessRegistry(process.cwd())
@@ -29,5 +29,10 @@ describe('station harness registry', () => {
       expect(station.definition_hash).toMatch(/^[a-f0-9]{64}$/)
       expect(station.instruction_hash).toMatch(/^[a-f0-9]{64}$/)
     }
+  })
+
+  it('validates station metadata with Git checkout line endings on Windows', () => {
+    const definition = loaded.stations.get('brief')!.definition
+    expect(stationInstructionMetadataMatches('---\r\nstation_id: brief\r\nstation_version: 1\r\nstatus: active\r\n---\r\n', definition)).toBe(true)
   })
 })
