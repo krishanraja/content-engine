@@ -1308,6 +1308,7 @@ const ownedApiFiles = [
   '../api/video-studio/runner/preview-upload.ts',
   '../api/video-studio/runner/preview-retention.ts',
   '../api/video-studio/runner/project.ts',
+  '../api/video-studio/runner/credential-probe.ts',
 ]
 const ownedSources = await Promise.all(ownedApiFiles.map((path) => readFile(new URL(path, import.meta.url), 'utf8')))
 for (const source of ownedSources) {

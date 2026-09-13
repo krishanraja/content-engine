@@ -46,8 +46,9 @@ describe('repository operating contracts', () => {
     const agents = await readFile(join(repoRoot, 'AGENTS.md'), 'utf8')
     const claude = await readFile(join(repoRoot, 'CLAUDE.md'), 'utf8')
     const protocol = await readFile(join(repoRoot, 'docs', 'ENGINE_SESSION.md'), 'utf8')
-    const claudeMcp = await json<{ mcpServers: { 'mindmake-studio': { type: string; url: string; headers: { Authorization: string } } } }>('.mcp.json')
+    const claudeMcp = await json<{ mcpServers: { 'mindmake-studio': { type: string; command: string; args: string[] } } }>('.mcp.json')
     const codexMcp = await readFile(join(repoRoot, '.codex', 'config.toml'), 'utf8')
+    const codexProxy = await readFile(join(repoRoot, 'scripts', 'studio-mcp-credential-proxy.ps1'), 'utf8')
     const endpoint = 'https://controlcenter.krishraja.com/api/video-studio/mcp'
 
     expect(agents).toContain('docs/ENGINE_SESSION.md')
@@ -56,12 +57,17 @@ describe('repository operating contracts', () => {
     expect(protocol).toContain('Never capture:')
     expect(protocol).toContain('whole ChatGPT, Claude, Codex, or Control Center transcript')
     expect(claudeMcp.mcpServers['mindmake-studio']).toEqual({
-      type: 'http',
-      url: endpoint,
-      headers: { Authorization: 'Bearer ${VIDEO_STUDIO_MCP_TOKEN}' },
+      type: 'stdio',
+      command: 'pwsh',
+      args: ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', 'scripts/studio-mcp-credential-proxy.ps1'],
     })
-    expect(codexMcp).toContain(endpoint)
-    expect(codexMcp).toContain('bearer_token_env_var = "VIDEO_STUDIO_MCP_TOKEN"')
+    expect(codexMcp).toContain('command = "pwsh"')
+    expect(codexMcp).toContain('scripts/studio-mcp-credential-proxy.ps1')
+    expect(codexMcp).not.toContain('bearer_token_env_var')
+    expect(codexProxy).toContain(endpoint)
+    expect(codexProxy).toContain('MindmakeVideoStudio/studio-mcp-token')
+    expect(codexProxy).toContain('RedirectStandardOutput = $true')
+    expect(codexProxy).not.toContain('Write-Output $token')
 
     const launcher = await readFile(join(repoRoot, '.agents', 'skills', 'video-engine', 'SKILL.md'), 'utf8')
     expect(launcher).toContain("equals 'Video engine' case-insensitively")
@@ -87,6 +93,24 @@ describe('repository operating contracts', () => {
       scheduled_work: 'server_side_rows',
       public_publish_allowed: false,
     })
+  })
+
+  it('pins active runtime credentials to versioned local-only targets', async () => {
+    const controlPlane = await readFile(join(repoRoot, 'packages', 'core', 'src', 'control-plane-client.ts'), 'utf8')
+    const signing = await readFile(join(repoRoot, 'packages', 'core', 'src', 'approval-signing.ts'), 'utf8')
+    const doctor = await readFile(join(repoRoot, 'packages', 'core', 'src', 'doctor.ts'), 'utf8')
+    const cli = await readFile(join(repoRoot, 'packages', 'cli', 'src', 'index.ts'), 'utf8')
+    const writer = await readFile(join(repoRoot, 'scripts', 'set-credential.ps1'), 'utf8')
+    const active = `${controlPlane}\n${signing}\n${doctor}\n${cli}`
+
+    expect(active).toContain('MindmakeVideoStudio/control-center-runner-token-v2')
+    expect(active).toContain('MindmakeVideoStudio/control-center-runner-signing-key-v2')
+    expect(active).toContain('MindmakeVideoStudio/control-center-radar-token-v2')
+    expect(controlPlane).not.toContain("= 'MindmakeVideoStudio/control-center-runner-token'")
+    expect(signing).not.toContain("= 'MindmakeVideoStudio/control-center-runner-signing-key'")
+    expect(cli).not.toContain("credential: 'MindmakeVideoStudio/control-center-radar-token'")
+    expect(writer).toContain('$quarantinedTargets')
+    expect(writer).toContain('$isVersionedRuntimeTarget')
   })
 
   it('documents only the real V2 recovery, transcription and preview surface', async () => {
@@ -134,8 +158,12 @@ describe('repository operating contracts', () => {
     expect(ignored).toEqual(candidates)
 
     const scanner = await readFile(join(repoRoot, 'scripts', 'check-no-secrets.ts'), 'utf8')
+    const patterns = await readFile(join(repoRoot, 'scripts', 'secret-patterns.ts'), 'utf8')
     for (const extension of ['webm', 'm2ts', 'mts', 'mxf', 'm4a', 'aac', 'flac', 'ogg', 'opus', 'srt', 'vtt', 'edl', 'fcpxml']) {
       expect(scanner).toContain(extension)
     }
+    expect(scanner).toContain('containsCommittedSecret')
+    expect(patterns).toContain('VIDEO_STUDIO_(?:EXPORT_TOKEN|RUNNER_TOKEN|RUNNER_SIGNING_KEY|MCP_TOKEN)')
+    expect(patterns).toContain('#\\s*paste:')
   })
 })

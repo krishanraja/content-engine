@@ -232,6 +232,12 @@ describe('Windows runner entry point', () => {
     expect(source).toContain('Enterprise (roams)')
     expect(source).toContain('Mindmake Video Studio')
     expect(source).toContain('CredEnumerateW')
+    expect(source).toContain('[switch]$EnforceActiveContract')
+    expect(source).toContain('control-center-runner-token-v2')
+    expect(source).toContain('control-center-runner-signing-key-v2')
+    expect(source).toContain('control-center-radar-token-v2')
+    expect(source).toContain('studio-mcp-token')
+    expect(source).toContain("$entry.Persist -ne 'LocalMachine'")
   })
 
   it('writes a credential onto nothing and refuses to claim success without a readback', async () => {
@@ -259,6 +265,11 @@ describe('Windows runner entry point', () => {
     // writes were rolled back; it is a deliberate choice, never a default.
     expect(source).toContain('$expectedPersist = if ($Roaming) { 3 } else { 2 }')
     expect(source).toMatch(/if \(-not \$Roaming -and \$persist -eq 3\)/)
+    expect(source).toContain('$quarantinedTargets')
+    expect(source).toContain('$localOnlyTargets')
+    expect(source).toContain('studio-mcp-token')
+    expect(source).toContain('$isVersionedRuntimeTarget')
+    expect(source).toMatch(/if \(\$Roaming -and \(\(\$localOnlyTargets -contains \$Target\) -or \$isVersionedRuntimeTarget\)\)/)
 
     // -Generate stays available to packages/core/src/credentials.ts, which runs
     // this script -NonInteractive, and -FromStdin gives a caller with no console a

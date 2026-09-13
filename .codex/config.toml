@@ -1,3 +1,4 @@
 [mcp_servers.mindmake-studio]
-url = "https://controlcenter.krishraja.com/api/video-studio/mcp"
-bearer_token_env_var = "VIDEO_STUDIO_MCP_TOKEN"
+command = "pwsh"
+args = ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "scripts/studio-mcp-credential-proxy.ps1"]
+startup_timeout_sec = 20

@@ -6,34 +6,39 @@ param(
 )
 
 # Writes one Mindmake credential and then proves the store actually holds what was
-# written. On 2026-09-08 two credentials set through this script reverted to values
-# from four days earlier: Windows credential roaming restored Enterprise-persisted
-# entries over them. The write had succeeded and reported success, and nothing
-# looked wrong until the next process start hours later.
+# written. The three original control-center target names are quarantined because
+# Windows credential roaming restored stale Enterprise values over verified writes.
+# Active v2 and Studio MCP targets are new LocalMachine names and may never roam.
 #
 # Two consequences are baked in here. Any pre-existing entry is deleted before the
 # write, so a roaming-persisted entry cannot survive underneath. And the value is
 # read straight back out of the store and checked, including its persistence class,
 # because CredWrite returning true only means the call was accepted.
 #
-# -Roaming writes Persist = 3 (Enterprise) instead of 2 (LocalMachine). That is
-# not a fallback, it is the fix for one specific situation. This device is
-# WorkplaceJoined to a tenant, and the two runner credentials were originally
-# written as Enterprise, so tenant-side credential roaming holds a copy and
-# restores it wholesale, metadata and Sept-4 LastWritten included, over any local
-# write. Two verified LocalMachine writes were rolled back inside 25 minutes each.
-#
-# Writing the correct value as Enterprise makes the sync carry it: the roaming
-# copy becomes right rather than stale, so a restore restores what we want. The
-# trade, stated because it is real: an Enterprise credential syncs to the tenant
-# and to the account's other joined devices. These two already do, at their old
-# values. This changes what roams, not whether.
+# -Roaming remains available only for credentials whose explicit contract requires
+# Enterprise persistence. It is never a recovery technique for an active runtime
+# credential: those names are guarded as LocalMachine-only instead.
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 if (-not $Target.StartsWith('MindmakeVideoStudio/', [System.StringComparison]::Ordinal)) {
   throw 'Credential target must begin with MindmakeVideoStudio/'
+}
+$quarantinedTargets = @(
+  'MindmakeVideoStudio/control-center-runner-token',
+  'MindmakeVideoStudio/control-center-runner-signing-key',
+  'MindmakeVideoStudio/control-center-radar-token'
+)
+$localOnlyTargets = @(
+  'MindmakeVideoStudio/studio-mcp-token'
+)
+$isVersionedRuntimeTarget = $Target -match '^MindmakeVideoStudio/control-center-(?:runner-token|runner-signing-key|radar-token)-v(?:[2-9]|[1-9][0-9]+)$'
+if ($quarantinedTargets -contains $Target) {
+  throw "Credential target $Target is quarantined after a confirmed roaming rollback. Use the active v2 target documented in docs/DEPLOYMENT.md."
+}
+if ($Roaming -and (($localOnlyTargets -contains $Target) -or $isVersionedRuntimeTarget)) {
+  throw "Credential target $Target is LocalMachine-only and may not be written with -Roaming."
 }
 if ($Generate -and $FromStdin) {
   throw 'Choose one source: -Generate or -FromStdin.'
