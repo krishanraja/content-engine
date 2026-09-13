@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "candidates",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Author only self-contained, useful candidate edits with explicit reasoning and endings.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/candidates/STATION.md",
+  "implementation_owners": ["packages/core/src/candidates.ts", "packages/core/src/editorial.ts"],
+  "contract_owners": ["packages/contracts/src/index.ts", "packages/contracts/src/v2.ts"],
+  "prerequisites": { "extract": ["transcript"], "solo": ["transcript"], "short_native": ["script"] },
+  "consumes": ["transcript_artifact", "script_artifact", "active_editorial_rules"],
+  "produces": ["candidate_artifact"],
+  "approval_gate": null,
+  "hard_gates": ["Meaning, source wording, standalone coherence, audience value and ending quality must pass."],
+  "soft_gates": ["Impact, insight, relevance, specificity, novelty and hook strength should justify production."],
+  "invalidates_on_change": {
+    "extract": ["claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "solo": ["claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["claims", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "block", "fallback": "Return a reject or rerecord diagnosis instead of manufacturing a publishable recommendation." },
+  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/candidates.test.ts", "tests/editorial.test.ts"],
+    "regression_cases": ["A stitched edit must make semantic sense as one complete argument.", "A weak source yields rerecord guidance rather than content for content's sake."]
+  }
+}

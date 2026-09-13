@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "transcript",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Produce verified word timings while preserving exactly what each speaker actually said.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/transcript/STATION.md",
+  "implementation_owners": ["packages/core/src/media.ts", "packages/core/src/caption-analysis.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts"],
+  "prerequisites": { "extract": ["normalize"], "solo": ["normalize"], "short_native": ["normalize"] },
+  "consumes": ["normalized_media_artifact"],
+  "produces": ["transcript_artifact"],
+  "approval_gate": null,
+  "hard_gates": ["Proper nouns, numbers, products and consequential claims require human verification."],
+  "soft_gates": ["Word timing and diarisation confidence should support precise editorial cuts."],
+  "invalidates_on_change": {
+    "extract": ["candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "solo": ["candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "stable_fallback", "fallback": "Use available captions for discovery only and block approval until shortlisted wording is verified." },
+  "learning": { "reads_active_preferences": false, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/caption-analysis.test.ts", "tests/captions.test.ts"],
+    "regression_cases": ["Caption cleanup never adds a word absent from the verified transcript.", "Speaker uncertainty cannot silently assign a guest quote to Krish."]
+  }
+}

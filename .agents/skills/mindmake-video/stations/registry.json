@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "registry_id": "mindmake-production-stations",
+  "registry_version": 1,
+  "station_contracts": [
+    { "station_id": "brief", "definition_path": ".agents/skills/mindmake-video/stations/brief/station.json" },
+    { "station_id": "script", "definition_path": ".agents/skills/mindmake-video/stations/script/station.json" },
+    { "station_id": "recording_brief", "definition_path": ".agents/skills/mindmake-video/stations/recording-brief/station.json" },
+    { "station_id": "ingest", "definition_path": ".agents/skills/mindmake-video/stations/ingest/station.json" },
+    { "station_id": "normalize", "definition_path": ".agents/skills/mindmake-video/stations/normalize/station.json" },
+    { "station_id": "transcript", "definition_path": ".agents/skills/mindmake-video/stations/transcript/station.json" },
+    { "station_id": "source_analysis", "definition_path": ".agents/skills/mindmake-video/stations/source-analysis/station.json" },
+    { "station_id": "candidates", "definition_path": ".agents/skills/mindmake-video/stations/candidates/station.json" },
+    { "station_id": "claims", "definition_path": ".agents/skills/mindmake-video/stations/claims/station.json" },
+    { "station_id": "visual_plan", "definition_path": ".agents/skills/mindmake-video/stations/visual-plan/station.json" },
+    { "station_id": "assets", "definition_path": ".agents/skills/mindmake-video/stations/assets/station.json" },
+    { "station_id": "styleframes", "definition_path": ".agents/skills/mindmake-video/stations/styleframes/station.json" },
+    { "station_id": "animatic", "definition_path": ".agents/skills/mindmake-video/stations/animatic/station.json" },
+    { "station_id": "treatment", "definition_path": ".agents/skills/mindmake-video/stations/treatment/station.json" },
+    { "station_id": "render", "definition_path": ".agents/skills/mindmake-video/stations/render/station.json" },
+    { "station_id": "qa", "definition_path": ".agents/skills/mindmake-video/stations/qa/station.json" },
+    { "station_id": "package", "definition_path": ".agents/skills/mindmake-video/stations/package/station.json" }
+  ],
+  "assemblies": {
+    "extract": ["brief", "script", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "solo": ["brief", "script", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["brief", "script", "candidates", "claims", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  }
+}

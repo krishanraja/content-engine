@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "treatment",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Compile the approved story into deterministic platform render manifests and treatment rules.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/treatment/STATION.md",
+  "implementation_owners": ["packages/core/src/treatment.ts", "packages/core/src/render-lineage-v2.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts", "packages/contracts/src/index.ts"],
+  "prerequisites": { "extract": ["animatic"], "solo": ["animatic"], "short_native": ["animatic"] },
+  "consumes": ["animatic_review_packet", "approved_treatment_rules", "brand_theme"],
+  "produces": ["treatment_artifact", "render_manifests"],
+  "approval_gate": "treatment",
+  "hard_gates": ["Every edit, crop, caption, asset, platform safe zone and seed must be explicit and approved."],
+  "soft_gates": ["Platform adaptations should preserve one approved story while respecting native viewing behaviour."],
+  "invalidates_on_change": {
+    "extract": ["render", "qa", "package"],
+    "solo": ["render", "qa", "package"],
+    "short_native": ["render", "qa", "package"]
+  },
+  "failure": { "behavior": "block", "fallback": "Use a previously approved conservative treatment or return the new treatment for exact review." },
+  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/treatment-presets.test.ts", "tests/render-lineage-v2.test.ts"],
+    "regression_cases": ["A caption-only change preserves transcription and candidate artifacts.", "A brand-theme change requires a new treatment approval."]
+  }
+}

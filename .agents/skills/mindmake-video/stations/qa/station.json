@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "qa",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Independently test technical, editorial, brand, rights and lineage requirements on each master.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/qa/STATION.md",
+  "implementation_owners": ["packages/core/src/qa.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts", "packages/contracts/src/index.ts"],
+  "prerequisites": { "extract": ["render"], "solo": ["render"], "short_native": ["render"] },
+  "consumes": ["render_artifact", "platform_masters", "claim_ledger", "asset_ledger"],
+  "produces": ["qa_artifact"],
+  "approval_gate": "final",
+  "hard_gates": ["Truth, rights, naming, transcript fidelity, safe zones, media specs and exact lineage must pass."],
+  "soft_gates": ["The finished master should meet the approved premium visual and editorial intent."],
+  "invalidates_on_change": {
+    "extract": ["package"],
+    "solo": ["package"],
+    "short_native": ["package"]
+  },
+  "failure": { "behavior": "block", "fallback": "Return the exact failed checks to their owning upstream station and rerun only descendants." },
+  "learning": { "reads_active_preferences": false, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/qa.test.ts", "tests/repository-contracts.test.ts"],
+    "regression_cases": ["Captions outside safe zones block final approval.", "A legacy series name in public output fails the package path."]
+  }
+}

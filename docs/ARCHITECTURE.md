@@ -20,6 +20,27 @@ radar/brief -> script -> candidates -> claims -> recording brief -> recorded ing
 
 An approved short-native script stays upstream when a recording is replaced. Re-ingest invalidates transcript, visual analysis, and visual descendants without discarding the editorial decision that caused the recording.
 
+## Station machinery
+
+The production graph is a mechanical assembly of independently governed stations, not one procedural prompt. `mindmake-video/SKILL.md` is a thin router. Shared editorial, visual, safety and learning policies remain focused cross-cutting references. Every executable V2 stage has its own station directory under `.agents/skills/mindmake-video/stations/` containing:
+
+- `station.json`: the typed machine boundary, version, owners, prerequisites by source mode, inputs, outputs, approval gate, invalidation map, fallback, learning permissions and regression cases.
+- `STATION.md`: the judgment needed at that station, including its responsibility, quality gates, failure behavior, handoff and change-control rule.
+- Existing deterministic test files named by the station contract as its regression evidence.
+
+The small `stations/registry.json` is an inventory and assembly map. It is not a second implementation of the engine. The runtime graph remains executable code, while the station files own operating judgment and boundary metadata. `npm run check:stations` proves exact parity between the registry, station contracts and runtime order, prerequisites and descendant invalidation. It also verifies that every named owner, test and instruction exists and content-addresses every contract and instruction card.
+
+This creates four separate kinds of authority:
+
+1. Prose owns intent, judgment, stopping conditions and handoff behavior.
+2. Zod schemas own data shape and reject incompatible handoffs.
+3. TypeScript owns execution, state transitions and invalidation.
+4. Fixtures and validators own admission to release.
+
+No production station can activate a learning rule. Stations emit observations; the governed feedback lifecycle may propose a scoped rule; Krish approves a durable change; reviewed Git configuration activates it. Operational telemetry, taste feedback and performance evidence remain separate.
+
+New formats reuse the shared upstream editorial workpiece and add only genuinely different downstream stations. A carousel, video or future long-form path must not clone the ideas pipeline, evidence ledger, voice rules, feedback memory or Control Center review surface. A proposed new station is admitted only when it has a distinct responsibility and owner, typed inputs and outputs, real failure behavior, regression cases and less overlap than extending an existing station. This keeps the machinery flexible without turning it into a collection of competing skills.
+
 `SourceBundleV1` holds up to 32 aligned camera, audio, and screen sources. `SourceVisualAnalysisV1` records normalized tracks, shot boundaries, active-speaker confidence, gesture and gaze intervals, safe negative space, protected presenter regions, capability downgrades, and conservative fallbacks. A Krish face template is encrypted in Windows-runner state and supplied to the analyzer over stdin; neither its descriptors nor source images enter Git, a job manifest, command arguments, or logs. Its manifest reference contains only the fixed profile ID and content hash. Guests receive job-local labels only. An ambiguous identity match remains unknown.
 
 `VisualNarrativePlanV1` is the editorial-to-render boundary. It binds the exact candidate, claims, source analysis, technique registry, and preference snapshot; gives every beat one primary attention target and narrative function; specifies layered shot and camera decisions; links proof to exact assets; declares fallbacks; and enforces the local-first £15 cloud ceiling. Generated media has the truth role `illustration`, never `evidence`, and synthetic speech is not supported.
