@@ -24,11 +24,11 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $videoFfmpegBuild = 'ffmpeg-n8.1.2-50-g1a748fe2cd-win64-gpl-8.1'
-          $videoFfmpegSha256 = 'b0b50337bdd4e7797caa874fbd000435864361b71ceb6aa26525d8df0c9c86a6'
+          $videoFfmpegBuild = 'ffmpeg-n8.1.2-53-g1005b294ff-win64-gpl-8.1'
+          $videoFfmpegSha256 = '577a6a46f9c844657ac849245487a56dfc0507f9bac3f92d40370ebfb64ace72'
           $videoFfmpegArchive = Join-Path $env:RUNNER_TEMP "$videoFfmpegBuild.zip"
           $videoFfmpegRoot = Join-Path $env:RUNNER_TEMP 'mindmake-ffmpeg'
-          Invoke-WebRequest -Uri "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-03-13-17/$videoFfmpegBuild.zip" -OutFile $videoFfmpegArchive
+          Invoke-WebRequest -Uri "https://github.com/krishanraja/content-engine/releases/download/toolchain-ffmpeg-n8.1.2-53-g1005b294ff/$videoFfmpegBuild.zip" -OutFile $videoFfmpegArchive
           $videoFfmpegActualSha256 = (Get-FileHash -LiteralPath $videoFfmpegArchive -Algorithm SHA256).Hash.ToLowerInvariant()
           if ($videoFfmpegActualSha256 -ne $videoFfmpegSha256) { throw 'Downloaded FFmpeg archive failed its pinned SHA-256 check.' }
           Expand-Archive -LiteralPath $videoFfmpegArchive -DestinationPath $videoFfmpegRoot
@@ -40,10 +40,10 @@ jobs:
         if: runner.os == 'Linux'
         shell: bash
         run: |
-          video_ffmpeg_build='ffmpeg-n8.1.2-50-g1a748fe2cd-linux64-gpl-8.1'
-          video_ffmpeg_sha256='226d1e25cdc67ba195baf09e43a0c91a5af9262455ddad9e2e10c30d7c77b40d'
+          video_ffmpeg_build='ffmpeg-n8.1.2-53-g1005b294ff-linux64-gpl-8.1'
+          video_ffmpeg_sha256='e4a088c9b16d4b729396805e589394cef45a6d1e5427f8ca32ded8a86694d5b8'
           video_ffmpeg_archive="$RUNNER_TEMP/$video_ffmpeg_build.tar.xz"
-          curl --fail --location --retry 3 --output "$video_ffmpeg_archive" "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-03-13-17/$video_ffmpeg_build.tar.xz"
+          curl --fail --location --retry 3 --output "$video_ffmpeg_archive" "https://github.com/krishanraja/content-engine/releases/download/toolchain-ffmpeg-n8.1.2-53-g1005b294ff/$video_ffmpeg_build.tar.xz"
           echo "$video_ffmpeg_sha256  $video_ffmpeg_archive" | sha256sum --check --strict
           tar -xJf "$video_ffmpeg_archive" -C "$RUNNER_TEMP"
           video_ffmpeg_bin="$RUNNER_TEMP/$video_ffmpeg_build/bin"
