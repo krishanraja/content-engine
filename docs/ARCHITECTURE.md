@@ -30,6 +30,8 @@ The production graph is a mechanical assembly of independently governed stations
 
 The small `stations/registry.json` is an inventory and assembly map. It is not a second implementation of the engine. The runtime graph remains executable code, while the station files own operating judgment and boundary metadata. `npm run check:stations` proves exact parity between the registry, station contracts and runtime order, prerequisites and descendant invalidation. It also verifies that every named owner, test and instruction exists and content-addresses every contract and instruction card.
 
+The registry also declares the conveyor's `external_inputs` and `terminal_outputs`, and `npm run check:stations` proves the artifact topology across every station's declared inputs and outputs: each produced artifact needs exactly one producing station and either a consuming station or a declared terminal output, and each consumed artifact needs either a producing station or a declared external input. A missing producer, a duplicate producer, an orphaned output or an unowned terminal output fails the check rather than reaching runtime.
+
 This creates four separate kinds of authority:
 
 1. Prose owns intent, judgment, stopping conditions and handoff behavior.
