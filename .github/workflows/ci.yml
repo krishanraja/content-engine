@@ -23,12 +23,14 @@ jobs:
       - name: Install hash-pinned FFmpeg and FFprobe on Windows
         if: runner.os == 'Windows'
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           $videoFfmpegBuild = 'ffmpeg-n8.1.2-53-g1005b294ff-win64-gpl-8.1'
           $videoFfmpegSha256 = '577a6a46f9c844657ac849245487a56dfc0507f9bac3f92d40370ebfb64ace72'
           $videoFfmpegArchive = Join-Path $env:RUNNER_TEMP "$videoFfmpegBuild.zip"
           $videoFfmpegRoot = Join-Path $env:RUNNER_TEMP 'mindmake-ffmpeg'
-          Invoke-WebRequest -Uri "https://github.com/krishanraja/content-engine/releases/download/toolchain-ffmpeg-n8.1.2-53-g1005b294ff/$videoFfmpegBuild.zip" -OutFile $videoFfmpegArchive
+          gh release download toolchain-ffmpeg-n8.1.2-53-g1005b294ff --repo $env:GITHUB_REPOSITORY --pattern "$videoFfmpegBuild.zip" --dir $env:RUNNER_TEMP
           $videoFfmpegActualSha256 = (Get-FileHash -LiteralPath $videoFfmpegArchive -Algorithm SHA256).Hash.ToLowerInvariant()
           if ($videoFfmpegActualSha256 -ne $videoFfmpegSha256) { throw 'Downloaded FFmpeg archive failed its pinned SHA-256 check.' }
           Expand-Archive -LiteralPath $videoFfmpegArchive -DestinationPath $videoFfmpegRoot
@@ -39,11 +41,13 @@ jobs:
       - name: Install hash-pinned FFmpeg and FFprobe on Linux
         if: runner.os == 'Linux'
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           video_ffmpeg_build='ffmpeg-n8.1.2-53-g1005b294ff-linux64-gpl-8.1'
           video_ffmpeg_sha256='e4a088c9b16d4b729396805e589394cef45a6d1e5427f8ca32ded8a86694d5b8'
           video_ffmpeg_archive="$RUNNER_TEMP/$video_ffmpeg_build.tar.xz"
-          curl --fail --location --retry 3 --output "$video_ffmpeg_archive" "https://github.com/krishanraja/content-engine/releases/download/toolchain-ffmpeg-n8.1.2-53-g1005b294ff/$video_ffmpeg_build.tar.xz"
+          gh release download toolchain-ffmpeg-n8.1.2-53-g1005b294ff --repo "$GITHUB_REPOSITORY" --pattern "$video_ffmpeg_build.tar.xz" --dir "$RUNNER_TEMP"
           echo "$video_ffmpeg_sha256  $video_ffmpeg_archive" | sha256sum --check --strict
           tar -xJf "$video_ffmpeg_archive" -C "$RUNNER_TEMP"
           video_ffmpeg_bin="$RUNNER_TEMP/$video_ffmpeg_build/bin"
