@@ -63,6 +63,14 @@ export const StationRegistryV1Schema = z.object({
     (value) => new Set(value.map((entry) => entry.station_id)).size === value.length,
     { message: 'station registry cannot contain duplicate station IDs' },
   ),
+  external_inputs: z.array(z.string().regex(/^[a-z][a-z0-9_]*$/)).refine(
+    (value) => new Set(value).size === value.length,
+    { message: 'external station inputs cannot contain duplicates' },
+  ),
+  terminal_outputs: z.array(z.string().regex(/^[a-z][a-z0-9_]*$/)).min(1).refine(
+    (value) => new Set(value).size === value.length,
+    { message: 'terminal station outputs cannot contain duplicates' },
+  ),
   assemblies: SourceModeStageMapV1Schema,
 }).strict().superRefine((value, context) => {
   const registered = new Set(value.station_contracts.map((entry) => entry.station_id))

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { StageNameV2Schema } from '@mindmake/contracts'
-import { loadStationHarnessRegistry, stationInstructionMetadataMatches, v2DescendantsFor, v2PrerequisitesFor, v2StageOrder } from '@mindmake/core'
+import { loadStationHarnessRegistry, stationArtifactTopologyIssues, stationInstructionMetadataMatches, v2DescendantsFor, v2PrerequisitesFor, v2StageOrder } from '@mindmake/core'
 
 describe('station harness registry', () => {
   const loaded = loadStationHarnessRegistry(process.cwd())
@@ -21,6 +21,33 @@ describe('station harness registry', () => {
 
   it('prevents a station from silently activating learning rules', () => {
     for (const station of loaded.stations.values()) expect(station.definition.learning.may_activate_rules).toBe(false)
+  })
+
+  it('proves every handoff has exactly one producer or an explicit external source', () => {
+    const definitions = [...loaded.stations.values()].map((station) => station.definition)
+    expect(stationArtifactTopologyIssues(loaded.registry, definitions)).toEqual([])
+  })
+
+  it('rejects a consumed artifact with no producer or external declaration', () => {
+    const definitions = [...loaded.stations.values()].map((station) => structuredClone(station.definition))
+    definitions.find((station) => station.station_id === 'qa')!.consumes.push('unowned_verdict')
+    expect(stationArtifactTopologyIssues(loaded.registry, definitions)).toContain('station input unowned_verdict has no producer or external declaration: qa')
+  })
+
+  it('rejects duplicate producers and unconsumed outputs', () => {
+    const definitions = [...loaded.stations.values()].map((station) => structuredClone(station.definition))
+    definitions.find((station) => station.station_id === 'qa')!.produces.push('render_artifact', 'orphaned_qa_output')
+    expect(stationArtifactTopologyIssues(loaded.registry, definitions)).toEqual(expect.arrayContaining([
+      'artifact render_artifact must have exactly one producing station: render, qa',
+      'station output orphaned_qa_output has no consumer or terminal declaration',
+    ]))
+  })
+
+  it('rejects a terminal output without a producer', () => {
+    const registry = structuredClone(loaded.registry)
+    registry.terminal_outputs.push('missing_delivery')
+    const definitions = [...loaded.stations.values()].map((station) => station.definition)
+    expect(stationArtifactTopologyIssues(registry, definitions)).toContain('terminal output missing_delivery has no producing station')
   })
 
   it('content-addresses every machine contract and instruction card', () => {

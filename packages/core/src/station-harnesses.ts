@@ -44,6 +44,35 @@ export type LoadedStationRegistryV1 = {
   stations: Map<StationDefinitionV1['station_id'], LoadedStationHarnessV1>
 }
 
+export function stationArtifactTopologyIssues(
+  registry: StationRegistryV1,
+  definitions: Iterable<StationDefinitionV1>,
+): string[] {
+  const stations = [...definitions]
+  const producers = new Map<string, string[]>()
+  const consumers = new Map<string, string[]>()
+  for (const station of stations) {
+    for (const artifact of station.produces) producers.set(artifact, [...(producers.get(artifact) ?? []), station.station_id])
+    for (const artifact of station.consumes) consumers.set(artifact, [...(consumers.get(artifact) ?? []), station.station_id])
+  }
+
+  const externalInputs = new Set(registry.external_inputs)
+  const terminalOutputs = new Set(registry.terminal_outputs)
+  const issues: string[] = []
+  for (const [artifact, owners] of producers) {
+    if (owners.length !== 1) issues.push(`artifact ${artifact} must have exactly one producing station: ${owners.join(', ')}`)
+    if (externalInputs.has(artifact)) issues.push(`artifact ${artifact} cannot be both external and station-produced`)
+    if (!consumers.has(artifact) && !terminalOutputs.has(artifact)) issues.push(`station output ${artifact} has no consumer or terminal declaration`)
+  }
+  for (const [artifact, owners] of consumers) {
+    if (!producers.has(artifact) && !externalInputs.has(artifact)) issues.push(`station input ${artifact} has no producer or external declaration: ${owners.join(', ')}`)
+  }
+  for (const artifact of terminalOutputs) {
+    if (!producers.has(artifact)) issues.push(`terminal output ${artifact} has no producing station`)
+  }
+  return [...new Set(issues)].sort()
+}
+
 export function stationInstructionMetadataMatches(instructionSource: string, definition: StationDefinitionV1): boolean {
   const normalized = instructionSource.replace(/\r\n?/g, '\n')
   const frontmatter = `station_id: ${definition.station_id}\nstation_version: ${definition.station_version}\nstatus: ${definition.status}`
@@ -81,5 +110,7 @@ export function loadStationHarnessRegistry(repoRoot: string): LoadedStationRegis
   }
 
   if (stations.size !== registry.station_contracts.length) throw new Error('station registry did not load every station contract')
+  const topologyIssues = stationArtifactTopologyIssues(registry, [...stations.values()].map((station) => station.definition))
+  if (topologyIssues.length > 0) throw new Error(`station artifact topology is invalid:\n- ${topologyIssues.join('\n- ')}`)
   return { registry, registry_hash: sha256(registrySource), stations }
 }

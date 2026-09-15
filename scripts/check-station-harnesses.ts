@@ -1,6 +1,7 @@
 import { StageNameV2Schema, type StationSourceModeV1 } from '@mindmake/contracts'
 import {
   loadStationHarnessRegistry,
+  stationArtifactTopologyIssues,
   v2DescendantsFor,
   v2PrerequisitesFor,
   v2StageOrder,
@@ -9,6 +10,9 @@ import {
 const loaded = loadStationHarnessRegistry(process.cwd())
 const expectedStations = new Set(StageNameV2Schema.options)
 const registeredStations = new Set(loaded.registry.station_contracts.map((entry) => entry.station_id))
+
+const topologyIssues = stationArtifactTopologyIssues(loaded.registry, [...loaded.stations.values()].map((station) => station.definition))
+if (topologyIssues.length > 0) throw new Error(`station artifact topology is invalid:\n- ${topologyIssues.join('\n- ')}`)
 
 if (expectedStations.size !== registeredStations.size || [...expectedStations].some((stage) => !registeredStations.has(stage))) {
   throw new Error('station registry must cover every V2 production stage exactly once')

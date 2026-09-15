@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "registry_id": "mindmake-production-stations",
-  "registry_version": 1,
+  "registry_version": 2,
   "station_contracts": [
     { "station_id": "brief", "definition_path": ".agents/skills/mindmake-video/stations/brief/station.json" },
     { "station_id": "script", "definition_path": ".agents/skills/mindmake-video/stations/script/station.json" },
@@ -21,6 +21,20 @@
     { "station_id": "qa", "definition_path": ".agents/skills/mindmake-video/stations/qa/station.json" },
     { "station_id": "package", "definition_path": ".agents/skills/mindmake-video/stations/package/station.json" }
   ],
+  "external_inputs": [
+    "approved_production_brief",
+    "active_voice_rules",
+    "source_bundle",
+    "intake_proof",
+    "identity_profile",
+    "active_editorial_rules",
+    "public_evidence",
+    "approved_source_shortlist",
+    "technique_registry",
+    "approved_treatment_rules",
+    "brand_theme"
+  ],
+  "terminal_outputs": ["draft_package_artifact"],
   "assemblies": {
     "extract": ["brief", "script", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
     "solo": ["brief", "script", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "candidates", "claims", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],

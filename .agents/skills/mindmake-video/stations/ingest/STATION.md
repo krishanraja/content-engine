@@ -1,6 +1,6 @@
 ---
 station_id: ingest
-station_version: 1
+station_version: 2
 status: active
 ---
 
