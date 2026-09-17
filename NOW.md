@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake Video and Carousel Studio
-as_of: 2026-09-15
-head: 915d697
+as_of: 2026-09-17
+head: a32d571
 lifecycle: building
 production_url: none
 state_doc: docs/CAROUSEL_ENGINE_STATE.md
@@ -32,7 +32,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is a pipeline that refuses to make the video when the source cannot clear the bar, and writes down the refusal.
 
-## Where it is right now (as of 2026-09-15)
+## Where it is right now (as of 2026-09-17)
 
 Lifecycle: building. Nothing in the repo records a live render, an installed runner, a published carousel or a public upload. Every claim below points at a file at `8477f04` unless a later commit is named directly.
 
