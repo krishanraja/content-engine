@@ -45,7 +45,23 @@ export function classifyRun(statusCode: number, body: unknown, threw: Error | nu
   if (threw) return { status: 'failed', reason: threw.message.slice(0, 600) }
   const record = body && typeof body === 'object' && !Array.isArray(body) ? body as Record<string, unknown> : {}
   if (statusCode >= 400 || record.ok === false) {
-    const reason = typeof record.error === 'string' ? record.error : typeof record.skipped === 'string' ? record.skipped : `http_${statusCode}`
+    // `http_${statusCode}` is the right fallback for a TRANSPORT failure: a 503
+    // with no body says what it can, and the number is the useful fact.
+    //
+    // It is exactly the wrong fallback for a 200 that answered `ok: false` with
+    // no `error` field. There the transport succeeded, and stringifying its
+    // status produced `http_200` — the status code of a SUCCESSFUL request,
+    // written into content_engine_runs.reason and rendered to Krish on
+    // 2026-09-17 as "Investigations failed on its last run: http_200." A number
+    // that says nothing, cannot be searched for, and cannot be acted on.
+    //
+    // A refusal with no reason is still worth recording, but it should say what
+    // it is. Control Center's `apiErrorMessage` (src/lib/apiFetch.ts) makes the
+    // same distinction on the reading side.
+    const reason = typeof record.error === 'string' ? record.error
+      : typeof record.skipped === 'string' ? record.skipped
+      : statusCode >= 400 ? `http_${statusCode}`
+      : 'the job reported failure without a reason'
     return { status: 'failed', reason: reason.slice(0, 600) }
   }
   if (typeof record.skipped === 'string') return { status: 'skipped', reason: record.skipped.slice(0, 600) }

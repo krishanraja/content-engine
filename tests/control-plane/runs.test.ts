@@ -12,6 +12,14 @@ test('a quiet skip is a skip, an ok:false is a failure, a throw is a failure', (
   assert.deepEqual(classifyRun(200, { ok: false, error: 'pool not configured' }, null), { status: 'failed', reason: 'pool not configured' })
   assert.deepEqual(classifyRun(500, { ok: false, error: 'boom' }, null), { status: 'failed', reason: 'boom' })
   assert.deepEqual(classifyRun(503, {}, null), { status: 'failed', reason: 'http_503' })
+  // A 200 that refuses without saying why. Every other case here was covered;
+  // this one was not, and it is the one that shipped: it produced `http_200`,
+  // the status code of a SUCCESSFUL transport, and Krish read "Investigations
+  // failed on its last run: http_200." on 2026-09-17.
+  assert.deepEqual(classifyRun(200, { ok: false }, null),
+    { status: 'failed', reason: 'the job reported failure without a reason' })
+  // The transport fallback must survive the fix: a real 4xx/5xx still says so.
+  assert.deepEqual(classifyRun(404, { ok: false }, null), { status: 'failed', reason: 'http_404' })
   assert.deepEqual(classifyRun(500, null, new Error('threw')), { status: 'failed', reason: 'threw' })
 })
 

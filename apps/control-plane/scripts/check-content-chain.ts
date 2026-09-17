@@ -123,12 +123,16 @@ for (const link of CHAIN) {
 // A discard must never be silent. The single most repeated complaint about the
 // previous engine was 54 proposals with no explanation of any of them.
 {
-  const surface = src('api/arcs/surface.ts')
+  // Both files, because the row builder was lifted out of the handler into
+  // api/arcs/_cards.ts so its shape could be tested without a database. The
+  // guard is about the reasons reaching the table, not about which file holds
+  // the object literal, so it reads the pair.
+  const surface = src('api/arcs/surface.ts') + src('api/arcs/_cards.ts')
   if (!/surface_reason/.test(surface)) {
-    bad('api/arcs/surface.ts does not write surface_reason, so a card that loses gives no reason and "why is this not in my queue" is unanswerable again')
+    bad('the surfacing lane does not write surface_reason, so a card that loses gives no reason and "why is this not in my queue" is unanswerable again')
   }
   if (!/preBlocked|pre_blocked/.test(surface)) {
-    bad('api/arcs/surface.ts does not record the arcs it blocked before composing, so they vanish silently')
+    bad('the surfacing lane does not record the arcs it blocked before composing, so they vanish silently')
   }
   const classify = src('api/shifts/detect.ts')
   if (!/classify_reason/.test(classify)) {
