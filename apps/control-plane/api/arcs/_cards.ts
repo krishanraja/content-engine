@@ -19,6 +19,34 @@ import { surfacingReason } from '../_arcScore.js'
  * too — fixing only the column in the message would have moved the failure to
  * the next run, a week later.
  */
+/**
+ * A composer error that is a fact about the DEPLOYMENT, not about the arc.
+ *
+ * `callClaude` (api/_content.ts) throws `anthropic_${status}:${message}` and
+ * hangs the status on the error, or throws `ANTHROPIC_API_KEY not configured`
+ * when there is no key at all. A missing or rejected credential fails every arc
+ * identically, so catching it per arc turns one broken key into a column of
+ * editorial verdicts. That is what the 2026-09-18 surfacing did: ten arc_cards
+ * written blocked with `composer failed: anthropic_401:API key is invalid.`,
+ * `format` null on every one of them because none was ever composed, and the
+ * run still recorded `ok`. The ledger said the job worked, the tab said
+ * nothing, and the only trace was inside a per-row block reason.
+ *
+ * Transient failures stay per arc on purpose. A timeout, a 429 or a 5xx can hit
+ * one arc and not the next, and blocking that one arc is the right answer.
+ */
+export function systemicComposerFailure(e: unknown): string | null {
+  const err = e as { status?: number; message?: string } | null
+  const message = String(err?.message ?? e ?? '')
+  if (message.startsWith('ANTHROPIC_API_KEY not configured')) return message
+  const status = typeof err?.status === 'number'
+    ? err.status
+    : Number(/^anthropic_(\d{3}):/.exec(message)?.[1] ?? NaN)
+  // 401 unauthorised, 403 forbidden, 402 payment required. All three are the
+  // deployment's problem and none of them will be different for the next arc.
+  return status === 401 || status === 402 || status === 403 ? message : null
+}
+
 /** Only what a row needs off the arc. The caller's Row is wider. */
 export interface CardArc { id: string; arc_state?: string | null; theme_id?: string | null }
 

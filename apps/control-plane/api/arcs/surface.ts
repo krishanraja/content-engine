@@ -6,7 +6,7 @@ import { isoWeekLabel } from '../_weeks.js'
 import { buildComposePrompt, buildRepairPrompt, parseComposed, type ComposableArc, type ComposedCard } from '../_compose.js'
 import { scoreArc, surface, VISIBLE_SLOTS, RESERVED_FOR_UNTHEMED,
   MIN_INDEPENDENT_BEATS, type Arc } from '../_arcScore.js'
-import { arcCardRows } from './_cards.js'
+import { arcCardRows, systemicComposerFailure } from './_cards.js'
 import { lintCard } from '../_cardLint.js'
 import type { Lens, Channel } from '../_lenses.js'
 import { SYNTHESIS_MODEL } from '../_models.js'
@@ -140,6 +140,11 @@ export async function runSurface(opts: { week?: string; max?: number } = {}) {
       const raw = await callClaude({ agent: 'arcs-compose', model: SYNTHESIS_MODEL, maxTokens: 1200, temperature: 0.3, system, user, timeoutMs: 45_000 })
       composed = parseComposed(robustJson(raw))
     } catch (e: any) {
+      // A rejected or missing credential is not this arc's verdict. Fail the
+      // whole run so content_engine_runs says so and the tab shows it, rather
+      // than writing one uncomposed card per arc and reporting ok.
+      const systemic = systemicComposerFailure(e)
+      if (systemic) throw new Error(`composer unavailable: ${systemic}`)
       skipped.push({ row: a, reason: `composer failed: ${String(e?.message || e).slice(0, 200)}` })
       continue
     }
@@ -149,7 +154,13 @@ export async function runSurface(opts: { week?: string; max?: number } = {}) {
       try {
         const retry = await callClaude({ agent: 'arcs-compose', model: SYNTHESIS_MODEL, maxTokens: 1600, temperature: 0.3, system, user, timeoutMs: 45_000 })
         composed = parseComposed(robustJson(retry))
-      } catch { /* fall through to the skip below */ }
+      } catch (e: any) {
+        // Same rule on the retry: a credential that has started failing between
+        // the two calls is still the deployment's problem, not the arc's.
+        const systemic = systemicComposerFailure(e)
+        if (systemic) throw new Error(`composer unavailable: ${systemic}`)
+        /* otherwise fall through to the skip below */
+      }
     }
     if (!composed) { skipped.push({ row: a, reason: 'composer returned nothing usable, twice' }); continue }
     if ('skip' in composed) { skipped.push({ row: a, reason: `composer declined: ${composed.skip}` }); continue }

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'vitest'
-import { arcCardRows, type ScoredArc } from '../../apps/control-plane/api/arcs/_cards.ts'
+import { arcCardRows, systemicComposerFailure, type ScoredArc } from '../../apps/control-plane/api/arcs/_cards.ts'
 
 // The shape of what one weekly surfacing writes.
 //
@@ -100,4 +100,40 @@ test('a reserved slot is marked on the row that holds it and on no other', () =>
     surfacedIds: new Set(['a', 'b']), reservedIds: new Set(['b']), week: '2026-W38',
   })
   assert.deepEqual(rows.map(r => r.reserved_slot), [false, true])
+})
+
+// A broken credential is one fact about the deployment, not N editorial
+// verdicts. The 2026-09-18 surfacing wrote ten blocked arc_cards reading
+// `composer failed: anthropic_401:API key is invalid.` and recorded the run as
+// ok, so nothing on the tab said the composer was down and every card from that
+// run has `format` null.
+test('an auth or config failure is systemic, a transient one is the arc\'s own', () => {
+  const anthropic = (status: number, message: string) => {
+    const e = new Error(`anthropic_${status}:${message}`) as Error & { status?: number }
+    e.status = status
+    return e
+  }
+
+  // The exact error from the 2026-09-18 run.
+  assert.equal(
+    systemicComposerFailure(anthropic(401, 'API key is invalid.')),
+    'anthropic_401:API key is invalid.',
+  )
+  assert.ok(systemicComposerFailure(anthropic(403, 'forbidden')))
+  assert.ok(systemicComposerFailure(anthropic(402, 'credit balance is too low')))
+  assert.ok(systemicComposerFailure(new Error('ANTHROPIC_API_KEY not configured')))
+
+  // Read off the message alone when nothing hung a status on the error.
+  assert.ok(systemicComposerFailure(new Error('anthropic_401:API key is invalid.')))
+
+  // Transient, and genuinely per arc: the next arc may well compose.
+  assert.equal(systemicComposerFailure(anthropic(429, 'rate limit')), null)
+  assert.equal(systemicComposerFailure(anthropic(500, 'overloaded')), null)
+  assert.equal(systemicComposerFailure(anthropic(529, 'overloaded')), null)
+  assert.equal(systemicComposerFailure(new Error('anthropic_timeout_45000ms')), null)
+  assert.equal(systemicComposerFailure(new Error('unexpected end of JSON input')), null)
+  assert.equal(systemicComposerFailure(null), null)
+
+  // A 401 named inside prose is not a status. Only the documented shapes count.
+  assert.equal(systemicComposerFailure(new Error('the model wrote about anthropic_401 in its answer')), null)
 })

@@ -58,7 +58,16 @@ export function classifyRun(statusCode: number, body: unknown, threw: Error | nu
     // A refusal with no reason is still worth recording, but it should say what
     // it is. Control Center's `apiErrorMessage` (src/lib/apiFetch.ts) makes the
     // same distinction on the reading side.
+    // `abortReason` is where api/_investigation.ts puts its refusal. Its
+    // aborted shape is `{ ok: false, status: 'aborted', abortReason: '...' }`
+    // with no `error` field at all, so both branches above missed it and the
+    // reason the run already carried was thrown away twice: as `http_200` on
+    // 2026-09-10 ("no claim survived G3") and as "the job reported failure
+    // without a reason" on 2026-09-17 ("grounding failed twice"). Both were
+    // written to content_engine_runs.reason and rendered to Krish, and neither
+    // said the thing the run had already worked out.
     const reason = typeof record.error === 'string' ? record.error
+      : typeof record.abortReason === 'string' ? record.abortReason
       : typeof record.skipped === 'string' ? record.skipped
       : statusCode >= 400 ? `http_${statusCode}`
       : 'the job reported failure without a reason'
