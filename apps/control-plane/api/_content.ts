@@ -7,6 +7,7 @@ import * as meter from './_meter.js'
 
 
 import { UTILITY_MODEL, SYNTHESIS_MODEL, MODEL_PRICES, thinkingParam } from './_models.js'
+import { fetchWithRetry } from './_retry.js'
 
 /** Strip the cardinal sin — em dashes (and their lookalikes) — anywhere,
  *  replacing them with the comma/period Krish would actually use. Safe to run
@@ -365,9 +366,43 @@ function userContent(opts: ClaudeOpts): string | ContentBlock[] {
   ]
 }
 
+/**
+ * The Anthropic key, from the deploy env or the app_secrets fallback.
+ *
+ * Ported from control-center on 2026-09-19, which added it on 2026-09-16 after
+ * a bad Vercel variable took down its Network tab with
+ * "planner:anthropic_401:API key is invalid." and no recovery short of a
+ * redeploy. The control plane moved out of that repo eight days before the fix
+ * and never got it, so on 2026-09-17 and 2026-09-18 the identical 401 took out
+ * the weekly investigation and blocked ten arcs in the weekly surfacing, and
+ * there was no way back without a deploy either.
+ *
+ * The env still wins, so nothing changes for a healthy deploy. The anon client
+ * cannot read app_secrets (RLS), so the row is only reachable server-side.
+ * Cached per process, including the negative, so a missing key costs one query.
+ *
+ * NOTE this is a recovery mechanism, not a fix. Writing a working key into
+ * either place is the fix.
+ */
+let cachedAnthropicKey: string | null | undefined
+async function getAnthropicKey(): Promise<string | null> {
+  if (process.env.ANTHROPIC_API_KEY) return process.env.ANTHROPIC_API_KEY
+  if (cachedAnthropicKey !== undefined) return cachedAnthropicKey
+  try {
+    const { supabase } = await import('./_supabase.js')
+    const { data } = await supabase.from('app_secrets').select('value').eq('key', 'anthropic_api_key').maybeSingle()
+    cachedAnthropicKey = data && typeof (data as { value?: unknown }).value === 'string'
+      ? (data as { value: string }).value
+      : null
+  } catch {
+    cachedAnthropicKey = null
+  }
+  return cachedAnthropicKey
+}
+
 /** Single-shot Anthropic Messages call. Returns the first text block (or throws). */
 export async function callClaude(opts: ClaudeOpts): Promise<string> {
-  const apiKey = process.env.ANTHROPIC_API_KEY
+  const apiKey = await getAnthropicKey()
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not configured')
   // A deadline, because there was none. An upstream that stalls otherwise burns
   // the entire 60s function budget and the caller gets no response at all, which
@@ -377,7 +412,7 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
   const ctrl = new AbortController()
   const tid = opts.timeoutMs ? setTimeout(() => ctrl.abort(), opts.timeoutMs) : null
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+    const r = await fetchWithRetry('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
       body: JSON.stringify({
@@ -389,6 +424,12 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
         messages: [{ role: 'user', content: userContent(opts) }],
       }),
       signal: opts.timeoutMs ? ctrl.signal : undefined,
+    }, {
+      // A 529 is Anthropic overloaded and a 429 is the account rate-limited.
+      // Both are weather. On arcs/surface that weather used to cost one arc per
+      // occurrence, and on shifts/detect or investigations it costs the week.
+      onRetry: ({ attempt, status, waitMs }) =>
+        console.warn(`[anthropic] ${opts.agent} retry ${attempt} after ${status ?? 'transport'}, waiting ${waitMs}ms`),
     })
     const j: any = await r.json().catch(() => ({}))
     if (!r.ok) {
