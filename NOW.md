@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake Video and Carousel Studio
-as_of: 2026-09-17
-head: a32d571
+as_of: 2026-09-19
+head: 2b3ddb2
 lifecycle: building
 production_url: none
 state_doc: docs/CAROUSEL_ENGINE_STATE.md
@@ -32,7 +32,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is a pipeline that refuses to make the video when the source cannot clear the bar, and writes down the refusal.
 
-## Where it is right now (as of 2026-09-17)
+## Where it is right now (as of 2026-09-19)
 
 Lifecycle: building. Nothing in the repo records a live render, an installed runner, a published carousel or a public upload. Every claim below points at a file at `8477f04` unless a later commit is named directly.
 
@@ -99,5 +99,6 @@ Lifecycle: building. Nothing in the repo records a live render, an installed run
 
 ## Do not trust
 
+- This file as a description of everything in the repository. It describes the Video and Carousel Studio. `apps/control-plane` also holds the editorial spine (`content-ideas`, `arcs`, `shifts`, the weekly brief, the inspiration lane), moved here from `krishanraja/control-center` in PR #42, and no document under this repo's `docs_roots` describes it. The steward has now re-headed past that subsystem twice without a bullet, on 2026-09-17 and 2026-09-19, for that reason. Its current behaviour is in the code and in `krishanraja/control-center`'s `docs/CONTENT-ENGINE-PARITY-LEDGER.md`, not here.
 - `docs/OPERATIONS.md` command examples use the legacy `codex-user-confirmation:` receipt prefix. Still valid for Codex, but a new client must generate `studio-user-confirmation:<client>:...` and never the legacy prefix (`docs/ENGINE_SESSION.md`, 2026-09-07).
 - The name "Mindmaker" in `README.md`, `docs/PILOT.md` and the skill descriptions: the older name. Kept until Krish rules; see above.

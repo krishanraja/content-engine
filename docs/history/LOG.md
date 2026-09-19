@@ -5,6 +5,22 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/CAROUSEL_ENGINE_STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-09-19
+
+- reconciled at `2b3ddb2`: three non-steward commits since `a32d571`, all in
+  `apps/control-plane`, the editorial spine rather than the Video and Carousel
+  Studio this file describes. `f413109` made an aborted investigation say why
+  (`classifyRun` had discarded a reason the run already carried, so 2026-09-10
+  recorded `http_200` while the body said no claim survived G3) and made a
+  systemic composer failure fail the run instead of becoming a per-arc skip.
+  `3007ec5` gave the engine the retry policy and the `app_secrets` key fallback
+  the dashboard already had. `2b3ddb2` made the inspiration scan distinguish a
+  quiet Drive folder from an unreadable one: both listed zero and the job had
+  been printing one hedged sentence covering both for eleven days.
+- no "What changed recently" bullet, same reasoning as 2026-09-17: no document
+  under this repo's `docs_roots` describes that subsystem. That is now recorded
+  as a standing gap in "Do not trust" rather than re-derived each time.
+
 ## 2026-09-17
 
 - reconciled at `a32d571`: the only non-steward commit since `915d697` fixed a production incident in `apps/control-plane` ("stop the weekly surfacing killing itself on its own bulk upsert": every weekly arc-card write since 2026-08-26 died on a not-null violation caused by PostgREST's key-union behaviour on a bulk upsert, and a 200 response with `ok: false` and no `error` field was misreported to Krish as the literal string `http_200`). That subsystem is the editorial spine (`content-ideas`, `arcs`, `shifts`, the weekly brief) moved into this repo from `krishanraja/control-center` in PR #42, not the Video and Carousel Studio that `NOW.md`, `README.md`, `AGENTS.md` and `docs/CAROUSEL_ENGINE_STATE.md` describe; no doc in this repo's `docs_roots` names `arc_cards`, `classifyRun` or the weekly surfacing job, so no prose or stamp needed a change. `NOW.md` gained no "What changed recently" bullet for this reason. Moved `head` from `915d697` to `a32d571`, `as_of` to 2026-09-17 and the "Where it is right now" heading to match. `docs/CAROUSEL_ENGINE_STATE.md` still carries `Last verified: 2026-09-07`, flagged again by the digest; the commit touches no carousel code or config, so the stamp was left as is, same reasoning as 2026-09-13 and 2026-09-15. The repeated `SKILL.md` and `STATION.md` basenames the digest lists as duplicate candidates are one file per skill or per station by the repo's own directory convention (`.agents/skills/mindmake-video/stations/`), not an unlabelled duplicate of a single current file; no move.
