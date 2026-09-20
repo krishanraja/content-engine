@@ -41,6 +41,37 @@ interface Synth {
   gaps?: string
 }
 
+/** The live venture that owns every subchannel. Matches what synthesize writes. */
+const PUBLICATION = 'publication'
+
+/**
+ * Accept a live subchannel slug or a retired spelling; return the live one.
+ *
+ * The authority is `venture_formats` plus `format_aliases` in Mindmaker OS, and
+ * control-center reads it properly through `src/lib/formats.ts`. This repo has
+ * no such reader yet, so this is a deliberately small second copy: three live
+ * slugs and the aliases that can still arrive over the wire, and nothing else.
+ * It is listed here rather than hidden in a condition so the day a fourth
+ * subchannel exists, the thing to change is obvious.
+ *
+ * Widening it is not the real fix. The real fix is one shared formats contract
+ * both repos read, which is a bigger change than this endpoint.
+ */
+const LIVE_FORMATS = new Set(['split_the_bill', 'mind_the_gap', 'lift_the_lid'])
+const FORMAT_ALIASES: Record<string, string> = {
+  // The two research stances the picker sends, and the format names they were.
+  paid: 'split_the_bill',
+  money_of_ai: 'split_the_bill',
+  built: 'lift_the_lid',
+  built_with_ai: 'lift_the_lid',
+}
+function liveFormat(value?: string | null): string | null {
+  const v = String(value || '').trim()
+  if (!v) return null
+  if (LIVE_FORMATS.has(v)) return v
+  return FORMAT_ALIASES[v] ?? null
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (preamble(req, res)) return
 
@@ -57,7 +88,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (topic.length < 8) {
     return res.status(400).json({ ok: false, error: 'topic required (at least 8 characters)' })
   }
-  const format = b.format === 'paid' || b.format === 'built' ? b.format : null
+  // The caller may name a live subchannel or one of the two research stances
+  // the Control Center picker still sends over the wire ('paid' / 'built').
+  // Whichever arrives, what gets STORED is the live slug.
+  //
+  // Until 2026-09-20 this accepted only 'paid' and 'built' and wrote them
+  // straight onto the row, together with lane: 'mindmaker_live'. All three of
+  // those spellings retired, so the single most-used way into the engine was
+  // minting new rows in dead vocabulary. Reads survived it, because
+  // resolveFormat consults the alias ledger first, but the house rule is that
+  // an unknown slug fails the write rather than degrading, and a new row in a
+  // retired spelling is that rule inverted: the degrade happening at write
+  // time and being paid for on every read afterwards.
+  const format = liveFormat(b.format)
+  if (b.format && !format) {
+    return res.status(400).json({ ok: false, error: `unknown format: ${String(b.format).slice(0, 40)}` })
+  }
   if (!process.env.ANTHROPIC_API_KEY) {
     return res.status(500).json({ ok: false, error: 'ANTHROPIC_API_KEY not configured' })
   }
@@ -87,11 +133,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const wantWeb = typeof b.web === 'boolean'
     ? b.web
     : (b.materials?.length ? ownMaterials.length === 0 : true)
+  // The second query is the format's OWN question, so the research comes back
+  // on-mandate instead of generic.
+  //
+  // This was a binary on `format === 'paid'`, which had two problems once the
+  // names changed. `format` is a live slug now, so that test could never be
+  // true again and every piece would have taken the else branch: a money piece
+  // researched as if it were a teardown, silently. And a binary cannot express
+  // three formats at all, so mind.the.gap, the hero, had no question of its own.
+  const digForFormat: Record<string, string> = {
+    split_the_bill: `${topic}. Who is paying, who is collecting, and what it does to pricing, margin and unit economics. Name the parties.`,
+    mind_the_gap: `${topic}. What is actually happening here, measured against what is being claimed about it. Name who claimed what and when, and what the record since shows.`,
+    lift_the_lid: `${topic}. Who has actually built or shipped something here, and what specifically they built.`,
+  }
   const queries = [
     `${topic}. What actually happened, with named companies, real numbers and dates.`,
-    format === 'paid'
-      ? `${topic}. Who is paying, who is collecting, and what it does to pricing, margin and unit economics. Name the parties.`
-      : `${topic}. Who has actually built or shipped something here, and what specifically they built.`,
+    (format ? digForFormat[format] : null)
+      ?? `${topic}. Who has actually built or shipped something here, and what specifically they built.`,
     `${topic}. The strongest counterargument, and what the evidence does NOT yet show.`,
   ]
 
@@ -170,7 +228,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     source_url: citations[0] || null,
     source_snippet: sanitizeVoice(String(s.thesis || topic)).slice(0, 500),
     source_captured_at: new Date().toISOString(),
-    lane: format ? 'mindmaker_live' : null,
+    // 'mindmaker_live' was a venture slug that retired into `general`; the live
+    // venture is `publication`, which is what synthesize writes too.
+    lane: format ? PUBLICATION : null,
     lane_slot: format,
     origin: 'user',
     distribution: [],
