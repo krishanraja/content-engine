@@ -163,6 +163,22 @@ export function laneToCorpusChannel(lane?: string | null, slot?: string | null):
   return null
 }
 
+/**
+ * Formats that exist in venture_formats and have NO section in the corpus.
+ *
+ * Declared rather than quietly pointed at a neighbour's playbook, because a
+ * format wearing another format's register is worse than a format with none:
+ * the output reads finished and is written to the wrong brief.
+ *
+ * This declaration used to live only in control-center's copy of this file,
+ * which no longer serves any content route after ADR-019. It was therefore
+ * true in a file nobody called and absent from the one that runs.
+ */
+export const NO_CORPUS_PLAYBOOK: Record<string, string> = {
+  mind_the_gap:
+    'The corpus in system_config.content_corpus was last written on 2026-08-28, when the canon still said the publication ran exactly two channels. mind.the.gap was added to venture_formats on 2026-09-17 and has no section in it. Writing that section is editorial work against venture_formats.mandate, not a rename, which is why it is declared here rather than pointed at split.the.bill or lift.the.lid.',
+}
+
 // channel key -> a matcher against the playbook heading text in the corpus.
 const CHANNEL_HEADING: Record<string, RegExp> = {
   // COLLISION RULE. These patterns are tested against every `##` heading in the
@@ -194,6 +210,24 @@ const CHANNEL_HEADING: Record<string, RegExp> = {
   built_with_ai: /^#*\s*\d*\.?\s*Built\s+with\s+AI\b/i,
   paid: /^#*\s*\d*\.?\s*(The\s+)?Money\s+of\s+AI\b/i,
   built: /^#*\s*\d*\.?\s*Built\b/i,
+
+  // ── The three live subchannels (venture_formats, renamed 2026-09-17) ──
+  // Two are the same editorial lineage under a new name, which is exactly what
+  // format_aliases records: money_of_ai -> split_the_bill, and
+  // built_with_ai -> lift_the_lid. They inherit those playbooks rather than
+  // falling through to the whole-corpus synopsis, the same way the 'paid' and
+  // 'built' legacy keys above already do.
+  //
+  // The corpus SECTIONS still carry the old titles, so these point at the old
+  // headings on purpose. Rewriting those sections against the new mandates is
+  // editorial work rather than a rename, and until that happens a piece gets
+  // the playbook its lineage had.
+  //
+  // mind_the_gap is deliberately absent. It is new, not a rename, and the
+  // corpus has no section for it: see NO_CORPUS_PLAYBOOK below.
+  split_the_bill: /^#*\s*\d*\.?\s*(The\s+)?Money\s+of\s+AI\b/i,
+  lift_the_lid: /^#*\s*\d*\.?\s*Built\s+with\s+AI\b/i,
+
   publication: /Publication house register/i,
   signal_noise: /Signal\s*&?\s*Noise/i,
   maven: /Maven/i,
@@ -268,6 +302,15 @@ export function corpusForChannel(corpus: string, channel?: string | null, cap = 
     // single playbook so the model still has the whole map.
     const onePara = find(/One-Paragraph Version/i)
     if (onePara) picked.push(onePara.body.trim())
+    // A DECLARED gap is not the same as an unrecognised value, and the model
+    // must not be left to infer a register from the house synopsis and write
+    // as though it had a playbook. Say it in the prompt.
+    const gap = channel ? NO_CORPUS_PLAYBOOK[channel] : null
+    if (gap) {
+      picked.unshift(
+        `NO PLAYBOOK EXISTS FOR THIS FORMAT. ${gap} Work from the house register and the mandate you were given, and do not imitate another format's register.`,
+      )
+    }
   }
 
   const cross = find(/Cross-Channel Rules/i)
