@@ -5,6 +5,34 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/CAROUSEL_ENGINE_STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-09-20
+
+- reconciled at `c8fdee3`: three non-steward commits since `2b3ddb2`, all in
+  `apps/control-plane`, the editorial spine rather than the Video and Carousel
+  Studio this file describes. `5a9fb88` stopped `research-topic` writing new
+  rows in retired vocabulary: reads already resolved a retired slug to its
+  live one before use, so a write in the retired spelling looked fine on
+  every read afterwards while breaking the house rule that an unknown slug
+  fails the write rather than degrading; fixing it also exposed that the
+  research queries branched on the literal string `paid`, which a live slug
+  can no longer match, so mind.the.gap would have been researched as a
+  teardown with no dig of its own, and that `corpusForChannel` did not know
+  the two renamed formats, so a piece written under a new name would have
+  fallen through to the whole-corpus synopsis instead of its playbook.
+  `d0513bc` fixed the reason main had been red since 2026-09-19:
+  `check-inspiration-lane` asserted the exact wording of a status message
+  instead of the invariant behind it, so the message's own improvement (
+  distinguishing a quiet folder from an unreadable one, both of which used
+  to report as one hedged sentence) broke the guard that was supposed to
+  protect it. `c8fdee3` is the merge of both onto `main`.
+- no "What changed recently" bullet, same reasoning as 2026-09-17 and
+  2026-09-19: no document under this repo's `docs_roots` describes that
+  subsystem.
+- `docs/CAROUSEL_ENGINE_STATE.md` still carries `Last verified: 2026-09-07`,
+  flagged again by the digest; no commit in this range touches carousel or
+  video engine code or config, so the stamp was left as is rather than
+  bumped without a check.
+
 ## 2026-09-19
 
 - reconciled at `2b3ddb2`: three non-steward commits since `a32d571`, all in
