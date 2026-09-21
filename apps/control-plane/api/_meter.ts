@@ -333,6 +333,23 @@ export async function anthropicCall(e: {
   usage?: unknown
   /** A call that errored after tokens were produced still cost money. */
   failed?: boolean
+  /**
+   * How many calls this usage total covers. Defaults to 1, which is every
+   * in-process site: one call, one usage object, one run.
+   *
+   * It exists for the reporters that measure a batch and post it afterwards.
+   * The AEO engine runs in GitHub Actions and sends one row per model per run,
+   * and a run is around fifty probes. Without this, `runs` would read 1 for all
+   * of them: the dollars would be right and cost-per-run fifty times the truth,
+   * which is the kind of half-wrong number that survives a long time because
+   * the total it sits beside is correct.
+   */
+  calls?: number
+  /** How many of `calls` failed. Defaults to `failed` on a single call. */
+  failedCalls?: number
+  /** The day this usage belongs to. Defaults to today, which is right for an
+   *  in-process call and wrong for a run posting its total after midnight. */
+  day?: string
 }): Promise<void> {
   const u: TokenUsage = e.usage
     ? readUsage(e.usage)
@@ -340,6 +357,13 @@ export async function anthropicCall(e: {
   const cached = (u.cacheRead || 0) + (u.cacheWrite5m || 0) + (u.cacheWrite1h || 0)
   const tokens = u.input + u.output + cached
   if (!tokens) return
+  const runs = Math.max(1, Math.trunc(Number(e.calls) || 1))
+  // An explicit failedCalls always wins, including an explicit zero. Only when
+  // it is absent does the single-call `failed` boolean decide, which is every
+  // in-process site.
+  const failedRuns = e.failedCalls === undefined
+    ? (e.failed ? 1 : 0)
+    : Math.max(0, Math.trunc(Number(e.failedCalls) || 0))
   await add({
     provider: 'anthropic',
     unitKind: 'agent',
@@ -349,11 +373,12 @@ export async function anthropicCall(e: {
     category: isPriced(e.model) ? 'priced' : 'unpriced-model',
     usd: priceUsdDetailed(e.model, u),
     usdUncached: priceUsdUncached(e.model, u),
-    runs: 1,
-    failed: e.failed ? 1 : 0,
+    runs,
+    failed: Math.min(runs, failedRuns),
     units: tokens,
     unitName: 'tokens',
     cacheReadTokens: u.cacheRead || 0,
     cacheWriteTokens: (u.cacheWrite5m || 0) + (u.cacheWrite1h || 0),
+    day: e.day,
   })
 }
