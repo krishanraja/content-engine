@@ -5,6 +5,34 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/CAROUSEL_ENGINE_STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-09-21
+
+- reconciled at `c62ac34`: three non-steward commits since `c8fdee3`, all in
+  `apps/control-plane`, the editorial spine rather than the Video and Carousel
+  Studio this file describes. `061d6fd` fixed a meter that swallowed its own
+  write failures (`meter_add`'s returned error was discarded in a try/catch,
+  so every Anthropic agent in `meter_daily` went dark on 2026-09-15 while the
+  cron-written rows carried on, and the dashboard read "we spent nothing"
+  instead of failing loudly) and ported prompt caching from control-center,
+  opt-in per call site because a cache write costs more than an ordinary
+  input token and pays off only when a prefix is genuinely re-sent inside the
+  TTL. `67c3299` gave the AEO research engine a measured spend path through
+  the same `anthropicCall` primitive rather than a second price table, adding
+  `calls` and `day` so a batched reporter cannot make `runs` read 1 against a
+  correct dollar total. `2ad04fd` fixed the same discarded-error shape in both
+  `content_edit_events` writes, the PATCH choke point that is the only place
+  the product sees a person's edit over the machine's, and unpinned
+  `check-judges` from the literal wording of a comment, the same class of
+  fault named in `AGENTS.md` that had already kept main red once this month.
+  `c62ac34` is the merge of all three onto `main`.
+- no "What changed recently" bullet, same reasoning as 2026-09-17, 2026-09-19
+  and 2026-09-20: no document under this repo's `docs_roots` describes that
+  subsystem.
+- `docs/CAROUSEL_ENGINE_STATE.md` still carries `Last verified: 2026-09-07`,
+  flagged again by the digest; no commit in this range touches carousel or
+  video engine code or config, so the stamp was left as is rather than
+  bumped without a check.
+
 ## 2026-09-20
 
 - reconciled at `c8fdee3`: three non-steward commits since `2b3ddb2`, all in
