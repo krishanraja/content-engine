@@ -484,7 +484,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         })
       }
       if (events.length) {
-        try { await supabase.from('content_edit_events').insert(events) } catch { /* the edit is the product */ }
+        // The edit is the product and the ledger is the record of it, so this
+        // still never throws. But supabase-js returns its errors instead of
+        // throwing, so discarding the result made a rejected batch look exactly
+        // like a written one. This is the PATCH choke point: the only place
+        // that sees what Krish typed over the machine, and the highest-signal
+        // input the weekly compiler has.
+        try {
+          const { error } = await supabase.from('content_edit_events').insert(events)
+          if (error) console.warn(`[edit-ledger] ${events.length} manual edit event(s) not recorded: ${error.message || error}`)
+        } catch (e) {
+          console.warn(`[edit-ledger] manual edit events threw: ${(e as Error)?.message || e}`)
+        }
       }
     }
 

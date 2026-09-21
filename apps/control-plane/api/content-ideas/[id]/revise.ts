@@ -126,10 +126,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // gap that made meta.revisions[] unreadable for a year.
   //
   // Best effort on purpose: a ledger write must never cost him the rewrite he
-  // just waited twenty seconds for.
+  // just waited twenty seconds for. Swallowed, never thrown, but SAID.
+  //
+  // supabase-js RETURNS its errors rather than throwing them, so discarding the
+  // result made a rejected row indistinguishable from a written one, and the
+  // catch below never saw anything either. Every admission rule on this table
+  // is a CHECK constraint, so the likely failure is a 23514 nobody has ever
+  // seen. Same shape as the usage meter dropping meter_add's error for six
+  // days, and it matters more here: the table had one row in it, a smoke test.
   const editEventId = randomUUID()
   try {
-    await supabase.from('content_edit_events').insert({
+    const { error } = await supabase.from('content_edit_events').insert({
       idempotency_key: editEventId,
       subject_table: 'content_ideas',
       subject_id: id,
@@ -146,7 +153,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       surface: 'composer',
       client: typeof b.client === 'string' && b.client === 'mobile' ? 'mobile' : 'desktop',
     })
-  } catch { /* the rewrite is the product; the ledger is the record of it */ }
+    if (error) console.warn(`[edit-ledger] magic_invoked not recorded for ${id}: ${error.message || error}`)
+  } catch (e) {
+    // The rewrite is the product; the ledger is the record of it.
+    console.warn(`[edit-ledger] magic_invoked threw for ${id}: ${(e as Error)?.message || e}`)
+  }
 
   // The client returns this to resolve the event when Krish accepts or keeps
   // the current version.
