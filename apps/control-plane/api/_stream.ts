@@ -74,6 +74,10 @@ export interface StreamClaudeOpts {
    *  SSE itself (`message_start` carries input, `message_delta` carries output),
    *  so a streamed call is metered exactly like a blocking one. */
   agent?: string
+  /** Cache the system prefix. Opt-in for the same reason as ClaudeOpts.cache:
+   *  a write is priced above an uncached send, so it pays only where the same
+   *  system prompt goes out again inside the TTL. */
+  cache?: boolean
 }
 
 /**
@@ -95,7 +99,15 @@ export async function streamClaude(opts: StreamClaudeOpts): Promise<string> {
       model: opts.model,
       max_tokens: opts.maxTokens,
       ...thinkingParam(opts.model, opts.think === true),
-      system: opts.system,
+      // A cache breakpoint on the stable prefix when the caller asked for one.
+      // Same floor and same reasoning as cacheableSystem in _content.ts: a
+      // prefix under the model minimum is silently not cached, and a write is
+      // priced above an ordinary input token, so this is opt-in per call site.
+      // revise is the site that most wants it: one draft, many passes, minutes
+      // apart, with the rubric and corpus identical every time.
+      system: opts.cache && opts.system && opts.system.length >= 6000
+        ? [{ type: 'text', text: opts.system, cache_control: { type: 'ephemeral' } }]
+        : opts.system,
       messages: opts.messages,
       ...(opts.temperature !== undefined && supportsSampling(opts.model) ? { temperature: opts.temperature } : {}),
       stream: true,
@@ -114,6 +126,8 @@ export async function streamClaude(opts: StreamClaudeOpts): Promise<string> {
   let out = ''
   let inputTokens = 0
   let outputTokens = 0
+  /** The raw usage object, accumulated across message_start and message_delta. */
+  let usage: Record<string, unknown> = {}
 
   for (;;) {
     const { done, value } = await reader.read()
@@ -135,8 +149,8 @@ export async function streamClaude(opts: StreamClaudeOpts): Promise<string> {
           const evt = JSON.parse(raw) as {
             type?: string
             delta?: { type?: string; text?: string }
-            message?: { usage?: { input_tokens?: number; output_tokens?: number } }
-            usage?: { input_tokens?: number; output_tokens?: number }
+            message?: { usage?: Record<string, unknown> }
+            usage?: Record<string, unknown>
             error?: { message?: string }
           }
           if (evt.type === 'error') throw new Error(evt.error?.message || 'anthropic_stream_error')
@@ -146,10 +160,15 @@ export async function streamClaude(opts: StreamClaudeOpts): Promise<string> {
           }
           // Token counts arrive in their own frames, not with the text.
           if (evt.type === 'message_start') {
+            // message_start carries the FULL usage object, cache fields included.
+            // Reading two numbers off it and discarding the rest is what made a
+            // cached call and an uncached one identical in meter_daily.
+            if (evt.message?.usage) usage = { ...usage, ...evt.message.usage }
             inputTokens = Number(evt.message?.usage?.input_tokens) || inputTokens
             outputTokens = Number(evt.message?.usage?.output_tokens) || outputTokens
           }
           if (evt.type === 'message_delta' && evt.usage) {
+            usage = { ...usage, ...evt.usage }
             outputTokens = Number(evt.usage.output_tokens) || outputTokens
           }
         } catch (e) {
@@ -160,6 +179,6 @@ export async function streamClaude(opts: StreamClaudeOpts): Promise<string> {
     }
   }
 
-  await meter.anthropicCall({ agent: opts.agent, model: opts.model, inputTokens, outputTokens })
+  await meter.anthropicCall({ agent: opts.agent, model: opts.model, usage, inputTokens, outputTokens })
   return out
 }

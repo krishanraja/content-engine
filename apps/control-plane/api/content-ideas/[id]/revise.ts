@@ -86,6 +86,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     revisedFragment = (await streamClaude({
       agent: 'cleo-revise',
+      // The single best place in the engine for a prefix cache. `system` holds
+      // the rubric, the voice block and the channel corpus and does not change
+      // between passes; `user` holds the draft. One piece gets revised many
+      // times in a sitting, so from the second pass on the largest part of the
+      // request is served at a tenth of the price.
+      cache: true,
       apiKey,
       model: humour ? 'claude-opus-4-8' : UTILITY_MODEL,
       // Matches the other rewrite surfaces (channel-cut, synthesize) rather than

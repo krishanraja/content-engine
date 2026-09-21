@@ -131,6 +131,7 @@ async function classifyBatch(items: RelevanceItem[], opts: ClassifyOpts): Promis
   await meter.anthropicCall({
     agent: opts.agent || 'relevance-classifier',
     model: opts.model || HAIKU,
+    usage: j?.usage,
     inputTokens: Number(j?.usage?.input_tokens) || 0,
     outputTokens: Number(j?.usage?.output_tokens) || 0,
     failed: !r.ok,

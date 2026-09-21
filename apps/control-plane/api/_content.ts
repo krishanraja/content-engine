@@ -346,6 +346,28 @@ export interface ClaudeOpts {
   /** Abort after this many ms. Omit for no deadline (batch/cron callers). */
   timeoutMs?: number
   system: string
+  /**
+   * Cache the system prompt, for call sites that send the same one repeatedly.
+   *
+   * OFF BY DEFAULT, AND THAT IS NOT TIMIDITY. A cache write is priced ABOVE an
+   * ordinary input token (1.25x for the five minute entry) and a read at a
+   * tenth of one. So caching pays only when the prefix is genuinely re-sent
+   * inside the TTL, and on a once-a-day cron it is a straight 25% surcharge on
+   * the largest part of the request for a entry nobody ever reads. Turning it
+   * on everywhere would have raised this bill, not lowered it.
+   *
+   * Turn it on where the same system prompt goes out more than once in quick
+   * succession: a route that loops over items, and the composer, where the
+   * whole point of the surface is iterating one draft to completion in a
+   * sitting. `system` carries the rubric, the voice block and the corpus and
+   * `user` carries the draft, so the stable part is already first, which is
+   * what makes a prefix cache possible at all.
+   *
+   * Whether it is working is not a matter of opinion: meter_daily now carries
+   * cache_read_tokens and cache_write_tokens separately, deliberately un-netted,
+   * so a site that writes entries nobody reads shows up as exactly that.
+   */
+  cache?: boolean
   user: string
   /** Images to send alongside `user`, for the vision path.
    *
@@ -444,6 +466,26 @@ async function getAnthropicKey(): Promise<string | null> {
 }
 
 /** Single-shot Anthropic Messages call. Returns the first text block (or throws). */
+/**
+ * The `system` field, with a cache breakpoint on it when the caller asked.
+ *
+ * Caching is a PREFIX match and the render order is tools, then system, then
+ * messages, so a breakpoint at the end of `system` caches everything stable and
+ * leaves the draft in `user` to vary freely. That is already how these prompts
+ * are built, which is the only reason this is a one-line change.
+ *
+ * The floor is a real constraint, not defensive padding: a prefix shorter than
+ * the model's minimum (512 to 4096 tokens depending on the model) is silently
+ * not cached at all. Nothing errors and no entry appears, so a short prompt
+ * asking for a breakpoint just quietly gets nothing. 6000 characters is roughly
+ * 1500 tokens, comfortably clear of the common 1024 floor, and below it the
+ * request is small enough that caching it was never the saving anyway.
+ */
+function cacheableSystem(opts: ClaudeOpts): unknown {
+  if (!opts.cache || !opts.system || opts.system.length < 6000) return opts.system
+  return [{ type: 'text', text: opts.system, cache_control: { type: 'ephemeral' } }]
+}
+
 export async function callClaude(opts: ClaudeOpts): Promise<string> {
   const apiKey = await getAnthropicKey()
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not configured')
@@ -463,7 +505,7 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
         max_tokens: opts.maxTokens ?? 4000,
         ...thinkingParam(model, opts.think === true),
         ...(supportsSampling(model) ? { temperature: opts.temperature ?? 0.5 } : {}),
-        system: opts.system,
+        system: cacheableSystem(opts),
         messages: [{ role: 'user', content: userContent(opts) }],
       }),
       signal: opts.timeoutMs ? ctrl.signal : undefined,
@@ -493,7 +535,13 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
     if (opts.onUsage) opts.onUsage({ input: inputTokens, output: outputTokens, model })
     // Unconditional, unlike onUsage: a route that does not care what it cost is
     // exactly the route whose spend nobody was watching.
-    await meter.anthropicCall({ agent: opts.agent, model, inputTokens, outputTokens })
+    //
+    // The RAW usage object, not the two counts plucked above. Those two drop
+    // the cache read and cache creation fields on the floor, so a cached call
+    // and an uncached one of the same size were indistinguishable in
+    // meter_daily, and prompt caching would have been unmeasurable the day it
+    // was switched on. Parsed in exactly one place, _prices.readUsage.
+    await meter.anthropicCall({ agent: opts.agent, model, usage: j?.usage })
     return firstText(j)
   } catch (e: unknown) {
     if ((e as Error)?.name === 'AbortError') throw new Error(`anthropic_timeout_${opts.timeoutMs}ms`)
@@ -549,6 +597,7 @@ export async function callClaudeMessages(
   await meter.anthropicCall({
     agent: opts.agent,
     model,
+    usage: j?.usage,
     inputTokens: Number(j?.usage?.input_tokens) || 0,
     outputTokens: Number(j?.usage?.output_tokens) || 0,
   })
@@ -619,6 +668,6 @@ export async function callClaudeBlocks(
   if (!r.ok) throw new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`)
   const inputTokens = Number(j?.usage?.input_tokens) || 0
   const outputTokens = Number(j?.usage?.output_tokens) || 0
-  await meter.anthropicCall({ agent: opts.agent, model, inputTokens, outputTokens })
+  await meter.anthropicCall({ agent: opts.agent, model, usage: j?.usage, inputTokens, outputTokens })
   return { text: firstText(j), inputTokens, outputTokens, model }
 }
