@@ -189,9 +189,35 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.match(revise, /action: 'magic_invoked'/, 'an invoked edit must be recorded')
   assert.match(revise, /confirmation_state: 'pending'/, 'an invocation is pending until Krish keeps or discards it')
   assert.match(revise, /edit_event_id/, 'the client needs the event id to resolve the invocation to accepted or rejected')
-  // Both must be best-effort: the rewrite and the save are the product.
-  assert.match(revise, /catch \{ \/\* the rewrite is the product/, 'a ledger failure must never cost the rewrite')
-  assert.match(patch, /catch \{ \/\* the edit is the product/, 'a ledger failure must never cost the edit')
+  // Both ledger writes must be best-effort: the rewrite and the save are the
+  // product. Asserted STRUCTURALLY, not textually.
+  //
+  // This used to pin the literal comment `catch { /* the rewrite is the
+  // product`, so improving the wording broke the build while the invariant it
+  // guards sat untouched. Same failure as check-inspiration-lane pinning a
+  // message's exact sentence, which kept main red for a day on 2026-09-19. A
+  // guard tied to a sentence fails every time the sentence improves, which
+  // teaches people either to stop improving it or to stop believing the guard.
+  //
+  // Two invariants now. The second is new, and its absence is a large part of
+  // why this table held exactly one row, a smoke test, for a fortnight:
+  //
+  //   never fatal    the write sits in a try/catch that does not rethrow
+  //   never silent   supabase-js RETURNS its errors rather than throwing, so a
+  //                  discarded result makes a rejected row indistinguishable
+  //                  from a written one, and the catch never fires either
+  for (const [what, src] of [['rewrite', revise], ['edit', patch]] as const) {
+    const at = src.indexOf("content_edit_events').insert")
+    assert.notEqual(at, -1, `the ${what} path must write to the edit ledger`)
+    const window = src.slice(Math.max(0, at - 400), at + 1400)
+    assert.match(window, /try \{/, `a ledger failure must never cost the ${what}`)
+    const caught = /catch\s*(?:\([^)]*\))?\s*\{([\s\S]*?)\n\s*\}/.exec(src.slice(at))
+    assert.ok(caught, `the ${what}'s ledger write must be caught`)
+    assert.doesNotMatch(caught[1], /\bthrow\b/, `a ledger failure must never cost the ${what}`)
+    assert.match(window, /const \{ error \} = await supabase\.from\('content_edit_events'\)\.insert/,
+      `the ${what}'s ledger write must read supabase's RETURNED error: insert does not throw one`)
+    assert.match(window, /console\.warn/, `a rejected ledger row must be said out loud on the ${what} path`)
+  }
 }
 
 // ── 9. The migration matches the code ───────────────────────────────────────
