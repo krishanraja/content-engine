@@ -149,7 +149,7 @@ export async function callMetered(opts: MeteredOpts, budget: RunBudget): Promise
     // error are tokens Anthropic bills for.
     await meter.anthropicCall({
       agent: opts.agent || 'investigations',
-      model, inputTokens: inTok, outputTokens: outTok, failed: !r.ok,
+      model, usage: j?.usage, inputTokens: inTok, outputTokens: outTok, failed: !r.ok,
     })
     if (!r.ok) {
       return { ...empty, inputTokens: inTok, outputTokens: outTok, costUsd: cost, error: `anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}` }
