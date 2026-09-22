@@ -5,6 +5,7 @@ import { fetchPoolDays, poolConfigured } from '../_pool.js'
 import { onTeardownBeat } from '../_beat.js'
 import { purgeBoundary } from '../_weeks.js'
 import { withContentRun } from '../_runs.js'
+import { recordObservations, type ObservationInput } from '../_observations.js'
 
 // Daily Feed ingest (Content Engine v2, spec §4).
 //
@@ -35,6 +36,24 @@ import { withContentRun } from '../_runs.js'
 // corpus that keeps its own noise makes every downstream reader responsible for
 // remembering to filter it. The count comes back in the response and lands in
 // content_engine_runs, so the discard is still visible.
+//
+// ── The observation record, wired in 2026-09-22 ──────────────────────────
+//
+// "The count is still visible" was true and was not enough. content_engine_runs
+// keeps `off_beat: 41` and nothing about WHICH 41, so the gate has never been
+// auditable: whether it is rejecting noise or rejecting the next shift a week
+// early is not a question a number can answer. And the stories it admitted
+// fared no better, because the Monday purge deletes whatever did not become a
+// shift.
+//
+// Every story the pool hands us now lands in trend_observations first, with
+// what we decided about it on the same row: surfaced, or dropped and why. That
+// table is append only and nothing ever deletes from it. The desk still clears
+// every Monday; the record of what arrived does not. See api/_observations.ts.
+//
+// The write is best effort and deliberately does not gate the ingest. A feed
+// that stops because its archive is unavailable would be a worse failure than
+// the one this fixes.
 
 const LOOKBACK_DAYS = 2
 
@@ -71,15 +90,42 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     const expiresAt = purgeBoundary(new Date()).toISOString()
 
     const rows: Record<string, unknown>[] = []
+    const observed: ObservationInput[] = []
+    // Every story the pool handed us, with the verdict on the same row. The
+    // pool's own day is the observation day rather than today, so a re-run and
+    // the two-day lookback converge instead of writing the same story twice.
+    const observe = (
+      s: typeof stories[number],
+      surfaced: boolean,
+      dropReason?: 'off_beat' | 'duplicate',
+    ) => {
+      observed.push({
+        observedOn: s.day,
+        origin: 'pool_headline',
+        collector: 'feed/ingest',
+        title: s.headline,
+        snippet: s.say,
+        url: s.url,
+        sourceHost: s.source,
+        category: s.category,
+        sourceCount: s.sourceCount,
+        sourceUrls: s.sourceUrls,
+        surfaced,
+        dropReason: dropReason ?? null,
+        raw: { pool: { day: s.day, category: s.category, source: s.source, source_count: s.sourceCount, source_urls: s.sourceUrls } },
+      })
+    }
+
     let offBeat = 0
     for (const s of stories) {
       const titleNorm = norm(s.headline)
-      if ((s.url && seenUrls.has(s.url)) || seenTitles.has(titleNorm)) continue
+      if ((s.url && seenUrls.has(s.url)) || seenTitles.has(titleNorm)) { observe(s, false, 'duplicate'); continue }
       // `say` is the pool's one-line reading of the story, which is the number
       // sentence the gate's middle tier is built to be rescued by.
-      if (!onTeardownBeat(s.headline, s.say)) { offBeat++; continue }
+      if (!onTeardownBeat(s.headline, s.say)) { offBeat++; observe(s, false, 'off_beat'); continue }
       if (s.url) seenUrls.add(s.url)
       seenTitles.add(titleNorm)
+      observe(s, true)
       rows.push({
         idea: s.headline,
         thesis: s.say,
@@ -105,7 +151,18 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       if (insErr) throw new Error(insErr.message)
       inserted = count ?? rows.length
     }
-    return res.json({ ok: true, days, fetched: stories.length, inserted, off_beat: offBeat })
+
+    // After the desk write, never before it: the archive is the thing that can
+    // be caught up later, the feed is not. `recorded` lands in the run ledger,
+    // so an archive that silently stops writing is visible as a zero next to a
+    // non-zero `fetched` rather than as nothing at all.
+    const archive = await recordObservations(observed)
+
+    return res.json({
+      ok: true, days, fetched: stories.length, inserted, off_beat: offBeat,
+      observed: archive.attempted, recorded: archive.written,
+      ...(archive.ok ? {} : { observation_error: archive.reason }),
+    })
   } catch (e: any) {
     return res.status(500).json({ ok: false, error: String(e?.message || e) })
   }
