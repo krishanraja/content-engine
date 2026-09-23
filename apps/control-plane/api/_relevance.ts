@@ -1,13 +1,24 @@
 // _relevance — shared topic/vertical relevance classifier for triage clearing.
 //
-// Used by two callers:
-//   1. api/content-ideas.ts  — the ingest relevance gate (one card at a time):
+// Callers:
+//   1. api/content-ideas.ts — the ingest relevance gate (one card at a time):
 //      an agent-sourced idea that is off-vertical or too-technical is dropped
 //      at capture so it never reaches the triage deck ("forever").
-//   2. scripts/triage/relevance-sweep.ts — the backlog sweep (many cards):
-//      classifies the existing deck and routes off-vertical / too-technical
-//      cards through the same -1 feedback path a manual swipe uses, so Vera
-//      learns the pattern.
+//   2. api/feed/ingest.ts — the daily pool lane (many cards, one call per 25).
+//      Added 2026-09-23. Until then the Feed was the ONE lane with no model
+//      between the source and content_ideas: it wrote the CTRL pool's headline
+//      and description straight in, filtered only by a regex whose last line
+//      is `return !OFF_BEAT.test(headline)`, so anything it had no word for
+//      was admitted. Of the 66 pool rows in the table, 39 were there because
+//      nothing matched. Krish, seeing a Bloomberg bond-yields video blurb in
+//      his triage queue: "Nor can we stop suggestions that are clearly awful,
+//      like this one about bond yields." This classifier already refused it:
+//      `finance` has been a muted vertical since 2026-06-17 and "library
+//      changelogs" has always been in the too_technical definition. Nothing
+//      was calling it on that lane.
+//
+//   (The header used to name scripts/triage/relevance-sweep.ts as caller 2.
+//   That script no longer imports this module.)
 //
 // Deliberately dependency-light: it does NOT import _supabase or _content, so
 // it resolves cleanly both under the Vercel bundler (.js imports) and under
@@ -16,7 +27,23 @@
 import { JUDGE_MODEL } from './_models.js'
 import * as meter from './_meter.js'
 
-export type Verdict = 'keep' | 'off_vertical' | 'too_technical'
+/**
+ * `not_interesting` is the buyer test, added 2026-09-23 and deliberately NOT
+ * acted on yet by any caller.
+ *
+ * The other two verdicts ask what a story is ABOUT. This one asks whether the
+ * person Krish sells to would care, which is the question every gate in the
+ * system was missing: the inspiration sweep's 2,000-word bar scores voice,
+ * pillar fit, evidence and novelty and never once mentions his customer.
+ *
+ * It is recorded and not enforced because a new refusal has to be measured
+ * before it is trusted. The pool corpus is what the synthesis engine reads
+ * ACROSS, and an item that is dull alone is often a thread in a thesis: "OpenAI
+ * hires Patreon co-founder" is trivia until it sits beside two other creator
+ * monetisation moves. Dropping on this verdict before we know its false
+ * positive rate would quietly starve the one part of the system that works.
+ */
+export type Verdict = 'keep' | 'off_vertical' | 'too_technical' | 'not_interesting'
 
 export interface RelevanceItem {
   id: string
@@ -86,10 +113,15 @@ function policyPrompt(muted: readonly string[], surface: string): string {
     ``,
     `- "too_technical": low-level engineering / infrastructure / devops with no strategic angle — cloud-ops (AWS / GCP / Azure), Kubernetes, database internals, framework release notes, library changelogs. BUT keep builder-economy "how we built X with agents" strategic-technical pieces.`,
     ``,
-    `When unsure, prefer "keep" with low confidence. Only mark off_vertical / too_technical when you are confident the item has no AI / agent / economics angle Krish would write about.`,
+    // The buyer test, in Krish's own words. Everything here is quoted from the
+    // edit ledger or from him directly, not inferred: this is the one criterion
+    // no other gate in the system holds, and a paraphrase of it would drift.
+    `- "not_interesting": on-topic for AI, but there is nothing here a reader would DO anything with. Krish's reader is a commercial leader who might hire him for thirty days to build an AI brain or an AI go-to-market plan. He is asking: does this change how that person thinks about buying, pricing, positioning, hiring or building with AI? Mark not_interesting for a one-off item with no second-order consequence: a personnel move, a version bump, an event listing, a quoted tweet, a syndicated video interview, a vendor announcement that repriced nothing. His words for what he wants instead: "fun, and observant, and tying together multiple threads, shifts or themes, not just crappy unimportant one off news items". And for the register: "My tonality is commercial, positive, and visionary", not "governance, risk, safety, negative things, and overly technical things".`,
+    ``,
+    `When unsure, prefer "keep" with low confidence. Only mark off_vertical / too_technical when you are confident the item has no AI / agent / economics angle Krish would write about. Only mark not_interesting when you are confident a commercial leader would read it and have nothing to do differently.`,
     ``,
     `Return ONLY a JSON array, one object per item, same order and ids:`,
-    `[{"id":"<id>","verdict":"keep|off_vertical|too_technical","vertical":"<one muted key or null>","confidence":0.0-1.0,"rationale":"<=12 words"}]`,
+    `[{"id":"<id>","verdict":"keep|off_vertical|too_technical|not_interesting","vertical":"<one muted key or null>","confidence":0.0-1.0,"rationale":"<=12 words"}]`,
   ].join('\n')
 }
 
@@ -145,7 +177,8 @@ async function classifyBatch(items: RelevanceItem[], opts: ClassifyOpts): Promis
   // Map back onto the input order; anything the model dropped defaults to keep.
   return items.map(it => {
     const o = byId.get(it.id) || {}
-    const verdict: Verdict = o.verdict === 'off_vertical' || o.verdict === 'too_technical' ? o.verdict : 'keep'
+    const verdict: Verdict = o.verdict === 'off_vertical' || o.verdict === 'too_technical' || o.verdict === 'not_interesting'
+      ? o.verdict : 'keep'
     const confidence = typeof o.confidence === 'number' ? Math.max(0, Math.min(1, o.confidence)) : 0
     return {
       id: it.id,
@@ -178,5 +211,10 @@ export async function classifyRelevance(items: RelevanceItem[], opts: ClassifyOp
  *  src/lib/triageReasons.ts). */
 export function relevanceReasonCode(prefix: string, verdict: Verdict): string {
   if (verdict === 'too_technical') return `${prefix}_too_technical`
+  // Same spelling Krish uses when he bins one by hand at the triage desk
+  // (BIN_REASONS in artifacts/triage-desk.html), so the machine's refusals and
+  // his own land in one vocabulary and a disagreement is a group-by rather than
+  // a translation.
+  if (verdict === 'not_interesting') return `${prefix}_not_interesting`
   return `${prefix}_off_vertical`
 }

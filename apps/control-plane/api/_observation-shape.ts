@@ -46,6 +46,11 @@ export type ObservationOrigin =
 export type DropReason =
   | 'off_beat' | 'below_trust_floor' | 'not_ai_native' | 'too_old'
   | 'lane_full' | 'damage' | 'duplicate' | 'purged_unused' | 'gathered_not_selected'
+  // The relevance classifier's two enforced verdicts, so a story refused by a
+  // model is distinguishable in the archive from one refused by the regex gate.
+  // `not_interesting` is deliberately absent: it is recorded on the row it kept
+  // and never acted on, until its false positive rate is known.
+  | 'off_vertical' | 'too_technical'
 
 export interface ObservationInput {
   observedOn?: string          // 'YYYY-MM-DD'; defaults to today UTC

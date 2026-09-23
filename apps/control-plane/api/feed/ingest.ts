@@ -6,6 +6,7 @@ import { onTeardownBeat } from '../_beat.js'
 import { purgeBoundary } from '../_weeks.js'
 import { withContentRun } from '../_runs.js'
 import { recordObservations, type ObservationInput } from '../_observations.js'
+import { classifyRelevance, type RelevanceVerdict } from '../_relevance.js'
 
 // Daily Feed ingest (Content Engine v2, spec §4).
 //
@@ -97,7 +98,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     const observe = (
       s: typeof stories[number],
       surfaced: boolean,
-      dropReason?: 'off_beat' | 'duplicate',
+      dropReason?: 'off_beat' | 'duplicate' | 'off_vertical' | 'too_technical',
     ) => {
       observed.push({
         observedOn: s.day,
@@ -116,6 +117,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       })
     }
 
+    // Pass 1: the free filters. Dedupe, then the regex beat gate.
+    const candidates: { s: typeof stories[number]; titleNorm: string }[] = []
     let offBeat = 0
     for (const s of stories) {
       const titleNorm = norm(s.headline)
@@ -125,21 +128,75 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       if (!onTeardownBeat(s.headline, s.say)) { offBeat++; observe(s, false, 'off_beat'); continue }
       if (s.url) seenUrls.add(s.url)
       seenTitles.add(titleNorm)
-      observe(s, true)
+      candidates.push({ s, titleNorm })
+    }
+
+    // Pass 2: the model. This lane had none — it was the only path into
+    // content_ideas with nothing but a regex between the source and the table,
+    // and that regex ends on `return !OFF_BEAT.test(headline)`, so a story it
+    // had no word for was admitted rather than judged. That is how a Bloomberg
+    // bond-yields video interview reached Krish's triage queue while `finance`
+    // had been a muted vertical in this very classifier since 2026-06-17.
+    //
+    // Fail-open, on purpose and at three levels: no key, a thrown call, or a
+    // chunk error inside classifyRelevance all end with the story kept. The
+    // Feed is the corpus the synthesis engine reads across, and a quiet empty
+    // day would cost more than a dull row. Every one of those cases is counted
+    // and returned, so an unjudged run reads as unjudged instead of as clean.
+    const verdicts = new Map<string, RelevanceVerdict>()
+    let classified = 0
+    let classifierNote: string | null = null
+    if (candidates.length) {
+      if (!process.env.ANTHROPIC_API_KEY) {
+        classifierNote = 'ANTHROPIC_API_KEY not configured: every story kept unjudged'
+      } else {
+        try {
+          const vs = await classifyRelevance(
+            candidates.map((c, i) => ({ id: String(i), title: c.s.headline, text: c.s.say })),
+            { apiKey: process.env.ANTHROPIC_API_KEY, surface: 'content', agent: 'feed-ingest' },
+          )
+          for (const v of vs) verdicts.set(v.id, v)
+          classified = vs.length
+        } catch (e: any) {
+          classifierNote = `classifier failed, every story kept: ${String(e?.message || e).slice(0, 160)}`
+        }
+      }
+    }
+
+    // Matches the ingest gate in content-ideas.ts rather than inventing a
+    // second threshold for the same judgment.
+    const DROP_CONFIDENCE = 0.85
+    const refused: Record<string, number> = {}
+    let dullButKept = 0
+    for (const [i, c] of candidates.entries()) {
+      const v = verdicts.get(String(i))
+      if (v && (v.verdict === 'off_vertical' || v.verdict === 'too_technical') && v.confidence >= DROP_CONFIDENCE) {
+        refused[v.verdict] = (refused[v.verdict] || 0) + 1
+        observe(c.s, false, v.verdict)
+        continue
+      }
+      // Recorded, never enforced. See the Verdict doc comment in _relevance.ts:
+      // an item that is dull alone is often a thread in a synthesis, so this
+      // number gets watched before it is allowed to delete anything.
+      if (v?.verdict === 'not_interesting') dullButKept++
+      observe(c.s, true)
       rows.push({
-        idea: s.headline,
-        thesis: s.say,
+        idea: c.s.headline,
+        thesis: c.s.say,
         source_type: 'pool_headline',
-        source_ref: `pool:${s.day}`,
-        source_url: s.url,
-        source_snippet: s.say,
-        source_captured_at: `${s.day}T12:00:00Z`,
+        source_ref: `pool:${c.s.day}`,
+        source_url: c.s.url,
+        source_snippet: c.s.say,
+        source_captured_at: `${c.s.day}T12:00:00Z`,
         state: 'seeded',
         origin: 'agent',
         horizon: 'news',
         expires_at: expiresAt,
-        title_norm: titleNorm,
-        meta: { pool: { day: s.day, category: s.category, source: s.source, source_count: s.sourceCount, source_urls: s.sourceUrls } },
+        title_norm: c.titleNorm,
+        meta: {
+          pool: { day: c.s.day, category: c.s.category, source: c.s.source, source_count: c.s.sourceCount, source_urls: c.s.sourceUrls },
+          ...(v ? { relevance: { verdict: v.verdict, confidence: v.confidence, rationale: v.rationale } } : {}),
+        },
       })
     }
 
@@ -160,6 +217,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.json({
       ok: true, days, fetched: stories.length, inserted, off_beat: offBeat,
+      classified, refused, dull_but_kept: dullButKept,
+      ...(classifierNote ? { classifier_note: classifierNote } : {}),
       observed: archive.attempted, recorded: archive.written,
       ...(archive.ok ? {} : { observation_error: archive.reason }),
     })
