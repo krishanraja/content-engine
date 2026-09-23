@@ -81,7 +81,8 @@
     "ending_strength": 0.78,
     "cold_open_max_ms": 5500,
     "long_video_ms": 30000,
-    "minimum_segment_ms": 500
+    "minimum_segment_ms": 500,
+    "promise_match_min_terms": 1
   },
   "runtime": {
     "drive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",

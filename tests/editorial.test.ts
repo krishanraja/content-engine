@@ -1,5 +1,5 @@
 import { CandidateV1Schema, JobManifestV1Schema, StageNameSchema } from '@mindmake/contracts'
-import { applyPresenterIdentityCorrections, BUILT_WITH_AI_EDITORIAL_RULE_ID, captionTreatmentIssues, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
+import { applyPresenterIdentityCorrections, BUILT_WITH_AI_EDITORIAL_RULE_ID, captionTreatmentIssues, OPENING_POSITION_UNSTATED, OPENING_PROMISE_MISSED, OPENING_PROMISE_UNCHECKED, OPENING_STANDING_UNSTATED, openingContractIssues, promiseMatchTerms, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
 import { describe, expect, it } from 'vitest'
 
 const thresholds: EditorialThresholds = {
@@ -212,7 +212,7 @@ describe('editorial judgement gates', () => {
     }
     const cleanClaim = { text: 'The workflow reduces handoff time.', kind: 'fact' as const, evidence_urls: ['https://example.com/workflow'], verification: 'verified' as const }
     const built = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined, transcript: 'This is insane. Follow me for more. What do you think?', claims: [] })
-    expect(validateShortNativeEditorialCandidate(built, thresholds, 'Krish', [preference]).soft_blocks).toEqual([])
+    expect(validateShortNativeEditorialCandidate(built, thresholds, 'Krish', [preference]).soft_blocks).toEqual([OPENING_PROMISE_UNCHECKED, OPENING_STANDING_UNSTATED])
 
     const money = CandidateV1Schema.parse({ ...built, series: 'money_of_ai' })
     expect(validateShortNativeEditorialCandidate(money, thresholds, 'Krish', [preference]).soft_blocks).toEqual(expect.arrayContaining([
@@ -223,7 +223,7 @@ describe('editorial judgement gates', () => {
     ]))
 
     const cleanMoney = CandidateV1Schema.parse({ ...money, transcript: 'Here is the source. It shows the workflow reduces handoff time.', hook: 'Here is the source.', payoff: 'The workflow reduces handoff time.', claims: [cleanClaim] })
-    expect(validateShortNativeEditorialCandidate(cleanMoney, thresholds, 'Krish', [preference]).soft_blocks).toEqual([])
+    expect(validateShortNativeEditorialCandidate(cleanMoney, thresholds, 'Krish', [preference]).soft_blocks).toEqual([OPENING_PROMISE_UNCHECKED, OPENING_STANDING_UNSTATED])
   })
 
   it('adapts the Built With AI proof requirement to the canonical format', () => {
@@ -237,12 +237,43 @@ describe('editorial judgement gates', () => {
       approved_by: 'Krish', approved_at: '2026-09-08T12:00:00.000Z',
     }
     const humanLed = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined, editorial_format: 'third_why', source_refs: [], claims: [], scores: { truth: 0.9, evidence: 0.5, clarity: 0.9, tension: 0.8, payoff: 0.9, visual_proof: 0.5, qualified_fit: 0.9, novelty: 0.8 } })
-    expect(validateShortNativeEditorialCandidate(humanLed, thresholds, 'Krish', [preference]).soft_blocks).toEqual([])
+    expect(validateShortNativeEditorialCandidate(humanLed, thresholds, 'Krish', [preference]).soft_blocks).toEqual([OPENING_PROMISE_UNCHECKED])
 
     const build = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined, editorial_format: 'build_itself', source_refs: [], claims: [], scores: { truth: 0.9, evidence: 0.8, clarity: 0.9, tension: 0.8, payoff: 0.9, visual_proof: 0.5, qualified_fit: 0.9, novelty: 0.8 } })
     expect(validateShortNativeEditorialCandidate(build, thresholds, 'Krish', [preference]).soft_blocks).toEqual(expect.arrayContaining([
       'build_itself requires a more concrete build or artifact proof plan',
       'build_itself requires a concrete build, artifact, or recorded source reference',
     ]))
+  })
+  it('requires the opening sentence to confirm the approved promise', () => {
+    const base = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined })
+    const matched = validateShortNativeEditorialCandidate(base, thresholds, 'Krish', [], { approved_title: 'Why the workflow beats the model' })
+    expect(matched.soft_blocks).not.toContain(OPENING_PROMISE_MISSED)
+    expect(matched.soft_blocks).not.toContain(OPENING_PROMISE_UNCHECKED)
+    expect(promiseMatchTerms('Why the workflow beats the model', base.transcript)).toEqual(expect.arrayContaining(['workflow', 'model']))
+
+    const missed = validateShortNativeEditorialCandidate(base, thresholds, 'Krish', [], { approved_title: 'Inside the Brisbane warehouse robotics retrofit' })
+    expect(missed.soft_blocks).toContain(OPENING_PROMISE_MISSED)
+    expect(missed.hard_blocks).not.toContain(OPENING_PROMISE_MISSED)
+  })
+
+  it('blocks an extracted candidate whose opening abandons the approved promise', () => {
+    const wandered = validateEditorialCandidate(candidate(), transcript(), job(), thresholds, [], { approved_title: 'Inside the Brisbane warehouse robotics retrofit' })
+    expect(wandered.hard_blocks).toContain(OPENING_PROMISE_MISSED)
+    const confirmed = validateEditorialCandidate(candidate(), transcript(), job(), thresholds, [], { approved_title: 'Why the workflow beats the model' })
+    expect(confirmed.hard_blocks).not.toContain(OPENING_PROMISE_MISSED)
+  })
+
+  it('reports an opening that states no standing and a long story with no position marker', () => {
+    const impersonal = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined, transcript: 'The workflow is the useful part. The handoff gets faster.' })
+    expect(openingContractIssues(impersonal, thresholds).soft_blocks).toContain(OPENING_STANDING_UNSTATED)
+    const personal = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined })
+    expect(openingContractIssues(personal, thresholds).soft_blocks).not.toContain(OPENING_STANDING_UNSTATED)
+
+    const words = Array.from({ length: 120 }, () => 'workflow').join(' ')
+    const long = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined, transcript: `I built this. ${words}.` })
+    expect(openingContractIssues(long, thresholds).soft_blocks).toContain(OPENING_POSITION_UNSTATED)
+    const staged = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined, transcript: `I built this. There are three things it changed. ${words}.` })
+    expect(openingContractIssues(staged, thresholds).soft_blocks).not.toContain(OPENING_POSITION_UNSTATED)
   })
 })

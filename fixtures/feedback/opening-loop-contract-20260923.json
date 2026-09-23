@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "feedback_id": "feedback-opening-loop-contract-20260923-01",
+  "recorded_at": "2026-09-23T00:00:00.000Z",
+  "owner": "Krish",
+  "decision": "confirmed",
+  "scope": {
+    "level": "publication_formats",
+    "series": ["money_of_ai", "built_with_ai"],
+    "stations": ["script", "candidates", "visual_plan"]
+  },
+  "reference": {
+    "reference_id": "newsletter-three-components-of-a-hook-20260923",
+    "title": "The 3 Components of A Great YouTube Hook",
+    "rights_role": "analysis_only",
+    "source_hash": "508928c76f1733da1201a232f8cf7e5a7455858ccc144240973b3ab76f498f8f",
+    "prohibited_uses": [
+      "Do not republish or quote the reference in any public artifact.",
+      "Do not reproduce its structure as a template or cite it as evidence inside a Short or carousel."
+    ]
+  },
+  "confirmed_inference": "Packaging opens a loop that the opening closes, so the opening owes the viewer three things: it confirms the promise the packaging made, it makes the narrator's standing visible, and it leaves a question the rest of the story answers. Enforce the first deterministically against the approved brief title, the third structurally against the beat graph, and report the second for human review rather than guessing at it.",
+  "confirmation_excerpt": "ok do this all and merge to main",
+  "capture_boundary": "This record captures Krish's approval of the decomposition proposed in docs/OPENING_LOOP_CALIBRATION.md. It does not adopt the reference's thirty-second intro budget, which belongs to long-form YouTube, and it does not widen the existing allowance for human-led openings."
+}
