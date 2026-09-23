@@ -52,6 +52,26 @@ function plan(overrides: Record<string, unknown> = {}): VisualNarrativePlanV1 {
   })
 }
 
+/** The shape a production plan actually has: a hook that leaves a question open and a payoff that answers it. */
+function loopedPlan(overrides: Record<string, unknown> = {}): VisualNarrativePlanV1 {
+  const base = plan()
+  const shot = base.shot_directives[0]!
+  const span = (id: string, start: number, end: number) => ({
+    ...shot, shot_id: `shot-${id}`, beat_id: `beat-${id}`, start_ms: start, end_ms: end, source_start_ms: start, source_end_ms: end,
+    camera_plan: { ...shot.camera_plan, camera_plan_id: `camera-${id}`, start_ms: start, end_ms: end, keyframes: [{ at_ms: start, crop: { x: 0, y: 0, width: 1, height: 1 }, zoom: 1, rotation_degrees: 0, confidence: 1 }] },
+  })
+  return VisualNarrativePlanV1Schema.parse({
+    ...base,
+    beats: [
+      { ...base.beats[0]!, beat_id: 'beat-hook', start_ms: 0, end_ms: 6_000, source_spans: [{ source_id: 'camera-main', start_ms: 0, end_ms: 6_000 }], narrative_function: 'hook', viewer_task: 'feel_stakes', emotional_function: 'curiosity', transcript: 'The number everyone quotes is the wrong one.', rationale: 'Confirm the promise and leave the real number unsaid.', opens_question: true },
+      { ...base.beats[0]!, beat_id: 'beat-payoff', start_ms: 6_000, end_ms: 20_000, source_spans: [{ source_id: 'camera-main', start_ms: 6_000, end_ms: 20_000 }], answers_beat_id: 'beat-hook' },
+    ],
+    shot_directives: [span('hook', 0, 6_000), span('payoff', 6_000, 20_000)],
+    strategy_summary: 'A hook that withholds the real number and a payoff that supplies it.',
+    ...overrides,
+  })
+}
+
 describe('visual narrative planning gates', () => {
   it('accepts a bound, conservative plan and requires review artifacts for a new treatment', async () => {
     const registryPath = resolve('config/techniques.json')
@@ -252,5 +272,16 @@ describe('visual narrative planning gates', () => {
     const approvedInvention = { ...invention, invention: { ...invention.invention!, approval_state: 'approved' as const, approved_by: 'Krish' as const, approval_ref: 'studio-user-confirmation:codex:invention:trace-invention' } }
     const wrongLane = reviewVisualPlan({ plan: plan({ device_selection_traces: [approvedInvention] }), analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H, production: true })
     expect(wrongLane.review.hard_blocks).toContain('invented devices require the experimental treatment lane')
+  })
+  it('reviews a two-beat plan that keeps a question open past the hook', async () => {
+    const registry = await loadTechniqueRegistry(resolve('config/techniques.json'))
+    const reviewed = reviewVisualPlan({ plan: loopedPlan(), analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H })
+    expect(reviewed.review.hard_blocks).toEqual([])
+
+    const unlooped = loopedPlan()
+    expect(() => VisualNarrativePlanV1Schema.parse({
+      ...unlooped,
+      beats: unlooped.beats.map(({ opens_question, answers_beat_id, ...beat }) => beat),
+    })).toThrow('the hook must leave a question open that a later beat answers')
   })
 })

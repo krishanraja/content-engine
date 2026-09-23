@@ -14,6 +14,8 @@ export interface EditorialThresholds {
   cold_open_max_ms: number
   long_video_ms: number
   minimum_segment_ms: number
+  /** Content terms the opening sentence must share with the approved brief title. Absent means one. */
+  promise_match_min_terms?: number
 }
 
 export interface EditorialValidation {
@@ -64,6 +66,77 @@ export function editorialPreferenceIssues(candidate: CandidateV1, preferences: P
 }
 
 export const investigativeShortPreferenceIssues = editorialPreferenceIssues
+
+export interface OpeningContextV1 {
+  approved_title?: string
+}
+
+const PROMISE_STOPWORDS = new Set([
+  'the', 'and', 'for', 'with', 'that', 'this', 'from', 'into', 'your', 'you', 'our', 'was', 'were', 'are', 'has', 'have',
+  'had', 'but', 'not', 'how', 'why', 'what', 'when', 'who', 'its', 'his', 'her', 'their', 'they', 'them', 'than', 'then',
+  'about', 'after', 'before', 'over', 'under', 'just', 'can', 'will', 'would', 'could', 'should', 'does', 'did', 'been',
+])
+
+function promiseTerm(token: string): string {
+  return token.length > 3 && token.endsWith('s') && !token.endsWith('ss') ? token.slice(0, -1) : token
+}
+
+function promiseTerms(value: string): Set<string> {
+  const terms = value.split(/\s+/).map(normalizeSpokenToken).filter((token) => token.length > 2 && !PROMISE_STOPWORDS.has(token)).map(promiseTerm)
+  return new Set(terms)
+}
+
+/** The first spoken sentence, which is where the packaging promise has to be confirmed. */
+export function openingSentence(script: string): string {
+  const trimmed = script.trim()
+  const match = trimmed.match(/^[^.!?]*[.!?]?/)
+  return (match?.[0] || trimmed).trim()
+}
+
+/** Content terms shared by the approved title and the opening sentence. Reported so a reviewer can see the overlap, not only the verdict. */
+export function promiseMatchTerms(approvedTitle: string, script: string): string[] {
+  const opening = promiseTerms(openingSentence(script))
+  return [...promiseTerms(approvedTitle)].filter((term) => opening.has(term))
+}
+
+export const OPENING_PROMISE_UNCHECKED = 'promise match is unchecked: no approved brief title is bound to this job'
+export const OPENING_PROMISE_MISSED = 'the opening sentence does not name the subject of the approved title; the first thing the viewer hears must confirm the promise the packaging made'
+export const OPENING_STANDING_UNSTATED = "the opening does not state the narrator's relation to the claim; confirm the standing is visible on screen if it is not spoken"
+export const OPENING_POSITION_UNSTATED = 'nothing tells the viewer where they are in the story; past thirty seconds, name the stage or the count'
+
+const STANDING_MARKER = /\b(?:i|i'm|im|i've|ive|my|mine|we|we're|we've|our|us)\b/i
+const POSITION_COUNT = '\\d+|two|three|four|five|six|seven|eight|nine|ten'
+const POSITION_MARKER = new RegExp(`\\b(?:first|second|third|next|then|finally|last|by the end|step (?:${POSITION_COUNT})|(?:${POSITION_COUNT}) (?:things|steps|reasons|ways|rules|questions|mistakes|parts|lessons))\\b`, 'i')
+
+function estimatedDurationMs(candidate: CandidateV1): number {
+  if (candidate.edit_plan) return candidate.edit_plan.total_duration_ms
+  const words = candidate.transcript.split(/\s+/).filter(Boolean).length
+  return Math.round(words / 2.5 * 1000)
+}
+
+/**
+ * The opening contract: the first sentence confirms the promise the packaging made, makes the narrator's standing
+ * visible, and, past the long-video threshold, tells the viewer where they are. `promise_match` is the only one of the
+ * three with a deterministic verdict; the others report what a reviewer must look at.
+ */
+export function openingContractIssues(candidate: CandidateV1, thresholds: EditorialThresholds, context: OpeningContextV1 = {}, promiseMatchBlocks = false): { hard_blocks: string[]; soft_blocks: string[] } {
+  const hardBlocks: string[] = []
+  const softBlocks: string[] = []
+  const opening = openingSentence(candidate.transcript)
+
+  if (!context.approved_title) {
+    softBlocks.push(OPENING_PROMISE_UNCHECKED)
+  } else if (promiseMatchTerms(context.approved_title, candidate.transcript).length < (thresholds.promise_match_min_terms ?? 1)) {
+    const issue = OPENING_PROMISE_MISSED
+    if (promiseMatchBlocks) hardBlocks.push(issue)
+    else softBlocks.push(issue)
+  }
+
+  if (!STANDING_MARKER.test(opening)) softBlocks.push(OPENING_STANDING_UNSTATED)
+  if (estimatedDurationMs(candidate) > thresholds.long_video_ms && !POSITION_MARKER.test(candidate.transcript)) softBlocks.push(OPENING_POSITION_UNSTATED)
+
+  return { hard_blocks: hardBlocks, soft_blocks: softBlocks }
+}
 
 export function normalizeSpokenToken(value: string): string {
   return value.toLowerCase().replace(/[’]/g, "'").replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, '')
@@ -209,7 +282,7 @@ export function suggestCaptionTreatment(source: string): string {
   return /[.!?]$/.test(joined) ? joined : `${joined}.`
 }
 
-export function validateEditorialCandidate(candidate: CandidateV1, transcript: TranscriptDocument, job: JobManifestV1, thresholds: EditorialThresholds, preferences: PreferenceRuleV1[] = []): EditorialValidation {
+export function validateEditorialCandidate(candidate: CandidateV1, transcript: TranscriptDocument, job: JobManifestV1, thresholds: EditorialThresholds, preferences: PreferenceRuleV1[] = [], opening: OpeningContextV1 = {}): EditorialValidation {
   const hardBlocks: string[] = []
   const softBlocks: string[] = []
   if (candidate.job_id !== job.job_id || candidate.series !== job.series || candidate.mode !== job.mode) hardBlocks.push('candidate job, series, and mode must match the job manifest')
@@ -296,11 +369,14 @@ export function validateEditorialCandidate(candidate: CandidateV1, transcript: T
   const averageSegment = plan.total_duration_ms / plan.segments.length
   if (plan.structure === 'stitched' && averageSegment < 2500) softBlocks.push('average stitched section is under 2.5 seconds; check comprehension, jump cuts, and audio continuity')
   softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
+  const openingContract = openingContractIssues(candidate, thresholds, opening, true)
+  hardBlocks.push(...openingContract.hard_blocks)
+  softBlocks.push(...openingContract.soft_blocks)
 
   return { hard_blocks: [...new Set(hardBlocks)], soft_blocks: [...new Set(softBlocks)], ...fidelity }
 }
 
-export function validateShortNativeEditorialCandidate(candidate: CandidateV1, thresholds: EditorialThresholds, presenterName?: string, preferences: PreferenceRuleV1[] = []): { hard_blocks: string[]; soft_blocks: string[] } {
+export function validateShortNativeEditorialCandidate(candidate: CandidateV1, thresholds: EditorialThresholds, presenterName?: string, preferences: PreferenceRuleV1[] = [], opening: OpeningContextV1 = {}): { hard_blocks: string[]; soft_blocks: string[] } {
   const hardBlocks: string[] = []
   const softBlocks: string[] = []
   const editorial = candidate.editorial
@@ -327,5 +403,8 @@ export function validateShortNativeEditorialCandidate(candidate: CandidateV1, th
   if (presenterName?.toLowerCase() === 'krish' && /\bchris\b/i.test(`${candidate.transcript} ${candidate.hook} ${candidate.payoff}`) && !declaredNonPresenterChris) hardBlocks.push('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
   if (candidate.transcript.split(/\s+/).length > 180) softBlocks.push('short-native script may exceed the intended short-form duration; verify delivery time before recording')
   softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
+  const openingContract = openingContractIssues(candidate, thresholds, opening, false)
+  hardBlocks.push(...openingContract.hard_blocks)
+  softBlocks.push(...openingContract.soft_blocks)
   return { hard_blocks: [...new Set(hardBlocks)], soft_blocks: [...new Set(softBlocks)] }
 }

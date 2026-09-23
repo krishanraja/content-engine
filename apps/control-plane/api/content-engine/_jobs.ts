@@ -43,6 +43,9 @@ export const JOBS: Readonly<Record<string, JobEntry>> = Object.freeze({
   learning_compile: { path: '/api/learning/compile', safety: 'replayable', note: 'Proposes; it never writes config.' },
   runner_watch: { path: '/api/video-studio/runner/watch', safety: 'replayable', note: 'Read-only over heartbeats and queues.' },
   aeo_ingest: { path: '/api/aeo/ingest', safety: 'manual_only', note: 'Spends roughly $0.70 of probe budget per run and has no schedule.' },
+  trend_entities: { path: '/api/trends/entities', safety: 'replayable', note: 'Tags only observations with no alias extraction yet; a second run finds none.' },
+  claims_resolve: { path: '/api/claims/resolve', safety: 'replayable', note: 'Notices due falsifiers; one came_due row per claim, so a replay writes nothing twice. It never rules.' },
+  trend_metrics: { path: '/api/trends/metrics', safety: 'replayable', note: 'Appends a fresh snapshot beside the old one rather than replacing it, which is the point: a moved number stays attributable.' },
   purge: { path: '/api/purge/run', safety: 'manual_only', note: 'Hard-deletes. To undo a purge use POST /api/purge/restore, never a second run.' },
 })
 

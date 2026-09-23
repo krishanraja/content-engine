@@ -290,8 +290,8 @@ function stitchedFixture(): ValidateRenderLineageV2Input {
     ...input.visualPlanArtifact.payload,
     duration_ms: 3_500,
     beats: [
-      { beat_id: 'beat-opening', start_ms: 0, end_ms: 1_500, transcript: firstText, source_spans: [{ source_id: 'camera-main', start_ms: 500, end_ms: 2_000 }], claim_ids: [], narrative_function: 'hook', viewer_task: 'connect_with_speaker', emotional_function: 'curiosity', visual_density: 'low', proof_dependency: false, primary_attention_target: { kind: 'presenter' }, rationale: 'Open directly on the operating priority with Krish.' },
-      { beat_id: 'beat-ending', start_ms: 1_500, end_ms: 3_500, transcript: secondText, source_spans: [{ source_id: 'camera-main', start_ms: 2_500, end_ms: 4_500 }], claim_ids: [], narrative_function: 'ending', viewer_task: 'land_payoff', emotional_function: 'trust', visual_density: 'low', proof_dependency: false, primary_attention_target: { kind: 'presenter' }, rationale: 'Land the specific model-purchasing consequence clearly.' },
+      { beat_id: 'beat-opening', start_ms: 0, end_ms: 1_500, transcript: firstText, source_spans: [{ source_id: 'camera-main', start_ms: 500, end_ms: 2_000 }], claim_ids: [], narrative_function: 'hook', viewer_task: 'connect_with_speaker', emotional_function: 'curiosity', visual_density: 'low', proof_dependency: false, primary_attention_target: { kind: 'presenter' }, rationale: 'Open directly on the operating priority with Krish.', opens_question: true },
+      { beat_id: 'beat-ending', start_ms: 1_500, end_ms: 3_500, transcript: secondText, source_spans: [{ source_id: 'camera-main', start_ms: 2_500, end_ms: 4_500 }], claim_ids: [], narrative_function: 'ending', viewer_task: 'land_payoff', emotional_function: 'trust', visual_density: 'low', proof_dependency: false, primary_attention_target: { kind: 'presenter' }, rationale: 'Land the specific model-purchasing consequence clearly.', answers_beat_id: 'beat-opening' },
     ],
     shot_directives: [firstShot, secondShot],
   })

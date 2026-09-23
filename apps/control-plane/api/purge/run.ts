@@ -4,6 +4,7 @@ import { supabase } from '../_supabase.js'
 import { exportBeforeDelete } from './_archive.js'
 import { isoWeekLabel, queueWindowStart } from '../_weeks.js'
 import { withContentRun } from '../_runs.js'
+import { recordObservations, type ObservationInput, type ObservationOrigin } from '../_observations.js'
 
 // The Monday purge (Content Engine v2, spec §4). Mon 14:00 UTC, after send.
 //
@@ -22,6 +23,66 @@ import { withContentRun } from '../_runs.js'
 // see the notes at each. Purge stats go to audit_log so it is observable.
 //
 //   GET (CRON_SECRET) — Mon 14:00 UTC   ·   POST — manual
+//
+// ── The observation record, wired in 2026-09-22 ──────────────────────────
+//
+// R10 is a rule about the DESK, and it is a good one. It became a rule about
+// the whole system only because the desk was the only copy. The JSON export
+// below has faithfully copied every purged row to a private bucket since it
+// was added, and in all that time nothing has ever read one: a bucket of
+// timestamped JSON blobs is a restore path, not a queryable record, and no
+// trend question can be asked of it.
+//
+// So before the delete, every doomed row is now also written to
+// trend_observations as a dated, queryable, permanently kept observation
+// marked purged_unused. "This story reached us on the 4th, nobody wrote about
+// it, and it came back on the 19th" is the shape of the question this makes
+// answerable, and it was unanswerable by construction until now.
+//
+// The export's rule extends to it: if the observation write fails, NOTHING is
+// deleted. A week of un-purged rows is untidy. A week of rows deleted without
+// a record is the failure both of these exist to prevent, and the two are not
+// close in cost.
+
+// Where a content_ideas row originally came from, in the observation record's
+// vocabulary. Unknown source types fall back to 'purge' rather than being
+// guessed at: an honest "arrived via the purge, provenance unrecorded" beats a
+// wrong provenance that a trend query would silently count.
+const ORIGIN_BY_SOURCE_TYPE: Record<string, ObservationOrigin> = {
+  pool_headline: 'pool_headline',
+  inspiration_sweep: 'newsletter',
+  newsletter: 'newsletter',
+  lens_radar: 'exa_lens',
+  creator_post: 'creator',
+  creator: 'creator',
+  build_signal: 'build_signal',
+  zara_signal: 'zara',
+  investigation: 'investigation',
+}
+
+/** A doomed content_ideas row as a permanent observation. The whole row goes
+ *  into raw, so a column this mapping does not know about is still kept. */
+function toObservation(row: Record<string, unknown>): ObservationInput {
+  const str = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : null)
+  const sourceType = str(row.source_type) || ''
+  // When we saw it, preferring the source's own capture stamp over the row's
+  // creation time, and never today: a row purged in September that arrived in
+  // July belongs on the July day or the volume series is nonsense.
+  const capturedAt = str(row.source_captured_at) || str(row.created_at)
+  return {
+    observedOn: capturedAt ? capturedAt.slice(0, 10) : undefined,
+    origin: ORIGIN_BY_SOURCE_TYPE[sourceType] ?? 'purge',
+    collector: 'purge/run',
+    title: str(row.idea) || str(row.title_norm) || 'untitled',
+    snippet: str(row.thesis) || str(row.source_snippet),
+    url: str(row.source_url),
+    publishedAt: str(row.source_captured_at),
+    storyKey: str(row.story_key),
+    surfaced: false,
+    dropReason: 'purged_unused',
+    raw: { content_idea: row },
+  }
+}
 
 async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Cache-Control', 'no-store')
@@ -50,6 +111,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
     let expired = 0
     let archived_to: string | null = null
+    let observations_recorded = 0
     if (toExpire) {
       // Export before deleting. This is the only hard delete in the engine and
       // it runs unattended every Monday, so "we purged the wrong thing" has
@@ -79,6 +141,22 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         })
       }
       archived_to = exported.key
+
+      // The queryable half of the copy. Same refusal as the export above: a
+      // row that could not be recorded is not deleted.
+      const archive = await recordObservations((doomed || []).map(toObservation))
+      if (!archive.ok) {
+        return res.status(200).json({
+          ok: false,
+          week,
+          error: 'purge_observation_failed',
+          reason: archive.reason,
+          expired: 0,
+          archived_to,
+          note: 'nothing was deleted: the engine will not hard-delete rows it could not record first',
+        })
+      }
+      observations_recorded = archive.written
 
       const { error: delErr, count } = await supabase
         .from('content_ideas')
@@ -169,7 +247,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       event_type: 'content_purge',
       actor: 'content-engine-v2',
       details: {
-        week, expired, archived_to,
+        week, expired, archived_to, observations_recorded,
         briefs_archived: (archived || []).map(a => a.week),
         decisions_swept: (sweptRows || []).length + (sweptPreviews || []).length,
         swept_by_kind: swept,
@@ -177,7 +255,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     })
 
     return res.json({
-      ok: true, week, expired, archived_to,
+      ok: true, week, expired, archived_to, observations_recorded,
       briefs_archived: (archived || []).length,
       decisions_swept: (sweptRows || []).length + (sweptPreviews || []).length,
       swept_by_kind: swept,
