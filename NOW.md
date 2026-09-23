@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Mindmake Video and Carousel Studio
 as_of: 2026-09-23
-head: 33fb5ec
+head: 242ac30
 lifecycle: building
 production_url: none
 state_doc: docs/CAROUSEL_ENGINE_STATE.md
