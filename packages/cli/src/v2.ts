@@ -143,6 +143,7 @@ import {
   windowsCredentialExists,
   transcribeMedia,
   type EditorialThresholds,
+  type OpeningContextV1,
   type NormalizedMediaSourceV2,
   type TranscriptDocument,
 } from '@mindmake/core'
@@ -639,6 +640,16 @@ async function assertCandidateIsCurrent(jobId: string, candidate: CandidateV1): 
   if (!current.some((item) => item.candidate_id === candidate.candidate_id && hashValue(item) === hashValue(candidate))) {
     throw new Error('candidate is not an exact member of the current candidates stage')
   }
+}
+
+/** The approved promise the opening has to confirm. Absent when no production brief is bound to the job. */
+async function approvedBriefTitle(jobId: string): Promise<OpeningContextV1> {
+  try {
+    const artifact = await readStageArtifactV2(jobId, 'brief')
+    const payload = artifact.payload as Record<string, unknown>
+    const brief = ProductionBriefV1Schema.safeParse(payload.production_brief || payload.brief)
+    return brief.success ? { approved_title: brief.data.content.title } : {}
+  } catch { return {} }
 }
 
 async function verifyEvidencePacketFiles(packet: EvidenceReviewPacketV2): Promise<void> {
@@ -1217,7 +1228,8 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           const formattedCandidate = productionBrief.success && productionBrief.data.editorial_format
             ? CandidateV1Schema.parse({ ...candidate, editorial_format: productionBrief.data.editorial_format })
             : candidate
-          return withEditorialValidation(formattedCandidate, validateShortNativeEditorialCandidate(formattedCandidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences), true)
+          const approvedTitle = productionBrief.success ? { approved_title: productionBrief.data.content.title } : {}
+          return withEditorialValidation(formattedCandidate, validateShortNativeEditorialCandidate(formattedCandidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences, approvedTitle), true)
         })
         const inputHash = await hashFile(options.input)
         const scriptArtifact = await completeStageV2(manifest.job_id, 'script', {
@@ -1235,9 +1247,10 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           const parsed = candidatesInPayload(raw)
           if (!parsed.length) throw new Error('candidate input contains no valid CandidateV1 objects')
           const compatibilityJob = candidateCompatibilityJob(manifest, transcriptArtifact.payload.source_id)
+          const openingContext = await approvedBriefTitle(manifest.job_id)
           candidates = parsed.map((candidate) => {
             if (candidate.job_id !== manifest.job_id || candidate.series !== manifest.series || candidate.mode !== manifest.mode) throw new Error('candidate job, series, and mode must match the job manifest')
-            return withEditorialValidation(candidate, validateEditorialCandidate(candidate, transcript, compatibilityJob, config.editorial_thresholds, config.active_preferences), false)
+            return withEditorialValidation(candidate, validateEditorialCandidate(candidate, transcript, compatibilityJob, config.editorial_thresholds, config.active_preferences, openingContext), false)
           })
           candidatesInputs = { transcript: transcriptArtifact.artifact_hash, candidate_file: await hashFile(options.input) }
           generator = 'codex-excerpt-editorial-v2'
@@ -2022,14 +2035,16 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         artifactHash = candidateSemanticHash(candidate)
         const config = await readJson<PinnedStudioConfigV2>(pinnedConfigPathV2(manifest))
         if (!config.editorial_thresholds) throw new Error('job-pinned configuration is missing editorial_thresholds')
+        const openingContext = await approvedBriefTitle(manifest.job_id)
         const independentEditorial = manifest.mode === 'short_native'
-          ? validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences)
+          ? validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences, openingContext)
           : validateEditorialCandidate(
               candidate,
               parseTranscriptDocument((await readStageArtifactV2<TranscriptStagePayloadV2>(manifest.job_id, 'transcript')).payload.transcript),
               candidateCompatibilityJob(manifest),
               config.editorial_thresholds,
               config.active_preferences,
+              openingContext,
             )
         const hardBlocks = [
           ...candidate.challenge.hard_blocks,

@@ -1,27 +1,85 @@
 {
   "schema_version": 1,
   "station_id": "script",
-  "station_version": 1,
+  "station_version": 2,
   "status": "active",
   "purpose": "Turn the approved brief into exact spoken wording without weakening truth or voice.",
   "instruction_path": ".agents/skills/mindmake-video/stations/script/STATION.md",
-  "implementation_owners": ["packages/core/src/editorial.ts"],
-  "contract_owners": ["packages/contracts/src/editorial-v1.ts"],
-  "prerequisites": { "extract": ["brief"], "solo": ["brief"], "short_native": ["brief"] },
-  "consumes": ["brief_artifact", "active_voice_rules"],
-  "produces": ["script_artifact"],
-  "approval_gate": null,
-  "hard_gates": ["Spoken wording must preserve truth, claim boundaries, confidentiality and canonical names."],
-  "soft_gates": ["The opening, mechanism, payoff and ending should be specific and speakable."],
-  "invalidates_on_change": {
-    "extract": ["recording_brief"],
-    "solo": ["recording_brief"],
-    "short_native": ["candidates", "claims", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  "implementation_owners": [
+    "packages/core/src/editorial.ts"
+  ],
+  "contract_owners": [
+    "packages/contracts/src/editorial-v1.ts"
+  ],
+  "prerequisites": {
+    "extract": [
+      "brief"
+    ],
+    "solo": [
+      "brief"
+    ],
+    "short_native": [
+      "brief"
+    ]
   },
-  "failure": { "behavior": "block", "fallback": "Return a concise diagnosis and a stronger source-grounded rewrite for editorial review." },
-  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "consumes": [
+    "brief_artifact",
+    "active_voice_rules"
+  ],
+  "produces": [
+    "script_artifact"
+  ],
+  "approval_gate": null,
+  "hard_gates": [
+    "Spoken wording must preserve truth, claim boundaries, confidentiality and canonical names."
+  ],
+  "soft_gates": [
+    "The opening, mechanism, payoff and ending should be specific and speakable.",
+    "The opening should confirm the approved promise, show why this narrator holds the claim, and leave a question open."
+  ],
+  "invalidates_on_change": {
+    "extract": [
+      "recording_brief"
+    ],
+    "solo": [
+      "recording_brief"
+    ],
+    "short_native": [
+      "candidates",
+      "claims",
+      "recording_brief",
+      "ingest",
+      "normalize",
+      "transcript",
+      "source_analysis",
+      "visual_plan",
+      "assets",
+      "styleframes",
+      "animatic",
+      "treatment",
+      "render",
+      "qa",
+      "package"
+    ]
+  },
+  "failure": {
+    "behavior": "block",
+    "fallback": "Return a concise diagnosis and a stronger source-grounded rewrite for editorial review."
+  },
+  "learning": {
+    "reads_active_preferences": true,
+    "emits_observations": true,
+    "may_activate_rules": false
+  },
   "validation": {
-    "test_paths": ["tests/editorial.test.ts", "tests/production-brief.test.ts"],
-    "regression_cases": ["A stronger hook cannot introduce an unsupported factual claim.", "Generic AI phrasing fails the voice and specificity quality bar."]
+    "test_paths": [
+      "tests/editorial.test.ts",
+      "tests/production-brief.test.ts"
+    ],
+    "regression_cases": [
+      "A stronger hook cannot introduce an unsupported factual claim.",
+      "Generic AI phrasing fails the voice and specificity quality bar.",
+      "A script whose first sentence names nothing from the approved title fails the opening contract downstream."
+    ]
   }
 }
