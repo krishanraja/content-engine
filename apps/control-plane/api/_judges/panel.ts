@@ -232,19 +232,39 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
   }
 
   const roster = rosterFor(input.gate)
-  const user = [
-    input.gate === 'idea' ? '## The idea' : '## The draft',
-    input.artifact,
-    '',
-    '## Context you may use',
-    input.context,
-  ].join('\n')
+
+  // ── THE FAN-OUT WAS PAYING FULL PRICE NINE TIMES ──────────────────────────
+  //
+  // Nine blinded judges read the SAME brief and the SAME artifact; only the
+  // rubric differs. Until 2026-09-24 the rubric went in `system` and the brief
+  // and artifact went in `user`, so the varying part was in the cacheable slot
+  // and the shared part was not. cacheableSystem also only fires above 6000
+  // characters and a rubric is about 1650, so in practice NOTHING was cached
+  // and the shared context was sent nine times at full rate, every idea.
+  //
+  // Caching is a prefix match rendered tools, then system, then messages, so
+  // the shared content has to come first to be cacheable at all. It does now:
+  //
+  //   systemStable  the brief, read by every judge of every idea in the sweep
+  //   system        this idea's artifact, read by the other eight judges
+  //   systemTail    the rubric, the only thing that varies, and still in the
+  //                 SYSTEM role: moving it to `user` would have bought the
+  //                 saving with a behaviour change.
+  //
+  // A 1h TTL because a sweep runs longer than the five minute default and an
+  // entry that expires mid-run is a second full-price write.
+  const brief = ['## Context you may use', input.context].join('\n')
+  const artifact = [input.gate === 'idea' ? '## The idea' : '## The draft', input.artifact].join('\n')
 
   const results = await Promise.all(roster.map(async judge => {
     try {
       const raw = await callClaude({
-        system: buildJudgePrompt(judge, input.gate),
-        user,
+        systemStable: brief,
+        system: artifact,
+        cache: true,
+        cacheTtl: '1h',
+        systemTail: buildJudgePrompt(judge, input.gate),
+        user: 'Judge it.',
         model: JUDGE_MODEL,
         maxTokens: 900,
         temperature: 0.2,

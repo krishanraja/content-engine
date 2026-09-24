@@ -346,6 +346,17 @@ export interface ClaudeOpts {
   /** Abort after this many ms. Omit for no deadline (batch/cron callers). */
   timeoutMs?: number
   system: string
+  /** The part of the prompt that does not change between calls, rendered
+   *  BEFORE `system` so a prefix cache can hold it across them. A fan-out that
+   *  shares a brief and varies one rubric belongs here. */
+  systemStable?: string
+  /** '1h' for a sweep, where the same brief is re-read for the length of the
+   *  run and the default five minutes would expire mid-way. */
+  cacheTtl?: '5m' | '1h'
+  /** Rendered last, in the system role, AFTER the final cache breakpoint. For
+   *  the part of the instruction that varies per call and must still carry
+   *  system weight. */
+  systemTail?: string
   /**
    * Cache the system prompt, for call sites that send the same one repeatedly.
    *
@@ -481,9 +492,44 @@ async function getAnthropicKey(): Promise<string | null> {
  * 1500 tokens, comfortably clear of the common 1024 floor, and below it the
  * request is small enough that caching it was never the saving anyway.
  */
+export function buildSystemBlocks(opts: Partial<ClaudeOpts>): unknown {
+  return cacheableSystem(opts as ClaudeOpts)
+}
+
 function cacheableSystem(opts: ClaudeOpts): unknown {
-  if (!opts.cache || !opts.system || opts.system.length < 6000) return opts.system
-  return [{ type: 'text', text: opts.system, cache_control: { type: 'ephemeral' } }]
+  // TWO BREAKPOINTS, when the caller has something stable to put in front.
+  //
+  // A fan-out of nine blinded judges sends the same voice block, canon and
+  // corpus nine times per idea, and the same voice block, canon and corpus on
+  // every idea in a sweep. One breakpoint would re-write the whole prefix per
+  // idea because the artifact inside it changes. Two splits the difference the
+  // way the traffic actually repeats:
+  //
+  //   block 1  the stable brief    written once, read by every judge of every
+  //                                idea for the life of the entry
+  //   block 2  this idea's artifact written once per idea, read by the other
+  //                                eight judges
+  //
+  // Caching is cumulative on the prefix, so block 2's entry is stable+artifact
+  // and clears the model's minimum even when the artifact alone would not.
+  const stable = opts.systemStable
+  if (opts.cache && stable && stable.length >= 6000) {
+    const ttl = opts.cacheTtl === '1h' ? { type: 'ephemeral', ttl: '1h' } : { type: 'ephemeral' }
+    // `systemTail` stays in the SYSTEM role and after the last breakpoint. A
+    // judge's rubric is its instruction and moving it to `user` to make room
+    // for the cache would have traded a cost saving for a behaviour change,
+    // which is the one thing this was not allowed to do.
+    return [
+      { type: 'text', text: stable, cache_control: ttl },
+      ...(opts.system ? [{ type: 'text', text: opts.system, cache_control: ttl }] : []),
+      ...(opts.systemTail ? [{ type: 'text', text: opts.systemTail }] : []),
+    ]
+  }
+  // The floor is a real constraint: a prefix under the model's minimum is
+  // silently not cached and nothing says so.
+  const joined = [stable, opts.system, opts.systemTail].filter(Boolean).join('\n\n')
+  if (!opts.cache || joined.length < 6000) return joined
+  return [{ type: 'text', text: joined, cache_control: { type: 'ephemeral' } }]
 }
 
 export async function callClaude(opts: ClaudeOpts): Promise<string> {
