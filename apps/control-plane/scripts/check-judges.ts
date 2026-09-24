@@ -470,6 +470,27 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
       'every sweep write must be conditional on it still running, or a cancel is silently undone by the tick already in flight')
   }
 
+  // ── THE LIVE BUDGET MUST LEAVE ROOM FOR ONE MORE IDEA ─────────────────────
+  //
+  // The deadline is checked at the TOP of each idea, so the real worst case is
+  // the budget PLUS one whole idea, and a repairable one (research, two
+  // rewrites, three panels) runs about a minute. With a 240s budget on a 300s
+  // function, ticks measured 242s, 299s and then one died outright: ideas kept
+  // being judged while `ticks` sat frozen, the run ledger went silent, and
+  // MAX_TICKS could never fire because the counter had stopped. A sweep that is
+  // working but cannot say so is the same failure as one that says so without
+  // working.
+  {
+    const budget = /const LIVE_TICK_MS = ([\d_]+)/.exec(sweep)
+    const ceiling = /export const config = \{ maxDuration: (\d+) \}/.exec(sweep)
+    assert.ok(budget && ceiling, 'the live budget and the function ceiling must both be stated in this file')
+    const budgetMs = Number(budget[1].replace(/_/g, ''))
+    const ceilingMs = Number(ceiling[1]) * 1000
+    // 90s of headroom: one worst-case idea plus the end-of-tick writes.
+    assert.ok(budgetMs + 90_000 <= ceilingMs,
+      `the live budget (${budgetMs}ms) plus one idea must fit inside maxDuration (${ceilingMs}ms), or the tick dies before it can record what it did`)
+  }
+
   // ── One batch may not park the whole backlog ──────────────────────────────
   //
   // The tick ceiling counts PRODUCTIVE ticks, so it cannot see a batch that

@@ -127,9 +127,26 @@ const BATCH_GIVE_UP_MIN = 360
  * research plus two rewrites plus three panels. A fixed count either wastes
  * most of the budget or overruns it.
  *
- * Overrunning is cheap here — every reply is cached the moment it arrives and
- * an idea commits only when its walk completes — so this protects the ledger
- * row, not the work.
+ * Overrunning loses the BOOKKEEPING, which is the part I got wrong first time.
+ *
+ * The work is genuinely safe: every reply is cached as it arrives and an idea
+ * commits when its own walk completes, so a killed tick loses nothing and
+ * re-buys nothing. What it does lose is the write at the end of the tick — the
+ * sweep row and the run-ledger row. Measured 2026-09-24 with this at 240s
+ * against a 300s function: ticks ran 242s, 299s, 268s, and then one died
+ * outright. Ideas kept being judged while `ticks` sat frozen at 6, the ledger
+ * went silent, and MAX_TICKS could never fire because the counter had stopped.
+ * A sweep that is working but cannot say so is the same failure as one that
+ * says so without working.
+ *
+ * The deadline is checked at the TOP of each idea, so the true worst case is
+ * this budget PLUS one whole idea, and a repairable one with research, two
+ * rewrites and three panels runs about a minute. 240 + 60 is exactly the 300
+ * that was killing it.
+ *
+ * So the function gets 600s in vercel.json and this stays at 240s: worst case
+ * 300s, half the ceiling, and still inside the 600s cron interval so two ticks
+ * cannot overlap. Raise this and the headroom goes with it.
  */
 const LIVE_TICK_MS = 240_000
 
@@ -467,4 +484,4 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 export default withContentRun('judge_sweep', handler)
-export const config = { maxDuration: 300 }
+export const config = { maxDuration: 600 }

@@ -110,7 +110,7 @@
       "maxDuration": 120
     },
     "api/judge/sweep.ts": {
-      "maxDuration": 300
+      "maxDuration": 600
     },
     "api/judge/ladder.ts": {
       "maxDuration": 300
