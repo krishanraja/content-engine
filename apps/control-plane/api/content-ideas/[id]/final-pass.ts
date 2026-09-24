@@ -59,7 +59,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const [voice, corpus] = await Promise.all([loadVoiceBlock(), loadCorpus()])
   const channelCorpus = corpusForChannel(corpus, rubric.corpusChannel)
-  const materialsBlock = materials.length ? `\n${materialsContext(materials)}` : ''
+  // The final pass verifies claims against these, so it reads more of each
+  // source than a writer does. At the writer's allowance the oldest research
+  // was cut to "[trimmed]" and the pass asked to verify figures that were on
+  // file (walk finding F5, 2026-09-24).
+  const materialsBlock = materials.length ? `\n${materialsContext(materials, 4000, 16000)}` : ''
 
   // Deterministic em-dash sanitize first, so the model never wastes an autofix on
   // it and the diff Krish reviews is the same text that will ship.
@@ -75,7 +79,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   let result
   try {
-    const txt = await callClaude({ agent: 'cleo-final-pass', cache: true, system, user, maxTokens: 3200, temperature: 0.3 })
+    // The result echoes the whole cleaned draft inside its JSON, so a 900-word
+    // piece plus its suggestions ran past 3,200 tokens and the JSON was cut off
+    // mid-object: two of five walk runs returned 502 and lost their spend
+    // (walk finding F6). 6,000 leaves room for a long piece.
+    const txt = await callClaude({ agent: 'cleo-final-pass', cache: true, system, user, maxTokens: 6000, temperature: 0.3 })
     const parsed = robustJson(txt)
     if (!parsed) return res.status(502).json({ ok: false, error: 'could not parse final pass result' })
     result = normalizePass(parsed)
