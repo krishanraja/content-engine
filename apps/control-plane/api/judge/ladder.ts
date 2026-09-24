@@ -532,6 +532,46 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         })
       }
 
+      // ── NOTHING IS BURIED ON ONE READING ─────────────────────────────────
+      //
+      // Measured over three passes of the same ten ideas, same code, same
+      // input: 7 of 10 scored identically every time, but one idea Krish had
+      // graded 7 came out 4, 6, 6 — so one run in three would have buried work
+      // he rated well. The cause was a single judge (`novelty`) scoring the
+      // same unchanged text 3, 6, 6 while every other judge held steady. One
+      // rubric's wobble moved the median one step and across the bury line.
+      //
+      // Burying is the only thing this route does that Krish never sees, so it
+      // is the only place that noise is expensive. A second blind panel on the
+      // same wording turns a one-in-three wrong bury into roughly one in nine,
+      // and it costs a panel only on pieces already headed for the archive.
+      //
+      // Keep the better of the two readings, consistent with the repair rule
+      // above: the question is whether the piece is genuinely weak, and two
+      // disagreeing panels are not evidence that it is.
+      let confirmation: Record<string, unknown> | null = null
+      if (s.band === 'weak') {
+        const second = await runPanel({
+          gate: 'idea', subjectTable: 'content_ideas', subjectId: idea.id,
+          artifact: artifactOf(current),
+          context: judgeContext,
+          deterministic: deterministicFindings({ text: artifactOf(current), minChars: 80, checkVoice: true }),
+          shortCircuitOnKill: true, idempotencyKey: randomUUID(),
+        })
+        const confirmId = dryRun ? null : await persistPanel(idea.id, second)
+        if (confirmId) panelRunId = confirmId
+        const c = standing(second.verdicts)
+        confirmation = {
+          first: { score: s.score, weakest: s.weakest, band: s.band },
+          second: { score: c.score, weakest: c.weakest, band: c.band },
+          agreed: c.band === 'weak',
+          panel_run_id: confirmId,
+        }
+        // A disagreement is the useful row: it names a rubric that is not
+        // repeatable, which is what the weekly compiler is for.
+        if (c.band !== 'weak') s = c
+      }
+
       const router = await route({ ...idea, ...current }, mandates)
       const ladder = {
         artifact_hash: artifactHash(artifactOf(current)),
@@ -544,6 +584,10 @@ async function handler(req: VercelRequest, res: VercelResponse) {
               known: expansion.known.length, inferred: expansion.inferred.length }
           : { failed: expansion.why_not },
         attempts,
+        // Present only when the piece reached the weak band, so its absence on
+        // a row means the question never arose rather than that the check was
+        // skipped.
+        ...(confirmation ? { bury_confirmation: confirmation } : {}),
         panel_run_id: panelRunId,
         router: router ? { fits: router.fits, winner: router.winner, contested: router.contested, why: router.why } : null,
         // Recorded, never enforced: the router names its pick and a human pick
@@ -567,7 +611,10 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         // "evidence scored 4" when 4 is the median and evidence scored 2 would
         // be a small lie in the one place Krish reads to overturn a bury.
         patch.buried_reason =
-          `ladder: panel median ${s.score ?? 'n/a'}, weakest ${s.weakest || 'panel'}, after ${attempts.length} attempt(s)`
+          `ladder: panel median ${s.score ?? 'n/a'}, weakest ${s.weakest || 'panel'}, after ${attempts.length} attempt(s)` +
+          // Says the second panel agreed, so a bury Krish is reading can be
+          // told apart from one taken on a single reading.
+          `, confirmed by a second panel`
         buried++
       } else if (s.band === 'ready') ready++
       else escalated++
@@ -595,6 +642,10 @@ async function handler(req: VercelRequest, res: VercelResponse) {
           researched: a.researched, sources: a.sources, briefed: a.brief.length,
         })),
         spread: panel.spread, dissent: panel.dissent,
+        // Surfaced, not merely stored — the lesson from `researched`, which was
+        // recorded on every attempt and left out of the response, and so read
+        // as never having happened.
+        bury_confirmation: confirmation,
         scores: Object.fromEntries(panel.verdicts.filter(v => !v.deterministic).map(v => [v.judge, v.score])),
         router: ladder.router, router_disagrees: ladder.router_disagrees,
       })

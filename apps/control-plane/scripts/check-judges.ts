@@ -118,9 +118,19 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   const buryAt = ladder.indexOf('buried_at = ')
   const buryPatch = ladder.indexOf('patch.buried_at')
   assert.ok(buryPatch > 0, 'the ladder must bury through buried_at')
-  const weakBranch = ladder.indexOf("if (s.band === 'weak')")
+  // lastIndexOf, because there are now TWO weak branches: the confirming panel
+  // below runs on the first one and the bury happens in the second. indexOf
+  // found the confirmation branch and failed this assertion on correct code —
+  // the exact "a probe that indicts working code" failure the desk probe's
+  // header warns about, arriving here instead.
+  const weakBranch = ladder.lastIndexOf("if (s.band === 'weak')")
   assert.ok(weakBranch > 0 && buryPatch > weakBranch && buryPatch - weakBranch < 400,
     'the only bury must sit inside the weak branch, never in the escalate band')
+  // And the earlier weak branch must not bury: it is the confirmation, and a
+  // bury there would be the single reading this whole check exists to stop.
+  const firstWeak = ladder.indexOf("if (s.band === 'weak')")
+  assert.ok(ladder.slice(firstWeak, weakBranch).indexOf('buried_at') === -1,
+    'the confirming branch must not bury: that would be the one-reading bury it exists to prevent')
   assert.doesNotMatch(ladder, /'repairable'[^\n]*buried|buried[^\n]*'repairable'/,
     'nothing may bury a piece in the band Krish reserved')
 
@@ -203,6 +213,33 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // looking like refusals with nothing to work from. A field you cannot read
   // is a field that was never set, as far as anyone measuring is concerned.
   const projection = ladder.slice(ladder.indexOf('attempts: attempts.map('), ladder.indexOf('attempts: attempts.map(') + 500)
+  // ── Nothing is buried on one reading ──────────────────────────────────────
+  //
+  // Measured over three passes of the same ten ideas: 7 of 10 scored
+  // identically every time, but one Krish had graded 7 came out 4, 6, 6 — one
+  // run in three would have buried it, on a single judge scoring the same
+  // unchanged text 3, 6, 6 while every other judge held steady. Burying is the
+  // only thing this route does that he never sees, so it is the only place
+  // that noise is expensive.
+  //
+  // Ruling (Krish, 2026-09-24): a bury needs two weak readings.
+  const weakBandAt = ladder.indexOf("if (s.band === 'weak') {")
+  const confirmAt = ladder.indexOf('bury_confirmation')
+  assert.ok(weakBandAt > 0 && confirmAt > 0 && confirmAt > weakBandAt,
+    'a weak band must trigger a confirming panel before anything is buried')
+  assert.ok(ladder.indexOf('patch.buried_at') > confirmAt,
+    'the confirming panel must run BEFORE the bury, not be recorded after one')
+  assert.match(ladder, /agreed: c\.band === 'weak'/,
+    'the confirmation must record whether the second panel agreed: a disagreement names an unrepeatable rubric')
+  assert.match(ladder, /if \(c\.band !== 'weak'\) s = c/,
+    'two disagreeing panels are not evidence a piece is weak: keep the better reading')
+  // Twice: once stored on the row, once returned in the response. Asserting a
+  // single occurrence passed with the response copy deleted, because the
+  // stored one satisfied it — a weaker version of the `researched` mistake,
+  // where a value exists but nobody reading the run can see it.
+  assert.ok((ladder.match(/bury_confirmation/g) || []).length >= 2,
+    'the confirmation must be both stored on the row and returned in the response')
+
   // A repair may never leave a piece worse than it found it. Caught on a live
   // run: an idea the panel scored 7 was "improved", re-judged at 3 on the new
   // wording, and buried on that 3 — so the machine could destroy a good idea by
