@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto'
-import { callClaude, robustJson } from '../_content.js'
+import { callClaude, robustJson, type ClaudeCall } from '../_content.js'
 import { JUDGE_MODEL } from '../_models.js'
+import { isDeferred } from './deferred.js'
 import {
   CONTESTED_POINTS, MATERIAL_DISAGREEMENT_POINTS, ROSTER_VERSION, ROUTER_FIT_FLOOR, ROUTER_TIEBREAK,
   rosterFor, type Gate, type Judge, type RouterVerdict,
@@ -40,6 +41,14 @@ export interface PanelInput {
   shortCircuitOnKill?: boolean
   idempotencyKey?: string
   timeoutMs?: number
+  /** How the judges reach the model. Defaults to a live call; the batched
+   *  sweep passes its own, which answers from a reply already paid for or
+   *  defers. Nothing else about the panel changes between the two. */
+  call?: ClaudeCall
+  /** Which independent draw of this panel this is. Only the bury confirmation
+   *  sets it, and only so a batched re-read of an identical artifact is a real
+   *  second reading rather than the first one served from cache. */
+  sample?: number
 }
 
 export interface JudgeVerdict {
@@ -256,9 +265,10 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
   const brief = ['## Context you may use', input.context].join('\n')
   const artifact = [input.gate === 'idea' ? '## The idea' : '## The draft', input.artifact].join('\n')
 
+  const call = input.call || callClaude
   const results = await Promise.all(roster.map(async judge => {
     try {
-      const raw = await callClaude({
+      const raw = await call({
         systemStable: brief,
         system: artifact,
         cache: true,
@@ -269,10 +279,19 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
         maxTokens: 900,
         temperature: 0.2,
         agent: `judge-${judge.key}`,
+        ...(input.sample ? { sample: input.sample } : {}),
         ...(input.timeoutMs ? { timeoutMs: input.timeoutMs } : {}),
       })
       return parseVerdict(judge, raw)
     } catch (e) {
+      // A DEFERRAL IS NOT AN ABSTENTION and this is the single most dangerous
+      // catch in the batched path. The batch transport throws to say the reply
+      // is not back yet; turning that into an abstention would give every judge
+      // of every idea `score: null`, standing() would correctly return the
+      // `unjudged` band for all of them, and the sweep would write a complete,
+      // well-formed judgment of nothing. Exactly the spend-cap failure of
+      // 2026-09-24, rebuilt on purpose.
+      if (isDeferred(e)) throw e
       // One judge failing is not the panel failing. It abstains, visibly, and
       // the rest still report.
       return {

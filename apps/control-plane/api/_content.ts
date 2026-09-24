@@ -415,6 +415,49 @@ export interface ClaudeOpts {
    *  numbers mean something. A call that omits it meters as 'unattributed' —
    *  a visible gap in the console, never folded into another agent's total. */
   agent?: string
+  /**
+   * NOT SENT TO THE MODEL. Which independent sample of an identical request
+   * this is, for a transport that caches replies by request content.
+   *
+   * The batch transport keys a cached reply on a hash of the request body, so
+   * two byte-identical requests resolve to one reply. That is right for a
+   * fan-out and WRONG for the bury confirmation, which deliberately asks the
+   * same question twice to find out whether the answer is stable — measured
+   * 2026-09-24, only 2 of 10 seeds expanded to the same angle twice, and all
+   * the score variance lived in the eight that did not. A cache hit there
+   * would hand back the first expansion, the second panel would agree with
+   * itself, and the row would claim a confirmation that never happened.
+   *
+   * So a call that must be an independent draw says so, and the transport keys
+   * it separately. It changes nothing about what is sent.
+   */
+  sample?: number
+}
+
+/** A way of reaching the model. `callClaude` is the live one; the batch
+ *  transport in _judges/batch.ts is the other, and the ladder takes either. */
+export type ClaudeCall = (opts: ClaudeOpts) => Promise<string>
+
+/**
+ * The request body, exactly as it goes on the wire.
+ *
+ * Extracted so the Batches API sends the SAME body a live call would. A batch
+ * `params` object is a Messages request minus `stream`, so a second hand-rolled
+ * copy of this shape would be a fork of the one thing that must not drift:
+ * judge a piece through a batch and through a live call and the two have to be
+ * the same request, or the 50% saving was bought with a behaviour change
+ * nothing in the output would show.
+ */
+export function claudeRequestBody(opts: ClaudeOpts): Record<string, unknown> {
+  const model = opts.model || UTILITY_MODEL
+  return {
+    model,
+    max_tokens: opts.maxTokens ?? 4000,
+    ...thinkingParam(model, opts.think === true),
+    ...(supportsSampling(model) ? { temperature: opts.temperature ?? 0.5 } : {}),
+    system: cacheableSystem(opts),
+    messages: [{ role: 'user', content: userContent(opts) }],
+  }
 }
 
 export interface TokenUsage { input: number; output: number; model: string }
@@ -461,7 +504,7 @@ function userContent(opts: ClaudeOpts): string | ContentBlock[] {
  * either place is the fix.
  */
 let cachedAnthropicKey: string | null | undefined
-async function getAnthropicKey(): Promise<string | null> {
+export async function getAnthropicKey(): Promise<string | null> {
   if (process.env.ANTHROPIC_API_KEY) return process.env.ANTHROPIC_API_KEY
   if (cachedAnthropicKey !== undefined) return cachedAnthropicKey
   try {
@@ -546,14 +589,7 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
     const r = await fetchWithRetry('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        max_tokens: opts.maxTokens ?? 4000,
-        ...thinkingParam(model, opts.think === true),
-        ...(supportsSampling(model) ? { temperature: opts.temperature ?? 0.5 } : {}),
-        system: cacheableSystem(opts),
-        messages: [{ role: 'user', content: userContent(opts) }],
-      }),
+      body: JSON.stringify(claudeRequestBody(opts)),
       signal: opts.timeoutMs ? ctrl.signal : undefined,
     }, {
       // A 529 is Anthropic overloaded and a 429 is the account rate-limited.

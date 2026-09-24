@@ -1,5 +1,6 @@
-import { callClaude, robustJson } from '../_content.js'
+import { callClaude, robustJson, type ClaudeCall } from '../_content.js'
 import { UTILITY_MODEL } from '../_models.js'
+import { isDeferred } from './deferred.js'
 
 // Expand the seed into the piece it could be, BEFORE any judge reads it.
 //
@@ -150,10 +151,26 @@ export function expansionArtifact(seed: string, e: Expansion): string {
   return lines.join('\n')
 }
 
-export async function expand(seed: string, mandates: string, whatKrishDoes: string): Promise<Expansion> {
+/**
+ * How this expansion reaches the model, and which draw of it this is.
+ *
+ * `sample` is what tells the batch transport that a second expansion of the
+ * same seed must be an INDEPENDENT draw rather than the first one handed back.
+ * The bury confirmation is the only caller that sets it, and it is the whole
+ * reason that confirmation means anything: only 2 of 10 seeds expanded to the
+ * same angle twice, so a cached second expansion would agree with itself every
+ * time and the row would claim a confirmation nothing tested.
+ */
+export interface ExpandOpts { call?: ClaudeCall; sample?: number }
+
+export async function expand(
+  seed: string, mandates: string, whatKrishDoes: string, opts: ExpandOpts = {},
+): Promise<Expansion> {
+  const call = opts.call || callClaude
   try {
-    const raw = await callClaude({
+    const raw = await call({
       system: SYSTEM,
+      ...(opts.sample ? { sample: opts.sample } : {}),
       user: [
         '## The seed', seed, '',
         // All three, always. Work out the piece; the router places it after.
@@ -166,6 +183,12 @@ export async function expand(seed: string, mandates: string, whatKrishDoes: stri
     })
     return parseExpansion(raw)
   } catch (e) {
+    // A deferral is not a failed expansion. The batch transport throws it to
+    // say "not yet", and swallowing it here would record `why_not: the
+    // expansion call failed` on every idea of every tick — a sweep that judged
+    // nothing, reporting the shape of one that judged everything, which is the
+    // failure this engine keeps finding in its own code.
+    if (isDeferred(e)) throw e
     return {
       angle: '', implications: [], scenarios: [], decision_rule: null, known: [], inferred: [],
       ok: false, why_not: `the expansion call failed: ${(e as Error)?.message?.slice(0, 160) || 'unknown'}`,

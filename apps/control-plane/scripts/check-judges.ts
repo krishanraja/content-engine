@@ -232,14 +232,22 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // nothing, with no re-run able to reach them.
   assert.match(ladder, /priorBand && priorBand !== 'unjudged'/,
     'the idempotency skip must require a REAL judgment: an unjudged row has to stay eligible')
-  // Anchored to the response object, not the file. `/unjudged,/` passed with
-  // the field removed from the payload because the word still appeared in the
-  // const that computes it and in the warning string. That is the third
-  // substring-not-symbol miss today, after x_researched and robustJson.
-  const jsonAt = ladder.lastIndexOf('return res.json({')
-  const payload = ladder.slice(jsonAt, jsonAt + 500)
+  // Anchored to the report object, not the file. `/unjudged,/` passed with the
+  // field removed from the payload because the word still appeared in the const
+  // that computes it and in the warning string. That is the third
+  // substring-not-symbol miss in one day, after x_researched and robustJson.
+  //
+  // The anchor moved on 2026-09-24 from `return res.json({` to the report
+  // itself, because runLadder now RETURNS the payload and two routes render it:
+  // the live one and the batched sweep. The invariant is unchanged — the report
+  // must carry `unjudged` — and pinning it to the HTTP call would have quietly
+  // stopped covering the batched path, which is the one that runs unattended.
+  const jsonAt = ladder.lastIndexOf('const unjudged = results.filter')
+  const payload = ladder.slice(jsonAt, jsonAt + 600)
   assert.match(payload, /(^|[^A-Za-z0-9_])unjudged,/,
-    'the RESPONSE must report `unjudged` separately, or a sweep that judged nothing reports the shape of one that judged everything')
+    'the REPORT must carry `unjudged` separately, or a sweep that judged nothing reports the shape of one that judged everything')
+  assert.match(payload, /(^|[^A-Za-z0-9_])deferred,/,
+    'the report must carry `deferred`: an idea waiting on a batch is neither judged nor skipped, and folding it into either would make a half-finished sweep read as a finished one')
 
   // ── The expansion is not bound to one subchannel ──────────────────────────
   //
@@ -313,6 +321,117 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
     assert.match(projection, new RegExp(`(^|[^A-Za-z0-9_])${field}:`),
       `the response must surface ${field}: a repair's evidence is unreadable without it`)
   }
+}
+
+// ── 3bb. The batched sweep is the same ladder, not a second one ─────────────
+//
+// The Batches API is half price and up to twenty-four hours slow, so a batched
+// sweep cannot be one invocation that waits. The obvious build is a staged
+// pipeline — expand everything, judge everything, repair what needs it — and it
+// is the wrong one, because the staging would be a second copy of the banding,
+// the two-attempt cap, the keep-the-better rule and the bury confirmation.
+// Every one of those was fixed in place after a live run proved it wrong, and
+// a second copy is a second place for the next fix to be forgotten.
+{
+  const sweep = read('api/judge/sweep.ts')
+  const batch = read('api/_judges/batch.ts')
+  const panel = read('api/_judges/panel.ts')
+  const expand = read('api/_judges/expand.ts')
+  const ladder = read('api/judge/ladder.ts')
+
+  // ── A DEFERRAL IS NOT AN ABSTENTION, AND NOT A FAILURE ────────────────────
+  //
+  // The single most dangerous catch in the batched path. The transport throws
+  // to say "the reply is not back yet"; a broad catch that swallows it gives
+  // every judge of every idea `score: null`, standing() correctly returns the
+  // `unjudged` band for all of them, and the sweep writes a complete,
+  // well-formed judgment of nothing — which is the spend-cap failure of
+  // 2026-09-24 rebuilt on purpose, with no outage to blame it on.
+  //
+  // Four catches have to re-throw it. Named individually rather than counted,
+  // because a count passes when one is added and another deleted.
+  for (const [where, src] of [
+    ['the panel', panel], ['the expansion', expand], ['the ladder', ladder],
+  ] as const) {
+    assert.match(src, /if \(isDeferred\(e\)\) throw e/,
+      `${where} must re-throw a deferral: swallowing it turns "not back yet" into a verdict of nothing`)
+  }
+  // Both of the ladder's own broad catches — the repair and the router.
+  assert.ok((ladder.match(/if \(isDeferred\(e\)\) throw e/g) || []).length >= 2,
+    'both the repair and the router must re-throw a deferral, or a tick that never reached the model spends the idea\'s one attempt')
+
+  // The sentinel must stay importable with no database. batch.ts loads the
+  // Supabase client at module scope, and panel.ts and expand.ts both run in
+  // the test suite and in this guard on machines with no credentials at all.
+  const deferredImports = [...read('api/_judges/deferred.ts').matchAll(/^\s*import\s/gm)]
+  assert.equal(deferredImports.length, 0,
+    'deferred.ts must import nothing: the modules that recognise a deferral have to load with no database')
+  for (const [name, src] of [['panel.ts', panel], ['expand.ts', expand]] as const) {
+    assert.doesNotMatch(src, /from '\.\/batch\.js'/,
+      `${name} must take the sentinel from deferred.js, not batch.js, or importing it drags in a database client`)
+  }
+
+  // ── The confirmation must still be able to disagree ───────────────────────
+  //
+  // Only 2 of 10 seeds expanded to the same angle twice, and every point of
+  // score variance lived in the other eight. The batch caches a reply by a hash
+  // of the request, so without `sample` the second expansion IS the first one
+  // and the second panel agrees with itself every time. Worse, when the
+  // re-expansion fails the confirming panel reads a byte-identical artifact, so
+  // it would serve the first panel's own verdicts back as a confirmation.
+  const confirmBlock = ladder.slice(ladder.indexOf('let confirmation'), ladder.indexOf('const router = await route'))
+  assert.ok((confirmBlock.match(/sample: 2/g) || []).length >= 2,
+    'both the re-expansion AND the confirming panel must ask for an independent draw, or a content-keyed cache confirms a weak verdict with itself')
+  assert.match(batch, /sample/,
+    'the transport must key on the sample, or asking for an independent draw does nothing')
+
+  // ── One request shape, not two ────────────────────────────────────────────
+  assert.match(batch, /claudeRequestBody\(/,
+    'a batched request must be built by the same function a live call uses: two copies of the body is how a half-price path quietly becomes a different one')
+  assert.doesNotMatch(batch, /max_tokens:/,
+    'batch.ts must not assemble a request body of its own')
+
+  // ── The sweep drives the ladder; it does not re-decide anything ───────────
+  assert.match(sweep, /runLadder\(/,
+    'the sweep must call the ladder rather than restage it')
+  for (const forbidden of [/READY_AT/, /ESCALATE_FLOOR/, /MAX_ATTEMPTS/, /band === 'weak'/, /standing\(/]) {
+    assert.doesNotMatch(sweep, forbidden,
+      `the sweep must hold no opinion about a piece (${forbidden.source}): the ladder owns every one of those and has been corrected on all of them`)
+  }
+
+  // ── A panel is HELD until the idea finishes its walk ──────────────────────
+  //
+  // A batched idea is re-walked from the top on every tick — that is how it
+  // advances one stage at a time without the ladder knowing. A panel written
+  // the moment it is read would land in panel_runs once per tick, and
+  // judge_calibration would join one reading against five copies of itself.
+  assert.match(sweep, /bus\.hold\('panel_runs'/,
+    'the batched path must hold its panel rows, not write them: a deferred idea re-walks and would insert the same reading on every tick')
+  assert.doesNotMatch(sweep, /from\('panel_runs'\)\.insert|from\('judge_verdicts'\)\.insert/,
+    'only the ladder writes a panel; the sweep hands it to the buffer')
+
+  // ── Half price, counted once, and never off the token counts ──────────────
+  assert.match(batch, /BATCH_DISCOUNT = 0\.5/, 'the batch discount must be stated, not implied')
+  assert.match(batch, /discount: BATCH_DISCOUNT/,
+    'a batched reply must be metered at half price, or the saving is invisible in meter_daily and unprovable')
+  const drainAt = batch.indexOf('export async function drainBatch')
+  assert.ok(drainAt > 0 && batch.indexOf('meter.anthropicCall', drainAt) > drainAt,
+    'metering must happen when a batch is DRAINED, once: metering on read would count one call once per tick that read it')
+
+  // ── Research is cached because the sweep cannot converge otherwise ────────
+  //
+  // gather() feeds its result into the repair prompt. A lookup that returned
+  // something different on the next tick would change the repair REQUEST, miss
+  // its own cached reply, and the idea would defer forever. This is
+  // correctness, not thrift, and a future reader deleting it as an
+  // optimisation is exactly what this assertion is for.
+  assert.match(batch, /kind: 'research'/,
+    'a web lookup must be cached for the life of the sweep: research that varies between ticks changes the repair request and the sweep never converges')
+
+  // A runaway batch is the one mistake here that cannot be taken back once it
+  // is submitted.
+  assert.match(batch, /MAX_BATCH_REQUESTS/, 'the transport must cap what one tick may submit')
+  assert.match(batch, /refusing to submit an empty batch/, 'an empty batch is a bug, not a no-op')
 }
 
 // ── 3c. The expansion parses what the model really sends ────────────────────
@@ -529,6 +648,18 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
     assert.ok(rules.includes(`'${action}'`), `the ledger does not accept ${action}`)
     assert.ok(migration.includes(`'${action}'`), `the migration does not allow ${action}`)
   }
+
+  // The batched sweep's own state. Two tables the code cannot work without, and
+  // a unique index that is the difference between one sweep and two sweeps each
+  // paying for the other's deferred work.
+  const sweeps = readFileSync(new URL('../../../supabase/migrations/20260924100000_judge_batch_sweeps.sql', import.meta.url), 'utf8')
+  for (const table of ['judge_sweeps', 'judge_sweep_cache']) {
+    assert.match(sweeps, new RegExp(`create table public\\.${table}`), `${table} is missing`)
+    assert.match(sweeps, new RegExp(`alter table public\\.${table} enable row level security`), `${table} has no RLS`)
+  }
+  assert.match(sweeps, /unique index judge_sweeps_one_running[\s\S]*?where status = 'running'/,
+    'only one sweep may run at a time, and the database has to be the one saying so: two would each submit the other\'s deferred requests and pay twice')
+  assert.match(sweeps, /kind in \('call', 'research'\)/, 'the cache must say what kind of reply it holds')
 }
 
 console.log(`PASS  ${IDEA_JUDGES.length} idea judges and ${DRAFT_JUDGES.length} draft judges, each owning one question, evidence mandatory, spread preserved, the panel does not decide, anti-echo held`)

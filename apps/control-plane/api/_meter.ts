@@ -350,6 +350,20 @@ export async function anthropicCall(e: {
   /** The day this usage belongs to. Defaults to today, which is right for an
    *  in-process call and wrong for a run posting its total after midnight. */
   day?: string
+  /**
+   * A multiplier on the PRICE, for tokens that did not cost list rate.
+   *
+   * The only caller today is the Batches API, which bills every token type at
+   * half. Applied to `usd` and `usd_uncached` alike, because the discount is a
+   * property of how the request was sent rather than of whether its prefix was
+   * cached: folding it into only one of the two would make the cache saving
+   * read larger than it is, and the batch saving smaller.
+   *
+   * Token counts are untouched, so a batched call and a live call of the same
+   * size still record the same `units` and the dollars-per-token between them
+   * stays comparable. Ignored unless it is a finite number in (0, 1].
+   */
+  discount?: number
 }): Promise<void> {
   const u: TokenUsage = e.usage
     ? readUsage(e.usage)
@@ -357,6 +371,12 @@ export async function anthropicCall(e: {
   const cached = (u.cacheRead || 0) + (u.cacheWrite5m || 0) + (u.cacheWrite1h || 0)
   const tokens = u.input + u.output + cached
   if (!tokens) return
+  // Bounded rather than trusted. A discount above 1 would be a surcharge and a
+  // discount of 0 would make a real spend disappear from the meter, which is
+  // the one failure a spend surface may never have.
+  const discount = Number.isFinite(Number(e.discount)) && Number(e.discount) > 0 && Number(e.discount) <= 1
+    ? Number(e.discount)
+    : 1
   const runs = Math.max(1, Math.trunc(Number(e.calls) || 1))
   // An explicit failedCalls always wins, including an explicit zero. Only when
   // it is absent does the single-call `failed` boolean decide, which is every
@@ -371,8 +391,8 @@ export async function anthropicCall(e: {
     bucket: e.model,
     label: normalizeAgent(e.agent),
     category: isPriced(e.model) ? 'priced' : 'unpriced-model',
-    usd: priceUsdDetailed(e.model, u),
-    usdUncached: priceUsdUncached(e.model, u),
+    usd: priceUsdDetailed(e.model, u) * discount,
+    usdUncached: priceUsdUncached(e.model, u) * discount,
     runs,
     failed: Math.min(runs, failedRuns),
     units: tokens,

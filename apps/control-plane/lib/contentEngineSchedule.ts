@@ -30,6 +30,7 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   { job: 'feed_ingest',      path: '/api/feed/ingest',                   label: 'Feed ingest',           everyHours: DAY,  graceHours: 12 },
   { job: 'editorial_radar',  path: '/api/content-opportunities/refresh', label: 'Editorial radar',       everyHours: DAY,  graceHours: 12 },
   { job: 'triage_sweep',     path: '/api/triage/sweep',                  label: 'Triage sweep',          everyHours: DAY,  graceHours: 12 },
+  { job: 'judge_sweep',      path: '/api/judge/sweep',                   label: 'Judge sweep',           everyHours: DAY,  graceHours: 12 },
   { job: 'content_cluster',  path: '/api/content-ideas/cluster',         label: 'Draft clustering',      everyHours: DAY,  graceHours: 12 },
   { job: 'archive_stale',    path: '/api/content-ideas/archive-stale',   label: 'Stale idea archive',    everyHours: DAY,  graceHours: 12 },
   { job: 'lens_radar',       path: '/api/discover-lens-radar',           label: 'Lens radar',            everyHours: WEEK, graceHours: DAY },

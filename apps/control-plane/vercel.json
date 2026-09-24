@@ -20,6 +20,10 @@
       "schedule": "0 3 * * *"
     },
     {
+      "path": "/api/judge/sweep",
+      "schedule": "*/30 * * * *"
+    },
+    {
       "path": "/api/content-ideas/cluster",
       "schedule": "0 4 * * *"
     },
@@ -104,6 +108,12 @@
     },
     "api/aeo/ingest.ts": {
       "maxDuration": 120
+    },
+    "api/judge/sweep.ts": {
+      "maxDuration": 300
+    },
+    "api/judge/ladder.ts": {
+      "maxDuration": 300
     }
   }
 }
