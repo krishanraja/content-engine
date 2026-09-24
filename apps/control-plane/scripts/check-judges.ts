@@ -371,6 +371,36 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
       `${name} must take the sentinel from deferred.js, not batch.js, or importing it drags in a database client`)
   }
 
+  // ── THE SHAPE THAT ACTUALLY PRODUCES VERDICTS ─────────────────────────────
+  //
+  // The rubric is the SYSTEM prompt and the brief and artifact are the user
+  // turn it answers. That is the shape every real verdict this panel has ever
+  // produced came out of.
+  //
+  // On 2026-09-24 it was restructured to put all three in `system` and leave
+  // `user` as the bare string "Judge it.", to make the shared part cacheable.
+  // Measured the same evening: cache_read_tokens was 0 across 153 calls (the
+  // block landed at ~1,735 tokens, under Haiku's 2,048-token minimum) AND
+  // about four in five judges stopped returning JSON. It bought nothing and
+  // broke the judging, and a live sweep produced 4 unjudged ideas out of 5.
+  //
+  // Caching this fan-out is still worth doing. The bar is a live call whose
+  // usage.cache_read_input_tokens is non-zero on a real brief — not an
+  // argument from the documented floor, which is what produced this entry.
+  {
+    const callAt = panel.indexOf('const raw = await call({')
+    assert.ok(callAt > 0, 'the panel must reach the model through the injected transport')
+    const shape = panel.slice(callAt, callAt + 320)
+    assert.match(shape, /system: buildJudgePrompt\(judge, input\.gate\)/,
+      'the rubric must BE the system prompt: moving it out stopped four in five judges returning JSON')
+    assert.match(shape, /user: \[brief, artifact\]/,
+      'the brief and artifact must be the user turn the rubric answers')
+    assert.doesNotMatch(shape, /user: 'Judge it\.'/,
+      'a bare "Judge it." user turn is the exact regression that produced a sweep of unjudged ideas')
+    assert.doesNotMatch(shape, /systemStable|systemTail/,
+      'the fan-out may only be restructured for caching once a live call has been SEEN to return a non-zero cache read')
+  }
+
   // ── The confirmation must still be able to disagree ───────────────────────
   //
   // Only 2 of 10 seeds expanded to the same angle twice, and every point of

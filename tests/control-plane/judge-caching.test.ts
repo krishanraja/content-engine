@@ -1,6 +1,19 @@
 import { describe, expect, it } from 'vitest'
 import { buildSystemBlocks } from '../../apps/control-plane/api/_content.js'
 
+// NOTE, 2026-09-24 evening: THE JUDGE PANEL NO LONGER USES THIS SHAPE. It was
+// switched to it that afternoon and reverted the same evening, measured rather
+// than argued: cache_read_tokens came back 0 across 153 calls because the block
+// landed at ~1,735 tokens, under Haiku's 2,048-token minimum, AND about four in
+// five judges stopped returning JSON, which produced a live sweep of 4 unjudged
+// ideas out of 5. See _judges/panel.ts for the record.
+//
+// These tests stay and still earn their place: buildSystemBlocks is exported,
+// correct, and is what any future attempt will be built on. They describe the
+// FUNCTION, not the panel — and the bar for pointing the panel at it again is a
+// live call SEEN to return a non-zero cache read, not an argument from the
+// documented floor, which is what produced this note.
+//
 // The judge fan-out sends one brief and one artifact to nine judges. Until
 // 2026-09-24 the VARYING part (the rubric) sat in the cacheable slot and the
 // SHARED part sat in `user`, and cacheableSystem only fires above 6000

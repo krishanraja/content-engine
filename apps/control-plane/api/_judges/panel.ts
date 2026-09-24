@@ -242,26 +242,38 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
 
   const roster = rosterFor(input.gate)
 
-  // ── THE FAN-OUT WAS PAYING FULL PRICE NINE TIMES ──────────────────────────
+  // ── THE FAN-OUT IS NOT CACHED, AND THE ATTEMPT TO CACHE IT COST A RUN ─────
   //
-  // Nine blinded judges read the SAME brief and the SAME artifact; only the
-  // rubric differs. Until 2026-09-24 the rubric went in `system` and the brief
-  // and artifact went in `user`, so the varying part was in the cacheable slot
-  // and the shared part was not. cacheableSystem also only fires above 6000
-  // characters and a rubric is about 1650, so in practice NOTHING was cached
-  // and the shared context was sent nine times at full rate, every idea.
+  // Nine blinded judges read the SAME brief and the SAME artifact and differ
+  // only in their rubric, so the shared context goes out nine times per idea at
+  // full rate. That is real and it is still true. The fix attempted on
+  // 2026-09-24 (439c781) put the shared part first — systemStable for the
+  // brief, system for the artifact, systemTail for the rubric — and left
+  // `user` as the bare string "Judge it.".
   //
-  // Caching is a prefix match rendered tools, then system, then messages, so
-  // the shared content has to come first to be cacheable at all. It does now:
+  // It was reverted the same evening, measured rather than argued:
   //
-  //   systemStable  the brief, read by every judge of every idea in the sweep
-  //   system        this idea's artifact, read by the other eight judges
-  //   systemTail    the rubric, the only thing that varies, and still in the
-  //                 SYSTEM role: moving it to `user` would have bought the
-  //                 saving with a behaviour change.
+  //   cache_read_tokens    0 across 153 judge calls. The brief for a seed with
+  //                        no lane_slot is 4,823 characters, under the 6,000
+  //                        gate in cacheableSystem, so it fell to the joined
+  //                        path: ONE block of 6,939 characters, about 1,735
+  //                        tokens, under Haiku's 2,048-token minimum cacheable
+  //                        prefix. Silently not cached, precisely as that
+  //                        function's own comment warns.
+  //   verdicts             about four in five judges stopped returning JSON.
+  //                        parseVerdict recorded them honestly as "the judge
+  //                        did not return an object", standing() read a panel
+  //                        of abstentions as `unjudged`, and a live sweep
+  //                        produced 4 unjudged of 5.
   //
-  // A 1h TTL because a sweep runs longer than the five minute default and an
-  // entry that expires mid-run is a second full-price write.
+  // So it bought nothing and broke the judging. The shape below is the one that
+  // has produced every real verdict this panel has: the rubric IS the system
+  // prompt, and the brief and artifact are the user turn it answers.
+  //
+  // Caching this fan-out is still worth doing. What it needs first is a live
+  // call whose `usage.cache_read_input_tokens` is non-zero, on a real brief at
+  // its real length, against this model's real minimum. Reasoning about the
+  // floor from the documentation is what produced this entry.
   const brief = ['## Context you may use', input.context].join('\n')
   const artifact = [input.gate === 'idea' ? '## The idea' : '## The draft', input.artifact].join('\n')
 
@@ -269,12 +281,8 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
   const results = await Promise.all(roster.map(async judge => {
     try {
       const raw = await call({
-        systemStable: brief,
-        system: artifact,
-        cache: true,
-        cacheTtl: '1h',
-        systemTail: buildJudgePrompt(judge, input.gate),
-        user: 'Judge it.',
+        system: buildJudgePrompt(judge, input.gate),
+        user: [brief, artifact].join('\n\n'),
         model: JUDGE_MODEL,
         maxTokens: 900,
         temperature: 0.2,
