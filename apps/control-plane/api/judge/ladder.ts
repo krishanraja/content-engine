@@ -346,7 +346,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       results.push({
         id: idea.id, idea: current.idea.slice(0, 90),
         first_score: first.score, final_score: s.score, weakest: s.weakest, band: s.band,
-        attempts: attempts.length, spread: panel.spread, dissent: panel.dissent,
+        attempts: attempts.map(a => ({ n: a.n, outcome: a.outcome, detail: a.detail, score_before: a.score_before, score_after: a.score_after, weakest_before: a.weakest_before })),
+        spread: panel.spread, dissent: panel.dissent,
         scores: Object.fromEntries(panel.verdicts.filter(v => !v.deterministic).map(v => [v.judge, v.score])),
         router: ladder.router, router_disagrees: ladder.router_disagrees,
       })
