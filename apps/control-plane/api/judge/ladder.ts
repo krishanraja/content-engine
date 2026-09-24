@@ -63,6 +63,11 @@ interface Attempt {
   weakest_before: string | null
   weakest_after: string | null
   changed: boolean
+  /** Why nothing changed, when nothing changed. An attempt with no outcome and
+   *  no reason is the failure this whole engine keeps re-learning: it reads as
+   *  "we tried" and proves nothing. */
+  outcome: 'improved' | 'declined' | 'unchanged' | 'call_failed'
+  detail: string | null
   panel_run_id: string | null
 }
 
@@ -110,7 +115,19 @@ async function persistPanel(subjectId: string, panel: PanelResult): Promise<stri
 /** One attempt at lifting a piece, briefed by the judges that held it down.
  *  Returns null when the model declined or returned nothing usable, which is a
  *  real outcome and not an error: some ideas cannot be rescued. */
-async function repair(idea: Idea, s: Standing, mandate: string, voice: string): Promise<{ idea: string; thesis: string } | null> {
+// Keyed on a STRING outcome rather than a boolean `ok`. This tsconfig has
+// strict off by design (see its header), which widens `ok: true` to `boolean`
+// and silently stops a discriminated union discriminating. tsc caught it; the
+// string discriminant narrows either way.
+interface RepairResult {
+  outcome: 'improved' | 'declined' | 'unchanged' | 'call_failed'
+  idea?: string
+  thesis?: string
+  what_changed?: string
+  detail?: string
+}
+
+async function repair(idea: Idea, s: Standing, mandate: string, voice: string): Promise<RepairResult> {
   const brief = s.brief.map(b => `- ${b.judge} (${b.score ?? 'n/a'}/10): ${b.fix}`).join('\n')
   const system = [
     'You are improving one content idea for Krish Raja so that it clears a judging panel it has just failed.',
@@ -150,16 +167,26 @@ async function repair(idea: Idea, s: Standing, mandate: string, voice: string): 
       agent: 'ladder-repair', timeoutMs: REPAIR_TIMEOUT_MS,
     })
     const m = raw.match(/\{[\s\S]*\}/)
-    if (!m) return null
+    if (!m) return { outcome: 'call_failed', detail: 'the model did not return an object' }
     const parsed = JSON.parse(m[0]) as Record<string, unknown>
-    if (parsed.cannot_fix) return null
+    // A refusal is a real answer and the most interesting one: it means the fix
+    // the judges asked for needs evidence that does not exist.
+    if (typeof parsed.cannot_fix === 'string' && parsed.cannot_fix.trim()) {
+      return { outcome: 'declined', detail: parsed.cannot_fix.trim().slice(0, 400) }
+    }
     const nextIdea = typeof parsed.idea === 'string' ? parsed.idea.trim() : ''
     const nextThesis = typeof parsed.thesis === 'string' ? parsed.thesis.trim() : ''
-    if (!nextIdea || nextIdea.length < 12) return null
-    return { idea: nextIdea, thesis: nextThesis }
+    if (!nextIdea || nextIdea.length < 12) {
+      return { outcome: 'call_failed', detail: 'the model returned no usable idea' }
+    }
+    return {
+      outcome: 'improved', idea: nextIdea, thesis: nextThesis,
+      what_changed: typeof parsed.what_changed === 'string' ? parsed.what_changed.trim().slice(0, 300) : '',
+    }
   } catch (e) {
-    console.warn(`[ladder] repair failed for ${idea.id}: ${(e as Error)?.message?.slice(0, 120)}`)
-    return null
+    const detail = (e as Error)?.message?.slice(0, 200) || 'unknown'
+    console.warn(`[ladder] repair call failed for ${idea.id}: ${detail}`)
+    return { outcome: 'call_failed', detail }
   }
 }
 
@@ -244,15 +271,25 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
       for (let n = 1; n <= allowed && s.band !== 'ready'; n++) {
         const fixed = await repair({ ...idea, ...current }, s, mandate, voice)
-        const changed = Boolean(fixed) && artifactOf(fixed!) !== artifactOf(current)
-        if (!fixed || !changed) {
-          // An attempt that changed nothing is the most useful row here: it is
-          // evidence the idea is finished or the fix was not actionable.
-          attempts.push({ n, brief: s.brief, score_before: s.score, score_after: s.score, weakest_before: s.weakest, weakest_after: s.weakest, changed: false, panel_run_id: null })
-          break
+        const changed = fixed.outcome === 'improved'
+          && artifactOf({ idea: fixed.idea || '', thesis: fixed.thesis }) !== artifactOf(current)
+        // An attempt that changed nothing is the most useful row here, but only
+        // if it says WHY. Declined for want of evidence, returned the same text,
+        // and the call fell over are three different facts, and reading them as
+        // one is how "we tried" becomes a sentence nobody can act on. They are
+        // split rather than ternaried because the compiler caught me conflating
+        // the first two.
+        const stop = (outcome: Attempt['outcome'], detail: string) => {
+          attempts.push({
+            n, brief: s.brief, score_before: s.score, score_after: s.score,
+            weakest_before: s.weakest, weakest_after: s.weakest, changed: false,
+            outcome, detail, panel_run_id: null,
+          })
         }
+        if (fixed.outcome !== 'improved') { stop(fixed.outcome, fixed.detail || 'no reason given'); break }
+        if (!changed) { stop('unchanged', 'the model returned the same idea'); break }
         repairs++
-        current = fixed
+        current = { idea: fixed.idea as string, thesis: fixed.thesis || '' }
         panel = await runPanel({
           gate: 'idea', subjectTable: 'content_ideas', subjectId: idea.id,
           artifact: artifactOf(current),
@@ -264,7 +301,11 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         const before = s
         s = standing(panel.verdicts)
         if (runId) panelRunId = runId
-        attempts.push({ n, brief: before.brief, score_before: before.score, score_after: s.score, weakest_before: before.weakest, weakest_after: s.weakest, changed: true, panel_run_id: runId })
+        attempts.push({
+          n, brief: before.brief, score_before: before.score, score_after: s.score,
+          weakest_before: before.weakest, weakest_after: s.weakest, changed: true,
+          outcome: 'improved', detail: fixed.what_changed || null, panel_run_id: runId,
+        })
       }
 
       const router = await route({ ...idea, ...current }, mandates)
