@@ -140,6 +140,7 @@ Known breaks the walk will hit, in order:
 
 | # | Change | Why | Commit |
 |---|---|---|---|
+| H2 | `/api/content-edits` (the ledger), `judge`, `editorial-route` and `production-brief` move from `guard()` to `guardEngine()`. `check-unified-content-spine` and `check-content-production-bridge` now assert `guardEngine`. | They were cookie-only and failed open when the access code was unset. The walk records Krish's decisions through the ledger and judges drafts, so they need the same gate as the rest. | see git log: `engine: one gate for the ledger and the judges` |
 | H1 | Every route under `api/content-ideas/` and the bare `api/content-ideas.ts` now calls `guardEngine()` (`api/_auth.ts`): the `cc_access` cookie or `Authorization: Bearer $ENGINE_OPERATOR_TOKEN`, refusing both when unset, origin pinned. `voice.ts` is wrapped rather than changing the shared `_whisper.ts`. `ENGINE_OPERATOR_TOKEN` created on the engine's Vercel project (sensitive, production only). | 13 routes, several of which spend or write, had no auth. The bearer lets a session with no browser drive the engine without holding `CRON_SECRET`. | see git log: `engine: gate the idea routes` |
 
 **One narrow exception, `score`.** The Postgres trigger
@@ -152,6 +153,12 @@ a bearer for the trigger in Supabase Vault would remove the exception, but
 writing a secret into the Vault was stopped by the session's safety check and
 is Krish's call (section 4). Covered by
 `tests/control-plane/score-autoscore.test.ts` (4 tests, mutation-tested).
+
+**H1 verified live 2026-09-24** against production `574695a`: with no
+credentials or a wrong bearer, `revise`, `final-pass`, `chat` and the bare
+PATCH return 401; the operator token passes the gate (a fake id then 404s);
+`score` admits `{model:'haiku'}` without credentials and refuses any other
+model; preflight returns 204. No call spent.
 
 Checks for H1: `tests/control-plane/engine-auth.test.ts` (9 tests) calls
 every idea handler with no credentials and requires a 401, with Supabase
@@ -187,6 +194,53 @@ in a container without ffmpeg; they are environmental.
   deploys, open any idea in Control Center once. A 401 in the engine's logs on
   `/api/content-ideas/*` means the two projects hold different access codes or
   the rewrite drops the cookie; one revert restores the old behaviour.
+
+## 5. The craft standard, stage by stage
+
+Krish, 2026-09-24: the objective is to train every stage from ideation to
+post-production so the engine assists him at 10/10 at each one, and learns
+from every live run. Examples he named: when to make an interactive
+artifact and what it should look like, the signature voice of the carousel
+format, the humour and delivery of a video Short, and how a video is post
+produced when speed matters versus when effort does.
+
+**How the walk trains, within the engine's own rules.** Every durable taste
+rule needs Krish's explicit approval (`AGENTS.md`). Silence is not feedback,
+and a model may never record that he expressed a preference he did not state
+(`docs/ENGINE_SESSION.md`). So each stage of each piece records:
+
+- what the engine proposed, verbatim or by artifact hash;
+- what Krish decided, and his reason in his own words, only when he gives one;
+- the candidate rule it suggests, marked **proposed** until he approves it,
+  then **approved**, then the commit or config row that makes it **active**.
+
+Decisions reach the learning ledger (`content_edit_events`, joined to the
+panel by `panel_run_id`), not this file. This file is the engineering record
+and the index of proposals; it is not a memory store.
+
+**Where an approved rule becomes active**, by stage:
+
+| Stage | Where the standard lives today | Tracked from a cloud session? |
+|---|---|---|
+| Ideation and curation (what is worth writing) | the judge rubrics in `apps/control-plane/api/_judges/`, `venture_formats` mandates | yes, through the ledger |
+| Drafting and iteration (the argument, the voice) | `system_config.content_corpus` playbooks, `_revisePrompt.ts`, `_finalPass.ts` rubrics | yes, through the ledger |
+| Channel selection and per-channel copy | `channel-cut.ts` channel rules, `transformed_outputs` | yes, through the ledger |
+| Carousel, video Short, interactive artifact, post-production | Studio configuration in Git, promoted only through the tracked Studio gateway | **no.** The gateway is a Windows stdio proxy reading Windows Credential Manager (`.mcp.json`), so a cloud session is `read_only_untracked` for the Studio. It can draft a production brief but cannot record Studio learning. |
+
+Standards by stage (filled as the walk reaches each one):
+
+| Stage | What the engine does today (verified) | What 10/10 looks like (from Krish's decisions) | Candidate rules | Status |
+|---|---|---|---|---|
+| Ideation | judge ladder: 9 idea judges, lower median, repair, confirm | | | |
+| Curation | ranked ready list, decide card with reason codes | | | |
+| Drafting | *(no route drafts into an existing row)* | | | |
+| Iteration | `revise` presets, `final-pass` per-venture rubric | | | |
+| Channel selection | router fit across three subchannels; `channel-cut` | | | |
+| Copywriting per channel | | | | |
+| Interactive artifact | *(no engine stage)* | | | |
+| Carousel | Studio carousel director | | | |
+| Video Short | Studio video engine | | | |
+| Post-production, speed vs effort | | | | |
 
 ---
 

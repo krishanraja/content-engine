@@ -116,7 +116,9 @@ describe('guardEngine', () => {
 const API = join(__dirname, '../../apps/control-plane/api')
 
 function handlers(): string[] {
-  const out: string[] = [join(API, 'content-ideas.ts')]
+  // content-edits.ts is the ledger the walk's decisions are recorded through,
+  // so it carries the same gate as the routes it records.
+  const out: string[] = [join(API, 'content-ideas.ts'), join(API, 'content-edits.ts')]
   const walk = (dir: string) => {
     for (const name of readdirSync(dir)) {
       const p = join(dir, name)
@@ -133,7 +135,8 @@ describe('every idea route', () => {
 
   test('the scan found the routes it is meant to guard', () => {
     // A probe that finds nothing has to be proved able to find something.
-    assert.ok(files.length >= 20, `expected at least 20 handlers, found ${files.length}`)
+    assert.ok(files.length >= 21, `expected at least 21 handlers, found ${files.length}`)
+    assert.ok(files.some(f => f.endsWith('content-edits.ts')))
     assert.ok(files.some(f => f.endsWith(join('[id]', 'revise.ts'))))
   })
 

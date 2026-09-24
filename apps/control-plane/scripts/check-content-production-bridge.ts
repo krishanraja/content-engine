@@ -90,7 +90,9 @@ assert.match(approvalRoute, /retired_revision_changed/)
 assert.match(approvalRoute, /eq\('updated_at', current\.updated_at\)/, 'approval edits must not overwrite a concurrent runner acknowledgement')
 
 const bridgeRoute = readFileSync(new URL('../api/content-ideas/[id]/production-brief.ts', import.meta.url), 'utf8')
-assert.match(bridgeRoute, /guard\(req, res, \['POST'\]\)/)
+// guardEngine since 2026-09-24: the cookie or the operator bearer, and it never
+// fails open. It must not slip back to nothing, or to the fail-open guard().
+assert.match(bridgeRoute, /guardEngine\(req, res, \['POST'\]\)/)
 assert.match(bridgeRoute, /confirm_hard_gates !== true/)
 assert.match(bridgeRoute, /approval\.content_revision_hash !== contentRevisionHash\(row\)/)
 assert.match(bridgeRoute, /hard_editorial_gate_failed/)

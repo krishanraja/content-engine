@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { guard } from '../../_auth.js'
+import { guardEngine } from '../../_auth.js'
 import {
   buildProductionBrief,
   contentRevisionHash,
@@ -32,7 +32,7 @@ function strings(value: unknown): string[] {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guard(req, res, ['POST'])) return
+  if (guardEngine(req, res, ['POST'])) return
   const id = Array.isArray(req.query?.id) ? req.query.id[0] : req.query?.id
   if (!id) return res.status(400).json({ ok: false, error: 'id_required' })
 

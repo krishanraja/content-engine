@@ -11,7 +11,9 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 const route = readFileSync(new URL('../api/content-ideas/[id]/editorial-route.ts', import.meta.url), 'utf8')
-assert.match(route, /guard\(req, res, \['POST'\]\)/)
+// guardEngine since 2026-09-24: the cookie or the operator bearer, and it never
+// fails open. It must not slip back to nothing, or to the fail-open guard().
+assert.match(route, /guardEngine\(req, res, \['POST'\]\)/)
 assert.match(route, /editorial-route-v1:/)
 assert.match(route, /lane: 'publication'/)
 assert.match(route, /const slot = series/)

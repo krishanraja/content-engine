@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
-import { guard } from '../../_auth.js'
+import { guardEngine } from '../../_auth.js'
 import { corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock, pathId } from '../../_content.js'
 import { supabase } from '../../_supabase.js'
 import { deterministicFindings } from '../../_judges/deterministic.js'
@@ -42,7 +42,7 @@ interface IdeaRow {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guard(req, res, ['POST'])) return
+  if (guardEngine(req, res, ['POST'])) return
 
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id_required' })

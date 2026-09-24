@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { guard } from './_auth.js'
+import { guardEngine } from './_auth.js'
 import { supabase } from './_supabase.js'
 import { validateEditEvent } from './_editEvents.js'
 
@@ -21,7 +21,7 @@ import { validateEditEvent } from './_editEvents.js'
 // database. This file is the write.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guard(req, res, ['POST'])) return
+  if (guardEngine(req, res, ['POST'])) return
 
   const parsed = validateEditEvent(req.body)
   if (parsed.ok !== true) return res.status(400).json({ ok: false, error: parsed.error })
