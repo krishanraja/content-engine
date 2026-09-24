@@ -71,12 +71,17 @@ export const IDEA_JUDGES: Judge[] = [
   },
   {
     key: 'evidence',
-    question: 'Can this be proven, and what would prove it?',
+    question: 'Is the reasoning traceable, and are the unknowns named?',
     rubric:
-      'Score how provable the claim is with sources that exist. 10 means specific, checkable, and the proof is named; '
-      + '5 means arguable with work; 1 means it is a vibe or an unfalsifiable prediction. Do not score whether the '
-      + 'claim is TRUE, score whether it can be SHOWN. An honest "no evidence exists yet" is a low score, not a kill.',
-    evidence: 'Name what would have to be shown, and whether such a source plausibly exists.',
+      'Score whether a reader can follow how the claim was reached and can see where it stops being knowable. '
+      + '10 means every step is either sourced or labelled as inference, and the piece says plainly what it does not '
+      + 'know; 5 means the chain is followable but one step is asserted without support or a label; 1 means the '
+      + 'claim floats free and the reader cannot tell fact from guess. '
+      + 'A FORWARD-LOOKING CLAIM WITH NO SOURCE YET IS NOT A LOW SCORE. Krish, 2026-09-24: "In the absence of tons '
+      + 'of evidence, we need to look at hypotheticals and sense-backed predictions." A labelled hypothesis that '
+      + 'reasons from something real scores HIGH here. What scores low is an unlabelled one: a prediction dressed '
+      + 'as a finding. Do not score whether the claim is true, and do not demand a citation for the future.',
+    evidence: 'Name the load-bearing step, and say whether it is sourced, labelled as inference, or neither.',
   },
   {
     key: 'consequence',
@@ -137,9 +142,13 @@ export const IDEA_JUDGES: Judge[] = [
     rubric:
       'Score standing. 10 means he has built, sold, run or lived the thing and can say something only he can say; '
       + '5 means he has adjacent experience and can reason credibly; 1 means he would be summarising other people. '
-      + 'The corpus and his build record are the evidence. Absence of standing is not a kill, it is a reason to '
-      + 'reshape the piece toward what he has actually done.',
-    evidence: 'Name the experience that gives him standing, or say plainly that none is visible.',
+      + 'READ THE "WHAT KRISH ACTUALLY DOES" BLOCK IN YOUR CONTEXT BEFORE SCORING. This judge scored a piece about '
+      + 'encoding a leader\'s judgement as a 3 while Krish scored it 7 and said "my business tries to encode '
+      + 'decisions, judgment, standards and taste for a leader". It was not being strict; it did not know what he '
+      + 'builds. A subject that touches his actual work, his fleet, his clients or his operating model is standing, '
+      + 'whether or not he has written about it before. '
+      + 'Absence of standing is not a kill, it is a reason to reshape the piece toward what he has actually done.',
+    evidence: 'Name the experience or the part of his business that gives him standing, or say plainly that none is visible.',
   },
   {
     key: 'prosecutor',

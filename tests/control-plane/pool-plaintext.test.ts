@@ -61,3 +61,19 @@ describe('plainText', () => {
     expect(plainText(clean)).toBe(clean)
   })
 })
+
+describe('looksTruncated', () => {
+  it('catches the row Krish flagged, cut inside an href', async () => {
+    const { looksTruncated } = await import('../../apps/control-plane/api/_pool.js')
+    expect(looksTruncated('<p>Yesterday was <a href="https://x.ai/n">Grok 4.7</a> and <a href="https:/')).toBe(true)
+  })
+
+  it('does not call a complete sentence truncated just because it lacks a full stop', async () => {
+    // Guessing at missing punctuation would throw away real text. Only an
+    // unterminated tag is proof the writer was cut off.
+    const { looksTruncated } = await import('../../apps/control-plane/api/_pool.js')
+    expect(looksTruncated('A complete thought with no full stop')).toBe(false)
+    expect(looksTruncated('<p>A complete thought.</p>')).toBe(false)
+    expect(looksTruncated(null)).toBe(false)
+  })
+})

@@ -10,7 +10,9 @@
 export interface PoolStory {
   day: string           // 'YYYY-MM-DD' (briefing_date)
   headline: string
-  say: string | null    // the pool's own "why it matters" line
+  say: string | null    // the pool's own "why it matters" line, or null if cut
+  /** The source text was cut off mid-markup, so the sentence is incomplete. */
+  truncated: boolean
   source: string | null
   url: string | null
   sourceUrls: string[]
@@ -42,6 +44,30 @@ const ENTITIES: Record<string, string> = {
   hellip: '…', mdash: '—', ndash: '–', rsquo: '’', lsquo: '‘',
   rdquo: '”', ldquo: '“', middot: '·', bull: '•',
 }
+/**
+ * The source text was cut off, not merely dirty.
+ *
+ * Krish, 2026-09-24, grading a seed the panel scored 1 and he scored 2: "We're
+ * still pulling in incomplete ideas 'Yesterday was Grok 4.7 (pelicans) and'.
+ * This rating is invalid as a result, we need to fix the problem of capturing
+ * half sentences."
+ *
+ * He is right and stripping markup cannot fix it: the row read
+ * `<p>Yesterday was <a href="...">Grok 4.7</a> (...) and <a href="https:/`
+ * and the words after "and" were never stored, so there is nothing to recover.
+ * Cleaning it produced a tidy fragment, which is worse than a dirty one,
+ * because a tidy fragment looks like a real thesis and gets judged as one.
+ *
+ * Deliberately deterministic and narrow: an UNTERMINATED TAG at the end is
+ * proof the writer was cut off mid-character. A sentence merely lacking a full
+ * stop is not proof of anything, and guessing at that would throw away real
+ * text.
+ */
+export function looksTruncated(raw: unknown): boolean {
+  if (typeof raw !== 'string') return false
+  return /<[^>]*$/.test(raw.trimEnd())
+}
+
 export function plainText(raw: unknown): string | null {
   if (typeof raw !== 'string') return null
   const text = raw
@@ -74,7 +100,11 @@ function normalizeCard(day: string, card: any): PoolStory | null {
   return {
     day,
     headline,
-    say: plainText(card?.say),
+    // A cut-off source yields NO thesis rather than a plausible fragment. The
+    // row then fails the panel's free thinness check for a stated reason,
+    // cheaply, instead of being scored as though someone wrote it.
+    say: looksTruncated(card?.say) ? null : plainText(card?.say),
+    truncated: looksTruncated(card?.say),
     source: typeof card?.source === 'string' ? card.source : null,
     url: representativeUrl,
     sourceUrls,

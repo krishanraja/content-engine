@@ -31,15 +31,33 @@ describe('the score of a piece is its weakest judge', () => {
     expect(s.weakest).not.toBe('prosecutor')
   })
 
+  // Relative to READY_AT, never to a literal. These two were written against
+  // 9 and broke the moment the threshold was calibrated to Krish's actual
+  // grades, which is the failure this repo already documents: a test pinned to
+  // a number that is supposed to move.
   it('still carries the prosecutor into the repair brief, last', () => {
-    const s = standing([v('evidence', 7, 'find a source'), v('prosecutor', 8, 'it dates badly', true)])
+    const s = standing([
+      v('evidence', READY_AT - 2, 'find a source'),
+      v('prosecutor', 8, 'it dates badly', true),
+    ])
     expect(s.brief.map(b => b.judge)).toEqual(['evidence', 'prosecutor'])
   })
 
   it('briefs the repair with every judge below ready, weakest first', () => {
-    const s = standing([v('novelty', 9, 'nothing'), v('fun', 6, 'no line worth repeating'), v('evidence', 8, 'one more source')])
+    const s = standing([
+      v('novelty', READY_AT + 2, 'nothing'),
+      v('fun', READY_AT - 3, 'no line worth repeating'),
+      v('evidence', READY_AT - 1, 'one more source'),
+    ])
     expect(s.brief.map(b => b.judge)).toEqual(['fun', 'evidence'])
     expect(s.brief.map(b => b.fix)).toEqual(['no line worth repeating', 'one more source'])
+  })
+
+  it('excludes a judge at or above the bar from the repair brief', () => {
+    // The brief is what to FIX. A judge that already cleared the bar has
+    // nothing to contribute and would send the repair chasing a non-problem.
+    const s = standing([v('fun', READY_AT - 1, 'sharpen it'), v('novelty', READY_AT, 'nothing to do')])
+    expect(s.brief.map(b => b.judge)).toEqual(['fun'])
   })
 
   it('a whole panel abstaining is unjudged, never zero', () => {

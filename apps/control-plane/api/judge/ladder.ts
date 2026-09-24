@@ -11,6 +11,7 @@ import {
   READY_AT, ESCALATE_FLOOR, type PanelResult, type Standing,
 } from '../_judges/panel.js'
 import { ROSTER_VERSION, type RouterVerdict } from '../_judges/roster.js'
+import { expand, expansionArtifact, type Expansion } from '../_judges/expand.js'
 
 // The ladder. Judge, try to fix, and only then bother Krish.
 //
@@ -236,6 +237,27 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     if (rErr) throw new Error(rErr.message)
 
     const [voice, corpus] = await Promise.all([loadVoiceBlock(), loadCorpus()])
+
+    // WHAT KRISH ACTUALLY DOES, for the standing judge.
+    //
+    // It rated a piece about encoding a leader's judgement a 3. Krish rated it
+    // 7: "my business tries to encode decisions, judgment, standards, and taste
+    // for a leader. This is the type of component that is missing." The judge
+    // was not strict, it was uninformed: nothing in its context said what he
+    // builds. The canon block at the head of the Cleo brief says exactly that,
+    // and it has never been shown to a judge.
+    //
+    // Bounded to the canon block rather than the whole 30k brief: the rest is
+    // drafting identity, and a judge reading his content preferences would be
+    // the anti-echo failure check-judges.ts exists to prevent.
+    let whatKrishDoes = ''
+    try {
+      const { data: brief } = await supabase.from('agents').select('brief_content').eq('id', 'cleo').maybeSingle()
+      whatKrishDoes = String((brief as Record<string, unknown> | null)?.brief_content || '').slice(0, 2600)
+    } catch (e) {
+      console.warn(`[ladder] could not load the Cleo brief: ${(e as Error)?.message?.slice(0, 120)}`)
+    }
+    if (!whatKrishDoes) console.warn('[ladder] running WITHOUT the brief: the standing judge will score uninformed')
     const results: Record<string, unknown>[] = []
     let judged = 0, ready = 0, escalated = 0, buried = 0, skipped = 0, repairs = 0
 
@@ -248,14 +270,29 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       // re-judged, which is the behaviour a sweep needs to be safe to repeat.
       if (meta.ladder?.artifact_hash === hash) { skipped++; continue }
 
-      const free = deterministicFindings({ text: artifactOf(idea), minChars: 80, checkVoice: true })
+      const mandateFor = (slug: string | null) =>
+        mandates.find(m => m.slug === slug)?.mandate || mandates.map(m => m.mandate).join('\n\n')
+      const judgeContext = [
+        corpusForChannel(corpus, idea.lane_slot || 'general'),
+        `VOICE\n${voice.slice(0, 1500)}`,
+        whatKrishDoes ? `WHAT KRISH ACTUALLY DOES\n${whatKrishDoes}` : '',
+      ].filter(Boolean).join('\n\n')
+
+      // The seed is not the thing to judge. The angle is. See _judges/expand.ts:
+      // the panel was two points harsher than Krish on ten ideas because it was
+      // scoring headlines while he was scoring the piece underneath them.
+      //
+      // A failed expansion is NOT a fallback to judging the seed quietly. It is
+      // recorded, and the seed is judged with that fact attached, so a run can
+      // be read afterwards without guessing which ideas got the full treatment.
+      const expansion = await expand(artifactOf(idea), mandateFor(idea.lane_slot), whatKrishDoes)
+      const judged0 = expansion.ok ? expansionArtifact(artifactOf(idea), expansion) : artifactOf(idea)
+
+      const free = deterministicFindings({ text: judged0, minChars: 80, checkVoice: true })
       let panel = await runPanel({
         gate: 'idea', subjectTable: 'content_ideas', subjectId: idea.id,
-        artifact: artifactOf(idea),
-        context: [
-          corpusForChannel(corpus, idea.lane_slot || 'general'),
-          `VOICE\n${voice.slice(0, 1500)}`,
-        ].join('\n\n'),
+        artifact: judged0,
+        context: judgeContext,
         deterministic: free, shortCircuitOnKill: true,
         idempotencyKey: randomUUID(),
       })
@@ -267,7 +304,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       let current = { idea: idea.idea, thesis: idea.thesis || '' }
 
       const allowed = s.band === 'weak' ? 1 : s.band === 'repairable' ? MAX_ATTEMPTS : 0
-      const mandate = mandates.find(m => m.slug === idea.lane_slot)?.mandate || mandates.map(m => m.mandate).join('\n\n')
+      const mandate = mandateFor(idea.lane_slot)
 
       for (let n = 1; n <= allowed && s.band !== 'ready'; n++) {
         const fixed = await repair({ ...idea, ...current }, s, mandate, voice)
@@ -293,7 +330,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         panel = await runPanel({
           gate: 'idea', subjectTable: 'content_ideas', subjectId: idea.id,
           artifact: artifactOf(current),
-          context: [corpusForChannel(corpus, idea.lane_slot || 'general'), `VOICE\n${voice.slice(0, 1500)}`].join('\n\n'),
+          context: judgeContext,
           deterministic: deterministicFindings({ text: artifactOf(current), minChars: 80, checkVoice: true }),
           shortCircuitOnKill: true, idempotencyKey: randomUUID(),
         })
@@ -314,6 +351,11 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         roster_version: ROSTER_VERSION,
         judged_at: new Date().toISOString(),
         first, final: { score: s.score, weakest: s.weakest, band: s.band },
+        expansion: expansion.ok
+          ? { angle: expansion.angle, parties: expansion.implications.map(i => i.party),
+              scenarios: expansion.scenarios.length, decision_rule: Boolean(expansion.decision_rule),
+              known: expansion.known.length, inferred: expansion.inferred.length }
+          : { failed: expansion.why_not },
         attempts,
         panel_run_id: panelRunId,
         router: router ? { fits: router.fits, winner: router.winner, contested: router.contested, why: router.why } : null,
@@ -346,6 +388,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       results.push({
         id: idea.id, idea: current.idea.slice(0, 90),
         first_score: first.score, final_score: s.score, weakest: s.weakest, band: s.band,
+        expanded: expansion.ok, expansion_failed: expansion.why_not,
+        angle: expansion.ok ? expansion.angle.slice(0, 110) : null,
         attempts: attempts.map(a => ({ n: a.n, outcome: a.outcome, detail: a.detail, score_before: a.score_before, score_after: a.score_after, weakest_before: a.weakest_before })),
         spread: panel.spread, dissent: panel.dissent,
         scores: Object.fromEntries(panel.verdicts.filter(v => !v.deterministic).map(v => [v.judge, v.score])),

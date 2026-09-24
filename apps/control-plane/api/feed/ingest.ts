@@ -194,7 +194,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         expires_at: expiresAt,
         title_norm: c.titleNorm,
         meta: {
-          pool: { day: c.s.day, category: c.s.category, source: c.s.source, source_count: c.s.sourceCount, source_urls: c.s.sourceUrls },
+          pool: { day: c.s.day, category: c.s.category, source: c.s.source, source_count: c.s.sourceCount, source_urls: c.s.sourceUrls, truncated: c.s.truncated },
           ...(v ? { relevance: { verdict: v.verdict, confidence: v.confidence, rationale: v.rationale } } : {}),
         },
       })

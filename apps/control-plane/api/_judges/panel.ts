@@ -375,10 +375,20 @@ export function parseRouterVerdict(raw: string, slugs: string[]): RouterVerdict 
 // so a strong objection would otherwise read as the piece's weakest axis and
 // sink everything it did its job on.
 
-/** At or above this, the piece is ready and does not need Krish. */
-export const READY_AT = 9
-/** Below this, the piece is buried after its one repair attempt. */
-export const ESCALATE_FLOOR = 7
+// CALIBRATED against Krish's own grades, 2026-09-24, not guessed.
+//
+// He scored ten ideas the panel had judged. His top score was 7 and he never
+// went above it, so READY_AT of 9 sat above his ceiling and nothing could ever
+// have been ready. The panel was harsher than him on 8 of the 10 and kinder on
+// none: mean 3.8 against his 6.0.
+//
+// At a bar of 7 his ten split 5 ready, 4 to him, 1 binned. At the old bar it
+// was 0 ready and 8 buried.
+
+/** At or above this, the piece is ready and does not need Krish. His yes. */
+export const READY_AT = 7
+/** Below this, the piece is buried after its repair attempt. */
+export const ESCALATE_FLOOR = 5
 
 export interface Standing {
   /** The weakest non-adversarial score, or null when every judge abstained. */
