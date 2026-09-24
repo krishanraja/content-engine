@@ -238,9 +238,31 @@ async function createSweep(limit: number, ids: string[], dryRun: boolean, mode: 
   return data as SweepRow
 }
 
+/**
+ * Save, without resurrecting a sweep somebody stopped.
+ *
+ * A tick reads the sweep at the start and writes it back at the end, so a
+ * cancel landing in between was simply overwritten: `status` went back to
+ * `running` and the next cron tick carried on spending.
+ *
+ * Found the hard way on 2026-09-24. The judges had stopped returning anything
+ * usable, the sweep was cancelled to stop the bleeding, and it ticked twice
+ * more regardless because an in-flight tick wrote `running` back over the
+ * cancel. "I stopped it and it kept spending" is not a state this route may
+ * have.
+ *
+ * `.eq('status', 'running')` makes every write conditional on the sweep still
+ * being the one this tick started on. A cancelled sweep matches nothing and the
+ * update is a no-op, which is the right outcome: whoever stopped it wins. The
+ * end-of-tick write that sets `finished` or `failed` is also conditional on
+ * `running`, so it still lands normally and still loses to a cancel.
+ */
 async function saveSweep(id: string, patch: Record<string, unknown>): Promise<void> {
   const { error } = await supabase
-    .from('judge_sweeps').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', id)
+    .from('judge_sweeps')
+    .update({ ...patch, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .eq('status', 'running')
   if (error) console.warn(`[sweep] could not save ${id}: ${error.message}`)
 }
 

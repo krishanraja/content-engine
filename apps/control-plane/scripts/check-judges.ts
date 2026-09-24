@@ -455,6 +455,21 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.match(sweep, /const done = live \? !report\.ran_out_of_time/,
     'a live sweep is finished when the walk reached the end of the LIST, not the end of its clock')
 
+  // ── A STOPPED SWEEP MUST STAY STOPPED ─────────────────────────────────────
+  //
+  // A tick reads the sweep at the start and writes it back at the end, so a
+  // cancel landing in between was overwritten and the next tick carried on
+  // spending. Measured 2026-09-24: the judges had stopped returning anything
+  // usable, the sweep was cancelled to stop it, and it ticked twice more.
+  // "I stopped it and it kept spending" is not a state this route may have.
+  {
+    const saveAt = sweep.indexOf('async function saveSweep')
+    assert.ok(saveAt > 0, 'the sweep must write through one save')
+    const body = sweep.slice(saveAt, saveAt + 700)
+    assert.match(body, /\.eq\('status', 'running'\)/,
+      'every sweep write must be conditional on it still running, or a cancel is silently undone by the tick already in flight')
+  }
+
   // ── One batch may not park the whole backlog ──────────────────────────────
   //
   // The tick ceiling counts PRODUCTIVE ticks, so it cannot see a batch that
