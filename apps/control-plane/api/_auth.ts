@@ -231,6 +231,17 @@ export function guardEngine(req: VercelRequest, res: VercelResponse, methods = [
     res.status(405).json({ ok: false, error: 'method_not_allowed' })
     return true
   }
+  if (!hasEngineAccess(req)) {
+    res.status(401).json({ ok: false, error: 'unauthorized' })
+    return true
+  }
+  return false
+}
+
+/** The credential check inside `guardEngine`, for the one route that has to
+ *  know the answer without refusing on it (`score`, whose autoscore caller has
+ *  no credential; see that file). Everything else calls `guardEngine`. */
+export function hasEngineAccess(req: VercelRequest): boolean {
   const accessCode = process.env.ACCESS_CODE || ''
   const expectedCookie = accessCode ? createHash('sha256').update(accessCode).digest('hex') : ''
   const suppliedCookie = parseCookies(req.headers.cookie)[COOKIE] || ''
@@ -240,11 +251,7 @@ export function guardEngine(req: VercelRequest, res: VercelResponse, methods = [
   const authorization = req.headers.authorization || ''
   const bearerAllowed = Boolean(operatorToken) && safeEqual(authorization, `Bearer ${operatorToken}`)
 
-  if (!browserAllowed && !bearerAllowed) {
-    res.status(401).json({ ok: false, error: 'unauthorized' })
-    return true
-  }
-  return false
+  return browserAllowed || bearerAllowed
 }
 
 /** Guard for the cron-driven routes: `GET` from Vercel's scheduler with the

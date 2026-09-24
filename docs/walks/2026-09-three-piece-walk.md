@@ -142,6 +142,17 @@ Known breaks the walk will hit, in order:
 |---|---|---|---|
 | H1 | Every route under `api/content-ideas/` and the bare `api/content-ideas.ts` now calls `guardEngine()` (`api/_auth.ts`): the `cc_access` cookie or `Authorization: Bearer $ENGINE_OPERATOR_TOKEN`, refusing both when unset, origin pinned. `voice.ts` is wrapped rather than changing the shared `_whisper.ts`. `ENGINE_OPERATOR_TOKEN` created on the engine's Vercel project (sensitive, production only). | 13 routes, several of which spend or write, had no auth. The bearer lets a session with no browser drive the engine without holding `CRON_SECRET`. | see git log: `engine: gate the idea routes` |
 
+**One narrow exception, `score`.** The Postgres trigger
+`trg_autoscore_content_idea` posts `{model:'haiku'}` to `score` through pg_net
+with no credential whenever a row first gets a body (178 rows scored this
+way). Gating it would have switched quality scoring off silently. So `score`
+admits exactly that body, scores only the row's own stored body, and only
+for a row with no `quality_score`; anything else needs a credential. Storing
+a bearer for the trigger in Supabase Vault would remove the exception, but
+writing a secret into the Vault was stopped by the session's safety check and
+is Krish's call (section 4). Covered by
+`tests/control-plane/score-autoscore.test.ts` (4 tests, mutation-tested).
+
 Checks for H1: `tests/control-plane/engine-auth.test.ts` (9 tests) calls
 every idea handler with no credentials and requires a 401, with Supabase
 pointed at a dead local address so a missing gate cannot write to production.
@@ -167,6 +178,11 @@ in a container without ffmpeg; they are environmental.
   belong in the cloud environment's settings, not in chat.
 - **`ENGINE_OPERATOR_TOKEN` after the walk.** Delete it, rotate it, or keep it
   and add it to the cloud environment so future sessions can drive the engine.
+- **Give the autoscore trigger a credential?** Store the operator token in
+  Supabase Vault as `engine_operator_token` and have
+  `autoscore_content_idea()` send it, which closes `score`'s one
+  unauthenticated path. It needs a write into the secret store, which the
+  walk session was not allowed to make on its own.
 - **The browser path through `guardEngine` needs one real visit.** After H1
   deploys, open any idea in Control Center once. A 401 in the engine's logs on
   `/api/content-ideas/*` means the two projects hold different access codes or

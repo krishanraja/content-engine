@@ -3,7 +3,7 @@ import { supabase } from '../../_supabase.js'
 import { loadCorpus, pathId } from '../../_content.js'
 import { scoreStandards } from '../../_standards.js'
 import { JUDGE_MODEL } from '../../_models.js'
-import { guardEngine } from '../../_auth.js'
+import { applyGatedHeaders, guardEngine, hasEngineAccess } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/score
 //   body: { source_text?: string }
@@ -15,16 +15,45 @@ import { guardEngine } from '../../_auth.js'
 // never blocks (decision 2026-06-11). Most AI-default content fails #1 and #4,
 // so those two are the watch standards.
 
+// THE ONE UNAUTHENTICATED CALLER, and exactly how narrow it is.
+//
+// The Postgres trigger `trg_autoscore_content_idea` (control-center
+// scripts/migrations/2026-06-11-content-autoscore.sql) posts `{model:'haiku'}`
+// here through pg_net whenever a row first gets a body, and it carries no
+// credential. When the idea routes were gated on 2026-09-24 this would have
+// turned quality scoring off without a sound. Storing a bearer for the trigger
+// in Vault is the better fix and is Krish's call, so until then this route
+// admits that request and nothing wider:
+//
+//   - the body is exactly `{model:'haiku'}`: no source_text, no other model,
+//   - it scores the row's own stored body, never text the caller supplies,
+//   - only a row that has a body and has never been scored.
+//
+// So an outsider holding the URL can buy, at most, one cheap score per unscored
+// row, which is what the trigger was going to do anyway, and can write nothing
+// but that score.
+function isAutoscoreCall(req: VercelRequest): boolean {
+  const b = req.body && typeof req.body === 'object' ? req.body as Record<string, unknown> : null
+  return req.method === 'POST' && !!b && Object.keys(b).length === 1 && b.model === 'haiku'
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guardEngine(req, res)) return
+  const trigger = isAutoscoreCall(req) && !hasEngineAccess(req)
+  if (trigger) applyGatedHeaders(res)
+  else if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 
   const { data: idea, error } = await supabase
-    .from('content_ideas').select('idea,thesis,body,source_type,meta').eq('id', id).single()
+    .from('content_ideas').select('idea,thesis,body,source_type,meta,quality_score').eq('id', id).single()
   if (error || !idea) return res.status(404).json({ ok: false, error: 'idea not found' })
+  // Said as a 401 rather than a 409: an unauthenticated caller learns nothing
+  // about whether the row exists or was scored.
+  if (trigger && idea.quality_score != null) return res.status(401).json({ ok: false, error: 'unauthorized' })
 
-  const draft = (((req.body || {}) as any).source_text || idea.body || '').trim()
+  const draft = trigger
+    ? (idea.body || '').trim()
+    : (((req.body || {}) as any).source_text || idea.body || '').trim()
   if (!draft) return res.status(400).json({ ok: false, error: 'no draft to score (source_text or body required)' })
 
   // Tier: manual scoring uses Sonnet (sharper judgment); the auto-score trigger
