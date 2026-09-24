@@ -8,8 +8,27 @@
 //      between judges stops meaning anything and the spread becomes noise.
 //   2. Evidence is mandatory. A verdict with no citation is an opinion with a
 //      number attached.
-//   3. The panel does not decide. No route may advance, approve or bin a piece
-//      from a verdict. Krish decides; that is the whole contract.
+//   3. The panel decides only at the extremes, and never in Krish's band.
+//      This invariant CHANGED on 2026-09-24 and the change is his, not a
+//      drift. It used to read "no route may advance, approve or bin a piece
+//      from a verdict. Krish decides; that is the whole contract."
+//
+//      Ruling (Krish, 2026-09-24): "the judges should literally judge, in the
+//      machine, before it's presented to me for triage with the judges scores.
+//      I should always be able to review and override on things that score
+//      between a 7>9 out of 10 if the machine could not find a way to improve
+//      the story to get it to a 10/10 itself first."
+//
+//      So the contract is now narrower and sharper rather than gone. A piece
+//      scoring at or above READY_AT is advanced; one below ESCALATE_FLOOR is
+//      buried after its repair attempt, reversibly and with the weakest
+//      judge's evidence as the reason. EVERYTHING BETWEEN THOSE TWO IS HIS,
+//      and no route may resolve it. That band is the whole point: it is where
+//      the machine tried, failed, and has to show its working.
+//
+//      api/content-ideas/[id]/judge.ts stays pure regardless. It is the
+//      on-demand "judge this one" endpoint and it reads without moving
+//      anything; the ladder is a separate route and carries the power.
 //   4. Anti-echo. Judges score form, craft and evidence. Nothing may rank a
 //      candidate higher because Krish showed interest in its subject. This is
 //      the same rule check-slate-calibration.ts enforces on the arc scorer, and

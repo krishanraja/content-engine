@@ -1,7 +1,10 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { callClaude, robustJson } from '../_content.js'
 import { JUDGE_MODEL } from '../_models.js'
-import { MATERIAL_DISAGREEMENT_POINTS, ROSTER_VERSION, rosterFor, type Gate, type Judge } from './roster.js'
+import {
+  CONTESTED_POINTS, MATERIAL_DISAGREEMENT_POINTS, ROSTER_VERSION, ROUTER_FIT_FLOOR, ROUTER_TIEBREAK,
+  rosterFor, type Gate, type Judge, type RouterVerdict,
+} from './roster.js'
 
 // Running a panel.
 //
@@ -282,5 +285,131 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
     cost_usd: 0,
     started_at: started.toISOString(),
     finished_at: new Date().toISOString(),
+  }
+}
+
+// ── Running the router ──────────────────────────────────────────────────────
+//
+// Separate from the panel on purpose. See the note in roster.ts: the router
+// answers a different shape of question and must never dilute a judge.
+
+export function buildRouterPrompt(mandates: { slug: string; label: string; mandate: string }[]): string {
+  return [
+    'You route one content idea to one of Krish Raja\'s three subchannels, or to none of them.',
+    '',
+    'THE MANDATES. These are the only definition of each channel. Read them as written.',
+    '',
+    ...mandates.map(m => `### ${m.slug} (${m.label})\n${m.mandate}`),
+    '',
+    'THE TIEBREAK, which settles every contested piece:',
+    ROUTER_TIEBREAK,
+    '',
+    'Score fit for EVERY channel, including the ones that lose. A piece that fits none is homeless and that is a',
+    'real answer: do not award a channel a passing score because something has to win. A piece that fits two is',
+    'contested, which is also a real answer, and Krish settles it.',
+    '',
+    'Judge the QUESTION the piece asks, never its surface subject. The same pricing page can belong to any of the',
+    'three depending on what it is being asked.',
+    '',
+    'Return ONE JSON object and nothing else:',
+    `{"fits": {${mandates.map(m => `"${m.slug}": 0-10`).join(', ')}},`,
+    ' "why": "the question this piece asks, in one sentence", "confidence": 0-1}',
+  ].join('\n')
+}
+
+/** Strict, for the same reason parseVerdict is: a guessed route is worse than
+ *  no route, because it silently files a piece under the wrong mandate and
+ *  every downstream judge then reads it against the wrong rules. */
+export function parseRouterVerdict(raw: string, slugs: string[]): RouterVerdict {
+  const empty: RouterVerdict = { fits: {}, winner: null, contested: [], confidence: null, why: '' }
+  const parsed = robustJson(raw)
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return empty
+
+  const rawFits = (parsed as Record<string, unknown>).fits
+  if (!rawFits || typeof rawFits !== 'object') return empty
+  const fits: Record<string, number> = {}
+  for (const slug of slugs) {
+    const n = Number((rawFits as Record<string, unknown>)[slug])
+    // A missing channel is not a zero. Zero is a judgement; absent is a
+    // malformed reply, and treating them the same would let a truncated
+    // answer read as "definitely not this one".
+    if (!Number.isFinite(n) || n < 0 || n > 10) return empty
+    fits[slug] = Math.round(n * 100) / 100
+  }
+
+  const ranked = Object.entries(fits).sort((a, b) => b[1] - a[1])
+  const top = ranked[0]
+  const winner = top && top[1] >= ROUTER_FIT_FLOOR ? top[0] : null
+  const contested = winner
+    ? ranked.filter(([slug, score]) => slug !== winner && top![1] - score <= CONTESTED_POINTS && score >= ROUTER_FIT_FLOOR).map(([slug]) => slug)
+    : []
+
+  const rawConfidence = Number((parsed as Record<string, unknown>).confidence)
+  const whyValue = (parsed as Record<string, unknown>).why
+  return {
+    fits,
+    winner,
+    contested,
+    confidence: Number.isFinite(rawConfidence) && rawConfidence >= 0 && rawConfidence <= 1
+      ? Math.round(rawConfidence * 100) / 100
+      : null,
+    why: typeof whyValue === 'string' ? whyValue.trim().slice(0, 400) : '',
+  }
+}
+
+// ── The ladder ──────────────────────────────────────────────────────────────
+//
+// Krish, 2026-09-24: "the judges should literally judge, in the machine, before
+// it's presented to me for triage with the judges scores. I should always be
+// able to review and override on things that score between a 7>9 out of 10 if
+// the machine could not find a way to improve the story to get it to a 10/10
+// itself first by going deeper, finding contrarian evidence, asking why."
+//
+// THE SCORE OF A PIECE IS ITS WEAKEST JUDGE. A piece is as good as its worst
+// axis: an idea whose evidence scores 4 is a 4, however much fun it is, and the
+// fix is not in doubt. This is also the only reading of "scores between a 7 and
+// 9" that survives the no-averaging rule, and it is what makes the repair brief
+// write itself.
+//
+// The prosecutor is excluded, as it is everywhere else. It argues for killing,
+// so a strong objection would otherwise read as the piece's weakest axis and
+// sink everything it did its job on.
+
+/** At or above this, the piece is ready and does not need Krish. */
+export const READY_AT = 9
+/** Below this, the piece is buried after its one repair attempt. */
+export const ESCALATE_FLOOR = 7
+
+export interface Standing {
+  /** The weakest non-adversarial score, or null when every judge abstained. */
+  score: number | null
+  /** Which judge is holding it down. The repair aims here first. */
+  weakest: string | null
+  /** What to fix, in the judges' own words, weakest first. Includes the
+   *  prosecutor's objection last, because the best counterpoint is usually the
+   *  better piece rather than a reason to stop. */
+  brief: { judge: string; score: number | null; fix: string }[]
+  band: 'ready' | 'repairable' | 'weak' | 'unjudged'
+}
+
+export function standing(verdicts: JudgeVerdict[]): Standing {
+  const scored = verdicts.filter(v => !v.adversarial && v.score !== null) as Array<JudgeVerdict & { score: number }>
+  // Every judge abstaining is not a zero. It means the panel could not read the
+  // piece, and treating that as a bad score would bury ideas for a model outage.
+  if (!scored.length) return { score: null, weakest: null, brief: [], band: 'unjudged' }
+
+  const sorted = [...scored].sort((a, b) => a.score - b.score)
+  const score = sorted[0]!.score
+  const brief = sorted
+    .filter(v => v.score < READY_AT && v.the_one_fix)
+    .map(v => ({ judge: v.judge, score: v.score as number | null, fix: v.the_one_fix as string }))
+  const prosecutor = verdicts.find(v => v.adversarial && v.the_one_fix)
+  if (prosecutor) brief.push({ judge: prosecutor.judge, score: prosecutor.score, fix: prosecutor.the_one_fix as string })
+
+  return {
+    score,
+    weakest: sorted[0]!.judge,
+    brief,
+    band: score >= READY_AT ? 'ready' : score >= ESCALATE_FLOOR ? 'repairable' : 'weak',
   }
 }
