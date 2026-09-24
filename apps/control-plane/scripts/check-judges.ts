@@ -144,6 +144,50 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // A human's subchannel is not the router's to overwrite.
   assert.match(ladder, /if \(!idea\.lane_slot && router\?\.winner/,
     'the router may only set a subchannel that is empty')
+
+  // ── The repair must be able to go and look ────────────────────────────────
+  //
+  // On the first full ladder run every single repair declined, all ten for the
+  // same reason: the judges asked for a named person or a verified figure, the
+  // repair pass is forbidden to invent one, and nothing in the path could go
+  // and find one. A repairer told not to invent and given no way to look can
+  // only ever refuse, so the ladder had a ceiling built in that no rubric
+  // change could lift.
+  assert.match(ladder, /webResearch/,
+    'the repair must be able to research, or it can only ever decline for want of evidence')
+  const gatherAt = ladder.indexOf('const found = await gather(')
+  const repairAt = ladder.indexOf('await repair(')
+  assert.ok(gatherAt > 0 && repairAt > gatherAt,
+    'the research must happen BEFORE the repair, or the repair is briefed on nothing')
+
+  // Krish's own research is read from the same field the composer reads, so
+  // "research this for me" and "here is my own research" reach the judges
+  // through one door rather than two.
+  assert.match(ladder, /function ownMaterials/,
+    'the ladder must read meta.materials: his own research is the evidence the judges keep asking for')
+
+  // An attempt that declined WITH research in hand is a finished idea. One that
+  // declined with none is a missing lookup. A run that cannot tell them apart
+  // reports ten identical refusals and teaches nothing, which is what the first
+  // run did.
+  // EVERY push, not merely one of them: the first version of this assertion
+  // matched a single occurrence and passed with the other recording site
+  // stripped, which is the "a probe that finds nothing has to be proved able to
+  // find something" lesson in AGENTS.md arriving in a new costume.
+  const pushes = (ladder.match(/attempts\.push\(\{/g) || []).length
+  const marked = (ladder.match(/researched: Boolean\(/g) || []).length
+  assert.ok(pushes > 0 && marked === pushes,
+    `every attempt must record whether it had research (${marked} of ${pushes} do), or a refusal cannot be read`)
+
+  // Nothing Krish wrote may be exempt from judging for having been written.
+  // research-topic.ts — the one route that takes a topic he names or research
+  // he brings back himself — writes state 'drafting' WITH a body, so a
+  // `body is null` filter here silently excused his own thinking from the panel
+  // while judging everything the machine scraped.
+  assert.doesNotMatch(ladder, /body\.is\.null/,
+    'the ladder must not skip a piece for having a body: that filter excluded every idea Krish researched himself')
+  assert.match(ladder, /'seeded', 'researching', 'drafting'/,
+    'the ladder must judge drafted pieces too, or the one path carrying his own research bypasses the judges')
 }
 
 // ── 4. Anti-echo ────────────────────────────────────────────────────────────

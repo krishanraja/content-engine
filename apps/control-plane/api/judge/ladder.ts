@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { callClaude, loadCorpus, loadVoiceBlock, corpusForChannel } from '../_content.js'
+import { webResearch } from '../_enrich.js'
 import { UTILITY_MODEL, JUDGE_MODEL } from '../_models.js'
 import { withContentRun } from '../_runs.js'
 import { deterministicFindings } from '../_judges/deterministic.js'
@@ -52,6 +53,7 @@ interface Idea {
   id: string
   idea: string
   thesis: string | null
+  body: string | null
   lane_slot: string | null
   meta: Record<string, unknown> | null
 }
@@ -70,9 +72,40 @@ interface Attempt {
   outcome: 'improved' | 'declined' | 'unchanged' | 'call_failed'
   detail: string | null
   panel_run_id: string | null
+  /** What the repair was given to work with. An attempt that declined for want
+   *  of evidence WITH research in hand is a different fact from one that
+   *  declined with none, and the first run could not tell them apart. */
+  researched: boolean
+  sources: string[]
 }
 
 const artifactOf = (i: { idea: string; thesis?: string | null }) => `${i.idea}\n\n${i.thesis || ''}`.trim()
+
+/**
+ * The research Krish brought himself.
+ *
+ * meta.materials[] is where research-topic.ts puts pasted research and where
+ * /materials writes an attachment, so his Perplexity pass, a newsletter he kept
+ * and a document from his inspiration folder all arrive in one shape. Read here
+ * so the judging path stops being the one part of the engine that never looks
+ * at it.
+ */
+function ownMaterials(idea: Idea): string {
+  const raw = (idea.meta as Record<string, unknown> | null)?.materials
+  if (!Array.isArray(raw)) return ''
+  return raw
+    .map(m => {
+      const o = (m || {}) as Record<string, unknown>
+      const content = typeof o.content === 'string' ? o.content.trim() : ''
+      if (!content) return ''
+      const title = typeof o.title === 'string' && o.title.trim() ? o.title.trim() : 'untitled'
+      const url = typeof o.url === 'string' && o.url.trim() ? ` (${o.url.trim()})` : ''
+      return `### ${title}${url}\n${content.slice(0, 4000)}`
+    })
+    .filter(Boolean)
+    .slice(0, 4)
+    .join('\n\n')
+}
 
 async function persistPanel(subjectId: string, panel: PanelResult): Promise<string | null> {
   const { data, error } = await supabase.from('panel_runs').insert({
@@ -128,7 +161,59 @@ interface RepairResult {
   detail?: string
 }
 
-async function repair(idea: Idea, s: Standing, mandate: string, voice: string): Promise<RepairResult> {
+/** Research gathered for one repair, or nothing. */
+interface Gathered { text: string; sources: string[] }
+
+/**
+ * Go and look it up, the way Krish does before he writes.
+ *
+ * THE DEADLOCK THIS BREAKS. On the first ladder run every single repair
+ * declined, and all ten gave the same reason in different words: the judges
+ * asked for a named person, a verified figure or a real deal, and the repair
+ * pass is forbidden to invent one. So the judges demanded the one thing the
+ * repairer could not produce, and a refusal was the only legal move. The
+ * machine was asking itself to remember facts instead of going to find them.
+ *
+ * Krish, 2026-09-24: "I often come up with angles and ideas and go and research
+ * the thesis in perplexity first, so the engine should be able to account for
+ * that too."
+ *
+ * webResearch() has been in _enrich.ts the whole time, Perplexity first with
+ * Exa and Brave behind it. Nothing in the judging path had ever called it.
+ *
+ * The query is built from what the judges actually withheld marks for, not from
+ * the headline, because the headline is the part that already passed.
+ *
+ * Fail-soft and COUNTED: no key, an empty return or a thrown call all end with
+ * null, the repair runs unresearched exactly as it did before, and the attempt
+ * records `researched: false`. A repair that declined with research in hand is
+ * a finished idea; one that declined without it is a missing lookup, and a run
+ * that cannot tell them apart teaches nothing.
+ */
+async function gather(current: { idea: string; thesis?: string | null }, s: Standing): Promise<Gathered | null> {
+  const asks = s.brief.filter(b => b.fix).slice(0, 4).map(b => b.fix).join(' ')
+  if (!asks) return null
+  const query = [
+    `Find verifiable, recent, citable facts for this claim: "${current.idea}".`,
+    current.thesis ? `The argument: ${current.thesis}` : '',
+    `Specifically find what these gaps need: ${asks}`,
+    'Give named companies, dated announcements, published figures and prices with their sources.',
+    'If a fact cannot be verified, say so plainly rather than offering a plausible one.',
+  ].filter(Boolean).join(' ').slice(0, 1400)
+  try {
+    const r = await webResearch(query)
+    if (!r.text || r.text.trim().length < 80) return null
+    return { text: r.text.trim().slice(0, 6000), sources: r.sources.slice(0, 12) }
+  } catch (e) {
+    console.warn(`[ladder] research failed: ${(e as Error)?.message?.slice(0, 160) || 'unknown'}`)
+    return null
+  }
+}
+
+async function repair(
+  idea: Idea, s: Standing, mandate: string, voice: string,
+  research: Gathered | null, own: string,
+): Promise<RepairResult> {
   const brief = s.brief.map(b => `- ${b.judge} (${b.score ?? 'n/a'}/10): ${b.fix}`).join('\n')
   const system = [
     'You are improving one content idea for Krish Raja so that it clears a judging panel it has just failed.',
@@ -143,8 +228,18 @@ async function repair(idea: Idea, s: Standing, mandate: string, voice: string): 
     '- Ask why, twice. The second answer is usually the piece.',
     '- Name what would prove it. An unfalsifiable idea scores low on evidence forever.',
     '',
-    'You may change the claim. You may not invent a fact, a figure, a source or a quote. If the fix the judges',
-    'asked for requires evidence that does not exist, say so in `cannot_fix` and change nothing.',
+    'You may change the claim. You may not invent a fact, a figure, a source or a quote.',
+    research || own
+      // The first run declined all ten repairs for want of evidence, so the
+      // rule now names where evidence IS allowed to come from instead of only
+      // where it is not. "Nothing was found" stays a legal answer: a repair
+      // that quietly upgrades a thin research return into a confident claim is
+      // the invention this rule exists to stop, wearing a citation.
+      ? 'Facts below — the research gathered for this fix, and any material Krish brought himself — ARE available to you. ' +
+        'Use them, and attribute each one to its source in the thesis. Anything not in them, or only half-supported by them, ' +
+        'is still an invention: say so in `cannot_fix` rather than reaching for it.'
+      : 'No research was available for this attempt. If the fix the judges asked for requires evidence that does not ' +
+        'exist here, say so in `cannot_fix` and change nothing.',
     '',
     'THE MANDATE this belongs to:',
     mandate,
@@ -160,6 +255,13 @@ async function repair(idea: Idea, s: Standing, mandate: string, voice: string): 
   const user = [
     '## The idea as it stands', artifactOf(idea), '',
     '## What the judges said to fix, weakest first', brief,
+    // Krish's own research first, because he already decided it was worth
+    // keeping and a lookup did not. Same meta.materials[] the composer and
+    // revise read, so "research this for me" and "here is my research" reach
+    // the judges through one door.
+    ...(own ? ['', '## Research Krish brought himself', own] : []),
+    ...(research ? ['', '## Research gathered for this fix', research.text,
+      research.sources.length ? `\nSources: ${research.sources.join(' | ')}` : ''] : []),
   ].join('\n')
 
   try {
@@ -224,14 +326,27 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       .map(m => ({ slug: m.slug as string, label: m.label as string, mandate: m.mandate as string }))
     if (mandates.length !== 3) throw new Error(`expected 3 live subchannel mandates, found ${mandates.length}`)
 
-    // Ideas with no body yet: the ones a dry run is waiting on. Over-fetch,
-    // because the idempotency check below skips anything already judged at its
-    // current wording and those should not eat the limit.
+    // Everything unjudged, whoever wrote it and however far it got.
+    //
+    // THE HOLE THIS CLOSES. The filter was `state in (seeded, researching) and
+    // body is null`, which reads as "ideas a dry run is waiting on" and turned
+    // out to mean something narrower: research-topic.ts — the ONE route that
+    // exists to take a topic Krish names, or research he brings back himself,
+    // and work it up — writes state 'drafting' WITH a body. So the single path
+    // carrying his own thinking was the single path the judges never saw, and
+    // the panel only ever graded what the machine had scraped.
+    //
+    // Krish, 2026-09-24, on his Perplexity habit and his inspiration folder:
+    // "I am sure you have already wired all the avenues in to one cohesive
+    // engine." It was not. This is that wire.
+    //
+    // A body is still not judged as a seed: `expand` is skipped for a piece
+    // that already has one, because the body IS the expansion and re-expanding
+    // it would judge a summary of his work instead of his work.
     const { data: rows, error: rErr } = await supabase.from('content_ideas')
-      .select('id,idea,thesis,lane_slot,meta')
+      .select('id,idea,thesis,body,lane_slot,meta')
       .is('buried_at', null)
-      .in('state', ['seeded', 'researching'])
-      .or('body.is.null,body.eq.')
+      .in('state', ['seeded', 'researching', 'drafting'])
       .order('created_at', { ascending: false })
       .limit(limit * 3)
     if (rErr) throw new Error(rErr.message)
@@ -285,8 +400,21 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       // A failed expansion is NOT a fallback to judging the seed quietly. It is
       // recorded, and the seed is judged with that fact attached, so a run can
       // be read afterwards without guessing which ideas got the full treatment.
-      const expansion = await expand(artifactOf(idea), mandateFor(idea.lane_slot), whatKrishDoes)
-      const judged0 = expansion.ok ? expansionArtifact(artifactOf(idea), expansion) : artifactOf(idea)
+      //
+      // A piece that already HAS a body skips the expansion: the body is the
+      // expansion, written by Krish or researched on his instruction, and
+      // expanding it again would hand the judges a summary of his work in
+      // place of his work.
+      const written = (idea.body || '').trim()
+      const expansion: Expansion = written
+        ? {
+            angle: '', implications: [], scenarios: [], decision_rule: null, known: [], inferred: [],
+            ok: false, why_not: 'already written: judged on its own body, not an expansion of it',
+          }
+        : await expand(artifactOf(idea), mandateFor(idea.lane_slot), whatKrishDoes)
+      const judged0 = written
+        ? `${artifactOf(idea)}\n\n${written}`
+        : expansion.ok ? expansionArtifact(artifactOf(idea), expansion) : artifactOf(idea)
 
       const free = deterministicFindings({ text: judged0, minChars: 80, checkVoice: true })
       let panel = await runPanel({
@@ -306,8 +434,15 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       const allowed = s.band === 'weak' ? 1 : s.band === 'repairable' ? MAX_ATTEMPTS : 0
       const mandate = mandateFor(idea.lane_slot)
 
+      // What Krish already went and found, from meta.materials[] — the same
+      // field research-topic.ts and /materials write. His Perplexity pass and
+      // his inspiration drops land here, so a repair sees his work before it
+      // spends anything looking for its own.
+      const own = ownMaterials(idea)
+
       for (let n = 1; n <= allowed && s.band !== 'ready'; n++) {
-        const fixed = await repair({ ...idea, ...current }, s, mandate, voice)
+        const found = await gather(current, s)
+        const fixed = await repair({ ...idea, ...current }, s, mandate, voice, found, own)
         const changed = fixed.outcome === 'improved'
           && artifactOf({ idea: fixed.idea || '', thesis: fixed.thesis }) !== artifactOf(current)
         // An attempt that changed nothing is the most useful row here, but only
@@ -321,6 +456,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
             n, brief: s.brief, score_before: s.score, score_after: s.score,
             weakest_before: s.weakest, weakest_after: s.weakest, changed: false,
             outcome, detail, panel_run_id: null,
+            researched: Boolean(found || own), sources: found?.sources || [],
           })
         }
         if (fixed.outcome !== 'improved') { stop(fixed.outcome, fixed.detail || 'no reason given'); break }
@@ -342,6 +478,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
           n, brief: before.brief, score_before: before.score, score_after: s.score,
           weakest_before: before.weakest, weakest_after: s.weakest, changed: true,
           outcome: 'improved', detail: fixed.what_changed || null, panel_run_id: runId,
+          researched: Boolean(found || own), sources: found?.sources || [],
         })
       }
 
