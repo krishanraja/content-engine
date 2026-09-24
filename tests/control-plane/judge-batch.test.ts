@@ -110,3 +110,4 @@ describe('isDeferred', () => {
     expect(isDeferred({ deferred: true })).toBe(true)
   })
 })
+

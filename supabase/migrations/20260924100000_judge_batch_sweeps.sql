@@ -88,3 +88,20 @@ create index judge_sweep_cache_created_at on public.judge_sweep_cache (created_a
 -- are in judge_verdicts, and this is the plumbing under both.
 alter table public.judge_sweeps enable row level security;
 alter table public.judge_sweep_cache enable row level security;
+
+-- Added 2026-09-24, same day, after the batch path was measured rather than
+-- estimated. `ladder-router` fires once per idea that completes a walk and had
+-- run 113 times, so the day's $12.07 was about $0.107 an idea, not the $0.32
+-- the design was justified on. At 46 ideas a week the batch discount is worth
+-- roughly $95 a year, which does not buy six to eighteen hours of latency.
+--
+-- Ruling (Krish, 2026-09-24): fast turnaround and cost efficiency both.
+--
+-- So the cron sweeps LIVE and this flag is true from creation. Batch is opt-in,
+-- for a large catch-up where nothing waits on the answer, and the same flag is
+-- what a batch sweep sets on itself when it gives up waiting.
+alter table public.judge_sweeps
+  add column if not exists live_fallback boolean not null default false;
+
+comment on column public.judge_sweeps.live_fallback is
+  'This sweep makes real calls rather than batching. Set at creation for a live sweep (the default), or mid-run when a batch has been waited on past its patience.';

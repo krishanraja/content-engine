@@ -391,6 +391,71 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.doesNotMatch(batch, /max_tokens:/,
     'batch.ts must not assemble a request body of its own')
 
+  // ── LIVE BY DEFAULT, BATCH ONLY WHEN ASKED ────────────────────────────────
+  //
+  // The batch path was justified on $0.32 an idea, arrived at by dividing the
+  // day's $12.07 by the 38 ideas that SETTLED before the spend cap. But
+  // `ladder-router` fires once per idea that completes a walk and had run 113
+  // times, so the real figure is about $0.107 and the batch discount is worth
+  // roughly $95 a year at 46 ideas a week. That does not buy six to eighteen
+  // hours of latency, and the cost estimate was wrong in the direction that
+  // flattered the design already built.
+  //
+  // Ruling (Krish, 2026-09-24): fast turnaround and cost efficiency both.
+  assert.match(sweep, /const DEFAULT_MODE: SweepMode = 'live'/,
+    'the cron must sweep live: batching costs hours and saves under a hundred dollars a year at this volume')
+  assert.match(sweep, /body\.mode === 'batch' \? 'batch' : DEFAULT_MODE/,
+    'batch must be asked for explicitly and never inferred')
+
+  // ── A live pass is bounded by the CLOCK, and says when it stopped ─────────
+  //
+  // Bounding by a count of ideas is the obvious choice and the wrong one: a
+  // ready piece is one router call, a repairable one is research plus two
+  // rewrites plus three panels. A count either wastes the budget or overruns.
+  //
+  // The second assertion is the one that matters. A pass that stopped on its
+  // clock looks exactly like one that reached the end of the list, and reading
+  // the second as the first is how a half-done sweep reports as a whole one —
+  // the same failure as the spend-capped run that wrote 102 judgments of
+  // nothing.
+  assert.match(ladder, /if \(deadline && Date\.now\(\) > deadline\)/,
+    'a live pass must stop on its wall-clock budget')
+  assert.match(ladder, /ran_out_of_time: ranOutOfTime/,
+    'the report must say whether it stopped on the clock, or a half-done pass reads as a finished one')
+  assert.match(sweep, /const done = live \? !report\.ran_out_of_time/,
+    'a live sweep is finished when the walk reached the end of the LIST, not the end of its clock')
+
+  // ── One batch may not park the whole backlog ──────────────────────────────
+  //
+  // The tick ceiling counts PRODUCTIVE ticks, so it cannot see a batch that
+  // simply never ends: every poll reports "waiting" and the ledger records a
+  // healthy ok while nothing happens for a day. Measured 2026-09-24, an
+  // expansion batch sat at 0 of 64 for over two hours.
+  assert.match(batch, /export async function cancelBatch/,
+    'the transport must be able to stop a batch that is holding the queue')
+  for (const [name, re] of [
+    ['an overdue warning', /BATCH_OVERDUE_MIN/],
+    ['a give-up threshold', /BATCH_GIVE_UP_MIN/],
+  ] as const) {
+    assert.match(sweep, re, `the sweep needs ${name}: the tick ceiling cannot see a batch that never ends`)
+  }
+  // Short of the API's own 24h expiry on purpose: a batch left to expire bills
+  // for what it completed and returns nothing usable for the rest, so the sweep
+  // loses the day AND the money.
+  const giveUp = /const BATCH_GIVE_UP_MIN = (\d+)/.exec(sweep)
+  assert.ok(giveUp && Number(giveUp[1]) < 24 * 60,
+    'giving up must happen before the batch expires, or the sweep pays for work it then throws away')
+
+  // The live fallback must read the cache first, or giving up on a batch
+  // re-buys every stage already paid for, including the replies that DID
+  // finish inside the cancelled one.
+  assert.match(batch, /liveCall: ClaudeCall/,
+    'the live fallback must go through the cache, not straight to callClaude')
+  const liveAt = batch.indexOf('liveCall: ClaudeCall')
+  const liveBody = batch.slice(liveAt, liveAt + 900)
+  assert.ok(liveBody.indexOf('this.ready.get(key)') > 0 && liveBody.indexOf('this.ready.get(key)') < liveBody.indexOf('await callClaude'),
+    'the live fallback must check what is already paid for BEFORE it spends')
+
   // ── The sweep drives the ladder; it does not re-decide anything ───────────
   assert.match(sweep, /runLadder\(/,
     'the sweep must call the ladder rather than restage it')

@@ -437,6 +437,9 @@ export interface LadderReport {
   /** Ideas whose next step is waiting on a batch. Always 0 on the live path.
    *  A deferred idea is untouched: nothing was written for it this pass. */
   deferred: number
+  /** True when the pass stopped on its wall-clock budget rather than at the
+   *  end of the list. The remaining ideas are untouched and eligible. */
+  ran_out_of_time: boolean
   warning?: string
   results: Record<string, unknown>[]
 }
@@ -449,8 +452,24 @@ export interface LadderReport {
  * whether a reply that is not back yet may be caught and retried later.
  */
 export async function runLadder(
-  { limit, ids, dryRun, deps }: { limit: number; ids: string[]; dryRun: boolean; deps: LadderDeps },
+  { limit, ids, dryRun, deps, deadlineMs }:
+    { limit: number; ids: string[]; dryRun: boolean; deps: LadderDeps; deadlineMs?: number },
 ): Promise<LadderReport> {
+  // A wall-clock budget, for the live path.
+  //
+  // Bounding the work by a COUNT of ideas is the obvious thing and it is the
+  // wrong one: the ideas are wildly uneven. A ready piece needs one router call
+  // and is done in a second; a repairable one needs research, two rewrites and
+  // three panels. A fixed count either wastes most of the function's budget on
+  // an easy batch or overruns on a hard one.
+  //
+  // Overrunning is cheap and safe here, which is what makes a deadline usable:
+  // every reply is written to the cache the moment it arrives, and an idea's
+  // rows are committed only when its walk finishes. A tick killed mid-idea
+  // therefore loses nothing and re-buys nothing — the next tick re-walks that
+  // one idea entirely from cache. The deadline exists to keep the ledger row
+  // honest, not to protect the work.
+  const deadline = deadlineMs ? Date.now() + deadlineMs : null
   {
     const { data: mandateRows, error: mErr } = await supabase
       .from('venture_formats').select('slug,label,mandate').eq('active', true).not('mandate', 'is', null)
@@ -512,9 +531,11 @@ export async function runLadder(
     if (!whatKrishDoes) console.warn('[ladder] running WITHOUT the brief: the standing judge will score uninformed')
     const results: Record<string, unknown>[] = []
     let judged = 0, ready = 0, escalated = 0, weak = 0, skipped = 0, repairs = 0, deferred = 0
+    let ranOutOfTime = false
 
     for (const raw of (rows || [])) {
       if (judged >= limit) break
+      if (deadline && Date.now() > deadline) { ranOutOfTime = true; break }
       const idea = raw as unknown as Idea
       const meta = (idea.meta || {}) as Record<string, any>
       const hash = artifactHash(artifactOf(idea))
@@ -856,6 +877,10 @@ export async function runLadder(
     const unjudged = results.filter(r => (r as Record<string, unknown>).band === 'unjudged').length
     return {
       ok: true, dry_run: dryRun, judged, ready, escalated, weak, unjudged, skipped, repairs, deferred,
+      // Said rather than inferred. A pass that stopped on the clock looks
+      // exactly like one that finished the list, and reading the second as the
+      // first is how a half-done sweep reports as a whole one.
+      ran_out_of_time: ranOutOfTime,
       ...(unjudged ? { warning: `${unjudged} of ${judged} could not be judged at all and will be retried on the next run` } : {}),
       results,
     }

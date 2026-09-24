@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { claudeRequestBody, getAnthropicKey, type ClaudeCall, type ClaudeOpts } from '../_content.js'
+import { callClaude, claudeRequestBody, getAnthropicKey, type ClaudeCall, type ClaudeOpts } from '../_content.js'
 import { supabase } from '../_supabase.js'
 import * as meter from '../_meter.js'
 import { DeferredCall } from './deferred.js'
@@ -155,6 +155,23 @@ export async function retrieveBatch(id: string): Promise<BatchStatus> {
   }
 }
 
+/**
+ * Stop a batch that is holding the queue.
+ *
+ * Requests already finished inside it are still billed and are still readable,
+ * so this is not a refund: it stops the rest and lets the sweep get on. The
+ * cancel is asynchronous — the batch moves to `canceling` and ends shortly
+ * after — so the caller must not assume the results are final the moment this
+ * returns.
+ */
+export async function cancelBatch(id: string): Promise<void> {
+  const r = await anthropic(`${API}/${encodeURIComponent(id)}/cancel`, { method: 'POST' })
+  if (!r.ok) {
+    const body = await r.text().catch(() => '')
+    throw new Error(`batch_cancel_${r.status}:${body.slice(0, 160)}`)
+  }
+}
+
 /** The first text block of a batch result message, for the same reason
  *  _content.firstText exists: a thinking block can come first, and indexing by
  *  position returns undefined from a perfectly good reply. */
@@ -274,6 +291,37 @@ export class BatchBus {
     }
     this.wanted.set(key, { key, opts })
     throw new DeferredCall(key, opts.agent || 'unattributed')
+  }
+
+  /**
+   * The live fallback: answer from what has already been paid for, or make the
+   * call now and remember it.
+   *
+   * Used once a batch has been given up on. The cache read is the whole point —
+   * a sweep that gave up at stage four must not re-buy stages one to three, and
+   * the replies that DID finish inside the abandoned batch are in here too, so
+   * nothing paid for is thrown away. Only what is genuinely missing costs a
+   * live call, at list price, metered by callClaude as any other.
+   *
+   * The reply is written straight back to the cache, so a tick that dies
+   * part-way through does not re-buy what it already got.
+   */
+  liveCall: ClaudeCall = async (opts: ClaudeOpts): Promise<string> => {
+    const key = requestKey(opts)
+    const hit = this.ready.get(key)
+    if (hit) {
+      if (hit.error) throw new Error(hit.error)
+      return hit.text || ''
+    }
+    const text = await callClaude(opts)
+    this.ready.set(key, { text, error: null })
+    if (!this.dryRun) {
+      const { error } = await supabase.from('judge_sweep_cache').upsert({
+        key, kind: 'call', sweep_id: this.sweepId, value: { text, error: null },
+      }, { onConflict: 'key' })
+      if (error) console.warn(`[sweep] live reply cache write failed: ${error.message}`)
+    }
+    return text
   }
 
   /**

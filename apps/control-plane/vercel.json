@@ -21,7 +21,7 @@
     },
     {
       "path": "/api/judge/sweep",
-      "schedule": "*/30 * * * *"
+      "schedule": "*/10 * * * *"
     },
     {
       "path": "/api/content-ideas/cluster",

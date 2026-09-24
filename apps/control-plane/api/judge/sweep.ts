@@ -2,9 +2,9 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
-import { BatchBus, drainBatch, retrieveBatch, type BatchRef } from '../_judges/batch.js'
+import { BatchBus, cancelBatch, drainBatch, retrieveBatch, type BatchRef } from '../_judges/batch.js'
 import type { PanelResult } from '../_judges/panel.js'
-import { candidateQuery, needsJudging, panelRows, runLadder, type LadderDeps, type LadderReport } from './ladder.js'
+import { candidateQuery, liveDeps, needsJudging, panelRows, runLadder, type LadderDeps, type LadderReport } from './ladder.js'
 import { webResearch } from '../_enrich.js'
 import { randomUUID } from 'node:crypto'
 
@@ -45,6 +45,26 @@ import { randomUUID } from 'node:crypto'
 //   GET (CRON_SECRET) — tick   ·   POST — { action, ids, limit, dryRun }
 
 const DEFAULT_LIMIT = 80
+
+// ── LIVE BY DEFAULT, AND THE MEASUREMENT IS WHY ───────────────────────────
+//
+// This route was built batch-first on an estimate of $0.32 an idea. That was
+// wrong, and wrong in the direction that flattered the design: it divided the
+// day's $12.07 by the 38 ideas that SETTLED before the spend cap, when
+// `ladder-router` — one call per idea that completes a walk — ran 113 times.
+// The real figure is about $0.107, so at 46 ideas a week the batch discount is
+// worth roughly $95 a year.
+//
+// Ruling (Krish, 2026-09-24): fast turnaround and cost efficiency both, and
+// six to eighteen hours of latency does not buy either.
+//
+// So the cron runs LIVE: caching already took the larger share of the bill at
+// no latency cost, and a live sweep of a night's ideas finishes in minutes.
+// The batch path stays, unchanged and tested, for the one case it genuinely
+// suits — a hundred-idea catch-up where nothing is waiting on the answer. It
+// is asked for explicitly, never chosen by default.
+type SweepMode = 'live' | 'batch'
+const DEFAULT_MODE: SweepMode = 'live'
 /** A tick that has advanced nothing this many times running has stalled: a
  *  batch that keeps erroring, or a request whose reply never satisfies the
  *  walk. Stopping and saying so beats resubmitting the same work nightly. */
@@ -62,6 +82,57 @@ const MAX_BARREN_TICKS = 3
  */
 const MAX_TICKS = 20
 
+// ── HOW LONG ONE BATCH MAY HOLD THE WHOLE BACKLOG ─────────────────────────
+//
+// The tick ceiling above counts PRODUCTIVE ticks, so it cannot see this: a
+// batch that simply never ends parks the sweep forever while every poll
+// dutifully reports "waiting" and the run ledger records a healthy `ok`. A
+// nightly sweep that silently does nothing for twenty hours is the same shape
+// as every other bug found this week — success reported for work that did not
+// happen — and capping runaway ticks did nothing about it.
+//
+// Measured 2026-09-24: an expansion batch of 64 requests sat at 0 of 64
+// completed for over two hours. Anthropic's own envelope is "usually within
+// an hour, up to 24", so two hours is slow rather than broken. Hence two
+// thresholds and not one:
+
+/** Past this, the sweep says so — on the row, in the tick, in the ledger —
+ *  and keeps waiting. Slow is not broken and a cancel here would throw away
+ *  work that is about to land. */
+const BATCH_OVERDUE_MIN = 120
+
+/**
+ * Past this, it stops waiting and finishes the stage live.
+ *
+ * Six hours, not the twenty this was first set to. Twenty was calibrated
+ * against the API's 24h expiry — the wrong reference. The right one is what
+ * the discount is FOR: batching is opt-in because it trades hours for money,
+ * and a batch that has not landed in six hours has stopped being a trade. It
+ * is just a parked backlog with a cost saving nobody can spend.
+ *
+ * Still short of the expiry, which matters independently: a batch left to
+ * expire bills for whatever it completed and hands back nothing usable for the
+ * rest, so the sweep would lose the day AND the money. Cancelling keeps the
+ * replies that did finish — they reach judge_sweep_cache as soon as the
+ * cancelled batch ends — and the live fallback pays list price for the
+ * remainder rather than leaving the work parked.
+ */
+const BATCH_GIVE_UP_MIN = 360
+
+/**
+ * How long a live tick may spend walking, inside a 300s function.
+ *
+ * A wall-clock budget rather than a count of ideas, because the ideas are
+ * wildly uneven: a ready piece is one router call, a repairable one is
+ * research plus two rewrites plus three panels. A fixed count either wastes
+ * most of the budget or overruns it.
+ *
+ * Overrunning is cheap here — every reply is cached the moment it arrives and
+ * an idea commits only when its walk completes — so this protects the ledger
+ * row, not the work.
+ */
+const LIVE_TICK_MS = 240_000
+
 interface SweepRow {
   id: string
   status: string
@@ -71,6 +142,39 @@ interface SweepRow {
   counts: Record<string, unknown>
   dry_run: boolean
   note: string | null
+  /** Set once a batch has been given up on. From then the sweep runs live, a
+   *  few ideas per tick, until it finishes. Everything already paid for stays
+   *  in judge_sweep_cache and is still served from it. */
+  live_fallback: boolean
+}
+
+/**
+ * The live fallback transport: the same bookkeeping, real calls.
+ *
+ * Built from liveDeps so there is one definition of what a live call is, with
+ * the two things the sweep owns swapped in — the cache, so nothing already
+ * paid for is bought twice, and the held panel rows, so a walk that throws
+ * part-way leaves nothing half-written.
+ */
+function liveWithCache(bus: BatchBus, dryRun: boolean): LadderDeps {
+  const base = liveDeps(dryRun)
+  return {
+    ...base,
+    call: bus.liveCall,
+    research: query => bus.research(query, () => base.research(query)),
+    persist: async (subjectId, panel) => {
+      const runId = randomUUID()
+      const { run, verdicts } = panelRows(subjectId, panel, runId)
+      bus.hold('panel_runs', [run])
+      bus.hold('judge_verdicts', verdicts)
+      return runId
+    },
+    commit: () => bus.commit(),
+    abandon: () => bus.abandon(),
+    // A live call never defers, so a deferral here would be a bug and must
+    // surface rather than be counted.
+    deferrable: false,
+  }
 }
 
 /** The batched transport, as the ladder's own dependency shape. */
@@ -112,7 +216,7 @@ async function loadRunning(): Promise<SweepRow | null> {
   return (data as SweepRow | null) || null
 }
 
-async function createSweep(limit: number, ids: string[], dryRun: boolean): Promise<SweepRow | null> {
+async function createSweep(limit: number, ids: string[], dryRun: boolean, mode: SweepMode): Promise<SweepRow | null> {
   const { data: rows, error } = await candidateQuery(limit, ids)
   if (error) throw new Error(error.message)
   // The same eligibility the walk applies, applied once up front so the sweep
@@ -124,8 +228,11 @@ async function createSweep(limit: number, ids: string[], dryRun: boolean): Promi
     .slice(0, limit)
     .map(r => String((r as Record<string, unknown>).id))
   if (!chosen.length) return null
+  // A live sweep is simply one that starts where a given-up batch sweep ends:
+  // same walk, same cache, same held rows, real calls. One mechanism, two
+  // entry points, rather than a second runner to keep in step.
   const { data, error: iErr } = await supabase.from('judge_sweeps').insert({
-    idea_ids: chosen, dry_run: dryRun,
+    idea_ids: chosen, dry_run: dryRun, live_fallback: mode === 'live',
   }).select('*').single()
   if (iErr || !data) throw new Error(`could not start a sweep: ${iErr?.message || 'no row'}`)
   return data as SweepRow
@@ -146,13 +253,51 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
   // that are already in flight in the unread batch, and submitting them a
   // second time. Waiting is free; paying twice is not.
   let drainedRows = 0, drainedErrors = 0
+  let live = sweep.live_fallback === true
+  let gaveUp: string | null = null
+  let overdue: { batch: string; minutes: number } | null = null
+
   for (const ref of batches) {
     if (ref.read) continue
     const status = await retrieveBatch(ref.id)
     if (!status.ended) {
+      const ageMin = Math.round((Date.now() - Date.parse(ref.submitted_at)) / 60_000)
+
+      // Past patience entirely: stop waiting on it and finish live.
+      //
+      // Cancelled rather than abandoned. A batch left alone until its 24h
+      // expiry bills for whatever it completed and returns nothing usable for
+      // the rest, so the sweep would lose the day AND the money. Cancelling
+      // ends it promptly, and the next tick drains the replies that DID
+      // finish into the cache, so none of what was paid for is thrown away.
+      if (ageMin >= BATCH_GIVE_UP_MIN) {
+        try {
+          await cancelBatch(ref.id)
+          gaveUp = `gave up on ${ref.id} after ${ageMin} minutes and switched to live calls; replies that did finish are still used`
+        } catch (e) {
+          gaveUp = `could not cancel ${ref.id} after ${ageMin} minutes (${(e as Error)?.message?.slice(0, 120)}); switching to live calls anyway`
+        }
+        live = true
+        // NOT marked read. Its results are drained on a later tick once the
+        // cancel takes effect, and everything already paid for is then served
+        // from the cache exactly as if it had landed on time.
+        break
+      }
+
+      // Slow, not broken. Said out loud and still waited on: a cancel here
+      // would throw away work that is very likely about to land.
+      if (ageMin >= BATCH_OVERDUE_MIN) {
+        overdue = { batch: ref.id, minutes: ageMin }
+        await saveSweep(sweep.id, {
+          note: `batch ${ref.id} has been processing ${ageMin} minutes (${status.succeeded} of ${ref.requests} done). Still waiting; gives up at ${BATCH_GIVE_UP_MIN}.`,
+        })
+      }
+
       return {
         ok: true, sweep_id: sweep.id, state: 'waiting',
         waiting_on: ref.id, processing: status.processing, succeeded: status.succeeded,
+        age_minutes: ageMin,
+        ...(overdue ? { overdue: true, gives_up_at_minutes: BATCH_GIVE_UP_MIN } : {}),
         ticks: sweep.ticks, batches: batches.length,
       }
     }
@@ -163,6 +308,11 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
   }
 
   // ── 3. Walk every idea from the top, against what is now in hand ──────────
+  //
+  // Live mode still opens the bus, and that is the point: everything already
+  // paid for is served from judge_sweep_cache exactly as before, and only what
+  // is genuinely missing costs a live call. Giving up on a batch loses the
+  // discount on the remainder, never the work.
   const bus = await BatchBus.open(sweep.id, sweep.dry_run)
   let report: LadderReport
   try {
@@ -170,7 +320,8 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
       limit: sweep.idea_ids.length,
       ids: sweep.idea_ids,
       dryRun: sweep.dry_run,
-      deps: batchDeps(bus),
+      deps: live ? liveWithCache(bus, sweep.dry_run) : batchDeps(bus),
+      ...(live ? { deadlineMs: LIVE_TICK_MS } : {}),
     })
   } catch (e) {
     await saveSweep(sweep.id, {
@@ -191,7 +342,15 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
   // deferrals, because those are two different claims and only one of them is
   // evidence. A sweep can also finish with ideas it never managed to judge —
   // it says so rather than reporting the shape of a clean run.
-  const done = !ref
+  // In live mode nothing defers, so `ref` is always null — which would read as
+  // "finished" on the very first fallback tick while most of the backlog was
+  // still untouched. Completion there means every idea settled, which the walk
+  // reports as skipped (already judged) plus the bands it just produced.
+  // Live mode never defers, so `ref` is always null there — which would read as
+  // "finished" on the first tick while most of the backlog was untouched. It is
+  // done when the walk reached the end of the list rather than the end of its
+  // clock, which the walk now reports rather than leaving to be inferred.
+  const done = live ? !report.ran_out_of_time : !ref
   // Counted from the walk's own band tallies, which are only incremented at the
   // END of a walk that completed. `judged - deferred` would have read -64 on the
   // first tick, where every idea defers at the expansion before any panel runs.
@@ -205,6 +364,7 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
     status: done ? 'finished' : stalled ? 'failed' : 'running',
     batches,
     ticks,
+    live_fallback: live,
     counts: {
       judged: report.judged, ready: report.ready, escalated: report.escalated,
       weak: report.weak, unjudged: report.unjudged, skipped: report.skipped,
@@ -214,7 +374,9 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
       ? `stopped at the ${MAX_TICKS}-tick ceiling with ${report.deferred} ideas still deferring: something is not converging`
       : barren
         ? `stopped after ${ticks} ticks with ${report.deferred} ideas still deferring and nothing new arriving`
-        : done ? null : sweep.note,
+        // A give-up is the note worth keeping over an earlier overdue warning:
+        // it says what was done about it, not merely that something was slow.
+        : gaveUp || (done ? null : sweep.note),
   })
 
   return {
@@ -226,6 +388,8 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
     settled,
     deferred: report.deferred,
     waiting_for: ref ? { batch: ref.id, requests: ref.requests, by_agent: wanted } : null,
+    ...(live ? { mode: 'live', ran_out_of_time: report.ran_out_of_time } : { mode: 'batch' }),
+    ...(gaveUp ? { gave_up: gaveUp } : {}),
     drained: { replies: drainedRows, errored: drainedErrors },
     cached_before_walk: bus.cached,
     judged: report.judged, ready: report.ready, escalated: report.escalated,
@@ -238,8 +402,11 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
 async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardCronRoute(req, res)) return
 
-  const body = (req.body || {}) as { action?: string; limit?: number; ids?: string[]; dryRun?: boolean }
+  const body = (req.body || {}) as { action?: string; limit?: number; ids?: string[]; dryRun?: boolean; mode?: string }
   const action = String(body.action || 'tick')
+  // Batch is opt-in and never inferred. It halves the bill and costs hours, and
+  // the hours are only free when nothing is waiting on the answer.
+  const mode: SweepMode = body.mode === 'batch' ? 'batch' : DEFAULT_MODE
   const limit = Math.max(1, Math.min(200, Number(body.limit) || DEFAULT_LIMIT))
   const dryRun = body.dryRun === true
   const ids = Array.isArray(body.ids)
@@ -264,7 +431,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // work and pay for it twice.
     if (running) return res.json(await tick(running))
 
-    const started = await createSweep(limit, ids, dryRun)
+    const started = await createSweep(limit, ids, dryRun, mode)
     // `ok`, not `skipped`. A tick that looked and found nothing to judge is a
     // tick that did its job, and contentEngineAttention measures staleness from
     // the last OK run only — so recording an idle half-hourly tick as skipped
