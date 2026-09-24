@@ -195,9 +195,38 @@ access code, the cron secret accepted); each was caught.
 token fields directly instead of through `readUsage()`). Two media tests fail
 in a container without ffmpeg; they are environmental.
 
+**Found on piece 1's iteration, not yet fixed** (each one is a backlog item,
+with the evidence that found it):
+
+| # | Stage | What is wrong | Evidence |
+|---|---|---|---|
+| F1 | revise | The stored voice block beats the house rule and a direct instruction. After H7, a full revise told "zero Not X, Y" kept about seven; a second revise that quoted the eight offending sentences back kept most of them. Only line-by-line rewrites cleared them. | piece 1, v2 and v3. The fix is the voice block edit (section 4). |
+| F2 | revise, in place | The select-and-rewrite path splices back whatever the model returns. Given a heading, it returned the heading without `## ` plus the next sentence, so the heading stopped being a heading and a sentence was duplicated. Twice it changed the meaning of the line (invented a position for Amazon; "measured, not projected" became "measured against your actual logs"). | piece 1, 8 in-place calls: 6 clean, 1 broken splice, 2 meaning drifts. The route should refuse a fragment that carries text from outside the selection and keep a heading's markdown. |
+| F3 | revise | The model wrote the instruction into the piece: "Say the ad-revenue read once, plainly:" appeared in the body. | piece 1, v3 |
+| F4 | revise, final pass, judges | An invented attribution passed everything. v2 said GeekWire reported Meta's view that Muse "shouldn't need special authorization to do what any browser extension already does". Nothing on file says it. The final pass missed it, and `evidence_integrity`, the judge for it, returned nothing ("the judge did not return an object") on that run. | piece 1, v2, panel `b1c852d4` |
+| F5 | final pass | It cannot see the research it grades against: materials reach it trimmed ("[trimmed]"), so it asked to verify the $68.6B and the Perplexity claim, both of which are on file. | piece 1, v2 and v5 |
+| F6 | final pass | Volatile and fragile. v2 "close to ship-ready", v5 (which fixed v2's faults) "not ready", with researched 4 to 3 and helpful 4 to 3. One call returned unparseable output: 502, no retry, spend lost. | piece 1, 4 runs, $0.23 |
+| F7 | final pass, judges | The pitch fields go stale. The row's `idea` still states the ad motive as fact and a pitch field still carries the retired $56B; the final pass reads them and flagged the mismatch. Nothing offers to update them when the piece changes. | piece 1, v5 |
+| F8 | draft judges | `channel_fit` grades against retired channel names ("Mindmaker Live: Paid", Signal & Noise, LinkedIn), not the subchannel mandate, and misread the length (said 1,200 words for 1,008). The voice judge reads the voice block, so it marked the signature section labels as "scaffolding" (a conflict with R3 for Krish to settle). | panels `b1c852d4`, `68a94a2f` |
+| F9 | voice check | Reports only the first "Not X, Y" it finds; misses "never X, it was Y"; one false positive on honest hedging ("is not established. It's the plainest explanation"). | piece 1, v2 |
+| F10 | research | `dive-deeper` caps Perplexity at 1,200 tokens, so a three-part question is cut off mid-sentence. Each call also rewrites the whole `meta`, so calls must run one at a time. | piece 1, research |
+
 ## 3. Front-end implications
 
-- *(pending)*
+Collected as the walk goes; finalised after piece 3.
+
+- **The composer should send `edit_source: 'magic'` on the autosave that
+  follows an accepted rewrite** (H6). Until it does, an accepted rewrite is
+  still logged twice: once as `magic_accepted`, once as a Krish
+  `manual_edit`, and the compiler reads the second as him typing.
+- **An operator session relays a decision with `decided_by: 'Krish'`**, and
+  only then. Any surface that lets an agent act for him (a Claude chat, the
+  triage desk run by Claude) needs to carry that explicitly (H6).
+- **Show the voice check inline, every hit** (F9): the deterministic check is
+  the only thing that caught R2 violations, and it names one.
+- **Select-and-rewrite needs a guard or a preview of the splice** (F2).
+- **Offer to update the headline and thesis when the body moves** (F7).
+- **Ask Krish in plain messages on mobile** (section 4): tool answers were lost.
 
 ## 4. Open questions for Krish
 
@@ -304,6 +333,11 @@ voice check (an em dash or banned phrase in the angle).
 | 5. Draft judges | `POST .../judge {gate:'draft'}`, panel `e4d51476` | hook 8, clarity 8, personality 8, evidence_integrity 9, voice 7 (meta-commentary), channel_fit 7 (180 words of Amazon's position before the argument), prosecutor 7 (the "both things can be true" middle) | about $0.09 | **works, with two faults.** No judge flagged the four "Not X, Y" uses (H7). `evidence_integrity` gave 9 to the evidence the final pass called the biggest gap: one of the two is miscalibrated. |
 | 6. Krish's verdict | questions put to him in session | **Revise it. The money leads. "Cut it everywhere"** (the "Not X, Y" move, which became rule R2). **Research, then revise**, plus his question on format (rule R3, proposed). | $0 | His answers did not reach the session: the question tool returned "[No preference]" for all four, and the session went on as if he had not answered, labelling its own defaults as team calls. He sent screenshots of his answers. Two differed from the defaults: the session had planned to allow one "Not X, Y", and had not planned sections. See section 4 on asking by plain message instead. |
 | 7. Research | `POST .../dive-deeper`, four calls, run one at a time because each rewrites the whole `meta` | Amazon's advertising services: $68.635B in FY2025 (10-K filed Feb 6, 2026; sponsored ads, display and video; Sponsored Products not broken out; $56.2B was FY2024, so the seed's number was a year stale and mislabelled). Block began Sunday Sept 20, 2026; Amazon's warning text; spokesperson statements to CNET and Business Times. Meta declined to comment to CNBC (Sept 23); GeekWire reported Meta's position. Amazon's amended complaint against Perplexity, Sept 21, N.D. Cal., adds a contract claim under the Conditions of Use. Shopify: Tobi Lutke on X, Sept 21, Shop Pay agentic checkout for Muse across Shopify stores. | $0 metered (Perplexity is unmetered) | **works, one fault.** `dive-deeper` caps Perplexity at 1,200 tokens, so a three-part question came back cut off mid-sentence; ask one thing per call. |
+| 8. Revise (v2) | `POST .../revise`, direction built from Krish's answers: four signature sections (R3 trial), the money leads, the $68.6B stated as what it is, attributed statements, zero "Not X, Y" | 1,008 words, four sections, $56B gone, verdict names the Conditions of Use case | about $0.02 | **mixed.** Structure and facts landed. About seven "Not X, Y" survived (F1), one invented attribution (F4), commentary about the piece crept back. |
+| 9. Checks on v2 | final pass; draft judges, panel `b1c852d4` | Final pass: "close to ship-ready"; flagged that the idea's title states the hypothesis as fact. Voice check (H7) caught "Not X, Y" at 4, its first live catch. Prosecutor 7: FOLLOW THE MONEY reads as an explainer bolted to a news story. Voice 6: hedging. | about $0.16 | **works, with F4, F5, F8** |
+| 10. Revise (v3), then line rewrites (v4) | targeted revise quoting the eight offending sentences; then eight in-place rewrites, chained | v3 fixed the invented line, the dates and the inference labels, and wrote the instruction into the body (F3); kept most named sentences (F1). In place: 6 of 8 clean, 1 broken splice, 2 meaning drifts (F2). | about $0.15 | **the engine could not finish R2 alone** |
+| 11. Editor's pass (v5, v6) | seven line edits by the session, saved as a `manual_edit` that the ledger marks `observation_only` (H6) | Zero "Not X, Y" of any shape. Restored the verdict heading, removed the duplicate, "Sunday night" to "Sunday" (the hour is not on file), the Shopify timeline corrected after the final pass caught it (Muse checkout was reportedly live on Shopify from Sept 8; the Sept 21 post deepened it). 902 words. | $0 | the edits are the session's, listed here so Krish can see exactly what a person changed |
+| 12. Checks on v5 | final pass (one 502, one retry); draft judges, panel `68a94a2f` | No kills; hook 8, personality 8, clarity 7, evidence_integrity 7, voice 7, channel_fit 7, prosecutor 7. Final pass "not ready": the stale $56B in the pitch fields (F7), the Shopify timeline (fixed in v6), the mechanism stated as fact rather than inference, and a close that leans on a pending ruling where the mandate wants a fixed constraint. | about $0.18 | **works, with F6, F7, F8.** v6 differs from v5 by the timeline fix only and was not re-judged. |
 
 **A source conflict about Krish's voice, found at step 3.** The stored voice
 block (`system_config.content_voice_block`) calls the "Not X, Y" clarifier
