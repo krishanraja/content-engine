@@ -48,6 +48,11 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     supabase
       .from('content_edit_events')
       .select('action, mode, value, subject_id, occurred_at')
+      // His hand only. An agent session's own drafts and rewrites are
+      // recorded as observations (see operatorAttribution in _editEvents.ts)
+      // and are never evidence of his taste.
+      .eq('actor', 'Krish')
+      .neq('confirmation_state', 'observation_only')
       .gte('occurred_at', since)
       .limit(5000),
     supabase

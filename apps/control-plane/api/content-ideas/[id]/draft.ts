@@ -5,7 +5,7 @@ import {
   callClaude, corpusForChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId,
   readMaterials, robustJson, sanitizeVoice, VOICE_GUARDRAILS,
 } from '../../_content.js'
-import { sha256 } from '../../_editEvents.js'
+import { operatorAttribution, sha256 } from '../../_editEvents.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { loadSubchannel } from '../../_subchannels.js'
 import { guardEngine } from '../../_auth.js'
@@ -194,7 +194,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const seed = [row.idea || '', row.thesis || ''].join('\n\n')
-  const operator = /^Bearer\s/i.test(String(req.headers.authorization || ''))
+  const operator = operatorAttribution(req.headers.authorization, req.body)
   const editEventId = randomUUID()
   const { error: ledgerError } = await supabase.from('content_edit_events').insert({
     idempotency_key: editEventId,
@@ -209,11 +209,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     chars_before: seed.length,
     chars_after: body.length,
     panel_run_id: typeof meta.ladder?.panel_run_id === 'string' ? meta.ladder.panel_run_id : null,
-    confirmation_state: 'pending',
-    // Who asked, from how they got in: the operator bearer is a session with
-    // no browser, the cookie is Control Center.
-    surface: operator ? 'api' : 'composer',
-    client: operator ? 'claude_code' : 'desktop',
+    // Who asked, from how they got in: the cookie is Krish in Control Center;
+    // the operator bearer is a session acting as itself unless it relays him
+    // (decided_by: 'Krish'), and its own calls are observations.
+    confirmation_state: operator?.observation ? 'observation_only' : 'pending',
+    surface: operator ? operator.surface : 'composer',
+    client: operator ? operator.client : 'desktop',
+    ...(operator ? { actor: operator.actor } : {}),
   })
   if (ledgerError) console.warn(`[edit-ledger] draft not recorded for ${id}: ${ledgerError.message}`)
 

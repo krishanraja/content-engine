@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardEngine } from './_auth.js'
 import { supabase } from './_supabase.js'
-import { validateEditEvent } from './_editEvents.js'
+import { DECISION_ACTIONS, operatorAttribution, validateEditEvent } from './_editEvents.js'
 
 // Append one edit event.
 //
@@ -26,7 +26,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const parsed = validateEditEvent(req.body)
   if (parsed.ok !== true) return res.status(400).json({ ok: false, error: parsed.error })
 
-  const { error } = await supabase.from('content_edit_events').insert(parsed.value)
+  // An operator session writes as itself (see operatorAttribution). It may
+  // relay one of Krish's decisions, but it cannot make one: a decision row
+  // settles a judge in judge_calibration, which reads no actor.
+  const operator = operatorAttribution(req.headers.authorization, req.body)
+  const row = { ...parsed.value }
+  if (operator) {
+    if (DECISION_ACTIONS.has(row.action) && operator.observation) {
+      return res.status(403).json({ ok: false, error: 'a_decision_needs_krish', detail: "Relay Krish's own decision with decided_by: 'Krish'." })
+    }
+    row.surface = operator.surface
+    row.client = operator.client
+    row.actor = operator.actor
+    if (operator.observation) row.confirmation_state = 'observation_only'
+  }
+
+  const { error } = await supabase.from('content_edit_events').insert(row)
   if (error) {
     // A replay is not a failure. The unique idempotency key is what makes the
     // composer's accept safe to double-fire on a phone.

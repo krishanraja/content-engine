@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
-import { sha256 } from '../../_editEvents.js'
+import { operatorAttribution, sha256 } from '../../_editEvents.js'
 import { supabase } from '../../_supabase.js'
 import { openStream, send, fail, streamClaude } from '../../_stream.js'
 import { corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId, readMaterials, sanitizeVoice } from '../../_content.js'
@@ -141,6 +141,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // seen. Same shape as the usage meter dropping meter_add's error for six
   // days, and it matters more here: the table had one row in it, a smoke test.
   const editEventId = randomUUID()
+  const operator = operatorAttribution(req.headers.authorization, req.body)
   try {
     const { error } = await supabase.from('content_edit_events').insert({
       idempotency_key: editEventId,
@@ -155,9 +156,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       before_hash: sha256(sourceText),
       chars_before: sourceText.length,
       chars_after: revised.length,
-      confirmation_state: 'pending',
-      surface: 'composer',
-      client: typeof b.client === 'string' && b.client === 'mobile' ? 'mobile' : 'desktop',
+      // An operator session's own rewrite is an observation, not his (see
+      // operatorAttribution); a browser's is his, pending his verdict.
+      ...(operator
+        ? { confirmation_state: operator.observation ? 'observation_only' : 'pending', surface: operator.surface, client: operator.client, actor: operator.actor }
+        : { confirmation_state: 'pending', surface: 'composer', client: typeof b.client === 'string' && b.client === 'mobile' ? 'mobile' : 'desktop' }),
     })
     if (error) console.warn(`[edit-ledger] magic_invoked not recorded for ${id}: ${error.message || error}`)
   } catch (e) {

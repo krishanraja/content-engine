@@ -38,6 +38,47 @@ export function sha256(text: string): string {
   return createHash('sha256').update(text ?? '').digest('hex')
 }
 
+// ── Whose event is it ───────────────────────────────────────────────────────
+//
+// The weekly compiler learns Krish's taste from this table, and `actor`
+// defaults to 'Krish'. Until 2026-09-24 every row an agent session wrote took
+// that default, so a draft the agent asked for, or a rewrite the agent kept,
+// would have been learned as his. Found on the three-piece walk, whose own
+// drafting would have been the first such rows.
+//
+// The rule is the Studio's (packages/core/src/feedback.ts): an event whose
+// origin is not Krish is an observation, never a preference. An operator
+// session (the bearer token) acts as itself unless it says it is relaying a
+// decision Krish made in words, with `decided_by: 'Krish'`. Saying so is
+// deliberate and auditable; the default can never pass for him.
+
+/** Clients that are an agent acting, not Krish's hand on a device. */
+export const AGENT_CLIENTS = new Set(['codex', 'claude_code', 'claude_ai', 'chatgpt', 'runner', 'cron'])
+
+/** The actions that settle a judge's prediction in judge_calibration. Only
+ *  Krish makes these; an agent may relay one, never take one. */
+export const DECISION_ACTIONS = new Set(['approved', 'binned', 'published'])
+
+export interface OperatorAttribution {
+  surface: 'api'
+  client: string
+  actor: string
+  /** True unless the session is relaying Krish's own decision. */
+  observation: boolean
+}
+
+/**
+ * Attribution for a request that came in on the operator bearer. Null for a
+ * browser (the cookie), whose events are Krish's on the surface it names.
+ */
+export function operatorAttribution(authorization: unknown, body: unknown): OperatorAttribution | null {
+  if (!/^Bearer\s/i.test(String(authorization || ''))) return null
+  const b = (body && typeof body === 'object' ? body : {}) as Record<string, unknown>
+  const client = typeof b.client === 'string' && AGENT_CLIENTS.has(b.client) ? b.client : 'claude_code'
+  const relayed = b.decided_by === 'Krish'
+  return { surface: 'api', client, actor: relayed ? 'Krish' : client, observation: !relayed }
+}
+
 export interface EditEventInput {
   idempotency_key: string
   subject_table: string
@@ -60,6 +101,7 @@ export interface EditEventInput {
   dwell_ms?: number | null
   reason_code?: string | null
   confirmation_state?: string | null
+  actor?: string
 }
 
 /** Fail closed and say which field. A ledger that silently accepts a malformed

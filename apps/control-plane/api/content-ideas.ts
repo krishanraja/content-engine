@@ -9,7 +9,7 @@ import { SYNTHESIS_MODEL } from './_models.js'
 import { recordShip } from './_ships.js'
 import { randomUUID } from 'node:crypto'
 import { contentRevisionHash, createProductionApproval, jsonRecord, readProductionApproval } from './_productionBrief.js'
-import { sha256 } from './_editEvents.js'
+import { operatorAttribution, sha256 } from './_editEvents.js'
 import { guardEngine } from './_auth.js'
 
 // Content ideas inbox endpoint.
@@ -320,6 +320,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ ok: false, error: 'no updatable fields supplied' })
     }
 
+    // Approve, drop and publish are Krish's decisions and each one settles the
+    // panel in judge_calibration. An operator session may relay one he made in
+    // words (decided_by: 'Krish'); it may not take one. See operatorAttribution.
+    const operator = operatorAttribution(req.headers.authorization, body)
+    if (operator?.observation && ['approved', 'dropped', 'published'].includes(String(updates.state))) {
+      return res.status(403).json({ ok: false, error: 'a_decision_needs_krish', detail: "Relay Krish's own decision with decided_by: 'Krish'." })
+    }
+
     const changesApprovedContent = ['idea', 'thesis', 'body'].some((key) => Object.prototype.hasOwnProperty.call(updates, key))
     let current: {
       idea: string
@@ -449,11 +457,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         : null
 
       const events: Record<string, unknown>[] = []
-      const surface = typeof body.surface === 'string' && body.surface === 'mobile_deck' ? 'mobile_deck' : 'composer'
-      const client = typeof body.client === 'string' && body.client === 'mobile' ? 'mobile' : 'desktop'
+      // Who did this: Krish in a browser, or an operator session acting as
+      // itself unless it is relaying him. An agent's own rows are observations,
+      // which the compiler never learns from.
+      const surface = operator ? operator.surface
+        : typeof body.surface === 'string' && body.surface === 'mobile_deck' ? 'mobile_deck' : 'composer'
+      const client = operator ? operator.client
+        : typeof body.client === 'string' && body.client === 'mobile' ? 'mobile' : 'desktop'
+      const attribution = operator
+        ? { actor: operator.actor, ...(operator.observation ? { confirmation_state: 'observation_only' } : {}) }
+        : {}
       const panelRunId = typeof body.panel_run_id === 'string' ? body.panel_run_id : null
+      // A body that came from an accepted rewrite is not a hand edit. Its
+      // verdict is recorded by whoever accepted it (magic_accepted, through
+      // /api/content-edits); logging it here as well would teach the compiler
+      // that he typed what the machine wrote.
+      const fromRewrite = body.edit_source === 'magic'
 
-      if (bodyChanged) {
+      if (bodyChanged && !fromRewrite) {
         events.push({
           idempotency_key: randomUUID(),
           subject_table: 'content_ideas', subject_id: id, artifact_kind: 'draft',
@@ -462,7 +483,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           chars_before: beforeText.length, chars_after: afterText.length,
           // Bounded and structured: what moved, never the two bodies again.
           delta_features: [{ feature: 'chars', before: beforeText.length, after: afterText.length }],
-          surface, client,
+          surface, client, ...attribution,
         })
       }
       if (stateAction) {
@@ -476,7 +497,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           // a join and not a guess about which verdict came before which call.
           ...(panelRunId ? { panel_run_id: panelRunId } : {}),
           ...(typeof body.reason_code === 'string' ? { reason_code: body.reason_code } : {}),
-          surface, client,
+          surface, client, ...attribution,
         })
       }
       if (events.length) {
