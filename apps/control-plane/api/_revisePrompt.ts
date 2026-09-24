@@ -27,6 +27,10 @@ export interface ReviseContext {
   /** materialsContext(...) output, or '' when the piece carries no materials. */
   materialsBlock: string
   idea?: { idea?: string | null; thesis?: string | null; contrarian?: string | null } | null
+  /** The live subchannel's mandate from venture_formats, when the piece is
+   *  routed to one. It is the test the piece must pass, so it governs the
+   *  structure and the close over the house voice line. */
+  mandate?: { label: string; text: string } | null
 }
 
 export interface ReviseRequest {
@@ -62,9 +66,17 @@ export function buildReviseSystem(ctx: ReviseContext, r: Pick<ReviseRequest, 'va
   const corpusBlock = ctx.channelCorpus
     ? `\n\nCHANNEL CORPUS (the mandate, audience, and bar for this channel — bend the draft toward THIS, not a generic rewrite):\n${ctx.channelCorpus}`
     : ''
+  // A routed piece is rewritten to its subchannel's mandate, as it was drafted
+  // and as final-pass grades it. Without this, a rewrite pulled every close back
+  // to the house "hard verdict", which the lift.the.lid mandate forbids.
+  const mandate = ctx.mandate?.text?.trim()
+  const mandateBlock = mandate
+    ? `=== THE MANDATE FOR ${ctx.mandate!.label.toUpperCase()} ===\n${mandate}\n\nThe mandate is the test this piece must pass. Keep the rewrite inside it. Where the voice notes or house rules disagree with the mandate about the question the piece asks, its structure or how it closes, the mandate wins.`
+    : ''
   return [
-    'You are Cleo, rewriting a draft in Krish Raja\'s voice. Krish is a British-Australian founder-operator in Brooklyn who runs a production AI agent fleet. Founder-practitioner, two gears, compression, the "Not X, Y" clarifier, hard-verdict endings.',
+    `You are Cleo, rewriting a draft in Krish Raja's voice. Krish is a British-Australian founder-operator in Brooklyn who runs a production AI agent fleet. Founder-practitioner, two gears, compression, the "Not X, Y" clarifier${mandate ? '' : ', hard-verdict endings'}.`,
     '',
+    mandateBlock,
     ctx.voice ? `VOICE REFERENCE:\n${ctx.voice}` : '',
     corpusBlock,
     '',

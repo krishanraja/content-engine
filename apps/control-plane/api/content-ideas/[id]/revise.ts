@@ -8,6 +8,7 @@ import { isHumourRegister } from '../../_humor.js'
 import { buildRevisePrompt, REVISE_MODES } from '../../_revisePrompt.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { guardEngine } from '../../_auth.js'
+import { loadSubchannel } from '../../_subchannels.js'
 
 // POST /api/content-ideas/:id/revise
 //   body: {
@@ -54,6 +55,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const channelCorpus = corpusForChannel(corpus, corpusChannel)
   const materials = readMaterials((idea as any)?.meta)
   const materialsBlock = materials.length ? `\n\n${materialsContext(materials)}` : ''
+  // The mandate follows the same target as the corpus: the subchannel being
+  // adapted to, else the one the piece is routed to. Null for anything else.
+  const sub = await loadSubchannel(adaptMatch ? adaptMatch[1] : (idea as any)?.lane_slot)
 
   const inPlace = !!(b.selection && sourceText.includes(b.selection))
 
@@ -63,6 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       channelCorpus,
       materialsBlock,
       idea: idea ? { idea: idea.idea, thesis: idea.thesis, contrarian: (idea as any)?.meta?.contrarian ?? null } : null,
+      mandate: sub ? { label: sub.label, text: sub.mandate } : null,
     },
     {
       mode, value: b.value, hint: b.hint, instruction: b.instruction,
