@@ -70,7 +70,11 @@ interface Attempt {
   /** Why nothing changed, when nothing changed. An attempt with no outcome and
    *  no reason is the failure this whole engine keeps re-learning: it reads as
    *  "we tried" and proves nothing. */
-  outcome: 'improved' | 'declined' | 'unchanged' | 'call_failed'
+  /** `regressed` is a repair that was judged WORSE than what it replaced. The
+   *  earlier wording is kept and the loop stops; both scores stay on the row,
+   *  because a repair that went backwards says the judges' brief was wrong
+   *  rather than the idea. */
+  outcome: 'improved' | 'declined' | 'unchanged' | 'call_failed' | 'regressed'
   detail: string | null
   panel_run_id: string | null
   /** What the repair was given to work with. An attempt that declined for want
@@ -478,18 +482,48 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         if (fixed.outcome !== 'improved') { stop(fixed.outcome, fixed.detail || 'no reason given'); break }
         if (!changed) { stop('unchanged', 'the model returned the same idea'); break }
         repairs++
-        current = { idea: fixed.idea as string, thesis: fixed.thesis || '' }
+        const previous = current
+        const repaired = { idea: fixed.idea as string, thesis: fixed.thesis || '' }
         panel = await runPanel({
           gate: 'idea', subjectTable: 'content_ideas', subjectId: idea.id,
-          artifact: artifactOf(current),
+          artifact: artifactOf(repaired),
           context: judgeContext,
-          deterministic: deterministicFindings({ text: artifactOf(current), minChars: 80, checkVoice: true }),
+          deterministic: deterministicFindings({ text: artifactOf(repaired), minChars: 80, checkVoice: true }),
           shortCircuitOnKill: true, idempotencyKey: randomUUID(),
         })
         const runId = dryRun ? null : await persistPanel(idea.id, panel)
         const before = s
-        s = standing(panel.verdicts)
+        const after = standing(panel.verdicts)
         if (runId) panelRunId = runId
+
+        // A REPAIR MAY NEVER LEAVE A PIECE WORSE THAN IT FOUND IT.
+        //
+        // Caught on a live run, 2026-09-24: an idea the panel had scored 7 was
+        // "improved", re-judged at 3 on the new wording, and buried on that 3.
+        // The loop took the repaired text unconditionally, so the machine could
+        // destroy a good idea by trying to sharpen it, and then file the wreck
+        // as its own evidence for burying it. Nothing said so: it read as an
+        // ordinary low score.
+        //
+        // The keep-the-better rule is not a rollback of the record. Both
+        // versions were judged, both scores are on the attempt, and a repair
+        // that went backwards is the single most useful row here — it says the
+        // judges' brief was wrong, not the idea.
+        if (after.score !== null && before.score !== null && after.score < before.score) {
+          current = previous
+          attempts.push({
+            n, brief: before.brief, score_before: before.score, score_after: after.score,
+            weakest_before: before.weakest, weakest_after: after.weakest, changed: false,
+            outcome: 'regressed',
+            detail: `the repair scored ${after.score} against ${before.score}; the earlier wording was kept`,
+            panel_run_id: runId,
+            researched: Boolean(found || own), sources: found?.sources || [],
+          })
+          break
+        }
+
+        current = repaired
+        s = after
         attempts.push({
           n, brief: before.brief, score_before: before.score, score_after: s.score,
           weakest_before: before.weakest, weakest_after: s.weakest, changed: true,

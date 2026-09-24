@@ -203,6 +203,19 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // looking like refusals with nothing to work from. A field you cannot read
   // is a field that was never set, as far as anyone measuring is concerned.
   const projection = ladder.slice(ladder.indexOf('attempts: attempts.map('), ladder.indexOf('attempts: attempts.map(') + 500)
+  // A repair may never leave a piece worse than it found it. Caught on a live
+  // run: an idea the panel scored 7 was "improved", re-judged at 3 on the new
+  // wording, and buried on that 3 — so the machine could destroy a good idea by
+  // sharpening it and then file the wreck as its own reason for burying it.
+  assert.match(ladder, /after\.score < before\.score/,
+    'the ladder must compare the repaired score against the one before it')
+  const regressAt = ladder.indexOf('after.score < before.score')
+  const revertAt = ladder.indexOf('current = previous')
+  assert.ok(revertAt > regressAt && revertAt - regressAt < 200,
+    'a repair judged worse must restore the earlier wording, not keep the worse one')
+  assert.match(ladder, /outcome: 'regressed'/,
+    'a repair that went backwards must be recorded as such: it says the brief was wrong, not the idea')
+
   // Anchored on a word boundary, not a substring: the first version of this
   // assertion passed against `x_researched:`, which is the "a probe that finds
   // nothing has to be proved able to find something" rule catching me a second
