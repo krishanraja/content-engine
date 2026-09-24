@@ -131,6 +131,23 @@ Known breaks the walk will hit, in order:
 - **Whole-`meta` overwrites.** `final-pass`, `revise`, `challenge` and
   `deepen` read `meta`, wait 30 to 120 seconds on a model, then write the
   stale copy back. Two calls at once lose one of them.
+- **The final-pass rubrics are older than the mandates.** `_finalPass.ts`
+  hand-writes a rubric per venture. The `built` rubric instant-fails a piece
+  that "Krish did not build or watch being built", which is exactly what the
+  lift.the.lid mandate requires (never his own builds). The mandates were
+  rewritten on 2026-09-17; the rubrics were not. (read)
+- **The house close rule contradicts two mandates.** `VOICE_GUARDRAILS` in
+  `_content.ts` says every piece ends "on a hard, forward-looking verdict".
+  mind.the.gap forbids a closing moral and lift.the.lid says the verdict is the
+  reader's to reach; only split.the.bill wants a verdict close. The draft route
+  tells the model the mandate wins on structure and the close. (read)
+- **`judge_calibration` cannot grade a judge that said "revise".** The view
+  sets `agreed` only for `pass` and `kill` verdicts. On piece 1, three of ten
+  judges said revise (evidence 7, prosecutor 6, voice_mechanics 4) and are
+  invisible to calibration however Krish decides. (live)
+- **Curation output was never read downstream.** `meta.contrarian`,
+  `meta.adjacent_stories` and `meta.krish_notes` are written by the triage and
+  inspiration lanes and read by no drafting-class route. (read; H3 reads them)
 - **Ledger gaps.** A PATCH that only changes state (`published`, `dropped`)
   writes no `content_edit_events` row, so publishing never reaches
   `judge_calibration`. `chat` meters as `unattributed`. Nothing writes
@@ -140,6 +157,7 @@ Known breaks the walk will hit, in order:
 
 | # | Change | Why | Commit |
 |---|---|---|---|
+| H3 | New `POST /api/content-ideas/:id/draft` and `api/_subchannels.ts`. The route writes a full draft into an existing idea, against the subchannel's mandate read live from `venture_formats` (aliases via `format_aliases`), with everything curation left on the row: the angle the panel judged, `meta.contrarian`, `meta.adjacent_stories`, research, materials, and `meta.krish_notes` verbatim. Writes `body`, `state:'drafting'`, `meta.drafts` (with the model's own list of labelled inferences and open questions), and a `magic_invoked` ledger row carrying `panel_run_id`. Write guarded on `updated_at`. Refuses an unrouted idea (409 `no_subchannel`). | No route could draft into an existing idea (stage 3 did not exist), and nothing read what curation produced. | see git log: `engine: draft into the idea curation already worked up` |
 | H2 | `/api/content-edits` (the ledger), `judge`, `editorial-route` and `production-brief` move from `guard()` to `guardEngine()`. `check-unified-content-spine` and `check-content-production-bridge` now assert `guardEngine`. | They were cookie-only and failed open when the access code was unset. The walk records Krish's decisions through the ledger and judges drafts, so they need the same gate as the rest. | see git log: `engine: one gate for the ledger and the judges` |
 | H1 | Every route under `api/content-ideas/` and the bare `api/content-ideas.ts` now calls `guardEngine()` (`api/_auth.ts`): the `cc_access` cookie or `Authorization: Bearer $ENGINE_OPERATOR_TOKEN`, refusing both when unset, origin pinned. `voice.ts` is wrapped rather than changing the shared `_whisper.ts`. `ENGINE_OPERATOR_TOKEN` created on the engine's Vercel project (sensitive, production only). | 13 routes, several of which spend or write, had no auth. The bearer lets a session with no browser drive the engine without holding `CRON_SECRET`. | see git log: `engine: gate the idea routes` |
 
@@ -227,12 +245,19 @@ and the index of proposals; it is not a memory store.
 | Channel selection and per-channel copy | `channel-cut.ts` channel rules, `transformed_outputs` | yes, through the ledger |
 | Carousel, video Short, interactive artifact, post-production | Studio configuration in Git, promoted only through the tracked Studio gateway | **no.** The gateway is a Windows stdio proxy reading Windows Credential Manager (`.mcp.json`), so a cloud session is `read_only_untracked` for the Studio. It can draft a production brief but cannot record Studio learning. |
 
+**Candidate rules** (proposed until Krish approves; approved rules name where
+they become active):
+
+| Rule | Text | Source | Scope | Status |
+|---|---|---|---|---|
+| R1 | Where evidence is thin, the draft may argue from clearly labelled hypotheticals and reasoned predictions rather than dropping the piece. Inference is marked as inference. | Krish's note on piece 1 (triage desk, 2026-09-24): "In the absence of tons of evidence, we need to look at hypotheticals and sense-backed predictions." | Trial on all three walk pieces, passed to the draft as direction, not yet in any engine prompt | **proposed**, approved for trial 2026-09-24 |
+
 Standards by stage (filled as the walk reaches each one):
 
 | Stage | What the engine does today (verified) | What 10/10 looks like (from Krish's decisions) | Candidate rules | Status |
 |---|---|---|---|---|
 | Ideation | judge ladder: 9 idea judges, lower median, repair, confirm | | | |
-| Curation | ranked ready list, decide card with reason codes | | | |
+| Curation | ranked ready list, decide card with reason codes | Piece 1: the mandate's boundary question ("what does the reader change next?") decided a router-contested piece; Krish chose the subchannel whose reader acts on a budget. All four reasons to write applied. | | |
 | Drafting | *(no route drafts into an existing row)* | | | |
 | Iteration | `revise` presets, `final-pass` per-venture rubric | | | |
 | Channel selection | router fit across three subchannels; `channel-cut` | | | |
@@ -253,7 +278,20 @@ voice check (an em dash or banned phrase in the angle).
 
 | Step | Call | Result | Spend | Outcome |
 |---|---|---|---|---|
-| | | | | |
+| 1. Decide | Krish's decisions, recorded via `POST /api/content-edits` (operator token, `surface:'api'`, `client:'claude_code'`) | `approved` with `panel_run_id` and reasons `pattern_is_real`, `nobody_has_said_it`, `timing`, `sells_the_practice`; `magic_rejected` for the router's `mind_the_gap` pick | $0 | **works.** `judge_calibration` gained 7 rows with `agreed` set for this run, the first since the view was built on 2026-09-09. The 3 `revise` verdicts stay null (see section 1). |
+| 2. Draft | `POST .../draft` | *(next)* | | **missing** until H3 |
+
+**The curation decisions, as Krish made them (2026-09-24):**
+
+- Subchannel: **split.the.bill**, overruling the router (mind.the.gap 8,
+  split.the.bill 7, contested). Written as the money chain: sponsored-listing
+  budgets bypassed by an agent that completes checkout, closing on a verdict.
+- Why it is worth writing: the pattern is real, nobody has said it, timing,
+  and it sells the practice.
+- The $56B ad motive: **labelled as the hypothesis**. Amazon's stated reason
+  (security) is reported fairly; the money motive is argued as inference,
+  backed by Amazon's own advertising figure.
+- His note on the piece becomes proposed rule R1 (section 5).
 
 ## Piece 2: mind.the.gap
 
