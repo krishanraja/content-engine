@@ -403,7 +403,20 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       const hash = artifactHash(artifactOf(idea))
       // Idempotent on the artifact. Re-running is free and an edited idea is
       // re-judged, which is the behaviour a sweep needs to be safe to repeat.
-      if (meta.ladder?.artifact_hash === hash) { skipped++; continue }
+      //
+      // A RUN THAT COULD NOT JUDGE IS NOT A JUDGMENT. Measured 2026-09-24: the
+      // Anthropic account hit its spend cap 38 ideas into a 102-idea sweep.
+      // Every call after that failed, standing() correctly returned the
+      // `unjudged` band because every judge had abstained, and the row was
+      // written anyway with its artifact_hash. The next pass then skipped all
+      // 102, so 64 ideas were stranded as permanently-judged-as-nothing and
+      // no re-run would ever have picked them up.
+      //
+      // This reads the band rather than the presence of the record, so it
+      // repairs the rows already written without a migration: they carry
+      // `unjudged` and are now eligible again.
+      const priorBand = meta.ladder?.final?.band
+      if (meta.ladder?.artifact_hash === hash && priorBand && priorBand !== 'unjudged') { skipped++; continue }
 
       const mandateFor = (slug: string | null) =>
         mandates.find(m => m.slug === slug)?.mandate || mandates.map(m => m.mandate).join('\n\n')
@@ -691,7 +704,16 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
     // `weak` where `buried` used to be. The count is the Sunday list's length,
     // and calling it buried would be a lie about what happened to the rows.
-    return res.json({ ok: true, dry_run: dryRun, judged, ready, escalated, weak, skipped, repairs, results })
+    // `unjudged` is reported separately from the bands. A sweep where every
+    // model call failed returned judged=102 with the same shape as a clean
+    // one, which is the failure this engine keeps finding in other people's
+    // code: success reported for work that did not happen.
+    const unjudged = results.filter(r => (r as Record<string, unknown>).band === 'unjudged').length
+    return res.json({
+      ok: true, dry_run: dryRun, judged, ready, escalated, weak, unjudged, skipped, repairs,
+      ...(unjudged ? { warning: `${unjudged} of ${judged} could not be judged at all and will be retried on the next run` } : {}),
+      results,
+    })
   } catch (e: any) {
     return res.status(500).json({ ok: false, error: String(e?.message || e) })
   }

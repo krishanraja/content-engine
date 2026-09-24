@@ -224,6 +224,23 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // looking like refusals with nothing to work from. A field you cannot read
   // is a field that was never set, as far as anyone measuring is concerned.
   const projection = ladder.slice(ladder.indexOf('attempts: attempts.map('), ladder.indexOf('attempts: attempts.map(') + 500)
+  // ── An unjudged run is not a judgment ─────────────────────────────────────
+  //
+  // The spend cap was hit 38 ideas into a 102-idea sweep on 2026-09-24. Every
+  // call after it failed, the rows were written with their artifact_hash, and
+  // the next pass skipped all 102: 64 ideas stranded as permanently judged-as-
+  // nothing, with no re-run able to reach them.
+  assert.match(ladder, /priorBand && priorBand !== 'unjudged'/,
+    'the idempotency skip must require a REAL judgment: an unjudged row has to stay eligible')
+  // Anchored to the response object, not the file. `/unjudged,/` passed with
+  // the field removed from the payload because the word still appeared in the
+  // const that computes it and in the warning string. That is the third
+  // substring-not-symbol miss today, after x_researched and robustJson.
+  const jsonAt = ladder.lastIndexOf('return res.json({')
+  const payload = ladder.slice(jsonAt, jsonAt + 500)
+  assert.match(payload, /(^|[^A-Za-z0-9_])unjudged,/,
+    'the RESPONSE must report `unjudged` separately, or a sweep that judged nothing reports the shape of one that judged everything')
+
   // ── The expansion is not bound to one subchannel ──────────────────────────
   //
   // It used to be handed the row's CURRENT lane, and it correctly refused when
