@@ -157,6 +157,7 @@ Known breaks the walk will hit, in order:
 
 | # | Change | Why | Commit |
 |---|---|---|---|
+| H4 | `final-pass` judges a live subchannel against its mandate: `subchannelRubric()` in `_finalPass.ts` builds the rubric from `venture_formats` via `loadSubchannel`, instant-fails only on the mandate's hard gates, flags (never blocks) unverifiable claims, and sets `mandateGovernsClose` so the house "end on a hard verdict" absolute is dropped. `laneToCorpusChannel` returns the live slot for a null or publication lane, so `revise`, `chat` and the judges get the subchannel's playbook. | A routed piece has a null lane, so final-pass used the Unassigned rubric and every drafting route got no playbook; the hand-written rubrics predate the 2026-09-17 mandates (see section 1). | see git log: `engine: judge a subchannel piece against its own mandate` |
 | H3 | New `POST /api/content-ideas/:id/draft` and `api/_subchannels.ts`. The route writes a full draft into an existing idea, against the subchannel's mandate read live from `venture_formats` (aliases via `format_aliases`), with everything curation left on the row: the angle the panel judged, `meta.contrarian`, `meta.adjacent_stories`, research, materials, and `meta.krish_notes` verbatim. Writes `body`, `state:'drafting'`, `meta.drafts` (with the model's own list of labelled inferences and open questions), and a `magic_invoked` ledger row carrying `panel_run_id`. Write guarded on `updated_at`. Refuses an unrouted idea (409 `no_subchannel`). | No route could draft into an existing idea (stage 3 did not exist), and nothing read what curation produced. | see git log: `engine: draft into the idea curation already worked up` |
 | H2 | `/api/content-edits` (the ledger), `judge`, `editorial-route` and `production-brief` move from `guard()` to `guardEngine()`. `check-unified-content-spine` and `check-content-production-bridge` now assert `guardEngine`. | They were cookie-only and failed open when the access code was unset. The walk records Krish's decisions through the ledger and judges drafts, so they need the same gate as the rest. | see git log: `engine: one gate for the ledger and the judges` |
 | H1 | Every route under `api/content-ideas/` and the bare `api/content-ideas.ts` now calls `guardEngine()` (`api/_auth.ts`): the `cc_access` cookie or `Authorization: Bearer $ENGINE_OPERATOR_TOKEN`, refusing both when unset, origin pinned. `voice.ts` is wrapped rather than changing the shared `_whisper.ts`. `ENGINE_OPERATOR_TOKEN` created on the engine's Vercel project (sensitive, production only). | 13 routes, several of which spend or write, had no auth. The bearer lets a session with no browser drive the engine without holding `CRON_SECRET`. | see git log: `engine: gate the idea routes` |
@@ -208,6 +209,9 @@ in a container without ffmpeg; they are environmental.
   `autoscore_content_idea()` send it, which closes `score`'s one
   unauthenticated path. It needs a write into the secret store, which the
   walk session was not allowed to make on its own.
+- **The "Not X, Y" move: signature or tic?** The stored voice block teaches it
+  as his most consistent habit; his standing instructions to Claude ban it.
+  Piece 1's draft used it four times.
 - **The browser path through `guardEngine` needs one real visit.** After H1
   deploys, open any idea in Control Center once. A 401 in the engine's logs on
   `/api/content-ideas/*` means the two projects hold different access codes or
@@ -279,7 +283,16 @@ voice check (an em dash or banned phrase in the angle).
 | Step | Call | Result | Spend | Outcome |
 |---|---|---|---|---|
 | 1. Decide | Krish's decisions, recorded via `POST /api/content-edits` (operator token, `surface:'api'`, `client:'claude_code'`) | `approved` with `panel_run_id` and reasons `pattern_is_real`, `nobody_has_said_it`, `timing`, `sells_the_practice`; `magic_rejected` for the router's `mind_the_gap` pick | $0 | **works.** `judge_calibration` gained 7 rows with `agreed` set for this run, the first since the view was built on 2026-09-09. The 3 `revise` verdicts stay null (see section 1). |
-| 2. Draft | `POST .../draft` | *(next)* | | **missing** until H3 |
+| 2. Draft | `POST .../draft` with direction built from Krish's four decisions (the direction is the session's wording of the options he chose, not his words) | 200 in 34s. 885 words, `state:'drafting'`, 3 of 3 sources on file cited, 6 labelled inferences, 5 open questions, one of which correctly says the $56B came from the seed and has no source on file | $0.061 (`cleo-draft`) | **works** after H3. The autoscore trigger did not fire: this row already had a `quality_score`, so that path is still untested live. |
+| 3. Editor's read | read in session, before any engine check | Evidence discipline good. Voice: "not X, it's Y" four times, "Here's the..." twice, one meta-commentary line. Structure: opens on Amazon's stated reason, because the session's direction said "early", while the mandate says the money question leads. Evidence: calls Amazon's whole advertising line "sponsored listings". Close: ends on "the open question worth watching", not the verdict the mandate asks for. | $0 | to compare against what the engine's own checks catch |
+
+**A source conflict about Krish's voice, found at step 3.** The stored voice
+block (`system_config.content_voice_block`) calls the "Not X, Y" clarifier
+"Krish's most consistent sentence-level habit" and says to use it when it
+fits; the corpus teaches it as a move. Krish's standing instructions to Claude
+say no "it's not X, it's Y". The draft's four uses followed the engine's
+teaching. Whether the move or its frequency is the fault is his call (section
+4), and is not settled by the walk.
 
 **The curation decisions, as Krish made them (2026-09-24):**
 

@@ -131,6 +131,15 @@ export async function loadCorpus(): Promise<string> {
  *  does it go". Before this, `lane` fused venture and channel, which is why
  *  signal_noise and builder_economy existed as both a venture and a lane. */
 export function laneToCorpusChannel(lane?: string | null, slot?: string | null): string | null {
+  // THE LIVE SUBCHANNELS FIRST (2026-09-24). The judge ladder sets lane_slot to
+  // a subchannel and never sets lane, so every routed piece arrived here with a
+  // null lane and got no playbook at all. A live slot names its own playbook
+  // (CHANNEL_HEADING maps split_the_bill and lift_the_lid to their lineage's
+  // sections; mind_the_gap has none and corpusForChannel says so).
+  if (slot && (slot === 'split_the_bill' || slot === 'lift_the_lid' || slot === 'mind_the_gap')
+      && (lane == null || lane === 'publication' || lane === 'mindmaker_live')) {
+    return slot
+  }
   // THE LIVE MODEL (canon, 2026-08-28). One publication, exactly two channels:
   // The Money of AI and Built with AI. There is no third. Legacy slot values
   // ('paid', 'built', 'teardown', 'investigation') map forward, never rejected.

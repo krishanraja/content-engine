@@ -5,9 +5,10 @@ import {
   materialsContext, pathId, readMaterials, robustJson, sanitizeVoice,
 } from '../../_content.js'
 import {
-  applyAutofixes, buildFinalPassSystem, laneToVenture, normalizePass, rubricFor,
+  applyAutofixes, buildFinalPassSystem, laneToVenture, normalizePass, rubricFor, subchannelRubric, type VentureKey,
 } from '../../_finalPass.js'
 import { guardEngine } from '../../_auth.js'
+import { loadSubchannel } from '../../_subchannels.js'
 
 // POST /api/content-ideas/:id/final-pass
 //   body: { source_text: string, lenses?: string[] }
@@ -45,10 +46,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // an unverifiable load-bearing claim is an instant fail). Before Techonomic
   // was retired this only fired for lane='techonomic'; the depth engine now
   // publishes to MYMU as a Teardown and must not lose its bar on the way.
-  const venture = hasInvestigationManifest(idea?.meta)
+  //
+  // A live subchannel is judged against its own mandate, read from
+  // venture_formats now (see subchannelRubric). A null lane no longer drops a
+  // routed piece onto the 'dynamic' (Unassigned) rubric: the ladder sets
+  // lane_slot and never lane, so every walk piece arrived that way.
+  const sub = hasInvestigationManifest(idea?.meta) ? null : await loadSubchannel(idea?.lane_slot)
+  const venture: VentureKey = hasInvestigationManifest(idea?.meta)
     ? 'investigation'
-    : laneToVenture(idea?.lane, idea?.lane_slot)
-  const rubric = rubricFor(venture)
+    : sub ? sub.slug as VentureKey : laneToVenture(idea?.lane, idea?.lane_slot)
+  const rubric = sub ? subchannelRubric(sub) : rubricFor(venture)
 
   const [voice, corpus] = await Promise.all([loadVoiceBlock(), loadCorpus()])
   const channelCorpus = corpusForChannel(corpus, rubric.corpusChannel)
