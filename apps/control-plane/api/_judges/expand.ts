@@ -1,4 +1,4 @@
-import { callClaude } from '../_content.js'
+import { callClaude, robustJson } from '../_content.js'
 import { UTILITY_MODEL } from '../_models.js'
 
 // Expand the seed into the piece it could be, BEFORE any judge reads it.
@@ -77,6 +77,11 @@ const SYSTEM = [
   'a bare product name, a headline with no claim in it: these are honest nothings and pretending otherwise puts a',
   'confident number on top of rubbish.',
   '',
+  'THAT IS THE ONLY REASON TO REFUSE. Not fitting a subchannel is not one: on 2026-09-24 a security story filed',
+  'under the wrong one was declined for being "not for that subchannel", which left it judged as a bare headline',
+  'and scored accordingly. Where it belongs is decided after you, by something that reads all three. Work out the',
+  'piece and let it be placed.',
+  '',
   'Return ONE JSON object and nothing else:',
   '{"ok": true|false, "why_not": null or "why this cannot be expanded",',
   ' "angle": "the one-line claim the piece makes, after the expansion",',
@@ -98,13 +103,17 @@ export function parseExpansion(raw: string): Expansion {
     angle: '', implications: [], scenarios: [], decision_rule: null,
     known: [], inferred: [], ok: false, why_not: why,
   })
-  let parsed: Record<string, unknown>
-  try {
-    const m = raw.match(/\{[\s\S]*\}/)
-    if (!m) return nothing('the model did not return an object')
-    parsed = JSON.parse(m[0]) as Record<string, unknown>
-  } catch {
-    return nothing('the model returned unparseable JSON')
+  // robustJson strips a code fence and tolerates prose either side of the
+  // object. The greedy `match(/\{[\s\S]*\}/)` that used to be here did
+  // neither, and a truncated reply has no closing brace at all, which is why
+  // the token ceiling below moved at the same time.
+  const parsed = robustJson(raw) as Record<string, unknown> | null
+  if (!parsed || typeof parsed !== 'object') {
+    // The reason is specific so the failure rate is diagnosable rather than a
+    // single "did not expand" bucket covering four different problems.
+    return nothing(raw.trim().length >= 1
+      ? 'the model returned something that was not an object'
+      : 'the model returned nothing')
   }
   if (parsed.ok === false) return nothing(str(parsed.why_not) || 'the seed could not be expanded')
   const angle = str(parsed.angle, 500)
@@ -141,16 +150,18 @@ export function expansionArtifact(seed: string, e: Expansion): string {
   return lines.join('\n')
 }
 
-export async function expand(seed: string, mandate: string, whatKrishDoes: string): Promise<Expansion> {
+export async function expand(seed: string, mandates: string, whatKrishDoes: string): Promise<Expansion> {
   try {
     const raw = await callClaude({
       system: SYSTEM,
       user: [
         '## The seed', seed, '',
-        '## The subchannel mandate it is aimed at', mandate, '',
+        // All three, always. Work out the piece; the router places it after.
+        '## The three things Krish publishes. Work the seed up for whichever it really is,',
+        '## and never refuse because it does not suit one of them.', mandates, '',
         '## What Krish actually does, so you can tell when this touches his own work', whatKrishDoes,
       ].join('\n'),
-      model: UTILITY_MODEL, maxTokens: 1600, temperature: 0.5,
+      model: UTILITY_MODEL, maxTokens: 2600, temperature: 0.5,
       agent: 'ladder-expand', timeoutMs: 90_000,
     })
     return parseExpansion(raw)

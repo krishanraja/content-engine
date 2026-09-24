@@ -224,6 +224,20 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // looking like refusals with nothing to work from. A field you cannot read
   // is a field that was never set, as far as anyone measuring is concerned.
   const projection = ladder.slice(ladder.indexOf('attempts: attempts.map('), ladder.indexOf('attempts: attempts.map(') + 500)
+  // ── The expansion is not bound to one subchannel ──────────────────────────
+  //
+  // It used to be handed the row's CURRENT lane, and it correctly refused when
+  // the piece did not fit: a security story filed under lift.the.lid came back
+  // "not for that subchannel", which left it judged as a bare headline and
+  // scored accordingly. The router runs after the expansion and scores fit
+  // against all three, so pre-committing to one lane is the wrong order.
+  assert.doesNotMatch(ladder, /expand\([^)]*mandateFor\(idea\.lane_slot\)/,
+    'the expansion must not be bound to the row\'s current lane: the router decides placement, after')
+  const expandCalls = (ladder.match(/await expand\(/g) || []).length
+  const allMandates = (ladder.match(/mandateFor\(null\)/g) || []).length
+  assert.equal(allMandates, expandCalls,
+    `every expand() must get all three mandates (${allMandates} of ${expandCalls} do)`)
+
   // ── Nothing is CALLED weak on one reading ─────────────────────────────────
   //
   // This check was written to protect a bury, and the bury is gone. It earns
@@ -282,6 +296,25 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
     assert.match(projection, new RegExp(`(^|[^A-Za-z0-9_])${field}:`),
       `the response must surface ${field}: a repair's evidence is unreadable without it`)
   }
+}
+
+// ── 3c. The expansion parses what the model really sends ────────────────────
+{
+  const expand = read('api/_judges/expand.ts')
+  // A greedy brace match plus a bare JSON.parse lost 1 of 10 expansions on the
+  // 2026-09-24 run while robustJson() sat unused in _content.ts. A hand-rolled
+  // parser here is a second implementation of a solved problem, and this file
+  // is where it gets re-solved badly.
+  // The CALL, not the import. Asserting the bare word passed with the parse
+  // swapped back to JSON.parse, because `robustJson` still appeared on the
+  // import line: the same substring-not-symbol mistake that let `x_researched`
+  // satisfy a check for `researched` earlier today.
+  assert.match(expand, /robustJson\(raw\)/,
+    'the expansion must PARSE with robustJson, not merely import it')
+  assert.doesNotMatch(expand, /JSON\.parse\(/,
+    'no hand-rolled JSON.parse in the expansion: robustJson is the one parser and it handles the fenced and padded replies this one lost')
+  assert.doesNotMatch(expand, /raw\.match\(\/\\\{/,
+    'the greedy brace match is retired; it cannot read a code fence or a truncated reply')
 }
 
 // ── 4. Anti-echo ────────────────────────────────────────────────────────────

@@ -431,7 +431,11 @@ async function handler(req: VercelRequest, res: VercelResponse) {
             angle: '', implications: [], scenarios: [], decision_rule: null, known: [], inferred: [],
             ok: false, why_not: 'already written: judged on its own body, not an expansion of it',
           }
-        : await expand(artifactOf(idea), mandateFor(idea.lane_slot), whatKrishDoes)
+        // All three mandates, never the row's current lane. The router runs
+        // AFTER this and scores fit against all three, so binding the
+        // expansion to one lane it may overturn is the wrong order, and the
+        // cost is a refusal that leaves the piece judged as a raw headline.
+        : await expand(artifactOf(idea), mandateFor(null), whatKrishDoes)
       const judged0 = written
         ? `${artifactOf(idea)}\n\n${written}`
         : expansion.ok ? expansionArtifact(artifactOf(idea), expansion) : artifactOf(idea)
@@ -562,7 +566,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       if (s.band === 'weak') {
         const reExpansion: Expansion | null = written
           ? null
-          : await expand(artifactOf(current), mandateFor(idea.lane_slot), whatKrishDoes)
+          : await expand(artifactOf(current), mandateFor(null), whatKrishDoes)
         const artifact = reExpansion?.ok
           ? expansionArtifact(artifactOf(current), reExpansion)
           : written ? `${artifactOf(current)}\n\n${written}` : artifactOf(current)

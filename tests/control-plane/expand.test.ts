@@ -75,3 +75,50 @@ describe('what the judges actually read', () => {
     expect(out).toBe('just the seed')
   })
 })
+
+// ── The two shapes that really lost an expansion on 2026-09-24 ────────────
+//
+// 1 of 10 expansions on the live run came back "the model returned
+// unparseable JSON", and the parse was a greedy brace match with a bare
+// JSON.parse while robustJson() sat unused two files away. These are the
+// inputs that beat the old parser, written from the failure rather than
+// invented.
+describe('parseExpansion survives what the model actually sends', () => {
+  const good = {
+    ok: true, why_not: null, angle: 'The constraint moved from capability to review.',
+    implications: [{ party: 'the lab', effect: 'ships faster than anyone can check' }],
+    scenarios: ['peer review industrialises'], decision_rule: 'Check what you can verify.',
+    known: ['the result was published'], inferred: ['the bottleneck moves'],
+  }
+
+  it('reads an object wrapped in a fenced code block', async () => {
+    const { parseExpansion } = await import('../../apps/control-plane/api/_judges/expand.js')
+    const e = parseExpansion('```json\n' + JSON.stringify(good) + '\n```')
+    expect(e.ok).toBe(true)
+    expect(e.angle).toBe('The constraint moved from capability to review.')
+  })
+
+  it('reads an object with prose either side of it', async () => {
+    const { parseExpansion } = await import('../../apps/control-plane/api/_judges/expand.js')
+    const e = parseExpansion(`Here is the expansion you asked for.\n${JSON.stringify(good)}\nHope that helps.`)
+    expect(e.ok).toBe(true)
+    expect(e.implications[0]!.party).toBe('the lab')
+  })
+
+  it('says what it got rather than calling every failure unparseable', async () => {
+    const { parseExpansion } = await import('../../apps/control-plane/api/_judges/expand.js')
+    // A truncated reply has no closing brace. It is a length problem wearing a
+    // parse problem's clothes, and one bucket for both is how the real cause
+    // stayed invisible for a run.
+    expect(parseExpansion('{"ok": true, "angle": "cut off mid').why_not)
+      .toBe('the model returned something that was not an object')
+    expect(parseExpansion('').why_not).toBe('the model returned nothing')
+  })
+
+  it('still refuses a genuinely empty expansion rather than passing a blank on', async () => {
+    const { parseExpansion } = await import('../../apps/control-plane/api/_judges/expand.js')
+    expect(parseExpansion(JSON.stringify({ ok: true, angle: '' })).ok).toBe(false)
+    expect(parseExpansion(JSON.stringify({ ok: false, why_not: 'the seed is a bare product name' })).why_not)
+      .toBe('the seed is a bare product name')
+  })
+})
