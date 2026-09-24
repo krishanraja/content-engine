@@ -22,14 +22,15 @@ import { expand, expansionArtifact, type Expansion } from '../_judges/expand.js'
 // the machine could not find a way to improve the story to get it to a 10/10
 // itself first by going deeper, finding contrarian evidence, asking why."
 //
-//   score = the weakest judge (see standing() in _judges/panel.ts)
+//   score = the MEDIAN judge; weakest = what a repair aims at
+//   (see standing() in _judges/panel.ts for why the minimum was retired)
 //
 //   >= READY_AT        ready. Never reaches him as a decision.
 //   ESCALATE_FLOOR..   two repair attempts, re-judged blind each time. Still
 //                      short after two, it is HIS, carrying both attempts.
 //   < ESCALATE_FLOOR   one attempt, because a low score is sometimes a thin
 //                      brief rather than a bad idea. Still short, it is buried
-//                      with the weakest judge's evidence as the reason.
+//                      carrying the median and the weakest judge as the reason.
 //
 // THE BAND BETWEEN THE TWO IS HIS AND THIS ROUTE MUST NEVER RESOLVE IT. That
 // is the whole point of the change to check-judges.ts invariant 3: the machine
@@ -218,8 +219,8 @@ async function repair(
   const system = [
     'You are improving one content idea for Krish Raja so that it clears a judging panel it has just failed.',
     '',
-    'A panel of blinded judges scored it. Its score is its WEAKEST axis, so fixing the weakest thing is the',
-    'whole job. Do not polish what already works.',
+    'A panel of blinded judges scored it. Its standing is the MEDIAN of their scores, but the brief below is',
+    'ordered weakest first, and the weakest axes are the whole job. Do not polish what already works.',
     '',
     'HOW TO LIFT IT, in order of what usually works:',
     '- Go deeper. Replace the general claim with the specific mechanism underneath it.',
@@ -512,7 +513,12 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
       if (s.band === 'weak') {
         patch.buried_at = new Date().toISOString()
-        patch.buried_reason = `ladder: ${s.weakest || 'panel'} scored ${s.score ?? 'n/a'} after ${attempts.length} attempt(s)`
+        // Names both numbers, because they are two different facts now: the
+        // panel's standing, and which judge a repair would aim at. Saying
+        // "evidence scored 4" when 4 is the median and evidence scored 2 would
+        // be a small lie in the one place Krish reads to overturn a bury.
+        patch.buried_reason =
+          `ladder: panel median ${s.score ?? 'n/a'}, weakest ${s.weakest || 'panel'}, after ${attempts.length} attempt(s)`
         buried++
       } else if (s.band === 'ready') ready++
       else escalated++

@@ -365,25 +365,49 @@ export function parseRouterVerdict(raw: string, slugs: string[]): RouterVerdict 
 // the machine could not find a way to improve the story to get it to a 10/10
 // itself first by going deeper, finding contrarian evidence, asking why."
 //
-// THE SCORE OF A PIECE IS ITS WEAKEST JUDGE. A piece is as good as its worst
-// axis: an idea whose evidence scores 4 is a 4, however much fun it is, and the
-// fix is not in doubt. This is also the only reading of "scores between a 7 and
-// 9" that survives the no-averaging rule, and it is what makes the repair brief
-// write itself.
+// THE SCORE OF A PIECE IS THE MEDIAN OF ITS JUDGES, and specifically the LOWER
+// median: the 4th lowest of eight. Never the mean, and no longer the minimum.
+//
+// The minimum was the rule until 2026-09-24 and it was Krish's own. The reason
+// for it was sound — a piece is as good as its worst axis — and the measurement
+// killed it anyway. Two runs over the same ten ideas he had graded himself:
+//
+//   min over 8 judges     mean 3.2 against his 6.0   2 of 10 within a point
+//   lower median          mean 5.6 against his 6.0   8 of 10 within a point
+//
+// The diagnosis is an order statistic, not a rubric. Rewriting the judge that
+// was doing the killing moved the panel mean by nothing at all, because a new
+// judge immediately took over: dropping ANY single judge other than the killer
+// left the mean at 3.2 to one decimal place. With eight independent rubrics
+// each roughly two points noisy, at least one lands three points low every
+// time, so a minimum samples the tail rather than the quality. The eight
+// together already agreed with him; the minimum was throwing that away.
+//
+// THE LOWER MEDIAN RATHER THAN THE TRUE ONE, for two reasons. It is a pure
+// order statistic — one of the judges' actual scores, never two of them
+// averaged — so the no-averaging rule holds in spirit and not merely in letter.
+// And it agreed with him more often (8 of 10 against 6) while erring slightly
+// low, which sends a borderline piece to him rather than passing it unseen.
+//
+// `weakest` is still the genuinely lowest judge, because that part of his rule
+// was right and is what makes the repair brief write itself. The score says how
+// good the piece is; the weakest judge says what to fix. They are two questions
+// and the old rule answered both with one number.
+//
+// Ruling (Krish, 2026-09-24): score a piece on the median of the eight judges,
+// not the weakest one.
 //
 // The prosecutor is excluded, as it is everywhere else. It argues for killing,
-// so a strong objection would otherwise read as the piece's weakest axis and
-// sink everything it did its job on.
+// so a strong objection would otherwise drag down everything it did its job on.
 
 // CALIBRATED against Krish's own grades, 2026-09-24, not guessed.
 //
 // He scored ten ideas the panel had judged. His top score was 7 and he never
 // went above it, so READY_AT of 9 sat above his ceiling and nothing could ever
-// have been ready. The panel was harsher than him on 8 of the 10 and kinder on
-// none: mean 3.8 against his 6.0.
+// have been ready.
 //
-// At a bar of 7 his ten split 5 ready, 4 to him, 1 binned. At the old bar it
-// was 0 ready and 8 buried.
+// On the lower median these thresholds split his ten 4 ready, 3 to him, 3
+// buried. Under the minimum at the original bar it was 0 ready and 9 buried.
 
 /** At or above this, the piece is ready and does not need Krish. His yes. */
 export const READY_AT = 7
@@ -391,9 +415,12 @@ export const READY_AT = 7
 export const ESCALATE_FLOOR = 5
 
 export interface Standing {
-  /** The weakest non-adversarial score, or null when every judge abstained. */
+  /** The lower median of the non-adversarial scores, or null when every judge
+   *  abstained. One of the judges' real scores, never two of them averaged. */
   score: number | null
-  /** Which judge is holding it down. The repair aims here first. */
+  /** Which judge is genuinely lowest. The repair aims here first, and it is no
+   *  longer the same thing as the score: how good it is and what to fix are two
+   *  questions, and the old minimum rule answered both with one number. */
   weakest: string | null
   /** What to fix, in the judges' own words, weakest first. Includes the
    *  prosecutor's objection last, because the best counterpoint is usually the
@@ -409,7 +436,11 @@ export function standing(verdicts: JudgeVerdict[]): Standing {
   if (!scored.length) return { score: null, weakest: null, brief: [], band: 'unjudged' }
 
   const sorted = [...scored].sort((a, b) => a.score - b.score)
-  const score = sorted[0]!.score
+  // The lower median: index (n-1)/2 floored. For the eight idea judges that is
+  // the 4th lowest. Written as an index rather than an average of the two
+  // middle scores on purpose — an interpolated median would be a mean of two
+  // judges, which is the thing this panel is not allowed to do.
+  const score = sorted[Math.floor((sorted.length - 1) / 2)]!.score
   const brief = sorted
     .filter(v => v.score < READY_AT && v.the_one_fix)
     .map(v => ({ judge: v.judge, score: v.score as number | null, fix: v.the_one_fix as string }))

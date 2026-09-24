@@ -40,7 +40,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { DRAFT_JUDGES, IDEA_JUDGES, ROSTER_VERSION, rosterFor } from '../api/_judges/roster.js'
-import { buildJudgePrompt, parseVerdict, summarise } from '../api/_judges/panel.js'
+import { buildJudgePrompt, parseVerdict, summarise, standing } from '../api/_judges/panel.js'
 import { deterministicFindings, voiceMechanics } from '../api/_judges/deterministic.js'
 
 const read = (rel: string) => readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8')
@@ -226,6 +226,45 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.deepEqual(spread.kills, ['buyer', 'prosecutor'])
   const source = read('api/_judges/panel.ts')
   assert.doesNotMatch(source, /reduce\([^)]*\+[^)]*\)\s*\/\s*/, 'the panel must not average its judges into one number')
+
+  // ── The score is the lower median, and it is an order statistic ───────────
+  //
+  // Ruling (Krish, 2026-09-24): score a piece on the median of the eight
+  // judges, not the weakest one. The minimum was his own earlier rule and the
+  // measurement overturned it — over the same ten ideas he had graded, the
+  // minimum landed 2.8 low and agreed with him on 2 of 10, the lower median
+  // 0.4 low and 8 of 10. Rewriting the judge doing the killing changed nothing,
+  // because with eight noisy rubrics a new one immediately took over: a minimum
+  // samples the tail, not the quality.
+  //
+  // The LOWER median rather than the interpolated one, so the score is always
+  // one of the judges' real numbers. An interpolated median of an even panel is
+  // a mean of two judges, which the rule above forbids, and the regex would not
+  // have caught it written as `(a + b) / 2`.
+  assert.match(source, /sorted\[Math\.floor\(\(sorted\.length - 1\) \/ 2\)\]/,
+    'the score must be the lower median by index: an interpolated median averages two judges')
+  assert.doesNotMatch(source, /const score = sorted\[0\]/,
+    'the score must not be the minimum: one miscalibrated rubric would hold a veto over every piece')
+
+  // Proved by running it, not by reading it. Eight judges, one three points
+  // below the rest: the minimum would call this a 3, the median calls it a 7,
+  // and `weakest` still names the judge to brief the repair on.
+  const eight = [3, 7, 7, 7, 8, 8, 9, 9].map((score, i) => ({
+    judge: `j${i}`, score, verdict: 'revise' as const, the_one_fix: `fix ${i}`,
+    evidence: ['e'], confidence: 0.8, deterministic: false, model: 'm', adversarial: false,
+  }))
+  const st = standing(eight)
+  assert.equal(st.score, 7, 'the lower median of [3,7,7,7,8,8,9,9] is 7, not the minimum 3')
+  assert.equal(st.weakest, 'j0', 'the weakest judge must still be named: it is what the repair is briefed on')
+  assert.equal(st.band, 'ready', 'one outlier judge must not be able to veto a piece the other seven passed')
+  assert.ok(st.brief.some(b => b.judge === 'j0'), "the outlier's fix must still reach the repair brief")
+
+  // An odd panel, and one where the outlier really is the story: five judges
+  // agreeing it is weak must still read as weak.
+  assert.equal(standing(eight.slice(0, 5)).score, 7, 'the lower median of five is the 3rd lowest')
+  const mostlyWeak = [2, 3, 3, 4, 9, 9, 9, 9].map((score, i) => ({ ...eight[0]!, judge: `k${i}`, score }))
+  assert.equal(standing(mostlyWeak).score, 4, 'a panel that mostly says weak must score weak')
+  assert.equal(standing(mostlyWeak).band, 'weak')
 }
 
 // ── 6. The free checks actually catch things ────────────────────────────────

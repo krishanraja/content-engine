@@ -12,14 +12,39 @@ const v = (judge: string, score: number | null, fix: string | null = null, adver
   the_one_fix: fix, evidence: ['e'], confidence: 0.8, deterministic: false, model: 'm', adversarial,
 })
 
-describe('the score of a piece is its weakest judge', () => {
-  it('takes the minimum, not the mean', () => {
-    // A mean of these is 8.6, which would read as ready. The evidence judge
-    // says there is nothing to stand on. It is a 4.
+describe('the score of a piece is the median of its judges', () => {
+  // This test used to assert the opposite, and the rule it asserted was
+  // Krish's own. It was overturned by measurement on 2026-09-24: over the same
+  // ten ideas he had graded himself, the minimum came in 2.8 points low and
+  // agreed with him on 2 of 10; the lower median 0.4 low and 8 of 10. Rewriting
+  // the judge that was doing the killing moved nothing, because with eight
+  // noisy rubrics the next one took over immediately. A minimum samples the
+  // tail rather than the quality.
+  it('one outlier judge cannot veto a piece the other seven passed', () => {
     const s = standing([v('novelty', 9), v('evidence', 4, 'name a source'), v('fun', 10), v('reader', 9), v('buyer', 9), v('connection', 9), v('consequence', 9), v('standing', 9)])
-    expect(s.score).toBe(4)
+    expect(s.score).toBe(9)
+    expect(s.band).toBe('ready')
+    // The score and the fix are two questions. The old rule answered both with
+    // one number; the weakest judge still names what a repair aims at.
     expect(s.weakest).toBe('evidence')
+    expect(s.brief.map(b => b.judge)).toContain('evidence')
+  })
+
+  it('a panel that mostly says weak still scores weak', () => {
+    // The change must not become "ignore the low scores". Five of eight below
+    // the floor is the piece's real standing, not an outlier.
+    const s = standing([v('novelty', 2), v('evidence', 3, 'no source'), v('fun', 3), v('reader', 4), v('buyer', 9), v('connection', 9), v('consequence', 9), v('standing', 9)])
+    expect(s.score).toBe(4)
     expect(s.band).toBe('weak')
+  })
+
+  it('never interpolates: the score is always a judge\'s real number', () => {
+    // An even panel's true median is the mean of the two middle scores, which
+    // is an average of two judges and the one thing this panel may not do.
+    // 6 and 9 sit in the middle here; a true median would invent 7.5.
+    const s = standing([v('novelty', 2), v('evidence', 4), v('fun', 6), v('reader', 9), v('buyer', 9), v('connection', 9)])
+    expect(s.score).toBe(6)
+    expect([2, 4, 6, 9]).toContain(s.score)
   })
 
   it('never lets the prosecutor set the score', () => {
