@@ -12,6 +12,7 @@ import {
 import { canonicalUrl, titleNorm, contentHash } from '../_text.js'
 import { embed, vectorLiteral } from '../_embeddings.js'
 import { UTILITY_MODEL } from '../_models.js'
+import { guardEngine } from '../_auth.js'
 
 // POST /api/content-ideas/synthesize
 //
@@ -77,13 +78,7 @@ interface SourceCard {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  res.setHeader('Cache-Control', 'no-store')
-
-  if (req.method === 'OPTIONS') return res.status(200).end()
-  if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' })
+  if (guardEngine(req, res)) return
 
   const body = (req.body || {}) as {
     source_idea_ids?: string[]

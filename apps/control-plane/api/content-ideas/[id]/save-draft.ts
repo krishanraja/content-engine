@@ -1,8 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import {
-  loadConfig, materialsContext, pathId, preamble, readMaterials, sanitizeVoice,
+  loadConfig, materialsContext, pathId, readMaterials, sanitizeVoice,
 } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/save-draft
 //   body: { channel?: FactoryChannel, source_text?: string }
@@ -114,7 +115,7 @@ function extractDocUrl(payload: any, depth = 0): string | null {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 

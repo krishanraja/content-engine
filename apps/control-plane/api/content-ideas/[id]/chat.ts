@@ -2,8 +2,9 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import {
   callClaudeMessages, corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock,
-  materialsContext, pathId, preamble, readMaterials, sanitizeVoice, VOICE_GUARDRAILS, type ChatTurn,
+  materialsContext, pathId, readMaterials, sanitizeVoice, VOICE_GUARDRAILS, type ChatTurn,
 } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/chat
 //   body: { messages: [{role,content}], draft?: string }
@@ -14,7 +15,7 @@ import {
 // draft. Conversational escape hatch when the buttons feel too restrictive.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 

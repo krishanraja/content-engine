@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
 import { supabase } from '../../_supabase.js'
 import { pathId, readMaterials, type Material } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
 
 // /api/content-ideas/:id/materials
 //   GET    — list the background materials attached to a piece.
@@ -16,11 +17,7 @@ import { pathId, readMaterials, type Material } from '../../_content.js'
 const MAX_CONTENT = 400_000 // ~400KB of corpus per material is plenty
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  res.setHeader('Cache-Control', 'no-store')
-  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (guardEngine(req, res, ['GET', 'POST', 'DELETE'])) return
 
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })

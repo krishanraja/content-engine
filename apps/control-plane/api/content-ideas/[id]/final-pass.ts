@@ -2,11 +2,12 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import {
   callClaude, corpusForChannel, loadCorpus, loadVoiceBlock,
-  materialsContext, pathId, preamble, readMaterials, robustJson, sanitizeVoice,
+  materialsContext, pathId, readMaterials, robustJson, sanitizeVoice,
 } from '../../_content.js'
 import {
   applyAutofixes, buildFinalPassSystem, laneToVenture, normalizePass, rubricFor,
 } from '../../_finalPass.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/final-pass
 //   body: { source_text: string, lenses?: string[] }
@@ -25,7 +26,7 @@ import {
 // normal autosave + save-draft path. Nothing here fires the factory.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 

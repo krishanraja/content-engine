@@ -208,6 +208,45 @@ export function guardOperatorOrCron(req: VercelRequest, res: VercelResponse, met
   return false
 }
 
+/** Fail-closed gate for the idea routes under /api/content-ideas: the
+ *  dashboard's cookie, or the `ENGINE_OPERATOR_TOKEN` bearer.
+ *
+ *  Until 2026-09-24 thirteen of these routes had no auth at all. They went
+ *  through `preamble()`, which checks only the HTTP method and sends a wildcard
+ *  CORS origin, so anyone holding the engine's URL could make it spend on the
+ *  Anthropic key (`revise`, `final-pass`, `deepen`, `chat`) or overwrite a row
+ *  (`save-draft`, the bare PATCH, which can set `state` and `published_url`).
+ *
+ *  Not `guard`: it fails OPEN when ACCESS_CODE is unset, which is right for a
+ *  dashboard read and wrong for a route that spends or writes, and it has no
+ *  bearer arm, so nothing without a browser could drive the engine. The bearer
+ *  is its own secret rather than CRON_SECRET so an operator session can be
+ *  given engine access without also being handed every scheduled job. */
+export function guardEngine(req: VercelRequest, res: VercelResponse, methods = ['POST']): boolean {
+  applyGatedHeaders(res)
+  res.setHeader('Access-Control-Allow-Methods', [...methods, 'OPTIONS'].join(', '))
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  if (req.method === 'OPTIONS') { res.status(204).end(); return true }
+  if (!methods.includes(req.method || '')) {
+    res.status(405).json({ ok: false, error: 'method_not_allowed' })
+    return true
+  }
+  const accessCode = process.env.ACCESS_CODE || ''
+  const expectedCookie = accessCode ? createHash('sha256').update(accessCode).digest('hex') : ''
+  const suppliedCookie = parseCookies(req.headers.cookie)[COOKIE] || ''
+  const browserAllowed = Boolean(expectedCookie) && safeEqual(suppliedCookie, expectedCookie)
+
+  const operatorToken = process.env.ENGINE_OPERATOR_TOKEN || ''
+  const authorization = req.headers.authorization || ''
+  const bearerAllowed = Boolean(operatorToken) && safeEqual(authorization, `Bearer ${operatorToken}`)
+
+  if (!browserAllowed && !bearerAllowed) {
+    res.status(401).json({ ok: false, error: 'unauthorized' })
+    return true
+  }
+  return false
+}
+
 /** Guard for the cron-driven routes: `GET` from Vercel's scheduler with the
  *  CRON_SECRET, or a manual `POST` from someone who is already through the edge
  *  gate (or who holds the secret).

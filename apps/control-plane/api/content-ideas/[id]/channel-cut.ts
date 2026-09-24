@@ -2,10 +2,11 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import { unsupportedNumbers } from '../../_numbers.js'
 import {
-  callClaude, corpusForChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId, preamble,
+  callClaude, corpusForChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId,
   readMaterials, robustJson, sanitizeVoice,
 } from '../../_content.js'
 import { UTILITY_MODEL } from '../../_models.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/channel-cut
 //   body: { channel: MediaChannel, hint?: string, source_text?: string }
@@ -58,7 +59,7 @@ const FALLBACK_HINT: Record<string, string> = {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 

@@ -10,6 +10,7 @@ import { recordShip } from './_ships.js'
 import { randomUUID } from 'node:crypto'
 import { contentRevisionHash, createProductionApproval, jsonRecord, readProductionApproval } from './_productionBrief.js'
 import { sha256 } from './_editEvents.js'
+import { guardEngine } from './_auth.js'
 
 // Content ideas inbox endpoint.
 //
@@ -57,12 +58,7 @@ const ALLOWED_SOURCE = new Set([
 ])
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  res.setHeader('Cache-Control', 'no-store')
-
-  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (guardEngine(req, res, ['POST', 'PATCH'])) return
 
   if (req.method === 'POST') {
     const body = (req.body || {}) as {

@@ -1,11 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
 import {
-  callClaude, corpusForChannel, loadCorpus, loadVoiceBlock, preamble, robustJson, sanitizeVoice, slug,
+  callClaude, corpusForChannel, loadCorpus, loadVoiceBlock, robustJson, sanitizeVoice, slug,
 } from '../_content.js'
 import { webResearch } from '../_enrich.js'
 import { canonicalUrl, titleNorm, contentHash } from '../_text.js'
 import { UTILITY_MODEL } from '../_models.js'
+import { guardEngine } from '../_auth.js'
 
 // POST /api/content-ideas/research-topic
 //   body: { topic, format?: 'paid'|'built', angle?: string, web?: boolean,
@@ -73,7 +74,7 @@ function liveFormat(value?: string | null): string | null {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
 
   const b = (req.body || {}) as {
     topic?: string

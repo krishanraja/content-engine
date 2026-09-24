@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
-import { callClaude, loadVoiceBlock, pathId, preamble, robustJson, VOICE_GUARDRAILS } from '../../_content.js'
+import { callClaude, loadVoiceBlock, pathId, robustJson, VOICE_GUARDRAILS } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/challenge
 //   body: { mode?: 'challenge' | 'counter' | 'hook' | 'sources', source_text?: string }
@@ -91,7 +92,7 @@ async function apifyCommunity(token: string, query: string): Promise<{ text: str
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 

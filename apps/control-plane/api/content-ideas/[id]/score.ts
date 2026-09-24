@@ -1,8 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
-import { loadCorpus, pathId, preamble } from '../../_content.js'
+import { loadCorpus, pathId } from '../../_content.js'
 import { scoreStandards } from '../../_standards.js'
 import { JUDGE_MODEL } from '../../_models.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/score
 //   body: { source_text?: string }
@@ -15,7 +16,7 @@ import { JUDGE_MODEL } from '../../_models.js'
 // so those two are the watch standards.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 

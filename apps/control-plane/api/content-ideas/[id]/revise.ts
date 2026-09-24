@@ -3,10 +3,11 @@ import { randomUUID } from 'node:crypto'
 import { sha256 } from '../../_editEvents.js'
 import { supabase } from '../../_supabase.js'
 import { openStream, send, fail, streamClaude } from '../../_stream.js'
-import { corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId, preamble, readMaterials, sanitizeVoice } from '../../_content.js'
+import { corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId, readMaterials, sanitizeVoice } from '../../_content.js'
 import { isHumourRegister } from '../../_humor.js'
 import { buildRevisePrompt, REVISE_MODES } from '../../_revisePrompt.js'
 import { UTILITY_MODEL } from '../../_models.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/revise
 //   body: {
@@ -23,7 +24,7 @@ import { UTILITY_MODEL } from '../../_models.js'
 // entry is appended to meta.revisions[] for auditability.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 
