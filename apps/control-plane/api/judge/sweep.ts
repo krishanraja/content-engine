@@ -49,6 +49,18 @@ const DEFAULT_LIMIT = 80
  *  batch that keeps erroring, or a request whose reply never satisfies the
  *  walk. Stopping and saying so beats resubmitting the same work nightly. */
 const MAX_BARREN_TICKS = 3
+/**
+ * A hard ceiling on productive ticks. A circuit breaker, not a tuning knob.
+ *
+ * The longest an idea can legitimately take is nine stages: expand, judge,
+ * repair, judge, repair, judge, confirm-expand, confirm-judge, route. Past
+ * about twice that, something is not converging — a request whose reply never
+ * comes back under the custom_id it was sent with would be re-deferred and
+ * RESUBMITTED on every tick, forever, and because each of those ticks still
+ * drains rows the barren check would never see it. On a half-hourly cron that
+ * bills quietly for days.
+ */
+const MAX_TICKS = 20
 
 interface SweepRow {
   id: string
@@ -185,7 +197,9 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
   // first tick, where every idea defers at the expansion before any panel runs.
   const settled = report.ready + report.escalated + report.weak
   const ticks = sweep.ticks + 1
-  const stalled = ref && report.deferred > 0 && drainedRows === 0 && ticks > MAX_BARREN_TICKS
+  const barren = ref && report.deferred > 0 && drainedRows === 0 && ticks > MAX_BARREN_TICKS
+  const overrun = Boolean(ref) && ticks >= MAX_TICKS
+  const stalled = barren || overrun
 
   await saveSweep(sweep.id, {
     status: done ? 'finished' : stalled ? 'failed' : 'running',
@@ -196,9 +210,11 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
       weak: report.weak, unjudged: report.unjudged, skipped: report.skipped,
       repairs: report.repairs, deferred: report.deferred,
     },
-    note: stalled
-      ? `stopped after ${ticks} ticks with ${report.deferred} ideas still deferring and nothing new arriving`
-      : done ? null : sweep.note,
+    note: overrun
+      ? `stopped at the ${MAX_TICKS}-tick ceiling with ${report.deferred} ideas still deferring: something is not converging`
+      : barren
+        ? `stopped after ${ticks} ticks with ${report.deferred} ideas still deferring and nothing new arriving`
+        : done ? null : sweep.note,
   })
 
   return {
