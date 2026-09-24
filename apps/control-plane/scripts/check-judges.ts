@@ -196,6 +196,21 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // one, because the caller believes it worked.
   assert.match(ladder, /\.in\('id', ids\)/,
     'the ladder must honour the ids it advertises in its own body type, or a named request silently judges something else')
+
+  // Recorded is not the same as reported. The first run to carry `researched`
+  // left it out of the response projection, so four repairs that had plainly
+  // read the research — and said so in their own stated reason — came back
+  // looking like refusals with nothing to work from. A field you cannot read
+  // is a field that was never set, as far as anyone measuring is concerned.
+  const projection = ladder.slice(ladder.indexOf('attempts: attempts.map('), ladder.indexOf('attempts: attempts.map(') + 500)
+  // Anchored on a word boundary, not a substring: the first version of this
+  // assertion passed against `x_researched:`, which is the "a probe that finds
+  // nothing has to be proved able to find something" rule catching me a second
+  // time in one session.
+  for (const field of ['researched', 'sources', 'briefed']) {
+    assert.match(projection, new RegExp(`(^|[^A-Za-z0-9_])${field}:`),
+      `the response must surface ${field}: a repair's evidence is unreadable without it`)
+  }
 }
 
 // ── 4. Anti-echo ────────────────────────────────────────────────────────────

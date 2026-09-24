@@ -548,7 +548,18 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         first_score: first.score, final_score: s.score, weakest: s.weakest, band: s.band,
         expanded: expansion.ok, expansion_failed: expansion.why_not,
         angle: expansion.ok ? expansion.angle.slice(0, 110) : null,
-        attempts: attempts.map(a => ({ n: a.n, outcome: a.outcome, detail: a.detail, score_before: a.score_before, score_after: a.score_after, weakest_before: a.weakest_before })),
+        // researched/sources are in this projection deliberately. The Attempt
+        // carries them so a refusal can be read, and the first run that had
+        // them left them OUT of the response — so the run reported "declined,
+        // no research" for four repairs that had plainly read the research and
+        // said so in their own reason. A field recorded but not surfaced is
+        // indistinguishable from a field that was never set, which is the same
+        // failure as reporting success for work that did not happen, inverted.
+        attempts: attempts.map(a => ({
+          n: a.n, outcome: a.outcome, detail: a.detail,
+          score_before: a.score_before, score_after: a.score_after, weakest_before: a.weakest_before,
+          researched: a.researched, sources: a.sources, briefed: a.brief.length,
+        })),
         spread: panel.spread, dissent: panel.dissent,
         scores: Object.fromEntries(panel.verdicts.filter(v => !v.deterministic).map(v => [v.judge, v.score])),
         router: ladder.router, router_disagrees: ladder.router_disagrees,
