@@ -36,10 +36,10 @@ import { expand, expansionArtifact, type Expansion } from '../_judges/expand.js'
 // is the whole point of the change to check-judges.ts invariant 3: the machine
 // takes the obvious ends and shows its working on everything it could not fix.
 //
-// Every automatic decision is REVERSIBLE and RECORDED. A bury sets buried_at
-// and buried_reason, the house archive verb, so detect.ts can still read the
-// row and the desk's "what you have told me" view still shows it. Nothing is
-// deleted.
+// NOTHING HERE BURIES. A weak piece is counted, left where it is, and reaches
+// Krish on the Sunday list — see the weak branch near the end of the loop for
+// why, and for the seed that settled it. Burying stays what it always was: a
+// thing he does at the desk, deliberately, on a piece he has read.
 //
 //   GET (CRON_SECRET) — scheduled   ·   POST — manual, { limit, ids, dryRun }
 
@@ -394,7 +394,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     }
     if (!whatKrishDoes) console.warn('[ladder] running WITHOUT the brief: the standing judge will score uninformed')
     const results: Record<string, unknown>[] = []
-    let judged = 0, ready = 0, escalated = 0, buried = 0, skipped = 0, repairs = 0
+    let judged = 0, ready = 0, escalated = 0, weak = 0, skipped = 0, repairs = 0
 
     for (const raw of (rows || [])) {
       if (judged >= limit) break
@@ -627,19 +627,30 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       // either way and is graded on the disagreement.
       if (!idea.lane_slot && router?.winner && !router.contested.length) patch.lane_slot = router.winner
 
-      if (s.band === 'weak') {
-        patch.buried_at = new Date().toISOString()
-        // Names both numbers, because they are two different facts now: the
-        // panel's standing, and which judge a repair would aim at. Saying
-        // "evidence scored 4" when 4 is the median and evidence scored 2 would
-        // be a small lie in the one place Krish reads to overturn a bury.
-        patch.buried_reason =
-          `ladder: panel median ${s.score ?? 'n/a'}, weakest ${s.weakest || 'panel'}, after ${attempts.length} attempt(s)` +
-          // Says the second panel agreed, so a bury Krish is reading can be
-          // told apart from one taken on a single reading.
-          `, confirmed by a second panel`
-        buried++
-      } else if (s.band === 'ready') ready++
+      // ── THIS ROUTE DOES NOT BURY ─────────────────────────────────────────
+      //
+      // It used to, and two safeguards were built for it in one afternoon
+      // before the measurement said the premise was wrong.
+      //
+      // The Jev seed, which Krish graded 7: `consequence`, `reader` and
+      // `standing` each scored it 3 on FOUR independent expansions and panels.
+      // Not a coin flip, not one rubric wobbling — a settled disagreement
+      // between him and three judges. No amount of confirming, re-reading or
+      // re-expanding averages that away, because there is nothing random in it
+      // to average. The machine would have buried it every time, correctly by
+      // its own lights, and he would never have seen it.
+      //
+      // Krish, 2026-09-24, choosing this over keeping the bury: weak pieces go
+      // to a Sunday list, nothing buries. One judge doing all the killing shows
+      // up in that list immediately, which is the quickest route to the rubric
+      // that is actually wrong — and nothing is lost to a disagreement the
+      // system has not learned yet.
+      //
+      // The band is on the row, so the list is a query rather than a table:
+      //   meta->'ladder'->'final'->>'band' = 'weak'
+      // Burying stays exactly what it was, a thing Krish does at the desk.
+      if (s.band === 'weak') weak++
+      else if (s.band === 'ready') ready++
       else escalated++
 
       if (!dryRun) {
@@ -674,7 +685,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       })
     }
 
-    return res.json({ ok: true, dry_run: dryRun, judged, ready, escalated, buried, skipped, repairs, results })
+    // `weak` where `buried` used to be. The count is the Sunday list's length,
+    // and calling it buried would be a lie about what happened to the rows.
+    return res.json({ ok: true, dry_run: dryRun, judged, ready, escalated, weak, skipped, repairs, results })
   } catch (e: any) {
     return res.status(500).json({ ok: false, error: String(e?.message || e) })
   }

@@ -115,24 +115,28 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // resolve it, the whole arrangement collapses into a machine that picks his
   // work for him, which is the thing he reserved for himself by name.
   assert.match(ladder, /band === 'weak'/, 'the ladder must branch explicitly on the weak band')
-  const buryAt = ladder.indexOf('buried_at = ')
-  const buryPatch = ladder.indexOf('patch.buried_at')
-  assert.ok(buryPatch > 0, 'the ladder must bury through buried_at')
-  // lastIndexOf, because there are now TWO weak branches: the confirming panel
-  // below runs on the first one and the bury happens in the second. indexOf
-  // found the confirmation branch and failed this assertion on correct code —
-  // the exact "a probe that indicts working code" failure the desk probe's
-  // header warns about, arriving here instead.
-  const weakBranch = ladder.lastIndexOf("if (s.band === 'weak')")
-  assert.ok(weakBranch > 0 && buryPatch > weakBranch && buryPatch - weakBranch < 400,
-    'the only bury must sit inside the weak branch, never in the escalate band')
-  // And the earlier weak branch must not bury: it is the confirmation, and a
-  // bury there would be the single reading this whole check exists to stop.
-  const firstWeak = ladder.indexOf("if (s.band === 'weak')")
-  assert.ok(ladder.slice(firstWeak, weakBranch).indexOf('buried_at') === -1,
-    'the confirming branch must not bury: that would be the one-reading bury it exists to prevent')
-  assert.doesNotMatch(ladder, /'repairable'[^\n]*buried|buried[^\n]*'repairable'/,
-    'nothing may bury a piece in the band Krish reserved')
+
+  // ── THE LADDER DOES NOT BURY ──────────────────────────────────────────────
+  //
+  // This assertion used to be its exact opposite — "the ladder must bury
+  // through buried_at" — and it was right for as long as the premise under it
+  // held. The measurement removed the premise.
+  //
+  // The Jev seed, which Krish graded 7: `consequence`, `reader` and `standing`
+  // each scored it 3 on FOUR independent expansions and panels. A settled
+  // disagreement between him and three judges, with nothing random in it to
+  // average away. Two safeguards were built against noise before the data
+  // showed the loss was not noise, and the machine would have buried that
+  // piece every single time, correctly by its own lights.
+  //
+  // Ruling (Krish, 2026-09-24): weak pieces go to a Sunday list, nothing
+  // buries. Burying stays what it always was, a thing he does at the desk.
+  assert.doesNotMatch(ladder, /patch\.buried_at|patch\.buried_reason/,
+    'the ladder must never bury: a settled disagreement between Krish and a judge is not the machine\'s to resolve')
+  assert.match(ladder, /if \(s\.band === 'weak'\) weak\+\+/,
+    'a weak piece must be counted and left where Krish can see it')
+  assert.match(ladder, /escalated, weak,/,
+    'the response must report `weak`, not `buried`: calling it buried would be a lie about what happened to the rows')
 
   // Reversible, always. A delete would take the row out of the desk's "what
   // you have told me" view and out of detect.ts's reach at the same time.
@@ -140,7 +144,14 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
 
   // A bury with no reason is the exact failure the triage desk was rebuilt to
   // stop, and an unattended one is worse because nobody watched it happen.
-  assert.match(ladder, /buried_reason/, 'an automatic bury must carry its reason')
+  // This used to read `assert.match(ladder, /buried_reason/)` — "an automatic
+  // bury must carry its reason". After the bury was removed it still PASSED,
+  // because the words survived in a doc comment at the head of the file. A
+  // guard a comment can satisfy is worse than no guard: it reports an
+  // invariant that is no longer enforced anywhere. The replacement asserts the
+  // absence, which prose cannot fake into existence.
+  assert.doesNotMatch(ladder, /buried_reason\s*=/,
+    'nothing in the ladder may write a bury reason, because nothing in it may bury')
 
   // Two attempts, his number. A cap that drifts upward turns a repair into a
   // rewrite of something he never approved.
@@ -213,24 +224,22 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // looking like refusals with nothing to work from. A field you cannot read
   // is a field that was never set, as far as anyone measuring is concerned.
   const projection = ladder.slice(ladder.indexOf('attempts: attempts.map('), ladder.indexOf('attempts: attempts.map(') + 500)
-  // ── Nothing is buried on one reading ──────────────────────────────────────
+  // ── Nothing is CALLED weak on one reading ─────────────────────────────────
   //
-  // Measured over three passes of the same ten ideas: 7 of 10 scored
-  // identically every time, but one Krish had graded 7 came out 4, 6, 6 — one
-  // run in three would have buried it, on a single judge scoring the same
-  // unchanged text 3, 6, 6 while every other judge held steady. Burying is the
-  // only thing this route does that he never sees, so it is the only place
-  // that noise is expensive.
-  //
-  // Ruling (Krish, 2026-09-24): a bury needs two weak readings.
+  // This check was written to protect a bury, and the bury is gone. It earns
+  // its place anyway: a piece called weak goes on the Sunday list, and a list
+  // padded with pieces that only looked weak on one draw of the expansion is a
+  // list Krish stops reading. So the second reading now decides whether a
+  // piece reaches that list at all rather than whether it survives.
   const weakBandAt = ladder.indexOf("if (s.band === 'weak') {")
   const confirmAt = ladder.indexOf('bury_confirmation')
   assert.ok(weakBandAt > 0 && confirmAt > 0 && confirmAt > weakBandAt,
-    'a weak band must trigger a confirming panel before anything is buried')
-  assert.ok(ladder.indexOf('patch.buried_at') > confirmAt,
-    'the confirming panel must run BEFORE the bury, not be recorded after one')
+    'a weak band must trigger a second reading before the piece is called weak')
+  const countedAt = ladder.indexOf("if (s.band === 'weak') weak++")
+  assert.ok(countedAt > confirmAt,
+    'the second reading must happen BEFORE the piece is counted weak, not be recorded after it')
   assert.match(ladder, /agreed: c\.band === 'weak'/,
-    'the confirmation must record whether the second panel agreed')
+    'the confirmation must record whether the second reading agreed')
 
   // The confirming read must be a DIFFERENT EXPANSION, not the same one again.
   // Measured: only 2 of 10 seeds expanded to the same angle twice, and every
