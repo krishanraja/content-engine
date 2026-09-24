@@ -728,7 +728,7 @@ export const VOICE_GUARDRAILS = [
   'No synthetic enthusiasm ("excited", "thrilled"). No "leverage" (except "leverage audit"). No "utilise", "seamless", "empower", "journey", "landscape", "robust", "synergy".',
   'Active voice only. Dropped subject pronouns where natural ("Been thinking", not "I\'ve been thinking").',
   // Krish, 2026-09-24, asked what the rule is for this move: "Cut it everywhere."
-  'Never use the "Not X, Y" construction, at any scale: no "Not X, Y", no "it\'s not X, it\'s Y", no "X isn\'t the story, Y is". State the sharper take directly. This overrides any voice note that calls it a habit.',
+  'Never use the "Not X, Y" construction, at any scale and in either order: no "Not X, Y", no "it\'s not X, it\'s Y", no "X isn\'t the story, Y is", no "Y, not X", no "never X, it was Y". State the sharper take directly. Plain factual negation ("Amazon did not say why") is fine. This overrides any voice note that calls it a habit.',
   'End on a hard, forward-looking verdict — never a summary, rhetorical question, or CTA.',
   'Specific over general. Never invent numbers, outcomes, or quotes; flag gaps instead.',
 ].join('\n')

@@ -41,26 +41,47 @@ export function duplicate(existing: { id: string; idea: string } | null): Determ
 }
 
 // Krish, 2026-09-24, asked what the rule is for the "Not X, Y" move: "Cut it
-// everywhere." The prompts say so; this catches a model that does it anyway.
-// Only the unambiguous shapes are matched. "Y, not X" ("in pounds, not
-// dollars") is ordinary English far more often than it is the move, so it is
-// left to the prompt rule rather than flagged here and trained into noise.
+// everywhere", which he confirmed covers both orders. The prompts say so; this
+// catches a model that does it anyway. Plain factual negation ("Amazon did not
+// say why") is not the move and must never be flagged, or the check becomes
+// noise people learn to ignore.
 const NOT_XY = [
   // Sentence-initial: "Not the compliance story, the version where..."
-  /(?:^|[.!?]["'”’)]?\s+)Not\s+[^.!?\n,]{2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/,
+  /(?:^|[.!?]["'”’)]?\s+)Not\s+(?!(?:surprisingly|only|least|yet|once|quite|to mention|much|many|all|every\w*)\b)[^.!?\n,]{2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/g,
+  // After a colon or semicolon: "...a news cycle: not what Amazon says, what a judge says"
+  /[:;]\s+not\s+(?!(?:surprisingly|only|least|yet|once|quite|to mention|much|many|all|every\w*)\b)[^.!?\n,]{2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/gi,
   // "isn't X, it's Y", "is not X. It's Y", "aren't X, they're Y"
-  /\b(?:isn['’]t|is not|wasn['’]t|was not|aren['’]t|are not)\s+[^.!?\n]{1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are| was| were)\b[^.!?\n]{0,30}/i,
+  /\b(?:isn['’]t|is not|wasn['’]t|was not|aren['’]t|are not)\s+[^.!?\n]{1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are| was| were)\b[^.!?\n]{0,30}/gi,
   // "it's not X, it's Y"
-  /\b(?:it|this|that|they)(?:['’]s|['’]re| is| are) not\s+[^.!?\n]{1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are)\b[^.!?\n]{0,30}/i,
+  /\b(?:it|this|that|they)(?:['’]s|['’]re| is| are) not\s+[^.!?\n]{1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are)\b[^.!?\n]{0,30}/gi,
+  // "never X, it was Y"
+  /\bnever\s+[^.!?\n]{1,60}?,\s+(?:it|this|that|they)\s+(?:was|were|is|are)\b[^.!?\n]{0,30}/gi,
+  // The reverse order, "Y, not X": "measured, not projected."
+  /[^.!?\n,]{0,40},\s+not\s+(?!only\b|least\b|surprisingly\b|yet\b|always\b|quite\b)(?:a |an |the )?[\w'’-]+(?:\s+[\w'’-]+){0,3}(?=[.,;!?]|$)/gim,
 ]
 
-/** The first "Not X, Y" construction in the text, trimmed for evidence, or null. */
-export function notXYConstruction(text: string): string | null {
+// "is not established. It's our inference" is a hedge, not the move: a bare
+// participle on the negated side names a state of evidence, not a rival take.
+const HEDGE = /\b(?:is|was|are|were|isn['’]t|wasn['’]t) not (?:yet )?\w+ed[.,;]/i
+
+/** Every "Not X, Y" construction in the text, trimmed for evidence, in order. */
+export function notXYConstructions(text: string): string[] {
+  const found: { at: number; text: string }[] = []
   for (const re of NOT_XY) {
-    const m = re.exec(text)
-    if (m) return m[0].replace(/^[.!?"'”’)\s]+/, '').trim().slice(0, 120)
+    re.lastIndex = 0
+    for (const m of text.matchAll(re)) {
+      if (HEDGE.test(m[0])) continue
+      found.push({ at: m.index ?? 0, text: m[0].replace(/^[.!?"'”’)\s]+/, '').trim().slice(0, 120) })
+    }
   }
-  return null
+  found.sort((a, b) => a.at - b.at)
+  // One sentence can match two shapes; report it once.
+  return found.filter((f, i) => !found.slice(0, i).some(g => g.text.includes(f.text) || f.text.includes(g.text))).map(f => f.text)
+}
+
+/** The first "Not X, Y" construction in the text, or null. */
+export function notXYConstruction(text: string): string | null {
+  return notXYConstructions(text)[0] ?? null
 }
 
 /** The voice rules that are mechanical. sanitizeVoice already strips em dashes
@@ -80,8 +101,10 @@ export function voiceMechanics(text: string): DeterministicFinding | null {
   const lower = text.toLowerCase()
   for (const word of banned) if (lower.includes(word)) problems.push(`banned phrase: ${word}`)
 
-  const notXY = notXYConstruction(text)
-  if (notXY) problems.push(`the "Not X, Y" construction: "${notXY}"`)
+  // Every hit, not the first: one flag for seven uses reads as one fix.
+  const notXY = notXYConstructions(text)
+  for (const hit of notXY.slice(0, 5)) problems.push(`the "Not X, Y" construction: "${hit}"`)
+  if (notXY.length > 5) problems.push(`and ${notXY.length - 5} more "Not X, Y" constructions`)
 
   if (!problems.length) return null
   return {
