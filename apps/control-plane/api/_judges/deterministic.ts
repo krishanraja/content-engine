@@ -40,6 +40,29 @@ export function duplicate(existing: { id: string; idea: string } | null): Determ
   }
 }
 
+// Krish, 2026-09-24, asked what the rule is for the "Not X, Y" move: "Cut it
+// everywhere." The prompts say so; this catches a model that does it anyway.
+// Only the unambiguous shapes are matched. "Y, not X" ("in pounds, not
+// dollars") is ordinary English far more often than it is the move, so it is
+// left to the prompt rule rather than flagged here and trained into noise.
+const NOT_XY = [
+  // Sentence-initial: "Not the compliance story, the version where..."
+  /(?:^|[.!?]["'”’)]?\s+)Not\s+[^.!?\n,]{2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/,
+  // "isn't X, it's Y", "is not X. It's Y", "aren't X, they're Y"
+  /\b(?:isn['’]t|is not|wasn['’]t|was not|aren['’]t|are not)\s+[^.!?\n]{1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are| was| were)\b[^.!?\n]{0,30}/i,
+  // "it's not X, it's Y"
+  /\b(?:it|this|that|they)(?:['’]s|['’]re| is| are) not\s+[^.!?\n]{1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are)\b[^.!?\n]{0,30}/i,
+]
+
+/** The first "Not X, Y" construction in the text, trimmed for evidence, or null. */
+export function notXYConstruction(text: string): string | null {
+  for (const re of NOT_XY) {
+    const m = re.exec(text)
+    if (m) return m[0].replace(/^[.!?"'”’)\s]+/, '').trim().slice(0, 120)
+  }
+  return null
+}
+
 /** The voice rules that are mechanical. sanitizeVoice already strips em dashes
  *  and their lookalikes on every write path, so anything this finds is a rule a
  *  model would otherwise be asked to notice and would sometimes miss. */
@@ -56,6 +79,9 @@ export function voiceMechanics(text: string): DeterministicFinding | null {
   ]
   const lower = text.toLowerCase()
   for (const word of banned) if (lower.includes(word)) problems.push(`banned phrase: ${word}`)
+
+  const notXY = notXYConstruction(text)
+  if (notXY) problems.push(`the "Not X, Y" construction: "${notXY}"`)
 
   if (!problems.length) return null
   return {

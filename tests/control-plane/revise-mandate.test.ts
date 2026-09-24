@@ -31,9 +31,9 @@ describe('revise: a routed piece is rewritten to its mandate', () => {
     assert.doesNotMatch(buildReviseSystem(ctx(LIFT), { value: 'custom', humour: false }), /hard-verdict endings/)
   })
 
-  test('an unrouted piece keeps the house voice line exactly as before', () => {
+  test('an unrouted piece keeps the house verdict close', () => {
     const s = buildReviseSystem(ctx(null), { value: 'custom', humour: false })
-    assert.match(s, /the "Not X, Y" clarifier, hard-verdict endings\./)
+    assert.match(s, /two gears, compression, hard-verdict endings\./)
     assert.doesNotMatch(s, /THE MANDATE FOR/)
   })
 

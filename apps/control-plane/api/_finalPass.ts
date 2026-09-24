@@ -197,7 +197,7 @@ const RUBRICS: Record<StaticVenture, VentureRubric> = {
     label: 'Signal & Noise',
     corpusChannel: 'signal_noise',
     mandate: 'AI in media, marketing, AdTech, and the economics and monetization of the internet. Separate durable signal from noise. Exec-to-exec (Gear A).',
-    leadWith: 'The durable signal, named plainly, with what most people get wrong ("Not X, Y").',
+    leadWith: 'The durable signal, named plainly, and what most people get wrong about it.',
     instantFail: [
       'No practical real-world example: the piece is abstract from start to finish with nothing the reader can picture.',
     ],

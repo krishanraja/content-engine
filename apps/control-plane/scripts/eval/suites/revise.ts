@@ -63,7 +63,7 @@ const PRESETS = [
   { value: 'punchier', label: 'Punchier', hint: 'Compress. Shorter declaratives, harder verb choices, uneven rhythm. Cut every word that the reader already understands.' },
   { value: 'shorter', label: 'Shorter', hint: 'Cut at least a third. Keep the sharpest sentences, lose the connective tissue.' },
   { value: 'harder-verdict', label: 'Harder ending', hint: 'Replace the ending with a hard, forward-looking verdict. No summary, no question, no CTA.' },
-  { value: 'contrarian', label: 'More contrarian', hint: 'Sharpen the antagonist. Discard the lazy version of the take out loud ("Not X, Y") then commit to the spikier read. Spike points at the idea, never the reader.' },
+  { value: 'contrarian', label: 'More contrarian', hint: 'Sharpen the antagonist and commit to the spikier read, stated directly. Spike points at the idea, never the reader.' },
 ] as const
 
 export interface ReviseCase {
