@@ -315,6 +315,14 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   const body = (req.body || {}) as { limit?: number; ids?: string[]; dryRun?: boolean }
   const limit = Math.max(1, Math.min(60, Number(body.limit) || DEFAULT_LIMIT))
   const dryRun = body.dryRun === true
+  // `ids` was in this type and in the doc comment at the head of the file from
+  // the day the route was written, and nothing ever read it: a caller asking
+  // for ten named ideas silently got an arbitrary ten instead, with no error
+  // and a well-formed response. Same shape as every other bug this week — the
+  // option exists, nothing is wired to it.
+  const ids = Array.isArray(body.ids)
+    ? body.ids.filter((v): v is string => typeof v === 'string' && v.length > 0).slice(0, 60)
+    : []
 
   try {
     const { data: mandateRows, error: mErr } = await supabase
@@ -344,12 +352,19 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // A body is still not judged as a seed: `expand` is skipped for a piece
     // that already has one, because the body IS the expansion and re-expanding
     // it would judge a summary of his work instead of his work.
-    const { data: rows, error: rErr } = await supabase.from('content_ideas')
-      .select('id,idea,thesis,body,lane_slot,meta')
-      .is('buried_at', null)
-      .in('state', ['seeded', 'researching', 'drafting'])
+    //
+    // Named ids override both filters. Asking for a row by its id is an
+    // explicit instruction, and the case that matters most is re-judging
+    // something a previous ladder run BURIED — which the buried_at filter would
+    // otherwise make unreachable, so the route could never be pointed at its
+    // own mistakes.
+    let q = supabase.from('content_ideas').select('id,idea,thesis,body,lane_slot,meta')
+    q = ids.length
+      ? q.in('id', ids)
+      : q.is('buried_at', null).in('state', ['seeded', 'researching', 'drafting'])
+    const { data: rows, error: rErr } = await q
       .order('created_at', { ascending: false })
-      .limit(limit * 3)
+      .limit(ids.length ? ids.length : limit * 3)
     if (rErr) throw new Error(rErr.message)
 
     const [voice, corpus] = await Promise.all([loadVoiceBlock(), loadCorpus()])

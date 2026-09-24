@@ -188,6 +188,14 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
     'the ladder must not skip a piece for having a body: that filter excluded every idea Krish researched himself')
   assert.match(ladder, /'seeded', 'researching', 'drafting'/,
     'the ladder must judge drafted pieces too, or the one path carrying his own research bypasses the judges')
+
+  // `ids` sat in the POST body type and in the route's own doc comment from the
+  // day it was written, and nothing read it: asking for ten named ideas
+  // silently returned an arbitrary ten, with no error and a well-formed
+  // response. An advertised option that does nothing is worse than a missing
+  // one, because the caller believes it worked.
+  assert.match(ladder, /\.in\('id', ids\)/,
+    'the ladder must honour the ids it advertises in its own body type, or a named request silently judges something else')
 }
 
 // ── 4. Anti-echo ────────────────────────────────────────────────────────────
