@@ -107,6 +107,45 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.ok(deterministicAt > 0 && panelAt > deterministicAt, 'the free checks must run before the model calls')
 }
 
+// ── 3b. The ladder decides the ends and never the middle ────────────────────
+{
+  const ladder = read('api/judge/ladder.ts')
+
+  // The band between the thresholds is Krish's. If this route ever learns to
+  // resolve it, the whole arrangement collapses into a machine that picks his
+  // work for him, which is the thing he reserved for himself by name.
+  assert.match(ladder, /band === 'weak'/, 'the ladder must branch explicitly on the weak band')
+  const buryAt = ladder.indexOf('buried_at = ')
+  const buryPatch = ladder.indexOf('patch.buried_at')
+  assert.ok(buryPatch > 0, 'the ladder must bury through buried_at')
+  const weakBranch = ladder.indexOf("if (s.band === 'weak')")
+  assert.ok(weakBranch > 0 && buryPatch > weakBranch && buryPatch - weakBranch < 400,
+    'the only bury must sit inside the weak branch, never in the escalate band')
+  assert.doesNotMatch(ladder, /'repairable'[^\n]*buried|buried[^\n]*'repairable'/,
+    'nothing may bury a piece in the band Krish reserved')
+
+  // Reversible, always. A delete would take the row out of the desk's "what
+  // you have told me" view and out of detect.ts's reach at the same time.
+  assert.doesNotMatch(ladder, /\.delete\(/, 'the ladder must never delete a row: burying is the house archive verb')
+
+  // A bury with no reason is the exact failure the triage desk was rebuilt to
+  // stop, and an unattended one is worse because nobody watched it happen.
+  assert.match(ladder, /buried_reason/, 'an automatic bury must carry its reason')
+
+  // Two attempts, his number. A cap that drifts upward turns a repair into a
+  // rewrite of something he never approved.
+  assert.match(ladder, /const MAX_ATTEMPTS = 2/, 'the repair cap must stay at the two attempts Krish set')
+
+  // The calibration join. Without this the weekly compiler has nothing to
+  // measure the judges against, which is how the panel sat unmeasured for a
+  // year in the first place.
+  assert.match(ladder, /panel_run_id/, 'the ladder must record panel_run_id or nothing can be calibrated')
+
+  // A human's subchannel is not the router's to overwrite.
+  assert.match(ladder, /if \(!idea\.lane_slot && router\?\.winner/,
+    'the router may only set a subchannel that is empty')
+}
+
 // ── 4. Anti-echo ────────────────────────────────────────────────────────────
 {
   const roster = read('api/_judges/roster.ts')
