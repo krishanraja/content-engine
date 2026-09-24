@@ -230,7 +230,19 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   assert.ok(ladder.indexOf('patch.buried_at') > confirmAt,
     'the confirming panel must run BEFORE the bury, not be recorded after one')
   assert.match(ladder, /agreed: c\.band === 'weak'/,
-    'the confirmation must record whether the second panel agreed: a disagreement names an unrepeatable rubric')
+    'the confirmation must record whether the second panel agreed')
+
+  // The confirming read must be a DIFFERENT EXPANSION, not the same one again.
+  // Measured: only 2 of 10 seeds expanded to the same angle twice, and every
+  // point of score variance lived in the eight that did not. The first version
+  // of this check re-judged the identical wording, so the second panel could
+  // only agree — and on a live run it did, judge for judge, and buried a piece
+  // Krish had graded 7. A confirmation that cannot disagree is not one.
+  const confirmBlock = ladder.slice(ladder.indexOf('let confirmation'), ladder.indexOf('const router = await route'))
+  assert.match(confirmBlock, /await expand\(/,
+    'the bury confirmation must expand again: the expansion is where the variance is, and re-judging the same text cannot find it')
+  assert.match(confirmBlock, /re_expanded:/,
+    'the confirmation must say whether it actually re-expanded, or the row cannot say which question it answered')
   assert.match(ladder, /if \(c\.band !== 'weak'\) s = c/,
     'two disagreeing panels are not evidence a piece is weak: keep the better reading')
   // Twice: once stored on the row, once returned in the response. Asserting a

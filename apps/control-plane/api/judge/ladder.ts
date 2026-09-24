@@ -532,30 +532,45 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         })
       }
 
-      // ── NOTHING IS BURIED ON ONE READING ─────────────────────────────────
+      // ── NOTHING IS BURIED ON ONE READING OF ONE EXPANSION ────────────────
       //
       // Measured over three passes of the same ten ideas, same code, same
-      // input: 7 of 10 scored identically every time, but one idea Krish had
-      // graded 7 came out 4, 6, 6 — so one run in three would have buried work
-      // he rated well. The cause was a single judge (`novelty`) scoring the
-      // same unchanged text 3, 6, 6 while every other judge held steady. One
-      // rubric's wobble moved the median one step and across the bury line.
+      // input: one idea Krish had graded 7 came out 4, 6, 6, so one run in
+      // three would have buried work he rated well.
       //
-      // Burying is the only thing this route does that Krish never sees, so it
-      // is the only place that noise is expensive. A second blind panel on the
-      // same wording turns a one-in-three wrong bury into roughly one in nine,
-      // and it costs a panel only on pieces already headed for the archive.
+      // The first version of this check re-judged the same wording with a
+      // fresh panel, on the theory that the judges were noisy. A run proved
+      // that wrong in the most direct way available: the second panel agreed
+      // with the first, judge for judge, and the piece was buried anyway.
       //
-      // Keep the better of the two readings, consistent with the repair rule
-      // above: the question is whether the piece is genuinely weak, and two
-      // disagreeing panels are not evidence that it is.
+      // The variance is not in the judges. It is HERE, in the expansion:
+      //
+      //   seeds whose expansion produced identical text   score range 0, 0
+      //   seeds whose expansion produced different text   0,1,0,2,0,0,0,2
+      //
+      // Only 2 of 10 seeds expanded to the same angle twice. The other eight
+      // became a genuinely different piece each run, and every point of
+      // variance lives in that group. So a seed was never being buried for
+      // being weak — it was buried for the one expansion it happened to draw,
+      // and a second panel reading that same expansion could only agree.
+      //
+      // The confirmation therefore EXPANDS AGAIN and judges that. It asks the
+      // question that matters: is this seed weak, or was that expansion bad?
+      // A piece that already has a body has nothing to re-expand, so it is
+      // re-judged as before — there the judges really are the only variable.
       let confirmation: Record<string, unknown> | null = null
       if (s.band === 'weak') {
+        const reExpansion: Expansion | null = written
+          ? null
+          : await expand(artifactOf(current), mandateFor(idea.lane_slot), whatKrishDoes)
+        const artifact = reExpansion?.ok
+          ? expansionArtifact(artifactOf(current), reExpansion)
+          : written ? `${artifactOf(current)}\n\n${written}` : artifactOf(current)
         const second = await runPanel({
           gate: 'idea', subjectTable: 'content_ideas', subjectId: idea.id,
-          artifact: artifactOf(current),
+          artifact,
           context: judgeContext,
-          deterministic: deterministicFindings({ text: artifactOf(current), minChars: 80, checkVoice: true }),
+          deterministic: deterministicFindings({ text: artifact, minChars: 80, checkVoice: true }),
           shortCircuitOnKill: true, idempotencyKey: randomUUID(),
         })
         const confirmId = dryRun ? null : await persistPanel(idea.id, second)
@@ -565,10 +580,18 @@ async function handler(req: VercelRequest, res: VercelResponse) {
           first: { score: s.score, weakest: s.weakest, band: s.band },
           second: { score: c.score, weakest: c.weakest, band: c.band },
           agreed: c.band === 'weak',
+          // Whether the second reading was a genuinely different piece or the
+          // same one. Without this the row cannot say which question it
+          // answered, and the first version of this check silently answered
+          // the wrong one.
+          re_expanded: Boolean(reExpansion?.ok),
+          re_expansion_failed: reExpansion && !reExpansion.ok ? reExpansion.why_not : null,
           panel_run_id: confirmId,
         }
-        // A disagreement is the useful row: it names a rubric that is not
-        // repeatable, which is what the weekly compiler is for.
+        // Two readings of two different expansions disagreeing means the seed
+        // survives: the better one is what it is worth. The disagreement is
+        // the useful record either way — it says the expansion is the unstable
+        // part, which is what the weekly compiler should be watching.
         if (c.band !== 'weak') s = c
       }
 
