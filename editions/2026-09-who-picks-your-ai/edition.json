@@ -1,0 +1,17 @@
+{
+  "idea_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+  "subchannel": "mind_the_gap",
+  "title": "Who picks your AI?",
+  "fact_check": {
+    "body_hash": "9cef31f57a4c34a4b98febc8c8652e82a366417a778f20acd8363b60f4924d78",
+    "ran_at": "2026-09-25T21:51:35.457Z",
+    "passed": true,
+    "claims": 34,
+    "verified": 19,
+    "verified_on_file": 13,
+    "verified_web": 2,
+    "set_aside": 43,
+    "independent_checker": "perplexity:sonar-pro"
+  },
+  "status": "draft for Krish: prediction confidence not set; not published"
+}

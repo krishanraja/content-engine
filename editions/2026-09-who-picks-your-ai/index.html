@@ -1,0 +1,792 @@
+<title>Who Picks Your AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&family=Fraunces:ital,opsz,wght@1,9..144,300..600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* makeyourmindup house style, brand book v1.0. Every colour has one job. */
+:root{
+  color-scheme: dark;
+  --ink:#0C1512; --ink-deep:#070D0B; --ink-soft:#16221D;
+  --cream:#F4EFE4; --cream-75:rgba(244,239,228,.75); --cream-55:rgba(244,239,228,.58); --cream-25:rgba(244,239,228,.25); --cream-12:rgba(244,239,228,.12);
+  --mint:#7EF0C0;   /* the brand, the answer, the next action */
+  --coral:#FF6A4D;  /* mind.the.gap, Fridays. Nothing else. */
+  --ink-50:rgba(12,21,18,.5); --ink-20:rgba(12,21,18,.2);
+  --f-display:'Anton','Arial Narrow',Impact,sans-serif;
+  --f-sans:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-dek:'Fraunces',Georgia,'Times New Roman',serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --shadow:6px 6px 0 0 var(--ink); --shadow-sm:3px 3px 0 0 var(--ink);
+  --gut:16px;
+}
+@media (min-width:640px){:root{--gut:24px}}
+@media (min-width:1024px){:root{--gut:40px}}
+*{box-sizing:border-box}
+html{background:var(--ink)}
+body{background:var(--ink);color:var(--cream);font-family:var(--f-sans);font-size:1.0625rem;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+.wrap{max-width:1400px;margin-inline:auto;padding-inline:var(--gut)}
+.read{max-width:40rem}
+.label{font-family:var(--f-mono);font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+.display{font-family:var(--f-display);font-weight:400;text-transform:uppercase;line-height:.88;letter-spacing:.005em;text-wrap:balance;margin:0}
+.dek{font-family:var(--f-dek);font-style:italic;font-weight:400}
+.heavy{font-family:var(--f-sans);font-weight:900;font-variation-settings:'wdth' 112;letter-spacing:-.02em}
+p{margin:0}
+.prose{display:grid;gap:1.1rem}
+.prose p{max-width:40rem}
+.pill{display:inline-flex;align-items:center;font-family:var(--f-mono);font-weight:600;font-size:.75rem;letter-spacing:.14em;text-transform:lowercase;background:var(--coral);color:var(--ink);padding:.3rem .55rem}
+.sticker{font-family:var(--f-mono);font-weight:600;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;display:inline-flex;align-items:center;padding:.5rem 1rem;border:2px solid var(--ink);border-radius:999px;color:var(--ink);box-shadow:var(--shadow-sm);white-space:nowrap}
+.stamp{display:inline-block;font-family:var(--f-mono);font-weight:600;letter-spacing:.22em;text-transform:uppercase;border:3px solid currentColor;padding:.35rem .7rem;font-size:.8rem}
+.swipe{position:relative;z-index:0;white-space:nowrap;color:var(--ink)}
+.swipe::before{content:"";position:absolute;inset:24% -.06em 6% -.06em;background:var(--mint);transform:skewX(-8deg) rotate(-1deg);z-index:-1}
+.grain{position:relative;isolation:isolate}
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:overlay;z-index:0;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.grain>*{position:relative;z-index:1}
+.halftone{background-image:radial-gradient(rgba(12,21,18,.16) 1.1px,transparent 1.5px);background-size:14px 14px}
+.btn{font:inherit;cursor:pointer;border:2px solid var(--ink);background:var(--cream);color:var(--ink);font-family:var(--f-mono);font-weight:600;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;padding:.7rem 1rem;box-shadow:var(--shadow-sm);transition:transform .12s ease, box-shadow .12s ease}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 0 var(--ink)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.on-ink .btn{border-color:var(--cream);box-shadow:3px 3px 0 0 var(--cream-25)}
+.btn-primary{font-family:var(--f-sans);font-weight:900;font-variation-settings:'wdth' 112;letter-spacing:.01em;font-size:1.05rem;background:var(--mint);color:var(--ink);border:2px solid var(--ink);box-shadow:var(--shadow);padding:.85rem 1.4rem;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.6rem}
+.on-ink .btn-primary{box-shadow:6px 6px 0 0 var(--cream)}
+.card{border:2px solid var(--ink);box-shadow:var(--shadow);background:var(--cream);color:var(--ink)}
+.on-ink .card{box-shadow:6px 6px 0 0 var(--ink-deep)}
+.src{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.04em;color:var(--cream-55);line-height:1.5}
+.card .src{color:rgba(12,21,18,.62)}
+.tnum{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---- masthead ---- */
+.mast{padding-block:16px 0}
+.mast-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.25rem 1rem;border-block:1px solid var(--cream-25);padding-block:.55rem;color:var(--cream-75)}
+.mast-row span:nth-child(2){display:none}
+@media (min-width:560px){.mast-row span:nth-child(2){display:inline}}
+.mast-logo{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:clamp(1.25rem,3vw,2rem)}
+.mast-logo img{width:clamp(150px,22vw,260px);height:auto;display:block}
+
+/* ---- hero ---- */
+.hero{padding-block:clamp(1.5rem,5vw,3.5rem) clamp(2.5rem,6vw,5rem)}
+.hero-top{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.hero h1{font-size:clamp(3.6rem,15vw,9rem);margin-top:1.1rem}
+.hero h1 .l2{display:block;margin-top:.14em}
+.hero .dek{font-size:clamp(1.25rem,2.6vw,1.6rem);line-height:1.35;max-width:38rem;margin-top:clamp(1.6rem,3.5vw,2.6rem);color:var(--cream)}
+.byline{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin-top:1.4rem;color:var(--cream-55)}
+.hero-sticker{background:var(--coral);transform:rotate(-5deg);margin-left:.4rem}
+
+/* ---- marquee ---- */
+.marquee{overflow:hidden;border-block:2px solid rgba(126,240,192,.4);background:var(--ink-deep);padding-block:.95rem}
+.marquee-track{display:flex;width:max-content;animation:marq 38s linear infinite}
+.marquee span{font-family:var(--f-display);text-transform:uppercase;font-size:clamp(1.3rem,3vw,1.9rem);letter-spacing:.02em;padding-inline:1.4rem;white-space:nowrap;color:var(--cream)}
+.marquee i{font-style:normal;color:var(--mint)}
+.marquee b{font-weight:400;color:var(--coral)}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ---- section heads ---- */
+.sec{padding-block:clamp(3rem,7vw,6rem)}
+.sec-head{display:grid;gap:.7rem;margin-bottom:clamp(1.6rem,3vw,2.4rem)}
+.sec-head h2{font-size:clamp(2.6rem,9vw,5.2rem)}
+.sec-head .label{color:var(--cream-55)}
+
+/* ---- the counter ---- */
+.counter{display:grid;gap:clamp(1.5rem,3vw,2.5rem);grid-template-columns:1fr}
+@media (min-width:980px){.counter{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:start}}
+.panel{background:var(--ink-soft);border:2px solid var(--cream-12);padding:clamp(1rem,2.5vw,1.6rem)}
+.panel h3{font-family:var(--f-mono);font-weight:600;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 .9rem;color:var(--cream-75)}
+.then-tubs{display:flex;gap:1rem;flex-wrap:wrap}
+.tub{cursor:pointer;border:2px solid var(--cream);background:transparent;color:var(--cream);padding:.6rem .8rem .7rem;display:grid;justify-items:center;gap:.45rem;min-width:8.5rem;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.tub .scoop{width:64px;height:64px;border-radius:50%;border:2px solid var(--cream)}
+.tub[aria-pressed="true"]{background:var(--cream);color:var(--ink)}
+.tub[aria-pressed="true"] .scoop{border-color:var(--ink)}
+.scoop.choc{background:repeating-linear-gradient(135deg,var(--cream) 0 3px,transparent 3px 9px)}
+.scoop.van{background:var(--cream)}
+.tub[aria-pressed="true"] .scoop.van{background:var(--ink-soft)}
+.then-out{margin-top:1rem;min-height:1.6rem;font-family:var(--f-mono);font-size:.82rem;color:var(--mint)}
+.shop{display:grid;gap:1rem}
+.flavours{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
+@media (max-width:520px){.flavours{grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}}
+.fl{aspect-ratio:1;max-width:100%;border-radius:50%;border:2px solid var(--cream-55);cursor:pointer;padding:0;background:var(--ink);position:relative}
+.fl:hover{border-color:var(--cream)}
+.fl[aria-pressed="true"]{border-color:var(--mint);box-shadow:0 0 0 3px var(--mint)}
+.fl.routed{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral)}
+.fl.t1{background:var(--cream)} .fl.t2{background:var(--coral)} .fl.t3{background:var(--mint)}
+.fl.t4{background:repeating-linear-gradient(45deg,var(--cream) 0 3px,var(--ink) 3px 7px)}
+.fl.t5{background:radial-gradient(var(--coral) 1.6px,var(--ink) 2px) 0 0/7px 7px}
+.fl.t6{background:repeating-linear-gradient(90deg,var(--mint) 0 3px,var(--ink) 3px 7px)}
+.fl.t7{background:conic-gradient(var(--cream) 0 25%,var(--coral) 0 50%,var(--cream) 0 75%,var(--coral) 0)}
+.fl.t8{background:radial-gradient(circle at 35% 35%,var(--mint) 0 30%,var(--ink-soft) 31%)}
+.shop-controls{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.seg{display:inline-flex}
+.seg .btn{box-shadow:none;margin-right:-2px}
+.readout{font-family:var(--f-mono);font-size:.82rem;line-height:1.6;min-height:3.2rem;color:var(--cream-75)}
+.readout b{font-weight:600;color:var(--cream)}
+.readout .got{color:var(--coral)}
+.guy{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.guy .sticker{background:var(--coral);transform:rotate(3deg)}
+.pop{animation:slap .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes slap{0%{transform:scale(1.6) rotate(-10deg);opacity:0}100%{transform:scale(1) rotate(3deg);opacity:1}}
+
+/* ---- then: the model picker and the gears ---- */
+.duo{display:grid;gap:clamp(1.5rem,3vw,2.5rem);grid-template-columns:1fr}
+@media (min-width:980px){.duo{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}}
+.duo>div{display:grid;gap:1.2rem;align-content:start}
+.picker{padding:0;max-width:26rem}
+.picker-head{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--ink);padding:.6rem .8rem;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.picker label{display:flex;gap:.7rem;align-items:flex-start;padding:.7rem .8rem;border-bottom:1px solid var(--ink-20);cursor:pointer}
+.picker label:last-child{border-bottom:0}
+.picker input{accent-color:var(--ink);margin-top:.25rem}
+.picker .nm{font-weight:700}
+.picker .ds{display:block;font-size:.85rem;color:rgba(12,21,18,.7)}
+.picker .soon{opacity:.55;cursor:not-allowed}
+.gears{display:flex;gap:.6rem;align-items:flex-end}
+.gear{cursor:pointer;background:transparent;border:2px solid var(--cream);color:var(--cream);font-family:var(--f-mono);font-weight:600;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;display:grid;justify-items:center;gap:.5rem;padding:.6rem .7rem}
+.gear .cog{border-radius:50%;border:3px dashed var(--cream)}
+.gear[aria-pressed="true"]{background:var(--cream);color:var(--ink)}
+.gear[aria-pressed="true"] .cog{border-color:var(--ink)}
+.out{font-family:var(--f-mono);font-size:.82rem;color:var(--mint);min-height:1.4rem}
+
+/* ---- the timeline ---- */
+/* One position drives the line, the dots and the end circle, so they share a centre. */
+.line-list,.end{--rail-x:10px;--pad:44px}
+@media (min-width:760px){.line-list,.end{--rail-x:18px;--pad:64px}}
+.line-list{position:relative;display:grid;padding-left:var(--pad)}
+.line-list::before{content:"";position:absolute;left:var(--rail-x);top:.4rem;bottom:0;width:4px;background:var(--coral)}
+.stop{position:relative;padding-block:0 clamp(2rem,4vw,3rem)}
+.stop .dot{position:absolute;top:.2rem;left:calc(var(--rail-x) + 2px - 8px - var(--pad));width:16px;height:16px;border-radius:50%;border:3px solid var(--ink);background:var(--coral)}
+.stop.lit .dot{box-shadow:0 0 0 5px rgba(255,106,77,.35)}
+.dates{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}
+.date{font-family:var(--f-mono);font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:.2rem .45rem;background:var(--coral);color:var(--ink)}
+.date.plain{background:transparent;color:var(--cream-75);border:1px solid var(--cream-25)}
+.stop-grid{display:grid;gap:1.4rem;grid-template-columns:1fr}
+@media (min-width:1100px){.stop-grid.split{grid-template-columns:minmax(0,40rem) minmax(0,1fr);align-items:start;gap:2.5rem}}
+.inline-stamp{color:var(--coral);transform:rotate(-4deg);display:inline-block}
+.end{position:relative;padding-left:var(--pad);display:grid;gap:.9rem}
+.end .ring{position:absolute;left:calc(var(--rail-x) + 2px - 13px);top:.1rem;width:26px;height:26px;border-radius:50%;background:var(--mint);border:4px solid var(--ink);box-shadow:0 0 0 3px var(--mint)}
+.end h3{font-size:clamp(2.4rem,7vw,4.4rem);color:var(--mint)}
+
+/* menu */
+.menu{padding:clamp(1rem,2.5vw,1.5rem);max-width:34rem;position:relative}
+.menu-title{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;border-bottom:3px double var(--ink);padding-bottom:.6rem;margin-bottom:.8rem}
+.menu-title .display{font-size:2rem}
+.menu-tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.6rem}
+.menu-row{display:flex;align-items:baseline;gap:.5rem;padding-block:.55rem}
+.menu-row .nm{font-weight:800;font-variation-settings:'wdth' 108}
+.menu-row .ds{font-size:.82rem;color:rgba(12,21,18,.65);display:block;font-weight:400}
+.menu-row .lead{flex:1;border-bottom:2px dotted var(--ink-50);transform:translateY(-.3rem);min-width:1rem}
+.menu-row .pr{font-family:var(--f-display);font-size:1.7rem;line-height:1}
+.menu .new{position:absolute;top:-14px;right:14px;background:var(--coral);transform:rotate(5deg)}
+
+/* jefferson */
+.ask{display:grid;gap:.8rem;max-width:34rem}
+.ask-q{font-family:var(--f-dek);font-style:italic;font-size:1.35rem}
+.ask-row{display:flex;flex-wrap:wrap;gap:.6rem}
+.bubble{border:2px solid var(--cream);padding:.7rem .9rem;display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
+.bubble b{font-family:var(--f-display);font-weight:400;font-size:1.5rem;text-transform:uppercase}
+
+/* 95 */
+.ninety{display:grid;gap:1.2rem;grid-template-columns:1fr;align-items:center}
+@media (min-width:760px){.ninety{grid-template-columns:auto minmax(0,1fr)}}
+.big{font-family:var(--f-display);font-size:clamp(5rem,20vw,11rem);line-height:.85;color:var(--coral)}
+.dots{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:4px;max-width:30rem}
+.dots i{aspect-ratio:1;background:var(--coral)}
+.dots i.cheap{background:transparent;border:2px solid var(--cream)}
+
+/* the bill */
+.bill{padding:clamp(1rem,2.5vw,1.6rem);max-width:36rem;display:grid;gap:.9rem}
+.bill-line{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;border-bottom:1px dashed var(--ink-50);padding-bottom:.55rem}
+.bill-line .v{font-family:var(--f-display);font-size:1.7rem;line-height:1}
+.bill-total .v{font-size:clamp(2.2rem,6vw,3.2rem);color:var(--ink)}
+.bill input[type=range]{width:100%;accent-color:var(--coral)}
+.who{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(12,21,18,.65)}
+
+/* quote */
+.pull{font-family:var(--f-dek);font-style:italic;font-size:clamp(1.6rem,4vw,2.6rem);line-height:1.2;max-width:48rem;margin:0}
+.pull .mk{color:var(--mint)}
+
+/* next: coral block */
+.coral{background:var(--coral);color:var(--ink)}
+.coral .sec-head .label{color:var(--ink)}
+.coral .prose p{color:var(--ink)}
+.coral .sticker{background:var(--cream)}
+.frost{display:grid;gap:.8rem;max-width:30rem}
+.glass{border:2px solid var(--ink);background:var(--cream);color:var(--ink);padding:1rem;box-shadow:var(--shadow);display:grid;gap:.35rem;transition:filter .3s ease}
+.glass .q{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.glass .a{font-family:var(--f-display);font-size:2rem;text-transform:uppercase;line-height:1}
+.glass.frosted .a{filter:blur(9px);user-select:none}
+.coral .seg .btn{box-shadow:none}
+
+/* forks */
+.forkfig{margin-block:1rem 0;display:none}
+@media (min-width:980px){.forkfig{display:block}}
+.forkfig svg{display:block;width:100%;height:auto;max-height:180px}
+.forks{display:grid;gap:clamp(1rem,2vw,1.5rem);grid-template-columns:1fr;margin-top:1.6rem}
+@media (min-width:980px){.forks{margin-top:0}}
+@media (min-width:980px){.forks{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.fork{position:relative;padding:clamp(1rem,2.2vw,1.4rem);display:grid;gap:.8rem;align-content:start;cursor:pointer;transition:transform .15s ease}
+.fork[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:4px}
+.fork .line{height:0;border-top:5px solid var(--ink);width:56px;display:none}
+@media (min-width:980px){.fork .line{display:block}}
+.fork .line.dash{border-top-style:dashed}
+.fork .line.dot{border-top-style:dotted}
+.fork h3{font-size:clamp(2rem,4.2vw,2.8rem)}
+.fork dl{margin:0;display:grid;gap:.6rem}
+.fork dt{font-family:var(--f-mono);font-weight:600;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
+.fork dd{margin:0;font-size:.98rem}
+.fork .bet{position:static;justify-self:start;background:var(--mint);transform:rotate(-3deg)}
+@media (min-width:980px){.fork .bet{position:absolute;top:-16px;right:12px;transform:rotate(4deg)}}
+.fork .mine{justify-self:start}
+.picks{margin-top:1.4rem;font-family:var(--f-mono);font-size:.85rem;letter-spacing:.06em;display:flex;flex-wrap:wrap;gap:.4rem 1.4rem}
+.picks b{font-weight:600}
+
+/* call */
+.call{display:grid;gap:clamp(1.2rem,3vw,2rem);grid-template-columns:1fr}
+@media (min-width:980px){.call{grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);align-items:start}}
+.call-card{border:3px solid var(--mint);padding:clamp(1.2rem,3vw,2rem);display:grid;gap:1.1rem;position:relative}
+.call-card .display{font-size:clamp(1.8rem,3.8vw,2.7rem);line-height:.98;color:var(--cream)}
+.call-meta{display:flex;flex-wrap:wrap;gap:.6rem}
+.call-meta .stamp{color:var(--mint)}
+.call-meta .stamp.tbd{color:var(--coral)}
+.yours{display:grid;gap:.8rem}
+.yours input{width:100%;accent-color:var(--mint)}
+.yours .n{font-family:var(--f-display);font-size:3.4rem;line-height:1;color:var(--mint)}
+
+/* checked twice */
+.checked{display:grid;gap:clamp(1.5rem,3vw,2.5rem);grid-template-columns:1fr}
+@media (min-width:980px){.checked{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}}
+.tally{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;background:var(--ink);border:2px solid var(--ink)}
+.tally div{background:var(--cream);padding:.9rem;display:grid;gap:.2rem}
+.tally b{font-family:var(--f-display);font-weight:400;font-size:2.4rem;line-height:1}
+.tally span{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+.sources{list-style:none;margin:0;padding:0;display:grid;gap:.1rem}
+.sources li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.8rem;padding-block:.55rem;border-bottom:1px solid var(--cream-12)}
+.sources .when{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;color:var(--cream-55);min-width:6.8rem;padding-top:.15rem}
+.sources a{text-decoration-color:var(--cream-25);text-underline-offset:3px;overflow-wrap:anywhere}
+
+/* footer */
+.foot{background:var(--ink-deep);padding-block:clamp(2.5rem,6vw,4.5rem)}
+.foot-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem}
+.foot img{width:clamp(150px,20vw,220px);height:auto;display:block}
+.foot .dek{font-size:clamp(1.4rem,3vw,2rem)}
+.krish{margin-top:clamp(2.5rem,5vw,4rem);padding:clamp(1rem,2.5vw,1.6rem);max-width:52rem}
+.krish h2{font-family:var(--f-mono);font-size:.78rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin:0 0 .8rem}
+.krish ol{margin:0;padding-left:1.3rem;display:grid;gap:.55rem}
+.krish code{font-family:var(--f-mono);font-size:.9em;background:rgba(12,21,18,.08);padding:.05rem .3rem}
+
+@media (prefers-reduced-motion:reduce){
+  .marquee-track{animation:none}
+  .pop{animation:none}
+  *{transition:none!important}
+}
+</style>
+
+<header class="grain">
+  <div class="wrap mast">
+    <div class="mast-row label"><span>Vol. 01 · Issue 01</span><span>mind.the.gap · Fridays</span><span>Free to read*</span></div>
+    <div class="mast-logo">
+      <img src="logo.png" alt="makeyourmindup" width="1200" height="141">
+      <span class="label" style="color:var(--cream-55)">Preview</span>
+    </div>
+  </div>
+  <div class="wrap hero">
+    <div class="hero-top"><span class="pill">mind.the.gap</span><span class="label" style="color:var(--cream-55)">Fridays · What's coming, before it's obvious</span><span class="sticker hero-sticker">Contains ice cream</span></div>
+    <h1 class="display">Who picks<span class="l2">your <span class="swipe">AI?</span></span></h1>
+    <p class="dek">Two years ago you chose which AI answered you. Now, more and more, a piece of software chooses for you. Here's how that happened, and three ways it could go.</p>
+    <div class="byline label"><span>By Krish Raja</span><span>6 minute read</span><span>Every fact checked twice</span></div>
+  </div>
+</header>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track">
+  <span><b>mind.the.gap</b> · Fridays <i>✦</i> Free from jargon <i>✦</i> Contains ice cream <i>✦</i> No added sermons <i>✦</i> Contains British spelling <i>✦</i></span>
+  <span><b>mind.the.gap</b> · Fridays <i>✦</i> Free from jargon <i>✦</i> Contains ice cream <i>✦</i> No added sermons <i>✦</i> Contains British spelling <i>✦</i></span>
+</div></div>
+
+<main>
+<!-- ============ THE COUNTER ============ -->
+<section class="sec grain on-ink" aria-labelledby="h-counter">
+  <div class="wrap counter">
+    <div class="prose">
+      <h2 id="h-counter" class="sr">The ice cream counter</h2>
+      <p class="dek" style="font-size:clamp(1.3rem,2.6vw,1.6rem);line-height:1.35">Two years ago, picking an AI brain was like picking an ice cream flavour. Chocolate or vanilla. You chose.</p>
+      <div class="panel">
+        <h3>Two years ago</h3>
+        <div class="then-tubs" role="group" aria-label="Pick a flavour">
+          <button class="tub" type="button" data-then="chocolate" aria-pressed="false"><span class="scoop choc"></span>Chocolate</button>
+          <button class="tub" type="button" data-then="vanilla" aria-pressed="false"><span class="scoop van"></span>Vanilla</button>
+        </div>
+        <p class="then-out" id="then-out" aria-live="polite">Tap one.</p>
+      </div>
+    </div>
+    <div class="prose">
+      <p class="dek" style="font-size:clamp(1.3rem,2.6vw,1.6rem);line-height:1.35">Now it's like walking into an ice cream shop with forty flavours, three sizes, a "thinking" scoop that costs extra, and a guy behind the counter who sometimes just picks for you without asking.</p>
+      <div class="panel shop">
+        <h3>Now · forty flavours</h3>
+        <div class="flavours" id="flavours" role="group" aria-label="Forty flavours"></div>
+        <div class="shop-controls">
+          <div class="seg" role="group" aria-label="Size">
+            <button class="btn" type="button" data-size="Small" aria-pressed="false">Small</button>
+            <button class="btn" type="button" data-size="Medium" aria-pressed="true">Medium</button>
+            <button class="btn" type="button" data-size="Large" aria-pressed="false">Large</button>
+          </div>
+          <button class="btn" type="button" id="think" aria-pressed="false">+ Thinking scoop</button>
+          <button class="btn-primary" type="button" id="order">Order</button>
+        </div>
+        <div class="guy"><span class="label" style="color:var(--cream-55)">The guy behind the counter</span><span class="sticker" id="guy-stamp">Picks for you</span></div>
+        <p class="readout" id="readout" aria-live="polite">Example order: you asked for a medium <b>Big Brain Fudge</b>. <span class="got">The counter gave you Mini Brain Vanilla.</span></p>
+      </div>
+      <p>That guy behind the counter is the whole story. Here's how he got there, and where he's taking you next.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THEN ============ -->
+<section class="sec" aria-labelledby="h-then" style="border-top:2px solid var(--cream-12)">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">Then · 2024</span><h2 id="h-then" class="display">What it used to be</h2></div>
+    <div class="duo">
+      <div>
+        <p>Quick jargon check: OpenAI and Anthropic call their AIs "models". We'll call them brains. In September 2024, OpenAI gave people on its paid ChatGPT Plus and Team plans two new brains, o1-preview and o1-mini, and you picked them yourself from a menu called the model picker. They were built to spend more time thinking before they answered, like a kid who reads the whole maths question before scribbling. OpenAI, the company that makes ChatGPT, even said it was "working to" get ChatGPT to automatically choose the right model for you. It hadn't yet. You were the one holding the menu.</p>
+        <fieldset class="card picker" style="margin:0">
+          <legend class="sr">ChatGPT's model picker, September 2024</legend>
+          <div class="picker-head"><span>Model picker</span><span>Sept 2024</span></div>
+          <label><input type="radio" name="pick24" value="o1-preview"><span><span class="nm">o1-preview</span><span class="ds">Spends more time thinking before it answers</span></span></label>
+          <label><input type="radio" name="pick24" value="o1-mini"><span><span class="nm">o1-mini</span><span class="ds">The smaller one</span></span></label>
+          <label class="soon"><input type="radio" name="pick24" value="auto" disabled><span><span class="nm">Choose for me</span><span class="ds">Not yet. OpenAI said it was "working to"</span></span></label>
+        </fieldset>
+        <p class="out" id="pick24-out" aria-live="polite"></p>
+        <p class="src">Drawn from OpenAI's release notes, 12 September 2024: "Both o1-preview and o1-mini can be selected manually in the model picker."</p>
+      </div>
+      <div>
+        <p>Anthropic, which makes Claude, sold its brains the same way: three sizes, small, middle and big (Claude 3 Haiku, Sonnet and Opus), so you could pick your own balance of brains, speed and price. A bit like choosing your bike gear yourself instead of the bike doing it.</p>
+        <div class="gears" role="group" aria-label="Pick a size">
+          <button class="gear" type="button" data-gear="Haiku" data-size="small" aria-pressed="false"><svg class="cog" width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"></svg>Haiku<span style="font-weight:400">small</span></button>
+          <button class="gear" type="button" data-gear="Sonnet" data-size="middle" aria-pressed="false"><svg class="cog" width="50" height="50" viewBox="0 0 50 50" aria-hidden="true"></svg>Sonnet<span style="font-weight:400">middle</span></button>
+          <button class="gear" type="button" data-gear="Opus" data-size="big" aria-pressed="false"><svg class="cog" width="68" height="68" viewBox="0 0 68 68" aria-hidden="true"></svg>Opus<span style="font-weight:400">big</span></button>
+        </div>
+        <p class="out" id="gear-out" aria-live="polite">Your gear, your choice.</p>
+        <p class="src">Anthropic, Introducing the next generation of Claude: "three state-of-the-art models in ascending order of capability: Claude 3 Haiku, Claude 3 Sonnet, and Claude 3 Opus."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track">
+  <span>What it used to be <i>✦</i> What it is now <i>✦</i> <b>Where it could go</b> <i>✦</i> Our prediction <i>✦</i></span>
+  <span>What it used to be <i>✦</i> What it is now <i>✦</i> <b>Where it could go</b> <i>✦</i> Our prediction <i>✦</i></span>
+</div></div>
+
+<!-- ============ NOW ============ -->
+<section class="sec grain" aria-labelledby="h-now">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">Now · August 2025 to today</span><h2 id="h-now" class="display">What it is now</h2></div>
+
+    <div class="line-list">
+      <article class="stop"><span class="dot" aria-hidden="true"></span>
+        <div class="dates"><span class="date">7 Aug 2025</span></div>
+        <p class="read">On 7 August 2025, OpenAI made GPT-5 the new default brain in ChatGPT and called it "a single auto-switching system". Translation: you stop picking. The app decides which brain answers each question: a quick one for easy stuff, or one that takes extra time to "think" for hard stuff.</p>
+      </article>
+
+      <article class="stop"><span class="dot" aria-hidden="true"></span>
+        <div class="dates"><span class="date">8 Aug 2025</span><span class="date">12 Aug 2025</span></div>
+        <div class="stop-grid split">
+          <p>It broke. The next day OpenAI's boss, Sam Altman, said the "autoswitcher was out of commission for a chunk of the day", and the result was that "GPT-5 seemed way dumber". People lobbied hard to get the old brain back, and by 12 August 2025 OpenAI had put GPT-4o back on the menu for paying users. The waiter had grabbed the wrong dish from the kitchen, and half the restaurant sent it back.</p>
+          <div><span class="stamp inline-stamp">Way dumber</span><p class="src" style="margin-top:.8rem">Sam Altman, quoted by TechCrunch, 8 August 2025. OpenAI's release notes, 12 August 2025: "4o is back in the model picker for all paid users by default."</p></div>
+        </div>
+      </article>
+
+      <article class="stop"><span class="dot" aria-hidden="true"></span>
+        <div class="dates"><span class="date">3 Oct 2025</span><span class="date">March 2026</span></div>
+        <p class="read">Then OpenAI said it would "soon begin" sending some sensitive chats, like ones showing "signs of acute distress" (someone in a really bad way), to a reasoning brain, the kind that stops and thinks first. On 3 October 2025 it said: "we've been using our real-time router to direct sensitive parts of conversations" that way. The router is the switcher. By March 2026, if you pay for ChatGPT and hit your limit on its thinking brain, GPT-5.4 Thinking, you get moved down to a smaller one, GPT-5.4 mini. And big companies can set ChatGPT's automatic mode to use that small brain by default.</p>
+      </article>
+
+      <article class="stop"><span class="dot" aria-hidden="true"></span>
+        <div class="dates"><span class="date plain">Meanwhile at Anthropic</span></div>
+        <p class="read">Over at Anthropic, the docs say Claude "decides for itself whether to think and how much", one question at a time. People building apps with Claude can turn its effort setting up to "max", or down to save time and money.</p>
+      </article>
+
+      <article class="stop"><span class="dot" aria-hidden="true"></span>
+        <div class="dates"><span class="date">5 June 2026</span><span class="date plain">The money</span></div>
+        <div class="stop-grid split">
+          <p>Here's the part that actually matters: the money. On 5 June 2026, CNBC reported that letting software pick the brain, which the industry calls "model routing", fixes AI overspending, and is a problem for OpenAI and Anthropic. Scott Wu, who runs Cognition (it makes an AI coder called Devin), said that for a lot of boilerplate work, the dull same-again jobs, companies can get five to 10 times better cost efficiency (more work for the money) from brains that are still good enough for the task. His example: ask a model to name the third US president. Each one, no matter how expensive, will tell you it was Thomas Jefferson. Paying top price for that is like hiring a professor to tell you what day it is.</p>
+          <div class="ask on-ink">
+            <p class="ask-q">Who was the third US president?</p>
+            <div class="ask-row">
+              <button class="btn" type="button" data-ask="astra">Ask the $50 one</button>
+              <button class="btn" type="button" data-ask="luna">Ask the $0.50 one</button>
+            </div>
+            <div class="bubble" id="ans-astra" hidden><b>Thomas Jefferson.</b><span class="label">GPT-6 Astra · $50</span></div>
+            <div class="bubble" id="ans-luna" hidden><b>Thomas Jefferson.</b><span class="label">GPT-6 Luna · $0.50</span></div>
+            <p class="out" id="ask-out" aria-live="polite"></p>
+            <p class="src">Scott Wu's example, reported by CNBC. Prices are what OpenAI charges for a million tokens of writing. These answers are an illustration, not a live question.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="stop"><span class="dot" aria-hidden="true"></span>
+        <div class="dates"><span class="date">June 2026</span><span class="date plain">The bill</span></div>
+        <div class="stop-grid split">
+          <div class="prose">
+            <div class="ninety">
+              <span class="big tnum" aria-hidden="true">95%</span>
+              <div class="dots" role="img" aria-label="95 of 100 squares filled: roughly 95% of company AI use runs on the most expensive brains"></div>
+            </div>
+            <p>Yet Glean's boss, Arvind Jain, has estimated that roughly 95% of company AI use still runs on the most expensive brains, even for jobs cheaper ones could easily handle. Jeetu Patel, Cisco's chief product officer, did the sums: about $200 of tokens per worker per week comes to about $10,000 a year each. Tokens are little blocks of data, and the bill counts every one the AI gets through. With 90,000 employees, a company is looking at $900 million a year.</p>
+          </div>
+          <div class="card bill" aria-labelledby="bill-h">
+            <div class="menu-title" style="margin:0"><span id="bill-h" class="display" style="font-size:2rem">Cisco's sums</span><span class="label">Jeetu Patel</span></div>
+            <div class="bill-line"><span>Per worker, per week<br><span class="who">Jeetu Patel, Cisco</span></span><span class="v tnum">$200</span></div>
+            <div class="bill-line"><span>Per worker, per year<br><span class="who">Jeetu Patel: "about $10,000"</span></span><span class="v tnum">$10,000</span></div>
+            <label for="staff" class="bill-line" style="border:0;padding:0"><span>Workers</span><span class="v tnum" id="staff-n">90,000</span></label>
+            <input type="range" id="staff" min="500" max="200000" step="500" value="90000">
+            <div class="bill-line bill-total" style="border:0"><span>A year<br><span class="who" id="bill-who">Jeetu Patel, for 90,000 employees</span></span><span class="v tnum" id="bill-v">$900m</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="stop"><span class="dot" aria-hidden="true"></span>
+        <div class="dates"><span class="date">5 June 2026</span></div>
+        <div class="prose">
+          <blockquote class="pull"><span class="mk">"</span>Pricing power is shifting from the companies selling premium AI toward the companies buying it.<span class="mk">"</span></blockquote>
+          <p class="label" style="color:var(--cream-55)">CNBC, 5 June 2026</p>
+          <p class="read">CNBC's own conclusion: "Pricing power is shifting from the companies selling premium AI toward the companies buying it." In plain English, the power to set prices is moving to the buyers.</p>
+        </div>
+      </article>
+
+      <article class="stop"><span class="dot" aria-hidden="true"></span>
+        <div class="dates"><span class="date">22 Sept 2026</span></div>
+        <p class="read">On 22 September 2026 both big AI companies launched cheaper brains. OpenAI added two GPT-6 brains, Sol and Luna, and cut the prices it charges app builders 50% compared with its special-offer prices for GPT-5.6. Anthropic said its newest Claude, Opus 5.5, "costs 40% less to run than Opus 5".</p>
+      </article>
+
+      <article class="stop"><span class="dot" aria-hidden="true"></span>
+        <div class="dates"><span class="date">Today</span></div>
+        <div class="stop-grid split">
+          <p>The price list is now the length of a takeaway menu. OpenAI charges by the token. GPT-6 Luna, the brain OpenAI calls its "most efficient model", costs $0.50 for a million tokens of writing. GPT-6 Astra, its "most capable model", costs $50 for the same. Then you pick a lane: Fast mode costs double, and two cheaper lanes, called Batch and Flex, cost half.</p>
+          <div class="card menu" aria-labelledby="menu-h">
+            <span class="sticker new">New 22 Sept</span>
+            <div class="menu-title"><span id="menu-h" class="display">Price list</span><span class="label">A million tokens of writing</span></div>
+            <div class="menu-tabs" role="group" aria-label="Lane">
+              <button class="btn" type="button" data-lane="standard" aria-pressed="true">Normal</button>
+              <button class="btn" type="button" data-lane="fast" aria-pressed="false">Fast: costs double</button>
+              <button class="btn" type="button" data-lane="batch" aria-pressed="false">Batch or Flex: half</button>
+            </div>
+            <div class="menu-tabs" role="group" aria-label="How much it reads first">
+              <button class="btn" type="button" data-ctx="short" aria-pressed="true">Short question</button>
+              <button class="btn" type="button" data-ctx="long" aria-pressed="false">Reads a long document first</button>
+            </div>
+            <div class="menu-row"><span><span class="nm">GPT-6 Astra</span><span class="ds">"Most capable model"</span></span><span class="lead"></span><span class="pr tnum" data-m="astra">$50.00</span></div>
+            <div class="menu-row"><span><span class="nm">GPT-6 Sol</span><span class="ds">A tier below Astra</span></span><span class="lead"></span><span class="pr tnum" data-m="sol">$10.00</span></div>
+            <div class="menu-row"><span><span class="nm">GPT-6 Luna</span><span class="ds">"Most efficient model"</span></span><span class="lead"></span><span class="pr tnum" data-m="luna">$0.50</span></div>
+            <p class="src" style="margin-top:.6rem">OpenAI's price list, read 25 September 2026: the price of the writing each brain does. Tokens are little blocks of data.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="end">
+      <span class="ring" aria-hidden="true"></span>
+      <span class="label" style="color:var(--mint)">Put it all together</span>
+      <h3 class="display">A switcher picks your AI.</h3>
+      <p class="read">Put it all together and our answer to who picks your brain is, more and more, a switcher: software that, in TechCrunch's words, "decides which model to use for a particular prompt". In plain English, it decides which brain answers each question.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEXT ============ -->
+<section class="sec coral halftone" aria-labelledby="h-next">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">Next · our guess</span><h2 id="h-next" class="display">Where it could go</h2></div>
+    <div class="duo">
+      <div class="prose">
+        <p>From here on, this is our guess. For now you can still see behind the counter: in October 2025 OpenAI said ChatGPT "will continue to tell users which model is active when asked". The bigger shift would come if nobody tells you anything, and the brain you get depends on what's cheapest that day, for the free user, the student, the person asking for a recipe.</p>
+        <p>You would never know if you got the smart brain or the bargain-bin brain. You would just notice, some days, that the answer feels a bit dumber, the way people did in August 2025, except this time nobody would tell you why, or say sorry, or bring back the old one.</p>
+      </div>
+      <div class="frost">
+        <div class="seg" role="group" aria-label="Can you see which brain answered?">
+          <button class="btn" type="button" data-frost="clear" aria-pressed="true">Today</button>
+          <button class="btn" type="button" data-frost="frosted" aria-pressed="false">If they stop telling you</button>
+        </div>
+        <div class="glass" id="glass">
+          <span class="q">Which brain answered you?</span>
+          <span class="a" id="glass-a">GPT-5.4 mini</span>
+          <span class="q" id="glass-note" style="opacity:.7">You asked. It told you.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:clamp(3rem,7vw,5.5rem)"><span class="label">Next · three futures</span><h2 class="display">Three ways this could go</h2></div>
+    <p class="read">Three ways this could go. Plain English, silly names, and the first sign you're living in each one.</p>
+    <figure class="forkfig" aria-hidden="true"><svg viewBox="0 0 1200 180" preserveAspectRatio="none" id="fork-svg"></svg></figure>
+
+    <div class="forks" role="group" aria-label="The three futures">
+      <article class="card fork" data-fork="vending" aria-pressed="false" tabindex="0">
+        <span class="sticker bet">Our bet</span>
+        <span class="line" aria-hidden="true"></span>
+        <h3 class="display">The Vending Machine</h3>
+        <p>Every AI company makes the switching fully automatic and invisible, everywhere, always. You press a button, something comes out, you never see the machinery.</p>
+        <dl>
+          <div><dt>Winners</dt><dd>The AI companies, whose pitch would shift from "our brain is smarter" to "our machine never jams".</dd></div>
+          <div><dt>Losers</dt><dd>People who wanted to pick the smart brain on purpose and can't any more.</dd></div>
+          <div><dt>First sign</dt><dd>The menu of brains disappears from the app for everyone, paying customers included.</dd></div>
+        </dl>
+        <button class="btn mine" type="button" data-mine="The Vending Machine">I think this one</button>
+      </article>
+      <article class="card fork" data-fork="secret" aria-pressed="false" tabindex="0">
+        <span class="line dash" aria-hidden="true"></span>
+        <h3 class="display">The Secret Menu</h3>
+        <p>The switching stays automatic for everyone, but a hidden menu opens back up for people who pay extra or know to ask: picking your own brain becomes a paid extra.</p>
+        <dl>
+          <div><dt>Winners</dt><dd>Professionals who need a specific brain for a specific job.</dd></div>
+          <div><dt>Losers</dt><dd>Everyday users who never knew the secret menu existed.</dd></div>
+          <div><dt>First sign</dt><dd>A "choose your model" switch buried three menus deep, clearly built for people who go looking for it.</dd></div>
+        </dl>
+        <button class="btn mine" type="button" data-mine="The Secret Menu">I think this one</button>
+      </article>
+      <article class="card fork" data-fork="group" aria-pressed="false" tabindex="0">
+        <span class="line dot" aria-hidden="true"></span>
+        <h3 class="display">The Group Project</h3>
+        <p>Several brains answer the same question at once, cheap and expensive, and something compares the answers before showing you one. It would be slower and pricier per question, but much harder to get a "way dumber" day.</p>
+        <dl>
+          <div><dt>Winners</dt><dd>Anyone doing something that really matters, like medical questions, legal questions, or code that runs a real business.</dd></div>
+          <div><dt>Losers</dt><dd>The AI companies' profits, because running three brains costs more than running one.</dd></div>
+          <div><dt>First sign</dt><dd>Your answer takes visibly longer to arrive than it used to, on purpose.</dd></div>
+        </dl>
+        <button class="btn mine" type="button" data-mine="The Group Project">I think this one</button>
+      </article>
+    </div>
+    <div class="picks" aria-live="polite"><span>Our bet: the Vending Machine.</span><span id="your-pick">Your pick: <b>make your mind up</b></span></div>
+  </div>
+</section>
+
+<!-- ============ OUR PREDICTION ============ -->
+<section class="sec grain on-ink" aria-labelledby="h-call">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">Our prediction · with a date</span><h2 id="h-call" class="display">Our prediction</h2></div>
+    <div class="call">
+      <div class="call-card">
+        <p class="display">By 30 September 2027, at least two of OpenAI, Anthropic and Google will have their software pick the brain automatically, by default, for businesses that build apps on their AI.</p>
+        <p class="src">In the jargon: automatic model routing becomes the default on their main API.</p>
+        <div class="call-meta"><span class="stamp">Check back 30 Sept 2027</span><span class="stamp tbd">How sure we are: Krish to set</span></div>
+        <p class="src">When the date arrives, we mark it held, broke or unclear. Misses go up as big as hits.</p>
+      </div>
+      <div class="yours">
+        <label for="mine-conf" class="label" style="color:var(--cream-75)">How sure are you?</label>
+        <span class="n tnum" id="mine-n">50%</span>
+        <input type="range" id="mine-conf" min="0" max="100" step="5" value="50">
+        <p class="src">Your number stays in this browser. You make your mind up.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHECKED TWICE ============ -->
+<section class="sec" aria-labelledby="h-checked" style="background:var(--cream);color:var(--ink)">
+  <div class="wrap checked">
+    <div class="prose">
+      <div class="sec-head" style="margin-bottom:0"><span class="label" style="color:var(--ink)">How we checked</span><h2 id="h-checked" class="display">Checked twice</h2></div>
+      <p>Every number, date and quote in this piece was checked twice before it could reach you: against the source's own words, copied exactly, and on the web by a separate checker. The jokes, the three futures and our prediction were set aside, because they are ours.</p>
+      <div class="tally">
+        <div><b class="tnum">34</b><span>Facts checked</span></div>
+        <div><b class="tnum">19</b><span>Confirmed by both checks</span></div>
+        <div><b class="tnum">13</b><span>Word for word in the source</span></div>
+        <div><b class="tnum">2</b><span>Confirmed on the web</span></div>
+      </div>
+      <p class="src">Passed the fact check on 25 September 2026. 43 sentences were set aside as jokes, scenarios or our guesses.</p>
+    </div>
+    <div>
+      <p class="label" style="margin-bottom:.8rem">Sources, in date order</p>
+      <ol class="sources" style="color:var(--ink)">
+        <li><span class="when" style="color:rgba(12,21,18,.6)">2024</span><a href="https://www.anthropic.com/news/claude-3-family">Anthropic, Introducing the next generation of Claude</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">12 Sept 2024</span><a href="https://help.openai.com/en/articles/9624314-model-release-notes">OpenAI release notes: o1-preview and o1-mini</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">7, 12 Aug 2025</span><a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes">OpenAI, ChatGPT release notes: GPT-5, and GPT-5 updates</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">8 Aug 2025</span><a href="https://techcrunch.com/2025/08/08/sam-altman-addresses-bumpy-gpt-5-rollout-bringing-4o-back-and-the-chart-crime/">TechCrunch: Sam Altman addresses bumpy GPT-5 rollout</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">Undated</span><a href="https://openai.com/index/building-more-helpful-chatgpt-experiences-for-everyone/">OpenAI, Building more helpful ChatGPT experiences for everyone</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">3 Oct 2025, 18 Mar 2026</span><a href="https://help.openai.com/en/articles/9624314-model-release-notes">OpenAI release notes: Updating GPT-5; GPT-5.4 mini in ChatGPT</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">5 June 2026</span><a href="https://www.cnbc.com/2026/06/05/model-routing-on-ai-is-a-problem-for-openai-and-anthropic.html">CNBC: Model routing is a fix for AI overspending</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">22 Sept 2026</span><a href="https://www.cnbc.com/2026/09/22/anthropic-openai-cheaper-ai-models.html">CNBC: Anthropic and OpenAI roll out cheaper models</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">Read 25 Sept 2026</span><a href="https://www.anthropic.com/claude/opus">Anthropic: Claude Opus</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">Read 25 Sept 2026</span><a href="https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking">Anthropic docs: Adaptive thinking, and Effort</a></li>
+        <li><span class="when" style="color:rgba(12,21,18,.6)">Read 25 Sept 2026</span><a href="https://developers.openai.com/api/docs/pricing">OpenAI's price list, and the GPT-6 Luna and Astra pages</a></li>
+      </ol>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot grain on-ink">
+  <div class="wrap">
+    <div class="foot-row">
+      <img src="logo.png" alt="makeyourmindup" width="1200" height="141">
+      <a class="btn-primary" href="https://www.makeyourmindup.ai/">Subscribe free <span aria-hidden="true">↗</span></a>
+    </div>
+    <p class="dek" style="margin-top:1.4rem">You make your mind up.</p>
+    <p class="label" style="margin-top:.8rem;color:var(--cream-55)">under.the.hood Mondays · follow.the.money Wednesdays · mind.the.gap Fridays</p>
+
+    <section class="card krish" aria-labelledby="h-krish">
+      <h2 id="h-krish">For Krish · reply with numbers</h2>
+      <ol>
+        <li>How sure are we on the prediction? Piece 1 went out at 70%.</li>
+        <li>This page: yes, or what to change.</li>
+        <li>The cover page fix I sent (logo space, the mint highlight, the line under it): go.</li>
+        <li>makeyourmindup.ai as the home of this full, interactive version, with Substack carrying the email version: yes or no.</li>
+      </ol>
+    </section>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var store = {
+    get: function(k){ try { return localStorage.getItem('myu-p2-' + k) } catch (e) { return null } },
+    set: function(k, v){ try { localStorage.setItem('myu-p2-' + k, v) } catch (e) {} }
+  };
+  function $(s, r){ return (r || document).querySelector(s) }
+  function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)) }
+  function press(group, btn){ group.forEach(function(b){ b.setAttribute('aria-pressed', b === btn ? 'true' : 'false') }) }
+
+  // Two years ago: you chose, you got.
+  var thenBtns = $$('[data-then]');
+  thenBtns.forEach(function(b){ b.addEventListener('click', function(){
+    press(thenBtns, b);
+    $('#then-out').textContent = 'You chose ' + b.dataset.then + '. You got ' + b.dataset.then + '.';
+  }) });
+
+  // Now: forty flavours and a guy behind the counter.
+  var names = ['Big Brain Fudge','Mini Brain Vanilla','Genius Swirl','Smarty Pants Pistachio','Quick Answer Lemon','Slow Thinker Toffee','Know-It-All Mocha','Homework Helper Mint',
+    'Deep Thought Chocolate','Half Asleep Honeycomb','Overthinker Caramel','Show Your Working Strawberry','Straight A Sorbet','Pop Quiz Peach','Brain Freeze Blueberry','Clever Clogs Coconut',
+    'Guesswork Gelato','Bargain Bin Banana','Top Shelf Tiramisu','Budget Butterscotch','Premium Praline','Expert Espresso','Rookie Raspberry','Deep End Dark Chocolate',
+    'Big Words Bubblegum','Small Talk Sorbet','Second Opinion Cherry','Fact Checker Fig','Plain English Pear','Long Answer Liquorice','Short Answer Lime','Think Harder Hazelnut',
+    'Snap Decision Ripple','Mind Reader Mango','Night Owl Neapolitan','Early Bird Blackcurrant','Pay Extra Pistachio','House Special Vanilla','Surprise Me Swirl','Whatever Is Cheapest Vanilla'];
+  var cheap = ['Mini Brain Vanilla','Bargain Bin Banana','Budget Butterscotch','Whatever Is Cheapest Vanilla','House Special Vanilla','Guesswork Gelato'];
+  var grid = $('#flavours'), picked = 'Big Brain Fudge', size = 'medium', thinking = false, lastRouted = null;
+  names.forEach(function(n, i){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'fl t' + ((i * 3 + Math.floor(i / 8)) % 8 + 1); b.setAttribute('aria-label', n);
+    b.setAttribute('aria-pressed', n === picked ? 'true' : 'false'); b.dataset.name = n; b.title = n;
+    if (n === 'Mini Brain Vanilla') { b.classList.add('routed'); lastRouted = b }
+    b.addEventListener('click', function(){
+      picked = n; $$('.fl').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false') });
+      if (lastRouted) { lastRouted.classList.remove('routed'); lastRouted = null }
+      $('#readout').innerHTML = 'You picked <b>' + n + '</b>. Now order it.';
+    });
+    grid.appendChild(b);
+  });
+  var sizes = $$('[data-size]').filter(function(b){ return b.classList.contains('btn') });
+  sizes.forEach(function(b){ b.addEventListener('click', function(){ press(sizes, b); size = b.dataset.size.toLowerCase() }) });
+  $('#think').addEventListener('click', function(){ thinking = !thinking; this.setAttribute('aria-pressed', String(thinking)) });
+  var orders = 0;
+  $('#order').addEventListener('click', function(){
+    orders++;
+    var swap = orders % 3 !== 0;   // sometimes. Mostly.
+    var want = 'a ' + size + ' <b>' + picked + '</b>' + (thinking ? ' with the thinking scoop' : '');
+    if (lastRouted) { lastRouted.classList.remove('routed'); lastRouted = null }
+    var stamp = $('#guy-stamp'); stamp.classList.remove('pop'); void stamp.offsetWidth;
+    if (swap) {
+      var pool = cheap.filter(function(c){ return c !== picked });
+      var got = pool[orders % pool.length];
+      var el = $$('.fl').filter(function(x){ return x.dataset.name === got })[0];
+      if (el) { el.classList.add('routed'); lastRouted = el }
+      stamp.textContent = 'Picked for you'; stamp.classList.add('pop');
+      $('#readout').innerHTML = 'You asked for ' + want + '. <span class="got">The counter gave you ' + got + (thinking ? ', no thinking scoop' : '') + '.</span> Nobody asked you.';
+    } else {
+      stamp.textContent = 'Picks for you'; stamp.classList.add('pop');
+      $('#readout').innerHTML = 'You asked for ' + want + '. You got it. This time.';
+    }
+  });
+
+  // Then: the model picker, Sept 2024.
+  $$('input[name="pick24"]').forEach(function(r){ r.addEventListener('change', function(){
+    $('#pick24-out').textContent = 'You picked ' + r.value + '. You got ' + r.value + '.';
+  }) });
+
+  // Gears: draw the cogs, then let the reader shift.
+  $$('.gear').forEach(function(g){
+    var svg = g.querySelector('svg'), w = +svg.getAttribute('width'), c = w / 2, teeth = Math.round(w / 6), path = '';
+    for (var i = 0; i < teeth * 2; i++) {
+      var a = i * Math.PI / teeth, r = i % 2 ? c - 5 : c - 1;
+      path += (i ? 'L' : 'M') + (c + r * Math.cos(a)).toFixed(1) + ' ' + (c + r * Math.sin(a)).toFixed(1);
+    }
+    svg.innerHTML = '<path d="' + path + 'Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="' + c + '" cy="' + c + '" r="' + (c / 3) + '" fill="none" stroke="currentColor" stroke-width="2"/>';
+    svg.style.border = '0';
+    g.addEventListener('click', function(){
+      press($$('.gear'), g);
+      $('#gear-out').textContent = 'You picked ' + g.dataset.gear + ', the ' + g.dataset.size + ' one. Your gear, your choice.';
+    });
+  });
+
+  // The takeaway menu: OpenAI's output prices per 1M tokens, read 25 Sept 2026.
+  var P = {
+    standard: { short: { astra: 50, sol: 10, luna: 0.5 }, long: { astra: 75, sol: 15, luna: 0.75 } },
+    fast:     { short: { astra: 100, sol: 20, luna: 1 },  long: { astra: 150, sol: 30, luna: 1.5 } },
+    batch:    { short: { astra: 25, sol: 5, luna: 0.25 }, long: { astra: 37.5, sol: 7.5, luna: 0.375 } }
+  };
+  var lane = 'standard', ctx = 'short';
+  function money(v){ return '$' + (v < 1 ? v.toFixed(v * 1000 % 10 ? 3 : 2) : v.toFixed(2)) }
+  function menu(){ $$('[data-m]').forEach(function(el){ el.textContent = money(P[lane][ctx][el.dataset.m]) }) }
+  var lanes = $$('[data-lane]'), ctxs = $$('[data-ctx]');
+  lanes.forEach(function(b){ b.addEventListener('click', function(){ press(lanes, b); lane = b.dataset.lane; menu() }) });
+  ctxs.forEach(function(b){ b.addEventListener('click', function(){ press(ctxs, b); ctx = b.dataset.ctx; menu() }) });
+
+  // Ask any brain.
+  var asked = {};
+  $$('[data-ask]').forEach(function(b){ b.addEventListener('click', function(){
+    asked[b.dataset.ask] = true; $('#ans-' + b.dataset.ask).hidden = false;
+    if (asked.astra && asked.luna) $('#ask-out').textContent = 'Same answer. One charges 100 times as much for the same amount of writing ($50 against $0.50, our arithmetic).';
+  }) });
+
+  // 95 in 100.
+  var dots = $('.dots'); for (var i = 0; i < 100; i++) { var d = document.createElement('i'); if (i >= 95) d.className = 'cheap'; dots.appendChild(d) }
+
+  // The bill.
+  var staff = $('#staff');
+  function bill(){
+    var n = +staff.value, v = n * 10000;
+    $('#staff-n').textContent = n.toLocaleString('en-GB');
+    $('#bill-v').textContent = v >= 1e9 ? '$' + (v / 1e9).toFixed(2).replace(/\.?0+$/, '') + 'bn' : '$' + Math.round(v / 1e6).toLocaleString('en-GB') + 'm';
+    $('#bill-who').textContent = n === 90000 ? 'Jeetu Patel, for 90,000 employees' : 'Our arithmetic, at Patel’s $10,000 each';
+  }
+  staff.addEventListener('input', bill);
+
+  // The counter goes frosted.
+  var fr = $$('[data-frost]');
+  fr.forEach(function(b){ b.addEventListener('click', function(){
+    press(fr, b); var frosted = b.dataset.frost === 'frosted';
+    $('#glass').classList.toggle('frosted', frosted);
+    $('#glass-note').textContent = frosted ? 'You asked. Nobody said.' : 'You asked. It told you.';
+  }) });
+
+  // Forks: our bet, your pick.
+  var forks = $$('.fork');
+  function highlight(key){
+    forks.forEach(function(f){ f.setAttribute('aria-pressed', f.dataset.fork === key ? 'true' : 'false') });
+    $$('#fork-svg path').forEach(function(p){ p.setAttribute('stroke-width', p.dataset.fork === key ? '9' : '5') });
+  }
+  forks.forEach(function(f){
+    f.addEventListener('click', function(e){ if (!e.target.closest('.mine')) highlight(f.dataset.fork) });
+    f.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); highlight(f.dataset.fork) } });
+  });
+  function showPick(name){ $('#your-pick').innerHTML = 'Your pick: <b>' + (name || 'make your mind up') + '</b>' }
+  $$('.mine').forEach(function(b){ b.addEventListener('click', function(){
+    store.set('fork', b.dataset.mine); showPick(b.dataset.mine); highlight(b.closest('.fork').dataset.fork);
+  }) });
+  showPick(store.get('fork'));
+
+  // The fork: one thread in, three out, never meeting again.
+  var fs = $('#fork-svg');
+  fs.innerHTML = [
+    ['vending', 'M600 0 C600 70 200 70 200 180', ''],
+    ['secret', 'M600 0 L600 180', '14 10'],
+    ['group', 'M600 0 C600 70 1000 70 1000 180', '3 9']
+  ].map(function(p){ return '<path data-fork="' + p[0] + '" d="' + p[1] + '" fill="none" stroke="#0C1512" stroke-width="5" vector-effect="non-scaling-stroke" stroke-linecap="round"' + (p[2] ? ' stroke-dasharray="' + p[2] + '"' : '') + '/>' }).join('')
+    + '<circle cx="600" cy="6" r="10" fill="#7EF0C0" stroke="#0C1512" stroke-width="4" vector-effect="non-scaling-stroke"/>';
+
+  // Your confidence.
+  var mc = $('#mine-conf'); var saved = store.get('conf'); if (saved !== null && !isNaN(+saved)) mc.value = saved;
+  function conf(){ $('#mine-n').textContent = mc.value + '%'; store.set('conf', mc.value) }
+  mc.addEventListener('input', conf); conf();
+
+  // Light the stop you are reading.
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('lit', e.isIntersecting) }) }, { rootMargin: '-40% 0px -45% 0px' });
+    $$('.stop').forEach(function(s){ io.observe(s) });
+  }
+})();
+</script>

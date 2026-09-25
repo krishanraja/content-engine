@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-09-25 against `main` at `fd467e1`, the Vercel production
+Last verified: 2026-09-25 against `main` at `a5c5ab3`, the Vercel production
 deployment and a Supabase readback the same day
 
 The deepest current-state document for the whole repository. `NOW.md` is the
@@ -27,6 +27,15 @@ Readback 2026-09-25 unless a date is given.
 - **Production.** The control plane deploys from `main` to the Vercel project
   `content-engine`; the last walk fix (`b61a461`, H9 and H10) was verified live
   on 2026-09-24 by running the same draft through the checks before and after.
+- **The fact gate** (walk log H12 to H14). No piece on a live subchannel
+  reaches review, approval or publication until every checkable claim in its
+  exact text has been checked twice. Proven on piece 2, which passed on its
+  tenth run: 34 facts, 19 confirmed by both checks, 13 word for word in a filed
+  source, 2 on the web, 43 sentences set aside as jokes, scenarios or guesses.
+  Perplexity is connected as the independent checker. Krish runs it from the
+  composer's "Check the facts" strip in Control Center (H18).
+- **House rules R6 and R7** (plain words with no coined labels; reading age 12
+  with humour) are in every writer's rules and the final pass (H15).
 - **Crons.** All 20 in `apps/control-plane/vercel.json` have
   `content_engine_runs` rows in the last seven days. `judge_sweep` ran 59
   times.
@@ -67,11 +76,11 @@ Readback 2026-09-25 unless a date is given.
   skipped: "only 1 edit events in 28 days: too thin to propose anything". The
   ledger has grown since (37 of Krish's rows), so the next run is the first
   that may propose.
-- **The fact gate** (walk log H12). No piece on a live subchannel reaches
-  review, approval or publication until every checkable claim in its exact
-  body is verified. Built and tested; its first live runs are on pieces 1
-  and 2. Only an agent session can run a check until Control Center has the
-  button and the claim table.
+- **Web editions** (`editions/`, walk log H19). The first, piece 2's "Who
+  picks your AI?", is hand-built in the house style beside the exact text that
+  passed the gate; a test fails if the page says anything the gate did not
+  check. Nothing is published, and where editions live (makeyourmindup.ai)
+  waits on Krish.
 - **Remote Studio sessions.** The OAuth connector for Claude.ai and ChatGPT is
   not released, so those clients are `read_only_untracked`.
 
@@ -88,10 +97,9 @@ Engine:
 - **Guards that fail open.** `guard` and the POST arm of `guardCronRoute`
   admit everyone when `ACCESS_CODE` is unset; `discover-lens-radar` admits
   everyone when `LENS_RADAR_SECRET` is unset.
-- **CI on `main` cannot be green.** `check-run-recovery` (the replay registry
-  lacks `judge_sweep` and `judge_ladder`) and `check-cache-metering` (two judge
-  modules read cache token fields directly) fail, so `npm run verify` fails.
-  Two media tests also fail where FFmpeg is absent; CI installs it.
+- **`npm run verify`** passes its 28 control-plane guards again (fixed
+  2026-09-25, H16). Two media tests fail where FFmpeg is absent; CI installs
+  it.
 - **Retired names still drive whole paths.** The editorial radar and
   `editorial-route` know only `money_of_ai` and `built_with_ai`; `save-draft`
   and brief push map only the old factory channels; `deepen` accepts only
@@ -121,13 +129,17 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
 ## Waiting on Krish
 
 - **Piece 1** ("Same agent, opposite answers", follow.the.money, in review):
-  opening B, the Call at 70% and the panel-stamp answer are his (2026-09-25).
-  Waiting on his go for the reading-age-12 rewrite, then the fact gate, then
-  approval, which is the first decision the calibration view can learn from at
-  the draft stage.
-- **Piece 2** (mind.the.gap, "Every AI lab now sells a menu..."): v2 drafted
-  at about grade 8, angle A agreed. Waiting on his pick of a look for the
-  futures graphic, the Call's confidence, and the fact gate.
+  opening B, the prediction at 70% and the panel-stamp answer are his
+  (2026-09-25). It reads at about grade 10.5 and predates R6 and R7, so it
+  needs the plain-words, reading-age-12 rewrite and then the fact gate before
+  it can be approved. Waiting on his go for the rewrite.
+- **Piece 2** (mind.the.gap, now "Who picks your AI?"): v4 passed the fact
+  gate. Waiting on the prediction's confidence, his verdict on the page, and
+  whether makeyourmindup.ai hosts the full edition with Substack carrying the
+  email version.
+- **The cover page fix** for makeyourmindup.ai (logo clear space, the mint
+  highlight, the line under it), shown to him as before and after on
+  2026-09-25; that repository is not reachable from this session.
 - **The Studio's series.** Whether and when to rename `money_of_ai` and
   `built_with_ai`, which needs wordmarks for the subchannels first.
 - **The creative identity** (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8):

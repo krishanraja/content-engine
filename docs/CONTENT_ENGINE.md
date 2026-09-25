@@ -123,6 +123,16 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `POST /api/content-ideas/synthesize` | merges 2 to 25 cards into one `drafting` piece and marks the sources `absorbed` | Sonnet [`cleo-synthesize`] |
 | `/api/briefs/assemble` (cron), `/api/briefs/[week]`, `revise`, `notes` | the weekly brief: one investigative opinion piece plus its decision cards | Sonnet [`briefs-*`] |
 
+**The fact gate, in practice.** A second model reads every sentence the
+claim lister did not cover (twelve at a time, with its section heading), and
+a sentence is set aside as a joke, scenario, guess or the piece's own
+prediction only when both readings agree; a sentence with a number is never
+set aside unless it reads as a forecast. Sources are strongest filed word for
+word: `apps/control-plane/scripts/file-verbatim-source.ts` files a page's own
+words (title, dates, matching passages) with its URL. Krish runs a check from
+the composer's "Check the facts" strip in Control Center. Piece 2 took ten
+runs to pass, and the fixes each run forced are in the walk log (H12 to H14).
+
 **The fact gate.** A piece on a live subchannel cannot reach `review`,
 `approved` or `published` (through `PATCH /api/content-ideas` or `save-draft`)
 until a fact check of its exact current body has passed: every claim verified,
@@ -311,6 +321,15 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    `meter_daily` to check it.
 5. Write what you find in `docs/walks/` or the relevant document, never only in
    the chat.
+6. Before a piece can move on, its facts must pass the gate. File the sources
+   you used as verbatim excerpts with `file-verbatim-source.ts` (a summary
+   alone never passes a fact), run `POST /api/content-ideas/:id/fact-check`,
+   and fix or cut what it lists. Where you attribute words, use the source's
+   own words; the piece's house translations ("brain" for model) belong in
+   the writer's voice, never inside a quote or a paraphrase of one.
+7. A web edition goes in `editions/` with the exact text that passed and the
+   gate's record (`editions/README.md`); its test fails if the page says
+   anything the gate did not check.
 
 ## Development notes
 
