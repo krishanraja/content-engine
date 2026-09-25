@@ -66,7 +66,7 @@ Everything older is in `docs/history/2026-09-25-NOW.md` and `docs/history/LOG.md
 ## What is next and what is waiting on Krish
 
 - Next: Krish's verdict on piece 1, then piece 2 (mind.the.gap) and piece 3 (lift.the.lid) through the same walk.
-- Waiting on Krish: whether and when the Studio's series are renamed to the subchannels (needs wordmarks); the publication's name (Control Center's docs disagree); rotating four credentials pasted into a chat on 2026-09-24; the operator token's fate; merging Control Center's preset fix.
+- Waiting on Krish: whether and when the Studio's series are renamed to the subchannels (needs wordmarks); the publication's name (Control Center's docs disagree); rotating four credentials pasted into a chat on 2026-09-24; and the operator token's fate.
 - Engineering backlog, in order of risk: the unauthenticated write routes; `check-run-recovery` and `check-cache-metering`; the brief bridge for live subchannels; the walk's open findings F2 to F12 (`docs/STATE.md`).
 
 ## Read next

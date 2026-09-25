@@ -45,7 +45,8 @@ Readback 2026-09-25 unless a date is given.
   through `format_aliases`.
 - **The voice rule R2.** "Cut it everywhere" is active in the house rules, the
   deterministic voice check, the stored voice block and the channel corpus
-  (walk log, H7 and H8).
+  (walk log, H7 and H8), and in Control Center's composer presets
+  (control-center `d15ad25`, on `main` since 2026-09-25).
 - **Studio.** Two `video_studio_jobs` rows; `runner_watch` runs daily.
   `mindmake_studio_learning_proposals` is empty.
 
@@ -127,8 +128,6 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
 - **Credentials.** Four credentials pasted into a chat on 2026-09-24 need
   rotating. The fate of `ENGINE_OPERATOR_TOKEN` after the walk. Whether the
   autoscore trigger gets a credential in Supabase Vault.
-- **Control Center.** The branch that removes "Not X, Y" from two composer
-  presets waits to merge.
 - **Rules.** R1 (argue from labelled hypotheses when evidence is thin) is in
   trial; R3 (signature sections and a signature visual per subchannel) is
   proposed.
