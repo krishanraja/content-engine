@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Mindmake content engine
 as_of: 2026-09-25
-head: 2fca463
+head: 9981a3d
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -16,7 +16,7 @@ never_publish: [the Supabase project id, any credential or secret name including
 
 ## What it is
 
-The Mindmake content engine is the production team behind Krish Raja's publication: it finds what is worth saying, judges it with a blind panel, drafts it in his voice to the right subchannel's mandate, and turns it into Shorts and carousels, while Krish makes every decision that matters and nothing publishes itself. One repository holds two halves over one Supabase database. The content engine (`apps/control-plane`, its own Vercel project) runs 20 crons of collectors, a judge ladder, drafting and rewriting routes, channel cuts, production briefs and the ledger the engine learns from. The Video and Carousel Studio (`packages/`, `apps/runner`, `apps/renderer`) turns an approved brief into a Short or a carousel through hash-gated stations on Krish's Windows machine. Control Center is the desk Krish works at; this repository has no interface of its own. The publication has three subchannels, split.the.bill, mind.the.gap and lift.the.lid, each held to a mandate that lives in the database (`docs/NORTH_STAR.md`).
+The Mindmake content engine is the production team behind makeyourmindup, Krish Raja's publication: it finds what is worth saying, judges it with a blind panel, drafts it in his voice to the right subchannel's mandate, and turns it into Shorts and carousels, while Krish makes every decision that matters and nothing publishes itself. One repository holds two halves over one Supabase database. The content engine (`apps/control-plane`, its own Vercel project) runs 20 crons of collectors, a judge ladder, drafting and rewriting routes, channel cuts, production briefs and the ledger the engine learns from. The Video and Carousel Studio (`packages/`, `apps/runner`, `apps/renderer`) turns an approved brief into a Short or a carousel through hash-gated stations on Krish's Windows machine. Control Center is the desk Krish works at; this repository has no interface of its own. The publication, makeyourmindup, is hosted on Substack with its cover page at makeyourmindup.ai, and has three subchannels, split.the.bill, mind.the.gap and lift.the.lid, each held to a mandate that lives in the database (`docs/NORTH_STAR.md`).
 
 ## Who it is for and why it matters for Mindmake
 
@@ -45,6 +45,7 @@ Lifecycle: building. Readback the same day unless a commit is named.
 
 ## What changed recently
 
+- 2026-09-25 **The publication is makeyourmindup, and every piece gets a signature identity** (`docs/CREATIVE_IDENTITY_UPGRADE.md`). Ruling (Krish, 2026-09-25): "if they are going in, they need to go in for everything." Why: he wants no "walls of text" and nothing "out-there for out-theres sake"; the form has to communicate better. Each subchannel's signature device is the diagram its own mandate already names (the money map, the timeline, real or theatre), the cold open is the mandate's opening artifact, every piece makes a Call ruled in public through the claims system the engine already has, and the panel stamp leads with the panel's sharpest objection and his answer. Components go live one at a time, each universal from the day it passes on every piece.
 - 2026-09-25 **Documentation reset, at Krish's request.** Why: an agent reading this repository could not tell what it was. The README described only the Studio under retired names, no document described the content engine that moved here on 2026-09-08, and `AGENTS.md` named The Money of AI and Built With AI as the public series without saying they now survive only as Studio identifiers. New: `docs/NORTH_STAR.md`, `docs/SYSTEM_MAP.md`, `docs/CONTENT_ENGINE.md`, `docs/STUDIO.md`, `docs/GLOSSARY.md`, `docs/STATE.md`. The old README, NOW, PILOT and control-plane README moved to `docs/history/` (`docs/history/LOG.md`).
 - 2026-09-24 **Judges read what the piece was written from; the final pass stops truncating** (`b61a461`). Why: the draft gate's evidence judge graded evidence it could not see, and `channel_fit` had no mandate and guessed retired channels. The final pass echoes the whole draft inside its JSON, so a 900-word piece ran past 3,200 output tokens and 2 of 5 runs returned 502 and lost their spend.
 - 2026-09-24 **"Cut it everywhere"** (`19d7d7e`, `30b42af`). Ruling (Krish, 2026-09-24): no "Not X, Y" construction in any piece, in either order. It became a house rule, a deterministic check that reports every hit, and an edit to the stored voice block and corpus, which had been teaching the move.
@@ -66,7 +67,7 @@ Everything older is in `docs/history/2026-09-25-NOW.md` and `docs/history/LOG.md
 ## What is next and what is waiting on Krish
 
 - Next: Krish's verdict on piece 1, then piece 2 (mind.the.gap) and piece 3 (lift.the.lid) through the same walk.
-- Waiting on Krish: whether and when the Studio's series are renamed to the subchannels (needs wordmarks); the publication's name (Control Center's docs disagree); rotating four credentials pasted into a chat on 2026-09-24; and the operator token's fate.
+- Waiting on Krish: the makeyourmindup masthead and subchannel wordmarks (to approve from rendered territories), which also unblock renaming the Studio's series; adding the Call to all three mandates; where CTRL's lead-magnet door goes now that makeyourmindup.ai is the publication's cover page; rotating four credentials pasted into a chat on 2026-09-24; and the operator token's fate.
 - Engineering backlog, in order of risk: the unauthenticated write routes; `check-run-recovery` and `check-cache-metering`; the brief bridge for live subchannels; the walk's open findings F2 to F12 (`docs/STATE.md`).
 
 ## Read next
@@ -76,14 +77,15 @@ Everything older is in `docs/history/2026-09-25-NOW.md` and `docs/history/LOG.md
 3. `docs/STATE.md`: what is live, built, broken and waiting on Krish.
 4. `docs/SYSTEM_MAP.md`: the two halves, every system involved and who owns what.
 5. `docs/CONTENT_ENGINE.md`: the content engine route by route: guards, crons, models, spend, tables, checks.
-6. `docs/STUDIO.md`: the Studio, and the index of its detailed documents with what is stale in each.
-7. `docs/ENGINE_SESSION.md`: the Studio's tracked-session contract.
-8. `docs/GLOSSARY.md`: every term, and every retired name with its live equivalent.
-9. `docs/walks/2026-09-three-piece-walk.md`: the record of the first live walk, H1 to H10 and F1 to F12.
+6. `docs/CREATIVE_IDENTITY_UPGRADE.md`: the Signature Pack, how every piece looks, sounds and moves, and what Krish has decided on it.
+7. `docs/STUDIO.md`: the Studio, and the index of its detailed documents with what is stale in each.
+8. `docs/ENGINE_SESSION.md`: the Studio's tracked-session contract.
+9. `docs/GLOSSARY.md`: every term, and every retired name with its live equivalent.
+10. `docs/walks/2026-09-three-piece-walk.md`: the record of the first live walk, H1 to H10 and F1 to F12.
 
 ## Do not trust
 
 - `docs/ARCHITECTURE.md`, `docs/OPERATIONS.md`, `docs/DEPLOYMENT.md`, `docs/ENGINE_SECRETS_HANDOVER.md` and `docs/CAROUSEL_ENGINE_STATE.md` in the passages `docs/STUDIO.md` lists as stale (audited 2026-09-25). The rest of each is current for the Studio.
 - The Studio's skills under `.agents/skills/` (`content-corpus`, `krish-voice`, `mindmake-video`) where they route work into The Money of AI or Built With AI and call the business Mindmaker: correct for the Studio's series, wrong as a description of the publication. They are copied into every Studio job, so they change only with care.
-- Control Center's own docs where they say the publication has exactly two channels, or that Control Center hosts the content routes (its `docs/MINDMAKE_OS_ARCHITECTURE.md` section 0a, `docs/CONTENT-ENGINE-BUILD-SIGNALS.md`). Superseded by the three subchannels (2026-09-17) and ADR-019 (2026-09-08).
+- Control Center's own docs where they call the publication "Mindmake's publication" or treat makeyourmindup.ai as CTRL's door (superseded 2026-09-25: the publication is makeyourmindup), where they say it has exactly two channels, or that Control Center hosts the content routes (its `docs/MINDMAKE_OS_ARCHITECTURE.md` section 0a, `docs/CONTENT-ENGINE-BUILD-SIGNALS.md`). Superseded by the three subchannels (2026-09-17) and ADR-019 (2026-09-08).
 - Everything in `docs/history/`.
