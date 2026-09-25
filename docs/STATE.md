@@ -34,8 +34,18 @@ Readback 2026-09-25 unless a date is given.
   source, 2 on the web, 43 sentences set aside as jokes, scenarios or guesses.
   Perplexity is connected as the independent checker. Krish runs it from the
   composer's "Check the facts" strip in Control Center (H18).
-- **House rules R6 and R7** (plain words with no coined labels; reading age 12
-  with humour) are in every writer's rules and the final pass (H15).
+- **House rules** (walk log H20 to H22). Krish's thirteen rulings live in
+  `api/_houseRules.ts` and reach writers, both judge gates, the joke pass and
+  the final pass. Approval also needs the machine checks in
+  `api/_publishChecks.ts` (409 `publish_gate`). Read back live on piece 2:
+  the facts pass, reading age about 12.5 (a warning), and the only thing
+  holding approval is the prediction's confidence, which is Krish's to set.
+- **Receipts** (H24). `GET /fact-check` returns the source's own words behind
+  each checked claim; 32 for piece 2, read back live. A storyboard of piece 2
+  as a Short built from them is with Krish
+  (`docs/REFERENCE_INSTAGRAM_AD.md`).
+- **Not yet reachable: video and carousels for the live subchannels.** The
+  Studio brief accepts only the two retired series (walk log F21).
 - **Crons.** All 20 in `apps/control-plane/vercel.json` have
   `content_engine_runs` rows in the last seven days. `judge_sweep` ran 59
   times.

@@ -142,6 +142,28 @@ from the dashes `save-draft` swaps for commas. Anything else is a 409
 Krish asked for it on 2026-09-25, after the engine's first draft of a piece
 rescaled Cisco's $900 million a year to "close to a million dollars".
 
+**Krish's house rules** (`api/_houseRules.ts`). Every ruling Krish has given
+in words is one record: the instruction, his exact words, the date, live or
+on trial, and the stages that enforce it. Writers read them through
+`VOICE_GUARDRAILS` (the joke pass included), the drafter and rewriter add the
+rules scoped to their subchannel, both judge gates put the rules for their
+gate in every judge's context, and the final pass builds its absolutes from
+them. House rules win over a mandate where they disagree, so every piece
+ends with a dated prediction. `tests/control-plane/house-rules.test.ts` fails
+when a live rule reaches no stage.
+
+**Before approval** (`api/_publishChecks.ts`). `approved` and `published`
+also need the checks a machine can make: the fact gate, no "Not X, Y", no em
+dashes, no exclamation marks outside quotes, a reading age of 13 at most (12
+to 13 warns), and a prediction with a date and a percentage. Anything else is
+a 409 `publish_gate` naming what is left. `GET /fact-check` returns the whole
+checklist, whether the piece is `ready`, and its receipts.
+
+**Receipts** (`api/_receipts.ts`). For every claim that passed, the source's
+own words the gate found it in, with the page: the proof a Short, carousel or
+web edition shows on screen. Only verbatim passages from sources on file;
+nothing in a receipt is written by a model.
+
 ### 4. Channel selection and per-channel copy
 
 | Route | What it does |
@@ -298,12 +320,12 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 
 - `npm run check:control-plane` runs 28 guards in `apps/control-plane/scripts/`
   (supply, judging, content lifecycle, operations, security and the Studio
-  bridge); it is part of `npm run verify` and skipped on Windows. Two fail on
-  `main` and have since before the walk: `check-run-recovery` (the missing
-  judge jobs above) and `check-cache-metering` (two judge modules read cache
-  token fields directly).
+  bridge); it is part of `npm run verify` and skipped on Windows. All pass
+  since walk log H16.
 - `npm run typecheck:control-plane` typechecks the app and its scripts.
-- `tests/control-plane/` holds 28 vitest files, run by the root `npm test`.
+- `tests/control-plane/` holds 38 vitest files, run by the root `npm test`.
+  A test that imports engine code belongs here: the root typecheck covers
+  only top-level `tests/*.ts`, under settings the engine was not written for.
   Tests that call a handler point Supabase at a dead local address, so a
   missing guard fails as a connection error rather than a production write.
 - `apps/control-plane/scripts/run-endpoint.ts` runs one handler locally;
@@ -330,6 +352,11 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 7. A web edition goes in `editions/` with the exact text that passed and the
    gate's record (`editions/README.md`); its test fails if the page says
    anything the gate did not check.
+8. When Krish gives a new ruling in words, add it to `api/_houseRules.ts`
+   once, with his words and the stages it touches, and let the coverage test
+   tell you which stage still ignores it. Never copy a rule into one prompt.
+9. After every push to `main`, read `main`'s CI before the next push (walk
+   log F20).
 
 ## Development notes
 

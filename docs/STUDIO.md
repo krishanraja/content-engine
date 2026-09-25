@@ -174,4 +174,5 @@ Each is current for the Studio except where the note says otherwise
 | `docs/ART_DIRECTOR_REPERTOIRE.md` | the visual device registry and the sharp-alternative path | nothing |
 | `docs/OPENING_LOOP_CALIBRATION.md` | the opening contract (promise match, open question) | nothing |
 | `docs/REFERENCE_VIDEO_CALIBRATION.md` | the calibration record behind the active preferences | nothing |
+| `docs/REFERENCE_INSTAGRAM_AD.md` | a reference Krish liked (proof panels, split frame), proposed and not confirmed; two conflicts with the confirmed standard await his ruling | nothing |
 | `docs/FILM_CREATIVE_JURY.md` | the film jury; it lives in `apps/control-plane/api/_judges/film.ts` | nothing |
