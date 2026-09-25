@@ -215,6 +215,11 @@ describe('the gate', () => {
     assert.match(check, /filter\(m => m\.verbatim === true && m\.content\)/)
     assert.match(check, /combine\(f\.verdict, ind\.verdict, f\.primary === true\)/)
   })
+  test('a set-aside takes two readings: the lister\'s set-asides go to the second look too', () => {
+    const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
+    assert.match(check, /\.\.\.swept\.setAside\.map\(a => \(\{ sentence: a\.sentence, claim: a\.sentence, kind: 'unclassified'/)
+    assert.match(check, /summarise\(checked, looked\.setAside, body, checker\)/)
+  })
   test('the PATCH that moves a piece asks the gate first', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')
     assert.match(src, /updates\.state === 'review' \|\| updates\.state === 'approved' \|\| updates\.state === 'published'\)\s*\n\s*&& \(LIVE_SUBCHANNELS/)

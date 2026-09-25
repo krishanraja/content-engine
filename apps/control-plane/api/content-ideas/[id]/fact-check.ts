@@ -260,7 +260,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const asOf = new Date().toISOString().slice(0, 10)
   const listed = await extract(body)
   const swept = sweep(body, listed.claims, listed.setAside)
-  const leftovers = swept.claims.filter(c => c.kind === 'unclassified')
+  // The lister's set-asides are read again too. It once set aside Scott Wu's
+  // "Each one, no matter how expensive, will tell you it was Thomas Jefferson"
+  // as inference, because of "will". Waving a sentence through now takes two
+  // readings that agree.
+  const leftovers = [
+    ...swept.claims.filter(c => c.kind === 'unclassified'),
+    ...swept.setAside.map(a => ({ sentence: a.sentence, claim: a.sentence, kind: 'unclassified' as ClaimKind })),
+  ]
   const looked = resolveLeftovers(leftovers, await secondLook(leftovers, body))
   const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims]
   const claims = all.slice(0, MAX_CLAIMS)
@@ -273,7 +280,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return { ...c, on_file: f, independent: ind, verdict: combine(f.verdict, ind.verdict, f.primary === true) }
   })
   const checker = checked.find(c => c.independent.checker)?.independent.checker || null
-  const result = summarise(checked, [...swept.setAside, ...looked.setAside], body, checker)
+  const result = summarise(checked, looked.setAside, body, checker)
   if (all.length > MAX_CLAIMS) { result.passed = false; result.blocking += all.length - MAX_CLAIMS }
 
   // A run takes minutes. Merge into the meta as it is NOW, so a material or a
