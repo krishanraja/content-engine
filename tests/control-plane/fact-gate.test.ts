@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
-  bodyHash, combine, gateStatus, quoteHolds, sentences, summarise, sweep, type CheckedClaim,
+  bodyHash, combine, gateStatus, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sentences, summarise, sweep,
+  type CheckedClaim,
 } from '../../apps/control-plane/api/_factGate.js'
 
 // The fact gate (Krish, 2026-09-25). The cases below are the real ones: the
@@ -34,6 +35,52 @@ describe('the on-file check trusts text, never the checker', () => {
   })
   test('curly quotes and markdown emphasis do not break a real match', () => {
     assert.equal(quoteHolds('Glean CEO Arvind Jain has estimated that roughly **95%** of enterprise AI usage', SOURCES, '95% of enterprise AI usage'), true)
+  })
+})
+
+describe('a fact split across a heading and its text', () => {
+  const NOTES = '4. 18 March 2026. OpenAI release notes: paid users who hit their limit on GPT-5.4 Thinking fall back to the smaller GPT-5.4 mini.'
+  test('two real passages that carry every number between them hold', () => {
+    assert.equal(quotesFail(['18 March 2026. OpenAI release notes', 'paid users who hit their limit on GPT-5.4 Thinking fall back to the smaller GPT-5.4 mini'],
+      NOTES, 'By March 2026 paid users who hit the GPT-5.4 Thinking limit fall back to GPT-5.4 mini'), null)
+  })
+  test('one passage without the date does not', () => {
+    assert.match(String(quotesFail(['paid users who hit their limit on GPT-5.4 Thinking fall back to the smaller GPT-5.4 mini'],
+      NOTES, 'By March 2026 paid users fall back to GPT-5.4 mini')), /do not carry 2026/)
+  })
+  test('one invented passage sinks the set', () => {
+    assert.match(String(quotesFail(['18 March 2026. OpenAI release notes', 'paid users are quietly moved to GPT-5.4 mini'],
+      NOTES, 'By March 2026 paid users are quietly moved to GPT-5.4 mini')), /not found word for word/)
+  })
+})
+
+describe('the second look at what the sweep caught', () => {
+  const left = (sentence: string) => ({ sentence, claim: sentence, kind: 'unclassified' as const })
+  const ice = left('Now it\'s like walking into an ice cream shop with forty flavours, a "thinking" scoop that costs extra.')
+  const aug = left('You\'ll just notice the answer feels a bit dumber, the way people did in August 2025.')
+  const cnbc = left('In June 2026, CNBC asked the people paying the bills.')
+  test('an analogy with a scare quote is set aside, with its reason', () => {
+    const out = resolveLeftovers([ice], [{ i: 0, claims: [], reason: 'analogy' }])
+    assert.equal(out.claims.length, 0)
+    assert.match(out.setAside[0].reason, /second look: analogy/)
+  })
+  test('facts found inside a sentence are checked one by one', () => {
+    const out = resolveLeftovers([aug], [{ i: 0, claims: [{ claim: 'In August 2025 users said GPT-5 seemed dumber', kind: 'event' }], reason: '' }])
+    assert.equal(out.claims.length, 1)
+    assert.equal(out.claims[0].claim, 'In August 2025 users said GPT-5 seemed dumber')
+  })
+  test('a number is never waved through on a model\'s word', () => {
+    const out = resolveLeftovers([cnbc], [{ i: 0, claims: [], reason: 'framing' }])
+    assert.equal(out.claims.length, 1)
+    assert.equal(out.setAside.length, 0)
+  })
+  test('a sentence the second look did not answer stays a claim', () => {
+    const out = resolveLeftovers([ice, cnbc], [])
+    assert.equal(out.claims.length, 2)
+  })
+  test('"you\'ll" reads as the future', () => {
+    assert.equal(readsAsForecast('You\'ll just notice the answer feels a bit dumber.'), true)
+    assert.equal(readsAsForecast('Anthropic sold three models in 2024.'), false)
   })
 })
 
@@ -71,8 +118,13 @@ describe('verdicts', () => {
   })
   test('agreement verifies; one source is said as one source', () => {
     assert.equal(combine('supported', 'supported'), 'verified')
-    assert.equal(combine('supported', 'unclear'), 'verified_on_file')
+    assert.equal(combine('supported', 'unclear', true), 'verified_on_file')
     assert.equal(combine('not_found', 'supported'), 'verified_web')
+  })
+  test('a summary alone is not enough: the engine filed Luna\'s Batch price as its standard price', () => {
+    assert.equal(combine('supported', 'unclear', false), 'unverified')
+    assert.equal(combine('supported', 'unavailable'), 'unverified')
+    assert.equal(combine('supported', 'supported', false), 'verified')
   })
   test('nobody finding it is unverified', () => {
     assert.equal(combine('not_found', 'unclear'), 'unverified')
@@ -117,6 +169,13 @@ describe('the gate', () => {
     assert.ok(gate > 0)
     assert.ok(gate < src.indexOf('fetch(webhook'), 'the gate must run before the factory webhook fires')
     assert.match(src, /reason: 'fact_gate'/)
+  })
+  test('only a pasted excerpt with the page it came from can be filed as verbatim, and only those count as primary', () => {
+    const route = readFileSync('apps/control-plane/api/content-ideas/[id]/materials.ts', 'utf8')
+    assert.match(route, /const verbatim = b\.verbatim === true && kind === 'paste' && \/\^https\?:/)
+    const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
+    assert.match(check, /filter\(m => m\.verbatim === true && m\.content\)/)
+    assert.match(check, /combine\(f\.verdict, ind\.verdict, f\.primary === true\)/)
   })
   test('the PATCH that moves a piece asks the gate first', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')

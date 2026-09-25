@@ -13,12 +13,17 @@ import { guardEngine } from '../../_auth.js'
 import { webResearch } from '../../_enrich.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  combine, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, quoteHolds, summarise, sweep,
+  combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, norm, ON_FILE_SYSTEM, quotesFail,
+  resolveLeftovers, SECOND_LOOK_SYSTEM, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
 
 const MAX_CLAIMS = 60
 const POOL = 6
+// Perplexity answered 429 to six of 26 claims at six at a time (piece 2,
+// first run). Its calls go through their own narrower gate, with retries.
+const PERPLEXITY_POOL = 3
+const RETRY_WAITS_MS = [2000, 5000, 10000, 20000]
 const KINDS = new Set(['number', 'date', 'quote', 'attribution', 'event', 'name', 'other'])
 
 /** Everything the piece was written from, as plain text the quotes must come from. */
@@ -26,7 +31,7 @@ export function sourcesText(meta: Record<string, any>): string {
   const parts: string[] = []
   for (const m of readMaterials(meta)) {
     const body = m.kind === 'link' ? (m.url || '') : (m.content || '')
-    if (body.trim()) parts.push(`### ${m.title || m.kind}\n${body}`)
+    if (body.trim()) parts.push(`### ${m.title || m.kind}${m.verbatim && m.url ? ` (verbatim, ${m.url})` : ''}\n${body}`)
   }
   const stories = Array.isArray(meta.adjacent_stories) ? meta.adjacent_stories : []
   for (const s of stories) parts.push(`### ${s?.title || 'source'} (${s?.published_date_iso || 'undated'}) ${s?.url || ''}\n${s?.why_relevant || ''}\n${s?.summary || ''}`)
@@ -36,6 +41,11 @@ export function sourcesText(meta: Record<string, any>): string {
   const dives = Array.isArray(meta.deep_dives) ? meta.deep_dives : []
   for (const d of dives) parts.push(typeof d === 'string' ? d : `${d?.question || ''}\n${d?.findings || d?.answer || ''}\n${Array.isArray(d?.sources) ? d.sources.join('\n') : ''}`)
   return parts.filter(p => p && p.trim()).join('\n\n').slice(0, 120_000)
+}
+
+/** Only the verbatim excerpts: the sources' own words, not anyone's summary. */
+export function primaryText(meta: Record<string, any>): string {
+  return readMaterials(meta).filter(m => m.verbatim === true && m.content).map(m => m.content as string).join('\n\n')
 }
 
 async function extract(body: string): Promise<{ claims: Claim[]; setAside: Array<{ sentence: string; reason: string }> }> {
@@ -53,7 +63,7 @@ async function extract(body: string): Promise<{ claims: Claim[]; setAside: Array
   return { claims, setAside }
 }
 
-async function onFile(c: Claim, sources: string): Promise<CheckedClaim['on_file']> {
+async function onFile(c: Claim, sources: string, primary: string): Promise<CheckedClaim['on_file']> {
   if (!sources.trim()) return { verdict: 'not_found', quote: null, note: 'no sources on file' }
   try {
     const raw = await callClaude({
@@ -64,16 +74,21 @@ async function onFile(c: Claim, sources: string): Promise<CheckedClaim['on_file'
       maxTokens: 900, temperature: 0, timeoutMs: 60_000,
     })
     const j = robustJson(raw) || {}
-    const quote = typeof j.quote === 'string' && j.quote.trim() ? j.quote.trim() : null
+    const quotes: string[] = (Array.isArray(j.quotes) ? j.quotes : [j.quote])
+      .filter((q: unknown): q is string => typeof q === 'string' && q.trim().length > 0)
+      .map((q: string) => q.trim()).slice(0, 3)
+    const quote = quotes.length ? quotes.join(' | ') : null
     const note = typeof j.note === 'string' ? j.note.slice(0, 300) : null
     let verdict: OnFileVerdict = j.verdict === 'supported' || j.verdict === 'contradicted' ? j.verdict : 'not_found'
-    // The model cannot vouch; the text must. A "supported" whose quote is not
-    // in the sources, or lacks the claim's numbers, is not found.
-    if (verdict === 'supported' && !quoteHolds(quote, sources, c.claim)) {
-      return { verdict: 'not_found', quote, note: `quote not found verbatim with the claim's numbers${note ? `; model said: ${note}` : ''}` }
+    // The model cannot vouch; the text must. A "supported" whose passages are
+    // not in the sources, or do not carry the claim's numbers, is not found.
+    if (verdict === 'supported') {
+      const why = quotesFail(quotes, sources, c.claim)
+      if (why) return { verdict: 'not_found', quote, note: `${why}${note ? `; model said: ${note}` : ''}` }
+      return { verdict, quote, note, primary: !!primary && quotesFail(quotes, primary, c.claim) === null }
     }
     // A contradiction must also be real text, or it is only the model's doubt.
-    if (verdict === 'contradicted' && !(quote && sources.toLowerCase().replace(/\s+/g, ' ').includes(quote.toLowerCase().replace(/\s+/g, ' ')))) {
+    if (verdict === 'contradicted' && !(quotes.length && quotes.every(q => norm(sources).includes(norm(q))))) {
       verdict = 'not_found'
     }
     return { verdict, quote, note }
@@ -82,7 +97,27 @@ async function onFile(c: Claim, sources: string): Promise<CheckedClaim['on_file'
   }
 }
 
+let perplexityActive = 0
+const perplexityQueue: Array<() => void> = []
+async function withPerplexitySlot<T>(fn: () => Promise<T>): Promise<T> {
+  if (perplexityActive >= PERPLEXITY_POOL) await new Promise<void>(resolve => perplexityQueue.push(resolve))
+  perplexityActive++
+  try { return await fn() } finally { perplexityActive--; perplexityQueue.shift()?.() }
+}
+
 async function perplexityCheck(key: string, c: Claim, asOf: string): Promise<CheckedClaim['independent']> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await withPerplexitySlot(() => perplexityOnce(key, c, asOf))
+    } catch (e) {
+      const wait = RETRY_WAITS_MS[attempt]
+      if (!/perplexity_(429|5\d\d)/.test((e as Error).message) || wait === undefined) throw e
+      await new Promise(resolve => setTimeout(resolve, wait + Math.floor(Math.random() * 500)))
+    }
+  }
+}
+
+async function perplexityOnce(key: string, c: Claim, asOf: string): Promise<CheckedClaim['independent']> {
   const r = await fetch('https://api.perplexity.ai/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
@@ -137,6 +172,46 @@ async function independent(c: Claim, asOf: string): Promise<CheckedClaim['indepe
   return { verdict: 'unavailable', checker: null, evidence: null, url: null, correct_value: null }
 }
 
+/** A web checker's verdict counts only when its own quoted evidence bears it
+ *  out, read by a second model. Perplexity "supported" two claims on piece 2
+ *  with a quote about something else, and "contradicted" two with a source
+ *  that only said less. */
+async function entail(c: Claim, ind: CheckedClaim['independent']): Promise<CheckedClaim['independent']> {
+  if (ind.verdict !== 'supported' && ind.verdict !== 'contradicted') return ind
+  const evidence = [ind.evidence, ind.correct_value ? `(the checker says the source gives: ${ind.correct_value})` : ''].filter(Boolean).join(' ')
+  if (!ind.evidence || ind.evidence.trim().length < 12) return { ...ind, verdict: 'unclear', evidence: `${ind.evidence || ''} [no usable quote from the source]`.trim() }
+  try {
+    const raw = await callClaude({
+      agent: 'fact-gate-entail', model: UTILITY_MODEL, system: ENTAIL_SYSTEM,
+      user: JSON.stringify({ claim: c.claim, as_written: c.sentence, evidence, source: ind.url }),
+      maxTokens: 300, temperature: 0, timeoutMs: 45_000,
+    })
+    const a = String((robustJson(raw) || {}).answer || '')
+    const holds = ind.verdict === 'supported' ? a === 'states' : a === 'conflicts'
+    return holds ? ind : { ...ind, verdict: 'unclear', evidence: `${ind.evidence} [${ind.verdict} not borne out by the quoted evidence]` }
+  } catch {
+    return { ...ind, verdict: 'unclear' }
+  }
+}
+
+/** The sweep's leftovers get one more reading before they block. */
+async function secondLook(leftovers: Claim[]): Promise<Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>> {
+  if (!leftovers.length) return []
+  try {
+    const raw = await callClaude({
+      agent: 'fact-gate-second-look', model: UTILITY_MODEL, system: SECOND_LOOK_SYSTEM,
+      user: JSON.stringify(leftovers.map((l, i) => ({ i, sentence: l.sentence }))),
+      maxTokens: 4000, temperature: 0, timeoutMs: 90_000,
+    })
+    const j = robustJson(raw) || {}
+    return (Array.isArray(j.answers) ? j.answers : [])
+      .filter((a: any) => Number.isInteger(a?.i))
+      .map((a: any) => ({ i: a.i, claims: Array.isArray(a.claims) ? a.claims : [], reason: String(a.reason || '') }))
+  } catch {
+    return []
+  }
+}
+
 async function pool<T, R>(items: T[], n: number, fn: (t: T) => Promise<R>): Promise<R[]> {
   const out: R[] = new Array(items.length)
   let i = 0
@@ -165,16 +240,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const asOf = new Date().toISOString().slice(0, 10)
   const listed = await extract(body)
   const swept = sweep(body, listed.claims, listed.setAside)
-  const claims = swept.claims.slice(0, MAX_CLAIMS)
+  const leftovers = swept.claims.filter(c => c.kind === 'unclassified')
+  const looked = resolveLeftovers(leftovers, await secondLook(leftovers))
+  const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims]
+  const claims = all.slice(0, MAX_CLAIMS)
   const sources = sourcesText(meta)
+  const primary = primaryText(meta)
 
   const checked = await pool(claims, POOL, async (c): Promise<CheckedClaim> => {
-    const [f, ind] = await Promise.all([onFile(c, sources), independent(c, asOf)])
-    return { ...c, on_file: f, independent: ind, verdict: combine(f.verdict, ind.verdict) }
+    const [f, raw] = await Promise.all([onFile(c, sources, primary), independent(c, asOf)])
+    const ind = await entail(c, raw)
+    return { ...c, on_file: f, independent: ind, verdict: combine(f.verdict, ind.verdict, f.primary === true) }
   })
   const checker = checked.find(c => c.independent.checker)?.independent.checker || null
-  const result = summarise(checked, swept.setAside, body, checker)
-  if (swept.claims.length > MAX_CLAIMS) { result.passed = false; result.blocking += swept.claims.length - MAX_CLAIMS }
+  const result = summarise(checked, [...swept.setAside, ...looked.setAside], body, checker)
+  if (all.length > MAX_CLAIMS) { result.passed = false; result.blocking += all.length - MAX_CLAIMS }
 
   // A run takes minutes. Merge into the meta as it is NOW, so a material or a
   // ladder result saved meanwhile survives. If the body moved on, the stored

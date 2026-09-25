@@ -43,7 +43,9 @@ export interface Claim {
 }
 
 export interface CheckedClaim extends Claim {
-  on_file: { verdict: OnFileVerdict; quote: string | null; note: string | null }
+  /** primary: every passage is in a verbatim excerpt of the source itself,
+   *  not only in a summary someone wrote of it. */
+  on_file: { verdict: OnFileVerdict; quote: string | null; note: string | null; primary?: boolean }
   independent: { verdict: IndependentVerdict; evidence: string | null; url: string | null; checker: string | null; correct_value: string | null }
   verdict: ClaimVerdict
 }
@@ -105,7 +107,7 @@ export function isCheckable(sentence: string): boolean {
 
 /** Reads like something that has not happened yet, or like a labelled guess. */
 export function readsAsForecast(sentence: string): boolean {
-  return /\b(will|would|could|might|may|if|bet|call|forecast|predict|scenario|inference|we think|our read|by (?:\d{1,2} )?(?:january|february|march|april|may|june|july|august|september|october|november|december)?\s*\d{4})\b/i.test(sentence)
+  return /\b(will|would|could|might|may|if|bet|call|forecast|predict|scenario|inference|we think|our read|going to|\w+['’]ll|by (?:\d{1,2} )?(?:january|february|march|april|may|june|july|august|september|october|november|december)?\s*\d{4})\b/i.test(sentence)
 }
 
 /** The numbers in a text, as bare digit strings: "$900 million" -> "900". */
@@ -113,15 +115,55 @@ export function numbersIn(s: string): string[] {
   return (String(s || '').match(/\d[\d,]*(?:\.\d+)?/g) || []).map(n => n.replace(/,/g, '')).filter(n => n.length > 0)
 }
 
+/** Why a set of passages fails, or null when every one is really in the
+ *  sources and together they carry every number in the claim. Up to three
+ *  passages, because a fact is often split: the date in a heading, the fact
+ *  below it. */
+export function quotesFail(quotes: Array<string | null> | null, sourcesText: string, claim: string): string | null {
+  const list = (quotes || []).filter((q): q is string => typeof q === 'string' && q.trim().length > 0).slice(0, 3)
+  if (list.length === 0) return 'no passage given'
+  const src = norm(sourcesText)
+  for (const q of list) {
+    const n = norm(q)
+    if (n.length < 12) return `passage too short to trust: "${q.slice(0, 40)}"`
+    if (!src.includes(n)) return `passage not found word for word in the sources: "${q.slice(0, 80)}"`
+  }
+  const carried = new Set(list.flatMap(numbersIn))
+  const missing = numbersIn(claim).filter(n => !carried.has(n))
+  return missing.length ? `the passages do not carry ${missing.join(', ')}` : null
+}
+
 /** True only when the quote really is in the sources and carries the claim's numbers. */
 export function quoteHolds(quote: string | null, sourcesText: string, claim: string): boolean {
-  if (!quote) return false
-  const q = norm(quote)
-  if (q.length < 12) return false
-  if (!norm(sourcesText).includes(q)) return false
-  const inQuote = new Set(numbersIn(quote))
-  return numbersIn(claim).every(n => inQuote.has(n))
+  return quotesFail([quote], sourcesText, claim) === null
 }
+
+/** The sweep's leftovers after a second look. A sentence the second look
+ *  finds claims in is checked claim by claim. One it finds none in is set
+ *  aside with its reason, but only when it has no digits or reads as a
+ *  forecast: a number is never waved through on a model's word. Anything the
+ *  second look did not answer stays a claim, so a failed call fails closed. */
+export function resolveLeftovers(
+  leftovers: Claim[],
+  answers: Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>,
+): { claims: Claim[]; setAside: Array<{ sentence: string; reason: string }> } {
+  const claims: Claim[] = []
+  const setAside: Array<{ sentence: string; reason: string }> = []
+  leftovers.forEach((l, i) => {
+    const a = answers.find(x => x.i === i)
+    if (!a) { claims.push(l); return }
+    const found = (a.claims || []).filter(c => typeof c?.claim === 'string' && c.claim.trim())
+    if (found.length) {
+      for (const c of found) claims.push({ sentence: l.sentence, claim: c.claim.trim(), kind: (KIND_SET.has(c.kind) ? c.kind : 'other') as ClaimKind })
+      return
+    }
+    if (!/\d/.test(l.sentence) || readsAsForecast(l.sentence)) setAside.push({ sentence: l.sentence, reason: `second look: ${String(a.reason || 'no factual claim').slice(0, 80)}` })
+    else claims.push(l)
+  })
+  return { claims, setAside }
+}
+
+const KIND_SET = new Set(['number', 'date', 'quote', 'attribution', 'event', 'name', 'other'])
 
 /** Every checkable sentence is covered by a claim or an honoured set-aside;
  *  anything left over becomes a claim of its own. */
@@ -142,10 +184,14 @@ export function sweep(body: string, claims: Claim[], setAside: Array<{ sentence:
   return { claims: [...claims, ...extra], setAside: honoured }
 }
 
-export function combine(onFile: OnFileVerdict, independent: IndependentVerdict): ClaimVerdict {
+/** One source is enough only when it is the source's own words. The engine's
+ *  research on piece 2 listed GPT-6 Luna's Batch price as its standard price;
+ *  a claim resting on that summary alone would have passed. So a claim found
+ *  only in a summary needs the web to agree. */
+export function combine(onFile: OnFileVerdict, independent: IndependentVerdict, primary = false): ClaimVerdict {
   if (onFile === 'contradicted' || independent === 'contradicted') return 'contradicted'
   if (onFile === 'supported' && independent === 'supported') return 'verified'
-  if (onFile === 'supported') return 'verified_on_file'
+  if (onFile === 'supported' && primary) return 'verified_on_file'
   if (independent === 'supported') return 'verified_web'
   return 'unverified'
 }
@@ -189,10 +235,25 @@ export const EXTRACT_SYSTEM = [
 
 export const ON_FILE_SYSTEM = [
   'You check ONE claim against the sources below, which are the only evidence you may use. You never use your own knowledge.',
-  'supported: the sources state it. Return the passage that states it, copied EXACTLY, character for character, long enough to contain every number in the claim.',
+  'supported: the sources state it. Return the passage or passages that state it, each copied EXACTLY, character for character. Give up to three passages only when the fact is split across them (for example the date in a heading and the fact under it); together they must contain every number in the claim.',
   'contradicted: the sources say something different (a different number, date, name, speaker or meaning). Return the exact passage that contradicts it, and say what it says.',
-  'not_found: the sources do not state it. A claim that is only implied, rounded, rescaled, combined from two passages, or said by a different person is not_found or contradicted, never supported.',
-  'Return JSON only: {"verdict":"supported|contradicted|not_found","quote":"exact passage or null","note":"one line"}',
+  'not_found: the sources do not state it. A claim that is only implied, rounded, rescaled, or said by a different person is not_found or contradicted, never supported. Words put in someone\'s mouth must be their words.',
+  'Return JSON only: {"verdict":"supported|contradicted|not_found","quotes":["exact passage", "..."],"note":"one line"}',
+].join('\n')
+
+export const SECOND_LOOK_SYSTEM = [
+  'These sentences come from a piece of writing. Each has a number or a quotation mark, and nobody listed a factual claim in it yet.',
+  'For each sentence, list every factual claim a reader could check as true or false: a number, a date, a quotation or who said something, what a company or person did, a definition presented as fact. One claim per fact, stated plainly.',
+  'A scare quote, an analogy, a joke, a made-up example line, an opinion, a hypothetical or a description of a possible future is not a claim; for such a sentence return no claims and give the reason in a few words.',
+  'Return JSON only: {"answers":[{"i":0,"claims":[{"claim":"...","kind":"number|date|quote|attribution|event|name|other"}],"reason":"..."}]}',
+].join('\n')
+
+export const ENTAIL_SYSTEM = [
+  'A fact checker quoted a source about a claim. Judge only from the quoted evidence, never from your own knowledge.',
+  'states: the evidence, read on its own, states every part of the claim (each number, date, name and who said it), in the same meaning.',
+  'conflicts: the evidence states something that cannot be true at the same time as the claim (a different number, date, speaker or meaning). A source that says less, or says nothing about part of the claim, does not conflict.',
+  'neither: anything else.',
+  'Return JSON only: {"answer":"states|conflicts|neither","why":"one line"}',
 ].join('\n')
 
 export const INDEPENDENT_SYSTEM = [

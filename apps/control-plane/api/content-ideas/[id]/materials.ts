@@ -39,6 +39,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const kind = b.kind === 'link' || b.kind === 'file' ? b.kind : 'paste'
     const content = typeof b.content === 'string' ? b.content.slice(0, MAX_CONTENT) : ''
     const url = typeof b.url === 'string' ? b.url.trim().slice(0, 2000) : ''
+    // A verbatim excerpt is pasted text that is the source's own words, with
+    // the page it came from. The fact gate trusts it further than a summary.
+    const verbatim = b.verbatim === true && kind === 'paste' && /^https?:\/\//.test(url)
+    if (b.verbatim === true && !verbatim) return res.status(400).json({ ok: false, error: 'a verbatim excerpt is pasted text with the url it was copied from' })
     if (kind === 'link' && !url) return res.status(400).json({ ok: false, error: 'url required for a link' })
     if (kind !== 'link' && !content.trim()) return res.status(400).json({ ok: false, error: 'content required' })
 
@@ -58,7 +62,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       kind,
       title,
       content: kind === 'link' ? null : content,
-      url: kind === 'link' ? url : null,
+      url: kind === 'link' || verbatim ? url : null,
+      ...(verbatim ? { verbatim: true } : {}),
       bytes: kind === 'link' ? url.length : content.length,
       at: new Date().toISOString(),
     }

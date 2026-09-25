@@ -43,6 +43,10 @@ export interface Material {
    *  (claude_code, codex...). Absent on rows written before 2026-09-25, which
    *  materialsOf() reads as Krish's unless the kind is 'research'. */
   by?: string | null
+  /** The filer's statement that `content` is the source's own text, copied
+   *  word for word from `url`, not a summary. The fact gate lets a claim pass
+   *  on one source only when that source is verbatim (api/_factGate.ts). */
+  verbatim?: boolean
 }
 
 /** Whose a material is, for the label the writer sees. Engine research
