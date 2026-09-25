@@ -270,6 +270,32 @@ checked against `vercel.json` by `check-content-engine-schedule`.
   the ladder's 10 ideas by default and 60 at most, the sweep's 80 and 200,
   and small insert governors on every collector.
 
+**Waiting: the prompt caching pass.** Krish, 2026-09-25: "Once this engine is
+built and the machinery is in place, run a prompt caching pass over the
+system. Only once the pieces are capable of being produced with minimal fix
+passes." Do not start it early.
+
+- *When it starts.* Three pieces in a row, one per subchannel, reach a green
+  approval checklist with: the fact gate passing within two runs, at most one
+  rewrite round after the first draft, and no text edited by hand by an agent
+  session. The baseline is piece 2: ten fact-gate runs and several agent
+  rewrites.
+- *Why it waits.* A cache only pays while the front of a prompt stays the
+  same, and the prompts are still moving: house rules entered every stage on
+  2026-09-25, mandates and the prediction are still settling. Cache
+  boundaries drawn now would be redrawn with each change.
+- *How to run it.* Measure before changing anything. On 2026-09-24 a caching
+  change to the judge panel produced zero cache reads over 153 calls (the
+  prompt sat under the model's minimum cacheable length) and stopped four in
+  five judges returning a verdict; it was reverted (`api/_judges/panel.ts`).
+  List every model call and its spend from `meter_daily`, put the parts that
+  repeat first (voice block, corpus, house rules, mandate, a piece's sources),
+  and keep a change only when a live call shows a non-zero cache read
+  (`readUsage` in `api/_prices.ts`) and the stage's output is unchanged on a
+  real piece. The likeliest savings: the judge panel (nine judges read the
+  same context per idea) and the fact gate (every claim's check reads the same
+  sources).
+
 ## Where the data lives
 
 One Supabase database is shared by this engine, Control Center, the Studio
