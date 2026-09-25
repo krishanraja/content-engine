@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Mindmake content engine
 as_of: 2026-09-25
-head: 9981a3d
+head: 0a4cc74
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -45,6 +45,7 @@ Lifecycle: building. Readback the same day unless a commit is named.
 
 ## What changed recently
 
+- 2026-09-25 **The subchannels take their final names: follow.the.money and under.the.hood** (`0a4cc74`, control-center migration `20260925120000`). Ruling (Krish, 2026-09-25): "those two and mind.the.gap are my FINAL FINAL choices for the 3 channels", renamed "every single instance front and back end, with zero exceptions". Why: the names are the publication's identity and he has settled them. Both repositories, the live database rows and the n8n content factory were renamed together; the old names survive only as aliases so append-only rows still resolve, and a test fails if either returns.
 - 2026-09-25 **The publication is makeyourmindup, and every piece gets a signature identity** (`docs/CREATIVE_IDENTITY_UPGRADE.md`). Ruling (Krish, 2026-09-25): "if they are going in, they need to go in for everything." Why: he wants no "walls of text" and nothing "out-there for out-theres sake"; the form has to communicate better. Each subchannel's signature device is the diagram its own mandate already names (the money map, the timeline, real or theatre), the cold open is the mandate's opening artifact, every piece makes a Call ruled in public through the claims system the engine already has, and the panel stamp leads with the panel's sharpest objection and his answer. Components go live one at a time, each universal from the day it passes on every piece.
 - 2026-09-25 **Documentation reset, at Krish's request.** Why: an agent reading this repository could not tell what it was. The README described only the Studio under retired names, no document described the content engine that moved here on 2026-09-08, and `AGENTS.md` named The Money of AI and Built With AI as the public series without saying they now survive only as Studio identifiers. New: `docs/NORTH_STAR.md`, `docs/SYSTEM_MAP.md`, `docs/CONTENT_ENGINE.md`, `docs/STUDIO.md`, `docs/GLOSSARY.md`, `docs/STATE.md`. The old README, NOW, PILOT and control-plane README moved to `docs/history/` (`docs/history/LOG.md`).
 - 2026-09-24 **Judges read what the piece was written from; the final pass stops truncating** (`b61a461`). Why: the draft gate's evidence judge graded evidence it could not see, and `channel_fit` had no mandate and guessed retired channels. The final pass echoes the whole draft inside its JSON, so a 900-word piece ran past 3,200 output tokens and 2 of 5 runs returned 502 and lost their spend.
