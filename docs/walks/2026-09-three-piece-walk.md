@@ -392,10 +392,13 @@ ledger with `decided_by: 'Krish'`, sequences 64 to 66):**
 - The four money-map states: in final form one diagram that moves as the
   reader scrolls on makeyourmindup.ai, a looping video on Substack, and the
   same animation in the Short (his question, answered yes).
-- Open: the section called "Follow the money" now shares the subchannel's
-  name, as does the engine's story shape "Follow the Money"
-  (`apps/control-plane/api/_formats.ts`). Proposed: "Who gets paid" and "The
-  money trail". Nothing renamed until he answers.
+- The name clash: the section "Follow the money" is now "Who gets paid" (in
+  v10), and the engine's story shape is now "The Money Trail"
+  (`apps/control-plane/api/_formats.ts`, seven slate rulings and two arc cards
+  migrated, old name accepted on read). Krish, 2026-09-25: "rename to either or".
+- v10 saved (`state: review`): opening B ("1B"), the stamp answer at the end of
+  "What they say", the Call at 70% ("2 70%"), "Who gets paid". It reads at about
+  grade 10.5 (Flesch-Kincaid), above the reading age of 12 he set the same day.
 
 ## Piece 2: mind.the.gap
 

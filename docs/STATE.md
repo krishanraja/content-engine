@@ -137,8 +137,10 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
   trial; R3 (signature sections and a signature visual per subchannel), R4
   (openings hook on consequence) and R5 (mind.the.gap's timeline forks into
   scenarios, a mandate change) are proposed.
-- **A name clash.** The section "Follow the money" and the story shape
-  "Follow the Money" now share the subchannel's name; renames are proposed.
+- **The register.** Krish, 2026-09-25: the whole channel reads at a reading age of
+  12, with a huge sense of humour, fun and personality, and a bold, colourful
+  look ("everything is so boring and Bloomberg right now"). Piece 1 v10 reads at
+  about grade 10.5.
 
 ## Where the history is
 

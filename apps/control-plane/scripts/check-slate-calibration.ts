@@ -75,7 +75,7 @@ type Ruling = {
 // never edited; the rename is applied on read instead, exactly as
 // 2026-08-29-artifact-format-rename.sql applied it to the rows. Keep this in
 // step with LEGACY_FORMATS in api/_formats.ts.
-const SEED_FORMAT_RENAMES: Record<string, string> = { 'The Teardown': 'The Artifact' }
+const SEED_FORMAT_RENAMES: Record<string, string> = { 'The Teardown': 'The Artifact', 'Follow the Money': 'The Money Trail' }
 
 const rulings: Ruling[] = []
 for (const line of rulingSql.split('\n')) {
