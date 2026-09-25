@@ -311,7 +311,7 @@ export const SECOND_LOOK_SYSTEM = [
 export const ENTAIL_SYSTEM = [
   'A fact checker quoted a source about a claim. Judge only from the quoted evidence, never from your own knowledge.',
   'states: the evidence, read on its own, states every part of the claim (each number, date, name and who said it), in the same meaning.',
-  'conflicts: the evidence states something that cannot be true at the same time as the claim (a different number, date, speaker or meaning). A source that says less, or says nothing about part of the claim, does not conflict. A plan stated earlier ("we will soon begin") does not conflict with a later report that it happened, and a fact about one date does not conflict with a claim about another.',
+  'conflicts: the evidence states something that cannot be true at the same time as the claim (a different number, date, speaker or meaning). A source that says less, or says nothing about part of the claim, does not conflict. A plan stated earlier ("we will soon begin") does not conflict with a later report that it happened, and a fact about one date does not conflict with a claim about another. When the claim is about what someone said or did on a stated date and the evidence carries no date, do not assume the evidence is from that date: a difference of stage (planned, begun, done) is neither.',
   'neither: anything else.',
   'Return JSON only: {"answer":"states|conflicts|neither","why":"one line"}',
 ].join('\n')
