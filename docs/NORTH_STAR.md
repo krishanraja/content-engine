@@ -137,11 +137,11 @@ only in `venture_formats`; the lines below are orientation.
 | Subchannel | The question it asks | The reader changes... | Cadence (live table, 2026-09-25) |
 |---|---|---|---|
 | mind.the.gap | What is the pattern, and what does it mean is coming? | how they think or what they expect | Fridays, 1 a week; the hero subchannel |
-| split.the.bill | Where does the money move, and who ends up better or worse off? | a price, a budget or a contract | Wednesdays, 1 a week |
-| lift.the.lid | What actually goes together in a shipped thing, and why did this one work? | what they build or buy | no fixed day, 1 every two weeks |
+| follow.the.money | Where does the money move, and who ends up better or worse off? | a price, a budget or a contract | Wednesdays, 1 a week |
+| under.the.hood | What actually goes together in a shipped thing, and why did this one work? | what they build or buy | no fixed day, 1 every two weeks |
 
 Krish's own one-line version (2026-09-24, recorded in Control Center's
-`NOW.md`): "split.the.bill is how to make money with AI, lift.the.lid is how to
+`NOW.md`): "follow.the.money is how to make money with AI, under.the.hood is how to
 build with it, mind.the.gap is the patterns and where they lead".
 
 The right-hand column is the boundary rule, and it settles every contested

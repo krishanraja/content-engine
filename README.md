@@ -50,9 +50,9 @@ This repository has no user interface of its own.
 Three subchannels, each with a mandate stored in the database
 (`venture_formats.mandate`) and read live by every writer and checker:
 
-- **split.the.bill**: where the money moves, and who ends up better or worse off.
+- **follow.the.money**: where the money moves, and who ends up better or worse off.
 - **mind.the.gap**: the pattern across several threads, and what it means is coming.
-- **lift.the.lid**: what actually goes together in a shipped thing, and why it worked.
+- **under.the.hood**: what actually goes together in a shipped thing, and why it worked.
 
 The Money of AI and Built with AI are retired as subchannels (2026-09-17) and
 survive as aliases, **and as the Studio's two series identifiers, which are

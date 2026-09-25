@@ -252,7 +252,7 @@ assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
   // ── The expansion is not bound to one subchannel ──────────────────────────
   //
   // It used to be handed the row's CURRENT lane, and it correctly refused when
-  // the piece did not fit: a security story filed under lift.the.lid came back
+  // the piece did not fit: a security story filed under under.the.hood came back
   // "not for that subchannel", which left it judged as a bare headline and
   // scored accordingly. The router runs after the expansion and scores fit
   // against all three, so pre-committing to one lane is the wrong order.

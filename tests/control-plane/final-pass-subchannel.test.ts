@@ -10,12 +10,12 @@ import { corpusForChannel, laneToCorpusChannel } from '../../apps/control-plane/
 // (Unassigned) rubric and every drafting route got no playbook. And the
 // hand-written rubrics had drifted from the mandates rewritten on 2026-09-17:
 // the `built` rubric instant-fails a piece Krish did not build, which is what
-// the lift.the.lid mandate requires. The mandate text below is an excerpt of
+// the under.the.hood mandate requires. The mandate text below is an excerpt of
 // the live venture_formats row.
 
 const LIFT = {
-  slug: 'lift_the_lid',
-  label: 'lift.the.lid',
+  slug: 'under_the_hood',
+  label: 'under.the.hood',
   mandate: 'Work out what actually goes together, and why this one worked. Take a shipped thing apart to show what is really in it, then draw the build lesson. HARD GATES, applied before scoring. NOT US: the subject is never Krish, mind/make, CTRL or his own builds, however available the material. NO PREACHING: no closing moral, no lesson for leaders, no sentence telling the reader what to conclude. The verdict is the reader\'s to reach.',
 }
 
@@ -25,12 +25,12 @@ const system = (rubric: ReturnType<typeof rubricFor>) =>
 describe('final pass: a live subchannel is judged against its mandate', () => {
   test('the mandate is the rubric, whole', () => {
     const s = system(subchannelRubric(LIFT))
-    assert.match(s, /VENTURE: lift\.the\.lid/)
+    assert.match(s, /VENTURE: under\.the\.hood/)
     assert.match(s, /NOT US: the subject is never Krish/)
     assert.match(s, /The verdict is the reader's to reach/)
   })
 
-  test("the retired 'Krish built it' rule never reaches a lift.the.lid piece", () => {
+  test("the retired 'Krish built it' rule never reaches an under.the.hood piece", () => {
     const s = system(subchannelRubric(LIFT))
     assert.doesNotMatch(s, /Krish did not build or watch being built/)
     // It is still in the legacy rubric, so this is a real difference, not an absence.
@@ -51,10 +51,10 @@ describe('final pass: a live subchannel is judged against its mandate', () => {
 
 describe('corpus: a routed piece with a null lane gets its playbook', () => {
   test('live slots name their own playbook whatever the lane', () => {
-    assert.equal(laneToCorpusChannel(null, 'split_the_bill'), 'split_the_bill')
-    assert.equal(laneToCorpusChannel(null, 'lift_the_lid'), 'lift_the_lid')
+    assert.equal(laneToCorpusChannel(null, 'follow_the_money'), 'follow_the_money')
+    assert.equal(laneToCorpusChannel(null, 'under_the_hood'), 'under_the_hood')
     assert.equal(laneToCorpusChannel(null, 'mind_the_gap'), 'mind_the_gap')
-    assert.equal(laneToCorpusChannel('publication', 'split_the_bill'), 'split_the_bill')
+    assert.equal(laneToCorpusChannel('publication', 'follow_the_money'), 'follow_the_money')
   })
 
   test('legacy values still map as before', () => {
@@ -63,14 +63,14 @@ describe('corpus: a routed piece with a null lane gets its playbook', () => {
     assert.equal(laneToCorpusChannel(null, null), null)
   })
 
-  test('split.the.bill takes its lineage playbook; mind.the.gap is told it has none', () => {
+  test('follow.the.money takes its lineage playbook; mind.the.gap is told it has none', () => {
     const corpus = [
       '## 0. Publication house register', 'House body.',
       '## 1. The Money of AI', 'Money playbook body.',
       '## 2. Built with AI', 'Built playbook body.',
       '## One-Paragraph Version', 'Synopsis.',
     ].join('\n')
-    assert.match(corpusForChannel(corpus, laneToCorpusChannel(null, 'split_the_bill')), /Money playbook body/)
+    assert.match(corpusForChannel(corpus, laneToCorpusChannel(null, 'follow_the_money')), /Money playbook body/)
     assert.match(corpusForChannel(corpus, laneToCorpusChannel(null, 'mind_the_gap')), /NO PLAYBOOK EXISTS FOR THIS FORMAT/)
   })
 })

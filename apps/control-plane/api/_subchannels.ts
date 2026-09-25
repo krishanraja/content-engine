@@ -7,7 +7,7 @@ import { supabase } from './_supabase.js'
 // built_with_ai) to the live slug. Both are the authority. Before 2026-09-24
 // every drafting-class stage in this repo spoke only the retired keys, and the
 // final-pass rubrics were hand-written copies of mandates that were rewritten
-// on 2026-09-17, so a lift.the.lid piece would have been graded against a rule
+// on 2026-09-17, so an under.the.hood piece would have been graded against a rule
 // ("Krish built it or watched it being built") that its own mandate forbids.
 //
 // research-topic.ts keeps a small in-code copy of the alias map and says this
@@ -21,7 +21,7 @@ export interface Subchannel {
 
 /** The three publication subchannels. Only these carry a drafting mandate;
  *  `general` is the holding lane and never a destination for a piece. */
-export const LIVE_SUBCHANNELS = ['split_the_bill', 'mind_the_gap', 'lift_the_lid'] as const
+export const LIVE_SUBCHANNELS = ['follow_the_money', 'mind_the_gap', 'under_the_hood'] as const
 
 /**
  * Resolve a stored slot (live slug or retired alias) to its live subchannel,

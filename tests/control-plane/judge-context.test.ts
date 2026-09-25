@@ -13,7 +13,7 @@ import { describe, test } from 'vitest'
 process.env.SUPABASE_URL = 'http://127.0.0.1:9'
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'not-a-key'
 
-const SUB = { slug: 'split_the_bill', label: 'split.the.bill', mandate: 'Work out where the money moves. THE CLOSE is a verdict.' }
+const SUB = { slug: 'follow_the_money', label: 'follow.the.money', mandate: 'Work out where the money moves. THE CLOSE is a verdict.' }
 const ROW = {
   idea: 'Same agent, opposite answers',
   thesis: 'Amazon blocked Muse; Shopify deepened its partnership.',
@@ -28,7 +28,7 @@ describe('judgeContext', () => {
   test('the draft gate reads the mandate and the sources on file', async () => {
     const { judgeContext } = await import('../../apps/control-plane/api/content-ideas/[id]/judge.js')
     const c = judgeContext({ ...base, gate: 'draft' })
-    assert.match(c, /### The subchannel this is for: split\.the\.bill/)
+    assert.match(c, /### The subchannel this is for: follow\.the\.money/)
     assert.match(c, /THE CLOSE is a verdict/)
     assert.match(c, /### The sources on file/)
     assert.match(c, /geekwire\.com\/x/)

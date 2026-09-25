@@ -58,8 +58,8 @@ repository serves it and has no interface of its own.
 
 ## Names
 
-The publication's subchannels are **split.the.bill**, **mind.the.gap** and
-**lift.the.lid** (`split_the_bill`, `mind_the_gap`, `lift_the_lid`). The Money
+The publication's subchannels are **follow.the.money**, **mind.the.gap** and
+**under.the.hood** (`follow_the_money`, `mind_the_gap`, `under_the_hood`). The Money
 of AI and Built with AI were retired as subchannels on 2026-09-17 and survive
 as aliases in `format_aliases`.
 

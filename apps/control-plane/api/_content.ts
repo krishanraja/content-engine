@@ -134,9 +134,9 @@ export function laneToCorpusChannel(lane?: string | null, slot?: string | null):
   // THE LIVE SUBCHANNELS FIRST (2026-09-24). The judge ladder sets lane_slot to
   // a subchannel and never sets lane, so every routed piece arrived here with a
   // null lane and got no playbook at all. A live slot names its own playbook
-  // (CHANNEL_HEADING maps split_the_bill and lift_the_lid to their lineage's
+  // (CHANNEL_HEADING maps follow_the_money and under_the_hood to their lineage's
   // sections; mind_the_gap has none and corpusForChannel says so).
-  if (slot && (slot === 'split_the_bill' || slot === 'lift_the_lid' || slot === 'mind_the_gap')
+  if (slot && (slot === 'follow_the_money' || slot === 'under_the_hood' || slot === 'mind_the_gap')
       && (lane == null || lane === 'publication' || lane === 'mindmaker_live')) {
     return slot
   }
@@ -185,7 +185,7 @@ export function laneToCorpusChannel(lane?: string | null, slot?: string | null):
  */
 export const NO_CORPUS_PLAYBOOK: Record<string, string> = {
   mind_the_gap:
-    'The corpus in system_config.content_corpus was last written on 2026-08-28, when the canon still said the publication ran exactly two channels. mind.the.gap was added to venture_formats on 2026-09-17 and has no section in it. Writing that section is editorial work against venture_formats.mandate, not a rename, which is why it is declared here rather than pointed at split.the.bill or lift.the.lid.',
+    'The corpus in system_config.content_corpus was last written on 2026-08-28, when the canon still said the publication ran exactly two channels. mind.the.gap was added to venture_formats on 2026-09-17 and has no section in it. Writing that section is editorial work against venture_formats.mandate, not a rename, which is why it is declared here rather than pointed at follow.the.money or under.the.hood.',
 }
 
 // channel key -> a matcher against the playbook heading text in the corpus.
@@ -222,8 +222,8 @@ const CHANNEL_HEADING: Record<string, RegExp> = {
 
   // ── The three live subchannels (venture_formats, renamed 2026-09-17) ──
   // Two are the same editorial lineage under a new name, which is exactly what
-  // format_aliases records: money_of_ai -> split_the_bill, and
-  // built_with_ai -> lift_the_lid. They inherit those playbooks rather than
+  // format_aliases records: money_of_ai -> follow_the_money, and
+  // built_with_ai -> under_the_hood. They inherit those playbooks rather than
   // falling through to the whole-corpus synopsis, the same way the 'paid' and
   // 'built' legacy keys above already do.
   //
@@ -234,8 +234,8 @@ const CHANNEL_HEADING: Record<string, RegExp> = {
   //
   // mind_the_gap is deliberately absent. It is new, not a rename, and the
   // corpus has no section for it: see NO_CORPUS_PLAYBOOK below.
-  split_the_bill: /^#*\s*\d*\.?\s*(The\s+)?Money\s+of\s+AI\b/i,
-  lift_the_lid: /^#*\s*\d*\.?\s*Built\s+with\s+AI\b/i,
+  follow_the_money: /^#*\s*\d*\.?\s*(The\s+)?Money\s+of\s+AI\b/i,
+  under_the_hood: /^#*\s*\d*\.?\s*Built\s+with\s+AI\b/i,
 
   publication: /Publication house register/i,
   signal_noise: /Signal\s*&?\s*Noise/i,

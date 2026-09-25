@@ -68,7 +68,7 @@ export function buildReviseSystem(ctx: ReviseContext, r: Pick<ReviseRequest, 'va
     : ''
   // A routed piece is rewritten to its subchannel's mandate, as it was drafted
   // and as final-pass grades it. Without this, a rewrite pulled every close back
-  // to the house "hard verdict", which the lift.the.lid mandate forbids.
+  // to the house "hard verdict", which the under.the.hood mandate forbids.
   const mandate = ctx.mandate?.text?.trim()
   const mandateBlock = mandate
     ? `=== THE MANDATE FOR ${ctx.mandate!.label.toUpperCase()} ===\n${mandate}\n\nThe mandate is the test this piece must pass. Keep the rewrite inside it. Where the voice notes or house rules disagree with the mandate about the question the piece asks, its structure or how it closes, the mandate wins.`

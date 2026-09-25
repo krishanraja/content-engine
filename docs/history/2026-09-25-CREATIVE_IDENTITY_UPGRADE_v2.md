@@ -72,7 +72,7 @@ Krish wants signature formats that run on any article. An agent must read that a
 
 ## 2. Publishing still comes first
 
-As of 2026-09-25, `content_ideas` has 0 published rows and no Short or carousel has reached final approval (`docs/STATE.md`). Piece 1 ("Same agent, opposite answers", split.the.bill) waits on Krish's verdict.
+As of 2026-09-25, `content_ideas` has 0 published rows and no Short or carousel has reached final approval (`docs/STATE.md`). Piece 1 ("Same agent, opposite answers", follow.the.money) waits on Krish's verdict.
 
 The universality ruling and the publishing rule fit together this way:
 
@@ -159,23 +159,23 @@ It is extracted from the approved draft, the panel records and the evidence the 
 - **Identity:** subchannel, content revision hash, title, one-line thesis.
 - **Seed:** derived from the content revision hash. The lead verified value, if the piece has one, is layered on top as a visual element. The seed never depends on a number existing.
 - **Device graph:** one of three shapes, fixed by subchannel.
-  - split.the.bill: parties, flows between them (from, to, amount or share, direction, source), and who ends better or worse off.
+  - follow.the.money: parties, flows between them (from, to, amount or share, direction, source), and who ends better or worse off.
   - mind.the.gap: threads (each with a dated source), links between threads (each tied to a sentence in the draft), and the resolved pattern in one sentence.
-  - lift.the.lid: the shipped thing, its components (each with evidence), how they fit together, and the one decision that made it work.
+  - under.the.hood: the shipped thing, its components (each with evidence), how they fit together, and the one decision that made it work.
 - **Verified values:** every number the pack will show, each with its source and date. A number without a source cannot appear anywhere in the pack.
 - **Panel:** median score, Krish's override if any, and the strongest dissent with its judge and verdict reference.
 - **The Call:** statement, resolve-by date, confidence, and what evidence would settle it.
 - **Evidence assets:** approved screenshots and images with their hashes, and their truth role (evidence or illustration).
 
-**Why the device graph can always be produced.** Each graph is the subchannel's own question in structured form. A split.the.bill piece that cannot say who pays whom has not answered "where does the money move, and who ends up better or worse off?" A mind.the.gap piece with no threads has no pattern. A lift.the.lid piece with no components has not lifted the lid. So a failed extraction is a draft problem, and it is caught at drafting.
+**Why the device graph can always be produced.** Each graph is the subchannel's own question in structured form. A follow.the.money piece that cannot say who pays whom has not answered "where does the money move, and who ends up better or worse off?" A mind.the.gap piece with no threads has no pattern. An under.the.hood piece with no components has not looked under the hood. So a failed extraction is a draft problem, and it is caught at drafting.
 
 **Where it is enforced.** Add an extraction and completeness check after the final pass and before the draft panel, in the same place the other structural checks run. It reads the mandate live from `venture_formats.mandate` like every drafting and checking stage (`AGENTS.md`), and it never copies mandate text. If extraction fails its minimums (below), the draft returns to `revise` with the missing element named, and never reaches Krish's review queue in that state.
 
 Minimums, as starting values to be confirmed by the corpus test and approved by Krish:
 
-- split.the.bill: at least 2 parties and 1 sourced flow.
+- follow.the.money: at least 2 parties and 1 sourced flow.
 - mind.the.gap: at least 3 threads with dated sources and at least 2 links.
-- lift.the.lid: at least 3 components with evidence.
+- under.the.hood: at least 3 components with evidence.
 - Every subchannel: a Call that passes the Call check (P6).
 
 ### 5.3 The ten components
@@ -186,9 +186,9 @@ Each component lists its intent, what to build, its degraded mode, and when it i
 
 **Intent.** Identity comes from a small grammar repeated everywhere. The host of every Short and carousel is a kinetic type system, together with Krish when he is on camera. There is no avatar and no stock presenter. The three subchannels share the same bones (typeface family, grid, timing) and differ in accent and in how type moves:
 
-- split.the.bill: type behaves like money. Numbers tick, totals settle, words slide between columns as value moves.
+- follow.the.money: type behaves like money. Numbers tick, totals settle, words slide between columns as value moves.
 - mind.the.gap: type connects. Words arrive as separate points, lines join them, the phrase that matters lands last.
-- lift.the.lid: type assembles. Words arrive as parts and snap into place.
+- under.the.hood: type assembles. Words arrive as parts and snap into place.
 
 This component also clears a production blocker: the Studio's series rename "waits on wordmarks for the subchannels" (`docs/STUDIO.md`), mind.the.gap has no wordmark or series, and the production-brief bridge (`apps/control-plane/api/_productionBrief.ts`) accepts only `money_of_ai` and `built_with_ai`.
 
@@ -212,9 +212,9 @@ This component also clears a production blocker: the Studio's series rename "wai
 
 **Intent.** One hero mechanism per subchannel, on every piece in that subchannel. Each one acts out the subchannel's question, and consistency is what makes it a signature. The registry's limit of one signature device per Short (`config/techniques.json`) holds: this is that one.
 
-- **Money flow (split.the.bill).** Money as literal flow between named parties: width is amount, speed is how fast it moves, colour marks who gains and who loses. The reader sees who ends up better or worse off.
+- **Money flow (follow.the.money).** Money as literal flow between named parties: width is amount, speed is how fast it moves, colour marks who gains and who loses. The reader sees who ends up better or worse off.
 - **Constellation (mind.the.gap).** Each thread appears as a point with its source label as the piece names it; lines form as the argument connects them; the pattern resolves into a shape at the end, when the gap becomes visible.
-- **Exploded view (lift.the.lid).** The shipped thing splits into its real components as each is named, like an assembly manual, and the camera pushes into the part under discussion.
+- **Exploded view (under.the.hood).** The shipped thing splits into its real components as each is named, like an assembly manual, and the camera pushes into the part under discussion.
 
 **Build.** Each device is a pure function of its device graph: same graph, same render. Promote each to the registry as a `signature: true` technique with purpose, inputs, parameters, accessibility, fallback and tests, following `docs/ART_DIRECTOR_REPERTOIRE.md`. Check overlap with `progressive-value-reveal` and reuse it inside money flow where that is cleaner. Layout must handle the whole range of graph sizes: automatic layout for 2 to 12 elements, with a grouping rule above that ("and 4 smaller flows") so a large graph never becomes unreadable. Generated imagery inside exploded view is labelled as illustration.
 
@@ -257,8 +257,8 @@ Plus **the panel sting**, a short sound that marks every appearance of the engin
 The call takes the subchannel's shape:
 
 - mind.the.gap: what the pattern means is coming, by when.
-- split.the.bill: who will be better or worse off, or where a price or budget will move, by when.
-- lift.the.lid: whether the approach will spread, hold or break, by when.
+- follow.the.money: who will be better or worse off, or where a price or budget will move, by when.
+- under.the.hood: whether the approach will spread, hold or break, by when.
 
 **Build.**
 

@@ -115,7 +115,7 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
 
 ## Waiting on Krish
 
-- **Piece 1** ("Same agent, opposite answers", split.the.bill, in review): his
+- **Piece 1** ("Same agent, opposite answers", follow.the.money, in review): his
   verdict. Approving it is the first decision the calibration view can learn
   from at the draft stage.
 - **Piece 2** (mind.the.gap, "Every AI lab now sells a menu..."): whether to

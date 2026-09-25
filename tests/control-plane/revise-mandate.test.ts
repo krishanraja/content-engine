@@ -7,13 +7,13 @@ import { buildReviseSystem } from '../../apps/control-plane/api/_revisePrompt.js
 //
 // Found on the three-piece walk, 2026-09-24: draft and final-pass read the
 // mandate from venture_formats, but revise did not, and its persona line told
-// the model every piece ends on a "hard verdict". The lift.the.lid mandate
-// forbids a closing moral, so every revise pass on a lift.the.lid piece pulled
+// the model every piece ends on a "hard verdict". The under.the.hood mandate
+// forbids a closing moral, so every revise pass on an under.the.hood piece pulled
 // it back toward the close its own mandate fails. The mandate text below is an
 // excerpt of the live row.
 
 const LIFT = {
-  label: 'lift.the.lid',
+  label: 'under.the.hood',
   text: 'Take a shipped thing apart to show what is really in it. NO PREACHING: no closing moral, no lesson for leaders. The verdict is the reader\'s to reach.',
 }
 
@@ -22,7 +22,7 @@ const ctx = (mandate: typeof LIFT | null) => ({ voice: '', channelCorpus: '', ma
 describe('revise: a routed piece is rewritten to its mandate', () => {
   test('the mandate reaches the system prompt, whole, and is told it wins', () => {
     const s = buildReviseSystem(ctx(LIFT), { value: 'custom', humour: false })
-    assert.match(s, /THE MANDATE FOR LIFT\.THE\.LID/)
+    assert.match(s, /THE MANDATE FOR UNDER\.THE\.HOOD/)
     assert.match(s, /The verdict is the reader's to reach/)
     assert.match(s, /the mandate wins/)
   })

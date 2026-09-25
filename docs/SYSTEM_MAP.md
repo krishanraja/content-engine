@@ -45,7 +45,7 @@ signals, feeds, research, Krish's own ideas
 content_ideas row (state: seeded)
    |  judge ladder: expand, 9-judge panel, repair, re-judge, route   stage 2
    v
-routed to split.the.bill | mind.the.gap | lift.the.lid, banded ready | repairable | weak
+routed to follow.the.money | mind.the.gap | under.the.hood, banded ready | repairable | weak
    |  Krish decides in Control Center (DecideCard), recorded in the ledger
    v
 draft to the mandate -> revise -> final pass -> 7-judge draft panel   stage 3

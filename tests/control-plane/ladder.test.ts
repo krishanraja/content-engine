@@ -102,36 +102,36 @@ describe('the score of a piece is the median of its judges', () => {
 })
 
 describe('the router', () => {
-  const slugs = ['split_the_bill', 'lift_the_lid', 'mind_the_gap']
+  const slugs = ['follow_the_money', 'under_the_hood', 'mind_the_gap']
 
   it('names a winner and reports every channel, losers included', () => {
-    const r = parseRouterVerdict(JSON.stringify({ fits: { split_the_bill: 9, lift_the_lid: 4, mind_the_gap: 6 }, why: 'what it costs', confidence: 0.9 }), slugs)
-    expect(r.winner).toBe('split_the_bill')
-    expect(r.fits).toEqual({ split_the_bill: 9, lift_the_lid: 4, mind_the_gap: 6 })
+    const r = parseRouterVerdict(JSON.stringify({ fits: { follow_the_money: 9, under_the_hood: 4, mind_the_gap: 6 }, why: 'what it costs', confidence: 0.9 }), slugs)
+    expect(r.winner).toBe('follow_the_money')
+    expect(r.fits).toEqual({ follow_the_money: 9, under_the_hood: 4, mind_the_gap: 6 })
   })
 
   it('calls a piece homeless rather than filing it under the least bad channel', () => {
-    const r = parseRouterVerdict(JSON.stringify({ fits: { split_the_bill: 5, lift_the_lid: 4, mind_the_gap: 3 }, why: 'x' }), slugs)
+    const r = parseRouterVerdict(JSON.stringify({ fits: { follow_the_money: 5, under_the_hood: 4, mind_the_gap: 3 }, why: 'x' }), slugs)
     expect(r.winner).toBeNull()
     expect(ROUTER_FIT_FLOOR).toBe(6)
   })
 
   it('flags a contested piece instead of deciding it', () => {
-    const r = parseRouterVerdict(JSON.stringify({ fits: { split_the_bill: 8.5, lift_the_lid: 8, mind_the_gap: 3 }, why: 'x' }), slugs)
-    expect(r.winner).toBe('split_the_bill')
-    expect(r.contested).toEqual(['lift_the_lid'])
+    const r = parseRouterVerdict(JSON.stringify({ fits: { follow_the_money: 8.5, under_the_hood: 8, mind_the_gap: 3 }, why: 'x' }), slugs)
+    expect(r.winner).toBe('follow_the_money')
+    expect(r.contested).toEqual(['under_the_hood'])
   })
 
   it('treats a missing channel as malformed, not as a zero', () => {
     // A truncated reply that dropped a channel would otherwise read as
     // "definitely not that one" and route the piece confidently wrong.
-    const r = parseRouterVerdict(JSON.stringify({ fits: { split_the_bill: 9, lift_the_lid: 4 }, why: 'x' }), slugs)
+    const r = parseRouterVerdict(JSON.stringify({ fits: { follow_the_money: 9, under_the_hood: 4 }, why: 'x' }), slugs)
     expect(r.winner).toBeNull()
     expect(r.fits).toEqual({})
   })
 
   it('refuses a score outside 0 to 10 rather than clamping it', () => {
-    const r = parseRouterVerdict(JSON.stringify({ fits: { split_the_bill: 42, lift_the_lid: 4, mind_the_gap: 3 }, why: 'x' }), slugs)
+    const r = parseRouterVerdict(JSON.stringify({ fits: { follow_the_money: 42, under_the_hood: 4, mind_the_gap: 3 }, why: 'x' }), slugs)
     expect(r.winner).toBeNull()
   })
 })

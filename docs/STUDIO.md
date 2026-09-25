@@ -30,8 +30,8 @@ merged but not verified installed (`docs/STATE.md`).
 
 Read this before touching any name.
 
-- **The publication** routes pieces to three subchannels: split.the.bill,
-  mind.the.gap and lift.the.lid (`venture_formats`, read by
+- **The publication** routes pieces to three subchannels: follow.the.money,
+  mind.the.gap and under.the.hood (`venture_formats`, read by
   `apps/control-plane/api/_subchannels.ts`).
 - **The Studio** still knows exactly two series, `money_of_ai` and
   `built_with_ai`, displayed as "The Money of AI" and "Built With AI". They
@@ -43,8 +43,8 @@ Read this before touching any name.
   and many tests. `paid` and `built` are the Studio's import aliases, which is
   what "legacy" means inside the Studio.
 
-The mapping between them is `money_of_ai` to split.the.bill and
-`built_with_ai` to lift.the.lid (`format_aliases`). mind.the.gap has no Studio
+The mapping between them is `money_of_ai` to follow.the.money and
+`built_with_ai` to under.the.hood (`format_aliases`). mind.the.gap has no Studio
 series, format set or wordmark. The bridge that turns an approved piece into a
 production brief (`apps/control-plane/api/_productionBrief.ts`) accepts only
 the two Studio keys, so a piece routed to a live subchannel cannot become a

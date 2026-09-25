@@ -49,8 +49,8 @@ export type VentureKey =
   | 'dynamic'
   // The live publication subchannels (venture_formats, 2026-09-17). Their
   // rubric is built from the mandate at call time, never hand-copied here.
-  | 'split_the_bill'
-  | 'lift_the_lid'
+  | 'follow_the_money'
+  | 'under_the_hood'
   | 'mind_the_gap'
 
 /** lane (+slot) -> venture rubric key. Mirrors laneToCorpusChannel / save-draft.
@@ -120,7 +120,7 @@ export interface VentureRubric {
   /** How strict to be on an unverifiable claim: 'block' folds it into instant_fail. */
   unverifiedClaim: 'block' | 'flag'
   /** True when the mandate, not VOICE_ABSOLUTES, decides how the piece closes.
-   *  mind.the.gap forbids a closing moral and lift.the.lid leaves the verdict to
+   *  mind.the.gap forbids a closing moral and under.the.hood leaves the verdict to
    *  the reader, so the house "end on a hard verdict" absolute would grade them
    *  against their own brief. */
   mandateGovernsClose?: boolean
@@ -166,7 +166,7 @@ const INVESTIGATION_LENSES: Lens[] = [
 
 /** The hand-written rubrics. The three live subchannels are deliberately
  *  absent: theirs is built from the mandate by subchannelRubric(). */
-type StaticVenture = Exclude<VentureKey, 'split_the_bill' | 'lift_the_lid' | 'mind_the_gap'>
+type StaticVenture = Exclude<VentureKey, 'follow_the_money' | 'under_the_hood' | 'mind_the_gap'>
 const RUBRICS: Record<StaticVenture, VentureRubric> = {
   investigation: {
     key: 'investigation',
@@ -343,9 +343,9 @@ const CLOSE_ABSOLUTE = /^End on a hard, forward-looking verdict/
  * holds it now.
  *
  * The hand-written rubrics above predate the 2026-09-17 mandates and have
- * drifted from them. The worst case: `built`, the lineage lift.the.lid came
+ * drifted from them. The worst case: `built`, the lineage under.the.hood came
  * from, instant-fails a piece "Krish did not build or watch being built",
- * while the lift.the.lid mandate requires the subject is never his own build.
+ * while the under.the.hood mandate requires the subject is never his own build.
  * So the mandate is the rubric, whole: it carries the standing question, the
  * boundary test, the naming rule, the close and the hard gates, and a second
  * copy here would drift the same way.

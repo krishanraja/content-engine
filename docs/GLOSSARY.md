@@ -15,12 +15,13 @@ this repository start with a retired name.
 | Mindmake | Krish's AI advisory, education and products business. The current name | everywhere |
 | Mindmaker | the older name of the business | load-bearing only as a Drive folder path, the ASR vocabulary, the CLI description and some skill descriptions; renaming those breaks paths or tests |
 | Mindmaker Live | a retired channel name; its alias maps to `general` | old pilot and analytics labels |
-| split.the.bill (`split_the_bill`) | live subchannel: the money question | the publication |
+| follow.the.money (`follow_the_money`) | live subchannel: the money question | the publication |
 | mind.the.gap (`mind_the_gap`) | live subchannel: the pattern question; the hero subchannel | the publication |
-| lift.the.lid (`lift_the_lid`) | live subchannel: the build question | the publication |
-| The Money of AI (`money_of_ai`), `paid` | retired as a subchannel on 2026-09-17; an alias of split.the.bill | **live as a Studio series** |
-| Built with AI (`built_with_ai`), `built` | retired as a subchannel on 2026-09-17; an alias of lift.the.lid | **live as a Studio series** |
+| under.the.hood (`under_the_hood`) | live subchannel: the build question | the publication |
+| The Money of AI (`money_of_ai`), `paid` | retired as a subchannel on 2026-09-17; an alias of follow.the.money | **live as a Studio series** |
+| Built with AI (`built_with_ai`), `built` | retired as a subchannel on 2026-09-17; an alias of under.the.hood | **live as a Studio series** |
 | `techonomic`, `builder_economy`, `mindmaker_live` | aliases of `general` | old rows |
+| split.the.bill (`split_the_bill`), lift.the.lid (`lift_the_lid`) | the names follow.the.money and under.the.hood carried until Krish renamed them on 2026-09-25 ("every single instance front and back end, with zero exceptions"). Aliases in `format_aliases`, so an old link or row still resolves. Nowhere else: a test fails if either name reappears in a tracked file | the nine append-only rows written before the rename (`content_edit_events`, `judge_verdicts`), which cannot be edited |
 | Signal & Noise (`signal_noise`) | an older channel still known to the final-pass rubrics and channel cuts | legacy rubric keys |
 | `general`, `either` | rows in `venture_formats` that are not subchannels: a holding lane, and "suits more than one" | routing |
 | makeyourmindup | **the publication's name** (Krish, 2026-09-25). Hosted on Substack; its cover page is makeyourmindup.ai. Also the `corpus_key` on every live subchannel row | makeyourmindup.ai used to be CTRL's lead-magnet door; where that door goes now is open (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8) |
@@ -39,8 +40,8 @@ this repository start with a retired name.
   `venture_formats.mandate` and is read live by the draft, revise, final pass,
   draft judges and router. Never copy it into code or a document.
 - **Boundary rule.** How a contested subject is placed: ask what the reader
-  changes next. A price, budget or contract means split.the.bill; what they
-  build or buy means lift.the.lid; how they think or what they expect means
+  changes next. A price, budget or contract means follow.the.money; what they
+  build or buy means under.the.hood; how they think or what they expect means
   mind.the.gap.
 - **Hard gates.** Rules in a mandate applied before scoring, such as "not us"
   (the subject is never Krish or his own businesses) and "no preaching".

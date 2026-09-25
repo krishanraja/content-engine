@@ -135,7 +135,7 @@ writing:
 
 As of 2026-09-25, `content_ideas` has 0 published rows and no Short or
 carousel has reached final approval (`docs/STATE.md`). Piece 1 ("Same agent,
-opposite answers", split.the.bill) waits on Krish's verdict.
+opposite answers", follow.the.money) waits on Krish's verdict.
 
 The universality ruling and the publishing rule fit together this way:
 
@@ -274,7 +274,7 @@ from.
   What they say, The verdict) are the four build states of its money map.
 - **Device graph:** one shape per subchannel, from the diagram language its
   mandate names.
-  - split.the.bill, the money map ("where the dollars enter and where they
+  - follow.the.money, the money map ("where the dollars enter and where they
     leave"): parties, the points where money enters and leaves each, flows
     between them (from, to, amount or share, source, date), and who ends up
     better or worse off.
@@ -282,7 +282,7 @@ from.
     events; the moments where threads meet, each tied to a sentence in the
     draft; the resolved pattern in one sentence; and what it means is coming,
     placed on the same axis as the Call.
-  - lift.the.lid, the annotated product shot, "with what is real marked
+  - under.the.hood, the annotated product shot, "with what is real marked
     against what is theatre": the shipped thing, its parts, each part marked
     real or theatre with the evidence for the mark, and the one decision that
     made it work.
@@ -297,10 +297,10 @@ from.
   their truth role (evidence or illustration).
 
 **Why the device graph can always be produced.** Each graph is the
-subchannel's own question in structured form. A split.the.bill piece that
+subchannel's own question in structured form. A follow.the.money piece that
 cannot say where the money enters and leaves has not answered its question. A
-mind.the.gap piece with no dated threads has no pattern. A lift.the.lid piece
-that cannot mark a single part real or theatre has not lifted the lid. A
+mind.the.gap piece with no dated threads has no pattern. An under.the.hood piece
+that cannot mark a single part real or theatre has not looked under the hood. A
 failed extraction is a draft problem, caught at drafting.
 
 **Where it is enforced.** An extraction and completeness check runs after the
@@ -311,10 +311,10 @@ named and never reaches Krish's queue in that state.
 Minimums, as starting values to be confirmed by the corpus test and approved
 by Krish:
 
-- split.the.bill: at least 2 parties and 1 sourced flow.
+- follow.the.money: at least 2 parties and 1 sourced flow.
 - mind.the.gap: at least 3 threads, each with at least 2 dated, sourced
   events, and at least 2 meeting points.
-- lift.the.lid: at least 3 parts, each marked real or theatre with evidence.
+- under.the.hood: at least 3 parts, each marked real or theatre with evidence.
 - Every subchannel: a Call that passes the Call check (P6).
 
 ### 5.3 The components
@@ -327,11 +327,11 @@ he is on camera. The masthead is makeyourmindup. The three subchannels share
 the same bones (typeface family, grid, timing) and differ in accent and in how
 type moves:
 
-- split.the.bill: type behaves like money. Numbers tick, totals settle, words
+- follow.the.money: type behaves like money. Numbers tick, totals settle, words
   slide between columns as value moves.
 - mind.the.gap: type travels in time. Words arrive on their dates along a
   line, and the phrase that matters lands where the lines meet.
-- lift.the.lid: type labels parts. Words attach to components, and each label
+- under.the.hood: type labels parts. Words attach to components, and each label
   lands with its mark: real or theatre.
 
 This also clears a production blocker: the Studio's series rename waits on
@@ -353,7 +353,7 @@ renders; every corpus piece renders its title card without overflow.
 
 #### P2. The opening artifact
 
-**Intent.** The mandates for mind.the.gap and lift.the.lid each name the
+**Intent.** The mandates for mind.the.gap and under.the.hood each name the
 question their opening artifact asks the reader. The opening artifact is the
 signature device's first state, posing that question: the money map with its
 first flow half drawn, the timeline with its threads still apart, the product
@@ -377,14 +377,14 @@ subchannel, each drawn in the diagram language its mandate names.
 Consistency is what makes it a signature. The registry's limit of one
 signature device per Short (`config/techniques.json`) holds: this is that one.
 
-- **The money map (split.the.bill).** Where the dollars enter and where they
+- **The money map (follow.the.money).** Where the dollars enter and where they
   leave, between named parties. Width is amount, colour marks who gains and
   who loses, and the path the money no longer takes stays visible as a ghost.
 - **The timeline (mind.the.gap).** Each thread runs along a shared time axis
   as a line of dated, sourced events. As the piece argues, the lines bend
   toward each other and meet; the meeting point is the pattern, and what it
   means is coming extends past today to the Call's date.
-- **Real or theatre (lift.the.lid).** The annotated product shot. The shipped
+- **Real or theatre (under.the.hood).** The annotated product shot. The shipped
   thing comes apart into its parts; each part is labelled and stamped real or
   theatre, with the evidence for the stamp one tap or one frame away.
 
@@ -472,9 +472,9 @@ and keeps score.
 The call takes the subchannel's shape:
 
 - mind.the.gap: what the pattern means is coming, by when.
-- split.the.bill: who will be better or worse off, or where a price or budget
+- follow.the.money: who will be better or worse off, or where a price or budget
   will move, by when.
-- lift.the.lid: whether the approach will spread, hold or break, by when.
+- under.the.hood: whether the approach will spread, hold or break, by when.
 
 **Build on what exists.** The engine already keeps dated predictions and
 rulings, and this component reuses them:

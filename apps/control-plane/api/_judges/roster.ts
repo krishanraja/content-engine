@@ -291,5 +291,5 @@ export const CONTESTED_POINTS = 1.5
  *  applies it. */
 export const ROUTER_TIEBREAK =
   'What does the reader change next? If they would go and change a price, a budget or a contract, it is '
-  + 'split_the_bill. If they would change what they build or buy, it is lift_the_lid. If they would change how they '
+  + 'follow_the_money. If they would change what they build or buy, it is under_the_hood. If they would change how they '
   + 'think or what they expect, it is mind_the_gap. The question the piece asks decides, never its surface subject.'

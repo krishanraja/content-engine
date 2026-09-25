@@ -16,7 +16,7 @@ never_publish: [the Supabase project id, any credential or secret name including
 
 ## What it is
 
-The Mindmake content engine is the production team behind makeyourmindup, Krish Raja's publication: it finds what is worth saying, judges it with a blind panel, drafts it in his voice to the right subchannel's mandate, and turns it into Shorts and carousels, while Krish makes every decision that matters and nothing publishes itself. One repository holds two halves over one Supabase database. The content engine (`apps/control-plane`, its own Vercel project) runs 20 crons of collectors, a judge ladder, drafting and rewriting routes, channel cuts, production briefs and the ledger the engine learns from. The Video and Carousel Studio (`packages/`, `apps/runner`, `apps/renderer`) turns an approved brief into a Short or a carousel through hash-gated stations on Krish's Windows machine. Control Center is the desk Krish works at; this repository has no interface of its own. The publication, makeyourmindup, is hosted on Substack with its cover page at makeyourmindup.ai, and has three subchannels, split.the.bill, mind.the.gap and lift.the.lid, each held to a mandate that lives in the database (`docs/NORTH_STAR.md`).
+The Mindmake content engine is the production team behind makeyourmindup, Krish Raja's publication: it finds what is worth saying, judges it with a blind panel, drafts it in his voice to the right subchannel's mandate, and turns it into Shorts and carousels, while Krish makes every decision that matters and nothing publishes itself. One repository holds two halves over one Supabase database. The content engine (`apps/control-plane`, its own Vercel project) runs 20 crons of collectors, a judge ladder, drafting and rewriting routes, channel cuts, production briefs and the ledger the engine learns from. The Video and Carousel Studio (`packages/`, `apps/runner`, `apps/renderer`) turns an approved brief into a Short or a carousel through hash-gated stations on Krish's Windows machine. Control Center is the desk Krish works at; this repository has no interface of its own. The publication, makeyourmindup, is hosted on Substack with its cover page at makeyourmindup.ai, and has three subchannels, follow.the.money, mind.the.gap and under.the.hood, each held to a mandate that lives in the database (`docs/NORTH_STAR.md`).
 
 ## Who it is for and why it matters for Mindmake
 
@@ -37,7 +37,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 Lifecycle: building. Readback the same day unless a commit is named.
 
 - **Choosing is live.** All 20 crons in `apps/control-plane/vercel.json` wrote run rows in the last seven days; the judge sweep ran 59 times; 243 panel runs; 93 live ideas routed to a subchannel.
-- **Making was walked for the first time on 2026-09-24.** One piece per subchannel, from judged-ready to the edge of publishing (`docs/walks/2026-09-three-piece-walk.md`). Piece 1 ("Same agent, opposite answers", split.the.bill) is in `review` waiting on Krish; piece 2 is researched and waits on his go.
+- **Making was walked for the first time on 2026-09-24.** One piece per subchannel, from judged-ready to the edge of publishing (`docs/walks/2026-09-three-piece-walk.md`). Piece 1 ("Same agent, opposite answers", follow.the.money) is in `review` waiting on Krish; piece 2 is researched and waits on his go.
 - **Nothing is published.** `content_ideas` has 0 published rows. No Short or carousel has a final approval, package or upload.
 - **The engine learns only from Krish.** 55 ledger rows, 37 of them his; every agent row since the fix is `observation_only`. `judge_calibration` has 7 settled rows.
 - **The Studio cannot yet take a routed piece.** Its series are still `money_of_ai` and `built_with_ai`, and the production-brief bridge accepts only those (`docs/STUDIO.md`).
@@ -66,7 +66,7 @@ Everything older is in `docs/history/2026-09-25-NOW.md` and `docs/history/LOG.md
 
 ## What is next and what is waiting on Krish
 
-- Next: Krish's verdict on piece 1, then piece 2 (mind.the.gap) and piece 3 (lift.the.lid) through the same walk.
+- Next: Krish's verdict on piece 1, then piece 2 (mind.the.gap) and piece 3 (under.the.hood) through the same walk.
 - Waiting on Krish: the makeyourmindup masthead and subchannel wordmarks (to approve from rendered territories), which also unblock renaming the Studio's series; adding the Call to all three mandates; where CTRL's lead-magnet door goes now that makeyourmindup.ai is the publication's cover page; rotating four credentials pasted into a chat on 2026-09-24; and the operator token's fate.
 - Engineering backlog, in order of risk: the unauthenticated write routes; `check-run-recovery` and `check-cache-metering`; the brief bridge for live subchannels; the walk's open findings F2 to F12 (`docs/STATE.md`).
 

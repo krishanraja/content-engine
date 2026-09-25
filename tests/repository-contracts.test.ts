@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
@@ -165,5 +166,25 @@ describe('repository operating contracts', () => {
     expect(scanner).toContain('containsCommittedSecret')
     expect(patterns).toContain('VIDEO_STUDIO_(?:EXPORT_TOKEN|RUNNER_TOKEN|RUNNER_SIGNING_KEY|MCP_TOKEN)')
     expect(patterns).toContain('#\\s*paste:')
+  })
+
+  // Krish, 2026-09-25: the money subchannel is follow.the.money and the build
+  // subchannel is under.the.hood, "every single instance front and back end,
+  // with zero exceptions". The old names may appear only where an agent needs
+  // the mapping to read an append-only row that still carries them: the
+  // glossary's retired names and the dated log entry for the rename.
+  it('keeps the two subchannel names retired on 2026-09-25 out of every tracked file', () => {
+    const renamed = /split\\?[._-]the\\?[._-]bill|lift\\?[._-]the\\?[._-]lid/i
+    const allowed = new Set(['docs/GLOSSARY.md', 'docs/history/LOG.md'])
+    const files = execFileSync('git', ['ls-files'], { cwd: repoRoot, encoding: 'utf8' }).split(/\r?\n/).filter(Boolean)
+    const hits: string[] = []
+    for (const file of files) {
+      if (allowed.has(file)) continue
+      let body: string
+      try { body = readFileSync(join(repoRoot, file), 'utf8') } catch { continue }
+      if (body.includes('\u0000')) continue
+      body.split(/\r?\n/).forEach((line, i) => { if (renamed.test(line)) hits.push(`${file}:${i + 1}`) })
+    }
+    expect(hits).toEqual([])
   })
 })

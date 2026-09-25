@@ -58,13 +58,13 @@ const PUBLICATION = 'publication'
  * Widening it is not the real fix. The real fix is one shared formats contract
  * both repos read, which is a bigger change than this endpoint.
  */
-const LIVE_FORMATS = new Set(['split_the_bill', 'mind_the_gap', 'lift_the_lid'])
+const LIVE_FORMATS = new Set(['follow_the_money', 'mind_the_gap', 'under_the_hood'])
 const FORMAT_ALIASES: Record<string, string> = {
   // The two research stances the picker sends, and the format names they were.
-  paid: 'split_the_bill',
-  money_of_ai: 'split_the_bill',
-  built: 'lift_the_lid',
-  built_with_ai: 'lift_the_lid',
+  paid: 'follow_the_money',
+  money_of_ai: 'follow_the_money',
+  built: 'under_the_hood',
+  built_with_ai: 'under_the_hood',
 }
 function liveFormat(value?: string | null): string | null {
   const v = String(value || '').trim()
@@ -143,9 +143,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // researched as if it were a teardown, silently. And a binary cannot express
   // three formats at all, so mind.the.gap, the hero, had no question of its own.
   const digForFormat: Record<string, string> = {
-    split_the_bill: `${topic}. Who is paying, who is collecting, and what it does to pricing, margin and unit economics. Name the parties.`,
+    follow_the_money: `${topic}. Who is paying, who is collecting, and what it does to pricing, margin and unit economics. Name the parties.`,
     mind_the_gap: `${topic}. What is actually happening here, measured against what is being claimed about it. Name who claimed what and when, and what the record since shows.`,
-    lift_the_lid: `${topic}. Who has actually built or shipped something here, and what specifically they built.`,
+    under_the_hood: `${topic}. Who has actually built or shipped something here, and what specifically they built.`,
   }
   const queries = [
     `${topic}. What actually happened, with named companies, real numbers and dates.`,
