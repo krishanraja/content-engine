@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Mindmake content engine
 as_of: 2026-09-25
-head: caed8e6
+head: 6d847e9
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -73,6 +73,7 @@ Everything older is in `docs/history/2026-09-25-NOW.md` and `docs/history/LOG.md
 
 - Next: piece 2's confidence and his verdict on its page and Short storyboard; piece 1's plain-words rewrite and fact gate; piece 3 (under.the.hood); then the idea sources' own rule copies and retired names (walk log F23).
 - Waiting on Krish: the two ways the ad he liked runs into the Short standard he confirmed on 2026-09-08 (captions, and the close); the makeyourmindup masthead and subchannel wordmarks (to approve from rendered territories), which also unblock renaming the Studio's series; adding the Call to all three mandates; where CTRL's lead-magnet door goes now that makeyourmindup.ai is the publication's cover page; rotating four credentials pasted into a chat on 2026-09-24; and the operator token's fate.
+- Sequenced by Krish (2026-09-25): a prompt caching pass over the whole engine, only once three pieces in a row come out with minimal fix passes (`docs/CONTENT_ENGINE.md`, "Waiting: the prompt caching pass").
 - Engineering backlog, in order of risk: the unauthenticated write routes; the brief bridge for live subchannels; the walk's open findings (F2 to F19, `docs/STATE.md`).
 
 ## Read next
