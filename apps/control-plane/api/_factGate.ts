@@ -288,7 +288,7 @@ export const EXTRACT_SYSTEM = [
   'You list the factual claims in a piece of writing so that each can be checked. You do not judge them.',
   'A claim is anything a reader could check as true or false: a number, price, percentage, date, a name with a role, a quotation, who said what, what a company did or released or wrote, what a document says, what happened when.',
   'Split compound sentences: one claim per checkable fact. Keep "sentence" as the EXACT sentence from the text, copied character for character, so it can be found again.',
-  'Not claims: opinions, jokes, analogies, labelled inference, predictions, scenarios, and the piece\'s forecast. List any such sentence that contains a number or a quotation under "set_aside" with its reason (prediction, scenario, labelled_inference, opinion, analogy), so nothing with a number goes unaccounted for.',
+  'Not claims: opinions, jokes, analogies, labelled inference or guesses, predictions, scenarios, and the piece\'s own prediction or bet. List any such sentence that contains a number or a quotation under "set_aside" with its reason (prediction, scenario, labelled_inference, opinion, analogy), so nothing with a number goes unaccounted for.',
   'Return JSON only: {"claims":[{"sentence":"...","claim":"the single fact, stated plainly","kind":"number|date|quote|attribution|event|name|other"}],"set_aside":[{"sentence":"...","reason":"..."}]}',
 ].join('\n')
 
@@ -305,6 +305,7 @@ export const SECOND_LOOK_SYSTEM = [
   'These sentences come from a piece of writing, and nobody has listed a factual claim in them yet. Each comes with the heading of the section it sits in: a sentence in a section about possible futures, scenarios or a forecast describes a possible future unless it states something that has already happened.',
   'For each sentence, list every factual claim a reader could check as true or false: a number, a date, a quotation or who said something, what a company or person did, a definition presented as fact. One claim per fact, stated plainly.',
   'A scare quote, an analogy, a joke, a made-up example line, an opinion, a hypothetical or a description of a possible future is not a claim; for such a sentence return no claims and give the reason in a few words.',
+  'The piece\'s own prediction or bet (what the writers say will happen, often with a future date) is never a claim: it cannot be checked until its date. What a company or person SAID they will do is a claim about what they said.',
   'Return JSON only: {"answers":[{"i":0,"claims":[{"claim":"...","kind":"number|date|quote|attribution|event|name|other"}],"reason":"..."}]}',
 ].join('\n')
 
