@@ -11,7 +11,7 @@ Each edition is a folder:
 | `index.html` | The page. Self-contained apart from Google Fonts and `logo.png`. |
 | `body.md` | The piece's text at the version the fact gate passed. The page says this and nothing else. |
 | `edition.json` | The piece's id, its subchannel, and the fact-gate record for `body.md`: its hash, when the check ran, and the tally. |
-| `logo.png` | The horizontal logo on ink, from the brand kit. |
+| `logo.png` | Not in the repository: image files are never committed (`scripts/check-no-secrets.ts`). Copy `logos/horizontal/makeyourmindup-horizontal-transparent-1200w.png` from the makeyourmindup brand kit beside the page when publishing it. |
 
 `tests/editions.test.ts` holds every edition to two rules:
 
