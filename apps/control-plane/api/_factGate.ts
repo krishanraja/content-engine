@@ -60,6 +60,9 @@ export interface FactCheck {
   passed: boolean
   blocking: number
   single_source: number
+  /** How many sentences the second look read, and how many it never answered
+   *  (each of those stayed a claim). */
+  second_look?: { sentences: number; unanswered: number }
 }
 
 export const FACT_GATE_VERSION = 1 as const

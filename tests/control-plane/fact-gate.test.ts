@@ -238,6 +238,13 @@ describe('the gate', () => {
     assert.match(check, /\.\.\.swept\.setAside\.map\(a => \(\{ sentence: a\.sentence, claim: a\.sentence, kind: 'unclassified'/)
     assert.match(check, /summarise\(checked, looked\.setAside, body, checker\)/)
   })
+  test('the second look numbers each batch from 0 and asks again for what it missed', () => {
+    const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
+    assert.match(check, /ids\.map\(\(id, i\) => \(\{ i, section:/)
+    assert.match(check, /a\.i >= 0 && a\.i < ids\.length/)
+    assert.match(check, /const retried = \(await pool\(missing, 6, id => ask\(\[id\]\)\)\)\.flat\(\)/)
+    assert.match(check, /result\.second_look = \{ sentences: leftovers\.length, unanswered: second\.unanswered \}/)
+  })
   test('the PATCH that moves a piece asks the gate first', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')
     assert.match(src, /updates\.state === 'review' \|\| updates\.state === 'approved' \|\| updates\.state === 'published'\)\s*\n\s*&& \(LIVE_SUBCHANNELS/)

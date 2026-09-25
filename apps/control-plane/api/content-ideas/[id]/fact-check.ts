@@ -209,27 +209,33 @@ async function entail(c: Claim, ind: CheckedClaim['independent']): Promise<Check
 }
 
 /** The sweep's leftovers get one more reading before they block, twelve
- *  sentences a call: the whole piece in one call came back empty, and an
- *  empty answer fails closed. */
-async function secondLook(leftovers: Claim[], body: string): Promise<Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>> {
-  const batches: number[][] = []
-  for (let k = 0; k < leftovers.length; k += 12) batches.push(leftovers.slice(k, k + 12).map((_, j) => k + j))
-  const answers = await pool(batches, 4, async (ids) => {
+ *  sentences a call, numbered from 0 within the call: a model answering the
+ *  fourth batch of a piece renumbers from 0, and its answers were dropped. A
+ *  sentence left unanswered is asked once more on its own. Unanswered after
+ *  that, it stays a claim (fails closed), and the count is recorded. */
+async function secondLook(leftovers: Claim[], body: string): Promise<{ answers: Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>; unanswered: number }> {
+  const ask = async (ids: number[]) => {
     try {
       const raw = await callClaude({
         agent: 'fact-gate-second-look', model: UTILITY_MODEL, system: SECOND_LOOK_SYSTEM,
-        user: JSON.stringify(ids.map(i => ({ i, section: sectionOf(body, leftovers[i].sentence), sentence: leftovers[i].sentence }))),
+        user: JSON.stringify(ids.map((id, i) => ({ i, section: sectionOf(body, leftovers[id].sentence), sentence: leftovers[id].sentence }))),
         maxTokens: 3000, temperature: 0, timeoutMs: 90_000,
       })
       const j = robustJson(raw) || {}
       return (Array.isArray(j.answers) ? j.answers : [])
-        .filter((a: any) => Number.isInteger(a?.i) && ids.includes(a.i))
-        .map((a: any) => ({ i: a.i as number, claims: Array.isArray(a.claims) ? a.claims : [], reason: String(a.reason || '') }))
+        .filter((a: any) => Number.isInteger(a?.i) && a.i >= 0 && a.i < ids.length)
+        .map((a: any) => ({ i: ids[a.i], claims: Array.isArray(a.claims) ? a.claims : [], reason: String(a.reason || '') }))
     } catch {
-      return []
+      return [] as Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>
     }
-  })
-  return answers.flat()
+  }
+  const batches: number[][] = []
+  for (let k = 0; k < leftovers.length; k += 12) batches.push(leftovers.slice(k, k + 12).map((_, j) => k + j))
+  const answers = (await pool(batches, 4, ask)).flat()
+  const missing = leftovers.map((_, i) => i).filter(i => !answers.some(a => a.i === i))
+  const retried = (await pool(missing, 6, id => ask([id]))).flat()
+  const all = [...answers, ...retried]
+  return { answers: all, unanswered: leftovers.filter((_, i) => !all.some(a => a.i === i)).length }
 }
 
 async function pool<T, R>(items: T[], n: number, fn: (t: T) => Promise<R>): Promise<R[]> {
@@ -268,7 +274,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ...swept.claims.filter(c => c.kind === 'unclassified'),
     ...swept.setAside.map(a => ({ sentence: a.sentence, claim: a.sentence, kind: 'unclassified' as ClaimKind })),
   ]
-  const looked = resolveLeftovers(leftovers, await secondLook(leftovers, body))
+  const second = await secondLook(leftovers, body)
+  const looked = resolveLeftovers(leftovers, second.answers)
   const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims]
   const claims = all.slice(0, MAX_CLAIMS)
   const sources = sourcesText(meta)
@@ -281,6 +288,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   })
   const checker = checked.find(c => c.independent.checker)?.independent.checker || null
   const result = summarise(checked, looked.setAside, body, checker)
+  result.second_look = { sentences: leftovers.length, unanswered: second.unanswered }
   if (all.length > MAX_CLAIMS) { result.passed = false; result.blocking += all.length - MAX_CLAIMS }
 
   // A run takes minutes. Merge into the meta as it is NOW, so a material or a
