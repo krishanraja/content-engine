@@ -1,5 +1,7 @@
 # Reference video calibration and publication-wide expansion
 
+> Scope: the Studio's calibration record. For the whole system start at `README.md`.
+
 ## Decision
 
 `feedback-reference-videos-20260908-01` records the reference-video judgement. `feedback-cross-series-format-expansion-20260908-01` records Krish's explicit approval to extend the underlying standard across both publication series and every canonical format.

@@ -1,5 +1,7 @@
 # Portable Studio session contract
 
+> Scope: the Studio: how an agent opens a tracked session and what it may capture. The content engine's agent rules are in `AGENTS.md` and `docs/CONTENT_ENGINE.md`. For the whole system start at `README.md`.
+
 ## Outcome
 
 Any supported LLM or Control Center can become a window into the same Video and Carousel Studio. The client supplies judgement and conversation. The engine owns commands, reviews, feedback provenance, and learning state.

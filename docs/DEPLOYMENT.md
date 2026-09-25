@@ -1,5 +1,7 @@
 # Deployment
 
+> Scope: the Video and Carousel Studio. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
+
 ## Upstream review order
 
 The adapter implementation is split into independently reviewable pull requests:

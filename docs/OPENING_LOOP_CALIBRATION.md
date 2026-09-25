@@ -1,5 +1,7 @@
 # Opening loop calibration
 
+> Scope: the Studio's opening contract for Shorts. For the whole system start at `README.md`.
+
 ## Decision
 
 `feedback-opening-loop-contract-20260923-01` records Krish's approval, on 2026-09-23, of the opening contract described here. Three named checks replace one unaccountable judgement about the opening. They are active in reviewed configuration and enforced by the candidates and visual plan stations.

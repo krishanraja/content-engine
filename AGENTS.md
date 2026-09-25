@@ -1,30 +1,151 @@
 # AGENTS.md
 
-## Product invariants
+Rules for any agent working in this repository: Claude Code, Codex, Claude.ai,
+ChatGPT or anything else. Read `docs/NORTH_STAR.md` first; it says what the
+whole system is for, and every rule below serves it. `README.md` says where
+everything is.
 
-- Public series names are The Money of AI and Built With AI. `paid` and `built` are import aliases only.
-- Control Center is the governed mobile review surface. Codex may orchestrate the same versioned contracts, but the Windows runner must operate without a Codex session and must never depend on model availability.
-- Do not add another production dashboard or a second media source of truth. Control Center stores only redacted projections, commands, review metadata, and private proxy references; local job artifacts remain authoritative.
-- A Control Center review decision is not durable until the runner has validated its exact lineage and appended the domain-separated signed local decision event. Replays must finish idempotently and must never append a second decision or approval.
-- A terminal cloud review becomes decidable again only after a signed `review_recovery_record` clones the exact authenticated local review identity. Recovery must prove the declared terminal reason from a failed receipt, signed claim journal, or the verified absence of both, and must never mutate active media.
-- GitHub owns code and configuration. Never commit media, credentials, OAuth state, job data, archives, or derived indexes.
-- Public publishing is never automatic. YouTube is private-only; LinkedIn, TikTok, and Instagram Reels output remains local draft packages.
-- Truth, rights, confidentiality, meaning preservation, and canonical naming are hard gates.
-- Every durable taste or performance rule needs explicit user approval.
-- Free-form magic-edit directions may compile only into schema-bounded presentation operations. Meaning, claims, evidence content, story structure, and unsupported changes return to the full editorial route.
-- Use plain English and no em dashes in public copy.
+## What this repository is
 
-## Portable engine sessions
+The Mindmake content engine: the engine behind Krish's publication and the
+Shorts and carousels made from it. Two halves share one purpose and one
+database:
 
-- This repository is a client-neutral engine, not a Codex-only workflow. Read `docs/ENGINE_SESSION.md` before using any Studio tool or recording feedback.
-- A repository checkout provides instructions, not production authority. Mutations and durable learning are supported only when the Mindmake Studio remote MCP gateway reports a tracked session with the required capability.
-- Never claim that an ordinary chat turn was captured. The gateway records structured engine actions, exact feedback excerpts supplied to a feedback tool, and artifact differences. It never stores whole third-party chat transcripts.
-- If the gateway is unavailable, remain read-only and say that the session is untracked. Do not create local shadow memory.
-- The global `video-engine` launcher retains its exact first-message trigger. Opening this repository makes engine tools discoverable but must not make unrelated video questions invoke the production workflow.
+- **The content engine**, `apps/control-plane/`: ideation, curation, drafting,
+  iteration, channel copy, production briefs and the learning ledger.
+  `docs/CONTENT_ENGINE.md`.
+- **The Studio**, `packages/`, `apps/runner/`, `apps/renderer/`: Shorts and
+  carousels from approved briefs, on Krish's Windows machine.
+  `docs/STUDIO.md`.
+
+Control Center (`krishanraja/control-center`) is where Krish works. This
+repository serves it and has no interface of its own.
+
+## Rules for every agent
+
+- **Krish decides.** Approve, drop, publish, and every choice of taste are
+  his. The engine and its agents propose, show their reasoning, and leave him
+  the decision.
+- **Your own actions are observations.** On the content engine an operator
+  session's rows are `observation_only` unless it relays a decision Krish made
+  in words, with `decided_by: 'Krish'`. Never relay a decision he did not
+  make, and never write that he expressed a preference he did not state.
+  Silence is not feedback.
+- **Every durable taste or performance rule needs explicit user approval.** A
+  rule is proposed, may be trialled, and becomes active only when he approves
+  it and it lands in code or configuration.
+- **Check before you ask.** Before putting a question to Krish, check whether
+  an earlier answer already covers it, read for its reach rather than its
+  literal wording. On mobile, ask in a plain message.
+- **Public publishing is never automatic.** YouTube is private-only; LinkedIn,
+  TikTok and Instagram Reels output stays a local draft package; the content
+  engine never posts.
+- **Truth, rights, confidentiality, meaning preservation and canonical naming
+  are hard gates.** Never invent a number, a quotation, a source or an
+  attribution; label inference as inference.
+- **The mandate is the test.** Each subchannel's mandate lives in
+  `venture_formats.mandate` and is read live. Never copy a mandate, the voice
+  block or the corpus into code, a prompt or a document.
+- **Voice.** Plain English and no em dashes in anything public. No "Not X, Y"
+  construction in any piece, in either order (rule R2, Krish, 2026-09-24: "Cut
+  it everywhere").
+- **Spend.** Stay inside the amount Krish approved for the session and check
+  `meter_daily`. Research through Perplexity, Exa and Brave is not metered, so
+  count it yourself.
+- **Leave the knowledge in the repository.** What you learn about the engine
+  goes into `docs/STATE.md`, `docs/walks/` or the document it corrects, never
+  only into a chat.
+
+## Names
+
+The publication's subchannels are **split.the.bill**, **mind.the.gap** and
+**lift.the.lid** (`split_the_bill`, `mind_the_gap`, `lift_the_lid`). The Money
+of AI and Built with AI were retired as subchannels on 2026-09-17 and survive
+as aliases in `format_aliases`.
+
+The Studio still uses **The Money of AI** and **Built With AI** as its two
+series (`money_of_ai`, `built_with_ai`); `paid` and `built` are its import
+aliases only. Those identifiers are enforced by schemas, a database CHECK,
+official wordmarks, signed approval domains and tests. They are Studio
+identifiers, never a subchannel. Renaming them is Krish's decision and waits
+on wordmarks for the subchannels. Every other retired name is in
+`docs/GLOSSARY.md`.
+
+## Content engine invariants
+
+- Every route that writes or spends is guarded: `guardEngine` for the idea,
+  ledger and judge routes, the cron guards for scheduled jobs, the runner and
+  MCP guards for the Studio. A new route never uses `preamble`, which checks
+  nothing. The routes that still do are a known risk (`docs/STATE.md`).
+- `content_edit_events` is append-only, enforced by a trigger. A wrong row is
+  corrected by a new row or a note in the walk log, never by an update.
+- Most routes read a row, call a model, then write the whole `meta` back. Run
+  such calls one at a time, and guard new writes on `updated_at`.
+- Draft, revise, final pass and the draft judges read the subchannel's
+  mandate; a new drafting or checking stage must too.
+- The content engine owns new DDL for content and Studio tables; add it under
+  `supabase/migrations/`.
+
+## Studio invariants
+
+- Control Center is the governed mobile review surface. Codex may orchestrate
+  the same versioned contracts, but the Windows runner must operate without a
+  Codex session and must never depend on model availability.
+- Do not add another production dashboard or a second media source of truth.
+  Control Center stores only redacted projections, commands, review metadata,
+  and private proxy references; local job artifacts remain authoritative.
+- A Control Center review decision is not durable until the runner has
+  validated its exact lineage and appended the domain-separated signed local
+  decision event. Replays must finish idempotently and must never append a
+  second decision or approval.
+- A terminal cloud review becomes decidable again only after a signed
+  `review_recovery_record` clones the exact authenticated local review
+  identity. Recovery must prove the declared terminal reason from a failed
+  receipt, signed claim journal, or the verified absence of both, and must
+  never mutate active media.
+- GitHub owns code and configuration. Never commit media, credentials, OAuth
+  state, job data, archives, or derived indexes.
+- Free-form magic-edit directions may compile only into schema-bounded
+  presentation operations. Meaning, claims, evidence content, story structure,
+  and unsupported changes return to the full editorial route.
+
+## Portable engine sessions (the Studio)
+
+- The Studio is a client-neutral engine that any supported client drives
+  through the same contracts. Read
+  `docs/ENGINE_SESSION.md` before using any Studio tool or recording feedback.
+- A repository checkout provides instructions only; production authority
+  comes from a tracked session. Mutations and durable learning are supported only when the Mindmake Studio
+  remote MCP gateway reports a tracked session with the required capability.
+- Never claim that an ordinary chat turn was captured. The gateway records
+  structured engine actions, exact feedback excerpts supplied to a feedback
+  tool, and artifact differences. It never stores whole third-party chat
+  transcripts.
+- If the gateway is unavailable, remain read-only and say that the session is
+  untracked. Do not create local shadow memory.
+- The global `video-engine` launcher retains its exact first-message trigger.
+  Opening this repository makes engine tools discoverable but must not make
+  unrelated video questions invoke the production workflow.
+
+## Documentation
+
+- The current documents and their order of authority are listed in
+  `README.md`. `docs/history/` holds superseded documents and the dated log;
+  nothing there is current.
+- `NOW.md` and `docs/history/LOG.md` follow the docs steward's schema
+  (control-center, `docs/steward/SCHEMA.md`); the steward reconciles them
+  nightly. A superseded document moves to `docs/history/YYYY-MM-DD-<name>`
+  under a Historical banner; nothing is deleted.
+- When behaviour changes, update the document that describes it in the same
+  commit. When Krish overrules a decision, record it in the commit body as
+  `Ruling (Krish, YYYY-MM-DD): ...`.
 
 ## Verification
 
-Run `npm run verify` before pushing. Validate all repo-scoped skills with `npm run skills:validate`.
+Run `npm run verify` before pushing. Validate all repo-scoped skills with
+`npm run skills:validate`. For the content engine, `npm run
+typecheck:control-plane` and `npm run check:control-plane`. Known failures on
+`main` are listed in `docs/STATE.md`; anything else failing is yours to fix.
 
 <!-- krish-canon:start release=v2026.09.08.2 sha=2351d9ef9484 rendered=2026-09-08 -->
 ## Krish canon

@@ -1,5 +1,7 @@
 # Art Director Repertoire
 
+> Scope: the Studio's visual planning. For the whole system start at `README.md`.
+
 ## Purpose
 
 The repertoire gives every studio client one governed visual vocabulary. It is not an effects catalogue. Each device has a narrative job, eligibility rules, required inputs, a deterministic score, an executable render path, QA checks and a conservative fallback. GitHub owns approved definitions in `config/techniques.json`. Job artifacts own exact selections and usage history. Control Center shows redacted review projections only.

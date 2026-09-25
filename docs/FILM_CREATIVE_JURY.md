@@ -1,5 +1,7 @@
 # Film creative jury
 
+> Scope: a check for Studio films that lives in the content engine (`apps/control-plane/api/_judges/film.ts`); no route calls it yet. For the whole system start at `README.md`.
+
 The Content Engine has a permanent, demanding jury for Mindmake films. It examines idea, strategy, story, business consequence, functional clarity, art direction, cinematography, editing, sound, finish, format fitness, accessibility and integrity. A separate prosecutor makes the strongest case against shipping.
 
 The jury is benchmarked against the published criteria for [Cannes Lions Film](https://www.canneslions.com/awards/lions/film/what-you-need-to-know), [Film Craft](https://www.canneslions.com/awards/lions/film-craft), [Creative Strategy](https://www.canneslions.com/awards/lions/creative-strategy), [Digital Craft](https://www.canneslions.com/awards/lions/digital-craft/what-you-need-to-know) and the [Integrity Standards](https://www.canneslions.com/awards/awards-support/integrity-standards). This is an internal standard, not an affiliation with Cannes Lions or a claim to reproduce its jury process.

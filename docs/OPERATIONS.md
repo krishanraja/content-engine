@@ -1,5 +1,7 @@
 # Operations
 
+> Scope: the Video and Carousel Studio, plus the recovery of the content engine's crons. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
+
 ## Source and state
 
 GitHub is authoritative for source, configuration, schemas, tests, and skills. On Windows, runtime state defaults to `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime` and is never committed. This explicit non-virtualized path keeps Codex and the independent Scheduled Task on one job, receipt, Python, browser, and cache root. Approved job folders may be copied to `MINDMAKE_ARCHIVE_ROOT`.

@@ -1,5 +1,7 @@
 # Windows credential contract
 
+> Scope: the Studio's Windows credentials. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
+
 ## Outcome
 
 No credential value belongs in Git, chat, shell history, command arguments,
