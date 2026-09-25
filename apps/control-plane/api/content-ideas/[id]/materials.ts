@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { supabase } from '../../_supabase.js'
 import { pathId, readMaterials, type Material } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
+import { operatorAttribution } from '../../_editEvents.js'
 
 // /api/content-ideas/:id/materials
 //   GET    — list the background materials attached to a piece.
@@ -47,7 +48,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ? hostnameOf(url)
         : firstHeadingOrLine(content)
 
+    // Who added it decides how the writer is told about it (materialsContext).
+    // The browser cookie is Krish's hand; the operator bearer is an agent
+    // unless it is relaying something Krish supplied, with decided_by: 'Krish'.
+    const who = operatorAttribution(req.headers.authorization, req.body)
     const material: Material = {
+      by: who ? who.actor : 'Krish',
       id: randomUUID(),
       kind,
       title,

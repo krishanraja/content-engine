@@ -109,7 +109,7 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
 - F6: the final pass's verdict swings between runs of the same piece.
 - F7: the idea's title and thesis go stale as the piece changes.
 - F10: research calls cap at 1,200 tokens and rewrite the whole `meta`.
-- F12: research the engine fetched is presented to writers and checkers as
+- F12 (fixed 2026-09-25 by H11): research the engine fetched was presented to writers and checkers as
   "materials Krish provided".
 - DecideCard's reroute does not write `lane_slot`.
 

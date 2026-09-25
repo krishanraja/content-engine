@@ -39,6 +39,19 @@ export interface Material {
   url?: string | null
   bytes?: number
   at?: string
+  /** Who put it on the piece: 'Krish', or the agent client that added it
+   *  (claude_code, codex...). Absent on rows written before 2026-09-25, which
+   *  materialsOf() reads as Krish's unless the kind is 'research'. */
+  by?: string | null
+}
+
+/** Whose a material is, for the label the writer sees. Engine research
+ *  (dive-deeper, deepen, investigations) is the engine's; anything an agent
+ *  session added is that agent's; the rest is Krish's. */
+export function materialOwner(m: Material): 'krish' | 'engine' | string {
+  if (m.by && m.by !== 'Krish') return m.by
+  if (m.kind === 'research' && !m.by) return 'engine'
+  return 'krish'
 }
 
 /** Read the materials a piece carries (lives in content_ideas.meta.materials). */
@@ -48,20 +61,39 @@ export function readMaterials(meta: any): Material[] {
 }
 
 /** Compact the corpus into a grounding block for the model. Truncates each item
- *  and the whole block so a large corpus never blows the context budget. */
+ *  and the whole block so a large corpus never blows the context budget.
+ *
+ *  Until 2026-09-25 every material was introduced as "BACKGROUND MATERIALS
+ *  Krish provided (his own research)", including research the engine fetched
+ *  itself and anything an agent session attached (walk finding F12). A writer
+ *  told that a claim is Krish's own research treats it as his position. Now
+ *  only what Krish put on the piece carries his name; the rest is labelled by
+ *  who gathered it, and is a source to check claims against, never his view. */
 export function materialsContext(materials: Material[], perItem = 2400, total = 9000): string {
   if (!materials.length) return ''
-  const parts: string[] = []
+  const groups = new Map<string, string[]>()
   let used = 0
+  let full = false
   for (const m of materials) {
+    if (full) break
     const head = m.title ? `### ${m.title}` : `### ${m.kind} material`
     const bodyRaw = m.kind === 'link' ? (m.url || '') : (m.content || '')
     const body = bodyRaw.slice(0, perItem)
-    const block = `${head}\n${body}`.trim()
-    if (used + block.length > total) { parts.push(`${head}\n[trimmed — ${bodyRaw.length} chars]`); break }
-    parts.push(block); used += block.length
+    let block = `${head}\n${body}`.trim()
+    if (used + block.length > total) { block = `${head}\n[trimmed, ${bodyRaw.length} chars]`; full = true }
+    else used += block.length
+    const owner = materialOwner(m)
+    groups.set(owner, [...(groups.get(owner) || []), block])
   }
-  return `BACKGROUND MATERIALS Krish provided (his own research — treat as primary source, ground claims in it, never invent beyond it):\n\n${parts.join('\n\n')}`
+  const out: string[] = []
+  const krish = groups.get('krish')
+  if (krish) out.push(`BACKGROUND MATERIALS Krish provided (his own research, treat as primary source, ground claims in it, never invent beyond it):\n\n${krish.join('\n\n')}`)
+  for (const [owner, parts] of groups) {
+    if (owner === 'krish') continue
+    const who = owner === 'engine' ? 'the engine' : `an agent session (${owner})`
+    out.push(`RESEARCH ON FILE, gathered by ${who}, not by Krish (sources to ground and check claims against; never present any of it as his view or his words):\n\n${parts.join('\n\n')}`)
+  }
+  return out.join('\n\n')
 }
 
 export function slug(s: string): string {
