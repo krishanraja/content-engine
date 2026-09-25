@@ -14,7 +14,7 @@ import { webResearch } from '../../_enrich.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
   combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, norm, ON_FILE_SYSTEM, quotesFail,
-  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, summarise, sweep,
+  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, SOURCE_MARK, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
 
@@ -26,26 +26,30 @@ const PERPLEXITY_POOL = 3
 const RETRY_WAITS_MS = [2000, 5000, 10000, 20000]
 const KINDS = new Set(['number', 'date', 'quote', 'attribution', 'event', 'name', 'other'])
 
-/** Everything the piece was written from, as plain text the quotes must come from. */
+/** Everything the piece was written from, as plain text the quotes must come
+ *  from. Each source starts with SOURCE_MARK. A verbatim excerpt is headed by
+ *  its URL alone: its title is the filer's words, and a date in it must not
+ *  pass for the source's. */
 export function sourcesText(meta: Record<string, any>): string {
   const parts: string[] = []
   for (const m of readMaterials(meta)) {
     const body = m.kind === 'link' ? (m.url || '') : (m.content || '')
-    if (body.trim()) parts.push(`### ${m.title || m.kind}${m.verbatim && m.url ? ` (verbatim, ${m.url})` : ''}\n${body}`)
+    if (body.trim()) parts.push(`${SOURCE_MARK}${m.verbatim && m.url ? `verbatim excerpt from ${m.url}` : (m.title || m.kind)}\n${body}`)
   }
   const stories = Array.isArray(meta.adjacent_stories) ? meta.adjacent_stories : []
-  for (const s of stories) parts.push(`### ${s?.title || 'source'} (${s?.published_date_iso || 'undated'}) ${s?.url || ''}\n${s?.why_relevant || ''}\n${s?.summary || ''}`)
+  for (const s of stories) parts.push(`${SOURCE_MARK}${s?.title || 'source'} (${s?.published_date_iso || 'undated'}) ${s?.url || ''}\n${s?.why_relevant || ''}\n${s?.summary || ''}`)
   const research = meta.research
-  if (Array.isArray(research)) for (const r of research) parts.push(typeof r === 'string' ? r : `${r?.title || ''} ${r?.url || ''}\n${r?.summary || r?.text || ''}`)
-  else if (typeof research === 'string') parts.push(research)
+  if (Array.isArray(research)) for (const r of research) parts.push(`${SOURCE_MARK}research\n${typeof r === 'string' ? r : `${r?.title || ''} ${r?.url || ''}\n${r?.summary || r?.text || ''}`}`)
+  else if (typeof research === 'string') parts.push(`${SOURCE_MARK}research\n${research}`)
   const dives = Array.isArray(meta.deep_dives) ? meta.deep_dives : []
-  for (const d of dives) parts.push(typeof d === 'string' ? d : `${d?.question || ''}\n${d?.findings || d?.answer || ''}\n${Array.isArray(d?.sources) ? d.sources.join('\n') : ''}`)
+  for (const d of dives) parts.push(`${SOURCE_MARK}deep dive\n${typeof d === 'string' ? d : `${d?.question || ''}\n${d?.findings || d?.answer || ''}\n${Array.isArray(d?.sources) ? d.sources.join('\n') : ''}`}`)
   return parts.filter(p => p && p.trim()).join('\n\n').slice(0, 120_000)
 }
 
 /** Only the verbatim excerpts: the sources' own words, not anyone's summary. */
 export function primaryText(meta: Record<string, any>): string {
-  return readMaterials(meta).filter(m => m.verbatim === true && m.content).map(m => m.content as string).join('\n\n')
+  return readMaterials(meta).filter(m => m.verbatim === true && m.content)
+    .map(m => `${SOURCE_MARK}verbatim excerpt from ${m.url}\n${m.content}`).join('\n\n')
 }
 
 async function extract(body: string): Promise<{ claims: Claim[]; setAside: Array<{ sentence: string; reason: string }> }> {
@@ -87,9 +91,14 @@ async function onFile(c: Claim, sources: string, primary: string): Promise<Check
       if (why) return { verdict: 'not_found', quote, note: `${why}${note ? `; model said: ${note}` : ''}` }
       return { verdict, quote, note, primary: !!primary && quotesFail(quotes, primary, c.claim) === null }
     }
-    // A contradiction must also be real text, or it is only the model's doubt.
-    if (verdict === 'contradicted' && !(quotes.length && quotes.every(q => norm(sources).includes(norm(q))))) {
-      verdict = 'not_found'
+    // A contradiction must be real text, and the text must really conflict:
+    // one run called "broke on launch day" contradicted by Altman saying
+    // "yesterday" the day after launch.
+    if (verdict === 'contradicted') {
+      const real = quotes.length && quotes.every(q => norm(sources).includes(norm(q)))
+      if (!real || (await entailment(c, quotes.join(' | '), null)) !== 'conflicts') {
+        return { verdict: 'not_found', quote, note: `a contradiction the passage does not bear out${note ? `; model said: ${note}` : ''}` }
+      }
     }
     return { verdict, quote, note }
   } catch (e) {
@@ -176,40 +185,51 @@ async function independent(c: Claim, asOf: string): Promise<CheckedClaim['indepe
  *  out, read by a second model. Perplexity "supported" two claims on piece 2
  *  with a quote about something else, and "contradicted" two with a source
  *  that only said less. */
-async function entail(c: Claim, ind: CheckedClaim['independent']): Promise<CheckedClaim['independent']> {
-  if (ind.verdict !== 'supported' && ind.verdict !== 'contradicted') return ind
-  const evidence = [ind.evidence, ind.correct_value ? `(the checker says the source gives: ${ind.correct_value})` : ''].filter(Boolean).join(' ')
-  if (!ind.evidence || ind.evidence.trim().length < 12) return { ...ind, verdict: 'unclear', evidence: `${ind.evidence || ''} [no usable quote from the source]`.trim() }
+async function entailment(c: Claim, evidence: string, url: string | null): Promise<string> {
   try {
     const raw = await callClaude({
       agent: 'fact-gate-entail', model: UTILITY_MODEL, system: ENTAIL_SYSTEM,
-      user: JSON.stringify({ claim: c.claim, as_written: c.sentence, evidence, source: ind.url }),
+      user: JSON.stringify({ claim: c.claim, as_written: c.sentence, evidence, source: url }),
       maxTokens: 300, temperature: 0, timeoutMs: 45_000,
     })
-    const a = String((robustJson(raw) || {}).answer || '')
-    const holds = ind.verdict === 'supported' ? a === 'states' : a === 'conflicts'
-    return holds ? ind : { ...ind, verdict: 'unclear', evidence: `${ind.evidence} [${ind.verdict} not borne out by the quoted evidence]` }
+    return String((robustJson(raw) || {}).answer || '')
   } catch {
-    return { ...ind, verdict: 'unclear' }
+    return ''
   }
 }
 
-/** The sweep's leftovers get one more reading before they block. */
+async function entail(c: Claim, ind: CheckedClaim['independent']): Promise<CheckedClaim['independent']> {
+  if (ind.verdict !== 'supported' && ind.verdict !== 'contradicted') return ind
+  // Only the source's quoted words count. The checker's own reading of them
+  // (correct_value) is shown to Krish, never used as evidence.
+  if (!ind.evidence || ind.evidence.trim().length < 12) return { ...ind, verdict: 'unclear', evidence: `${ind.evidence || ''} [no usable quote from the source]`.trim() }
+  const a = await entailment(c, ind.evidence, ind.url)
+  const holds = ind.verdict === 'supported' ? a === 'states' : a === 'conflicts'
+  return holds ? ind : { ...ind, verdict: 'unclear', evidence: `${ind.evidence} [${ind.verdict} not borne out by the quoted evidence]` }
+}
+
+/** The sweep's leftovers get one more reading before they block, twelve
+ *  sentences a call: the whole piece in one call came back empty, and an
+ *  empty answer fails closed. */
 async function secondLook(leftovers: Claim[], body: string): Promise<Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>> {
-  if (!leftovers.length) return []
-  try {
-    const raw = await callClaude({
-      agent: 'fact-gate-second-look', model: UTILITY_MODEL, system: SECOND_LOOK_SYSTEM,
-      user: JSON.stringify(leftovers.map((l, i) => ({ i, section: sectionOf(body, l.sentence), sentence: l.sentence }))),
-      maxTokens: 8000, temperature: 0, timeoutMs: 90_000,
-    })
-    const j = robustJson(raw) || {}
-    return (Array.isArray(j.answers) ? j.answers : [])
-      .filter((a: any) => Number.isInteger(a?.i))
-      .map((a: any) => ({ i: a.i, claims: Array.isArray(a.claims) ? a.claims : [], reason: String(a.reason || '') }))
-  } catch {
-    return []
-  }
+  const batches: number[][] = []
+  for (let k = 0; k < leftovers.length; k += 12) batches.push(leftovers.slice(k, k + 12).map((_, j) => k + j))
+  const answers = await pool(batches, 4, async (ids) => {
+    try {
+      const raw = await callClaude({
+        agent: 'fact-gate-second-look', model: UTILITY_MODEL, system: SECOND_LOOK_SYSTEM,
+        user: JSON.stringify(ids.map(i => ({ i, section: sectionOf(body, leftovers[i].sentence), sentence: leftovers[i].sentence }))),
+        maxTokens: 3000, temperature: 0, timeoutMs: 90_000,
+      })
+      const j = robustJson(raw) || {}
+      return (Array.isArray(j.answers) ? j.answers : [])
+        .filter((a: any) => Number.isInteger(a?.i) && ids.includes(a.i))
+        .map((a: any) => ({ i: a.i as number, claims: Array.isArray(a.claims) ? a.claims : [], reason: String(a.reason || '') }))
+    } catch {
+      return []
+    }
+  })
+  return answers.flat()
 }
 
 async function pool<T, R>(items: T[], n: number, fn: (t: T) => Promise<R>): Promise<R[]> {

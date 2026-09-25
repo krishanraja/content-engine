@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
-  bodyHash, combine, gateStatus, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, summarise, sweep,
+  bodyHash, combine, datedContext, gateStatus, numbersIn, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
+  summarise, sweep,
   type CheckedClaim,
 } from '../../apps/control-plane/api/_factGate.js'
 
@@ -51,6 +52,33 @@ describe('a fact split across a heading and its text', () => {
   test('one invented passage sinks the set', () => {
     assert.match(String(quotesFail(['18 March 2026. OpenAI release notes', 'paid users are quietly moved to GPT-5.4 mini'],
       NOTES, 'By March 2026 paid users are quietly moved to GPT-5.4 mini')), /not found word for word/)
+  })
+})
+
+describe('the date lives in the heading, the fact under it', () => {
+  const NOTES = [
+    `${SOURCE_MARK}verbatim excerpt from https://help.openai.com/en/articles/6825453-chatgpt-release-notes`,
+    '# August 12, 2025', '', '## GPT-5 Updates', '',
+    '4o is back in the model picker for all paid users by default.', '',
+    '# August 7, 2025', '', '## GPT-5', '',
+    'It simplifies ChatGPT to a single auto-switching system that brings together the best of our previous models.',
+    `${SOURCE_MARK}research`, '# Notes from 2019',
+  ].join('\n')
+  test('the nearest dated heading above a passage is its date', () => {
+    assert.deepEqual(datedContext(NOTES, 'It simplifies ChatGPT to a single auto-switching system'), ['## GPT-5', '# August 7, 2025'])
+    assert.equal(quotesFail(['It simplifies ChatGPT to a single auto-switching system'], NOTES, 'On 7 August 2025 GPT-5 became a single auto-switching system'), null)
+  })
+  test('a date further up, in an earlier entry, is not borrowed', () => {
+    assert.match(String(quotesFail(['It simplifies ChatGPT to a single auto-switching system'], NOTES, 'On 12 August 2025 GPT-5 became a single auto-switching system')), /do not carry 12/)
+  })
+  test('nor one across the line where the next source starts', () => {
+    assert.deepEqual(datedContext(NOTES, '4o is back in the model picker for all paid users by default.'), ['## GPT-5 Updates', '# August 12, 2025'])
+    assert.equal(datedContext(`${SOURCE_MARK}a\n# 2019 notes\n${SOURCE_MARK}b\nThe fact itself, stated here.`, 'The fact itself, stated here.').length, 0)
+  })
+  test('numbers compare by value', () => {
+    assert.deepEqual(numbersIn('$150.00, 08, 10,000 and 0.25'), ['150', '8', '10000', '0.25'])
+    assert.equal(quotesFail(['| gpt-6-astra | $20.00 | $2.00 | $25.00 | $100.00 | $40.00 | $4.00 | $50.00 | $150.00 |'],
+      '| gpt-6-astra | $20.00 | $2.00 | $25.00 | $100.00 | $40.00 | $4.00 | $50.00 | $150.00 |', 'Astra costs up to $150'), null)
   })
 })
 

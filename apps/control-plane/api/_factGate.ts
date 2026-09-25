@@ -114,9 +114,38 @@ export function readsAsForecast(sentence: string): boolean {
   return /\b(will|would|could|might|may|if|bet|call|forecast|predict|scenario|inference|we think|our read|going to|\w+['’]ll|by (?:\d{1,2} )?(?:january|february|march|april|may|june|july|august|september|october|november|december)?\s*\d{4})\b/i.test(sentence)
 }
 
-/** The numbers in a text, as bare digit strings: "$900 million" -> "900". */
+/** The numbers in a text, by value: "$900 million" -> "900", "$150.00" ->
+ *  "150", "08" -> "8", "10,000" -> "10000". A price table and a sentence
+ *  write the same number differently. */
 export function numbersIn(s: string): string[] {
-  return (String(s || '').match(/\d[\d,]*(?:\.\d+)?/g) || []).map(n => n.replace(/,/g, '')).filter(n => n.length > 0)
+  return (String(s || '').match(/\d[\d,]*(?:\.\d+)?/g) || [])
+    .map(n => n.replace(/,/g, ''))
+    .filter(n => n.length > 0)
+    .map(n => { const v = Number(n); return Number.isFinite(v) ? String(v) : n })
+}
+
+/** Where one source ends and the next begins in the text the checkers read. */
+export const SOURCE_MARK = '### SOURCE: '
+
+/** The dated context above a passage in its own source: the headings and
+ *  "Published" lines above it, nearest first, up to and including the first
+ *  one that carries a year, and never past the source's start. A release note
+ *  puts the date in the heading and the fact under it. */
+export function datedContext(text: string, quote: string): string[] {
+  const lines = String(text || '').split('\n')
+  const probe = norm(quote).slice(0, 50)
+  if (probe.length < 12) return []
+  const at = lines.findIndex(l => norm(l).includes(probe))
+  if (at < 0) return []
+  const out: string[] = []
+  for (let i = at - 1; i >= 0; i--) {
+    const l = lines[i]
+    if (l.startsWith(SOURCE_MARK)) break
+    if (!/^\s*#{1,6}\s/.test(l) && !/^\s*(published|updated)\b/i.test(l)) continue
+    out.push(l.trim())
+    if (/\b(19|20)\d{2}\b/.test(l)) break
+  }
+  return out
 }
 
 /** Why a set of passages fails, or null when every one is really in the
@@ -133,7 +162,11 @@ export function quotesFail(quotes: Array<string | null> | null, sourcesText: str
     if (!src.includes(n)) return `passage not found word for word in the sources: "${q.slice(0, 80)}"`
   }
   const carried = new Set(list.flatMap(numbersIn))
-  const missing = numbersIn(claim).filter(n => !carried.has(n))
+  let missing = numbersIn(claim).filter(n => !carried.has(n))
+  if (missing.length) {
+    for (const line of datedContext(sourcesText, list[0])) numbersIn(line).forEach(n => carried.add(n))
+    missing = missing.filter(n => !carried.has(n))
+  }
   return missing.length ? `the passages do not carry ${missing.join(', ')}` : null
 }
 
