@@ -13,7 +13,7 @@ Each edition is a folder:
 | `edition.json` | The piece's id, its subchannel, and the fact-gate record for `body.md`: its hash, when the check ran, and the tally. |
 | `logo.png` | Not in the repository: image files are never committed (`scripts/check-no-secrets.ts`). Copy `logos/horizontal/makeyourmindup-horizontal-transparent-1200w.png` from the makeyourmindup brand kit beside the page when publishing it. |
 
-`tests/editions.test.ts` holds every edition to two rules:
+`tests/control-plane/editions.test.ts` holds every edition to two rules:
 
 1. `body.md` is the version that passed: its fact-gate hash equals the one in
    `edition.json`, and `edition.json` says it passed.

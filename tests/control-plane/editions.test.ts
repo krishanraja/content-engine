@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, test } from 'vitest'
-import { bodyHash } from '../apps/control-plane/api/_factGate.js'
+import { bodyHash } from '../../apps/control-plane/api/_factGate.js'
 
 // A web edition may add pictures, labels and sources, never a fact the gate
 // did not check (editions/README.md).
