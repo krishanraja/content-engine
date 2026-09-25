@@ -115,12 +115,22 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `POST /api/content-ideas/[id]/draft` | writes a 700 to 1000 word draft to the subchannel's mandate from everything curation left on the row (`api/_curation.ts`); refuses an unrouted idea (409 `no_subchannel`); moves `seeded` or `researching` to `drafting`; keeps the last 10 drafts | Sonnet [`cleo-draft`] |
 | `POST /api/content-ideas/[id]/revise` | streams a rewrite preview (tone, length, zoom, feedback, humour; in place when given a selection). Reads the mandate. Never writes `body`; the caller saves an accepted rewrite | Sonnet, or Opus for humour [`cleo-revise`], prompt caching on |
 | `POST /api/content-ideas/[id]/final-pass` | the ship-moment rubric: instant fails, autofixes, suggestions, a verify list; judged against the subchannel's mandate, or the investigation rubric when an evidence manifest is attached | Sonnet [`cleo-final-pass`] |
+| `POST /api/content-ideas/[id]/fact-check` (`GET` reads the last result) | the fact gate (`api/_factGate.ts`). Lists every checkable claim, sweeps the body so no sentence with a number or a quotation escapes, then checks each claim twice: against the sources on file (the model must quote them verbatim with the claim's numbers, and code confirms the quote) and independently on the web (Perplexity `sonar-pro`, else Exa or Brave judged). Stores `meta.fact_check`, pinned to a hash of the exact body | Sonnet [`fact-gate-*`], Perplexity |
 | `POST /api/content-ideas/[id]/dive-deeper` | suggests research questions or runs one scoped dive and files it as a material | Perplexity `sonar-pro`, Sonnet [`cleo-dive-deeper`] |
 | `POST /api/content-ideas/[id]/challenge` | steelman, counter-case, sharper take | Perplexity, NewsAPI, Apify, Sonnet [`cleo-challenge`] |
 | `POST /api/content-ideas/[id]/deepen` | comparison research. Accepts only `paid` and `built` | Sonnet [`cleo-deepen`] |
 | `POST /api/content-ideas/[id]/chat` | conversation with Cleo on a piece | Sonnet, metered as `unattributed` |
 | `POST /api/content-ideas/synthesize` | merges 2 to 25 cards into one `drafting` piece and marks the sources `absorbed` | Sonnet [`cleo-synthesize`] |
 | `/api/briefs/assemble` (cron), `/api/briefs/[week]`, `revise`, `notes` | the weekly brief: one investigative opinion piece plus its decision cards | Sonnet [`briefs-*`] |
+
+**The fact gate.** A piece on a live subchannel cannot reach `review`,
+`approved` or `published` (through `PATCH /api/content-ideas` or `save-draft`)
+until a fact check of its exact current body has passed: every claim verified,
+an independent checker connected, and the body unchanged since the check apart
+from the dashes `save-draft` swaps for commas. Anything else is a 409
+`fact_gate` with a plain reason. Relaying Krish's decision does not skip it.
+Krish asked for it on 2026-09-25, after the engine's first draft of a piece
+rescaled Cisco's $900 million a year to "close to a million dollars".
 
 ### 4. Channel selection and per-channel copy
 

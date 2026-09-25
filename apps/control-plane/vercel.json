@@ -114,6 +114,9 @@
     },
     "api/judge/ladder.ts": {
       "maxDuration": 300
+    },
+    "api/content-ideas/[id]/fact-check.ts": {
+      "maxDuration": 300
     }
   }
 }

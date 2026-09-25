@@ -67,6 +67,11 @@ Readback 2026-09-25 unless a date is given.
   skipped: "only 1 edit events in 28 days: too thin to propose anything". The
   ledger has grown since (37 of Krish's rows), so the next run is the first
   that may propose.
+- **The fact gate** (walk log H12). No piece on a live subchannel reaches
+  review, approval or publication until every checkable claim in its exact
+  body is verified. Built and tested; its first live runs are on pieces 1
+  and 2. Only an agent session can run a check until Control Center has the
+  button and the claim table.
 - **Remote Studio sessions.** The OAuth connector for Claude.ai and ChatGPT is
   not released, so those clients are `read_only_untracked`.
 
@@ -115,14 +120,14 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
 
 ## Waiting on Krish
 
-- **Piece 1** ("Same agent, opposite answers", follow.the.money, in review): his
-  pick between two new openings and the confidence on the Call. Call A and the
-  panel-stamp answer are approved (2026-09-25, ledger sequences 64 and 65).
-  Approving the piece is the first decision the calibration view can learn
-  from at the draft stage.
-- **Piece 2** (mind.the.gap, "Every AI lab now sells a menu..."): his go.
-  Angle A, "the lab becomes the router", is agreed (2026-09-25) and shown as a
-  forking timeline.
+- **Piece 1** ("Same agent, opposite answers", follow.the.money, in review):
+  opening B, the Call at 70% and the panel-stamp answer are his (2026-09-25).
+  Waiting on his go for the reading-age-12 rewrite, then the fact gate, then
+  approval, which is the first decision the calibration view can learn from at
+  the draft stage.
+- **Piece 2** (mind.the.gap, "Every AI lab now sells a menu..."): v2 drafted
+  at about grade 8, angle A agreed. Waiting on his pick of a look for the
+  futures graphic, the Call's confidence, and the fact gate.
 - **The Studio's series.** Whether and when to rename `money_of_ai` and
   `built_with_ai`, which needs wordmarks for the subchannels first.
 - **The creative identity** (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8):

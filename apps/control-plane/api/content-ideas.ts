@@ -1,3 +1,5 @@
+import { gateStatus } from './_factGate.js'
+import { LIVE_SUBCHANNELS } from './_subchannels.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from './_supabase.js'
 import { callClaude, robustJson, sanitizeVoice } from './_content.js'
@@ -340,7 +342,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       transformed_outputs: Record<string, unknown> | null
       updated_at: string
     } | null = null
-    if (changesApprovedContent || updates.state === 'review' || updates.state === 'approved') {
+    if (changesApprovedContent || updates.state === 'review' || updates.state === 'approved' || updates.state === 'published') {
       const read = await supabase
         .from('content_ideas')
         .select('idea,thesis,body,lane,lane_slot,state,meta,transformed_outputs,updated_at')
@@ -374,6 +376,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             : 'Nothing to approve — this card has no draft yet.',
         })
       }
+    }
+
+    // ── The fact gate (Krish, 2026-09-25) ──────────────────────────────────
+    // A publication piece cannot go to review, be approved or be published
+    // until every checkable claim in the exact body being moved has passed the
+    // fact check (api/_factGate.ts). Relaying Krish's decision does not skip
+    // it: the gate protects his name, so it applies to him too.
+    if (current && (updates.state === 'review' || updates.state === 'approved' || updates.state === 'published')
+      && (LIVE_SUBCHANNELS as readonly string[]).includes(String(current.lane_slot))) {
+      const effective = typeof updates.body === 'string' ? updates.body : (current.body || '')
+      const gate = gateStatus(jsonRecord(current.meta), effective)
+      if (!gate.ok) return res.status(409).json({ ok: false, reason: 'fact_gate', error: gate.reason })
     }
 
     // Approval is an exact editorial revision, not a floating state label.

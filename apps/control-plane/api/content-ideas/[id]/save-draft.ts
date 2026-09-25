@@ -4,6 +4,8 @@ import {
   loadConfig, materialsContext, pathId, readMaterials, sanitizeVoice,
 } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
+import { gateStatus } from '../../_factGate.js'
+import { LIVE_SUBCHANNELS } from '../../_subchannels.js'
 
 // POST /api/content-ideas/:id/save-draft
 //   body: { channel?: FactoryChannel, source_text?: string }
@@ -138,6 +140,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const draftRaw = (b.source_text || idea.body || '').trim()
   if (!draftRaw) return res.status(400).json({ ok: false, error: 'nothing to save — write or expand a draft first' })
   const draft = sanitizeVoice(draftRaw)
+
+  // The fact gate (api/_factGate.ts). This route moves a piece to review and
+  // puts it in Krish's Drive and on his phone, so a publication piece gets
+  // here only with every claim in this exact draft verified.
+  if ((LIVE_SUBCHANNELS as readonly string[]).includes(String(idea.lane_slot))
+    && idea.state !== 'published' && idea.state !== 'dropped') {
+    const gate = gateStatus(meta, draft)
+    if (!gate.ok) return res.status(409).json({ ok: false, reason: 'fact_gate', error: gate.reason })
+  }
 
   const channel = resolveChannel(b.channel) || laneToChannel(idea.lane, idea.lane_slot)
 
