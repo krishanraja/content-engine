@@ -19,14 +19,15 @@ describe('every web edition says only what the fact gate checked', () => {
   for (const d of dirs) {
     test(`${d}: body.md is the version that passed`, () => {
       const ed = JSON.parse(readFileSync(join(ROOT, d, 'edition.json'), 'utf8'))
-      const body = readFileSync(join(ROOT, d, 'body.md'), 'utf8')
+      // Windows checks text out with CRLF; the engine hashed the text with LF.
+      const body = readFileSync(join(ROOT, d, 'body.md'), 'utf8').replace(/\r\n/g, '\n')
       assert.equal(ed.fact_check?.passed, true)
       assert.equal(bodyHash(body.trim()), ed.fact_check.body_hash)
     })
     test(`${d}: every sentence of body.md is on the page`, () => {
       const page = pageText(readFileSync(join(ROOT, d, 'index.html'), 'utf8'))
       const missing: string[] = []
-      for (const para of readFileSync(join(ROOT, d, 'body.md'), 'utf8').split(/\n{2,}/)) {
+      for (const para of readFileSync(join(ROOT, d, 'body.md'), 'utf8').replace(/\r\n/g, '\n').split(/\n{2,}/)) {
         const text = para.replace(/^#+ .*$/gm, '').replace(/\*\*/g, '').trim()
         if (!text) continue
         for (const raw of text.split(/(?<=[.!?"])\s+(?=[A-Z"])/)) {

@@ -1,0 +1,3 @@
+# An edition's body.md is hashed by the fact gate with LF line endings
+# (tests/control-plane/editions.test.ts). Keep it LF on every checkout.
+editions/**/*.md text eol=lf
