@@ -96,7 +96,22 @@ describe('the checks before approval, on real text', () => {
   })
   test('dense writing fails the reading age', () => {
     const dense = 'Notwithstanding considerable institutional heterogeneity, organisational procurement methodologies systematically prioritise interoperability considerations, consequently diminishing comparative evaluation opportunities. '.repeat(4)
-    assert.ok(publishChecks(dense, factsOk).some(c => c.id === 'R7' && !c.ok))
+    const r7 = publishChecks(dense, factsOk).find(c => c.id === 'R7')!
+    assert.ok(!r7.ok && r7.blocking)
+    assert.doesNotMatch(r7.detail, /grade/i)
+  })
+  test('a little above age 12 warns without blocking, and says so in ages', () => {
+    // Piece 2's passed text reads at about 12.5: the formula is rough, so
+    // between 12 and 13 is a nudge to shorten sentences, not a refusal.
+    const r7 = publishChecks(PASSED, factsOk).find(c => c.id === 'R7')!
+    assert.equal(r7.ok, false); assert.equal(r7.blocking, false)
+    assert.match(r7.detail, /about age 12\.5, a little above 12/)
+    const plain = 'The cat sat on the mat. It was a warm day. We had tea. '.repeat(10)
+    assert.ok(publishChecks(plain, factsOk).find(c => c.id === 'R7')!.ok)
+  })
+  test('each word to explain is listed once', () => {
+    const r6 = publishChecks('A token here, two tokens there, the API and an api.', factsOk).find(c => c.id === 'R6')!
+    assert.match(r6.detail, /: token, API\.$/)
   })
   test('an unchecked text is never ready, whatever else it passes', () => {
     assert.equal(publishStatus(publishChecks(PASSED.replace('[Krish to set]', '65%'), { ok: false, reason: 'not checked' })).ok, false)

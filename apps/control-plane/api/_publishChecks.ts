@@ -37,8 +37,12 @@ export function readingGrade(body: string): number {
   return 0.39 * (words.length / sentences.length) + 11.8 * (syllables / words.length) - 15.59
 }
 
-/** The house rule is a reading age of 12, about grade 7. A piece passes up to
- *  grade 8, since names, prices and dates push the number up. */
+/** The house rule is an average reading age of 12, which is grade 7 (reading
+ *  age is roughly grade + 5). The formula is rough and names, prices and dates
+ *  push it up, so between age 12 and 13 the check warns, and above 13 it
+ *  blocks. Reported in ages only: "grade" is a word the reader of the
+ *  checklist would have to interpret. */
+export const TARGET_READING_GRADE = 7
 export const MAX_READING_GRADE = 8
 
 /** Words a reader may need explained. Listed, never blocking: a word can be
@@ -74,11 +78,22 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   const bangs = text.replace(/"[^"\n]*"|“[^”\n]*”/g, '').match(/[A-Za-z0-9)\]'’]!/g) || []
   checks.push({ id: 'NO_EXCLAMATION', name: 'No exclamation marks', blocking: true, ok: bangs.length === 0, detail: bangs.length ? `${bangs.length} found outside quotations.` : 'None found.' })
   const grade = readingGrade(text)
-  const age = Math.round(grade + 5)
-  checks.push({ id: 'R7', name: 'Reading age 12', blocking: true, ok: grade <= MAX_READING_GRADE, detail: `Reads at about age ${age} (grade ${grade.toFixed(1)}); the house rule is age 12, grade ${MAX_READING_GRADE} at most.` })
+  const age = Math.max(6, Math.round((grade + 5) * 2) / 2)
+  checks.push({
+    id: 'R7', name: 'Reading age 12',
+    blocking: grade > MAX_READING_GRADE,
+    ok: grade <= TARGET_READING_GRADE,
+    detail: grade <= TARGET_READING_GRADE
+      ? `Reads at about age ${age}.`
+      : grade <= MAX_READING_GRADE
+        ? `Reads at about age ${age}, a little above 12. Shorten the longest sentences.`
+        : `Reads at about age ${age}. Above 13 cannot be approved: shorten sentences and swap long words for short ones.`,
+  })
   const call = predictionCheck(text)
   checks.push({ id: 'CALL', name: 'A dated prediction with a confidence', blocking: true, ok: call.ok, detail: call.detail })
-  const jargon = [...new Set((text.match(JARGON) || []).map(w => w.toLowerCase()))]
+  // One entry per word: "token" and "tokens" are the same thing to fix.
+  const jargon = [...new Set((text.match(JARGON) || []).map(w => w.toLowerCase().replace(/s$/, '')))]
+    .map(w => /^(api|llm|gpu|rag)$/.test(w) ? w.toUpperCase() : w)
   checks.push({ id: 'R6', name: 'Plain words', blocking: false, ok: jargon.length === 0, detail: jargon.length ? `Make sure each is explained where it first appears: ${jargon.join(', ')}.` : 'No listed jargon found.' })
   return checks
 }
