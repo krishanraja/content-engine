@@ -135,6 +135,10 @@ export const VOICE_ABSOLUTES: string[] = [
   'Dropped subject pronouns where natural ("Been thinking", not "I have been thinking").',
   'No warm-up and never bury the lede. The first sentence is already mid-argument.',
   'End on a hard, forward-looking verdict. Never a summary, a rhetorical question, or a CTA.',
+  // Krish, 2026-09-25: "I mean words that someone needs to interpret."
+  'Plain words only. Flag every word or label a reader has to interpret: technical jargon, and also the piece\'s own coined labels, nicknames or shorthand. A term that cannot be avoided must be explained in plain English where it first appears.',
+  // Krish, 2026-09-25: "an average reading age of 12".
+  'Reading age 12. Flag any sentence a 12-year-old would have to read twice.',
 ]
 
 // The improvement dimensions a suggestion can belong to (Krish, Q4: cover all,

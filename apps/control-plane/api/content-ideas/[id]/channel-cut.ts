@@ -3,7 +3,7 @@ import { supabase } from '../../_supabase.js'
 import { unsupportedNumbers } from '../../_numbers.js'
 import {
   callClaude, corpusForChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId,
-  readMaterials, robustJson, sanitizeVoice,
+  readMaterials, robustJson, sanitizeVoice, VOICE_GUARDRAILS,
 } from '../../_content.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { guardEngine } from '../../_auth.js'
@@ -118,6 +118,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     'EVERY NUMBER MUST APPEAR VERBATIM IN THE SOURCE. Do not compute totals, differences, percentages or rates, even when the arithmetic looks obvious. ' +
     'If a number you want is not written in the source, leave it out and say the thing without it. ' +
     'No em dashes.',
+    // Channel copy is published copy, so it keeps the house rules the writer
+    // keeps. It never read them before 2026-09-25.
+    `\n\nHOUSE RULES\n${VOICE_GUARDRAILS}`,
   ].filter(Boolean).join('')
 
   let text: string
