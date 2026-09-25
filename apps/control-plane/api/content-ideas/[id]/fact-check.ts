@@ -14,7 +14,7 @@ import { webResearch } from '../../_enrich.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
   combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, norm, ON_FILE_SYSTEM, quotesFail,
-  resolveLeftovers, SECOND_LOOK_SYSTEM, summarise, sweep,
+  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
 
@@ -195,12 +195,12 @@ async function entail(c: Claim, ind: CheckedClaim['independent']): Promise<Check
 }
 
 /** The sweep's leftovers get one more reading before they block. */
-async function secondLook(leftovers: Claim[]): Promise<Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>> {
+async function secondLook(leftovers: Claim[], body: string): Promise<Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>> {
   if (!leftovers.length) return []
   try {
     const raw = await callClaude({
       agent: 'fact-gate-second-look', model: UTILITY_MODEL, system: SECOND_LOOK_SYSTEM,
-      user: JSON.stringify(leftovers.map((l, i) => ({ i, sentence: l.sentence }))),
+      user: JSON.stringify(leftovers.map((l, i) => ({ i, section: sectionOf(body, l.sentence), sentence: l.sentence }))),
       maxTokens: 8000, temperature: 0, timeoutMs: 90_000,
     })
     const j = robustJson(raw) || {}
@@ -241,7 +241,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const listed = await extract(body)
   const swept = sweep(body, listed.claims, listed.setAside)
   const leftovers = swept.claims.filter(c => c.kind === 'unclassified')
-  const looked = resolveLeftovers(leftovers, await secondLook(leftovers))
+  const looked = resolveLeftovers(leftovers, await secondLook(leftovers, body))
   const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims]
   const claims = all.slice(0, MAX_CLAIMS)
   const sources = sourcesText(meta)

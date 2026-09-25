@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
-  bodyHash, combine, gateStatus, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sentences, summarise, sweep,
+  bodyHash, combine, gateStatus, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, summarise, sweep,
   type CheckedClaim,
 } from '../../apps/control-plane/api/_factGate.js'
 
@@ -77,6 +77,11 @@ describe('the second look at what the sweep caught', () => {
   test('a sentence the second look did not answer stays a claim', () => {
     const out = resolveLeftovers([ice, cnbc], [])
     assert.equal(out.claims.length, 2)
+  })
+  test('each sentence travels with the heading it sits under', () => {
+    const body = '## WHAT IT IS NOW\n\nGPT-5 became the default.\n\n## THE FORKS\n\nFirst sign: the model picker disappears from the app.'
+    assert.equal(sectionOf(body, 'First sign: the model picker disappears from the app.'), 'THE FORKS')
+    assert.equal(sectionOf(body, 'GPT-5 became the default.'), 'WHAT IT IS NOW')
   })
   test('"you\'ll" reads as the future', () => {
     assert.equal(readsAsForecast('You\'ll just notice the answer feels a bit dumber.'), true)

@@ -100,6 +100,15 @@ export function sentences(body: string): string[] {
   return out
 }
 
+/** The heading a sentence sits under, so a line read on its own ("First sign:
+ *  the model picker disappears") is read as part of THE FORKS, a scenario. */
+export function sectionOf(body: string, sentence: string): string {
+  const at = String(body || '').indexOf(String(sentence || '').slice(0, 60))
+  if (at < 0) return ''
+  const before = body.slice(0, at).split('\n').filter(l => /^\s*#{1,6}\s/.test(l))
+  return before.length ? before[before.length - 1].replace(/^\s*#{1,6}\s*/, '').trim() : ''
+}
+
 /** Reads like something that has not happened yet, or like a labelled guess. */
 export function readsAsForecast(sentence: string): boolean {
   return /\b(will|would|could|might|may|if|bet|call|forecast|predict|scenario|inference|we think|our read|going to|\w+['’]ll|by (?:\d{1,2} )?(?:january|february|march|april|may|june|july|august|september|october|november|december)?\s*\d{4})\b/i.test(sentence)
@@ -239,7 +248,7 @@ export const ON_FILE_SYSTEM = [
 ].join('\n')
 
 export const SECOND_LOOK_SYSTEM = [
-  'These sentences come from a piece of writing, and nobody has listed a factual claim in them yet. Read each one on its own.',
+  'These sentences come from a piece of writing, and nobody has listed a factual claim in them yet. Each comes with the heading of the section it sits in: a sentence in a section about possible futures, scenarios or a forecast describes a possible future unless it states something that has already happened.',
   'For each sentence, list every factual claim a reader could check as true or false: a number, a date, a quotation or who said something, what a company or person did, a definition presented as fact. One claim per fact, stated plainly.',
   'A scare quote, an analogy, a joke, a made-up example line, an opinion, a hypothetical or a description of a possible future is not a claim; for such a sentence return no claims and give the reason in a few words.',
   'Return JSON only: {"answers":[{"i":0,"claims":[{"claim":"...","kind":"number|date|quote|attribution|event|name|other"}],"reason":"..."}]}',
