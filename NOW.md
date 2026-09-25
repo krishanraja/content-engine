@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Mindmake content engine
 as_of: 2026-09-25
-head: 46129f3
+head: caed8e6
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -37,7 +37,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 Lifecycle: building. Readback the same day unless a commit is named.
 
 - **Choosing is live.** All 20 crons in `apps/control-plane/vercel.json` wrote run rows in the last seven days; the judge sweep ran 59 times; 243 panel runs; 93 live ideas routed to a subchannel.
-- **Making was walked for the first time on 2026-09-24.** One piece per subchannel, from judged-ready to the edge of publishing (`docs/walks/2026-09-three-piece-walk.md`). Piece 1 ("Same agent, opposite answers", follow.the.money) is in `review` and needs the plain-words rewrite and the fact gate; piece 2 ("Who picks your AI?", mind.the.gap) passed the fact gate and has a web edition in `editions/`, waiting on Krish's verdict; piece 3 (under.the.hood) is next.
+- **Making was walked for the first time on 2026-09-24.** One piece per subchannel, from judged-ready to the edge of publishing (`docs/walks/2026-09-three-piece-walk.md`). Piece 1 ("Same agent, opposite answers", follow.the.money) is in `review` and needs the plain-words rewrite and the fact gate; piece 2 ("Who picks your AI?", mind.the.gap) passed the fact gate, has a web edition in `editions/` and a Short storyboard built from its receipts, and the only check holding its approval is the prediction's confidence, which is Krish's to set; piece 3 (under.the.hood) is next.
 - **Nothing is published.** `content_ideas` has 0 published rows. No Short or carousel has a final approval, package or upload.
 - **The engine learns only from Krish.** 55 ledger rows, 37 of them his; every agent row since the fix is `observation_only`. `judge_calibration` has 7 settled rows.
 - **The Studio cannot yet take a routed piece.** Its series are still `money_of_ai` and `built_with_ai`, and the production-brief bridge accepts only those (`docs/STUDIO.md`).
@@ -45,6 +45,7 @@ Lifecycle: building. Readback the same day unless a commit is named.
 
 ## What changed recently
 
+- 2026-09-25 **Krish's rulings in one list every stage reads, checked before approval, with receipts for the Shorts** (`a032649`, `d574a8e`, `d408e11`; Control Center `37538b7`). Ruling (Krish, 2026-09-25): think of the engine "as a modular set of components that work together to come alive", upgrading every part a guideline touches, "brainstorming an idea and judging it" through "gates and checks prior to publish". Why: his rulings were copied into some prompts and missing from others; no judge had read any of them. Now `api/_houseRules.ts` holds each with his words and reaches writers, both judge gates, the joke pass and the final pass, and a test fails when one goes unenforced; approval needs the machine checks (no "Not X, Y", no em dashes, reading age, a dated prediction with a confidence); and the fact gate's verbatim quotes come back as receipts, the proof panels for a Short in the style of an ad he liked (`docs/REFERENCE_INSTAGRAM_AD.md`, proposed, not confirmed). Also: `main`'s CI had been red in both repositories while I kept pushing; both are green again, and agent sessions now read CI after every push (walk log F20).
 - 2026-09-25 **Bricks, not one article at a time** (`494d4f4`, `18f34fd`, `a5c5ab3`, `04449a6`; Control Center `d006f60`). Ruling (Krish, 2026-09-25): "This requires more frequent merging, documentation, logging, and building the bricks of the system as you go, as opposed to just doing this one article by article." Why: the work on piece 2 was piling up as one-off fixes. Now: plain words and a reading age of 12 are house rules every writer and the final pass read (his words the same day: no words "someone needs to interpret"); `npm run verify`'s two standing guard failures are fixed; a script files a source's own words for the fact gate; Krish has a Check the facts button where he approves; and a piece's web edition lives in `editions/` beside the exact text that passed, with a test that fails if the page says anything the gate did not check.
 - 2026-09-25 **Piece 2 passes the fact gate** on its tenth run (34 facts, 19 confirmed by both checks). Why it took ten: each run exposed a fault in the gate, fixed in turn (walk log H14), and three in my own text (F16, F17, F18).
 - 2026-09-25 **The fact gate** (`a843cc8`, `e870a90`, `deefcae`). Ruling (Krish, 2026-09-25): "we cannot afford even a chance of factual errors slipping in." Why: the engine's first draft of piece 2 rescaled Cisco's $900 million a year to "close to a million dollars" and made five other errors with the right sources on file, and the judges gave it evidence 9. No piece on a live subchannel reaches review, approval or publication until every checkable claim in its exact body is verified against its sources, with the quote confirmed in code, and independently on the web. Its first run also showed that one source is not enough unless it is the source's own words: the engine's research had filed a Batch price as a standard price.
@@ -70,8 +71,8 @@ Everything older is in `docs/history/2026-09-25-NOW.md` and `docs/history/LOG.md
 
 ## What is next and what is waiting on Krish
 
-- Next: Krish's verdict on piece 1, then piece 2 (mind.the.gap) and piece 3 (under.the.hood) through the same walk.
-- Waiting on Krish: the makeyourmindup masthead and subchannel wordmarks (to approve from rendered territories), which also unblock renaming the Studio's series; adding the Call to all three mandates; where CTRL's lead-magnet door goes now that makeyourmindup.ai is the publication's cover page; rotating four credentials pasted into a chat on 2026-09-24; and the operator token's fate.
+- Next: piece 2's confidence and his verdict on its page and Short storyboard; piece 1's plain-words rewrite and fact gate; piece 3 (under.the.hood); then the idea sources' own rule copies and retired names (walk log F23).
+- Waiting on Krish: the two ways the ad he liked runs into the Short standard he confirmed on 2026-09-08 (captions, and the close); the makeyourmindup masthead and subchannel wordmarks (to approve from rendered territories), which also unblock renaming the Studio's series; adding the Call to all three mandates; where CTRL's lead-magnet door goes now that makeyourmindup.ai is the publication's cover page; rotating four credentials pasted into a chat on 2026-09-24; and the operator token's fate.
 - Engineering backlog, in order of risk: the unauthenticated write routes; the brief bridge for live subchannels; the walk's open findings (F2 to F19, `docs/STATE.md`).
 
 ## Read next
