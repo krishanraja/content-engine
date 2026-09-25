@@ -156,13 +156,14 @@ export function datedContext(text: string, quote: string): string[] {
  *  passages, because a fact is often split: the date in a heading, the fact
  *  below it. */
 export function quotesFail(quotes: Array<string | null> | null, sourcesText: string, claim: string): string | null {
-  const list = (quotes || []).filter((q): q is string => typeof q === 'string' && q.trim().length > 0).slice(0, 3)
-  if (list.length === 0) return 'no passage given'
+  // A passage too short to trust is dropped, never counted: one run failed a
+  // correct claim because the checker added the heading "## GPT-5" as a
+  // passage. Dropping one can only remove support, never add it.
+  const list = (quotes || []).filter((q): q is string => typeof q === 'string' && norm(q).length >= 12).slice(0, 3)
+  if (list.length === 0) return 'no passage long enough to trust'
   const src = norm(sourcesText)
   for (const q of list) {
-    const n = norm(q)
-    if (n.length < 12) return `passage too short to trust: "${q.slice(0, 40)}"`
-    if (!inOrder(n, src)) return `passage not found word for word in the sources: "${q.slice(0, 80)}"`
+    if (!inOrder(norm(q), src)) return `passage not found word for word in the sources: "${q.slice(0, 80)}"`
   }
   const carried = new Set(list.flatMap(numbersIn))
   let missing = numbersIn(claim).filter(n => !carried.has(n))

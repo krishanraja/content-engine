@@ -49,6 +49,11 @@ describe('a fact split across a heading and its text', () => {
     assert.match(String(quotesFail(['paid users who hit their limit on GPT-5.4 Thinking fall back to the smaller GPT-5.4 mini'],
       NOTES, 'By March 2026 paid users fall back to GPT-5.4 mini')), /do not carry 2026/)
   })
+  test('a sliver of a heading is ignored, not fatal', () => {
+    assert.equal(quotesFail(['## GPT', '18 March 2026. OpenAI release notes', 'paid users who hit their limit on GPT-5.4 Thinking fall back to the smaller GPT-5.4 mini'],
+      NOTES, 'By March 2026 paid users who hit the GPT-5.4 Thinking limit fall back to GPT-5.4 mini'), null)
+    assert.match(String(quotesFail(['## GPT'], NOTES, 'anything')), /no passage long enough/)
+  })
   test('one invented passage sinks the set', () => {
     assert.match(String(quotesFail(['18 March 2026. OpenAI release notes', 'paid users are quietly moved to GPT-5.4 mini'],
       NOTES, 'By March 2026 paid users are quietly moved to GPT-5.4 mini')), /not found word for word/)
