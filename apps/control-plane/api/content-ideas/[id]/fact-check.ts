@@ -201,7 +201,7 @@ async function secondLook(leftovers: Claim[]): Promise<Array<{ i: number; claims
     const raw = await callClaude({
       agent: 'fact-gate-second-look', model: UTILITY_MODEL, system: SECOND_LOOK_SYSTEM,
       user: JSON.stringify(leftovers.map((l, i) => ({ i, sentence: l.sentence }))),
-      maxTokens: 4000, temperature: 0, timeoutMs: 90_000,
+      maxTokens: 8000, temperature: 0, timeoutMs: 90_000,
     })
     const j = robustJson(raw) || {}
     return (Array.isArray(j.answers) ? j.answers : [])

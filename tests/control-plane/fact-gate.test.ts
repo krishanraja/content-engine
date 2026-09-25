@@ -104,6 +104,11 @@ describe('nothing with a number or a quotation goes unchecked', () => {
     assert.equal(out.claims.some(c => c.sentence.includes('2027')), false)
     assert.equal(out.setAside.length, 1)
   })
+  test('a fact with no number and no quotation is caught too', () => {
+    const out = sweep('Over at Anthropic it worked the same way: a small one, a middle one and a big one, and you picked.', [], [])
+    assert.equal(out.claims.length, 1)
+    assert.equal(out.claims[0].kind, 'unclassified')
+  })
   test('a fact dressed as an opinion may not', () => {
     const out = sweep(body, [], [{ sentence: 'Anthropic sold one model in 2024.', reason: 'opinion' }])
     assert.ok(out.claims.some(c => c.sentence.includes('Anthropic sold one model in 2024')))

@@ -100,11 +100,6 @@ export function sentences(body: string): string[] {
   return out
 }
 
-/** A sentence the gate must see: it carries a number or a quotation. */
-export function isCheckable(sentence: string): boolean {
-  return /\d/.test(sentence) || /["“”]/.test(sentence)
-}
-
 /** Reads like something that has not happened yet, or like a labelled guess. */
 export function readsAsForecast(sentence: string): boolean {
   return /\b(will|would|could|might|may|if|bet|call|forecast|predict|scenario|inference|we think|our read|going to|\w+['’]ll|by (?:\d{1,2} )?(?:january|february|march|april|may|june|july|august|september|october|november|december)?\s*\d{4})\b/i.test(sentence)
@@ -165,8 +160,11 @@ export function resolveLeftovers(
 
 const KIND_SET = new Set(['number', 'date', 'quote', 'attribution', 'event', 'name', 'other'])
 
-/** Every checkable sentence is covered by a claim or an honoured set-aside;
- *  anything left over becomes a claim of its own. */
+/** Every sentence is covered by a claim or an honoured set-aside; anything
+ *  left over becomes a claim of its own, for the second look to read. Not only
+ *  sentences with a number or a quotation: piece 2 said Anthropic sold "a
+ *  small one, a middle one and a big one" in 2024, a fact with neither, and
+ *  the lister missed it. */
 export function sweep(body: string, claims: Claim[], setAside: Array<{ sentence: string; reason: string }>): {
   claims: Claim[]; setAside: Array<{ sentence: string; reason: string }>
 } {
@@ -177,7 +175,6 @@ export function sweep(body: string, claims: Claim[], setAside: Array<{ sentence:
   const honoured = setAside.filter(a => readsAsForecast(a.sentence))
   const extra: Claim[] = []
   for (const s of sentences(body)) {
-    if (!isCheckable(s)) continue
     if (covered(s, claims) || covered(s, honoured)) continue
     extra.push({ sentence: s, claim: s, kind: 'unclassified' })
   }
@@ -242,7 +239,7 @@ export const ON_FILE_SYSTEM = [
 ].join('\n')
 
 export const SECOND_LOOK_SYSTEM = [
-  'These sentences come from a piece of writing. Each has a number or a quotation mark, and nobody listed a factual claim in it yet.',
+  'These sentences come from a piece of writing, and nobody has listed a factual claim in them yet. Read each one on its own.',
   'For each sentence, list every factual claim a reader could check as true or false: a number, a date, a quotation or who said something, what a company or person did, a definition presented as fact. One claim per fact, stated plainly.',
   'A scare quote, an analogy, a joke, a made-up example line, an opinion, a hypothetical or a description of a possible future is not a claim; for such a sentence return no claims and give the reason in a few words.',
   'Return JSON only: {"answers":[{"i":0,"claims":[{"claim":"...","kind":"number|date|quote|attribution|event|name|other"}],"reason":"..."}]}',
