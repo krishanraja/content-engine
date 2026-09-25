@@ -1,4 +1,5 @@
 import { gateStatus } from './_factGate.js'
+import { publishChecks, publishStatus } from './_publishChecks.js'
 import { LIVE_SUBCHANNELS } from './_subchannels.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from './_supabase.js'
@@ -388,6 +389,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const effective = typeof updates.body === 'string' ? updates.body : (current.body || '')
       const gate = gateStatus(jsonRecord(current.meta), effective)
       if (!gate.ok) return res.status(409).json({ ok: false, reason: 'fact_gate', error: gate.reason })
+      // Krish's house rules that a machine can check (api/_publishChecks.ts):
+      // before approval or publication, every blocking check must pass. Review
+      // is where he reads a piece, so a missing confidence does not block it.
+      if (updates.state === 'approved' || updates.state === 'published') {
+        const checks = publishChecks(effective, gate)
+        const status = publishStatus(checks)
+        if (!status.ok) return res.status(409).json({ ok: false, reason: 'publish_gate', error: status.reason, checks: status.failing })
+      }
     }
 
     // Approval is an exact editorial revision, not a floating state label.

@@ -11,6 +11,7 @@ import { supabase } from '../../_supabase.js'
 import { callClaude, pathId, readMaterials, robustJson } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
 import { webResearch } from '../../_enrich.js'
+import { publishChecks, publishStatus } from '../../_publishChecks.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
   combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, norm, ON_FILE_SYSTEM, quotesFail,
@@ -258,7 +259,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const body = String(row.body || '')
 
   if (req.method === 'GET') {
-    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate: gateStatus(meta, body) })
+    const gate = gateStatus(meta, body)
+    // The whole pre-publish checklist rides along, so Control Center can show
+    // Krish every house rule this exact version passes or fails in one place.
+    const checks = publishChecks(body, gate)
+    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok })
   }
 
   if (body.trim().length < 200) return res.status(409).json({ ok: false, error: 'There is no draft to check yet.' })

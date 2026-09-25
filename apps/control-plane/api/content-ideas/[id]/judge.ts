@@ -8,6 +8,7 @@ import { runPanel } from '../../_judges/panel.js'
 import { ROSTER_VERSION } from '../../_judges/roster.js'
 import { curationBlock } from '../../_curation.js'
 import { loadSubchannel, type Subchannel } from '../../_subchannels.js'
+import { houseRulesBlock } from '../../_houseRules.js'
 
 // Put a piece in front of the panel.
 //
@@ -63,11 +64,13 @@ export function judgeContext(input: {
   recentIdeas: string[]
   channel: string | null
   sub: Subchannel | null
-  row: { idea: string | null; thesis: string | null; meta: Record<string, any> | null }
+  row: { idea: string | null; thesis: string | null; meta: Record<string, any> | null; lane_slot?: string | null }
 }): string {
   const draft = input.gate === 'draft'
   return [
     '### How Krish writes', input.voice,
+    // His rulings, the same list the writers and the final pass read.
+    '### His house rules', houseRulesBlock(draft ? 'judge_draft' : 'judge_idea', input.sub?.slug ?? input.row.lane_slot ?? null),
     '### What he has published', input.corpusSlice,
     '### Ideas already in the system (for the novelty judge)',
     input.recentIdeas.map(i => `- ${i.slice(0, 160)}`).join('\n') || '(none)',
@@ -148,7 +151,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     recentIdeas: (recent || []).map(r => String((r as { idea: string }).idea)),
     channel,
     sub,
-    row: { idea: row.idea, thesis: row.thesis, meta: row.meta as Record<string, any> | null },
+    row: { idea: row.idea, thesis: row.thesis, meta: row.meta as Record<string, any> | null, lane_slot: row.lane_slot },
   })
 
   const panel = await runPanel({

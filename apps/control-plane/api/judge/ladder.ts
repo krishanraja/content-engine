@@ -2,7 +2,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
-import { callClaude, loadCorpus, loadVoiceBlock, corpusForChannel, type ClaudeCall } from '../_content.js'
+import { callClaude, loadCorpus, loadVoiceBlock, corpusForChannel, sanitizeVoice, type ClaudeCall } from '../_content.js'
+import { houseRulesBlock } from '../_houseRules.js'
 import { webResearch } from '../_enrich.js'
 import { isDeferred } from '../_judges/deferred.js'
 import { UTILITY_MODEL, JUDGE_MODEL } from '../_models.js'
@@ -563,6 +564,8 @@ export async function runLadder(
           corpusForChannel(corpus, idea.lane_slot || 'general'),
           `VOICE\n${voice.slice(0, 1500)}`,
           whatKrishDoes ? `WHAT KRISH ACTUALLY DOES\n${whatKrishDoes}` : '',
+          // His rulings reach the panel, not only the writers (api/_houseRules.ts).
+          houseRulesBlock('judge_idea', idea.lane_slot),
         ].filter(Boolean).join('\n\n')
 
         // The seed is not the thing to judge. The angle is. See _judges/expand.ts:
@@ -786,7 +789,10 @@ export async function runLadder(
           meta: { ...meta, ladder },
           updated_at: new Date().toISOString(),
         }
-        if (attempts.some(a => a.changed)) { patch.idea = current.idea; patch.thesis = current.thesis }
+        // Every other writer runs its words through sanitizeVoice before storing
+        // them; the repair was the one that did not, so an em dash it wrote
+        // stayed in the idea and the voice check then marked the idea down for it.
+        if (attempts.some(a => a.changed)) { patch.idea = sanitizeVoice(current.idea); patch.thesis = current.thesis == null ? current.thesis : sanitizeVoice(current.thesis) }
         // Never overwrite a subchannel a human chose. The router records its pick
         // either way and is graded on the disagreement.
         if (!idea.lane_slot && router?.winner && !router.contested.length) patch.lane_slot = router.winner

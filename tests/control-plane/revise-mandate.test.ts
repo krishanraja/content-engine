@@ -40,6 +40,6 @@ describe('revise: a routed piece is rewritten to its mandate', () => {
   test('the route loads the mandate for the piece, or for the subchannel it is adapted to', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas/[id]/revise.ts', 'utf8')
     assert.match(src, /loadSubchannel\(adaptMatch \? adaptMatch\[1\] : \(idea as any\)\?\.lane_slot\)/)
-    assert.match(src, /mandate: sub \? \{ label: sub\.label, text: sub\.mandate \} : null/)
+    assert.match(src, /mandate: sub \? \{ label: sub\.label, text: sub\.mandate, slug: sub\.slug \} : null/)
   })
 })

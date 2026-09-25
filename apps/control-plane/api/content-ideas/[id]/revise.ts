@@ -67,7 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       channelCorpus,
       materialsBlock,
       idea: idea ? { idea: idea.idea, thesis: idea.thesis, contrarian: (idea as any)?.meta?.contrarian ?? null } : null,
-      mandate: sub ? { label: sub.label, text: sub.mandate } : null,
+      mandate: sub ? { label: sub.label, text: sub.mandate, slug: sub.slug } : null,
     },
     {
       mode, value: b.value, hint: b.hint, instruction: b.instruction,

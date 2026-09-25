@@ -38,6 +38,8 @@
 // 2026-08-06). It is a FORMAT now, not a destination, and it keeps the hardest
 // evidence bar in the OS because that bar is the whole point of it.
 
+import { rulesFor } from './_houseRules.js'
+
 export type VentureKey =
   | 'investigation'
   | 'signal_noise'
@@ -135,9 +137,10 @@ export const VOICE_ABSOLUTES: string[] = [
   'Dropped subject pronouns where natural ("Been thinking", not "I have been thinking").',
   'No warm-up and never bury the lede. The first sentence is already mid-argument.',
   'End on a hard, forward-looking verdict. Never a summary, a rhetorical question, or a CTA.',
-  // Krish, 2026-09-25: "I mean words that someone needs to interpret."
+  // Krish's rulings, from the one registry (api/_houseRules.ts), so a new
+  // ruling reaches the ship-moment check without editing this list.
+  ...rulesFor('final_pass').map(r => `${r.name}: ${r.text}`),
   'Plain words only. Flag every word or label a reader has to interpret: technical jargon, and also the piece\'s own coined labels, nicknames or shorthand. A term that cannot be avoided must be explained in plain English where it first appears.',
-  // Krish, 2026-09-25: "an average reading age of 12".
   'Reading age 12. Flag any sentence a 12-year-old would have to read twice.',
 ]
 

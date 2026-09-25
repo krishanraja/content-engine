@@ -2,6 +2,7 @@
 // (revise / challenge / score / push-to-cleo). Mirrors the inline helpers in
 // transform.ts but de-duplicated, since four routes need the same primitives.
 
+import { houseRulesBlock } from './_houseRules.js'
 import { priceUsd } from './_prices.js'
 import * as meter from './_meter.js'
 
@@ -763,15 +764,10 @@ export const VOICE_GUARDRAILS = [
   'No AI tells: no "hook line, gap, explanation" opening, no "here\'s the thing", no "the truth is", no "let\'s dive in", no "delve", no "unpack", no "deep dive".',
   'No synthetic enthusiasm ("excited", "thrilled"). No "leverage" (except "leverage audit"). No "utilise", "seamless", "empower", "journey", "landscape", "robust", "synergy".',
   'Active voice only. Dropped subject pronouns where natural ("Been thinking", not "I\'ve been thinking").',
-  // Krish, 2026-09-24, asked what the rule is for this move: "Cut it everywhere."
-  'Never use the "Not X, Y" construction, at any scale and in either order: no "Not X, Y", no "it\'s not X, it\'s Y", no "X isn\'t the story, Y is", no "Y, not X", no "never X, it was Y". State the sharper take directly. Plain factual negation ("Amazon did not say why") is fine. This overrides any voice note that calls it a habit.',
-  // Krish, 2026-09-25, on the publication: "This entire media channel needs to
-  // be radically simplistic with an average reading age of 12 and a huge sense
-  // of humour and fun and personality."
-  'Write for a reading age of 12: short sentences, everyday words, and real humour and personality. The joke points at the hype, never the reader, and never replaces the finding.',
-  // Krish, 2026-09-25: "We do say no jargon everywhere and I don't just mean
-  // technical jargon. I mean words that someone needs to interpret."
-  'Plain words only: no word the reader has to interpret. That covers technical jargon and also our own coined labels, nicknames and shorthand for sections, devices or ideas. If a term cannot be avoided (a product name, a quoted source), say what it means in plain English the first time it appears.',
+  // Krish's rulings (R2, R4, R6, R7, the facts, the prediction, no sermons,
+  // no exclamation marks...) come from one registry, api/_houseRules.ts, so a
+  // new ruling reaches every writer without editing five prompts.
+  houseRulesBlock('write'),
   'End on a hard, forward-looking verdict — never a summary, rhetorical question, or CTA.',
   'Specific over general. Never invent numbers, outcomes, or quotes; flag gaps instead.',
 ].join('\n')
