@@ -57,8 +57,9 @@ cut from it, run at the standard Krish would set himself.
 
 ## What that means, plainly
 
-This repository is the engine behind Krish Raja's media business: the Mindmake
-publication and the video and carousel work made from it. It should behave
+This repository is the engine behind Krish Raja's media business: makeyourmindup,
+the Mindmake publication (on Substack, cover page at makeyourmindup.ai), and the
+video and carousel work made from it. It should behave
 like a world-class production team working for one person. It finds what is
 worth saying, argues for the best version of it, writes it in his voice to
 the mandate of the right subchannel, turns it into the right formats, and
@@ -124,6 +125,10 @@ imitation of it. They are hard rules and outrank convenience.
    checking stage. No document or prompt keeps a copy that could drift.
 
 ## The publication it serves
+
+The publication is **makeyourmindup** (Krish, 2026-09-25): hosted on Substack,
+with its cover page at makeyourmindup.ai. How it looks, sounds and moves on every
+surface is in `docs/CREATIVE_IDENTITY_UPGRADE.md`.
 
 Three subchannels, each with a standing question and a mandate that decides
 the structure and the close of every piece. The mandates are authoritative

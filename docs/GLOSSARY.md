@@ -23,7 +23,8 @@ this repository start with a retired name.
 | `techonomic`, `builder_economy`, `mindmaker_live` | aliases of `general` | old rows |
 | Signal & Noise (`signal_noise`) | an older channel still known to the final-pass rubrics and channel cuts | legacy rubric keys |
 | `general`, `either` | rows in `venture_formats` that are not subchannels: a holding lane, and "suits more than one" | routing |
-| makeyourmindup | Mindmake's CTRL lead-magnet surface; also the `corpus_key` on every live subchannel row | disputed as the publication's name (`docs/STATE.md`, open decisions) |
+| makeyourmindup | **the publication's name** (Krish, 2026-09-25). Hosted on Substack; its cover page is makeyourmindup.ai. Also the `corpus_key` on every live subchannel row | makeyourmindup.ai used to be CTRL's lead-magnet door; where that door goes now is open (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8) |
+| Mindmake's publication | an older way of naming the publication | Control Center's architecture canon |
 | Content Engine | this repository's editorial half, and the Content tab in Control Center that is its desk | both repos |
 | Studio, Video Engine, Video Studio, video-studio | the media half of this repository | `packages/`, `apps/runner`, `apps/renderer`, `/api/video-studio/*` |
 | `mindmake-video-studio` | this repository's former name | older docs and a session alias |

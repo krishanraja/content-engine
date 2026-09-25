@@ -1,6 +1,7 @@
 # Mindmake content engine
 
-The engine behind Krish Raja's media business: the Mindmake publication and
+The engine behind Krish Raja's media business: makeyourmindup, the Mindmake
+publication (hosted on Substack, with its cover page at makeyourmindup.ai), and
 the Shorts and carousels made from it. It finds what is worth saying, judges
 it, routes it to the right subchannel, drafts it in Krish's voice to that
 subchannel's mandate, cuts it for each channel and produces the media, and it
@@ -19,6 +20,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | work on ideas, judging, drafting, rewriting, channel copy or the ledger | `docs/CONTENT_ENGINE.md` |
 | work on video, carousels, the runner or the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
 | understand how the pieces fit, or who owns what | `docs/SYSTEM_MAP.md` |
+| design how a piece looks, sounds or moves, on any surface | `docs/CREATIVE_IDENTITY_UPGRADE.md` |
 | use or change any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |
 
@@ -94,11 +96,13 @@ document; code outranks prose about what the code does.
 3. `docs/STATE.md` and `NOW.md`: where it is right now.
 4. `docs/SYSTEM_MAP.md`: how the parts fit and who owns what.
 5. `docs/CONTENT_ENGINE.md`: the content engine, route by route.
-6. `docs/STUDIO.md`: the Studio, and the index of its detailed documents
+6. `docs/CREATIVE_IDENTITY_UPGRADE.md`: how every piece looks, sounds and
+   moves (the Signature Pack), with the decisions Krish has made on it.
+7. `docs/STUDIO.md`: the Studio, and the index of its detailed documents
    (`docs/ENGINE_SESSION.md`, `docs/ARCHITECTURE.md`, `docs/OPERATIONS.md`,
    `docs/DEPLOYMENT.md`, `docs/CAROUSEL_ENGINE_STATE.md` and the calibration
    records).
-7. `docs/GLOSSARY.md`: every term and every retired name.
-8. `docs/walks/`: live engineering records. They explain why things are as
+8. `docs/GLOSSARY.md`: every term and every retired name.
+9. `docs/walks/`: live engineering records. They explain why things are as
    they are; they are not instructions.
-9. `docs/history/`: superseded documents and the dated log. Never current.
+10. `docs/history/`: superseded documents and the dated log. Never current.

@@ -122,9 +122,11 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
   write it, and as which subchannel; research is done.
 - **The Studio's series.** Whether and when to rename `money_of_ai` and
   `built_with_ai`, which needs wordmarks for the subchannels first.
-- **The publication's name.** Control Center's docs disagree: "Mindmake's
-  publication" in its architecture canon, `makeyourmindup` in its taxonomy
-  check, and `makeyourmindup` is the `corpus_key` on every live subchannel row.
+- **The creative identity** (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8):
+  the makeyourmindup masthead, subchannel wordmarks and type system (to approve
+  from rendered territories); adding the Call to all three mandates; where
+  CTRL's lead-magnet door goes now that makeyourmindup.ai is the publication's
+  cover page. The publication's name is settled: makeyourmindup (2026-09-25).
 - **Credentials.** Four credentials pasted into a chat on 2026-09-24 need
   rotating. The fate of `ENGINE_OPERATOR_TOKEN` after the walk. Whether the
   autoscore trigger gets a credential in Supabase Vault.
