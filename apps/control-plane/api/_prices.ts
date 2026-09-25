@@ -112,6 +112,24 @@ export function priceUsdUncached(model: string, u: TokenUsage): number {
 }
 
 /** Read the cache fields off an Anthropic usage object, whatever is present. */
+/** Adds one response's usage to a running total, in the response's own shape,
+ *  so a batch can meter one summed object and the cache fields are still read
+ *  only here. Used by the judge batch, which meters a whole Batches API run. */
+export function addUsage(total: unknown, usage: unknown): Record<string, unknown> {
+  const a = readUsage(total)
+  const b = readUsage(usage)
+  return {
+    input_tokens: a.input + b.input,
+    output_tokens: a.output + b.output,
+    cache_read_input_tokens: a.cacheRead + b.cacheRead,
+    cache_creation_input_tokens: a.cacheWrite5m + a.cacheWrite1h + b.cacheWrite5m + b.cacheWrite1h,
+    cache_creation: {
+      ephemeral_5m_input_tokens: a.cacheWrite5m + b.cacheWrite5m,
+      ephemeral_1h_input_tokens: a.cacheWrite1h + b.cacheWrite1h,
+    },
+  }
+}
+
 export function readUsage(usage: unknown): TokenUsage {
   const u = (usage || {}) as Record<string, unknown>
   const n = (v: unknown) => Number(v) || 0

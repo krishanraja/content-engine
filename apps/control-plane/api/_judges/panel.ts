@@ -271,7 +271,7 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
   // prompt, and the brief and artifact are the user turn it answers.
   //
   // Caching this fan-out is still worth doing. What it needs first is a live
-  // call whose `usage.cache_read_input_tokens` is non-zero, on a real brief at
+  // call whose usage shows a non-zero cache read (readUsage in api/_prices.ts), on a real brief at
   // its real length, against this model's real minimum. Reasoning about the
   // floor from the documentation is what produced this entry.
   const brief = ['## Context you may use', input.context].join('\n')

@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { callClaude, claudeRequestBody, getAnthropicKey, type ClaudeCall, type ClaudeOpts } from '../_content.js'
 import { supabase } from '../_supabase.js'
 import * as meter from '../_meter.js'
+import { addUsage } from '../_prices.js'
 import { DeferredCall } from './deferred.js'
 
 // The batch transport: the same ladder, at half price, paid for in latency.
@@ -416,21 +417,17 @@ export async function drainBatch(sweepId: string, ref: BatchRef): Promise<{ cach
   let errored = 0
   // One meter row per (model, agent) rather than one per reply: 576 individual
   // writes would be slower than the batch itself.
-  const totals = new Map<string, { model: string; agent: string; input: number; output: number; cacheRead: number; cacheWrite: number; calls: number; failed: number }>()
+  const totals = new Map<string, { model: string; agent: string; usage: Record<string, unknown>; calls: number; failed: number }>()
   const rows: Record<string, unknown>[] = []
 
   for (const r of results) {
     if (r.value.error) errored++
     rows.push({ key: r.key, kind: 'call', sweep_id: sweepId, value: r.value })
-    const u = (r.usage || {}) as Record<string, unknown>
     const model = r.model || 'unknown'
     const agent = 'judge-batch'
     const bucket = `${model}\u0000${agent}`
-    const t = totals.get(bucket) || { model, agent, input: 0, output: 0, cacheRead: 0, cacheWrite: 0, calls: 0, failed: 0 }
-    t.input += Number(u.input_tokens) || 0
-    t.output += Number(u.output_tokens) || 0
-    t.cacheRead += Number(u.cache_read_input_tokens) || 0
-    t.cacheWrite += Number(u.cache_creation_input_tokens) || 0
+    const t = totals.get(bucket) || { model, agent, usage: addUsage(null, null), calls: 0, failed: 0 }
+    t.usage = addUsage(t.usage, r.usage)
     t.calls += 1
     if (r.value.error) t.failed += 1
     totals.set(bucket, t)
@@ -451,12 +448,7 @@ export async function drainBatch(sweepId: string, ref: BatchRef): Promise<{ cach
       await meter.anthropicCall({
         agent: t.agent,
         model: t.model,
-        usage: {
-          input_tokens: t.input,
-          output_tokens: t.output,
-          cache_read_input_tokens: t.cacheRead,
-          cache_creation_input_tokens: t.cacheWrite,
-        },
+        usage: t.usage,
         calls: t.calls,
         failedCalls: t.failed,
         discount: BATCH_DISCOUNT,
