@@ -310,6 +310,8 @@ they become active):
 | R1 | Where evidence is thin, the draft may argue from clearly labelled hypotheticals and reasoned predictions rather than dropping the piece. Inference is marked as inference. | Krish's note on piece 1 (triage desk, 2026-09-24): "In the absence of tons of evidence, we need to look at hypotheticals and sense-backed predictions." | Trial on all three walk pieces, passed to the draft as direction, not yet in any engine prompt | **proposed**, approved for trial 2026-09-24 |
 | R2 | No "Not X, Y" construction, at any scale, in any piece: no "Not X, Y", no "it's not X, it's Y", no "X isn't the story, Y is". Say the sharper take directly. | Krish, 2026-09-24, answering "The draft used it four times. What's the rule?": "Cut it everywhere." | Every drafting and rewrite path, the stored voice block, and the deterministic voice check | **approved** 2026-09-24, both orders; **active**: engine code (H7, H8), the stored voice block and corpus (H8), Control Center presets on the branch |
 | R3 | A publication piece has clear signature sections instead of paragraph after paragraph, and each subchannel has a signature visual (follow.the.money: the mandate's "money map", where the dollars enter and where they leave). | Krish, 2026-09-24: "the old school of publishing five years ago would be a bog-standard blog post that is just paragraph after paragraph. I'm wondering whether that's too boring and we need to make it either signature sections that are really clear. How does it become a visual piece? Do interactive artefacts get involved? Do generated images get involved?" | Sections trialled in piece 1's revision; the visual is designed after the copy locks | **approved in direction** 2026-09-25 and specified as the Signature Pack in `docs/CREATIVE_IDENTITY_UPGRADE.md` (each subchannel's device from the diagram language its mandate names; the piece's sections are the device's states). Specific designs still need his approval on rendered evidence |
+| R4 | An opening hooks on consequence: it makes the reader feel this is consequential and think about what could happen next, with more personality and a sharper point, and it lets the reader reach the conclusion rather than handing it to them. It may provoke; it never argues the reader into a verdict. | Krish, 2026-09-25, on piece 1's question-led opening: "it needs to have a lot more personality and make a much clearer point. The first opening has to really hook the reader until they need to know this or what might happen as a result. The average reader needs to feel like this is consequential and make them think about what could happen, as opposed to us forcing our opinion on them. But it should probably be a bit more inflammatory in that way." (ledger sequence 66) | Openings on all three walk pieces | **proposed** 2026-09-25 |
+| R5 | mind.the.gap's timeline shows what used to be, what is now, where it could go and how it could fork into scenarios; the Call sits on one branch. | Krish, 2026-09-25, on piece 2: map out "what used to be the case, what is the case now, where this could go, how it could fork off into different scenarios" | The mind.the.gap device, which lives in its mandate | **proposed** 2026-09-25; a mandate change, so it waits on his yes |
 
 Standards by stage (filled as the walk reaches each one):
 
@@ -374,12 +376,38 @@ teaching. Whether the move or its frequency is the fault is his call (section
   backed by Amazon's own advertising figure.
 - His note on the piece becomes proposed rule R1 (section 5).
 
+**Decisions on the sharpened piece (Krish, 2026-09-25, relayed through the
+ledger with `decided_by: 'Krish'`, sequences 64 to 66):**
+
+- The Call: option A, "By 30 June 2027, Amazon opens an authorised route for
+  shopping agents, and that route still shows them sponsored listings." His
+  words: "I'm happy with A for piece 1's call." Confidence not yet set by him;
+  the page offers 60% as a suggestion and prints nothing until he gives a number.
+- The panel stamp: the drafted answer to the prosecutor is approved as written
+  ("I approve your draft for decision 2."). It goes on the stamp and at the end
+  of "What they say".
+- The question-led opening: rejected, with the feedback that became proposed
+  rule R4. Two new openings (money-led, recommended; scene-led) are with him.
+- The four money-map states: in final form one diagram that moves as the
+  reader scrolls on makeyourmindup.ai, a looping video on Substack, and the
+  same animation in the Short (his question, answered yes).
+- Open: the section called "Follow the money" now shares the subchannel's
+  name, as does the engine's story shape "Follow the Money"
+  (`apps/control-plane/api/_formats.ts`). Proposed: "Who gets paid" and "The
+  money trail". Nothing renamed until he answers.
+
 ## Piece 2: mind.the.gap
 
 `904658db-4df2-4537-a0ed-ebe93e081db7`. "Every AI lab now sells a menu instead
 of a model, and the menu is the price list." Four model judges at 8; lowest
 model judge `consequence` at 3. First live test of the missing mind.the.gap
 corpus playbook.
+
+Angle A, "the lab becomes the router" (Krish, 2026-09-25: "yes, I agree"),
+shown as a forking timeline (proposed rule R5): what it used to be, what it is
+now, where it could go, and three forks (the lab routes, the router routes, the
+buyer routes), each with who wins, who loses and a signpost. The Call sits on
+the first fork. Research checks and the draft wait on his go.
 
 ## Piece 3: under.the.hood
 

@@ -116,10 +116,13 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
 ## Waiting on Krish
 
 - **Piece 1** ("Same agent, opposite answers", follow.the.money, in review): his
-  verdict. Approving it is the first decision the calibration view can learn
+  pick between two new openings and the confidence on the Call. Call A and the
+  panel-stamp answer are approved (2026-09-25, ledger sequences 64 and 65).
+  Approving the piece is the first decision the calibration view can learn
   from at the draft stage.
-- **Piece 2** (mind.the.gap, "Every AI lab now sells a menu..."): whether to
-  write it, and as which subchannel; research is done.
+- **Piece 2** (mind.the.gap, "Every AI lab now sells a menu..."): his go.
+  Angle A, "the lab becomes the router", is agreed (2026-09-25) and shown as a
+  forking timeline.
 - **The Studio's series.** Whether and when to rename `money_of_ai` and
   `built_with_ai`, which needs wordmarks for the subchannels first.
 - **The creative identity** (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8):
@@ -131,8 +134,11 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
   rotating. The fate of `ENGINE_OPERATOR_TOKEN` after the walk. Whether the
   autoscore trigger gets a credential in Supabase Vault.
 - **Rules.** R1 (argue from labelled hypotheses when evidence is thin) is in
-  trial; R3 (signature sections and a signature visual per subchannel) is
-  proposed.
+  trial; R3 (signature sections and a signature visual per subchannel), R4
+  (openings hook on consequence) and R5 (mind.the.gap's timeline forks into
+  scenarios, a mandate change) are proposed.
+- **A name clash.** The section "Follow the money" and the story shape
+  "Follow the Money" now share the subchannel's name; renames are proposed.
 
 ## Where the history is
 
