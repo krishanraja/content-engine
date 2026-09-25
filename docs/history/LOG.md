@@ -2,8 +2,27 @@
 
 Newest first. Entries are written by the docs steward (see the steward link in
 `NOW.md`) and by people doing the same job by hand. Nothing in this file
-describes current behaviour; `NOW.md` and `docs/CAROUSEL_ENGINE_STATE.md` do.
+describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
+
+## 2026-09-25
+
+- decision (Krish, 2026-09-25): rewrite the repository's documentation so that no agent can misread the objective, what the repository is or what it does, and scrub everything old into history. Done by hand in one session, following the steward's schema, because the steward itself only reconciles and never restructures.
+- moved `README.md` to `docs/history/2026-09-25-README.md`, replaced by a new `README.md` plus `docs/NORTH_STAR.md`, `docs/SYSTEM_MAP.md` and `docs/STUDIO.md`, because it described the repository as the Video Studio alone, under the names Mindmaker, The Money of AI and Built With AI, and never mentioned the content engine in `apps/control-plane`.
+- moved `NOW.md` to `docs/history/2026-09-25-NOW.md`, replaced by a new `NOW.md` for the whole repository, because it described only the Studio and said so in its own Do not trust section. Its "What changed recently" bullets from 2026-08-28 to 2026-09-07 are not carried into the new file; they are preserved verbatim in the moved copy.
+- moved `docs/PILOT.md` to `docs/history/2026-09-25-PILOT.md`, not replaced, because the four-week two-series pilot never started and was written for the retired series grid and the retired Mindmaker Live channel.
+- moved `apps/control-plane/README.md` to `docs/history/2026-09-25-control-plane-README.md`, replaced by `docs/CONTENT_ENGINE.md` and a short pointer README, because its route table left out the judge ladder, learning, trends, claims, AEO, inspiration and the edit ledger, and it misdescribed which routes are guarded.
+- archived copies of `AGENTS.md` and `CLAUDE.md` as they stood, at `docs/history/2026-09-25-AGENTS.md` and `docs/history/2026-09-25-CLAUDE.md`, before both were rewritten in place. The generated krish-canon block in `AGENTS.md` was left byte-identical and is not copied.
+- new current documents: `docs/NORTH_STAR.md` (the objective in Krish's words), `docs/STATE.md` (the new state doc; `NOW.md` and control-center's `docs/steward/fleet.json` now name it instead of `docs/CAROUSEL_ENGINE_STATE.md`), `docs/SYSTEM_MAP.md`, `docs/CONTENT_ENGINE.md`, `docs/STUDIO.md`, `docs/GLOSSARY.md`.
+- every detailed Studio document (`ARCHITECTURE`, `OPERATIONS`, `DEPLOYMENT`, `ENGINE_SECRETS_HANDOVER`, `CAROUSEL_ENGINE_STATE`, `ART_DIRECTOR_REPERTOIRE`, `OPENING_LOOP_CALIBRATION`, `REFERENCE_VIDEO_CALIBRATION`, `ENGINE_SESSION`, `FILM_CREATIVE_JURY`) gained a one-line scope banner; their bodies are unchanged, several are pinned by `tests/repository-contracts.test.ts`, and their known stale passages are listed in `docs/STUDIO.md` rather than rewritten without a check.
+- this log's preamble now names `docs/STATE.md` as the state doc.
+
+## 2026-09-24
+
+- reconciled at `fd467e1`: the three-piece walk (`docs/walks/2026-09-three-piece-walk.md`) and the judge-ladder rework before it, 36 non-steward commits since `2ce9de6`. The walk took one idea per subchannel from judged-ready toward publishing, straight against the engine's API, and hardened the backend on the way: H1 and H2 gated the idea, ledger and judge routes (thirteen had checked nothing but the method); H3 added the draft route; H4 and H5 made final pass and revise read the subchannel mandate; H6 made an agent's ledger rows its own observations; H7 and H8 made rule R2 active; H9 and H10 gave the draft judges the sources and the final pass room to answer. Findings F1 to F12 are its open backlog.
+- decision (Krish, 2026-09-24): "Cut it everywhere", on the "Not X, Y" construction (rule R2), later confirmed to cover the stored voice block and both orders. The voice block and the channel corpus in `system_config` were edited the same day by exact position; the replaced passages were not copied into this repository.
+- decision (Krish, 2026-09-24): on piece 1, split.the.bill over the router's mind.the.gap; the ad-revenue motive labelled as the hypothesis; the money leads; signature sections trialled (rule R3, proposed).
+- decision (Krish, 2026-09-24): fast turnaround and cost efficiency both, so the judge sweep runs live by default (`d153021`).
 
 ## 2026-09-23
 
