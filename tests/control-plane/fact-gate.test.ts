@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
-  bodyHash, combine, datedContext, gateStatus, numbersIn, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
+  bodyHash, combine, datedContext, gateStatus, inOrder, numbersIn, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   summarise, sweep,
   type CheckedClaim,
 } from '../../apps/control-plane/api/_factGate.js'
@@ -79,6 +79,24 @@ describe('the date lives in the heading, the fact under it', () => {
     assert.deepEqual(numbersIn('$150.00, 08, 10,000 and 0.25'), ['150', '8', '10000', '0.25'])
     assert.equal(quotesFail(['| gpt-6-astra | $20.00 | $2.00 | $25.00 | $100.00 | $40.00 | $4.00 | $50.00 | $150.00 |'],
       '| gpt-6-astra | $20.00 | $2.00 | $25.00 | $100.00 | $40.00 | $4.00 | $50.00 | $150.00 |', 'Astra costs up to $150'), null)
+  })
+})
+
+describe('a passage shortened with an ellipsis', () => {
+  const SRC = 'we are working to increase those rates and enable chatgpt to automatically choose the right model for a given prompt.'
+  test('holds when every piece is there, in order', () => {
+    assert.equal(inOrder('we are working to ... enable chatgpt to automatically choose', SRC), true)
+    assert.equal(inOrder('we are working to … enable chatgpt', SRC), true)
+  })
+  test('fails when the pieces are out of order or one is invented', () => {
+    assert.equal(inOrder('enable chatgpt to automatically ... we are working to', SRC), false)
+    assert.equal(inOrder('we are working to ... pick the cheapest model', SRC), false)
+  })
+  test('the quote check uses it', () => {
+    assert.equal(quotesFail(['We are working to ... enable ChatGPT to automatically choose the right model'], SRC, 'OpenAI said it was working to have ChatGPT choose the model'), null)
+  })
+  test('a sliver between ellipses proves nothing', () => {
+    assert.equal(inOrder('we are working to ... the ... right model', SRC), false)
   })
 })
 

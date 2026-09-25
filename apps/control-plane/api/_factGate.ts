@@ -159,7 +159,7 @@ export function quotesFail(quotes: Array<string | null> | null, sourcesText: str
   for (const q of list) {
     const n = norm(q)
     if (n.length < 12) return `passage too short to trust: "${q.slice(0, 40)}"`
-    if (!src.includes(n)) return `passage not found word for word in the sources: "${q.slice(0, 80)}"`
+    if (!inOrder(n, src)) return `passage not found word for word in the sources: "${q.slice(0, 80)}"`
   }
   const carried = new Set(list.flatMap(numbersIn))
   let missing = numbersIn(claim).filter(n => !carried.has(n))
@@ -168,6 +168,22 @@ export function quotesFail(quotes: Array<string | null> | null, sourcesText: str
     missing = missing.filter(n => !carried.has(n))
   }
   return missing.length ? `the passages do not carry ${missing.join(', ')}` : null
+}
+
+/** A passage the checker shortened with an ellipsis holds only when every
+ *  piece is in the sources, in order. The checkers do this ("We are working
+ *  to ... enable ChatGPT"), and a whole quote with "..." is never verbatim. */
+export function inOrder(passage: string, text: string): boolean {
+  const pieces = passage.split(/\s*(?:\.\.\.|…)\s*/).map(p => p.trim()).filter(Boolean)
+  if (!pieces.length) return false
+  if (pieces.length > 1 && pieces.some(p => p.length < 8)) return false
+  let from = 0
+  for (const p of pieces) {
+    const at = text.indexOf(p, from)
+    if (at < 0) return false
+    from = at + p.length
+  }
+  return true
 }
 
 /** True only when the quote really is in the sources and carries the claim's numbers. */
@@ -277,6 +293,7 @@ export const ON_FILE_SYSTEM = [
   'supported: the sources state it. Return the passage or passages that state it, each copied EXACTLY, character for character. Give up to three passages only when the fact is split across them (for example the date in a heading and the fact under it); together they must contain every number in the claim.',
   'contradicted: the sources say something different (a different number, date, name, speaker or meaning). Return the exact passage that contradicts it, and say what it says.',
   'not_found: the sources do not state it. A claim that is only implied, rounded, rescaled, or said by a different person is not_found or contradicted, never supported. Words put in someone\'s mouth must be their words.',
+  'Copy passages whole: never shorten one with "...". Read a table by its column headings; a price table can list several lanes and context lengths side by side.',
   'Return JSON only: {"verdict":"supported|contradicted|not_found","quotes":["exact passage", "..."],"note":"one line"}',
 ].join('\n')
 
@@ -290,7 +307,7 @@ export const SECOND_LOOK_SYSTEM = [
 export const ENTAIL_SYSTEM = [
   'A fact checker quoted a source about a claim. Judge only from the quoted evidence, never from your own knowledge.',
   'states: the evidence, read on its own, states every part of the claim (each number, date, name and who said it), in the same meaning.',
-  'conflicts: the evidence states something that cannot be true at the same time as the claim (a different number, date, speaker or meaning). A source that says less, or says nothing about part of the claim, does not conflict.',
+  'conflicts: the evidence states something that cannot be true at the same time as the claim (a different number, date, speaker or meaning). A source that says less, or says nothing about part of the claim, does not conflict. A plan stated earlier ("we will soon begin") does not conflict with a later report that it happened, and a fact about one date does not conflict with a claim about another.',
   'neither: anything else.',
   'Return JSON only: {"answer":"states|conflicts|neither","why":"one line"}',
 ].join('\n')
