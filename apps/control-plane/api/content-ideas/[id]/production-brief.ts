@@ -59,7 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!row.body?.trim() || row.body.trim().length < 12) return res.status(409).json({ ok: false, error: 'approved_content_missing' })
     if (!productionSeries(row)) return res.status(409).json({ ok: false, error: 'canonical_series_required' })
     const series = productionSeries(row)!
-    // mind.the.gap has no editorial formats yet: its brief names none.
+    // Every live subchannel has formats now; a series without any names none.
     const editorialFormat = seriesHasFormats(series) ? normalizeProductionFormat(payload.editorial_format, series) : null
     if (seriesHasFormats(series) ? !editorialFormat : payload.editorial_format !== undefined && payload.editorial_format !== null && payload.editorial_format !== '') {
       return res.status(400).json({ ok: false, error: 'canonical_editorial_format_required' })

@@ -10,7 +10,7 @@ import {
   productionBriefCanBeClaimed,
   readProductionBriefEnvelope,
 } from '../_productionBriefQueue.js'
-import { parseProductionBriefClaimRequest, runnerTakesSeries } from '../_runnerContracts.js'
+import { parseProductionBriefClaimRequest, runnerTakesFormat, runnerTakesSeries } from '../_runnerContracts.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardVideoStudioRunner(req, res, ['POST'])) return
@@ -40,6 +40,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!approval || approval.content_revision_hash !== currentRevisionHash || envelope.brief.content_revision_hash !== currentRevisionHash) continue
       if (!productionBriefCanBeClaimed(envelope, now)) continue
       if (!runnerTakesSeries(body.series_supported, envelope.brief.series)) continue
+      if (!runnerTakesFormat(body.editorial_formats_supported, envelope.brief.editorial_format)) continue
 
       const leaseToken = randomBytes(32).toString('base64url')
       const claimedAt = now.toISOString()

@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { CarouselStoryV1Schema, CarouselVisualDirectionMethodV1Schema, EditorialFormatV1Schema, normalizeEditorialFormatV1 } from '@mindmake/contracts'
-import { carouselApprovalBinds, carouselEditorialPreferenceIssues, carouselProductionIssues, carouselStoryContentHash } from '@mindmake/core'
+import { carouselApprovalBinds, carouselEditorialPreferenceIssues, carouselProductionIssues, carouselStoryContentHash, theForkIssues } from '@mindmake/core'
 
 const fixturePath = resolve('examples/carousels/built-editorial-gates.review.json')
 
@@ -185,5 +185,21 @@ describe('carousel engine', () => {
       expect(input.toLowerCase()).not.toContain(phrase)
     }
     expect(input).not.toContain('\u2014')
+  })
+
+  it('The Fork is mind.the.gap\'s format and ends on our call, dated and with how sure we are', async () => {
+    const input = await fixture()
+    const slides = input.slides as Array<Record<string, unknown>>
+    const fork = { ...input, series: 'mind_the_gap', source_format: 'The Fork' }
+    // Only mind.the.gap owns it.
+    expect(() => CarouselStoryV1Schema.parse({ ...input, source_format: 'the_fork' })).toThrow(/source format/)
+    const noCall = CarouselStoryV1Schema.parse({ ...fork, source_format: 'the_fork' })
+    expect(theForkIssues(noCall)).toEqual(['The Fork ends on our call: the last slide needs the prediction\'s date and how sure we are'])
+    expect(carouselProductionIssues(noCall)[0]).toMatch(/The Fork ends on our call/)
+    const last = { ...slides.at(-1)!, headline: 'Our call: by 30 September 2027', body: 'How sure we are: 75%' }
+    const withCall = CarouselStoryV1Schema.parse({ ...fork, source_format: 'the_fork', slides: [...slides.slice(0, -1), last] })
+    expect(theForkIssues(withCall)).toEqual([])
+    expect(normalizeEditorialFormatV1('The Fork')).toBe('the_fork')
+    expect(EditorialFormatV1Schema.options).toContain('the_fork')
   })
 })

@@ -10,6 +10,7 @@
 // builder compiles exactly like a route. check-run-recovery.ts refuses the
 // package-name form so the green-build-broken-function failure cannot come back.
 import {
+  PRE_FORK_EDITORIAL_FORMATS_V1,
   ProductionBriefClaimRequestV1Schema,
   RunnerClaimRequestV1Schema,
   RunnerCompleteRequestV1Schema,
@@ -915,6 +916,9 @@ export interface ProductionBriefClaimRequest {
   /** The series the runner said it understands, or null when it said nothing
    *  (a runner from before the live subchannel names). */
   series_supported: string[] | null
+  /** The editorial formats it said it understands, or null when it said
+   *  nothing (a runner from before The Fork). */
+  editorial_formats_supported: string[] | null
 }
 
 /** A production-brief claim. Its own parser, because a runner that declares
@@ -929,6 +933,7 @@ export function parseProductionBriefClaimRequest(value: unknown): ProductionBrie
     command_schema_versions: [1],
     lease_seconds: parsed.data.lease_seconds ?? 120,
     series_supported: parsed.data.series_supported ? [...parsed.data.series_supported] : null,
+    editorial_formats_supported: parsed.data.editorial_formats_supported ? [...parsed.data.editorial_formats_supported] : null,
   }
 }
 
@@ -939,6 +944,15 @@ export function parseProductionBriefClaimRequest(value: unknown): ProductionBrie
 export function runnerTakesSeries(supported: readonly string[] | null, series: string): boolean {
   if ((RETIRED_SERIES as readonly string[]).includes(series)) return true
   return Boolean(supported?.includes(series))
+}
+
+/** Whether a runner may be handed a brief in this editorial format, for the
+ *  same reason: a format added after the runner was built (The Fork) goes
+ *  only to a runner that declared it. A brief with no format, or one in a
+ *  format every runner knows, goes to any runner. */
+export function runnerTakesFormat(supported: readonly string[] | null, format: string | undefined): boolean {
+  if (!format || (PRE_FORK_EDITORIAL_FORMATS_V1 as readonly string[]).includes(format)) return true
+  return Boolean(supported?.includes(format))
 }
 
 export interface RunnerHeartbeatRequestV1 {

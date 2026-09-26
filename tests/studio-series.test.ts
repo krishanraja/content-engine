@@ -2,11 +2,14 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 import {
   BrandThemeV1Schema,
+  EditorialFormatV1Schema,
+  PRE_FORK_EDITORIAL_FORMATS_V1,
   ProductionBriefClaimRequestV1Schema,
   ProductionBriefV1Schema,
   RunnerClaimRequestV1Schema,
   SeriesSchema,
   editorialFormatBelongsToSeriesV1,
+  normalizeEditorialFormatV1,
   normalizeSeries,
   sameSeriesLine,
   seriesEligible,
@@ -39,15 +42,29 @@ describe('the Studio knows the three subchannels', () => {
     for (const theme of studio.brand_themes) expect(hashValue(BrandThemeV1Schema.parse(theme))).toBe(hashValue(theme))
   })
 
-  test('follow.the.money and under.the.hood inherit their predecessors\' formats; mind.the.gap has none', () => {
+  test('follow.the.money and under.the.hood inherit their predecessors\' formats; mind.the.gap has The Fork', () => {
     expect(editorialFormatBelongsToSeriesV1('follow_the_money', 'money_trace')).toBe(true)
     expect(editorialFormatBelongsToSeriesV1('follow_the_money', 'third_why')).toBe(false)
     expect(editorialFormatBelongsToSeriesV1('under_the_hood', 'third_why')).toBe(true)
     expect(editorialFormatBelongsToSeriesV1('mind_the_gap', 'money_trace')).toBe(false)
+    expect(editorialFormatBelongsToSeriesV1('mind_the_gap', 'the_fork')).toBe(true)
+    expect(editorialFormatBelongsToSeriesV1('follow_the_money', 'the_fork')).toBe(false)
+    expect(editorialFormatBelongsToSeriesV1('money_of_ai', 'the_fork')).toBe(false)
+    expect(normalizeEditorialFormatV1('The Fork')).toBe('the_fork')
     const mind = { ...briefFixture, series: 'mind_the_gap' }
     delete mind.editorial_format
+    // A brief made before The Fork, with no format, still parses.
     expect(ProductionBriefV1Schema.safeParse(mind).success).toBe(true)
+    expect(ProductionBriefV1Schema.safeParse({ ...mind, editorial_format: 'the_fork' }).success).toBe(true)
     expect(ProductionBriefV1Schema.safeParse({ ...mind, editorial_format: 'money_trace' }).success).toBe(false)
+  })
+
+  test('a runner declares the formats it parses; one that declares none never gets The Fork', () => {
+    const base = { schema_version: 1, runner_id: 'runner-1', software_commit: 'a'.repeat(40), command_schema_versions: [1] }
+    expect(ProductionBriefClaimRequestV1Schema.safeParse({ ...base, editorial_formats_supported: ['money_trace', 'the_fork'] }).success).toBe(true)
+    expect(ProductionBriefClaimRequestV1Schema.safeParse({ ...base, editorial_formats_supported: ['timeline'] }).success).toBe(false)
+    expect(PRE_FORK_EDITORIAL_FORMATS_V1).not.toContain('the_fork')
+    expect(EditorialFormatV1Schema.options).toEqual(expect.arrayContaining([...PRE_FORK_EDITORIAL_FORMATS_V1, 'the_fork']))
   })
 
   test('approved rules, presets and devices follow the subchannel, and old matches are unchanged', () => {

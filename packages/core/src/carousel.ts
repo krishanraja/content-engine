@@ -100,10 +100,24 @@ export function carouselApprovalBinds(approval: CarouselApprovalV1, gate: Carous
     && confirmationRefMatches(approval.confirmation_ref, gate, contentHash)
 }
 
+/** The Fork (mind.the.gap, Krish 2026-09-26) tells the story in the order
+ *  the channel's timeline draws it: then, now, the fork, our call. Its last
+ *  slide is the call, so it must carry the prediction's date and how sure we
+ *  are; every piece ends on a dated prediction. */
+export function theForkIssues(input: CarouselStoryV1): string[] {
+  const story = CarouselStoryV1Schema.parse(input)
+  if (story.source_format !== 'the_fork') return []
+  const last = story.slides.at(-1)
+  const text = `${last?.headline || ''} ${last?.body || ''}`
+  const dated = /\b20\d{2}\b/.test(text)
+  const sure = /\b\d{1,3}\s?%/.test(text)
+  return dated && sure ? [] : ['The Fork ends on our call: the last slide needs the prediction\'s date and how sure we are']
+}
+
 export function carouselProductionIssues(input: CarouselStoryV1): string[] {
   const story = CarouselStoryV1Schema.parse(input)
   const contentHash = carouselStoryContentHash(story)
-  const issues: string[] = []
+  const issues: string[] = [...theForkIssues(story)]
   if (story.editorial.disposition !== 'publishable') issues.push(`editorial disposition is ${story.editorial.disposition}`)
   for (const gate of ['story', 'visual_direction'] as const) {
     if (!story.approvals.some((approval) => carouselApprovalBinds(approval, gate, contentHash))) issues.push(`${gate} approval for the exact story is missing`)

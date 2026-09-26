@@ -6,7 +6,14 @@ export const PRODUCTION_BRIEF_SCHEMA_VERSION_V1 = 1 as const
 
 export const MONEY_OF_AI_FORMATS_V1 = ['money_trace', 'artifact', 'verdict', 'cold_open_cutdown'] as const
 export const BUILT_WITH_AI_FORMATS_V1 = ['builder_conversation', 'build_itself', 'third_why', 'first_version'] as const
-export const EditorialFormatV1Schema = z.enum([...MONEY_OF_AI_FORMATS_V1, ...BUILT_WITH_AI_FORMATS_V1])
+/** mind.the.gap's format (Krish, 2026-09-26: "The Fork is good"). It tells
+ *  the story in the order the channel's timeline draws it: then, now, the
+ *  fork, our call. */
+export const MIND_THE_GAP_FORMATS_V1 = ['the_fork'] as const
+/** Every format a runner could parse before The Fork. A runner that does not
+ *  declare the formats it understands is only handed briefs in these. */
+export const PRE_FORK_EDITORIAL_FORMATS_V1 = [...MONEY_OF_AI_FORMATS_V1, ...BUILT_WITH_AI_FORMATS_V1] as const
+export const EditorialFormatV1Schema = z.enum([...MONEY_OF_AI_FORMATS_V1, ...BUILT_WITH_AI_FORMATS_V1, ...MIND_THE_GAP_FORMATS_V1])
 export type EditorialFormatV1 = z.infer<typeof EditorialFormatV1Schema>
 
 const EDITORIAL_FORMAT_IMPORT_ALIASES = new Map<string, EditorialFormatV1>([
@@ -26,6 +33,8 @@ const EDITORIAL_FORMAT_IMPORT_ALIASES = new Map<string, EditorialFormatV1>([
   ['third why', 'third_why'],
   ['the third why', 'third_why'],
   ['first version', 'first_version'],
+  ['fork', 'the_fork'],
+  ['the fork', 'the_fork'],
 ])
 
 export function normalizeEditorialFormatV1(input: string): EditorialFormatV1 {
@@ -36,11 +45,10 @@ export function normalizeEditorialFormatV1(input: string): EditorialFormatV1 {
 }
 
 /** The formats each subchannel owns. follow.the.money inherits The Money of
- *  AI's and under.the.hood Built With AI's; mind.the.gap has none yet, so its
- *  briefs carry no editorial format. */
+ *  AI's and under.the.hood Built With AI's; mind.the.gap has The Fork. */
 export const EDITORIAL_FORMATS_BY_LINE_V1: Readonly<Record<'follow_the_money' | 'mind_the_gap' | 'under_the_hood', readonly EditorialFormatV1[]>> = Object.freeze({
   follow_the_money: MONEY_OF_AI_FORMATS_V1,
-  mind_the_gap: [],
+  mind_the_gap: MIND_THE_GAP_FORMATS_V1,
   under_the_hood: BUILT_WITH_AI_FORMATS_V1,
 })
 
@@ -127,6 +135,9 @@ export const ProductionBriefClaimRequestV1Schema = z.object({
   // retired ones: parsing a live name would throw inside its claim and fail
   // its whole cycle, again on every lease expiry.
   series_supported: z.array(StudioSeriesSchema).min(1).max(8).optional(),
+  // The editorial formats this runner understands, for the same reason. One
+  // that sends none predates The Fork and is only given the formats before it.
+  editorial_formats_supported: z.array(EditorialFormatV1Schema).min(1).max(32).optional(),
 }).strict()
 export type ProductionBriefClaimRequestV1 = z.infer<typeof ProductionBriefClaimRequestV1Schema>
 

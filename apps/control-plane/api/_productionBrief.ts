@@ -6,13 +6,13 @@ export const PRODUCTION_KIND_VALUES = ['video', 'carousel'] as const
 export const PRODUCTION_SOURCE_MODE_VALUES = ['extract', 'solo', 'short_native', 'written'] as const
 // The retired pair stays for briefs made under it. follow.the.money takes The
 // Money of AI's formats and under.the.hood Built With AI's; mind.the.gap has
-// none yet, so its briefs carry no editorial format. Mirrors
+// The Fork (Krish, 2026-09-26). Mirrors
 // packages/contracts/src/editorial-v1.ts EDITORIAL_FORMATS_BY_LINE_V1.
 export const PRODUCTION_FORMATS_BY_SERIES = {
   money_of_ai: ['money_trace', 'artifact', 'verdict', 'cold_open_cutdown'],
   built_with_ai: ['builder_conversation', 'build_itself', 'third_why', 'first_version'],
   follow_the_money: ['money_trace', 'artifact', 'verdict', 'cold_open_cutdown'],
-  mind_the_gap: [],
+  mind_the_gap: ['the_fork'],
   under_the_hood: ['builder_conversation', 'build_itself', 'third_why', 'first_version'],
 } as const
 export const PRODUCTION_SERIES_VALUES = ['money_of_ai', 'built_with_ai', 'follow_the_money', 'mind_the_gap', 'under_the_hood'] as const
@@ -213,6 +213,8 @@ export function normalizeProductionFormat(value: unknown, series: ProductionSeri
     'third why': 'third_why',
     'the third why': 'third_why',
     'first version': 'first_version',
+    fork: 'the_fork',
+    'the fork': 'the_fork',
   }
   const format = aliases[normalized]
   return format && (PRODUCTION_FORMATS_BY_SERIES[series] as readonly string[]).includes(format) ? format : null
@@ -223,7 +225,7 @@ export function buildProductionBrief(input: {
   approval: ProductionApprovalV1
   productionKinds: ProductionKind[]
   sourceMode: ProductionSourceMode
-  /** Null only for a series with no formats (mind.the.gap). */
+  /** Null only for a series with no formats. */
   editorialFormat: ProductionFormat | null
 }): ProductionBriefV1 {
   const { row, approval, productionKinds, sourceMode, editorialFormat } = input

@@ -157,6 +157,8 @@ Known breaks the walk will hit, in order:
 
 | # | Change | Why | Commit |
 |---|---|---|---|
+| H28 | The fact gate never checks Krish's confidence line: `extract()` drops "How sure we are: N%" from the claims and sets it aside as a prediction, whatever the model lists. Test: `tests/control-plane/fact-gate.test.ts`, mutation-checked. | F25: on piece 2 the line passed one run and blocked the next. | `65bda02` |
+| H27 | The Fork, mind.the.gap's format: then, now, the fork, our call, the order its timeline draws the story in. In the contracts, the brief builder, both format lists and Control Center's composer, which picks it for a mind.the.gap piece. A Fork carousel must end on the call with a date and a percentage (`theForkIssues`). The runner declares the formats it parses, and a runner that declares none is never handed The Fork, so the old runner keeps working. Tests: `tests/studio-series.test.ts`, `tests/carousel.test.ts`, `tests/control-plane/production-brief-live-series.test.ts`, a composer spec; mutation-checked. | Krish, 2026-09-26: "The Fork is good". | see git log |
 | H26 | The Studio learns the three subchannels (`packages/contracts/src/series.ts`). Five series: the three live names, plus the two retired ids kept valid for good because they sit inside hashed and signed records. Rules, presets and devices approved for a retired id serve its successor; follow.the.money and under.the.hood take their predecessors' formats; mind.the.gap has none yet. A live piece gets a brief in its own name. The runner declares the series it can parse and is only handed those, so an old runner keeps working and the two sides update in either order. Control Center's composer offers Studio for all three. A branded render for a live subchannel refuses in plain words until Krish approves its wordmark. Migration `20260926090000` pins the five on `video_studio_jobs`, applied live and read back. Tests: `tests/studio-series.test.ts`, `tests/control-plane/production-brief-live-series.test.ts`, two composer specs; all mutation-checked. | Krish, 2026-09-26: item 4, teach the video side the three names. F21. | `47f3944`, control-center `2c60cd0` |
 | H25 | Krish's confidence in a prediction no longer puts a passed fact check out of date: `bodyHash` reads "How sure we are:" plus a bare percentage as the same line, and every other word still breaks the match. Setting piece 2 to 75% kept its check; before, it would have cost a full re-run. A new house rule, CLEAR_STANCE, warns (never blocks) when a confidence is under 70%. | Krish, 2026-09-26: "I'd rather take a clearer stance than sit on the fence all the time and say 60%." | `e4f1394`, `b423fcf` |
 | H24 | Receipts (`api/_receipts.ts`). For every claim the fact gate passed, the source's own words behind it: the one passage that carries every number the sentence uses, its page, whether the web agreed, and a screen form with markup removed and no word changed. `GET /fact-check` returns them for the version that passed. On piece 2: 32 receipts, 21 short enough for a phone screen. They are the proof panels for Shorts and carousels. Test: `tests/control-plane/receipts.test.ts`, mutation-checked. | Krish shared an Instagram ad he found "really impactful" (`docs/REFERENCE_INSTAGRAM_AD.md`); its strongest move is showing the source on screen. | `d408e11` |
@@ -241,6 +243,8 @@ with the evidence that found it):
 | F22 | judges | No judge read any of Krish's rulings. The draft "voice" judge was told to score against a kill list it was never given. Fixed as H21. | component map, 2026-09-25 |
 | F23 | ideation | The idea sources (research, radar, creator scout, inspiration) each carry their own copy of the voice rules, several still write retired subchannel names, and `deepen` refuses a piece on a live subchannel with a 400. Not fixed yet. | component map, 2026-09-25 |
 | F24 | database | Live, `video_studio_jobs.series` had lost the check the migrations give it and gained a foreign key to `venture_formats(slug) ON UPDATE CASCADE`, added outside either repository's history. Each subchannel rename cascaded into it, so the two retired validation jobs now read `under_the_hood` while the runner's signed records for them say `built_with_ai`. They are retired and carry no media, so they were left as they are. Migration `20260926090000` pins the Studio's five ids on top of the key, so a rename can no longer move a job's series away from its signed record. | live readback, 2026-09-26 |
+| F25 | fact gate | The gate gives different verdicts on the same sentence from run to run. Piece 2's line edits took four runs on 2026-09-26 (11 to 14), and each run blocked 4 to 6 claims, mostly different ones each time, including sentences word for word the same as in the version that passed on run 10. The causes seen: the web checker (Perplexity) cites a different article about a different event ("contradicted" by a Reuters story on another price cut); the on-file check quotes a passage that is not word for word in the source (a table row, a quote mark dropped); and the extractor listed Krish's confidence as a claim (fixed as H28). The gate still errs towards blocking, which is the safe side for zero tolerance, but a correct piece can take several runs. Run 11 also caught two real slips that run 10 missed ("one question at a time" where the docs say "each request"; a 2025 event told in the present tense). Making it steadier is a policy choice for Krish. | piece 2, runs 11 to 14 |
+| F26 | process | Two of the failures on piece 2's line edits were mine. Splitting long sentences for reading age cut claims away from the words that made them checkable ("It broke." and "People lobbied hard to get the old brain back." on their own; the CNBC claim without "model routing"), and I changed "ask a model" to "ask a brain" inside Scott Wu's example, a house translation inside a paraphrase, which the rules forbid. From now on: a readability edit keeps each claim's subject, source and key term in one sentence, and never touches a quote or a paraphrase of one. | piece 2, runs 12 and 14 |
 | F14 | judge sweep | Editing the thesis of a piece in `drafting` changes its `artifact_hash`, so the 10-minute sweep re-judges it and the ladder may repair (rewrite) the thesis. So piece 2's stale thesis (F7 again) is left alone for now. | `candidateQuery` in the sweep includes `drafting` |
 | F10 | research | `dive-deeper` caps Perplexity at 1,200 tokens, so a three-part question is cut off mid-sentence. Each call also rewrites the whole `meta`, so calls must run one at a time. | piece 1, research |
 
@@ -271,28 +275,18 @@ Collected as the walk goes; finalised after piece 3.
 - **Settled: how Shorts are branded** (Krish, 2026-09-26): "Make your mind
   up, Mark, plus the channel name. You've got the logos as per the website
   for all of that." The makeyourmindup mark plus the channel name in mono
-  (`fixtures/feedback/studio-branding-mark-channel-20260926.json`). Still
-  his: where it sits (the storyboard shows the mark at the start of the
-  timeline on every beat and the full lockup once at the end).
-- **The mind.the.gap format's name.** He read "The Timeline" as clashing
-  with a timeline elsewhere. Nothing else is a format by that name; the
-  timeline is mind.the.gap's own picture (`docs/CREATIVE_IDENTITY_UPGRADE.md`)
-  and house rule TIMELINE. Proposed: call the format The Fork, so the picture
-  and the format each keep one name. No brief uses either yet, so nothing
-  needs changing after the fact. Not built until he confirms the name,
-  because a format id goes into sealed briefs.
-- **Piece 2 line edits.** Proposed on 2026-09-26: reading age 12.5 to 11,
-  the "In the jargon" line cut, every fact, quote and the prediction
-  unchanged. Applying them needs his go, then one fact-gate run.
-- **Settled: Shorts in the ad's style** (Krish, 2026-09-26, "I agree with
-  all your four except for number one"). Captions in sentence case with at
-  most one loud word; the close is the dated prediction. Recorded in
-  `fixtures/feedback/proof-short-captions-close-20260926.json`. Still his:
-  a verdict on the piece 2 storyboard.
-- **Settled: piece 2's confidence is 75%** (Krish, 2026-09-26): "I'd rather
-  take a clearer stance than sit on the fence all the time and say 60%."
-  House rule CLEAR_STANCE. Piece 2 now clears every blocking check and waits
-  on his approval.
+  (`fixtures/feedback/studio-branding-mark-channel-20260926.json`). Where
+  it sits was settled the same day (below).
+- **Settled: The Fork** (Krish, 2026-09-26: "The Fork is good"), mind.the.gap's
+  format (H27). **Settled: the lockup placement** ("placement approved"): the
+  mark at the start of the timeline on every beat, the full lockup once at
+  the end, no title card.
+- **Piece 2 line edits: go** (Krish, 2026-09-26: "go on the edits"). Applied as
+  his edit, with the fixes the fact gate asked for; see F25 and F26.
+- **How steady should the fact gate be?** F25. Options range from re-asking a
+  failed check once before it blocks (fewer false alarms, a little more
+  risk) to leaving it strict (safe, but a correct piece can take several
+  runs). His call, because it trades against zero tolerance.
 
 - **Rotate four credentials.** A Supabase CLI token, a Vercel access token, a
   GitHub PAT and an n8n API key were pasted into the walk session's chat on

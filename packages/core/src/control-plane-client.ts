@@ -30,6 +30,7 @@ import {
   type ClaimedProductionBriefV1,
   type ProductionBriefCompleteRequestV1,
   SERIES_IDS,
+  EditorialFormatV1Schema,
 } from '@mindmake/contracts'
 import { hashFile, hashFileMd5, hashValue } from './hash.js'
 
@@ -161,6 +162,8 @@ export class ControlPlaneClient {
       // hands it briefs in the live subchannel names. A runner that says
       // nothing is only given the retired pair.
       series_supported: [...SERIES_IDS],
+      // And every editorial format it can parse, so it is handed The Fork.
+      editorial_formats_supported: [...EditorialFormatV1Schema.options],
     })
     const response = ProductionBriefClaimResponseV1Schema.parse(await this.post('production-brief-claim', request))
     if (!response.item) return null

@@ -3,7 +3,7 @@ import { CHANNEL_ADAPTS, VIDEO_FORMATS } from './contentEngine.js'
 export type ContentOutputFamily = 'article' | 'social' | 'audio' | 'video_script' | 'video' | 'carousel'
 
 export type StudioSeries = 'money_of_ai' | 'built_with_ai' | 'follow_the_money' | 'mind_the_gap' | 'under_the_hood'
-export type StudioEditorialFormat = 'money_trace' | 'artifact' | 'verdict' | 'cold_open_cutdown' | 'builder_conversation' | 'build_itself' | 'third_why' | 'first_version'
+export type StudioEditorialFormat = 'money_trace' | 'artifact' | 'verdict' | 'cold_open_cutdown' | 'builder_conversation' | 'build_itself' | 'third_why' | 'first_version' | 'the_fork'
 export const STUDIO_FORMATS_BY_SERIES: Record<StudioSeries, ReadonlyArray<{ value: StudioEditorialFormat; label: string }>> = {
   money_of_ai: [
     { value: 'money_trace', label: 'Money Trace' },
@@ -18,14 +18,16 @@ export const STUDIO_FORMATS_BY_SERIES: Record<StudioSeries, ReadonlyArray<{ valu
     { value: 'first_version', label: 'First Version' },
   ],
   // follow.the.money and under.the.hood inherit the formats of the series they
-  // replaced; mind.the.gap has none yet.
+  // replaced; mind.the.gap has The Fork: then, now, the fork, our call.
   follow_the_money: [
     { value: 'money_trace', label: 'Money Trace' },
     { value: 'artifact', label: 'The Artifact' },
     { value: 'verdict', label: 'Verdict' },
     { value: 'cold_open_cutdown', label: 'Cold-open cutdown' },
   ],
-  mind_the_gap: [],
+  mind_the_gap: [
+    { value: 'the_fork', label: 'The Fork' },
+  ],
   under_the_hood: [
     { value: 'builder_conversation', label: 'Builder conversation' },
     { value: 'build_itself', label: 'The Build Itself' },

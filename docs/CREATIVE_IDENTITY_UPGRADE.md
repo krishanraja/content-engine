@@ -382,11 +382,21 @@ signature device per Short (`config/techniques.json`) holds: this is that one.
   who loses, and the path the money no longer takes stays visible as a ghost.
 - **The timeline (mind.the.gap).** Each thread runs along a shared time axis
   as a line of dated, sourced events. As the piece argues, the lines bend
-  toward each other and meet; the meeting point is the pattern, and what it
-  means is coming extends past today to the Call's date.
+  toward each other and meet at today; the meeting point is the pattern. From
+  today the line forks into possible futures that never rejoin (house rule
+  TIMELINE, Krish's R5), and the Call sits on one branch at its date. The Fork
+  is the format that tells a Short or carousel in this order.
 - **Real or theatre (under.the.hood).** The annotated product shot. The shipped
   thing comes apart into its parts; each part is labelled and stamped real or
   theatre, with the evidence for the stamp one tap or one frame away.
+
+**Keeping the three apart** (proposed 2026-09-26, waiting on Krish; sketches
+at the "three signatures" artifact). Each device answers its own question in
+its own shape, and never borrows another's: the money map never shows dates
+or a time axis (its ghost route is the only nod to before); the timeline
+never shows money flowing between parties or the inside of a product; real
+or theatre never shows dates or money flows, because it is one product as it
+is today.
 
 **Build.** Each device is a pure function of its device graph. Promote each to
 the registry as a `signature: true` technique with purpose, inputs,

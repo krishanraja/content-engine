@@ -8,7 +8,7 @@ import {
   productionSeries,
 } from '../../apps/control-plane/api/_productionBrief.ts'
 import { readProductionBriefEnvelope } from '../../apps/control-plane/api/video-studio/_productionBriefQueue.ts'
-import { parseProductionBriefClaimRequest, runnerTakesSeries } from '../../apps/control-plane/api/video-studio/_runnerContracts.ts'
+import { parseProductionBriefClaimRequest, runnerTakesFormat, runnerTakesSeries } from '../../apps/control-plane/api/video-studio/_runnerContracts.ts'
 
 // Krish, 2026-09-26: teach the video side the three subchannel names. Until
 // then a piece on follow.the.money, mind.the.gap or under.the.hood could not
@@ -31,7 +31,7 @@ const brief = (lane_slot: string, editorialFormat: string | null) => {
 }
 
 test('a piece on each live subchannel gets a brief in its own name, valid under the contract', () => {
-  for (const [slot, format] of [['follow_the_money', 'money_trace'], ['under_the_hood', 'third_why'], ['mind_the_gap', null]] as const) {
+  for (const [slot, format] of [['follow_the_money', 'money_trace'], ['under_the_hood', 'third_why'], ['mind_the_gap', 'the_fork']] as const) {
     assert.equal(productionSeries(piece(slot)), slot)
     const b = brief(slot, format)
     assert.equal(b.series, slot)
@@ -40,9 +40,11 @@ test('a piece on each live subchannel gets a brief in its own name, valid under 
   }
 })
 
-test('mind.the.gap briefs name no format, and the other two must name one of their own', () => {
-  assert.equal('editorial_format' in brief('mind_the_gap', null), false)
+test('every live subchannel brief names one of its own formats: mind.the.gap\'s is The Fork', () => {
+  assert.equal(brief('mind_the_gap', 'the_fork').editorial_format, 'the_fork')
+  assert.throws(() => brief('mind_the_gap', null), /canonical_editorial_format_required/)
   assert.throws(() => brief('mind_the_gap', 'money_trace'), /canonical_editorial_format_required/)
+  assert.throws(() => brief('follow_the_money', 'the_fork'), /canonical_editorial_format_required/)
   assert.throws(() => brief('follow_the_money', null), /canonical_editorial_format_required/)
   assert.throws(() => brief('follow_the_money', 'third_why'), /canonical_editorial_format_required/)
 })
@@ -65,9 +67,23 @@ test('a runner that declares nothing is only handed the retired series', () => {
   assert.equal(runnerTakesSeries(current.series_supported, 'mind_the_gap'), true)
 })
 
+test('a runner that declares no formats is never handed The Fork', () => {
+  const old = parseProductionBriefClaimRequest({ schema_version: 1, runner_id: 'runner-1', software_commit: 'a'.repeat(40), command_schema_versions: [1], series_supported: ['mind_the_gap'] })
+  assert.ok(old)
+  assert.equal(old.editorial_formats_supported, null)
+  assert.equal(runnerTakesFormat(old.editorial_formats_supported, 'the_fork'), false)
+  assert.equal(runnerTakesFormat(old.editorial_formats_supported, 'money_trace'), true)
+  assert.equal(runnerTakesFormat(old.editorial_formats_supported, undefined), true)
+  const current = parseProductionBriefClaimRequest({ schema_version: 1, runner_id: 'runner-1', software_commit: 'a'.repeat(40), command_schema_versions: [1], series_supported: ['mind_the_gap'], editorial_formats_supported: ['money_trace', 'the_fork'] })
+  assert.ok(current)
+  assert.equal(runnerTakesFormat(current.editorial_formats_supported, 'the_fork'), true)
+})
+
 test('the claim route asks before it leases', () => {
   const src = readFileSync('apps/control-plane/api/video-studio/runner/production-brief-claim.ts', 'utf8')
   assert.match(src, /parseProductionBriefClaimRequest\(req\.body\)/)
   const guard = src.indexOf('runnerTakesSeries(body.series_supported, envelope.brief.series)')
   assert.ok(guard > 0 && guard < src.indexOf('randomBytes(32)'), 'the series check must come before a lease is written')
+  const formatGuard = src.indexOf('runnerTakesFormat(body.editorial_formats_supported, envelope.brief.editorial_format)')
+  assert.ok(formatGuard > 0 && formatGuard < src.indexOf('randomBytes(32)'), 'the format check must come before a lease is written')
 })

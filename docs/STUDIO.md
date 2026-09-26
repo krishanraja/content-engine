@@ -49,8 +49,11 @@ follow.the.money, `built_with_ai` of under.the.hood (`SERIES_LINE`). Rules,
 treatment presets and visual devices approved for a retired id serve its
 successor, and a list naming both retired ids serves all three; every old job
 matches exactly what it matched before. follow.the.money and under.the.hood
-take their predecessors' formats; mind.the.gap has none yet, so its briefs
-name no format and its carousels (which need one) wait for one. A piece on a
+take their predecessors' formats; mind.the.gap has The Fork (Krish,
+2026-09-26: "The Fork is good"): then, now, the fork, our call, the order its
+timeline draws the story in. A Fork carousel must end on the call, with the
+prediction's date and how sure we are (`theForkIssues` in
+`packages/core/src/carousel.ts`). A piece on a
 live subchannel gets a brief in its own name; a piece on a retired slot keeps
 its retired id.
 
@@ -62,12 +65,13 @@ branded render refuses in plain words until he approves their marks.
 
 ### Taking live-name briefs on the Windows runner
 
-The runner declares the series it can parse on each brief claim, and the
-control plane hands a live-name brief only to a runner that declared it. An
-older runner is only ever given the retired pair, so it keeps working, and
-the cloud and the runner can update in either order. To take live-name
-briefs, update the runner's checkout to `47f3944` or later, following
-`docs/DEPLOYMENT.md`:
+The runner declares the series and the editorial formats it can parse on
+each brief claim, and the control plane hands a brief only to a runner that
+declared both. An older runner is only ever given the retired pair and the
+formats from before The Fork, so it keeps working, and the cloud and the
+runner can update in either order. To take live-name briefs, update the
+runner's checkout to `47f3944` or later; to take The Fork, to the commit that
+added it or later. Following `docs/DEPLOYMENT.md`:
 
 1. In the dedicated `runner-source` checkout: `git fetch`, then
    `git switch --detach <commit>`, then `npm ci`.
