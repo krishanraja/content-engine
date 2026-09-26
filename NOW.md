@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Mindmake content engine
 as_of: 2026-09-26
-head: 274e03c
+head: fdf434b
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -45,7 +45,7 @@ Lifecycle: building. Readback the same day unless a commit is named.
 
 ## What changed recently
 
-- 2026-09-26 **The engine follows the live cover page: under.the.hood on Mondays, British spelling checked** (this commit; Control Center `25732f0`). Ruling (Krish, 2026-09-26): "Just get in line with what those updates are at the live website", then "Correct the engine's table and anywhere else, its out of date". Why: makeyourmindup.ai went live promising Mon, Wed and Fri and "Contains British spelling", while under.the.hood had no fixed day and nothing checked spelling. The cadence changed live in `venture_formats` and `content_cadence`; house rule BRITISH_SPELLING now reaches the writers and the final pass, and an American spelling outside a quotation or a name blocks approval. The site's logos, colours and typefaces match the pinned kit, so nothing is re-pinned; the brand book now lives in `krishanraja/makeyourmindup`, `docs/brandbooknew/` (`docs/STUDIO.md`).
+- 2026-09-26 **The engine follows the live cover page: under.the.hood on Mondays, British spelling checked** (`fdf434b`; Control Center `25732f0`). Ruling (Krish, 2026-09-26): "Just get in line with what those updates are at the live website", then "Correct the engine's table and anywhere else, its out of date". Why: makeyourmindup.ai went live promising Mon, Wed and Fri and "Contains British spelling", while under.the.hood had no fixed day and nothing checked spelling. The cadence changed live in `venture_formats` and `content_cadence`; house rule BRITISH_SPELLING now reaches the writers and the final pass, and an American spelling outside a quotation or a name blocks approval. The site's logos, colours and typefaces match the pinned kit, so nothing is re-pinned; the brand book now lives in `krishanraja/makeyourmindup`, `docs/brandbooknew/` (`docs/STUDIO.md`).
 - 2026-09-26 **The makeyourmindup lockup is built into the Studio, switched off** (`c370006`). Ruling (Krish, 2026-09-26): "Make your mind up, Mark, plus the channel name", then "placement approved". Why: live subchannels had no branding the Studio could render; it goes live only when his approval is captured as Studio feedback, which a cloud session cannot do.
 - 2026-09-26 **mind.the.gap gets The Fork; piece 2 takes the line edits; the fact gate stops flip-flopping on three known causes** (`3d8e473`, `65bda02` to `d85c3cf`, `644cc3e`). Ruling (Krish, 2026-09-26): "The Fork is good, go on the edits, placement approved." Why: mind.the.gap had no format, so no carousel; piece 2 read at age 12.5; and the gate blocked correct sentences on noise (the confidence line, glued paragraphs, dropped quote marks), which took eight runs to pass. Whether to make the gate steadier still is Krish's call (walk log F25).
 - 2026-09-26 **Shorts are branded makeyourmindup plus the channel name** (`112cc5a`). Ruling (Krish, 2026-09-26): "Make your mind up, Mark, plus the channel name. You've got the logos as per the website for all of that." Why: no channel has a logo image of its own, and the brand book sets channel names as mono type. Recorded, not built; the placement waits on his storyboard verdict.
