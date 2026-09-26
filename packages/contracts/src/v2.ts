@@ -1,11 +1,12 @@
 import { z } from 'zod'
 import { DeviceSelectionTraceV1Schema } from './art-director-v1.js'
+import { StudioSeriesSchema } from './series.js'
 
 export const JOB_SCHEMA_VERSION_V2 = 2 as const
 export const VISUAL_CONTRACT_VERSION_V1 = 1 as const
 export const Sha256V1Schema = z.string().regex(/^[a-f0-9]{64}$/)
 export const IdentifierV1Schema = z.string().regex(/^[a-z0-9][a-z0-9_-]{1,95}$/i)
-export const SeriesV2Schema = z.enum(['money_of_ai', 'built_with_ai'])
+export const SeriesV2Schema = StudioSeriesSchema
 export type SeriesV2 = z.infer<typeof SeriesV2Schema>
 export const SourceModeV2Schema = z.enum(['extract', 'solo', 'short_native'])
 export type SourceModeV2 = z.infer<typeof SourceModeV2Schema>

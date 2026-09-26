@@ -1,4 +1,4 @@
-import { CandidateV1Schema, SCHEMA_VERSION, type CandidateV1, type JobManifestV1 } from '@mindmake/contracts'
+import { CandidateV1Schema, SCHEMA_VERSION, SERIES_LINE, type CandidateV1, type JobManifestV1 } from '@mindmake/contracts'
 import { hashValue } from './hash.js'
 
 export interface TranscriptWord {
@@ -114,7 +114,9 @@ const BUILD_MECHANISM = /\b(build|built|workflow|implementation|api|prompt|agent
 
 export function seriesFit(text: string, series: JobManifestV1['series']): number {
   const ai = AI_CONTEXT.test(text)
-  const mechanism = (series === 'money_of_ai' ? MONEY_MECHANISM : BUILD_MECHANISM).test(text)
+  // follow.the.money reads for a money mechanism, as The Money of AI did;
+  // under.the.hood and mind.the.gap for a build or workflow mechanism.
+  const mechanism = (SERIES_LINE[series] === 'follow_the_money' ? MONEY_MECHANISM : BUILD_MECHANISM).test(text)
   if (!ai && !mechanism) return 0.1
   if (!ai) return 0.3
   if (!mechanism) return 0.45
@@ -211,7 +213,7 @@ export function generateCandidates(job: JobManifestV1, transcript: TranscriptDoc
       const softBlocks: string[] = []
       if (scores.clarity < 0.65) softBlocks.push('the excerpt needs a clearer standalone setup')
       if (scores.tension < 0.65) softBlocks.push('the opening lacks a strong first-beat tension')
-      if (scores.qualified_fit < 0.65) softBlocks.push(`the excerpt does not yet demonstrate a credible ${job.series === 'money_of_ai' ? 'AI business mechanism' : 'AI build, workflow, or implementation mechanism'}`)
+      if (scores.qualified_fit < 0.65) softBlocks.push(`the excerpt does not yet demonstrate a credible ${SERIES_LINE[job.series] === 'follow_the_money' ? 'AI business mechanism' : 'AI build, workflow, or implementation mechanism'}`)
       if (!/[.!?]["')\]]?\s*$/.test(window.text)) softBlocks.push('the excerpt ends before a complete payoff')
       if (job.purpose === 'calibration') softBlocks.push('calibration jobs are analysis-only and cannot create publishable packages')
       const candidate = {

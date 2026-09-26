@@ -136,7 +136,7 @@ function brandableManifest(base: RenderManifestV2 = manifest()): RenderManifestV
       theme_id: theme.theme_id,
       theme_version: theme.version,
       theme_hash: hashValue(theme),
-      wordmark_hashes: [theme.wordmarks!.mindmake.sha256, theme.wordmarks!.series[base.series].sha256],
+      wordmark_hashes: [theme.wordmarks!.mindmake.sha256, theme.wordmarks!.series[base.series]!.sha256],
     },
     shot_directives: base.shot_directives.map((shot) => ({
       ...shot,

@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { IdentifierV1Schema, Sha256V1Schema } from './v2.js'
+import { SERIES_LINE, StudioSeriesSchema, type StudioSeries } from './series.js'
 
 export const PRODUCTION_BRIEF_SCHEMA_VERSION_V1 = 1 as const
 
@@ -34,8 +35,21 @@ export function normalizeEditorialFormatV1(input: string): EditorialFormatV1 {
   return alias
 }
 
-export function editorialFormatBelongsToSeriesV1(series: 'money_of_ai' | 'built_with_ai', format: EditorialFormatV1): boolean {
-  return (series === 'money_of_ai' ? MONEY_OF_AI_FORMATS_V1 : BUILT_WITH_AI_FORMATS_V1).includes(format as never)
+/** The formats each subchannel owns. follow.the.money inherits The Money of
+ *  AI's and under.the.hood Built With AI's; mind.the.gap has none yet, so its
+ *  briefs carry no editorial format. */
+export const EDITORIAL_FORMATS_BY_LINE_V1: Readonly<Record<'follow_the_money' | 'mind_the_gap' | 'under_the_hood', readonly EditorialFormatV1[]>> = Object.freeze({
+  follow_the_money: MONEY_OF_AI_FORMATS_V1,
+  mind_the_gap: [],
+  under_the_hood: BUILT_WITH_AI_FORMATS_V1,
+})
+
+export function editorialFormatsForSeriesV1(series: StudioSeries): readonly EditorialFormatV1[] {
+  return EDITORIAL_FORMATS_BY_LINE_V1[SERIES_LINE[series]]
+}
+
+export function editorialFormatBelongsToSeriesV1(series: StudioSeries, format: EditorialFormatV1): boolean {
+  return editorialFormatsForSeriesV1(series).includes(format)
 }
 
 export const ProductionBriefV1Schema = z.object({
@@ -43,7 +57,7 @@ export const ProductionBriefV1Schema = z.object({
   brief_id: IdentifierV1Schema,
   content_idea_id: z.string().uuid(),
   content_revision_hash: Sha256V1Schema,
-  series: z.enum(['money_of_ai', 'built_with_ai']),
+  series: StudioSeriesSchema,
   editorial_format: EditorialFormatV1Schema.optional(),
   production_kinds: z.array(z.enum(['video', 'carousel'])).min(1).max(2).refine((value) => new Set(value).size === value.length, { message: 'production kinds must be unique' }),
   source_mode: z.enum(['extract', 'solo', 'short_native', 'written']),
@@ -108,6 +122,11 @@ export const ProductionBriefClaimRequestV1Schema = z.object({
   software_commit: RunnerCommitV1Schema,
   command_schema_versions: z.tuple([z.literal(1)]),
   lease_seconds: z.number().int().min(30).max(300).optional(),
+  // The series this runner understands. A runner that sends none predates
+  // the live subchannel names and is only ever given briefs in the two
+  // retired ones: parsing a live name would throw inside its claim and fail
+  // its whole cycle, again on every lease expiry.
+  series_supported: z.array(StudioSeriesSchema).min(1).max(8).optional(),
 }).strict()
 export type ProductionBriefClaimRequestV1 = z.infer<typeof ProductionBriefClaimRequestV1Schema>
 

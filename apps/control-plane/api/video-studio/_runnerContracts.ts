@@ -10,6 +10,7 @@
 // builder compiles exactly like a route. check-run-recovery.ts refuses the
 // package-name form so the green-build-broken-function failure cannot come back.
 import {
+  ProductionBriefClaimRequestV1Schema,
   RunnerClaimRequestV1Schema,
   RunnerCompleteRequestV1Schema,
   RunnerHeartbeatRequestV1Schema,
@@ -27,6 +28,8 @@ import {
   parseReviewPayload,
   parseMagicEditSelection,
   safeRedactedText,
+  SERIES,
+  RETIRED_SERIES,
 } from './_contracts.js'
 
 type UnknownRecord = Record<string, unknown>
@@ -582,7 +585,7 @@ export function parseRunnerProjectRequest(value: unknown): RunnerProjectRequestV
   const safeJobSummary = safeRedactedText(job.safe_summary, 600, 1)
   if (
     !identifier(job.job_id)
-    || !['money_of_ai', 'built_with_ai'].includes(String(job.series || ''))
+    || !(SERIES as readonly string[]).includes(String(job.series || ''))
     || !['extract', 'solo', 'short_native'].includes(String(job.mode || ''))
     || !Array.isArray(job.target_platforms)
     || job.target_platforms.length < 1
@@ -901,6 +904,41 @@ export function parseRunnerClaimRequest(value: unknown): RunnerClaimRequestV1 | 
     // send a number it never chose.
     lease_seconds: parsed.data.lease_seconds ?? 120,
   }
+}
+
+export interface ProductionBriefClaimRequest {
+  schema_version: 1
+  runner_id: string
+  software_commit: string
+  command_schema_versions: [1]
+  lease_seconds: number
+  /** The series the runner said it understands, or null when it said nothing
+   *  (a runner from before the live subchannel names). */
+  series_supported: string[] | null
+}
+
+/** A production-brief claim. Its own parser, because a runner that declares
+ *  the series it understands sends a field the general claim refuses. */
+export function parseProductionBriefClaimRequest(value: unknown): ProductionBriefClaimRequest | null {
+  const parsed = ProductionBriefClaimRequestV1Schema.safeParse(value)
+  if (!parsed.success) return null
+  return {
+    schema_version: 1,
+    runner_id: parsed.data.runner_id,
+    software_commit: parsed.data.software_commit,
+    command_schema_versions: [1],
+    lease_seconds: parsed.data.lease_seconds ?? 120,
+    series_supported: parsed.data.series_supported ? [...parsed.data.series_supported] : null,
+  }
+}
+
+/** Whether a runner may be handed a brief in this series. The retired pair
+ *  goes to any runner; a live subchannel only to one that declared it, because
+ *  an older runner throws while parsing it and fails its whole cycle, again on
+ *  every lease expiry. */
+export function runnerTakesSeries(supported: readonly string[] | null, series: string): boolean {
+  if ((RETIRED_SERIES as readonly string[]).includes(series)) return true
+  return Boolean(supported?.includes(series))
 }
 
 export interface RunnerHeartbeatRequestV1 {

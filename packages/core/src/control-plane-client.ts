@@ -29,6 +29,7 @@ import {
   type RunnerProjectProjectionV1,
   type ClaimedProductionBriefV1,
   type ProductionBriefCompleteRequestV1,
+  SERIES_IDS,
 } from '@mindmake/contracts'
 import { hashFile, hashFileMd5, hashValue } from './hash.js'
 
@@ -156,6 +157,10 @@ export class ControlPlaneClient {
       software_commit: input.software_commit,
       command_schema_versions: [1],
       ...(input.lease_seconds === undefined ? {} : { lease_seconds: input.lease_seconds }),
+      // Declares every series this runner can parse, so the control plane
+      // hands it briefs in the live subchannel names. A runner that says
+      // nothing is only given the retired pair.
+      series_supported: [...SERIES_IDS],
     })
     const response = ProductionBriefClaimResponseV1Schema.parse(await this.post('production-brief-claim', request))
     if (!response.item) return null

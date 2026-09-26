@@ -11,6 +11,7 @@ import {
   type RenderManifestV1,
   type RenderManifestV2,
   type VideoPlatformV1,
+  SERIES_LINE,
 } from '@mindmake/contracts'
 import { hashFile, hashValue } from './hash.js'
 import { jobPath, studioPaths } from './paths.js'
@@ -159,9 +160,11 @@ function publicText(value: string): string {
 }
 
 function seriesTags(candidate: CandidateV1): string[] {
-  return candidate.series === 'money_of_ai'
-    ? ['#Mindmake', '#TheMoneyOfAI', '#BusinessAI']
-    : ['#Mindmake', '#BuiltWithAI', '#AIForOperators']
+  // Jobs made under the retired names keep the tags they were drafted with.
+  if (candidate.series === 'money_of_ai') return ['#Mindmake', '#TheMoneyOfAI', '#BusinessAI']
+  if (candidate.series === 'built_with_ai') return ['#Mindmake', '#BuiltWithAI', '#AIForOperators']
+  const line = SERIES_LINE[candidate.series]
+  return ['#makeyourmindup', line === 'follow_the_money' ? '#FollowTheMoney' : line === 'mind_the_gap' ? '#MindTheGap' : '#UnderTheHood', '#AI']
 }
 
 export function platformCopyV2(candidate: CandidateV1, platform: VideoPlatformV1): PlatformCopyV2 {

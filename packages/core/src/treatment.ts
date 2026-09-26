@@ -11,6 +11,7 @@ import {
   type RenderManifestV1,
   type Series,
   type SourceMode,
+  seriesEligible,
 } from '@mindmake/contracts'
 import { hashFile, hashValue } from './hash.js'
 import { assembleClip, probeMedia } from './media.js'
@@ -62,7 +63,7 @@ function styleFor(treatmentId: string): RenderManifestV1['style'] {
 }
 
 export function treatmentPresetMatchesScope(preset: ApprovedTreatmentPresetV1, series: Series, mode: SourceMode): boolean {
-  return preset.status === 'approved' && preset.scope.series.includes(series) && preset.scope.modes.includes(mode)
+  return preset.status === 'approved' && seriesEligible(preset.scope.series, series) && preset.scope.modes.includes(mode)
 }
 
 export function resolveApprovedTreatmentPreset(

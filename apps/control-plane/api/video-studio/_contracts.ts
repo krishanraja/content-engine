@@ -4,7 +4,11 @@ export const VIDEO_STUDIO_CONTROL_SCHEMA_VERSION = 1 as const
 export const SHA256_RE = /^[a-f0-9]{64}$/
 export const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
-export const SERIES = ['money_of_ai', 'built_with_ai'] as const
+// The retired pair stays valid for records made under it; new briefs carry
+// the live subchannel names (packages/contracts/src/series.ts).
+export const RETIRED_SERIES = ['money_of_ai', 'built_with_ai'] as const
+export const LIVE_SERIES = ['follow_the_money', 'mind_the_gap', 'under_the_hood'] as const
+export const SERIES = [...RETIRED_SERIES, ...LIVE_SERIES] as const
 export const MODES = ['extract', 'solo', 'short_native'] as const
 export const VIDEO_PLATFORMS = ['youtube_shorts', 'linkedin', 'tiktok', 'instagram_reels'] as const
 export const REVIEW_GATES = ['story', 'treatment', 'final', 'learning'] as const

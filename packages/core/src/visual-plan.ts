@@ -7,6 +7,7 @@ import {
   type PreferenceRuleV1,
   type SourceVisualAnalysisV1,
   type VisualNarrativePlanV1,
+  sameSeriesLine,
 } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { BUILT_WITH_AI_EDITORIAL_RULE_ID, MONEY_OF_AI_EDITORIAL_RULE_ID } from './editorial.js'
@@ -96,7 +97,7 @@ function activeEditorialStandards(input: ReviewVisualPlanInput): Set<string> {
   return new Set((input.activePreferences || []).filter((rule) => {
     if (![MONEY_OF_AI_EDITORIAL_RULE_ID, BUILT_WITH_AI_EDITORIAL_RULE_ID].includes(rule.rule_id) || rule.status !== 'active') return false
     if (rule.scope.level === 'global') return true
-    if (rule.scope.level === 'series') return rule.scope.key === context.series
+    if (rule.scope.level === 'series') return sameSeriesLine(rule.scope.key, context.series)
     if (rule.scope.level === 'mode') return rule.scope.key === context.mode
     if (rule.scope.level === 'job') return rule.scope.key === context.jobId
     return false

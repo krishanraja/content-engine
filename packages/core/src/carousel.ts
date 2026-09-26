@@ -14,13 +14,14 @@ import {
   type CarouselDraftPackageV1,
   type CarouselStoryV1,
   type PreferenceRuleV1,
+  PUBLIC_SERIES_NAMES,
+  sameSeriesLine,
 } from '@mindmake/contracts'
 import { stageOfficialSeriesWordmarks, type StagedWordmarkAsset } from './brand-assets.js'
 import { BUILT_WITH_AI_EDITORIAL_RULE_ID, MONEY_OF_AI_EDITORIAL_RULE_ID } from './editorial.js'
 import { hashFile, hashValue } from './hash.js'
 
 const COMPOSITION_ID = 'MindmakeCarouselSlide'
-const SERIES_NAMES = { money_of_ai: 'The Money of AI', built_with_ai: 'Built With AI' } as const
 
 export interface CarouselRenderResult {
   story_id: string
@@ -43,7 +44,7 @@ function parseCarouselStoryInput(input: unknown): CarouselStoryV1 {
 
 function seriesPreferenceActive(story: CarouselStoryV1, preferences: PreferenceRuleV1[], ruleId: string): boolean {
   return preferences.some((rule) => rule.rule_id === ruleId && rule.status === 'active' && (
-    rule.scope.level === 'global' || (rule.scope.level === 'series' && rule.scope.key === story.series)
+    rule.scope.level === 'global' || (rule.scope.level === 'series' && sameSeriesLine(rule.scope.key, story.series))
   ))
 }
 
@@ -179,7 +180,7 @@ export async function renderCarousel(repoRoot: string, configPath: string, story
       reviewMode,
       storyId: story.story_id,
       series: story.series,
-      seriesName: SERIES_NAMES[story.series],
+      seriesName: PUBLIC_SERIES_NAMES[story.series],
       slideCount: story.slides.length,
       slide: {
         position: slide.position,

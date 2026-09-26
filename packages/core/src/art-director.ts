@@ -11,6 +11,8 @@ import {
   type DeviceUsageEventV1,
   type VisualDeviceDefinitionV1,
   type VisualNarrativeJobV1,
+  seriesEligible,
+  type StudioSeries,
 } from '@mindmake/contracts'
 import { createHash, randomUUID } from 'node:crypto'
 import { appendFile, mkdir, readFile } from 'node:fs/promises'
@@ -19,7 +21,7 @@ import { dirname } from 'node:path'
 export interface DeviceSelectionContextV1 {
   traceId: string
   beatId: string
-  series: 'money_of_ai' | 'built_with_ai'
+  series: StudioSeries
   sourceMode: 'extract' | 'solo' | 'short_native'
   editorialFormat?: string
   narrativeFunction: string
@@ -36,7 +38,7 @@ export interface DeviceSelectionContextV1 {
 }
 
 export interface VisualRecipeContextV1 {
-  series: 'money_of_ai' | 'built_with_ai'
+  series: StudioSeries
   editorialFormat?: string
   treatmentLane: 'restrained' | 'premium' | 'experimental'
   availableInputs: string[]
@@ -49,7 +51,7 @@ export function resolveVisualRecipe(repertoireInput: ArtDirectorRepertoireV1, re
   if (!recipe) throw new Error(`unknown visual recipe ${recipeId}`)
   const available = new Set(context.availableInputs)
   const hardRejections: string[] = []
-  if (!recipe.eligible_series.includes(context.series)) hardRejections.push(`not eligible for ${context.series}`)
+  if (!seriesEligible(recipe.eligible_series, context.series)) hardRejections.push(`not eligible for ${context.series}`)
   if (recipe.eligible_formats.length && (!context.editorialFormat || !recipe.eligible_formats.includes(context.editorialFormat))) hardRejections.push('not eligible for this editorial format')
   const missing = recipe.required_inputs.filter((input) => !available.has(input))
   if (missing.length) hardRejections.push(`missing inputs: ${missing.sort().join(', ')}`)
@@ -85,7 +87,7 @@ function applies(values: string[], value: string | undefined): boolean {
 function hardRejections(device: VisualDeviceDefinitionV1, context: DeviceSelectionContextV1): string[] {
   const issues: string[] = []
   const available = new Set(context.availableInputs)
-  if (!device.eligibility.series.includes(context.series)) issues.push(`not eligible for ${context.series}`)
+  if (!seriesEligible(device.eligibility.series, context.series)) issues.push(`not eligible for ${context.series}`)
   if (!device.eligibility.source_modes.includes(context.sourceMode)) issues.push(`not eligible for ${context.sourceMode}`)
   if (!applies(device.eligibility.editorial_formats, context.editorialFormat)) issues.push('not eligible for this editorial format')
   if (!applies(device.eligibility.narrative_functions, context.narrativeFunction)) issues.push('not eligible for this narrative function')
@@ -109,7 +111,7 @@ function scoreDevice(device: VisualDeviceDefinitionV1, context: DeviceSelectionC
     : device.narrative_jobs.includes('prove') ? 12 : 18
   const available_coverage = 20
   const series_format_fit = Math.min(10,
-    (device.eligibility.series.includes(context.series) ? 5 : 0)
+    (seriesEligible(device.eligibility.series, context.series) ? 5 : 0)
     + (applies(device.eligibility.editorial_formats, context.editorialFormat) ? 3 : 0)
     + (preferred.has(device.technique_id) ? 2 : 0))
   const novelty = recent.has(device.technique_id) ? 2 : 10

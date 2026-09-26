@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { access, copyFile, mkdir, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, join } from 'node:path'
-import type { BrandThemeV1, BrandWordmarkAssetV1, BrandWordmarkLockupV1, RenderManifestV1, Series } from '@mindmake/contracts'
+import { SERIES_IDS, type BrandThemeV1, type BrandWordmarkAssetV1, type BrandWordmarkLockupV1, type RenderManifestV1, type Series } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { studioPaths } from './paths.js'
 
@@ -28,12 +28,19 @@ export interface BrandWordmarkLegibilityMetrics {
   plate_height_px: number
 }
 
+/** Always the two retired series, whose marks every theme carries; a live
+ *  subchannel only once its mark is approved and pinned. */
+export type MarkedSeriesRecord<T> = Record<'money_of_ai' | 'built_with_ai', T> & Partial<Record<Series, T>>
+
 export interface BrandWordmarkLegibilityReport {
   failures: string[]
   warnings: string[]
-  recommended_identity_mode: Record<Series, 'stacked_identity' | 'series_only'>
-  identity: Record<Series, BrandWordmarkLegibilityMetrics>
-  series_only: Record<Series, BrandWordmarkLegibilityMetrics>
+  // Keyed by the series whose official mark the theme carries. The two retired
+  // series always have one; a live subchannel appears once Krish approves its
+  // mark and it is pinned in studio.json.
+  recommended_identity_mode: MarkedSeriesRecord<'stacked_identity' | 'series_only'>
+  identity: MarkedSeriesRecord<BrandWordmarkLegibilityMetrics>
+  series_only: MarkedSeriesRecord<BrandWordmarkLegibilityMetrics>
   anchor: BrandWordmarkLegibilityMetrics
 }
 
@@ -107,7 +114,6 @@ function renderedLetterHeight(asset: BrandWordmarkAssetV1, width: number): numbe
   return width * asset.letter_region.height / asset.alpha_crop.width
 }
 
-const SERIES: Series[] = ['money_of_ai', 'built_with_ai']
 
 export function brandWordmarkLegibilityReport(theme: BrandThemeV1): BrandWordmarkLegibilityReport {
   const emptyMetrics = { mindmake_width_px: 0, mindmake_height_px: 0, series_width_px: 0, series_asset_height_px: 0, series_letter_height_px: 0, series_letter_height_at_375_css_px: 0, plate_width_px: 0, plate_height_px: 0 }
@@ -131,9 +137,9 @@ export function brandWordmarkLegibilityReport(theme: BrandThemeV1): BrandWordmar
 
   const failures: string[] = []
   const warnings: string[] = []
-  const recommendedMode = {} as Record<Series, 'stacked_identity' | 'series_only'>
-  const identity = {} as Record<Series, BrandWordmarkLegibilityMetrics>
-  const seriesOnly = {} as Record<Series, BrandWordmarkLegibilityMetrics>
+  const recommendedMode = {} as MarkedSeriesRecord<'stacked_identity' | 'series_only'>
+  const identity = {} as MarkedSeriesRecord<BrandWordmarkLegibilityMetrics>
+  const seriesOnly = {} as MarkedSeriesRecord<BrandWordmarkLegibilityMetrics>
   const minimum = lockup.minimum_effective
   const anchorMindmakeHeight = renderedHeight(theme.wordmarks.mindmake, lockup.anchor.mindmake_width)
   const anchor = {
@@ -150,8 +156,9 @@ export function brandWordmarkLegibilityReport(theme: BrandThemeV1): BrandWordmar
     && anchorMindmakeHeight <= lockup.anchor.plate_height - lockup.anchor.padding * 2
   if (lockup.anchor.mindmake_width < minimum.mindmake_width_px || anchorMindmakeHeight < minimum.mindmake_height_px || !anchorFits) failures.push('Mindmake-only anchor renders below the 1080x1920 legibility or fit floor')
 
-  for (const series of SERIES) {
+  for (const series of SERIES_IDS) {
     const asset = theme.wordmarks.series[series]
+    if (!asset) continue
     const mindmakeHeight = renderedHeight(theme.wordmarks.mindmake, lockup.identity.mindmake_width)
     const seriesHeight = renderedHeight(asset, lockup.identity.series_width)
     const seriesLetterHeight = renderedLetterHeight(asset, lockup.identity.series_width)
@@ -219,7 +226,7 @@ export async function stageOfficialWordmarks(manifest: RenderManifestV1, targetD
   if (!theme.wordmarks.lockup) throw new Error('branded renders require the approved responsive wordmark lockup')
   const issues = brandWordmarkLegibilityIssues(theme)
   if (issues.length) throw new Error(`official wordmark legibility gate failed: ${issues.join('; ')}`)
-  const seriesAsset = theme.wordmarks.series[manifest.series as Series]
+  const seriesAsset = officialSeriesMark(theme, manifest.series as Series)
   return {
     mindmake: await stageAsset(theme, theme.wordmarks.mindmake, targetDirectory, 'mindmake', fetchImpl),
     series: await stageAsset(theme, seriesAsset, targetDirectory, manifest.series, fetchImpl),
@@ -227,10 +234,19 @@ export async function stageOfficialWordmarks(manifest: RenderManifestV1, targetD
   }
 }
 
+/** The official mark for a series, or a plain refusal naming the missing
+ *  approval. The live subchannels have no approved mark yet (walk log F21),
+ *  and a mark is never recreated as text. */
+export function officialSeriesMark(theme: BrandThemeV1, series: Series): BrandWordmarkAssetV1 {
+  const asset = theme.wordmarks?.series[series]
+  if (!asset) throw new Error(`${series} has no approved official wordmark yet; a branded render needs one pinned in studio.json`)
+  return asset
+}
+
 export async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: Series, targetDirectory: string, fetchImpl: typeof fetch = fetch): Promise<Pick<StagedBrandWordmarks, 'mindmake' | 'series'>> {
   if (!theme.rules.official_wordmarks_only || !theme.wordmarks) throw new Error('branded carousel renders require official wordmarks')
   return {
     mindmake: await stageAsset(theme, theme.wordmarks.mindmake, targetDirectory, 'mindmake', fetchImpl),
-    series: await stageAsset(theme, theme.wordmarks.series[series], targetDirectory, series, fetchImpl),
+    series: await stageAsset(theme, officialSeriesMark(theme, series), targetDirectory, series, fetchImpl),
   }
 }

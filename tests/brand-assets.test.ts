@@ -47,7 +47,8 @@ describe('official brand wordmarks', () => {
     expect(wordmarks.series.built_with_ai.letter_region).toEqual({ x: 287, y: 452, width: 626, height: 57 })
     const lockup = wordmarks.lockup
     if (!lockup) throw new Error('active theme is missing its approved wordmark lockup')
-    for (const asset of Object.values(wordmarks.series)) {
+    // Every mark the theme carries; a live subchannel has none until approved.
+    for (const asset of Object.values(wordmarks.series).filter((mark): mark is NonNullable<typeof mark> => Boolean(mark))) {
       // The complete official lettering, not a convenient middle slice, must
       // survive the crop and fit inside both approved series plates.
       expect(asset.letter_region.x).toBe(asset.alpha_crop.x)

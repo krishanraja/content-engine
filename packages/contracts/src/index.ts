@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { DraftPackageV2Schema, JobManifestV2Schema, RenderManifestV2Schema, StageArtifactV2Schema, StudioEventV2Schema } from './v2.js'
 import { EditorialFormatV1Schema, editorialFormatBelongsToSeriesV1 } from './editorial-v1.js'
+import { StudioSeriesSchema } from './series.js'
 export * from './v2.js'
 export * from './control-plane-v1.js'
 export * from './drive-discovery-v1.js'
@@ -10,10 +11,11 @@ export * from './confirmation-v1.js'
 export * from './editorial-v1.js'
 export * from './art-director-v1.js'
 export * from './station-harness-v1.js'
+export * from './series.js'
 
 export const SCHEMA_VERSION = 1 as const
 
-export const SeriesSchema = z.enum(['money_of_ai', 'built_with_ai'])
+export const SeriesSchema = StudioSeriesSchema
 export type Series = z.infer<typeof SeriesSchema>
 
 export const SourceModeSchema = z.enum(['extract', 'solo', 'short_native'])
@@ -493,9 +495,14 @@ export const BrandThemeV1Schema = z.object({
     }),
     lockup: BrandWordmarkLockupV1Schema.optional(),
     mindmake: BrandWordmarkAssetV1Schema,
+    // The live subchannels are optional until Krish approves their marks, so
+    // a theme pinned before they existed parses and hashes exactly as it did.
     series: z.object({
       money_of_ai: BrandWordmarkAssetV1Schema,
       built_with_ai: BrandWordmarkAssetV1Schema,
+      follow_the_money: BrandWordmarkAssetV1Schema.optional(),
+      mind_the_gap: BrandWordmarkAssetV1Schema.optional(),
+      under_the_hood: BrandWordmarkAssetV1Schema.optional(),
     }),
   }).optional(),
 })
@@ -713,7 +720,7 @@ export const DraftPackageV1Schema = z.object({
 export type DraftPackageV1 = z.infer<typeof DraftPackageV1Schema>
 
 export function normalizeSeries(value: string): Series {
-  const normalized = value.trim().toLowerCase().replace(/[\s-]+/g, '_')
+  const normalized = value.trim().toLowerCase().replace(/[\s.-]+/g, '_')
   if (normalized === 'paid' || normalized === 'the_money_of_ai' || normalized === 'money_of_ai') return 'money_of_ai'
   if (normalized === 'built' || normalized === 'built_with_ai') return 'built_with_ai'
   return SeriesSchema.parse(normalized)
@@ -722,6 +729,9 @@ export function normalizeSeries(value: string): Series {
 export const PUBLIC_SERIES_NAMES: Record<Series, string> = {
   money_of_ai: 'The Money of AI',
   built_with_ai: 'Built With AI',
+  follow_the_money: 'follow.the.money',
+  mind_the_gap: 'mind.the.gap',
+  under_the_hood: 'under.the.hood',
 }
 
 export const AnyJobManifestSchema=z.discriminatedUnion('schema_version',[JobManifestV1Schema,JobManifestV2Schema])

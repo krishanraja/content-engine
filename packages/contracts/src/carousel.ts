@@ -1,9 +1,10 @@
 import { z } from 'zod'
 import { confirmationRefMatches } from './confirmation-v1.js'
 import { EditorialFormatV1Schema, editorialFormatBelongsToSeriesV1 } from './editorial-v1.js'
+import { StudioSeriesSchema } from './series.js'
 
 export const CAROUSEL_SCHEMA_VERSION = 1 as const
-const CarouselSeriesSchema = z.enum(['money_of_ai', 'built_with_ai'])
+const CarouselSeriesSchema = StudioSeriesSchema
 
 const CarouselVisualStageSchema = z.enum([
   'meaning_map',

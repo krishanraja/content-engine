@@ -14,8 +14,9 @@ const RuntimeWordmarkSchema = z.object({
 export const CarouselRenderPropsSchema = z.object({
   reviewMode: z.boolean(),
   storyId: z.string().min(1),
-  series: z.enum(['money_of_ai', 'built_with_ai']),
-  seriesName: z.enum(['The Money of AI', 'Built With AI']),
+  // The retired pair stays for stories made under them (packages/contracts/src/series.ts).
+  series: z.enum(['money_of_ai', 'built_with_ai', 'follow_the_money', 'mind_the_gap', 'under_the_hood']),
+  seriesName: z.enum(['The Money of AI', 'Built With AI', 'follow.the.money', 'mind.the.gap', 'under.the.hood']),
   slideCount: z.number().int().min(5).max(10),
   slide: z.object({
     position: z.number().int().positive(),

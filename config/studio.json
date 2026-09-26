@@ -104,7 +104,10 @@
   },
   "series": {
     "money_of_ai": { "public_name": "The Money of AI", "accent": "#7FE3B4", "audience": "enterprise leaders, founders, and transformation buyers" },
-    "built_with_ai": { "public_name": "Built With AI", "accent": "#7FE3B4", "audience": "AI-native operators and hands-on builders" }
+    "built_with_ai": { "public_name": "Built With AI", "accent": "#7FE3B4", "audience": "AI-native operators and hands-on builders" },
+    "follow_the_money": { "public_name": "follow.the.money", "accent": "#FFD84D", "audience": "makeyourmindup readers, written at a reading age of 12" },
+    "mind_the_gap": { "public_name": "mind.the.gap", "accent": "#FF6A4D", "audience": "makeyourmindup readers, written at a reading age of 12" },
+    "under_the_hood": { "public_name": "under.the.hood", "accent": "#B7A6FF", "audience": "makeyourmindup readers, written at a reading age of 12" }
   },
   "gates": { "hard": ["truth", "rights", "confidentiality", "meaning", "canonical_naming"], "soft": ["clarity", "engagement", "novelty", "audience_fit"] },
   "learning": { "broaden_after_confirmations": 3, "broaden_across_jobs": 2, "performance_replications": 3, "approval_required": true },

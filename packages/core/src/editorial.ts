@@ -1,4 +1,4 @@
-import type { CandidateV1, EditSegmentV1, JobManifestV1, PreferenceRuleV1 } from '@mindmake/contracts'
+import { sameSeriesLine, type CandidateV1, type EditSegmentV1, type JobManifestV1, type PreferenceRuleV1 } from '@mindmake/contracts'
 import type { TranscriptDocument, TranscriptWord } from './candidates.js'
 import { sliceTranscript } from './captions.js'
 
@@ -34,7 +34,7 @@ export const INVESTIGATIVE_SHORT_REFERENCE_RULE_ID = MONEY_OF_AI_EDITORIAL_RULE_
 function preferenceAppliesToCandidate(rule: PreferenceRuleV1, candidate: CandidateV1): boolean {
   if (rule.status !== 'active') return false
   if (rule.scope.level === 'global') return true
-  if (rule.scope.level === 'series') return rule.scope.key === candidate.series
+  if (rule.scope.level === 'series') return sameSeriesLine(rule.scope.key, candidate.series)
   if (rule.scope.level === 'mode') return rule.scope.key === candidate.mode
   if (rule.scope.level === 'job') return rule.scope.key === candidate.job_id
   return false

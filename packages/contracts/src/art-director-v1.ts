@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { StudioSeriesSchema } from './series.js'
 
 const Identifier = z.string().regex(/^[a-z0-9][a-z0-9_-]{1,95}$/i)
 const Sha256 = z.string().regex(/^[a-f0-9]{64}$/)
@@ -9,7 +10,9 @@ export const DeviceImplementationStateV1Schema = z.enum(['specified', 'implement
 export const DeviceCostClassV1Schema = z.enum(['local', 'hybrid', 'cloud_optional'])
 
 export const DeviceEligibilityV1Schema = z.object({
-  series: z.array(z.enum(['money_of_ai', 'built_with_ai'])).default(['money_of_ai', 'built_with_ai']),
+  // The default stays the two retired ids so a pinned registry parses exactly
+  // as it did; seriesEligible reads a list naming both as every subchannel.
+  series: z.array(StudioSeriesSchema).default(['money_of_ai', 'built_with_ai']),
   source_modes: z.array(z.enum(['extract', 'solo', 'short_native'])).default(['extract', 'solo', 'short_native']),
   editorial_formats: z.array(Identifier).default([]),
   narrative_functions: z.array(Identifier).default([]),
@@ -52,7 +55,7 @@ export const VisualRecipeV1Schema = z.object({
   name: z.string().trim().min(2).max(120),
   purpose: z.string().trim().min(12).max(600),
   device_sequence: z.array(Identifier).min(2).max(12),
-  eligible_series: z.array(z.enum(['money_of_ai', 'built_with_ai'])).min(1),
+  eligible_series: z.array(StudioSeriesSchema).min(1),
   eligible_formats: z.array(Identifier).default([]),
   recurrence_cap_jobs: z.number().int().min(1).max(20).default(4),
   required_inputs: z.array(Identifier).default([]),

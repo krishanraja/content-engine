@@ -94,6 +94,8 @@ jobs:
           psql_in supabase/migrations/20260905100000_video_studio_heartbeat_lease.sql
           psql_in tests/fixtures/control-plane/projection-state-pre-migration.sql
           psql_in supabase/migrations/20260905110000_video_studio_expected_platform_state.sql
+          psql_in supabase/migrations/20260926090000_video_studio_series_live_subchannels.sql
+          psql_in tests/fixtures/control-plane/series-live-subchannels.sql
           psql_in tests/fixtures/control-plane/projection-state-regression.sql
           psql_in tests/fixtures/control-plane/projection-state-concurrency-setup.sql
 

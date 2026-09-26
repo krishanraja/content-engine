@@ -1,16 +1,25 @@
 import { createHash } from 'node:crypto'
+import { FACE } from './_mission.js'
 
 export const PRODUCTION_BRIEF_SCHEMA_VERSION = 1 as const
 export const PRODUCTION_KIND_VALUES = ['video', 'carousel'] as const
 export const PRODUCTION_SOURCE_MODE_VALUES = ['extract', 'solo', 'short_native', 'written'] as const
+// The retired pair stays for briefs made under it. follow.the.money takes The
+// Money of AI's formats and under.the.hood Built With AI's; mind.the.gap has
+// none yet, so its briefs carry no editorial format. Mirrors
+// packages/contracts/src/editorial-v1.ts EDITORIAL_FORMATS_BY_LINE_V1.
 export const PRODUCTION_FORMATS_BY_SERIES = {
   money_of_ai: ['money_trace', 'artifact', 'verdict', 'cold_open_cutdown'],
   built_with_ai: ['builder_conversation', 'build_itself', 'third_why', 'first_version'],
+  follow_the_money: ['money_trace', 'artifact', 'verdict', 'cold_open_cutdown'],
+  mind_the_gap: [],
+  under_the_hood: ['builder_conversation', 'build_itself', 'third_why', 'first_version'],
 } as const
+export const PRODUCTION_SERIES_VALUES = ['money_of_ai', 'built_with_ai', 'follow_the_money', 'mind_the_gap', 'under_the_hood'] as const
 
 export type ProductionKind = typeof PRODUCTION_KIND_VALUES[number]
 export type ProductionSourceMode = typeof PRODUCTION_SOURCE_MODE_VALUES[number]
-export type ProductionSeries = 'money_of_ai' | 'built_with_ai'
+export type ProductionSeries = typeof PRODUCTION_SERIES_VALUES[number]
 export type ProductionFormat = typeof PRODUCTION_FORMATS_BY_SERIES[ProductionSeries][number]
 
 type JsonRecord = Record<string, unknown>
@@ -132,9 +141,17 @@ export function contentRevisionHash(input: ContentRevisionInput): string {
   })
 }
 
+/** The Studio series for a piece: its subchannel as stored. A piece on a
+ *  retired slot keeps that id, so its briefs and their hashes are unchanged; a
+ *  piece on a live subchannel gets the live id. Never crossed. */
 export function productionSeries(input: Pick<ContentRevisionInput, 'lane' | 'lane_slot'>): ProductionSeries | null {
   if (input.lane !== 'publication') return null
-  return input.lane_slot === 'money_of_ai' || input.lane_slot === 'built_with_ai' ? input.lane_slot : null
+  return (PRODUCTION_SERIES_VALUES as readonly string[]).includes(String(input.lane_slot)) ? input.lane_slot as ProductionSeries : null
+}
+
+/** Whether a series has editorial formats a brief must name one of. */
+export function seriesHasFormats(series: ProductionSeries): boolean {
+  return PRODUCTION_FORMATS_BY_SERIES[series].length > 0
 }
 
 export function createProductionApproval(input: ContentRevisionInput, approvedAt: string): ProductionApprovalV1 {
@@ -206,7 +223,8 @@ export function buildProductionBrief(input: {
   approval: ProductionApprovalV1
   productionKinds: ProductionKind[]
   sourceMode: ProductionSourceMode
-  editorialFormat: ProductionFormat
+  /** Null only for a series with no formats (mind.the.gap). */
+  editorialFormat: ProductionFormat | null
 }): ProductionBriefV1 {
   const { row, approval, productionKinds, sourceMode, editorialFormat } = input
   const series = productionSeries(row)
@@ -214,7 +232,9 @@ export function buildProductionBrief(input: {
   const revisionHash = contentRevisionHash(row)
   if (approval.content_revision_hash !== revisionHash) throw new Error('approved_revision_changed')
   if (productionKinds.includes('video') && sourceMode === 'written') throw new Error('video_source_mode_required')
-  if (!(PRODUCTION_FORMATS_BY_SERIES[series] as readonly string[]).includes(editorialFormat)) throw new Error('canonical_editorial_format_required')
+  if (seriesHasFormats(series)
+    ? !editorialFormat || !(PRODUCTION_FORMATS_BY_SERIES[series] as readonly string[]).includes(editorialFormat)
+    : editorialFormat !== null) throw new Error('canonical_editorial_format_required')
 
   const meta = jsonRecord(row.meta)
   const route = jsonRecord(meta.editorial_route)
@@ -223,7 +243,9 @@ export function buildProductionBrief(input: {
   const thesis = normalizedText(row.thesis) || normalizedText(row.body).split(/\n\n+/)[0] || normalizedText(row.idea)
   const audience = textFrom(candidate, 'audience_problem', series === 'money_of_ai'
     ? 'Enterprise leaders making commercial decisions about AI'
-    : 'AI-native operators and builders deciding how to work')
+    : series === 'built_with_ai'
+      ? 'AI-native operators and builders deciding how to work'
+      : FACE)
   const payoff = textFrom(candidate, 'honest_payoff', thesis)
   const visual = textFrom(candidate, 'visual_proof', textFrom(meta, 'visual_suggestion'))
 
@@ -241,7 +263,9 @@ export function buildProductionBrief(input: {
     content_idea_id: row.id,
     content_revision_hash: revisionHash,
     series,
-    editorial_format: editorialFormat,
+    // Absent, never null, when the series has no formats: the contract field
+    // is optional, and every existing brief keeps this key in this place.
+    ...(editorialFormat ? { editorial_format: editorialFormat } : {}),
     production_kinds: productionKinds,
     source_mode: sourceMode,
     content: {

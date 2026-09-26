@@ -5,6 +5,7 @@ import {
   productionBriefHash,
   type ProductionSeries,
   type ProductionBriefV1,
+  PRODUCTION_SERIES_VALUES,
 } from '../_productionBrief.js'
 
 export const PRODUCTION_BRIEF_LEASE_STATUSES = ['ready_for_studio', 'leased'] as const
@@ -56,7 +57,7 @@ export function readProductionBrief(value: unknown): ProductionBriefV1 | null {
     || typeof brief.brief_id !== 'string' || !/^[a-z0-9][a-z0-9_-]{1,95}$/i.test(brief.brief_id)
     || typeof brief.content_idea_id !== 'string' || !/^[0-9a-f-]{36}$/i.test(brief.content_idea_id)
     || !isSha256(brief.content_revision_hash)
-    || !['money_of_ai', 'built_with_ai'].includes(String(brief.series || ''))
+    || !(PRODUCTION_SERIES_VALUES as readonly string[]).includes(String(brief.series || ''))
     || (brief.editorial_format !== undefined && normalizeProductionFormat(brief.editorial_format, brief.series as ProductionSeries) !== brief.editorial_format)
     || !Array.isArray(brief.production_kinds) || brief.production_kinds.length < 1 || brief.production_kinds.length > 2
     || new Set(brief.production_kinds).size !== brief.production_kinds.length

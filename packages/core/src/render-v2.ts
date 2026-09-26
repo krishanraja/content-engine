@@ -17,7 +17,7 @@ import {
   type VisualAssetV1,
 } from '@mindmake/contracts'
 import type { V2RenderProps } from '../../../apps/renderer/src/v2/props.js'
-import { brandWordmarkLegibilityReport, stageOfficialWordmarks, type BrandLockupMode, type StagedBrandWordmarks } from './brand-assets.js'
+import { brandWordmarkLegibilityReport, officialSeriesMark, stageOfficialWordmarks, type BrandLockupMode, type StagedBrandWordmarks } from './brand-assets.js'
 import { remotionLicenceEligible } from './doctor.js'
 import { hashFile, hashPath, hashValue } from './hash.js'
 import { loadJobV2, pinnedConfigPathV2, readStageArtifactV2 } from './job-store-v2.js'
@@ -518,6 +518,7 @@ export function resolveBrandTimeline(manifest: RenderManifestV2, theme: BrandThe
   const report = brandWordmarkLegibilityReport(theme)
   if (report.failures.length) return { cues: [], issues: report.failures }
   const preferredIdentityMode = report.recommended_identity_mode[manifest.series]
+  if (!preferredIdentityMode) return { cues: [], issues: [`${manifest.series} has no approved official wordmark yet; a branded render needs one pinned in studio.json`] }
   let identityCue: BrandCueV2 | undefined
   for (const window of identityWindows(manifest, lockup.identity.duration_ms)) {
     const resolved = resolveBrandPlacementForShot(manifest, theme, window.shot, preferredIdentityMode, window.startMs, window.endMs, geometryContext)
@@ -922,7 +923,7 @@ async function loadBrandTheme(
   if (theme.version !== manifest.branding.theme_version) throw new Error(`brand theme ${theme.theme_id} version differs from the render manifest`)
   if (hashValue(theme) !== manifest.branding.theme_hash) throw new Error(`brand theme ${theme.theme_id} hash differs from the render manifest`)
   if (!theme.wordmarks?.lockup) throw new Error(`brand theme ${theme.theme_id} has no approved compact wordmark lockup`)
-  const requiredWordmarkHashes = [theme.wordmarks.mindmake.sha256, theme.wordmarks.series[manifest.series].sha256].sort()
+  const requiredWordmarkHashes = [theme.wordmarks.mindmake.sha256, officialSeriesMark(theme, manifest.series).sha256].sort()
   const manifestWordmarkHashes = [...manifest.branding.wordmark_hashes].sort()
   if (requiredWordmarkHashes.join(':') !== manifestWordmarkHashes.join(':')) throw new Error('render manifest is not pinned to the exact official Mindmake and series wordmarks')
   const collisionIssues = brandLayerCollisionIssues(manifest, theme, brandGeometry)

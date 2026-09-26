@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { StudioSeriesSchema } from './series.js'
 import {
   IdentifierV1Schema,
   SeriesV2Schema,
@@ -681,7 +682,7 @@ export type MagicEditCandidateProjectionV1 = z.infer<typeof MagicEditCandidatePr
 export const VideoJobProjectionV1Schema = z.object({
   schema_version: z.literal(CONTROL_PLANE_SCHEMA_VERSION_V1),
   job_id: IdentifierV1Schema,
-  series: z.enum(['money_of_ai', 'built_with_ai']),
+  series: StudioSeriesSchema,
   mode: z.enum(['extract', 'solo', 'short_native']),
   revision_hash: Sha256V1Schema,
   current_stage: StageNameV2Schema.optional(),
