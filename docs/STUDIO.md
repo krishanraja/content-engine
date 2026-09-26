@@ -82,6 +82,43 @@ added it or later. Following `docs/DEPLOYMENT.md`:
 
 No credential or signing key changes.
 
+### makeyourmindup branding: approved, being built
+
+Krish, 2026-09-26: "Make your mind up, Mark, plus the channel name. You've got
+the logos as per the website for all of that" (`fixtures/feedback/
+studio-branding-mark-channel-20260926.json`), then "placement approved" on
+the piece 2 storyboard. Why: no channel has a logo image of its own, the
+brand book sets channel names as mono type, and the Studio still brands
+Shorts as Mindmake, so no branded Short can render for a live subchannel.
+
+What it looks like, as approved:
+
+- Every beat: the makeyourmindup mark alone, top left, where the channel's
+  signature (the timeline, the money map) starts.
+- Once, at the end: the full makeyourmindup logo with the channel name under
+  it, set as type in IBM Plex Mono, lowercase, joined by dots. Not at the
+  start: a Short opens straight on its claim, with no title card.
+- The retired series keep the Mindmake theme exactly as approved.
+
+How it is built (not done yet):
+
+1. The marks: `src/assets/brand/makeyourmindup/` in control-center (public;
+   content-engine never tracks image files), pinned by sha256.
+2. A new theme, `makeyourmindup-video-v1`, beside `mindmake-video-v1` (whose
+   parse and hash must not change). It carries a publication lockup: the
+   mark (anchor), the logo (identity), the channel label's type, and an
+   identity moment that is the ending only.
+3. The planner (`packages/core/src/render-v2.ts`): the same collision and
+   safe-zone checks, with the mark as the anchor plate and the logo plus
+   label as the identity plate; identity windows are the last shot, then a
+   late safe beat, never the opening.
+4. The renderers (`apps/renderer/src/v2`, the carousel slide) draw the mark
+   and logo as pinned images and the label as live type; Control Center's
+   `VideoBrandLockup` shows the same.
+5. It ships as `candidate`. It goes `active` only when Krish's approval is
+   captured as Studio feedback from his machine (a cloud session is
+   read-only for the Studio), and the runner is updated.
+
 ## The V2 stage graph
 
 Defined in `packages/core/src/stage-graphs.ts`, mirrored in
