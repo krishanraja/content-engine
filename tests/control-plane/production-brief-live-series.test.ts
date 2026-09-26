@@ -50,7 +50,8 @@ test('mind.the.gap briefs name no format, and the other two must name one of the
 test('a piece on a retired slot keeps its retired series, never crossed to the live name', () => {
   assert.equal(productionSeries(piece('money_of_ai')), 'money_of_ai')
   assert.equal(brief('money_of_ai', 'money_trace').series, 'money_of_ai')
-  assert.equal(productionSeries(piece('split_the_bill')), null)
+  // A venture_formats slug that is not a Studio series.
+  assert.equal(productionSeries(piece('general')), null)
 })
 
 test('a runner that declares nothing is only handed the retired series', () => {

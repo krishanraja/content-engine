@@ -8,9 +8,9 @@
 --
 -- Live, this table's series check was gone and a foreign key to
 -- venture_formats(slug) ON UPDATE CASCADE stood in its place, added outside
--- this history. That cascade rewrote the two retired validation jobs' series
--- through each subchannel rename (built_with_ai, then lift_the_lid, then
--- under_the_hood) while the runner's own records kept built_with_ai. The
+-- this history. That cascade carried the two retired validation jobs' series
+-- through each subchannel rename, from built_with_ai to under_the_hood today,
+-- while the runner's own records kept built_with_ai. The
 -- check below pins the Studio's five ids on top of that key, so a future
 -- subchannel rename stops here instead of silently moving a job's series
 -- away from its signed record. Renaming a Studio series is a contract change

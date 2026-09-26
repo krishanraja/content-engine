@@ -24,7 +24,7 @@ const briefFixture = JSON.parse(readFileSync('fixtures/contracts/production-brie
 describe('the Studio knows the three subchannels', () => {
   test('every series parses, and the retired pair still does', () => {
     for (const s of ['money_of_ai', 'built_with_ai', 'follow_the_money', 'mind_the_gap', 'under_the_hood']) expect(SeriesSchema.parse(s)).toBe(s)
-    expect(() => SeriesSchema.parse('split_the_bill')).toThrow()
+    expect(() => SeriesSchema.parse('general')).toThrow()
     expect(normalizeSeries('follow.the.money')).toBe('follow_the_money')
     expect(normalizeSeries('Mind the gap')).toBe('mind_the_gap')
     expect(normalizeSeries('paid')).toBe('money_of_ai')
@@ -83,7 +83,7 @@ describe('the Studio knows the three subchannels', () => {
     const base = { schema_version: 1, runner_id: 'runner-1', software_commit: 'a'.repeat(40), command_schema_versions: [1] }
     expect(ProductionBriefClaimRequestV1Schema.safeParse(base).success).toBe(true)
     expect(ProductionBriefClaimRequestV1Schema.safeParse({ ...base, series_supported: ['money_of_ai', 'mind_the_gap'] }).success).toBe(true)
-    expect(ProductionBriefClaimRequestV1Schema.safeParse({ ...base, series_supported: ['split_the_bill'] }).success).toBe(false)
+    expect(ProductionBriefClaimRequestV1Schema.safeParse({ ...base, series_supported: ['general'] }).success).toBe(false)
     // The general command claim stays strict, which is why brief claims have their own parser.
     expect(RunnerClaimRequestV1Schema.safeParse({ ...base, series_supported: ['mind_the_gap'] }).success).toBe(false)
   })
