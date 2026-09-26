@@ -983,6 +983,9 @@ describe('signed acknowledged runner project state', () => {
     expect(calls).toEqual({ project: 0, discovery: 0, claim: 0, dispatch: 0 })
   })
 
+  // A dozen scenarios, each with its own temp tree, symlinks and signed files:
+  // 180 ms on Linux, 0.9 s to over 5 s on the Windows CI runner, whose disk
+  // speed varies run to run (d85c3cf timed out at the 5 s default).
   it('rejects every unexpected project-state entry before project replay, discovery, heartbeat, or claim', async () => {
     for (const scenario of ['unexpected_root', 'invalid_job', 'job_symlink', 'unexpected_job_file', 'invalid_platform', 'platform_symlink', 'platform_temp', 'conflict_name', 'resolution_name', 'corrupt_cursor'] as const) {
       runtimeRoot = await mkdtemp(join(tmpdir(), `mindmake-project-layout-${scenario}-`))
@@ -1046,7 +1049,7 @@ describe('signed acknowledged runner project state', () => {
       await rm(runtimeRoot, { recursive: true, force: true })
       runtimeRoot = ''
     }
-  })
+  }, 15_000)
 
   it('rejects every unexpected or unauthenticated pending-receipt entry before project, discovery, or claim', async () => {
     for (const scenario of ['unexpected_root', 'unexpected_child', 'malformed_json', 'tampered_hmac', 'missing_claim', 'mismatched_claim', 'symlink'] as const) {
