@@ -116,10 +116,14 @@ Where the brand lives: the makeyourmindup brand kit and brand book (v1.4 on
 2026-09-26) are in `krishanraja/makeyourmindup`, `docs/brandbooknew/`:
 `makeyourmindup-brand-kit.zip` holds everything, and
 `makeyourmindup-brand-book.zip` holds the book as a PDF and as page images.
-`npm run brand-kit` in that repository rebuilds both. On 2026-09-26 the live
-makeyourmindup.ai served the kit's horizontal logo, stacked logo and both
-icons byte for byte, with the same eight colours and four typefaces, and v1.4
-changed no logo, so the pinned mark and logo stand. If a rebuild ever changes
+`npm run brand-kit` in that repository rebuilds both. On 2026-09-26 the v1.4 kit's
+`logos/mark/makeyourmindup-mark-transparent.png` and
+`logos/horizontal/makeyourmindup-horizontal-transparent-1200w.png` hash-matched
+the pinned mark and logo exactly, its colours were unchanged and its tokens
+differed only in their version number: v1.4 adds the felt robot (p.13), the
+stamp rules (p.14) and a `photography/` folder, and nothing else. So the pinned
+mark and logo stand. The same page says the logo is the name, never part of a
+sentence. If a rebuild ever changes
 either file, copy it into control-center, pin the new commit and hashes in the
 theme, and render the proof again.
 

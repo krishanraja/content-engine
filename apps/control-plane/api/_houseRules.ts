@@ -117,6 +117,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'final_pass', 'publish_check'],
   },
   {
+    id: 'STAMPS', name: 'Real or theatre stamps, as the brand book sets them',
+    text: 'A stamp says REAL or THEATRE and nothing else, with the part it judges named above it in lowercase mono ("the stuffing", "the visor"). Bold mono, 0.18em tracking, a 3px border; REAL filled cream and tilted +3 degrees, THEATRE an outline at -4 degrees; a thin cream line from the stamp to an ink dot on the part. Stamps annotate the picture and never sit in the headline\'s line; on a cream spread they take the section\'s colours. Every stamp shows its evidence.',
+    said: 'Just get in line with what those updates are at the live website.',
+    on: '2026-09-26', source: 'makeyourmindup brand book v1.4, p.14 "Real, or theatre?"; makeyourmindup.ai', status: 'live', scope: 'under_the_hood',
+    stages: ['visual'],
+  },
+  {
     id: 'TIMELINE', name: 'mind.the.gap maps then, now and the forks',
     text: 'A mind.the.gap piece shows what used to be the case, what is the case now, where it could go, and how it could fork into different futures, including what each future means for ordinary people using the product. The futures fork and never rejoin; the prediction sits on one of them.',
     said: 'map out, over time, visually: what used to be the case / what is the case now / where this could go / how it could fork off into different scenarios',

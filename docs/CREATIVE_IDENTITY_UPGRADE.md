@@ -389,21 +389,26 @@ signature device per Short (`config/techniques.json`) holds: this is that one.
 - **Real or theatre (under.the.hood).** The annotated product shot. The shipped
   thing comes apart into its parts; each part is labelled and stamped real or
   theatre, with the evidence for the stamp one tap or one frame away.
-  As the live cover page draws it (2026-09-26): each part is named in plain
-  lowercase words ("the model", "the data", "the launch video", "the
-  waitlist", "the people checking it"), each stamp reads REAL or THEATRE, and
-  the caption promises "the real ones show the evidence for every stamp". The
-  cover stamps the felt robot the same way ("the stuffing", Real; "the
-  visor", Theatre).
+  The stamp follows brand book v1.4, p.14 (house rule STAMPS): two words
+  only, REAL or THEATRE; the part it judges named above it in lowercase mono
+  ("the model", "the launch video"); bold mono, 0.18em tracking, a 3px border,
+  REAL filled cream and tilted +3 degrees, THEATRE an outline at -4 degrees; a
+  thin cream line from the stamp to an ink dot on the part. Stamps annotate the
+  picture and never sit in the headline's line, and on a cream spread they take
+  the section's colours. The cover promises "the real ones show the evidence
+  for every stamp".
 
-**The felt robot** is the publication's cover photography: a hand-sewn felt
-robot on an operating table, its chest seam unpicked, with three loose threads
-in the three channel colours (lilac, butter, coral). Brand book v1.4 sets its
-rules on p.13 (the robot, the stuffing just visible and never a plume, the
-threads, the backdrop and the cut edge) and the stamp rules on p.14, with a
-`photography/` folder in the kit. Both live in `krishanraja/makeyourmindup`,
-`docs/brandbooknew/`; this repository does not copy them yet, and the Studio
-does not use the photographs.
+**The felt robot** (brand book v1.4, p.13) is the publication's only
+photographic subject: a hand-sewn felt robot in cream felt with grey patches
+and a blank dark visor, lying on the operating table for the cover and standing
+for the welcome page. The stuffing is just visible at the unpicked seam, never
+a plume. Three threads, lilac, butter and coral, one per section; the mint seam
+ripper is the only other colour. The backdrop is darker than ink, so the photo
+lightens into the page, with no frame. The cut is at an edge, and the threads
+hang past it into the headline. Never stretch it, recolour it or give it
+company. The originals, cut-outs and threads are in the kit's `photography/`
+folder (`krishanraja/makeyourmindup`, `docs/brandbooknew/`); the Studio does
+not use them yet.
 
 **Keeping the three apart** (proposed 2026-09-26, waiting on Krish; sketches
 at the "three signatures" artifact). Each device answers its own question in
