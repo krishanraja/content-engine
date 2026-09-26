@@ -154,8 +154,9 @@ when a live rule reaches no stage.
 
 **Before approval** (`api/_publishChecks.ts`). `approved` and `published`
 also need the checks a machine can make: the fact gate, no "Not X, Y", no em
-dashes, no exclamation marks outside quotes, a reading age of 13 at most (12
-to 13 warns), and a prediction with a date and a percentage. Anything else is
+dashes, no exclamation marks outside quotes, British spelling outside quotes
+and names, a reading age of 13 at most (12 to 13 warns), and a prediction with
+a date and a percentage. Anything else is
 a 409 `publish_gate` naming what is left. `GET /fact-check` returns the whole
 checklist, whether the piece is `ready`, and its receipts.
 

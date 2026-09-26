@@ -116,6 +116,18 @@ describe('the checks before approval, on real text', () => {
     assert.ok(!ids('He said "ship it!" and it shipped.').includes('NO_EXCLAMATION'))
     assert.ok(ids("It's not a price cut, it's a land grab.").includes('R2'))
   })
+  test('American spelling blocks; a quotation, a name, a link and look-alike words do not', () => {
+    // makeyourmindup.ai, live 2026-09-26: "Contains British spelling".
+    const check = (t: string) => publishChecks(t, factsOk).find(c => c.id === 'BRITISH_SPELLING')!
+    const us = check('The data center was gray, so we analyzed it, organized a team and cut the modeling bill.')
+    assert.equal(us.ok, false); assert.equal(us.blocking, true)
+    assert.match(us.detail, /center \(write centre\)/)
+    assert.match(us.detail, /analyzed \(write analysed\)/)
+    assert.match(check('We utilize it.').detail, /utilize \(write use\)/)
+    const fine = check('"We prioritize safety," she said. The Department of Defense and Kennedy Space Center agree. [See](https://example.com/color). `optimize` Its size, the prize, honorary, humorous, rigorous, the laboratory, Colorado, the program, a license, the aftermath.')
+    assert.equal(fine.ok, true, fine.detail)
+    assert.equal(check(PASSED).ok, true)
+  })
   test('dense writing fails the reading age', () => {
     const dense = 'Notwithstanding considerable institutional heterogeneity, organisational procurement methodologies systematically prioritise interoperability considerations, consequently diminishing comparative evaluation opportunities. '.repeat(4)
     const r7 = publishChecks(dense, factsOk).find(c => c.id === 'R7')!

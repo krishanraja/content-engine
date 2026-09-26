@@ -49,6 +49,54 @@ export const MAX_READING_GRADE = 8
  *  fine when the piece explains it where it first appears. */
 const JARGON = /\b(API|LLMs?|inference|latency|agentic|fine-tun\w*|parameters?|benchmarks?|GPUs?|RAG|embeddings?|model routing|frontier models?|tokens?|prompts?|multimodal|throughput)\b/gi
 
+/** American spellings, each with the British one the house writes instead
+ *  (makeyourmindup.ai promises "Contains British spelling"). Each pattern
+ *  keeps its stem in group 1 and its ending in group 2. The lists are explicit
+ *  so a word both countries spell the same way ("program" for software,
+ *  "license" as a verb, "judgment") never trips the check. Lowercase only: a
+ *  capitalised match is usually a name ("Kennedy Space Center", "Department
+ *  of Defense"), which keeps its own spelling. */
+const US_WORDS: Record<string, string> = {
+  aluminum: 'aluminium', aging: 'ageing', artifact: 'artefact', artifacts: 'artefacts',
+  jewelry: 'jewellery', cozy: 'cosy', math: 'maths',
+  fulfill: 'fulfil', fulfills: 'fulfils', fulfillment: 'fulfilment',
+  enroll: 'enrol', enrolls: 'enrols', enrollment: 'enrolment',
+  installment: 'instalment', installments: 'instalments', skillful: 'skilful', willful: 'wilful',
+  // "utilise" is on the voice kill list too, so the plain word is the fix.
+  utilize: 'use', utilizes: 'uses', utilized: 'used', utilizing: 'using', utilization: 'use',
+}
+const US_SPELLINGS: ReadonlyArray<[RegExp, (stem: string, end: string) => string]> = [
+  [/\b(col|fav|behavi|lab|hon|neighb|flav|hum|rum|harb|endeav|vap|arm|cand|rig|val)or(s|ed|ing|ful|ite|ites|able|ably|hood|hoods)?\b/g, (s, e) => `${s}our${e}`],
+  [/\b(cent|theat|fib|lit|kilomet|centimet|millimet|calib|somb|meag)er(s|ed|ing)?\b/g, (s, e) => (e === 'ed' || e === 'ing' ? `${s}r${e}` : `${s}re${e}`)],
+  [/\b(organ|real|recogn|priorit|optim|apolog|critic|emphas|summar|standard|monet|subsid|capital|minim|maxim|special|final|categor|custom|author|character|memor|mobil|modern|normal|penal|public|stabil|visual|jeopard|legal|central|global|industrial|commercial|personal|digit|synchron|revolution|scrutin|weapon|local|incentiv|popular|rational|harmon|sanit|social|neutral|polar|privat|civil)iz(e|es|ed|ing|ation|ations|er|ers)\b/g, (s, e) => `${s}is${e}`],
+  [/\b(anal|paral|catal)yz(e|es|ed|ing|er|ers)\b/g, (s, e) => `${s}ys${e}`],
+  [/\b(def|off|pret)ense(s|less)?\b/g, (s, e) => `${s}ence${e}`],
+  [/\b(travel|cancel|label|model|signal|fuel|level|total|marvel|counsel|channel|tunnel|funnel|dial|equal|rival|spiral|pedal|quarrel|panel)(ed|ing|er|ers)\b/g, (s, e) => `${s}l${e}`],
+  [/\b(catalog)(s|ed|ing)?\b/g, (s, e) => `${s}ue${e}`],
+  [/\b(practic)(ed|ing)\b/g, (_s, e) => `practis${e}`],
+  [/\b(gray)(s|er|est|ing|ish)?\b/g, (_s, e) => `grey${e}`],
+  [new RegExp(`\\b(${Object.keys(US_WORDS).join('|')})()\\b`, 'g'), s => US_WORDS[s]],
+]
+
+/** American spellings outside quotations, links and code, each once, with the
+ *  British spelling to use. A quotation keeps its source's spelling (FACTS). */
+export function americanSpellings(body: string): Array<{ found: string; use: string }> {
+  const text = String(body || '')
+    .replace(/^>.*$/gm, '')
+    .replace(/`[^`\n]*`/g, '')
+    .replace(/\]\([^)]*\)/g, ']')
+    .replace(/https?:\/\/\S+/g, '')
+    .replace(/"[^"\n]*"|“[^”\n]*”/g, '')
+  const seen = new Map<string, string>()
+  for (const [pattern, uk] of US_SPELLINGS) {
+    for (const m of text.matchAll(pattern)) {
+      const use = uk(m[1], m[2] ?? '')
+      if (use && use !== m[0] && !seen.has(m[0])) seen.set(m[0], use)
+    }
+  }
+  return [...seen].map(([found, use]) => ({ found, use }))
+}
+
 /** Where a confidence starts to read as a clear stance (Krish, 2026-09-26). */
 export const CLEAR_STANCE_AT = 70
 
@@ -86,6 +134,8 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   checks.push({ id: 'NO_EM_DASH', name: 'No em dashes', blocking: true, ok: dashes === 0, detail: dashes ? `${dashes} found.` : 'None found.' })
   const bangs = text.replace(/"[^"\n]*"|“[^”\n]*”/g, '').match(/[A-Za-z0-9)\]'’]!/g) || []
   checks.push({ id: 'NO_EXCLAMATION', name: 'No exclamation marks', blocking: true, ok: bangs.length === 0, detail: bangs.length ? `${bangs.length} found outside quotations.` : 'None found.' })
+  const us = americanSpellings(text)
+  checks.push({ id: 'BRITISH_SPELLING', name: 'British spelling', blocking: true, ok: us.length === 0, detail: us.length ? `Found: ${us.slice(0, 5).map(w => `${w.found} (write ${w.use})`).join(', ')}${us.length > 5 ? `, and ${us.length - 5} more` : ''}.` : 'None found.' })
   const grade = readingGrade(text)
   const age = Math.max(6, Math.round((grade + 5) * 2) / 2)
   checks.push({

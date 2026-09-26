@@ -389,6 +389,21 @@ signature device per Short (`config/techniques.json`) holds: this is that one.
 - **Real or theatre (under.the.hood).** The annotated product shot. The shipped
   thing comes apart into its parts; each part is labelled and stamped real or
   theatre, with the evidence for the stamp one tap or one frame away.
+  As the live cover page draws it (2026-09-26): each part is named in plain
+  lowercase words ("the model", "the data", "the launch video", "the
+  waitlist", "the people checking it"), each stamp reads REAL or THEATRE, and
+  the caption promises "the real ones show the evidence for every stamp". The
+  cover stamps the felt robot the same way ("the stuffing", Real; "the
+  visor", Theatre).
+
+**The felt robot** is the publication's cover photography: a hand-sewn felt
+robot on an operating table, its chest seam unpicked, with three loose threads
+in the three channel colours (lilac, butter, coral). Brand book v1.4 sets its
+rules on p.13 (the robot, the stuffing just visible and never a plume, the
+threads, the backdrop and the cut edge) and the stamp rules on p.14, with a
+`photography/` folder in the kit. Both live in `krishanraja/makeyourmindup`,
+`docs/brandbooknew/`; this repository does not copy them yet, and the Studio
+does not use the photographs.
 
 **Keeping the three apart** (proposed 2026-09-26, waiting on Krish; sketches
 at the "three signatures" artifact). Each device answers its own question in

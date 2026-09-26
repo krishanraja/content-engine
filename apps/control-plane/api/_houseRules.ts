@@ -110,6 +110,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'final_pass', 'publish_check'],
   },
   {
+    id: 'BRITISH_SPELLING', name: 'British spelling',
+    text: 'Use British spelling: colour, centre, theatre, organise, analyse, defence, labour, modelling, travelled, grey. A quotation and a name keep their own spelling.',
+    said: 'Just get in line with what those updates are at the live website.',
+    on: '2026-09-26', source: 'makeyourmindup.ai, "Contains British spelling" (live 2026-09-26)', status: 'live',
+    stages: ['write', 'final_pass', 'publish_check'],
+  },
+  {
     id: 'TIMELINE', name: 'mind.the.gap maps then, now and the forks',
     text: 'A mind.the.gap piece shows what used to be the case, what is the case now, where it could go, and how it could fork into different futures, including what each future means for ordinary people using the product. The futures fork and never rejoin; the prediction sits on one of them.',
     said: 'map out, over time, visually: what used to be the case / what is the case now / where this could go / how it could fork off into different scenarios',
