@@ -11,7 +11,10 @@ import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
 // together", and each guideline he gives should reach every stage it touches.
 // The registry is the one place a ruling lives; these tests fail when a live
 // ruling is recorded but enforced nowhere, or a stage drops one.
+// Piece 2 as published in its edition (Krish set 75% on 2026-09-26), and the
+// same text as it stood when it passed the fact gate, before he set it.
 const PASSED = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
+const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')
 const factsOk = { ok: true, reason: null }
 
 describe('every ruling carries his words and reaches a stage', () => {
@@ -74,7 +77,7 @@ describe('every ruling carries his words and reaches a stage', () => {
 
 describe('the checks before approval, on real text', () => {
   test('piece 2 as it passed the fact gate clears everything but the confidence Krish sets', () => {
-    const checks = publishChecks(PASSED, factsOk)
+    const checks = publishChecks(UNSET, factsOk)
     const failing = publishStatus(checks).failing.map(c => c.id)
     assert.deepEqual(failing, ['CALL'])
     assert.match(checks.find(c => c.id === 'CALL')!.detail, /no confidence yet/)
@@ -83,22 +86,24 @@ describe('the checks before approval, on real text', () => {
   test('with Krish\'s 75% set, it is ready, and the fact check still holds', () => {
     // Krish, 2026-09-26: 75%. The confidence is his judgement, not a fact, so
     // setting it leaves the passed check in force (api/_factGate.ts bodyHash).
-    const set = PASSED.replace('How sure we are: [Krish to set]', 'How sure we are: 75%.')
+    const set = PASSED
+    assert.ok(set.includes('How sure we are: 75%.') && UNSET !== set)
     assert.equal(publishStatus(publishChecks(set, factsOk)).ok, true)
+    assert.equal(bodyHash(UNSET), bodyHash(set))
     const edition = JSON.parse(readFileSync('editions/2026-09-who-picks-your-ai/edition.json', 'utf8'))
     assert.equal(bodyHash(set.trim()), edition.fact_check.body_hash)
     assert.equal(bodyHash(set.replace('75%.', '60%')), bodyHash(set))
   })
   test('only the number is exempt: words added to the confidence line are checked like any other', () => {
-    const set = PASSED.replace('How sure we are: [Krish to set]', 'How sure we are: 75%.')
+    const set = PASSED
     assert.notEqual(bodyHash(set.replace('75%.', '75%, because OpenAI said so.')), bodyHash(set))
     assert.notEqual(bodyHash(set.replace('By 30 September 2027', 'By 30 September 2028')), bodyHash(set))
   })
   test('a fence-sitting confidence warns, and never blocks', () => {
-    const at = (n: number) => publishChecks(PASSED.replace('[Krish to set]', `${n}%.`), factsOk).find(c => c.id === 'CLEAR_STANCE')!
+    const at = (n: number) => publishChecks(PASSED.replace('75%.', `${n}%.`), factsOk).find(c => c.id === 'CLEAR_STANCE')!
     assert.equal(at(60).ok, false); assert.equal(at(60).blocking, false); assert.match(at(60).detail, /sitting on the fence/)
     assert.equal(at(75).ok, true)
-    assert.equal(publishStatus(publishChecks(PASSED.replace('[Krish to set]', '60%.'), factsOk)).ok, true)
+    assert.equal(publishStatus(publishChecks(PASSED.replace('75%.', '60%.'), factsOk)).ok, true)
   })
   test('the prediction can be a bold paragraph, as piece 1 writes it', () => {
     assert.equal(predictionCheck('**The Call.** By 30 June 2027, Amazon opens a route. Confidence: 70%.').ok, true)
@@ -131,7 +136,7 @@ describe('the checks before approval, on real text', () => {
     assert.match(r6.detail, /: token, API\.$/)
   })
   test('an unchecked text is never ready, whatever else it passes', () => {
-    assert.equal(publishStatus(publishChecks(PASSED.replace('[Krish to set]', '65%'), { ok: false, reason: 'not checked' })).ok, false)
+    assert.equal(publishStatus(publishChecks(PASSED, { ok: false, reason: 'not checked' })).ok, false)
   })
   test('the PATCH to approved or published asks the checks', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')
