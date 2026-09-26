@@ -5,6 +5,11 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-09-26
+
+- decision (Krish, 2026-09-26): piece 2's prediction is set at 75%. "In general I think I'd rather take a clearer stance than sit on the fence all the time and say 60%." Relayed to the engine as his edit; rule CLEAR_STANCE, and a confidence no longer forces a fact re-check (`e4f1394`).
+- decision (Krish, 2026-09-26): "I agree with all your four except for number one." Shorts take sentence-case captions with at most one loud word, and close on the dated prediction (`fixtures/feedback/proof-short-captions-close-20260926.json`); the Studio is to learn the three subchannel names (walk log F21).
+
 ## 2026-09-25
 
 - decision (Krish, 2026-09-25): "Once this engine is built and the machinery is in place, run a prompt caching pass over the system. Only once the pieces are capable of being produced with minimal fix passes." Sequenced, not started: the trigger, the reason and the method are in `docs/CONTENT_ENGINE.md` ("Waiting: the prompt caching pass").

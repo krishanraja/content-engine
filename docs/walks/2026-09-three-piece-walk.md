@@ -157,6 +157,7 @@ Known breaks the walk will hit, in order:
 
 | # | Change | Why | Commit |
 |---|---|---|---|
+| H25 | Krish's confidence in a prediction no longer puts a passed fact check out of date: `bodyHash` reads "How sure we are:" plus a bare percentage as the same line, and every other word still breaks the match. Setting piece 2 to 75% kept its check; before, it would have cost a full re-run. A new house rule, CLEAR_STANCE, warns (never blocks) when a confidence is under 70%. | Krish, 2026-09-26: "I'd rather take a clearer stance than sit on the fence all the time and say 60%." | `e4f1394`, `b423fcf` |
 | H24 | Receipts (`api/_receipts.ts`). For every claim the fact gate passed, the source's own words behind it: the one passage that carries every number the sentence uses, its page, whether the web agreed, and a screen form with markup removed and no word changed. `GET /fact-check` returns them for the version that passed. On piece 2: 32 receipts, 21 short enough for a phone screen. They are the proof panels for Shorts and carousels. Test: `tests/control-plane/receipts.test.ts`, mutation-checked. | Krish shared an Instagram ad he found "really impactful" (`docs/REFERENCE_INSTAGRAM_AD.md`); its strongest move is showing the source on screen. | `d408e11` |
 | H23 | Control Center's fact-check strip shows the whole approval checklist ("Before it can be approved", with a count or "Ready"), and every approve path explains a `publish_gate` refusal. The strip's spec joins CI's e2e list, which had never run it. | The engine refuses approval now (H22); Krish needs to see why before he presses the button. | control-center `37538b7` |
 | H22 | Checks before approval (`api/_publishChecks.ts`). The PATCH refuses `approved` and `published` with 409 `publish_gate` unless: the fact gate passed; no "Not X, Y"; no em dashes; no exclamation marks outside quotes; reading age at most 13 (12 to 13 warns); a prediction with a date and a percentage. Plain words is a warning listing words to explain. Reported in ages and plain words. | Krish, 2026-09-25: "implementing gates and checks prior to publish that have come from some of the guidelines I've given". | `a032649`, `d574a8e` |
@@ -234,8 +235,8 @@ with the evidence that found it):
 | F17 | draft | My v2 of piece 2 said the switching so far was only "companies routing their own work". GPT-5's switcher has routed ordinary ChatGPT users since August 2025. No check caught it, because it is an argument rather than a fact; Krish's read and the rewrite did. | piece 2 v2, "Where it could go" |
 | F18 | fact gate | The independent check earned its keep: Claude's support page says thinking is always on for Opus 5.5 and Fable 5.1, so "at every level Claude still decides whether to think" overstated Anthropic's own docs. Cut. | run 7 on piece 2 |
 | F19 | voice | The engine and I invented labels a reader has to decode: "the picker, the price, the bill", "the pattern", "the Call", "inference", "router", "Speakeasy", flavour names built on jargon. Krish: "I can't understand it by just looking at it so we shouldn't assume anyone else will." Fixed as H15 for the engine and in piece 2's page and text. | Krish, 2026-09-25, on the page |
-| F20 | process | I pushed to `main` without reading CI. The engine went red at `a5c5ab3` (an undocumented `ENGINE_URL`), then my edition test pulled engine code into the strict root typecheck, then Windows checked the edition out with CRLF and its hash broke. Control Center was red from the rename at `a01e2a7` for about ten hours over seven pushes: on a 360px phone the room tabs wrapped to five rows and pushed a button under the nav. All fixed (`eea86ce`, `21a0fdf`, control-center `60cbedc`). From now on: read `main`'s CI after every push before the next one. | GitHub Actions, 2026-09-25 |
-| F21 | studio | The Studio brief accepts only the two retired series (`money_of_ai`, `built_with_ai`) in `_productionBrief.ts`, so no piece on follow.the.money, mind.the.gap or under.the.hood can get one. The pieces that can are the ones the fact gate skips. Nothing reaches video or carousel until the contracts speak the live names. Not fixed: it changes the contracts the Windows runner reads. | component map, 2026-09-25 |
+| F20 | process | I pushed to `main` without reading CI. The engine went red at `a5c5ab3` (an undocumented `ENGINE_URL`), then my edition test pulled engine code into the strict root typecheck, then Windows checked the edition out with CRLF and its hash broke. Control Center was red from the rename at `a01e2a7` for about ten hours over seven pushes: on a 360px phone the room tabs wrapped to five rows and pushed a button under the nav. All fixed (`eea86ce`, `21a0fdf`, control-center `60cbedc`). From now on: read `main`'s CI after every push before the next one. It happened once more on 2026-09-26: `e4f1394` went out with two failing tests on screen, because the command that ran them did not stop the push. Fixed in `b423fcf`; a push now runs only after every check in the same command succeeds. | GitHub Actions, 2026-09-25 and 26 |
+| F21 | studio | The Studio brief accepts only the two retired series (`money_of_ai`, `built_with_ai`) in `_productionBrief.ts`, so no piece on follow.the.money, mind.the.gap or under.the.hood can get one. The pieces that can are the ones the fact gate skips. Nothing reaches video or carousel until the contracts speak the live names. Krish gave the go on 2026-09-26; in progress. | component map, 2026-09-25 |
 | F22 | judges | No judge read any of Krish's rulings. The draft "voice" judge was told to score against a kill list it was never given. Fixed as H21. | component map, 2026-09-25 |
 | F23 | ideation | The idea sources (research, radar, creator scout, inspiration) each carry their own copy of the voice rules, several still write retired subchannel names, and `deepen` refuses a piece on a live subchannel with a 400. Not fixed yet. | component map, 2026-09-25 |
 | F14 | judge sweep | Editing the thesis of a piece in `drafting` changes its `artifact_hash`, so the 10-minute sweep re-judges it and the ladder may repair (rewrite) the thesis. So piece 2's stale thesis (F7 again) is left alone for now. | `candidateQuery` in the sweep includes `drafting` |
@@ -265,12 +266,15 @@ Collected as the walk goes; finalised after piece 3.
 
 ## 4. Open questions for Krish
 
-- **Shorts in the ad's style: two calls that are his.** The ad he liked
-  (`docs/REFERENCE_INSTAGRAM_AD.md`) runs into the Studio standard he
-  confirmed on 2026-09-08 twice: its captions are close to the all-caps
-  word-by-word style he rejected, and it closes on a comment prompt. The
-  storyboard for piece 2 uses the proposed defaults (sentence-case captions
-  with one loud word; the close is the dated prediction).
+- **Settled: Shorts in the ad's style** (Krish, 2026-09-26, "I agree with
+  all your four except for number one"). Captions in sentence case with at
+  most one loud word; the close is the dated prediction. Recorded in
+  `fixtures/feedback/proof-short-captions-close-20260926.json`. Still his:
+  a verdict on the piece 2 storyboard.
+- **Settled: piece 2's confidence is 75%** (Krish, 2026-09-26): "I'd rather
+  take a clearer stance than sit on the fence all the time and say 60%."
+  House rule CLEAR_STANCE. Piece 2 now clears every blocking check and waits
+  on his approval.
 
 - **Rotate four credentials.** A Supabase CLI token, a Vercel access token, a
   GitHub PAT and an n8n API key were pasted into the walk session's chat on

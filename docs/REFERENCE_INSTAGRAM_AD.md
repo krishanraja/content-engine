@@ -5,16 +5,22 @@
 > confirmed Studio standard it is read against is
 > `docs/REFERENCE_VIDEO_CALIBRATION.md`.
 
-## Status: a proposal Krish has not confirmed
+## Status: two rulings confirmed, the rest a proposal
 
 Krish shared an ad on 2026-09-25 and said, in full:
 
 > "I really like this Instagram ad, the way it's designed and styled. I think
 > it's really impactful."
 
-That is the whole of his judgement. Everything below "What it does" is
-Claude's reading of the ad. It changes no Studio gate or preference, and no
-fixture in `fixtures/feedback/` records it, until Krish confirms it.
+That was the whole of his judgement on the ad. Everything below "What it
+does" is Claude's reading of it.
+
+On 2026-09-26 he confirmed the two defaults in "Where it conflicts" below
+("I agree with all your four except for number one"; items 2 and 3 were the
+captions and the close). They are recorded in
+`fixtures/feedback/proof-short-captions-close-20260926.json`. The rest of the
+grammar (moves 1 to 4) stays a proposal until he rules on the piece 2
+storyboard.
 
 | Field | Value |
 |---|---|
@@ -80,19 +86,21 @@ rejects "all-caps word-by-word captions" and "empty comment CTAs":
 | 5, fast captions | The ad's captions are sentence case, with capitals only on a few punch words, which is close to the all-caps word-by-word style he rejected without being it. | Two to four words per caption in sentence case (Archivo). At most one punch word per beat, in Anton capitals with the mint swipe. |
 | 6, comment prompt | A one-word comment prompt is close to the empty comment prompt he rejected. The Studio's pattern check (`packages/core/src/editorial.ts`) looks for phrases like "comment below" and would miss this wording, so only his ruling settles it. | End on the full face delivering the piece's dated prediction, with the date and confidence on screen: the brand's "Every piece makes a call. We keep score." |
 
-Neither default is adopted as a rule. Krish decides each one.
+Both defaults are confirmed (Krish, 2026-09-26): captions in sentence case
+with at most one loud word, and the close on the dated prediction.
 
 ## What changes if he confirms
 
-- A Studio preference record in `fixtures/feedback/` with his confirming
-  words, scoped to the three live subchannels.
-- The visual plan for a Short gains a proof-panel beat fed from receipts,
-  and a rule that the one highlight may only mark words inside a receipt.
-- Caption treatment and the close follow whichever way he rules on the two
-  conflicts.
+- Done: the preference record for the two rulings, scoped to the three live
+  subchannels.
+- Next, with the Studio's series: caption treatment and the close follow
+  the two rulings in the Studio's own checks.
+- If he confirms the storyboard: the visual plan for a Short gains a
+  proof-panel beat fed from receipts, and a rule that the one highlight may
+  only mark words inside a receipt.
 
 The Studio still speaks only the two retired series names
 (`apps/control-plane/api/_productionBrief.ts`), so a piece routed to
 follow.the.money, mind.the.gap or under.the.hood cannot get a production
-brief today. That has to be fixed before any Short in this grammar can be
-produced; it is recorded in `docs/walks/2026-09-three-piece-walk.md`.
+brief yet. Krish gave the go to teach it the three names on 2026-09-26 (walk
+log F21).
