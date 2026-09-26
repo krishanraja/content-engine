@@ -63,13 +63,14 @@ The publication's subchannels are **follow.the.money**, **mind.the.gap** and
 of AI and Built with AI were retired as subchannels on 2026-09-17 and survive
 as aliases in `format_aliases`.
 
-The Studio still uses **The Money of AI** and **Built With AI** as its two
-series (`money_of_ai`, `built_with_ai`); `paid` and `built` are its import
-aliases only. Those identifiers are enforced by schemas, a database CHECK,
-official wordmarks, signed approval domains and tests. They are Studio
-identifiers, never a subchannel. Renaming them is Krish's decision and waits
-on wordmarks for the subchannels. Every other retired name is in
-`docs/GLOSSARY.md`.
+The Studio knows the three subchannels as series (`follow_the_money`,
+`mind_the_gap`, `under_the_hood`) since 2026-09-26, and keeps **The Money of
+AI** and **Built With AI** (`money_of_ai`, `built_with_ai`) valid for records
+made under them: they sit inside hashed and signed records, so never rename,
+drop or rewrite them (`packages/contracts/src/series.ts`, `docs/STUDIO.md`).
+`paid` and `built` are its import aliases only. Wordmarks for the three
+subchannels are Krish's decision; until he approves them a branded render
+refuses. Every other retired name is in `docs/GLOSSARY.md`.
 
 ## Content engine invariants
 

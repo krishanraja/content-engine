@@ -33,24 +33,50 @@ Read this before touching any name.
 - **The publication** routes pieces to three subchannels: follow.the.money,
   mind.the.gap and under.the.hood (`venture_formats`, read by
   `apps/control-plane/api/_subchannels.ts`).
-- **The Studio** still knows exactly two series, `money_of_ai` and
-  `built_with_ai`, displayed as "The Money of AI" and "Built With AI". They
-  are enforced by the schemas (`packages/contracts/src/index.ts`,
-  `SeriesSchema`), a database CHECK
-  (`supabase/migrations/20260904084240_video_studio_control_plane.sql`), the
-  official SHA-pinned wordmarks (`config/studio.json`), job ids, signed
-  approval domains, platform copy and hashtags (`packages/core/src/package.ts`),
-  and many tests. `paid` and `built` are the Studio's import aliases, which is
-  what "legacy" means inside the Studio.
+- **The Studio** knows five series since 2026-09-26 (Krish: teach the video
+  side the three names). The three live ones, `follow_the_money`,
+  `mind_the_gap` and `under_the_hood`, and the two retired ones,
+  `money_of_ai` and `built_with_ai` ("The Money of AI", "Built With AI"),
+  which stay valid for good because they sit inside hashed and signed
+  records (briefs, jobs, projections, render manifests) that are re-parsed
+  strictly. The set is defined once in `packages/contracts/src/series.ts` and
+  pinned on `video_studio_jobs` by a check
+  (`supabase/migrations/20260926090000_video_studio_series_live_subchannels.sql`).
+  `paid` and `built` remain the Studio's import aliases.
 
-The mapping between them is `money_of_ai` to follow.the.money and
-`built_with_ai` to under.the.hood (`format_aliases`). mind.the.gap has no Studio
-series, format set or wordmark. The bridge that turns an approved piece into a
-production brief (`apps/control-plane/api/_productionBrief.ts`) accepts only
-the two Studio keys, so a piece routed to a live subchannel cannot become a
-Studio job today. Renaming the Studio's series is Krish's decision and waits on
-wordmarks for the subchannels; until he makes it, do not rename Studio
-identifiers, and do not use Studio series names for editorial routing.
+Each retired id is the past name of a live subchannel: `money_of_ai` of
+follow.the.money, `built_with_ai` of under.the.hood (`SERIES_LINE`). Rules,
+treatment presets and visual devices approved for a retired id serve its
+successor, and a list naming both retired ids serves all three; every old job
+matches exactly what it matched before. follow.the.money and under.the.hood
+take their predecessors' formats; mind.the.gap has none yet, so its briefs
+name no format and its carousels (which need one) wait for one. A piece on a
+live subchannel gets a brief in its own name; a piece on a retired slot keeps
+its retired id.
+
+Still Krish's: **wordmarks.** A production render must carry the series'
+official mark, pinned by hash in `config/studio.json`, and never recreated as
+text. The three live subchannels have none yet, so everything up to the
+branded render works for them (brief, job, script, plan, captions), and the
+branded render refuses in plain words until he approves their marks.
+
+### Taking live-name briefs on the Windows runner
+
+The runner declares the series it can parse on each brief claim, and the
+control plane hands a live-name brief only to a runner that declared it. An
+older runner is only ever given the retired pair, so it keeps working, and
+the cloud and the runner can update in either order. To take live-name
+briefs, update the runner's checkout to `47f3944` or later, following
+`docs/DEPLOYMENT.md`:
+
+1. In the dedicated `runner-source` checkout: `git fetch`, then
+   `git switch --detach <commit>`, then `npm ci`.
+2. If `MINDMAKE_SOFTWARE_COMMIT` is set, set it to that commit or remove it.
+3. Run `scripts/verify-runner-source.ps1 -RequirePersistentLocation`.
+4. Restart the Scheduled Task and prove its lifecycle as `docs/DEPLOYMENT.md`
+   describes (stop, read-only preflight inactive, start, healthy status).
+
+No credential or signing key changes.
 
 ## The V2 stage graph
 

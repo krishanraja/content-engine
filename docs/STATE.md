@@ -44,8 +44,13 @@ Readback 2026-09-25 unless a date is given.
   each checked claim; 32 for piece 2, read back live. A storyboard of piece 2
   as a Short built from them is with Krish
   (`docs/REFERENCE_INSTAGRAM_AD.md`).
-- **Not yet reachable: video and carousels for the live subchannels.** The
-  Studio brief accepts only the two retired series (walk log F21).
+- **The Studio knows the three subchannels** (walk log H26, 2026-09-26). A
+  piece on any of them can get a production brief in its own name from
+  Control Center; the job table's check admits the five Studio series (read
+  back live). Not yet reachable: a branded render for a live subchannel,
+  which needs Krish's approved wordmark; a mind.the.gap carousel, which needs
+  a format; and live-name briefs on the Windows runner, which needs updating
+  to `47f3944` or later (`docs/STUDIO.md`) and is not verified installed.
 - **Crons.** All 20 in `apps/control-plane/vercel.json` have
   `content_engine_runs` rows in the last seven days. `judge_sweep` ran 59
   times.
