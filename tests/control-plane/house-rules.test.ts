@@ -4,6 +4,7 @@ import { describe, test } from 'vitest'
 import { HOUSE_RULES, houseRulesBlock, rulesFor, type Stage } from '../../apps/control-plane/api/_houseRules.js'
 import { predictionCheck, publishChecks, publishStatus, readingGrade } from '../../apps/control-plane/api/_publishChecks.js'
 import { VOICE_GUARDRAILS } from '../../apps/control-plane/api/_content.js'
+import { bodyHash } from '../../apps/control-plane/api/_factGate.js'
 import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
 
 // Krish, 2026-09-25: the engine is "a modular set of components that work
@@ -79,9 +80,25 @@ describe('the checks before approval, on real text', () => {
     assert.match(checks.find(c => c.id === 'CALL')!.detail, /no confidence yet/)
     assert.ok(readingGrade(PASSED) <= 8)
   })
-  test('with a confidence set, it is ready', () => {
-    const set = PASSED.replace('How sure we are: [Krish to set]', 'How sure we are: 65%.')
+  test('with Krish\'s 75% set, it is ready, and the fact check still holds', () => {
+    // Krish, 2026-09-26: 75%. The confidence is his judgement, not a fact, so
+    // setting it leaves the passed check in force (api/_factGate.ts bodyHash).
+    const set = PASSED.replace('How sure we are: [Krish to set]', 'How sure we are: 75%.')
     assert.equal(publishStatus(publishChecks(set, factsOk)).ok, true)
+    const edition = JSON.parse(readFileSync('editions/2026-09-who-picks-your-ai/edition.json', 'utf8'))
+    assert.equal(bodyHash(set.trim()), edition.fact_check.body_hash)
+    assert.equal(bodyHash(set.replace('75%.', '60%')), bodyHash(set))
+  })
+  test('only the number is exempt: words added to the confidence line are checked like any other', () => {
+    const set = PASSED.replace('How sure we are: [Krish to set]', 'How sure we are: 75%.')
+    assert.notEqual(bodyHash(set.replace('75%.', '75%, because OpenAI said so.')), bodyHash(set))
+    assert.notEqual(bodyHash(set.replace('By 30 September 2027', 'By 30 September 2028')), bodyHash(set))
+  })
+  test('a fence-sitting confidence warns, and never blocks', () => {
+    const at = (n: number) => publishChecks(PASSED.replace('[Krish to set]', `${n}%.`), factsOk).find(c => c.id === 'CLEAR_STANCE')!
+    assert.equal(at(60).ok, false); assert.equal(at(60).blocking, false); assert.match(at(60).detail, /sitting on the fence/)
+    assert.equal(at(75).ok, true)
+    assert.equal(publishStatus(publishChecks(PASSED.replace('[Krish to set]', '60%.'), factsOk)).ok, true)
   })
   test('the prediction can be a bold paragraph, as piece 1 writes it', () => {
     assert.equal(predictionCheck('**The Call.** By 30 June 2027, Amazon opens a route. Confidence: 70%.').ok, true)

@@ -84,6 +84,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check'],
   },
   {
+    id: 'CLEAR_STANCE', name: 'Take a clear stance',
+    text: 'Our prediction takes a clear stance. Back the outcome we believe with a confident number; a confidence of 60% or so reads as sitting on the fence.',
+    said: "In general I think I'd rather take a clearer stance than sit on the fence all the time and say 60%.",
+    on: '2026-09-26', source: 'setting piece 2 at 75% instead of the 60% proposed', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass', 'publish_check'],
+  },
+  {
     id: 'NO_SERMONS', name: 'Show the working, no sermons',
     text: 'Show the working and let the reader make their mind up. No closing moral, no telling the reader what to think.',
     said: 'as opposed to us forcing our opinion on them',

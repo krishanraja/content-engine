@@ -52,4 +52,4 @@ By 30 September 2027, at least two of OpenAI, Anthropic and Google will have the
 
 In the jargon: automatic model routing becomes the default on their main API.
 
-How sure we are: [Krish to set]
+How sure we are: 75%.

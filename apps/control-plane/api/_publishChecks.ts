@@ -49,6 +49,15 @@ export const MAX_READING_GRADE = 8
  *  fine when the piece explains it where it first appears. */
 const JARGON = /\b(API|LLMs?|inference|latency|agentic|fine-tun\w*|parameters?|benchmarks?|GPUs?|RAG|embeddings?|model routing|frontier models?|tokens?|prompts?|multimodal|throughput)\b/gi
 
+/** Where a confidence starts to read as a clear stance (Krish, 2026-09-26). */
+export const CLEAR_STANCE_AT = 70
+
+/** The confidence in the prediction section, as a number, or null when unset. */
+export function confidenceOf(body: string): number | null {
+  const m = String(body || '').match(/How sure we are:[ \t]*(\d{1,3})%/i)
+  return m ? Number(m[1]) : null
+}
+
 /** The prediction section: a heading, a date to check by, and a confidence. */
 export function predictionCheck(body: string): { ok: boolean; detail: string } {
   // Either a section ("## OUR PREDICTION") or a paragraph that opens with a
@@ -91,6 +100,17 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   })
   const call = predictionCheck(text)
   checks.push({ id: 'CALL', name: 'A dated prediction with a confidence', blocking: true, ok: call.ok, detail: call.detail })
+  // A warning, never a block: the number is Krish's, and he may choose a
+  // middling one on purpose. 70% is where "clear" starts in this check, set
+  // from his own pair of examples (60% fence-sitting, 75% clear).
+  const sure = confidenceOf(text)
+  checks.push({
+    id: 'CLEAR_STANCE', name: 'Take a clear stance', blocking: false,
+    ok: sure === null || sure >= CLEAR_STANCE_AT,
+    detail: sure === null ? 'No confidence set yet.'
+      : sure >= CLEAR_STANCE_AT ? `${sure}% is a clear stance.`
+      : `${sure}% reads as sitting on the fence. Back the outcome we believe with a clearer number.`,
+  })
   // One entry per word: "token" and "tokens" are the same thing to fix.
   const jargon = [...new Set((text.match(JARGON) || []).map(w => w.toLowerCase().replace(/s$/, '')))]
     .map(w => /^(api|llm|gpu|rag)$/.test(w) ? w.toUpperCase() : w)

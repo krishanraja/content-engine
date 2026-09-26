@@ -68,12 +68,20 @@ export interface FactCheck {
 export const FACT_GATE_VERSION = 1 as const
 export const PASSING: ReadonlySet<ClaimVerdict> = new Set(['verified', 'verified_on_file', 'verified_web'])
 
+/** Krish's confidence in the piece's own prediction is his judgement, never a
+ *  checked fact, so setting it must not put a passed check out of date (he set
+ *  piece 2's to 75% on 2026-09-26 and it would otherwise have cost a full
+ *  re-check). Only a bare percentage or the placeholder is read as the same
+ *  line; anything else written after "How sure we are:" is hashed as written. */
+const CONFIDENCE_LINE = /^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[Krish to set\])[ \t]*$/gim
+
 /** The hash a check is pinned to. It is taken over the text as save-draft
  *  will store it (sanitizeVoice only swaps dashes for commas), so a checked
  *  draft stays checked through that save, and any change to a word or a
- *  number breaks the match. */
+ *  number breaks the match, except the confidence Krish sets. */
 export function bodyHash(body: string): string {
-  return createHash('sha256').update(sanitizeVoice(String(body ?? '')).trim()).digest('hex')
+  const text = sanitizeVoice(String(body ?? '')).replace(CONFIDENCE_LINE, '$1 [Krish to set]').trim()
+  return createHash('sha256').update(text).digest('hex')
 }
 
 /** Lowercase, straight quotes and apostrophes, no markdown emphasis, one space. */
