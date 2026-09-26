@@ -68,6 +68,19 @@ const RuntimeBrandingSchema = z.object({
       anchor: z.object({ plateWidth: z.number().positive(), plateHeight: z.number().positive(), padding: z.number().nonnegative(), mindmakeWidth: z.number().positive() }),
     }),
   }).optional(),
+  // A live subchannel: the publication's mark and logo, and the channel's
+  // name set as type (never an image).
+  publication: z.object({
+    mark: RuntimeWordmarkSchema,
+    logo: RuntimeWordmarkSchema,
+    channel: z.object({ label: z.string().min(1), color: z.string(), sizePx: z.number().positive(), weight: z.number().int() }),
+    lockup: z.object({
+      offsetX: z.number().nonnegative(),
+      offsetY: z.number().nonnegative(),
+      identity: z.object({ durationMs: z.number().positive(), plateWidth: z.number().positive(), plateHeight: z.number().positive(), padding: z.number().nonnegative(), gap: z.number().nonnegative(), logoWidth: z.number().positive() }),
+      anchor: z.object({ plateWidth: z.number().positive(), plateHeight: z.number().positive(), padding: z.number().nonnegative(), markWidth: z.number().positive() }),
+    }),
+  }).optional(),
 })
 
 const RuntimeSourceSchema = z.object({
@@ -126,7 +139,7 @@ const RuntimeShotSchema = z.object({
     startMs: z.number().nonnegative(),
     endMs: z.number().positive(),
     mode: z.enum(['stacked_identity', 'series_only', 'mindmake_only']),
-    corner: z.enum(['top_left', 'top_right']),
+    corner: z.enum(['top_left', 'top_right', 'bottom_left']),
     topPx: z.number().nonnegative(),
     leftPx: z.number().nonnegative(),
   })).optional(),

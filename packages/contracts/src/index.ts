@@ -449,6 +449,80 @@ export const BrandWordmarkLockupV1Schema = z.object({
 })
 export type BrandWordmarkLockupV1 = z.infer<typeof BrandWordmarkLockupV1Schema>
 
+/** The publication's own lockup (makeyourmindup; Krish, 2026-09-26: "Make your
+ *  mind up, Mark, plus the channel name", then "placement approved"). Its
+ *  mark sits on every beat; once, at the end, its logo sits with the
+ *  channel's name set as type. A channel name is never an image: the brand
+ *  book sets it in mono, lowercase, joined by dots. There is no opening
+ *  identity moment: a Short opens straight on its claim. */
+export const BrandPublicationLockupV1Schema = z.object({
+  // Absent while the theme is a candidate. A theme goes active only with
+  // Krish's approval captured as Studio feedback on his machine.
+  approval: z.object({
+    feedback_id: z.string().uuid(),
+    approved_by: z.literal('Krish'),
+    approved_at: z.string().datetime(),
+  }).optional(),
+  mark: BrandWordmarkAssetV1Schema,
+  logo: BrandWordmarkAssetV1Schema,
+  channel_label: z.object({
+    typeface: z.literal('IBM Plex Mono'),
+    weight: z.literal(500),
+    letter_case: z.literal('lower'),
+    size_px: z.number().int().min(32).max(80),
+    cap_height_ratio: z.number().min(0.6).max(0.8),
+  }).strict(),
+  // The brand book's colour for each channel, marking only the dot before
+  // its name: butter, coral, lilac.
+  channel_colors: z.object({
+    follow_the_money: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    mind_the_gap: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    under_the_hood: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+  }).strict(),
+  reference_canvas: z.object({
+    width: z.literal(1080),
+    height: z.literal(1920),
+  }).strict(),
+  offset_x: z.number().int().min(32).max(100),
+  offset_y: z.number().int().min(32).max(220),
+  minimum_effective: z.object({
+    mark_width_px: z.number().int().min(48).max(160),
+    logo_letter_height_px: z.number().int().min(32).max(120),
+    preview_width_css_px: z.literal(375),
+    logo_letter_height_css_px: z.number().min(12).max(24),
+    label_cap_height_css_px: z.number().min(8).max(24),
+  }).strict(),
+  identity: z.object({
+    mode: z.literal('publication_logo_with_channel'),
+    moment: z.literal('ending'),
+    duration_ms: z.number().int().min(800).max(3000),
+    plate_width: z.number().int().min(480).max(960),
+    plate_height: z.number().int().min(120).max(400),
+    padding: z.number().int().min(12).max(48),
+    gap: z.number().int().min(8).max(40),
+    logo_width: z.number().int().min(400).max(900),
+    // Bottom left first, as on the approved storyboard (under the
+    // prediction), above the platform's safe zone; top left if that collides.
+    corners: z.tuple([z.literal('bottom_left'), z.literal('top_left')]),
+  }).strict(),
+  anchor: z.object({
+    mode: z.literal('publication_mark'),
+    plate_width: z.number().int().min(72).max(220),
+    plate_height: z.number().int().min(72).max(220),
+    padding: z.number().int().min(8).max(28),
+    mark_width: z.number().int().min(48).max(160),
+    corners: z.tuple([z.literal('top_left'), z.literal('top_right')]),
+  }).strict(),
+}).strict().superRefine((lockup, context) => {
+  const markHeight = lockup.anchor.mark_width * lockup.mark.alpha_crop.height / lockup.mark.alpha_crop.width
+  if (lockup.anchor.mark_width > lockup.anchor.plate_width - lockup.anchor.padding * 2 || markHeight > lockup.anchor.plate_height - lockup.anchor.padding * 2) context.addIssue({ code: 'custom', path: ['anchor'], message: 'the publication mark exceeds its anchor plate' })
+  if (lockup.minimum_effective.mark_width_px > lockup.anchor.mark_width) context.addIssue({ code: 'custom', path: ['anchor', 'mark_width'], message: 'the publication mark is below its declared minimum width' })
+  const logoHeight = lockup.identity.logo_width * lockup.logo.alpha_crop.height / lockup.logo.alpha_crop.width
+  const labelLine = lockup.channel_label.size_px * 1.15
+  if (lockup.identity.logo_width > lockup.identity.plate_width - lockup.identity.padding * 2 || logoHeight + lockup.identity.gap + labelLine > lockup.identity.plate_height - lockup.identity.padding * 2) context.addIssue({ code: 'custom', path: ['identity'], message: 'the logo and channel name exceed the identity plate' })
+})
+export type BrandPublicationLockupV1 = z.infer<typeof BrandPublicationLockupV1Schema>
+
 export const BrandThemeV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),
   theme_id: z.string().min(1),
@@ -505,6 +579,10 @@ export const BrandThemeV1Schema = z.object({
       under_the_hood: BrandWordmarkAssetV1Schema.optional(),
     }),
   }).optional(),
+  // A theme for the live subchannels carries the publication's lockup instead
+  // of per-series wordmark images. Optional, so every theme pinned before it
+  // parses and hashes exactly as it did.
+  publication: BrandPublicationLockupV1Schema.optional(),
 })
 export type BrandThemeV1 = z.infer<typeof BrandThemeV1Schema>
 

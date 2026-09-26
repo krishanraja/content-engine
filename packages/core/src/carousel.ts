@@ -17,7 +17,7 @@ import {
   PUBLIC_SERIES_NAMES,
   sameSeriesLine,
 } from '@mindmake/contracts'
-import { stageOfficialSeriesWordmarks, type StagedWordmarkAsset } from './brand-assets.js'
+import { stageOfficialSeriesWordmarks, stagePublicationMarks, type StagedWordmarkAsset } from './brand-assets.js'
 import { BUILT_WITH_AI_EDITORIAL_RULE_ID, MONEY_OF_AI_EDITORIAL_RULE_ID } from './editorial.js'
 import { hashFile, hashValue } from './hash.js'
 
@@ -172,16 +172,21 @@ export async function renderCarousel(repoRoot: string, configPath: string, story
     if (issues.length) throw new Error(`carousel production gate failed: ${issues.join('; ')}`)
   }
   const theme = await loadPinnedTheme(configPath, story)
-  if (!theme.wordmarks) throw new Error('carousel brand theme has no official wordmarks')
+  if (!theme.wordmarks && !theme.publication) throw new Error('carousel brand theme has no official wordmarks')
   const storyHash = carouselStoryContentHash(story)
   const target = resolve(outputDirectory, `${story.story_id}-${storyHash.slice(0, 16)}${reviewMode ? '-review' : ''}`)
   const staging = join(target, 'staging')
   const slidesDirectory = join(target, 'slides')
   await Promise.all([mkdir(staging, { recursive: true }), mkdir(slidesDirectory, { recursive: true })])
-  const wordmarks = await stageOfficialSeriesWordmarks(theme, story.series, staging)
-  const runtimeWordmarks = {
-    mindmake: await runtimeWordmark(wordmarks.mindmake, staging),
-    series: await runtimeWordmark(wordmarks.series, staging),
+  // A live subchannel's theme carries the publication lockup (refused while
+  // a candidate, and never for a retired series); a retired one, its wordmarks.
+  let brandMarks: { wordmarks: { mindmake: Awaited<ReturnType<typeof runtimeWordmark>>; series: Awaited<ReturnType<typeof runtimeWordmark>> } } | { publication: { mark: Awaited<ReturnType<typeof runtimeWordmark>>; logo: Awaited<ReturnType<typeof runtimeWordmark>>; channel: { label: string; color: string; weight: number } } }
+  if (theme.publication) {
+    const marks = await stagePublicationMarks(theme, story.series, staging)
+    brandMarks = { publication: { mark: await runtimeWordmark(marks.mark, staging), logo: await runtimeWordmark(marks.logo, staging), channel: { label: marks.channelLabel, color: marks.channelColor, weight: marks.lockup.channel_label.weight } } }
+  } else {
+    const wordmarks = await stageOfficialSeriesWordmarks(theme, story.series, staging)
+    brandMarks = { wordmarks: { mindmake: await runtimeWordmark(wordmarks.mindmake, staging), series: await runtimeWordmark(wordmarks.series, staging) } }
   }
   const assets = await stageStoryAssets(story, staging)
   const browser = await ensureBrowser({ chromeMode: 'headless-shell', logLevel: 'warn' })
@@ -211,7 +216,7 @@ export async function renderCarousel(repoRoot: string, configPath: string, story
       branding: {
         colors: { ink: theme.colors.ink, surface: theme.colors.surface, raised: theme.colors.raised, line: theme.colors.line, text: theme.colors.text, secondaryText: theme.colors.secondary_text, mutedText: theme.colors.muted_text, paper: theme.colors.paper, mint: theme.colors.mint, mintInk: theme.colors.mint_ink, amber: theme.colors.amber },
         typography: theme.typography,
-        wordmarks: runtimeWordmarks,
+        ...brandMarks,
         assets,
       },
     }

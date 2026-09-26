@@ -6,7 +6,7 @@ import '@fontsource-variable/source-serif-4'
 import '@fontsource/ibm-plex-mono/500.css'
 import type { CarouselRenderProps } from './props'
 
-type Wordmark = CarouselRenderProps['branding']['wordmarks']['mindmake']
+type Wordmark = NonNullable<CarouselRenderProps['branding']['wordmarks']>['mindmake']
 type Colors = CarouselRenderProps['branding']['colors']
 type Scene = CarouselRenderProps['slide']['scene']
 
@@ -134,7 +134,7 @@ function SceneArtwork({ scene, colors, items }: { scene: Scene; colors: Colors; 
 
 export function MindmakeCarouselSlide(props: CarouselRenderProps) {
   const { slide, branding } = props
-  const { colors, typography, wordmarks } = branding
+  const { colors, typography, wordmarks, publication } = branding
   const paperScene = slide.scene === 'inspection_table' || slide.scene === 'lever_cutaway' || slide.scene === 'shutter_cabinet'
   const background = paperScene ? colors.paper : colors.ink
   const foreground = paperScene ? colors.ink : colors.text
@@ -145,9 +145,19 @@ export function MindmakeCarouselSlide(props: CarouselRenderProps) {
   return <AbsoluteFill style={{ background, color: foreground, boxSizing: 'border-box', overflow: 'hidden' }}>
     <SceneArtwork scene={slide.scene} colors={colors} items={slide.visualItems} />
     <div style={{ position: 'absolute', left: BRAND_PLATE_LEFT, right: 76, top: 64, height: 92, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-      <div data-brand-slot="series-channel-signpost" style={{ width: 510, height: 78, background: '#050806', border: `1px solid ${colors.line}`, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: `0 ${BRAND_PLATE_PADDING_X}px`, boxSizing: 'border-box', overflow: 'hidden' }}>
-        <OfficialWordmark asset={wordmarks.series} width={470} lettersOnly />
-      </div>
+      {publication ? (
+        // A live subchannel (Krish, 2026-09-26): the publication's mark, then
+        // the channel's name set as type, never as an image.
+        <div data-brand-slot="series-channel-signpost" style={{ height: 78, background: '#050806', border: `1px solid ${colors.line}`, display: 'flex', alignItems: 'center', gap: 16, padding: `0 ${BRAND_PLATE_PADDING_X}px`, boxSizing: 'border-box', overflow: 'hidden' }}>
+          <OfficialWordmark asset={publication.mark} width={56} />
+          <span style={{ width: 14, height: 14, borderRadius: '50%', background: publication.channel.color, flex: 'none' }} />
+          <span style={{ fontFamily: typography.data, fontWeight: publication.channel.weight, fontSize: 34, letterSpacing: 0.4, color: colors.text, textTransform: 'lowercase', whiteSpace: 'nowrap' }}>{publication.channel.label}</span>
+        </div>
+      ) : (
+        <div data-brand-slot="series-channel-signpost" style={{ width: 510, height: 78, background: '#050806', border: `1px solid ${colors.line}`, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: `0 ${BRAND_PLATE_PADDING_X}px`, boxSizing: 'border-box', overflow: 'hidden' }}>
+          <OfficialWordmark asset={wordmarks!.series} width={470} lettersOnly />
+        </div>
+      )}
       <div style={{ width: 98, paddingTop: 13, borderTop: `2px solid ${paperScene ? colors.ink : colors.line}`, textAlign: 'right', fontFamily: typography.data, fontSize: 18, letterSpacing: 2, color: paperScene ? colors.ink : colors.mutedText }}>{String(slide.position).padStart(2, '0')} / {String(props.slideCount).padStart(2, '0')}</div>
     </div>
     <div style={{ position: 'absolute', left: 76, right: 76, top: isCover ? 250 : 202 }}>
@@ -155,8 +165,8 @@ export function MindmakeCarouselSlide(props: CarouselRenderProps) {
       <div style={{ maxWidth: isCover ? 830 : 900, fontFamily: isVerdict ? typography.claim : typography.structure, fontSize: isCover ? 74 : isVerdict ? 76 : 61, lineHeight: 0.99, letterSpacing: isVerdict ? -2.2 : -3, fontWeight: isVerdict ? 540 : 760, color: accentColor }}>{slide.headline}</div>
       {slide.body && <div style={{ fontFamily: typography.body, fontSize: isCover ? 31 : 30, lineHeight: 1.22, color: secondary, maxWidth: 800, marginTop: 20 }}>{slide.body}</div>}
     </div>
-    <div data-brand-slot="mindmake-publisher-signature" style={{ position: 'absolute', left: BRAND_PLATE_LEFT, bottom: 24, width: 228, height: 58, background: '#050806', border: `1px solid ${colors.line}`, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: `0 ${BRAND_PLATE_PADDING_X}px`, boxSizing: 'border-box', overflow: 'hidden' }}>
-      <OfficialWordmark asset={wordmarks.mindmake} width={188} />
+    <div data-brand-slot="mindmake-publisher-signature" style={{ position: 'absolute', left: BRAND_PLATE_LEFT, bottom: 24, width: publication ? 340 : 228, height: 58, background: '#050806', border: `1px solid ${colors.line}`, display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: `0 ${BRAND_PLATE_PADDING_X}px`, boxSizing: 'border-box', overflow: 'hidden' }}>
+      {publication ? <OfficialWordmark asset={publication.logo} width={300} /> : <OfficialWordmark asset={wordmarks!.mindmake} width={188} />}
     </div>
     {props.reviewMode && <div style={{ position: 'absolute', right: 76, top: 118, background: background, border: `1px solid ${colors.amber}`, padding: '7px 10px', fontFamily: typography.data, fontSize: 12, color: colors.amber, letterSpacing: 1.8 }}>DESIGN CANDIDATE</div>}
   </AbsoluteFill>

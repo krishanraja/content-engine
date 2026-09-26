@@ -46,6 +46,7 @@ import {
   analyzeMediaArtifactForFeedback,
   analyzeLoudness,
   brandLayerCollisionIssues,
+  brandThemeRefusal,
   brandWordmarkLegibilityReport,
   alignScriptToTranscript,
   applyPresenterIdentityCorrections,
@@ -1983,9 +1984,16 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
           if (!brandTheme) brandFailures.push('manifest brand theme does not match the exact job-pinned active theme')
           else {
-            const report = brandWordmarkLegibilityReport(brandTheme)
-            brandFailures.push(...report.failures, ...brandLayerCollisionIssues(manifest, brandTheme, brandGeometry))
-            brandWarnings.push(...report.warnings)
+            if (brandTheme.publication) {
+              // A live subchannel's lockup: refused while a candidate, and
+              // never for a retired series.
+              const refusal = brandThemeRefusal(brandTheme, manifest.series)
+              brandFailures.push(...(refusal ? [refusal] : []), ...brandLayerCollisionIssues(manifest, brandTheme, brandGeometry))
+            } else {
+              const report = brandWordmarkLegibilityReport(brandTheme)
+              brandFailures.push(...report.failures, ...brandLayerCollisionIssues(manifest, brandTheme, brandGeometry))
+              brandWarnings.push(...report.warnings)
+            }
           }
         }
         const checks = [

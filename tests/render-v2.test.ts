@@ -3,9 +3,9 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { RenderManifestV2Schema, SourceVisualAnalysisV1Schema, TreatmentRegistryV1Schema, VisualNarrativePlanV1Schema, type BrandThemeV1, type RenderManifestV2, type SourceVisualAnalysisV1 } from '@mindmake/contracts'
-import { brandGeometryContextIssues, brandLayerCollisionIssues, completeStageV2, createJobV2, hashValue, loadExactBrandGeometryContextV2, loadPinnedRenderRegistryV2, loudnormSecondPassFilterV2, manifestToV2RenderProps, renderV2CacheKey, resolveBrandPlacementForShot, resolveBrandTimeline, validateV2RenderReadiness, type BrandGeometryContextV2 } from '@mindmake/core'
+import { brandGeometryContextIssues, brandLayerCollisionIssues, publicationLegibilityReport, completeStageV2, createJobV2, hashValue, loadExactBrandGeometryContextV2, loadPinnedRenderRegistryV2, loudnormSecondPassFilterV2, manifestToV2RenderProps, renderV2CacheKey, resolveBrandPlacementForShot, resolveBrandTimeline, validateV2RenderReadiness, type BrandGeometryContextV2 } from '@mindmake/core'
 import studioConfig from '../config/studio.json'
-import { brandLockupRenderModel } from '../apps/renderer/src/v2/MindmakeStory'
+import { brandLockupRenderModel, publicationLockupRenderModel } from '../apps/renderer/src/v2/MindmakeStory'
 import { cameraCropAt, defaultLayerBounds, deterministicUnit, primaryAttentionLayerId, sourceStartForShot, transitionOpacity } from '../apps/renderer/src/v2/timeline'
 import type { V2RuntimeShot } from '../apps/renderer/src/v2/props'
 
@@ -683,5 +683,124 @@ describe('V2 brand lockup protection', () => {
     expect(calibrationProps.branding).toMatchObject({ mode: 'none', seriesName: '' })
     expect(calibrationProps.branding.wordmarks).toBeUndefined()
     expect(brandLockupRenderModel(calibrationProps.branding)).toBeNull()
+  })
+})
+
+// Krish, 2026-09-26: "Make your mind up, Mark, plus the channel name", then
+// "placement approved": the publication's mark on every beat, and once, at
+// the end, its logo with the channel's name set as type. Never an opening
+// title card: a Short opens straight on its claim.
+function publicationBrandFixture() {
+  const registry = TreatmentRegistryV1Schema.parse(studioConfig)
+  const candidate = registry.brand_themes.find((theme) => theme.theme_id === 'makeyourmindup-video-v1')
+  if (!candidate?.publication) throw new Error('the makeyourmindup theme is missing its publication lockup')
+  // The committed theme is a candidate with no approval. This active copy,
+  // with a placeholder approval, exercises the path it takes once Krish's
+  // approval is captured as Studio feedback on his machine.
+  const theme = { ...candidate, status: 'active', publication: { ...candidate.publication, approval: { feedback_id: '00000000-0000-4000-8000-000000000000', approved_by: 'Krish', approved_at: '2026-09-26T00:00:00.000Z' } } } as BrandThemeV1
+  const lockup = theme.publication!
+  return {
+    candidate,
+    theme,
+    wordmarks: {
+      mark: { ...lockup.mark, assetFile: `brand-publication-mark-${lockup.mark.sha256.slice(0, 16)}.png` },
+      logo: { ...lockup.logo, assetFile: `brand-publication-logo-${lockup.logo.sha256.slice(0, 16)}.png` },
+      lockup,
+      channelLabel: 'mind.the.gap',
+      channelColor: '#FF6A4D',
+    },
+  }
+}
+
+function liveTwoShotManifest(lateMs = 2_000, series: RenderManifestV2['series'] = 'mind_the_gap', theme: BrandThemeV1 = publicationBrandFixture().theme): RenderManifestV2 {
+  const base = manifest()
+  const shot = base.shot_directives[0]!
+  const end = 2_000 + lateMs
+  const late = {
+    ...shot,
+    shot_id: 'shot-late',
+    beat_id: 'beat-late',
+    start_ms: 2_000,
+    end_ms: end,
+    source_start_ms: 6_000,
+    source_end_ms: 6_000 + lateMs,
+    camera_plan: { ...shot.camera_plan, camera_plan_id: 'camera-plan-late', start_ms: 2_000, end_ms: end, keyframes: [{ ...shot.camera_plan.keyframes[0]!, at_ms: 2_000 }, { ...shot.camera_plan.keyframes[1]!, at_ms: end }] },
+    layers: shot.layers.map((layer) => ({ ...layer, layer_id: `${layer.layer_id}-late`, ...(layer.kind === 'source' ? { protected: false } : {}) })),
+  }
+  return RenderManifestV2Schema.parse({
+    ...base,
+    series,
+    duration_ms: end,
+    shot_directives: [{ ...shot, layers: shot.layers.map((layer) => layer.kind === 'source' ? { ...layer, protected: false } : layer) }, late],
+    captions: [...base.captions, { start_ms: 2_000, end_ms: end, text: 'Our call.', emphasis: ['call'] }],
+    caption_provenance: { ...base.caption_provenance, source_token_count: 9, caption_token_count: 9 },
+    audio_plan: { ...base.audio_plan, dialogue_edits: [{ ...base.audio_plan.dialogue_edits[0]!, output_end_ms: end, source_end_ms: base.audio_plan.dialogue_edits[0]!.source_start_ms + end }] },
+    branding: { mode: 'series', theme_id: theme.theme_id, theme_version: theme.version, theme_hash: hashValue(theme), wordmark_hashes: [theme.publication?.mark.sha256 ?? HASH_A, theme.publication?.logo.sha256 ?? HASH_B] },
+  })
+}
+
+function placementClearAt(m: RenderManifestV2, theme: BrandThemeV1, analysis: SourceVisualAnalysisV1, corner: 'top_left'): boolean {
+  const onlyTop = { ...theme, publication: { ...theme.publication!, identity: { ...theme.publication!.identity, corners: [corner, 'bottom_left'] } } } as unknown as BrandThemeV1
+  return resolveBrandPlacementForShot(m, onlyTop, m.shot_directives[1]!, 'stacked_identity', 2_000, 4_000, brandGeometryFor(m, analysis)).placement?.corner === corner
+}
+
+describe('makeyourmindup publication lockup', () => {
+  it('pins a legible mark and logo, and the channel name clears the phone floor', () => {
+    const { candidate } = publicationBrandFixture()
+    const report = publicationLegibilityReport(candidate)
+    expect(report.failures).toEqual([])
+    expect(report.logo_letter_height_at_375_css_px).toBeGreaterThanOrEqual(17)
+    expect(report.label_cap_height_at_375_css_px).toBeGreaterThanOrEqual(12)
+    expect(candidate.status).toBe('candidate')
+    expect(candidate.publication?.approval).toBeUndefined()
+    expect(candidate.source).toMatchObject({ repository: 'krishanraja/control-center', contract_path: 'src/assets/brand/makeyourmindup/README.md' })
+  })
+
+  it('puts the mark on every beat and the logo with the channel name only at the end', () => {
+    const { theme, wordmarks } = publicationBrandFixture()
+    const live = liveTwoShotManifest()
+    const props = manifestToV2RenderProps(live, { sourceFiles: { 'camera-main': 'source-camera.mp4' }, assetFiles: {} }, { theme, wordmarks, brandGeometry: brandGeometryFor(live) })
+    expect(props.branding.wordmarks).toBeUndefined()
+    expect(props.branding.publication?.channel).toEqual({ label: 'mind.the.gap', color: '#FF6A4D', sizePx: 52, weight: 500 })
+    const opening = props.shots.find((shot) => shot.shotId === 'shot-main')!.brandCues!
+    const ending = props.shots.find((shot) => shot.shotId === 'shot-late')!.brandCues!
+    expect(opening.every((cue) => cue.mode === 'mindmake_only')).toBe(true)
+    expect(opening[0]).toMatchObject({ startMs: 0, corner: 'top_left', topPx: 140, leftPx: 80 })
+    expect(ending).toHaveLength(1)
+    expect(ending[0]).toMatchObject({ mode: 'stacked_identity', startMs: 2_000, endMs: 4_000 })
+    const mark = publicationLockupRenderModel(props.branding, opening[0])
+    expect(mark).toMatchObject({ identity: false, channel: null, plate: { width: 120, height: 110 }, images: [{ role: 'mark', displayWidth: 88 }] })
+    const identity = publicationLockupRenderModel(props.branding, ending[0])
+    expect(identity).toMatchObject({ identity: true, plate: { width: 704, height: 220 }, images: [{ role: 'logo', displayWidth: 640 }], channel: { label: 'mind.the.gap' } })
+    expect(brandLockupRenderModel(props.branding, opening[0])).toBeNull()
+  })
+
+  it('sits the ending lockup bottom left when the frame is clear there, as on the storyboard', () => {
+    const { theme } = publicationBrandFixture()
+    const base = liveTwoShotManifest()
+    const clear = RenderManifestV2Schema.parse({ ...base, shot_directives: base.shot_directives.map((shot) => ({ ...shot, layers: shot.layers.map((layer) => layer.kind === 'caption' ? { ...layer, bounds: { x: 0.065, y: 0.3, width: 0.87, height: 0.12 } } : layer) })) })
+    const analysis = sourceAnalysisFor(clear, { subjects: [{ ...sourceAnalysisFor(clear).subjects[0]!, face_keyframes: [{ at_ms: 0, bounds: { x: 0.45, y: 0.42, width: 0.1, height: 0.08 }, confidence: 0.99 }, { at_ms: 10_000, bounds: { x: 0.45, y: 0.42, width: 0.1, height: 0.08 }, confidence: 0.99 }], body_keyframes: [{ at_ms: 0, bounds: { x: 0.4, y: 0.5, width: 0.2, height: 0.12 }, confidence: 0.99 }, { at_ms: 10_000, bounds: { x: 0.4, y: 0.5, width: 0.2, height: 0.12 }, confidence: 0.99 }] }] })
+    const timeline = resolveBrandTimeline(clear, theme, brandGeometryFor(clear, analysis))
+    expect(timeline.issues).toEqual([])
+    // Both corners are clear here, so the order decides: bottom left first.
+    // 1920 - max(offset 140, safe zone 300) - plate 220
+    expect(timeline.identity_cue).toMatchObject({ mode: 'stacked_identity', corner: 'bottom_left', topPx: 1_400, leftPx: 80, shotId: 'shot-late' })
+    expect(resolveBrandPlacementForShot(clear, theme, clear.shot_directives[1]!, 'stacked_identity', 2_000, 4_000, brandGeometryFor(clear, analysis)).placement?.corner).toBe('bottom_left')
+    const topClear = placementClearAt(clear, theme, analysis, 'top_left')
+    expect(topClear).toBe(true)
+  })
+
+  it('never falls back to an opening title card', () => {
+    const { theme } = publicationBrandFixture()
+    const short = liveTwoShotManifest(1_000)
+    expect(resolveBrandTimeline(short, theme, brandGeometryFor(short)).issues).toEqual(['no ending or late beat can host the publication logo and channel name'])
+  })
+
+  it('refuses while a candidate, and never brands a retired series', () => {
+    const { candidate, theme } = publicationBrandFixture()
+    const asCandidate = liveTwoShotManifest(2_000, 'mind_the_gap', candidate)
+    expect(resolveBrandTimeline(asCandidate, candidate, brandGeometryFor(asCandidate)).issues[0]).toMatch(/is a candidate: it goes live only when Krish's approval is captured/)
+    const retired = liveTwoShotManifest(2_000, 'built_with_ai', theme)
+    expect(resolveBrandTimeline(retired, theme, brandGeometryFor(retired)).issues[0]).toMatch(/brands only the live subchannels; built_with_ai keeps the theme it was approved under/)
   })
 })

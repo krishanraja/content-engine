@@ -322,6 +322,44 @@
           }
         }
       }
+    },
+    {
+      "schema_version": 1,
+      "theme_id": "makeyourmindup-video-v1",
+      "version": 1,
+      "status": "candidate",
+      "source": { "repository": "krishanraja/control-center", "commit": "bb08cc835b8a6ed7a4ebfc307a89adebecf40d26", "contract_path": "src/assets/brand/makeyourmindup/README.md" },
+      "colors": { "ink": "#0A100D", "surface": "#111A16", "raised": "#1E2C26", "line": "#22322B", "text": "#E6EDE8", "secondary_text": "#B0C0B7", "muted_text": "#788C82", "paper": "#F2F1EA", "mint": "#7FE3B4", "mint_ink": "#07110C", "amber": "#E0A44A" },
+      "typography": { "structure": "Archivo Variable", "claim": "Newsreader Variable", "body": "Source Serif 4 Variable", "data": "IBM Plex Mono" },
+      "rules": { "mint_means_answer": true, "amber_means_changed": true, "mono_for_evidence_labels": true, "serif_for_claims_only": true, "progress_bar": "hidden", "radius": "precise", "official_wordmarks_only": true },
+      "publication": {
+        "mark": {
+          "source_path": "src/assets/brand/makeyourmindup/makeyourmindup-mark.png",
+          "sha256": "4a45152311ff552a1fd08307a78e8e49c0c699663d73c35687c52887f782fb4a",
+          "pixel_width": 831,
+          "pixel_height": 740,
+          "alpha_crop": { "x": 1, "y": 13, "width": 830, "height": 720 },
+          "letter_region": { "x": 1, "y": 13, "width": 830, "height": 720 },
+          "display_width": 180
+        },
+        "logo": {
+          "source_path": "src/assets/brand/makeyourmindup/makeyourmindup-horizontal.png",
+          "sha256": "463303741ec114cabc2a531afad537a7f04eb3f008efb2b384ecee52158aa7ee",
+          "pixel_width": 1200,
+          "pixel_height": 141,
+          "alpha_crop": { "x": 0, "y": 0, "width": 1200, "height": 141 },
+          "letter_region": { "x": 158, "y": 0, "width": 1042, "height": 116 },
+          "display_width": 640
+        },
+        "channel_label": { "typeface": "IBM Plex Mono", "weight": 500, "letter_case": "lower", "size_px": 52, "cap_height_ratio": 0.7 },
+        "channel_colors": { "follow_the_money": "#FFD84D", "mind_the_gap": "#FF6A4D", "under_the_hood": "#B7A6FF" },
+        "reference_canvas": { "width": 1080, "height": 1920 },
+        "offset_x": 80,
+        "offset_y": 140,
+        "minimum_effective": { "mark_width_px": 72, "logo_letter_height_px": 50, "preview_width_css_px": 375, "logo_letter_height_css_px": 17, "label_cap_height_css_px": 12 },
+        "identity": { "mode": "publication_logo_with_channel", "moment": "ending", "duration_ms": 2000, "plate_width": 704, "plate_height": 220, "padding": 32, "gap": 20, "logo_width": 640, "corners": ["bottom_left", "top_left"] },
+        "anchor": { "mode": "publication_mark", "plate_width": 120, "plate_height": 110, "padding": 16, "mark_width": 88, "corners": ["top_left", "top_right"] }
+      }
     }
   ],
   "default_brand_theme": "mindmake-video-v1"

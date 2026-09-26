@@ -17,7 +17,7 @@ import {
   type VisualAssetV1,
 } from '@mindmake/contracts'
 import type { V2RenderProps } from '../../../apps/renderer/src/v2/props.js'
-import { brandWordmarkLegibilityReport, officialSeriesMark, stageOfficialWordmarks, type BrandLockupMode, type StagedBrandWordmarks } from './brand-assets.js'
+import { brandThemeRefusal, brandWordmarkLegibilityReport, officialSeriesMark, publicationLegibilityReport, stageOfficialWordmarks, stagePublicationMarks, type BrandLockupMode, type StagedBrandWordmarks, type StagedPublicationMarks } from './brand-assets.js'
 import { remotionLicenceEligible } from './doctor.js'
 import { hashFile, hashPath, hashValue } from './hash.js'
 import { loadJobV2, pinnedConfigPathV2, readStageArtifactV2 } from './job-store-v2.js'
@@ -102,7 +102,9 @@ interface NormalizedBounds { x: number; y: number; width: number; height: number
 
 export interface BrandPlacementV2 {
   mode: BrandLockupMode
-  corner: 'top_left' | 'top_right'
+  // bottom_left only for a publication theme's ending identity (approved
+  // storyboard: the logo and channel name sit under the prediction).
+  corner: 'top_left' | 'top_right' | 'bottom_left'
   topPx: number
   leftPx: number
 }
@@ -261,6 +263,11 @@ function fallbackBounds(anchor: RenderManifestV2['shot_directives'][number]['lay
 }
 
 function brandPlateDimensions(theme: BrandThemeV1, mode: BrandLockupMode): { width: number; height: number } {
+  // A publication theme has two plates: the logo with the channel name (the
+  // identity moment) and the mark alone (the anchor on every other beat).
+  if (theme.publication) return mode === 'stacked_identity'
+    ? { width: theme.publication.identity.plate_width, height: theme.publication.identity.plate_height }
+    : { width: theme.publication.anchor.plate_width, height: theme.publication.anchor.plate_height }
   const lockup = theme.wordmarks?.lockup
   if (!lockup) return { width: 0, height: 0 }
   if (mode === 'stacked_identity') return { width: lockup.identity.plate_width, height: lockup.identity.plate_height }
@@ -269,13 +276,15 @@ function brandPlateDimensions(theme: BrandThemeV1, mode: BrandLockupMode): { wid
 }
 
 function placementBounds(manifest: RenderManifestV2, theme: BrandThemeV1, mode: BrandLockupMode, corner: BrandPlacementV2['corner']): { placement: BrandPlacementV2; normalized: NormalizedBounds; insideSafeZone: boolean } {
-  const lockup = theme.wordmarks!.lockup!
+  const offsets = theme.publication ?? theme.wordmarks!.lockup!
   const dimensions = brandPlateDimensions(theme, mode)
   const safe = manifest.output.safe_zones
-  const topPx = Math.max(lockup.offset_y, safe.top_px)
-  const leftPx = corner === 'top_left'
-    ? Math.max(lockup.offset_x, safe.left_px)
-    : manifest.output.width - Math.max(lockup.offset_x, safe.right_px) - dimensions.width
+  const topPx = corner === 'bottom_left'
+    ? manifest.output.height - Math.max(offsets.offset_y, safe.bottom_px) - dimensions.height
+    : Math.max(offsets.offset_y, safe.top_px)
+  const leftPx = corner === 'top_right'
+    ? manifest.output.width - Math.max(offsets.offset_x, safe.right_px) - dimensions.width
+    : Math.max(offsets.offset_x, safe.left_px)
   const insideSafeZone = leftPx >= safe.left_px
     && leftPx + dimensions.width <= manifest.output.width - safe.right_px
     && topPx >= safe.top_px
@@ -458,19 +467,25 @@ export function resolveBrandPlacementForShot(
   const geometryIssues = brandGeometryContextIssues(manifest, geometryContext)
   if (geometryIssues.length) return { issues: geometryIssues }
   const lockup = theme.wordmarks?.lockup
-  if (!lockup) return { issues: [`shot ${shot.shot_id} cannot place branding because the approved responsive lockup is missing`] }
-  const report = brandWordmarkLegibilityReport(theme)
-  if (report.failures.length) return { issues: report.failures }
+  if (!lockup && !theme.publication) return { issues: [`shot ${shot.shot_id} cannot place branding because the approved responsive lockup is missing`] }
+  const failures = theme.publication ? publicationLegibilityReport(theme).failures : brandWordmarkLegibilityReport(theme).failures
+  if (failures.length) return { issues: failures }
   const authored = shot.layers.filter((layer) => layer.kind === 'branding')
   if (authored.length > 1) return { issues: [`shot ${shot.shot_id} has more than one branding placement directive`] }
   const authoredAnchor = authored[0]?.anchor
   if (authoredAnchor && authoredAnchor !== 'top_left' && authoredAnchor !== 'top_right') return { issues: [`shot ${shot.shot_id} branding placement must use top_left or top_right`] }
   const inferredCorner: BrandPlacementV2['corner'] = shot.camera_plan.lead_room === 'right' ? 'top_right' : 'top_left'
   const preferredCorner = (authoredAnchor || inferredCorner) as BrandPlacementV2['corner']
-  const corners = authoredAnchor
-    ? [preferredCorner]
-    : [preferredCorner, ...lockup.placement.allowed_corners.filter((corner) => corner !== preferredCorner)]
-  const modes: BrandLockupMode[] = mode === 'stacked_identity' ? ['stacked_identity', 'series_only'] : [mode]
+  const allowedCorners: readonly BrandPlacementV2['corner'][] = theme.publication
+    ? (mode === 'stacked_identity' ? theme.publication.identity.corners : theme.publication.anchor.corners)
+    : lockup!.placement.allowed_corners
+  const corners = theme.publication && mode === 'stacked_identity'
+    ? [...allowedCorners]
+    : authoredAnchor
+      ? [preferredCorner]
+      : [preferredCorner, ...allowedCorners.filter((corner) => corner !== preferredCorner)]
+  // A publication theme has no series-only fallback: the channel name is type.
+  const modes: BrandLockupMode[] = mode === 'stacked_identity' && !theme.publication ? ['stacked_identity', 'series_only'] : [mode]
 
   for (const candidateMode of modes) {
     for (const corner of corners) {
@@ -492,14 +507,18 @@ export function resolveBrandPlacementForShot(
   return { issues: [`shot ${shot.shot_id} has no safe, legible wordmark placement${collisionLabels.length ? ` because it collides with ${[...new Set(collisionLabels)].join(', ')}` : ' inside the platform safe zone'}`] }
 }
 
-function identityWindows(manifest: RenderManifestV2, durationMs: number): Array<{ shot: RenderManifestV2['shot_directives'][number]; startMs: number; endMs: number }> {
+function identityWindows(manifest: RenderManifestV2, durationMs: number, endingOnly = false): Array<{ shot: RenderManifestV2['shot_directives'][number]; startMs: number; endMs: number }> {
   const shots = [...manifest.shot_directives].sort((left, right) => left.start_ms - right.start_ms || left.end_ms - right.end_ms)
   const first = shots[0]
   const last = shots.at(-1)
   const opening = first && first.end_ms - first.start_ms >= durationMs ? [{ shot: first, startMs: first.start_ms, endMs: first.start_ms + durationMs }] : []
   const ending = last && last.end_ms - last.start_ms >= durationMs ? [{ shot: last, startMs: last.end_ms - durationMs, endMs: last.end_ms }] : []
   const safeBeats = shots.filter((shot) => shot.end_ms - shot.start_ms >= durationMs).map((shot) => ({ shot, startMs: shot.start_ms, endMs: shot.start_ms + durationMs }))
-  const ordered = [...opening, ...ending, ...safeBeats]
+  // A publication theme's identity is the ending, then the latest beat that
+  // can hold it, and never the opening: a Short opens straight on its claim
+  // (Krish, 2026-09-26, "placement approved").
+  const lateBeats = safeBeats.filter((beat) => beat.shot !== first).reverse()
+  const ordered = endingOnly ? [...ending, ...lateBeats] : [...opening, ...ending, ...safeBeats]
   const seen = new Set<string>()
   return ordered.filter((item) => {
     const key = `${item.shot.shot_id}:${item.startMs}:${item.endMs}`
@@ -514,20 +533,28 @@ export function resolveBrandTimeline(manifest: RenderManifestV2, theme: BrandThe
   const geometryIssues = brandGeometryContextIssues(manifest, geometryContext)
   if (geometryIssues.length) return { cues: [], issues: geometryIssues }
   const lockup = theme.wordmarks?.lockup
-  if (!lockup) return { cues: [], issues: ['approved responsive wordmark lockup is missing'] }
-  const report = brandWordmarkLegibilityReport(theme)
-  if (report.failures.length) return { cues: [], issues: report.failures }
-  const preferredIdentityMode = report.recommended_identity_mode[manifest.series]
+  if (!lockup && !theme.publication) return { cues: [], issues: ['approved responsive wordmark lockup is missing'] }
+  let preferredIdentityMode: 'stacked_identity' | 'series_only' | undefined
+  if (theme.publication) {
+    const refusal = brandThemeRefusal(theme, manifest.series)
+    if (refusal) return { cues: [], issues: [refusal] }
+    preferredIdentityMode = 'stacked_identity'
+  } else {
+    const report = brandWordmarkLegibilityReport(theme)
+    if (report.failures.length) return { cues: [], issues: report.failures }
+    preferredIdentityMode = report.recommended_identity_mode[manifest.series]
+  }
   if (!preferredIdentityMode) return { cues: [], issues: [`${manifest.series} has no approved official wordmark yet; a branded render needs one pinned in studio.json`] }
+  const identityDurationMs = theme.publication ? theme.publication.identity.duration_ms : lockup!.identity.duration_ms
   let identityCue: BrandCueV2 | undefined
-  for (const window of identityWindows(manifest, lockup.identity.duration_ms)) {
+  for (const window of identityWindows(manifest, identityDurationMs, Boolean(theme.publication))) {
     const resolved = resolveBrandPlacementForShot(manifest, theme, window.shot, preferredIdentityMode, window.startMs, window.endMs, geometryContext)
     if (resolved.placement) {
       identityCue = { ...resolved.placement, shotId: window.shot.shot_id, startMs: window.startMs, endMs: window.endMs }
       break
     }
   }
-  if (!identityCue) return { cues: [], issues: ['no opening, ending, or safe beat can host the required phone-legible series identity moment'] }
+  if (!identityCue) return { cues: [], issues: [theme.publication ? 'no ending or late beat can host the publication logo and channel name' : 'no opening, ending, or safe beat can host the required phone-legible series identity moment'] }
 
   const cues: BrandCueV2[] = [identityCue]
   const issues: string[] = []
@@ -659,10 +686,64 @@ export function validateV2RenderReadiness(manifestInput: RenderManifestV2, revie
   return [...new Set(issues)]
 }
 
-function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWordmarks | undefined, manifest: RenderManifestV2): V2RenderProps['branding'] {
+const runtimeMark = (asset: StagedPublicationMarks['mark']) => ({
+  assetFile: asset.assetFile,
+  sourcePath: asset.source_path,
+  sha256: asset.sha256,
+  pixelWidth: asset.pixel_width,
+  pixelHeight: asset.pixel_height,
+  alphaCrop: asset.alpha_crop,
+  letterRegion: asset.letter_region,
+})
+
+function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWordmarks | StagedPublicationMarks | undefined, manifest: RenderManifestV2): V2RenderProps['branding'] {
   if (manifest.branding.mode === 'none') return fallbackBranding
   if (!theme) throw new Error('branded V2 renders require their exact job-pinned brand theme')
   if (!staged) throw new Error('official wordmarks were not staged for a branded V2 render')
+  if ('logo' in staged) {
+    const lockup = staged.lockup
+    return {
+      mode: 'series',
+      seriesName: PUBLIC_SERIES_NAMES[manifest.series],
+      colors: {
+        ink: theme.colors.ink,
+        surface: theme.colors.surface,
+        raised: theme.colors.raised,
+        line: theme.colors.line,
+        text: theme.colors.text,
+        secondaryText: theme.colors.secondary_text,
+        mutedText: theme.colors.muted_text,
+        paper: theme.colors.paper,
+        mint: theme.colors.mint,
+        mintInk: theme.colors.mint_ink,
+        amber: theme.colors.amber,
+      },
+      typography: theme.typography,
+      publication: {
+        mark: runtimeMark(staged.mark),
+        logo: runtimeMark(staged.logo),
+        channel: { label: staged.channelLabel, color: staged.channelColor, sizePx: lockup.channel_label.size_px, weight: lockup.channel_label.weight },
+        lockup: {
+          offsetX: lockup.offset_x,
+          offsetY: lockup.offset_y,
+          identity: {
+            durationMs: lockup.identity.duration_ms,
+            plateWidth: lockup.identity.plate_width,
+            plateHeight: lockup.identity.plate_height,
+            padding: lockup.identity.padding,
+            gap: lockup.identity.gap,
+            logoWidth: lockup.identity.logo_width,
+          },
+          anchor: {
+            plateWidth: lockup.anchor.plate_width,
+            plateHeight: lockup.anchor.plate_height,
+            padding: lockup.anchor.padding,
+            markWidth: lockup.anchor.mark_width,
+          },
+        },
+      },
+    }
+  }
   return {
     mode: 'series',
     seriesName: PUBLIC_SERIES_NAMES[manifest.series],
@@ -731,7 +812,7 @@ function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWor
 export function manifestToV2RenderProps(
   manifest: RenderManifestV2,
   staged: V2StagedMedia,
-  options: { durationMs?: number; reviewOverlay?: V2ReviewOverlay; theme?: BrandThemeV1; wordmarks?: StagedBrandWordmarks; brandGeometry?: BrandGeometryContextV2 } = {},
+  options: { durationMs?: number; reviewOverlay?: V2ReviewOverlay; theme?: BrandThemeV1; wordmarks?: StagedBrandWordmarks | StagedPublicationMarks; brandGeometry?: BrandGeometryContextV2 } = {},
 ): V2RenderProps {
   manifest = RenderManifestV2Schema.parse(manifest)
   const durationMs = Math.min(manifest.duration_ms, options.durationMs ?? manifest.duration_ms)
@@ -915,13 +996,22 @@ async function loadBrandTheme(
   manifest: RenderManifestV2,
   stagingDirectory: string,
   brandGeometry?: BrandGeometryContextV2,
-): Promise<{ theme?: BrandThemeV1; wordmarks?: StagedBrandWordmarks }> {
+): Promise<{ theme?: BrandThemeV1; wordmarks?: StagedBrandWordmarks | StagedPublicationMarks }> {
   if (manifest.branding.mode === 'none') return {}
   const theme = config.brand_themes.find((candidate) => candidate.theme_id === manifest.branding.theme_id)
   if (!theme) throw new Error(`brand theme ${manifest.branding.theme_id || 'missing'} is not available in the job-pinned configuration`)
   if (theme.status !== 'active') throw new Error(`brand theme ${theme.theme_id} is not active`)
   if (theme.version !== manifest.branding.theme_version) throw new Error(`brand theme ${theme.theme_id} version differs from the render manifest`)
   if (hashValue(theme) !== manifest.branding.theme_hash) throw new Error(`brand theme ${theme.theme_id} hash differs from the render manifest`)
+  if (theme.publication) {
+    const refusal = brandThemeRefusal(theme, manifest.series)
+    if (refusal) throw new Error(refusal)
+    const required = [theme.publication.mark.sha256, theme.publication.logo.sha256].sort()
+    if (required.join(':') !== [...manifest.branding.wordmark_hashes].sort().join(':')) throw new Error('render manifest is not pinned to the exact publication mark and logo')
+    const publicationCollisions = brandLayerCollisionIssues(manifest, theme, brandGeometry)
+    if (publicationCollisions.length) throw new Error(`brand lockup collision gate failed: ${publicationCollisions.join('; ')}`)
+    return { theme, wordmarks: await stagePublicationMarks(theme, manifest.series, stagingDirectory) }
+  }
   if (!theme.wordmarks?.lockup) throw new Error(`brand theme ${theme.theme_id} has no approved compact wordmark lockup`)
   const requiredWordmarkHashes = [theme.wordmarks.mindmake.sha256, officialSeriesMark(theme, manifest.series).sha256].sort()
   const manifestWordmarkHashes = [...manifest.branding.wordmark_hashes].sort()

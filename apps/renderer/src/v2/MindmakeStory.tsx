@@ -87,7 +87,68 @@ export function brandLockupRenderModel(branding: RuntimeBranding, placement?: Ru
   }
 }
 
+/** A live subchannel's lockup (Krish, 2026-09-26): the publication's mark
+ *  alone on every beat, and once, at the end, its logo with the channel's
+ *  name set as type under it. The name is live text, never an image. */
+export function publicationLockupRenderModel(branding: RuntimeBranding, placement?: RuntimeBrandCue) {
+  const publication = branding.publication
+  if (branding.mode === 'none' || !publication) return null
+  const identity = (placement?.mode || 'mindmake_only') === 'stacked_identity'
+  const layout = identity ? publication.lockup.identity : publication.lockup.anchor
+  return {
+    identity,
+    corner: placement?.corner || 'top_left' as const,
+    plate: {
+      width: layout.plateWidth,
+      height: layout.plateHeight,
+      top: placement?.topPx ?? publication.lockup.offsetY,
+      left: placement?.leftPx ?? publication.lockup.offsetX,
+      padding: layout.padding,
+      gap: identity ? publication.lockup.identity.gap : 0,
+    },
+    images: identity
+      ? [{ role: 'logo' as const, asset: publication.logo, displayWidth: publication.lockup.identity.logoWidth }]
+      : [{ role: 'mark' as const, asset: publication.mark, displayWidth: publication.lockup.anchor.markWidth }],
+    channel: identity ? publication.channel : null,
+  }
+}
+
+function PublicationLockup({ branding, placement }: { branding: RuntimeBranding; placement: RuntimeBrandCue | undefined }) {
+  const model = publicationLockupRenderModel(branding, placement)
+  if (!model) return null
+  const fonts = brandFonts(branding)
+  return (
+    <div style={{ position: 'absolute', zIndex: 900, top: model.plate.top, left: model.plate.left }}>
+      <div style={{
+        width: model.plate.width,
+        height: model.plate.height,
+        boxSizing: 'border-box',
+        padding: model.plate.padding,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: model.identity ? 'flex-start' : 'center',
+        justifyContent: 'center',
+        gap: model.plate.gap,
+        overflow: 'hidden',
+        borderRadius: 3,
+        background: 'rgba(10,16,13,.95)',
+        border: `1px solid ${branding.colors.line}`,
+        boxShadow: '0 14px 42px rgba(0,0,0,.38)',
+      }}>
+        {model.images.map((image) => <OfficialWordmark key={image.role} asset={image.asset} displayWidth={image.displayWidth} />)}
+        {model.channel ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: Math.round(model.channel.sizePx * 0.42) }}>
+            <span style={{ width: Math.round(model.channel.sizePx * 0.5), height: Math.round(model.channel.sizePx * 0.5), borderRadius: '50%', background: model.channel.color, flex: 'none' }} />
+            <span style={{ fontFamily: fonts.data, fontWeight: model.channel.weight, fontSize: model.channel.sizePx, lineHeight: 1.15, letterSpacing: '0.01em', color: branding.colors.text, textTransform: 'lowercase', whiteSpace: 'nowrap' }}>{model.channel.label}</span>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
 function BrandLockup({ branding, placement }: { branding: RuntimeBranding; placement: RuntimeBrandCue | undefined }) {
+  if (branding.publication) return <PublicationLockup branding={branding} placement={placement} />
   const model = brandLockupRenderModel(branding, placement)
   if (!model) return null
   return (
@@ -418,7 +479,7 @@ export function MindmakeStoryV2(props: V2RenderProps) {
   const brandCue = captionShot?.brandCues?.find((cue) => cue.startMs <= atMs && cue.endMs > atMs)
   const captionLayer = captionShot?.layers.find((layer) => layer.kind === 'caption')
   const captionBounds = captionLayer?.bounds ? defaultLayerBounds(captionLayer) : undefined
-  if (props.branding.mode === 'series' && !props.branding.wordmarks) throw new Error('branded V2 renders require staged official Mindmake and series wordmarks')
+  if (props.branding.mode === 'series' && !props.branding.wordmarks && !props.branding.publication) throw new Error('branded V2 renders require staged official wordmarks or the publication lockup')
   if (props.branding.mode === 'series' && !brandCue) throw new Error('branded V2 renders require a safe wordmark cue for every frame')
   return (
     <AbsoluteFill style={{ background: props.branding.colors.ink }}>

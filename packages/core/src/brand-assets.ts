@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { access, copyFile, mkdir, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, join } from 'node:path'
-import { SERIES_IDS, type BrandThemeV1, type BrandWordmarkAssetV1, type BrandWordmarkLockupV1, type RenderManifestV1, type Series } from '@mindmake/contracts'
+import { isLiveSeries, PUBLIC_SERIES_NAMES, SERIES_IDS, type BrandPublicationLockupV1, type BrandThemeV1, type BrandWordmarkAssetV1, type BrandWordmarkLockupV1, type RenderManifestV1, type Series } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { studioPaths } from './paths.js'
 
@@ -248,5 +248,80 @@ export async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: 
   return {
     mindmake: await stageAsset(theme, theme.wordmarks.mindmake, targetDirectory, 'mindmake', fetchImpl),
     series: await stageAsset(theme, officialSeriesMark(theme, series), targetDirectory, series, fetchImpl),
+  }
+}
+
+// ── The publication lockup (makeyourmindup) ─────────────────────────────────
+// Krish, 2026-09-26: "Make your mind up, Mark, plus the channel name", then
+// "placement approved". A theme for the live subchannels carries the
+// publication's mark and logo as pinned images, and sets the channel's name as
+// type. It serves only the live subchannels: the retired series keep the
+// Mindmake theme they were approved under.
+
+export interface StagedPublicationMarks {
+  mark: StagedWordmarkAsset
+  logo: StagedWordmarkAsset
+  lockup: BrandPublicationLockupV1
+  /** The channel's name as the brand book sets it: "mind.the.gap". */
+  channelLabel: string
+  channelColor: string
+}
+
+export interface PublicationLegibilityReport {
+  failures: string[]
+  mark_width_px: number
+  mark_height_px: number
+  logo_letter_height_px: number
+  logo_letter_height_at_375_css_px: number
+  label_cap_height_at_375_css_px: number
+}
+
+export function publicationLegibilityReport(theme: BrandThemeV1): PublicationLegibilityReport {
+  const lockup = theme.publication
+  if (!lockup) return { failures: ['the publication lockup is missing'], mark_width_px: 0, mark_height_px: 0, logo_letter_height_px: 0, logo_letter_height_at_375_css_px: 0, label_cap_height_at_375_css_px: 0 }
+  const minimum = lockup.minimum_effective
+  const toCss = (px: number) => px * minimum.preview_width_css_px / lockup.reference_canvas.width
+  const markHeight = renderedHeight(lockup.mark, lockup.anchor.mark_width)
+  const logoLetters = renderedLetterHeight(lockup.logo, lockup.identity.logo_width)
+  const labelCap = lockup.channel_label.size_px * lockup.channel_label.cap_height_ratio
+  const failures: string[] = []
+  if (lockup.anchor.mark_width < minimum.mark_width_px) failures.push(`the publication mark renders below ${minimum.mark_width_px} px wide`)
+  if (logoLetters < minimum.logo_letter_height_px || toCss(logoLetters) < minimum.logo_letter_height_css_px) failures.push(`the publication logo's lettering renders below ${minimum.logo_letter_height_px} px or ${minimum.logo_letter_height_css_px} CSS px`)
+  if (toCss(labelCap) < minimum.label_cap_height_css_px) failures.push(`the channel name renders below ${minimum.label_cap_height_css_px} CSS px cap height`)
+  return {
+    failures,
+    mark_width_px: lockup.anchor.mark_width,
+    mark_height_px: markHeight,
+    logo_letter_height_px: logoLetters,
+    logo_letter_height_at_375_css_px: toCss(logoLetters),
+    label_cap_height_at_375_css_px: toCss(labelCap),
+  }
+}
+
+/** Why this theme cannot brand this series, or null when it can. A
+ *  publication theme brands the live subchannels only, and only once active
+ *  with Krish's approval captured; a series-wordmark theme needs the series'
+ *  own approved mark. */
+export function brandThemeRefusal(theme: BrandThemeV1, series: Series): string | null {
+  if (theme.publication) {
+    if (!isLiveSeries(series)) return `${theme.theme_id} brands only the live subchannels; ${series} keeps the theme it was approved under`
+    if (theme.status !== 'active' || !theme.publication.approval) return `${theme.theme_id} is a candidate: it goes live only when Krish's approval is captured as Studio feedback on his machine`
+    const failures = publicationLegibilityReport(theme).failures
+    return failures.length ? `the publication lockup legibility gate failed: ${failures.join('; ')}` : null
+  }
+  if (!theme.wordmarks?.series[series]) return `${series} has no approved official wordmark yet; a branded render needs one pinned in studio.json`
+  return null
+}
+
+export async function stagePublicationMarks(theme: BrandThemeV1, series: Series, targetDirectory: string, fetchImpl: typeof fetch = fetch): Promise<StagedPublicationMarks> {
+  const refusal = brandThemeRefusal(theme, series)
+  if (refusal) throw new Error(refusal)
+  const lockup = theme.publication!
+  return {
+    mark: await stageAsset(theme, lockup.mark, targetDirectory, 'publication-mark', fetchImpl),
+    logo: await stageAsset(theme, lockup.logo, targetDirectory, 'publication-logo', fetchImpl),
+    lockup,
+    channelLabel: PUBLIC_SERIES_NAMES[series],
+    channelColor: lockup.channel_colors[series as keyof BrandPublicationLockupV1['channel_colors']],
   }
 }

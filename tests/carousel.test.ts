@@ -145,8 +145,13 @@ describe('carousel engine', () => {
   it('puts one official series signpost and one Mindmake publisher signature on every card', async () => {
     const renderer = await readFile(resolve('apps/renderer/src/carousel/MindmakeCarouselSlide.tsx'), 'utf8')
     expect(renderer).not.toContain('props.seriesName')
-    expect(renderer.match(/wordmarks\.series/g)).toHaveLength(1)
-    expect(renderer.match(/wordmarks\.mindmake/g)).toHaveLength(1)
+    expect(renderer.match(/wordmarks!?\.series/g)).toHaveLength(1)
+    expect(renderer.match(/wordmarks!?\.mindmake/g)).toHaveLength(1)
+    // A live subchannel (Krish, 2026-09-26): the publication's mark and the
+    // channel's name as type in the signpost, its logo as the signature.
+    expect(renderer.match(/publication\.mark/g)).toHaveLength(1)
+    expect(renderer.match(/publication\.logo/g)).toHaveLength(1)
+    expect(renderer).toContain('{publication.channel.label}</span>')
     expect(renderer).toContain('data-brand-slot="series-channel-signpost"')
     expect(renderer).toContain('data-brand-slot="mindmake-publisher-signature"')
   })
