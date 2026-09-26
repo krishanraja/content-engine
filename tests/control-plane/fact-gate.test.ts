@@ -298,6 +298,11 @@ describe('spacing is not wording', () => {
   test('a respaced table row still holds (piece 2, run 14)', () => {
     assert.equal(quotesFail(['| GPT-6 Astra |  $50.00 |'], SRC, 'GPT-6 Astra costs $50'), null)
   })
+  test('a passage with the quote marks dropped still holds (piece 2, run 16)', () => {
+    const src = 'OpenAI introduced a \u201creal-time router\u201d that decides which model to use for a particular prompt.'
+    assert.equal(quotesFail(['a real-time router that decides which model to use for a particular prompt'], src, 'x'), null)
+  })
+
   test('different words still fail', () => {
     assert.match(quotesFail(["complained GPT-5 wasn't working as well for them as 5 did. Altman said"], SRC, 'x') || '', /not found word for word/)
     assert.match(quotesFail(['| GPT-6 Astra | $5.00 |'], SRC, 'GPT-6 Astra costs $5') || '', /not found word for word|do not carry/)

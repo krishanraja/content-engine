@@ -170,7 +170,11 @@ export function datedContext(text: string, quote: string): string[] {
  *  sources and together they carry every number in the claim. Up to three
  *  passages, because a fact is often split: the date in a heading, the fact
  *  below it. */
-const unspaced = (s: string): string => s.replace(/\s+/g, '')
+/** The words alone: no spacing and no quotation marks (norm has already
+ *  made curly quotes straight). A checker that drops the marks around a
+ *  quoted term ('a real-time router that', piece 2 run 16) quotes the same
+ *  words in the same order. */
+const unspaced = (s: string): string => s.replace(/[\s"'`]+/g, '')
 
 export function quotesFail(quotes: Array<string | null> | null, sourcesText: string, claim: string): string | null {
   // A passage too short to trust is dropped, never counted: one run failed a
