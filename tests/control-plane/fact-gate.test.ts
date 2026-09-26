@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
-  bodyHash, combine, datedContext, gateStatus, inOrder, numbersIn, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
+  bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, numbersIn, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   summarise, sweep,
   type CheckedClaim,
 } from '../../apps/control-plane/api/_factGate.js'
@@ -255,5 +255,24 @@ describe('the gate', () => {
     assert.match(src, /updates\.state === 'review' \|\| updates\.state === 'approved' \|\| updates\.state === 'published'\)\s*\n\s*&& \(LIVE_SUBCHANNELS/)
     assert.match(src, /const gate = gateStatus\(jsonRecord\(current\.meta\), effective\)/)
     assert.match(src, /reason: 'fact_gate'/)
+  })
+})
+
+describe('the confidence line is never a claim', () => {
+  // Piece 2, run 13 (2026-09-26): the extractor listed "How sure we are: 75%."
+  // as a claim and it failed against the sources; on run 11 the same line
+  // happened to pass. It is Krish's judgement, so it is never checked.
+  test('the line, bare or with the placeholder, is recognised; other sentences are not', () => {
+    assert.equal(isConfidenceLine('How sure we are: 75%.'), true)
+    assert.equal(isConfidenceLine('  How sure we are: 60%'), true)
+    assert.equal(isConfidenceLine('How sure we are: [Krish to set]'), true)
+    assert.equal(isConfidenceLine('How sure we are: 75%, because Cisco said so.'), false)
+    assert.equal(isConfidenceLine('Glean estimated that 95% of usage runs on the priciest models.'), false)
+  })
+
+  test('the route drops it from the claims and sets it aside before any check runs', () => {
+    const src = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
+    assert.match(src, /const claims = listed\.filter\(c => !isConfidenceLine\(c\.sentence\)\)/)
+    assert.ok(src.indexOf('isConfidenceLine(c.sentence)') < src.indexOf('async function onFile'), 'the filter runs inside extract, before the checks')
   })
 })

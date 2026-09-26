@@ -15,7 +15,7 @@ import { publishChecks, publishStatus } from '../../_publishChecks.js'
 import { receipts } from '../../_receipts.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, norm, ON_FILE_SYSTEM, quotesFail,
+  combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, norm, ON_FILE_SYSTEM, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, SOURCE_MARK, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -60,12 +60,15 @@ async function extract(body: string): Promise<{ claims: Claim[]; setAside: Array
     maxTokens: 8000, temperature: 0, timeoutMs: 90_000,
   })
   const j = robustJson(raw) || {}
-  const claims: Claim[] = (Array.isArray(j.claims) ? j.claims : [])
+  const listed: Claim[] = (Array.isArray(j.claims) ? j.claims : [])
     .filter((c: any) => typeof c?.sentence === 'string' && typeof c?.claim === 'string')
     .map((c: any) => ({ sentence: c.sentence.trim(), claim: c.claim.trim(), kind: (KINDS.has(c.kind) ? c.kind : 'other') as ClaimKind }))
+  // Krish's confidence is his judgement, never a claim, whatever the model says.
+  const claims = listed.filter(c => !isConfidenceLine(c.sentence))
   const setAside = (Array.isArray(j.set_aside) ? j.set_aside : [])
     .filter((a: any) => typeof a?.sentence === 'string')
     .map((a: any) => ({ sentence: a.sentence.trim(), reason: String(a.reason || '').slice(0, 60) }))
+  for (const c of listed) if (isConfidenceLine(c.sentence) && !setAside.some(a => a.sentence === c.sentence)) setAside.push({ sentence: c.sentence, reason: 'prediction' })
   return { claims, setAside }
 }
 

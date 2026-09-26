@@ -75,6 +75,13 @@ export const PASSING: ReadonlySet<ClaimVerdict> = new Set(['verified', 'verified
  *  line; anything else written after "How sure we are:" is hashed as written. */
 const CONFIDENCE_LINE = /^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[Krish to set\])[ \t]*$/gim
 
+/** Whether a sentence is only the confidence line. The extractor sometimes
+ *  lists it as a claim; checked against the sources it can only fail, and on
+ *  2026-09-26 it blocked piece 2 once while passing on the run before. */
+export function isConfidenceLine(sentence: string): boolean {
+  return new RegExp(CONFIDENCE_LINE.source, 'im').test(String(sentence ?? '').trim())
+}
+
 /** The hash a check is pinned to. It is taken over the text as save-draft
  *  will store it (sanitizeVoice only swaps dashes for commas), so a checked
  *  draft stays checked through that save, and any change to a word or a
