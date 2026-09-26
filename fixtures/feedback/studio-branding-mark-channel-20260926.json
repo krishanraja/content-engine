@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "feedback_id": "feedback-studio-branding-mark-channel-20260926-01",
+  "recorded_at": "2026-09-26T00:00:00.000Z",
+  "owner": "Krish",
+  "decision": "confirmed",
+  "scope": {
+    "level": "publication_brand",
+    "series": ["follow_the_money", "mind_the_gap", "under_the_hood"],
+    "stations": ["styleframes", "render", "package"]
+  },
+  "confirmed_inference": "Branded Shorts and carousels for the three live channels carry the makeyourmindup mark, taken from the makeyourmindup brand kit (the logos on makeyourmindup.ai), plus the channel name. The channel name is set as type in IBM Plex Mono, lowercase and joined by dots, because the brand book sets channel section names that way and no channel has a logo image of its own. This replaces the Mindmake wordmark and the per-series wordmark images for the live channels only; the two retired series keep the branding approved for them.",
+  "confirmation_excerpt": "Make your mind up, Mark, plus the channel name. You've got the logos as per the website for all of that.",
+  "capture_boundary": "A minimal Git release record of a direction Krish approved in words on 2026-09-26, answering item 2 of a numbered list (how Shorts are branded). It does not approve a placement: the mark at the start of the timeline on every beat and the full lockup once at the end, with no title card, is a proposal shown in the piece 2 storyboard on 2026-09-26. It does not claim the render pipeline was changed, and it does not claim the chat was captured as a tracked portable Studio session."
+}

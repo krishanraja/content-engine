@@ -268,6 +268,22 @@ Collected as the walk goes; finalised after piece 3.
 
 ## 4. Open questions for Krish
 
+- **Settled: how Shorts are branded** (Krish, 2026-09-26): "Make your mind
+  up, Mark, plus the channel name. You've got the logos as per the website
+  for all of that." The makeyourmindup mark plus the channel name in mono
+  (`fixtures/feedback/studio-branding-mark-channel-20260926.json`). Still
+  his: where it sits (the storyboard shows the mark at the start of the
+  timeline on every beat and the full lockup once at the end).
+- **The mind.the.gap format's name.** He read "The Timeline" as clashing
+  with a timeline elsewhere. Nothing else is a format by that name; the
+  timeline is mind.the.gap's own picture (`docs/CREATIVE_IDENTITY_UPGRADE.md`)
+  and house rule TIMELINE. Proposed: call the format The Fork, so the picture
+  and the format each keep one name. No brief uses either yet, so nothing
+  needs changing after the fact. Not built until he confirms the name,
+  because a format id goes into sealed briefs.
+- **Piece 2 line edits.** Proposed on 2026-09-26: reading age 12.5 to 11,
+  the "In the jargon" line cut, every fact, quote and the prediction
+  unchanged. Applying them needs his go, then one fact-gate run.
 - **Settled: Shorts in the ad's style** (Krish, 2026-09-26, "I agree with
   all your four except for number one"). Captions in sentence case with at
   most one loud word; the close is the dated prediction. Recorded in
