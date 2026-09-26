@@ -258,7 +258,7 @@ export function sweep(body: string, claims: Claim[], setAside: Array<{ sentence:
     const n = norm(s)
     return list.some(c => { const m = norm(c.sentence); return m.length >= 12 && (n.includes(m) || m.includes(n)) })
   }
-  const honoured = setAside.filter(a => readsAsForecast(a.sentence) || isConfidenceLine(a.sentence))
+  const honoured = setAside.filter(a => readsAsForecast(a.sentence) && !isConfidenceLine(a.sentence))
   const extra: Claim[] = []
   for (const s of sentences(body)) {
     // Krish's confidence is never a leftover to check, listed or not.
@@ -267,6 +267,17 @@ export function sweep(body: string, claims: Claim[], setAside: Array<{ sentence:
     extra.push({ sentence: s, claim: s, kind: 'unclassified' })
   }
   return { claims: [...claims, ...extra], setAside: honoured }
+}
+
+/** What the second look reads: the sweep's unclassified sentences and the
+ *  lister's set-asides, read again so waving a sentence through takes two
+ *  readings that agree. Never Krish's confidence line: the second look turns
+ *  any sentence with a number into a claim (piece 2, runs 15 to 17). */
+export function leftoversOf(swept: { claims: Claim[]; setAside: Array<{ sentence: string; reason: string }> }): Claim[] {
+  return [
+    ...swept.claims.filter(c => c.kind === 'unclassified'),
+    ...swept.setAside.map(a => ({ sentence: a.sentence, claim: a.sentence, kind: 'unclassified' as ClaimKind })),
+  ].filter(l => !isConfidenceLine(l.sentence))
 }
 
 /** One source is enough only when it is the source's own words. The engine's

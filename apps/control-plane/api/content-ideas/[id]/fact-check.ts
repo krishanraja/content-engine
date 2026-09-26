@@ -15,7 +15,7 @@ import { publishChecks, publishStatus } from '../../_publishChecks.js'
 import { receipts } from '../../_receipts.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, norm, ON_FILE_SYSTEM, quotesFail,
+  combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, SOURCE_MARK, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -283,10 +283,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // "Each one, no matter how expensive, will tell you it was Thomas Jefferson"
   // as inference, because of "will". Waving a sentence through now takes two
   // readings that agree.
-  const leftovers = [
-    ...swept.claims.filter(c => c.kind === 'unclassified'),
-    ...swept.setAside.map(a => ({ sentence: a.sentence, claim: a.sentence, kind: 'unclassified' as ClaimKind })),
-  ]
+  const leftovers = leftoversOf(swept)
   const second = await secondLook(leftovers, body)
   const looked = resolveLeftovers(leftovers, second.answers)
   const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims]

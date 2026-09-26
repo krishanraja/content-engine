@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
-  bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, numbersIn, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
+  bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, numbersIn, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   summarise, sweep,
   type CheckedClaim,
 } from '../../apps/control-plane/api/_factGate.js'
@@ -240,7 +240,9 @@ describe('the gate', () => {
   })
   test('a set-aside takes two readings: the lister\'s set-asides go to the second look too', () => {
     const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
-    assert.match(check, /\.\.\.swept\.setAside\.map\(a => \(\{ sentence: a\.sentence, claim: a\.sentence, kind: 'unclassified'/)
+    assert.match(check, /const leftovers = leftoversOf\(swept\)/)
+    const wu = { sentence: 'Each one, no matter how expensive, will tell you it was Thomas Jefferson.', reason: 'labelled_inference' }
+    assert.deepEqual(leftoversOf({ claims: [], setAside: [wu] }), [{ sentence: wu.sentence, claim: wu.sentence, kind: 'unclassified' }])
     assert.match(check, /summarise\(checked, looked\.setAside, body, checker\)/)
   })
   test('the second look numbers each batch from 0 and asks again for what it missed', () => {
@@ -279,13 +281,20 @@ describe('the confidence line is never a claim', () => {
     const unlisted = sweep(body, [claim], [forecast])
     assert.ok(!unlisted.claims.some(c => /How sure we are/.test(c.sentence)), 'an unlisted confidence line is not a leftover')
     const listed = sweep(body, [claim], [forecast, { sentence: 'How sure we are: 75%.', reason: 'prediction' }])
-    assert.ok(!listed.claims.some(c => /How sure we are/.test(c.sentence)), 'a set-aside confidence line is honoured')
-    assert.ok(listed.setAside.some(a => /How sure we are/.test(a.sentence)), 'and it stays on the record as set aside')
+    assert.ok(!listed.claims.some(c => /How sure we are/.test(c.sentence)), 'a listed confidence line is not a leftover either')
+    // Runs 16 and 17: the route re-reads every set-aside at the second look,
+    // which turns a sentence with a number into a claim. It must never get there.
+    for (const swept of [unlisted, listed]) assert.ok(!leftoversOf(swept).some(l => /How sure we are/.test(l.sentence)), 'never re-read')
+    assert.ok(leftoversOf(listed).some(l => l.sentence === forecast.sentence), 'real set-asides are still re-read')
+    // Whatever reaches it, the line is never handed to the second look.
+    const slipped = { claims: [{ sentence: 'How sure we are: 75%.', claim: 'How sure we are: 75%.', kind: 'unclassified' as const }], setAside: [{ sentence: 'How sure we are: 75%.', reason: 'prediction' }] }
+    assert.deepEqual(leftoversOf(slipped), [])
   })
 
   test('the route drops it from the claims and sets it aside before any check runs', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
     assert.match(src, /const claims = listed\.filter\(c => !isConfidenceLine\(c\.sentence\)\)/)
+    assert.match(src, /const leftovers = leftoversOf\(swept\)/)
     assert.ok(src.indexOf('isConfidenceLine(c.sentence)') < src.indexOf('async function onFile'), 'the filter runs inside extract, before the checks')
   })
 })
