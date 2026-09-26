@@ -123,13 +123,16 @@ describe('the checks before approval, on real text', () => {
     assert.doesNotMatch(r7.detail, /grade/i)
   })
   test('a little above age 12 warns without blocking, and says so in ages', () => {
-    // Piece 2's passed text reads at about 12.5: the formula is rough, so
-    // between 12 and 13 is a nudge to shorten sentences, not a refusal.
-    const r7 = publishChecks(PASSED, factsOk).find(c => c.id === 'R7')!
+    // Piece 2 before its line edits read at about 12.5: the formula is rough,
+    // so between 12 and 13 is a nudge to shorten sentences, not a refusal.
+    const before = readFileSync('tests/fixtures/control-plane/piece2-before-line-edits.md', 'utf8')
+    const r7 = publishChecks(before, factsOk).find(c => c.id === 'R7')!
     assert.equal(r7.ok, false); assert.equal(r7.blocking, false)
     assert.match(r7.detail, /about age 12\.5, a little above 12/)
     const plain = 'The cat sat on the mat. It was a warm day. We had tea. '.repeat(10)
     assert.ok(publishChecks(plain, factsOk).find(c => c.id === 'R7')!.ok)
+    // Krish's go on the line edits (2026-09-26) brought it to about 11.5.
+    assert.ok(publishChecks(PASSED, factsOk).find(c => c.id === 'R7')!.ok, 'the edited edition reads at 12 or under')
   })
   test('each word to explain is listed once', () => {
     const r6 = publishChecks('A token here, two tokens there, the API and an api.', factsOk).find(c => c.id === 'R6')!
