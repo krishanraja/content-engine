@@ -170,15 +170,20 @@ export function datedContext(text: string, quote: string): string[] {
  *  sources and together they carry every number in the claim. Up to three
  *  passages, because a fact is often split: the date in a heading, the fact
  *  below it. */
+const unspaced = (s: string): string => s.replace(/\s+/g, '')
+
 export function quotesFail(quotes: Array<string | null> | null, sourcesText: string, claim: string): string | null {
   // A passage too short to trust is dropped, never counted: one run failed a
   // correct claim because the checker added the heading "## GPT-5" as a
   // passage. Dropping one can only remove support, never add it.
   const list = (quotes || []).filter((q): q is string => typeof q === 'string' && norm(q).length >= 12).slice(0, 3)
   if (list.length === 0) return 'no passage long enough to trust'
-  const src = norm(sourcesText)
+  // Spacing is not wording. Checkers join paragraphs ("as 4o did.Altman
+  // said", piece 2 run 15) and respace table rows ("| Output | $50.00 |",
+  // run 14); the same words in the same order still hold.
+  const src = unspaced(norm(sourcesText))
   for (const q of list) {
-    if (!inOrder(norm(q), src)) return `passage not found word for word in the sources: "${q.slice(0, 80)}"`
+    if (!inOrder(unspaced(norm(q)), src)) return `passage not found word for word in the sources: "${q.slice(0, 80)}"`
   }
   const carried = new Set(list.flatMap(numbersIn))
   let missing = numbersIn(claim).filter(n => !carried.has(n))
@@ -249,9 +254,11 @@ export function sweep(body: string, claims: Claim[], setAside: Array<{ sentence:
     const n = norm(s)
     return list.some(c => { const m = norm(c.sentence); return m.length >= 12 && (n.includes(m) || m.includes(n)) })
   }
-  const honoured = setAside.filter(a => readsAsForecast(a.sentence))
+  const honoured = setAside.filter(a => readsAsForecast(a.sentence) || isConfidenceLine(a.sentence))
   const extra: Claim[] = []
   for (const s of sentences(body)) {
+    // Krish's confidence is never a leftover to check, listed or not.
+    if (isConfidenceLine(s)) continue
     if (covered(s, claims) || covered(s, honoured)) continue
     extra.push({ sentence: s, claim: s, kind: 'unclassified' })
   }

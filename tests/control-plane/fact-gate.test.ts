@@ -270,9 +270,36 @@ describe('the confidence line is never a claim', () => {
     assert.equal(isConfidenceLine('Glean estimated that 95% of usage runs on the priciest models.'), false)
   })
 
+  test('the sweep never turns it into a leftover, whether the extractor listed it or not', () => {
+    // Piece 2, run 15: the extractor left the line out, and the sweep sent it
+    // to the second look as an unclassified sentence with a number in it.
+    const body = 'On 7 August 2025, OpenAI made GPT-5 the default in ChatGPT.\n\n## OUR PREDICTION\n\nBy 30 September 2027, two of three labs will route by default.\n\nHow sure we are: 75%.'
+    const claim = { sentence: 'On 7 August 2025, OpenAI made GPT-5 the default in ChatGPT.', claim: 'GPT-5 became the default on 7 August 2025', kind: 'date' as const }
+    const forecast = { sentence: 'By 30 September 2027, two of three labs will route by default.', reason: 'prediction' }
+    const unlisted = sweep(body, [claim], [forecast])
+    assert.ok(!unlisted.claims.some(c => /How sure we are/.test(c.sentence)), 'an unlisted confidence line is not a leftover')
+    const listed = sweep(body, [claim], [forecast, { sentence: 'How sure we are: 75%.', reason: 'prediction' }])
+    assert.ok(!listed.claims.some(c => /How sure we are/.test(c.sentence)), 'a set-aside confidence line is honoured')
+    assert.ok(listed.setAside.some(a => /How sure we are/.test(a.sentence)), 'and it stays on the record as set aside')
+  })
+
   test('the route drops it from the claims and sets it aside before any check runs', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
     assert.match(src, /const claims = listed\.filter\(c => !isConfidenceLine\(c\.sentence\)\)/)
     assert.ok(src.indexOf('isConfidenceLine(c.sentence)') < src.indexOf('async function onFile'), 'the filter runs inside extract, before the checks')
+  })
+})
+
+describe('spacing is not wording', () => {
+  const SRC = "Multiple people in the AMA complained GPT-5 wasn't working as well for them as 4o did.\n\nAltman said the reason GPT-5 seemed \u201cdumber\u201d was the router wasn't working properly.\n\n| Model | Output |\n|---|---|\n| GPT-6 Astra | $50.00 |"
+  test('a passage glued across two paragraphs still holds (piece 2, run 15)', () => {
+    assert.equal(quotesFail(["complained GPT-5 wasn't working as well for them as 4o did.Altman said the reason GPT-5 seemed \u201cdumber\u201d"], SRC, 'People said GPT-5 seemed dumber'), null)
+  })
+  test('a respaced table row still holds (piece 2, run 14)', () => {
+    assert.equal(quotesFail(['| GPT-6 Astra |  $50.00 |'], SRC, 'GPT-6 Astra costs $50'), null)
+  })
+  test('different words still fail', () => {
+    assert.match(quotesFail(["complained GPT-5 wasn't working as well for them as 5 did. Altman said"], SRC, 'x') || '', /not found word for word/)
+    assert.match(quotesFail(['| GPT-6 Astra | $5.00 |'], SRC, 'GPT-6 Astra costs $5') || '', /not found word for word|do not carry/)
   })
 })
