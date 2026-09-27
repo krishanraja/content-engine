@@ -18,14 +18,14 @@ Create two separate strong random provider-token values. Configure the mm-ctrl v
 
 ```text
 MindmakeVideoStudio/mm-ctrl-radar-token
-MindmakeVideoStudio/control-center-radar-token-v2
+MindmakeVideoStudio/control-center-radar-token-v3
 ```
 
 Use the interactive writer so the value never appears in shell history:
 
 ```powershell
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/mm-ctrl-radar-token
-powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-radar-token-v2
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-radar-token-v3
 ```
 
 Configure provider URLs through environment variables:
@@ -80,8 +80,8 @@ Before installing the task, run `studio v2 inbox init`, then two scans separated
 The runner uses two separate Windows Generic Credentials:
 
 ```text
-MindmakeVideoStudio/control-center-runner-token-v2
-MindmakeVideoStudio/control-center-runner-signing-key-v2
+MindmakeVideoStudio/control-center-runner-token-v3
+MindmakeVideoStudio/control-center-runner-signing-key-v3
 ```
 
 The first is the dedicated bearer accepted only by runner endpoints. The second must match the server-side `VIDEO_STUDIO_RUNNER_SIGNING_KEY` and signs receipt hashes. It is distinct from the bearer and from the durable local approval and decision ledger key:
@@ -93,8 +93,8 @@ MindmakeVideoStudio/approval-signing-key
 Enter all values interactively. The local ledger key never leaves the machine and must remain stable for the lifetime of the signed job history:
 
 ```powershell
-powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-token-v2
-powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-signing-key-v2
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-token-v3
+powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/control-center-runner-signing-key-v3
 powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/approval-signing-key
 ```
 

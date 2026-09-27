@@ -34,7 +34,7 @@ import {
 } from '@mindmake/contracts'
 import { hashFile, hashFileMd5, hashValue } from './hash.js'
 
-export const CONTROL_CENTER_RUNNER_CREDENTIAL = 'MindmakeVideoStudio/control-center-runner-token-v2'
+export const CONTROL_CENTER_RUNNER_CREDENTIAL = 'MindmakeVideoStudio/control-center-runner-token-v3'
 
 type FetchLike = typeof fetch
 

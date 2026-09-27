@@ -1,6 +1,6 @@
 param(
   [string]$Endpoint = 'https://controlcenter.krishraja.com/api/video-studio/mcp',
-  [string]$CredentialTarget = 'MindmakeVideoStudio/studio-mcp-token'
+  [string]$CredentialTarget = 'MindmakeVideoStudio/studio-mcp-token-v2'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -9,7 +9,7 @@ Set-StrictMode -Version Latest
 if ($Endpoint -ne 'https://controlcenter.krishraja.com/api/video-studio/mcp') {
   throw 'The Studio MCP proxy is pinned to the production gateway.'
 }
-if ($CredentialTarget -ne 'MindmakeVideoStudio/studio-mcp-token') {
+if ($CredentialTarget -ne 'MindmakeVideoStudio/studio-mcp-token-v2') {
   throw 'The Studio MCP proxy only accepts the dedicated Studio credential target.'
 }
 

@@ -12,10 +12,10 @@ The active control-plane credentials are:
 
 | Windows credential target | Vercel variable | Persistence |
 |---|---|---|
-| `MindmakeVideoStudio/control-center-runner-token-v2` | `VIDEO_STUDIO_RUNNER_TOKEN` | LocalMachine |
-| `MindmakeVideoStudio/control-center-runner-signing-key-v2` | `VIDEO_STUDIO_RUNNER_SIGNING_KEY` | LocalMachine |
-| `MindmakeVideoStudio/control-center-radar-token-v2` | `VIDEO_STUDIO_EXPORT_TOKEN` | LocalMachine |
-| `MindmakeVideoStudio/studio-mcp-token` | `VIDEO_STUDIO_MCP_TOKEN` | LocalMachine |
+| `MindmakeVideoStudio/control-center-runner-token-v3` | `VIDEO_STUDIO_RUNNER_TOKEN` | LocalMachine |
+| `MindmakeVideoStudio/control-center-runner-signing-key-v3` | `VIDEO_STUDIO_RUNNER_SIGNING_KEY` | LocalMachine |
+| `MindmakeVideoStudio/control-center-radar-token-v3` | `VIDEO_STUDIO_EXPORT_TOKEN` | LocalMachine |
+| `MindmakeVideoStudio/studio-mcp-token-v2` | `VIDEO_STUDIO_MCP_TOKEN` | LocalMachine |
 
 `MindmakeVideoStudio/approval-signing-key` is a separate, machine-local trust
 root for the approval ledger. Never rotate it as part of a cloud credential

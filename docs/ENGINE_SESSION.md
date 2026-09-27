@@ -77,6 +77,6 @@ Consumer clients may require a one-time connector approval. GitHub access alone 
 
 ## Local client setup
 
-Codex and Claude Code use the committed stdio proxy in `.codex/config.toml` and `.mcp.json`. The proxy reads `MindmakeVideoStudio/studio-mcp-token` directly from Windows Credential Manager inside its own process, pins the production endpoint, and never prints or persists the value. No parent-process environment variable or special client launch command is required.
+Codex and Claude Code use the committed stdio proxy in `.codex/config.toml` and `.mcp.json`. The proxy reads `MindmakeVideoStudio/studio-mcp-token-v2` directly from Windows Credential Manager inside its own process, pins the production endpoint, and never prints or persists the value. No parent-process environment variable or special client launch command is required.
 
 Claude.ai and ChatGPT require the separately released OAuth connector. Until that release exists, those clients may read and reason from the repository but must report `read_only_untracked`; they must not reuse the local bearer token.

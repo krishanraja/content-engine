@@ -29,7 +29,7 @@
 //
 //   npx tsx scripts/rotate-runner-signing-key.ts
 //   npx tsx scripts/rotate-runner-signing-key.ts --commit \
-//     --new-credential-target MindmakeVideoStudio/control-center-runner-signing-key-v2
+//     --new-credential-target MindmakeVideoStudio/control-center-runner-signing-key-v3
 //
 // Windows only: the credential lives in Credential Manager and the runtime root
 // is a Windows path.

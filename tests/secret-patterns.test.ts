@@ -23,7 +23,7 @@ describe('committed secret patterns', () => {
     'VIDEO_STUDIO_MCP_TOKEN=${VIDEO_STUDIO_MCP_TOKEN}',
     '# paste: <replace-me>',
     '# paste: [stored securely]',
-    'MindmakeVideoStudio/studio-mcp-token',
+    'MindmakeVideoStudio/studio-mcp-token-v2',
     'Authorization: Bearer ${VIDEO_STUDIO_MCP_TOKEN}',
   ])('permits a non-secret placeholder or credential name', (candidate) => {
     expect(containsCommittedSecret(candidate)).toBe(false)
