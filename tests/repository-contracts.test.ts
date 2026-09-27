@@ -66,7 +66,7 @@ describe('repository operating contracts', () => {
     expect(codexMcp).toContain('scripts/studio-mcp-credential-proxy.ps1')
     expect(codexMcp).not.toContain('bearer_token_env_var')
     expect(codexProxy).toContain(endpoint)
-    expect(codexProxy).toContain('MindmakeVideoStudio/studio-mcp-token')
+    expect(codexProxy).toContain('MindmakeVideoStudio/studio-mcp-token-v2')
     expect(codexProxy).toContain('RedirectStandardOutput = $true')
     expect(codexProxy).not.toContain('Write-Output $token')
 
@@ -104,9 +104,9 @@ describe('repository operating contracts', () => {
     const writer = await readFile(join(repoRoot, 'scripts', 'set-credential.ps1'), 'utf8')
     const active = `${controlPlane}\n${signing}\n${doctor}\n${cli}`
 
-    expect(active).toContain('MindmakeVideoStudio/control-center-runner-token-v2')
-    expect(active).toContain('MindmakeVideoStudio/control-center-runner-signing-key-v2')
-    expect(active).toContain('MindmakeVideoStudio/control-center-radar-token-v2')
+    expect(active).toContain('MindmakeVideoStudio/control-center-runner-token-v3')
+    expect(active).toContain('MindmakeVideoStudio/control-center-runner-signing-key-v3')
+    expect(active).toContain('MindmakeVideoStudio/control-center-radar-token-v3')
     expect(controlPlane).not.toContain("= 'MindmakeVideoStudio/control-center-runner-token'")
     expect(signing).not.toContain("= 'MindmakeVideoStudio/control-center-runner-signing-key'")
     expect(cli).not.toContain("credential: 'MindmakeVideoStudio/control-center-radar-token'")

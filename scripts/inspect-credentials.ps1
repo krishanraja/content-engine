@@ -135,10 +135,10 @@ $report = foreach ($entry in $entries) {
 $report | Sort-Object Target | Format-List
 
 $activeLocalTargets = @(
-  'MindmakeVideoStudio/control-center-runner-token-v2',
-  'MindmakeVideoStudio/control-center-runner-signing-key-v2',
-  'MindmakeVideoStudio/control-center-radar-token-v2',
-  'MindmakeVideoStudio/studio-mcp-token'
+  'MindmakeVideoStudio/control-center-runner-token-v3',
+  'MindmakeVideoStudio/control-center-runner-signing-key-v3',
+  'MindmakeVideoStudio/control-center-radar-token-v3',
+  'MindmakeVideoStudio/studio-mcp-token-v2'
 )
 $quarantinedTargets = @(
   'MindmakeVideoStudio/control-center-runner-token',

@@ -31,7 +31,7 @@ $quarantinedTargets = @(
   'MindmakeVideoStudio/control-center-radar-token'
 )
 $localOnlyTargets = @(
-  'MindmakeVideoStudio/studio-mcp-token'
+  'MindmakeVideoStudio/studio-mcp-token-v2'
 )
 $isVersionedRuntimeTarget = $Target -match '^MindmakeVideoStudio/control-center-(?:runner-token|runner-signing-key|radar-token)-v(?:[2-9]|[1-9][0-9]+)$'
 if ($quarantinedTargets -contains $Target) {
