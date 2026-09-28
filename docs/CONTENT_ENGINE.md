@@ -264,6 +264,15 @@ checked against `vercel.json` by `check-content-engine-schedule`.
   `meter_add` (`api/_meter.ts`): one row per agent key per day, with cache
   reads and writes and the uncached price kept separately. Batch calls are
   priced at half. Prices live in one table, `api/_prices.ts`.
+- A failed call is metered too (since 2026-09-28, walk log F29): one run and
+  one failure on its agent key and day, and no cost unless the provider
+  reported usage before it failed. Its class (usage limit, credit, key,
+  overload, rate limit, server, timeout, bad request), the provider's words
+  and any reset time it gave are kept in `system_config` under
+  `content_engine_anthropic_failure`, and the first success after it under
+  `content_engine_anthropic_ok_at` (`api/_modelProvider.ts`). Control
+  Center's own breaker, `anthropic_unavailable_until`, is a different key on
+  purpose: the two projects may run on different Anthropic keys.
 - Not metered by this code: OpenAI, and Perplexity, Exa, Brave and NewsAPI
   outside investigations.
 - There is no global dollar cap in code. Limits are per run: the investigation

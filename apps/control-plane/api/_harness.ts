@@ -150,6 +150,7 @@ export async function callMetered(opts: MeteredOpts, budget: RunBudget): Promise
     await meter.anthropicCall({
       agent: opts.agent || 'investigations',
       model, usage: j?.usage, inputTokens: inTok, outputTokens: outTok, failed: !r.ok,
+      ...(r.ok ? {} : { error: Object.assign(new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`), { status: r.status }) }),
     })
     if (!r.ok) {
       return { ...empty, inputTokens: inTok, outputTokens: outTok, costUsd: cost, error: `anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}` }
