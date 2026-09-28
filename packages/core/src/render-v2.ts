@@ -17,7 +17,8 @@ import {
   type VisualAssetV1,
 } from '@mindmake/contracts'
 import type { V2RenderProps } from '../../../apps/renderer/src/v2/props.js'
-import { brandThemeRefusal, brandWordmarkLegibilityReport, officialSeriesMark, publicationLegibilityReport, stageOfficialWordmarks, stagePublicationMarks, type BrandLockupMode, type StagedBrandWordmarks, type StagedPublicationMarks } from './brand-assets.js'
+import { houseCallFrame, houseShortStickerFrame, type HouseBox } from '../../../apps/renderer/src/house/geometry.js'
+import { brandThemeRefusal, brandWordmarkLegibilityReport, officialSeriesMark, publicationLegibilityReport, runtimeTypography, stageOfficialWordmarks, stagePublicationMarks, type BrandLockupMode, type StagedBrandWordmarks, type StagedPublicationMarks } from './brand-assets.js'
 import { remotionLicenceEligible } from './doctor.js'
 import { hashFile, hashPath, hashValue } from './hash.js'
 import { loadJobV2, pinnedConfigPathV2, readStageArtifactV2 } from './job-store-v2.js'
@@ -102,9 +103,10 @@ interface NormalizedBounds { x: number; y: number; width: number; height: number
 
 export interface BrandPlacementV2 {
   mode: BrandLockupMode
-  // bottom_left only for a publication theme's ending identity (approved
-  // storyboard: the logo and channel name sit under the prediction).
-  corner: 'top_left' | 'top_right' | 'bottom_left'
+  // bottom_left only for a version 1 publication theme's ending identity
+  // (approved storyboard: the logo and channel name sit under the
+  // prediction); band only for the house style's full-bleed ending band.
+  corner: 'top_left' | 'top_right' | 'bottom_left' | 'band'
   topPx: number
   leftPx: number
 }
@@ -123,7 +125,16 @@ export interface BrandPlacementResolutionV2 {
 export interface BrandTimelineResolutionV2 {
   cues: BrandCueV2[]
   identity_cue?: BrandCueV2
+  /** The house style's timed elements: the channel sticker on the second
+   *  beat (left out where it would cover the presenter or a directed layer)
+   *  and the call card on the beat the manifest names. */
+  house?: HouseMomentsV2
   issues: string[]
+}
+
+export interface HouseMomentsV2 {
+  sticker?: { text: string; startMs: number; endMs: number }
+  call?: { startMs: number; endMs: number; statement: string; due: string; confidencePercent: number }
 }
 
 export interface BrandGeometryContextV2 {
@@ -264,10 +275,16 @@ function fallbackBounds(anchor: RenderManifestV2['shot_directives'][number]['lay
 
 function brandPlateDimensions(theme: BrandThemeV1, mode: BrandLockupMode): { width: number; height: number } {
   // A publication theme has two plates: the logo with the channel name (the
-  // identity moment) and the mark alone (the anchor on every other beat).
-  if (theme.publication) return mode === 'stacked_identity'
-    ? { width: theme.publication.identity.plate_width, height: theme.publication.identity.plate_height }
-    : { width: theme.publication.anchor.plate_width, height: theme.publication.anchor.plate_height }
+  // identity moment; in the house style, the full-bleed ending band) and the
+  // mark alone (the anchor on every other beat), its hard shadow included.
+  if (theme.publication) {
+    const publication = theme.publication
+    if (mode === 'stacked_identity') return publication.identity.mode === 'publication_band'
+      ? { width: publication.reference_canvas.width, height: publication.identity.height_px }
+      : { width: publication.identity.plate_width, height: publication.identity.plate_height }
+    const shadow = publication.anchor.shadow_px ?? 0
+    return { width: publication.anchor.plate_width + shadow, height: publication.anchor.plate_height + shadow }
+  }
   const lockup = theme.wordmarks?.lockup
   if (!lockup) return { width: 0, height: 0 }
   if (mode === 'stacked_identity') return { width: lockup.identity.plate_width, height: lockup.identity.plate_height }
@@ -279,6 +296,16 @@ function placementBounds(manifest: RenderManifestV2, theme: BrandThemeV1, mode: 
   const offsets = theme.publication ?? theme.wordmarks!.lockup!
   const dimensions = brandPlateDimensions(theme, mode)
   const safe = manifest.output.safe_zones
+  if (corner === 'band' && theme.publication?.identity.mode === 'publication_band') {
+    // Full bleed at the mock's height; its type is inset to the safe zone,
+    // so only its top and foot must clear the platform's interface.
+    const topPx = theme.publication.identity.top_px
+    return {
+      placement: { mode, corner, topPx, leftPx: 0 },
+      normalized: { x: 0, y: topPx / manifest.output.height, width: 1, height: dimensions.height / manifest.output.height },
+      insideSafeZone: topPx >= safe.top_px && topPx + dimensions.height <= manifest.output.height - safe.bottom_px,
+    }
+  }
   const topPx = corner === 'bottom_left'
     ? manifest.output.height - Math.max(offsets.offset_y, safe.bottom_px) - dimensions.height
     : Math.max(offsets.offset_y, safe.top_px)
@@ -317,9 +344,11 @@ function layerVisibleAt(
   return layer.opacity > 0 && atMs >= layerStart && atMs < layerEnd
 }
 
-function collidingBrandLayers(shot: RenderManifestV2['shot_directives'][number], bounds: NormalizedBounds, startMs: number, endMs: number): string[] {
+function collidingBrandLayers(shot: RenderManifestV2['shot_directives'][number], bounds: NormalizedBounds, startMs: number, endMs: number, options: { ignoreCaptions?: boolean } = {}): string[] {
   return shot.layers.filter((layer) => {
     if (layer.kind === 'branding' || !layerVisibleDuring(layer, shot, startMs, endMs)) return false
+    // The house style's band and call card take the caption's place.
+    if (options.ignoreCaptions && layer.kind === 'caption') return false
     if ((layer.kind === 'source' || layer.kind === 'background') && !layer.protected) return false
     return boundsOverlap(bounds, layer.bounds || fallbackBounds(layer.anchor))
   }).map((layer) => layer.layer_id)
@@ -397,6 +426,7 @@ function brandAnalysisCollisions(
   startMs: number,
   endMs: number,
   context: BrandGeometryContextV2,
+  options: { faceOnly?: boolean } = {},
 ): { labels: string[]; issues: string[] } {
   const labels = new Set<string>()
   const issues = new Set<string>()
@@ -437,7 +467,9 @@ function brandAnalysisCollisions(
         ]
         if (!geometries.some(([, bounds]) => bounds)) issues.add(`shot ${shot.shot_id} subject geometry ${track.track_id} is unknown at source time ${Math.round(sourceTime)} ms`)
         for (const [kind, sourceBounds] of geometries) {
-          if (!sourceBounds) continue
+          // The house style's band sits over the torso as a lower third, as
+          // in the approved mock; it must still never cover the face.
+          if (!sourceBounds || (options.faceOnly && kind === 'body')) continue
           const projected = projectedSourceBounds(sourceBounds, crop, source.width, source.height, layerBounds, manifest.output.width, manifest.output.height)
           if (projected && boundsOverlap(brandBounds, projected)) labels.add(`${track.track_id}:${kind}`)
         }
@@ -476,8 +508,9 @@ export function resolveBrandPlacementForShot(
   if (authoredAnchor && authoredAnchor !== 'top_left' && authoredAnchor !== 'top_right') return { issues: [`shot ${shot.shot_id} branding placement must use top_left or top_right`] }
   const inferredCorner: BrandPlacementV2['corner'] = shot.camera_plan.lead_room === 'right' ? 'top_right' : 'top_left'
   const preferredCorner = (authoredAnchor || inferredCorner) as BrandPlacementV2['corner']
+  const band = Boolean(theme.publication && mode === 'stacked_identity' && theme.publication.identity.mode === 'publication_band')
   const allowedCorners: readonly BrandPlacementV2['corner'][] = theme.publication
-    ? (mode === 'stacked_identity' ? theme.publication.identity.corners : theme.publication.anchor.corners)
+    ? (mode === 'stacked_identity' ? (theme.publication.identity.mode === 'publication_band' ? ['band'] : theme.publication.identity.corners) : theme.publication.anchor.corners)
     : lockup!.placement.allowed_corners
   const corners = theme.publication && mode === 'stacked_identity'
     ? [...allowedCorners]
@@ -491,8 +524,8 @@ export function resolveBrandPlacementForShot(
     for (const corner of corners) {
       const candidate = placementBounds(manifest, theme, candidateMode, corner)
       if (!candidate.insideSafeZone) continue
-      const authoredCollisions = collidingBrandLayers(shot, candidate.normalized, startMs, endMs)
-      const analysisCollisions = brandAnalysisCollisions(manifest, shot, candidate.normalized, startMs, endMs, geometryContext!)
+      const authoredCollisions = collidingBrandLayers(shot, candidate.normalized, startMs, endMs, { ignoreCaptions: band })
+      const analysisCollisions = brandAnalysisCollisions(manifest, shot, candidate.normalized, startMs, endMs, geometryContext!, { faceOnly: band })
       if (analysisCollisions.issues.length) return { issues: analysisCollisions.issues }
       if (!authoredCollisions.length && !analysisCollisions.labels.length) return { placement: candidate.placement, issues: [] }
     }
@@ -500,8 +533,8 @@ export function resolveBrandPlacementForShot(
   const collisionLabels = modes.flatMap((candidateMode) => corners.flatMap((corner) => {
     const candidate = placementBounds(manifest, theme, candidateMode, corner)
     return [
-      ...collidingBrandLayers(shot, candidate.normalized, startMs, endMs),
-      ...brandAnalysisCollisions(manifest, shot, candidate.normalized, startMs, endMs, geometryContext!).labels,
+      ...collidingBrandLayers(shot, candidate.normalized, startMs, endMs, { ignoreCaptions: band }),
+      ...brandAnalysisCollisions(manifest, shot, candidate.normalized, startMs, endMs, geometryContext!, { faceOnly: band }).labels,
     ]
   }))
   return { issues: [`shot ${shot.shot_id} has no safe, legible wordmark placement${collisionLabels.length ? ` because it collides with ${[...new Set(collisionLabels)].join(', ')}` : ' inside the platform safe zone'}`] }
@@ -571,7 +604,81 @@ export function resolveBrandTimeline(manifest: RenderManifestV2, theme: BrandThe
       else cues.push({ ...resolved.placement, shotId: shot.shot_id, ...interval })
     }
   }
-  return { cues: cues.sort((left, right) => left.startMs - right.startMs || left.endMs - right.endMs), identity_cue: identityCue, issues: [...new Set(issues)] }
+  const house = theme.publication?.house_style ? resolveHouseMoments(manifest, theme, identityCue, cues, geometryContext!) : undefined
+  if (house) issues.push(...house.issues)
+  return { cues: cues.sort((left, right) => left.startMs - right.startMs || left.endMs - right.endMs), identity_cue: identityCue, ...(house ? { house: house.moments } : {}), issues: [...new Set(issues)] }
+}
+
+interface BeatWindowV2 { beatId: string; startMs: number; endMs: number; shots: RenderManifestV2['shot_directives'] }
+
+/** Each beat's span on the output timeline, in the order the beats play. */
+export function beatWindowsV2(manifest: RenderManifestV2): BeatWindowV2[] {
+  const windows = new Map<string, BeatWindowV2>()
+  for (const shot of [...manifest.shot_directives].sort((left, right) => left.start_ms - right.start_ms || left.end_ms - right.end_ms)) {
+    const window = windows.get(shot.beat_id)
+    if (!window) windows.set(shot.beat_id, { beatId: shot.beat_id, startMs: shot.start_ms, endMs: shot.end_ms, shots: [shot] })
+    else {
+      window.startMs = Math.min(window.startMs, shot.start_ms)
+      window.endMs = Math.max(window.endMs, shot.end_ms)
+      window.shots.push(shot)
+    }
+  }
+  return [...windows.values()]
+}
+
+const MINIMUM_HOUSE_MOMENT_MS = 500
+
+/** The house style's sticker and call card, placed on the beats that carry
+ *  them and checked like the mark: never over the presenter's face, a
+ *  directed layer or the platform's interface. Both give way to the ending
+ *  band. The sticker is decoration, so where it cannot sit clear it is left
+ *  out; the call is the piece's content, so where it cannot, the render
+ *  stops and says why. */
+function resolveHouseMoments(manifest: RenderManifestV2, theme: BrandThemeV1, identityCue: BrandCueV2, cues: BrandCueV2[], context: BrandGeometryContextV2): { moments: HouseMomentsV2; issues: string[] } {
+  const house = theme.publication!.house_style!
+  const copy = house.channels[manifest.series as keyof typeof house.channels]
+  const safe = { topPx: manifest.output.safe_zones.top_px, rightPx: manifest.output.safe_zones.right_px, bottomPx: manifest.output.safe_zones.bottom_px, leftPx: manifest.output.safe_zones.left_px }
+  const normal = (box: HouseBox): NormalizedBounds => ({ x: box.left / manifest.output.width, y: box.top / manifest.output.height, width: box.width / manifest.output.width, height: box.height / manifest.output.height })
+  const beforeBand = (window: BeatWindowV2): { startMs: number; endMs: number } | undefined => {
+    const overlapsBand = window.startMs < identityCue.endMs && window.endMs > identityCue.startMs
+    const endMs = overlapsBand ? Math.max(window.startMs, Math.min(window.endMs, identityCue.startMs)) : window.endMs
+    return endMs - window.startMs >= MINIMUM_HOUSE_MOMENT_MS ? { startMs: window.startMs, endMs } : undefined
+  }
+  const clearOver = (window: BeatWindowV2, span: { startMs: number; endMs: number }, bounds: NormalizedBounds, ignoreCaptions: boolean): string[] => window.shots.flatMap((shot) => {
+    const startMs = Math.max(shot.start_ms, span.startMs)
+    const endMs = Math.min(shot.end_ms, span.endMs)
+    if (endMs <= startMs) return []
+    return [...collidingBrandLayers(shot, bounds, startMs, endMs, { ignoreCaptions }), ...brandAnalysisCollisions(manifest, shot, bounds, startMs, endMs, context, { faceOnly: true }).labels]
+  })
+  const moments: HouseMomentsV2 = {}
+  const issues: string[] = []
+  const beats = beatWindowsV2(manifest)
+
+  const second = beats[1]
+  const stickerSpan = second ? beforeBand(second) : undefined
+  if (second && stickerSpan) {
+    const bounds = normal(houseShortStickerFrame(copy.sticker, safe).box)
+    const overMark = cues.some((cue) => cue.mode === 'mindmake_only' && cue.startMs < stickerSpan.endMs && cue.endMs > stickerSpan.startMs && boundsOverlap(bounds, placementBounds(manifest, theme, cue.mode, cue.corner).normalized))
+    if (!overMark && !clearOver(second, stickerSpan, bounds, false).length) moments.sticker = { text: copy.sticker, ...stickerSpan }
+  }
+
+  if (manifest.call) {
+    const call = manifest.call
+    const beat = beats.find((window) => window.beatId === call.beat_id)
+    const span = beat ? beforeBand(beat) : undefined
+    if (!beat) issues.push(`the call names beat ${call.beat_id}, which no shot carries`)
+    else if (!span) issues.push(`the call card on beat ${call.beat_id} would share the screen with the ending band; give the call a beat of its own before the ending`)
+    else {
+      const frame = houseCallFrame(call.statement, safe)
+      const callIssues: string[] = []
+      if (frame.top + frame.height > manifest.output.height - safe.bottomPx) callIssues.push(`the call card on beat ${call.beat_id} runs into the ${manifest.target_platform} safe zone at the foot of the frame; shorten its statement`)
+      const collisions = clearOver(beat, span, normal(frame.box), true)
+      if (collisions.length) callIssues.push(`the call card on beat ${call.beat_id} would cover ${[...new Set(collisions)].join(', ')}`)
+      if (callIssues.length) issues.push(...callIssues)
+      else moments.call = { ...span, statement: call.statement, due: call.due, confidencePercent: call.confidence_percent }
+    }
+  }
+  return { moments, issues }
 }
 
 export function brandLayerCollisionIssues(manifest: RenderManifestV2, theme: BrandThemeV1, geometryContext?: BrandGeometryContextV2): string[] {
@@ -696,12 +803,32 @@ const runtimeMark = (asset: StagedPublicationMarks['mark']) => ({
   letterRegion: asset.letter_region,
 })
 
-function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWordmarks | StagedPublicationMarks | undefined, manifest: RenderManifestV2): V2RenderProps['branding'] {
+function runtimeHouse(staged: StagedPublicationMarks, moments: HouseMomentsV2 | undefined): NonNullable<NonNullable<V2RenderProps['branding']['publication']>['house']> | undefined {
+  const lockup = staged.lockup
+  const house = lockup.house_style
+  if (!house || lockup.identity.mode !== 'publication_band' || !staged.stacked || !staged.channelCopy) return undefined
+  return {
+    stacked: runtimeMark(staged.stacked),
+    tokens: { ink: house.tokens.ink, inkDeep: house.tokens.ink_deep, inkSoft: house.tokens.ink_soft, cream: house.tokens.cream, mint: house.tokens.mint, section: staged.channelColor },
+    day: staged.channelCopy.day,
+    promise: staged.channelCopy.promise,
+    site: house.copy.site,
+    tile: { size: lockup.anchor.plate_width, markWidth: lockup.anchor.mark_width, shadowPx: lockup.anchor.shadow_px ?? 0 },
+    band: { topPx: lockup.identity.top_px, heightPx: lockup.identity.height_px, logoWidth: lockup.identity.logo_width },
+    ...(moments?.sticker ? { sticker: moments.sticker } : {}),
+    ...(moments?.call ? { call: { startMs: moments.call.startMs, endMs: moments.call.endMs, kicker: house.copy.call_kicker, headline: house.copy.call_headline, statement: moments.call.statement, due: moments.call.due, confidencePercent: moments.call.confidencePercent } } : {}),
+  }
+}
+
+function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWordmarks | StagedPublicationMarks | undefined, manifest: RenderManifestV2, moments?: HouseMomentsV2): V2RenderProps['branding'] {
   if (manifest.branding.mode === 'none') return fallbackBranding
   if (!theme) throw new Error('branded V2 renders require their exact job-pinned brand theme')
   if (!staged) throw new Error('official wordmarks were not staged for a branded V2 render')
   if ('logo' in staged) {
     const lockup = staged.lockup
+    const identity = lockup.identity
+    const house = runtimeHouse(staged, moments)
+    if (lockup.house_style && !house) throw new Error('the house style needs its staged stacked logo and channel copy')
     return {
       mode: 'series',
       seriesName: PUBLIC_SERIES_NAMES[manifest.series],
@@ -718,7 +845,7 @@ function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWor
         mintInk: theme.colors.mint_ink,
         amber: theme.colors.amber,
       },
-      typography: theme.typography,
+      typography: runtimeTypography(theme),
       publication: {
         mark: runtimeMark(staged.mark),
         logo: runtimeMark(staged.logo),
@@ -726,14 +853,18 @@ function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWor
         lockup: {
           offsetX: lockup.offset_x,
           offsetY: lockup.offset_y,
-          identity: {
-            durationMs: lockup.identity.duration_ms,
-            plateWidth: lockup.identity.plate_width,
-            plateHeight: lockup.identity.plate_height,
-            padding: lockup.identity.padding,
-            gap: lockup.identity.gap,
-            logoWidth: lockup.identity.logo_width,
-          },
+          // The house style's band spans the frame; its padding is the
+          // mast's side inset and its gap the mast's.
+          identity: identity.mode === 'publication_band'
+            ? { durationMs: identity.duration_ms, plateWidth: lockup.reference_canvas.width, plateHeight: identity.height_px, padding: 72, gap: 30, logoWidth: identity.logo_width }
+            : {
+                durationMs: identity.duration_ms,
+                plateWidth: identity.plate_width,
+                plateHeight: identity.plate_height,
+                padding: identity.padding,
+                gap: identity.gap,
+                logoWidth: identity.logo_width,
+              },
           anchor: {
             plateWidth: lockup.anchor.plate_width,
             plateHeight: lockup.anchor.plate_height,
@@ -741,6 +872,7 @@ function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWor
             markWidth: lockup.anchor.mark_width,
           },
         },
+        ...(house ? { house } : {}),
       },
     }
   }
@@ -760,7 +892,7 @@ function runtimeBranding(theme: BrandThemeV1 | undefined, staged: StagedBrandWor
       mintInk: theme.colors.mint_ink,
       amber: theme.colors.amber,
     },
-    typography: theme.typography,
+    typography: runtimeTypography(theme),
     wordmarks: {
       mindmake: {
         assetFile: staged.mindmake.assetFile,
@@ -913,7 +1045,7 @@ export function manifestToV2RenderProps(
     shots,
     captions: manifest.captions.filter((cue) => cue.start_ms < durationMs).map((cue) => ({ startMs: cue.start_ms, endMs: Math.min(cue.end_ms, durationMs), text: cue.text, emphasis: cue.emphasis })),
     audioTracks,
-    branding: runtimeBranding(options.theme, options.wordmarks, manifest),
+    branding: runtimeBranding(options.theme, options.wordmarks, manifest, brandTimeline?.house),
     reviewOverlay: options.reviewOverlay ?? 'none',
   }
 }
@@ -1006,8 +1138,8 @@ async function loadBrandTheme(
   if (theme.publication) {
     const refusal = brandThemeRefusal(theme, manifest.series)
     if (refusal) throw new Error(refusal)
-    const required = [theme.publication.mark.sha256, theme.publication.logo.sha256].sort()
-    if (required.join(':') !== [...manifest.branding.wordmark_hashes].sort().join(':')) throw new Error('render manifest is not pinned to the exact publication mark and logo')
+    const required = [theme.publication.mark.sha256, theme.publication.logo.sha256, ...(theme.publication.stacked ? [theme.publication.stacked.sha256] : [])].sort()
+    if (required.join(':') !== [...manifest.branding.wordmark_hashes].sort().join(':')) throw new Error('render manifest is not pinned to the exact publication mark and logos')
     const publicationCollisions = brandLayerCollisionIssues(manifest, theme, brandGeometry)
     if (publicationCollisions.length) throw new Error(`brand lockup collision gate failed: ${publicationCollisions.join('; ')}`)
     return { theme, wordmarks: await stagePublicationMarks(theme, manifest.series, stagingDirectory) }
@@ -1026,6 +1158,7 @@ async function loadBrandTheme(
 export async function rendererImplementationHashV2(repoRoot: string): Promise<string> {
   return hashValue({
     renderer_v2: await hashPath(join(repoRoot, 'apps', 'renderer', 'src', 'v2')),
+    renderer_house: await hashPath(join(repoRoot, 'apps', 'renderer', 'src', 'house')),
     renderer_root: await hashFile(join(repoRoot, 'apps', 'renderer', 'src', 'Root.tsx')),
     renderer_runtime: await hashFile(join(repoRoot, 'packages', 'core', 'src', 'render-v2.ts')),
     brand_runtime: await hashFile(join(repoRoot, 'packages', 'core', 'src', 'brand-assets.ts')),
@@ -1069,7 +1202,7 @@ async function verifyRenderedAudioV2(path: string): Promise<void> {
   if (!Number.isFinite(video) || !Number.isFinite(audio) || Math.abs(video - audio) > 0.15) throw new Error('V2 rendered audio does not match the video duration')
 }
 
-async function sharedBrowserExecutableV2(): Promise<string> {
+export async function sharedBrowserExecutableV2(): Promise<string> {
   const targetDirectory = join(studioPaths().runtimeRoot, 'browser', `remotion-${REMOTION_VERSION}`, 'headless-shell')
   const targetExecutable = join(targetDirectory, 'chrome-headless-shell.exe')
   try { await access(targetExecutable); return targetExecutable } catch { /* Install or reuse the pinned Remotion browser. */ }

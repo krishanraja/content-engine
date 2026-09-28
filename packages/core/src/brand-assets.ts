@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { access, copyFile, mkdir, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, join } from 'node:path'
-import { isLiveSeries, PUBLIC_SERIES_NAMES, SERIES_IDS, type BrandPublicationLockupV1, type BrandThemeV1, type BrandWordmarkAssetV1, type BrandWordmarkLockupV1, type RenderManifestV1, type Series } from '@mindmake/contracts'
+import { isLiveSeries, PENDING_BRAND_SOURCE_COMMIT, PUBLIC_SERIES_NAMES, SERIES_IDS, type BrandHouseStyleV1, type BrandPublicationLockupV1, type BrandThemeV1, type BrandWordmarkAssetV1, type BrandWordmarkLockupV1, type RenderManifestV1, type Series } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { studioPaths } from './paths.js'
 
@@ -48,6 +48,7 @@ const MAX_BRAND_ASSET_BYTES = 2_000_000
 
 export function officialWordmarkUrl(theme: BrandThemeV1, asset: BrandWordmarkAssetV1): string {
   if (!/^[a-z0-9_.-]+\/[a-z0-9_.-]+$/i.test(theme.source.repository)) throw new Error('brand source repository must be an owner/name GitHub repository')
+  if (theme.source.commit === PENDING_BRAND_SOURCE_COMMIT) throw new Error(`${theme.theme_id} has no recorded source commit yet (${PENDING_BRAND_SOURCE_COMMIT}); its marks cannot be fetched`)
   const encodedPath = asset.source_path.split('/').map(encodeURIComponent).join('/')
   return `https://raw.githubusercontent.com/${theme.source.repository}/${theme.source.commit}/${encodedPath}`
 }
@@ -251,6 +252,14 @@ export async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: 
   }
 }
 
+/** A theme's faces in the four slots the renderers read. The Studio theme
+ *  passes through untouched; in the house style the display face (Anton)
+ *  sets the claims and Archivo the structure and body. */
+export function runtimeTypography(theme: BrandThemeV1): { structure: string; claim: string; body: string; data: string } {
+  const typography = theme.typography
+  return 'display' in typography ? { structure: typography.structure, claim: typography.display, body: typography.structure, data: typography.data } : typography
+}
+
 // ── The publication lockup (makeyourmindup) ─────────────────────────────────
 // Krish, 2026-09-26: "Make your mind up, Mark, plus the channel name", then
 // "placement approved". A theme for the live subchannels carries the
@@ -261,10 +270,14 @@ export async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: 
 export interface StagedPublicationMarks {
   mark: StagedWordmarkAsset
   logo: StagedWordmarkAsset
+  /** The stacked logo, for the house style's ending band. */
+  stacked?: StagedWordmarkAsset
   lockup: BrandPublicationLockupV1
   /** The channel's name as the brand book sets it: "mind.the.gap". */
   channelLabel: string
   channelColor: string
+  /** The channel's day, sticker, promise and question (house style only). */
+  channelCopy?: BrandHouseStyleV1['channels'][keyof BrandHouseStyleV1['channels']]
 }
 
 export interface PublicationLegibilityReport {
@@ -282,7 +295,11 @@ export function publicationLegibilityReport(theme: BrandThemeV1): PublicationLeg
   const minimum = lockup.minimum_effective
   const toCss = (px: number) => px * minimum.preview_width_css_px / lockup.reference_canvas.width
   const markHeight = renderedHeight(lockup.mark, lockup.anchor.mark_width)
-  const logoLetters = renderedLetterHeight(lockup.logo, lockup.identity.logo_width)
+  // The ending shows the horizontal logo on the version 1 plate, and the
+  // stacked logo in the house style's band.
+  const endingLogo = lockup.identity.mode === 'publication_band' ? lockup.stacked : lockup.logo
+  if (!endingLogo) return { failures: ['the ending band has no pinned stacked logo'], mark_width_px: lockup.anchor.mark_width, mark_height_px: markHeight, logo_letter_height_px: 0, logo_letter_height_at_375_css_px: 0, label_cap_height_at_375_css_px: 0 }
+  const logoLetters = renderedLetterHeight(endingLogo, lockup.identity.logo_width)
   const labelCap = lockup.channel_label.size_px * lockup.channel_label.cap_height_ratio
   const failures: string[] = []
   if (lockup.anchor.mark_width < minimum.mark_width_px) failures.push(`the publication mark renders below ${minimum.mark_width_px} px wide`)
@@ -306,6 +323,7 @@ export function brandThemeRefusal(theme: BrandThemeV1, series: Series): string |
   if (theme.publication) {
     if (!isLiveSeries(series)) return `${theme.theme_id} brands only the live subchannels; ${series} keeps the theme it was approved under`
     if (theme.status !== 'active' || !theme.publication.approval) return `${theme.theme_id} is a candidate: it goes live only when Krish's approval is captured as Studio feedback on his machine`
+    if (theme.source.commit === PENDING_BRAND_SOURCE_COMMIT) return `${theme.theme_id} pins its marks to a control-center commit that is not recorded yet (${PENDING_BRAND_SOURCE_COMMIT})`
     const failures = publicationLegibilityReport(theme).failures
     return failures.length ? `the publication lockup legibility gate failed: ${failures.join('; ')}` : null
   }
@@ -317,11 +335,14 @@ export async function stagePublicationMarks(theme: BrandThemeV1, series: Series,
   const refusal = brandThemeRefusal(theme, series)
   if (refusal) throw new Error(refusal)
   const lockup = theme.publication!
+  const channel = series as keyof BrandPublicationLockupV1['channel_colors']
   return {
     mark: await stageAsset(theme, lockup.mark, targetDirectory, 'publication-mark', fetchImpl),
     logo: await stageAsset(theme, lockup.logo, targetDirectory, 'publication-logo', fetchImpl),
+    ...(lockup.stacked ? { stacked: await stageAsset(theme, lockup.stacked, targetDirectory, 'publication-stacked', fetchImpl) } : {}),
     lockup,
     channelLabel: PUBLIC_SERIES_NAMES[series],
-    channelColor: lockup.channel_colors[series as keyof BrandPublicationLockupV1['channel_colors']],
+    channelColor: lockup.channel_colors[channel],
+    ...(lockup.house_style ? { channelCopy: lockup.house_style.channels[channel] } : {}),
   }
 }

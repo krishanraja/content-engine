@@ -5,6 +5,7 @@ import '@fontsource-variable/newsreader'
 import '@fontsource-variable/source-serif-4'
 import '@fontsource/ibm-plex-mono/500.css'
 import type { CarouselRenderProps } from './props'
+import { HouseCarouselCard } from './HouseCarouselCard'
 
 type Wordmark = NonNullable<CarouselRenderProps['branding']['wordmarks']>['mindmake']
 type Colors = CarouselRenderProps['branding']['colors']
@@ -133,6 +134,8 @@ function SceneArtwork({ scene, colors, items }: { scene: Scene; colors: Colors; 
 }
 
 export function MindmakeCarouselSlide(props: CarouselRenderProps) {
+  // A live subchannel in the makeyourmindup house style.
+  if (props.branding.publication?.house) return <HouseCarouselCard {...props} />
   const { slide, branding } = props
   const { colors, typography, wordmarks, publication } = branding
   const paperScene = slide.scene === 'inspection_table' || slide.scene === 'lever_cutaway' || slide.scene === 'shutter_cabinet'

@@ -17,7 +17,7 @@ import {
   PUBLIC_SERIES_NAMES,
   sameSeriesLine,
 } from '@mindmake/contracts'
-import { stageOfficialSeriesWordmarks, stagePublicationMarks, type StagedWordmarkAsset } from './brand-assets.js'
+import { runtimeTypography, stageOfficialSeriesWordmarks, stagePublicationMarks, type StagedPublicationMarks, type StagedWordmarkAsset } from './brand-assets.js'
 import { BUILT_WITH_AI_EDITORIAL_RULE_ID, MONEY_OF_AI_EDITORIAL_RULE_ID } from './editorial.js'
 import { hashFile, hashValue } from './hash.js'
 
@@ -108,7 +108,9 @@ export function theForkIssues(input: CarouselStoryV1): string[] {
   const story = CarouselStoryV1Schema.parse(input)
   if (story.source_format !== 'the_fork') return []
   const last = story.slides.at(-1)
-  const text = `${last?.headline || ''} ${last?.body || ''}`
+  // The house style sets the date and how sure we are in the card's mono
+  // line (its data label), so that counts as part of the call too.
+  const text = `${last?.headline || ''} ${last?.body || ''} ${last?.data_label || ''}`
   const dated = /\b20\d{2}\b/.test(text)
   const sure = /\b\d{1,3}\s?%/.test(text)
   return dated && sure ? [] : ['The Fork ends on our call: the last slide needs the prediction\'s date and how sure we are']
@@ -135,7 +137,7 @@ async function loadPinnedTheme(configPath: string, story: CarouselStoryV1): Prom
   return theme
 }
 
-async function runtimeWordmark(asset: StagedWordmarkAsset, stagingDirectory: string) {
+export async function runtimeWordmark(asset: StagedWordmarkAsset, stagingDirectory: string) {
   const mimeType = extname(asset.assetFile).toLowerCase() === '.svg' ? 'image/svg+xml' : 'image/png'
   const assetDataUrl = `data:${mimeType};base64,${(await readFile(join(stagingDirectory, asset.assetFile))).toString('base64')}`
   const cropDataUrl = (crop: StagedWordmarkAsset['alpha_crop']) => {
@@ -180,10 +182,10 @@ export async function renderCarousel(repoRoot: string, configPath: string, story
   await Promise.all([mkdir(staging, { recursive: true }), mkdir(slidesDirectory, { recursive: true })])
   // A live subchannel's theme carries the publication lockup (refused while
   // a candidate, and never for a retired series); a retired one, its wordmarks.
-  let brandMarks: { wordmarks: { mindmake: Awaited<ReturnType<typeof runtimeWordmark>>; series: Awaited<ReturnType<typeof runtimeWordmark>> } } | { publication: { mark: Awaited<ReturnType<typeof runtimeWordmark>>; logo: Awaited<ReturnType<typeof runtimeWordmark>>; channel: { label: string; color: string; weight: number } } }
+  let brandMarks: CarouselBrandMarks
   if (theme.publication) {
     const marks = await stagePublicationMarks(theme, story.series, staging)
-    brandMarks = { publication: { mark: await runtimeWordmark(marks.mark, staging), logo: await runtimeWordmark(marks.logo, staging), channel: { label: marks.channelLabel, color: marks.channelColor, weight: marks.lockup.channel_label.weight } } }
+    brandMarks = { publication: { mark: await runtimeWordmark(marks.mark, staging), logo: await runtimeWordmark(marks.logo, staging), channel: { label: marks.channelLabel, color: marks.channelColor, weight: marks.lockup.channel_label.weight }, ...carouselHouse(story, marks) } }
   } else {
     const wordmarks = await stageOfficialSeriesWordmarks(theme, story.series, staging)
     brandMarks = { wordmarks: { mindmake: await runtimeWordmark(wordmarks.mindmake, staging), series: await runtimeWordmark(wordmarks.series, staging) } }
@@ -195,31 +197,7 @@ export async function renderCarousel(repoRoot: string, configPath: string, story
   const serveUrl = await bundle({ entryPoint: join(repoRoot, 'apps', 'renderer', 'src', 'index.ts'), publicDir: staging })
   const slides: CarouselRenderResult['slides'] = []
   for (const slide of story.slides) {
-    const inputProps = {
-      reviewMode,
-      storyId: story.story_id,
-      series: story.series,
-      seriesName: PUBLIC_SERIES_NAMES[story.series],
-      slideCount: story.slides.length,
-      slide: {
-        position: slide.position,
-        role: slide.role,
-        layout: slide.layout,
-        scene: slide.scene,
-        headline: slide.headline,
-        ...(slide.body ? { body: slide.body } : {}),
-        ...(slide.data_label ? { dataLabel: slide.data_label } : {}),
-        visualItems: slide.visual_items,
-        assetIds: slide.asset_ids,
-        accent: slide.accent,
-      },
-      branding: {
-        colors: { ink: theme.colors.ink, surface: theme.colors.surface, raised: theme.colors.raised, line: theme.colors.line, text: theme.colors.text, secondaryText: theme.colors.secondary_text, mutedText: theme.colors.muted_text, paper: theme.colors.paper, mint: theme.colors.mint, mintInk: theme.colors.mint_ink, amber: theme.colors.amber },
-        typography: theme.typography,
-        ...brandMarks,
-        assets,
-      },
-    }
+    const inputProps = carouselSlideInputProps(story, slide, theme, brandMarks, assets, reviewMode)
     const composition = await selectComposition({ serveUrl, id: COMPOSITION_ID, inputProps, browserExecutable })
     const output = join(slidesDirectory, `${String(slide.position).padStart(2, '0')}.png`)
     await renderStill({ composition, serveUrl, output, frame: 0, inputProps, browserExecutable, imageFormat: 'png', overwrite: true, logLevel: 'warn' })
@@ -227,6 +205,70 @@ export async function renderCarousel(repoRoot: string, configPath: string, story
   }
   await writeFile(join(target, 'render.json'), `${JSON.stringify({ story_id: story.story_id, story_hash: storyHash, review_mode: reviewMode, slides }, null, 2)}\n`, 'utf8')
   return { story_id: story.story_id, story_hash: storyHash, review_mode: reviewMode, slides }
+}
+
+type RuntimeCarouselWordmark = Awaited<ReturnType<typeof runtimeWordmark>>
+export type CarouselBrandMarks =
+  | { wordmarks: { mindmake: RuntimeCarouselWordmark; series: RuntimeCarouselWordmark } }
+  | { publication: { mark: RuntimeCarouselWordmark; logo: RuntimeCarouselWordmark; channel: { label: string; color: string; weight: number }; house?: CarouselHouseV1 } }
+
+export interface CarouselHouseV1 {
+  tokens: { ink: string; inkDeep: string; inkSoft: string; cream: string; mint: string; section: string }
+  day: string
+  coverSticker: string
+  questionKicker: string
+  question: string
+  callFootnote: string
+  site: string
+}
+
+/** The house style's copy for one carousel: its day and question from the
+ *  live site, and The Fork's cover sticker, which points at the call. */
+export function carouselHouse(story: CarouselStoryV1, marks: Pick<StagedPublicationMarks, 'lockup' | 'channelColor' | 'channelCopy'>): { house: CarouselHouseV1 } | Record<string, never> {
+  const house = marks.lockup.house_style
+  if (!house || !marks.channelCopy) return {}
+  return {
+    house: {
+      tokens: { ink: house.tokens.ink, inkDeep: house.tokens.ink_deep, inkSoft: house.tokens.ink_soft, cream: house.tokens.cream, mint: house.tokens.mint, section: marks.channelColor },
+      day: marks.channelCopy.day,
+      coverSticker: story.source_format === 'the_fork' ? house.copy.cover_call_sticker : marks.channelCopy.sticker,
+      questionKicker: house.copy.question_kicker,
+      question: marks.channelCopy.question,
+      callFootnote: house.copy.call_footnote,
+      site: house.copy.site,
+    },
+  }
+}
+
+/** The props one card renders from. The Fork's last card is the call. */
+export function carouselSlideInputProps(story: CarouselStoryV1, slide: CarouselStoryV1['slides'][number], theme: BrandThemeV1, brandMarks: CarouselBrandMarks, assets: unknown[], reviewMode: boolean) {
+  const isCall = story.source_format === 'the_fork' && slide.position === story.slides.length
+  return {
+    reviewMode,
+    storyId: story.story_id,
+    series: story.series,
+    seriesName: PUBLIC_SERIES_NAMES[story.series],
+    slideCount: story.slides.length,
+    slide: {
+      position: slide.position,
+      role: slide.role,
+      layout: slide.layout,
+      scene: slide.scene,
+      headline: slide.headline,
+      ...(slide.body ? { body: slide.body } : {}),
+      ...(slide.data_label ? { dataLabel: slide.data_label } : {}),
+      visualItems: slide.visual_items,
+      assetIds: slide.asset_ids,
+      accent: slide.accent,
+      ...(isCall && 'publication' in brandMarks && brandMarks.publication.house ? { call: true } : {}),
+    },
+    branding: {
+      colors: { ink: theme.colors.ink, surface: theme.colors.surface, raised: theme.colors.raised, line: theme.colors.line, text: theme.colors.text, secondaryText: theme.colors.secondary_text, mutedText: theme.colors.muted_text, paper: theme.colors.paper, mint: theme.colors.mint, mintInk: theme.colors.mint_ink, amber: theme.colors.amber },
+      typography: runtimeTypography(theme),
+      ...brandMarks,
+      assets,
+    },
+  }
 }
 
 async function writeLinkedInPdf(slides: CarouselRenderResult['slides'], outputPath: string): Promise<void> {

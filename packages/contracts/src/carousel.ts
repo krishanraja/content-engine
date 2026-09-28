@@ -198,13 +198,25 @@ export const CarouselStoryV1Schema = z.object({
   source_artifact: z.object({ kind: z.enum(['owned', 'public', 'internal_sanitized']), ref: z.string().min(1), source_hash: z.string().regex(/^[a-f0-9]{64}$/) }).strict(),
   platforms: z.array(CarouselPlatformSchema).min(1),
   fixed_seed: z.string().min(8),
-  brand_theme: z.object({
-    theme_id: z.string().min(1),
-    theme_hash: z.string().regex(/^[a-f0-9]{64}$/),
-    design_repository: z.literal('krishanraja/mindmake'),
-    design_commit: z.string().regex(/^[a-f0-9]{40}$/),
-    design_contract_path: z.literal('project-documentation/03_DESIGN_CONTRACT.md'),
-  }).strict(),
+  // The Mindmake design contract for the retired series, or the
+  // makeyourmindup marks in control-center for a live subchannel's house
+  // style. Each is an exact repository and contract path.
+  brand_theme: z.union([
+    z.object({
+      theme_id: z.string().min(1),
+      theme_hash: z.string().regex(/^[a-f0-9]{64}$/),
+      design_repository: z.literal('krishanraja/mindmake'),
+      design_commit: z.string().regex(/^[a-f0-9]{40}$/),
+      design_contract_path: z.literal('project-documentation/03_DESIGN_CONTRACT.md'),
+    }).strict(),
+    z.object({
+      theme_id: z.string().min(1),
+      theme_hash: z.string().regex(/^[a-f0-9]{64}$/),
+      design_repository: z.literal('krishanraja/control-center'),
+      design_commit: z.string().regex(/^[a-f0-9]{40}$/),
+      design_contract_path: z.literal('src/assets/brand/makeyourmindup/README.md'),
+    }).strict(),
+  ]),
   claims: z.array(CarouselClaimSchema).default([]),
   assets: z.array(CarouselAssetV1Schema).default([]),
   slides: z.array(CarouselSlideV1Schema).min(5).max(10),

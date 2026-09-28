@@ -29,6 +29,8 @@ export const CarouselRenderPropsSchema = z.object({
     visualItems: z.array(z.string()),
     assetIds: z.array(z.string()),
     accent: z.enum(['none', 'mint_answer', 'amber_changed']),
+    // The Fork's last card: our call, dated, with how sure we are.
+    call: z.boolean().optional(),
   }),
   branding: z.object({
     colors: z.object({ ink: z.string(), surface: z.string(), raised: z.string(), line: z.string(), text: z.string(), secondaryText: z.string(), mutedText: z.string(), paper: z.string(), mint: z.string(), mintInk: z.string(), amber: z.string() }),
@@ -40,6 +42,17 @@ export const CarouselRenderPropsSchema = z.object({
       mark: RuntimeWordmarkSchema,
       logo: RuntimeWordmarkSchema,
       channel: z.object({ label: z.string().min(1), color: z.string(), weight: z.number().int() }),
+      // The makeyourmindup house style (the mock Krish approved on
+      // 2026-09-28): a cover card, middle cards and a last card.
+      house: z.object({
+        tokens: z.object({ ink: z.string(), inkDeep: z.string(), inkSoft: z.string(), cream: z.string(), mint: z.string(), section: z.string() }),
+        day: z.string().min(1),
+        coverSticker: z.string().min(1),
+        questionKicker: z.string().min(1),
+        question: z.string().min(1),
+        callFootnote: z.string().min(1),
+        site: z.string().min(1),
+      }).optional(),
     }).optional(),
     assets: z.array(z.object({ assetId: z.string(), assetFile: z.string(), truthRole: z.enum(['evidence', 'owned_artifact', 'illustration', 'decoration']), attribution: z.string().optional(), illustrationLabel: z.string().optional() })),
   }).refine((branding) => Boolean(branding.wordmarks) !== Boolean(branding.publication), { message: 'a carousel carries either the series wordmarks or the publication lockup' }),

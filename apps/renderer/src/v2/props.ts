@@ -35,6 +35,26 @@ const RuntimeWordmarkSchema = z.object({
   }),
 })
 
+const RuntimeHouseSchema = z.object({
+  stacked: RuntimeWordmarkSchema,
+  tokens: z.object({ ink: z.string(), inkDeep: z.string(), inkSoft: z.string(), cream: z.string(), mint: z.string(), section: z.string() }),
+  day: z.string().min(1),
+  promise: z.string().min(1),
+  site: z.string().min(1),
+  tile: z.object({ size: z.number().positive(), markWidth: z.number().positive(), shadowPx: z.number().nonnegative() }),
+  band: z.object({ topPx: z.number().nonnegative(), heightPx: z.number().positive(), logoWidth: z.number().positive() }),
+  sticker: z.object({ text: z.string().min(1), startMs: z.number().nonnegative(), endMs: z.number().positive() }).optional(),
+  call: z.object({
+    startMs: z.number().nonnegative(),
+    endMs: z.number().positive(),
+    kicker: z.string().min(1),
+    headline: z.string().min(1),
+    statement: z.string().min(1),
+    due: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    confidencePercent: z.number().int().min(1).max(99),
+  }).optional(),
+})
+
 const RuntimeBrandingSchema = z.object({
   mode: z.enum(['series', 'none']),
   seriesName: z.string(),
@@ -80,6 +100,10 @@ const RuntimeBrandingSchema = z.object({
       identity: z.object({ durationMs: z.number().positive(), plateWidth: z.number().positive(), plateHeight: z.number().positive(), padding: z.number().nonnegative(), gap: z.number().nonnegative(), logoWidth: z.number().positive() }),
       anchor: z.object({ plateWidth: z.number().positive(), plateHeight: z.number().positive(), padding: z.number().nonnegative(), markWidth: z.number().positive() }),
     }),
+    // The makeyourmindup house style (the mock Krish approved on
+    // 2026-09-28): the mark on its ink tile, the captions, the channel
+    // sticker on the second beat, the call card and the ending band.
+    house: RuntimeHouseSchema.optional(),
   }).optional(),
 })
 
@@ -139,7 +163,7 @@ const RuntimeShotSchema = z.object({
     startMs: z.number().nonnegative(),
     endMs: z.number().positive(),
     mode: z.enum(['stacked_identity', 'series_only', 'mindmake_only']),
-    corner: z.enum(['top_left', 'top_right', 'bottom_left']),
+    corner: z.enum(['top_left', 'top_right', 'bottom_left', 'band']),
     topPx: z.number().nonnegative(),
     leftPx: z.number().nonnegative(),
   })).optional(),

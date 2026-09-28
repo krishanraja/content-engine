@@ -326,11 +326,11 @@
     {
       "schema_version": 1,
       "theme_id": "makeyourmindup-video-v1",
-      "version": 1,
+      "version": 2,
       "status": "candidate",
-      "source": { "repository": "krishanraja/control-center", "commit": "bb08cc835b8a6ed7a4ebfc307a89adebecf40d26", "contract_path": "src/assets/brand/makeyourmindup/README.md" },
-      "colors": { "ink": "#0A100D", "surface": "#111A16", "raised": "#1E2C26", "line": "#22322B", "text": "#E6EDE8", "secondary_text": "#B0C0B7", "muted_text": "#788C82", "paper": "#F2F1EA", "mint": "#7FE3B4", "mint_ink": "#07110C", "amber": "#E0A44A" },
-      "typography": { "structure": "Archivo Variable", "claim": "Newsreader Variable", "body": "Source Serif 4 Variable", "data": "IBM Plex Mono" },
+      "source": { "repository": "krishanraja/control-center", "commit": "7dac4cefd1a846b3fdf057c519cb5ba1186c6d5b", "contract_path": "src/assets/brand/makeyourmindup/README.md" },
+      "colors": { "ink": "#0C1512", "surface": "#16221D", "raised": "#16221D", "line": "#363C38", "text": "#F4EFE4", "secondary_text": "#D1CEC4", "muted_text": "#AEAEA5", "paper": "#F4EFE4", "mint": "#7EF0C0", "mint_ink": "#0C1512", "amber": "#F4EFE4" },
+      "typography": { "display": "Anton", "structure": "Archivo", "dek": "Fraunces", "data": "IBM Plex Mono" },
       "rules": { "mint_means_answer": true, "amber_means_changed": true, "mono_for_evidence_labels": true, "serif_for_claims_only": true, "progress_bar": "hidden", "radius": "precise", "official_wordmarks_only": true },
       "publication": {
         "mark": {
@@ -349,16 +349,34 @@
           "pixel_height": 141,
           "alpha_crop": { "x": 0, "y": 0, "width": 1200, "height": 141 },
           "letter_region": { "x": 158, "y": 0, "width": 1042, "height": 116 },
-          "display_width": 640
+          "display_width": 470
         },
-        "channel_label": { "typeface": "IBM Plex Mono", "weight": 500, "letter_case": "lower", "size_px": 52, "cap_height_ratio": 0.7 },
+        "stacked": {
+          "source_path": "src/assets/brand/makeyourmindup/makeyourmindup-stacked.png",
+          "sha256": "5a0e8a08d3ff027feac0e505162318e4095add2466f1096305031d8a1f29a4fc",
+          "pixel_width": 2415,
+          "pixel_height": 740,
+          "alpha_crop": { "x": 1, "y": 0, "width": 2414, "height": 740 },
+          "letter_region": { "x": 876, "y": 1, "width": 1539, "height": 348 },
+          "display_width": 520
+        },
+        "channel_label": { "typeface": "IBM Plex Mono", "weight": 600, "letter_case": "lower", "size_px": 40, "cap_height_ratio": 0.7 },
         "channel_colors": { "follow_the_money": "#FFD84D", "mind_the_gap": "#FF6A4D", "under_the_hood": "#B7A6FF" },
         "reference_canvas": { "width": 1080, "height": 1920 },
-        "offset_x": 80,
-        "offset_y": 140,
-        "minimum_effective": { "mark_width_px": 72, "logo_letter_height_px": 50, "preview_width_css_px": 375, "logo_letter_height_css_px": 17, "label_cap_height_css_px": 12 },
-        "identity": { "mode": "publication_logo_with_channel", "moment": "ending", "duration_ms": 2000, "plate_width": 704, "plate_height": 220, "padding": 32, "gap": 20, "logo_width": 640, "corners": ["bottom_left", "top_left"] },
-        "anchor": { "mode": "publication_mark", "plate_width": 120, "plate_height": 110, "padding": 16, "mark_width": 88, "corners": ["top_left", "top_right"] }
+        "offset_x": 72,
+        "offset_y": 150,
+        "minimum_effective": { "mark_width_px": 72, "logo_letter_height_px": 50, "preview_width_css_px": 375, "logo_letter_height_css_px": 17, "label_cap_height_css_px": 9.5 },
+        "identity": { "mode": "publication_band", "moment": "ending", "duration_ms": 2000, "top_px": 1060, "height_px": 408, "logo_width": 520 },
+        "anchor": { "mode": "publication_mark", "plate_width": 136, "plate_height": 136, "padding": 20, "mark_width": 96, "corners": ["top_left", "top_right"], "shadow_px": 10 },
+        "house_style": {
+          "tokens": { "ink": "#0C1512", "ink_deep": "#070D0B", "ink_soft": "#16221D", "cream": "#F4EFE4", "mint": "#7EF0C0" },
+          "channels": {
+            "under_the_hood": { "day": "Mondays", "sticker": "Screwdriver included", "promise": "Free from jargon", "question": "What actually goes together in a shipped thing, and why did this one work?" },
+            "follow_the_money": { "day": "Wednesdays", "sticker": "Bring a calculator", "promise": "No added sermons", "question": "Where does the money move, and who ends up better or worse off?" },
+            "mind_the_gap": { "day": "Fridays", "sticker": "The headliner", "promise": "Every call scored in public", "question": "What is the pattern, and what does it mean is coming?" }
+          },
+          "copy": { "site": "makeyourmindup.ai", "call_kicker": "The call", "call_headline": "Our call.", "call_footnote": "On the day, we mark it held, broke or unclear. Misses go up as big as hits.", "question_kicker": "The question", "cover_call_sticker": "Swipe for the call", "thumbnail_call_sticker": "Our call, dated" }
+        }
       }
     }
   ],

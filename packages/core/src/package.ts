@@ -255,6 +255,10 @@ export async function createDraftPackageV2(
   manifest: RenderManifestV1 | RenderManifestV2,
   qa: unknown,
   approvedHashes?: { render_manifest_hash?: string; master_path?: string; master_hash?: string },
+  // A rendered cover, for a Short in the makeyourmindup house style: its
+  // thumbnail (renderThumbnailV2). Without one, the cover is the master's
+  // frame at half a second, as it always was.
+  cover?: { path: string; sha256: string },
 ): Promise<DraftPackageV2> {
   if (manifest.schema_version === 2 && manifest.target_platform !== platform) {
     throw new Error(`render manifest targets ${manifest.target_platform}, not ${platform}`)
@@ -274,7 +278,8 @@ export async function createDraftPackageV2(
   const masterHash = approvedHashes?.master_hash || actualMasterHash
   const renderManifestHash = approvedHashes?.render_manifest_hash || hashValue(manifest)
   const copy = platformCopyV2(candidate, platform)
-  const packageKey = hashValue({ schema_version: 2, packager_version: V2_PACKAGER_VERSION, job_id: jobId, platform, source_master_path: sourceMasterPath, master_hash: masterHash, candidate, render_manifest_hash: renderManifestHash, qa, platform_copy: copy })
+  if (cover && (!/\.jpe?g$/i.test(cover.path) || await hashFile(cover.path) !== cover.sha256)) throw new Error('the rendered cover must be the exact JPEG it was hashed as')
+  const packageKey = hashValue({ schema_version: 2, packager_version: V2_PACKAGER_VERSION, job_id: jobId, platform, source_master_path: sourceMasterPath, master_hash: masterHash, candidate, render_manifest_hash: renderManifestHash, qa, platform_copy: copy, ...(cover ? { cover_hash: cover.sha256 } : {}) })
   const root = join(jobPath(jobId), 'packages', 'v2', platform, packageKey)
   await mkdir(root, { recursive: true })
   const masterTarget = join(root, `master-${masterHash.slice(0, 16)}.mp4`)
@@ -319,7 +324,8 @@ export async function createDraftPackageV2(
 
   await cp(masterPath, masterTarget, { force: true })
   await writeFile(captionsPath, captionsAsSrt(manifest), 'utf8')
-  await run('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', '-ss', '0.500', '-i', masterTarget, '-frames:v', '1', '-q:v', '2', coverPath], { timeoutMs: 120_000 })
+  if (cover) await cp(cover.path, coverPath, { force: true })
+  else await run('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', '-ss', '0.500', '-i', masterTarget, '-frames:v', '1', '-q:v', '2', coverPath], { timeoutMs: 120_000 })
   await writeFile(claimsPath, `${JSON.stringify(candidate.claims, null, 2)}\n`, 'utf8')
   await writeFile(assetsPath, `${JSON.stringify(v2Assets(manifest), null, 2)}\n`, 'utf8')
   await writeFile(metadataPath, `${JSON.stringify(copy.metadata, null, 2)}\n`, 'utf8')
