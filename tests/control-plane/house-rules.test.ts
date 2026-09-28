@@ -118,14 +118,18 @@ describe('the checks before approval, on real text', () => {
     assert.equal(stance('Confidence: 60%.').ok, false)
     assert.match(stance('Confidence: 60%.').detail, /sitting on the fence/)
   })
-  test('a confidence the check cannot read is never green, and says why', () => {
+  test('a confidence without its label blocks the call and is never green', () => {
+    // The Studio cannot tell which number is the confidence, so the call card
+    // could not be drawn: CALL now refuses what the Studio refuses (H32).
     const text = 'Amazon\'s move is about ads.\n\n**The Call.** By 30 June 2027, Amazon opens an authorised route. We are 70% sure.'
     const checks = publishChecks(text, factsOk)
-    assert.equal(checks.find(c => c.id === 'CALL')!.ok, true)
+    const call = checks.find(c => c.id === 'CALL')!
+    assert.equal(call.ok, false)
+    assert.equal(call.blocking, true)
+    assert.match(call.detail, /without "How sure we are:"/)
     const stance = checks.find(c => c.id === 'CLEAR_STANCE')!
     assert.equal(stance.ok, false)
     assert.equal(stance.blocking, false)
-    assert.match(stance.detail, /cannot read/)
     const unset = publishChecks(UNSET, factsOk).find(c => c.id === 'CLEAR_STANCE')!
     assert.equal(unset.ok, false)
     assert.equal(unset.detail, 'No confidence set yet.')

@@ -68,17 +68,28 @@ const VARIANTS: Array<(text: string) => string> = [
   (t) => t.replace(/How sure we are: (\d+)%/i, 'How sure we are: $1% How sure we are: 90%'),
 ]
 
-describe('the publish checks read the call as they always have', () => {
-  test('predictionCheck and confidenceOf give the old result on every text', () => {
+describe('the publish checks read the call with the Studio\'s reader', () => {
+  test('CALL passes exactly what the Studio can show, and still refuses everything it refused, in the same words', () => {
+    // CALL used to pass a call the Studio then refused (an unlabelled
+    // percentage, two dated paragraphs, 31 June), so a piece could be
+    // approved with a call no Short could show (walk log H32).
     let compared = 0
+    let tightened = 0
     for (const base of BASES) {
       for (const variant of VARIANTS) {
         const text = variant(base)
-        assert.deepEqual(predictionCheck(text), legacyPredictionCheck(text), `predictionCheck: ${JSON.stringify(text.slice(-160))}`)
-        assert.equal(confidenceOf(text), legacyConfidenceOf(text), `confidenceOf: ${JSON.stringify(text.slice(-160))}`)
+        const now = predictionCheck(text)
+        const legacy = legacyPredictionCheck(text)
+        const label = JSON.stringify(text.slice(-160))
+        assert.equal(now.ok, readPieceCall(text).ok, `predictionCheck: ${label}`)
+        // The old check misread Windows line endings; the reader does not.
+        if (!legacy.ok && text.indexOf('\r') < 0) assert.deepEqual(now, legacy, `predictionCheck: ${label}`)
+        if (legacy.ok && !now.ok) tightened++
+        assert.equal(confidenceOf(text), legacyConfidenceOf(text), `confidenceOf: ${label}`)
         compared++
       }
     }
+    assert.ok(tightened > 0, 'the stricter reader refused nothing the old check passed')
     assert.equal(predictionCheck(undefined as unknown as string).detail, legacyPredictionCheck(undefined as unknown as string).detail)
     assert.equal(confidenceOf(null as unknown as string), null)
     assert.equal(compared, BASES.length * VARIANTS.length)

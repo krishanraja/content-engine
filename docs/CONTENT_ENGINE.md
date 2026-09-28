@@ -218,10 +218,10 @@ when a live rule reaches no stage.
 also need the checks a machine can make: the fact gate, no "Not X, Y", no em
 dashes, no exclamation marks outside quotes, British spelling outside quotes
 and names, a reading age of 13 at most (12 to 13 warns), and a prediction with
-a date and a percentage. The prediction is found by the same reader the
-Studio uses to put the call on a Short (`packages/contracts/src/call.ts`),
-which asks more: one date and one labelled percentage it can tell apart, so
-a piece can pass this check with a call the Studio still refuses.
+a date and a percentage. The prediction is read by the same reader the
+Studio uses to put the call on a Short (`packages/contracts/src/call.ts`), so
+a piece passes only with a call a Short can show word for word: one dated
+paragraph, a real date, and one labelled whole percentage.
 `CLEAR_STANCE`, a warning, reads the confidence written as "How sure we are:
 75%" or "Confidence: 70%", and is green only on a number it has read, at 70%
 or more (walk log F35). Anything else is a 409 `publish_gate` naming what is

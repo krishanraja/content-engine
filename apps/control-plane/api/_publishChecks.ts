@@ -8,7 +8,7 @@ import { notXYConstructions } from './_judges/deterministic.js'
 // The one reader of a piece's call, shared with the Studio. Imported by its
 // relative path, as video-studio/_runnerContracts.ts explains; the file has no
 // dependencies of its own.
-import { CALL_MISSING, callDateMentions, callSectionOf, hasPercentage, labelledConfidences } from '../../../packages/contracts/src/call.js'
+import { labelledConfidences, readPieceCall } from '../../../packages/contracts/src/call.js'
 
 // ── Mechanical checks before approval or publication ────────────────────────
 
@@ -121,10 +121,12 @@ export function confidenceOf(body: string): number | null {
  *  percentage are there; the Studio's readPieceCall also asks that each is
  *  unambiguous before it puts the call on screen. */
 export function predictionCheck(body: string): { ok: boolean; detail: string } {
-  const section = callSectionOf(String(body || ''))
-  if (section === null) return { ok: false, detail: CALL_MISSING.section }
-  if (callDateMentions(section).length === 0) return { ok: false, detail: CALL_MISSING.date }
-  if (!hasPercentage(section)) return { ok: false, detail: CALL_MISSING.confidence }
+  // The Studio's own reader: a piece passes only with a call a Short can show
+  // word for word (one dated paragraph, a real date, one labelled whole
+  // percentage). The looser check it replaced let a piece be approved with a
+  // call the Studio then refused (walk log H32).
+  const reading = readPieceCall(String(body || ''))
+  if ('reason' in reading) return { ok: false, detail: reading.reason }
   return { ok: true, detail: 'Has a date to check by and a confidence.' }
 }
 
