@@ -31,6 +31,9 @@
 import { createHash } from 'node:crypto'
 import { readMaterials, sanitizeVoice } from './_content.js'
 import { stripMarkdownLinks } from './_text.js'
+// The one reader of a piece's call, shared with the publish checks and the
+// Studio. Imported by its relative path, as api/_publishChecks.ts does.
+import { callSectionOf, labelledConfidences } from '../../../packages/contracts/src/call.js'
 
 export type ClaimKind = 'number' | 'date' | 'quote' | 'attribution' | 'event' | 'name' | 'other' | 'unclassified'
 export type OnFileVerdict = 'supported' | 'contradicted' | 'not_found'
@@ -72,23 +75,64 @@ export const PASSING: ReadonlySet<ClaimVerdict> = new Set(['verified', 'verified
 /** Krish's confidence in the piece's own prediction is his judgement, never a
  *  checked fact, so setting it must not put a passed check out of date (he set
  *  piece 2's to 75% on 2026-09-26 and it would otherwise have cost a full
- *  re-check). Only a bare percentage or the placeholder is read as the same
- *  line; anything else written after "How sure we are:" is hashed as written. */
+ *  re-check; his ruling that day: a confidence no longer forces a fact
+ *  re-check). A line that is only "How sure we are:" and a bare percentage or
+ *  the placeholder is the form this first read, and is still read the same
+ *  way, so every check stored before 2026-09-28 still matches its text. */
 const CONFIDENCE_LINE = /^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[Krish to set\])[ \t]*$/gim
+const UNSET = '[Krish to set]'
 
-/** Whether a sentence is only the confidence line. The extractor sometimes
- *  lists it as a claim; checked against the sources it can only fail, and on
- *  2026-09-26 it blocked piece 2 once while passing on the run before. */
+/** Each number the shared label reader (labelledConfidences in
+ *  packages/contracts/src/call.ts) finds after "How sure we are:" or
+ *  "Confidence:" becomes the placeholder. The number alone: the label and
+ *  every other character stay as written. */
+function unsetLabelled(text: string): string {
+  let out = text
+  for (const m of labelledConfidences(text).reverse()) {
+    const at = text.indexOf(`${m.value}%`, m.index)
+    if (at >= 0) out = out.slice(0, at) + UNSET + out.slice(at + m.value.length + 1)
+  }
+  return out
+}
+
+/** The text with Krish's confidence taken out, as the hash reads it. First the
+ *  line form above, exactly as before. Then the confidence inside the call,
+ *  under either label: piece 1 writes its call as one paragraph that ends
+ *  "Confidence: 70%.", which only the first step's label missed, so re-setting
+ *  it would have thrown a passed check away (walk log F41). Only the number on
+ *  a labelled line inside the call (callSectionOf, the reader CALL and the
+ *  Studio use) is taken out. The call's words, its date, anything written
+ *  after the number, and a labelled number anywhere else in the piece
+ *  ("Consumer confidence: 62% in August") are hashed as written. */
+export function withoutConfidence(text: string): string {
+  const lined = String(text ?? '').replace(CONFIDENCE_LINE, `$1 ${UNSET}`)
+  const section = callSectionOf(lined)
+  if (!section) return lined
+  const start = lined.indexOf(section)
+  if (start < 0) return lined
+  return lined.slice(0, start) + unsetLabelled(section) + lined.slice(start + section.length)
+}
+
+/** Nothing but a confidence: a label, the placeholder, a full stop at most. */
+const ONLY_CONFIDENCE = /^(?:How sure we are|Confidence):[ \t]*\[Krish to set\]\.?$/i
+
+/** Whether a sentence is only Krish's confidence, "How sure we are: 75%." or
+ *  "Confidence: 70%.". The extractor sometimes lists it as a claim; checked
+ *  against the sources it can only fail, and on 2026-09-26 it blocked piece 2
+ *  once while passing on the run before. Piece 1's "Confidence: 70%." was
+ *  never recognised, so it would have been a claim on every run (walk log
+ *  F41). A sentence with anything else in it is checked like any other. */
 export function isConfidenceLine(sentence: string): boolean {
-  return new RegExp(CONFIDENCE_LINE.source, 'im').test(String(sentence ?? '').trim())
+  const s = String(sentence ?? '').trim()
+  return ONLY_CONFIDENCE.test(unsetLabelled(s.replace(new RegExp(CONFIDENCE_LINE.source, 'im'), `$1 ${UNSET}`)))
 }
 
 /** The hash a check is pinned to. It is taken over the text as save-draft
  *  will store it (sanitizeVoice only swaps dashes for commas), so a checked
  *  draft stays checked through that save, and any change to a word or a
- *  number breaks the match, except the confidence Krish sets. */
+ *  number breaks the match, except the number of the confidence Krish sets. */
 export function bodyHash(body: string): string {
-  const text = sanitizeVoice(String(body ?? '')).replace(CONFIDENCE_LINE, '$1 [Krish to set]').trim()
+  const text = withoutConfidence(sanitizeVoice(String(body ?? ''))).trim()
   return createHash('sha256').update(text).digest('hex')
 }
 

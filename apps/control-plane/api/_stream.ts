@@ -2,7 +2,7 @@ import type { VercelResponse } from '@vercel/node'
 import { supportsSampling } from './_content.js'
 import { thinkingParam } from './_models.js'
 import * as meter from './_meter.js'
-import { classifyAnthropicFailure, describeFailure, type ProviderFailureClass } from './_modelProvider.js'
+import { classifyAnthropicFailure, describeFailure, type ProviderFailure, type ProviderFailureClass } from './_modelProvider.js'
 
 /**
  * Server-sent events for the model calls a human sits and waits on.
@@ -78,12 +78,20 @@ export interface ModelErrorBody {
 
 const RETRYABLE: ReadonlySet<ProviderFailureClass> = new Set(['overload', 'rate_limit', 'server', 'timeout'])
 
+export interface ModelFailureAnswer { status: number; retryAfterSeconds: number | null; body: ModelErrorBody }
+
 /** The body, and the HTTP status a caller gets when the failure is known
  *  before the stream opens: 429 for a rate limit, 502 for a request the
  *  provider refused as malformed, 503 for everything that means the provider
  *  cannot serve the engine now. */
-export function modelFailure(error: string, what: string, e: unknown): { status: number; retryAfterSeconds: number | null; body: ModelErrorBody } {
-  const f = classifyAnthropicFailure(e)
+export function modelFailure(error: string, what: string, e: unknown): ModelFailureAnswer {
+  return failureAnswer(error, `${what} did not run.`, classifyAnthropicFailure(e))
+}
+
+/** The same answer for a failure already classified, opened by the caller's
+ *  own sentence. The fact gate makes dozens of calls and answers with the one
+ *  that ended its run. */
+export function failureAnswer(error: string, lead: string, f: ProviderFailure): ModelFailureAnswer {
   const status = f.class === 'rate_limit' ? 429 : f.class === 'request' || f.class === 'unknown' ? 502 : 503
   const untilReset = f.reset_at ? Math.ceil((Date.parse(f.reset_at) - Date.now()) / 1000) : null
   const retryAfterSeconds = untilReset !== null && untilReset > 0 ? untilReset : RETRYABLE.has(f.class) ? 30 : null
@@ -92,7 +100,7 @@ export function modelFailure(error: string, what: string, e: unknown): { status:
     retryAfterSeconds,
     body: {
       ok: false, error, code: `provider_${f.class}`, provider_class: f.class, message: f.message || null,
-      reset_at: f.reset_at, retryable: RETRYABLE.has(f.class), detail: `${what} did not run. ${describeFailure(f)}`,
+      reset_at: f.reset_at, retryable: RETRYABLE.has(f.class), detail: `${lead} ${describeFailure(f)}`,
     },
   }
 }

@@ -178,6 +178,13 @@ body, and no `done` follows. An answer with no text is `empty_output`. A
 failed rewrite writes nothing to `meta.revisions` or the ledger. Read a
 revise response as a success only when it ends with `done` and `ok: true`.
 
+The brief's rewrite, `POST /api/briefs/:week/revise`, answers the same way
+since 2026-09-28 (walk log F40): the stream opens once the provider has
+accepted the call, a refusal before that is the same JSON body with 503, 429
+or 502, and a failure after it is the stream's last event, `error`. Its
+`done` carries `{ ok: true, preview }`, and a preview under 100 characters is
+`empty_output`.
+
 **The fact gate, in practice.** A second model reads every sentence the
 claim lister did not cover (twelve at a time, with its section heading), and
 a sentence is set aside as a joke, scenario, guess or the piece's own
@@ -195,6 +202,29 @@ material. Krish runs a check from
 the composer's "Check the facts" strip in Control Center. Piece 2 took ten
 runs to pass, and the fixes each run forced are in the walk log (H12 to H14).
 
+**When the fact gate cannot reach the model** (since 2026-09-28, walk log
+F39). The first model call of a run that gets no answer (a usage limit, a
+spent balance, a refused key, or an overload, timeout or outage that outlasted
+the retries) ends the run. No new claim or call starts, a Perplexity call
+queued behind it included; the checks already running finish; nothing is
+written, so the piece keeps its last real result and `GET /fact-check` still
+shows it. The answer is revise's typed body (`ModelErrorBody`, "How `revise`
+answers" above) with status 503, 429 (rate limit) or 502 (a request refused as
+malformed), and `Retry-After` when there is a time to give:
+
+```
+{ "ok": false, "error": "model_unavailable",
+  "code": "provider_usage_limit", "provider_class": "usage_limit",
+  "message": "You have reached your specified API usage limits. ...",
+  "reset_at": "2026-10-01T00:00:00.000Z", "retryable": false,
+  "detail": "The fact check stopped before it had checked every claim, so nothing was recorded and the piece keeps its last result. Anthropic is over its usage limit ..." }
+```
+
+The failure is kept where health reads it. A claim that was checked keeps its
+verdict exactly as before, and a failure of the web checker (Perplexity, Exa,
+Brave) still leaves a claim unclear, which blocks. A run answered this way is
+no verdict on the piece: run it again once health says the provider is usable.
+
 **The fact gate.** A piece on a live subchannel cannot reach `review`,
 `approved` or `published` (through `PATCH /api/content-ideas` or `save-draft`)
 until a fact check of its exact current body has passed: every claim verified,
@@ -203,6 +233,18 @@ from the dashes `save-draft` swaps for commas. Anything else is a 409
 `fact_gate` with a plain reason. Relaying Krish's decision does not skip it.
 Krish asked for it on 2026-09-25, after the engine's first draft of a piece
 rescaled Cisco's $900 million a year to "close to a million dollars".
+
+Two things may change without a new check: the dashes, and the number of
+Krish's confidence in the call (his ruling, 2026-09-26: a confidence no longer
+forces a fact re-check). Since 2026-09-28 (walk log F41) the confidence is
+found by the same reader CALL and the Studio use
+(`packages/contracts/src/call.ts`), under either label: a line of its own,
+"How sure we are: 75%.", anywhere in the piece, as before, and any number
+after "How sure we are:" or "Confidence:" inside the call, so piece 1's
+"... sponsored listings. Confidence: 70%." can be re-set too. Only the number
+is exempt: the label, the words after it, the call's statement and date, and
+a labelled number outside the call are checked like any other text. A
+sentence that is only the confidence is never a claim to check.
 
 **Krish's house rules** (`api/_houseRules.ts`). Every ruling Krish has given
 in words is one record: the instruction, his exact words, the date, live or
@@ -476,7 +518,9 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 10. Before a piece can move on, its facts must pass the gate. File the sources
    you used as verbatim excerpts with `file-verbatim-source.ts` (a summary
    alone never passes a fact), run `POST /api/content-ideas/:id/fact-check`,
-   and fix or cut what it lists. Where you attribute words, use the source's
+   and fix or cut what it lists. An answer of `model_unavailable` recorded
+   nothing: read health, and run it again once the provider is back.
+   Where you attribute words, use the source's
    own words; the piece's house translations ("brain" for model) belong in
    the writer's voice, never inside a quote or a paraphrase of one.
    A known limit: the gate needs the figure as the piece writes it. Amazon's
