@@ -24,6 +24,7 @@ import { hashFile, hashPath, hashValue } from './hash.js'
 import { loadJobV2, pinnedConfigPathV2, readStageArtifactV2 } from './job-store-v2.js'
 import { jobPath, studioPaths } from './paths.js'
 import { run } from './process.js'
+import { boundRenderCallIssuesV2 } from './render-call.js'
 
 const REMOTION_VERSION = '4.0.518'
 const COMPOSITION_ID = 'MindmakeStoryV2'
@@ -1231,6 +1232,8 @@ export async function renderStoryV2(repoRoot: string, manifestInput: RenderManif
   const settings = profileSettings(options, manifest)
   const readinessIssues = validateV2RenderReadiness(manifest, settings.overlay)
   if (readinessIssues.length) throw new Error(`V2 render readiness failed: ${readinessIssues.join('; ')}`)
+  const callIssues = await boundRenderCallIssuesV2(manifest, pinnedRegistry)
+  if (callIssues.length) throw new Error(`hard block: the call gate failed: ${callIssues.join('; ')}`)
   const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
   const rendererHash = await rendererImplementationHashV2(repoRoot)
@@ -1290,6 +1293,8 @@ export async function renderV2Styleframes(repoRoot: string, manifestInput: Rende
   if (times.some((time) => time < 0 || time >= manifest.duration_ms)) throw new Error('styleframe time is outside the render duration')
   const readinessIssues = validateV2RenderReadiness(manifest, 'styleframe')
   if (readinessIssues.length) throw new Error(`V2 styleframe readiness failed: ${readinessIssues.join('; ')}`)
+  const callIssues = await boundRenderCallIssuesV2(manifest, pinnedRegistry)
+  if (callIssues.length) throw new Error(`hard block: the call gate failed: ${callIssues.join('; ')}`)
   const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
   const rendererHash = await rendererImplementationHashV2(repoRoot)

@@ -46,6 +46,7 @@ Do not turn stations into independently auto-triggering global skills. The `mind
 - Do not turn a raw radar signal into production copy. New short-native work requires an exact approved `ProductionBriefV1` from Control Center.
 - Import that artifact with `studio v2 production-brief import --input <brief.json>`. Repeating the same import reuses its content address and deterministic job; reusing a brief ID for changed semantic content fails closed. Extract and solo work wait for a reviewed `SourceBundleV1` before materialising a job.
 - In the installed environment, prefer the authenticated runner intake: it claims the saved brief directly from Control Center, materialises short-native video jobs, and reports solo or podcast work as `awaiting_source_bundle`. Use the manual import only for offline recovery or a supplied contract fixture.
+- A Short in the makeyourmindup house style for a live subchannel ends on the piece's call. Every render manifest you write for one (the review manifest for styleframes, the animatic's, each treatment manifest) carries it as `"call"`, pasted exactly as `studio v2 call --job <job> --beat <beat_id>` prints it from the job's approved production brief. Choose only the beat. Never type or edit the statement, date or percentage: the Studio refuses a manifest with no call, or with any difference from the approved text, and says why. If the command refuses, the approved text has no call it can read; take that reason to Krish.
 
 ## Operating shape
 

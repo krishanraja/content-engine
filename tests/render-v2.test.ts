@@ -1,9 +1,10 @@
+import { readFileSync } from 'node:fs'
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { BrandThemeV1Schema, PENDING_BRAND_SOURCE_COMMIT, RenderManifestV2Schema, SourceVisualAnalysisV1Schema, TreatmentRegistryV1Schema, VisualNarrativePlanV1Schema, type BrandThemeV1, type RenderManifestV2, type SourceVisualAnalysisV1 } from '@mindmake/contracts'
-import { brandGeometryContextIssues, brandLayerCollisionIssues, brandThemeRefusal, officialWordmarkUrl, publicationLegibilityReport, completeStageV2, createJobV2, hashValue, loadExactBrandGeometryContextV2, loadPinnedRenderRegistryV2, loudnormSecondPassFilterV2, manifestToV2RenderProps, renderV2CacheKey, resolveBrandPlacementForShot, resolveBrandTimeline, validateV2RenderReadiness, type BrandGeometryContextV2 } from '@mindmake/core'
+import { BrandThemeV1Schema, PENDING_BRAND_SOURCE_COMMIT, ProductionBriefV1Schema, RenderManifestV2Schema, SourceVisualAnalysisV1Schema, TreatmentRegistryV1Schema, VisualNarrativePlanV1Schema, type BrandThemeV1, type ProductionBriefV1, type RenderManifestV2, type SourceVisualAnalysisV1 } from '@mindmake/contracts'
+import { boundRenderCallIssuesV2, brandGeometryContextIssues, brandLayerCollisionIssues, brandThemeRefusal, importProductionBrief, materializeProductionBriefJob, officialWordmarkUrl, publicationLegibilityReport, completeStageV2, createJobV2, hashValue, loadExactBrandGeometryContextV2, loadPinnedRenderRegistryV2, loudnormSecondPassFilterV2, manifestToV2RenderProps, renderCallFromBriefV2, renderCallIssuesV2, renderStoryV2, renderV2CacheKey, renderV2Styleframes, resolveBrandPlacementForShot, resolveBrandTimeline, validateV2RenderReadiness, type BrandGeometryContextV2 } from '@mindmake/core'
 import studioConfig from '../config/studio.json'
 import { brandLockupRenderModel, publicationLockupRenderModel } from '../apps/renderer/src/v2/MindmakeStory'
 import { houseBandModel, houseCallModel, houseCaptionHidden, houseCaptionModel, houseMarkModel, houseStickerModel } from '../apps/renderer/src/v2/HouseShort'
@@ -953,4 +954,133 @@ describe('retired series render exactly as before', () => {
     expect(houseCaptionHidden(props.branding, cue, props.safeZones, 0)).toBe(false)
     expect(brandLockupRenderModel(props.branding, cue)).not.toBeNull()
   })
+})
+
+// The call card shows the piece's dated prediction, so it must be the call
+// Krish approved, to the character: a wrong date or percentage on screen is a
+// factual error in public. The Studio reads it from the approved text of the
+// job's production brief (readPieceCall) and refuses a house style render for
+// a live subchannel whose manifest has no call or a different one.
+const EDITION_TEXT = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
+const REVISION = 'e'.repeat(64)
+
+function briefFor(series: ProductionBriefV1['series'], approvedText: string = EDITION_TEXT, briefId = `brief_call_${series}`): ProductionBriefV1 {
+  return ProductionBriefV1Schema.parse({
+    schema_version: 1,
+    brief_id: briefId,
+    content_idea_id: '904658db-4df2-4537-a0ed-ebe93e081db7',
+    content_revision_hash: REVISION,
+    series,
+    production_kinds: ['video'],
+    source_mode: 'short_native',
+    content: {
+      title: 'Who picks your AI?',
+      thesis: 'The software that picks the brain for you is becoming the default, and the money follows it.',
+      approved_text: approvedText,
+      audience: 'Leaders who buy AI for their businesses.',
+      intended_payoff: 'Know who will be choosing the brain behind your AI, and when to check.',
+    },
+    claims: [],
+    visual_opportunities: [],
+    hard_gates: { truth: 'passed', rights: 'passed', confidentiality: 'passed', meaning: 'passed', naming: 'passed' },
+    editorial_approval: { approved_by: 'Krish', approved_at: '2026-09-28T12:00:00.000Z', approval_revision_hash: REVISION },
+  })
+}
+
+const APPROVED_CALL = { beat_id: 'beat-main', statement: STATEMENT, due: '2027-09-30', confidence_percent: 75 }
+
+describe('the call on screen is the call Krish approved', () => {
+  it('reads the call from the brief, ready for the manifest, and refuses a text without one', () => {
+    expect(renderCallFromBriefV2(briefFor('mind_the_gap'), 'beat-main')).toEqual(APPROVED_CALL)
+    const unset = briefFor('mind_the_gap', EDITION_TEXT.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]'))
+    expect(() => renderCallFromBriefV2(unset, 'beat-main')).toThrow(/production brief brief_call_mind_the_gap has no call the Studio can read in its approved text: The prediction has no confidence yet/)
+  })
+
+  it('passes a call that matches the approved text exactly', () => {
+    const { theme } = publicationBrandFixture()
+    const live = liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call: APPROVED_CALL })
+    expect(renderCallIssuesV2(live, theme, briefFor('mind_the_gap'))).toEqual([])
+  })
+
+  it('refuses a drifted date, a drifted percentage and a drifted statement', () => {
+    const { theme } = publicationBrandFixture()
+    const brief = briefFor('mind_the_gap')
+    const issues = (call: Partial<typeof APPROVED_CALL>) => renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call: { ...APPROVED_CALL, ...call } }), theme, brief)
+    expect(issues({ due: '2027-09-29' })).toEqual([
+      'the call\'s due date is 2027-09-29, and production brief brief_call_mind_the_gap\'s approved text says 2027-09-30',
+      'print the exact call with studio v2 call --job job-render-v2 --beat beat-main',
+    ])
+    expect(issues({ confidence_percent: 80 })[0]).toBe('the call says 80% sure, and production brief brief_call_mind_the_gap\'s approved text says 75%')
+    // One character: the full stop.
+    expect(issues({ statement: STATEMENT.slice(0, -1) })[0]).toBe(`the call's statement differs from production brief brief_call_mind_the_gap's approved text, which says: ${JSON.stringify(STATEMENT)}`)
+    expect(issues({ statement: STATEMENT.replace('30 September 2027', '30 September 2028'), due: '2028-09-30' })).toHaveLength(3)
+  })
+
+  it('refuses a house style render with no call, and names what to add', () => {
+    const { theme } = publicationBrandFixture()
+    const [issue, ...rest] = renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme), theme, briefFor('mind_the_gap'))
+    expect(rest).toEqual([])
+    expect(issue).toMatch(/^the render manifest has no call\. A makeyourmindup Short ends on the piece's call: add "call": /)
+    expect(issue).toContain(JSON.stringify({ beat_id: '<the beat that carries it>', statement: STATEMENT, due: '2027-09-30', confidence_percent: 75 }))
+    expect(issue).toContain('studio v2 call --job job-render-v2 --beat <beat_id>')
+    // A brief whose approved text has no readable call cannot render at all.
+    const unset = briefFor('mind_the_gap', EDITION_TEXT.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]'))
+    expect(renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme, { call: APPROVED_CALL }), theme, unset)).toEqual([
+      'production brief brief_call_mind_the_gap has no call the Studio can read in its approved text: The prediction has no confidence yet. Krish sets how sure we are, as a percentage. A Short in the house style ends on its call, so it cannot render until the approved text states one.',
+    ])
+  })
+
+  it('leaves the retired series, unbranded renders, other themes and briefless jobs exactly as they were', () => {
+    const { theme } = publicationBrandFixture()
+    const drifted = { ...APPROVED_CALL, due: '2027-09-29' }
+    // A retired series, drawn in the house style theme (which refuses it on
+    // its own) or its own, with no call or a drifted one.
+    for (const call of [undefined, drifted]) {
+      const extra = call ? { call } : {}
+      expect(renderCallIssuesV2(liveTwoShotManifest(2_000, 'built_with_ai', theme, extra), theme, briefFor('built_with_ai'))).toEqual([])
+      const retired = brandableManifest(RenderManifestV2Schema.parse({ ...manifest(), ...extra }))
+      expect(renderCallIssuesV2(retired, officialBrandFixture().theme, briefFor('built_with_ai'))).toEqual([])
+      const unbranded = RenderManifestV2Schema.parse({ ...liveTwoShotManifest(2_000, 'mind_the_gap', theme, extra), branding: { mode: 'none', wordmark_hashes: [] } })
+      expect(renderCallIssuesV2(unbranded, theme, briefFor('mind_the_gap'))).toEqual([])
+      // No production brief bound to the job: nothing to check against.
+      expect(renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme, extra), theme, undefined)).toEqual([])
+    }
+    // A live subchannel under a theme with no house style draws no call card.
+    const { house_style: _omitted, ...noHouse } = theme.publication!
+    const older = { ...theme, publication: noHouse } as BrandThemeV1
+    expect(renderCallIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', older), older, briefFor('mind_the_gap'))).toEqual([])
+  })
+
+  it('refuses at the render and the styleframes from the job\'s own brief, before any media work', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'mindmake-render-call-'))
+    const priorRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
+    process.env.MINDMAKE_RUNTIME_ROOT = join(root, 'runtime')
+    try {
+      const configPath = join(process.cwd(), 'config', 'studio.json')
+      const imported = await importProductionBrief(briefFor('mind_the_gap'))
+      const { job } = await materializeProductionBriefJob({ imported, configPath, skillPaths: [] })
+      const { theme } = publicationBrandFixture()
+      const forJob = (extra: Partial<RenderManifestV2> = {}) => RenderManifestV2Schema.parse({ ...liveTwoShotManifest(2_000, 'mind_the_gap', theme, extra), job_id: job.job_id })
+      // The job pins the committed theme: a candidate, with the house style.
+      expect(await boundRenderCallIssuesV2(forJob({ call: APPROVED_CALL }))).toEqual([])
+      expect((await boundRenderCallIssuesV2(forJob()))[0]).toMatch(/^the render manifest has no call/)
+      expect((await boundRenderCallIssuesV2(forJob({ call: { ...APPROVED_CALL, confidence_percent: 70 } })))[0]).toMatch(/says 70% sure, and production brief brief_call_mind_the_gap's approved text says 75%/)
+      await expect(renderStoryV2(process.cwd(), forJob())).rejects.toThrow(/^hard block: the call gate failed: the render manifest has no call/)
+      await expect(renderStoryV2(process.cwd(), forJob({ call: { ...APPROVED_CALL, due: '2027-09-29' } }), { profile: 'preview' })).rejects.toThrow(/^hard block: the call gate failed: the call's due date is 2027-09-29/)
+      await expect(renderV2Styleframes(process.cwd(), forJob(), [0, 1_000, 3_000])).rejects.toThrow(/^hard block: the call gate failed: the render manifest has no call/)
+
+      // A retired series job from its own brief reads nothing and passes.
+      const retiredImport = await importProductionBrief(briefFor('built_with_ai'))
+      const { job: retiredJob } = await materializeProductionBriefJob({ imported: retiredImport, configPath, skillPaths: [] })
+      const retired = RenderManifestV2Schema.parse({ ...brandableManifest(), job_id: retiredJob.job_id, call: { ...APPROVED_CALL, due: '2027-09-29' } })
+      expect(await boundRenderCallIssuesV2(retired)).toEqual([])
+      // A live job made without a production brief has nothing to check against.
+      const briefless = await createJobV2({ series: 'mind_the_gap', mode: 'short_native', presenterName: 'Krish', configPath, skillPaths: [] })
+      expect(await boundRenderCallIssuesV2(RenderManifestV2Schema.parse({ ...forJob(), job_id: briefless.job_id }))).toEqual([])
+    } finally {
+      if (priorRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
+      else process.env.MINDMAKE_RUNTIME_ROOT = priorRuntimeRoot
+      await rm(root, { recursive: true, force: true })
+    }
+  }, 30_000)
 })

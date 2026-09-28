@@ -156,14 +156,34 @@ What it draws:
   look; it needs its own change there.
 
 The call. Nothing upstream marked which beat of a Short carries the piece's
-call (The Fork marks only a carousel's last slide), so a render manifest now
-may name it: `call: { beat_id, statement, due, confidence_percent }`
-(`RenderCallV1Schema`, `packages/contracts/src/v2.ts`). Whoever writes the
-treatment manifest fills it from the piece's prediction ("Our call" and "How
-sure we are" in the approved text). The card renders only in the house
-style; a call that would cover the face, run into the platform's lower safe
-zone or share the screen with the ending band stops the render with the
-reason.
+call (The Fork marks only a carousel's last slide), so a render manifest
+names it: `call: { beat_id, statement, due, confidence_percent }`
+(`RenderCallV1Schema`, `packages/contracts/src/v2.ts`). The card renders
+only in the house style; a call that would cover the face, run into the
+platform's lower safe zone or share the screen with the ending band stops
+the render with the reason.
+
+Where the call comes from. A wrong date or percentage on the card is a
+factual error in public, so the call comes from the approved text of the
+production brief bound to the job, read by one parser, `readPieceCall`
+(`packages/contracts/src/call.ts`), which the control plane's publish checks
+share. It reads the section under `## OUR
+PREDICTION`, `## THE CALL` or `## PREDICTION`, or a paragraph that opens
+`**The Call.**` or `**Our prediction**`: the one paragraph with a date to
+check it by ("by 30 September 2027", or `2027-09-30`), and how sure we are
+("How sure we are: 75%" or "Confidence: 70%"). It refuses, with the reason,
+whenever any of the three is missing or open to doubt (two dates, two
+percentages, a date that is not on the calendar, a percentage only in square
+brackets). `studio v2 call --job <job> --beat <beat_id>` prints the call
+ready to paste into the manifest as `"call"`. A house style render for a
+live subchannel whose job has a production brief refuses without a call, and
+refuses a call whose statement, date or percentage differs from the approved
+text by a single character (`packages/core/src/render-call.ts`). The check
+runs where a review or treatment manifest is taken in (`styleframes create`,
+`animatic create`, `treatment register`) and again before every render, so
+it covers styleframes, animatics, previews, masters and magic-edit previews.
+The retired series, unbranded renders and a job with no production brief are
+left exactly as they were.
 
 How it is built: `makeyourmindup-video-v1` version 2 in `config/studio.json`,
 status `candidate`, no approval. Its `typography` is the house set (Anton,
@@ -217,8 +237,11 @@ Studio, `docs/ENGINE_SESSION.md`):
    `brand-lockup` preference in line (identity at the ending only for this
    theme; the channel name is type, which the brand book requires and which
    is not a recreated mark).
-6. A render manifest for a live subchannel then names `makeyourmindup-video-v1`
-   and pins the mark, logo and stacked logo hashes, and names its call beat.
+6. A render manifest for a live subchannel then names `makeyourmindup-video-v1`,
+   pins the mark, logo and stacked logo hashes, and carries the call that
+   `studio v2 call --job <job> --beat <beat_id>` prints from the job's
+   production brief. The render refuses without it, or with any difference
+   from the approved text.
 
 Proof rendered by the Studio's own renderer in a cloud container on
 2026-09-28, against the mock's frames, with a still of Krish as the
@@ -270,7 +293,7 @@ The CLI groups: `doctor`, `status`, `resume`, `index rebuild`; `carousel
 method|validate|render|package`; and under `v2`: `production-brief
 import|materialize`, `identity`, `job create|status|resume`, the stage commands
 (`ingest`, `transcribe`, `candidates`, `recording-brief create`, `stage
-import`, `source analyze`), `repertoire`, `visual-plan`, `assets`,
+import`, `source analyze`), `repertoire`, `visual-plan`, `assets`, `call`,
 `styleframes`, `animatic`, `treatment`, `render`, `qa`, `approve`, `feedback`,
 `package create|archive`, `publish youtube` (private only), `magic`, `inbox`,
 `runner once|status|resolve-project-conflict|project|daemon`, `analytics

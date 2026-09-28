@@ -89,6 +89,7 @@ import {
   krishIdentityStatus,
   loadCaptionTranscript,
   loadImportedProductionBrief,
+  loadBoundProductionBriefV2,
   loadJobV2,
   loadExactBrandGeometryContextV2,
   loadKrishIdentity,
@@ -116,6 +117,8 @@ import {
   readWindowsCredential,
   recordApprovalV2,
   requireRunnerSourceProvenance,
+  boundRenderCallIssuesV2,
+  renderCallFromBriefV2,
   renderStoryV2,
   prepareMagicEditCandidate,
   publishRunnerProject,
@@ -648,10 +651,8 @@ async function assertCandidateIsCurrent(jobId: string, candidate: CandidateV1): 
 /** The approved promise the opening has to confirm. Absent when no production brief is bound to the job. */
 async function approvedBriefTitle(jobId: string): Promise<OpeningContextV1> {
   try {
-    const artifact = await readStageArtifactV2(jobId, 'brief')
-    const payload = artifact.payload as Record<string, unknown>
-    const brief = ProductionBriefV1Schema.safeParse(payload.production_brief || payload.brief)
-    return brief.success ? { approved_title: brief.data.content.title } : {}
+    const brief = await loadBoundProductionBriefV2(await loadJobV2(jobId))
+    return brief ? { approved_title: brief.content.title } : {}
   } catch { return {} }
 }
 
@@ -770,6 +771,10 @@ async function loadReviewManifest(job: JobManifestV2, manifestPath: string, stor
   if (hashValue(manifest.assets) !== hashValue(assetArtifact.payload.assets) || hashValue(manifest.generated_shots) !== hashValue(assetArtifact.payload.generated_shots)) throw new Error('render manifest is not bound to the exact approved asset ledger')
   const readiness = validateV2RenderReadiness(manifest, storyboardHash === undefined ? 'styleframe' : 'none')
   if (readiness.length) throw new Error(`hard block: V2 render readiness failed: ${readiness.join('; ')}`)
+  // A Short in the house style shows the piece's call; it must be the call
+  // the job's approved production brief states, exactly.
+  const callIssues = await boundRenderCallIssuesV2(manifest)
+  if (callIssues.length) throw new Error(`hard block: the call gate failed: ${callIssues.join('; ')}`)
   return { manifest, manifestHash }
 }
 
@@ -1789,6 +1794,20 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         ...(packet.editorial_evidence ? { editorial_evidence: packet.editorial_evidence } : {}),
       }, { visual_plan: visualPlanArtifact.artifact_hash, evidence_packet: packetHash }, { asset_verifier: V2_CLI_VERSION })
       context.out({ job_id: options.job, artifact_hash: artifact.artifact_hash, verified_asset_hashes: verdict.verified_hashes, generated_shot_hashes: approvedShots.map((shot) => shot.output_hash) })
+    })
+
+  v2.command('call')
+    .description("Print the piece's call from the job's approved production brief, ready to paste into a render manifest as \"call\"")
+    .requiredOption('--job <jobId>')
+    .requiredOption('--beat <beatId>', 'the beat that carries the call card')
+    .action(async (options) => {
+      const job = await loadJobV2(options.job)
+      const brief = await loadBoundProductionBriefV2(job)
+      if (!brief) throw new Error(`job ${job.job_id} has no production brief bound to it, and a call comes only from the approved text of the job's production brief`)
+      let call
+      try { call = renderCallFromBriefV2(brief, options.beat) }
+      catch (error) { throw new Error(`hard block: ${error instanceof Error ? error.message : String(error)}`) }
+      context.out({ job_id: job.job_id, brief_id: brief.brief_id, call })
     })
 
   const styleframes = v2.command('styleframes')

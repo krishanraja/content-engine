@@ -36,6 +36,10 @@ A replaced take invalidates only media-dependent descendants. CI rejects drift b
 
 Never substitute chat agreement for the recorded approval.
 
+## The call on a Short
+
+A Short in the makeyourmindup house style for a live subchannel shows the piece's call (its dated prediction and how sure we are) on a card, on the beat its render manifest names. The call comes only from the approved text of the job's production brief: run `studio v2 call --job <job> --beat <beat_id>` and paste its `call` into every manifest for the job, from the styleframes review manifest to the treatment manifests. The Studio refuses a manifest without it, or with a statement, date or percentage that differs from the approved text, at `styleframes create`, `animatic create`, `treatment register` and every render. The retired series and unbranded renders carry no call card.
+
 ## Shared output contract
 
 Normalize video to 1080 by 1920, constant 30 fps and 48 kHz. Target approximately -14 LUFS integrated and no more than -1 dBTP true peak. Use phrase captions with at most two lines, safe-zone validation and selective emphasis.
