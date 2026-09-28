@@ -48,6 +48,58 @@ The contract above holds per machine:
   targets. Rotate the standby in the same window as the primary, or record
   that it is behind and keep its task disabled until it is brought level.
 
+## The Studio MCP token
+
+`MindmakeVideoStudio/studio-mcp-token-v2` holds the bearer the Studio MCP proxy
+(`scripts/studio-mcp-credential-proxy.ps1`) sends to the production gateway.
+Its value has a fixed family: `vst_mcp_` followed by at least 64 lowercase
+hexadecimal characters. The proxy refuses anything else ("wrong family
+prefix"), so a value of the right length can still leave `studio.session.open`
+unavailable, which is what Krish's Windows session reported on 2026-09-28.
+
+- `scripts/set-credential.ps1 -Target MindmakeVideoStudio/studio-mcp-token-v2
+  -Generate` writes `vst_mcp_` and 96 lowercase hex from the cryptographic
+  generator. `-FromStdin` and the interactive prompt refuse a value outside the
+  family before anything is deleted or written; the message names the target
+  and never the value. Every other target is unchanged.
+- `scripts/inspect-credentials.ps1 -EnforceActiveContract` fails with
+  "studio-mcp-token-v2 has the wrong family prefix" when the stored value is
+  outside the family. It reports a verdict and never any part of the value.
+- The same value must be in two places: the `content-engine` Vercel project as
+  `VIDEO_STUDIO_MCP_TOKEN` (Production; the gateway reads it only after a
+  redeploy), and each runner machine's LocalMachine store under the target
+  above. Control Center holds no copy: it rewrites `/api/video-studio/*` to the
+  `content-engine` project, where `apps/control-plane/api/_videoStudioMcpAuth.ts`
+  compares the bearer with that variable.
+
+Rotation, without the value ever reaching a screen, a file, a log, a command
+argument or a chat:
+
+1. Close any Codex or Claude Code session using the Studio tools on the
+   machines.
+2. On the primary, generate the new value into the store:
+   `powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/studio-mcp-token-v2 -Generate`.
+   It prints only the length (104) and a 12-character fingerprint.
+3. Move it to Vercel through the clipboard, never the console. Run the reader
+   as a separate process so its output goes into the pipe:
+   `pwsh -NoProfile -File scripts/get-credential.ps1 -Target MindmakeVideoStudio/studio-mcp-token-v2 | Set-Clipboard`.
+   (Invoked as `.\scripts\get-credential.ps1` inside the same session it
+   writes straight to the console; do not do that.) Paste it as the
+   Production value of `VIDEO_STUDIO_MCP_TOKEN` in the `content-engine`
+   project, marked Sensitive, then clear the clipboard with
+   `Set-Clipboard -Value ' '` and redeploy production.
+4. On every other runner machine, enter the same value at the masked prompt of
+   `scripts/set-credential.ps1 -Target MindmakeVideoStudio/studio-mcp-token-v2`
+   (no `-Generate`), carried by a password manager or the same clipboard
+   routine, never a file or a chat. The prompt refuses a wrong-family value.
+5. On each machine, `scripts/inspect-credentials.ps1 -EnforceActiveContract`
+   must pass and show the same fingerprint for the target as the primary.
+6. Open a Studio session from that machine: `studio.session.open` returning a
+   tracked session proves the Vercel value matches.
+
+The target name stays `studio-mcp-token-v2`: the proxy pins it, so a new name
+would be a code change and a runner upgrade.
+
 ## Quarantined names
 
 These original names are permanently retired:

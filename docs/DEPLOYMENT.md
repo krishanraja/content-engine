@@ -23,6 +23,8 @@ The active Windows credential targets since the v3 rotation of 2026-09-27. Each 
 | `MindmakeVideoStudio/control-center-radar-token-v3` | `VIDEO_STUDIO_EXPORT_TOKEN` |
 | `MindmakeVideoStudio/studio-mcp-token-v2` | `VIDEO_STUDIO_MCP_TOKEN` |
 
+The MCP token's value is `vst_mcp_` followed by at least 64 lowercase hex characters; the MCP proxy refuses any other shape, `scripts/set-credential.ps1 -Generate` writes that family for this target, and the writer refuses a wrong-family value from the prompt or stdin. The same value sits in the `content-engine` Vercel project as `VIDEO_STUDIO_MCP_TOKEN` (Production, effective after a redeploy) and in each machine's LocalMachine store. The rotation recipe that never displays it is in `docs/ENGINE_SECRETS_HANDOVER.md`, "The Studio MCP token".
+
 `MindmakeVideoStudio/approval-signing-key` has no cloud half. Each machine generates its own locally and never shares or copies it (`docs/ENGINE_SECRETS_HANDOVER.md`). The retired `-v2` bearer, signing-key and radar targets and the three quarantined unversioned names may still sit in a machine's store; nothing reads them. (`studio-mcp-token-v2` is the active MCP target and is not retired.)
 
 Create two separate strong random provider-token values. Configure the mm-ctrl value as `VIDEO_STUDIO_EXPORT_TOKEN` only in its Supabase project, and configure the different Control Center value under that same provider-local key only in its Vercel project. Store each matching value locally in its own Windows Generic Credential:

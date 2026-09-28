@@ -34,6 +34,16 @@ $localOnlyTargets = @(
   'MindmakeVideoStudio/studio-mcp-token-v2'
 )
 $isVersionedRuntimeTarget = $Target -match '^MindmakeVideoStudio/control-center-(?:runner-token|runner-signing-key|radar-token)-v(?:[2-9]|[1-9][0-9]+)$'
+# The Studio MCP proxy (scripts/studio-mcp-credential-proxy.ps1) refuses any value
+# outside the vst_mcp_ token family, so a value this script wrote for that target
+# without the prefix produced a credential nothing could use. The family is
+# vst_mcp_ followed by at least 64 lowercase hexadecimal characters
+# (scripts/secret-patterns.ts), and the same value must sit in the content-engine
+# Vercel project as VIDEO_STUDIO_MCP_TOKEN.
+$mcpTokenTarget = 'MindmakeVideoStudio/studio-mcp-token-v2'
+$mcpTokenPattern = '^vst_mcp_[a-f0-9]{64,}\z'
+$isMcpTokenTarget = $Target -eq $mcpTokenTarget
+$mcpTokenFamilyMessage = "Credential target $Target needs a value in the Studio MCP token family: vst_mcp_ followed by at least 64 lowercase hexadecimal characters. Nothing was written."
 if ($quarantinedTargets -contains $Target) {
   throw "Credential target $Target is quarantined after a confirmed roaming rollback. Use the active v2 target documented in docs/DEPLOYMENT.md."
 }
@@ -47,10 +57,19 @@ if ($Generate -and $FromStdin) {
 $secret = if ($Generate) {
   $bytes = New-Object byte[] 48
   $generator = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+  $generated = $null
   try {
     $generator.GetBytes($bytes)
-    ConvertTo-SecureString -String ([Convert]::ToBase64String($bytes)) -AsPlainText -Force
+    # The MCP target gets its token family: vst_mcp_ and 96 lowercase hex from
+    # the same cryptographic generator. Every other target keeps base64.
+    $generated = if ($isMcpTokenTarget) {
+      'vst_mcp_' + (-join ($bytes | ForEach-Object { $_.ToString('x2') }))
+    } else {
+      [Convert]::ToBase64String($bytes)
+    }
+    ConvertTo-SecureString -String $generated -AsPlainText -Force
   } finally {
+    $generated = $null
     $generator.Dispose()
     [Array]::Clear($bytes, 0, $bytes.Length)
   }
@@ -60,11 +79,31 @@ $secret = if ($Generate) {
   # the command line and the shell history. One line on stdin, never echoed.
   $line = [Console]::In.ReadLine()
   if ($null -eq $line) { throw 'No value arrived on stdin.' }
-  ConvertTo-SecureString -String $line.Trim() -AsPlainText -Force
+  $line = $line.Trim()
+  if ($isMcpTokenTarget -and -not ($line -cmatch $mcpTokenPattern)) {
+    $line = $null
+    throw $mcpTokenFamilyMessage
+  }
+  ConvertTo-SecureString -String $line -AsPlainText -Force
+  $line = $null
 } else {
   Read-Host -Prompt "Secret for $Target" -AsSecureString
 }
 if ($secret.Length -eq 0) { throw 'Credential cannot be empty' }
+
+# One check for every source, the interactive prompt included, before anything
+# is deleted or written. The value is decoded only in memory for the match and
+# is never printed; the message names the target alone.
+if ($isMcpTokenTarget) {
+  $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
+  $familyMatches = $false
+  try {
+    $familyMatches = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer) -cmatch $mcpTokenPattern
+  } finally {
+    [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer)
+  }
+  if (-not $familyMatches) { throw $mcpTokenFamilyMessage }
+}
 
 Add-Type @"
 using System;
