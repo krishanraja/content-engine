@@ -328,7 +328,7 @@
       "theme_id": "makeyourmindup-video-v1",
       "version": 2,
       "status": "candidate",
-      "source": { "repository": "krishanraja/control-center", "commit": "PENDING_CC_COMMIT", "contract_path": "src/assets/brand/makeyourmindup/README.md" },
+      "source": { "repository": "krishanraja/control-center", "commit": "7dac4cefd1a846b3fdf057c519cb5ba1186c6d5b", "contract_path": "src/assets/brand/makeyourmindup/README.md" },
       "colors": { "ink": "#0C1512", "surface": "#16221D", "raised": "#16221D", "line": "#363C38", "text": "#F4EFE4", "secondary_text": "#D1CEC4", "muted_text": "#AEAEA5", "paper": "#F4EFE4", "mint": "#7EF0C0", "mint_ink": "#0C1512", "amber": "#F4EFE4" },
       "typography": { "display": "Anton", "structure": "Archivo", "dek": "Fraunces", "data": "IBM Plex Mono" },
       "rules": { "mint_means_answer": true, "amber_means_changed": true, "mono_for_evidence_labels": true, "serif_for_claims_only": true, "progress_bar": "hidden", "radius": "precise", "official_wordmarks_only": true },

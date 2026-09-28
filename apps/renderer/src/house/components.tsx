@@ -121,13 +121,15 @@ export function MonoLabel({ children, style, sizePx = HOUSE.mono.size }: { child
   return <span style={{ fontFamily: HOUSE_FONTS.data, fontWeight: HOUSE.mono.weight, fontSize: sizePx, letterSpacing: `${HOUSE.mono.letterSpacingEm}em`, textTransform: 'uppercase', whiteSpace: 'nowrap', ...style }}>{children}</span>
 }
 
-/** A pinned logo file, whole and untouched, at a width. */
+/** A pinned logo file, whole and untouched, at a width. It sits above every
+ *  grain layer, because the brand book lets the logo take no effects. */
 export function HouseLogo({ image, width }: { image: HouseImage; width: number }) {
-  return <Img src={image.src} style={{ display: 'block', width, height: width * image.pixelHeight / image.pixelWidth, maxWidth: 'none' }} />
+  return <Img src={image.src} style={{ display: 'block', position: 'relative', zIndex: 1, width, height: width * image.pixelHeight / image.pixelWidth, maxWidth: 'none' }} />
 }
 
-/** The mark on its ink tile, with grain (left off where the tile sits on an
- *  ink card whose own grain already covers it). */
+/** The mark on its ink tile, with grain on the tile but never on the mark
+ *  (left off where the tile sits on an ink card whose own grain already
+ *  covers it). */
 export function MarkTile({ image, size, imageWidth, tokens, style, grain = true }: { image: HouseImage; size: number; imageWidth: number; tokens: HouseTokens; style?: React.CSSProperties; grain?: boolean }) {
   return (
     <div style={{ position: 'relative', width: size, height: size, background: tokens.ink, display: 'grid', placeItems: 'center', ...style }}>

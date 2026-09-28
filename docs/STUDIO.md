@@ -106,11 +106,12 @@ only; type on a colour block is always ink; Anton for headlines, always
 uppercase; Fraunces italic for the human line; Archivo for structure and
 body; IBM Plex Mono for labels, dates and section names; grain on dark
 blocks and halftone dots on colour blocks; stickers tilt, type and logos
-never do.
+never do. The logo takes no effects either, so every logo sits above the
+grain (the approved mock had grain over the logo; the brand book wins).
 
 What it draws:
 
-- A Short. The mark on an ink tile with grain and a 10 px hard shadow in the
+- A Short. The mark on an ink tile with a 10 px hard shadow in the
   channel's colour, top left on every beat (left 72, top 150, inside the
   platform's safe zone; top right when the shot's lead room asks for it).
   Captions on an ink block with grain, cream Archivo 900 at width 112, a 12
@@ -183,10 +184,10 @@ theme's faces resolve exactly as before. The renderer's house code is in
 `apps/renderer/src/thumbnail/`.
 
 `brandThemeRefusal` refuses the theme for a retired series, while it is a
-candidate or has no approval, and while its `source.commit` is still the
-placeholder `PENDING_CC_COMMIT` (the control-center commit that pins the
-stacked logo is recorded when that commit reaches control-center `main`). An
-active theme cannot carry the placeholder at all.
+candidate or has no approval, and whenever its `source.commit` is the
+placeholder `PENDING_CC_COMMIT`. An active theme cannot carry the placeholder
+at all. The theme now pins control-center `7dac4ce` (on `main` since
+2026-09-28), the commit that added the stacked logo.
 
 Where the brand lives: the makeyourmindup brand kit and brand book (v1.4 on
 2026-09-26) are in `krishanraja/makeyourmindup`, `docs/brandbooknew/`:
@@ -204,8 +205,8 @@ theme, and render the proof again.
 Switching it on, from Krish's machine (a cloud session is read-only for the
 Studio, `docs/ENGINE_SESSION.md`):
 
-1. Record the control-center commit that holds `makeyourmindup-stacked.png`
-   in the theme's `source.commit`, in place of `PENDING_CC_COMMIT`.
+1. Done 2026-09-28: the theme's `source.commit` is control-center
+   `7dac4ce`, which holds `makeyourmindup-stacked.png`.
 2. Update the runner to `main` (above).
 3. Render the proof in the Studio (a Short with its call, the thumbnail and a
    carousel) and show it to Krish.
