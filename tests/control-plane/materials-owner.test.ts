@@ -1,5 +1,13 @@
 import assert from 'node:assert/strict'
-import { describe, test } from 'vitest'
+import { describe, test, vi } from 'vitest'
+
+// ladder.ts imports the database client at load, and the client throws
+// without these. A dead local address, so no test ever reaches a real
+// database, and CI (which has neither variable) can load the module.
+vi.hoisted(() => {
+  process.env.SUPABASE_URL = 'http://127.0.0.1:9'
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'not-a-key'
+})
 import { FILED_SOURCES_BUDGET, materialOwner, materialsContext, type Material } from '../../apps/control-plane/api/_content.js'
 import { curationBlock } from '../../apps/control-plane/api/_curation.js'
 import { ownMaterials } from '../../apps/control-plane/api/judge/ladder.js'

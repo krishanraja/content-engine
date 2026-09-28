@@ -11,6 +11,21 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // leaves each idea it reached a time to try again. A judge that ran and
 // declined still abstains, and is still written.
 
+// The voice block and the corpus are read from system_config through a
+// dynamic import the database mock below does not reach, so they are stubbed
+// here: without this the walk read the live database whenever the session had
+// credentials, and failed in CI, which has none. The dead local address is a
+// second guard, so nothing in this file can reach a real database.
+vi.hoisted(() => {
+  process.env.SUPABASE_URL = 'http://127.0.0.1:9'
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'not-a-key'
+})
+vi.mock('../../apps/control-plane/api/_content.js', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../apps/control-plane/api/_content.js')>()),
+  loadVoiceBlock: async () => '',
+  loadCorpus: async () => '',
+}))
+
 const db = vi.hoisted(() => ({
   tables: {} as Record<string, unknown[]>,
   updates: [] as Array<{ table: string; values: Record<string, any>; filters: Array<[string, unknown]> }>,
