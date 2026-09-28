@@ -15,6 +15,10 @@ import {
 } from '../_judges/panel.js'
 import { ROSTER_VERSION, type RouterVerdict } from '../_judges/roster.js'
 import { expand, expansionArtifact, type Expansion } from '../_judges/expand.js'
+import {
+  BLIND_RETRY_MS, classifyAnthropicFailure, describeFailure, isModelUnavailable, ModelUnavailableError,
+  refusesEveryCall, type ProviderFailure,
+} from '../_modelProvider.js'
 
 // The ladder. Judge, try to fix, and only then bother Krish.
 //
@@ -59,6 +63,8 @@ interface Idea {
   body: string | null
   lane_slot: string | null
   meta: Record<string, unknown> | null
+  /** Read so a failed pass can guard its write (AGENTS.md: guard new writes on updated_at). */
+  updated_at?: string | null
 }
 
 interface Attempt {
@@ -216,18 +222,85 @@ export interface LadderDeps {
  * except the one route that carries Krish's own research".
  */
 export function candidateQuery(limit: number, ids: string[]) {
-  let q = supabase.from('content_ideas').select('id,idea,thesis,body,lane_slot,meta')
+  let q = supabase.from('content_ideas').select('id,idea,thesis,body,lane_slot,meta,updated_at')
   q = ids.length
     ? q.in('id', ids)
     : q.is('buried_at', null).in('state', ['seeded', 'researching', 'drafting'])
   return q.order('created_at', { ascending: false }).limit(ids.length ? ids.length : limit * 3)
 }
 
+// ── BACKING OFF AN IDEA THE PANEL COULD NOT JUDGE ──────────────────────────
+//
+// From 2026-09-27 10:00 UTC the provider refused every call, and the sweep
+// walked the same nine ideas every ten minutes for 33 hours: each pass wrote
+// `unjudged`, and `unjudged` is eligible again on the next tick. So a pass
+// that could not judge an idea now says when to try it again, on the row, as
+// meta.ladder_failure. A refusal that ends at a stated time waits for that
+// time; a refusal with none waits an hour; anything transient (an overload,
+// a timeout, every judge abstaining) waits half an hour, doubling on each
+// failure of the same wording, up to a day. Editing the idea ends the wait,
+// because the record is pinned to the text it failed on.
+
+const IDEA_BACKOFF_BASE_MS = 30 * 60_000
+const IDEA_BACKOFF_MAX_MS = 24 * 3_600_000
+
+export interface LadderFailure {
+  at: string
+  /** provider: the model could not be reached. abstained: every judge ran and declined. */
+  reason: 'provider' | 'abstained'
+  class: string
+  message: string
+  status: number | null
+  reset_at: string | null
+  attempts: number
+  retry_after: string
+  artifact_hash: string
+}
+
+export function nextLadderFailure(
+  prev: unknown,
+  f: { reason: LadderFailure['reason']; class: string; message: string; status: number | null; reset_at: string | null },
+  hash: string,
+  now: Date = new Date(),
+): LadderFailure {
+  const p = (prev && typeof prev === 'object' ? prev : null) as Partial<LadderFailure> | null
+  const attempts = (p && p.artifact_hash === hash ? Number(p.attempts) || 0 : 0) + 1
+  let retry = now.getTime() + Math.min(IDEA_BACKOFF_BASE_MS * 2 ** (attempts - 1), IDEA_BACKOFF_MAX_MS)
+  if (f.reason === 'provider' && refusesEveryCall(f.class as ProviderFailure['class'])) {
+    const reset = f.reset_at ? Date.parse(f.reset_at) : NaN
+    retry = Number.isFinite(reset) && reset > now.getTime() ? reset : now.getTime() + BLIND_RETRY_MS
+  }
+  return {
+    at: now.toISOString(), reason: f.reason, class: f.class, message: String(f.message || '').slice(0, 300),
+    status: f.status, reset_at: f.reset_at, attempts, retry_after: new Date(retry).toISOString(), artifact_hash: hash,
+  }
+}
+
+/** When the idea's last failed pass said to try again, while that is still
+ *  ahead and the idea is the text it failed on. */
+export function backedOffUntil(meta: Record<string, any> | null, hash: string, now: Date = new Date()): string | null {
+  const f = meta?.ladder_failure as Partial<LadderFailure> | undefined
+  if (!f || typeof f.retry_after !== 'string' || f.artifact_hash !== hash) return null
+  const t = Date.parse(f.retry_after)
+  return Number.isFinite(t) && t > now.getTime() ? f.retry_after : null
+}
+
+/** An expansion refused in a way that refuses every call (a usage limit, a
+ *  spent balance, a bad key). The nine judges would meet the same refusal,
+ *  so the walk stops at the expansion instead of paying for nine more. */
+export function expansionRefusal(e: Expansion): ProviderFailure | null {
+  if (e.ok || typeof e.why_not !== 'string' || !e.why_not.startsWith('the expansion call failed:')) return null
+  const f = classifyAnthropicFailure(e.why_not.replace(/^the expansion call failed:\s*/, ''))
+  return refusesEveryCall(f.class) ? f : null
+}
+
 /** Which of those still need a real judgment. `unjudged` on the row is a run
  *  that could not reach the model, not a verdict, so it stays eligible — see
- *  the skip inside the walk for the sweep that stranded 64 ideas. */
-export function needsJudging(row: { meta: Record<string, unknown> | null; idea: string; thesis: string | null }): boolean {
+ *  the skip inside the walk for the sweep that stranded 64 ideas. An idea
+ *  backing off after a failed pass waits for its retry time. */
+export function needsJudging(row: { meta: Record<string, unknown> | null; idea: string; thesis: string | null }, now: Date = new Date()): boolean {
   const meta = (row.meta || {}) as Record<string, any>
+  if (backedOffUntil(meta, artifactHash(artifactOf(row)), now)) return false
   const band = meta.ladder?.final?.band
   if (!meta.ladder || !band || band === 'unjudged') return true
   return meta.ladder.artifact_hash !== artifactHash(artifactOf(row))
@@ -441,8 +514,38 @@ export interface LadderReport {
   /** True when the pass stopped on its wall-clock budget rather than at the
    *  end of the list. The remaining ideas are untouched and eligible. */
   ran_out_of_time: boolean
+  /** Ideas whose walk could not reach the model. Nothing was written for
+   *  them except when to try again (meta.ladder_failure). */
+  failed: number
+  /** Ideas skipped because an earlier failed pass said to wait. */
+  backed_off: number
+  /** Set when the provider refused in a way that refuses every call: the pass
+   *  stopped at that idea and left the rest untouched. */
+  stopped: ProviderFailure | null
   warning?: string
   results: Record<string, unknown>[]
+}
+
+/** Whether a pass is a success for the run ledger. A pass that met a refusal
+ *  of every call, or could not judge a single idea it tried, failed, and says
+ *  why in the provider's words. Until 2026-09-28 such a pass reported `ok`. */
+export function ladderOutcome(r: Pick<LadderReport, 'stopped' | 'failed' | 'judged'>): { ok: boolean; error: string | null } {
+  if (r.stopped) {
+    return { ok: false, error: `The judges stopped, and nothing was recorded for the ${r.failed} idea${r.failed === 1 ? '' : 's'} they reached. ${describeFailure(r.stopped)}` }
+  }
+  if (r.failed > 0 && r.judged === 0) {
+    return { ok: false, error: `No idea could be judged: all ${r.failed} panel${r.failed === 1 ? '' : 's'} this pass failed to reach the model, and each waits before it is tried again.` }
+  }
+  return { ok: true, error: null }
+}
+
+/** Keep when to try the idea again. Guarded on updated_at, so a failed pass
+ *  can never overwrite a meta somebody saved while it ran. */
+async function recordLadderFailure(idea: Idea, meta: Record<string, any>, record: LadderFailure): Promise<void> {
+  let q = supabase.from('content_ideas').update({ meta: { ...meta, ladder_failure: record } }).eq('id', idea.id)
+  if (idea.updated_at) q = q.eq('updated_at', idea.updated_at)
+  const { error } = await q
+  if (error) console.warn(`[ladder] could not record the failed pass on ${idea.id}: ${error.message}`)
 }
 
 /**
@@ -532,6 +635,8 @@ export async function runLadder(
     if (!whatKrishDoes) console.warn('[ladder] running WITHOUT the brief: the standing judge will score uninformed')
     const results: Record<string, unknown>[] = []
     let judged = 0, ready = 0, escalated = 0, weak = 0, skipped = 0, repairs = 0, deferred = 0
+    let failed = 0, backedOff = 0
+    let stopped: ProviderFailure | null = null
     let ranOutOfTime = false
 
     for (const raw of (rows || [])) {
@@ -557,6 +662,7 @@ export async function runLadder(
         // `unjudged` and are now eligible again.
         const priorBand = meta.ladder?.final?.band
         if (meta.ladder?.artifact_hash === hash && priorBand && priorBand !== 'unjudged') { skipped++; continue }
+        if (backedOffUntil(meta, hash)) { backedOff++; continue }
 
         const mandateFor = (slug: string | null) =>
           mandates.find(m => m.slug === slug)?.mandate || mandates.map(m => m.mandate).join('\n\n')
@@ -591,6 +697,8 @@ export async function runLadder(
           // expansion to one lane it may overturn is the wrong order, and the
           // cost is a refusal that leaves the piece judged as a raw headline.
           : await expand(artifactOf(idea), mandateFor(null), whatKrishDoes, { call: deps.call })
+        const refused = expansionRefusal(expansion)
+        if (refused) throw new ModelUnavailableError(refused, 'expand')
         const judged0 = written
           ? `${artifactOf(idea)}\n\n${written}`
           : expansion.ok ? expansionArtifact(artifactOf(idea), expansion) : artifactOf(idea)
@@ -785,8 +893,17 @@ export async function runLadder(
           router_disagrees: Boolean(router?.winner && idea.lane_slot && router.winner !== idea.lane_slot),
         }
 
+        // A real reading ends any wait an earlier failed pass set. A panel on
+        // which every judge ran and abstained is a reading too, and it waits
+        // before the next one, because the same text gets the same answer.
+        const { ladder_failure: previousFailure, ...rest } = meta
         const patch: Record<string, unknown> = {
-          meta: { ...meta, ladder },
+          meta: {
+            ...rest, ladder,
+            ...(s.band === 'unjudged' ? { ladder_failure: nextLadderFailure(previousFailure, {
+              reason: 'abstained', class: 'all_abstained', message: 'every judge ran and abstained', status: null, reset_at: null,
+            }, ladder.artifact_hash) } : {}),
+          },
           updated_at: new Date().toISOString(),
         }
         // Every other writer runs its words through sanitizeVoice before storing
@@ -821,7 +938,9 @@ export async function runLadder(
         // Burying stays exactly what it was, a thing Krish does at the desk.
         if (s.band === 'weak') weak++
         else if (s.band === 'ready') ready++
-        else escalated++
+        // `unjudged` is not escalated: the sweep of 2026-09-28 reported nine
+        // escalations for nine ideas no judge had read. It is counted apart.
+        else if (s.band === 'repairable') escalated++
 
         if (!dryRun) {
           const { error: uErr } = await supabase.from('content_ideas').update(patch).eq('id', idea.id)
@@ -858,6 +977,29 @@ export async function runLadder(
         // tick, so writing as it went would insert the same panel five times.
         await deps.commit()
       } catch (e) {
+        // ── THE MODEL COULD NOT BE REACHED ───────────────────────────────────
+        //
+        // A failed run. Nothing held for the idea is written, no band is
+        // recorded, and the row keeps its last real reading. It gets one
+        // thing: when to try again. A refusal of every call (a usage limit, a
+        // spent balance, a bad key) stops the pass here, because every idea
+        // after this one would meet it too.
+        if (isModelUnavailable(e)) {
+          deps.abandon()
+          failed++
+          const f = e.failure
+          const record = nextLadderFailure(meta.ladder_failure, {
+            reason: 'provider', class: f.class, message: f.message, status: f.status, reset_at: f.reset_at,
+          }, hash)
+          if (!dryRun) await recordLadderFailure(idea, meta, record)
+          results.push({
+            id: idea.id, idea: String(idea.idea || '').slice(0, 90), band: 'failed', stage: e.stage,
+            failure: { class: f.class, status: f.status, message: f.message, reset_at: f.reset_at },
+            retry_after: record.retry_after,
+          })
+          if (refusesEveryCall(f.class)) { stopped = f; break }
+          continue
+        }
         // ── A DEFERRAL IS NOT A FAILURE, AND IT IS NOT A JUDGMENT ───────────
         //
         // The batched transport throws to say the reply is not back yet. The
@@ -883,11 +1025,15 @@ export async function runLadder(
     const unjudged = results.filter(r => (r as Record<string, unknown>).band === 'unjudged').length
     return {
       ok: true, dry_run: dryRun, judged, ready, escalated, weak, unjudged, skipped, repairs, deferred,
+      failed, backed_off: backedOff, stopped,
       // Said rather than inferred. A pass that stopped on the clock looks
       // exactly like one that finished the list, and reading the second as the
       // first is how a half-done sweep reports as a whole one.
       ran_out_of_time: ranOutOfTime,
-      ...(unjudged ? { warning: `${unjudged} of ${judged} could not be judged at all and will be retried on the next run` } : {}),
+      ...(unjudged || failed ? { warning: [
+        unjudged ? `${unjudged} of ${judged} were read by no judge (every one abstained) and wait before the next reading` : '',
+        failed ? `${failed} could not reach the model and wait before they are tried again` : '',
+      ].filter(Boolean).join('; ') } : {}),
       results,
     }
   }
@@ -909,7 +1055,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     : []
 
   try {
-    return res.json(await runLadder({ limit, ids, dryRun, deps: liveDeps(dryRun) }))
+    const report = await runLadder({ limit, ids, dryRun, deps: liveDeps(dryRun) })
+    const outcome = ladderOutcome(report)
+    return outcome.ok ? res.json(report) : res.status(503).json({ ...report, ok: false, error: outcome.error })
   } catch (e: any) {
     return res.status(500).json({ ok: false, error: String(e?.message || e) })
   }

@@ -191,6 +191,14 @@ export function providerHealth(failure: ProviderFailure | null, okAt: string | n
       : `Anthropic is usable. Its last failure, at ${when(failure.at)}, was: ${CLASS_LABEL[failure.class]}.` }
 }
 
+/** Whether a caller that can wait (the judge sweep) should leave the provider
+ *  alone for now: it has refused every call and the time to try again, its
+ *  own stated reset or an hour after a refusal with none, has not come. */
+export function providerRefusing(health: ProviderHealth, now: Date = new Date()): boolean {
+  if (health.state !== 'unavailable' || !health.retry_after) return false
+  return now.getTime() < Date.parse(health.retry_after)
+}
+
 // ── The record ─────────────────────────────────────────────────────────────
 //
 // Two plain rows, so a failure and a recovery never overwrite each other:

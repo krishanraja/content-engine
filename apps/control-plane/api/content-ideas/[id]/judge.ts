@@ -4,7 +4,8 @@ import { guardEngine } from '../../_auth.js'
 import { corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock, pathId } from '../../_content.js'
 import { supabase } from '../../_supabase.js'
 import { deterministicFindings } from '../../_judges/deterministic.js'
-import { runPanel } from '../../_judges/panel.js'
+import { runPanel, type PanelResult } from '../../_judges/panel.js'
+import { describeFailure, isModelUnavailable } from '../../_modelProvider.js'
 import { ROSTER_VERSION } from '../../_judges/roster.js'
 import { curationBlock } from '../../_curation.js'
 import { loadSubchannel, type Subchannel } from '../../_subchannels.js'
@@ -154,16 +155,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     row: { idea: row.idea, thesis: row.thesis, meta: row.meta as Record<string, any> | null, lane_slot: row.lane_slot },
   })
 
-  const panel = await runPanel({
-    gate,
-    subjectTable: 'content_ideas',
-    subjectId: row.id,
-    artifact,
-    context,
-    deterministic,
-    idempotencyKey,
-    timeoutMs: JUDGE_TIMEOUT_MS,
-  })
+  let panel: PanelResult
+  try {
+    panel = await runPanel({
+      gate,
+      subjectTable: 'content_ideas',
+      subjectId: row.id,
+      artifact,
+      context,
+      deterministic,
+      idempotencyKey,
+      timeoutMs: JUDGE_TIMEOUT_MS,
+    })
+  } catch (e) {
+    // Every judge failed to reach the model: a failed run, recorded nowhere
+    // as a verdict (api/_judges/panel.ts). The caller hears what the provider
+    // said, with the status that says try later.
+    if (isModelUnavailable(e)) {
+      if (e.failure.reset_at) res.setHeader('Retry-After', String(Math.max(1, Math.ceil((Date.parse(e.failure.reset_at) - Date.now()) / 1000))))
+      return res.status(503).json({
+        ok: false, error: 'model_unavailable',
+        detail: `The panel could not run, so nothing was recorded. ${describeFailure(e.failure)}`,
+        failure: e.failure,
+      })
+    }
+    throw e
+  }
 
   // Store the run, then the verdicts. A run that cannot be stored is still
   // returned: the panel already did the work, and losing the answer because the

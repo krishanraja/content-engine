@@ -71,8 +71,8 @@ export interface StreamClaudeOpts {
   onText: (chunk: string) => void
   /** Called once the provider has accepted the request, before the first
    *  delta. A caller opens its own stream here, so a refusal (a usage limit,
-   *  a bad key, an overload) still reaches its client as an HTTP status
-   *  rather than as an event inside a 200. */
+   *  a bad key, an overload) reaches its client as an HTTP status, before
+   *  any event has been sent. */
   onOpen?: () => void
   signal?: AbortSignal
   /** Agent stamp for the usage meter. A stream reports its token counts in the
