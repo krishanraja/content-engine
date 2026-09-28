@@ -285,7 +285,7 @@ describe('Windows runner entry point', () => {
   // has the wrong token-family prefix." The proxy accepts only vst_mcp_ values,
   // and -Generate had written base64 with no prefix for every target.
   it('generates and accepts only vst_mcp_ family values for the Studio MCP target', async () => {
-    const source = await readFile(join(ROOT, 'scripts', 'set-credential.ps1'), 'utf8')
+    const source = (await readFile(join(ROOT, 'scripts', 'set-credential.ps1'), 'utf8')).replace(/\r\n/g, '\n')
     const proxy = await readFile(join(ROOT, 'scripts', 'studio-mcp-credential-proxy.ps1'), 'utf8')
 
     expect(proxy).toContain("StartsWith('vst_mcp_', [StringComparison]::Ordinal)")
@@ -322,7 +322,8 @@ describe('Windows runner entry point', () => {
   })
 
   it('fails the active contract when the MCP target is outside the vst_mcp_ family', async () => {
-    const source = await readFile(join(ROOT, 'scripts', 'inspect-credentials.ps1'), 'utf8')
+    // A Windows checkout carries CRLF line endings; compare the text itself.
+    const source = (await readFile(join(ROOT, 'scripts', 'inspect-credentials.ps1'), 'utf8')).replace(/\r\n/g, '\n')
 
     expect(source).toContain('using System.Text.RegularExpressions;')
     expect(source).toContain('McpTokenFamily = Regex.IsMatch(value, "^vst_mcp_[a-f0-9]{64,}\\\\z", RegexOptions.CultureInvariant)')
