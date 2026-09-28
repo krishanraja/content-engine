@@ -5,6 +5,12 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-09-28
+
+- decision (Krish, 2026-09-28): "approve". Piece 2, "Who picks your AI?" (mind.the.gap), approved at the exact text that passed the fact check, with his 75%. Relayed with `decided_by: 'Krish'`; nothing is published.
+- decision (Krish, 2026-09-28): "fact check as much as possible until is no longer needed." The fact gate stays at full strength: both checks on every fact, any contradiction blocks, and a piece is re-run as often as it takes. The proposal to re-ask the web checker once before blocking is declined. The gate is relaxed only when the record shows the checking is no longer needed.
+- decision (Krish, 2026-09-28), on the Studio's makeyourmindup branding as rendered: "this is awful, and embarrasing. it does not even look like the makeyourmindup site in design aesthetic." The candidate theme stays switched off and is redesigned in the makeyourmindup look before any approval is sought.
+
 ## 2026-09-26
 
 - decision (Krish, 2026-09-26): "Just get in line with what those updates are at the live website", then "Correct the engine's table and anywhere else, its out of date." under.the.hood is due every Monday, one a week, as the makeyourmindup cover page promises (Mon, Wed, Fri). It had no fixed day at 0.5 a week. `venture_formats` and `content_cadence` changed live and read back; Control Center migration `20260926150000` records it.

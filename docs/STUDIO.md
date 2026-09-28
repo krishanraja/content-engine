@@ -84,6 +84,8 @@ No credential or signing key changes.
 
 ### makeyourmindup branding: built, switched off until approved in the Studio
 
+**Rejected as rendered, 2026-09-28.** Krish: "this is awful, and embarrasing. it does not even look like the makeyourmindup site in design aesthetic." The lockup below kept the Mindmake Studio look around the new logo. It stays switched off and is being redesigned in the makeyourmindup brand book's own system; do not seek approval for it as built.
+
 Krish, 2026-09-26: "Make your mind up, Mark, plus the channel name. You've got
 the logos as per the website for all of that" (`fixtures/feedback/
 studio-branding-mark-channel-20260926.json`), then "placement approved" on
