@@ -5,6 +5,10 @@
 // the list as a checklist. Pure: no database, no network.
 
 import { notXYConstructions } from './_judges/deterministic.js'
+// The one reader of a piece's call, shared with the Studio. Imported by its
+// relative path, as video-studio/_runnerContracts.ts explains; the file has no
+// dependencies of its own.
+import { labelledConfidences, readPieceCall } from '../../../packages/contracts/src/call.js'
 
 // ── Mechanical checks before approval or publication ────────────────────────
 
@@ -100,28 +104,29 @@ export function americanSpellings(body: string): Array<{ found: string; use: str
 /** Where a confidence starts to read as a clear stance (Krish, 2026-09-26). */
 export const CLEAR_STANCE_AT = 70
 
-/** The confidence in the prediction section, as a number, or null when unset.
- *  Reads "How sure we are: 75%" and piece 1's "Confidence: 70%". It read only
- *  the first, so piece 1's 70% came back as unset and CLEAR_STANCE showed
+/** The confidence in the prediction, as a number, or null when unset. Reads
+ *  "How sure we are: 75%" and piece 1's "Confidence: 70%", with the same
+ *  label reader the Studio uses for the call (readPieceCall). It once read
+ *  only the first, so piece 1's 70% came back as unset and CLEAR_STANCE showed
  *  green over a detail saying "No confidence set yet" (walk log F35). */
 export function confidenceOf(body: string): number | null {
-  const m = String(body || '').match(/\b(?:How sure we are|Confidence)[ \t]*:[ \t]*(\d{1,3})[ \t]*%/i)
-  return m ? Number(m[1]) : null
+  const first = labelledConfidences(String(body || '')).find(m => m.whole)
+  return first ? first.percent : null
 }
 
-/** The prediction section: a heading, a date to check by, and a confidence. */
+/** The prediction section: a heading, a date to check by, and a confidence.
+ *  Either a section ("## OUR PREDICTION") or a paragraph that opens with a
+ *  bold label ("**The Call.** By 30 June 2027 ... Confidence: 70%."), found by
+ *  the same reader the Studio uses. This check asks only that a date and a
+ *  percentage are there; the Studio's readPieceCall also asks that each is
+ *  unambiguous before it puts the call on screen. */
 export function predictionCheck(body: string): { ok: boolean; detail: string } {
-  // Either a section ("## OUR PREDICTION") or a paragraph that opens with a
-  // bold label ("**The Call.** By 30 June 2027 ... Confidence: 70%.").
-  const text = String(body || '')
-  const heading = text.match(/^#{1,3}\s*(OUR PREDICTION|THE CALL|PREDICTION)\b[^\n]*\n([\s\S]*?)(?=^#{1,3}\s|$(?![\s\S]))/im)
-  const para = text.match(/^\*\*(The Call|Our prediction)\.?\*\*[^\n]*(?:\n(?!\n)[^\n]*)*/im)
-  const section = heading ? heading[2] : para ? para[0] : null
-  if (section === null) return { ok: false, detail: 'No prediction section. Every piece ends with what will happen, a date to check it by, and how sure we are.' }
-  const date = /\b(by|on|before)\s+\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}\b|\b\d{4}-\d{2}-\d{2}\b/i.test(section)
-  const sure = /\b\d{1,3}%/.test(section.replace(/\[[^\]]*\]/g, ''))
-  if (!date) return { ok: false, detail: 'The prediction has no date to check it by.' }
-  if (!sure) return { ok: false, detail: 'The prediction has no confidence yet. Krish sets how sure we are, as a percentage.' }
+  // The Studio's own reader: a piece passes only with a call a Short can show
+  // word for word (one dated paragraph, a real date, one labelled whole
+  // percentage). The looser check it replaced let a piece be approved with a
+  // call the Studio then refused (walk log H32).
+  const reading = readPieceCall(String(body || ''))
+  if ('reason' in reading) return { ok: false, detail: reading.reason }
   return { ok: true, detail: 'Has a date to check by and a confidence.' }
 }
 

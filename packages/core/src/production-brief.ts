@@ -11,7 +11,7 @@ import {
 } from '@mindmake/contracts'
 import { withDurableFileLock } from './durable-lock.js'
 import { hashValue, stableJson } from './hash.js'
-import { completeStageV2, createJobV2 } from './job-store-v2.js'
+import { completeStageV2, createJobV2, readStageArtifactV2 } from './job-store-v2.js'
 import { studioPaths } from './paths.js'
 
 interface ProductionBriefPointerV1 {
@@ -118,4 +118,17 @@ export async function materializeProductionBriefJob(input: {
     importer: 'control-center-production-brief-v1',
   })
   return { job, brief_artifact_hash: briefArtifact.artifact_hash, created: input.imported.created }
+}
+
+/** The approved production brief a job was made from, read from its brief
+ *  stage, or undefined when none is bound: a job made without one, or a
+ *  short-native job given a free-form brief. A brief stage that names a
+ *  production brief it cannot parse refuses rather than reading as none. */
+export async function loadBoundProductionBriefV2(job: JobManifestV2): Promise<ProductionBriefV1 | undefined> {
+  if (job.stages.brief?.status !== 'complete') return undefined
+  const artifact = await readStageArtifactV2(job.job_id, 'brief')
+  const payload = (artifact.payload ?? {}) as Record<string, unknown>
+  const parsed = ProductionBriefV1Schema.safeParse(payload.production_brief || payload.brief)
+  if (!parsed.success && payload.production_brief !== undefined) throw new Error(`job ${job.job_id} names a production brief its brief stage cannot parse`)
+  return parsed.success ? parsed.data : undefined
 }

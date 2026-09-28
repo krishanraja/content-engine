@@ -26,13 +26,86 @@ describe.sequential('V2 CLI', () => {
     const program = new Command().exitOverride()
     registerV2Commands(program, { repoRoot: '.', configPath: 'config.json', skillPaths: [], out: () => undefined })
     const v2 = program.commands.find((command) => command.name() === 'v2')!
-    expect(v2.commands.map((command) => command.name())).toEqual(expect.arrayContaining(['production-brief', 'identity', 'job', 'ingest', 'transcribe', 'candidates', 'recording-brief', 'source', 'visual-plan', 'assets', 'styleframes', 'animatic', 'treatment', 'render', 'qa', 'approve', 'feedback', 'package', 'publish', 'analytics', 'experiment']))
+    expect(v2.commands.map((command) => command.name())).toEqual(expect.arrayContaining(['production-brief', 'identity', 'job', 'ingest', 'transcribe', 'candidates', 'recording-brief', 'source', 'visual-plan', 'assets', 'call', 'styleframes', 'animatic', 'treatment', 'render', 'qa', 'approve', 'feedback', 'package', 'publish', 'analytics', 'experiment']))
     const publish = v2.commands.find((command) => command.name() === 'publish')!
     expect(publish.commands.map((command) => command.name())).toEqual(['youtube'])
     expect(() => assertYoutubePrivateOnly('youtube_shorts', 'private')).not.toThrow()
     expect(() => assertYoutubePrivateOnly('youtube_shorts', 'public')).toThrow(/only permits private/i)
     expect(() => assertYoutubePrivateOnly('linkedin', 'private')).toThrow(/local draft packages/i)
     try { assertYoutubePrivateOnly('linkedin', 'private') } catch (error) { expect(classifyError(error).exitCode).toBe(20) }
+  })
+
+  it('prints the call from the job\'s approved production brief, ready to paste, and nothing else', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'mindmake-cli-call-'))
+    roots.push(root)
+    process.env.MINDMAKE_RUNTIME_ROOT = join(root, 'runtime')
+    const configPath = join(process.cwd(), 'config', 'studio.json')
+    const run = async (...args: string[]): Promise<Record<string, unknown>> => {
+      const outputs: unknown[] = []
+      const program = new Command().exitOverride()
+      registerV2Commands(program, { repoRoot: process.cwd(), configPath, skillPaths: [], out: (value) => outputs.push(value) })
+      await program.parseAsync(['node', 'studio', 'v2', ...args])
+      return outputs[0] as Record<string, unknown>
+    }
+    const edition = await readFile('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
+    const revision = 'e'.repeat(64)
+    const brief = (briefId: string, approvedText: string) => ({
+      schema_version: 1,
+      brief_id: briefId,
+      content_idea_id: '904658db-4df2-4537-a0ed-ebe93e081db7',
+      content_revision_hash: revision,
+      series: 'mind_the_gap',
+      production_kinds: ['video'],
+      source_mode: 'short_native',
+      content: { title: 'Who picks your AI?', thesis: 'The software that picks the brain for you is becoming the default.', approved_text: approvedText, audience: 'Leaders who buy AI.', intended_payoff: 'Know who picks the brain behind your AI, and when to check.' },
+      claims: [],
+      visual_opportunities: [],
+      hard_gates: { truth: 'passed', rights: 'passed', confidentiality: 'passed', meaning: 'passed', naming: 'passed' },
+      editorial_approval: { approved_by: 'Krish', approved_at: '2026-09-28T12:00:00.000Z', approval_revision_hash: revision },
+    })
+    const briefPath = join(root, 'brief.json')
+    await writeFile(briefPath, JSON.stringify(brief('brief_cli_call', edition)), 'utf8')
+    const imported = await run('production-brief', 'import', '--input', briefPath)
+    const jobId = imported.job_id as string
+
+    const printed = await run('call', '--job', jobId, '--beat', 'beat-call')
+    expect(printed).toEqual({
+      job_id: jobId,
+      brief_id: 'brief_cli_call',
+      call: {
+        beat_id: 'beat-call',
+        statement: 'By 30 September 2027, at least two of OpenAI, Anthropic and Google will have their software pick the brain automatically, by default, for businesses that build apps on their AI.',
+        due: '2027-09-30',
+        confidence_percent: 75,
+      },
+    })
+
+    // The same call for any beat; the manifest refuses a beat no shot carries.
+    expect((await run('call', '--job', jobId, '--beat', 'beat-hook')).call).toEqual({ ...(printed.call as object), beat_id: 'beat-hook' })
+    await expect(run('call', '--job', jobId, '--beat', 'not a beat id')).rejects.toThrow(/cannot go on a call card: beat_id/)
+
+    // A brief whose approved text has no readable call.
+    const unsetPath = join(root, 'unset.json')
+    await writeFile(unsetPath, JSON.stringify(brief('brief_cli_unset', edition.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]'))), 'utf8')
+    const unset = await run('production-brief', 'import', '--input', unsetPath)
+    const refusal = await run('call', '--job', unset.job_id as string, '--beat', 'beat-call').then(() => null, (error: unknown) => error)
+    expect((refusal as Error).message).toBe('hard block: production brief brief_cli_unset has no call the Studio can read in its approved text: The prediction has no confidence yet. Krish sets how sure we are, as a percentage.')
+    expect(classifyError(refusal).exitCode).toBe(20)
+
+    // A job with no production brief has no call to print.
+    const created = await run('job', 'create', '--series', 'mind_the_gap', '--mode', 'short_native', '--techniques', join(process.cwd(), 'config', 'techniques.json'), '--no-identity')
+    const createdId = (created.job as { job_id: string }).job_id
+    await expect(run('call', '--job', createdId, '--beat', 'beat-call')).rejects.toThrow(`job ${createdId} has no production brief bound to it, and a call comes only from the approved text of the job's production brief`)
+  }, 30_000)
+
+  it('checks the call wherever a review or treatment manifest is taken in', async () => {
+    // styleframes create, animatic create and treatment register all read
+    // their manifest through loadReviewManifest; the call gate is its last step.
+    const source = await readFile('packages/cli/src/v2.ts', 'utf8')
+    const body = source.slice(source.indexOf('async function loadReviewManifest('), source.indexOf('function exactAssetHashes('))
+    expect(body.indexOf('await boundRenderCallIssuesV2(manifest)')).toBeGreaterThan(body.indexOf('validateV2RenderReadiness(manifest'))
+    expect(body.indexOf('await boundRenderCallIssuesV2(manifest)')).toBeLessThan(body.indexOf('return { manifest, manifestHash }'))
+    expect(source.match(/loadReviewManifest\(job, /g)).toHaveLength(3)
   })
 
   it('accepts only explicit passing QA shapes', () => {

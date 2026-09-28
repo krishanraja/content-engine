@@ -12,6 +12,7 @@ export * from './editorial-v1.js'
 export * from './art-director-v1.js'
 export * from './station-harness-v1.js'
 export * from './series.js'
+export * from './call.js'
 
 export const SCHEMA_VERSION = 1 as const
 
