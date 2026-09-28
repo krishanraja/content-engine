@@ -2,8 +2,8 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
-  bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, numbersIn, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
-  summarise, sweep,
+  bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
+  sourcesText, summarise, sweep,
   type CheckedClaim,
 } from '../../apps/control-plane/api/_factGate.js'
 
@@ -235,7 +235,9 @@ describe('the gate', () => {
     const route = readFileSync('apps/control-plane/api/content-ideas/[id]/materials.ts', 'utf8')
     assert.match(route, /const verbatim = b\.verbatim === true && kind === 'paste' && \/\^https\?:/)
     const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
-    assert.match(check, /filter\(m => m\.verbatim === true && m\.content\)/)
+    // primaryText moved to api/_factGate.ts (2026-09-28), where it is tested without a database.
+    assert.match(readFileSync('apps/control-plane/api/_factGate.ts', 'utf8'), /filter\(m => m\.verbatim === true && m\.content\)/)
+    assert.match(check, /const primary = primaryText\(meta\)/)
     assert.match(check, /combine\(f\.verdict, ind\.verdict, f\.primary === true\)/)
   })
   test('a set-aside takes two readings: the lister\'s set-asides go to the second look too', () => {
@@ -315,5 +317,100 @@ describe('spacing is not wording', () => {
   test('different words still fail', () => {
     assert.match(quotesFail(["complained GPT-5 wasn't working as well for them as 5 did. Altman said"], SRC, 'x') || '', /not found word for word/)
     assert.match(quotesFail(['| GPT-6 Astra | $5.00 |'], SRC, 'GPT-6 Astra costs $5') || '', /not found word for word|do not carry/)
+  })
+})
+
+// Walk log F33 (2026-09-28, piece 1). The filer keeps the page's markdown
+// links, so a verbatim excerpt reads "[2025 filing](https://...)", and a
+// checker quoting the visible words failed "word for word" on three of
+// fifteen passages. The comparison now reads link text as a reader does.
+describe('a link reads as its words', () => {
+  const FILED = [
+    'Title: amzn-20251231',
+    'Amazon told investors in its [2025 filing](https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm) that advertising services revenue was $68.6 billion.',
+    'Amazon\u2019s Conditions of Use,[those Conditions have included](https://www.thefashionlaw.com/amazon-perplexity-case/)dedicated Agent Terms since May 2025.',
+  ].join('\n\n')
+
+  test('a quote of the visible words holds against a filed excerpt that keeps the link', () => {
+    assert.equal(quotesFail(['Amazon told investors in its 2025 filing that advertising services revenue was $68.6 billion.'], FILED, 'Amazon reported $68.6 billion of advertising revenue in its 2025 filing'), null)
+    assert.equal(quotesFail(['those Conditions have included dedicated Agent Terms since May 2025'], FILED, 'Agent Terms since May 2025'), null)
+    assert.equal(norm('[2025 filing](https://www.sec.gov/x.htm)'), '2025 filing')
+  })
+
+  test('a quote that keeps the link syntax still holds', () => {
+    assert.equal(quotesFail(['in its [2025 filing](https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm) that advertising services revenue was $68.6 billion'], FILED, '$68.6 billion in 2025'), null)
+  })
+
+  test('a number only in a link\'s address carries nothing', () => {
+    const src = 'The [annual report](https://example.test/reports/2025/68635.htm) shows advertising grew.'
+    assert.match(quotesFail(['The [annual report](https://example.test/reports/2025/68635.htm) shows advertising grew.'], src, 'advertising was 68635 in 2025') || '', /do not carry 68635, 2025/)
+  })
+
+  test('different words still fail with the links stripped', () => {
+    assert.match(quotesFail(['Amazon told investors in its 2025 filing that advertising revenue was $69.6 billion.'], FILED, '$69.6 billion') || '', /not found word for word/)
+  })
+})
+
+// Zero tolerance survives the change (Krish, 2026-09-28: "fact check as much
+// as possible until is no longer needed"). Reading links as words can only
+// let a real passage be found; it never lets a contradiction through.
+describe('a contradicted claim still blocks', () => {
+  test('either checker contradicting wins, even over a verbatim source that supports it', () => {
+    assert.equal(combine('supported', 'contradicted', true), 'contradicted')
+    assert.equal(combine('contradicted', 'supported', true), 'contradicted')
+  })
+  test('one contradicted claim fails the whole check and the gate refuses the move', () => {
+    const body = 'Amazon reported $68.6 billion of advertising revenue in 2025. It blocked the agent on 17 September.'
+    const contradicted: CheckedClaim = { ...checked('contradicted'), sentence: 'It blocked the agent on 17 September.' }
+    const fc = summarise([checked('verified'), contradicted], [], body, 'perplexity:sonar-pro')
+    assert.equal(fc.passed, false)
+    assert.equal(fc.blocking, 1)
+    const gate = gateStatus({ fact_check: fc }, body)
+    assert.equal(gate.ok, false)
+    assert.match(gate.reason || '', /1 claim failed the fact check/)
+  })
+  test('the contradiction check compares link text too, so a filed contradiction is found', () => {
+    const src = 'Amazon said it began blocking the agent on [18 September](https://example.test/a).'
+    assert.ok(norm(src).includes(norm('began blocking the agent on 18 September')))
+  })
+})
+
+// Walk log F33 again: the gate read research dives as `question` and
+// `sources`, but dive-deeper and research-topic store `query` and
+// `citations`, and dive-deeper also files the findings as a material. So a
+// dive's question and URLs never reached the checkers, and its findings came
+// in twice. Shapes below are the live ones (meta.deep_dives and
+// meta.materials on piece 3, read 2026-09-28).
+describe('the sources the checkers read', () => {
+  const AT = '2026-09-28T19:03:10.579Z'
+  const FINDINGS = 'Salesforce and NVIDIA announced Koa on 15 September 2026 at Dreamforce, built by post-training an open model.'
+  const dive = { query: 'What exactly did Salesforce announce about Koa?', findings: FINDINGS, citations: ['https://www.salesforce.com/news/koa', 'https://blogs.nvidia.com/koa'], at: AT }
+  const filed = { id: 'm1', kind: 'research' as const, title: dive.query, content: `${FINDINGS}\n\nSources:\n${dive.citations.join('\n')}`, url: null, at: AT }
+  const verbatim = { id: 'm2', kind: 'paste' as const, by: 'claude_code', verbatim: true, url: 'https://arxiv.org/pdf/2609.15066v1', title: 'Paper (verbatim)', content: 'Koa 0.86, remaining below the strongest frontier models.' }
+
+  test('a dive filed as a material is read once, with its question and its links', () => {
+    const text = sourcesText({ deep_dives: [dive], materials: [filed, verbatim] })
+    assert.equal(text.split(FINDINGS).length - 1, 1, 'the findings appear once')
+    assert.match(text, /What exactly did Salesforce announce about Koa\?/)
+    assert.match(text, /https:\/\/blogs\.nvidia\.com\/koa/)
+    assert.match(text, /verbatim excerpt from https:\/\/arxiv\.org\/pdf\/2609\.15066v1/)
+  })
+
+  test('a dive with no material of its own is read under its stored names', () => {
+    const text = sourcesText({ deep_dives: [dive], materials: [] })
+    assert.match(text, new RegExp(`${SOURCE_MARK}deep dive: What exactly did Salesforce announce about Koa\\?`))
+    assert.match(text, /Sources:\nhttps:\/\/www\.salesforce\.com\/news\/koa\nhttps:\/\/blogs\.nvidia\.com\/koa/)
+    assert.equal(text.split(FINDINGS).length - 1, 1)
+  })
+
+  test('a row written with the older names is still read', () => {
+    const text = sourcesText({ deep_dives: [{ question: 'Old question?', answer: 'Old answer about 12 things.', sources: ['https://old.test/a'] }] })
+    assert.match(text, /deep dive: Old question\?\nOld answer about 12 things\.\n\nSources:\nhttps:\/\/old\.test\/a/)
+  })
+
+  test('only the verbatim excerpts are primary', () => {
+    const primary = primaryText({ deep_dives: [dive], materials: [filed, verbatim] })
+    assert.match(primary, /remaining below the strongest frontier models/)
+    assert.doesNotMatch(primary, /Dreamforce/)
   })
 })
