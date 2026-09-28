@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
-import { callClaude, loadCorpus, loadVoiceBlock, corpusForChannel, sanitizeVoice, type ClaudeCall } from '../_content.js'
+import { callClaude, isFiledSource, loadCorpus, loadVoiceBlock, corpusForChannel, materialOwner, readMaterials, sanitizeVoice, type ClaudeCall } from '../_content.js'
 import { houseRulesBlock } from '../_houseRules.js'
 import { webResearch } from '../_enrich.js'
 import { isDeferred } from '../_judges/deferred.js'
@@ -103,21 +103,29 @@ const artifactOf = (i: { idea: string; thesis?: string | null }) => `${i.idea}\n
  * so the judging path stops being the one part of the engine that never looks
  * at it.
  */
-function ownMaterials(idea: Idea): string {
-  const raw = (idea.meta as Record<string, unknown> | null)?.materials
-  if (!Array.isArray(raw)) return ''
-  return raw
-    .map(m => {
-      const o = (m || {}) as Record<string, unknown>
-      const content = typeof o.content === 'string' ? o.content.trim() : ''
-      if (!content) return ''
-      const title = typeof o.title === 'string' && o.title.trim() ? o.title.trim() : 'untitled'
-      const url = typeof o.url === 'string' && o.url.trim() ? ` (${o.url.trim()})` : ''
-      return `### ${title}${url}\n${content.slice(0, 4000)}`
-    })
-    .filter(Boolean)
-    .slice(0, 4)
-    .join('\n\n')
+/**
+ * Labelled by whose it is (walk log F36). This handed every material to the
+ * repair as "Research Krish brought himself", including the engine's own
+ * Perplexity dives and an agent session's filings. His come first, then the
+ * filed sources, then everything else, four at most.
+ */
+export function ownMaterials(idea: Pick<Idea, 'meta'>): string {
+  const all = readMaterials(idea.meta).filter(m => typeof m.content === 'string' && m.content.trim())
+  const his = all.filter(m => materialOwner(m) === 'krish' && !isFiledSource(m))
+  const filed = all.filter(isFiledSource)
+  const rest = all.filter(m => !his.includes(m) && !filed.includes(m))
+  const chosen = [...his, ...filed, ...rest].slice(0, 4)
+  const block = (m: (typeof all)[number]) =>
+    `### ${m.title?.trim() || 'untitled'}${m.url ? ` (${m.url.trim()})` : ''}\n${String(m.content).trim().slice(0, 4000)}`
+  const section = (label: string, list: typeof all) => {
+    const picked = list.filter(m => chosen.includes(m))
+    return picked.length ? `## ${label}\n${picked.map(block).join('\n\n')}` : ''
+  }
+  return [
+    section('Research Krish brought himself', his),
+    section("Sources filed on the piece, each the source's own words", filed),
+    section("Research on file that is not Krish's: the engine's own secondary research or an agent session's notes, to check before use; none of it is his view", rest),
+  ].filter(Boolean).join('\n\n')
 }
 
 /**
@@ -442,7 +450,7 @@ async function repair(
     // keeping and a lookup did not. Same meta.materials[] the composer and
     // revise read, so "research this for me" and "here is my research" reach
     // the judges through one door.
-    ...(own ? ['', '## Research Krish brought himself', own] : []),
+    ...(own ? ['', own] : []),
     ...(research ? ['', '## Research gathered for this fix', research.text,
       research.sources.length ? `\nSources: ${research.sources.join(' | ')}` : ''] : []),
   ].join('\n')
