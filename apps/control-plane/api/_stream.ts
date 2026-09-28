@@ -2,6 +2,7 @@ import type { VercelResponse } from '@vercel/node'
 import { supportsSampling } from './_content.js'
 import { thinkingParam } from './_models.js'
 import * as meter from './_meter.js'
+import { classifyAnthropicFailure, describeFailure, type ProviderFailureClass } from './_modelProvider.js'
 
 /**
  * Server-sent events for the model calls a human sits and waits on.
@@ -43,6 +44,72 @@ export function send(res: VercelResponse, event: string, data: unknown): void {
 
 export function fail(res: VercelResponse, error: string, detail?: string): void {
   send(res, 'error', { error, detail })
+  res.end()
+}
+
+/**
+ * The typed failure of a model call a person was waiting on, the same shape
+ * before and after the stream opens (docs/CONTENT_ENGINE.md, "Driving it from
+ * an agent session"). `error` and `detail` keep the shape Control Center's
+ * stream reader already shows; the rest says what happened in terms a caller
+ * can act on.
+ *
+ * On 2026-09-28 a revise refused for the account's usage limit came back as
+ * HTTP 200 carrying one untyped event, and a session that read the status saw
+ * success (walk log F31).
+ */
+export interface ModelErrorBody {
+  ok: false
+  /** The route's failure, for example `revise_failed`. */
+  error: string
+  /** `provider_<class>` (provider_usage_limit, provider_overload...), or
+   *  `empty_output` when the model answered with no text. */
+  code: string
+  provider_class: ProviderFailureClass | null
+  /** The provider's own words, when it gave any. */
+  message: string | null
+  /** When the provider said access returns, when it said. */
+  reset_at: string | null
+  /** Whether the same request is worth sending again shortly. */
+  retryable: boolean
+  /** One plain sentence. */
+  detail: string
+}
+
+const RETRYABLE: ReadonlySet<ProviderFailureClass> = new Set(['overload', 'rate_limit', 'server', 'timeout'])
+
+/** The body, and the HTTP status a caller gets when the failure is known
+ *  before the stream opens: 429 for a rate limit, 502 for a request the
+ *  provider refused as malformed, 503 for everything that means the provider
+ *  cannot serve the engine now. */
+export function modelFailure(error: string, what: string, e: unknown): { status: number; retryAfterSeconds: number | null; body: ModelErrorBody } {
+  const f = classifyAnthropicFailure(e)
+  const status = f.class === 'rate_limit' ? 429 : f.class === 'request' || f.class === 'unknown' ? 502 : 503
+  const untilReset = f.reset_at ? Math.ceil((Date.parse(f.reset_at) - Date.now()) / 1000) : null
+  const retryAfterSeconds = untilReset !== null && untilReset > 0 ? untilReset : RETRYABLE.has(f.class) ? 30 : null
+  return {
+    status,
+    retryAfterSeconds,
+    body: {
+      ok: false, error, code: `provider_${f.class}`, provider_class: f.class, message: f.message || null,
+      reset_at: f.reset_at, retryable: RETRYABLE.has(f.class), detail: `${what} did not run. ${describeFailure(f)}`,
+    },
+  }
+}
+
+/** The body for a model that answered with nothing: a green transport
+ *  carrying no text is a failure. */
+export function emptyOutput(error: string, what: string): ModelErrorBody {
+  return {
+    ok: false, error, code: 'empty_output', provider_class: null, message: null, reset_at: null, retryable: true,
+    detail: `${what} came back empty, so nothing was produced. Run it again.`,
+  }
+}
+
+/** Send a typed failure as the stream's last event, and end it. No `done`
+ *  event follows, so nothing can read the stream as a success. */
+export function failWith(res: VercelResponse, body: ModelErrorBody): void {
+  send(res, 'error', body)
   res.end()
 }
 

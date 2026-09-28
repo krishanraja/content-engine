@@ -140,6 +140,31 @@ has passed. `POST /api/content-ideas/:id/judge` answers such a panel with 503
 | `POST /api/content-ideas/synthesize` | merges 2 to 25 cards into one `drafting` piece and marks the sources `absorbed` | Sonnet [`cleo-synthesize`] |
 | `/api/briefs/assemble` (cron), `/api/briefs/[week]`, `revise`, `notes` | the weekly brief: one investigative opinion piece plus its decision cards | Sonnet [`briefs-*`] |
 
+**How `revise` answers** (since 2026-09-28, walk log F31). The stream
+opens only once Anthropic has accepted the call. A success is a stream of
+`delta` events (`{ text }`) that ends with `done`
+(`{ ok: true, revised, mode, value, edit_event_id }`); apply `revised`, never
+the deltas. A failure is typed, `ModelErrorBody` in `api/_stream.ts`:
+
+```
+{ "ok": false, "error": "revise_failed",
+  "code": "provider_usage_limit",   // provider_<class>, or empty_output
+  "provider_class": "usage_limit",  // usage_limit, credit, auth, overload, rate_limit,
+                                    // server, timeout, request, unknown; null for empty_output
+  "message": "You have reached your specified API usage limits. ...",  // the provider's words
+  "reset_at": "2026-10-01T00:00:00.000Z",  // when the provider named one, else null
+  "retryable": false,
+  "detail": "The rewrite did not run. Anthropic is over its usage limit ..." }
+```
+
+Known before the stream opens, it is that JSON with status 503 (the provider
+cannot serve the engine now), 429 (rate limit) or 502 (a request it refused
+as malformed), and `Retry-After` when there is a time to give. After the
+stream opens, it is the stream's last event, `event: error` with the same
+body, and no `done` follows. An answer with no text is `empty_output`. A
+failed rewrite writes nothing to `meta.revisions` or the ledger. Read a
+revise response as a success only when it ends with `done` and `ok: true`.
+
 **The fact gate, in practice.** A second model reads every sentence the
 claim lister did not cover (twelve at a time, with its section heading), and
 a sentence is set aside as a joke, scenario, guess or the piece's own
