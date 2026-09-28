@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import { guardSensitiveRead } from '../_auth.js'
 import { CONTENT_ENGINE_JOBS, contentEngineAttention, type ContentEngineRunRow } from '../../lib/contentEngineSchedule.js'
 import { envReadiness } from './_required.js'
+import { publicRunner, readRunnerState } from '../video-studio/_runnerWatch.js'
 
 // The engine says how it is. One read for the dashboard's obligation strip
 // and for a person with curl: the deploy commit, whether the operator guard
@@ -12,6 +13,15 @@ import { envReadiness } from './_required.js'
 // deployment schedules, the last run of each job, and how long the Windows
 // runner has been quiet. Nothing here is pushed anywhere: the OS is
 // pull-only, and this is what gets pulled.
+//
+// Since 2026-09-28 there are two runners, a primary and a cold standby, and
+// only the one with the active role is leased work
+// (supabase/migrations/20260928120000_video_studio_runner_roles.sql). The
+// runner block below is the active runner's; the standby is listed beside it,
+// and retired rows (old bearers, old machines) are left out. Until then this
+// route selected columns the heartbeat table does not have and always said
+// "never". Runners appear by the first eight characters of their hash only:
+// the export bearer can read this route too.
 
 const RUNNER_ABSENT_AFTER_HOURS = 48
 
@@ -62,17 +72,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   const { supabase } = await import('../_supabase.js')
 
-  const [runsResult, heartbeatResult] = await Promise.all([
+  const [runsResult, runnerState] = await Promise.all([
     supabase
       .from('content_engine_runs')
       .select('job, status, reason, finished_at')
       .order('finished_at', { ascending: false })
       .limit(400),
-    supabase
-      .from('video_studio_runner_heartbeats')
-      .select('updated_at, status')
-      .order('updated_at', { ascending: false })
-      .limit(1),
+    readRunnerState(supabase, now),
   ])
 
   const rows = (runsResult.data || []) as ContentEngineRunRow[]
@@ -80,10 +86,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const lastRun = new Map<string, ContentEngineRunRow>()
   for (const row of rows) if (!lastRun.has(row.job)) lastRun.set(row.job, row)
 
-  const heartbeat = heartbeatResult.data?.[0] as { updated_at?: string; status?: string } | undefined
-  const heartbeatAgeHours = heartbeat?.updated_at
-    ? Math.round(((now.getTime() - Date.parse(heartbeat.updated_at)) / 3_600_000) * 10) / 10
-    : null
+  const { roster, waiting, attention: runnerAttention } = runnerState
+  const active = roster.active
+  const activeAgeSeconds = active?.heartbeat_age_seconds ?? null
+  const heartbeatAgeHours = activeAgeSeconds === null ? null : Math.round((activeAgeSeconds / 3600) * 10) / 10
   const runner = heartbeatAgeHours === null
     ? 'never'
     : heartbeatAgeHours > RUNNER_ABSENT_AFTER_HOURS ? 'absent' : heartbeatAgeHours > 24 ? 'quiet' : 'present'
@@ -109,11 +115,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     database_configured: true,
     ...env,
     cron_secret_configured: Boolean(process.env.CRON_SECRET),
-    runner: { state: runner, heartbeat_age_hours: heartbeatAgeHours, status: heartbeat?.status ?? null },
+    // The active runner, in the shape Control Center has always read.
+    runner: {
+      state: runner,
+      heartbeat_age_hours: heartbeatAgeHours,
+      status: active?.runner_status ?? null,
+      drive_state: active?.drive_state ?? null,
+      runner_id_prefix: active?.runner_id_prefix ?? null,
+      basis: roster.active_basis,
+    },
+    runners: {
+      fenced: roster.fenced,
+      active: publicRunner(active),
+      standby: roster.standby.map(publicRunner),
+      unassigned: roster.unassigned.map(publicRunner),
+      retired_count: roster.retired_count,
+      waiting,
+      attention: runnerAttention,
+    },
     schedule_hash: scheduleHash,
     jobs,
     attention,
     unrecorded,
-    read_errors: [runsResult.error?.message, heartbeatResult.error?.message].filter(Boolean),
+    read_errors: [runsResult.error?.message, ...runnerState.errors].filter(Boolean),
   })
 }

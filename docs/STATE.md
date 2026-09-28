@@ -87,6 +87,10 @@ The gaps this left, in order of risk:
   not exist (`updated_at`, `status`) and so always reports the runner as
   `never`; `runner_watch` reads the newest row whichever runner wrote it, and
   counts production briefs in `meta.production_brief`, where none are stored.
+  Fixed in code the same day, live at the next deploy: both read the active
+  runner, list the standby apart, ignore retired rows and count briefs where
+  they are stored (`docs/OPERATIONS.md`, "The runner is quiet"), and Control
+  Center's alert drawer shows the runners.
 - **G4.** Repository defaults pointed at G: (fixed the same day).
 - **G5.** No document described the two machines or the failover (fixed the
   same day: `docs/DEPLOYMENT.md` and `docs/OPERATIONS.md`).
@@ -195,8 +199,9 @@ Engine:
   `shifts_detect` (2026-09-18), `creator_posts` (2026-09-22) and
   `investigations` (2026-09-24) failed; their failure artifacts are in
   `content_engine_run_artifacts`.
-- **Smaller faults.** `content-engine/health` probably selects the wrong
-  heartbeat columns; `chat` meters as `unattributed`; `AEO_ENGINE_SECRET` is
+- **Smaller faults.** `content-engine/health` selected heartbeat columns that
+  do not exist until the fix of 2026-09-28 is deployed (G3 above); `chat`
+  meters as `unattributed`; `AEO_ENGINE_SECRET` is
   missing from `.env.example`; the humour rewrite path ignores the mandate;
   mind.the.gap has no playbook in the corpus; no subchannel has a wordmark.
 

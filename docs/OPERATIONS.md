@@ -359,12 +359,31 @@ and the table's CHECK constraint in step with each other.
 
 **The runner is quiet.**
 
-`GET /api/content-engine/health` reports `runner.state` and
-`heartbeat_age_hours`. The `runner_watch` cron runs daily at 06:30 UTC and
-records `silent_hours` alongside what is queued. Silence with nothing queued is
-not a problem; silence with work waiting is. See "Windows background runner"
-above, and `docs/ENGINE_SECRETS_HANDOVER.md` for the credential failure mode
-that lets a running daemon look healthy while no new one can start.
+`GET /api/content-engine/health` reports the active runner in `runner`
+(`state`, `heartbeat_age_hours`, `status`, `drive_state` and its hash prefix)
+and every runner in `runners`: the active one, the standby apart from it, any
+runner heard in the last week with no role, the number retired, the work
+waiting (queued or leased commands, pending reviews, claimable briefs) and an
+`attention` list. Retired rows are never counted as a runner. Before the roles
+are seeded the runner heard most recently stands in for the active one
+(`runner.basis: latest_heartbeat_unfenced`). The route shows hash prefixes
+only, because the export bearer can read it too; the operator's
+`GET /api/video-studio/runner-roles` has the full hashes.
+
+The `runner_watch` cron runs daily at 06:30 UTC over the same read
+(`api/video-studio/_runnerWatch.ts`) and records `silent_hours` for the active
+runner alongside what is waiting and the standby's age. The rule is unchanged:
+silence with nothing waiting is not a problem; the active runner silent for a
+day with work waiting is, and the run is recorded as failed so the alert
+drawer shows it. A standby's silence is never an alert. The attention list
+also names a standby heartbeating while the active runner is down (switch the
+role if that is the failover you meant), a runner heartbeating with no role
+(after a bearer rotation, switch the active role to the primary's new hash),
+and, before the seed, more than one runner heartbeating at once. Nothing is
+pushed to a chat: Control Center shows it when opened. See "Windows background
+runner" above, and `docs/ENGINE_SECRETS_HANDOVER.md` for the credential
+failure mode that lets a running daemon look healthy while no new one can
+start.
 
 **A cron ran but the ledger says `manual`.**
 
