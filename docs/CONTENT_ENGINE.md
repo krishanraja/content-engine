@@ -178,6 +178,13 @@ body, and no `done` follows. An answer with no text is `empty_output`. A
 failed rewrite writes nothing to `meta.revisions` or the ledger. Read a
 revise response as a success only when it ends with `done` and `ok: true`.
 
+The brief's rewrite, `POST /api/briefs/:week/revise`, answers the same way
+since 2026-09-28 (walk log F40): the stream opens once the provider has
+accepted the call, a refusal before that is the same JSON body with 503, 429
+or 502, and a failure after it is the stream's last event, `error`. Its
+`done` carries `{ ok: true, preview }`, and a preview under 100 characters is
+`empty_output`.
+
 **The fact gate, in practice.** A second model reads every sentence the
 claim lister did not cover (twelve at a time, with its section heading), and
 a sentence is set aside as a joke, scenario, guess or the piece's own
