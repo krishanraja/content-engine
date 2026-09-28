@@ -25,4 +25,18 @@ describe('file-verbatim-source keeps the words and their date', () => {
   test('a pattern that matches nothing is reported, so nothing is filed', () => {
     assert.deepEqual(excerpt(PAGE, [/router/i, /never on this page/i]).unmatched, ['/never on this page/i'])
   })
+  test('link text is filed without the link syntax, and patterns match the words a reader sees', () => {
+    // Walk log F34: piece 1's excerpts kept "[2025 filing](https://...)" and
+    // ",[those Conditions have included](https://...)dedicated".
+    const page = [
+      'Title: amzn-20251231', '',
+      '## [Results](https://www.sec.gov/results) for 2025', '',
+      'Amazon said in its [2025 filing](https://www.sec.gov/Archives/edgar/data/1018724/x.htm) that advertising grew.', '',
+      '![Image 3: a chart of ad revenue](https://example.test/chart.png)',
+    ].join('\n')
+    const { content, unmatched } = excerpt(page, [/its 2025 filing that/, /chart of ad revenue/])
+    assert.deepEqual(unmatched, [])
+    assert.equal(content, 'Title: amzn-20251231\n\n## Results for 2025\n\nAmazon said in its 2025 filing that advertising grew.\n\nImage 3: a chart of ad revenue')
+    assert.doesNotMatch(content, /\]\(|https?:/)
+  })
 })

@@ -171,7 +171,8 @@ a sentence is set aside as a joke, scenario, guess or the piece's own
 prediction only when both readings agree; a sentence with a number is never
 set aside unless it reads as a forecast. Sources are strongest filed word for
 word: `apps/control-plane/scripts/file-verbatim-source.ts` files a page's own
-words (title, dates, matching passages) with its URL. The word-for-word
+words (title, dates, matching passages) with its URL, link text as plain words
+without the markdown link syntax (walk log F34). The word-for-word
 comparison reads markdown link syntax as the words a reader sees
 ("[2025 filing](https://...)" is "2025 filing"), and a claim's numbers must be
 in those words, never only in a link's address (walk log F33). A research

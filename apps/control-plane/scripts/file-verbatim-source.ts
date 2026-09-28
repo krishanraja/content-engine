@@ -20,13 +20,21 @@
 // "Verbatim" means that text, copied exactly. Env: ENGINE_OPERATOR_TOKEN, and
 // ENGINE_URL (defaults to production).
 
+import { stripMarkdownLinks } from '../api/_text.js'
+
 const ENGINE = process.env.ENGINE_URL || 'https://content-engine-flame-nu.vercel.app'
 
 /** The lines to keep, in page order: the title and date lines, every line
  *  matching a pattern, and for each match the nearest heading above it and
- *  the first heading above that which carries a year. Pure, so it is tested. */
+ *  the first heading above that which carries a year. Pure, so it is tested.
+ *
+ *  Links are filed as their words: "[2025 filing](https://...)" is filed as
+ *  "2025 filing", and a pattern is matched against the words a reader sees.
+ *  The reader keeps the page's markdown links, and a checker quoting the
+ *  visible words then failed "word for word" (walk log F34). The page's own
+ *  address is filed with the excerpt, so nothing is lost. */
 export function excerpt(text: string, patterns: RegExp[]): { content: string; unmatched: string[] } {
-  const lines = String(text || '').split('\n')
+  const lines = String(text || '').split('\n').map(stripMarkdownLinks)
   const keep = new Set<number>()
   lines.forEach((l, i) => { if (/^(Title|Published( Time)?|Updated)\b/i.test(l.trim())) keep.add(i) })
   const unmatched: string[] = []
