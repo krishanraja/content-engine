@@ -111,6 +111,73 @@ describe('guardEngine', () => {
   })
 })
 
+// ── the health route: the operator bearer may read it ──────────────────────
+//
+// An agent session drives the engine on the operator bearer, and until
+// 2026-09-28 health refused it (401), so a session could not see that the
+// model provider had been refusing every call for 33 hours (walk log F30).
+// Health admits it by the same check guardEngine makes, and every refusal it
+// made before still stands.
+
+const EXPORT = 'vse_' + 'e'.repeat(40)
+
+async function sensitive(env: Parameters<typeof withEnv>[0], req: Record<string, unknown>, operatorBearer: boolean) {
+  return withEnv(env, async () => {
+    const previous = process.env.VIDEO_STUDIO_EXPORT_TOKEN
+    process.env.VIDEO_STUDIO_EXPORT_TOKEN = EXPORT
+    try {
+      const { guardSensitiveRead } = await import('../../apps/control-plane/api/_auth.js')
+      const { res, out } = fakeRes()
+      const stopped = guardSensitiveRead({ method: 'GET', headers: {}, ...req } as never, res as never, ['GET'], { operatorBearer })
+      return { stopped, ...out }
+    } finally {
+      if (previous === undefined) delete process.env.VIDEO_STUDIO_EXPORT_TOKEN
+      else process.env.VIDEO_STUDIO_EXPORT_TOKEN = previous
+    }
+  })
+}
+
+describe('GET /api/content-engine/health', () => {
+  test('the operator bearer reads it; the cookie and the export bearer still do', async () => {
+    assert.equal((await sensitive({ ENGINE_OPERATOR_TOKEN: TOKEN }, { headers: { authorization: `Bearer ${TOKEN}` } }, true)).stopped, false)
+    assert.equal((await sensitive({ ACCESS_CODE: CODE }, { headers: { cookie: COOKIE } }, true)).stopped, false)
+    assert.equal((await sensitive({}, { headers: { authorization: `Bearer ${EXPORT}` } }, true)).stopped, false)
+  })
+
+  test('the route itself asks for the operator arm, and no other sensitive read gains it', () => {
+    const health = readFileSync(join(API, 'content-engine/health.ts'), 'utf8')
+    assert.match(health, /guardSensitiveRead\(req, res, \['GET'\], \{ operatorBearer: true \}\)/)
+    const seeds = readFileSync(join(API, 'content-seed-candidates.ts'), 'utf8')
+    assert.doesNotMatch(seeds, /operatorBearer/)
+  })
+
+  test('without the opt-in, the operator bearer is refused as before', async () => {
+    const r = await sensitive({ ENGINE_OPERATOR_TOKEN: TOKEN }, { headers: { authorization: `Bearer ${TOKEN}` } }, false)
+    assert.equal(r.stopped, true)
+    assert.equal(r.status, 401)
+  })
+
+  test('every refusal it made before still stands', async () => {
+    await withEnv({ ACCESS_CODE: CODE, ENGINE_OPERATOR_TOKEN: TOKEN, CRON_SECRET: 'cs_' + 'f'.repeat(32) }, async () => {
+      const { default: handler } = await import('../../apps/control-plane/api/content-engine/health.js')
+      const call = async (headers: Record<string, string>, method = 'GET') => {
+        const { res, out } = fakeRes()
+        await handler({ method, headers, query: {} } as never, res as never)
+        return out.status
+      }
+      assert.equal(await call({}), 401, 'no credentials')
+      assert.equal(await call({ authorization: 'Bearer eot_wrong' }), 401, 'a wrong bearer')
+      assert.equal(await call({ authorization: `Bearer ${'cs_' + 'f'.repeat(32)}` }), 401, 'the cron secret')
+      assert.equal(await call({ cookie: 'cc_access=' + 'f'.repeat(64) }), 401, 'a wrong cookie')
+      assert.equal(await call({ authorization: `Bearer ${TOKEN}` }, 'POST'), 405, 'a write')
+    })
+    // An unset token never matches, even an empty bearer.
+    const empty = await sensitive({ ENGINE_OPERATOR_TOKEN: '' }, { headers: { authorization: 'Bearer ' } }, true)
+    assert.equal(empty.stopped, true)
+    assert.equal(empty.status, 401)
+  })
+})
+
 // ── every handler, called for real ────────────────────────────────────────
 
 const API = join(__dirname, '../../apps/control-plane/api')
@@ -146,6 +213,26 @@ describe('every idea route', () => {
       return /\bpreamble\(req/.test(src) || /Access-Control-Allow-Origin', '\*'/.test(src)
     })
     assert.deepEqual(open.map(f => relative(API, f)), [])
+  })
+
+  test('a read of one piece is refused without credentials, and reaches the route on the operator bearer', async () => {
+    // GET /api/content-ideas?id= (walk log F32): an agent session reads a body
+    // before it saves one, through the same gate as the writes.
+    await withEnv({ ACCESS_CODE: CODE, ENGINE_OPERATOR_TOKEN: TOKEN, CRON_SECRET: 'cs_' + 'd'.repeat(32) }, async () => {
+      const { default: handler } = await import(join(API, 'content-ideas.ts'))
+      const call = async (headers: Record<string, string>, query: Record<string, string>) => {
+        const { res, out } = fakeRes()
+        await handler({ method: 'GET', headers, query, body: {} }, res)
+        return out.status
+      }
+      const id = '00000000-0000-4000-8000-000000000000'
+      assert.equal(await call({}, { id }), 401, 'no credentials')
+      assert.equal(await call({ authorization: `Bearer ${'cs_' + 'd'.repeat(32)}` }, { id }), 401, 'the cron secret')
+      assert.equal(await call({ authorization: 'Bearer eot_wrong' }, { id }), 401, 'a wrong bearer')
+      // Through the gate: no id is the route's own 400, before any read.
+      assert.equal(await call({ authorization: `Bearer ${TOKEN}` }, {}), 400)
+      assert.equal(await call({ cookie: COOKIE }, { id: 'not-a-uuid' }), 400)
+    })
   })
 
   test('each one refuses a request that carries no credentials', async () => {

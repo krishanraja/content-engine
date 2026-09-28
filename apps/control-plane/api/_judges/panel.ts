@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { callClaude, robustJson, type ClaudeCall } from '../_content.js'
 import { JUDGE_MODEL } from '../_models.js'
+import { classifyAnthropicFailure, ModelUnavailableError, worstFailure } from '../_modelProvider.js'
 import { isDeferred } from './deferred.js'
 import {
   CONTESTED_POINTS, MATERIAL_DISAGREEMENT_POINTS, ROSTER_VERSION, ROUTER_FIT_FLOOR, ROUTER_TIEBREAK,
@@ -278,6 +279,9 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
   const artifact = [input.gate === 'idea' ? '## The idea' : '## The draft', input.artifact].join('\n')
 
   const call = input.call || callClaude
+  // Why each judge that could not be reached could not be reached. See the
+  // check after the fan-out: when it is every judge, the run failed.
+  const errors: unknown[] = []
   const results = await Promise.all(roster.map(async judge => {
     try {
       const raw = await call({
@@ -302,6 +306,7 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
       if (isDeferred(e)) throw e
       // One judge failing is not the panel failing. It abstains, visibly, and
       // the rest still report.
+      errors.push(e)
       return {
         judge: judge.key,
         score: null,
@@ -315,6 +320,22 @@ export async function runPanel(input: PanelInput): Promise<PanelResult> {
       }
     }
   }))
+
+  // ── EVERY JUDGE FAILING IS A FAILED RUN ─────────────────────────────────
+  //
+  // From 2026-09-27 10:00 UTC the Anthropic account was over its usage limit.
+  // Each judge's refusal became an abstention "the judge could not be
+  // reached", standing() read the panel as `unjudged`, and the rows were
+  // written: 8,046 blank verdicts that day and 11,079 the next, and a sweep
+  // that logged `ok` every ten minutes while judging nothing. An abstention
+  // is a judge that read the piece and declined, and here no judge read
+  // anything. So the run fails, with what the provider said, and nothing is
+  // written for it. A judge that ran and declined, or returned
+  // something unreadable, still abstains exactly as before.
+  if (roster.length > 0 && errors.length === roster.length) {
+    const failure = worstFailure(errors.map(e => classifyAnthropicFailure(e)))
+    if (failure) throw new ModelUnavailableError(failure, 'panel', roster.length)
+  }
 
   const verdicts = [...deterministic, ...results]
   const { spread, dissent } = summarise(verdicts)

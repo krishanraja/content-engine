@@ -51,13 +51,28 @@ export interface Material {
 }
 
 /** Whose a material is, for the label the writer sees. Engine research
- *  (dive-deeper, deepen, investigations) is the engine's; anything an agent
+ *  (dive-deeper, deepen, investigations, whoever pressed the button) and the
+ *  shift dossier the engine writes are the engine's; anything an agent
  *  session added is that agent's; the rest is Krish's. */
 export function materialOwner(m: Material): 'krish' | 'engine' | string {
+  if (m.kind === 'research' || (m.kind as string) === 'note') return 'engine'
   if (m.by && m.by !== 'Krish') return m.by
-  if (m.kind === 'research' && !m.by) return 'engine'
   return 'krish'
 }
+
+/** A filed source: the source's own words, pasted with the page they came
+ *  from (file-verbatim-source.ts, or /materials with `verbatim: true`). */
+export function isFiledSource(m: Material): boolean {
+  return m.verbatim === true && Boolean(m.url) && Boolean((m.content || '').trim())
+}
+
+/** How much of the filed sources every reader of materials sees, in full,
+ *  before any summary. The final pass's whole materials budget was 16,000
+ *  characters and the fact gate reads 120,000, while the drafter and the
+ *  rewriter saw 9,000 of everything, newest first, stopping at the first
+ *  item that did not fit, so a writer could miss a source the checkers then
+ *  held it to (walk log F36). */
+export const FILED_SOURCES_BUDGET = 24_000
 
 /** Read the materials a piece carries (lives in content_ideas.meta.materials). */
 export function readMaterials(meta: any): Material[] {
@@ -65,38 +80,61 @@ export function readMaterials(meta: any): Material[] {
   return m.filter((x: any) => x && typeof x === 'object')
 }
 
-/** Compact the corpus into a grounding block for the model. Truncates each item
- *  and the whole block so a large corpus never blows the context budget.
+/** Compact the corpus into a grounding block for the model.
+ *
+ *  Filed sources come first, each in full, up to FILED_SOURCES_BUDGET: they
+ *  are what the fact gate holds a piece to. Everything else follows, cut to
+ *  `perItem` each and `total` in all; an item that does not fit is named as
+ *  trimmed and the next one is still tried.
  *
  *  Until 2026-09-25 every material was introduced as "BACKGROUND MATERIALS
  *  Krish provided (his own research)", including research the engine fetched
  *  itself and anything an agent session attached (walk finding F12). A writer
- *  told that a claim is Krish's own research treats it as his position. Now
- *  only what Krish put on the piece carries his name; the rest is labelled by
- *  who gathered it, and is a source to check claims against, never his view. */
+ *  told that a claim is Krish's own research treats it as his position. Only
+ *  what Krish put on the piece carries his name. The engine's own research
+ *  (the dive-deeper summaries of Perplexity answers, deepen, investigations)
+ *  is labelled as its secondary research, to be checked against the filed
+ *  sources before a writer uses it (walk log F36). */
 export function materialsContext(materials: Material[], perItem = 2400, total = 9000): string {
   if (!materials.length) return ''
+  const out: string[] = []
+  const who = (m: Material) => {
+    const owner = materialOwner(m)
+    return owner === 'krish' ? 'Krish' : owner === 'engine' ? 'the engine' : `an agent session (${owner})`
+  }
+
+  const filed: string[] = []
+  const unshown: string[] = []
+  let filedUsed = 0
+  for (const m of materials.filter(isFiledSource)) {
+    const block = `### ${m.title || 'filed source'} (${m.url})\nfiled by ${who(m)}\n${(m.content || '').trim()}`
+    if (filedUsed + block.length > FILED_SOURCES_BUDGET) { unshown.push(`${m.title || m.url} (${(m.content || '').length} chars)`); continue }
+    filed.push(block)
+    filedUsed += block.length
+  }
+  if (filed.length || unshown.length) {
+    out.push(`FILED SOURCES, each the source's own words, copied from the page at its URL. Ground every fact in these, and quote only what is here:\n\n${filed.join('\n\n')}` +
+      (unshown.length ? `\n\n[filed but not shown, over the ${FILED_SOURCES_BUDGET} character budget: ${unshown.join('; ')}]` : ''))
+  }
+
   const groups = new Map<string, string[]>()
   let used = 0
-  let full = false
-  for (const m of materials) {
-    if (full) break
+  for (const m of materials.filter(x => !isFiledSource(x))) {
     const head = m.title ? `### ${m.title}` : `### ${m.kind} material`
     const bodyRaw = m.kind === 'link' ? (m.url || '') : (m.content || '')
-    const body = bodyRaw.slice(0, perItem)
-    let block = `${head}\n${body}`.trim()
-    if (used + block.length > total) { block = `${head}\n[trimmed, ${bodyRaw.length} chars]`; full = true }
+    let block = `${head}\n${bodyRaw.slice(0, perItem)}`.trim()
+    if (used + block.length > total) block = `${head}\n[trimmed, ${bodyRaw.length} chars]`
     else used += block.length
     const owner = materialOwner(m)
     groups.set(owner, [...(groups.get(owner) || []), block])
   }
-  const out: string[] = []
   const krish = groups.get('krish')
   if (krish) out.push(`BACKGROUND MATERIALS Krish provided (his own research, treat as primary source, ground claims in it, never invent beyond it):\n\n${krish.join('\n\n')}`)
+  const engine = groups.get('engine')
+  if (engine) out.push(`THE ENGINE'S OWN SECONDARY RESEARCH: summaries of web searches the engine ran itself (Perplexity dives and the like). Krish did not provide them, and they are not a primary source. Check each line against the filed sources before you use it, and never present any of it as his view or his words.\n\n${engine.join('\n\n')}`)
   for (const [owner, parts] of groups) {
-    if (owner === 'krish') continue
-    const who = owner === 'engine' ? 'the engine' : `an agent session (${owner})`
-    out.push(`RESEARCH ON FILE, gathered by ${who}, not by Krish (sources to ground and check claims against; never present any of it as his view or his words):\n\n${parts.join('\n\n')}`)
+    if (owner === 'krish' || owner === 'engine') continue
+    out.push(`RESEARCH ON FILE, gathered by an agent session (${owner}), not by Krish (a secondary source to check claims against the filed sources; never present any of it as his view or his words):\n\n${parts.join('\n\n')}`)
   }
   return out.join('\n\n')
 }
@@ -631,6 +669,10 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
   const model = opts.model || UTILITY_MODEL
   const ctrl = new AbortController()
   const tid = opts.timeoutMs ? setTimeout(() => ctrl.abort(), opts.timeoutMs) : null
+  // Every failure is metered once: a refusal below, a timeout or a transport
+  // error in the catch. Until 2026-09-28 none was, so a key that answered
+  // nothing for 33 hours showed `failed = 0` (api/_meter.ts).
+  let metered = false
   try {
     const r = await fetchWithRetry('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -656,6 +698,8 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
       }
       e.status = r.status
       e.body = JSON.stringify(j?.error || j || {}).slice(0, 400)
+      metered = true
+      await meter.anthropicFailure({ agent: opts.agent, model, usage: j?.usage, error: e })
       throw e
     }
     const inputTokens = Number(j?.usage?.input_tokens) || 0
@@ -672,8 +716,9 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
     await meter.anthropicCall({ agent: opts.agent, model, usage: j?.usage })
     return firstText(j)
   } catch (e: unknown) {
-    if ((e as Error)?.name === 'AbortError') throw new Error(`anthropic_timeout_${opts.timeoutMs}ms`)
-    throw e
+    const out = (e as Error)?.name === 'AbortError' ? new Error(`anthropic_timeout_${opts.timeoutMs}ms`) : e
+    if (!metered) await meter.anthropicFailure({ agent: opts.agent, model, error: out })
+    throw out
   } finally {
     if (tid) clearTimeout(tid)
   }
@@ -721,7 +766,11 @@ export async function callClaudeMessages(
     }),
   })
   const j: any = await r.json().catch(() => ({}))
-  if (!r.ok) throw new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 120)}`)
+  if (!r.ok) {
+    const e = Object.assign(new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 120)}`), { status: r.status })
+    await meter.anthropicFailure({ agent: opts.agent, model, usage: j?.usage, error: e })
+    throw e
+  }
   await meter.anthropicCall({
     agent: opts.agent,
     model,
@@ -797,7 +846,11 @@ export async function callClaudeBlocks(
     }),
   })
   const j: any = await r.json().catch(() => ({}))
-  if (!r.ok) throw new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`)
+  if (!r.ok) {
+    const e = Object.assign(new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`), { status: r.status })
+    await meter.anthropicFailure({ agent: opts.agent, model, usage: j?.usage, error: e })
+    throw e
+  }
   const inputTokens = Number(j?.usage?.input_tokens) || 0
   const outputTokens = Number(j?.usage?.output_tokens) || 0
   await meter.anthropicCall({ agent: opts.agent, model, usage: j?.usage, inputTokens, outputTokens })

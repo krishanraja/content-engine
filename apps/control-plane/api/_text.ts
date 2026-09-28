@@ -6,6 +6,20 @@ import { createHash } from 'node:crypto'
 // idea-capture insert, which is the root cause of the duplicate-storm in the
 // Content triage.
 
+/** Markdown link syntax reduced to the words a reader sees.
+ *
+ *  "[2025 filing](https://sec.gov/...)" is "2025 filing", and an image is its
+ *  alt text. The r.jina.ai reader keeps links in the pages it returns, so a
+ *  verbatim excerpt carries them, and a checker quoting the visible words
+ *  failed "word for word" against it (walk log F33, piece 1: three of fifteen
+ *  passages). Used by the fact gate's comparison and by the filer's excerpt.
+ *  Reference-style links and bare URLs are left as they are. */
+export function stripMarkdownLinks(s: string): string {
+  return String(s ?? '')
+    .replace(/!\[([^\]]*)\]\((?:[^()\s]|\([^()\s]*\))*(?:\s+"[^"]*")?\)/g, '$1')
+    .replace(/\[([^\]]*)\]\((?:[^()\s]|\([^()\s]*\))*(?:\s+"[^"]*")?\)/g, '$1')
+}
+
 /** Normalized title fingerprint for near-dup collapse. Lower-case, punctuation
  *  collapsed to spaces, capped at 64 chars. */
 export function fingerprint(s: string): string {

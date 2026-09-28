@@ -29,7 +29,8 @@
 // its link, and "one source" is said wherever there was one.
 
 import { createHash } from 'node:crypto'
-import { sanitizeVoice } from './_content.js'
+import { readMaterials, sanitizeVoice } from './_content.js'
+import { stripMarkdownLinks } from './_text.js'
 
 export type ClaimKind = 'number' | 'date' | 'quote' | 'attribution' | 'event' | 'name' | 'other' | 'unclassified'
 export type OnFileVerdict = 'supported' | 'contradicted' | 'not_found'
@@ -91,9 +92,10 @@ export function bodyHash(body: string): string {
   return createHash('sha256').update(text).digest('hex')
 }
 
-/** Lowercase, straight quotes and apostrophes, no markdown emphasis, one space. */
+/** Lowercase, straight quotes and apostrophes, no markdown emphasis or link
+ *  syntax ("[2025 filing](https://...)" reads "2025 filing"), one space. */
 export function norm(s: string): string {
-  return String(s || '')
+  return stripMarkdownLinks(String(s || ''))
     .toLowerCase()
     .replace(/[‘’‛′]/g, "'")
     .replace(/[“”‟″]/g, '"')
@@ -145,6 +147,61 @@ export function numbersIn(s: string): string[] {
 /** Where one source ends and the next begins in the text the checkers read. */
 export const SOURCE_MARK = '### SOURCE: '
 
+/** The most of the sources the checkers read. */
+export const SOURCES_BUDGET = 120_000
+
+/** Everything the piece was written from, as plain text the quotes must come
+ *  from. Each source starts with SOURCE_MARK. A verbatim excerpt is headed by
+ *  its URL alone: its title is the filer's words, and a date in it must not
+ *  pass for the source's.
+ *
+ *  A research dive (dive-deeper, research-topic) is stored as
+ *  `{ query, findings, citations, at }` in meta.deep_dives, and dive-deeper
+ *  also files its findings as a `research` material. This read `question`
+ *  and `sources`, which no writer stores, so a dive's question and its URLs
+ *  never reached the checkers, and its findings came in twice, spending the
+ *  budget twice (walk log F33). Each summary is now read once, under the
+ *  names it is stored with; the older names are still read if a row has
+ *  them. */
+export function sourcesText(meta: Record<string, any>): string {
+  const parts: string[] = []
+  const materials = readMaterials(meta)
+  for (const m of materials) {
+    const body = m.kind === 'link' ? (m.url || '') : (m.content || '')
+    if (body.trim()) parts.push(`${SOURCE_MARK}${m.verbatim && m.url ? `verbatim excerpt from ${m.url}` : (m.title || m.kind)}\n${body}`)
+  }
+  const stories = Array.isArray(meta.adjacent_stories) ? meta.adjacent_stories : []
+  for (const s of stories) parts.push(`${SOURCE_MARK}${s?.title || 'source'} (${s?.published_date_iso || 'undated'}) ${s?.url || ''}\n${s?.why_relevant || ''}\n${s?.summary || ''}`)
+  const research = meta.research
+  if (Array.isArray(research)) for (const r of research) parts.push(`${SOURCE_MARK}research\n${typeof r === 'string' ? r : `${r?.title || ''} ${r?.url || ''}\n${r?.summary || r?.text || ''}`}`)
+  else if (typeof research === 'string') parts.push(`${SOURCE_MARK}research\n${research}`)
+  const dives = Array.isArray(meta.deep_dives) ? meta.deep_dives : []
+  for (const d of dives) {
+    if (typeof d === 'string') { parts.push(`${SOURCE_MARK}deep dive\n${d}`); continue }
+    const findings = String(d?.findings || d?.answer || '')
+    if (diveOnFile(d, findings, materials)) continue
+    const question = String(d?.query || d?.question || '')
+    const links = Array.isArray(d?.citations) ? d.citations : Array.isArray(d?.sources) ? d.sources : []
+    parts.push(`${SOURCE_MARK}deep dive${question ? `: ${question}` : ''}\n${findings}${links.length ? `\n\nSources:\n${links.join('\n')}` : ''}`)
+  }
+  return parts.filter(p => p && p.trim()).join('\n\n').slice(0, SOURCES_BUDGET)
+}
+
+/** Whether a dive's findings are already on the piece as the material
+ *  dive-deeper filed for it: the same time, or the same opening words. */
+function diveOnFile(d: Record<string, any>, findings: string, materials: ReturnType<typeof readMaterials>): boolean {
+  const head = findings.trim().slice(0, 200)
+  return materials.some(m => m.kind === 'research' && (
+    (typeof d?.at === 'string' && d.at === m.at) || (head.length >= 40 && String(m.content || '').trim().startsWith(head))
+  ))
+}
+
+/** Only the verbatim excerpts: the sources' own words, not anyone's summary. */
+export function primaryText(meta: Record<string, any>): string {
+  return readMaterials(meta).filter(m => m.verbatim === true && m.content)
+    .map(m => `${SOURCE_MARK}verbatim excerpt from ${m.url}\n${m.content}`).join('\n\n')
+}
+
 /** The dated context above a passage in its own source: the headings and
  *  "Published" lines above it, nearest first, up to and including the first
  *  one that carries a year, and never past the source's start. A release note
@@ -189,10 +246,13 @@ export function quotesFail(quotes: Array<string | null> | null, sourcesText: str
   for (const q of list) {
     if (!inOrder(unspaced(norm(q)), src)) return `passage not found word for word in the sources: "${q.slice(0, 80)}"`
   }
-  const carried = new Set(list.flatMap(numbersIn))
+  // Numbers are read from the words a reader sees. A link's address is not
+  // the passage: "[the filing](https://sec.gov/.../2025/68635.htm)" carries
+  // neither 2025 nor 68635.
+  const carried = new Set(list.flatMap(q => numbersIn(stripMarkdownLinks(q))))
   let missing = numbersIn(claim).filter(n => !carried.has(n))
   if (missing.length) {
-    for (const line of datedContext(sourcesText, list[0])) numbersIn(line).forEach(n => carried.add(n))
+    for (const line of datedContext(sourcesText, list[0])) numbersIn(stripMarkdownLinks(line)).forEach(n => carried.add(n))
     missing = missing.filter(n => !carried.has(n))
   }
   return missing.length ? `the passages do not carry ${missing.join(', ')}` : null

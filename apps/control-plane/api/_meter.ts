@@ -1,4 +1,5 @@
 import { priceUsd, priceUsdDetailed, priceUsdUncached, readUsage, isPriced, type TokenUsage } from './_prices.js'
+import { classifyAnthropicFailure, noteAnthropicSuccess, recordAnthropicFailure, type ProviderFailure } from './_modelProvider.js'
 
 /**
  * Supabase, lazily.
@@ -334,6 +335,14 @@ export async function anthropicCall(e: {
   /** A call that errored after tokens were produced still cost money. */
   failed?: boolean
   /**
+   * What the provider said when the call failed. With `failed`, the failure is
+   * classified (usage limit, overload...) and kept where the health endpoint
+   * and the judge sweep read it (api/_modelProvider.ts). Only for a single
+   * in-process call: a reporter posting another process's totals has no error
+   * of ours to record.
+   */
+  error?: unknown
+  /**
    * How many calls this usage total covers. Defaults to 1, which is every
    * in-process site: one call, one usage object, one run.
    *
@@ -370,7 +379,6 @@ export async function anthropicCall(e: {
     : { input: e.inputTokens || 0, output: e.outputTokens || 0 }
   const cached = (u.cacheRead || 0) + (u.cacheWrite5m || 0) + (u.cacheWrite1h || 0)
   const tokens = u.input + u.output + cached
-  if (!tokens) return
   // Bounded rather than trusted. A discount above 1 would be a surcharge and a
   // discount of 0 would make a real spend disappear from the meter, which is
   // the one failure a spend surface may never have.
@@ -384,6 +392,16 @@ export async function anthropicCall(e: {
   const failedRuns = e.failedCalls === undefined
     ? (e.failed ? 1 : 0)
     : Math.max(0, Math.trunc(Number(e.failedCalls) || 0))
+  // A FAILED CALL IS COUNTED EVEN WHEN IT PRODUCED NOTHING.
+  //
+  // This returned early on zero tokens, and a refused call has zero tokens:
+  // from 2026-09-27 10:00 UTC every Anthropic call the engine made was refused
+  // for the account's usage limit, and meter_daily recorded none of them, so
+  // `failed` read 0 for a key that had not answered for 33 hours. A failure
+  // now adds a run and a failure to its key and day, and no cost unless the
+  // provider reported usage. Only a call with neither tokens nor a failure is
+  // still skipped: there is nothing to say about it.
+  if (!tokens && !failedRuns) return
   await add({
     provider: 'anthropic',
     unitKind: 'agent',
@@ -401,4 +419,33 @@ export async function anthropicCall(e: {
     cacheWriteTokens: (u.cacheWrite5m || 0) + (u.cacheWrite1h || 0),
     day: e.day,
   })
+  // What the provider is doing, kept for health and the judge sweep. Single
+  // in-process calls only: `calls` is how a reporter (the AEO engine, a batch
+  // drain) posts totals for calls this process did not see fail or succeed.
+  if (e.calls !== undefined) return
+  if (failedRuns && e.error !== undefined) {
+    await recordAnthropicFailure({ ...classifyAnthropicFailure(e.error), agent: normalizeAgent(e.agent), model: e.model })
+  } else if (!failedRuns && tokens) {
+    await noteAnthropicSuccess()
+  }
+}
+
+/**
+ * Record one failed Anthropic call: a run and a failure on its key and day,
+ * no cost unless the provider reported usage, and the failure itself where
+ * health reads it. Returns the classified failure, so a route can say what
+ * happened in its own response. Never throws.
+ */
+export async function anthropicFailure(e: {
+  agent?: string | null
+  model: string
+  error: unknown
+  /** The usage the provider reported before it failed, if any. */
+  usage?: unknown
+}): Promise<ProviderFailure> {
+  const failure = classifyAnthropicFailure(e.error)
+  try {
+    await anthropicCall({ agent: e.agent, model: e.model, usage: e.usage ?? null, failed: true, error: e.error })
+  } catch { /* metering is never load-bearing */ }
+  return failure
 }

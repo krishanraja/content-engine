@@ -36,7 +36,7 @@ modules live under `apps/control-plane/api/`.
 |---|---|---|
 | Control Center (Krish in a browser) | `controlcenter.krishraja.com/api/...`, rewritten by control-center's `vercel.json` to this project, same path | the `cc_access` cookie (sha256 of `ACCESS_CODE`), so `ACCESS_CODE`, `APP_ORIGIN` and the CSRF secret must be byte-identical on both projects |
 | Vercel cron | this project's own `vercel.json` crons | `Bearer CRON_SECRET` |
-| An agent session with no browser (Claude Code, Codex) | straight to this project's URL | `Bearer ENGINE_OPERATOR_TOKEN` on the routes behind `guardEngine` |
+| An agent session with no browser (Claude Code, Codex) | straight to this project's URL | `Bearer ENGINE_OPERATOR_TOKEN` on the routes behind `guardEngine`, and on `GET /api/content-engine/health` |
 | The Windows runner | `/api/video-studio/runner/*` via Control Center's origin | `Bearer VIDEO_STUDIO_RUNNER_TOKEN`, receipts HMAC-signed |
 | The Studio MCP gateway | `/api/video-studio/mcp` | `Bearer VIDEO_STUDIO_MCP_TOKEN` |
 | The AEO engine (GitHub Actions) | `/api/aeo/ingest`, `/api/aeo/context`, `/api/aeo/meter` | `Bearer AEO_ENGINE_SECRET` |
@@ -54,7 +54,7 @@ this project's own URL.
 | `guardCronRoute` | GET: `Bearer CRON_SECRET` only. POST: the secret or the cookie | the POST arm lets everyone in when `ACCESS_CODE` is unset |
 | `guard` | the cookie | lets everyone in when `ACCESS_CODE` is unset |
 | `guardOperatorOrCron` | the cookie or `Bearer CRON_SECRET` | refuses |
-| `guardSensitiveRead` | the cookie or `Bearer VIDEO_STUDIO_EXPORT_TOKEN`, 60 a minute | refuses |
+| `guardSensitiveRead` | the cookie or `Bearer VIDEO_STUDIO_EXPORT_TOKEN`, 60 a minute; a route that opts in (health only) also takes `Bearer ENGINE_OPERATOR_TOKEN`, by the check `guardEngine` makes | refuses |
 | `guardBearerExport(ENV)` | `Bearer $ENV`, 60 a minute | refuses |
 | `preamble` (`api/_content.ts`) | anyone; it only checks the method | no auth at all |
 | Studio read and mutation | the cookie; a mutation also needs Origin equal to `APP_ORIGIN` and an HMAC CSRF header | 503 |
@@ -108,6 +108,23 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
 
+**When the judges cannot reach the model** (since 2026-09-28, walk log F28).
+A panel on which every model judge failed with an error is a failed run
+(`ModelUnavailableError`, `api/_modelProvider.ts`): no `panel_runs` or
+`judge_verdicts` row is written for it, and the idea keeps its last real
+reading. A judge that ran and declined still abstains and is written as
+before. The ladder records on the idea only when to try again,
+`meta.ladder_failure` (the provider's class and words, attempts, `retry_after`,
+pinned to the idea's text): a usage limit waits for the reset the provider
+named, a refused key or spent balance an hour, anything transient half an
+hour doubling to a day, and every judge abstaining the same. Editing the idea
+ends the wait. A refusal of every call (usage limit, credit, key) stops the
+pass at that idea. The sweep then fails its tick with the provider's words,
+and each later tick reads the recorded failure first and fails at once,
+without a call, until the reset (or an hour, for a refusal with no reset)
+has passed. `POST /api/content-ideas/:id/judge` answers such a panel with 503
+`model_unavailable` and records nothing.
+
 ### 3. Drafting and iteration
 
 | Route | What it does | Model |
@@ -123,13 +140,58 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `POST /api/content-ideas/synthesize` | merges 2 to 25 cards into one `drafting` piece and marks the sources `absorbed` | Sonnet [`cleo-synthesize`] |
 | `/api/briefs/assemble` (cron), `/api/briefs/[week]`, `revise`, `notes` | the weekly brief: one investigative opinion piece plus its decision cards | Sonnet [`briefs-*`] |
 
+**What the writers read of the materials** (`materialsContext` in
+`api/_content.ts`, since 2026-09-28, walk log F36). Filed sources come first,
+each in full, up to 24,000 characters (the final pass's whole budget was
+16,000 and the fact gate reads 120,000); one that does not fit is named as
+not shown, and the next is still tried. Everything else follows at the
+caller's budget (the drafter and the rewriter: 2,400 characters each, 9,000
+in all), under a label saying whose it is: "BACKGROUND MATERIALS Krish
+provided ... treat as primary source" only for what he put on the piece; the
+engine's own dives, deepen and investigation research, and the shift dossier
+as "THE ENGINE'S OWN SECONDARY RESEARCH", which a writer checks against the
+filed sources before using; an agent session's other notes as research on
+file. The ladder's repair reads the same three labels.
+
+**How `revise` answers** (since 2026-09-28, walk log F31). The stream
+opens only once Anthropic has accepted the call. A success is a stream of
+`delta` events (`{ text }`) that ends with `done`
+(`{ ok: true, revised, mode, value, edit_event_id }`); apply `revised`, never
+the deltas. A failure is typed, `ModelErrorBody` in `api/_stream.ts`:
+
+```
+{ "ok": false, "error": "revise_failed",
+  "code": "provider_usage_limit",   // provider_<class>, or empty_output
+  "provider_class": "usage_limit",  // usage_limit, credit, auth, overload, rate_limit,
+                                    // server, timeout, request, unknown; null for empty_output
+  "message": "You have reached your specified API usage limits. ...",  // the provider's words
+  "reset_at": "2026-10-01T00:00:00.000Z",  // when the provider named one, else null
+  "retryable": false,
+  "detail": "The rewrite did not run. Anthropic is over its usage limit ..." }
+```
+
+Known before the stream opens, it is that JSON with status 503 (the provider
+cannot serve the engine now), 429 (rate limit) or 502 (a request it refused
+as malformed), and `Retry-After` when there is a time to give. After the
+stream opens, it is the stream's last event, `event: error` with the same
+body, and no `done` follows. An answer with no text is `empty_output`. A
+failed rewrite writes nothing to `meta.revisions` or the ledger. Read a
+revise response as a success only when it ends with `done` and `ok: true`.
+
 **The fact gate, in practice.** A second model reads every sentence the
 claim lister did not cover (twelve at a time, with its section heading), and
 a sentence is set aside as a joke, scenario, guess or the piece's own
 prediction only when both readings agree; a sentence with a number is never
 set aside unless it reads as a forecast. Sources are strongest filed word for
 word: `apps/control-plane/scripts/file-verbatim-source.ts` files a page's own
-words (title, dates, matching passages) with its URL. Krish runs a check from
+words (title, dates, matching passages) with its URL, link text as plain words
+without the markdown link syntax (walk log F34). The word-for-word
+comparison reads markdown link syntax as the words a reader sees
+("[2025 filing](https://...)" is "2025 filing"), and a claim's numbers must be
+in those words, never only in a link's address (walk log F33). A research
+dive is read once, under the names it is stored with (`query`, `findings`,
+`citations`), and skipped when dive-deeper already filed its findings as a
+material. Krish runs a check from
 the composer's "Check the facts" strip in Control Center. Piece 2 took ten
 runs to pass, and the fixes each run forced are in the walk log (H12 to H14).
 
@@ -156,7 +218,9 @@ when a live rule reaches no stage.
 also need the checks a machine can make: the fact gate, no "Not X, Y", no em
 dashes, no exclamation marks outside quotes, British spelling outside quotes
 and names, a reading age of 13 at most (12 to 13 warns), and a prediction with
-a date and a percentage. Anything else is
+a date and a percentage. `CLEAR_STANCE`, a warning, reads the confidence
+written as "How sure we are: 75%" or "Confidence: 70%", and is green only on a
+number it has read, at 70% or more (walk log F35). Anything else is
 a 409 `publish_gate` naming what is left. `GET /fact-check` returns the whole
 checklist, whether the piece is `ready`, and its receipts.
 
@@ -199,6 +263,7 @@ records that Krish published a piece (and a ship); it does not post anything.
 | Route | What it does |
 |---|---|
 | `POST /api/content-edits` | appends one event to the edit ledger, `content_edit_events` (admission rules in `api/_editEvents.ts`) |
+| `GET /api/content-ideas?id=<uuid>` | one piece as it stands, `{ ok: true, piece: { id, state, lane_slot, idea, thesis, body, updated_at } }`; 400 without a uuid, 404 when there is no such row; the cookie or the operator bearer, like the writes. Records nothing |
 | `PATCH /api/content-ideas` | the single choke point for body edits and state moves; writes `manual_edit`, `approved`, `binned` and `published` events |
 | `/api/learning/compile` (cron, Sundays) | the weekly compiler. Proposes, never changes config: presets he never keeps, judges that never change an outcome, hand rewrites after an accepted machine edit. Reads only `actor = 'Krish'` rows that are not `observation_only` |
 | `judge_calibration` (a view) | joins each judge's verdict to Krish's decision on the same panel run (`panel_run_id`) |
@@ -216,7 +281,7 @@ accept is recorded by whoever accepted it.
 
 | Route | What it does |
 |---|---|
-| `GET /api/content-engine/health` | commit, auth configured, missing variables, each job's last run, runner state |
+| `GET /api/content-engine/health` | commit, auth configured, missing variables, each job's last run, runner state, and `model_provider`: whether Anthropic is usable, its last failure (class, status, the provider's words, agent, time), the reset time it gave, when the judge sweep will try again, and `says`, a plain sentence that begins "The engine cannot write or check anything" when every call is being refused. Readable on the operator bearer |
 | `GET /api/content-engine/ping` | commit and a ready flag, no auth |
 | `/api/content-engine/runs/replay` | re-runs a registered job by calling its GET with `CRON_SECRET`; refuses `manual_only` jobs |
 | `/api/purge/run` (cron, Mondays), `/api/purge/restore` | exports doomed rows to the `content-engine-archive` bucket and `trend_observations`, then hard-deletes expired news rows; deletes nothing if either copy fails. The engine's only hard delete |
@@ -264,6 +329,15 @@ checked against `vercel.json` by `check-content-engine-schedule`.
   `meter_add` (`api/_meter.ts`): one row per agent key per day, with cache
   reads and writes and the uncached price kept separately. Batch calls are
   priced at half. Prices live in one table, `api/_prices.ts`.
+- A failed call is metered too (since 2026-09-28, walk log F29): one run and
+  one failure on its agent key and day, and no cost unless the provider
+  reported usage before it failed. Its class (usage limit, credit, key,
+  overload, rate limit, server, timeout, bad request), the provider's words
+  and any reset time it gave are kept in `system_config` under
+  `content_engine_anthropic_failure`, and the first success after it under
+  `content_engine_anthropic_ok_at` (`api/_modelProvider.ts`). Control
+  Center's own breaker, `anthropic_unavailable_until`, is a different key on
+  purpose: the two projects may run on different Anthropic keys.
 - Not metered by this code: OpenAI, and Perplexity, Exa, Brave and NewsAPI
   outside investigations.
 - There is no global dollar cap in code. Limits are per run: the investigation
@@ -362,27 +436,59 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 
 1. Use the operator bearer from a secret store the session was given; never
    print it, commit it or paste it into chat.
-2. Your own calls are observations. Relay a decision only when Krish made it
+2. Check the engine's health before you spend: `GET
+   /api/content-engine/health` on the operator bearer. When
+   `model_provider.usable` is false, stop: `model_provider.says` names the
+   failure, in the provider's own words, and when access returns, and every
+   stage that writes or checks (draft, revise, final pass, fact gate, the
+   judges) will be refused. When `state` is `unconfirmed`, the reset has
+   passed and one cheap call shows whether it is back. On 2026-09-27 the key
+   was over its usage limit for 33 hours before anyone knew (walk log F28 to
+   F30).
+3. Read a piece with `GET /api/content-ideas?id=<uuid>`: its `id`, `state`,
+   `lane_slot`, `idea`, `thesis`, `body` and `updated_at`. Never read a body
+   with SQL (walk log F32).
+4. Your own calls are observations. Relay a decision only when Krish made it
    in words in the session, with `decided_by: 'Krish'`.
-3. Run calls that write `meta` one at a time: most routes read the row, call a
+5. Run calls that write `meta` one at a time: most routes read the row, call a
    model, then write the whole `meta` back.
-4. Keep spend inside what Krish approved for the session, and read
-   `meter_daily` to check it.
-5. Write what you find in `docs/walks/` or the relevant document, never only in
+6. Keep spend inside what Krish approved for the session, and read
+   `meter_daily` to check it. A refused call counts as a run and a failure on
+   its key, at no cost.
+7. Write what you find in `docs/walks/` or the relevant document, never only in
    the chat.
-6. Before a piece can move on, its facts must pass the gate. File the sources
+8. A revise is a success only when its stream ends with `done` and
+   `ok: true`. A failure is a status with a typed body, or the stream's last
+   event, `error`, with a `code` (see "How `revise` answers").
+9. Save text the engine wrote (a rewrite you accept, a draft, a final-pass
+   fix) with `PATCH /api/content-ideas` and `edit_source: 'magic'`:
+   `{ id, body, edit_source: 'magic', client: 'claude_code' }`. Without it the
+   PATCH records a `manual_edit`, which the ledger, and the caching-pass bar
+   that counts hand edits, read as an agent editing by hand when it did not
+   (walk log F37). The accept itself, when you record it, goes to
+   `POST /api/content-edits` as `magic_accepted` with `before_hash` and
+   `after_hash`, and an operator's row is an observation. Text you wrote
+   yourself is a hand edit: save it without the field, so it is counted.
+10. Before a piece can move on, its facts must pass the gate. File the sources
    you used as verbatim excerpts with `file-verbatim-source.ts` (a summary
    alone never passes a fact), run `POST /api/content-ideas/:id/fact-check`,
    and fix or cut what it lists. Where you attribute words, use the source's
    own words; the piece's house translations ("brain" for model) belong in
    the writer's voice, never inside a quote or a paraphrase of one.
-7. A web edition goes in `editions/` with the exact text that passed and the
+   A known limit: the gate needs the figure as the piece writes it. Amazon's
+   10-K prints advertising revenue as "68,635" (in millions), and no passage
+   of it can carry "$68.6 billion", because the number check wants "68.6" in
+   the quoted words. File a source that prints the rounded figure as well
+   (piece 1 filed a GuruFocus report on Yahoo Finance and marketmaze), and
+   check the passage is about the same thing: the same 10-K says "Operating
+   income was $68.6 billion" for 2024 (walk log F38).
+11. A web edition goes in `editions/` with the exact text that passed and the
    gate's record (`editions/README.md`); its test fails if the page says
    anything the gate did not check.
-8. When Krish gives a new ruling in words, add it to `api/_houseRules.ts`
+12. When Krish gives a new ruling in words, add it to `api/_houseRules.ts`
    once, with his words and the stages it touches, and let the coverage test
    tell you which stage still ignores it. Never copy a rule into one prompt.
-9. After every push to `main`, read `main`'s CI before the next push (walk
+13. After every push to `main`, read `main`'s CI before the next push (walk
    log F20).
 
 ## Development notes

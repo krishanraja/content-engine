@@ -4,8 +4,9 @@ import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
 import { BatchBus, cancelBatch, drainBatch, retrieveBatch, type BatchRef } from '../_judges/batch.js'
 import type { PanelResult } from '../_judges/panel.js'
-import { candidateQuery, liveDeps, needsJudging, panelRows, runLadder, type LadderDeps, type LadderReport } from './ladder.js'
+import { candidateQuery, ladderOutcome, liveDeps, needsJudging, panelRows, runLadder, type LadderDeps, type LadderReport } from './ladder.js'
 import { webResearch } from '../_enrich.js'
+import { providerHealth, providerRefusing, readProviderState } from '../_modelProvider.js'
 import { randomUUID } from 'node:crypto'
 
 // The batched sweep: the same ladder, half the bill, paid for in latency.
@@ -370,6 +371,32 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
     throw e
   }
 
+  // ── A pass that could not reach the model is a failed tick ────────────────
+  //
+  // From 2026-09-27 10:00 UTC every tick walked the same nine ideas, reached
+  // no judge, and recorded `ok`. Now the tick fails and says what the
+  // provider said; the ideas it reached carry when to try them again, and a
+  // refusal of every call is also kept where the next tick reads it before
+  // spending (see the gate in the handler).
+  const outcome = ladderOutcome(report)
+  if (!outcome.ok) {
+    await saveSweep(sweep.id, {
+      status: 'failed', batches, ticks: sweep.ticks + 1, live_fallback: live,
+      counts: {
+        judged: report.judged, ready: report.ready, escalated: report.escalated, weak: report.weak,
+        unjudged: report.unjudged, skipped: report.skipped, repairs: report.repairs, deferred: report.deferred,
+        failed: report.failed, backed_off: report.backed_off,
+      },
+      note: outcome.error,
+    })
+    return {
+      ok: false, error: outcome.error, sweep_id: sweep.id, state: 'failed',
+      ticks: sweep.ticks + 1, ideas: sweep.idea_ids.length,
+      judged: report.judged, failed: report.failed, backed_off: report.backed_off,
+      provider: report.stopped, results: report.results,
+    }
+  }
+
   // ── 4. Everything deferred goes out as one batch ──────────────────────────
   const wanted = bus.wantedByAgent()
   const ref = await bus.flush()
@@ -408,6 +435,7 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
       judged: report.judged, ready: report.ready, escalated: report.escalated,
       weak: report.weak, unjudged: report.unjudged, skipped: report.skipped,
       repairs: report.repairs, deferred: report.deferred,
+      failed: report.failed, backed_off: report.backed_off,
     },
     note: overrun
       ? `stopped at the ${MAX_TICKS}-tick ceiling with ${report.deferred} ideas still deferring: something is not converging`
@@ -433,9 +461,35 @@ async function tick(sweep: SweepRow): Promise<Record<string, unknown>> {
     cached_before_walk: bus.cached,
     judged: report.judged, ready: report.ready, escalated: report.escalated,
     weak: report.weak, unjudged: report.unjudged, skipped: report.skipped, repairs: report.repairs,
+    failed: report.failed, backed_off: report.backed_off,
     ...(report.warning ? { warning: report.warning } : {}),
     ...(done ? { results: report.results } : {}),
   }
+}
+
+/**
+ * Whether the provider has said it will refuse every call until a time that
+ * has not come. Read fresh on every tick, before a sweep is created or
+ * advanced, so a usage limit costs one failed tick and then waits for its
+ * reset instead of ten refused calls every ten minutes. A record that cannot
+ * be read lets the tick run: the first idea it reaches will say.
+ */
+export async function providerPause(now: Date = new Date()): Promise<Record<string, unknown> | null> {
+  const state = await readProviderState()
+  if (state.error) return null
+  const health = providerHealth(state.failure, state.okAt, now)
+  if (!providerRefusing(health, now)) return null
+  return {
+    ok: false, state: 'provider_unavailable',
+    error: `Judging is paused until ${health.retry_after}. ${health.says}`,
+    retry_after: health.retry_after, provider: health,
+  }
+}
+
+/** A tick that failed answers with a failure status, so the run ledger and a
+ *  person with curl both read it as one. */
+function reply(res: VercelResponse, body: Record<string, unknown>) {
+  return body.ok === false ? res.status(503).json(body) : res.json(body)
 }
 
 async function handler(req: VercelRequest, res: VercelResponse) {
@@ -465,10 +519,13 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       return res.json({ ok: true, state: running ? 'running' : 'idle', sweep: running })
     }
 
+    const paused = await providerPause()
+    if (paused) return reply(res, paused)
+
     // One sweep at a time, enforced by a partial unique index as well as here.
     // Two sweeps over the same ideas would each submit the other's deferred
     // work and pay for it twice.
-    if (running) return res.json(await tick(running))
+    if (running) return reply(res, await tick(running))
 
     const started = await createSweep(limit, ids, dryRun, mode)
     // `ok`, not `skipped`. A tick that looked and found nothing to judge is a
@@ -477,7 +534,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // would have the dashboard report a working sweep as not having succeeded
     // in a day, every quiet day.
     if (!started) return res.json({ ok: true, state: 'idle', ideas: 0 })
-    return res.json(await tick(started))
+    return reply(res, await tick(started))
   } catch (e: any) {
     return res.status(500).json({ ok: false, error: String(e?.message || e) })
   }

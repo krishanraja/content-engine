@@ -15,8 +15,8 @@ import { publishChecks, publishStatus } from '../../_publishChecks.js'
 import { receipts } from '../../_receipts.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, quotesFail,
-  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, SOURCE_MARK, summarise, sweep,
+  combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, sourcesText, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
 
@@ -28,31 +28,8 @@ const PERPLEXITY_POOL = 3
 const RETRY_WAITS_MS = [2000, 5000, 10000, 20000]
 const KINDS = new Set(['number', 'date', 'quote', 'attribution', 'event', 'name', 'other'])
 
-/** Everything the piece was written from, as plain text the quotes must come
- *  from. Each source starts with SOURCE_MARK. A verbatim excerpt is headed by
- *  its URL alone: its title is the filer's words, and a date in it must not
- *  pass for the source's. */
-export function sourcesText(meta: Record<string, any>): string {
-  const parts: string[] = []
-  for (const m of readMaterials(meta)) {
-    const body = m.kind === 'link' ? (m.url || '') : (m.content || '')
-    if (body.trim()) parts.push(`${SOURCE_MARK}${m.verbatim && m.url ? `verbatim excerpt from ${m.url}` : (m.title || m.kind)}\n${body}`)
-  }
-  const stories = Array.isArray(meta.adjacent_stories) ? meta.adjacent_stories : []
-  for (const s of stories) parts.push(`${SOURCE_MARK}${s?.title || 'source'} (${s?.published_date_iso || 'undated'}) ${s?.url || ''}\n${s?.why_relevant || ''}\n${s?.summary || ''}`)
-  const research = meta.research
-  if (Array.isArray(research)) for (const r of research) parts.push(`${SOURCE_MARK}research\n${typeof r === 'string' ? r : `${r?.title || ''} ${r?.url || ''}\n${r?.summary || r?.text || ''}`}`)
-  else if (typeof research === 'string') parts.push(`${SOURCE_MARK}research\n${research}`)
-  const dives = Array.isArray(meta.deep_dives) ? meta.deep_dives : []
-  for (const d of dives) parts.push(`${SOURCE_MARK}deep dive\n${typeof d === 'string' ? d : `${d?.question || ''}\n${d?.findings || d?.answer || ''}\n${Array.isArray(d?.sources) ? d.sources.join('\n') : ''}`}`)
-  return parts.filter(p => p && p.trim()).join('\n\n').slice(0, 120_000)
-}
-
-/** Only the verbatim excerpts: the sources' own words, not anyone's summary. */
-export function primaryText(meta: Record<string, any>): string {
-  return readMaterials(meta).filter(m => m.verbatim === true && m.content)
-    .map(m => `${SOURCE_MARK}verbatim excerpt from ${m.url}\n${m.content}`).join('\n\n')
-}
+// sourcesText and primaryText live in api/_factGate.ts, where they are tested
+// without a database.
 
 async function extract(body: string): Promise<{ claims: Claim[]; setAside: Array<{ sentence: string; reason: string }> }> {
   const raw = await callClaude({
