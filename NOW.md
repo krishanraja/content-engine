@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake content engine
-as_of: 2026-09-27
-head: 6bf7862
+as_of: 2026-09-28
+head: ce258b6
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -32,7 +32,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-09-27)
+## Where it is right now (as of 2026-09-28)
 
 Lifecycle: building. Readback the same day unless a commit is named.
 
@@ -45,7 +45,7 @@ Lifecycle: building. Readback the same day unless a commit is named.
 
 ## What changed recently
 
-- 2026-09-28 **Piece 2 approved; the fact gate stays strict; the Studio branding goes back for a redesign** (this commit). Rulings (Krish, 2026-09-28): "approve"; "fact check as much as possible until is no longer needed"; and, on the rendered branding, "this is awful, and embarrasing. it does not even look like the makeyourmindup site in design aesthetic." Why: piece 2 passed every blocking check at its exact text; the gate keeps both checks on every fact and re-runs until a piece passes; the candidate theme kept the Mindmake Studio look and stays switched off until a makeyourmindup redesign is approved (walk log F27).
+- 2026-09-28 **Piece 2 approved; the fact gate stays strict; the Studio branding goes back for a redesign** (`ce258b6`). Rulings (Krish, 2026-09-28): "approve"; "fact check as much as possible until is no longer needed"; and, on the rendered branding, "this is awful, and embarrasing. it does not even look like the makeyourmindup site in design aesthetic." Why: piece 2 passed every blocking check at its exact text; the gate keeps both checks on every fact and re-runs until a piece passes; the candidate theme kept the Mindmake Studio look and stays switched off until a makeyourmindup redesign is approved (walk log F27).
 - 2026-09-27 **Video Studio credential targets rotated to fresh versioned names** (`bd286a4`, PR #72). The runner, signing key, radar and MCP credential contracts in `docs/DEPLOYMENT.md`, `docs/ENGINE_SECRETS_HANDOVER.md`, `docs/ENGINE_SESSION.md` and `docs/OPERATIONS.md` moved together with the code in the same commit. PR #72: "Full repository verification passed locally: 90 test files and 861 tests, plus typechecks and secret scans." No behaviour changed; the old versioned names are quarantined the same way the first rotation quarantined theirs (`docs/ENGINE_SECRETS_HANDOVER.md`, "Quarantined names").
 - 2026-09-26 **The engine follows the live cover page: under.the.hood on Mondays, British spelling checked** (`fdf434b`; Control Center `25732f0`). Ruling (Krish, 2026-09-26): "Just get in line with what those updates are at the live website", then "Correct the engine's table and anywhere else, its out of date". Why: makeyourmindup.ai went live promising Mon, Wed and Fri and "Contains British spelling", while under.the.hood had no fixed day and nothing checked spelling. The cadence changed live in `venture_formats` and `content_cadence`; house rule BRITISH_SPELLING now reaches the writers and the final pass, and an American spelling outside a quotation or a name blocks approval. The site's logos, colours and typefaces match the pinned kit, so nothing is re-pinned; the brand book now lives in `krishanraja/makeyourmindup`, `docs/brandbooknew/` (`docs/STUDIO.md`). Its v1.4 pages on the felt robot and the real-or-theatre stamps are read in: house rule STAMPS (under.the.hood, visual) and `docs/CREATIVE_IDENTITY_UPGRADE.md`; the v1.4 mark and logo hash-match the pinned files.
 - 2026-09-26 **The makeyourmindup lockup is built into the Studio, switched off** (`c370006`). Ruling (Krish, 2026-09-26): "Make your mind up, Mark, plus the channel name", then "placement approved". Why: live subchannels had no branding the Studio could render; it goes live only when his approval is captured as Studio feedback, which a cloud session cannot do.
