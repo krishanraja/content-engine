@@ -60,6 +60,8 @@ import {
   confirmFeedbackV2,
   captureFeedbackV2,
   createDraftPackageV2,
+  houseThemeForManifestV2,
+  renderThumbnailV2,
   createDriveSourceBundleDraft,
   createExperimentV2,
   createJobV2,
@@ -651,6 +653,13 @@ async function approvedBriefTitle(jobId: string): Promise<OpeningContextV1> {
     const brief = ProductionBriefV1Schema.safeParse(payload.production_brief || payload.brief)
     return brief.success ? { approved_title: brief.data.content.title } : {}
   } catch { return {} }
+}
+
+/** The thumbnail's words: the approved title over the Short's hook, or,
+ *  with no production brief bound to the job, the hook over the payoff. */
+async function thumbnailCopy(jobId: string, candidate: CandidateV1): Promise<{ headline: string; dek: string }> {
+  const { approved_title: title } = await approvedBriefTitle(jobId)
+  return title ? { headline: title, dek: candidate.hook } : { headline: candidate.hook, dek: candidate.payoff }
 }
 
 async function verifyEvidencePacketFiles(packet: EvidenceReviewPacketV2): Promise<void> {
@@ -2234,7 +2243,12 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         if (hashValue(renderManifest.assets) !== approvedAssetsHash || hashValue(renderManifest.generated_shots) !== approvedGeneratedHash) throw new Error(`render manifest for ${platform} is not bound to the exact approved asset ledger`)
         for (const sourceItem of renderManifest.sources) if (await hashFile(resolve(sourceItem.path)) !== sourceItem.sha256) throw new Error(`render source ${sourceItem.source_id} changed for ${platform}`)
         if (!renderManifest.disclosures.some((item) => item.platform === platform)) throw new Error(`render manifest for ${platform} lacks a platform disclosure decision`)
-        created.push(await createDraftPackageV2(options.job, platform, renderItem.master_path, candidate, renderManifest, qa.payload, { render_manifest_hash: renderItem.manifest_hash, master_path: renderItem.master_path, master_hash: renderItem.master_hash }))
+        // In the makeyourmindup house style the package's cover is the
+        // Short's thumbnail: the piece's title over its hook, no photograph.
+        const cover = await houseThemeForManifestV2(renderManifest)
+          ? await renderThumbnailV2(context.repoRoot, renderManifest, await thumbnailCopy(options.job, candidate))
+          : undefined
+        created.push(await createDraftPackageV2(options.job, platform, renderItem.master_path, candidate, renderManifest, qa.payload, { render_manifest_hash: renderItem.manifest_hash, master_path: renderItem.master_path, master_hash: renderItem.master_hash }, cover))
       }
       await verifyPackagePayload({ packages: created }, manifest)
       const artifact = await completeStageV2(options.job, 'package', { packages: created }, { render: render.artifact_hash, qa: qa.artifact_hash }, { packager: V2_CLI_VERSION })

@@ -449,12 +449,90 @@ export const BrandWordmarkLockupV1Schema = z.object({
 })
 export type BrandWordmarkLockupV1 = z.infer<typeof BrandWordmarkLockupV1Schema>
 
+const HexColourSchema = z.string().regex(/^#[a-fA-F0-9]{6}$/)
+
+/** The control-center commit that pins a publication theme's marks, until it
+ *  is known. A theme carrying it can be read and tested; brandThemeRefusal
+ *  refuses to render it and an active theme cannot carry it. */
+export const PENDING_BRAND_SOURCE_COMMIT = 'PENDING_CC_COMMIT' as const
+
+/** What a live subchannel is called on makeyourmindup.ai, in its own words:
+ *  the day it runs, its sticker, the promise its ticker repeats and the
+ *  standing question its carousel cover asks. It is copy from the live site;
+ *  the mandates live only in venture_formats. */
+const HouseChannelCopyV1Schema = z.object({
+  day: z.enum(['Mondays', 'Wednesdays', 'Fridays']),
+  sticker: z.string().min(3).max(40),
+  promise: z.string().min(3).max(60),
+  question: z.string().min(12).max(200),
+}).strict()
+
+/** The makeyourmindup house style (brand book v1.4), as Krish approved it in
+ *  the Studio mock on 2026-09-28 ("yes, approved"). The renderer draws the
+ *  mock's own geometry; this holds what a job must pin: the colours, the
+ *  copy each channel carries and the fixed lines around the call. */
+export const BrandHouseStyleV1Schema = z.object({
+  tokens: z.object({
+    ink: HexColourSchema,
+    ink_deep: HexColourSchema,
+    ink_soft: HexColourSchema,
+    cream: HexColourSchema,
+    mint: HexColourSchema,
+  }).strict(),
+  channels: z.object({
+    follow_the_money: HouseChannelCopyV1Schema,
+    mind_the_gap: HouseChannelCopyV1Schema,
+    under_the_hood: HouseChannelCopyV1Schema,
+  }).strict(),
+  copy: z.object({
+    site: z.literal('makeyourmindup.ai'),
+    call_kicker: z.string().min(3).max(40),
+    call_headline: z.string().min(3).max(40),
+    call_footnote: z.string().min(12).max(200),
+    question_kicker: z.string().min(3).max(40),
+    cover_call_sticker: z.string().min(3).max(40),
+    thumbnail_call_sticker: z.string().min(3).max(40),
+  }).strict(),
+}).strict()
+export type BrandHouseStyleV1 = z.infer<typeof BrandHouseStyleV1Schema>
+
 /** The publication's own lockup (makeyourmindup; Krish, 2026-09-26: "Make your
  *  mind up, Mark, plus the channel name", then "placement approved"). Its
  *  mark sits on every beat; once, at the end, its logo sits with the
  *  channel's name set as type. A channel name is never an image: the brand
  *  book sets it in mono, lowercase, joined by dots. There is no opening
- *  identity moment: a Short opens straight on its claim. */
+ *  identity moment: a Short opens straight on its claim.
+ *
+ *  Version 1 drew both on dark plates (rejected by Krish, 2026-09-28). The
+ *  house style (version 2, from the approved mock) sets the mark on an ink
+ *  tile with the channel colour's hard shadow and ends on a masthead band:
+ *  a ticker, the stacked logo on ink, the day, the section pill and the
+ *  address. A pinned version 1 theme still parses and hashes as it did. */
+const PublicationPlateIdentityV1Schema = z.object({
+  mode: z.literal('publication_logo_with_channel'),
+  moment: z.literal('ending'),
+  duration_ms: z.number().int().min(800).max(3000),
+  plate_width: z.number().int().min(480).max(960),
+  plate_height: z.number().int().min(120).max(400),
+  padding: z.number().int().min(12).max(48),
+  gap: z.number().int().min(8).max(40),
+  logo_width: z.number().int().min(400).max(900),
+  // Bottom left first, as on the approved storyboard (under the
+  // prediction), above the platform's safe zone; top left if that collides.
+  corners: z.tuple([z.literal('bottom_left'), z.literal('top_left')]),
+}).strict()
+
+/** The ending band: full bleed, at a fixed height on the frame, for the same
+ *  moment and duration as the version 1 ending lockup. */
+const PublicationBandIdentityV1Schema = z.object({
+  mode: z.literal('publication_band'),
+  moment: z.literal('ending'),
+  duration_ms: z.number().int().min(800).max(3000),
+  top_px: z.number().int().min(160).max(1400),
+  height_px: z.number().int().min(240).max(520),
+  logo_width: z.number().int().min(400).max(700),
+}).strict()
+
 export const BrandPublicationLockupV1Schema = z.object({
   // Absent while the theme is a candidate. A theme goes active only with
   // Krish's approval captured as Studio feedback on his machine.
@@ -465,19 +543,23 @@ export const BrandPublicationLockupV1Schema = z.object({
   }).optional(),
   mark: BrandWordmarkAssetV1Schema,
   logo: BrandWordmarkAssetV1Schema,
+  // The primary lockup, set on ink in the ending band (house style only).
+  stacked: BrandWordmarkAssetV1Schema.optional(),
   channel_label: z.object({
     typeface: z.literal('IBM Plex Mono'),
-    weight: z.literal(500),
+    // 500 on the version 1 plate; the house style's section pill is 600.
+    weight: z.union([z.literal(500), z.literal(600)]),
     letter_case: z.literal('lower'),
     size_px: z.number().int().min(32).max(80),
     cap_height_ratio: z.number().min(0.6).max(0.8),
   }).strict(),
-  // The brand book's colour for each channel, marking only the dot before
-  // its name: butter, coral, lilac.
+  // The brand book's colour for each channel: butter, coral, lilac. On the
+  // version 1 plate it marked only the dot before the name; in the house
+  // style it is the section's colour block, pill and hard shadow.
   channel_colors: z.object({
-    follow_the_money: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    mind_the_gap: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    under_the_hood: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    follow_the_money: HexColourSchema,
+    mind_the_gap: HexColourSchema,
+    under_the_hood: HexColourSchema,
   }).strict(),
   reference_canvas: z.object({
     width: z.literal(1080),
@@ -492,19 +574,7 @@ export const BrandPublicationLockupV1Schema = z.object({
     logo_letter_height_css_px: z.number().min(12).max(24),
     label_cap_height_css_px: z.number().min(8).max(24),
   }).strict(),
-  identity: z.object({
-    mode: z.literal('publication_logo_with_channel'),
-    moment: z.literal('ending'),
-    duration_ms: z.number().int().min(800).max(3000),
-    plate_width: z.number().int().min(480).max(960),
-    plate_height: z.number().int().min(120).max(400),
-    padding: z.number().int().min(12).max(48),
-    gap: z.number().int().min(8).max(40),
-    logo_width: z.number().int().min(400).max(900),
-    // Bottom left first, as on the approved storyboard (under the
-    // prediction), above the platform's safe zone; top left if that collides.
-    corners: z.tuple([z.literal('bottom_left'), z.literal('top_left')]),
-  }).strict(),
+  identity: z.discriminatedUnion('mode', [PublicationPlateIdentityV1Schema, PublicationBandIdentityV1Schema]),
   anchor: z.object({
     mode: z.literal('publication_mark'),
     plate_width: z.number().int().min(72).max(220),
@@ -512,16 +582,52 @@ export const BrandPublicationLockupV1Schema = z.object({
     padding: z.number().int().min(8).max(28),
     mark_width: z.number().int().min(48).max(160),
     corners: z.tuple([z.literal('top_left'), z.literal('top_right')]),
+    // The house style's hard shadow in the channel colour, which the
+    // collision and safe-zone checks count as part of the tile.
+    shadow_px: z.number().int().min(0).max(24).optional(),
   }).strict(),
+  house_style: BrandHouseStyleV1Schema.optional(),
 }).strict().superRefine((lockup, context) => {
   const markHeight = lockup.anchor.mark_width * lockup.mark.alpha_crop.height / lockup.mark.alpha_crop.width
   if (lockup.anchor.mark_width > lockup.anchor.plate_width - lockup.anchor.padding * 2 || markHeight > lockup.anchor.plate_height - lockup.anchor.padding * 2) context.addIssue({ code: 'custom', path: ['anchor'], message: 'the publication mark exceeds its anchor plate' })
   if (lockup.minimum_effective.mark_width_px > lockup.anchor.mark_width) context.addIssue({ code: 'custom', path: ['anchor', 'mark_width'], message: 'the publication mark is below its declared minimum width' })
-  const logoHeight = lockup.identity.logo_width * lockup.logo.alpha_crop.height / lockup.logo.alpha_crop.width
-  const labelLine = lockup.channel_label.size_px * 1.15
-  if (lockup.identity.logo_width > lockup.identity.plate_width - lockup.identity.padding * 2 || logoHeight + lockup.identity.gap + labelLine > lockup.identity.plate_height - lockup.identity.padding * 2) context.addIssue({ code: 'custom', path: ['identity'], message: 'the logo and channel name exceed the identity plate' })
+  const identity = lockup.identity
+  if (identity.mode === 'publication_logo_with_channel') {
+    const logoHeight = identity.logo_width * lockup.logo.alpha_crop.height / lockup.logo.alpha_crop.width
+    const labelLine = lockup.channel_label.size_px * 1.15
+    if (identity.logo_width > identity.plate_width - identity.padding * 2 || logoHeight + identity.gap + labelLine > identity.plate_height - identity.padding * 2) context.addIssue({ code: 'custom', path: ['identity'], message: 'the logo and channel name exceed the identity plate' })
+    return
+  }
+  // The house style needs its stacked logo, its copy and its tile shadow.
+  if (!lockup.stacked) context.addIssue({ code: 'custom', path: ['stacked'], message: 'the ending band needs the pinned stacked logo' })
+  if (!lockup.house_style) context.addIssue({ code: 'custom', path: ['house_style'], message: 'the ending band needs the house style' })
+  if (lockup.anchor.shadow_px === undefined) context.addIssue({ code: 'custom', path: ['anchor', 'shadow_px'], message: 'the house style mark tile declares its hard shadow' })
+  if (identity.top_px + identity.height_px > lockup.reference_canvas.height) context.addIssue({ code: 'custom', path: ['identity'], message: 'the ending band leaves the frame' })
+  if (lockup.stacked) {
+    const logoHeight = identity.logo_width * lockup.stacked.alpha_crop.height / lockup.stacked.alpha_crop.width
+    if (logoHeight >= identity.height_px) context.addIssue({ code: 'custom', path: ['identity', 'logo_width'], message: 'the stacked logo exceeds the ending band' })
+  }
 })
 export type BrandPublicationLockupV1 = z.infer<typeof BrandPublicationLockupV1Schema>
+
+/** The retired Studio typography (Mindmake). */
+const StudioTypographyV1Schema = z.object({
+  structure: z.literal('Archivo Variable'),
+  claim: z.literal('Newsreader Variable'),
+  body: z.literal('Source Serif 4 Variable'),
+  data: z.literal('IBM Plex Mono'),
+})
+/** makeyourmindup's four faces, four roles (brand book v1.4, p. 08): Anton
+ *  for display, always uppercase; Archivo for structure and body (heavy is
+ *  900 at width 112); Fraunces italic for the dek; IBM Plex Mono for labels,
+ *  dates and section names. */
+export const HouseTypographyV1Schema = z.object({
+  display: z.literal('Anton'),
+  structure: z.literal('Archivo'),
+  dek: z.literal('Fraunces'),
+  data: z.literal('IBM Plex Mono'),
+}).strict()
+export type HouseTypographyV1 = z.infer<typeof HouseTypographyV1Schema>
 
 export const BrandThemeV1Schema = z.object({
   schema_version: z.literal(SCHEMA_VERSION),
@@ -530,28 +636,23 @@ export const BrandThemeV1Schema = z.object({
   status: z.enum(['candidate', 'active']),
   source: z.object({
     repository: z.string().min(1),
-    commit: z.string().regex(/^[a-f0-9]{40}$/),
+    commit: z.union([z.string().regex(/^[a-f0-9]{40}$/), z.literal(PENDING_BRAND_SOURCE_COMMIT)]),
     contract_path: z.string().min(1),
   }),
   colors: z.object({
-    ink: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    surface: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    raised: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    line: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    text: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    secondary_text: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    muted_text: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    paper: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    mint: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    mint_ink: z.string().regex(/^#[a-fA-F0-9]{6}$/),
-    amber: z.string().regex(/^#[a-fA-F0-9]{6}$/),
+    ink: HexColourSchema,
+    surface: HexColourSchema,
+    raised: HexColourSchema,
+    line: HexColourSchema,
+    text: HexColourSchema,
+    secondary_text: HexColourSchema,
+    muted_text: HexColourSchema,
+    paper: HexColourSchema,
+    mint: HexColourSchema,
+    mint_ink: HexColourSchema,
+    amber: HexColourSchema,
   }),
-  typography: z.object({
-    structure: z.literal('Archivo Variable'),
-    claim: z.literal('Newsreader Variable'),
-    body: z.literal('Source Serif 4 Variable'),
-    data: z.literal('IBM Plex Mono'),
-  }),
+  typography: z.union([StudioTypographyV1Schema, HouseTypographyV1Schema]),
   rules: z.object({
     mint_means_answer: z.literal(true),
     amber_means_changed: z.literal(true),
@@ -583,6 +684,10 @@ export const BrandThemeV1Schema = z.object({
   // of per-series wordmark images. Optional, so every theme pinned before it
   // parses and hashes exactly as it did.
   publication: BrandPublicationLockupV1Schema.optional(),
+}).superRefine((theme, context) => {
+  if (theme.status === 'active' && theme.source.commit === PENDING_BRAND_SOURCE_COMMIT) context.addIssue({ code: 'custom', path: ['source', 'commit'], message: 'an active theme pins its marks to a recorded commit' })
+  const house = 'display' in theme.typography
+  if (house !== Boolean(theme.publication?.house_style)) context.addIssue({ code: 'custom', path: ['typography'], message: 'the makeyourmindup typography belongs with the publication house style, and only there' })
 })
 export type BrandThemeV1 = z.infer<typeof BrandThemeV1Schema>
 

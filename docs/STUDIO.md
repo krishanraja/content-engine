@@ -82,69 +82,148 @@ added it or later. Following `docs/DEPLOYMENT.md`:
 
 No credential or signing key changes.
 
-### makeyourmindup branding: built, switched off until approved in the Studio
+### makeyourmindup branding: the house style, built and switched off until approved in the Studio
 
-**Rejected as rendered, 2026-09-28.** Krish: "this is awful, and embarrasing. it does not even look like the makeyourmindup site in design aesthetic." The lockup below kept the Mindmake Studio look around the new logo. It stays switched off and is being redesigned in the makeyourmindup brand book's own system; do not seek approval for it as built.
+**Version 2, built from the approved mock.** Krish approved the Studio mock
+on 2026-09-28 with the words "yes, approved", in answer to "approve the
+frames and the thumbnail?" (claude.ai/artifact/N77k2LJtZxSxAp1UZTTp8r,
+version 3). The mock's CSS is the spec, and the Studio draws its geometry in
+1080-wide frame pixels. The theme stays a candidate and switched off until
+his approval of a render made by the Studio itself is captured on his
+machine (the steps below).
 
-Krish, 2026-09-26: "Make your mind up, Mark, plus the channel name. You've got
-the logos as per the website for all of that" (`fixtures/feedback/
-studio-branding-mark-channel-20260926.json`), then "placement approved" on
-the piece 2 storyboard. Why: no channel has a logo image of its own, the
-brand book sets channel names as mono type, and the Studio branded Shorts as
-Mindmake, so no branded Short could render for a live subchannel.
+History. Krish, 2026-09-26: "Make your mind up, Mark, plus the channel name.
+You've got the logos as per the website for all of that"
+(`fixtures/feedback/studio-branding-mark-channel-20260926.json`), then
+"placement approved" on the piece 2 storyboard: the mark alone on every
+beat, top left; the full logo and the channel once, at the end, and nothing
+at the opening. That placement still holds. Version 1 kept the Mindmake Studio look
+around the new logo and Krish rejected it as rendered on 2026-09-28: "this is
+awful, and embarrasing. it does not even look like the makeyourmindup site in
+design aesthetic." Version 2 replaces its look, in the brand book's own
+system (v1.4): ink, cream and mint; a section's colour means that section
+only; type on a colour block is always ink; Anton for headlines, always
+uppercase; Fraunces italic for the human line; Archivo for structure and
+body; IBM Plex Mono for labels, dates and section names; grain on dark
+blocks and halftone dots on colour blocks; stickers tilt, type and logos
+never do.
 
-What it does:
+What it draws:
 
-- A Short: the makeyourmindup mark alone, top left, on every beat (the
-  compact anchor, same collision and safe-zone checks as before). Once, at
-  the end, the full logo with the channel's name under it, set as type in
-  IBM Plex Mono, lowercase, with the channel's brand-book colour as a dot;
-  bottom left above the platform's safe zone, as on the storyboard, or top
-  left if that collides. Never at the start: a Short opens on its claim.
-- A carousel card: the mark and the channel's name in the signpost, the
-  makeyourmindup logo as the signature.
-- Control Center's video plate shows the same (`VideoBrandLockup`).
-- The retired series keep the Mindmake theme exactly as approved.
+- A Short. The mark on an ink tile with grain and a 10 px hard shadow in the
+  channel's colour, top left on every beat (left 72, top 150, inside the
+  platform's safe zone; top right when the shot's lead room asks for it).
+  Captions on an ink block with grain, cream Archivo 900 at width 112, a 12
+  px shadow in the channel's colour, and one loud word on the mint swipe
+  (the first emphasis word; sentence case, at most one loud word, Krish,
+  2026-09-26). The channel's sticker, tilted -6 degrees, on the second beat,
+  left out wherever it would cover the face, a directed layer or the tile.
+  The call card on the beat the manifest names (below). The ending band in
+  place of the old ending plate, for the same two seconds at the end: a
+  ticker with the channel's promise and day (the only thing that keeps
+  moving, about one cycle every 38 seconds), the stacked logo on ink, the
+  day, the section pill and makeyourmindup.ai. The band and the call card
+  each take the caption's place while they are up, as in the mock. Things
+  arrive with a short slide, drop or slap, every motion a pure function of
+  the frame. The band may sit over the torso, as in the mock, and must
+  clear the face.
+- The thumbnail (composition `MakeyourmindupThumbnail`, 1080 x 1920, still):
+  the section's colour block with halftone, the day, the pill on ink, the
+  mark tile, the piece's headline in Anton, the dek in Fraunces italic and a
+  cream sticker ("Our call, dated" for a piece with a call, the channel's
+  own sticker otherwise), all inside the middle 1080 x 1440 that Instagram's
+  grid shows. It has no field for a photograph, so no photo of Krish can
+  reach it. `studio v2 package create` renders it (`renderThumbnailV2`) and
+  makes it the package's `cover.jpg` for a Short in the house style: the
+  approved title from the production brief over the Short's hook, or the
+  hook over the payoff when no brief is bound to the job. Every other
+  package keeps the master's frame at half a second, as before.
+- A carousel. The cover on the section's colour (day, pill, mark tile, the
+  headline, the dek, a sticker pointing at the call for The Fork or the
+  channel's sticker otherwise, and the channel's standing question); middle
+  cards on ink with grain (day, pill, mark tile, the headline with one swiped
+  word where the slide has an accent, the body in Archivo, the data label in
+  mint mono, a page counter "n / N"); the last card as the mock (day, pill,
+  counter, headline, body, the mono line, for The Fork the line about how
+  calls are marked, and the horizontal logo and address in the footer). No
+  Mindmake scene artwork in this theme. Headlines are sized to fit before a
+  card renders, from the kit fonts' own metrics.
+- The retired series keep the Mindmake theme exactly as approved: their
+  render props hash as they did at `518b5fe` (tests/render-v2.test.ts and
+  tests/carousel.test.ts check it).
+- Control Center's video plate (`VideoBrandLockup`) still shows the version 1
+  look; it needs its own change there.
 
-How it is built: the theme `makeyourmindup-video-v1` in `config/studio.json`
-carries a `publication` lockup (`packages/contracts/src/index.ts`,
-`BrandPublicationLockupV1Schema`). Its mark and logo are pinned by sha256 in
-control-center at `bb08cc8`, `src/assets/brand/makeyourmindup/`, because
-content-engine never tracks image files. It keeps the approved Studio colours
-and type. `brandThemeRefusal` refuses it for a retired series, and refuses it
-entirely while it is a candidate or has no approval.
+The call. Nothing upstream marked which beat of a Short carries the piece's
+call (The Fork marks only a carousel's last slide), so a render manifest now
+may name it: `call: { beat_id, statement, due, confidence_percent }`
+(`RenderCallV1Schema`, `packages/contracts/src/v2.ts`). Whoever writes the
+treatment manifest fills it from the piece's prediction ("Our call" and "How
+sure we are" in the approved text). The card renders only in the house
+style; a call that would cover the face, run into the platform's lower safe
+zone or share the screen with the ending band stops the render with the
+reason.
+
+How it is built: `makeyourmindup-video-v1` version 2 in `config/studio.json`,
+status `candidate`, no approval. Its `typography` is the house set (Anton,
+Archivo, Fraunces, IBM Plex Mono) and its `publication` lockup
+(`BrandPublicationLockupV1Schema`) now carries the stacked logo, an ending
+`publication_band` identity, the tile's shadow and a `house_style` block
+(`BrandHouseStyleV1Schema`: the tokens, each channel's day, sticker, promise
+and standing question from makeyourmindup.ai, and the fixed lines around the
+call). A job pinned under version 1 still parses and hashes as it did. The
+mark, the horizontal logo and the stacked logo
+(`makeyourmindup-stacked.png`, 2415 x 740, sha256 `5a0e8a08...29a4fc`) are
+pinned by sha256 in control-center, `src/assets/brand/makeyourmindup/`,
+because content-engine never tracks image files. The house faces load under
+names of their own (`apps/renderer/src/house/fonts.css`), so the retired
+theme's faces resolve exactly as before. The renderer's house code is in
+`apps/renderer/src/house/`, `apps/renderer/src/v2/HouseShort.tsx`,
+`apps/renderer/src/carousel/HouseCarouselCard.tsx` and
+`apps/renderer/src/thumbnail/`.
+
+`brandThemeRefusal` refuses the theme for a retired series, while it is a
+candidate or has no approval, and while its `source.commit` is still the
+placeholder `PENDING_CC_COMMIT` (the control-center commit that pins the
+stacked logo is recorded when that commit reaches control-center `main`). An
+active theme cannot carry the placeholder at all.
 
 Where the brand lives: the makeyourmindup brand kit and brand book (v1.4 on
 2026-09-26) are in `krishanraja/makeyourmindup`, `docs/brandbooknew/`:
 `makeyourmindup-brand-kit.zip` holds everything, and
 `makeyourmindup-brand-book.zip` holds the book as a PDF and as page images.
-`npm run brand-kit` in that repository rebuilds both. On 2026-09-26 the v1.4 kit's
-`logos/mark/makeyourmindup-mark-transparent.png` and
-`logos/horizontal/makeyourmindup-horizontal-transparent-1200w.png` hash-matched
-the pinned mark and logo exactly, its colours were unchanged and its tokens
-differed only in their version number: v1.4 adds the felt robot (p.13), the
-stamp rules (p.14) and a `photography/` folder, and nothing else. So the pinned
-mark and logo stand. The same page says the logo is the name, never part of a
-sentence. If a rebuild ever changes
-either file, copy it into control-center, pin the new commit and hashes in the
+`npm run brand-kit` in that repository rebuilds both. The pinned mark,
+horizontal logo and stacked logo hash-match the v1.4 kit's
+`logos/mark/makeyourmindup-mark-transparent.png`,
+`logos/horizontal/makeyourmindup-horizontal-transparent-1200w.png` and
+`logos/stacked/makeyourmindup-stacked-transparent.png`. The book says the
+logo is the name, never part of a sentence. If a rebuild ever changes a
+file, copy it into control-center, pin the new commit and hashes in the
 theme, and render the proof again.
 
 Switching it on, from Krish's machine (a cloud session is read-only for the
 Studio, `docs/ENGINE_SESSION.md`):
 
-1. Update the runner to `main` (above).
-2. In a tracked Studio session, record Krish's approval of the lockup as
+1. Record the control-center commit that holds `makeyourmindup-stacked.png`
+   in the theme's `source.commit`, in place of `PENDING_CC_COMMIT`.
+2. Update the runner to `main` (above).
+3. Render the proof in the Studio (a Short with its call, the thumbnail and a
+   carousel) and show it to Krish.
+4. In a tracked Studio session, record Krish's approval of that render as
    feedback and confirm it with a `studio-user-confirmation` receipt.
-3. Put that feedback's id and time in the theme's `publication.approval`,
+5. Put that feedback's id and time in the theme's `publication.approval`,
    set its `status` to `active`, and in the same change bring the approved
    `brand-lockup` preference in line (identity at the ending only for this
    theme; the channel name is type, which the brand book requires and which
    is not a recreated mark).
-4. A render manifest for a live subchannel then names `makeyourmindup-video-v1`
-   and pins the mark and logo hashes.
+6. A render manifest for a live subchannel then names `makeyourmindup-video-v1`
+   and pins the mark, logo and stacked logo hashes, and names its call beat.
 
-Proof rendered by the Studio's own renderer on 2026-09-26 (placeholder
-presenter): the anchor, the ending lockup and a carousel cover.
+Proof rendered by the Studio's own renderer in a cloud container on
+2026-09-28, against the mock's frames, with a still of Krish as the
+presenter: the four Short beats, the thumbnail and a carousel's cover,
+middle and last cards. It is a proof of the build only; Krish's approval of
+a Studio render is still to be captured.
 
 ## The V2 stage graph
 

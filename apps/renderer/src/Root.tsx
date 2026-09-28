@@ -6,6 +6,8 @@ import { MindmakeStoryV2 } from './v2/MindmakeStory'
 import { V2RenderPropsSchema, type V2RenderProps } from './v2/props'
 import { MindmakeCarouselSlide } from './carousel/MindmakeCarouselSlide'
 import { CarouselRenderPropsSchema, type CarouselRenderProps } from './carousel/props'
+import { MakeyourmindupThumbnail } from './thumbnail/MakeyourmindupThumbnail'
+import { ThumbnailPropsSchema, type ThumbnailProps } from './thumbnail/props'
 
 const defaultProps: ShortProps = {
   sourceFile: 'placeholder.mp4',
@@ -76,6 +78,18 @@ const carouselDefaultProps: CarouselRenderProps = {
   },
 }
 
+const thumbnailDefaultProps: ThumbnailProps = {
+  reviewMode: true,
+  series: 'mind_the_gap',
+  channelLabel: 'mind.the.gap',
+  day: 'Fridays',
+  headline: 'A headline in Anton.',
+  dek: 'The human line, in Fraunces italic.',
+  sticker: 'The headliner',
+  mark: { assetFile: 'placeholder.png', pixelWidth: 831, pixelHeight: 740 },
+  tokens: { ink: '#0C1512', inkDeep: '#070D0B', inkSoft: '#16221D', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' },
+}
+
 export function RemotionRoot() {
   return (
     <>
@@ -110,6 +124,16 @@ export function RemotionRoot() {
         schema={V2RenderPropsSchema}
         defaultProps={v2DefaultProps}
         calculateMetadata={({ props }) => ({ durationInFrames: Math.max(1, Math.ceil(props.durationMs / 1000 * 30)) })}
+      />
+      <Composition
+        id="MakeyourmindupThumbnail"
+        component={MakeyourmindupThumbnail}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={1}
+        schema={ThumbnailPropsSchema}
+        defaultProps={thumbnailDefaultProps}
       />
     </>
   )

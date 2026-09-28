@@ -18,6 +18,9 @@ import '@fontsource/ibm-plex-mono/400.css'
 import '@fontsource/ibm-plex-mono/500.css'
 import type { V2RenderProps, V2RuntimeLayer, V2RuntimeShot } from './props'
 import { cameraCropAt, defaultLayerBounds, deterministicUnit, primaryAttentionLayerId, sourceStartForShot, transitionOpacity } from './timeline'
+import { HouseFontsGate } from '../house/components'
+import { HOUSE_FONTS, HOUSE_PRESENTER_SHADE } from '../house/geometry'
+import { HouseBand, HouseCall, HouseCaption, HouseMark, HouseSticker, houseCaptionHidden } from './HouseShort'
 
 const WIDTH = 1080
 const HEIGHT = 1920
@@ -32,6 +35,8 @@ const framesFor = (milliseconds: number, fps: number): number => Math.max(1, Mat
 const gainFromDb = (gainDb: number): number => 10 ** (gainDb / 20)
 
 function brandFonts(branding: RuntimeBranding) {
+  // The house style sets its own four faces (brand book v1.4, p. 08).
+  if (branding.publication?.house) return { structure: HOUSE_FONTS.structure, claim: HOUSE_FONTS.display, body: HOUSE_FONTS.structure, data: HOUSE_FONTS.data }
   return {
     structure: `"${branding.typography.structure}", Arial, sans-serif`,
     claim: `"${branding.typography.claim}", Georgia, serif`,
@@ -342,7 +347,7 @@ function Layer({
           trimBefore={frameAt(sourceStartMs, fps)}
           style={sourceCropStyle(source, shot, bounds, atMs, source.sourceId === shot.sourceId)}
         />
-        {full ? <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(10,16,13,.16) 0%, rgba(10,16,13,0) 32%, rgba(10,16,13,.05) 58%, rgba(10,16,13,.54) 100%)' }} /> : null}
+        {full ? <AbsoluteFill style={{ background: branding.publication?.house ? HOUSE_PRESENTER_SHADE : 'linear-gradient(180deg, rgba(10,16,13,.16) 0%, rgba(10,16,13,0) 32%, rgba(10,16,13,.05) 58%, rgba(10,16,13,.54) 100%)' }} /> : null}
       </div>
     )
   }
@@ -481,18 +486,30 @@ export function MindmakeStoryV2(props: V2RenderProps) {
   const captionBounds = captionLayer?.bounds ? defaultLayerBounds(captionLayer) : undefined
   if (props.branding.mode === 'series' && !props.branding.wordmarks && !props.branding.publication) throw new Error('branded V2 renders require staged official wordmarks or the publication lockup')
   if (props.branding.mode === 'series' && !brandCue) throw new Error('branded V2 renders require a safe wordmark cue for every frame')
+  const house = props.branding.mode === 'series' ? props.branding.publication?.house : undefined
+  const captionsHidden = house ? houseCaptionHidden(props.branding, brandCue, props.safeZones, atMs) : false
   return (
     <AbsoluteFill style={{ background: props.branding.colors.ink }}>
+      {house ? <HouseFontsGate /> : null}
       {props.shots.map((shot) => (
         <Sequence key={shot.shotId} from={frameAt(shot.startMs, fps)} durationInFrames={framesFor(shot.endMs - shot.startMs, fps)}>
           <Shot shot={shot} props={props} />
         </Sequence>
       ))}
-      <BrandLockup branding={props.branding} placement={brandCue} />
+      {house ? (
+        <>
+          <HouseMark branding={props.branding} cue={brandCue} resolve={staticFile} />
+          <HouseSticker branding={props.branding} safeZones={props.safeZones} atMs={atMs} />
+          <HouseCall branding={props.branding} safeZones={props.safeZones} atMs={atMs} />
+          <HouseBand branding={props.branding} cue={brandCue} safeZones={props.safeZones} atMs={atMs} resolve={staticFile} />
+        </>
+      ) : <BrandLockup branding={props.branding} placement={brandCue} />}
       {props.captions.map((cue, index) => (
         <Sequence key={`${cue.startMs}-${index}`} from={frameAt(cue.startMs, fps)} durationInFrames={framesFor(cue.endMs - cue.startMs, fps)}>
           <AbsoluteFill>
-            <Caption cue={cue} branding={props.branding} lane={captionShot?.treatmentLane || 'restrained'} safeZones={props.safeZones} {...(captionBounds ? { bounds: captionBounds } : {})} />
+            {house
+              ? captionsHidden ? null : <HouseCaption cue={cue} branding={props.branding} safeZones={props.safeZones} {...(captionBounds ? { bounds: captionBounds } : {})} />
+              : <Caption cue={cue} branding={props.branding} lane={captionShot?.treatmentLane || 'restrained'} safeZones={props.safeZones} {...(captionBounds ? { bounds: captionBounds } : {})} />}
           </AbsoluteFill>
         </Sequence>
       ))}

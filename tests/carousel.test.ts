@@ -1,8 +1,11 @@
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { CarouselStoryV1Schema, CarouselVisualDirectionMethodV1Schema, EditorialFormatV1Schema, normalizeEditorialFormatV1 } from '@mindmake/contracts'
-import { carouselApprovalBinds, carouselEditorialPreferenceIssues, carouselProductionIssues, carouselStoryContentHash, theForkIssues } from '@mindmake/core'
+import { CarouselStoryV1Schema, CarouselVisualDirectionMethodV1Schema, EditorialFormatV1Schema, TreatmentRegistryV1Schema, normalizeEditorialFormatV1, type BrandThemeV1 } from '@mindmake/contracts'
+import { carouselApprovalBinds, carouselEditorialPreferenceIssues, carouselHouse, carouselProductionIssues, carouselSlideInputProps, carouselStoryContentHash, hashValue, renderCarousel, theForkIssues } from '@mindmake/core'
+import studioConfig from '../config/studio.json'
+import { CarouselRenderPropsSchema } from '../apps/renderer/src/carousel/props'
+import { houseCardModel } from '../apps/renderer/src/carousel/HouseCarouselCard'
 
 const fixturePath = resolve('examples/carousels/built-editorial-gates.review.json')
 
@@ -207,4 +210,104 @@ describe('carousel engine', () => {
     expect(normalizeEditorialFormatV1('The Fork')).toBe('the_fork')
     expect(EditorialFormatV1Schema.options).toContain('the_fork')
   })
+
+  it('reads the date and how sure we are from the call card\'s mono line too', async () => {
+    const input = await fixture()
+    const slides = input.slides as Array<Record<string, unknown>>
+    const last = { ...slides.at(-1)!, headline: 'Our call.', body: 'By 30 September 2027, the switching is automatic by default.', data_label: 'Due 2027-09-30 · 75% sure' }
+    const fork = CarouselStoryV1Schema.parse({ ...input, series: 'mind_the_gap', source_format: 'the_fork', slides: [...slides.slice(0, -1), last] })
+    expect(theForkIssues(fork)).toEqual([])
+  })
 })
+
+// The makeyourmindup house style (Krish approved the mock on 2026-09-28):
+// a cover on the section's colour, middle cards and a last card on ink.
+const W = { assetFile: 'brand.png', assetDataUrl: 'data:image/png;base64,AA==', alphaCropDataUrl: 'data:a', letterCropDataUrl: 'data:l', pixelWidth: 10, pixelHeight: 5, alphaCrop: { x: 0, y: 0, width: 10, height: 5 }, letterRegion: { x: 0, y: 0, width: 10, height: 5 } }
+
+function themes() {
+  const registry = TreatmentRegistryV1Schema.parse(studioConfig)
+  return {
+    retired: registry.brand_themes.find((theme) => theme.theme_id === registry.default_brand_theme)!,
+    house: registry.brand_themes.find((theme) => theme.theme_id === 'makeyourmindup-video-v1')! as BrandThemeV1,
+  }
+}
+
+async function forkStory(sourceFormat: 'the_fork' | 'build_itself' = 'the_fork') {
+  const input = await fixture()
+  const slides = input.slides as Array<Record<string, unknown>>
+  const last = { ...slides.at(-1)!, headline: 'Our call.', body: 'By 30 September 2027, at least two of OpenAI, Anthropic and Google will pick the brain by default.', data_label: 'Due 2027-09-30 · 75% sure' }
+  const series = sourceFormat === 'the_fork' ? 'mind_the_gap' : 'under_the_hood'
+  return CarouselStoryV1Schema.parse({ ...input, series, source_format: sourceFormat, slides: [{ ...slides[0]!, headline: 'Who picks your AI?', body: 'There\'s a guy behind the counter, and he\'s picking for you.' }, ...slides.slice(1, -1), last] })
+}
+
+function houseCards(story: Awaited<ReturnType<typeof forkStory>>) {
+  const { house } = themes()
+  const lockup = house.publication!
+  const channel = story.series as 'mind_the_gap' | 'under_the_hood'
+  const marks = { lockup, channelColor: lockup.channel_colors[channel], channelCopy: lockup.house_style!.channels[channel] }
+  const brandMarks = { publication: { mark: W, logo: W, channel: { label: channel === 'mind_the_gap' ? 'mind.the.gap' : 'under.the.hood', color: marks.channelColor, weight: 600 }, ...carouselHouse(story, marks) } }
+  return story.slides.map((slide) => CarouselRenderPropsSchema.parse(carouselSlideInputProps(story, slide, house, brandMarks, [], false)))
+}
+
+describe('carousel cards in the makeyourmindup house style', () => {
+  it('builds the retired series\' card props exactly as before', async () => {
+    const { retired } = themes()
+    const story = CarouselStoryV1Schema.parse(await fixture())
+    const props = story.slides.map((slide) => carouselSlideInputProps(story, slide, retired, { wordmarks: { mindmake: W, series: W } }, [], true))
+    // The hash of the same props built by the inline code at 518b5fe.
+    expect(hashValue(props)).toBe('aeb702f5a7c550363bbd7a9d403df4933e8a9201ad2f3e3cc140dff711563cce')
+    expect(props.every((card) => !('call' in card.slide))).toBe(true)
+  })
+
+  it('sets the cover as the mock: the section block, its day and pill, the call sticker and the question', async () => {
+    const cards = houseCards(await forkStory())
+    const cover = cards[0]!
+    expect(cover.branding.publication?.house).toEqual({ tokens: { ink: '#0C1512', inkDeep: '#070D0B', inkSoft: '#16221D', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' }, day: 'Fridays', coverSticker: 'Swipe for the call', questionKicker: 'The question', question: 'What is the pattern, and what does it mean is coming?', callFootnote: 'On the day, we mark it held, broke or unclear. Misses go up as big as hits.', site: 'makeyourmindup.ai' })
+    expect(cover.branding.typography).toEqual({ structure: 'Archivo', claim: 'Anton', body: 'Archivo', data: 'IBM Plex Mono' })
+    // "Who picks your AI?" at the mock's 178 px, on two lines.
+    expect(houseCardModel(cover)).toMatchObject({ kind: 'cover', counter: null, headlineSize: 178, headlineLines: 2, swipeIndex: -1, sticker: 'Swipe for the call', question: 'What is the pattern, and what does it mean is coming?' })
+  })
+
+  it('numbers the middle and last cards, swipes one word on an accent and ends on the call', async () => {
+    const story = await forkStory()
+    const cards = houseCards(story)
+    const count = cards.length
+    const middle = cards.slice(1, -1)
+    for (const card of middle) {
+      const model = houseCardModel(card)!
+      expect(model.kind).toBe('middle')
+      expect(model.counter).toBe(`${card.slide.position} / ${count}`)
+      expect(model.headlineSize).toBeLessThanOrEqual(160)
+      expect(model.swipeIndex === -1).toBe(card.slide.accent === 'none')
+    }
+    const last = cards.at(-1)!
+    expect(last.slide.call).toBe(true)
+    expect(houseCardModel(last)).toMatchObject({ kind: 'last', counter: `${count} / ${count}`, headlineSize: 160, swipeIndex: 2, footnote: 'On the day, we mark it held, broke or unclear. Misses go up as big as hits.' })
+    // A long headline shrinks to fit rather than running off the card.
+    const long = { ...middle[0]!, slide: { ...middle[0]!.slide, headline: 'A green tick can outlive the thing it checked, and nobody notices until it breaks.' } }
+    const fitted = houseCardModel(long)!
+    expect(fitted.headlineSize).toBeLessThan(160)
+    expect(fitted.headlineLines * fitted.headlineSize * 0.88).toBeLessThanOrEqual(1200 - 300)
+  })
+
+  it('gives a story without a call its channel sticker, and no call card', async () => {
+    const cards = houseCards(await forkStory('build_itself'))
+    expect(houseCardModel(cards[0]!)).toMatchObject({ sticker: 'Screwdriver included', question: 'What actually goes together in a shipped thing, and why did this one work?' })
+    expect(cards[0]!.branding.publication?.house?.day).toBe('Mondays')
+    expect(cards.at(-1)!.slide.call).toBeUndefined()
+    expect(houseCardModel(cards.at(-1)!)!.footnote).toBeNull()
+  })
+
+  it('refuses a house style theme while it is a candidate', async () => {
+    const { house } = themes()
+    expect(house.status).toBe('candidate')
+    // A story may pin the house style theme by its control-center contract.
+    const story = await forkStory()
+    const pinned = { ...(await fixture()), series: 'mind_the_gap', source_format: 'the_fork', slides: story.slides, brand_theme: { theme_id: house.theme_id, theme_hash: hashValue(house), design_repository: 'krishanraja/control-center', design_commit: 'c'.repeat(40), design_contract_path: 'src/assets/brand/makeyourmindup/README.md' } }
+    expect(CarouselStoryV1Schema.safeParse(pinned).success).toBe(true)
+    expect(CarouselStoryV1Schema.safeParse({ ...pinned, brand_theme: { ...pinned.brand_theme, design_contract_path: 'project-documentation/03_DESIGN_CONTRACT.md' } }).success).toBe(false)
+    // The renderer refuses it before drawing anything, even for review.
+    await expect(renderCarousel(resolve('.'), resolve('config/studio.json'), pinned, resolve('.never-written'), true)).rejects.toThrow('active brand theme makeyourmindup-video-v1 is unavailable')
+  })
+})
+
