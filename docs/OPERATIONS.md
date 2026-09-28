@@ -66,14 +66,31 @@ The task installer accepts only the clean, exact Git checkout at `%USERPROFILE%\
 
 The status output reports runner identity, source commit, Drive state, singleton activity, unacknowledged receipt count, path-free discovery counts, `receipt_journals` counts, and `project_journals` counts. A project conflict remains in a signed quarantine journal and produces a safe attention code, with idempotency conflicts taking priority. A deterministic terminal receipt conflict is also moved to signed receipt quarantine; `recovery_exists` reports `runner_receipt_recovery_conflict`, while other exact authority conflicts report `runner_receipt_authority_conflict`. The evidence is never deleted or retried forever. Either receipt conflict means authoritative histories diverged, so the whole runner stops before project replay, Drive discovery, cloud claim, or preview retention and consumes no more leases. Receipt-conflict recovery is a bespoke audited reconciliation in v1, not a generic delete or clear action. Paths and projection contents are never emitted in status. The daemon heartbeats the live mount before scanning, scans the dedicated Inbox before every claim, continues heartbeats during a long first hash, and checks Drive during active command heartbeats. When Drive is unavailable, inaccessible, scan-limited, or permission-blocked it reports `degraded`, leaves cloud commands queued, and resumes only after a complete healthy scan. It never turns mount loss into an avoidable terminal command failure. Cloud heartbeats carry only the safe Drive state; local runner status and cycle output carry path-free safe codes and counts.
 
+## Primary and cold standby
+
+Since 2026-09-28 two Windows machines can run the Studio. The **primary** has the task `Mindmake Video Studio Runner` enabled and running. The **cold standby** is a second machine with its own checkout at the same exact commit, its own runtime, its own runner identity and its own approval key; its task is installed and disabled (`docs/DEPLOYMENT.md`, "Setting up a standby machine"). Each shows in the cloud as its own row in `video_studio_runner_heartbeats`, keyed by a hash of its runner identity and the bearer; refer to a runner by the first eight characters of that hash. On 2026-09-28 the primary reported as `656ae98c` and the standby, during the drill, as `e4e562cc`.
+
+Protocol v1 is single-runner. Never have both tasks enabled. Exact receipt reclaim is same-runner only, so work leased by one machine can be finished only by that machine; nothing is ever copied between them to "move" work.
+
+A failover is a manual operator action. Never infer that one is needed, or that one has happened, from a missing heartbeat alone: a sleeping laptop, a Windows update or a lost Drive mount all silence a healthy primary.
+
+1. **Primary.** `scripts/runner.ps1 -Mode status` must show zero pending and zero conflicted receipt journals, zero pending and zero conflicted project journals, and no active command. Then `Stop-ScheduledTask -TaskName "Mindmake Video Studio Runner"` and `Disable-ScheduledTask -TaskName "Mindmake Video Studio Runner"`. `scripts/runner.ps1 -Mode stop-preflight` must return exactly `"active": false`. If the primary machine is lost and cannot be inspected, stop here: its pending receipts and leases can be finished only by it.
+2. **Cloud, read-only.** The primary's heartbeat row stops advancing (an idle runner heartbeats about every five seconds, so a minute of silence is decisive). There are 0 `queued` or `leased` rows in `video_studio_commands`, and 0 claimable production briefs in `content_ideas.transformed_outputs.production_briefs` (status `ready_for_studio`, or `leased` with an expired lease).
+3. **Standby.** `Enable-ScheduledTask` and `Start-ScheduledTask` for the same task name. `scripts/runner.ps1 -Mode status` must show `active: true`, the exact expected commit, source provenance `verified`, Drive `ready` and zero conflicts, and the standby's heartbeat row must be fresh.
+4. **Failback** is the same procedure in reverse. Afterwards the machine that is not running keeps its task disabled.
+
+The drill of 2026-09-28 followed these steps with an empty queue: the primary was stopped and disabled, the standby started, heartbeated idle with Drive ready, claimed nothing, and was stopped and disabled again; the primary restarted healthy.
+
 ## Google Drive Inbox
 
 The default directories are:
 
 ```text
-G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
-G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
+H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
+H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
 ```
+
+They moved from G: to H: on 2026-09-28 (Krish's decision; `docs/DEPLOYMENT.md`, "Independent runner setup"). Every runner machine sets `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX` and `MINDMAKE_ARCHIVE_ROOT` to these paths as user environment variables. The G: folder stays intact as the rollback copy. The move changed the Inbox fingerprint, and the standby's Inbox was rebound with Krish's confirmation through the flow below; the primary reports the same H: fingerprint.
 
 Initialize the Inbox only after confirming the Drive mount points at the intended Mindmaker folder:
 

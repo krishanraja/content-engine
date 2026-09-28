@@ -21,6 +21,33 @@ The active control-plane credentials are:
 root for the approval ledger. Never rotate it as part of a cloud credential
 change.
 
+## Every runner machine
+
+Since 2026-09-28 the Studio has a primary runner and a cold standby on a
+second Windows machine (`docs/OPERATIONS.md`, "Primary and cold standby").
+The contract above holds per machine:
+
+- Every runner machine holds its own copy of the four active targets above,
+  each written on that machine through `scripts/set-credential.ps1` as a
+  LocalMachine credential. The values are the same on every machine because
+  each must match its Vercel Secret; they are entered interactively on each
+  machine and never copied as files, exported or pasted into a chat.
+- Every runner machine has its own `MindmakeVideoStudio/approval-signing-key`,
+  generated on that machine with `scripts/set-credential.ps1 -Generate` and
+  never shared. Local approvals signed on one machine are verified only by that
+  machine; this is one reason nothing in a runtime is copied between machines.
+- Retired names may remain in a machine's store: the `-v2` bearer, signing-key
+  and radar targets retired by the v3 rotation, and the three quarantined
+  unversioned names below. Nothing reads them, and their presence proves
+  nothing about what is current.
+- `scripts/inspect-credentials.ps1 -EnforceActiveContract` and
+  `npm run probe:runner-credentials` are run on each machine separately. On
+  2026-09-28 both passed on the standby; the probe reported "runner bearer and
+  signing credentials accepted by production".
+- A rotation is complete only when every runner machine carries the new
+  targets. Rotate the standby in the same window as the primary, or record
+  that it is behind and keep its task disabled until it is brought level.
+
 ## Quarantined names
 
 These original names are permanently retired:
@@ -93,12 +120,14 @@ assignments, paste instructions, common token families, bearer literals and
 private keys. The revoked literals remain in Git history until a separately
 approved history rewrite is coordinated with every clone.
 
-The installed runner remains at:
+Each runner machine keeps its installed checkout at:
 
 ```text
-C:\Users\krish\Documents\MindmakeVideoStudio\runner-source
+%USERPROFILE%\Documents\MindmakeVideoStudio\runner-source
 ```
 
-Its scheduled task is `Mindmake Video Studio Runner` and remains Interactive by
-design so Windows DPAPI can unlock Credential Manager. Do not change the task
-principal.
+On each machine the scheduled task is `Mindmake Video Studio Runner` and
+remains Interactive by design so Windows DPAPI can unlock Credential Manager.
+Do not change the task principal. Both machines were verified at
+`6bf78628a481a61bf16ea3b4deec0d326281eee6` on 2026-09-28 with clean detached
+checkouts and verified source provenance.

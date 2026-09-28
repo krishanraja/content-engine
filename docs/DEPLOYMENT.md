@@ -14,6 +14,17 @@ The verified upstream main commits are pinned in `config/studio.json`. Recheck m
 
 ## Secrets
 
+The active Windows credential targets since the v3 rotation of 2026-09-27. Each is a LocalMachine Generic Credential (never roaming) whose value matches the Vercel Secret beside it. Every runner machine, primary and standby, holds its own copy of all four, entered interactively on that machine:
+
+| Windows credential target | Vercel Secret |
+|---|---|
+| `MindmakeVideoStudio/control-center-runner-token-v3` | `VIDEO_STUDIO_RUNNER_TOKEN` |
+| `MindmakeVideoStudio/control-center-runner-signing-key-v3` | `VIDEO_STUDIO_RUNNER_SIGNING_KEY` |
+| `MindmakeVideoStudio/control-center-radar-token-v3` | `VIDEO_STUDIO_EXPORT_TOKEN` |
+| `MindmakeVideoStudio/studio-mcp-token-v2` | `VIDEO_STUDIO_MCP_TOKEN` |
+
+`MindmakeVideoStudio/approval-signing-key` has no cloud half. Each machine generates its own locally and never shares or copies it (`docs/ENGINE_SECRETS_HANDOVER.md`). The retired `-v2` bearer, signing-key and radar targets and the three quarantined unversioned names may still sit in a machine's store; nothing reads them. (`studio-mcp-token-v2` is the active MCP target and is not retired.)
+
 Create two separate strong random provider-token values. Configure the mm-ctrl value as `VIDEO_STUDIO_EXPORT_TOKEN` only in its Supabase project, and configure the different Control Center value under that same provider-local key only in its Vercel project. Store each matching value locally in its own Windows Generic Credential:
 
 ```text
@@ -45,11 +56,11 @@ Set the control-plane API base URL as environment configuration, never as a cred
 
 ```text
 MINDMAKE_CONTROL_PLANE_URL=https://controlcenter.krishraja.com/api/video-studio/runner
-MINDMAKE_PREVIEW_STORAGE_ORIGIN=https://<project-ref>.supabase.co
+MINDMAKE_PREVIEW_STORAGE_ORIGIN=https://gojpffsrxybbpbdzzrvs.supabase.co
 MINDMAKE_RUNTIME_ROOT=%USERPROFILE%\Documents\MindmakeVideoStudio\runtime
-MINDMAKE_DRIVE_ROOT=G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine
-MINDMAKE_MEDIA_INBOX=G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
-MINDMAKE_ARCHIVE_ROOT=G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
+MINDMAKE_DRIVE_ROOT=H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine
+MINDMAKE_MEDIA_INBOX=H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
+MINDMAKE_ARCHIVE_ROOT=H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
 MINDMAKE_DISCOVERY_STABILITY_SECONDS=30
 MINDMAKE_DISCOVERY_MAX_FILES=500
 MINDMAKE_DISCOVERY_MAX_ENTRIES=2000
@@ -57,6 +68,10 @@ MINDMAKE_DISCOVERY_MAX_DEPTH=4
 MINDMAKE_DISCOVERY_HISTORY_RETENTION_DAYS=365
 MINDMAKE_DISCOVERY_REVERIFY_SECONDS=86400
 ```
+
+Set these as user environment variables on every runner machine. The Drive root moved from G: to H: on 2026-09-28 (Krish's decision): H: is the krish@themindmaker.ai Google Drive account, and G:, the personal account, had been reporting `drive_mount_offline`. The move covers the Video Studio only (`Inbox`, `Archive` and `Inspiration`); the rest of the Ventures tree stays on G:. The old G: folder is the rollback copy: keep it intact and never delete it. Moving the Inbox changes its identity fingerprint, so each machine needs the confirmed rebind in `docs/OPERATIONS.md`, "Google Drive Inbox", before its scans are trusted again.
+
+The runner's base URL is Control Center's origin. `controlcenter.krishraja.com` is served by the Control Center Vercel project, whose `vercel.json` rewrites `/api/video-studio/:path*` to this repository's Vercel project `content-engine` (`content-engine-flame-nu.vercel.app`). Control Center has no `api/video-studio` route of its own that could shadow the rewrite, so every runner call lands in `apps/control-plane/api/video-studio/runner/` here. The preview origin above is the public origin of the shared Supabase project and is plain configuration: it holds no secret.
 
 The Control Center URL is production-pinned and an override must be absent or exactly equal to that value. Set the preview origin to the exact public origin of the dedicated Supabase project, with no path, credentials, query, or fragment. The runner rejects HTTP, local/private destinations, cross-origin signed upload URLs, redirects, and upload routes outside Supabase Storage's signed-object path.
 
@@ -144,6 +159,20 @@ The implementation in this repository does not itself install the Scheduled Task
 To rotate the bearer, stop and disable the task, create a fresh versioned LocalMachine credential target, replace the matching Vercel Secret, update the active constant, then reinstall the exact clean commit and verify runner status. Never reuse the three quarantined unversioned names.
 
 The signing key authenticates retained claims, receipts, project journals, conflict records, acknowledged cursors, and the external runner-authority marker. A deliberate change must use `scripts/rotate-runner-signing-key.ts --commit --new-credential-target <new-versioned-target>` while the task is disabled. The script verifies every old signature, creates a full backup, changes only hash-bound runner signatures, rereads them under the new key and never accepts or prints a key value. It deliberately excludes approval-ledger and review-binding signatures because those use a separate body-signing trust root. After migration, update the active constant and deploy the matching Vercel Secret before restarting. Never delete, edit or re-sign authority records by hand.
+
+## Setting up a standby machine
+
+Since 2026-09-28 the Studio has two Windows runners: a primary whose task is enabled, and a cold standby on a second machine whose task is installed and left disabled. Protocol v1 is single-runner. Exactly one task is ever enabled, and the switch between them is the manual procedure in `docs/OPERATIONS.md`, "Primary and cold standby". A standby is a complete, separate runner: its own checkout, its own runtime, its own runner identity and its own approval key. Nothing is copied from the primary.
+
+1. **The same exact commit.** In `%USERPROFILE%\Documents\MindmakeVideoStudio\runner-source`, check out the 40-character commit the primary runs (`git switch --detach <commit>`), run `npm ci`, then `scripts/verify-runner-source.ps1 -RequirePersistentLocation`. A failover must never also be a silent upgrade or downgrade.
+2. **A fresh runtime.** Set `MINDMAKE_RUNTIME_ROOT` to `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime` and the three Drive variables to the H: paths above, then run `scripts/migrate-runner-runtime.ps1` and `npm run bootstrap:python`. Never copy a runtime, `identity.json`, claims, receipts, project journals, `runner-staging` or `runner-authority.json` from another machine: the standby creates its own identity on its first authenticated start, and a copied one would claim to be the primary.
+3. **Its own approval key.** `powershell -NoProfile -File scripts/set-credential.ps1 -Target MindmakeVideoStudio/approval-signing-key -Generate`. It is generated on the machine, never displayed and never shared.
+4. **The four v3 targets.** Enter each value interactively with `scripts/set-credential.ps1 -Target <target>` for the four targets in "Secrets" above. Never paste a value into a command line, a file or a chat. Then run `scripts/inspect-credentials.ps1 -EnforceActiveContract`.
+5. **The probe.** `npm run probe:runner-credentials` must report that the runner bearer and signing credentials were accepted by production. It leases nothing and writes nothing.
+6. **The Inbox.** `.\scripts\studio.ps1 v2 inbox init`, then `inbox scan` twice across the stability interval and `inbox status`. If the resolved Inbox fingerprint differs from the one this machine last trusted, stop and record Krish's explicit confirmation through `inbox rebind` (`docs/OPERATIONS.md`, "Google Drive Inbox") before trusting it.
+7. **Install, then leave it disabled.** Run `.\scripts\studio.ps1 doctor` and `scripts/install-runner-task.ps1`. Prove the lifecycle only inside a failover drill, with the primary stopped and disabled and the queue empty, because a started runner heartbeats and asks for work. Then `Stop-ScheduledTask`, require `runner.ps1 -Mode stop-preflight` to return exactly `"active": false`, and `Disable-ScheduledTask`. The standby stays disabled until a failover.
+
+Once the runner-role fence is live (`docs/OPERATIONS.md`, "Primary and cold standby"), the cloud leases work only to the runner designated active, so a standby that is started by mistake heartbeats and receives nothing. Until then, the disabled task is the only thing keeping a second runner from taking work.
 
 ## Projection cursor protocol rollout
 

@@ -11,7 +11,7 @@ export interface StudioPaths {
   archiveRoot: string | null
 }
 
-export const DEFAULT_WINDOWS_DRIVE_ROOT = 'G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine'
+export const DEFAULT_WINDOWS_DRIVE_ROOT = 'H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine'
 const INVALID_WINDOWS_DRIVE_ROOT = 'G:\\My Drive\\Ventures\\Active\\Mindmaker\\04\\_Content\\Video Engine'
 
 export function canonicalWindowsDrivePath(value: string | undefined, fallback: string): string {

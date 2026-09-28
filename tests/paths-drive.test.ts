@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { DEFAULT_WINDOWS_DRIVE_ROOT, canonicalWindowsDrivePath } from '@mindmake/core'
 
 describe('Windows Drive path authority', () => {
-  it('uses the mounted 04_Content root as the canonical default', () => {
-    expect(DEFAULT_WINDOWS_DRIVE_ROOT).toBe('G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine')
+  // Krish, 2026-09-28: the Video Studio's Drive moves from G: to H:, the
+  // krish@themindmaker.ai account. The old G: folder stays as a rollback copy.
+  it('uses the mounted 04_Content root on H: as the canonical default', () => {
+    expect(DEFAULT_WINDOWS_DRIVE_ROOT).toBe('H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine')
     expect(canonicalWindowsDrivePath(undefined, DEFAULT_WINDOWS_DRIVE_ROOT)).toBe(DEFAULT_WINDOWS_DRIVE_ROOT)
     expect(canonicalWindowsDrivePath(DEFAULT_WINDOWS_DRIVE_ROOT, 'wrong')).toBe(DEFAULT_WINDOWS_DRIVE_ROOT)
   })
@@ -18,5 +20,12 @@ describe('Windows Drive path authority', () => {
   it('preserves an explicitly configured different mounted path', () => {
     const alternate = 'H:\\Shared Drive\\Mindmaker Video\\Inbox'
     expect(canonicalWindowsDrivePath(alternate, `${DEFAULT_WINDOWS_DRIVE_ROOT}\\Inbox`)).toBe(alternate)
+  })
+
+  it('still honours the retired G: root when a machine sets it explicitly', () => {
+    // The rollback copy: setting the environment back to G: must be obeyed,
+    // never silently rewritten to the new default.
+    const rollback = 'G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Inbox'
+    expect(canonicalWindowsDrivePath(rollback, `${DEFAULT_WINDOWS_DRIVE_ROOT}\\Inbox`)).toBe(rollback)
   })
 })

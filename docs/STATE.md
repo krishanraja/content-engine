@@ -18,7 +18,74 @@ was walked end to end for the first time on 2026-09-24, and on the way the
 backend got ten fixes (H1 to H10 in the walk log). No piece has ever been
 published. One is in review, waiting on Krish's verdict. The Studio is built
 and tested but has never produced a Short or carousel that reached final
-approval, and its runner is not recorded as installed.
+approval. Its Windows runner is installed on a primary machine, with a cold
+standby on a second machine, both at `6bf7862` (2026-09-28, below).
+
+## The Studio's runners, 2026-09-28
+
+What changed on the Windows machines, as Krish's session on them reported it,
+checked the same day against a read-only Supabase readback (18:23 UTC).
+
+- **Upgraded and pinned.** Both runners moved from `c13561b` to
+  `6bf78628a481a61bf16ea3b4deec0d326281eee6`, the merge of PR #72 (credential
+  targets rotated to v3), and stay pinned there while `main` takes docs-only
+  commits. Both report source provenance `verified` at that exact commit from
+  clean detached checkouts in the dedicated `runner-source` location.
+- **Credentials.** The four v3 targets are installed on both machines as
+  LocalMachine credentials, each matching its Vercel Secret, and each machine
+  generated its own approval key (`docs/DEPLOYMENT.md`, "Secrets";
+  `docs/ENGINE_SECRETS_HANDOVER.md`, "Every runner machine").
+  `inspect-credentials.ps1 -EnforceActiveContract` passes on the standby and
+  `npm run probe:runner-credentials` returns "runner bearer and signing
+  credentials accepted by production". The retired `-v2` targets and the three
+  quarantined names still sit in the standby's store, unread.
+- **A primary and a cold standby.** The primary's task is enabled and running;
+  its heartbeat row `656ae98c` read idle, Drive ready, commit `6bf7862`, 0
+  pending receipts, 5 seconds old. The standby is a second machine with its
+  own runtime, runner identity and approval key; its task is installed and
+  disabled and its stop preflight reports `"active": false`. Its row is
+  `e4e562cc` (idle, Drive ready, `6bf7862`, last heard 17:59 UTC during the
+  drill; matched to the standby by timing and never recomputed). A controlled
+  failover drill passed with an empty queue (`docs/OPERATIONS.md`, "Primary and
+  cold standby"). Nothing was copied between the machines.
+- **Stale heartbeat rows.** Four more rows remain and are kept: `8f265fde`
+  (`c13561b`, degraded with Drive unavailable, last heard 2026-09-27; the hash
+  includes the bearer, so this is probably the primary under the retired v2
+  bearer, an inference) and three at `4307daa` (`b62de041` on 2026-09-08,
+  `d3e2e922` and `130c98b3` on 2026-09-12).
+- **Drive moved from G: to H:** (Krish's decision). H: is the
+  krish@themindmaker.ai account; G: had been reporting `drive_mount_offline`.
+  Both machines set the three Drive variables to the H: paths, the standby's
+  Inbox was rebound with Krish's confirmation to the H: fingerprint, and the
+  primary reports the same fingerprint. The G: folder stays as the rollback
+  copy. Only the Video Studio moved. The repository defaults followed the same
+  day (`config/studio.json`, `.env.example`, `packages/core/src/paths.ts`, the
+  launcher skill); the code default is inert on both machines because the
+  environment variables are set.
+- **Configuration.** `MINDMAKE_CONTROL_PLANE_URL` is Control Center's origin,
+  which rewrites the runner routes to this repository's `content-engine`
+  project (`docs/DEPLOYMENT.md`, "Independent runner setup");
+  `MINDMAKE_PREVIEW_STORAGE_ORIGIN` is the shared Supabase project's origin.
+- **Queue at readback.** 0 queued or leased `video_studio_commands`, 0
+  production briefs in `content_ideas.transformed_outputs`, and 1 command in
+  `attention`: a `magic_edit_prepare` from 2026-09-05 whose five attempts ran
+  out and whose direction succeeded on a later retry.
+
+The gaps this left, in order of risk:
+
+- **G1.** Both claim paths (`runner/production-brief-claim.ts` and the
+  `video_studio_claim_command` function) lease work to any runner that
+  presents the bearer. Only receipt reclaim is tied to one runner.
+- **G2.** Nothing records which runner is meant to be active, switches it with
+  an audit trail, or says when it has gone silent while work waits.
+- **G3.** `GET /api/content-engine/health` selects heartbeat columns that do
+  not exist (`updated_at`, `status`) and so always reports the runner as
+  `never`; `runner_watch` reads the newest row whichever runner wrote it, and
+  counts production briefs in `meta.production_brief`, where none are stored.
+- **G4.** Repository defaults pointed at G: (fixed the same day).
+- **G5.** No document described the two machines or the failover (fixed the
+  same day: `docs/DEPLOYMENT.md` and `docs/OPERATIONS.md`).
+- **G6.** The one `attention` command's cause was unrecorded.
 
 ## Live and verified
 
@@ -49,8 +116,8 @@ Readback 2026-09-25 unless a date is given.
   Control Center; the job table's check admits the five Studio series (read
   back live). Not yet reachable: a branded render for a live subchannel,
   which needs Krish's approved wordmark; a mind.the.gap carousel, which needs
-  a format; and live-name briefs on the Windows runner, which needs updating
-  to `47f3944` or later (`docs/STUDIO.md`) and is not verified installed.
+  a format. Live-name briefs need a runner at `47f3944` or later; both
+  runners have been at `6bf7862`, which includes it, since 2026-09-28.
 - **Crons.** All 20 in `apps/control-plane/vercel.json` have
   `content_engine_runs` rows in the last seven days. `judge_sweep` ran 59
   times.
@@ -76,10 +143,10 @@ Readback 2026-09-25 unless a date is given.
 
 ## Built but unproven
 
-- **The Windows runner.** Merged and tested; `docs/DEPLOYMENT.md` says the
-  repository does not install the Scheduled Task, and nothing records the
-  seven-step live readback. `docs/ENGINE_SECRETS_HANDOVER.md` says it is
-  installed; treat that as unverified.
+- **The Windows runner.** Installed, heartbeating and credential-probed on
+  2026-09-28 (above), but it has not yet claimed, run and completed a real
+  command or brief at `6bf7862`: the queue was empty. The first real piece of
+  work is the business proof.
 - **Studio output.** No Short or carousel has a recorded final approval,
   package or upload. The carousel's brand placement still waits on Krish's
   review of the rendered set (`docs/CAROUSEL_ENGINE_STATE.md`).

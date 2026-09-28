@@ -18,7 +18,9 @@ describe('repository operating contracts', () => {
       visual_story_director: { review_gates: string[] }
       runtime: { drive_root: string; media_inbox: string; archive_root: string }
     }>('config/studio.json')
-    const exactMediaRoot = String.raw`G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine`
+    // Ruling (Krish, 2026-09-28): the Video Studio's Drive root moves from G:
+    // to H: (krish@themindmaker.ai). Scope is the Video Studio only.
+    const exactMediaRoot = String.raw`H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine`
 
     expect(studio.transcription.vocabulary).toContain('Krish')
     expect(studio.transcription.vocabulary).not.toContain('Krish Raja')
@@ -39,7 +41,9 @@ describe('repository operating contracts', () => {
     expect(launcher).toContain(exactMediaRoot)
     expect(launcher).not.toMatch(/Krish(?:an)? Raja/)
     expect(`${voiceSkill}\n${voiceMetadata}`).not.toMatch(/Krish(?:an)? Raja/)
-    expect(pathSource).toContain("export const DEFAULT_WINDOWS_DRIVE_ROOT = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04_Content\\\\Video Engine'")
+    expect(pathSource).toContain("export const DEFAULT_WINDOWS_DRIVE_ROOT = 'H:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04_Content\\\\Video Engine'")
+    expect(studio.runtime.drive_root).not.toMatch(/^G:/)
+    expect(environment).toContain(`MINDMAKE_ARCHIVE_ROOT=${exactMediaRoot}\\Archive`)
     expect(pathSource).toContain("const INVALID_WINDOWS_DRIVE_ROOT = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04\\\\_Content\\\\Video Engine'")
   })
 

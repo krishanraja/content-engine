@@ -85,9 +85,9 @@
     "promise_match_min_terms": 1
   },
   "runtime": {
-    "drive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",
-    "media_inbox": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Inbox",
-    "archive_root": "G:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Archive"
+    "drive_root": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",
+    "media_inbox": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Inbox",
+    "archive_root": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Archive"
   },
   "radar_providers": {
     "mm_ctrl_url": "https://bkyuxvschuwngtcdhsyg.supabase.co/functions/v1/video-radar-export",

@@ -22,9 +22,12 @@ from Control Center. It never publishes: YouTube upload is private-only, and
 LinkedIn, TikTok and Instagram output stays a local package for a person to
 post.
 
-As of 2026-09-25 two Studio jobs exist in the database, no Short has a
-recorded final approval, package or upload, and the runner is built and
-merged but not verified installed (`docs/STATE.md`).
+As of 2026-09-25 two Studio jobs exist in the database and no Short has a
+recorded final approval, package or upload. Since 2026-09-28 the runner is
+installed on a primary Windows machine with a cold standby on a second one,
+both pinned at `6bf7862`, and the Studio's Drive root is on H:
+(`docs/STATE.md`, "The Studio's runners"; `docs/OPERATIONS.md`, "Primary and
+cold standby").
 
 ## Series and subchannels: two vocabularies, both live
 
@@ -262,8 +265,8 @@ Each is current for the Studio except where the note says otherwise
 | `docs/ENGINE_SESSION.md` | the tracked session contract and what may be captured | nothing |
 | `docs/ARCHITECTURE.md` | state model, media decisions, learning boundary, runner protocol | short-native now starts only from `ProductionBriefV1`; "Inter 800" is V1 only; the radar section predates import-only; says "Codex authors" where any client may |
 | `docs/OPERATIONS.md` | setup, typical runs, recovery, failure codes | examples use the legacy `codex-user-confirmation:` prefix; "never creates a job automatically" predates brief intake; "16 scheduled jobs" is now 20; "podcast" is not a mode |
-| `docs/DEPLOYMENT.md` | secrets, runner install, the shipped versus installed boundary | treats Control Center as the API host (the routes moved to `apps/control-plane`, ADR-019); upstream review order and rollout checklists are historical; omits the MCP token |
-| `docs/ENGINE_SECRETS_HANDOVER.md` | the Windows credential contract | says the runner is installed, which nothing else records |
+| `docs/DEPLOYMENT.md` | secrets, runner install, the standby machine, the shipped versus installed boundary | upstream review order and rollout checklists are historical, and they still say "Control Center API" for routes that deploy from `apps/control-plane` (ADR-019); the host, the credential table and the Drive paths were brought current on 2026-09-28 |
+| `docs/ENGINE_SECRETS_HANDOVER.md` | the Windows credential contract, per runner machine | nothing (checked 2026-09-28) |
 | `docs/CAROUSEL_ENGINE_STATE.md` | the carousel engine's gate and decision record | last verified 2026-09-07; calls the repo `mindmake-video-studio`; its test counts are old |
 | `docs/ART_DIRECTOR_REPERTOIRE.md` | the visual device registry and the sharp-alternative path | nothing |
 | `docs/OPENING_LOOP_CALIBRATION.md` | the opening contract (promise match, open question) | nothing |
