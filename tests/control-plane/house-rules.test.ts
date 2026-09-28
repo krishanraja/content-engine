@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import { HOUSE_RULES, houseRulesBlock, rulesFor, type Stage } from '../../apps/control-plane/api/_houseRules.js'
-import { predictionCheck, publishChecks, publishStatus, readingGrade } from '../../apps/control-plane/api/_publishChecks.js'
+import { confidenceOf, predictionCheck, publishChecks, publishStatus, readingGrade } from '../../apps/control-plane/api/_publishChecks.js'
 import { VOICE_GUARDRAILS } from '../../apps/control-plane/api/_content.js'
 import { bodyHash } from '../../apps/control-plane/api/_factGate.js'
 import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
@@ -104,6 +104,31 @@ describe('the checks before approval, on real text', () => {
     assert.equal(at(60).ok, false); assert.equal(at(60).blocking, false); assert.match(at(60).detail, /sitting on the fence/)
     assert.equal(at(75).ok, true)
     assert.equal(publishStatus(publishChecks(PASSED.replace('75%.', '60%.'), factsOk)).ok, true)
+  })
+  test('piece 1\'s "Confidence: 70%" is read, so the stance is judged on its number', () => {
+    // Walk log F35: v10 ends "**The Call.** ... Confidence: 70%." and the
+    // check read only "How sure we are:", so CLEAR_STANCE showed green over
+    // "No confidence set yet".
+    const call = (line: string) => `Amazon's move is about ads.\n\n**The Call.** By 30 June 2027, Amazon opens an authorised route for shopping agents. ${line}`
+    assert.equal(confidenceOf(call('Confidence: 70%.')), 70)
+    assert.equal(confidenceOf('How sure we are: 75%.'), 75)
+    const stance = (line: string) => publishChecks(call(line), factsOk).find(c => c.id === 'CLEAR_STANCE')!
+    assert.equal(stance('Confidence: 70%.').ok, true)
+    assert.equal(stance('Confidence: 70%.').detail, '70% is a clear stance.')
+    assert.equal(stance('Confidence: 60%.').ok, false)
+    assert.match(stance('Confidence: 60%.').detail, /sitting on the fence/)
+  })
+  test('a confidence the check cannot read is never green, and says why', () => {
+    const text = 'Amazon\'s move is about ads.\n\n**The Call.** By 30 June 2027, Amazon opens an authorised route. We are 70% sure.'
+    const checks = publishChecks(text, factsOk)
+    assert.equal(checks.find(c => c.id === 'CALL')!.ok, true)
+    const stance = checks.find(c => c.id === 'CLEAR_STANCE')!
+    assert.equal(stance.ok, false)
+    assert.equal(stance.blocking, false)
+    assert.match(stance.detail, /cannot read/)
+    const unset = publishChecks(UNSET, factsOk).find(c => c.id === 'CLEAR_STANCE')!
+    assert.equal(unset.ok, false)
+    assert.equal(unset.detail, 'No confidence set yet.')
   })
   test('the prediction can be a bold paragraph, as piece 1 writes it', () => {
     assert.equal(predictionCheck('**The Call.** By 30 June 2027, Amazon opens a route. Confidence: 70%.').ok, true)

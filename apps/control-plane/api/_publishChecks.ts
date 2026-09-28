@@ -100,9 +100,12 @@ export function americanSpellings(body: string): Array<{ found: string; use: str
 /** Where a confidence starts to read as a clear stance (Krish, 2026-09-26). */
 export const CLEAR_STANCE_AT = 70
 
-/** The confidence in the prediction section, as a number, or null when unset. */
+/** The confidence in the prediction section, as a number, or null when unset.
+ *  Reads "How sure we are: 75%" and piece 1's "Confidence: 70%". It read only
+ *  the first, so piece 1's 70% came back as unset and CLEAR_STANCE showed
+ *  green over a detail saying "No confidence set yet" (walk log F35). */
 export function confidenceOf(body: string): number | null {
-  const m = String(body || '').match(/How sure we are:[ \t]*(\d{1,3})%/i)
+  const m = String(body || '').match(/\b(?:How sure we are|Confidence)[ \t]*:[ \t]*(\d{1,3})[ \t]*%/i)
   return m ? Number(m[1]) : null
 }
 
@@ -153,11 +156,16 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   // A warning, never a block: the number is Krish's, and he may choose a
   // middling one on purpose. 70% is where "clear" starts in this check, set
   // from his own pair of examples (60% fence-sitting, 75% clear).
+  // Green only on a number it has read. A confidence it cannot read is not a
+  // clear stance, whatever CALL makes of the section.
   const sure = confidenceOf(text)
   checks.push({
     id: 'CLEAR_STANCE', name: 'Take a clear stance', blocking: false,
-    ok: sure === null || sure >= CLEAR_STANCE_AT,
-    detail: sure === null ? 'No confidence set yet.'
+    ok: sure !== null && sure >= CLEAR_STANCE_AT,
+    detail: sure === null
+      ? (call.ok
+        ? 'The prediction has a percentage this check cannot read as its confidence. Write it as "How sure we are: 75%".'
+        : 'No confidence set yet.')
       : sure >= CLEAR_STANCE_AT ? `${sure}% is a clear stance.`
       : `${sure}% reads as sitting on the fence. Back the outcome we believe with a clearer number.`,
   })
