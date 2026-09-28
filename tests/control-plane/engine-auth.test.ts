@@ -215,6 +215,26 @@ describe('every idea route', () => {
     assert.deepEqual(open.map(f => relative(API, f)), [])
   })
 
+  test('a read of one piece is refused without credentials, and reaches the route on the operator bearer', async () => {
+    // GET /api/content-ideas?id= (walk log F32): an agent session reads a body
+    // before it saves one, through the same gate as the writes.
+    await withEnv({ ACCESS_CODE: CODE, ENGINE_OPERATOR_TOKEN: TOKEN, CRON_SECRET: 'cs_' + 'd'.repeat(32) }, async () => {
+      const { default: handler } = await import(join(API, 'content-ideas.ts'))
+      const call = async (headers: Record<string, string>, query: Record<string, string>) => {
+        const { res, out } = fakeRes()
+        await handler({ method: 'GET', headers, query, body: {} }, res)
+        return out.status
+      }
+      const id = '00000000-0000-4000-8000-000000000000'
+      assert.equal(await call({}, { id }), 401, 'no credentials')
+      assert.equal(await call({ authorization: `Bearer ${'cs_' + 'd'.repeat(32)}` }, { id }), 401, 'the cron secret')
+      assert.equal(await call({ authorization: 'Bearer eot_wrong' }, { id }), 401, 'a wrong bearer')
+      // Through the gate: no id is the route's own 400, before any read.
+      assert.equal(await call({ authorization: `Bearer ${TOKEN}` }, {}), 400)
+      assert.equal(await call({ cookie: COOKIE }, { id: 'not-a-uuid' }), 400)
+    })
+  })
+
   test('each one refuses a request that carries no credentials', async () => {
     // Called, not read: a gate that is imported and never reached is the same
     // as no gate. Every handler must stop before touching the database.

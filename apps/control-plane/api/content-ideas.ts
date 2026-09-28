@@ -17,6 +17,10 @@ import { guardEngine } from './_auth.js'
 
 // Content ideas inbox endpoint.
 //
+//   GET    ?id=<uuid>: one piece as it stands (id, state, lane_slot, idea,
+//            thesis, body and updated_at), behind the same gate as the rest.
+//            Until 2026-09-28 nothing an agent session could reach returned a
+//            body, and a walk confirmed the live text with SQL (walk log F32).
 //   POST   — quick-capture: Krish types an idea (⌘+I modal). We FIRST run the
 //            tiered dedup check (canonical URL → title_norm → content_hash →
 //            embedding similarity) so the same story arriving via Gmail sweep,
@@ -60,8 +64,23 @@ const ALLOWED_SOURCE = new Set([
   'build_signal',
 ])
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/** The columns a read of one piece returns. */
+export const PIECE_COLUMNS = 'id,state,lane_slot,idea,thesis,body,updated_at'
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guardEngine(req, res, ['POST', 'PATCH'])) return
+  if (guardEngine(req, res, ['GET', 'POST', 'PATCH'])) return
+
+  if (req.method === 'GET') {
+    const raw = req.query?.id
+    const id = String((Array.isArray(raw) ? raw[0] : raw) || '').trim()
+    if (!UUID.test(id)) return res.status(400).json({ ok: false, error: 'id is required, as a uuid' })
+    const { data, error } = await supabase.from('content_ideas').select(PIECE_COLUMNS).eq('id', id).maybeSingle()
+    if (error) return res.status(500).json({ ok: false, error: 'read_failed' })
+    if (!data) return res.status(404).json({ ok: false, error: 'not_found' })
+    return res.status(200).json({ ok: true, piece: data })
+  }
 
   if (req.method === 'POST') {
     const body = (req.body || {}) as {

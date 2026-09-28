@@ -241,6 +241,7 @@ records that Krish published a piece (and a ship); it does not post anything.
 | Route | What it does |
 |---|---|
 | `POST /api/content-edits` | appends one event to the edit ledger, `content_edit_events` (admission rules in `api/_editEvents.ts`) |
+| `GET /api/content-ideas?id=<uuid>` | one piece as it stands, `{ ok: true, piece: { id, state, lane_slot, idea, thesis, body, updated_at } }`; 400 without a uuid, 404 when there is no such row; the cookie or the operator bearer, like the writes. Records nothing |
 | `PATCH /api/content-ideas` | the single choke point for body edits and state moves; writes `manual_edit`, `approved`, `binned` and `published` events |
 | `/api/learning/compile` (cron, Sundays) | the weekly compiler. Proposes, never changes config: presets he never keeps, judges that never change an outcome, hand rewrites after an accepted machine edit. Reads only `actor = 'Krish'` rows that are not `observation_only` |
 | `judge_calibration` (a view) | joins each judge's verdict to Krish's decision on the same panel run (`panel_run_id`) |
