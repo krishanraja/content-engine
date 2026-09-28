@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
 import { operatorAttribution, sha256 } from '../../_editEvents.js'
 import { supabase } from '../../_supabase.js'
-import { openStream, send, fail, streamClaude } from '../../_stream.js'
+import { emptyOutput, failWith, modelFailure, openStream, send, streamClaude } from '../../_stream.js'
 import { corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId, readMaterials, sanitizeVoice } from '../../_content.js'
 import { isHumourRegister } from '../../_humor.js'
 import { buildRevisePrompt, REVISE_MODES } from '../../_revisePrompt.js'
@@ -23,6 +23,13 @@ import { loadSubchannel } from '../../_subchannels.js'
 // In-place rewrite of the CURRENT draft (Phases 1 + 5). Does NOT mutate the row's
 // body — returns the revised text so the card can preview-then-accept. A history
 // entry is appended to meta.revisions[] for auditability.
+//
+// Success is a stream that ends with a `done` event whose `ok` is true. A
+// failure is typed (ModelErrorBody in api/_stream.ts): known before the
+// stream opens (a usage limit, a bad key, an overload the provider answered
+// at once), it is a JSON body with a failure status; after it opens, it is
+// the stream's last event, `error`, and no `done` follows. Neither writes
+// meta.revisions or a ledger row. docs/CONTENT_ENGINE.md has the shapes.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res)) return
@@ -87,7 +94,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) return res.status(503).json({ ok: false, error: 'ANTHROPIC_API_KEY not configured' })
 
-  openStream(res)
+  // The stream opens only once the provider has accepted the call, so a
+  // refusal reaches the caller as a status it cannot mistake for success.
+  let opened = false
   let revisedFragment: string
   try {
     revisedFragment = (await streamClaude({
@@ -107,13 +116,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       maxTokens: mode === 'length' && b.value === 'long' ? 3200 : 2200,
       system,
       messages: [{ role: 'user', content: user }],
+      onOpen: () => { openStream(res); opened = true },
       onText: chunk => send(res, 'delta', { text: chunk }),
     })).trim()
-  } catch (e: any) {
-    return fail(res, 'revise_failed', String(e?.message || e))
+  } catch (e: unknown) {
+    const failure = modelFailure('revise_failed', 'The rewrite', e)
+    if (!opened) {
+      if (failure.retryAfterSeconds) res.setHeader('Retry-After', String(failure.retryAfterSeconds))
+      return res.status(failure.status).json(failure.body)
+    }
+    return failWith(res, failure.body)
   }
   // Strip stray surrounding quotes / em dashes the model may have slipped in.
   revisedFragment = sanitizeVoice(revisedFragment.replace(/^["'`]+|["'`]+$/g, ''))
+  if (!revisedFragment) return failWith(res, emptyOutput('revise_failed', 'The rewrite'))
 
   const revised = inPlace ? sourceText.replace(b.selection as string, revisedFragment) : revisedFragment
 
