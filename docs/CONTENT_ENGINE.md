@@ -140,6 +140,19 @@ has passed. `POST /api/content-ideas/:id/judge` answers such a panel with 503
 | `POST /api/content-ideas/synthesize` | merges 2 to 25 cards into one `drafting` piece and marks the sources `absorbed` | Sonnet [`cleo-synthesize`] |
 | `/api/briefs/assemble` (cron), `/api/briefs/[week]`, `revise`, `notes` | the weekly brief: one investigative opinion piece plus its decision cards | Sonnet [`briefs-*`] |
 
+**What the writers read of the materials** (`materialsContext` in
+`api/_content.ts`, since 2026-09-28, walk log F36). Filed sources come first,
+each in full, up to 24,000 characters (the final pass's whole budget was
+16,000 and the fact gate reads 120,000); one that does not fit is named as
+not shown, and the next is still tried. Everything else follows at the
+caller's budget (the drafter and the rewriter: 2,400 characters each, 9,000
+in all), under a label saying whose it is: "BACKGROUND MATERIALS Krish
+provided ... treat as primary source" only for what he put on the piece; the
+engine's own dives, deepen and investigation research, and the shift dossier
+as "THE ENGINE'S OWN SECONDARY RESEARCH", which a writer checks against the
+filed sources before using; an agent session's other notes as research on
+file. The ladder's repair reads the same three labels.
+
 **How `revise` answers** (since 2026-09-28, walk log F31). The stream
 opens only once Anthropic has accepted the call. A success is a stream of
 `delta` events (`{ text }`) that ends with `done`
