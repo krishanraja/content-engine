@@ -1399,5 +1399,43 @@ for (const name of [
 ]) assert.match(envExample, new RegExp(`^${name}=`, 'm'))
 assert.match(envExample, /26214400-byte object limit/)
 
+// The runner-role fence (2026-09-28). Ruling (Krish, 2026-09-28): a second
+// Windows machine is a cold standby with its task disabled. Behaviour is
+// proved in tests/fixtures/control-plane/runner-roles-*.sql and
+// tests/control-plane/runner-roles.test.ts; these pin the shape a later edit
+// could quietly loosen.
+const runnerRolesMigrationName = '20260928120000_video_studio_runner_roles.sql'
+const runnerRolesMigration = await readFile(new URL(`../../../supabase/migrations/${runnerRolesMigrationName}`, import.meta.url), 'utf8')
+assert.ok(runnerRolesMigrationName > '20260926090000_video_studio_series_live_subchannels.sql', 'the runner-role migration sorts after every applied Video Studio migration')
+for (const table of ['video_studio_runner_roles', 'video_studio_runner_role_events']) {
+  assert.match(runnerRolesMigration, new RegExp(`alter table public\\.${table} enable row level security;`), `${table} RLS`)
+  assert.match(runnerRolesMigration, new RegExp(`revoke all on public\\.${table} from public, anon, authenticated, service_role;`), `${table} revoke`)
+  assert.match(runnerRolesMigration, new RegExp(`grant select on public\\.${table} to service_role;`), `${table} is read-only to service_role`)
+  assert.doesNotMatch(runnerRolesMigration, new RegExp(`grant [^;]*(?:insert|update|delete)[^;]* on public\\.${table}`, 'i'), `${table} writes go through the functions`)
+}
+assert.match(runnerRolesMigration, /create unique index video_studio_runner_roles_one_active_idx[\s\S]+where role = 'active'/, 'at most one active runner')
+assert.match(runnerRolesMigration, /create constraint trigger video_studio_runner_roles_one_active[\s\S]+deferrable initially deferred/, 'exactly one active runner once seeded')
+assert.match(runnerRolesMigration, /before truncate on public\.video_studio_runner_roles/, 'the roles can never be emptied, so the fence cannot fall back open')
+assert.match(runnerRolesMigration, /where roles\.runner_id_hash = p_runner_id_hash\s+for share;/, 'a claim holds the role row until it commits, so a switch sees its lease')
+assert.match(runnerRolesMigration, /\(c\.last_lease_owner_hash is null and v_standing in \('active', 'unfenced'\)\)\s+or c\.last_lease_owner_hash = p_runner_id_hash/, 'new commands only for the active runner; a runner may still finish its own')
+assert.match(runnerRolesMigration, /if v_standing = 'retired' then return; end if;/, 'a retired runner claims nothing, its own work included')
+assert.match(runnerRolesMigration, /if v_standing not in \('active', 'unfenced'\) then\s+return 'fenced';/, 'new briefs only for the active runner')
+assert.match(runnerRolesMigration, /and idea\.updated_at = p_expected_updated_at/, 'the brief lease stays compare-and-set')
+for (const refusal of ['active_runner_still_running', 'active_runner_has_pending_receipts', 'active_runner_holds_work', 'target_runner_not_ready', 'runner_retired', 'active_runner_changed']) {
+  assert.match(runnerRolesMigration, new RegExp(`raise exception '${refusal}'`), `the switch refuses: ${refusal}`)
+}
+assert.match(runnerRolesMigration, /and \(v_active_runner_hash is null or heartbeat\.runner_id_hash = v_active_runner_hash\)/, 'a recovery is admitted only for the active runner')
+assert.doesNotMatch(runnerRolesMigration, /grant all/i)
+assert.doesNotMatch(runnerRolesMigration, /\bstorage\./i)
+assert.doesNotMatch(runnerRolesMigration, /video_studio_record_heartbeat|video_studio_complete_command\(/, 'heartbeats and completion are never fenced')
+const runnerRolesRoute = await readFile(new URL('../api/video-studio/runner-roles.ts', import.meta.url), 'utf8')
+assert.match(runnerRolesRoute, /guardVideoStudioOperatorMutation\(req, res, \['POST'\]\)/)
+assert.match(runnerRolesRoute, /guardVideoStudioOperatorRead\(req, res, \['GET'\]\)/)
+assert.match(runnerRolesRoute, /p_set_by: setBy/)
+assert.match(runnerRolesRoute, /const setBy = `operator:\$\{operator\}`/)
+assert.doesNotMatch(runnerRolesRoute, /Access-Control-Allow-Origin|guardVideoStudioRunner/)
+const briefClaimRoute = await readFile(new URL('../api/video-studio/runner/production-brief-claim.ts', import.meta.url), 'utf8')
+assert.match(briefClaimRoute, /res\.status\(200\)\.json\(\{ \.\.\.NOTHING_TO_CLAIM_BRIEF \}\)/, 'a fenced runner gets exactly the empty answer')
+
 await import('./check-studio-session-gateway.ts')
 console.log('video studio control-plane invariants passed')

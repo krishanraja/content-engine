@@ -78,6 +78,11 @@ The gaps this left, in order of risk:
   presents the bearer. Only receipt reclaim is tied to one runner.
 - **G2.** Nothing records which runner is meant to be active, switches it with
   an audit trail, or says when it has gone silent while work waits.
+- G1 and G2 are built and wait to go live: runner roles fenced in both claim paths and
+  an audited operator switch (`docs/OPERATIONS.md`, "Runner roles";
+  migration `20260928120000_video_studio_runner_roles.sql`). Applying the
+  migration, deploying and seeding the primary as active wait on Krish, in
+  the order in "Seeding the roles and the deployment order".
 - **G3.** `GET /api/content-engine/health` selects heartbeat columns that do
   not exist (`updated_at`, `status`) and so always reports the runner as
   `never`; `runner_watch` reads the newest row whichever runner wrote it, and

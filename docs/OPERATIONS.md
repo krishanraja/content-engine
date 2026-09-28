@@ -77,9 +77,43 @@ A failover is a manual operator action. Never infer that one is needed, or that 
 1. **Primary.** `scripts/runner.ps1 -Mode status` must show zero pending and zero conflicted receipt journals, zero pending and zero conflicted project journals, and no active command. Then `Stop-ScheduledTask -TaskName "Mindmake Video Studio Runner"` and `Disable-ScheduledTask -TaskName "Mindmake Video Studio Runner"`. `scripts/runner.ps1 -Mode stop-preflight` must return exactly `"active": false`. If the primary machine is lost and cannot be inspected, stop here: its pending receipts and leases can be finished only by it.
 2. **Cloud, read-only.** The primary's heartbeat row stops advancing (an idle runner heartbeats about every five seconds, so a minute of silence is decisive). There are 0 `queued` or `leased` rows in `video_studio_commands`, and 0 claimable production briefs in `content_ideas.transformed_outputs.production_briefs` (status `ready_for_studio`, or `leased` with an expired lease).
 3. **Standby.** `Enable-ScheduledTask` and `Start-ScheduledTask` for the same task name. `scripts/runner.ps1 -Mode status` must show `active: true`, the exact expected commit, source provenance `verified`, Drive `ready` and zero conflicts, and the standby's heartbeat row must be fresh.
-4. **Failback** is the same procedure in reverse. Afterwards the machine that is not running keeps its task disabled.
+4. **Switch the active role** (once the runner roles are live, below). Until this step the standby heartbeats and is leased nothing. In Control Center, or with `POST /api/video-studio/runner-roles`, switch the active role from the primary's hash to the standby's, with a reason. The switch is refused unless the primary has been silent for a minute, its last heartbeat reported no pending receipts and no active command, no command is queued or leased to it (or was last leased to it), no brief is leased to it, and the standby is heartbeating idle with Drive ready. A refusal names its reason and changes nothing.
+5. **Failback** is the same procedure in reverse, ending with the switch back. Afterwards the machine that is not running keeps its task disabled.
 
-The drill of 2026-09-28 followed these steps with an empty queue: the primary was stopped and disabled, the standby started, heartbeated idle with Drive ready, claimed nothing, and was stopped and disabled again; the primary restarted healthy.
+The drill of 2026-09-28 followed steps 1 to 3 with an empty queue, before the roles existed: the primary was stopped and disabled, the standby started, heartbeated idle with Drive ready, claimed nothing, and was stopped and disabled again; the primary restarted healthy.
+
+### Runner roles
+
+`video_studio_runner_roles` (`supabase/migrations/20260928120000_video_studio_runner_roles.sql`) holds one row per runner hash with its role, who set it, when and why; `video_studio_runner_role_events` keeps every change. At most one runner is `active`. Once the roles are seeded there is always exactly one, rows are never deleted, and a `retired` runner stays retired.
+
+- **The fence.** Both claim paths lease new work only to the active runner: `video_studio_claim_command` for commands, and `video_studio_lease_production_brief`, which `runner/production-brief-claim.ts` now calls to write a brief lease. Any other runner gets the answers an empty queue gives, `{"ok": true, "schema_version": 1, "command": null}` and `{"ok": true, "schema_version": 1, "item": null}`, which the installed runner already reads as "nothing to claim". The runners need no change.
+- **What it never touches.** Heartbeats are accepted from every runner. Lease renewal, preview upload, completion, late completion and receipt acknowledgement work for whichever runner holds the lease, whatever its role, and a runner may still reclaim a command it leased itself (unless it is retired). A switch therefore never strands a signed receipt, and the switch refuses while any of that work exists anyway.
+- **Recovery.** A review recovery is admitted only when the runner holding its signed evidence is the active one, because only the active runner can claim the recovery's binding command. After a failover, recover the old primary's commands after failing back.
+- **Operator actions.** `GET /api/video-studio/runner-roles` lists the runners (full hashes, roles, last heartbeat, Drive state, the last 20 changes). `POST` takes `{"schema_version": 1, "action": "switch_active", "to_runner_id_hash", "expected_active_runner_id_hash", "reason"}`, or `{"schema_version": 1, "action": "set_role", "runner_id_hash", "role": "standby" | "retired", "reason"}` for a runner that is not active. Both need Control Center's cookie, its exact origin and a CSRF token, and record `operator:<identity hash>` with the reason. A runner that is heartbeating or holds work cannot be retired.
+- **After a bearer rotation** every runner reports under a new hash, because the hash covers the bearer. The new hashes are unassigned and fenced, so production takes no work until the active role is switched to the primary's new hash; the health route says so ("heartbeating with no role"). Switch it once the primary heartbeats under the new bearer, then retire the old hashes.
+
+### Seeding the roles and the deployment order
+
+Until the first role row exists the claim functions behave exactly as before, so the migration can be applied while the primary works. The seed turns the fence on in one transaction; it is a data change that needs Krish's approval, with the real hashes read back from `video_studio_runner_heartbeats` at that moment:
+
+```sql
+begin;
+insert into public.video_studio_runner_roles (runner_id_hash, role, set_by, reason) values
+  ('<the primary''s full hash, heartbeating now>', 'active', 'krish', '<why, in Krish''s words>'),
+  ('<each stale hash>', 'retired', 'krish', '<why>');
+commit;
+```
+
+Mark the standby `standby` once a drill has identified its hash, through the `set_role` action or `public.video_studio_set_runner_role`. Until then it is unassigned, which fences it the same way.
+
+The order, each step proved before the next:
+
+1. Apply the migration. Nothing changes: re-run the read-only checks and confirm the primary still heartbeats and the queue is unchanged.
+2. Deploy the control plane (`content-engine`) from the merged commit. Before the seed its brief claim behaves as before; it now writes through the new database function, which must exist first.
+3. Run the seed, with the primary heartbeating, idle and holding nothing.
+4. Prove it read-only: `select runner_id_hash, role from video_studio_runner_roles` shows the primary's hash `active` and exactly one active row, the primary keeps heartbeating, the health route reports it as the active runner with the roles fenced, and the next real command or brief is leased to the primary's hash (`video_studio_commands.lease_owner_hash`, or the brief envelope's `lease.runner_id_hash`). The queue was empty on 2026-09-28, so that last proof waits for the first real piece of work.
+
+If the order is broken the failure is closed and visible: control-plane code deployed before the migration answers the runner's brief claim with a 503 (`production_brief_store_unavailable`). The runner asks for a brief before it asks for a command, so its whole cycle fails and retries with backoff: it claims neither briefs nor commands until the migration lands, and nothing is lost.
 
 ## Google Drive Inbox
 

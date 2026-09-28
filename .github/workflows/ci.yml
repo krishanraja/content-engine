@@ -96,7 +96,11 @@ jobs:
           psql_in supabase/migrations/20260905110000_video_studio_expected_platform_state.sql
           psql_in supabase/migrations/20260926090000_video_studio_series_live_subchannels.sql
           psql_in tests/fixtures/control-plane/series-live-subchannels.sql
+          # The runner-role fence goes in before the existing regression, which
+          # then proves nothing changes while the roles are unseeded.
+          psql_in supabase/migrations/20260928120000_video_studio_runner_roles.sql
           psql_in tests/fixtures/control-plane/projection-state-regression.sql
+          psql_in tests/fixtures/control-plane/runner-roles-regression.sql
           psql_in tests/fixtures/control-plane/projection-state-concurrency-setup.sql
 
           wait_for_advisory_locks() {
@@ -139,6 +143,14 @@ jobs:
           psql_in tests/fixtures/control-plane/projection-state-concurrency-verify.sql
           psql_in supabase/migrations/20260907091923_studio_session_learning_spine.sql
           psql_in tests/fixtures/control-plane/studio-session-learning-regression.sql
+          # Last, because it commits a seed that fences every later claim: an
+          # open claim holds the active role row, so a switch must wait for it
+          # and then refuse.
+          psql_in tests/fixtures/control-plane/runner-roles-race-setup.sql
+          run_projection_race \
+            tests/fixtures/control-plane/runner-roles-race-claim-first.sql \
+            tests/fixtures/control-plane/runner-roles-race-switch-second.sql 1
+          psql_in tests/fixtures/control-plane/runner-roles-race-verify.sql
 
   dependency-audit:
     runs-on: ubuntu-latest

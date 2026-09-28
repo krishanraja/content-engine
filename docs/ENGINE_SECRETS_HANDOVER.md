@@ -159,6 +159,11 @@ depending on a broad parent-directory trust rule.
    fresh heartbeat. Normal signed receipts remain the business-flow proof, but
    they are no longer required merely to establish that the two credential
    stores agree.
+9. After a bearer rotation, switch the active runner role to the primary's
+   new hash (`docs/OPERATIONS.md`, "Runner roles"). The hash covers the
+   bearer, so the primary reports under a new, unassigned hash and takes no
+   work until the switch; retire the old hashes afterwards. A signing-key
+   rotation alone leaves the hashes and roles unchanged.
 
 If any check fails, keep the runner disabled. Do not delete, edit or re-sign an
 authority record by hand.
