@@ -209,7 +209,7 @@ describe('GET /api/video-studio/runner/watch', () => {
     assert.equal(body.silent_hours, 48)
   })
 
-  test('the active runner heard recently with work waiting is working, not an alert', async () => {
+  test('the active runner heard recently with work waiting is working and raises no alert', async () => {
     world({ roles: seededRoles, heartbeats: [beat(A, 5), beat(B, 5 * 86_400)], queued: 3 })
     const body = await watch()
     assert.equal(body.ok, true)

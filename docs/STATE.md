@@ -94,7 +94,21 @@ The gaps this left, in order of risk:
 - **G4.** Repository defaults pointed at G: (fixed the same day).
 - **G5.** No document described the two machines or the failover (fixed the
   same day: `docs/DEPLOYMENT.md` and `docs/OPERATIONS.md`).
-- **G6.** The one `attention` command's cause was unrecorded.
+- **G6.** The one `attention` command's cause was unrecorded. Read back on
+  2026-09-28: `magic_edit_prepare` `033099bb`, on the synthetic validation job
+  `20260905-built_with_ai-e999681c` (retired on 2026-09-07 with
+  `synthetic_validation_2026_09_05`), `attempts_exhausted` after five leases
+  between 02:03 and 02:14 UTC on 2026-09-05, with no receipt. Probable cause
+  (inference): the lease-renewal bug fixed by
+  `20260905100000_video_studio_heartbeat_lease.sql`, applied live at 02:43 UTC
+  that day, which failed every renewal of a long-running command, so each
+  attempt lost its lease before it could write a receipt. The same direction
+  succeeded on a retry at 02:31 and its review is `superseded`.
+  `review_recovery_record` does not apply (it recovers only
+  `magic_edit_activate` and `review_decision_record` commands, and this row
+  predates `last_lease_owner_hash`), and a retired job is outside the queue
+  and the runner watch. Recommendation: leave it as the record of that day.
+  Nothing reads it as work waiting.
 
 ## Live and verified
 
