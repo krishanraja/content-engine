@@ -436,27 +436,59 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 
 1. Use the operator bearer from a secret store the session was given; never
    print it, commit it or paste it into chat.
-2. Your own calls are observations. Relay a decision only when Krish made it
+2. Check the engine's health before you spend: `GET
+   /api/content-engine/health` on the operator bearer. When
+   `model_provider.usable` is false, stop: `model_provider.says` names the
+   failure, in the provider's own words, and when access returns, and every
+   stage that writes or checks (draft, revise, final pass, fact gate, the
+   judges) will be refused. When `state` is `unconfirmed`, the reset has
+   passed and one cheap call shows whether it is back. On 2026-09-27 the key
+   was over its usage limit for 33 hours before anyone knew (walk log F28 to
+   F30).
+3. Read a piece with `GET /api/content-ideas?id=<uuid>`: its `id`, `state`,
+   `lane_slot`, `idea`, `thesis`, `body` and `updated_at`. Never read a body
+   with SQL (walk log F32).
+4. Your own calls are observations. Relay a decision only when Krish made it
    in words in the session, with `decided_by: 'Krish'`.
-3. Run calls that write `meta` one at a time: most routes read the row, call a
+5. Run calls that write `meta` one at a time: most routes read the row, call a
    model, then write the whole `meta` back.
-4. Keep spend inside what Krish approved for the session, and read
-   `meter_daily` to check it.
-5. Write what you find in `docs/walks/` or the relevant document, never only in
+6. Keep spend inside what Krish approved for the session, and read
+   `meter_daily` to check it. A refused call counts as a run and a failure on
+   its key, at no cost.
+7. Write what you find in `docs/walks/` or the relevant document, never only in
    the chat.
-6. Before a piece can move on, its facts must pass the gate. File the sources
+8. A revise is a success only when its stream ends with `done` and
+   `ok: true`. A failure is a status with a typed body, or the stream's last
+   event, `error`, with a `code` (see "How `revise` answers").
+9. Save text the engine wrote (a rewrite you accept, a draft, a final-pass
+   fix) with `PATCH /api/content-ideas` and `edit_source: 'magic'`:
+   `{ id, body, edit_source: 'magic', client: 'claude_code' }`. Without it the
+   PATCH records a `manual_edit`, which the ledger, and the caching-pass bar
+   that counts hand edits, read as an agent editing by hand when it did not
+   (walk log F37). The accept itself, when you record it, goes to
+   `POST /api/content-edits` as `magic_accepted` with `before_hash` and
+   `after_hash`, and an operator's row is an observation. Text you wrote
+   yourself is a hand edit: save it without the field, so it is counted.
+10. Before a piece can move on, its facts must pass the gate. File the sources
    you used as verbatim excerpts with `file-verbatim-source.ts` (a summary
    alone never passes a fact), run `POST /api/content-ideas/:id/fact-check`,
    and fix or cut what it lists. Where you attribute words, use the source's
    own words; the piece's house translations ("brain" for model) belong in
    the writer's voice, never inside a quote or a paraphrase of one.
-7. A web edition goes in `editions/` with the exact text that passed and the
+   A known limit: the gate needs the figure as the piece writes it. Amazon's
+   10-K prints advertising revenue as "68,635" (in millions), and no passage
+   of it can carry "$68.6 billion", because the number check wants "68.6" in
+   the quoted words. File a source that prints the rounded figure as well
+   (piece 1 filed a GuruFocus report on Yahoo Finance and marketmaze), and
+   check the passage is about the same thing: the same 10-K says "Operating
+   income was $68.6 billion" for 2024 (walk log F38).
+11. A web edition goes in `editions/` with the exact text that passed and the
    gate's record (`editions/README.md`); its test fails if the page says
    anything the gate did not check.
-8. When Krish gives a new ruling in words, add it to `api/_houseRules.ts`
+12. When Krish gives a new ruling in words, add it to `api/_houseRules.ts`
    once, with his words and the stages it touches, and let the coverage test
    tell you which stage still ignores it. Never copy a rule into one prompt.
-9. After every push to `main`, read `main`'s CI before the next push (walk
+13. After every push to `main`, read `main`'s CI before the next push (walk
    log F20).
 
 ## Development notes
