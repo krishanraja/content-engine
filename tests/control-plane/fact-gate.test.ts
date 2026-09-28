@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
@@ -6,6 +7,8 @@ import {
   sourcesText, summarise, sweep,
   type CheckedClaim,
 } from '../../apps/control-plane/api/_factGate.js'
+import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
+import { readPieceCall } from '../../packages/contracts/src/call.js'
 
 // The fact gate (Krish, 2026-09-25). The cases below are the real ones: the
 // engine's first draft of piece 2 turned Cisco's "$900 million annually" into
@@ -298,6 +301,75 @@ describe('the confidence line is never a claim', () => {
     assert.match(src, /const claims = listed\.filter\(c => !isConfidenceLine\(c\.sentence\)\)/)
     assert.match(src, /const leftovers = leftoversOf\(swept\)/)
     assert.ok(src.indexOf('isConfidenceLine(c.sentence)') < src.indexOf('async function onFile'), 'the filter runs inside extract, before the checks')
+  })
+})
+
+// Walk log F41 (2026-09-28). Only "How sure we are:" on a line of its own was
+// exempt, and piece 1 writes its call as one paragraph that ends "Confidence:
+// 70%.". Re-setting that number would have thrown a passed check away, and
+// the sentence itself was a claim on every run, one that can only fail.
+// Krish, 2026-09-26: a confidence no longer forces a fact re-check. The
+// exemption now reads both labels with the Studio's call reader, and takes out
+// the number alone.
+describe('Krish\'s confidence under either label', () => {
+  const PIECE_1 = [
+    'Amazon blocked Muse on Sunday 20 September 2026.',
+    '## Who gets paid',
+    'Amazon made $68.6 billion from advertising, and Consumer confidence: 62% in August, per the survey.',
+    '**The Call.** By 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings. Confidence: 70%.',
+  ].join('\n\n')
+  const at = (n: string) => PIECE_1.replace('Confidence: 70%', `Confidence: ${n}`)
+  const verified = (): CheckedClaim => checked('verified')
+
+  test('changing or setting the number on the call\'s "Confidence:" keeps a passed check', () => {
+    assert.deepEqual(readPieceCall(PIECE_1), { ok: true, call: { statement: 'By 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings.', due: '2027-06-30', confidence_percent: 70 } })
+    assert.equal(bodyHash(at('65%')), bodyHash(PIECE_1))
+    assert.equal(bodyHash(at('[Krish to set]')), bodyHash(PIECE_1))
+    const fc = summarise([verified()], [], PIECE_1, 'perplexity:sonar-pro')
+    assert.equal(gateStatus({ fact_check: fc }, at('65%')).ok, true)
+  })
+
+  test('"How sure we are:" inside the call\'s paragraph is exempt the same way', () => {
+    const call = 'It shipped late in 2026, and the price held.\n\n**Our prediction.** By 1 March 2028, the price halves. How sure we are: 80%'
+    assert.equal(readPieceCall(call).ok, true)
+    assert.equal(bodyHash(call.replace('80%', '85%')), bodyHash(call))
+  })
+
+  test('only the number: every other change to the text still breaks the check', () => {
+    const base = bodyHash(PIECE_1)
+    assert.notEqual(bodyHash(PIECE_1.replace('30 June 2027', '30 June 2028')), base, 'the call\'s date')
+    assert.notEqual(bodyHash(PIECE_1.replace('still shows them', 'shows them')), base, 'the call\'s words')
+    assert.notEqual(bodyHash(PIECE_1.replace('Confidence: 70%.', 'Confidence: 70%, because Amazon said so.')), base, 'words after the number')
+    assert.notEqual(bodyHash(PIECE_1.replace('Confidence: 70%.', 'Certainty: 70%.')), base, 'the label')
+    assert.notEqual(bodyHash(PIECE_1.replace('$68.6 billion', '$68.7 billion')), base, 'a fact elsewhere')
+    // A labelled number outside the call is a fact like any other.
+    assert.notEqual(bodyHash(PIECE_1.replace('Consumer confidence: 62%', 'Consumer confidence: 65%')), base, 'a labelled number outside the call')
+    const fc = summarise([verified()], [], PIECE_1, 'perplexity:sonar-pro')
+    assert.equal(gateStatus({ fact_check: fc }, PIECE_1.replace('30 June 2027', '30 June 2028')).ok, false)
+  })
+
+  test('every check stored before this change still matches its text', () => {
+    // The hash as it was taken until 2026-09-28, for texts it already read.
+    const legacy = (body: string) => createHash('sha256').update(
+      sanitizeVoice(body).replace(/^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[Krish to set\])[ \t]*$/gim, '$1 [Krish to set]').trim(),
+    ).digest('hex')
+    const edition = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
+    for (const body of [edition, edition.replace('75%.', '[Krish to set]'), 'Cisco did the sums, $900 million a year.', PIECE_1.replace('Confidence: 70%.', '')]) {
+      assert.equal(bodyHash(body), legacy(body))
+    }
+  })
+
+  test('the sentence "Confidence: 70%." is never a claim, and a sentence with more in it still is', () => {
+    assert.equal(isConfidenceLine('Confidence: 70%.'), true)
+    assert.equal(isConfidenceLine('Confidence: [Krish to set].'), true)
+    assert.equal(isConfidenceLine('Confidence: 70%, because Amazon said so.'), false)
+    assert.equal(isConfidenceLine('Consumer confidence: 62% in August, per the survey.'), false)
+    assert.equal(isConfidenceLine('Consumer confidence: 62%.'), false)
+    const call = '**The Call.** By 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings.'
+    const swept = sweep(PIECE_1, [], [{ sentence: call, reason: 'prediction' }])
+    assert.ok(!swept.claims.some(c => /^Confidence:/.test(c.sentence)), 'not a leftover')
+    assert.ok(!leftoversOf(swept).some(l => /^Confidence:/.test(l.sentence)), 'never re-read')
+    assert.ok(swept.claims.some(c => /Consumer confidence/.test(c.sentence)), 'the survey sentence is still checked')
   })
 })
 

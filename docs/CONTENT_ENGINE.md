@@ -234,6 +234,18 @@ from the dashes `save-draft` swaps for commas. Anything else is a 409
 Krish asked for it on 2026-09-25, after the engine's first draft of a piece
 rescaled Cisco's $900 million a year to "close to a million dollars".
 
+Two things may change without a new check: the dashes, and the number of
+Krish's confidence in the call (his ruling, 2026-09-26: a confidence no longer
+forces a fact re-check). Since 2026-09-28 (walk log F41) the confidence is
+found by the same reader CALL and the Studio use
+(`packages/contracts/src/call.ts`), under either label: a line of its own,
+"How sure we are: 75%.", anywhere in the piece, as before, and any number
+after "How sure we are:" or "Confidence:" inside the call, so piece 1's
+"... sponsored listings. Confidence: 70%." can be re-set too. Only the number
+is exempt: the label, the words after it, the call's statement and date, and
+a labelled number outside the call are checked like any other text. A
+sentence that is only the confidence is never a claim to check.
+
 **Krish's house rules** (`api/_houseRules.ts`). Every ruling Krish has given
 in words is one record: the instruction, his exact words, the date, live or
 on trial, and the stages that enforce it. Writers read them through
