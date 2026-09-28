@@ -167,6 +167,7 @@ async function classifyBatch(items: RelevanceItem[], opts: ClassifyOpts): Promis
     inputTokens: Number(j?.usage?.input_tokens) || 0,
     outputTokens: Number(j?.usage?.output_tokens) || 0,
     failed: !r.ok,
+    ...(r.ok ? {} : { error: Object.assign(new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 120)}`), { status: r.status }) }),
   })
   if (!r.ok) throw new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 120)}`)
   const raw = robustJsonArray(j?.content?.[0]?.text || '')

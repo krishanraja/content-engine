@@ -631,6 +631,10 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
   const model = opts.model || UTILITY_MODEL
   const ctrl = new AbortController()
   const tid = opts.timeoutMs ? setTimeout(() => ctrl.abort(), opts.timeoutMs) : null
+  // Every failure is metered once: a refusal below, a timeout or a transport
+  // error in the catch. Until 2026-09-28 none was, so a key that answered
+  // nothing for 33 hours showed `failed = 0` (api/_meter.ts).
+  let metered = false
   try {
     const r = await fetchWithRetry('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -656,6 +660,8 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
       }
       e.status = r.status
       e.body = JSON.stringify(j?.error || j || {}).slice(0, 400)
+      metered = true
+      await meter.anthropicFailure({ agent: opts.agent, model, usage: j?.usage, error: e })
       throw e
     }
     const inputTokens = Number(j?.usage?.input_tokens) || 0
@@ -672,8 +678,9 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
     await meter.anthropicCall({ agent: opts.agent, model, usage: j?.usage })
     return firstText(j)
   } catch (e: unknown) {
-    if ((e as Error)?.name === 'AbortError') throw new Error(`anthropic_timeout_${opts.timeoutMs}ms`)
-    throw e
+    const out = (e as Error)?.name === 'AbortError' ? new Error(`anthropic_timeout_${opts.timeoutMs}ms`) : e
+    if (!metered) await meter.anthropicFailure({ agent: opts.agent, model, error: out })
+    throw out
   } finally {
     if (tid) clearTimeout(tid)
   }
@@ -721,7 +728,11 @@ export async function callClaudeMessages(
     }),
   })
   const j: any = await r.json().catch(() => ({}))
-  if (!r.ok) throw new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 120)}`)
+  if (!r.ok) {
+    const e = Object.assign(new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 120)}`), { status: r.status })
+    await meter.anthropicFailure({ agent: opts.agent, model, usage: j?.usage, error: e })
+    throw e
+  }
   await meter.anthropicCall({
     agent: opts.agent,
     model,
@@ -797,7 +808,11 @@ export async function callClaudeBlocks(
     }),
   })
   const j: any = await r.json().catch(() => ({}))
-  if (!r.ok) throw new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`)
+  if (!r.ok) {
+    const e = Object.assign(new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`), { status: r.status })
+    await meter.anthropicFailure({ agent: opts.agent, model, usage: j?.usage, error: e })
+    throw e
+  }
   const inputTokens = Number(j?.usage?.input_tokens) || 0
   const outputTokens = Number(j?.usage?.output_tokens) || 0
   await meter.anthropicCall({ agent: opts.agent, model, usage: j?.usage, inputTokens, outputTokens })
