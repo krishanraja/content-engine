@@ -195,6 +195,29 @@ material. Krish runs a check from
 the composer's "Check the facts" strip in Control Center. Piece 2 took ten
 runs to pass, and the fixes each run forced are in the walk log (H12 to H14).
 
+**When the fact gate cannot reach the model** (since 2026-09-28, walk log
+F39). The first model call of a run that gets no answer (a usage limit, a
+spent balance, a refused key, or an overload, timeout or outage that outlasted
+the retries) ends the run. No new claim or call starts, a Perplexity call
+queued behind it included; the checks already running finish; nothing is
+written, so the piece keeps its last real result and `GET /fact-check` still
+shows it. The answer is revise's typed body (`ModelErrorBody`, "How `revise`
+answers" above) with status 503, 429 (rate limit) or 502 (a request refused as
+malformed), and `Retry-After` when there is a time to give:
+
+```
+{ "ok": false, "error": "model_unavailable",
+  "code": "provider_usage_limit", "provider_class": "usage_limit",
+  "message": "You have reached your specified API usage limits. ...",
+  "reset_at": "2026-10-01T00:00:00.000Z", "retryable": false,
+  "detail": "The fact check stopped before it had checked every claim, so nothing was recorded and the piece keeps its last result. Anthropic is over its usage limit ..." }
+```
+
+The failure is kept where health reads it. A claim that was checked keeps its
+verdict exactly as before, and a failure of the web checker (Perplexity, Exa,
+Brave) still leaves a claim unclear, which blocks. A run answered this way is
+no verdict on the piece: run it again once health says the provider is usable.
+
 **The fact gate.** A piece on a live subchannel cannot reach `review`,
 `approved` or `published` (through `PATCH /api/content-ideas` or `save-draft`)
 until a fact check of its exact current body has passed: every claim verified,
@@ -476,7 +499,9 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 10. Before a piece can move on, its facts must pass the gate. File the sources
    you used as verbatim excerpts with `file-verbatim-source.ts` (a summary
    alone never passes a fact), run `POST /api/content-ideas/:id/fact-check`,
-   and fix or cut what it lists. Where you attribute words, use the source's
+   and fix or cut what it lists. An answer of `model_unavailable` recorded
+   nothing: read health, and run it again once the provider is back.
+   Where you attribute words, use the source's
    own words; the piece's house translations ("brain" for model) belong in
    the writer's voice, never inside a quote or a paraphrase of one.
    A known limit: the gate needs the figure as the piece writes it. Amazon's

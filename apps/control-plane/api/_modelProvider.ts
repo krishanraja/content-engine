@@ -120,12 +120,13 @@ export function worstFailure(failures: ProviderFailure[]): ProviderFailure | nul
 }
 
 /** Thrown when a stage could not reach the model at all: every judge of a
- *  panel failed with an error, or the expansion was refused in a way that
- *  refuses every call. It is a failed run. Recording it as a row of
- *  abstentions is what wrote 19,125 blank verdicts in 33 hours. */
+ *  panel failed with an error, the expansion was refused in a way that
+ *  refuses every call, or any call of a fact-gate run failed. It is a failed
+ *  run. Recording it as a row of abstentions is what wrote 19,125 blank
+ *  verdicts in 33 hours. */
 export class ModelUnavailableError extends Error {
   readonly modelUnavailable = true
-  constructor(readonly failure: ProviderFailure, readonly stage: 'panel' | 'expand', readonly judges = 0) {
+  constructor(readonly failure: ProviderFailure, readonly stage: 'panel' | 'expand' | 'fact_check', readonly judges = 0) {
     super(`the model could not be reached (${stage}): ${failure.class}: ${failure.message}`)
     this.name = 'ModelUnavailableError'
   }
