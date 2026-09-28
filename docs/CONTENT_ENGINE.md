@@ -108,6 +108,23 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
 
+**When the judges cannot reach the model** (since 2026-09-28, walk log F28).
+A panel on which every model judge failed with an error is a failed run
+(`ModelUnavailableError`, `api/_modelProvider.ts`): no `panel_runs` or
+`judge_verdicts` row is written for it, and the idea keeps its last real
+reading. A judge that ran and declined still abstains and is written as
+before. The ladder records on the idea only when to try again,
+`meta.ladder_failure` (the provider's class and words, attempts, `retry_after`,
+pinned to the idea's text): a usage limit waits for the reset the provider
+named, a refused key or spent balance an hour, anything transient half an
+hour doubling to a day, and every judge abstaining the same. Editing the idea
+ends the wait. A refusal of every call (usage limit, credit, key) stops the
+pass at that idea. The sweep then fails its tick with the provider's words,
+and each later tick reads the recorded failure first and fails at once,
+without a call, until the reset (or an hour, for a refusal with no reset)
+has passed. `POST /api/content-ideas/:id/judge` answers such a panel with 503
+`model_unavailable` and records nothing.
+
 ### 3. Drafting and iteration
 
 | Route | What it does | Model |
