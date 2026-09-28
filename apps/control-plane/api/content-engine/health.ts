@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import { guardSensitiveRead } from '../_auth.js'
 import { CONTENT_ENGINE_JOBS, contentEngineAttention, type ContentEngineRunRow } from '../../lib/contentEngineSchedule.js'
 import { envReadiness } from './_required.js'
+import { providerHealth, readProviderState } from '../_modelProvider.js'
 
 // The engine says how it is. One read for the dashboard's obligation strip
 // and for a person with curl: the deploy commit, whether the operator guard
@@ -12,6 +13,13 @@ import { envReadiness } from './_required.js'
 // deployment schedules, the last run of each job, and how long the Windows
 // runner has been quiet. Nothing here is pushed anywhere: the OS is
 // pull-only, and this is what gets pulled.
+//
+// Since 2026-09-28 it also says whether the model provider is usable
+// (`model_provider`, api/_modelProvider.ts): the last Anthropic failure, its
+// class, the reset time the provider gave, and a plain sentence when the
+// engine cannot write or check anything. The key had been over its usage
+// limit for 33 hours before anyone knew. The operator bearer can read this
+// route, so an agent session checks it before it spends.
 
 const RUNNER_ABSENT_AFTER_HOURS = 48
 
@@ -27,7 +35,7 @@ function operatorAuthConfigured(): boolean {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guardSensitiveRead(req, res, ['GET'])) return
+  if (guardSensitiveRead(req, res, ['GET'], { operatorBearer: true })) return
 
   const now = new Date()
   const commit = process.env.VERCEL_GIT_COMMIT_SHA || 'development'
@@ -62,7 +70,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   const { supabase } = await import('../_supabase.js')
 
-  const [runsResult, heartbeatResult] = await Promise.all([
+  const [runsResult, heartbeatResult, providerState] = await Promise.all([
     supabase
       .from('content_engine_runs')
       .select('job, status, reason, finished_at')
@@ -73,6 +81,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .select('updated_at, status')
       .order('updated_at', { ascending: false })
       .limit(1),
+    readProviderState(),
   ])
 
   const rows = (runsResult.data || []) as ContentEngineRunRow[]
@@ -114,6 +123,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     jobs,
     attention,
     unrecorded,
-    read_errors: [runsResult.error?.message, heartbeatResult.error?.message].filter(Boolean),
+    model_provider: providerHealth(providerState.failure, providerState.okAt, now),
+    read_errors: [runsResult.error?.message, heartbeatResult.error?.message, providerState.error].filter(Boolean),
   })
 }

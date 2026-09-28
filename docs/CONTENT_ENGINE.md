@@ -36,7 +36,7 @@ modules live under `apps/control-plane/api/`.
 |---|---|---|
 | Control Center (Krish in a browser) | `controlcenter.krishraja.com/api/...`, rewritten by control-center's `vercel.json` to this project, same path | the `cc_access` cookie (sha256 of `ACCESS_CODE`), so `ACCESS_CODE`, `APP_ORIGIN` and the CSRF secret must be byte-identical on both projects |
 | Vercel cron | this project's own `vercel.json` crons | `Bearer CRON_SECRET` |
-| An agent session with no browser (Claude Code, Codex) | straight to this project's URL | `Bearer ENGINE_OPERATOR_TOKEN` on the routes behind `guardEngine` |
+| An agent session with no browser (Claude Code, Codex) | straight to this project's URL | `Bearer ENGINE_OPERATOR_TOKEN` on the routes behind `guardEngine`, and on `GET /api/content-engine/health` |
 | The Windows runner | `/api/video-studio/runner/*` via Control Center's origin | `Bearer VIDEO_STUDIO_RUNNER_TOKEN`, receipts HMAC-signed |
 | The Studio MCP gateway | `/api/video-studio/mcp` | `Bearer VIDEO_STUDIO_MCP_TOKEN` |
 | The AEO engine (GitHub Actions) | `/api/aeo/ingest`, `/api/aeo/context`, `/api/aeo/meter` | `Bearer AEO_ENGINE_SECRET` |
@@ -54,7 +54,7 @@ this project's own URL.
 | `guardCronRoute` | GET: `Bearer CRON_SECRET` only. POST: the secret or the cookie | the POST arm lets everyone in when `ACCESS_CODE` is unset |
 | `guard` | the cookie | lets everyone in when `ACCESS_CODE` is unset |
 | `guardOperatorOrCron` | the cookie or `Bearer CRON_SECRET` | refuses |
-| `guardSensitiveRead` | the cookie or `Bearer VIDEO_STUDIO_EXPORT_TOKEN`, 60 a minute | refuses |
+| `guardSensitiveRead` | the cookie or `Bearer VIDEO_STUDIO_EXPORT_TOKEN`, 60 a minute; a route that opts in (health only) also takes `Bearer ENGINE_OPERATOR_TOKEN`, by the check `guardEngine` makes | refuses |
 | `guardBearerExport(ENV)` | `Bearer $ENV`, 60 a minute | refuses |
 | `preamble` (`api/_content.ts`) | anyone; it only checks the method | no auth at all |
 | Studio read and mutation | the cookie; a mutation also needs Origin equal to `APP_ORIGIN` and an HMAC CSRF header | 503 |
@@ -233,7 +233,7 @@ accept is recorded by whoever accepted it.
 
 | Route | What it does |
 |---|---|
-| `GET /api/content-engine/health` | commit, auth configured, missing variables, each job's last run, runner state |
+| `GET /api/content-engine/health` | commit, auth configured, missing variables, each job's last run, runner state, and `model_provider`: whether Anthropic is usable, its last failure (class, status, the provider's words, agent, time), the reset time it gave, when the judge sweep will try again, and `says`, a plain sentence that begins "The engine cannot write or check anything" when every call is being refused. Readable on the operator bearer |
 | `GET /api/content-engine/ping` | commit and a ready flag, no auth |
 | `/api/content-engine/runs/replay` | re-runs a registered job by calling its GET with `CRON_SECRET`; refuses `manual_only` jobs |
 | `/api/purge/run` (cron, Mondays), `/api/purge/restore` | exports doomed rows to the `content-engine-archive` bucket and `trend_observations`, then hard-deletes expired news rows; deletes nothing if either copy fails. The engine's only hard delete |

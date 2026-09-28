@@ -141,8 +141,14 @@ export function guard(req: VercelRequest, res: VercelResponse, methods = ['POST'
 }
 
 /** Fail-closed browser or operator bearer gate for service-role read routes.
- * Unlike the dashboard-wide guard, an absent ACCESS_CODE never grants access. */
-export function guardSensitiveRead(req: VercelRequest, res: VercelResponse, methods = ['GET']): boolean {
+ * Unlike the dashboard-wide guard, an absent ACCESS_CODE never grants access.
+ *
+ * `operatorBearer` also admits `Bearer ENGINE_OPERATOR_TOKEN`, by the same
+ * check guardEngine makes, for the routes an agent session must read before
+ * it drives the engine (health, since 2026-09-28: a session could not see
+ * that the model provider had been refusing every call for 33 hours). It is
+ * opt-in per route, so no other sensitive read widens. */
+export function guardSensitiveRead(req: VercelRequest, res: VercelResponse, methods = ['GET'], opts: { operatorBearer?: boolean } = {}): boolean {
   applyGatedHeaders(res)
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   if (req.method === 'OPTIONS') { res.status(204).end(); return true }
@@ -157,12 +163,13 @@ export function guardSensitiveRead(req: VercelRequest, res: VercelResponse, meth
   const exportToken = process.env.VIDEO_STUDIO_EXPORT_TOKEN || ''
   const authorization = req.headers.authorization || ''
   const bearerAllowed = Boolean(exportToken) && safeEqual(authorization, `Bearer ${exportToken}`)
-  if (!browserAllowed && !bearerAllowed) {
+  const operatorAllowed = opts.operatorBearer === true && operatorBearerAllowed(req)
+  if (!browserAllowed && !bearerAllowed && !operatorAllowed) {
     res.status(401).json({ ok: false, error: 'unauthorized' })
     return true
   }
-  if (bearerAllowed) {
-    const retryAfter = consumeExportRateLimit(exportToken)
+  if (bearerAllowed || operatorAllowed) {
+    const retryAfter = consumeExportRateLimit(bearerAllowed ? exportToken : process.env.ENGINE_OPERATOR_TOKEN || '')
     if (retryAfter > 0) {
       res.setHeader('Retry-After', String(retryAfter))
       res.status(429).json({ ok: false, error: 'rate_limited' })
@@ -247,11 +254,16 @@ export function hasEngineAccess(req: VercelRequest): boolean {
   const suppliedCookie = parseCookies(req.headers.cookie)[COOKIE] || ''
   const browserAllowed = Boolean(expectedCookie) && safeEqual(suppliedCookie, expectedCookie)
 
+  return browserAllowed || operatorBearerAllowed(req)
+}
+
+/** The operator bearer arm on its own: `Bearer ENGINE_OPERATOR_TOKEN`, and
+ *  never a match while the variable is unset. One definition for guardEngine
+ *  and for the sensitive reads that opt in to it. */
+export function operatorBearerAllowed(req: VercelRequest): boolean {
   const operatorToken = process.env.ENGINE_OPERATOR_TOKEN || ''
   const authorization = req.headers.authorization || ''
-  const bearerAllowed = Boolean(operatorToken) && safeEqual(authorization, `Bearer ${operatorToken}`)
-
-  return browserAllowed || bearerAllowed
+  return Boolean(operatorToken) && safeEqual(authorization, `Bearer ${operatorToken}`)
 }
 
 /** Guard for the cron-driven routes: `GET` from Vercel's scheduler with the
