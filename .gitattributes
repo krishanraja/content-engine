@@ -1,3 +1,6 @@
 # An edition's body.md is hashed by the fact gate with LF line endings
 # (tests/control-plane/editions.test.ts). Keep it LF on every checkout.
 editions/**/*.md text eol=lf
+
+# Stored piece bodies are LF; the writer tests use real ones as fixtures.
+tests/fixtures/control-plane/*.md text eol=lf

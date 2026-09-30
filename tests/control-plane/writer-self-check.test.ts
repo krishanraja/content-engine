@@ -59,7 +59,9 @@ const { blockingHits, selfCheck, correctionFor, guardConfidence } = await import
 const TOKEN = 'eot_' + 's'.repeat(40)
 const ID = '00000000-0000-4000-8000-000000000042'
 const LIMIT = 'You have reached your specified API usage limits. You will regain access on 2099-10-01 at 00:00 UTC.'
-const fixture = (name: string) => readFileSync(`tests/fixtures/control-plane/${name}`, 'utf8')
+// Stored bodies are LF. A Windows checkout can turn the fixtures CRLF, so
+// they are read line-ending blind (the CI Windows leg does exactly this).
+const fixture = (name: string) => readFileSync(`tests/fixtures/control-plane/${name}`, 'utf8').replace(/\r\n?/g, '\n')
 
 // Piece 1 after the engine's rewrite, and the same text with its two hits fixed.
 const P1 = fixture('piece1-v11-engine-rewrite.md')
