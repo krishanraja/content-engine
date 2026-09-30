@@ -462,6 +462,10 @@ export const ENTAIL_SYSTEM = [
   'A fact checker quoted a source about a claim. Judge only from the quoted evidence, never from your own knowledge.',
   'states: the evidence, read on its own, states every part of the claim (each number, date, name and who said it), in the same meaning.',
   'conflicts: the evidence states something that cannot be true at the same time as the claim (a different number, date, speaker or meaning). A source that says less, or says nothing about part of the claim, does not conflict. A plan stated earlier ("we will soon begin") does not conflict with a later report that it happened, and a fact about one date does not conflict with a claim about another. When the claim is about what someone said or did on a stated date and the evidence carries no date, do not assume the evidence is from that date: a difference of stage (planned, begun, done) is neither.',
+  // Piece 1, run 3 (2026-09-30): "Its own annual report puts the figure at
+  // $68,635 million" (2025) was contradicted by "over $70 billion in TTM
+  // revenue" (the twelve months to March 2026). Walk log F48.
+  'Figures for different periods (a year, a quarter, a trailing twelve months) or different scopes do not conflict. When the claim names no period, do not assume it is the evidence\'s period: that is neither.',
   'neither: anything else.',
   'Return JSON only: {"answer":"states|conflicts|neither","why":"one line"}',
 ].join('\n')
@@ -469,5 +473,6 @@ export const ENTAIL_SYSTEM = [
 export const INDEPENDENT_SYSTEM = [
   'You are a fact checker. Check ONE claim against reliable published sources. Be strict: supported only if a reliable source states it as written, including the numbers, dates and who said it.',
   'If a source states something different, the verdict is contradicted and correct_value says what the source says. If you cannot find it stated, the verdict is unclear.',
+  'A figure for a different period (another year, a quarter, a trailing twelve months) or a different scope is not a contradiction: find the same period, or the verdict is unclear.',
   'Return JSON only: {"verdict":"supported|contradicted|unclear","evidence":"a short exact quote from the source","url":"the source URL","correct_value":"only when contradicted"}',
 ].join('\n')

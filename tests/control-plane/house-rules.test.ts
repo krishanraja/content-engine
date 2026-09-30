@@ -188,3 +188,20 @@ describe('the checks before approval, on real text', () => {
     assert.match(src, /reason: 'publish_gate'/)
   })
 })
+
+describe('the reading age ends a sentence inside a closing quote', () => {
+  // Piece 3 quotes its sources word for word. Until 2026-09-30 a sentence
+  // ending '..."' ran on into the next, and the piece read a year older than
+  // it is (walk log F46).
+  test('a quote at the end of a sentence reads the same as no quote', () => {
+    const plain = 'The paper says Koa stays below the best models. Tech Times says no one has checked. We agree.'
+    const quoted = 'The paper says Koa stays "below the best models." Tech Times says "no one has checked." We agree.'
+    assert.equal(readingGrade(quoted).toFixed(6), readingGrade(plain).toFixed(6))
+  })
+  test('the blocking message gives the age to one decimal, so it never reads "about age 13. Above 13"', () => {
+    const long = Array.from({ length: 6 }, () => 'Organisational infrastructure considerations necessitate comprehensive evaluation methodologies, particularly regarding proprietary implementations.').join(' ')
+    const r7 = publishChecks(long, factsOk).find(c => c.id === 'R7')!
+    assert.equal(r7.blocking, true)
+    assert.match(r7.detail, /^Reads at about age \d+\.\d\. Above 13 cannot be approved/)
+  })
+})

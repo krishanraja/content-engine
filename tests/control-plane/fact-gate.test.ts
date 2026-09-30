@@ -5,7 +5,7 @@ import { describe, test } from 'vitest'
 import {
   bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   sourcesText, summarise, sweep,
-  type CheckedClaim,
+  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
 import { readPieceCall } from '../../packages/contracts/src/call.js'
@@ -487,5 +487,15 @@ describe('the sources the checkers read', () => {
     const primary = primaryText({ deep_dives: [dive], materials: [filed, verbatim] })
     assert.match(primary, /remaining below the strongest frontier models/)
     assert.doesNotMatch(primary, /Dreamforce/)
+  })
+})
+
+describe('a figure for another period is not a contradiction', () => {
+  // Piece 1, run 3 (2026-09-30): Amazon's 2025 annual report figure,
+  // $68,635 million, was "contradicted" by a trailing-twelve-month figure to
+  // March 2026. Both checkers that can call a claim contradicted are told.
+  test('the web checker and the reader of its quote both carry the rule', () => {
+    assert.match(INDEPENDENT_SYSTEM, /A figure for a different period .* is not a contradiction/)
+    assert.match(ENTAIL_SYSTEM, /Figures for different periods .* do not conflict\. When the claim names no period, do not assume it is the evidence's period/)
   })
 })

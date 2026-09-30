@@ -97,10 +97,15 @@ export function blockingHits(text: string, opts: { readingAge: boolean }): SelfC
   return hits.filter((h, i) => hits.findIndex(g => g.rule === h.rule && g.found === h.found) === i)
 }
 
-/** The longest sentences, the ones a shorter reading age starts with. */
+/** The longest sentences, the ones a shorter reading age starts with. Never
+ *  the call: on 2026-09-30 a retry handed piece 3's prediction as a long
+ *  sentence rewrote it into a different prediction (walk log F49). The call is
+ *  Krish's, and the draft brief fixes its wording. */
 function longestSentences(text: string, n: number): string[] {
   const words = (s: string) => s.split(/\s+/).filter(Boolean).length
-  return sentences(text).sort((a, b) => words(b) - words(a)).slice(0, n)
+  const call = callSectionOf(text)
+  const inCall = (s: string) => !!call && call.includes(s)
+  return sentences(text).filter(s => !inCall(s)).sort((a, b) => words(b) - words(a)).slice(0, n)
 }
 
 /** The message the writer's second call gets: each hit, the rule it breaks
@@ -118,6 +123,12 @@ export function correctionFor(text: string, hits: SelfCheckHit[], answer: string
       for (const s of longestSentences(text, 3)) lines.push(`  "${s}"`)
     } else for (const h of mine) lines.push(`- "${h.found}"`)
   }
+  // On 2026-09-30 a retry asked to shorten piece 3 answered "Our guess:
+  // Salesforce marked its own test. Why? Because an independent test would
+  // likely show the same gap. The gap to GPT-5.5 ...": shorter, and a
+  // rhetorical question and a fragment the checks above cannot see (walk log
+  // F45). So the correction says what a fix may not add.
+  lines.push('', 'Fix each one with plain, complete sentences. Add no question, no sentence fragment and no new fact.')
   lines.push('', `Rewrite only these sentences; keep every other word. ${answer}`)
   return lines.join('\n')
 }

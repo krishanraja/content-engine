@@ -22,6 +22,12 @@ describe('the "Not X, Y" construction is flagged', () => {
     'The badge was never built to persuade a model, it was built to persuade a person.',
     'Revenue is reported in dollars, not pounds.',
     'That decides whether this is real money or a news cycle: not what Amazon says about security, what a judge says about the contract.',
+    // The subject said twice, and the verb said twice (piece 1, found by the
+    // fact gate on 2026-09-30 after a week in the draft).
+    'Shopify is not the supermarket. Shopify is the till.',
+    "It doesn't care which shelf you picked things off. It cares that you're at the till.",
+    // A self-check retry wrote this into piece 3 the same day.
+    "Our read: Koa doesn't need to beat Claude or GPT-5.5. It just needs to be cheap, private, and good enough at CRM chores.",
   ]
   for (const text of flagged) {
     test(text, () => {
@@ -41,6 +47,10 @@ describe('ordinary negation is left alone', () => {
     'The filing is long and, not surprisingly, dense.',
     // A hedge about the evidence, not a rival take.
     'Whether that mechanism triggered the block is not established. It is the plainest explanation on offer.',
+    // Two plain facts about one thing, and a negation followed by a new verb.
+    'The fee is not refundable. The fee is due on Monday.',
+    "It doesn't glance sideways. That threatens the supermarket's shelf money.",
+    'Amazon did not say why. It declined to comment.',
   ]
   for (const text of clean) {
     test(text, () => assert.equal(notXYConstruction(text), null))

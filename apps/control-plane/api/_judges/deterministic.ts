@@ -57,6 +57,16 @@ const NOT_XY = [
   /\b(?:isn['’]t|is not|wasn['’]t|was not|aren['’]t|are not)\s+(?:[^.!?\n]|\.(?=\w)){1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are| was| were)\b[^.!?\n]{0,30}/gi,
   // "it's not X, it's Y"
   /\b(?:it|this|that|they)(?:['’]s|['’]re| is| are) not\s+(?:[^.!?\n]|\.(?=\w)){1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are)\b[^.!?\n]{0,30}/gi,
+  // The subject said twice: "Shopify is not the supermarket. Shopify is the
+  // till." (piece 1, 2026-09-30). The negated side starts with a determiner,
+  // so two plain facts about one thing ("The fee is not refundable. The fee
+  // is due on Monday") are left alone.
+  /\b([A-Z][\w'’-]*|it|this|that|they)\s+(?:is not|isn['’]t|are not|aren['’]t|was not|wasn['’]t|were not|weren['’]t)\s+(?:a|an|the|about|my|your|his|her|its|our|their)\b(?:[^.!?\n]|\.(?=\w)){1,80}?[.;,]\s+\1\s+(?:is|are|was|were)\s+(?:a|an|the|about|my|your|his|her|its|our|their)\b[^.!?\n]{0,30}/g,
+  // The verb said twice: "It doesn't care which shelf you picked things off.
+  // It cares that you're at the till." (piece 1), and "Koa doesn't need to
+  // beat Claude or GPT-5.5. It just needs to be cheap" (a piece 3 retry), both
+  // 2026-09-30.
+  /\b(?:doesn['’]t|does not|don['’]t|do not|didn['’]t|did not)\s+([a-z]+)\b(?:[^.!?\n]|\.(?=\w)){0,80}?[.;,]\s+(?:[A-Z][\w'’-]*|it|this|that|they|he|she|we|you)\s+(?:just\s+|only\s+|simply\s+)?\1(?:s|es|d|ed)?\b[^.!?\n]{0,30}/g,
   // "never X, it was Y"
   /\bnever\s+(?:[^.!?\n]|\.(?=\w)){1,60}?,\s+(?:it|this|that|they)\s+(?:was|were|is|are)\b[^.!?\n]{0,30}/gi,
   // The reverse order, "Y, not X": "measured, not projected."

@@ -269,6 +269,12 @@ with the evidence that found it):
 | F42 | draft, revise | The writers broke Krish's blocking rules even when told exactly what to fix (F1 again). Piece 1's rewrite (`revise`, feedback) returned two "Not X, Y": "Those words were about Perplexity's robot, not Muse." and "Reading them across to Muse is our guess, not Amazon's claim." A revise scoped to that one sentence, told to remove the construction, returned "...is our guess, not Amazon's claim." three times running. Piece 3's first draft broke R2 three times ("So the 27 years is a flavour, not an ingredient"; "That's not matching or exceeding the leading models. That's finishing third out of three"; "isn't secrecy for its own sake. It's that...") and read at about age 13.5, above the blocking limit of 13. Each cost a rewrite or hand work, and the caching pass waits on three pieces in a row with at most one rewrite and no agent hand edits. | pieces 1 and 3, 2026-09-30, when drafting resumed after the outage. **Fixed 2026-09-30**: the writers' self-check (`api/_selfCheck.ts`). After the model answers, `draft` and `revise` run the checklist's blocking checks a writer can meet (R2, em dashes, exclamation marks, British spelling, and the reading age for a whole text); on a hit, one more call with the same system prompt and a correction quoting each hit and its house rule; the answer with fewer failures is returned with `self_check: {passed, remaining, retried, note?}`. A provider failure on the retry keeps the first answer with a note. `tests/control-plane/writer-self-check.test.ts` |
 | F43 | draft, revise | The writer set Krish's confidence. Piece 3's first draft was told to end with `How sure we are: [Krish to set]` and wrote `How sure we are: 78%.` on its own. The number is his judgement (his ruling, 2026-09-26: "I'd rather take a clearer stance than sit on the fence all the time and say 60%", and he sets it), and an engine-invented number could reach a reader as his stance. Nothing stopped a rewrite changing or dropping his number either. | piece 3, `POST /draft`, 2026-09-30. **Fixed 2026-09-30**: `guardConfidence` (`api/_selfCheck.ts`) runs after the model and any retry. A first draft says `How sure we are: [Krish to set]` whatever the model wrote; a rewrite keeps the source's confidence exactly, label and number, or the placeholder; a dropped line is put back at the end of the call. Found by the shared call reader (`labelledConfidences`, `callSectionOf`) as the fact gate finds it. The response says `self_check.confidence_restored: true`. `tests/control-plane/writer-self-check.test.ts` |
 | F44 | revise, in place | Asked to delete one sentence ("Send it to buy a blender and it buys the blender."), a scoped revise returned piece 1 with the sentence before the selection twice: "Muse is Meta's AI helper that shops for people. Muse is Meta's AI helper that shops for people." The route spliced back whatever the model returned with `sourceText.replace(selection, answer)`, and it failed an empty answer as `empty_output`, so a deletion had no usable answer. The model echoed the sentence before the passage, and the splice put the echo where the passage had been (F2 again). Reproduced exactly: from v12's paragraph, the old splice handed that one sentence gives v13 byte for byte. | piece 1 v12 to v13, 2026-09-30. **Fixed 2026-09-30**: `passageReplacement` (`api/_selection.ts`) takes off whatever an answer repeats of the draft just before the passage (from a sentence start) or just after it (to a sentence end); `spliceSelection` replaces by slicing (a "$" in an answer is text), and an empty replacement deletes the passage, leaving one space or the paragraph break. An empty answer in place is a deletion, and the prompt says to return nothing to delete. `tests/control-plane/writer-self-check.test.ts` |
+| F45 | self-check retry | Asked to fix a blocking rule, the retry swapped it for tells the checks cannot see. Piece 3's guess paragraph came back "Our guess: Salesforce marked its own test. Why? Because an independent test would likely show the same gap. The gap to GPT-5.5 and Claude Opus 4.8 that its own paper already shows.": a rhetorical question and a fragment. | piece 3, revise 2 (v3), 2026-09-30. **Fixed 2026-09-30**: the correction (`correctionFor`, `api/_selfCheck.ts`) says "Fix each one with plain, complete sentences. Add no question, no sentence fragment and no new fact." The paragraph was repaired by a revise scoped to it (v4). |
+| F46 | publish checks (R7) | The reading age never ended a sentence that closes inside a quote mark or bracket (`...models." Tech Times reported`), so two sentences counted as one. Piece 3 quotes its sources word for word, and v6 read 13.5 and blocked; counted properly it reads about 13, a warning. The blocking message could also say "about age 13. Above 13 cannot be approved". | piece 3 v6, 2026-09-30. **Fixed 2026-09-30**: `readingGrade` (`api/_publishChecks.ts`) splits after a closing quote or bracket, and the blocking message gives the age to one decimal. Piece 1 v16 moves from 12.5 to 12 with it. |
+| F47 | voice check (R2) | Two shapes of "Not X, Y" sat in piece 1 for a week without a flag: the subject said twice ("Shopify is not the supermarket. Shopify is the till.") and the verb said twice ("It doesn't care which shelf you picked things off. It cares that you're at the till."). A retry on piece 3 then wrote a third: "Koa doesn't need to beat Claude or GPT-5.5. It just needs to be cheap". | found by the session reading piece 1 after fact-gate run 2, 2026-09-30. **Fixed 2026-09-30**: two more shapes in `NOT_XY` (`api/_judges/deterministic.ts`). The subject shape needs a determiner on the negated side, so two plain facts about one thing ("The fee is not refundable. The fee is due on Monday.") pass. Every edition, fixture and draft rescanned: the new shapes hit only the piece 1 drafts that carried them. |
+| F48 | fact gate | The web checker, and the reader of its quote, called a figure for one period a contradiction of a figure for another: Amazon's 2025 annual report ($68,635 million) against "over $70 billion in TTM revenue" (the twelve months to March 2026). The sentence named no year, so nothing told them the periods differed. | piece 1, run 3, 2026-09-30. **Fixed 2026-09-30**: `INDEPENDENT_SYSTEM` and `ENTAIL_SYSTEM` (`api/_factGate.ts`) say figures for different periods or scopes do not conflict, and a claim with no period is never assumed to share the evidence's. The piece's sentence now says "for 2025". |
+| F49 | self-check retry | The reading-age correction lists the three longest sentences to shorten, and the prediction could be one of them. On piece 3 the retry rewrote the call into a different prediction ("one of SAP, Oracle or Workday will build its own AI model this way too"), added a "Not X, Y" (F47), and the route kept it because it broke fewer checks. | piece 3, revise 5, 2026-09-30. That answer was discarded, never saved. **Fixed 2026-09-30**: `longestSentences` (`api/_selfCheck.ts`) skips the call section. |
+| F50 | fact gate, on file | The on-file reader misread a flattened PDF table. It said Koa "exceeds Claude Opus" on Tau2Bench and BFCL; the paper's Table 1 has Koa below Opus 4.8 on both (69.41 against 74.00, 66.63 against 78.18) and below GPT-5.5 on all three overall scores. The gate failed closed (a contradiction the passage did not bear out became "not found"), so nothing false passed, but a true sentence was held. | piece 3, run 2, 2026-09-30. **Not fixed.** File tables as one row a line with the column names, or read them from the HTML. |
 
 ## 3. Front-end implications
 
@@ -482,6 +488,20 @@ ledger with `decided_by: 'Krish'`, sequences 64 to 66):**
   "What they say", the Call at 70% ("2 70%"), "Who gets paid". It reads at about
   grade 10.5 (Flesch-Kincaid), above the reading age of 12 he set the same day.
 
+**Drafting resumed, 2026-09-30 (fact gate loop).** The engine wrote every
+version below; the session only chose what to ask for, and saved each answer
+with `edit_source: 'magic'` and a `magic_accepted` event.
+
+| Run | Body | Blocking | Contradicted | What the next rewrite fixed |
+|---|---|---|---|---|
+| 1 | v14 | 10 | 1 | The $68.6bn attribution, the Shop Pay line, labelled guesses, "Amazon has made no such claim about Muse" (contradicted: Amazon did say Muse broke its Conditions of Use) |
+| 2 | v15 | 4 | 2 | "The next day" (dates stated), the Shop Pay fee (a web source says Shop Pay charges no fee of its own), a meta sentence, and two "Not X, Y" the detector had missed (F47) |
+| 3 | v16 | 3 | 1 | The annual report's year (F48), "started blocking", "the till" marked as the story's picture |
+
+v17 is saved and waits for run 4 on the fixed gate. Against the caching bar,
+piece 1 does not count: it took far more than one rewrite and more than two
+gate runs.
+
 ## Piece 2: mind.the.gap
 
 `904658db-4df2-4537-a0ed-ebe93e081db7`. "Every AI lab now sells a menu instead
@@ -507,3 +527,27 @@ his verdict on the page.
 
 `5255dcd8-3772-420d-994c-6bf2ab5f06e3`. Salesforce's Koa
 split. No judge at 8; lowest model judge `novelty` at 6.
+
+
+**Drafted 2026-09-30, after the provider came back.** Research and the eight
+verbatim filings are from 2026-09-28. The first draft read at about 13.5,
+broke R2 three times and set Krish's confidence to 78% on its own (F42, F43).
+
+| Run | Body | Blocking | Contradicted | What the next rewrite fixed |
+|---|---|---|---|---|
+| 1 | v2 | 16 | 2 | The "27 years" framing, the pizza lines read as facts, "trained a new model", the frontier-model definition, and "three AIs" (the paper says one helper model played three roles) |
+| 2 | v5 | 7 | 1 | "Third out of three" (the checker counted five models), the pizza analogy labelled, the recap paragraph, and a claim about what the paper does not say, cut because a gate cannot check an absence |
+| 3 | v6 | 3 | 0 | "Tells a different story", "on CRM Bench", and the hosting claim put on the press release where it lives |
+
+- v3's guess paragraph was garbled by the self-check retry (F45) and repaired
+  by a revise scoped to it (v4).
+- v5 is the session's one hand edit: "How sure we are: 78%." back to
+  "How sure we are: [Krish to set]", undoing F43. The confidence is his.
+- Revise 5's answer (v7) was discarded: the retry rewrote the prediction (F49).
+  It runs again on the fixed engine.
+- The THEATRE stamp on "matches or exceeds" was checked against the full
+  Table 1 after run 2: Koa is below GPT-5.5 and Claude Opus 4.8 on all three
+  overall scores, so the stamp stands.
+
+Against the caching bar, piece 3 does not count: several rewrites and a hand
+edit.

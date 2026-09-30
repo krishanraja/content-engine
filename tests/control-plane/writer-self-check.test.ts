@@ -7,7 +7,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 // breaking Krish's blocking rules even when told exactly what to fix. The
 // fixtures are the real texts from that day: piece 1 after the engine's
 // rewrite (two "Not X, Y"), and piece 3's first draft (three "Not X, Y", a
-// reading age of about 13.5, and a confidence of 78% the writer set itself).
+// reading age of about 13.5 as the check counted it then, 13 since it reads
+// a sentence ending in a quote as ended, and a confidence of 78% the writer
+// set itself).
 //
 // Every model call here is a stubbed fetch and the database is a stub: no
 // test reaches a provider or a real database.
@@ -63,11 +65,20 @@ const LIMIT = 'You have reached your specified API usage limits. You will regain
 // they are read line-ending blind (the CI Windows leg does exactly this).
 const fixture = (name: string) => readFileSync(`tests/fixtures/control-plane/${name}`, 'utf8').replace(/\r\n?/g, '\n')
 
-// Piece 1 after the engine's rewrite, and the same text with its two hits fixed.
+// Piece 1 after the engine's rewrite, and the same text with its hits fixed.
+// The first two were found by the fact gate's run 2 on 2026-09-30, after the
+// detector had passed them for a week: the subject said twice, and the verb
+// said twice (walk log F47).
 const P1 = fixture('piece1-v11-engine-rewrite.md')
+const P1_TILL = 'Shopify is not the supermarket. Shopify is the till.'
+const P1_CARES = "It doesn't care which shelf you picked things off. It cares that you're at the till."
 const P1_HIT_1 = "Those words were about Perplexity's robot, not Muse."
 const P1_HIT_2 = "Reading them across to Muse is our guess, not Amazon's claim."
-const P1_FIXED = P1.replace(P1_HIT_1, "Those words were about Perplexity's robot.").replace(P1_HIT_2, 'Reading them across to Muse is our guess.')
+const P1_FIXED = P1
+  .replace(P1_TILL, 'Shopify is the till.')
+  .replace(P1_CARES, 'Which shelf the shopper walked past makes no difference to that cut.')
+  .replace(P1_HIT_1, "Those words were about Perplexity's robot.")
+  .replace(P1_HIT_2, 'Reading them across to Muse is our guess.')
 
 // Piece 3's first draft, and the same draft with its three hits fixed (it
 // still reads above age 13).
@@ -163,7 +174,12 @@ afterEach(() => { vi.unstubAllGlobals() })
 describe('what the self-check finds', () => {
   it('names each "Not X, Y" in piece 1 as the whole sentence it sits in', () => {
     const hits = blockingHits(P1, { readingAge: true })
-    expect(hits).toEqual([{ rule: 'R2', found: P1_HIT_1 }, { rule: 'R2', found: P1_HIT_2 }])
+    expect(hits).toEqual([
+      { rule: 'R2', found: P1_TILL },
+      { rule: 'R2', found: P1_CARES },
+      { rule: 'R2', found: P1_HIT_1 },
+      { rule: 'R2', found: P1_HIT_2 },
+    ])
     expect(blockingHits(P1_FIXED, { readingAge: true })).toEqual([])
   })
 
@@ -176,7 +192,7 @@ describe('what the self-check finds', () => {
       expect.stringMatching(/^Salesforce isn't proving Koa is smarter than Claude or GPT-5\.5\. It's proving it doesn't need to be, .*who baked it\.$/),
       expect.stringMatching(/^Guess, clearly labelled: the reason .* isn't secrecy for its own sake\. It's that an independent benchmark .* around it\.$/),
     ])
-    expect(hits.find(h => h.rule === 'R7')?.found).toMatch(/^Reads at about age 13\.5\. Above 13 cannot be approved/)
+    expect(hits.find(h => h.rule === 'R7')?.found).toMatch(/^Reads at about age 13\.0\. Above 13 cannot be approved/)
     expect(blockingHits(P3, { readingAge: false }).some(h => h.rule === 'R7')).toBe(false)
   })
 
@@ -200,6 +216,20 @@ describe('what the self-check finds', () => {
   })
 })
 
+describe('the reading-age correction never offers the call', () => {
+  it('names the longest sentences outside the prediction section, however long the prediction is', () => {
+    const call = 'By 30 September 2027, at least one of SAP, Oracle or Workday will launch an AI model of its own built by retraining another company\'s open model, and at least one will say so on stage.'
+    const text = [
+      'Organisational infrastructure considerations necessitate comprehensive evaluation methodologies regarding proprietary implementations everywhere.',
+      'Short one. Another short one.',
+      '## OUR PREDICTION', '', call, '', 'How sure we are: [Krish to set]',
+    ].join('\n\n')
+    const correction = correctionFor(text, [{ rule: 'R7', found: 'Reads at about age 16.0. Above 13 cannot be approved.' }], 'Return only the whole rewritten text.')
+    expect(correction).toContain('Organisational infrastructure considerations')
+    expect(correction).not.toContain('By 30 September 2027')
+  })
+})
+
 describe('selfCheck, the retry', () => {
   const later = () => Date.now() + 120_000
 
@@ -214,7 +244,7 @@ describe('selfCheck, the retry', () => {
     const r = await selfCheck({ first: P1, readingAge: true, answer: 'x', deadline: later(), retry: async () => P1 })
     expect(r.chose).toBe('first')
     expect(r.self_check).toMatchObject({ passed: false, retried: true, note: expect.stringMatching(/as many rules/) })
-    expect(r.self_check.remaining).toHaveLength(2)
+    expect(r.self_check.remaining).toHaveLength(4)
   })
 
   it('keeps the first answer when the second is cut short', async () => {
@@ -243,7 +273,8 @@ describe('POST /api/content-ideas/:id/draft, self-checked', () => {
     expect(correction).toContain('"So the 27 years is a flavour, not an ingredient."')
     expect(correction).toContain("That's not matching or exceeding the leading models. That's finishing third out of three")
     expect(correction).toContain("isn't secrecy for its own sake. It's that an independent benchmark")
-    expect(correction).toContain('Reads at about age 13.5.')
+    expect(correction).toContain('Reads at about age 13.')
+    expect(correction).toContain('Add no question, no sentence fragment and no new fact.')
     expect(correction).toContain('Rewrite only these sentences; keep every other word. Return the same JSON object as before')
 
     expect(out.status).toBe(200)
@@ -295,7 +326,7 @@ describe('POST /api/content-ideas/:id/revise, self-checked', () => {
     expect(r.events[r.events.length - 1]!.event).toBe('done')
     expect(r.done).toMatchObject({ ok: true, revised: P1.trim(), self_check: { passed: false, retried: false } })
     expect(r.done.self_check.note).toMatch(/usage limit/)
-    expect(r.done.self_check.remaining.map((h: { found: string }) => h.found)).toEqual([P1_HIT_1, P1_HIT_2])
+    expect(r.done.self_check.remaining.map((h: { found: string }) => h.found)).toEqual([P1_TILL, P1_CARES, P1_HIT_1, P1_HIT_2])
   })
 
   it('checks an in-place rewrite by its passage, and retries the construction it returned three times on 2026-09-30', async () => {

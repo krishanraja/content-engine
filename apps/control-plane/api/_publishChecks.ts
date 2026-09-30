@@ -22,13 +22,17 @@ export interface Check {
 }
 
 /** The reading grade of a piece (Flesch-Kincaid), headings and markdown left
- *  out. Grade 7 is roughly a reading age of 12. */
+ *  out. Grade 7 is roughly a reading age of 12. A sentence may end inside a
+ *  closing quote or bracket ('...models." Tech Times reported'): until
+ *  2026-09-30 those ends were missed, two sentences counted as one, and
+ *  piece 3, which quotes its sources word for word, read a year older than it
+ *  is and was blocked (walk log F46). */
 export function readingGrade(body: string): number {
   const text = String(body || '')
     .replace(/^#{1,6} .*$/gm, '')
     .replace(/\*\*|__|`/g, '')
     .replace(/https?:\/\/\S+/g, '')
-  const sentences = text.split(/(?<=[.!?])\s+/).filter(s => /[A-Za-z]/.test(s))
+  const sentences = text.split(/(?<=[.!?]["'”’)]*)\s+/).filter(s => /[A-Za-z]/.test(s))
   const words: string[] = text.match(/[A-Za-z0-9$%'.-]+/g) || []
   if (!sentences.length || !words.length) return 0
   const syllables = words.reduce((n, w) => {
@@ -165,7 +169,9 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
       ? `Reads at about age ${age}.`
       : grade <= MAX_READING_GRADE
         ? `Reads at about age ${age}, a little above 12. Shorten the longest sentences.`
-        : `Reads at about age ${age}. Above 13 cannot be approved: shorten sentences and swap long words for short ones.`,
+        // One decimal here: rounded to the half, 13.03 read "about age 13. Above
+        // 13 cannot be approved", which contradicts itself.
+        : `Reads at about age ${(grade + 5).toFixed(1)}. Above 13 cannot be approved: shorten sentences and swap long words for short ones.`,
   })
   const call = predictionCheck(text)
   checks.push({ id: 'CALL', name: 'A dated prediction with a confidence', blocking: true, ok: call.ok, detail: call.detail })
