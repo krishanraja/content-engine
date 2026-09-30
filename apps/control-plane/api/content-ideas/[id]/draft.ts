@@ -11,7 +11,7 @@ import { UTILITY_MODEL } from '../../_models.js'
 import { loadSubchannel } from '../../_subchannels.js'
 import { subchannelRulesBlock } from '../../_houseRules.js'
 import { guardEngine } from '../../_auth.js'
-import { selfCheck } from '../../_selfCheck.js'
+import { guardConfidence, selfCheck } from '../../_selfCheck.js'
 
 // POST /api/content-ideas/:id/draft
 //   body: { instruction?: string }   Krish's direction for this draft, up to 1600 chars
@@ -51,7 +51,9 @@ import { selfCheck } from '../../_selfCheck.js'
 // The publish gate's mechanical checks read the draft before it is written,
 // and one more call fixes what they find (api/_selfCheck.ts). Piece 3's first
 // draft, 2026-09-30, broke R2 three times and read at about age 13.5. The
-// response says what the saved draft still breaks, as `self_check`.
+// response says what the saved draft still breaks, as `self_check`. The
+// draft's confidence is always "How sure we are: [Krish to set]": the number
+// is Krish's, and that draft wrote 78% on its own.
 
 const MAX_DRAFTS = 10
 // The time a request has for both calls: maxDuration (below), less 15
@@ -171,7 +173,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     },
   })
   if (checked.chose === 'retry' && second.out) out = { ...out, ...second.out }
-  const body = checked.text
+  // How sure we are is Krish's to set. A first draft carries the placeholder,
+  // whatever either call wrote (walk log F43).
+  const confidence = guardConfidence(checked.text, null)
+  const body = confidence.text
+  const self_check = { ...checked.self_check, confidence_restored: confidence.restored }
 
   const words = body.split(/\s+/).filter(Boolean).length
   const entry = {
@@ -204,7 +210,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!written || !written.length) {
     // Someone else changed the row during the model call. Their change wins;
     // the draft is returned so nothing is lost, but it is not written over them.
-    return res.status(409).json({ ok: false, error: 'changed_during_draft', body, self_check: checked.self_check })
+    return res.status(409).json({ ok: false, error: 'changed_during_draft', body, self_check })
   }
 
   const seed = [row.idea || '', row.thesis || ''].join('\n\n')
@@ -243,7 +249,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     labelled_inferences: entry.labelled_inferences,
     open_questions: entry.open_questions,
     edit_event_id: ledgerError ? null : editEventId,
-    self_check: checked.self_check,
+    self_check,
   })
 }
 

@@ -80,7 +80,9 @@ export const PASSING: ReadonlySet<ClaimVerdict> = new Set(['verified', 'verified
  *  the placeholder is the form this first read, and is still read the same
  *  way, so every check stored before 2026-09-28 still matches its text. */
 const CONFIDENCE_LINE = /^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[Krish to set\])[ \t]*$/gim
-const UNSET = '[Krish to set]'
+/** Where Krish's confidence goes until he sets it. The writers put it in a
+ *  first draft (api/_selfCheck.ts, guardConfidence). */
+export const UNSET = '[Krish to set]'
 
 /** Each number the shared label reader (labelledConfidences in
  *  packages/contracts/src/call.ts) finds after "How sure we are:" or

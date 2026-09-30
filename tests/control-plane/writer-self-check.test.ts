@@ -54,7 +54,7 @@ vi.mock('../../apps/control-plane/api/_subchannels.js', () => ({
   loadSubchannel: async (v?: string | null) => (v ? { slug: 'under_the_hood', label: 'under.the.hood', mandate: 'Take a shipped thing apart.' } : null),
 }))
 
-const { blockingHits, selfCheck, correctionFor } = await import('../../apps/control-plane/api/_selfCheck.js')
+const { blockingHits, selfCheck, correctionFor, guardConfidence } = await import('../../apps/control-plane/api/_selfCheck.js')
 
 const TOKEN = 'eot_' + 's'.repeat(40)
 const ID = '00000000-0000-4000-8000-000000000042'
@@ -70,6 +70,8 @@ const P1_FIXED = P1.replace(P1_HIT_1, "Those words were about Perplexity's robot
 // Piece 3's first draft, and the same draft with its three hits fixed (it
 // still reads above age 13).
 const P3 = fixture('piece3-v1-first-draft.md')
+// The placeholder in place of the 78% the draft wrote on its own.
+const unset = (text: string) => text.replace('How sure we are: 78%.', 'How sure we are: [Krish to set].')
 const P3_R2_FIXED = P3
   .replace('So the 27 years is a flavour, not an ingredient.', 'So the 27 years is a flavour. It never went into the dough.')
   .replace("That's not matching or exceeding the leading models. That's finishing third", 'Koa finished third')
@@ -240,7 +242,7 @@ describe('POST /api/content-ideas/:id/draft, self-checked', () => {
     expect(correction).toContain('Rewrite only these sentences; keep every other word. Return the same JSON object as before')
 
     expect(out.status).toBe(200)
-    expect(out.body.body).toBe(P3_R2_FIXED.trim())
+    expect(out.body.body).toBe(unset(P3_R2_FIXED).trim())
     expect(out.body.self_check).toMatchObject({ passed: false, retried: true })
     expect(out.body.self_check.remaining.map((h: { rule: string }) => h.rule)).toEqual(['R7'])
     // Metered like any other call, on its own key.
@@ -250,14 +252,14 @@ describe('POST /api/content-ideas/:id/draft, self-checked', () => {
   it('makes one call when the draft is clean', async () => {
     const out = await draft(asJson(P1_FIXED))
     expect(calls).toHaveLength(1)
-    expect(out.body.self_check).toEqual({ passed: true, remaining: [], retried: false })
+    expect(out.body.self_check).toEqual({ passed: true, remaining: [], retried: false, confidence_restored: true })
   })
 
   it('keeps the first draft, with a note, when the provider refuses the retry', async () => {
     const out = await draft(asJson(P3), refused)
     expect(calls).toHaveLength(2)
     expect(out.status).toBe(200)
-    expect(out.body.body).toBe(P3.trim())
+    expect(out.body.body).toBe(unset(P3).trim())
     expect(out.body.self_check).toMatchObject({ passed: false, retried: false, note: expect.stringMatching(/^The second try did not run\. Anthropic is over its usage limit/) })
     expect(out.body.self_check.remaining).toHaveLength(4)
   })
@@ -280,7 +282,7 @@ describe('POST /api/content-ideas/:id/revise, self-checked', () => {
   it('makes one call when the rewrite is clean', async () => {
     const r = await revise({ instruction: 'Tighten it.', source_text: P1 }, P1_FIXED)
     expect(calls).toHaveLength(1)
-    expect(r.done.self_check).toEqual({ passed: true, remaining: [], retried: false })
+    expect(r.done.self_check).toEqual({ passed: true, remaining: [], retried: false, confidence_restored: false })
   })
 
   it('answers with the first rewrite, and a note, when the provider refuses the retry', async () => {
@@ -300,6 +302,80 @@ describe('POST /api/content-ideas/:id/revise, self-checked', () => {
     expect(calls[1]!.messages[2]!.content).toContain(`"${P1_HIT_2}"`)
     expect(calls[1]!.messages[2]!.content).toContain('Return only the rewritten passage.')
     expect(r.done.revised).toContain("Those words were about Perplexity's robot, not Muse. Reading them across to Muse is our guess.\n")
-    expect(r.done.self_check).toEqual({ passed: true, remaining: [], retried: true })
+    expect(r.done.self_check).toEqual({ passed: true, remaining: [], retried: true, confidence_restored: false })
+  })
+})
+
+// ── Brick 2: the writer never sets Krish's confidence ─────────────────────
+
+// Piece 1's call as it was written before 2026-09-26: one paragraph with a
+// bold label, ending "Confidence: 70%." (walk log F41).
+const CALL_PARAGRAPH = '**The Call.** By 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings. Confidence: 70%.'
+const P1_PARAGRAPH = P1.replace(/## OUR PREDICTION[\s\S]*$/, CALL_PARAGRAPH)
+
+describe('guardConfidence', () => {
+  it('a first draft says "How sure we are: [Krish to set]", whatever the model wrote', () => {
+    const r = guardConfidence(P3, null)
+    expect(r.restored).toBe(true)
+    expect(r.text).toBe(unset(P3))
+    expect(guardConfidence(unset(P3), null)).toEqual({ text: unset(P3), restored: false })
+    // Under the other label too, in the house form.
+    expect(guardConfidence(P1_PARAGRAPH, null).text.endsWith('sponsored listings. How sure we are: [Krish to set].')).toBe(true)
+  })
+
+  it('a first draft that dropped the line gets the placeholder back, at the end of the call', () => {
+    const r = guardConfidence(P3.replace('\n\nHow sure we are: 78%.', ''), null)
+    expect(r.restored).toBe(true)
+    expect(r.text.endsWith("echoing exactly the Nemotron-into-Koa move.\n\nHow sure we are: [Krish to set]")).toBe(true)
+  })
+
+  it('a rewrite keeps the source\'s "How sure we are:" number, and gets it back when dropped', () => {
+    expect(guardConfidence(P1.replace('How sure we are: 70%.', 'How sure we are: 75%.'), P1)).toEqual({ text: P1, restored: true })
+    expect(guardConfidence(P1.replace('\n\nHow sure we are: 70%.', ''), P1)).toEqual({ text: P1, restored: true })
+    expect(guardConfidence(P1, P1)).toEqual({ text: P1, restored: false })
+  })
+
+  it('a rewrite keeps the source\'s "Confidence:" label and number, and gets it back when dropped', () => {
+    expect(guardConfidence(P1_PARAGRAPH.replace('Confidence: 70%.', 'Confidence: 80%.'), P1_PARAGRAPH)).toEqual({ text: P1_PARAGRAPH, restored: true })
+    expect(guardConfidence(P1_PARAGRAPH.replace('Confidence: 70%.', 'How sure we are: 80%.'), P1_PARAGRAPH)).toEqual({ text: P1_PARAGRAPH, restored: true })
+    expect(guardConfidence(P1_PARAGRAPH.replace(' Confidence: 70%.', ''), P1_PARAGRAPH)).toEqual({ text: P1_PARAGRAPH, restored: true })
+  })
+
+  it('a rewrite of a piece waiting on Krish keeps the placeholder', () => {
+    const waiting = unset(P3)
+    expect(guardConfidence(P3, waiting)).toEqual({ text: waiting, restored: true })
+  })
+
+  it('leaves a labelled number outside the call alone: it is a fact about something else', () => {
+    const text = P1.replace('## WHO GETS PAID', 'Consumer confidence: 62% in August.\n\n## WHO GETS PAID')
+    expect(guardConfidence(text, P1)).toEqual({ text, restored: false })
+  })
+})
+
+describe('the routes put the confidence back after the model and after any retry', () => {
+  it('draft: the 78% piece 3 wrote on its own, in the first answer and again in the retry, becomes the placeholder', async () => {
+    const out = await draft(asJson(P3), asJson(P3_R2_FIXED))
+    expect(out.body.body.endsWith('How sure we are: [Krish to set].')).toBe(true)
+    expect(out.body.body).not.toContain('78%')
+    expect(out.body.self_check.confidence_restored).toBe(true)
+    const written = db.updates.find(u => u.table === 'content_ideas')!.values as { body: string }
+    expect(written.body).toBe(out.body.body)
+  })
+
+  it("revise: the source's confidence survives a rewrite that changed it, under both labels", async () => {
+    const r = await revise({ instruction: 'Tighten it.', source_text: P1 }, P1_FIXED.replace('How sure we are: 70%.', 'How sure we are: 75%.'))
+    expect(r.done.revised).toBe(P1_FIXED.trim())
+    expect(r.done.self_check.confidence_restored).toBe(true)
+
+    const fixedParagraph = P1_PARAGRAPH.replace(P1_HIT_1, "Those words were about Perplexity's robot.").replace(P1_HIT_2, 'Reading them across to Muse is our guess.')
+    const again = await revise({ instruction: 'Tighten it.', source_text: P1_PARAGRAPH }, fixedParagraph.replace('Confidence: 70%.', 'How sure we are: 85%.'))
+    expect(again.done.revised).toBe(fixedParagraph.trim())
+    expect(again.done.self_check.confidence_restored).toBe(true)
+  })
+
+  it('revise: a confidence line the rewrite dropped is put back', async () => {
+    const r = await revise({ instruction: 'Cut the ending.', source_text: P1 }, P1_FIXED.replace('\n\nHow sure we are: 70%.', ''))
+    expect(r.done.revised.endsWith('still shows them sponsored listings.\n\nHow sure we are: 70%.')).toBe(true)
+    expect(r.done.self_check.confidence_restored).toBe(true)
   })
 })

@@ -216,9 +216,28 @@ of its 409 `changed_during_draft`) and of revise's `done`:
     { "rule": "R7", "found": "Reads at about age 13.5. Above 13 cannot be approved: ..." }
   ],
   "retried": true,                      // a second call ran and answered
-  "note": "The second try broke as many rules as the first, so this is the first answer."
+  "note": "The second try broke as many rules as the first, so this is the first answer.",
+  "confidence_restored": true           // Krish's confidence had to be put back (below)
 }                                       // note: only when a retry was wanted and the first answer kept
 ```
+
+**The writer never sets Krish's confidence** (since 2026-09-30, walk log
+F43). How sure we are is his judgement (his ruling, 2026-09-26: "I'd rather
+take a clearer stance than sit on the fence all the time and say 60%", and
+he sets the number). After the model and any retry, in code
+(`guardConfidence`, `api/_selfCheck.ts`): a first draft says
+`How sure we are: [Krish to set]`, whatever the model wrote; a rewrite keeps
+the source text's confidence exactly, label and number ("How sure we are:
+70%." stays that, "Confidence: 70%." stays that, and the placeholder stays
+the placeholder); a rewrite of a text with no confidence gets the placeholder
+in place of any number the model wrote. A confidence the model dropped is put
+back at the end of the call (a paragraph of its own under a heading, the last
+sentence of a bold-label paragraph); with no call at all there is nowhere to
+put it, and CALL says so. It is found by the shared call reader
+(`labelledConfidences`, `callSectionOf`) as the fact gate finds it: "How sure
+we are:" anywhere, "Confidence:" inside the call only, so a labelled number
+elsewhere ("Consumer confidence: 62% in August") is left as written.
+`self_check.confidence_restored` is true whenever it changed the text.
 
 `rule` is the checklist's id (`R2`, `NO_EM_DASH`, `NO_EXCLAMATION`,
 `BRITISH_SPELLING`, `R7`). The brief's rewrite, `briefs/[week]/revise`, is
