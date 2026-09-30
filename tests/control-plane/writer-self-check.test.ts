@@ -379,3 +379,88 @@ describe('the routes put the confidence back after the model and after any retry
     expect(r.done.self_check.confidence_restored).toBe(true)
   })
 })
+
+// ── Brick 3: putting an in-place rewrite back ─────────────────────────────
+
+const { passageReplacement, spliceSelection } = await import('../../apps/control-plane/api/_selection.js')
+
+// Piece 1 after the broken scoped fixes: asked to delete the blender
+// sentence, the in-place rewrite left the sentence before it twice.
+const P1_V13 = fixture('piece1-v13-scoped-fixes.md')
+const MUSE = "Muse is Meta's AI helper that shops for people."
+const BLENDER = 'Send it to buy a blender and it buys the blender.'
+const TWICE = `${MUSE} ${MUSE}`
+// The text the deletion was asked of, rebuilt from v13. Its paragraph is the
+// one the engine was given (piece 1 v12), byte for byte.
+const BEFORE_DELETION = P1_V13.replace(TWICE, `${MUSE} ${BLENDER}`)
+const DELETED = P1_V13.replace(TWICE, MUSE)
+
+describe('the in-place splice', () => {
+  it('reproduces 2026-09-30: handed the sentence before the passage, the old splice gives v13 and its duplicate', () => {
+    const oldSplice = (source: string, selection: string, reply: string) => source.replace(selection, reply)
+    expect(oldSplice(BEFORE_DELETION, BLENDER, MUSE)).toBe(P1_V13)
+    expect(P1_V13).toContain(TWICE)
+  })
+
+  it('takes that echo off, so the deletion deletes the passage and nothing else', () => {
+    const passage = passageReplacement(BEFORE_DELETION, BLENDER, MUSE)
+    expect(passage).toBe('')
+    expect(spliceSelection(BEFORE_DELETION, BLENDER, passage)).toBe(DELETED)
+    expect(DELETED).toContain(`${MUSE} Nothing else on the page gets a look in.`)
+  })
+
+  it('takes off an echo on either side, or the whole draft sent back, and keeps the new words', () => {
+    expect(passageReplacement(BEFORE_DELETION, BLENDER, `${MUSE} It buys what it was sent for.`)).toBe('It buys what it was sent for.')
+    expect(passageReplacement(BEFORE_DELETION, BLENDER, `${MUSE} Nothing else on the page gets a look in.`)).toBe('')
+    expect(passageReplacement(BEFORE_DELETION, BLENDER, BEFORE_DELETION.replace(BLENDER, 'It buys what it was sent for.'))).toBe('It buys what it was sent for.')
+    // The start of the sentence the passage sits in.
+    expect(passageReplacement(P1, "is our guess, not Amazon's claim.", 'Reading them across to Muse is our guess.')).toBe('is our guess.')
+    // F2, 2026-09-24: a heading sent back with the sentence under it.
+    const heading = passageReplacement(P1, '## WHAT DECIDES IT', "WHAT DECIDES IT\n\nAmazon's ad money is real today.")
+    expect(heading).toBe('WHAT DECIDES IT')
+  })
+
+  it('leaves an answer alone that only starts with the same word as the text before it', () => {
+    expect(passageReplacement('The cat sat. It ran off.', 'ran off.', 'Its owner ran.')).toBe('Its owner ran.')
+    expect(passageReplacement(P1, P1_HIT_2, 'Reading them across to Muse is our guess.')).toBe('Reading them across to Muse is our guess.')
+  })
+
+  it('an empty replacement leaves one space, or the paragraph break, where the passage was', () => {
+    expect(spliceSelection('One. Two. Three.', 'Two.', '')).toBe('One. Three.')
+    expect(spliceSelection('One.\n\nTwo.\n\nThree.', 'Two.', '')).toBe('One.\n\nThree.')
+    expect(spliceSelection('One. Two.\n\nThree.', 'Two.', '')).toBe('One.\n\nThree.')
+    expect(spliceSelection('Two. Three.', 'Two.', '')).toBe('Three.')
+    expect(spliceSelection('One. Two.', 'Two.', '')).toBe('One.')
+  })
+
+  it('a normal replacement goes where the passage was, its edge spaces kept, and a "$" in it is text', () => {
+    expect(spliceSelection(P1, P1_HIT_2, 'Reading them across to Muse is our guess.')).toBe(P1.replace(P1_HIT_2, 'Reading them across to Muse is our guess.'))
+    expect(spliceSelection('One. Two. Three.', ' Two. ', 'Deux.')).toBe('One. Deux. Three.')
+    expect(spliceSelection('It cost $5.', '$5', "$&$' of $68.6 billion")).toBe("It cost $&$' of $68.6 billion.")
+  })
+})
+
+describe('POST /api/content-ideas/:id/revise, in place', () => {
+  it('the deletion that doubled a sentence on 2026-09-30 now deletes the sentence and nothing else', async () => {
+    const r = await revise({ instruction: 'Delete this sentence.', source_text: BEFORE_DELETION, selection: BLENDER }, MUSE)
+    expect(calls).toHaveLength(1)
+    expect(r.done.revised).toBe(DELETED.trim())
+    expect(r.done.revised).not.toContain(TWICE)
+    expect(r.done.self_check).toEqual({ passed: true, remaining: [], retried: false, confidence_restored: false })
+  })
+
+  it('an empty answer deletes the passage', async () => {
+    const r = await revise({ instruction: 'Delete this sentence.', source_text: BEFORE_DELETION, selection: BLENDER }, '')
+    expect(r.done).toMatchObject({ ok: true, revised: DELETED.trim() })
+  })
+
+  it('an answer that echoes the sentence before keeps only its new words', async () => {
+    const r = await revise({ instruction: 'Say it shorter.', source_text: BEFORE_DELETION, selection: BLENDER }, `${MUSE} It buys what it was sent for.`)
+    expect(r.done.revised).toBe(BEFORE_DELETION.replace(BLENDER, 'It buys what it was sent for.').trim())
+  })
+
+  it('tells the model to return only the passage, and nothing to delete it', async () => {
+    await revise({ instruction: 'Delete this sentence.', source_text: BEFORE_DELETION, selection: BLENDER }, '')
+    expect(calls[0]!.messages[0]!.content).toContain('return only the rewritten version of this, with none of the text around it; to delete it, return nothing')
+  })
+})

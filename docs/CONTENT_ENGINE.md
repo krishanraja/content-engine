@@ -174,7 +174,8 @@ Known before the stream opens, it is that JSON with status 503 (the provider
 cannot serve the engine now), 429 (rate limit) or 502 (a request it refused
 as malformed), and `Retry-After` when there is a time to give. After the
 stream opens, it is the stream's last event, `event: error` with the same
-body, and no `done` follows. An answer with no text is `empty_output`. A
+body, and no `done` follows. An answer with no text is `empty_output`, except
+in place, where it deletes the passage (below). A
 failed rewrite writes nothing to `meta.revisions` or the ledger. Read a
 revise response as a success only when it ends with `done` and `ok: true`.
 
@@ -238,6 +239,18 @@ put it, and CALL says so. It is found by the shared call reader
 we are:" anywhere, "Confidence:" inside the call only, so a labelled number
 elsewhere ("Consumer confidence: 62% in August") is left as written.
 `self_check.confidence_restored` is true whenever it changed the text.
+
+**A rewrite in place** (since 2026-09-30, walk log F44). Given a `selection`,
+revise hands the model the whole draft and the passage, then puts the answer
+back where the passage was (`passageReplacement` and `spliceSelection`,
+`api/_selection.ts`). Whatever the answer repeats of the draft just before
+the passage (from a sentence start) or just after it (to a sentence end) is
+taken off first, so an answer that echoes its context cannot repeat or lose a
+neighbouring sentence. An empty answer deletes the passage and leaves one
+space, or the paragraph break that was there; the model is told to return
+nothing to delete. `done.revised` is the whole draft with the passage
+replaced, and the self-check reads only the new passage. A heading sent back
+without its `## ` still loses it (F2).
 
 `rule` is the checklist's id (`R2`, `NO_EM_DASH`, `NO_EXCLAMATION`,
 `BRITISH_SPELLING`, `R7`). The brief's rewrite, `briefs/[week]/revise`, is

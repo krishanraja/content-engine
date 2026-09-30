@@ -10,6 +10,7 @@ import { UTILITY_MODEL } from '../../_models.js'
 import { guardEngine } from '../../_auth.js'
 import { loadSubchannel } from '../../_subchannels.js'
 import { guardConfidence, selfCheck } from '../../_selfCheck.js'
+import { passageReplacement, spliceSelection } from '../../_selection.js'
 
 // POST /api/content-ideas/:id/revise
 //   body: {
@@ -146,7 +147,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Strip stray surrounding quotes / em dashes the model may have slipped in.
   const clean = (text: string) => sanitizeVoice(text.trim().replace(/^["'`]+|["'`]+$/g, ''))
   const revisedFragment = clean(firstText)
-  if (!revisedFragment) return failWith(res, emptyOutput('revise_failed', 'The rewrite'))
+  // An in-place rewrite may answer with nothing: that deletes the passage.
+  if (!revisedFragment && !inPlace) return failWith(res, emptyOutput('revise_failed', 'The rewrite'))
+  // The new passage, with any text around it that the model echoed taken
+  // off, so the splice cannot repeat or lose a neighbour (walk log F44).
+  const passage = (text: string) => inPlace ? passageReplacement(sourceText, b.selection as string, text) : text
 
   // One more call when the rewrite breaks a blocking rule, metered on its own
   // key: the same system prompt, the first request and answer, and the
@@ -154,7 +159,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // the first answer, and `done` carries the one to apply. A passage has no
   // reading age of its own, so an in-place rewrite is checked without it.
   const checked = await selfCheck({
-    first: revisedFragment,
+    first: passage(revisedFragment),
     readingAge: !inPlace,
     answer: inPlace ? 'Return only the rewritten passage.' : 'Return only the whole rewritten text.',
     deadline: started + BUDGET_MS,
@@ -163,13 +168,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const stop = new AbortController()
       const timer = setTimeout(() => stop.abort(), timeoutMs)
       try {
-        return clean(await streamClaude({
+        return passage(clean(await streamClaude({
           ...call,
           agent: 'cleo-revise-retry',
           messages: [{ role: 'user', content: user }, { role: 'assistant', content: firstText }, { role: 'user', content: correction }],
           signal: stop.signal,
           onText: () => {},
-        }))
+        })))
       } finally {
         clearTimeout(timer)
       }
@@ -178,7 +183,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // How sure we are is Krish's to set: the rewrite keeps the source's, label
   // and number, and gets it back if the model dropped it (walk log F43).
-  const confidence = guardConfidence(inPlace ? sourceText.replace(b.selection as string, checked.text) : checked.text, sourceText)
+  const confidence = guardConfidence(inPlace ? spliceSelection(sourceText, b.selection as string, checked.text) : checked.text, sourceText)
   const revised = confidence.text
   const self_check = { ...checked.self_check, confidence_restored: confidence.restored }
 

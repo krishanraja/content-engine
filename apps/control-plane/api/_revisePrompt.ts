@@ -101,7 +101,7 @@ export function buildReviseUser(ctx: ReviseContext, r: ReviseRequest): string {
 
   const inPlace = !!(r.selection && r.sourceText.includes(r.selection))
   if (inPlace) {
-    return `${head}Rewrite ONLY the SELECTED passage below. ${directive}${extra}\n\nFULL DRAFT (for context, do not return it):\n${r.sourceText}\n\nSELECTED PASSAGE (return only the rewritten version of this):\n${r.selection}`
+    return `${head}Rewrite ONLY the SELECTED passage below. ${directive}${extra}\n\nFULL DRAFT (for context, do not return it):\n${r.sourceText}\n\nSELECTED PASSAGE (return only the rewritten version of this, with none of the text around it; to delete it, return nothing):\n${r.selection}`
   }
   return `${head}Rewrite the draft below. ${directive}${extra}\n\nDRAFT:\n${r.sourceText}`
 }
