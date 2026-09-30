@@ -275,6 +275,8 @@ with the evidence that found it):
 | F48 | fact gate | The web checker, and the reader of its quote, called a figure for one period a contradiction of a figure for another: Amazon's 2025 annual report ($68,635 million) against "over $70 billion in TTM revenue" (the twelve months to March 2026). The sentence named no year, so nothing told them the periods differed. | piece 1, run 3, 2026-09-30. **Fixed 2026-09-30**: `INDEPENDENT_SYSTEM` and `ENTAIL_SYSTEM` (`api/_factGate.ts`) say figures for different periods or scopes do not conflict, and a claim with no period is never assumed to share the evidence's. The piece's sentence now says "for 2025". |
 | F49 | self-check retry | The reading-age correction lists the three longest sentences to shorten, and the prediction could be one of them. On piece 3 the retry rewrote the call into a different prediction ("one of SAP, Oracle or Workday will build its own AI model this way too"), added a "Not X, Y" (F47), and the route kept it because it broke fewer checks. | piece 3, revise 5, 2026-09-30. That answer was discarded, never saved. **Fixed 2026-09-30**: `longestSentences` (`api/_selfCheck.ts`) skips the call section. |
 | F51 | fact gate, on file | A checker's passage that starts or stops inside a markdown link ("In Salesforce's CRM benchmark](https://...), a model benchmark") never matched the source word for word: the link stripper took whole links only. A true claim, the press release's own "three times fewer errors", was held on piece 3's run 5. | piece 3, run 5, 2026-09-30. **Fixed 2026-09-30**: `stripMarkdownLinks` (`api/_text.ts`) also drops the back half of a cut link and the opening bracket of one cut at the end. |
+| F52 | fact gate | Runs do not converge on an opinion-heavy piece: the claim lister reads a different handful of commentary sentences as claims each run (piece 3, runs 1 to 6: 16, 7, 3, 4, 2, 3 blocking, almost all different sentences). | piece 3, 2026-09-30. **Not built: proposal with Krish.** Carry forward a sentence's verdict while its text and the filed sources are unchanged. |
+| F53 | CI, Windows | `tests/drive-discovery.test.ts`, first test in the file, timed out at 5 seconds on the Windows runner (c3a6e52); the re-run passed and the file runs in 2.3 seconds locally. The first test pays the file's cold start. | CI run 36725258056, 2026-09-30. **Not fixed.** Give the file's first test its own timeout, or warm the import in a `beforeAll`. |
 | F50 | fact gate, on file | The on-file reader misread a flattened PDF table. It said Koa "exceeds Claude Opus" on Tau2Bench and BFCL; the paper's Table 1 has Koa below Opus 4.8 on both (69.41 against 74.00, 66.63 against 78.18) and below GPT-5.5 on all three overall scores. The gate failed closed (a contradiction the passage did not bear out became "not found"), so nothing false passed, but a true sentence was held. | piece 3, run 2, 2026-09-30. **Not fixed.** File tables as one row a line with the column names, or read them from the HTML. |
 
 ## 3. Front-end implications
@@ -545,9 +547,21 @@ broke R2 three times and set Krish's confidence to 78% on its own (F42, F43).
 | 5 | v8 | 2 | 0 | Held, both true: "On CRM Bench, GPT-5.5 scored 0.90" (the on-file reader confused two columns of Table 1, F50), and the press release's "three times fewer errors" (a passage quoted from inside a link, F51) |
 
 Run 5 was the cap this session set itself. The engine refuses review while a
-claim is held (409 `fact_gate`), and both holds are gate faults, one now
-fixed. So piece 3 gets one more run on unchanged text once F51 is live, logged
-here as over the cap.
+claim is held (409 `fact_gate`), and both holds were gate faults, one then
+fixed. So piece 3 got one more run on unchanged text once F51 was live, over
+the cap:
+
+| Run | Body | Blocking | Contradicted | What happened |
+|---|---|---|---|---|
+| 6 | v8 | 3 | 1 | Both run 5 holds passed (F51 works). Three new ones: "Koa sits behind GPT-5.5 and Claude Opus 4.8" (true by Table 1; the web checker called its own missing data a contradiction), "marked its own test" (a metaphor read as a claim), and "runs its own model on its own machines", a real overstatement: Salesforce hosts its models on AWS inside its trust boundary, and its release says "within its own infrastructure" |
+
+v9 fixes the overstatement and the metaphor through one exact engine rewrite,
+and stops there. Each run reads a different handful of commentary sentences as
+claims, so on a teardown this opinionated rewording alone does not converge.
+**Proposal for Krish (F52):** a sentence whose text and filed sources are
+unchanged keeps the verdict it earned on an earlier run, so each run checks
+only what changed and what failed. It changes the gate's guarantee (every run
+re-reads every sentence), so it is his call, not built.
 
 - v3's guess paragraph was garbled by the self-check retry (F45) and repaired
   by a revise scoped to it (v4).
