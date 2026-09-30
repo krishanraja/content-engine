@@ -140,6 +140,9 @@ describe('the second look at what the sweep caught', () => {
   test('"you\'ll" reads as the future', () => {
     assert.equal(readsAsForecast('You\'ll just notice the answer feels a bit dumber.'), true)
     assert.equal(readsAsForecast('Anthropic sold three models in 2024.'), false)
+    // House rule R1 labels a guess as a guess (piece 1, 2026-09-30).
+    assert.equal(readsAsForecast("Here's our guess, in full: Amazon's real worry is the $68.6 billion."), true)
+    assert.equal(readsAsForecast('Amazon filed an amended complaint on 21 September.'), false)
   })
 })
 

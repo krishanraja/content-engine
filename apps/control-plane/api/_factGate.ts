@@ -175,9 +175,15 @@ export function sectionOf(body: string, sentence: string): string {
   return before.length ? before[before.length - 1].replace(/^\s*#{1,6}\s*/, '').trim() : ''
 }
 
-/** Reads like something that has not happened yet, or like a labelled guess. */
+/** Reads like something that has not happened yet, or like a labelled guess.
+ *  House rule R1 tells every writer "A guess is marked as a guess", so "our
+ *  guess" is a label here too: on 2026-09-30 piece 1's "Here's our guess, in
+ *  full: Amazon's real worry is the $68.6 billion." was set aside by the
+ *  lister and then checked as a fact because this list did not know the word.
+ *  The lister still has to set the sentence aside itself, and a number in it is
+ *  still checked wherever the piece states it as fact. */
 export function readsAsForecast(sentence: string): boolean {
-  return /\b(will|would|could|might|may|if|bet|call|forecast|predict|scenario|inference|we think|our read|going to|\w+['’]ll|by (?:\d{1,2} )?(?:january|february|march|april|may|june|july|august|september|october|november|december)?\s*\d{4})\b/i.test(sentence)
+  return /\b(will|would|could|might|may|if|bet|call|forecast|predict|scenario|inference|guess|guesses|guessing|we think|our read|going to|\w+['’]ll|by (?:\d{1,2} )?(?:january|february|march|april|may|june|july|august|september|october|november|december)?\s*\d{4})\b/i.test(sentence)
 }
 
 /** The numbers in a text, by value: "$900 million" -> "900", "$150.00" ->
