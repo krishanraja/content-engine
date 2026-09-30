@@ -9,6 +9,7 @@ import { buildRevisePrompt, REVISE_MODES } from '../../_revisePrompt.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { guardEngine } from '../../_auth.js'
 import { loadSubchannel } from '../../_subchannels.js'
+import { selfCheck } from '../../_selfCheck.js'
 
 // POST /api/content-ideas/:id/revise
 //   body: {
@@ -30,8 +31,19 @@ import { loadSubchannel } from '../../_subchannels.js'
 // at once), it is a JSON body with a failure status; after it opens, it is
 // the stream's last event, `error`, and no `done` follows. Neither writes
 // meta.revisions or a ledger row. docs/CONTENT_ENGINE.md has the shapes.
+//
+// The publish gate's mechanical checks read the rewrite before `done`, and
+// one more call fixes what they find (api/_selfCheck.ts). On 2026-09-30 a
+// rewrite of piece 1 came back with two "Not X, Y" constructions, and a
+// rewrite of one of those sentences, asked to remove it, returned it three
+// times running. `done` says what the rewrite still breaks, as `self_check`.
+
+// The time a request has for both calls: maxDuration (below), less 15
+// seconds to record it and answer.
+const BUDGET_MS = 285_000
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const started = Date.now()
   if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
@@ -94,27 +106,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) return res.status(503).json({ ok: false, error: 'ANTHROPIC_API_KEY not configured' })
 
+  const call = {
+    // The single best place in the engine for a prefix cache. `system` holds
+    // the rubric, the voice block and the channel corpus and does not change
+    // between passes; `user` holds the draft. One piece gets revised many
+    // times in a sitting, so from the second pass on the largest part of the
+    // request is served at a tenth of the price.
+    cache: true,
+    apiKey,
+    model: humour ? 'claude-opus-4-8' : UTILITY_MODEL,
+    // Matches the other rewrite surfaces (channel-cut, synthesize) rather than
+    // the provider default this silently ran at before streamClaude accepted a
+    // temperature. Ignored on the humour path: opus rejects sampling params.
+    temperature: 0.5,
+    maxTokens: mode === 'length' && b.value === 'long' ? 3200 : 2200,
+    system,
+  }
+
   // The stream opens only once the provider has accepted the call, so a
   // refusal reaches the caller as a status it cannot mistake for success.
   let opened = false
-  let revisedFragment: string
+  let firstText: string
   try {
-    revisedFragment = (await streamClaude({
+    firstText = (await streamClaude({
+      ...call,
       agent: 'cleo-revise',
-      // The single best place in the engine for a prefix cache. `system` holds
-      // the rubric, the voice block and the channel corpus and does not change
-      // between passes; `user` holds the draft. One piece gets revised many
-      // times in a sitting, so from the second pass on the largest part of the
-      // request is served at a tenth of the price.
-      cache: true,
-      apiKey,
-      model: humour ? 'claude-opus-4-8' : UTILITY_MODEL,
-      // Matches the other rewrite surfaces (channel-cut, synthesize) rather than
-      // the provider default this silently ran at before streamClaude accepted a
-      // temperature. Ignored on the humour path: opus rejects sampling params.
-      temperature: 0.5,
-      maxTokens: mode === 'length' && b.value === 'long' ? 3200 : 2200,
-      system,
       messages: [{ role: 'user', content: user }],
       onOpen: () => { openStream(res); opened = true },
       onText: chunk => send(res, 'delta', { text: chunk }),
@@ -128,10 +144,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return failWith(res, failure.body)
   }
   // Strip stray surrounding quotes / em dashes the model may have slipped in.
-  revisedFragment = sanitizeVoice(revisedFragment.replace(/^["'`]+|["'`]+$/g, ''))
+  const clean = (text: string) => sanitizeVoice(text.trim().replace(/^["'`]+|["'`]+$/g, ''))
+  const revisedFragment = clean(firstText)
   if (!revisedFragment) return failWith(res, emptyOutput('revise_failed', 'The rewrite'))
 
-  const revised = inPlace ? sourceText.replace(b.selection as string, revisedFragment) : revisedFragment
+  // One more call when the rewrite breaks a blocking rule, metered on its own
+  // key: the same system prompt, the first request and answer, and the
+  // correction. Its text is not streamed: the preview already on screen is
+  // the first answer, and `done` carries the one to apply. A passage has no
+  // reading age of its own, so an in-place rewrite is checked without it.
+  const checked = await selfCheck({
+    first: revisedFragment,
+    readingAge: !inPlace,
+    answer: inPlace ? 'Return only the rewritten passage.' : 'Return only the whole rewritten text.',
+    deadline: started + BUDGET_MS,
+    minShare: inPlace ? 0 : 0.7,
+    retry: async (correction, timeoutMs) => {
+      const stop = new AbortController()
+      const timer = setTimeout(() => stop.abort(), timeoutMs)
+      try {
+        return clean(await streamClaude({
+          ...call,
+          agent: 'cleo-revise-retry',
+          messages: [{ role: 'user', content: user }, { role: 'assistant', content: firstText }, { role: 'user', content: correction }],
+          signal: stop.signal,
+          onText: () => {},
+        }))
+      } finally {
+        clearTimeout(timer)
+      }
+    },
+  })
+
+  const revised = inPlace ? sourceText.replace(b.selection as string, checked.text) : checked.text
 
   // Append history (non-destructive; body is only changed when the user accepts).
   const meta = (idea?.meta || {}) as any
@@ -186,11 +231,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // The client returns this to resolve the event when Krish accepts or keeps
   // the current version.
-  send(res, 'done', { ok: true, revised, mode, value: b.value || null, edit_event_id: editEventId })
+  send(res, 'done', { ok: true, revised, mode, value: b.value || null, edit_event_id: editEventId, self_check: checked.self_check })
   return res.end()
 }
 
 // Claude/webhook calls here can run 20-60s; raise the function ceiling above
 // the short platform default so the request finishes instead of being killed
 // mid-call (the cause of the composer hanging then dropping back to the draft).
-export const config = { maxDuration: 60 }
+// Two such calls when the self-check asks for a second: see BUDGET_MS.
+export const config = { maxDuration: 300 }

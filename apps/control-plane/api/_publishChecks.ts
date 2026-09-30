@@ -101,6 +101,17 @@ export function americanSpellings(body: string): Array<{ found: string; use: str
   return [...seen].map(([found, use]) => ({ found, use }))
 }
 
+/** Each em dash (or horizontal bar) in the text. */
+export function emDashes(body: string): string[] {
+  return String(body || '').match(/[—―]/g) || []
+}
+
+/** Each exclamation mark outside a quotation, with the character before it.
+ *  A quotation keeps its source's punctuation. */
+export function exclamationMarks(body: string): string[] {
+  return String(body || '').replace(/"[^"\n]*"|“[^”\n]*”/g, '').match(/[A-Za-z0-9)\]'’]!/g) || []
+}
+
 /** Where a confidence starts to read as a clear stance (Krish, 2026-09-26). */
 export const CLEAR_STANCE_AT = 70
 
@@ -138,9 +149,9 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   checks.push({ id: 'FACTS', name: 'Every fact checked twice', blocking: true, ok: factGate.ok, detail: factGate.ok ? 'This exact version passed the fact check.' : (factGate.reason || 'The facts have not passed yet.') })
   const nxy = notXYConstructions(text)
   checks.push({ id: 'R2', name: 'No "Not X, Y"', blocking: true, ok: nxy.length === 0, detail: nxy.length ? `Found: ${nxy.slice(0, 3).map(h => `"${h}"`).join('; ')}` : 'None found.' })
-  const dashes = (text.match(/[—―]/g) || []).length
+  const dashes = emDashes(text).length
   checks.push({ id: 'NO_EM_DASH', name: 'No em dashes', blocking: true, ok: dashes === 0, detail: dashes ? `${dashes} found.` : 'None found.' })
-  const bangs = text.replace(/"[^"\n]*"|“[^”\n]*”/g, '').match(/[A-Za-z0-9)\]'’]!/g) || []
+  const bangs = exclamationMarks(text)
   checks.push({ id: 'NO_EXCLAMATION', name: 'No exclamation marks', blocking: true, ok: bangs.length === 0, detail: bangs.length ? `${bangs.length} found outside quotations.` : 'None found.' })
   const us = americanSpellings(text)
   checks.push({ id: 'BRITISH_SPELLING', name: 'British spelling', blocking: true, ok: us.length === 0, detail: us.length ? `Found: ${us.slice(0, 5).map(w => `${w.found} (write ${w.use})`).join(', ')}${us.length > 5 ? `, and ${us.length - 5} more` : ''}.` : 'None found.' })

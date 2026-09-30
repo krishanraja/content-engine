@@ -464,6 +464,10 @@ export interface ClaudeOpts {
    */
   cache?: boolean
   user: string
+  /** Earlier turns, sent before `user`. The writer's self-check
+   *  (api/_selfCheck.ts) sends the first request and answer here, then its
+   *  correction as `user`. Absent for every other caller. */
+  history?: ChatTurn[]
   /** Images to send alongside `user`, for the vision path.
    *
    *  Anthropic only accepts images inside a content-block array, so supplying
@@ -540,7 +544,7 @@ export function claudeRequestBody(opts: ClaudeOpts): Record<string, unknown> {
     ...thinkingParam(model, opts.think === true),
     ...(supportsSampling(model) ? { temperature: opts.temperature ?? 0.5 } : {}),
     system: cacheableSystem(opts),
-    messages: [{ role: 'user', content: userContent(opts) }],
+    messages: [...(opts.history ?? []), { role: 'user', content: userContent(opts) }],
   }
 }
 

@@ -11,6 +11,7 @@ import { UTILITY_MODEL } from '../../_models.js'
 import { loadSubchannel } from '../../_subchannels.js'
 import { subchannelRulesBlock } from '../../_houseRules.js'
 import { guardEngine } from '../../_auth.js'
+import { selfCheck } from '../../_selfCheck.js'
 
 // POST /api/content-ideas/:id/draft
 //   body: { instruction?: string }   Krish's direction for this draft, up to 1600 chars
@@ -44,8 +45,18 @@ import { guardEngine } from '../../_auth.js'
 // draft can pair with it. The write is guarded on updated_at: a model call
 // takes a minute, and writing back a stale copy of meta is how every other
 // drafting route loses concurrent work.
+//
+// ── THE SELF-CHECK ──────────────────────────────────────────────────────
+//
+// The publish gate's mechanical checks read the draft before it is written,
+// and one more call fixes what they find (api/_selfCheck.ts). Piece 3's first
+// draft, 2026-09-30, broke R2 three times and read at about age 13.5. The
+// response says what the saved draft still breaks, as `self_check`.
 
 const MAX_DRAFTS = 10
+// The time a request has for both calls: maxDuration (below), less 15
+// seconds to write the row and answer.
+const BUDGET_MS = 285_000
 
 interface Row {
   id: string
@@ -73,6 +84,7 @@ const strings = (v: unknown, cap = 20): string[] =>
 export { curationBlock }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const started = Date.now()
   if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id_required' })
@@ -114,8 +126,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     '"open_questions": [each thing that must be checked before this publishes]}.'
 
   let out: DraftOut
+  let firstText: string
   try {
-    const text = await callClaude({
+    firstText = await callClaude({
       agent: 'cleo-draft',
       model: UTILITY_MODEL,
       system,
@@ -123,12 +136,42 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       maxTokens: 4000,
       timeoutMs: 110_000,
     })
-    out = (robustJson(text) || {}) as DraftOut
+    out = (robustJson(firstText) || {}) as DraftOut
   } catch (e) {
     return res.status(502).json({ ok: false, error: String((e as Error)?.message || e).slice(0, 200) })
   }
-  const body = sanitizeVoice(String(out.body || '')).trim()
-  if (body.length < 400) return res.status(502).json({ ok: false, error: 'draft_too_short_or_unparseable' })
+  const firstBody = sanitizeVoice(String(out.body || '')).trim()
+  if (firstBody.length < 400) return res.status(502).json({ ok: false, error: 'draft_too_short_or_unparseable' })
+
+  // One more call when the draft breaks a blocking rule, metered on its own
+  // key: the same system prompt, the first request and answer, and the
+  // correction. The draft with fewer failures is kept, with its own lists.
+  const second: { out?: DraftOut } = {}
+  const checked = await selfCheck({
+    first: firstBody,
+    readingAge: true,
+    answer: 'Return the same JSON object as before, with the corrected body and the lists to match it.',
+    deadline: started + BUDGET_MS,
+    minShare: 0.7,
+    retry: async (correction, timeoutMs) => {
+      const text = await callClaude({
+        agent: 'cleo-draft-retry',
+        model: UTILITY_MODEL,
+        system,
+        history: [{ role: 'user', content: user }, { role: 'assistant', content: firstText }],
+        user: correction,
+        maxTokens: 4000,
+        timeoutMs,
+      })
+      const again = (robustJson(text) || {}) as DraftOut
+      const body = sanitizeVoice(String(again.body || '')).trim()
+      if (body.length < 400) return null
+      second.out = again
+      return body
+    },
+  })
+  if (checked.chose === 'retry' && second.out) out = { ...out, ...second.out }
+  const body = checked.text
 
   const words = body.split(/\s+/).filter(Boolean).length
   const entry = {
@@ -161,7 +204,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!written || !written.length) {
     // Someone else changed the row during the model call. Their change wins;
     // the draft is returned so nothing is lost, but it is not written over them.
-    return res.status(409).json({ ok: false, error: 'changed_during_draft', body })
+    return res.status(409).json({ ok: false, error: 'changed_during_draft', body, self_check: checked.self_check })
   }
 
   const seed = [row.idea || '', row.thesis || ''].join('\n\n')
@@ -200,7 +243,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     labelled_inferences: entry.labelled_inferences,
     open_questions: entry.open_questions,
     edit_event_id: ledgerError ? null : editEventId,
+    self_check: checked.self_check,
   })
 }
 
-export const config = { maxDuration: 120 }
+// Two model calls when the self-check asks for a second: see BUDGET_MS.
+export const config = { maxDuration: 300 }

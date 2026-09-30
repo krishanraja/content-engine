@@ -129,8 +129,8 @@ has passed. `POST /api/content-ideas/:id/judge` answers such a panel with 503
 
 | Route | What it does | Model |
 |---|---|---|
-| `POST /api/content-ideas/[id]/draft` | writes a 700 to 1000 word draft to the subchannel's mandate from everything curation left on the row (`api/_curation.ts`); refuses an unrouted idea (409 `no_subchannel`); moves `seeded` or `researching` to `drafting`; keeps the last 10 drafts | Sonnet [`cleo-draft`] |
-| `POST /api/content-ideas/[id]/revise` | streams a rewrite preview (tone, length, zoom, feedback, humour; in place when given a selection). Reads the mandate. Never writes `body`; the caller saves an accepted rewrite | Sonnet, or Opus for humour [`cleo-revise`], prompt caching on |
+| `POST /api/content-ideas/[id]/draft` | writes a 700 to 1000 word draft to the subchannel's mandate from everything curation left on the row (`api/_curation.ts`); refuses an unrouted idea (409 `no_subchannel`); moves `seeded` or `researching` to `drafting`; keeps the last 10 drafts. Self-checked before it is written (below) | Sonnet [`cleo-draft`; the self-check's retry `cleo-draft-retry`] |
+| `POST /api/content-ideas/[id]/revise` | streams a rewrite preview (tone, length, zoom, feedback, humour; in place when given a selection). Reads the mandate. Never writes `body`; the caller saves an accepted rewrite. Self-checked before `done` (below) | Sonnet, or Opus for humour [`cleo-revise`; the self-check's retry `cleo-revise-retry`], prompt caching on |
 | `POST /api/content-ideas/[id]/final-pass` | the ship-moment rubric: instant fails, autofixes, suggestions, a verify list; judged against the subchannel's mandate, or the investigation rubric when an evidence manifest is attached | Sonnet [`cleo-final-pass`] |
 | `POST /api/content-ideas/[id]/fact-check` (`GET` reads the last result) | the fact gate (`api/_factGate.ts`). Lists every checkable claim, sweeps the body so no sentence with a number or a quotation escapes, then checks each claim twice: against the sources on file (the model must quote up to three passages verbatim that carry the claim's numbers, and code confirms them) and independently on the web (Perplexity `sonar-pro`, else Exa or Brave judged), whose verdict counts only when a second model finds its quoted evidence bears it out. One source is enough only when it is a verbatim excerpt (a material filed with `verbatim: true` and its URL); a claim found only in a summary needs the web to agree. Stores `meta.fact_check`, pinned to a hash of the exact body | Sonnet [`fact-gate-*`], Perplexity |
 | `POST /api/content-ideas/[id]/dive-deeper` | suggests research questions or runs one scoped dive and files it as a material | Perplexity `sonar-pro`, Sonnet [`cleo-dive-deeper`] |
@@ -156,8 +156,8 @@ file. The ladder's repair reads the same three labels.
 **How `revise` answers** (since 2026-09-28, walk log F31). The stream
 opens only once Anthropic has accepted the call. A success is a stream of
 `delta` events (`{ text }`) that ends with `done`
-(`{ ok: true, revised, mode, value, edit_event_id }`); apply `revised`, never
-the deltas. A failure is typed, `ModelErrorBody` in `api/_stream.ts`:
+(`{ ok: true, revised, mode, value, edit_event_id, self_check }`); apply
+`revised`, never the deltas. A failure is typed, `ModelErrorBody` in `api/_stream.ts`:
 
 ```
 { "ok": false, "error": "revise_failed",
@@ -184,6 +184,47 @@ accepted the call, a refusal before that is the same JSON body with 503, 429
 or 502, and a failure after it is the stream's last event, `error`. Its
 `done` carries `{ ok: true, preview }`, and a preview under 100 characters is
 `empty_output`.
+
+**The writers' self-check** (since 2026-09-30, walk log F42). Once the model
+has answered, `draft` and `revise` (a whole text and a selection) run the
+blocking checks from the approval checklist that a writer can meet on its own
+(`api/_selfCheck.ts`, calling the checklist's own functions in
+`api/_publishChecks.ts`): no "Not X, Y", no em dashes, no exclamation marks
+outside quotes, British spelling, and a reading age of 13 at most. A passage
+rewritten in place is checked without the reading age, which belongs to a
+whole piece. When one fails, the writer gets one more call, metered on its
+own key (`cleo-draft-retry`, `cleo-revise-retry`): the same system prompt,
+the first request and answer, and a correction that quotes each sentence or
+word, the house rule it breaks in the rule's own words, and "Rewrite only
+these sentences; keep every other word." The answer with fewer failures is
+returned, the first on a tie. The retry's text is never streamed as deltas.
+A retry that cannot run (a provider failure, or under 20 seconds left of the
+request) keeps the first answer with `retried: false` and a note; one that
+comes back empty, unreadable or cut short (under 70% of the first answer's
+length, for a whole text) keeps it with `retried: true` and a note. Neither
+fails the request. Both routes may run for 300 seconds.
+
+Every answer says what it still breaks, as a field of the draft's JSON (and
+of its 409 `changed_during_draft`) and of revise's `done`:
+
+```
+"self_check": {
+  "passed": false,
+  "remaining": [                        // what the returned text still breaks
+    { "rule": "R2", "found": "Those words were about Perplexity's robot, not Muse." },
+    { "rule": "BRITISH_SPELLING", "found": "color", "use": "colour" },
+    { "rule": "R7", "found": "Reads at about age 13.5. Above 13 cannot be approved: ..." }
+  ],
+  "retried": true,                      // a second call ran and answered
+  "note": "The second try broke as many rules as the first, so this is the first answer."
+}                                       // note: only when a retry was wanted and the first answer kept
+```
+
+`rule` is the checklist's id (`R2`, `NO_EM_DASH`, `NO_EXCLAMATION`,
+`BRITISH_SPELLING`, `R7`). The brief's rewrite, `briefs/[week]/revise`, is
+not self-checked: it has its own prompt and returns the whole brief, and it
+is still on `preamble`, where a second paid call would widen an open route
+(`docs/STATE.md`).
 
 **The fact gate, in practice.** A second model reads every sentence the
 claim lister did not cover (twelve at a time, with its section heading), and
@@ -505,7 +546,10 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    the chat.
 8. A revise is a success only when its stream ends with `done` and
    `ok: true`. A failure is a status with a typed body, or the stream's last
-   event, `error`, with a `code` (see "How `revise` answers").
+   event, `error`, with a `code` (see "How `revise` answers"). Read
+   `self_check.remaining` on a draft or a rewrite before anything else: it
+   lists what the text still breaks, so a fix goes to exactly those
+   sentences ("The writers' self-check").
 9. Save text the engine wrote (a rewrite you accept, a draft, a final-pass
    fix) with `PATCH /api/content-ideas` and `edit_source: 'magic'`:
    `{ id, body, edit_source: 'magic', client: 'claude_code' }`. Without it the
