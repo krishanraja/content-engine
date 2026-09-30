@@ -73,3 +73,16 @@ describe('the rule reaches every writer', () => {
     }
   })
 })
+
+describe('a full stop inside a word does not end the sentence', () => {
+  test('the negated side may carry a version number (piece 3, 2026-09-30)', () => {
+    const live = "Salesforce isn't proving Koa is smarter than Claude or GPT-5.5. It's proving it doesn't need to be, as long as it's cheap enough."
+    assert.deepEqual(notXYConstructions(live), ["isn't proving Koa is smarter than Claude or GPT-5.5. It's proving it doesn't need to be"])
+    assert.equal(notXYConstructions("It isn't about the 3.2 million seats, it's about who pays for them.").length, 1)
+  })
+
+  test('a plain sentence with a decimal is still not the move', () => {
+    assert.deepEqual(notXYConstructions('GPT-5.5 scored 0.90. Claude Opus 4.8 scored 0.87. Koa scored 0.86.'), [])
+    assert.deepEqual(notXYConstructions('Amazon did not say why the figure was 68.6 billion. It declined to comment.'), [])
+  })
+})

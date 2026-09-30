@@ -78,6 +78,7 @@ const P3_R2_FIXED = P3
   .replace('So the 27 years is a flavour, not an ingredient.', 'So the 27 years is a flavour. It never went into the dough.')
   .replace("That's not matching or exceeding the leading models. That's finishing third", 'Koa finished third')
   .replace("isn't secrecy for its own sake. It's that an independent benchmark", 'is that an independent benchmark')
+  .replace("Salesforce isn't proving Koa is smarter than Claude or GPT-5.5. It's proving it doesn't need to be", "Salesforce has shown Koa doesn't need to beat Claude or GPT-5.5")
 
 // ── The fake provider ─────────────────────────────────────────────────────
 
@@ -166,11 +167,13 @@ describe('what the self-check finds', () => {
     expect(blockingHits(P1_FIXED, { readingAge: true })).toEqual([])
   })
 
-  it("finds piece 3's three constructions and its reading age, and a passage is read without the age", () => {
+  it("finds piece 3's four constructions and its reading age, and a passage is read without the age", () => {
     const hits = blockingHits(P3, { readingAge: true })
     expect(hits.filter(h => h.rule === 'R2').map(h => h.found)).toEqual([
       'So the 27 years is a flavour, not an ingredient.',
       expect.stringMatching(/^That's not matching or exceeding the leading models\. That's finishing third out of three, .*frontier models\."$/),
+      // The detector once stopped at the full stop in "GPT-5.5" and missed this one.
+      expect.stringMatching(/^Salesforce isn't proving Koa is smarter than Claude or GPT-5\.5\. It's proving it doesn't need to be, .*who baked it\.$/),
       expect.stringMatching(/^Guess, clearly labelled: the reason .* isn't secrecy for its own sake\. It's that an independent benchmark .* around it\.$/),
     ])
     expect(hits.find(h => h.rule === 'R7')?.found).toMatch(/^Reads at about age 13\.5\. Above 13 cannot be approved/)
@@ -263,7 +266,7 @@ describe('POST /api/content-ideas/:id/draft, self-checked', () => {
     expect(out.status).toBe(200)
     expect(out.body.body).toBe(unset(P3).trim())
     expect(out.body.self_check).toMatchObject({ passed: false, retried: false, note: expect.stringMatching(/^The second try did not run\. Anthropic is over its usage limit/) })
-    expect(out.body.self_check.remaining).toHaveLength(4)
+    expect(out.body.self_check.remaining).toHaveLength(5)
   })
 })
 

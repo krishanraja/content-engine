@@ -44,18 +44,21 @@ export function duplicate(existing: { id: string; idea: string } | null): Determ
 // everywhere", which he confirmed covers both orders. The prompts say so; this
 // catches a model that does it anyway. Plain factual negation ("Amazon did not
 // say why") is not the move and must never be flagged, or the check becomes
-// noise people learn to ignore.
+// noise people learn to ignore. A full stop inside a word ("GPT-5.5",
+// "3.2 million") is not the end of a sentence, so the negated side may carry
+// one: on 2026-09-30 "Salesforce isn't proving Koa is smarter than Claude or
+// GPT-5.5. It's proving it doesn't need to be" passed every check.
 const NOT_XY = [
   // Sentence-initial: "Not the compliance story, the version where..."
-  /(?:^|[.!?]["'”’)]?\s+)Not\s+(?!(?:surprisingly|only|least|yet|once|quite|to mention|much|many|all|every\w*)\b)[^.!?\n,]{2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/g,
+  /(?:^|[.!?]["'”’)]?\s+)Not\s+(?!(?:surprisingly|only|least|yet|once|quite|to mention|much|many|all|every\w*)\b)(?:[^.!?\n,]|\.(?=\w)){2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/g,
   // After a colon or semicolon: "...a news cycle: not what Amazon says, what a judge says"
-  /[:;]\s+not\s+(?!(?:surprisingly|only|least|yet|once|quite|to mention|much|many|all|every\w*)\b)[^.!?\n,]{2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/gi,
+  /[:;]\s+not\s+(?!(?:surprisingly|only|least|yet|once|quite|to mention|much|many|all|every\w*)\b)(?:[^.!?\n,]|\.(?=\w)){2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/gi,
   // "isn't X, it's Y", "is not X. It's Y", "aren't X, they're Y"
-  /\b(?:isn['’]t|is not|wasn['’]t|was not|aren['’]t|are not)\s+[^.!?\n]{1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are| was| were)\b[^.!?\n]{0,30}/gi,
+  /\b(?:isn['’]t|is not|wasn['’]t|was not|aren['’]t|are not)\s+(?:[^.!?\n]|\.(?=\w)){1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are| was| were)\b[^.!?\n]{0,30}/gi,
   // "it's not X, it's Y"
-  /\b(?:it|this|that|they)(?:['’]s|['’]re| is| are) not\s+[^.!?\n]{1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are)\b[^.!?\n]{0,30}/gi,
+  /\b(?:it|this|that|they)(?:['’]s|['’]re| is| are) not\s+(?:[^.!?\n]|\.(?=\w)){1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are)\b[^.!?\n]{0,30}/gi,
   // "never X, it was Y"
-  /\bnever\s+[^.!?\n]{1,60}?,\s+(?:it|this|that|they)\s+(?:was|were|is|are)\b[^.!?\n]{0,30}/gi,
+  /\bnever\s+(?:[^.!?\n]|\.(?=\w)){1,60}?,\s+(?:it|this|that|they)\s+(?:was|were|is|are)\b[^.!?\n]{0,30}/gi,
   // The reverse order, "Y, not X": "measured, not projected."
   /[^.!?\n,]{0,40},\s+not\s+(?!only\b|least\b|surprisingly\b|yet\b|always\b|quite\b)(?:a |an |the )?[\w'’-]+(?:\s+[\w'’-]+){0,3}(?=[.,;!?]|$)/gim,
 ]
