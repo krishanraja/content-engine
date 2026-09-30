@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Mindmake content engine
 as_of: 2026-09-30
-head: a28b538
+head: eed0191
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
