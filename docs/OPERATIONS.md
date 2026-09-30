@@ -94,6 +94,8 @@ The drill of 2026-09-28 followed steps 1 to 3 with an empty queue, before the ro
 
 ### Seeding the roles and the deployment order
 
+Done on 2026-09-30 (Krish: "Go runner."): the migration, the deploy at `83d2caa` and the seed, in that order. The procedure below stays as the record, and for a rebuild.
+
 Until the first role row exists the claim functions behave exactly as before, so the migration can be applied while the primary works. The seed turns the fence on in one transaction; it is a data change that needs Krish's approval, with the real hashes read back from `video_studio_runner_heartbeats` at that moment:
 
 ```sql
