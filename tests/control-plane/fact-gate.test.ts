@@ -499,3 +499,18 @@ describe('a figure for another period is not a contradiction', () => {
     assert.match(ENTAIL_SYSTEM, /Figures for different periods .* do not conflict\. When the claim names no period, do not assume it is the evidence's period/)
   })
 })
+
+describe('a passage that starts or stops inside a link', () => {
+  // Piece 3, run 5 (2026-09-30): the checker quoted from inside the press
+  // release's link, and the true claim was held (walk log F51).
+  const source = 'In [Salesforce’s CRM benchmark](https://www.salesforceairesearch.com/crm-benchmark), a model benchmark that includes a suite of real-world tasks, Koa already matches or exceeds leading model performance on CRM actions with three times fewer errors.'
+  test('the back half of a cut link is the words a reader sees', () => {
+    assert.equal(quoteHolds('In Salesforce’s CRM benchmark](https://www.salesforceairesearch.com/crm-benchmark), a model benchmark that includes a suite', source, 'Salesforce claimed three times fewer errors'), true)
+  })
+  test('so is the front half', () => {
+    assert.equal(quoteHolds('Koa already matches or exceeds leading model performance. See [the benchmark', 'Koa already matches or exceeds leading model performance. See [the benchmark](https://example.test/b).', 'Koa matches leading models'), true)
+  })
+  test('the words themselves still have to match', () => {
+    assert.equal(quoteHolds('In Salesforce’s CRM leaderboard](https://www.salesforceairesearch.com/crm-benchmark), a model benchmark', source, 'x claimed y'), false)
+  })
+})

@@ -13,11 +13,19 @@ import { createHash } from 'node:crypto'
  *  verbatim excerpt carries them, and a checker quoting the visible words
  *  failed "word for word" against it (walk log F33, piece 1: three of fifteen
  *  passages). Used by the fact gate's comparison and by the filer's excerpt.
+ *  A passage can also start or stop inside a link: on 2026-09-30 a checker
+ *  quoted "In Salesforce's CRM benchmark](https://...), a model benchmark",
+ *  the link's opening bracket left behind, and a true claim was held (walk
+ *  log F51). What is left of a cut link goes too.
  *  Reference-style links and bare URLs are left as they are. */
 export function stripMarkdownLinks(s: string): string {
   return String(s ?? '')
     .replace(/!\[([^\]]*)\]\((?:[^()\s]|\([^()\s]*\))*(?:\s+"[^"]*")?\)/g, '$1')
     .replace(/\[([^\]]*)\]\((?:[^()\s]|\([^()\s]*\))*(?:\s+"[^"]*")?\)/g, '$1')
+    // The back half of a link whose front was cut off: "text](url)".
+    .replace(/\]\((?:https?:\/\/|\/)(?:[^()\s]|\([^()\s]*\))*(?:\s+"[^"]*")?\)/g, '')
+    // The front half of a link whose back was cut off: "[text" to the end.
+    .replace(/!?\[(?=[^\]]*$)/, '')
 }
 
 /** Normalized title fingerprint for near-dup collapse. Lower-case, punctuation

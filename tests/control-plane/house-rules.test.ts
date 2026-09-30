@@ -170,6 +170,10 @@ describe('the checks before approval, on real text', () => {
     const r7 = publishChecks(before, factsOk).find(c => c.id === 'R7')!
     assert.equal(r7.ok, false); assert.equal(r7.blocking, false)
     assert.match(r7.detail, /about age 12\.5, a little above 12/)
+    // Just over the target reads as over it, never "about age 12, a little
+    // above 12" (piece 1 at 12.03, 2026-09-30).
+    const justOver = 'The cat sat on the mat. '.repeat(6) + 'Advertising revenue depends on shoppers noticing the sponsored listings. '.repeat(5)
+    assert.equal(publishChecks(justOver, factsOk).find(c => c.id === 'R7')!.detail, 'Reads at about age 12.1, a little above 12. Shorten the longest sentences.')
     const plain = 'The cat sat on the mat. It was a warm day. We had tea. '.repeat(10)
     assert.ok(publishChecks(plain, factsOk).find(c => c.id === 'R7')!.ok)
     // Krish's go on the line edits (2026-09-26) brought it to about 11.5.

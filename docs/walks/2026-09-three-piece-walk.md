@@ -274,6 +274,7 @@ with the evidence that found it):
 | F47 | voice check (R2) | Two shapes of "Not X, Y" sat in piece 1 for a week without a flag: the subject said twice ("Shopify is not the supermarket. Shopify is the till.") and the verb said twice ("It doesn't care which shelf you picked things off. It cares that you're at the till."). A retry on piece 3 then wrote a third: "Koa doesn't need to beat Claude or GPT-5.5. It just needs to be cheap". | found by the session reading piece 1 after fact-gate run 2, 2026-09-30. **Fixed 2026-09-30**: two more shapes in `NOT_XY` (`api/_judges/deterministic.ts`). The subject shape needs a determiner on the negated side, so two plain facts about one thing ("The fee is not refundable. The fee is due on Monday.") pass. Every edition, fixture and draft rescanned: the new shapes hit only the piece 1 drafts that carried them. |
 | F48 | fact gate | The web checker, and the reader of its quote, called a figure for one period a contradiction of a figure for another: Amazon's 2025 annual report ($68,635 million) against "over $70 billion in TTM revenue" (the twelve months to March 2026). The sentence named no year, so nothing told them the periods differed. | piece 1, run 3, 2026-09-30. **Fixed 2026-09-30**: `INDEPENDENT_SYSTEM` and `ENTAIL_SYSTEM` (`api/_factGate.ts`) say figures for different periods or scopes do not conflict, and a claim with no period is never assumed to share the evidence's. The piece's sentence now says "for 2025". |
 | F49 | self-check retry | The reading-age correction lists the three longest sentences to shorten, and the prediction could be one of them. On piece 3 the retry rewrote the call into a different prediction ("one of SAP, Oracle or Workday will build its own AI model this way too"), added a "Not X, Y" (F47), and the route kept it because it broke fewer checks. | piece 3, revise 5, 2026-09-30. That answer was discarded, never saved. **Fixed 2026-09-30**: `longestSentences` (`api/_selfCheck.ts`) skips the call section. |
+| F51 | fact gate, on file | A checker's passage that starts or stops inside a markdown link ("In Salesforce's CRM benchmark](https://...), a model benchmark") never matched the source word for word: the link stripper took whole links only. A true claim, the press release's own "three times fewer errors", was held on piece 3's run 5. | piece 3, run 5, 2026-09-30. **Fixed 2026-09-30**: `stripMarkdownLinks` (`api/_text.ts`) also drops the back half of a cut link and the opening bracket of one cut at the end. |
 | F50 | fact gate, on file | The on-file reader misread a flattened PDF table. It said Koa "exceeds Claude Opus" on Tau2Bench and BFCL; the paper's Table 1 has Koa below Opus 4.8 on both (69.41 against 74.00, 66.63 against 78.18) and below GPT-5.5 on all three overall scores. The gate failed closed (a contradiction the passage did not bear out became "not found"), so nothing false passed, but a true sentence was held. | piece 3, run 2, 2026-09-30. **Not fixed.** File tables as one row a line with the column names, or read them from the HTML. |
 
 ## 3. Front-end implications
@@ -497,8 +498,10 @@ with `edit_source: 'magic'` and a `magic_accepted` event.
 | 1 | v14 | 10 | 1 | The $68.6bn attribution, the Shop Pay line, labelled guesses, "Amazon has made no such claim about Muse" (contradicted: Amazon did say Muse broke its Conditions of Use) |
 | 2 | v15 | 4 | 2 | "The next day" (dates stated), the Shop Pay fee (a web source says Shop Pay charges no fee of its own), a meta sentence, and two "Not X, Y" the detector had missed (F47) |
 | 3 | v16 | 3 | 1 | The annual report's year (F48), "started blocking", "the till" marked as the story's picture |
+| 4 | v17 | 4 | 1 | "Nothing to do with adverts" (true of Muse, false of the Perplexity case, so it now names Muse), the Shopify fee stated with the source's own condition (Shopify Payments), the second statement of the $68.6bn cut |
+| 5 | v18 | **0** | 0 | **Passed.** Every blocking check on the approval list is green; reading age about 12, a warning |
 
-v17 is saved and waits for run 4 on the fixed gate. Against the caching bar,
+v18 waits on Krish: the judging note and the angle. Against the caching bar,
 piece 1 does not count: it took far more than one rewrite and more than two
 gate runs.
 
@@ -538,13 +541,21 @@ broke R2 three times and set Krish's confidence to 78% on its own (F42, F43).
 | 1 | v2 | 16 | 2 | The "27 years" framing, the pizza lines read as facts, "trained a new model", the frontier-model definition, and "three AIs" (the paper says one helper model played three roles) |
 | 2 | v5 | 7 | 1 | "Third out of three" (the checker counted five models), the pizza analogy labelled, the recap paragraph, and a claim about what the paper does not say, cut because a gate cannot check an absence |
 | 3 | v6 | 3 | 0 | "Tells a different story", "on CRM Bench", and the hosting claim put on the press release where it lives |
+| 4 | v7 | 4 | 1 | "Behind both of them" named ("GPT-5.5 and Claude Opus 4.8"), "built to make you picture" labelled as our read, the guess paragraph's repeat of a checked fact folded into the guess, a sentence with no clear referent cut |
+| 5 | v8 | 2 | 0 | Held, both true: "On CRM Bench, GPT-5.5 scored 0.90" (the on-file reader confused two columns of Table 1, F50), and the press release's "three times fewer errors" (a passage quoted from inside a link, F51) |
+
+Run 5 was the cap this session set itself. The engine refuses review while a
+claim is held (409 `fact_gate`), and both holds are gate faults, one now
+fixed. So piece 3 gets one more run on unchanged text once F51 is live, logged
+here as over the cap.
 
 - v3's guess paragraph was garbled by the self-check retry (F45) and repaired
   by a revise scoped to it (v4).
 - v5 is the session's one hand edit: "How sure we are: 78%." back to
   "How sure we are: [Krish to set]", undoing F43. The confidence is his.
-- Revise 5's answer (v7) was discarded: the retry rewrote the prediction (F49).
-  It runs again on the fixed engine.
+- Revise 5's first answer was discarded: the retry rewrote the prediction
+  (F49). Rerun on the fixed engine, it came back exactly as asked, with no
+  retry (v7).
 - The THEATRE stamp on "matches or exceeds" was checked against the full
   Table 1 after run 2: Koa is below GPT-5.5 and Claude Opus 4.8 on all three
   overall scores, so the stamp stands.

@@ -168,9 +168,10 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
     detail: grade <= TARGET_READING_GRADE
       ? `Reads at about age ${age}.`
       : grade <= MAX_READING_GRADE
-        ? `Reads at about age ${age}, a little above 12. Shorten the longest sentences.`
-        // One decimal here: rounded to the half, 13.03 read "about age 13. Above
-        // 13 cannot be approved", which contradicts itself.
+        // One decimal above the target: rounded to the half, 12.03 read "about
+        // age 12, a little above 12" (piece 1, 2026-09-30) and 13.03 read "about
+        // age 13. Above 13 cannot be approved", each contradicting itself.
+        ? `Reads at about age ${(grade + 5).toFixed(1)}, a little above 12. Shorten the longest sentences.`
         : `Reads at about age ${(grade + 5).toFixed(1)}. Above 13 cannot be approved: shorten sentences and swap long words for short ones.`,
   })
   const call = predictionCheck(text)
