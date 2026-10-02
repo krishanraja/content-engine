@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake content engine
-as_of: 2026-10-01
-head: 48a2a68
+as_of: 2026-10-02
+head: 6cf3c2a
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
