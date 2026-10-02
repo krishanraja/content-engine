@@ -245,3 +245,42 @@ describe('what was checked keeps its verdict, exactly as before', () => {
     expect(recorded()).toHaveLength(0)
   })
 })
+
+describe('a sentence an earlier run settled keeps its result (walk log F52)', () => {
+  // Krish, 2026-10-02: "Yes, or cut the opinion lines". The second run checks
+  // only the claim that failed; the two that passed are carried, unchanged,
+  // without a model or web call.
+  it('stores the ledger, then spends checks only on what failed', async () => {
+    const failFirst = {
+      onFile: (claim: string) => claim === CLAIMS[0]!.claim
+        ? { verdict: 'not_found', quotes: [], note: 'not stated' }
+        : { verdict: 'supported', quotes: [CLAIMS.find(c => c.claim === claim)!.quote], note: 'stated' },
+      perplexity: (claim: string) => claim === CLAIMS[0]!.claim ? { status: 200, out: { verdict: 'unclear' } } : undefined,
+    }
+    const first = await factCheck(failFirst)
+    expect(first.body).toMatchObject({ ok: true, passed: false, blocking: 1, carried: 0 })
+    const stored = written()[0]!.values.meta
+    expect(Object.values(stored.fact_ledger.sentences).map((e: any) => e.status).sort()).toEqual(['passed', 'passed'])
+
+    db.row = { id: ID, body: BODY, meta: { ...db.row!.meta, ...stored } }
+    db.updates.length = 0
+    calls.anthropic.length = 0
+    calls.perplexity.length = 0
+    const second = await factCheck({})
+    expect(second.body).toMatchObject({ ok: true, passed: true, blocking: 0, claims: 3, carried: 2 })
+    expect(calls.perplexity).toEqual([CLAIMS[0]!.claim])
+    expect(calls.anthropic.filter(c => c.stage === 'on_file').map(c => c.claim)).toEqual([CLAIMS[0]!.claim])
+    const carried = written()[0]!.values.meta.fact_check.claims.filter((c: any) => c.carried_from)
+    expect(carried.map((c: any) => c.claim).sort()).toEqual([CLAIMS[1]!.claim, CLAIMS[2]!.claim].sort())
+  })
+
+  it('a changed source checks everything again', async () => {
+    await factCheck({})
+    const stored = written()[0]!.values.meta
+    db.row = { id: ID, body: BODY, meta: { ...stored, materials: [...MATERIALS, { id: 'm3', kind: 'paste', title: 'New', content: 'A new source.' }] } }
+    calls.perplexity.length = 0
+    const again = await factCheck({})
+    expect(again.body).toMatchObject({ ok: true, passed: true, carried: 0 })
+    expect(calls.perplexity).toHaveLength(3)
+  })
+})

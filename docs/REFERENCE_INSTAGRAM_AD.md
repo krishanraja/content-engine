@@ -18,9 +18,9 @@ does" is Claude's reading of it.
 On 2026-09-26 he confirmed the two defaults in "Where it conflicts" below
 ("I agree with all your four except for number one"; items 2 and 3 were the
 captions and the close). They are recorded in
-`fixtures/feedback/proof-short-captions-close-20260926.json`. The rest of the
-grammar (moves 1 to 4) stays a proposal until he rules on the piece 2
-storyboard.
+`fixtures/feedback/proof-short-captions-close-20260926.json`. On 2026-10-02
+he approved the piece 2 storyboard ("yes", on the work board), and with it
+moves 1 to 4 below (`fixtures/feedback/piece2-short-storyboard-20261002.json`).
 
 | Field | Value |
 |---|---|
@@ -95,9 +95,9 @@ with at most one loud word, and the close on the dated prediction.
   subchannels.
 - Next, with the Studio's series: caption treatment and the close follow
   the two rulings in the Studio's own checks.
-- If he confirms the storyboard: the visual plan for a Short gains a
-  proof-panel beat fed from receipts, and a rule that the one highlight may
-  only mark words inside a receipt.
+- He confirmed the storyboard (2026-10-02). Next: the visual plan for a Short
+  gains a proof-panel beat fed from receipts, and a rule that the one
+  highlight may only mark words inside a receipt. Not built yet.
 
 The Studio still speaks only the two retired series names
 (`apps/control-plane/api/_productionBrief.ts`), so a piece routed to

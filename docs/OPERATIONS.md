@@ -106,7 +106,7 @@ insert into public.video_studio_runner_roles (runner_id_hash, role, set_by, reas
 commit;
 ```
 
-Mark the standby `standby` once a drill has identified its hash, through the `set_role` action or `public.video_studio_set_runner_role`. Until then it is unassigned, which fences it the same way.
+Mark the standby `standby` once a drill has identified its hash, through the `set_role` action or `public.video_studio_set_runner_role`. Until then it is unassigned, which fences it the same way. Done for `e4e562cc` on 2026-10-02, on Krish's word.
 
 The order, each step proved before the next:
 

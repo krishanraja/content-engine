@@ -52,6 +52,9 @@ export interface CheckedClaim extends Claim {
   on_file: { verdict: OnFileVerdict; quote: string | null; note: string | null; primary?: boolean }
   independent: { verdict: IndependentVerdict; evidence: string | null; url: string | null; checker: string | null; correct_value: string | null }
   verdict: ClaimVerdict
+  /** When this verdict was earned on an earlier run and carried, unchanged,
+   *  into this one (carryForward below): that run's time. */
+  carried_from?: string
 }
 
 export interface FactCheck {
@@ -67,6 +70,9 @@ export interface FactCheck {
   /** How many sentences the second look read, and how many it never answered
    *  (each of those stayed a claim). */
   second_look?: { sentences: number; unanswered: number }
+  /** How many sentences kept the result an earlier run gave them, because
+   *  their words and the piece's sources had not changed (carryForward). */
+  carried?: number
 }
 
 export const FACT_GATE_VERSION = 1 as const
@@ -429,6 +435,124 @@ export function gateStatus(meta: Record<string, any> | null, body: string): { ok
   if (!fc.independent_checker) return { ok: false, reason: 'No independent fact checker was connected, so nothing can pass. Perplexity needs its key.' }
   if (!fc.passed) return { ok: false, reason: `${fc.blocking} claim${fc.blocking === 1 ? '' : 's'} failed the fact check. Fix or cut them, then run it again.` }
   return { ok: true, reason: null }
+}
+
+// ── A checked sentence keeps its result until it changes (walk log F52) ────
+//
+// Krish, 2026-10-02, on the work board, asked "Let a checked sentence keep its
+// verdict until it changes?": "Yes, or cut the opinion lines". Piece 3 ran six
+// checks (16, 7, 3, 4, 2 and 3 failing): the lister read a different handful of
+// its commentary sentences as claims on each run, so rewording alone never
+// settled it. Now a sentence that passed on an earlier run (every claim in it
+// verified) or was set aside, and whose words and the piece's filed sources are
+// unchanged since, keeps that result: a run checks only what changed or failed.
+// The trade-off he accepted: a sentence wrongly passed once stays passed until
+// its words change. A failed sentence is never carried, and any change to the
+// sources or to the gate's version starts the ledger again, so new evidence is
+// always checked in full.
+
+export interface LedgerEntry {
+  status: 'passed' | 'set_aside'
+  /** The run that settled it. */
+  at: string
+  /** For a passed sentence, the claims that passed, as checked then. */
+  claims?: CheckedClaim[]
+  /** For a set-aside sentence, why. */
+  reason?: string
+}
+
+export interface FactLedger {
+  version: typeof FACT_GATE_VERSION
+  /** sourcesHash() of the sources the entries were checked against. */
+  sources_hash: string
+  /** By sentenceKey(). */
+  sentences: Record<string, LedgerEntry>
+}
+
+/** A sentence's identity: its words as norm() reads them. */
+export function sentenceKey(sentence: string): string {
+  return createHash('sha256').update(norm(sentence)).digest('hex').slice(0, 32)
+}
+
+/** The sources a verdict rests on. Any material added, removed or changed
+ *  gives a new hash, and the ledger starts again. */
+export function sourcesHash(meta: Record<string, any>): string {
+  return createHash('sha256').update(sourcesText(meta || {})).digest('hex')
+}
+
+/** The body sentences a claim's or a set-aside's sentence covers. A lister's
+ *  "sentence" can be part of one body sentence or run across two. */
+function overlapping(sentence: string, bodySentences: string[]): string[] {
+  const n = norm(sentence)
+  if (n.length < 12) return []
+  return bodySentences.filter(s => {
+    const m = norm(s)
+    return m.length >= 12 && (n.includes(m) || m.includes(n))
+  })
+}
+
+function usable(ledger: FactLedger | null | undefined, hash: string): ledger is FactLedger {
+  return !!ledger && ledger.version === FACT_GATE_VERSION && ledger.sources_hash === hash && !!ledger.sentences
+}
+
+/**
+ * This run's claims, split into those to check and those whose every sentence
+ * is settled in the ledger. A settled sentence's result is carried once, with
+ * the time it was earned: a passed sentence's claims as they were checked, a
+ * set-aside sentence back among the set-asides with its reason.
+ */
+export function carryForward(
+  body: string,
+  claims: Claim[],
+  setAside: Array<{ sentence: string; reason: string }>,
+  ledger: FactLedger | null | undefined,
+  hash: string,
+): { toCheck: Claim[]; carried: CheckedClaim[]; setAside: Array<{ sentence: string; reason: string }>; sentences: number } {
+  if (!usable(ledger, hash)) return { toCheck: claims, carried: [], setAside, sentences: 0 }
+  const bodySentences = sentences(body)
+  const toCheck: Claim[] = []
+  const carried: CheckedClaim[] = []
+  const aside = [...setAside]
+  const done = new Set<string>()
+  for (const c of claims) {
+    const over = overlapping(c.sentence, bodySentences)
+    const entries = over.map(s => ({ s, key: sentenceKey(s), entry: ledger.sentences[sentenceKey(s)] }))
+    if (!entries.length || entries.some(e => !e.entry)) { toCheck.push(c); continue }
+    for (const { s, key, entry } of entries) {
+      if (done.has(key)) continue
+      done.add(key)
+      if (entry.status === 'passed') {
+        for (const x of entry.claims || []) {
+          if (!carried.some(y => y.claim === x.claim && y.sentence === x.sentence)) carried.push({ ...x, carried_from: x.carried_from || entry.at })
+        }
+      } else if (!aside.some(a => norm(a.sentence) === norm(s))) {
+        aside.push({ sentence: s, reason: `kept from ${entry.at}: ${entry.reason || 'set aside'}` })
+      }
+    }
+  }
+  return { toCheck, carried, setAside: aside, sentences: done.size }
+}
+
+/** The ledger after a run: what it already held for sentences still in the
+ *  body, and every sentence this run passed or set aside. A sentence with a
+ *  failing claim is not added. */
+export function settle(body: string, result: FactCheck, prior: FactLedger | null | undefined, hash: string): FactLedger {
+  const bodySentences = sentences(body)
+  const keys = new Set(bodySentences.map(sentenceKey))
+  const out: Record<string, LedgerEntry> = {}
+  if (usable(prior, hash)) for (const [k, v] of Object.entries(prior.sentences)) if (keys.has(k)) out[k] = v
+  for (const s of bodySentences) {
+    const key = sentenceKey(s)
+    if (out[key] || isConfidenceLine(s)) continue
+    const mine = result.claims.filter(c => overlapping(c.sentence, [s]).length > 0)
+    if (mine.length) {
+      if (mine.every(c => PASSING.has(c.verdict))) out[key] = { status: 'passed', at: result.ran_at, claims: mine }
+      continue
+    }
+    const aside = result.set_aside.find(a => overlapping(a.sentence, [s]).length > 0)
+    if (aside) out[key] = { status: 'set_aside', at: result.ran_at, reason: aside.reason }
+  }
+  return { version: FACT_GATE_VERSION, sources_hash: hash, sentences: out }
 }
 
 // ── The prompts ─────────────────────────────────────────────────────────────

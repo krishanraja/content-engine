@@ -175,6 +175,16 @@ describe('the walk', () => {
   }
   const BODY = 'Salesforce took an open model, trained it on invented customers, and sold it as twenty seven years of wisdom. The weights are the part it owns.'
 
+  // The walk reads the clock: a reset time already past is not a time to wait
+  // for. The refusal says access returns on 2026-10-01, so the walk runs on
+  // 2026-09-28, the day the rows were written. On the real clock this test
+  // started failing on 2026-10-01 (walk log F54). Only Date is faked; timers
+  // and promises run as normal.
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'], now: new Date('2026-09-28T12:00:00Z') })
+    return () => { vi.useRealTimers() }
+  })
+
   beforeEach(() => {
     db.updates.length = 0
     db.tables = {

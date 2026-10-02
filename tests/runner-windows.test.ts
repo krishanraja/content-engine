@@ -336,8 +336,8 @@ describe('Windows runner entry point', () => {
     expect(source).not.toMatch(/public string (?:Value|Prefix)\b/)
   })
 
-  it.skipIf(process.platform !== 'win32')('parses both credential scripts without a PowerShell syntax error', async () => {
-    for (const script of ['set-credential.ps1', 'inspect-credentials.ps1']) {
+  it.skipIf(process.platform !== 'win32')('parses the credential scripts without a PowerShell syntax error', async () => {
+    for (const script of ['set-credential.ps1', 'inspect-credentials.ps1', 'standby-studio-mcp-token.ps1']) {
       const path = join(ROOT, 'scripts', script).replace(/'/g, "''")
       const command = [
         '$tokens = $null; $errors = $null',
@@ -348,6 +348,29 @@ describe('Windows runner entry point', () => {
       expect(stdout.trim(), script).toBe('0')
     }
   }, 30_000)
+
+  it("the standby's token script never handles the value itself and never touches an enabled runner task", async () => {
+    // Krish, 2026-10-02, on the work board: "can you give me the script to run
+    // on this machine, fully self contained script". It wraps the checkout's own
+    // writer and inspector, so the family check and the LocalMachine readback
+    // stay in one place.
+    const source = (await readFile(join(ROOT, 'scripts', 'standby-studio-mcp-token.ps1'), 'utf8')).replace(/\r\n/g, '\n')
+    expect(source).toContain("$target = 'MindmakeVideoStudio/studio-mcp-token-v2'")
+    expect(source).toContain('& powershell -NoProfile -ExecutionPolicy Bypass -File $writer -Target $target\n')
+    expect(source).toContain('& powershell -NoProfile -ExecutionPolicy Bypass -File $inspector -EnforceActiveContract')
+    // No value on a command line, from stdin or a variable, and nothing that
+    // could enable, start or register a runner task. The header's how-to (the
+    // primary's clipboard routine) is prose for Krish, not code this runs.
+    const code = source.slice(source.indexOf('#>') + 2)
+    expect(code).not.toMatch(/-FromStdin|-Generate\b|-Value\b|ConvertTo-SecureString|Read-Host/)
+    expect(code).not.toMatch(/Enable-ScheduledTask|Start-ScheduledTask|Register-ScheduledTask|install-runner-task/)
+    // A runner task that is not disabled stops the script before the writer.
+    const stop = source.indexOf("[string]$task.State -ne 'Disabled'")
+    expect(stop).toBeGreaterThan(-1)
+    expect(stop).toBeLessThan(source.indexOf('-File $writer'))
+    // It must live outside the checkout, or the runner's clean-checkout rule fails.
+    expect(source).toContain('Keep this file outside the runner checkout.')
+  })
 
   it.skipIf(process.platform !== 'win32')('matches the MCP family exactly as the writer and the inspector do', async () => {
     // The pattern the two scripts share, exercised in PowerShell itself with

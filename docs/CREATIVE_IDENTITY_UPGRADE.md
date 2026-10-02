@@ -686,11 +686,13 @@ shipped, what Krish approved and what waits on him.
 
 ## 8. Decisions still waiting on Krish
 
+Settled since: the Call is in all three mandates (Krish, 2026-10-02: "yes";
+`supabase/migrations/20261002090000_mandates_dated_prediction.sql`).
+
 | Decision | Recommendation | Why |
 |---|---|---|
 | The makeyourmindup masthead, subchannel wordmarks and type system | Approve from three rendered territories | Unblocks the series rename and the brief bridge |
 | Rename the Studio series to the subchannels | Yes, once wordmarks are approved | The Studio still speaks the retired two |
-| Add the Call to all three mandates | Yes | P6 cannot be enforced until the mandates ask for it |
 | Where CTRL's lead-magnet door goes, now that makeyourmindup.ai is the publication's cover page | A clearly labelled route from the cover page, or its own address | makeyourmindup.ai was CTRL's door; readers and CTRL leads need different first screens |
 | Whether the Substack uses the makeyourmindup.ai domain or links to it | Link from the cover page first; move the domain later if it helps | The cover page stays owned whatever Substack does |
 | Extraction minimums per subchannel | Start with 5.2, adjust after the corpus test | They decide which drafts are sent back |

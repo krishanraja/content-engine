@@ -88,8 +88,8 @@ The gaps this left, in order of risk:
   stale runners retired. The primary heartbeated idle and ready under the
   fence 93 seconds later. Still to prove: the first real command or brief
   leased to the primary, which waits for real work. The standby
-  (`e4e562cc`) stays unassigned, which fences it the same way, until Krish
-  confirms it.
+  (`e4e562cc`) has been marked `standby` since 2026-10-02 (Krish: "Yes, this
+  is the standby"), fenced from work like an unassigned runner.
 - **G3.** `GET /api/content-engine/health` selects heartbeat columns that do
   not exist (`updated_at`, `status`) and so always reports the runner as
   `never`; `runner_watch` reads the newest row whichever runner wrote it, and
@@ -257,11 +257,12 @@ From the walk, still open (`docs/walks/2026-09-three-piece-walk.md`, F-table):
   `built_with_ai`, which needs wordmarks for the subchannels first.
 - **The creative identity** (`docs/CREATIVE_IDENTITY_UPGRADE.md`, section 8):
   the makeyourmindup masthead, subchannel wordmarks and type system (to approve
-  from rendered territories); adding the Call to all three mandates; where
+  from rendered territories); where
   CTRL's lead-magnet door goes now that makeyourmindup.ai is the publication's
   cover page. The publication's name is settled: makeyourmindup (2026-09-25).
-- **Credentials.** Four credentials pasted into a chat on 2026-09-24 need
-  rotating. The fate of `ENGINE_OPERATOR_TOKEN` after the walk. Whether the
+- **Credentials.** The four credentials pasted into a chat on 2026-09-24 are
+  rotated (Krish, 2026-10-02: "done"). The fate of `ENGINE_OPERATOR_TOKEN`
+  after the walk. Whether the
   autoscore trigger gets a credential in Supabase Vault.
 - **Rules.** R1 (argue from labelled hypotheses when evidence is thin) is in
   trial; R3 (signature sections and a signature visual per subchannel), R4

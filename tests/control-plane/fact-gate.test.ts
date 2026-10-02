@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
-import { describe, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import {
   bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   sourcesText, summarise, sweep,
-  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM,
+  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, carryForward, settle, sentenceKey, sourcesHash, type FactCheck,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
 import { readPieceCall } from '../../packages/contracts/src/call.js'
@@ -251,7 +251,9 @@ describe('the gate', () => {
     assert.match(check, /const leftovers = leftoversOf\(swept\)/)
     const wu = { sentence: 'Each one, no matter how expensive, will tell you it was Thomas Jefferson.', reason: 'labelled_inference' }
     assert.deepEqual(leftoversOf({ claims: [], setAside: [wu] }), [{ sentence: wu.sentence, claim: wu.sentence, kind: 'unclassified' }])
-    assert.match(check, /summarise\(checked, looked\.setAside, body, checker\)/)
+    // Through the carry-forward (walk log F52), which only adds to them.
+    assert.match(check, /carryForward\(body, claims, looked\.setAside, /)
+    assert.match(check, /summarise\(\[\.\.\.carry\.carried, \.\.\.checked\], carry\.setAside, body, checker\)/)
   })
   test('the second look numbers each batch from 0 and asks again for what it missed', () => {
     const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
@@ -512,5 +514,78 @@ describe('a passage that starts or stops inside a link', () => {
   })
   test('the words themselves still have to match', () => {
     assert.equal(quoteHolds('In Salesforce’s CRM leaderboard](https://www.salesforceairesearch.com/crm-benchmark), a model benchmark', source, 'x claimed y'), false)
+  })
+})
+
+describe('a checked sentence keeps its result until it changes (walk log F52)', () => {
+  // Krish, 2026-10-02: "Yes, or cut the opinion lines". Piece 3's runs read a
+  // different handful of its commentary as claims each time, so it never
+  // settled. A sentence passed or set aside once, unchanged since, against the
+  // same sources, keeps that result; a failed one is always checked again.
+  const A = 'Koa scored 0.86 on CRM Bench, and GPT-5.5 scored 0.90.'
+  const B = 'Salesforce hosts Koa within its own infrastructure, its press release says.'
+  const C = 'This line wants you to picture millions of real customer records feeding the model.'
+  const D = 'Our guess: an outside test would put Koa behind both of them too.'
+  const BODY = `${A} ${B}\n\n${C}\n\n${D}`
+  const meta = { materials: [{ id: 'm1', kind: 'paste', title: 'paper', url: 'https://example.test/p', verbatim: true, content: 'Koa 0.86. GPT-5.5 0.90.' }] }
+  const hash = sourcesHash(meta)
+  const passed = (sentence: string, claim: string): CheckedClaim => ({
+    sentence, claim, kind: 'number',
+    on_file: { verdict: 'supported', quote: 'Koa 0.86. GPT-5.5 0.90.', note: null, primary: true },
+    independent: { verdict: 'supported', evidence: 'Koa 0.86', url: 'https://example.test/w', checker: 'perplexity:sonar-pro', correct_value: null },
+    verdict: 'verified',
+  })
+  const failed = (sentence: string): CheckedClaim => ({ ...passed(sentence, sentence), kind: 'other', on_file: { verdict: 'not_found', quote: null, note: 'opinion', primary: false }, independent: { verdict: 'unclear', evidence: null, url: null, checker: 'perplexity:sonar-pro', correct_value: null }, verdict: 'unverified' })
+  const run1: FactCheck = {
+    version: 1, ran_at: '2026-10-01T10:00:00.000Z', body_hash: 'x', independent_checker: 'perplexity:sonar-pro',
+    claims: [passed(A, 'Koa scored 0.86'), passed(A, 'GPT-5.5 scored 0.90'), passed(B, 'Salesforce hosts Koa itself'), failed(C)],
+    set_aside: [{ sentence: D, reason: 'labelled_inference' }], passed: false, blocking: 1, single_source: 0,
+  }
+  const ledger = settle(BODY, run1, null, hash)
+
+  test('a run settles what passed and what was set aside, never what failed', () => {
+    expect(ledger.sentences[sentenceKey(A)]).toMatchObject({ status: 'passed', at: run1.ran_at })
+    expect(ledger.sentences[sentenceKey(A)]!.claims).toHaveLength(2)
+    expect(ledger.sentences[sentenceKey(B)]).toMatchObject({ status: 'passed' })
+    expect(ledger.sentences[sentenceKey(D)]).toMatchObject({ status: 'set_aside', reason: 'labelled_inference' })
+    expect(ledger.sentences[sentenceKey(C)]).toBeUndefined()
+  })
+
+  test('the next run checks only what changed or failed', () => {
+    // Run 2's lister reads A, B and D as claims (D is the commentary it set
+    // aside before), and C again.
+    const listed = [A, B, C, D].map(sentence => ({ sentence, claim: sentence, kind: 'other' as const }))
+    const r = carryForward(BODY, listed, [], ledger, hash)
+    expect(r.toCheck.map(c => c.sentence)).toEqual([C])
+    expect(r.carried.map(c => c.claim)).toEqual(['Koa scored 0.86', 'GPT-5.5 scored 0.90', 'Salesforce hosts Koa itself'])
+    expect(r.carried.every(c => c.carried_from === run1.ran_at)).toBe(true)
+    expect(r.setAside).toEqual([{ sentence: D, reason: `kept from ${run1.ran_at}: labelled_inference` }])
+    expect(r.sentences).toBe(3)
+  })
+
+  test('a changed sentence is checked in full, and the ledger forgets its old words', () => {
+    const changed = BODY.replace('0.90', '0.91')
+    const r = carryForward(changed, [{ sentence: A.replace('0.90', '0.91'), claim: 'GPT-5.5 scored 0.91', kind: 'number' }], [], ledger, hash)
+    expect(r.toCheck).toHaveLength(1)
+    expect(r.carried).toHaveLength(0)
+    const next = settle(changed, { ...run1, claims: [], set_aside: [] }, ledger, hash)
+    expect(next.sentences[sentenceKey(A)]).toBeUndefined()
+    expect(next.sentences[sentenceKey(B)]).toMatchObject({ status: 'passed' })
+  })
+
+  test('a claim across two sentences carries only when both are settled', () => {
+    const across = { sentence: `${A} ${C}`, claim: 'both', kind: 'other' as const }
+    expect(carryForward(BODY, [across], [], ledger, hash).toCheck).toEqual([across])
+    const both = { sentence: `${A} ${B}`, claim: 'both', kind: 'other' as const }
+    expect(carryForward(BODY, [both], [], ledger, hash).toCheck).toEqual([])
+  })
+
+  test('new or changed sources, or another gate version, start the ledger again', () => {
+    const listed = [{ sentence: A, claim: 'Koa scored 0.86', kind: 'number' as const }]
+    const moreSources = { materials: [...meta.materials, { id: 'm2', kind: 'paste', title: 'new', content: 'A new source.' }] }
+    expect(sourcesHash(moreSources)).not.toBe(hash)
+    expect(carryForward(BODY, listed, [], ledger, sourcesHash(moreSources)).toCheck).toEqual(listed)
+    expect(carryForward(BODY, listed, [], { ...ledger, version: 2 as never }, hash).toCheck).toEqual(listed)
+    expect(Object.keys(settle(BODY, { ...run1, claims: [], set_aside: [] }, ledger, sourcesHash(moreSources)).sentences)).toHaveLength(0)
   })
 })

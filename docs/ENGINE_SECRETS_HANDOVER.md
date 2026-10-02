@@ -92,6 +92,11 @@ argument or a chat:
    `scripts/set-credential.ps1 -Target MindmakeVideoStudio/studio-mcp-token-v2`
    (no `-Generate`), carried by a password manager or the same clipboard
    routine, never a file or a chat. The prompt refuses a wrong-family value.
+   On the cold standby, `scripts/standby-studio-mcp-token.ps1` does this step
+   and step 5 in one run: it checks the runner task there is disabled, stores
+   the value at the masked prompt and runs the inspector. Copy it out of the
+   repository first (to Downloads), because a file added inside the runner
+   checkout makes it unclean.
 5. On each machine, `scripts/inspect-credentials.ps1 -EnforceActiveContract`
    must pass and show the same fingerprint for the target as the primary.
 6. Open a Studio session from that machine: `studio.session.open` returning a

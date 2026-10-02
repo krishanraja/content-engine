@@ -5,6 +5,19 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-02
+
+Krish answered thirteen items on the work board (claude.ai/artifact/BytBqVcDsswyFaoyntQwEf) at 08:20 to 08:23 UTC.
+
+- decision (Krish, 2026-10-02): "Yes, this is the standby". Runner `e4e562cc` is the cold standby (`video_studio_set_runner_role`, audited in the role events); `656ae98c` stays the only active runner.
+- decision (Krish, 2026-10-02): "yes" to adding the dated prediction to all three channel mandates. Each live mandate gained one "THE CALL" sentence (`supabase/migrations/20261002090000_mandates_dated_prediction.sql`, applied and read back).
+- decision (Krish, 2026-10-02): "Yes, or cut the opinion lines" to letting a checked sentence keep its verdict until it changes. Built: `meta.fact_ledger` (walk log F52).
+- decision (Krish, 2026-10-02): "yes" to piece 2's Short storyboard, and with it moves 1 to 4 of the reference grammar (`fixtures/feedback/piece2-short-storyboard-20261002.json`).
+- decision (Krish, 2026-10-02): piece 1's ruling note "Yes"; on the angle, "We need to dig further as Muse gets more usage". Piece 3: "Keep" (under.the.hood), and "Yes, 55%. And vary it up". Relayed with `decided_by: 'Krish'` (ledger sequences 129 to 133); the walk log has the detail.
+- decision (Krish, 2026-10-02): the four credentials pasted on 2026-09-24 are rotated ("done"); the makeyourmindup repository stays public ("no"); the site line saying he writes every piece stays ("keep it as is").
+- decision (Krish, 2026-10-02): "can you give me the script to run on this machine, fully self contained script", for the standby's Studio MCP token: `scripts/standby-studio-mcp-token.ps1`.
+- decision (Krish, 2026-10-02): "yes" to approving a Studio render of the house style. No Studio render exists yet (no job or projection since 2026-09-05), so the switch-on steps in `docs/STUDIO.md` still start with rendering the proof on his machine.
+
 ## 2026-09-28
 
 - decision (Krish, 2026-09-28): "approve". Piece 2, "Who picks your AI?" (mind.the.gap), approved at the exact text that passed the fact check, with his 75%. Relayed with `decided_by: 'Krish'`; nothing is published.

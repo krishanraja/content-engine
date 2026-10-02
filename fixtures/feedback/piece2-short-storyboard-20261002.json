@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "feedback_id": "feedback-piece2-short-storyboard-20261002-01",
+  "recorded_at": "2026-10-02T08:22:45.304Z",
+  "owner": "Krish",
+  "decision": "confirmed",
+  "scope": {
+    "level": "publication_formats",
+    "series": ["follow_the_money", "mind_the_gap", "under_the_hood"],
+    "stations": ["storyboard", "visual_plan"]
+  },
+  "reference": {
+    "reference_id": "instagram-ad-proof-first-20260925",
+    "title": "Instagram ad for a model API product (9:16, about 21.5 s)",
+    "rights_role": "analysis_only",
+    "source_hash": "29ca7c0bbc082af2a325afcaed09f5e3919b5ef11e0f1191264124dd8e20e182",
+    "prohibited_uses": [
+      "Do not republish, quote or show the reference or any frame of it in a public artifact.",
+      "Do not copy its script, product claims or on-screen text, or cite it as evidence."
+    ]
+  },
+  "confirmed_inference": "The piece 2 Short storyboard is approved as shown, and with it moves 1 to 4 of the reference's grammar for Shorts on the three live channels: open mid-sentence on the belief the piece breaks, with no greeting or title card; the picture acts out the sentence; a split frame with a proof panel on top and the face below, captions on the seam; and one highlight that marks only words inside a receipt. A proof panel is a fact-check receipt on screen (cream on ink, the source named under it, the highlight in mint); nothing on a panel is written by a model. The captions and the close follow the 2026-09-26 rulings already recorded.",
+  "confirmation_excerpt": "yes",
+  "capture_boundary": "A minimal Git release record of Krish's answer on the work board on 2026-10-02 to the item 'Your verdict on piece 2's Short storyboard' (prompt: 'Yes, or what to change'). It does not claim the Studio's visual plan or checks were changed, it does not approve a render, and it does not claim a tracked portable Studio session captured it."
+}

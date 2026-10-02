@@ -275,8 +275,9 @@ with the evidence that found it):
 | F48 | fact gate | The web checker, and the reader of its quote, called a figure for one period a contradiction of a figure for another: Amazon's 2025 annual report ($68,635 million) against "over $70 billion in TTM revenue" (the twelve months to March 2026). The sentence named no year, so nothing told them the periods differed. | piece 1, run 3, 2026-09-30. **Fixed 2026-09-30**: `INDEPENDENT_SYSTEM` and `ENTAIL_SYSTEM` (`api/_factGate.ts`) say figures for different periods or scopes do not conflict, and a claim with no period is never assumed to share the evidence's. The piece's sentence now says "for 2025". |
 | F49 | self-check retry | The reading-age correction lists the three longest sentences to shorten, and the prediction could be one of them. On piece 3 the retry rewrote the call into a different prediction ("one of SAP, Oracle or Workday will build its own AI model this way too"), added a "Not X, Y" (F47), and the route kept it because it broke fewer checks. | piece 3, revise 5, 2026-09-30. That answer was discarded, never saved. **Fixed 2026-09-30**: `longestSentences` (`api/_selfCheck.ts`) skips the call section. |
 | F51 | fact gate, on file | A checker's passage that starts or stops inside a markdown link ("In Salesforce's CRM benchmark](https://...), a model benchmark") never matched the source word for word: the link stripper took whole links only. A true claim, the press release's own "three times fewer errors", was held on piece 3's run 5. | piece 3, run 5, 2026-09-30. **Fixed 2026-09-30**: `stripMarkdownLinks` (`api/_text.ts`) also drops the back half of a cut link and the opening bracket of one cut at the end. |
-| F52 | fact gate | Runs do not converge on an opinion-heavy piece: the claim lister reads a different handful of commentary sentences as claims each run (piece 3, runs 1 to 6: 16, 7, 3, 4, 2, 3 blocking, almost all different sentences). | piece 3, 2026-09-30. **Not built: proposal with Krish.** Carry forward a sentence's verdict while its text and the filed sources are unchanged. |
+| F52 | fact gate | Runs do not converge on an opinion-heavy piece: the claim lister reads a different handful of commentary sentences as claims each run (piece 3, runs 1 to 6: 16, 7, 3, 4, 2, 3 blocking, almost all different sentences). | piece 3, 2026-09-30. **Fixed 2026-10-02** on Krish's answer ("Yes, or cut the opinion lines"): `carryForward` and `settle` (`api/_factGate.ts`) keep a sentence's pass or set-aside in `meta.fact_ledger` while its words and the sources are unchanged; a failed sentence is always checked again, and a change to the sources or the gate's version starts the ledger again. |
 | F53 | CI, Windows | `tests/drive-discovery.test.ts`, first test in the file, timed out at 5 seconds on the Windows runner (c3a6e52); the re-run passed and the file runs in 2.3 seconds locally. The first test pays the file's cold start. | CI run 36725258056, 2026-09-30. **Not fixed.** Give the file's first test its own timeout, or warm the import in a `beforeAll`. |
+| F54 | tests | `tests/control-plane/judge-failed-run.test.ts` ("a usage limit stops the pass at the first idea") hardcoded a provider reset of 2026-10-01 00:00 UTC and read the real clock. From that moment the reset was in the past, the walk fell back to its own retry time, and the test failed for every change. | full suite, 2026-10-02. **Fixed 2026-10-02**: that block fakes Date only, at 2026-09-28 12:00 UTC, the day its rows were written. |
 | F50 | fact gate, on file | The on-file reader misread a flattened PDF table. It said Koa "exceeds Claude Opus" on Tau2Bench and BFCL; the paper's Table 1 has Koa below Opus 4.8 on both (69.41 against 74.00, 66.63 against 78.18) and below GPT-5.5 on all three overall scores. The gate failed closed (a contradiction the passage did not bear out became "not found"), so nothing false passed, but a true sentence was held. | piece 3, run 2, 2026-09-30. **Not fixed.** File tables as one row a line with the column names, or read them from the HTML. |
 
 ## 3. Front-end implications
@@ -503,7 +504,14 @@ with `edit_source: 'magic'` and a `magic_accepted` event.
 | 4 | v17 | 4 | 1 | "Nothing to do with adverts" (true of Muse, false of the Perplexity case, so it now names Muse), the Shopify fee stated with the source's own condition (Shopify Payments), the second statement of the $68.6bn cut |
 | 5 | v18 | **0** | 0 | **Passed.** Every blocking check on the approval list is green; reading age about 12, a warning |
 
-v18 waits on Krish: the judging note and the angle. Against the caching bar,
+Krish, 2026-10-02 (work board): the ruling note "Yes", as proposed: held if by
+30 June 2027 Amazon publicly lets at least one outside company's shopping agent
+buy on Amazon.com under its terms, and sponsored listings still show to it. On
+the angle: "We need to dig further as Muse gets more usage", read as keep the
+piece's angle, labelled as our guess, and follow it up as Muse's usage grows
+(ledger sequences 129 and 130). Approval of the piece itself is still his.
+
+v18 waited on Krish for the judging note and the angle. Against the caching bar,
 piece 1 does not count: it took far more than one rewrite and more than two
 gate runs.
 
@@ -560,8 +568,13 @@ and stops there. Each run reads a different handful of commentary sentences as
 claims, so on a teardown this opinionated rewording alone does not converge.
 **Proposal for Krish (F52):** a sentence whose text and filed sources are
 unchanged keeps the verdict it earned on an earlier run, so each run checks
-only what changed and what failed. It changes the gate's guarantee (every run
-re-reads every sentence), so it is his call, not built.
+only what changed and what failed. Krish, 2026-10-02: "Yes, or cut the
+opinion lines". Built the same day.
+
+**Krish's calls, 2026-10-02 (work board):** the prediction wording "Yes", his
+confidence 55% ("Yes, 55%. And vary it up"), and the channel "Keep"
+(under.the.hood). The three sentences that opened "Here's" were varied by one
+exact engine rewrite (v10), and his 55% set (v11). Ledger sequences 131 to 133.
 
 - v3's guess paragraph was garbled by the self-check retry (F45) and repaired
   by a revise scoped to it (v4).

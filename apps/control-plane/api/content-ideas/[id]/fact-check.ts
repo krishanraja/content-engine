@@ -24,9 +24,9 @@ import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
-  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, sourcesText, summarise, sweep,
-  type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type IndependentVerdict, type OnFileVerdict,
+  carryForward, combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, sourcesHash, sourcesText, summarise, sweep,
+  type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
 
 const MAX_CLAIMS = 60
@@ -293,7 +293,7 @@ async function pool<T, R>(items: T[], n: number, fn: (t: T) => Promise<R>): Prom
 
 /** Every step of a run, up to the result it would store. Throws
  *  ModelUnavailableError when a model call fails. */
-async function check(run: GateRun, body: string, meta: Record<string, any>): Promise<FactCheck> {
+async function check(run: GateRun, body: string, meta: Record<string, any>): Promise<{ result: FactCheck; ledger: FactLedger }> {
   const asOf = new Date().toISOString().slice(0, 10)
   const listed = await extract(run, body)
   const swept = sweep(body, listed.claims, listed.setAside)
@@ -308,8 +308,12 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   const claims = all.slice(0, MAX_CLAIMS)
   const sources = sourcesText(meta)
   const primary = primaryText(meta)
+  // A sentence an earlier run passed or set aside, unchanged since and checked
+  // against the same sources, keeps that result (walk log F52).
+  const hash = sourcesHash(meta)
+  const carry = carryForward(body, claims, looked.setAside, meta.fact_ledger as FactLedger | undefined, hash)
 
-  const checked = await pool(claims, POOL, async (c): Promise<CheckedClaim> => {
+  const checked = await pool(carry.toCheck, POOL, async (c): Promise<CheckedClaim> => {
     // Both checks settle before the claim is done, so a failure in one never
     // leaves the other running after the run has ended.
     const [onFileCheck, webCheck] = await Promise.allSettled([onFile(run, c, sources, primary), independent(run, c, asOf)])
@@ -319,11 +323,12 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
     const ind = await entail(run, c, webCheck.value)
     return { ...c, on_file: f, independent: ind, verdict: combine(f.verdict, ind.verdict, f.primary === true) }
   })
-  const checker = checked.find(c => c.independent.checker)?.independent.checker || null
-  const result = summarise(checked, looked.setAside, body, checker)
+  const checker = [...checked, ...carry.carried].find(c => c.independent.checker)?.independent.checker || null
+  const result = summarise([...carry.carried, ...checked], carry.setAside, body, checker)
   result.second_look = { sentences: leftovers.length, unanswered: second.unanswered }
+  result.carried = carry.sentences
   if (all.length > MAX_CLAIMS) { result.passed = false; result.blocking += all.length - MAX_CLAIMS }
-  return result
+  return { result, ledger: settle(body, result, meta.fact_ledger as FactLedger | undefined, hash) }
 }
 
 /** A run the provider stopped: revise's typed answer, and nothing written. */
@@ -362,8 +367,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const run = new GateRun()
   let result: FactCheck
+  let ledger: FactLedger
   try {
-    result = await check(run, body, meta)
+    ({ result, ledger } = await check(run, body, meta))
   } catch (e) {
     if (!isModelUnavailable(e)) throw e
     return stopped(res, run.failure ?? e.failure)
@@ -378,13 +384,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const fresh = await supabase.from('content_ideas').select('meta').eq('id', id).single()
   const nowMeta = (fresh.data?.meta || meta) as Record<string, any>
   const { error: upErr } = await supabase.from('content_ideas')
-    .update({ meta: { ...nowMeta, fact_check: result } })
+    .update({ meta: { ...nowMeta, fact_check: result, fact_ledger: ledger } })
     .eq('id', id)
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
 
   return res.status(200).json({
     ok: true, passed: result.passed, blocking: result.blocking, single_source: result.single_source,
-    independent_checker: result.independent_checker, claims: result.claims.length, set_aside: result.set_aside.length,
+    independent_checker: result.independent_checker, claims: result.claims.length, set_aside: result.set_aside.length, carried: result.carried ?? 0,
     fact_check: result,
   })
 }
