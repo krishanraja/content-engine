@@ -230,9 +230,14 @@ Studio, `docs/ENGINE_SESSION.md`):
 
 1. Done 2026-09-28: the theme's `source.commit` is control-center
    `7dac4ce`, which holds `makeyourmindup-stacked.png`.
-2. Update the runner to `main` (above).
+2. Done 2026-10-02: both runners are on `cc0657e` (`docs/STATE.md`, "The
+   Studio's runners, 2026-10-02").
 3. Render the proof in the Studio (a Short with its call, the thumbnail and a
-   carousel) and show it to Krish.
+   carousel) and show it to Krish. The call comes from the job's production
+   brief, and a brief is built only from an approved piece
+   (`api/content-ideas/[id]/production-brief.ts` refuses
+   `exact_revision_not_approved`), so the proof follows Krish's approval of a
+   piece and its brief.
 4. In a tracked Studio session, record Krish's approval of that render as
    feedback and confirm it with a `studio-user-confirmation` receipt.
 5. Put that feedback's id and time in the theme's `publication.approval`,

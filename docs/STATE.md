@@ -19,7 +19,29 @@ backend got ten fixes (H1 to H10 in the walk log). No piece has ever been
 published. One is in review, waiting on Krish's verdict. The Studio is built
 and tested but has never produced a Short or carousel that reached final
 approval. Its Windows runner is installed on a primary machine, with a cold
-standby on a second machine, both at `6bf7862` (2026-09-28, below).
+standby on a second machine, both at `cc0657e` since 2026-10-02 (below).
+
+## The Studio's runners, 2026-10-02
+
+Krish's session on the Windows machines reported, at about 09:40 UTC:
+
+- **Both checkouts upgraded** from `6bf7862` to the same commit, with the
+  role tables and fence functions present, the primary active, the standby
+  standby, the runner-roles route live and guarded, no commands or briefs
+  waiting, and local status active, ready, clean and conflict-free.
+- **The Studio MCP token** (`studio-mcp-token-v2`) stored on both machines
+  (`docs/ENGINE_SECRETS_HANDOVER.md`, "The Studio MCP token"); on the standby
+  through `scripts/standby-studio-mcp-token.ps1`.
+
+Read back from the cloud at 09:44 UTC: the primary's row `656ae98c` is
+`active`, idle, commit `cc0657ea55c8` (`main`, deployed to production), Drive
+ready, 0 pending receipts, 2 seconds old; 0 queued or leased commands (the one
+`attention` row from 2026-09-05 is unchanged). The standby's task is disabled,
+so its row `e4e562cc` still shows its last drill (`6bf7862`, 2026-09-28); its
+new commit is Krish's report until the next drill. Not yet proved: a tracked
+`studio.session.open` from either machine, and the first real job leased to
+the primary. Both wait for the first Studio render, which needs an approved
+piece's production brief (`docs/STUDIO.md`, "Switching it on").
 
 ## The Studio's runners, 2026-09-28
 

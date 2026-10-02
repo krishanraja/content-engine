@@ -105,6 +105,11 @@ argument or a chat:
 The target name stays `studio-mcp-token-v2`: the proxy pins it, so a new name
 would be a code change and a runner upgrade.
 
+On 2026-10-02 Krish reported the token stored on both machines, the standby's
+through `scripts/standby-studio-mcp-token.ps1`, with the credential checks
+passing. Step 6 is still to do: no tracked Studio session has been opened
+since.
+
 ## Quarantined names
 
 These original names are permanently retired:
