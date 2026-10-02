@@ -571,6 +571,10 @@ export const ON_FILE_SYSTEM = [
   'contradicted: the sources say something different (a different number, date, name, speaker or meaning). Return the exact passage that contradicts it, and say what it says.',
   'not_found: the sources do not state it. A claim that is only implied, rounded, rescaled, or said by a different person is not_found or contradicted, never supported. Words put in someone\'s mouth must be their words.',
   'Copy passages whole: never shorten one with "...". Read a table by its column headings; a price table can list several lanes and context lengths side by side.',
+  // Piece 3 (2026-09-30 to 2026-10-02, walk log F50): a PDF's Table 1, filed
+  // as text, lost its grid. The reader twice read the wrong column for a true
+  // score and called it not found or contradicted.
+  'A table copied from a PDF loses its grid: a header line names the columns left to right, and each row gives its name and then its values in that same order. Count along the row to the column the claim names, and quote the whole row together with the header line.',
   'Return JSON only: {"verdict":"supported|contradicted|not_found","quotes":["exact passage", "..."],"note":"one line"}',
 ].join('\n')
 

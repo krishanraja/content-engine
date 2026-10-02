@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 import {
   bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   sourcesText, summarise, sweep,
-  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, carryForward, settle, sentenceKey, sourcesHash, type FactCheck,
+  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, settle, sentenceKey, sourcesHash, type FactCheck,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
 import { readPieceCall } from '../../packages/contracts/src/call.js'
@@ -587,5 +587,20 @@ describe('a checked sentence keeps its result until it changes (walk log F52)', 
     expect(carryForward(BODY, listed, [], ledger, sourcesHash(moreSources)).toCheck).toEqual(listed)
     expect(carryForward(BODY, listed, [], { ...ledger, version: 2 as never }, hash).toCheck).toEqual(listed)
     expect(Object.keys(settle(BODY, { ...run1, claims: [], set_aside: [] }, ledger, sourcesHash(moreSources)).sentences)).toHaveLength(0)
+  })
+})
+
+describe('a table copied from a PDF', () => {
+  // Piece 3's Table 1 was filed as flattened text: "Claude Opus 4.8 69.0 86.2
+  // ... 0.87 OpenAI GPT-5.5 62.5 ... 0.90". The reader read the wrong column
+  // twice (walk log F50). It is told how a flattened row maps to its columns,
+  // and code still confirms the quoted row carries the claim's numbers.
+  test('the on-file reader is told how to read a flattened row', () => {
+    assert.match(ON_FILE_SYSTEM, /A table copied from a PDF loses its grid/)
+    assert.match(ON_FILE_SYSTEM, /quote the whole row together with the header line/)
+  })
+  test('a whole flattened row carries the score it is quoted for', () => {
+    const source = '> Tau2Bench BFCL CRM Bench Model Airline Retail Telecom Weighted Avg. Acc. Topic Func. Text Weighted Avg.\n> Claude Opus 4.8 69.0 86.2 64.0 74.00 78.18 0.99 0.83 0.79 0.87 OpenAI GPT-5.5 62.5 81.6 95.8 83.99 67.63 0.99 0.82 0.89 0.90'
+    assert.equal(quoteHolds('OpenAI GPT-5.5 62.5 81.6 95.8 83.99 67.63 0.99 0.82 0.89 0.90', source, 'GPT-5.5 scored 0.90 on CRM Bench.'), true)
   })
 })
