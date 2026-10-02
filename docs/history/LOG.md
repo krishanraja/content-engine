@@ -16,6 +16,7 @@ Krish answered thirteen items on the work board (claude.ai/artifact/BytBqVcDsswy
 - decision (Krish, 2026-10-02): piece 1's ruling note "Yes"; on the angle, "We need to dig further as Muse gets more usage". Piece 3: "Keep" (under.the.hood), and "Yes, 55%. And vary it up". Relayed with `decided_by: 'Krish'` (ledger sequences 129 to 133); the walk log has the detail.
 - decision (Krish, 2026-10-02): the four credentials pasted on 2026-09-24 are rotated ("done"); the makeyourmindup repository stays public ("no"); the site line saying he writes every piece stays ("keep it as is").
 - decision (Krish, 2026-10-02): "can you give me the script to run on this machine, fully self contained script", for the standby's Studio MCP token: `scripts/standby-studio-mcp-token.ps1`.
+- decision (Krish, 2026-10-02): "Piece 1 approved". "Same agent, opposite answers" (follow.the.money) is `approved` on the exact text that passed the fact gate (run 5, v18), relayed with `decided_by: 'Krish'`; the walk log has the detail. Nothing is published.
 - report (Krish, 2026-10-02, about 09:40 UTC): the Studio MCP token is stored on both machines, and both runner checkouts are on the same commit with every check passing. The cloud read the primary `656ae98c` active on `cc0657e` (`docs/STATE.md`, "The Studio's runners, 2026-10-02").
 - decision (Krish, 2026-10-02): "yes" to approving a Studio render of the house style. No Studio render exists yet (no job or projection since 2026-09-05), so the switch-on steps in `docs/STUDIO.md` still start with rendering the proof on his machine.
 

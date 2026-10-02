@@ -515,6 +515,19 @@ v18 waited on Krish for the judging note and the angle. Against the caching bar,
 piece 1 does not count: it took far more than one rewrite and more than two
 gate runs.
 
+**Approved, 2026-10-02.** Krish, in the session: "Piece 1 approved". Relayed at
+10:58 UTC with `PATCH /api/content-ideas` (`state: 'approved'`,
+`decided_by: 'Krish'`), which ran the fact gate and every blocking publish
+check again on the exact v18 text and passed. The row carries
+`meta.production_approval` (`approved_by: 'Krish'`, content revision hash
+`7a83593a`), and the ledger has the `approved` event with `actor: 'Krish'` and
+the idea panel's id (`d132d285`). That id was already settled by his decision of
+2026-09-24 to write the piece, also `approved`, so the panel's nine rows in
+`judge_calibration` now carry today's decision time with the same agreement;
+the browser's approve button sends no panel id. Next is the Studio brief, which
+needs his five-gate confirmation for this exact revision (`docs/STUDIO.md`,
+"Switching it on").
+
 ## Piece 2: mind.the.gap
 
 `904658db-4df2-4537-a0ed-ebe93e081db7`. "Every AI lab now sells a menu instead
