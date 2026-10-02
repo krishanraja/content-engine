@@ -571,6 +571,13 @@ unchanged keeps the verdict it earned on an earlier run, so each run checks
 only what changed and what failed. Krish, 2026-10-02: "Yes, or cut the
 opinion lines". Built the same day.
 
+| Run | Body | Blocking | Contradicted | What happened |
+|---|---|---|---|---|
+| 7 | v11 | 4 | 0 | The first run with the sentence ledger (F52), so a full check that settled 44 sentences (29 passed, 15 set aside). Held: the table's GPT-5.5 score (F50 again), "anyone can see it, change it" (a paraphrase of Nvidia's definition read as a licence claim), and the pizza line read as two claims. v12 rewrote the last two through the engine and the on-file reader learned flattened tables (`44d9d97`) |
+| 8 | v12 | **0** | 0 | **Passed.** 30 sentences carried their earlier result; only the 2 changed or held sentences were checked, both verified. Every blocking check on the approval list is green. Warnings: reading age about 12.4, 55% "reads as sitting on the fence", two words to explain (both inside quotes) |
+
+Piece 3 moved to `review` on 2026-10-02. Approving it is Krish's.
+
 **Krish's calls, 2026-10-02 (work board):** the prediction wording "Yes", his
 confidence 55% ("Yes, 55%. And vary it up"), and the channel "Keep"
 (under.the.hood). The three sentences that opened "Here's" were varied by one
