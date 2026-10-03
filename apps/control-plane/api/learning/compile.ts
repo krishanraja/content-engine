@@ -4,7 +4,7 @@ import { withContentRun } from '../_runs.js'
 import { supabase } from '../_supabase.js'
 import {
   LOOKBACK_DAYS, MIN_INSTANCES,
-  presetProposals, judgeProposals, handRewriteProposals,
+  presetProposals, judgeProposals, handRewriteProposals, toProposalRow,
   type CalibrationRow, type EditRow,
 } from './_patterns.js'
 
@@ -47,7 +47,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   const [edits, calibration] = await Promise.all([
     supabase
       .from('content_edit_events')
-      .select('action, mode, value, subject_id, occurred_at')
+      .select('event_id, action, mode, value, subject_id, occurred_at')
       // His hand only. An agent session's own drafts and rewrites are
       // recorded as observations (see operatorAttribution in _editEvents.ts)
       // and are never evidence of his taste.
@@ -57,7 +57,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       .limit(5000),
     supabase
       .from('judge_calibration')
-      .select('judge, verdict, agreed')
+      .select('panel_run_id, judge, verdict, agreed')
       .limit(5000),
   ])
 
@@ -89,23 +89,28 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ ok: true, proposals: 0, edits_read: editRows.length, note: 'nothing recurred often enough to propose' })
   }
 
+  // Every row is checked against the table's own rules before the insert, so
+  // one malformed proposal is set aside by name instead of failing the batch.
+  // The insert used to send an empty evidence list, which the table refuses,
+  // so the week of 2026-09-27 wrote nothing and said only "write_failed".
   const batch = new Date().toISOString().slice(0, 10)
-  const { error } = await supabase.from('mindmake_studio_learning_proposals').insert(proposals.map(p => ({
-    weekly_batch_id: batch,
-    proposal_class: p.proposal_class,
-    assertion: p.assertion,
-    scope: p.scope,
-    evidence_event_ids: [],
-    independent_session_count: p.evidence_count,
-    independent_job_count: 0,
-    counterexamples: p.counterexamples,
-    regression_cases: p.regression_cases,
-    proposed_change: p.proposed_change,
-    status: 'proposed',
-  })))
-  if (error) return res.status(500).json({ ok: false, error: 'write_failed', proposals: proposals.length })
+  const rows: Record<string, unknown>[] = []
+  const setAside: string[] = []
+  for (const p of proposals) {
+    const shaped = toProposalRow(p, batch)
+    if ('row' in shaped) rows.push(shaped.row)
+    else setAside.push(`${String(p.scope.key ?? p.proposal_class)}: ${shaped.reason}`)
+  }
 
-  return res.status(200).json({ ok: true, proposals: proposals.length, edits_read: editRows.length })
+  if (!rows.length) {
+    return res.status(500).json({ ok: false, error: `no proposal could be stored: ${setAside.join('; ').slice(0, 400)}` })
+  }
+  const { error } = await supabase.from('mindmake_studio_learning_proposals').insert(rows)
+  if (error) {
+    return res.status(500).json({ ok: false, error: `write_failed: ${error.message}`.slice(0, 500), proposals: rows.length })
+  }
+
+  return res.status(200).json({ ok: true, proposals: rows.length, set_aside: setAside, edits_read: editRows.length })
 }
 
 export default withContentRun('learning_compile', handler)
