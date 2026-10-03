@@ -2,7 +2,7 @@
 repo: krishanraja/content-engine
 product: Mindmake content engine
 as_of: 2026-10-03
-head: 172cc9b
+head: 4979fad
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -46,6 +46,7 @@ Lifecycle: building. Readback the same day unless a commit is named.
 
 ## What changed recently
 
+- 2026-10-03 **The work board moved into the database, and the engine key onto the home machines** (`4979fad`). Rulings (Krish, 2026-10-03): "I need the boards to not be Claude pages, but accessible by Codex too and workable using Codex too"; "I will use codex on one of the two machines set up as the video runner, either or. sort the engine key." Why: the board was a Claude-only page and Codex had no way to reach the engine. Now `/api/workbench` serves the board to Control Center (#/board) and to any session with the engine key, and only Krish can write a reply; `scripts/engine-key.ps1` stores the key in Windows Credential Manager, with KeePass as its backup (`docs/ENGINE_SECRETS_HANDOVER.md`).
 - 2026-10-03 **Any tool can pick up the work: `WORKBENCH.md` and `scripts/engine.py`** (`19d7eb2`). Ruling (Krish, 2026-10-03): "I need to be able to work from this chat or from Codex chat, but if I want to move this over to Codex seamlessly, I need to be able to do that." Why: the state of the work lived in one chat and a Claude-only board, and the helper that drives the engine lived in a scratch folder. Now every session, in Claude Code or Codex, reads `WORKBENCH.md` first and updates it last, and drives the engine with the committed helper and the engine key set as a secret in its own environment. Measured the same day: over 14 days, writing and rewriting cost $2.52 of model spend and the timer judges $39.34, so where Krish works barely changes what he pays.
 - 2026-10-02 **Piece 1 approved** (docs only). Ruling (Krish, 2026-10-02): "Piece 1 approved". "Same agent, opposite answers" is the first walk piece approved on text that passed the fact gate; the approval re-ran the gate and the blocking checks and is bound to that exact revision (`docs/walks/2026-09-three-piece-walk.md`). Why it matters: it is what the Studio's house-style proof was waiting on.
 - 2026-10-02 **Both runner machines on today's `main`, with the Studio MCP token on both** (docs only). Krish's session on the machines reported both checkouts upgraded to the same commit with every check passing, and the token stored on both; the cloud read the primary `656ae98c` active on `cc0657e`, Drive ready, nothing queued (`docs/STATE.md`, "The Studio's runners, 2026-10-02"). Why it matters: the runner can now take a live-name brief, so the house-style proof waits only on Krish approving a piece and confirming its production brief.
