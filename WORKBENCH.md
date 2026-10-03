@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 20:19 UTC, by a Claude Code session.
+Last updated: 2026-10-03 20:40 UTC, by a Claude Code session.
 
 ## How Krish wants to be worked with
 
@@ -61,7 +61,7 @@ only in a chat.
 |---|---|---|
 | Claude Code on the web, desktop or phone | Everything except running the video studio | This repository, and the engine key as the secret `ENGINE_OPERATOR_TOKEN` in its environment |
 | Codex in the cloud | The same | This repository connected, and the same secret in the Codex environment |
-| Claude Code or Codex on either Windows home computer | All of the above, plus the video studio (`docs/ENGINE_SESSION.md`) | Run `scripts/engine-key.ps1` once on that machine (the engine key then lives in Windows Credential Manager and the helper reads it from there). Work in a separate copy of this repository, never in the runner's own folder, which must stay untouched |
+| Claude Code or Codex on either Windows home computer | All of the above, plus the video studio (`docs/ENGINE_SESSION.md`) | Run `scripts/engine-key.ps1` once on that machine (the engine key then lives in Windows Credential Manager and the helper reads it from there). Work in Krish's own copy at `C:\Users\krish\dev\content-engine`, where he keeps his repositories, never in the runner's folder (`Documents\MindmakeVideoStudio\runner-source`), which must stay untouched |
 | A plain chat (Claude.ai, ChatGPT) with no repository | Talk and plan only | Paste this file in |
 
 To start a session in any of them: read `AGENTS.md`, then this file, then do
