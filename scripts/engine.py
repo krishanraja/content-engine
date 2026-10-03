@@ -7,6 +7,7 @@ Usage:
 Examples:
   python3 scripts/engine.py GET "/api/content-ideas?id=<uuid>"
   python3 scripts/engine.py PATCH /api/content-ideas @body.json
+  (On Windows the command is `python`, not `python3`.)
 
 The engine key is read from the environment variable ENGINE_OPERATOR_TOKEN
 (Claude Code's cloud environment, or any shell). On Krish's Windows machines it

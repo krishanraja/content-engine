@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 20:17 UTC, by a Claude Code session.
+Last updated: 2026-10-03 20:19 UTC, by a Claude Code session.
 
 ## How Krish wants to be worked with
 
@@ -29,7 +29,8 @@ Control Center at https://controlcenter.krishraja.com/#/board (phone or desk)
 and replies to items there. Every session, in Claude Code or Codex, reads and
 writes it through the engine:
 
-- Read it: `python3 scripts/engine.py GET /api/workbench --full`. His replies
+- Read it: `python3 scripts/engine.py GET /api/workbench --full` (`python` on
+  Windows). His replies
   are in `replies`; `unseen_replies` counts the ones no session has acted on.
 - Add or change items (up to 50 at once; an existing item changes only the
   fields you send):
@@ -66,9 +67,21 @@ only in a chat.
 To start a session in any of them: read `AGENTS.md`, then this file, then do
 the top item that is not waiting on Krish. Before you stop, update this file.
 
+Krish starts a session by pasting this:
+
+> Continue the Mindmake content engine. Read AGENTS.md and WORKBENCH.md, then
+> read the board and my replies on it. Tell me in plain words what is waiting
+> on me and what you will do next, then do the top thing that is not waiting
+> on me. Update the board and WORKBENCH.md before you stop, and end every reply
+> with the board link.
+
+He may add a line saying what he wants today; that comes first.
+
 Talk to the engine with `python3 scripts/engine.py METHOD PATH [body]`, for
-example `python3 scripts/engine.py GET "/api/content-ideas?id=<id>"`. It reads
-the key from `ENGINE_OPERATOR_TOKEN` and never prints it.
+example `python3 scripts/engine.py GET "/api/content-ideas?id=<id>"`. On
+Windows the command is `python`, not `python3`. It reads the key from
+`ENGINE_OPERATOR_TOKEN`, or on a home computer from Windows Credential
+Manager, and never prints it.
 
 ## What costs money
 
