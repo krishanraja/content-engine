@@ -11,6 +11,7 @@ Files moved here keep their body verbatim under a Historical banner.
 - decision (Krish, 2026-10-03): "yes I need the boards to not be Claude pages, but accessible by Codex too and workable using Codex too". The board lives in the database (`/api/workbench`) and in Control Center at #/board; the Claude page is retired.
 - report (Krish, 2026-10-03): "key done". The engine was redeployed so it takes the new key.
 - report (Krish, 2026-10-03): "done, I overwrote the ENGINE_OPERATOR_TOKEN that was already in there and redeployed". Checked after that deployment: the old engine key is refused and the new one accepted; the board item closed.
+- report (Krish, 2026-10-03), relaying Codex on a home computer: "The board read is blocked because this machine's engine key is not currently available to the helper." Cause: Codex's Windows sandbox runs commands as a separate Windows user that cannot read his Credential Manager or reach the internet. The helper now says so, and Codex runs it outside the sandbox with his approval (`AGENTS.md`).
 
 ## 2026-10-02
 

@@ -12,9 +12,14 @@ Examples:
 The engine key is read from the environment variable ENGINE_OPERATOR_TOKEN
 (Claude Code's cloud environment, or any shell). On Krish's Windows machines it
 is read from Windows Credential Manager instead (Mindmake/engine-operator-token,
-stored once by scripts/engine-key.ps1), so Codex there needs no setup. It is
-never printed, logged or written to a file. ENGINE_BASE_URL overrides the
-production address.
+stored once by scripts/engine-key.ps1). It is never printed, logged or written
+to a file. ENGINE_BASE_URL overrides the production address.
+
+Codex on Windows runs commands in its sandbox as a separate Windows user
+(CodexSandboxOffline or CodexSandboxOnline). That user cannot read Krish's
+Credential Manager and has no internet, so this helper must run outside the
+sandbox: ask for escalated permissions and Krish approves. When it cannot find
+the key, it says which of these is the cause.
 
 --sse   for routes that stream (revise): prints only the last data event.
 --full  prints the whole response instead of the first 1,500 characters.
@@ -32,12 +37,28 @@ import uuid
 
 BASE = os.environ.get('ENGINE_BASE_URL', 'https://content-engine-flame-nu.vercel.app').rstrip('/')
 WINDOWS_TARGET = 'Mindmake/engine-operator-token'
+ERROR_NOT_FOUND = 1168  # Credential Manager has no entry by that name for this user
 
 
-def windows_key() -> str:
-    """The key from Windows Credential Manager, or '' when there is none."""
+def windows_user() -> str:
+    """The Windows account this process really runs as: the token's user, which
+    differs from an inherited USERNAME inside Codex's sandbox."""
+    import ctypes
+    from ctypes import wintypes
+    advapi = ctypes.WinDLL('Advapi32.dll', use_last_error=True)
+    advapi.GetUserNameW.argtypes = [wintypes.LPWSTR, ctypes.POINTER(wintypes.DWORD)]
+    advapi.GetUserNameW.restype = wintypes.BOOL
+    size = wintypes.DWORD(257)
+    buf = ctypes.create_unicode_buffer(size.value)
+    if advapi.GetUserNameW(buf, ctypes.byref(size)):
+        return buf.value
+    return os.environ.get('USERNAME', '')
+
+
+def windows_key() -> tuple:
+    """(key, 0) from Windows Credential Manager, or ('', Windows error code)."""
     if os.name != 'nt':
-        return ''
+        return '', 0
     import ctypes
     from ctypes import wintypes
 
@@ -62,14 +83,35 @@ def windows_key() -> str:
     cred_free.argtypes = [ctypes.c_void_p]
     pointer = ctypes.POINTER(CREDENTIAL)()
     if not cred_read(WINDOWS_TARGET, 1, 0, ctypes.byref(pointer)):
-        return ''
+        return '', ctypes.get_last_error()
     try:
         cred = pointer.contents
         if not cred.CredentialBlob or not cred.CredentialBlobSize:
-            return ''
-        return ctypes.string_at(cred.CredentialBlob, cred.CredentialBlobSize).decode('utf-16-le')
+            return '', ERROR_NOT_FOUND
+        return ctypes.string_at(cred.CredentialBlob, cred.CredentialBlobSize).decode('utf-16-le'), 0
     finally:
         cred_free(pointer)
+
+
+def no_key_message(os_name: str, user: str, error: int) -> str:
+    """What to do when there is no key, in words an agent can act on."""
+    if os_name != 'nt':
+        return ('No engine key. Set ENGINE_OPERATOR_TOKEN in this tool\'s environment '
+                '(WORKBENCH.md, "Pick up from any tool").')
+    if user.lower().startswith('codexsandbox'):
+        return (f"This ran inside Codex's sandbox, as the Windows user {user}. The sandbox "
+                "cannot see Krish's engine key and cannot reach the internet. Run the same "
+                "command again outside the sandbox: ask for escalated permissions and Krish "
+                "approves. Never ask Krish for the key itself.")
+    if error == ERROR_NOT_FOUND:
+        return (f"This computer has no engine key for the Windows user {user}. Krish runs "
+                "scripts/engine-key.ps1 once in his own PowerShell window and pastes the key "
+                "from KeePass (the entry \"Mindmake engine key\"). Never ask him to paste it "
+                "into a chat.")
+    return (f"The engine key could not be read from Windows Credential Manager (Windows user "
+            f"{user}, error {error}). If this ran inside a sandbox, run it again outside it. "
+            "Otherwise Krish runs scripts/engine-key.ps1 -Check in his own PowerShell window, "
+            "which says what is wrong.")
 
 
 def main() -> int:
@@ -78,10 +120,14 @@ def main() -> int:
     if len(args) < 2:
         print(__doc__)
         return 2
-    token = os.environ.get('ENGINE_OPERATOR_TOKEN', '').strip() or windows_key().strip()
+    token = os.environ.get('ENGINE_OPERATOR_TOKEN', '').strip()
     if not token:
-        print('No engine key. On a Windows home machine run scripts/engine-key.ps1 once; elsewhere set ENGINE_OPERATOR_TOKEN in this tool\'s environment (WORKBENCH.md, "Pick up from any tool").', file=sys.stderr)
-        return 2
+        key, error = windows_key()
+        token = key.strip()
+        if not token:
+            user = windows_user() if os.name == 'nt' else ''
+            print(no_key_message(os.name, user, error), file=sys.stderr)
+            return 2
     method, path = args[0].upper(), args[1]
     body = None
     if len(args) > 2:
@@ -101,6 +147,10 @@ def main() -> int:
             status, text = r.status, r.read().decode()
     except urllib.error.HTTPError as e:
         status, text = e.code, e.read().decode()
+    except urllib.error.URLError as e:
+        print(f'Could not reach the engine at {BASE} ({e.reason}). If this ran inside a '
+              'sandbox with no internet, run it again outside the sandbox.', file=sys.stderr)
+        return 3
     if '--sse' in flags:
         events = [line[6:] for line in text.splitlines() if line.startswith('data: ')]
         text = events[-1] if events else text
