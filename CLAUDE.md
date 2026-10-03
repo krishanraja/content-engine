@@ -8,8 +8,10 @@ schemas, configuration and instructions; the shared Supabase database owns
 live state, including every subchannel's mandate; the Windows runner owns
 exact media artifacts and execution history.
 
-Before doing anything here, read `docs/NORTH_STAR.md` and `AGENTS.md`.
-`README.md` says which document covers the work in front of you.
+Before doing anything here, read `docs/NORTH_STAR.md` and `AGENTS.md`, then
+`WORKBENCH.md`: where the work is, what is waiting on Krish, and how he wants to
+be worked with. Update `WORKBENCH.md` before you stop. `README.md` says which
+document covers the work in front of you.
 
 Before operating the Studio, also read `docs/ENGINE_SESSION.md`. Then call
 `studio.session.open` through the configured `mindmake-studio` MCP server and

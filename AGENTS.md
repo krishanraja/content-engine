@@ -5,6 +5,11 @@ ChatGPT or anything else. Read `docs/NORTH_STAR.md` first; it says what the
 whole system is for, and every rule below serves it. `README.md` says where
 everything is.
 
+**Start every session with `WORKBENCH.md`**: what is waiting on Krish, what is
+in progress and what is next, and how he wants to be worked with (plain words,
+no project shorthand). Update it before you stop, so the next session, in any
+tool, picks up where you left off.
+
 ## What this repository is
 
 The Mindmake content engine: the engine behind Krish's publication and the

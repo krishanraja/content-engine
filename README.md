@@ -17,6 +17,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | You are about to... | Read |
 |---|---|
 | do anything at all in this repository | `docs/NORTH_STAR.md`, then `AGENTS.md` |
+| pick up the work where the last session left it, in any tool (Claude Code, Codex) | `WORKBENCH.md` |
 | work on ideas, judging, drafting, rewriting, channel copy or the ledger | `docs/CONTENT_ENGINE.md` |
 | work on video, carousels, the runner or the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
 | understand how the pieces fit, or who owns what | `docs/SYSTEM_MAP.md` |
