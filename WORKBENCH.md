@@ -102,30 +102,37 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
   does not change the fact. These instructions are now engine house rules for
   writing, checking and visual planning. All 1,107 tests and the repository's
   type, skill, station, renderer, public-copy and secret checks passed.
-- Krish approved exactly one more Article 1 fact-check run on 2026-10-04, but
-  only after the engine learns how to avoid repeated paid checks. The approved
-  run has not been used. The previous run checked 21 claims and failed closed
-  on four lines: the dated start of Amazon's block, the dated Shopify contrast,
-  the CNET attribution, and the broad description of what Amazon advertisers
-  pay for. The article remains in review. Its approval was not recorded, no
-  production brief or video job was created, and nothing was published.
-- The repeat-spend cause is known: the result before the failed run predated
-  the sentence ledger, so there was nothing safe to reuse, and the paid route
-  offered no preflight or hard scope ceiling. A local fix now reports settled
-  versus fresh sentences and accepts a hard fresh-sentence cap. It refuses
-  before any model or web call when the current article exceeds that cap. Its
-  86 focused tests and both control-plane type checks pass. It is not live.
-  Krish must approve pushing the content-engine change before the one approved
-  check is spent. Once live, repair all four failed lines in one surgical
-  batch, read the exact scope, and run once with the cap set to that scope.
+- Krish approved the two safeguards and exactly one more Article 1 fact-check
+  run on 2026-10-04, conditional on learning how to avoid repeated paid checks.
+  Both safeguards are live. Article 1's four failed lines were repaired in one
+  exact edit: two unsupported details were cut, and the two dated contrast
+  sentences became plain source-backed statements. The free preview reported
+  59 reusable sentences and four fresh sentences. The run used a hard cap of
+  four, ran once, passed with no blockers, and left the exact article ready.
+  The article remains in review until Krish approves this exact version. No
+  production brief or video job exists, and nothing has been published.
+- The repeat-spend cause and prevention are now durable. The earlier result
+  predated the sentence ledger, and the paid route offered no preflight or hard
+  scope ceiling. The live route now reports settled versus fresh sentences and
+  refuses before any model or web call when the fresh scope exceeds the
+  approved cap. The capped Article 1 run proved the guard on a real piece.
+- The post-run readback exposed a smaller bookkeeping gap: two short scenario
+  labels, such as "Guess one.", still appeared as fresh even though the passing
+  check had set them aside. This did not block the article or require another
+  paid run. A local follow-up now settles an exact short match safely and fills
+  deterministic ledger gaps from a successful check of the exact current body
+  and sources. The full repository verification passes: 1,109 tests plus the
+  type, skill, station, renderer, public-copy and secret checks. It is not
+  pushed; making this counter correction live needs a new explicit push
+  approval.
 - The board failed to render in an already-open tab after a deployment because
   the old app shell requested a route file whose hashed name had been replaced.
   Its Retry button retried the obsolete request; a full reload restored the
-  board. The local Control Center fix makes Retry perform that full reload only
-  for this class of stale-file failure. Its focused test, TypeScript check,
-  lint and production build pass. It is not live. Krish must approve pushing
-  the Control Center change. The dependency install reported 64 existing audit
-  findings; this narrow recovery repair did not change unrelated packages.
+  board. The fix is live: Retry performs that full reload only for this class
+  of stale-file failure. Its production deployment is ready, its live build
+  identity matches the pushed fix, and the board renders after reload. The
+  dependency install reported 64 existing audit findings; this narrow recovery
+  repair did not change unrelated packages.
 - Krish said he is ready to watch the sample. A tracked Studio session found
   no Article 1 video job or review, recorded his relatable-explanation feedback
   without the surrounding chat, and closed cleanly. The Windows runner creates

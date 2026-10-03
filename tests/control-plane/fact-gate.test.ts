@@ -600,6 +600,25 @@ describe('a checked sentence keeps its result until it changes (walk log F52)', 
       fresh_sentences: 4,
     })
   })
+
+  test('an exact short scenario label settles without fuzzy-matching other text', () => {
+    const body = 'Guess one.\n\nAmazon wins.'
+    const result = {
+      ...run1,
+      claims: [],
+      set_aside: [
+        { sentence: 'Guess one.', reason: 'scenario label' },
+        { sentence: 'Amazon wins.', reason: 'hypothetical outcome' },
+      ],
+    }
+    const ledger = settle(body, result, undefined, hash)
+    expect(factLedgerCoverage(body, ledger, hash)).toEqual({
+      ledger_usable: true,
+      total_sentences: 2,
+      reusable_sentences: 2,
+      fresh_sentences: 0,
+    })
+  })
 })
 
 describe('a table copied from a PDF', () => {

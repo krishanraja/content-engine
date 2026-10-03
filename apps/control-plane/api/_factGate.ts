@@ -484,9 +484,13 @@ export function sourcesHash(meta: Record<string, any>): string {
  *  "sentence" can be part of one body sentence or run across two. */
 function overlapping(sentence: string, bodySentences: string[]): string[] {
   const n = norm(sentence)
-  if (n.length < 12) return []
+  if (!n) return []
   return bodySentences.filter(s => {
     const m = norm(s)
+    // A short label such as "Guess one." is safe to settle when it is an
+    // exact match. Only fuzzy containment needs the length floor that stops
+    // tiny fragments from attaching themselves to unrelated sentences.
+    if (m === n) return true
     return m.length >= 12 && (n.includes(m) || m.includes(n))
   })
 }

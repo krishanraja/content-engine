@@ -341,6 +341,16 @@ async function stopped(res: VercelResponse, f: ProviderFailure) {
   return res.status(answer.status).json(answer.body)
 }
 
+/** Fill any deterministic ledger gaps from a successful check of this exact
+ * body. This costs nothing and is safe only while the filed sources still
+ * match the ledger that check used. */
+function currentLedger(body: string, meta: Record<string, any>, hash: string): FactLedger | undefined {
+  const prior = meta.fact_ledger as FactLedger | undefined
+  const result = meta.fact_check as FactCheck | undefined
+  if (!prior || prior.sources_hash !== hash || !result || !gateStatus(meta, body).ok) return prior
+  return settle(body, result, prior, hash)
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET', 'POST'])) return
   const id = pathId(req)
@@ -350,10 +360,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (error || !row) return res.status(404).json({ ok: false, error: 'idea not found' })
   const meta = (row.meta || {}) as Record<string, any>
   const body = String(row.body || '')
+  const sourceHash = sourcesHash(meta)
+  const ledger = currentLedger(body, meta, sourceHash)
 
   if (req.method === 'GET') {
     const gate = gateStatus(meta, body)
-    const nextRun = factLedgerCoverage(body, meta.fact_ledger as FactLedger | undefined, sourcesHash(meta))
+    const nextRun = factLedgerCoverage(body, ledger, sourceHash)
     // The whole pre-publish checklist rides along, so Control Center can show
     // Krish every house rule this exact version passes or fails in one place.
     const checks = publishChecks(body, gate)
@@ -373,7 +385,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (rawCap !== undefined && (!Number.isInteger(rawCap) || Number(rawCap) < 0 || Number(rawCap) > MAX_CLAIMS)) {
     return res.status(400).json({ ok: false, error: `max_fresh_sentences must be a whole number from 0 to ${MAX_CLAIMS}.` })
   }
-  const scope = factLedgerCoverage(body, meta.fact_ledger as FactLedger | undefined, sourcesHash(meta))
+  const scope = factLedgerCoverage(body, ledger, sourceHash)
   if (rawCap !== undefined && scope.fresh_sentences > Number(rawCap)) {
     return res.status(409).json({
       ok: false,
@@ -385,9 +397,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const run = new GateRun()
   let result: FactCheck
-  let ledger: FactLedger
+  let nextLedger: FactLedger
   try {
-    ({ result, ledger } = await check(run, body, meta))
+    ({ result, ledger: nextLedger } = await check(run, body, { ...meta, fact_ledger: ledger }))
   } catch (e) {
     if (!isModelUnavailable(e)) throw e
     return stopped(res, run.failure ?? e.failure)
@@ -402,7 +414,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const fresh = await supabase.from('content_ideas').select('meta').eq('id', id).single()
   const nowMeta = (fresh.data?.meta || meta) as Record<string, any>
   const { error: upErr } = await supabase.from('content_ideas')
-    .update({ meta: { ...nowMeta, fact_check: result, fact_ledger: ledger } })
+    .update({ meta: { ...nowMeta, fact_check: result, fact_ledger: nextLedger } })
     .eq('id', id)
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
 
