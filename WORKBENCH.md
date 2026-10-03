@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03, by a Claude Code session.
+Last updated: 2026-10-03 18:35 UTC, by a Claude Code session.
 
 ## How Krish wants to be worked with
 
@@ -41,6 +41,13 @@ Last updated: 2026-10-03, by a Claude Code session.
    rewritten in plain words. Nothing is built until he says so.
 4. **Approve one sample video**, once article 1's video exists. That switches
    on the new makeyourmindup look for videos.
+5. **Say where he will run Codex** (home computer or cloud), so a session can
+   give him the exact steps to add the engine key there, once.
+6. **Cut the timer judges?** They are the biggest model cost ($39.34 of $85.60
+   over 14 days). Suggested: score new ideas once a day, and only those that
+   pass a free first check. Waiting on his yes.
+7. **Move the work board into Control Center?** Then any tool can update it and
+   he sees it on his phone. Waiting on his yes.
 
 ## In progress
 
