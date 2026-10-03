@@ -10,6 +10,10 @@ in progress and what is next, and how he wants to be worked with (plain words,
 no project shorthand). Update it before you stop, so the next session, in any
 tool, picks up where you left off.
 
+**Codex on a Windows home computer:** run `scripts/engine.py` and `git pull` or
+`git push` outside the sandbox, asking Krish to approve. The sandbox runs as a
+separate Windows user that cannot see the engine key or reach the internet.
+
 ## What this repository is
 
 The Mindmake content engine: the engine behind Krish's publication and the
