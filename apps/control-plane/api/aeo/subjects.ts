@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
-import { preamble, slug as slugify } from '../_content.js'
+import { guardEngine } from '../_auth.js'
+import { slug as slugify } from '../_content.js'
 import { PRODUCT_SLUGS, SUBJECT_KINDS, text, bodyId } from '../_growth.js'
 
 // /api/aeo/subjects: the registry of what the AEO research machine studies.
@@ -58,7 +59,7 @@ function domains(v: unknown): string[] | null {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res, 'GET, POST, PATCH, OPTIONS')) return
+  if (guardEngine(req, res, ['GET', 'POST', 'PATCH'])) return
 
   if (req.method === 'GET') {
     const { data, error } = await supabase

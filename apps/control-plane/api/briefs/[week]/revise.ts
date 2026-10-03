@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
-import { loadVoiceBlock, preamble, sanitizeVoice, VOICE_GUARDRAILS } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
+import { loadVoiceBlock, sanitizeVoice, VOICE_GUARDRAILS } from '../../_content.js'
 import { emptyOutput, failWith, modelFailure, openStream, send, streamClaude } from '../../_stream.js'
 import { loadStandingNotes, standingNotesPrompt } from '../../_briefNotes.js'
 import { locateSpan } from '../../_selection.js'
@@ -44,7 +45,7 @@ const PRESETS: Record<string, string> = {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const week = (req.query.week || '') as string
   if (!/^\d{4}-W\d{2}$/.test(week)) return res.status(400).json({ ok: false, error: 'week required (YYYY-Www)' })
 

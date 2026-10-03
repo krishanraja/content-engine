@@ -222,12 +222,13 @@ Readback 2026-09-25 unless a date is given.
 
 Engine:
 
-- **Unauthenticated write routes.** About a dozen routes use `preamble`, which
-  checks nothing: `shifts/[id]` (dismiss deletes a shift), `shifts/[id]/write`,
-  `content-decisions/*`, every `briefs/[week]` route including `revise`
-  (spends on Anthropic) and `push` (fires the n8n factory), `briefs/notes`,
-  `content-creators`, `aeo/subjects`, `aeo/digest`, `aeo/queries`
-  (`docs/CONTENT_ENGINE.md`, "The guards").
+- **The remaining unauthenticated content routes are fixed in the current
+  checkout, not live yet.** Thirteen handlers for shifts, content decisions,
+  weekly briefs, creator settings and AEO settings moved from the method-only
+  `preamble` helper to fail-closed `guardEngine` on 2026-10-03. Sixteen focused
+  auth tests pass, including a real handler call that gets 401 for each former
+  opening, and a scan prevents any API handler using `preamble` again. The
+  control-plane typecheck passes. Deployment and production readback remain.
 - **Guards that fail open.** `guard` and the POST arm of `guardCronRoute`
   admit everyone when `ACCESS_CODE` is unset; `discover-lens-radar` admits
   everyone when `LENS_RADAR_SECRET` is unset.

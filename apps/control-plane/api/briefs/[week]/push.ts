@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
-import { preamble, sanitizeVoice } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
+import { sanitizeVoice } from '../../_content.js'
 import { recordShip } from '../../_ships.js'
 
 // POST /api/briefs/:week/push   body: { channels: string[] }
@@ -52,7 +53,7 @@ function extractDocUrl(payload: any, depth = 0): string | null {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const week = (req.query.week || '') as string
   if (!/^\d{4}-W\d{2}$/.test(week)) return res.status(400).json({ ok: false, error: 'week required (YYYY-Www)' })
 

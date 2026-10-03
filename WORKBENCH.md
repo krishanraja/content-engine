@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 20:40 UTC, by a Claude Code session.
+Last updated: 2026-10-03 20:58 UTC, by a Codex session.
 
 ## How Krish wants to be worked with
 
@@ -82,6 +82,24 @@ example `python3 scripts/engine.py GET "/api/content-ideas?id=<id>"`. On
 Windows the command is `python`, not `python3`. It reads the key from
 `ENGINE_OPERATOR_TOKEN`, or on a home computer from Windows Credential
 Manager, and never prints it.
+
+## Latest handoff
+
+- The board was read and read back on 2026-10-03. There were no new replies
+  from Krish. Another session briefly added a Codex access action; this session
+  proved access and moved it to done. The waiting list is now: make the access
+  fix live, article 1's video, article 3, the phone redesign, the timer judges
+  and, after the first video exists, its final look.
+- The highest risk that needed no decision was the remaining group of content
+  actions that checked only which kind of request arrived. Thirteen of them
+  can change decisions, spend money, start the document factory or remove a
+  proposed shift. They now use the same locked door as article writing.
+- The focused access checks, the content engine's type check and the secret
+  scan pass. The full test run found five older brief-rewrite tests that did
+  not bring a key through the new door; those tests were corrected and pass,
+  while every other test passed on the first run.
+- This security fix is committed on this computer but is not live. Pushing it
+  would deploy it, so the next action is Krish's approval to make it live.
 
 ## What costs money
 

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
-import { preamble } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
 import { VIDEO_FORMATS, buildVideoScript, videoFormat } from '../../_video.js'
 
 // POST /api/briefs/:week/video-script   body: { duration, hint? }
@@ -14,7 +14,7 @@ import { VIDEO_FORMATS, buildVideoScript, videoFormat } from '../../_video.js'
 const MIN_SOURCE = 120
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const week = (req.query.week || '') as string
   if (!/^\d{4}-W\d{2}$/.test(week)) return res.status(400).json({ ok: false, error: 'week required (YYYY-Www)' })
 

@@ -43,6 +43,7 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => ({
 }))
 
 const WEEK = '2026-W40'
+const TOKEN = 'eot_' + 'b'.repeat(40)
 const BRIEF = '# The week the price list became the product\n\nEvery lab now sells a menu. The clues below prosecute one belief: that buyers still pick a model.'
 const LIMIT = 'You have reached your specified API usage limits. You will regain access on 2099-10-01 at 00:00 UTC.'
 const REWRITE = 'The week the price list became the product. Every lab now sells a menu, and the menu decides who pays for what. '.repeat(2)
@@ -72,7 +73,7 @@ async function revise(upstream: () => Response) {
     write(chunk: string) { out.chunks.push(chunk); return true },
     end() { return res },
   }
-  await handler({ method: 'POST', headers: {}, query: { week: WEEK }, body: { mode: 'tighten' } } as never, res as never)
+  await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: { week: WEEK }, body: { mode: 'tighten' } } as never, res as never)
   const events = out.chunks.join('').split('\n\n').filter(f => f.startsWith('event:')).map(f => {
     const [head, data] = f.split('\n')
     return { event: head!.slice(6).trim(), data: JSON.parse(data!.slice(5).trim()) }
@@ -80,8 +81,14 @@ async function revise(upstream: () => Response) {
   return { ...out, events }
 }
 
-beforeEach(() => { process.env.ANTHROPIC_API_KEY = 'sk-test-not-a-key' })
-afterEach(() => { vi.unstubAllGlobals() })
+beforeEach(() => {
+  process.env.ANTHROPIC_API_KEY = 'sk-test-not-a-key'
+  process.env.ENGINE_OPERATOR_TOKEN = TOKEN
+})
+afterEach(() => {
+  delete process.env.ENGINE_OPERATOR_TOKEN
+  vi.unstubAllGlobals()
+})
 
 describe('POST /api/briefs/:week/revise', () => {
   it('a refusal known before the stream opens is a failure status with a typed JSON body', async () => {

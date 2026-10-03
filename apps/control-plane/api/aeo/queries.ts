@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
-import { preamble } from '../_content.js'
+import { guardEngine } from '../_auth.js'
 
 // PATCH /api/aeo/queries  { id, status: 'watch' | 'drop' }
 //
@@ -14,7 +14,7 @@ export const config = { maxDuration: 15 }
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res, 'PATCH, OPTIONS')) return
+  if (guardEngine(req, res, ['PATCH'])) return
   const b = (req.body || {}) as Record<string, unknown>
   const id = typeof b.id === 'string' ? b.id : ''
   if (!UUID.test(id)) return res.status(400).json({ ok: false, error: 'id required' })

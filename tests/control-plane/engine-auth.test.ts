@@ -251,3 +251,63 @@ describe('every idea route', () => {
     assert.deepEqual(unguarded, [])
   })
 })
+
+// The rest of the content engine used to have a second class of route that
+// only checked the HTTP method through preamble(). That left editorial
+// decisions, weekly briefs, creator/AEO settings and shifts open to anonymous
+// writes, paid model calls, factory pushes or deletion. These routes belong on
+// the same fail-closed browser-or-operator boundary as the idea routes.
+
+const FORMERLY_OPEN_ROUTES = [
+  { file: join(API, 'content-decisions/[id].ts'), method: 'PATCH' },
+  { file: join(API, 'content-decisions/[id]/likely-reasons.ts'), method: 'GET' },
+  { file: join(API, 'content-creators.ts'), method: 'GET' },
+  { file: join(API, 'briefs/[week].ts'), method: 'GET' },
+  { file: join(API, 'briefs/notes.ts'), method: 'GET' },
+  { file: join(API, 'briefs/[week]/push.ts'), method: 'POST' },
+  { file: join(API, 'briefs/[week]/revise.ts'), method: 'POST' },
+  { file: join(API, 'briefs/[week]/video-script.ts'), method: 'POST' },
+  { file: join(API, 'aeo/subjects.ts'), method: 'GET' },
+  { file: join(API, 'aeo/digest.ts'), method: 'PATCH' },
+  { file: join(API, 'aeo/queries.ts'), method: 'PATCH' },
+  { file: join(API, 'shifts/[id].ts'), method: 'PATCH' },
+  { file: join(API, 'shifts/[id]/write.ts'), method: 'POST' },
+] as const
+
+function allHandlers(): string[] {
+  const out: string[] = []
+  const walk = (dir: string) => {
+    for (const name of readdirSync(dir)) {
+      const p = join(dir, name)
+      if (statSync(p).isDirectory()) walk(p)
+      else if (name.endsWith('.ts') && !name.startsWith('_')) out.push(p)
+    }
+  }
+  walk(API)
+  return out
+}
+
+describe('the formerly open content routes', () => {
+  test('no API handler can use the unauthenticated preamble again', () => {
+    const open = allHandlers().filter(file => /\bpreamble\(req/.test(readFileSync(file, 'utf8')))
+    assert.deepEqual(open.map(file => relative(API, file)), [])
+  })
+
+  test('each former opening now refuses its own allowed method without credentials', async () => {
+    const unguarded: string[] = []
+    await withEnv({ ACCESS_CODE: CODE, ENGINE_OPERATOR_TOKEN: TOKEN }, async () => {
+      for (const route of FORMERLY_OPEN_ROUTES) {
+        const { default: handler } = await import(route.file)
+        const { res, out } = fakeRes()
+        await handler({
+          method: route.method,
+          headers: {},
+          query: { id: '00000000-0000-4000-8000-000000000000', week: '2026-W40' },
+          body: {},
+        } as never, res as never)
+        if (out.status !== 401) unguarded.push(`${relative(API, route.file)} -> ${out.status || 'no status'}`)
+      }
+    })
+    assert.deepEqual(unguarded, [])
+  })
+})

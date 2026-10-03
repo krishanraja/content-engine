@@ -56,16 +56,18 @@ this project's own URL.
 | `guardOperatorOrCron` | the cookie or `Bearer CRON_SECRET` | refuses |
 | `guardSensitiveRead` | the cookie or `Bearer VIDEO_STUDIO_EXPORT_TOKEN`, 60 a minute; a route that opts in (health only) also takes `Bearer ENGINE_OPERATOR_TOKEN`, by the check `guardEngine` makes | refuses |
 | `guardBearerExport(ENV)` | `Bearer $ENV`, 60 a minute | refuses |
-| `preamble` (`api/_content.ts`) | anyone; it only checks the method | no auth at all |
+| `preamble` (`api/_content.ts`) | legacy method-only helper; no handler may call it | no auth at all |
 | Studio read and mutation | the cookie; a mutation also needs Origin equal to `APP_ORIGIN` and an HMAC CSRF header | 503 |
 
-Routes still on `preamble`, which therefore accept writes from anyone who
-knows the URL: `shifts/[id]` (dismiss deletes a shift), `shifts/[id]/write`,
-`content-decisions/[id]` and `likely-reasons`, every `briefs/[week]` route
-(including `revise`, which spends on Anthropic, and `push`, which fires the n8n
-factory), `briefs/notes`, `content-creators`, `aeo/subjects`, `aeo/digest` and
-`aeo/queries`. `discover-lens-radar` is open when `LENS_RADAR_SECRET` is unset.
-This is recorded as an open risk in `docs/STATE.md`.
+No API handler calls `preamble` after the 2026-10-03 route-gate fix. The final
+thirteen callers moved to `guardEngine`: shifts, content decisions, weekly
+briefs, creator settings and AEO settings. The auth test scans every handler so
+a new `preamble(req, ...)` call fails the suite, and it invokes each of the
+thirteen former openings with no credentials to prove it returns 401 before a
+database read, model call or factory push. This code is not live until it is
+merged and deployed. `discover-lens-radar` remains open when
+`LENS_RADAR_SECRET` is unset, and the fail-open guards remain recorded in
+`docs/STATE.md`.
 
 ## The pipeline, stage by stage
 
@@ -254,9 +256,9 @@ without its `## ` still loses it (F2).
 
 `rule` is the checklist's id (`R2`, `NO_EM_DASH`, `NO_EXCLAMATION`,
 `BRITISH_SPELLING`, `R7`). The brief's rewrite, `briefs/[week]/revise`, is
-not self-checked: it has its own prompt and returns the whole brief, and it
-is still on `preamble`, where a second paid call would widen an open route
-(`docs/STATE.md`).
+not self-checked: it has its own prompt and returns the whole brief. It is
+behind `guardEngine`, so only Control Center or an operator session can start
+that paid call.
 
 **The fact gate, in practice.** A second model reads every sentence the
 claim lister did not cover (twelve at a time, with its section heading), and

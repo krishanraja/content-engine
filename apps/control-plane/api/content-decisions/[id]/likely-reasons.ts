@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
-import { preamble, pathId, callClaude, loadVoiceBlock, robustJson } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
+import { pathId, callClaude, loadVoiceBlock, robustJson } from '../../_content.js'
 import { embed, vectorLiteral } from '../../_embeddings.js'
 import { JUDGE_MODEL } from '../../_models.js'
 
@@ -125,7 +126,7 @@ async function fromModel(title: string, body: string) {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res, 'GET, OPTIONS')) return
+  if (guardEngine(req, res, ['GET'])) return
   if (req.method !== 'GET') return res.status(405).json({ ok: false, error: 'GET only' })
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })

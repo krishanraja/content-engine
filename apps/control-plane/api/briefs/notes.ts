@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { preamble } from '../_content.js'
+import { guardEngine } from '../_auth.js'
 import { loadStandingNotes, addStandingNote, removeStandingNote } from '../_briefNotes.js'
 
 // GET/POST/DELETE /api/briefs/notes — Krish's standing brief preferences.
@@ -12,7 +12,7 @@ import { loadStandingNotes, addStandingNote, removeStandingNote } from '../_brie
 // prompt, so "Tell Cleo" corrections can compound instead of resetting.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res, 'GET, POST, DELETE, OPTIONS')) return
+  if (guardEngine(req, res, ['GET', 'POST', 'DELETE'])) return
   try {
     if (req.method === 'GET') {
       return res.json({ ok: true, notes: await loadStandingNotes() })
