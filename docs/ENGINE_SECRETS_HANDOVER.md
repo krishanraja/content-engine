@@ -134,9 +134,13 @@ The name sits outside `MindmakeVideoStudio/`, so the runner's credential
 contract and `inspect-credentials.ps1` are unaffected.
 
 Rotated 2026-10-03: Krish ran `engine-key.ps1 -New` on a home machine and put
-the new value in KeePass, Vercel and the Claude environment ("key done"). The
-engine was redeployed the same hour, and the previous value, which had been
-held in a session's scratch folder, stopped working at that deployment.
+the new value in KeePass, Vercel and the Claude environment ("key done", then
+"done, I overwrote the ENGINE_OPERATOR_TOKEN that was already in there and
+redeployed"). Checked after his redeploy: the previous value, which had been
+held in a session's scratch folder, is refused (401) and the new one is
+accepted. The scratch copy was deleted. Redeploys before the Vercel value was
+saved kept accepting the old key, so the order is: save in Vercel, then
+redeploy, then check.
 
 To make a new one (rotation): on one home machine run
 `scripts/engine-key.ps1 -New` from outside the runner checkout. It stores a

@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 19:45 UTC, by a Claude Code session.
+Last updated: 2026-10-03 20:17 UTC, by a Claude Code session.
 
 ## How Krish wants to be worked with
 

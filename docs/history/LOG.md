@@ -10,6 +10,7 @@ Files moved here keep their body verbatim under a Historical banner.
 - decision (Krish, 2026-10-03): "I will use codex on one of the two machines set up as the video runner, either or. sort the engine key." and "feel free to use KeePass in the H drive which stores all the other creds for the video runner". The engine key now lives in Windows Credential Manager on the home machines (`scripts/engine-key.ps1`), in KeePass, in Vercel and in the Claude environment (`docs/ENGINE_SECRETS_HANDOVER.md`, "The engine key for agent sessions").
 - decision (Krish, 2026-10-03): "yes I need the boards to not be Claude pages, but accessible by Codex too and workable using Codex too". The board lives in the database (`/api/workbench`) and in Control Center at #/board; the Claude page is retired.
 - report (Krish, 2026-10-03): "key done". The engine was redeployed so it takes the new key.
+- report (Krish, 2026-10-03): "done, I overwrote the ENGINE_OPERATOR_TOKEN that was already in there and redeployed". Checked after that deployment: the old engine key is refused and the new one accepted; the board item closed.
 
 ## 2026-10-02
 
