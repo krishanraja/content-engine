@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-04 00:00 UTC, by a Claude Code session.
+Last updated: 2026-10-04 00:06 UTC, by a Codex session.
 
 ## How Krish wants to be worked with
 
@@ -87,14 +87,42 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
 ## Latest handoff
 
+- Krish read the current Article 1 revision on 2026-10-04 and said, "ok,
+  happy with this article". Treat that as his taste approval of the exact
+  wording he saw. His decision is recorded in the edit ledger against that
+  body. The engine correctly refused the official approval state because the
+  practical section was added after the last fact check. Authoritative
+  readback still shows the article in review with no production approval. No
+  paid check ran and no video job exists. Krish approved pushing the no-cost
+  counter correction, it is live, and the production readback now establishes
+  the exact scope: 61 reusable sentences and 31 fresh sentences. Running one
+  paid truth check with a hard cap of 31 is the next decision waiting on him.
 - Three timed jobs that failed on every run are fixed and merged. The Sunday
-  job that turns Krish's edits into suggested rules had never saved one: each
-  suggestion lacked the list of edits behind it, which the database requires.
-  It now attaches them, so Sunday's run is the first that can save. The Friday
-  shift spotter wrote old channel names the database refuses; it now writes
-  the current ones. The Saturday build-signals job now says why it fails. It
-  still fails until Krish replaces the GitHub key in this engine's own Vercel
-  project; the board asks him.
+  job that turns Krish's edits into suggested rules had never saved one because
+  each suggestion lacked the list of edits behind it, which the database
+  requires. It now attaches them. The Friday shift spotter now writes the
+  current channel names instead of retired ones. The Saturday build-signals
+  job now says why it fails. Krish said on 2026-10-04 that the GitHub key in
+  this engine's Vercel project is fresh. Nothing further is waiting on him for
+  that key; the next scheduled job is the proof that build signals now fill.
+- Krish's current correction for Article 1 is that its true value is the
+  practical implication for a business leader or consumer: what business to
+  build, which features matter, what to be wary of, and what a shopper should
+  demand. One section now makes a single commercial call: build the authorised
+  front door between agents and merchants. It names the likely customer, the
+  metric, the merchant and shopper controls, the trust features, the platform
+  risk, and the consumer test. The advice is clearly judgement rather than a
+  new fact. The revised article is saved and visible in Control Center. Its
+  deterministic checks pass, including reading age about 12. Because the
+  words changed, the earlier passing fact check no longer covers the current
+  body. The free preview reports 61 reusable sentences and 31 new sentences.
+  No new paid check has run, the article is still in review, and no video job
+  or public post exists. Krish now needs to say whether the new section is the
+  value he meant, or what still needs to change. He has now said it does. This
+  ruling, his approval and the handoff are recorded in the local documentation
+  commit. Krish approved pushing it with the no-cost counter correction on
+  2026-10-04. The correction is live and production still reports 61 reusable
+  sentences and 31 fresh ones. No paid check has run.
 - Krish approved Article 1's clearer wording on 2026-10-03 and made clarity a
   critical rule for every future article. Every sentence must have one clear
   reading. When an unfamiliar mechanism needs help, use a factual historical
@@ -108,23 +136,25 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
   exact edit: two unsupported details were cut, and the two dated contrast
   sentences became plain source-backed statements. The free preview reported
   59 reusable sentences and four fresh sentences. The run used a hard cap of
-  four, ran once, passed with no blockers, and left the exact article ready.
-  The article remains in review until Krish approves this exact version. No
-  production brief or video job exists, and nothing has been published.
+  four, ran once and passed with no blockers. It covered that exact earlier
+  body only; the later practical-value revision above means it no longer
+  covers the current article. No production brief or video job exists, and
+  nothing has been published.
 - The repeat-spend cause and prevention are now durable. The earlier result
   predated the sentence ledger, and the paid route offered no preflight or hard
   scope ceiling. The live route now reports settled versus fresh sentences and
   refuses before any model or web call when the fresh scope exceeds the
   approved cap. The capped Article 1 run proved the guard on a real piece.
-- The post-run readback exposed a smaller bookkeeping gap: two short scenario
-  labels, such as "Guess one.", still appeared as fresh even though the passing
-  check had set them aside. This did not block the article or require another
-  paid run. A local follow-up now settles an exact short match safely and fills
-  deterministic ledger gaps from a successful check of the exact current body
-  and sources. The full repository verification passes: 1,109 tests plus the
-  type, skill, station, renderer, public-copy and secret checks. It is not
-  pushed; making this counter correction live needs a new explicit push
-  approval.
+- The post-run readback exposed a smaller bookkeeping gap: short scenario
+  labels, such as "Guess one.", could not settle by fuzzy matching. The live
+  correction now lets exact short matches settle and fills deterministic
+  ledger gaps from a successful check of the exact current body and sources.
+  The full repository verification passed: 1,109 tests plus the type, skill,
+  station, renderer, public-copy and secret checks. Production still reports
+  61 reusable and 31 fresh sentences for the current Article 1 because its new
+  section was added after the older check. The correction prevents this leak
+  on future exact results; it does not rewrite an older ledger after the body
+  changed. No paid check ran.
 - The board failed to render in an already-open tab after a deployment because
   the old app shell requested a route file whose hashed name had been replaced.
   Its Retry button retried the obsolete request; a full reload restored the

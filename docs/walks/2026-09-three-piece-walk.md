@@ -278,7 +278,7 @@ with the evidence that found it):
 | F52 | fact gate | Runs do not converge on an opinion-heavy piece: the claim lister reads a different handful of commentary sentences as claims each run (piece 3, runs 1 to 6: 16, 7, 3, 4, 2, 3 blocking, almost all different sentences). | piece 3, 2026-09-30. **Fixed 2026-10-02** on Krish's answer ("Yes, or cut the opinion lines"): `carryForward` and `settle` (`api/_factGate.ts`) keep a sentence's pass or set-aside in `meta.fact_ledger` while its words and the sources are unchanged; a failed sentence is always checked again, and a change to the sources or the gate's version starts the ledger again. |
 | F53 | CI, Windows | `tests/drive-discovery.test.ts`, first test in the file, timed out at 5 seconds on the Windows runner (c3a6e52); the re-run passed and the file runs in 2.3 seconds locally. The first test pays the file's cold start. | CI run 36725258056, 2026-09-30. **Not fixed.** Give the file's first test its own timeout, or warm the import in a `beforeAll`. |
 | F54 | tests | `tests/control-plane/judge-failed-run.test.ts` ("a usage limit stops the pass at the first idea") hardcoded a provider reset of 2026-10-01 00:00 UTC and read the real clock. From that moment the reset was in the past, the walk fell back to its own retry time, and the test failed for every change. | full suite, 2026-10-02. **Fixed 2026-10-02**: that block fakes Date only, at 2026-09-28 12:00 UTC, the day its rows were written. |
-| F55 | fact gate, spend | Article 1 changed two sentences after its last check, but the next run carried zero earlier findings and checked 21 claims again. The previous result predated the sentence ledger, so there was nothing safe to reuse, and the paid route had no preflight or hard scope ceiling. A status code could not reveal that before spend. | piece 1, run at 2026-10-03 22:26 UTC. **Fixed 2026-10-03**: `factLedgerCoverage` reports exact settled and fresh sentence counts without a model call; `GET /fact-check` exposes it; and `POST` accepts `max_fresh_sentences`, refusing with `rerun_scope` before any model or web call when a rerun is broader than approved. Piece 1's next run repaired all four lines together, reused 59 settled sentences, checked exactly four fresh sentences under that cap and passed with no blockers. Its post-run readback exposed two short scenario labels that fuzzy matching could never settle; exact short matches now settle, and a successful exact-version check fills deterministic ledger gaps without another paid call. `tests/control-plane/fact-gate.test.ts`, `fact-check-provider.test.ts` |
+| F55 | fact gate, spend | Article 1 changed two sentences after its last check, but the next run carried zero earlier findings and checked 21 claims again. The previous result predated the sentence ledger, so there was nothing safe to reuse, and the paid route had no preflight or hard scope ceiling. A status code could not reveal that before spend. | piece 1, run at 2026-10-03 22:26 UTC. **Fixed 2026-10-03**: `factLedgerCoverage` reports exact settled and fresh sentence counts without a model call; `GET /fact-check` exposes it; and `POST` accepts `max_fresh_sentences`, refusing with `rerun_scope` before any model or web call when a rerun is broader than approved. Piece 1's next run repaired all four lines together, reused 59 settled sentences, checked exactly four fresh sentences under that cap and passed with no blockers. Its post-run readback exposed two short scenario labels that fuzzy matching could never settle; exact short matches now settle, and a successful exact-version check fills deterministic ledger gaps without another paid call. The correction was pushed and the production deployment became ready on 2026-10-04. Article 1's live scope remained 61 reusable and 31 fresh sentences because its practical section changed the body after the earlier result; the correction is prospective and does not rewrite that older ledger. `tests/control-plane/fact-gate.test.ts`, `fact-check-provider.test.ts` |
 | F50 | fact gate, on file | The on-file reader misread a flattened PDF table. It said Koa "exceeds Claude Opus" on Tau2Bench and BFCL; the paper's Table 1 has Koa below Opus 4.8 on both (69.41 against 74.00, 66.63 against 78.18) and below GPT-5.5 on all three overall scores. The gate failed closed (a contradiction the passage did not bear out became "not found"), so nothing false passed, but a true sentence was held. | piece 3, run 2, 2026-09-30, and again run 7, 2026-10-02 ("On CRM Bench, GPT-5.5 scored 0.90"). **Fixed in the prompt 2026-10-02**: `ON_FILE_SYSTEM` says how a flattened row maps to its header and asks for the whole row with the header line; code still confirms the row carries the claim's numbers. Filing tables one row a line would be stronger, but a change to the sources restarts the sentence ledger (F52). |
 
 ## 3. Front-end implications
@@ -528,6 +528,33 @@ the idea panel's id (`d132d285`). That id was already settled by his decision of
 the browser's approve button sends no panel id. Next is the Studio brief, which
 needs his five-gate confirmation for this exact revision (`docs/STUDIO.md`,
 "Switching it on").
+
+**Practical-value correction, 2026-10-04.** After later fact repairs returned
+the piece to review, Krish said its missing value was the implication for a
+business leader or consumer: what business could be built, which features
+matter, what to be wary of, and what a shopper should demand. This is an
+Article 1 correction, not yet a general house rule. The exact revision adds
+one section that makes a single commercial call: build the authorised front
+door between agents and merchants. It names the likely customer, the metric,
+the merchant and shopper controls, the trust features, the platform risk, and
+the consumer test. The advice is identified as judgement rather than evidence.
+Deterministic checks pass, including R2, the no-em-dash rule, plain words and
+reading age about 12. The edit changed the article after its passing fact
+check, so the piece remains in review. A free scope preview reports 61 reusable
+sentences and 31 new sentences; no new paid check has run.
+
+**Taste approval, 2026-10-04.** Krish read that exact revision and said,
+"ok, happy with this article". The session appended his `approved` decision to
+the edit ledger against the exact current body. The attempt to move the piece
+to `approved` was correctly refused by the fact gate because the new section
+postdates the last paid check. Authoritative readback still shows `review` and
+no production approval. This preserves his taste decision without claiming a
+truth clearance he did not give or spending on another run. The free preview
+still reports 61 reusable sentences and 31 fresh sentences. Krish approved the
+no-cost correction's push and the production deployment is ready. Production
+readback stayed at 61 reusable and 31 fresh because this article changed after
+the earlier result. The exact next gate is therefore one paid truth-check run
+with a hard cap of 31 fresh sentences; it has not been approved or run.
 
 ## Piece 2: mind.the.gap
 
