@@ -69,6 +69,17 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.ok(!houseRulesBlock('write', 'follow_the_money').includes('fork into different futures'))
     assert.ok(!VOICE_GUARDRAILS.includes('fork into different futures'))
   })
+  test('clarity and relatable explanations reach words and visuals without weakening the fact gate', () => {
+    const clear = HOUSE_RULES.find(r => r.id === 'CRYSTAL_CLEAR')
+    const relatable = HOUSE_RULES.find(r => r.id === 'RELATABLE_EXPLANATION')
+    assert.ok(clear)
+    assert.match(clear.text, /one reasonable reading differs/)
+    assert.ok(relatable)
+    assert.deepEqual(relatable.stages, ['judge_draft', 'write', 'final_pass', 'visual'])
+    assert.match(relatable.text, /keep the underlying fact exact/)
+    assert.ok(houseRulesBlock('write').includes(relatable.text))
+    assert.ok(houseRulesBlock('visual').includes(relatable.text))
+  })
   test('the stages named are the stages that exist', () => {
     const stages: Stage[] = ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual']
     for (const r of HOUSE_RULES) for (const s of r.stages) assert.ok(stages.includes(s), `${r.id}: ${s}`)

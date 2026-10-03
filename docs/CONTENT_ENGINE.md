@@ -328,8 +328,11 @@ on trial, and the stages that enforce it. Writers read them through
 rules scoped to their subchannel, both judge gates put the rules for their
 gate in every judge's context, and the final pass builds its absolutes from
 them. House rules win over a mandate where they disagree, so every piece
-ends with a dated prediction. `tests/control-plane/house-rules.test.ts` fails
-when a live rule reaches no stage.
+ends with a dated prediction. They also require every sentence to have one
+clear reading, and ask unfamiliar mechanisms to use a factual historical
+parallel, familiar analogy or clearly signposted comic exaggeration when that
+makes the idea easier to grasp. `tests/control-plane/house-rules.test.ts`
+fails when a live rule reaches no stage.
 
 **Before approval** (`api/_publishChecks.ts`). `approved` and `published`
 also need the checks a machine can make: the fact gate, no "Not X, Y", no em

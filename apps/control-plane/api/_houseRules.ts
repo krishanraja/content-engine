@@ -64,10 +64,17 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'CRYSTAL_CLEAR', name: 'Crystal clear before clever',
-    text: 'Never use a smart-sounding phrase that leaves the reader to work out what actually happened. Say the actor, the action and the consequence in literal, everyday words. If a phrase can be read two ways, replace it.',
-    said: 'I never, ever want to say things that sound too smart and can be misinterpreted, things like this should be crystal clear as to what is happening, what does nudgeed even mean?',
-    on: '2026-10-03', source: 'workbench reply on piece 1', status: 'live',
+    text: 'Every sentence must make the actor, the action and the consequence clear on the first read. Never use a smart-sounding phrase that leaves the reader to work out what actually happened. If one reasonable reading differs from what we mean, rewrite it in literal, everyday words.',
+    said: 'I never, ever want to say things that sound too smart and can be misinterpreted, things like this should be crystal clear as to what is happening, what does nudgeed even mean? Then: Ensure no other article is ever capable of being even 1% misinterpreted or confusing in the future, this is critical.',
+    on: '2026-10-03', source: 'workbench replies on piece 1', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
+  },
+  {
+    id: 'RELATABLE_EXPLANATION', name: 'Make unfamiliar ideas relatable',
+    text: 'When a mechanism is unfamiliar, add a real historical parallel, a familiar analogy or a comical exaggeration that makes the point easier to grasp. Make the comparison visibly a comparison, keep the underlying fact exact, and remove it if it changes what happened.',
+    said: 'We should also add parallels (when this has happened before), analogies to things people will relate to, or comical exaggerations to make the point where it does not distort fact.',
+    on: '2026-10-03', source: 'workbench reply on piece 1', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass', 'visual'],
   },
   {
     id: 'R7', name: 'Reading age 12, with humour',
