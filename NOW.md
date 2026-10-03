@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Mindmake content engine
-as_of: 2026-10-02
-head: 3ac641d
+as_of: 2026-10-03
+head: 19d7eb2
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -32,7 +32,7 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-10-02)
+## Where it is right now (as of 2026-10-03)
 
 Lifecycle: building. Readback the same day unless a commit is named.
 
@@ -46,6 +46,7 @@ Lifecycle: building. Readback the same day unless a commit is named.
 
 ## What changed recently
 
+- 2026-10-03 **Any tool can pick up the work: `WORKBENCH.md` and `scripts/engine.py`** (`19d7eb2`). Ruling (Krish, 2026-10-03): "I need to be able to work from this chat or from Codex chat, but if I want to move this over to Codex seamlessly, I need to be able to do that." Why: the state of the work lived in one chat and a Claude-only board, and the helper that drives the engine lived in a scratch folder. Now every session, in Claude Code or Codex, reads `WORKBENCH.md` first and updates it last, and drives the engine with the committed helper and the engine key set as a secret in its own environment. Measured the same day: over 14 days, writing and rewriting cost $2.52 of model spend and the timer judges $39.34, so where Krish works barely changes what he pays.
 - 2026-10-02 **Piece 1 approved** (docs only). Ruling (Krish, 2026-10-02): "Piece 1 approved". "Same agent, opposite answers" is the first walk piece approved on text that passed the fact gate; the approval re-ran the gate and the blocking checks and is bound to that exact revision (`docs/walks/2026-09-three-piece-walk.md`). Why it matters: it is what the Studio's house-style proof was waiting on.
 - 2026-10-02 **Both runner machines on today's `main`, with the Studio MCP token on both** (docs only). Krish's session on the machines reported both checkouts upgraded to the same commit with every check passing, and the token stored on both; the cloud read the primary `656ae98c` active on `cc0657e`, Drive ready, nothing queued (`docs/STATE.md`, "The Studio's runners, 2026-10-02"). Why it matters: the runner can now take a live-name brief, so the house-style proof waits only on Krish approving a piece and confirming its production brief.
 - 2026-10-02 **Krish's thirteen answers on the work board, acted on** (`6cf3c2a`). Rulings (Krish, 2026-10-02): "Yes, or cut the opinion lines" (a checked sentence keeps its verdict until it changes); "Yes, this is the standby"; "yes" to the dated prediction in every mandate; "yes" to piece 2's Short storyboard; piece 3 "Keep" and "Yes, 55%. And vary it up"; piece 1's ruling note "Yes"; "can you give me the script to run on this machine, fully self contained script". Why: piece 3's fact gate never settled because each run read different commentary as claims. Now the gate carries a sentence's pass or set-aside in `meta.fact_ledger` while its words and the sources are unchanged, and checks only what changed or failed. The standby is marked; the three mandates ask for the dated prediction (data migration, read back); `scripts/standby-studio-mcp-token.ps1` puts the MCP token on the standby in one run; the storyboard approval is a Studio preference record. A test that read the real clock against a 2026-10-01 reset had been failing since that date (F54).
