@@ -7,6 +7,9 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-03
 
+- reconciled at `b59f395`: `docs/GLOSSARY.md` said the judge sweep runs every 10 minutes; the cron is daily at 05:00 UTC since `25c6f4f`, so the line was corrected (stamp left at 2026-09-25 because only that line was checked). NOW.md gained the clarity rulings, the sweep change and the route-gate fix, and its piece 1 and piece 3 status now follows `WORKBENCH.md`.
+- decision (Krish, 2026-10-03): "Never use phrases that sound smart but can be misinterpreted; say what happened in crystal-clear words." Now house rule CRYSTAL_CLEAR.
+- decision (Krish, 2026-10-03): "Every article must have one clear reading and use factual parallels, relatable analogies or clearly labelled comic exaggeration where they help." Now house rule RELATABLE_EXPLANATION.
 - decision (Krish, 2026-10-03): "I will use codex on one of the two machines set up as the video runner, either or. sort the engine key." and "feel free to use KeePass in the H drive which stores all the other creds for the video runner". The engine key now lives in Windows Credential Manager on the home machines (`scripts/engine-key.ps1`), in KeePass, in Vercel and in the Claude environment (`docs/ENGINE_SECRETS_HANDOVER.md`, "The engine key for agent sessions").
 - decision (Krish, 2026-10-03): "yes I need the boards to not be Claude pages, but accessible by Codex too and workable using Codex too". The board lives in the database (`/api/workbench`) and in Control Center at #/board; the Claude page is retired.
 - report (Krish, 2026-10-03): "key done". The engine was redeployed so it takes the new key.

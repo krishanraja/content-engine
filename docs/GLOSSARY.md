@@ -86,7 +86,7 @@ this repository start with a retired name.
   `unjudged`. A repairable piece gets two repair attempts; what is still short
   goes to Krish.
 - **Judge ladder, sweep.** The ladder expands, judges, repairs and routes; the
-  sweep runs it over the backlog every 10 minutes.
+  sweep runs it over the backlog once a day at 05:00 UTC (it ran every 10 minutes until 2026-10-03).
 - **Router.** Picks the subchannel; it writes `lane_slot` only when the slot
   is empty and the pick is uncontested.
 - **`judge_calibration`.** A view pairing each judge's pass or kill with
