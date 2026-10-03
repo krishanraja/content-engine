@@ -5,6 +5,12 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-03
+
+- decision (Krish, 2026-10-03): "I will use codex on one of the two machines set up as the video runner, either or. sort the engine key." and "feel free to use KeePass in the H drive which stores all the other creds for the video runner". The engine key now lives in Windows Credential Manager on the home machines (`scripts/engine-key.ps1`), in KeePass, in Vercel and in the Claude environment (`docs/ENGINE_SECRETS_HANDOVER.md`, "The engine key for agent sessions").
+- decision (Krish, 2026-10-03): "yes I need the boards to not be Claude pages, but accessible by Codex too and workable using Codex too". The board lives in the database (`/api/workbench`) and in Control Center at #/board; the Claude page is retired.
+- report (Krish, 2026-10-03): "key done". The engine was redeployed so it takes the new key.
+
 ## 2026-10-02
 
 Krish answered thirteen items on the work board (claude.ai/artifact/BytBqVcDsswyFaoyntQwEf) at 08:20 to 08:23 UTC.

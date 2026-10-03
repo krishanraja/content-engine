@@ -133,6 +133,11 @@ Where the one value lives, and nowhere else:
 The name sits outside `MindmakeVideoStudio/`, so the runner's credential
 contract and `inspect-credentials.ps1` are unaffected.
 
+Rotated 2026-10-03: Krish ran `engine-key.ps1 -New` on a home machine and put
+the new value in KeePass, Vercel and the Claude environment ("key done"). The
+engine was redeployed the same hour, and the previous value, which had been
+held in a session's scratch folder, stopped working at that deployment.
+
 To make a new one (rotation): on one home machine run
 `scripts/engine-key.ps1 -New` from outside the runner checkout. It stores a
 fresh `mm_engine_` key, puts it on the clipboard once for KeePass, Vercel and
