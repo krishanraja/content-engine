@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 22:06 UTC, by a Codex session.
+Last updated: 2026-10-03 22:30 UTC, by a Codex session.
 
 ## How Krish wants to be worked with
 
@@ -94,12 +94,18 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
   does not change the fact. These instructions are now engine house rules for
   writing, checking and visual planning. All 1,107 tests and the repository's
   type, skill, station, renderer, public-copy and secret checks passed.
-- The database has not recorded Article 1's approval yet. The engine correctly
-  refused because the two clearer sentences changed after its last source
-  check. No check was run and no money was spent. The board asks Krish to
-  approve up to $2 for one final fact check. If it passes, record his approval
-  on that exact version, create its production brief and start the sample
-  video. Nothing may be published.
+- Krish approved one Article 1 fact-check run on 2026-10-03, with the proposed
+  $2 ceiling. Codex ran it exactly once. It checked 21 claims and failed closed
+  on four lines: the dated start of Amazon's block, the dated Shopify contrast,
+  the CNET attribution, and the broad description of what Amazon advertisers
+  pay for. The article remains in review. Its approval was not recorded, no
+  production brief or video job was created, and nothing was published. The
+  run's exact cost was not exposed by the available read route, so do not claim
+  a precise figure until the meter is read directly.
+- No article wording was changed after that failed run. Next, tighten only
+  those four lines from the evidence already collected, show Krish the exact
+  revised version, and only then ask whether to fund one more exact-version
+  check. Never retry the paid fact check without a new approval.
 - Krish said he is ready to watch the sample. A tracked Studio session found
   no Article 1 video job or review, recorded his relatable-explanation feedback
   without the surrounding chat, and closed cleanly. The Windows runner creates
@@ -134,3 +140,6 @@ Writing is cheap; keep it in the engine, where Krish's rules and his edits
 teach it. The timer judges are the biggest cost and run whether or not anyone
 is working. Before you run anything that spends, check this table is still
 true.
+
+One Article 1 fact-check run completed on 2026-10-03 after this table's
+measurement window. Its exact meter delta has not yet been read back.
