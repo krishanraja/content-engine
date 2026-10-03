@@ -495,6 +495,34 @@ function usable(ledger: FactLedger | null | undefined, hash: string): ledger is 
   return !!ledger && ledger.version === FACT_GATE_VERSION && ledger.sources_hash === hash && !!ledger.sentences
 }
 
+export interface FactLedgerCoverage {
+  ledger_usable: boolean
+  total_sentences: number
+  reusable_sentences: number
+  fresh_sentences: number
+}
+
+/** A no-model preflight for a paid rerun. It says how much of the exact body
+ * already has a settled result against the exact current sources. Operators
+ * can put a hard ceiling on fresh work before the first provider call. */
+export function factLedgerCoverage(
+  body: string,
+  ledger: FactLedger | null | undefined,
+  hash: string,
+): FactLedgerCoverage {
+  const bodySentences = sentences(body).filter(s => !isConfidenceLine(s))
+  const ledgerUsable = usable(ledger, hash)
+  const reusable = ledgerUsable
+    ? bodySentences.filter(s => !!ledger.sentences[sentenceKey(s)]).length
+    : 0
+  return {
+    ledger_usable: ledgerUsable,
+    total_sentences: bodySentences.length,
+    reusable_sentences: reusable,
+    fresh_sentences: bodySentences.length - reusable,
+  }
+}
+
 /**
  * This run's claims, split into those to check and those whose every sentence
  * is settled in the ledger. A settled sentence's result is carried once, with

@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 22:30 UTC, by a Codex session.
+Last updated: 2026-10-03 23:07 UTC, by a Codex session.
 
 ## How Krish wants to be worked with
 
@@ -94,18 +94,30 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
   does not change the fact. These instructions are now engine house rules for
   writing, checking and visual planning. All 1,107 tests and the repository's
   type, skill, station, renderer, public-copy and secret checks passed.
-- Krish approved one Article 1 fact-check run on 2026-10-03, with the proposed
-  $2 ceiling. Codex ran it exactly once. It checked 21 claims and failed closed
+- Krish approved exactly one more Article 1 fact-check run on 2026-10-04, but
+  only after the engine learns how to avoid repeated paid checks. The approved
+  run has not been used. The previous run checked 21 claims and failed closed
   on four lines: the dated start of Amazon's block, the dated Shopify contrast,
   the CNET attribution, and the broad description of what Amazon advertisers
   pay for. The article remains in review. Its approval was not recorded, no
-  production brief or video job was created, and nothing was published. The
-  run's exact cost was not exposed by the available read route, so do not claim
-  a precise figure until the meter is read directly.
-- No article wording was changed after that failed run. Next, tighten only
-  those four lines from the evidence already collected, show Krish the exact
-  revised version, and only then ask whether to fund one more exact-version
-  check. Never retry the paid fact check without a new approval.
+  production brief or video job was created, and nothing was published.
+- The repeat-spend cause is known: the result before the failed run predated
+  the sentence ledger, so there was nothing safe to reuse, and the paid route
+  offered no preflight or hard scope ceiling. A local fix now reports settled
+  versus fresh sentences and accepts a hard fresh-sentence cap. It refuses
+  before any model or web call when the current article exceeds that cap. Its
+  86 focused tests and both control-plane type checks pass. It is not live.
+  Krish must approve pushing the content-engine change before the one approved
+  check is spent. Once live, repair all four failed lines in one surgical
+  batch, read the exact scope, and run once with the cap set to that scope.
+- The board failed to render in an already-open tab after a deployment because
+  the old app shell requested a route file whose hashed name had been replaced.
+  Its Retry button retried the obsolete request; a full reload restored the
+  board. The local Control Center fix makes Retry perform that full reload only
+  for this class of stale-file failure. Its focused test, TypeScript check,
+  lint and production build pass. It is not live. Krish must approve pushing
+  the Control Center change. The dependency install reported 64 existing audit
+  findings; this narrow recovery repair did not change unrelated packages.
 - Krish said he is ready to watch the sample. A tracked Studio session found
   no Article 1 video job or review, recorded his relatable-explanation feedback
   without the surrounding chat, and closed cleanly. The Windows runner creates

@@ -24,7 +24,7 @@ import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  carryForward, combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  carryForward, combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, sourcesHash, sourcesText, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -353,6 +353,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'GET') {
     const gate = gateStatus(meta, body)
+    const nextRun = factLedgerCoverage(body, meta.fact_ledger as FactLedger | undefined, sourcesHash(meta))
     // The whole pre-publish checklist rides along, so Control Center can show
     // Krish every house rule this exact version passes or fails in one place.
     const checks = publishChecks(body, gate)
@@ -360,10 +361,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // a carousel or a web edition to show on screen (api/_receipts.ts). Only
     // for the exact version that passed.
     const proof = gate.ok ? receipts(meta.fact_check, readMaterials(meta)) : []
-    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof })
+    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun })
   }
 
   if (body.trim().length < 200) return res.status(409).json({ ok: false, error: 'There is no draft to check yet.' })
+
+  const request = req.body && typeof req.body === 'object' && !Array.isArray(req.body)
+    ? req.body as Record<string, unknown>
+    : {}
+  const rawCap = request.max_fresh_sentences
+  if (rawCap !== undefined && (!Number.isInteger(rawCap) || Number(rawCap) < 0 || Number(rawCap) > MAX_CLAIMS)) {
+    return res.status(400).json({ ok: false, error: `max_fresh_sentences must be a whole number from 0 to ${MAX_CLAIMS}.` })
+  }
+  const scope = factLedgerCoverage(body, meta.fact_ledger as FactLedger | undefined, sourcesHash(meta))
+  if (rawCap !== undefined && scope.fresh_sentences > Number(rawCap)) {
+    return res.status(409).json({
+      ok: false,
+      reason: 'rerun_scope',
+      error: `This rerun would check ${scope.fresh_sentences} fresh sentences, above the approved cap of ${rawCap}. No model was called.`,
+      next_run: scope,
+    })
+  }
 
   const run = new GateRun()
   let result: FactCheck
@@ -391,6 +409,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   return res.status(200).json({
     ok: true, passed: result.passed, blocking: result.blocking, single_source: result.single_source,
     independent_checker: result.independent_checker, claims: result.claims.length, set_aside: result.set_aside.length, carried: result.carried ?? 0,
-    fact_check: result,
+    fact_check: result, next_run: scope,
   })
 }

@@ -131,7 +131,7 @@ function upstream(plan: Plan) {
 const { default: handler } = await import('../../apps/control-plane/api/content-ideas/[id]/fact-check.js')
 const provider = await import('../../apps/control-plane/api/_modelProvider.js')
 
-async function factCheck(plan: Plan) {
+async function factCheck(plan: Plan, requestBody: Record<string, unknown> = {}) {
   vi.stubGlobal('fetch', vi.fn(upstream(plan)))
   const out = { status: 0, headers: {} as Record<string, string>, body: undefined as any }
   const res: Record<string, any> = {
@@ -142,7 +142,7 @@ async function factCheck(plan: Plan) {
     end() { return res },
   }
   try {
-    await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: { id: ID }, body: {} } as never, res as never)
+    await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: { id: ID }, body: requestBody } as never, res as never)
   } finally {
     vi.unstubAllGlobals()
   }
@@ -180,6 +180,20 @@ function expectFailedRun(r: Awaited<ReturnType<typeof factCheck>>) {
 }
 
 describe('POST /api/content-ideas/:id/fact-check when the model provider fails', () => {
+  it('refuses an unexpectedly broad rerun before any paid provider call', async () => {
+    const r = await factCheck({}, { max_fresh_sentences: 1 })
+    expect(r.status).toBe(409)
+    expect(r.body).toMatchObject({
+      ok: false,
+      reason: 'rerun_scope',
+      next_run: { ledger_usable: false, total_sentences: 3, reusable_sentences: 0, fresh_sentences: 3 },
+    })
+    expect(r.body.error).toMatch(/No model was called/)
+    expect(calls.anthropic).toHaveLength(0)
+    expect(calls.perplexity).toHaveLength(0)
+    expect(written()).toHaveLength(0)
+  })
+
   it('a refused extract is a 503 with the provider\'s class, words and reset, where it was a 500', async () => {
     const r = await factCheck({ refuse: stage => stage === 'extract' })
     expectFailedRun(r)
@@ -266,8 +280,15 @@ describe('a sentence an earlier run settled keeps its result (walk log F52)', ()
     db.updates.length = 0
     calls.anthropic.length = 0
     calls.perplexity.length = 0
-    const second = await factCheck({})
-    expect(second.body).toMatchObject({ ok: true, passed: true, blocking: 0, claims: 3, carried: 2 })
+    const second = await factCheck({}, { max_fresh_sentences: 1 })
+    expect(second.body).toMatchObject({
+      ok: true,
+      passed: true,
+      blocking: 0,
+      claims: 3,
+      carried: 2,
+      next_run: { ledger_usable: true, total_sentences: 3, reusable_sentences: 2, fresh_sentences: 1 },
+    })
     expect(calls.perplexity).toEqual([CLAIMS[0]!.claim])
     expect(calls.anthropic.filter(c => c.stage === 'on_file').map(c => c.claim)).toEqual([CLAIMS[0]!.claim])
     const carried = written()[0]!.values.meta.fact_check.claims.filter((c: any) => c.carried_from)

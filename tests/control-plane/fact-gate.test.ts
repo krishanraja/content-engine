@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 import {
   bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   sourcesText, summarise, sweep,
-  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, settle, sentenceKey, sourcesHash, type FactCheck,
+  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, factLedgerCoverage, settle, sentenceKey, sourcesHash, type FactCheck,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
 import { readPieceCall } from '../../packages/contracts/src/call.js'
@@ -561,6 +561,12 @@ describe('a checked sentence keeps its result until it changes (walk log F52)', 
     expect(r.carried.every(c => c.carried_from === run1.ran_at)).toBe(true)
     expect(r.setAside).toEqual([{ sentence: D, reason: `kept from ${run1.ran_at}: labelled_inference` }])
     expect(r.sentences).toBe(3)
+    expect(factLedgerCoverage(BODY, ledger, hash)).toEqual({
+      ledger_usable: true,
+      total_sentences: 4,
+      reusable_sentences: 3,
+      fresh_sentences: 1,
+    })
   })
 
   test('a changed sentence is checked in full, and the ledger forgets its old words', () => {
@@ -587,6 +593,12 @@ describe('a checked sentence keeps its result until it changes (walk log F52)', 
     expect(carryForward(BODY, listed, [], ledger, sourcesHash(moreSources)).toCheck).toEqual(listed)
     expect(carryForward(BODY, listed, [], { ...ledger, version: 2 as never }, hash).toCheck).toEqual(listed)
     expect(Object.keys(settle(BODY, { ...run1, claims: [], set_aside: [] }, ledger, sourcesHash(moreSources)).sentences)).toHaveLength(0)
+    expect(factLedgerCoverage(BODY, ledger, sourcesHash(moreSources))).toEqual({
+      ledger_usable: false,
+      total_sentences: 4,
+      reusable_sentences: 0,
+      fresh_sentences: 4,
+    })
   })
 })
 
