@@ -285,7 +285,9 @@ export async function noteAnthropicSuccess(): Promise<void> {
       if (state.error) { cache = { failureAt: null, okAt: null, readAt: now }; return }
     }
     if (!cache?.failureAt) return
-    if (cache.okAt && Date.parse(cache.okAt) > Date.parse(cache.failureAt)) return
+    // At or after: on a fast machine the failure and the first success can
+    // share a millisecond, and a strict comparison wrote the recovery twice.
+    if (cache.okAt && Date.parse(cache.okAt) >= Date.parse(cache.failureAt)) return
     const okAt = new Date(now).toISOString()
     cache = { ...cache, okAt }
     const supabase = await db()

@@ -112,6 +112,20 @@ describe('a failed call is counted on its key and day, at no cost', () => {
 })
 
 describe('the failure is kept where health and the judge sweep read it', () => {
+  it('a success in the same millisecond as the failure is still noted once', async () => {
+    // CI on 2026-10-03: a fast runner put the failure and the first success
+    // in one millisecond, and the recovery was written twice.
+    vi.useFakeTimers({ toFake: ['Date'], now: new Date('2026-10-03T18:20:00.000Z') })
+    try {
+      await meter.anthropicFailure({ agent: 'judge-0', model: JUDGE_MODEL, error: new Error(`anthropic_400:${LIMIT}`) })
+      await meter.anthropicCall({ agent: 'cleo-draft', model: UTILITY_MODEL, usage: { input_tokens: 10, output_tokens: 10 } })
+      await meter.anthropicCall({ agent: 'cleo-draft', model: UTILITY_MODEL, usage: { input_tokens: 10, output_tokens: 10 } })
+      expect(db.upserts.filter(u => u.key === provider.OK_KEY)).toHaveLength(1)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('recorded once for a burst of nine judges, then a success after it is noted once', async () => {
     for (let i = 0; i < 9; i++) {
       await meter.anthropicFailure({ agent: `judge-${i}`, model: JUDGE_MODEL, error: new Error(`anthropic_400:${LIMIT}`) })
