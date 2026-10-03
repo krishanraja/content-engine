@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 21:33 UTC, by a Codex session.
+Last updated: 2026-10-03 21:39 UTC, by a Codex session.
 
 ## How Krish wants to be worked with
 
@@ -104,12 +104,13 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 - Krish agreed to cut the timer-judge cost. The free triage now runs first and
   the paid idea judges run once each morning, skipping anything triage set
   aside. The full repository check passed: both type checks, all 1,106 tests,
-  the skills, renderer, public-copy, secret and schedule gates. The final
-  control-plane path check is Linux-only and ran in GitHub on the previous
-  release; read the new GitHub check before another push.
-- What waits on Krish now: read article 1's clearer opening. After he approves
-  that exact text, make the visual-first video and slides. Article 3 and the
-  access fix need no more action from him.
+  the skills, renderer, public-copy, secret and schedule gates. GitHub then
+  passed the complete change on Windows and Linux, and production reported
+  the same live version.
+- What waits on Krish now: read article 1's clearer opening, and answer the
+  board item about the plan for outside video tools. After he approves article
+  1's exact text, make the visual-first video and slides. Article 3, the access
+  fix and the judge-cost change need no more action from him.
 
 ## What costs money
 
