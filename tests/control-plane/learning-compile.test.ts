@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'vitest'
-import { presetProposals, judgeProposals, handRewriteProposals } from '../../apps/control-plane/api/learning/_patterns.ts'
+import { presetProposals, judgeProposals, handRewriteProposals, toProposalRow, MAX_EVIDENCE } from '../../apps/control-plane/api/learning/_patterns.ts'
 
 // What the compiler is allowed to say, and what it must stay quiet about.
 //
@@ -79,4 +79,59 @@ test('a manual edit before an accept is not the pattern', () => {
     { action: 'magic_accepted', mode: 'tone', value: 'punchier', subject_id: s, occurred_at: at(2) },
   ]))
   assert.deepEqual(handRewriteProposals(rows), [], 'order is the whole signal')
+})
+
+
+// The table's own rules, so a shape it would refuse fails here and not on a
+// Sunday. On 2026-09-27 every row carried an empty evidence list, the table's
+// `mindmake_studio_learning_evidence_nonempty` check refused the batch, and the
+// run said only "write_failed".
+
+const uuid = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`
+
+test('every pattern cites the ledger rows it rests on', () => {
+  const presetRows = [
+    ...Array.from({ length: 7 }, (_, i) => ({ event_id: uuid(i), action: 'magic_rejected', mode: 'humor', value: 'dry', subject_id: `r${i}`, occurred_at: at(i + 1) })),
+    { event_id: uuid(50), action: 'magic_accepted', mode: 'humor', value: 'dry', subject_id: 'kept-1', occurred_at: at(9) },
+  ]
+  const [preset] = presetProposals(presetRows)
+  assert.equal(preset!.evidence_ids.length, 8)
+
+  const judgeRows = [
+    ...Array.from({ length: 5 }, (_, i) => ({ panel_run_id: uuid(100 + i), judge: 'buyer', verdict: 'kill', agreed: false })),
+    { panel_run_id: uuid(110), judge: 'buyer', verdict: 'abstain', agreed: null },
+  ]
+  const [judge] = judgeProposals(judgeRows)
+  assert.equal(judge!.evidence_ids.length, 5, 'abstentions are not evidence of being wrong, so they are not cited')
+
+  const rewriteRows = ['a', 'b', 'c'].flatMap((s, i) => ([
+    { event_id: uuid(200 + i * 2), action: 'magic_accepted', mode: 'tone', value: 'punchier', subject_id: s, occurred_at: at(1) },
+    { event_id: uuid(201 + i * 2), action: 'manual_edit', mode: null, value: null, subject_id: s, occurred_at: at(2) },
+  ]))
+  const [rewrite] = handRewriteProposals(rewriteRows)
+  assert.equal(rewrite!.evidence_ids.length, 6)
+})
+
+test('a proposal the table would refuse is set aside by name, never sent', () => {
+  const base = judgeProposals(Array.from({ length: 4 }, (_, i) => ({ panel_run_id: uuid(i), judge: 'buyer', verdict: 'kill', agreed: false })))[0]!
+  const stored = toProposalRow(base, '2026-10-04')
+  assert.ok(stored.ok)
+  if (stored.ok) {
+    const ids = stored.row.evidence_event_ids as string[]
+    assert.ok(ids.length >= 1 && ids.length <= 100)
+    assert.ok((stored.row.independent_session_count as number) > 0)
+    assert.ok(Array.isArray(stored.row.regression_cases) && (stored.row.regression_cases as unknown[]).length > 0)
+  }
+  const empty = toProposalRow({ ...base, evidence_ids: [] }, '2026-10-04')
+  assert.equal(empty.ok, false)
+  if (!empty.ok) assert.match(empty.reason, /no evidence/)
+  assert.equal(toProposalRow(base, 'Week 40').ok, false, 'the batch id must match the table pattern')
+  assert.equal(toProposalRow({ ...base, regression_cases: [] }, '2026-10-04').ok, false)
+})
+
+test('evidence is unique and capped at what the table holds', () => {
+  const rows = Array.from({ length: 150 }, (_, i) => ({ panel_run_id: uuid(i % 120), judge: 'buyer', verdict: 'kill', agreed: false }))
+  const [proposal] = judgeProposals(rows)
+  assert.equal(proposal!.evidence_ids.length, MAX_EVIDENCE)
+  assert.equal(new Set(proposal!.evidence_ids).size, MAX_EVIDENCE)
 })

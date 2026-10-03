@@ -179,8 +179,14 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       }).then(r => { if (r.error) console.error('build_signals audit write failed', r.error.message) })
     }
 
+    // When every repo fails the run is a failure, and it says why. Without an
+    // `error` field the run ledger recorded "the job reported failure without
+    // a reason" on 2026-09-26 and 2026-10-03, while `errors` held the answer
+    // both times: GitHub answering 401, a dead GITHUB_TOKEN.
+    const allFailed = repos.length > 0 && counts.failed >= repos.length
     return res.status(200).json({
-      ok: counts.failed < repos.length,
+      ok: !allFailed,
+      ...(allFailed ? { error: summariseRepoErrors(errors) } : {}),
       dry,
       week_ending: weekEnding,
       since,
@@ -199,4 +205,17 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
 // Every run lands in content_engine_runs so the Content tab can say when this
 // job last succeeded. See api/_runs.ts.
+/** One line for the run ledger: the first error, with GitHub's JSON body cut
+ *  down to its message, and how many repos shared the failure. */
+export function summariseRepoErrors(errors: Record<string, string>): string {
+  const entries = Object.entries(errors)
+  if (!entries.length) return 'every repository failed and none said why'
+  const [repo, raw] = entries[0]!
+  const message = /"message"\s*:\s*"([^"]+)"/.exec(raw)?.[1]
+  const status = /HTTP (\d{3})/.exec(raw)?.[1]
+  const first = status ? `GitHub ${status}${message ? ` ${message}` : ''}` : raw.slice(0, 160)
+  const credential = status === '401' ? ': GITHUB_TOKEN is rejected, replace it in this Vercel project' : ''
+  return `all ${entries.length} repositories failed, first ${repo}: ${first}${credential}`.slice(0, 500)
+}
+
 export default withContentRun('build_signals', handler)
