@@ -88,7 +88,7 @@ describe('the engine helper says why it has no key', () => {
   })
 
   it('runs for real without a key: exit 2, a reason, and no request sent', () => {
-    const env = { ...process.env, ENGINE_BASE_URL: 'https://engine.invalid' }
+    const env: NodeJS.ProcessEnv = { ...process.env, ENGINE_BASE_URL: 'https://engine.invalid' }
     delete env.ENGINE_OPERATOR_TOKEN
     const run = spawnSync(PY, [HELPER, 'GET', '/api/workbench'], { encoding: 'utf8', env })
     expect(run.status, run.stderr).toBe(2)
