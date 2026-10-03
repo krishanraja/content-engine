@@ -110,6 +110,38 @@ through `scripts/standby-studio-mcp-token.ps1`, with the credential checks
 passing. Step 6 is still to do: no tracked Studio session has been opened
 since.
 
+## The engine key for agent sessions
+
+`ENGINE_OPERATOR_TOKEN` in the `content-engine` Vercel project lets an agent
+session with no browser (Claude Code, Codex) read and write the content engine
+and the work board (`docs/CONTENT_ENGINE.md`, "The guards"; `WORKBENCH.md`).
+Ruling (Krish, 2026-10-03): "I will use codex on one of the two machines set up
+as the video runner, either or. sort the engine key", and "feel free to use
+KeePass in the H drive which stores all the other creds for the video runner".
+
+Where the one value lives, and nowhere else:
+
+- the `content-engine` Vercel project, Production, as `ENGINE_OPERATOR_TOKEN`;
+- each Windows home machine that runs Codex or Claude Code, in Windows
+  Credential Manager as `Mindmake/engine-operator-token` (LocalMachine), written
+  by `scripts/engine-key.ps1`; `scripts/engine.py` reads it from there;
+- Claude Code's cloud environment, as the environment variable
+  `ENGINE_OPERATOR_TOKEN`;
+- KeePass, beside the runner's other keys, as "Mindmake engine key
+  (ENGINE_OPERATOR_TOKEN)".
+
+The name sits outside `MindmakeVideoStudio/`, so the runner's credential
+contract and `inspect-credentials.ps1` are unaffected.
+
+To make a new one (rotation): on one home machine run
+`scripts/engine-key.ps1 -New` from outside the runner checkout. It stores a
+fresh `mm_engine_` key, puts it on the clipboard once for KeePass, Vercel and
+the Claude environment, then clears the clipboard. Redeploy the engine so it
+takes the new value; the old one stops working at that deployment. On the other
+machine run the script without `-New` and paste the key from KeePass at its
+hidden prompt. `-Check` prints the fingerprint and whether the engine accepts
+the key; both machines must show the same fingerprint.
+
 ## Quarantined names
 
 These original names are permanently retired:

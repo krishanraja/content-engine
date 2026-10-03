@@ -8,10 +8,12 @@ Examples:
   python3 scripts/engine.py GET "/api/content-ideas?id=<uuid>"
   python3 scripts/engine.py PATCH /api/content-ideas @body.json
 
-The engine key is read from the environment variable ENGINE_OPERATOR_TOKEN.
-Set it as a secret in the tool you are using (Claude Code environment, Codex
-environment, or your shell). It is never printed, logged or written to a file.
-ENGINE_BASE_URL overrides the production address.
+The engine key is read from the environment variable ENGINE_OPERATOR_TOKEN
+(Claude Code's cloud environment, or any shell). On Krish's Windows machines it
+is read from Windows Credential Manager instead (Mindmake/engine-operator-token,
+stored once by scripts/engine-key.ps1), so Codex there needs no setup. It is
+never printed, logged or written to a file. ENGINE_BASE_URL overrides the
+production address.
 
 --sse   for routes that stream (revise): prints only the last data event.
 --full  prints the whole response instead of the first 1,500 characters.
@@ -28,6 +30,45 @@ import urllib.request
 import uuid
 
 BASE = os.environ.get('ENGINE_BASE_URL', 'https://content-engine-flame-nu.vercel.app').rstrip('/')
+WINDOWS_TARGET = 'Mindmake/engine-operator-token'
+
+
+def windows_key() -> str:
+    """The key from Windows Credential Manager, or '' when there is none."""
+    if os.name != 'nt':
+        return ''
+    import ctypes
+    from ctypes import wintypes
+
+    class FILETIME(ctypes.Structure):
+        _fields_ = [('low', wintypes.DWORD), ('high', wintypes.DWORD)]
+
+    class CREDENTIAL(ctypes.Structure):
+        _fields_ = [
+            ('Flags', wintypes.DWORD), ('Type', wintypes.DWORD),
+            ('TargetName', wintypes.LPWSTR), ('Comment', wintypes.LPWSTR),
+            ('LastWritten', FILETIME), ('CredentialBlobSize', wintypes.DWORD),
+            ('CredentialBlob', ctypes.c_void_p), ('Persist', wintypes.DWORD),
+            ('AttributeCount', wintypes.DWORD), ('Attributes', ctypes.c_void_p),
+            ('TargetAlias', wintypes.LPWSTR), ('UserName', wintypes.LPWSTR),
+        ]
+
+    advapi = ctypes.WinDLL('Advapi32.dll', use_last_error=True)
+    cred_read = advapi.CredReadW
+    cred_read.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.POINTER(ctypes.POINTER(CREDENTIAL))]
+    cred_read.restype = wintypes.BOOL
+    cred_free = advapi.CredFree
+    cred_free.argtypes = [ctypes.c_void_p]
+    pointer = ctypes.POINTER(CREDENTIAL)()
+    if not cred_read(WINDOWS_TARGET, 1, 0, ctypes.byref(pointer)):
+        return ''
+    try:
+        cred = pointer.contents
+        if not cred.CredentialBlob or not cred.CredentialBlobSize:
+            return ''
+        return ctypes.string_at(cred.CredentialBlob, cred.CredentialBlobSize).decode('utf-16-le')
+    finally:
+        cred_free(pointer)
 
 
 def main() -> int:
@@ -36,9 +77,9 @@ def main() -> int:
     if len(args) < 2:
         print(__doc__)
         return 2
-    token = os.environ.get('ENGINE_OPERATOR_TOKEN', '').strip()
+    token = os.environ.get('ENGINE_OPERATOR_TOKEN', '').strip() or windows_key().strip()
     if not token:
-        print('ENGINE_OPERATOR_TOKEN is not set. Add it as a secret in this tool\'s environment (WORKBENCH.md, "Pick up from any tool").', file=sys.stderr)
+        print('No engine key. On a Windows home machine run scripts/engine-key.ps1 once; elsewhere set ENGINE_OPERATOR_TOKEN in this tool\'s environment (WORKBENCH.md, "Pick up from any tool").', file=sys.stderr)
         return 2
     method, path = args[0].upper(), args[1]
     body = None

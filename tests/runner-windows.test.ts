@@ -337,7 +337,7 @@ describe('Windows runner entry point', () => {
   })
 
   it.skipIf(process.platform !== 'win32')('parses the credential scripts without a PowerShell syntax error', async () => {
-    for (const script of ['set-credential.ps1', 'inspect-credentials.ps1', 'standby-studio-mcp-token.ps1']) {
+    for (const script of ['set-credential.ps1', 'inspect-credentials.ps1', 'standby-studio-mcp-token.ps1', 'engine-key.ps1']) {
       const path = join(ROOT, 'scripts', script).replace(/'/g, "''")
       const command = [
         '$tokens = $null; $errors = $null',

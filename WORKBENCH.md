@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 18:35 UTC, by a Claude Code session.
+Last updated: 2026-10-03 19:45 UTC, by a Claude Code session.
 
 ## How Krish wants to be worked with
 
@@ -14,64 +14,40 @@ Last updated: 2026-10-03 18:35 UTC, by a Claude Code session.
   numbers or project shorthand. Say what happened, what it means for him, and
   what you need from him. If a sentence would confuse someone outside the
   project, rewrite it.
-- After everything you do, update this file. If your tool can reach the work
-  board (https://claude.ai/artifact/BytBqVcDsswyFaoyntQwEf, Claude sessions
-  only), update it too, and end every reply with that link.
+- After everything you do, update the board (below), and end every reply to
+  him with its link: https://controlcenter.krishraja.com/#/board. Update this
+  file when how the work is done changes.
 - Make the call and say what you assumed. Ask only when the answer changes the
   shape of the work, and offer your best guess with the question.
 - His decisions are his alone. Record one only when he made it in words, with
   `decided_by: 'Krish'` (`AGENTS.md`).
 
-## Waiting on Krish
+## The board: what is waiting on Krish, in progress and done
 
-1. **Say yes to turning article 1 into a video and slides.** Article 1, "Same
-   agent, opposite answers" (follow.the.money, Amazon and Shopify), is approved.
-   Before its video and slides start, he confirms five things: the facts are
-   checked (they are), we are allowed to use everything in it, nothing private
-   is in it, the video will not change what it says, and it sits under
-   follow.the.money. Suggested: him on camera reading a short script, with the
-   evidence shown above him (the style he approved for article 2). His reply
-   "yes, make the video" covers all five. Today a few video steps still need
-   someone at his home computer.
-2. **Read article 3 and say yes or what to change.** "Koa, taken apart"
-   (under.the.hood). Every fact is checked. Three small notes, none blocking.
-3. **React to the phone redesign** (https://claude.ai/artifact/RkQGVASw3DEAttpcpMoGhp).
-   A pretend Control Center that takes one article from draft to posted on his
-   phone, video included. Version 1 confused him (made-up labels); version 2 is
-   rewritten in plain words. Nothing is built until he says so.
-4. **Approve one sample video**, once article 1's video exists. That switches
-   on the new makeyourmindup look for videos.
-5. **Say where he will run Codex** (home computer or cloud), so a session can
-   give him the exact steps to add the engine key there, once.
-6. **Cut the timer judges?** They are the biggest model cost ($39.34 of $85.60
-   over 14 days). Suggested: score new ideas once a day, and only those that
-   pass a free first check. Waiting on his yes.
-7. **Move the work board into Control Center?** Then any tool can update it and
-   he sees it on his phone. Waiting on his yes.
+The live list lives in the shared database, not in this file. Krish sees it in
+Control Center at https://controlcenter.krishraja.com/#/board (phone or desk)
+and replies to items there. Every session, in Claude Code or Codex, reads and
+writes it through the engine:
 
-## In progress
+- Read it: `python3 scripts/engine.py GET /api/workbench --full`. His replies
+  are in `replies`; `unseen_replies` counts the ones no session has acted on.
+- Add or change items (up to 50 at once; an existing item changes only the
+  fields you send):
+  `python3 scripts/engine.py POST /api/workbench @items.json` with
+  `{"action": "upsert_items", "client": "codex", "items": [{"id": "p3-approve", "lane": "on_you", "rank": 2, "area": "Article 3", "title": "...", "detail": "...", "prompt": "Yes, or what to change"}]}`.
+  Lanes: `on_you`, `in_progress`, `done`, `archived` (hidden). Ids are
+  lowercase words joined by hyphens. Links must start with `https://`.
+- Change the headline or the status lights: `{"action": "set_state",
+  "headline": "...", "signals": [{"label": "Home computer", "state": "ok",
+  "text": "On and ready"}]}` (state is `ok`, `warn`, `bad` or empty).
+- After you act on his replies: `{"action": "mark_seen", "ids": ["<reply id>"],
+  "client": "codex"}`. The board then shows him that you read it.
+- Only Krish writes a reply, from Control Center. The engine key cannot: a
+  session must never put words in his mouth.
 
-- **Making videos from the phone.** Today the video steps after the plan are
-  started by hand on his home computer, and only 3 of the 8 places where he
-  approves something work from his phone. The plan is in the redesign; the
-  build waits on his reaction.
-- **His next two articles** start once article 3 is approved: OpenAI's maths
-  result and the $22.5M of computing behind it (follow.the.money), and four
-  times as many apps with the same number of downloads (mind.the.gap).
-
-## Done recently
-
-- 2026-10-02: Article 1 approved by Krish. Nothing posted.
-- 2026-10-02: Buttons no longer fall off the phone screen in Control Center's
-  article screen; a test now stops it coming back.
-- 2026-10-02: Both home computers set up for video work. The main one is on and
-  up to date; the spare one is off, as it should be.
-- 2026-10-02: Every channel's rules now ask for a dated prediction at the end of
-  each article.
-
-Older history: `NOW.md` (what changed and why) and
-`docs/walks/2026-09-three-piece-walk.md` (every step of the first three
-articles).
+Set `"client"` to `"codex"` or `"claude_code"` so the board says who changed it.
+Write every item in plain words: what happened, what it means for him, and what
+you need from him.
 
 ## Pick up from any tool
 
@@ -84,7 +60,7 @@ only in a chat.
 |---|---|---|
 | Claude Code on the web, desktop or phone | Everything except running the video studio | This repository, and the engine key as the secret `ENGINE_OPERATOR_TOKEN` in its environment |
 | Codex in the cloud | The same | This repository connected, and the same secret in the Codex environment |
-| Claude Code or Codex on the Windows home computer | All of the above, plus the video studio (`docs/ENGINE_SESSION.md`) | The same, plus the studio key already stored on that machine |
+| Claude Code or Codex on either Windows home computer | All of the above, plus the video studio (`docs/ENGINE_SESSION.md`) | Run `scripts/engine-key.ps1` once on that machine (the engine key then lives in Windows Credential Manager and the helper reads it from there). Work in a separate copy of this repository, never in the runner's own folder, which must stay untouched |
 | A plain chat (Claude.ai, ChatGPT) with no repository | Talk and plan only | Paste this file in |
 
 To start a session in any of them: read `AGENTS.md`, then this file, then do
