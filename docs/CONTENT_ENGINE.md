@@ -99,7 +99,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 |---|---|---|
 | `POST /api/content-ideas/[id]/judge` | puts one piece before the panel. Idea gate: 9 judges (novelty, evidence, consequence, reader, buyer, connection, fun, standing, prosecutor). Draft gate: 7 (hook, clarity, personality, evidence_integrity, voice, channel_fit, prosecutor), which read the subchannel's mandate and the sources on file. Free deterministic judges run first. The panel reports and never changes state | Haiku [`judge-<key>`] |
 | `/api/judge/ladder` (manual) | expand the seed, judge, repair with research and re-judge, then route. Score is the lower median judge: 7 or more is `ready`, 5 or 6 `repairable`, below 5 `weak`. Nothing is buried. Sets `lane_slot` only when it is empty and the router's pick is uncontested | Sonnet [`ladder-expand`, `ladder-repair`], Haiku panel and [`ladder-router`] |
-| `/api/judge/sweep` (cron, every 10 minutes) | runs the ladder over the backlog; optional batch mode at half price | as the ladder, plus the Anthropic Batches API |
+| `/api/judge/sweep` (cron, daily at 05:00 UTC) | runs the ladder over ideas left after the free 03:00 triage; optional batch mode at half price | as the ladder, plus the Anthropic Batches API |
 | `/api/content-ideas/[id]/score` | the Five Standards gate (unique, researched, thoughtful, kind, helpful) | Sonnet, or Haiku on the autoscore path [`standards`] |
 | `/api/content-opportunities/refresh` (cron) | the editorial radar. Two lenses only, `money_of_ai` and `built_with_ai` | Sonnet [`editorial-radar-*`] |
 | `POST /api/content-ideas/[id]/editorial-route` | approves a radar lens into a child idea with `lane_slot` `money_of_ai` or `built_with_ai` | none |
@@ -418,7 +418,7 @@ All 20 have run-ledger rows in the last seven days (read back 2026-09-25).
 
 | Schedule | Job | Route |
 |---|---|---|
-| every 10 min | `judge_sweep` | `/api/judge/sweep` |
+| daily 05:00 | `judge_sweep` | `/api/judge/sweep` |
 | every 2 h | `inspiration_scan` | `/api/inspiration/drive-scan` |
 | daily 02:00 | `trend_entities` | `/api/trends/entities` |
 | daily 03:00 | `triage_sweep` | `/api/triage/sweep` |

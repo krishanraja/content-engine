@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 21:10 UTC, by a Codex session.
+Last updated: 2026-10-03 21:33 UTC, by a Codex session.
 
 ## How Krish wants to be worked with
 
@@ -87,21 +87,29 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
 ## Latest handoff
 
-- The board was read again after pulling the latest work from GitHub on
-  2026-10-03. There were no new replies from Krish. The waiting list is: make
-  the access fix live, article 1's video, article 3, the phone redesign, the
-  timer judges and, after the first video exists, its final look.
-- The highest risk that needed no decision was the remaining group of content
-  actions that checked only which kind of request arrived. Thirteen of them
-  can change decisions, spend money, start the document factory or remove a
-  proposed shift. They now use the same locked door as article writing.
-- GitHub's latest engine-helper work is now combined with the access fix. One
-  new helper check assumed the computer had no stored key, so it failed on a
-  computer that did have one. The check was isolated from the real stored key;
-  all 23 helper and access checks now pass together.
-- This security fix and the completed pull are committed on this computer but
-  are not live. Pushing them would deploy the change, so the next action is
-  Krish's approval to make it live.
+- Krish left five board replies on 2026-10-03. The access fix is live and was
+  checked both ways: an anonymous request to a formerly open action is refused,
+  while the approved engine helper can still use it. The previous GitHub check
+  also passed on Windows and Linux.
+- Article 3 is approved on the exact text Krish read. Nothing was published.
+- Article 1 is back in review because Krish asked for clearer words. Only the
+  two passages about being "nudged" changed, the old wording is gone, and the
+  rest of the article stayed byte-for-byte the same. Its future video and
+  slides must use explanatory visuals throughout, especially for the money
+  flow and the steps a human or an agent takes.
+- Krish approved the phone direction with one requirement: every review step
+  needs an elegant, easy feedback action, tied to the exact thing he saw and
+  stored for the next round of tool improvements. This is now active work in
+  the existing Control Center and Studio records, not a second dashboard.
+- Krish agreed to cut the timer-judge cost. The free triage now runs first and
+  the paid idea judges run once each morning, skipping anything triage set
+  aside. The full repository check passed: both type checks, all 1,106 tests,
+  the skills, renderer, public-copy, secret and schedule gates. The final
+  control-plane path check is Linux-only and ran in GitHub on the previous
+  release; read the new GitHub check before another push.
+- What waits on Krish now: read article 1's clearer opening. After he approves
+  that exact text, make the visual-first video and slides. Article 3 and the
+  access fix need no more action from him.
 
 ## What costs money
 

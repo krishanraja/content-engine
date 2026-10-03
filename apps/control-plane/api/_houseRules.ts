@@ -63,6 +63,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual'],
   },
   {
+    id: 'CRYSTAL_CLEAR', name: 'Crystal clear before clever',
+    text: 'Never use a smart-sounding phrase that leaves the reader to work out what actually happened. Say the actor, the action and the consequence in literal, everyday words. If a phrase can be read two ways, replace it.',
+    said: 'I never, ever want to say things that sound too smart and can be misinterpreted, things like this should be crystal clear as to what is happening, what does nudgeed even mean?',
+    on: '2026-10-03', source: 'workbench reply on piece 1', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass'],
+  },
+  {
     id: 'R7', name: 'Reading age 12, with humour',
     text: 'Write for a reading age of 12: short sentences, everyday words, and real humour and personality. The joke points at the hype, never the reader, and never replaces the finding.',
     said: 'This entire media channel needs to be radically simplistic with an average reading age of 12 and a huge sense of humour and fun and personality.',

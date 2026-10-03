@@ -30,9 +30,10 @@ import { randomUUID } from 'node:crypto'
 //   4. Everything thrown this tick goes out as one batch, and the tick ends.
 //   5. A tick that deferred nothing is the last one.
 //
-// A typical idea takes four ticks (expand, judge, confirm-or-route, route) and
-// a repaired one up to eight. With a ten-minute cron that is under two hours
-// for a whole backlog, all ideas moving in parallel.
+// The automatic path runs live once a day, after the free triage sweep has set
+// aside weak idle rows. Batch mode is an explicit catch-up tool: a typical
+// idea takes four ticks (expand, judge, confirm-or-route, route), and a repaired
+// one up to eight, with each later tick requested deliberately.
 //
 // ── WHY THE LADDER IS NOT RESTAGED ────────────────────────────────────────
 //
