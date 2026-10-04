@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-03 23:07 UTC, by a Codex session.
+Last updated: 2026-10-04 00:00 UTC, by a Claude Code session.
 
 ## How Krish wants to be worked with
 
@@ -87,6 +87,14 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
 ## Latest handoff
 
+- Three timed jobs that failed on every run are fixed and merged. The Sunday
+  job that turns Krish's edits into suggested rules had never saved one: each
+  suggestion lacked the list of edits behind it, which the database requires.
+  It now attaches them, so Sunday's run is the first that can save. The Friday
+  shift spotter wrote old channel names the database refuses; it now writes
+  the current ones. The Saturday build-signals job now says why it fails. It
+  still fails until Krish replaces the GitHub key in this engine's own Vercel
+  project; the board asks him.
 - Krish approved Article 1's clearer wording on 2026-10-03 and made clarity a
   critical rule for every future article. Every sentence must have one clear
   reading. When an unfamiliar mechanism needs help, use a factual historical
