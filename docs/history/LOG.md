@@ -5,6 +5,12 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-04
+
+- reconciled at `39225c8`: `NOW.md` gained piece 1's practical-value revision, the capped paid fact check and the three cron fixes; `docs/STATE.md` "Recent cron failures" now records the 2026-10-03 fixes (stamp left at 2026-09-25 because only that bullet was checked). `docs/CONTENT_ENGINE.md` already carried the fact-check scope change.
+- decision (Krish, 2026-10-04): "Article 1's true value is the practical implication for business leaders and consumers: what to build, which features matter, and what to watch." Recorded in `docs/walks/2026-09-three-piece-walk.md`; not yet a house rule.
+- report (Krish, 2026-10-04): the GitHub key in the engine's Vercel project is fresh (per `WORKBENCH.md`).
+
 ## 2026-10-03
 
 - reconciled at `b59f395`: `docs/GLOSSARY.md` said the judge sweep runs every 10 minutes; the cron is daily at 05:00 UTC since `25c6f4f`, so the line was corrected (stamp left at 2026-09-25 because only that line was checked). NOW.md gained the clarity rulings, the sweep change and the route-gate fix, and its piece 1 and piece 3 status now follows `WORKBENCH.md`.

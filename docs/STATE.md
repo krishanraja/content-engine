@@ -242,7 +242,16 @@ Engine:
 - **Recent cron failures.** The last runs of `briefs_assemble` and
   `shifts_detect` (2026-09-18), `creator_posts` (2026-09-22) and
   `investigations` (2026-09-24) failed; their failure artifacts are in
-  `content_engine_run_artifacts`.
+  `content_engine_run_artifacts`. Three more crons that started on time and
+  failed on every run were fixed in code on 2026-10-03 (`e017c9d`, merged, no
+  production readback of a run yet): `learning_compile` sent proposals with an
+  empty evidence list, which the table refuses, so none was ever stored;
+  `shifts_detect` wrote the storage lane keys `built` and `paid` where
+  `shifts.lane` is a foreign key to `venture_formats(slug)`, and now writes
+  `under_the_hood` and `follow_the_money`; `build_signals` hit GitHub 401 on
+  2026-09-26 and 2026-10-03 and now says so in the ledger. `WORKBENCH.md`
+  records Krish saying on 2026-10-04 that the GitHub key in this Vercel
+  project is fresh; the next Saturday run is the proof.
 - **Smaller faults.** `content-engine/health` selected heartbeat columns that
   do not exist until the fix of 2026-09-28 is deployed (G3 above); `chat`
   meters as `unattributed`; `AEO_ENGINE_SECRET` is
