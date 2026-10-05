@@ -90,6 +90,19 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
 ## Latest handoff
 
+- 2026-10-05, later: the schedule is now Monday follow.the.money, Wednesday
+  under.the.hood, Friday mind.the.gap, in Krish's words "Let's just make follow
+  the money permanently a monday thing, and swap it out". It is changed in all
+  three repos, the database's day labels and the live site. Substack's short
+  description, About page, welcome email and free-benefit line need Krish to
+  paste the new text (board item `you-substack-schedule`), and the Windows
+  runner needs a `git pull` before its next render. Krish also asked to work
+  in the agent session while the engine is built: pieces and their artwork
+  are made there as branded HTML and image files, and Control Center is for
+  locking and publishing only. Article 1 passed the fact check with his
+  rewritten opening (62 claims, 0 problems). Its branded page, the launch post
+  (a visual page and a one-column Substack copy) and two video scripts (a hello
+  for the launch post, and Who gets paid) are linked from the board.
 - 2026-10-05: Article 1 is the launch piece, rewritten deeper at Krish's
   request ("why they get paid for different things ... the incentives ... where
   the consumer or merchant could get stung"), with his practical sections kept
