@@ -27,8 +27,9 @@ Control Center reaches them through rewrites." Control Center kept the desk:
 the Content tab, the composer, the mobile deck, the Studio reviewer, and the
 hooks that read the database directly.
 
-It has no UI of its own and no local dev server. 89 route files and 91 shared
-modules live under `apps/control-plane/api/`.
+It has no UI of its own and no local dev server. Its route files, and the
+shared modules whose names start with `_`, live under `apps/control-plane/api/`.
+The counts are left out because they went stale within days.
 
 ## How callers reach it
 
