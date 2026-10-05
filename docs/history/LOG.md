@@ -7,6 +7,9 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-05
 
+- decision (Krish, 2026-10-05): "lets close this session out by ensuring everything I have asked for in terms of the content engine (like a viral youtube title and description) becomes a part of the durable engine. Log anything else I've missed. Improve the content engine as much as you can". Done at `761e85f` (the `package` step and house rule `YOUTUBE_PACKAGE`, after "whats a viral video title for this"), `b69a464` (`scripts/pages`, `scripts/channel-kit`) and `4cb6b1e` (`scripts/quick-edit`); findings F58 to F63 and rows H33 to H36 in the walk log at `159224f` and `b20eae3`.
+- decision (Krish, 2026-10-05): "mindmakerlive.substack.com is now replaced with home.makeyourmindup.ai as the substack homepage. should I call it something different? if not, sub this out absolutely everywhere". Asked whether "read" fit better, he said "there are loads of videos planned, is read still the right word?", and the name stays "home". The engine counts both addresses at `13dd2be`. The cover's links and Control Center's tracking wait on Substack serving the new address (walk log F62).
+- reconciled at `b20eae3`: NOW.md takes launch day's tools, the address move, piece 3 as Wednesday's post (database readback: `approved`), and a new waiting-on-Krish list; the old next step (piece 1's capped fact check) was done on 2026-10-05.
 - scripts (2026-10-05) at `4cb6b1e`: `scripts/quick-edit` turns one recording into a finished tall and wide video; it edited both launch videos, whose settings are in `editions/2026-10-launch/video-kit/`. The hello README now points there.
 - editions (2026-10-05) at `3e259b9`: end cards and the edit recipe for the launch hello video, which is edited outside the Studio.
 - workbench (2026-10-05) at `8b87aee`: the latest handoff records the Monday schedule, working in the agent session, and article 1's launch set.
