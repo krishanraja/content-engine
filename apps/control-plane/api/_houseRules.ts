@@ -145,6 +145,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['judge_idea', 'judge_draft', 'write', 'visual'],
   },
   {
+    id: 'REAL_LIFE', name: 'Show it with something people really do',
+    text: 'Land each key point with an everyday example of something a reader actually does: searching a shop for trainers, paying at checkout, asking an AI agent to buy something. Use real prices, fees and rules where they exist, and keep the example exact.',
+    said: 'real world examples someone would do in real life are gold',
+    on: '2026-10-05', source: 'chat, visuals for piece 1', status: 'live',
+    stages: ['judge_draft', 'write', 'visual'],
+  },
+  {
     id: 'AI_AGENT', name: 'Call it an AI agent',
     text: 'Software that shops, books or acts for a person is an "AI agent" (for shopping, an "AI shopping agent"), never a robot or a bot. On first mention, say whose agent it is and what it does in plain words.',
     said: 'be clearer and refer to \'robot\' as "AI agent"',

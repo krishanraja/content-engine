@@ -106,6 +106,10 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.ok(houseRulesBlock('write', 'follow_the_money').includes(money.text))
     assert.ok(!houseRulesBlock('write', 'mind_the_gap').includes(money.text))
     assert.match(money.text, /where the consumer and the merchant could get stung/)
+    const life = HOUSE_RULES.find(x => x.id === 'REAL_LIFE')
+    assert.ok(life)
+    assert.match(life.said, /real world examples someone would do in real life are gold/)
+    assert.ok(houseRulesBlock('visual').includes(life.text) && houseRulesBlock('write').includes(life.text))
   })
   test('the stages named are the stages that exist', () => {
     const stages: Stage[] = ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual']
