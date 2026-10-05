@@ -101,15 +101,17 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
   session, the way he asked to work: `scripts/pages` for the branded page and
   the Substack copy, visuals that each explain one point, a video script for
   him to record, `scripts/quick-edit` for the edit, the engine's `package`
-  step for the YouTube title and description, and the LinkedIn post. Friday
+  step for the YouTube and Substack titles and descriptions, `scripts/pages --cover`
+  for a cover that survives Substack's crops, `scripts/pages/card.py` to check
+  any artwork reads on a phone, and the LinkedIn post. Friday
   2026-10-09 is mind.the.gap, piece 2 (`904658db`, approved).
   **The publication lives at `home.makeyourmindup.ai`**, shipped everywhere on
   2026-10-05 once Substack switched it on (the cover's Subscribe button and
   feed, Control Center's tracking and its migration, the engine, the AEO
   engine); tracking keeps the old address as an alias. Article 1 and the
   Who gets paid video post went live on Substack the same day. **Waiting on
-  Krish:** swap in article 1's new 3:2 cover (sent in chat; Substack cut the
-  old one on every screen, walk log F64); publish the launch post with the
+  Krish:** swap in article 1's new 3:2 cover (the second one sent in chat, which
+  reads on a phone; Substack cut the old one on every screen, walk log F64); publish the launch post with the
   hello video; paste the new schedule into Substack; put back the Drive
   folders the clean-up moved; a yes for Claude to change the address in the
   `mindmake` canon and `ai-harness`. Findings from the day are F58 to F65 in
