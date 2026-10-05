@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-05
+
+- decision (Krish, 2026-10-05): "The visuals need to explain something critical in the article in a way that would help them understand the point quicker. this needs to be a permanent rule, right now the visuals just feel like gimmicks - who cares about a person walking to a box that says \"till\"?" House rule `VISUAL_EXPLAINS` (live, stage visual), read by the video script and channel cut planners; `AGENTS.md` carries it for sessions that build visuals by hand. Said about the first launch interactive for piece 1 (a person and a robot walking an aisle to a till), which is withdrawn.
+
 ## 2026-10-04
 
 - reconciled at `39225c8`: `NOW.md` gained piece 1's practical-value revision, the capped paid fact check and the three cron fixes; `docs/STATE.md` "Recent cron failures" now records the 2026-10-03 fixes (stamp left at 2026-09-25 because only that bullet was checked). `docs/CONTENT_ENGINE.md` already carried the fact-check scope change.
