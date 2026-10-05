@@ -212,12 +212,14 @@ placeholder `PENDING_CC_COMMIT`. An active theme cannot carry the placeholder
 at all. The theme now pins control-center `7dac4ce` (on `main` since
 2026-09-28), the commit that added the stacked logo.
 
-Where the brand lives: the makeyourmindup brand kit and brand book (v1.4 on
-2026-09-26) are in `krishanraja/makeyourmindup`, `docs/brandbooknew/`:
+Where the brand lives: the makeyourmindup brand kit and brand book (v1.5 on
+2026-10-05; it changed only the subchannels' days and the order they are
+listed in, so the logos, colours and type are v1.4's) are in
+`krishanraja/makeyourmindup`, `docs/brandbooknew/`:
 `makeyourmindup-brand-kit.zip` holds everything, and
 `makeyourmindup-brand-book.zip` holds the book as a PDF and as page images.
 `npm run brand-kit` in that repository rebuilds both. The pinned mark,
-horizontal logo and stacked logo hash-match the v1.4 kit's
+horizontal logo and stacked logo hash-match the kit's (identical in v1.4 and v1.5)
 `logos/mark/makeyourmindup-mark-transparent.png`,
 `logos/horizontal/makeyourmindup-horizontal-transparent-1200w.png` and
 `logos/stacked/makeyourmindup-stacked-transparent.png`. The book says the

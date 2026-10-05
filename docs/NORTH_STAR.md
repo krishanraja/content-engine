@@ -134,11 +134,16 @@ Three subchannels, each with a standing question and a mandate that decides
 the structure and the close of every piece. The mandates are authoritative
 only in `venture_formats`; the lines below are orientation.
 
-| Subchannel | The question it asks | The reader changes... | Cadence (live table, 2026-09-26) |
+| Subchannel | The question it asks | The reader changes... | Cadence (live table, 2026-10-05) |
 |---|---|---|---|
 | mind.the.gap | What is the pattern, and what does it mean is coming? | how they think or what they expect | Fridays, 1 a week; the hero subchannel |
-| follow.the.money | Where does the money move, and who ends up better or worse off? | a price, a budget or a contract | Wednesdays, 1 a week |
-| under.the.hood | What actually goes together in a shipped thing, and why did this one work? | what they build or buy | Mondays, 1 a week |
+| follow.the.money | Where does the money move, and who ends up better or worse off? | a price, a budget or a contract | Mondays, 1 a week |
+| under.the.hood | What actually goes together in a shipped thing, and why did this one work? | what they build or buy | Wednesdays, 1 a week |
+
+The days swapped on 2026-10-05. Krish: "Let's just make follow the money
+permanently a monday thing, and swap it out." Until then under.the.hood ran on
+Mondays (since 2026-09-26) and follow.the.money on Wednesdays. Each subchannel
+kept its colour, sticker, promise and question.
 
 Krish's own one-line version (2026-09-24, recorded in Control Center's
 `NOW.md`): "follow.the.money is how to make money with AI, under.the.hood is how to

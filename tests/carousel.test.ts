@@ -293,7 +293,7 @@ describe('carousel cards in the makeyourmindup house style', () => {
   it('gives a story without a call its channel sticker, and no call card', async () => {
     const cards = houseCards(await forkStory('build_itself'))
     expect(houseCardModel(cards[0]!)).toMatchObject({ sticker: 'Screwdriver included', question: 'What actually goes together in a shipped thing, and why did this one work?' })
-    expect(cards[0]!.branding.publication?.house?.day).toBe('Mondays')
+    expect(cards[0]!.branding.publication?.house?.day).toBe('Wednesdays')
     expect(cards.at(-1)!.slide.call).toBeUndefined()
     expect(houseCardModel(cards.at(-1)!)!.footnote).toBeNull()
   })

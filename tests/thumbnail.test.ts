@@ -38,8 +38,8 @@ describe('the house style thumbnail', () => {
   it('carries the channel\'s own sticker when the piece has no call', () => {
     const { theme, marks } = fixture()
     expect(thumbnailInputProps(theme, marks('mind_the_gap'), 'mind_the_gap', COPY, { hasCall: false }).sticker).toBe('The headliner')
-    expect(thumbnailInputProps(theme, marks('follow_the_money'), 'follow_the_money', COPY, { hasCall: false })).toMatchObject({ day: 'Wednesdays', sticker: 'Bring a calculator', channelLabel: 'follow.the.money', tokens: { section: '#FFD84D' } })
-    expect(thumbnailInputProps(theme, marks('under_the_hood'), 'under_the_hood', COPY, { hasCall: false })).toMatchObject({ day: 'Mondays', sticker: 'Screwdriver included', tokens: { section: '#B7A6FF' } })
+    expect(thumbnailInputProps(theme, marks('follow_the_money'), 'follow_the_money', COPY, { hasCall: false })).toMatchObject({ day: 'Mondays', sticker: 'Bring a calculator', channelLabel: 'follow.the.money', tokens: { section: '#FFD84D' } })
+    expect(thumbnailInputProps(theme, marks('under_the_hood'), 'under_the_hood', COPY, { hasCall: false })).toMatchObject({ day: 'Wednesdays', sticker: 'Screwdriver included', tokens: { section: '#B7A6FF' } })
   })
 
   it('shrinks a long headline to stay inside the grid crop', () => {

@@ -779,8 +779,8 @@ describe('makeyourmindup house style', () => {
     expect(candidate.publication?.channel_colors).toEqual({ follow_the_money: '#FFD84D', mind_the_gap: '#FF6A4D', under_the_hood: '#B7A6FF' })
     expect(candidate.publication?.house_style?.tokens).toEqual({ ink: '#0C1512', ink_deep: '#070D0B', ink_soft: '#16221D', cream: '#F4EFE4', mint: '#7EF0C0' })
     expect(candidate.publication?.house_style?.channels).toEqual({
-      under_the_hood: { day: 'Mondays', sticker: 'Screwdriver included', promise: 'Free from jargon', question: 'What actually goes together in a shipped thing, and why did this one work?' },
-      follow_the_money: { day: 'Wednesdays', sticker: 'Bring a calculator', promise: 'No added sermons', question: 'Where does the money move, and who ends up better or worse off?' },
+      follow_the_money: { day: 'Mondays', sticker: 'Bring a calculator', promise: 'No added sermons', question: 'Where does the money move, and who ends up better or worse off?' },
+      under_the_hood: { day: 'Wednesdays', sticker: 'Screwdriver included', promise: 'Free from jargon', question: 'What actually goes together in a shipped thing, and why did this one work?' },
       mind_the_gap: { day: 'Fridays', sticker: 'The headliner', promise: 'Every call scored in public', question: 'What is the pattern, and what does it mean is coming?' },
     })
     const report = publicationLegibilityReport(candidate)
