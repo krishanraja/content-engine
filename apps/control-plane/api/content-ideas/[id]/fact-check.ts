@@ -25,10 +25,12 @@ import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
   carryForward, combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
-  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, sourcesHash, sourcesText, summarise, sweep,
+  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
 
+// The most new claims one run checks (splitFresh), so a first full pass
+// stays inside the 300-second limit in vercel.json. Settled claims are free.
 const MAX_CLAIMS = 60
 const POOL = 6
 // Perplexity answered 429 to six of 26 claims at six at a time (piece 2,
@@ -305,15 +307,15 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   const second = await secondLook(run, leftovers, body)
   const looked = resolveLeftovers(leftovers, second.answers)
   const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims]
-  const claims = all.slice(0, MAX_CLAIMS)
   const sources = sourcesText(meta)
   const primary = primaryText(meta)
   // A sentence an earlier run passed or set aside, unchanged since and checked
   // against the same sources, keeps that result (walk log F52).
   const hash = sourcesHash(meta)
-  const carry = carryForward(body, claims, looked.setAside, meta.fact_ledger as FactLedger | undefined, hash)
+  const carry = carryForward(body, all, looked.setAside, meta.fact_ledger as FactLedger | undefined, hash)
+  const fresh = splitFresh(carry.toCheck, MAX_CLAIMS)
 
-  const checked = await pool(carry.toCheck, POOL, async (c): Promise<CheckedClaim> => {
+  const checked = await pool(fresh.now, POOL, async (c): Promise<CheckedClaim> => {
     // Both checks settle before the claim is done, so a failure in one never
     // leaves the other running after the run has ended.
     const [onFileCheck, webCheck] = await Promise.allSettled([onFile(run, c, sources, primary), independent(run, c, asOf)])
@@ -327,7 +329,7 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   const result = summarise([...carry.carried, ...checked], carry.setAside, body, checker)
   result.second_look = { sentences: leftovers.length, unanswered: second.unanswered }
   result.carried = carry.sentences
-  if (all.length > MAX_CLAIMS) { result.passed = false; result.blocking += all.length - MAX_CLAIMS }
+  if (fresh.later) { result.passed = false; result.blocking += fresh.later; result.unchecked = fresh.later }
   return { result, ledger: settle(body, result, meta.fact_ledger as FactLedger | undefined, hash) }
 }
 
@@ -420,7 +422,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.status(200).json({
     ok: true, passed: result.passed, blocking: result.blocking, single_source: result.single_source,
-    independent_checker: result.independent_checker, claims: result.claims.length, set_aside: result.set_aside.length, carried: result.carried ?? 0,
+    independent_checker: result.independent_checker, claims: result.claims.length, set_aside: result.set_aside.length, carried: result.carried ?? 0, unchecked: result.unchecked ?? 0,
     fact_check: result, next_run: scope,
   })
 }

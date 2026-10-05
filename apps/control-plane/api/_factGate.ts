@@ -73,6 +73,9 @@ export interface FactCheck {
   /** How many sentences kept the result an earlier run gave them, because
    *  their words and the piece's sources had not changed (carryForward). */
   carried?: number
+  /** How many new claims this run left for the next one, because a run
+   *  checks at most a fixed number of new claims (splitFresh). */
+  unchecked?: number
 }
 
 export const FACT_GATE_VERSION = 1 as const
@@ -433,6 +436,7 @@ export function gateStatus(meta: Record<string, any> | null, body: string): { ok
   if (!fc || fc.version !== FACT_GATE_VERSION) return { ok: false, reason: 'The facts in this piece have not been checked yet. Run the fact check first.' }
   if (fc.body_hash !== bodyHash(body)) return { ok: false, reason: 'The words changed after the fact check. Run it again on this version.' }
   if (!fc.independent_checker) return { ok: false, reason: 'No independent fact checker was connected, so nothing can pass. Perplexity needs its key.' }
+  if (!fc.passed && fc.unchecked && fc.unchecked === fc.blocking) return { ok: false, reason: `${fc.unchecked} claim${fc.unchecked === 1 ? ' is' : 's are'} still to check. Run the fact check again: what passed is kept.` }
   if (!fc.passed) return { ok: false, reason: `${fc.blocking} claim${fc.blocking === 1 ? '' : 's'} failed the fact check. Fix or cut them, then run it again.` }
   return { ok: true, reason: null }
 }
@@ -563,6 +567,15 @@ export function carryForward(
     }
   }
   return { toCheck, carried, setAside: aside, sentences: done.size }
+}
+
+/** One run checks at most `max` new claims, so a first full pass stays
+ *  inside the route's time limit. The rest wait for the next run, and every
+ *  claim this run passes is carried then, so a long piece is checked in full
+ *  across runs instead of being blocked for its length (walk log F57). */
+export function splitFresh<T>(toCheck: T[], max: number): { now: T[]; later: number } {
+  const now = toCheck.slice(0, Math.max(0, max))
+  return { now, later: toCheck.length - now.length }
 }
 
 /** The ledger after a run: what it already held for sentences still in the

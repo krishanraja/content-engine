@@ -4,8 +4,8 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 import {
   bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
-  sourcesText, summarise, sweep,
-  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, factLedgerCoverage, settle, sentenceKey, sourcesHash, type FactCheck,
+  sourcesText, splitFresh, summarise, sweep,
+  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, factLedgerCoverage, settle, sentenceKey, sourcesHash, type FactCheck, FACT_GATE_VERSION,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
 import { readPieceCall } from '../../packages/contracts/src/call.js'
@@ -252,7 +252,11 @@ describe('the gate', () => {
     const wu = { sentence: 'Each one, no matter how expensive, will tell you it was Thomas Jefferson.', reason: 'labelled_inference' }
     assert.deepEqual(leftoversOf({ claims: [], setAside: [wu] }), [{ sentence: wu.sentence, claim: wu.sentence, kind: 'unclassified' }])
     // Through the carry-forward (walk log F52), which only adds to them.
-    assert.match(check, /carryForward\(body, claims, looked\.setAside, /)
+    assert.match(check, /carryForward\(body, all, looked\.setAside, /)
+    // Only new claims count toward a run's cap, and what waits is reported (F57).
+    assert.match(check, /const fresh = splitFresh\(carry\.toCheck, MAX_CLAIMS\)/)
+    assert.match(check, /await pool\(fresh\.now, POOL,/)
+    assert.match(check, /result\.unchecked = fresh\.later/)
     assert.match(check, /summarise\(\[\.\.\.carry\.carried, \.\.\.checked\], carry\.setAside, body, checker\)/)
   })
   test('the second look numbers each batch from 0 and asks again for what it missed', () => {
@@ -633,5 +637,29 @@ describe('a table copied from a PDF', () => {
   test('a whole flattened row carries the score it is quoted for', () => {
     const source = '> Tau2Bench BFCL CRM Bench Model Airline Retail Telecom Weighted Avg. Acc. Topic Func. Text Weighted Avg.\n> Claude Opus 4.8 69.0 86.2 64.0 74.00 78.18 0.99 0.83 0.79 0.87 OpenAI GPT-5.5 62.5 81.6 95.8 83.99 67.63 0.99 0.82 0.89 0.90'
     assert.equal(quoteHolds('OpenAI GPT-5.5 62.5 81.6 95.8 83.99 67.63 0.99 0.82 0.89 0.90', source, 'GPT-5.5 scored 0.90 on CRM Bench.'), true)
+  })
+})
+
+describe('a long piece is checked across runs, never blocked for its length (F57)', () => {
+  test('one run checks at most the cap of new claims and says how many wait', () => {
+    const claims = Array.from({ length: 67 }, (_, i) => `claim ${i}`)
+    const { now, later } = splitFresh(claims, 60)
+    expect(now).toHaveLength(60)
+    expect(now[0]).toBe('claim 0')
+    expect(later).toBe(7)
+  })
+
+  test('under the cap, every new claim is checked now', () => {
+    expect(splitFresh(['a', 'b'], 60)).toEqual({ now: ['a', 'b'], later: 0 })
+  })
+
+  test('claims left for the next run read as waiting, not as failures', () => {
+    const body = 'One. Two.'
+    const base = { version: FACT_GATE_VERSION, ran_at: '2026-10-05T13:30:00Z', body_hash: '', independent_checker: 'perplexity:sonar-pro', claims: [], set_aside: [], single_source: 0 }
+    const waiting = gateStatus({ fact_check: { ...base, body_hash: bodyHash(body), passed: false, blocking: 7, unchecked: 7 } }, body)
+    expect(waiting.ok).toBe(false)
+    expect(waiting.reason).toMatch(/7 claims are still to check/)
+    const mixed = gateStatus({ fact_check: { ...base, body_hash: bodyHash(body), passed: false, blocking: 8, unchecked: 7 } }, body)
+    expect(mixed.reason).toMatch(/8 claims failed the fact check/)
   })
 })

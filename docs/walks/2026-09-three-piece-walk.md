@@ -601,6 +601,35 @@ a LinkedIn post and card, a Substack social image and a 60-second video script
 were written to go with the piece, and none of them is published. The piece is
 in `review`; locking it is Krish's, in Control Center.
 
+**Krish's edits and the Ship button, 2026-10-05.** Krish rewrote the opening in
+Control Center and pressed Ship. No Google Doc appeared: `save-draft` answered
+409 twice, because the fact gate refuses any text that changed after its last
+check, and Control Center showed that only as a brief pop-up. Three of his
+lines were fixed before the re-check, and he was told why: `Amazon's "not a
+human" warning popup` quoted words the popup never used (it says "unauthorized
+AI agent"), "The intensity has continued to increase" did not say what
+increased, and "Why?" was the hook-then-question pattern the final review
+flags. The re-check then held "recent" (the quote is from Amazon's November
+2025 complaint) and "Meanwhile" (the web check could not confirm the launch
+sentence, which had passed in the morning without it), so both sentences went
+back to the exact words that had passed.
+
+**F57. A long piece was blocked for its length.** The deeper article lists 67
+claims. A run checked the first 60 and counted the other 7 as failures, on
+every run, whatever passed. The cap exists because a full first pass of 60
+takes about four and a half minutes against the route's 300-second limit.
+Fixed by `splitFresh`: settled sentences are carried free (F52), the cap
+applies only to new claims, and the claims over it are reported as `unchecked`
+and wait for the next run, where everything this run passed is carried. The
+gate's refusal says "N claims are still to check" instead of "failed".
+
+Krish, the same day, on how he wants to work while the engine is being built:
+"I would rather work in here and have the pieces and their artwork produced in
+html and assets like we are doing now - control center editing feeling super
+fiddly to me right now while we are building the engine". Pieces and their
+artwork are now produced in the agent session as branded HTML and image files;
+Control Center stays the record for locking and publishing.
+
 ## Piece 2: mind.the.gap
 
 `904658db-4df2-4537-a0ed-ebe93e081db7`. "Every AI lab now sells a menu instead
