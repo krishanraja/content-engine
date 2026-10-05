@@ -31,7 +31,8 @@ Artwork made from HTML is checked before it becomes a PNG by card.py.
 --cover   draws cover.png, the post's cover image at 1200 x 800, from the
           "cover" page facts, and cover-crops.png, what Substack's feed, share
           card and archive each show of it. It refuses if a word or a logo
-          would be cut off by any of them.
+          would be cut off by any of them, or if a word would be too small to
+          read in a phone's feed.
 """
 import argparse
 import base64
@@ -765,6 +766,13 @@ def shots(out):
 # Article 1's first cover was 1200 x 630, and all three cut the ends off its
 # headline, its wordmark and its labels. So the cover is drawn at the feed's
 # own 3:2, and every word and logo sits inside COVER_SAFE, which all three keep.
+#
+# Krish reads the feed on his phone, where the card is about 358 pixels wide,
+# so every word on the cover comes out at 358/1200 of its size there. The
+# cover's words are held to card.py's phone floors like any other artwork:
+# card.needed(COVER_W) is the size a word, and fine print, must be drawn at,
+# the template draws at exactly those sizes, and the cover is refused if a
+# word comes out smaller.
 COVER_W, COVER_H = 1200, 800
 COVER_SAFE = (220, 84, 980, 716)  # left, top, right, bottom
 COVER_CROPS = [  # what each shows of the cover: left, top, right, bottom
@@ -772,7 +780,11 @@ COVER_CROPS = [  # what each shows of the cover: left, top, right, bottom
     ('The share card, for LinkedIn and others: 16:9', (0, (COVER_H - COVER_W * 9 / 16) / 2, COVER_W, (COVER_H + COVER_W * 9 / 16) / 2)),
     ('The archive list: the centre square', ((COVER_W - COVER_H) / 2, 0, (COVER_W + COVER_H) / 2, COVER_H)),
 ]
+COVER_HEAD_PX = (104, 100, 96, 92, 88)  # the headline takes the largest of these at which it fits...
+COVER_HEAD_LINES = 3                    # ...in this many lines, or the cover is refused
 
+# --head, --words and --fine are set per cover: the headline's size, and the
+# phone floors from card.needed().
 COVER_CSS = """
 * { box-sizing: border-box; margin: 0; }
 body { background: var(--deep); }
@@ -780,17 +792,30 @@ body { background: var(--deep); }
 #card .ph { position: absolute; inset: 0; background-position: center 30%; background-size: cover; opacity: .3; }
 #card .fade { position: absolute; inset: 0; background: radial-gradient(60% 70% at 50% 50%, rgba(var(--shade), .92) 0%, rgba(var(--shade), .8) 55%, rgba(var(--shade), .35) 100%); }
 #safe { position: absolute; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.wm { height: 40px; }
-h1 { margin-top: 30px; font-family: "Anton", Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: 80px; line-height: .94; }
+.wm { height: 48px; }
+h1 { margin-top: 22px; font-family: "Anton", Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: var(--head); line-height: .94; }
 h1 span { display: block; color: var(--accent); }
-.sub { margin-top: 22px; font-family: "Archivo", Arial, sans-serif; font-size: 30px; font-weight: 700; }
-.rows { margin-top: 28px; width: 640px; display: flex; flex-direction: column; gap: 12px; }
-.row { background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
-.row img { height: 38px; }
+.sub { margin-top: 18px; font-family: "Archivo", Arial, sans-serif; font-size: var(--words); line-height: 1.1; font-weight: 700; }
+.rows { margin-top: 26px; width: 100%; display: flex; flex-direction: column; gap: 12px; }
+.row { background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.row img { height: 64px; }
 .mono { font-family: "IBM Plex Mono", monospace; }
-.tag { font-size: 19px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 7px 12px; color: var(--ink); white-space: nowrap; }
-.ft { margin-top: 26px; font-size: 22px; color: #AEAEA5; letter-spacing: .06em; }
+.tag { font-size: var(--words); line-height: 1; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 8px 14px; color: var(--ink); white-space: nowrap; }
+.ft { margin-top: 18px; font-size: var(--fine); line-height: 1.1; color: #AEAEA5; white-space: nowrap; }
 """
+
+# The largest size from the list at which the headline fits in `most` lines,
+# and how many lines it takes there.
+FIT_HEADLINE_JS = r"""([sizes, most]) => {
+  const h = document.querySelector('#safe h1');
+  let size = sizes[0], lines = 0;
+  for (size of sizes) {
+    document.documentElement.style.setProperty('--head', size + 'px');
+    lines = Math.round(h.getBoundingClientRect().height / parseFloat(getComputedStyle(h).lineHeight));
+    if (lines <= most) break;
+  }
+  return [size, lines];
+}"""
 
 
 def split_headline(text):
@@ -803,8 +828,10 @@ def split_headline(text):
 
 def cover_html(facts, base, refresh=False):
     """The cover, 1200 x 800: the wordmark, the headline with its last line in
-    the subchannel's colour, a bold subline, a row per logo with its tag, and
-    the subchannel and a label in mono, over an optional photo at 30%."""
+    the subchannel's colour, an optional bold subline, a row per logo with its
+    tag, and the subchannel and a label in mono as fine print, over an
+    optional photo at 30%. Every word is drawn at least as big as a phone's
+    feed needs (card.needed)."""
     hs = brand.house()
     ch = brand.channel(hs, facts['subchannel'])
     t = hs['tokens']
@@ -830,13 +857,15 @@ def cover_html(facts, base, refresh=False):
     label = c.get('label') or facts.get('issue') or long_date(facts['date'])
     deep = t['ink_deep'].lstrip('#')
     left, top, right, bottom = COVER_SAFE
+    words, fine = card.needed(COVER_W)
     return f"""<!doctype html>
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="artwork-size" content="{COVER_W}x{COVER_H}">
 <style>{brand.font_css()}</style>
-<style>:root {{ --ink: {t['ink']}; --deep: {t['ink_deep']}; --cream: {t['cream']}; --accent: {ch['accent']}; --shade: {', '.join(str(int(deep[i:i + 2], 16)) for i in (0, 2, 4))}; }}
+<style>:root {{ --ink: {t['ink']}; --deep: {t['ink_deep']}; --cream: {t['cream']}; --accent: {ch['accent']}; --shade: {', '.join(str(int(deep[i:i + 2], 16)) for i in (0, 2, 4))};
+  --head: {COVER_HEAD_PX[0]}px; --words: {words}px; --fine: {fine}px; }}
 {COVER_CSS}
 #card {{ width: {COVER_W}px; height: {COVER_H}px; }}
 #safe {{ left: {left}px; top: {top}px; width: {right - left}px; height: {bottom - top}px; }}</style>
@@ -874,8 +903,12 @@ def cover_crops_html(png):
 
 
 def draw_cover(facts, base, out, refresh=False):
-    """cover.png and cover-crops.png. Refuses, and removes an older cover.png,
-    when a word or a logo falls outside the part every crop keeps. True when
+    """cover.png and cover-crops.png. The headline takes the largest size in
+    COVER_HEAD_PX at which it fits in COVER_HEAD_LINES lines, and the label
+    line is left out when the cover only fits without it. Refuses, writing
+    nothing and removing an older cover.png, when the headline still takes
+    more lines, when a word or a logo falls outside the part every crop keeps,
+    or when a word comes out too small to read in a phone's feed. True when
     the cover was written."""
     out = Path(out)
     for name in ('cover.png', 'cover-crops.png'):
@@ -887,9 +920,16 @@ def draw_cover(facts, base, out, refresh=False):
         pg = b.new_page(viewport={'width': COVER_W, 'height': COVER_H})
         pg.set_content(page)
         card.settle(pg)
+        size, lines = pg.evaluate(FIT_HEADLINE_JS, [list(COVER_HEAD_PX), COVER_HEAD_LINES])
         cut = card.outside(card.boxes(pg, '#safe'), COVER_SAFE)
+        dropped = False
+        if cut and pg.evaluate("() => { const f = document.querySelector('#safe .ft'); if (f) f.remove(); return !!f; }"):
+            cut = card.outside(card.boxes(pg, '#safe'), COVER_SAFE)
+            dropped = not cut
         words = card.texts(pg, (0, 0, COVER_W, COVER_H))
-        if not cut:
+        small = card.too_small(words, COVER_W)
+        ok = lines <= COVER_HEAD_LINES and not cut and not small
+        if ok:
             png = pg.screenshot(clip={'x': 0, 'y': 0, 'width': COVER_W, 'height': COVER_H})
             sheet = b.new_page(viewport={'width': 1600, 'height': 600})
             sheet.set_content(cover_crops_html(png))
@@ -898,24 +938,38 @@ def draw_cover(facts, base, out, refresh=False):
         b.close()
     left, top, right, bottom = COVER_SAFE
     keep = f'x {left} to {right}, y {top} to {bottom}'
-    if cut:
-        print(f'cover: not written. Substack would cut these off, because they fall outside {keep}, the part its feed, '
-              'its share card and its archive all keep:')
-        for x in cut:
-            x0, y0, x1, y1 = x['box']
-            print(f'  {card.short(x["what"])}  at x {x0:.0f} to {x1:.0f}, y {y0:.0f} to {y1:.0f}')
-        print('  shorten the cover\'s headline or subline (the "cover" page facts), or take a row out')
+    need_words, need_fine = card.needed(COVER_W)
+    feed = f'in a phone\'s feed the cover is about {card.PHONE_COLUMN} px wide'
+    if not ok:
+        print('cover: not written.')
+        if lines > COVER_HEAD_LINES:
+            print(f'  the headline takes {lines} lines even at {size} px, and {COVER_HEAD_LINES} fit: shorten the cover\'s "headline"')
+        if cut:
+            print(f'  Substack would cut these off, because they fall outside {keep}, the part its feed, its share card '
+                  'and its archive all keep:')
+            for x in cut:
+                x0, y0, x1, y1 = x['box']
+                print(f'    {card.short(x["what"])}  at x {x0:.0f} to {x1:.0f}, y {y0:.0f} to {y1:.0f}')
+            print('  shorten the headline, or take the subline or a row out (the "cover" page facts)')
+        if small:
+            print(f'  {feed[0].upper() + feed[1:]}, and these words would be too small to read there '
+                  f'(words need {card.MIN_READ_PX} px there, fine print {card.MIN_FINE_PX} px):')
+            for w in small:
+                print(f'    {w["phone"]:4.1f} px on a phone, drawn at {w["px"]:.0f} px; it needs '
+                      f'{need_fine if w["fine"] else need_words} px  "{card.short(w["text"])}"')
+            print('  draw each at the size it needs, or take those words off the cover')
         return False
     (out / 'cover.png').write_bytes(png)
     (out / 'cover-crops.png').write_bytes(crops)
     print(f'{out / "cover.png"}  {COVER_W} x {COVER_H}: upload it as the post\'s cover image')
-    print(f'  every word and logo is inside {keep}, so the feed, the share card and the archive keep all of it')
-    print(f'{out / "cover-crops.png"}  what each of them shows. Look at it before publishing.')
-    print(f'  in a phone\'s feed the cover is about {card.PHONE_COLUMN} px wide, so its words come out at:')
+    print(f'  the headline is {size} px, in {lines} line(s); every word and logo is inside {keep}, so the feed, '
+          'the share card and the archive keep all of it')
+    if dropped:
+        print('  the label line did not fit, so the cover leaves it out')
+    print(f'  {feed}, and every word can be read there:')
     for w in sorted(words, key=lambda w: -w['px']):
-        phone = card.on_phone(w['px'], COVER_W)
-        floor = card.MIN_FINE_PX if w['fine'] else card.MIN_READ_PX
-        print(f'    {phone:4.1f} px  "{card.short(w["text"])}"' + ('  (hard to read on a phone)' if round(phone, 2) < floor else ''))
+        print(f'    {card.on_phone(w["px"], COVER_W):4.1f} px  "{card.short(w["text"])}"' + ('  (fine print)' if w['fine'] else ''))
+    print(f'{out / "cover-crops.png"}  what each of them shows. Look at it before publishing.')
     return True
 
 

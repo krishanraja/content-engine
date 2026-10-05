@@ -22,7 +22,7 @@ or it writes neither (the rule in `editions/README.md`).
 | `page.html` | The piece in the makeyourmindup look, in its subchannel's colour: masthead, headline, deck and byline, the body with its source links and images, opinion labelled ("Our read:"), the choices as cards, the dated call with how sure we are, the sources and the subscribe band. One file: the fonts and images are inside it. |
 | `substack.html` | The same words in one column, ready for Substack. Copy buttons for the title, the subtitle and the post. The post is headings, paragraphs, lists, quotes, links and images, nothing else, because Substack's editor drops layout and crashes on pasted side-by-side blocks. The images are inside the copy, in place, so they paste with the words. |
 | `phone-images.png` | Every image in the post at the width a phone shows it (358 pixels). Look at it before publishing: a word you cannot read there, a reader on a phone cannot read either. |
-| `cover.png` | With `--cover`: the post's cover image, 1200 x 800, to upload in Substack's post settings. It is not written if a word or a logo would be cut off ("What Substack does to your artwork", below). |
+| `cover.png` | With `--cover`: the post's cover image, 1200 x 800, to upload in Substack's post settings. It is not written if a word or a logo would be cut off, or a word would be too small to read in a phone's feed ("What Substack does to your artwork", below). |
 | `cover-crops.png` | With `--cover`: what Substack's feed, share card and archive each show of the cover. |
 | `shots/` | With `--shots`: both files at a computer's width (1440) and a phone's (390). |
 
@@ -92,7 +92,7 @@ One JSON file. Paths are relative to the file (or to `--assets DIR`).
 | `title` | The browser tab. Defaults to the headline. |
 | `body` | The body file. Defaults to `body.md`; `--body FILE` overrides it. |
 | `hero` | The art beside the headline, or nothing. `{"image": "img/x.png", "alt": "..."}`, or a receipt: `{"receipt": {"title", "alt", "customer": {"logo", "text"}, "rows": [{"logo", "name", "when", "verdict", "colour"}], "total": [left, right]}}`. A row's `colour` is `mint`, `butter`, `lilac` or `coral`. |
-| `cover` | The post's cover image, drawn by `--cover`. All of it is optional: `{"headline": ["the words in cream", "the last line in the subchannel's colour"], "subline": "one bold line", "rows": [{"logo", "name", "tag", "colour"}], "label": "words after the subchannel at the foot", "background": "img/photo.jpg"}`. Without `headline`, the page's headline is split after its last comma, full stop, colon or question mark. A row's `logo` must read on dark ink (a light logo), its `tag` is the words beside it, and its `colour` is `mint`, `butter`, `lilac` or `coral`. `label` defaults to `issue`, then the date. The `background` photo sits at 30% under a dark fade. |
+| `cover` | The post's cover image, drawn by `--cover`. All of it is optional: `{"headline": ["the words in cream", "the last line in the subchannel's colour"], "rows": [{"logo", "name", "tag", "colour"}], "label": "words after the subchannel at the foot", "subline": "one bold line", "background": "img/photo.jpg"}`. Without `headline`, the page's headline is split after its last comma, full stop, colon or question mark; it is drawn at the largest of 104, 100, 96, 92 or 88 pixels at which it fits in three lines. A row's `logo` must read on dark ink (a light logo) and is drawn 64 pixels tall; its `tag` is the words beside it, drawn at 47 pixels; its `colour` is `mint`, `butter`, `lilac` or `coral`. Keep to two rows. `label` defaults to `issue`, then the date, and is fine print at 37 pixels; it is left out when the cover only fits without it. Leave `subline` out unless it says something the rows do not: it is drawn at 47 pixels, like the tags, and there is rarely room for it. The `background` photo sits at 30% under a dark fade. |
 | `figures` | The piece's images: `{"after": "words in the body", "image": "img/1.png", "alt": "what it shows", "caption": "optional"}`. Each goes after the paragraph that holds its `after` words. `alt` is required. |
 | `pull_quotes` | `{"after": "...", "quote": "...", "cite": "who said it"}`. The quote must be words from the body, exactly. |
 | `sources` | `{"id": ["Title, date", "https://..."]}` (or `{"title", "url"}`). Listed at the end in the order they are first linked; any never linked come last, and the build mentions them. |
@@ -142,11 +142,25 @@ What the tools do about it:
 - **`--cover` draws the cover at 1200 x 800,** the feed's own 3:2, so the feed
   shows all of it. Every word and logo sits inside x 220 to 980, y 84 to 716,
   which the 16:9 share card (it keeps y 62 to 738) and the archive square (it
-  keeps x 200 to 1000) both keep. After drawing, it measures every element and
-  every line of words, and if one falls outside that box it writes no
-  `cover.png`, removes an older one, and lists what would be cut. It also says
-  how big each word comes out in a phone's feed. `cover-crops.png` shows the
-  three crops side by side, and the archive tile at 150 pixels.
+  keeps x 200 to 1000) both keep.
+- **The cover's words must be readable in the feed, too.** Krish reads the
+  feed on his phone, where the card is about 358 pixels wide, so every word on
+  the 1200-wide cover comes out at 358/1200 of its size. On the first
+  1200 x 800 cover, made by hand, the subline, the tags and the footer came
+  out at about 6 to 9 pixels there. The cover is held
+  to the same floors as any artwork (`card.py`, below): words at 47 pixels or
+  more on the cover and fine print at 37 or more, and the template draws at
+  those sizes. That leaves room for the wordmark, a headline of up to three
+  lines, two rows and the label line; the subline is left out unless the
+  facts give one.
+- After drawing, `--cover` measures every element, every line of words and
+  every word's size. If the headline needs more than three lines, if anything
+  falls outside the box, or if a word would be too small in the feed, it
+  writes no `cover.png`, removes an older one, and lists each problem: what
+  would be cut and where, or each small word with its size on a phone and the
+  size it needs on the cover. If the cover only fits without the label line,
+  it leaves the label out and says so. `cover-crops.png` shows the three crops
+  side by side, and the archive tile at 150 pixels.
 - **`card.py` checks artwork made from HTML before it becomes a PNG:**
 
   ```

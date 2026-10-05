@@ -111,7 +111,7 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.match(life.said, /real world examples someone would do in real life are gold/)
     assert.ok(houseRulesBlock('visual').includes(life.text) && houseRulesBlock('write').includes(life.text))
   })
-  test('artwork that survives Substack carries his words, reaches the visuals, and states the numbers scripts/pages checks', () => {
+  test('artwork that survives Substack carries his words, reaches the visuals, and states the numbers scripts/pages checks, the cover included', () => {
     const r = HOUSE_RULES.find(x => x.id === 'SUBSTACK_FIT')
     assert.ok(r)
     assert.equal(r.status, 'live')
@@ -128,9 +128,15 @@ describe('every ruling carries his words and reaches a stage', () => {
     const read = constant(card, 'MIN_READ_PX')
     const fine = constant(card, 'MIN_FINE_PX')
     assert.deepEqual([column, read, fine], [358, 14, 11])
-    assert.ok(r.text.includes(`about ${column} pixels wide on a phone`))
+    const at = (width: number, floor: number) => Math.ceil(floor * width / column)
+    assert.ok(r.text.includes(`A phone shows every image about ${column} pixels wide: the cover in the feed`))
     assert.ok(r.text.includes(`${read} pixels or more there, and fine print such as sources at ${fine} or more`))
-    assert.ok(r.text.includes(`draw words at ${Math.ceil(read * 1360 / column)} pixels or more and fine print at ${Math.ceil(fine * 1360 / column)} or more`))
+    assert.ok(r.text.includes(`on the 1200-wide cover, draw words at ${at(1200, read)} pixels or more and fine print at ${at(1200, fine)} or more; on a 1360-wide image, ${at(1360, read)} and ${at(1360, fine)}`))
+    // The cover is held to card.py's floors and draws at card.py's sizes,
+    // never at a copy of them.
+    assert.match(build, /words, fine = card\.needed\(COVER_W\)/)
+    assert.match(build, /small = card\.too_small\(words, COVER_W\)/)
+    assert.doesNotMatch(build, /^(PHONE_COLUMN|MIN_READ_PX|MIN_FINE_PX) =/m)
     assert.match(build, /^COVER_W, COVER_H = 1200, 800$/m)
     assert.ok(r.text.includes('The cover is 1200 x 800 (3:2)'))
     const safe = /^COVER_SAFE = \((\d+), (\d+), (\d+), (\d+)\)/m.exec(build)

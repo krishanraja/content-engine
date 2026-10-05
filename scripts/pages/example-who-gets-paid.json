@@ -35,7 +35,6 @@
   },
   "cover": {
     "headline": ["When an AI agent does your shopping,", "who gets paid?"],
-    "subline": "Same AI agent. Opposite answers.",
     "rows": [
       {
         "logo": "logos/amazon-light.svg",
