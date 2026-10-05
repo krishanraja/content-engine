@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-05
 
+- reconciled at `427691a`: merged `main`, which had gained the canon block sync (#66, `AGENTS.md` only); nothing in NOW.md changed with it.
 - feedback (Krish, 2026-10-05), with a phone screenshot of the published article 1 in his feed: "Also bear in mind what happens to your artwork when I'm looking at the article in Substack once it's posted." House rule `SUBSTACK_FIT` (live, stage visual) at `16dbd8d` and `687f1a6`; the Substack title and subtitle in the `package` step at `2ea277a`; walk log F64, F65, H37, H38 at `c1e04f7`. The address move shipped the same night in all four repositories (walk log F62).
 - reconciled at `c1e04f7`: NOW.md takes the shipped address move, article 1 live, the Substack-fit tools and the new waiting-on-Krish list.
 - decision (Krish, 2026-10-05): "lets close this session out by ensuring everything I have asked for in terms of the content engine (like a viral youtube title and description) becomes a part of the durable engine. Log anything else I've missed. Improve the content engine as much as you can". Done at `761e85f` (the `package` step and house rule `YOUTUBE_PACKAGE`, after "whats a viral video title for this"), `b69a464` (`scripts/pages`, `scripts/channel-kit`) and `4cb6b1e` (`scripts/quick-edit`); findings F58 to F63 and rows H33 to H36 in the walk log at `159224f` and `b20eae3`.
