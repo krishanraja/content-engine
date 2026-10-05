@@ -556,6 +556,51 @@ readback stayed at 61 reusable and 31 fresh because this article changed after
 the earlier result. The exact next gate is therefore one paid truth-check run
 with a hard cap of 31 fresh sentences; it has not been approved or run.
 
+**The launch version, 2026-10-05.** Krish picked article 1 to launch
+makeyourmindup ("given it's the first one, it needs to be a really big-picture
+piece") and asked for depth: "it doesn't really explain in plain english why
+they get paid for different things and what those different things are, what
+the incentives are for each company to make that decision, and where the
+consumer or merchant could get stung". He agreed the plan of three visuals,
+one per point a reader must grasp ("this is better ... happy with the 3"), and
+"yes to the article too". The rewrite is 1,813 words at reading age 12.5. It
+keeps his approved IF YOU ARE BUILDING and IF YOU ARE BUYING sections word for
+word, and adds what each company is paid for, why each chose as it did, and
+three sections on where a shopper, a Shopify merchant or an Amazon seller could
+get stung. 36 verbatim source excerpts were attached as materials. Five paid
+fact-check runs:
+
+| Run | Blocking | Claims | What it held |
+|---|---|---|---|
+| 1 | 40 | 60 | A quote's date (it appears in two filings a year apart), "$68.6bn" without its year, a date for a Zuckerberg remark, and many claims with no excerpt filed yet |
+| 2 | 19 | 60 | "Muse goes straight to the product", contradicted: Muse browses and shows listings. Claims backed on file but unclear on the web |
+| 3 | 16 | 60 | Numbers not written the same way in any filed source, a court date missing from its excerpt, a UK paper not named as the CMA's |
+| 4 | 6 | 60 | Plain-English restatements read as claims: "It gets paid when you pay", "put the shelf inside its own AI agent", "Tell Muse what to buy" |
+| 5 | **0** | 59 | **Passed.** 52 sentences carried their earlier result (F52); every claim is verified twice or on file with a primary source |
+
+Runs 1 to 4 were full runs: each came after new excerpts were attached, and a
+changed materials hash empties the ledger. Run 5 attached nothing new.
+
+**F56. The on-file reader passes a figure only when a filed source writes it
+the same way.** Amazon's 10-K says advertising was 68,635 (in millions); the
+sentence says $68.6 billion. That sentence passed on the web check alone, and a
+second one carrying "$56.2 billion in 2024" blocked, so it was cut. The same
+literal reading blocks a summary line that restates a source in plain words,
+unless it reads as an analogy ("Shopify is the till") or is labelled "Our read".
+The fixes that worked were quoting the company's own words ("automate
+deal-finding, cart-building, and routine purchases") and moving a summary into
+an analogy. Proposal for Krish, not built: the write stage quotes a source's
+own words for every fact and keeps plain-English summaries as analogies or
+labelled reads, so the first run is not the most expensive.
+
+The three visuals follow the live VISUAL_EXPLAINS rule: one company needs you
+to look and the other needs you to pay (Amazon and Shopify's 2025 money), the
+same request sent to Amazon's AI agent and to Meta's Muse, and who pays when an
+AI agent gets it wrong. They carry the companies' public logos. A launch post,
+a LinkedIn post and card, a Substack social image and a 60-second video script
+were written to go with the piece, and none of them is published. The piece is
+in `review`; locking it is Krish's, in Control Center.
+
 ## Piece 2: mind.the.gap
 
 `904658db-4df2-4537-a0ed-ebe93e081db7`. "Every AI lab now sells a menu instead

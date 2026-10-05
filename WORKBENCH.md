@@ -90,6 +90,18 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
 ## Latest handoff
 
+- 2026-10-05: Article 1 is the launch piece, rewritten deeper at Krish's
+  request ("why they get paid for different things ... the incentives ... where
+  the consumer or merchant could get stung"), with his practical sections kept
+  word for word. It passed the fact check on the fifth run (59 claims, 0
+  problems) and is in review. Locking it is Krish's, in Control Center. The
+  launch kit (a private artifact linked from the board item
+  `you-launch-today`) holds the Substack title and subtitle, the article with
+  three images and 28 sources linked, the launch post, the LinkedIn post and
+  card, and the video script. Nothing is published. After he publishes, he
+  sends the link; the makeyourmindup.ai scoreboard and the move from Issue 00
+  to Issue 01 need his yes. What the fact check taught is walk log F56. The
+  article supersedes the 2026-10-04 notes below.
 - Krish read the current Article 1 revision on 2026-10-04 and said, "ok,
   happy with this article". Treat that as his taste approval of the exact
   wording he saw. His decision is recorded in the edit ledger against that
