@@ -145,6 +145,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['judge_idea', 'judge_draft', 'write', 'visual'],
   },
   {
+    id: 'VISUAL_EXPLAINS', name: 'A visual makes a critical point land faster',
+    text: 'A visual exists only to make one critical point of the piece land faster than the words can. Before making one, write that point in one sentence and the reader\'s question it answers. Build it from the piece\'s real, checked numbers, quotes and evidence, and show the mechanism or the comparison that carries the point. Never decorate: no figures walking to boxes, no icons acting out an analogy, no motion that adds nothing the words already said. Test: a reader who sees only the visual understands the point. If it fails, cut it.',
+    said: 'The visuals need to explain something critical in the article in a way that would help them understand the point quicker. this needs to be a permanent rule, right now the visuals just feel like gimmicks - who cares about a person walking to a box that says "till"?',
+    on: '2026-10-05', source: 'chat, launch visuals for piece 1', status: 'live',
+    stages: ['visual'],
+  },
+  {
     id: 'BOLD', name: 'Bold and colourful, never Bloomberg',
     text: 'Every page, Short and carousel is bold, colourful and fun, in the makeyourmindup house style: one loud thing per block, colour blocks loud because the rest is quiet. Never the grey, dense look of a financial terminal.',
     said: 'this design needs to be bold, vivacious and colourful like everything else we creatively bring to life. everything is so boring and Bloomberg right now.',

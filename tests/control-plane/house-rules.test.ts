@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, test } from 'vitest'
 import { HOUSE_RULES, houseRulesBlock, rulesFor, type Stage } from '../../apps/control-plane/api/_houseRules.js'
 import { confidenceOf, predictionCheck, publishChecks, publishStatus, readingGrade } from '../../apps/control-plane/api/_publishChecks.js'
@@ -79,6 +80,20 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.match(relatable.text, /keep the underlying fact exact/)
     assert.ok(houseRulesBlock('write').includes(relatable.text))
     assert.ok(houseRulesBlock('visual').includes(relatable.text))
+  })
+  test('a visual must make a critical point land faster, and the script and channel cut planners read that', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'VISUAL_EXPLAINS')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.match(r.said, /explain something critical in the article/)
+    assert.match(r.text, /real, checked numbers, quotes and evidence/)
+    assert.match(r.text, /a reader who sees only the visual understands the point/)
+    assert.ok(houseRulesBlock('visual').includes(r.text))
+    const video = readFileSync(join(__dirname, '../../apps/control-plane/api/_video.ts'), 'utf8')
+    assert.match(video, /houseRulesBlock\('visual'\)/)
+    assert.match(video, /houseRulesBlock\('write'\)/)
+    const cut = readFileSync(join(__dirname, '../../apps/control-plane/api/content-ideas/[id]/channel-cut.ts'), 'utf8')
+    assert.match(cut, /houseRulesBlock\('visual'\)/)
   })
   test('the stages named are the stages that exist', () => {
     const stages: Stage[] = ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual']

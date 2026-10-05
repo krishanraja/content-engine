@@ -331,7 +331,10 @@ them. House rules win over a mandate where they disagree, so every piece
 ends with a dated prediction. They also require every sentence to have one
 clear reading, and ask unfamiliar mechanisms to use a factual historical
 parallel, familiar analogy or clearly signposted comic exaggeration when that
-makes the idea easier to grasp. `tests/control-plane/house-rules.test.ts`
+makes the idea easier to grasp. Every visual must make one critical point
+land faster than the words, built from the piece's checked evidence, and the
+video script and channel cut planners read that rule for every shot and visual
+suggestion. `tests/control-plane/house-rules.test.ts`
 fails when a live rule reaches no stage.
 
 **Before approval** (`api/_publishChecks.ts`). `approved` and `published`

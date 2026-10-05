@@ -7,6 +7,7 @@ import {
 } from '../../_content.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { guardEngine } from '../../_auth.js'
+import { houseRulesBlock } from '../../_houseRules.js'
 
 // POST /api/content-ideas/:id/channel-cut
 //   body: { channel: MediaChannel, hint?: string, source_text?: string }
@@ -137,7 +138,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         `\nDRAFT:\n${source.slice(0, 14_000)}\n\n` +
         `INSTRUCTION: ${b.hint || FALLBACK_HINT[channel]}\n\n` +
         'Return ONLY a single JSON object: {"body":string,"visual_suggestion":string|null,"notes":string|null}. ' +
-        '"notes" is where you flag anything the channel wanted that the source could not support. Leave it null if there is nothing to flag.',
+        '"notes" is where you flag anything the channel wanted that the source could not support. Leave it null if there is nothing to flag.\n\n' +
+        `"visual_suggestion" follows these rules, and is null when no visual passes them:\n${houseRulesBlock('visual')}`,
       maxTokens: 6000,
       temperature: 0.5,
       timeoutMs: 90_000,

@@ -117,6 +117,7 @@ import {
   robustJson, sanitizeVoice, type Material,
 } from './_content.js'
 import { UTILITY_MODEL } from './_models.js'
+import { houseRulesBlock } from './_houseRules.js'
 
 export interface VideoBeat { t: string; say: string; shot: string }
 
@@ -168,6 +169,11 @@ export async function buildVideoScript(o: {
     `This is a hard ceiling, not a style note: ${f.words} words is what fits in ${f.seconds} seconds at an unhurried pace. Going over does not produce a longer ${f.label}, it produces a script that overruns, and at the short lengths that is the difference between a hook and a rambling clip. If the material will not fit, cut material. Do not speed up the delivery to make room.`,
     `STRUCTURE FOR THIS LENGTH (not a suggestion, this is what this length can carry):\n${f.shape}`,
     SPOKEN_RULES,
+    // Krish's house rules reach the spoken words and the shots. Before 2026-10-05 a script
+    // could say "this week" about a month-old event, and planned a "till ringing" shot that
+    // explained nothing (walk log, piece 1 launch).
+    houseRulesBlock('write'),
+    `FOR EVERY "shot" (what is on screen):\n${houseRulesBlock('visual')}`,
     'You may cut, compress, reorder and re-voice. You may NOT add a claim the source piece did not earn. EVERY NUMBER MUST APPEAR VERBATIM IN THE SOURCE. Do not compute totals, differences, percentages or rates, even when the arithmetic looks obvious.',
     'Return JSON only: {"beats":[{"t":string,"say":string,"shot":string}],"title":string,"hook":string,"notes":string|null}',
     '"t" is an approximate timecode for the start of the beat, as m:ss (for example "0:00", "0:12"). "say" is the spoken words for that beat, verbatim, ready to read. "shot" is what is on screen during it: framing, b-roll, on-screen text, or a cut instruction. Keep "shot" concrete and short.',

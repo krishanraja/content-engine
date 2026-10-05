@@ -10,6 +10,16 @@ in progress and what is next, and how he wants to be worked with (plain words,
 no project shorthand). Update it before you stop, so the next session, in any
 tool, picks up where you left off.
 
+**Every visual, interactive or animation makes a critical point land faster.**
+Krish, 2026-10-05: "The visuals need to explain something critical in the
+article in a way that would help them understand the point quicker. this needs
+to be a permanent rule, right now the visuals just feel like gimmicks". Before
+you build one, write the point it carries and the reader's question it answers.
+Build it from the piece's checked numbers, quotes and evidence, never from
+figures or icons acting out an analogy. If a reader who sees only the visual
+would not get the point, do not make it. The rule is `VISUAL_EXPLAINS` in
+`apps/control-plane/api/_houseRules.ts`.
+
 **Codex on a Windows home computer:** run `scripts/engine.py` and `git pull` or
 `git push` outside the sandbox, asking Krish to approve. The sandbox runs as a
 separate Windows user that cannot see the engine key or reach the internet.

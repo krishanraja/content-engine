@@ -19,6 +19,9 @@ Last updated: 2026-10-04 00:06 UTC, by a Codex session.
   file when how the work is done changes.
 - Make the call and say what you assumed. Ask only when the answer changes the
   shape of the work, and offer your best guess with the question.
+- Every visual, interactive or animation must make one critical point of the
+  piece land faster than the words can, from its checked evidence. No
+  gimmicks (`AGENTS.md`, house rule `VISUAL_EXPLAINS`).
 - His decisions are his alone. Record one only when he made it in words, with
   `decided_by: 'Krish'` (`AGENTS.md`).
 
