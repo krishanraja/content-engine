@@ -29,10 +29,12 @@ import {
   type RunnerProjectProjectionV1,
   type ClaimedProductionBriefV1,
   type ProductionBriefCompleteRequestV1,
+  SERIES_IDS,
+  EditorialFormatV1Schema,
 } from '@mindmake/contracts'
 import { hashFile, hashFileMd5, hashValue } from './hash.js'
 
-export const CONTROL_CENTER_RUNNER_CREDENTIAL = 'MindmakeVideoStudio/control-center-runner-token'
+export const CONTROL_CENTER_RUNNER_CREDENTIAL = 'MindmakeVideoStudio/control-center-runner-token-v3'
 
 type FetchLike = typeof fetch
 
@@ -156,6 +158,12 @@ export class ControlPlaneClient {
       software_commit: input.software_commit,
       command_schema_versions: [1],
       ...(input.lease_seconds === undefined ? {} : { lease_seconds: input.lease_seconds }),
+      // Declares every series this runner can parse, so the control plane
+      // hands it briefs in the live subchannel names. A runner that says
+      // nothing is only given the retired pair.
+      series_supported: [...SERIES_IDS],
+      // And every editorial format it can parse, so it is handed The Fork.
+      editorial_formats_supported: [...EditorialFormatV1Schema.options],
     })
     const response = ProductionBriefClaimResponseV1Schema.parse(await this.post('production-brief-claim', request))
     if (!response.item) return null

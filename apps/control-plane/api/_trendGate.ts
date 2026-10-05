@@ -29,24 +29,34 @@ export const SHIFT_CATEGORIES = [
 export type ShiftCategory = typeof SHIFT_CATEGORIES[number]
 
 // Which format a shift belongs to (Krish, 2026-08-06: venture / format /
-// channel). Built asks how a thing was actually built; Paid asks how it
-// actually makes money. The category the gate already assigns answers that,
-// so the lane is derived rather than being a second judgement to get wrong.
+// channel). One builder asks how a thing was actually built; the other asks
+// how it actually makes money. The category the gate already assigns answers
+// that, so the lane is derived rather than being a second judgement to get
+// wrong.
+//
+// The values are live `venture_formats` slugs, because `shifts.lane` has been
+// a foreign key to that table since 2026-09-19. This map used to return the
+// storage keys `built` and `paid`, which the key refuses, so every detection
+// since then failed on `shifts_lane_fkey` and wrote nothing. The successors
+// are the ones `format_aliases` records (`built` -> under_the_hood, `paid` ->
+// follow_the_money), and they match the 41 laned rows already in the table.
 //
 // Anything genuinely ambiguous returns null. A null lane shows in BOTH lanes
 // in the Content tab, which is honest: the detector has not decided, and
 // forcing a lane would invent a judgement nobody made.
-const LANE_BY_CATEGORY: Partial<Record<ShiftCategory, 'built' | 'paid'>> = {
-  tools: 'built',
-  orchestration: 'built',
-  model: 'built',
-  economics: 'paid',
-  product: 'paid',
-  proof: 'paid',
+export type ShiftLane = 'under_the_hood' | 'follow_the_money'
+
+const LANE_BY_CATEGORY: Partial<Record<ShiftCategory, ShiftLane>> = {
+  tools: 'under_the_hood',
+  orchestration: 'under_the_hood',
+  model: 'under_the_hood',
+  economics: 'follow_the_money',
+  product: 'follow_the_money',
+  proof: 'follow_the_money',
   // governance, security and org cut across both and stay unlaned on purpose.
 }
 
-export function laneForShift(category: ShiftCategory): 'built' | 'paid' | null {
+export function laneForShift(category: ShiftCategory): ShiftLane | null {
   return LANE_BY_CATEGORY[category] ?? null
 }
 

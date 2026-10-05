@@ -34,3 +34,13 @@ Preserve Krish's exact sketch as the first option. Cleanup, isolation, colour tr
 ## Failure behaviour
 
 Fail closed on a missing asset, hash drift, unclear rights, broken attribution, unapproved transformation, misleading crop, undisclosed realistic generation, or an illustration used as proof. If cloud access, budget, or provider output fails, use the recorded local fallback rather than silently substituting another asset.
+
+## Editorial source preflight
+
+Before external capture, show Krish a short source and headline shortlist. Recommend one option, state the strongest reason it may fail and prefer one exceptional headline over two merely relevant pages. Do not capture or compose a source that has not survived this gate.
+
+Prefer primary authorities and tier-one reporting, then corroborated specialist trade reporting. Vendor marketing and secondary blogs cannot receive full-screen proof treatment. Treat 60 days as the default ceiling for fresh news and 180 days for current material. Older sources must be primary research or genuinely evergreen evidence.
+
+Reject generic service content, marketing claims, listicles, guides, SEO headlines and pages whose relevance exists only in body copy. The visible headline must name a development, quantified consequence, conflict or structural shift that directly matches the spoken claim. Specialist trade claims require independent corroboration and a recorded objection.
+
+Budget enough time to read the proof. Prefer one strong headline when two would rush the beat. Capture only the useful source identity, exact headline, date and decisive visual or statistic. Exclude browser chrome, cookie banners, unrelated navigation and unreadable body copy before exact screenshot approval.

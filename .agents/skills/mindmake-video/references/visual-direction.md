@@ -44,6 +44,14 @@ The foundation includes shot-size progression, inserts, cutaways, reactions, mon
 
 The first Mindmake signature pack is evidence-led: living evidence theatre, gesture-directed composition, guided screenshot pans and magnifiers, animated owned sketches, vertical evidence descent, and evidence-to-illustration handoffs. More experimental devices such as depth layering, portals, camera-motion relays, stylised duplicates, or reality ruptures remain exact-shot approval decisions.
 
+Use `config/techniques.json` as the single repertoire authority. Before authoring production shot directives, run `studio v2 repertoire propose` for every beat and persist its `DeviceSelectionTraceV1` in `device_selection_traces`. Hard eligibility precedes scoring. Use one primary device and at most two supports. Equal scores resolve by stable device ID. Never select a device whose required governed inputs are missing.
+
+The registry also contains recipes and analysis-only reference observations. A recipe is a recurring narrative sequence, not a house style. A reference observation may teach a principle but never grants permission to copy, trace or publish the reference media.
+
+The current device pack adds noun-to-proof cut, tracked object label, progressive value reveal and embodied closing action. The Evidence Walkthrough recipe combines these with guided inspection and a clean return to Krish. Tracked labels require ordered layer tracking keyframes. Progressive reveals require at least two staged reveal moments. Embodied closing actions belong only in the final payoff or ending beat.
+
+If no existing device clears the repertoire threshold, do not lower the threshold or choose decorative filler. The sharp alternative is exactly one job-local `DeviceInventionProposalV1`. It must use the experimental lane, name a conservative existing fallback, receive phone-size styleframe and timed animatic review, and receive exact approval from Krish before treatment. It cannot promote itself into the registry.
+
 ## Review and rejection
 
 Review new work through phone-size entry, middle, and exit styleframes, then a timed low-resolution animatic. Premium and experimental work always requires the animatic gate. A proven restrained treatment may skip it only when risk and confidence checks pass.
@@ -51,3 +59,22 @@ Review new work through phone-size entry, middle, and exit styleframes, then a t
 Reject or request a precise pickup or rerecord when the argument, performance, ending, proof, source resolution, or visual coverage cannot support a premium result. Never use motion or generated media to disguise weak content.
 
 Reject unsafe flashes, unreadable evidence, motion that risks discomfort, attention collisions, damaged facial detail, or a crop that changes the apparent meaning of a gesture.
+
+## Brand and on-screen orchestration
+
+The Money of AI is mechanism-led and commercially authoritative. Built With AI is tactile and operational. Use one shared Mindmake skeleton with distinct proof motifs and editorial behaviour. Series identity comes from the name, editorial role and proof motif, not extra colour systems.
+
+The pinned brand theme uses ink and paper grounds, mint for the answer, amber only for something that changed, Archivo for structure, Newsreader for claims, Source Serif 4 for body copy and IBM Plex Mono for evidence labels, dates, sources and data. Do not reintroduce legacy blue and lime series accents, generic rounded social cards, ornamental gradients or a progress bar. A brand-theme change creates a new treatment revision and requires treatment approval.
+
+Use only content-addressed official wordmarks from `krishanraja/mindmake/src/assets`. Never type, trace, approximate, recolour or regenerate one. For variable footage, use the approved ink-background variants, preserve their pixels and crop only transparent padding. Stack Mindmake above the matching series mark inside the approved compact top-left square. Keep both at or above the configured phone-legibility floor. A missing asset, hash mismatch, absent series mapping, missing lockup or undersized mark is a hard render failure.
+
+Choose the on-screen relationship from the viewer's immediate task:
+
+- `presenter_primary`: Krish's expression or delivery is the value. Use only a short, low-reading-load element in verified negative space.
+- `sidecar`: the viewer needs Krish and a simple artifact together. Reserve a deliberate side of frame and never float it over a face.
+- `evidence_ribbon`: a compact headline or screenshot sits in the lower-middle torso or background region, with the face clear and captions below.
+- `evidence_cutaway`: proof needs uninterrupted inspection. Replace the presenter intentionally, preserve audio continuity and return to Krish for connection and the ending.
+
+Do not make captions, presenter expression and dense evidence compete for the same moment. Use claim boundaries for transitions. Prefer a ribbon when the approved source remains legible at portrait width. Unless the ending itself is an essential reveal, return to unobstructed Krish for at least the final second.
+
+`evidence-kinetic-ribbon-v1` is approved only for Built With AI solo footage. It is a source-agnostic layout, not a fixed timeline. Retain lower captions, selective kinetic emphasis, a compact evidence ribbon, face avoidance and at least one clear final second. Every new job requires treatment review until automated face-occupancy proof exists.

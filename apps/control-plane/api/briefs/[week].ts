@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
-import { sanitizeVoice, preamble } from '../_content.js'
+import { guardEngine } from '../_auth.js'
+import { sanitizeVoice } from '../_content.js'
 import { attachRejectSignal } from '../_rejectSignal.js'
 import { recordShip } from '../_ships.js'
 
@@ -20,7 +21,7 @@ function weekParam(req: VercelRequest): string | null {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res, 'GET, PATCH, OPTIONS')) return
+  if (guardEngine(req, res, ['GET', 'PATCH'])) return
   const week = weekParam(req)
   if (!week) return res.status(400).json({ ok: false, error: 'week required (YYYY-Www)' })
 

@@ -1,0 +1,74 @@
+{
+ "name": "hello",
+ "source": "recording/hello.mp4",
+ "crop": [
+  404,
+  720,
+  438,
+  0
+ ],
+ "face": [
+  100,
+  450
+ ],
+ "remove": [
+  {
+   "say": "So, you know,",
+   "after": "maybe suggests is coming"
+  },
+  {
+   "say": "you'll get,",
+   "after": "in your inbox, and"
+  },
+  {
+   "say": "you can get access to free, sorry,",
+   "after": "to pay as well"
+  }
+ ],
+ "replacements": [
+  [
+   "Chris",
+   "Krish"
+  ],
+  [
+   "theater",
+   "theatre"
+  ]
+ ],
+ "frame16": "gfx/hello-frame-16x9.png",
+ "endcard": {
+  "9x16": "../hello/endcard-9x16.mp4",
+  "16x9": "../hello/endcard-16x9.mp4"
+ },
+ "strap": {
+  "png": "gfx/strap-9x16.png",
+  "after": "hi im",
+  "seconds": 4
+ },
+ "cues": [
+  {
+   "id": "monday",
+   "panel": "gfx/hello-mon-{aspect}.png",
+   "start": "so on mondays",
+   "end": "than you think"
+  },
+  {
+   "id": "wednesday",
+   "panel": "gfx/hello-wed-{aspect}.png",
+   "start": "on wednesday",
+   "end": "and not believe"
+  },
+  {
+   "id": "friday",
+   "panel": "gfx/hello-fri-{aspect}.png",
+   "start": "and then on friday",
+   "end": "buying products"
+  },
+  {
+   "id": "scoreboard",
+   "panel": "gfx/hello-score-{aspect}.png",
+   "start": "every piece ends",
+   "end": "hits go up"
+  }
+ ]
+}

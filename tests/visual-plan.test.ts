@@ -8,7 +8,7 @@ import {
   type SourceVisualAnalysisV1,
   type VisualNarrativePlanV1,
 } from '@mindmake/contracts'
-import { BUILT_WITH_AI_EDITORIAL_RULE_ID, hashFile, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, loadTechniqueRegistry, reviewVisualPlan, verifyVisualAssets } from '@mindmake/core'
+import { BUILT_WITH_AI_EDITORIAL_RULE_ID, hashFile, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, loadTechniqueRegistry, reviewVisualPlan, selectDevicesForBeat, verifyVisualAssets } from '@mindmake/core'
 
 const H = 'a'.repeat(64)
 
@@ -48,6 +48,26 @@ function plan(overrides: Record<string, unknown> = {}): VisualNarrativePlanV1 {
     budget: { estimated_cost_gbp: 0, maximum_cost_gbp: 15, exception_approved: false },
     disclosures: [{ platform: 'youtube_shorts', decision: 'not_required', rationale: 'No meaningfully altered media is present.' }],
     fallbacks: [], strategy_summary: 'A restrained presenter-led conclusion with no decorative clutter.',
+    ...overrides,
+  })
+}
+
+/** The shape a production plan actually has: a hook that leaves a question open and a payoff that answers it. */
+function loopedPlan(overrides: Record<string, unknown> = {}): VisualNarrativePlanV1 {
+  const base = plan()
+  const shot = base.shot_directives[0]!
+  const span = (id: string, start: number, end: number) => ({
+    ...shot, shot_id: `shot-${id}`, beat_id: `beat-${id}`, start_ms: start, end_ms: end, source_start_ms: start, source_end_ms: end,
+    camera_plan: { ...shot.camera_plan, camera_plan_id: `camera-${id}`, start_ms: start, end_ms: end, keyframes: [{ at_ms: start, crop: { x: 0, y: 0, width: 1, height: 1 }, zoom: 1, rotation_degrees: 0, confidence: 1 }] },
+  })
+  return VisualNarrativePlanV1Schema.parse({
+    ...base,
+    beats: [
+      { ...base.beats[0]!, beat_id: 'beat-hook', start_ms: 0, end_ms: 6_000, source_spans: [{ source_id: 'camera-main', start_ms: 0, end_ms: 6_000 }], narrative_function: 'hook', viewer_task: 'feel_stakes', emotional_function: 'curiosity', transcript: 'The number everyone quotes is the wrong one.', rationale: 'Confirm the promise and leave the real number unsaid.', opens_question: true },
+      { ...base.beats[0]!, beat_id: 'beat-payoff', start_ms: 6_000, end_ms: 20_000, source_spans: [{ source_id: 'camera-main', start_ms: 6_000, end_ms: 20_000 }], answers_beat_id: 'beat-hook' },
+    ],
+    shot_directives: [span('hook', 0, 6_000), span('payoff', 6_000, 20_000)],
+    strategy_summary: 'A hook that withholds the real number and a payoff that supplies it.',
     ...overrides,
   })
 }
@@ -190,5 +210,78 @@ describe('visual narrative planning gates', () => {
     expect(await verifyVisualAssets(withAsset)).toMatchObject({ passed: true, hard_blocks: [] })
     await writeFile(path, 'changed pixels', 'utf8')
     expect((await verifyVisualAssets(withAsset)).hard_blocks).toContain('asset proof-1 changed after planning')
+  })
+
+  it('requires implementable tracked labels and staged value reveals', async () => {
+    const registry = await loadTechniqueRegistry(resolve('config/techniques.json'))
+    const base = plan()
+    const tracked = plan({
+      shot_directives: [{
+        ...base.shot_directives[0]!,
+        technique_ids: ['tracked-object-label'],
+        layers: [...base.shot_directives[0]!.layers, {
+          layer_id: 'tracked-label', z_index: 1, kind: 'annotation', target_id: 'verified-value', anchor: 'tracked_region', opacity: 1, blend_mode: 'normal', protected: true,
+        }],
+      }],
+    })
+    const invalidTracked = reviewVisualPlan({ plan: tracked, analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H })
+    expect(invalidTracked.review.hard_blocks).toContain('shot shot-1 uses tracked-object-label without ordered tracking keyframes on an annotation layer')
+
+    const progressive = plan({
+      shot_directives: [{
+        ...base.shot_directives[0]!,
+        technique_ids: ['progressive-value-reveal'],
+        layers: [
+          ...base.shot_directives[0]!.layers,
+          { layer_id: 'value-one', z_index: 1, kind: 'annotation', target_id: 'value-one', anchor: 'left', opacity: 1, blend_mode: 'normal', protected: true, visible_start_ms: 2_000, visible_end_ms: 18_000 },
+          { layer_id: 'value-two', z_index: 2, kind: 'annotation', target_id: 'value-two', anchor: 'right', opacity: 1, blend_mode: 'normal', protected: true, visible_start_ms: 7_000, visible_end_ms: 18_000 },
+        ],
+      }],
+    })
+    const validProgressive = reviewVisualPlan({ plan: progressive, analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H })
+    expect(validProgressive.review.hard_blocks.some((issue) => issue.includes('progressive-value-reveal'))).toBe(false)
+  })
+
+  it('requires a deterministic device trace for every production beat under registry v2', async () => {
+    const registry = await loadTechniqueRegistry(resolve('config/techniques.json'))
+    const reviewed = reviewVisualPlan({ plan: plan(), analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H, production: true })
+    expect(reviewed.review.hard_blocks).toContain('production visual plans require one deterministic device selection trace per beat')
+
+    const trace = selectDevicesForBeat(registry, {
+      traceId: 'trace-beat-1',
+      beatId: 'beat-1',
+      series: 'built_with_ai',
+      sourceMode: 'solo',
+      narrativeFunction: 'payoff',
+      viewerTask: 'land_payoff',
+      narrativeJob: 'explain',
+      treatmentLane: 'restrained',
+      availableInputs: ['subject_tracks', 'shot_boundaries'],
+      proofRequired: false,
+      prohibitedTechniqueIds: registry.techniques.map((device) => device.technique_id).filter((id) => id !== 'stable-semantic-crop'),
+      registryHash: H,
+    })
+    const bound = reviewVisualPlan({ plan: plan({ device_selection_traces: [trace] }), analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H, production: true })
+    expect(bound.review.hard_blocks).toEqual([])
+    const wrongHash = reviewVisualPlan({ plan: plan({ device_selection_traces: [{ ...trace, registry_hash: 'b'.repeat(64) }] }), analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H, production: true })
+    expect(wrongHash.review.hard_blocks).toContain('device selection trace trace-beat-1 references a different technique registry hash')
+
+    const invention = selectDevicesForBeat(registry, {
+      traceId: 'trace-invention', beatId: 'beat-1', series: 'built_with_ai', sourceMode: 'solo', narrativeFunction: 'payoff', viewerTask: 'land_payoff', narrativeJob: 'delight', treatmentLane: 'experimental', availableInputs: [], proofRequired: false, registryHash: H,
+    })
+    const approvedInvention = { ...invention, invention: { ...invention.invention!, approval_state: 'approved' as const, approved_by: 'Krish' as const, approval_ref: 'studio-user-confirmation:codex:invention:trace-invention' } }
+    const wrongLane = reviewVisualPlan({ plan: plan({ device_selection_traces: [approvedInvention] }), analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H, production: true })
+    expect(wrongLane.review.hard_blocks).toContain('invented devices require the experimental treatment lane')
+  })
+  it('reviews a two-beat plan that keeps a question open past the hook', async () => {
+    const registry = await loadTechniqueRegistry(resolve('config/techniques.json'))
+    const reviewed = reviewVisualPlan({ plan: loopedPlan(), analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H })
+    expect(reviewed.review.hard_blocks).toEqual([])
+
+    const unlooped = loopedPlan()
+    expect(() => VisualNarrativePlanV1Schema.parse({
+      ...unlooped,
+      beats: unlooped.beats.map(({ opens_question, answers_beat_id, ...beat }) => beat),
+    })).toThrow('the hook must leave a question open that a later beat answers')
   })
 })

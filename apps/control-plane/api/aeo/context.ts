@@ -52,7 +52,7 @@ const ROOM_FACE = {
  *  the answer for a venture or a prospect read. */
 const KRISH = {
   name: 'Krish Raja',
-  domains: ['mindmake.co', 'krishraja.com', 'mindmakerlive.substack.com', 'linkedin.com/in/krishraja'],
+  domains: ['mindmake.co', 'krishraja.com', 'mindmakerlive.substack.com', 'home.makeyourmindup.ai', 'makeyourmindup.ai', 'linkedin.com/in/krishraja'],
 }
 
 type Row = Record<string, any>

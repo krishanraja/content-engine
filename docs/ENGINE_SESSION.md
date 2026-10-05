@@ -1,5 +1,7 @@
 # Portable Studio session contract
 
+> Scope: the Studio: how an agent opens a tracked session and what it may capture. The content engine's agent rules are in `AGENTS.md` and `docs/CONTENT_ENGINE.md`. For the whole system start at `README.md`.
+
 ## Outcome
 
 Any supported LLM or Control Center can become a window into the same Video and Carousel Studio. The client supplies judgement and conversation. The engine owns commands, reviews, feedback provenance, and learning state.
@@ -75,6 +77,6 @@ Consumer clients may require a one-time connector approval. GitHub access alone 
 
 ## Local client setup
 
-Set `VIDEO_STUDIO_MCP_TOKEN` in the process environment before starting Codex or Claude Code. The committed client files read the token from that environment and never place it in GitHub.
+Codex and Claude Code use the committed stdio proxy in `.codex/config.toml` and `.mcp.json`. The proxy reads `MindmakeVideoStudio/studio-mcp-token-v2` directly from Windows Credential Manager inside its own process, pins the production endpoint, and never prints or persists the value. No parent-process environment variable or special client launch command is required.
 
 Claude.ai and ChatGPT require the separately released OAuth connector. Until that release exists, those clients may read and reason from the repository but must report `read_only_untracked`; they must not reuse the local bearer token.

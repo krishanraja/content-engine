@@ -3,7 +3,7 @@ import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
 import { loadConfig, callClaudeBlocks } from '../_content.js'
-import { driveListFolder, driveDownloadFile, googleConfigured } from '../_google.js'
+import { driveListFolder, driveProbeFolder, driveDownloadFile, googleConfigured } from '../_google.js'
 import { postHash, verbatimCheck } from '../_creatorFingerprint.js'
 import { buildSystemPrompt, buildUserContent, type Pillar, type CreatorRow, type YieldRow, type ReadableDoc, type ReadableBinary } from './_prompt.js'
 import {
@@ -157,17 +157,42 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { candidates, listed, unreadable } = toCandidates(listing.files)
   if (!candidates.length) {
-    // Two very different things both list zero, and the first message here
-    // named only the rarer one. An unshared folder lists clean rather than
-    // erroring, so it does have to be said; but once the folder IS shared, the
-    // ordinary reason for zero is that nothing has been dropped in the lookback
-    // window, and a quiet fortnight is not a fault. Name the window first,
-    // with the number, so the common case reads as the common case.
+    // Two very different things both list zero, and the previous message named
+    // both in one sentence, which let whoever read it pick the comfortable one.
+    // A quiet fortnight and an unshared folder are not the same event: the
+    // first is fine and the second is the lane being dead. So ask a question
+    // that separates them instead of guessing, by listing the folder again
+    // with no date filter.
+    //
+    // This also gives a re-share a moment to show up. Sharing a folder does
+    // not touch any file's modifiedTime, so a fixed grant stays invisible to
+    // the filtered list until somebody edits a file, and the job would have
+    // gone on printing the same ambiguous line over a folder it could now read.
+    if (listed === 0) {
+      const probe = await driveProbeFolder(folderId)
+      if (!probe.reachable) {
+        return res.status(200).json({
+          ok: false,
+          error: 'inspiration_folder_unreachable',
+          reason: `the inspiration folder cannot be read, so this lane is dead rather than quiet. ${probe.reason || ''}`.trim(),
+          fix: 'share the folder with the service account address in GOOGLE_SERVICE_ACCOUNT_EMAIL, as Viewer. Re-running before that changes nothing.',
+          listed: 0, lookback_days: lookbackDays,
+        })
+      }
+      return res.status(200).json({
+        ok: true,
+        skipped: probe.total === 0
+          ? 'the folder is readable and empty. Nothing to do, and nothing wrong.'
+          : `the folder is readable and holds ${probe.total} file(s), none modified in the last ${lookbackDays} days${probe.newestModified ? ` (newest ${probe.newestModified.slice(0, 10)})` : ''}. Quiet, not broken.`,
+        folder_reachable: true,
+        files_in_folder: probe.total,
+        newest_modified: probe.newestModified ?? null,
+        listed: 0, unreadable, lookback_days: lookbackDays,
+      })
+    }
     return res.status(200).json({
       ok: true,
-      skipped: listed === 0
-        ? `nothing modified in the folder in the last ${lookbackDays} days. If that is wrong, check the folder is shared with GOOGLE_SERVICE_ACCOUNT_EMAIL: an unshared folder also lists zero`
-        : 'nothing_readable_in_folder',
+      skipped: `${listed} file(s) were modified in the last ${lookbackDays} days and none of them is a type this can read. Readable types: Docs, Sheets, plain text, Markdown, JPEG, PNG, WebP, GIF and PDF.`,
       listed, unreadable, lookback_days: lookbackDays,
     })
   }

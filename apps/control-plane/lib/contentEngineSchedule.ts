@@ -30,6 +30,7 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   { job: 'feed_ingest',      path: '/api/feed/ingest',                   label: 'Feed ingest',           everyHours: DAY,  graceHours: 12 },
   { job: 'editorial_radar',  path: '/api/content-opportunities/refresh', label: 'Editorial radar',       everyHours: DAY,  graceHours: 12 },
   { job: 'triage_sweep',     path: '/api/triage/sweep',                  label: 'Triage sweep',          everyHours: DAY,  graceHours: 12 },
+  { job: 'judge_sweep',      path: '/api/judge/sweep',                   label: 'Judge sweep',           everyHours: DAY,  graceHours: 12 },
   { job: 'content_cluster',  path: '/api/content-ideas/cluster',         label: 'Draft clustering',      everyHours: DAY,  graceHours: 12 },
   { job: 'archive_stale',    path: '/api/content-ideas/archive-stale',   label: 'Stale idea archive',    everyHours: DAY,  graceHours: 12 },
   { job: 'lens_radar',       path: '/api/discover-lens-radar',           label: 'Lens radar',            everyHours: WEEK, graceHours: DAY },
@@ -47,6 +48,12 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   // something twelve times.
   { job: 'inspiration_scan', path: '/api/inspiration/drive-scan',         label: 'Drive inspiration scan', everyHours: DAY, graceHours: 12 },
   { job: 'aeo_ingest',       path: '/api/aeo/ingest',                    label: 'AEO research',          everyHours: WEEK, graceHours: DAY, trigger: 'external' },
+  // The trend record's own jobs. Entity tagging and the claim sweep are cheap
+  // and daily; the weekly series is snapshotted on Saturday, after Friday's
+  // detection and brief have already landed in what it counts.
+  { job: 'trend_entities',   path: '/api/trends/entities',               label: 'Entity tagging',        everyHours: DAY,  graceHours: 12 },
+  { job: 'claims_resolve',   path: '/api/claims/resolve',                label: 'Claim falsifier sweep', everyHours: DAY,  graceHours: 12 },
+  { job: 'trend_metrics',    path: '/api/trends/metrics',                label: 'Weekly trend series',   everyHours: WEEK, graceHours: DAY },
 ]
 
 export interface ContentEngineRunRow {

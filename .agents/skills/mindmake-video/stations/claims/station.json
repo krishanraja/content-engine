@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "claims",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Separate facts, inferences and judgments and bind consequential claims to evidence.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/claims/STATION.md",
+  "implementation_owners": ["packages/core/src/evidence.ts", "packages/core/src/editorial.ts"],
+  "contract_owners": ["packages/contracts/src/index.ts", "packages/contracts/src/v2.ts"],
+  "prerequisites": { "extract": ["candidates"], "solo": ["candidates"], "short_native": ["candidates"] },
+  "consumes": ["candidate_artifact", "public_evidence"],
+  "produces": ["claim_ledger"],
+  "approval_gate": "angle",
+  "hard_gates": ["Unsupported facts, private patterns without public proof and unresolved consequential claims block."],
+  "soft_gates": ["The strongest credible objection should be visible when evidence remains contestable."],
+  "invalidates_on_change": {
+    "extract": ["visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "solo": ["visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["recording_brief", "ingest", "normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "block", "fallback": "Narrow the claim, obtain public evidence or remove the unsupported candidate from production." },
+  "learning": { "reads_active_preferences": false, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/evidence.test.ts", "tests/editorial-contracts.test.ts"],
+    "regression_cases": ["An internal pattern cannot become a factual script claim without public evidence.", "A verified fact cannot have an empty evidence ledger."]
+  }
+}

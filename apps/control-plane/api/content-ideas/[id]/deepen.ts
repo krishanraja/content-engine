@@ -7,6 +7,7 @@ import {
   callClaude, corpusForChannel, loadCorpus, readMaterials, robustJson, type Material,
 } from '../../_content.js'
 import { UTILITY_MODEL } from '../../_models.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/deepen   body: { format?: 'paid' | 'built' }
 //
@@ -84,12 +85,7 @@ const SYSTEM = (format: Format) => [
 ].join('\n\n')
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  res.setHeader('Cache-Control', 'no-store')
-  if (req.method === 'OPTIONS') return res.status(200).end()
-  if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' })
+  if (guardEngine(req, res)) return
 
   const raw = req.query?.id
   const ideaId = Array.isArray(raw) ? raw[0] : raw

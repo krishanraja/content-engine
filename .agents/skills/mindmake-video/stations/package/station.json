@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "station_id": "package",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Bind approved masters, copy, covers, captions, ledgers and delivery settings into one artifact.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/package/STATION.md",
+  "implementation_owners": ["packages/core/src/package.ts", "packages/core/src/youtube.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts", "packages/contracts/src/index.ts"],
+  "prerequisites": { "extract": ["qa"], "solo": ["qa"], "short_native": ["qa"] },
+  "consumes": ["qa_artifact", "platform_masters", "claim_ledger", "asset_ledger"],
+  "produces": ["draft_package_artifact"],
+  "approval_gate": "package",
+  "hard_gates": ["Every package component must match its approved hash and public publishing must remain disabled."],
+  "soft_gates": ["Platform copy, cover and metadata should adapt the same approved story without generic filler."],
+  "invalidates_on_change": { "extract": [], "solo": [], "short_native": [] },
+  "failure": { "behavior": "retry", "fallback": "Keep the complete local package and retry private delivery without rebuilding upstream work." },
+  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/packaging-v2.test.ts", "tests/feedback-governance.test.ts"],
+    "regression_cases": ["YouTube delivery remains private-only.", "A post-engine edit must be re-imported before analytics can attach."]
+  }
+}

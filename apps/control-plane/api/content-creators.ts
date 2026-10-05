@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from './_supabase.js'
-import { preamble, slug as slugify } from './_content.js'
+import { guardEngine } from './_auth.js'
+import { slug as slugify } from './_content.js'
 import { text, bodyId } from './_growth.js'
 
 // /api/content-creators: thin CRUD over the curated-creator registry
@@ -30,7 +31,7 @@ function linkedinSlugFrom(url: string | null, bare: string | null): string | nul
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res, 'GET, POST, PATCH, OPTIONS')) return
+  if (guardEngine(req, res, ['GET', 'POST', 'PATCH'])) return
 
   if (req.method === 'GET') {
     const { data, error } = await supabase

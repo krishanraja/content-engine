@@ -1,5 +1,7 @@
 # Architecture
 
+> Scope: the Video and Carousel Studio. For the whole system start at `README.md`. Its known stale passages are listed in `docs/STUDIO.md`, "The detailed Studio documents".
+
 ## State model
 
 Each job freezes its current studio configuration and complete skill directories under `pinned/`. `job.json` is the materialized state; `events.jsonl` is append-only. Every stage artifact is schema-validated, content-addressed from semantic inputs, and immutable. Timestamps are audit metadata and do not affect semantic hashes.
@@ -19,6 +21,29 @@ radar/brief -> script -> candidates -> claims -> recording brief -> recorded ing
 ```
 
 An approved short-native script stays upstream when a recording is replaced. Re-ingest invalidates transcript, visual analysis, and visual descendants without discarding the editorial decision that caused the recording.
+
+## Station machinery
+
+The production graph is a mechanical assembly of independently governed stations, not one procedural prompt. `mindmake-video/SKILL.md` is a thin router. Shared editorial, visual, safety and learning policies remain focused cross-cutting references. Every executable V2 stage has its own station directory under `.agents/skills/mindmake-video/stations/` containing:
+
+- `station.json`: the typed machine boundary, version, owners, prerequisites by source mode, inputs, outputs, approval gate, invalidation map, fallback, learning permissions and regression cases.
+- `STATION.md`: the judgment needed at that station, including its responsibility, quality gates, failure behavior, handoff and change-control rule.
+- Existing deterministic test files named by the station contract as its regression evidence.
+
+The small `stations/registry.json` is an inventory and assembly map. It is not a second implementation of the engine. The runtime graph remains executable code, while the station files own operating judgment and boundary metadata. `npm run check:stations` proves exact parity between the registry, station contracts and runtime order, prerequisites and descendant invalidation. It also verifies that every named owner, test and instruction exists and content-addresses every contract and instruction card.
+
+The registry also declares the conveyor's `external_inputs` and `terminal_outputs`, and `npm run check:stations` proves the artifact topology across every station's declared inputs and outputs: each produced artifact needs exactly one producing station and either a consuming station or a declared terminal output, and each consumed artifact needs either a producing station or a declared external input. A missing producer, a duplicate producer, an orphaned output or an unowned terminal output fails the check rather than reaching runtime.
+
+This creates four separate kinds of authority:
+
+1. Prose owns intent, judgment, stopping conditions and handoff behavior.
+2. Zod schemas own data shape and reject incompatible handoffs.
+3. TypeScript owns execution, state transitions and invalidation.
+4. Fixtures and validators own admission to release.
+
+No production station can activate a learning rule. Stations emit observations; the governed feedback lifecycle may propose a scoped rule; Krish approves a durable change; reviewed Git configuration activates it. Operational telemetry, taste feedback and performance evidence remain separate.
+
+New formats reuse the shared upstream editorial workpiece and add only genuinely different downstream stations. A carousel, video or future long-form path must not clone the ideas pipeline, evidence ledger, voice rules, feedback memory or Control Center review surface. A proposed new station is admitted only when it has a distinct responsibility and owner, typed inputs and outputs, real failure behavior, regression cases and less overlap than extending an existing station. This keeps the machinery flexible without turning it into a collection of competing skills.
 
 `SourceBundleV1` holds up to 32 aligned camera, audio, and screen sources. `SourceVisualAnalysisV1` records normalized tracks, shot boundaries, active-speaker confidence, gesture and gaze intervals, safe negative space, protected presenter regions, capability downgrades, and conservative fallbacks. A Krish face template is encrypted in Windows-runner state and supplied to the analyzer over stdin; neither its descriptors nor source images enter Git, a job manifest, command arguments, or logs. Its manifest reference contains only the fixed profile ID and content hash. Guests receive job-local labels only. An ambiguous identity match remains unknown.
 
@@ -81,6 +106,8 @@ Non-activation `review_decision_record` commands synchronize story, treatment, f
 
 Receipts are HMAC signed over canonical JSON and journaled before completion. Claimed command envelopes are separately HMAC journaled before dispatch, without lease credentials. A committed completion whose HTTP response is lost fences its job and is retried from the receipt journal; unrelated jobs may continue. The exact command may be reclaimed only to the same stable installed runner identity, which atomically rebinds the outer journal to the fresh lease without changing the signed receipt. A matching terminal receipt can therefore be acknowledged after its original lease expires. If Control Center reports a deterministic unrecoverable authority state, including a recovery that already won, the original receipt is preserved in signed quarantine and surfaces explicit attention instead of retrying forever. Unlike an ordinary pending receipt, this contradictory history stops the whole runner before project replay, discovery, claim, or preview retention until bespoke operator reconciliation. Every such stop still sends one best-effort degraded heartbeat containing only path-free counts and safe attention state. Transient lease, provider, or media availability errors do not create a contradictory terminal receipt. The lease expires and the server may issue a bounded reclaim. Historical pre-cursor success receipts are authenticated acknowledged evidence only: they cannot be replayed, submitted, or used for recovery, and a legacy non-failed pending receipt is quarantined. A missing Drive mount is heartbeated as degraded and no media command is claimed until the mount returns.
 
+Since 2026-09-28 a second Windows machine can hold a cold standby runner with its own identity and runtime. Which runner may take work is recorded in the cloud, in `video_studio_runner_roles` (`supabase/migrations/20260928120000_video_studio_runner_roles.sql`): at most one runner is active, and both claim paths lease new commands and briefs only to it, inside the same transaction that writes the lease. Every other runner is answered as if the queue were empty, so the runner protocol is unchanged. Heartbeats, renewal, completion and same-runner reclaim are never fenced, and the audited operator switch refuses while the outgoing runner is running or holds work (`docs/OPERATIONS.md`, "Primary and cold standby").
+
 The daemon singleton lock binds its PID to the operating system's process-start identity and records acquisition time. This prevents an unrelated process which later inherits a crashed runner's Windows PID from making the stale lock permanent. Legacy locks without an instance identity are reclaimed only when the live process start time proves PID reuse; ambiguity remains a hard concurrent-runner block.
 
 V1 job bootstrap is explicit. `studio v2 runner project` verifies the exact current local treatment approval, builds its semantic target map, removes local-only fields, and publishes one idempotent per-platform review launcher. For a final launcher it also verifies the exact master hash and passing QA. Before any cloud command claim, the daemon records one bounded mounted-Drive discovery scan. It does not project intake candidates or create jobs automatically.
@@ -100,3 +127,15 @@ Cloud heartbeats receive only the existing `ready`, `unavailable`, or `not_confi
 ## Radar boundary
 
 The studio does no gathering. It reads `RadarFeedV1` from the existing mm-ctrl public pool and Control Center owned/operator patterns. Offline JSON fixtures use the same schema. Internal sanitized patterns are research prompts only and are hard-blocked from factual scripting until replaced with public evidence or approved case material.
+
+## Art director repertoire
+
+The art director extends the one versioned registry at `config/techniques.json`; it does not create a competing effects system. Reference work is reduced to analysis-only observations, atomic devices and optional recipes. Every device declares its narrative jobs, eligible series and formats, required inputs, contraindications, implementation state, render adapter, QA checks, production cost and fallback.
+
+For each beat, eligibility fails closed before deterministic weighted scoring. The trace records every rejected and eligible candidate, exact scores, one primary device, at most two supporting devices and its fallback. Production visual plans bind one trace to every beat. A Short may carry at most one signature device and one experimental or invented device.
+
+The sharp alternative is available only when no existing device clears the recorded threshold. It creates one bounded invention proposal in the experimental lane. It cannot enter treatment without exact Krish approval, phone-size styleframes and an animatic. Reference frames, compositions, copy and creator likeness remain prohibited production inputs.
+
+Device feedback is append-only and scoped by job, session, series, mode, treatment or platform. Weekly aggregation can make a narrow strong correction or a repeated cross-job pattern eligible for promotion, but it cannot activate a rule. Conflicting evidence leaves the pattern observational. Active repertoire changes still require exact Krish approval and reviewed Git configuration.
+
+The repertoire owns pre-treatment selection; `film-jury-v1` owns independent evaluation of the rendered evidence. Jury packets bind the same registry hash and selection traces so verdicts can cite the mechanism actually used. Jury scores, platform performance and Krish's taste remain separate evidence classes. None can silently promote a device.

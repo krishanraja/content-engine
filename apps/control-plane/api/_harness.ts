@@ -149,7 +149,8 @@ export async function callMetered(opts: MeteredOpts, budget: RunBudget): Promise
     // error are tokens Anthropic bills for.
     await meter.anthropicCall({
       agent: opts.agent || 'investigations',
-      model, inputTokens: inTok, outputTokens: outTok, failed: !r.ok,
+      model, usage: j?.usage, inputTokens: inTok, outputTokens: outTok, failed: !r.ok,
+      ...(r.ok ? {} : { error: Object.assign(new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`), { status: r.status }) }),
     })
     if (!r.ok) {
       return { ...empty, inputTokens: inTok, outputTokens: outTok, costUsd: cost, error: `anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}` }
@@ -228,7 +229,7 @@ export async function fetchPage(url: string, budget: RunBudget): Promise<Fetched
       signal: ctrl.signal,
       headers: {
         Range: `bytes=0-${FETCH_BYTES}`,
-        'User-Agent': 'Mozilla/5.0 (compatible; MindmakeVerifier/1.0; +https://mindmakerlive.substack.com)',
+        'User-Agent': 'Mozilla/5.0 (compatible; MindmakeVerifier/1.0; +https://home.makeyourmindup.ai)',
         Accept: 'text/html,application/xhtml+xml',
       },
     })

@@ -27,7 +27,7 @@
  *  content_slate_rulings were migrated to 'The Artifact' in the same pass, so
  *  the slate history is intact. 'The Teardown' is accepted on read only. */
 export const FORMATS = [
-  'Follow the Money',
+  'The Money Trail',
   'The Receipt',
   'One Number',
   'The Lag',
@@ -57,7 +57,7 @@ export type FormatSpec = {
 }
 
 export const FORMAT_SPEC: Record<Format, FormatSpec> = {
-  'Follow the Money': {
+  'The Money Trail': {
     covers: 'trace who pays whom and what the flow reveals about the position each side is in',
     outlet: 'Substack',
     slate: { lead: 1, yes: 2, maybe: 3, no: 1 },
@@ -125,7 +125,12 @@ export const FORMAT_SPEC: Record<Format, FormatSpec> = {
 
 /** Legacy format values that may still arrive from an old row or payload.
  *  Mapped forward, never rejected. */
-const LEGACY_FORMATS: Record<string, Format> = { 'The Teardown': 'The Artifact' }
+/** RENAMED 2026-09-25. 'Follow the Money' became 'The Money Trail' when Krish
+ *  made follow.the.money a subchannel's name: a story shape and a subchannel
+ *  sharing three words would make every brief that names one ambiguous. The
+ *  seven slate rulings and two arc cards were migrated in the same pass
+ *  (scripts/migrations/2026-09-25-money-trail-format-rename.sql). */
+const LEGACY_FORMATS: Record<string, Format> = { 'The Teardown': 'The Artifact', 'Follow the Money': 'The Money Trail' }
 
 export const normalizeFormat = (v: unknown): Format | null => {
   if (typeof v !== 'string') return null

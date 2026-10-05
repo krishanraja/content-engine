@@ -2,11 +2,13 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import {
   callClaude, corpusForChannel, loadCorpus, loadVoiceBlock,
-  materialsContext, pathId, preamble, readMaterials, robustJson, sanitizeVoice,
+  materialsContext, pathId, readMaterials, robustJson, sanitizeVoice,
 } from '../../_content.js'
 import {
-  applyAutofixes, buildFinalPassSystem, laneToVenture, normalizePass, rubricFor,
+  applyAutofixes, buildFinalPassSystem, laneToVenture, normalizePass, rubricFor, subchannelRubric, type VentureKey,
 } from '../../_finalPass.js'
+import { guardEngine } from '../../_auth.js'
+import { loadSubchannel } from '../../_subchannels.js'
 
 // POST /api/content-ideas/:id/final-pass
 //   body: { source_text: string, lenses?: string[] }
@@ -25,7 +27,7 @@ import {
 // normal autosave + save-draft path. Nothing here fires the factory.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 
@@ -44,14 +46,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // an unverifiable load-bearing claim is an instant fail). Before Techonomic
   // was retired this only fired for lane='techonomic'; the depth engine now
   // publishes to MYMU as a Teardown and must not lose its bar on the way.
-  const venture = hasInvestigationManifest(idea?.meta)
+  //
+  // A live subchannel is judged against its own mandate, read from
+  // venture_formats now (see subchannelRubric). A null lane no longer drops a
+  // routed piece onto the 'dynamic' (Unassigned) rubric: the ladder sets
+  // lane_slot and never lane, so every walk piece arrived that way.
+  const sub = hasInvestigationManifest(idea?.meta) ? null : await loadSubchannel(idea?.lane_slot)
+  const venture: VentureKey = hasInvestigationManifest(idea?.meta)
     ? 'investigation'
-    : laneToVenture(idea?.lane, idea?.lane_slot)
-  const rubric = rubricFor(venture)
+    : sub ? sub.slug as VentureKey : laneToVenture(idea?.lane, idea?.lane_slot)
+  const rubric = sub ? subchannelRubric(sub) : rubricFor(venture)
 
   const [voice, corpus] = await Promise.all([loadVoiceBlock(), loadCorpus()])
   const channelCorpus = corpusForChannel(corpus, rubric.corpusChannel)
-  const materialsBlock = materials.length ? `\n${materialsContext(materials)}` : ''
+  // The final pass verifies claims against these, so it reads more of each
+  // source than a writer does. At the writer's allowance the oldest research
+  // was cut to "[trimmed]" and the pass asked to verify figures that were on
+  // file (walk finding F5, 2026-09-24).
+  const materialsBlock = materials.length ? `\n${materialsContext(materials, 4000, 16000)}` : ''
 
   // Deterministic em-dash sanitize first, so the model never wastes an autofix on
   // it and the diff Krish reviews is the same text that will ship.
@@ -67,7 +79,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   let result
   try {
-    const txt = await callClaude({ agent: 'cleo-final-pass', system, user, maxTokens: 3200, temperature: 0.3 })
+    // The result echoes the whole cleaned draft inside its JSON, so a 900-word
+    // piece plus its suggestions ran past 3,200 tokens and the JSON was cut off
+    // mid-object: two of five walk runs returned 502 and lost their spend
+    // (walk finding F6). 6,000 leaves room for a long piece.
+    const txt = await callClaude({ agent: 'cleo-final-pass', cache: true, system, user, maxTokens: 6000, temperature: 0.3 })
     const parsed = robustJson(txt)
     if (!parsed) return res.status(502).json({ ok: false, error: 'could not parse final pass result' })
     result = normalizePass(parsed)

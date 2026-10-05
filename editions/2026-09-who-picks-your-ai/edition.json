@@ -1,0 +1,17 @@
+{
+  "idea_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+  "subchannel": "mind_the_gap",
+  "title": "Who picks your AI?",
+  "fact_check": {
+    "body_hash": "979315013a47fd422bef5f323a6599ba1d19649b4633709942772b2da6b25432",
+    "ran_at": "2026-09-26T09:01:32.368Z",
+    "passed": true,
+    "claims": 40,
+    "verified": 18,
+    "verified_on_file": 22,
+    "verified_web": 0,
+    "set_aside": 54,
+    "independent_checker": "perplexity:sonar-pro"
+  },
+  "status": "approved by Krish on 2026-09-28 at this text and 75%; not published"
+}

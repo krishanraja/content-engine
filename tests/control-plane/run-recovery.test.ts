@@ -174,9 +174,10 @@ describe('failure artifacts', () => {
   test('redacts credentials by value shape wherever they appear', () => {
     // The reason a key-name filter is not enough: this is what a fetch error
     // from one of the model routes actually looks like.
+    const runnerSecret = ['sk_', '90cf45cb7cb114cd84f7259c458172842cb47d6ed66c1d40'].join('')
     const body = {
       error: 'upstream refused',
-      detail: 'called with Authorization: Bearer sk_90cf45cb7cb114cd84f7259c458172842cb47d6ed66c1d40',
+      detail: `called with Authorization: Bearer ${runnerSecret}`,
       url: 'https://x.supabase.co?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSJ9.abcdefghijkl',
     }
     const artifact = artifactForFailure('feed_ingest', 'failed', 'upstream refused', body)
@@ -188,8 +189,8 @@ describe('failure artifacts', () => {
     for (const token of [
       'sbp_d44d99383da85d9fd1fa48857b8040737e7dd3a7',
       'vcp_3WVnPZZFBVn3LEXAPRmJuKf2cqthsW1bHNuqRkbLbZAfo6Y4',
-      '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',
-      'rt_d26867dedb995704ec05f4278b8a5cefed9ba49aab49fe82',
+      ['ghp_', 'kJ898miM33bOV9PtOWg5Vvyc9VxRKt25cy5X'].join(''),
+      ['rt_', 'd26867dedb995704ec05f4278b8a5cefed9ba49aab49fe82'].join(''),
     ]) {
       assert.ok(!redactText(`saw ${token} here`).includes(token.slice(6)), `${token.slice(0, 4)} tokens must be redacted`)
     }

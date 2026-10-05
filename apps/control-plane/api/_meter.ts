@@ -1,4 +1,5 @@
-import { priceUsd, isPriced } from './_prices.js'
+import { priceUsd, priceUsdDetailed, priceUsdUncached, readUsage, isPriced, type TokenUsage } from './_prices.js'
+import { classifyAnthropicFailure, noteAnthropicSuccess, recordAnthropicFailure, type ProviderFailure } from './_modelProvider.js'
 
 /**
  * Supabase, lazily.
@@ -60,6 +61,19 @@ export interface MeterRow {
   units: number
   /** What `units` counts: 'compute-units' | 'executions' | 'tokens'. */
   unit_name: string | null
+  /**
+   * Cached tokens, kept apart from `units` and from each other.
+   *
+   * Netting reads against writes would hide the one failure worth catching: a
+   * site that writes cache entries nobody reads pays MORE than one with no
+   * caching at all, because a write is priced above an ordinary input token
+   * and a read is priced at a tenth of one. Two columns, so the ratio between
+   * them is visible and a write-only site shows up as exactly what it is.
+   */
+  cache_read_tokens?: number
+  cache_write_tokens?: number
+  /** What the same work would have cost with no caching. usd minus this is the saving. */
+  usd_uncached?: number
 }
 
 /** UTC calendar day of an instant, as the meter stores it. */
@@ -117,13 +131,17 @@ export async function add(e: {
   failed?: number
   units?: number
   unitName?: string | null
+  cacheReadTokens?: number
+  cacheWriteTokens?: number
+  /** What this call would have cost uncached, so the saving is a stored number. */
+  usdUncached?: number
   /** Defaults to today. */
   day?: string
 }): Promise<void> {
   try {
     const supabase = await db()
     if (!supabase) return
-    await supabase.rpc('meter_add', {
+    const { error } = await supabase.rpc('meter_add', {
       p_provider: e.provider,
       p_unit_kind: e.unitKind,
       p_unit_key: e.unitKey,
@@ -136,8 +154,30 @@ export async function add(e: {
       p_failed: e.failed ?? 0,
       p_units: e.units ?? 0,
       p_unit_name: e.unitName ?? null,
+      p_cache_read_tokens: e.cacheReadTokens ?? 0,
+      p_cache_write_tokens: e.cacheWriteTokens ?? 0,
+      p_usd_uncached: e.usdUncached ?? e.usd ?? 0,
     })
-  } catch { /* metering is never load-bearing */ }
+    // METERING IS NEVER LOAD-BEARING, BUT IT MUST BE ABLE TO SAY IT FAILED.
+    //
+    // supabase-js RETURNS errors here, it does not throw them, so the catch
+    // below never saw a rejected write: the result was discarded and every
+    // failure looked exactly like a successful one. Combined with the catch,
+    // this function could not report anything at all.
+    //
+    // What that hides is the whole instrument going dark. Every Anthropic agent
+    // in meter_daily stops on 2026-09-15 on the same day, control-center's own
+    // and content-engine's alike, while the apify and n8n rows written by the
+    // sync crons continue. Read off the dashboard that is "we spent nothing",
+    // which is the most expensive sentence this codebase can say silently.
+    //
+    // Still swallowed, still never thrown: a failed meter write must not fail
+    // the work it was measuring. But it is now SAID, once per failure, so the
+    // difference between "no spend" and "no measurement" reaches a log.
+    if (error) console.warn(`[meter] write failed for ${e.provider}/${e.unitKey}: ${error.message || error}`)
+  } catch (e2) {
+    console.warn(`[meter] write threw for ${e.provider}/${e.unitKey}: ${(e2 as Error)?.message || e2}`)
+  }
 }
 
 export interface MeterUnit {
@@ -280,13 +320,88 @@ export function normalizeAgent(raw: string | null | undefined): string {
 export async function anthropicCall(e: {
   agent?: string | null
   model: string
-  inputTokens: number
-  outputTokens: number
+  inputTokens?: number
+  outputTokens?: number
+  /**
+   * The raw `usage` object from the response, preferred over the two counts.
+   *
+   * Every call site used to pluck input_tokens and output_tokens by hand and
+   * drop everything else, which is why cache savings were invisible across the
+   * whole OS: five sites, five places to forget. Passing the object through
+   * means the cache fields are read in exactly one place, and a site that
+   * starts caching tomorrow is measured without touching it.
+   */
+  usage?: unknown
   /** A call that errored after tokens were produced still cost money. */
   failed?: boolean
+  /**
+   * What the provider said when the call failed. With `failed`, the failure is
+   * classified (usage limit, overload...) and kept where the health endpoint
+   * and the judge sweep read it (api/_modelProvider.ts). Only for a single
+   * in-process call: a reporter posting another process's totals has no error
+   * of ours to record.
+   */
+  error?: unknown
+  /**
+   * How many calls this usage total covers. Defaults to 1, which is every
+   * in-process site: one call, one usage object, one run.
+   *
+   * It exists for the reporters that measure a batch and post it afterwards.
+   * The AEO engine runs in GitHub Actions and sends one row per model per run,
+   * and a run is around fifty probes. Without this, `runs` would read 1 for all
+   * of them: the dollars would be right and cost-per-run fifty times the truth,
+   * which is the kind of half-wrong number that survives a long time because
+   * the total it sits beside is correct.
+   */
+  calls?: number
+  /** How many of `calls` failed. Defaults to `failed` on a single call. */
+  failedCalls?: number
+  /** The day this usage belongs to. Defaults to today, which is right for an
+   *  in-process call and wrong for a run posting its total after midnight. */
+  day?: string
+  /**
+   * A multiplier on the PRICE, for tokens that did not cost list rate.
+   *
+   * The only caller today is the Batches API, which bills every token type at
+   * half. Applied to `usd` and `usd_uncached` alike, because the discount is a
+   * property of how the request was sent rather than of whether its prefix was
+   * cached: folding it into only one of the two would make the cache saving
+   * read larger than it is, and the batch saving smaller.
+   *
+   * Token counts are untouched, so a batched call and a live call of the same
+   * size still record the same `units` and the dollars-per-token between them
+   * stays comparable. Ignored unless it is a finite number in (0, 1].
+   */
+  discount?: number
 }): Promise<void> {
-  const tokens = (e.inputTokens || 0) + (e.outputTokens || 0)
-  if (!tokens) return
+  const u: TokenUsage = e.usage
+    ? readUsage(e.usage)
+    : { input: e.inputTokens || 0, output: e.outputTokens || 0 }
+  const cached = (u.cacheRead || 0) + (u.cacheWrite5m || 0) + (u.cacheWrite1h || 0)
+  const tokens = u.input + u.output + cached
+  // Bounded rather than trusted. A discount above 1 would be a surcharge and a
+  // discount of 0 would make a real spend disappear from the meter, which is
+  // the one failure a spend surface may never have.
+  const discount = Number.isFinite(Number(e.discount)) && Number(e.discount) > 0 && Number(e.discount) <= 1
+    ? Number(e.discount)
+    : 1
+  const runs = Math.max(1, Math.trunc(Number(e.calls) || 1))
+  // An explicit failedCalls always wins, including an explicit zero. Only when
+  // it is absent does the single-call `failed` boolean decide, which is every
+  // in-process site.
+  const failedRuns = e.failedCalls === undefined
+    ? (e.failed ? 1 : 0)
+    : Math.max(0, Math.trunc(Number(e.failedCalls) || 0))
+  // A FAILED CALL IS COUNTED EVEN WHEN IT PRODUCED NOTHING.
+  //
+  // This returned early on zero tokens, and a refused call has zero tokens:
+  // from 2026-09-27 10:00 UTC every Anthropic call the engine made was refused
+  // for the account's usage limit, and meter_daily recorded none of them, so
+  // `failed` read 0 for a key that had not answered for 33 hours. A failure
+  // now adds a run and a failure to its key and day, and no cost unless the
+  // provider reported usage. Only a call with neither tokens nor a failure is
+  // still skipped: there is nothing to say about it.
+  if (!tokens && !failedRuns) return
   await add({
     provider: 'anthropic',
     unitKind: 'agent',
@@ -294,10 +409,43 @@ export async function anthropicCall(e: {
     bucket: e.model,
     label: normalizeAgent(e.agent),
     category: isPriced(e.model) ? 'priced' : 'unpriced-model',
-    usd: priceUsd(e.model, e.inputTokens || 0, e.outputTokens || 0),
-    runs: 1,
-    failed: e.failed ? 1 : 0,
+    usd: priceUsdDetailed(e.model, u) * discount,
+    usdUncached: priceUsdUncached(e.model, u) * discount,
+    runs,
+    failed: Math.min(runs, failedRuns),
     units: tokens,
     unitName: 'tokens',
+    cacheReadTokens: u.cacheRead || 0,
+    cacheWriteTokens: (u.cacheWrite5m || 0) + (u.cacheWrite1h || 0),
+    day: e.day,
   })
+  // What the provider is doing, kept for health and the judge sweep. Single
+  // in-process calls only: `calls` is how a reporter (the AEO engine, a batch
+  // drain) posts totals for calls this process did not see fail or succeed.
+  if (e.calls !== undefined) return
+  if (failedRuns && e.error !== undefined) {
+    await recordAnthropicFailure({ ...classifyAnthropicFailure(e.error), agent: normalizeAgent(e.agent), model: e.model })
+  } else if (!failedRuns && tokens) {
+    await noteAnthropicSuccess()
+  }
+}
+
+/**
+ * Record one failed Anthropic call: a run and a failure on its key and day,
+ * no cost unless the provider reported usage, and the failure itself where
+ * health reads it. Returns the classified failure, so a route can say what
+ * happened in its own response. Never throws.
+ */
+export async function anthropicFailure(e: {
+  agent?: string | null
+  model: string
+  error: unknown
+  /** The usage the provider reported before it failed, if any. */
+  usage?: unknown
+}): Promise<ProviderFailure> {
+  const failure = classifyAnthropicFailure(e.error)
+  try {
+    await anthropicCall({ agent: e.agent, model: e.model, usage: e.usage ?? null, failed: true, error: e.error })
+  } catch { /* metering is never load-bearing */ }
+  return failure
 }

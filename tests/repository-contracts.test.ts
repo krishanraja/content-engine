@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
@@ -17,7 +18,9 @@ describe('repository operating contracts', () => {
       visual_story_director: { review_gates: string[] }
       runtime: { drive_root: string; media_inbox: string; archive_root: string }
     }>('config/studio.json')
-    const exactMediaRoot = String.raw`G:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine`
+    // Ruling (Krish, 2026-09-28): the Video Studio's Drive root moves from G:
+    // to H: (krish@themindmaker.ai). Scope is the Video Studio only.
+    const exactMediaRoot = String.raw`H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine`
 
     expect(studio.transcription.vocabulary).toContain('Krish')
     expect(studio.transcription.vocabulary).not.toContain('Krish Raja')
@@ -38,7 +41,9 @@ describe('repository operating contracts', () => {
     expect(launcher).toContain(exactMediaRoot)
     expect(launcher).not.toMatch(/Krish(?:an)? Raja/)
     expect(`${voiceSkill}\n${voiceMetadata}`).not.toMatch(/Krish(?:an)? Raja/)
-    expect(pathSource).toContain("export const DEFAULT_WINDOWS_DRIVE_ROOT = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04_Content\\\\Video Engine'")
+    expect(pathSource).toContain("export const DEFAULT_WINDOWS_DRIVE_ROOT = 'H:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04_Content\\\\Video Engine'")
+    expect(studio.runtime.drive_root).not.toMatch(/^G:/)
+    expect(environment).toContain(`MINDMAKE_ARCHIVE_ROOT=${exactMediaRoot}\\Archive`)
     expect(pathSource).toContain("const INVALID_WINDOWS_DRIVE_ROOT = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04\\\\_Content\\\\Video Engine'")
   })
 
@@ -46,8 +51,9 @@ describe('repository operating contracts', () => {
     const agents = await readFile(join(repoRoot, 'AGENTS.md'), 'utf8')
     const claude = await readFile(join(repoRoot, 'CLAUDE.md'), 'utf8')
     const protocol = await readFile(join(repoRoot, 'docs', 'ENGINE_SESSION.md'), 'utf8')
-    const claudeMcp = await json<{ mcpServers: { 'mindmake-studio': { type: string; url: string; headers: { Authorization: string } } } }>('.mcp.json')
+    const claudeMcp = await json<{ mcpServers: { 'mindmake-studio': { type: string; command: string; args: string[] } } }>('.mcp.json')
     const codexMcp = await readFile(join(repoRoot, '.codex', 'config.toml'), 'utf8')
+    const codexProxy = await readFile(join(repoRoot, 'scripts', 'studio-mcp-credential-proxy.ps1'), 'utf8')
     const endpoint = 'https://controlcenter.krishraja.com/api/video-studio/mcp'
 
     expect(agents).toContain('docs/ENGINE_SESSION.md')
@@ -56,12 +62,17 @@ describe('repository operating contracts', () => {
     expect(protocol).toContain('Never capture:')
     expect(protocol).toContain('whole ChatGPT, Claude, Codex, or Control Center transcript')
     expect(claudeMcp.mcpServers['mindmake-studio']).toEqual({
-      type: 'http',
-      url: endpoint,
-      headers: { Authorization: 'Bearer ${VIDEO_STUDIO_MCP_TOKEN}' },
+      type: 'stdio',
+      command: 'pwsh',
+      args: ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', 'scripts/studio-mcp-credential-proxy.ps1'],
     })
-    expect(codexMcp).toContain(endpoint)
-    expect(codexMcp).toContain('bearer_token_env_var = "VIDEO_STUDIO_MCP_TOKEN"')
+    expect(codexMcp).toContain('command = "pwsh"')
+    expect(codexMcp).toContain('scripts/studio-mcp-credential-proxy.ps1')
+    expect(codexMcp).not.toContain('bearer_token_env_var')
+    expect(codexProxy).toContain(endpoint)
+    expect(codexProxy).toContain('MindmakeVideoStudio/studio-mcp-token-v2')
+    expect(codexProxy).toContain('RedirectStandardOutput = $true')
+    expect(codexProxy).not.toContain('Write-Output $token')
 
     const launcher = await readFile(join(repoRoot, '.agents', 'skills', 'video-engine', 'SKILL.md'), 'utf8')
     expect(launcher).toContain("equals 'Video engine' case-insensitively")
@@ -87,6 +98,24 @@ describe('repository operating contracts', () => {
       scheduled_work: 'server_side_rows',
       public_publish_allowed: false,
     })
+  })
+
+  it('pins active runtime credentials to versioned local-only targets', async () => {
+    const controlPlane = await readFile(join(repoRoot, 'packages', 'core', 'src', 'control-plane-client.ts'), 'utf8')
+    const signing = await readFile(join(repoRoot, 'packages', 'core', 'src', 'approval-signing.ts'), 'utf8')
+    const doctor = await readFile(join(repoRoot, 'packages', 'core', 'src', 'doctor.ts'), 'utf8')
+    const cli = await readFile(join(repoRoot, 'packages', 'cli', 'src', 'index.ts'), 'utf8')
+    const writer = await readFile(join(repoRoot, 'scripts', 'set-credential.ps1'), 'utf8')
+    const active = `${controlPlane}\n${signing}\n${doctor}\n${cli}`
+
+    expect(active).toContain('MindmakeVideoStudio/control-center-runner-token-v3')
+    expect(active).toContain('MindmakeVideoStudio/control-center-runner-signing-key-v3')
+    expect(active).toContain('MindmakeVideoStudio/control-center-radar-token-v3')
+    expect(controlPlane).not.toContain("= 'MindmakeVideoStudio/control-center-runner-token'")
+    expect(signing).not.toContain("= 'MindmakeVideoStudio/control-center-runner-signing-key'")
+    expect(cli).not.toContain("credential: 'MindmakeVideoStudio/control-center-radar-token'")
+    expect(writer).toContain('$quarantinedTargets')
+    expect(writer).toContain('$isVersionedRuntimeTarget')
   })
 
   it('documents only the real V2 recovery, transcription and preview surface', async () => {
@@ -134,8 +163,32 @@ describe('repository operating contracts', () => {
     expect(ignored).toEqual(candidates)
 
     const scanner = await readFile(join(repoRoot, 'scripts', 'check-no-secrets.ts'), 'utf8')
+    const patterns = await readFile(join(repoRoot, 'scripts', 'secret-patterns.ts'), 'utf8')
     for (const extension of ['webm', 'm2ts', 'mts', 'mxf', 'm4a', 'aac', 'flac', 'ogg', 'opus', 'srt', 'vtt', 'edl', 'fcpxml']) {
       expect(scanner).toContain(extension)
     }
+    expect(scanner).toContain('containsCommittedSecret')
+    expect(patterns).toContain('VIDEO_STUDIO_(?:EXPORT_TOKEN|RUNNER_TOKEN|RUNNER_SIGNING_KEY|MCP_TOKEN)')
+    expect(patterns).toContain('#\\s*paste:')
+  })
+
+  // Krish, 2026-09-25: the money subchannel is follow.the.money and the build
+  // subchannel is under.the.hood, "every single instance front and back end,
+  // with zero exceptions". The old names may appear only where an agent needs
+  // the mapping to read an append-only row that still carries them: the
+  // glossary's retired names and the dated log entry for the rename.
+  it('keeps the two subchannel names retired on 2026-09-25 out of every tracked file', () => {
+    const renamed = /split\\?[._-]the\\?[._-]bill|lift\\?[._-]the\\?[._-]lid/i
+    const allowed = new Set(['docs/GLOSSARY.md', 'docs/history/LOG.md'])
+    const files = execFileSync('git', ['ls-files'], { cwd: repoRoot, encoding: 'utf8' }).split(/\r?\n/).filter(Boolean)
+    const hits: string[] = []
+    for (const file of files) {
+      if (allowed.has(file)) continue
+      let body: string
+      try { body = readFileSync(join(repoRoot, file), 'utf8') } catch { continue }
+      if (body.includes('\u0000')) continue
+      body.split(/\r?\n/).forEach((line, i) => { if (renamed.test(line)) hits.push(`${file}:${i + 1}`) })
+    }
+    expect(hits).toEqual([])
   })
 })

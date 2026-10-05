@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { guard } from '../../_auth.js'
+import { guardEngine } from '../../_auth.js'
 import { EDITORIAL_RADAR_GENERATOR_REVISION, type EditorialSeries } from '../../_editorialRadar.js'
 import { supabase } from '../../_supabase.js'
 
@@ -86,7 +86,7 @@ async function writeDecision(
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guard(req, res, ['POST'])) return
+  if (guardEngine(req, res, ['POST'])) return
 
   const id = Array.isArray(req.query?.id) ? req.query.id[0] : req.query?.id
   const payload = record(req.body)

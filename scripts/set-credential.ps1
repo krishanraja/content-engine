@@ -6,34 +6,49 @@ param(
 )
 
 # Writes one Mindmake credential and then proves the store actually holds what was
-# written. On 2026-09-08 two credentials set through this script reverted to values
-# from four days earlier: Windows credential roaming restored Enterprise-persisted
-# entries over them. The write had succeeded and reported success, and nothing
-# looked wrong until the next process start hours later.
+# written. The three original control-center target names are quarantined because
+# Windows credential roaming restored stale Enterprise values over verified writes.
+# Active v2 and Studio MCP targets are new LocalMachine names and may never roam.
 #
 # Two consequences are baked in here. Any pre-existing entry is deleted before the
 # write, so a roaming-persisted entry cannot survive underneath. And the value is
 # read straight back out of the store and checked, including its persistence class,
 # because CredWrite returning true only means the call was accepted.
 #
-# -Roaming writes Persist = 3 (Enterprise) instead of 2 (LocalMachine). That is
-# not a fallback, it is the fix for one specific situation. This device is
-# WorkplaceJoined to a tenant, and the two runner credentials were originally
-# written as Enterprise, so tenant-side credential roaming holds a copy and
-# restores it wholesale, metadata and Sept-4 LastWritten included, over any local
-# write. Two verified LocalMachine writes were rolled back inside 25 minutes each.
-#
-# Writing the correct value as Enterprise makes the sync carry it: the roaming
-# copy becomes right rather than stale, so a restore restores what we want. The
-# trade, stated because it is real: an Enterprise credential syncs to the tenant
-# and to the account's other joined devices. These two already do, at their old
-# values. This changes what roams, not whether.
+# -Roaming remains available only for credentials whose explicit contract requires
+# Enterprise persistence. It is never a recovery technique for an active runtime
+# credential: those names are guarded as LocalMachine-only instead.
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 if (-not $Target.StartsWith('MindmakeVideoStudio/', [System.StringComparison]::Ordinal)) {
   throw 'Credential target must begin with MindmakeVideoStudio/'
+}
+$quarantinedTargets = @(
+  'MindmakeVideoStudio/control-center-runner-token',
+  'MindmakeVideoStudio/control-center-runner-signing-key',
+  'MindmakeVideoStudio/control-center-radar-token'
+)
+$localOnlyTargets = @(
+  'MindmakeVideoStudio/studio-mcp-token-v2'
+)
+$isVersionedRuntimeTarget = $Target -match '^MindmakeVideoStudio/control-center-(?:runner-token|runner-signing-key|radar-token)-v(?:[2-9]|[1-9][0-9]+)$'
+# The Studio MCP proxy (scripts/studio-mcp-credential-proxy.ps1) refuses any value
+# outside the vst_mcp_ token family, so a value this script wrote for that target
+# without the prefix produced a credential nothing could use. The family is
+# vst_mcp_ followed by at least 64 lowercase hexadecimal characters
+# (scripts/secret-patterns.ts), and the same value must sit in the content-engine
+# Vercel project as VIDEO_STUDIO_MCP_TOKEN.
+$mcpTokenTarget = 'MindmakeVideoStudio/studio-mcp-token-v2'
+$mcpTokenPattern = '^vst_mcp_[a-f0-9]{64,}\z'
+$isMcpTokenTarget = $Target -eq $mcpTokenTarget
+$mcpTokenFamilyMessage = "Credential target $Target needs a value in the Studio MCP token family: vst_mcp_ followed by at least 64 lowercase hexadecimal characters. Nothing was written."
+if ($quarantinedTargets -contains $Target) {
+  throw "Credential target $Target is quarantined after a confirmed roaming rollback. Use the active v2 target documented in docs/DEPLOYMENT.md."
+}
+if ($Roaming -and (($localOnlyTargets -contains $Target) -or $isVersionedRuntimeTarget)) {
+  throw "Credential target $Target is LocalMachine-only and may not be written with -Roaming."
 }
 if ($Generate -and $FromStdin) {
   throw 'Choose one source: -Generate or -FromStdin.'
@@ -42,10 +57,19 @@ if ($Generate -and $FromStdin) {
 $secret = if ($Generate) {
   $bytes = New-Object byte[] 48
   $generator = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+  $generated = $null
   try {
     $generator.GetBytes($bytes)
-    ConvertTo-SecureString -String ([Convert]::ToBase64String($bytes)) -AsPlainText -Force
+    # The MCP target gets its token family: vst_mcp_ and 96 lowercase hex from
+    # the same cryptographic generator. Every other target keeps base64.
+    $generated = if ($isMcpTokenTarget) {
+      'vst_mcp_' + (-join ($bytes | ForEach-Object { $_.ToString('x2') }))
+    } else {
+      [Convert]::ToBase64String($bytes)
+    }
+    ConvertTo-SecureString -String $generated -AsPlainText -Force
   } finally {
+    $generated = $null
     $generator.Dispose()
     [Array]::Clear($bytes, 0, $bytes.Length)
   }
@@ -55,11 +79,31 @@ $secret = if ($Generate) {
   # the command line and the shell history. One line on stdin, never echoed.
   $line = [Console]::In.ReadLine()
   if ($null -eq $line) { throw 'No value arrived on stdin.' }
-  ConvertTo-SecureString -String $line.Trim() -AsPlainText -Force
+  $line = $line.Trim()
+  if ($isMcpTokenTarget -and -not ($line -cmatch $mcpTokenPattern)) {
+    $line = $null
+    throw $mcpTokenFamilyMessage
+  }
+  ConvertTo-SecureString -String $line -AsPlainText -Force
+  $line = $null
 } else {
   Read-Host -Prompt "Secret for $Target" -AsSecureString
 }
 if ($secret.Length -eq 0) { throw 'Credential cannot be empty' }
+
+# One check for every source, the interactive prompt included, before anything
+# is deleted or written. The value is decoded only in memory for the match and
+# is never printed; the message names the target alone.
+if ($isMcpTokenTarget) {
+  $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
+  $familyMatches = $false
+  try {
+    $familyMatches = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer) -cmatch $mcpTokenPattern
+  } finally {
+    [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer)
+  }
+  if (-not $familyMatches) { throw $mcpTokenFamilyMessage }
+}
 
 Add-Type @"
 using System;

@@ -20,6 +20,10 @@
       "schedule": "0 3 * * *"
     },
     {
+      "path": "/api/judge/sweep",
+      "schedule": "0 5 * * *"
+    },
+    {
       "path": "/api/content-ideas/cluster",
       "schedule": "0 4 * * *"
     },
@@ -78,6 +82,18 @@
     {
       "path": "/api/inspiration/drive-scan",
       "schedule": "0 */2 * * *"
+    },
+    {
+      "path": "/api/trends/entities",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/claims/resolve",
+      "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/trends/metrics",
+      "schedule": "0 6 * * 6"
     }
   ],
   "functions": {
@@ -92,6 +108,15 @@
     },
     "api/aeo/ingest.ts": {
       "maxDuration": 120
+    },
+    "api/judge/sweep.ts": {
+      "maxDuration": 600
+    },
+    "api/judge/ladder.ts": {
+      "maxDuration": 300
+    },
+    "api/content-ideas/[id]/fact-check.ts": {
+      "maxDuration": 300
     }
   }
 }

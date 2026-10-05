@@ -1,5 +1,6 @@
 param(
-  [string]$Filter = 'MindmakeVideoStudio/*'
+  [string]$Filter = 'MindmakeVideoStudio/*',
+  [switch]$EnforceActiveContract
 )
 
 # Reads every Mindmake credential and reports the four fields that identify what
@@ -20,6 +21,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 public static class MindmakeCredentialInspector {
   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -53,6 +55,9 @@ public static class MindmakeCredentialInspector {
     public string UserName;
     public int Chars;
     public string Fingerprint;
+    // Whether the value is in the Studio MCP token family (vst_mcp_ and at least
+    // 64 lowercase hex). A yes or no leaves this class; the value never does.
+    public bool McpTokenFamily;
   }
 
   public static Entry[] Enumerate(string filter) {
@@ -93,7 +98,8 @@ public static class MindmakeCredentialInspector {
           Comment = credential.Comment,
           UserName = credential.UserName,
           Chars = value.Length,
-          Fingerprint = fingerprint
+          Fingerprint = fingerprint,
+          McpTokenFamily = Regex.IsMatch(value, "^vst_mcp_[a-f0-9]{64,}\\z", RegexOptions.CultureInvariant)
         };
       }
       return entries;
@@ -104,12 +110,14 @@ public static class MindmakeCredentialInspector {
 }
 "@
 
+$mcpTokenTarget = 'MindmakeVideoStudio/studio-mcp-token-v2'
 $persistNames = @{ 1 = 'Session'; 2 = 'LocalMachine'; 3 = 'Enterprise (roams)' }
 $typeNames = @{ 1 = 'Generic'; 2 = 'DomainPassword' }
 
 $entries = [MindmakeCredentialInspector]::Enumerate($Filter)
 if ($entries.Count -eq 0) {
   Write-Output "No credentials match $Filter"
+  if ($EnforceActiveContract) { throw 'Active credential contract cannot pass with an empty store.' }
   return
 }
 
@@ -127,10 +135,51 @@ $report = foreach ($entry in $entries) {
     LastWritten = $written
     Comment     = $entry.Comment
     UserName    = $entry.UserName
+    # Said only for the MCP target, as a verdict, never as any part of the value.
+    TokenFamily = if ($entry.Target -eq $mcpTokenTarget) { if ($entry.McpTokenFamily) { 'vst_mcp' } else { 'wrong family prefix' } } else { $null }
   }
 }
 
 $report | Sort-Object Target | Format-List
+
+$activeLocalTargets = @(
+  'MindmakeVideoStudio/control-center-runner-token-v3',
+  'MindmakeVideoStudio/control-center-runner-signing-key-v3',
+  'MindmakeVideoStudio/control-center-radar-token-v3',
+  'MindmakeVideoStudio/studio-mcp-token-v2'
+)
+$quarantinedTargets = @(
+  'MindmakeVideoStudio/control-center-runner-token',
+  'MindmakeVideoStudio/control-center-runner-signing-key',
+  'MindmakeVideoStudio/control-center-radar-token'
+)
+
+$quarantined = @($report | Where-Object { $quarantinedTargets -contains $_.Target })
+if ($quarantined.Count -gt 0) {
+  Write-Output 'NOTICE: quarantined legacy credential names remain in the store and must never be used by active code:'
+  foreach ($item in $quarantined) { Write-Output "  $($item.Target)" }
+}
+
+if ($EnforceActiveContract) {
+  $failures = @()
+  foreach ($target in $activeLocalTargets) {
+    $entry = $report | Where-Object { $_.Target -eq $target } | Select-Object -First 1
+    if ($null -eq $entry) {
+      $failures += "$target is missing"
+      continue
+    }
+    if ($entry.Chars -lt 32) { $failures += "$target is shorter than 32 characters" }
+    if ($entry.Persist -ne 'LocalMachine') { $failures += "$target is not LocalMachine" }
+    if ($entry.Comment -ne 'Mindmake Video Studio') { $failures += "$target has a foreign writer marker" }
+    # The Studio MCP proxy refuses anything outside the vst_mcp_ family, so a
+    # value of the right length and persistence can still be unusable.
+    if ($target -eq $mcpTokenTarget -and $entry.TokenFamily -ne 'vst_mcp') { $failures += "$target has the wrong family prefix" }
+  }
+  if ($failures.Count -gt 0) {
+    throw "Active credential contract failed: $($failures -join '; ')"
+  }
+  Write-Output 'Active credential contract passed.'
+}
 
 # Persist 3 is the one that can be overwritten by something other than a local
 # write, so it is called out rather than left for the reader to notice.

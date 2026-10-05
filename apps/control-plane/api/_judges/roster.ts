@@ -39,7 +39,7 @@
 // shapes he finishes is a fact about him as a writer. Which subjects he likes
 // is the thing the machine is supposed to be able to surprise him about.
 
-export const ROSTER_VERSION = 'panel-v1'
+export const ROSTER_VERSION = 'panel-v2'
 
 export type Gate = 'idea' | 'draft'
 
@@ -71,12 +71,17 @@ export const IDEA_JUDGES: Judge[] = [
   },
   {
     key: 'evidence',
-    question: 'Can this be proven, and what would prove it?',
+    question: 'Is the reasoning traceable, and are the unknowns named?',
     rubric:
-      'Score how provable the claim is with sources that exist. 10 means specific, checkable, and the proof is named; '
-      + '5 means arguable with work; 1 means it is a vibe or an unfalsifiable prediction. Do not score whether the '
-      + 'claim is TRUE, score whether it can be SHOWN. An honest "no evidence exists yet" is a low score, not a kill.',
-    evidence: 'Name what would have to be shown, and whether such a source plausibly exists.',
+      'Score whether a reader can follow how the claim was reached and can see where it stops being knowable. '
+      + '10 means every step is either sourced or labelled as inference, and the piece says plainly what it does not '
+      + 'know; 5 means the chain is followable but one step is asserted without support or a label; 1 means the '
+      + 'claim floats free and the reader cannot tell fact from guess. '
+      + 'A FORWARD-LOOKING CLAIM WITH NO SOURCE YET IS NOT A LOW SCORE. Krish, 2026-09-24: "In the absence of tons '
+      + 'of evidence, we need to look at hypotheticals and sense-backed predictions." A labelled hypothesis that '
+      + 'reasons from something real scores HIGH here. What scores low is an unlabelled one: a prediction dressed '
+      + 'as a finding. Do not score whether the claim is true, and do not demand a citation for the future.',
+    evidence: 'Name the load-bearing step, and say whether it is sourced, labelled as inference, or neither.',
   },
   {
     key: 'consequence',
@@ -88,14 +93,48 @@ export const IDEA_JUDGES: Judge[] = [
     evidence: 'Name the reader and the specific thing they do or stop doing.',
   },
   {
-    key: 'buyer',
-    question: 'Does the senior leader this is written for actually care?',
+    key: 'reader',
+    question: 'Will the leader this is written for actually read it?',
     rubric:
-      'Score reach into the audience: a senior leader at a PE or VC backed media, adtech, publishing or data '
-      + 'business, quietly behind on what is coming and unable to say so inside their organisation. 10 means it '
-      + 'speaks to a problem they have this quarter; 1 means it is for practitioners, peers, or nobody in particular. '
-      + 'Do not reward flattery of that reader; reward usefulness to them.',
+      'Score reach into the readership: a senior leader in a business doing roughly five to fifty million pounds '
+      + 'who will not admit, to anyone, that they are not ready for what is happening. 10 means it speaks to a '
+      + 'problem they have this quarter; 1 means it is for practitioners, peers, or nobody in particular. Do not '
+      + 'reward flattery of that reader; reward usefulness to them. Judge the readership only. Whether it reaches '
+      + 'anyone who might hire him is the buyer judge and not yours.',
     evidence: 'Name the situation that reader is in where this lands.',
+  },
+  {
+    key: 'buyer',
+    question: 'Does this reach someone who might hire him for a thirty-day build?',
+    rubric:
+      'Score commercial reach: a commercial leader who might engage Krish on a short-term basis to build an AI '
+      + 'brain or an AI go-to-market plan. 10 means it lands in front of a problem that engagement solves; 1 means '
+      + 'it is for an audience that will never buy anything. Judge commercial reach only. Whether the wider '
+      + 'readership enjoys it belongs to the reader judge, and the two of you disagreeing on one idea is a finding '
+      + 'rather than a fault.',
+    evidence: 'Name the situation a prospective client is in where this lands.',
+  },
+  {
+    key: 'connection',
+    question: 'Does this tie several threads into one observation, or is it one news item?',
+    rubric:
+      'Score synthesis. 10 means it joins three or more separate threads, shifts or themes into a single '
+      + 'observation that no one source states; 5 means it joins two, or joins them loosely; 1 means it reports one '
+      + 'thing that happened. The threads must resolve into ONE argument with one spine: a piece that surveys '
+      + 'several subjects without joining them scores low, because a roundup is not a synthesis. Judge the '
+      + 'connection, never whether the subject matters.',
+    evidence: 'Name each thread it joins, and the observation that only appears once they are put together.',
+  },
+  {
+    key: 'fun',
+    question: 'Would he enjoy reading this, and enjoy writing it?',
+    rubric:
+      'Score whether this is a pleasure to read. 10 means a reader repeats the observation to someone else the '
+      + 'same day; 5 means competently interesting; 1 means dutiful, worthy, or a briefing. Wit points at claims, '
+      + 'hype, incentives and decisions, never at a named person\'s competence. Dry is fine and smug is not, and a '
+      + 'joke that costs the evidence its credibility scores low however funny it is. Judge only whether it is a '
+      + 'pleasure. Whether it is correct or provable is other judges\' work.',
+    evidence: 'Quote the line a reader would repeat, or say plainly that there is not one.',
   },
   {
     key: 'standing',
@@ -103,9 +142,13 @@ export const IDEA_JUDGES: Judge[] = [
     rubric:
       'Score standing. 10 means he has built, sold, run or lived the thing and can say something only he can say; '
       + '5 means he has adjacent experience and can reason credibly; 1 means he would be summarising other people. '
-      + 'The corpus and his build record are the evidence. Absence of standing is not a kill, it is a reason to '
-      + 'reshape the piece toward what he has actually done.',
-    evidence: 'Name the experience that gives him standing, or say plainly that none is visible.',
+      + 'READ THE "WHAT KRISH ACTUALLY DOES" BLOCK IN YOUR CONTEXT BEFORE SCORING. This judge scored a piece about '
+      + 'encoding a leader\'s judgement as a 3 while Krish scored it 7 and said "my business tries to encode '
+      + 'decisions, judgment, standards and taste for a leader". It was not being strict; it did not know what he '
+      + 'builds. A subject that touches his actual work, his fleet, his clients or his operating model is standing, '
+      + 'whether or not he has written about it before. '
+      + 'Absence of standing is not a kill, it is a reason to reshape the piece toward what he has actually done.',
+    evidence: 'Name the experience or the part of his business that gives him standing, or say plainly that none is visible.',
   },
   {
     key: 'prosecutor',
@@ -202,3 +245,51 @@ export function rosterFor(gate: Gate): Judge[] {
  *  their scores are more than this far apart. That is the trigger for a
  *  tiebreaker, mirroring the divergence doctrine already used for design. */
 export const MATERIAL_DISAGREEMENT_POINTS = 4
+
+// ── The router ──────────────────────────────────────────────────────────────
+//
+// Krish, 2026-09-24: "does it actually fit the narrative of each sub channel".
+//
+// The router is NOT a judge and must never be added to a roster. A judge owns
+// one axis and returns one score; the router answers a different kind of
+// question and returns three. Folding it into the panel would break the one
+// property that makes the panel worth running, and would also hide the thing
+// worth seeing: a piece that fits two channels well, or none at all.
+//
+// It scores fit against all three mandates and names the winner. Two outcomes
+// the old "pick one" shape could not express:
+//   - low on all three is HOMELESS, which is a verdict. Before this, such a
+//     piece was silently filed under whichever channel was least bad.
+//   - high on two is CONTESTED, and that is the case the mandates exist to
+//     settle. It goes to Krish rather than being resolved by a coin toss.
+//
+// The mandates are passed in at call time and never copied into this file.
+// venture_formats.mandate is the only truth for what each channel is, and a
+// copy here would drift the first time Krish changed one. He changed all three
+// on 2026-09-24.
+
+export interface RouterVerdict {
+  /** slug -> 0-10 fit. Every live subchannel appears, including the losers. */
+  fits: Record<string, number>
+  /** The best fit, or null when nothing cleared the floor. */
+  winner: string | null
+  /** Slugs within CONTESTED_POINTS of the winner. Krish settles these. */
+  contested: string[]
+  confidence: number | null
+  /** Which question the piece asks, in one sentence. The reason for the call. */
+  why: string
+}
+
+/** Below this, the piece does not belong to any channel and says so. */
+export const ROUTER_FIT_FLOOR = 6
+
+/** Two channels this close is a contested call, not a decided one. */
+export const CONTESTED_POINTS = 1.5
+
+/** The one rule that settles a contested piece. Krish, 2026-09-24. It is in
+ *  every mandate now, and repeated here because the router is the thing that
+ *  applies it. */
+export const ROUTER_TIEBREAK =
+  'What does the reader change next? If they would go and change a price, a budget or a contract, it is '
+  + 'follow_the_money. If they would change what they build or buy, it is under_the_hood. If they would change how they '
+  + 'think or what they expect, it is mind_the_gap. The question the piece asks decides, never its surface subject.'

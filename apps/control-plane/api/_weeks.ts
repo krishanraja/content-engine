@@ -40,3 +40,12 @@ export function queueWindowStart(span = QUEUE_WEEK_SPAN, now = new Date()): stri
   back.setUTCDate(back.getUTCDate() - 7 * Math.max(0, span - 1))
   return isoWeekLabel(back)
 }
+
+/** The ISO week label N weeks before the one containing `d`.
+ *
+ *  Steps by whole weeks rather than by month or year arithmetic, so a step
+ *  across a year boundary lands on the ISO week-numbering year: one week back
+ *  from 2027-W01 is 2026-W53, never '2027-W00'. */
+export function weekLabelBack(weeksBack: number, d = new Date()): string {
+  return isoWeekLabel(new Date(d.getTime() - weeksBack * 7 * 86_400_000))
+}

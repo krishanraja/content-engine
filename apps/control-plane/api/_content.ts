@@ -2,11 +2,13 @@
 // (revise / challenge / score / push-to-cleo). Mirrors the inline helpers in
 // transform.ts but de-duplicated, since four routes need the same primitives.
 
+import { houseRulesBlock } from './_houseRules.js'
 import { priceUsd } from './_prices.js'
 import * as meter from './_meter.js'
 
 
 import { UTILITY_MODEL, SYNTHESIS_MODEL, MODEL_PRICES, thinkingParam } from './_models.js'
+import { fetchWithRetry } from './_retry.js'
 
 /** Strip the cardinal sin — em dashes (and their lookalikes) — anywhere,
  *  replacing them with the comma/period Krish would actually use. Safe to run
@@ -38,7 +40,39 @@ export interface Material {
   url?: string | null
   bytes?: number
   at?: string
+  /** Who put it on the piece: 'Krish', or the agent client that added it
+   *  (claude_code, codex...). Absent on rows written before 2026-09-25, which
+   *  materialsOf() reads as Krish's unless the kind is 'research'. */
+  by?: string | null
+  /** The filer's statement that `content` is the source's own text, copied
+   *  word for word from `url`, not a summary. The fact gate lets a claim pass
+   *  on one source only when that source is verbatim (api/_factGate.ts). */
+  verbatim?: boolean
 }
+
+/** Whose a material is, for the label the writer sees. Engine research
+ *  (dive-deeper, deepen, investigations, whoever pressed the button) and the
+ *  shift dossier the engine writes are the engine's; anything an agent
+ *  session added is that agent's; the rest is Krish's. */
+export function materialOwner(m: Material): 'krish' | 'engine' | string {
+  if (m.kind === 'research' || (m.kind as string) === 'note') return 'engine'
+  if (m.by && m.by !== 'Krish') return m.by
+  return 'krish'
+}
+
+/** A filed source: the source's own words, pasted with the page they came
+ *  from (file-verbatim-source.ts, or /materials with `verbatim: true`). */
+export function isFiledSource(m: Material): boolean {
+  return m.verbatim === true && Boolean(m.url) && Boolean((m.content || '').trim())
+}
+
+/** How much of the filed sources every reader of materials sees, in full,
+ *  before any summary. The final pass's whole materials budget was 16,000
+ *  characters and the fact gate reads 120,000, while the drafter and the
+ *  rewriter saw 9,000 of everything, newest first, stopping at the first
+ *  item that did not fit, so a writer could miss a source the checkers then
+ *  held it to (walk log F36). */
+export const FILED_SOURCES_BUDGET = 24_000
 
 /** Read the materials a piece carries (lives in content_ideas.meta.materials). */
 export function readMaterials(meta: any): Material[] {
@@ -46,21 +80,63 @@ export function readMaterials(meta: any): Material[] {
   return m.filter((x: any) => x && typeof x === 'object')
 }
 
-/** Compact the corpus into a grounding block for the model. Truncates each item
- *  and the whole block so a large corpus never blows the context budget. */
+/** Compact the corpus into a grounding block for the model.
+ *
+ *  Filed sources come first, each in full, up to FILED_SOURCES_BUDGET: they
+ *  are what the fact gate holds a piece to. Everything else follows, cut to
+ *  `perItem` each and `total` in all; an item that does not fit is named as
+ *  trimmed and the next one is still tried.
+ *
+ *  Until 2026-09-25 every material was introduced as "BACKGROUND MATERIALS
+ *  Krish provided (his own research)", including research the engine fetched
+ *  itself and anything an agent session attached (walk finding F12). A writer
+ *  told that a claim is Krish's own research treats it as his position. Only
+ *  what Krish put on the piece carries his name. The engine's own research
+ *  (the dive-deeper summaries of Perplexity answers, deepen, investigations)
+ *  is labelled as its secondary research, to be checked against the filed
+ *  sources before a writer uses it (walk log F36). */
 export function materialsContext(materials: Material[], perItem = 2400, total = 9000): string {
   if (!materials.length) return ''
-  const parts: string[] = []
+  const out: string[] = []
+  const who = (m: Material) => {
+    const owner = materialOwner(m)
+    return owner === 'krish' ? 'Krish' : owner === 'engine' ? 'the engine' : `an agent session (${owner})`
+  }
+
+  const filed: string[] = []
+  const unshown: string[] = []
+  let filedUsed = 0
+  for (const m of materials.filter(isFiledSource)) {
+    const block = `### ${m.title || 'filed source'} (${m.url})\nfiled by ${who(m)}\n${(m.content || '').trim()}`
+    if (filedUsed + block.length > FILED_SOURCES_BUDGET) { unshown.push(`${m.title || m.url} (${(m.content || '').length} chars)`); continue }
+    filed.push(block)
+    filedUsed += block.length
+  }
+  if (filed.length || unshown.length) {
+    out.push(`FILED SOURCES, each the source's own words, copied from the page at its URL. Ground every fact in these, and quote only what is here:\n\n${filed.join('\n\n')}` +
+      (unshown.length ? `\n\n[filed but not shown, over the ${FILED_SOURCES_BUDGET} character budget: ${unshown.join('; ')}]` : ''))
+  }
+
+  const groups = new Map<string, string[]>()
   let used = 0
-  for (const m of materials) {
+  for (const m of materials.filter(x => !isFiledSource(x))) {
     const head = m.title ? `### ${m.title}` : `### ${m.kind} material`
     const bodyRaw = m.kind === 'link' ? (m.url || '') : (m.content || '')
-    const body = bodyRaw.slice(0, perItem)
-    const block = `${head}\n${body}`.trim()
-    if (used + block.length > total) { parts.push(`${head}\n[trimmed — ${bodyRaw.length} chars]`); break }
-    parts.push(block); used += block.length
+    let block = `${head}\n${bodyRaw.slice(0, perItem)}`.trim()
+    if (used + block.length > total) block = `${head}\n[trimmed, ${bodyRaw.length} chars]`
+    else used += block.length
+    const owner = materialOwner(m)
+    groups.set(owner, [...(groups.get(owner) || []), block])
   }
-  return `BACKGROUND MATERIALS Krish provided (his own research — treat as primary source, ground claims in it, never invent beyond it):\n\n${parts.join('\n\n')}`
+  const krish = groups.get('krish')
+  if (krish) out.push(`BACKGROUND MATERIALS Krish provided (his own research, treat as primary source, ground claims in it, never invent beyond it):\n\n${krish.join('\n\n')}`)
+  const engine = groups.get('engine')
+  if (engine) out.push(`THE ENGINE'S OWN SECONDARY RESEARCH: summaries of web searches the engine ran itself (Perplexity dives and the like). Krish did not provide them, and they are not a primary source. Check each line against the filed sources before you use it, and never present any of it as his view or his words.\n\n${engine.join('\n\n')}`)
+  for (const [owner, parts] of groups) {
+    if (owner === 'krish' || owner === 'engine') continue
+    out.push(`RESEARCH ON FILE, gathered by an agent session (${owner}), not by Krish (a secondary source to check claims against the filed sources; never present any of it as his view or his words):\n\n${parts.join('\n\n')}`)
+  }
+  return out.join('\n\n')
 }
 
 export function slug(s: string): string {
@@ -130,6 +206,15 @@ export async function loadCorpus(): Promise<string> {
  *  does it go". Before this, `lane` fused venture and channel, which is why
  *  signal_noise and builder_economy existed as both a venture and a lane. */
 export function laneToCorpusChannel(lane?: string | null, slot?: string | null): string | null {
+  // THE LIVE SUBCHANNELS FIRST (2026-09-24). The judge ladder sets lane_slot to
+  // a subchannel and never sets lane, so every routed piece arrived here with a
+  // null lane and got no playbook at all. A live slot names its own playbook
+  // (CHANNEL_HEADING maps follow_the_money and under_the_hood to their lineage's
+  // sections; mind_the_gap has none and corpusForChannel says so).
+  if (slot && (slot === 'follow_the_money' || slot === 'under_the_hood' || slot === 'mind_the_gap')
+      && (lane == null || lane === 'publication' || lane === 'mindmaker_live')) {
+    return slot
+  }
   // THE LIVE MODEL (canon, 2026-08-28). One publication, exactly two channels:
   // The Money of AI and Built with AI. There is no third. Legacy slot values
   // ('paid', 'built', 'teardown', 'investigation') map forward, never rejected.
@@ -160,6 +245,22 @@ export function laneToCorpusChannel(lane?: string | null, slot?: string | null):
   // Still a real corpus playbook, just a channel rather than a venture now.
   if (lane === 'signal_noise') return 'signal_noise'
   return null
+}
+
+/**
+ * Formats that exist in venture_formats and have NO section in the corpus.
+ *
+ * Declared rather than quietly pointed at a neighbour's playbook, because a
+ * format wearing another format's register is worse than a format with none:
+ * the output reads finished and is written to the wrong brief.
+ *
+ * This declaration used to live only in control-center's copy of this file,
+ * which no longer serves any content route after ADR-019. It was therefore
+ * true in a file nobody called and absent from the one that runs.
+ */
+export const NO_CORPUS_PLAYBOOK: Record<string, string> = {
+  mind_the_gap:
+    'The corpus in system_config.content_corpus was last written on 2026-08-28, when the canon still said the publication ran exactly two channels. mind.the.gap was added to venture_formats on 2026-09-17 and has no section in it. Writing that section is editorial work against venture_formats.mandate, not a rename, which is why it is declared here rather than pointed at follow.the.money or under.the.hood.',
 }
 
 // channel key -> a matcher against the playbook heading text in the corpus.
@@ -193,6 +294,24 @@ const CHANNEL_HEADING: Record<string, RegExp> = {
   built_with_ai: /^#*\s*\d*\.?\s*Built\s+with\s+AI\b/i,
   paid: /^#*\s*\d*\.?\s*(The\s+)?Money\s+of\s+AI\b/i,
   built: /^#*\s*\d*\.?\s*Built\b/i,
+
+  // ── The three live subchannels (venture_formats, renamed 2026-09-17) ──
+  // Two are the same editorial lineage under a new name, which is exactly what
+  // format_aliases records: money_of_ai -> follow_the_money, and
+  // built_with_ai -> under_the_hood. They inherit those playbooks rather than
+  // falling through to the whole-corpus synopsis, the same way the 'paid' and
+  // 'built' legacy keys above already do.
+  //
+  // The corpus SECTIONS still carry the old titles, so these point at the old
+  // headings on purpose. Rewriting those sections against the new mandates is
+  // editorial work rather than a rename, and until that happens a piece gets
+  // the playbook its lineage had.
+  //
+  // mind_the_gap is deliberately absent. It is new, not a rename, and the
+  // corpus has no section for it: see NO_CORPUS_PLAYBOOK below.
+  follow_the_money: /^#*\s*\d*\.?\s*(The\s+)?Money\s+of\s+AI\b/i,
+  under_the_hood: /^#*\s*\d*\.?\s*Built\s+with\s+AI\b/i,
+
   publication: /Publication house register/i,
   signal_noise: /Signal\s*&?\s*Noise/i,
   maven: /Maven/i,
@@ -267,6 +386,15 @@ export function corpusForChannel(corpus: string, channel?: string | null, cap = 
     // single playbook so the model still has the whole map.
     const onePara = find(/One-Paragraph Version/i)
     if (onePara) picked.push(onePara.body.trim())
+    // A DECLARED gap is not the same as an unrecognised value, and the model
+    // must not be left to infer a register from the house synopsis and write
+    // as though it had a playbook. Say it in the prompt.
+    const gap = channel ? NO_CORPUS_PLAYBOOK[channel] : null
+    if (gap) {
+      picked.unshift(
+        `NO PLAYBOOK EXISTS FOR THIS FORMAT. ${gap} Work from the house register and the mandate you were given, and do not imitate another format's register.`,
+      )
+    }
   }
 
   const cross = find(/Cross-Channel Rules/i)
@@ -302,7 +430,44 @@ export interface ClaudeOpts {
   /** Abort after this many ms. Omit for no deadline (batch/cron callers). */
   timeoutMs?: number
   system: string
+  /** The part of the prompt that does not change between calls, rendered
+   *  BEFORE `system` so a prefix cache can hold it across them. A fan-out that
+   *  shares a brief and varies one rubric belongs here. */
+  systemStable?: string
+  /** '1h' for a sweep, where the same brief is re-read for the length of the
+   *  run and the default five minutes would expire mid-way. */
+  cacheTtl?: '5m' | '1h'
+  /** Rendered last, in the system role, AFTER the final cache breakpoint. For
+   *  the part of the instruction that varies per call and must still carry
+   *  system weight. */
+  systemTail?: string
+  /**
+   * Cache the system prompt, for call sites that send the same one repeatedly.
+   *
+   * OFF BY DEFAULT, AND THAT IS NOT TIMIDITY. A cache write is priced ABOVE an
+   * ordinary input token (1.25x for the five minute entry) and a read at a
+   * tenth of one. So caching pays only when the prefix is genuinely re-sent
+   * inside the TTL, and on a once-a-day cron it is a straight 25% surcharge on
+   * the largest part of the request for a entry nobody ever reads. Turning it
+   * on everywhere would have raised this bill, not lowered it.
+   *
+   * Turn it on where the same system prompt goes out more than once in quick
+   * succession: a route that loops over items, and the composer, where the
+   * whole point of the surface is iterating one draft to completion in a
+   * sitting. `system` carries the rubric, the voice block and the corpus and
+   * `user` carries the draft, so the stable part is already first, which is
+   * what makes a prefix cache possible at all.
+   *
+   * Whether it is working is not a matter of opinion: meter_daily now carries
+   * cache_read_tokens and cache_write_tokens separately, deliberately un-netted,
+   * so a site that writes entries nobody reads shows up as exactly that.
+   */
+  cache?: boolean
   user: string
+  /** Earlier turns, sent before `user`. The writer's self-check
+   *  (api/_selfCheck.ts) sends the first request and answer here, then its
+   *  correction as `user`. Absent for every other caller. */
+  history?: ChatTurn[]
   /** Images to send alongside `user`, for the vision path.
    *
    *  Anthropic only accepts images inside a content-block array, so supplying
@@ -338,6 +503,49 @@ export interface ClaudeOpts {
    *  numbers mean something. A call that omits it meters as 'unattributed' —
    *  a visible gap in the console, never folded into another agent's total. */
   agent?: string
+  /**
+   * NOT SENT TO THE MODEL. Which independent sample of an identical request
+   * this is, for a transport that caches replies by request content.
+   *
+   * The batch transport keys a cached reply on a hash of the request body, so
+   * two byte-identical requests resolve to one reply. That is right for a
+   * fan-out and WRONG for the bury confirmation, which deliberately asks the
+   * same question twice to find out whether the answer is stable — measured
+   * 2026-09-24, only 2 of 10 seeds expanded to the same angle twice, and all
+   * the score variance lived in the eight that did not. A cache hit there
+   * would hand back the first expansion, the second panel would agree with
+   * itself, and the row would claim a confirmation that never happened.
+   *
+   * So a call that must be an independent draw says so, and the transport keys
+   * it separately. It changes nothing about what is sent.
+   */
+  sample?: number
+}
+
+/** A way of reaching the model. `callClaude` is the live one; the batch
+ *  transport in _judges/batch.ts is the other, and the ladder takes either. */
+export type ClaudeCall = (opts: ClaudeOpts) => Promise<string>
+
+/**
+ * The request body, exactly as it goes on the wire.
+ *
+ * Extracted so the Batches API sends the SAME body a live call would. A batch
+ * `params` object is a Messages request minus `stream`, so a second hand-rolled
+ * copy of this shape would be a fork of the one thing that must not drift:
+ * judge a piece through a batch and through a live call and the two have to be
+ * the same request, or the 50% saving was bought with a behaviour change
+ * nothing in the output would show.
+ */
+export function claudeRequestBody(opts: ClaudeOpts): Record<string, unknown> {
+  const model = opts.model || UTILITY_MODEL
+  return {
+    model,
+    max_tokens: opts.maxTokens ?? 4000,
+    ...thinkingParam(model, opts.think === true),
+    ...(supportsSampling(model) ? { temperature: opts.temperature ?? 0.5 } : {}),
+    system: cacheableSystem(opts),
+    messages: [...(opts.history ?? []), { role: 'user', content: userContent(opts) }],
+  }
 }
 
 export interface TokenUsage { input: number; output: number; model: string }
@@ -365,9 +573,98 @@ function userContent(opts: ClaudeOpts): string | ContentBlock[] {
   ]
 }
 
+/**
+ * The Anthropic key, from the deploy env or the app_secrets fallback.
+ *
+ * Ported from control-center on 2026-09-19, which added it on 2026-09-16 after
+ * a bad Vercel variable took down its Network tab with
+ * "planner:anthropic_401:API key is invalid." and no recovery short of a
+ * redeploy. The control plane moved out of that repo eight days before the fix
+ * and never got it, so on 2026-09-17 and 2026-09-18 the identical 401 took out
+ * the weekly investigation and blocked ten arcs in the weekly surfacing, and
+ * there was no way back without a deploy either.
+ *
+ * The env still wins, so nothing changes for a healthy deploy. The anon client
+ * cannot read app_secrets (RLS), so the row is only reachable server-side.
+ * Cached per process, including the negative, so a missing key costs one query.
+ *
+ * NOTE this is a recovery mechanism, not a fix. Writing a working key into
+ * either place is the fix.
+ */
+let cachedAnthropicKey: string | null | undefined
+export async function getAnthropicKey(): Promise<string | null> {
+  if (process.env.ANTHROPIC_API_KEY) return process.env.ANTHROPIC_API_KEY
+  if (cachedAnthropicKey !== undefined) return cachedAnthropicKey
+  try {
+    const { supabase } = await import('./_supabase.js')
+    const { data } = await supabase.from('app_secrets').select('value').eq('key', 'anthropic_api_key').maybeSingle()
+    cachedAnthropicKey = data && typeof (data as { value?: unknown }).value === 'string'
+      ? (data as { value: string }).value
+      : null
+  } catch {
+    cachedAnthropicKey = null
+  }
+  return cachedAnthropicKey
+}
+
 /** Single-shot Anthropic Messages call. Returns the first text block (or throws). */
+/**
+ * The `system` field, with a cache breakpoint on it when the caller asked.
+ *
+ * Caching is a PREFIX match and the render order is tools, then system, then
+ * messages, so a breakpoint at the end of `system` caches everything stable and
+ * leaves the draft in `user` to vary freely. That is already how these prompts
+ * are built, which is the only reason this is a one-line change.
+ *
+ * The floor is a real constraint, not defensive padding: a prefix shorter than
+ * the model's minimum (512 to 4096 tokens depending on the model) is silently
+ * not cached at all. Nothing errors and no entry appears, so a short prompt
+ * asking for a breakpoint just quietly gets nothing. 6000 characters is roughly
+ * 1500 tokens, comfortably clear of the common 1024 floor, and below it the
+ * request is small enough that caching it was never the saving anyway.
+ */
+export function buildSystemBlocks(opts: Partial<ClaudeOpts>): unknown {
+  return cacheableSystem(opts as ClaudeOpts)
+}
+
+function cacheableSystem(opts: ClaudeOpts): unknown {
+  // TWO BREAKPOINTS, when the caller has something stable to put in front.
+  //
+  // A fan-out of nine blinded judges sends the same voice block, canon and
+  // corpus nine times per idea, and the same voice block, canon and corpus on
+  // every idea in a sweep. One breakpoint would re-write the whole prefix per
+  // idea because the artifact inside it changes. Two splits the difference the
+  // way the traffic actually repeats:
+  //
+  //   block 1  the stable brief    written once, read by every judge of every
+  //                                idea for the life of the entry
+  //   block 2  this idea's artifact written once per idea, read by the other
+  //                                eight judges
+  //
+  // Caching is cumulative on the prefix, so block 2's entry is stable+artifact
+  // and clears the model's minimum even when the artifact alone would not.
+  const stable = opts.systemStable
+  if (opts.cache && stable && stable.length >= 6000) {
+    const ttl = opts.cacheTtl === '1h' ? { type: 'ephemeral', ttl: '1h' } : { type: 'ephemeral' }
+    // `systemTail` stays in the SYSTEM role and after the last breakpoint. A
+    // judge's rubric is its instruction and moving it to `user` to make room
+    // for the cache would have traded a cost saving for a behaviour change,
+    // which is the one thing this was not allowed to do.
+    return [
+      { type: 'text', text: stable, cache_control: ttl },
+      ...(opts.system ? [{ type: 'text', text: opts.system, cache_control: ttl }] : []),
+      ...(opts.systemTail ? [{ type: 'text', text: opts.systemTail }] : []),
+    ]
+  }
+  // The floor is a real constraint: a prefix under the model's minimum is
+  // silently not cached and nothing says so.
+  const joined = [stable, opts.system, opts.systemTail].filter(Boolean).join('\n\n')
+  if (!opts.cache || joined.length < 6000) return joined
+  return [{ type: 'text', text: joined, cache_control: { type: 'ephemeral' } }]
+}
+
 export async function callClaude(opts: ClaudeOpts): Promise<string> {
-  const apiKey = process.env.ANTHROPIC_API_KEY
+  const apiKey = await getAnthropicKey()
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not configured')
   // A deadline, because there was none. An upstream that stalls otherwise burns
   // the entire 60s function budget and the caller gets no response at all, which
@@ -376,19 +673,22 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
   const model = opts.model || UTILITY_MODEL
   const ctrl = new AbortController()
   const tid = opts.timeoutMs ? setTimeout(() => ctrl.abort(), opts.timeoutMs) : null
+  // Every failure is metered once: a refusal below, a timeout or a transport
+  // error in the catch. Until 2026-09-28 none was, so a key that answered
+  // nothing for 33 hours showed `failed = 0` (api/_meter.ts).
+  let metered = false
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+    const r = await fetchWithRetry('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        max_tokens: opts.maxTokens ?? 4000,
-        ...thinkingParam(model, opts.think === true),
-        ...(supportsSampling(model) ? { temperature: opts.temperature ?? 0.5 } : {}),
-        system: opts.system,
-        messages: [{ role: 'user', content: userContent(opts) }],
-      }),
+      body: JSON.stringify(claudeRequestBody(opts)),
       signal: opts.timeoutMs ? ctrl.signal : undefined,
+    }, {
+      // A 529 is Anthropic overloaded and a 429 is the account rate-limited.
+      // Both are weather. On arcs/surface that weather used to cost one arc per
+      // occurrence, and on shifts/detect or investigations it costs the week.
+      onRetry: ({ attempt, status, waitMs }) =>
+        console.warn(`[anthropic] ${opts.agent} retry ${attempt} after ${status ?? 'transport'}, waiting ${waitMs}ms`),
     })
     const j: any = await r.json().catch(() => ({}))
     if (!r.ok) {
@@ -402,6 +702,8 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
       }
       e.status = r.status
       e.body = JSON.stringify(j?.error || j || {}).slice(0, 400)
+      metered = true
+      await meter.anthropicFailure({ agent: opts.agent, model, usage: j?.usage, error: e })
       throw e
     }
     const inputTokens = Number(j?.usage?.input_tokens) || 0
@@ -409,11 +711,18 @@ export async function callClaude(opts: ClaudeOpts): Promise<string> {
     if (opts.onUsage) opts.onUsage({ input: inputTokens, output: outputTokens, model })
     // Unconditional, unlike onUsage: a route that does not care what it cost is
     // exactly the route whose spend nobody was watching.
-    await meter.anthropicCall({ agent: opts.agent, model, inputTokens, outputTokens })
+    //
+    // The RAW usage object, not the two counts plucked above. Those two drop
+    // the cache read and cache creation fields on the floor, so a cached call
+    // and an uncached one of the same size were indistinguishable in
+    // meter_daily, and prompt caching would have been unmeasurable the day it
+    // was switched on. Parsed in exactly one place, _prices.readUsage.
+    await meter.anthropicCall({ agent: opts.agent, model, usage: j?.usage })
     return firstText(j)
   } catch (e: unknown) {
-    if ((e as Error)?.name === 'AbortError') throw new Error(`anthropic_timeout_${opts.timeoutMs}ms`)
-    throw e
+    const out = (e as Error)?.name === 'AbortError' ? new Error(`anthropic_timeout_${opts.timeoutMs}ms`) : e
+    if (!metered) await meter.anthropicFailure({ agent: opts.agent, model, error: out })
+    throw out
   } finally {
     if (tid) clearTimeout(tid)
   }
@@ -461,10 +770,15 @@ export async function callClaudeMessages(
     }),
   })
   const j: any = await r.json().catch(() => ({}))
-  if (!r.ok) throw new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 120)}`)
+  if (!r.ok) {
+    const e = Object.assign(new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 120)}`), { status: r.status })
+    await meter.anthropicFailure({ agent: opts.agent, model, usage: j?.usage, error: e })
+    throw e
+  }
   await meter.anthropicCall({
     agent: opts.agent,
     model,
+    usage: j?.usage,
     inputTokens: Number(j?.usage?.input_tokens) || 0,
     outputTokens: Number(j?.usage?.output_tokens) || 0,
   })
@@ -503,6 +817,10 @@ export const VOICE_GUARDRAILS = [
   'No AI tells: no "hook line, gap, explanation" opening, no "here\'s the thing", no "the truth is", no "let\'s dive in", no "delve", no "unpack", no "deep dive".',
   'No synthetic enthusiasm ("excited", "thrilled"). No "leverage" (except "leverage audit"). No "utilise", "seamless", "empower", "journey", "landscape", "robust", "synergy".',
   'Active voice only. Dropped subject pronouns where natural ("Been thinking", not "I\'ve been thinking").',
+  // Krish's rulings (R2, R4, R6, R7, the facts, the prediction, no sermons,
+  // no exclamation marks...) come from one registry, api/_houseRules.ts, so a
+  // new ruling reaches every writer without editing five prompts.
+  houseRulesBlock('write'),
   'End on a hard, forward-looking verdict — never a summary, rhetorical question, or CTA.',
   'Specific over general. Never invent numbers, outcomes, or quotes; flag gaps instead.',
 ].join('\n')
@@ -532,9 +850,13 @@ export async function callClaudeBlocks(
     }),
   })
   const j: any = await r.json().catch(() => ({}))
-  if (!r.ok) throw new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`)
+  if (!r.ok) {
+    const e = Object.assign(new Error(`anthropic_${r.status}:${(j?.error?.message || '').slice(0, 160)}`), { status: r.status })
+    await meter.anthropicFailure({ agent: opts.agent, model, usage: j?.usage, error: e })
+    throw e
+  }
   const inputTokens = Number(j?.usage?.input_tokens) || 0
   const outputTokens = Number(j?.usage?.output_tokens) || 0
-  await meter.anthropicCall({ agent: opts.agent, model, inputTokens, outputTokens })
+  await meter.anthropicCall({ agent: opts.agent, model, usage: j?.usage, inputTokens, outputTokens })
   return { text: firstText(j), inputTokens, outputTokens, model }
 }

@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
-import { preamble, sanitizeVoice } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
+import { sanitizeVoice } from '../../_content.js'
 
 // POST /api/shifts/:id/write
 //
@@ -10,7 +11,7 @@ import { preamble, sanitizeVoice } from '../../_content.js'
 // the receipts. Returns the new idea id for the deep link.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = ((req.query.id || '') as string).trim()
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 

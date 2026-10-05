@@ -1,3 +1,6 @@
+import { gateStatus } from './_factGate.js'
+import { publishChecks, publishStatus } from './_publishChecks.js'
+import { LIVE_SUBCHANNELS } from './_subchannels.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from './_supabase.js'
 import { callClaude, robustJson, sanitizeVoice } from './_content.js'
@@ -9,10 +12,15 @@ import { SYNTHESIS_MODEL } from './_models.js'
 import { recordShip } from './_ships.js'
 import { randomUUID } from 'node:crypto'
 import { contentRevisionHash, createProductionApproval, jsonRecord, readProductionApproval } from './_productionBrief.js'
-import { sha256 } from './_editEvents.js'
+import { operatorAttribution, sha256 } from './_editEvents.js'
+import { guardEngine } from './_auth.js'
 
 // Content ideas inbox endpoint.
 //
+//   GET    ?id=<uuid>: one piece as it stands (id, state, lane_slot, idea,
+//            thesis, body and updated_at), behind the same gate as the rest.
+//            Until 2026-09-28 nothing an agent session could reach returned a
+//            body, and a walk confirmed the live text with SQL (walk log F32).
 //   POST   — quick-capture: Krish types an idea (⌘+I modal). We FIRST run the
 //            tiered dedup check (canonical URL → title_norm → content_hash →
 //            embedding similarity) so the same story arriving via Gmail sweep,
@@ -56,13 +64,23 @@ const ALLOWED_SOURCE = new Set([
   'build_signal',
 ])
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, PATCH, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  res.setHeader('Cache-Control', 'no-store')
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-  if (req.method === 'OPTIONS') return res.status(200).end()
+/** The columns a read of one piece returns. */
+export const PIECE_COLUMNS = 'id,state,lane_slot,idea,thesis,body,updated_at'
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (guardEngine(req, res, ['GET', 'POST', 'PATCH'])) return
+
+  if (req.method === 'GET') {
+    const raw = req.query?.id
+    const id = String((Array.isArray(raw) ? raw[0] : raw) || '').trim()
+    if (!UUID.test(id)) return res.status(400).json({ ok: false, error: 'id is required, as a uuid' })
+    const { data, error } = await supabase.from('content_ideas').select(PIECE_COLUMNS).eq('id', id).maybeSingle()
+    if (error) return res.status(500).json({ ok: false, error: 'read_failed' })
+    if (!data) return res.status(404).json({ ok: false, error: 'not_found' })
+    return res.status(200).json({ ok: true, piece: data })
+  }
 
   if (req.method === 'POST') {
     const body = (req.body || {}) as {
@@ -324,6 +342,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ ok: false, error: 'no updatable fields supplied' })
     }
 
+    // Approve, drop and publish are Krish's decisions and each one settles the
+    // panel in judge_calibration. An operator session may relay one he made in
+    // words (decided_by: 'Krish'); it may not take one. See operatorAttribution.
+    const operator = operatorAttribution(req.headers.authorization, body)
+    if (operator?.observation && ['approved', 'dropped', 'published'].includes(String(updates.state))) {
+      return res.status(403).json({ ok: false, error: 'a_decision_needs_krish', detail: "Relay Krish's own decision with decided_by: 'Krish'." })
+    }
+
     const changesApprovedContent = ['idea', 'thesis', 'body'].some((key) => Object.prototype.hasOwnProperty.call(updates, key))
     let current: {
       idea: string
@@ -336,7 +362,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       transformed_outputs: Record<string, unknown> | null
       updated_at: string
     } | null = null
-    if (changesApprovedContent || updates.state === 'review' || updates.state === 'approved') {
+    if (changesApprovedContent || updates.state === 'review' || updates.state === 'approved' || updates.state === 'published') {
       const read = await supabase
         .from('content_ideas')
         .select('idea,thesis,body,lane,lane_slot,state,meta,transformed_outputs,updated_at')
@@ -369,6 +395,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             ? 'A card needs a real draft before it can go to review. Develop it first.'
             : 'Nothing to approve — this card has no draft yet.',
         })
+      }
+    }
+
+    // ── The fact gate (Krish, 2026-09-25) ──────────────────────────────────
+    // A publication piece cannot go to review, be approved or be published
+    // until every checkable claim in the exact body being moved has passed the
+    // fact check (api/_factGate.ts). Relaying Krish's decision does not skip
+    // it: the gate protects his name, so it applies to him too.
+    if (current && (updates.state === 'review' || updates.state === 'approved' || updates.state === 'published')
+      && (LIVE_SUBCHANNELS as readonly string[]).includes(String(current.lane_slot))) {
+      const effective = typeof updates.body === 'string' ? updates.body : (current.body || '')
+      const gate = gateStatus(jsonRecord(current.meta), effective)
+      if (!gate.ok) return res.status(409).json({ ok: false, reason: 'fact_gate', error: gate.reason })
+      // Krish's house rules that a machine can check (api/_publishChecks.ts):
+      // before approval or publication, every blocking check must pass. Review
+      // is where he reads a piece, so a missing confidence does not block it.
+      if (updates.state === 'approved' || updates.state === 'published') {
+        const checks = publishChecks(effective, gate)
+        const status = publishStatus(checks)
+        if (!status.ok) return res.status(409).json({ ok: false, reason: 'publish_gate', error: status.reason, checks: status.failing })
       }
     }
 
@@ -453,11 +499,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         : null
 
       const events: Record<string, unknown>[] = []
-      const surface = typeof body.surface === 'string' && body.surface === 'mobile_deck' ? 'mobile_deck' : 'composer'
-      const client = typeof body.client === 'string' && body.client === 'mobile' ? 'mobile' : 'desktop'
+      // Who did this: Krish in a browser, or an operator session acting as
+      // itself unless it is relaying him. An agent's own rows are observations,
+      // which the compiler never learns from.
+      const surface = operator ? operator.surface
+        : typeof body.surface === 'string' && body.surface === 'mobile_deck' ? 'mobile_deck' : 'composer'
+      const client = operator ? operator.client
+        : typeof body.client === 'string' && body.client === 'mobile' ? 'mobile' : 'desktop'
+      const attribution = operator
+        ? { actor: operator.actor, ...(operator.observation ? { confirmation_state: 'observation_only' } : {}) }
+        : {}
       const panelRunId = typeof body.panel_run_id === 'string' ? body.panel_run_id : null
+      // A body that came from an accepted rewrite is not a hand edit. Its
+      // verdict is recorded by whoever accepted it (magic_accepted, through
+      // /api/content-edits); logging it here as well would teach the compiler
+      // that he typed what the machine wrote.
+      const fromRewrite = body.edit_source === 'magic'
 
-      if (bodyChanged) {
+      if (bodyChanged && !fromRewrite) {
         events.push({
           idempotency_key: randomUUID(),
           subject_table: 'content_ideas', subject_id: id, artifact_kind: 'draft',
@@ -466,7 +525,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           chars_before: beforeText.length, chars_after: afterText.length,
           // Bounded and structured: what moved, never the two bodies again.
           delta_features: [{ feature: 'chars', before: beforeText.length, after: afterText.length }],
-          surface, client,
+          surface, client, ...attribution,
         })
       }
       if (stateAction) {
@@ -480,11 +539,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           // a join and not a guess about which verdict came before which call.
           ...(panelRunId ? { panel_run_id: panelRunId } : {}),
           ...(typeof body.reason_code === 'string' ? { reason_code: body.reason_code } : {}),
-          surface, client,
+          surface, client, ...attribution,
         })
       }
       if (events.length) {
-        try { await supabase.from('content_edit_events').insert(events) } catch { /* the edit is the product */ }
+        // The edit is the product and the ledger is the record of it, so this
+        // still never throws. But supabase-js returns its errors instead of
+        // throwing, so discarding the result made a rejected batch look exactly
+        // like a written one. This is the PATCH choke point: the only place
+        // that sees what Krish typed over the machine, and the highest-signal
+        // input the weekly compiler has.
+        try {
+          const { error } = await supabase.from('content_edit_events').insert(events)
+          if (error) console.warn(`[edit-ledger] ${events.length} manual edit event(s) not recorded: ${error.message || error}`)
+        } catch (e) {
+          console.warn(`[edit-ledger] manual edit events threw: ${(e as Error)?.message || e}`)
+        }
       }
     }
 

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "animatic",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Test the timed visual argument, reading load and attention flow before final treatment.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/animatic/STATION.md",
+  "implementation_owners": ["packages/core/src/visual-plan.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts"],
+  "prerequisites": { "extract": ["styleframes"], "solo": ["styleframes"], "short_native": ["styleframes"] },
+  "consumes": ["styleframe_review_packet", "transcript_artifact"],
+  "produces": ["animatic_review_packet"],
+  "approval_gate": "animatic",
+  "hard_gates": ["Timing must preserve meaning, proof readability, caption clearance and exact approved assets."],
+  "soft_gates": ["The sequence should feel intentional, premium and easy to follow without visual overload."],
+  "invalidates_on_change": {
+    "extract": ["treatment", "render", "qa", "package"],
+    "solo": ["treatment", "render", "qa", "package"],
+    "short_native": ["treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "block", "fallback": "Return to styleframes or visual planning with the exact beat that lost clarity." },
+  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/visual-plan.test.ts", "tests/contracts-v2.test.ts"],
+    "regression_cases": ["A proof beat remains on screen long enough to read.", "An experimental device cannot bypass animatic approval."]
+  }
+}

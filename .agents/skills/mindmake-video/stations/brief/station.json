@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "brief",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Bind an approved production idea to one exact, content-addressed editorial brief.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/brief/STATION.md",
+  "implementation_owners": ["packages/core/src/production-brief.ts"],
+  "contract_owners": ["packages/contracts/src/editorial-v1.ts"],
+  "prerequisites": { "extract": [], "solo": [], "short_native": [] },
+  "consumes": ["approved_production_brief"],
+  "produces": ["brief_artifact"],
+  "approval_gate": null,
+  "hard_gates": ["Exact content address and canonical series identity must validate."],
+  "soft_gates": ["The brief should state a specific audience payoff and production intent."],
+  "invalidates_on_change": {
+    "extract": ["script", "recording_brief"],
+    "solo": ["script", "recording_brief"],
+    "short_native": ["script", "candidates", "claims", "recording_brief", "ingest", "normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "block", "fallback": "Return the invalid fields to the upstream editorial owner without inventing missing content." },
+  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/production-brief.test.ts"],
+    "regression_cases": ["Changed semantic content cannot reuse an existing brief identity.", "A legacy public series alias cannot enter an approved brief."]
+  }
+}

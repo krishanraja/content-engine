@@ -228,6 +228,65 @@ export async function driveListFolder(folderId: string, lookbackDays: number): P
   }
 }
 
+/**
+ * Can the service account see this folder at all, ignoring dates?
+ *
+ * driveListFolder always filters on modifiedTime, so a folder that is not
+ * shared and a folder that has simply been quiet BOTH return zero files, with
+ * no error either way. That ambiguity ran for eleven days: inspiration_scan
+ * reported "nothing modified in the last 14 days, and if that is wrong check
+ * the folder is shared" every two hours, which is two different diagnoses in
+ * one sentence and let the operator pick the comfortable one.
+ *
+ * Re-sharing a folder does not change any file's modifiedTime, so a newly
+ * fixed share stays invisible until somebody happens to edit a file. Without
+ * this probe there is no moment at which the job can say it is working again.
+ *
+ * Returns the total file count and the newest modified time, both unfiltered.
+ * `reachable: false` means the folder genuinely cannot be read, which is the
+ * only one of the two cases that is a fault.
+ */
+export async function driveProbeFolder(folderId: string): Promise<{
+  reachable: boolean
+  total: number
+  newestModified?: string
+  reason?: string
+}> {
+  let why = 'google_service_account_not_configured'
+  const token = await googleAccessToken([DRIVE_READONLY_SCOPE], { impersonate: false, onError: r => { why = r } })
+  if (!token) return { reachable: false, total: 0, reason: why }
+  const params = new URLSearchParams({
+    q: `'${folderId}' in parents and trashed = false`,
+    fields: 'files(id,modifiedTime)',
+    orderBy: 'modifiedTime desc',
+    pageSize: '100',
+    supportsAllDrives: 'true',
+    includeItemsFromAllDrives: 'true',
+  })
+  try {
+    const r = await fetch(`https://www.googleapis.com/drive/v3/files?${params}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const j: any = await r.json().catch(() => ({}))
+    // A 404 on the folder id is what an unshared folder returns when the id is
+    // right and the grant is missing. Named, because "not found" reads as a
+    // wrong id and sends anyone debugging this to the wrong place.
+    if (!r.ok) {
+      return {
+        reachable: false,
+        total: 0,
+        reason: r.status === 404
+          ? 'the folder id is either wrong or not shared with the service account. Both answer 404 here.'
+          : `drive_${r.status}:${String(j?.error?.message || '').slice(0, 160)}`,
+      }
+    }
+    const files = Array.isArray(j?.files) ? j.files : []
+    return { reachable: true, total: files.length, newestModified: files[0]?.modifiedTime }
+  } catch (e) {
+    return { reachable: false, total: 0, reason: (e as Error)?.message?.slice(0, 160) || 'drive_probe_threw' }
+  }
+}
+
 /** Bytes for a binary file, or the exported text of a native Google doc.
  *  Returns null on any failure so the caller can mark the file for retry
  *  rather than treat a transient 5xx as "this file is unreadable". */

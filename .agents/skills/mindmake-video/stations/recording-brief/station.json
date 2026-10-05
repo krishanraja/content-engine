@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "recording_brief",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Translate an approved script into a practical, specific capture plan for Krish.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/recording-brief/STATION.md",
+  "implementation_owners": ["packages/core/src/editorial.ts"],
+  "contract_owners": ["packages/contracts/src/editorial-v1.ts"],
+  "prerequisites": { "extract": ["script"], "solo": ["script"], "short_native": ["candidates", "claims"] },
+  "consumes": ["script_artifact", "candidate_artifact", "claim_ledger"],
+  "produces": ["recording_brief_artifact"],
+  "approval_gate": "angle",
+  "hard_gates": ["Recording guidance must match the approved claims and exact candidate lineage."],
+  "soft_gates": ["Guidance should make delivery, proof, framing and ending executable in one batch."],
+  "invalidates_on_change": {
+    "extract": [],
+    "solo": [],
+    "short_native": ["ingest", "normalize", "transcript", "source_analysis", "visual_plan", "assets", "styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "block", "fallback": "Keep the job before recording and return exact missing decisions or proof requirements." },
+  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/editorial-contracts.test.ts", "tests/editorial.test.ts"],
+    "regression_cases": ["A blocked candidate cannot produce a recording brief.", "A rerecord request includes hook, proof, delivery and ending guidance."]
+  }
+}

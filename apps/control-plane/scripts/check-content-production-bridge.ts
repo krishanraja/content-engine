@@ -90,7 +90,9 @@ assert.match(approvalRoute, /retired_revision_changed/)
 assert.match(approvalRoute, /eq\('updated_at', current\.updated_at\)/, 'approval edits must not overwrite a concurrent runner acknowledgement')
 
 const bridgeRoute = readFileSync(new URL('../api/content-ideas/[id]/production-brief.ts', import.meta.url), 'utf8')
-assert.match(bridgeRoute, /guard\(req, res, \['POST'\]\)/)
+// guardEngine since 2026-09-24: the cookie or the operator bearer, and it never
+// fails open. It must not slip back to nothing, or to the fail-open guard().
+assert.match(bridgeRoute, /guardEngine\(req, res, \['POST'\]\)/)
 assert.match(bridgeRoute, /confirm_hard_gates !== true/)
 assert.match(bridgeRoute, /approval\.content_revision_hash !== contentRevisionHash\(row\)/)
 assert.match(bridgeRoute, /hard_editorial_gate_failed/)
@@ -102,8 +104,16 @@ const completeRoute = readFileSync(new URL('../api/video-studio/runner/productio
 for (const route of [claimRoute, completeRoute]) {
   assert.match(route, /guardVideoStudioRunner/)
   assert.match(route, /enforceVideoStudioRateLimit/)
-  assert.match(route, /eq\('updated_at', row\.updated_at\)/, 'queue writes must use optimistic compare-and-set')
 }
+assert.match(completeRoute, /eq\('updated_at', row\.updated_at\)/, 'queue writes must use optimistic compare-and-set')
+// The claim's write moved into the database with the runner-role fence
+// (2026-09-28): still compare-and-set on updated_at, now in one transaction
+// with the check that the runner is the active one.
+assert.match(claimRoute, /rpc\('video_studio_lease_production_brief'/)
+assert.match(claimRoute, /p_expected_updated_at: row\.updated_at/, 'queue writes must use optimistic compare-and-set')
+assert.doesNotMatch(claimRoute, /\.update\(/, 'the claim never writes content_ideas around the fence')
+assert.match(claimRoute, /mayStartNewWork\(runnerStanding\(/)
+assert.match(claimRoute, /lease\.data === 'fenced'\) return nothingToClaim\(res\)/)
 assert.match(claimRoute, /hashLeaseToken/)
 assert.match(claimRoute, /envelope\.brief\.content_revision_hash !== currentRevisionHash/)
 assert.match(completeRoute, /leaseTokenMatches/)

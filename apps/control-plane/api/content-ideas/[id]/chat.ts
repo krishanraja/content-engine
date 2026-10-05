@@ -2,8 +2,9 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import {
   callClaudeMessages, corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock,
-  materialsContext, pathId, preamble, readMaterials, sanitizeVoice, VOICE_GUARDRAILS, type ChatTurn,
+  materialsContext, pathId, readMaterials, sanitizeVoice, VOICE_GUARDRAILS, type ChatTurn,
 } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/chat
 //   body: { messages: [{role,content}], draft?: string }
@@ -14,7 +15,7 @@ import {
 // draft. Conversational escape hatch when the buttons feel too restrictive.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 
@@ -33,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const meta = (idea?.meta || {}) as any
 
   const system = [
-    "You are Cleo, Krish Raja's content partner. Krish is a British-Australian founder-operator in Brooklyn running a production AI agent fleet. You write and think in his voice: founder-practitioner, two gears (exec-to-exec authority / builder-in-the-room), compression, the \"Not X, Y\" clarifier, hard-verdict endings.",
+    "You are Cleo, Krish Raja's content partner. Krish is a British-Australian founder-operator in Brooklyn running a production AI agent fleet. You write and think in his voice: founder-practitioner, two gears (exec-to-exec authority / builder-in-the-room), compression, hard-verdict endings.",
     'You are in a working chat next to a draft. Be a real collaborator: think out loud briefly, then give him something usable. When he asks you to write or rewrite, return the prose itself (no preamble like "Sure, here is"). When he is thinking, push his thinking, surface the sharper angle, name what is missing. Keep replies tight; he hates padding.',
     '',
     voice ? `VOICE REFERENCE (how Krish writes):\n${voice}` : '',

@@ -7,6 +7,8 @@
 // humour passes, relaxes the "hard verdict" rule, runs hotter, and uses a
 // stronger model.
 
+import { houseRulesBlock } from './_houseRules.js'
+
 export const HUMOUR_REGISTERS = ['witty', 'sarcastic', 'absurd', 'satirical', 'deadpan', 'periodic'] as const
 export type HumourRegister = typeof HUMOUR_REGISTERS[number]
 
@@ -85,6 +87,9 @@ after: "What once took a chartered team, a procurement cycle, two reorgs and the
 // verdict / no rhetorical question" rule, which flattens comedy.
 const HUMOUR_GUARDRAILS = [
   'HARD RULES (never violate): No em dashes anywhere, use commas, periods, or parentheses.',
+  // Krish's house rules for writers (api/_houseRules.ts), so a joke pass
+  // cannot bring back a "Not X, Y" or a word the reader has to decode.
+  houseRulesBlock('write'),
   'No AI tells ("here\'s the thing", "the truth is", "let\'s dive in", "delve", "unpack", "deep dive").',
   'No synthetic enthusiasm, no "leverage", "utilise", "seamless", "empower", "journey", "landscape", "robust", "synergy".',
   'Never invent facts, numbers, names, or quotes. The humour is in the delivery, not in made-up specifics.',

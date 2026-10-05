@@ -1,11 +1,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
-import { guard } from '../../_auth.js'
+import { guardEngine } from '../../_auth.js'
 import { corpusForChannel, laneToCorpusChannel, loadCorpus, loadVoiceBlock, pathId } from '../../_content.js'
 import { supabase } from '../../_supabase.js'
 import { deterministicFindings } from '../../_judges/deterministic.js'
-import { runPanel } from '../../_judges/panel.js'
+import { runPanel, type PanelResult } from '../../_judges/panel.js'
+import { describeFailure, isModelUnavailable } from '../../_modelProvider.js'
 import { ROSTER_VERSION } from '../../_judges/roster.js'
+import { curationBlock } from '../../_curation.js'
+import { loadSubchannel, type Subchannel } from '../../_subchannels.js'
+import { houseRulesBlock } from '../../_houseRules.js'
 
 // Put a piece in front of the panel.
 //
@@ -41,8 +45,48 @@ interface IdeaRow {
   meta: Record<string, unknown> | null
 }
 
+// The evidence judge checks claims against these, so it gets more of each
+// source than a writer does (a writer needs the gist, a checker the figure).
+const SOURCE_BUDGET = { perItem: 4000, total: 16000 }
+
+/**
+ * What every judge may read. Pure, so a test can hold it.
+ *
+ * On the draft gate the panel also reads the subchannel's mandate (what the
+ * piece is for; before 2026-09-24 channel_fit guessed, and named retired
+ * channels) and the sources on file (what the piece was written from; before,
+ * the evidence judge graded evidence it could not see). The idea gate is
+ * unchanged: an idea is judged on its claim, before any sources exist.
+ */
+export function judgeContext(input: {
+  gate: 'idea' | 'draft'
+  voice: string
+  corpusSlice: string
+  recentIdeas: string[]
+  channel: string | null
+  sub: Subchannel | null
+  row: { idea: string | null; thesis: string | null; meta: Record<string, any> | null; lane_slot?: string | null }
+}): string {
+  const draft = input.gate === 'draft'
+  return [
+    '### How Krish writes', input.voice,
+    // His rulings, the same list the writers and the final pass read.
+    '### His house rules', houseRulesBlock(draft ? 'judge_draft' : 'judge_idea', input.sub?.slug ?? input.row.lane_slot ?? null),
+    '### What he has published', input.corpusSlice,
+    '### Ideas already in the system (for the novelty judge)',
+    input.recentIdeas.map(i => `- ${i.slice(0, 160)}`).join('\n') || '(none)',
+    draft && input.sub
+      ? `### The subchannel this is for: ${input.sub.label}\nIts mandate is the test the piece must pass, including how it must close.\n${input.sub.mandate}`
+      : '',
+    input.channel ? `### The channel this is for\n${input.channel}` : '',
+    draft
+      ? `### The sources on file\nWhat the piece was written from. Check its claims against these: a claim found here is sourced, a claim found nowhere here is not.\n\n${curationBlock(input.row, null, SOURCE_BUDGET)}`
+      : '',
+  ].filter(Boolean).join('\n\n')
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (guard(req, res, ['POST'])) return
+  if (guardEngine(req, res, ['POST'])) return
 
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id_required' })
@@ -100,24 +144,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .neq('id', row.id)
     .order('created_at', { ascending: false })
     .limit(40)
-  const context = [
-    '### How Krish writes', voice,
-    '### What he has published', corpusForChannel(corpus, laneToCorpusChannel(row.lane, row.lane_slot)),
-    '### Ideas already in the system (for the novelty judge)',
-    (recent || []).map(r => `- ${String((r as { idea: string }).idea).slice(0, 160)}`).join('\n') || '(none)',
-    channel ? `### The channel this is for\n${channel}` : '',
-  ].filter(Boolean).join('\n\n')
-
-  const panel = await runPanel({
+  const sub = gate === 'draft' ? await loadSubchannel(row.lane_slot) : null
+  const context = judgeContext({
     gate,
-    subjectTable: 'content_ideas',
-    subjectId: row.id,
-    artifact,
-    context,
-    deterministic,
-    idempotencyKey,
-    timeoutMs: JUDGE_TIMEOUT_MS,
+    voice,
+    corpusSlice: corpusForChannel(corpus, laneToCorpusChannel(row.lane, row.lane_slot)),
+    recentIdeas: (recent || []).map(r => String((r as { idea: string }).idea)),
+    channel,
+    sub,
+    row: { idea: row.idea, thesis: row.thesis, meta: row.meta as Record<string, any> | null, lane_slot: row.lane_slot },
   })
+
+  let panel: PanelResult
+  try {
+    panel = await runPanel({
+      gate,
+      subjectTable: 'content_ideas',
+      subjectId: row.id,
+      artifact,
+      context,
+      deterministic,
+      idempotencyKey,
+      timeoutMs: JUDGE_TIMEOUT_MS,
+    })
+  } catch (e) {
+    // Every judge failed to reach the model: a failed run, recorded nowhere
+    // as a verdict (api/_judges/panel.ts). The caller hears what the provider
+    // said, with the status that says try later.
+    if (isModelUnavailable(e)) {
+      if (e.failure.reset_at) res.setHeader('Retry-After', String(Math.max(1, Math.ceil((Date.parse(e.failure.reset_at) - Date.now()) / 1000))))
+      return res.status(503).json({
+        ok: false, error: 'model_unavailable',
+        detail: `The panel could not run, so nothing was recorded. ${describeFailure(e.failure)}`,
+        failure: e.failure,
+      })
+    }
+    throw e
+  }
 
   // Store the run, then the verdicts. A run that cannot be stored is still
   // returned: the panel already did the work, and losing the answer because the

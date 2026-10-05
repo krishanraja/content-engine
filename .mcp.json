@@ -1,11 +1,16 @@
 {
   "mcpServers": {
     "mindmake-studio": {
-      "type": "http",
-      "url": "https://controlcenter.krishraja.com/api/video-studio/mcp",
-      "headers": {
-        "Authorization": "Bearer ${VIDEO_STUDIO_MCP_TOKEN}"
-      }
+      "type": "stdio",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts/studio-mcp-credential-proxy.ps1"
+      ]
     }
   }
 }

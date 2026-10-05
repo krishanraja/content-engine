@@ -63,6 +63,20 @@ describe('V2 contracts remain additive',()=>{
     expect(()=>VisualAssetV1Schema.parse(generatedEvidence)).toThrow('generated media cannot be evidence')
   })
 
+  it('requires a multi-beat story to leave a question open that a later beat answers',()=>{
+    const span=(beatId:string,start:number,end:number)=>({...shot,shot_id:`shot-${beatId}`,beat_id:beatId,start_ms:start,end_ms:end,source_start_ms:start,source_end_ms:end,camera_plan:{...cameraPlan,camera_plan_id:`camera-plan-${beatId}`,start_ms:start,end_ms:end,keyframes:[{at_ms:start,crop:{x:0,y:0,width:1,height:1},zoom:1,rotation_degrees:0,confidence:1}]}})
+    const hook={...visualPlan.beats[0],beat_id:'hook',start_ms:0,end_ms:400,source_spans:[{source_id:'camera-main',start_ms:0,end_ms:400}],narrative_function:'hook' as const,viewer_task:'feel_stakes' as const,emotional_function:'curiosity' as const,transcript:'Here is the promise.',rationale:'Confirm the promise the packaging made.'}
+    const ending={...visualPlan.beats[0],beat_id:'ending',start_ms:400,end_ms:1000,source_spans:[{source_id:'camera-main',start_ms:400,end_ms:1000}]}
+    const twoBeat={...visualPlan,beats:[hook,ending],shot_directives:[span('hook',0,400),span('ending',400,1000)]}
+
+    expect(()=>VisualNarrativePlanV1Schema.parse(twoBeat)).toThrow('the hook must leave a question open that a later beat answers')
+    expect(VisualNarrativePlanV1Schema.parse({...twoBeat,beats:[{...hook,opens_question:true},{...ending,answers_beat_id:'hook'}]}).beats).toHaveLength(2)
+    expect(()=>VisualNarrativePlanV1Schema.parse({...twoBeat,beats:[{...hook,opens_question:true},{...ending,answers_beat_id:'absent'}]})).toThrow('unknown beat')
+    expect(()=>VisualNarrativePlanV1Schema.parse({...twoBeat,beats:[hook,{...ending,answers_beat_id:'hook'}]})).toThrow('the referenced beat does not open a question')
+    expect(()=>VisualNarrativePlanV1Schema.parse({...twoBeat,beats:[{...hook,opens_question:true,answers_beat_id:'ending'},{...ending,answers_beat_id:'hook'}]})).toThrow('a question must be answered by a later beat')
+    expect(VisualNarrativePlanV1Schema.parse(visualPlan).beats).toHaveLength(1)
+  })
+
   it('validates V2 stage payloads instead of accepting arbitrary visual artifacts',()=>{
     const envelope={schema_version:2 as const,job_id:'job-1',stage:'source_analysis' as const,created_at:new Date().toISOString(),input_hashes:{normalize:H},config_hash:H,tool_versions:{analyzer:'test'},payload:analysis,artifact_hash:H2}
     expect(StageArtifactV2Schema.parse(envelope).stage).toBe('source_analysis')

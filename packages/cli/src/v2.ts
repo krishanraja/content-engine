@@ -5,6 +5,7 @@ import type { Command } from 'commander'
 import {
   ApprovalGateV2Schema,
   CandidateV1Schema,
+  DeviceUsageEventV1Schema,
   FeedbackEventV2Schema,
   GeneratedShotV1Schema,
   JobPurposeSchema,
@@ -40,9 +41,12 @@ import {
 } from '@mindmake/contracts'
 import {
   analyzeSourceBundle,
+  aggregateDeviceLearning,
+  appendDeviceUsageEvent,
   analyzeMediaArtifactForFeedback,
   analyzeLoudness,
   brandLayerCollisionIssues,
+  brandThemeRefusal,
   brandWordmarkLegibilityReport,
   alignScriptToTranscript,
   applyPresenterIdentityCorrections,
@@ -56,6 +60,8 @@ import {
   confirmFeedbackV2,
   captureFeedbackV2,
   createDraftPackageV2,
+  houseThemeForManifestV2,
+  renderThumbnailV2,
   createDriveSourceBundleDraft,
   createExperimentV2,
   createJobV2,
@@ -83,11 +89,16 @@ import {
   krishIdentityStatus,
   loadCaptionTranscript,
   loadImportedProductionBrief,
+  loadBoundProductionBriefV2,
   loadJobV2,
   loadExactBrandGeometryContextV2,
   loadKrishIdentity,
   loadPinnedRenderRegistryV2,
   loadTechniqueRegistry,
+  loadDeviceUsageLedger,
+  resolveVisualRecipe,
+  selectDevicesForBeat,
+  validateShortDeviceSelections,
   materializeProductionBriefJob,
   activateMagicEditCandidate,
   listExperimentsV2,
@@ -106,6 +117,8 @@ import {
   readWindowsCredential,
   recordApprovalV2,
   requireRunnerSourceProvenance,
+  boundRenderCallIssuesV2,
+  renderCallFromBriefV2,
   renderStoryV2,
   prepareMagicEditCandidate,
   publishRunnerProject,
@@ -136,6 +149,7 @@ import {
   windowsCredentialExists,
   transcribeMedia,
   type EditorialThresholds,
+  type OpeningContextV1,
   type NormalizedMediaSourceV2,
   type TranscriptDocument,
 } from '@mindmake/core'
@@ -634,6 +648,21 @@ async function assertCandidateIsCurrent(jobId: string, candidate: CandidateV1): 
   }
 }
 
+/** The approved promise the opening has to confirm. Absent when no production brief is bound to the job. */
+async function approvedBriefTitle(jobId: string): Promise<OpeningContextV1> {
+  try {
+    const brief = await loadBoundProductionBriefV2(await loadJobV2(jobId))
+    return brief ? { approved_title: brief.content.title } : {}
+  } catch { return {} }
+}
+
+/** The thumbnail's words: the approved title over the Short's hook, or,
+ *  with no production brief bound to the job, the hook over the payoff. */
+async function thumbnailCopy(jobId: string, candidate: CandidateV1): Promise<{ headline: string; dek: string }> {
+  const { approved_title: title } = await approvedBriefTitle(jobId)
+  return title ? { headline: title, dek: candidate.hook } : { headline: candidate.hook, dek: candidate.payoff }
+}
+
 async function verifyEvidencePacketFiles(packet: EvidenceReviewPacketV2): Promise<void> {
   for (const asset of packet.assets) {
     const actual = await hashFile(resolve(asset.path))
@@ -742,6 +771,10 @@ async function loadReviewManifest(job: JobManifestV2, manifestPath: string, stor
   if (hashValue(manifest.assets) !== hashValue(assetArtifact.payload.assets) || hashValue(manifest.generated_shots) !== hashValue(assetArtifact.payload.generated_shots)) throw new Error('render manifest is not bound to the exact approved asset ledger')
   const readiness = validateV2RenderReadiness(manifest, storyboardHash === undefined ? 'styleframe' : 'none')
   if (readiness.length) throw new Error(`hard block: V2 render readiness failed: ${readiness.join('; ')}`)
+  // A Short in the house style shows the piece's call; it must be the call
+  // the job's approved production brief states, exactly.
+  const callIssues = await boundRenderCallIssuesV2(manifest)
+  if (callIssues.length) throw new Error(`hard block: the call gate failed: ${callIssues.join('; ')}`)
   return { manifest, manifestHash }
 }
 
@@ -1210,7 +1243,8 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           const formattedCandidate = productionBrief.success && productionBrief.data.editorial_format
             ? CandidateV1Schema.parse({ ...candidate, editorial_format: productionBrief.data.editorial_format })
             : candidate
-          return withEditorialValidation(formattedCandidate, validateShortNativeEditorialCandidate(formattedCandidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences), true)
+          const approvedTitle = productionBrief.success ? { approved_title: productionBrief.data.content.title } : {}
+          return withEditorialValidation(formattedCandidate, validateShortNativeEditorialCandidate(formattedCandidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences, approvedTitle), true)
         })
         const inputHash = await hashFile(options.input)
         const scriptArtifact = await completeStageV2(manifest.job_id, 'script', {
@@ -1228,9 +1262,10 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           const parsed = candidatesInPayload(raw)
           if (!parsed.length) throw new Error('candidate input contains no valid CandidateV1 objects')
           const compatibilityJob = candidateCompatibilityJob(manifest, transcriptArtifact.payload.source_id)
+          const openingContext = await approvedBriefTitle(manifest.job_id)
           candidates = parsed.map((candidate) => {
             if (candidate.job_id !== manifest.job_id || candidate.series !== manifest.series || candidate.mode !== manifest.mode) throw new Error('candidate job, series, and mode must match the job manifest')
-            return withEditorialValidation(candidate, validateEditorialCandidate(candidate, transcript, compatibilityJob, config.editorial_thresholds, config.active_preferences), false)
+            return withEditorialValidation(candidate, validateEditorialCandidate(candidate, transcript, compatibilityJob, config.editorial_thresholds, config.active_preferences, openingContext), false)
           })
           candidatesInputs = { transcript: transcriptArtifact.artifact_hash, candidate_file: await hashFile(options.input) }
           generator = 'codex-excerpt-editorial-v2'
@@ -1415,6 +1450,109 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       })
       const artifact = await completeStageV2(options.job, 'source_analysis', analysis, inputs, tools)
       context.out({ job_id: options.job, artifact_hash: artifact.artifact_hash, analysis, unavailable_capabilities: analysis.capabilities.unavailable, fallbacks: analysis.capabilities.fallbacks })
+    })
+
+  const repertoire = v2.command('repertoire').description('Inspect and apply the deterministic art director device library')
+  repertoire.command('inspect')
+    .action(async () => {
+      const path = join(context.repoRoot, 'config', 'techniques.json')
+      const registry = await loadTechniqueRegistry(path)
+      context.out({
+        registry_id: registry.registry_id,
+        version: registry.version,
+        registry_hash: await hashFile(path),
+        selection_policy: registry.selection_policy,
+        devices: registry.techniques.map((device) => ({
+          technique_id: device.technique_id,
+          version: device.version,
+          name: device.name,
+          narrative_jobs: device.narrative_jobs,
+          experimental: device.experimental,
+          signature: device.signature,
+          implementation_state: device.implementation_state,
+        })),
+        recipes: registry.recipes,
+        references: registry.reference_observations.map((reference) => ({
+          reference_id: reference.reference_id,
+          title: reference.title,
+          rights_role: reference.rights_role,
+          observed_devices: reference.observed_devices,
+        })),
+      })
+    })
+  repertoire.command('propose')
+    .requiredOption('--beat <beatId>')
+    .requiredOption('--series <series>')
+    .requiredOption('--mode <mode>')
+    .requiredOption('--narrative-function <value>')
+    .requiredOption('--viewer-task <value>')
+    .requiredOption('--narrative-job <value>', 'prove, explain, orient, compare, evoke, or delight')
+    .requiredOption('--lane <lane>', 'restrained, premium, or experimental')
+    .option('--format <format>')
+    .option('--inputs <inputs...>', 'available governed inputs', [])
+    .option('--proof-required')
+    .option('--preferred <ids...>', 'preferred device IDs', [])
+    .option('--recent <ids...>', 'recently used device IDs', [])
+    .option('--prohibited <ids...>', 'prohibited device IDs', [])
+    .option('--invention-name <name>')
+    .option('--invention-mechanism <mechanism>')
+    .action(async (options) => {
+      if (!['prove', 'explain', 'orient', 'compare', 'evoke', 'delight'].includes(options.narrativeJob)) throw new Error('--narrative-job is unsupported')
+      const path = join(context.repoRoot, 'config', 'techniques.json')
+      const registry = await loadTechniqueRegistry(path)
+      const registryHash = await hashFile(path)
+      const trace = selectDevicesForBeat(registry, {
+        traceId: `trace-${options.beat}`,
+        beatId: options.beat,
+        series: normalizeSeries(options.series),
+        sourceMode: SourceModeSchema.parse(options.mode),
+        ...(options.format ? { editorialFormat: normalizeEditorialFormatV1(options.format) } : {}),
+        narrativeFunction: options.narrativeFunction,
+        viewerTask: options.viewerTask,
+        narrativeJob: options.narrativeJob,
+        treatmentLane: TreatmentLaneV1Schema.parse(options.lane),
+        availableInputs: options.inputs || [],
+        proofRequired: Boolean(options.proofRequired),
+        preferredTechniqueIds: options.preferred || [],
+        recentlyUsedTechniqueIds: options.recent || [],
+        prohibitedTechniqueIds: options.prohibited || [],
+        registryHash,
+        ...(options.inventionName && options.inventionMechanism
+          ? { inventionBrief: { name: options.inventionName, mechanism: options.inventionMechanism } }
+          : {}),
+      })
+      context.out({ trace, plan_issues: validateShortDeviceSelections(registry, [trace]) })
+    })
+  repertoire.command('recipe')
+    .requiredOption('--recipe <recipeId>')
+    .requiredOption('--series <series>')
+    .requiredOption('--lane <lane>', 'restrained, premium, or experimental')
+    .option('--format <format>')
+    .option('--inputs <inputs...>', 'available governed inputs', [])
+    .option('--recent-use-count <count>', 'number of recent jobs using this recipe', '0')
+    .action(async (options) => {
+      const registry = await loadTechniqueRegistry(join(context.repoRoot, 'config', 'techniques.json'))
+      const recentUseCount = Number(options.recentUseCount)
+      context.out(resolveVisualRecipe(registry, options.recipe, {
+        series: normalizeSeries(options.series),
+        treatmentLane: TreatmentLaneV1Schema.parse(options.lane),
+        ...(options.format ? { editorialFormat: normalizeEditorialFormatV1(options.format) } : {}),
+        availableInputs: options.inputs || [],
+        recentUseCount,
+      }))
+    })
+  repertoire.command('record-feedback')
+    .requiredOption('--input <path>', 'DeviceUsageEventV1 JSON')
+    .requiredOption('--ledger <path>', 'job-local device usage JSONL ledger')
+    .action(async (options) => {
+      const event = DeviceUsageEventV1Schema.parse(await readJson(options.input))
+      context.out(await appendDeviceUsageEvent(resolve(options.ledger), event))
+    })
+  repertoire.command('learning-proposals')
+    .requiredOption('--ledger <path>', 'device usage JSONL ledger')
+    .action(async (options) => {
+      const events = await loadDeviceUsageLedger(resolve(options.ledger))
+      context.out({ proposals: aggregateDeviceLearning(events) })
     })
 
   const visualPlan = v2.command('visual-plan')
@@ -1658,6 +1796,20 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       context.out({ job_id: options.job, artifact_hash: artifact.artifact_hash, verified_asset_hashes: verdict.verified_hashes, generated_shot_hashes: approvedShots.map((shot) => shot.output_hash) })
     })
 
+  v2.command('call')
+    .description("Print the piece's call from the job's approved production brief, ready to paste into a render manifest as \"call\"")
+    .requiredOption('--job <jobId>')
+    .requiredOption('--beat <beatId>', 'the beat that carries the call card')
+    .action(async (options) => {
+      const job = await loadJobV2(options.job)
+      const brief = await loadBoundProductionBriefV2(job)
+      if (!brief) throw new Error(`job ${job.job_id} has no production brief bound to it, and a call comes only from the approved text of the job's production brief`)
+      let call
+      try { call = renderCallFromBriefV2(brief, options.beat) }
+      catch (error) { throw new Error(`hard block: ${error instanceof Error ? error.message : String(error)}`) }
+      context.out({ job_id: job.job_id, brief_id: brief.brief_id, call })
+    })
+
   const styleframes = v2.command('styleframes')
   styleframes.command('create')
     .requiredOption('--job <jobId>')
@@ -1860,9 +2012,16 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
           const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
           if (!brandTheme) brandFailures.push('manifest brand theme does not match the exact job-pinned active theme')
           else {
-            const report = brandWordmarkLegibilityReport(brandTheme)
-            brandFailures.push(...report.failures, ...brandLayerCollisionIssues(manifest, brandTheme, brandGeometry))
-            brandWarnings.push(...report.warnings)
+            if (brandTheme.publication) {
+              // A live subchannel's lockup: refused while a candidate, and
+              // never for a retired series.
+              const refusal = brandThemeRefusal(brandTheme, manifest.series)
+              brandFailures.push(...(refusal ? [refusal] : []), ...brandLayerCollisionIssues(manifest, brandTheme, brandGeometry))
+            } else {
+              const report = brandWordmarkLegibilityReport(brandTheme)
+              brandFailures.push(...report.failures, ...brandLayerCollisionIssues(manifest, brandTheme, brandGeometry))
+              brandWarnings.push(...report.warnings)
+            }
           }
         }
         const checks = [
@@ -1912,14 +2071,16 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         artifactHash = candidateSemanticHash(candidate)
         const config = await readJson<PinnedStudioConfigV2>(pinnedConfigPathV2(manifest))
         if (!config.editorial_thresholds) throw new Error('job-pinned configuration is missing editorial_thresholds')
+        const openingContext = await approvedBriefTitle(manifest.job_id)
         const independentEditorial = manifest.mode === 'short_native'
-          ? validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences)
+          ? validateShortNativeEditorialCandidate(candidate, config.editorial_thresholds, manifest.presenter_name, config.active_preferences, openingContext)
           : validateEditorialCandidate(
               candidate,
               parseTranscriptDocument((await readStageArtifactV2<TranscriptStagePayloadV2>(manifest.job_id, 'transcript')).payload.transcript),
               candidateCompatibilityJob(manifest),
               config.editorial_thresholds,
               config.active_preferences,
+              openingContext,
             )
         const hardBlocks = [
           ...candidate.challenge.hard_blocks,
@@ -2101,7 +2262,12 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
         if (hashValue(renderManifest.assets) !== approvedAssetsHash || hashValue(renderManifest.generated_shots) !== approvedGeneratedHash) throw new Error(`render manifest for ${platform} is not bound to the exact approved asset ledger`)
         for (const sourceItem of renderManifest.sources) if (await hashFile(resolve(sourceItem.path)) !== sourceItem.sha256) throw new Error(`render source ${sourceItem.source_id} changed for ${platform}`)
         if (!renderManifest.disclosures.some((item) => item.platform === platform)) throw new Error(`render manifest for ${platform} lacks a platform disclosure decision`)
-        created.push(await createDraftPackageV2(options.job, platform, renderItem.master_path, candidate, renderManifest, qa.payload, { render_manifest_hash: renderItem.manifest_hash, master_path: renderItem.master_path, master_hash: renderItem.master_hash }))
+        // In the makeyourmindup house style the package's cover is the
+        // Short's thumbnail: the piece's title over its hook, no photograph.
+        const cover = await houseThemeForManifestV2(renderManifest)
+          ? await renderThumbnailV2(context.repoRoot, renderManifest, await thumbnailCopy(options.job, candidate))
+          : undefined
+        created.push(await createDraftPackageV2(options.job, platform, renderItem.master_path, candidate, renderManifest, qa.payload, { render_manifest_hash: renderItem.manifest_hash, master_path: renderItem.master_path, master_hash: renderItem.master_hash }, cover))
       }
       await verifyPackagePayload({ packages: created }, manifest)
       const artifact = await completeStageV2(options.job, 'package', { packages: created }, { render: render.artifact_hash, qa: qa.artifact_hash }, { packager: V2_CLI_VERSION })

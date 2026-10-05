@@ -40,6 +40,71 @@ export function duplicate(existing: { id: string; idea: string } | null): Determ
   }
 }
 
+// Krish, 2026-09-24, asked what the rule is for the "Not X, Y" move: "Cut it
+// everywhere", which he confirmed covers both orders. The prompts say so; this
+// catches a model that does it anyway. Plain factual negation ("Amazon did not
+// say why") is not the move and must never be flagged, or the check becomes
+// noise people learn to ignore. A full stop inside a word ("GPT-5.5",
+// "3.2 million") is not the end of a sentence, so the negated side may carry
+// one: on 2026-09-30 "Salesforce isn't proving Koa is smarter than Claude or
+// GPT-5.5. It's proving it doesn't need to be" passed every check.
+const NOT_XY = [
+  // Sentence-initial: "Not the compliance story, the version where..."
+  /(?:^|[.!?]["'”’)]?\s+)Not\s+(?!(?:surprisingly|only|least|yet|once|quite|to mention|much|many|all|every\w*)\b)(?:[^.!?\n,]|\.(?=\w)){2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/g,
+  // After a colon or semicolon: "...a news cycle: not what Amazon says, what a judge says"
+  /[:;]\s+not\s+(?!(?:surprisingly|only|least|yet|once|quite|to mention|much|many|all|every\w*)\b)(?:[^.!?\n,]|\.(?=\w)){2,80},\s+(?!and\b|or\b|so\b|because\b|which\b|who\b)\S[^.!?\n]{0,40}/gi,
+  // "isn't X, it's Y", "is not X. It's Y", "aren't X, they're Y"
+  /\b(?:isn['’]t|is not|wasn['’]t|was not|aren['’]t|are not)\s+(?:[^.!?\n]|\.(?=\w)){1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are| was| were)\b[^.!?\n]{0,30}/gi,
+  // "it's not X, it's Y"
+  /\b(?:it|this|that|they)(?:['’]s|['’]re| is| are) not\s+(?:[^.!?\n]|\.(?=\w)){1,80}?[,;.]\s+(?:it|this|that|they)(?:['’]s|['’]re| is| are)\b[^.!?\n]{0,30}/gi,
+  // The subject said twice: "Shopify is not the supermarket. Shopify is the
+  // till." (piece 1, 2026-09-30). The negated side starts with a determiner,
+  // so two plain facts about one thing ("The fee is not refundable. The fee
+  // is due on Monday") are left alone.
+  /\b([A-Z][\w'’-]*|it|this|that|they)\s+(?:is not|isn['’]t|are not|aren['’]t|was not|wasn['’]t|were not|weren['’]t)\s+(?:a|an|the|about|my|your|his|her|its|our|their)\b(?:[^.!?\n]|\.(?=\w)){1,80}?[.;,]\s+\1\s+(?:is|are|was|were)\s+(?:a|an|the|about|my|your|his|her|its|our|their)\b[^.!?\n]{0,30}/g,
+  // The verb said twice: "It doesn't care which shelf you picked things off.
+  // It cares that you're at the till." (piece 1), and "Koa doesn't need to
+  // beat Claude or GPT-5.5. It just needs to be cheap" (a piece 3 retry), both
+  // 2026-09-30.
+  /\b(?:doesn['’]t|does not|don['’]t|do not|didn['’]t|did not)\s+([a-z]+)\b(?:[^.!?\n]|\.(?=\w)){0,80}?[.;,]\s+(?:[A-Z][\w'’-]*|it|this|that|they|he|she|we|you)\s+(?:just\s+|only\s+|simply\s+)?\1(?:s|es|d|ed)?\b[^.!?\n]{0,30}/g,
+  // "never X, it was Y"
+  /\bnever\s+(?:[^.!?\n]|\.(?=\w)){1,60}?,\s+(?:it|this|that|they)\s+(?:was|were|is|are)\b[^.!?\n]{0,30}/gi,
+  // The reverse order, "Y, not X": "measured, not projected."
+  /[^.!?\n,]{0,40},\s+not\s+(?!only\b|least\b|surprisingly\b|yet\b|always\b|quite\b)(?:a |an |the )?[\w'’-]+(?:\s+[\w'’-]+){0,3}(?=[.,;!?]|$)/gim,
+]
+
+// "is not established. It's our inference" is a hedge, not the move: a bare
+// participle on the negated side names a state of evidence, not a rival take.
+const HEDGE = /\b(?:is|was|are|were|isn['’]t|wasn['’]t) not (?:yet )?\w+ed[.,;]/i
+
+/** Every "Not X, Y" construction in the text, trimmed for evidence, in order. */
+export function notXYConstructions(text: string): string[] {
+  const found: { at: number; text: string }[] = []
+  for (const re of NOT_XY) {
+    re.lastIndex = 0
+    for (const m of text.matchAll(re)) {
+      if (HEDGE.test(m[0])) continue
+      found.push({ at: m.index ?? 0, text: m[0].replace(/^[.!?"'”’)\s]+/, '').trim().slice(0, 120) })
+    }
+  }
+  found.sort((a, b) => a.at - b.at)
+  // One sentence can match two shapes; report it once.
+  return found.filter((f, i) => !found.slice(0, i).some(g => g.text.includes(f.text) || f.text.includes(g.text))).map(f => f.text)
+}
+
+/** The first "Not X, Y" construction in the text, or null. */
+export function notXYConstruction(text: string): string | null {
+  return notXYConstructions(text)[0] ?? null
+}
+
+/** The banned-word list Krish enforces in public copy. Kept short and exact:
+ *  a long fuzzy list produces false positives that train people to ignore it.
+ *  Exported so the YouTube title check (api/_packaging.ts) reads the same list. */
+export const BANNED_PHRASES: readonly string[] = Object.freeze([
+  'delve', 'leverage the power', 'in today\'s fast-paced', 'game-changer', 'unlock the potential',
+  'navigate the complexities', 'it\'s not just', 'testament to', 'tapestry', 'realm of',
+])
+
 /** The voice rules that are mechanical. sanitizeVoice already strips em dashes
  *  and their lookalikes on every write path, so anything this finds is a rule a
  *  model would otherwise be asked to notice and would sometimes miss. */
@@ -48,14 +113,13 @@ export function voiceMechanics(text: string): DeterministicFinding | null {
   const problems: string[] = []
   if (cleaned !== text) problems.push('em dashes or their lookalikes are present')
 
-  // The banned-word list Krish enforces in public copy. Kept short and exact:
-  // a long fuzzy list produces false positives that train people to ignore it.
-  const banned = [
-    'delve', 'leverage the power', 'in today\'s fast-paced', 'game-changer', 'unlock the potential',
-    'navigate the complexities', 'it\'s not just', 'testament to', 'tapestry', 'realm of',
-  ]
   const lower = text.toLowerCase()
-  for (const word of banned) if (lower.includes(word)) problems.push(`banned phrase: ${word}`)
+  for (const word of BANNED_PHRASES) if (lower.includes(word)) problems.push(`banned phrase: ${word}`)
+
+  // Every hit, not the first: one flag for seven uses reads as one fix.
+  const notXY = notXYConstructions(text)
+  for (const hit of notXY.slice(0, 5)) problems.push(`the "Not X, Y" construction: "${hit}"`)
+  if (notXY.length > 5) problems.push(`and ${notXY.length - 5} more "Not X, Y" constructions`)
 
   if (!problems.length) return null
   return {

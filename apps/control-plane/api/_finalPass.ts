@@ -38,6 +38,8 @@
 // 2026-08-06). It is a FORMAT now, not a destination, and it keeps the hardest
 // evidence bar in the OS because that bar is the whole point of it.
 
+import { rulesFor } from './_houseRules.js'
+
 export type VentureKey =
   | 'investigation'
   | 'signal_noise'
@@ -47,6 +49,11 @@ export type VentureKey =
   | 'mindmake_field'
   | 'builder_economy'
   | 'dynamic'
+  // The live publication subchannels (venture_formats, 2026-09-17). Their
+  // rubric is built from the mandate at call time, never hand-copied here.
+  | 'follow_the_money'
+  | 'under_the_hood'
+  | 'mind_the_gap'
 
 /** lane (+slot) -> venture rubric key. Mirrors laneToCorpusChannel / save-draft.
  *
@@ -114,6 +121,11 @@ export interface VentureRubric {
   notes: string[]
   /** How strict to be on an unverifiable claim: 'block' folds it into instant_fail. */
   unverifiedClaim: 'block' | 'flag'
+  /** True when the mandate, not VOICE_ABSOLUTES, decides how the piece closes.
+   *  mind.the.gap forbids a closing moral and under.the.hood leaves the verdict to
+   *  the reader, so the house "end on a hard verdict" absolute would grade them
+   *  against their own brief. */
+  mandateGovernsClose?: boolean
 }
 
 // The voice rules that are ABSOLUTE on every venture (Krish, Q13). These are
@@ -125,6 +137,11 @@ export const VOICE_ABSOLUTES: string[] = [
   'Dropped subject pronouns where natural ("Been thinking", not "I have been thinking").',
   'No warm-up and never bury the lede. The first sentence is already mid-argument.',
   'End on a hard, forward-looking verdict. Never a summary, a rhetorical question, or a CTA.',
+  // Krish's rulings, from the one registry (api/_houseRules.ts), so a new
+  // ruling reaches the ship-moment check without editing this list.
+  ...rulesFor('final_pass').map(r => `${r.name}: ${r.text}`),
+  'Plain words only. Flag every word or label a reader has to interpret: technical jargon, and also the piece\'s own coined labels, nicknames or shorthand. A term that cannot be avoided must be explained in plain English where it first appears.',
+  'Reading age 12. Flag any sentence a 12-year-old would have to read twice.',
 ]
 
 // The improvement dimensions a suggestion can belong to (Krish, Q4: cover all,
@@ -154,7 +171,10 @@ const INVESTIGATION_LENSES: Lens[] = [
   { key: 'second_order', label: 'Second-order', desc: 'The consequence of the consequence. What this does two moves downstream that nobody is pricing in.', defaultOn: true },
 ]
 
-const RUBRICS: Record<VentureKey, VentureRubric> = {
+/** The hand-written rubrics. The three live subchannels are deliberately
+ *  absent: theirs is built from the mandate by subchannelRubric(). */
+type StaticVenture = Exclude<VentureKey, 'follow_the_money' | 'under_the_hood' | 'mind_the_gap'>
+const RUBRICS: Record<StaticVenture, VentureRubric> = {
   investigation: {
     key: 'investigation',
     label: 'MYMU: Teardown',
@@ -184,7 +204,7 @@ const RUBRICS: Record<VentureKey, VentureRubric> = {
     label: 'Signal & Noise',
     corpusChannel: 'signal_noise',
     mandate: 'AI in media, marketing, AdTech, and the economics and monetization of the internet. Separate durable signal from noise. Exec-to-exec (Gear A).',
-    leadWith: 'The durable signal, named plainly, with what most people get wrong ("Not X, Y").',
+    leadWith: 'The durable signal, named plainly, and what most people get wrong about it.',
     instantFail: [
       'No practical real-world example: the piece is abstract from start to finish with nothing the reader can picture.',
     ],
@@ -323,8 +343,46 @@ const RUBRICS: Record<VentureKey, VentureRubric> = {
   },
 }
 
+const CLOSE_ABSOLUTE = /^End on a hard, forward-looking verdict/
+
+/**
+ * The rubric for a live subchannel, built from its mandate as venture_formats
+ * holds it now.
+ *
+ * The hand-written rubrics above predate the 2026-09-17 mandates and have
+ * drifted from them. The worst case: `built`, the lineage under.the.hood came
+ * from, instant-fails a piece "Krish did not build or watch being built",
+ * while the under.the.hood mandate requires the subject is never his own build.
+ * So the mandate is the rubric, whole: it carries the standing question, the
+ * boundary test, the naming rule, the close and the hard gates, and a second
+ * copy here would drift the same way.
+ */
+export function subchannelRubric(sub: { slug: string; label: string; mandate: string }): VentureRubric {
+  return {
+    key: sub.slug as VentureKey,
+    label: sub.label,
+    corpusChannel: sub.slug,
+    mandate: sub.mandate,
+    leadWith: "The mandate's standing question, answered from the first paragraph.",
+    instantFail: [
+      "It fails one of the mandate's HARD GATES, for example NOT US (the subject is Krish, mind/make, CTRL or his own work) or MATERIAL EXISTS (the evidence would have to be created rather than found).",
+    ],
+    evidenceBar:
+      'Every number is dated and attributed to whoever it came from. A claim that is inference is labelled as inference, and where the public record stops the piece says so. Never invent a number, outcome or quote.',
+    mustHave: [
+      "The mandate's standing question, answered.",
+      'The close the mandate asks for, and no other.',
+    ],
+    notes: [
+      "Apply the mandate's boundary test (what does the reader change next?). If the piece answers a different subchannel's question, that is a high-severity structure suggestion, not an instant fail.",
+    ],
+    unverifiedClaim: 'flag',
+    mandateGovernsClose: true,
+  }
+}
+
 export function rubricFor(venture: VentureKey): VentureRubric {
-  return RUBRICS[venture] || RUBRICS.dynamic
+  return RUBRICS[venture as StaticVenture] || RUBRICS.dynamic
 }
 
 // ── Prompt ──────────────────────────────────────────────────────────────────
@@ -378,7 +436,12 @@ export function buildFinalPassSystem(args: {
     lensBlock,
     '',
     'VOICE ABSOLUTES (never "improve" these away, a violation is at least a high-severity voice suggestion):',
-    VOICE_ABSOLUTES.map(s => `- ${s}`).join('\n'),
+    VOICE_ABSOLUTES
+      .filter(s => !(rubric.mandateGovernsClose && CLOSE_ABSOLUTE.test(s)))
+      .map(s => `- ${s}`).join('\n'),
+    rubric.mandateGovernsClose
+      ? 'THE CLOSE is whatever the MANDATE above asks for. Judge the ending against the mandate, not against a house rule.'
+      : '',
     '',
     voice ? `VOICE REFERENCE (how Krish writes):\n${voice}` : '',
     '',

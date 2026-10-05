@@ -1,0 +1,84 @@
+{
+ "name": "who-gets-paid",
+ "source": "recording/who-gets-paid.mp4",
+ "crop": [
+  404,
+  720,
+  438,
+  0
+ ],
+ "face": [
+  100,
+  450
+ ],
+ "remove": [
+  {
+   "say": "is",
+   "after": "and the reason"
+  },
+  {
+   "say": "So if Meta Muse, and",
+   "after": "you've paid it more"
+  }
+ ],
+ "replacements": [
+  [
+   "Chris",
+   "Krish"
+  ]
+ ],
+ "frame16": "gfx/wgp-frame-16x9.png",
+ "endcard": {
+  "9x16": "../hello/endcard-9x16.mp4",
+  "16x9": "../hello/endcard-16x9.mp4"
+ },
+ "strap": {
+  "png": "gfx/strap-9x16.png",
+  "after": "in september meta launched",
+  "seconds": 3.5
+ },
+ "cues": [
+  {
+   "id": "quote",
+   "panel": "gfx/wgp-quote-{aspect}.png",
+   "start": "amazon recently told",
+   "end": "shown to humans"
+  },
+  {
+   "id": "blocked",
+   "panel": "gfx/wgp-blocked-{aspect}.png",
+   "start": "and within two weeks",
+   "end": "opposite with it"
+  },
+  {
+   "id": "image-1",
+   "panel": "gfx/wgp-v1-{aspect}.png",
+   "start": "and the reason",
+   "end": "fee on every sale"
+  },
+  {
+   "id": "image-2",
+   "panel": "gfx/wgp-v2-{aspect}.png",
+   "start": "but they only like",
+   "end": "shows no ads today"
+  },
+  {
+   "id": "image-3",
+   "panel": "gfx/wgp-v3-{aspect}.png",
+   "start": "if you let an",
+   "end": "paid it more"
+  },
+  {
+   "id": "shopify",
+   "panel": "gfx/wgp-shopify-{aspect}.png",
+   "start": "if youre someone that",
+   "end": "commission eventually"
+  },
+  {
+   "id": "call",
+   "panel": "gfx/wgp-call-{aspect}.png",
+   "start": "so whats our call",
+   "end": "sure of this"
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import { access, copyFile, mkdir, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, join } from 'node:path'
-import type { BrandThemeV1, BrandWordmarkAssetV1, BrandWordmarkLockupV1, RenderManifestV1, Series } from '@mindmake/contracts'
+import { isLiveSeries, PENDING_BRAND_SOURCE_COMMIT, PUBLIC_SERIES_NAMES, SERIES_IDS, type BrandHouseStyleV1, type BrandPublicationLockupV1, type BrandThemeV1, type BrandWordmarkAssetV1, type BrandWordmarkLockupV1, type RenderManifestV1, type Series } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { studioPaths } from './paths.js'
 
@@ -28,12 +28,19 @@ export interface BrandWordmarkLegibilityMetrics {
   plate_height_px: number
 }
 
+/** Always the two retired series, whose marks every theme carries; a live
+ *  subchannel only once its mark is approved and pinned. */
+export type MarkedSeriesRecord<T> = Record<'money_of_ai' | 'built_with_ai', T> & Partial<Record<Series, T>>
+
 export interface BrandWordmarkLegibilityReport {
   failures: string[]
   warnings: string[]
-  recommended_identity_mode: Record<Series, 'stacked_identity' | 'series_only'>
-  identity: Record<Series, BrandWordmarkLegibilityMetrics>
-  series_only: Record<Series, BrandWordmarkLegibilityMetrics>
+  // Keyed by the series whose official mark the theme carries. The two retired
+  // series always have one; a live subchannel appears once Krish approves its
+  // mark and it is pinned in studio.json.
+  recommended_identity_mode: MarkedSeriesRecord<'stacked_identity' | 'series_only'>
+  identity: MarkedSeriesRecord<BrandWordmarkLegibilityMetrics>
+  series_only: MarkedSeriesRecord<BrandWordmarkLegibilityMetrics>
   anchor: BrandWordmarkLegibilityMetrics
 }
 
@@ -41,6 +48,7 @@ const MAX_BRAND_ASSET_BYTES = 2_000_000
 
 export function officialWordmarkUrl(theme: BrandThemeV1, asset: BrandWordmarkAssetV1): string {
   if (!/^[a-z0-9_.-]+\/[a-z0-9_.-]+$/i.test(theme.source.repository)) throw new Error('brand source repository must be an owner/name GitHub repository')
+  if (theme.source.commit === PENDING_BRAND_SOURCE_COMMIT) throw new Error(`${theme.theme_id} has no recorded source commit yet (${PENDING_BRAND_SOURCE_COMMIT}); its marks cannot be fetched`)
   const encodedPath = asset.source_path.split('/').map(encodeURIComponent).join('/')
   return `https://raw.githubusercontent.com/${theme.source.repository}/${theme.source.commit}/${encodedPath}`
 }
@@ -107,7 +115,6 @@ function renderedLetterHeight(asset: BrandWordmarkAssetV1, width: number): numbe
   return width * asset.letter_region.height / asset.alpha_crop.width
 }
 
-const SERIES: Series[] = ['money_of_ai', 'built_with_ai']
 
 export function brandWordmarkLegibilityReport(theme: BrandThemeV1): BrandWordmarkLegibilityReport {
   const emptyMetrics = { mindmake_width_px: 0, mindmake_height_px: 0, series_width_px: 0, series_asset_height_px: 0, series_letter_height_px: 0, series_letter_height_at_375_css_px: 0, plate_width_px: 0, plate_height_px: 0 }
@@ -131,9 +138,9 @@ export function brandWordmarkLegibilityReport(theme: BrandThemeV1): BrandWordmar
 
   const failures: string[] = []
   const warnings: string[] = []
-  const recommendedMode = {} as Record<Series, 'stacked_identity' | 'series_only'>
-  const identity = {} as Record<Series, BrandWordmarkLegibilityMetrics>
-  const seriesOnly = {} as Record<Series, BrandWordmarkLegibilityMetrics>
+  const recommendedMode = {} as MarkedSeriesRecord<'stacked_identity' | 'series_only'>
+  const identity = {} as MarkedSeriesRecord<BrandWordmarkLegibilityMetrics>
+  const seriesOnly = {} as MarkedSeriesRecord<BrandWordmarkLegibilityMetrics>
   const minimum = lockup.minimum_effective
   const anchorMindmakeHeight = renderedHeight(theme.wordmarks.mindmake, lockup.anchor.mindmake_width)
   const anchor = {
@@ -150,8 +157,9 @@ export function brandWordmarkLegibilityReport(theme: BrandThemeV1): BrandWordmar
     && anchorMindmakeHeight <= lockup.anchor.plate_height - lockup.anchor.padding * 2
   if (lockup.anchor.mindmake_width < minimum.mindmake_width_px || anchorMindmakeHeight < minimum.mindmake_height_px || !anchorFits) failures.push('Mindmake-only anchor renders below the 1080x1920 legibility or fit floor')
 
-  for (const series of SERIES) {
+  for (const series of SERIES_IDS) {
     const asset = theme.wordmarks.series[series]
+    if (!asset) continue
     const mindmakeHeight = renderedHeight(theme.wordmarks.mindmake, lockup.identity.mindmake_width)
     const seriesHeight = renderedHeight(asset, lockup.identity.series_width)
     const seriesLetterHeight = renderedLetterHeight(asset, lockup.identity.series_width)
@@ -219,7 +227,7 @@ export async function stageOfficialWordmarks(manifest: RenderManifestV1, targetD
   if (!theme.wordmarks.lockup) throw new Error('branded renders require the approved responsive wordmark lockup')
   const issues = brandWordmarkLegibilityIssues(theme)
   if (issues.length) throw new Error(`official wordmark legibility gate failed: ${issues.join('; ')}`)
-  const seriesAsset = theme.wordmarks.series[manifest.series as Series]
+  const seriesAsset = officialSeriesMark(theme, manifest.series as Series)
   return {
     mindmake: await stageAsset(theme, theme.wordmarks.mindmake, targetDirectory, 'mindmake', fetchImpl),
     series: await stageAsset(theme, seriesAsset, targetDirectory, manifest.series, fetchImpl),
@@ -227,10 +235,114 @@ export async function stageOfficialWordmarks(manifest: RenderManifestV1, targetD
   }
 }
 
+/** The official mark for a series, or a plain refusal naming the missing
+ *  approval. The live subchannels have no approved mark yet (walk log F21),
+ *  and a mark is never recreated as text. */
+export function officialSeriesMark(theme: BrandThemeV1, series: Series): BrandWordmarkAssetV1 {
+  const asset = theme.wordmarks?.series[series]
+  if (!asset) throw new Error(`${series} has no approved official wordmark yet; a branded render needs one pinned in studio.json`)
+  return asset
+}
+
 export async function stageOfficialSeriesWordmarks(theme: BrandThemeV1, series: Series, targetDirectory: string, fetchImpl: typeof fetch = fetch): Promise<Pick<StagedBrandWordmarks, 'mindmake' | 'series'>> {
   if (!theme.rules.official_wordmarks_only || !theme.wordmarks) throw new Error('branded carousel renders require official wordmarks')
   return {
     mindmake: await stageAsset(theme, theme.wordmarks.mindmake, targetDirectory, 'mindmake', fetchImpl),
-    series: await stageAsset(theme, theme.wordmarks.series[series], targetDirectory, series, fetchImpl),
+    series: await stageAsset(theme, officialSeriesMark(theme, series), targetDirectory, series, fetchImpl),
+  }
+}
+
+/** A theme's faces in the four slots the renderers read. The Studio theme
+ *  passes through untouched; in the house style the display face (Anton)
+ *  sets the claims and Archivo the structure and body. */
+export function runtimeTypography(theme: BrandThemeV1): { structure: string; claim: string; body: string; data: string } {
+  const typography = theme.typography
+  return 'display' in typography ? { structure: typography.structure, claim: typography.display, body: typography.structure, data: typography.data } : typography
+}
+
+// ── The publication lockup (makeyourmindup) ─────────────────────────────────
+// Krish, 2026-09-26: "Make your mind up, Mark, plus the channel name", then
+// "placement approved". A theme for the live subchannels carries the
+// publication's mark and logo as pinned images, and sets the channel's name as
+// type. It serves only the live subchannels: the retired series keep the
+// Mindmake theme they were approved under.
+
+export interface StagedPublicationMarks {
+  mark: StagedWordmarkAsset
+  logo: StagedWordmarkAsset
+  /** The stacked logo, for the house style's ending band. */
+  stacked?: StagedWordmarkAsset
+  lockup: BrandPublicationLockupV1
+  /** The channel's name as the brand book sets it: "mind.the.gap". */
+  channelLabel: string
+  channelColor: string
+  /** The channel's day, sticker, promise and question (house style only). */
+  channelCopy?: BrandHouseStyleV1['channels'][keyof BrandHouseStyleV1['channels']]
+}
+
+export interface PublicationLegibilityReport {
+  failures: string[]
+  mark_width_px: number
+  mark_height_px: number
+  logo_letter_height_px: number
+  logo_letter_height_at_375_css_px: number
+  label_cap_height_at_375_css_px: number
+}
+
+export function publicationLegibilityReport(theme: BrandThemeV1): PublicationLegibilityReport {
+  const lockup = theme.publication
+  if (!lockup) return { failures: ['the publication lockup is missing'], mark_width_px: 0, mark_height_px: 0, logo_letter_height_px: 0, logo_letter_height_at_375_css_px: 0, label_cap_height_at_375_css_px: 0 }
+  const minimum = lockup.minimum_effective
+  const toCss = (px: number) => px * minimum.preview_width_css_px / lockup.reference_canvas.width
+  const markHeight = renderedHeight(lockup.mark, lockup.anchor.mark_width)
+  // The ending shows the horizontal logo on the version 1 plate, and the
+  // stacked logo in the house style's band.
+  const endingLogo = lockup.identity.mode === 'publication_band' ? lockup.stacked : lockup.logo
+  if (!endingLogo) return { failures: ['the ending band has no pinned stacked logo'], mark_width_px: lockup.anchor.mark_width, mark_height_px: markHeight, logo_letter_height_px: 0, logo_letter_height_at_375_css_px: 0, label_cap_height_at_375_css_px: 0 }
+  const logoLetters = renderedLetterHeight(endingLogo, lockup.identity.logo_width)
+  const labelCap = lockup.channel_label.size_px * lockup.channel_label.cap_height_ratio
+  const failures: string[] = []
+  if (lockup.anchor.mark_width < minimum.mark_width_px) failures.push(`the publication mark renders below ${minimum.mark_width_px} px wide`)
+  if (logoLetters < minimum.logo_letter_height_px || toCss(logoLetters) < minimum.logo_letter_height_css_px) failures.push(`the publication logo's lettering renders below ${minimum.logo_letter_height_px} px or ${minimum.logo_letter_height_css_px} CSS px`)
+  if (toCss(labelCap) < minimum.label_cap_height_css_px) failures.push(`the channel name renders below ${minimum.label_cap_height_css_px} CSS px cap height`)
+  return {
+    failures,
+    mark_width_px: lockup.anchor.mark_width,
+    mark_height_px: markHeight,
+    logo_letter_height_px: logoLetters,
+    logo_letter_height_at_375_css_px: toCss(logoLetters),
+    label_cap_height_at_375_css_px: toCss(labelCap),
+  }
+}
+
+/** Why this theme cannot brand this series, or null when it can. A
+ *  publication theme brands the live subchannels only, and only once active
+ *  with Krish's approval captured; a series-wordmark theme needs the series'
+ *  own approved mark. */
+export function brandThemeRefusal(theme: BrandThemeV1, series: Series): string | null {
+  if (theme.publication) {
+    if (!isLiveSeries(series)) return `${theme.theme_id} brands only the live subchannels; ${series} keeps the theme it was approved under`
+    if (theme.status !== 'active' || !theme.publication.approval) return `${theme.theme_id} is a candidate: it goes live only when Krish's approval is captured as Studio feedback on his machine`
+    if (theme.source.commit === PENDING_BRAND_SOURCE_COMMIT) return `${theme.theme_id} pins its marks to a control-center commit that is not recorded yet (${PENDING_BRAND_SOURCE_COMMIT})`
+    const failures = publicationLegibilityReport(theme).failures
+    return failures.length ? `the publication lockup legibility gate failed: ${failures.join('; ')}` : null
+  }
+  if (!theme.wordmarks?.series[series]) return `${series} has no approved official wordmark yet; a branded render needs one pinned in studio.json`
+  return null
+}
+
+export async function stagePublicationMarks(theme: BrandThemeV1, series: Series, targetDirectory: string, fetchImpl: typeof fetch = fetch): Promise<StagedPublicationMarks> {
+  const refusal = brandThemeRefusal(theme, series)
+  if (refusal) throw new Error(refusal)
+  const lockup = theme.publication!
+  const channel = series as keyof BrandPublicationLockupV1['channel_colors']
+  return {
+    mark: await stageAsset(theme, lockup.mark, targetDirectory, 'publication-mark', fetchImpl),
+    logo: await stageAsset(theme, lockup.logo, targetDirectory, 'publication-logo', fetchImpl),
+    ...(lockup.stacked ? { stacked: await stageAsset(theme, lockup.stacked, targetDirectory, 'publication-stacked', fetchImpl) } : {}),
+    lockup,
+    channelLabel: PUBLIC_SERIES_NAMES[series],
+    channelColor: lockup.channel_colors[channel],
+    ...(lockup.house_style ? { channelCopy: lockup.house_style.channels[channel] } : {}),
   }
 }

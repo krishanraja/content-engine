@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
-import { preamble, pathId } from '../_content.js'
+import { guardEngine } from '../_auth.js'
+import { pathId } from '../_content.js'
 
 // PATCH /api/shifts/:id   body: { action, merge_into?, note? }
 //
@@ -29,7 +30,7 @@ async function refreshTotals(shiftId: string) {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res, 'PATCH, OPTIONS')) return
+  if (guardEngine(req, res, ['PATCH'])) return
   if (req.method !== 'PATCH') return res.status(405).json({ ok: false, error: 'PATCH only' })
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })

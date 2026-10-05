@@ -82,7 +82,20 @@ const read = (rel: string) => readFileSync(new URL(`../${rel}`, import.meta.url)
   // A quiet fortnight is the ordinary reason for zero once the folder is
   // shared. The first version of this message named only the unshared case and
   // read as a fault when the lane was simply not fed.
-  assert.match(route, /nothing modified in the folder in the last \$\{lookbackDays\} days/, 'a quiet window must not read as a misconfiguration')
+  //
+  // It was then pinned as a LITERAL sentence. When the message was improved on
+  // 2026-09-19 to split the two zeroes apart, this line failed on wording while
+  // the behaviour it exists to protect got strictly better, and that alone kept
+  // main red from 2026-09-19 until 2026-09-20. A guard tied to a sentence fails
+  // every time the sentence improves, which teaches people to stop improving it
+  // or to stop believing the guard. Both are worse than no guard.
+  //
+  // The invariant is structural now: the two zeroes must be distinguishable,
+  // and a quiet folder must SAY it is quiet rather than offering a hedge the
+  // reader has to choose a half of.
+  assert.match(route, /inspiration_folder_unreachable/, 'an unreadable folder needs its own error, or a dead lane reads as a quiet one')
+  assert.match(route, /Quiet, not broken/, 'a quiet window must say so plainly rather than reading as a misconfiguration')
+  assert.match(route, /none modified in the last \$\{lookbackDays\} days/, 'the quiet message must name the window it looked at')
   // A deferred file must NOT be written to the ledger, or it never returns.
   assert.doesNotMatch(route, /markLedger\([^)]*deferred/, 'a deferred file must stay out of the ledger')
 }

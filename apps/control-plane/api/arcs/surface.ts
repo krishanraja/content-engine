@@ -4,8 +4,9 @@ import { supabase } from '../_supabase.js'
 import { callClaude, robustJson } from '../_content.js'
 import { isoWeekLabel } from '../_weeks.js'
 import { buildComposePrompt, buildRepairPrompt, parseComposed, type ComposableArc, type ComposedCard } from '../_compose.js'
-import { scoreArc, surface, surfacingReason, VISIBLE_SLOTS, RESERVED_FOR_UNTHEMED,
+import { scoreArc, surface, VISIBLE_SLOTS, RESERVED_FOR_UNTHEMED,
   MIN_INDEPENDENT_BEATS, type Arc } from '../_arcScore.js'
+import { arcCardRows, systemicComposerFailure } from './_cards.js'
 import { lintCard } from '../_cardLint.js'
 import type { Lens, Channel } from '../_lenses.js'
 import { SYNTHESIS_MODEL } from '../_models.js'
@@ -139,6 +140,11 @@ export async function runSurface(opts: { week?: string; max?: number } = {}) {
       const raw = await callClaude({ agent: 'arcs-compose', model: SYNTHESIS_MODEL, maxTokens: 1200, temperature: 0.3, system, user, timeoutMs: 45_000 })
       composed = parseComposed(robustJson(raw))
     } catch (e: any) {
+      // A rejected or missing credential is not this arc's verdict. Fail the
+      // whole run so content_engine_runs says so and the tab shows it, rather
+      // than writing one uncomposed card per arc and reporting ok.
+      const systemic = systemicComposerFailure(e)
+      if (systemic) throw new Error(`composer unavailable: ${systemic}`)
       skipped.push({ row: a, reason: `composer failed: ${String(e?.message || e).slice(0, 200)}` })
       continue
     }
@@ -148,7 +154,13 @@ export async function runSurface(opts: { week?: string; max?: number } = {}) {
       try {
         const retry = await callClaude({ agent: 'arcs-compose', model: SYNTHESIS_MODEL, maxTokens: 1600, temperature: 0.3, system, user, timeoutMs: 45_000 })
         composed = parseComposed(robustJson(retry))
-      } catch { /* fall through to the skip below */ }
+      } catch (e: any) {
+        // Same rule on the retry: a credential that has started failing between
+        // the two calls is still the deployment's problem, not the arc's.
+        const systemic = systemicComposerFailure(e)
+        if (systemic) throw new Error(`composer unavailable: ${systemic}`)
+        /* otherwise fall through to the skip below */
+      }
     }
     if (!composed) { skipped.push({ row: a, reason: 'composer returned nothing usable, twice' }); continue }
     if ('skip' in composed) { skipped.push({ row: a, reason: `composer declined: ${composed.skip}` }); continue }
@@ -197,36 +209,7 @@ export async function runSurface(opts: { week?: string; max?: number } = {}) {
   const reservedIds = new Set(picked.unthemed.map(p => p.id))
 
   // ── write everything, winners and losers alike ───────────────────────────
-  const rows: any[] = []
-  for (const s of scored) {
-    const on = surfacedIds.has(s.row.id)
-    rows.push({
-      shift_id: s.row.id, week,
-      headline: s.card.headline, what_changed: s.card.what_changed, why_now: s.card.why_now,
-      the_opening: s.card.the_opening, where_this_goes: s.card.where_this_goes,
-      reader_decision: s.card.reader_decision, format: s.card.format,
-      score: s.blocked ? 0 : s.score, components: s.components,
-      blocked: s.blocked, blocks: s.blocks,
-      surfaced: on, reserved_slot: reservedIds.has(s.row.id),
-      surface_reason: s.blocked
-        ? s.blocks.join('; ')
-        : on
-          ? surfacingReason(s.row.arc_state || 'building', Boolean(s.row.theme_id))
-          : `scored ${s.score.toFixed(2)}, below the cut for this week`,
-    })
-  }
-  for (const p of preBlocked) {
-    rows.push({
-      shift_id: p.row.id, week, blocked: true, blocks: p.blocks, score: 0,
-      surfaced: false, surface_reason: p.blocks.join('; '),
-    })
-  }
-  for (const sk of skipped) {
-    rows.push({
-      shift_id: sk.row.id, week, blocked: true, blocks: [sk.reason], score: 0,
-      surfaced: false, surface_reason: sk.reason,
-    })
-  }
+  const rows = arcCardRows({ scored, preBlocked, skipped, surfacedIds, reservedIds, week })
   if (rows.length) {
     const { error: wErr } = await supabase.from('arc_cards')
       .upsert(rows, { onConflict: 'shift_id,week' })

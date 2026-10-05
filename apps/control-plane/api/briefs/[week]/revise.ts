@@ -1,7 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
-import { loadVoiceBlock, preamble, sanitizeVoice, VOICE_GUARDRAILS } from '../../_content.js'
-import { openStream, send, fail, streamClaude } from '../../_stream.js'
+import { guardEngine } from '../../_auth.js'
+import { loadVoiceBlock, sanitizeVoice, VOICE_GUARDRAILS } from '../../_content.js'
+import { emptyOutput, failWith, modelFailure, openStream, send, streamClaude } from '../../_stream.js'
 import { loadStandingNotes, standingNotesPrompt } from '../../_briefNotes.js'
 import { locateSpan } from '../../_selection.js'
 import { buildHumourSystem, isHumourRegister } from '../../_humor.js'
@@ -26,6 +27,13 @@ import { SYNTHESIS_MODEL } from '../../_models.js'
 // piece that contradicts a belief or confirms a twelve-month thesis, read
 // through a commercial and strategic lens. A preset that treats it as a roundup
 // sands the argument off, which is exactly how the weekly drifted before.
+//
+// Success is a stream that ends with a `done` event whose `ok` is true, as
+// the piece's revise does. A failure is typed (ModelErrorBody in
+// api/_stream.ts): known before the stream opens (a usage limit, a bad key,
+// an overload the provider answered at once), it is a JSON body with 503,
+// 429 or 502; after it opens, it is the stream's last event, `error`, and no
+// `done` follows. docs/CONTENT_ENGINE.md has the shapes.
 
 const ARGUMENT = 'This brief is an investigative opinion piece, not a roundup: the clues prosecute one belief, either contradicting it or confirming a twelve-month thesis, always through a commercial and strategic lens (pricing, margin, who pays, build versus buy, competitive position). Every edit must leave that argument intact or sharper, never flatter.'
 
@@ -37,7 +45,7 @@ const PRESETS: Record<string, string> = {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const week = (req.query.week || '') as string
   if (!/^\d{4}-W\d{2}$/.test(week)) return res.status(400).json({ ok: false, error: 'week required (YYYY-Www)' })
 
@@ -106,9 +114,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) return res.status(503).json({ ok: false, error: 'ANTHROPIC_API_KEY not configured' })
 
-  openStream(res)
+  // The stream opens only once the provider has accepted the call, so a
+  // refusal reaches the caller as a status it cannot mistake for success. It
+  // used to open first, and a usage limit came back as HTTP 200 carrying one
+  // untyped event, the fault 1d6a1b0 fixed on the piece's revise (walk log
+  // F31, F40).
+  let opened = false
+  let out: string
   try {
-    const out = await streamClaude({
+    out = await streamClaude({
       agent: 'briefs-revise',
       apiKey,
       model: humour ? 'claude-opus-4-8' : SYNTHESIS_MODEL,
@@ -118,15 +132,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       maxTokens: 4000,
       system,
       messages: [{ role: 'user', content: user }],
+      onOpen: () => { openStream(res); opened = true },
       onText: chunk => send(res, 'delta', { text: chunk }),
     })
-    const preview = sanitizeVoice(out.trim().replace(/^```(?:markdown|md)?\n?|\n?```$/g, ''))
-    if (!preview || preview.length < 100) return fail(res, 'revision came back empty')
-    send(res, 'done', { ok: true, preview })
-    return res.end()
   } catch (e: unknown) {
-    return fail(res, 'revise_failed', String((e as Error)?.message || e))
+    const failure = modelFailure('revise_failed', 'The rewrite of the brief', e)
+    if (!opened) {
+      if (failure.retryAfterSeconds) res.setHeader('Retry-After', String(failure.retryAfterSeconds))
+      return res.status(failure.status).json(failure.body)
+    }
+    return failWith(res, failure.body)
   }
+  const preview = sanitizeVoice(out.trim().replace(/^```(?:markdown|md)?\n?|\n?```$/g, ''))
+  // A brief is a whole piece: under 100 characters it was cut short or never
+  // written, and there is nothing to preview.
+  if (!preview || preview.length < 100) {
+    return failWith(res, { ...emptyOutput('revise_failed', 'The rewrite of the brief'), detail: 'The rewrite of the brief came back empty or under 100 characters, so nothing was produced. Run it again.' })
+  }
+  send(res, 'done', { ok: true, preview })
+  return res.end()
 }
 
 export const config = { maxDuration: 120 }

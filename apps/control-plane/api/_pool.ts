@@ -10,7 +10,9 @@
 export interface PoolStory {
   day: string           // 'YYYY-MM-DD' (briefing_date)
   headline: string
-  say: string | null    // the pool's own "why it matters" line
+  say: string | null    // the pool's own "why it matters" line, or null if cut
+  /** The source text was cut off mid-markup, so the sentence is incomplete. */
+  truncated: boolean
   source: string | null
   url: string | null
   sourceUrls: string[]
@@ -23,9 +25,71 @@ const CATEGORIES = new Set([
   'governance', 'security', 'org', 'proof',
 ])
 
+/**
+ * Feed text, as text.
+ *
+ * Some of the pool's sources hand back a raw RSS <description>, which is markup,
+ * not a sentence. It went into content_ideas.thesis verbatim, so the Feed
+ * carried rows reading `<p>Yesterday was <a href="https://x.ai/news/grok-4-7">`,
+ * cut off mid-attribute at the column limit. Krish, 2026-09-23, looking at one:
+ * "why can't we stop garbage characters and sentences from coming in".
+ *
+ * Cleaned here rather than at the one caller, because this is where a pool card
+ * becomes a typed PoolStory and every reader downstream is entitled to assume a
+ * string field holds prose. Returns null for text that was ONLY markup: an
+ * absent thesis is honest, an empty-looking one is not.
+ */
+const ENTITIES: Record<string, string> = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
+  hellip: '…', mdash: '—', ndash: '–', rsquo: '’', lsquo: '‘',
+  rdquo: '”', ldquo: '“', middot: '·', bull: '•',
+}
+/**
+ * The source text was cut off, not merely dirty.
+ *
+ * Krish, 2026-09-24, grading a seed the panel scored 1 and he scored 2: "We're
+ * still pulling in incomplete ideas 'Yesterday was Grok 4.7 (pelicans) and'.
+ * This rating is invalid as a result, we need to fix the problem of capturing
+ * half sentences."
+ *
+ * He is right and stripping markup cannot fix it: the row read
+ * `<p>Yesterday was <a href="...">Grok 4.7</a> (...) and <a href="https:/`
+ * and the words after "and" were never stored, so there is nothing to recover.
+ * Cleaning it produced a tidy fragment, which is worse than a dirty one,
+ * because a tidy fragment looks like a real thesis and gets judged as one.
+ *
+ * Deliberately deterministic and narrow: an UNTERMINATED TAG at the end is
+ * proof the writer was cut off mid-character. A sentence merely lacking a full
+ * stop is not proof of anything, and guessing at that would throw away real
+ * text.
+ */
+export function looksTruncated(raw: unknown): boolean {
+  if (typeof raw !== 'string') return false
+  return /<[^>]*$/.test(raw.trimEnd())
+}
+
+export function plainText(raw: unknown): string | null {
+  if (typeof raw !== 'string') return null
+  const text = raw
+    // Script and style carry content that is not prose at all, so the whole
+    // block goes, not just its tags.
+    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+    // Block boundaries are sentence boundaries. Without this, stripping tags
+    // glues the last word of one paragraph to the first of the next.
+    .replace(/<\/?(p|div|br|li|tr|h[1-6]|blockquote)\b[^>]*>/gi, ' ')
+    // Every other tag, then one the feed truncated mid-attribute.
+    .replace(/<[^>]*>/g, '')
+    .replace(/<[^>]*$/, '')
+    .replace(/&#(\d+);/g, (_m, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_m, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&([a-z]+);/gi, (m, name) => ENTITIES[String(name).toLowerCase()] ?? m)
+    .replace(/\s+/g, ' ')
+    .trim()
+  return text || null
+}
+
 function normalizeCard(day: string, card: any): PoolStory | null {
-  const headline = typeof card?.headline === 'string' ? card.headline.trim()
-    : typeof card?.title === 'string' ? card.title.trim() : ''
+  const headline = plainText(card?.headline) || plainText(card?.title) || ''
   if (!headline) return null
   const category = typeof card?.category === 'string' && CATEGORIES.has(card.category) ? card.category : null
   const representativeUrl = typeof card?.url === 'string' && /^https?:\/\//.test(card.url) ? card.url : null
@@ -36,7 +100,11 @@ function normalizeCard(day: string, card: any): PoolStory | null {
   return {
     day,
     headline,
-    say: typeof card?.say === 'string' ? card.say : null,
+    // A cut-off source yields NO thesis rather than a plausible fragment. The
+    // row then fails the panel's free thinness check for a stated reason,
+    // cheaply, instead of being scored as though someone wrote it.
+    say: looksTruncated(card?.say) ? null : plainText(card?.say),
+    truncated: looksTruncated(card?.say),
     source: typeof card?.source === 'string' ? card.source : null,
     url: representativeUrl,
     sourceUrls,

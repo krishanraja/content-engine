@@ -483,6 +483,10 @@ describe('Codex-independent runner', () => {
     }
   })
 
+  // Seven crash phases, each with its own temporary runtime on disk. It takes
+  // about 130ms on Linux; on the Windows CI runner, with the whole suite running
+  // in parallel, it passed 5s once (2026-09-26), so it gets the same 15s budget
+  // as the disk-heavy runner tests in runner-projection-state.test.ts.
   it('resumes every authenticated first-start initialization crash phase without changing identity', async () => {
     for (const phase of ['before_marker', 'marker_staged', 'after_marker', 'partial_layout', 'identity_staged', 'identity_written', 'legacy_identity_retained'] as const) {
       runtimeRoot = await mkdtemp(join(tmpdir(), `mindmake-runner-init-${phase}-`))
@@ -510,7 +514,7 @@ describe('Codex-independent runner', () => {
       await rm(runtimeRoot, { recursive: true, force: true })
       runtimeRoot = ''
     }
-  })
+  }, 15_000)
 
   it('fails closed when authenticated authority is hidden, deleted, replaced, or tampered', async () => {
     for (const scenario of ['renamed_root', 'deleted_root', 'root_junction', 'renamed_marker', 'deleted_marker', 'marker_junction', 'renamed_identity', 'deleted_identity', 'tampered_marker'] as const) {

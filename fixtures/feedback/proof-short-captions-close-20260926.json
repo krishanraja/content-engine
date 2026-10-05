@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "feedback_id": "feedback-proof-short-captions-close-20260926-01",
+  "recorded_at": "2026-09-26T00:00:00.000Z",
+  "owner": "Krish",
+  "decision": "confirmed",
+  "scope": {
+    "level": "publication_formats",
+    "series": ["follow_the_money", "mind_the_gap", "under_the_hood"],
+    "stations": ["script", "visual_plan", "captions"]
+  },
+  "reference": {
+    "reference_id": "instagram-ad-proof-first-20260925",
+    "title": "Instagram ad for a model API product (9:16, about 21.5 s)",
+    "rights_role": "analysis_only",
+    "source_hash": "29ca7c0bbc082af2a325afcaed09f5e3919b5ef11e0f1191264124dd8e20e182",
+    "prohibited_uses": [
+      "Do not republish, quote or show the reference or any frame of it in a public artifact.",
+      "Do not copy its script, product claims or on-screen text, or cite it as evidence."
+    ]
+  },
+  "confirmed_inference": "Where the reference he liked runs into the standard confirmed on 2026-09-08, Shorts take these two defaults. Captions: two to four words per caption in sentence case, with at most one punch word per beat set in the display face in capitals with the mint swipe; never all-caps word-by-word captions. The close: the full face delivering the piece's dated prediction, with the date and the confidence on screen; never a comment-keyword prompt.",
+  "confirmation_excerpt": "I agree with all your four except for number one",
+  "capture_boundary": "A minimal Git release record of two rulings Krish gave in words on 2026-09-26, answering items 2 and 3 of a numbered list (captions, the close). It does not record a verdict on the piece 2 storyboard or adopt the rest of the reference's grammar, which stays a proposal in docs/REFERENCE_INSTAGRAM_AD.md, and it does not claim the chat was captured as a tracked portable Studio session."
+}

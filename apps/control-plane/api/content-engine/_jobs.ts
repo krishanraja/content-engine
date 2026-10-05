@@ -43,7 +43,12 @@ export const JOBS: Readonly<Record<string, JobEntry>> = Object.freeze({
   learning_compile: { path: '/api/learning/compile', safety: 'replayable', note: 'Proposes; it never writes config.' },
   runner_watch: { path: '/api/video-studio/runner/watch', safety: 'replayable', note: 'Read-only over heartbeats and queues.' },
   aeo_ingest: { path: '/api/aeo/ingest', safety: 'manual_only', note: 'Spends roughly $0.70 of probe budget per run and has no schedule.' },
+  trend_entities: { path: '/api/trends/entities', safety: 'replayable', note: 'Tags only observations with no alias extraction yet; a second run finds none.' },
+  claims_resolve: { path: '/api/claims/resolve', safety: 'replayable', note: 'Notices due falsifiers; one came_due row per claim, so a replay writes nothing twice. It never rules.' },
+  trend_metrics: { path: '/api/trends/metrics', safety: 'replayable', note: 'Appends a fresh snapshot beside the old one rather than replacing it, which is the point: a moved number stays attributable.' },
   purge: { path: '/api/purge/run', safety: 'manual_only', note: 'Hard-deletes. To undo a purge use POST /api/purge/restore, never a second run.' },
+  judge_sweep: { path: '/api/judge/sweep', safety: 'replayable', note: 'Runs every 10 minutes and re-judges only rows whose text changed, so a replay spends only on work the next tick would do anyway.' },
+  judge_ladder: { path: '/api/judge/ladder', safety: 'manual_only', note: 'Spends on the nine-judge panel and can rewrite a thesis while repairing it. Re-run one idea by id, never the whole ladder blind.' },
 })
 
 export const JOB_NAMES: readonly string[] = Object.freeze(Object.keys(JOBS).sort())

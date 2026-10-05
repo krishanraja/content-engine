@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "station_id": "assets",
+  "station_version": 1,
+  "status": "active",
+  "purpose": "Acquire and approve exact visual evidence, owned media and clearly labelled illustrations.",
+  "instruction_path": ".agents/skills/mindmake-video/stations/assets/STATION.md",
+  "implementation_owners": ["packages/core/src/evidence.ts", "packages/core/src/brand-assets.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts", "packages/contracts/src/index.ts"],
+  "prerequisites": { "extract": ["visual_plan"], "solo": ["visual_plan"], "short_native": ["visual_plan"] },
+  "consumes": ["visual_plan_artifact", "approved_source_shortlist"],
+  "produces": ["asset_stage_artifact", "asset_ledger"],
+  "approval_gate": "evidence",
+  "hard_gates": ["Every asset needs exact content identity, rights, provenance, truth role and safe placement intent."],
+  "soft_gates": ["Evidence should be compelling, legible, current and worth interrupting the presenter for."],
+  "invalidates_on_change": {
+    "extract": ["styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "solo": ["styleframes", "animatic", "treatment", "render", "qa", "package"],
+    "short_native": ["styleframes", "animatic", "treatment", "render", "qa", "package"]
+  },
+  "failure": { "behavior": "block", "fallback": "Use an approved presenter-only plan or return to visual planning rather than substitute generic decoration." },
+  "learning": { "reads_active_preferences": true, "emits_observations": true, "may_activate_rules": false },
+  "validation": {
+    "test_paths": ["tests/evidence.test.ts", "tests/brand-assets.test.ts"],
+    "regression_cases": ["A changed screenshot hash invalidates every visual descendant.", "Generated illustration cannot be presented as factual evidence."]
+  }
+}

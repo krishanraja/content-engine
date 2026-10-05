@@ -14,8 +14,9 @@ const RuntimeWordmarkSchema = z.object({
 export const CarouselRenderPropsSchema = z.object({
   reviewMode: z.boolean(),
   storyId: z.string().min(1),
-  series: z.enum(['money_of_ai', 'built_with_ai']),
-  seriesName: z.enum(['The Money of AI', 'Built With AI']),
+  // The retired pair stays for stories made under them (packages/contracts/src/series.ts).
+  series: z.enum(['money_of_ai', 'built_with_ai', 'follow_the_money', 'mind_the_gap', 'under_the_hood']),
+  seriesName: z.enum(['The Money of AI', 'Built With AI', 'follow.the.money', 'mind.the.gap', 'under.the.hood']),
   slideCount: z.number().int().min(5).max(10),
   slide: z.object({
     position: z.number().int().positive(),
@@ -28,13 +29,33 @@ export const CarouselRenderPropsSchema = z.object({
     visualItems: z.array(z.string()),
     assetIds: z.array(z.string()),
     accent: z.enum(['none', 'mint_answer', 'amber_changed']),
+    // The Fork's last card: our call, dated, with how sure we are.
+    call: z.boolean().optional(),
   }),
   branding: z.object({
     colors: z.object({ ink: z.string(), surface: z.string(), raised: z.string(), line: z.string(), text: z.string(), secondaryText: z.string(), mutedText: z.string(), paper: z.string(), mint: z.string(), mintInk: z.string(), amber: z.string() }),
     typography: z.object({ structure: z.string(), claim: z.string(), body: z.string(), data: z.string() }),
-    wordmarks: z.object({ mindmake: RuntimeWordmarkSchema, series: RuntimeWordmarkSchema }),
+    // A retired series: the Mindmake and series wordmarks. A live subchannel:
+    // the publication's mark and logo, and the channel's name as type.
+    wordmarks: z.object({ mindmake: RuntimeWordmarkSchema, series: RuntimeWordmarkSchema }).optional(),
+    publication: z.object({
+      mark: RuntimeWordmarkSchema,
+      logo: RuntimeWordmarkSchema,
+      channel: z.object({ label: z.string().min(1), color: z.string(), weight: z.number().int() }),
+      // The makeyourmindup house style (the mock Krish approved on
+      // 2026-09-28): a cover card, middle cards and a last card.
+      house: z.object({
+        tokens: z.object({ ink: z.string(), inkDeep: z.string(), inkSoft: z.string(), cream: z.string(), mint: z.string(), section: z.string() }),
+        day: z.string().min(1),
+        coverSticker: z.string().min(1),
+        questionKicker: z.string().min(1),
+        question: z.string().min(1),
+        callFootnote: z.string().min(1),
+        site: z.string().min(1),
+      }).optional(),
+    }).optional(),
     assets: z.array(z.object({ assetId: z.string(), assetFile: z.string(), truthRole: z.enum(['evidence', 'owned_artifact', 'illustration', 'decoration']), attribution: z.string().optional(), illustrationLabel: z.string().optional() })),
-  }),
+  }).refine((branding) => Boolean(branding.wordmarks) !== Boolean(branding.publication), { message: 'a carousel carries either the series wordmarks or the publication lockup' }),
 })
 
 export type CarouselRenderProps = z.infer<typeof CarouselRenderPropsSchema>

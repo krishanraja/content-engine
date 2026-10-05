@@ -10,6 +10,8 @@
 // builder compiles exactly like a route. check-run-recovery.ts refuses the
 // package-name form so the green-build-broken-function failure cannot come back.
 import {
+  PRE_FORK_EDITORIAL_FORMATS_V1,
+  ProductionBriefClaimRequestV1Schema,
   RunnerClaimRequestV1Schema,
   RunnerCompleteRequestV1Schema,
   RunnerHeartbeatRequestV1Schema,
@@ -27,6 +29,8 @@ import {
   parseReviewPayload,
   parseMagicEditSelection,
   safeRedactedText,
+  SERIES,
+  RETIRED_SERIES,
 } from './_contracts.js'
 
 type UnknownRecord = Record<string, unknown>
@@ -582,7 +586,7 @@ export function parseRunnerProjectRequest(value: unknown): RunnerProjectRequestV
   const safeJobSummary = safeRedactedText(job.safe_summary, 600, 1)
   if (
     !identifier(job.job_id)
-    || !['money_of_ai', 'built_with_ai'].includes(String(job.series || ''))
+    || !(SERIES as readonly string[]).includes(String(job.series || ''))
     || !['extract', 'solo', 'short_native'].includes(String(job.mode || ''))
     || !Array.isArray(job.target_platforms)
     || job.target_platforms.length < 1
@@ -901,6 +905,54 @@ export function parseRunnerClaimRequest(value: unknown): RunnerClaimRequestV1 | 
     // send a number it never chose.
     lease_seconds: parsed.data.lease_seconds ?? 120,
   }
+}
+
+export interface ProductionBriefClaimRequest {
+  schema_version: 1
+  runner_id: string
+  software_commit: string
+  command_schema_versions: [1]
+  lease_seconds: number
+  /** The series the runner said it understands, or null when it said nothing
+   *  (a runner from before the live subchannel names). */
+  series_supported: string[] | null
+  /** The editorial formats it said it understands, or null when it said
+   *  nothing (a runner from before The Fork). */
+  editorial_formats_supported: string[] | null
+}
+
+/** A production-brief claim. Its own parser, because a runner that declares
+ *  the series it understands sends a field the general claim refuses. */
+export function parseProductionBriefClaimRequest(value: unknown): ProductionBriefClaimRequest | null {
+  const parsed = ProductionBriefClaimRequestV1Schema.safeParse(value)
+  if (!parsed.success) return null
+  return {
+    schema_version: 1,
+    runner_id: parsed.data.runner_id,
+    software_commit: parsed.data.software_commit,
+    command_schema_versions: [1],
+    lease_seconds: parsed.data.lease_seconds ?? 120,
+    series_supported: parsed.data.series_supported ? [...parsed.data.series_supported] : null,
+    editorial_formats_supported: parsed.data.editorial_formats_supported ? [...parsed.data.editorial_formats_supported] : null,
+  }
+}
+
+/** Whether a runner may be handed a brief in this series. The retired pair
+ *  goes to any runner; a live subchannel only to one that declared it, because
+ *  an older runner throws while parsing it and fails its whole cycle, again on
+ *  every lease expiry. */
+export function runnerTakesSeries(supported: readonly string[] | null, series: string): boolean {
+  if ((RETIRED_SERIES as readonly string[]).includes(series)) return true
+  return Boolean(supported?.includes(series))
+}
+
+/** Whether a runner may be handed a brief in this editorial format, for the
+ *  same reason: a format added after the runner was built (The Fork) goes
+ *  only to a runner that declared it. A brief with no format, or one in a
+ *  format every runner knows, goes to any runner. */
+export function runnerTakesFormat(supported: readonly string[] | null, format: string | undefined): boolean {
+  if (!format || (PRE_FORK_EDITORIAL_FORMATS_V1 as readonly string[]).includes(format)) return true
+  return Boolean(supported?.includes(format))
 }
 
 export interface RunnerHeartbeatRequestV1 {

@@ -18,6 +18,9 @@ import '@fontsource/ibm-plex-mono/400.css'
 import '@fontsource/ibm-plex-mono/500.css'
 import type { V2RenderProps, V2RuntimeLayer, V2RuntimeShot } from './props'
 import { cameraCropAt, defaultLayerBounds, deterministicUnit, primaryAttentionLayerId, sourceStartForShot, transitionOpacity } from './timeline'
+import { HouseFontsGate } from '../house/components'
+import { HOUSE_FONTS, HOUSE_PRESENTER_SHADE } from '../house/geometry'
+import { HouseBand, HouseCall, HouseCaption, HouseMark, HouseSticker, houseCaptionHidden } from './HouseShort'
 
 const WIDTH = 1080
 const HEIGHT = 1920
@@ -32,6 +35,8 @@ const framesFor = (milliseconds: number, fps: number): number => Math.max(1, Mat
 const gainFromDb = (gainDb: number): number => 10 ** (gainDb / 20)
 
 function brandFonts(branding: RuntimeBranding) {
+  // The house style sets its own four faces (brand book v1.4, p. 08).
+  if (branding.publication?.house) return { structure: HOUSE_FONTS.structure, claim: HOUSE_FONTS.display, body: HOUSE_FONTS.structure, data: HOUSE_FONTS.data }
   return {
     structure: `"${branding.typography.structure}", Arial, sans-serif`,
     claim: `"${branding.typography.claim}", Georgia, serif`,
@@ -87,7 +92,68 @@ export function brandLockupRenderModel(branding: RuntimeBranding, placement?: Ru
   }
 }
 
+/** A live subchannel's lockup (Krish, 2026-09-26): the publication's mark
+ *  alone on every beat, and once, at the end, its logo with the channel's
+ *  name set as type under it. The name is live text, never an image. */
+export function publicationLockupRenderModel(branding: RuntimeBranding, placement?: RuntimeBrandCue) {
+  const publication = branding.publication
+  if (branding.mode === 'none' || !publication) return null
+  const identity = (placement?.mode || 'mindmake_only') === 'stacked_identity'
+  const layout = identity ? publication.lockup.identity : publication.lockup.anchor
+  return {
+    identity,
+    corner: placement?.corner || 'top_left' as const,
+    plate: {
+      width: layout.plateWidth,
+      height: layout.plateHeight,
+      top: placement?.topPx ?? publication.lockup.offsetY,
+      left: placement?.leftPx ?? publication.lockup.offsetX,
+      padding: layout.padding,
+      gap: identity ? publication.lockup.identity.gap : 0,
+    },
+    images: identity
+      ? [{ role: 'logo' as const, asset: publication.logo, displayWidth: publication.lockup.identity.logoWidth }]
+      : [{ role: 'mark' as const, asset: publication.mark, displayWidth: publication.lockup.anchor.markWidth }],
+    channel: identity ? publication.channel : null,
+  }
+}
+
+function PublicationLockup({ branding, placement }: { branding: RuntimeBranding; placement: RuntimeBrandCue | undefined }) {
+  const model = publicationLockupRenderModel(branding, placement)
+  if (!model) return null
+  const fonts = brandFonts(branding)
+  return (
+    <div style={{ position: 'absolute', zIndex: 900, top: model.plate.top, left: model.plate.left }}>
+      <div style={{
+        width: model.plate.width,
+        height: model.plate.height,
+        boxSizing: 'border-box',
+        padding: model.plate.padding,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: model.identity ? 'flex-start' : 'center',
+        justifyContent: 'center',
+        gap: model.plate.gap,
+        overflow: 'hidden',
+        borderRadius: 3,
+        background: 'rgba(10,16,13,.95)',
+        border: `1px solid ${branding.colors.line}`,
+        boxShadow: '0 14px 42px rgba(0,0,0,.38)',
+      }}>
+        {model.images.map((image) => <OfficialWordmark key={image.role} asset={image.asset} displayWidth={image.displayWidth} />)}
+        {model.channel ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: Math.round(model.channel.sizePx * 0.42) }}>
+            <span style={{ width: Math.round(model.channel.sizePx * 0.5), height: Math.round(model.channel.sizePx * 0.5), borderRadius: '50%', background: model.channel.color, flex: 'none' }} />
+            <span style={{ fontFamily: fonts.data, fontWeight: model.channel.weight, fontSize: model.channel.sizePx, lineHeight: 1.15, letterSpacing: '0.01em', color: branding.colors.text, textTransform: 'lowercase', whiteSpace: 'nowrap' }}>{model.channel.label}</span>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
 function BrandLockup({ branding, placement }: { branding: RuntimeBranding; placement: RuntimeBrandCue | undefined }) {
+  if (branding.publication) return <PublicationLockup branding={branding} placement={placement} />
   const model = brandLockupRenderModel(branding, placement)
   if (!model) return null
   return (
@@ -188,6 +254,23 @@ function AnnotationLayer({ layer, asset, branding }: { layer: V2RuntimeLayer; as
   )
 }
 
+function trackedLayerBounds(layer: V2RuntimeLayer, atMs: number) {
+  const keyframes = layer.trackingKeyframes
+  if (!keyframes?.length) return defaultLayerBounds(layer)
+  const before = [...keyframes].reverse().find((keyframe) => keyframe.atMs <= atMs) || keyframes[0]!
+  const after = keyframes.find((keyframe) => keyframe.atMs >= atMs) || keyframes.at(-1)!
+  const span = after.atMs - before.atMs
+  const progress = span <= 0 ? 0 : Math.max(0, Math.min(1, (atMs - before.atMs) / span))
+  const between = (left: number, right: number) => left + (right - left) * progress
+  return {
+    x: between(before.bounds.x, after.bounds.x),
+    y: between(before.bounds.y, after.bounds.y),
+    width: between(before.bounds.width, after.bounds.width),
+    height: between(before.bounds.height, after.bounds.height),
+    rotationDegrees: 0,
+  }
+}
+
 function Layer({
   layer,
   shot,
@@ -207,16 +290,16 @@ function Layer({
   primary: boolean
   fixedSeed: string
 }) {
-  const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
   if (layer.kind === 'caption' || layer.kind === 'branding') return null
   if (layer.visibleStartMs !== undefined && atMs < layer.visibleStartMs) return null
   if (layer.visibleEndMs !== undefined && atMs >= layer.visibleEndMs) return null
-  const bounds = defaultLayerBounds(layer)
+  const bounds = trackedLayerBounds(layer, atMs)
   const source = sources.find((item) => item.sourceId === layer.targetId) ?? (layer.kind === 'source' ? sources.find((item) => item.sourceId === shot.sourceId) : undefined)
   const asset = assets.find((item) => item.assetId === layer.targetId)
   const full = layer.anchor === 'full' && !layer.bounds
-  const localEntrance = spring({ frame, fps, config: { damping: 22, stiffness: 190, mass: 0.7 }, durationInFrames: Math.max(8, Math.round(fps * 0.42)) })
+  const entranceFrame = frameAt(Math.max(0, atMs - (layer.visibleStartMs ?? shot.startMs)), fps)
+  const localEntrance = spring({ frame: entranceFrame, fps, config: { damping: 22, stiffness: 190, mass: 0.7 }, durationInFrames: Math.max(8, Math.round(fps * 0.42)) })
   const laneMotion = shot.treatmentLane === 'restrained' ? 1 : interpolate(localEntrance, [0, 1], [0.965, 1])
   const random = deterministicUnit(`${fixedSeed}:${shot.shotId}:${layer.layerId}`)
   const rotation = shot.treatmentLane === 'experimental' && !full ? (random - 0.5) * 1.1 * (1 - localEntrance) : 0
@@ -264,7 +347,7 @@ function Layer({
           trimBefore={frameAt(sourceStartMs, fps)}
           style={sourceCropStyle(source, shot, bounds, atMs, source.sourceId === shot.sourceId)}
         />
-        {full ? <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(10,16,13,.16) 0%, rgba(10,16,13,0) 32%, rgba(10,16,13,.05) 58%, rgba(10,16,13,.54) 100%)' }} /> : null}
+        {full ? <AbsoluteFill style={{ background: branding.publication?.house ? HOUSE_PRESENTER_SHADE : 'linear-gradient(180deg, rgba(10,16,13,.16) 0%, rgba(10,16,13,0) 32%, rgba(10,16,13,.05) 58%, rgba(10,16,13,.54) 100%)' }} /> : null}
       </div>
     )
   }
@@ -401,20 +484,32 @@ export function MindmakeStoryV2(props: V2RenderProps) {
   const brandCue = captionShot?.brandCues?.find((cue) => cue.startMs <= atMs && cue.endMs > atMs)
   const captionLayer = captionShot?.layers.find((layer) => layer.kind === 'caption')
   const captionBounds = captionLayer?.bounds ? defaultLayerBounds(captionLayer) : undefined
-  if (props.branding.mode === 'series' && !props.branding.wordmarks) throw new Error('branded V2 renders require staged official Mindmake and series wordmarks')
+  if (props.branding.mode === 'series' && !props.branding.wordmarks && !props.branding.publication) throw new Error('branded V2 renders require staged official wordmarks or the publication lockup')
   if (props.branding.mode === 'series' && !brandCue) throw new Error('branded V2 renders require a safe wordmark cue for every frame')
+  const house = props.branding.mode === 'series' ? props.branding.publication?.house : undefined
+  const captionsHidden = house ? houseCaptionHidden(props.branding, brandCue, props.safeZones, atMs) : false
   return (
     <AbsoluteFill style={{ background: props.branding.colors.ink }}>
+      {house ? <HouseFontsGate /> : null}
       {props.shots.map((shot) => (
         <Sequence key={shot.shotId} from={frameAt(shot.startMs, fps)} durationInFrames={framesFor(shot.endMs - shot.startMs, fps)}>
           <Shot shot={shot} props={props} />
         </Sequence>
       ))}
-      <BrandLockup branding={props.branding} placement={brandCue} />
+      {house ? (
+        <>
+          <HouseMark branding={props.branding} cue={brandCue} resolve={staticFile} />
+          <HouseSticker branding={props.branding} safeZones={props.safeZones} atMs={atMs} />
+          <HouseCall branding={props.branding} safeZones={props.safeZones} atMs={atMs} />
+          <HouseBand branding={props.branding} cue={brandCue} safeZones={props.safeZones} atMs={atMs} resolve={staticFile} />
+        </>
+      ) : <BrandLockup branding={props.branding} placement={brandCue} />}
       {props.captions.map((cue, index) => (
         <Sequence key={`${cue.startMs}-${index}`} from={frameAt(cue.startMs, fps)} durationInFrames={framesFor(cue.endMs - cue.startMs, fps)}>
           <AbsoluteFill>
-            <Caption cue={cue} branding={props.branding} lane={captionShot?.treatmentLane || 'restrained'} safeZones={props.safeZones} {...(captionBounds ? { bounds: captionBounds } : {})} />
+            {house
+              ? captionsHidden ? null : <HouseCaption cue={cue} branding={props.branding} safeZones={props.safeZones} {...(captionBounds ? { bounds: captionBounds } : {})} />
+              : <Caption cue={cue} branding={props.branding} lane={captionShot?.treatmentLane || 'restrained'} safeZones={props.safeZones} {...(captionBounds ? { bounds: captionBounds } : {})} />}
           </AbsoluteFill>
         </Sequence>
       ))}

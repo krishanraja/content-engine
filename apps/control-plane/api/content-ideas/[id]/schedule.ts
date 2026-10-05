@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
+import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/schedule   body: { date: 'YYYY-MM-DD' | null }
 //
@@ -9,12 +10,7 @@ import { supabase } from '../../_supabase.js'
 // timezone coercion. Touches scheduled_for + updated_at only.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  res.setHeader('Cache-Control', 'no-store')
-  if (req.method === 'OPTIONS') return res.status(200).end()
-  if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' })
+  if (guardEngine(req, res)) return
 
   const id = req.query?.id
   const ideaId = Array.isArray(id) ? id[0] : id

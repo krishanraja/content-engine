@@ -90,3 +90,94 @@ export function locateSpan(source: string, selection: string, minChars = 8): Spa
     ambiguous: hay.text.indexOf(need.text, at + 1) >= 0,
   }
 }
+
+// ── Putting a rewritten passage back ─────────────────────────────────────
+//
+// The piece's in-place rewrite (POST /api/content-ideas/:id/revise with a
+// selection) hands the model the whole draft and one passage, then splices
+// the answer back where the passage was. On 2026-09-30 piece 1's "Send it to
+// buy a blender and it buys the blender." went to be deleted. The only answer
+// the old splice could have turned into what came back is the sentence
+// before it, "Muse is Meta's AI helper that shops for people.": the model
+// echoed its context (the route failed an empty answer as empty_output, so
+// "nothing" was never a usable reply), and the splice put that echo where the
+// passage had been. The sentence appeared twice in a row (walk log F44; F2
+// saw the same on 2026-09-24, with a heading).
+//
+// So an answer is read for what it echoes before it is spliced. Whatever it
+// repeats of the draft just before the passage (from a sentence start) or
+// just after it (to a sentence end) is taken off, and what is left replaces
+// the passage. Nothing is left for a deletion, and an empty replacement
+// deletes the passage cleanly.
+
+// Where a sentence can start: at the start, and after a sentence's closing
+// mark or a line break.
+function sentenceStarts(text: string): number[] {
+  const out = [0]
+  for (const m of text.matchAll(/[.!?]["'”’)\]*_]*\s+|\n+/g)) out.push((m.index ?? 0) + m[0].length)
+  return out
+}
+
+// Where a sentence can end: after a closing mark, before a line break, and
+// at the end.
+function sentenceEnds(text: string): number[] {
+  const out: number[] = []
+  for (const m of text.matchAll(/[.!?]["'”’)\]*_]*(?=\s|$)|(?=\n)/g)) out.push((m.index ?? 0) + m[0].length)
+  out.push(text.length)
+  return out.filter(n => n > 0)
+}
+
+const wordChar = (c: string | undefined) => !!c && /[\p{L}\p{N}'’]/u.test(c)
+
+/**
+ * The model's answer for a passage, with the neighbouring text it echoed
+ * taken off: an opening that repeats the draft just before the passage, from
+ * a sentence start, and a close that repeats the draft just after it, to a
+ * sentence end. The longest echo on each side goes. What is left replaces the
+ * passage; nothing left means the passage is deleted.
+ */
+export function passageReplacement(source: string, selection: string, reply: string): string {
+  let out = String(reply ?? '').trim()
+  const at = source.indexOf(selection)
+  if (at < 0 || !out) return out
+  const before = source.slice(0, at).trimEnd()
+  const after = source.slice(at + selection.length).trimStart()
+  for (const start of sentenceStarts(before)) {
+    const echo = before.slice(start).trim()
+    if (echo && out.startsWith(echo) && !(wordChar(echo[echo.length - 1]) && wordChar(out[echo.length]))) {
+      out = out.slice(echo.length).trim()
+      break
+    }
+  }
+  for (const end of sentenceEnds(after).reverse()) {
+    const echo = after.slice(0, end).trim()
+    if (echo && out.endsWith(echo) && !(wordChar(echo[0]) && wordChar(out[out.length - echo.length - 1]))) {
+      out = out.slice(0, out.length - echo.length).trim()
+      break
+    }
+  }
+  return out
+}
+
+/**
+ * The draft with the passage replaced, at its first occurrence. The
+ * passage's own edge spaces stay with the text around it. An empty
+ * replacement deletes the passage and leaves a single space, or the line or
+ * paragraph break that was there. Built by slicing: String.replace read "$&"
+ * or "$'" in an answer as a pattern.
+ */
+export function spliceSelection(source: string, selection: string, replacement: string): string {
+  const at = source.indexOf(selection)
+  if (at < 0) return source
+  const passage = replacement.trim()
+  if (passage) {
+    const lead = selection.length - selection.trimStart().length
+    const trail = selection.length - selection.trimEnd().length
+    return source.slice(0, at + lead) + passage + source.slice(at + selection.length - trail)
+  }
+  const left = source.slice(0, at).trimEnd()
+  const right = source.slice(at + selection.length).trimStart()
+  if (!left || !right) return left + right
+  const gap = source.slice(left.length, at) + source.slice(at + selection.length, source.length - right.length)
+  return left + (gap.includes('\n\n') ? '\n\n' : gap.includes('\n') ? '\n' : ' ') + right
+}

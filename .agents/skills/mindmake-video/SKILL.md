@@ -19,6 +19,17 @@ Use the repository CLI as the system of record. Do not improvise job state in ch
 
 Read only the references relevant to the current operation. Apply `$krish-voice` to public wording and `$content-corpus` to series and channel decisions.
 
+## Load the exact production station
+
+The station registry is machine-validated against the executable dependency graph. Read only the card for the station being operated, plus the relevant cross-cutting reference above:
+
+- Editorial: [brief](stations/brief/STATION.md), [script](stations/script/STATION.md), [recording brief](stations/recording-brief/STATION.md), [candidates](stations/candidates/STATION.md), [claims](stations/claims/STATION.md).
+- Source: [ingest](stations/ingest/STATION.md), [normalize](stations/normalize/STATION.md), [transcript](stations/transcript/STATION.md), [source analysis](stations/source-analysis/STATION.md).
+- Visual: [visual plan](stations/visual-plan/STATION.md), [assets](stations/assets/STATION.md), [styleframes](stations/styleframes/STATION.md), [animatic](stations/animatic/STATION.md).
+- Manufacture: [treatment](stations/treatment/STATION.md), [render](stations/render/STATION.md), [QA](stations/qa/STATION.md), [package](stations/package/STATION.md).
+
+Do not turn stations into independently auto-triggering global skills. The `mindmake-video` workflow remains the only production router. A new executable stage is incomplete until it has a typed station definition, a focused instruction card, named code and contract owners, regression cases, dependency and invalidation maps, and CI parity with the runtime graph.
+
 ## Non-negotiable boundaries
 
 - Krish is always named Krish. Public series names are The Money of AI and Built With AI. Never publish Paid or bare Built as a series name.
@@ -35,6 +46,7 @@ Read only the references relevant to the current operation. Apply `$krish-voice`
 - Do not turn a raw radar signal into production copy. New short-native work requires an exact approved `ProductionBriefV1` from Control Center.
 - Import that artifact with `studio v2 production-brief import --input <brief.json>`. Repeating the same import reuses its content address and deterministic job; reusing a brief ID for changed semantic content fails closed. Extract and solo work wait for a reviewed `SourceBundleV1` before materialising a job.
 - In the installed environment, prefer the authenticated runner intake: it claims the saved brief directly from Control Center, materialises short-native video jobs, and reports solo or podcast work as `awaiting_source_bundle`. Use the manual import only for offline recovery or a supplied contract fixture.
+- A Short in the makeyourmindup house style for a live subchannel ends on the piece's call. Every render manifest you write for one (the review manifest for styleframes, the animatic's, each treatment manifest) carries it as `"call"`, pasted exactly as `studio v2 call --job <job> --beat <beat_id>` prints it from the job's approved production brief. Choose only the beat. Never type or edit the statement, date or percentage: the Studio refuses a manifest with no call, or with any difference from the approved text, and says why. If the command refuses, the approved text has no call it can read; take that reason to Krish.
 
 ## Operating shape
 

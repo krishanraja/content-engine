@@ -2,6 +2,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
 import { supabase } from '../../_supabase.js'
 import { pathId, readMaterials, type Material } from '../../_content.js'
+import { guardEngine } from '../../_auth.js'
+import { operatorAttribution } from '../../_editEvents.js'
 
 // /api/content-ideas/:id/materials
 //   GET    — list the background materials attached to a piece.
@@ -16,11 +18,7 @@ import { pathId, readMaterials, type Material } from '../../_content.js'
 const MAX_CONTENT = 400_000 // ~400KB of corpus per material is plenty
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  res.setHeader('Cache-Control', 'no-store')
-  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (guardEngine(req, res, ['GET', 'POST', 'DELETE'])) return
 
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
@@ -41,6 +39,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const kind = b.kind === 'link' || b.kind === 'file' ? b.kind : 'paste'
     const content = typeof b.content === 'string' ? b.content.slice(0, MAX_CONTENT) : ''
     const url = typeof b.url === 'string' ? b.url.trim().slice(0, 2000) : ''
+    // A verbatim excerpt is pasted text that is the source's own words, with
+    // the page it came from. The fact gate trusts it further than a summary.
+    const verbatim = b.verbatim === true && kind === 'paste' && /^https?:\/\//.test(url)
+    if (b.verbatim === true && !verbatim) return res.status(400).json({ ok: false, error: 'a verbatim excerpt is pasted text with the url it was copied from' })
     if (kind === 'link' && !url) return res.status(400).json({ ok: false, error: 'url required for a link' })
     if (kind !== 'link' && !content.trim()) return res.status(400).json({ ok: false, error: 'content required' })
 
@@ -50,12 +52,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ? hostnameOf(url)
         : firstHeadingOrLine(content)
 
+    // Who added it decides how the writer is told about it (materialsContext).
+    // The browser cookie is Krish's hand; the operator bearer is an agent
+    // unless it is relaying something Krish supplied, with decided_by: 'Krish'.
+    const who = operatorAttribution(req.headers.authorization, req.body)
     const material: Material = {
+      by: who ? who.actor : 'Krish',
       id: randomUUID(),
       kind,
       title,
       content: kind === 'link' ? null : content,
-      url: kind === 'link' ? url : null,
+      url: kind === 'link' || verbatim ? url : null,
+      ...(verbatim ? { verbatim: true } : {}),
       bytes: kind === 'link' ? url.length : content.length,
       at: new Date().toISOString(),
     }

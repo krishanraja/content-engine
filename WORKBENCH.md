@@ -1,0 +1,267 @@
+# Workbench: where we are and what's next
+
+This is the one file every working session reads first and updates last,
+whatever tool it runs in: Claude Code (web, desktop or phone), Codex (cloud or
+desktop), or anything else that can open this repository. It is how work moves
+from one tool to another without anything getting lost. The rules for agents
+are in `AGENTS.md`; this file is the live state of the work.
+
+Last updated: 2026-10-04 00:06 UTC, by a Codex session.
+
+## How Krish wants to be worked with
+
+- Plain words. Nothing he reads may contain codes, labels, hashes, version
+  numbers or project shorthand. Say what happened, what it means for him, and
+  what you need from him. If a sentence would confuse someone outside the
+  project, rewrite it.
+- After everything you do, update the board (below), and end every reply to
+  him with its link: https://controlcenter.krishraja.com/#/board. Update this
+  file when how the work is done changes.
+- Make the call and say what you assumed. Ask only when the answer changes the
+  shape of the work, and offer your best guess with the question.
+- Every visual, interactive or animation must make one critical point of the
+  piece land faster than the words can, from its checked evidence. No
+  gimmicks (`AGENTS.md`, house rule `VISUAL_EXPLAINS`).
+- His decisions are his alone. Record one only when he made it in words, with
+  `decided_by: 'Krish'` (`AGENTS.md`).
+
+## The board: what is waiting on Krish, in progress and done
+
+The live list lives in the shared database, not in this file. Krish sees it in
+Control Center at https://controlcenter.krishraja.com/#/board (phone or desk)
+and replies to items there. Every session, in Claude Code or Codex, reads and
+writes it through the engine:
+
+- Read it: `python3 scripts/engine.py GET /api/workbench --full` (`python` on
+  Windows). His replies
+  are in `replies`; `unseen_replies` counts the ones no session has acted on.
+- Add or change items (up to 50 at once; an existing item changes only the
+  fields you send):
+  `python3 scripts/engine.py POST /api/workbench @items.json` with
+  `{"action": "upsert_items", "client": "codex", "items": [{"id": "p3-approve", "lane": "on_you", "rank": 2, "area": "Article 3", "title": "...", "detail": "...", "prompt": "Yes, or what to change"}]}`.
+  Lanes: `on_you`, `in_progress`, `done`, `archived` (hidden). Ids are
+  lowercase words joined by hyphens. Links must start with `https://`.
+- Change the headline or the status lights: `{"action": "set_state",
+  "headline": "...", "signals": [{"label": "Home computer", "state": "ok",
+  "text": "On and ready"}]}` (state is `ok`, `warn`, `bad` or empty).
+- After you act on his replies: `{"action": "mark_seen", "ids": ["<reply id>"],
+  "client": "codex"}`. The board then shows him that you read it.
+- Only Krish writes a reply, from Control Center. The engine key cannot: a
+  session must never put words in his mouth.
+
+Set `"client"` to `"codex"` or `"claude_code"` so the board says who changed it.
+Write every item in plain words: what happened, what it means for him, and what
+you need from him.
+
+## Pick up from any tool
+
+Everything that matters lives in two places every tool can reach: this
+repository on GitHub (code, rules, this file) and the shared database (the
+articles, Krish's decisions, each channel's rules). Nothing important lives
+only in a chat.
+
+| Tool | What it can do | What it needs |
+|---|---|---|
+| Claude Code on the web, desktop or phone | Everything except running the video studio | This repository, and the engine key as the secret `ENGINE_OPERATOR_TOKEN` in its environment |
+| Codex in the cloud | The same | This repository connected, and the same secret in the Codex environment |
+| Claude Code or Codex on either Windows home computer | All of the above, plus the video studio (`docs/ENGINE_SESSION.md`) | Run `scripts/engine-key.ps1` once on that machine (the engine key then lives in Windows Credential Manager and the helper reads it from there). Work in Krish's own copy at `C:\Users\krish\dev\content-engine`, where he keeps his repositories, never in the runner's folder (`Documents\MindmakeVideoStudio\runner-source`), which must stay untouched. In Codex, run the engine helper and `git pull` or `git push` outside the sandbox (ask for escalated permissions; Krish approves): Codex's sandbox runs as a separate Windows user that cannot see the key or reach the internet |
+| A plain chat (Claude.ai, ChatGPT) with no repository | Talk and plan only | Paste this file in |
+
+To start a session in any of them: read `AGENTS.md`, then this file, then do
+the top item that is not waiting on Krish. Before you stop, update this file.
+
+Krish starts a session by pasting this:
+
+> Continue the Mindmake content engine. Read AGENTS.md and WORKBENCH.md, then
+> read the board and my replies on it. Tell me in plain words what is waiting
+> on me and what you will do next, then do the top thing that is not waiting
+> on me. Update the board and WORKBENCH.md before you stop, and end every reply
+> with the board link.
+
+He may add a line saying what he wants today; that comes first.
+
+Talk to the engine with `python3 scripts/engine.py METHOD PATH [body]`, for
+example `python3 scripts/engine.py GET "/api/content-ideas?id=<id>"`. On
+Windows the command is `python`, not `python3`. It reads the key from
+`ENGINE_OPERATOR_TOKEN`, or on a home computer from Windows Credential
+Manager, and never prints it. When it has no key it says why and what to do;
+inside Codex's sandbox on Windows, that means running it again outside the
+sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
+
+## Latest handoff
+
+- 2026-10-05, closing the launch-day session. **Wednesday 2026-10-07 is
+  under.the.hood, so it is piece 3** (Salesforce's Koa, `5255dcd8`):
+  approved, fact check passed, call "By 30 September 2027" at 55%. Settle
+  three things with Krish before building its launch set, all written out at
+  the end of "Piece 3" in `docs/walks/2026-09-three-piece-walk.md`: the final
+  pass said the title promises a fork the body never covers and the reader's
+  "what do I build" is left implied; four house rules arrived after he
+  approved it; and nothing is made from it yet. Then make the set in the
+  session, the way he asked to work: `scripts/pages` for the branded page and
+  the Substack copy, visuals that each explain one point, a video script for
+  him to record, `scripts/quick-edit` for the edit, the engine's `package`
+  step for the YouTube title and description, and the LinkedIn post. Friday
+  2026-10-09 is mind.the.gap, piece 2 (`904658db`, approved).
+  **Shipping on its own:** the Substack address moves to
+  `home.makeyourmindup.ai` everywhere once Substack serves it (it still sent
+  people to substack.com at 22:30 UTC). The engine and the AEO engine
+  already count both addresses. The rest waits on
+  `claude/cool-gates-85mcik`: makeyourmindup `f09652a` (the Subscribe button
+  and feed) and control-center `4ff9089b` (website and AI-answer tracking,
+  with migration `20261005220000_publication_home_address.sql` to apply). An
+  hourly check in the launch-day session ships them. If that session is gone
+  and the address works, ship them from those branches: cover first, then
+  control-center and its migration, then read the changed rows back. **Waiting on Krish:** publish article 1
+  and the launch post with the two videos in; paste the new schedule into
+  Substack; put back the Drive folders the clean-up moved; a yes for Claude to
+  change the address in the `mindmake` canon and `ai-harness`. Findings from
+  the day are F58 to F63 in the walk log; F61 (Ship's refusal is only a
+  pop-up) and F63 (nothing protects the Drive folders the OS reads by path)
+  are open in control-center.
+- 2026-10-05, evening: both launch videos are edited and with Krish (the
+  hello and Who gets paid, each tall and wide). He recorded them and shared
+  them by Drive link; the edit was done in the agent session with the new
+  `scripts/quick-edit` tool, whose settings for both are in
+  `editions/2026-10-launch/video-kit/`. Chat uploads stop at 30 MiB, so he
+  has share copies made with `--share-mib 29`; the full-size masters were
+  only in that session. A re-record runs through the same configs:
+  `--plan` first, then render.
+- 2026-10-05, later: the schedule is now Monday follow.the.money, Wednesday
+  under.the.hood, Friday mind.the.gap, in Krish's words "Let's just make follow
+  the money permanently a monday thing, and swap it out". It is changed in all
+  three repos, the database's day labels and the live site. Substack's short
+  description, About page, welcome email and free-benefit line need Krish to
+  paste the new text (board item `you-substack-schedule`), and the Windows
+  runner needs a `git pull` before its next render. Krish also asked to work
+  in the agent session while the engine is built: pieces and their artwork
+  are made there as branded HTML and image files, and Control Center is for
+  locking and publishing only. Article 1 passed the fact check with his
+  rewritten opening (62 claims, 0 problems). Its branded page, the launch post
+  (a visual page and a one-column Substack copy) and two video scripts (a hello
+  for the launch post, and Who gets paid) are linked from the board.
+- 2026-10-05: Article 1 is the launch piece, rewritten deeper at Krish's
+  request ("why they get paid for different things ... the incentives ... where
+  the consumer or merchant could get stung"), with his practical sections kept
+  word for word. It passed the fact check on the fifth run (59 claims, 0
+  problems) and is in review. Locking it is Krish's, in Control Center. The
+  launch kit (a private artifact linked from the board item
+  `you-launch-today`) holds the Substack title and subtitle, the article with
+  three images and 28 sources linked, the launch post, the LinkedIn post and
+  card, and the video script. Nothing is published. After he publishes, he
+  sends the link; the makeyourmindup.ai scoreboard and the move from Issue 00
+  to Issue 01 need his yes. What the fact check taught is walk log F56. The
+  article supersedes the 2026-10-04 notes below.
+- Krish read the current Article 1 revision on 2026-10-04 and said, "ok,
+  happy with this article". Treat that as his taste approval of the exact
+  wording he saw. His decision is recorded in the edit ledger against that
+  body. The engine correctly refused the official approval state because the
+  practical section was added after the last fact check. Authoritative
+  readback still shows the article in review with no production approval. No
+  paid check ran and no video job exists. Krish approved pushing the no-cost
+  counter correction, it is live, and the production readback now establishes
+  the exact scope: 61 reusable sentences and 31 fresh sentences. Running one
+  paid truth check with a hard cap of 31 is the next decision waiting on him.
+- Three timed jobs that failed on every run are fixed and merged. The Sunday
+  job that turns Krish's edits into suggested rules had never saved one because
+  each suggestion lacked the list of edits behind it, which the database
+  requires. It now attaches them. The Friday shift spotter now writes the
+  current channel names instead of retired ones. The Saturday build-signals
+  job now says why it fails. Krish said on 2026-10-04 that the GitHub key in
+  this engine's Vercel project is fresh. Nothing further is waiting on him for
+  that key; the next scheduled job is the proof that build signals now fill.
+- Krish's current correction for Article 1 is that its true value is the
+  practical implication for a business leader or consumer: what business to
+  build, which features matter, what to be wary of, and what a shopper should
+  demand. One section now makes a single commercial call: build the authorised
+  front door between agents and merchants. It names the likely customer, the
+  metric, the merchant and shopper controls, the trust features, the platform
+  risk, and the consumer test. The advice is clearly judgement rather than a
+  new fact. The revised article is saved and visible in Control Center. Its
+  deterministic checks pass, including reading age about 12. Because the
+  words changed, the earlier passing fact check no longer covers the current
+  body. The free preview reports 61 reusable sentences and 31 new sentences.
+  No new paid check has run, the article is still in review, and no video job
+  or public post exists. Krish now needs to say whether the new section is the
+  value he meant, or what still needs to change. He has now said it does. This
+  ruling, his approval and the handoff are recorded in the local documentation
+  commit. Krish approved pushing it with the no-cost counter correction on
+  2026-10-04. The correction is live and production still reports 61 reusable
+  sentences and 31 fresh ones. No paid check has run.
+- Krish approved Article 1's clearer wording on 2026-10-03 and made clarity a
+  critical rule for every future article. Every sentence must have one clear
+  reading. When an unfamiliar mechanism needs help, use a factual historical
+  parallel, a familiar analogy or a clearly signposted comic exaggeration that
+  does not change the fact. These instructions are now engine house rules for
+  writing, checking and visual planning. All 1,107 tests and the repository's
+  type, skill, station, renderer, public-copy and secret checks passed.
+- Krish approved the two safeguards and exactly one more Article 1 fact-check
+  run on 2026-10-04, conditional on learning how to avoid repeated paid checks.
+  Both safeguards are live. Article 1's four failed lines were repaired in one
+  exact edit: two unsupported details were cut, and the two dated contrast
+  sentences became plain source-backed statements. The free preview reported
+  59 reusable sentences and four fresh sentences. The run used a hard cap of
+  four, ran once and passed with no blockers. It covered that exact earlier
+  body only; the later practical-value revision above means it no longer
+  covers the current article. No production brief or video job exists, and
+  nothing has been published.
+- The repeat-spend cause and prevention are now durable. The earlier result
+  predated the sentence ledger, and the paid route offered no preflight or hard
+  scope ceiling. The live route now reports settled versus fresh sentences and
+  refuses before any model or web call when the fresh scope exceeds the
+  approved cap. The capped Article 1 run proved the guard on a real piece.
+- The post-run readback exposed a smaller bookkeeping gap: short scenario
+  labels, such as "Guess one.", could not settle by fuzzy matching. The live
+  correction now lets exact short matches settle and fills deterministic
+  ledger gaps from a successful check of the exact current body and sources.
+  The full repository verification passed: 1,109 tests plus the type, skill,
+  station, renderer, public-copy and secret checks. Production still reports
+  61 reusable and 31 fresh sentences for the current Article 1 because its new
+  section was added after the older check. The correction prevents this leak
+  on future exact results; it does not rewrite an older ledger after the body
+  changed. No paid check ran.
+- The board failed to render in an already-open tab after a deployment because
+  the old app shell requested a route file whose hashed name had been replaced.
+  Its Retry button retried the obsolete request; a full reload restored the
+  board. The fix is live: Retry performs that full reload only for this class
+  of stale-file failure. Its production deployment is ready, its live build
+  identity matches the pushed fix, and the board renders after reload. The
+  dependency install reported 64 existing audit findings; this narrow recovery
+  repair did not change unrelated packages.
+- Krish said he is ready to watch the sample. A tracked Studio session found
+  no Article 1 video job or review, recorded his relatable-explanation feedback
+  without the surrounding chat, and closed cleanly. The Windows runner creates
+  that job only after the exact article passes the truth gate and its approval
+  is recorded. The first output is a governed phone review.
+- Krish agreed to the outside-tools plan. Shape the stack only after real video
+  results exist: post the first pieces by hand, collect YouTube results, then
+  choose tools from the evidence. No purchase has been made. Runway remains one
+  capped illustration test, Higgsfield may be one evidence-checked judge, and
+  Native stays out because it would bypass his approval.
+- The earlier work remains complete: Article 3 is approved but unpublished;
+  the access fix and the timer-judge cost cut are live and verified; elegant,
+  exact-artifact feedback at every phone review step remains active Studio
+  work.
+
+## What costs money
+
+Krish pays for the model only when the engine calls it. A session's own
+thinking runs on his Claude or Codex subscription. Measured over the 14 days to
+2026-10-02 (`meter_daily` in the database):
+
+| What | Cost |
+|---|---|
+| Judges scoring new ideas on a timer | $39.34 |
+| Control Center's people, growth and strategist features | $17.87 |
+| Fact checking (mostly repeated checks on articles 1 and 3) | $15.06 |
+| Writing and rewriting articles | $2.52 |
+| Everything else on the model | about $11 |
+| Apify (LinkedIn and job scraping, not the model) | $33.10 |
+
+Writing is cheap; keep it in the engine, where Krish's rules and his edits
+teach it. The timer judges are the biggest cost and run whether or not anyone
+is working. Before you run anything that spends, check this table is still
+true.
+
+One Article 1 fact-check run completed on 2026-10-03 after this table's
+measurement window. Its exact meter delta has not yet been read back.

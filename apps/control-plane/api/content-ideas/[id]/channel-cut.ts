@@ -2,10 +2,12 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import { unsupportedNumbers } from '../../_numbers.js'
 import {
-  callClaude, corpusForChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId, preamble,
-  readMaterials, robustJson, sanitizeVoice,
+  callClaude, corpusForChannel, loadCorpus, loadVoiceBlock, materialsContext, pathId,
+  readMaterials, robustJson, sanitizeVoice, VOICE_GUARDRAILS,
 } from '../../_content.js'
 import { UTILITY_MODEL } from '../../_models.js'
+import { guardEngine } from '../../_auth.js'
+import { houseRulesBlock } from '../../_houseRules.js'
 
 // POST /api/content-ideas/:id/channel-cut
 //   body: { channel: MediaChannel, hint?: string, source_text?: string }
@@ -58,7 +60,7 @@ const FALLBACK_HINT: Record<string, string> = {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (preamble(req, res)) return
+  if (guardEngine(req, res)) return
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 
@@ -117,6 +119,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     'EVERY NUMBER MUST APPEAR VERBATIM IN THE SOURCE. Do not compute totals, differences, percentages or rates, even when the arithmetic looks obvious. ' +
     'If a number you want is not written in the source, leave it out and say the thing without it. ' +
     'No em dashes.',
+    // Channel copy is published copy, so it keeps the house rules the writer
+    // keeps. It never read them before 2026-09-25.
+    `\n\nHOUSE RULES\n${VOICE_GUARDRAILS}`,
   ].filter(Boolean).join('')
 
   let text: string
@@ -133,7 +138,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         `\nDRAFT:\n${source.slice(0, 14_000)}\n\n` +
         `INSTRUCTION: ${b.hint || FALLBACK_HINT[channel]}\n\n` +
         'Return ONLY a single JSON object: {"body":string,"visual_suggestion":string|null,"notes":string|null}. ' +
-        '"notes" is where you flag anything the channel wanted that the source could not support. Leave it null if there is nothing to flag.',
+        '"notes" is where you flag anything the channel wanted that the source could not support. Leave it null if there is nothing to flag.\n\n' +
+        `"visual_suggestion" follows these rules, and is null when no visual passes them:\n${houseRulesBlock('visual')}`,
       maxTokens: 6000,
       temperature: 0.5,
       timeoutMs: 90_000,

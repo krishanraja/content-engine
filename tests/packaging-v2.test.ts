@@ -1,9 +1,9 @@
-import { mkdir, mkdtemp, rename, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { CandidateV1Schema, DraftPackageV2Schema } from '@mindmake/contracts'
-import { VIDEO_PACKAGE_PLATFORMS, draftPackageFileIssuesV2, hashFile, platformCopyV2 } from '@mindmake/core'
+import { CandidateV1Schema, DraftPackageV2Schema, RenderManifestV2Schema } from '@mindmake/contracts'
+import { VIDEO_PACKAGE_PLATFORMS, createDraftPackageV2, draftPackageFileIssuesV2, hashFile, platformCopyV2 } from '@mindmake/core'
 
 const candidate = CandidateV1Schema.parse({
   schema_version: 1,
@@ -124,4 +124,42 @@ describe('four-platform V2 packages', () => {
     await writeFile(outsidePath, 'captions.srt\n', 'utf8')
     expect(await draftPackageFileIssuesV2({ ...draft, captions_path: outsidePath }, expected)).toContain('captions path is outside the current job package')
   })
+
+  it('makes a rendered thumbnail the package cover, bound to its exact bytes', async () => {
+    const temporaryRoot = await mkdtemp(join(tmpdir(), 'mindmake-package-cover-'))
+    temporaryRoots.push(temporaryRoot)
+    previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
+    process.env.MINDMAKE_RUNTIME_ROOT = join(temporaryRoot, 'runtime')
+    const masterPath = join(temporaryRoot, 'master.mp4')
+    await writeFile(masterPath, 'approved master\n', 'utf8')
+    const masterHash = await hashFile(masterPath)
+    const thumbnailPath = join(temporaryRoot, 'thumbnail.jpg')
+    await writeFile(thumbnailPath, 'rendered thumbnail jpeg\n', 'utf8')
+    const thumbnailHash = await hashFile(thumbnailPath)
+    const hash = 'a'.repeat(64)
+    const crop = { x: 0, y: 0, width: 1, height: 1 }
+    const manifest = RenderManifestV2Schema.parse({
+      schema_version: 2, manifest_id: 'manifest-cover', job_id: 'job-house-cover', candidate_id: candidate.candidate_id, candidate_hash: hash, visual_plan_artifact_hash: hash, series: 'mind_the_gap', treatment_id: 'house', treatment_lane: 'restrained', target_platform: 'linkedin',
+      output: { platform: 'linkedin', width: 1080, height: 1920, fps: 30, audio_hz: 48000, safe_zones: { top_px: 120, right_px: 100, bottom_px: 260, left_px: 100 }, maximum_duration_ms: 180_000 },
+      duration_ms: 1_000,
+      sources: [{ source_id: 'camera', kind: 'video', path: 'camera.mp4', sha256: hash, duration_ms: 1_000, width: 1080, height: 1920, fps: 30, audio_hz: 48000, canonical_offset_ms: 0 }],
+      shot_directives: [{ shot_id: 'shot', beat_id: 'beat', start_ms: 0, end_ms: 1_000, source_id: 'camera', source_start_ms: 0, source_end_ms: 1_000, subject_track_ids: [], primary_attention_target: { kind: 'presenter' }, technique_ids: [],
+        camera_plan: { camera_plan_id: 'camera-plan', source_id: 'camera', subject_track_ids: [], start_ms: 0, end_ms: 1_000, framing: 'medium_close', movement: 'locked', lead_room: 'none', protected_region_ids: [], keyframes: [{ at_ms: 0, crop, zoom: 1, rotation_degrees: 0, confidence: 1 }], easing: 'hold', max_velocity: 1, max_acceleration: 1, minimum_hold_ms: 250, quality_floor: { minimum_effective_width_px: 1080, allow_upscale: false }, confidence: 1, fallback: 'Hold the frame as recorded.' },
+        layers: [{ layer_id: 'source', z_index: 0, kind: 'source', target_id: 'camera', anchor: 'full', opacity: 1, blend_mode: 'normal', protected: false }],
+        transition_in: 'none', transition_out: 'none', audio_continuity: 'direct', rationale: 'One held shot for the package test.' }],
+      assets: [], generated_shots: [], captions: [],
+      caption_provenance: { transcript_hash: hash, verified: true, exact_word_fidelity: true, source_token_count: 0, caption_token_count: 0 },
+      audio_plan: { dialogue_source_ids: ['camera'], dialogue_master_source_id: 'camera', dialogue_edits: [{ edit_id: 'dialogue', source_id: 'camera', output_start_ms: 0, output_end_ms: 1_000, source_start_ms: 0, source_end_ms: 1_000, gain_db: 0, fade_in_ms: 0, fade_out_ms: 0 }], transitions: [], music: [], effects: [], target_lufs: -14, maximum_true_peak_dbtp: -1 },
+      branding: { mode: 'none', wordmark_hashes: [] },
+      disclosures: [{ platform: 'linkedin', decision: 'not_required', rationale: 'No synthetic or altered material is used.' }],
+      fixed_seed: 'package-cover-seed',
+    })
+    const bindings = { render_manifest_hash: 'f'.repeat(64), master_path: masterPath, master_hash: masterHash }
+    const draft = await createDraftPackageV2('job-house-cover', 'linkedin', masterPath, candidate, manifest, { passed: true }, bindings, { path: thumbnailPath, sha256: thumbnailHash })
+    expect(draft.cover_hash).toBe(thumbnailHash)
+    expect(await readFile(draft.cover_path, 'utf8')).toBe('rendered thumbnail jpeg\n')
+    expect(await draftPackageFileIssuesV2(draft, { job_id: 'job-house-cover', platform: 'linkedin', render_manifest_hash: bindings.render_manifest_hash, master_hash: masterHash })).toEqual([])
+    await expect(createDraftPackageV2('job-house-cover', 'linkedin', masterPath, candidate, manifest, { passed: true }, bindings, { path: thumbnailPath, sha256: '0'.repeat(64) })).rejects.toThrow('the rendered cover must be the exact JPEG it was hashed as')
+  })
 })
+

@@ -12,6 +12,27 @@ test('a quiet skip is a skip, an ok:false is a failure, a throw is a failure', (
   assert.deepEqual(classifyRun(200, { ok: false, error: 'pool not configured' }, null), { status: 'failed', reason: 'pool not configured' })
   assert.deepEqual(classifyRun(500, { ok: false, error: 'boom' }, null), { status: 'failed', reason: 'boom' })
   assert.deepEqual(classifyRun(503, {}, null), { status: 'failed', reason: 'http_503' })
+  // A 200 that refuses without saying why. Every other case here was covered;
+  // this one was not, and it is the one that shipped: it produced `http_200`,
+  // the status code of a SUCCESSFUL transport, and Krish read "Investigations
+  // failed on its last run: http_200." on 2026-09-17.
+  assert.deepEqual(classifyRun(200, { ok: false }, null),
+    { status: 'failed', reason: 'the job reported failure without a reason' })
+  // An aborted investigation DOES say why, in `abortReason`, and both fallbacks
+  // above used to step over it. These are the two real bodies from
+  // content_engine_runs, replayed: 2026-09-10 and 2026-09-17.
+  assert.deepEqual(classifyRun(200, { ok: false, status: 'aborted', abortReason: 'no claim survived G3' }, null),
+    { status: 'failed', reason: 'no claim survived G3' })
+  assert.deepEqual(classifyRun(200, { ok: false, status: 'aborted', abortReason: 'grounding failed twice' }, null),
+    { status: 'failed', reason: 'grounding failed twice' })
+  // `error` still outranks it, so a handler that says both is not second-guessed.
+  assert.deepEqual(classifyRun(200, { ok: false, error: 'boom', abortReason: 'quieter' }, null),
+    { status: 'failed', reason: 'boom' })
+  // An abort on a real transport failure prefers its own words to the number.
+  assert.deepEqual(classifyRun(500, { ok: false, abortReason: 'grounding failed twice' }, null),
+    { status: 'failed', reason: 'grounding failed twice' })
+  // The transport fallback must survive the fix: a real 4xx/5xx still says so.
+  assert.deepEqual(classifyRun(404, { ok: false }, null), { status: 'failed', reason: 'http_404' })
   assert.deepEqual(classifyRun(500, null, new Error('threw')), { status: 'failed', reason: 'threw' })
 })
 

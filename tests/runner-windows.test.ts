@@ -232,6 +232,12 @@ describe('Windows runner entry point', () => {
     expect(source).toContain('Enterprise (roams)')
     expect(source).toContain('Mindmake Video Studio')
     expect(source).toContain('CredEnumerateW')
+    expect(source).toContain('[switch]$EnforceActiveContract')
+    expect(source).toContain('control-center-runner-token-v3')
+    expect(source).toContain('control-center-runner-signing-key-v3')
+    expect(source).toContain('control-center-radar-token-v3')
+    expect(source).toContain('studio-mcp-token')
+    expect(source).toContain("$entry.Persist -ne 'LocalMachine'")
   })
 
   it('writes a credential onto nothing and refuses to claim success without a readback', async () => {
@@ -259,6 +265,11 @@ describe('Windows runner entry point', () => {
     // writes were rolled back; it is a deliberate choice, never a default.
     expect(source).toContain('$expectedPersist = if ($Roaming) { 3 } else { 2 }')
     expect(source).toMatch(/if \(-not \$Roaming -and \$persist -eq 3\)/)
+    expect(source).toContain('$quarantinedTargets')
+    expect(source).toContain('$localOnlyTargets')
+    expect(source).toContain('studio-mcp-token')
+    expect(source).toContain('$isVersionedRuntimeTarget')
+    expect(source).toMatch(/if \(\$Roaming -and \(\(\$localOnlyTargets -contains \$Target\) -or \$isVersionedRuntimeTarget\)\)/)
 
     // -Generate stays available to packages/core/src/credentials.ts, which runs
     // this script -NonInteractive, and -FromStdin gives a caller with no console a
@@ -268,4 +279,109 @@ describe('Windows runner entry point', () => {
     expect(source).not.toMatch(/\[string\]\$Value/)
     expect(source).toContain('[Console]::In.ReadLine()')
   })
+
+  // Krish's Windows session, 2026-09-28: "studio.session.open is unavailable
+  // because the credential stored under MindmakeVideoStudio/studio-mcp-token-v2
+  // has the wrong token-family prefix." The proxy accepts only vst_mcp_ values,
+  // and -Generate had written base64 with no prefix for every target.
+  it('generates and accepts only vst_mcp_ family values for the Studio MCP target', async () => {
+    const source = (await readFile(join(ROOT, 'scripts', 'set-credential.ps1'), 'utf8')).replace(/\r\n/g, '\n')
+    const proxy = await readFile(join(ROOT, 'scripts', 'studio-mcp-credential-proxy.ps1'), 'utf8')
+
+    expect(proxy).toContain("StartsWith('vst_mcp_', [StringComparison]::Ordinal)")
+    expect(source).toContain("$mcpTokenTarget = 'MindmakeVideoStudio/studio-mcp-token-v2'")
+    expect(source).toContain("$mcpTokenPattern = '^vst_mcp_[a-f0-9]{64,}\\z'")
+    expect(source).toContain('$isMcpTokenTarget = $Target -eq $mcpTokenTarget')
+
+    // -Generate: 48 bytes from the cryptographic generator, written as 96
+    // lowercase hex after the prefix for the MCP target, base64 for the rest.
+    expect(source).toContain('$bytes = New-Object byte[] 48')
+    expect(source).toContain('[System.Security.Cryptography.RandomNumberGenerator]::Create()')
+    expect(source).toContain("'vst_mcp_' + (-join ($bytes | ForEach-Object { $_.ToString('x2') }))")
+    expect(source).toContain('[Convert]::ToBase64String($bytes)')
+    expect(source).not.toMatch(/Get-Random|System\.Random\b/)
+
+    // -FromStdin refuses a wrong-family value before it becomes a SecureString,
+    // and every source, the interactive prompt included, is checked before the
+    // existing entry is deleted or anything is written.
+    const stdinCheck = source.indexOf('if ($isMcpTokenTarget -and -not ($line -cmatch $mcpTokenPattern))')
+    const stdinConvert = source.indexOf('ConvertTo-SecureString -String $line -AsPlainText -Force')
+    expect(stdinCheck).toBeGreaterThan(-1)
+    expect(stdinCheck).toBeLessThan(stdinConvert)
+    const everySourceCheck = source.indexOf('PtrToStringBSTR($pointer) -cmatch $mcpTokenPattern')
+    expect(everySourceCheck).toBeGreaterThan(source.indexOf("Read-Host -Prompt \"Secret for $Target\" -AsSecureString"))
+    expect(everySourceCheck).toBeLessThan(source.indexOf('DeleteExisting($Target)'))
+    expect(source).toContain('ZeroFreeBSTR($pointer)')
+
+    // The refusal names the target and the family, never the value.
+    expect(source).toContain('$mcpTokenFamilyMessage = "Credential target $Target needs a value in the Studio MCP token family')
+    const refusals = source.match(/throw \$mcpTokenFamilyMessage/g) ?? []
+    expect(refusals).toHaveLength(2)
+    expect(source).not.toMatch(/throw[^\n]*\$line\b/)
+    expect(source).not.toMatch(/Write-(?:Output|Host)[^\n]*\$(?:line|generated)\b/)
+  })
+
+  it('fails the active contract when the MCP target is outside the vst_mcp_ family', async () => {
+    // A Windows checkout carries CRLF line endings; compare the text itself.
+    const source = (await readFile(join(ROOT, 'scripts', 'inspect-credentials.ps1'), 'utf8')).replace(/\r\n/g, '\n')
+
+    expect(source).toContain('using System.Text.RegularExpressions;')
+    expect(source).toContain('McpTokenFamily = Regex.IsMatch(value, "^vst_mcp_[a-f0-9]{64,}\\\\z", RegexOptions.CultureInvariant)')
+    expect(source).toContain('public bool McpTokenFamily;')
+    expect(source).toContain("$mcpTokenTarget = 'MindmakeVideoStudio/studio-mcp-token-v2'")
+    expect(source).toContain("TokenFamily = if ($entry.Target -eq $mcpTokenTarget) { if ($entry.McpTokenFamily) { 'vst_mcp' } else { 'wrong family prefix' } } else { $null }")
+    const enforcement = source.slice(source.indexOf('if ($EnforceActiveContract) {\n  $failures'))
+    expect(enforcement).toContain(`if ($target -eq $mcpTokenTarget -and $entry.TokenFamily -ne 'vst_mcp') { $failures += "$target has the wrong family prefix" }`)
+    // Only a yes or no crosses from the C# reader into PowerShell.
+    expect(source).not.toMatch(/public string (?:Value|Prefix)\b/)
+  })
+
+  it.skipIf(process.platform !== 'win32')('parses the credential scripts without a PowerShell syntax error', async () => {
+    for (const script of ['set-credential.ps1', 'inspect-credentials.ps1', 'standby-studio-mcp-token.ps1', 'engine-key.ps1']) {
+      const path = join(ROOT, 'scripts', script).replace(/'/g, "''")
+      const command = [
+        '$tokens = $null; $errors = $null',
+        `[void][System.Management.Automation.Language.Parser]::ParseFile('${path}', [ref]$tokens, [ref]$errors)`,
+        '[Console]::Out.Write($errors.Count)',
+      ].join('; ')
+      const { stdout } = await execFileAsync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', command])
+      expect(stdout.trim(), script).toBe('0')
+    }
+  }, 30_000)
+
+  it("the standby's token script never handles the value itself and never touches an enabled runner task", async () => {
+    // Krish, 2026-10-02, on the work board: "can you give me the script to run
+    // on this machine, fully self contained script". It wraps the checkout's own
+    // writer and inspector, so the family check and the LocalMachine readback
+    // stay in one place.
+    const source = (await readFile(join(ROOT, 'scripts', 'standby-studio-mcp-token.ps1'), 'utf8')).replace(/\r\n/g, '\n')
+    expect(source).toContain("$target = 'MindmakeVideoStudio/studio-mcp-token-v2'")
+    expect(source).toContain('& powershell -NoProfile -ExecutionPolicy Bypass -File $writer -Target $target\n')
+    expect(source).toContain('& powershell -NoProfile -ExecutionPolicy Bypass -File $inspector -EnforceActiveContract')
+    // No value on a command line, from stdin or a variable, and nothing that
+    // could enable, start or register a runner task. The header's how-to (the
+    // primary's clipboard routine) is prose for Krish, not code this runs.
+    const code = source.slice(source.indexOf('#>') + 2)
+    expect(code).not.toMatch(/-FromStdin|-Generate\b|-Value\b|ConvertTo-SecureString|Read-Host/)
+    expect(code).not.toMatch(/Enable-ScheduledTask|Start-ScheduledTask|Register-ScheduledTask|install-runner-task/)
+    // A runner task that is not disabled stops the script before the writer.
+    const stop = source.indexOf("[string]$task.State -ne 'Disabled'")
+    expect(stop).toBeGreaterThan(-1)
+    expect(stop).toBeLessThan(source.indexOf('-File $writer'))
+    // It must live outside the checkout, or the runner's clean-checkout rule fails.
+    expect(source).toContain('Keep this file outside the runner checkout.')
+  })
+
+  it.skipIf(process.platform !== 'win32')('matches the MCP family exactly as the writer and the inspector do', async () => {
+    // The pattern the two scripts share, exercised in PowerShell itself with
+    // synthetic values that are never credentials.
+    const command = [
+      "$pattern = '^vst_mcp_[a-f0-9]{64,}\\z'",
+      "$good = 'vst_mcp_' + ('0' * 96)",
+      "$results = @(($good -cmatch $pattern), (('vst_mcp_' + ('A' * 96)) -cmatch $pattern), (('0' * 104) -cmatch $pattern), (('vst_mcp_' + ('0' * 63)) -cmatch $pattern), (($good + [char]10) -cmatch $pattern))",
+      '[Console]::Out.Write(($results | ForEach-Object { $_.ToString() }) -join ",")',
+    ].join('; ')
+    const { stdout } = await execFileAsync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', command])
+    expect(stdout.trim()).toBe('True,False,False,False,False')
+  }, 30_000)
 })
