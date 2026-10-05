@@ -10,7 +10,10 @@ const ROOT = 'editions'
 const dirs = readdirSync(ROOT).filter(d => existsSync(join(ROOT, d, 'edition.json')))
 
 function pageText(html: string): string {
-  const t = html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ')
+  // A link or a label inside a sentence is part of it, so its tags go without
+  // a gap ("Perplexity</a>," reads "Perplexity,"); any other tag is a break.
+  const t = html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '')
+    .replace(/<\/?(?:a|span|strong|em|b|i|cite|mark|code|sup|sub)\b[^>]*>/g, '').replace(/<[^>]+>/g, ' ')
   return t.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, ' ')
 }
 
@@ -28,7 +31,8 @@ describe('every web edition says only what the fact gate checked', () => {
       const page = pageText(readFileSync(join(ROOT, d, 'index.html'), 'utf8'))
       const missing: string[] = []
       for (const para of readFileSync(join(ROOT, d, 'body.md'), 'utf8').replace(/\r\n/g, '\n').split(/\n{2,}/)) {
-        const text = para.replace(/^#+ .*$/gm, '').replace(/\*\*/g, '').trim()
+        // Headings are not sentences; a list's or a quote's marker is not a word.
+        const text = para.replace(/^#+ .*$/gm, '').replace(/^\s*(?:[-*+]|\d+[.)]|>)\s+/gm, '').replace(/\*\*/g, '').trim()
         if (!text) continue
         for (const raw of text.split(/(?<=[.!?"])\s+(?=[A-Z"])/)) {
           const s = raw.replace(/\s+/g, ' ').trim()

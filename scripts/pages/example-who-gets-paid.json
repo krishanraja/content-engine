@@ -1,0 +1,124 @@
+{
+  "subchannel": "follow.the.money",
+  "title": "Who Gets Paid",
+  "headline": "When an AI agent does your shopping, who gets paid?",
+  "deck": "Amazon blocked Meta's new AI shopping agent. Shopify plugged it into its checkout. Here's who an AI agent threatens, who it pays, and where you could get stung.",
+  "date": "2026-10-05",
+  "issue": "Vol. 01 · Issue 01",
+  "body": "body.md",
+  "hero": {
+    "receipt": {
+      "title": "RECEIPT",
+      "alt": "Receipt: Muse, Meta's AI agent. Sunday 20 September, Amazon blocked it. Monday 21 September, Shopify welcomed it. Total: same AI agent, opposite answers.",
+      "customer": {
+        "logo": "logos/muse.svg",
+        "text": "Customer: Muse, Meta's AI agent"
+      },
+      "rows": [
+        {
+          "logo": "logos/amazon-dark.svg",
+          "name": "Amazon",
+          "when": "Sun 20 Sep",
+          "verdict": "Blocked it",
+          "colour": "coral"
+        },
+        {
+          "logo": "logos/shopify-dark.svg",
+          "name": "Shopify",
+          "when": "Mon 21 Sep",
+          "verdict": "Welcomed it",
+          "colour": "mint"
+        }
+      ],
+      "total": ["Total", "Same AI agent, opposite answers"]
+    }
+  },
+  "figures": [
+    {
+      "after": "The till only cares that you paid.",
+      "image": "img/1-look-or-pay.png",
+      "alt": "Amazon's 2025 revenue of $716.9 billion, with $68.6 billion from adverts, next to Shopify's $11.6 billion, 76% of it from fees on sales."
+    },
+    {
+      "after": "Our read: Amazon likes AI shopping agents",
+      "image": "img/2-same-request.png",
+      "alt": "The same request, running trainers under $50, sent to Amazon's AI agent and to Meta's Muse, and who gets paid each time."
+    },
+    {
+      "after": "People may be steered towards products",
+      "image": "img/3-who-pays.png",
+      "alt": "Three things that can go wrong when Muse buys for you, who carries each one, and your safety net."
+    }
+  ],
+  "pull_quotes": [
+    {
+      "after": "For Amazon, that is a problem.",
+      "quote": "Amazon's advertisers pay for their ads to be shown to humans.",
+      "cite": "Amazon, in its court case against Perplexity"
+    }
+  ],
+  "sources": {
+    "amzn10k": ["Amazon 2025 annual report (10-K)", "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm"],
+    "pplx": ["Amazon v Perplexity, complaint, 4 November 2025", "https://chatgptiseatingtheworld.com/wp-content/uploads/2025/11/Amazon.com-Servs.-v.-Perplexity-Nov.-4-2025-COMPLAINT.pdf"],
+    "meta": ["Meta, introducing Muse, 8 September 2026", "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/"],
+    "giz": ["Gizmodo, 21 September 2026", "https://gizmodo.com/amazon-brings-down-the-hammer-on-metas-muse-ai-agent-2000814878"],
+    "tobi": ["Tobi Lütke on X, 21 September 2026", "https://x.com/tobi/status/2102090718546198790"],
+    "amzq4": ["Amazon Q4 2025 results, 5 February 2026", "https://www.aboutamazon.com/news/company-news/amazon-earnings-q4-2025-report"],
+    "shop10k": ["Shopify 2025 annual report (10-K)", "https://www.sec.gov/Archives/edgar/data/1594805/000159480526000007/shop-20251231.htm"],
+    "shopprice": ["Shopify pricing (US)", "https://www.shopify.com/pricing"],
+    "amzagentic": ["Amazon Ads: advertising in Alexa for Shopping", "https://advertising.amazon.com/library/news/agentic-shopping-advertising"],
+    "amzq2ads": ["Amazon Ads, Q2 2026 results, 31 July 2026", "https://www.aboutamazon.com/news/company-news/amazon-ceo-andy-jassy-amazon-ads-growth-q2-2026-earnings"],
+    "jassyq4": ["Amazon Q4 2025 earnings call (Motley Fool)", "https://www.fool.com/earnings/call-transcripts/2026/02/05/amazon-amzn-q4-2025-earnings-call-transcript/"],
+    "jassyq3": ["Amazon Q3 2025 earnings call (Motley Fool)", "https://www.fool.com/earnings/call-transcripts/2025/10/31/amazon-amzn-q3-2025-earnings-call-transcript/"],
+    "shopq2": ["Shopify Q2 2026 earnings call (The Globe and Mail)", "https://www.theglobeandmail.com/investing/markets/stocks/SHOP/pressreleases/3809161/shopify-shop-q2-2026-earnings-call-transcript/"],
+    "shopgpt": ["Shopify Help Center: selling in ChatGPT", "https://help.shopify.com/en/manual/online-sales-channels/agentic-storefronts/chatgpt"],
+    "shopgoogle": ["Shopify Help Center: selling in Google AI Mode and Gemini", "https://help.shopify.com/en/manual/online-sales-channels/agentic-storefronts/google"],
+    "heise": ["heise, 22 September 2026", "https://www.heise.de/en/news/Locked-out-Amazon-blocks-Meta-s-AI-agent-Muse-in-its-online-shop-11460854.html"],
+    "cou": ["Amazon Conditions of Use (archived 30 September 2026)", "https://web.archive.org/web/20260930145024/https://www.amazon.com/gp/help/customer/display.html?nodeId=GLSBYFE9MGKKQXXM"],
+    "geekwire": ["GeekWire, Amazon blocks Meta's Muse", "https://www.geekwire.com/2026/amazon-blocks-metas-muse-ai-assistant-in-new-standoff-over-agentic-shopping/"],
+    "tnw": ["The Next Web, 21 September 2026", "https://thenextweb.com/news/amazon-blocks-muse-perplexity-amended-complaint"],
+    "ca9": ["US Court of Appeals, Ninth Circuit, No. 26-1444, 4 August 2026", "https://cdn.ca9.uscourts.gov/datastore/opinions/2026/08/04/26-1444.pdf"],
+    "museterms": ["Muse Supplemental Terms", "https://muse.ai/terms"],
+    "link": ["Link: what's covered with protections", "https://support.link.com/questions/what-s-covered-with-protections"],
+    "digiday": ["Digiday, 25 September 2026", "https://digiday.com/marketing/future-of-marketing-briefing-imagining-the-ad-business-hiding-inside-metas-muse/"],
+    "cma": ["UK CMA: agentic AI and consumers, 9 March 2026", "https://www.gov.uk/government/publications/agentic-ai-and-consumers/agentic-ai-and-consumers"],
+    "shopmeta": ["Shopify Help Center: selling through Meta", "https://help.shopify.com/en/manual/online-sales-channels/agentic-storefronts/meta"],
+    "cnn": ["CNN, 28 September 2026", "https://www.cnn.com/2026/09/28/tech/meta-muse-ai-agents-amazon"],
+    "ftc": ["FTC press release, 31 August 2026", "https://www.ftc.gov/news-events/news/press-releases/2026/08/ftc-states-sue-amazon-over-secret-ad-surcharge-scheme"],
+    "tc": ["TechCrunch, 31 August 2026", "https://techcrunch.com/2026/08/31/ftc-accuses-amazon-of-running-a-secret-ad-surcharge-scheme-in-new-lawsuit/"]
+  },
+  "links": [
+    ["$68.6 billion in 2025", "amzn10k"],
+    ["a court case against the AI company Perplexity", "pplx"],
+    ["Meta launched Muse", "meta"],
+    ["warning popup", "giz"],
+    ["posted on X", "tobi"],
+    ["$716.9 billion in 2025", "amzq4"],
+    ["Amazon's yearly report", "amzn10k"],
+    ["76% of Shopify's $11.6 billion revenue", "shop10k"],
+    ["basic plan in the US", "shopprice"],
+    ["now called Alexa for Shopping", "amzagentic"],
+    ["Sponsored Prompt", "amzq2ads"],
+    ["work with other third-party agents over time", "jassyq4"],
+    ["The delivery estimates are frequently wrong.", "jassyq3"],
+    ["told investors in August", "shopq2"],
+    ["ChatGPT", "shopgpt"],
+    ["Google's Gemini", "shopgoogle"],
+    ["named in Shopify's own yearly report", "shop10k"],
+    ["The popup read", "heise"],
+    ["\"Agent Terms\"", "cou"],
+    ["told GeekWire", "geekwire"],
+    ["The Next Web reported", "tnw"],
+    ["Meta says Muse \"has no visibility", "meta"],
+    ["a US appeals court cancelled", "ca9"],
+    ["amended complaint on 21 September", "tnw"],
+    ["Muse's terms", "museterms"],
+    ["Link's purchase protections", "link"],
+    ["Digiday reports", "digiday"],
+    ["A UK government paper on AI agents and shoppers", "cma"],
+    ["switched on by default for eligible Shopify stores", "shopmeta"],
+    ["CNN reported", "cnn"],
+    ["sued Amazon", "ftc"],
+    ["called the suit", "tc"]
+  ]
+}

@@ -30,6 +30,12 @@ with real humour, and no word a reader has to interpret, including our own
 coined labels. Labels on the page name things by what a reader sees ("Cisco's
 sums", "Price list", "Our prediction"), never by a nickname we invented.
 
-These are built by hand for now. The first, `2026-09-who-picks-your-ai`, is
+Since 2026-10-05 a page is built with `scripts/pages` instead of by hand: it
+takes `body.md` and a short file of page facts, makes the page (fully
+self-contained, so `logo.png` is no longer needed beside it) and a copy that
+pastes into Substack, and refuses to write either if a sentence of `body.md`
+would be missing (`scripts/pages/README.md`).
+
+The first edition, `2026-09-who-picks-your-ai`, was built by hand. It is
 mind.the.gap's device: a dated line that ends in "put it all together",
 three futures that fork and never rejoin, and a prediction with a date.
