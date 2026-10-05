@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-05
 
+- workbench (2026-10-05) at `8b87aee`: the latest handoff records the Monday schedule, working in the agent session, and article 1's launch set.
 - decision (Krish, 2026-10-05): "Let's just make follow the money permanently a monday thing, and swap it out." Then: "ok, make sure absolutely everywhere reflects this swap in scheduling, including the site, everywhere". In `4675ef8`: `config/studio.json` house style days (follow_the_money Mondays, under_the_hood Wednesdays), the thumbnail, carousel and render-v2 tests, the North Star cadence table, the who-picks-your-ai footer, and `docs/STUDIO.md` pointing at brand kit v1.5. Control Center migration `20261005170000` changed `venture_formats.cadence_label`. The 2026-09-26 entries, the walk log and NOW.md's 2026-09-26 bullet keep the days they were written with.
 - decision (Krish, 2026-10-05): "I would rather work in here and have the pieces and their artwork produced in html and assets like we are doing now - control center editing feeling super fiddly to me right now while we are building the engine". Pieces and artwork are made in the agent session; Control Center stays the record for locking and publishing.
 - fix (2026-10-05) at `ace7249`: the fact check caps new claims per run, not total claims, so a long piece finishes across runs (walk log F57).
