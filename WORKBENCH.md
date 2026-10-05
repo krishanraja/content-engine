@@ -103,22 +103,19 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
   him to record, `scripts/quick-edit` for the edit, the engine's `package`
   step for the YouTube title and description, and the LinkedIn post. Friday
   2026-10-09 is mind.the.gap, piece 2 (`904658db`, approved).
-  **Shipping on its own:** the Substack address moves to
-  `home.makeyourmindup.ai` everywhere once Substack serves it (it still sent
-  people to substack.com at 22:30 UTC). The engine and the AEO engine
-  already count both addresses. The rest waits on
-  `claude/cool-gates-85mcik`: makeyourmindup `f09652a` (the Subscribe button
-  and feed) and control-center `4ff9089b` (website and AI-answer tracking,
-  with migration `20261005220000_publication_home_address.sql` to apply). An
-  hourly check in the launch-day session ships them. If that session is gone
-  and the address works, ship them from those branches: cover first, then
-  control-center and its migration, then read the changed rows back. **Waiting on Krish:** publish article 1
-  and the launch post with the two videos in; paste the new schedule into
-  Substack; put back the Drive folders the clean-up moved; a yes for Claude to
-  change the address in the `mindmake` canon and `ai-harness`. Findings from
-  the day are F58 to F63 in the walk log; F61 (Ship's refusal is only a
-  pop-up) and F63 (nothing protects the Drive folders the OS reads by path)
-  are open in control-center.
+  **The publication lives at `home.makeyourmindup.ai`**, shipped everywhere on
+  2026-10-05 once Substack switched it on (the cover's Subscribe button and
+  feed, Control Center's tracking and its migration, the engine, the AEO
+  engine); tracking keeps the old address as an alias. Article 1 and the
+  Who gets paid video post went live on Substack the same day. **Waiting on
+  Krish:** swap in article 1's new 3:2 cover (sent in chat; Substack cut the
+  old one on every screen, walk log F64); publish the launch post with the
+  hello video; paste the new schedule into Substack; put back the Drive
+  folders the clean-up moved; a yes for Claude to change the address in the
+  `mindmake` canon and `ai-harness`. Findings from the day are F58 to F65 in
+  the walk log. Open: F61 (Ship's refusal is only a pop-up) and F63 (nothing
+  protects the Drive folders the OS reads by path), both in control-center,
+  and article 1's explainers, which read small on a phone (F64).
 - 2026-10-05, evening: both launch videos are edited and with Krish (the
   hello and Who gets paid, each tall and wide). He recorded them and shared
   them by Drive link; the edit was done in the agent session with the new
