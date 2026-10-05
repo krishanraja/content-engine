@@ -339,8 +339,10 @@ suggestion. Software that acts for a person is called an AI agent, never a
 robot, and a follow.the.money piece explains what each company is paid for,
 why it moved and who could get stung (on trial). A video's YouTube title and
 description name who is involved, leave a question the video answers, stay
-true to the piece and end with the line to makeyourmindup.ai
-(`YOUTUBE_PACKAGE`); `api/_packaging.ts` checks what a machine can of it.
+true to the piece and end with the line to makeyourmindup.ai, and the title
+and subtitle the piece goes out under on Substack keep the same rules and fit
+what a phone shows (`YOUTUBE_PACKAGE`); `api/_packaging.ts` checks what a
+machine can of it.
 `tests/control-plane/house-rules.test.ts` fails when a live rule reaches no
 stage.
 
@@ -368,7 +370,7 @@ nothing in a receipt is written by a model.
 | Route | What it does |
 |---|---|
 | `POST /api/content-ideas/[id]/channel-cut` | one channel's cut (substack, linkedin, youtube, instagram, podcast, signal_noise) into `transformed_outputs[channel]`; flags any number missing from the source [`cleo-channel-cut`] |
-| `POST /api/content-ideas/[id]/package` | the YouTube title, two backup titles and the description for the piece's video, into `transformed_outputs.youtube_package` with what still breaks a rule; takes optional `thumbnail_text`, `video_seconds` and `hint`; publishes nothing (below) [`cleo-package`; its retry `cleo-package-retry`] |
+| `POST /api/content-ideas/[id]/package` | the YouTube title, two backup titles and the description for the piece's video, and the title and subtitle the piece goes out under on Substack, into `transformed_outputs.youtube_package` with what still breaks a rule; takes optional `thumbnail_text`, `video_seconds` and `hint`; publishes nothing (below) [`cleo-package`; its retry `cleo-package-retry`] |
 | `POST /api/content-ideas/[id]/video-script` | a 15 second to 20 minute script into `transformed_outputs` [`video`] |
 | `POST /api/content-ideas/[id]/save-draft` | sends the draft to the n8n content factory, which makes a Google Doc, and moves the piece to `review`. Its channel map knows `paid`, `built` and older channels only |
 | `POST /api/briefs/[week]/push` | pushes an approved brief to the factory, once per channel |
@@ -388,21 +390,52 @@ sentences, then the piece's dated prediction as the piece gives it, then
 "Read the full piece free at makeyourmindup.ai", then at most three
 hashtags, or none.
 
+**The Substack title and subtitle** (since 2026-10-05, walk log F65). The
+same day Krish published article 1 on Substack and sent a screenshot of his
+publication's feed on his phone. The title, 122 characters, was cut off at
+about 110 ("who actuall"), and the subtitle after its first line. He said:
+"Also bear in mind what happens to your artwork when I'm looking at the
+article in Substack once it's posted." So the same call writes the title and
+subtitle the piece goes out under on Substack, under the same rules for
+truth, names, a plain conflict, numbers, hype and capitals. The Substack
+title may differ from the YouTube title but never contradicts it. It aims for
+60 characters, because Substack also sends it as the email's subject line and
+a phone cuts that short, and is never more than 100, because the feed cuts a
+title off at about 110. The subtitle's first sentence makes sense on its own
+and fits in about 60 characters, because the feed shows about one line of a
+subtitle and an email shows its start as the preview text. The whole subtitle
+aims for 150. Krish's own subtitle shows how: its first sentence, "Amazon
+blocked Meta's new AI shopping agent.", is 44 characters and gives the news
+in the one line the feed shows. To paste them, put them in the page facts of
+`scripts/pages` as `substack_title` and `substack_subtitle`: the Copy title
+and Copy subtitle buttons of its Substack copy read those fields.
+
 The route reads the piece (409 `no_draft` without one, as channel-cut), the
 voice block, the house rules and the subchannel's mandate, and asks the
-utility model once. `lintPackage` then checks what a machine can: the length,
-em dashes, "Not X, Y", exclamation marks, American spelling, the banned
-phrases, "robot" or "bot" for an AI agent, words in capitals longer than four
-letters, hype ("shocking", "breaking", "just" as urgency), a title that
-repeats the thumbnail, any number the piece and its sources do not state, the
-line to makeyourmindup.ai, and the hashtags. A `fail` sends the writer back
-once with each problem in plain words, and the answer that fails less is
-kept, the first on a tie; it never asks a third time. A `warn` (over 60
-characters, a title that names nobody, a description without the piece's
-prediction) is for the person reading. A conflict, an open question and
-being true beyond the numbers are rules only the writer and Krish can check,
-and `PACKAGING_RULES` marks them so. A backup title is checked without the
-thumbnail, because one is for when the thumbnail changes. The answer:
+utility model once for all of it. `lintPackage` then checks what a machine
+can: the length, em dashes, "Not X, Y", exclamation marks, American
+spelling, the banned phrases, "robot" or "bot" for an AI agent, words in
+capitals longer than four letters, hype ("shocking", "breaking", "just" as
+urgency), a title that repeats the thumbnail, any number the piece and its
+sources do not state, the line to makeyourmindup.ai, and the hashtags.
+`lintSubstack` checks the Substack title and subtitle the same way, without
+YouTube's own limits: the title's length and the names in it, the length of
+the subtitle's first sentence and of the whole subtitle, and the same house
+rules, numbers and hype in both. A `fail` sends the writer back once with
+each problem in plain words, and the answer that fails less is kept, the
+first on a tie; it never asks a third time. A Substack title over 100 fails,
+and so does an answer with no Substack title or subtitle: its YouTube fields
+are kept, and the one retry asks for what is missing. A `warn` (a title over
+60 characters, a title that names nobody, a description without the piece's
+prediction, a subtitle whose first sentence runs past about 60 characters or
+that runs past 150 in all) is for the person reading. A conflict, an open
+question, being true beyond the numbers, a Substack title that tells the
+same story as the YouTube one, and a first sentence that makes sense alone
+are rules only the writer and Krish can check, and `PACKAGING_RULES` marks
+them so. A backup title is checked without the thumbnail, because one is for
+when the thumbnail changes. The Substack title and subtitle are kept in
+`youtube_package` beside the YouTube fields, and the key keeps its name, so
+nothing that reads it breaks. The answer:
 
 ```
 { "ok": true, "outputs": ["youtube", "youtube_package"],
@@ -410,19 +443,22 @@ thumbnail, because one is for when the thumbnail changes. The answer:
     "title": "Amazon blocked Meta's AI shopping agent. Shopify let it in.",
     "alternates": [{ "title": "...", "why": "...", "lint": { "passed": true, "problems": [] } }, ...],
     "description": "...\n\nRead the full piece free at makeyourmindup.ai",
+    "substack_title": "...", "substack_subtitle": "...",
     "why": "...", "thumbnail_text": "...", "video_seconds": 152, "hint": null,
-    "lint": { "passed": false, "problems": [
+    "lint": { "passed": true, "problems": [
       { "rule": "TITLE_LENGTH", "field": "title", "level": "warn",
-        "detail": "The title is 64 characters. A phone cuts it off after about 60, so aim for 60 or fewer." } ] },
+        "detail": "The title is 64 characters. A phone cuts it off after about 60, so aim for 60 or fewer." },
+      { "rule": "SUBTITLE_FIRST_LINE", "field": "substack_subtitle", "level": "warn",
+        "detail": "The subtitle's first sentence is 72 characters. Substack's feed on a phone shows about 60, so it would be cut off before it says what happened." } ] },
     "retried": true, "note": null, "generated_at": "...", "model": "..." } }
 ```
 
 A failed call is revise's typed body with `error: 'package_failed'` ("How
-`revise` answers"), and an answer with no title or description is
+`revise` answers"), and an answer with no YouTube title or description is
 `empty_output`; neither writes anything. The write is guarded on
 `updated_at`: a change made during the call wins, and the answer is a 409
 `changed_during_package` that carries the package so nothing is lost. Nothing
-here publishes, and which title goes up is Krish's choice.
+here publishes, and which titles go up is Krish's choice.
 
 ### 5. Handoff to the Studio
 
@@ -680,19 +716,22 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    tell you which stage still ignores it. Never copy a rule into one prompt.
 13. After every push to `main`, read `main`'s CI before the next push (walk
    log F20).
-14. When Krish asks for a video's YouTube title and description, ask the
-   engine for them rather than writing them in the chat. Put what you know in
+14. When Krish asks for a video's YouTube title and description, or a
+   piece's Substack title and subtitle, ask the engine for them rather than
+   writing them in the chat. One call writes all four. Put what you know in
    `body.json`, every field optional: `{ "thumbnail_text": "When an AI agent
    does your shopping, who gets paid?", "video_seconds": 152, "hint": "a steer
    he gave, in his words" }`. Then run
    `python3 scripts/engine.py POST /api/content-ideas/<id>/package @body.json`.
    Read `package.lint.problems` first: a `fail` is something the engine could
    not fix in its one retry, a `warn` is worth a look. Then show him the title,
-   the two `alternates` with their `why`, and the description. Which title
-   goes up is his decision, and he pastes it into YouTube Studio himself; the
+   the two `alternates` with their `why`, the description, and the
+   `substack_title` and `substack_subtitle`. Which titles go up is his
+   decision, and he pastes them into YouTube Studio and Substack himself; the
    engine publishes nothing. A new ruling of his about titles goes into
    `api/_houseRules.ts` as step 12 says, and the part a machine can check into
-   `PACKAGING_RULES` and `lintPackage` in `api/_packaging.ts`.
+   `PACKAGING_RULES` and `lintPackage` or `lintSubstack` in
+   `api/_packaging.ts`.
 
 ## Development notes
 

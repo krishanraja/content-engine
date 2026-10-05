@@ -1,4 +1,5 @@
-// The YouTube title and description for a piece's video: the rules, as data,
+// The YouTube title and description for a piece's video, and the title and
+// subtitle the piece itself goes out under on Substack: the rules, as data,
 // and the checks a machine can make of them.
 //
 // Krish, 2026-10-05, in chat about the video for piece 1 (Amazon, Meta's Muse
@@ -12,6 +13,15 @@
 // lives here, the route that asks for one (content-ideas/[id]/package.ts)
 // reads it, and the ruling with his words is YOUTUBE_PACKAGE in
 // api/_houseRules.ts, so every writer reads it too (walk log F59).
+//
+// The same day he published article 1 on Substack and sent a screenshot of
+// his publication's feed on his phone. The title, 122 characters, was cut off
+// at about 110 ("who actuall"), and the subtitle after its first line.
+// Substack also sends the title as the email's subject line, which a phone
+// cuts sooner. He said: "Also bear in mind what happens to your artwork when
+// I'm looking at the article in Substack once it's posted." So the same step
+// writes the Substack title and subtitle too, under the same rules, cut to
+// what a phone shows (walk log F65).
 //
 // Pure: no database, no network, no route code. The checks are the engine's
 // own (the publish checks, the "Not X, Y" reader, the banned-phrase list, the
@@ -41,13 +51,41 @@ export const DESCRIPTION_MAX = 5000
 export const MAX_HASHTAGS = 3
 /** The line every description carries, so a viewer can find the piece. */
 export const READ_LINE = 'Read the full piece free at makeyourmindup.ai'
+/** Where Substack's feed on a phone cut article 1's title off. The Substack
+ *  title keeps TITLE_MAX, inside this cut, and aims for TITLE_AIM, because
+ *  Substack also sends the title as the email's subject line, and a phone
+ *  cuts a subject line short. */
+export const FEED_CUT = 110
+/** About one line of a subtitle, which is all Substack's feed on a phone
+ *  shows of it. Email apps show the same start as the preview text. */
+export const SUBTITLE_LINE = 60
+/** A subtitle is a line or two under the title. */
+export const SUBTITLE_AIM = 150
+
+/** What the step writes: the YouTube title and description, and the title
+ *  and subtitle the piece goes out under on Substack. */
+export type PackageField = 'title' | 'description' | 'substack_title' | 'substack_subtitle'
+
+export type RuleGroup = 'title' | 'description' | 'both' | 'substack_title' | 'substack_subtitle' | 'titles' | 'all'
+
+/** Who a rule is for: one field, or a group of them, with the heading the
+ *  writer reads it under, in the order the writer reads them. */
+export const RULE_GROUPS: Readonly<Record<RuleGroup, { heading: string; fields: readonly PackageField[] }>> = Object.freeze({
+  title: { heading: 'THE YOUTUBE TITLE', fields: ['title'] },
+  description: { heading: 'THE YOUTUBE DESCRIPTION', fields: ['description'] },
+  both: { heading: 'BOTH YOUTUBE FIELDS', fields: ['title', 'description'] },
+  substack_title: { heading: 'THE SUBSTACK TITLE', fields: ['substack_title'] },
+  substack_subtitle: { heading: 'THE SUBSTACK SUBTITLE', fields: ['substack_subtitle'] },
+  titles: { heading: "BOTH TITLES, YOUTUBE'S AND SUBSTACK'S", fields: ['title', 'substack_title'] },
+  all: { heading: 'ALL FOUR', fields: ['title', 'description', 'substack_title', 'substack_subtitle'] },
+})
 
 export interface PackagingRule {
   id: string
-  field: 'title' | 'description' | 'both'
+  field: RuleGroup
   /** The instruction the writer reads. */
   text: string
-  /** 'code' when lintPackage checks it; 'writer' when only the writer and
+  /** 'code' when lintPackage or lintSubstack checks it; 'writer' when only the writer and
    *  the person reading the answer can. Said, so nobody mistakes a rule the
    *  machine cannot see for one it has checked. */
   checked: 'code' | 'writer'
@@ -56,23 +94,23 @@ export interface PackagingRule {
 export const PACKAGING_RULES: readonly PackagingRule[] = Object.freeze([
   { id: 'TITLE_LENGTH', field: 'title', checked: 'code',
     text: `Aim for ${TITLE_AIM} characters or fewer, so a phone shows the whole title. YouTube stops at ${TITLE_MAX}.` },
-  { id: 'NAMES', field: 'title', checked: 'code',
+  { id: 'NAMES', field: 'titles', checked: 'code',
     text: 'Name the people or companies the piece is about, when it has them. Names people already know are what they notice and search for.' },
-  { id: 'CONFLICT', field: 'title', checked: 'writer',
+  { id: 'CONFLICT', field: 'titles', checked: 'writer',
     text: 'Put them in a plain conflict or change, with a plain verb: blocked, let in, paid, dropped, sued, bought.' },
   { id: 'OPEN_QUESTION', field: 'title', checked: 'writer',
     text: 'Leave one open question that the video answers, so the viewer clicks to find out why.' },
   { id: 'THUMBNAIL', field: 'title', checked: 'code',
     text: 'Add to the thumbnail text instead of repeating it. The two are read together, so the title tells the story the thumbnail only asks about.' },
-  { id: 'TRUE_TO_SOURCE', field: 'both', checked: 'writer',
+  { id: 'TRUE_TO_SOURCE', field: 'all', checked: 'writer',
     text: 'Every word is true and in the piece. Make no claim the piece does not make, and state nothing it only guesses at as fact.' },
-  { id: 'NUMBERS', field: 'both', checked: 'code',
+  { id: 'NUMBERS', field: 'all', checked: 'code',
     text: 'Every number is one the piece states, word for word. Do no sums.' },
-  { id: 'NO_CLICKBAIT', field: 'both', checked: 'code',
+  { id: 'NO_CLICKBAIT', field: 'all', checked: 'code',
     text: 'No made-up urgency or hype: no "just" as in "just happened", and no "breaking", "shocking", "insane" or "you won\'t believe".' },
-  { id: 'NO_SHOUTING', field: 'both', checked: 'code',
+  { id: 'NO_SHOUTING', field: 'all', checked: 'code',
     text: 'No words in capitals to shout. A name or a short acronym such as AI keeps its own capitals.' },
-  { id: 'BANNED_PHRASE', field: 'both', checked: 'code',
+  { id: 'BANNED_PHRASE', field: 'all', checked: 'code',
     text: 'None of the phrases on the house\'s banned list ("delve", "game-changer" and the rest).' },
   { id: 'YOUTUBE_LIMITS', field: 'both', checked: 'code',
     text: `YouTube's own limits: a title of ${TITLE_MAX} characters at most, a description of ${DESCRIPTION_MAX}, and no < or > in either.` },
@@ -86,6 +124,16 @@ export const PACKAGING_RULES: readonly PackagingRule[] = Object.freeze([
     text: `Then, on a line of its own: "${READ_LINE}".` },
   { id: 'HASHTAGS', field: 'description', checked: 'code',
     text: `No wall of hashtags: at most ${MAX_HASHTAGS} that fit the piece, on the last line, or none.` },
+  { id: 'SUBSTACK_TITLE_LENGTH', field: 'substack_title', checked: 'code',
+    text: `Aim for ${TITLE_AIM} characters or fewer: Substack also sends the title as the email's subject line, and a phone cuts a subject line short. Never more than ${TITLE_MAX}, because Substack's feed on a phone cuts a title off at about ${FEED_CUT}.` },
+  { id: 'SAME_STORY', field: 'substack_title', checked: 'writer',
+    text: 'It may differ from the YouTube title, as long as it tells the same story and never contradicts it.' },
+  { id: 'SUBTITLE_FIRST_LINE', field: 'substack_subtitle', checked: 'code',
+    text: `Its first sentence fits in about ${SUBTITLE_LINE} characters, because Substack's feed on a phone shows only about one line of the subtitle, and an email shows its start as the preview text.` },
+  { id: 'SUBTITLE_STANDS_ALONE', field: 'substack_subtitle', checked: 'writer',
+    text: 'That first sentence makes sense on its own: who did what, in plain words, so a reader who sees nothing else still gets the news. Then one or two plain sentences on what the piece shows the reader.' },
+  { id: 'SUBTITLE_LENGTH', field: 'substack_subtitle', checked: 'code',
+    text: `Aim for ${SUBTITLE_AIM} characters or fewer in all: a line or two under the title.` },
 ])
 
 /** The case the rules came from, shown to the writer for its reasoning. Its
@@ -102,6 +150,16 @@ export const WORKED_EXAMPLE = Object.freeze({
   /** The opening paragraph Krish published in YouTube Studio. Its hook is
    *  the first sentence. */
   opening: "Amazon blocked Meta's new AI shopping agent. Shopify plugged it into its checkout. Here's who an AI agent threatens, who it pays, and where you could get stung. | 2 minute watch",
+  /** Article 1 as Krish published it on Substack the same day, and what the
+   *  feed on his phone showed of it (walk log F65). The subtitle is the
+   *  description's opening without the length, and the line under the
+   *  headline on the piece's page (scripts/pages/example-who-gets-paid.json). */
+  substack: Object.freeze({
+    title: 'Muse, Dot and the next wave of agents are now going shopping. When an AI agent does your shopping, who actually gets paid?',
+    why: 'The feed on his phone cut it off at "who actuall", so the question it asks was lost. An email\'s subject line shows even less.',
+    subtitle: "Amazon blocked Meta's new AI shopping agent. Shopify plugged it into its checkout. Here's who an AI agent threatens, who it pays, and where you could get stung.",
+    subtitleWhy: 'The feed showed only its first line. Its first sentence gives the news on its own, so that line still worked.',
+  }),
 })
 
 /** Characters as a person counts them: an emoji or an accented letter is one. */
@@ -114,25 +172,35 @@ export function watchLabel(seconds: number | null | undefined): string | null {
   return `${Math.max(1, Math.round(seconds / 60))} minute watch`
 }
 
+/** The opening sentence of a text's first line: the hook of a description,
+ *  and the part of a subtitle a phone's feed shows. */
+export function firstSentence(text: string): string {
+  const line = String(text ?? '').split('\n').map(l => l.trim()).find(Boolean) ?? ''
+  return line.split(/(?<=[.!?]["'”’)]*)\s+/)[0] ?? ''
+}
+
 /** The rules as a block the writer reads, with the worked example. */
 export function packagingRulesBlock(): string {
-  const rules = (field: PackagingRule['field']) => PACKAGING_RULES.filter(r => r.field === field).map(r => `- ${r.text}`)
+  const sections = (Object.keys(RULE_GROUPS) as RuleGroup[]).flatMap(group => {
+    const rules = PACKAGING_RULES.filter(r => r.field === group).map(r => `- ${r.text}`)
+    return rules.length ? ['', RULE_GROUPS[group].heading, ...rules] : []
+  }).slice(1)
   const ex = WORKED_EXAMPLE
   return [
-    'THE TITLE', ...rules('title'),
-    '', 'THE DESCRIPTION', ...rules('description'),
-    '', 'BOTH', ...rules('both'),
+    ...sections,
     '', "A WORKED EXAMPLE, from the piece about Amazon, Meta's AI shopping agent and Shopify. Learn the reasoning; its words fit that piece only.",
     `Thumbnail text: "${ex.thumbnail}"`,
     `Krish's first try, ${characters(ex.draft)} characters, over YouTube's limit, shouting in capitals and partly repeating the thumbnail: "${ex.draft}"`,
     `The pick, ${characters(ex.pick)} characters: "${ex.pick}" ${ex.why}`,
     ...ex.alternates.map(a => `Backup: "${a.title}" (${characters(a.title)} characters). ${a.why}`),
     `The opening paragraph of the description Krish published: "${ex.opening}"`,
+    `The title Krish published the piece under on Substack, ${characters(ex.substack.title)} characters, more than the ${TITLE_MAX} allowed: "${ex.substack.title}" ${ex.substack.why}`,
+    `Its subtitle, whose first sentence is ${characters(firstSentence(ex.substack.subtitle))} characters: "${ex.substack.subtitle}" ${ex.substack.subtitleWhy}`,
   ].join('\n')
 }
 
 /** A rule's instruction, by its id: a packaging rule or one of Krish's house
- *  rules. Every problem lintPackage reports names one of these. */
+ *  rules. Every problem lintPackage or lintSubstack reports names one of these. */
 export function ruleText(id: string): string | null {
   return PACKAGING_RULES.find(r => r.id === id)?.text ?? HOUSE_RULES.find(r => r.id === id)?.text ?? null
 }
@@ -142,7 +210,7 @@ export function ruleText(id: string): string | null {
 export interface PackageProblem {
   /** The rule broken: a packaging rule above, or a house rule's id. */
   rule: string
-  field: 'title' | 'description'
+  field: PackageField
   /** 'fail' sends the writer back once (the route); 'warn' is for the
    *  person reading. Nothing here publishes, so neither blocks a post. */
   level: 'fail' | 'warn'
@@ -158,7 +226,8 @@ export interface PackageLint {
 
 export interface PackageContext {
   thumbnailText?: string | null
-  /** The piece the video is made from. Its prediction is read from here. */
+  /** The piece the video is made from, and the article on Substack. Its
+   *  prediction is read from here. */
   source: string
   /** Other text a number may come from: the filed sources, the video's length. */
   grounding?: string
@@ -168,7 +237,7 @@ export interface PackageContext {
  *  Whole words only: "robotics" and "chatbot" are other things. */
 const ROBOT = /\b(?:robots?|bots?)\b/gi
 
-/** Hype a title or description has to do without. "just" counts only as
+/** Hype no title, description or subtitle may carry. "just" counts only as
  *  urgency, before something that happened ("just blocked", "just made"),
  *  never as "only" ("it just needs to be cheap"). "breaking" counts only as
  *  a news flash, so "breaking its own rules" is left alone. */
@@ -200,7 +269,7 @@ function namedInSource(word: string, source: string): boolean {
   return new RegExp(`[a-z0-9,;:)]['’"]?\\s+${escape(word)}(?![A-Za-z])`).test(source)
 }
 
-/** The names in a title that the piece also names. */
+/** The names in a title, YouTube's or Substack's, that the piece also names. */
 export function namesIn(title: string, source: string): string[] {
   const body = withoutHeadings(source)
   const tokens = (String(title ?? '').match(/\b[A-Z][A-Za-z0-9&'’-]*/g) || [])
@@ -236,29 +305,44 @@ export function predictionDate(source: string): string | null {
   return first ? first.text.replace(/^(?:by|on|before)\s+/i, '') : null
 }
 
-/** The checks both fields get: the house's own mechanical rules, the
+/** How a problem names its field. YouTube's two keep the plain names they
+ *  have always had. */
+const FIELD_NAMES: Readonly<Record<PackageField, string>> = Object.freeze({
+  title: 'title', description: 'description', substack_title: 'Substack title', substack_subtitle: 'Substack subtitle',
+})
+
+/** The checks every field gets: the house's own mechanical rules, the
  *  numbers, and the hype. */
-function voiceProblems(field: PackageProblem['field'], text: string, ctx: PackageContext): PackageProblem[] {
+function voiceProblems(field: PackageField, text: string, ctx: PackageContext): PackageProblem[] {
   const out: PackageProblem[] = []
   const fail = (rule: string, detail: string) => out.push({ rule, field, level: 'fail', detail })
+  const name = FIELD_NAMES[field]
   const dashes = emDashes(text).length
-  if (dashes) fail('NO_EM_DASH', `The ${field} has ${dashes === 1 ? 'an em dash' : `${dashes} em dashes`}. Use a comma or a full stop.`)
-  for (const hit of notXYConstructions(text)) fail('R2', `The ${field} uses the "Not X, Y" move: "${hit}". Say the sharper thing straight.`)
-  if (exclamationMarks(text).length) fail('NO_EXCLAMATION', `The ${field} has an exclamation mark.`)
+  if (dashes) fail('NO_EM_DASH', `The ${name} has ${dashes === 1 ? 'an em dash' : `${dashes} em dashes`}. Use a comma or a full stop.`)
+  for (const hit of notXYConstructions(text)) fail('R2', `The ${name} uses the "Not X, Y" move: "${hit}". Say the sharper thing straight.`)
+  if (exclamationMarks(text).length) fail('NO_EXCLAMATION', `The ${name} has an exclamation mark.`)
   const us = americanSpellings(text)
-  if (us.length) fail('BRITISH_SPELLING', `The ${field} uses American spelling: ${us.map(w => `${w.found} (write ${w.use})`).join(', ')}.`)
+  if (us.length) fail('BRITISH_SPELLING', `The ${name} uses American spelling: ${us.map(w => `${w.found} (write ${w.use})`).join(', ')}.`)
   const lower = text.toLowerCase()
-  for (const phrase of BANNED_PHRASES) if (lower.includes(phrase)) fail('BANNED_PHRASE', `The ${field} uses a banned phrase: "${phrase}".`)
+  for (const phrase of BANNED_PHRASES) if (lower.includes(phrase)) fail('BANNED_PHRASE', `The ${name} uses a banned phrase: "${phrase}".`)
   const robots = [...new Set((text.match(ROBOT) || []).map(w => w.toLowerCase()))]
-  if (robots.length) fail('AI_AGENT', `The ${field} says ${robots.map(w => `"${w}"`).join(' and ')}. Software that acts for a person is an AI agent.`)
+  if (robots.length) fail('AI_AGENT', `The ${name} says ${robots.map(w => `"${w}"`).join(' and ')}. Software that acts for a person is an AI agent.`)
   const inCapitals = new Set(withoutHeadings(ctx.source).match(/\b[A-Z]{5,}\b/g) || [])
   const shouting = [...new Set(text.match(/\b[A-Z]{5,}\b/g) || [])].filter(w => !KNOWN_CAPITALS.has(w) && !inCapitals.has(w))
-  if (shouting.length) fail('NO_SHOUTING', `The ${field} shouts in capitals: ${shouting.join(', ')}. Write it in normal case.`)
-  for (const [pattern, label] of CLICKBAIT) if (pattern.test(text)) fail('NO_CLICKBAIT', `The ${field} uses hype: ${label}. Say what happened instead.`)
+  if (shouting.length) fail('NO_SHOUTING', `The ${name} shouts in capitals: ${shouting.join(', ')}. Write it in normal case.`)
+  for (const [pattern, label] of CLICKBAIT) if (pattern.test(text)) fail('NO_CLICKBAIT', `The ${name} uses hype: ${label}. Say what happened instead.`)
   const numbers = unsupportedNumbers(text, [ctx.source, ctx.grounding || ''].join('\n'))
-  if (numbers.length) fail('NUMBERS', `The ${field} has ${numbers.length === 1 ? 'a number' : 'numbers'} the piece does not state: ${numbers.join(', ')}. Use only numbers the piece gives, word for word.`)
-  if (/[<>]/.test(text)) fail('YOUTUBE_LIMITS', `YouTube does not accept < or > in a ${field}.`)
+  if (numbers.length) fail('NUMBERS', `The ${name} has ${numbers.length === 1 ? 'a number' : 'numbers'} the piece does not state: ${numbers.join(', ')}. Use only numbers the piece gives, word for word.`)
+  // YouTube's own refusal, so for its two fields only.
+  if ((field === 'title' || field === 'description') && /[<>]/.test(text)) fail('YOUTUBE_LIMITS', `YouTube does not accept < or > in a ${name}.`)
   return out
+}
+
+/** A title that names nobody, when the piece names people: for both
+ *  titles, YouTube's and Substack's. */
+function namesProblems(field: 'title' | 'substack_title', title: string, source: string): PackageProblem[] {
+  if (!sourceHasNames(source) || namesIn(title, source).length) return []
+  return [{ rule: 'NAMES', field, level: 'warn', detail: `The ${FIELD_NAMES[field]} names nobody from the piece. Name the people or companies involved.` }]
 }
 
 /** The title on its own: for the main title and for each backup. */
@@ -277,9 +361,7 @@ export function lintTitle(input: PackageContext & { title: string }): PackageLin
   const repeat = repeatsThumbnail(title, input.thumbnailText)
   if (repeat === 'same') add('THUMBNAIL', 'fail', 'The title repeats the thumbnail text. Use the title to tell the story the thumbnail only asks about.')
   else if (repeat === 'mostly') add('THUMBNAIL', 'warn', 'The title says mostly what the thumbnail already says. Add something the thumbnail does not.')
-  if (sourceHasNames(input.source) && !namesIn(title, input.source).length) {
-    add('NAMES', 'warn', 'The title names nobody from the piece. Name the people or companies involved.')
-  }
+  problems.push(...namesProblems('title', title, input.source))
   return { passed: !problems.some(p => p.level === 'fail'), problems }
 }
 
@@ -305,7 +387,7 @@ export function lintPackage(input: PackageContext & { title: string; description
   // The hook is the opening sentence. Krish's own first paragraph on
   // 2026-10-05 ran to 177 characters, and its hook, "Amazon blocked Meta's
   // new AI shopping agent.", is 44: what has to fit is the hook itself.
-  const hook = (lines[0] ?? '').split(/(?<=[.!?]["'”’)]*)\s+/)[0] ?? ''
+  const hook = firstSentence(description)
   if (characters(hook) > HOOK_MAX) add('HOOK', 'warn', `The opening sentence is ${characters(hook)} characters. YouTube shows about ${HOOK_MAX} before "more", so the hook would be cut off.`)
   problems.push(...voiceProblems('description', description, input))
   const due = predictionDate(input.source)
@@ -322,11 +404,51 @@ export function lintPackage(input: PackageContext & { title: string; description
   return { passed: !problems.some(p => p.level === 'fail'), problems }
 }
 
+/**
+ * Check the title and subtitle the piece goes out under on Substack, the
+ * same way. The title keeps the rules on truth, names, numbers and hype, and
+ * is cut to what a phone shows: the feed cut article 1's title off at about
+ * FEED_CUT, and an email's subject line shows less. The subtitle's first
+ * sentence has to fit in the one line the feed shows. Whether the title tells
+ * the same story as the YouTube title, and whether that first sentence makes
+ * sense alone, only the writer and the person reading can say.
+ */
+export function lintSubstack(input: PackageContext & { substackTitle: string; substackSubtitle: string }): PackageLint {
+  const title = String(input.substackTitle ?? '').trim()
+  const subtitle = String(input.substackSubtitle ?? '').trim()
+  const problems: PackageProblem[] = []
+  const add = (rule: string, field: PackageField, level: PackageProblem['level'], detail: string) => problems.push({ rule, field, level, detail })
+  if (!title) add('SUBSTACK_TITLE_LENGTH', 'substack_title', 'fail', 'There is no Substack title.')
+  else {
+    const n = characters(title)
+    if (n > TITLE_MAX) add('SUBSTACK_TITLE_LENGTH', 'substack_title', 'fail', `The Substack title is ${n} characters. Substack's feed on a phone cuts a title off at about ${FEED_CUT}, so ${TITLE_MAX} is the most, and an email's subject line shows about ${TITLE_AIM}.`)
+    else if (n > TITLE_AIM) add('SUBSTACK_TITLE_LENGTH', 'substack_title', 'warn', `The Substack title is ${n} characters. It is also the email's subject line, which a phone cuts off after about ${TITLE_AIM}, so aim for ${TITLE_AIM} or fewer.`)
+    problems.push(...voiceProblems('substack_title', title, input), ...namesProblems('substack_title', title, input.source))
+  }
+  if (!subtitle) add('SUBTITLE_LENGTH', 'substack_subtitle', 'fail', 'There is no Substack subtitle.')
+  else {
+    // Article 1's subtitle ran to 160 characters and the feed showed one
+    // line of it; its first sentence, "Amazon blocked Meta's new AI shopping
+    // agent.", is 44, so the news was in the line that showed.
+    const first = characters(firstSentence(subtitle))
+    if (first > SUBTITLE_LINE) add('SUBTITLE_FIRST_LINE', 'substack_subtitle', 'warn', `The subtitle's first sentence is ${first} characters. Substack's feed on a phone shows about ${SUBTITLE_LINE}, so it would be cut off before it says what happened.`)
+    const n = characters(subtitle)
+    if (n > SUBTITLE_AIM) add('SUBTITLE_LENGTH', 'substack_subtitle', 'warn', `The subtitle is ${n} characters. Aim for ${SUBTITLE_AIM} or fewer: a line or two under the title.`)
+    problems.push(...voiceProblems('substack_subtitle', subtitle, input))
+  }
+  return { passed: !problems.some(p => p.level === 'fail'), problems }
+}
+
 // ── The writer's answer ─────────────────────────────────────────────────────
 
 export interface PackageAnswer {
   title: string
   description: string
+  /** The title and subtitle the piece goes out under on Substack. Empty
+   *  when the writer left one out: the check fails it, so the one retry
+   *  asks for it, and the YouTube answer is kept either way. */
+  substackTitle: string
+  substackSubtitle: string
   why: string | null
   /** Two backups: one for search, one for if the thumbnail changes. */
   alternates: Array<{ title: string; why: string | null }>
@@ -353,15 +475,26 @@ export function readAnswer(parsed: unknown): PackageAnswer | null {
     const t = unquote(clean(alt.title))
     return t ? [{ title: t, why: clean(alt.why) || null }] : []
   }).slice(0, 2)
-  return { title, description, why: clean(o.why) || null, alternates }
+  return {
+    title, description,
+    substackTitle: unquote(clean(o.substack_title)),
+    substackSubtitle: unquote(clean(o.substack_subtitle)),
+    why: clean(o.why) || null, alternates,
+  }
 }
 
-/** The main title and description, and each backup title. A backup is
- *  checked without the thumbnail: one is for when the thumbnail changes, and
- *  on 2026-10-05 that backup was the thumbnail's own words, on purpose. */
+/** The main title and description, the Substack title and subtitle, and
+ *  each backup title. A backup is checked without the thumbnail: one is for
+ *  when the thumbnail changes, and on 2026-10-05 that backup was the
+ *  thumbnail's own words, on purpose. */
 export function lintAnswer(answer: PackageAnswer, ctx: PackageContext): AnswerLint {
   const main = lintPackage({ ...ctx, title: answer.title, description: answer.description })
-  return { ...main, alternates: answer.alternates.map(a => lintTitle({ ...ctx, thumbnailText: null, title: a.title })) }
+  const substack = lintSubstack({ ...ctx, substackTitle: answer.substackTitle, substackSubtitle: answer.substackSubtitle })
+  return {
+    passed: main.passed && substack.passed,
+    problems: [...main.problems, ...substack.problems],
+    alternates: answer.alternates.map(a => lintTitle({ ...ctx, thumbnailText: null, title: a.title })),
+  }
 }
 
 /** How many problems fail, across the main answer and the backups. */
@@ -372,15 +505,16 @@ export function failures(lint: AnswerLint): number {
 /** The message the writer's second, and last, call gets: each failing
  *  problem in plain words, with the rule it breaks. */
 export function packagingCorrection(answer: PackageAnswer, lint: AnswerLint): string {
-  const lines = ['Your answer breaks rules for a YouTube title and description. Fix each of these.']
+  const lines = ['Your answer breaks rules for the YouTube title and description, or the Substack title and subtitle. Fix each of these.']
   const list = (where: string, problems: PackageProblem[]) => {
     for (const p of problems.filter(x => x.level === 'fail')) {
       const rule = ruleText(p.rule)
       lines.push(`- ${where}: ${p.detail}${rule ? ` The rule: ${rule}` : ''}`)
     }
   }
-  list('The title', lint.problems.filter(p => p.field === 'title'))
-  list('The description', lint.problems.filter(p => p.field === 'description'))
+  for (const field of ['title', 'description', 'substack_title', 'substack_subtitle'] as const) {
+    list(`The ${FIELD_NAMES[field]}`, lint.problems.filter(p => p.field === field))
+  }
   lint.alternates.forEach((l, i) => list(`Backup title ${i + 1} ("${answer.alternates[i]?.title ?? ''}")`, l.problems))
   lines.push('', 'Change only what these need. Add no new fact and no number the piece does not state. Return the same JSON object as before.')
   return lines.join('\n')
@@ -401,17 +535,18 @@ export function packagingRequest(o: {
     `PIECE: ${o.idea || '(untitled)'}`,
     o.thesis ? `Thesis: ${o.thesis}` : '',
     o.materialsBlock || '',
-    `\nTHE PIECE, the only source for the title and description:\n${o.source.slice(0, 14_000)}`,
+    `\nTHE PIECE, the only source for the titles, the description and the subtitle:\n${o.source.slice(0, 14_000)}`,
     o.thumbnailText
-      ? `\nTHUMBNAIL TEXT, read together with the title: "${o.thumbnailText}"`
-      : '\nNo thumbnail text was given. Write the title so it works on its own.',
+      ? `\nTHUMBNAIL TEXT, read together with the YouTube title: "${o.thumbnailText}"`
+      : '\nNo thumbnail text was given. Write the YouTube title so it works on its own.',
     o.watch
       ? `\nTHE VIDEO'S LENGTH: end the description's first paragraph with " | ${o.watch}".`
       : '\nThe video\'s length was not given. Leave it out.',
     o.hint ? `\nA STEER FROM THE PERSON ASKING: ${o.hint}` : '',
-    '\nReturn ONLY one JSON object: {"title": string, "alternates": [{"title": string, "why": string}, {"title": string, "why": string}], "description": string, "why": string}. ' +
-    '"alternates" are two backup titles: the first for search, the second for if the thumbnail changes. ' +
-    '"why" says in one or two plain sentences why the title works. ' +
+    '\nReturn ONLY one JSON object: {"title": string, "alternates": [{"title": string, "why": string}, {"title": string, "why": string}], "description": string, "substack_title": string, "substack_subtitle": string, "why": string}. ' +
+    '"title", "alternates" and "description" are for YouTube. "alternates" are two backup titles: the first for search, the second for if the thumbnail changes. ' +
+    '"substack_title" and "substack_subtitle" are the title and subtitle the piece itself goes out under on Substack. ' +
+    '"why" says in one or two plain sentences why the YouTube title works. ' +
     'The description puts each of its parts on its own line.',
   ].filter(Boolean).join('\n')
 }

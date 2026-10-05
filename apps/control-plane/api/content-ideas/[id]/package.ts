@@ -18,7 +18,8 @@ import {
 // POST /api/content-ideas/:id/package
 //   body: { thumbnail_text?: string, video_seconds?: number, hint?: string }
 //
-// Write and KEEP the YouTube title and description for a piece's video.
+// Write and KEEP the YouTube title and description for a piece's video, and
+// the title and subtitle the piece itself goes out under on Substack.
 //
 // ── WHY THIS EXISTS ──────────────────────────────────────────────────────
 // Krish, 2026-10-05, about the video for piece 1: "whats a viral video title
@@ -30,25 +31,34 @@ import {
 // wrote what he pastes into YouTube Studio. The rules that made the good
 // title, and the checks a machine can make of them, are in api/_packaging.ts.
 //
+// The same day he published article 1 on Substack, and his phone's feed cut
+// its 122-character title off at about 110 and its subtitle after one line:
+// "Also bear in mind what happens to your artwork when I'm looking at the
+// article in Substack once it's posted." So the same call writes the
+// Substack title and subtitle, under the same rules (walk log F65).
+//
 // ── WHAT IT DOES ─────────────────────────────────────────────────────────
 // Reads the piece (a 409 no_draft without one, as channel-cut), the voice
 // block, the house rules and the subchannel's mandate, and asks the utility
-// model once for a title, two backups and a description. lintPackage checks
-// the answer. When anything fails, the writer gets one more call listing each
-// problem in plain words, and the answer with fewer failures is kept, the
-// first on a tie. It never asks a third time: what still fails is stored and
-// returned, so the person reading sees it.
+// model once for a title, two backups, a description, and the Substack title
+// and subtitle. lintPackage and lintSubstack check the answer. When anything
+// fails, the writer gets one more call listing each problem in plain words,
+// and the answer with fewer failures is kept, the first on a tie. It never
+// asks a third time: what still fails is stored and returned, so the person
+// reading sees it.
 //
 // ── WHAT IT WRITES ───────────────────────────────────────────────────────
 // transformed_outputs.youtube_package, beside the channel cuts, merged so the
-// cuts survive. It never touches `body` and never publishes anything: Krish
-// pastes the words into YouTube Studio himself. The write is guarded on
-// updated_at, so a change made during the model call is never written over.
+// cuts survive. The Substack title and subtitle sit in it beside the YouTube
+// fields; the key keeps its name, so nothing that reads it breaks. It never
+// touches `body` and never publishes anything: Krish pastes the words into
+// YouTube Studio and Substack himself. The write is guarded on updated_at, so
+// a change made during the model call is never written over.
 
 /** The time a request has for both calls: maxDuration (below), less 15
  *  seconds to write the row and answer. */
 const BUDGET_MS = 135_000
-/** One call's deadline. A title and a description are short. */
+/** One call's deadline. Two titles, a description and a subtitle are short. */
 const CALL_MS = 60_000
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -106,14 +116,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     voice,
     sub ? `\n\nTHE SUBCHANNEL: ${sub.label}. Its mandate, which says the question its pieces answer:\n${sub.mandate}` : '',
     sub ? `\n\n${subchannelRulesBlock('write', sub.slug)}` : '',
-    '\n\nYou write the YouTube title and description for the video made from one piece. Krish pastes them into YouTube Studio himself; the engine publishes nothing. ' +
+    '\n\nYou write the YouTube title and description for the video made from one piece, and the title and subtitle the piece itself goes out under on Substack. Krish pastes them into YouTube Studio and Substack himself; the engine publishes nothing. ' +
     'The piece is the only source. You may compress and reorder it. You may NOT add a claim it does not make. ' +
     'EVERY NUMBER MUST APPEAR VERBATIM IN THE PIECE OR ITS SOURCES. Do no sums. No em dashes.',
     `\n\nHOUSE RULES\n${VOICE_GUARDRAILS}`,
     // The house rules ask a piece to end on a verdict, never a question or a
     // call to action. A title leaves a question open and a description points
-    // to the piece, so for these two the rules below win.
-    `\n\nTHE RULES FOR THE TITLE AND DESCRIPTION (for these two, they win where the house rules above ask for a verdict and no question or call to action)\n${packagingRulesBlock()}`,
+    // to the piece, so for these four the rules below win.
+    `\n\nTHE RULES FOR THE TITLES, THE DESCRIPTION AND THE SUBTITLE (for these four, they win where the house rules above ask for a verdict and no question or call to action)\n${packagingRulesBlock()}`,
   ].filter(Boolean).join('')
 
   const user = packagingRequest({ idea: idea.idea, thesis: idea.thesis, source, materialsBlock, thumbnailText, watch, hint })
@@ -189,6 +199,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     title: chosen.title,
     alternates: chosen.alternates.map((a, i) => ({ ...a, lint: lint.alternates[i] ?? null })),
     description: chosen.description,
+    // The article's own title and subtitle on Substack; null when the writer
+    // gave none, and the lint says so.
+    substack_title: chosen.substackTitle || null,
+    substack_subtitle: chosen.substackSubtitle || null,
     why: chosen.why,
     thumbnail_text: thumbnailText,
     video_seconds: videoSeconds,

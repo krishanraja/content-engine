@@ -1,13 +1,15 @@
 import { readFileSync } from 'node:fs'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// POST /api/content-ideas/:id/package (walk log F59).
+// POST /api/content-ideas/:id/package (walk log F59 and F65).
 //
-// The YouTube title and description for a piece's video, written by the
-// engine, checked by lintPackage (api/_packaging.ts), asked for once more
-// when something fails and never a third time, and kept beside the channel
-// cuts in transformed_outputs. Every model call here is a stubbed fetch and
-// the database is a stub: no test reaches a provider or a real database.
+// The YouTube title and description for a piece's video, and the title and
+// subtitle the piece goes out under on Substack, written by the engine in one
+// call, checked by lintPackage and lintSubstack (api/_packaging.ts), asked
+// for once more when something fails and never a third time, and kept beside
+// the channel cuts in transformed_outputs. Every model call here is a stubbed
+// fetch and the database is a stub: no test reaches a provider or a real
+// database.
 
 vi.hoisted(() => {
   // _supabase.ts throws at load without these. A dead local address, so a
@@ -73,10 +75,18 @@ const GOOD = {
     'Our prediction: by 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings.',
     'Read the full piece free at makeyourmindup.ai',
   ].join('\n\n'),
+  // 58 characters, and a first sentence of 44 that a phone's feed shows whole.
+  substack_title: "Amazon blocked Meta's AI shopping agent. So who gets paid?",
+  substack_subtitle: "Amazon blocked Meta's new AI shopping agent. Shopify plugged it into its checkout.",
   why: 'Names everyone knows, a plain conflict, and a question the video answers.',
 }
 // Krish's own first try, and a description with no line to the piece.
 const BAD = { ...GOOD, title: 'AI AGENTS are Muse, Dot and the next wave of agents are now going shopping. When an AI agent does your shopping,', description: GOOD.description.replace('Read the full piece free at makeyourmindup.ai', '') }
+// The title article 1 went out under on Substack, which the feed on his
+// phone cut off at about 110 characters.
+const SUBSTACK_122 = 'Muse, Dot and the next wave of agents are now going shopping. When an AI agent does your shopping, who actually gets paid?'
+// The YouTube fields only, as the step wrote them before it wrote Substack's.
+const NO_SUBSTACK = { title: GOOD.title, alternates: GOOD.alternates, description: GOOD.description, why: GOOD.why }
 
 const calls: Array<{ agent: string | null; system: string; messages: Array<{ role: string; content: string }> }> = []
 const text = (t: string) => new Response(JSON.stringify({ content: [{ type: 'text', text: t }], usage: { input_tokens: 10, output_tokens: 5 } }), { status: 200 })
@@ -138,6 +148,7 @@ describe('POST /api/content-ideas/:id/package', () => {
     expect(r.body.ok).toBe(true)
     expect(r.body.package).toMatchObject({
       title: GOOD.title, description: GOOD.description, why: GOOD.why,
+      substack_title: GOOD.substack_title, substack_subtitle: GOOD.substack_subtitle,
       thumbnail_text: THUMBNAIL, video_seconds: 120, retried: false, note: null,
       lint: { passed: true, problems: [] },
     })
@@ -155,9 +166,13 @@ describe('POST /api/content-ideas/:id/package', () => {
     const { system, messages } = calls[0]!
     expect(system).toContain('THE VOICE BLOCK')
     expect(system).toContain('When writing the YouTube title and description for a video')
+    expect(system).toContain('The title and subtitle the piece itself goes out under on Substack keep the same rules')
     expect(system).toContain('Where does the money move, and who ends up better or worse off?')
     expect(system).toContain("A WORKED EXAMPLE, from the piece about Amazon, Meta's AI shopping agent and Shopify")
-    expect(messages[0]!.content).toContain(`THUMBNAIL TEXT, read together with the title: "${THUMBNAIL}"`)
+    expect(system).toContain('THE SUBSTACK SUBTITLE')
+    expect(system).toContain('The title Krish published the piece under on Substack, 122 characters')
+    expect(messages[0]!.content).toContain(`THUMBNAIL TEXT, read together with the YouTube title: "${THUMBNAIL}"`)
+    expect(messages[0]!.content).toContain('"substack_title": string, "substack_subtitle": string')
     expect(messages[0]!.content).toContain('" | 2 minute watch"')
     expect(messages[0]!.content).toContain('A STEER FROM THE PERSON ASKING: lead with Shopify')
   })
@@ -184,6 +199,40 @@ describe('POST /api/content-ideas/:id/package', () => {
     expect(r.body.package.lint.passed).toBe(false)
     expect(r.body.package.lint.problems.filter((p: any) => p.level === 'fail').map((p: any) => p.rule)).toEqual(['TITLE_LENGTH', 'NO_SHOUTING', 'READ_LINE'])
     expect(written()[0]!.values.transformed_outputs.youtube_package.lint.passed).toBe(false)
+  })
+
+  it('a Substack title past the cap is sent back in the same one retry, and the answer that fits is kept', async () => {
+    const r = await pack([{ ...GOOD, substack_title: SUBSTACK_122 }, GOOD])
+    expect(calls).toHaveLength(2)
+    const correction = calls[1]!.messages[2]!.content
+    expect(correction).toMatch(/- The Substack title: The Substack title is 122 characters\. Substack's feed on a phone cuts a title off at about 110/)
+    expect(correction).not.toMatch(/- The title:|- The description:/)
+    expect(r.status).toBe(200)
+    expect(r.body.package).toMatchObject({ title: GOOD.title, substack_title: GOOD.substack_title, retried: true, note: null, lint: { passed: true } })
+    expect(written()[0]!.values.transformed_outputs.youtube_package.substack_title).toBe(GOOD.substack_title)
+  })
+
+  it('an answer without the Substack title and subtitle keeps the YouTube one, asks once more, and stores what still fails', async () => {
+    const r = await pack([NO_SUBSTACK, NO_SUBSTACK])
+    expect(calls).toHaveLength(2)
+    expect(calls[1]!.messages[2]!.content).toMatch(/- The Substack title: There is no Substack title\./)
+    expect(calls[1]!.messages[2]!.content).toMatch(/- The Substack subtitle: There is no Substack subtitle\./)
+    expect(r.status).toBe(200)
+    expect(r.body.package).toMatchObject({
+      title: GOOD.title, description: GOOD.description, substack_title: null, substack_subtitle: null,
+      retried: true, note: 'The second try broke as many rules as the first, so this is the first answer.',
+    })
+    expect(r.body.package.lint.problems.filter((p: any) => p.level === 'fail').map((p: any) => [p.rule, p.field]))
+      .toEqual([['SUBSTACK_TITLE_LENGTH', 'substack_title'], ['SUBTITLE_LENGTH', 'substack_subtitle']])
+  })
+
+  it('Krish\'s own Substack subtitle passes, with a warning that it runs past 150', async () => {
+    const r = await pack([{ ...GOOD, substack_subtitle: "Amazon blocked Meta's new AI shopping agent. Shopify plugged it into its checkout. Here's who an AI agent threatens, who it pays, and where you could get stung." }])
+    expect(calls).toHaveLength(1)
+    expect(r.body.package.lint).toEqual({
+      passed: true,
+      problems: [{ rule: 'SUBTITLE_LENGTH', field: 'substack_subtitle', level: 'warn', detail: 'The subtitle is 160 characters. Aim for 150 or fewer: a line or two under the title.' }],
+    })
   })
 
   it('a second try the provider refuses keeps the first answer, with a note', async () => {

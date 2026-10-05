@@ -75,7 +75,7 @@ the decisions.
 | 1. Ideation | `api/feed/`, `api/discover-*`, `api/inspiration/`, `api/aeo/`, `api/investigations/`, `api/content-ideas.ts`, `research-topic` | `content_ideas`, `trend_observations` | Feed and capture in Control Center |
 | 2. Curation | `api/judge/`, `api/_judges/`, `api/content-ideas/[id]/judge.ts`, `api/triage/`, `api/shifts/`, `api/arcs/` | `panel_runs`, `judge_verdicts`, `content_ideas.meta.ladder` | lane rooms, DecideCard, the Sunday list |
 | 3. Drafting and iteration | `api/content-ideas/[id]/{draft,revise,final-pass,dive-deeper,challenge,chat}.ts`, `api/_curation.ts`, `api/_finalPass.ts`, `api/_revisePrompt.ts` | `content_ideas.body`, `meta.drafts`, `meta.revisions` | the composer |
-| 4. Channel and copy | `channel-cut`, `package` (the YouTube title and description), `video-script`, `save-draft`, `production-brief`, `api/_packaging.ts` | `transformed_outputs` | the composer |
+| 4. Channel and copy | `channel-cut`, `package` (the YouTube title and description, and the Substack title and subtitle), `video-script`, `save-draft`, `production-brief`, `api/_packaging.ts` | `transformed_outputs` | the composer |
 | 5 and 6. Production and post-production | `packages/core`, `apps/runner`, `apps/renderer`, `api/video-studio/` | job folders; `video_studio_*` projections | the Studio reviewer |
 | 7. Publishing | none | `PATCH state: published` records it | Krish, by hand |
 | 8. Learning | `api/content-edits.ts`, `api/_editEvents.ts`, `api/learning/`, `packages/core/src/feedback.ts` | `content_edit_events`, `judge_calibration`, `mindmake_studio_learning_proposals` | learning proposals in Control Center |
