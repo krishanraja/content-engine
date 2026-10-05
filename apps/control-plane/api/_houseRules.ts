@@ -173,6 +173,16 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['visual'],
   },
   {
+    // The numbers and the line below are the constants in api/_packaging.ts,
+    // which checks them in code; tests/control-plane/packaging.test.ts fails
+    // when the two drift apart.
+    id: 'YOUTUBE_PACKAGE', name: 'YouTube titles and descriptions: worth clicking, every word true',
+    text: 'When writing the YouTube title and description for a video: the title names the people or companies in the story, puts them in a plain conflict or change, and leaves one question the video answers. It adds to the thumbnail text instead of repeating it, and fits in 60 characters so a phone shows all of it (YouTube stops at 100). The description opens with the hook in about 150 characters, because YouTube shows only that much before "more"; then two or three plain sentences; then the piece\'s dated prediction as the piece gives it; then "Read the full piece free at makeyourmindup.ai"; then at most three hashtags, or none. Every word is true and in the piece: every number is one it states, nothing is added that it does not say, and there is no made-up urgency ("just", "breaking", "shocking") and no shouting in capitals.',
+    said: '"whats a viral video title for this", then: "lets close this session out by ensuring everything I have asked for in terms of the content engine (like a viral youtube title and description) becomes a part of the durable engine."',
+    on: '2026-10-05', source: 'chat, the video for piece 1; walk log F59 (docs/walks/2026-09-three-piece-walk.md); checked by api/_packaging.ts', status: 'live',
+    stages: ['write'],
+  },
+  {
     id: 'BOLD', name: 'Bold and colourful, never Bloomberg',
     text: 'Every page, Short and carousel is bold, colourful and fun, in the makeyourmindup house style: one loud thing per block, colour blocks loud because the rest is quiet. Never the grey, dense look of a financial terminal.',
     said: 'this design needs to be bold, vivacious and colourful like everything else we creatively bring to life. everything is so boring and Bloomberg right now.',

@@ -7,6 +7,9 @@ Usage:
 Examples:
   python3 scripts/engine.py GET "/api/content-ideas?id=<uuid>"
   python3 scripts/engine.py PATCH /api/content-ideas @body.json
+  python3 scripts/engine.py POST /api/content-ideas/<uuid>/package @body.json
+      (the YouTube title and description for the piece's video; body.json may
+      give thumbnail_text, video_seconds and hint, all optional)
   (On Windows the command is `python`, not `python3`.)
 
 The engine key is read from the environment variable ENGINE_OPERATOR_TOKEN

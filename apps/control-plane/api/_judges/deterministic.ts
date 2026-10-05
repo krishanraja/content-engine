@@ -97,6 +97,14 @@ export function notXYConstruction(text: string): string | null {
   return notXYConstructions(text)[0] ?? null
 }
 
+/** The banned-word list Krish enforces in public copy. Kept short and exact:
+ *  a long fuzzy list produces false positives that train people to ignore it.
+ *  Exported so the YouTube title check (api/_packaging.ts) reads the same list. */
+export const BANNED_PHRASES: readonly string[] = Object.freeze([
+  'delve', 'leverage the power', 'in today\'s fast-paced', 'game-changer', 'unlock the potential',
+  'navigate the complexities', 'it\'s not just', 'testament to', 'tapestry', 'realm of',
+])
+
 /** The voice rules that are mechanical. sanitizeVoice already strips em dashes
  *  and their lookalikes on every write path, so anything this finds is a rule a
  *  model would otherwise be asked to notice and would sometimes miss. */
@@ -105,14 +113,8 @@ export function voiceMechanics(text: string): DeterministicFinding | null {
   const problems: string[] = []
   if (cleaned !== text) problems.push('em dashes or their lookalikes are present')
 
-  // The banned-word list Krish enforces in public copy. Kept short and exact:
-  // a long fuzzy list produces false positives that train people to ignore it.
-  const banned = [
-    'delve', 'leverage the power', 'in today\'s fast-paced', 'game-changer', 'unlock the potential',
-    'navigate the complexities', 'it\'s not just', 'testament to', 'tapestry', 'realm of',
-  ]
   const lower = text.toLowerCase()
-  for (const word of banned) if (lower.includes(word)) problems.push(`banned phrase: ${word}`)
+  for (const word of BANNED_PHRASES) if (lower.includes(word)) problems.push(`banned phrase: ${word}`)
 
   // Every hit, not the first: one flag for seven uses reads as one fix.
   const notXY = notXYConstructions(text)

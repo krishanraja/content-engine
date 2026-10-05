@@ -18,12 +18,13 @@ describe('plain words and a reading age of 12 are house rules', () => {
     assert.ok(VOICE_ABSOLUTES.some(r => /Plain words only/.test(r) && /coined labels/.test(r)))
     assert.ok(VOICE_ABSOLUTES.some(r => /Reading age 12/.test(r)))
   })
-  test('every route that writes copy carries the house rules, channel cuts included', () => {
+  test('every route that writes copy carries the house rules, channel cuts and YouTube titles included', () => {
     for (const p of [
       'apps/control-plane/api/content-ideas/[id]/draft.ts',
       'apps/control-plane/api/_revisePrompt.ts',
       'apps/control-plane/api/content-ideas/[id]/chat.ts',
       'apps/control-plane/api/content-ideas/[id]/channel-cut.ts',
+      'apps/control-plane/api/content-ideas/[id]/package.ts',
       'apps/control-plane/api/content-ideas/synthesize.ts',
     ]) assert.match(readFileSync(p, 'utf8'), /VOICE_GUARDRAILS/, p)
   })
