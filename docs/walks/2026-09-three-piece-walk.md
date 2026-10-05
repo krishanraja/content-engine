@@ -280,6 +280,12 @@ with the evidence that found it):
 | F54 | tests | `tests/control-plane/judge-failed-run.test.ts` ("a usage limit stops the pass at the first idea") hardcoded a provider reset of 2026-10-01 00:00 UTC and read the real clock. From that moment the reset was in the past, the walk fell back to its own retry time, and the test failed for every change. | full suite, 2026-10-02. **Fixed 2026-10-02**: that block fakes Date only, at 2026-09-28 12:00 UTC, the day its rows were written. |
 | F55 | fact gate, spend | Article 1 changed two sentences after its last check, but the next run carried zero earlier findings and checked 21 claims again. The previous result predated the sentence ledger, so there was nothing safe to reuse, and the paid route had no preflight or hard scope ceiling. A status code could not reveal that before spend. | piece 1, run at 2026-10-03 22:26 UTC. **Fixed 2026-10-03**: `factLedgerCoverage` reports exact settled and fresh sentence counts without a model call; `GET /fact-check` exposes it; and `POST` accepts `max_fresh_sentences`, refusing with `rerun_scope` before any model or web call when a rerun is broader than approved. Piece 1's next run repaired all four lines together, reused 59 settled sentences, checked exactly four fresh sentences under that cap and passed with no blockers. Its post-run readback exposed two short scenario labels that fuzzy matching could never settle; exact short matches now settle, and a successful exact-version check fills deterministic ledger gaps without another paid call. The correction was pushed and the production deployment became ready on 2026-10-04. Article 1's live scope remained 61 reusable and 31 fresh sentences because its practical section changed the body after the earlier result; the correction is prospective and does not rewrite that older ledger. `tests/control-plane/fact-gate.test.ts`, `fact-check-provider.test.ts` |
 | F50 | fact gate, on file | The on-file reader misread a flattened PDF table. It said Koa "exceeds Claude Opus" on Tau2Bench and BFCL; the paper's Table 1 has Koa below Opus 4.8 on both (69.41 against 74.00, 66.63 against 78.18) and below GPT-5.5 on all three overall scores. The gate failed closed (a contradiction the passage did not bear out became "not found"), so nothing false passed, but a true sentence was held. | piece 3, run 2, 2026-09-30, and again run 7, 2026-10-02 ("On CRM Bench, GPT-5.5 scored 0.90"). **Fixed in the prompt 2026-10-02**: `ON_FILE_SYSTEM` says how a flattened row maps to its header and asks for the whole row with the header line; code still confirms the row carries the claim's numbers. Filing tables one row a line would be stronger, but a change to the sources restarts the sentence ledger (F52). |
+| F58 | video, outside the Studio | The two launch videos (the hello and Who gets paid) could not go through the Studio: it is read-only from a cloud session, its Drive Inbox is bound to a path the Drive clean-up had just moved, and neither video has a production brief. They were edited in the agent session instead, by a script that existed only for that session. Looking at preview frames found three faults a render log never shows: the tall version's face band cut off Krish's eyes, the captions read small, and the transcriber wrote "Chris" for "Krish". The first send of the finished files failed because chat uploads stop at 30 MiB. | 2026-10-05. Fixed: `scripts/quick-edit` (cuts by the words said, graphics placed by anchor words, `--plan`, `--share-mib`), with both videos' settings in `editions/2026-10-launch/video-kit/`. |
+| F59 | channel copy | No step wrote what Krish pastes into YouTube Studio. `channel-cut` writes a spoken YouTube script and `_video.ts` a working title, but nothing writes the publish title and description. Krish's own title for Who gets paid ran to 112 characters against YouTube's cap of 100, and phones cut far sooner. | 2026-10-05, Krish: "whats a viral video title for this", then that it should become "a part of the durable engine". Fixed: the `package` step (H35). |
+| F60 | pages | Pages and the Substack copy were built by hand in a scratch folder that dies with the session. The visual launch page crashed Substack's editor when pasted; a one-column copy with every image inline pasted cleanly (a clipboard test kept 7 images and 4 headings). | 2026-10-05, Krish: "Images copy fine, but it needs to all be in line otherwise Substack crashes". Fixed: `scripts/pages` and `scripts/channel-kit` (H36). |
+| F61 | Ship, Control Center | When the fact gate refuses Ship (409, the text changed after its last check), Control Center shows it only as a brief pop-up, so Ship looks broken: Krish expected a Google Doc and got nothing he could read. | 2026-10-05, piece 1 (see Piece 1, "Krish's edits and the Ship button"). **Open**, control-center: the Ship dialog should say why in plain words and offer "Check the facts again". |
+| F62 | publication address | The publication's address was written out in about 20 files across five repositories and five database rows, with no single source. When Krish moved Substack to `home.makeyourmindup.ai`, each had to be found and sorted into live address, Substack's own identifier (`mindmakerlive` stays in its API) and history. | 2026-10-05. The swap is staged on each repository's work branch and ships once Substack serves the new address (it still redirected to substack.com at 22:30 UTC). **Open**: the `mindmake` canon and `ai-harness` need Krish's yes. |
+| F63 | Drive | The OS depends on Drive folders by path (the Studio's Video Engine Inbox, the KeePass file the runner reads), and nothing protects them: a clean-up session moved them on 2026-10-04 and broke both. | 2026-10-05. Krish was given the list of folders to put back (board item `you-drive-restore`). **Open**, control-center: list the path-bound folders in the architecture doc's Drive section so a clean-up reads it first. |
 
 ## 3. Front-end implications
 
@@ -711,3 +717,23 @@ exact engine rewrite (v10), and his 55% set (v11). Ledger sequences 131 to 133.
 
 Against the caching bar, piece 3 does not count: several rewrites and a hand
 edit.
+
+**Before it ships on Wednesday 2026-10-07.** under.the.hood now runs on
+Wednesdays, so piece 3 is Wednesday's post. It is `approved` (Krish, on
+the work board, 2026-10-03) with the fact check passed and
+the call set ("By 30 September 2027", "How sure we are: 55%."). Three things
+to settle with Krish first:
+
+- The final pass, before his approval, said the piece "argues a piece it
+  half-titled": the title promises the AIforce and ClaudeForce fork and the
+  body covers only Koa, and the reader's question (what do I build
+  differently) is implied rather than answered. It also flagged a US-only
+  line. Krish approved without those changes; ask whether he wants them.
+- Four house rules arrived after his approval: CRYSTAL_CLEAR and
+  RELATABLE_EXPLANATION (2026-10-03), REAL_LIFE and AI_AGENT (2026-10-05).
+  The body never says "robot". Read it against the other three.
+- It has none of its launch set yet: the branded page and Substack copy
+  (`scripts/pages`), visuals that each explain one key point (VISUAL_EXPLAINS),
+  the video script, the YouTube title and description (`package`), and the
+  LinkedIn post. Any change to the body needs the fact check run again before
+  Ship (F61).

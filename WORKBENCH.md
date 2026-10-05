@@ -90,6 +90,35 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
 ## Latest handoff
 
+- 2026-10-05, closing the launch-day session. **Wednesday 2026-10-07 is
+  under.the.hood, so it is piece 3** (Salesforce's Koa, `5255dcd8`):
+  approved, fact check passed, call "By 30 September 2027" at 55%. Settle
+  three things with Krish before building its launch set, all written out at
+  the end of "Piece 3" in `docs/walks/2026-09-three-piece-walk.md`: the final
+  pass said the title promises a fork the body never covers and the reader's
+  "what do I build" is left implied; four house rules arrived after he
+  approved it; and nothing is made from it yet. Then make the set in the
+  session, the way he asked to work: `scripts/pages` for the branded page and
+  the Substack copy, visuals that each explain one point, a video script for
+  him to record, `scripts/quick-edit` for the edit, the engine's `package`
+  step for the YouTube title and description, and the LinkedIn post. Friday
+  2026-10-09 is mind.the.gap, piece 2 (`904658db`, approved).
+  **Shipping on its own:** the Substack address moves to
+  `home.makeyourmindup.ai` everywhere once Substack serves it (it still sent
+  people to substack.com at 22:30 UTC). The engine and the AEO engine
+  already count both addresses. The rest waits on
+  `claude/cool-gates-85mcik`: makeyourmindup `f09652a` (the Subscribe button
+  and feed) and control-center `4ff9089b` (website and AI-answer tracking,
+  with migration `20261005220000_publication_home_address.sql` to apply). An
+  hourly check in the launch-day session ships them. If that session is gone
+  and the address works, ship them from those branches: cover first, then
+  control-center and its migration, then read the changed rows back. **Waiting on Krish:** publish article 1
+  and the launch post with the two videos in; paste the new schedule into
+  Substack; put back the Drive folders the clean-up moved; a yes for Claude to
+  change the address in the `mindmake` canon and `ai-harness`. Findings from
+  the day are F58 to F63 in the walk log; F61 (Ship's refusal is only a
+  pop-up) and F63 (nothing protects the Drive folders the OS reads by path)
+  are open in control-center.
 - 2026-10-05, evening: both launch videos are edited and with Krish (the
   hello and Who gets paid, each tall and wide). He recorded them and shared
   them by Drive link; the edit was done in the agent session with the new
