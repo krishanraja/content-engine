@@ -2,7 +2,7 @@
 """pages: a piece's branded web page and its Substack copy, from the text that
 passed the fact gate.
 
-    python build.py page.json --out OUTDIR [--check] [--shots]
+    python build.py page.json --out OUTDIR [--check] [--shots] [--cover]
 
 Reads the piece's body markdown and a small JSON file of page facts (README.md
 has every field), and writes two self-contained files into OUTDIR:
@@ -19,12 +19,22 @@ has every field), and writes two self-contained files into OUTDIR:
 Every sentence of the body must be on both pages (the rule in
 editions/README.md); the build stops if one is missing.
 
+It also writes phone-images.png: every image in the post at the width a phone
+shows it (358 pixels), to look at before publishing. Substack keeps those
+images whole and shrinks them, and a finished PNG's words cannot be measured.
+Artwork made from HTML is checked before it becomes a PNG by card.py.
+
 --check   copies substack.html's post the way a person would (Playwright) and
           reports how many images, headings and links survive, and whether
           every sentence is still there.
 --shots   screenshots both files at 1440 and 390 pixels wide into OUTDIR/shots.
+--cover   draws cover.png, the post's cover image at 1200 x 800, from the
+          "cover" page facts, and cover-crops.png, what Substack's feed, share
+          card and archive each show of it. It refuses if a word or a logo
+          would be cut off by any of them.
 """
 import argparse
+import base64
 import datetime as dt
 import html
 import json
@@ -34,6 +44,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import brand  # noqa: E402
+import card  # noqa: E402
 
 CHOICE = re.compile(r'^(Guess|Future|Scenario|Option|Outcome) (one|two|three|four|five)\. (.+)$', re.S)
 BET = re.compile(r'\bOur (?:bet|pick|call): (?:guess|future|scenario|option|outcome) (one|two|three|four|five)\b', re.I)
@@ -743,6 +754,208 @@ def shots(out):
         b.close()
 
 
+# ---------------------------------------------------------------- what Substack does to the artwork
+
+# Substack shows a post's cover image three ways and fills each by cropping
+# (measured on 2026-10-05 from article 1's live post and a screenshot of
+# Krish's phone; walk log F64): the feed on a phone at about 3:2, cut evenly
+# from both sides; the share card for LinkedIn and others at 16:9 (1200 x 675,
+# Substack picks its own middle); and the archive list as the centre square,
+# 150 to 450 pixels.
+# Article 1's first cover was 1200 x 630, and all three cut the ends off its
+# headline, its wordmark and its labels. So the cover is drawn at the feed's
+# own 3:2, and every word and logo sits inside COVER_SAFE, which all three keep.
+COVER_W, COVER_H = 1200, 800
+COVER_SAFE = (220, 84, 980, 716)  # left, top, right, bottom
+COVER_CROPS = [  # what each shows of the cover: left, top, right, bottom
+    ('The feed on a phone: 3:2, so all of it', (0, 0, COVER_W, COVER_H)),
+    ('The share card, for LinkedIn and others: 16:9', (0, (COVER_H - COVER_W * 9 / 16) / 2, COVER_W, (COVER_H + COVER_W * 9 / 16) / 2)),
+    ('The archive list: the centre square', ((COVER_W - COVER_H) / 2, 0, (COVER_W + COVER_H) / 2, COVER_H)),
+]
+
+COVER_CSS = """
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--deep); }
+#card { position: relative; overflow: hidden; background: var(--deep); color: var(--cream); }
+#card .ph { position: absolute; inset: 0; background-position: center 30%; background-size: cover; opacity: .3; }
+#card .fade { position: absolute; inset: 0; background: radial-gradient(60% 70% at 50% 50%, rgba(var(--shade), .92) 0%, rgba(var(--shade), .8) 55%, rgba(var(--shade), .35) 100%); }
+#safe { position: absolute; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.wm { height: 40px; }
+h1 { margin-top: 30px; font-family: "Anton", Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: 80px; line-height: .94; }
+h1 span { display: block; color: var(--accent); }
+.sub { margin-top: 22px; font-family: "Archivo", Arial, sans-serif; font-size: 30px; font-weight: 700; }
+.rows { margin-top: 28px; width: 640px; display: flex; flex-direction: column; gap: 12px; }
+.row { background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.row img { height: 38px; }
+.mono { font-family: "IBM Plex Mono", monospace; }
+.tag { font-size: 19px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 7px 12px; color: var(--ink); white-space: nowrap; }
+.ft { margin-top: 26px; font-size: 22px; color: #AEAEA5; letter-spacing: .06em; }
+"""
+
+
+def split_headline(text):
+    """A headline as (the words in cream, the last line in the subchannel's
+    colour): split after its last comma, full stop, colon or question mark.
+    With none of those, all of it is in colour."""
+    m = re.match(r'^(.*[,.:?])\s+(\S.*)$', text.strip())
+    return (m.group(1), m.group(2)) if m else ('', text.strip())
+
+
+def cover_html(facts, base, refresh=False):
+    """The cover, 1200 x 800: the wordmark, the headline with its last line in
+    the subchannel's colour, a bold subline, a row per logo with its tag, and
+    the subchannel and a label in mono, over an optional photo at 30%."""
+    hs = brand.house()
+    ch = brand.channel(hs, facts['subchannel'])
+    t = hs['tokens']
+    c = facts.get('cover') or {}
+    head = c.get('headline') or facts['headline']
+    if not isinstance(head, str) and len(head) != 2:
+        brand.fail('"cover": "headline" is one line of text, or two: the words in cream, then the last line in the subchannel\'s colour')
+    lead, last = split_headline(head) if isinstance(head, str) else head
+    colours = {'mint': t['mint'], **PALETTE}
+    rows = []
+    for row in c.get('rows', []):
+        colour = colours.get(row.get('colour', 'mint'))
+        if not row.get('logo') or not row.get('tag'):
+            brand.fail('"cover": each row needs "logo" (one that reads on dark ink) and "tag" (the words beside it)')
+        if not colour:
+            brand.fail(f'"cover": a row\'s colour is one of {", ".join(colours)}, not {row.get("colour")!r}')
+        rows.append(f'<div class="row"><img src="{brand.data_uri(resolve(base, row["logo"]), 600)}" alt="{attr(row.get("name", ""))}">'
+                    f'<span class="tag mono" style="background:{colour}">{esc(row["tag"])}</span></div>')
+    photo = ''
+    if c.get('background'):
+        photo = (f'<div class="ph" style="background-image:url({brand.data_uri(resolve(base, c["background"]), 2000)})"></div>'
+                 '<div class="fade"></div>')
+    label = c.get('label') or facts.get('issue') or long_date(facts['date'])
+    deep = t['ink_deep'].lstrip('#')
+    left, top, right, bottom = COVER_SAFE
+    return f"""<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="artwork-size" content="{COVER_W}x{COVER_H}">
+<style>{brand.font_css()}</style>
+<style>:root {{ --ink: {t['ink']}; --deep: {t['ink_deep']}; --cream: {t['cream']}; --accent: {ch['accent']}; --shade: {', '.join(str(int(deep[i:i + 2], 16)) for i in (0, 2, 4))}; }}
+{COVER_CSS}
+#card {{ width: {COVER_W}px; height: {COVER_H}px; }}
+#safe {{ left: {left}px; top: {top}px; width: {right - left}px; height: {bottom - top}px; }}</style>
+</head>
+<body>
+<div id="card">{photo}<div id="safe">
+<img class="wm" src="{brand.brand_uri('wordmark', refresh)}" alt="makeyourmindup">
+<h1>{esc(lead) + ' ' if lead else ''}<span>{esc(last)}</span></h1>
+{f'<p class="sub">{esc(c["subline"])}</p>' if c.get('subline') else ''}
+{f'<div class="rows">{"".join(rows)}</div>' if rows else ''}
+<p class="ft mono" data-fine-print>{esc(ch['name'])} · {esc(label)}</p>
+</div></div>
+</body>
+</html>
+"""
+
+
+def cover_crops_html(png):
+    """What the feed, the share card and the archive each show of the cover,
+    side by side at one height, and the archive tile at its smallest."""
+    src = 'data:image/png;base64,' + base64.b64encode(png).decode()
+    label = "font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:.06em;color:#333;margin:0 0 8px"
+
+    def panel(name, box, height):
+        x0, y0, x1, y1 = box
+        s = height / (y1 - y0)
+        return (f'<div style="width:{(x1 - x0) * s:.1f}px"><p style="{label}">{esc(name)}</p>'
+                f'<div style="height:{height}px;background:url({src}) -{x0 * s:.1f}px -{y0 * s:.1f}px / '
+                f'{COVER_W * s:.1f}px {COVER_H * s:.1f}px no-repeat;outline:1px solid #ccc"></div></div>')
+    panels = [panel(name, box, 280) for name, box in COVER_CROPS]
+    panels.append(panel('The archive list at its smallest, 150 pixels', COVER_CROPS[2][1], 150))
+    return (f'<meta charset="utf-8"><style>{brand.font_css()}\n*{{box-sizing:border-box;margin:0}}</style>'
+            '<body style="margin:0;background:#fff"><div id="sheet" style="display:inline-flex;gap:20px;align-items:flex-end;'
+            f'padding:20px;background:#fff">{"".join(panels)}</div></body>')
+
+
+def draw_cover(facts, base, out, refresh=False):
+    """cover.png and cover-crops.png. Refuses, and removes an older cover.png,
+    when a word or a logo falls outside the part every crop keeps. True when
+    the cover was written."""
+    out = Path(out)
+    for name in ('cover.png', 'cover-crops.png'):
+        (out / name).unlink(missing_ok=True)
+    page = cover_html(facts, base, refresh)
+    png = crops = None
+    with brand.playwright() as p:
+        b = brand.browser(p)
+        pg = b.new_page(viewport={'width': COVER_W, 'height': COVER_H})
+        pg.set_content(page)
+        card.settle(pg)
+        cut = card.outside(card.boxes(pg, '#safe'), COVER_SAFE)
+        words = card.texts(pg, (0, 0, COVER_W, COVER_H))
+        if not cut:
+            png = pg.screenshot(clip={'x': 0, 'y': 0, 'width': COVER_W, 'height': COVER_H})
+            sheet = b.new_page(viewport={'width': 1600, 'height': 600})
+            sheet.set_content(cover_crops_html(png))
+            card.settle(sheet)
+            crops = sheet.locator('#sheet').screenshot()
+        b.close()
+    left, top, right, bottom = COVER_SAFE
+    keep = f'x {left} to {right}, y {top} to {bottom}'
+    if cut:
+        print(f'cover: not written. Substack would cut these off, because they fall outside {keep}, the part its feed, '
+              'its share card and its archive all keep:')
+        for x in cut:
+            x0, y0, x1, y1 = x['box']
+            print(f'  {card.short(x["what"])}  at x {x0:.0f} to {x1:.0f}, y {y0:.0f} to {y1:.0f}')
+        print('  shorten the cover\'s headline or subline (the "cover" page facts), or take a row out')
+        return False
+    (out / 'cover.png').write_bytes(png)
+    (out / 'cover-crops.png').write_bytes(crops)
+    print(f'{out / "cover.png"}  {COVER_W} x {COVER_H}: upload it as the post\'s cover image')
+    print(f'  every word and logo is inside {keep}, so the feed, the share card and the archive keep all of it')
+    print(f'{out / "cover-crops.png"}  what each of them shows. Look at it before publishing.')
+    print(f'  in a phone\'s feed the cover is about {card.PHONE_COLUMN} px wide, so its words come out at:')
+    for w in sorted(words, key=lambda w: -w['px']):
+        phone = card.on_phone(w['px'], COVER_W)
+        floor = card.MIN_FINE_PX if w['fine'] else card.MIN_READ_PX
+        print(f'    {phone:4.1f} px  "{card.short(w["text"])}"' + ('  (hard to read on a phone)' if round(phone, 2) < floor else ''))
+    return True
+
+
+def phone_images(facts, base, out):
+    """Every image in the post as a phone shows it, 358 pixels wide in a
+    390-pixel screen, as phone-images.png. Substack keeps these images whole
+    and shrinks them; a finished PNG's words cannot be measured, so a person
+    has to look. Needs Pillow."""
+    path = Path(out) / 'phone-images.png'
+    path.unlink(missing_ok=True)
+    figures = facts.get('figures') or []
+    if not figures:
+        return
+    try:
+        from PIL import Image
+    except ImportError:
+        print(f'  note: phone-images.png needs Pillow (pip install pillow). Without it, look at every image {card.PHONE_COLUMN} pixels wide before publishing.')
+        return
+    shown = []
+    for f in figures:
+        try:
+            im = Image.open(resolve(base, f['image'])).convert('RGBA')
+        except Exception as e:  # noqa: BLE001
+            print(f'  note: could not open {f["image"]} to show it at a phone\'s width ({e}); look at it yourself')
+            continue
+        w = min(card.PHONE_COLUMN, im.width)
+        shown.append(im.resize((w, round(im.height * w / im.width)), Image.LANCZOS))
+    if not shown:
+        return
+    gap = 24
+    sheet = Image.new('RGB', (card.PHONE_COLUMN + 32, 32 + sum(im.height for im in shown) + gap * (len(shown) - 1)), 'white')
+    y = 16
+    for im in shown:
+        sheet.paste(im, (16, y), im)
+        y += im.height + gap
+    sheet.save(path)
+    print(f'{path}  every image in the post at a phone\'s width ({card.PHONE_COLUMN} px)')
+    print('  look at it before publishing: a word you cannot read there, a reader on a phone cannot read either')
+
+
 # ---------------------------------------------------------------- main
 
 def main():
@@ -753,6 +966,7 @@ def main():
     ap.add_argument('--assets', help='folder that image paths are relative to (default: the facts file\'s folder)')
     ap.add_argument('--check', action='store_true', help='copy the Substack post and report what survives')
     ap.add_argument('--shots', action='store_true', help='screenshot both files at 1440 and 390 wide')
+    ap.add_argument('--cover', action='store_true', help="draw cover.png, the post's cover image, and cover-crops.png, what Substack shows of it")
     ap.add_argument('--refresh-brand', action='store_true', help='fetch the logo images again now')
     a = ap.parse_args()
 
@@ -775,9 +989,17 @@ def main():
         print(f'  note: listed under Sources but linked from no phrase: {", ".join(r["unlinked"])}')
     if not r['call']:
         print('  note: no prediction section found, so the page has no call band')
+    phone_images(facts, base, out)
+    if facts.get('cover') and not a.cover:
+        print('  note: the page facts describe a cover; add --cover to draw cover.png')
+    ok = True
     if a.shots:
         shots(out)
-    if a.check and not clipboard_check(out / 'substack.html', body):
+    if a.cover:
+        ok &= draw_cover(facts, base, out, a.refresh_brand)
+    if a.check:
+        ok &= clipboard_check(out / 'substack.html', body)
+    if not ok:
         sys.exit(1)
 
 

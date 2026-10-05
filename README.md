@@ -22,7 +22,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | work on video, carousels, the runner or the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
 | understand how the pieces fit, or who owns what | `docs/SYSTEM_MAP.md` |
 | design how a piece looks, sounds or moves, on any surface | `docs/CREATIVE_IDENTITY_UPGRADE.md` |
-| make a piece's web page and the copy that pastes into Substack | `scripts/pages/README.md` |
+| make a piece's web page, the copy that pastes into Substack and its cover image, or check that its artwork can be read on a phone | `scripts/pages/README.md` |
 | make the YouTube banner, watermark and channel description | `scripts/channel-kit/README.md` |
 | use or change any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |

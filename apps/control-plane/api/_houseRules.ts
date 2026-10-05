@@ -173,6 +173,16 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['visual'],
   },
   {
+    // The numbers below are the constants scripts/pages checks with
+    // (COVER_SAFE in build.py, the phone floors in card.py);
+    // tests/control-plane/house-rules.test.ts fails when the two drift apart.
+    id: 'SUBSTACK_FIT', name: 'Artwork that survives Substack',
+    text: 'Design every image for the places Substack shows it. The cover is 1200 x 800 (3:2), with every word and logo inside x 220 to 980 and y 84 to 716: the phone feed shows the whole cover, and that box is the part the 16:9 share card and the square archive tile also keep. Substack keeps an image inside the article whole and shrinks it to about 358 pixels wide on a phone, so every word a reader needs must come out at 14 pixels or more there, and fine print such as sources at 11 or more: on a 1360-wide image, draw words at 54 pixels or more and fine print at 42 or more. Never put more words in an image than a phone can read; put the rest in the article. Before publishing, look at the cover\'s crop preview and at every image at phone width.',
+    said: "Also bear in mind what happens to your artwork when I'm looking at the article in Substack once it's posted.",
+    on: '2026-10-05', source: 'chat, article 1 on Substack; walk log F64 (docs/walks/2026-09-three-piece-walk.md); checked by scripts/pages', status: 'live',
+    stages: ['visual'],
+  },
+  {
     // The numbers and the line below are the constants in api/_packaging.ts,
     // which checks them in code; tests/control-plane/packaging.test.ts fails
     // when the two drift apart.

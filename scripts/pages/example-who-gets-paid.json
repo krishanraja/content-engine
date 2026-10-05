@@ -33,6 +33,26 @@
       "total": ["Total", "Same AI agent, opposite answers"]
     }
   },
+  "cover": {
+    "headline": ["When an AI agent does your shopping,", "who gets paid?"],
+    "subline": "Same AI agent. Opposite answers.",
+    "rows": [
+      {
+        "logo": "logos/amazon-light.svg",
+        "name": "Amazon",
+        "tag": "Blocked Muse",
+        "colour": "coral"
+      },
+      {
+        "logo": "logos/shopify-light.svg",
+        "name": "Shopify",
+        "tag": "Welcomed Muse",
+        "colour": "mint"
+      }
+    ],
+    "label": "the first piece",
+    "background": "img/cover-photo.jpg"
+  },
   "figures": [
     {
       "after": "The till only cares that you paid.",
