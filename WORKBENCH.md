@@ -90,6 +90,14 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
 ## Latest handoff
 
+- 2026-10-05, evening: both launch videos are edited and with Krish (the
+  hello and Who gets paid, each tall and wide). He recorded them and shared
+  them by Drive link; the edit was done in the agent session with the new
+  `scripts/quick-edit` tool, whose settings for both are in
+  `editions/2026-10-launch/video-kit/`. Chat uploads stop at 30 MiB, so he
+  has share copies made with `--share-mib 29`; the full-size masters were
+  only in that session. A re-record runs through the same configs:
+  `--plan` first, then render.
 - 2026-10-05, later: the schedule is now Monday follow.the.money, Wednesday
   under.the.hood, Friday mind.the.gap, in Krish's words "Let's just make follow
   the money permanently a monday thing, and swap it out". It is changed in all
