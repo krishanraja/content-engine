@@ -95,6 +95,18 @@ describe('every ruling carries his words and reaches a stage', () => {
     const cut = readFileSync(join(__dirname, '../../apps/control-plane/api/content-ideas/[id]/channel-cut.ts'), 'utf8')
     assert.match(cut, /houseRulesBlock\('visual'\)/)
   })
+  test('AI agent wording and the money mechanics reach the writers, judges and visuals', () => {
+    const term = HOUSE_RULES.find(x => x.id === 'AI_AGENT')
+    const money = HOUSE_RULES.find(x => x.id === 'MONEY_MECHANICS')
+    assert.ok(term && money)
+    assert.match(term.said, /refer to 'robot' as "AI agent"/)
+    assert.ok(houseRulesBlock('write').includes(term.text))
+    assert.ok(houseRulesBlock('visual').includes(term.text))
+    assert.equal(money.scope, 'follow_the_money')
+    assert.ok(houseRulesBlock('write', 'follow_the_money').includes(money.text))
+    assert.ok(!houseRulesBlock('write', 'mind_the_gap').includes(money.text))
+    assert.match(money.text, /where the consumer and the merchant could get stung/)
+  })
   test('the stages named are the stages that exist', () => {
     const stages: Stage[] = ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual']
     for (const r of HOUSE_RULES) for (const s of r.stages) assert.ok(stages.includes(s), `${r.id}: ${s}`)

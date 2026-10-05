@@ -145,6 +145,20 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['judge_idea', 'judge_draft', 'write', 'visual'],
   },
   {
+    id: 'AI_AGENT', name: 'Call it an AI agent',
+    text: 'Software that shops, books or acts for a person is an "AI agent" (for shopping, an "AI shopping agent"), never a robot or a bot. On first mention, say whose agent it is and what it does in plain words.',
+    said: 'be clearer and refer to \'robot\' as "AI agent"',
+    on: '2026-10-05', source: 'chat, launch visual for piece 1', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass', 'visual'],
+  },
+  {
+    id: 'MONEY_MECHANICS', name: 'Show how each side is paid, why it moved, and who gets stung',
+    text: 'For every company in the story, explain in plain English what it actually gets paid for and by whom, the incentive that explains its move, and where the consumer and the merchant could get stung. Use the companies\' own reported numbers where they exist and label the rest as our read.',
+    said: 'the whole article isn\'t very deep either, it doesn\'t really explain in plain english why they get paid for different things and what those different things are, what the incentives are for each company to make that decision, and where the consumer or merchant could get stung. Then: that feedback applies to the video, article and artifact',
+    on: '2026-10-05', source: 'chat, piece 1 before launch', status: 'trial', scope: 'follow_the_money',
+    stages: ['judge_draft', 'write', 'visual'],
+  },
+  {
     id: 'VISUAL_EXPLAINS', name: 'A visual makes a critical point land faster',
     text: 'A visual exists only to make one critical point of the piece land faster than the words can. Before making one, write that point in one sentence and the reader\'s question it answers. Build it from the piece\'s real, checked numbers, quotes and evidence, and show the mechanism or the comparison that carries the point. Never decorate: no figures walking to boxes, no icons acting out an analogy, no motion that adds nothing the words already said. Test: a reader who sees only the visual understands the point. If it fails, cut it.',
     said: 'The visuals need to explain something critical in the article in a way that would help them understand the point quicker. this needs to be a permanent rule, right now the visuals just feel like gimmicks - who cares about a person walking to a box that says "till"?',

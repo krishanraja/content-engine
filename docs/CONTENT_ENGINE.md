@@ -334,7 +334,9 @@ parallel, familiar analogy or clearly signposted comic exaggeration when that
 makes the idea easier to grasp. Every visual must make one critical point
 land faster than the words, built from the piece's checked evidence, and the
 video script and channel cut planners read that rule for every shot and visual
-suggestion. `tests/control-plane/house-rules.test.ts`
+suggestion. Software that acts for a person is called an AI agent, never a
+robot, and a follow.the.money piece explains what each company is paid for,
+why it moved and who could get stung (on trial). `tests/control-plane/house-rules.test.ts`
 fails when a live rule reaches no stage.
 
 **Before approval** (`api/_publishChecks.ts`). `approved` and `published`
