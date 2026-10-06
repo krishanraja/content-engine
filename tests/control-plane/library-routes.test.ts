@@ -422,6 +422,35 @@ describe('POST /api/library/written', () => {
     expect(db.rpc.some((c) => c.name === 'content_library_record_written')).toBe(false)
   })
 
+  it('takes a READ ME kept beside a hand-written one, which the path rule alone would refuse', async () => {
+    // 2026-10-06: the first real pass kept Krish's own READ ME.txt and wrote the
+    // pack's beside it as "READ ME (2).txt"; the report was refused whole.
+    const readme = `${POST}/READ ME.txt`
+    db.written = [{ item_path: readme, item_sha256: SHA, outcome: 'recorded' }]
+    const res = await call(written, asRunner('POST', { body: { schema_version: 1, machine, items: [
+      { path: readme, sha256: SHA, written_as: `${POST}/READ ME (2).txt` },
+    ] } }))
+    expect(res.statusCode).toBe(200)
+    expect(db.rpc.find((c) => c.name === 'content_library_record_written')?.args).toEqual({
+      p_machine_hash: hash,
+      p_items: [{ path: readme, sha256: SHA, written_as: `${POST}/READ ME (2).txt` }],
+    })
+  })
+
+  it('takes only the sync\'s own beside-name, in the same folder', async () => {
+    const { isBesideName } = await import('../../apps/control-plane/api/library/_library.js')
+    const readme = `${POST}/READ ME.txt`
+    expect(isBesideName(readme, `${POST}/READ ME (2).txt`)).toBe(true)
+    expect(isBesideName(readme, `${POST}/READ ME (99).txt`)).toBe(true)
+    expect(isBesideName(PATH, PATH.replace('substack-copy.html', 'substack-copy (3).html'))).toBe(true)
+    for (const bad of [
+      `${POST}/READ ME (1).txt`, `${POST}/READ ME (100).txt`, `${POST}/READ ME (02).txt`,
+      `${POST}/READ ME (2).html`, `${POST}/READ ME(2).txt`, `${POST}/other.txt`,
+      `${POST}/1 Article/READ ME (2).txt`, `2 Channel art (permanent)/READ ME (2).txt`,
+      `${POST}/READ ME (2).txt/../x.txt`, 42, null,
+    ]) expect(isBesideName(readme, bad)).toBe(false)
+  })
+
   it('records what this machine wrote, and names what the library does not hold', async () => {
     const beside = PATH.replace('substack-copy.html', 'substack-copy (2).html')
     db.written = [

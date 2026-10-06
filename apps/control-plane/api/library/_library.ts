@@ -257,6 +257,29 @@ function folderOf(path: string): string {
   return path.slice(0, path.lastIndexOf('/') + 1)
 }
 
+/** The name the sync gives a new version it keeps beside a file someone else
+ *  put there or Krish changed: "name (2).ext" to "name (99).ext", in the same
+ *  folder (Get-BesideName in scripts/library-sync.ps1). It is derived from a
+ *  path that passed the rule, so it is accepted even where the rule names one
+ *  file only. A post's top folder holds only "READ ME.txt", so on 2026-10-06
+ *  "READ ME (2).txt", kept beside a READ ME written by hand, failed the rule,
+ *  the whole report was refused, and the sync wrote the same first batch again
+ *  on every pass without recording it. */
+export function isBesideName(path: string, candidate: unknown): candidate is string {
+  if (typeof candidate !== 'string') return false
+  const folder = folderOf(path)
+  const name = path.slice(folder.length)
+  const dot = name.lastIndexOf('.')
+  const stem = dot > 0 ? name.slice(0, dot) : name
+  const extension = dot > 0 ? name.slice(dot) : ''
+  const m = candidate.startsWith(folder) && candidate.endsWith(extension)
+    ? /^ \((\d{1,2})\)$/.exec(candidate.slice(folder.length + stem.length, candidate.length - extension.length))
+    : null
+  if (!m || candidate.slice(folder.length, folder.length + stem.length) !== stem) return false
+  const copy = Number(m[1])
+  return String(copy) === m[1] && copy >= 2 && copy <= 99
+}
+
 export function parseLibraryWrittenRequest(value: unknown): { machine: string; items: LibraryWrittenItem[] } | null {
   const body = record(value)
   if (!body || body.schema_version !== 1) return null
@@ -270,10 +293,10 @@ export function parseLibraryWrittenRequest(value: unknown): { machine: string; i
     if (!path.ok || typeof item.sha256 !== 'string' || !SHA256_RE.test(item.sha256)) return null
     let writtenAs: string | null = null
     if (item.written_as !== undefined && item.written_as !== null && item.written_as !== item.path) {
-      // A file kept beside one Krish changed goes in the same folder, never elsewhere.
-      const beside = checkLibraryPath(item.written_as)
-      if (!beside.ok || folderOf(beside.path) !== folderOf(path.path)) return null
-      writtenAs = beside.path
+      // A file kept beside one Krish changed goes in the same folder, under the
+      // sync's own "name (n)" and nothing else.
+      if (!isBesideName(path.path, item.written_as)) return null
+      writtenAs = item.written_as
     }
     items.push({ path: path.path, sha256: item.sha256, written_as: writtenAs })
   }
