@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-06
 
+- reconciled at `177dbd3`: the archive's Windows fix (the Windows CI run caught an unreadable error when Drive is not running) and walk log F68 (the dependency audit fails on main's lockfile since a critical advisory against the test runner's tinypool; an upgrade is queued separately).
 - decision (Krish, 2026-10-06): "Can you ensure all videos are always archived properly in folder with data/subject/where I can post it in the folder name?" Done at `03f22ee` (walk log F67, H40).
 - feedback (Krish, 2026-10-06), of a subscriber's Outlook showing the launch email with no pictures: "is there any way around this?" Done at `ef93e67` (walk log F66, H39); the welcome email line is in makeyourmindup.
 - report (Krish, 2026-10-06): "Article 1 was published as was launch post" and "done all the things waiting on me". Read back the same morning: the description and About page carry the new schedule; article 1's share image is still the old 1200 x 630 cover.
