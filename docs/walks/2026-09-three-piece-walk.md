@@ -157,6 +157,7 @@ Known breaks the walk will hit, in order:
 
 | # | Change | Why | Commit |
 |---|---|---|---|
+| H44 | The source filer reads a page directly when the reader refuses it. `file-verbatim-source.ts` tries the r.jina.ai reader first; when it refuses or returns nothing, it fetches the page and turns its HTML into the lines a reader sees (`htmlToText`: page title first, headings kept as markdown headings for the excerpt to walk up to, scripts and styles dropped, entities decoded), and says so before the excerpt. | F72 | this commit |
 | H43 | The library's report takes the sync's own beside-name. `/api/library/written` accepts `written_as` only as the path's own "name (2)" to "name (99)" in the same folder (`isBesideName`), instead of running it through the path rule, which allows only `READ ME.txt` at a post's top. | F71 | `c31f0fc` |
 | H42 | Every post's files reach Krish's makeyourmindup Drive folder. A session packs a post with `scripts/post-pack/build.py` (one folder per post: 1 Article, 2 Covers and images, 3 Video, 4 Social, with a READ ME saying what each file is for) and sends it with `send.py` to a private store (`content_library_files`, bucket `content-library`, routes `/api/library/*`); `scripts/library-sync.ps1` on the always-on machine writes the ready files into the folder every ten minutes and keeps the brand kit current. It never deletes or renames anything in Drive, and a file Krish changed is kept, the new one beside it. | F70 | `85705c8`, `b693b26` |
 | H41 | A broadcast email as one copy page: `scripts/pages/broadcast.py` writes the subject (with others to choose from), the preview line, Copy email with the pictures in place, and Copy HTML code. It refuses a picture that is not already on the web, alt text under eight words, a link that is not https and an em dash. | F69 | `5d4ee93` |
@@ -305,6 +306,8 @@ with the evidence that found it):
 | F69 | email | Krish asked for the Maven launch email "Same as usual, one click copy job with pictures in line and an email subject". The usual, the Substack copy, carries its pictures inside the page, and Gmail and Outlook drop a picture carried inside an email; nothing made an email for a list that is not Substack. | 2026-10-06. Fixed (H41): the Maven email used the four pictures Substack hosts for the launch post, and the copy check found 4 of 4 pictures, 3 of 3 links and every sentence on the clipboard. |
 | F70 | library | A post's files lived in a cloud session's scratch folder and in chat, and a cloud session cannot put a file into Drive. | 2026-10-06, Krish: "I want every single asset in there, permanent and for individual posts, categorized properly, clear what to use them for, and every new post gets its own new folder with all assets including the article HTML I can copy paste, video scripts, etc etc". Fixed (H42); merged on "yes, merge the library sync to main". **Open**: the sync runs once Krish installs it on the always-on machine, and the project's storage upload limit may be lower than the bucket's 500 MiB, which would refuse the larger videos; the first send of a video will show it. |
 | F71 | library | The sync's first real pass, 2026-10-06 15:47 UTC, wrote the first 25 files into Drive and recorded none of them: it kept the READ ME written by hand that morning and put the pack's beside it as `READ ME (2).txt`, the path rule allows only `READ ME.txt` at a post's top, so the engine refused the whole report (400) and the sync would have written the same first batch again on every pass. | Found from the database (36 ready, 0 written) and Drive (21 new files by 15:48:20, then nothing). Fixed (H43). |
+| F72 | fact gate, sources | The source filer could not file any page from higgsfield.ai: the r.jina.ai reader it reads through refused with "too many requests" (and refused Forbes for this machine's "IP reputation"), though higgsfield.ai answered a plain request. | 2026-10-06, the Higgsfield piece. Fixed (H44). Forbes refuses a plain request too, so the piece cites Tech Times for the Sora largest-customer line. |
+| F73 | fact gate, launch set | The fact gate checks the article body only. The video script, the LinkedIn post and the YouTube description restate its facts by hand, and on the Higgsfield set three slips got through: "its biggest customer" with Tech Times's attribution dropped (video and LinkedIn), the founder's "probably 20 to 30%" stated as fact (both), and a stray "\| 2 minute watch" mid-description. | 2026-10-06, found by reading the set against the passed body before sending it; fixed by hand. **Open**: check the launch set's words against the passed body (every number and name in them must appear in a passed sentence, and each attribution kept) before `post-pack` will pack them. |
 
 ## 3. Front-end implications
 
@@ -756,3 +759,23 @@ to settle with Krish first:
   the video script, the YouTube title and description (`package`), and the
   LinkedIn post. Any change to the body needs the fact check run again before
   Ship (F61).
+
+**Replaced for Wednesday, 2026-10-06.** Krish, on running Koa: "no,
+Salesforce is such a boring company, everyone hates it, everyone hates CRM
+as a concept. It's so dull. We need to permanently shift focus away from
+things as boring as this towards things that are more fasincating and
+aspirational, like AI content creation for example, Higgsfiels is going nuts
+right now etc." Piece 3 stays approved and unpublished.
+
+Wednesday 7 October runs `9ae1a768-f32a-4533-b253-67a506bf5600`,
+"Higgsfield, taken apart: the $1bn AI video machine", built on the research
+Krish dropped in the Cold Ideas & Inspo folder ("Higgsfield", under the hood).
+His words on the choices put to him: "Title 2. 85%. And yes" (the title, the
+call's confidence, and the paid fact check). The fact check passed 33 claims
+with 0 blocking once these were cut or reworded: "20VC" (read as the number
+20), two numbers worked out by us rather than quoted, a "like Google's"
+gloss, a future-tense Kazakhstan figure, Kling's maker (not on file), and the
+"no paid advertising" line, now told as the podcast's own question and answer.
+Pricing claims were cut because the pricing page renders only in a browser.
+The launch set is packed and in the library under `3 Posts`; F72 and F73 came
+from it.

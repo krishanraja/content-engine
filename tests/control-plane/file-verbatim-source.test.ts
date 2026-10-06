@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, test } from 'vitest'
-import { excerpt } from '../../apps/control-plane/scripts/file-verbatim-source.js'
+import { excerpt, htmlToText } from '../../apps/control-plane/scripts/file-verbatim-source.js'
 
 const PAGE = [
   'Title: Model Release Notes', '', 'URL Source: https://help.openai.com/x', '',
@@ -38,5 +38,21 @@ describe('file-verbatim-source keeps the words and their date', () => {
     assert.deepEqual(unmatched, [])
     assert.equal(content, 'Title: amzn-20251231\n\n## Results for 2025\n\nAmazon said in its 2025 filing that advertising grew.\n\nImage 3: a chart of ad revenue')
     assert.doesNotMatch(content, /\]\(|https?:/)
+  })
+})
+
+describe('htmlToText, for a page the reader refuses', () => {
+  test('keeps the title, the headings and the words, and drops scripts and styles', () => {
+    const html = '<html><head><title>Sora 2 Model &amp; API</title><style>p{color:red}</style><script>var x = "September 24, 2026"</script></head>'
+      + '<body><h2>Specialized models</h2><p>The Sora 2 models were shut down on <b>September 24, 2026</b>.</p><p>No&nbsp;replacement&#8217;s listed.</p></body></html>'
+    const text = htmlToText(html)
+    assert.deepEqual(text.split('\n'), [
+      'Title: Sora 2 Model & API',
+      '## Specialized models',
+      'The Sora 2 models were shut down on September 24, 2026.',
+      'No replacement’s listed.',
+    ])
+    assert.ok(!text.includes('var x'))
+    assert.ok(!text.includes('color:red'))
   })
 })

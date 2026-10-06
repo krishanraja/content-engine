@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-04 00:06 UTC, by a Codex session.
+Last updated: 2026-10-06 17:40 UTC, by a Claude Code session.
 
 ## How Krish wants to be worked with
 
@@ -24,6 +24,12 @@ Last updated: 2026-10-04 00:06 UTC, by a Codex session.
   gimmicks (`AGENTS.md`, house rule `VISUAL_EXPLAINS`).
 - His decisions are his alone. Record one only when he made it in words, with
   `decided_by: 'Krish'` (`AGENTS.md`).
+- Pick subjects people find fascinating and aspirational, like AI content
+  creation. Leave out the dull enterprise ones. His words, 2026-10-06, turning
+  down the Salesforce piece: "We need to permanently shift focus away from
+  things as boring as this towards things that are more fasincating and
+  aspirational, like AI content creation for example". The engine's judges and
+  channel briefs do not know this yet (see Latest handoff).
 
 ## The board: what is waiting on Krish, in progress and done
 
@@ -106,6 +112,24 @@ the one-time install on his machine: `scripts/post-pack/README.md`.
 
 ## Latest handoff
 
+- 2026-10-06, evening: **Wednesday 7 October is "Higgsfield, taken apart:
+  the $1bn AI video machine"** (under.the.hood, `9ae1a768`), in place of
+  Koa, which Krish turned down as boring (walk log, end of "Piece 3"). Built
+  on his own research from the Cold Ideas & Inspo folder; he chose the title,
+  85% and the paid fact check ("Title 2. 85%. And yes"). Fact check passed,
+  33 claims, 0 blocking. The whole launch set is in the library under `3
+  Posts` and was sent in chat. **Waiting on Krish:** approve it, record the
+  video from the script, paste the Substack copy and cover, publish, and post
+  the LinkedIn post with picture 1 (link in the first comment). Any change to
+  the body needs the fact check run again. **Next to build**, each shown to
+  Krish as exact wording before it changes anything live: the shift to
+  fascinating subjects in the judges and the three channel briefs, idea
+  sources pointed at AI creation, and the Cold Ideas scan reading whole
+  documents and Word files. Then F73: check the launch set's words against
+  the passed body before packing (three slips were caught by hand today).
+  Friday 9 October stays mind.the.gap piece 2 (`904658db`), with the model
+  names research Krish dropped in the folder folded in and its new numbers
+  fact-checked.
 - 2026-10-06, later: **the Drive library sync is merged** (walk log H42),
   on Krish's "yes, merge the library sync to main". Its private store is in
   the database. **Waiting on Krish:** on the always-on machine, run the
