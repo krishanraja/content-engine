@@ -14,7 +14,8 @@ article HTML I can copy paste, video scripts, etc etc".
 0a.5 says agents never write into his Drive. His words above override it for
 the makeyourmindup library folder only, and the writing is done by his own
 always-on Windows machine. Every other Drive folder keeps rule 0a.5, and the
-Studio's Video Engine Inbox and Archive are never touched.
+Studio's Video Engine Inbox and Archive are never written. The recordings
+upload (below) reads the Inbox and nothing more.
 
 ## Why it works this way
 
@@ -203,6 +204,89 @@ Before the first install, the engine's migration
 (`supabase/migrations/20261006120000_content_library.sql`) must be applied and
 the engine deployed: the check asks the engine for its library.
 
+## Recordings: from the Inbox to a cloud session
+
+**What.** Every recording Krish drops into the Video Engine Inbox
+(`H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox`,
+`MINDMAKE_MEDIA_INBOX` on the runner machines) reaches the engine's private
+storage within about ten minutes, and any cloud session fetches it with one
+command.
+
+**Why.** On 2026-10-06 a session told Krish it could not reach his file. His
+answer: "figure out how to never make that error again". The Google Drive
+connector caps a download at 10 MB, and a recording runs 100 to 500 MB, so a
+session never takes a recording from Drive, and Krish never moves a file by
+hand. Then: "How can you do this automatically in the future, and just use
+whichever machine is online at the time? the runner exists on both".
+
+**How it gets there.** `scripts/recordings-upload.ps1` runs as the scheduled
+task "Mindmake Recordings Upload" on both runner machines, the primary and the
+standby, every five minutes. Whichever is online does the work. For each
+mp4, mov, m4a, wav, mp3, mkv or webm file up to 500 MiB that has stopped
+changing (the same size and time on two passes, or untouched for two
+minutes), it works out the sha256 and MD5, asks the engine for a signed upload
+URL, puts the bytes and confirms. The engine keys a recording by its sha256,
+so when both machines send the same file one finds it already there, or its
+upload is refused as a duplicate and its confirm finds the other's bytes:
+storage ends with one copy and nothing fails twice. A failure on one file
+never stops the rest; a file over 500 MiB is logged once and skipped. It reads
+the Inbox and never writes, moves, renames or deletes anything there.
+
+It runs on both machines and the library sync on one because they differ:
+two machines writing the same Drive library would leave "name (2)" copies,
+and this writes nothing to Drive.
+
+Its log and its state (`recordings.json`: what this machine has sent, by name,
+size and time) are in `Documents\MindmakeVideoStudio\recordings-upload\`.
+Before each pass it pulls its own copy of the repository, `recordings-source`,
+and when the script has changed it ends so the task starts the new one: a fix
+on `main` reaches both machines with nothing for Krish to do.
+
+**How a session uses it.**
+
+```
+python scripts/post-pack/recording.py list
+python scripts/post-pack/recording.py get "2026-10-06 take 1.mp4"
+python scripts/post-pack/recording.py get "2026-10-06 take 1.mp4" --wait 15
+python scripts/post-pack/recording.py get NAME --out DIR
+```
+
+`list` prints the recordings, the newest first. `get` downloads the newest
+recording with that name (an exact match first, then ignoring case, then
+without the extension) into `.cache/recordings/` (git ignores it) or `--out`,
+and checks its size and sha256 before keeping it. `--wait MINUTES` polls until
+it appears, for a file Krish has just dropped. It authenticates as
+`scripts/engine.py` does. Then edit it with `scripts/quick-edit`.
+
+If a recording is missing, say which step failed: it is not in the Inbox yet,
+neither runner machine has sent it (each machine's `recordings-upload.log`
+says why), or the download failed (`recording.py` says how). Never tell Krish
+a recording cannot be reached.
+
+**What Krish does, once.** Approve the merge of `claude/recordings-lane` to
+`main` (the engine deploys from it). Then paste this block into PowerShell on
+each runner machine, the primary and the standby:
+
+```
+$dir = "$env:USERPROFILE\Documents\MindmakeVideoStudio\recordings-source"
+if (Test-Path "$dir\.git") { git -C $dir pull --ff-only } else { git clone https://github.com/krishanraja/content-engine.git $dir }
+powershell -NoProfile -ExecutionPolicy Bypass -File "$dir\scripts\install-recordings-upload.ps1"
+```
+
+The installer pulls the copy, then runs the upload once with `-Check`, which
+sends nothing: the Inbox must be reachable, the runner key must be on the
+machine and the engine must accept it on the recordings route. If any of that
+fails it says why and installs nothing. Then it registers the task and starts
+it. To stop it on a machine:
+`Disable-ScheduledTask -TaskName "Mindmake Recordings Upload"`.
+
+An `.mkv` recording also needs the migration
+`supabase/migrations/20261006180000_content_library_recordings.sql`, which
+lets the bucket hold Matroska. Until it is applied an `.mkv` is refused with
+`recording_type_not_enabled` and the log says so; every other type works
+without it. The project's storage upload limit must be at least 500 MiB, as
+for the library.
+
 ## Size and storage
 
 The library's bucket is private, holds only the file types a post, the brand
@@ -217,7 +301,8 @@ signed URLs and never pass through the engine's functions.
 ```
 python scripts/post-pack/build.py --self-test
 python scripts/post-pack/send.py --self-test
-npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/post-pack.test.ts tests/library-sync.test.ts
+python scripts/post-pack/recording.py --self-test
+npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/library-recordings.test.ts tests/control-plane/post-pack.test.ts tests/library-sync.test.ts tests/recordings-upload.test.ts
 ```
 
 ## What stays out of the repository

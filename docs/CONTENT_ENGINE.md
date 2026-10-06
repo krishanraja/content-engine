@@ -40,6 +40,7 @@ The counts are left out because they went stale within days.
 | An agent session with no browser (Claude Code, Codex) | straight to this project's URL | `Bearer ENGINE_OPERATOR_TOKEN` on the routes behind `guardEngine`, and on `GET /api/content-engine/health` |
 | The Windows runner | `/api/video-studio/runner/*` via Control Center's origin | `Bearer VIDEO_STUDIO_RUNNER_TOKEN`, receipts HMAC-signed |
 | The library sync on Krish's runner machine (`scripts/library-sync.ps1`) | `GET /api/library/pending` and `POST /api/library/written`, straight to this project's URL | `Bearer VIDEO_STUDIO_RUNNER_TOKEN`, the runner's own |
+| The recordings upload on both runner machines (`scripts/recordings-upload.ps1`) | `POST /api/library/recordings/upload-url` and `/confirm`, straight to this project's URL | `Bearer VIDEO_STUDIO_RUNNER_TOKEN`, the runner's own |
 | The Studio MCP gateway | `/api/video-studio/mcp` | `Bearer VIDEO_STUDIO_MCP_TOKEN` |
 | The AEO engine (GitHub Actions) | `/api/aeo/ingest`, `/api/aeo/context`, `/api/aeo/meter` | `Bearer AEO_ENGINE_SECRET` |
 | A Postgres trigger (autoscore) | `POST /api/content-ideas/:id/score` with exactly `{model:'haiku'}` | none, by a narrow exception that refuses anything else |
@@ -549,6 +550,34 @@ four sections or as its `READ ME.txt`.
 The machine is identified as the runner routes identify a runner: a hash of
 the runner bearer and the id it sends. `guardVideoStudioRunner` asks for a
 JSON content type only on a request with a body, so the sync's GET needs none.
+
+#### Recordings: from the Video Engine Inbox to a cloud session
+
+Krish, 2026-10-06, after a session told him it could not reach his file:
+"figure out how to never make that error again", then "just use whichever
+machine is online at the time? the runner exists on both". The Drive
+connector caps a download at 10 MB and a recording runs 100 to 500 MB. So
+`scripts/recordings-upload.ps1`, a scheduled task on both runner machines,
+reads the Inbox (never writes there) and sends every finished recording to the
+same bucket under `recordings/`, and `scripts/post-pack/recording.py` fetches
+it in any session. No table: each recording is its bytes
+(`recordings/<sha256>.<ext>`) and a small manifest beside them
+(`recordings/<sha256>.json`: its names, size, sha256, MD5 and when it
+arrived). The library's own index never sees them, so nothing reaches Drive.
+Two machines sending the same recording end with one object: the key is the
+sha256, the signed upload never overwrites, and the second confirm finds the
+first one's bytes. `api/library/_recordings.ts` holds the rule.
+
+| Route | Who | What it does |
+|---|---|---|
+| `POST /api/library/recordings/upload-url` | the runner bearer | `{ name, sha256, md5?, bytes }`. `already_there` when these bytes are listed under this name; `upload: null` when they are stored (under another name, or a confirm did not finish); otherwise a signed PUT. A name with a folder, an unsafe character or a type that is no recording is 400 `invalid_recording_name` with the reason; over 500 MiB, 413; an `.mkv` before its migration, 415 `recording_type_not_enabled` |
+| `POST /api/library/recordings/confirm` | the runner bearer | The same body. Checks the stored object's size, type and (where both sides have one) MD5, then writes the manifest, adding the name. 409 `recording_object_missing` or `recording_object_conflict` otherwise |
+| `GET /api/library/recordings?limit=<1..200>` | the engine key (or the cookie) | The recordings, the newest first: `name`, `names`, `bytes`, `sha256`, `content_type`, `uploaded_at` and a download URL that lasts an hour. A manifest that cannot be read is counted in `skipped` |
+
+mp4, mov, webm, m4a, wav and mp3 are in the bucket from the library's
+migration. Matroska (`.mkv`) needs `20261006180000_content_library_recordings.sql`,
+which adds `video/x-matroska` to the bucket; the engine accepts the bucket
+with or without it, so it can be applied before or after the deploy.
 
 ## Crons (`apps/control-plane/vercel.json`, all UTC)
 

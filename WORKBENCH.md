@@ -116,6 +116,19 @@ write into his Drive; this is his explicit instruction for that one folder,
 carried out by his own machine, and it covers that folder only. Details and
 the one-time install on his machine: `scripts/post-pack/README.md`.
 
+**A recording Krish drops in the Video Engine Inbox reaches any session.**
+Krish, 2026-10-06, after a session told him it could not reach his file:
+"figure out how to never make that error again". Fetch it with
+`python3 scripts/post-pack/recording.py get "<file name>"` (`--wait 15` for one
+he has just dropped; `list` shows what has arrived). Both runner machines send
+every finished recording to the engine within about ten minutes, whichever is
+online. The Drive connector caps downloads at 10 MB, so never take a recording
+from Drive and never tell Krish one cannot be reached; if it is missing, say
+which step failed. Until he has merged `claude/recordings-lane` and pasted the
+install block on each runner machine, the lane is not running
+(`scripts/post-pack/README.md`, "Recordings: from the Inbox to a cloud
+session").
+
 ## Latest handoff
 
 - 2026-10-06, evening: **Wednesday 7 October is "Higgsfield, taken apart:

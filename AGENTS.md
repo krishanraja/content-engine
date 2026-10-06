@@ -34,6 +34,14 @@ agents never write into his Drive; this is his explicit instruction for that
 one folder, carried out by his own machine, and it covers that folder only.
 `scripts/post-pack/README.md` has the layout and the commands.
 
+**A recording in the Video Engine Inbox reaches a cloud session through
+`python scripts/post-pack/recording.py get NAME`.** The Drive connector caps
+downloads at 10 MB, so never tell Krish a recording cannot be reached; if the
+lane fails, say which step failed: the recording has yet to reach the Inbox,
+neither runner machine has sent it, or the download broke.
+`scripts/post-pack/README.md`, "Recordings:
+from the Inbox to a cloud session".
+
 **Codex on a Windows home computer:** run `scripts/engine.py` and `git pull` or
 `git push` outside the sandbox, asking Krish to approve. The sandbox runs as a
 separate Windows user that cannot see the engine key or reach the internet.
