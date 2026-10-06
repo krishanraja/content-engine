@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-05",
+  "subchannel": "follow.the.money",
+  "subject": "Who gets paid",
+  "headline": "When an AI agent does your shopping, who gets paid?",
+  "links": {
+    "Substack": "https://home.makeyourmindup.ai/p/<the post's address, from Substack>"
+  },
+  "files": [
+    { "kind": "substack-copy", "file": "out/substack.html" },
+    { "kind": "web-page", "file": "out/page.html" },
+    { "kind": "fact-checked-text", "file": "body.md" },
+    { "kind": "email-pictures-off", "file": "out/email-pictures-off.html" },
+    { "kind": "cover", "file": "out/cover.png" },
+    { "kind": "cover-crops", "file": "out/cover-crops.png" },
+    { "kind": "phone-check", "file": "out/phone-images.png" },
+    { "kind": "image", "file": "img/1-look-or-pay.png" },
+    { "kind": "image", "file": "img/2-same-request.png" },
+    { "kind": "image", "file": "img/3-who-pays.png" },
+    { "kind": "video-script", "file": "video/who-gets-paid-script.md" },
+    { "kind": "video-words", "file": "video/who-gets-paid-package.json" },
+    { "kind": "video", "shape": "tall", "file": "video/out/who-gets-paid-9x16.mp4", "share": "video/out/share/who-gets-paid-9x16.mp4" },
+    { "kind": "video", "shape": "wide", "file": "video/out/who-gets-paid-16x9.mp4", "share": "video/out/share/who-gets-paid-16x9.mp4" },
+    { "kind": "linkedin-post", "file": "social/linkedin-post.txt" },
+    { "kind": "linkedin-card", "file": "social/linkedin-card.png" }
+  ]
+}

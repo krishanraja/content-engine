@@ -28,9 +28,17 @@ worth making and writes it; the Studio makes the media from it.
 | Vercel project `content-engine` | the running control plane and its crons | deployed from `main` |
 | Control Center | the desk Krish works at: the Content tab, composer, mobile deck, Studio reviewer; reaches the engine by rewrite | `krishanraja/control-center`, `controlcenter.krishraja.com` |
 | The Windows runner and job folders | exact media, the append-only local job ledger, signed approvals | Krish's machine |
-| Google Drive | recording intake (the Inbox) and approved archives | a fixed Drive folder named in `config/studio.json` |
+| Google Drive | recording intake (the Inbox) and approved archives; and Krish's makeyourmindup asset library (the brand kit, the channel art, a folder for every post), which his always-on Windows machine writes from the engine's library (`api/library/`, `scripts/post-pack/`, `scripts/library-sync.ps1`) | fixed Drive folders named in `config/studio.json` |
 | n8n (Cleo) | sourcing and distribution arms, including the content factory that turns a draft into a Google Doc | n8n Cloud, called by `save-draft` and `briefs/[week]/push` |
 | Upstream feeds | the CTRL headline pool, Perplexity, Exa, Brave, NewsAPI, Apify, GitHub, the AEO engine | called by the collectors |
+
+The asset library is Krish's instruction of 2026-10-06: "I want every single
+asset in there, permanent and for individual posts, categorized properly,
+clear what to use them for, and every new post gets its own new folder with
+all assets including the article HTML I can copy paste, video scripts, etc
+etc". The architecture doc's rule 0a.5 says agents never write into his
+Drive; his instruction overrides it for that one folder only, and his own
+machine does the writing.
 
 When two of these disagree: live state beats documentation, and the database
 is the authority for mandates, the voice block and the corpus. Code beats

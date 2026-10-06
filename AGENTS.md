@@ -20,6 +20,20 @@ figures or icons acting out an analogy. If a reader who sees only the visual
 would not get the point, do not make it. The rule is `VISUAL_EXPLAINS` in
 `apps/control-plane/api/_houseRules.ts`.
 
+**Every post's assets go into Krish's asset library the same day.** Krish,
+2026-10-06: "make sure the brand kit is always updated here [the library's
+Drive folder]", then "I want every single asset in there, permanent and for
+individual posts, categorized properly, clear what to use them for, and every
+new post gets its own new folder with all assets including the article HTML I
+can copy paste, video scripts, etc etc". Pack every post's launch set with
+`scripts/post-pack/build.py` and send it with `scripts/post-pack/send.py` the
+same day it is made, and send a brand kit change with `send.py --brand-kit`.
+His always-on Windows machine writes them into the makeyourmindup folder on
+Drive (`scripts/library-sync.ps1`). The architecture doc's rule 0a.5 says
+agents never write into his Drive; this is his explicit instruction for that
+one folder, carried out by his own machine, and it covers that folder only.
+`scripts/post-pack/README.md` has the layout and the commands.
+
 **Codex on a Windows home computer:** run `scripts/engine.py` and `git pull` or
 `git push` outside the sandbox, asking Krish to approve. The sandbox runs as a
 separate Windows user that cannot see the engine key or reach the internet.

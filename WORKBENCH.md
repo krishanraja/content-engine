@@ -88,6 +88,22 @@ Manager, and never prints it. When it has no key it says why and what to do;
 inside Codex's sandbox on Windows, that means running it again outside the
 sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
+**Every post's assets go into Krish's asset library the same day.** Krish,
+2026-10-06: "I want every single asset in there, permanent and for individual
+posts, categorized properly, clear what to use them for, and every new post
+gets its own new folder with all assets including the article HTML I can copy
+paste, video scripts, etc etc". In any tool: pack each post's launch set
+(the page and Substack copy, the cover and pictures, the video script, the
+YouTube and Substack words, the finished videos, the LinkedIn post) with
+`python3 scripts/post-pack/build.py post.json` and send it with
+`python3 scripts/post-pack/send.py <pack folder>` the same day it is made. A
+brand kit change goes with `send.py --brand-kit <kit folder or zip>`. Krish's
+always-on Windows machine writes them into the makeyourmindup folder on Drive
+within about ten minutes. The architecture doc's rule 0a.5 says agents never
+write into his Drive; this is his explicit instruction for that one folder,
+carried out by his own machine, and it covers that folder only. Details and
+the one-time install on his machine: `scripts/post-pack/README.md`.
+
 ## Latest handoff
 
 - 2026-10-06: article 1, the Who gets paid video post and the launch post
