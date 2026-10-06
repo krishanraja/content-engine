@@ -26,6 +26,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | make the YouTube banner, watermark and channel description | `scripts/channel-kit/README.md` |
 | use or change any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |
 | put anything in Google Drive, or move, rename or tidy a Drive folder | `docs/DRIVE.md` |
+| write a one-off script for the main channel, outside the three subchannels | `docs/one-offs/README.md` |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |
 
 ## The objective

@@ -31,8 +31,8 @@ The runner's KeePass file, elsewhere on the H: drive, is bound by path too.
 
 | Folder | Drive id | What goes in it |
 |---|---|---|
-| `Sales Materials` | `1ylvMi9fn6hB5TNPDISGxXS7oQ-zHR61R` | Anything used to sell: decks, one-pagers, proposals, case studies, outreach templates. Krish drops things here. Never delete or overwrite; a new version sits beside the old with the date first in its name. |
-| `One Off Content Ideas` | `1BWvWnv7hoE7Mv4IGt0m4EFo2wBf1MkbY` | Ready-to-record video scripts for the main channel, outside the three subchannels: durable, practical AI tips (building your AI brain, levelling yourself up, ways of thinking about AI). One Google Doc per script, numbered, plus `00 Index`. |
+| `Sales Materials` | `1ylvMi9fn6hB5TNPDISGxXS7oQ-zHR61R` | Anything used to sell: decks, one-pagers, proposals, case studies, outreach templates. Krish drops things here. Never delete or overwrite; a new version sits beside the old with the date first in its name. `Email signature` (`1EQKpvfv1Z8mSZjzJ8o3mw2BkH8PCW7eU`) holds Krish's signature HTML and how to install it; its banner is served from makeyourmindup.ai (makeyourmindup `apps/cover/substack-kit/email-signature/`). |
+| `One Off Content Ideas` | `1BWvWnv7hoE7Mv4IGt0m4EFo2wBf1MkbY` | Ready-to-record video scripts for the main channel, outside the three subchannels: durable, practical AI tips (building your AI brain, levelling yourself up, ways of thinking about AI). One Google Doc per script, numbered, plus `00 Index`. Their Markdown source and the research behind them are in `docs/one-offs/`. |
 | `Films` | `1ytn_PH3wpnENsRiZTzyjoSj5uQpXJM5t` | Finished brand films, not channel posts: `1 Mindmake website films (delivered 2026-08-28)`, `2 Division films`, `3 Agent films`, `4 AI-enabled business films (2026-08-29)`. A new film set is the next number. |
 | `Video Engine brief and architecture (reference only)` | `1zjVcPcXWLevgdWJcyWU3TNDTbIebV-OV` | The Studio's original brief and architecture, logos and voice briefs. Reading material; nothing reads it automatically. |
 

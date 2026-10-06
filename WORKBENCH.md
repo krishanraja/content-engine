@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-04 00:06 UTC, by a Codex session.
+Last updated: 2026-10-06 11:50 UTC, by a Claude Code session.
 
 ## How Krish wants to be worked with
 
@@ -90,6 +90,21 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
 ## Latest handoff
 
+- 2026-10-06, Drive and one-off scripts (Claude Code, cloud). Krish asked for
+  `04_Content` in Drive to be organised, for the whole system to know where
+  things go, and for one-off main-channel scripts. Done: the four film folders
+  sit in one `Films` folder with plain names; `Sales Materials` and `One Off
+  Content Ideas` have READMEs; a "READ ME FIRST - what goes where" file sits at
+  the top of `04_Content`; `docs/DRIVE.md` is the map, linked from `AGENTS.md`
+  and `README.md` here and from the other three repositories' `AGENTS.md`.
+  `Video Engine` and `makeyourmindup` were not touched (path-bound, F63).
+  Sixteen scripts plus an index are Google Docs in `One Off Content Ideas`;
+  source and research in `docs/one-offs/`. A new email signature (draft v1) is
+  in `Sales Materials > Email signature`; its banner is on the makeyourmindup
+  branch `claude/relaxed-dirac-ubqur0` and goes live at
+  makeyourmindup.ai/brand/ when that branch merges. **Waiting on Krish:** a
+  yes or changes on the signature and the scripts; dropping the banner PNG and
+  preview (sent in chat) into the signature folder.
 - 2026-10-06: article 1, the Who gets paid video post and the launch post
   are live on Substack, and Krish says the videos are posted, the Drive
   folders are back and the schedule is pasted ("done all the things waiting
