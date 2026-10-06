@@ -1,0 +1,106 @@
+{
+ "name": "higgsfield",
+ "source": "higgsfield.mp4",
+ "crop": "auto",
+ "remove": [
+  {
+   "restart_near": "3:02"
+  }
+ ],
+ "replacements": [
+  [
+   "Chris",
+   "Krish"
+  ],
+  [
+   "Higsfield",
+   "Higgsfield"
+  ],
+  [
+   "Higgs field",
+   "Higgsfield"
+  ],
+  [
+   "theater",
+   "theatre"
+  ],
+  [
+   "Sorah",
+   "Sora"
+  ],
+  [
+   "had cost a billion",
+   "had crossed a billion"
+  ],
+  [
+   "computing power group",
+   "computing power grows"
+  ],
+  [
+   "nobody is back to full",
+   "nobody has banked a full"
+  ],
+  [
+   "influencer during",
+   "influencer doing"
+  ],
+  [
+   "MakeYourMindUp .ai",
+   "makeyourmindup.ai"
+  ],
+  [
+   "onto a research",
+   "on to research"
+  ]
+ ],
+ "frame16": "gfx/hf-frame-16x9.png",
+ "strap": {
+  "png": "gfx/hf-strap-9x16.png",
+  "after": "its ai video maker",
+  "seconds": 3.5
+ },
+ "endcard": {
+  "9x16": "endcard-9x16.mp4",
+  "16x9": "endcard-16x9.mp4"
+ },
+ "subject": "Higgsfield, taken apart",
+ "date": "2026-10-07",
+ "cues": [
+  {
+   "id": "sora",
+   "panel": "gfx/hf-sora-{aspect}.png",
+   "start": "why did sora close",
+   "end": "a day to run"
+  },
+  {
+   "id": "inside",
+   "panel": "gfx/hf-inside-{aspect}.png",
+   "start": "most of its videos",
+   "end": "shop stayed open"
+  },
+  {
+   "id": "keeps",
+   "panel": "gfx/hf-keeps-{aspect}.png",
+   "start": "chooses the ai for you",
+   "end": "always worth more"
+  },
+  {
+   "id": "billion",
+   "panel": "gfx/hf-billion-{aspect}.png",
+   "start": "now that billion",
+   "end": "full year of it yet"
+  },
+  {
+   "id": "theatre",
+   "panel": "gfx/hf-theatre-{aspect}.png",
+   "start": "claim doesn't stand up",
+   "end": "doesn't come free"
+  },
+  {
+   "id": "call",
+   "panel": "gfx/hf-call-{aspect}.png",
+   "start": "so here's our call",
+   "end": "on the day"
+  }
+ ]
+}
