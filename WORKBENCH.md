@@ -90,6 +90,20 @@ sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
 ## Latest handoff
 
+- 2026-10-06: article 1, the Who gets paid video post and the launch post
+  are live on Substack, and Krish says the videos are posted, the Drive
+  folders are back and the schedule is pasted ("done all the things waiting
+  on me"). **Waiting on Krish:** two covers in Substack (article 1 still shows
+  its old 1200 x 630 cover; the launch post's cover is the Monday card), both
+  sent in chat as 3:2 covers that pass the crop and phone checks; one line for
+  the welcome email, because Outlook hides pictures from a new sender (walk
+  log F66; the line is in makeyourmindup's `apps/cover/substack-kit/COPY.md`);
+  a yes, or not, for the address change in the `mindmake` canon and
+  `ai-harness`. **New:** every finished video is archived in a folder named
+  by date, subject and where to post it (H40). To file the two launch
+  videos, on a runner machine: `python scripts/quick-edit/archive.py --subject
+  "Who gets paid" --date 2026-10-05 --tall <tall file> --wide <wide file>`,
+  and the same with the hello (subject "Launch hello" until Krish names it).
 - 2026-10-05, closing the launch-day session. **Wednesday 2026-10-07 is
   under.the.hood, so it is piece 3** (Salesforce's Koa, `5255dcd8`):
   approved, fact check passed, call "By 30 September 2027" at 55%. Settle
