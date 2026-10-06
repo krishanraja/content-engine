@@ -177,8 +177,18 @@ describe('archiveJob', () => {
   it('refuses a master that does not match its approved hash, and an archive with no root', async () => {
     const { jobId, packages } = await fixtureJob()
     await expect(archiveJob(jobId, { subject: 'Who gets paid', subject_from: 'package_title', packages: [{ ...packages[0]!, master_hash: '0'.repeat(64) }] })).rejects.toThrow('does not match the approved master')
+    // An archive folder that cannot be made says so plainly. A regular file
+    // in the path makes mkdir fail on every platform.
+    const blocker = join(await mkdtemp(join(tmpdir(), 'archive-blocked-')), 'not-a-folder')
+    await writeFile(blocker, 'x')
+    process.env.MINDMAKE_ARCHIVE_ROOT = join(blocker, 'Archive')
+    await expect(archiveJob(jobId, { subject: 'Who gets paid', subject_from: 'package_title', packages })).rejects.toThrow('is not reachable')
+    // Off Windows an unset archive is refused; on Windows it defaults inside
+    // Google Drive (config/studio.json), so it is never unset there.
     delete process.env.MINDMAKE_ARCHIVE_ROOT
     delete process.env.MINDMAKE_DRIVE_ROOT
-    await expect(archiveJob(jobId, { subject: 'Who gets paid', subject_from: 'package_title', packages })).rejects.toThrow('MINDMAKE_ARCHIVE_ROOT is not configured')
+    if (process.platform !== 'win32') {
+      await expect(archiveJob(jobId, { subject: 'Who gets paid', subject_from: 'package_title', packages })).rejects.toThrow('MINDMAKE_ARCHIVE_ROOT is not configured')
+    }
   })
 })

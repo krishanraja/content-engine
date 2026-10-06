@@ -625,7 +625,15 @@ export async function archiveJob(jobId: string, input: ArchiveJobInput): Promise
   }
   const postTo = archivePlacesForPlatforms(input.packages.map((item) => item.platform))
 
-  await mkdir(archiveRoot, { recursive: true })
+  // On Windows the archive has a default inside Google Drive, so it is never
+  // unset there; when Drive is not running, mkdir fails on the long-path
+  // prefix with a message nobody can act on. Say what is wrong instead.
+  try {
+    await mkdir(archiveRoot, { recursive: true })
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException).code || 'error'
+    throw new Error(`the archive folder ${archiveRoot} is not reachable (${code}). Check that Google Drive is running, or set MINDMAKE_ARCHIVE_ROOT.`)
+  }
   const folder = await claimArchiveFolder(archiveRoot, { date, subject: input.subject, places: postTo })
   const destination = join(archiveRoot, folder.name)
   const files: ArchiveJobResult['files'] = []
