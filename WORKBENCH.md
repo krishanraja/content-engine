@@ -106,6 +106,17 @@ the one-time install on his machine: `scripts/post-pack/README.md`.
 
 ## Latest handoff
 
+- 2026-10-06, later: **the Drive library sync is merged** (walk log H42),
+  on Krish's "yes, merge the library sync to main". Its private store is in
+  the database. **Waiting on Krish:** on the always-on machine, after `git
+  pull`, run once `powershell -NoProfile -ExecutionPolicy Bypass -File
+  scripts\install-library-sync.ps1`. The files for the first two posts
+  (the launch and Who gets paid) go to the store from the session with
+  `scripts/post-pack/send.py`, and wait there until the sync writes them.
+  **Also waiting on
+  Krish:** send the Maven email (sent in chat as one copy page, made with
+  `scripts/pages/broadcast.py`, H41), and swap Monday and Wednesday in the
+  free welcome email, which still has the old order.
 - 2026-10-06: article 1, the Who gets paid video post and the launch post
   are live on Substack, and Krish says the videos are posted, the Drive
   folders are back and the schedule is pasted ("done all the things waiting
