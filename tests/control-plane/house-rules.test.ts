@@ -117,8 +117,12 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.equal(r.status, 'live')
     assert.equal(r.on, '2026-10-05')
     assert.deepEqual(r.stages, ['visual'])
-    assert.equal(r.said, "Also bear in mind what happens to your artwork when I'm looking at the article in Substack once it's posted.")
-    assert.match(r.source, /walk log F64/)
+    assert.ok(r.said.includes("Also bear in mind what happens to your artwork when I'm looking at the article in Substack once it's posted."))
+    assert.ok(r.said.includes('is there any way around this?'))
+    assert.match(r.source, /walk log F64 and F66/)
+    // An email with its pictures hidden shows the alt text (walk log F66): the
+    // ruling says so, and the page tool writes that view and flags thin alt text.
+    assert.ok(r.text.includes('the post makes sense with the pictures off'))
     assert.ok(houseRulesBlock('visual').includes(r.text))
     // The tool and the ruling say the same numbers (walk log F64).
     const build = readFileSync('scripts/pages/build.py', 'utf8')
@@ -138,6 +142,8 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.match(build, /small = card\.too_small\(words, COVER_W\)/)
     assert.doesNotMatch(build, /^(PHONE_COLUMN|MIN_READ_PX|MIN_FINE_PX) =/m)
     assert.match(build, /^COVER_W, COVER_H = 1200, 800$/m)
+    assert.match(build, /^ALT_MIN_WORDS = \d+$/m)
+    assert.match(build, /pictures_off\(sub_html, out\)/)
     assert.ok(r.text.includes('The cover is 1200 x 800 (3:2)'))
     const safe = /^COVER_SAFE = \((\d+), (\d+), (\d+), (\d+)\)/m.exec(build)
     assert.ok(safe)

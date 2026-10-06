@@ -20,7 +20,10 @@ Every sentence of the body must be on both pages (the rule in
 editions/README.md); the build stops if one is missing.
 
 It also writes phone-images.png: every image in the post at the width a phone
-shows it (358 pixels), to look at before publishing. Substack keeps those
+shows it (358 pixels), to look at before publishing, and
+email-pictures-off.html: the email as Outlook and many work inboxes first show
+it, with every picture replaced by its alt text, because they hide pictures
+from a sender the reader has not trusted yet. Substack keeps those
 images whole and shrinks them, and a finished PNG's words cannot be measured.
 Artwork made from HTML is checked before it becomes a PNG by card.py.
 
@@ -342,6 +345,9 @@ def place_after(raw_md, figures, pulls, page, sub, base):
             f['placed'] = True
             uri = brand.data_uri(resolve(base, f['image']), 1360)
             alt, cap = attr(f.get('alt', '')), f.get('caption')
+            if len(f.get('alt', '').split()) < ALT_MIN_WORDS:
+                print(f'  note: the alt text for {f["image"]} is under {ALT_MIN_WORDS} words. Outlook shows it instead of the '
+                      'picture until a reader trusts the sender, so say the picture\'s point in one plain sentence.')
             page.append(f'<figure class="vis"><img src="{uri}" alt="{alt}" width="680">'
                         + (f'<figcaption>{esc(cap)}</figcaption>' if cap else '') + '</figure>')
             sub.append(f'<p><img src="{uri}" alt="{alt}" width="680"></p>' + (f'<p><em>{esc(cap)}</em></p>' if cap else ''))
@@ -973,6 +979,30 @@ def draw_cover(facts, base, out, refresh=False):
     return True
 
 
+# Outlook, and many work inboxes, hide every picture in an email from a sender
+# the reader has not trusted yet and show its alt text instead (2026-10-06: a
+# subscriber's Outlook showed article 1's launch email as captions, with no
+# pictures). So the alt text has to carry the picture's point on its own.
+ALT_MIN_WORDS = 8
+
+
+def pictures_off(sub_html, out):
+    """The email with pictures hidden, as Outlook first shows it: every image
+    becomes its alt text in a dashed box. Written next to substack.html so a
+    person can read the post the way a reader who has not trusted the sender
+    will."""
+    def box(m):
+        alt = re.search(r'alt="([^"]*)"', m.group(0))
+        text = alt.group(1) if alt and alt.group(1).strip() else '(a picture with no alt text: this reader sees nothing here)'
+        return ('<span style="display:block;border:1px dashed #8a8f98;padding:10px 12px;margin:8px 0;'
+                f'color:#1a5fb4;font:15px/1.4 Segoe UI,Arial,sans-serif">{text}</span>')
+    body = re.sub(r'<img\b[^>]*>', box, sub_html)
+    path = Path(out) / 'email-pictures-off.html'
+    path.write_text(body, encoding='utf-8')
+    print(f'{path}  the email as Outlook first shows it, pictures replaced by their alt text')
+    print('  read it before publishing: if a point only lives in a picture, a reader with pictures off misses it')
+
+
 def phone_images(facts, base, out):
     """Every image in the post as a phone shows it, 358 pixels wide in a
     390-pixel screen, as phone-images.png. Substack keeps these images whole
@@ -1044,6 +1074,7 @@ def main():
     if not r['call']:
         print('  note: no prediction section found, so the page has no call band')
     phone_images(facts, base, out)
+    pictures_off(sub_html, out)
     if facts.get('cover') and not a.cover:
         print('  note: the page facts describe a cover; add --cover to draw cover.png')
     ok = True

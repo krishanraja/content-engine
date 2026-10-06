@@ -199,6 +199,24 @@ The house rule is `SUBSTACK_FIT` in `apps/control-plane/api/_houseRules.ts`,
 and `tests/control-plane/house-rules.test.ts` holds its numbers to the ones
 these tools check.
 
+### In the email, with pictures off
+
+Substack sends every post as an email, and Outlook and many work inboxes hide
+the pictures in an email from a sender the reader has not trusted yet. The
+reader sees each picture's alt text instead, until they press "download
+pictures" or add the sender to their contacts (2026-10-06: a subscriber's
+Outlook showed the launch post as captions). Nothing in the post can switch
+this off, so the build makes the post work without its pictures:
+
+- `email-pictures-off.html` is the email as that reader first sees it, every
+  picture replaced by its alt text. Read it before publishing; a point that
+  only lives in a picture is lost there.
+- The build notes any alt text under eight words. Say the picture's point in
+  one plain sentence, the way article 1's do ("mind.the.gap, every Friday.
+  What's coming, before it's obvious.").
+- The welcome email asks new readers to add the sender to their contacts
+  (`apps/cover/substack-kit/COPY.md` in krishanraja/makeyourmindup).
+
 ## Where the look comes from
 
 Nothing about the brand is copied into this folder, so nothing here can drift
