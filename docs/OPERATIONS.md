@@ -426,6 +426,42 @@ Krish, 2026-10-06: "Can you ensure all videos are always archived properly in fo
 
 Archives made before 2026-10-06 keep their bare job id names.
 
+## The asset library sync
+
+Krish, 2026-10-06: "make sure the brand kit is always updated here [the
+library's Drive folder]", then "I want every single asset in there, permanent
+and for individual posts, categorized properly, clear what to use them for,
+and every new post gets its own new folder with all assets including the
+article HTML I can copy paste, video scripts, etc etc". Cloud sessions send a
+post's files and the brand kit to the engine's private library
+(`scripts/post-pack/`); the scheduled task "Mindmake Library Sync" on the
+active runner machine writes them into the makeyourmindup folder beside the
+Video Engine folder (`runtime.library_root` in `config/studio.json`, or
+`MINDMAKE_LIBRARY_ROOT`), and keeps its brand kit in step with the one
+published in krishanraja/makeyourmindup. The architecture doc's rule 0a.5 says
+agents never write into his Drive; this is his explicit instruction for that
+one folder, carried out by his own machine, and it covers that folder only.
+
+- **Install, once,** from Krish's own copy of this repository after
+  `git pull` (never the runner's `runner-source`):
+  `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\install-library-sync.ps1`.
+  It runs `scripts\library-sync.ps1 -Check` first, which writes nothing, and
+  installs nothing if the library folder, the runner key or the engine is
+  missing.
+- **What it touches.** Only the library folder, under its three top folders.
+  It never deletes or renames a file in Drive, never touches the Video Engine
+  Inbox or Archive (it refuses to run if the library root overlaps them), and
+  checks every file's sha256 before it reaches Drive. It reads the runner's
+  own bearer through `scripts/get-credential.ps1`, as the runner does, and
+  leaves the runner's task, checkout, runtime and credentials alone. Its log
+  and state are in `Documents\MindmakeVideoStudio\library-sync\`.
+- **One machine.** Install it on the active runner only. After a failover,
+  install it on the new active machine and
+  `Disable-ScheduledTask -TaskName "Mindmake Library Sync"` on the other.
+- **Look without writing:** `scripts\library-sync.ps1 -Check`.
+
+`scripts/post-pack/README.md` has the library's layout and everything else.
+
 ## Publishing boundary
 
 LinkedIn, TikTok, and Instagram Reels commands create local files only. The YouTube command rejects every privacy value except `private`, requires final approval and passing QA, and checks the API response confirms private status. Public posting is always a separate human action.

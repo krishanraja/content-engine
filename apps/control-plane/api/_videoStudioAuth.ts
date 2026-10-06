@@ -197,9 +197,13 @@ export function guardVideoStudioRunner(
   if (!safeEqual(authorization, `Bearer ${runnerToken}`)) {
     return sendError(res, 401, 'unauthorized')
   }
-  const contentType = headerValue(req.headers['content-type']).split(';', 1)[0]?.trim().toLowerCase()
-  if (contentType !== 'application/json') {
-    return sendError(res, 415, 'unsupported_media_type')
+  // A GET carries no body, so it has no content type to check (the library
+  // sync's pending read is the one runner GET; every other runner route is POST).
+  if (req.method !== 'GET') {
+    const contentType = headerValue(req.headers['content-type']).split(';', 1)[0]?.trim().toLowerCase()
+    if (contentType !== 'application/json') {
+      return sendError(res, 415, 'unsupported_media_type')
+    }
   }
   return false
 }
