@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-06
 
+- reconciled at `079ec3d`: the library sync installs from its own copy of the repository, after the first install line failed on Krish's machine ("The argument 'scripts\install-library-sync.ps1' to the -File parameter does not exist."). Report (Krish, 2026-10-06): "Done storage limit"; the two tall videos then went into the store. NOW.md's waiting list already names the install.
 - reconciled at `f8f40c2`: the second Windows CI run found send.py walking a folder in a different order on Windows; fixed at `f8f40c2`. Nothing in NOW.md changed but the head.
 - reconciled at `9a10bd9`: the Windows CI run failed at send.py's self-test, which wrote a file name Windows refuses; fixed at `9a10bd9`. Nothing in NOW.md changed but the head.
 - reconciled at `69c4020`: NOW.md takes the library sync, `broadcast.py` and a new waiting list; the pictures line in the welcome emails, the new schedule on Substack and the Drive folders are off it, done.
