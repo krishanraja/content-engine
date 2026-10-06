@@ -17,6 +17,8 @@
 //
 // The page is read through the r.jina.ai reader, which returns the rendered
 // text of pages that refuse plain fetches (CNBC and OpenAI's help centre did).
+// When the reader itself refuses, the page is read directly and its HTML
+// turned into the lines a reader sees (htmlToText).
 // "Verbatim" means that text, copied exactly. Env: ENGINE_OPERATOR_TOKEN, and
 // ENGINE_URL (defaults to production).
 
@@ -60,6 +62,46 @@ export function excerpt(text: string, patterns: RegExp[]): { content: string; un
   return { content, unmatched }
 }
 
+const ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '\u2019', lsquo: '\u2018', rdquo: '\u201d', ldquo: '\u201c', ndash: '\u2013', hellip: '\u2026' }
+
+function decode(t: string): string {
+  return t
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&([a-z]+);/gi, (m, n) => ENTITIES[n.toLowerCase()] ?? m)
+}
+
+/** A page's HTML as the lines a reader sees: no scripts or styles, headings
+ *  kept as markdown headings (the excerpt walks up to them), one line per
+ *  block, entities decoded, and the page title first. Pure, so it is tested.
+ *  Used only when the reader service refuses the page: on 2026-10-06 it
+ *  refused higgsfield.ai for "too many requests", and higgsfield.ai answered
+ *  a plain request. Some sites refuse both (Forbes did); cite another. */
+export function htmlToText(html: string): string {
+  const title = decode((/<title[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1] || '').replace(/\s+/g, ' ').trim())
+  const body = String(html || '')
+    .replace(/<(script|style|noscript|svg|template|title)\b[\s\S]*?<\/\1>/gi, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<h([1-6])\b[^>]*>/gi, (_, n) => `\n${'#'.repeat(Number(n))} `)
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|li|h[1-6]|tr|td|th|section|article|header|footer|blockquote|pre|dd|dt)>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+  const lines = decode(body).split('\n').map(l => l.replace(/[ \t\u00a0]+/g, ' ').trim()).filter(Boolean)
+  return [title ? `Title: ${title}` : '', ...lines].filter(Boolean).join('\n')
+}
+
+async function readPage(url: string): Promise<{ text: string; via: 'reader' | 'direct' }> {
+  try {
+    const r = await fetch(`https://r.jina.ai/${url}`)
+    const text = await r.text()
+    if (r.ok && text.length >= 200 && !/^\s*\{"data":null/.test(text)) return { text, via: 'reader' }
+  } catch { /* fall through to a direct read */ }
+  const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (makeyourmindup fact gate filer)', Accept: 'text/html' } })
+  const html = await r.text()
+  if (!r.ok || html.length < 200) throw new Error(`could not read ${url}: ${r.status}`)
+  return { text: htmlToText(html), via: 'direct' }
+}
+
 function args(argv: string[]) {
   const out: { idea?: string; url?: string; title?: string; match: string[]; dry: boolean } = { match: [], dry: false }
   for (let i = 0; i < argv.length; i++) {
@@ -79,9 +121,8 @@ async function main() {
     console.error('usage: --idea <id> --url <page> --match "<regex>" [--match ...] [--title "..."] [--dry-run]')
     process.exit(2)
   }
-  const r = await fetch(`https://r.jina.ai/${a.url}`)
-  const text = await r.text()
-  if (!r.ok || text.length < 200) throw new Error(`could not read ${a.url}: ${r.status}`)
+  const { text, via } = await readPage(a.url)
+  if (via === 'direct') console.log('The reader refused this page; read it directly instead.')
   const { content, unmatched } = excerpt(text, a.match.map(m => new RegExp(m, 'i')))
   if (unmatched.length) {
     console.error(`Nothing on the page matches ${unmatched.join(', ')}. Nothing filed.`)

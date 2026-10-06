@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-06 11:50 UTC, by a Claude Code session.
+Last updated: 2026-10-06 17:40 UTC, by a Claude Code session.
 
 ## How Krish wants to be worked with
 
@@ -24,6 +24,18 @@ Last updated: 2026-10-06 11:50 UTC, by a Claude Code session.
   gimmicks (`AGENTS.md`, house rule `VISUAL_EXPLAINS`).
 - His decisions are his alone. Record one only when he made it in words, with
   `decided_by: 'Krish'` (`AGENTS.md`).
+- Pick subjects people find fascinating and aspirational, like AI content
+  creation. Leave out the dull enterprise ones. His words, 2026-10-06, turning
+  down the Salesforce piece: "We need to permanently shift focus away from
+  things as boring as this towards things that are more fasincating and
+  aspirational, like AI content creation for example". The engine's judges and
+  channel briefs do not know this yet (see Latest handoff).
+- Every piece, its video and its posts answer three questions: what it means
+  for the consumer, what it means for someone starting or building a
+  business, and how the old way is changing, creatively and in who gets paid
+  (house rule `THREE_LENSES`). Every visual uses the real logos of the
+  companies it names, and the cover and share picture carry Krish's face
+  (`LOGOS_AND_FACE`; `scripts/pages` cover facts, `"portrait": true`).
 
 ## The board: what is waiting on Krish, in progress and done
 
@@ -88,8 +100,59 @@ Manager, and never prints it. When it has no key it says why and what to do;
 inside Codex's sandbox on Windows, that means running it again outside the
 sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
+**Every post's assets go into Krish's asset library the same day.** Krish,
+2026-10-06: "I want every single asset in there, permanent and for individual
+posts, categorized properly, clear what to use them for, and every new post
+gets its own new folder with all assets including the article HTML I can copy
+paste, video scripts, etc etc". In any tool: pack each post's launch set
+(the page and Substack copy, the cover and pictures, the video script, the
+YouTube and Substack words, the finished videos, the LinkedIn post) with
+`python3 scripts/post-pack/build.py post.json` and send it with
+`python3 scripts/post-pack/send.py <pack folder>` the same day it is made. A
+brand kit change goes with `send.py --brand-kit <kit folder or zip>`. Krish's
+always-on Windows machine writes them into the makeyourmindup folder on Drive
+within about ten minutes. The architecture doc's rule 0a.5 says agents never
+write into his Drive; this is his explicit instruction for that one folder,
+carried out by his own machine, and it covers that folder only. Details and
+the one-time install on his machine: `scripts/post-pack/README.md`.
+
 ## Latest handoff
 
+- 2026-10-06, evening: **Wednesday 7 October is "Higgsfield, taken apart:
+  the $1bn AI video machine"** (under.the.hood, `9ae1a768`), in place of
+  Koa, which Krish turned down as boring (walk log, end of "Piece 3"). Built
+  on his own research from the Cold Ideas & Inspo folder; he chose the title,
+  85% and the paid fact check ("Title 2. 85%. And yes"). Fact check passed,
+  37 claims, 0 blocking, after the piece took Krish's three questions
+  (walk log F74). The whole launch set is in the library under `3 Posts` and
+  was sent in chat: the cover carries his face and is also the LinkedIn
+  picture, and both explainers carry the companies' real logos. **Waiting on Krish:** approve it, record the
+  video from the script, paste the Substack copy and cover, publish, and post
+  the LinkedIn post with the cover (link in the first comment). Any change to
+  the body needs the fact check run again. **Next to build**, each shown to
+  Krish as exact wording before it changes anything live: the shift to
+  fascinating subjects in the judges and the three channel briefs, idea
+  sources pointed at AI creation, and the Cold Ideas scan reading whole
+  documents and Word files. Then F73: check the launch set's words against
+  the passed body before packing (three slips were caught by hand today).
+  Friday 9 October stays mind.the.gap piece 2 (`904658db`), with the model
+  names research Krish dropped in the folder folded in and its new numbers
+  fact-checked.
+- 2026-10-06, later: **the Drive library sync is merged** (walk log H42),
+  on Krish's "yes, merge the library sync to main". Its private store is in
+  the database. **Waiting on Krish:** on the always-on machine, run the
+  three install lines in `scripts/post-pack/README.md` ("Install it, once"):
+  they make the sync its own copy of the repository, `library-source`, and
+  install from it. The first try ran the bare `-File
+  scripts\install-library-sync.ps1` from a folder where that file did not
+  exist, and PowerShell could not find it. All 33 files for the channel art and
+  the first two posts (the launch and Who gets paid) are in the store, the
+  two tall videos too since Krish raised the storage upload limit to 500 MB,
+  and wait there until the sync writes them.
+  **Also waiting on
+  Krish:** send the Maven email (sent in chat as one copy page, made with
+  `scripts/pages/broadcast.py`, H41), and swap Monday and Wednesday in the
+  free welcome email, which still has the old order.
 - 2026-10-06, Drive and one-off scripts (Claude Code, cloud). Krish asked for
   `04_Content` in Drive to be organised, for the whole system to know where
   things go, and for one-off main-channel scripts. Done: the four film folders

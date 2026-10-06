@@ -24,10 +24,19 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | design how a piece looks, sounds or moves, on any surface | `docs/CREATIVE_IDENTITY_UPGRADE.md` |
 | make a piece's web page, the copy that pastes into Substack and its cover image, or check that its artwork can be read on a phone | `scripts/pages/README.md` |
 | make the YouTube banner, watermark and channel description | `scripts/channel-kit/README.md` |
+| put a post's assets, the brand kit or the channel art into Krish's asset library on Drive | `scripts/post-pack/README.md` |
 | use or change any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |
 | put anything in Google Drive, or move, rename or tidy a Drive folder | `docs/DRIVE.md` |
 | write a one-off script for the main channel, outside the three subchannels | `docs/one-offs/README.md` |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |
+
+The asset library is Krish's instruction of 2026-10-06 ("I want every single
+asset in there, permanent and for individual posts, categorized properly,
+clear what to use them for, and every new post gets its own new folder with
+all assets including the article HTML I can copy paste, video scripts, etc
+etc"). It overrides the architecture doc's rule 0a.5, that agents never write
+into his Drive, for that one folder only, and his own always-on machine does
+the writing.
 
 ## The objective
 

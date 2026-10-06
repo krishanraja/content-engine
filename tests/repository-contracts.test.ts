@@ -16,7 +16,7 @@ describe('repository operating contracts', () => {
     const studio = await json<{
       transcription: { vocabulary: string[] }
       visual_story_director: { review_gates: string[] }
-      runtime: { drive_root: string; media_inbox: string; archive_root: string }
+      runtime: { drive_root: string; media_inbox: string; archive_root: string; library_root: string }
     }>('config/studio.json')
     // Ruling (Krish, 2026-09-28): the Video Studio's Drive root moves from G:
     // to H: (krish@themindmaker.ai). Scope is the Video Studio only.
@@ -30,6 +30,10 @@ describe('repository operating contracts', () => {
     expect(studio.runtime.drive_root).toBe(exactMediaRoot)
     expect(studio.runtime.media_inbox).toBe(`${exactMediaRoot}\\Inbox`)
     expect(studio.runtime.archive_root).toBe(`${exactMediaRoot}\\Archive`)
+    // Krish, 2026-10-06: his makeyourmindup asset library sits beside the
+    // Video Engine folder, never inside it (scripts/library-sync.ps1).
+    expect(studio.runtime.library_root).toBe(exactMediaRoot.replace(/\\Video Engine$/, '\\makeyourmindup'))
+    expect(studio.runtime.library_root.startsWith(`${exactMediaRoot}\\`)).toBe(false)
 
     const environment = await readFile(join(repoRoot, '.env.example'), 'utf8')
     const launcher = await readFile(join(repoRoot, '.agents', 'skills', 'video-engine', 'SKILL.md'), 'utf8')

@@ -118,20 +118,61 @@ def no_key_message(os_name: str, user: str, error: int) -> str:
             "which says what is wrong.")
 
 
+class NoKey(Exception):
+    """There is no engine key here; the message says what to do."""
+
+
+class Unreachable(Exception):
+    """The engine could not be reached; the message says why."""
+
+
+def operator_key() -> str:
+    """The engine key: ENGINE_OPERATOR_TOKEN, else (on Krish's Windows
+    machines) Windows Credential Manager. Raises NoKey with what to do when
+    there is none. The key is never printed, logged or written to a file.
+    scripts/post-pack/send.py authenticates through this too."""
+    token = os.environ.get('ENGINE_OPERATOR_TOKEN', '').strip()
+    if token:
+        return token
+    key, error = windows_key()
+    token = key.strip()
+    if token:
+        return token
+    user = windows_user() if os.name == 'nt' else ''
+    raise NoKey(no_key_message(os.name, user, error))
+
+
+def call(method: str, path: str, body=None, token: str = '', sse: bool = False, timeout: int = 300) -> tuple:
+    """(status, text) for one call to the engine at BASE, on the engine key.
+    Raises Unreachable when the engine cannot be reached."""
+    data = json.dumps(body).encode() if body is not None else None
+    req = urllib.request.Request(BASE + path, data=data, method=method.upper())
+    req.add_header('Authorization', 'Bearer ' + token)
+    if data is not None:
+        req.add_header('Content-Type', 'application/json')
+    if sse:
+        req.add_header('Accept', 'text/event-stream')
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status, r.read().decode()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read().decode()
+    except urllib.error.URLError as e:
+        raise Unreachable(f'Could not reach the engine at {BASE} ({e.reason}). If this ran inside a '
+                          'sandbox with no internet, run it again outside the sandbox.')
+
+
 def main() -> int:
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     flags = {a for a in sys.argv[1:] if a.startswith('--')}
     if len(args) < 2:
         print(__doc__)
         return 2
-    token = os.environ.get('ENGINE_OPERATOR_TOKEN', '').strip()
-    if not token:
-        key, error = windows_key()
-        token = key.strip()
-        if not token:
-            user = windows_user() if os.name == 'nt' else ''
-            print(no_key_message(os.name, user, error), file=sys.stderr)
-            return 2
+    try:
+        token = operator_key()
+    except NoKey as no_key:
+        print(no_key, file=sys.stderr)
+        return 2
     method, path = args[0].upper(), args[1]
     body = None
     if len(args) > 2:
@@ -139,21 +180,10 @@ def main() -> int:
         body = json.loads(raw)
         if isinstance(body, dict) and body.get('idempotency_key') == 'NEW':
             body['idempotency_key'] = str(uuid.uuid4())
-    data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(BASE + path, data=data, method=method)
-    req.add_header('Authorization', 'Bearer ' + token)
-    if data is not None:
-        req.add_header('Content-Type', 'application/json')
-    if '--sse' in flags:
-        req.add_header('Accept', 'text/event-stream')
     try:
-        with urllib.request.urlopen(req, timeout=300) as r:
-            status, text = r.status, r.read().decode()
-    except urllib.error.HTTPError as e:
-        status, text = e.code, e.read().decode()
-    except urllib.error.URLError as e:
-        print(f'Could not reach the engine at {BASE} ({e.reason}). If this ran inside a '
-              'sandbox with no internet, run it again outside the sandbox.', file=sys.stderr)
+        status, text = call(method, path, body, token, sse='--sse' in flags)
+    except Unreachable as unreachable:
+        print(unreachable, file=sys.stderr)
         return 3
     if '--sse' in flags:
         events = [line[6:] for line in text.splitlines() if line.startswith('data: ')]

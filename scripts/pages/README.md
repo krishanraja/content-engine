@@ -92,7 +92,7 @@ One JSON file. Paths are relative to the file (or to `--assets DIR`).
 | `title` | The browser tab. Defaults to the headline. |
 | `body` | The body file. Defaults to `body.md`; `--body FILE` overrides it. |
 | `hero` | The art beside the headline, or nothing. `{"image": "img/x.png", "alt": "..."}`, or a receipt: `{"receipt": {"title", "alt", "customer": {"logo", "text"}, "rows": [{"logo", "name", "when", "verdict", "colour"}], "total": [left, right]}}`. A row's `colour` is `mint`, `butter`, `lilac` or `coral`. |
-| `cover` | The post's cover image, drawn by `--cover`. All of it is optional: `{"headline": ["the words in cream", "the last line in the subchannel's colour"], "rows": [{"logo", "name", "tag", "colour"}], "label": "words after the subchannel at the foot", "subline": "one bold line", "background": "img/photo.jpg"}`. Without `headline`, the page's headline is split after its last comma, full stop, colon or question mark; it is drawn at the largest of 104, 100, 96, 92 or 88 pixels at which it fits in three lines. A row's `logo` must read on dark ink (a light logo) and is drawn 64 pixels tall; its `tag` is the words beside it, drawn at 47 pixels; its `colour` is `mint`, `butter`, `lilac` or `coral`. Keep to two rows. `label` defaults to `issue`, then the date, and is fine print at 37 pixels; it is left out when the cover only fits without it. Leave `subline` out unless it says something the rows do not: it is drawn at 47 pixels, like the tags, and there is rarely room for it. The `background` photo sits at 30% under a dark fade. |
+| `cover` | The post's cover image, drawn by `--cover`. All of it is optional: `{"headline": ["the words in cream", "the last line in the subchannel's colour"], "rows": [{"logo", "name", "tag", "colour"}], "label": "words after the subchannel at the foot", "subline": "one bold line", "background": "img/photo.jpg", "portrait": true}`. Without `headline`, the page's headline is split after its last comma, full stop, colon or question mark; it is drawn at the largest of 104, 100, 96, 92 or 88 pixels at which it fits in three lines. A row's `logo` must read on dark ink (a light logo) and is drawn 64 pixels tall; its `tag` is the words beside it, drawn at 47 pixels; its `colour` is `mint`, `butter`, `lilac` or `coral`. Keep to two rows. `label` defaults to `issue`, then the date, and is fine print at 37 pixels; it is left out when the cover only fits without it. Leave `subline` out unless it says something the rows do not: it is drawn at 47 pixels, like the tags, and there is rarely room for it. The `background` photo sits at 30% under a dark fade. With `portrait`, Krish's face sits in a 236-pixel circle under the headline, with the subline and rows beside it: `true` draws the cover site's "closer look" photo, a path draws that picture instead. Use it on every cover; Krish, 2026-10-06: "even one of the funny headshots on the cover pictures or social share pictures like this that make it even more personal that it's me analysing it" (house rule `LOGOS_AND_FACE`). Beside the face there is room for a tag of about 11 characters; the cover refuses a longer one. The cover doubles as the LinkedIn picture. |
 | `figures` | The piece's images: `{"after": "words in the body", "image": "img/1.png", "alt": "what it shows", "caption": "optional"}`. Each goes after the paragraph that holds its `after` words. `alt` is required. |
 | `pull_quotes` | `{"after": "...", "quote": "...", "cite": "who said it"}`. The quote must be words from the body, exactly. |
 | `sources` | `{"id": ["Title, date", "https://..."]}` (or `{"title", "url"}`). Listed at the end in the order they are first linked; any never linked come last, and the build mentions them. |
@@ -216,6 +216,54 @@ this off, so the build makes the post work without its pictures:
   What's coming, before it's obvious.").
 - The welcome email asks new readers to add the sender to their contacts
   (`apps/cover/substack-kit/COPY.md` in krishanraja/makeyourmindup).
+
+## Emails
+
+Krish, 2026-10-06, asking for the email that told his Maven followers
+makeyourmindup was live: "Same as usual, one click copy job with pictures in
+line and an email subject". `broadcast.py` makes that page for any email that
+does not go out through Substack (Maven, LinkedIn, a list he sends from
+himself):
+
+```
+python scripts/pages/broadcast.py WORKDIR/email.json --out WORKDIR/out --links --check --shots
+```
+
+It writes `email.html`, the copy page: the subject, any other subjects to
+choose from, and the preview text (the grey line an inbox shows after the
+subject), each with a Copy button; **Copy email**, which puts the email on the
+clipboard with its pictures and links in place; and, folded away, **Copy HTML
+code**, the same email as one 600-pixel column styled inline, for a tool that
+takes HTML in a box. It also writes `email-pictures-off.html` (above).
+
+**The pictures must already be on the web.** The Substack copy carries its
+pictures inside the page, and Substack's editor takes them. Gmail and Outlook
+drop a picture carried inside an email, so this tool refuses one. Use the
+copies Substack hosts once the post is published: open the post, and each
+picture's address starts `https://substack-post-media.s3.amazonaws.com/`.
+
+`email.json`:
+
+| Field | What it is |
+|---|---|
+| `subject` | The subject. Over 50 characters gets a note: a phone's inbox cuts it off about there. |
+| `other_subjects` | Optional. Other subjects to choose from, each with its own Copy button. |
+| `preview` | Optional. The preview text; over 140 characters gets a note. |
+| `body` | The email as markdown, beside the facts file: paragraphs, `##` headings, lists, `**bold**`, `*italic*`, `[links](https://...)`, and a picture as a paragraph of its own, `![alt text](https://...)`. |
+| `for`, `about` | Optional. The tool and a line on what the email is, shown at the top of the page. |
+| `accent` | Optional. `butter`, `lilac` or `coral`; mint otherwise. |
+| `note` | Optional. The paste instruction under Copy email, in place of the usual one. |
+
+It writes nothing if a picture is not on the web over https, a picture's alt
+text is under eight words, a link is not https, or any of the words has an
+em dash. `--links` asks the web for every picture and link and stops if one
+does not answer 200. `--check` presses Copy email and counts what reached the
+clipboard. `python scripts/pages/broadcast.py --self-test` checks the
+refusals.
+
+In a cloud session, Chromium does not trust the session's proxy, so
+`--shots` draws the pictures as their alt text there; on Krish's machines
+they load.
 
 ## Where the look comes from
 

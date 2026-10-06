@@ -87,7 +87,8 @@
   "runtime": {
     "drive_root": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",
     "media_inbox": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Inbox",
-    "archive_root": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Archive"
+    "archive_root": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Archive",
+    "library_root": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\makeyourmindup"
   },
   "radar_providers": {
     "mm_ctrl_url": "https://bkyuxvschuwngtcdhsyg.supabase.co/functions/v1/video-radar-export",

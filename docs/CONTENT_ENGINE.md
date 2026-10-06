@@ -39,13 +39,14 @@ The counts are left out because they went stale within days.
 | Vercel cron | this project's own `vercel.json` crons | `Bearer CRON_SECRET` |
 | An agent session with no browser (Claude Code, Codex) | straight to this project's URL | `Bearer ENGINE_OPERATOR_TOKEN` on the routes behind `guardEngine`, and on `GET /api/content-engine/health` |
 | The Windows runner | `/api/video-studio/runner/*` via Control Center's origin | `Bearer VIDEO_STUDIO_RUNNER_TOKEN`, receipts HMAC-signed |
+| The library sync on Krish's runner machine (`scripts/library-sync.ps1`) | `GET /api/library/pending` and `POST /api/library/written`, straight to this project's URL | `Bearer VIDEO_STUDIO_RUNNER_TOKEN`, the runner's own |
 | The Studio MCP gateway | `/api/video-studio/mcp` | `Bearer VIDEO_STUDIO_MCP_TOKEN` |
 | The AEO engine (GitHub Actions) | `/api/aeo/ingest`, `/api/aeo/context`, `/api/aeo/meter` | `Bearer AEO_ENGINE_SECRET` |
 | A Postgres trigger (autoscore) | `POST /api/content-ideas/:id/score` with exactly `{model:'haiku'}` | none, by a narrow exception that refuses anything else |
 
 Not every path is rewritten by Control Center: `/api/judge/*`, `/api/learning/*`,
-`/api/inspiration/*`, `/api/trends/*` and `/api/claims/*` are reachable only on
-this project's own URL.
+`/api/inspiration/*`, `/api/trends/*`, `/api/claims/*` and `/api/library/*` are
+reachable only on this project's own URL.
 
 ### The guards (`api/_auth.ts`, `api/_videoStudioAuth.ts`, `api/_videoStudioMcpAuth.ts`)
 
@@ -512,6 +513,43 @@ Every scheduled route is wrapped in `withContentRun` (`api/_runs.ts`), which
 writes one `content_engine_runs` row per run, and a redacted failure artifact
 when it fails.
 
+### 9. The asset library (`api/library/`)
+
+Krish, 2026-10-06: "make sure the brand kit is always updated here [the
+library's Drive folder]", then "I want every single asset in there, permanent
+and for individual posts, categorized properly, clear what to use them for,
+and every new post gets its own new folder with all assets including the
+article HTML I can copy paste, video scripts, etc etc". The pieces and their
+artwork are made in cloud sessions, which cannot write into Drive, so a
+session sends each file here and his always-on Windows machine writes it into
+the makeyourmindup folder on Drive. The architecture doc's rule 0a.5 says
+agents never write into his Drive; this is his explicit instruction for that
+one folder, carried out by his own machine, and it covers that folder only.
+The tools are `scripts/post-pack/` (its README has the folder layout) and
+`scripts/library-sync.ps1`.
+
+The pattern is the Studio's preview upload: a private bucket
+(`content-library`, 500 MiB a file, only the types a post, the brand kit and
+the channel art use), signed URLs so the bytes never pass through a function,
+the bucket's settings checked on every request, and the Studio's error shape
+(`{ ok: false, error: { code } }`). Every path is checked against one rule
+(`api/library/_library.ts`, tested with `scripts/post-pack/library.py` against
+`config/library-paths.cases.json`): relative, forward slashes, Windows-safe,
+and inside `1 Brand kit (permanent)/`, `2 Channel art (permanent)/` or one
+post's folder, `3 Posts/YYYY-MM-DD <Day> <subchannel> - <Subject>/`, in its
+four sections or as its `READ ME.txt`.
+
+| Route | Who | What it does |
+|---|---|---|
+| `POST /api/library/upload-url` | the engine key (or the cookie) | `{ path, sha256, md5, bytes, purpose, client? }`. Reserves the file and returns a signed PUT, or `already_there` when the path's newest version has these bytes, or `upload: null` when the bytes are stored already (sent for another path). Sending an older version again makes it the newest. A refused path comes back 400 `invalid_library_path` with the reason; over the cap, 413 |
+| `POST /api/library/confirm` | the engine key (or the cookie) | `{ path, sha256 }`. Checks the stored object's size, type and (where Storage reports a plain one) MD5, then marks the file ready. 409 `library_object_missing` or `library_object_conflict` otherwise |
+| `GET /api/library/pending?machine=<id>&limit=<1..100>` | the runner bearer | For each path, the newest ready version this machine has not written, with `previous_sha256` (what it last wrote there) and a download URL that lasts 30 minutes. A row that breaks the path rule is held back and counted in `skipped` |
+| `POST /api/library/written` | the runner bearer | `{ schema_version: 1, machine, items: [{ path, sha256, written_as? }] }`. Records what the machine wrote and under what name (`written_as`, in the same folder, when it kept a file Krish changed and put the new one beside it) |
+
+The machine is identified as the runner routes identify a runner: a hash of
+the runner bearer and the id it sends. `guardVideoStudioRunner` asks for a
+JSON content type only on a request with a body, so the sync's GET needs none.
+
 ## Crons (`apps/control-plane/vercel.json`, all UTC)
 
 All 20 have run-ledger rows in the last seven days (read back 2026-09-25).
@@ -617,6 +655,11 @@ The tables this engine lives on:
   `shift_evidence`, `shift_beats`, `arc_cards`, `content_themes`.
 - **Supply:** `trend_observations`, `lens_seed_candidates`, `content_creators`,
   `creator_moves`, `investigations` and its child tables.
+- **The asset library:** `content_library_files` (one row per version of a
+  file: its path in the library, sha256, size, what it is for, who sent it and
+  when, and when and which machine wrote it into Drive) and the private bucket
+  `content-library`, from
+  `supabase/migrations/20261006120000_content_library.sql`.
 - **Operations:** `content_engine_runs`, `content_engine_run_artifacts`,
   `meter_daily`, `system_config` (the voice block `content_voice_block` and the
   channel corpus `content_corpus`, both read live by every writer).
@@ -645,7 +688,7 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
   bridge); it is part of `npm run verify` and skipped on Windows. All pass
   since walk log H16.
 - `npm run typecheck:control-plane` typechecks the app and its scripts.
-- `tests/control-plane/` holds 38 vitest files, run by the root `npm test`.
+- `tests/control-plane/` holds 56 vitest files, run by the root `npm test`.
   A test that imports engine code belongs here: the root typecheck covers
   only top-level `tests/*.ts`, under settings the engine was not written for.
   Tests that call a handler point Supabase at a dead local address, so a
@@ -732,6 +775,12 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    `api/_houseRules.ts` as step 12 says, and the part a machine can check into
    `PACKAGING_RULES` and `lintPackage` or `lintSubstack` in
    `api/_packaging.ts`.
+15. The same day a post's launch set is made, pack it with
+   `python3 scripts/post-pack/build.py post.json` and send it with
+   `python3 scripts/post-pack/send.py <pack folder>`; send a brand kit change
+   with `send.py --brand-kit` (Krish, 2026-10-06, section 9 above). Read
+   `--dry-run` first: it shows every path and what it is for. A refused path
+   stops the whole send before anything goes.
 
 ## Development notes
 

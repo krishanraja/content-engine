@@ -152,6 +152,20 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['judge_draft', 'write', 'visual'],
   },
   {
+    id: 'THREE_LENSES', name: 'What it means for the consumer, for the builder, and how the old way is changing',
+    text: 'Every piece answers three questions in plain words, each in its own section or beat, from checked facts with our reads labelled: what this means for the consumer (the person who buys, watches or uses the thing); what it means for someone starting or building a business; and how the old way of doing things is changing, both creatively and in who gets paid. The video script and the social posts carry all three too. A piece that leaves one out is not finished.',
+    said: 'Always always make sure, like the last piece we released, we talk about: what this means for the consumer / what this means for someone starting a business or building a business / how the paradigm is shifting from the way things have typically been done in this world, creatively and economically',
+    on: '2026-10-06', source: 'chat, the Higgsfield piece for under.the.hood', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass', 'visual'],
+  },
+  {
+    id: 'LOGOS_AND_FACE', name: 'Real logos, and Krish\'s face on the cover',
+    text: 'Show the real logo of every company a visual names, taken from the company\'s own brand files (Brandfetch), never redrawn or imitated, in its own colours where they read and in its light version on dark. Put Krish\'s face on the cover and on the social share picture, one of his funny headshots, so the reader sees him taking the subject apart: scripts/pages draws the cover site\'s "closer look" photo with "portrait": true in the cover\'s facts.',
+    said: 'Once again don\'t be afraid to use the real logos for any companies mentioned. And even one of the funny headshots on the cover pictures or social share pictures like this that make it even more personal that it\'s me analysing it',
+    on: '2026-10-06', source: 'chat, the Higgsfield piece for under.the.hood', status: 'live',
+    stages: ['visual'],
+  },
+  {
     id: 'AI_AGENT', name: 'Call it an AI agent',
     text: 'Software that shops, books or acts for a person is an "AI agent" (for shopping, an "AI shopping agent"), never a robot or a bot. On first mention, say whose agent it is and what it does in plain words.',
     said: 'be clearer and refer to \'robot\' as "AI agent"',
