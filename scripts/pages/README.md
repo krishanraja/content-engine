@@ -217,6 +217,54 @@ this off, so the build makes the post work without its pictures:
 - The welcome email asks new readers to add the sender to their contacts
   (`apps/cover/substack-kit/COPY.md` in krishanraja/makeyourmindup).
 
+## Emails
+
+Krish, 2026-10-06, asking for the email that told his Maven followers
+makeyourmindup was live: "Same as usual, one click copy job with pictures in
+line and an email subject". `broadcast.py` makes that page for any email that
+does not go out through Substack (Maven, LinkedIn, a list he sends from
+himself):
+
+```
+python scripts/pages/broadcast.py WORKDIR/email.json --out WORKDIR/out --links --check --shots
+```
+
+It writes `email.html`, the copy page: the subject, any other subjects to
+choose from, and the preview text (the grey line an inbox shows after the
+subject), each with a Copy button; **Copy email**, which puts the email on the
+clipboard with its pictures and links in place; and, folded away, **Copy HTML
+code**, the same email as one 600-pixel column styled inline, for a tool that
+takes HTML in a box. It also writes `email-pictures-off.html` (above).
+
+**The pictures must already be on the web.** The Substack copy carries its
+pictures inside the page, and Substack's editor takes them. Gmail and Outlook
+drop a picture carried inside an email, so this tool refuses one. Use the
+copies Substack hosts once the post is published: open the post, and each
+picture's address starts `https://substack-post-media.s3.amazonaws.com/`.
+
+`email.json`:
+
+| Field | What it is |
+|---|---|
+| `subject` | The subject. Over 50 characters gets a note: a phone's inbox cuts it off about there. |
+| `other_subjects` | Optional. Other subjects to choose from, each with its own Copy button. |
+| `preview` | Optional. The preview text; over 140 characters gets a note. |
+| `body` | The email as markdown, beside the facts file: paragraphs, `##` headings, lists, `**bold**`, `*italic*`, `[links](https://...)`, and a picture as a paragraph of its own, `![alt text](https://...)`. |
+| `for`, `about` | Optional. The tool and a line on what the email is, shown at the top of the page. |
+| `accent` | Optional. `butter`, `lilac` or `coral`; mint otherwise. |
+| `note` | Optional. The paste instruction under Copy email, in place of the usual one. |
+
+It writes nothing if a picture is not on the web over https, a picture's alt
+text is under eight words, a link is not https, or any of the words has an
+em dash. `--links` asks the web for every picture and link and stops if one
+does not answer 200. `--check` presses Copy email and counts what reached the
+clipboard. `python scripts/pages/broadcast.py --self-test` checks the
+refusals.
+
+In a cloud session, Chromium does not trust the session's proxy, so
+`--shots` draws the pictures as their alt text there; on Krish's machines
+they load.
+
 ## Where the look comes from
 
 Nothing about the brand is copied into this folder, so nothing here can drift
