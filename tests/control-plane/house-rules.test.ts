@@ -18,6 +18,24 @@ const PASSED = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8'
 const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')
 const factsOk = { ok: true, reason: null }
 
+describe('a script makes sense out loud and tells one story (walk log F75)', () => {
+  test('both rules are live and reach the writers, both judge gates and the final pass', () => {
+    for (const id of ['FOR_THE_EAR', 'STORY_ARC']) {
+      const r = HOUSE_RULES.find(x => x.id === id)
+      assert.ok(r, id)
+      assert.equal(r.status, 'live')
+      for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), `${id} ${stage}`)
+    }
+  })
+  test('the script writer carries the story check and the outro for scripts of a minute or more', async () => {
+    const video = await import('../../apps/control-plane/api/_video.js')
+    assert.match(video.SCRIPT_STORY, /One opening question/)
+    assert.match(video.SCRIPT_STORY, /Never end on the number/)
+    assert.match(video.STORY_OUTRO, /makeyourmindup\.ai/)
+    for (const f of video.VIDEO_FORMATS.filter(x => x.seconds >= 60)) assert.match(f.shape, /STORY_OUTRO/, f.id)
+  })
+})
+
 describe('every ruling carries his words and reaches a stage', () => {
   test('each rule has his verbatim words, a date and at least one stage', () => {
     for (const r of HOUSE_RULES) {

@@ -43,7 +43,8 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import library  # noqa: E402
+import library
+import story_check  # noqa: E402
 from library import ARTICLE, COVERS, POST_README, POSTS, SOCIAL, VIDEO, LibraryError, archive, brand  # noqa: E402
 
 DEFAULT_OUT = library.ROOT / '.cache' / 'post-pack'
@@ -215,11 +216,15 @@ def plan(post, base):
                 raise PackError(f'{label}: only {", ".join(sorted(TEXT_KINDS))} may be given as "text"')
             if not isinstance(entry['text'], str) or not entry['text'].strip():
                 raise PackError(f'{label}: "text" is empty')
+            if kind == 'video-script':
+                story_gate(entry, entry['text'], label)
             name = entry.get('name') or (fixed if '.' in fixed else f'{fixed}.md')
             planned.append({'section': section, 'name': safe_name(name), 'purpose': purpose,
                             'text': entry['text'].strip() + '\n'})
             continue
         source = source_of(entry, label)
+        if kind == 'video-script':
+            story_gate(entry, source.read_text(encoding='utf-8-sig'), label)
         if kind == 'video-words':
             planned.append({'section': section, 'name': fixed, 'purpose': purpose, 'text': words_text(source)})
             continue
@@ -249,6 +254,17 @@ def plan(post, base):
                             f'{library.MAX_BYTES // (1024 * 1024)} MiB')
         item['path'] = relative
     return folder, planned
+
+
+def story_gate(entry, text, label):
+    """Krish, 2026-10-06 (walk log F75): a script that does not make sense out
+    loud, or stops dead on the number, is not packed. Only his own words in
+    "story_check_override" let one through."""
+    found = story_check.problems(text)
+    override = entry.get('story_check_override')
+    if found and not (isinstance(override, str) and override.strip().lower().startswith('krish')):
+        raise PackError(f'{label}: the script fails the story check:\n  - ' + '\n  - '.join(found) +
+                        '\n  Fix it (scripts/post-pack/story_check.py), or record Krish\'s own words in "story_check_override".')
 
 
 def library_purpose(value):
@@ -368,7 +384,7 @@ def self_test():
         for name, body in (('out/substack.html', b'<p>post</p>'), ('out/page.html', b'<p>page</p>'),
                            ('body.md', b'The words.\n'), ('out/email-pictures-off.html', b'<p>email</p>'),
                            ('out/cover.png', b'cover'), ('img/1-look-or-pay.png', b'one'),
-                           ('script.md', b'Say this.\n'), ('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'),
+                           ('script.md', b'[To camera]\nWhy does this matter? Say this.\n'), ('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'),
                            ('share/v-9x16.mp4', b'tall share'), ('card.png', b'card')):
             (work / name).parent.mkdir(parents=True, exist_ok=True)
             (work / name).write_bytes(body)
@@ -459,9 +475,11 @@ def self_test():
         refused('a video with no shape', lambda: variant(files=[{'kind': 'video', 'file': 'v-9x16.mp4'}]), 'needs "shape"')
         refused('a video for a place the archive rule does not know', lambda: variant(files=[{'kind': 'video', 'shape': 'tall', 'file': 'v-9x16.mp4', 'post_to': ['Facebook']}]), 'is not a place to post')
         refused('a link that is not https', lambda: variant(links={'Substack': 'http://x'}), 'https://')
-        launch = variant(launch=True, subchannel=None, subject='Launch hello', files=[{'kind': 'video-script', 'text': 'Hello.'}])
+        refused('a script that fails the story check', lambda: variant(files=[{'kind': 'video-script', 'text': 'One: the billion. Real, with small print.'}]), 'fails the story check')
+        check('Krish can let one through in his own words', bool(variant(files=[{'kind': 'video-script', 'text': 'Hello.', 'story_check_override': 'Krish, 2026-10-06: record it as it is'}])), True)
+        launch = variant(launch=True, subchannel=None, subject='Launch hello', files=[{'kind': 'video-script', 'text': 'Why are we here? Hello.'}])
         check('a launch post', launch['folder'], '2026-10-05 Launch - Launch hello')
-        check('text given in the post file', (tmp / 'other' / launch['folder'] / '3 Video' / 'video-script.md').read_text(encoding='utf-8'), 'Hello.\n')
+        check('text given in the post file', (tmp / 'other' / launch['folder'] / '3 Video' / 'video-script.md').read_text(encoding='utf-8'), 'Why are we here? Hello.\n')
         (out / folder / MANIFEST).unlink()
         refused('a folder this tool did not make', lambda: build(work / 'post.json', out, replace=True), 'was not made by this tool')
         check('a folder this tool did not make is left alone', (out / folder / POST_README).is_file(), True)

@@ -39,6 +39,12 @@ describe('the post pack tools check themselves', () => {
     expect(result.stdout).toMatch(/post-pack self-test passed: \d+ checks/)
   })
 
+  it('story_check.py --self-test: the Higgsfield failures are refused, a good script passes', () => {
+    const result = run('story_check.py', ['--self-test'])
+    expect(result.status, result.stderr).toBe(0)
+    expect(result.stdout).toMatch(/story check self-test passed: \d+ checks/)
+  })
+
   it('send.py --self-test: planning and sending against a stand-in engine', () => {
     const result = run('send.py', ['--self-test'])
     expect(result.status, result.stderr).toBe(0)
@@ -75,6 +81,8 @@ describe('a pack Krish reads', () => {
       'phone-images.png', 'stack.png', 'card.png', 'script.md', 'v-9x16.mp4', 'v-16x9.mp4', 'captions.srt']) {
       writeFileSync(join(work, name), name)
     }
+    // A script must pass the story check to be packed (walk log F75).
+    writeFileSync(join(work, 'script.md'), '[To camera]\nWhy does this matter? Say this.\n')
     writeFileSync(join(work, 'post.json'), JSON.stringify(post))
     const out = join(work, 'packs')
     mkdirSync(out)

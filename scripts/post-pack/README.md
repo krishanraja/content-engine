@@ -114,6 +114,26 @@ first post's facts.
 | `linkedin-post` | 4 Social | `linkedin-post.txt` | the LinkedIn post (or `"text"`) |
 | `linkedin-card` | 4 Social | `linkedin-card` and its type | the picture for the LinkedIn post |
 
+## The story check
+
+A `video-script` is packed only if it passes `story_check.py` (Krish,
+2026-10-06, walk log F75: "they need to actually make sense to humans", then
+"happy with that idea" of the five-point story check). It refuses a script
+that does not open on a question, one of a minute or more with no spoken
+outro after the call (so it never ends on the number), one that speaks an
+article heading or a REAL or THEATRE stamp aloud, and one with lines still
+marked NOT YET FACT-CHECKED. Run it on any script before sending it to Krish:
+
+```
+python scripts/post-pack/story_check.py SCRIPT
+```
+
+Only Krish's own words, in the file's `"story_check_override"` (starting
+"Krish"), let a failing script through. The rest of the story check (every
+beat follows from the last, every takeaway from a beat already told) is the
+house rule STORY_ARC, which every writer and judge reads; reading the script
+aloud once is still the last check.
+
 ## Send it
 
 ```

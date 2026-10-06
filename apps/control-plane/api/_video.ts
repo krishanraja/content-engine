@@ -52,17 +52,17 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'The hook is the surprising claim, inside ten seconds, with no throat-clearing.',
       'The proof grounds it in named specifics.',
       'The turn is the part the viewer did not see coming: the second-order effect, the counter-reading, the part that inverts the obvious take.',
-      'The verdict is hard and forward-looking. No summary, no question, no CTA.',
+      'The verdict is hard and forward-looking and answers the hook. No summary, no question. Then one short spoken outro line (STORY_OUTRO).',
     ].join(' '),
   },
   {
     id: '3min', label: '3 minutes', seconds: 180, words: 450,
     shape: [
-      'Hook, then three beats, then verdict.',
+      'Hook (one plain question the whole script answers), then three beats, then verdict, then a short spoken outro.',
       'Each beat makes ONE point and carries its own evidence. A beat that restates the one above it is cut.',
       'Beats escalate: the third should be the one that would not have been believed at the start.',
       'Mark the beats explicitly so the edit has cut points.',
-      'The verdict is a hard forward-looking read, not a recap of the three beats.',
+      'The verdict answers the hook\'s question, then makes the call. It is a hard forward-looking read and never a recap of the three beats. The spoken outro follows it (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -73,7 +73,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'Each of the four sections advances the argument and ends on a hook into the next. A section that could be reordered freely is a list, not an argument.',
       'Pick ONE analogy and carry it the whole way, including through the part where it breaks, and say out loud where it stops working.',
       'Hold one genuine counterpoint, in full, before answering it.',
-      'The close is a hard verdict plus the specific thing to watch next.',
+      'The close answers the cold open\'s question, gives a hard verdict plus the specific thing to watch next, then the spoken outro (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -84,7 +84,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'One analogy, carried the whole way, broken honestly where it stops mapping.',
       'Hold the strongest counterpoint in its best form, not a straw version, and answer it or concede it.',
       'Say plainly where the knowable record ends rather than papering over it.',
-      'Close on a hard verdict and the terminal question the evidence actually leaves open.',
+      'Close by answering the question the cold open asked, then a hard verdict and the terminal question the evidence actually leaves open, then the spoken outro (STORY_OUTRO).',
       'At this length the viewer will forgive slowness but not padding: every section must move the argument or come out.',
     ].join(' '),
   },
@@ -95,6 +95,25 @@ export function videoFormat(id?: string | null): VideoFormat | null {
 }
 
 /** Spoken-delivery rules every length obeys. */
+// Krish, 2026-10-06, of the Higgsfield launch script (walk log F75): it spoke the
+// article's headings aloud, judged a claim it never set up, and "just ends
+// randomly on 85%, with nothing after that, no outro". The story check he
+// approved the same evening, as the script writer reads it. The house rules
+// FOR_THE_EAR and STORY_ARC carry it to every other stage, and
+// scripts/post-pack/story_check.py refuses to pack a script that fails it.
+export const STORY_OUTRO = 'STORY_OUTRO: a script of a minute or more ends with one or two spoken lines after the call: what this was (the subchannel or makeyourmindup), where the full piece and its sources are (makeyourmindup.ai), and Krish signing off. This outro is the only call to action a script makes, and it never asks for likes or comments.'
+
+export const SCRIPT_STORY = [
+  'THE STORY CHECK (Krish, 2026-10-06). Before you answer, check the script against all five and fix any that fail:',
+  '1. One opening question, said out loud in the first beat, that the whole script answers.',
+  '2. Every beat sets that question up or answers it, and follows from the beat before. A beat that could be moved anywhere is a list item: cut it or connect it.',
+  '3. Every claim is set up before it is judged: say what was claimed and why it matters before calling it real or theatre.',
+  '4. Every takeaway follows from a beat already told. Name the beat it comes from in your head; if there is none, cut the takeaway.',
+  '5. The ending answers the opening question, then the call, then the spoken outro. Never end on the number.',
+  'And it must make sense out loud: say what the thing is before taking it apart, explain each number as it is said, and never speak an article heading or a label the listener has not heard explained.',
+  STORY_OUTRO,
+].join('\n')
+
 export const SPOKEN_RULES = [
   'This is spoken, not an essay read aloud. Contractions, asides, and sentences a person can say in one breath.',
   'Plain words even where the idea is not. Expand every acronym once, the first time it appears.',
@@ -169,6 +188,8 @@ export async function buildVideoScript(o: {
     `This is a hard ceiling, not a style note: ${f.words} words is what fits in ${f.seconds} seconds at an unhurried pace. Going over does not produce a longer ${f.label}, it produces a script that overruns, and at the short lengths that is the difference between a hook and a rambling clip. If the material will not fit, cut material. Do not speed up the delivery to make room.`,
     `STRUCTURE FOR THIS LENGTH (not a suggestion, this is what this length can carry):\n${f.shape}`,
     SPOKEN_RULES,
+    // Formats under a minute have no room for the outro; everything longer carries the full story check.
+    f.seconds >= 60 ? SCRIPT_STORY : 'THE STORY CHECK, short form: one clear question or claim, answered by the last line. Explain any number as it is said.',
     // Krish's house rules reach the spoken words and the shots. Before 2026-10-05 a script
     // could say "this week" about a month-old event, and planned a "till ringing" shot that
     // explained nothing (walk log, piece 1 launch).

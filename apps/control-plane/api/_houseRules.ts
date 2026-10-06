@@ -228,6 +228,20 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     on: '2026-09-24', source: 'walk log R1', status: 'trial',
     stages: ['judge_idea', 'write'],
   },
+  {
+    id: 'FOR_THE_EAR', name: 'A script makes sense out loud',
+    text: 'A video script is written to be said, and heard once. Never cut it from the article\'s headings or section labels. Say what the thing is before taking it apart. Explain every number the moment it is said: what it means and why it matters. Never speak a label the listener has not heard explained ("the chooser", "the engines", "REAL, with small print"). Read it aloud; any sentence that needs a second pass is rewritten.',
+    said: 'I can\'t even say it out loud as it confuses the hell out of me reading it. Then: they need to actually make sense to humans. That is kind of important.',
+    on: '2026-10-06', source: 'walk log F75', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass'],
+  },
+  {
+    id: 'STORY_ARC', name: 'One story, start to finish',
+    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes with a short spoken outro after the call (what this was, where the full piece is, and Krish signing off); it never ends on the number.',
+    said: 'what does that mean? We\'ve never introduced that concept yet, and I dont get why it matters to whats been said thus far. It also barely connects to the next bits, the takeaways. ... now it just ends randomly on 85%, with nothing after that, no outro. Then, of the five-point story check: yes, i agree with it being there. happy with that idea.',
+    on: '2026-10-06', source: 'walk log F75', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass'],
+  },
 ])
 
 /** The rules a stage enforces, for one subchannel or the house as a whole. */

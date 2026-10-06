@@ -118,6 +118,20 @@ the one-time install on his machine: `scripts/post-pack/README.md`.
 
 ## Latest handoff
 
+- 2026-10-06, late: **every script now has to tell one story** (walk log
+  F75, closed). Krish found the Higgsfield script unsayable, then that
+  version 2 never set up "you don't do paid", had takeaways that did not follow
+  and ended on 85% with no outro. He approved the five-point story check
+  ("happy with that idea") and asked that the system never do it again.
+  Built: house rules FOR_THE_EAR and STORY_ARC (writers, judges, final
+  pass), every `_video.ts` shape now ends question answered, call, spoken
+  outro, and `scripts/post-pack/story_check.py` refuses to pack a script that
+  fails. The Sora facts are now in the article and passed the fact check
+  (49 claims, 0 blocking). The corrected article pages, script v4 and
+  LinkedIn v3 are in the post folder. **Waiting on Krish:** the same approve,
+  record and publish as below, from those files. **Next:** the 16 one-off
+  scripts fail the story check and are being reworked, and the Studio script
+  station still needs the same check.
 - 2026-10-06, evening: **Wednesday 7 October is "Higgsfield, taken apart:
   the $1bn AI video machine"** (under.the.hood, `9ae1a768`), in place of
   Koa, which Krish turned down as boring (walk log, end of "Piece 3"). Built
