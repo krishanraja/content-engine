@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-06
 
+- reconciled at `c31f0fc`: the library sync's first real pass wrote 25 files into Drive and recorded none, because the engine refused "READ ME (2).txt" as a name; fixed at `c31f0fc` (walk log F71, H43). Report (Krish, 2026-10-06): "ok think it worked. check."
 - reconciled at `079ec3d`: the library sync installs from its own copy of the repository, after the first install line failed on Krish's machine ("The argument 'scripts\install-library-sync.ps1' to the -File parameter does not exist."). Report (Krish, 2026-10-06): "Done storage limit"; the two tall videos then went into the store. NOW.md's waiting list already names the install.
 - reconciled at `f8f40c2`: the second Windows CI run found send.py walking a folder in a different order on Windows; fixed at `f8f40c2`. Nothing in NOW.md changed but the head.
 - reconciled at `9a10bd9`: the Windows CI run failed at send.py's self-test, which wrote a file name Windows refuses; fixed at `9a10bd9`. Nothing in NOW.md changed but the head.
