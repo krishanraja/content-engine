@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-06
 
+- decision (Krish, 2026-10-06): "Yes merge". Main fast-forwarded to `3bd1ed8` (the source filer's direct read, the three questions, real logos and the cover portrait); CI green apart from the dependency audit (F68, red on main since the morning).
 - decision (Krish, 2026-10-06), first seen by the session as a screenshot with "You received this?": "Once again don't be afraid to use the real logos for any companies mentioned. And even one of the funny headshots on the cover pictures or social share pictures like this that make it even more personal that it's me analysing it", and "Always always make sure, like the last piece we released, we talk about: what this means for the consumer / what this means for someone starting a business or building a business / how the paradigm is shifting from the way things have typically been done in this world, creatively and economically". Done at `89fa9f0` (walk log F74, H45).
 - reconciled at `89fa9f0`: NOW.md takes the three questions every piece answers and the cover portrait (walk log F74, H45), the shift to fascinating subjects, Wednesday's Higgsfield piece in place of piece 3, the source filer's direct read (walk log F72, H44) and F73; the library sync's install is off the waiting list (36 of 36 files written on 2026-10-06).
 - decision (Krish, 2026-10-06), on the Higgsfield piece: "Title 2. 85%. And yes" (the title "Higgsfield, taken apart: the $1bn AI video machine", the call's confidence, and the paid fact check).
