@@ -1,4 +1,4 @@
-import { cp, lstat, mkdir, readFile, realpath, writeFile } from 'node:fs/promises'
+import { cp, lstat, mkdir, readdir, readFile, realpath, writeFile } from 'node:fs/promises'
 import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import {
   DraftPackageV1Schema,
@@ -8,14 +8,29 @@ import {
   type CandidateV1,
   type DraftPackageV1,
   type DraftPackageV2,
+  type JobManifestV2,
   type RenderManifestV1,
   type RenderManifestV2,
   type VideoPlatformV1,
   SERIES_LINE,
 } from '@mindmake/contracts'
+import {
+  ARCHIVE_COPY_MAX,
+  ARCHIVE_PLACE_FOR_PLATFORM,
+  ARCHIVE_PLACES,
+  archiveFileName,
+  archiveLocalDate,
+  archivePlacesForPlatforms,
+  archiveSafeText,
+  assertArchiveDate,
+  nextArchiveFolder,
+  type ArchiveFolderInput,
+  type ArchivePlace,
+} from './archive-naming.js'
 import { hashFile, hashValue } from './hash.js'
 import { jobPath, studioPaths } from './paths.js'
 import { run } from './process.js'
+import { loadBoundProductionBriefV2 } from './production-brief.js'
 import { publicCopyChecks } from './qa.js'
 
 function srtTimestamp(milliseconds: number): string {
@@ -466,11 +481,178 @@ export async function createDraftPackage(
   return draft
 }
 
-export async function archiveJob(jobId: string): Promise<string> {
+/** What the archive needs from one approved platform package. A
+ *  DraftPackageV2 is one; a V1 package is mapped onto it. */
+export interface ArchivePackageInput {
+  platform: VideoPlatformV1
+  master_path: string
+  master_hash?: string | undefined
+  titles: readonly string[]
+  description: string
+  post_copy: string
+  pinned_comment?: string | undefined
+  cover_path?: string | undefined
+  captions_path?: string | undefined
+}
+
+/** Where an archive folder's subject came from: the approved title of the
+ *  production brief bound to the job, or, for a job made without one, the
+ *  approved package's first title. */
+export type ArchiveSubjectSource = 'production_brief' | 'package_title'
+
+export interface ArchiveJobInput {
+  /** The piece's short title, as given. Never the job id. */
+  subject: string
+  subject_from: ArchiveSubjectSource
+  /** The piece's publish date, YYYY-MM-DD, when known. Without it the
+   *  folder carries the day it was archived, on Krish's clock. */
+  publish_date?: string | undefined
+  packages: readonly ArchivePackageInput[]
+  package_artifact_hash?: string | undefined
+  now?: Date | undefined
+}
+
+export interface ArchiveJobResult {
+  archive_path: string
+  folder: string
+  subject: string
+  date: string
+  date_from: 'publish_date' | 'archive_day'
+  post_to: ArchivePlace[]
+  files: Array<{ file: string; post_to: ArchivePlace[]; platforms: VideoPlatformV1[]; sha256: string }>
+}
+
+/** The subject an archive folder is named by: the production brief's
+ *  approved title when one is bound to the job, else the approved package's
+ *  first title. With neither it refuses: a folder is never named by a job id. */
+export async function archiveSubjectV2(job: JobManifestV2, packages: readonly { titles: readonly string[] }[]): Promise<{ subject: string; subject_from: ArchiveSubjectSource }> {
+  const title = (await loadBoundProductionBriefV2(job))?.content.title
+  if (title && archiveSafeText(title)) return { subject: title, subject_from: 'production_brief' }
+  const first = packages.flatMap((item) => item.titles).find((item) => archiveSafeText(item))
+  if (first) return { subject: first, subject_from: 'package_title' }
+  throw new Error(`job ${job.job_id} has no subject to name its archive folder: no production brief is bound to it and its package has no title`)
+}
+
+const placeOrder = (place: ArchivePlace): number => ARCHIVE_PLACES.indexOf(place)
+const platformOrder = (platform: VideoPlatformV1): number => placeOrder(ARCHIVE_PLACE_FOR_PLATFORM[platform])
+const PLACE_IN_FULL: Readonly<Partial<Record<ArchivePlace, string>>> = Object.freeze({ Shorts: 'Shorts (YouTube Shorts)', Reels: 'Reels (Instagram Reels)' })
+const inFull = (place: ArchivePlace): string => PLACE_IN_FULL[place] ?? place
+
+/** Claims the first free folder name by creating it. Creating fails when the
+ *  folder exists, so a second run, or two at once, can never write into an
+ *  earlier folder: it moves on to " (2)", " (3)" and so on. */
+async function claimArchiveFolder(root: string, input: ArchiveFolderInput): Promise<{ name: string; subject: string }> {
+  const raced = new Set<string>()
+  for (let attempt = 0; attempt <= ARCHIVE_COPY_MAX; attempt += 1) {
+    const folder = nextArchiveFolder(input, [...await readdir(root), ...raced])
+    try {
+      await mkdir(join(root, folder.name))
+      return folder
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error
+      raced.add(folder.name)
+    }
+  }
+  throw new Error(`the archive already has ${ARCHIVE_COPY_MAX} folders named for this piece`)
+}
+
+/** A package file as a path inside the archived job copy, or nothing when
+ *  it lies outside the job folder. */
+function pathInJobCopy(jobRoot: string, path: string | undefined): string | undefined {
+  if (!path || !pathIsWithin(jobRoot, path)) return undefined
+  return join('job', relative(resolve(jobRoot), resolve(path)))
+}
+
+function whereToPostText(input: {
+  subject: string
+  date: string
+  dateFrom: ArchiveJobResult['date_from']
+  postTo: readonly ArchivePlace[]
+  files: ArchiveJobResult['files']
+  packages: readonly ArchivePackageInput[]
+  jobRoot: string
+}): string {
+  const lines = [
+    input.subject,
+    `Date: ${input.date} (${input.dateFrom === 'publish_date' ? 'the publish date' : 'the day it was archived, London time'})`,
+    `Post to: ${input.postTo.join(', ')}`,
+    '',
+    'Nothing in this folder has been posted. Each video is posted by hand, with the words below.',
+    '',
+    'THE VIDEOS',
+  ]
+  for (const file of input.files) lines.push(`- ${file.file}`, `  Post to ${file.post_to.map(inFull).join(', ')}.`)
+  const fileFor = new Map(input.files.flatMap((file) => file.platforms.map((platform) => [platform, file.file] as const)))
+  for (const item of [...input.packages].sort((a, b) => platformOrder(a.platform) - platformOrder(b.platform))) {
+    lines.push('', inFull(ARCHIVE_PLACE_FOR_PLATFORM[item.platform]).toUpperCase(), `Video: ${fileFor.get(item.platform) ?? ''}`)
+    const [title, ...others] = item.titles
+    if (title) lines.push(`Title: ${title}`)
+    if (others.length) lines.push('Other titles:', ...others.map((other) => `- ${other}`))
+    if (item.description.trim()) lines.push('Description:', item.description.trim())
+    if (item.post_copy.trim()) lines.push('Post:', item.post_copy.trim())
+    if (item.pinned_comment?.trim()) lines.push(`Pinned comment: ${item.pinned_comment.trim()}`)
+    const cover = pathInJobCopy(input.jobRoot, item.cover_path)
+    const captions = pathInJobCopy(input.jobRoot, item.captions_path)
+    if (cover) lines.push(`Cover: ${cover}`)
+    if (captions) lines.push(`Captions: ${captions}`)
+  }
+  return `${lines.join('\n')}\n`
+}
+
+/** Files an approved package in the archive: one folder named by the date,
+ *  the subject and where to post it, holding each approved master under a
+ *  name that says where it goes, a where-to-post.txt with the approved
+ *  words for each platform, a job.txt naming the Studio job, and, in `job`,
+ *  an exact copy of the job folder as the archive always held. It never
+ *  writes into a folder that exists and never touches the job folder. */
+export async function archiveJob(jobId: string, input: ArchiveJobInput): Promise<ArchiveJobResult> {
   const archiveRoot = studioPaths().archiveRoot
   if (!archiveRoot) throw new Error('MINDMAKE_ARCHIVE_ROOT is not configured')
-  const destination = join(archiveRoot, jobId)
+  const jobRoot = jobPath(jobId)
+  if (!(await lstat(jobRoot)).isDirectory()) throw new Error(`job ${jobId} has no job folder to archive`)
+  if (!input.packages.length) throw new Error('there is no approved package to archive')
+  const now = input.now ?? new Date()
+  const date = input.publish_date ? assertArchiveDate(input.publish_date) : archiveLocalDate(now)
+  const dateFrom = input.publish_date ? 'publish_date' as const : 'archive_day' as const
+
+  // One file per exact master: platforms that share a master share its file.
+  const groups = new Map<string, { master_path: string; platforms: VideoPlatformV1[] }>()
+  for (const item of input.packages) {
+    const sha256 = item.master_hash ?? await hashFile(item.master_path)
+    const group = groups.get(sha256) ?? { master_path: item.master_path, platforms: [] }
+    if (!group.platforms.includes(item.platform)) group.platforms.push(item.platform)
+    groups.set(sha256, group)
+  }
+  const postTo = archivePlacesForPlatforms(input.packages.map((item) => item.platform))
+
   await mkdir(archiveRoot, { recursive: true })
-  await cp(jobPath(jobId), destination, { recursive: true, force: false, errorOnExist: true })
-  return destination
+  const folder = await claimArchiveFolder(archiveRoot, { date, subject: input.subject, places: postTo })
+  const destination = join(archiveRoot, folder.name)
+  const files: ArchiveJobResult['files'] = []
+  const sorted = [...groups.entries()].sort(([, a], [, b]) => Math.min(...a.platforms.map(platformOrder)) - Math.min(...b.platforms.map(platformOrder)))
+  for (const [sha256, group] of sorted) {
+    const places = archivePlacesForPlatforms(group.platforms)
+    const file = archiveFileName({ subject: folder.subject, shape: 'tall', places })
+    const target = join(destination, file)
+    await cp(group.master_path, target, { force: false, errorOnExist: true })
+    if (await hashFile(target) !== sha256) throw new Error(`the archived copy of ${file} does not match the approved master`)
+    const platforms = [...group.platforms].sort((a, b) => platformOrder(a) - platformOrder(b))
+    files.push({ file, post_to: places, platforms, sha256 })
+  }
+  await cp(jobRoot, join(destination, 'job'), { recursive: true, force: false, errorOnExist: true })
+  const subject = input.subject.replace(/\s+/g, ' ').trim()
+  const subjectFrom = input.subject_from === 'production_brief'
+    ? 'the approved title of the production brief bound to the job'
+    : 'the approved package\'s first title, because no production brief is bound to the job'
+  const jobText = [
+    `Studio job: ${jobId}`,
+    ...(input.package_artifact_hash ? [`Approved package: ${input.package_artifact_hash}`] : []),
+    `Archived: ${now.toISOString()}`,
+    `Subject: ${subject} (from ${subjectFrom})`,
+    '',
+    'The job folder beside this file is an exact copy of the Studio\'s job folder: its approvals, its history and every file the package was made from.',
+  ].join('\n')
+  await writeFile(join(destination, 'job.txt'), `${jobText}\n`, { encoding: 'utf8', flag: 'wx' })
+  await writeFile(join(destination, 'where-to-post.txt'), whereToPostText({ subject, date, dateFrom, postTo, files, packages: input.packages, jobRoot }), { encoding: 'utf8', flag: 'wx' })
+  return { archive_path: destination, folder: folder.name, subject: folder.subject, date, date_from: dateFrom, post_to: postTo, files }
 }

@@ -4,7 +4,7 @@
 
 ## Source and state
 
-GitHub is authoritative for source, configuration, schemas, tests, and skills. On Windows, runtime state defaults to `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime` and is never committed. This explicit non-virtualized path keeps Codex and the independent Scheduled Task on one job, receipt, Python, browser, and cache root. Approved job folders may be copied to `MINDMAKE_ARCHIVE_ROOT`.
+GitHub is authoritative for source, configuration, schemas, tests, and skills. On Windows, runtime state defaults to `%USERPROFILE%\Documents\MindmakeVideoStudio\runtime` and is never committed. This explicit non-virtualized path keeps Codex and the independent Scheduled Task on one job, receipt, Python, browser, and cache root. An approved package is filed in `MINDMAKE_ARCHIVE_ROOT` by `studio v2 package archive`, in a folder named by the date, the piece's title and where to post it ("The archive", below).
 
 Every job contains `job.json`, append-only `events.jsonl`, immutable stage artifacts, media, renders, and platform packages. If the SQLite index is lost, rebuild it with:
 
@@ -401,6 +401,30 @@ Inspect the approved device library with `studio v2 repertoire inspect`. Use `st
 Use `studio v2 repertoire record-feedback` to append a confirmed device decision to the job-local JSONL ledger. Use `studio v2 repertoire learning-proposals` during the weekly learning run. Every returned proposal has `activation_allowed: false`; review it in Control Center and promote it through an approved Git change only.
 
 If selection returns an invention, treatment remains blocked. Review the stated repertoire gap and fallback first. If the new mechanism is genuinely worthwhile, Krish must approve the exact proposal, then approve its phone-size styleframes and animatic before rendering. Only one invented or experimental mechanism may appear in a Short.
+
+## The archive
+
+Krish, 2026-10-06: "Can you ensure all videos are always archived properly in folder with date/subject/where I can post it in the folder name?" `studio v2 package archive --job <job-id> [--date YYYY-MM-DD]` keeps its gates (Krish's approval of the exact package, calibration jobs refused, every package file verified against its hash) and files the package in `MINDMAKE_ARCHIVE_ROOT` in one new folder:
+
+```text
+2026-10-06 Who picks your AI (post to Shorts, Reels, TikTok, LinkedIn)
+    Who picks your AI - tall 9x16 - Shorts.mp4
+    Who picks your AI - tall 9x16 - Reels.mp4
+    Who picks your AI - tall 9x16 - TikTok.mp4
+    Who picks your AI - tall 9x16 - LinkedIn.mp4
+    where-to-post.txt
+    job.txt
+    job\
+```
+
+- **Date.** `--date` is the piece's publish date. A Studio job holds no publish date, so without it the folder carries the day it was archived, London time.
+- **Subject.** The approved title of the production brief bound to the job. A job made without a brief, and every V1 job, uses the approved package's first title, which is the Short's hook. A folder is never named by a job id.
+- **Where to post.** The package's platforms in plain names, always in the order YouTube, Substack, Shorts, Reels, TikTok, LinkedIn: `youtube_shorts` is Shorts and `instagram_reels` is Reels. Platforms whose masters are the same exact file share one file, named for all of them. Each copied master is hashed again against its approved hash.
+- **Inside.** `where-to-post.txt` lists each file and where it goes, then each platform's approved titles, description, post and pinned comment, and where its cover and captions are in the job copy. `job.txt` names the job, the approved package hash and where the subject came from. `job` is an exact copy of the job folder, as the archive always held.
+- **Safe and never overwritten.** Names drop `< > : " / \ | ? *`, never end in a dot or a space, and stay within 150 characters by cutting only the subject. A folder that exists is never written into: a second archive of the same job lands in a folder ending ` (2)`. The job folder is never moved or changed.
+- **One rule.** The rule is written once as cases in `config/archive-naming.cases.json`, implemented in `packages/core/src/archive-naming.ts` and in `scripts/quick-edit/archive.py`, which files the videos made outside the Studio. Both are tested against every case.
+
+Archives made before 2026-10-06 keep their bare job id names.
 
 ## Publishing boundary
 

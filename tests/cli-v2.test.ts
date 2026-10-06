@@ -5,7 +5,7 @@ import { join, resolve } from 'node:path'
 import { promisify } from 'node:util'
 import { Command } from 'commander'
 import { afterEach, describe, expect, it } from 'vitest'
-import { assertDriveSourceBundleProvenance, classifyError } from '@mindmake/core'
+import { archiveSubjectV2, assertDriveSourceBundleProvenance, classifyError, loadJobV2 } from '@mindmake/core'
 import { assertCanonicalEvidencePacketPathV2, assertYoutubePrivateOnly, evidenceApprovalCurrentnessIssuesV2, evidenceClaimUrlIssues, qaPassed, registerV2Commands, resolveApprovalArtifactHash, type CurrentEvidencePacketRefV2, type EvidenceReviewPacketV2 } from '../packages/cli/src/v2.js'
 import { runStudioCli } from '../packages/cli/src/index.js'
 import type { JobManifestV2 } from '@mindmake/contracts'
@@ -97,6 +97,61 @@ describe.sequential('V2 CLI', () => {
     const createdId = (created.job as { job_id: string }).job_id
     await expect(run('call', '--job', createdId, '--beat', 'beat-call')).rejects.toThrow(`job ${createdId} has no production brief bound to it, and a call comes only from the approved text of the job's production brief`)
   }, 30_000)
+
+  it('names the archive by the production brief\'s title, or without one the package\'s first title', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'mindmake-cli-archive-subject-'))
+    roots.push(root)
+    process.env.MINDMAKE_RUNTIME_ROOT = join(root, 'runtime')
+    const configPath = join(process.cwd(), 'config', 'studio.json')
+    const run = async (...args: string[]): Promise<Record<string, unknown>> => {
+      const outputs: unknown[] = []
+      const program = new Command().exitOverride()
+      registerV2Commands(program, { repoRoot: process.cwd(), configPath, skillPaths: [], out: (value) => outputs.push(value) })
+      await program.parseAsync(['node', 'studio', 'v2', ...args])
+      return outputs[0] as Record<string, unknown>
+    }
+    const revision = 'e'.repeat(64)
+    const briefPath = join(root, 'brief.json')
+    await writeFile(briefPath, JSON.stringify({
+      schema_version: 1,
+      brief_id: 'brief_cli_archive_subject',
+      content_idea_id: '904658db-4df2-4537-a0ed-ebe93e081db7',
+      content_revision_hash: revision,
+      series: 'mind_the_gap',
+      production_kinds: ['video'],
+      source_mode: 'short_native',
+      content: { title: 'Who picks your AI?', thesis: 'The software that picks the brain for you is becoming the default.', approved_text: await readFile('editions/2026-09-who-picks-your-ai/body.md', 'utf8'), audience: 'Leaders who buy AI.', intended_payoff: 'Know who picks the brain behind your AI, and when to check.' },
+      claims: [],
+      visual_opportunities: [],
+      hard_gates: { truth: 'passed', rights: 'passed', confidentiality: 'passed', meaning: 'passed', naming: 'passed' },
+      editorial_approval: { approved_by: 'Krish', approved_at: '2026-09-28T12:00:00.000Z', approval_revision_hash: revision },
+    }), 'utf8')
+    const briefed = await loadJobV2((await run('production-brief', 'import', '--input', briefPath)).job_id as string)
+    const packages = [{ titles: ['The hook of the Short', 'A backup'] }, { titles: ['LinkedIn title'] }]
+    expect(await archiveSubjectV2(briefed, packages)).toEqual({ subject: 'Who picks your AI?', subject_from: 'production_brief' })
+
+    const created = await run('job', 'create', '--series', 'mind_the_gap', '--mode', 'short_native', '--techniques', join(process.cwd(), 'config', 'techniques.json'), '--no-identity')
+    const unbriefed = await loadJobV2((created.job as { job_id: string }).job_id)
+    expect(await archiveSubjectV2(unbriefed, packages)).toEqual({ subject: 'The hook of the Short', subject_from: 'package_title' })
+    await expect(archiveSubjectV2(unbriefed, [{ titles: [' ', '?'] }])).rejects.toThrow(`job ${unbriefed.job_id} has no subject to name its archive folder`)
+  }, 30_000)
+
+  it('keeps every safety check of the archive command before anything is copied', async () => {
+    // Approval required, calibration refused and the package verified, all
+    // before the subject is read and archiveJob runs (which never overwrites).
+    const source = await readFile('packages/cli/src/v2.ts', 'utf8')
+    const body = source.slice(source.indexOf("packages.command('archive')"), source.indexOf("const publish = v2.command('publish')"))
+    const at = (text: string): number => {
+      const index = body.indexOf(text)
+      expect(index, text).toBeGreaterThan(-1)
+      return index
+    }
+    const copy = at('await archiveJob(options.job, {')
+    expect(at("manifest.purpose === 'calibration'")).toBeLessThan(copy)
+    expect(at("hasApprovalV2(manifest, 'package', packageArtifact.artifact_hash, 'krish')")).toBeLessThan(copy)
+    expect(at('await verifyPackagePayload(packageArtifact.payload, manifest)')).toBeLessThan(at('await archiveSubjectV2(manifest, packageArtifact.payload.packages)'))
+    expect(at('await archiveSubjectV2(manifest, packageArtifact.payload.packages)')).toBeLessThan(copy)
+  })
 
   it('checks the call wherever a review or treatment manifest is taken in', async () => {
     // styleframes create, animatic create and treatment register all read

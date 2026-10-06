@@ -551,8 +551,15 @@ packageCommand.command('linkedin')
     const renderManifest = RenderManifestV1Schema.parse(await readJson(render.payload.manifest_path))
     const draft = await createDraftPackage(options.job, 'linkedin', render.payload.master_path, candidate, renderManifest, qa.payload)
     const artifact = await completeStage(options.job, 'package', draft, { render: render.payload.master_hash, qa: qa.artifact_hash }, { package: 'linkedin-v1' })
-    const archivePath = options.archive ? await archiveJob(options.job) : undefined
-    out({ job_id: options.job, artifact_hash: artifact.artifact_hash, draft, ...(archivePath ? { archive_path: archivePath } : {}) })
+    // A V1 job has no production brief, so its folder is named by the
+    // package's first title (archiveJob, config/archive-naming.cases.json).
+    const archived = options.archive ? await archiveJob(options.job, {
+      subject: draft.titles.find((title) => title.trim()) || candidate.hook,
+      subject_from: 'package_title',
+      packages: [{ ...draft, platform: 'linkedin' }],
+      package_artifact_hash: artifact.artifact_hash,
+    }) : undefined
+    out({ job_id: options.job, artifact_hash: artifact.artifact_hash, draft, ...(archived ? { archive_path: archived.archive_path, archive: archived } : {}) })
   })
 
 const publish = program.command('publish')

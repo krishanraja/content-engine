@@ -309,6 +309,13 @@ import`, `source analyze`), `repertoire`, `visual-plan`, `assets`, `call`,
 `runner once|status|resolve-project-conflict|project|daemon`, `analytics
 import` and `experiment`. Stdout is JSON; diagnostics go to stderr.
 
+`package archive` files an approved package in the Drive archive in a folder
+named by the date, the piece's title and where to post it, such as
+`2026-10-06 Who picks your AI (post to Shorts, Reels, TikTok, LinkedIn)`,
+with the job id in its `job.txt` (Krish, 2026-10-06). The rule is
+`config/archive-naming.cases.json`, shared with `scripts/quick-edit/archive.py`
+(`docs/OPERATIONS.md`, "The archive").
+
 ## How it connects to the rest
 
 - **Production briefs.** Control Center approves a brief built by the content

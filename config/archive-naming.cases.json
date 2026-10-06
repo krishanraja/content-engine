@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "about": [
+    "How a finished video is filed in the archive. Krish, 2026-10-06: \"Can you ensure all videos are always archived properly in folder with date/subject/where I can post it in the folder name?\"",
+    "Two programs follow this rule: the Studio (packages/core/src/archive-naming.ts) and quick-edit (scripts/quick-edit/archive.py). Both are tested against every case in this file, so they cannot drift apart. Change the rule here first, then in both programs.",
+    "Folder: YYYY-MM-DD <Subject> (post to <Where>). Files: <Subject> - tall 9x16 - <Where>.mp4 and <Subject> - wide 16x9 - <Where>.mp4.",
+    "Date: the piece's publish date when known, else the day it was archived on Krish's clock (time_zone).",
+    "Where: the places the files are for, always in the order of places, joined with a comma and a space. A name is matched whatever its capitals.",
+    "Safe on Windows and Google Drive: every control character and every kind of space becomes a plain space, the characters < > : \" / \\ | ? * are removed, runs of spaces become one, and spaces and dots at either end are removed (dots only at the end).",
+    "At most folder_max characters (counted as Unicode code points) in a folder name. Only the subject is shortened: it is cut at the last space that fits (or mid-word when one word is too long), and spaces, dots, commas, semicolons and dashes left at its end are removed. The date and the where list are never shortened.",
+    "When the folder already exists (capitals ignored, as on Windows and Drive), the name gets \" (2)\", then \" (3)\" and so on, still inside folder_max. Nothing is ever overwritten."
+  ],
+  "time_zone": "Europe/London",
+  "folder_max": 150,
+  "copy_max": 999,
+  "places": ["YouTube", "Substack", "Shorts", "Reels", "TikTok", "LinkedIn"],
+  "studio_platforms": {
+    "youtube_shorts": "Shorts",
+    "instagram_reels": "Reels",
+    "tiktok": "TikTok",
+    "linkedin": "LinkedIn"
+  },
+  "quick_edit": {
+    "tall": ["Shorts", "Reels", "LinkedIn"],
+    "tall_with_tiktok": ["Shorts", "Reels", "TikTok", "LinkedIn"],
+    "wide": ["YouTube", "Substack"]
+  },
+  "folders": [
+    {
+      "why": "Launch video Who gets paid, both shapes from quick-edit",
+      "date": "2026-10-05",
+      "subject": "Who gets paid",
+      "places": ["Shorts", "Reels", "LinkedIn", "YouTube", "Substack"],
+      "folder": "2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn)",
+      "subject_used": "Who gets paid"
+    },
+    {
+      "why": "Launch hello video, both shapes from quick-edit",
+      "date": "2026-10-05",
+      "subject": "Launch hello",
+      "places": ["Shorts", "Reels", "LinkedIn", "YouTube", "Substack"],
+      "folder": "2026-10-05 Launch hello (post to YouTube, Substack, Shorts, Reels, LinkedIn)",
+      "subject_used": "Launch hello"
+    },
+    {
+      "why": "The Studio's four-platform package, given in the Studio's own order; the question mark is removed",
+      "date": "2026-10-06",
+      "subject": "Who picks your AI?",
+      "places": ["Shorts", "LinkedIn", "TikTok", "Reels"],
+      "folder": "2026-10-06 Who picks your AI (post to Shorts, Reels, TikTok, LinkedIn)",
+      "subject_used": "Who picks your AI"
+    },
+    {
+      "why": "Places in any order and any capitals, repeated, come out once each in the fixed order",
+      "date": "2026-11-02",
+      "subject": "Amazon vs Meta",
+      "places": ["linkedin", "YOUTUBE", "Shorts", " youtube "],
+      "folder": "2026-11-02 Amazon vs Meta (post to YouTube, Shorts, LinkedIn)",
+      "subject_used": "Amazon vs Meta"
+    },
+    {
+      "why": "Characters Windows refuses are removed, and a tab becomes a space",
+      "date": "2026-10-07",
+      "subject": "Meta's \"Muse\": who pays? <draft>\tv2/final",
+      "places": ["Shorts"],
+      "folder": "2026-10-07 Meta's Muse who pays draft v2final (post to Shorts)",
+      "subject_used": "Meta's Muse who pays draft v2final"
+    },
+    {
+      "why": "Backslash, bar and star are removed and the spaces left behind collapse",
+      "date": "2026-10-07",
+      "subject": "AI | the 10* rule \\ explained",
+      "places": ["YouTube"],
+      "folder": "2026-10-07 AI the 10 rule explained (post to YouTube)",
+      "subject_used": "AI the 10 rule explained"
+    },
+    {
+      "why": "Control characters and non-breaking spaces become plain spaces, so words stay apart",
+      "date": "2026-10-07",
+      "subject": "Who\ngets\u0007paid\u00a0\u00a0now",
+      "places": ["Reels"],
+      "folder": "2026-10-07 Who gets paid now (post to Reels)",
+      "subject_used": "Who gets paid now"
+    },
+    {
+      "why": "No trailing dot or space, which Windows drops and Drive mangles",
+      "date": "2026-10-07",
+      "subject": "\u00a0 The end of the free lunch... ",
+      "places": ["Substack"],
+      "folder": "2026-10-07 The end of the free lunch (post to Substack)",
+      "subject_used": "The end of the free lunch"
+    },
+    {
+      "why": "Too long: the subject is cut at the last space that fits; the date and the where list stay whole (147 characters)",
+      "date": "2026-10-05",
+      "subject": "Muse, Dot and the next wave of agents are now going shopping. When an AI agent does your shopping, who actually gets paid?",
+      "places": ["YouTube", "Substack", "Shorts", "Reels", "LinkedIn"],
+      "folder": "2026-10-05 Muse, Dot and the next wave of agents are now going shopping. When an AI agent does (post to YouTube, Substack, Shorts, Reels, LinkedIn)",
+      "subject_used": "Muse, Dot and the next wave of agents are now going shopping. When an AI agent does"
+    },
+    {
+      "why": "Too long, all six places, and a second copy: the suffix fits inside the 150 too (148 characters)",
+      "date": "2026-10-05",
+      "subject": "Muse, Dot and the next wave of agents are now going shopping. When an AI agent does your shopping, who actually gets paid?",
+      "places": ["YouTube", "Substack", "Shorts", "Reels", "TikTok", "LinkedIn"],
+      "copy": 2,
+      "folder": "2026-10-05 Muse, Dot and the next wave of agents are now going shopping. When an AI (post to YouTube, Substack, Shorts, Reels, TikTok, LinkedIn) (2)",
+      "subject_used": "Muse, Dot and the next wave of agents are now going shopping. When an AI"
+    },
+    {
+      "why": "Too long, and the cut lands after a comma: the comma goes",
+      "date": "2026-10-08",
+      "subject": "Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha,",
+      "places": ["Shorts"],
+      "folder": "2026-10-08 Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha (post to Shorts)",
+      "subject_used": "Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha, Alpha"
+    },
+    {
+      "why": "One word too long to fit is cut mid-word, to exactly 150 characters",
+      "date": "2026-10-08",
+      "subject": "SupercalifragilisticexpialidociousSupercalifragilisticexpialidociousSupercalifragilisticexpialidociousSupercalifragilisticexpialidociousSupercalifragilisticexpialidociousSupercalifragilisticexpialidocious",
+      "places": ["Shorts"],
+      "folder": "2026-10-08 SupercalifragilisticexpialidociousSupercalifragilisticexpialidociousSupercalifragilisticexpialidociousSupercalifragilistic (post to Shorts)",
+      "subject_used": "SupercalifragilisticexpialidociousSupercalifragilisticexpialidociousSupercalifragilisticexpialidociousSupercalifragilistic"
+    },
+    {
+      "why": "A leap day in a leap year is a date",
+      "date": "2028-02-29",
+      "subject": "Who gets paid",
+      "places": ["TikTok"],
+      "folder": "2028-02-29 Who gets paid (post to TikTok)",
+      "subject_used": "Who gets paid"
+    },
+    {
+      "why": "A third copy",
+      "date": "2026-10-05",
+      "subject": "Who gets paid",
+      "places": ["YouTube", "Substack", "Shorts", "Reels", "LinkedIn"],
+      "copy": 3,
+      "folder": "2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn) (3)",
+      "subject_used": "Who gets paid"
+    },
+    { "why": "A subject with nothing a name can keep is refused", "date": "2026-10-05", "subject": "???", "places": ["Shorts"], "error": "the subject has nothing a folder name can keep" },
+    { "why": "Dots alone are refused too", "date": "2026-10-05", "subject": " ... ", "places": ["Shorts"], "error": "the subject has nothing a folder name can keep" },
+    { "why": "A date that is not on the calendar is refused", "date": "2026-02-30", "subject": "Who gets paid", "places": ["Shorts"], "error": "is not a date in the form YYYY-MM-DD" },
+    { "why": "A date in another form is refused", "date": "5 Oct 2026", "subject": "Who gets paid", "places": ["Shorts"], "error": "is not a date in the form YYYY-MM-DD" },
+    { "why": "A leap day only in a leap year", "date": "2027-02-29", "subject": "Who gets paid", "places": ["Shorts"], "error": "is not a date in the form YYYY-MM-DD" },
+    { "why": "There is no year nought", "date": "0000-01-01", "subject": "Who gets paid", "places": ["Shorts"], "error": "is not a date in the form YYYY-MM-DD" },
+    { "why": "A place outside the six is refused", "date": "2026-10-05", "subject": "Who gets paid", "places": ["Shorts", "Instagram"], "error": "is not a place to post" },
+    { "why": "A video for nowhere is refused", "date": "2026-10-05", "subject": "Who gets paid", "places": [], "error": "a video needs at least one place to post it" },
+    { "why": "A copy number out of range is refused", "date": "2026-10-05", "subject": "Who gets paid", "places": ["Shorts"], "copy": 0, "error": "copy must be a whole number from 1 to 999" }
+  ],
+  "files": [
+    { "why": "Who gets paid, the tall video", "subject": "Who gets paid", "shape": "tall", "places": ["Shorts", "Reels", "LinkedIn"], "file": "Who gets paid - tall 9x16 - Shorts, Reels, LinkedIn.mp4" },
+    { "why": "Who gets paid, the wide video", "subject": "Who gets paid", "shape": "wide", "places": ["YouTube", "Substack"], "file": "Who gets paid - wide 16x9 - YouTube, Substack.mp4" },
+    { "why": "Launch hello, the tall video", "subject": "Launch hello", "shape": "tall", "places": ["Shorts", "Reels", "LinkedIn"], "file": "Launch hello - tall 9x16 - Shorts, Reels, LinkedIn.mp4" },
+    { "why": "Launch hello, the wide video", "subject": "Launch hello", "shape": "wide", "places": ["YouTube", "Substack"], "file": "Launch hello - wide 16x9 - YouTube, Substack.mp4" },
+    { "why": "A tall video for TikTok as well, when the config says so", "subject": "Who gets paid", "shape": "tall", "places": ["LinkedIn", "TikTok", "Reels", "Shorts"], "file": "Who gets paid - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4" },
+    { "why": "One Studio master for one platform", "subject": "Who picks your AI?", "shape": "tall", "places": ["Shorts"], "file": "Who picks your AI - tall 9x16 - Shorts.mp4" },
+    { "why": "The same cleaning as the folder", "subject": "Meta's \"Muse\": who pays? ", "shape": "wide", "places": ["youtube"], "file": "Meta's Muse who pays - wide 16x9 - YouTube.mp4" },
+    { "why": "A file for nowhere is refused", "subject": "Who gets paid", "shape": "tall", "places": [], "error": "a video needs at least one place to post it" }
+  ],
+  "existing": [
+    {
+      "why": "The folder exists, so the new one is the second copy",
+      "date": "2026-10-05",
+      "subject": "Who gets paid",
+      "places": ["YouTube", "Substack", "Shorts", "Reels", "LinkedIn"],
+      "existing": ["2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn)"],
+      "folder": "2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn) (2)"
+    },
+    {
+      "why": "The first two exist, so the third",
+      "date": "2026-10-05",
+      "subject": "Who gets paid",
+      "places": ["YouTube", "Substack", "Shorts", "Reels", "LinkedIn"],
+      "existing": ["2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn)", "2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn) (2)"],
+      "folder": "2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn) (3)"
+    },
+    {
+      "why": "Windows and Drive ignore capitals, so a folder that differs only in capitals is taken",
+      "date": "2026-10-05",
+      "subject": "Who gets paid",
+      "places": ["YouTube", "Substack", "Shorts", "Reels", "LinkedIn"],
+      "existing": ["2026-10-05 WHO GETS PAID (post to youtube, substack, shorts, reels, linkedin)"],
+      "folder": "2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn) (2)"
+    },
+    {
+      "why": "Only a second copy exists, so the plain name is free",
+      "date": "2026-10-05",
+      "subject": "Who gets paid",
+      "places": ["YouTube", "Substack", "Shorts", "Reels", "LinkedIn"],
+      "existing": ["2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn) (2)", "2026-10-05 Something else (post to YouTube)"],
+      "folder": "2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn)"
+    },
+    {
+      "why": "A long subject that already exists: the copy number still fits inside the 150",
+      "date": "2026-10-05",
+      "subject": "Muse, Dot and the next wave of agents are now going shopping. When an AI agent does your shopping, who actually gets paid?",
+      "places": ["YouTube", "Substack", "Shorts", "Reels", "LinkedIn"],
+      "existing": ["2026-10-05 Muse, Dot and the next wave of agents are now going shopping. When an AI agent does (post to YouTube, Substack, Shorts, Reels, LinkedIn)"],
+      "folder": "2026-10-05 Muse, Dot and the next wave of agents are now going shopping. When an AI agent (post to YouTube, Substack, Shorts, Reels, LinkedIn) (2)"
+    }
+  ],
+  "dates": [
+    { "why": "Midday in October is the same day", "instant": "2026-10-05T12:00:00Z", "date": "2026-10-05" },
+    { "why": "11.30 at night by the world clock is already the next day in a London summer", "instant": "2026-10-05T23:30:00Z", "date": "2026-10-06" },
+    { "why": "In winter London keeps world time", "instant": "2026-12-01T23:30:00Z", "date": "2026-12-01" },
+    { "why": "The night before the clocks go forward", "instant": "2026-03-28T23:30:00Z", "date": "2026-03-28" },
+    { "why": "The night the clocks have gone forward", "instant": "2026-03-29T23:30:00Z", "date": "2026-03-30" },
+    { "why": "Still summer time just before the clocks go back", "instant": "2026-10-24T23:30:00Z", "date": "2026-10-25" },
+    { "why": "The night the clocks have gone back", "instant": "2026-10-25T23:30:00Z", "date": "2026-10-25" },
+    { "why": "New Year's Eve in winter time", "instant": "2026-12-31T23:59:00Z", "date": "2026-12-31" },
+    { "why": "Midsummer, the next morning in London", "instant": "2027-06-30T23:00:00Z", "date": "2027-07-01" }
+  ]
+}

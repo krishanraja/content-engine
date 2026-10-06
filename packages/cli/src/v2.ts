@@ -52,6 +52,7 @@ import {
   applyPresenterIdentityCorrections,
   acknowledgeRunnerProjectConflict,
   archiveJob,
+  archiveSubjectV2,
   assessTranscriptQuality,
   assertRenderLineageV2,
   attachSourceBundleV2,
@@ -2280,16 +2281,27 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       })
     })
 
+  // Krish, 2026-10-06: "Can you ensure all videos are always archived
+  // properly in folder with date/subject/where I can post it in the folder
+  // name?" The folder is named by config/archive-naming.cases.json's rule:
+  // the date, the piece's title and the platforms (archiveJob).
   packages.command('archive')
     .requiredOption('--job <jobId>')
+    .option('--date <YYYY-MM-DD>', 'the piece\'s publish date; without it, the day it is archived, London time')
     .action(async (options) => {
       const manifest = await loadJobV2(options.job)
       if (manifest.purpose === 'calibration') throw new Error('calibration jobs cannot be archived as approved deliverables')
       const packageArtifact = await readStageArtifactV2<PackagePayload>(options.job, 'package')
       if (!hasApprovalV2(manifest, 'package', packageArtifact.artifact_hash, 'krish')) throw new Error('the exact four-platform package requires Krish approval before archive')
       await verifyPackagePayload(packageArtifact.payload, manifest)
-      const archivePath = await archiveJob(options.job)
-      context.out({ job_id: options.job, package_artifact_hash: packageArtifact.artifact_hash, archive_path: archivePath })
+      const subject = await archiveSubjectV2(manifest, packageArtifact.payload.packages)
+      const archived = await archiveJob(options.job, {
+        ...subject,
+        publish_date: options.date,
+        packages: packageArtifact.payload.packages,
+        package_artifact_hash: packageArtifact.artifact_hash,
+      })
+      context.out({ job_id: options.job, package_artifact_hash: packageArtifact.artifact_hash, subject_from: subject.subject_from, ...archived })
     })
 
   const publish = v2.command('publish').description('Private YouTube upload only; every other platform remains a local package')

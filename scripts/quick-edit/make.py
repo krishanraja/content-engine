@@ -21,12 +21,16 @@ What it does, in order:
 Needs Python 3.10+, ffmpeg and ffprobe on the PATH, and for transcription
 `pip install faster-whisper`. Run from anywhere:
 
-    python make.py config.json --out OUTDIR [--only 9x16|16x9] [--plan] [--share-mib 29]
+    python make.py config.json --out OUTDIR [--only 9x16|16x9] [--plan] [--share-mib 29] [--archive [ROOT]]
 
 `--plan` stops after the transcript: it prints every cut, every graphic's
 window and the caption count, and renders nothing. Run it first.
 `--share-mib` also writes a copy of each finished video under that size
-(share.py), for chat uploads that stop at 30 MiB. README.md has the rest.
+(share.py), for chat uploads that stop at 30 MiB.
+`--archive` then files the finished videos in the archive (archive.py), in a
+folder named by the date, the config's `subject` and where to post them. ROOT
+defaults to MINDMAKE_ARCHIVE_ROOT, the archive the Studio uses. README.md has
+the rest.
 """
 import argparse
 import json
@@ -35,6 +39,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from archive import ArchiveError, archive_root, archive_videos, plan as archive_plan, read_package
 from share import share_copy
 
 CREAM, INK, MINT = '&H00E4EFF4', '&H0012150C', '&H00C0F07E'
@@ -243,6 +248,38 @@ def measure_loudness(src):
     return json.loads(m.group(0))
 
 
+def archive_settings(args, cfg):
+    """Checks --archive before anything is transcribed or rendered, so a
+    missing folder, subject or bad setting stops the run in seconds, not
+    after the render. None without --archive."""
+    if args.archive is None:
+        return None
+    try:
+        root = Path(archive_root(args.archive or None))
+        if not root.is_dir():
+            raise ArchiveError(f'the archive folder {root} does not exist: check the path, and that Google Drive is running if it is on Drive')
+        subject = cfg.get('subject')
+        if not isinstance(subject, str) or not subject.strip():
+            raise ArchiveError('--archive needs a "subject" in the config: the piece\'s short title, as it should read, such as "Who gets paid"')
+        post_to = cfg.get('post_to')
+        if isinstance(post_to, str):
+            post_to = [part for part in post_to.split(',') if part.strip()]
+        if post_to is not None and not (isinstance(post_to, list) and all(isinstance(part, str) for part in post_to)):
+            raise ArchiveError('"post_to" in the config is a list of places, such as ["YouTube", "LinkedIn"]')
+        tiktok = cfg.get('tiktok', False)
+        if not isinstance(tiktok, bool):
+            raise ArchiveError('"tiktok" in the config is true or false')
+        day = cfg.get('date')
+        settings = {'root': root, 'subject': subject, 'day': day, 'post_to': post_to, 'tiktok': tiktok, 'package': args.package}
+        shapes = ['tall' if asp == '9x16' else 'wide' for asp in ([args.only] if args.only else ['9x16', '16x9'])]
+        planned = archive_plan(subject, shapes, day, post_to, tiktok)
+        if args.package:
+            read_package(args.package)
+    except ArchiveError as error:
+        sys.exit(f'archive: {error}')
+    return {**settings, 'plan': planned}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('config')
@@ -250,10 +287,16 @@ def main():
     ap.add_argument('--only', choices=['9x16', '16x9'])
     ap.add_argument('--plan', action='store_true', help='print the cuts and graphic windows, render nothing')
     ap.add_argument('--share-mib', type=float, help='also write a copy of each video under this size')
+    ap.add_argument('--archive', nargs='?', const='', metavar='ROOT',
+                    help='file the finished videos in the archive (default ROOT: MINDMAKE_ARCHIVE_ROOT)')
+    ap.add_argument('--package', help='with --archive: the engine\'s package answer, for the YouTube and Substack words')
     args = ap.parse_args()
+    if args.package and args.archive is None:
+        ap.error('--package goes with --archive')
     cfg_path = Path(args.config).resolve()
     base = cfg_path.parent
     cfg = json.loads(cfg_path.read_text())
+    archiving = archive_settings(args, cfg)
     P = lambda p: (base / p).resolve()
     out = Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -273,7 +316,8 @@ def main():
         print(json.dumps({'name': cfg['name'], 'source_seconds': round(dur, 2), 'cut_seconds': total, 'segments': len(segs),
                           'cuts': [{'words': ' '.join(words[i]['w'].strip() for i in range(a, b + 1)), 'at': words[a]['s']} for a, b in cuts],
                           'cues': [{k: c[k] for k in ('id', 's', 'e')} for c in wins], 'missing_cues': missing,
-                          'captions': len(groups)}, indent=1))
+                          'captions': len(groups),
+                          **({'archive': {k: archiving['plan'][k] for k in ('folder', 'videos')}} if archiving else {})}, indent=1))
         sys.exit(1 if missing else 0)
 
     # Stage 1: the edited talking head, cropped to the real picture.
@@ -368,11 +412,27 @@ def main():
         for j, t in enumerate(shots):
             run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', f'{t:.2f}', '-i', final.name, '-frames:v', '1', '-vf', 'scale=-2:640',
                  f'preview-{asp}-{j:02d}.jpg'], quiet=True, cwd=out)
+    archive_failed = None
+    if archiving:
+        # Copies only what this run made: a share copy left from an earlier
+        # run is never picked up in place of a fresh one.
+        made = {asp: out / report[f'{asp}_file'] for asp in aspects}
+        try:
+            report['archive'] = archive_videos(
+                archiving['root'], archiving['subject'], tall=made.get('9x16'), wide=made.get('16x9'), day=archiving['day'],
+                tall_share=report.get('9x16_share', {}).get('file'), wide_share=report.get('16x9_share', {}).get('file'),
+                package=archiving['package'], post_to=archiving['post_to'], tiktok=archiving['tiktok'], find_shares=False)
+        except (ArchiveError, OSError) as error:
+            # The render stands: the report is written, and archive.py can
+            # file the same videos once the archive is reachable.
+            archive_failed = report['archive_error'] = str(error)
     (out / f"{cfg['name']}.report.json").write_text(json.dumps(report, indent=1))
     (out / f"{cfg['name']}.cut.txt").write_text(' '.join(t['w'] for t in toks))
     print(json.dumps(report, indent=1))
     if missing:
         print('MISSING CUES:', missing, file=sys.stderr)
+    if archive_failed:
+        sys.exit(f'archive: {archive_failed}')
 
 
 if __name__ == '__main__':
