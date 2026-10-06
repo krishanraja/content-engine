@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-06
 
+- reconciled at `9a10bd9`: the Windows CI run failed at send.py's self-test, which wrote a file name Windows refuses; fixed at `9a10bd9`. Nothing in NOW.md changed but the head.
 - reconciled at `69c4020`: NOW.md takes the library sync, `broadcast.py` and a new waiting list; the pictures line in the welcome emails, the new schedule on Substack and the Drive folders are off it, done.
 - decision (Krish, 2026-10-06): "yes, merge the library sync to main". Merged with `85705c8` and `b693b26`; migration `20261006120000_content_library` applied the same day.
 - decision (Krish, 2026-10-06): "make sure the brand kit is always updated here [the library's Drive folder]", then "I want every single asset in there, permanent and for individual posts, categorized properly, clear what to use them for, and every new post gets its own new folder with all assets including the article HTML I can copy paste, video scripts, etc etc". Done at `85705c8` and `b693b26` (walk log F70, H42).
