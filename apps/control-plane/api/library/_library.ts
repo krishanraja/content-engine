@@ -80,6 +80,12 @@ export function libraryMimeTypes(): string[] {
   return [...new Set(Object.values(LIBRARY_CONTENT_TYPES))].sort()
 }
 
+/** Types the bucket may also allow, added by a later migration for one lane:
+ *  Matroska, for recordings from the Video Engine Inbox
+ *  (20261006180000_content_library_recordings.sql). The library itself never
+ *  holds them; the recordings lane takes one only once the bucket allows it. */
+export const LIBRARY_OPTIONAL_MIME_TYPES: readonly string[] = Object.freeze(['video/x-matroska'])
+
 export type LibraryPathRefusal =
   | 'path_not_text'
   | 'path_too_long'
@@ -110,9 +116,9 @@ export type LibraryPathCheck = ({ ok: true } & LibraryPath) | { ok: false; refus
 
 // What Windows refuses in a name ('/' is the separator here), and control
 // characters, spelled out as archive-naming spells them.
-const WINDOWS_UNSAFE = /[<>:"\\|?*]/
-const CONTROL = /[\u0000-\u001f\u007f-\u009f]/
-const RESERVED = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i
+export const WINDOWS_UNSAFE = /[<>:"\\|?*]/
+export const CONTROL = /[\u0000-\u001f\u007f-\u009f]/
+export const RESERVED = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
 const POST_FOLDER = new RegExp(
   `^([0-9]{4})-([0-9]{2})-([0-9]{2}) (?:(${WEEKDAYS.join('|')}) (${LIBRARY_SUBCHANNELS.map((name) => name.replace(/\./g, '\\.')).join('|')})|Launch) - \\S`,
@@ -180,7 +186,7 @@ export function libraryObjectKey(sha256: string, extension: string): string {
   return `files/${sha256}.${extension}`
 }
 
-const MD5_RE = /^[a-f0-9]{32}$/
+export const MD5_RE = /^[a-f0-9]{32}$/
 const MACHINE_RE = /^[A-Za-z0-9:_-]{1,160}$/
 const OBJECT_KEY_RE = /^files\/[a-f0-9]{64}\.[a-z0-9]{1,8}$/
 
@@ -307,10 +313,11 @@ export function parseLibraryWrittenRequest(value: unknown): { machine: string; i
 
 export type LibraryStoreError = 'library_store_unconfigured' | 'library_store_misconfigured' | 'library_store_unavailable'
 
-export interface LibraryStoreConfig { bucket: string; supabaseOrigin: string }
+export interface LibraryStoreConfig { bucket: string; supabaseOrigin: string; allowedTypes: readonly string[] }
 
 /** The bucket as the migration made it: private, the size cap and the type
- *  list exactly. Anything else refuses, as the preview store does. */
+ *  list exactly, with or without the optional types a later migration adds.
+ *  Anything else refuses, as the preview store does. */
 export async function configuredLibraryStore(): Promise<{ config: LibraryStoreConfig | null; error: LibraryStoreError | null }> {
   let supabaseOrigin = ''
   try {
@@ -322,14 +329,16 @@ export async function configuredLibraryStore(): Promise<{ config: LibraryStoreCo
   if (result.error || !result.data) return { config: null, error: 'library_store_unavailable' }
   const allowed = [...(result.data.allowed_mime_types || [])].sort()
   const expected = libraryMimeTypes()
+  const extra = allowed.filter((type) => !expected.includes(type))
   if (
     result.data.public
     || !Number.isSafeInteger(result.data.file_size_limit)
     || Number(result.data.file_size_limit) !== LIBRARY_MAX_BYTES
-    || allowed.length !== expected.length
-    || allowed.some((type, index) => type !== expected[index])
+    || new Set(allowed).size !== allowed.length
+    || expected.some((type) => !allowed.includes(type))
+    || extra.some((type) => !LIBRARY_OPTIONAL_MIME_TYPES.includes(type))
   ) return { config: null, error: 'library_store_misconfigured' }
-  return { config: { bucket: LIBRARY_BUCKET, supabaseOrigin }, error: null }
+  return { config: { bucket: LIBRARY_BUCKET, supabaseOrigin, allowedTypes: allowed }, error: null }
 }
 
 function baseType(value: unknown): string | null {
@@ -337,15 +346,17 @@ function baseType(value: unknown): string | null {
 }
 
 /** The stored object against what the sender declared. Size and type always;
- *  the MD5 when Storage reports a plain one (a large upload stored in parts
- *  reports a composite tag instead). The sha256 is checked end to end by the
- *  library sync before a file reaches Drive. */
+ *  the MD5 when the sender gave one and Storage reports a plain one (a large
+ *  upload stored in parts reports a composite tag instead). The sha256 is
+ *  checked end to end by whoever downloads it: the library sync before a file
+ *  reaches Drive, scripts/post-pack/recording.py before a session uses a
+ *  recording. */
 export async function verifyStoredLibraryObject(
   bucket: string,
   objectKey: string,
   bytes: number,
   contentType: string,
-  md5: string,
+  md5: string | null,
 ): Promise<'verified' | 'missing' | 'mismatch' | 'unavailable'> {
   const result = await supabase.storage.from(bucket).info(objectKey)
   if (result.error || !result.data) {
@@ -357,7 +368,7 @@ export async function verifyStoredLibraryObject(
   const storedType = baseType(info.contentType ?? info.metadata?.mimetype)
   const storedMd5 = normalizedStorageMd5Etag(info.etag)
   if (storedSize !== bytes || storedType !== contentType) return 'mismatch'
-  if (storedMd5 && storedMd5 !== md5) return 'mismatch'
+  if (md5 && storedMd5 && storedMd5 !== md5) return 'mismatch'
   return 'verified'
 }
 

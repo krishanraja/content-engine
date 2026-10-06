@@ -50,6 +50,33 @@ describe('the post pack tools check themselves', () => {
     expect(result.status, result.stderr).toBe(0)
     expect(result.stdout).toMatch(/send self-test passed: \d+ checks/)
   })
+
+  it('recording.py --self-test: finding, waiting for and checking a recording against a stand-in', () => {
+    const result = run('recording.py', ['--self-test'])
+    expect(result.status, result.stderr).toBe(0)
+    expect(result.stdout).toMatch(/recording self-test passed: \d+ checks/)
+  })
+})
+
+describe('the recordings lane, from a cloud session', () => {
+  // Krish, 2026-10-06, after a session told him it could not reach his file:
+  // "figure out how to never make that error again".
+  it('recording.py without a key says what to do, and fetches nothing', () => {
+    const result = run('recording.py', ['get', 'take 1.mp4', '--out', join(work, 'recordings')])
+    if (process.platform !== 'win32') {
+      expect(result.status).not.toBe(0)
+      expect(result.stderr).toContain('Set ENGINE_OPERATOR_TOKEN')
+    }
+    expect(result.stdout).not.toContain('fetched')
+  })
+
+  it('its help and its refusals say which step failed, and never that a recording cannot be reached', () => {
+    const source = readFileSync(join(ROOT, 'scripts', 'post-pack', 'recording.py'), 'utf8')
+    expect(source).toContain('recordings-upload.log')
+    expect(source).toContain('Never tell Krish a recording cannot be reached.')
+    expect(source).not.toMatch(/[\u2013\u2014]/)
+    expect(notXYConstructions(source)).toEqual([])
+  })
 })
 
 describe('a pack Krish reads', () => {

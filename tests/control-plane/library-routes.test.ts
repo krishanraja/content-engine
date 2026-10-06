@@ -231,6 +231,13 @@ describe('POST /api/library/upload-url', () => {
     expect(db.files).toEqual([])
   })
 
+  it('still works once the recordings migration adds Matroska to the bucket', async () => {
+    db.bucket = { ...db.bucket!, allowed_mime_types: [...libraryMimeTypes(), 'video/x-matroska'] }
+    const res = await call(uploadUrl, asEngine(send()))
+    expect(res.statusCode).toBe(200)
+    expect(res.body.upload.method).toBe('PUT')
+  })
+
   it('reserves a new file and hands back a signed PUT for the private bucket', async () => {
     const res = await call(uploadUrl, asEngine(send()))
     expect(res.statusCode).toBe(200)
