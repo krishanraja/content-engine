@@ -388,11 +388,11 @@ def self_test():
         loose = tmp / 'loose'
         (loose / 'art').mkdir(parents=True)
         (loose / 'art' / 'banner.png').write_bytes(b'banner')
-        (loose / 'art' / 'bad|name.png').write_bytes(b'bad')
+        (loose / 'art' / ' bad name.png').write_bytes(b'bad')  # a leading space: Windows allows it, the library does not
         calls = len(fake.calls)
         refused('one bad name stops everything', lambda: send(plan(loose, '2 Channel art (permanent)', 'Art.'), fake, quiet), 'nothing was sent')
         check('nothing reached the engine', len(fake.calls), calls)
-        (loose / 'art' / 'bad|name.png').unlink()
+        (loose / 'art' / ' bad name.png').unlink()
         refused('no place in the library', lambda: plan(loose, purpose='Art.'), 'say where in the library')
         refused('outside the library', lambda: plan(loose, 'Video Engine/Inbox', 'Art.'), 'outside')
         refused('loose in a post folder', lambda: plan(loose, f'3 Posts/{pack.name}', 'Art.'), 'inside a post folder')
