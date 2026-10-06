@@ -110,13 +110,15 @@ def walk(folder):
     """Every file under folder, as (relative posix path, Path), in order.
     Hidden files and folders, and the clutter Windows leaves, are left out."""
     found = []
-    for path in sorted(Path(folder).rglob('*')):
+    for path in Path(folder).rglob('*'):
         relative = PurePosixPath(*path.relative_to(folder).parts)
         if any(part.startswith('.') or part.lower() in CLUTTER for part in relative.parts):
             continue
         if path.is_file():
             found.append((str(relative), path))
-    return found
+    # Sorted by the posix path, so the order is the same on every machine:
+    # Windows compares its own paths without regard to case.
+    return sorted(found, key=lambda item: item[0])
 
 
 def kit_root(folder):
