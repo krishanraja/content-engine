@@ -91,7 +91,7 @@ describe('the recordings upload on Krish\'s runner machines', () => {
     expect(check).toBeGreaterThan(-1)
     expect(check).toBeLessThan(lane.indexOf('Get-Sha256'))
     expect(lane).toContain('if (-not $Check) { Save-JsonFile $StatePath')
-    expect(fn('Test-Engine')).toContain("$answer.code -eq 'invalid_recording_request'")
+    expect(fn('Test-Engine')).toContain("-like 'invalid_recording*'")
   })
 
   it('takes the runner\'s own bearer the way the runner does, and never shows it', () => {
