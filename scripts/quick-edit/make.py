@@ -178,6 +178,10 @@ def segments(words, remove, max_gap, pad_before, pad_after, src_dur):
             out[-1]['idx'] += g['idx']
         else:
             out.append({'a': round(a, 3), 'b': round(b, 3), 'idx': g['idx']})
+    # Each window is a whole number of frames at 30 fps, so its picture and
+    # sound are the same length and the joined cut never drifts out of sync.
+    for g in out:
+        g['b'] = round(g['a'] + max(1, round((g['b'] - g['a']) * 30)) / 30, 4)
     t = 0.0
     for g in out:
         g['off'] = round(t, 3)
@@ -436,18 +440,31 @@ def main():
 
     # Stage 1: the edited talking head, cropped to the real picture.
     edited = out / f"{cfg['name']}.edited.mkv"
-    graph = []
-    for i, g in enumerate(segs):
-        d = g['b'] - g['a']
-        graph.append(f"[0:v]trim=start={g['a']}:end={g['b']},setpts=PTS-STARTPTS,crop={cw}:{ch}:{cx}:{cy},fps=30[v{i}]")
-        graph.append(f"[0:a]atrim=start={g['a']}:end={g['b']},asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.012,afade=t=out:st={max(0, d - 0.012):.3f}:d=0.012[a{i}]")
-    graph.append(''.join(f'[v{i}][a{i}]' for i in range(len(segs))) + f'concat=n={len(segs)}:v=1:a=1[v][a]')
-    g1 = out / 'stage1.graph'
+    # One short encode per window, then a join without re-encoding. A single
+    # filter graph over every window held each window's frames in memory at
+    # once, and a 3:38 upright 1080x1920 recording with 57 windows was killed
+    # for running out of it (2026-10-06).
+    plan_lines = [f"{g['a']:.4f} {g['b']:.4f} crop={cw}:{ch}:{cx}:{cy}" for g in segs]
+    g1 = out / 'stage1.plan'
     # The cut only changes when the words to remove or the pause rule change, so reuse it otherwise.
-    if not (edited.exists() and g1.exists() and g1.read_text() == ';\n'.join(graph)):
-        g1.write_text(';\n'.join(graph))
-        run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-i', src, '-filter_complex_script', g1, '-map', '[v]', '-map', '[a]',
-             '-c:v', 'libx264', '-preset', 'fast', '-crf', '10', '-c:a', 'pcm_s16le', '-ar', '48000', edited])
+    if not (edited.exists() and g1.exists() and g1.read_text() == '\n'.join(plan_lines)):
+        parts = out / 'parts'
+        parts.mkdir(exist_ok=True)
+        for old in parts.glob('*.mkv'):
+            old.unlink()
+        names = []
+        for i, g in enumerate(segs):
+            d = g['b'] - g['a']
+            part = parts / f'{i:04d}.mkv'
+            run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', f"{g['a']:.4f}", '-i', src, '-t', f'{d:.4f}',
+                 '-vf', f'crop={cw}:{ch}:{cx}:{cy},fps=30,setpts=PTS-STARTPTS',
+                 '-af', f'aresample=48000,asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.012,afade=t=out:st={max(0, d - 0.012):.4f}:d=0.012',
+                 '-frames:v', str(round(d * 30)), '-c:v', 'libx264', '-preset', 'fast', '-crf', '10', '-c:a', 'pcm_s16le', part], quiet=True)
+            names.append(f"file '{part.as_posix()}'")
+        listing = parts / 'list.txt'
+        listing.write_text('\n'.join(names) + '\n')
+        run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', listing, '-c', 'copy', edited])
+        g1.write_text('\n'.join(plan_lines))
     loud = measure_loudness(edited)
     afilter = (f"highpass=f=70,loudnorm=I=-14:TP=-1.0:LRA=11:measured_I={loud['input_i']}:measured_TP={loud['input_tp']}:"
                f"measured_LRA={loud['input_lra']}:measured_thresh={loud['input_thresh']}:offset={loud['target_offset']}:linear=true,aresample=48000")
