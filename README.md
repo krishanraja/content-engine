@@ -25,6 +25,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | make a piece's web page, the copy that pastes into Substack and its cover image, or check that its artwork can be read on a phone | `scripts/pages/README.md` |
 | make the YouTube banner, watermark and channel description | `scripts/channel-kit/README.md` |
 | use or change any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |
+| put anything in Google Drive, or move, rename or tidy a Drive folder | `docs/DRIVE.md` |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |
 
 ## The objective

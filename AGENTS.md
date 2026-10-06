@@ -71,6 +71,9 @@ repository serves it and has no interface of its own.
 - **Spend.** Stay inside the amount Krish approved for the session and check
   `meter_daily`. Research through Perplexity, Exa and Brave is not metered, so
   count it yourself.
+- **Drive folders are load-bearing.** Read `docs/DRIVE.md` before you put
+  anything in Google Drive or move, rename or tidy a folder there. `Video
+  Engine` and `makeyourmindup` are read by path and never move.
 - **Leave the knowledge in the repository.** What you learn about the engine
   goes into `docs/STATE.md`, `docs/walks/` or the document it corrects, never
   only into a chat.
