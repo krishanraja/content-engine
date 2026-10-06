@@ -66,15 +66,65 @@ def transcribe(src, out, model='small.en', prompt=''):
     return words
 
 
+def seconds(at):
+    """'3:02' or 182 as seconds into the raw recording."""
+    if isinstance(at, (int, float)):
+        return float(at)
+    m, _, s = str(at).rpartition(':')
+    return float(m or 0) * 60 + float(s)
+
+
+def restart_cut(words, at, before=25.0, slack=6.0):
+    """The false start before a restarted sentence, found by time alone.
+
+    Krish, 2026-10-06: "I messed up and restarted my sentence at 3m02s". When a
+    sentence is restarted, its opening words are said twice: once in the false
+    start, once again from about `at`. This finds the restart (a run of at least
+    two words, starting within `slack` seconds of `at`, that was also said in the
+    `before` seconds just ahead of it) and returns the false start, from its first
+    word up to the word before the restart, so the second take is the one kept.
+    The longest repeated run wins, then the restart nearest `at`."""
+    t = seconds(at)
+    toks = [norm(w['w']) for w in words]
+    best = None
+    for j, w in enumerate(words):
+        if abs(w['s'] - t) > slack:
+            continue
+        for i in range(j - 1, -1, -1):
+            if words[i]['s'] < w['s'] - before:
+                break
+            k = 0
+            while i + k < j and j + k < len(toks) and toks[i + k] and toks[i + k] == toks[j + k]:
+                k += 1
+            if k >= 2:
+                score = (k, -abs(w['s'] - t), -(j - i))
+                if not best or score > best[0]:
+                    best = (score, i, j)
+    if not best:
+        return None
+    return best[1], best[2] - 1
+
+
 def resolve_removals(words, remove):
     """Word ranges to cut. An entry is the words themselves, {"say": "So, you know,",
-    "after": "is coming"}, found in the transcript after the `after` phrase, or an
-    index pair [first, last] into the words file. Words survive a re-transcription;
-    index pairs do not, so configs that live in the repository use words."""
+    "after": "is coming"}, found in the transcript after the `after` phrase, an
+    index pair [first, last] into the words file, or {"restart_near": "3:02"}, the
+    false start of a sentence restarted at about that point in the raw recording
+    (restart_cut). Words survive a re-transcription; index pairs do not, so
+    configs that live in the repository use words or restart_near."""
     ranges, missing = [], []
     for r in remove:
         if isinstance(r, (list, tuple)):
             ranges.append((int(r[0]), int(r[1])))
+            continue
+        if 'restart_near' in r:
+            hit = restart_cut(words, r['restart_near'])
+            if hit:
+                ranges.append(hit)
+            else:
+                t = seconds(r['restart_near'])
+                near = ' '.join(w['w'].strip() for w in words if t - 20 <= w['s'] <= t + 8)
+                missing.append({**r, 'words_said_there': near})
             continue
         t0 = 0.0
         if r.get('after'):
@@ -128,6 +178,22 @@ def segments(words, remove, max_gap, pad_before, pad_after, src_dur):
         g['off'] = round(t, 3)
         t += g['b'] - g['a']
     return out, round(t, 3)
+
+
+def auto_crop(src, dur):
+    """The real picture inside the frame, [w, h, x, y], from ffmpeg's cropdetect,
+    narrowed to a centred 9:16 window when the picture is wider than that, which
+    is the shape both renders expect (a phone held upright)."""
+    probe = subprocess.run(['ffmpeg', '-hide_banner', '-ss', f'{min(30.0, dur / 3):.1f}', '-t', '6', '-i', str(src),
+                            '-vf', 'cropdetect=24:2:0', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    found = re.findall(r'crop=(\d+):(\d+):(\d+):(\d+)', probe)
+    if not found:
+        raise SystemExit('crop "auto" could not read the picture: set "crop" to [w, h, x, y] by hand')
+    w, h, x, y = (int(v) for v in found[-1])
+    if w * 16 > h * 9:
+        nw = (h * 9 // 16) // 2 * 2
+        x, w = x + (w - nw) // 2, nw
+    return [w, h, x, y]
 
 
 def retime(words, segs):
@@ -280,7 +346,26 @@ def archive_settings(args, cfg):
     return {**settings, 'plan': planned}
 
 
+def self_test():
+    said = ('so what can you take from this if your business runs on someone else\'s um '
+            'if your business runs on someone else\'s AI do not run on just one').split()
+    words = [{'w': w, 's': 170.0 + n * 0.4, 'e': 170.3 + n * 0.4} for n, w in enumerate(said)]
+    restart = said.index('if', 8)
+    checks = [
+        ('the false start and the um go', restart_cut(words, 170.0 + restart * 0.4), (7, restart - 1)),
+        ('a time a little off still finds it', restart_cut(words, 170.0 + restart * 0.4 + 3), (7, restart - 1)),
+        ('no repeat, no cut', restart_cut(words[:restart], 172.0), None),
+        ('3:02 is 182 seconds', seconds('3:02'), 182.0),
+        ('found through resolve_removals', resolve_removals(words, [{'restart_near': 170.0 + restart * 0.4}]), [(7, restart - 1)]),
+    ]
+    bad = [f'{label}: got {got!r}, want {want!r}' for label, got, want in checks if got != want]
+    print('\n'.join(bad) if bad else f'quick-edit self-test passed: {len(checks)} checks')
+    return 1 if bad else 0
+
+
 def main():
+    if sys.argv[1:2] == ['--self-test']:
+        sys.exit(self_test())
     ap = argparse.ArgumentParser()
     ap.add_argument('config')
     ap.add_argument('--out', required=True)
@@ -309,7 +394,13 @@ def main():
     segs, total = segments(words, cuts, cfg.get('max_gap', 0.35), cfg.get('pad_before', 0.10), cfg.get('pad_after', 0.16), dur)
     ws = retime(words, segs)
     wins, missing = cue_windows(ws, cfg['cues'], total)
+    if cfg['crop'] == 'auto':
+        cfg['crop'] = auto_crop(src, dur)
+        print(f"crop auto: {cfg['crop']}", file=sys.stderr)
     cw, ch, cx, cy = cfg['crop']
+    # The face band under a tall graphic: 100 to 550 down a 720-high picture
+    # kept the eyes in frame for the launch videos, so scale that by default.
+    cfg.setdefault('face', [round(ch * 100 / 720), round(ch * 450 / 720)])
     if args.plan:
         toks = tokens(ws, cfg.get('replacements', []))
         groups = chunks(toks, sorted({c['s'] for c in wins} | {c['e'] for c in wins}))
