@@ -213,10 +213,13 @@ function Invoke-Engine($Client, [string]$Base, [string]$Token, [string]$Path, $B
 
 function Test-Engine($Client, [string]$Base, [string]$Token) {
   # Proves the key and the route without sending anything: the runner guard
-  # answers before the body is read, so an empty body comes back 400
-  # invalid_recording_request only when the key is accepted and the route is deployed.
+  # answers before the body is read, so an empty body comes back 400 with an
+  # invalid_recording_* code only when the key is accepted and the route is
+  # deployed. The engine names the first field it finds missing (the name,
+  # today), so any invalid_recording_* code proves it: on 2026-10-06 the check
+  # expected only invalid_recording_request and refused a working machine.
   $answer = Send-Engine $Client $Base $Token '/api/library/recordings/upload-url' @{}
-  if ($answer.status -eq 400 -and $answer.code -eq 'invalid_recording_request') { return }
+  if ($answer.status -eq 400 -and "$($answer.code)" -like 'invalid_recording*') { return }
   if ($answer.status -eq 404) { throw 'the engine has no recordings route yet: the recordings lane is not deployed.' }
   if ($answer.status -eq 401) { throw "the engine refused this machine's runner key." }
   throw "the engine answered $($answer.status) ($($answer.code))."
