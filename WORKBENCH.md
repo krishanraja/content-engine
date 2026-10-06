@@ -108,11 +108,15 @@ the one-time install on his machine: `scripts/post-pack/README.md`.
 
 - 2026-10-06, later: **the Drive library sync is merged** (walk log H42),
   on Krish's "yes, merge the library sync to main". Its private store is in
-  the database. **Waiting on Krish:** on the always-on machine, after `git
-  pull`, run once `powershell -NoProfile -ExecutionPolicy Bypass -File
-  scripts\install-library-sync.ps1`. The files for the first two posts
-  (the launch and Who gets paid) go to the store from the session with
-  `scripts/post-pack/send.py`, and wait there until the sync writes them.
+  the database. **Waiting on Krish:** on the always-on machine, run the
+  three install lines in `scripts/post-pack/README.md` ("Install it, once"):
+  they make the sync its own copy of the repository, `library-source`, and
+  install from it. The first try ran the bare `-File
+  scripts\install-library-sync.ps1` from a folder where that file did not
+  exist, and PowerShell could not find it. All 33 files for the channel art and
+  the first two posts (the launch and Who gets paid) are in the store, the
+  two tall videos too since Krish raised the storage upload limit to 500 MB,
+  and wait there until the sync writes them.
   **Also waiting on
   Krish:** send the Maven email (sent in chat as one copy page, made with
   `scripts/pages/broadcast.py`, H41), and swap Monday and Wednesday in the

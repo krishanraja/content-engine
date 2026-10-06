@@ -442,9 +442,17 @@ published in krishanraja/makeyourmindup. The architecture doc's rule 0a.5 says
 agents never write into his Drive; this is his explicit instruction for that
 one folder, carried out by his own machine, and it covers that folder only.
 
-- **Install, once,** from Krish's own copy of this repository after
-  `git pull` (never the runner's `runner-source`):
-  `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\install-library-sync.ps1`.
+- **Install, once,** on the active runner machine, from the sync's own copy
+  of this repository, `%USERPROFILE%\Documents\MindmakeVideoStudio\library-source`
+  (never the runner's `runner-source`, which stays pinned). In PowerShell, from
+  any folder (`scripts/post-pack/README.md`, "Install it, once"):
+
+  ```
+  $dir = "$env:USERPROFILE\Documents\MindmakeVideoStudio\library-source"
+  if (Test-Path "$dir\.git") { git -C $dir pull --ff-only } else { git clone https://github.com/krishanraja/content-engine.git $dir }
+  powershell -NoProfile -ExecutionPolicy Bypass -File "$dir\scripts\install-library-sync.ps1"
+  ```
+
   It runs `scripts\library-sync.ps1 -Check` first, which writes nothing, and
   installs nothing if the library folder, the runner key or the engine is
   missing.

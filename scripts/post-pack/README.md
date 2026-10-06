@@ -171,12 +171,24 @@ the runner's folders and outside them.
 
 ### Install it, once
 
-On the active runner machine, in Krish's own copy of this repository (never
-the runner's `runner-source` folder), after `git pull`, in PowerShell:
+On the active runner machine, in PowerShell. The sync runs from a copy of this
+repository of its own, `library-source`, beside the runner's folders: never
+the runner's `runner-source`, which stays pinned to the commit the runner
+runs, and never a copy a session works in, which may be left on a branch
+without the script. These three lines make that copy (or bring it up to date)
+and install from it, from any folder:
 
 ```
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\install-library-sync.ps1
+$dir = "$env:USERPROFILE\Documents\MindmakeVideoStudio\library-source"
+if (Test-Path "$dir\.git") { git -C $dir pull --ff-only } else { git clone https://github.com/krishanraja/content-engine.git $dir }
+powershell -NoProfile -ExecutionPolicy Bypass -File "$dir\scripts\install-library-sync.ps1"
 ```
+
+The first try on 2026-10-06 ran `-File scripts\install-library-sync.ps1` from
+a folder with no such file (not a copy of this repository, or one without the
+day's changes), and PowerShell said the file does not exist; the full path
+above works from anywhere. To pick up a newer
+sync later, run the same three lines again.
 
 It first runs the sync with `-Check`, which writes nothing: the library folder
 must be reachable, the runner key must be on the machine and the engine must

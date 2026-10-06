@@ -1,9 +1,12 @@
 <#
 Registers the scheduled task that keeps Krish's makeyourmindup asset library on
 Drive up to date (scripts/library-sync.ps1). Run it once, on the active runner
-machine, from Krish's own copy of this repository after a git pull:
+machine, from the sync's own copy of this repository, library-source beside
+the runner's folders, never the runner's pinned checkout. From any folder:
 
-  powershell -NoProfile -ExecutionPolicy Bypass -File scripts\install-library-sync.ps1
+  $dir = "$env:USERPROFILE\Documents\MindmakeVideoStudio\library-source"
+  if (Test-Path "$dir\.git") { git -C $dir pull --ff-only } else { git clone https://github.com/krishanraja/content-engine.git $dir }
+  powershell -NoProfile -ExecutionPolicy Bypass -File "$dir\scripts\install-library-sync.ps1"
 
 Krish, 2026-10-06: "make sure the brand kit is always updated here [the
 library's Drive folder]", then "I want every single asset in there, permanent
