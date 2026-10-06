@@ -97,7 +97,12 @@ def restart_cut(words, at, before=25.0, slack=6.0):
             while i + k < j and j + k < len(toks) and toks[i + k] and toks[i + k] == toks[j + k]:
                 k += 1
             if k >= 2:
-                score = (k, -abs(w['s'] - t), -(j - i))
+                # A stumble often repeats its opening more than once ("how do
+                # you keep, how do you, sorry, lose ... How do you lose ...").
+                # The retake is the last clean start near `at`; the false start
+                # runs back to the first time those words were said. So a run of
+                # three or more words wins, then the widest cut, then the longer run, then nearness.
+                score = (min(k, 3), j - i, k, -abs(w['s'] - t))
                 if not best or score > best[0]:
                     best = (score, i, j)
     if not best:
@@ -249,9 +254,20 @@ def tokens(ws, replacements):
             continue
         w = dict(ws[i])
         for a, b in replacements:
-            w['w'] = re.sub(rf'\b{re.escape(a)}\b', b, w['w'])
+            if ' ' not in a.strip():
+                w['w'] = re.sub(rf'\b{re.escape(a)}\b', b, w['w'])
         out.append(w)
         i += 1
+    for a, b in replacements:
+        if ' ' not in a.strip():
+            continue
+        seq = [norm(x) for x in a.split() if norm(x)]
+        k = 0
+        while k + len(seq) <= len(out):
+            if [norm(x['w']) for x in out[k:k + len(seq)]] == seq:
+                tail = re.sub(r'^.*?([.,!?;:]*)$', r'\1', out[k + len(seq) - 1]['w'])
+                out[k:k + len(seq)] = [{**out[k], 'w': b.rstrip('.,!?;:') + tail, 'e': out[k + len(seq) - 1]['e']}]
+            k += 1
     for j, t in enumerate(out):
         if j == 0 or re.search(r'[.!?]$', out[j - 1]['w']):
             t['w'] = t['w'][:1].upper() + t['w'][1:]
@@ -351,11 +367,18 @@ def self_test():
             'if your business runs on someone else\'s AI do not run on just one').split()
     words = [{'w': w, 's': 170.0 + n * 0.4, 'e': 170.3 + n * 0.4} for n, w in enumerate(said)]
     restart = said.index('if', 8)
+    trip = ('so back to the question how do you keep your biggest how do you sorry lose your biggest supplier '
+            'how do you lose your biggest supplier and keep growing').split()
+    stumble = [{'w': w, 's': 172.0 + n * 0.4, 'e': 172.3 + n * 0.4} for n, w in enumerate(trip)]
+    phrase = [{'w': w, 's': n * 0.4, 'e': n * 0.4 + 0.3} for n, w in enumerate('nobody is back to full year.'.split())]
     checks = [
         ('the false start and the um go', restart_cut(words, 170.0 + restart * 0.4), (7, restart - 1)),
         ('a time a little off still finds it', restart_cut(words, 170.0 + restart * 0.4 + 3), (7, restart - 1)),
         ('no repeat, no cut', restart_cut(words[:restart], 172.0), None),
         ('3:02 is 182 seconds', seconds('3:02'), 182.0),
+        ('a stumble goes back to its first start', restart_cut(stumble, 172.0 + 19 * 0.4), (5, 18)),
+        ('a phrase fix joins the words', [x['w'] for x in tokens(phrase, [['nobody is back to full', 'nobody has banked a full']])],
+         ['Nobody has banked a full', 'year.']),
         ('found through resolve_removals', resolve_removals(words, [{'restart_near': 170.0 + restart * 0.4}]), [(7, restart - 1)]),
     ]
     bad = [f'{label}: got {got!r}, want {want!r}' for label, got, want in checks if got != want]

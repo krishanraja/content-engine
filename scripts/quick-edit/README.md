@@ -63,10 +63,10 @@ One JSON file per video. Paths are relative to the config file.
 |---|---|
 | `name` | Prefix for every output file. |
 | `source` | The recording. |
-| `crop` | `[w, h, x, y]` of the real picture inside the frame. A phone recording shown in a 1280x720 frame is `[404, 720, 438, 0]`. |
-| `face` | `[y, h]` inside the crop: the band shown under a graphic in the tall shape. Keep the eyes and the top of the head in it. `[100, 450]` worked for the launch videos. |
-| `remove` | The words to cut, as said: `{"say": "So, you know,", "after": "is coming"}`. `after` is the words just before, so the right instance is cut. An index pair `[first, last]` into the words file also works, but only for that exact transcript. |
-| `replacements` | `[["Chris", "Krish"], ["theater", "theatre"]]`: fixes what the transcriber mishears, and keeps British spelling. Captions only; the audio is untouched. |
+| `crop` | `[w, h, x, y]` of the real picture inside the frame. A phone recording shown in a 1280x720 frame is `[404, 720, 438, 0]`. `"auto"` finds it with ffmpeg's cropdetect and narrows a wider picture to a centred 9:16 window. |
+| `face` | Optional. `[y, h]` inside the crop: the band shown under a graphic in the tall shape. Keep the eyes and the top of the head in it. `[100, 450]` worked for the launch videos, so without it the band is 100 to 550 of every 720 pixels down. |
+| `remove` | The words to cut, as said: `{"say": "So, you know,", "after": "is coming"}`. `after` is the words just before, so the right instance is cut. `{"restart_near": "3:02"}` cuts a restarted sentence from the time alone: it finds the words said again near that point in the raw recording and cuts from the first time they were said up to the clean retake (Krish, 2026-10-06: "I messed up and restarted my sentence at 3m02s"). `--plan` prints the words it cut; check them. An index pair `[first, last]` into the words file also works, but only for that exact transcript. |
+| `replacements` | `[["Chris", "Krish"], ["theater", "theatre"], ["computing power group", "computing power grows"]]`: fixes what the transcriber mishears, and keeps British spelling. A phrase of several words is matched as a run and replaced as one caption word group. Captions only; the audio is untouched. |
 | `cues` | The graphics. Each has an `id`, a `panel` image (`{aspect}` becomes `9x16` or `16x9`), and the `start` and `end` words it covers. The graphic comes in 0.15 seconds before `start` and leaves 0.35 seconds after `end` (`lead` and `tail` change that). |
 | `frame16` | The wide shape's background: brand panels left and right of the speaker. |
 | `strap` | The name strap in the tall shape: a `png`, the words it follows (`after`) and how long it stays (`seconds`). |
