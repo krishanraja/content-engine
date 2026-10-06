@@ -131,6 +131,19 @@ session").
 
 ## Latest handoff
 
+- 2026-10-06, night: **the Higgsfield video is edited and the recordings
+  lane is live on both machines.** Krish recorded from script v4; the cut
+  (restart at 3:02 removed, 3:38 to 3:04), six graphics, captions and end card
+  are in the post's `3 Video` folder with YouTube words v2
+  (`editions/2026-10-higgsfield/video-kit`). The recording first had to be
+  sent by hand: the Drive connector stops at 10 MB and no route existed. Krish:
+  "figure out how to never make that error again", then "just use whichever
+  machine is online". Now `scripts/recordings-upload.ps1` runs on both runner
+  machines (installed by Krish, 2026-10-06) and any session gets a recording
+  with `python scripts/post-pack/recording.py get NAME`. The Studio script
+  station is at version 3 and refuses a short-native script that fails the
+  story check (`storyArcIssues`), on Krish's "Do this task here ... and then
+  merge to main". **Waiting on Krish:** publish Wednesday's set.
 - 2026-10-06, late: **every script now has to tell one story** (walk log
   F75, closed). Krish found the Higgsfield script unsayable, then that
   version 2 never set up "you don't do paid", had takeaways that did not follow

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "station_id": "script",
-  "station_version": 2,
+  "station_version": 3,
   "status": "active",
   "purpose": "Turn the approved brief into exact spoken wording without weakening truth or voice.",
   "instruction_path": ".agents/skills/mindmake-video/stations/script/STATION.md",
@@ -31,11 +31,13 @@
   ],
   "approval_gate": null,
   "hard_gates": [
-    "Spoken wording must preserve truth, claim boundaries, confidentiality and canonical names."
+    "Spoken wording must preserve truth, claim boundaries, confidentiality and canonical names.",
+    "Short-native scripts pass the story check (walk log F75): open on the one question the script answers, end by answering it, then the call, then a spoken outro once a script runs a minute or more; never read a heading or stamp aloud; carry no line still marked NOT YET FACT-CHECKED."
   ],
   "soft_gates": [
     "The opening, mechanism, payoff and ending should be specific and speakable.",
-    "The opening should confirm the approved promise, show why this narrator holds the claim, and leave a question open."
+    "The opening should confirm the approved promise, show why this narrator holds the claim, and leave a question open.",
+    "Every beat sets up the opening question or answers it; every claim is set up before it is judged; each takeaway follows from a beat already told. A recorded cut reports the story check for review instead of refusing it."
   ],
   "invalidates_on_change": {
     "extract": [
@@ -79,7 +81,9 @@
     "regression_cases": [
       "A stronger hook cannot introduce an unsupported factual claim.",
       "Generic AI phrasing fails the voice and specificity quality bar.",
-      "A script whose first sentence names nothing from the approved title fails the opening contract downstream."
+      "A script whose first sentence names nothing from the approved title fails the opening contract downstream.",
+      "A script that ends on the number with no spoken outro fails the story check (the Higgsfield version 2 failure).",
+      "A script that opens with no question, or reads REAL or THEATRE aloud outside a quotation, fails the story check (the Higgsfield version 1 failure)."
     ]
   }
 }

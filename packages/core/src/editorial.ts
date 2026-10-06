@@ -138,6 +138,37 @@ export function openingContractIssues(candidate: CandidateV1, thresholds: Editor
   return { hard_blocks: hardBlocks, soft_blocks: softBlocks }
 }
 
+/**
+ * The story check (Krish, 2026-10-06, walk log F75; house rules FOR_THE_EAR and STORY_ARC). Of the Higgsfield
+ * launch script: "they need to actually make sense to humans", then "it just ends randomly on 85%, with nothing after
+ * that, no outro". These are the parts a rule can see, the same ones `scripts/post-pack/story_check.py` refuses to
+ * pack: the script opens on the question it answers, a script of a minute or more ends on a spoken outro after the
+ * call, and it never reads a heading or a stamp aloud. Whether every beat follows from the last still needs a reader.
+ */
+export const STORY_NO_OPENING_QUESTION = 'the script does not open on a question: say, in the first beat, the one question the script answers, and answer it at the end'
+export const STORY_NO_OUTRO = 'the script stops without a spoken outro: after the call, say what this was, where the full piece is (makeyourmindup.ai) and sign off, so it never ends on the number'
+export const STORY_SPOKEN_STAMP = 'the script reads a heading or stamp aloud (REAL, THEATRE, "One: the billion."): say what the claim is and why it matters, and leave the stamp to the screen'
+export const STORY_UNCHECKED = 'the script still carries lines marked NOT YET FACT-CHECKED'
+
+const STORY_OPENING_WORDS = 90
+const STORY_OUTRO_FROM_WORDS = 160
+const STORY_OUTRO_TAIL_WORDS = 45
+const STORY_OUTRO = /makeyourmindup|make your mind up|follow\.the\.money|under\.the\.hood|mind\.the\.gap/i
+const STORY_STAMP = /\b(?:REAL|THEATRE)\b/
+const STORY_LABEL = /(?:^|[.!?]\s+)(?:one|two|three|four|five|six)\s*:\s*the\s+\w+\s*\./i
+
+export function storyArcIssues(script: string): string[] {
+  const issues: string[] = []
+  if (script.includes('NOT YET FACT-CHECKED')) issues.push(STORY_UNCHECKED)
+  const words = script.split(/\s+/).filter(Boolean)
+  if (!words.length) return issues
+  if (!words.slice(0, STORY_OPENING_WORDS).join(' ').includes('?')) issues.push(STORY_NO_OPENING_QUESTION)
+  if (words.length >= STORY_OUTRO_FROM_WORDS && !STORY_OUTRO.test(words.slice(-STORY_OUTRO_TAIL_WORDS).join(' '))) issues.push(STORY_NO_OUTRO)
+  const unquoted = script.replace(/"[^"]*"|\u201c[^\u201d]*\u201d/g, '')
+  if (STORY_STAMP.test(unquoted) || STORY_LABEL.test(unquoted)) issues.push(STORY_SPOKEN_STAMP)
+  return issues
+}
+
 export function normalizeSpokenToken(value: string): string {
   return value.toLowerCase().replace(/[’]/g, "'").replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, '')
 }
@@ -369,6 +400,8 @@ export function validateEditorialCandidate(candidate: CandidateV1, transcript: T
   const averageSegment = plan.total_duration_ms / plan.segments.length
   if (plan.structure === 'stitched' && averageSegment < 2500) softBlocks.push('average stitched section is under 2.5 seconds; check comprehension, jump cuts, and audio continuity')
   softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
+  // A recorded cut keeps what was said, so its story is reported for review rather than refused.
+  softBlocks.push(...storyArcIssues(plan.caption_script))
   const openingContract = openingContractIssues(candidate, thresholds, opening, true)
   hardBlocks.push(...openingContract.hard_blocks)
   softBlocks.push(...openingContract.soft_blocks)
@@ -402,6 +435,7 @@ export function validateShortNativeEditorialCandidate(candidate: CandidateV1, th
   const declaredNonPresenterChris = candidate.identity_mentions.some((mention) => normalizeSpokenToken(mention.name) === 'chris' && mention.role !== 'presenter')
   if (presenterName?.toLowerCase() === 'krish' && /\bchris\b/i.test(`${candidate.transcript} ${candidate.hook} ${candidate.payoff}`) && !declaredNonPresenterChris) hardBlocks.push('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
   if (candidate.transcript.split(/\s+/).length > 180) softBlocks.push('short-native script may exceed the intended short-form duration; verify delivery time before recording')
+  hardBlocks.push(...storyArcIssues(candidate.transcript))
   softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
   const openingContract = openingContractIssues(candidate, thresholds, opening, false)
   hardBlocks.push(...openingContract.hard_blocks)

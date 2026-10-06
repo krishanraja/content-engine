@@ -6,7 +6,10 @@ this repository, recordings-source beside the runner's folders. From any
 folder:
 
   $dir = "$env:USERPROFILE\Documents\MindmakeVideoStudio\recordings-source"
-  if (Test-Path "$dir\.git") { git -C $dir pull --ff-only } else { git clone https://github.com/krishanraja/content-engine.git $dir }
+  if (-not (Test-Path "$dir\.git")) { if (Test-Path $dir) { Remove-Item $dir -Recurse -Force }; git clone https://github.com/krishanraja/content-engine.git $dir }
+  git -C $dir fetch origin main
+  git -C $dir checkout -B main origin/main
+  git -C $dir log --oneline -1
   powershell -NoProfile -ExecutionPolicy Bypass -File "$dir\scripts\install-recordings-upload.ps1"
 
 Krish, 2026-10-06: "figure out how to never make that error again", after a

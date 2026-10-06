@@ -289,9 +289,18 @@ each runner machine, the primary and the standby:
 
 ```
 $dir = "$env:USERPROFILE\Documents\MindmakeVideoStudio\recordings-source"
-if (Test-Path "$dir\.git") { git -C $dir pull --ff-only } else { git clone https://github.com/krishanraja/content-engine.git $dir }
+if (-not (Test-Path "$dir\.git")) { if (Test-Path $dir) { Remove-Item $dir -Recurse -Force }; git clone https://github.com/krishanraja/content-engine.git $dir }
+git -C $dir fetch origin main
+git -C $dir checkout -B main origin/main
+git -C $dir log --oneline -1
 powershell -NoProfile -ExecutionPolicy Bypass -File "$dir\scripts\install-recordings-upload.ps1"
 ```
+
+The first version of this block (2026-10-06) only pulled or cloned, and on
+both of Krish's machines it left a copy without the installer, so PowerShell
+said the `-File` argument does not exist. This one repairs a folder that is
+not a clone, sets the copy to exactly `main` whatever state it was in, and
+prints the commit it holds before installing, so a stale copy shows itself.
 
 The installer pulls the copy, then runs the upload once with `-Check`, which
 sends nothing: the Inbox must be reachable, the runner key must be on the

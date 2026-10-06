@@ -1,5 +1,5 @@
 import { CandidateV1Schema, JobManifestV1Schema, StageNameSchema } from '@mindmake/contracts'
-import { applyPresenterIdentityCorrections, BUILT_WITH_AI_EDITORIAL_RULE_ID, captionTreatmentIssues, OPENING_POSITION_UNSTATED, OPENING_PROMISE_MISSED, OPENING_PROMISE_UNCHECKED, OPENING_STANDING_UNSTATED, openingContractIssues, promiseMatchTerms, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
+import { applyPresenterIdentityCorrections, BUILT_WITH_AI_EDITORIAL_RULE_ID, captionTreatmentIssues, OPENING_POSITION_UNSTATED, OPENING_PROMISE_MISSED, OPENING_PROMISE_UNCHECKED, OPENING_STANDING_UNSTATED, openingContractIssues, promiseMatchTerms, exactWordFidelity, INVESTIGATIVE_SHORT_REFERENCE_RULE_ID, meaningCriticalRemovalIssues, suggestCaptionTreatment, validateEditorialCandidate, validateShortNativeEditorialCandidate, storyArcIssues, STORY_NO_OPENING_QUESTION, STORY_NO_OUTRO, STORY_SPOKEN_STAMP, STORY_UNCHECKED, type EditorialThresholds, type TranscriptDocument } from '@mindmake/core'
 import { describe, expect, it } from 'vitest'
 
 const thresholds: EditorialThresholds = {
@@ -186,13 +186,28 @@ describe('editorial judgement gates', () => {
     expect(validateEditorialCandidate(invalid, transcript(), job(), thresholds).hard_blocks).toContain('a stitched edit must explicitly reject the strongest continuous baseline')
   })
 
+  it('applies the story check Krish approved to every script (walk log F75)', () => {
+    const middle = Array(30).fill('Every beat sets up the question or answers it.').join(' ')
+    const good = `So how do you lose your biggest supplier and keep growing? ${middle} So, back to the question: you never needed just one. That's under.the.hood for this week. The full teardown is free at makeyourmindup.ai. I'm Krish. Make your mind up.`
+    expect(storyArcIssues(good)).toEqual([])
+    // The Higgsfield version 2 failure: it ended on the number with no outro.
+    expect(storyArcIssues(`Is that billion real? ${middle} By the end of June 2027, Higgsfield raises at ten billion dollars. Eighty-five per cent.`)).toEqual([STORY_NO_OUTRO])
+    // The version 1 failure: no question, and the article's stamps read aloud.
+    expect(storyArcIssues('Higgsfield crossed a billion. One: the billion. Real, with small print. The billion: REAL.')).toEqual([STORY_NO_OPENING_QUESTION, STORY_SPOKEN_STAMP])
+    expect(storyArcIssues('Why does it matter? He said "We don\'t do paid, REAL talk." Because it costs.')).toEqual([])
+    expect(storyArcIssues('Why? [NOT YET FACT-CHECKED] It costs a million a day.')).toEqual([STORY_UNCHECKED])
+    expect(storyArcIssues('Why does it matter? Because the price doubled.')).toEqual([])
+  })
+
   it('automatically suggests only a deletion-based caption starting point', () => {
     expect(suggestCaptionTreatment('um This this is the workflow')).toBe('This is the workflow.')
   })
 
   it('applies the same quality floor to short-native scripts', () => {
-    const base = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined })
+    const asked = candidate({ mode: 'short_native', job_id: 'native-job', edit_plan: undefined })
+    const base = CandidateV1Schema.parse({ ...asked, transcript: `So what actually saves the team time? ${asked.transcript}` })
     expect(validateShortNativeEditorialCandidate(base, thresholds, 'Krish').hard_blocks).toEqual([])
+    expect(validateShortNativeEditorialCandidate(asked, thresholds, 'Krish').hard_blocks).toContain(STORY_NO_OPENING_QUESTION)
     const weak = CandidateV1Schema.parse({ ...base, editorial: { ...base.editorial, scores: { ...base.editorial!.scores, insight: 0.2 } } })
     expect(validateShortNativeEditorialCandidate(weak, thresholds, 'Krish').hard_blocks).toContain('insight is below the publishable threshold')
   })
