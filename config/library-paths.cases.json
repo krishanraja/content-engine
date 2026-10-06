@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "about": [
+    "What may go into Krish's makeyourmindup asset library on Drive, and how a post's folder is named. Krish, 2026-10-06: \"I want every single asset in there, permanent and for individual posts, categorized properly, clear what to use them for, and every new post gets its own new folder with all assets including the article HTML I can copy paste, video scripts, etc etc\".",
+    "Two programs follow this rule: the engine's library routes (apps/control-plane/api/library/_library.ts), which refuse anything else, and the post pack (scripts/post-pack/library.py), which builds and sends the files. Both are tested against every case in this file, so they cannot drift apart. Change the rule here first, then in both.",
+    "A library path is relative, with forward slashes, and starts with one of top_folders. Inside \"3 Posts\" the next folder is one post's folder, and a file in it is either post_readme or sits inside one of post_sections.",
+    "Every name is safe on Windows and Google Drive: no . or .. folder, no name starting with a dot, none of < > : \" \\ | ? * or a control character, no space at either end or dot at the end, none of Windows' reserved device names. Accented letters are written in their composed form (NFC). At most path_max characters in the whole path and part_max in one name, counted as Windows counts them (UTF-16 code units).",
+    "The extension decides the type, from content_types; nothing else is taken. A file is at most max_bytes.",
+    "A post's folder: YYYY-MM-DD <Day> <subchannel> - <Subject>, with the day the date fell on (Mon, Tue, Wed, Thu, Fri, Sat or Sun) and the subchannel as the brand writes it; a launch post is YYYY-MM-DD Launch - <Subject>. The subject is made safe by the archive naming rule (config/archive-naming.cases.json) and cut at a space so the whole name stays within part_max."
+  ],
+  "top_folders": [
+    "1 Brand kit (permanent)",
+    "2 Channel art (permanent)",
+    "3 Posts"
+  ],
+  "post_sections": [
+    "1 Article",
+    "2 Covers and images",
+    "3 Video",
+    "4 Social"
+  ],
+  "post_readme": "READ ME.txt",
+  "subchannels": [
+    "follow.the.money",
+    "mind.the.gap",
+    "under.the.hood"
+  ],
+  "path_max": 180,
+  "part_max": 100,
+  "max_bytes": 524288000,
+  "content_types": {
+    "html": "text/html",
+    "md": "text/markdown",
+    "txt": "text/plain",
+    "csv": "text/csv",
+    "json": "application/json",
+    "css": "text/css",
+    "js": "text/javascript",
+    "cjs": "text/javascript",
+    "mjs": "text/javascript",
+    "pdf": "application/pdf",
+    "png": "image/png",
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+    "webp": "image/webp",
+    "gif": "image/gif",
+    "svg": "image/svg+xml",
+    "ttf": "font/ttf",
+    "otf": "font/otf",
+    "woff": "font/woff",
+    "woff2": "font/woff2",
+    "mp4": "video/mp4",
+    "mov": "video/quicktime",
+    "webm": "video/webm",
+    "mp3": "audio/mpeg",
+    "m4a": "audio/mp4",
+    "wav": "audio/wav",
+    "srt": "application/x-subrip",
+    "vtt": "text/vtt",
+    "zip": "application/zip"
+  },
+  "paths": [
+    {
+      "why": "the copy that pastes into Substack",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/1 Article/substack-copy.html"
+    },
+    {
+      "why": "the post's READ ME",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/READ ME.txt"
+    },
+    {
+      "why": "the cover",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/2 Covers and images/substack-cover-3x2.png"
+    },
+    {
+      "why": "a finished video named by the archive rule",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/3 Video/Who gets paid - tall 9x16 - Shorts, Reels, LinkedIn.mp4"
+    },
+    {
+      "why": "a share copy in a folder under the video section",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/3 Video/share/Who gets paid - wide 16x9 - YouTube, Substack.mp4"
+    },
+    {
+      "why": "the LinkedIn post",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/4 Social/linkedin-post.txt"
+    },
+    {
+      "why": "a launch post",
+      "path": "3 Posts/2026-10-05 Launch - Launch hello/3 Video/video-script.md"
+    },
+    {
+      "why": "a Wednesday under.the.hood post",
+      "path": "3 Posts/2026-10-07 Wed under.the.hood - Why Koa works/1 Article/web-page.html"
+    },
+    {
+      "why": "a brand kit logo, two folders down",
+      "path": "1 Brand kit (permanent)/logos/mark/makeyourmindup-mark-transparent.png"
+    },
+    {
+      "why": "a brand kit font",
+      "path": "1 Brand kit (permanent)/fonts/IBM-Plex-Mono/IBMPlexMono-SemiBold.ttf"
+    },
+    {
+      "why": "the brand kit's tailwind preset",
+      "path": "1 Brand kit (permanent)/tokens/tailwind.preset.cjs"
+    },
+    {
+      "why": "channel art at the top of its folder",
+      "path": "2 Channel art (permanent)/youtube-banner.png"
+    },
+    {
+      "why": "capitals in the extension",
+      "path": "2 Channel art (permanent)/WATERMARK.PNG"
+    },
+    {
+      "why": "an accented letter in its composed form",
+      "path": "2 Channel art (permanent)/Café card.png"
+    },
+    {
+      "why": "a name of exactly part_max characters",
+      "path": "2 Channel art (permanent)/dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd.png"
+    },
+    {
+      "why": "a path of exactly path_max characters",
+      "path": "2 Channel art (permanent)/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccccccccccccccccccccccccccccccc.png"
+    },
+    {
+      "why": "climbing out with ..",
+      "path": "3 Posts/../../Video Engine/Inbox/take.mp4",
+      "refused": "path_escapes_library"
+    },
+    {
+      "why": "climbing out after the post folder",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/../../../Video Engine/Archive/x.mp4",
+      "refused": "path_escapes_library"
+    },
+    {
+      "why": "a . folder",
+      "path": "1 Brand kit (permanent)/./logo.png",
+      "refused": "path_escapes_library"
+    },
+    {
+      "why": "an absolute path",
+      "path": "/3 Posts/x/READ ME.txt",
+      "refused": "path_absolute"
+    },
+    {
+      "why": "a Windows drive",
+      "path": "H:/My Drive/Ventures/x.png",
+      "refused": "path_absolute"
+    },
+    {
+      "why": "a network share",
+      "path": "//server/share/x.png",
+      "refused": "path_absolute"
+    },
+    {
+      "why": "backslashes",
+      "path": "1 Brand kit (permanent)\\logos\\mark.png",
+      "refused": "path_backslash"
+    },
+    {
+      "why": "a Windows path with a drive and backslashes",
+      "path": "C:\\Users\\krish\\x.png",
+      "refused": "path_backslash"
+    },
+    {
+      "why": "a colon in the subject",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who: gets paid/READ ME.txt",
+      "refused": "path_unsafe_character"
+    },
+    {
+      "why": "a question mark",
+      "path": "2 Channel art (permanent)/why?.png",
+      "refused": "path_unsafe_character"
+    },
+    {
+      "why": "a pipe",
+      "path": "2 Channel art (permanent)/a|b.png",
+      "refused": "path_unsafe_character"
+    },
+    {
+      "why": "an asterisk",
+      "path": "2 Channel art (permanent)/a*.png",
+      "refused": "path_unsafe_character"
+    },
+    {
+      "why": "a double quote",
+      "path": "2 Channel art (permanent)/\"quoted\".png",
+      "refused": "path_unsafe_character"
+    },
+    {
+      "why": "angle brackets",
+      "path": "2 Channel art (permanent)/<b>.png",
+      "refused": "path_unsafe_character"
+    },
+    {
+      "why": "a line break",
+      "path": "2 Channel art (permanent)/two\nlines.png",
+      "refused": "path_unsafe_character"
+    },
+    {
+      "why": "a tab",
+      "path": "2 Channel art (permanent)/tab\there.png",
+      "refused": "path_unsafe_character"
+    },
+    {
+      "why": "a name ending in a dot",
+      "path": "2 Channel art (permanent)/art./x.png",
+      "refused": "path_part_edge"
+    },
+    {
+      "why": "a name ending in a space",
+      "path": "2 Channel art (permanent)/art /x.png",
+      "refused": "path_part_edge"
+    },
+    {
+      "why": "a name starting with a space",
+      "path": "2 Channel art (permanent)/ x.png",
+      "refused": "path_part_edge"
+    },
+    {
+      "why": "Windows' reserved name CON",
+      "path": "2 Channel art (permanent)/con.png",
+      "refused": "path_reserved_name"
+    },
+    {
+      "why": "Windows' reserved name LPT1 as a folder",
+      "path": "2 Channel art (permanent)/LPT1/x.png",
+      "refused": "path_reserved_name"
+    },
+    {
+      "why": "a hidden file",
+      "path": "1 Brand kit (permanent)/.gitignore",
+      "refused": "path_hidden_part"
+    },
+    {
+      "why": "a hidden folder",
+      "path": "1 Brand kit (permanent)/.cache/x.png",
+      "refused": "path_hidden_part"
+    },
+    {
+      "why": "the Studio's Inbox",
+      "path": "Video Engine/Inbox/take.mp4",
+      "refused": "path_wrong_top_folder"
+    },
+    {
+      "why": "the library's READ ME FIRST, which is Krish's",
+      "path": "READ ME FIRST.txt",
+      "refused": "path_wrong_top_folder"
+    },
+    {
+      "why": "a top folder spelt with other capitals",
+      "path": "3 posts/2026-10-05 Mon follow.the.money - Who gets paid/READ ME.txt",
+      "refused": "path_wrong_top_folder"
+    },
+    {
+      "why": "a top folder without its number",
+      "path": "Brand kit (permanent)/logo.png",
+      "refused": "path_wrong_top_folder"
+    },
+    {
+      "why": "a top folder alone",
+      "path": "2 Channel art (permanent)",
+      "refused": "path_no_file"
+    },
+    {
+      "why": "a post folder alone",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid",
+      "refused": "path_no_file"
+    },
+    {
+      "why": "a post folder without a date",
+      "path": "3 Posts/Who gets paid/READ ME.txt",
+      "refused": "path_post_folder_invalid"
+    },
+    {
+      "why": "a post folder with words before its date",
+      "path": "3 Posts/Draft 2026-10-05 Mon follow.the.money - Who gets paid/READ ME.txt",
+      "refused": "path_post_folder_invalid"
+    },
+    {
+      "why": "the wrong day for the date",
+      "path": "3 Posts/2026-10-05 Wed follow.the.money - Who gets paid/READ ME.txt",
+      "refused": "path_post_folder_invalid"
+    },
+    {
+      "why": "a date that does not exist",
+      "path": "3 Posts/2026-02-30 Mon follow.the.money - Who gets paid/READ ME.txt",
+      "refused": "path_post_folder_invalid"
+    },
+    {
+      "why": "a retired subchannel name",
+      "path": "3 Posts/2026-10-05 Mon The Money of AI - Who gets paid/READ ME.txt",
+      "refused": "path_post_folder_invalid"
+    },
+    {
+      "why": "a subchannel written with underscores",
+      "path": "3 Posts/2026-10-05 Mon follow_the_money - Who gets paid/READ ME.txt",
+      "refused": "path_post_folder_invalid"
+    },
+    {
+      "why": "a post folder with no subject",
+      "path": "3 Posts/2026-10-05 Launch - /READ ME.txt",
+      "refused": "path_part_edge"
+    },
+    {
+      "why": "a file loose in a post folder",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/cover.png",
+      "refused": "path_post_section_invalid"
+    },
+    {
+      "why": "a section that does not exist",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/5 Extras/x.png",
+      "refused": "path_post_section_invalid"
+    },
+    {
+      "why": "a section named without its number",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/Article/substack-copy.html",
+      "refused": "path_post_section_invalid"
+    },
+    {
+      "why": "the READ ME used as a folder",
+      "path": "3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/READ ME.txt/x.txt",
+      "refused": "path_post_section_invalid"
+    },
+    {
+      "why": "two slashes together",
+      "path": "1 Brand kit (permanent)//logo.png",
+      "refused": "path_empty_part"
+    },
+    {
+      "why": "a slash at the end",
+      "path": "2 Channel art (permanent)/art/",
+      "refused": "path_empty_part"
+    },
+    {
+      "why": "longer than path_max",
+      "path": "2 Channel art (permanent)/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cc.png",
+      "refused": "path_too_long"
+    },
+    {
+      "why": "a name longer than part_max",
+      "path": "2 Channel art (permanent)/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.png",
+      "refused": "path_part_too_long"
+    },
+    {
+      "why": "an accented letter written in two pieces",
+      "path": "2 Channel art (permanent)/Café card.png",
+      "refused": "path_not_nfc"
+    },
+    {
+      "why": "a program",
+      "path": "2 Channel art (permanent)/setup.exe",
+      "refused": "path_type_not_allowed"
+    },
+    {
+      "why": "no extension",
+      "path": "2 Channel art (permanent)/banner",
+      "refused": "path_type_not_allowed"
+    },
+    {
+      "why": "a type named like a property every JavaScript object has",
+      "path": "2 Channel art (permanent)/x.constructor",
+      "refused": "path_type_not_allowed"
+    },
+    {
+      "why": "an empty path",
+      "path": "",
+      "refused": "path_not_text"
+    }
+  ],
+  "post_folders": [
+    {
+      "why": "the first follow.the.money post, on a Monday",
+      "date": "2026-10-05",
+      "subchannel": "follow.the.money",
+      "subject": "Who gets paid",
+      "folder": "2026-10-05 Mon follow.the.money - Who gets paid"
+    },
+    {
+      "why": "a subchannel given by its id",
+      "date": "2026-10-07",
+      "subchannel": "under_the_hood",
+      "subject": "Why Koa works",
+      "folder": "2026-10-07 Wed under.the.hood - Why Koa works"
+    },
+    {
+      "why": "a subchannel in capitals, with the day given and matching",
+      "date": "2026-10-09",
+      "subchannel": "MIND.THE.GAP",
+      "day": "Fri",
+      "subject": "Who picks your AI",
+      "folder": "2026-10-09 Fri mind.the.gap - Who picks your AI"
+    },
+    {
+      "why": "a launch post",
+      "date": "2026-10-05",
+      "launch": true,
+      "subject": "Launch hello",
+      "folder": "2026-10-05 Launch - Launch hello"
+    },
+    {
+      "why": "characters Windows refuses are taken out of the subject",
+      "date": "2026-10-09",
+      "subchannel": "mind.the.gap",
+      "subject": "Who picks your AI: the fork, and our call?",
+      "folder": "2026-10-09 Fri mind.the.gap - Who picks your AI the fork, and our call"
+    },
+    {
+      "why": "a long subject is cut at a space to fit part_max",
+      "date": "2026-10-09",
+      "subchannel": "mind.the.gap",
+      "subject": "Why every agent that books your travel will quietly route the money through a handful of payment rails nobody votes on",
+      "folder": "2026-10-09 Fri mind.the.gap - Why every agent that books your travel will quietly route the money"
+    },
+    {
+      "why": "a day that does not match the date",
+      "date": "2026-10-05",
+      "subchannel": "follow.the.money",
+      "day": "Wed",
+      "subject": "Who gets paid",
+      "error": "its day is Mon, not Wed"
+    },
+    {
+      "why": "a date that does not exist",
+      "date": "2026-02-30",
+      "subchannel": "follow.the.money",
+      "subject": "Who gets paid",
+      "error": "is not a date"
+    },
+    {
+      "why": "a retired subchannel",
+      "date": "2026-10-05",
+      "subchannel": "money_of_ai",
+      "subject": "Who gets paid",
+      "error": "is not a subchannel"
+    },
+    {
+      "why": "no subchannel and not a launch",
+      "date": "2026-10-05",
+      "subject": "Who gets paid",
+      "error": "a post needs its subchannel"
+    },
+    {
+      "why": "a launch post with a subchannel as well",
+      "date": "2026-10-05",
+      "launch": true,
+      "subchannel": "follow.the.money",
+      "subject": "Hello",
+      "error": "a launch post has no subchannel"
+    },
+    {
+      "why": "a subject with nothing a name can keep",
+      "date": "2026-10-05",
+      "subchannel": "follow.the.money",
+      "subject": "::??",
+      "error": "nothing a folder name can keep"
+    }
+  ]
+}
