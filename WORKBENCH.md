@@ -30,6 +30,12 @@ Last updated: 2026-10-06 17:40 UTC, by a Claude Code session.
   things as boring as this towards things that are more fasincating and
   aspirational, like AI content creation for example". The engine's judges and
   channel briefs do not know this yet (see Latest handoff).
+- Every piece, its video and its posts answer three questions: what it means
+  for the consumer, what it means for someone starting or building a
+  business, and how the old way is changing, creatively and in who gets paid
+  (house rule `THREE_LENSES`). Every visual uses the real logos of the
+  companies it names, and the cover and share picture carry Krish's face
+  (`LOGOS_AND_FACE`; `scripts/pages` cover facts, `"portrait": true`).
 
 ## The board: what is waiting on Krish, in progress and done
 
@@ -117,10 +123,12 @@ the one-time install on his machine: `scripts/post-pack/README.md`.
   Koa, which Krish turned down as boring (walk log, end of "Piece 3"). Built
   on his own research from the Cold Ideas & Inspo folder; he chose the title,
   85% and the paid fact check ("Title 2. 85%. And yes"). Fact check passed,
-  33 claims, 0 blocking. The whole launch set is in the library under `3
-  Posts` and was sent in chat. **Waiting on Krish:** approve it, record the
+  37 claims, 0 blocking, after the piece took Krish's three questions
+  (walk log F74). The whole launch set is in the library under `3 Posts` and
+  was sent in chat: the cover carries his face and is also the LinkedIn
+  picture, and both explainers carry the companies' real logos. **Waiting on Krish:** approve it, record the
   video from the script, paste the Substack copy and cover, publish, and post
-  the LinkedIn post with picture 1 (link in the first comment). Any change to
+  the LinkedIn post with the cover (link in the first comment). Any change to
   the body needs the fact check run again. **Next to build**, each shown to
   Krish as exact wording before it changes anything live: the shift to
   fascinating subjects in the judges and the three channel briefs, idea

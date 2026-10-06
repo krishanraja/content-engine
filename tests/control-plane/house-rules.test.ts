@@ -149,6 +149,21 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.ok(safe)
     assert.ok(r.text.includes(`inside x ${safe[1]} to ${safe[3]} and y ${safe[2]} to ${safe[4]}`))
   })
+  test('the three questions every piece answers, and real logos with Krish\'s face, reach the stages that make them', () => {
+    const lenses = HOUSE_RULES.find(x => x.id === 'THREE_LENSES')
+    const faces = HOUSE_RULES.find(x => x.id === 'LOGOS_AND_FACE')
+    assert.ok(lenses && faces)
+    assert.match(lenses.said, /what this means for someone starting a business or building a business/)
+    assert.match(faces.said, /use the real logos for any companies mentioned/)
+    for (const stage of ['write', 'judge_draft', 'final_pass', 'visual'] as Stage[]) {
+      assert.ok(houseRulesBlock(stage).includes(lenses.text), stage)
+    }
+    for (const sub of ['follow_the_money', 'mind_the_gap', 'under_the_hood']) {
+      assert.ok(houseRulesBlock('write', sub).includes(lenses.text), sub)
+    }
+    assert.ok(houseRulesBlock('visual').includes(faces.text))
+    assert.match(faces.text, /"portrait": true/)
+  })
   test('the stages named are the stages that exist', () => {
     const stages: Stage[] = ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual']
     for (const r of HOUSE_RULES) for (const s of r.stages) assert.ok(stages.includes(s), `${r.id}: ${s}`)

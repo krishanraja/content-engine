@@ -808,6 +808,10 @@ h1 span { display: block; color: var(--accent); }
 .mono { font-family: "IBM Plex Mono", monospace; }
 .tag { font-size: var(--words); line-height: 1; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 8px 14px; color: var(--ink); white-space: nowrap; }
 .ft { margin-top: 18px; font-size: var(--fine); line-height: 1.1; color: #AEAEA5; white-space: nowrap; }
+.band { margin-top: 24px; width: 100%; display: flex; align-items: center; gap: 30px; text-align: left; }
+.face { flex: none; width: 236px; height: 236px; border-radius: 50%; background-size: cover; background-position: center 28%; border: 6px solid var(--accent); box-shadow: 10px 10px 0 rgba(0, 0, 0, .35); }
+.side { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.band .sub, .band .rows { margin-top: 0; }
 """
 
 # The largest size from the list at which the headline fits in `most` lines,
@@ -832,12 +836,24 @@ def split_headline(text):
     return (m.group(1), m.group(2)) if m else ('', text.strip())
 
 
+def beside(face, words):
+    """The subline and rows, beside Krish's face when the cover has one."""
+    return f'<div class="band">{face}<div class="side">{words}</div></div>' if face else words
+
+
 def cover_html(facts, base, refresh=False):
     """The cover, 1200 x 800: the wordmark, the headline with its last line in
     the subchannel's colour, an optional bold subline, a row per logo with its
     tag, and the subchannel and a label in mono as fine print, over an
     optional photo at 30%. Every word is drawn at least as big as a phone's
-    feed needs (card.needed)."""
+    feed needs (card.needed).
+
+    With "portrait", Krish's face sits in a circle under the headline, the
+    subline and rows beside it, so the cover reads as him taking the subject
+    apart. His words, 2026-10-06: "even one of the funny headshots on the
+    cover pictures or social share pictures like this that make it even more
+    personal that it's me analysing it". `true` uses the cover site's photo
+    (brand.REMOTE['krish']); a path uses that picture instead."""
     hs = brand.house()
     ch = brand.channel(hs, facts['subchannel'])
     t = hs['tokens']
@@ -856,6 +872,10 @@ def cover_html(facts, base, refresh=False):
             brand.fail(f'"cover": a row\'s colour is one of {", ".join(colours)}, not {row.get("colour")!r}')
         rows.append(f'<div class="row"><img src="{brand.data_uri(resolve(base, row["logo"]), 600)}" alt="{attr(row.get("name", ""))}">'
                     f'<span class="tag mono" style="background:{colour}">{esc(row["tag"])}</span></div>')
+    face = ''
+    if c.get('portrait'):
+        source = brand.fetch('krish', refresh) if c['portrait'] is True else resolve(base, c['portrait'])
+        face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 600)})"></div>'
     photo = ''
     if c.get('background'):
         photo = (f'<div class="ph" style="background-image:url({brand.data_uri(resolve(base, c["background"]), 2000)})"></div>'
@@ -880,8 +900,7 @@ def cover_html(facts, base, refresh=False):
 <div id="card">{photo}<div id="safe">
 <img class="wm" src="{brand.brand_uri('wordmark', refresh)}" alt="makeyourmindup">
 <h1>{esc(lead) + ' ' if lead else ''}<span>{esc(last)}</span></h1>
-{f'<p class="sub">{esc(c["subline"])}</p>' if c.get('subline') else ''}
-{f'<div class="rows">{"".join(rows)}</div>' if rows else ''}
+{beside(face, (f'<p class="sub">{esc(c["subline"])}</p>' if c.get('subline') else '') + (f'<div class="rows">{"".join(rows)}</div>' if rows else ''))}
 <p class="ft mono" data-fine-print>{esc(ch['name'])} · {esc(label)}</p>
 </div></div>
 </body>
