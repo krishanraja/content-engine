@@ -139,11 +139,16 @@ function Resolve-LibraryRoot($Config) {
   if (-not $root) { throw 'No library folder: set MINDMAKE_LIBRARY_ROOT, or runtime.library_root in config\studio.json.' }
   if (-not [System.IO.Path]::IsPathRooted($root)) { throw "The library folder must be a full path: $root" }
   $root = [System.IO.Path]::GetFullPath($root).TrimEnd('\')
-  # The Studio's Drive folders are never the library, and the library is never inside them.
+  # The Studio's Drive folders are never the library, the library is never
+  # inside them, and they are never inside a folder the sync writes to. Since
+  # 2026-10-07 (Krish moved makeyourmindup to Ventures\Active, "the moves were
+  # made on purpose") Video Engine sits inside the library folder beside the
+  # three top folders; the sync writes only under those, so that is allowed.
   $studio = @((Get-Field $runtime 'drive_root'), (Get-Field $runtime 'media_inbox'), (Get-Field $runtime 'archive_root'),
     $env:MINDMAKE_DRIVE_ROOT, $env:MINDMAKE_MEDIA_INBOX, $env:MINDMAKE_ARCHIVE_ROOT) | Where-Object { $_ }
   foreach ($folder in $studio) {
-    if ((Test-SamePath $root $folder) -or (Test-Inside $root $folder) -or (Test-Inside $folder $root)) {
+    $underWritten = @($TopFolders | Where-Object { $top = Join-Path $root $_; (Test-SamePath $folder $top) -or (Test-Inside $folder $top) -or (Test-Inside $top $folder) }).Count -gt 0
+    if ((Test-SamePath $root $folder) -or (Test-Inside $root $folder) -or $underWritten) {
       throw "The library folder $root overlaps the Studio's Video Engine folder $folder. Refusing to write anything."
     }
   }

@@ -20,7 +20,7 @@ describe('repository operating contracts', () => {
     }>('config/studio.json')
     // Ruling (Krish, 2026-09-28): the Video Studio's Drive root moves from G:
     // to H: (krish@themindmaker.ai). Scope is the Video Studio only.
-    const exactMediaRoot = String.raw`H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine`
+    const exactMediaRoot = String.raw`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine`
 
     expect(studio.transcription.vocabulary).toContain('Krish')
     expect(studio.transcription.vocabulary).not.toContain('Krish Raja')
@@ -30,9 +30,11 @@ describe('repository operating contracts', () => {
     expect(studio.runtime.drive_root).toBe(exactMediaRoot)
     expect(studio.runtime.media_inbox).toBe(`${exactMediaRoot}\\Inbox`)
     expect(studio.runtime.archive_root).toBe(`${exactMediaRoot}\\Archive`)
-    // Krish, 2026-10-06: his makeyourmindup asset library sits beside the
-    // Video Engine folder, never inside it (scripts/library-sync.ps1).
-    expect(studio.runtime.library_root).toBe(exactMediaRoot.replace(/\\Video Engine$/, '\\makeyourmindup'))
+    // Krish, 2026-10-07 ("the moves were made on purpose"): makeyourmindup is
+    // its own venture folder and holds Video Engine beside the library's three
+    // top folders. The library is never inside Video Engine, and Video Engine is
+    // never inside a folder the sync writes to (scripts/library-sync.ps1).
+    expect(studio.runtime.library_root).toBe(exactMediaRoot.replace(/\\Video Engine$/, ''))
     expect(studio.runtime.library_root.startsWith(`${exactMediaRoot}\\`)).toBe(false)
 
     const environment = await readFile(join(repoRoot, '.env.example'), 'utf8')
@@ -45,7 +47,7 @@ describe('repository operating contracts', () => {
     expect(launcher).toContain(exactMediaRoot)
     expect(launcher).not.toMatch(/Krish(?:an)? Raja/)
     expect(`${voiceSkill}\n${voiceMetadata}`).not.toMatch(/Krish(?:an)? Raja/)
-    expect(pathSource).toContain("export const DEFAULT_WINDOWS_DRIVE_ROOT = 'H:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04_Content\\\\Video Engine'")
+    expect(pathSource).toContain("export const DEFAULT_WINDOWS_DRIVE_ROOT = 'H:\\\\My Drive\\\\Ventures\\\\Active\\\\makeyourmindup\\\\Video Engine'")
     expect(studio.runtime.drive_root).not.toMatch(/^G:/)
     expect(environment).toContain(`MINDMAKE_ARCHIVE_ROOT=${exactMediaRoot}\\Archive`)
     expect(pathSource).toContain("const INVALID_WINDOWS_DRIVE_ROOT = 'G:\\\\My Drive\\\\Ventures\\\\Active\\\\Mindmaker\\\\04\\\\_Content\\\\Video Engine'")

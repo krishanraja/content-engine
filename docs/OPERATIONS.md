@@ -122,8 +122,8 @@ If the order is broken the failure is closed and visible: control-plane code dep
 The default directories are:
 
 ```text
-H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
-H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
+H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox
+H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Archive
 ```
 
 They moved from G: to H: on 2026-09-28 (Krish's decision; `docs/DEPLOYMENT.md`, "Independent runner setup"). Every runner machine sets `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX` and `MINDMAKE_ARCHIVE_ROOT` to these paths as user environment variables. The G: folder stays intact as the rollback copy. The move changed the Inbox fingerprint, and the standby's Inbox was rebound with Krish's confirmation through the flow below; the primary reports the same H: fingerprint.

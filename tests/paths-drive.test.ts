@@ -4,8 +4,8 @@ import { DEFAULT_WINDOWS_DRIVE_ROOT, canonicalWindowsDrivePath } from '@mindmake
 describe('Windows Drive path authority', () => {
   // Krish, 2026-09-28: the Video Studio's Drive moves from G: to H:, the
   // krish@themindmaker.ai account. The old G: folder stays as a rollback copy.
-  it('uses the mounted 04_Content root on H: as the canonical default', () => {
-    expect(DEFAULT_WINDOWS_DRIVE_ROOT).toBe('H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine')
+  it('uses the makeyourmindup Video Engine folder on H: as the canonical default (moved 2026-10-07)', () => {
+    expect(DEFAULT_WINDOWS_DRIVE_ROOT).toBe('H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine')
     expect(canonicalWindowsDrivePath(undefined, DEFAULT_WINDOWS_DRIVE_ROOT)).toBe(DEFAULT_WINDOWS_DRIVE_ROOT)
     expect(canonicalWindowsDrivePath(DEFAULT_WINDOWS_DRIVE_ROOT, 'wrong')).toBe(DEFAULT_WINDOWS_DRIVE_ROOT)
   })

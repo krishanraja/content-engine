@@ -36,7 +36,9 @@ describe('the library sync on Krish\'s machine', () => {
   it('refuses a library root that overlaps the Studio\'s Video Engine folders', () => {
     for (const name of ['drive_root', 'media_inbox', 'archive_root']) expect(sync).toContain(`Get-Field $runtime '${name}'`)
     for (const name of ['MINDMAKE_DRIVE_ROOT', 'MINDMAKE_MEDIA_INBOX', 'MINDMAKE_ARCHIVE_ROOT']) expect(sync).toContain(`$env:${name}`)
-    expect(sync).toMatch(/Test-SamePath \$root \$folder\) -or \(Test-Inside \$root \$folder\) -or \(Test-Inside \$folder \$root\)/)
+    expect(sync).toMatch(/Test-SamePath \$root \$folder\) -or \(Test-Inside \$root \$folder\) -or \$underWritten/)
+    // Video Engine may sit inside the library folder, never inside a folder the sync writes to (2026-10-07).
+    expect(sync).toMatch(/\$TopFolders \| Where-Object \{ \$top = Join-Path \$root \$_/)
     expect(sync).not.toMatch(/\\Inbox|\\Archive/)
   })
 
