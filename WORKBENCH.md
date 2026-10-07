@@ -131,6 +131,31 @@ session").
 
 ## Latest handoff
 
+- 2026-10-07, night: **ready for tomorrow's Friday planning.** Engine live at
+  `main` (`16e40b4`), health ready. Friday 9 October is mind.the.gap piece 2
+  (`904658db`, approved, draft of 2026-09-25): fold in the model-names
+  research Krish dropped in Drive, fact-check the new numbers, then build the
+  launch set the same way as Higgsfield. What changed today, all on `main`:
+  - Drive: Krish moved `makeyourmindup` to `Ventures > Active`, with
+    `Video Engine` inside it ("the moves were made on purpose"); every path,
+    both machines' environment and both READ MEs follow (`docs/DRIVE.md`).
+  - Recordings reach a cloud session by themselves from either runner
+    machine: `python scripts/post-pack/recording.py get NAME`.
+  - quick-edit: the logo opens every tall video; known mishearings
+    ("Bike Dance") are fixed in every caption; a restart is cut by its time.
+  - Pictures: nothing may run off an edge (`edge_check.py` in the pack,
+    `card.py` before a PNG). Substack's social preview box wants 1200 x 630;
+    the pack does not make one yet (made by hand for Higgsfield).
+  - The call is marked right, wrong or too close to call, everywhere.
+  - makeyourmindup.ai: YouTube live (`@makeyourmind-up`, Krish's handle; the
+    clean one was taken), the newsstand lists articles only and refreshes
+    every 15 minutes, the scoreboard is a labelled example board until the
+    real one has calls to count, and a Meet the judges button.
+  **Waiting on Krish:** change "held, broke or unclear" to the new words on
+  the two published pieces in Substack; replace the 16 one-off docs in Drive
+  with the reworked scripts (`docs/one-offs/scripts/`). **Next to build:** a
+  warning on the board when library files wait over 30 minutes (the sync
+  stalled 18 hours unseen); the 1200 x 630 social preview in every pack.
 - 2026-10-06, night: **the Higgsfield video is edited and the recordings
   lane is live on both machines.** Krish recorded from script v4; the cut
   (restart at 3:02 removed, 3:38 to 3:04), six graphics, captions and end card
