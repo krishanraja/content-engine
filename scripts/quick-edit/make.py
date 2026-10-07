@@ -53,6 +53,52 @@ def run(cmd, quiet=False, **kw):
     return subprocess.run([str(c) for c in cmd], check=True, **kw)
 
 
+# Names the transcriber gets wrong, fixed in every video's captions before the
+# config's own fixes. Krish, 2026-10-07, of the Higgsfield video: "the subtitle
+# called Byte Dance, 'Bike Dance.'" Add a name here when a video gets it wrong,
+# so the next one cannot.
+DEFAULT_FIXES = [
+    ['Bike Dance', 'ByteDance'], ['Byte Dance', 'ByteDance'], ['Bite Dance', 'ByteDance'], ['Bytedance', 'ByteDance'],
+    ['Higgs field', 'Higgsfield'], ['Higsfield', 'Higgsfield'], ['Open AI', 'OpenAI'], ['Sorah', 'Sora'],
+    ['Chat GPT', 'ChatGPT'], ['XAI', 'xAI'], ['Deep Seek', 'DeepSeek'], ['Mid Journey', 'Midjourney'], ['Eleven Labs', 'ElevenLabs'],
+    ['MakeYourMindUp .ai', 'makeyourmindup.ai'], ['Chris', 'Krish'], ['theater', 'theatre'],
+]
+
+
+def default_logo(out):
+    """The makeyourmindup masthead on an ink pill, centred above the tall
+    captions (they start 250 pixels down), on a transparent 1080x1920 frame.
+    Drawn once per output folder from the brand's own masthead."""
+    png = Path(out) / 'logo-9x16.png'
+    if png.exists():
+        return png
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'pages'))
+    import brand
+    from PIL import Image, ImageDraw
+    mast = Image.open(brand.fetch('masthead')).convert('RGBA')
+    w = 440
+    mast = mast.resize((w, round(mast.height * w / mast.width)), Image.LANCZOS)
+    pad_x, pad_y, top = 26, 20, 50
+    frame = Image.new('RGBA', (1080, 1920), (0, 0, 0, 0))
+    box = (540 - w // 2 - pad_x, top, 540 + w // 2 + pad_x, top + mast.height + 2 * pad_y)
+    ImageDraw.Draw(frame).rounded_rectangle(box, radius=22, fill=(12, 21, 18, 235))
+    frame.alpha_composite(mast, (540 - w // 2, top + pad_y))
+    frame.save(png)
+    return png
+
+
+def script_prompt(path):
+    """The names in the script, as a hint for the transcriber, so it hears
+    "ByteDance" and "Higgsfield" the way they are spelt."""
+    text = Path(path).read_text(encoding='utf-8-sig')
+    names = []
+    for m in re.finditer(r"\b(?:[A-Z][a-z]*[A-Z][A-Za-z]*|[A-Z][a-z]{2,}(?:\s+[A-Z][a-z]{2,})*|[A-Z]{2,}[a-z]*)\b", text):
+        word = m.group(0)
+        if word not in names and word.split()[0] not in {'The', 'This', 'That', 'And', 'But', 'So', 'Now', 'Our', 'If', 'One', 'First', 'Then', 'When', 'What', 'How', 'Why', 'Think', 'People', 'Every', 'Most', 'Nobody', 'Instead', 'Expensive', 'Choose', 'Line', 'Before', 'Square', 'Written', 'On', 'In', 'It', 'They', 'You', 'We', 'He', 'She', 'Let', 'Back'}:
+            names.append(word)
+    return 'Krish, makeyourmindup. ' + ', '.join(names[:60]) + '.'
+
+
 def norm(t):
     return re.sub(r"[^a-z0-9%$]", '', t.lower())
 
@@ -268,9 +314,13 @@ def tokens(ws, replacements):
         seq = [norm(x) for x in a.split() if norm(x)]
         k = 0
         while k + len(seq) <= len(out):
-            if [norm(x['w']) for x in out[k:k + len(seq)]] == seq:
+            got = [norm(x['w']) for x in out[k:k + len(seq)]]
+            # The last word may carry an 's ("bike dances," is ByteDance's).
+            owned = got[:-1] == seq[:-1] and got[-1] == seq[-1] + 's' and not seq[-1].endswith('s')
+            if got == seq or owned:
                 tail = re.sub(r'^.*?([.,!?;:]*)$', r'\1', out[k + len(seq) - 1]['w'])
-                out[k:k + len(seq)] = [{**out[k], 'w': b.rstrip('.,!?;:') + tail, 'e': out[k + len(seq) - 1]['e']}]
+                word = b.rstrip('.,!?;:') + ("'s" if owned else '') + tail
+                out[k:k + len(seq)] = [{**out[k], 'w': word, 'e': out[k + len(seq) - 1]['e']}]
             k += 1
     for j, t in enumerate(out):
         if j == 0 or re.search(r'[.!?]$', out[j - 1]['w']):
@@ -374,6 +424,7 @@ def self_test():
     trip = ('so back to the question how do you keep your biggest how do you sorry lose your biggest supplier '
             'how do you lose your biggest supplier and keep growing').split()
     stumble = [{'w': w, 's': 172.0 + n * 0.4, 'e': 172.3 + n * 0.4} for n, w in enumerate(trip)]
+    bike = [{'w': w, 's': n * 0.4, 'e': n * 0.4 + 0.3} for n, w in enumerate("made with bike dances, Alibaba's, XAI's.".split())]
     phrase = [{'w': w, 's': n * 0.4, 'e': n * 0.4 + 0.3} for n, w in enumerate('nobody is back to full year.'.split())]
     checks = [
         ('the false start and the um go', restart_cut(words, 170.0 + restart * 0.4), (7, restart - 1)),
@@ -381,6 +432,7 @@ def self_test():
         ('no repeat, no cut', restart_cut(words[:restart], 172.0), None),
         ('3:02 is 182 seconds', seconds('3:02'), 182.0),
         ('a stumble goes back to its first start', restart_cut(stumble, 172.0 + 19 * 0.4), (5, 18)),
+        ('Bike Dance is ByteDance, owned and all', [x['w'] for x in tokens(bike, DEFAULT_FIXES)], ['Made', 'with', "ByteDance's,", "Alibaba's,", "xAI's."]),
         ('a phrase fix joins the words', [x['w'] for x in tokens(phrase, [['nobody is back to full', 'nobody has banked a full']])],
          ['Nobody has banked a full', 'year.']),
         ('found through resolve_removals', resolve_removals(words, [{'restart_near': 170.0 + restart * 0.4}]), [(7, restart - 1)]),
@@ -415,7 +467,7 @@ def main():
     src = P(cfg['source'])
     dur = float(json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'json', str(src)], capture_output=True, text=True).stdout)['format']['duration'])
     wpath = P(cfg['words']) if cfg.get('words') else out / f"{cfg['name']}.words.json"
-    words = json.loads(wpath.read_text())['words'] if wpath.exists() else transcribe(src, wpath, cfg.get('model', 'small.en'), cfg.get('prompt', ''))
+    words = json.loads(wpath.read_text())['words'] if wpath.exists() else transcribe(src, wpath, cfg.get('model', 'small.en'), cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''))
 
     cuts = resolve_removals(words, cfg.get('remove', []) + cfg.get('remove_words', []))
     segs, total = segments(words, cuts, cfg.get('max_gap', 0.35), cfg.get('pad_before', 0.10), cfg.get('pad_after', 0.16), dur)
@@ -429,7 +481,7 @@ def main():
     # kept the eyes in frame for the launch videos, so scale that by default.
     cfg.setdefault('face', [round(ch * 100 / 720), round(ch * 450 / 720)])
     if args.plan:
-        toks = tokens(ws, cfg.get('replacements', []))
+        toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []))
         groups = chunks(toks, sorted({c['s'] for c in wins} | {c['e'] for c in wins}))
         print(json.dumps({'name': cfg['name'], 'source_seconds': round(dur, 2), 'cut_seconds': total, 'segments': len(segs),
                           'cuts': [{'words': ' '.join(words[i]['w'].strip() for i in range(a, b + 1)), 'at': words[a]['s']} for a, b in cuts],
@@ -469,7 +521,7 @@ def main():
     afilter = (f"highpass=f=70,loudnorm=I=-14:TP=-1.0:LRA=11:measured_I={loud['input_i']}:measured_TP={loud['input_tp']}:"
                f"measured_LRA={loud['input_lra']}:measured_thresh={loud['input_thresh']}:offset={loud['target_offset']}:linear=true,aresample=48000")
 
-    toks = tokens(ws, cfg.get('replacements', []))
+    toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []))
     bounds = sorted({c['s'] for c in wins} | {c['e'] for c in wins})
     groups = chunks(toks, bounds)
     report = {'name': cfg['name'], 'source_seconds': round(dur, 2), 'cut_seconds': total, 'segments': len(segs),
@@ -508,6 +560,17 @@ def main():
         for c in wins:
             inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', P(c['panel'].replace('{aspect}', asp))]
             g.append(f"[{last}][{n}:v]overlay=x={px}:y={py}:enable='between(t,{c['s']},{c['e']})'[s{k}]")
+            last, n, k = f's{k}', n + 1, k + 1
+        if asp == '9x16' and cfg.get('logo', True) is not False:
+            # The makeyourmindup logo in the opening seconds of every tall video
+            # (Krish, 2026-10-07: "put the Make Your Mind Up logo in the first
+            # few seconds of the video somewhere on vertical video"). The PNG is
+            # the whole frame, transparent, so it says where the logo sits.
+            lg = cfg['logo'] if isinstance(cfg.get('logo'), dict) else {}
+            secs = lg.get('seconds', 3.0)
+            inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', P(lg['png']) if lg.get('png') else default_logo(out)]
+            g.append(f"[{n}:v]format=rgba,fade=t=out:st={max(0.0, secs - 0.4):.2f}:d=0.4:alpha=1[lg]")
+            g.append(f"[{last}][lg]overlay=0:0:enable='between(t,0,{secs:.2f})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
         if asp == '9x16' and cfg.get('strap'):
             st = cfg['strap']
