@@ -92,7 +92,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'CALL', name: 'Every piece makes a dated prediction',
-    text: 'Every piece ends with our prediction: what will happen, a date to check it by, and how sure we are as a percentage. It is ruled held, broke or unclear in public on that date, and misses go up as big as hits. Write it as a last section headed "## OUR PREDICTION": one paragraph that opens with the date ("By 30 June 2027, ..."), then a line on its own, "How sure we are: 75%." The Short shows that call word for word, so give one date and one whole percentage.',
+    text: 'Every piece ends with our prediction: what will happen, a date to check it by, and how sure we are as a percentage. It is ruled right, wrong or too close to call in public on that date, and the wrong ones go up as big as the right ones. Write it as a last section headed "## OUR PREDICTION": one paragraph that opens with the date ("By 30 June 2027, ..."), then a line on its own, "How sure we are: 75%." The Short shows that call word for word, so give one date and one whole percentage.',
     said: 'I want these to be signature bulletproof formats that can run across any article FYI, if they are going in, they need to go in for everything.',
     on: '2026-09-25', source: 'docs/CREATIVE_IDENTITY_UPGRADE.md (P6); makeyourmindup.ai, "Every piece makes a call. We keep score."', status: 'live',
     stages: ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check'],

@@ -376,7 +376,7 @@
             "under_the_hood": { "day": "Wednesdays", "sticker": "Screwdriver included", "promise": "Free from jargon", "question": "What actually goes together in a shipped thing, and why did this one work?" },
             "mind_the_gap": { "day": "Fridays", "sticker": "The headliner", "promise": "Every call scored in public", "question": "What is the pattern, and what does it mean is coming?" }
           },
-          "copy": { "site": "makeyourmindup.ai", "call_kicker": "The call", "call_headline": "Our call.", "call_footnote": "On the day, we mark it held, broke or unclear. Misses go up as big as hits.", "question_kicker": "The question", "cover_call_sticker": "Swipe for the call", "thumbnail_call_sticker": "Our call, dated" }
+          "copy": { "site": "makeyourmindup.ai", "call_kicker": "The call", "call_headline": "Our call.", "call_footnote": "On the day, we mark it right, wrong or too close to call. The wrong ones go up as big as the right ones.", "question_kicker": "The question", "cover_call_sticker": "Swipe for the call", "thumbnail_call_sticker": "Our call, dated" }
         }
       }
     }
