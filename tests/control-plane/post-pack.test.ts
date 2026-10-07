@@ -108,6 +108,8 @@ describe('a pack Krish reads', () => {
       'phone-images.png', 'stack.png', 'card.png', 'script.md', 'v-9x16.mp4', 'v-16x9.mp4', 'captions.srt']) {
       writeFileSync(join(work, name), name)
     }
+    // A picture must be whole to be packed (edge check, 2026-10-07): a plain one is.
+    writeFileSync(join(work, 'stack.png'), Buffer.from('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGUlEQVR4nGPcvuw/AymAiSTVoxpGNQwpDQBpOQJ8Y386+gAAAABJRU5ErkJggg==', 'base64'))
     // A script must pass the story check to be packed (walk log F75).
     writeFileSync(join(work, 'script.md'), '[To camera]\nWhy does this matter? Say this.\n')
     writeFileSync(join(work, 'post.json'), JSON.stringify(post))

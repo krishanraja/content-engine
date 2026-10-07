@@ -45,6 +45,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import library
 import story_check  # noqa: E402
+import edge_check  # noqa: E402
 from library import ARTICLE, COVERS, POST_README, POSTS, SOCIAL, VIDEO, LibraryError, archive, brand  # noqa: E402
 
 DEFAULT_OUT = library.ROOT / '.cache' / 'post-pack'
@@ -225,6 +226,8 @@ def plan(post, base):
         source = source_of(entry, label)
         if kind == 'video-script':
             story_gate(entry, source.read_text(encoding='utf-8-sig'), label)
+        if kind == 'image':
+            edge_gate(entry, source, label)
         if kind == 'video-words':
             planned.append({'section': section, 'name': fixed, 'purpose': purpose, 'text': words_text(source)})
             continue
@@ -265,6 +268,21 @@ def story_gate(entry, text, label):
     if found and not (isinstance(override, str) and override.strip().lower().startswith('krish')):
         raise PackError(f'{label}: the script fails the story check:\n  - ' + '\n  - '.join(found) +
                         '\n  Fix it (scripts/post-pack/story_check.py), or record Krish\'s own words in "story_check_override".')
+
+
+def edge_gate(entry, source, label):
+    """Krish, 2026-10-07, of a source line cut off at the bottom of an article
+    picture: "stuff like this can't happen". A picture with anything running
+    off an edge is not packed. Only his own words in "edge_check_override"
+    let one through."""
+    try:
+        found = edge_check.problems(source)
+    except Exception as e:  # noqa: BLE001
+        raise PackError(f'{label}: the picture could not be opened to check its edges ({e})')
+    override = entry.get('edge_check_override')
+    if found and not (isinstance(override, str) and override.strip().lower().startswith('krish')):
+        raise PackError(f'{label}: the picture is cut off:\n  - ' + '\n  - '.join(found) +
+                        '\n  Fix it (scripts/post-pack/edge_check.py), or record Krish\'s own words in "edge_check_override".')
 
 
 def library_purpose(value):
@@ -388,6 +406,12 @@ def self_test():
                            ('share/v-9x16.mp4', b'tall share'), ('card.png', b'card')):
             (work / name).parent.mkdir(parents=True, exist_ok=True)
             (work / name).write_bytes(body)
+        from PIL import Image, ImageDraw
+        whole = Image.new('RGB', (340, 320), (183, 166, 255))
+        ImageDraw.Draw(whole).rounded_rectangle((20, 40, 320, 280), 12, fill=(12, 21, 18))
+        whole.save(work / 'img/1-look-or-pay.png')
+        whole.save(work / 'card.png')
+        whole.crop((0, 0, 340, 270)).save(work / 'img/cut.png')
         (work / 'package.json').write_text(json.dumps({'ok': True, 'package': {
             'title': 'When an AI agent shops for you, who gets paid?',
             'alternates': [{'title': 'Amazon blocked it. Shopify paid it.', 'why': 'x'}],
@@ -475,6 +499,8 @@ def self_test():
         refused('a video with no shape', lambda: variant(files=[{'kind': 'video', 'file': 'v-9x16.mp4'}]), 'needs "shape"')
         refused('a video for a place the archive rule does not know', lambda: variant(files=[{'kind': 'video', 'shape': 'tall', 'file': 'v-9x16.mp4', 'post_to': ['Facebook']}]), 'is not a place to post')
         refused('a link that is not https', lambda: variant(links={'Substack': 'http://x'}), 'https://')
+        refused('a picture cut off at an edge', lambda: variant(files=[{'kind': 'image', 'file': 'img/cut.png'}]), 'is cut off')
+        check('Krish can let a cut picture through in his own words', bool(variant(subject='Edge override', files=[{'kind': 'image', 'file': 'img/cut.png', 'edge_check_override': 'Krish, 2026-10-07: it bleeds on purpose'}])), True)
         refused('a script that fails the story check', lambda: variant(files=[{'kind': 'video-script', 'text': 'One: the billion. Real, with small print.'}]), 'fails the story check')
         check('Krish can let one through in his own words', bool(variant(files=[{'kind': 'video-script', 'text': 'Hello.', 'story_check_override': 'Krish, 2026-10-06: record it as it is'}])), True)
         launch = variant(launch=True, subchannel=None, subject='Launch hello', files=[{'kind': 'video-script', 'text': 'Why are we here? Hello.'}])

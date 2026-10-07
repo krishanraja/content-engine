@@ -115,6 +115,26 @@ first post's facts.
 | `linkedin-post` | 4 Social | `linkedin-post.txt` | the LinkedIn post (or `"text"`) |
 | `linkedin-card` | 4 Social | `linkedin-card` and its type | the picture for the LinkedIn post |
 
+## The edge check
+
+Krish, 2026-10-07, of the Higgsfield picture "Who keeps what", whose source
+line was cut off at the bottom: "stuff like this can't happen - why do we not
+check basic things like this?" "What's inside Higgsfield" had the same fault,
+its dark card running off the bottom. Both had passed the phone check, which
+measured how big the words were and never whether they fitted.
+
+`build.py` now runs `edge_check.py` on every picture packed as an `image`:
+anything other than the background along an edge (words, a card, a bar) means
+the picture is cut off, and it is not packed. A solid frame or accent bar
+painted along an edge is allowed. Only Krish's own words in
+`"edge_check_override"` let a cut picture through. `scripts/pages/card.py`
+checks the same thing before a picture becomes a PNG, from the page itself: it
+refuses any word that the card's edge, or a box hiding what spills out of it,
+cuts through.
+
+    python scripts/post-pack/edge_check.py IMAGE [IMAGE ...]
+    python scripts/post-pack/edge_check.py --self-test
+
 ## The story check
 
 A `video-script` is packed only if it passes `story_check.py` (Krish,
