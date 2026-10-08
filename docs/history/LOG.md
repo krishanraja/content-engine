@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-08
+
+- reconciled at `09f316b`: NOW.md takes the Right, Wrong, Too close to call wording, the picture edge check, the logo on tall videos with the caption mishearing fixes, and the move of makeyourmindup to its own venture folder in Drive. `docs/STATE.md`, `docs/STUDIO.md`, `docs/SYSTEM_MAP.md`, `docs/GLOSSARY.md` and `docs/NORTH_STAR.md` keep their 2026-09-25 stamps; their bodies were not re-checked.
+
 ## 2026-10-06
 
 - reconciled at `2651635`: NOW.md takes the story check (house rules FOR_THE_EAR and STORY_ARC, `story_check.py`, `storyArcIssues` in the Studio script station, walk log F75), the recordings lane, the quick-edit restart and memory fixes, the one-off scripts and the Drive map. `docs/STATE.md`, `docs/STUDIO.md`, `docs/SYSTEM_MAP.md`, `docs/GLOSSARY.md` and `docs/NORTH_STAR.md` keep their 2026-09-25 stamps: their bodies were not re-read against these commits, and NOW.md says so. `WORKBENCH.md` still says in its standing section that the recordings lane is not running until Krish installs it; its own latest handoff says he did.
