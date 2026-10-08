@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-06 17:40 UTC, by a Claude Code session.
+Last updated: 2026-10-08, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -131,6 +131,17 @@ session").
 
 ## Latest handoff
 
+- 2026-10-08: **Friday's piece is planned, waiting on Krish's yes.** Plan:
+  `docs/plans/2026-10-09-who-picks-your-ai.md`. Piece 2 is rebuilt around the
+  SemiAnalysis report of 5 October behind the screenshot Krish sent ("Same
+  $20, five times the AI"), with the counter-evidence early (the gap is a
+  middle-plan result; Artificial Analysis puts a finished task at $5.98 on
+  Opus 5.5 against $0.72 on GPT-6.1 Sol), both companies' quiet changes from
+  his "Upgrade Treadmill" research (two errors in that doc are noted in the
+  plan), the three questions, a receipt picture and a plan slider. The call
+  stays at 75%. **Waiting on Krish:** the angle, the title, and a cap for one
+  paid fact check. This session had no engine key, so the board was not read
+  or updated; the next session with the key should add the plan to the board.
 - 2026-10-07, night: **ready for tomorrow's Friday planning.** Engine live at
   `main` (`16e40b4`), health ready. Friday 9 October is mind.the.gap piece 2
   (`904658db`, approved, draft of 2026-09-25): fold in the model-names
