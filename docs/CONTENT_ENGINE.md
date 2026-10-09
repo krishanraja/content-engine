@@ -734,7 +734,9 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 ## Driving it from an agent session
 
 1. Use the operator bearer from a secret store the session was given; never
-   print it, commit it or paste it into chat.
+   print it, commit it or paste it into chat. In Claude Code's cloud it is a
+   network secret bound to the engine's host and `/api/`: the session proxy
+   adds it to each request, and `scripts/engine.py` needs no key set.
 2. Check the engine's health before you spend: `GET
    /api/content-engine/health` on the operator bearer. When
    `model_provider.usable` is false, stop: `model_provider.says` names the

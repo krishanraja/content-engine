@@ -81,7 +81,7 @@ only in a chat.
 
 | Tool | What it can do | What it needs |
 |---|---|---|
-| Claude Code on the web, desktop or phone | Everything except running the video studio | This repository, and the engine key as the secret `ENGINE_OPERATOR_TOKEN` in its environment |
+| Claude Code on the web, desktop or phone | Everything except running the video studio | This repository, and the engine key as a **network secret** in the cloud environment (done 2026-10-09): Bearer, allowed website `content-engine-flame-nu.vercel.app`, path `/api/`. The session's proxy adds the key to every engine request; the container never holds it, and `scripts/engine.py` works with no key set |
 | Codex in the cloud | The same | This repository connected, and the same secret in the Codex environment |
 | Claude Code or Codex on either Windows home computer | All of the above, plus the video studio (`docs/ENGINE_SESSION.md`) | Run `scripts/engine-key.ps1` once on that machine (the engine key then lives in Windows Credential Manager and the helper reads it from there). Work in Krish's own copy at `C:\Users\krish\dev\content-engine`, where he keeps his repositories, never in the runner's folder (`Documents\MindmakeVideoStudio\runner-source`), which must stay untouched. In Codex, run the engine helper and `git pull` or `git push` outside the sandbox (ask for escalated permissions; Krish approves): Codex's sandbox runs as a separate Windows user that cannot see the key or reach the internet |
 | A plain chat (Claude.ai, ChatGPT) with no repository | Talk and plan only | Paste this file in |
@@ -103,7 +103,8 @@ Talk to the engine with `python3 scripts/engine.py METHOD PATH [body]`, for
 example `python3 scripts/engine.py GET "/api/content-ideas?id=<id>"`. On
 Windows the command is `python`, not `python3`. It reads the key from
 `ENGINE_OPERATOR_TOKEN`, or on a home computer from Windows Credential
-Manager, and never prints it. When it has no key it says why and what to do;
+Manager, and never prints it. In Claude Code's cloud it needs neither: the
+network secret supplies the key on the way out. When it has no key it says why and what to do;
 inside Codex's sandbox on Windows, that means running it again outside the
 sandbox with Krish's approval. Never ask Krish to paste the key into a chat.
 
@@ -155,19 +156,20 @@ session").
   engine and library.py). Friday's files: `docs/plans/2026-10-09-draft-script.md`
   (about 4 minutes), `-draft-script-90s.md` (76 seconds), `-publish.json`
   (every channel's words, linted by `_packaging.ts` and the publish checks),
-  `-manifold-market.md`. **Engine key in cloud sessions:** Krish is adding it
-  as a network secret (Bearer on `content-engine-flame-nu.vercel.app`, path
-  `/api/`), so the proxy injects it and the container never sees it.
-  `scripts/engine.py` still wants a local value: run it with
-  `ENGINE_OPERATOR_TOKEN=proxy-injected` and the proxy supplies the real
-  header; check `GET /api/content-engine/health` first. **Blocked until
-  then:** the paid fact check (approved by Krish)
-  needs the engine operator bearer, which cloud sessions do not have; the
-  Manifold market (approved) needs a Manifold key, so it is written out for
-  him to paste. **Waiting on Krish:** add `ENGINE_OPERATOR_TOKEN` to the cloud
-  environment's secrets (or run the check from his machine), create the
-  market, record both cuts, and confirm on first use that the Copy post
-  paste keeps pictures inside a Substack Video post.
+  `-manifold-market.md`. **The engine key now reaches cloud sessions** as a
+  network secret (health answered 200 through it on 2026-10-09).
+  **Next session, first job:** Friday's paid fact check, approved by Krish
+  ("spend what you need within reason"). Find Friday's mind.the.gap piece
+  (`904658db...`, `GET /api/content-ideas`), save the new draft
+  (`docs/plans/2026-10-09-draft-body.md`) as its body through the engine's
+  own route, run the free `GET .../fact-check` preview for the count, then
+  `POST` with `max_fresh_sentences` set to that count. Fix what fails, record
+  results here, and update the workroom
+  (https://claude.ai/artifact/MmaKvtHTHUYbSY9JEiCBAn) body checks.
+  **Waiting on Krish:** create the Manifold market (no Manifold key here; the
+  text is ready), record both cuts, rotate every key pasted in chat (including
+  the Vercel master token), and confirm on first use that the Copy post paste
+  keeps pictures inside a Substack Video post.
 
 - 2026-10-09, evening: **Friday's piece is rebuilt on Krish's angle, the big
   story: why there are so many AI models, and what it means.** His seed
