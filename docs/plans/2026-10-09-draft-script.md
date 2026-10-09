@@ -1,4 +1,4 @@
-Claude now gives you fourteen versions of itself to choose from. Fourteen. That's twice as many as there are Harry Potter books. And the longer that menu gets, the less you actually get to choose. So why are there suddenly so many AIs, and who is all this choice really for?
+Claude Code now lets you pick from more versions of Claude than there are Harry Potter books. More than a dozen. And the longer that menu gets, the less you actually get to choose. So why are there suddenly so many AIs, and who is all this choice really for?
 
 Claude and ChatGPT are the shop. Behind the counter sit lots of AI brains. They come in small, medium and large. Each one has a version number. And each one has a dial for how hard it thinks before it answers.
 
@@ -6,7 +6,7 @@ The sizes don't stay put either. In 2024, Anthropic's new medium brain beat its 
 
 So why so many? Because every name on that menu is doing four jobs at once. It's a version number, like iPhone 15 and 16. It's a price tag, like economy and business class. It's an advert, because every new name is a launch day. And it's a queue ticket, sending easy questions to cheap computers. One name can't do four jobs. So the menu keeps growing.
 
-Is it a scam to charge you more? The prices say no. The cost of AI as good as the first ChatGPT fell from twenty dollars to seven cents for a million tokens, and a token is just a chunk of a word. But the bills still go up, because AI agents now work for hours at a time. Data got cheaper per gigabyte, and your phone bill still didn't shrink. Same trick.
+Is it a scam to charge you more? The prices say no. The cost of AI as good as the first ChatGPT fell from twenty dollars to seven cents for a million tokens, and a token is just a word or a piece of one. But the bills still go up, because AI agents now work for hours at a time. Data got cheaper per gigabyte, and your phone bill still didn't shrink. Same trick.
 
 OpenAI tried scrapping the menu in 2025. One brain that switched itself. It broke on day one, people begged for their old brains back, and they got them within the week. Turns out we hate choosing, and we hate being chosen for even more.
 
