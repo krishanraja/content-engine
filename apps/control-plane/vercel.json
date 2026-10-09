@@ -94,6 +94,14 @@
     {
       "path": "/api/trends/metrics",
       "schedule": "0 6 * * 6"
+    },
+    {
+      "path": "/api/signals/news",
+      "schedule": "30 6 * * *"
+    },
+    {
+      "path": "/api/signals/odds",
+      "schedule": "45 6 * * *"
     }
   ],
   "functions": {

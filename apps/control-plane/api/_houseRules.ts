@@ -242,6 +242,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     on: '2026-10-06', source: 'walk log F75', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
   },
+  {
+    id: 'VOICE_ON_CAMERA', name: 'The script is Krish reacting, with opinion and dry wit',
+    text: 'The article states the facts. A video script is Krish reacting to them, in his own voice, with opinion and humour. A script of a minute or more carries at least three of these five: one dry, self-deprecating line about himself or this publication (it is made with Claude, say so); one sarcastic line aimed at the hype, never at the reader or a named person; one exaggeration made obvious by its size; one analogy a twelve-year-old would get; and one opinion said as opinion ("my bet", "I think", "my call"), kept apart from the checked facts so the listener and the fact gate both know which is which. A joke never sits inside a sentence the fact gate holds and never replaces the finding. Offer two options for each joke; cutting them is Krish\'s.',
+    said: 'What about making my scripts for video have more personality and opinion, not in a factual way? More humor? Self deprecating dry wit, sarcasm, exaggeration, analogy? Then, of the proposed rule: do all the things you suggested.',
+    on: '2026-10-09', source: 'chat, planning piece 2 and the 100x plan (docs/ENGINE_100X.md); checked softly by storyArcIssues\' companion voiceOnCameraIssues and scripts/post-pack/story_check.py', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass'],
+  },
 ])
 
 /** The rules a stage enforces, for one subchannel or the house as a whole. */

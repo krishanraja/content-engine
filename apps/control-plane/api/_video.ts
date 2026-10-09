@@ -110,6 +110,7 @@ export const SCRIPT_STORY = [
   '3. Every claim is set up before it is judged: say what was claimed and why it matters before calling it real or theatre.',
   '4. Every takeaway follows from a beat already told. Name the beat it comes from in your head; if there is none, cut the takeaway.',
   '5. The ending answers the opening question, then the call, then the spoken outro. Never end on the number.',
+  '6. It sounds like Krish, with opinion (VOICE_ON_CAMERA): at least three of a dry self-deprecating line, a sarcastic line at the hype, an exaggeration obvious by its size, an analogy a twelve-year-old gets, and an opinion said as opinion ("my bet", "I think"). No joke inside a checked fact. Offer two options for each joke, marked, so Krish can cut.',
   'And it must make sense out loud: say what the thing is before taking it apart, explain each number as it is said, and never speak an article heading or a label the listener has not heard explained.',
   STORY_OUTRO,
 ].join('\n')

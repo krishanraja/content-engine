@@ -169,6 +169,23 @@ export function storyArcIssues(script: string): string[] {
   return issues
 }
 
+/**
+ * The on-camera voice check (Krish, 2026-10-09; house rule VOICE_ON_CAMERA): "making my scripts for video have more
+ * personality and opinion ... Self deprecating dry wit, sarcasm, exaggeration, analogy". A rule cannot grade a joke, so
+ * this checks the one marker it can see: a script of a minute or more says an opinion as an opinion ("my bet",
+ * "I think", "my call"), kept apart from the checked facts. It is a soft block: the writer and the judges carry the
+ * rest of the rule, and a reader decides whether the wit landed.
+ */
+export const VOICE_NO_OPINION = 'the script states no opinion as an opinion: somewhere say "my bet", "I think" or "my call", kept apart from the checked facts, so the listener knows which is which'
+
+const VOICE_OPINION_MARKER = /\b(?:my (?:bet|call|take|guess)|i think|i reckon|i'd bet|i would bet|if you ask me|i'm not convinced|i am not convinced|i don't buy|here's where i land)\b/i
+
+export function voiceOnCameraIssues(script: string): string[] {
+  const words = script.split(/\s+/).filter(Boolean)
+  if (words.length < STORY_OUTRO_FROM_WORDS) return []
+  return VOICE_OPINION_MARKER.test(script) ? [] : [VOICE_NO_OPINION]
+}
+
 export function normalizeSpokenToken(value: string): string {
   return value.toLowerCase().replace(/[’]/g, "'").replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, '')
 }
@@ -402,6 +419,7 @@ export function validateEditorialCandidate(candidate: CandidateV1, transcript: T
   softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
   // A recorded cut keeps what was said, so its story is reported for review rather than refused.
   softBlocks.push(...storyArcIssues(plan.caption_script))
+  softBlocks.push(...voiceOnCameraIssues(plan.caption_script))
   const openingContract = openingContractIssues(candidate, thresholds, opening, true)
   hardBlocks.push(...openingContract.hard_blocks)
   softBlocks.push(...openingContract.soft_blocks)
@@ -436,6 +454,7 @@ export function validateShortNativeEditorialCandidate(candidate: CandidateV1, th
   if (presenterName?.toLowerCase() === 'krish' && /\bchris\b/i.test(`${candidate.transcript} ${candidate.hook} ${candidate.payoff}`) && !declaredNonPresenterChris) hardBlocks.push('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
   if (candidate.transcript.split(/\s+/).length > 180) softBlocks.push('short-native script may exceed the intended short-form duration; verify delivery time before recording')
   hardBlocks.push(...storyArcIssues(candidate.transcript))
+  softBlocks.push(...voiceOnCameraIssues(candidate.transcript))
   softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
   const openingContract = openingContractIssues(candidate, thresholds, opening, false)
   hardBlocks.push(...openingContract.hard_blocks)

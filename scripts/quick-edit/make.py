@@ -62,6 +62,11 @@ DEFAULT_FIXES = [
     ['Higgs field', 'Higgsfield'], ['Higsfield', 'Higgsfield'], ['Open AI', 'OpenAI'], ['Sorah', 'Sora'],
     ['Chat GPT', 'ChatGPT'], ['XAI', 'xAI'], ['Deep Seek', 'DeepSeek'], ['Mid Journey', 'Midjourney'], ['Eleven Labs', 'ElevenLabs'],
     ['MakeYourMindUp .ai', 'makeyourmindup.ai'], ['Chris', 'Krish'], ['theater', 'theatre'],
+    # The AI-plans pieces (2026-10-09): names the transcriber gets wrong.
+    ['Clawed', 'Claude'], ['Entropic', 'Anthropic'], ['Anthropics', 'Anthropic\'s'],
+    ['Semi Analysis', 'SemiAnalysis'], ['Semi analysis', 'SemiAnalysis'], ['Semianalysis', 'SemiAnalysis'],
+    ['Amoday', 'Amodei'], ['Fable five', 'Fable 5'], ['GPT six', 'GPT-6'], ['GPT 6', 'GPT-6'], ['GPT five', 'GPT-5'],
+    ['Poly market', 'Polymarket'], ['Kal shi', 'Kalshi'], ['Hugging face', 'Hugging Face'], ['Sora two', 'Sora 2'],
 ]
 
 

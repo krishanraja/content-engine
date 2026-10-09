@@ -34,6 +34,7 @@ JSON goes to stdout, so a caller can pipe it into the engine or a page.
 
 import argparse
 import json
+import os
 import sys
 import time
 import urllib.error
@@ -46,7 +47,7 @@ TIMEOUT = 30
 
 
 def _get(url, headers=None, retries=3):
-    """GET JSON. GDELT rate-limits bursts with a 429, so back off and retry."""
+    """GET JSON. Backs off and retries on a 429 or 503."""
     last = None
     for attempt in range(retries):
         try:
@@ -153,28 +154,32 @@ def _gdelt_get(url, tries=4):
     raise RateLimited("GDELT stayed rate-limited after retries")
 
 
-def gdelt(subject, days=7):
-    """Article counts per day over the window, plus the latest headlines.
-    The timeline is the news-wall's velocity; the headlines feed the picture."""
+def gdelt(subject, days=7, max_records=100):
+    """The latest headlines GDELT saw for a subject inside the window, and a
+    count per day worked out from their dates. One call, so it stays inside
+    GDELT's one-request-every-five-seconds limit; the counts are the news
+    wall's velocity and the headlines are its cards."""
     query = urllib.parse.quote(subject)
     span = f"&startdatetime={_gdelt_stamp(days)}&enddatetime={_gdelt_stamp(0)}"
-    tl = _gdelt_get(f"https://api.gdeltproject.org/api/v2/doc/doc?query={query}"
-                    f"&mode=timelinevolraw&format=json{span}")
-    per_day = []
-    for series in tl.get("timeline", []):
-        for pt in series.get("data", []):
-            per_day.append({"date": pt.get("date"), "count": pt.get("value")})
     arts = _gdelt_get(f"https://api.gdeltproject.org/api/v2/doc/doc?query={query}"
-                      f"&mode=artlist&maxrecords=25&sort=datedesc&format=json{span}")
+                      f"&mode=artlist&maxrecords={max_records}&sort=datedesc&format=json{span}")
     headlines = [{
         "title": a.get("title"),
         "domain": a.get("domain"),
         "seen": a.get("seendate"),
         "url": a.get("url"),
-    } for a in arts.get("articles", [])]
-    total = sum(p["count"] for p in per_day if isinstance(p.get("count"), (int, float)))
+    } for a in arts.get("articles", []) if a.get("title") and a.get("url")]
+    counts = {}
+    for h in headlines:
+        day = (h["seen"] or "")[:8]
+        if len(day) == 8:
+            day = f"{day[:4]}-{day[4:6]}-{day[6:]}"
+            counts[day] = counts.get(day, 0) + 1
+    per_day = [{"date": d, "count": counts[d]} for d in sorted(counts)]
+    outlets = len({h["domain"] for h in headlines if h["domain"]})
     return {"source": "gdelt", "subject": subject, "days": days,
-            "total_articles": total, "per_day": per_day, "headlines": headlines}
+            "total_articles": len(headlines), "outlets": outlets,
+            "per_day": per_day, "headlines": headlines[:25]}
 
 
 def _gdelt_stamp(days_ago):
@@ -223,6 +228,88 @@ def sec(ticker):
             "cik": cik, "filings": filings}
 
 
+# --- Kalshi (keyless) -----------------------------------------------------
+
+def kalshi(ticker):
+    """One Kalshi market by ticker. Kalshi quotes in cents; the probability is
+    the midpoint of the yes bid and ask when both are there, else the last
+    traded price."""
+    j = _get(f"https://api.elections.kalshi.com/trade-api/v2/markets/{urllib.parse.quote(ticker)}")
+    m = j.get("market") or {}
+    bid, ask, last = _num(m.get("yes_bid")), _num(m.get("yes_ask")), _num(m.get("last_price"))
+    cents = (bid + ask) / 2 if bid and ask else last
+    return {
+        "source": "kalshi",
+        "question": m.get("title"),
+        "ticker": m.get("ticker", ticker),
+        "probability": round(cents / 100, 4) if cents is not None else None,
+        "volume": _num(m.get("volume_fp", m.get("volume"))),
+        "end_date": m.get("close_time"),
+    }
+
+
+# --- Keyed readers: skip cleanly when the key is not in the environment ---
+
+class NoKey(RuntimeError):
+    """The reader needs a key the environment does not hold. Not a fault."""
+
+
+def _key(name):
+    v = os.environ.get(name, "").strip()
+    if not v:
+        raise NoKey(f"{name} is not set in this environment (docs/INTEGRATIONS.md)")
+    return v
+
+
+def _post_json(url, body, headers):
+    data = json.dumps(body).encode("utf-8")
+    req = urllib.request.Request(url, data=data, method="POST",
+                                 headers={"User-Agent": UA, "Content-Type": "application/json", **headers})
+    with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def exa(query, results=6):
+    """Exa: search that returns pages like a page, for "find the other outlets
+    that ran this" and prior art. EXA_API_KEY."""
+    key = _key("EXA_API_KEY")
+    j = _post_json("https://api.exa.ai/search", {"query": query, "numResults": results,
+                                                 "contents": {"text": {"maxCharacters": 600}}},
+                   {"x-api-key": key})
+    return {"source": "exa", "query": query, "results": [{
+        "title": r.get("title"), "url": r.get("url"), "published": r.get("publishedDate"),
+        "text": (r.get("text") or "")[:600],
+    } for r in j.get("results", [])]}
+
+
+def brave(query, count=6):
+    """Brave Search: a cheap second web search so no single source decides a
+    fact. BRAVE_API_KEY."""
+    key = _key("BRAVE_API_KEY")
+    q = urllib.parse.urlencode({"q": query, "count": count})
+    j = _get(f"https://api.search.brave.com/res/v1/web/search?{q}",
+             {"X-Subscription-Token": key, "Accept": "application/json"})
+    return {"source": "brave", "query": query, "results": [{
+        "title": r.get("title"), "url": r.get("url"), "description": r.get("description"), "age": r.get("age"),
+    } for r in (j.get("web") or {}).get("results", [])]}
+
+
+def x_recent(query, max_results=10):
+    """X: recent public posts for a query, the hour it happened. Pay-per-use
+    reads; X_BEARER_TOKEN. The value is used as given; if X answers 401 and
+    the token holds %2F or %3D, decode it once."""
+    token = _key("X_BEARER_TOKEN")
+    q = urllib.parse.urlencode({"query": query, "max_results": max(10, min(max_results, 100)),
+                                "tweet.fields": "created_at,public_metrics,author_id"})
+    j = _get(f"https://api.x.com/2/tweets/search/recent?{q}", {"Authorization": f"Bearer {token}"})
+    return {"source": "x", "query": query, "posts": [{
+        "id": t.get("id"), "text": t.get("text"), "created_at": t.get("created_at"), "author_id": t.get("author_id"),
+        "likes": (t.get("public_metrics") or {}).get("like_count"),
+        "reposts": (t.get("public_metrics") or {}).get("retweet_count"),
+        "url": f"https://x.com/i/web/status/{t.get('id')}",
+    } for t in j.get("data", [])]}
+
+
 def _self_test():
     """Hits every source live and checks the shape of what comes back."""
     checks = []
@@ -256,6 +343,17 @@ def _self_test():
         ok("sec resolves a ticker to filings", s.get("filings"))
     except Exception as e:  # noqa: BLE001
         ok(f"sec ({e})", False)
+    # The keyed readers: proven when their key is here, skipped when it is not.
+    for label, fn in (("exa", lambda: exa("Anthropic subscriptions", 2)),
+                      ("brave", lambda: brave("Anthropic subscriptions", 2)),
+                      ("x", lambda: x_recent("Anthropic", 10))):
+        try:
+            out = fn()
+            ok(f"{label} returns a result list", isinstance(out.get("results", out.get("posts")), list))
+        except NoKey as e:
+            skipped.append(f"{label} skipped: {e}")
+        except Exception as e:  # noqa: BLE001
+            ok(f"{label} ({e})", False)
 
     bad = [label for label, good in checks if not good]
     for label, good in checks:
@@ -291,20 +389,43 @@ def main(argv=None):
     p_sec = sub.add_parser("sec")
     p_sec.add_argument("--ticker", required=True)
 
+    p_kalshi = sub.add_parser("kalshi")
+    p_kalshi.add_argument("--ticker", required=True)
+
+    for name in ("exa", "brave", "x"):
+        p = sub.add_parser(name)
+        p.add_argument("--query", required=True)
+        p.add_argument("--limit", type=int, default=6)
+
     args = ap.parse_args(argv)
     if args.self_test:
         return _self_test()
-    if args.cmd == "odds":
-        out = polymarket(search=args.search, slug=args.slug, limit=args.limit)
-    elif args.cmd == "news":
-        out = gdelt(args.subject, days=args.days)
-    elif args.cmd == "hn":
-        out = hn(args.query, hits=args.hits)
-    elif args.cmd == "sec":
-        out = sec(args.ticker)
-    else:
-        ap.print_help()
-        return 2
+    try:
+        if args.cmd == "odds":
+            out = polymarket(search=args.search, slug=args.slug, limit=args.limit)
+        elif args.cmd == "news":
+            out = gdelt(args.subject, days=args.days)
+        elif args.cmd == "hn":
+            out = hn(args.query, hits=args.hits)
+        elif args.cmd == "sec":
+            out = sec(args.ticker)
+        elif args.cmd == "kalshi":
+            out = kalshi(args.ticker)
+        elif args.cmd == "exa":
+            out = exa(args.query, args.limit)
+        elif args.cmd == "brave":
+            out = brave(args.query, args.limit)
+        elif args.cmd == "x":
+            out = x_recent(args.query, args.limit)
+        else:
+            ap.print_help()
+            return 2
+    except NoKey as e:
+        print(f"skipped: {e}", file=sys.stderr)
+        return 3
+    except RateLimited as e:
+        print(f"rate-limited: {e}", file=sys.stderr)
+        return 4
     print(json.dumps(out, indent=2, ensure_ascii=False))
     return 0
 
