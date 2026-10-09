@@ -64,7 +64,7 @@ That's the lesson in one story. People complain about too much choice, then riot
 
 Our stance: the menu is a real tool with a hidden meter. The strong conspiracy fails, because prices are dropping and builders are flocking to the cheap brains. On OpenRouter most of the traffic goes to cheap, fast models, and Anthropic's top brain ranks ninth.
 
-The catch is quieter. Most apps don't show you which brain answered, how hard it thought, or how much of your allowance it ate. The company knows all three. You know none of them. Picture a taxi with no meter and a driver who picks the route. The route might be fine. You just can't check.
+The catch is quieter. Most apps don't show you which brain answered, how hard it thought, or how much of your allowance it ate. The company knows all three. You know none of them. Picture a taxi with no meter and a driver who picks the route. The route might be fine. You just can't check. And my read is that the windows are about to get darker.
 
 ## WHAT IT MEANS FOR YOU
 
@@ -86,10 +86,10 @@ Software used to be one product at one price. You bought Word, you got Word. AI 
 
 **The Glass Box.** After one too many quiet swaps, a big company competes on honesty. Every answer comes with a label: which brain, how hard it thought, what it cost. Good for everyone who wants to check. Bad for companies whose margins rely on you not looking. First sign: a big app prints the model and cost under every answer by default.
 
-The three paths split for good. Our bet: the Autopilot, with the Meter running quietly underneath.
+The three paths split for good. Our bet: the Autopilot, with the Meter running quietly underneath, and the Glass Box the least likely. Most people want one button and no homework, so the menu goes. And whoever picks the brain controls what every answer costs them to make. Giving that up for honesty's sake would be a big ask of any company. Expect the choice you see to shrink, and the meter to stay hidden.
 
 ## OUR PREDICTION
 
 By 30 September 2027, at least two of OpenAI, Anthropic and Google will have their software pick the brain automatically, by default, for businesses that build apps on their AI.
 
-How sure we are: 75%.
+How sure we are: 85%.

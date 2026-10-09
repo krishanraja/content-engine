@@ -60,13 +60,13 @@ What it means. For you: use the default, and switch to the big brain when it rea
 
 **On screen:** On screen: the fork. Autopilot, Meter, Glass Box. A pin drops on Autopilot.
 
-Where it goes: one, the menu vanishes and the app picks for you. Two, you pay for thinking time, like first-class post. Three, someone wins on honesty and labels every answer. My bet is the first, with the meter running quietly underneath.
+Where it goes: one, the menu vanishes and the app picks for you. Two, you pay for thinking time, like first-class post. Three, someone wins on honesty and labels every answer. My bet is the first, and I'd put the honest one last. Most of us want one button. And whoever picks the brain controls what every answer costs them. Nobody hands that over to be polite.
 
 ## Beat 10
 
 **On screen:** On screen: the call card. 30 September 2027, 75%.
 
-So, my call. By the end of September 2027, at least two of OpenAI, Anthropic and Google will pick the brain for app builders automatically, by default. Seventy-five per cent sure. We'll mark it right or wrong in public.
+So, my call. By the end of September 2027, at least two of OpenAI, Anthropic and Google will pick the brain for app builders automatically, by default. Eighty-five per cent sure. We'll mark it right or wrong in public.
 
 ## Beat 11
 
