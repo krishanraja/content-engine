@@ -155,7 +155,13 @@ session").
   engine and library.py). Friday's files: `docs/plans/2026-10-09-draft-script.md`
   (about 4 minutes), `-draft-script-90s.md` (76 seconds), `-publish.json`
   (every channel's words, linted by `_packaging.ts` and the publish checks),
-  `-manifold-market.md`. **Blocked:** the paid fact check (approved by Krish)
+  `-manifold-market.md`. **Engine key in cloud sessions:** Krish is adding it
+  as a network secret (Bearer on `content-engine-flame-nu.vercel.app`, path
+  `/api/`), so the proxy injects it and the container never sees it.
+  `scripts/engine.py` still wants a local value: run it with
+  `ENGINE_OPERATOR_TOKEN=proxy-injected` and the proxy supplies the real
+  header; check `GET /api/content-engine/health` first. **Blocked until
+  then:** the paid fact check (approved by Krish)
   needs the engine operator bearer, which cloud sessions do not have; the
   Manifold market (approved) needs a Manifold key, so it is written out for
   him to paste. **Waiting on Krish:** add `ENGINE_OPERATOR_TOKEN` to the cloud
