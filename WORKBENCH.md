@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-06 17:40 UTC, by a Claude Code session.
+Last updated: 2026-10-08, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -131,6 +131,37 @@ session").
 
 ## Latest handoff
 
+- 2026-10-09, later: **the outside tools are wired and the 100x plan is
+  written.** `scripts/signals/collect.py` reads four free public sources
+  (prediction-market odds, GDELT news velocity, Hacker News, SEC), tested
+  live. Exa, Brave, the X API and the Hacker News value are placed in the
+  content-engine Vercel env (`EXA_API_KEY`, `BRAVE_API_KEY`, `X_BEARER_TOKEN`,
+  `HN_ALGOLIA_KEY`); **they were exposed in chat and must be rotated**
+  (`docs/INTEGRATIONS.md`). `docs/ENGINE_100X.md` is the standing plan: every
+  tool, every plausible use, and the combinations that are actually 100x (the
+  scoreboard that keeps score against the market, the pile-on proven from
+  GDELT, the fact gate with three checkers). Everything merged to `main` on
+  Krish's command. **Next to build:** the scoreboard-odds feature (keyless),
+  a cheap Gemini video reader, then the Exa/Brave/X readers.
+
+- 2026-10-08: **Friday's piece is planned, waiting on Krish's yes.** Plan:
+  `docs/plans/2026-10-09-who-picks-your-ai.md`. Piece 2 is rebuilt around the
+  SemiAnalysis report of 5 October behind the screenshot Krish sent ("Same
+  $20, five times the AI"), with the counter-evidence early (the gap is a
+  middle-plan result; Artificial Analysis puts a finished task at $5.98 on
+  Opus 5.5 against $0.72 on GPT-6.1 Sol), both companies' quiet changes from
+  his "Upgrade Treadmill" research (two errors in that doc are noted in the
+  plan), the three questions, a receipt picture and a plan slider. The call
+  stays at 75%. **Waiting on Krish:** the angle, the title, and a cap for one
+  paid fact check. This session had no engine key, so the board was not read
+  or updated; the next session with the key should add the plan to the board.
+  Then, on Krish's ask to take the engine up a level: `docs/TOOL_BANK.md`
+  holds every way each paid tool could add to the engine, with a status that
+  moves only on evidence, and the plan has a "Taking the engine up a level"
+  section: the news wall for velocity, Reddit as the room, YouTube as a clue
+  mine, a proposed `VOICE_ON_CAMERA` rule for scripts with opinion and dry
+  wit, and an eight-step post-production list. **Waiting on Krish:** one yes
+  for the tools and their ceiling, and the script rule.
 - 2026-10-07, night: **ready for tomorrow's Friday planning.** Engine live at
   `main` (`16e40b4`), health ready. Friday 9 October is mind.the.gap piece 2
   (`904658db`, approved, draft of 2026-09-25): fold in the model-names
