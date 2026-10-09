@@ -170,6 +170,18 @@ Krish's "huge amount of browser tools and news APIs" are not written down
 anywhere a session can read. Add each to `tools-access` with what it is and
 how a session reaches it, and it gets its own rows here.
 
+## Connection status (2026-10-09)
+
+Krish connected or handed over keys for a wave of tools. What is live now,
+value-free, is mapped in `docs/INTEGRATIONS.md`. In short: the four keyless
+public sources (Polymarket/Kalshi odds, GDELT news velocity, Hacker News, SEC)
+are built and tested in `scripts/signals/`; Firecrawl, GitHub, Apify and
+ElevenLabs are reachable through their connectors; Exa, Brave, the X API and
+Gemini have reserved secret names and need their pasted keys rotated before
+use. The keys pasted into chat, the three master keys included, are exposed
+and must be rotated; the master keys must not become engine runtime secrets
+(`docs/INTEGRATIONS.md`, first section).
+
 ## Not yet bought: other APIs that could add, by rough cost
 
 Written 2026-10-09 on Krish's ask: "What other apis could possibly be
