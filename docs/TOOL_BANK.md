@@ -170,6 +170,107 @@ Krish's "huge amount of browser tools and news APIs" are not written down
 anywhere a session can read. Add each to `tools-access` with what it is and
 how a session reaches it, and it gets its own rows here.
 
+## Not yet bought: other APIs that could add, by rough cost
+
+Written 2026-10-09 on Krish's ask: "What other apis could possibly be
+additive? List them all and by rough cost". Costs are rough, at this
+publication's volume (three pieces a week), and most come from third-party
+price guides read the same day; a few are from memory and marked so.
+Verify on the vendor's own page before buying. None is bought. Every row
+is theorised.
+
+Cost bands: **free**, **pennies** (under $10 a month for us), **tens**
+($10 to $100 a month), **hundreds**, **thousands**.
+
+### Find (ideas, velocity, the revealed layer)
+
+| API | What it adds | Rough cost |
+|---|---|---|
+| Hacker News (Algolia) | What builders say the hour a story lands; the best contrarian comments for under.the.hood | free |
+| GDELT | Every news article in the world by subject and hour; the news wall and velocity alerts without scraping | free |
+| Google Trends (unofficial `pytrends`) | Is the public searching for it this week; a line on the timeline device | free, unofficial |
+| YouTube Data API | Views, likes, comments and titles of any public video; our own results; which titles win (the Apify route costs pennies and needs no quota) | free quota (10,000 units a day) |
+| Wayback Machine | "What it used to be" for mind.the.gap: a pricing page as it stood a year ago, as evidence | free |
+| SEC EDGAR, Companies House | Filings as the revealed layer for follow.the.money: who paid whom, in their own words | free |
+| GitHub API | What is being built: stars, commits, who moved to which tool; build signals already use it | free |
+| Semantic Scholar, arXiv | The paper behind the press release, filed in its own words | free |
+| Product Hunt, App Store and Play Store rankings (via Apify) | Pays-now demand, revealed | pennies |
+| Brave Search API | A second web search for the fact gate's independent check, cheaper than Perplexity | pennies to tens (from memory, verify) |
+| Exa | Search that returns pages like a given page; "find me three more outlets that ran this" for the news wall | about $7 per 1,000 searches |
+| Tavily | Search built for agents, credits | about $5 to $8 per 1,000 |
+| Firecrawl | Turn any page into clean text when the reader refuses it (walk log F72), including browser-rendered pricing pages the Higgsfield piece had to cut | pennies per page; plans $0 to $599 a month |
+| Jina reader | Already used; the free route the filer tries first | free tier |
+| X API | What the labs' own staff and critics post the hour it happens; pay-per-use is the only door for new accounts and reads cost about $5 per 1,000; full-archive search is enterprise, five figures a month | pennies for reads at our volume; thousands for archive |
+| Polymarket and Kalshi public APIs | **The market's odds on our dated calls.** When we say 75%, show what traders say, and track both to the due date. Read-only, no account | free |
+| Crunchbase, PitchBook, Similarweb | Funding and traffic; useful, pricey, and Apify covers most of it for pennies | hundreds to thousands |
+| Glassdoor, Indeed, LinkedIn jobs (via Apify) | Hiring as the revealed layer; already how the LinkedIn work runs | pennies to tens |
+| BuiltWith, Wappalyzer | The live tech stack of a company we write about; historical, so cross-check (Krish's own rule) | tens to hundreds |
+
+### Judge (what the world thinks, what will travel)
+
+| API | What it adds | Rough cost |
+|---|---|---|
+| Perplexity Sonar | Already the fact gate's independent checker; Sonar is about $5 to $12 per 1,000 requests plus tokens, so one piece's check is under a dollar | pennies per piece |
+| Reddit official API | Free for low volume, awkward terms; Apify is simpler | free, limited |
+| An LLM with web search (Anthropic, OpenAI, Gemini) | A second independent checker so no single source decides a fact | pennies per piece |
+
+### Write and hear
+
+| API | What it adds | Rough cost |
+|---|---|---|
+| ElevenLabs | Hear the script before filming; sound effects; a voice clone only if Krish rules | paid account exists |
+| OpenAI or Gemini text-to-speech | A cheaper scratch voice for the same job | pennies |
+| AssemblyAI | Transcribe Krish's recording for captions and the cut, about $0.15 to $0.21 an hour; the cheapest route if Whisper on the runner ever fails | pennies |
+| Deepgram | Same, about $0.40 to $0.55 an hour, faster streaming | pennies |
+| Gemini (video understanding) | Watch a competitor's video or our own cut and describe every shot; a judge that can see | pennies per video |
+
+### Picture and film
+
+| API | What it adds | Rough cost |
+|---|---|---|
+| fal.ai, Replicate | One door to every video and image model (Kling about $0.11 to $0.28 a second, Veo about $0.10 to $0.20 a second on fal, Sora 2 Pro $0.30 to $0.50) when Higgsfield or Runway lack the one we want | pennies to tens per clip |
+| Google Veo direct (Vertex) | Native audio clips; about $0.75 a second | tens per clip |
+| Pexels, Unsplash, Pixabay | Free stock photos and clips with clear licences, for the rare beat that needs a real place and not a generated one | free |
+| Getty, Shutterstock | Editorial photos of the real people we name (Altman, Amodei); the only legal route to a real face on a cover | tens to hundreds per image |
+| Giphy, Tenor | A reaction clip on the carousel's last card, if the brand ever allows it | free |
+| Remotion (in the Studio) | Already the renderer; its licence covers us | in place |
+| Figma API | If the brand kit moves to Figma, components flow to `scripts/pages` | tens a month |
+
+### Cut
+
+| API | What it adds | Rough cost |
+|---|---|---|
+| Descript, Captions.ai, Submagic, Opus Clip | Automatic cuts, captions, zooms and clip selection from a long recording; a rival to `quick-edit` and Riverside, judged on the same recording | tens a month each |
+| Mux, Cloudflare Stream | Host the videos ourselves with view analytics, for the cover site's newsstand | tens a month |
+| Suno, Udio | A music bed in the house's tone when Runway's is wrong; check the licence for commercial use first | tens a month |
+
+### Ship and learn
+
+| API | What it adds | Rough cost |
+|---|---|---|
+| YouTube Data API (upload) | Publish the video with the `package` step's words, on Krish's yes | free quota |
+| LinkedIn API | Posting on a personal profile needs the Community Management product and approval; Riverside's social upload is the shorter route | free, gated |
+| Substack | No public API; the copy page stays the route | none |
+| Beehiiv, Ghost, Kit | Publications with real APIs, if Substack ever becomes the bottleneck | tens a month |
+| Resend, Postmark | Send the Maven and other one-off emails from the engine, logged | pennies |
+| Plausible, PostHog | What readers do on makeyourmindup.ai and the editions | free to tens |
+| Buffer, Typefully | Schedule LinkedIn and X posts from the pack | tens a month |
+
+### The five to try first, in order
+
+1. **Polymarket and Kalshi** (free): the market's odds beside every dated
+   call, on the scoreboard. Nobody else in this lane does it.
+2. **GDELT plus Hacker News** (free): the news wall and the velocity alert
+   without scraping.
+3. **Firecrawl** (pennies): the pricing pages the fact gate keeps having to
+   cut because they render only in a browser.
+4. **Exa** (pennies): "find the other outlets that ran this" for the wall.
+5. **AssemblyAI** (pennies): captions and the cut from a transcript with
+   timestamps, as a fallback to the runner's transcriber.
+
+Not worth it yet: Crunchbase, PitchBook, Similarweb, X archive search,
+Veo direct. Apify and the free doors cover the same ground for pennies.
+
 ---
 
 ## What the tools added, post by post
