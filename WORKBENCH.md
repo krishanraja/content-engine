@@ -138,6 +138,23 @@ session").
 
 ## Latest handoff
 
+- 2026-10-09, evening: **Friday's piece is rebuilt on Krish's angle, the big
+  story: why there are so many AI models, and what it means.** His seed
+  (Perplexity research) was treated as raw material, never as an override:
+  20 claims checked against primary sources, ten corrections
+  (`docs/plans/2026-10-09-seed-fact-check.md`, including OpenAI's revenue cut
+  from ~$70bn to almost $50bn on 8 Oct). Our own thesis: the name is doing four
+  jobs (version number, price tag, advert, queue ticket). The $20 SemiAnalysis
+  story is one paragraph. Drafts: `docs/plans/2026-10-09-draft-body.md`
+  (passes every blocking publish check, reads at about age 10) and
+  `2026-10-09-draft-script.md` (passes story_check.py). The workroom
+  (https://claude.ai/artifact/MmaKvtHTHUYbSY9JEiCBAn) carries all of it, with a
+  new Mocks room (decoder, conveyor belt, four jobs, prices vs bills, the
+  menu-misleads bars, the three futures) and new decision cards: angle, title,
+  call and a new "revenue race" card. His earlier picks (level 1+, warm, both
+  lengths) stand. **Waiting on Krish:** angle, title, call, revenue paragraph,
+  market; the paid fact-check cap; rotating the keys pasted in chat.
+
 - 2026-10-09, afternoon: **Friday's piece now lives in a live workroom:**
   https://claude.ai/artifact/MmaKvtHTHUYbSY9JEiCBAn (private to Krish). Four
   rooms: Decide (seven decisions as tappable cards with Claude's pick, level

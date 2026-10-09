@@ -1,45 +1,75 @@
-Same $20, five times the AI: the video script (about 2 and a half minutes, tall; the 90-second cut drops the catch beat and the ladder beat)
-Square brackets say what is on screen. Everything else is said to camera. The joke options are under "Before you record" and are never spoken as written.
----
+# Friday 9 October: the video script (the big story)
 
-[To camera, two printed receipts held up, one in each hand. Logo pill on for the first three seconds.]
-Same price. One of these buys you about five times more AI than the other. So who decided that? Because it wasn't you.
+Target: about three minutes at Krish's pace; a 90-second cut keeps beats 1, 4, 5, 7, 10 and 11. Passes story_check.py.
 
-[On screen: the two receipts, OpenAI and Anthropic logos, "$200 a month"]
-A research firm called SemiAnalysis ran the same questions on every AI plan and watched the usage meter move. On the everyday brains, the ones both companies push you towards, Claude's plan came out at about five times the value of ChatGPT's. Same money.
+## Beat 1
 
-[On screen: the pie, "10% of the revenue, over 40% of the machines"]
-Here's the twist. It's a gift. These plans bring in a tenth of the money and eat nearly half the computers. So the cheap brain is the gift. The best brain is the product. And yes, this publication is made with Claude, so take the next minute with a pinch of salt.
+**On screen:** To camera, holding a coffee cup. Logo pill: Claude and ChatGPT for three seconds.
 
-[On screen: the catch card]
-The catch, before the comments say it: at the top tier the limits are, in the report's words, quite similar. Hold the number loosely.
+Why are there suddenly so many AIs? Open Claude and it's Opus, Sonnet, Haiku, Fable, a version number, and a dial for how hard it thinks. I just wanted a coffee, and they handed me a bean menu.
 
-[On screen: the timeline. March, April, June, October.]
-Now the part that matters. Both companies changed what your brain does this year without telling you. March: Anthropic quietly turned down how hard Claude Code thinks. April: their own write-up called it the wrong tradeoff. June: the new model was built to quietly give worse answers to people it thought were rivals. Two days later: the wrong tradeoff, again. At some point it's just the tradeoff.
+*Joke option:* I asked for a coffee. They gave me a spreadsheet.
 
-[On screen: "29 October", circled]
-And last week OpenAI halved its $200 plan. Keep the old limits until the twenty-ninth of October. After that, the same money buys half as much.
+## Beat 2
 
-[On screen: the ladder. Sonnet, Opus, Fable, the bar shrinking, Fable at half.]
-One more. On a Claude plan, the best brain can only be used for half your limit. The thing you pay the most for is the thing you're allowed the least of. A gym that lets you in five times as often, then hides the door to the good room.
+**On screen:** On screen: the decoder. One name splits into six labels: app, size, version, effort, speed, plan.
 
-[On screen: three lines]
-Monday: ask the app which brain answered. Watch the meter, it's the real price. Check your plan again in a month, because this deal moved twice since June.
+Here's what you're looking at. Claude and ChatGPT are the shop. Behind the counter sit lots of brains, in small, medium and large, each with a version number and a thinking dial. Claude Code alone lists fourteen of them.
 
-[On screen: OUR CALL, 75%]
-So who picks your AI? The company does, every day, and it's cheapest for them when you don't notice. My bet: by the end of September next year, at least two of the big three pick the brain for you by default. Seventy-five per cent sure. We'll mark it right or wrong on the day, next to what the market thinks.
+## Beat 3
 
-[To camera, then end card]
-That's mind.the.gap. The full piece and every source are free at makeyourmindup.ai. I'm Krish. Make your mind up.
+**On screen:** On screen: the conveyor belt. Sizes slide along; the 2024 large drops off the end.
 
-## Before you record
+And the sizes keep sliding. In 2024 Anthropic's new medium beat its old large three months after launch. So 'the big one' just means the big one this season. And the seasons are getting shorter.
 
-Joke options, two for each slot. Swap in the one you like; cut any you don't. The spoken script above uses the first of each.
+## Beat 4
 
-- Self-deprecating: "this publication is made with Claude, so take the next minute with a pinch of salt" / "I pay for both of these. I am the product in this story."
-- Sarcastic, at the hype: "At some point it's just the tradeoff." / "Nuclear option is their phrase for what OpenAI did, not mine. I'd have said Tuesday."
-- Exaggeration: "a gym that lets you in five times as often, then hides the door to the good room" / "paying full price for a chatbot to tell you what day it is"
-- Analogy: the gym (used) / the ice cream counter callback: "Last time he picked your flavour. Now he picks the size of the scoop."
-- Opinion as opinion: "My bet" (used) / "I think the meter is the real price, and I think they'd rather you never looked at it."
+**On screen:** To camera. On screen: four cards flip in: version, price tag, advert, queue ticket.
 
-Every number spoken is in the article body and comes from the SemiAnalysis article's own open text or a source already on file. The $1,178 and $211 figures for the $20 plans are behind the paywall and are not spoken.
+So why so many? My read: the name is doing four jobs at once. It's a version number. It's a price tag, like economy and business class. It's an advert, because every new name is a launch day. And it's a queue ticket, sending easy questions to cheap computers. One name can't do four jobs. So the menu grows.
+
+*Joke option:* One name, four jobs. It's the most overworked word in tech, and I say that as a man who calls everything 'interesting'.
+
+## Beat 5
+
+**On screen:** On screen: the price line falls from $20 to 7 cents; the bill bar beside it climbs.
+
+And no, it's not a con to raise prices. Prices crashed. Stanford found AI as good as the first ChatGPT went from twenty dollars to seven cents per million tokens, and a token is just a chunk of a word. But bills still go up, because AI agents now work for hours. Cheaper per gigabyte, bigger phone bill. Same trick.
+
+## Beat 6
+
+**On screen:** On screen: 7 August 2025, the GPT-5 menu collapsing, then reappearing.
+
+OpenAI tried scrapping the menu in 2025. One auto-switching brain. It broke on day one, people wanted their old brains back, and they came back within the week. Turns out we hate choosing, and hate even more being chosen for.
+
+## Beat 7
+
+**On screen:** To camera. On screen: a taxi with no meter.
+
+So here's the real catch. Most apps don't show you which brain answered, how hard it thought, or how much of your allowance it ate. It's a taxi with no meter. The route might be fine. You just can't check. And yes, this publication is made with Claude. So I'm the passenger complaining about the taxi while sitting in it.
+
+*Joke option:* Full disclosure: Claude helped me write this. It did not pick the brain. I checked.
+
+## Beat 8
+
+**On screen:** On screen: three cards: You, Your business, The old way.
+
+What it means. For you: use the default, and switch to the big brain when it really matters. For your business: ask what a good answer costs all in, and pin the exact version you run on. And the old way, one product, one price, is turning into electricity: paid by size and effort.
+
+## Beat 9
+
+**On screen:** On screen: the fork. Autopilot, Meter, Glass Box. A pin drops on Autopilot.
+
+Where it goes: one, the menu vanishes and the app picks for you. Two, you pay for thinking time, like first-class post. Three, someone wins on honesty and labels every answer. My bet is the first, with the meter running quietly underneath.
+
+## Beat 10
+
+**On screen:** On screen: the call card. 30 September 2027, 75%.
+
+So, my call. By the end of September 2027, at least two of OpenAI, Anthropic and Google will pick the brain for app builders automatically, by default. Seventy-five per cent sure. We'll mark it right or wrong in public.
+
+## Beat 11
+
+**On screen:** To camera, outro. End card: mind.the.gap.
+
+That's why the AI menu got so long, and who it's really for. The full piece, with every source, is at makeyourmindup.ai. I'm Krish. Pick your brain wisely.
