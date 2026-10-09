@@ -45,6 +45,12 @@ describe('the post pack tools check themselves', () => {
     expect(result.stdout).toMatch(/story check self-test passed: \d+ checks/)
   })
 
+  it('publish_kit.py --self-test: one Substack video post, then every channel in order (docs/AMPLIFICATION.md)', () => {
+    const result = run('publish_kit.py', ['--self-test'])
+    expect(result.status, result.stderr).toBe(0)
+    expect(result.stdout).toMatch(/publish kit self-test passed/)
+  })
+
   it('send.py --self-test: planning and sending against a stand-in engine', () => {
     const result = run('send.py', ['--self-test'])
     expect(result.status, result.stderr).toBe(0)
@@ -111,7 +117,7 @@ describe('a pack Krish reads', () => {
     // A picture must be whole to be packed (edge check, 2026-10-07): a plain one is.
     writeFileSync(join(work, 'stack.png'), Buffer.from('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGUlEQVR4nGPcvuw/AymAiSTVoxpGNQwpDQBpOQJ8Y386+gAAAABJRU5ErkJggg==', 'base64'))
     // A script must pass the story check to be packed (walk log F75).
-    writeFileSync(join(work, 'script.md'), '[To camera]\nWhy does this matter? Say this.\n')
+    writeFileSync(join(work, 'script.md'), 'Why does this matter? Say this.\n')
     writeFileSync(join(work, 'post.json'), JSON.stringify(post))
     const out = join(work, 'packs')
     mkdirSync(out)

@@ -1,45 +1,21 @@
-Same $20, five times the AI: the video script (about 2 and a half minutes, tall; the 90-second cut drops the catch beat and the ladder beat)
-Square brackets say what is on screen. Everything else is said to camera. The joke options are under "Before you record" and are never spoken as written.
----
+Claude now gives you fourteen versions of itself to choose from. Fourteen. That's twice as many as there are Harry Potter books. And the longer that menu gets, the less you actually get to choose. So why are there suddenly so many AIs, and who is all this choice really for?
 
-[To camera, two printed receipts held up, one in each hand. Logo pill on for the first three seconds.]
-Same price. One of these buys you about five times more AI than the other. So who decided that? Because it wasn't you.
+Claude and ChatGPT are the shop. Behind the counter sit lots of AI brains. They come in small, medium and large. Each one has a version number. And each one has a dial for how hard it thinks before it answers.
 
-[On screen: the two receipts, OpenAI and Anthropic logos, "$200 a month"]
-A research firm called SemiAnalysis ran the same questions on every AI plan and watched the usage meter move. On the everyday brains, the ones both companies push you towards, Claude's plan came out at about five times the value of ChatGPT's. Same money.
+The sizes don't stay put either. In 2024, Anthropic's new medium brain beat its old large one, three months after launch. So "the big one" just means the big one this season. And the seasons keep getting shorter.
 
-[On screen: the pie, "10% of the revenue, over 40% of the machines"]
-Here's the twist. It's a gift. These plans bring in a tenth of the money and eat nearly half the computers. So the cheap brain is the gift. The best brain is the product. And yes, this publication is made with Claude, so take the next minute with a pinch of salt.
+So why so many? Because every name on that menu is doing four jobs at once. It's a version number, like iPhone 15 and 16. It's a price tag, like economy and business class. It's an advert, because every new name is a launch day. And it's a queue ticket, sending easy questions to cheap computers. One name can't do four jobs. So the menu keeps growing.
 
-[On screen: the catch card]
-The catch, before the comments say it: at the top tier the limits are, in the report's words, quite similar. Hold the number loosely.
+Is it a scam to charge you more? The prices say no. The cost of AI as good as the first ChatGPT fell from twenty dollars to seven cents for a million tokens, and a token is just a chunk of a word. But the bills still go up, because AI agents now work for hours at a time. Data got cheaper per gigabyte, and your phone bill still didn't shrink. Same trick.
 
-[On screen: the timeline. March, April, June, October.]
-Now the part that matters. Both companies changed what your brain does this year without telling you. March: Anthropic quietly turned down how hard Claude Code thinks. April: their own write-up called it the wrong tradeoff. June: the new model was built to quietly give worse answers to people it thought were rivals. Two days later: the wrong tradeoff, again. At some point it's just the tradeoff.
+OpenAI tried scrapping the menu in 2025. One brain that switched itself. It broke on day one, people begged for their old brains back, and they got them within the week. Turns out we hate choosing, and we hate being chosen for even more.
 
-[On screen: "29 October", circled]
-And last week OpenAI halved its $200 plan. Keep the old limits until the twenty-ninth of October. After that, the same money buys half as much.
+Here's the real catch. Most apps don't tell you which brain answered, how hard it thought, or how much of your allowance it ate. It's a taxi with no meter. The route might be fine. You just can't check. And yes, I made this with Claude's help. So I'm the passenger moaning about the taxi while still sitting in it.
 
-[On screen: the ladder. Sonnet, Opus, Fable, the bar shrinking, Fable at half.]
-One more. On a Claude plan, the best brain can only be used for half your limit. The thing you pay the most for is the thing you're allowed the least of. A gym that lets you in five times as often, then hides the door to the good room.
+What do you do with that? If you just use AI, stick to the default, and switch to the biggest brain when it really matters. If you run a business on AI, ask what a good answer costs you all in, and lock the exact version you build on. And the old idea of one product at one price is going. AI is turning into electricity, paid for by the size and the effort.
 
-[On screen: three lines]
-Monday: ask the app which brain answered. Watch the meter, it's the real price. Check your plan again in a month, because this deal moved twice since June.
+Where does it go from here? Maybe the menu vanishes and the app picks for you. Maybe you pay for thinking time, like first-class post. Or maybe someone wins by being honest and labels every answer. My bet is the first one, and I'd put the honest one last. Most of us want one button. And whoever picks the brain controls what every answer costs them. Nobody hands that over to be polite.
 
-[On screen: OUR CALL, 75%]
-So who picks your AI? The company does, every day, and it's cheapest for them when you don't notice. My bet: by the end of September next year, at least two of the big three pick the brain for you by default. Seventy-five per cent sure. We'll mark it right or wrong on the day, next to what the market thinks.
+So here's my prediction. By the end of September 2027, at least two of OpenAI, Anthropic and Google will pick the brain for app builders automatically, by default. I'm eighty-five per cent sure, and we'll mark it right or wrong in public.
 
-[To camera, then end card]
-That's mind.the.gap. The full piece and every source are free at makeyourmindup.ai. I'm Krish. Make your mind up.
-
-## Before you record
-
-Joke options, two for each slot. Swap in the one you like; cut any you don't. The spoken script above uses the first of each.
-
-- Self-deprecating: "this publication is made with Claude, so take the next minute with a pinch of salt" / "I pay for both of these. I am the product in this story."
-- Sarcastic, at the hype: "At some point it's just the tradeoff." / "Nuclear option is their phrase for what OpenAI did, not mine. I'd have said Tuesday."
-- Exaggeration: "a gym that lets you in five times as often, then hides the door to the good room" / "paying full price for a chatbot to tell you what day it is"
-- Analogy: the gym (used) / the ice cream counter callback: "Last time he picked your flavour. Now he picks the size of the scoop."
-- Opinion as opinion: "My bet" (used) / "I think the meter is the real price, and I think they'd rather you never looked at it."
-
-Every number spoken is in the article body and comes from the SemiAnalysis article's own open text or a source already on file. The $1,178 and $211 figures for the $20 plans are behind the paywall and are not spoken.
+That's the short version. The full article has the rest: every source, the charts, and exactly what to do if your business runs on AI. It's free at makeyourmindup.ai. Read it, then tell me in the comments: do you pick your AI, or does it pick you? I'm Krish. See you on Monday.

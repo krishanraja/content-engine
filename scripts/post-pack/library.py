@@ -12,7 +12,7 @@ can copy paste, video scripts, etc etc".
         3 Posts/
             2026-10-05 Mon follow.the.money - Who gets paid/
                 READ ME.txt
-                1 Article/  2 Covers and images/  3 Video/  4 Social/
+                0 Publish/  1 Article/  2 Covers and images/  3 Video/  4 Social/
 
 The path rule is the engine's boundary for what may reach that folder. It is
 written once as cases in config/library-paths.cases.json, implemented here and
@@ -42,7 +42,7 @@ BRAND_KIT = '1 Brand kit (permanent)'
 CHANNEL_ART = '2 Channel art (permanent)'
 POSTS = '3 Posts'
 TOP_FOLDERS = (BRAND_KIT, CHANNEL_ART, POSTS)
-ARTICLE, COVERS, VIDEO, SOCIAL = POST_SECTIONS = ('1 Article', '2 Covers and images', '3 Video', '4 Social')
+PUBLISH, ARTICLE, COVERS, VIDEO, SOCIAL = POST_SECTIONS = ('0 Publish', '1 Article', '2 Covers and images', '3 Video', '4 Social')
 POST_README = 'READ ME.txt'
 PATH_MAX = 180  # the library root on Windows is about 62 characters; Windows stops a path at 260
 PART_MAX = 100

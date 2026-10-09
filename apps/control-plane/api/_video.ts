@@ -101,16 +101,16 @@ export function videoFormat(id?: string | null): VideoFormat | null {
 // approved the same evening, as the script writer reads it. The house rules
 // FOR_THE_EAR and STORY_ARC carry it to every other stage, and
 // scripts/post-pack/story_check.py refuses to pack a script that fails it.
-export const STORY_OUTRO = 'STORY_OUTRO: a script of a minute or more ends with one or two spoken lines after the call: what this was (the subchannel or makeyourmindup), where the full piece and its sources are (makeyourmindup.ai), and Krish signing off. This outro is the only call to action a script makes, and it never asks for likes or comments.'
+export const STORY_OUTRO = 'STORY_OUTRO: a script of a minute or more ends with one or two spoken lines after the call: what this was (the subchannel or makeyourmindup), that there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud so it works on every channel), one question for the comments, and Krish signing off (HOOK_AND_CTA). This outro is the only call to action a script makes, and it never asks for likes or subscribes.'
 
 export const SCRIPT_STORY = [
   'THE STORY CHECK (Krish, 2026-10-06). Before you answer, check the script against all five and fix any that fail:',
-  '1. One opening question, said out loud in the first beat, that the whole script answers.',
+  '1. One opening question, said out loud in the first beat, that the whole script answers. Before it, in the first two sentences, the most provocative true thing in the piece (HOOK_AND_CTA).',
   '2. Every beat sets that question up or answers it, and follows from the beat before. A beat that could be moved anywhere is a list item: cut it or connect it.',
   '3. Every claim is set up before it is judged: say what was claimed and why it matters before calling it real or theatre.',
   '4. Every takeaway follows from a beat already told. Name the beat it comes from in your head; if there is none, cut the takeaway.',
   '5. The ending answers the opening question, then the call, then the spoken outro. Never end on the number.',
-  '6. It sounds like Krish, with opinion (VOICE_ON_CAMERA): at least three of a dry self-deprecating line, a sarcastic line at the hype, an exaggeration obvious by its size, an analogy a twelve-year-old gets, and an opinion said as opinion ("my bet", "I think"). No joke inside a checked fact. Offer two options for each joke, marked, so Krish can cut.',
+  '6. It sounds like Krish, with opinion (VOICE_ON_CAMERA): at least three of a dry self-deprecating line, a sarcastic line at the hype, an exaggeration obvious by its size, an analogy a twelve-year-old gets, and an opinion said as opinion ("my bet", "I think"). No joke inside a checked fact. Put a second option for each joke in "notes", never inside "say", so Krish can swap or cut.',
   'And it must make sense out loud: say what the thing is before taking it apart, explain each number as it is said, and never speak an article heading or a label the listener has not heard explained.',
   STORY_OUTRO,
 ].join('\n')
@@ -198,7 +198,7 @@ export async function buildVideoScript(o: {
     `FOR EVERY "shot" (what is on screen):\n${houseRulesBlock('visual')}`,
     'You may cut, compress, reorder and re-voice. You may NOT add a claim the source piece did not earn. EVERY NUMBER MUST APPEAR VERBATIM IN THE SOURCE. Do not compute totals, differences, percentages or rates, even when the arithmetic looks obvious.',
     'Return JSON only: {"beats":[{"t":string,"say":string,"shot":string}],"title":string,"hook":string,"notes":string|null}',
-    '"t" is an approximate timecode for the start of the beat, as m:ss (for example "0:00", "0:12"). "say" is the spoken words for that beat, verbatim, ready to read. "shot" is what is on screen during it: framing, b-roll, on-screen text, or a cut instruction. Keep "shot" concrete and short.',
+    '"t" is an approximate timecode for the start of the beat, as m:ss (for example "0:00", "0:12"). "say" is only the spoken words for that beat, verbatim, ready to read: no stage directions, labels, timings, notes or lines about the script itself (SCRIPT_ONLY); everything else goes in "shot" or "notes". "shot" is what is on screen during it: framing, b-roll, on-screen text, or a cut instruction. Keep "shot" concrete and short.',
     '"title" is a working video title that states the claim rather than teasing it. "hook" is the first line, repeated on its own because it does the most work.',
   ].filter(Boolean).join('\n\n')
 

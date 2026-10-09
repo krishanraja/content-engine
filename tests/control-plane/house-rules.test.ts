@@ -337,3 +337,32 @@ describe('the script is Krish reacting, with opinion and dry wit (VOICE_ON_CAMER
     assert.match(video.SCRIPT_STORY, /6\. It sounds like Krish, with opinion \(VOICE_ON_CAMERA\)/)
   })
 })
+
+describe('the big picture, never the small headline (BIG_PICTURE, 2026-10-09)', () => {
+  test('the rule is live and reaches idea judging, draft judging, the writers and the final pass', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'BIG_PICTURE')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    for (const stage of ['judge_idea', 'judge_draft', 'write', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.match(r.said, /ALWAYS remember this/)
+  })
+})
+
+describe('a script is only the words, opening on a provocation and closing on the article (SCRIPT_ONLY, HOOK_AND_CTA, 2026-10-09)', () => {
+  test('both rules are live and reach the writers and the final pass', () => {
+    for (const id of ['SCRIPT_ONLY', 'HOOK_AND_CTA']) {
+      const r = HOUSE_RULES.find(x => x.id === id)
+      assert.ok(r, id)
+      assert.equal(r.status, 'live')
+      for (const stage of ['write', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), `${id} ${stage}`)
+    }
+    assert.match(HOUSE_RULES.find(x => x.id === 'SCRIPT_ONLY')!.said, /literally just scripts/)
+    assert.match(HOUSE_RULES.find(x => x.id === 'HOOK_AND_CTA')!.text, /makeyourmindup\.ai/)
+  })
+  test('the script writer keeps "say" to spoken words and its outro sends people to the article', async () => {
+    const video = await import('../../apps/control-plane/api/_video.js')
+    assert.match(video.STORY_OUTRO, /full article/)
+    assert.match(video.SCRIPT_STORY, /HOOK_AND_CTA/)
+    assert.doesNotMatch(video.SCRIPT_STORY, /Offer two options for each joke, marked/)
+  })
+})

@@ -30,6 +30,13 @@ Last updated: 2026-10-08, by a Claude Code session (cloud).
   things as boring as this towards things that are more fasincating and
   aspirational, like AI content creation for example". The engine's judges and
   channel briefs do not know this yet (see Latest handoff).
+- **Always the big picture, never the small headline.** His words,
+  2026-10-09, on the Friday workroom: "We need to always focus on the bigger
+  picture, never the one small picture temporary news headline - make sure you
+  ALWAYS remember this". A week's headline is evidence inside the bigger
+  story, never the story (house rule `BIG_PICTURE`). The session that broke
+  it built a whole piece around one report about AI plan value when he had
+  asked for "why there are so many models now, and what that actually means".
 - Every piece, its video and its posts answer three questions: what it means
   for the consumer, what it means for someone starting or building a
   business, and how the old way is changing, creatively and in who gets paid
@@ -131,6 +138,66 @@ session").
 
 ## Latest handoff
 
+- 2026-10-09, night: **Scripts are only scripts, and every post now has one
+  publish page.** Two new house rules: SCRIPT_ONLY (Krish: "make sure my video
+  scripts are literally just scripts without all the excess internal monologue
+  commentary (forever)") and HOOK_AND_CTA (open on the most provocative true
+  thing; close by sending people to the free article at makeyourmindup.ai).
+  `story_check.py` now refuses a script with stage directions, labels,
+  timings, headings or joke options, or with an outro that never mentions the
+  article; the video writer (`_video.ts`) keeps "say" to spoken words and puts
+  joke options in "notes". The amplification plan is `docs/AMPLIFICATION.md`:
+  one Substack **Video** post (long cut on top, article under it; Substack
+  uploads it to YouTube privately), then YouTube, LinkedIn, Shorts, Reels,
+  WhatsApp and Notes with one vertical cut of at most 90 seconds.
+  `scripts/post-pack/publish_kit.py` writes it per post as
+  `0 Publish/publish.html` (a new library section, in the cases file, the
+  engine and library.py). Friday's files: `docs/plans/2026-10-09-draft-script.md`
+  (about 4 minutes), `-draft-script-90s.md` (76 seconds), `-publish.json`
+  (every channel's words, linted by `_packaging.ts` and the publish checks),
+  `-manifold-market.md`. **Blocked:** the paid fact check (approved by Krish)
+  needs the engine operator bearer, which cloud sessions do not have; the
+  Manifold market (approved) needs a Manifold key, so it is written out for
+  him to paste. **Waiting on Krish:** add `ENGINE_OPERATOR_TOKEN` to the cloud
+  environment's secrets (or run the check from his machine), create the
+  market, record both cuts, and confirm on first use that the Copy post
+  paste keeps pictures inside a Substack Video post.
+
+- 2026-10-09, evening: **Friday's piece is rebuilt on Krish's angle, the big
+  story: why there are so many AI models, and what it means.** His seed
+  (Perplexity research) was treated as raw material, never as an override:
+  20 claims checked against primary sources, ten corrections
+  (`docs/plans/2026-10-09-seed-fact-check.md`, including OpenAI's revenue cut
+  from ~$70bn to almost $50bn on 8 Oct). Our own thesis: the name is doing four
+  jobs (version number, price tag, advert, queue ticket). The $20 SemiAnalysis
+  story is one paragraph. Drafts: `docs/plans/2026-10-09-draft-body.md`
+  (passes every blocking publish check, reads at about age 10) and
+  `2026-10-09-draft-script.md` (passes story_check.py). The workroom
+  (https://claude.ai/artifact/MmaKvtHTHUYbSY9JEiCBAn) carries all of it, with a
+  new Mocks room (decoder, conveyor belt, four jobs, prices vs bills, the
+  menu-misleads bars, the three futures) and new decision cards: angle, title,
+  call and a new "revenue race" card. **All picks made:** angle "One name,
+  four jobs"; title "Why are there suddenly so many AIs?"; revenue paragraph
+  kept; Manifold market; level 1+, warm, both lengths. His call, in his words:
+  "85% - big tech will make things more and more opaque and remove the illusion
+  of choice to satisfy the masses and control margin/outcome". The checkable
+  sentence is unchanged at 85%; his reason is now the stated bet in the article
+  and script. **Waiting on Krish:** the paid fact-check cap (the call paragraph
+  changed); approval to create the Manifold market; rotating the keys pasted in chat.
+
+- 2026-10-09, afternoon: **Friday's piece now lives in a live workroom:**
+  https://claude.ai/artifact/MmaKvtHTHUYbSY9JEiCBAn (private to Krish). Four
+  rooms: Decide (seven decisions as tappable cards with Claude's pick, level
+  and cost; picks save to the page's database), Article (the draft with the
+  engine's checks and a change log; a Note on any paragraph opens a comment
+  that can be sent to Claude), Script (one card per beat, timed at his pace
+  against a 90-second target, with joke options), Mocks (cover with his face,
+  the two receipts, the nerf timeline, the ladder, the subsidy bars, the
+  carousel and the storyboard). Content is in the page's database
+  (`piece/meta`, `piece/body`, `piece/script`, `piece/mocks`, `decisions/*`),
+  so a session updates it with ArtifactData and the page refreshes itself;
+  his picks are read back from `decisions/*`. This session watches it for
+  comments sent to Claude. **Waiting on Krish:** his picks in the Decide room.
 - 2026-10-09, later: **Friday's piece is drafted along the recommended lane,
   with the full creative menu and costs for Krish to choose from.**
   `docs/plans/2026-10-09-who-picks-your-ai-creative.md` is the menu (six

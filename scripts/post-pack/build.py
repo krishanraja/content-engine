@@ -23,6 +23,7 @@ it), named `YYYY-MM-DD Mon follow.the.money - Who gets paid` (a launch post is
 `YYYY-MM-DD Launch - <Subject>`):
 
     READ ME.txt              every file, what it is for and where it goes
+    0 Publish/               publish.html: start here, every channel in order, with Copy buttons (publish_kit.py)
     1 Article/               substack-copy.html, web-page.html, the text that passed the fact check, the email with pictures off
     2 Covers and images/     the cover, the pictures in the post, share cards
     3 Video/                 the script, the YouTube and Substack words, the finished videos
@@ -46,17 +47,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import library
 import story_check  # noqa: E402
 import edge_check  # noqa: E402
-from library import ARTICLE, COVERS, POST_README, POSTS, SOCIAL, VIDEO, LibraryError, archive, brand  # noqa: E402
+from library import ARTICLE, COVERS, POST_README, POSTS, PUBLISH, SOCIAL, VIDEO, LibraryError, archive, brand  # noqa: E402
 
 DEFAULT_OUT = library.ROOT / '.cache' / 'post-pack'
 MANIFEST = '.pack.json'  # what send.py reads: every file and its purpose. A dot keeps it out of the library.
-SECTION_NAMES = {'article': ARTICLE, 'covers': COVERS, 'images': COVERS, 'video': VIDEO, 'social': SOCIAL}
+SECTION_NAMES = {'publish': PUBLISH, 'article': ARTICLE, 'covers': COVERS, 'images': COVERS, 'video': VIDEO, 'social': SOCIAL}
 for _section in library.POST_SECTIONS:
     SECTION_NAMES[_section.lower()] = _section
 
 # Every kind of file a post's launch set holds: its section, the name it gets
 # (None keeps the file's own name) and what it is for, in words Krish reads.
 KINDS = {
+    'publish-kit': (PUBLISH, 'publish.html',
+                    'Start here. Open it in a browser: every channel in the order to publish, the file to upload for each, '
+                    'and a Copy button for every word to paste (docs/AMPLIFICATION.md).'),
     'substack-copy': (ARTICLE, 'substack-copy.html',
                       'Paste into Substack: open it on a computer, press Copy title, Copy subtitle and Copy post in turn, '
                       "and paste each into Substack's editor. The pictures go with the words."),
@@ -402,7 +406,7 @@ def self_test():
         for name, body in (('out/substack.html', b'<p>post</p>'), ('out/page.html', b'<p>page</p>'),
                            ('body.md', b'The words.\n'), ('out/email-pictures-off.html', b'<p>email</p>'),
                            ('out/cover.png', b'cover'), ('img/1-look-or-pay.png', b'one'),
-                           ('script.md', b'[To camera]\nWhy does this matter? Say this.\n'), ('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'),
+                           ('script.md', b'Why does this matter? Say this.\n'), ('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'),
                            ('share/v-9x16.mp4', b'tall share'), ('card.png', b'card')):
             (work / name).parent.mkdir(parents=True, exist_ok=True)
             (work / name).write_bytes(body)

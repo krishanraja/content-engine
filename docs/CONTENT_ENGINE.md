@@ -810,7 +810,9 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    `api/_houseRules.ts` as step 12 says, and the part a machine can check into
    `PACKAGING_RULES` and `lintPackage` or `lintSubstack` in
    `api/_packaging.ts`.
-15. The same day a post's launch set is made, pack it with
+15. Every launch set includes the publish page (`docs/AMPLIFICATION.md`,
+    `scripts/post-pack/publish_kit.py`): one Substack Video post, then YouTube,
+    LinkedIn, Shorts, Reels, WhatsApp and Notes, with Copy buttons. The same day a post's launch set is made, pack it with
    `python3 scripts/post-pack/build.py post.json` and send it with
    `python3 scripts/post-pack/send.py <pack folder>`; send a brand kit change
    with `send.py --brand-kit` (Krish, 2026-10-06, section 9 above). Read

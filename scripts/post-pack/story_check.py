@@ -40,6 +40,20 @@ STAGE = re.compile(r'\\?\[[^\]]*\\?\]')
 SPOKEN_STAMP = re.compile(r'\b(REAL|THEATRE)\b')
 SPOKEN_LABEL = re.compile(r'(^|[.!?]\s+)(One|Two|Three|Four|Five|Six)\s*:\s*the\s+\w+\s*\.', re.I)
 HEADING_MARKUP = re.compile(r'\*\*[^*]+:\*\*|\*\*[^*]+\*\*\s*:')
+# House rule SCRIPT_ONLY (Krish, 2026-10-09): "make sure my video scripts are
+# literally just scripts without all the excess internal monologue commentary
+# (forever)". The script is only the words he says, as plain paragraphs.
+NOT_SPOKEN = [
+    (re.compile(r'\\?\[[^\]]*\\?\]'), 'a bracketed stage direction'),
+    (re.compile(r'^\s*(?:\*{1,2}|_)?\s*(?:on screen|screen|say|shot|b-roll|visual|cut to|end card|joke option|alt(?:ernative)?|note)\s*(?:\*{1,2}|_)?\s*:', re.I | re.M), 'a label such as "On screen:" or "Say:"'),
+    (re.compile(r'^\s*#{1,6}\s', re.M), 'a heading'),
+    (re.compile(r'^\s*(?:\*\*)?\[?\d{1,2}:\d{2}\]?(?:\*\*)?\s*$', re.M), 'a timing'),
+    (re.compile(r'^\s*(?:---|\*\*\*)\s*$', re.M), 'a divider'),
+    (re.compile(r'^\s*(?:[-*\u2022]|\d+\.)\s', re.M), 'a list'),
+    (re.compile(r'^\s*beat\s+\d+', re.I | re.M), 'a beat number'),
+]
+# House rule HOOK_AND_CTA: the outro says there is a full article and where.
+ARTICLE = re.compile(r'\b(article|full piece|full story|full teardown|read it|the rest)\b', re.I)
 
 
 def spoken_paragraphs(text):
@@ -82,12 +96,19 @@ def problems(text):
     beats = spoken_paragraphs(text)
     words = ' '.join(beats).split()
     if not words:
-        return found + ['no spoken words found: give each spoken line its own paragraph, or start it with "Say:"']
+        return found + ['no spoken words found: a script is only the words Krish says, one plain paragraph per thought (house rule SCRIPT_ONLY)']
     if '?' not in ' '.join(words[:OPENING_WORDS]):
         found.append('it does not open on a question: say, in the first beat, the one question the script answers')
+    extra = [name for rx, name in NOT_SPOKEN if rx.search(text)]
+    if extra:
+        found.append(f'it carries more than the words Krish says ({", ".join(extra)}): a script is only the spoken '
+                     'words as plain paragraphs; shots go in the shot list and joke options beside it (house rule SCRIPT_ONLY)')
     if len(words) >= SHORT_WORDS and not OUTRO.search(beats[-1]):
         found.append('it stops without a spoken outro: after the call, say what this was, where the full piece is '
                      '(makeyourmindup.ai) and sign off, so it never ends on the number')
+    elif len(words) >= SHORT_WORDS and not ARTICLE.search(beats[-1]):
+        found.append('the outro never sends anyone to the article: say there is a full article, what it adds, that it is '
+                     'free and where (makeyourmindup.ai) (house rule HOOK_AND_CTA)')
     for beat in beats:
         quote_free = re.sub(r'"[^"]*"|\u201c[^\u201d]*\u201d', '', beat)
         if SPOKEN_STAMP.search(quote_free) or SPOKEN_LABEL.search(quote_free) or HEADING_MARKUP.search(beat):
@@ -152,19 +173,12 @@ Changes from version 1, and why
 - No spoken sign-off.
 '''
 
-GOOD = '''Title line, not spoken
----
+GOOD = '''So how do you lose your biggest supplier and keep growing? Let's take it apart.
 
-[To camera]
-So how do you lose your biggest supplier and keep growing? Let's take it apart.
-
-[On screen: THEATRE stamp]
 One claim doesn't stand up. On a podcast, the founder was asked if Higgsfield pays for advertising. "We don't do paid," he said. ''' + ' '.join(['More words that fill the middle of the script.'] * 20) + '''
 
-[On screen: OUR CALL]
 So here's our call. We're eighty-five per cent sure, and we'll mark it right or wrong on the day.
 
-[To camera, then end card]
 That's under.the.hood for this week. The full teardown is free at makeyourmindup.ai. I'm Krish. Make your mind up.
 '''
 
@@ -212,9 +226,13 @@ def self_test():
     check('a quoted "We don\'t do paid" is no heading', any('heading or stamp' in p for p in v2), False)
     check('version 3 shape passes', problems(GOOD), [])
     check('unchecked facts block it', any(UNCHECKED in p for p in problems(GOOD + '\n[NOT YET FACT-CHECKED]\n')), True)
-    check('a one-off in Say: lines passes', problems(ONE_OFF), [])
+    one_off = problems(ONE_OFF)
+    check('a script with Say: lines, timings and notes is more than words', any('SCRIPT_ONLY' in p for p in one_off), True)
+    check('stage directions are more than words', any('SCRIPT_ONLY' in p for p in problems(HIGGSFIELD_V1)), True)
+    check('an outro with no article is refused',
+          any('HOOK_AND_CTA' in p for p in problems(GOOD.replace('The full teardown is free at', 'Find us at'))), True)
     check('notes after the script are never spoken', any('heading or stamp' in p for p in problems(ONE_OFF)), False)
-    short = '[To camera]\nWhy does it matter? Because the price doubled. That is the whole story.\n'
+    short = 'Why does it matter? Because the price doubled. That is the whole story.\n'
     check('a short hook needs no outro', problems(short), [])
     check('a long script with no opinion gets a warning, never a refusal', len(warnings(GOOD)), 1)
     check('a long script that says "my bet" passes the voice check',
