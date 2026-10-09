@@ -37,6 +37,13 @@ Engine runtime secrets live where the engine runs, not in the repository:
 - **Supabase Edge Function secrets** for anything the Supabase functions call.
 - **Vercel project environment variables** (`content-engine` project) for
   anything the Vercel routes and crons call.
+- **Claude Code cloud environment, network secrets** for what an agent
+  session sends to the engine: the engine key (`ENGINE_OPERATOR_TOKEN`'s
+  value) as a Bearer secret bound to `content-engine-flame-nu.vercel.app`,
+  path `/api/` (placed 2026-10-09). The proxy adds it per request, so the
+  container never holds it. Vercel marks the engine key sensitive, so it cannot
+  be read back from Vercel; its copies are KeePass ("Mindmake engine key
+  (ENGINE_OPERATOR_TOKEN)") and Windows Credential Manager on each runner.
 
 A session sets one only on Krish's explicit yes for that action, through the
 Supabase or Vercel surface, and the value is never shown in chat. The names

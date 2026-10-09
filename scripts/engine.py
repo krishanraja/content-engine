@@ -39,7 +39,8 @@ import urllib.error
 import urllib.request
 import uuid
 
-BASE = os.environ.get('ENGINE_BASE_URL', 'https://content-engine-flame-nu.vercel.app').rstrip('/')
+PROXY_KEYED_BASE = 'https://content-engine-flame-nu.vercel.app'  # the host the cloud secret is bound to
+BASE = os.environ.get('ENGINE_BASE_URL', PROXY_KEYED_BASE).rstrip('/')
 WINDOWS_TARGET = 'Mindmake/engine-operator-token'
 ERROR_NOT_FOUND = 1168  # Credential Manager has no entry by that name for this user
 
@@ -134,6 +135,12 @@ def operator_key() -> str:
     token = os.environ.get('ENGINE_OPERATOR_TOKEN', '').strip()
     if token:
         return token
+    # Krish, 2026-10-09: in Claude Code's cloud the key is a network secret
+    # (Bearer on the engine's own host, path /api/). The session's proxy adds
+    # the real header to every request to that host, and the container never
+    # holds the key, so any stand-in value here is replaced on the way out.
+    if os.environ.get('CLAUDE_CODE_REMOTE') and BASE == PROXY_KEYED_BASE:
+        return 'injected-by-the-session-proxy'
     key, error = windows_key()
     token = key.strip()
     if token:
