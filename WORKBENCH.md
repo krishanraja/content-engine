@@ -158,14 +158,15 @@ session").
   (every channel's words, linted by `_packaging.ts` and the publish checks),
   `-manifold-market.md`. **The engine key now reaches cloud sessions** as a
   network secret (health answered 200 through it on 2026-10-09).
-  **Next session, first job:** Friday's paid fact check, approved by Krish
-  ("spend what you need within reason"). Find Friday's mind.the.gap piece
-  (`904658db...`, `GET /api/content-ideas`), save the new draft
-  (`docs/plans/2026-10-09-draft-body.md`) as its body through the engine's
-  own route, run the free `GET .../fact-check` preview for the count, then
-  `POST` with `max_fresh_sentences` set to that count. Fix what fails, record
-  results here, and update the workroom
-  (https://claude.ai/artifact/MmaKvtHTHUYbSY9JEiCBAn) body checks.
+  **Friday's fact check passed (9 Oct, 15:55 UTC), run from the cloud.** 27
+  primary sources filed on the piece word for word
+  (`docs/plans/2026-10-09-sources.json`); four runs took it from 36 failing
+  claims to none. It caught a real error (ordinary ChatGPT shows one GPT-6
+  with a Thinking slider, not Astra, Sol and Luna) and the article now says
+  "more than a dozen" models, so every title and the hook dropped "14" for
+  "more versions of Claude than there are Harry Potter books". The checked
+  text is `docs/plans/2026-10-09-draft-body.md`; saving it moved the piece to
+  `review`, so **approval is Krish's**. The workroom now has a Publish tab.
   **Waiting on Krish:** create the Manifold market (no Manifold key here; the
   text is ready), record both cuts, rotate every key pasted in chat (including
   the Vercel master token), and confirm on first use that the Copy post paste

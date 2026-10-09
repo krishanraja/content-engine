@@ -1,0 +1,137 @@
+[
+  {
+    "title": "Anthropic: Introducing the next generation of Claude (Claude 3 family), Mar 4, 2024",
+    "url": "https://www.anthropic.com/news/claude-3-family",
+    "content": "Today, we're announcing the Claude 3 model family, which sets new industry benchmarks across a wide range of cognitive tasks. The family includes three state-of-the-art models in ascending order of capability: Claude 3 Haiku, Claude 3 Sonnet, and Claude 3 Opus. Each successive model offers increasingly powerful performance, allowing users to select the optimal balance of intelligence, speed, and [cost](https://www.anthropic.com/api#pricing) for their specific application.\n\nOpus and Sonnet are now available to use in claude.ai and the Claude API which is now generally available in [159 countries](https://www.anthropic.com/supported-countries). Haiku will be available soon."
+  },
+  {
+    "title": "Anthropic: Claude 3.5 Sonnet, Jun 21, 2024",
+    "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
+    "content": "Today, we’re launching Claude 3.5 Sonnet—our first release in the forthcoming Claude 3.5 model family. Claude 3.5 Sonnet raises the industry bar for intelligence, outperforming competitor models and Claude 3 Opus on a wide range of evaluations, with the speed and cost of our mid-tier model, Claude 3 Sonnet.\n\nClaude 3.5 Sonnet operates at twice the speed of Claude 3 Opus. This performance boost, combined with cost-effective pricing, makes Claude 3.5 Sonnet ideal for complex tasks such as context-sensitive customer support and orchestrating multi-step workflows."
+  },
+  {
+    "title": "Anthropic: Introducing Claude Haiku 4.5, Oct 15, 2025",
+    "url": "https://www.anthropic.com/news/claude-haiku-4-5",
+    "content": "Claude Haiku 4.5, our latest small model, is available today to all users.\n\nWhat was recently at the frontier is now cheaper and faster. Five months ago, Claude Sonnet 4 was a state-of-the-art model. Today, Claude Haiku 4.5 gives you similar levels of coding performance but at one-third the cost and more than twice the speed."
+  },
+  {
+    "title": "Anthropic: Claude 3.7 Sonnet and Claude Code, Feb 24, 2025",
+    "url": "https://www.anthropic.com/news/claude-3-7-sonnet",
+    "content": "Today, we’re announcing Claude 3.7 Sonnet1, our most intelligent model to date and the first hybrid reasoning model on the market. Claude 3.7 Sonnet can produce near-instant responses or extended, step-by-step thinking that is made [visible to the user](https://youtu.be/t3nnDXa81Hs). API users also have fine-grained control over _how long_ the model can think for.\n\nClaude 3.7 Sonnet embodies this philosophy in several ways. First, Claude 3.7 Sonnet is both an ordinary LLM and a reasoning model in one: you can pick when you want the model to answer normally and when you want it to [think longer before answering](https://www.anthropic.com/research/visible-extended-thinking). In the standard mode, Claude 3.7 Sonnet represents an upgraded version of Claude 3.5 Sonnet. In [extended thinking mode](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking), it self-reflects before answering, which improves its performance on math, physics, instruction-following, coding, and many other tasks. We generally find that prompting for the model works similarly in both modes."
+  },
+  {
+    "title": "Anthropic: Introducing Claude 4, May 22, 2025",
+    "url": "https://www.anthropic.com/news/claude-4",
+    "content": "Claude Opus 4 and Sonnet 4 are hybrid models offering two modes: near-instant responses and extended thinking for deeper reasoning. The Pro, Max, Team, and Enterprise Claude plans include both models and extended thinking, with Sonnet 4 also available to free users. Both models are available on our API, Amazon Bedrock, and Google Cloud's Vertex AI. Pricing remains consistent with previous Opus and Sonnet models: Opus 4 at $15/$75 per million tokens (input/output) and Sonnet 4 at $3/$15."
+  },
+  {
+    "title": "Claude: Plans & pricing (API model prices and Fable plan limits)",
+    "url": "https://claude.com/pricing",
+    "content": "| Features | Free | Pro | Max 5x | Max 20x |\n| --- | --- | --- | --- | --- |\n| #### FableMore information | No | Usage credits | 50% of weekly limits\\* | 50% of weekly limits\\* |\n| #### Opus | No | Yes | Yes | Yes |\n| #### Sonnet | Yes | Yes | Yes | Yes |\n| #### Haiku | Yes | Yes | Yes | Yes |\n\n### Opus 5.5\n\nDaily driver for agentic coding and enterprise work\n\nPrompt caching\n\nRead\n\n$0.20/ MTok\n\nWrite\n\n$5/ MTok\n\nInput\n\n$4/ MTok\n\nOutput\n\n$20/ MTok\n\n### Haiku 5.5\n\nFastest, most cost-efficient model\n\nPrompt caching\n\nPrompts ≤ 100K tokens\n\nRead\n\n$0.01/ MTok\n\nWrite\n\n$0.125/ MTok\n\nPrompts > 100K tokens\n\nRead\n\n$0.05/ MTok\n\nWrite\n\n$0.625/ MTok\n\nInput\n\nPrompts ≤ 100K tokens\n\n$0.10/ MTok\n\nPrompts > 100K tokens\n\n$0.50/ MTok\n\nOutput\n\nPrompts ≤ 100K tokens\n\n$0.50/ MTok\n\nPrompts > 100K tokens\n\n$2.50/ MTok"
+  },
+  {
+    "title": "Claude Help Center: Claude Code model configuration (supported models)",
+    "url": "https://support.claude.com/en/articles/11940350-claude-code-model-configuration",
+    "content": "## Supported models\n\n- Haiku 5.5, `claude-haiku-5-5`\n\n- Sonnet 5.5, `claude-sonnet-5-5`\n\n- Opus 5.5, `claude-opus-5-5`\n\n- Fable 5.1, `claude-fable-5-1`\n\n- Opus 5, `claude-opus-5`\n\n- Sonnet 5, `claude-sonnet-5`\n\n- Fable 5, `claude-fable-5`\n\n- Opus 4.8, `claude-opus-4-8`\n\n- Opus 4.7, `claude-opus-4-7`\n\n- Sonnet 4.6, `claude-sonnet-4-6`\n\n- Opus 4.6, `claude-opus-4-6`\n\n- Opus 4.5, `claude-opus-4-5-20251101`\n\n- Haiku 4.5, `claude-haiku-4-5-20251001`\n\n- Sonnet 4.5, `claude-sonnet-4-5-20250929`"
+  },
+  {
+    "title": "Claude Help Center: Change the model, effort, and thinking settings",
+    "url": "https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings",
+    "content": "The effort level controls how much thinking Claude applies to a response. Higher effort means more thorough responses, but they take longer and use more tokens, so you'll reach your usage limits faster.\n\nThe effort selector is available for Claude Haiku 5.5, Sonnet 5.5, Opus 5.5, Fable 5.1, Opus 5, Sonnet 5, Fable 5, Opus 4.7, Opus 4.6, and Sonnet 4.6.\n\nEach model has a recommended effort level, marked as \"Default\" in the menu:\n\n- **Low** and **Medium** work well for routine tasks and stretch your usage further.\n\n- **High** offers the best overall balance of quality and speed.\n\n- **Extra high** (xhigh) is designed for long-running coding and agentic tasks, offering deeper reasoning than high without the full token cost of max. Available on Opus 4.7 and newer models.\n\n- **Max** is the most thorough option, best for tasks requiring the deepest possible reasoning and most thorough analysis.\n\nThinking cannot be turned off in Claude when using Claude Haiku 5.5, Claude Sonnet 5.5, Claude Opus 5.5, Claude Fable 5.1, or Claude Opus 5. On Opus 5.5 and Fable 5.1, thinking is always on at every effort level, including on the Claude API."
+  },
+  {
+    "title": "Claude Academy: Choosing the right Claude model",
+    "url": "https://academy.claude.com/tutorials/choosing-the-right-claude-model",
+    "content": "Claude comes in four models: Haiku, Sonnet, Opus, and Fable. Each is built for different kinds of work, and each uses your rate limit differently. Using Opus on a task Haiku could handle costs you tokens for no gain and slows you down in the process. In this guide you'll learn how to pick the Claude model that can most efficiently accomplish your task _and_ keep you more comfortably within your rate limits.\n\n| Model | Rate limit use | Best for |\n| --- | --- | --- |\n| Haiku | Lightest | Quick answers, summaries, and simple extraction — anything you want done instantly |\n| Sonnet | Moderate | Coding, writing, analysis, and multi-step workflows — your versatile default |\n| Opus | Heavy | Deep research and complex reasoning that genuinely needs sustained thinking |\n| Fable | Heaviest | Your largest, most critical projects: long, complex tasks Claude works through with fewer check-ins |"
+  },
+  {
+    "title": "OpenAI API docs: GPT-6 Astra model page",
+    "url": "https://developers.openai.com/api/docs/models/gpt-6-astra",
+    "content": "Price\n\n$10•$50\n\nInput•Output\n\nGPT-6 Astra is our most capable model for the most demanding work.\nUse it for complex reasoning, coding, computer use, research, and document creation.\n`reasoning.effort` supports `low`, `medium`, `high`, `xhigh`, and `max`.\n\nText tokens\n\nPer 1M tokens\n\nInput\n\n$10.00\n\nCached input\n\n$1.00\n\nCache writes\n\n$12.50\n\nOutput\n\n$50.00"
+  },
+  {
+    "title": "OpenAI Help Center: ChatGPT Business models and limits",
+    "url": "https://help.openai.com/en/articles/12003714-chatgpt-business-models-and-limits",
+    "content": "GPT‑6 Pro, powered by GPT‑6 Astra, is available in ChatGPT for Pro $100, Pro $200, Business and Enterprise plans. Enterprise access also depends on your workspace’s model-access permissions. Plus plans include GPT‑6 Astra in ChatGPT Work and Codex.\n\nIn the model menu, **GPT-6** replaces **Latest**. Existing **Latest** selections move to **GPT-6** at the same effort; explicit **GPT-5.6 Sol** selections stay on GPT-5.6. When **GPT-6** is selected, **GPT-6 Sol** powers **Instant** through **Extra High**. Choose an available effort:\n\nWork and Codex use separate model controls, with **GPT-6 Sol**, GPT-6.1 Sol, and GPT-6 Luna as model options. In Chat, **GPT-6 Sol** powers **GPT-6** at **Instant** through **Extra High** as the rollout reaches your workspace; it is shown as **GPT-6**, not Sol. GPT-6.1 Sol and GPT-6 Luna are not selectable in ordinary ChatGPT conversations. Check the Work or Codex model picker for the options enabled for you."
+  },
+  {
+    "title": "OpenAI Help Center: GPT-6 and other models in ChatGPT",
+    "url": "https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt",
+    "content": "In the model menu, **GPT-6** replaces **Latest**. Existing **Latest** selections move to **GPT-6** at the same effort; explicit **GPT-5.6 Sol** selections stay on GPT-5.6. Use the **Thinking** slider to choose your effort. When **GPT-6** is selected, **GPT-6 Sol** powers **Instant**, **Medium**, **High**, and **Extra High**; **Pro** uses GPT-6 Pro, powered by **GPT-6 Astra**. Available options depend on your plan and workspace settings.\n\nTerra and Luna are not selectable in standard ChatGPT conversations. Depending on your plan, they are available in Work and Codex. Developers can also use them through the OpenAI API."
+  },
+  {
+    "title": "OpenAI: Introducing ChatGPT, November 30, 2022",
+    "url": "https://openai.com/index/chatgpt/",
+    "content": "November 30, 2022\n\nWe’ve trained a model called ChatGPT which interacts in a conversational way. The dialogue format makes it possible for ChatGPT to answer followup questions, admit its mistakes, challenge incorrect premises, and reject inappropriate requests.\n\nChatGPT is fine-tuned from a model in the GPT‑3.5 series, which finished training in early 2022. You can learn more about the 3.5 series [here⁠(opens in a new window)](https://beta.openai.com/docs/model-index-for-researchers). ChatGPT and GPT‑3.5 were trained on an Azure AI supercomputing infrastructure."
+  },
+  {
+    "title": "OpenAI Help Center: Understanding and counting tokens",
+    "url": "https://help.openai.com/en/articles/4936856-understanding-and-counting-tokens",
+    "content": "Tokens are the units that OpenAI models use to process text. A token can represent a character, part of a word, a whole word, or punctuation. Spaces also affect how text is divided into tokens.\n\nA token count is not the same as a word count. The same text can produce different token counts depending on the model, its encoding, and the language.\n\n- 1 token is approximately 4 characters.\n\n- 1 token is approximately three-quarters of a word.\n\n- 100 tokens are approximately 75 words."
+  },
+  {
+    "title": "Stanford HAI: The 2025 AI Index Report, Research and Development",
+    "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report/research-and-development",
+    "content": "#### 6\\. AI models become increasingly cheaper to use.\n\nThe cost of querying an AI model that scores the equivalent of GPT-3.5 (64.8) on MMLU, a popular benchmark for assessing language model performance, dropped from $20.00 per million tokens in November 2022 to just $0.07 per million tokens by October 2024 (Gemini-1.5-Flash-8B)—a more than 280-fold reduction in approximately 18 months. Depending on the task, LLM inference prices have fallen anywhere from 9 to 900 times per year."
+  },
+  {
+    "title": "OpenAI: The state of enterprise AI, 2025 report (PDF)",
+    "url": "https://cdn.openai.com/pdf/7ef17d82-96bf-4dd1-9df2-228f7f377a29/the-state-of-enterprise-ai_2025-report.pdf",
+    "content": "Companies build on the API to integrate models directly into their  \nproducts and systems with a high degree of control and customization.  \nAs firms transition from experimentation to production deployments, API \nconsumption has rapidly increased. More than 9,000 organizations have \nnow processed over 10 billion tokens, and nearly 200 have exceeded  \n1 trillion tokens.\n\nAverage reasoning token consumption per organization has increased by \napproximately 320x in the past 12 months, suggesting that more intelligent \nmodels are being systematically integrated into expanding products and \nservices. Codex, while still early in its enterprise lifecycle, is gaining rapid \ntraction as teams adopt it for end-to-end software tasks: code generation, \nrefactoring, testing, and debugging."
+  },
+  {
+    "title": "OpenAI: Introducing GPT-5, August 7, 2025",
+    "url": "https://openai.com/index/introducing-gpt-5/",
+    "content": "GPT‑5 is a unified system with a **smart, efficient model** that answers most questions, a **deeper reasoning model** (GPT‑5 thinking) for harder problems, and a **real‑time router** that quickly decides which to use based on conversation type, complexity, tool needs, and your explicit intent (for example, if you say “think hard about this” in the prompt). The router is continuously trained on real signals, including when users switch models, preference rates for responses, and measured correctness, improving over time. Once usage limits are reached, a mini version of each model handles remaining queries. In the near future, we plan to integrate these capabilities into a single model.\n\nGPT‑5 is the new default in ChatGPT, replacing GPT‑4o, OpenAI o3, OpenAI o4-mini, GPT‑4.1, and GPT‑4.5 for signed-in users. Just open ChatGPT and type your question; GPT‑5 handles the rest **,** applying reasoning automatically when the response would benefit from it. Paid users can still select **“GPT‑5 Thinking”** from the model picker, or type something like ‘think hard about this’ in the prompt to ensure reasoning is used when generating a response."
+  },
+  {
+    "title": "TechCrunch: Sam Altman addresses 'bumpy' GPT-5 rollout, bringing 4o back, and the 'chart crime' (Aug 8, 2025)",
+    "url": "https://techcrunch.com/2025/08/08/sam-altman-addresses-bumpy-gpt-5-rollout-bringing-4o-back-and-the-chart-crime/",
+    "content": "But multiple people in the AMA on the r/ChatGPT Reddit [complained](https://www.reddit.com/r/ChatGPT/comments/1mkae1l/comment/n7l66ku/) GPT-5 wasn’t working as well for them as 4o did. Altman said the reason GPT-5 seemed “dumber” was the router wasn’t working properly when it was rolled out Thursday.\n\n“GPT-5 will seem smarter starting today. Yesterday, we had a sev and the autoswitcher was out of commission for a chunk of the day, and the result was GPT-5 seemed way dumber. Also, we are making some interventions to how the decision boundary works that should help you get the right model more often. We will make it more transparent about which model is answering a given query,” Altman promised.\n\nStill, people on the AMA lobbied so hard to bring 4o back for Plus subscribers that Altman promised to at least look into that. “We are looking into letting Plus users to continue to use 4o. We are trying to gather more data on the tradeoffs,” he wrote."
+  },
+  {
+    "title": "VentureBeat: OpenAI returns old models to ChatGPT as Sam Altman admits 'bumpy' GPT-5 rollout (Aug 8, 2025)",
+    "url": "https://venturebeat.com/business/openai-returns-old-models-to-chatgpt-as-sam-altman-admits-bumpy-gpt-5-rollout",
+    "content": "Answering user questions [in a Reddit AMA (Ask Me Anything) thread](https://www.reddit.com/r/ChatGPT/comments/1mkae1l/gpt5_ama_with_openais_sam_altman_and_some_of_the/?q=%E2%80%9CPeople+were+working+late+and+were+very+tired%2C+and+human+error+got+in+the+way.+A+lot+comes+together+for+a+livestream+in+the+last+hours.%E2%80%9D&type=comments&cId=3ba2c830-41e3-426f-829a-fd7fcc5ce27b&iId=aa80770e-1c54-4e68-83b3-c787514a0947) and [in a post on X](https://x.com/sama/status/1953893841381273969) this afternoon, **Altman admitted to a range of issues that have disrupted the launch of GPT-5, including faulty model switching, poor performance, and user confusion** — prompting OpenAI to partially walk back some of its platform changes and **reinstate user access to earlier models like GPT-4o.**\n\n[On X](https://x.com/sama/status/1953893841381273969), **Altman revealed that a key part of that system — the autoswitcher — was “out of commission for a chunk of the day,” causing GPT-5 to appear “way dumber” than intended.**\n\nAdditionally, Altman confirmed that **OpenAI will now allow ChatGPT Plus users to continue using GPT-4o — the prior default model** — [after a wave of complaints about GPT-5’s inconsistent performance](https://venturebeat.com/ai/openais-gpt-5-rollout-is-not-going-smoothly/). He [said on Reddit](https://www.reddit.com/r/ChatGPT/comments/1mkae1l/comment/n7n5aas/) the company is “ **trying to gather more data on the tradeoffs” before deciding how long to offer legacy models.**"
+  },
+  {
+    "title": "OpenAI: Accelerating the next phase of AI (OpenAI raises $122 billion), March 31, 2026",
+    "url": "https://openai.com/index/accelerating-the-next-phase-ai/",
+    "content": "March 31, 2026\n\nThat product momentum shows up in the numbers. ChatGPT is the overwhelming leader in consumer AI with more than 900 million weekly active users, and over 50 million subscribers. ChatGPT has 6x the monthly web visits and mobile sessions than the next largest AI app, while total AI time spent is 4x the next largest AI app and 4x all others combined. Search usage has nearly tripled in a year, and our ads pilot reached more than $100 million in ARR in under six weeks. These are not just growth milestones—they show that frontier AI is becoming part of everyday life for people around the world."
+  },
+  {
+    "title": "Anthropic: Anthropic raises $30 billion in Series G funding at $380 billion post-money valuation, Feb 12, 2026",
+    "url": "https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation",
+    "content": "It has been less than three years since Anthropic earned its first dollar in revenue. Today, our run-rate revenue is $14 billion, with this figure growing over 10x annually in each of those past three years.\n\nThis growth has been driven by our position as the intelligence platform of choice for enterprises and developers. The number of customers spending over $100,000 annually on Claude (as represented by run-rate revenue) has grown 7x in the past year. And businesses that start with Claude for a single use case—API, Claude Code, or Claude for Work—are expanding their integrations across their organizations. Two years ago, a dozen customers spent over $1 million with us on an annualized basis. Today that number exceeds 500. Eight of the Fortune 10 are now Claude customers.\n\nClaude Code represents a new era of agentic coding, fundamentally changing how teams build software. Claude Code was made available to the general public in May 2025. Today, Claude Code’s run-rate revenue has grown to over $2.5 billion; this figure has more than doubled since the beginning of 2026. The number of weekly active Claude Code users has also doubled since January 1. A recent [analysis](https://newsletter.semianalysis.com/p/claude-code-is-the-inflection-point) estimated that 4% of all GitHub public commits worldwide were being authored by Claude Code—double the percentage from just one month prior."
+  },
+  {
+    "title": "Reuters: Anthropic revenue run rate tops $65 billion, source says (Aug 17, 2026)",
+    "url": "https://www.reuters.com/technology/anthropic-revenue-run-rate-tops-65-billion-source-says-2026-08-17/",
+    "content": "Aug 17 (Reuters) - Anthropic's annual revenue run rate topped $65 billion by the end of July, a person familiar with ​the matter said on Monday, underscoring the Claude ‌creator's rapid growth ahead of a potential public listing later this year.\n\nThe AI startup's latest revenue run rate — a ​metric that projects annual performance by extrapolating ​current sales levels — was up from the $47 billion ⁠in May and an extraordinary jump from about $9 ​billion at the end of 2025."
+  },
+  {
+    "title": "Reuters: OpenAI's September annualized revenue nears $50 billion, less than previously indicated, source says (Oct 8, 2026)",
+    "url": "https://www.reuters.com/business/openais-annualized-revenue-20-billion-less-than-previously-signaled-ft-reports-2026-10-08/",
+    "content": "Oct 8 (Reuters) - OpenAI has told investors its annualized revenue for September was almost $50 billion, a drop ​from what it signaled earlier, a person familiar with the ‌matter told Reuters on Thursday.\n\nThe company previously indicated to investors at a separate event that its revenue run rate for last month was [approaching $70 billion](https://www.reuters.com/technology/openais-annual-recurring-revenue-nears-70-billion-axios-reports-2026-09-29/), Reuters and ​other media reported.\n\nThe discrepancy mainly arose from an attempt to ​produce a direct comparison with figures from rival Anthropic, the ⁠person said on condition of anonymity.\n\nOpenAI, unlike Anthropic, does not include, for instance, revenue from sales via cloud partners such as Amazon's [(AMZN.O), opens new tab](https://www.reuters.com/markets/companies/AMZN.O) AWS and Alphabet's [(GOOGL.O), opens new tab](https://www.reuters.com/markets/companies/GOOGL.O) Google Cloud.\n\nAnthropic pays cloud partners [about 16% of ​every dollar](https://www.reuters.com/world/anthropic-ipo-prospectus-lays-bare-deep-dependence-big-tech-partners-2026-09-29/) earned through them, which last year accounted for half ​of revenue, a Reuters analysis showed."
+  },
+  {
+    "title": "Reuters Breakingviews: Anthropic's turbo-growth is only half the AI story (May 27, 2026)",
+    "url": "https://www.reuters.com/commentary/breakingviews/anthropics-turbo-growth-is-only-half-ai-story-2026-05-27/",
+    "content": "Anthropic’s accounting may not be directly comparable. Industry definitions of run-rate revenue can be [slippery](https://www.reuters.com/commentary/breakingviews/anthropic-gives-lesson-ai-revenue-hallucination-2026-03-10/), and the company’s top line doesn’t adjust for a cut owed to distribution partners. Arch-rival OpenAI, by contrast, reports its figures net of revenue shared with its main partner, Microsoft [(MSFT.O), opens new tab](https://www.reuters.com/markets/companies/MSFT.O). Boss ​Sam Altman’s claim of $5.7 billion of first-quarter sales is therefore quite different from Amodei’s."
+  },
+  {
+    "title": "OpenRouter: LLM Rankings (usage data through Oct 8, 2026)",
+    "url": "https://openrouter.ai/rankings",
+    "content": "Usage data throughOct 8, 2026\n\n| Rank | Model | Author | tokens processed | Change |\n| --- | --- | --- | --- | --- |\n| 1 | DeepSeek V4.1 Flash | deepseek | 35.6T tokens | +51% |\n| 2 | Space Bunny Alpha | stealth | 22.8T tokens | -26% |\n| 3 | GLM 5.3 Flash | z-ai | 10.8T tokens | +7% |\n| 4 | MiMo-V2.6-Flash | xiaomi | 10.5T tokens | +13% |\n| 5 | Hy4 preview | tencent | 7.36T tokens | +8% |\n| 6 | GPT-6 Luna | openai | 6.57T tokens | +16% |\n| 7 | Nemotron 3 Ultra (free) | nvidia | 6.16T tokens | 0% |\n| 8 | DeepSeek V4 Flash 0731 | deepseek | 5.28T tokens | -23% |\n| 9 | Claude Opus 5.5 | anthropic | 3.83T tokens | +85% |\n| 10 | Jev 1.13 | typesafe | 3.31T tokens | +10% |"
+  },
+  {
+    "title": "OpenRouter: LLM Rankings, Benchmarks section (Artificial Analysis Intelligence Index)",
+    "url": "https://openrouter.ai/rankings",
+    "content": "Top models on OpenRouter by Artificial Analysis Intelligence Index\n\n[Claude Opus 5.5 (Max, Default Fallback)](https://openrouter.ai/anthropic/claude-opus-5.5)\n\nby [anthropic](https://openrouter.ai/anthropic)\n\n57.6\n\n[Claude Sonnet 5.5 (Max, Default Fallback)](https://openrouter.ai/anthropic/claude-sonnet-5.5)\n\nby [anthropic](https://openrouter.ai/anthropic)\n\n56.0\n\n[Claude Fable 5.1 (Max, Default Fallback)](https://openrouter.ai/anthropic/claude-fable-5.1)\n\nby [anthropic](https://openrouter.ai/anthropic)\n\n53.4"
+  },
+  {
+    "title": "SemiAnalysis: Anthropic Subscriptions Offer 5x+ More Value Than OpenAI (Oct 05, 2026)",
+    "url": "https://newsletter.semianalysis.com/p/anthropic-subscriptions-offer-5x",
+    "content": "Oct 05, 2026\n\nLimits are quite similar across the board for GPT-6 Astra vs Fable 5.1, though remember that Fable can only be used for 50% of your limit. In other words, your $200 ANT plan would still have 50% left after consuming $2,485 worth of Fable 5.1, whereas the equivalent OAI plan would be fully exhausted after $2,897 of Astra.\n\nAt this mid-tier of models—which both companies market as the intended daily driver for most users—Anthropic is an overwhelmingly better deal, offering ~5x the API-equivalent value across the board. You could argue that this is unfair for OAI because 6.1 Sol is much cheaper per token than Opus 5.5, but the gap is still massive even if you switch to comparing the number of tokens."
+  }
+]

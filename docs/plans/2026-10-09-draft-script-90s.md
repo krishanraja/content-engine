@@ -1,4 +1,4 @@
-Claude now gives you fourteen versions of itself to choose from. That's twice as many as there are Harry Potter books. And the longer that menu gets, the less you actually get to choose. So why are there suddenly so many AIs?
+Claude Code now lets you pick from more versions of Claude than there are Harry Potter books. More than a dozen. And the longer that menu gets, the less you actually get to choose. So why are there suddenly so many AIs?
 
 Because every name on that menu is doing four jobs at once. It's a version number. It's a price tag, like economy and business class. It's an advert, because every new name is a launch day. And it's a queue ticket, sending easy questions to cheap computers.
 
