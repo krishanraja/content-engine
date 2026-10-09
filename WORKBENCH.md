@@ -131,6 +131,19 @@ session").
 
 ## Latest handoff
 
+- 2026-10-09, afternoon: **Friday's piece now lives in a live workroom:**
+  https://claude.ai/artifact/MmaKvtHTHUYbSY9JEiCBAn (private to Krish). Four
+  rooms: Decide (seven decisions as tappable cards with Claude's pick, level
+  and cost; picks save to the page's database), Article (the draft with the
+  engine's checks and a change log; a Note on any paragraph opens a comment
+  that can be sent to Claude), Script (one card per beat, timed at his pace
+  against a 90-second target, with joke options), Mocks (cover with his face,
+  the two receipts, the nerf timeline, the ladder, the subsidy bars, the
+  carousel and the storyboard). Content is in the page's database
+  (`piece/meta`, `piece/body`, `piece/script`, `piece/mocks`, `decisions/*`),
+  so a session updates it with ArtifactData and the page refreshes itself;
+  his picks are read back from `decisions/*`. This session watches it for
+  comments sent to Claude. **Waiting on Krish:** his picks in the Decide room.
 - 2026-10-09, later: **Friday's piece is drafted along the recommended lane,
   with the full creative menu and costs for Krish to choose from.**
   `docs/plans/2026-10-09-who-picks-your-ai-creative.md` is the menu (six
