@@ -155,6 +155,109 @@ worse answers, and the visible move to Opus 4.8 was the fix. And the April
 problems were in Claude Code, the Agent SDK and Cowork; Anthropic says the
 API was not affected.
 
+## Taking the engine up a level on this post
+
+Krish, 2026-10-09: screenshots that pile on to show how fast the news is
+moving, YouTube mined for clues, Reddit mined for what people feel, scripts
+with more personality and opinion (dry wit, self-deprecation, sarcasm,
+exaggeration, analogy), and post-production made ten times richer with the
+tools he now pays for. The full bank of what each tool could add is
+`docs/TOOL_BANK.md`. What this post uses:
+
+### The news wall (velocity, as a picture and a video beat)
+
+The SemiAnalysis report landed on 5 October and by the 8th it was on Dataconomy,
+The Register, implicator, Gate, KuCoin, X and the Instagram post Krish sent.
+That spread is the story's proof that it matters.
+
+- Article: one picture, "72 hours of one number": the headlines as a pile of
+  cards, each with the outlet's name and the hour it posted, the pile
+  getting taller left to right. Built from an Apify Google News pull (A5)
+  plus the Instagram post he sent. We reproduce headline, outlet and time
+  only, never an outlet's artwork or body text.
+- Video: while he says "and then everyone piled on", the cards drop in one
+  after another over three seconds, with the Instagram screenshot last
+  (a quick-edit graphic by anchor word). A screenshot of a public post,
+  shown briefly with the account name visible, as commentary, is the same
+  thing every news channel does on air; we keep each on screen under four
+  seconds and never crop the source off.
+- Rule for the bank: a pile-on beat needs three or more outlets inside 72
+  hours, or it is not velocity, it is one article.
+
+### Reddit as the room (A1, A2)
+
+Before the rewrite: 300 posts and comments from r/ClaudeAI, r/ChatGPT and
+r/OpenAI, last 14 days, searched for "limits", "plan", "$20", "worse",
+"dumber". Three uses: the writer learns what people actually feel about
+limits (the catch in section 3 should sound like them); up to three lines
+quoted word for word with the date and no username; and the judges get a
+one-line "what the room says" beside the angle. Cost about $1. Needs
+Krish's yes because it spends.
+
+### YouTube as a clue mine (A3)
+
+Twenty transcripts of this week's "Claude vs ChatGPT plan" videos, about
+20 cents. We want: the claim every video repeats (we skip it or say "you
+have heard this"), the one thing nobody says (the subsidy, if so, is our
+edge), and the title and thumbnail pattern that got views, for the
+`package` step. One page of findings in the post folder.
+
+### The script gets a personality
+
+Today the rules make a script clear, sayable, one story, reading age 12,
+"real humour". They do not ask for opinion, and the two launch scripts read
+like a careful article said aloud. Proposed house rule for Krish's yes,
+`VOICE_ON_CAMERA`: the article states the facts; the script is Krish
+reacting to them. Each script carries, somewhere in it:
+
+- one dry, self-deprecating line about himself or this publication ("this
+  whole publication is made with Claude, so take the next minute with a
+  pinch of salt");
+- one sarcastic line aimed at the hype, never at the reader or a named
+  person ("'the wrong tradeoff'. Twice in one year. At some point it is just
+  the tradeoff");
+- one exaggeration labelled as one by its size ("your $20 buys you a
+  professor to tell you what day it is");
+- one analogy a 12-year-old would get (the ice cream counter, the receipt);
+- one opinion said as opinion ("my bet", "I think"), kept apart from the
+  checked facts so the fact gate and the reader both know which is which.
+
+The story check gains a sixth point: the script has at least three of the
+five above, and no joke sits inside a sentence the fact gate holds. The
+jokes are Krish's to cut, and the writer offers two options for each.
+
+For Friday, the script is written that way, then a scratch voiceover of it
+in a stock voice (ElevenLabs through n8n, N3) so he hears the rhythm before
+he records. He can also dictate the opening in Wispr Flow (W2) and the
+writer builds around his phrasing.
+
+### Post-production, ten times richer, in order of what it adds
+
+1. The receipt and the news wall as graphics in quick-edit (done by the page
+   tool, no new tool).
+2. Sound: the receipt tearing, the till, a 20-second bed under the open and
+   the outro, from Runway (R1). Krish's voice stays the only voice.
+3. The plan slider recorded as a 4-second screen capture for the "only true
+   in the middle" beat.
+4. One generated clip, 4 seconds, for the ice cream counter beat (H2), shown
+   to Krish before it is cut in; if it reads as slop it goes.
+5. Real logos from Brandfetch on every graphic (B1), the companies' own
+   colours on the receipt (B2).
+6. The cover, the 1200 x 630 preview and the five-card carousel from one
+   Canva brand template (C1), every export through the edge and phone checks.
+7. The finished tall cut through Higgsfield's predictor as a judge (H1); its
+   score logged against the 7-day result.
+8. The video's title and thumbnail chosen with the YouTube findings (A3).
+
+Everything above that generates or scrapes spends; the plan asks for one yes
+covering the lot, with the ceiling named: about $5 of Apify, the tools'
+subscription credits for one clip, three sounds and one prediction.
+
+### Tools for this post
+
+A1, A2, A3, A5, B1, B2, C1, D1, N3 (E1), H1, H2, R1, W2. After the post ships,
+`docs/TOOL_BANK.md` records what each added, and its status moves.
+
 ## Order of work
 
 Thursday (today), once Krish says yes:
@@ -181,6 +284,8 @@ Friday:
 
 ## What Krish decides
 
+0. **The tools for this post and their ceiling** (above), and the
+   `VOICE_ON_CAMERA` rule for scripts.
 1. **The angle.** Rebuild around "Same $20, five times the AI" as above
    (recommended), or keep the approved text and add the three questions
    only. The rebuild changes the body, so the approved text no longer

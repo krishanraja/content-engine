@@ -142,6 +142,13 @@ session").
   stays at 75%. **Waiting on Krish:** the angle, the title, and a cap for one
   paid fact check. This session had no engine key, so the board was not read
   or updated; the next session with the key should add the plan to the board.
+  Then, on Krish's ask to take the engine up a level: `docs/TOOL_BANK.md`
+  holds every way each paid tool could add to the engine, with a status that
+  moves only on evidence, and the plan has a "Taking the engine up a level"
+  section: the news wall for velocity, Reddit as the room, YouTube as a clue
+  mine, a proposed `VOICE_ON_CAMERA` rule for scripts with opinion and dry
+  wit, and an eight-step post-production list. **Waiting on Krish:** one yes
+  for the tools and their ceiling, and the script rule.
 - 2026-10-07, night: **ready for tomorrow's Friday planning.** Engine live at
   `main` (`16e40b4`), health ready. Friday 9 October is mind.the.gap piece 2
   (`904658db`, approved, draft of 2026-09-25): fold in the model-names
