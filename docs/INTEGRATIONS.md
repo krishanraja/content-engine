@@ -13,7 +13,7 @@ is wired and whether it is live.
 
 On 2026-10-09 several live keys were pasted into the chat, including three
 account-level master keys (Supabase, Vercel, GitHub), an X API bearer, Exa,
-Brave and a Hacker News value. A chat transcript is not a secret store. Treat
+Brave, a Hacker News value and, later the same day, a Google (Gemini) key. A chat transcript is not a secret store. Treat
 every one of them as exposed and rotate it:
 
 - **Rotate all of them** at the provider, then put the new values only into the
@@ -76,7 +76,7 @@ MCP connector in a session, no engine secret).
 | Exa (search like a page) | `api/_enrich.ts` (`webResearch`, the fallback behind Perplexity, already live) and `scripts/signals/collect.py exa` | `EXA_API_KEY` | **placed in content-engine Vercel env, 2026-10-09; ROTATE** (was exposed in chat) |
 | Brave Search (second fact check) | `api/_enrich.ts` (`webResearch`, already live) and `scripts/signals/collect.py brave` | `BRAVE_API_KEY` | **placed in Vercel env, 2026-10-09; ROTATE** |
 | X / Twitter API | `api/_signals.ts` `xRecentSearch` and `scripts/signals/collect.py x` | `X_BEARER_TOKEN` | **placed in Vercel env, 2026-10-09 (stored URL-decoded); ROTATE** |
-| Gemini video understanding | `scripts/signals/video.py` (one Flash call per video, a shot list and the one change that would hold attention) | `GEMINI_API_KEY` | **built; needs key** (not among the keys handed over) |
+| Gemini video understanding | `scripts/signals/video.py` (one Flash call per video, a shot list and the one change that would hold attention) | `GEMINI_API_KEY` | **placed in content-engine Vercel env 2026-10-09 and proven** (gemini-2.5-flash answered a test call); ROTATE, it was pasted in chat |
 | ElevenLabs | the `mcp__ElevenLabs__*` connector (restricted: speech and transcription) | none for the connector; `ELEVENLABS_API_KEY` for the engine | **connector, live**; engine key to place for a cron voiceover |
 | YouTube (reads, uploads) | the cloud account's own connector / OAuth on `krish@mindmake.co` | none | **connector, via the account** |
 | Apify (scrapers) | the `mcp__Apify__*` connector, or `APIFY_TOKEN` at runtime | `APIFY_TOKEN` | **connector, live**; runtime key already in use |
@@ -92,7 +92,7 @@ Built on 2026-10-09 (`docs/ENGINE_100X.md`, "What is live right now"):
 3. **Gemini video reader**: `scripts/signals/video.py`, one cheap call per video. Needs `GEMINI_API_KEY` in the environment it runs in.
 4. **Exa, Brave, X**: Exa and Brave were already read by `api/_enrich.ts`; X has a reader in `api/_signals.ts`. All three are also in `scripts/signals/collect.py` for a session or a runner, where the key must be in that environment.
 
-What still waits on Krish: rotating the four exposed keys; a `GEMINI_API_KEY`; the same four names on a runner machine if a session there needs them.
+What still waits on Krish: rotating the five exposed keys (Exa, Brave, X, Hacker News, Gemini); the same names on a runner machine if a session there needs them.
 
 No new secret is placed, and no key is used, until Krish rotates it and says
 yes to that action.

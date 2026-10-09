@@ -82,28 +82,35 @@ def _pm_prob(market):
     return None
 
 
+def _pm_row(m, event_title=None):
+    return {
+        "source": "polymarket",
+        "question": m.get("question") or event_title,
+        "slug": m.get("slug"),
+        "probability": _pm_prob(m),
+        "volume_usd": _num(m.get("volume")),
+        "liquidity_usd": _num(m.get("liquidity")),
+        "end_date": m.get("endDate"),
+    }
+
+
 def polymarket(search=None, slug=None, limit=6):
-    base = "https://gamma-api.polymarket.com/markets"
+    """One market by slug, or a search. The `/markets` endpoint ignores a
+    search term (it hands back sports spreads for "OpenAI"), so a search goes
+    through `/public-search`, which returns events with their markets."""
     if slug:
-        url = f"{base}?slug={urllib.parse.quote(slug)}"
-    else:
-        # Open markets, searched, highest volume first.
-        q = urllib.parse.urlencode(
-            {"closed": "false", "limit": str(limit), "order": "volume",
-             "ascending": "false", "search": search or ""})
-        url = f"{base}?{q}"
-    rows = _get(url)
+        rows = _get(f"https://gamma-api.polymarket.com/markets?slug={urllib.parse.quote(slug)}")
+        return [_pm_row(m) for m in rows] if isinstance(rows, list) else []
+    q = urllib.parse.urlencode({"q": search or "", "limit_per_type": str(limit)})
+    j = _get(f"https://gamma-api.polymarket.com/public-search?{q}")
     out = []
-    for m in rows if isinstance(rows, list) else []:
-        out.append({
-            "source": "polymarket",
-            "question": m.get("question"),
-            "slug": m.get("slug"),
-            "probability": _pm_prob(m),
-            "volume_usd": _num(m.get("volume")),
-            "liquidity_usd": _num(m.get("liquidity")),
-            "end_date": m.get("endDate"),
-        })
+    for event in j.get("events") or []:
+        for m in event.get("markets") or []:
+            if m.get("closed") is True:
+                continue
+            out.append(_pm_row(m, event.get("title")))
+            if len(out) >= limit:
+                return out
     return out
 
 

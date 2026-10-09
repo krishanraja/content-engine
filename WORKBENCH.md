@@ -131,6 +131,21 @@ session").
 
 ## Latest handoff
 
+- 2026-10-09, later: **Friday's piece is drafted along the recommended lane,
+  with the full creative menu and costs for Krish to choose from.**
+  `docs/plans/2026-10-09-who-picks-your-ai-creative.md` is the menu (six
+  angles, seven titles, seven cold opens, seven visuals, six video shapes,
+  the personality options, the Call and its market, distribution stunts, and
+  four cost levels from $0 to a day of filming). `2026-10-09-draft-body.md`
+  and `2026-10-09-draft-script.md` are the drafts: the body passes every
+  mechanical publish check except the fact gate, which needs the engine key
+  and his cap; the script passes the story check at about 100 seconds. The
+  SemiAnalysis article's own open text is now on hand through Firecrawl, so
+  the piece quotes it word for word; the $20-plan dollar figures are behind
+  its paywall and are not used. Gemini is placed and proven. Polymarket's
+  search endpoint was wrong in the engine and is fixed; no market matches the
+  Call, so the menu offers a Manifold market. **Waiting on Krish:** the five
+  decisions at the end of the menu, then the paid fact check, record, pack.
 - 2026-10-09, night: **the engine is wired for the 100x world and merged to
   `main`.** On Krish's "prepare and harden the entire engine as though all of
   this exists permanently": the scoreboard that keeps score is built (pin a
