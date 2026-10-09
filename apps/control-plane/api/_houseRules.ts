@@ -243,6 +243,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['judge_draft', 'write', 'final_pass'],
   },
   {
+    id: 'BIG_PICTURE', name: 'The big picture, never the small headline',
+    text: 'Every piece is about the big, lasting shift, never one small, temporary news headline. A headline of the week (a report, a price change, a launch) is evidence inside the bigger story, one section at most, and never the story itself. Before choosing an angle or a title, name the bigger pattern it belongs to and lead with that; if a draft would be out of date in a month, it is about the headline and must be reframed.',
+    said: 'I think the story is bigger - it\'s story I asked for about why there are so many models now, and what that actually means. ... The $20/5X the AI is a sub story within that bigger story. We need to always focus on the bigger picture, never the one small picture temporary news headline - make sure you ALWAYS remember this',
+    on: '2026-10-09', source: 'the Friday workroom, his own words on the angle card', status: 'live',
+    stages: ['judge_idea', 'judge_draft', 'write', 'final_pass'],
+  },
+  {
     id: 'VOICE_ON_CAMERA', name: 'The script is Krish reacting, with opinion and dry wit',
     text: 'The article states the facts. A video script is Krish reacting to them, in his own voice, with opinion and humour. A script of a minute or more carries at least three of these five: one dry, self-deprecating line about himself or this publication (it is made with Claude, say so); one sarcastic line aimed at the hype, never at the reader or a named person; one exaggeration made obvious by its size; one analogy a twelve-year-old would get; and one opinion said as opinion ("my bet", "I think", "my call"), kept apart from the checked facts so the listener and the fact gate both know which is which. A joke never sits inside a sentence the fact gate holds and never replaces the finding. Offer two options for each joke; cutting them is Krish\'s.',
     said: 'What about making my scripts for video have more personality and opinion, not in a factual way? More humor? Self deprecating dry wit, sarcasm, exaggeration, analogy? Then, of the proposed rule: do all the things you suggested.',

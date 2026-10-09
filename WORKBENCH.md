@@ -30,6 +30,13 @@ Last updated: 2026-10-08, by a Claude Code session (cloud).
   things as boring as this towards things that are more fasincating and
   aspirational, like AI content creation for example". The engine's judges and
   channel briefs do not know this yet (see Latest handoff).
+- **Always the big picture, never the small headline.** His words,
+  2026-10-09, on the Friday workroom: "We need to always focus on the bigger
+  picture, never the one small picture temporary news headline - make sure you
+  ALWAYS remember this". A week's headline is evidence inside the bigger
+  story, never the story (house rule `BIG_PICTURE`). The session that broke
+  it built a whole piece around one report about AI plan value when he had
+  asked for "why there are so many models now, and what that actually means".
 - Every piece, its video and its posts answer three questions: what it means
   for the consumer, what it means for someone starting or building a
   business, and how the old way is changing, creatively and in who gets paid

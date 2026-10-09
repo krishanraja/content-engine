@@ -337,3 +337,13 @@ describe('the script is Krish reacting, with opinion and dry wit (VOICE_ON_CAMER
     assert.match(video.SCRIPT_STORY, /6\. It sounds like Krish, with opinion \(VOICE_ON_CAMERA\)/)
   })
 })
+
+describe('the big picture, never the small headline (BIG_PICTURE, 2026-10-09)', () => {
+  test('the rule is live and reaches idea judging, draft judging, the writers and the final pass', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'BIG_PICTURE')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    for (const stage of ['judge_idea', 'judge_draft', 'write', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.match(r.said, /ALWAYS remember this/)
+  })
+})
