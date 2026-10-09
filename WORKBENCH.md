@@ -131,6 +131,19 @@ session").
 
 ## Latest handoff
 
+- 2026-10-09, later: **the outside tools are wired and the 100x plan is
+  written.** `scripts/signals/collect.py` reads four free public sources
+  (prediction-market odds, GDELT news velocity, Hacker News, SEC), tested
+  live. Exa, Brave, the X API and the Hacker News value are placed in the
+  content-engine Vercel env (`EXA_API_KEY`, `BRAVE_API_KEY`, `X_BEARER_TOKEN`,
+  `HN_ALGOLIA_KEY`); **they were exposed in chat and must be rotated**
+  (`docs/INTEGRATIONS.md`). `docs/ENGINE_100X.md` is the standing plan: every
+  tool, every plausible use, and the combinations that are actually 100x (the
+  scoreboard that keeps score against the market, the pile-on proven from
+  GDELT, the fact gate with three checkers). Everything merged to `main` on
+  Krish's command. **Next to build:** the scoreboard-odds feature (keyless),
+  a cheap Gemini video reader, then the Exa/Brave/X readers.
+
 - 2026-10-08: **Friday's piece is planned, waiting on Krish's yes.** Plan:
   `docs/plans/2026-10-09-who-picks-your-ai.md`. Piece 2 is rebuilt around the
   SemiAnalysis report of 5 October behind the screenshot Krish sent ("Same

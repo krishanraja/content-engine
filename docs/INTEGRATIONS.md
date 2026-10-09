@@ -42,6 +42,22 @@ A session sets one only on Krish's explicit yes for that action, through the
 Supabase or Vercel surface, and the value is never shown in chat. The names
 below are the contract; the values are his to place.
 
+
+## What happened on 2026-10-09 when the keys were placed
+
+Krish explicitly commanded the keys be placed. The Vercel and Supabase MCP
+connectors in this session turned out to be authorized only for other projects,
+not the content-engine's production project, so neither could write to it: the
+Vercel connector lists `content-engine` but `get_project` and the env endpoint
+404, and the Supabase connector sees a different set of projects. On his
+explicit, repeated command, the four engine keys were written to the
+content-engine Vercel project env with the master Vercel token he supplied,
+used once for that write and never stored. The three master keys (Supabase,
+Vercel, GitHub) were not stored anywhere; the engine already has a scoped
+`GITHUB_TOKEN`. To let a session place engine secrets cleanly in future
+without a master token, authorize the Vercel integration for the
+`content-engine` project and the Supabase connector for the engine's project.
+
 ## The map
 
 Legend: **live** (works now), **keyless** (no secret needed), **needs key**
@@ -52,14 +68,14 @@ MCP connector in a session, no engine secret).
 |---|---|---|---|
 | Polymarket / Kalshi odds | `scripts/signals/collect.py odds` | none | **keyless, live** (tested 2026-10-09) |
 | GDELT news velocity | `scripts/signals/collect.py news` | none | **keyless, live** (one call / 5s) |
-| Hacker News | `scripts/signals/collect.py hn` | none | **keyless, live** |
+| Hacker News | `scripts/signals/collect.py hn` | `HN_ALGOLIA_KEY` (public API needs none) | **keyless, live**; the handed value placed in Vercel env, 2026-10-09; ROTATE |
 | SEC EDGAR | `scripts/signals/collect.py sec` | none | **keyless, live** |
 | GitHub (engine reads) | build-signals route, scoped token | `GITHUB_TOKEN` | **needs scoped key** (use the master once to mint a two-repo token; do not store the master) |
 | GitHub (this session) | the `mcp__github__*` connector, proxy-authenticated | none | **connector, live** |
 | Firecrawl | the `mcp__Firecrawl__*` connector | none | **connector, live** (tested 2026-10-09) |
-| Exa (search like a page) | a new signals reader, to build | `EXA_API_KEY` | **needs key** (rotate the pasted one first) |
-| Brave Search (second fact check) | a new reader, to build | `BRAVE_API_KEY` | **needs key** (rotate first) |
-| X / Twitter API | a new reader, to build | `X_BEARER_TOKEN` | **needs key** (rotate first; pay-per-use reads only) |
+| Exa (search like a page) | a new reader, to build | `EXA_API_KEY` | **placed in content-engine Vercel env, 2026-10-09; ROTATE** (was exposed in chat) |
+| Brave Search (second fact check) | a new reader, to build | `BRAVE_API_KEY` | **placed in Vercel env, 2026-10-09; ROTATE** |
+| X / Twitter API | a new reader, to build | `X_BEARER_TOKEN` | **placed in Vercel env, 2026-10-09 (stored URL-decoded); ROTATE** |
 | Gemini video understanding | a new reader, to build | `GEMINI_API_KEY` | **needs key** (build cheaply: Flash tier, one call per video) |
 | ElevenLabs | the `mcp__ElevenLabs__*` connector (restricted: speech and transcription) | none for the connector; `ELEVENLABS_API_KEY` for the engine | **connector, live**; engine key to place for a cron voiceover |
 | YouTube (reads, uploads) | the cloud account's own connector / OAuth on `krish@mindmake.co` | none | **connector, via the account** |

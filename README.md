@@ -30,6 +30,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | write a one-off script for the main channel, outside the three subchannels | `docs/one-offs/README.md` |
 | use an outside tool on a post, or record what one added | `docs/TOOL_BANK.md` |
 | reach a service (which are live, their secret names, what to rotate) | `docs/INTEGRATIONS.md` |
+| see every plausible way a tool could make the content far better | `docs/ENGINE_100X.md` |
 | read a free public signal: prediction-market odds, news velocity, Hacker News, SEC filings | `scripts/signals/README.md` |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |
 
