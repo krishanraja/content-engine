@@ -110,12 +110,24 @@ export async function polymarketBySlug(slug: string): Promise<MarketOdds | null>
   return m ? polymarketRow(m) : null
 }
 
-/** A rough finder: Polymarket's search is loose and can return unrelated
- *  markets, so a real Call is pinned by slug, never by search. */
+/** A finder: Polymarket's `/markets` endpoint ignores a search term (it hands
+ *  back sports spreads for "OpenAI"), so this reads `/public-search`, which
+ *  returns events with their markets. Still a finder, never a pin: a real
+ *  Call is pinned by slug after a person has read the market's question. */
 export async function polymarketSearch(query: string, limit = 6): Promise<MarketOdds[]> {
-  const q = new URLSearchParams({ closed: 'false', limit: String(limit), order: 'volume', ascending: 'false', search: query })
-  const rows = await getJson(`https://gamma-api.polymarket.com/markets?${q}`)
-  return (Array.isArray(rows) ? rows : []).map(polymarketRow)
+  const q = new URLSearchParams({ q: query, limit_per_type: String(limit) })
+  const j = await getJson(`https://gamma-api.polymarket.com/public-search?${q}`)
+  const out: MarketOdds[] = []
+  for (const event of Array.isArray(j?.events) ? j.events : []) {
+    for (const m of Array.isArray(event?.markets) ? event.markets : []) {
+      if (m?.closed === true) continue
+      const row = polymarketRow(m)
+      if (!row.question) row.question = event?.title ? String(event.title) : null
+      out.push(row)
+      if (out.length >= limit) return out
+    }
+  }
+  return out
 }
 
 /** Kalshi quotes in cents. The midpoint of the yes bid and ask when both are
