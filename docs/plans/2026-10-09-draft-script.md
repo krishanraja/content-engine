@@ -1,75 +1,21 @@
-# Friday 9 October: the video script (the big story)
+Claude now gives you fourteen versions of itself to choose from. Fourteen. That's twice as many as there are Harry Potter books. And the longer that menu gets, the less you actually get to choose. So why are there suddenly so many AIs, and who is all this choice really for?
 
-Target: about three minutes at Krish's pace; a 90-second cut keeps beats 1, 4, 5, 7, 10 and 11. Passes story_check.py.
+Claude and ChatGPT are the shop. Behind the counter sit lots of AI brains. They come in small, medium and large. Each one has a version number. And each one has a dial for how hard it thinks before it answers.
 
-## Beat 1
+The sizes don't stay put either. In 2024, Anthropic's new medium brain beat its old large one, three months after launch. So "the big one" just means the big one this season. And the seasons keep getting shorter.
 
-**On screen:** To camera, holding a coffee cup. Logo pill: Claude and ChatGPT for three seconds.
+So why so many? Because every name on that menu is doing four jobs at once. It's a version number, like iPhone 15 and 16. It's a price tag, like economy and business class. It's an advert, because every new name is a launch day. And it's a queue ticket, sending easy questions to cheap computers. One name can't do four jobs. So the menu keeps growing.
 
-Why are there suddenly so many AIs? Open Claude and it's Opus, Sonnet, Haiku, Fable, a version number, and a dial for how hard it thinks. I just wanted a coffee, and they handed me a bean menu.
+Is it a scam to charge you more? The prices say no. The cost of AI as good as the first ChatGPT fell from twenty dollars to seven cents for a million tokens, and a token is just a chunk of a word. But the bills still go up, because AI agents now work for hours at a time. Data got cheaper per gigabyte, and your phone bill still didn't shrink. Same trick.
 
-*Joke option:* I asked for a coffee. They gave me a spreadsheet.
+OpenAI tried scrapping the menu in 2025. One brain that switched itself. It broke on day one, people begged for their old brains back, and they got them within the week. Turns out we hate choosing, and we hate being chosen for even more.
 
-## Beat 2
+Here's the real catch. Most apps don't tell you which brain answered, how hard it thought, or how much of your allowance it ate. It's a taxi with no meter. The route might be fine. You just can't check. And yes, I made this with Claude's help. So I'm the passenger moaning about the taxi while still sitting in it.
 
-**On screen:** On screen: the decoder. One name splits into six labels: app, size, version, effort, speed, plan.
+What do you do with that? If you just use AI, stick to the default, and switch to the biggest brain when it really matters. If you run a business on AI, ask what a good answer costs you all in, and lock the exact version you build on. And the old idea of one product at one price is going. AI is turning into electricity, paid for by the size and the effort.
 
-Here's what you're looking at. Claude and ChatGPT are the shop. Behind the counter sit lots of brains, in small, medium and large, each with a version number and a thinking dial. Claude Code alone lists fourteen of them.
+Where does it go from here? Maybe the menu vanishes and the app picks for you. Maybe you pay for thinking time, like first-class post. Or maybe someone wins by being honest and labels every answer. My bet is the first one, and I'd put the honest one last. Most of us want one button. And whoever picks the brain controls what every answer costs them. Nobody hands that over to be polite.
 
-## Beat 3
+So here's my prediction. By the end of September 2027, at least two of OpenAI, Anthropic and Google will pick the brain for app builders automatically, by default. I'm eighty-five per cent sure, and we'll mark it right or wrong in public.
 
-**On screen:** On screen: the conveyor belt. Sizes slide along; the 2024 large drops off the end.
-
-And the sizes keep sliding. In 2024 Anthropic's new medium beat its old large three months after launch. So 'the big one' just means the big one this season. And the seasons are getting shorter.
-
-## Beat 4
-
-**On screen:** To camera. On screen: four cards flip in: version, price tag, advert, queue ticket.
-
-So why so many? My read: the name is doing four jobs at once. It's a version number. It's a price tag, like economy and business class. It's an advert, because every new name is a launch day. And it's a queue ticket, sending easy questions to cheap computers. One name can't do four jobs. So the menu grows.
-
-*Joke option:* One name, four jobs. It's the most overworked word in tech, and I say that as a man who calls everything 'interesting'.
-
-## Beat 5
-
-**On screen:** On screen: the price line falls from $20 to 7 cents; the bill bar beside it climbs.
-
-And no, it's not a con to raise prices. Prices crashed. Stanford found AI as good as the first ChatGPT went from twenty dollars to seven cents per million tokens, and a token is just a chunk of a word. But bills still go up, because AI agents now work for hours. Cheaper per gigabyte, bigger phone bill. Same trick.
-
-## Beat 6
-
-**On screen:** On screen: 7 August 2025, the GPT-5 menu collapsing, then reappearing.
-
-OpenAI tried scrapping the menu in 2025. One auto-switching brain. It broke on day one, people wanted their old brains back, and they came back within the week. Turns out we hate choosing, and hate even more being chosen for.
-
-## Beat 7
-
-**On screen:** To camera. On screen: a taxi with no meter.
-
-So here's the real catch. Most apps don't show you which brain answered, how hard it thought, or how much of your allowance it ate. It's a taxi with no meter. The route might be fine. You just can't check. And yes, this publication is made with Claude. So I'm the passenger complaining about the taxi while sitting in it.
-
-*Joke option:* Full disclosure: Claude helped me write this. It did not pick the brain. I checked.
-
-## Beat 8
-
-**On screen:** On screen: three cards: You, Your business, The old way.
-
-What it means. For you: use the default, and switch to the big brain when it really matters. For your business: ask what a good answer costs all in, and pin the exact version you run on. And the old way, one product, one price, is turning into electricity: paid by size and effort.
-
-## Beat 9
-
-**On screen:** On screen: the fork. Autopilot, Meter, Glass Box. A pin drops on Autopilot.
-
-Where it goes: one, the menu vanishes and the app picks for you. Two, you pay for thinking time, like first-class post. Three, someone wins on honesty and labels every answer. My bet is the first, and I'd put the honest one last. Most of us want one button. And whoever picks the brain controls what every answer costs them. Nobody hands that over to be polite.
-
-## Beat 10
-
-**On screen:** On screen: the call card. 30 September 2027, 75%.
-
-So, my call. By the end of September 2027, at least two of OpenAI, Anthropic and Google will pick the brain for app builders automatically, by default. Eighty-five per cent sure. We'll mark it right or wrong in public.
-
-## Beat 11
-
-**On screen:** To camera, outro. End card: mind.the.gap.
-
-That's why the AI menu got so long, and who it's really for. The full piece, with every source, is at makeyourmindup.ai. I'm Krish. Pick your brain wisely.
+That's the short version. The full article has the rest: every source, the charts, and exactly what to do if your business runs on AI. It's free at makeyourmindup.ai. Read it, then tell me in the comments: do you pick your AI, or does it pick you? I'm Krish. See you on Monday.

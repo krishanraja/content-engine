@@ -44,6 +44,7 @@ makeyourmindup\
   3 Posts\
     2026-10-05 Mon follow.the.money - Who gets paid\
       READ ME.txt               what every file is for and where it goes
+      0 Publish\                publish.html: start here, every channel in order with Copy buttons (docs/AMPLIFICATION.md)
       1 Article\                substack-copy.html (paste into Substack), web-page.html, text-that-passed-the-fact-check.md, email-pictures-off.html
       2 Covers and images\      substack-cover-3x2.png, the pictures in the post, share cards
       3 Video\                  the script, the YouTube and Substack words, the finished videos named by the archive rule
@@ -101,6 +102,7 @@ first post's facts.
 
 | `kind` | Goes to | Named | What it is |
 |---|---|---|---|
+| `publish-kit` | 0 Publish | `publish.html` | `publish_kit.py`'s page: every channel in order, the file for each, and Copy buttons (docs/AMPLIFICATION.md) |
 | `substack-copy` | 1 Article | `substack-copy.html` | `scripts/pages`' `substack.html`: open it, press the Copy buttons, paste into Substack |
 | `web-page` | 1 Article | `web-page.html` | `scripts/pages`' `page.html` |
 | `fact-checked-text` | 1 Article | `text-that-passed-the-fact-check.md` | the body whose fact check passed (or `"text"`) |
@@ -135,12 +137,26 @@ cuts through.
     python scripts/post-pack/edge_check.py IMAGE [IMAGE ...]
     python scripts/post-pack/edge_check.py --self-test
 
+## The publish page
+
+Krish, 2026-10-09: "Build a durable amplification strategy that looks cohesive
+and is really easy for me to take from Drive to Publish." The plan is
+`docs/AMPLIFICATION.md`: one Substack Video post (the long cut on top, the
+article under it), then YouTube, LinkedIn, Shorts, Reels, WhatsApp and Notes
+with the vertical cut of at most 90 seconds. `publish_kit.py publish.json --out DIR`
+writes `publish.html` for one post; pack it as `publish-kit`.
+
+    python scripts/post-pack/publish_kit.py WORKDIR/publish.json --out DIR
+    python scripts/post-pack/publish_kit.py --self-test
+
 ## The story check
 
 A `video-script` is packed only if it passes `story_check.py` (Krish,
 2026-10-06, walk log F75: "they need to actually make sense to humans", then
 "happy with that idea" of the five-point story check). It refuses a script
-that does not open on a question, one of a minute or more with no spoken
+that holds anything but the words Krish says (stage directions, labels,
+timings, headings, joke options: house rule SCRIPT_ONLY), one whose outro
+never sends people to the article (HOOK_AND_CTA), one that does not open on a question, one of a minute or more with no spoken
 outro after the call (so it never ends on the number), one that speaks an
 article heading or a REAL or THEATRE stamp aloud, and one with lines still
 marked NOT YET FACT-CHECKED. Run it on any script before sending it to Krish:

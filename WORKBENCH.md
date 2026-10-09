@@ -138,6 +138,31 @@ session").
 
 ## Latest handoff
 
+- 2026-10-09, night: **Scripts are only scripts, and every post now has one
+  publish page.** Two new house rules: SCRIPT_ONLY (Krish: "make sure my video
+  scripts are literally just scripts without all the excess internal monologue
+  commentary (forever)") and HOOK_AND_CTA (open on the most provocative true
+  thing; close by sending people to the free article at makeyourmindup.ai).
+  `story_check.py` now refuses a script with stage directions, labels,
+  timings, headings or joke options, or with an outro that never mentions the
+  article; the video writer (`_video.ts`) keeps "say" to spoken words and puts
+  joke options in "notes". The amplification plan is `docs/AMPLIFICATION.md`:
+  one Substack **Video** post (long cut on top, article under it; Substack
+  uploads it to YouTube privately), then YouTube, LinkedIn, Shorts, Reels,
+  WhatsApp and Notes with one vertical cut of at most 90 seconds.
+  `scripts/post-pack/publish_kit.py` writes it per post as
+  `0 Publish/publish.html` (a new library section, in the cases file, the
+  engine and library.py). Friday's files: `docs/plans/2026-10-09-draft-script.md`
+  (about 4 minutes), `-draft-script-90s.md` (76 seconds), `-publish.json`
+  (every channel's words, linted by `_packaging.ts` and the publish checks),
+  `-manifold-market.md`. **Blocked:** the paid fact check (approved by Krish)
+  needs the engine operator bearer, which cloud sessions do not have; the
+  Manifold market (approved) needs a Manifold key, so it is written out for
+  him to paste. **Waiting on Krish:** add `ENGINE_OPERATOR_TOKEN` to the cloud
+  environment's secrets (or run the check from his machine), create the
+  market, record both cuts, and confirm on first use that the Copy post
+  paste keeps pictures inside a Substack Video post.
+
 - 2026-10-09, evening: **Friday's piece is rebuilt on Krish's angle, the big
   story: why there are so many AI models, and what it means.** His seed
   (Perplexity research) was treated as raw material, never as an override:

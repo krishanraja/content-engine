@@ -115,20 +115,20 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     id: 'NO_EXCLAMATION', name: 'No exclamation marks',
     text: 'No exclamation marks, except inside a quotation.',
     said: 'No em dashes. No exclamation marks.', on: '2026-09-25', source: 'makeyourmindup brand book v1.0, "The house rules"', status: 'live',
-    stages: ['write', 'final_pass', 'publish_check'],
+    stages: ['write', 'final_pass'],
   },
   {
     id: 'NO_EM_DASH', name: 'No em dashes',
     text: 'No em dashes anywhere. Use commas, full stops or brackets.',
     said: 'No em dashes. No exclamation marks.', on: '2026-09-25', source: 'makeyourmindup brand book v1.0; voice doctrine', status: 'live',
-    stages: ['write', 'final_pass', 'publish_check'],
+    stages: ['write', 'final_pass'],
   },
   {
     id: 'BRITISH_SPELLING', name: 'British spelling',
     text: 'Use British spelling: colour, centre, theatre, organise, analyse, defence, labour, modelling, travelled, grey. A quotation and a name keep their own spelling.',
     said: 'Just get in line with what those updates are at the live website.',
     on: '2026-09-26', source: 'makeyourmindup.ai, "Contains British spelling" (live 2026-09-26)', status: 'live',
-    stages: ['write', 'final_pass', 'publish_check'],
+    stages: ['write', 'final_pass'],
   },
   {
     id: 'STAMPS', name: 'Real or theatre stamps, as the brand book sets them',
@@ -251,9 +251,23 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'VOICE_ON_CAMERA', name: 'The script is Krish reacting, with opinion and dry wit',
-    text: 'The article states the facts. A video script is Krish reacting to them, in his own voice, with opinion and humour. A script of a minute or more carries at least three of these five: one dry, self-deprecating line about himself or this publication (it is made with Claude, say so); one sarcastic line aimed at the hype, never at the reader or a named person; one exaggeration made obvious by its size; one analogy a twelve-year-old would get; and one opinion said as opinion ("my bet", "I think", "my call"), kept apart from the checked facts so the listener and the fact gate both know which is which. A joke never sits inside a sentence the fact gate holds and never replaces the finding. Offer two options for each joke; cutting them is Krish\'s.',
+    text: 'The article states the facts. A video script is Krish reacting to them, in his own voice, with opinion and humour. A script of a minute or more carries at least three of these five: one dry, self-deprecating line about himself or this publication (it is made with Claude, say so); one sarcastic line aimed at the hype, never at the reader or a named person; one exaggeration made obvious by its size; one analogy a twelve-year-old would get; and one opinion said as opinion ("my bet", "I think", "my call"), kept apart from the checked facts so the listener and the fact gate both know which is which. A joke never sits inside a sentence the fact gate holds and never replaces the finding. Offer two options for each joke as a choice beside the script, never inside it; cutting them is Krish\'s.',
     said: 'What about making my scripts for video have more personality and opinion, not in a factual way? More humor? Self deprecating dry wit, sarcasm, exaggeration, analogy? Then, of the proposed rule: do all the things you suggested.',
     on: '2026-10-09', source: 'chat, planning piece 2 and the 100x plan (docs/ENGINE_100X.md); checked softly by storyArcIssues\' companion voiceOnCameraIssues and scripts/post-pack/story_check.py', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass'],
+  },
+  {
+    id: 'SCRIPT_ONLY', name: 'A script is only the words Krish says',
+    text: 'A video script handed to Krish is only the words he says, in the order he says them, as plain paragraphs. Nothing else goes in it: no stage directions or "on screen" notes, no beat numbers, headings or timings, no joke alternatives, no notes to him, and no lines that talk about the script instead of the subject ("here is what you are looking at", "now the part that matters"). What goes on screen lives in a separate shot list, and joke options are offered as choices beside the script.',
+    said: 'make sure my video scripts are literally just scripts without all the excess internal monologue commentary (forever)',
+    on: '2026-10-09', source: 'chat, Friday piece 2 script review; checked by scripts/post-pack/story_check.py', status: 'live',
+    stages: ['write', 'final_pass'],
+  },
+  {
+    id: 'HOOK_AND_CTA', name: 'Open on a provocation, close on the article',
+    text: 'A video opens on the most provocative true thing in the piece, said in the first two sentences: a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. It never opens on throat-clearing or a definition. It closes on a call to action: say there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud, so the line works on every channel without "link below"), ask one question for the comments, and Krish signs off. The vertical cut keeps both, inside 90 seconds.',
+    said: 'make the intro more provocative and hooking, and the outro more CTA based, acknowledging there is a full article',
+    on: '2026-10-09', source: 'chat, Friday piece 2 script review; checked by scripts/post-pack/story_check.py', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
   },
 ])
