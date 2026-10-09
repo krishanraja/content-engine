@@ -49,6 +49,8 @@ export const JOBS: Readonly<Record<string, JobEntry>> = Object.freeze({
   purge: { path: '/api/purge/run', safety: 'manual_only', note: 'Hard-deletes. To undo a purge use POST /api/purge/restore, never a second run.' },
   judge_sweep: { path: '/api/judge/sweep', safety: 'replayable', note: 'Runs every 10 minutes and re-judges only rows whose text changed, so a replay spends only on work the next tick would do anyway.' },
   judge_ladder: { path: '/api/judge/ladder', safety: 'manual_only', note: 'Spends on the nine-judge panel and can rewrite a thesis while repairing it. Re-run one idea by id, never the whole ladder blind.' },
+  signals_news: { path: '/api/signals/news', safety: 'replayable', note: 'Keyless reads of GDELT and Hacker News; observations insert ON CONFLICT DO NOTHING, so a replay writes nothing twice. GDELT allows one call every five seconds, so a replay takes about a minute.' },
+  signals_odds: { path: '/api/signals/odds', safety: 'replayable', note: 'Keyless reads of Polymarket and Kalshi; a replay appends one more reading to each pinned Call\'s history, which is harmless and dated.' },
 })
 
 export const JOB_NAMES: readonly string[] = Object.freeze(Object.keys(JOBS).sort())

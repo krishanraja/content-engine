@@ -191,16 +191,37 @@ this list, and after it ships records in `docs/TOOL_BANK.md` what each one
 added. Concentrated rigor: pick the few that serve this piece, go deep on them,
 skip the rest. The bank learns; this plan is the menu.
 
-## What is live right now (2026-10-09)
+## What is live right now (2026-10-09, end of day)
 
-- Keyless and tested: Polymarket/Kalshi odds, GDELT, Hacker News, SEC
-  (`scripts/signals/`).
-- Keys placed in the engine's Vercel env and ready for a reader: Exa, Brave,
-  the X API, the Hacker News value. **All were exposed in chat and must be
-  rotated** (`docs/INTEGRATIONS.md`).
-- Connectors live in a session: Firecrawl, GitHub, Apify, ElevenLabs,
-  and the creative tools (Higgsfield, Runway, HeyGen, Canva, 21st Dev,
-  Riverside, Brandfetch, Wispr Flow).
-- To build next, in order: the scoreboard-odds feature (keyless), a cheap
-  Gemini video reader, then the Exa/Brave/X readers for the fact gate and the
-  news wall.
+- **The scoreboard that keeps score, built.** `POST /api/content-ideas/:id/call-market`
+  pins a Polymarket slug or Kalshi ticker to a piece's Call (read once, so a
+  wrong one is refused); the `signals_odds` cron reads every pinned market
+  daily into `meta.call_market.history`; `GET /api/calls` serves every
+  published piece's Call, our confidence, `not_due_yet` or `due`, Krish's
+  verdict when made, and the market's odds. Keyless. The cover site reads it.
+- **The pile-on, proven, built.** The `signals_news` cron sweeps GDELT and
+  Hacker News for every piece in review, approved or published in the last
+  thirty days, records each headline in `trend_observations`, and turns the
+  board's "News velocity" signal to warn when a subject doubles in a day.
+- **The script that sounds like Krish, built.** House rule `VOICE_ON_CAMERA`
+  is live for the writers, the draft judges and the final pass; the script
+  writer carries it as the sixth point of the story check; `voiceOnCameraIssues`
+  is a soft block in the Studio's validators and `story_check.py` warns.
+- **A judge that can watch, built.** `scripts/signals/video.py` sends a cut to
+  Gemini once and gets a shot list, the attention drops and the one change
+  that would hold viewers. Needs `GEMINI_API_KEY`.
+- **Keyless and tested:** Polymarket, Kalshi, GDELT, Hacker News, SEC
+  (`api/_signals.ts` for the engine, `scripts/signals/collect.py` for a
+  session or a runner).
+- **Keys placed in the engine's Vercel env:** Exa and Brave (already read by
+  `api/_enrich.ts` inside `webResearch`), the X API (`xRecentSearch`), the
+  Hacker News value. **All four were exposed in chat and must be rotated**
+  (`docs/INTEGRATIONS.md`).
+- **Connectors live in a session:** Firecrawl, GitHub, Apify, ElevenLabs, and
+  the creative tools (Higgsfield, Runway, HeyGen, Canva, 21st Dev, Riverside,
+  Brandfetch, Wispr Flow).
+- **Next, by value:** draw the news-wall picture from the sweep's rows; pin
+  Friday's Call to a market and watch the scoreboard fill; wire Brave and Exa
+  as a second independent verdict inside the fact gate (today they feed its
+  research); the Reddit chorus through Apify; the personality pass on Friday's
+  script.

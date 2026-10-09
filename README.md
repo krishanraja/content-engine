@@ -32,6 +32,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | reach a service (which are live, their secret names, what to rotate) | `docs/INTEGRATIONS.md` |
 | see every plausible way a tool could make the content far better | `docs/ENGINE_100X.md` |
 | read a free public signal: prediction-market odds, news velocity, Hacker News, SEC filings | `scripts/signals/README.md` |
+| pin a Call to a prediction market, or read the scoreboard feed | `docs/CONTENT_ENGINE.md`, `/api/content-ideas/[id]/call-market` and `/api/calls` |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |
 
 The asset library is Krish's instruction of 2026-10-06 ("I want every single

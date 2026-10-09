@@ -66,17 +66,17 @@ MCP connector in a session, no engine secret).
 
 | Service | How the engine reaches it | Symbolic name | Status |
 |---|---|---|---|
-| Polymarket / Kalshi odds | `scripts/signals/collect.py odds` | none | **keyless, live** (tested 2026-10-09) |
-| GDELT news velocity | `scripts/signals/collect.py news` | none | **keyless, live** (one call / 5s) |
+| Polymarket / Kalshi odds | `api/_signals.ts`, the `signals_odds` cron, `/api/content-ideas/[id]/call-market`, `/api/calls`; `scripts/signals/collect.py odds` and `kalshi` | none | **keyless, live** (tested 2026-10-09) |
+| GDELT news velocity | `api/_signals.ts` and the `signals_news` cron; `scripts/signals/collect.py news` | none | **keyless, live** (one call / 5s per IP, spaced and retried) |
 | Hacker News | `scripts/signals/collect.py hn` | `HN_ALGOLIA_KEY` (public API needs none) | **keyless, live**; the handed value placed in Vercel env, 2026-10-09; ROTATE |
 | SEC EDGAR | `scripts/signals/collect.py sec` | none | **keyless, live** |
 | GitHub (engine reads) | build-signals route, scoped token | `GITHUB_TOKEN` | **needs scoped key** (use the master once to mint a two-repo token; do not store the master) |
 | GitHub (this session) | the `mcp__github__*` connector, proxy-authenticated | none | **connector, live** |
 | Firecrawl | the `mcp__Firecrawl__*` connector | none | **connector, live** (tested 2026-10-09) |
-| Exa (search like a page) | a new reader, to build | `EXA_API_KEY` | **placed in content-engine Vercel env, 2026-10-09; ROTATE** (was exposed in chat) |
-| Brave Search (second fact check) | a new reader, to build | `BRAVE_API_KEY` | **placed in Vercel env, 2026-10-09; ROTATE** |
-| X / Twitter API | a new reader, to build | `X_BEARER_TOKEN` | **placed in Vercel env, 2026-10-09 (stored URL-decoded); ROTATE** |
-| Gemini video understanding | a new reader, to build | `GEMINI_API_KEY` | **needs key** (build cheaply: Flash tier, one call per video) |
+| Exa (search like a page) | `api/_enrich.ts` (`webResearch`, the fallback behind Perplexity, already live) and `scripts/signals/collect.py exa` | `EXA_API_KEY` | **placed in content-engine Vercel env, 2026-10-09; ROTATE** (was exposed in chat) |
+| Brave Search (second fact check) | `api/_enrich.ts` (`webResearch`, already live) and `scripts/signals/collect.py brave` | `BRAVE_API_KEY` | **placed in Vercel env, 2026-10-09; ROTATE** |
+| X / Twitter API | `api/_signals.ts` `xRecentSearch` and `scripts/signals/collect.py x` | `X_BEARER_TOKEN` | **placed in Vercel env, 2026-10-09 (stored URL-decoded); ROTATE** |
+| Gemini video understanding | `scripts/signals/video.py` (one Flash call per video, a shot list and the one change that would hold attention) | `GEMINI_API_KEY` | **built; needs key** (not among the keys handed over) |
 | ElevenLabs | the `mcp__ElevenLabs__*` connector (restricted: speech and transcription) | none for the connector; `ELEVENLABS_API_KEY` for the engine | **connector, live**; engine key to place for a cron voiceover |
 | YouTube (reads, uploads) | the cloud account's own connector / OAuth on `krish@mindmake.co` | none | **connector, via the account** |
 | Apify (scrapers) | the `mcp__Apify__*` connector, or `APIFY_TOKEN` at runtime | `APIFY_TOKEN` | **connector, live**; runtime key already in use |
@@ -85,19 +85,14 @@ MCP connector in a session, no engine secret).
 
 ## What is built, and what is next
 
-Built and tested this session: the four keyless sources (`scripts/signals/`).
+Built on 2026-10-09 (`docs/ENGINE_100X.md`, "What is live right now"):
 
-Next, each on Krish's yes for the key and the spend:
+1. **Scoreboard odds**: `POST /api/content-ideas/:id/call-market` pins a market to a Call; the `signals_odds` cron reads it daily; `GET /api/calls` serves the scoreboard. Keyless.
+2. **News velocity**: the `signals_news` cron sweeps GDELT and Hacker News for the pieces in play and warns on the board when a subject doubles in a day. Keyless.
+3. **Gemini video reader**: `scripts/signals/video.py`, one cheap call per video. Needs `GEMINI_API_KEY` in the environment it runs in.
+4. **Exa, Brave, X**: Exa and Brave were already read by `api/_enrich.ts`; X has a reader in `api/_signals.ts`. All three are also in `scripts/signals/collect.py` for a session or a runner, where the key must be in that environment.
 
-1. **Scoreboard odds.** Store each Call's Polymarket (or Kalshi) slug beside
-   its text; read the probability on a timer; show our call and the market's
-   side by side on makeyourmindup.ai, tracked to the due date. Keyless.
-2. **Gemini video reader**, cheap: one Flash call per video to describe every
-   shot, as a judge that can see. Needs `GEMINI_API_KEY`.
-3. **Exa and Brave readers** for "find the other outlets that ran this" and a
-   second independent fact check. Need their keys, rotated.
-4. **X reader** for what a lab's staff posted the hour a story broke.
-   Pay-per-use reads; needs `X_BEARER_TOKEN`, rotated.
+What still waits on Krish: rotating the four exposed keys; a `GEMINI_API_KEY`; the same four names on a runner machine if a session there needs them.
 
 No new secret is placed, and no key is used, until Krish rotates it and says
 yes to that action.

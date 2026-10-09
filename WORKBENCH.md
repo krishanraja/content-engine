@@ -131,6 +131,23 @@ session").
 
 ## Latest handoff
 
+- 2026-10-09, night: **the engine is wired for the 100x world and merged to
+  `main`.** On Krish's "prepare and harden the entire engine as though all of
+  this exists permanently": the scoreboard that keeps score is built (pin a
+  Call to a Polymarket or Kalshi market at `/api/content-ideas/:id/call-market`,
+  the `signals_odds` cron reads it daily, `/api/calls` serves every published
+  Call with our confidence and the market's odds); the news-velocity sweep is
+  built (`signals_news`, GDELT and Hacker News for every piece in play, a board
+  warning when a subject doubles in a day); the on-camera voice rule
+  (`VOICE_ON_CAMERA`) is live in the writers, judges, final pass, the story
+  check's sixth point, a soft block in the Studio and a warning in
+  `story_check.py`; a Gemini judge that can watch a cut
+  (`scripts/signals/video.py`, needs `GEMINI_API_KEY`); Exa and Brave were
+  already read by the research chain and now have the keys; X has a reader.
+  Every check passes (typecheck, control-plane typecheck, tests, all 28
+  control-plane guards, secrets, public copy). **Waiting on Krish:** rotate the
+  four keys that were pasted in chat; a `GEMINI_API_KEY`; pin Friday's Call to
+  a market once it is published; approve the piece-2 plan.
 - 2026-10-09, later: **the outside tools are wired and the 100x plan is
   written.** `scripts/signals/collect.py` reads four free public sources
   (prediction-market odds, GDELT news velocity, Hacker News, SEC), tested

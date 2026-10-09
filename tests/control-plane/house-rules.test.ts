@@ -322,3 +322,18 @@ describe('the reading age ends a sentence inside a closing quote', () => {
     assert.match(r7.detail, /^Reads at about age \d+\.\d\. Above 13 cannot be approved/)
   })
 })
+
+describe('the script is Krish reacting, with opinion and dry wit (VOICE_ON_CAMERA, 2026-10-09)', () => {
+  test('the rule is live and reaches the writers, the draft judges and the final pass', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'VOICE_ON_CAMERA')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.match(r.text, /my bet/)
+    assert.match(r.said, /personality and opinion/)
+  })
+  test('the script writer carries it as the sixth point of the story check', async () => {
+    const video = await import('../../apps/control-plane/api/_video.js')
+    assert.match(video.SCRIPT_STORY, /6\. It sounds like Krish, with opinion \(VOICE_ON_CAMERA\)/)
+  })
+})

@@ -110,6 +110,10 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/content-ideas/cluster` (cron) | embeddings backfill, then clustering at cosine 0.78 or more | Haiku [`cleo-cluster`] |
 | `/api/content-ideas/archive-stale` (cron) | archives idle ideas | none |
 | `/api/shifts/detect` (cron), `/api/shifts/[id]` | proposes shifts over a 21-day corpus through a deterministic gate; Krish's rulings on them | Sonnet [`shifts-*`] |
+| `/api/signals/news` (cron) | news velocity for the pieces in play: what GDELT saw about each subject in two days and what Hacker News said, every headline to `trend_observations` (origin `gdelt` or `hn`, story key the piece's id, `gathered_not_selected`); a subject that doubles in a day turns the board's "News velocity" signal to warn (`api/_signals.ts`, docs/ENGINE_100X.md) | none, keyless |
+| `/api/signals/odds` (cron) | the market's odds on every Call with a market pinned: reads Polymarket or Kalshi once a day and appends the reading to `meta.call_market.history` | none, keyless |
+| `/api/content-ideas/[id]/call-market` | pin a prediction market (Polymarket slug or Kalshi ticker) to a piece's dated Call, read once to refuse a wrong one; GET reads it, `{clear: true}` unpins | none, keyless |
+| `/api/calls` | public, read-only: every published piece's Call, our confidence, `not_due_yet` or `due`, Krish's verdict when he has made it, and the pinned market's odds; the scoreboard on makeyourmindup.ai reads it | none |
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
 
@@ -600,6 +604,8 @@ All 20 have run-ledger rows in the last seven days (read back 2026-09-25).
 | Tue 08:00 | `creator_posts` | `/api/discover-creator-posts` |
 | Thu 21:00 | `investigations` | `/api/investigations/run` |
 | Fri 17:30 | `shifts_detect` | `/api/shifts/detect` |
+| daily 06:30 | `signals_news` | `/api/signals/news` |
+| daily 06:45 | `signals_odds` | `/api/signals/odds` |
 | Fri 17:50 | `arcs_surface` | `/api/arcs/surface` |
 | Fri 18:00 | `briefs_assemble` | `/api/briefs/assemble` |
 | Sat 05:00 | `build_signals` | `/api/discover-build-signals` |

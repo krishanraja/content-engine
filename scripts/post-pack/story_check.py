@@ -97,8 +97,32 @@ def problems(text):
     return found
 
 
+OPINION = re.compile(r"\b(?:my (?:bet|call|take|guess)|i think|i reckon|i'd bet|i would bet|if you ask me|"
+                     r"i'm not convinced|i am not convinced|i don't buy|here's where i land)\b", re.I)
+
+
+def warnings(text):
+    """The sixth point, as a warning and never a refusal.
+
+    Krish, 2026-10-09 (house rule VOICE_ON_CAMERA): the script is him reacting,
+    with opinion and dry wit. A rule cannot grade a joke; it can see whether a
+    script of a minute or more ever says an opinion as an opinion ("my bet",
+    "I think", "my call"), kept apart from the checked facts. Whether the wit
+    landed is for him."""
+    beats = spoken_paragraphs(text)
+    words = ' '.join(beats).split()
+    if len(words) >= SHORT_WORDS and not OPINION.search(' '.join(beats)):
+        return ['it states no opinion as an opinion: somewhere say "my bet", "I think" or "my call", kept apart '
+                'from the checked facts (house rule VOICE_ON_CAMERA; a warning, not a refusal)']
+    return []
+
+
 def check_file(path):
     return problems(Path(path).read_text(encoding='utf-8-sig'))
+
+
+def warn_file(path):
+    return warnings(Path(path).read_text(encoding='utf-8-sig'))
 
 
 # ---------------------------------------------------------------- self-test
@@ -192,6 +216,11 @@ def self_test():
     check('notes after the script are never spoken', any('heading or stamp' in p for p in problems(ONE_OFF)), False)
     short = '[To camera]\nWhy does it matter? Because the price doubled. That is the whole story.\n'
     check('a short hook needs no outro', problems(short), [])
+    check('a long script with no opinion gets a warning, never a refusal', len(warnings(GOOD)), 1)
+    check('a long script that says "my bet" passes the voice check',
+          warnings(GOOD.replace("So here's our call.", "So here's my bet.")), [])
+    check('a short hook needs no opinion', warnings(short), [])
+    check('the voice warning never refuses', problems(GOOD), [])
     if failures:
         print('story check self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1
@@ -215,6 +244,8 @@ def main(argv):
                 print(f'  - {item}')
         else:
             print(f'ready      {path}')
+        for item in warn_file(path):
+            print(f'  WARN {item}')
     return worst
 
 
