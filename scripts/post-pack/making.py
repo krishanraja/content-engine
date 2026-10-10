@@ -95,9 +95,13 @@ def visual_gate_patch(post_path):
     import build
     import visual_gate
     post_path = Path(post_path)
-    post_json = json.loads(post_path.read_text(encoding='utf-8-sig'))
-    folder, planned = build.plan(post_json, post_path.parent)
-    problems = visual_gate.problems(post_json, planned, build.fact_checked_body(post_json, post_path.parent), post_path.parent)
+    try:
+        post_json = json.loads(post_path.read_text(encoding='utf-8-sig'))
+        folder, planned = build.plan(post_json, post_path.parent)
+        problems = visual_gate.problems(post_json, planned, build.fact_checked_body(post_json, post_path.parent), post_path.parent)
+    except (OSError, ValueError, build.PackError, build.LibraryError) as error:
+        # A pack that cannot even be planned has not passed the gate; say why, in the record.
+        problems = [f'the pack could not be planned: {error}']
     return {'visual_gate': {'passed': not problems, 'problems': problems, 'checked_at': now()}}
 
 
