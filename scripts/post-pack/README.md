@@ -98,6 +98,7 @@ first post's facts.
 | `subject` | The post's short title, as it should read in the folder name: `Who gets paid`. |
 | `headline` | Optional. The headline, shown in `READ ME.txt`. |
 | `links` | Where it is published: `{"Substack": "https://...", "YouTube": "https://..."}`. |
+| `piece_id` | The piece's `content_ideas` id. With it, `build.py` and `send.py` record the pack and the visual gate on the piece's board row (`making.py`), so Control Center shows them within a second. |
 | `files` | Every file, each with a `kind` (below), or a `category` (`article`, `covers`, `video` or `social`) and a `purpose`. Paths are relative to `post.json`. `name` renames a file; `purpose` replaces the usual words. |
 
 | `kind` | Goes to | Named | What it is |

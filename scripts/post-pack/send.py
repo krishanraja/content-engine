@@ -47,6 +47,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402  scripts/engine.py: the engine's address and key
 import library  # noqa: E402
+import making  # noqa: E402  records the send on the piece's board row
 from library import BRAND_KIT, LibraryError  # noqa: E402
 
 MANIFEST = '.pack.json'
@@ -484,6 +485,12 @@ def main():
             shutil.rmtree(unpacked, ignore_errors=True)
     print(f'Sent {done["sent"] + done["confirmed_only"]}, already there {done["already"]}. '
           "Krish's always-on machine writes them into the library within about ten minutes.")
+    if a.folder and (Path(a.folder) / MANIFEST).is_file():
+        post_json = Path(a.folder) / 'post.json'
+        pack_json = json.loads((Path(a.folder) / MANIFEST).read_text(encoding='utf-8'))
+        piece_id = str(pack_json.get('piece_id') or '') or making.piece_id_of(post_json)
+        if piece_id:
+            making.report(piece_id, making.pack_patch(a.folder, sent=True), 'pack sent to the library')
 
 
 if __name__ == '__main__':

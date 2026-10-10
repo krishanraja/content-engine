@@ -113,6 +113,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/signals/news` (cron) | news velocity for the pieces in play: what GDELT saw about each subject in two days and what Hacker News said, every headline to `trend_observations` (origin `gdelt` or `hn`, story key the piece's id, `gathered_not_selected`); a subject that doubles in a day turns the board's "News velocity" signal to warn (`api/_signals.ts`, docs/ENGINE_100X.md) | none, keyless |
 | `/api/signals/odds` (cron) | the market's odds on every Call with a market pinned: reads Polymarket or Kalshi once a day and appends the reading to `meta.call_market.history` | none, keyless |
 | `/api/content-ideas/[id]/call-market` | pin a prediction market (Polymarket slug or Kalshi ticker) to a piece's dated Call, read once to refuse a wrong one; GET reads it, `{clear: true}` unpins | none, keyless |
+| `/api/content-ideas/[id]/making` | where the piece is between the workroom and every channel (`meta.making`: workroom and publish page links, visual gate, script check, pack, recordings, video assets, channels posted, the session making it); GET reads it with the steps, POST merges a patch. Written by Claude Code sessions (`scripts/post-pack/making.py`) and by Krish's cookie when he ticks a channel off; read by Control Center over its realtime subscription on `content_ideas` | none, keyless |
 | `/api/calls` | public, read-only: every published piece's Call, our confidence, `not_due_yet` or `due`, Krish's verdict when he has made it, and the pinned market's odds; the scoreboard on makeyourmindup.ai reads it | none |
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
@@ -823,6 +824,20 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    with `send.py --brand-kit` (Krish, 2026-10-06, section 9 above). Read
    `--dry-run` first: it shows every path and what it is for. A refused path
    stops the whole send before anything goes.
+16. **The split.** Control Center plans, suggests and tracks; Claude Code
+    makes (Krish, 2026-10-10). A session that starts with `piece_id: <uuid>`
+    (Control Center's "Make it in Claude Code" button fires a Claude Code
+    routine with that line) follows `.agents/skills/make-piece/SKILL.md`:
+    workroom, fact gate, visual gate, scripts, publish page, pack, recording,
+    video assets, channels. Every step is recorded on the piece with
+    `python3 scripts/post-pack/making.py <uuid> ...` (`build.py` and `send.py`
+    record themselves when `post.json` carries `piece_id`), which writes
+    `content_ideas.meta.making` through `/api/content-ideas/:id/making`.
+    Control Center's realtime subscription on `content_ideas` shows each
+    change within a second: no second table, no polling, no copy of the
+    state anywhere else. The record's shape lives in
+    `apps/control-plane/api/_making.ts` and is mirrored in
+    `control-center/src/lib/making.ts`; change both together.
 
 ## Development notes
 

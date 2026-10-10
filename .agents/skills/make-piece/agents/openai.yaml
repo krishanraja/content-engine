@@ -1,0 +1,4 @@
+interface:
+  display_name: "Make a piece"
+  short_description: "Take one piece from Control Center's board through the workroom, the gates and the pack"
+  default_prompt: "Use $make-piece to make the piece whose id Control Center sent: piece_id: <uuid>."
