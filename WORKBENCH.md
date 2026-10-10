@@ -139,6 +139,22 @@ session").
 
 ## Latest handoff
 
+- 2026-10-10, late: **The weekly rhythm is ruled** (`docs/CADENCE.md`).
+  Krish: Sunday, Tuesday and Thursday are the preparation days, each with a
+  slate of ideas to pick from (the cold ideas and Inspo folder on Drive, and
+  the backlog); once picked, the artefact set is made the same day, he
+  records the next morning, the runner and post-production follow, and he
+  finishes on the publish board. **To build next, in this order:** (1) the
+  slate in Control Center on those three days: a cron that assembles the
+  three best from the Drive scan and the judged backlog into one
+  `pick_for_series` call for the next slot, with an honest "nothing worth
+  picking" when there is none; (2) the runner's post-production step
+  records the finished cuts on the piece (`making.py <id> video ...`) by
+  itself, so Video assets lands without a session; (3) the publish board
+  on the piece opens the publish page beside the ticks. Friday's piece runs
+  late by his own account, a learning week; he records both cuts first thing
+  tomorrow.
+
 - 2026-10-10, evening: **The control centre plans and tracks; Claude Code
   makes, and the two are one record.** Krish: "the control centre becomes
   more of a progress tracker, suggestions compiler, and ideas generator,
