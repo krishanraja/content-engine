@@ -47,6 +47,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import library
 import story_check  # noqa: E402
 import visual_gate  # noqa: E402
+import making  # noqa: E402  records the pack on the piece's board row
 import edge_check  # noqa: E402
 from library import ARTICLE, COVERS, POST_README, POSTS, PUBLISH, SOCIAL, VIDEO, LibraryError, archive, brand  # noqa: E402
 
@@ -402,6 +403,7 @@ def build(post_path, out=DEFAULT_OUT, replace=False, today=None):
         'post_folder': folder,
         'library_prefix': f'{POSTS}/{folder}',
         'packed_on': made,
+        'piece_id': post.get('piece_id') or None,
         'files': manifest,
     }, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
     return {'folder': folder, 'path': str(dest), 'files': [item['path'] for item in manifest]}
@@ -574,6 +576,9 @@ def main():
     print(f'Packed {len(result["files"])} files into {result["path"]}')
     for name in result['files']:
         print(f'  {name}')
+    piece_id = making.piece_id_of(a.post)
+    if piece_id:
+        making.report(piece_id, making.pack_patch(result['path']) | making.visual_gate_patch(a.post), 'pack built, visual gate passed')
     print(f'Send it to the library: python scripts/post-pack/send.py "{result["path"]}"')
 
 
