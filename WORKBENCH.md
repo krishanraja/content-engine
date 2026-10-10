@@ -139,6 +139,32 @@ session").
 
 ## Latest handoff
 
+- 2026-10-10: **The visual gate is live, and Friday's pictures pass it.**
+  Krish, of the first cover: "really boring and losing it's personality", and
+  "it needs to be a literal gate that stuff like this cannot be produced,
+  whether in static asset form or video." House rule VISUAL_EVIDENCE;
+  `scripts/post-pack/visual_gate.py` (run by `build.py` on every pack)
+  refuses a pack unless every company the body names
+  (`config/logo-registry.json`) has its real Brandfetch logo on a picture,
+  on the cover and declared on each video; a piece about volume carries a
+  picture built from at least six real, dated pages; and the cover came from
+  `scripts/pages/build.py --cover` (its new `cover.json` receipt matches the
+  PNG, portrait on, logo rows). Friday now has: the house cover (wordmark,
+  Krish, OpenAI and Anthropic marks, twelve launch pages behind), the pile-up
+  picture (twelve real pages, dated), real logos on all six pictures. The
+  first flat cover is refused by the gate, proven in this session. One
+  self-contained publish manager
+  (`scripts/post-pack/publish_manager.py`, kind `publish-manager`; Krish:
+  "there should just be a copy button. Same for pictures"): article with
+  pictures, every picture, every channel's words and the scripts, each with
+  Copy; proven in a browser (article pastes with 12 headings and 7 pictures;
+  a picture copies as PNG). Live at
+  https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV. Friday's pack
+  (`docs/plans/2026-10-09-friday/post.json`, cover facts, pile-up page)
+  builds and passes. **Waiting on Krish:** test Copy article and Copy picture
+  inside claude.ai; approve the text in the engine; record both cuts; create
+  the Manifold market; rotate the pasted keys.
+
 - 2026-10-09, night: **Scripts are only scripts, and every post now has one
   publish page.** Two new house rules: SCRIPT_ONLY (Krish: "make sure my video
   scripts are literally just scripts without all the excess internal monologue

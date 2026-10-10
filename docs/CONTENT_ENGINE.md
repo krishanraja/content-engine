@@ -812,7 +812,10 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    `api/_houseRules.ts` as step 12 says, and the part a machine can check into
    `PACKAGING_RULES` and `lintPackage` or `lintSubstack` in
    `api/_packaging.ts`.
-15. Every launch set includes the publish page (`docs/AMPLIFICATION.md`,
+15. Every pack passes the visual gate (`scripts/post-pack/visual_gate.py`,
+    house rule VISUAL_EVIDENCE): the real logo of every company the piece
+    names, real pages piled up when the piece is about volume, and a cover
+    from the house drawer with Krish's face. Every launch set includes the publish page (`docs/AMPLIFICATION.md`,
     `scripts/post-pack/publish_kit.py`): one Substack Video post, then YouTube,
     LinkedIn, Shorts, Reels, WhatsApp and Notes, with Copy buttons. The same day a post's launch set is made, pack it with
    `python3 scripts/post-pack/build.py post.json` and send it with

@@ -986,6 +986,16 @@ def draw_cover(facts, base, out, refresh=False):
         return False
     (out / 'cover.png').write_bytes(png)
     (out / 'cover-crops.png').write_bytes(crops)
+    # The drawer's receipt: scripts/post-pack/visual_gate.py packs a cover only
+    # when this sidecar matches the PNG, so a cover drawn any other way (Krish,
+    # 2026-10-10: "really boring and losing its personality") is refused.
+    import hashlib
+    cv = facts.get('cover') or {}
+    (out / 'cover.json').write_text(json.dumps({
+        'drawer': 'scripts/pages/build.py --cover', 'sha256': hashlib.sha256(png).hexdigest(),
+        'portrait': bool(cv.get('portrait')), 'rows': [r.get('name', '') for r in cv.get('rows', [])],
+        'background': bool(cv.get('background')), 'headline_px': size, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
+    }, indent=1) + '\n', encoding='utf-8')
     print(f'{out / "cover.png"}  {COVER_W} x {COVER_H}: upload it as the post\'s cover image')
     print(f'  the headline is {size} px, in {lines} line(s); every word and logo is inside {keep}, so the feed, '
           'the share card and the archive keep all of it')

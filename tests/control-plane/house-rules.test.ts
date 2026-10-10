@@ -366,3 +366,15 @@ describe('a script is only the words, opening on a provocation and closing on th
     assert.doesNotMatch(video.SCRIPT_STORY, /Offer two options for each joke, marked/)
   })
 })
+
+describe('real logos, real pages, and a cover with personality (VISUAL_EVIDENCE, 2026-10-10)', () => {
+  test('the rule is live and reaches the visual stage, the writers and the draft judges', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'VISUAL_EVIDENCE')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    for (const stage of ['visual', 'write', 'judge_draft'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.match(r.said, /literal gate/)
+    assert.match(r.text, /Brandfetch/)
+    assert.match(r.source, /visual_gate\.py/)
+  })
+})

@@ -1,0 +1,174 @@
+{
+ "date": "2026-10-09",
+ "subchannel": "mind.the.gap",
+ "subject": "Why so many AIs",
+ "headline": "Why are there suddenly so many AIs?",
+ "links": {},
+ "files": [
+  {
+   "kind": "publish-kit",
+   "file": "publish.html"
+  },
+  {
+   "kind": "fact-checked-text",
+   "file": "body.md"
+  },
+  {
+   "kind": "cover",
+   "file": "cover.png",
+   "logos": [
+    "OpenAI",
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "cover-crops",
+   "file": "cover-crops.png"
+  },
+  {
+   "kind": "image",
+   "file": "pileup.png",
+   "name": "the-pile-up.png",
+   "logos": [
+    "OpenAI",
+    "Anthropic",
+    "OpenRouter"
+   ],
+   "purpose": "Twelve real model pages, dated, piled up: the overwhelm the piece is about. Goes after the heading WHAT IT IS NOW.",
+   "evidence": {
+    "pages": [
+     {
+      "url": "https://www.anthropic.com/news/claude-3-family",
+      "date": "2024-03-04",
+      "shot": "shots/claude-3.png"
+     },
+     {
+      "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
+      "date": "2024-06-20",
+      "shot": "shots/claude-3-5-sonnet.png"
+     },
+     {
+      "url": "https://www.anthropic.com/news/claude-3-7-sonnet",
+      "date": "2025-02-24",
+      "shot": "shots/claude-3-7.png"
+     },
+     {
+      "url": "https://www.anthropic.com/news/claude-4",
+      "date": "2025-05-22",
+      "shot": "shots/claude-4.png"
+     },
+     {
+      "url": "https://openai.com/index/introducing-gpt-5/",
+      "date": "2025-08-07",
+      "shot": "shots/gpt-5.png"
+     },
+     {
+      "url": "https://www.anthropic.com/news/claude-haiku-4-5",
+      "date": "2025-10-15",
+      "shot": "shots/haiku-4-5.png"
+     },
+     {
+      "url": "https://www.anthropic.com/news/claude-sonnet-4-6",
+      "date": "2026-02-17",
+      "shot": "shots/sonnet-4-6.png"
+     },
+     {
+      "url": "https://openai.com/index/accelerating-the-next-phase-ai/",
+      "date": "2026-03-31",
+      "shot": "shots/openai-122bn.png"
+     },
+     {
+      "url": "https://developers.openai.com/api/docs/models/gpt-6-astra",
+      "date": "2026-10-10",
+      "shot": "shots/gpt-6-astra.png"
+     },
+     {
+      "url": "https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt",
+      "date": "2026-10-10",
+      "shot": "shots/chatgpt-gpt6-help.png"
+     },
+     {
+      "url": "https://openrouter.ai/rankings",
+      "date": "2026-10-08",
+      "shot": "shots/openrouter-rankings.png"
+     },
+     {
+      "url": "https://support.claude.com/en/articles/11940350-claude-code-model-configuration",
+      "date": "2026-10-10",
+      "shot": "shots/claude-code-models.png"
+     }
+    ]
+   }
+  },
+  {
+   "kind": "image",
+   "file": "decoder.png",
+   "name": "1-one-name-six-labels.png",
+   "logos": [
+    "OpenAI",
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "belt.png",
+   "name": "2-the-conveyor-belt.png",
+   "logos": [
+    "OpenAI",
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "menu.png",
+   "name": "3-the-pricier-name-scored-lower.png",
+   "logos": [
+    "Anthropic",
+    "OpenRouter"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "jobs.png",
+   "name": "4-one-name-four-jobs.png",
+   "logos": [
+    "OpenAI",
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "money.png",
+   "name": "5-prices-crash-bills-grow.png",
+   "logos": [
+    "OpenAI",
+    "Anthropic",
+    "SemiAnalysis"
+   ]
+  },
+  {
+   "kind": "image",
+   "file": "forks.png",
+   "name": "6-three-ways-this-could-go.png",
+   "logos": [
+    "OpenAI",
+    "Anthropic",
+    "Google"
+   ]
+  },
+  {
+   "kind": "video-script",
+   "file": "script.md"
+  },
+  {
+   "kind": "video-script",
+   "file": "script-90s.md",
+   "name": "video-script-90-seconds.md"
+  },
+  {
+   "kind": "linkedin-post",
+   "text": "Claude Code now lists more than a dozen versions of Claude to pick from. ChatGPT has GPT-6 with a Thinking slider from Instant to Extra High.\n\nThe obvious read is choice. My read is the opposite: the longer the menu gets, the less you actually choose.\n\nEvery model name is doing four jobs at once. Version number. Price tag. Advert. Queue ticket that sends easy questions to cheap computers.\n\nPrices aren't the con. The cost of AI as good as the first ChatGPT fell from $20.00 to $0.07 per million tokens in two years. The catch is the missing meter: most apps never tell you which model answered, how hard it thought, or what it used.\n\nFor anyone building on AI, that changes the question. Stop asking which model is best. Ask what a good answer costs you, all in, and pin the exact version you run on.\n\nMy call, dated: by 30 September 2027, at least two of OpenAI, Anthropic and Google pick the model for app builders by default. 85% sure.\n\nFull article, with every source, in the first comment."
+  }
+ ]
+}
