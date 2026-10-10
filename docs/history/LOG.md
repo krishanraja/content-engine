@@ -5,6 +5,11 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-10
+
+- reconciled at `f77d316`: NOW.md takes Friday's passed fact check, the BIG_PICTURE, SCRIPT_ONLY and HOOK_AND_CTA house rules, the publish page and amplification plan, the Call scoreboard and news velocity crons, and the network-secret route for cloud sessions; cron count 20 to 22.
+- rolled from NOW.md: 2026-09-08 **The content engine moved into this repository** (PR #42, ADR-019 in control-center). Why: Control Center kept the desk and gave the machinery to its own project; the routes, crons and guards now deploy from here.
+
 ## 2026-10-08
 
 - reconciled at `09f316b`: NOW.md takes the Right, Wrong, Too close to call wording, the picture edge check, the logo on tall videos with the caption mishearing fixes, and the move of makeyourmindup to its own venture folder in Drive. `docs/STATE.md`, `docs/STUDIO.md`, `docs/SYSTEM_MAP.md`, `docs/GLOSSARY.md` and `docs/NORTH_STAR.md` keep their 2026-09-25 stamps; their bodies were not re-checked.
