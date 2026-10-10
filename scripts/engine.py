@@ -39,8 +39,9 @@ import urllib.error
 import urllib.request
 import uuid
 
-PROXY_KEYED_BASE = 'https://content-engine-flame-nu.vercel.app'  # the host the cloud secret is bound to
-BASE = os.environ.get('ENGINE_BASE_URL', PROXY_KEYED_BASE).rstrip('/')
+BASE = os.environ.get('ENGINE_BASE_URL', 'https://content-engine-flame-nu.vercel.app').rstrip('/')
+# The host the cloud environment's network secret is bound to: the same address, before any override.
+PROXY_KEYED_BASE = 'https://content-engine-flame-nu.vercel.app'
 WINDOWS_TARGET = 'Mindmake/engine-operator-token'
 ERROR_NOT_FOUND = 1168  # Credential Manager has no entry by that name for this user
 
