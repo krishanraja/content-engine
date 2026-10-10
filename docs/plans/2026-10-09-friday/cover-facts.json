@@ -1,0 +1,30 @@
+{
+ "subchannel": "mind.the.gap",
+ "title": "Why are there suddenly so many AIs?",
+ "headline": "Why are there suddenly so many AIs?",
+ "date": "2026-10-09",
+ "issue": "The headliner",
+ "cover": {
+  "headline": [
+   "Why are there suddenly",
+   "so many AIs?"
+  ],
+  "rows": [
+   {
+    "logo": "../logos/openai-symbol-cream.svg",
+    "name": "OpenAI",
+    "tag": "4 GPT-6s",
+    "colour": "coral"
+   },
+   {
+    "logo": "../logos/anthropic-symbol-cream.svg",
+    "name": "Anthropic",
+    "tag": "14 Claudes",
+    "colour": "mint"
+   }
+  ],
+  "label": "the headliner",
+  "background": "../pileup-bg.png",
+  "portrait": true
+ }
+}

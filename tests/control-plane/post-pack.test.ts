@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -43,6 +44,12 @@ describe('the post pack tools check themselves', () => {
     const result = run('story_check.py', ['--self-test'])
     expect(result.status, result.stderr).toBe(0)
     expect(result.stdout).toMatch(/story check self-test passed: \d+ checks/)
+  })
+
+  it('visual_gate.py --self-test: logos for every named company, real pages for a volume piece, the house cover (VISUAL_EVIDENCE)', () => {
+    const result = run('visual_gate.py', ['--self-test'])
+    expect(result.status, result.stderr).toBe(0)
+    expect(result.stdout).toMatch(/visual gate self-test passed/)
   })
 
   it('publish_kit.py --self-test: one Substack video post, then every channel in order (docs/AMPLIFICATION.md)', () => {
@@ -118,6 +125,8 @@ describe('a pack Krish reads', () => {
     writeFileSync(join(work, 'stack.png'), Buffer.from('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGUlEQVR4nGPcvuw/AymAiSTVoxpGNQwpDQBpOQJ8Y386+gAAAABJRU5ErkJggg==', 'base64'))
     // A script must pass the story check to be packed (walk log F75).
     writeFileSync(join(work, 'script.md'), 'Why does this matter? Say this.\n')
+    // the house drawer's receipt beside the cover, so the visual gate takes it (visual_gate.py)
+    writeFileSync(join(work, 'cover.json'), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, 'cover.png'))).digest('hex'), portrait: true, rows: [] }))
     writeFileSync(join(work, 'post.json'), JSON.stringify(post))
     const out = join(work, 'packs')
     mkdirSync(out)

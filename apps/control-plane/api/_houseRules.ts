@@ -264,6 +264,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'final_pass'],
   },
   {
+    id: 'VISUAL_EVIDENCE', name: 'Real logos, real pages, and a cover with personality',
+    text: 'Every picture and every video frame that names a company shows that company\'s real logo, from its own brand files (Brandfetch), and all of them when the piece is about several (every AI lab, every bank). A piece about volume or velocity (so many launches, releases every few months, a growing menu) shows the real thing: screenshots of the actual pages, dated, piled on top of one another so the reader feels the overwhelm, never a drawn stand-in. The cover is drawn by the house cover drawer with the wordmark, Krish\'s face, the real logos and the evidence behind it, in the house colours and type, never a flat card. A plan for any visual starts by listing the companies it names and the real artefacts it can show.',
+    said: 'we need to add all the logos of the busineses that are related to what we are talking about. Sometimes, that is just one business - but here, it\'s all the LLMs. This needs to be considered in every post possible. ... an article like this should screenshot as many live articles of model releases ... it should pile up on top of one another visually. That kind of visual creative thinking has to apply to every video moving forward. I also think The cover and email thumbnail is really boring and losing it\'s personality ... it needs to be a literal gate that stuff like this cannot be produced, whether in static asset form or video.',
+    on: '2026-10-10', source: 'chat, Friday piece 2 cover review; the mechanical gate is scripts/post-pack/visual_gate.py (logos, evidence pages, the cover drawer\'s receipt), run by build.py before any pack', status: 'live',
+    stages: ['visual', 'write', 'judge_draft'],
+  },
+  {
     id: 'HOOK_AND_CTA', name: 'Open on a provocation, close on the article',
     text: 'A video opens on the most provocative true thing in the piece, said in the first two sentences: a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. It never opens on throat-clearing or a definition. It closes on a call to action: say there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud, so the line works on every channel without "link below"), ask one question for the comments, and Krish signs off. The vertical cut keeps both, inside 90 seconds.',
     said: 'make the intro more provocative and hooking, and the outro more CTA based, acknowledging there is a full article',

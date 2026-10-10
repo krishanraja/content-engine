@@ -1,0 +1,85 @@
+{
+ "title": "Why are there suddenly so many AIs?",
+ "subtitle": "Claude Code lists over a dozen versions of Claude. Here is why every AI menu keeps growing, who it serves, and what to do about it.",
+ "date": "2026-10-09",
+ "kicker": "mind.the.gap",
+ "status": [
+  "Fact check passed on this exact text",
+  "Visual gate passed: real logos, twelve real pages, house cover",
+  "Waiting: your approval, then recording"
+ ],
+ "body": "body.md",
+ "words": "words.json",
+ "images": [
+  {
+   "id": "cover",
+   "file": "img/cover.png",
+   "role": "cover",
+   "alt": "Why are there suddenly so many AIs? Krish on the mind.the.gap cover, with the OpenAI and Anthropic marks and twelve launch pages behind",
+   "caption": "Drawn by the house cover drawer: wordmark, Krish, the real OpenAI and Anthropic marks, the pile-up behind. Every word sits inside Substack's crops."
+  },
+  {
+   "id": "pileup",
+   "label": "The pile-up: twelve real pages",
+   "file": "img/pileup.png",
+   "after_heading": "WHAT IT IS NOW",
+   "alt": "Twelve real model launch and model pages from Anthropic, OpenAI and OpenRouter, March 2024 to October 2026, piled on top of each other",
+   "caption": "Twelve real pages, screenshotted 10 October 2026, oldest at the back. Sources: anthropic.com, openai.com, developers.openai.com, help.openai.com, support.claude.com, openrouter.ai"
+  },
+  {
+   "id": "decoder",
+   "label": "One name, six labels",
+   "file": "img/decoder.png",
+   "after_heading": "FIRST, WHAT YOU ARE LOOKING AT",
+   "alt": "One AI name read as six labels: app, size, version, effort, speed and plan"
+  },
+  {
+   "id": "belt",
+   "label": "The conveyor belt",
+   "file": "img/belt.png",
+   "after_heading": "WHAT IT USED TO BE",
+   "alt": "Timeline from one chatbot in 2022 to Haiku 4.5 in 2025",
+   "caption": "Sources: OpenAI; Anthropic launch posts"
+  },
+  {
+   "id": "menu",
+   "label": "The pricier name scored lower",
+   "file": "img/menu.png",
+   "after_heading": "WHAT IT IS NOW",
+   "alt": "Artificial Analysis Intelligence Index on OpenRouter: Opus 5.5 57.6, Sonnet 5.5 56.0, Fable 5.1 53.4",
+   "caption": "Source: Artificial Analysis Intelligence Index, shown on OpenRouter"
+  },
+  {
+   "id": "jobs",
+   "label": "One name, four jobs",
+   "file": "img/jobs.png",
+   "after_heading": "WHY THERE ARE SO MANY",
+   "alt": "Four jobs a model name does: version number, price tag, advert, queue ticket"
+  },
+  {
+   "id": "money",
+   "label": "Prices crash, bills grow",
+   "file": "img/money.png",
+   "after_heading": "FOLLOW THE MONEY",
+   "alt": "Price per million tokens fell from $20 to 7 cents while thinking bought per business grew 320 times",
+   "caption": "Sources: Stanford AI Index 2025; OpenAI, The state of enterprise AI"
+  },
+  {
+   "id": "forks",
+   "label": "Three ways this could go",
+   "file": "img/forks.png",
+   "after_heading": "THREE WAYS THIS COULD GO",
+   "alt": "Three futures: Autopilot (our bet), the Meter, the Glass Box"
+  }
+ ],
+ "scripts": [
+  {
+   "label": "Video script, about 4 minutes",
+   "file": "script-long.md"
+  },
+  {
+   "label": "Vertical cut, 76 seconds",
+   "file": "script-90s.md"
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+{
+  "about": [
+    "Every company the pieces name, with the Brandfetch domain its real logo comes from. House rule LOGOS_AND_FACE and VISUAL_EVIDENCE: a visual that names a company shows that company's real logo, from its own brand files, never redrawn.",
+    "scripts/post-pack/visual_gate.py reads this list: a name found in the fact-checked body must appear in the logos of at least one packed picture, and on the cover. Add a company here the first time a piece names it; the gate names the ones it cannot find.",
+    "A name may have several spellings; the first is how the logo list writes it."
+  ],
+  "companies": [
+    {"names": ["OpenAI", "ChatGPT", "Codex"], "domain": "openai.com"},
+    {"names": ["Anthropic", "Claude"], "domain": "anthropic.com"},
+    {"names": ["Google", "Gemini", "DeepMind"], "domain": "google.com"},
+    {"names": ["DeepSeek"], "domain": "deepseek.com"},
+    {"names": ["OpenRouter"], "domain": "openrouter.ai"},
+    {"names": ["SemiAnalysis"], "domain": "semianalysis.com"},
+    {"names": ["Reuters"], "domain": "reuters.com"},
+    {"names": ["Stanford"], "domain": "stanford.edu"},
+    {"names": ["Microsoft"], "domain": "microsoft.com"},
+    {"names": ["Amazon"], "domain": "amazon.com"},
+    {"names": ["Shopify"], "domain": "shopify.com"},
+    {"names": ["Meta"], "domain": "meta.com"},
+    {"names": ["Higgsfield"], "domain": "higgsfield.ai"},
+    {"names": ["Substack"], "domain": "substack.com"},
+    {"names": ["YouTube"], "domain": "youtube.com"},
+    {"names": ["LinkedIn"], "domain": "linkedin.com"}
+  ],
+  "mentions_only": [
+    "Reuters", "Stanford", "Substack", "YouTube", "LinkedIn", "Microsoft"
+  ],
+  "mentions_only_about": "Named as a source or a channel, never as a subject: a piece that only cites them needs no logo. A piece about one of them moves it out of this list."
+}

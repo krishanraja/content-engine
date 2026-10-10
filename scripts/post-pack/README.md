@@ -103,6 +103,7 @@ first post's facts.
 | `kind` | Goes to | Named | What it is |
 |---|---|---|---|
 | `publish-kit` | 0 Publish | `publish.html` | `publish_kit.py`'s page: every channel in order, the file for each, and Copy buttons (docs/AMPLIFICATION.md) |
+| `publish-manager` | 0 Publish | `publish-manager.html` | `publish_manager.py`'s self-contained page: the article with its pictures, every picture, every channel's words and the scripts, each with a Copy button |
 | `substack-copy` | 1 Article | `substack-copy.html` | `scripts/pages`' `substack.html`: open it, press the Copy buttons, paste into Substack |
 | `web-page` | 1 Article | `web-page.html` | `scripts/pages`' `page.html` |
 | `fact-checked-text` | 1 Article | `text-that-passed-the-fact-check.md` | the body whose fact check passed (or `"text"`) |
@@ -137,6 +138,18 @@ cuts through.
     python scripts/post-pack/edge_check.py IMAGE [IMAGE ...]
     python scripts/post-pack/edge_check.py --self-test
 
+## The publish manager
+
+Krish, 2026-10-10: "there should just be a copy button. Same for pictures."
+`publish_manager.py manager.json --out DIR` writes `publish-manager.html`,
+one self-contained page with every picture embedded, a Copy button on every
+word and every picture, Copy article (headings and pictures in place, as
+Substack takes it), and Download on each picture. Pack it as
+`publish-manager`.
+
+    python scripts/post-pack/publish_manager.py WORKDIR/manager.json --out DIR
+    python scripts/post-pack/publish_manager.py --self-test
+
 ## The publish page
 
 Krish, 2026-10-09: "Build a durable amplification strategy that looks cohesive
@@ -148,6 +161,34 @@ writes `publish.html` for one post; pack it as `publish-kit`.
 
     python scripts/post-pack/publish_kit.py WORKDIR/publish.json --out DIR
     python scripts/post-pack/publish_kit.py --self-test
+
+## The visual gate
+
+Krish, 2026-10-10, of Friday's first cover and pictures: "we need to add all
+the logos of the businesses that are related to what we are talking about ...
+an article like this should screenshot as many live articles of model
+releases ... it should pile up on top of one another visually ... The cover
+and email thumbnail is really boring and losing it's personality ... it needs
+to be a literal gate that stuff like this cannot be produced, whether in
+static asset form or video."
+
+`build.py` runs `visual_gate.py` on every pack and refuses it when:
+
+- a company the fact-checked body names (`config/logo-registry.json`) has its
+  real logo on no picture, not on the cover, or not declared on a video
+  (`"logos": ["OpenAI", "Anthropic"]` on each `image`, `cover` and `video`
+  entry: the companies whose real logos, from Brandfetch, it shows);
+- the body is about volume ("so many", "every few months", a count of
+  releases) and no picture is built from real pages: an `image` entry with
+  `"evidence": {"pages": [{"url", "date", "shot"}, ...]}` of at least six
+  real, dated pages, screenshotted and piled up;
+- the cover did not come from `scripts/pages/build.py --cover` (its
+  `cover.json` receipt must match the PNG), has no portrait, or has no logo
+  rows when the piece names companies.
+
+Only Krish's own words in the post file's `"visual_gate_override"` let a pack
+through without. `python scripts/post-pack/visual_gate.py post.json` explains
+what would pass or fail before packing.
 
 ## The story check
 

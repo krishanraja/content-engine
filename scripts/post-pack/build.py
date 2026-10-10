@@ -46,6 +46,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import library
 import story_check  # noqa: E402
+import visual_gate  # noqa: E402
 import edge_check  # noqa: E402
 from library import ARTICLE, COVERS, POST_README, POSTS, PUBLISH, SOCIAL, VIDEO, LibraryError, archive, brand  # noqa: E402
 
@@ -88,6 +89,9 @@ KINDS = {
     'captions': (VIDEO, None, 'Captions for the video. Upload them with it wherever the platform takes a captions file.'),
     'linkedin-post': (SOCIAL, 'linkedin-post.txt', 'The LinkedIn post. Paste it into LinkedIn as the post text.'),
     'linkedin-card': (SOCIAL, 'linkedin-card', 'The picture for the LinkedIn post. Attach it to the post.'),
+    'publish-manager': (PUBLISH, 'publish-manager.html',
+                        'Start here. One self-contained page: the article with its pictures, every picture, every channel\'s words and the '
+                        'scripts, each with its own Copy button (scripts/post-pack/publish_manager.py).'),
 }
 TEXT_KINDS = {'linkedin-post', 'video-script', 'fact-checked-text'}  # may be given as "text" in place of "file"
 SHARE_PURPOSE = 'A smaller copy of the video, under the 30 MiB a chat upload allows, for sending in a chat. Post the full-size one.'
@@ -198,13 +202,13 @@ def plan(post, base):
             name = archive.file_name(fitted, shape, goes, extension)
             purpose = given_purpose or f'The finished {archive.SHAPES[shape]} video. Post it to ' + \
                 and_list([archive.IN_FULL.get(place, place) for place in goes]) + '.'
-            planned.append({'section': VIDEO, 'name': name, 'purpose': purpose, 'source': source})
+            planned.append({'kind': kind, 'logos': [l for l in (entry.get('logos') or []) if isinstance(l, str)], 'evidence': entry.get('evidence') if isinstance(entry.get('evidence'), dict) else None, 'section': VIDEO, 'name': name, 'purpose': purpose, 'source': source})
             share = entry.get('share')
             if share is not None:
                 share_path = (base / share).resolve() if isinstance(share, str) else None
                 if not share_path or not share_path.is_file():
                     raise PackError(f'{label}: its "share" copy is not a file')
-                planned.append({'section': VIDEO, 'name': f'share/{name}', 'purpose': SHARE_PURPOSE, 'source': share_path})
+                planned.append({'kind': kind, 'logos': [l for l in (entry.get('logos') or []) if isinstance(l, str)], 'evidence': entry.get('evidence') if isinstance(entry.get('evidence'), dict) else None, 'section': VIDEO, 'name': f'share/{name}', 'purpose': SHARE_PURPOSE, 'source': share_path})
             continue
         if kind:
             section, fixed, purpose = KINDS[kind]
@@ -224,7 +228,7 @@ def plan(post, base):
             if kind == 'video-script':
                 story_gate(entry, entry['text'], label)
             name = entry.get('name') or (fixed if '.' in fixed else f'{fixed}.md')
-            planned.append({'section': section, 'name': safe_name(name), 'purpose': purpose,
+            planned.append({'kind': kind, 'logos': [l for l in (entry.get('logos') or []) if isinstance(l, str)], 'evidence': entry.get('evidence') if isinstance(entry.get('evidence'), dict) else None, 'section': section, 'name': safe_name(name), 'purpose': purpose,
                             'text': entry['text'].strip() + '\n'})
             continue
         source = source_of(entry, label)
@@ -233,7 +237,7 @@ def plan(post, base):
         if kind == 'image':
             edge_gate(entry, source, label)
         if kind == 'video-words':
-            planned.append({'section': section, 'name': fixed, 'purpose': purpose, 'text': words_text(source)})
+            planned.append({'kind': kind, 'logos': [l for l in (entry.get('logos') or []) if isinstance(l, str)], 'evidence': entry.get('evidence') if isinstance(entry.get('evidence'), dict) else None, 'section': section, 'name': fixed, 'purpose': purpose, 'text': words_text(source)})
             continue
         if entry.get('name'):
             name = entry['name']
@@ -243,7 +247,7 @@ def plan(post, base):
             name = f'{fixed}{source.suffix.lower()}'
         else:
             name = source.name
-        planned.append({'section': section, 'name': safe_name(name), 'purpose': purpose, 'source': source})
+        planned.append({'kind': kind, 'logos': [l for l in (entry.get('logos') or []) if isinstance(l, str)], 'evidence': entry.get('evidence') if isinstance(entry.get('evidence'), dict) else None, 'section': section, 'name': safe_name(name), 'purpose': purpose, 'source': source})
 
     seen = {}
     for item in planned:
@@ -261,6 +265,32 @@ def plan(post, base):
                             f'{library.MAX_BYTES // (1024 * 1024)} MiB')
         item['path'] = relative
     return folder, planned
+
+
+def fact_checked_body(post, base):
+    """The words of the piece, from its fact-checked-text entry, or ''."""
+    for entry in post.get('files') or []:
+        if isinstance(entry, dict) and entry.get('kind') == 'fact-checked-text':
+            if isinstance(entry.get('text'), str):
+                return entry['text']
+            if isinstance(entry.get('file'), str):
+                try:
+                    return (base / entry['file']).read_text(encoding='utf-8-sig')
+                except OSError:
+                    return ''
+    return ''
+
+
+def visual_gate_or_refuse(post, planned, base):
+    """Krish, 2026-10-10: every picture and video carries the real logos of
+    the companies the piece names, a piece about volume shows real pages
+    piled up, and the cover comes from the house drawer with his face. Only
+    his own words in "visual_gate_override" let a pack through without."""
+    found = visual_gate.problems(post, planned, fact_checked_body(post, base), base)
+    override = post.get('visual_gate_override')
+    if found and not (isinstance(override, str) and override.strip().lower().startswith('krish')):
+        raise PackError('the pack fails the visual gate:\n  - ' + '\n  - '.join(found) +
+                        '\n  Fix it (scripts/post-pack/visual_gate.py), or record Krish\'s own words in "visual_gate_override".')
 
 
 def story_gate(entry, text, label):
@@ -320,7 +350,8 @@ def read_me(post, folder, planned, made):
             continue
         lines += ['', section]
         for item in items:
-            lines += [f'- {item["name"]}', f'  {item["purpose"]}']
+            shows = f' Shows the real logos of {and_list(item["logos"])}.' if item.get('logos') else ''
+            lines += [f'- {item["name"]}', f'  {item["purpose"]}{shows}']
     lines += ['', f'Packed by the engine on {long_date(made)}. Every post is made by hand: '
                   'nothing in this folder has been posted by the engine.']
     return '\n'.join(lines) + '\n'
@@ -341,6 +372,7 @@ def build(post_path, out=DEFAULT_OUT, replace=False, today=None):
         folder, planned = plan(post, post_path.parent)
     except (LibraryError, archive.ArchiveError) as error:
         raise PackError(str(error))
+    visual_gate_or_refuse(post, planned, post_path.parent)
     made = today or datetime.now(timezone.utc).date().isoformat()
     readme = read_me(post, folder, planned, made)
 
@@ -441,6 +473,9 @@ def self_test():
                 {'category': 'social', 'file': 'card.png', 'name': 'quote card.png', 'purpose': 'A quote card for Instagram.'},
             ],
         }
+        # the house drawer's receipt, so the visual gate takes the cover (visual_gate.py)
+        (work / 'out' / 'cover.json').write_text(json.dumps({'sha256': hashlib.sha256((work / 'out' / 'cover.png').read_bytes()).hexdigest(),
+                                                             'portrait': True, 'rows': []}), encoding='utf-8')
         (work / 'post.json').write_text(json.dumps(post), encoding='utf-8')
         out = tmp / 'packs'
         built = build(work / 'post.json', out, today='2026-10-06')

@@ -54,14 +54,17 @@ def figure(img):
 def article_html(md, images):
     """The article as the HTML Substack takes on paste: h2, p, strong, em,
     and each picture as a figure right after its section's heading."""
-    after = {i['after_heading'].strip().upper(): i for i in images if i.get('after_heading')}
+    after = {}
+    for i in images:
+        if i.get('after_heading'):
+            after.setdefault(i['after_heading'].strip().upper(), []).append(i)
     parts, blocks = [], [b.strip() for b in md.replace('\r', '').split('\n\n') if b.strip()]
     for block in blocks:
         if block.startswith('## '):
             heading = block[3:].strip()
             parts.append(f'<h2>{inline(heading)}</h2>')
-            if heading.upper() in after:
-                parts.append(figure(after[heading.upper()]))
+            for img in after.get(heading.upper(), []):
+                parts.append(figure(img))
         else:
             parts.append(f'<p>{inline(" ".join(block.split()))}</p>')
     return '\n'.join(parts)
@@ -69,14 +72,17 @@ def article_html(md, images):
 
 def article_text(md, images):
     """Plain text: the words, with a marker where each picture goes."""
-    after = {i['after_heading'].strip().upper(): i for i in images if i.get('after_heading')}
+    after = {}
+    for i in images:
+        if i.get('after_heading'):
+            after.setdefault(i['after_heading'].strip().upper(), []).append(i)
     out = []
     for block in [b.strip() for b in md.replace('\r', '').split('\n\n') if b.strip()]:
         if block.startswith('## '):
             heading = block[3:].strip()
             out.append(heading)
-            if heading.upper() in after:
-                out.append(f'[Picture: {after[heading.upper()].get("alt", after[heading.upper()]["id"])}]')
+            for img in after.get(heading.upper(), []):
+                out.append(f'[Picture: {img.get("alt", img["id"])}]')
         else:
             out.append(re.sub(r'\*\*(.+?)\*\*', r'\1', ' '.join(block.split())))
     return '\n\n'.join(out)
