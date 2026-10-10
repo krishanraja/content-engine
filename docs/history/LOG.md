@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-10
 
+- reconciled at `31efbf4`: NOW.md takes the visual gate and publish manager, the making record and the make-piece routine, and the weekly rhythm ruled in `docs/CADENCE.md`; no document moved and none was archived.
 - reconciled at `f77d316`: NOW.md takes Friday's passed fact check, the BIG_PICTURE, SCRIPT_ONLY and HOOK_AND_CTA house rules, the publish page and amplification plan, the Call scoreboard and news velocity crons, and the network-secret route for cloud sessions; cron count 20 to 22.
 - rolled from NOW.md: 2026-09-08 **The content engine moved into this repository** (PR #42, ADR-019 in control-center). Why: Control Center kept the desk and gave the machinery to its own project; the routes, crons and guards now deploy from here.
 
