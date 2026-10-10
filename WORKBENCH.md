@@ -139,6 +139,29 @@ session").
 
 ## Latest handoff
 
+- 2026-10-10, evening: **The control centre plans and tracks; Claude Code
+  makes, and the two are one record.** Krish: "the control centre becomes
+  more of a progress tracker, suggestions compiler, and ideas generator,
+  which then saves my choices to the durable system and then a session here
+  picks up that durable system ... It's crucial that everything is fresh and
+  synchronised in real time." Where a piece is between the workroom and
+  every channel now lives on its own row, `content_ideas.meta.making`,
+  served by `/api/content-ideas/:id/making` (`api/_making.ts`) and written
+  from any session with `scripts/post-pack/making.py` (`build.py` and
+  `send.py` record the pack and the gate themselves when `post.json` carries
+  `piece_id`). Control Center (ADR-031 there) shows it on every piece's call
+  and in the composer over its realtime subscription, lets Krish tick
+  channels off in the amplification order, and its "Make it in Claude Code"
+  button fires the "Make a piece" routine with the piece id only; that
+  session follows `.agents/skills/make-piece/SKILL.md`. Friday's piece is
+  recorded: workroom, draft, visual gate, both scripts, pack built. **Waiting
+  on Krish:** generate the routine's token at claude.ai/code/routines ("Make
+  a piece") and set `CLAUDE_MAKE_ROUTINE_TOKEN` in Control Center's Vercel
+  project (the id is set); add the connectors the routine should carry
+  (Brandfetch, Firecrawl) in the routines UI; then the earlier items: test
+  Copy in claude.ai, approve the text, record both cuts, the Manifold
+  market, rotate the pasted keys.
+
 - 2026-10-10: **The visual gate is live, and Friday's pictures pass it.**
   Krish, of the first cover: "really boring and losing it's personality", and
   "it needs to be a literal gate that stuff like this cannot be produced,
