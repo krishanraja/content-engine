@@ -39,7 +39,7 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true}]}`.
    A piece already scheduled for its day (a pick carried over) needs no options.
    A new idea that is not yet a row is created first with
-   `POST /api/content-ideas {"raw_text": "...", "source_type": "lane_sourcing"}`.
+   `POST /api/content-ideas {"raw_text": "...", "source_type": "week_research"}`.
    Never leave out `source_type` and never use `manual`: a manual row is what
    the week page shows as an idea Krish dropped in, so a session's own find
    would pose as his. If the reply says `"via": "ingest_gate"`, the engine's

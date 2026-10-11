@@ -86,16 +86,21 @@ describe('which items a piece closes', () => {
   })
   it('with a making record, the Substack post alone closes nothing; the standing five close every item (Krish, 2026-10-11)', () => {
     const substack = { substack: { url: 'https://home.makeyourmindup.ai/p/x', posted_at: 'x' } }
-    const making = (channels: Record<string, unknown>) => ({ making: { channels, updated_at: 'x', by: 'Krish' } })
+    const making = (channels: Record<string, unknown>) => ({ making: { workroom: { url: 'https://claude.ai/artifact/w', at: 'x' }, channels, updated_at: 'x', by: 'Krish' } })
     expect(itemsToClose(items(), { id: FRIDAY, state: 'published', meta: making(substack) })).toEqual([])
     const four = { ...substack, youtube: { posted_at: 'x' }, shorts: { posted_at: 'x' }, reels: { posted_at: 'x' }, linkedin: { posted_at: 'x' } }
     expect(itemsToClose(items(), { id: FRIDAY, state: 'published', meta: making(four) })).toEqual([])
     const five = { ...four, tiktok: { posted_at: 'x' } }
     expect(itemsToClose(items(), { id: FRIDAY, state: 'published', meta: making(five) })).toEqual([{ id: 'friday-record', lane: 'done', by: 'engine: piece published' }])
   })
+  it("the watcher's Substack-only stamp on an old piece is not a making record, so its items still close on publish", () => {
+    const stub = { making: { channels: { substack: { url: 'https://home.makeyourmindup.ai/p/higgsfield', posted_at: 'x' } }, updated_at: 'x', by: 'publish watcher' } }
+    const closes = itemsToClose(items(), { id: HIGGS, state: 'published', meta: stub })
+    expect(closes.map(c => c.id)).toEqual(['you-wed-pick', 'old-link-item'])
+  })
   it('an item that closes_on "published" closes on the Substack post, before the reposts', () => {
     const list = [...items(), { id: 'friday-substack', lane: 'on_you', idea_id: FRIDAY, closes_on: 'published', link: null }]
-    const meta = { making: { channels: { substack: { posted_at: 'x' } }, updated_at: 'x', by: 'publish watcher' } }
+    const meta = { making: { session: { url: 'https://claude.ai/code/s', started_at: 'x', by: 'Claude Code' }, channels: { substack: { posted_at: 'x' } }, updated_at: 'x', by: 'publish watcher' } }
     expect(itemsToClose(list, { id: FRIDAY, state: 'review', meta })).toEqual([])
     expect(itemsToClose(list, { id: FRIDAY, state: 'published', meta })).toEqual([{ id: 'friday-substack', lane: 'done', by: 'engine: piece published' }])
   })

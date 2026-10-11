@@ -1,5 +1,5 @@
 import { supabase } from './_supabase.js'
-import { makingSteps, type MakingStep } from './_making.js'
+import { madeWithRecord, makingSteps, type MakingStep } from './_making.js'
 
 // Board items close themselves when the piece they are about moves on.
 //
@@ -14,8 +14,9 @@ import { makingSteps, type MakingStep } from './_making.js'
 //     (the standing five are ticked: Substack, YouTube, Shorts, TikTok and
 //     Instagram; Krish, 2026-10-11. The Substack post alone, which is what
 //     sets state 'published', leaves the reposts and their items open.)
-//   - the piece is published and has no making record at all (made before
-//     the record existed, so nothing can tick its channels) -> done
+//   - the piece is published and was not made with the making record
+//     (made before it existed, so nothing ticks its channels; a record
+//     holding only the watcher's Substack tick does not count) -> done
 //   - its closes_on is 'published' and the Substack post is live -> done
 //   - the piece is dropped or buried       -> archived
 //   - its closes_on step is done           -> done
@@ -42,7 +43,7 @@ export function itemPiece(item: Pick<OpenItem, 'idea_id' | 'link'>): string | nu
 export function itemsToClose(items: readonly OpenItem[], piece: PieceRow, steps: MakingStep[] = makingSteps(piece)): Close[] {
   const out: Close[] = []
   const published = piece.state === 'published'
-  const hasRecord = Boolean(piece.meta && typeof piece.meta === 'object' && piece.meta.making && typeof piece.meta.making === 'object')
+  const hasRecord = madeWithRecord(piece.meta)
   const gone = piece.state === 'dropped' || Boolean(piece.buried_at)
   const done = new Set(steps.filter(s => s.state === 'done').map(s => s.key))
   const finished = done.has('publish') || (published && !hasRecord)

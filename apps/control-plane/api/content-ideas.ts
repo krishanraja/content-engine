@@ -52,9 +52,11 @@ const ALLOWED_STATE = new Set([
 
 // A source type not listed here is stored as 'manual', and GET
 // /api/week/options reports manual rows as ideas Krish dropped in. So an
-// agent's own sourcing must be listed: 'lane_sourcing' is a Claude Code
-// session researching options for a day (.agents/skills/plan-week), already
-// in the content_ideas_source_type_check constraint.
+// agent's own sourcing must be listed: 'week_research' is the Sunday
+// planning session's finds (.agents/skills/plan-week). Every value must also
+// be a row in intake_sources, which content_ideas.source_type references
+// (migration 20261011200000 adds this one). 'lane_sourcing' belongs to the
+// n8n Lane Sourcing workflow, whose quiet-source alarm reads its rows.
 export const ALLOWED_SOURCE = new Set([
   'signal_inbox',
   'cleo_chat',
@@ -67,7 +69,7 @@ export const ALLOWED_SOURCE = new Set([
   'manual',
   'creator_move',
   'aeo_signal',
-  'lane_sourcing',
+  'week_research',
   'build_signal',
 ])
 

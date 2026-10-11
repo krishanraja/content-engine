@@ -184,6 +184,21 @@ export interface MakingStep { key: string; label: string; state: MakingStepState
  *  article and the publish board; Codex owns video production; Krish records
  *  and posts. A tool never writes a step it does not own. Mirrored in
  *  control-center/src/lib/making.ts and read by both tools' skills. */
+/**
+ * Whether a piece was made with the making record: any step written by a
+ * session, or any channel beyond the Substack post. The publish watcher's
+ * first version stamped old pieces with a record holding only the Substack
+ * tick (live on 2026-10-11 for Higgsfield and article 1); such a stub is
+ * not a record, so those pieces still close their board items on publish.
+ */
+export function madeWithRecord(meta: Record<string, any> | null | undefined): boolean {
+  const m = isObj(meta) && isObj(meta.making) ? meta.making : null
+  if (!m) return false
+  if (['workroom', 'publish_manager', 'visual_gate', 'script_check', 'pack', 'session'].some(k => isObj(m[k]))) return true
+  if (['recordings', 'video_assets'].some(k => Array.isArray(m[k]) && m[k].length > 0)) return true
+  return isObj(m.channels) && Object.keys(m.channels).some(c => c !== 'substack')
+}
+
 export const MAKING_OWNERS: Record<string, MakingOwner> = {
   workroom: 'Claude', draft: 'Claude', visual_gate: 'Claude', scripts: 'Claude', pack: 'Claude',
   record: 'Krish', video: 'Codex', publish: 'Krish',
