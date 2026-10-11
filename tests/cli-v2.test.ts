@@ -12,7 +12,9 @@ import type { JobManifestV2 } from '@mindmake/contracts'
 
 const execFileAsync = promisify(execFile)
 
-describe.sequential('V2 CLI', () => {
+// Tests in a suite run one after another unless marked concurrent, and this
+// config runs one file at a time, so the CLI's shared runtime root is safe.
+describe('V2 CLI', () => {
   const roots: string[] = []
   const priorRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
 
