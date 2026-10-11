@@ -20,7 +20,15 @@
     {"names": ["Higgsfield"], "domain": "higgsfield.ai"},
     {"names": ["Substack"], "domain": "substack.com"},
     {"names": ["YouTube"], "domain": "youtube.com"},
-    {"names": ["LinkedIn"], "domain": "linkedin.com"}
+    {"names": ["LinkedIn"], "domain": "linkedin.com"},
+    {"names": ["Suno"], "domain": "suno.com"},
+    {"names": ["Warner Music Group", "Warner Music", "Warner"], "domain": "wmg.com"},
+    {"names": ["BMG"], "domain": "bmg.com"},
+    {"names": ["Believe"], "domain": "believe.com"},
+    {"names": ["Sony Music", "Sony"], "domain": "sonymusic.com"},
+    {"names": ["Universal Music Group", "Universal Music", "Universal"], "domain": "universalmusic.com"},
+    {"names": ["Udio"], "domain": "udio.com"},
+    {"names": ["ElevenLabs"], "domain": "elevenlabs.io"}
   ],
   "mentions_only": [
     "Reuters", "Stanford", "Substack", "YouTube", "LinkedIn", "Microsoft"

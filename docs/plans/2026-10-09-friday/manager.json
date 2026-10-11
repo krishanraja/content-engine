@@ -1,7 +1,7 @@
 {
  "title": "Why are there suddenly so many AIs?",
  "subtitle": "Claude Code lists over a dozen versions of Claude. Here is why every AI menu keeps growing, who it serves, and what to do about it.",
- "date": "2026-10-09",
+ "date": "2026-10-16",
  "kicker": "mind.the.gap",
  "status": [
   "Fact check passed on this exact text",
@@ -74,11 +74,11 @@
  ],
  "scripts": [
   {
-   "label": "Video script, about 4 minutes",
+   "label": "Video script, about 3 minutes",
    "file": "script-long.md"
   },
   {
-   "label": "Vertical cut, 76 seconds",
+   "label": "90-second cut, about 80 seconds",
    "file": "script-90s.md"
   }
  ]

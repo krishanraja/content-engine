@@ -1,6 +1,6 @@
 {
  "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
- "date": "2026-10-09",
+ "date": "2026-10-16",
  "subchannel": "mind.the.gap",
  "subject": "Why so many AIs",
  "headline": "Why are there suddenly so many AIs?",
@@ -160,12 +160,14 @@
   },
   {
    "kind": "video-script",
-   "file": "script.md"
+   "file": "script.md",
+   "cut": "long"
   },
   {
    "kind": "video-script",
    "file": "script-90s.md",
-   "name": "video-script-90-seconds.md"
+   "name": "video-script-90-seconds.md",
+   "cut": "short"
   },
   {
    "kind": "linkedin-post",
