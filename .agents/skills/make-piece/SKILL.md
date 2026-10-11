@@ -26,6 +26,18 @@ chat that started it.
    `python3 scripts/post-pack/making.py <uuid> session <this session's https link>`.
    Then do the first step that is not done.
 
+## Who owns what
+
+Krish, 2026-10-11: video production iteration is Codex's; Claude Code is
+"the overall place for initial ideation, article creation and publish board
+building". So a Claude Code session owns the steps marked Claude below and
+never writes the video assets: when the piece shows Recorded, its next owner
+is Codex (`.agents/skills/produce-video/SKILL.md`), and this session's job is
+done until the video assets are on the record, after which it finishes the
+publish board (the publish page with the finished cuts). Every step carries
+its owner in `GET /api/content-ideas/:id/making`; a step that is not yours is
+not yours to write, whatever the chat says.
+
 ## The steps, in order, each recorded as it lands
 
 | Step | Do | Record |
@@ -36,9 +48,9 @@ chat that started it.
 | Scripts | The long and the short cut, spoken words only, provocative open, article in the outro (`scripts/post-pack/story_check.py`) | `making.py <uuid> scripts long.md short.md` |
 | Publish page | `publish_manager.py`: one page with Copy on every text and every picture; publish it as an artifact | `making.py <uuid> publish-manager <https link>` |
 | Pack | `build.py post.json` then `send.py <pack>` (both record themselves when post.json has `piece_id`) | automatic |
-| Record | Krish records both cuts from the scripts; `recording.py get` fetches them | `making.py <uuid> recorded long <path>` |
-| Video assets | Both cuts produced with logos and the pile-up on screen, through the gate, into the pack | `making.py <uuid> video long "<name>" <path> --url <https>` |
-| Publish | Krish posts in the amplification order (`docs/AMPLIFICATION.md`); he ticks channels off in Control Center, or a session records what he said he posted | `making.py <uuid> posted substack <https>` |
+| Record (Krish) | Krish records both cuts from the scripts and drops them in the Video Engine Inbox; the runner sends them to the engine | the runner or a session: `making.py <uuid> recorded long <path>` |
+| Video assets (Codex) | Both cuts produced with the logos and the pile-up on screen, through the visual gate, into the pack. Not this session's step | Codex: `making.py <uuid> video long "<name>" <path> --url <https>` |
+| Publish board (Claude), then posting (Krish) | Once the video assets are on the record, put the finished cuts in the publish page and the pack (`build.py --replace`, `send.py`). Krish posts in the amplification order (`docs/AMPLIFICATION.md`); he ticks channels off in Control Center, or a session records what he said he posted | `making.py <uuid> posted substack <https>` |
 
 `post.json` carries `"piece_id": "<uuid>"` so the pack tools report by
 themselves. Nothing in this skill sends, posts, spends or deletes: a paid

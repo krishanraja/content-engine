@@ -139,6 +139,17 @@ session").
 
 ## Latest handoff
 
+- 2026-10-11: **Codex owns video production; Claude Code owns ideation, the
+  article and the publish board.** Every step of the making record now
+  names its owner (`MAKING_OWNERS`), `.agents/skills/make-piece` stops at
+  the pack and comes back for the publish board, and the new
+  `.agents/skills/produce-video` is Codex's step from Recorded to Video
+  assets, on a runner machine, through the visual gate. `docs/CADENCE.md`
+  now holds who owns what, where every key and file lives, and the ten
+  ways the cross-tool system could be misread and what stops each. In
+  Control Center the slate now runs on a cron (Sunday, Tuesday and
+  Thursday morning Sydney) and lays each coming slot on the work board.
+
 - 2026-10-10, late: **The weekly rhythm is ruled** (`docs/CADENCE.md`).
   Krish: Sunday, Tuesday and Thursday are the preparation days, each with a
   slate of ideas to pick from (the cold ideas and Inspo folder on Drive, and

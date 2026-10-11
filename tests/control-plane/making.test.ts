@@ -142,6 +142,13 @@ describe('the pure helpers', () => {
     expect(next.updated_at).toBe('2026-10-10T00:01:00Z')
   })
 
+  it('every step names its owner: Claude makes, Krish records and posts, Codex produces the video', () => {
+    const steps = makingSteps({ state: 'drafting', meta: {} })
+    expect(Object.fromEntries(steps.map(s => [s.key, s.owner]))).toEqual({
+      workroom: 'Claude', draft: 'Claude', visual_gate: 'Claude', scripts: 'Claude', pack: 'Claude', record: 'Krish', video: 'Codex', publish: 'Krish',
+    })
+  })
+
   it('a published piece with every channel is done', () => {
     const channels = Object.fromEntries(['substack', 'youtube', 'linkedin', 'shorts', 'reels', 'whatsapp'].map(c => [c, { posted_at: '2026-10-10T03:00:00Z' }]))
     const steps = makingSteps({ state: 'published', meta: { fact_check: { status: 'passed' }, making: { channels, updated_at: 'x', by: 'Krish' } } })
