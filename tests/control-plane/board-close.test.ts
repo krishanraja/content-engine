@@ -80,9 +80,24 @@ beforeEach(() => {
 
 describe('which items a piece closes', () => {
   const items = () => db.tables.work_board_items as any[]
-  it('a published piece closes every item tied to it, by column or by link, and nothing else', () => {
+  it('a published piece with no making record (made before it existed) closes every item tied to it, by column or by link, and nothing else', () => {
     const closes = itemsToClose(items(), { id: HIGGS, state: 'published', meta: {} })
     expect(closes.map(c => [c.id, c.lane, c.by])).toEqual([['you-wed-pick', 'done', 'engine: piece published'], ['old-link-item', 'done', 'engine: piece published']])
+  })
+  it('with a making record, the Substack post alone closes nothing; the standing five close every item (Krish, 2026-10-11)', () => {
+    const substack = { substack: { url: 'https://home.makeyourmindup.ai/p/x', posted_at: 'x' } }
+    const making = (channels: Record<string, unknown>) => ({ making: { channels, updated_at: 'x', by: 'Krish' } })
+    expect(itemsToClose(items(), { id: FRIDAY, state: 'published', meta: making(substack) })).toEqual([])
+    const four = { ...substack, youtube: { posted_at: 'x' }, shorts: { posted_at: 'x' }, reels: { posted_at: 'x' }, linkedin: { posted_at: 'x' } }
+    expect(itemsToClose(items(), { id: FRIDAY, state: 'published', meta: making(four) })).toEqual([])
+    const five = { ...four, tiktok: { posted_at: 'x' } }
+    expect(itemsToClose(items(), { id: FRIDAY, state: 'published', meta: making(five) })).toEqual([{ id: 'friday-record', lane: 'done', by: 'engine: piece published' }])
+  })
+  it('an item that closes_on "published" closes on the Substack post, before the reposts', () => {
+    const list = [...items(), { id: 'friday-substack', lane: 'on_you', idea_id: FRIDAY, closes_on: 'published', link: null }]
+    const meta = { making: { channels: { substack: { posted_at: 'x' } }, updated_at: 'x', by: 'publish watcher' } }
+    expect(itemsToClose(list, { id: FRIDAY, state: 'review', meta })).toEqual([])
+    expect(itemsToClose(list, { id: FRIDAY, state: 'published', meta })).toEqual([{ id: 'friday-substack', lane: 'done', by: 'engine: piece published' }])
   })
   it('a dropped piece archives its items', () => {
     expect(itemsToClose(items(), { id: HIGGS, state: 'dropped', meta: {} }).map(c => c.lane)).toEqual(['archived', 'archived'])
@@ -176,7 +191,9 @@ describe('the publish watcher', () => {
       expect(out.body).toMatchObject({ published: 1, asked: 1 })
       const higgs = db.tables.content_ideas.find(r => r.id === HIGGS)!
       expect(higgs).toMatchObject({ state: 'published', published_url: 'https://home.makeyourmindup.ai/p/higgsfield-taken-apart-the-1bn-ai', published_at: '2026-10-07T16:06:00Z' })
-      expect(higgs.meta.making.channels.substack.url).toBe('https://home.makeyourmindup.ai/p/higgsfield-taken-apart-the-1bn-ai')
+      // Higgsfield was made before the making record existed: the watcher
+      // gives it none, so its items close on the publish as they always did.
+      expect(higgs.meta.making).toBeUndefined()
       expect(out.body.closed.sort()).toEqual(['old-link-item', 'you-wed-pick'])
       expect(db.tables.work_board_items.find(r => r.id === 'unrelated')?.lane).toBe('on_you')
       expect(db.tables.work_board_items.find(r => r.id === 'post-103')).toMatchObject({ lane: 'on_you', link: 'https://home.makeyourmindup.ai/p/fresh' })
@@ -186,6 +203,36 @@ describe('the publish watcher', () => {
       await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: {}, body: {} } as never, again.res as never)
       expect(again.out.body).toMatchObject({ published: 0, asked: 0, closed: [] })
       expect(db.tables.work_board_items.find(r => r.id === 'post-103')?.lane).toBe('archived')
+    } finally {
+      globalThis.fetch = realFetch
+    }
+  })
+
+  it('a piece with a making record gets the Substack tick, and its items wait for the standing five', async () => {
+    db.tables.work_board_items.push({ id: 'friday-repost', lane: 'on_you', idea_id: FRIDAY, closes_on: null, link: null, title: 'Repost to YouTube, Shorts, TikTok and Instagram' })
+    db.tables.work_board_items.push({ id: 'friday-substack', lane: 'on_you', idea_id: FRIDAY, closes_on: 'published', link: null, title: 'Post the Substack video' })
+    const archive = [{ id: 201, title: 'Why are there suddenly so many AIs?', canonical_url: 'https://home.makeyourmindup.ai/p/why-so-many-ais', post_date: '2026-10-16T13:00:00Z', type: 'newsletter' }]
+    const realFetch = globalThis.fetch
+    globalThis.fetch = (async () => ({ ok: true, status: 200, json: async () => archive })) as never
+    try {
+      const { default: handler } = await import('../../apps/control-plane/api/publish/watch.js')
+      const { out, res } = fakeRes()
+      await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: {}, body: {} } as never, res as never)
+      expect(out.body).toMatchObject({ published: 1 })
+      const friday = db.tables.content_ideas.find(r => r.id === FRIDAY)!
+      expect(friday.state).toBe('published')
+      expect(friday.meta.making.channels.substack.url).toBe('https://home.makeyourmindup.ai/p/why-so-many-ais')
+      expect(friday.meta.making.pack.folder).toBe('f')
+      expect(out.body.closed).toEqual(['friday-substack'])
+      expect(db.tables.work_board_items.find(r => r.id === 'friday-repost')?.lane).toBe('on_you')
+      expect(db.tables.work_board_items.find(r => r.id === 'friday-record')?.lane).toBe('on_you')
+      // Krish ticks the last of the five; the making route closes the rest.
+      const { default: making } = await import('../../apps/control-plane/api/content-ideas/[id]/making.js')
+      const tick = fakeRes()
+      await making({ method: 'POST', headers: { cookie: COOKIE }, query: { id: FRIDAY }, body: { channels: { youtube: {}, shorts: {}, tiktok: {}, reels: {} } } } as never, tick.res as never)
+      expect(tick.out.status).toBe(200)
+      expect(tick.out.body.steps.find((s: Row) => s.key === 'publish')).toMatchObject({ state: 'done', note: '5 of 5 channels' })
+      expect(tick.out.body.closed.sort()).toEqual(['friday-record', 'friday-repost'])
     } finally {
       globalThis.fetch = realFetch
     }

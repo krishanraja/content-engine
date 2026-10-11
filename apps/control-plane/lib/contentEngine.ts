@@ -415,10 +415,11 @@ export type MediaChannel =
 export const MEDIA_CHANNELS: { value: MediaChannel; label: string; shortForm: boolean }[] = [
   { value: 'substack', label: 'Substack', shortForm: false },
   { value: 'instagram', label: 'Instagram', shortForm: true },
-  // TikTok is deliberately absent from the SELECTABLE list while it has no
-  // register in the corpus: a channel you can tick but never cut for is a
-  // checkbox that does nothing. It stays in MediaChannel above so stored rows
-  // still type-check, and media_channels.active is false to match.
+  // TikTok is a standing channel since 2026-10-11 (Krish: "I always want to
+  // repost to YouTube and then Shorts, TikTok, and Instagram"), and
+  // media_channels.tiktok is active to match. What goes up is the 90-second
+  // short cut with its caption, posted by hand.
+  { value: 'tiktok', label: 'TikTok', shortForm: true },
   { value: 'youtube', label: 'YouTube', shortForm: false },
   { value: 'linkedin', label: 'LinkedIn', shortForm: true },
   { value: 'podcast', label: 'Podcast', shortForm: false },
@@ -428,8 +429,17 @@ export const MEDIA_CHANNELS: { value: MediaChannel; label: string; shortForm: bo
   { value: 'signal_noise', label: 'Signal & Noise', shortForm: false },
 ]
 
-/** Default distribution per format, so the composer pre-ticks the sane set. */
+/** Default distribution per subchannel, keyed `${lane}:${lane_slot}`, so the
+ *  composer pre-ticks the standing set every piece goes to (Krish,
+ *  2026-10-11): Substack, YouTube (with Shorts), Instagram and TikTok.
+ *  LinkedIn, the podcast and Signal & Noise stay a tick away. */
+const STANDING_CHANNELS: MediaChannel[] = ['substack', 'youtube', 'instagram', 'tiktok']
 export const DEFAULT_CHANNELS: Record<string, MediaChannel[]> = {
+  'publication:follow_the_money': [...STANDING_CHANNELS],
+  'publication:mind_the_gap': [...STANDING_CHANNELS],
+  'publication:under_the_hood': [...STANDING_CHANNELS],
+  // Historical rows, which carry the retired spelling verbatim, keep the
+  // defaults they were made under.
   'publication:money_of_ai': ['substack', 'linkedin'],
   'publication:built_with_ai': ['substack', 'instagram', 'youtube', 'signal_noise'],
 }
@@ -526,7 +536,7 @@ export const CHANNEL_ADAPTS: LaneAdapt[] = [
   {
     value: 'youtube',
     label: 'YouTube script',
-    hint: "Turn this into a YouTube script in Krish's spoken first person, 700-1300 words, roughly five to nine minutes. Genuinely spoken, not an essay read aloud: contractions, asides, sentences a person can say in one breath. Plain words even where the idea is not, and expand every acronym once. Pick ONE analogy and carry it the whole way, including through the part where it breaks, and say out loud where it stops working. Dry humour that makes the next idea easier to hold, aimed at the industry, the hype or Krish himself, never at the viewer for not knowing. Open in ten seconds on the surprising claim, no \"hey guys\", no \"in today's video\". Mark the beats. It has to pass a read-aloud test.",
+    hint: "Turn this into the long cut: a YouTube script in Krish's spoken first person, about three minutes, 405 to 495 spoken words (house rule TWO_CUTS). Genuinely spoken, not an essay read aloud: contractions, asides, sentences a person can say in one breath. Plain words even where the idea is not, and expand every acronym once. Pick ONE analogy and carry it the whole way, including through the part where it breaks, and say out loud where it stops working. Dry humour that makes the next idea easier to hold, aimed at the industry, the hype or Krish himself, never at the viewer for not knowing. Open in ten seconds on the surprising claim, no \"hey guys\", no \"in today's video\". Mark the beats. It has to pass a read-aloud test. The 90-second short cut for Shorts, TikTok and Instagram Reels is its own script with its own hook and outro (the 90s video format).",
   },
   {
     value: 'instagram',
@@ -548,10 +558,11 @@ export const CHANNEL_ADAPTS: LaneAdapt[] = [
 /** Legacy flat list, formats first. Kept so existing call sites keep compiling;
  *  new UI should render FORMAT_ADAPTS and CHANNEL_ADAPTS as separate groups. */
 // ── Video scripts ────────────────────────────────────────────────────────
-// Six lengths, 15 seconds to 20 minutes. The engine could already produce one
-// video artifact (CHANNEL_ADAPTS.youtube: a single 700-1300 word spoken cut),
-// which is one of these and not the others: a 15 second hook and a 20 minute
-// investigation are different shapes, not one shape scaled.
+// Seven lengths, 15 seconds to 20 minutes. Every piece uses two of them
+// (house rule TWO_CUTS, Krish, 2026-10-11): 3min, the long cut that
+// CHANNEL_ADAPTS.youtube also asks for, and 90s, the short cut for Shorts,
+// TikTok and Instagram Reels. A 15 second hook and a 20 minute investigation
+// are different shapes, not one shape scaled.
 //
 // The picker lives here; the per-length STRUCTURE and the prompt live in
 // api/_video.ts, because the server owns what gets asked of the model.
@@ -562,7 +573,7 @@ export const VIDEO_FORMATS: VideoFormatOption[] = [
   { id: '15s', label: '15 second hook', seconds: 15, words: 40 },
   { id: '30s', label: '30 seconds', seconds: 30, words: 80 },
   { id: '60s', label: '60 second reel', seconds: 60, words: 160 },
-  { id: '90s', label: '90 seconds', seconds: 90, words: 225 },
+  { id: '90s', label: '90 seconds', seconds: 90, words: 200 },
   { id: '3min', label: '3 minutes', seconds: 180, words: 450 },
   { id: '10min', label: '10 minutes', seconds: 600, words: 1500 },
   { id: '20min', label: '20 minutes', seconds: 1200, words: 3000 },

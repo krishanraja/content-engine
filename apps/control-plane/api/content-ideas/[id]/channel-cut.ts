@@ -36,7 +36,7 @@ import { houseRulesBlock } from '../../_houseRules.js'
 // A cut never touches `body`. The source piece stays whatever it was.
 
 const VALID_CHANNELS = new Set([
-  'substack', 'linkedin', 'youtube', 'instagram', 'podcast', 'signal_noise',
+  'substack', 'linkedin', 'youtube', 'instagram', 'tiktok', 'podcast', 'signal_noise',
 ])
 
 // Retired channel keys that may still arrive from an old client or a stored
@@ -53,7 +53,10 @@ const RETIRED_CHANNELS: Record<string, string> = {
 const FALLBACK_HINT: Record<string, string> = {
   substack: 'Adapt for Substack: 1200-2500 words, full evidence, one genuine counterpoint held properly, a verdict rather than a summary.',
   linkedin: 'Adapt for LinkedIn: 150-250 words, one idea, open mid-argument, short paragraphs, no hashtags and no "thoughts?" closer.',
-  youtube: 'Turn into a spoken first-person YouTube script, 700-1300 words, one analogy carried the whole way including where it breaks, plain words, dry humour aimed at the industry and never the viewer.',
+  youtube: 'Turn into a spoken first-person YouTube script, about three minutes: 405 to 495 spoken words (the long cut, house rule TWO_CUTS), one analogy carried the whole way including where it breaks, plain words, dry humour aimed at the industry and never the viewer.',
+  // TikTok is a standing channel (Krish, 2026-10-11). The video is the
+  // 90-second short cut, so what is cut here is its caption.
+  tiktok: 'Write the TikTok caption for the 90-second short cut: one or two plain sentences that state the claim the video opens on, then say the full article is free at makeyourmindup.ai, named as text because links in TikTok captions are not clickable. Under 300 characters.',
   instagram: 'Adapt into an Instagram post about one surprising or encouraging shift, a hook line then four to eight one-second beats, resting on a named company, a real number or a dated change.',
   podcast: 'Adapt into a podcast script, 800-1500 words, spoken register with nothing left to a picture, no punctuation the ear cannot hear, names and numbers repeated once.',
   signal_noise: 'Adapt for Signal & Noise: exec-to-exec, 300-500 words, separate durable signal from noise, name what most people get wrong, hard verdict ending.',

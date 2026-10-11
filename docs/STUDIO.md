@@ -312,7 +312,9 @@ import` and `experiment`. Stdout is JSON; diagnostics go to stderr.
 `package archive` files an approved package in the Drive archive in a folder
 named by the date, the piece's title and where to post it, such as
 `2026-10-06 Who picks your AI (post to Shorts, Reels, TikTok, LinkedIn)`,
-with the job id in its `job.txt` (Krish, 2026-10-06). The rule is
+with the job id in its `job.txt` (Krish, 2026-10-06). The places are named
+in the archive's file-naming order, which is not the posting order; that is
+in `docs/AMPLIFICATION.md`. The rule is
 `config/archive-naming.cases.json`, shared with `scripts/quick-edit/archive.py`
 (`docs/OPERATIONS.md`, "The archive").
 

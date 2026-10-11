@@ -115,7 +115,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/content-ideas/[id]/call-market` | pin a prediction market (Polymarket slug or Kalshi ticker) to a piece's dated Call, read once to refuse a wrong one; GET reads it, `{clear: true}` unpins | none, keyless |
 | `/api/content-ideas/[id]/making` | where the piece is between the workroom and every channel (`meta.making`: workroom and publish page links, visual gate, script check, pack, recordings, video assets, channels posted, the session making it); GET reads it with the steps, POST merges a patch. Written by Claude Code sessions (`scripts/post-pack/making.py`) and by Krish's cookie when he ticks a channel off; read by Control Center over its realtime subscription on `content_ideas` | none, keyless |
 | `/api/week/options` | the week's options (Krish, 2026-10-11: one Sunday decision for Monday, Wednesday and Friday). GET `?week_start=<Monday>` hands a session each series' mandate, the options written for that week, what is in flight, the judges' best and the ideas Krish dropped in; POST `{week_start, series, options:[{id, rank, pitch, why_now, recommended}]}` writes `meta.week_option` on each row and clears it from rows the day no longer offers. Read live by Control Center's week page. Picks nothing | none, keyless |
-| `/api/publish/watch` | hourly: marks a piece published from the publication's public archive and closes the board items tied to it (`_publishWatch.ts`, `_boardClose.ts`) | none, keyless |
+| `/api/publish/watch` | hourly: marks a piece published from the publication's public archive (and ticks Substack on its making record, when it has one), then closes the board items the publish closes: every item tied to the piece once the standing five are ticked, the `closes_on: published` ones at once, and all of them for a piece made before the making record existed (`_publishWatch.ts`, `_boardClose.ts`) | none, keyless |
 | `/api/calls` | public, read-only: every published piece's Call, our confidence, `not_due_yet` or `due`, Krish's verdict when he has made it, and the pinned market's odds; the scoreboard on makeyourmindup.ai reads it | none |
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
@@ -820,7 +820,8 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
     names, real pages piled up when the piece is about volume, and a cover
     from the house drawer with Krish's face. Every launch set includes the publish page (`docs/AMPLIFICATION.md`,
     `scripts/post-pack/publish_kit.py`): one Substack Video post, then YouTube,
-    LinkedIn, Shorts, Reels, WhatsApp and Notes, with Copy buttons. The same day a post's launch set is made, pack it with
+    then Shorts, TikTok and Instagram, with LinkedIn, WhatsApp and Notes as
+    optional steps, and Copy buttons on each. The same day a post's launch set is made, pack it with
    `python3 scripts/post-pack/build.py post.json` and send it with
    `python3 scripts/post-pack/send.py <pack folder>`; send a brand kit change
    with `send.py --brand-kit` (Krish, 2026-10-06, section 9 above). Read

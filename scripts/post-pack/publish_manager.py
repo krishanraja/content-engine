@@ -233,7 +233,7 @@ def page(m, base):
     if cover:
         sub.append(pic_card({**cover, 'label': 'Cover and email thumbnail'}, slug))
     sub += [pic_card({**i, 'label': f'Picture {k}: {i.get("label") or i["id"]}'}, slug) for k, i in enumerate(body_imgs, 1)]
-    sections.append(('substack', '1. Substack', 'One Video post: the long video on top, then this article under it. Copy each piece in turn.', ''.join(sub)))
+    sections.append(('substack', '1. Substack', 'One Video post: the 3-minute video on top, then this article under it. Copy each piece in turn.', ''.join(sub)))
 
     # 2 onwards: every other channel, from the same plan as publish_kit.py
     for k, s in enumerate(publish_kit.steps(words)[1:], 2):

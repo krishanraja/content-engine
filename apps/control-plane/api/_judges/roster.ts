@@ -218,7 +218,8 @@ export const DRAFT_JUDGES: Judge[] = [
     key: 'channel_fit',
     question: 'Is this the right shape for where it is going?',
     rubric:
-      'Score fit to the named channel. A Short must land one idea in under a minute with a spoken cadence. A '
+      'Score fit to the named channel. A Short must land one idea inside 90 seconds (the short cut, house rule '
+      + 'TWO_CUTS) with a spoken cadence. A '
       + 'Substack post can carry an argument with sources and earns its length. A carousel needs one idea per slide '
       + 'that survives being read alone. 10 means it could not be better shaped for this channel; 1 means it is the '
       + 'right idea in the wrong form and should be re-cut, not edited.',

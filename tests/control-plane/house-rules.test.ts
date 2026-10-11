@@ -367,6 +367,50 @@ describe('a script is only the words, opening on a provocation and closing on th
   })
 })
 
+describe('two cuts, each from its own script, inside the lengths story_check holds (TWO_CUTS, Krish, 2026-10-11)', () => {
+  test('the rule is live, says each cut has its own script, and reaches the writers', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'TWO_CUTS')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.match(r.text, /each recorded from its own script with its own hook and its own outro/)
+    assert.doesNotMatch(r.text, /one recording/)
+    for (const stage of ['write', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+  })
+  test('the writer aims the 3min and 90s formats inside the cut lengths, and asks again above the ceiling it states', async () => {
+    const video = await import('../../apps/control-plane/api/_video.js')
+    const client = await import('../../apps/control-plane/lib/contentEngine.js')
+    const check = readFileSync('scripts/post-pack/story_check.py', 'utf8')
+    const bounds = (cut: string) => {
+      const m = new RegExp(`'${cut}':\\s*\\((\\d+),\\s*(\\d+)`).exec(check)
+      assert.ok(m, cut)
+      return [Number(m[1]), Number(m[2])]
+    }
+    for (const [id, cut, ceiling] of [['3min', 'long', 495], ['90s', 'short', 220]] as const) {
+      const f = video.VIDEO_FORMATS.find(x => x.id === id)!
+      const [lo, hi] = bounds(cut)
+      assert.ok(f.words >= lo && f.words <= hi, `${id} target ${f.words} inside ${lo}-${hi}`)
+      assert.equal(video.wordCeiling(f), ceiling, id)
+      assert.ok(video.wordCeiling(f) <= hi, `${id} ceiling inside ${hi}`)
+      assert.equal(client.VIDEO_FORMATS.find(x => x.id === id)?.words, f.words, `${id} picker matches the server`)
+    }
+  })
+})
+
+describe('TikTok is a standing channel (Krish, 2026-10-11)', () => {
+  test('it can be ticked, every live subchannel pre-ticks the standing set, and a caption can be cut for it', async () => {
+    const client = await import('../../apps/control-plane/lib/contentEngine.js')
+    assert.deepEqual(client.MEDIA_CHANNELS.find(c => c.value === 'tiktok'), { value: 'tiktok', label: 'TikTok', shortForm: true })
+    for (const slot of ['follow_the_money', 'mind_the_gap', 'under_the_hood']) {
+      assert.deepEqual(client.DEFAULT_CHANNELS[`publication:${slot}`], ['substack', 'youtube', 'instagram', 'tiktok'], slot)
+    }
+    const cut = readFileSync(join(__dirname, '../../apps/control-plane/api/content-ideas/[id]/channel-cut.ts'), 'utf8')
+    assert.match(cut, /VALID_CHANNELS = new Set\(\[[^\]]*'tiktok'/)
+    assert.match(cut, /tiktok: 'Write the TikTok caption for the 90-second short cut/)
+    const capture = readFileSync(join(__dirname, '../../apps/control-plane/api/content-ideas.ts'), 'utf8')
+    assert.match(capture, /CAPTURE_CHANNELS = \[[^\]]*'tiktok'/)
+  })
+})
+
 describe('real logos, real pages, and a cover with personality (VISUAL_EVIDENCE, 2026-10-10)', () => {
   test('the rule is live and reaches the visual stage, the writers and the draft judges', () => {
     const r = HOUSE_RULES.find(x => x.id === 'VISUAL_EVIDENCE')

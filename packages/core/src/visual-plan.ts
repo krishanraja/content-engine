@@ -212,7 +212,9 @@ export function reviewVisualPlan(input: ReviewVisualPlanInput): { plan: VisualNa
     if (plan.beats[index - 1]?.visual_density === 'high' && plan.beats[index]?.visual_density === 'high') softBlocks.push(`beats ${plan.beats[index - 1]!.beat_id} and ${plan.beats[index]!.beat_id} need a visual rest or a deliberate collision experiment`)
   }
   softBlocks.push(...attentionCollisionIssues(plan, input.analysis))
-  if (input.production !== false && (plan.duration_ms < 20_000 || plan.duration_ms > 60_000)) softBlocks.push('story duration falls outside the normal 20 to 60 second range and needs a recorded editorial reason')
+  // The 90-second short cut is every piece's standing short (house rule TWO_CUTS, Krish, 2026-10-11),
+  // so it is normal; config/studio.json normal_duration_ms says the same.
+  if (input.production !== false && (plan.duration_ms < 20_000 || plan.duration_ms > 90_000)) softBlocks.push('story duration falls outside the normal 20 to 90 second range and needs a recorded editorial reason')
   for (const issue of input.analysis.quality_issues.filter((item) => item.severity === 'block')) hardBlocks.push(issue.detail)
   const editorialStandards = activeEditorialStandards(input)
   if (editorialStandards.size) softBlocks.push(...editorialStandardVisualIssues(plan, input, editorialStandards))

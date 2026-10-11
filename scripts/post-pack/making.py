@@ -11,7 +11,7 @@ that everything is fresh and synchronised in real time".
     python making.py PIECE_ID workroom https://claude.ai/artifact/...
     python making.py PIECE_ID publish-manager https://claude.ai/artifact/...
     python making.py PIECE_ID visual-gate post.json          # runs the gate, records pass or fail
-    python making.py PIECE_ID scripts long.md [short.md]     # runs story_check on each, records
+    python making.py PIECE_ID scripts long.md short.md       # story_check on each, by position; records
     python making.py PIECE_ID pack PACK_FOLDER [--sent]      # build.py and send.py call this themselves
     python making.py PIECE_ID recorded long PATH [--seconds N]
     python making.py PIECE_ID video long NAME PATH [--url https://...]
@@ -105,18 +105,42 @@ def visual_gate_patch(post_path):
     return {'visual_gate': {'passed': not problems, 'problems': problems, 'checked_at': now()}}
 
 
-def scripts_patch(paths):
+def _story_check(cut, path):
+    result = subprocess.run([sys.executable, str(HERE / 'story_check.py'), '--cut', cut, str(path)], capture_output=True, text=True)
+    return result.returncode, result.stdout + result.stderr
+
+
+def scripts_patch(paths, run=None, warn=None):
+    """Checks the two scripts by position: the first is the long cut, the
+    second the short (house rule TWO_CUTS, Krish, 2026-10-11: every piece
+    gets both). A missing script, or one that fails its check, records
+    passed false. A file name that says the other cut only warns: the
+    position decides, so a 450-word script cannot pass as the short cut, or
+    one script mark Scripts done, by what it is called."""
+    import story_check
+    run = run or _story_check
+    warn = warn or (lambda line: print(line, file=sys.stderr))
+    paths = list(paths or [])
+    if not paths or len(paths) > len(CUTS):
+        raise MakingError('give the two scripts, the long cut first: scripts long.md short.md')
     problems, cuts = [], []
-    for p in paths:
-        text = Path(p).read_text(encoding='utf-8')
-        import story_check
-        cut = story_check.cut_of(Path(p).name) or ('short' if len(text.split()) < 300 else 'long')
-        result = subprocess.run([sys.executable, str(HERE / 'story_check.py'), '--cut', cut, str(p)], capture_output=True, text=True)
+    for cut, p in zip(CUTS, paths):
+        name = Path(p).name
+        said = story_check.cut_of(name)
+        if said and said != cut:
+            warn(f'making: {name} says it is the {said} cut but is in the {cut} cut\'s place; '
+                 f'it is checked as the {cut} cut (the long cut comes first, then the short)')
+        if not Path(p).is_file():
+            problems.append(f'{cut} cut: {name} is not there')
+            continue
         cuts.append(cut)
-        if result.returncode != 0:
-            out = (result.stdout + result.stderr).strip().splitlines()
-            problems.extend([f'{Path(p).name}: {line.strip()}' for line in out if line.strip()][:10])
-    return {'script_check': {'passed': not problems, 'problems': problems, 'cuts': sorted(set(cuts), key=CUTS.index), 'checked_at': now()}}
+        code, out = run(cut, p)
+        if code != 0:
+            lines = [line.strip() for line in out.strip().splitlines() if line.strip()]
+            problems.extend([f'{name}: {line}' for line in lines][:10] or [f'{name}: the {cut} cut failed its check'])
+    for cut in CUTS[len(paths):]:
+        problems.append(f'{cut} cut: no script given; every piece gets both cuts (scripts long.md short.md)')
+    return {'script_check': {'passed': not problems, 'problems': problems, 'cuts': cuts, 'checked_at': now()}}
 
 
 def pack_patch(pack_dir, sent=False):
@@ -197,6 +221,39 @@ def self_test():
         check('piece_id is read from post.json', piece_id_of(t / 'post.json'), pid)
         (t / 'post.json').write_text(json.dumps({'piece_id': 'x'}))
         check('a bad piece_id is ignored', piece_id_of(t / 'post.json'), '')
+
+        # The scripts: the cut comes from the position, both are required.
+        for name in ('long.md', 'short.md', 'script.md', 'other.md', 'tall.md'):
+            (t / name).write_text('x', encoding='utf-8')
+        ran, warned = [], []
+        ok = lambda cut, path: (ran.append((cut, Path(path).name)), (0, ''))[1]
+        both = scripts_patch([t / 'long.md', t / 'short.md'], ok, warned.append)['script_check']
+        check('both scripts pass and are checked by position', (both['passed'], both['cuts'], ran), (True, ['long', 'short'], [('long', 'long.md'), ('short', 'short.md')]))
+        ran.clear()
+        plain = scripts_patch([t / 'script.md', t / 'other.md'], ok, warned.append)['script_check']
+        check('names that say no cut take it from the position', (plain['passed'], ran), (True, [('long', 'script.md'), ('short', 'other.md')]))
+        check('names that say no cut raise no warning', warned, [])
+        ran.clear()
+        swapped = scripts_patch([t / 'tall.md', t / 'long.md'], ok, warned.append)['script_check']
+        check('a name that contradicts its position is checked by the position', ran, [('long', 'tall.md'), ('short', 'long.md')])
+        check('and warns once for each such file', (len(warned), 'tall.md' in warned[0], 'long.md' in warned[1]), (2, True, True))
+        check('a warning alone does not fail the check', swapped['passed'], True)
+        one = scripts_patch([t / 'long.md'], ok, warned.append)['script_check']
+        check('one script never passes: the short cut is required', (one['passed'], one['cuts'], 'short cut: no script given' in one['problems'][0]), (False, ['long'], True))
+        gone = scripts_patch([t / 'long.md', t / 'missing.md'], ok, warned.append)['script_check']
+        check('a script that is not there fails', (gone['passed'], gone['problems']), (False, ['short cut: missing.md is not there']))
+        bad = lambda cut, path: (1, f'NOT READY  {path}\n  - the {cut} cut runs 600 spoken words') if cut == 'short' else (0, '')
+        failed = scripts_patch([t / 'long.md', t / 'short.md'], bad, warned.append)['script_check']
+        check('either check failing records passed false, with its reason', (failed['passed'], failed['problems'][-1]), (False, 'short.md: - the short cut runs 600 spoken words'))
+        for wrong in ([], [t / 'long.md', t / 'short.md', t / 'other.md']):
+            try:
+                scripts_patch(wrong, ok, warned.append)
+                check(f'{len(wrong)} scripts is refused', 'no error', 'error')
+            except MakingError as e:
+                check(f'{len(wrong)} scripts is refused', 'long cut first' in str(e), True)
+        # The real story check, once: a two-line script is no 3-minute cut.
+        real = scripts_patch([t / 'long.md', t / 'short.md'], warn=warned.append)['script_check']
+        check('the real story check fails a script that is far too short', (real['passed'], any('long.md' in x for x in real['problems'])), (False, True))
     if fails:
         print('making self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1

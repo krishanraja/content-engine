@@ -14,7 +14,8 @@ in any other ideas that we can flesh out?"
 ## The standing answers (never asked again)
 
 - **Two cuts, every piece** (house rule TWO_CUTS): a 3-minute video and a
-  90-second version, from one recording. `story_check.py` holds the lengths.
+  90-second version, each recorded from its own script with its own hook
+  and outro. `story_check.py` holds the lengths.
 - **Every piece goes to** Substack and YouTube, then YouTube Shorts, TikTok
   and Instagram (`docs/AMPLIFICATION.md`). LinkedIn, WhatsApp and Substack
   Notes stay available as optional steps.

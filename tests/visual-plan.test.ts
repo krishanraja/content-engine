@@ -83,6 +83,24 @@ describe('visual narrative planning gates', () => {
     expect(reviewed.review.requires_animatic).toBe(true)
   })
 
+  it('treats the 90-second short cut as a normal length and flags anything longer (TWO_CUTS, Krish, 2026-10-11)', async () => {
+    const registry = await loadTechniqueRegistry(resolve('config/techniques.json'))
+    const stretched = (ms: number) => {
+      const base = plan()
+      const shot = base.shot_directives[0]!
+      return {
+        ...base, duration_ms: ms,
+        beats: [{ ...base.beats[0]!, end_ms: ms, source_spans: [{ source_id: 'camera-main', start_ms: 0, end_ms: ms }] }],
+        shot_directives: [{ ...shot, end_ms: ms, source_end_ms: ms, camera_plan: { ...shot.camera_plan, end_ms: ms } }],
+      }
+    }
+    const review = (ms: number) => reviewVisualPlan({ plan: stretched(ms), analysis: analysis(), sourceAnalysisArtifactHash: H, candidateHash: H, claimsArtifactHash: H, techniqueRegistry: registry, techniqueRegistryHash: H, preferenceSnapshotHash: H }).review.soft_blocks
+    const outside = (blocks: string[]) => blocks.some((issue) => issue.startsWith('story duration falls outside'))
+    expect(outside(review(90_000))).toBe(false)
+    expect(outside(review(90_001))).toBe(true)
+    expect(outside(review(19_999))).toBe(true)
+  })
+
   it('blocks unknown techniques and flags an overlay on protected presenter space', async () => {
     const registry = await loadTechniqueRegistry(resolve('config/techniques.json'))
     const base = plan()

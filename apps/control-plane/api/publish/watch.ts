@@ -11,10 +11,14 @@ import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts
 // when we are done with a publish flow". The flow ends when the post is live
 // on Substack, so the engine reads the publication's public archive (no key)
 // and, for each post that matches one piece (_publishWatch.ts):
-//   - marks the piece published: state, published_at, published_url, and the
-//     Substack tick on its making record. This records a public fact; it
-//     publishes nothing, and it never unpublishes;
-//   - closes every board item tied to the piece (_boardClose.ts).
+//   - marks the piece published: state, published_at, published_url, and,
+//     when the piece has a making record, the Substack tick on it. This
+//     records a public fact; it publishes nothing, and it never unpublishes;
+//   - closes the board items the publish closes (_boardClose.ts): with a
+//     making record, only once the standing five are ticked (Krish,
+//     2026-10-11), so the reposts' items stay open after Substack; a piece
+//     made before the making record existed gets no record here, so its
+//     items close on the publish as they always did.
 // Then it sweeps every open board item tied to a piece and closes the ones
 // whose piece has moved on by any route. A fresh post that matches no piece
 // becomes one board question, asked once.
@@ -62,19 +66,23 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     const piece = pieces.find(p => p.id === m.piece.id)!
     if (piece.state !== 'published') {
       const meta = piece.meta && typeof piece.meta === 'object' ? piece.meta : {}
-      const making = meta.making && typeof meta.making === 'object' ? meta.making : {}
-      const channels = { ...(making.channels || {}) }
-      if (!channels.substack) channels.substack = { url: post.url, posted_at: post.posted_at }
       const stamp = now.toISOString()
+      let nextMeta = meta
+      if (meta.making && typeof meta.making === 'object') {
+        const channels = { ...(meta.making.channels || {}) }
+        if (!channels.substack) channels.substack = { url: post.url, posted_at: post.posted_at }
+        nextMeta = { ...meta, making: { ...meta.making, channels, updated_at: stamp, by: 'publish watcher' } }
+      }
       const write = await supabase.from('content_ideas').update({
         state: 'published',
         published_at: piece.published_at || post.posted_at,
         published_url: piece.published_url || post.url,
-        meta: { ...meta, making: { ...making, channels, updated_at: stamp, by: 'publish watcher' } },
+        meta: nextMeta,
         updated_at: stamp,
       }).eq('id', piece.id).eq('updated_at', piece.updated_at).select('id')
       if (write.error || !write.data?.length) { report.push({ post: post.url, piece: piece.id, by: m.by, written: false, note: write.error?.message || 'the row changed; the next pass tries again' }); continue }
       piece.state = 'published'
+      piece.meta = nextMeta
       published++
     }
     closed.push(...await closeBoardItemsForPiece(piece))

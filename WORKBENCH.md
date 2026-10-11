@@ -78,12 +78,15 @@ done with a publish flow"). Give it `"idea_id": "<the piece's uuid>"` and,
 when one step finishes it, `"closes_on"`: a making step (`workroom`,
 `draft`, `visual_gate`, `scripts`, `pack`, `record`, `video`, `publish`) or
 `published`. The engine then moves it to done the moment that step lands on
-the piece's making record, moves every item tied to a piece to done when the
-piece is published, and archives them when the piece is dropped
-(`apps/control-plane/api/_boardClose.ts`). The publish watcher
-(`/api/publish/watch`, hourly) learns a piece is published from the
-publication's own archive, so Krish never has to say so; a post whose title
-matches no piece becomes one board question. A session that hears from Krish
+the piece's making record, moves every item tied to a piece to done when its
+publish step is done (the standing five ticked: Substack, YouTube, Shorts,
+TikTok and Instagram; Krish, 2026-10-11), and archives them when the piece is
+dropped (`apps/control-plane/api/_boardClose.ts`). The Substack post alone
+closes only the items whose `closes_on` is `published`; a piece made before
+the making record existed still closes everything on the Substack post. The
+publish watcher (`/api/publish/watch`, hourly) learns a piece is published
+from the publication's own archive, so Krish never has to say so; a post
+whose title matches no piece becomes one board question. A session that hears from Krish
 that something is done, or that is not about a piece, still moves it itself.
 Never leave an `in_progress` item behind you: when you stop, it is done,
 handed on, or back on him.
@@ -154,6 +157,22 @@ install block on each runner machine, the lane is not running
 session").
 
 ## Latest handoff
+
+- 2026-10-11, Sunday: **The two cuts and the standing five are enforced, not
+  just written down.** Each cut is recorded from its own script with its own
+  hook and outro (TWO_CUTS reworded; AMPLIFICATION.md and CADENCE.md match).
+  The making record now needs both cuts for Record and for Video assets ("short
+  cut still to produce"), and all five standing channels for Publish: the
+  Substack post alone reads "Substack is out; 1 of 5 channels", and board items
+  tied to a piece wait for the five (a piece made before the making record
+  existed still closes on the Substack post). `making.py scripts long.md
+  short.md` takes the cuts by position and fails without both; `build.py` warns
+  when a script names no cut. The 90-second format aims at 200 words and the
+  writer retries above 495 (3 minutes) and 220 (90 seconds). TikTok is a
+  standing channel in the engine's lists; the Studio treats up to 90 seconds as
+  normal. Control Center's mirror (`src/lib/making.ts`,
+  `scripts/check-make-handoff.mts`) still needs the same video, record and
+  publish rules.
 
 - 2026-10-11, Sunday: **The week is planned on Sunday; the standing answers
   are written down.** Krish: every Sunday decide Monday, Wednesday and

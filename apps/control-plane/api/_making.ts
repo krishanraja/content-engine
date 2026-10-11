@@ -211,20 +211,28 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   steps.push(m.pack
     ? { key: 'pack', label: m.pack.sent_at ? 'Pack in Drive' : 'Pack built', state: m.pack.sent_at ? 'done' : 'now', at: m.pack.sent_at || m.pack.packed_at, note: m.pack.folder }
     : { key: 'pack', label: 'Pack', state: 'todo' })
+  // Both cuts, every piece (TWO_CUTS, Krish, 2026-10-11), whatever cuts a
+  // script check recorded: one recording or one video never finishes a step.
   const recorded = new Set((m.recordings || []).map(r => r.cut))
-  const cutsNeeded = m.script_check?.cuts?.length ? m.script_check.cuts : [...MAKING_CUTS]
-  const missingCuts = cutsNeeded.filter(c => !recorded.has(c))
+  const missingCuts = MAKING_CUTS.filter(c => !recorded.has(c))
   steps.push(recorded.size
     ? { key: 'record', label: 'Recorded', state: missingCuts.length ? 'now' : 'done', at: (m.recordings || []).map(r => r.at).sort().pop(), note: missingCuts.length ? `${missingCuts.join(' and ')} cut still to record` : undefined }
     : { key: 'record', label: 'Record', state: 'todo' })
   const assets = m.video_assets || []
+  const produced = new Set(assets.map(a => a.cut))
+  const missingAssets = MAKING_CUTS.filter(c => !produced.has(c))
   steps.push(assets.length
-    ? { key: 'video', label: 'Video assets', state: 'done', at: assets.map(a => a.at).sort().pop(), note: `${assets.length} file${assets.length === 1 ? '' : 's'}` }
+    ? { key: 'video', label: 'Video assets', state: missingAssets.length ? 'now' : 'done', at: assets.map(a => a.at).sort().pop(), note: missingAssets.length ? `${missingAssets.join(' and ')} cut still to produce` : `${assets.length} file${assets.length === 1 ? '' : 's'}` }
     : { key: 'video', label: 'Video assets', state: 'todo' })
+  // The publish step is done when the standing five are ticked (Krish,
+  // 2026-10-11). State 'published' means the Substack post is live
+  // (publish/watch.ts), so it counts as Substack's tick and nothing more.
+  const isOut = (c: MakingChannel) => Boolean(m.channels?.[c]) || (c === 'substack' && row.state === 'published')
   const posted = MAKING_CHANNELS.filter(c => m.channels?.[c])
-  const core = CORE_CHANNELS.filter(c => m.channels?.[c])
+  const core = CORE_CHANNELS.filter(isOut)
+  const allFive = core.length === CORE_CHANNELS.length
   steps.push(posted.length || row.state === 'published'
-    ? { key: 'publish', label: 'Published', state: core.length === CORE_CHANNELS.length || row.state === 'published' ? 'done' : 'now', at: posted.map(c => m.channels![c]!.posted_at).sort().pop(), note: `${core.length} of ${CORE_CHANNELS.length} channels` }
+    ? { key: 'publish', label: 'Published', state: allFive ? 'done' : 'now', at: posted.map(c => m.channels![c]!.posted_at).sort().pop(), note: `${row.state === 'published' && !allFive ? 'Substack is out; ' : ''}${core.length} of ${CORE_CHANNELS.length} channels` }
     : { key: 'publish', label: 'Publish', state: 'todo' })
   // The first step that is not done is where the piece is now.
   const first = steps.find(s => s.state === 'todo' || s.state === 'failed' || s.state === 'now')

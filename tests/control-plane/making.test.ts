@@ -103,7 +103,15 @@ describe('the making record', () => {
     expect(two.body.making.recordings.find((r: Row) => r.cut === 'long').seconds).toBe(415)
     expect(two.body.steps.find((s: Row) => s.key === 'record').state).toBe('done')
     const three = await call('POST', { video_assets: [{ cut: 'long', name: 'Substack video', path: '3 Video/long.mp4', url: 'https://drive.google.com/x' }] })
-    expect(three.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'done', note: '1 file' })
+    expect(three.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'now', note: 'short cut still to produce' })
+    const four = await call('POST', { video_assets: [{ cut: 'short', name: 'Shorts video', path: '3 Video/short.mp4' }] })
+    expect(four.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'done', note: '2 files' })
+  })
+
+  it('a script check that recorded one cut still needs both recordings (TWO_CUTS)', async () => {
+    await call('POST', { script_check: { passed: true, problems: [], cuts: ['long'] } })
+    const one = await call('POST', { recordings: [{ cut: 'long', path: 'recordings/long.mp4' }] })
+    expect(one.body.steps.find((s: Row) => s.key === 'record')).toMatchObject({ state: 'now', note: 'short cut still to record' })
   })
 
   it('Krish ticks channels off from his cookie; a null clears one; an unknown channel is refused', async () => {
@@ -153,6 +161,17 @@ describe('the pure helpers', () => {
     const channels = Object.fromEntries(['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin'].map(c => [c, { posted_at: '2026-10-10T03:00:00Z' }]))
     const steps = makingSteps({ state: 'published', meta: { fact_check: { status: 'passed' }, making: { channels, updated_at: 'x', by: 'Krish' } } })
     expect(steps.find(s => s.key === 'publish')).toMatchObject({ state: 'done', note: '5 of 5 channels' })
+  })
+
+  it('the Substack post alone (state published) leaves the publish step open until the reposts are ticked', () => {
+    const substack = { substack: { url: 'https://home.makeyourmindup.ai/p/x', posted_at: '2026-10-16T13:00:00Z' } }
+    const one = makingSteps({ state: 'published', meta: { making: { channels: substack, updated_at: 'x', by: 'publish watcher' } } })
+    expect(one.find(s => s.key === 'publish')).toMatchObject({ state: 'now', note: 'Substack is out; 1 of 5 channels' })
+    const three = makingSteps({ state: 'published', meta: { making: { channels: { ...substack, youtube: { posted_at: 'x' }, shorts: { posted_at: 'x' } }, updated_at: 'x', by: 'Krish' } } })
+    expect(three.find(s => s.key === 'publish')).toMatchObject({ state: 'now', note: 'Substack is out; 3 of 5 channels' })
+    // Published by any route counts as Substack's tick, and only Substack's.
+    const bare = makingSteps({ state: 'published', meta: { making: { channels: { youtube: { posted_at: 'x' }, shorts: { posted_at: 'x' }, tiktok: { posted_at: 'x' }, reels: { posted_at: 'x' } }, updated_at: 'x', by: 'Krish' } } })
+    expect(bare.find(s => s.key === 'publish')).toMatchObject({ state: 'done', note: '5 of 5 channels' })
   })
 
   it('the standing five close the publish step; LinkedIn and WhatsApp never stand in for TikTok', () => {

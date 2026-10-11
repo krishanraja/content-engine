@@ -20,9 +20,10 @@ Why: a reader gets one email instead of two; the video and the words share
 one set of comments and one link; and only Substack's Video post type does the
 rest of the work below (an article with a video dropped in gets none of it).
 
-**Two cuts, both from the same recording** (house rule TWO_CUTS). Krish,
-2026-10-11: "I always want a 3-minute video and a 90-second version. I always
-want to repost to YouTube and then Shorts, TikTok, and Instagram."
+**Two cuts, each recorded from its own script** with its own hook and its
+own outro (house rule TWO_CUTS). Krish, 2026-10-11: "I always want a 3-minute
+video and a 90-second version. I always want to repost to YouTube and then
+Shorts, TikTok, and Instagram."
 - The long cut (wide, 16:9, about 3 minutes: 405 to 495 spoken words) lives on
   Substack and YouTube.
 - The short cut (tall, 9:16, at most 90 seconds: 160 to 225 spoken words) goes

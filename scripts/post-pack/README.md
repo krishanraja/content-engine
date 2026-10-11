@@ -155,9 +155,10 @@ Substack takes it), and Download on each picture. Pack it as
 
 Krish, 2026-10-09: "Build a durable amplification strategy that looks cohesive
 and is really easy for me to take from Drive to Publish." The plan is
-`docs/AMPLIFICATION.md`: one Substack Video post (the long cut on top, the
-article under it), then YouTube, LinkedIn, Shorts, Reels, WhatsApp and Notes
-with the vertical cut of at most 90 seconds. `publish_kit.py publish.json --out DIR`
+`docs/AMPLIFICATION.md`: one Substack Video post (the 3-minute long cut on
+top, the article under it), then YouTube, then Shorts, TikTok and Instagram
+with the 90-second short cut; LinkedIn, WhatsApp and Notes are optional.
+`publish_kit.py publish.json --out DIR`
 writes `publish.html` for one post; pack it as `publish-kit`.
 
     python scripts/post-pack/publish_kit.py WORKDIR/publish.json --out DIR
@@ -204,8 +205,18 @@ article heading or a REAL or THEATRE stamp aloud, and one with lines still
 marked NOT YET FACT-CHECKED. Run it on any script before sending it to Krish:
 
 ```
-python scripts/post-pack/story_check.py SCRIPT
+python scripts/post-pack/story_check.py --cut long SCRIPT    # or --cut short
 ```
+
+Every piece has two scripts, one per cut, each with its own hook and outro
+(house rule TWO_CUTS, Krish, 2026-10-11): the 3-minute long cut, 405 to 495
+spoken words, and the 90-second short cut, 160 to 225. Give each
+`video-script` entry its `"cut": "long"` or `"cut": "short"` so the length is
+checked; a file name that says `long`, `3min`, `short` or `90` does the same.
+An entry that says neither is packed with a warning that its length was
+checked against neither cut. `making.py <piece id> scripts long.md short.md`
+checks both and records them on the piece, the long cut first; one script
+alone never passes.
 
 Only Krish's own words, in the file's `"story_check_override"` (starting
 "Krish"), let a failing script through. The rest of the story check (every

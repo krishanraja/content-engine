@@ -34,7 +34,9 @@ writes it into the library on Drive (README.md). Nothing here touches Drive.
 It copies; the files it was given stay where they are.
 """
 import argparse
+import contextlib
 import hashlib
+import io
 import json
 import re
 import shutil
@@ -294,6 +296,16 @@ def visual_gate_or_refuse(post, planned, base):
                         '\n  Fix it (scripts/post-pack/visual_gate.py), or record Krish\'s own words in "visual_gate_override".')
 
 
+_warned = set()
+
+
+def warn(message):
+    """A problem that does not stop the pack, said once on stderr."""
+    if message not in _warned:
+        _warned.add(message)
+        print(f'post-pack: WARNING {message}', file=sys.stderr)
+
+
 def story_gate(entry, text, label):
     """Krish, 2026-10-06 (walk log F75): a script that does not make sense out
     loud, or stops dead on the number, is not packed. Only his own words in
@@ -301,6 +313,9 @@ def story_gate(entry, text, label):
     # The cut a script says it is ("cut": "long" or "short", or its name),
     # so the length rule holds (house rule TWO_CUTS, Krish 2026-10-11).
     cut = entry.get('cut') if entry.get('cut') in story_check.CUTS else story_check.cut_of(entry.get('name') or entry.get('file') or '')
+    if cut is None:
+        warn(f'{label}: the script\'s length was checked against neither cut, so a 3-minute or 90-second '
+             f'script of the wrong length would pass (house rule TWO_CUTS). Add "cut": "long" or "short" to the entry.')
     found = story_check.problems(text, cut)
     override = entry.get('story_check_override')
     if found and not (isinstance(override, str) and override.strip().lower().startswith('krish')):
@@ -438,7 +453,9 @@ def self_test():
             return
         failures.append(f'{label}: gave {got!r}, want a refusal containing {want!r}')
 
-    with tempfile.TemporaryDirectory() as tmp:
+    # Warnings are collected, not printed, so the self-test's own output stays clean.
+    with tempfile.TemporaryDirectory() as tmp, contextlib.redirect_stderr(io.StringIO()) as said:
+        _warned.clear()
         tmp = Path(tmp)
         work = tmp / 'work'
         for name, body in (('out/substack.html', b'<p>post</p>'), ('out/page.html', b'<p>page</p>'),
@@ -487,6 +504,11 @@ def self_test():
         built = build(work / 'post.json', out, today='2026-10-06')
         folder = '2026-10-05 Mon follow.the.money - Who gets paid'
         check('folder', built['folder'], folder)
+        # script.md names no cut, so the length rule could not run: the pack is
+        # built, with a warning that names the fix (house rule TWO_CUTS).
+        check('a script with no cut warns that its length was checked against neither cut',
+              ('file 7 (video-script)' in said.getvalue(), 'checked against neither cut' in said.getvalue(),
+               'Add "cut": "long" or "short" to the entry.' in said.getvalue()), (True, True, True))
         pack = out / folder
         found = sorted(str(p.relative_to(pack)).replace('\\', '/') for p in pack.rglob('*') if p.is_file())
         expected = sorted([
@@ -548,6 +570,9 @@ def self_test():
         check('Krish can let a cut picture through in his own words', bool(variant(subject='Edge override', files=[{'kind': 'image', 'file': 'img/cut.png', 'edge_check_override': 'Krish, 2026-10-07: it bleeds on purpose'}])), True)
         refused('a script that fails the story check', lambda: variant(files=[{'kind': 'video-script', 'text': 'One: the billion. Real, with small print.'}]), 'fails the story check')
         check('Krish can let one through in his own words', bool(variant(files=[{'kind': 'video-script', 'text': 'Hello.', 'story_check_override': 'Krish, 2026-10-06: record it as it is'}])), True)
+        before = said.getvalue()
+        refused('a script given its cut is held to that length', lambda: variant(files=[{'kind': 'video-script', 'text': 'Why does this matter? Say this.', 'cut': 'short'}]), 'the short cut is 6 spoken words')
+        check('a script given its cut raises no warning', said.getvalue(), before)
         launch = variant(launch=True, subchannel=None, subject='Launch hello', files=[{'kind': 'video-script', 'text': 'Why are we here? Hello.'}])
         check('a launch post', launch['folder'], '2026-10-05 Launch - Launch hello')
         check('text given in the post file', (tmp / 'other' / launch['folder'] / '3 Video' / 'video-script.md').read_text(encoding='utf-8'), 'Why are we here? Hello.\n')

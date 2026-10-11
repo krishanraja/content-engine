@@ -26,6 +26,14 @@ export interface VideoFormat {
   shape: string
 }
 
+/** The most spoken words a script of this format may carry: the ceiling the
+ *  writer is told and the line above which it is asked again. For the two
+ *  cuts (TWO_CUTS) it is 495 for 3min and 220 for 90s, both inside the
+ *  bounds scripts/post-pack/story_check.py holds (405 to 495, 160 to 225). */
+export function wordCeiling(f: Pick<VideoFormat, 'words'>): number {
+  return Math.round(f.words * 1.1)
+}
+
 export const VIDEO_FORMATS: VideoFormat[] = [
   {
     id: '15s', label: '15 second hook', seconds: 15, words: 40,
@@ -58,8 +66,10 @@ export const VIDEO_FORMATS: VideoFormat[] = [
   },
   {
     // The short cut of every piece (house rule TWO_CUTS, Krish 2026-10-11):
-    // YouTube Shorts, TikTok and Instagram Reels, at most 90 seconds.
-    id: '90s', label: '90 seconds', seconds: 90, words: 225,
+    // YouTube Shorts, TikTok and Instagram Reels, at most 90 seconds. The
+    // target sits under story_check.py's 160 to 225 so its ceiling (220)
+    // does too; aiming at 225 made the writer overshoot what the check takes.
+    id: '90s', label: '90 seconds', seconds: 90, words: 200,
     shape: [
       'Hook (the most provocative true thing, then the one question), then two beats, then the call, then a one-line spoken outro.',
       'Each beat is one point with its one number. No third beat: there is no room.',
@@ -191,12 +201,13 @@ export async function buildVideoScript(o: {
   // The house already has a spoken register written down, under YouTube.
   const register = corpusForChannel(corpus, 'youtube')
   const f = o.format
+  const ceiling = wordCeiling(f)
 
   const system = [
     'You are cutting an existing piece into a spoken video script. The argument does not change. The length, register and scaffolding do.',
     voice ? `VOICE REFERENCE:\n${voice}` : '',
     register ? `CHANNEL REGISTER (bend the script toward THIS rather than doing a generic rewrite):\n${register}` : '',
-    `TARGET LENGTH: ${f.label}. The spoken words across ALL beats must total no more than ${Math.round(f.words * 1.1)} words, and should land near ${f.words}. Count them before you answer.`,
+    `TARGET LENGTH: ${f.label}. The spoken words across ALL beats must total no more than ${ceiling} words, and should land near ${f.words}. Count them before you answer.`,
     `This is a hard ceiling, not a style note: ${f.words} words is what fits in ${f.seconds} seconds at an unhurried pace. Going over does not produce a longer ${f.label}, it produces a script that overruns, and at the short lengths that is the difference between a hook and a rambling clip. If the material will not fit, cut material. Do not speed up the delivery to make room.`,
     `STRUCTURE FOR THIS LENGTH (not a suggestion, this is what this length can carry):\n${f.shape}`,
     SPOKEN_RULES,
@@ -250,12 +261,13 @@ export async function buildVideoScript(o: {
   // the model reliably nods at and ignores: asked for a 15 second script at 40
   // words it returned 77, which is a competent 31 second script and therefore
   // the wrong object. One corrective pass with the real numbers in front of it
-  // fixes this where restating the rule up front does not.
-  const CEILING = 1.15
+  // fixes this where restating the rule up front does not. The retry fires
+  // above the same ceiling the prompt states: a 1.15 tolerance let a 3min
+  // script of 496 to 517 words through, which story_check then refused.
   let attempt = await ask()
-  if (attempt.beats.length && attempt.words > f.words * CEILING) {
+  if (attempt.beats.length && attempt.words > ceiling) {
     const trimmed = await ask(
-      `Your previous attempt ran to ${attempt.words} spoken words. The ceiling is ${Math.round(f.words * 1.1)} and the target is ${f.words}. ` +
+      `Your previous attempt ran to ${attempt.words} spoken words. The ceiling is ${ceiling} and the target is ${f.words}. ` +
       `That is ${Math.round((attempt.words / f.words - 1) * 100)}% over, which at ${f.seconds} seconds overruns badly. ` +
       'Cut material, do not compress delivery: drop the least load-bearing beat entirely, and shorten the sentences that remain. Keep the hook and the ending. Return the same JSON shape.',
     ).catch(() => null)

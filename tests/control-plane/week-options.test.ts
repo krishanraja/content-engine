@@ -68,6 +68,20 @@ beforeEach(() => {
   db.writes = []
 })
 
+describe("the Sunday session's own finds", () => {
+  it('are stored under a source type the capture route accepts, never as one of Krish\'s drop-ins', async () => {
+    const { readFileSync } = await import('node:fs')
+    const { ALLOWED_SOURCE } = await import('../../apps/control-plane/api/content-ideas.js')
+    const skill = readFileSync('.agents/skills/plan-week/SKILL.md', 'utf8')
+    const types = [...skill.matchAll(/"source_type": "([a-z_]+)"/g)].map(m => m[1])
+    expect(types.length).toBeGreaterThan(0)
+    for (const t of types) {
+      expect(ALLOWED_SOURCE.has(t), t).toBe(true)
+      expect(t).not.toBe('manual')
+    }
+  })
+})
+
 describe('the week options', () => {
   it('reads a Monday only, and refuses a bad option with its reason', () => {
     expect(isMonday('2026-10-12')).toBe(true)

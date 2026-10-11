@@ -37,7 +37,7 @@
     },
     "treatment_lanes": ["restrained", "premium", "experimental"],
     "default_lane": "premium",
-    "normal_duration_ms": { "minimum": 20000, "maximum": 60000 },
+    "normal_duration_ms": { "minimum": 20000, "maximum": 90000 },
     "cloud": {
       "policy": "local_first_exact_clip_only",
       "default_job_ceiling_gbp": 15,

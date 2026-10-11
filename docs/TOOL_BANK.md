@@ -68,7 +68,7 @@ tool, and a predictor that scores a video for attention and retention.
 | H2 | cut | **B-roll that shows a mechanism, not a mood.** Generate 3 to 5 second clips for the one beat a talking head cannot carry: the ice cream counter, the guy behind it changing the scoop. Only where the brand book's VISUAL_EXPLAINS rule is met (it makes one point land faster). Never as wallpaper. | theorised | One clip for Friday's "guy behind the counter" beat; Krish sees it before it is cut in. |
 | H3 | picture | **Cover and explainer backgrounds**, generated from a text brief in the house palette, with the real logos and Krish's photo composited over by `scripts/pages`. | theorised | Only if the receipt device needs a texture the page tool cannot draw. |
 | H4 | cut | **Upscale and reframe** a phone recording to 4K, or a wide recording to tall without cropping his face out (`reframe`). Replaces the fixed face band in quick-edit when the framing drifts. | theorised | A recording that fails the face-band check. |
-| H5 | ship | **TikTok publish** straight from the tool. | theorised | Not before Krish opens a TikTok channel. |
+| H5 | ship | **TikTok publish** straight from the tool. TikTok is a standing channel since 2026-10-11 (Krish: "I always want to repost to YouTube and then Shorts, TikTok, and Instagram"); he posts the 90-second short cut there by hand (`docs/AMPLIFICATION.md`). | theorised | Only if posting by hand becomes the slow step, and never without his yes: the engine never posts. |
 
 Risks: generated people and places are never used as evidence (the Art Director
 rule: generic imagery fails the device); every generation costs credits and

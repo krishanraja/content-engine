@@ -10,7 +10,13 @@ import { makingSteps, type MakingStep } from './_making.js'
 // An item is tied to a piece by work_board_items.idea_id, or, for items
 // written before that column existed, by a link to the piece
 // (#/content?idea=<uuid>). It closes when:
-//   - the piece is published               -> done
+//   - the piece's publish step is done     -> done
+//     (the standing five are ticked: Substack, YouTube, Shorts, TikTok and
+//     Instagram; Krish, 2026-10-11. The Substack post alone, which is what
+//     sets state 'published', leaves the reposts and their items open.)
+//   - the piece is published and has no making record at all (made before
+//     the record existed, so nothing can tick its channels) -> done
+//   - its closes_on is 'published' and the Substack post is live -> done
 //   - the piece is dropped or buried       -> archived
 //   - its closes_on step is done           -> done
 // Callers: the making route after every write, and the publish watcher's
@@ -36,13 +42,16 @@ export function itemPiece(item: Pick<OpenItem, 'idea_id' | 'link'>): string | nu
 export function itemsToClose(items: readonly OpenItem[], piece: PieceRow, steps: MakingStep[] = makingSteps(piece)): Close[] {
   const out: Close[] = []
   const published = piece.state === 'published'
+  const hasRecord = Boolean(piece.meta && typeof piece.meta === 'object' && piece.meta.making && typeof piece.meta.making === 'object')
   const gone = piece.state === 'dropped' || Boolean(piece.buried_at)
   const done = new Set(steps.filter(s => s.state === 'done').map(s => s.key))
+  const finished = done.has('publish') || (published && !hasRecord)
   for (const item of items) {
     if (item.lane !== 'on_you' && item.lane !== 'in_progress') continue
     if (itemPiece(item) !== piece.id) continue
-    if (published) { out.push({ id: item.id, lane: 'done', by: 'engine: piece published' }); continue }
+    if (finished) { out.push({ id: item.id, lane: 'done', by: 'engine: piece published' }); continue }
     if (gone) { out.push({ id: item.id, lane: 'archived', by: 'engine: piece dropped' }); continue }
+    if (published && item.closes_on === 'published') { out.push({ id: item.id, lane: 'done', by: 'engine: piece published' }); continue }
     if (item.closes_on && item.closes_on !== 'published' && done.has(item.closes_on)) {
       out.push({ id: item.id, lane: 'done', by: `engine: ${item.closes_on} done`.slice(0, 40) })
     }

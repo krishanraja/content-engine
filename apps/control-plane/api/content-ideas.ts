@@ -35,9 +35,10 @@ import { guardEngine } from './_auth.js'
 // agatha_chat, openclaw_workspace, zara_signal.
 
 // The live distribution channels, mirroring media_channels where active=true
-// and MEDIA_CHANNELS in src/lib/contentEngine.ts. TikTok is absent on purpose:
-// it has no voice register, so nothing can be produced for it.
-const CAPTURE_CHANNELS = ['substack', 'linkedin', 'instagram', 'youtube', 'podcast', 'signal_noise']
+// and MEDIA_CHANNELS in src/lib/contentEngine.ts. TikTok joined the standing set
+// on 2026-10-11 (Krish: "I always want to repost to YouTube and then Shorts,
+// TikTok, and Instagram").
+const CAPTURE_CHANNELS = ['substack', 'linkedin', 'instagram', 'tiktok', 'youtube', 'podcast', 'signal_noise']
 
 const ALLOWED_STATE = new Set([
   'seeded',
@@ -49,7 +50,12 @@ const ALLOWED_STATE = new Set([
   'dropped',
 ])
 
-const ALLOWED_SOURCE = new Set([
+// A source type not listed here is stored as 'manual', and GET
+// /api/week/options reports manual rows as ideas Krish dropped in. So an
+// agent's own sourcing must be listed: 'lane_sourcing' is a Claude Code
+// session researching options for a day (.agents/skills/plan-week), already
+// in the content_ideas_source_type_check constraint.
+export const ALLOWED_SOURCE = new Set([
   'signal_inbox',
   'cleo_chat',
   'agatha_chat',
@@ -61,6 +67,7 @@ const ALLOWED_SOURCE = new Set([
   'manual',
   'creator_move',
   'aeo_signal',
+  'lane_sourcing',
   'build_signal',
 ])
 

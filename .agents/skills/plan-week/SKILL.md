@@ -23,7 +23,8 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>" --full`
    (mandates, options already written, what is in flight or scheduled, the
    judges' best, and the ideas Krish dropped in during the last fortnight).
-   Also list the Drive "Cold Ideas & Inspo" folder for anything new.
+   Also list the Drive "Cold Ideas & Inspo" folder for anything new, when the
+   Drive connector is attached (see "Without the connectors" below).
 2. Flesh out what Krish dropped in first: an idea of his is never ranked below
    an equal one of the engine's.
 3. For each publishing day, find three or four real options. Prefer existing
@@ -39,12 +40,31 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    A piece already scheduled for its day (a pick carried over) needs no options.
    A new idea that is not yet a row is created first with
    `POST /api/content-ideas {"raw_text": "...", "source_type": "lane_sourcing"}`.
+   Never leave out `source_type` and never use `manual`: a manual row is what
+   the week page shows as an idea Krish dropped in, so a session's own find
+   would pose as his. If the reply says `"via": "ingest_gate"`, the engine's
+   relevance gate dropped it as off-topic; it is not an option.
 5. Put the question on the board: the slate cron does this each Sunday morning
    (`control-center api/content/slate.ts`), and the week page reads the options
    live, so nothing else is needed. Check that the board item
    `week-<Monday>` exists; if the cron has not run yet, it will.
 6. Do not pick, schedule, draft or spend. Picking is Krish's press on the week
    page; his Monday pick starts the make-piece session on its own.
+
+## Without the connectors
+
+The scheduled Sunday routine may run with no Drive and no Firecrawl
+connector. Then research with the built-in web search and web fetch instead,
+and skip the Cold Ideas & Inspo folder rather than guessing what is in it.
+Say which sources were unavailable on the week's board item, in one plain line
+at the end of its detail, for example "Researched with web search only: Drive
+and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not
+read." Write it with `POST /api/workbench {"action": "upsert_items",
+"client": "claude_code", "items": [{"id": "week-<Monday>", "detail": "..."}]}`,
+keeping the detail already there (read it first with `GET /api/workbench`); if
+the item does not exist yet, give it `"lane": "on_you"` and a `"title"` too.
+Put the same line in `WORKBENCH.md`, because the slate cron rewrites the week
+item's text each morning.
 
 Update `WORKBENCH.md` and end every reply with
 https://controlcenter.krishraja.com/#/week.
