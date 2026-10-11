@@ -1,0 +1,4 @@
+interface:
+  display_name: "Produce the video"
+  short_description: "Codex: from Krish's recordings to the finished cuts on the piece's record"
+  default_prompt: "Use $produce-video for the piece whose record shows Recorded: piece_id: <uuid>."

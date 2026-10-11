@@ -835,7 +835,11 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
     `content_ideas.meta.making` through `/api/content-ideas/:id/making`.
     Control Center's realtime subscription on `content_ideas` shows each
     change within a second: no second table, no polling, no copy of the
-    state anywhere else. The record's shape lives in
+    state anywhere else. Each step names its owner (`MAKING_OWNERS`):
+    Claude Code makes the workroom, the draft, the pictures, the scripts
+    and the pack and builds the publish board; Krish records and posts;
+    Codex produces the video (`.agents/skills/produce-video/SKILL.md`).
+    A tool never writes a step it does not own (`docs/CADENCE.md`). The record's shape lives in
     `apps/control-plane/api/_making.ts` and is mirrored in
     `control-center/src/lib/making.ts`; change both together.
 

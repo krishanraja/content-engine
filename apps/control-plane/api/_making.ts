@@ -169,7 +169,17 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
 }
 
 export type MakingStepState = 'done' | 'now' | 'todo' | 'failed'
-export interface MakingStep { key: string; label: string; state: MakingStepState; at?: string; link?: string; note?: string }
+export type MakingOwner = 'Claude' | 'Krish' | 'Codex'
+export interface MakingStep { key: string; label: string; state: MakingStepState; owner: MakingOwner; at?: string; link?: string; note?: string }
+
+/** Who does each step (Krish, 2026-10-11): Claude Code owns ideation, the
+ *  article and the publish board; Codex owns video production; Krish records
+ *  and posts. A tool never writes a step it does not own. Mirrored in
+ *  control-center/src/lib/making.ts and read by both tools' skills. */
+export const MAKING_OWNERS: Record<string, MakingOwner> = {
+  workroom: 'Claude', draft: 'Claude', visual_gate: 'Claude', scripts: 'Claude', pack: 'Claude',
+  record: 'Krish', video: 'Codex', publish: 'Krish',
+}
 
 /** The row of steps a reader sees, from the piece's row. `meta.fact_check`
  *  is the fact gate written by content-ideas/[id]/fact-check.ts. Mirrored in
@@ -178,7 +188,7 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   const meta = isObj(row.meta) ? row.meta : {}
   const m = (isObj(meta.making) ? meta.making : {}) as Partial<Making>
   const factGate = isObj(meta.fact_check) ? meta.fact_check : null
-  const steps: MakingStep[] = []
+  const steps: Array<Omit<MakingStep, 'owner'>> = []
   steps.push(m.workroom ? { key: 'workroom', label: 'Workroom', state: 'done', at: m.workroom.at, link: m.workroom.url } : { key: 'workroom', label: 'Workroom', state: 'todo' })
   const factPassed = factGate ? factGate.passed === true || factGate.status === 'passed' || factGate.ok === true : false
   steps.push(factGate
@@ -210,5 +220,5 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   // The first step that is not done is where the piece is now.
   const first = steps.find(s => s.state === 'todo' || s.state === 'failed' || s.state === 'now')
   if (first && first.state === 'todo') first.state = 'now'
-  return steps
+  return steps.map(s => ({ ...s, owner: MAKING_OWNERS[s.key] || 'Claude' }))
 }
