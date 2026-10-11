@@ -58,6 +58,9 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   // in play, and the market's odds on every pinned Call. Both keyless.
   { job: 'signals_news',     path: '/api/signals/news',                  label: 'News velocity',         everyHours: DAY,  graceHours: 12 },
   { job: 'signals_odds',     path: '/api/signals/odds',                  label: 'Call odds',             everyHours: DAY,  graceHours: 12 },
+  // Hourly, keyless: marks a piece published when its post is live on
+  // Substack, and closes the board items that waited on it.
+  { job: 'publish_watch',    path: '/api/publish/watch',                 label: 'Publish watcher',       everyHours: DAY,  graceHours: 12 },
 ]
 
 export interface ContentEngineRunRow {

@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../../_auth.js'
 import { type Making, makingSteps, mergeMaking, parseMakingPatch } from '../../_making.js'
+import { closeBoardItemsForPiece } from '../../_boardClose.js'
 
 // GET  /api/content-ideas/:id/making           where this piece is: the record and its steps
 // POST /api/content-ideas/:id/making  body: a patch (apps/control-plane/api/_making.ts):
@@ -23,7 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const ideaId = Array.isArray(raw) ? raw[0] : raw
   if (!ideaId) return res.status(400).json({ ok: false, error: 'id required' })
 
-  const { data: row, error } = await supabase.from('content_ideas').select('id, idea, state, meta, updated_at').eq('id', ideaId).maybeSingle()
+  const { data: row, error } = await supabase.from('content_ideas').select('id, idea, state, meta, buried_at, updated_at').eq('id', ideaId).maybeSingle()
   if (error) return res.status(500).json({ ok: false, error: error.message })
   if (!row) return res.status(404).json({ ok: false, error: 'idea not found' })
   const meta = ((row as any).meta && typeof (row as any).meta === 'object' ? (row as any).meta : {}) as Record<string, unknown>
@@ -47,5 +48,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .eq('id', ideaId)
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
   const after = { ...(row as any), meta: { ...meta, making: next } }
-  return res.status(200).json({ ok: true, idea_id: ideaId, making: next, steps: makingSteps(after) })
+  // A step that lands closes the board items waiting on it (_boardClose.ts).
+  const closed = await closeBoardItemsForPiece(after)
+  return res.status(200).json({ ok: true, idea_id: ideaId, making: next, steps: makingSteps(after), closed })
 }

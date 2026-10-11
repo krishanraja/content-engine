@@ -102,6 +102,10 @@
     {
       "path": "/api/signals/odds",
       "schedule": "45 6 * * *"
+    },
+    {
+      "path": "/api/publish/watch",
+      "schedule": "17 * * * *"
     }
   ],
   "functions": {

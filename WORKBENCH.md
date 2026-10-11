@@ -72,6 +72,22 @@ Set `"client"` to `"codex"` or `"claude_code"` so the board says who changed it.
 Write every item in plain words: what happened, what it means for him, and what
 you need from him.
 
+**An item about a piece names the piece, so it closes itself** (Krish,
+2026-10-11: items "should really be chalked off automatically when we are
+done with a publish flow"). Give it `"idea_id": "<the piece's uuid>"` and,
+when one step finishes it, `"closes_on"`: a making step (`workroom`,
+`draft`, `visual_gate`, `scripts`, `pack`, `record`, `video`, `publish`) or
+`published`. The engine then moves it to done the moment that step lands on
+the piece's making record, moves every item tied to a piece to done when the
+piece is published, and archives them when the piece is dropped
+(`apps/control-plane/api/_boardClose.ts`). The publish watcher
+(`/api/publish/watch`, hourly) learns a piece is published from the
+publication's own archive, so Krish never has to say so; a post whose title
+matches no piece becomes one board question. A session that hears from Krish
+that something is done, or that is not about a piece, still moves it itself.
+Never leave an `in_progress` item behind you: when you stop, it is done,
+handed on, or back on him.
+
 ## Pick up from any tool
 
 Everything that matters lives in two places every tool can reach: this
@@ -138,6 +154,17 @@ install block on each runner machine, the lane is not running
 session").
 
 ## Latest handoff
+
+- 2026-10-11: **Board items close themselves when the piece moves on.**
+  Krish: things from Wednesday "should really be chalked off automatically
+  when we are done with a publish flow". Root cause: board items carried no
+  link to a piece, and no piece was ever marked published (he publishes by
+  hand in Substack; nothing told the engine). Now `work_board_items` has
+  `idea_id` and `closes_on` (migration `20261011120000`); the making route
+  closes the items a step finishes; and the hourly publish watcher marks a
+  piece published from the publication's public archive and closes every
+  item tied to it. Control Center's own jobs are recorded as themselves on
+  the board, not as Krish. See "The board" above for how to write items.
 
 - 2026-10-11: **Codex owns video production; Claude Code owns ideation, the
   article and the publish board.** Every step of the making record now

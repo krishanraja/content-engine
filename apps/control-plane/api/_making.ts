@@ -24,7 +24,7 @@ export type MakingCut = (typeof MAKING_CUTS)[number]
 
 export interface MakingCheck { passed: boolean; checked_at: string; problems: string[] }
 export interface MakingLink { url: string; at: string }
-export interface MakingPack { folder: string; packed_at: string; files: number; sent_at?: string }
+export interface MakingPack { folder: string; packed_at: string; files: number; sent_at?: string; headline?: string }
 export interface MakingRecording { cut: MakingCut; path: string; at: string; seconds?: number }
 export interface MakingVideoAsset { cut: MakingCut; name: string; path: string; at: string; url?: string; seconds?: number }
 export interface MakingChannelPost { url?: string; posted_at: string }
@@ -86,6 +86,8 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
       const pack: MakingPack = { folder, packed_at: when(isObj(v) ? v.packed_at : undefined, now), files: Math.max(0, Math.floor(Number((v as any).files) || 0)) }
       const sent = isObj(v) && v.sent_at !== undefined ? when(v.sent_at, now) : null
       if (sent) pack.sent_at = sent
+      const headline = isObj(v) ? str(v.headline, 300) : null
+      if (headline) pack.headline = headline
       patch.pack = pack
     }
   }
@@ -214,7 +216,7 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
     ? { key: 'video', label: 'Video assets', state: 'done', at: assets.map(a => a.at).sort().pop(), note: `${assets.length} file${assets.length === 1 ? '' : 's'}` }
     : { key: 'video', label: 'Video assets', state: 'todo' })
   const posted = MAKING_CHANNELS.filter(c => m.channels?.[c])
-  steps.push(posted.length
+  steps.push(posted.length || row.state === 'published'
     ? { key: 'publish', label: 'Published', state: posted.length >= 6 || row.state === 'published' ? 'done' : 'now', at: posted.map(c => m.channels![c]!.posted_at).sort().pop(), note: `${posted.length} of ${MAKING_CHANNELS.length} channels` }
     : { key: 'publish', label: 'Publish', state: 'todo' })
   // The first step that is not done is where the piece is now.

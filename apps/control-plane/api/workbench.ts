@@ -40,7 +40,18 @@ export interface BoardItemInput {
   link?: string | null
   link_label?: string | null
   prompt?: string | null
+  /** The piece this item is about; it then closes when the piece moves on (_boardClose.ts). */
+  idea_id?: string | null
+  /** The making step that closes it, or 'published'. */
+  closes_on?: string | null
 }
+
+/** Control Center's own jobs write with the access-code cookie, the same
+ *  credential as Krish's browser. A cookie call may name one of these to be
+ *  recorded as that job instead of as Krish. It can only lower the
+ *  attribution, never raise it, and a labelled call cannot write a reply. */
+export const COOKIE_AUTOMATIONS = new Set(['control_center_slate', 'control_center'])
+const CLOSE_STEPS = new Set(['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published'])
 
 function record(value: unknown): Json {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Json : {}
@@ -88,6 +99,14 @@ export function cleanItem(raw: unknown, isNew: boolean): Json & { id: string } {
   }
   const linkLabel = optionalText(r.link_label, 60, 'link_label'); if (linkLabel !== undefined) row.link_label = linkLabel
   const prompt = optionalText(r.prompt, 120, 'prompt'); if (prompt !== undefined) row.prompt = prompt
+  if (r.idea_id !== undefined) {
+    if (r.idea_id !== null && !(typeof r.idea_id === 'string' && UUID.test(r.idea_id))) throw new Error('idea_id_invalid')
+    row.idea_id = r.idea_id
+  }
+  if (r.closes_on !== undefined) {
+    if (r.closes_on !== null && !CLOSE_STEPS.has(String(r.closes_on))) throw new Error('closes_on_invalid')
+    row.closes_on = r.closes_on
+  }
   return row
 }
 
@@ -129,7 +148,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const body = record(req.body)
   // Null for Krish in a browser; an agent session otherwise.
   const operator = operatorAttribution(req.headers.authorization, body)
-  const who = operator ? operator.client : 'Krish'
+  const automation = !operator && typeof body.client === 'string' && COOKIE_AUTOMATIONS.has(body.client) ? body.client : null
+  const who = operator ? operator.client : automation ?? 'Krish'
   const now = new Date().toISOString()
 
   try {
@@ -163,7 +183,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (body.action === 'reply') {
-      if (operator) return res.status(403).json({ ok: false, error: 'a_reply_is_krish_words', detail: 'Only Krish writes a reply, from Control Center.' })
+      if (operator || automation) return res.status(403).json({ ok: false, error: 'a_reply_is_krish_words', detail: 'Only Krish writes a reply, from Control Center.' })
       const itemId = typeof body.item_id === 'string' ? body.item_id : ''
       if (!ID.test(itemId)) return res.status(400).json({ ok: false, error: 'item_id_invalid' })
       const replyText = text(body.text, 2000, 'text', true)!

@@ -47,6 +47,13 @@ Nothing here sends, posts, spends or deletes. The article body, the
 approval, the scripts and the channel ticks are never written from here. A
 Claude Code session finishes the publish board once Video assets shows.
 
+## Board items about this piece
+
+Every board item you write about this piece carries `"idea_id": "<uuid>"`
+and, when one step finishes it, `"closes_on": "<step>"` (WORKBENCH.md, "The
+board"). The engine closes it when that step lands and when the piece is
+published, so nothing about a finished piece lingers on Krish's board.
+
 ## Before you stop
 
 Update `WORKBENCH.md` and the board (`WORKBENCH.md`, "The board"), and end

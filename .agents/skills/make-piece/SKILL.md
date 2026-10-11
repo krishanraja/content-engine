@@ -56,6 +56,13 @@ not yours to write, whatever the chat says.
 themselves. Nothing in this skill sends, posts, spends or deletes: a paid
 fact check, a market, a post go only on Krish's words, immediately before.
 
+## Board items about this piece
+
+Every board item you write about this piece carries `"idea_id": "<uuid>"`
+and, when one step finishes it, `"closes_on": "<step>"` (WORKBENCH.md, "The
+board"). The engine closes it when that step lands and when the piece is
+published, so nothing about a finished piece lingers on Krish's board.
+
 ## Before you stop
 
 Update `WORKBENCH.md` and the board (`WORKBENCH.md`, "The board"), and end

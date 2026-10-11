@@ -124,6 +124,9 @@ def pack_patch(pack_dir, sent=False):
         raise MakingError(f'{pack_dir} is not a pack made by build.py (no .pack.json)')
     data = json.loads(manifest.read_text(encoding='utf-8'))
     patch = {'pack': {'folder': data['post_folder'], 'files': len(data.get('files') or []), 'packed_at': now()}}
+    if data.get('headline'):
+        # the title the post goes out under, so the publish watcher can match it
+        patch['pack']['headline'] = data['headline']
     if sent:
         patch['pack']['sent_at'] = now()
     return patch

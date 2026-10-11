@@ -404,6 +404,7 @@ def build(post_path, out=DEFAULT_OUT, replace=False, today=None):
         'library_prefix': f'{POSTS}/{folder}',
         'packed_on': made,
         'piece_id': post.get('piece_id') or None,
+        'headline': post.get('headline') or None,
         'files': manifest,
     }, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
     return {'folder': folder, 'path': str(dest), 'files': [item['path'] for item in manifest]}
