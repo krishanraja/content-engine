@@ -1,0 +1,65 @@
+{
+ "title": "Warner sued Suno. Now it takes a cut. Who else gets paid?",
+ "subtitle": "Warner, BMG and Believe now get a share of Suno's revenue. Universal and Sony sue it again. Here is who gets paid when a fan makes a song with AI.",
+ "date": "2026-10-12",
+ "kicker": "follow.the.money",
+ "status": [
+  "Fact check passed on this exact text",
+  "Visual gate passed: real logos of all eight companies, twelve real pages, house cover",
+  "Both scripts pass the story check: 3-minute and 90-second cuts",
+  "Waiting: your approval, then recording"
+ ],
+ "body": "body.md",
+ "words": "words.json",
+ "images": [
+  {
+   "id": "cover",
+   "file": "img/cover.png",
+   "role": "cover",
+   "alt": "A fan's AI song. Who gets paid? Krish on the follow.the.money cover, with Suno marked Pays, Warner Music Group and BMG marked Paid, Sony Music and Universal Music Group marked Suing, and twelve real pages behind",
+   "caption": "Drawn by the house cover drawer: wordmark, Krish, the real Suno, Warner Music Group, BMG, Sony Music and Universal Music Group marks, the pile-up behind. Every word sits inside Substack's crops."
+  },
+  {
+   "id": "pileup",
+   "label": "The pile-up: twelve real pages",
+   "file": "img/pileup.png",
+   "after_heading": "HOW WE GOT HERE",
+   "alt": "Twelve real pages from Universal Music Group, Warner Music Group, Suno, Music Business Worldwide, ElevenLabs, The Next Web and Variety, 29 October 2025 to 5 October 2026, piled on top of each other, under the line Same app, same songs, two opposite bets",
+   "caption": "Twelve real pages, screenshotted 11 October 2026, oldest at the back. Sources: universalmusic.com, wmg.com, suno.com, musicbusinessworldwide.com, elevenlabs.io, thenextweb.com, au.variety.com"
+  },
+  {
+   "id": "money",
+   "label": "Who gets paid when a fan makes a song with AI",
+   "file": "img/money.png",
+   "after_heading": "THE MONEY MAP",
+   "alt": "The money path: 1, the fan pays Suno, because downloading needs a paid account; 2, Suno collects, then passes on a portion; 3, Warner, BMG and Believe get a share from launch day. Past the labels, it goes dark: 4, the artist's share is set by label contracts nobody has published. Sony and Universal are still suing.",
+   "caption": "\"A portion\": Jack Brody, Suno's chief product officer, to Music Business Worldwide (MBW)"
+  },
+  {
+   "id": "camps",
+   "label": "Same app, same songs, two opposite bets",
+   "file": "img/camps.png",
+   "after_heading": "WHY EACH SIDE MOVED",
+   "alt": "Two camps. Partners: Warner settled and became Suno's partner in November 2025; from 9 September 2026 Warner, BMG and Believe get a share of Suno's revenue. Suing: Sony and Universal sued Suno over 560 recordings in June 2024, still running, and sued again over 60,202 recordings on 18 September 2026. While suing Suno, Universal signed AI deals with Udio in October 2025 and ElevenLabs on 10 September 2026.",
+   "caption": "Sources: Warner Music Group, Suno, Universal Music Group and ElevenLabs announcements; the labels' complaints, as reported by MBW"
+  },
+  {
+   "id": "prediction",
+   "label": "How these fights ended, and our call",
+   "file": "img/prediction.png",
+   "after_heading": "MY CALL",
+   "alt": "Warner's suit against Suno ended in a partnership. Universal's fight with Udio ended in licences. Our call, 70% sure: by 31 December 2027, Universal or Sony will have announced a settlement or a licensing deal with Suno. Why both sides want a deal: Suno faces a theoretical ceiling of just over $9 billion in the new suit alone; the labels risk a judge calling training fair use.",
+   "caption": "Just over $9 billion is MBW's theoretical maximum for the new suit, at the top rate of $150,000 a work. The judge picks where to land."
+  }
+ ],
+ "scripts": [
+  {
+   "label": "The 3-minute video",
+   "file": "script-long.md"
+  },
+  {
+   "label": "The 90-second cut",
+   "file": "script-90s.md"
+  }
+ ]
+}
