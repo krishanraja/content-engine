@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { isMonday, parseOptions } from '../../apps/control-plane/api/_weekOptions.js'
+import { isMonday, keepThroughWeek, parseOptions } from '../../apps/control-plane/api/_weekOptions.js'
 
 // The week's options (Krish, 2026-10-11): the Sunday session writes the
 // researched options for each publishing day onto the pieces; Control
@@ -59,9 +59,9 @@ beforeEach(() => {
       { slug: 'general', label: 'general', cadence_label: 'No cadence', mandate: '', venture_slug: 'publication', kind: 'any', active: true },
     ],
     content_ideas: [
-      { id: A, idea: 'AI music: who gets paid', state: 'seeded', lane_slot: 'follow_the_money', meta: { ladder: { final: { score: 7, band: 'ready' } } }, updated_at: '2026-10-10T00:00:00Z', buried_at: null, library_at: null },
+      { id: A, idea: 'AI music: who gets paid', state: 'seeded', lane_slot: 'follow_the_money', meta: { ladder: { final: { score: 7, band: 'ready' } } }, expires_at: '2026-10-12T14:00:00+00:00', updated_at: '2026-10-10T00:00:00Z', buried_at: null, library_at: null },
       { id: B, idea: 'Lease bill', state: 'drafting', lane_slot: 'follow_the_money', meta: {}, updated_at: '2026-10-10T00:00:00Z', buried_at: null, library_at: null },
-      { id: C, idea: 'No series yet', state: 'seeded', lane_slot: null, meta: {}, updated_at: '2026-10-10T00:00:00Z', buried_at: null, library_at: null },
+      { id: C, idea: 'No series yet', state: 'seeded', lane_slot: null, meta: {}, expires_at: null, updated_at: '2026-10-10T00:00:00Z', buried_at: null, library_at: null },
       { id: OLD, idea: 'Offered before', state: 'seeded', lane_slot: 'follow_the_money', meta: { week_option: { week_start: '2026-10-12', series: 'follow_the_money', rank: 1 } }, updated_at: '2026-10-10T00:00:00Z', buried_at: null, library_at: null },
     ],
   }
@@ -90,6 +90,16 @@ describe('the week options', () => {
     expect(rows[C].lane_slot).toBe('follow_the_money')
     expect(rows[A].lane_slot).toBe('follow_the_money')
     expect(rows[OLD].meta.week_option).toBeUndefined()
+    // The Monday purge would have deleted A at 14:00 on the day it was offered for.
+    expect(rows[A].expires_at).toBe('2026-10-19T14:00:00.000Z')
+    expect(rows[C].expires_at).toBeNull()
+  })
+
+  it('keeps an option alive through its week, and never shortens a later expiry', () => {
+    expect(keepThroughWeek('2026-10-12T14:00:00Z', '2026-10-12')).toBe('2026-10-19T14:00:00.000Z')
+    expect(keepThroughWeek('2026-10-25T10:00:00Z', '2026-10-12')).toBeNull()
+    expect(keepThroughWeek(null, '2026-10-12')).toBeNull()
+    expect(keepThroughWeek('2026-10-12T14:00:00Z', '2026-10-13')).toBeNull()
   })
 
   it('refuses a series that does not publish and a piece that is not live', async () => {

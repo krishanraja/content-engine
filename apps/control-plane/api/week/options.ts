@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../_auth.js'
-import { isMonday, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
+import { isMonday, keepThroughWeek, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
 
 // GET  /api/week/options?week_start=YYYY-MM-DD
 //        what the Sunday session needs to plan the week: each publishing
@@ -10,7 +10,9 @@ import { isMonday, parseOptions, type WeekOptionMeta } from '../_weekOptions.js'
 //        Krish dropped in during the last fortnight.
 // POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended }] }
 //        writes meta.week_option on each option's row (and its series, when
-//        the row has none), and clears it from rows this day no longer offers.
+//        the row has none), keeps each option alive through its week (a seed's
+//        own expiry can fall before the purge that would delete it), and
+//        clears week_option from rows this day no longer offers.
 //
 // Krish, 2026-10-11: planning is one Sunday decision for the week. The week
 // page in Control Center reads these options live from the rows. Nothing here
@@ -59,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const at = new Date().toISOString()
   const ids = options.map(o => o.id)
   const [chosen, previous] = await Promise.all([
-    ids.length ? supabase.from('content_ideas').select('id,state,lane_slot,meta,updated_at').in('id', ids) : Promise.resolve({ data: [], error: null }),
+    ids.length ? supabase.from('content_ideas').select('id,state,lane_slot,meta,expires_at,updated_at').in('id', ids) : Promise.resolve({ data: [], error: null }),
     supabase.from('content_ideas').select('id,meta').eq('meta->week_option->>week_start', week_start).eq('meta->week_option->>series', series),
   ])
   if (chosen.error || previous.error) return res.status(500).json({ ok: false, error: (chosen.error || previous.error)!.message })
@@ -77,6 +79,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const patch: Record<string, unknown> = { meta: { ...meta, week_option: option }, updated_at: at }
     // A row with no series takes the day's (the judges' ladder fills an empty slot the same way); a stored series is never overwritten.
     if (!row.lane_slot) patch.lane_slot = series
+    const keep = keepThroughWeek(row.expires_at, week_start)
+    if (keep) patch.expires_at = keep
     const up = await supabase.from('content_ideas').update(patch).eq('id', o.id).eq('updated_at', row.updated_at).select('id')
     if (up.error) return res.status(500).json({ ok: false, error: up.error.message, written })
     if (!up.data?.length) return res.status(409).json({ ok: false, error: 'changed_retry', problems: [`${o.id} changed while this was saving; send it again`], written })

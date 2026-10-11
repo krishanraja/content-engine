@@ -99,15 +99,22 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // Safety floor: a row Krish has started working (drafting or beyond) is
     // never hard-deleted by expiry, even if its expires_at was set while it
     // was still a seed (temporal-class expiry, 2026-07-27).
-    const expiredQuery = () => supabase
-      .from('content_ideas')
-      .select('id', { count: 'exact', head: true })
+    //
+    // A row that holds a day still to come is never deleted either, whatever
+    // its state (Krish, 2026-10-11: the week is planned on Sunday, and a
+    // scheduled piece waits for its day). Options offered for the week have
+    // their expiry moved past it when they are offered (api/week/options.ts).
+    const today = nowIso.slice(0, 10)
+    const doomedOnly = <Q extends { not: Function; lte: Function; is: Function; or: Function }>(q: Q): Q => q
       .not('expires_at', 'is', null)
       .lte('expires_at', nowIso)
       .is('shift_id', null)
       .is('library_at', null)
       .not('state', 'in', '("drafting","review","approved","published")')
-    const { count: toExpire } = await expiredQuery()
+      .or(`scheduled_for.is.null,scheduled_for.lt.${today}`)
+    const { count: toExpire } = await doomedOnly(supabase
+      .from('content_ideas')
+      .select('id', { count: 'exact', head: true }))
 
     let expired = 0
     let archived_to: string | null = null
@@ -121,14 +128,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       // Best effort with one exception: if the export FAILS we do not delete.
       // A week of un-purged rows is a tidiness problem. A week of deleted rows
       // with no copy is the thing this exists to prevent.
-      const { data: doomed } = await supabase
+      const { data: doomed } = await doomedOnly(supabase
         .from('content_ideas')
-        .select('*')
-        .not('expires_at', 'is', null)
-        .lte('expires_at', nowIso)
-        .is('shift_id', null)
-        .is('library_at', null)
-        .not('state', 'in', '("drafting","review","approved","published")')
+        .select('*'))
       const exported = await exportBeforeDelete(week, doomed || [])
       if (!exported.ok) {
         return res.status(200).json({
@@ -158,14 +160,9 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       }
       observations_recorded = archive.written
 
-      const { error: delErr, count } = await supabase
+      const { error: delErr, count } = await doomedOnly(supabase
         .from('content_ideas')
-        .delete({ count: 'exact' })
-        .not('expires_at', 'is', null)
-        .lte('expires_at', nowIso)
-        .is('shift_id', null)
-        .is('library_at', null)
-        .not('state', 'in', '("drafting","review","approved","published")')
+        .delete({ count: 'exact' }))
       if (delErr) throw new Error(delErr.message)
       expired = count ?? 0
     }

@@ -20,6 +20,21 @@ export function isMonday(ymd: string): boolean {
   return YMD.test(ymd) && new Date(`${ymd}T12:00:00Z`).getUTCDay() === 1
 }
 
+/**
+ * When an offered row should expire at the earliest: the Monday after its
+ * week, at the hour the weekly purge runs (api/purge/run.ts, Mon 14:00 UTC).
+ * A seed's own expiry is often days away, so without this the purge could
+ * delete an option before Krish had the week to pick it. Returns the new
+ * expiry, or null when the row's own is already later or it never expires.
+ */
+export function keepThroughWeek(expiresAt: string | null | undefined, weekStart: string): string | null {
+  if (!expiresAt || !isMonday(weekStart)) return null
+  const floor = new Date(`${weekStart}T14:00:00Z`)
+  floor.setUTCDate(floor.getUTCDate() + 7)
+  const own = Date.parse(expiresAt)
+  return Number.isFinite(own) && own >= floor.getTime() ? null : floor.toISOString()
+}
+
 export function parseOptions(body: unknown): { week_start: string; series: string; options: WeekOptionInput[]; problems: string[] } {
   const b = (body && typeof body === 'object' ? body : {}) as Record<string, unknown>
   const problems: string[] = []
