@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-08, by a Claude Code session (cloud).
+Last updated: 2026-10-11, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -161,6 +161,42 @@ session").
 
 ## Latest handoff
 
+- 2026-10-11, Sunday evening: **The first planned week is set, and Monday is
+  at its publish board.** Week of 12 October, on the week page (#/week):
+  - Monday, follow.the.money: "Warner sued Suno. Now it takes a cut. Who else
+    gets paid?" (f328382d). Fact gate passed on its fourth run (74 claims,
+    none blocking; about $1.47 of model spend, Perplexity not metered),
+    visual gate passed with all eight companies' logos, scripts 479 and 219
+    words, pack built. Workroom
+    https://claude.ai/artifact/MJQfHCaP7qg1mynF78K6rz (five picks with
+    Claude's marked: "By Suno's own count" or the word "unaudited", which
+    costs one more gate run; the title; two optional joke lines; the
+    sign-off). Publish board
+    https://claude.ai/artifact/QpGeGjaqZwvyXwRnSadqyS. Board item
+    `monday-record`. Waiting on Krish: the picks, then recording both cuts.
+  - Wednesday, under.the.hood: three options, the watermark piece
+    (eb032d36) recommended. Topic only; nothing is made until he picks.
+  - Friday, mind.the.gap: the AI models piece (904658db) moved from 9 to 16
+    October with its long script cut to 478 words; its publish board
+    (https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV) is updated in place.
+  - The Monday purge no longer deletes a week's options: offering one moves
+    its expiry past the week, the purge spares any row holding a day still to
+    come, and the stale archive spares scheduled, restored and offered rows
+    (migrations `20261011180000`, `20261011200000`, both applied).
+  - The Sunday session's own ideas are source `week_research`, never
+    `lane_sourcing` (the n8n workflow's, whose quiet alarm reads it).
+  - CI is green again: Pillow is installed from `requirements-ci.txt` and
+    vitest is 5.0.3 (the tinypool advisory). It had been red since 7 October.
+  - Still for Krish: generate the Make a piece routine's token and set
+    `CLAUDE_MAKE_ROUTINE_TOKEN` in Control Center's Vercel project; add the
+    Brandfetch, Firecrawl and Google Drive connectors to both routines (Make
+    a piece, and Plan the week, which next fires Sunday 18 October 06:47 in
+    New York). Board item `make-piece-token`.
+  - For Codex: archive naming still leaves TikTok out of the default tall
+    places (`scripts/quick-edit/archive.py`, `config/archive-naming.cases.json`,
+    `build.py`'s tiktok flag). `archive.py` keeps its own clock in
+    Europe/London while the week is planned in New York time.
+
 - 2026-10-11, Sunday: **The two cuts and the standing five are enforced, not
   just written down.** Each cut is recorded from its own script with its own
   hook and outro (TWO_CUTS reworded; AMPLIFICATION.md and CADENCE.md match).
@@ -174,8 +210,8 @@ session").
   writer retries above 495 (3 minutes) and 220 (90 seconds). TikTok is a
   standing channel in the engine's lists; the Studio treats up to 90 seconds as
   normal. Control Center's mirror (`src/lib/making.ts`,
-  `scripts/check-make-handoff.mts`) still needs the same video, record and
-  publish rules.
+  `scripts/check-make-handoff.mts`) carries the same rules (control-center
+  600eded).
 
 - 2026-10-11, Sunday: **The week is planned on Sunday; the standing answers
   are written down.** Krish: every Sunday decide Monday, Wednesday and
