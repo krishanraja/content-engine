@@ -82,8 +82,11 @@ the piece's making record, moves every item tied to a piece to done when its
 publish step is done (the standing five ticked: Substack, YouTube, Shorts,
 TikTok and Instagram; Krish, 2026-10-11), and archives them when the piece is
 dropped (`apps/control-plane/api/_boardClose.ts`). The Substack post alone
-closes only the items whose `closes_on` is `published`; a piece made before
-the making record existed still closes everything on the Substack post. The
+closes only the items whose `closes_on` is `published`, so use `published`
+only for an item about the Substack post itself; an item about the reposts
+uses `publish`. A piece made before the making record existed (no step a
+session wrote, at most the watcher's Substack tick) still closes everything
+on the Substack post. The
 publish watcher (`/api/publish/watch`, hourly) learns a piece is published
 from the publication's own archive, so Krish never has to say so; a post
 whose title matches no piece becomes one board question. A session that hears from Krish
