@@ -31,7 +31,7 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | use an outside tool on a post, or record what one added | `docs/TOOL_BANK.md` |
 | reach a service (which are live, their secret names, what to rotate) | `docs/INTEGRATIONS.md` |
 | see every plausible way a tool could make the content far better | `docs/ENGINE_100X.md` |
-| run the week: slate and pick on Sunday, Tuesday and Thursday, make the same day, record next morning, produce, publish board | `docs/CADENCE.md` |
+| run the week: plan all three pieces on Sunday, make Monday's the same day, Wednesday and Friday when Krish starts them; the standing answers (two cuts, the channels) | `docs/CADENCE.md` |
 | publish a finished post to every channel, from Drive (one Substack video post, then the rest) | `docs/AMPLIFICATION.md` |
 | read a free public signal: prediction-market odds, news velocity, Hacker News, SEC filings | `scripts/signals/README.md` |
 | pin a Call to a prediction market, or read the scoreboard feed | `docs/CONTENT_ENGINE.md`, `/api/content-ideas/[id]/call-market` and `/api/calls` |

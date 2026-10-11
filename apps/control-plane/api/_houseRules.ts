@@ -277,6 +277,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     on: '2026-10-09', source: 'chat, Friday piece 2 script review; checked by scripts/post-pack/story_check.py', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
   },
+  {
+    id: 'TWO_CUTS', name: 'A three-minute video and a ninety-second one',
+    text: 'Every piece gets two videos from one recording. The long cut is about three minutes: 405 to 495 spoken words at an unhurried 150 a minute, wide, for the Substack post and YouTube. The short cut is at most 90 seconds: 160 to 225 spoken words, tall, for YouTube Shorts, TikTok and Instagram Reels. Both keep the hook and the call to action (HOOK_AND_CTA). Material that does not fit is cut, never spoken faster.',
+    said: 'I always want a 3-minute video and a 90-second version. I always want to repost to YouTube and then Shorts, TikTok, and Instagram.',
+    on: '2026-10-11', source: 'chat, weekly planning; checked by scripts/post-pack/story_check.py (the cut lengths)', status: 'live',
+    stages: ['write', 'final_pass'],
+  },
 ])
 
 /** The rules a stage enforces, for one subchannel or the house as a whole. */

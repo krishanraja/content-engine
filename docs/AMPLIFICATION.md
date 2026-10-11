@@ -20,12 +20,16 @@ Why: a reader gets one email instead of two; the video and the words share
 one set of comments and one link; and only Substack's Video post type does the
 rest of the work below (an article with a video dropped in gets none of it).
 
-**Two cuts, both from the same recording.**
-- The long cut (wide, 16:9, about 3 to 4 minutes) lives on Substack and YouTube.
-- The vertical cut (tall, 9:16, at most 90 seconds) goes everywhere else: LinkedIn,
-  YouTube Shorts, Instagram Reels, WhatsApp and Substack Notes. Ninety seconds
-  is WhatsApp Status's limit (Krish's), and the cut keeps the hook and the
+**Two cuts, both from the same recording** (house rule TWO_CUTS). Krish,
+2026-10-11: "I always want a 3-minute video and a 90-second version. I always
+want to repost to YouTube and then Shorts, TikTok, and Instagram."
+- The long cut (wide, 16:9, about 3 minutes: 405 to 495 spoken words) lives on
+  Substack and YouTube.
+- The short cut (tall, 9:16, at most 90 seconds: 160 to 225 spoken words) goes
+  to YouTube Shorts, TikTok and Instagram Reels, every time; and to LinkedIn,
+  WhatsApp and Substack Notes when Krish wants them. It keeps the hook and the
   call to action (house rule HOOK_AND_CTA).
+- `scripts/post-pack/story_check.py` refuses a cut of the wrong length.
 
 **Same face everywhere.** Same title idea, same cover frame, same opening
 line, same closing line ("the full article is free at makeyourmindup.ai"),
@@ -33,15 +37,20 @@ said out loud so it works even where links do not.
 
 ## The order
 
+The first five are the standing set for every piece; the publish step on the
+piece's making record is done when they are ticked. The last three are
+optional and never hold a piece back.
+
 | # | Channel | What goes up | Where the link goes |
 |---|---|---|---|
-| 1 | Substack | Video post: long cut on top, the article under it, the cover as thumbnail. Settings: YouTube upload on with the watermark off; Shorts and LinkedIn clips off | It is the link |
-| 2 | YouTube | Substack uploads the long cut as private. Swap in the engine's title and description, set the thumbnail, make it public, pin a comment | The description's read line and the pinned comment |
-| 3 | LinkedIn | The vertical cut as a native video, with the LinkedIn post | First comment |
-| 4 | YouTube Shorts | The vertical cut, with Related video set to the long one | Related video (links in Shorts are not clickable) |
-| 5 | Instagram Reels | The vertical cut, with the caption | Link in bio (makeyourmindup.ai) |
-| 6 | WhatsApp | Channel: the vertical cut and the link. Status: the vertical cut | In the message |
-| 7 | Substack Notes | Optional: the vertical cut, with the post attached | The attached post |
+| 1 | Substack | Video post: the 3-minute cut on top, the article under it, the cover as thumbnail. Settings: YouTube upload on with the watermark off; Shorts and LinkedIn clips off | It is the link |
+| 2 | YouTube | Substack uploads the 3-minute cut as private. Swap in the engine's title and description, set the thumbnail, make it public, pin a comment | The description's read line and the pinned comment |
+| 3 | YouTube Shorts | The 90-second cut, with Related video set to the long one | Related video (links in Shorts are not clickable) |
+| 4 | TikTok | The 90-second cut, with the caption | Said out loud in the video; makeyourmindup.ai in the profile |
+| 5 | Instagram Reels | The 90-second cut, with the caption | Link in bio (makeyourmindup.ai) |
+| 6 | LinkedIn (optional) | The 90-second cut as a native video, with the LinkedIn post | First comment |
+| 7 | WhatsApp (optional) | Channel: the 90-second cut and the link. Status: the same cut | In the message |
+| 8 | Substack Notes (optional) | The 90-second cut, with the post attached | The attached post |
 
 Steps 1 and 2 come first because every later step needs their links. The
 page has a box for each link; paste it once and every Copy button carries it.
@@ -68,6 +77,12 @@ page has a box for each link; paste it once and every Copy button carries it.
 - Instagram Reels: up to 20 minutes, but over 3 minutes are not recommended to
   new audiences. Caption links are only in a test for Meta Verified accounts.
 - WhatsApp Status: 90 seconds is Krish's limit; only beta reports confirm it.
+- TikTok (checked 2026-10-11, from third-party guides; TikTok's own help page
+  did not come up): links in captions are not clickable; a clickable website
+  link in the profile needs 1,000 followers or a registered business account
+  (the guides disagree on whether it is either or both); uploads run up to
+  60 minutes for most accounts, so 90 seconds is never the limit. Still to
+  confirm in the app: the exact rule for the profile link.
 - No scheduling tool covers all of these: Buffer posts Substack Notes only and
   YouTube Shorts only; none posts to WhatsApp Channels. Publishing by hand
   from the page stays the simplest route.
@@ -82,7 +97,7 @@ upload names the video before step 2 renames it.
   both cuts: `story_check.py` refuses anything else.
 - Substack title and subtitle, YouTube title and description: the engine's
   `package` step (`docs/CONTENT_ENGINE.md`, step 14), linted by `_packaging.ts`.
-- LinkedIn post, Shorts title, Reels caption, WhatsApp message, Note: written
+- Shorts title, TikTok and Reels captions, LinkedIn post, WhatsApp message, Note: written
   with the piece, held to the same house rules, and passed through the
   publish checks before they go in `publish.json`.
 

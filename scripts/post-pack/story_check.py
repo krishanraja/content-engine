@@ -16,14 +16,24 @@ parts a rule can see, and refuses to pack a script that fails one:
     so it never stops dead on the number;
   - it never speaks the article's headings or stamps aloud
     ("The billion: REAL, with small print", "One: the billion.");
-  - nothing in it is still marked NOT YET FACT-CHECKED.
+  - nothing in it is still marked NOT YET FACT-CHECKED;
+  - when it says which cut it is, it is that long. Krish, 2026-10-11: "I
+    always want a 3-minute video and a 90-second version" (house rule
+    TWO_CUTS). At an unhurried 150 spoken words a minute, the long cut is
+    405 to 495 words (about 2:40 to 3:20) and the short cut 160 to 225
+    words (about 1:05 to 1:30).
 
 Whether every beat follows from the last still needs a reader. The rule
 catches the failures that sank the Higgsfield script; reading it aloud once
 catches the rest.
 
     python scripts/post-pack/story_check.py SCRIPT [SCRIPT ...]
+    python scripts/post-pack/story_check.py --cut long SCRIPT    # or --cut short
     python scripts/post-pack/story_check.py --self-test
+
+Without --cut, a file whose name says "90", "short" or "vertical" is the
+short cut and one whose name says "long", "3min" or "wide" is the long cut;
+any other name is checked for everything but length.
 """
 
 import re
@@ -33,6 +43,12 @@ from pathlib import Path
 UNCHECKED = 'NOT YET FACT-CHECKED'
 OPENING_WORDS = 90
 SHORT_WORDS = 160  # under about a minute: no room for an outro
+WORDS_PER_MINUTE = 150
+CUTS = {
+    # cut: (fewest words, most words, what Krish asked for)
+    'long': (405, 495, 'a 3-minute video'),
+    'short': (160, 225, 'a 90-second version'),
+}
 OUTRO = re.compile(r'makeyourmindup', re.I)
 META_START = re.compile(r'^\s*(changes from|before you record|the story in one line|#{1,3}\s)', re.I)
 SAY_LINE = re.compile(r'^\s*(?:\*\*say:\*\*|say:)\s*(.*)$', re.I)
@@ -88,8 +104,36 @@ def spoken_paragraphs(text):
     return [re.sub(r'\s+', ' ', p).strip() for p in paragraphs if p.strip()]
 
 
-def problems(text):
-    """Plain-words reasons this script is not ready, or [] when it passes."""
+def cut_of(name):
+    """The cut a file name says it is, or None."""
+    n = str(name or '').lower()
+    if re.search(r'90|short|vertical|tall', n):
+        return 'short'
+    if re.search(r'long|3.?min|wide|three', n):
+        return 'long'
+    return None
+
+
+def length_problem(words, cut):
+    """The reason a script is the wrong length for its cut, or None."""
+    if cut not in CUTS:
+        return None
+    low, high, asked = CUTS[cut]
+    n = len(words)
+    secs = round(n / WORDS_PER_MINUTE * 60)
+    when = f'{secs // 60}:{secs % 60:02d}'
+    if n > high:
+        return (f'the {cut} cut runs {n} spoken words, about {when} at an unhurried pace, and Krish asked for {asked}: '
+                f'cut it to {low} to {high} words (house rule TWO_CUTS)')
+    if n < low:
+        return (f'the {cut} cut is {n} spoken words, about {when}, short of {asked}: '
+                f'it should run {low} to {high} words (house rule TWO_CUTS)')
+    return None
+
+
+def problems(text, cut=None):
+    """Plain-words reasons this script is not ready, or [] when it passes.
+    `cut` ('long' or 'short') adds the length rule."""
     found = []
     if UNCHECKED in text:
         found.append(f'some lines are marked {UNCHECKED}: add those facts to the article and run the fact check, or cut them')
@@ -109,6 +153,9 @@ def problems(text):
     elif len(words) >= SHORT_WORDS and not ARTICLE.search(beats[-1]):
         found.append('the outro never sends anyone to the article: say there is a full article, what it adds, that it is '
                      'free and where (makeyourmindup.ai) (house rule HOOK_AND_CTA)')
+    too = length_problem(words, cut)
+    if too:
+        found.append(too)
     for beat in beats:
         quote_free = re.sub(r'"[^"]*"|\u201c[^\u201d]*\u201d', '', beat)
         if SPOKEN_STAMP.search(quote_free) or SPOKEN_LABEL.search(quote_free) or HEADING_MARKUP.search(beat):
@@ -138,8 +185,8 @@ def warnings(text):
     return []
 
 
-def check_file(path):
-    return problems(Path(path).read_text(encoding='utf-8-sig'))
+def check_file(path, cut=None):
+    return problems(Path(path).read_text(encoding='utf-8-sig'), cut or cut_of(Path(path).name))
 
 
 def warn_file(path):
@@ -239,6 +286,17 @@ def self_test():
           warnings(GOOD.replace("So here's our call.", "So here's my bet.")), [])
     check('a short hook needs no opinion', warnings(short), [])
     check('the voice warning never refuses', problems(GOOD), [])
+    filler = lambda n: 'Why does the price matter? ' + ' '.join(['word'] * (n - 5))
+    check('a 3-minute long cut passes the length rule', length_problem(filler(450).split(), 'long'), None)
+    check('a 4-minute long cut is refused', 'cut it to 405 to 495' in (length_problem(filler(617).split(), 'long') or ''), True)
+    check('a 90-second short cut passes', length_problem(filler(198).split(), 'short'), None)
+    check('a two-minute short cut is refused', 'TWO_CUTS' in (length_problem(filler(300).split(), 'short') or ''), True)
+    check('a long cut far too short is refused', 'short of a 3-minute video' in (length_problem(filler(250).split(), 'long') or ''), True)
+    check('no cut, no length rule', length_problem(filler(900).split(), None), None)
+    check('a file named 90s is the short cut', cut_of('script-90s.md'), 'short')
+    check('a file named long is the long cut', cut_of('script_long.md'), 'long')
+    check('a plain name says nothing', cut_of('script.md'), None)
+    check('problems() carries the length rule when the cut is known', any('TWO_CUTS' in p for p in problems(GOOD, 'long')), len(' '.join(spoken_paragraphs(GOOD)).split()) not in range(405, 496))
     if failures:
         print('story check self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1
@@ -249,12 +307,20 @@ def self_test():
 def main(argv):
     if argv[1:2] == ['--self-test']:
         return self_test()
-    if len(argv) < 2:
+    args = list(argv[1:])
+    cut = None
+    if args[:1] == ['--cut'] and len(args) >= 2:
+        cut = args[1] if args[1] in CUTS else None
+        if cut is None:
+            print(f'--cut must be one of {", ".join(CUTS)}')
+            return 2
+        args = args[2:]
+    if not args:
         print(__doc__.strip())
         return 2
     worst = 0
-    for path in argv[1:]:
-        found = check_file(path)
+    for path in args:
+        found = check_file(path, cut)
         if found:
             worst = 1
             print(f'NOT READY  {path}')

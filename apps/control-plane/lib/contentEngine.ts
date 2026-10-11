@@ -562,6 +562,7 @@ export const VIDEO_FORMATS: VideoFormatOption[] = [
   { id: '15s', label: '15 second hook', seconds: 15, words: 40 },
   { id: '30s', label: '30 seconds', seconds: 30, words: 80 },
   { id: '60s', label: '60 second reel', seconds: 60, words: 160 },
+  { id: '90s', label: '90 seconds', seconds: 90, words: 225 },
   { id: '3min', label: '3 minutes', seconds: 180, words: 450 },
   { id: '10min', label: '10 minutes', seconds: 600, words: 1500 },
   { id: '20min', label: '20 minutes', seconds: 1200, words: 3000 },

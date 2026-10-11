@@ -114,6 +114,8 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/signals/odds` (cron) | the market's odds on every Call with a market pinned: reads Polymarket or Kalshi once a day and appends the reading to `meta.call_market.history` | none, keyless |
 | `/api/content-ideas/[id]/call-market` | pin a prediction market (Polymarket slug or Kalshi ticker) to a piece's dated Call, read once to refuse a wrong one; GET reads it, `{clear: true}` unpins | none, keyless |
 | `/api/content-ideas/[id]/making` | where the piece is between the workroom and every channel (`meta.making`: workroom and publish page links, visual gate, script check, pack, recordings, video assets, channels posted, the session making it); GET reads it with the steps, POST merges a patch. Written by Claude Code sessions (`scripts/post-pack/making.py`) and by Krish's cookie when he ticks a channel off; read by Control Center over its realtime subscription on `content_ideas` | none, keyless |
+| `/api/week/options` | the week's options (Krish, 2026-10-11: one Sunday decision for Monday, Wednesday and Friday). GET `?week_start=<Monday>` hands a session each series' mandate, the options written for that week, what is in flight, the judges' best and the ideas Krish dropped in; POST `{week_start, series, options:[{id, rank, pitch, why_now, recommended}]}` writes `meta.week_option` on each row and clears it from rows the day no longer offers. Read live by Control Center's week page. Picks nothing | none, keyless |
+| `/api/publish/watch` | hourly: marks a piece published from the publication's public archive and closes the board items tied to it (`_publishWatch.ts`, `_boardClose.ts`) | none, keyless |
 | `/api/calls` | public, read-only: every published piece's Call, our confidence, `not_due_yet` or `due`, Krish's verdict when he has made it, and the pinned market's odds; the scoreboard on makeyourmindup.ai reads it | none |
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
@@ -825,7 +827,10 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    `--dry-run` first: it shows every path and what it is for. A refused path
    stops the whole send before anything goes.
 16. **The split.** Control Center plans, suggests and tracks; Claude Code
-    makes (Krish, 2026-10-10). A session that starts with `piece_id: <uuid>`
+    makes (Krish, 2026-10-10). The week is planned on Sunday
+    (`docs/CADENCE.md`, `.agents/skills/plan-week`): a session writes each
+    day's options with `/api/week/options`, Krish picks on the week page, and
+    his Monday pick starts the making. A session that starts with `piece_id: <uuid>`
     (Control Center's "Make it in Claude Code" button fires a Claude Code
     routine with that line) follows `.agents/skills/make-piece/SKILL.md`:
     workroom, fact gate, visual gate, scripts, publish page, pack, recording,

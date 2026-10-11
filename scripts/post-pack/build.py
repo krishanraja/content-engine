@@ -298,7 +298,10 @@ def story_gate(entry, text, label):
     """Krish, 2026-10-06 (walk log F75): a script that does not make sense out
     loud, or stops dead on the number, is not packed. Only his own words in
     "story_check_override" let one through."""
-    found = story_check.problems(text)
+    # The cut a script says it is ("cut": "long" or "short", or its name),
+    # so the length rule holds (house rule TWO_CUTS, Krish 2026-10-11).
+    cut = entry.get('cut') if entry.get('cut') in story_check.CUTS else story_check.cut_of(entry.get('name') or entry.get('file') or '')
+    found = story_check.problems(text, cut)
     override = entry.get('story_check_override')
     if found and not (isinstance(override, str) and override.strip().lower().startswith('krish')):
         raise PackError(f'{label}: the script fails the story check:\n  - ' + '\n  - '.join(found) +

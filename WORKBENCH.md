@@ -155,6 +155,22 @@ session").
 
 ## Latest handoff
 
+- 2026-10-11, Sunday: **The week is planned on Sunday; the standing answers
+  are written down.** Krish: every Sunday decide Monday, Wednesday and
+  Friday; make Monday's through to its publish board the same day; leave
+  Wednesday and Friday topic-confirmed until he starts them; the only Sunday
+  question is "What are we writing about this week?". Standing: a 3-minute
+  video and a 90-second version (house rule TWO_CUTS, story_check.py holds
+  the lengths); every piece to Substack and YouTube, then Shorts, TikTok and
+  Instagram (docs/AMPLIFICATION.md, publish_kit.py; LinkedIn, WhatsApp and
+  Notes optional; the making record's publish step needs the five).
+  `docs/CADENCE.md` rewritten. New: `/api/week/options` (a session writes
+  each day's options onto the pieces), `.agents/skills/plan-week` (the
+  Sunday routine), a `90s` video format. Krish is in New York, not Sydney:
+  the 10 October slate cron assumed Sydney and is replaced. The AI models
+  piece moved to Friday 16 October. Its long script runs about 4 minutes and
+  must be cut to 3 before he records it.
+
 - 2026-10-11: **Board items close themselves when the piece moves on.**
   Krish: things from Wednesday "should really be chalked off automatically
   when we are done with a publish flow". Root cause: board items carried no

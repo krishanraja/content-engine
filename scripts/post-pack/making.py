@@ -36,7 +36,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402
 
-CHANNELS = ('substack', 'youtube', 'linkedin', 'shorts', 'reels', 'whatsapp', 'notes')
+CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes')
 CUTS = ('long', 'short')
 UUID = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', re.I)
 
@@ -109,8 +109,9 @@ def scripts_patch(paths):
     problems, cuts = [], []
     for p in paths:
         text = Path(p).read_text(encoding='utf-8')
-        result = subprocess.run([sys.executable, str(HERE / 'story_check.py'), str(p)], capture_output=True, text=True)
-        cut = 'short' if len(text.split()) < 260 or 'short' in Path(p).name.lower() or '90' in Path(p).name else 'long'
+        import story_check
+        cut = story_check.cut_of(Path(p).name) or ('short' if len(text.split()) < 300 else 'long')
+        result = subprocess.run([sys.executable, str(HERE / 'story_check.py'), '--cut', cut, str(p)], capture_output=True, text=True)
         cuts.append(cut)
         if result.returncode != 0:
             out = (result.stdout + result.stderr).strip().splitlines()

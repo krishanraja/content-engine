@@ -1,36 +1,41 @@
 # The weekly rhythm
 
-Krish, 2026-10-10, after Friday's piece ran late: "I think I'm going to need
-to have Sunday, Tuesday, and Thursday as the content preparation days when I
-receive a slate of ideas which I pick from (if I posted anything in the cold
-ideas and inspire drive or there's a backlog of content that we've got a queue
-for). Once we've decided what we're going to be talking about, the artefact
-workflow takes shape: ready for publish the next morning after I've recorded,
-the video runner is done, and post-production is done and I have my final
-publish board. This feels like it's going to be the ongoing durable system."
+Krish, 2026-10-11, superseding the Sunday, Tuesday and Thursday slates of 10
+October: "We're going to enable planning for the whole week on a Sunday.
+Every Sunday we're going to decide which of the three pieces are going to go
+out on Monday, Wednesday, and Friday. We're going to get Monday's piece all
+the way to iteration and the publish board, whilst leaving Wednesday and
+Friday as topic confirmed and waiting on me to do the iteration workflow."
+And of the questions he is asked each week: "I don't think there are too many
+questions you need to be asking me every Sunday, other than: What are we
+writing about this week? Here are your ideas and options. Do you want to drop
+in any other ideas that we can flesh out?"
 
-This is that system, in order. Control Center plans and tracks; Claude Code
-makes (`docs/CONTENT_ENGINE.md`, "The split"); the record of every step is
-the piece's own row (`/api/content-ideas/:id/making`).
+## The standing answers (never asked again)
+
+- **Two cuts, every piece** (house rule TWO_CUTS): a 3-minute video and a
+  90-second version, from one recording. `story_check.py` holds the lengths.
+- **Every piece goes to** Substack and YouTube, then YouTube Shorts, TikTok
+  and Instagram (`docs/AMPLIFICATION.md`). LinkedIn, WhatsApp and Substack
+  Notes stay available as optional steps.
+
+## The week
+
+Times are Krish's, in New York (`system_config.operator_timezone`).
 
 | When | Where | What happens | Who |
 |---|---|---|---|
-| Sunday, Tuesday, Thursday | Control Center, Content tab | The slate: a short list of pieces to pick from, drawn from what he dropped in the cold ideas and Inspo folder on Drive (`inspiration/drive-scan`, every two hours) and from the backlog the judges rank. He picks one for the next slot. | Krish picks |
-| Same day, after the pick | Claude Code ("Make it in Claude Code", or a session he starts) | The workroom, the fact-checked draft, the visual gate, both scripts, the publish page, the pack in Drive. Each step lands on the piece as it is done. | a session |
-| Next morning | His desk | He records the long cut and the 90 second cut from the scripts, and drops them in the Video Engine Inbox. The piece shows Recorded. | Krish |
-| Same morning | The runner and a session | The runner fetches the recordings; the session makes both cuts with the logos and the pile-up on screen, through the visual gate, into the pack. The piece shows Video assets, with links. | a session |
-| Then | Control Center, the piece | The publish board: the publish page open, every channel in the amplification order (`docs/AMPLIFICATION.md`) with a Copy button and a tick. He posts and ticks each one. | Krish |
+| Sunday, early morning | A Claude Code session ("Plan the week" routine, `.agents/skills/plan-week`) | Researches three or four options for Monday, Wednesday and Friday, fleshes out what he dropped in the Cold Ideas & Inspo folder, stress-tests them, and writes them onto the pieces (`/api/week/options`) | Claude Code |
+| Sunday, 8am (7am in winter) | The work board | One item asks the Sunday question and links to the week page (`control-center api/content/slate.ts`, refreshed every morning, done when all three days have a piece) | Control Center |
+| Sunday | Control Center, the week page (`#/week`) | He picks a piece for each day, or drops in an idea to flesh out. A pick holds its day (scheduled_for) | Krish |
+| Sunday, on the Monday pick | Claude Code ("Make a piece" routine, `.agents/skills/make-piece`) | Monday's piece is made through to its publish board: workroom, fact-checked article, visual gate, both scripts, publish page, pack | Claude Code |
+| Monday morning | His desk | He records Monday's two cuts and drops them in the Video Engine Inbox | Krish |
+| Monday | Codex (`.agents/skills/produce-video`) | Both cuts produced, through the visual gate, onto the record | Codex |
+| Monday | The publish page | He posts in the standing order and ticks each channel | Krish |
+| When he is ready | The week page, Wednesday's and Friday's cards | "Make it in Claude Code" starts each one's making; it then follows Monday's path | Krish starts, Claude Code makes |
 
-Three slates a week means three pieces a week at most, one per subchannel
-day. A slate day with nothing worth picking is a slate day with nothing
-picked; the queue never forces a piece.
-
-What exists today: the pick, the making record, the button, the pack tools,
-the publish page, the recordings lane, the ticks. What is still to build is
-in `WORKBENCH.md`: the slate itself on Sunday, Tuesday and Thursday in
-Control Center (a cron that assembles the three best from the Drive folder
-and the backlog, and a call that asks him to pick), and the runner's
-post-production step that puts the video assets on the record by itself.
+A day with nothing worth picking is a day with nothing picked; the options
+never force a piece.
 
 ## Who owns what, and where things live
 
@@ -44,7 +49,8 @@ board, the strip and both skills read the same table.
 
 | Step | Owner | Skill | Writes |
 |---|---|---|---|
-| Slate and pick | Control Center (cron), Krish | `api/content/slate.ts` there | the work board; the pick |
+| Options for the week | Claude Code (Sunday routine) | `.agents/skills/plan-week` | `meta.week_option` through `/api/week/options` |
+| The Sunday question and the pick | Control Center (cron), Krish | `api/content/slate.ts`, the week page | the work board's week item; the pick and its day |
 | Workroom, fact-checked draft, visual gate, scripts, publish page, pack | Claude Code | `.agents/skills/make-piece` | `meta.making.workroom`, `.publish_manager`, `.visual_gate`, `.script_check`, `.pack`; the body through the engine |
 | Record | Krish, then the runner | the recordings lane | `meta.making.recordings` |
 | Video assets | Codex, on a runner machine | `.agents/skills/produce-video` | `meta.making.video_assets`; the pack rebuilt with the cuts |
@@ -85,11 +91,14 @@ What could be misread, and what stops it:
    per press and opens a live session instead of firing again. Codex has
    no trigger from Control Center: the Recorded step is its signal, and
    the record shows the session making it.
-6. **The slate at the wrong time.** The cron runs at 20:00 UTC on
-   Saturday, Monday and Wednesday, which is Sunday, Tuesday and Thursday
-   morning in Sydney, and the slot dates are computed in Krish's own time
-   zone from the operator profile. When his zone changes, the cron line in
-   `control-center/vercel.json` is the one thing to move.
+6. **The slate at the wrong time.** Krish is in New York
+   (`system_config.operator_timezone`; the 10 October cron wrongly assumed
+   Sydney). The slate cron runs every day at 12:00 UTC (8am New York in
+   summer time, 7am in winter), puts the week's item on the board only when
+   it is Sunday in his zone, and only refreshes it on other days. The
+   planning routine runs at 6:47am New York on Sunday (CRON_TZ in the
+   routine). When his zone changes, the routine's schedule moves with
+   CRON_TZ; the slate needs no change, because the Sunday test reads his zone.
 7. **A pack rebuilt without the gate.** `build.py --replace` runs the
    visual gate again, so a cut added without its logos declared refuses
    the whole pack. Only Krish's own words in `visual_gate_override` pass

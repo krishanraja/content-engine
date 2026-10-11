@@ -1,4 +1,5 @@
-// Video script formats, 15 seconds to 20 minutes.
+// Video script formats, 15 seconds to 20 minutes. Every piece uses two of
+// them: 3min (the long cut) and 90s (the short cut), house rule TWO_CUTS.
 //
 // The engine could already produce a "YouTube script" — one length, roughly
 // five to nine minutes, prose in a spoken register with the beats marked. That
@@ -53,6 +54,16 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'The proof grounds it in named specifics.',
       'The turn is the part the viewer did not see coming: the second-order effect, the counter-reading, the part that inverts the obvious take.',
       'The verdict is hard and forward-looking and answers the hook. No summary, no question. Then one short spoken outro line (STORY_OUTRO).',
+    ].join(' '),
+  },
+  {
+    // The short cut of every piece (house rule TWO_CUTS, Krish 2026-10-11):
+    // YouTube Shorts, TikTok and Instagram Reels, at most 90 seconds.
+    id: '90s', label: '90 seconds', seconds: 90, words: 225,
+    shape: [
+      'Hook (the most provocative true thing, then the one question), then two beats, then the call, then a one-line spoken outro.',
+      'Each beat is one point with its one number. No third beat: there is no room.',
+      'The call answers the question in one sentence. The outro says the full article is free at makeyourmindup.ai and asks one question for the comments (STORY_OUTRO).',
     ].join(' '),
   },
   {

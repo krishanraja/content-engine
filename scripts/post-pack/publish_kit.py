@@ -21,8 +21,13 @@ except title; a step whose words are missing says so instead of guessing):
                "cover": "2 Covers and images/substack-cover-3x2.png",
                "substack_copy": "1 Article/substack-copy.html"},
      "youtube_title": "...", "youtube_description": "...",
-     "short_title": "...", "linkedin_post": "...", "short_caption": "...",
-     "whatsapp_text": "...", "note_text": "...", "comment_question": "..."}
+     "short_title": "...", "short_caption": "...", "tiktok_caption": "...",
+     "linkedin_post": "...", "whatsapp_text": "...", "note_text": "...",
+     "comment_question": "..."}
+
+The order (Krish, 2026-10-11): Substack, YouTube, then Shorts, TikTok and
+Instagram, every time; LinkedIn, WhatsApp and Notes after, when he wants
+them. "tiktok_caption" falls back to "short_caption".
 
 Any text may hold {ARTICLE_URL} and {YOUTUBE_URL}. The page has a box for
 each: paste the link once and every Copy button carries it. Nothing here
@@ -36,36 +41,42 @@ from pathlib import Path
 
 ARTICLE = '{ARTICLE_URL}'
 YOUTUBE = '{YOUTUBE_URL}'
-VERTICAL_MAX_SECONDS = 90  # WhatsApp Status, Krish's limit; the vertical cut fits every channel at this length
+VERTICAL_MAX_SECONDS = 90  # the short cut, house rule TWO_CUTS; inside WhatsApp Status's limit too
 
 
 def steps(p):
-    """The channels, in the order they are published (docs/AMPLIFICATION.md)."""
+    """The channels, in the order they are published (docs/AMPLIFICATION.md).
+
+    Krish, 2026-10-11: "I always want a 3-minute video and a 90-second
+    version. I always want to repost to YouTube and then Shorts, TikTok, and
+    Instagram." Those five come first, every time. LinkedIn, WhatsApp and
+    Substack Notes follow as optional steps, for when he wants them."""
     f = p.get('files') or {}
-    long_video = f.get('long_video') or '3 Video/ the wide (16:9) video'
-    short_video = f.get('short_video') or '3 Video/ the tall (9:16) video'
+    long_video = f.get('long_video') or '3 Video/ the 3-minute wide (16:9) video'
+    short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
     cover = f.get('cover') or '2 Covers and images/substack-cover-3x2.png'
     copy_page = f.get('substack_copy') or '1 Article/substack-copy.html'
     q = p.get('comment_question') or ''
+    short_caption = p.get('short_caption')
     return [
         {
             'where': 'Substack', 'tag': 'The home: one post, one email',
-            'why': 'One post holds the video at the top and the whole article under it, so subscribers get one email '
+            'why': 'One post holds the 3-minute video at the top and the whole article under it, so subscribers get one email '
                    'and every other channel points to one link.',
             'files': [long_video, cover, copy_page],
             'do': [
-                'Create, then choose Video (not Article). Upload the wide video.',
+                'Create, then choose Video (not Article). Upload the 3-minute wide video.',
                 'Paste the title and subtitle below.',
                 f'Open {copy_page}, press Copy post, and paste it into the text under the video.',
                 'Use the cover as the thumbnail.',
                 'Settings, before you publish: YouTube upload on, with the Substack watermark off. '
-                'Shorts clips off and LinkedIn clips off (you post better ones yourself in steps 3 to 5).',
+                'Shorts clips off and LinkedIn clips off (you post your own 90-second cut in steps 3 to 5).',
                 'Publish and send to everyone. Then paste the post\'s link into the Article link box at the top of this page.',
             ],
             'copy': [('Title', p.get('title')), ('Subtitle', p.get('subtitle'))],
         },
         {
-            'where': 'YouTube (the full video)', 'tag': 'Substack uploads it privately; you finish it',
+            'where': 'YouTube (the 3-minute video)', 'tag': 'Substack uploads it privately; you finish it',
             'why': 'Substack puts the video on YouTube as private. Swap in the YouTube words, then make it public.',
             'files': [],
             'do': [
@@ -78,16 +89,7 @@ def steps(p):
                      ('Pinned comment', f'The full article, with every source, free: {ARTICLE}' + (f'\n\n{q}' if q else ''))],
         },
         {
-            'where': 'LinkedIn', 'tag': 'The vertical cut, uploaded natively',
-            'why': 'A native video travels further on LinkedIn than a link card. The link goes in the first comment.',
-            'files': [short_video],
-            'do': ['Start a post, add the tall video, paste the post text below and publish.',
-                   'Straight away, add the first comment below.'],
-            'copy': [('Post text', p.get('linkedin_post')),
-                     ('First comment', f'The full article, free, with every source: {ARTICLE}')],
-        },
-        {
-            'where': 'YouTube Shorts', 'tag': 'The same vertical cut, linked to the full video',
+            'where': 'YouTube Shorts', 'tag': f'The {VERTICAL_MAX_SECONDS}-second cut, linked to the full video',
             'why': 'Links in Shorts are not clickable, so the Short points to the full video instead.',
             'files': [short_video],
             'do': ['Upload the tall video as a Short with the title below.',
@@ -95,23 +97,41 @@ def steps(p):
             'copy': [('Title', p.get('short_title') or p.get('youtube_title'))],
         },
         {
-            'where': 'Instagram Reels', 'tag': 'The same vertical cut',
+            'where': 'TikTok', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
+            'why': 'Links in TikTok captions are not clickable, and a clickable link in your profile needs 1,000 followers '
+                   'or a business account. The video says makeyourmindup.ai out loud, so the caption only has to name it.',
+            'files': [short_video],
+            'do': ['Upload the tall video, paste the caption below and post.',
+                   'Put makeyourmindup.ai in your profile, as a link once TikTok offers the Website field, as text until then.'],
+            'copy': [('Caption', p.get('tiktok_caption') or short_caption)],
+        },
+        {
+            'where': 'Instagram Reels', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
             'why': 'Reel captions cannot hold a clickable link, so the caption sends people to the link in your bio.',
             'files': [short_video],
             'do': ['New Reel, add the tall video, paste the caption below and share.',
                    'Check the link in your bio is makeyourmindup.ai.'],
-            'copy': [('Caption', p.get('short_caption'))],
+            'copy': [('Caption', short_caption)],
         },
         {
-            'where': 'WhatsApp', 'tag': f'The same vertical cut, inside {VERTICAL_MAX_SECONDS} seconds',
-            'why': 'Your channel gets the video and the link; your Status gets the video and the line.',
+            'where': 'LinkedIn', 'tag': 'Optional: the same cut, uploaded natively',
+            'why': 'When you want it: a native video travels further on LinkedIn than a link card. The link goes in the first comment.',
+            'files': [short_video],
+            'do': ['Start a post, add the tall video, paste the post text below and publish.',
+                   'Straight away, add the first comment below.'],
+            'copy': [('Post text', p.get('linkedin_post')),
+                     ('First comment', f'The full article, free, with every source: {ARTICLE}')],
+        },
+        {
+            'where': 'WhatsApp', 'tag': f'Optional: the same cut, inside {VERTICAL_MAX_SECONDS} seconds',
+            'why': 'When you want it: your channel gets the video and the link; your Status gets the video and the line.',
             'files': [short_video],
             'do': ['Channel: send the tall video with the message below.',
                    'Status: add the same video with the message below.'],
             'copy': [('Message', p.get('whatsapp_text') or f'{p.get("title") or ""}\n\nThe full article: {ARTICLE}'.strip())],
         },
         {
-            'where': 'Substack Notes', 'tag': 'Optional: the vertical cut for Substack readers who don\'t subscribe yet',
+            'where': 'Substack Notes', 'tag': 'Optional: the same cut for Substack readers who don\'t subscribe yet',
             'why': 'Notes is where Substack readers find new writers. A Note can hold a video of up to five minutes.',
             'files': [short_video],
             'do': ['New Note, add the tall video, paste the text below, and attach the post from step 1.'],
@@ -220,9 +240,14 @@ def self_test():
     sample = {'title': 'Why are there suddenly so many AIs?', 'date': '2026-10-09',
               'youtube_title': 'T', 'linkedin_post': 'L', 'short_caption': 'C'}
     text = page(sample)
-    for where in ('1. Substack', '2. YouTube', '3. LinkedIn', '4. YouTube Shorts', '5. Instagram Reels', '6. WhatsApp', '7. Substack Notes'):
+    for where in ('1. Substack', '2. YouTube', '3. YouTube Shorts', '4. TikTok', '5. Instagram Reels', '6. LinkedIn', '7. WhatsApp', '8. Substack Notes'):
         if where not in text:
             failures.append(f'missing step {where}')
+    if 'Optional: the same cut, uploaded natively' not in text:
+        failures.append('LinkedIn must read as optional after the standing five')
+    tiktok = next(x for x in steps(sample) if x['where'] == 'TikTok')
+    if tiktok['copy'][0][1] != 'C':
+        failures.append('TikTok must fall back to the short caption')
     if 'choose Video (not Article)' not in text:
         failures.append('step 1 must use one Substack video post')
     if '{ARTICLE_URL}' not in text or 'id="article"' not in text:
@@ -234,7 +259,7 @@ def self_test():
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1
-    print('publish kit self-test passed: 5 checks')
+    print('publish kit self-test passed: 7 checks')
     return 0
 
 

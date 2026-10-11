@@ -17,8 +17,14 @@
 // The same shape is mirrored in control-center/src/lib/making.ts. Change one,
 // change the other (docs/CONTENT_ENGINE.md, "The split").
 
-export const MAKING_CHANNELS = ['substack', 'youtube', 'linkedin', 'shorts', 'reels', 'whatsapp', 'notes'] as const
+/** Every channel a piece can go to, in the order Krish posts them
+ *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
+ *  YouTube and then Shorts, TikTok, and Instagram." The first five are the
+ *  standing set; LinkedIn, WhatsApp and Substack Notes stay available when
+ *  he wants them and never hold a piece back. */
+export const MAKING_CHANNELS = ['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes'] as const
 export type MakingChannel = (typeof MAKING_CHANNELS)[number]
+export const CORE_CHANNELS: readonly MakingChannel[] = ['substack', 'youtube', 'shorts', 'tiktok', 'reels']
 export const MAKING_CUTS = ['long', 'short'] as const
 export type MakingCut = (typeof MAKING_CUTS)[number]
 
@@ -216,8 +222,9 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
     ? { key: 'video', label: 'Video assets', state: 'done', at: assets.map(a => a.at).sort().pop(), note: `${assets.length} file${assets.length === 1 ? '' : 's'}` }
     : { key: 'video', label: 'Video assets', state: 'todo' })
   const posted = MAKING_CHANNELS.filter(c => m.channels?.[c])
+  const core = CORE_CHANNELS.filter(c => m.channels?.[c])
   steps.push(posted.length || row.state === 'published'
-    ? { key: 'publish', label: 'Published', state: posted.length >= 6 || row.state === 'published' ? 'done' : 'now', at: posted.map(c => m.channels![c]!.posted_at).sort().pop(), note: `${posted.length} of ${MAKING_CHANNELS.length} channels` }
+    ? { key: 'publish', label: 'Published', state: core.length === CORE_CHANNELS.length || row.state === 'published' ? 'done' : 'now', at: posted.map(c => m.channels![c]!.posted_at).sort().pop(), note: `${core.length} of ${CORE_CHANNELS.length} channels` }
     : { key: 'publish', label: 'Publish', state: 'todo' })
   // The first step that is not done is where the piece is now.
   const first = steps.find(s => s.state === 'todo' || s.state === 'failed' || s.state === 'now')

@@ -5,7 +5,7 @@ import { readMaterials } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/video-script
-//   body: { duration: '15s'|'30s'|'60s'|'3min'|'10min'|'20min', hint?, source_text? }
+//   body: { duration: '15s'|'30s'|'60s'|'90s'|'3min'|'10min'|'20min', hint?, source_text? }
 //
 // Turns an existing piece into a spoken script at a chosen length. Modelled on
 // channel-cut: it compresses a draft that already exists, it never invents one,

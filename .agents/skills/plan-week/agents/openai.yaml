@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan the week"
+  short_description: "Sunday: research Monday, Wednesday and Friday's options and put them on the week page"
+  default_prompt: "Use $plan-week to plan the coming week: options for each publishing day, on the week page by Sunday morning."

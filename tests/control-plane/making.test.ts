@@ -110,12 +110,12 @@ describe('the making record', () => {
     const one = await call('POST', { channels: { substack: { url: 'https://makeyourmindup.substack.com/p/why-so-many-ais' }, youtube: {} } }, 'krish')
     expect(one.status).toBe(200)
     expect(one.body.making.by).toBe('Krish')
-    expect(one.body.steps.find((s: Row) => s.key === 'publish')).toMatchObject({ state: 'now', note: '2 of 7 channels' })
+    expect(one.body.steps.find((s: Row) => s.key === 'publish')).toMatchObject({ state: 'now', note: '2 of 5 channels' })
     const two = await call('POST', { channels: { youtube: null } }, 'krish')
     expect(Object.keys(two.body.making.channels)).toEqual(['substack'])
-    const bad = await call('POST', { channels: { tiktok: {} } })
+    const bad = await call('POST', { channels: { myspace: {} } })
     expect(bad.status).toBe(400)
-    expect(bad.body.problems[0]).toMatch(/unknown channel "tiktok"/)
+    expect(bad.body.problems[0]).toMatch(/unknown channel "myspace"/)
   })
 
   it('a bad link, an empty patch and a missing piece are refused with reasons', async () => {
@@ -150,8 +150,15 @@ describe('the pure helpers', () => {
   })
 
   it('a published piece with every channel is done', () => {
-    const channels = Object.fromEntries(['substack', 'youtube', 'linkedin', 'shorts', 'reels', 'whatsapp'].map(c => [c, { posted_at: '2026-10-10T03:00:00Z' }]))
+    const channels = Object.fromEntries(['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin'].map(c => [c, { posted_at: '2026-10-10T03:00:00Z' }]))
     const steps = makingSteps({ state: 'published', meta: { fact_check: { status: 'passed' }, making: { channels, updated_at: 'x', by: 'Krish' } } })
-    expect(steps.find(s => s.key === 'publish')).toMatchObject({ state: 'done', note: '6 of 7 channels' })
+    expect(steps.find(s => s.key === 'publish')).toMatchObject({ state: 'done', note: '5 of 5 channels' })
+  })
+
+  it('the standing five close the publish step; LinkedIn and WhatsApp never stand in for TikTok', () => {
+    const five = Object.fromEntries(['substack', 'youtube', 'shorts', 'tiktok', 'reels'].map(c => [c, { posted_at: 'x' }]))
+    expect(makingSteps({ state: 'approved', meta: { making: { channels: five, updated_at: 'x', by: 'Krish' } } }).find(s => s.key === 'publish')?.state).toBe('done')
+    const { tiktok: _t, ...four } = five
+    expect(makingSteps({ state: 'approved', meta: { making: { channels: { ...four, linkedin: { posted_at: 'x' }, whatsapp: { posted_at: 'x' } }, updated_at: 'x', by: 'Krish' } } }).find(s => s.key === 'publish')?.state).toBe('now')
   })
 })
