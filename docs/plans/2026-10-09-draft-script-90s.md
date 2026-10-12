@@ -1,3 +1,5 @@
+Here's what's coming with AI, before everyone notices. I'm Krish.
+
 Claude Code now lets you pick from more versions of Claude than there are Harry Potter books. More than a dozen. And the longer that menu gets, the less you actually get to choose. So why are there suddenly so many AIs?
 
 Because every name on that menu is doing four jobs at once. It's a version number. It's a price tag, like economy and business class. It's an advert, because every new name is a launch day. And it's a queue ticket, sending easy questions to cheap computers.
@@ -6,4 +8,4 @@ Is it a scam to charge you more? The prices say no. They've crashed. But most ap
 
 My bet: the menu disappears and the app picks for you. By the end of September 2027, at least two of OpenAI, Anthropic and Google will pick the brain for app builders by default. I'm eighty-five per cent sure.
 
-The full article has every source, and what to do if your business runs on AI. It's free at makeyourmindup.ai. I'm Krish. Do you pick your AI, or does it pick you?
+The full article has every source, and what to do if your business runs on AI. It's free at makeyourmindup.ai. Do you pick your AI, or does it pick you?

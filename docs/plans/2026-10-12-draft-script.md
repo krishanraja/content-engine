@@ -1,3 +1,5 @@
+Here's what you need to know about how money is changing because of AI. I'm Krish.
+
 Warner, Universal and Sony all sued Suno, the AI app that writes and sings you a song about your dog's birthday. Now Warner takes a share of Suno's money, and Universal and Sony are suing it all over again. So when a fan makes a song with AI, who gets paid, and who is left waiting?
 
 You pay Suno to download your song. Since 9 September, Warner, BMG and Believe get "a portion" of Suno's revenue. Half the cake, or the crumbs? Suno leaves the labels to share it out. Think of a wedding band booked through an agency. The couple pays the venue, the venue pays the agency, and what reaches the drummer depends on a contract the couple never sees. Suno is the venue. The artist is the drummer.
@@ -12,4 +14,4 @@ What does that mean for you? On a paid plan, Suno says the song is yours. Once y
 
 My call: the money is real as far as the labels. Past them, it goes dark, because label contracts nobody has published set the artist's share. Investors priced Suno at $5.4 billion in June. That price needs the remaining suits to end in licences, and my bet is they will. By 31 December 2027, Universal or Sony will have announced a settlement or a licensing deal with Suno. I'm 70% sure.
 
-The full article has the money map, the court papers, and what to check before selling an AI song. It's free at makeyourmindup.ai. Tell me in the comments: should an artist get paid when an AI learns from their song? I'm Krish. Make your mind up.
+The full article has the money map, the court papers, and what to check before selling an AI song. It's free at makeyourmindup.ai. Tell me in the comments: should an artist get paid when an AI learns from their song? Make your mind up.
