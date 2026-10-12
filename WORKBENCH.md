@@ -15,8 +15,9 @@ Last updated: 2026-10-12, about 22:00 UTC, by a Claude Code session (cloud).
   what you need from him. If a sentence would confuse someone outside the
   project, rewrite it.
 - After everything you do, update the board (below), and end every reply to
-  him with its link: https://controlcenter.krishraja.com/#/board. Update this
-  file when how the work is done changes.
+  him with the link to what waits on him:
+  https://controlcenter.krishraja.com/#/home?waiting=1. Update this file when
+  how the work is done changes.
 - Make the call and say what you assumed. Ask only when the answer changes the
   shape of the work, and offer your best guess with the question.
 - Every visual, interactive or animation must make one critical point of the
@@ -342,16 +343,15 @@ opening line before publishing.
 
 ## The board: what is waiting on Krish, in progress and done
 
-The live list lives in the shared database, not in this file. Krish sees it in
-Control Center at https://controlcenter.krishraja.com/#/board (phone or desk),
-and what is waiting on him reaches his one list on Control Center's Home
+The live list lives in the shared database, not in this file. What is
+waiting on Krish is his one list on Control Center's Home
 (https://controlcenter.krishraja.com/#/home?waiting=1), where he clears, bumps
-or purges it. Every session, in Claude Code or Codex, reads and writes it
-through the engine:
+or purges it; that is the link to give him. The whole board, in progress and
+done too, is a log at https://controlcenter.krishraja.com/#/board. Every
+session, in Claude Code or Codex, reads and writes it through the engine:
 
 - Read it: `python3 scripts/engine.py GET /api/workbench --full` (`python` on
-  Windows). Any replies he has written are in `replies`; `unseen_replies`
-  counts the ones no session has acted on.
+  Windows).
 - Add or change items (up to 50 at once; an existing item changes only the
   fields you send):
   `python3 scripts/engine.py POST /api/workbench @items.json` with
@@ -361,12 +361,17 @@ through the engine:
 - Change the headline or the status lights: `{"action": "set_state",
   "headline": "...", "signals": [{"label": "Home computer", "state": "ok",
   "text": "On and ready"}]}` (state is `ok`, `warn`, `bad` or empty).
-- After you act on a reply of his: `{"action": "mark_seen", "ids": ["<reply id>"],
-  "client": "codex"}`. The board then shows him that you read it.
-- Only Krish writes a reply, from Control Center. The engine key cannot: a
-  session must never put words in his mouth. Never leave an item waiting for
-  one: Control Center is retiring the reply box, and an item on him ends when
-  it closes itself or when he clears, bumps or purges it on his list.
+- **Replies are retired.** Control Center has no reply box any more, and
+  step 3's voice input, one place where he speaks to the system, replaces
+  it. Never leave an item waiting for his words: an item on him ends when it
+  closes itself or when he clears, bumps or purges it on his list, and a
+  question only his words answer is asked in your reply to him. The engine
+  refuses the reply action (`410 replies_retired`) and an item with a
+  `"prompt"` (`400 prompt_retired`; `"prompt": null` clears an old one).
+  The replies he wrote before stay in `replies` (`unseen_replies` counts the ones no
+  session has acted on; `{"action": "mark_seen", "ids": ["<reply id>"],
+  "client": "codex"}` after you act on one). The engine key can never write
+  one: a session must never put words in his mouth.
 
 Set `"client"` to `"codex"` or `"claude_code"` so the board says who changed it.
 Write every item in plain words: what happened, what it means for him, and what
@@ -389,14 +394,22 @@ session wrote, at most the watcher's Substack tick) still closes everything
 on the Substack post. The
 publish watcher (`/api/publish/watch`, hourly) learns a piece is published
 from the publication's own archive, so Krish never has to say so; a post
-whose title matches no piece becomes one board question. A session that hears from Krish
+whose title matches no piece becomes one item in progress for a session,
+which closes itself once the post is recorded on its piece (`making.py
+<piece id> posted substack <link>`). A question an engine tool holds for a
+session with no piece to close it (an unmatched post, `post-<id>`, or a take
+with no piece, `take-<sha12>`) that no session touches for a week is let go
+by the watcher's hourly pass (archived, by "engine: no session took it",
+and counted in its `let_go`). A session that hears from Krish
 that something is done, or that is not about a piece, still moves it itself.
 Never leave an `in_progress` item behind you: when you stop, it is done,
 handed on, or back on him.
 
-**An item waiting on him reaches his list only when it is ready** (Krish,
-2026-10-11: one list, holding only what he alone can do, what is prepared,
-and what says how it closes itself). Give every `on_you` item all three:
+**An item waiting on him is ready for his list, or it is not written**
+(Krish, 2026-10-11: one list, holding only what he alone can do, what is
+prepared, and what says how it closes itself; and "you are just capping
+the garbage. Surely we need to not have garbage."). Give every `on_you` item
+all three:
 
 - `"only_you"`, why only he can do it: `send`, `post`, `spend`, `delete`,
   `permission`, `credential`, `face` (his face and voice), `login` or
@@ -405,14 +418,32 @@ and what says how it closes itself). Give every `on_you` item all three:
   the draft, the page), with a short `"link_label"` for its button. A typed
   answer is not a link.
 - `"closes_on"` with the piece's `"idea_id"`, so the engine closes it when that
-  step lands (above). The week's planning item uses `"closes_on":
-  "week_planned"` and needs no `idea_id`; Control Center closes it once every
-  day has a piece. A `judgment` item needs one of these closes too.
+  step lands (above). The week's planning item (`week-<its Monday>`) uses
+  `"closes_on": "week_planned"` and needs no `idea_id`; Control Center closes
+  it once every day has a piece. A `judgment` item needs one of these closes
+  too.
 
-Control Center holds back an `on_you` item that lacks any of them: it is
-counted and named on the board's held lane, never shown on his list. That
-includes a job only he can do that nothing can see finished yet (a login, a
-key only he can change), so say in its detail what would show it done.
+The engine refuses an `on_you` write that lacks any of them, checked with
+what the item already holds, so a partial edit of an item on him counts too
+(`lane_if_new` is held to it for a new item): `400` with `on_you_needs_only_you`,
+`on_you_needs_link`, `on_you_needs_closes_on` or `on_you_needs_idea_id`, and a
+`detail` naming the values allowed. Keep such an item `in_progress` until it
+has them. A job only he can do that nothing can see finished (a login, a key
+only he can change, an email only he can send) stays `in_progress`, its
+detail saying what would show it done, until an agent gives it a check; ask
+him in your reply. The database holds the same rule
+(`work_board_items_on_you_is_ready`, migration `20261013093000`), the
+week's close on the week's item alone included: when it is applied, every
+item on him that fails it moves to `in_progress`, its detail starting "Held
+from your list on <date>: it" and the gates it fails in Control Center's
+own words ("does not need you", "is not ready for one press", "does not say
+how it closes itself"). The engine's own tools never put a question on him:
+nothing he can press answers which take a recording is, or which piece a
+post is, so the recordings lane and the publish watcher hold those in
+progress for a session, which asks him in its reply. A take tied to its
+piece closes on Record; the lane ends one with no piece once the take is
+placed or no waiting piece can be it; the watcher closes a post's once it
+matches a piece; and either is let go after a week untouched (above).
 `bumped_until` is written by his Bump; leave it alone.
 
 **An item Krish closed himself stays closed** (his Clear or Purge in Control
@@ -442,10 +473,10 @@ the top item that is not waiting on Krish. Before you stop, update this file.
 Krish starts a session by pasting this:
 
 > Continue the Mindmake content engine. Read AGENTS.md and WORKBENCH.md, then
-> read the board and my replies on it. Tell me in plain words what is waiting
-> on me and what you will do next, then do the top thing that is not waiting
-> on me. Update the board and WORKBENCH.md before you stop, and end every reply
-> with the board link.
+> read the board. Tell me in plain words what is waiting on me and what you
+> will do next, then do the top thing that is not waiting on me. Update the
+> board and WORKBENCH.md before you stop, and end every reply with the link to
+> my list.
 
 He may add a line saying what he wants today; that comes first.
 
@@ -494,6 +525,69 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-12, Monday, afternoon: **Nothing can be put on Krish unless it is
+  ready for his list.** Krish, 2026-10-11: "you are just capping the
+  garbage. Surely we need to not have garbage."
+  On branch `ccr-ace11b4d-yjbdcu-refuse-at-write`, committed, with a
+  review's twelve findings fixed on top; not merged, not deployed, the
+  migration not applied. In plain words:
+  - **The engine refuses it.** A board write that leaves an item on him
+    without a reason only he can act on, an https link to what he presses,
+    and a way it closes itself (its piece and step, or the week's own
+    item, `week-<its Monday>`) is refused, naming what is missing
+    (`on_you_needs_only_you`, `_link`, `_closes_on` or `_idea_id`), with
+    the values allowed. It is checked with what the item already holds, so
+    an edit that strips a field counts too, and `lane_if_new` counts for a
+    new item. An agent reopening an item Krish closed still hears
+    `krish_closed_it` first. Replies are refused outright now
+    (`replies_retired`, `prompt_retired`).
+  - **The database holds the same rule**
+    (`supabase/migrations/20261013093000_board_on_you_is_ready.sql`, to
+    apply), the week's close on the week's own item included. It moves the
+    four live items that fail it today (`you-launch-today`,
+    `you-engine-github-key`, `you-welcome-days`, and this week's publish
+    board, `week-publish-board-2026-10-12`, which a session put on him at
+    15:19 with no close) to in progress, each starting "Held from your list
+    on <date>: it" and the gates it fails in Control Center's own words,
+    then checks every row. Proven on a scratch database with seven failing
+    shapes, run twice, across New York's midnight, and against five broken
+    copies of the rule, each of which the check catches; CI runs it twice.
+  - **The engine's own tools never put a question on him.** Nothing he can
+    press answers which take a recording is, or which piece a post is, so
+    the recordings lane and the publish watcher hold those in progress for
+    a session, which asks him in its reply. Each has an end: a take tied to
+    its piece closes on Record; the lane closes one with no piece once the
+    take is placed or no waiting piece can be it; the watcher closes a
+    post's once it matches a piece; and the watcher's hourly pass lets go
+    of any of them no session has touched for a week, counted in its
+    `let_go`. The purge archives the board items about a row before it
+    deletes the row, and now counts them (`board_items_archived`, and
+    `board_items_off_his_list` for the ones that were on him).
+  - **The skills, AGENTS.md, the cadence and this file** say the same; the
+    link to give Krish is his list on Home,
+    https://controlcenter.krishraja.com/#/home?waiting=1.
+  Waiting on Krish: nothing new. The four held items go back on his list
+  only once something can see them done (the welcome email's days, the
+  launch cover, a working GitHub key, the week's publish board: step 4's
+  done checks).
+  Next, for the session that picks this up:
+  - Merge and deploy the engine, then apply the migration straight after,
+    through the Supabase MCP, without waiting for the home computers to
+    pull `main`. From the moment the engine deploys, its board route
+    refuses the old recordings lane's questions on him whether or not the
+    migration is applied, and a write that merges with one of the legacy
+    items still on him (an old `take-*`, `you-launch-today`) is refused
+    too; the old publish watcher is server code, replaced by that same
+    deploy. The migration only moves those legacy items off his list, so
+    every hour it waits keeps such writes failing. Read back that the four
+    rows moved and that `work_board_items_on_you_is_ready` is validated.
+  - Control Center follow-up: once the migration is applied, the Board's
+    "Held from your list" lane can never hold a board item again (it lists
+    only board items, and the engine and the database now refuse what its
+    gate held), so it reads empty for good. Retire that lane and its name
+    in the empty lanes line; the held items now show under In progress,
+    starting "Held from your list".
 
 - 2026-10-12, Monday, about 17:10 UTC: **the week's board carries the words
   Krish actually reads, Wednesday's workroom is made and waits on two

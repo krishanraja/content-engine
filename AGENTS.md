@@ -48,8 +48,9 @@ The recordings upload runs `scripts/post-pack/recording_match.py --record
 --board --by "Recordings lane"` at the end of every pass, on either machine;
 each take is stamped with the hash of the script it was read from, so a take
 of words that have changed since stops counting, and every take it is unsure
-of is one question on the board. A take already on a piece is fetched by the
-path its record holds: `recording.py get "recordings/<sha256>.<ext>"`.
+of is one board item held in progress for a session, never on Krish's list
+(a session works it out, or asks him in its reply). A take already on a
+piece is fetched by the path its record holds: `recording.py get "recordings/<sha256>.<ext>"`.
 `scripts/post-pack/README.md`, "Placing takes on the runners". This is the
 one way a take comes back: Krish drops it at the top of the Video Engine
 Inbox.

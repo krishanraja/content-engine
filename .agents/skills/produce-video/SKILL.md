@@ -53,8 +53,9 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
 A take reaches the engine within about ten minutes, from whichever home
 computer is on, and the same lane then places it on its piece and cut by
 itself, stamped with the script it was read from (step 2). He never has to
-give a file name or a piece id. He is asked only when the matcher is unsure
-(one board item per take), and for approvals that are his alone (a music
+give a file name or a piece id. He is asked only when the matcher is unsure,
+in a session's reply to him (the lane holds one board item per take for a
+session, never on his list), and for approvals that are his alone (a music
 track, the mix levels, the sting's design, the story intro and outro
 designs).
 
@@ -68,8 +69,8 @@ fetch it another way.
 ## Before anything
 
 Read `AGENTS.md`, `WORKBENCH.md`, `docs/CADENCE.md` ("Who owns what, and
-where things live") and `scripts/quick-edit/README.md`. Read the board and
-his replies (`WORKBENCH.md`, "The board"). This skill does not use the
+where things live") and `scripts/quick-edit/README.md`. Read the board
+(`WORKBENCH.md`, "The board"). This skill does not use the
 Studio; if a session touches it, `docs/ENGINE_SESSION.md` applies and a
 cloud session is read-only for it.
 
@@ -165,7 +166,11 @@ yet, and prints one line per file:
   be a take of the older words, so Krish says whether to use it or record
   that cut again. Each cut has its own time, so a change to the long script
   never makes a short take look old. With `--board` each unsure take is one
-  board item, asked once, and never reopened once he or a session closed it.
+  board item held in progress for a session (never on his list: you ask him
+  in your reply), asked once, and never reopened once he or a session
+  closed it. Tied to a piece it closes on Record; the lane ends one with no
+  piece once its take is placed or no waiting piece can be it, and the
+  engine lets one no session touches go after a week.
 - `left alone`: an older take of the same cut, or a take that arrived
   before any waiting piece's record began, so it is none of their takes.
 - `failed`: say which step failed (the download broke, a transcriber that
@@ -523,11 +528,18 @@ its thumbnail. `archive.py` refuses a thumbnail of the wrong shape too.
 ## 10. The board and the workbench
 
 Every board item about the piece carries `"idea_id": "PIECE_ID"` and, when
-one step finishes it, `"closes_on"` (`record`, `video`). Put on Krish only
-what is his: an unsure take, an approval, a missing folder, Library Sync to
-move. In Claude Code, copy the week's ticks once more (`make-piece`, "The
-week's ticks"). Update `WORKBENCH.md` and end every reply with
-https://controlcenter.krishraja.com/#/board.
+one step finishes it, `"closes_on"` (`record`, `video`). An item for a home
+computer or another session is `"lane": "in_progress"`. Put on Krish
+(`"on_you"`) only what is his, and only with `"only_you"`, an `https://`
+`"link"` to what he acts on and a `"closes_on"` step: the engine refuses an
+item on him without them and names the field it lacks (`WORKBENCH.md`, "The
+board"). A question of his that no step closes (an approval, a remake, a
+missing folder, Library Sync to move) goes `"in_progress"`, its detail
+saying what would show it done, and you ask him in your reply. The
+recordings lane writes its own take questions this way. In Claude Code, copy
+the week's ticks once more (`make-piece`, "The week's ticks"). Update
+`WORKBENCH.md` and end every reply with
+https://controlcenter.krishraja.com/#/home?waiting=1.
 
 ## The backup machine
 

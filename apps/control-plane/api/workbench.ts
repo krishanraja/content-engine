@@ -11,18 +11,34 @@ import { supabase } from './_supabase.js'
 // at #/board with Krish's cookie; any agent session, Claude Code or Codex,
 // reads and writes it here with the engine key (scripts/engine.py).
 //
-//   GET                                   the board: state, items, recent replies
+//   GET                                   the board: state, items, and the replies he wrote before they were retired
 //   POST { action: 'upsert_items', items } add or change items (an agent, or Krish)
 //   POST { action: 'set_state', headline?, signals? }
-//   POST { action: 'reply', item_id, text } Krish only: his words, from his cookie
-//   POST { action: 'mark_seen', ids }      a session has read and acted on replies
+//   POST { action: 'mark_seen', ids }      a session has read and acted on an old reply
 //
-// A reply is Krish's words. The engine key cannot write one, so nothing an
-// agent does can read as something he said (AGENTS.md, "Krish decides").
-// For the same reason an agent cannot reopen an item Krish closed himself:
-// that write is refused with 409 krish_closed_it. Who closed an item is kept
-// in closed_by, never read from the last writer, so an agent's later edit to
-// a closed item does not lift the rule.
+// Replies are retired: Control Center has no reply box, and step 3's voice
+// input, one place where he speaks to the system, replaces it. So the reply
+// action is refused for everyone (410 replies_retired), and so is an item
+// that asks him for one (400 prompt_retired; a null prompt clears an old
+// one). A question only his words answer is asked in a session's reply to
+// him. The replies he wrote before stay readable, and mark_seen still counts
+// them off.
+//
+// Nothing an agent does may read as something Krish said (AGENTS.md, "Krish
+// decides"), so an agent cannot reopen an item Krish closed himself: that
+// write is refused with 409 krish_closed_it. Who closed an item is kept in
+// closed_by, never read from the last writer, so an agent's later edit to a
+// closed item does not lift the rule.
+//
+// An item waiting on him (lane on_you) is ready for his one list, or it is
+// not written: it says why only he can do it (only_you), links to the
+// prepared thing he acts on (an https link) and says how it closes itself
+// (closes_on, with the piece's idea_id unless it is the week's planning
+// item). The write is merged with the row already there before it is
+// checked, so a partial edit of an item on him is held to the same rule, and
+// a refusal names the missing field (400 on_you_needs_*). Krish, 2026-10-11:
+// "you are just capping the garbage. Surely we need to not have garbage."
+// The database holds the same rule (work_board_items_on_you_is_ready).
 
 export const LANES = ['on_you', 'in_progress', 'done', 'archived'] as const
 type Lane = typeof LANES[number]
@@ -44,12 +60,13 @@ export interface BoardItemInput {
   detail?: string
   link?: string | null
   link_label?: string | null
-  prompt?: string | null
+  /** Retired with replies: only null, which clears an old one. */
+  prompt?: null
   /** The piece this item is about; it then closes when the piece moves on (_boardClose.ts). */
   idea_id?: string | null
   /** The making step that closes it, 'published', or 'week_planned'. */
   closes_on?: string | null
-  /** Why only Krish can do it (ONLY_YOU). Control Center's list holds an item waiting on him without one. */
+  /** Why only Krish can do it (ONLY_YOU). The route refuses an item on him (lane on_you) without one (on_you_needs_only_you). */
   only_you?: string | null
   /** Set by his Bump: off his list until this time (ISO, with a zone). */
   bumped_until?: string | null
@@ -58,7 +75,7 @@ export interface BoardItemInput {
 /** Control Center's own jobs write with the access-code cookie, the same
  *  credential as Krish's browser. A cookie call may name one of these to be
  *  recorded as that job instead of as Krish. It can only lower the
- *  attribution, never raise it, and a labelled call cannot write a reply. */
+ *  attribution, never raise it. */
 export const COOKIE_AUTOMATIONS = new Set(['control_center_slate', 'control_center'])
 // The making steps and 'published' close through _boardClose.ts; 'week_planned'
 // is the week's planning item, which Control Center's slate closes once every
@@ -66,6 +83,7 @@ export const COOKIE_AUTOMATIONS = new Set(['control_center_slate', 'control_cent
 const CLOSE_STEPS = new Set(['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published', 'week_planned'])
 /** Why only Krish can do an item: the walls only he passes, his face and voice, his login, his call. */
 export const ONLY_YOU = new Set(['send', 'post', 'spend', 'delete', 'permission', 'credential', 'face', 'login', 'judgment'])
+const WEEK_ITEM = /^week-\d{4}-\d{2}-\d{2}$/
 const ISO_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,6})?)?(Z|[+-]\d{2}:\d{2})$/
 
 function record(value: unknown): Json {
@@ -90,8 +108,44 @@ function optionalText(value: unknown, max: number, field: string): string | null
   return t === '' ? null : t
 }
 
-/** Checks one item and returns the columns to write. Throws a short code. */
-export function cleanItem(raw: unknown, isNew: boolean): Json & { id: string } {
+/** A write refused for a reason a writer can act on: a short code and, in
+ *  `detail`, what to send instead. */
+export class BoardRefusal extends Error {
+  constructor(code: string, readonly detail: string, readonly item?: string) { super(code) }
+}
+
+const KEEP_IN_PROGRESS = 'Until it has one, keep the item in in_progress.'
+/** Why nothing may ask Krish to reply on the board any more. */
+export const REPLIES_RETIRED = 'Replies are retired: Control Center has no reply box, and nothing can show a prompt to Krish or take his answer. '
+  + 'Ask a question only his words answer in your reply to him.'
+
+/** Why an item waiting on Krish is not ready for his list, in the order a
+ *  writer fixes it. Each detail names the values allowed. */
+export const ON_YOU_NEEDS = {
+  only_you: `An item waiting on Krish says why only he can do it: "only_you" is one of ${[...ONLY_YOU].join(', ')}. ${KEEP_IN_PROGRESS}`,
+  link: `An item waiting on Krish links to the prepared thing he acts on (the script, the draft, the page): "link" starts with https://, with a short "link_label". A typed answer is not a link. ${KEEP_IN_PROGRESS}`,
+  closes_on: `An item waiting on Krish says how it closes itself: "closes_on" is a making step (workroom, draft, visual_gate, scripts, pack, record, video, publish), published, or week_planned for the week's planning item alone (id week-<its Monday>). ${KEEP_IN_PROGRESS}`,
+  idea_id: `An item waiting on Krish that closes on a piece's step names the piece: "idea_id" is the piece's uuid. Only closes_on week_planned needs none. ${KEEP_IN_PROGRESS}`,
+} as const
+
+/** The first field an item waiting on Krish lacks once the write is merged
+ *  with the row already there, or null when it is ready or not on him. */
+export function onYouLacks(row: Json, before?: Partial<BoardItemRow>): keyof typeof ON_YOU_NEEDS | null {
+  const merged: Json = { ...(before || {}), ...row }
+  if (merged.lane !== 'on_you') return null
+  if (!merged.only_you) return 'only_you'
+  if (typeof merged.link !== 'string' || !/^https:\/\//.test(merged.link)) return 'link'
+  // week_planned closes only the week's own item (Control Center's slate);
+  // on any other item it would never fire.
+  if (!merged.closes_on || (merged.closes_on === 'week_planned' && !WEEK_ITEM.test(String(merged.id)))) return 'closes_on'
+  if (merged.closes_on !== 'week_planned' && !merged.idea_id) return 'idea_id'
+  return null
+}
+
+/** Checks one item and returns the columns to write. Throws a short code.
+ *  `before` is the row already there: the write is merged with it to check
+ *  an item waiting on Krish (onYouLacks). */
+export function cleanItem(raw: unknown, isNew: boolean, before?: Partial<BoardItemRow>): Json & { id: string } {
   const r = record(raw)
   const id = typeof r.id === 'string' ? r.id : ''
   if (!ID.test(id)) throw new Error('item_id_invalid')
@@ -118,7 +172,11 @@ export function cleanItem(raw: unknown, isNew: boolean): Json & { id: string } {
     row.link = link
   }
   const linkLabel = optionalText(r.link_label, 60, 'link_label'); if (linkLabel !== undefined) row.link_label = linkLabel
-  const prompt = optionalText(r.prompt, 120, 'prompt'); if (prompt !== undefined) row.prompt = prompt
+  // A prompt asked him to reply; replies are retired. Null clears an old one
+  // (Control Center's slate sends it).
+  const prompt = optionalText(r.prompt, 120, 'prompt')
+  if (prompt) throw new BoardRefusal('prompt_retired', REPLIES_RETIRED, id)
+  if (prompt !== undefined) row.prompt = prompt
   if (r.idea_id !== undefined) {
     if (r.idea_id !== null && !(typeof r.idea_id === 'string' && UUID.test(r.idea_id))) throw new Error('idea_id_invalid')
     row.idea_id = r.idea_id
@@ -139,11 +197,15 @@ export function cleanItem(raw: unknown, isNew: boolean): Json & { id: string } {
       row.bumped_until = new Date(at).toISOString()
     }
   }
+  const lacks = onYouLacks(row, isNew ? undefined : before)
+  if (lacks) throw new BoardRefusal(`on_you_needs_${lacks}`, ON_YOU_NEEDS[lacks], id)
   return row
 }
 
 /** What the route reads of an item before writing it. */
 export interface BoardBefore { id: string; lane: string; closed_by: string | null }
+/** The columns an item waiting on Krish is checked on. */
+export interface BoardItemRow extends BoardBefore { only_you: string | null; link: string | null; closes_on: string | null; idea_id: string | null }
 
 /** True when a write would move an item Krish closed back to an open lane. */
 export function reopensKrishsClose(before: BoardBefore | undefined, lane: unknown): boolean {
@@ -209,22 +271,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (body.items.length > MAX_ITEMS) return res.status(400).json({ ok: false, error: 'too_many_items' })
       const ids = body.items.map(i => String(record(i).id || ''))
       if (new Set(ids).size !== ids.length) return res.status(400).json({ ok: false, error: 'duplicate_item_ids' })
-      const found = await supabase.from('work_board_items').select('id,lane,closed_by').in('id', ids)
+      const found = await supabase.from('work_board_items').select('id,lane,closed_by,only_you,link,closes_on,idea_id').in('id', ids)
       if (found.error) return res.status(500).json({ ok: false, error: 'board_read_failed' })
-      const existing = new Map(((found.data || []) as BoardBefore[]).map(r => [r.id, r]))
-      // Check every item before writing any, so a bad one changes nothing.
-      const rows = body.items.map(i => cleanItem(i, !existing.has(String(record(i).id))))
+      const existing = new Map(((found.data || []) as BoardItemRow[]).map(r => [r.id, r]))
       // An item Krish closed himself (Clear or Purge, or a close an agent
       // relayed from his words) stays closed: an agent cannot move it back to
       // on_you or in_progress. His own Undo comes from his cookie, never the
       // engine key, so it is not refused. An edit in place, or done to
-      // archived, keeps it closed and is allowed.
+      // archived, keeps it closed and is allowed. This is said first: no
+      // field an agent could add would let the write through.
       if (operator) {
-        const reopened = rows.find(row => reopensKrishsClose(existing.get(row.id), row.lane))
+        const reopened = body.items.map(record).find(i => reopensKrishsClose(existing.get(String(i.id)), (LANES as readonly unknown[]).includes(i.lane) ? i.lane : undefined))
         if (reopened) {
-          return res.status(409).json({ ok: false, error: 'krish_closed_it', item: reopened.id, detail: 'Krish closed this item himself, so an agent cannot reopen it. If something new needs him, write a new item.' })
+          return res.status(409).json({ ok: false, error: 'krish_closed_it', item: String(reopened.id), detail: 'Krish closed this item himself, so an agent cannot reopen it. If something new needs him, write a new item.' })
         }
       }
+      // Check every item before writing any, so a bad one changes nothing.
+      // Each write is checked merged with the row already there, so an item
+      // left on Krish by a partial edit is ready for his list too.
+      const rows = body.items.map(i => {
+        const id = String(record(i).id)
+        return cleanItem(i, !existing.has(id), existing.get(id))
+      })
       // Who decided: Krish for his cookie or a relayed decision, else the writer.
       const closer = operator ? operator.actor : who
       for (const row of rows) {
@@ -248,18 +316,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ ok: true })
     }
 
-    if (body.action === 'reply') {
-      if (operator || automation) return res.status(403).json({ ok: false, error: 'a_reply_is_krish_words', detail: 'Only Krish writes a reply, from Control Center.' })
-      const itemId = typeof body.item_id === 'string' ? body.item_id : ''
-      if (!ID.test(itemId)) return res.status(400).json({ ok: false, error: 'item_id_invalid' })
-      const replyText = text(body.text, 2000, 'text', true)!
-      const item = await supabase.from('work_board_items').select('id').eq('id', itemId).maybeSingle()
-      if (item.error) return res.status(500).json({ ok: false, error: 'board_read_failed' })
-      if (!item.data) return res.status(404).json({ ok: false, error: 'item_not_found' })
-      const write = await supabase.from('work_board_replies').insert({ item_id: itemId, text: replyText, by: 'Krish', at: now }).select('*').single()
-      if (write.error) return res.status(500).json({ ok: false, error: 'board_write_failed' })
-      return res.status(200).json({ ok: true, reply: write.data })
-    }
+    if (body.action === 'reply') return res.status(410).json({ ok: false, error: 'replies_retired', detail: REPLIES_RETIRED })
 
     if (body.action === 'mark_seen') {
       const ids = Array.isArray(body.ids) ? body.ids.map(String) : []
@@ -269,8 +326,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ ok: true })
     }
 
-    return res.status(400).json({ ok: false, error: 'unknown_action', actions: ['upsert_items', 'set_state', 'reply', 'mark_seen'] })
+    return res.status(400).json({ ok: false, error: 'unknown_action', actions: ['upsert_items', 'set_state', 'mark_seen'] })
   } catch (e) {
+    if (e instanceof BoardRefusal) return res.status(400).json({ ok: false, error: e.message, item: e.item, detail: e.detail })
     return res.status(400).json({ ok: false, error: (e as Error).message })
   }
 }

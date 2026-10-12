@@ -352,7 +352,9 @@ def main():
     except (Stop, engine.NoKey, engine.Unreachable, plan_files.PlanFilesError) as e:
         log(f'STOPPED: {e}')
         if piece:
-            board(f'videos-{when.isoformat()}', 'on_you', f'{when:%A}\'s videos stopped', str(e), piece,
+            # Held for a session, never on Krish's list: a stopped run is a session's to fix
+            # (AGENTS.md, produce-video: never relay a runner's status as his blocker).
+            board(f'videos-{when.isoformat()}', 'in_progress', f'{when:%A}\'s videos stopped', str(e), piece,
                   'https://github.com/krishanraja/content-engine/actions/workflows/produce-day.yml')
         return 1
 

@@ -534,8 +534,15 @@ its words and the cut by its words or its length:
   stamped with `script_sha256`, the hash of the script it was read from
   (the piece's current words for that cut). Record is done when both cuts
   have a take of their current words.
-- **Unsure**: one board item, `take-<first 12 of its sha256>`, on Krish,
-  tied to the piece when the piece is known, closing when Record is done.
+- **Unsure**: one board item, `take-<first 12 of its sha256>`, held in
+  progress for a session and never on Krish's list: nothing he can press
+  answers which take it is, so a session works it out, or asks him in its
+  reply. When the piece is known the item names it (`idea_id`) and closes
+  when Record is done. The lane ends one with no piece itself: done once
+  the take is placed, archived once no waiting piece can be it; and the
+  engine's hourly pass lets go of one no session has touched for a week
+  (`_boardClose.ts`, `HELD_DAYS`). One the old lane put on him is moved off
+  his list when it is asked again.
   It is asked once for each question (its status, its piece, older words or
   not), never again because a score or the closest piece shifted. The board
   is read first and an item is never reopened: one Krish answered, or a

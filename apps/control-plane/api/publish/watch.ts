@@ -2,9 +2,9 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardCronRoute, guardEngine } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
-import { closeBoardItemsForPiece, itemPiece, type OpenItem } from '../_boardClose.js'
+import { LET_GO_BY, closeBoardItemsForPiece, heldToLetGo, itemPiece, type OpenItem } from '../_boardClose.js'
 import { makingStamp } from '../_making.js'
-import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts, unmatchedItem, type Candidate } from '../_publishWatch.js'
+import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts, unmatchedItem, unmatchedItemId, type Candidate } from '../_publishWatch.js'
 
 // GET (cron, hourly) or POST (an operator session): the publish watcher.
 //
@@ -22,7 +22,11 @@ import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts
 //     items close on the publish as they always did.
 // Then it sweeps every open board item tied to a piece and closes the ones
 // whose piece has moved on by any route. A fresh post that matches no piece
-// becomes one board question, asked once.
+// becomes one board item in progress, for a session, held once; it is never
+// put on Krish (it could not say how it closes), and the pass that matches
+// the post to a piece closes it. Last, a question held for a session that no
+// one has touched for a week is let go (_boardClose.ts, heldToLetGo): a post
+// that is not a piece, or a take no piece will claim.
 
 const PIECE_COLUMNS = 'id, idea, state, published_url, published_at, buried_at, meta, transformed_outputs, updated_at'
 
@@ -45,8 +49,12 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   if (error) return res.status(500).json({ ok: false, error: error.message })
   const pieces = (data || []) as Array<Candidate & { published_at: string | null; buried_at: string | null; updated_at: string }>
 
+  // The board items earlier passes held for posts that matched no piece.
+  const heldBefore = await supabase.from('work_board_items').select('id').ilike('id', 'post-%').in('lane', ['on_you', 'in_progress']).limit(100)
+  const openQuestions = new Set(((heldBefore.data || []) as Array<{ id: string }>).map(i => i.id))
+
   const report: Array<Record<string, unknown>> = []
-  let published = 0, ambiguous = 0, asked = 0
+  let published = 0, ambiguous = 0, held = 0
   const closed: string[] = []
   for (const post of posts) {
     const m = matchPost(post, pieces)
@@ -58,7 +66,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         const seen = await supabase.from('work_board_items').select('id').eq('id', item.id).maybeSingle()
         if (!seen.error && !seen.data) {
           const ins = await supabase.from('work_board_items').insert({ ...item, updated_by: 'engine: publish watcher', updated_at: now.toISOString() })
-          if (!ins.error) asked++
+          if (!ins.error) held++
         }
       }
       report.push({ post: post.url, matched: null })
@@ -87,12 +95,21 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       published++
     }
     closed.push(...await closeBoardItemsForPiece(piece))
+    // The question an earlier pass held for this post is answered now.
+    const question = unmatchedItemId(post)
+    if (openQuestions.has(question)) {
+      const answered = await supabase.from('work_board_items')
+        .update({ lane: 'done', updated_by: 'engine: publish watcher', closed_by: 'engine: publish watcher', updated_at: now.toISOString() })
+        .eq('id', question).in('lane', ['on_you', 'in_progress'])
+      if (!answered.error) closed.push(question)
+    }
     report.push({ post: post.url, piece: piece.id, by: m.by, written: true })
   }
 
   // The sweep: every open item tied to a piece, whatever moved the piece.
-  const open = await supabase.from('work_board_items').select('id,lane,idea_id,closes_on,link').in('lane', ['on_you', 'in_progress']).limit(300)
-  const ids = [...new Set(((open.data || []) as OpenItem[]).map(itemPiece).filter((x): x is string => Boolean(x)))]
+  const open = await supabase.from('work_board_items').select('id,lane,idea_id,closes_on,link,updated_at').in('lane', ['on_you', 'in_progress']).limit(300)
+  const openItems = (open.data || []) as Array<OpenItem & { updated_at: string }>
+  const ids = [...new Set(openItems.map(itemPiece).filter((x): x is string => Boolean(x)))]
   if (ids.length) {
     const tied = await supabase.from('content_ideas').select('id, state, buried_at, meta').in('id', ids)
     for (const piece of (tied.data || []) as Array<{ id: string; state: string; buried_at: string | null; meta: Record<string, any> | null }>) {
@@ -100,7 +117,16 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
-  return res.status(200).json({ ok: true, posts: posts.length, published, ambiguous, asked, closed: [...new Set(closed)], report })
+  // The questions held for a session that no one took up: let go, and counted.
+  let letGo = heldToLetGo(openItems, now).filter(id => !closed.includes(id))
+  if (letGo.length) {
+    const gone = await supabase.from('work_board_items')
+      .update({ lane: 'archived', updated_by: LET_GO_BY, closed_by: LET_GO_BY, updated_at: now.toISOString() })
+      .in('id', letGo).eq('lane', 'in_progress')
+    if (gone.error) letGo = []
+  }
+
+  return res.status(200).json({ ok: true, posts: posts.length, published, ambiguous, held, closed: [...new Set(closed)], let_go: letGo, report })
 }
 
 export default withContentRun('publish_watch', handler)
