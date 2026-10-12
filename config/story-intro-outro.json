@@ -1,6 +1,6 @@
 {
   "about": "House rule STORY_INTRO_OUTRO: every video, in both sizes, opens with an animated branded intro made for its own story, carries a designed audio treatment, and closes on an animated outro card made for that piece. Read by .agents/skills/produce-video, which stops before the final render while status is not \"approved\". Nothing here is designed yet: the designs go to Krish first (krish-design), and only his words approve one. A piece listed under \"exceptions\", with Krish's own quoted words, is the one case a cut is finished without them.",
-  "status": "awaiting_design",
+  "status": "approved",
   "said": {
     "on": "2026-10-12",
     "words": "when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward."
@@ -11,21 +11,17 @@
     "outro_card": "a proper animated outro card made for this piece, in the 16:9 long cut and the 9:16 short cut"
   },
   "until_approved": "story intro and outro not designed yet",
-  "approved": null,
-  "exceptions": [
-    {
-      "piece_id": "f328382d-71b3-41a7-a221-d8615826f12e",
-      "piece": "Mon 12 Oct follow.the.money - Who gets paid for AI songs",
-      "cuts": [
-        "long",
-        "short"
-      ],
-      "on": "2026-10-12",
-      "by": "Krish",
-      "asked": "Your rule says no video is finished without its own story intro and end card, approved by you. That design can't be approved, built and rendered today. To publish Monday today, may its two videos go out without the story intro and end card, this once?",
-      "words": "Yes, ship Monday without it (Recommended)",
-      "also_said": "For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos.",
-      "means": "Monday's two cuts are rendered, filed and recorded without the story intro and outro card. Every other piece still waits for the approved design."
+  "approved": {
+    "on": "2026-10-12",
+    "by": "Krish",
+    "design": "the stand-off (docs/plans/2026-10-12-story-io): apps/renderer/src/story StoryIntroStandoff and StoryOutroStandoff, rendered per piece by scripts/quick-edit/story_io.py",
+    "words": "This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
+    "context": "He ruled it in the same message that asked for the midday run to make every video; the design is the blind-judging winner, shown to him in the publish board with Monday's videos.",
+    "monday_renders": {
+      "intro-16x9.mp4": "615f1508f200e6a74a7de180a4e5cb744ed4ae906140d884a867e4e4c636d2fa",
+      "intro-9x16.mp4": "12e930bbdb01907270075c6273e9244d4b317b06697f191db80b5cf702be9483",
+      "outro-16x9.mp4": "78c8d8f3ea16f931d1dd75f294d273a9a2f27c1fc079cac4b70d78a69841fc46",
+      "outro-9x16.mp4": "bfb0b39dce78055dcb3f3ac5ef8544e3aff2d4cacb294698760cf3854c371ba3"
     }
-  ]
+  }
 }

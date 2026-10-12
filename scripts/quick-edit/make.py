@@ -652,6 +652,10 @@ def resolve_intro(cfg, asp, P, base='.'):
     except (ValueError, subprocess.CalledProcessError, KeyError) as e:
         return None, f'the intro {path} could not be read ({e}), so this cut has no intro'
     lo, hi = sting.SECONDS
+    if source == 'override':
+        # A story intro (house rule STORY_INTRO_OUTRO) runs longer than the
+        # 1 to 2 s sting: up to STORY_INTRO_MAX_S, on Krish's words.
+        lo, hi = sting.SECONDS[0], STORY_INTRO_MAX_S
     if not lo - 0.5 / FPS <= info['seconds'] <= hi + 0.5 / FPS:
         return None, f'the intro {path.name} runs {info["seconds"]} s, outside {lo} to {hi} s, so this cut has no intro'
     if source == 'house' and series_note:
@@ -669,8 +673,12 @@ def piece_key(cfg):
     return str(cfg.get('piece_id') or cfg.get('piece') or cfg.get('subject') or cfg['name'])
 
 
-# What a cut adds to its recording at most: the longest sting and the end card.
-CUT_EXTRA_S = sting.SECONDS[1] + 4.0
+# The story intro and outro (house rule STORY_INTRO_OUTRO,
+# config/story-intro-outro.json): the longest each may run.
+STORY_INTRO_MAX_S = 5.0
+STORY_OUTRO_MAX_S = 6.0
+# What a cut adds to its recording at most: the longest intro and end card.
+CUT_EXTRA_S = max(sting.SECONDS[1], STORY_INTRO_MAX_S) + STORY_OUTRO_MAX_S
 
 
 def piece_seconds(cfg, base='.'):
@@ -1221,7 +1229,7 @@ def gate_self_test():
     (work / 'kit.json').write_text(json.dumps({'cuts': {'long': {'recording_seconds': 185.2}, 'short': {'recording_seconds': 88.0}}}))
     checks.append(('the piece\'s music length: the long cut\'s recording plus the most a sting and end card add, for both cuts',
                    (piece_seconds({'kit': {}}, work), piece_seconds({'kit': {}, 'music_seconds': 200}, work)[0], piece_seconds({}, work)[0]),
-                   ((191.2, 'the long cut\'s recording, as kit.py measured it'), 200.0, None)))
+                   ((round(185.2 + CUT_EXTRA_S, 3), 'the long cut\'s recording, as kit.py measured it'), 200.0, None)))
     (work / 'kit.json').write_text(json.dumps({'cuts': {'short': {'recording_seconds': 88.0}}}))
     checks.append(('with only the short cut\'s kit made, it is not known (music.py then asks for its floor)', piece_seconds({'kit': {}}, work)[0], None))
     # A sting with a loud tone on it, a voice, an end card.

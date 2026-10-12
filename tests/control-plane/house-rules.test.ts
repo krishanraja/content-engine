@@ -633,14 +633,16 @@ describe('reading age 12 is a hard gate on every script (R7, Krish, 2026-10-12)'
 })
 
 describe('a story intro, its audio treatment and an outro card, in every format (STORY_INTRO_OUTRO, Krish, 2026-10-12)', () => {
-  test('the rule is live, in his words, on the production stage, and no design is approved yet', () => {
+  test('the rule is live, in his words, on the production stage, and the stand-off is approved in his words', () => {
     const r = HOUSE_RULES.find(x => x.id === 'STORY_INTRO_OUTRO')!
     assert.equal(r.status, 'live')
     assert.equal(r.on, '2026-10-12')
     assert.deepEqual(r.stages, ['production'])
     assert.equal(r.said, 'when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward.')
     const cfg = JSON.parse(readFileSync('config/story-intro-outro.json', 'utf8'))
-    assert.equal(cfg.status, 'awaiting_design')
+    assert.equal(cfg.status, 'approved')
+    assert.equal(cfg.approved.by, 'Krish')
+    assert.ok(cfg.approved.words.includes('todays video goes out with the new intro and outro animations'))
     assert.equal(cfg.said.words, r.said)
     assert.equal(cfg.until_approved, 'story intro and outro not designed yet')
     assert.ok(r.text.includes(cfg.until_approved))

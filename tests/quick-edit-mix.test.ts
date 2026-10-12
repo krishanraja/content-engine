@@ -52,8 +52,13 @@ describe('the music and the sting wait for Krish', () => {
     const ledger = JSON.parse(readFileSync(join(ROOT, 'config', 'music-library.json'), 'utf8'))
     expect(ledger.schema_version).toBe(1)
     expect(ledger.root_env).toBe('MINDMAKE_MUSIC_ROOT')
-    expect(Object.keys(ledger.levels).sort()).toEqual(
+    const approval = ['approval_words', 'approved_by', 'approved_on']
+    expect(Object.keys(ledger.levels).filter((k) => !approval.includes(k)).sort()).toEqual(
       ['bed_lufs', 'final_integrated_lufs', 'intro_lufs', 'max_true_peak_dbtp', 'outro_lufs', 'ramp_down_s', 'ramp_up_s', 'status', 'tolerance_lu'].sort())
+    if (ledger.levels.status === 'approved') {
+      expect(String(ledger.levels.approved_by)).toMatch(/^Krish/)
+      expect(String(ledger.levels.approval_words).trim()).not.toBe('')
+    }
     for (const track of ledger.tracks) {
       if (track.status === 'approved') {
         expect(String(track.approved_by)).toMatch(/^Krish/)

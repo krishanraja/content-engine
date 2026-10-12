@@ -8,6 +8,10 @@ import { MindmakeCarouselSlide } from './carousel/MindmakeCarouselSlide'
 import { CarouselRenderPropsSchema, type CarouselRenderProps } from './carousel/props'
 import { MakeyourmindupThumbnail } from './thumbnail/MakeyourmindupThumbnail'
 import { ThumbnailPropsSchema, type ThumbnailProps } from './thumbnail/props'
+import { StoryIntroStandoff, STORY_INTRO_FRAMES } from './story/StoryIntroStandoff'
+import { StoryOutroStandoff, STORY_OUTRO_FRAMES } from './story/StoryOutroStandoff'
+import { StoryStandoffPropsSchema } from './story/props'
+import { mondayStandoffProps } from './story/monday'
 
 const defaultProps: ShortProps = {
   sourceFile: 'placeholder.mp4',
@@ -135,6 +139,15 @@ export function RemotionRoot() {
         schema={ThumbnailPropsSchema}
         defaultProps={thumbnailDefaultProps}
       />
+      {/* The story intro and outro (the stand-off), silent: the music is mixed elsewhere. */}
+      <Composition id="StoryIntroStandoffWide" component={StoryIntroStandoff} width={1920} height={1080} fps={30}
+        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />
+      <Composition id="StoryIntroStandoffTall" component={StoryIntroStandoff} width={1080} height={1920} fps={30}
+        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />
+      <Composition id="StoryOutroStandoffWide" component={StoryOutroStandoff} width={1920} height={1080} fps={30}
+        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />
+      <Composition id="StoryOutroStandoffTall" component={StoryOutroStandoff} width={1080} height={1920} fps={30}
+        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />
     </>
   )
 }
