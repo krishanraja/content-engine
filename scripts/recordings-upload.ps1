@@ -62,28 +62,13 @@ In -Loop it brings its own copy of the repository up to date (git pull
 clone, and ends when this script has changed so the task starts the new one.
 A fix pushed to main reaches both machines without Krish doing anything.
 scripts/install-recordings-upload.ps1 registers the task.
-
-One file a session names, such as a take brought back from Descript
-(scripts\post-pack\descript_take.py fetch prints this line):
-
-  powershell -NoProfile -ExecutionPolicy Bypass -File scripts\recordings-upload.ps1 -File PATH -Name NAME [-Sha256 HASH]
-
-sends that one file to the engine as a pass sends an Inbox file, under NAME
-(its own name when not given), checked against HASH when given, and prints
-the path a piece's record names it by, recordings/<sha256>.<ext>. It keeps
-no state, places nothing and reads nothing in the Inbox, so it runs beside
-the scheduled task without waiting for it; the session then records the take
-itself (making.py recorded). The file is opened to read only.
 #>
 param(
   [string]$EngineUrl = '',
   [string]$StateRoot = '',
   [switch]$Check,
   [switch]$Loop,
-  [ValidateRange(1, 1440)][int]$EveryMinutes = 5,
-  [string]$File = '',
-  [string]$Name = '',
-  [string]$Sha256 = ''
+  [ValidateRange(1, 1440)][int]$EveryMinutes = 5
 )
 
 $ErrorActionPreference = 'Stop'
@@ -602,82 +587,7 @@ function Update-Source {
   if ($code -ne 0) { Write-Log "git pull did not finish ($($output -join ' ')); this pass runs on the copy as it is" }
 }
 
-# ---- one file a session names ------------------------------------------------
-
-function Send-OneRecording([string]$Path, [string]$SendName, [string]$Expected) {
-  # One file, sent to the engine the way a pass sends an Inbox file: the
-  # upload URL, the bytes, the confirm. It keeps no state and places nothing.
-  # Returns the path a piece's record names it by, recordings/<sha256>.<ext>.
-  if ($Check -or $Loop) { throw '-File sends one file; it takes neither -Check nor -Loop.' }
-  if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { throw "There is no file at $Path." }
-  $item = Get-Item -LiteralPath $Path
-  if (-not $SendName) { $SendName = $item.Name }
-  $SendName = $SendName.Normalize([System.Text.NormalizationForm]::FormC)
-  if ($SendName.StartsWith('.') -or $SendName.IndexOfAny([char[]]'\/') -ge 0) { throw "-Name is one file name, not '$SendName'." }
-  $extension = [System.IO.Path]::GetExtension($SendName).ToLowerInvariant()
-  if ($RecordingExtensions -notcontains $extension) { throw "-Name must end in one of $($RecordingExtensions -join ', ')." }
-  if ($extension -ne $item.Extension.ToLowerInvariant()) { throw "-Name ends in $extension and the file in $($item.Extension): give the file's own type." }
-  $bytes = [int64]$item.Length
-  if ($bytes -le 0) { throw "$Path is empty." }
-  if ($bytes -gt $RecordingMaxBytes) { throw "$Path is $bytes bytes, over the 500 MiB the engine takes." }
-  $ticks = [string]$item.LastWriteTimeUtc.Ticks
-  $sha = Get-Sha256 $item.FullName
-  if ($Expected -and $sha -ne $Expected.Trim().ToLowerInvariant()) {
-    throw "The file's sha256 is $sha, not $Expected, so it is not the take that was fetched. Nothing was sent."
-  }
-  $md5 = (Get-FileHash -LiteralPath $item.FullName -Algorithm MD5).Hash.ToLowerInvariant()
-  $item.Refresh()
-  if ([int64]$item.Length -ne $bytes -or [string]$item.LastWriteTimeUtc.Ticks -ne $ticks) { throw "$Path changed while it was read. Nothing was sent." }
-  $base = Resolve-EngineUrl
-  $token = Get-RunnerToken
-  $request = [ordered]@{ name = $SendName; sha256 = $sha; md5 = $md5; bytes = $bytes }
-  $uploader = New-HttpClient ([TimeSpan]::FromHours(2))
-  $client = New-HttpClient ([TimeSpan]::FromMinutes(5))
-  try {
-    $answer = Invoke-Engine $client $base $token '/api/library/recordings/upload-url' $request
-    $how = 'already there'
-    if (-not (Get-Field $answer 'already_there')) {
-      $upload = Get-Field $answer 'upload'
-      $how = 'listed (the engine held these bytes already)'
-      if ($null -ne $upload) {
-        $address = [string](Get-Field $upload 'url')
-        $url = [System.Uri]$address
-        if ($url.Scheme -ne 'https' -or $url.UserInfo -or -not $url.AbsolutePath.StartsWith('/storage/v1/object/upload/sign/content-library/recordings/')) {
-          throw 'the upload address is not the library storage'
-        }
-        $status = Send-Upload $uploader $address $item.FullName ([string](Get-Field (Get-Field $upload 'headers') 'Content-Type'))
-        # 400 or 409: storage holds these bytes already; the confirm below checks them.
-        if (($status -lt 200 -or $status -ge 300) -and $status -ne 400 -and $status -ne 409) { throw "the upload answered $status" }
-        $how = if ($status -ge 200 -and $status -lt 300) { 'sent' } else { 'listed (storage held these bytes already)' }
-      }
-      [void](Invoke-Engine $client $base $token '/api/library/recordings/confirm' $request)
-    }
-  } finally {
-    $uploader.Dispose()
-    $client.Dispose()
-  }
-  Write-Log "$how  $SendName  ($bytes bytes, sha256 $sha), named by a session"
-  return ('recordings/{0}{1}' -f $sha, $extension)
-}
-
 # ---- one pass, or a pass every few minutes -----------------------------------
-
-# One file a session names keeps no state and places nothing, so it never
-# waits on the lock below, which the scheduled task holds while it runs.
-if ($File) {
-  try {
-    $stored = Send-OneRecording $File $Name $Sha256
-    Write-Output $stored
-    exit 0
-  } catch {
-    Write-Log "the file was not sent: $($_.Exception.Message)"
-    exit 1
-  }
-}
-if ($Name -or $Sha256) {
-  Write-Output '-Name and -Sha256 go with -File PATH.'
-  exit 1
-}
 
 $mutex = [System.Threading.Mutex]::new($false, 'Local\MindmakeRecordingsUpload')
 $owned = $false

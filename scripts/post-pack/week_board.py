@@ -10,7 +10,7 @@ Manager is what you create every Sunday and let me iterate inside until
 we're done, and then I check off the list what I have done as I do it."
 
     python week_board.py --week 2026-10-12 --day mon=monday-publish.html --day fri=friday-publish.html \\
-        [--piece mon=UUID] [--piece fri=UUID] [--descript sent.json | --descript mon=record.json] \\
+        [--piece mon=UUID] [--piece fri=UUID] [--teleprompter ids.json | --teleprompter mon=record.json] \\
         [--options options.json | --live] [--pending wed="Title"] [--previous BOARD] [--unpick DAY] \\
         --out week-board.html
     python week_board.py --show BOARD [--json]
@@ -20,10 +20,11 @@ we're done, and then I check off the list what I have done as I do it."
 
   - made: a piece's whole publish page (publish_manager.py's page, given
     with --day), its ids namespaced by day ("mon-c5") and its script scoped
-    to its own tab, with three cards added at the top: Record in Descript
-    (the two cuts' "Record here" and script pages links, from the making
-    record's descript links when there are any), the two scripts to copy,
-    and the tick checklist. A tick also sits beside each channel's heading.
+    to its own tab, with three cards added at the top: Record (each cut's
+    script in Teleprompter, by its title, and its folder, from the making
+    record's teleprompter field, and how the take comes back: dropped at the
+    top of the Video Engine Inbox), the two scripts to copy, and the tick
+    checklist. A tick also sits beside each channel's heading.
   - picked, not made yet: names the piece and points to the week page,
     where "Make it in Claude Code" starts it; its checklist already works.
   - not picked: says so and points to the week page.
@@ -71,8 +72,10 @@ skills: the week, each day's state and piece, every tick id and the command
 that records it, and the Artifact publish call.
 
 Nothing here publishes, posts, sends, spends or writes to the engine,
-Descript or Drive; --live only reads (GET /api/week/options and GET
-/api/content-ideas/<id>/making).
+Teleprompter or Drive; --live only reads (GET /api/week/options and GET
+/api/content-ideas/<id>/making). Descript was retired on 2026-10-12 (Krish:
+"Descript is permanently gone, teleprompter.com is permanently in"), and
+its links with it; a tick saved under the old Record labels keeps its id.
 """
 import argparse
 import contextlib
@@ -109,10 +112,12 @@ DAYS = (
 DAY_KEYS = {k: k for k, *_ in DAYS} | {name: k for k, name, *_ in DAYS}
 
 # The steps Krish ticks: key, label, the engine's channel (making.py posted), counts toward 100%.
-# The keys and labels are the published board's; changing one orphans the ticks saved under it.
+# The keys are the published board's: a tick is saved under <day>-<key>, so changing a key orphans the
+# ticks saved under it. A label may change (the two Record labels did on 2026-10-12, when Descript was
+# retired): a saved tick counts by its id and piece, never its label.
 STEPS = (
-    ('record-long', 'Record the 3-minute cut (Descript)', None, True),
-    ('record-short', 'Record the 90-second cut (Descript)', None, True),
+    ('record-long', 'Record the 3-minute cut (Teleprompter)', None, True),
+    ('record-short', 'Record the 90-second cut (Teleprompter)', None, True),
     ('substack', 'Substack: video post with the article', 'substack', True),
     ('youtube', 'YouTube: the 3-minute video', 'youtube', True),
     ('shorts', 'YouTube Shorts', 'shorts', True),
@@ -274,34 +279,41 @@ def checklist(day, p):
             f'<div class="tick-list">{optional}</div></div>')
 
 
-def record_card(day, p, links):
-    rows, any_link = [], False
+INBOX = 'makeyourmindup > Video Engine > Inbox'
+
+
+def record_card(day, p, scripts):
+    """The Record card: each cut's script in Teleprompter (its title, and
+    whether it holds the current words), the folder, and the one way a take
+    comes back. scripts is teleprompter_info's answer, or {}."""
+    rows, any_script = [], False
+    cuts = scripts.get('cuts') or {}
     for cut, key, name, shape in CUTS:
-        got = links.get(cut) or {}
-        buttons = []
-        if got.get('record'):
-            buttons.append(f'<a class="btn" href="{E(got["record"])}" target="_blank" rel="noopener">Record here</a>')
-        if got.get('script'):
-            buttons.append(f'<a class="btn ghost" href="{E(got["script"])}" target="_blank" rel="noopener">Script pages</a>')
-        any_link = any_link or bool(buttons)
+        got = cuts.get(cut) or {}
+        if got.get('title'):
+            any_script = True
+            older = {'older': ' (it holds older words; the next session updates it)',
+                     'failed': ' (the last send failed; the next session sends it again)'}.get(got.get('state'), '')
+            where = f'<span class="rec-tp">Read from Teleprompter: {E(got["title"])}{E(older)}</span>'
+        else:
+            where = '<span class="rec-none">Not in Teleprompter yet</span>'
         rows.append(
             f'<div class="rec-row"><label class="tick rec-tick">{tick_box(f"{day}-{key}", LABEL[key])}'
             f'<span class="rec-cut"><span class="rec-name">{name}</span><span class="rec-shape">{shape}</span></span>'
-            f'{TICK_TAIL}</label><div class="rec-links">'
-            + (''.join(buttons) or '<span class="rec-none">Not in Descript yet</span>') + '</div></div>')
-    if any_link:
-        heading = 'Record in Descript'
-        how = ('Open Record here on your laptop or in the Descript web app, paste the script into the teleprompter '
-               '(each has a Copy button just below), and record. The 3-minute cut is a wide shot; for the 90-second '
-               'cut sit in the centre, as it is cut tall. Then tell the video skill you have recorded.')
+            f'{TICK_TAIL}</label><div class="rec-links">{where}</div></div>')
+    back = (f'Then drop each take at the top of the Video Engine Inbox in Drive ({INBOX}), any name, never in a subfolder: '
+            'the home computers send it and place it on its piece and cut by themselves, within about fifteen minutes.')
+    if any_script:
+        folder = scripts.get('folder_name')
+        how = ('Open teleprompter.com on your phone or laptop' + (f', folder "{folder}"' if folder else '')
+               + ', and read each cut from its own script. The 3-minute cut is a wide shot; for the 90-second cut sit in the centre, '
+               'as it is cut tall. ' + back)
     else:
-        heading = 'Record'
-        how = ('These scripts are not in Descript yet. Copy one just below into your teleprompter and record. '
-               'The 3-minute cut is a wide shot; for the 90-second cut sit in the centre, as it is cut tall. '
-               'Then tell the video skill you have recorded.')
+        how = ('These scripts are not in Teleprompter yet. Copy one just below into your teleprompter and record. The 3-minute cut is '
+               'a wide shot; for the 90-second cut sit in the centre, as it is cut tall. ' + back)
     return (f'<div class="rec" id="{p}record" role="region" aria-labelledby="{p}record-h"><div class="rec-head">'
-            f'<h2 id="{p}record-h">{heading}</h2><span class="kick">Two cuts</span></div>'
-            + ''.join(rows) + f'<p class="rec-how">{how}</p></div>')
+            f'<h2 id="{p}record-h">Record</h2><span class="kick">Two cuts</span></div>'
+            + ''.join(rows) + f'<p class="rec-how">{E(how)}</p></div>')
 
 
 def made_panel(page, day, name, p, links, hidden, warnings):
@@ -373,50 +385,52 @@ def not_made_panel(day, name, weekday, when, series_label, pick, hidden):
 
 # ------------------------------------------------------------------ inputs
 
-def descript_url(value):
-    """A Descript link, or None: https on descript.com only."""
-    if not isinstance(value, str) or not value.strip():
-        return None
-    u = urlparse(value.strip())
-    host = (u.hostname or '').lower()
-    if u.scheme != 'https' or not (host == 'descript.com' or host.endswith('.descript.com')):
-        return None
-    return value.strip()
+TP_ID = re.compile(r'^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$')
 
 
-def descript_links(data, piece_id, warnings=None, where='descript'):
-    """{cut: {'record': url, 'script': url}} for one piece, from any of: the
-    record of the hand send (pieces/<id>/<cut>/record_link and script_link),
-    the engine's answer for a piece's making record, a making record
-    (descript/cuts/<cut>), or a bare {long: ..., short: ...}."""
+def teleprompter_info(data, piece_id, warnings=None, where='teleprompter'):
+    """{'folder_name', 'folder_id', 'cuts': {cut: {'title', 'script_id',
+    'state'}}} for one piece, from any of: the engine's answer for a piece's
+    making record, a making record, its teleprompter field, or a small JSON
+    of ids ({folder_id, folder_name, cuts: {long: {script_id, title}}}),
+    alone or under "pieces" by piece id. state is 'in', 'older' or 'failed'
+    when the record holds the scripts' hashes, else None. {} when it holds
+    no script."""
     node = data
     if isinstance(node, dict) and isinstance(node.get('pieces'), dict):
         node = node['pieces'].get(piece_id) if piece_id else None
     elif isinstance(node, dict) and piece_id and isinstance(node.get(piece_id), dict):
         node = node[piece_id]
-    for key in ('piece', 'meta', 'making', 'descript', 'cuts'):
+    record = None
+    for key in ('piece', 'meta', 'making'):
         if isinstance(node, dict) and isinstance(node.get(key), dict):
             node = node[key]
-    out = {}
-    if not isinstance(node, dict):
-        return out
+    if isinstance(node, dict) and isinstance(node.get('teleprompter'), dict):
+        record, node = node, node['teleprompter']
+    if not isinstance(node, dict) or not isinstance(node.get('cuts'), dict):
+        return {}
+    check = (record or {}).get('script_check') if isinstance((record or {}).get('script_check'), dict) else {}
+    hashes = check.get('hashes') if check.get('passed') is True and isinstance(check.get('hashes'), dict) else {}
+    out = {'folder_name': node.get('folder_name') if isinstance(node.get('folder_name'), str) else None,
+           'folder_id': node.get('folder_id') if TP_ID.match(str(node.get('folder_id') or '')) else None, 'cuts': {}}
     for cut, *_ in CUTS:
-        c = node.get(cut)
+        c = node['cuts'].get(cut)
         if not isinstance(c, dict):
             continue
-        rec, scr = c.get('record'), c.get('script')
-        raw = {'record': c.get('record_link') or (rec.get('link') if isinstance(rec, dict) else rec),
-               'script': c.get('script_link') or c.get('link') or (scr.get('link') if isinstance(scr, dict) else scr)}
-        got = {}
-        for kind, value in raw.items():
-            url = descript_url(value)
-            if url:
-                got[kind] = url
-            elif value and warnings is not None:
-                warnings.append(f'{where}: the {cut} cut\'s {kind} link is not a Descript https link; left out')
-        if got:
-            out[cut] = got
-    return out
+        title, script_id = c.get('title'), c.get('script_id')
+        if not (isinstance(title, str) and title.strip() and TP_ID.match(str(script_id or ''))):
+            if c.get('error') and warnings is not None:
+                warnings.append(f'{where}: the {cut} cut\'s last Teleprompter send failed ({c["error"]}); its script is not on the board yet')
+            elif warnings is not None and (title or script_id):
+                warnings.append(f'{where}: the {cut} cut has no title and uppercase script id; left out')
+            continue
+        state = None
+        if c.get('error'):
+            state = 'failed'
+        elif hashes.get(cut):
+            state = 'in' if c.get('script_sha256') == hashes[cut] else 'older'
+        out['cuts'][cut] = {'title': ' '.join(title.split()), 'script_id': script_id, 'state': state}
+    return out if out['cuts'] else {}
 
 
 def picks_from_options(data, monday, warnings):
@@ -575,11 +589,11 @@ def by_day(values, what, has_value=True):
 
 # ------------------------------------------------------------------ the board
 
-def board(monday, pages=None, pieces=None, descript=None, picks=None, pending=None):
+def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None):
     """(page, manifest, warnings). pages: {day: publish page text};
-    pieces: {day: uuid}; descript: {day: links} from descript_links; picks:
+    pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
     {day: {'id', 'title'}} from the week options; pending: {day: title}."""
-    pages, pieces, descript, picks, pending = pages or {}, pieces or {}, descript or {}, picks or {}, pending or {}
+    pages, pieces, teleprompter, picks, pending = pages or {}, pieces or {}, teleprompter or {}, picks or {}, pending or {}
     warnings, days, panels, tabs, blocks = [], [], [], [], []
     parsed = {k: parse_day_page(v, f'the {k} publish page') for k, v in pages.items()}
     order = [k for k, *_ in DAYS]
@@ -604,7 +618,7 @@ def board(monday, pages=None, pieces=None, descript=None, picks=None, pending=No
                 if blocks:
                     warnings.append(f'{weekday}: its publish page was built with other styles than the first; both are kept')
                 blocks.append(page['css'])
-            panels.append(made_panel(page, key, name, f'{key}-', descript.get(key) or {}, key != opened, warnings))
+            panels.append(made_panel(page, key, name, f'{key}-', teleprompter.get(key) or {}, key != opened, warnings))
         else:
             state = 'picked' if (piece or key in pending or pick) else 'not_picked'
             panels.append(not_made_panel(key, name, weekday, short_date(when), series_label,
@@ -619,7 +633,7 @@ def board(monday, pages=None, pieces=None, descript=None, picks=None, pending=No
         days.append({
             'day': key, 'name': weekday, 'date': when.isoformat(), 'series': slug, 'series_label': series_label,
             'state': state, 'piece_id': piece or None, 'title': title or None,
-            'descript': descript.get(key) or None,
+            'teleprompter': teleprompter.get(key) or None,
             'tick_ids': [f'{key}-{k}' for k, *_ in STEPS] if picked else [],
         })
     missing = [d['name'] for d in days if d['state'] == 'not_picked']
@@ -740,20 +754,20 @@ def build(args, get=None):
         picks = picks_from_options(read_json(args.options, '--options'), monday, warnings)
     elif get:
         picks = picks_from_options(get(f'/api/week/options?week_start={monday.isoformat()}'), monday, warnings)
-    # Descript links: a file for every day, a file for one day, and with --live each piece's making record.
+    # Teleprompter scripts: a file for every day, a file for one day, and with --live each piece's making record.
     shared, per_day = [], {}
-    for v in args.descript or []:
+    for v in args.teleprompter or []:
         k, sep, rest = v.partition('=')
         if sep and DAY_KEYS.get(k.strip().lower()):
-            per_day[DAY_KEYS[k.strip().lower()]] = read_json(rest.strip(), '--descript')
+            per_day[DAY_KEYS[k.strip().lower()]] = read_json(rest.strip(), '--teleprompter')
         else:
-            data = read_json(v, '--descript')
-            # A file for every day must name each piece by its id, or one piece's links would land on every tab.
+            data = read_json(v, '--teleprompter')
+            # A file for every day must name each piece by its id, or one piece's scripts would land on every tab.
             if not (isinstance(data, dict) and (isinstance(data.get('pieces'), dict) or any(UUID.match(str(k)) for k in data))):
-                raise BoardError(f'--descript {v}: a file without a day must hold each piece by its id (as the hand send\'s '
-                                 'record does); give one piece\'s record as --descript mon=PATH')
+                raise BoardError(f'--teleprompter {v}: a file without a day must hold each piece by its id ({{"pieces": {{"<uuid>": ...}}}}); '
+                                 'give one piece\'s record or ids as --teleprompter mon=PATH')
             shared.append(data)
-    descript, unmade = {}, []
+    scripts, unmade = {}, []
     for key, _, weekday, *_ in DAYS:
         # The same order as board(): --piece, then the publish page's own, then the week's pick.
         piece = pieces.get(key) or (parse_day_page(pages[key], f'the {key} publish page')['piece'] if key in pages else None) \
@@ -764,25 +778,25 @@ def build(args, get=None):
                 answer = get(f'/api/content-ideas/{piece}/making')
             except BoardError as error:
                 answer = None
-                warnings.append(f'{weekday}: its making record could not be read ({error}); no Descript links from it')
+                warnings.append(f'{weekday}: its making record could not be read ({error}); no Teleprompter scripts from it')
             if answer is not None:
-                found = descript_links(answer, piece, warnings, f'{weekday}\'s making record')
+                found = teleprompter_info(answer, piece, warnings, f'{weekday}\'s making record')
                 made_at = (((answer.get('making') or {}) if isinstance(answer, dict) else {}).get('publish_manager') or {})
                 url = made_at.get('url') if isinstance(made_at, dict) else None
                 if isinstance(url, str) and url.strip() and key not in pages:
                     unmade.append(f'{weekday}: piece {piece} has its publish page ({url.strip()}); Artifact read it and give '
                                   f'--day {key}=<the saved file>, or its tab loses every Copy card')
         for data in shared:
-            found = descript_links(data, piece, warnings, f'{weekday} in --descript') or found
+            found = teleprompter_info(data, piece, warnings, f'{weekday} in --teleprompter') or found
         if key in per_day:
-            found = descript_links(per_day[key], piece, warnings, f'--descript {key}') or found
+            found = teleprompter_info(per_day[key], piece, warnings, f'--teleprompter {key}') or found
         if found:
-            descript[key] = found
+            scripts[key] = found
     if unmade:
         raise BoardError('a made day has no publish page in this build:\n  ' + '\n  '.join(unmade))
     for key in unpick:
         picks.pop(key, None)
-    page, manifest, more = board(monday, pages, pieces, descript, picks, pending)
+    page, manifest, more = board(monday, pages, pieces, scripts, picks, pending)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday)
     manifest['warnings'] = warnings + more
@@ -795,6 +809,8 @@ PNG = ('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGA
 MON_ID = '11111111-2222-4333-8444-555555555555'
 WED_ID = '22222222-3333-4444-8555-666666666666'
 FRI_ID = '33333333-4444-4555-8666-777777777777'
+TP_FOLDER, TP_LONG, TP_SHORT = '86B6F74B-2F8A-4477-AE44-8DA1119D1CD9', '45F414D8-31E1-4B2D-BBE4-44EBA042B346', 'ED3DE98A-7158-4448-A622-A2A5115FFA83'
+TP_FOLDER_FRI, TP_LONG_FRI, TP_SHORT_FRI = 'DD28154B-B6D1-47DB-803A-79410D83196D', '185F739E-733F-43B9-B5B2-66846CB5EC44', '1165370C-68A6-444E-88D5-A326A131E58C'
 
 
 def stand_in(tmp, name, title, kicker):
@@ -829,14 +845,16 @@ def self_test():
     with tempfile.TemporaryDirectory() as tmp:
         mon = stand_in(tmp, 'mon', 'Who gets paid for AI songs', 'follow.the.money')
         fri = stand_in(tmp, 'fri', 'Why so many AIs', 'mind.the.gap')
-        sent = {'pieces': {MON_ID: {
-            'long': {'record_link': 'https://web.descript.com/aaaa/rec1', 'script_link': 'https://web.descript.com/aaaa/scr1'},
-            'short': {'record_link': 'https://web.descript.com/bbbb/rec2', 'script_link': 'https://evil.example/x'}}}}
-        record = {'making': {'descript': {'cuts': {'long': {'link': 'https://web.descript.com/cccc/scr3',
-                                                            'record_link': 'https://web.descript.com/cccc/rec3'}}}}}
+        sent = {'pieces': {MON_ID: {'folder_id': TP_FOLDER, 'folder_name': 'Mon 12 Oct follow.the.money - Who gets paid for AI songs', 'cuts': {
+            'long': {'script_id': TP_LONG, 'title': 'Mon 12 Oct - 3-minute - Who gets paid for AI songs'},
+            'short': {'script_id': 'not-an-id', 'title': 'Mon 12 Oct - 90-second - Who gets paid for AI songs'}}}}}
+        record = {'making': {'script_check': {'passed': True, 'hashes': {'long': 'a' * 64, 'short': 'b' * 64}},
+                             'teleprompter': {'folder_id': TP_FOLDER_FRI, 'folder_name': 'Fri 16 Oct mind.the.gap - Why so many AIs', 'cuts': {
+                                 'long': {'script_id': TP_LONG_FRI, 'title': 'Fri 16 Oct - 3-minute - Why so many AIs', 'script_sha256': 'c' * 64},
+                                 'short': {'script_id': TP_SHORT_FRI, 'title': 'Fri 16 Oct - 90-second - Why so many AIs', 'script_sha256': 'b' * 64}}}}}
         warned = []
-        descript = {'mon': descript_links(sent, MON_ID, warned, 'sent'), 'fri': descript_links(record, FRI_ID, warned, 'record')}
-        page, manifest, warnings = board(monday, {'mon': mon, 'fri': fri}, {'mon': MON_ID, 'fri': FRI_ID}, descript,
+        scripts = {'mon': teleprompter_info(sent, MON_ID, warned, 'sent'), 'fri': teleprompter_info(record, FRI_ID, warned, 'record')}
+        page, manifest, warnings = board(monday, {'mon': mon, 'fri': fri}, {'mon': MON_ID, 'fri': FRI_ID}, scripts,
                                          pending={'wed': 'Watermarks <script>'}, picks={'wed': {'id': WED_ID, 'title': 'x'}})
         out, side = write(page, manifest, Path(tmp) / 'week-board.html')
         written = json.loads(side.read_text(encoding='utf-8'))
@@ -868,14 +886,14 @@ def self_test():
             {'slug': 'under_the_hood', 'in_flight': [{'id': WED_ID, 'idea': 'Watermarks', 'state': 'drafting', 'scheduled_for': '2026-10-14'}]}]}),
             encoding='utf-8')
         cli_page, cli_manifest = build(parser().parse_args(['--week', '2026-10-12', '--day', f'mon={tmp}/mon.html', '--options', f'{tmp}/options.json',
-                                                            '--descript', f'{tmp}/sent.json', '--out', f'{tmp}/cli.html']))
+                                                            '--teleprompter', f'{tmp}/sent.json', '--out', f'{tmp}/cli.html']))
         try:
-            build(parser().parse_args(['--week', '2026-10-12', '--descript', f'{tmp}/one.json']))
+            build(parser().parse_args(['--week', '2026-10-12', '--teleprompter', f'{tmp}/one.json']))
             refused_unkeyed = False
         except BoardError:
             refused_unkeyed = True
         per_day_page, _ = build(parser().parse_args(['--week', '2026-10-12', '--day', f'fri={tmp}/mon.html', '--piece', f'fri={FRI_ID}',
-                                                     '--descript', f'fri={tmp}/one.json']))
+                                                     '--teleprompter', f'fri={tmp}/one.json']))
         picks = picks_from_options({'week_start': '2026-10-12', 'series': [
             {'slug': 'under_the_hood', 'in_flight': [{'id': WED_ID, 'idea': 'Watermarks', 'state': 'drafting', 'scheduled_for': '2026-10-14'}]},
             {'slug': 'mind_the_gap', 'in_flight': [{'id': FRI_ID, 'idea': 'Menus', 'state': 'review', 'scheduled_for': '2026-10-23'}]}]},
@@ -967,17 +985,27 @@ def self_test():
           and 'Wednesday and Friday count once picked' in plain and 'data-tick="wed-' not in plain)
     check('nothing picked at all is three designed tabs, no ticks',
           empty.count('data-state="not_picked"') == 3 and 'data-tick="' not in empty and empty_manifest['picked'] == [])
-    check('Record in Descript: each cut\'s Record here and Script pages links',
-          'href="https://web.descript.com/aaaa/rec1"' in page and 'href="https://web.descript.com/aaaa/scr1"' in page
-          and 'href="https://web.descript.com/bbbb/rec2"' in page and 'href="https://web.descript.com/cccc/rec3"' in page
-          and 'href="https://web.descript.com/cccc/scr3"' in page)
-    engine_answer = {'making': {'descript': {'drive_id': 'd', 'cuts': {'short': {
-        'project_id': 'p', 'script_link': 'https://web.descript.com/dddd/scr4', 'record_link': 'https://web.descript.com/dddd/rec4'}}}}, 'steps': []}
-    check('the making record\'s descript cuts, as making.py descript writes them, give the links',
-          descript_links(engine_answer, FRI_ID) == {'short': {'record': 'https://web.descript.com/dddd/rec4', 'script': 'https://web.descript.com/dddd/scr4'}})
-    check('a link that is not Descript\'s is left out and said', 'evil.example' not in page and any('not a Descript' in w for w in warned))
-    check('a cut with no Descript link says so, and no Descript means the plain Record card',
-          'Not in Descript yet' in page and '<h2 id="mon-record-h">Record</h2>' in plain)
+    check('Record: each cut\'s script in Teleprompter by its title, and its folder',
+          'Read from Teleprompter: Mon 12 Oct - 3-minute - Who gets paid for AI songs' in page
+          and 'folder &quot;Mon 12 Oct follow.the.money - Who gets paid for AI songs&quot;' in page
+          and 'Read from Teleprompter: Fri 16 Oct - 90-second - Why so many AIs</span>' in page)
+    check('Record: a script holding older words says so', 'Read from Teleprompter: Fri 16 Oct - 3-minute - Why so many AIs (it holds older words' in page)
+    engine_answer = {'making': {'teleprompter': {'folder_id': TP_FOLDER, 'cuts': {'short': {
+        'script_id': TP_SHORT, 'title': 'Mon 12 Oct - 90-second - Who gets paid for AI songs', 'script_sha256': 'd' * 64}}}}, 'steps': []}
+    check('the making record\'s teleprompter field, as making.py teleprompter writes it, gives the scripts',
+          teleprompter_info(engine_answer, FRI_ID) == {'folder_name': None, 'folder_id': TP_FOLDER, 'cuts': {
+              'short': {'title': 'Mon 12 Oct - 90-second - Who gets paid for AI songs', 'script_id': TP_SHORT, 'state': None}}})
+    check('a script with no uppercase id is left out and said', 'not-an-id' not in page and any('no title and uppercase script id' in w for w in warned))
+    check('a cut not in Teleprompter says so, and with none the plain Record card says to copy the script',
+          'Not in Teleprompter yet' in page and '<h2 id="mon-record-h">Record</h2>' in plain and 'are not in Teleprompter yet' in plain)
+    check('the take comes back one way: dropped at the top of the Video Engine Inbox',
+          'Then drop each take at the top of the Video Engine Inbox in Drive (makeyourmindup &gt; Video Engine &gt; Inbox)' in page
+          and 'Then drop each take at the top of the Video Engine Inbox' in plain)
+    retired = re.compile(r'descript(?!ion|ive|or)', re.I)  # the tool, never the word "description"
+    check('Descript is gone from the board and its templates', not retired.search(page) and not retired.search(plain)
+          and not any(retired.search((TEMPLATES / n).read_text(encoding='utf-8')) for n in ('page.html', 'not-made.html', 'week.css', 'week.js')))
+    check('the two Record ticks keep their ids under their new labels',
+          [s_[:2] for s_ in STEPS[:2]] == [('record-long', 'Record the 3-minute cut (Teleprompter)'), ('record-short', 'Record the 90-second cut (Teleprompter)')])
     check('the two scripts are at the top of a made tab, namespaced apart from the Scripts section',
           page.index('id="mon-rec-c') < page.index('id="mon-ticks"') < page.index('class="card links"')
           and page.count('<pre class="txt" id="mon-rec-') == 2 and 'id="mon-c1"' in page)
@@ -1022,9 +1050,9 @@ def self_test():
     check('the page\'s CONF carries each day\'s state', [d.get('state') for d in conf['days']] == ['made', 'picked', 'made'])
     check('the command line: the pick names the made day\'s piece and a picked day, and the hand send\'s links reach Monday',
           [(d['state'], d['piece_id']) for d in cli_manifest['days']] == [('made', MON_ID), ('picked', WED_ID), ('not_picked', None)]
-          and 'href="https://web.descript.com/aaaa/rec1"' in cli_page and 'Watermarks' in cli_page)
-    check('one piece\'s Descript record is given for its day, never for the whole week',
-          refused_unkeyed and 'href="https://web.descript.com/cccc/rec3"' in per_day_page)
+          and 'Read from Teleprompter: Mon 12 Oct - 3-minute - Who gets paid for AI songs' in cli_page and 'Watermarks' in cli_page)
+    check('one piece\'s Teleprompter record is given for its day, never for the whole week',
+          refused_unkeyed and 'Read from Teleprompter: Fri 16 Oct - 90-second - Why so many AIs' in per_day_page)
     check('a button the board cannot run is refused', refused_act)
     check('a made day with no piece id is refused', refused_no_piece)
     check('--week must be a Monday', refused_tuesday)
@@ -1045,7 +1073,8 @@ def parser():
     ap.add_argument('--week', help='the Monday the week starts on, YYYY-MM-DD')
     ap.add_argument('--day', action='append', metavar='DAY=PATH', help='a made day\'s publish page (publish_manager.py), DAY mon, wed or fri')
     ap.add_argument('--piece', action='append', metavar='DAY=UUID', help='the piece a day holds')
-    ap.add_argument('--descript', action='append', metavar='[DAY=]PATH', help='Descript links: the hand send\'s record, or a making record')
+    ap.add_argument('--teleprompter', action='append', metavar='[DAY=]PATH', help='each cut\'s script in Teleprompter: a making record, or a small '
+                    'JSON of ids ({folder_id, folder_name, cuts: {long: {script_id, title}}}), for a day, or under "pieces" by piece id')
     ap.add_argument('--options', metavar='PATH', help='a saved GET /api/week/options answer for the week')
     ap.add_argument('--live', action='store_true', help='read the week\'s picks and each piece\'s making record from the engine (GET only)')
     ap.add_argument('--pending', action='append', metavar='DAY=TITLE', help='a picked piece not made yet, named by hand')

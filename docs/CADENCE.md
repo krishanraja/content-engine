@@ -29,11 +29,10 @@ Times are Krish's, in New York (`system_config.operator_timezone`).
 | Sunday, early morning | A Claude Code session ("Plan the week" routine, `.agents/skills/plan-week`) | Copies the ending week's ticks onto the records; researches three or four options for Monday, Wednesday and Friday, fleshes out what he dropped in the Cold Ideas & Inspo folder, stress-tests them, and writes them onto the pieces (`/api/week/options`); then makes the week's publish board (`scripts/post-pack/week_board.py`): one private page with a tab for each day and a tick for every step, its link on the week's own board item `week-publish-board-<Monday>` (on him, at the top) and in `WORKBENCH.md`; the ending week's board stays read until every day on it is at 100% | Claude Code |
 | Sunday, 8am (7am in winter) | The work board | One item asks the Sunday question and links to the week page (`control-center api/content/slate.ts`, refreshed every morning, done when all three days have a piece) | Control Center |
 | Sunday | Control Center, the week page (`#/week`) | He picks a piece for each day, or drops in an idea to flesh out. A pick holds its day (scheduled_for) | Krish |
-| Sunday, on the Monday pick | Claude Code ("Make a piece" routine, `.agents/skills/make-piece`) | Monday's piece is made through to its publish board: workroom, fact-checked article, visual gate, both scripts (each sent to his Descript drive as its own project, with a "Record here" timeline), publish page, pack. The week's publish board is rebuilt with the picks and Monday's page and republished to its link, so its ticks stay | Claude Code |
-| Monday morning | The Descript web app or his laptop | He records Monday's two cuts in Descript, each into its project's "Record here" timeline, reading the script from the Script timeline on his phone or pasting it into Descript's teleprompter. The fallback: each as its own file at the top of the Video Engine Inbox (any name). Then he tells Codex or Claude Code "I've recorded" | Krish |
-| When he says he has recorded | A session with the Descript connector (`.agents/skills/produce-video`, "Takes recorded in Descript") | Each Descript take is checked against its cut's script, copied privately, trimmed of its slate, sent to the engine on a home computer (`recordings-upload.ps1 -File`) and recorded on its piece and cut, stamped with the script it was read from (`scripts/post-pack/descript_take.py`). A cloud session goes as far as the private copy and leaves one board item for a home computer | Codex or Claude Code |
+| Sunday, on the Monday pick | Claude Code ("Make a piece" routine, `.agents/skills/make-piece`) | Monday's piece is made through to its publish board: workroom, fact-checked article, visual gate, both scripts (each opening with its series line, held to a reading age of 12 and read back by two fresh readers, then sent to his teleprompter.com account: one folder for the piece, one script per cut), publish page, pack. The week's publish board is rebuilt with the picks and Monday's page and republished to its link, so its ticks stay | Claude Code |
+| Monday morning | teleprompter.com on his phone or laptop, and his camera | He records Monday's two cuts, each read from its own script in Teleprompter, then drops each take as its own file at the top of the Video Engine Inbox (any name), the one way a take comes back. Then he tells Codex or Claude Code "I've recorded" | Krish |
 | Within about 15 minutes of an Inbox drop | Whichever home computer is on (the recordings upload, every five minutes) | Each take reaches the engine, and the same lane places it on its piece and cut by itself (`recording_match.py --record --board --by "Recordings lane"`), stamped with the script it was read from; a take it is unsure of becomes one board question | the home computers |
-| Monday | Codex on a home computer, or Claude Code there when he asks it (`.agents/skills/produce-video`) | Places any take still unplaced; both cuts produced with the intro sting once he approves one, the licensed music bed and a thumbnail for each size; filed in the archive and the post's library folder (`3 Video`) and onto the record | Codex |
+| Monday | Codex on a home computer, or Claude Code there when he asks it (`.agents/skills/produce-video`) | Places any take still unplaced; both cuts produced with the intro sting once he approves one, the licensed music bed and a thumbnail for each size, and with the animated intro made for the story, its audio treatment and the animated outro card once he approves their design (house rule STORY_INTRO_OUTRO: until then production stops before the final render, saying "story intro and outro not designed yet"); filed in the archive and the post's library folder (`3 Video`) and onto the record | Codex |
 | Monday | The week's publish board, Monday's tab | He posts in the standing order and ticks each step as he goes; each tick is saved at once on the board, and the next making session copies each channel tick onto the piece (`making.py <piece> posted <channel>`) | Krish, then the next session |
 | When he is ready | The week page, Wednesday's and Friday's cards | "Make it in Claude Code" starts each one's making; it then follows Monday's path, on its own tab of the same week's board | Krish starts, Claude Code makes |
 
@@ -84,8 +83,9 @@ board, the strip and both skills read the same table.
 | Options for the week | Claude Code (Sunday routine) | `.agents/skills/plan-week` | `meta.week_option` through `/api/week/options` |
 | The Sunday question and the pick | Control Center (cron), Krish | `api/content/slate.ts`, the week page | the work board's week item; the pick and its day |
 | Workroom, fact-checked draft, visual gate, scripts, publish page, pack | Claude Code | `.agents/skills/make-piece` | `meta.making.workroom`, `.publish_manager`, `.visual_gate`, `.script_check`, `.pack`; the body through the engine |
-| Scripts into Descript | Claude Code, at the Scripts step, or any session that `descript_send.py pending` shows a cut still to send | `make-piece` (the Scripts row), `scripts/post-pack/descript_send.py` | one view-access project per cut in his Descript drive, then `meta.making.descript` (each cut's project, its Script and Record here timelines and links, and the hash of the words sent) |
-| Record | Krish records, in Descript or the Inbox; the home computers' recordings lane writes an Inbox take, and the production session a take recorded in Descript or one the lane has not placed | `scripts/post-pack/recording_match.py --record`, run by `scripts/recordings-upload.ps1` at the end of every pass on either machine (`--board --by "Recordings lane"`) and in `.agents/skills/produce-video`; for a Descript take, `scripts/post-pack/descript_take.py` then `recordings-upload.ps1 -File` and `making.py recorded` | `meta.making.recordings`, each take with the hash of the script it was read from (`script_sha256`); for a Descript take, also the media it brought in, in `meta.making.descript` (`known_media`) |
+| The read-back | Claude Code, at the Scripts step: two fresh readers, each an ordinary 12-year-old hearing the script once | `make-piece` ("The Scripts step", step 4), `making.py <piece> read-back` | `meta.making.script_check.read_back`: who read each cut, when, "nothing lost", and the hash of the words they heard |
+| Scripts into Teleprompter | Claude Code, at the Scripts step, or any session that `teleprompter_send.py pending` shows a cut still to send | `make-piece` ("The Scripts step", step 6), `scripts/post-pack/teleprompter_send.py` | one folder per piece and one script per cut in his teleprompter.com account, then `meta.making.teleprompter` (the folder, each cut's script and title, and the hash of the words sent) |
+| Record | Krish records, then drops each take in the Inbox; the home computers' recordings lane writes it, and the production session one the lane has not placed | `scripts/post-pack/recording_match.py --record`, run by `scripts/recordings-upload.ps1` at the end of every pass on either machine (`--board --by "Recordings lane"`) and in `.agents/skills/produce-video` | `meta.making.recordings`, each take with the hash of the script it was read from (`script_sha256`) |
 | Video assets | Codex, on a home computer (Claude Code there too when Krish engages it) | `.agents/skills/produce-video` | `meta.making.video_assets`, each cut with its thumbnail and music track; the cuts and thumbnails in the archive and in the post's library folder (`3 Video`). Never the visual gate or the pack |
 | Publish board with the cuts | Claude Code | `make-piece` (last step) | the publish page; and the pack again with the cuts (`build.py --replace`, which records Visual gate and Pack, then `send.py`) when the session holds the post's working folder and the cut files |
 | The week's publish board | Claude Code: `plan-week` makes it on Sunday; `make-piece` republishes it whenever a day's publish page changes or a pick lands | `scripts/post-pack/week_board.py` | a new private artifact each Sunday, republished to the same link all week; the week's own board item `week-publish-board-<Monday>` and `WORKBENCH.md` carry the link |
@@ -100,8 +100,8 @@ Where each thing lives, and nowhere else:
 | The engine key | Claude Code cloud: a network secret bound to the engine's host. Codex cloud: the environment secret. Windows home machines: Credential Manager, read by `scripts/engine.py` | never a file, a chat or a commit |
 | The runner's bearer | Credential Manager on each runner machine | the recordings and library lanes |
 | Control Center's secrets (access code, cron secret, the routine's id and token) | Control Center's Vercel project | its own routes; the slate cron speaks to the board on the access-code cookie |
-| Recordings | the engine's recordings lane (object store plus manifest); a take recorded in Descript stays in its cut's "Record here" timeline until the video skill brings a private copy of it into the same lane | the home computers place each Inbox take on its piece and cut by themselves (`scripts/recordings-upload.ps1`, then `scripts/post-pack/recording_match.py`); a Descript take comes in through `descript_take.py fetch` and `recordings-upload.ps1 -File` on a home computer; `scripts/post-pack/recording.py get` fetches a take by its Inbox name or by the path its piece's record holds (`recordings/<sha256>.<ext>`); never the Drive connector (10 MB cap) |
-| Scripts for Krish to read while he records | his Descript drive (Krish Raja's Drive), `Mindmake scripts > <pack folder>`: one view-access project per cut, with a Script timeline (the pages video he reads on his phone) and a "Record here" timeline he records into; and the publish page's Copy | the two links per cut on the piece's making record (`meta.making.descript`), shown on Control Center's Record step and on the week's publish board. Sent at the Scripts step by `descript_send.py`; words that change go into the same project as a new Script timeline |
+| Recordings | the engine's recordings lane (object store plus manifest), fed only from the top of the Video Engine Inbox | the home computers place each Inbox take on its piece and cut by themselves (`scripts/recordings-upload.ps1`, then `scripts/post-pack/recording_match.py`); `scripts/post-pack/recording.py get` fetches a take by its Inbox name or by the path its piece's record holds (`recordings/<sha256>.<ext>`); never the Drive connector (10 MB cap) |
+| Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 3-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py`; words that change update the same script in place, and nothing there is ever deleted |
 | The week's publish board and its ticks | claude.ai, a private artifact made each Sunday; the ticks and links in its own store | each week's board item `week-publish-board-<Monday>` (its link) and `WORKBENCH.md` (this week's and last week's); the ticks are read with the ArtifactData tool, in Claude Code only |
 | Licensed music | Drive, `makeyourmindup > 00_Brand-Assets > 07_Music` (`MINDMAKE_MUSIC_ROOT`), each licence certificate beside its track; the ledger `config/music-library.json` in GitHub | `scripts/quick-edit/music.py` on a home computer; only approved ledger tracks, never browsed |
 | The pack, the publish page, the finished cuts | Krish's Drive library, written by his own machine from the engine's library store | `build.py`, `send.py`; the Drive folder is the canonical copy for every tool and for Krish |
@@ -190,44 +190,42 @@ What could be misread, and what stops it:
     only once each shape has its thumbnail and the visual gate passes for
     the videos and thumbnails, and never rebuilds the pack; `make-piece`'s
     publish board step rebuilds it with the cuts when it can.
-13. **Descript holds an older script.** When a cut's words change after
-    they were sent, `descript_send.py plan` sends the new words into the
-    same project as a new Script timeline, named with when it was sent, and
-    the record's Script link moves to it; the "Record here" timeline, and
-    any take in it, stays where it is. Every `make-piece` and `plan-week`
-    session starts with `descript_send.py pending`, so a change no session
-    sent is caught by the next one that has the Descript connector; a
-    session without it says so and sends nothing.
-14. **A second project for one cut.** `plan` reads the making record, and a
-    cut with no Descript entry there gets a new project. A send made by
-    hand (Monday's and Friday's, 12 October) is recorded with `making.py
-    <piece> descript CUT ...` before any `plan` runs for that piece: while
-    `WORKBENCH.md` keeps that line and the record does not hold the project,
-    `descript_send.py pending` prints the line instead of a plan line, and
-    `descript_take.py waiting` and `look` print it instead of sending the
-    take through the Inbox. A send that fails once `import_media` has made
-    the project is recorded on that project (`record --project ...
-    --error`), and the next `plan` finishes it there.
-15. **The wrong drive.** Every send and every take starts with
-    `get_drive_info`, whose id must be the one in `config/descript.json`.
-    `descript_send.py record` and `making.py descript` refuse any other
-    drive, and `descript_take.py` refuses another project or drive, so a
-    connector on another account sends nothing and records nothing.
-16. **A take of older words left in a "Record here" timeline.**
-    `descript_take.py look` counts as the new take only media the record
-    does not know yet (`known_media`), and asks Krish one question (exit 2)
-    about a timeline holding only known media, a project whose Descript
-    words are older, a cut already recorded, a copy already published at
-    another level, or a timeline longer than the slate and the new
-    recording. When he says to use it anyway, his words (`--krish-words`)
-    settle that question in `look`, `check` and `fetch` and go onto the
-    take's record. `check` then hears the words against the cut's current
-    script before anything is copied. A take brought in adds its media to
-    `known_media`, so it is never brought in twice.
-17. **A private copy refused (403).** The drive's publish settings may not
-    allow a private copy. The session tells Krish in plain words, publishes
-    nothing at any other level, and leaves the piece's Record board item
-    open; the Inbox still works.
+13. **Teleprompter holds an older script.** When a cut's words change
+    after they were sent, `teleprompter_send.py plan` updates the same script
+    in place, sending only its text and duration, so Krish's font, speed and
+    alignment stay as he set them. Every `make-piece` and `plan-week`
+    session starts with `teleprompter_send.py pending`, so a change no
+    session sent is caught by the next one that has the Teleprompter
+    connector; a session without it says so and sends nothing.
+14. **A second folder or a second script.** `plan` reads the making record:
+    a piece with a folder there gets no new one, and a cut with a script
+    there is updated, never created again. Before a create, the session
+    lists what is there (`list_folders`, `list_scripts_in_folder`) and uses
+    a folder or script of exactly that name instead. The four sends of 12
+    October were made by hand: while `WORKBENCH.md` keeps their `making.py
+    <piece> teleprompter CUT ...` lines and the record does not hold them,
+    `pending` and `plan` print those lines and nothing else. A send that
+    fails after `create_folder` is recorded with that folder (`record
+    --folder ... --error`), so the next plan never makes a second.
+15. **Something deleted, moved or overwritten.** Teleprompter has no delete
+    tool, and the allowed calls (`config/teleprompter.json`) never include
+    `move_script` or `update_folder`; an update never sends his font size,
+    speed, alignment or timed speed, which are his to set.
+16. **A script a 12-year-old could not follow** (house rule R7, the hard
+    gate; Krish, 2026-10-12: "I can't even understand what I'm reading off
+    the teleprompter. I thought we had hard gates for this?").
+    `story_check.py` refuses a script with a spoken sentence over 20 words,
+    more than 12 words a sentence on average, a reading grade over 6, a
+    quotation over four words, or a word on its list (licensing, settlement,
+    revenue, model and the rest) that its sentence does not explain, and
+    `build.py` will not pack one. A formula alone misses a script that loses
+    a child on its ideas, so two fresh readers hear each script once, and
+    `teleprompter_send.py plan` sends no cut whose current words they have
+    not passed (`script_check.read_back`).
+17. **A script without its series line, or "I'm Krish" said twice.**
+    `story_check.py --series` refuses both; `making.py scripts` passes the
+    piece's series from the engine, `build.py` from the post's subchannel,
+    and the engine's script writer puts the line first itself.
 18. **A tick that never reaches the record.** A tick lives only on the
     week's board until a Claude Code session copies it, at the start and
     end of every making session; Codex cannot read the board. Each tick is
@@ -248,20 +246,15 @@ What could be misread, and what stops it:
     `--live` refuses a made day without its publish page, so no tab loses
     its Copy cards while he is still posting. A new board is made only on
     Sunday, for the new week.
-20. **A take in another timeline.** Monday's 3-minute project also holds a
-    spare timeline called "Record here" (the first attempt's) beside the
-    real one, now called "Monday". `look` reads only the cut's own Record
-    here timeline, by its id; a recording that landed in another timeline
-    is named (which one, and how long it runs) and nothing is copied from
-    it: Krish drags the clip across or records again through the Record
-    here link.
+20. **A take recorded somewhere else.** Teleprompter records nothing, and
+    Descript was retired on 12 October (Krish: "Descript is permanently
+    gone"). A take reaches the engine only from the top of the Video Engine
+    Inbox; a take he recorded in Descript before then comes in only when he
+    exports it and drops the file there.
 21. **A send that keeps failing.** A failed send is recorded with when it
-    failed. `pending` holds back a cut whose media minutes are used up
-    (402) until its words change or Krish says go (`--retry`), and any
-    other failure for six hours, so no session makes a project or spends
-    minutes on every start.
+    failed. `pending` holds back a cut whose last send failed less than six
+    hours ago, unless its words changed or Krish says go (`--retry`), so no
+    session sends on every start.
 22. **A take recorded that is not in the store.** `making.py recorded`
-    refuses a path the engine's recordings store does not hold, and
-    `descript_take.py fetch` prints the send and record lines only on a
-    home computer with the runner key; anywhere else it prints the handoff
-    line for one.
+    refuses a path the engine's recordings store does not hold; the take
+    reaches the store when it is dropped in the Inbox and the lane sends it.

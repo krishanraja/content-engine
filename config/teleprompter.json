@@ -1,0 +1,52 @@
+{
+  "about": "Krish's standing yes to every checked video script going into his teleprompter.com account, and exactly what a session may do there. Read by scripts/post-pack/teleprompter_send.py and making.py teleprompter; nothing is sent or recorded unless status is \"confirmed\". The calls are made by a Claude Code session that holds the Teleprompter connector (make-piece, the Scripts step); this repository holds no Teleprompter key.",
+  "status": "confirmed",
+  "said": {
+    "switch": {
+      "on": "2026-10-12",
+      "words": "Also note that Descript is permanently gone, teleprompter.com is permanently in, connected via MCP here"
+    },
+    "send": {
+      "on": "2026-10-12",
+      "asked": "May every checked script go into your teleprompter.com account automatically, starting with Monday's two now?",
+      "picked": "Yes, automatic, Monday now",
+      "terms": "One script per cut, in a folder per piece (e.g. \"Mon 12 Oct follow.the.money\"). When the words change, the same script is updated in place. Nothing is ever deleted."
+    }
+  },
+  "allowed_tools": [
+    "list_folders",
+    "list_scripts",
+    "list_scripts_in_folder",
+    "get_folder",
+    "get_script",
+    "create_folder",
+    "create_script",
+    "update_script"
+  ],
+  "never": [
+    "deleting anything: Teleprompter has no delete tool, and nothing is ever deleted",
+    "move_script and update_folder: a script stays where it was made, and a folder keeps its name",
+    "a second folder for a piece, or a second script for a cut: a cut whose script is recorded is updated in place",
+    "fontSize, speed, alignment or timedSpeed, on a create or an update: Krish may set them, and they stay his"
+  ],
+  "folder_name": "<Ddd D Mon> <series label> - <short subject>",
+  "folder_examples": [
+    "Mon 12 Oct follow.the.money - Who gets paid for AI songs",
+    "Fri 16 Oct mind.the.gap - Why so many AIs"
+  ],
+  "script_title": "<Ddd D Mon> - <cut name> - <short subject>",
+  "title_examples": [
+    "Mon 12 Oct - 3-minute - Who gets paid for AI songs",
+    "Fri 16 Oct - 90-second - Why so many AIs"
+  ],
+  "cuts": {
+    "long": { "name": "3-minute" },
+    "short": { "name": "90-second" }
+  },
+  "words_per_minute": 150,
+  "duration": "the script's spoken words / 150 minutes, in whole seconds",
+  "text": "the script file's spoken words, any markdown stripped, its paragraphs separated by a blank line",
+  "create_fields": ["title", "text", "folderId", "duration"],
+  "update_fields": ["text", "duration"],
+  "id_pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
+}

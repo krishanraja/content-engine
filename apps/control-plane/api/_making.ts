@@ -38,7 +38,14 @@ export interface MakingCheck { passed: boolean; checked_at: string; problems: st
  *  take look older than its script. `changed_at` is when each cut's words
  *  last changed, so a change to one cut never makes the other's take look
  *  old (scripts/post-pack/recording_match.py's time rule). */
-export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>> }
+export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>> }
+/** A cut read back by two fresh readers, each an ordinary 12-year-old
+ *  hearing it once, who found nothing that lost them (house rule R7, the hard
+ *  gate on every script; Krish, 2026-10-12: "Every single script should be
+ *  understandable by a 12-year-old"). `script_sha256` is the hash of the
+ *  words they heard: a read-back holds only while the cut's words are the
+ *  same. Written by making.py read-back; only a pass is recorded. */
+export interface MakingReadBack { script_sha256: string; at: string; by: string; readers: string[]; found: 'nothing lost' }
 export interface MakingLink { url: string; at: string }
 export interface MakingPack { folder: string; packed_at: string; files: number; sent_at?: string; headline?: string }
 /** A recording's path is the engine's copy, `recordings/<sha256>.<ext>`
@@ -57,34 +64,30 @@ export interface MakingThumbnail { path: string; url?: string }
 export interface MakingVideoAsset { cut: MakingCut; name: string; path: string; at: string; url?: string; seconds?: number; thumbnail?: MakingThumbnail; music?: string }
 export interface MakingChannelPost { url?: string; posted_at: string }
 export interface MakingSession { url: string; started_at: string; by: string }
-/** Where one cut's script is in Descript (Krish, 2026-10-12: "Descript is
- *  now my tool of choice for video script readouts on my phone - scripts
- *  should automatically be sent there, with the ability for Descript to put
- *  the video in the correct place when recorded"). One view-access project
- *  per cut with two compositions: Script, the pages video he reads, and
- *  Record here, where he records. `script_sha256` is the hash of the words
- *  the Script composition holds; `known_media` is every media name the
- *  project held after the send, so a take recorded there later is a name
- *  not on it; `error` says why the last send failed and `failed_at` when, on
- *  the project the cut already had, alone when it had none, or on the bare
- *  project import_media made before the send failed (project_id and no
- *  compositions), which the next send finishes rather than making a second.
- *  Written by scripts/post-pack/descript_send.py record (making.py descript). */
-export interface MakingDescriptCut {
-  project_id?: string
-  script_composition?: string
-  record_composition?: string
-  script_link?: string
-  record_link?: string
+/** Where one cut's script is in Krish's teleprompter.com account. Krish,
+ *  2026-10-12: "Also note that Descript is permanently gone, teleprompter.com
+ *  is permanently in, connected via MCP here", and, asked whether every
+ *  checked script may go there automatically, "Yes, automatic, Monday now",
+ *  on these terms: "One script per cut, in a folder per piece (e.g. "Mon 12
+ *  Oct follow.the.money"). When the words change, the same script is updated
+ *  in place. Nothing is ever deleted." `script_id` is the script's id (an
+ *  uppercase UUID), `title` its title, and `script_sha256` the hash of the
+ *  words it holds (making.py script_hash); `error` says why the last send
+ *  failed and `failed_at` when, on the script the cut already had, or alone
+ *  when none was made. Written by scripts/post-pack/teleprompter_send.py
+ *  record (making.py teleprompter). */
+export interface MakingTeleprompterCut {
+  script_id?: string
+  title?: string
   script_sha256?: string
-  media?: string
-  known_media?: string[]
   sent_at: string
   by: string
   error?: string
   failed_at?: string
 }
-export interface MakingDescript { drive_id: string; cuts: Partial<Record<MakingCut, MakingDescriptCut>> }
+/** The piece's one folder and its scripts, merged cut by cut. `folder_id`
+ *  is absent only while no folder was made (a send that failed first). */
+export interface MakingTeleprompter { folder_id?: string; folder_name?: string; cuts: Partial<Record<MakingCut, MakingTeleprompterCut>> }
 
 export interface Making {
   /** When the record began: written on its first write and never moved, so
@@ -100,13 +103,17 @@ export interface Making {
   video_assets?: MakingVideoAsset[]
   channels?: Partial<Record<MakingChannel, MakingChannelPost>>
   session?: MakingSession
-  /** Where each cut's script is in Descript; merged cut by cut. */
-  descript?: MakingDescript
+  /** Where each cut's script is in Teleprompter; merged cut by cut. */
+  teleprompter?: MakingTeleprompter
+  /** Retired on 2026-10-12, when Descript was (Krish: "Descript is
+   *  permanently gone"). Records written before then still hold it; it is
+   *  kept as it is, so they still parse, and nothing reads it. */
+  descript?: unknown
   updated_at: string
   by: string
 }
 
-export type MakingPatch = Partial<Omit<Making, 'updated_at' | 'by' | 'started_at'>>
+export type MakingPatch = Partial<Omit<Making, 'updated_at' | 'by' | 'started_at' | 'descript'>>
 
 const MAX_PROBLEMS = 40
 const MAX_LIST = 40
@@ -118,53 +125,32 @@ function when(v: unknown, fallback: string): string { const s = str(v, 40); retu
 function https(v: unknown): string | null { const s = str(v, 2000); return s && /^https:\/\/\S+$/.test(s) ? s : null }
 /** A script's sha256, as making.py script_hash writes it. */
 export const SCRIPT_SHA256 = /^[a-f0-9]{64}$/
-/** A Descript drive, project or composition id. */
-export const DESCRIPT_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
-const MAX_KNOWN_MEDIA = 100
+/** A Teleprompter folder or script id: an uppercase UUID. */
+export const TELEPROMPTER_ID = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/
+/** Teleprompter's limit on a folder name and a script title. */
+const MAX_TELEPROMPTER_NAME = 200
 
-/** One cut of a descript patch, or the reason it is refused. */
-function parseDescriptCut(cut: string, v: unknown, by: string, now: string): { entry?: MakingDescriptCut; problem?: string } {
-  const at = `descript.cuts.${cut}`
-  if (!(MAKING_CUTS as readonly string[]).includes(cut)) return { problem: `unknown cut "${cut}" in descript.cuts (long, short)` }
+/** One cut of a teleprompter patch, or the reason it is refused. */
+function parseTeleprompterCut(cut: string, v: unknown, by: string, now: string): { entry?: MakingTeleprompterCut; problem?: string } {
+  const at = `teleprompter.cuts.${cut}`
+  if (!(MAKING_CUTS as readonly string[]).includes(cut)) return { problem: `unknown cut "${cut}" in teleprompter.cuts (long, short)` }
   if (!isObj(v)) return { problem: `${at} must be an object` }
-  const entry: MakingDescriptCut = { sent_at: when(v.sent_at, now), by: str(v.by, 60) || by }
+  const entry: MakingTeleprompterCut = { sent_at: when(v.sent_at, now), by: str(v.by, 60) || by }
   if (v.error !== undefined) {
     const error = str(v.error)
-    if (!error) return { problem: `${at}.error is what Descript said, at most ${MAX_TEXT} characters` }
+    if (!error) return { problem: `${at}.error is what Teleprompter said, at most ${MAX_TEXT} characters` }
     entry.error = error
     entry.failed_at = when(v.failed_at, now)
   }
-  if (v.project_id === undefined) {
-    // A send that failed before any project was made: the error alone.
-    return entry.error ? { entry } : { problem: `${at} needs project_id and its compositions, or the error that stopped the send` }
+  if (v.script_id === undefined) {
+    // A send that failed before any script was made: the error alone.
+    return entry.error ? { entry } : { problem: `${at} needs script_id, title and script_sha256, or the error that stopped the send` }
   }
-  const project = typeof v.project_id === 'string' && DESCRIPT_ID.test(v.project_id) ? v.project_id : null
-  if (!project) return { problem: `${at}.project_id is the Descript project's id, a lower case uuid` }
-  if (entry.error && v.script_composition === undefined && v.record_composition === undefined) {
-    // import_media made the project, then the send failed: kept, so the next send finishes it there.
-    entry.project_id = project
-    return { entry }
-  }
-  for (const key of ['script_composition', 'record_composition'] as const) {
-    if (typeof v[key] !== 'string' || !DESCRIPT_ID.test(v[key] as string)) return { problem: `${at}.${key} is a Descript composition id, a lower case uuid` }
-  }
-  if (v.script_composition === v.record_composition) return { problem: `${at}: the Script and Record here compositions are two different compositions` }
-  const link = new RegExp(`^https://web\\.descript\\.com/${project}/[A-Za-z0-9]{5}$`)
-  for (const key of ['script_link', 'record_link'] as const) {
-    if (typeof v[key] !== 'string' || !link.test(v[key] as string)) return { problem: `${at}.${key} opens a composition of its project: https://web.descript.com/${project}/<short id>` }
-  }
-  if (typeof v.script_sha256 !== 'string' || !SCRIPT_SHA256.test(v.script_sha256)) return { problem: `${at}.script_sha256 is the sha256 of the words the Script composition holds, 64 lowercase hex characters` }
-  const media = str(v.media, 200)
-  const known = Array.isArray(v.known_media) ? v.known_media : null
-  if (!media) return { problem: `${at}.media is the name the pages video was uploaded under` }
-  if (!known || !known.length || known.length > MAX_KNOWN_MEDIA || !known.every(n => typeof n === 'string' && str(n, 200) === n)) {
-    return { problem: `${at}.known_media is every media name the project lists, 1 to ${MAX_KNOWN_MEDIA} names` }
-  }
-  if (!known.includes(media)) return { problem: `${at}.known_media does not hold its media, "${media}"` }
-  Object.assign(entry, {
-    project_id: project, script_composition: v.script_composition, record_composition: v.record_composition,
-    script_link: v.script_link, record_link: v.record_link, script_sha256: v.script_sha256, media, known_media: [...new Set(known as string[])],
-  })
+  if (typeof v.script_id !== 'string' || !TELEPROMPTER_ID.test(v.script_id)) return { problem: `${at}.script_id is the script's id, an uppercase UUID` }
+  const title = str(v.title, MAX_TELEPROMPTER_NAME)
+  if (!title || /[\r\n\t]/.test(title)) return { problem: `${at}.title is the script's title, one line of at most ${MAX_TELEPROMPTER_NAME} characters` }
+  if (typeof v.script_sha256 !== 'string' || !SCRIPT_SHA256.test(v.script_sha256)) return { problem: `${at}.script_sha256 is the sha256 of the words the script holds, 64 lowercase hex characters` }
+  Object.assign(entry, { script_id: v.script_id, title, script_sha256: v.script_sha256 })
   return { entry }
 }
 
@@ -204,6 +190,19 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
         continue
       }
       check.changed_at = Object.fromEntries(entries) as Partial<Record<MakingCut, string>>
+    }
+    if (key === 'script_check' && v.read_back !== undefined) {
+      const entries = isObj(v.read_back) ? Object.entries(v.read_back) : null
+      const ok = (c: string, r: unknown) => (MAKING_CUTS as readonly string[]).includes(c) && isObj(r) && typeof r.script_sha256 === 'string' && SCRIPT_SHA256.test(r.script_sha256)
+        && r.found === 'nothing lost' && Array.isArray(r.readers) && r.readers.length >= 2 && r.readers.length <= 6
+        && r.readers.every(n => typeof n === 'string' && str(n, 200) === n && !/[\r\n\t]/.test(n))
+      if (!entries || !entries.every(([c, r]) => ok(c, r))) {
+        problems.push('script_check.read_back is each cut\'s read-back: {long, short}, each {script_sha256, at, by, readers: two to six names, found: "nothing lost"}')
+        continue
+      }
+      check.read_back = Object.fromEntries(entries.map(([c, r]: [string, any]) => [c, {
+        script_sha256: r.script_sha256, at: when(r.at, now), by: str(r.by, 60) || str(body.by, 60) || 'Claude Code', readers: [...r.readers], found: 'nothing lost' as const,
+      }])) as Partial<Record<MakingCut, MakingReadBack>>
     }
     patch[key] = check
   }
@@ -292,22 +291,28 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     if (!url) problems.push('session needs an https url')
     else patch.session = { url, started_at: when(isObj(v) ? v.started_at : undefined, now), by: (isObj(v) && str(v.by, 60)) || 'Claude Code' }
   }
-  if (body.descript !== undefined) {
-    const v = isObj(body.descript) ? body.descript : {}
-    const drive = typeof v.drive_id === 'string' && DESCRIPT_ID.test(v.drive_id) ? v.drive_id : null
-    if (!drive) problems.push('descript needs drive_id, the Descript drive\'s id (a lower case uuid)')
-    else if (!isObj(v.cuts) || !Object.keys(v.cuts).length) problems.push('descript.cuts needs the long or short cut')
+  if (body.teleprompter !== undefined) {
+    const v = isObj(body.teleprompter) ? body.teleprompter : {}
+    const folder = v.folder_id === undefined ? undefined : typeof v.folder_id === 'string' && TELEPROMPTER_ID.test(v.folder_id) ? v.folder_id : null
+    const name = v.folder_name === undefined ? undefined : str(v.folder_name, MAX_TELEPROMPTER_NAME)
+    if (folder === null) problems.push('teleprompter.folder_id is the folder\'s id, an uppercase UUID')
+    else if (name === null || (typeof name === 'string' && /[\r\n\t]/.test(name))) problems.push(`teleprompter.folder_name is the folder's name, one line of at most ${MAX_TELEPROMPTER_NAME} characters`)
+    else if (!isObj(v.cuts) || !Object.keys(v.cuts).length) problems.push('teleprompter.cuts needs the long or short cut')
     else {
-      const cuts: MakingDescript['cuts'] = {}
+      const cuts: MakingTeleprompter['cuts'] = {}
       const before = problems.length
       for (const [cut, c] of Object.entries(v.cuts)) {
-        const { entry, problem } = parseDescriptCut(cut, c, str(body.by, 60) || 'Claude Code', now)
+        const { entry, problem } = parseTeleprompterCut(cut, c, str(body.by, 60) || 'Claude Code', now)
         if (problem) problems.push(problem)
         else cuts[cut as MakingCut] = entry
       }
-      if (problems.length === before) patch.descript = { drive_id: drive, cuts }
+      // A script lives in the piece's folder: a cut with a script needs it.
+      if (problems.length === before && !folder && Object.values(cuts).some(c => c?.script_id)) problems.push('teleprompter needs folder_id, the folder its scripts are in')
+      if (problems.length === before) patch.teleprompter = { ...(folder ? { folder_id: folder } : {}), ...(name ? { folder_name: name } : {}), cuts }
     }
   }
+  // Descript was retired on 2026-10-12; a record of a send there is not taken.
+  if (body.descript !== undefined) problems.push('descript was retired on 2026-10-12 (Krish: "Descript is permanently gone, teleprompter.com is permanently in"): record the Teleprompter send in teleprompter')
   return { patch, problems }
 }
 
@@ -360,11 +365,18 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     }
     next.channels = channels
   }
-  if (patch.descript) {
-    // Cut by cut: a send of one cut keeps the other. A different drive's
-    // projects are not this drive's, so they go.
-    const held = isObj(base.descript) && base.descript.drive_id === patch.descript.drive_id && isObj(base.descript.cuts) ? base.descript.cuts : {}
-    next.descript = { drive_id: patch.descript.drive_id, cuts: { ...held, ...patch.descript.cuts } }
+  if (patch.teleprompter) {
+    // Cut by cut: a send of one cut keeps the other, and the folder the
+    // record holds stays unless the patch names one. Nothing in Teleprompter
+    // is ever deleted, so a script on the record is never dropped here.
+    const held = isObj(base.teleprompter) ? base.teleprompter : null
+    const folder = patch.teleprompter.folder_id || (held && typeof held.folder_id === 'string' ? held.folder_id : undefined)
+    const sameFolder = Boolean(held && held.folder_id && held.folder_id === folder)
+    const name = patch.teleprompter.folder_name || (sameFolder && typeof held!.folder_name === 'string' ? held!.folder_name : undefined)
+    next.teleprompter = {
+      ...(folder ? { folder_id: folder } : {}), ...(name ? { folder_name: name } : {}),
+      cuts: { ...(held && isObj(held.cuts) ? held.cuts : {}), ...patch.teleprompter.cuts },
+    }
   }
   return next
 }
@@ -396,39 +408,40 @@ export function takeCounts(take: Pick<MakingRecording, 'cut' | 'script_sha256'>,
   return !take.script_sha256 || !current || take.script_sha256 === current
 }
 
-/** What Descript holds for each cut against the words the scripts' check
- *  passed: 'in' (those words), 'older' (words that changed since), 'failed'
- *  (the last send failed), 'missing' (never sent). Only for a check that
- *  passed with hashes, since a send needs them. Mirrored in
- *  control-center/src/lib/making.ts and making.py descript_state. */
-export type DescriptState = 'in' | 'older' | 'failed' | 'missing'
-export function descriptStates(m: Partial<Making>): Partial<Record<MakingCut, DescriptState>> {
-  const out: Partial<Record<MakingCut, DescriptState>> = {}
+/** What Teleprompter holds for each cut against the words the scripts'
+ *  check passed: 'in' (those words), 'older' (words that changed since),
+ *  'failed' (the last send failed), 'missing' (never sent). Only for a check
+ *  that passed with hashes, since a send needs them. Mirrored in
+ *  control-center/src/lib/making.ts and making.py teleprompter_state. */
+export type TeleprompterState = 'in' | 'older' | 'failed' | 'missing'
+export function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut, TeleprompterState>> {
+  const out: Partial<Record<MakingCut, TeleprompterState>> = {}
   const check = m.script_check
   if (!check?.passed || !isObj(check.hashes)) return out
   for (const cut of MAKING_CUTS) {
     const hash = check.hashes[cut]
     if (!hash) continue
-    const sent = isObj(m.descript) && isObj(m.descript.cuts) ? m.descript.cuts[cut] : undefined
-    out[cut] = sent?.error ? 'failed' : !sent?.project_id ? 'missing' : sent.script_sha256 === hash ? 'in' : 'older'
+    const sent = isObj(m.teleprompter) && isObj(m.teleprompter.cuts) ? m.teleprompter.cuts[cut] : undefined
+    out[cut] = sent?.error ? 'failed' : !sent?.script_id ? 'missing' : sent.script_sha256 === hash ? 'in' : 'older'
   }
   return out
 }
 
-/** The Scripts step's word on Descript: "in Descript", "Descript has an
- *  older script", "the Descript send failed" or "not in Descript yet",
- *  naming the cut when only one is so. Never holds the step back. */
-export function descriptNote(m: Partial<Making>): string {
-  const states = descriptStates(m)
+/** The Scripts step's word on Teleprompter: "in Teleprompter", "Teleprompter
+ *  has an older script", "the Teleprompter send failed" or "not in
+ *  Teleprompter yet", naming the cut when only one is so. Never holds the
+ *  step back. */
+export function teleprompterNote(m: Partial<Making>): string {
+  const states = teleprompterStates(m)
   const cuts = MAKING_CUTS.filter(c => states[c])
   if (!cuts.length) return ''
-  const of = (s: DescriptState) => cuts.filter(c => states[c] === s)
-  if (of('in').length === cuts.length) return 'in Descript'
+  const of = (s: TeleprompterState) => cuts.filter(c => states[c] === s)
+  if (of('in').length === cuts.length) return 'in Teleprompter'
   const which = (list: MakingCut[]) => (list.length === cuts.length ? '' : ` for the ${list.join(' and ')} cut`)
   return [
-    of('older').length ? `Descript has an older script${which(of('older'))}` : '',
-    of('failed').length ? `the Descript send failed${which(of('failed'))}` : '',
-    of('missing').length ? `not in Descript yet${which(of('missing'))}` : '',
+    of('older').length ? `Teleprompter has an older script${which(of('older'))}` : '',
+    of('failed').length ? `the Teleprompter send failed${which(of('failed'))}` : '',
+    of('missing').length ? `not in Teleprompter yet${which(of('missing'))}` : '',
   ].filter(Boolean).join('; ')
 }
 
@@ -457,9 +470,9 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   steps.push(m.visual_gate
     ? { key: 'visual_gate', label: 'Visual gate', state: m.visual_gate.passed ? 'done' : 'failed', at: m.visual_gate.checked_at, note: m.visual_gate.passed ? undefined : m.visual_gate.problems[0] }
     : { key: 'visual_gate', label: 'Visual gate', state: 'todo' })
-  // Where the scripts are in Descript is said on the step and never holds it back.
+  // Where the scripts are in Teleprompter is said on the step and never holds it back.
   steps.push(m.script_check
-    ? { key: 'scripts', label: 'Scripts', state: m.script_check.passed ? 'done' : 'failed', at: m.script_check.checked_at, note: m.script_check.passed ? [(m.script_check.cuts || []).join(' and '), descriptNote(m)].filter(Boolean).join('; ') || undefined : m.script_check.problems[0] }
+    ? { key: 'scripts', label: 'Scripts', state: m.script_check.passed ? 'done' : 'failed', at: m.script_check.checked_at, note: m.script_check.passed ? [(m.script_check.cuts || []).join(' and '), teleprompterNote(m)].filter(Boolean).join('; ') || undefined : m.script_check.problems[0] }
     : { key: 'scripts', label: 'Scripts', state: 'todo' })
   steps.push(m.pack
     ? { key: 'pack', label: m.pack.sent_at ? 'Pack in Drive' : 'Pack built', state: m.pack.sent_at ? 'done' : 'now', at: m.pack.sent_at || m.pack.packed_at, note: m.pack.folder }

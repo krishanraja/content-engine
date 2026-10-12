@@ -176,8 +176,9 @@ we're done, and then I check off the list what I have done as I do it."
 `week_board.py` builds that one page (its template is `week_board/`). Each
 tab is a made piece's whole publish page (`publish_manager.py`'s, given with
 `--day`), or a designed "not made yet" or "not picked" state. A made tab
-opens with Record in Descript (each cut's "Record here" and script pages
-links, from the making record's Descript links or the hand send's record),
+opens with Record (each cut's script in Teleprompter by its title, and its
+folder, from the making record's teleprompter field or a small JSON of ids,
+and how the take comes back: dropped at the top of the Video Engine Inbox),
 the two scripts to copy and the checklist; a tick also sits by each
 channel's heading. Seven ticks make a day 100% (both cuts recorded, then
 Substack, YouTube, Shorts, TikTok, Instagram); LinkedIn, WhatsApp and Notes
@@ -189,7 +190,7 @@ the publish watcher marks a piece published once its Substack post is live
 and Krish still posts the rest from its tab.
 
     python scripts/post-pack/week_board.py --week 2026-10-12 --day mon=monday-publish.html --day fri=friday-publish.html \
-        --piece mon=<uuid> --piece fri=<uuid> --descript sent.json --live --previous <the board it replaces> --out week-board.html
+        --piece mon=<uuid> --piece fri=<uuid> [--teleprompter mon=record.json] --live --previous <the board it replaces> --out week-board.html
     python scripts/post-pack/week_board.py --show <a board page or week-board.json> [--json]
     python scripts/post-pack/week_board.py --self-test
     npx vitest run tests/control-plane/week-board.test.ts
@@ -575,77 +576,79 @@ places them (`-RequirePlacing` makes it a stop).
 It never writes to the Inbox, never sends anything outside the engine, and
 never produces a video: that is `.agents/skills/produce-video`.
 
-## Scripts into Descript
+## The scripts: the series line, reading age 12 and the read-back
 
-Krish, 2026-10-12: "Descript is now my tool of choice for video script
-readouts on my phone - scripts should automatically be sent there, with the
-ability for Descript to put the video in the correct place when recorded."
-Asked "May every checked script go to that account automatically? One
-view-access project per cut, in a Mindmake scripts folder, about 5 media
-minutes a piece; nothing published, edited or deleted, no AI credits", he
-said "3. yes", then "go, upload". His words, the drive and the calls allowed
-are in `config/descript.json`.
+`story_check.py --cut long|short --series <lane_slot> SCRIPT` refuses a
+script that does not open with its series line, word for word, or says
+"I'm Krish" again after it (house rule SERIES_OPENER; Krish, 2026-10-12: "We
+need something catchy at the start of a video script like "Here's what you
+need to know about how money is changing because of AI. I'm Krish." at the
+start of follow.the.money videos. And then similar for the weds and fri
+scripts", and "Drop it at the end"), and one a 12-year-old could not follow
+heard once (house rule R7; Krish, 2026-10-12: "Every single script should
+be understandable by a 12-year-old. I can't even understand what I'm
+reading off the teleprompter. I thought we had hard gates for this?"): a
+spoken sentence over 20 words, more than 12 words a sentence on average, a
+reading grade over 6, a quotation over four words, or a word on its list
+(licensing, settlement, revenue, model and the rest) its sentence does not
+explain. The lines and the gate's numbers are read from
+`apps/control-plane/api/_houseRules.ts` (`SERIES_OPENERS`, `SCRIPT_READING`),
+the one place they live. `making.py scripts` runs it with the piece's
+series, and `build.py` with the post's subchannel. Then two fresh readers,
+each an ordinary 12-year-old hearing the script once, must find nothing that
+loses them (their prompts are in `.agents/skills/make-piece/SKILL.md`, "The
+Scripts step"); `making.py PIECE read-back CUT --readers ...` records it on
+the script check, tied to the words they heard.
 
-`descript_send.py` makes no Descript call. `plan` reads the piece's making
-record, refuses unless the scripts' check passed and each file holds the
-words it passed, renders each cut's Script pages video (and, for a cut never
-sent, its one-second "Record here" slate) and prints the calls the session
-makes with the Descript connector, in order: `get_drive_info` (Krish Raja's
-Drive, `d8b77ba9-0c95-4b7b-8964-2f5b888c0b78`, or stop), `import_media`, a
-`curl --fail` PUT of each file to the upload link it returned,
-`wait_for_job`, `get_project`, then the `record` line, which writes the
-cut's project, its two timelines and links and the hash of the words sent
-onto `meta.making.descript` (`making.py descript` is the same). Words that
-change go into the same project as a new Script timeline; the Record here
-timeline and any take in it stay put. A failed send is recorded with what
-Descript said and when (`record --error`, with `--project` once
-`import_media` gave one, so the next plan finishes that project and never
-makes a second). `pending` lists every cut in flight this week and next
-whose current words Descript lacks, with its plan line; a cut sent by hand
-that the record does not hold yet gets its `WORKBENCH.md` record line
-instead, and a cut whose minutes ran out (402), or whose send failed less
-than six hours ago, is held back until its words change or `--retry`.
+    python scripts/post-pack/story_check.py --cut long --series follow_the_money docs/plans/2026-10-12-draft-script.md
+    python scripts/post-pack/making.py PIECE read-back long --readers "reader A, a fresh subagent" "reader B, a fresh subagent"
 
-    python scripts/post-pack/descript_send.py pending [--week YYYY-MM-DD] [--retry]
-    python scripts/post-pack/descript_send.py plan PIECE post.json long.md short.md
-    python scripts/post-pack/descript_send.py record PIECE CUT --drive ID --project ID ... | --error "what Descript said"
-    python scripts/post-pack/descript_send.py --self-test
+## Scripts into Teleprompter
 
-## Takes recorded in Descript
+Krish, 2026-10-12: "Also note that Descript is permanently gone,
+teleprompter.com is permanently in, connected via MCP here". Asked "May
+every checked script go into your teleprompter.com account automatically,
+starting with Monday's two now?", he picked "Yes, automatic, Monday now",
+whose terms were: "One script per cut, in a folder per piece (e.g. "Mon 12
+Oct follow.the.money"). When the words change, the same script is updated
+in place. Nothing is ever deleted." His words, the tools allowed and the
+names are in `config/teleprompter.json`.
 
-He records each cut in its project's "Record here" timeline, on the Descript
-web app or his laptop ("I can use the descript web app, otherwise my laptop
-to record"). Asked for "a standing yes for the video skill to make a private
-copy, never public, of each take recorded in a Record here timeline, so it
-can download it", he said "1. yes". `descript_take.py` makes no Descript
-call either; the video skill runs it (`.agents/skills/produce-video`, "Takes
-recorded in Descript"):
+`teleprompter_send.py` makes no Teleprompter call. `plan` reads the piece's
+making record, refuses unless the scripts' check passed, each file holds the
+words it passed and each cut to send was read back, and prints the calls the
+session makes with the Teleprompter connector, in order: `list_folders` and
+`create_folder` only when the record holds no folder for the piece ("Mon 12
+Oct follow.the.money - Who gets paid for AI songs"); for each cut never
+sent, `list_scripts_in_folder` and `create_script` with its title ("Mon 12
+Oct - 3-minute - Who gets paid for AI songs"), its spoken words (markdown
+stripped, a blank line between paragraphs) and its duration (its words at
+150 a minute, in whole seconds); for a cut whose words changed,
+`update_script` of the same script with only its text and duration; then the
+`record` line, which writes the folder, the cut's script, its title and the
+hash of the words sent onto `meta.making.teleprompter` (`making.py
+teleprompter` is the same). Ids are uppercase UUIDs. His font size, speed,
+alignment and timed speed are never sent, and nothing is ever deleted,
+moved or renamed. A failed send is recorded with what Teleprompter said and
+when (`record --error`, with `--folder` once `create_folder` gave one, so no
+second folder is made). `pending` lists every cut in flight this week and
+next whose current words Teleprompter lacks or holds older, with its plan
+line; a cut sent by hand that the record does not hold yet gets its
+`WORKBENCH.md` record line instead, and a cut whose send failed less than
+six hours ago is held back until its words change or `--retry`.
 
-- `waiting`: each cut still to record and its project (a cut sent by hand
-  and not on the record yet gets its `WORKBENCH.md` line, never the Inbox).
-- `look --project FILE`: what the Record here timeline holds beyond the
-  slate, from `get_project` saved to a file: a take (exit 0), a question for
-  Krish (exit 2) or nothing (exit 3). A recording in another timeline of
-  the project is named, never copied.
-- `check --words FILE`: the take's words, from `export_transcript`, heard
-  against the cut's script with the matcher's own bar; go or ask.
-- `fetch --url DOWNLOAD_URL`: the private copy (`publish_project` of the
-  Record here composition, `private`, 1080p) downloaded, its slate trimmed
-  to the frame, hashed and named "Descript <cut> take <date>.mp4". On a
-  home computer with the runner key it prints the single-file send
-  (`scripts\recordings-upload.ps1 -File PATH -Name NAME -Sha256 HASH`), then
-  `making.py recorded` (which refuses a path the store does not hold) and
-  the line that adds the take's media to `known_media`; anywhere else, the
-  `handoff --post` line for a home computer.
-- `--krish-words "Krish, YYYY-MM-DD: ..."` on `look`, `check` and `fetch`:
-  his words to use a take anyway (older words, a re-take of a cut already
-  recorded, a copy already published), kept on the take's record.
+    python scripts/post-pack/teleprompter_send.py pending [--week YYYY-MM-DD] [--retry]
+    python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md [--post post.json]
+    python scripts/post-pack/teleprompter_send.py record PIECE CUT --folder ID --script ID --sha SHA256 [--title T] | --error "what Teleprompter said"
+    python scripts/post-pack/teleprompter_send.py --self-test
 
-    python scripts/post-pack/descript_take.py waiting [--week YYYY-MM-DD]
-    python scripts/post-pack/descript_take.py look --piece ID --cut long --project PROJECT.json
-    python scripts/post-pack/descript_take.py --self-test
+Teleprompter holds scripts only. A take comes back one way: Krish drops it
+at the top of the Video Engine Inbox and the runners place it, as above.
 
-A take dropped in the Inbox is placed by the runners as above.
+Descript was retired on 12 October, the day its lane was built (Krish:
+"Descript is permanently gone"); `descript_send.py` and `descript_take.py`
+were removed with it, and the recordings upload's single-file send that
+only they used.
 
 ## Size and storage
 
@@ -665,11 +668,11 @@ python scripts/post-pack/recording.py --self-test
 python scripts/post-pack/recording_match.py --self-test
 python scripts/post-pack/making.py --self-test
 python scripts/post-pack/plan_files.py --self-test
-python scripts/post-pack/descript_send.py --self-test
-python scripts/post-pack/descript_take.py --self-test
+python scripts/post-pack/story_check.py --self-test
+python scripts/post-pack/teleprompter_send.py --self-test
 python scripts/post-pack/week_board.py --self-test
 npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/library-recordings.test.ts tests/control-plane/post-pack.test.ts tests/control-plane/making.test.ts tests/control-plane/recording-match.test.ts tests/library-sync.test.ts tests/recordings-upload.test.ts
-npx vitest run tests/control-plane/descript-send.test.ts tests/control-plane/descript-take.test.ts tests/control-plane/week-board.test.ts tests/control-plane/week-options.test.ts
+npx vitest run tests/control-plane/teleprompter-send.test.ts tests/control-plane/week-board.test.ts tests/control-plane/week-options.test.ts tests/control-plane/house-rules.test.ts
 ```
 
 ## What stays out of the repository

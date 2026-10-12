@@ -1,0 +1,15 @@
+{
+  "about": "House rule STORY_INTRO_OUTRO: every video, in both sizes, opens with an animated branded intro made for its own story, carries a designed audio treatment, and closes on an animated outro card made for that piece. Read by .agents/skills/produce-video, which stops before the final render while status is not \"approved\". Nothing here is designed yet: the designs go to Krish first (krish-design), and only his words approve one.",
+  "status": "awaiting_design",
+  "said": {
+    "on": "2026-10-12",
+    "words": "when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward."
+  },
+  "required": {
+    "story_intro": "a proper animated, branded intro made for this specific story, in the 16:9 long cut and the 9:16 short cut",
+    "audio_treatment": "the audio treatment that goes with it, across the intro, the voice and the outro",
+    "outro_card": "a proper animated outro card made for this piece, in the 16:9 long cut and the 9:16 short cut"
+  },
+  "until_approved": "story intro and outro not designed yet",
+  "approved": null
+}

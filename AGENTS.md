@@ -50,45 +50,56 @@ each take is stamped with the hash of the script it was read from, so a take
 of words that have changed since stops counting, and every take it is unsure
 of is one question on the board. A take already on a piece is fetched by the
 path its record holds: `recording.py get "recordings/<sha256>.<ext>"`.
-`scripts/post-pack/README.md`, "Placing takes on the runners". A take Krish
-records in Descript comes back through the video skill instead (the next
-rule).
+`scripts/post-pack/README.md`, "Placing takes on the runners". This is the
+one way a take comes back: Krish drops it at the top of the Video Engine
+Inbox.
 
-**Each checked script goes to Krish's Descript drive, a take he records
-there comes back through a private copy, and nothing else is done in
-Descript.** Krish, 2026-10-12: "Descript is now my tool of choice for video
-script readouts on my phone - scripts should automatically be sent there,
-with the ability for Descript to put the video in the correct place when
-recorded." He records there: "I can use the descript web app, otherwise my
-laptop to record". Asked "May every checked script go to that account
-automatically? One view-access project per cut, in a Mindmake scripts
-folder, about 5 media minutes a piece; nothing published, edited or deleted,
-no AI credits", he said "3. yes", then "go, upload". Asked for "a standing
-yes for the video skill to make a private copy, never public, of each take
-recorded in a Record here timeline, so it can download it", he said "1.
-yes". Of the teleprompter: "2 fine, no issue with copy paste", so no
-Underlord and no AI credits. The exact scope, on drive
-`d8b77ba9-0c95-4b7b-8964-2f5b888c0b78` (Krish Raja's Drive) only
-(`config/descript.json`):
+**Every video script opens with its series line, and a 12-year-old can
+follow it.** Krish, 2026-10-12: "We need something catchy at the start of a
+video script like "Here's what you need to know about how money is changing
+because of AI. I'm Krish." at the start of follow.the.money videos. And then
+similar for the weds and fri scripts." He picked the Wednesday and Friday
+lines, and "Drop it at the end" for the closing "I'm Krish", so his name is
+said once. The three lines live once, as `SERIES_OPENERS` in
+`apps/control-plane/api/_houseRules.ts` (house rule `SERIES_OPENER`). The
+same day: "I also feel like these scripts are too complicated for a layman
+to understand. Every single script should be understandable by a
+12-year-old. I can't even understand what I'm reading off the teleprompter.
+I thought we had hard gates for this?" House rule `R7` is that hard gate on
+every script: `scripts/post-pack/story_check.py` refuses a script that
+breaks the series line or the reading gate (`SCRIPT_READING`, beside the
+lines), and two fresh readers, each an ordinary 12-year-old hearing it once,
+must find nothing that loses them before it is sent (`make-piece`, "The
+Scripts step"; `making.py <piece> read-back`).
 
-- **The send**, by `make-piece` at the Scripts step, or by any session
-  that `scripts/post-pack/descript_send.py pending` shows a cut still to
-  send: `get_drive_info`, `import_media` (a new view-access project per cut
-  in `Mindmake scripts/<pack folder>`, or a new Script pages video and
-  composition in that cut's own project), the `curl` PUT of the rendered
-  file to the upload link it returned, `wait_for_job` and `get_project`,
-  exactly as `descript_send.py plan` prints them, then `descript_send.py
+**Each checked script goes to Krish's teleprompter.com account, and nothing
+there is ever deleted.** Krish, 2026-10-12: "Also note that Descript is
+permanently gone, teleprompter.com is permanently in, connected via MCP
+here". Asked "May every checked script go into your teleprompter.com account
+automatically, starting with Monday's two now?", he picked "Yes, automatic,
+Monday now", whose terms were: "One script per cut, in a folder per piece
+(e.g. "Mon 12 Oct follow.the.money"). When the words change, the same script
+is updated in place. Nothing is ever deleted." The exact scope
+(`config/teleprompter.json`):
+
+- **The send**, by `make-piece` at the Scripts step, or by any session that
+  `scripts/post-pack/teleprompter_send.py pending` shows a cut still to
+  send: `list_folders`, `list_scripts`, `list_scripts_in_folder`,
+  `get_folder` and `get_script` to look; `create_folder`, one folder per
+  piece, only when its record holds none; `create_script`, one script per
+  cut, only when its record holds none; `update_script` of the cut's own
+  script with only its `text` and `duration`, exactly as
+  `teleprompter_send.py plan` prints them, then `teleprompter_send.py
   record`.
-- **The take**, by `produce-video` ("Takes recorded in Descript"):
-  `get_drive_info`, `get_project`, `export_transcript`, and `publish_project`
-  of that cut's "Record here" composition at the `private` level only, then
-  `wait_for_job` and the download of that private copy
-  (`scripts/post-pack/descript_take.py`).
-- **Never**: a publish at any other level or of any other composition; an
-  edit, rename or deletion of a project, composition or media file;
-  Underlord (`prompt_project_agent`) or any AI credit; another drive; or any
-  call not named here. A private copy Descript refuses (403) is told to
-  Krish in plain words, and nothing is published another way.
+- **Never**: `move_script` or `update_folder`; his font size, speed,
+  alignment or timed speed, which are his to set; a second folder for a
+  piece or a second script for a cut; and any deletion (Teleprompter has no
+  delete tool). Teleprompter holds scripts only: a take comes back through
+  the Inbox (the rule above).
+
+Descript was retired on 2026-10-12, the day it was set up, in his words
+above; no session calls it. Records written before then keep a `descript`
+field that nothing reads.
 
 **The week's publish board is where Krish ticks; the piece's making record
 is where it counts.** Krish, 2026-10-12: "Give me a tick box next to each

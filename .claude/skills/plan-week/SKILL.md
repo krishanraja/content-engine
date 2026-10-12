@@ -26,11 +26,12 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    item stays open, and every session's tick copy keeps reading it as last
    week's board until every picked day on it is at 100%, because Krish
    posts Friday's reposts at the weekend. Then `python3
-   scripts/post-pack/descript_send.py pending`: a cut it lists is sent
-   exactly as `make-piece`'s Scripts row says (his standing yes covers any
-   session), or, without the Descript connector, named in one line on the
-   week's board item. A cut sent by hand gets its record line instead, and
-   one held back after a failed send is only named.
+   scripts/post-pack/teleprompter_send.py pending`: a cut it lists is sent
+   to Teleprompter exactly as `make-piece`'s "The Scripts step" says, step 6
+   (his standing yes covers any session), or, without the Teleprompter
+   connector, named in one line on the week's board item. A cut sent by hand
+   gets its record line instead, and one held back after a failed send is
+   only named.
 1. Read `docs/CADENCE.md` and each series' mandate and the material on hand:
    `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>" --full`
    (mandates, options already written, what is in flight or scheduled, the
@@ -128,8 +129,10 @@ Control Center holds it back from his list (`WORKBENCH.md`, the board).
 Put the same line in `WORKBENCH.md`, because the slate cron rewrites the week
 item's text each morning.
 
-Without the Descript connector, nothing is sent to Descript (step 0 names
-what waits). Without the Artifact or ArtifactData tools, the week's board
+Without the Teleprompter connector, nothing is sent to Teleprompter (step 0
+names what waits). Descript was retired on 12 October (Krish: "Descript is
+permanently gone, teleprompter.com is permanently in, connected via MCP
+here"): nothing is sent there. Without the Artifact or ArtifactData tools, the week's board
 cannot be made or read: say so on the week's board item and in
 `WORKBENCH.md`, and the session his Monday pick starts makes it.
 

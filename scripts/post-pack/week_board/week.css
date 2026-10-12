@@ -36,6 +36,7 @@ a.btn:focus-visible{outline:3px solid var(--ok);outline-offset:2px}
 .rec-shape{font:12px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted)}
 .rec-links{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .rec-none{font-size:13px;color:var(--muted)}
+.rec-tp{font-size:14px;font-weight:700;overflow-wrap:anywhere}
 .rec-how{margin:0;padding-top:10px;border-top:1px solid var(--line);color:var(--muted)}
 .rec-scripts .card:first-child{margin-top:0}
 .ticks{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px;margin:10px 0;display:grid;gap:8px}

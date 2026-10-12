@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, about 15:30 UTC, by a Claude Code session (cloud).
+Last updated: 2026-10-12, about 16:45 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -43,6 +43,27 @@ Last updated: 2026-10-12, about 15:30 UTC, by a Claude Code session (cloud).
   (house rule `THREE_LENSES`). Every visual uses the real logos of the
   companies it names, and the cover and share picture carry Krish's face
   (`LOGOS_AND_FACE`; `scripts/pages` cover facts, `"portrait": true`).
+- Every video script opens with its series line, then the hook, and says
+  "I'm Krish" only there (house rule `SERIES_OPENER`, Krish, 2026-10-12). And
+  an ordinary 12-year-old must follow every script heard once. His words:
+  "Every single script should be understandable by a 12-year-old. I can't
+  even understand what I'm reading off the teleprompter. I thought we had
+  hard gates for this?" (house rule `R7`, now a hard gate: `story_check.py`,
+  then two fresh readers; `make-piece`, "The Scripts step").
+- Every video, in every format, gets an animated intro made for its own
+  story, its audio treatment and an animated outro card. His words,
+  2026-10-12: "when the videos come back bear in mind that I want a proper
+  animated branded intro to this specific story visually, the audio
+  treatment, and then a proper animated outro card. Across all formats, and
+  this should be part of the system moving forward." Design comes first and
+  is his to approve; until then no cut is finished (house rule
+  `STORY_INTRO_OUTRO`, `config/story-intro-outro.json`).
+- He reads his scripts in teleprompter.com and drops each take at the top
+  of the Video Engine Inbox. His words, 2026-10-12: "Also note that Descript
+  is permanently gone, teleprompter.com is permanently in, connected via MCP
+  here". Every checked script goes there by itself, one folder per piece
+  and one script per cut, updated in place, and nothing there is ever
+  deleted (`AGENTS.md`, `config/teleprompter.json`).
 
 ## This week's publish board
 
@@ -210,13 +231,146 @@ which step failed. The lane has run on both machines since 2026-10-06
 (`scripts/post-pack/README.md`, "Recordings: from the Inbox to a cloud
 session"). Which take is which piece and cut needs no file name:
 `python3 scripts/post-pack/recording_match.py` works it out from his opening
-words, and the `produce-video` skill takes it from there. Once this branch's
-change to the lane is on `main`, the home computers also place each take on
-its piece and cut by themselves at the end of every pass, and a take already
-on a piece is fetched by the path its record holds
-(`recording.py get "recordings/<sha256>.<ext>"`).
+words, and the `produce-video` skill takes it from there. The home computers
+also place each take on its piece and cut by themselves at the end of every
+pass, and a take already on a piece is fetched by the path its record holds
+(`recording.py get "recordings/<sha256>.<ext>"`). This is the one way a take
+comes back: Teleprompter holds his scripts only, and Descript, which was to
+bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-12, Monday, about 16:45 UTC: **Descript is out, teleprompter.com
+  is in; every script opens with its series line and is held to a reading
+  age of 12 by a hard gate; takes are matched by their Teleprompter title;
+  and every video will get its own story intro and outro once Krish
+  approves a design.** Built on this branch in both
+  repositories; nothing committed, pushed, deployed, published or sent, and
+  the only outside calls were engine reads. His words, kept verbatim in
+  `config/teleprompter.json`, `AGENTS.md` and the house rules:
+  "Also note that Descript is permanently gone, teleprompter.com is
+  permanently in, connected via MCP here"; to "May every checked script go
+  into your teleprompter.com account automatically, starting with Monday's
+  two now?" he picked "Yes, automatic, Monday now", on the terms "One script
+  per cut, in a folder per piece (e.g. "Mon 12 Oct follow.the.money"). When
+  the words change, the same script is updated in place. Nothing is ever
+  deleted."; "We need something catchy at the start of a video script like
+  "Here's what you need to know about how money is changing because of AI.
+  I'm Krish." at the start of follow.the.money videos. And then similar for
+  the weds and fri scripts", with his picks for Wednesday and Friday and
+  "Drop it at the end" for the closing "I'm Krish"; and "I also feel like
+  these scripts are too complicated for a layman to understand. Every single
+  script should be understandable by a 12-year-old. I can't even understand
+  what I'm reading off the teleprompter. I thought we had hard gates for
+  this?" In plain words:
+  - **The series line.** The three lines live once, in the house rules
+    (`SERIES_OPENERS`, rule `SERIES_OPENER`); `HOOK_AND_CTA` now puts the
+    hook after the line and ends without his name. `story_check.py
+    --series` refuses a script that does not open with its line or says
+    "I'm Krish" again; `making.py scripts` passes the piece's series from
+    the engine (the making route now returns `lane_slot`), `build.py` from
+    the post, and the engine's script writer puts the line first itself.
+  - **Reading age 12, a hard gate** (rule `R7`, same id). `story_check.py`
+    refuses a spoken sentence over 20 words, more than 12 words a sentence on
+    average, a reading grade over 6, a quotation over four words, and any
+    word on the grown-up list (licensing, settlement, revenue, model,
+    copyright and the rest, `SCRIPT_READING` in the house rules) its sentence
+    does not explain. Then two fresh readers, each told to be an ordinary
+    12-year-old hearing it once, must find nothing that loses them; their
+    exact prompts are in `make-piece`, "The Scripts step", and the engine's
+    script writer runs the same two (`read_back` on each script it writes).
+    A pass is recorded with `making.py <piece> read-back CUT --readers ...`
+    on the script check, tied to the words heard, and `teleprompter_send.py
+    plan` sends no cut without it. Articles already have their own reading
+    gate (the publish checks block above age 13), so they get no new one.
+  - **The Teleprompter send** (`scripts/post-pack/teleprompter_send.py`,
+    `making.py teleprompter`, the engine's new `teleprompter` field): `plan`
+    prints the exact calls (a folder only when the record has none, then
+    `create_script` or `update_script` with only text and duration), `record`
+    writes the folder and each cut's script, `pending` lists what is missing
+    or older. Control Center's Record step now says, per cut, "Read from
+    Teleprompter: <title>"; the Scripts step says "in Teleprompter" or what
+    is missing. The week's board shows the same and how to send the take
+    back; its two Record ticks are now labelled "(Teleprompter)", same ids,
+    so saved ticks carry over (`--teleprompter` replaces `--descript`).
+  - **A take is matched against the current words, and by its title.**
+    Monday's two takes (now on the piece, 184 and 95 seconds) scored 0.40
+    and 0.42 on a home computer, because it heard them against the
+    morning's scripts in its own checkout and the Drive pack, while Krish
+    read the afternoon's words. `recording_match.py` now uses the copy whose
+    words hash to the record's (`script_check.hashes`), looking in the files
+    it knew and in the same files as committed on main, and says so when it
+    has no copy of the current words. And teleprompter.com names each
+    recording after its script ("Mon 12 Oct - 3-minute - Who gets paid for
+    AI songs.mp4"): a file named after a cut's script title on a waiting
+    piece's record is that piece and cut, unless its words are surely
+    another piece's or its length surely the other cut's.
+  - **A story intro and outro, in every format** (new house rule
+    `STORY_INTRO_OUTRO`, in his words: "when the videos come back bear in
+    mind that I want a proper animated branded intro to this specific story
+    visually, the audio treatment, and then a proper animated outro card.
+    Across all formats, and this should be part of the system moving
+    forward."). Nothing is designed or built: design comes first and is his
+    to approve. `produce-video` now stops before the final render, saying
+    "story intro and outro not designed yet", while
+    `config/story-intro-outro.json` says `awaiting_design`.
+  - **Descript is retired**: `descript_send.py`, `descript_take.py`,
+    `config/descript.json`, their tests and `making.py descript` are gone,
+    the recordings upload is back to its form before Descript (no
+    single-file send), and every skill and document now says a take comes
+    back one way: dropped at the top of the Video Engine Inbox. The engine
+    refuses a `descript` patch; records written today keep their `descript`
+    field, which nothing reads.
+  Next, in this order:
+  1. Commit, merge and deploy the engine, then Control Center. The live
+     engine drops the `teleprompter` field until then, so a record line run
+     first is refused ("nothing to record") and nothing is stored.
+  2. Straight after, from the repository root, record the four sends made
+     by hand this afternoon. Until they run, `teleprompter_send.py pending`
+     and `plan` print these lines and nothing else, so no second script is
+     made. Each line carries the hash of the words that script holds now:
+     Monday's as updated in place at about 15:49 UTC and Friday's at about
+     16:08 UTC, after both were rewritten for the reading gate (each cut
+     passed `story_check.py` and two fresh 12-year-old readers), the same
+     hashes `making.py scripts` recorded at 15:50 and 16:10 UTC.
+
+     ```
+     python3 scripts/post-pack/making.py --by 'Claude Code' f328382d-71b3-41a7-a221-d8615826f12e teleprompter long --folder 86B6F74B-2F8A-4477-AE44-8DA1119D1CD9 --folder-name 'Mon 12 Oct follow.the.money - Who gets paid for AI songs' --script 45F414D8-31E1-4B2D-BBE4-44EBA042B346 --title 'Mon 12 Oct - 3-minute - Who gets paid for AI songs' --sha 89c38280deb755f3e16c37b07020847d5564fe6877dba7e044d889eb7e4034c9 --sent-at 2026-10-12T15:49:00Z
+     python3 scripts/post-pack/making.py --by 'Claude Code' f328382d-71b3-41a7-a221-d8615826f12e teleprompter short --folder 86B6F74B-2F8A-4477-AE44-8DA1119D1CD9 --folder-name 'Mon 12 Oct follow.the.money - Who gets paid for AI songs' --script ED3DE98A-7158-4448-A622-A2A5115FFA83 --title 'Mon 12 Oct - 90-second - Who gets paid for AI songs' --sha d90a4415f9a86a6167379696b170320273a4314912f6365404733aff561a4693 --sent-at 2026-10-12T15:49:00Z
+     python3 scripts/post-pack/making.py --by 'Claude Code' 904658db-4df2-4537-a0ed-ebe93e081db7 teleprompter long --folder DD28154B-B6D1-47DB-803A-79410D83196D --folder-name 'Fri 16 Oct mind.the.gap - Why so many AIs' --script 185F739E-733F-43B9-B5B2-66846CB5EC44 --title 'Fri 16 Oct - 3-minute - Why so many AIs' --sha f8ef15d3f1eb0f62a86afb780ba2294dbb49a9352903e6a94548b324d5023645 --sent-at 2026-10-12T16:08:00Z
+     python3 scripts/post-pack/making.py --by 'Claude Code' 904658db-4df2-4537-a0ed-ebe93e081db7 teleprompter short --folder DD28154B-B6D1-47DB-803A-79410D83196D --folder-name 'Fri 16 Oct mind.the.gap - Why so many AIs' --script 1165370C-68A6-444E-88D5-A326A131E58C --title 'Fri 16 Oct - 90-second - Why so many AIs' --sha bc41bc8597977f90f95541f418006e8ae097033401779334a4c319982a286db5 --sent-at 2026-10-12T16:08:00Z
+     ```
+
+     Then `making.py <id> show` for each piece should say both cuts hold the
+     current words, and `teleprompter_send.py pending` should list neither.
+     Also record each cut's read-back of the words its two readers heard
+     (`making.py <id> read-back long --readers "..." "..."`, and `short`),
+     only for the exact words they heard; otherwise read them back again.
+  3. Update both routines' prompts with `update_trigger` to the text in the
+     parent session's scratchpad (`tp/routine-prompts.txt`): the Teleprompter
+     send as the one standing exception, `teleprompter_send.py pending`, the
+     series line and the reading-age gate. **Krish must attach the
+     Teleprompter connector to both routines in claude.ai**; a session cannot.
+  4. Rebuild this week's board with `--live --previous` and republish it to
+     its link, so the Record card shows the Teleprompter scripts and the new
+     labels (the ticks keep their ids).
+  5. Rewrite the board items that still send him to Descript (at least
+     `monday-record`, which names the "Record here" link and the timeline
+     called "Monday"): read each cut from its script in teleprompter.com,
+     then drop each take at the top of the Video Engine Inbox. Keep their
+     `idea_id` and `closes_on`. Read the board first (`GET /api/workbench
+     --full`) and change only the words.
+  Waiting on Krish: the designs for the story intro, its audio treatment and
+  the outro card (shown to him first, `krish-design`; no cut is finished
+  until he approves one, and then `config/story-intro-outro.json` records
+  it); attaching the Teleprompter connector to both routines;
+  and, if he recorded any take in Descript before it was retired, exporting
+  it and dropping the file in the Inbox. The four Descript projects of 12
+  October stay in his Descript drive; nothing reads them. Everything listed
+  as waiting in the entry below still is, except the Descript questions.
+  Not verified here: the read-back's model calls in the engine's script
+  writer (unit-tested with a stand-in, never called live), and the
+  Teleprompter calls themselves (this session made none).
 
 - 2026-10-12, Monday, about 15:30 UTC: **The Descript lane and the week's
   board are merged, deployed and live**, and every step left by the entry

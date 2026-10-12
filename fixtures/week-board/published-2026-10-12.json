@@ -1,5 +1,5 @@
 {
-  "about": "The week's publish board as published on 12 October 2026 (https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV), reduced to what a rebuild must keep: the doc id of every tick, the steps it writes and the piece each day held. A board republished to that page keeps every tick only while these stay the same (scripts/post-pack/week_board.py).",
+  "about": "The week's publish board as published on 12 October 2026 (https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV), reduced to what a rebuild must keep: the doc id of every tick, the steps it writes and the piece each day held. A board republished to that page keeps every tick only while the tick ids and step keys stay the same (scripts/post-pack/week_board.py). The two Record labels were renamed the same day, from \"(Descript)\" to \"(Teleprompter)\", when Krish retired Descript (\"Descript is permanently gone, teleprompter.com is permanently in, connected via MCP here\"); a saved tick counts by its id and piece, never its label, so every tick carries over.",
   "url": "https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV",
   "week_start": "2026-10-12",
   "tick_ids": [
@@ -27,13 +27,13 @@
   "steps": [
     {
       "key": "record-long",
-      "label": "Record the 3-minute cut (Descript)",
+      "label": "Record the 3-minute cut (Teleprompter)",
       "channel": null,
       "standing": true
     },
     {
       "key": "record-short",
-      "label": "Record the 90-second cut (Descript)",
+      "label": "Record the 90-second cut (Teleprompter)",
       "channel": null,
       "standing": true
     },

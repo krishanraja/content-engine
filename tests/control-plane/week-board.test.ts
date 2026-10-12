@@ -29,7 +29,7 @@ const PUBLISHED = JSON.parse(readFileSync(join(ROOT, 'fixtures', 'week-board', '
 const DAY_PAGES = process.env.WEEK_BOARD_DAY_PAGES || ''
 const MONDAY_PAGE = DAY_PAGES && join(DAY_PAGES, 'pm-monday', 'monday-publish.html')
 const FRIDAY_PAGE = DAY_PAGES && join(DAY_PAGES, 'pm-friday', 'friday-publish.html')
-const SENT = DAY_PAGES && join(DAY_PAGES, 'descript', 'sent.json')
+const SCRIPTS = DAY_PAGES && join(DAY_PAGES, 'teleprompter', 'ids.json')
 const MON = 'f328382d-71b3-41a7-a221-d8615826f12e'
 const WED = '7554ed4a-560b-4365-b266-ea72abeed7ef'
 const FRI = '904658db-4df2-4537-a0ed-ebe93e081db7'
@@ -257,6 +257,9 @@ describe('week_board.py builds the week\'s one publish board', () => {
     expect(conf(page).steps).toEqual(PUBLISHED.steps)
     expect(Object.fromEntries(conf(page).days.map(d => [d.key, d.piece_id]))).toEqual(PUBLISHED.pieces)
     expect(PUBLISHED.tick_ids.length).toBe(20)
+    // Descript was retired on 2026-10-12: the Record ticks keep their ids under their new labels.
+    expect(conf(page).steps.slice(0, 2).map(s => [s.key, s.label])).toEqual([
+      ['record-long', 'Record the 3-minute cut (Teleprompter)'], ['record-short', 'Record the 90-second cut (Teleprompter)']])
   }, 60_000)
 
   it('--previous refuses a rebuild that would turn a day the published board holds into not picked', () => {
@@ -274,7 +277,7 @@ describe('week_board.py builds the week\'s one publish board', () => {
   it.skipIf(!MONDAY_PAGE || !existsSync(MONDAY_PAGE) || !existsSync(FRIDAY_PAGE))('this week\'s board from the real Monday and Friday pages: no id twice, and the published board\'s ticks', () => {
     const out = join(work, 'real', 'week-board.html')
     const args = ['--week', '2026-10-12', '--day', `mon=${MONDAY_PAGE}`, '--day', `fri=${FRIDAY_PAGE}`, '--piece', `mon=${MON}`, '--piece', `fri=${FRI}`, '--out', out]
-    if (existsSync(SENT)) args.push('--descript', SENT)
+    if (existsSync(SCRIPTS)) args.push('--teleprompter', SCRIPTS)
     const result = run(args)
     expect(result.status, result.stdout + result.stderr).toBe(0)
     const page = readFileSync(out, 'utf8')
@@ -285,7 +288,7 @@ describe('week_board.py builds the week\'s one publish board', () => {
     expect(page).not.toContain('Mark done')
     expect(new Set([...page.matchAll(/data-tick="([^"]+)"/g)].map(m => m[1]))).toEqual(new Set(PUBLISHED.tick_ids))
     expect(conf(page).steps).toEqual(PUBLISHED.steps)
-    if (existsSync(SENT)) expect((page.match(/href="https:\/\/web\.descript\.com\//g) || []).length).toBe(8)
+    if (existsSync(SCRIPTS)) expect((page.match(/Read from Teleprompter: /g) || []).length).toBe(4)
   }, 120_000)
 })
 
@@ -340,7 +343,15 @@ page, manifest, warnings = week_board.board(week_board.monday_of('2026-10-12'), 
     expect(PUBLISHED.steps.find(s => s.key === 'substack')!.label).toBe(body.label)
     expect(board.boxes('wed-substack').every(b => b.checked)).toBe(true)
     await board.change(board.boxes('mon-record-long')[0]!, true)
-    expect(store.writes[1]!.body).toMatchObject({ day: 'mon', piece_id: MON, step: 'record-long', channel: null })
+    expect(store.writes[1]!.body).toMatchObject({ day: 'mon', piece_id: MON, step: 'record-long', channel: null, label: 'Record the 3-minute cut (Teleprompter)' })
+  })
+
+  it('a Record tick saved under the old Descript label still counts: a tick is its id and piece, never its label', async () => {
+    const store: Store = { saved: { ...saved(), 'mon-record-short': { done: true, at, day: 'mon', piece_id: MON, step: 'record-short', channel: null, label: 'Record the 90-second cut (Descript)' } }, writes: [], fail: false }
+    const board = mountBoard(page, store)
+    await board.settle()
+    expect(board.boxes('mon-record-short').every(b => b.checked)).toBe(true)
+    expect(board.root.querySelector('[data-tabprog="mon"]')!.textContent).toBe('2 of 7')
   })
 
   it('a write the store refuses is undone on the page and said', async () => {

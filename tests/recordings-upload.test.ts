@@ -123,7 +123,7 @@ describe('the recordings upload on Krish\'s runner machines', () => {
   })
 })
 
-// The Descript lane's stage 1a (settled 2026-10-12): the home computers place
+// The recordings lane's stage 1a (settled 2026-10-12): the home computers place
 // every take on its piece and cut by themselves, at the end of every pass, on
 // either machine. Krish, 2026-10-12: each recording "goes to the right place
 // when recorded".
