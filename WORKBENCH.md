@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, about 17:35 UTC, by a Claude Code session (cloud).
+Last updated: 2026-10-12, about 18:00 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -85,6 +85,35 @@ day on it is at 100% (Friday's reposts go out at the weekend).
   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
 
 Last week's publish board: none (the first board was made on 12 October).
+
+### Resumed 12 October, about 18:00 UTC (session_01YHC9kjnvJEzYDeFDdADLBq)
+
+- Krish's words this session: "Yes I approve that licence track. Feel free
+  to tighten it if I stumbled. For now you just take control of this entire
+  thing, get the videos produced, and have the publish board ready for me to
+  publish absolutely everything, including the videos." Asked whether
+  Monday's two videos may go out without the story intro and end card this
+  once, he picked "Yes, ship Monday without it". Recorded under
+  `exceptions` in `config/story-intro-outro.json`; every other piece still
+  waits for the approved design. Monday ships first; Wednesday and Friday
+  are his for tomorrow ("publish today ASAP and then work on Wednesday and
+  Friday tomorrow").
+- The music track approval cannot be written yet: `music.py approve` refuses
+  NO CURVES with no licence id, licence file, sha256 or loudness. A home
+  computer can measure the file; the Epidemic Sound licence details are his.
+  Until then the cuts go without music.
+- The board (same link) was republished with Wednesday shown in production
+  (working headline from the sources, his two calls) and Monday's blocker.
+  This session's account cannot read the board's tick store or open the
+  Monday and Friday day pages (both made under another account), so the
+  board was edited by hand, not rebuilt with `week_board.py`.
+- Main home computer: on, but reports Drive unavailable. Board item
+  `mon-produce-today` tells Krish to restore Drive and start Codex with
+  "produce Monday's video". After the cuts are recorded, a Claude Code
+  session adds them to Monday's tab and republishes the board.
+- Story intro design: three blind concepts made (stand-off, receipt printer,
+  song track); judges split (stand-off v receipt); a tie-break judge was run.
+  Files were in that session's scratchpad only.
 
 ### "Resume this week's publish board"
 

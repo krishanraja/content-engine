@@ -1,5 +1,5 @@
 {
-  "about": "House rule STORY_INTRO_OUTRO: every video, in both sizes, opens with an animated branded intro made for its own story, carries a designed audio treatment, and closes on an animated outro card made for that piece. Read by .agents/skills/produce-video, which stops before the final render while status is not \"approved\". Nothing here is designed yet: the designs go to Krish first (krish-design), and only his words approve one.",
+  "about": "House rule STORY_INTRO_OUTRO: every video, in both sizes, opens with an animated branded intro made for its own story, carries a designed audio treatment, and closes on an animated outro card made for that piece. Read by .agents/skills/produce-video, which stops before the final render while status is not \"approved\". Nothing here is designed yet: the designs go to Krish first (krish-design), and only his words approve one. A piece listed under \"exceptions\", with Krish's own quoted words, is the one case a cut is finished without them.",
   "status": "awaiting_design",
   "said": {
     "on": "2026-10-12",
@@ -11,5 +11,21 @@
     "outro_card": "a proper animated outro card made for this piece, in the 16:9 long cut and the 9:16 short cut"
   },
   "until_approved": "story intro and outro not designed yet",
-  "approved": null
+  "approved": null,
+  "exceptions": [
+    {
+      "piece_id": "f328382d-71b3-41a7-a221-d8615826f12e",
+      "piece": "Mon 12 Oct follow.the.money - Who gets paid for AI songs",
+      "cuts": [
+        "long",
+        "short"
+      ],
+      "on": "2026-10-12",
+      "by": "Krish",
+      "asked": "Your rule says no video is finished without its own story intro and end card, approved by you. That design can't be approved, built and rendered today. To publish Monday today, may its two videos go out without the story intro and end card, this once?",
+      "words": "Yes, ship Monday without it (Recommended)",
+      "also_said": "For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos.",
+      "means": "Monday's two cuts are rendered, filed and recorded without the story intro and outro card. Every other piece still waits for the approved design."
+    }
+  ]
 }
