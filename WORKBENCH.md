@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, about 17:10 UTC, by a Claude Code session (cloud).
+Last updated: 2026-10-12, about 17:20 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -85,6 +85,89 @@ day on it is at 100% (Friday's reposts go out at the weekend).
   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
 
 Last week's publish board: none (the first board was made on 12 October).
+
+### "Resume this week's publish board"
+
+Krish closed the 12 October session with: "lets just close this session
+out here, I will get another session to pick up exactly from here with the
+prompt "resume this weeks publish board"". The goal he set it, his words:
+"leave me with the final Publish Board with Monday 100% ready to publish
+(post produced video links included), Weds and Fri in production". A
+session given that prompt picks up here, in this order, and ends every reply
+with https://controlcenter.krishraja.com/#/board:
+
+1. **Read where it stands.** The three pieces: `python3
+   scripts/post-pack/making.py <piece> show` for Monday
+   f328382d-71b3-41a7-a221-d8615826f12e, Wednesday
+   7554ed4a-560b-4365-b266-ea72abeed7ef and Friday
+   904658db-4df2-4537-a0ed-ebe93e081db7. The board: `Artifact` read
+   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV, then `week_board.py
+   --show <the saved file>`, then copy his ticks ("The week's ticks" in
+   `make-piece`; Monday's two Record ticks are in its store already, written
+   on 12 October from his words "the two Monday videos are now in Inbox").
+   The board's waiting list: `python3 scripts/engine.py GET /api/workbench
+   --full` (his replies are in `replies`). Wednesday's making session was
+   started on 12 October at about 17:00 UTC by firing the "Make a piece"
+   routine (trig_01BNH3a98CuVV9sGW9b56DNJ) with Wednesday's piece; its
+   session is cse_01FzzvZdb6pALs4La91JrMJb (read it with the remote
+   session tools, `get_session` and `list_events`). Do not start a second
+   one while it is working.
+2. **Monday's story intro and outro design** (the only thing between
+   Monday and its produced videos). Run the process in
+   `docs/plans/2026-10-12-story-intro-outro-brief.md`: three blind concepts,
+   blind judges, one synthesis, shown to Krish cold. The first attempt was
+   stopped unfinished when the 12 October session closed and nothing was
+   kept. Record nothing as approved without his words.
+3. **After his approval**: record it in `config/story-intro-outro.json`,
+   build it in the renderer, then a home computer (Codex, `produce-video`)
+   produces Monday's two cuts from the takes on the record and records them
+   (`making.py --by Codex <piece> video ...`). A cloud session cannot
+   produce them (`docs/ENGINE_SESSION.md`). When the video assets are on the
+   record, put the cuts and their thumbnails on Monday's publish page
+   (https://claude.ai/artifact/QpGeGjaqZwvyXwRnSadqyS), republish it to its
+   link, rebuild the board and republish it to its link (command below).
+   Monday is 100% when the standing five are posted: that is Krish's.
+4. **Friday** waits on his call on the prediction line (board item
+   `friday-record`): keep the dated call, or say the broader bet ("the list
+   disappears, the app picks for you") in the video and leave the exact call
+   to the article; the 12 October session recommended the broader bet. On
+   his answer: rewrite `docs/plans/2026-10-09-draft-script.md` and `-90s.md`,
+   `story_check.py --cut long|short --series mind_the_gap` until ready, two
+   fresh readers until both find nothing that loses them (`making.py <piece>
+   read-back CUT --readers ...`), `making.py <piece> scripts`, then
+   `teleprompter_send.py plan` and `update_script` in place (folder
+   DD28154B-B6D1-47DB-803A-79410D83196D; 3-minute script
+   185F739E-733F-43B9-B5B2-66846CB5EC44, 90-second
+   1165370C-68A6-444E-88D5-A326A131E58C), the record lines, then Friday's
+   page (https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV: the scripts are
+   the `<pre class="txt" id="c13">` and `id="c14"` blocks, the words
+   HTML-escaped in both `data-raw` and the text; replace the chip "Waiting:
+   your call on the prediction line, then recording") and the board. If he
+   has not answered, ask once, with the two options and the recommendation.
+5. **Wednesday**: when its session has made its publish page, rebuild the
+   board with it (that session should do so itself; check it did).
+6. **Only Krish can**: attach the Teleprompter connector to both routines
+   ("Plan the week" trig_016PWevC6fzViu6mHpKSAbHM and "Make a piece"
+   trig_01BNH3a98CuVV9sGW9b56DNJ) and remove Descript from them, in
+   claude.ai. Until he does, a routine session stops at the Teleprompter
+   send and says so. Still open with him: the second sting design
+   (https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH), the NO CURVES
+   licence and levels, whether the 90-second cap counts the intro and outro,
+   and Library Sync on the backup computer.
+
+Rebuild the board with every made day's current page (each saved with an
+`Artifact` read), the board as last read as `--previous`, then republish it
+to its own link, never as a new artifact (the store, with every tick, stays
+with the page):
+
+    CLAUDE_CODE_REMOTE=1 python3 scripts/post-pack/week_board.py --week 2026-10-12 --live \
+      --previous <the board as Artifact read saved it> \
+      --day mon=<Monday's page> --day fri=<Friday's page> [--day wed=<Wednesday's page>] \
+      --out <scratchpad>/week-board.html
+
+With `--live` each cut's Teleprompter script comes from the making record,
+so `--teleprompter` is not needed (it takes a file when used). Check the
+built page for each day's current opening line before publishing.
 
 ## The board: what is waiting on Krish, in progress and done
 
@@ -267,8 +350,12 @@ bring takes back, was retired on 12 October.
     words, the approval and the build land in the renderer, Codex produces
     both cuts and records them (`making.py --by Codex <piece> video ...`),
     then a Claude Code session puts the cuts and thumbnails on Monday's
-    page and republishes the board. This session started that design: three
-    blind concepts, then blind judging, then one synthesis shown to him.
+    page and republishes the board. This session started that design (three
+    blind concepts, then blind judging, then one synthesis shown to him) and
+    stopped it unfinished when Krish closed the session; nothing was kept.
+    The brief and the process are in
+    `docs/plans/2026-10-12-story-intro-outro-brief.md`, and the next steps
+    are under "Resume this week's publish board" above.
   - **Wednesday is in production.** This session fired the "Make a piece"
     routine with Wednesday's piece (7554ed4a-560b-4365-b266-ea72abeed7ef)
     on his "Weds and Fri in production". That routine still has no
