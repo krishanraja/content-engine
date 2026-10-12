@@ -187,11 +187,11 @@ session").
     `lane_sourcing` (the n8n workflow's, whose quiet alarm reads it).
   - CI is green again: Pillow is installed from `requirements-ci.txt` and
     vitest is 5.0.3 (the tinypool advisory). It had been red since 7 October.
-  - Still for Krish: generate the Make a piece routine's token and set
-    `CLAUDE_MAKE_ROUTINE_TOKEN` in Control Center's Vercel project; add the
-    Brandfetch, Firecrawl and Google Drive connectors to both routines (Make
-    a piece, and Plan the week, which next fires Sunday 18 October 06:47 in
-    New York). Board item `make-piece-token`.
+  - Done by Krish on 12 October: the Make a piece token is in Control
+    Center's Vercel project (`CLAUDE_MAKE_ROUTINE_TOKEN`, live since the
+    07:21 UTC redeploy), and both routines (Make a piece; Plan the week, next
+    Sunday 18 October 06:47 in New York) carry Brandfetch, Firecrawl and
+    Google Drive and start with this repository attached.
   - For Codex: archive naming still leaves TikTok out of the default tall
     places (`scripts/quick-edit/archive.py`, `config/archive-naming.cases.json`,
     `build.py`'s tiktok flag). `archive.py` keeps its own clock in
