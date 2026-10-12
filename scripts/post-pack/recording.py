@@ -14,12 +14,21 @@ within about ten minutes; this fetches it.
     python scripts/post-pack/recording.py get NAME             the newest recording with that name
     python scripts/post-pack/recording.py get NAME --out DIR   into DIR (default .cache/recordings)
     python scripts/post-pack/recording.py get NAME --wait 15   wait up to 15 minutes for it to arrive
+    python scripts/post-pack/recording.py get "recordings/<sha256>.mp4"
+    python scripts/post-pack/recording.py get --sha256 <sha256>
+                                                               a take already recorded on a piece, by the
+                                                               path its making record holds
     python scripts/post-pack/recording.py --self-test
 
 NAME is the file's name as it sits in the Inbox, `2026-10-06 take 1.mp4`. An
 exact match wins; otherwise the match ignores case, and then a name without
-its extension matches too. Every download is checked against its size and
-sha256 before it is kept.
+its extension matches too. A piece's making record names each take by the
+engine's copy, `recordings/<sha256>.<ext>` (making.py show), so a session
+that picks up a piece whose takes are already recorded fetches them by that
+path, or by --sha256: the take whose sha256 the listing gives. It is kept
+under its own name, or as <sha256>.<ext> when another take of that name is
+already there. Every download is checked against its size and sha256 before
+it is kept.
 
 It authenticates exactly as scripts/engine.py does, with that file's own code:
 the engine key from ENGINE_OPERATOR_TOKEN, or on Krish's Windows machines from
@@ -54,6 +63,9 @@ EXTENSIONS = {'mp4', 'mov', 'webm', 'mkv', 'm4a', 'wav', 'mp3'}
 UNSAFE = re.compile(r'[<>:"/\\|?*\x00-\x1f\x7f-\x9f]')
 RESERVED = re.compile(r'^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$', re.IGNORECASE)
 DOWNLOAD_PATH = '/storage/v1/object/sign/content-library/recordings/'
+SHA256 = re.compile(r'^[a-f0-9]{64}$')
+# The path a piece's making record holds for a take: the engine's copy.
+RECORDED_PATH = re.compile(r'^recordings/([a-f0-9]{64})(?:\.[A-Za-z0-9]{1,5})?$')
 
 PLAIN = {
     'unauthorized': 'the engine refused the key. Check ENGINE_OPERATOR_TOKEN (WORKBENCH.md, "Pick up from any tool")',
@@ -99,6 +111,22 @@ def find(recordings, name):
         if found:
             return max(found, key=lambda r: r.get('uploaded_at', ''))
     return None
+
+
+def sha_of(name):
+    """The sha256 a take is asked for by: "recordings/<sha256>.<ext>" (a
+    making record's path) or a bare sha256. None for a file name."""
+    text = str(name or '').strip().replace('\\', '/')
+    match = RECORDED_PATH.match(text.lower())
+    if match:
+        return match.group(1)
+    return text.lower() if SHA256.match(text.lower()) else None
+
+
+def find_by_sha(recordings, sha):
+    """The recording whose sha256 is sha (the newest, if it came in twice), or None."""
+    found = [r for r in recordings if str(r.get('sha256') or '').lower() == sha]
+    return max(found, key=lambda r: r.get('uploaded_at', '')) if found else None
 
 
 # ---------------------------------------------------------------- the engine
@@ -155,11 +183,15 @@ def check_download_url(url):
 
 def get(engine_api, name, out_dir, wait_minutes=0, out=print, sleep=time.sleep, now=time.monotonic):
     """Downloads the newest recording called name into out_dir and returns its
-    path. Waits up to wait_minutes for it to appear."""
+    path. name may instead be a take's sha256, or the path a making record
+    holds for it ("recordings/<sha256>.<ext>"): then the take with that
+    sha256 is fetched. Waits up to wait_minutes for it to appear."""
+    wanted = sha_of(name)
     deadline = now() + wait_minutes * 60
     said = False
     while True:
-        recording = find(engine_api.recordings(), name)
+        listing = engine_api.recordings()
+        recording = find_by_sha(listing, wanted) if wanted else find(listing, name)
         if recording or now() >= deadline:
             break
         if not said:
@@ -168,8 +200,9 @@ def get(engine_api, name, out_dir, wait_minutes=0, out=print, sleep=time.sleep, 
             said = True
         sleep(POLL_SECONDS)
     if not recording:
+        called = f'with sha256 {wanted}' if wanted else f'called "{name}"'
         raise RecordingError(
-            f'no recording called "{name}" has reached the engine. Either it is not in the Video Engine Inbox yet, '
+            f'no recording {called} has reached the engine. Either it is not in the Video Engine Inbox yet, '
             f'or the recordings upload on Krish\'s runner machines has not sent it (neither is online, or the '
             f'upload failed): its log on each machine is '
             f'Documents\\MindmakeVideoStudio\\recordings-upload\\recordings-upload.log. '
@@ -186,6 +219,15 @@ def get(engine_api, name, out_dir, wait_minutes=0, out=print, sleep=time.sleep, 
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     target = out_dir / kept
+    if wanted:
+        # By sha256: never over another take that has the same name.
+        beside = out_dir / f'{sha}.{kept.rsplit(".", 1)[-1].lower()}'
+        for place in (target, beside):
+            if place.is_file() and place.stat().st_size == size and sha256_of(place) == sha:
+                out(f'already here  {place}  ({size_text(size)}, sha256 checked)')
+                return place
+        if target.exists():
+            target = beside
     if target.is_file() and target.stat().st_size == size and sha256_of(target) == sha:
         out(f'already here  {target}  ({size_text(size)}, sha256 checked)')
         return target
@@ -327,13 +369,31 @@ def self_test():
                     'https://u:p@store.invalid' + DOWNLOAD_PATH + 'x'):
             refused(f'a download address that is not recordings storage: {url}', lambda url=url: check_download_url(url), 'nothing was fetched')
         check('a safe name', safe_name('2026-10-06 take 1.MP4'), True)
+
+        # A take already recorded on a piece, by the path its making record holds, or by its sha256.
+        first = next(r for r in fake.items if r['bytes'] == len(b'first take'))
+        check('sha_of: a making record\'s path', sha_of(f'recordings/{first["sha256"]}.mp4'), first['sha256'])
+        check('sha_of: a bare sha256, any case, and a Windows slash', (sha_of(first['sha256'].upper()), sha_of(f'recordings\\{first["sha256"]}.MOV')), (first['sha256'], first['sha256']))
+        check('sha_of: a file name is not a sha256', (sha_of('take 1.mp4'), sha_of('recordings/abc.mp4')), (None, None))
+        path = get(fake, f'recordings/{first["sha256"]}.mp4', tmp / 'f', out=quiet)
+        check('get by path: that take, under its own name', (path.name, path.read_bytes()), ('take 1.mp4', b'first take'))
+        newer = get(fake, 'take 1.mp4', tmp / 'g', out=quiet)
+        older = get(fake, first['sha256'], tmp / 'g', out=quiet)
+        check('get by sha256: never over another take of the same name', (newer.read_bytes(), older.name, older.read_bytes()),
+              (b'second take, same name', f'{first["sha256"]}.mp4', b'first take'))
+        said = []
+        get(fake, f'recordings/{first["sha256"]}.mp4', tmp / 'g', out=said.append)
+        check('get by sha256 again: already here, nothing fetched', said[0].startswith('already here') and first['sha256'] in said[0], True)
+        refused('get by sha256: one that has not arrived says so', lambda: get(fake, 'd' * 64, tmp / 'h', out=quiet), 'with sha256 ' + 'd' * 64)
     return count, failures
 
 
 def main():
     ap = argparse.ArgumentParser(description="Fetch Krish's recordings from the Video Engine Inbox into this session.")
     ap.add_argument('command', nargs='?', choices=['list', 'get'], help='list the recordings, or get one')
-    ap.add_argument('name', nargs='?', help='for get: the file name as it sits in the Inbox')
+    ap.add_argument('name', nargs='?', help='for get: the file name as it sits in the Inbox, or "recordings/<sha256>.<ext>" '
+                    'as a making record holds it')
+    ap.add_argument('--sha256', metavar='SHA256', help='for get: the take with this sha256 (recording.py list shows it)')
     ap.add_argument('--out', default=str(DEFAULT_OUT), help='for get: the folder to put it in (default: %(default)s)')
     ap.add_argument('--wait', type=float, default=0, metavar='MINUTES', help='for get: wait this long for it to arrive')
     ap.add_argument('--json', action='store_true', help='for list: print the engine\'s answer as JSON')
@@ -348,8 +408,14 @@ def main():
         return
     if not a.command:
         ap.error('say list, or get NAME')
+    if a.sha256:
+        if a.command != 'get' or a.name:
+            ap.error('--sha256 goes with get, in place of a name')
+        if not SHA256.match(a.sha256.strip().lower()):
+            ap.error('--sha256 is the 64 hex characters recording.py list shows')
+        a.name = a.sha256.strip().lower()
     if a.command == 'get' and not a.name:
-        ap.error('get needs the recording\'s name, as it sits in the Inbox')
+        ap.error('get needs the recording\'s name as it sits in the Inbox, its "recordings/<sha256>.<ext>" path, or --sha256')
     if not 0 <= a.wait <= 240:
         ap.error('--wait is minutes, from 0 to 240')
     try:

@@ -42,6 +42,26 @@ neither runner machine has sent it, or the download broke.
 `scripts/post-pack/README.md`, "Recordings:
 from the Inbox to a cloud session".
 
+**The home computers place each take on its piece and cut by themselves.**
+Krish, 2026-10-12: each recording "goes to the right place when recorded".
+The recordings upload runs `scripts/post-pack/recording_match.py --record
+--board --by "Recordings lane"` at the end of every pass, on either machine;
+each take is stamped with the hash of the script it was read from, so a take
+of words that have changed since stops counting, and every take it is unsure
+of is one question on the board. A take already on a piece is fetched by the
+path its record holds: `recording.py get "recordings/<sha256>.<ext>"`.
+`scripts/post-pack/README.md`, "Placing takes on the runners". Descript is a
+separate lane: Krish said yes on 12 October to each checked script going to
+his Descript drive as a view-access project per cut (his words are in
+`WORKBENCH.md`), and Monday's and Friday's were sent by hand that day, but
+the automatic send and the return of a take recorded in Descript are not
+built yet. Nothing there is ever published, edited or deleted, and no AI
+credits are spent, beyond what his words allow.
+
+**Video production goes through `.agents/skills/produce-video`, and licensed
+music lives only at `MINDMAKE_MUSIC_ROOT` with its ledger
+`config/music-library.json`**; never browse Drive for audio.
+
 **Codex on a Windows home computer:** run `scripts/engine.py` and `git pull` or
 `git push` outside the sandbox, asking Krish to approve. The sandbox runs as a
 separate Windows user that cannot see the engine key or reach the internet.
@@ -188,7 +208,12 @@ refuses. Every other retired name is in `docs/GLOSSARY.md`.
 ## Verification
 
 Run `npm run verify` before pushing. Validate all repo-scoped skills with
-`npm run skills:validate`. For the content engine, `npm run
+`npm run skills:validate`. Codex reads `.agents/skills`; Claude Code reads
+`.claude/skills`, which holds a real copy of the `SKILL.md` of each skill it
+loads (make-piece, plan-week, produce-video), never a link, because git on
+Windows checks a link out as a text file. After editing one of those skills,
+run `python scripts/validate-skills.py --sync-claude`; the validator fails
+while a copy differs from its source. For the content engine, `npm run
 typecheck:control-plane` and `npm run check:control-plane`. Known failures on
 `main` are listed in `docs/STATE.md`; anything else failing is yours to fix.
 

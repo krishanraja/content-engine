@@ -47,7 +47,8 @@ describe('the recordings upload on Krish\'s runner machines', () => {
     for (const line of body.split('\n').filter((l) => /Move-Item|Add-Content|WriteAllText/.test(l))) {
       expect(line).toMatch(/-LiteralPath \$(LogPath|temporary) |WriteAllText\(\$temporary,/)
     }
-    for (const line of body.split('\n').filter((l) => /Save-JsonFile \$/.test(l))) expect(line).toMatch(/Save-JsonFile \$StatePath /)
+    for (const line of body.split('\n').filter((l) => /Save-JsonFile \$/.test(l))) expect(line).toMatch(/Save-JsonFile \$(StatePath|PlacingStatePath) /)
+    expect(upload).toContain("$PlacingStatePath = Join-Path $StateRoot 'placing.json'")
     expect(upload).toContain("$StateRoot = Join-Path $env:USERPROFILE 'Documents\\MindmakeVideoStudio\\recordings-upload'")
   })
 
@@ -122,6 +123,92 @@ describe('the recordings upload on Krish\'s runner machines', () => {
   })
 })
 
+// The Descript lane's stage 1a (settled 2026-10-12): the home computers place
+// every take on its piece and cut by themselves, at the end of every pass, on
+// either machine. Krish, 2026-10-12: each recording "goes to the right place
+// when recorded".
+describe('it places each take on its piece and cut, at the end of every pass', () => {
+  it('runs the matcher with the pinned Python bootstrap-python.ps1 builds, never the bare python', () => {
+    expect(upload).toContain("$StudioPython = Join-Path $env:USERPROFILE 'Documents\\MindmakeVideoStudio\\runtime\\python\\Scripts\\python.exe'")
+    const bootstrap = read('scripts/bootstrap-python.ps1')
+    expect(bootstrap).toContain("Join-Path $env:USERPROFILE 'Documents\\MindmakeVideoStudio\\runtime'")
+    expect(bootstrap).toContain("Join-Path $runtimeRoot 'python'")
+    expect(bootstrap).toContain("Join-Path $venvPath 'Scripts\\python.exe'")
+    expect(bootstrap).toMatch(/import faster_whisper/)
+    expect(code(upload)).not.toMatch(/& python(\.exe)? /)
+    expect(fn('Invoke-StudioPython')).toContain('& $StudioPython @Arguments 2>&1')
+  })
+
+  it('runs exactly recording_match.py --record --board --by "Recordings lane" --json', () => {
+    expect(upload).toContain("$Matcher = Join-Path $RepoRoot 'scripts\\post-pack\\recording_match.py'")
+    expect(upload).toContain("$MatchBy = 'Recordings lane'")
+    expect(fn('Invoke-TakePlacing')).toContain("Invoke-StudioPython @($Matcher, '--record', '--board', '--by', $MatchBy, '--json')")
+  })
+
+  it('runs it only when the engine holds a take no piece claims and the answered book does not hold', () => {
+    const match = read('scripts/post-pack/recording_match.py')
+    expect(match).toContain("CACHE = REPO / '.cache' / 'recordings'")
+    expect(match).toContain("ANSWERED = 'answered.json'")
+    expect(upload).toContain("$AnsweredPath = Join-Path $RepoRoot '.cache\\recordings\\answered.json'")
+    const place = fn('Invoke-TakePlacing')
+    const listed = place.indexOf('Get-EngineTakes')
+    const book = place.indexOf('Read-JsonFile $AnsweredPath')
+    const gate = place.indexOf('if ($due.Count -eq 0) { return $true }')
+    const run = place.indexOf('Invoke-StudioPython @($Matcher')
+    expect(listed).toBeGreaterThan(-1)
+    expect(book).toBeGreaterThan(listed)
+    expect(gate).toBeGreaterThan(book)
+    expect(run).toBeGreaterThan(gate)
+    expect(place).toContain('-not $answered.ContainsKey($_) -and -not $state.claimed.ContainsKey($_)')
+    expect(fn('Get-EngineTakes')).toContain("Invoke-StudioPython @($Lister, 'list', '--json')")
+  })
+
+  it('places after sending, and a problem placing never stops the sending', () => {
+    const pass = fn('Invoke-Pass')
+    const send = pass.indexOf('Sync-Recordings $inbox $base $token')
+    const place = pass.indexOf('try { $placed = Invoke-TakePlacing }')
+    expect(send).toBeGreaterThan(-1)
+    expect(place).toBeGreaterThan(send)
+    expect(pass).toContain('return ($sent -and $placed)')
+  })
+
+  it('in -Check, proves the pinned Python hears (faster_whisper, ffmpeg) and the engine key lists, and places nothing', () => {
+    const test = fn('Test-TakePlacing')
+    // A real decode, never an import alone: an unpinned pair imports and then fails on every take.
+    expect(test).toContain("Invoke-StudioPython @($Matcher, '--check-transcriber')")
+    expect(test).not.toContain("'import faster_whisper'")
+    expect(test).toContain('Get-Command ffmpeg.exe')
+    expect(test).toContain("Invoke-StudioPython @($Lister, 'list', '--json')")
+    expect(test).toContain('scripts\\engine-key.ps1')
+    expect(fn('Invoke-Pass')).toMatch(/if \(\$Check\) \{[\s\S]*?try \{\n\s+Test-TakePlacing/)
+    const place = fn('Invoke-TakePlacing')
+    expect(place.indexOf('if ($Check) {')).toBeGreaterThan(-1)
+    expect(place.indexOf('if ($Check) {')).toBeLessThan(place.indexOf('Invoke-StudioPython @($Matcher'))
+    expect(place.indexOf('Save-JsonFile $PlacingStatePath')).toBeGreaterThan(place.indexOf('Invoke-StudioPython @($Matcher'))
+  })
+
+  it('in -Check, a machine that sends but cannot place yet exits 3, never 1, so the sending is installed', () => {
+    const pass = fn('Invoke-Pass')
+    expect(pass).toContain('$script:PlacingNotReady = $_.Exception.Message')
+    expect(pass).toContain('Sending is not affected.')
+    expect(upload).toContain('if ($Check -and $script:PlacingNotReady -and $script:PassSent) { exit 3 }')
+    expect(installer).toContain('[switch]$RequirePlacing')
+    expect(installer).toMatch(/if \(\$checked -eq 3\) \{[\s\S]*?if \(\$RequirePlacing\) \{ throw[\s\S]*?\} elseif \(\$checked -ne 0\) \{\n\s+throw 'The check failed/)
+  })
+
+  it('a take the matcher left alone as old is looked at again six hours later, never booked for good', () => {
+    expect(upload).toContain('$OldRetryMinutes = 360')
+    expect(fn('Invoke-TakePlacing')).toContain("elseif ($looked[$sha] -eq 'old') { $later[$sha] = $now + 60 * $OldRetryMinutes }")
+    const match = read('scripts/post-pack/recording_match.py')
+    expect(match).toContain('A take left alone as "old" is not booked')
+  })
+
+  it('logs a problem placing once until it changes, and never shows a key', () => {
+    expect(fn('Write-PlacingNote')).toContain('if ($Message -eq $script:LastPlacingNote) { return }')
+    expect(code(upload)).not.toMatch(/ENGINE_OPERATOR_TOKEN|engine-operator-token/)
+  })
+})
+
 describe('its installer, for both runner machines', () => {
   it('runs only from the dedicated recordings-source clone, pulls it, checks, then registers a task every five minutes', () => {
     expect(installer).toContain("$sourceFolder = 'recordings-source'")
@@ -136,6 +223,13 @@ describe('its installer, for both runner machines', () => {
     expect(installer).toContain('-WindowStyle Hidden -File `"$uploadScript`" -Loop -EveryMinutes $EveryMinutes')
     expect(installer).toContain('-LogonType Interactive -RunLevel Limited')
     expect(installer).toContain('-MultipleInstances IgnoreNew')
+  })
+
+  it('says its check proves the engine key and the transcriber, as the upload\'s -Check does', () => {
+    const intro = installer.slice(0, installer.indexOf('#>'))
+    expect(intro).toContain('faster_whisper')
+    expect(intro).toContain('scripts\\engine-key.ps1')
+    expect(intro).toContain('recording_match.py')
   })
 
   it('leaves the runner\'s task, its checkout and the library sync alone', () => {

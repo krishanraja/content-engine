@@ -216,7 +216,13 @@ checked; a file name that says `long`, `3min`, `short` or `90` does the same.
 An entry that says neither is packed with a warning that its length was
 checked against neither cut. `making.py <piece id> scripts long.md short.md`
 checks both and records them on the piece, the long cut first; one script
-alone never passes.
+alone never passes. It records each script's hash and when each cut's words
+last changed, and when a cut's words change while a take of it is on the
+piece, it asks Krish on the board whether to use that take (one item,
+`take-<sha12>`, never reopened once answered). The story check also warns
+about a line saying the script was made with AI (house rule
+NO_AI_DISCLOSURE_LINE, Krish, 2026-10-12: "Eliminate the "I made this with
+AI" entirely - no need, it's like verbal diahorrea").
 
 Only Krish's own words, in the file's `"story_check_override"` (starting
 "Krish"), let a failing script through. The rest of the story check (every
@@ -313,6 +319,28 @@ Before the first install, the engine's migration
 (`supabase/migrations/20261006120000_content_library.sql`) must be applied and
 the engine deployed: the check asks the engine for its library.
 
+## Where a piece's files are
+
+```
+python scripts/post-pack/plan_files.py docs/plans/PLAN/post.json [--files DIR ...] [--json]
+python scripts/post-pack/plan_files.py --self-test
+```
+
+A piece's `post.json` names each script and picture as it was called in the
+working folder it was made in, which is usually on another machine.
+`plan_files.py` finds the same files wherever they are on this machine, in
+one order every tool shares (`scripts/quick-edit/kit.py` asks it): beside
+`post.json`; for a script, the dated draft the repository keeps beside the
+plan (`docs/plans/<date>-draft-script.md` and `-draft-script-90s.md`); the
+pack staged here (`.cache/post-pack/<pack folder>`); each `--files` folder
+(the working folder, or the post's library folder by packed names); then the
+library on this machine (`MINDMAKE_LIBRARY_ROOT`, and on Windows
+`runtime.library_root`). It only reads. Exit 0 when every script and picture
+is found, 1 when any is not (each listed with every place it looked), 2 when
+`post.json` cannot be read. So a piece's scripts are found anywhere the
+repository is, and its pictures once the pack is sent, or with `--files`
+until then.
+
 ## Recordings: from the Inbox to a cloud session
 
 **What.** Every recording Krish drops into the Video Engine Inbox
@@ -358,12 +386,18 @@ python scripts/post-pack/recording.py list
 python scripts/post-pack/recording.py get "2026-10-06 take 1.mp4"
 python scripts/post-pack/recording.py get "2026-10-06 take 1.mp4" --wait 15
 python scripts/post-pack/recording.py get NAME --out DIR
+python scripts/post-pack/recording.py get "recordings/<sha256>.mp4"     # a take already on a piece, by the path its record holds
+python scripts/post-pack/recording.py get --sha256 <sha256>
 ```
 
 `list` prints the recordings, the newest first. `get` downloads the newest
 recording with that name (an exact match first, then ignoring case, then
 without the extension) into `.cache/recordings/` (git ignores it) or `--out`,
-and checks its size and sha256 before keeping it. `--wait MINUTES` polls until
+and checks its size and sha256 before keeping it. A piece's making record
+names each take by the engine's copy, `recordings/<sha256>.<ext>`
+(`python scripts/engine.py GET /api/content-ideas/<id>/making --full` lists
+them), so a session that picks up a piece whose takes are already recorded
+fetches them by that path or by `--sha256`, with no file name. `--wait MINUTES` polls until
 it appears, for a file Krish has just dropped. It authenticates as
 `scripts/engine.py` does. Then edit it with `scripts/quick-edit`.
 
@@ -405,6 +439,100 @@ lets the bucket hold Matroska. Until it is applied an `.mkv` is refused with
 without it. The project's storage upload limit must be at least 500 MiB, as
 for the library.
 
+## Placing takes on the runners
+
+**What.** Each take Krish drops in the Inbox is placed on its piece and cut by
+the home computers themselves, within about fifteen minutes, with nothing
+for him or a session to do. Krish, 2026-10-12: each recording "goes to the
+right place when recorded".
+
+**How.** At the end of every pass, on either machine, the recordings upload
+(`scripts/recordings-upload.ps1`, above) lists the engine's takes and, when
+one is held by no piece and is not in the answered book, runs with the pinned
+Python (`%USERPROFILE%\Documents\MindmakeVideoStudio\runtime\python\Scripts\python.exe`,
+built by `npm run bootstrap:python`):
+
+```
+python scripts/post-pack/recording_match.py --record --board --by "Recordings lane" --json
+```
+
+`recording_match.py` finds the pieces waiting for a recording this week and
+next (Scripts done, Record not), hears the first 45 seconds of each new take
+(faster-whisper; the words are cached by sha256), and decides the piece by
+its words and the cut by its words or its length:
+
+- **Sure**: it records the take on its piece and cut (`making.py recorded`),
+  stamped with `script_sha256`, the hash of the script it was read from
+  (the piece's current words for that cut). Record is done when both cuts
+  have a take of their current words.
+- **Unsure**: one board item, `take-<first 12 of its sha256>`, on Krish,
+  tied to the piece when the piece is known, closing when Record is done.
+  It is asked once for each question (its status, its piece, older words or
+  not), never again because a score or the closest piece shifted. The board
+  is read first and an item is never reopened: one Krish answered, or a
+  session closed, stays closed on both machines.
+- **Old**: a take that arrived before any waiting piece's record began is
+  none of their takes, and is left alone without being heard. It is not
+  booked for good: the upload looks at it again six hours later.
+- **Failed**: a take that cannot be heard (a transcriber that cannot decode,
+  a file ffmpeg cannot read) is one `failed` line, naming the pinned install,
+  never a stop for the others.
+
+**The time rule, cut by cut.** `making.py scripts` keeps when each cut's
+words last changed (`script_check.changed_at`), which moves only when that
+cut's words change; a record from before the hashes counts as changed. A take
+recorded after its own cut's time is a take of the current words and can be
+placed, so a change to the long script never makes a short take of unchanged
+words look old. When a take was recorded is the time its file says it was
+made (its `creation_time`), when that falls after the piece's record began and
+no later than it reached the engine; otherwise when it reached the engine. A
+take recorded after the piece's record began (`started_at`, written once on
+the record's first write and never moved) but before its cut's words last
+changed is heard too: if it matches, it is unsure, "recorded before the
+script last changed", and Krish says whether to use it. A take already on a
+piece whose script's words changed after it no longer counts: `making.py
+show` says so, Record shows "recorded from an older script", and it is asked
+about the same way. `making.py recorded` refuses to stamp such a take as
+current without his words (`--krish-words "Krish, DATE: ..."`), which it keeps
+on the take.
+
+**What it keeps.** The matcher keeps `.cache/recordings/answered.json` in the
+recordings-source copy: every take it asked about, or left alone for a newer
+take of the same cut, so it is never asked twice. A take it downloads only to
+hear its opening is deleted once heard (the words stay cached by sha256), so
+the runners' disks do not fill; a session that fetches a take on purpose
+(`recording.py get`) keeps it. The upload keeps `placing.json` beside its log:
+the takes a piece holds (learnt from the matcher's own answer) and when to
+look again at a take no piece was waiting for (an hour), one that failed (a
+quarter of an hour) or one older than every waiting piece (six hours). Both
+runners may place the same take: recordings merge by path and the board
+item's id is fixed, so nothing is doubled. Each machine's log says what it
+placed and asked (`match:` lines).
+
+**What it needs.** On each runner: the engine key in Credential Manager
+(`scripts/engine-key.ps1`, once), the pinned Python with a faster_whisper
+that decodes sound (`recording_match.py --check-transcriber`), and ffmpeg.
+`install-recordings-upload.ps1` runs the upload with `-Check`. A problem with
+sending (the Inbox, the runner key, the engine) stops the install, naming
+it. A problem only with placing is the check's exit 3: it names it and
+installs anyway, so that machine still sends recordings while the other
+places them (`-RequirePlacing` makes it a stop).
+
+It never writes to the Inbox, never sends anything outside the engine, and
+never produces a video: that is `.agents/skills/produce-video`.
+
+## Scripts into Descript (not built as code)
+
+Krish said yes on 12 October to every checked script going to his Descript
+drive as a view-access project per cut, in a `Mindmake scripts` folder, with
+nothing published, edited or deleted and no AI credits (his words are in
+`WORKBENCH.md`). Monday's and Friday's four projects were made by hand that
+day, each with the script and a "Record here" timeline, linked from the
+piece's Record board item. Two things are not built yet: the automatic send
+when a piece's scripts pass, and bringing back a take he records in
+Descript, which therefore does not reach the engine or the matcher by
+itself. A take dropped in the Inbox is placed by the runners as above.
+
 ## Size and storage
 
 The library's bucket is private, holds only the file types a post, the brand
@@ -420,7 +548,10 @@ signed URLs and never pass through the engine's functions.
 python scripts/post-pack/build.py --self-test
 python scripts/post-pack/send.py --self-test
 python scripts/post-pack/recording.py --self-test
-npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/library-recordings.test.ts tests/control-plane/post-pack.test.ts tests/library-sync.test.ts tests/recordings-upload.test.ts
+python scripts/post-pack/recording_match.py --self-test
+python scripts/post-pack/making.py --self-test
+python scripts/post-pack/plan_files.py --self-test
+npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/library-recordings.test.ts tests/control-plane/post-pack.test.ts tests/control-plane/making.test.ts tests/control-plane/recording-match.test.ts tests/library-sync.test.ts tests/recordings-upload.test.ts
 ```
 
 ## What stays out of the repository

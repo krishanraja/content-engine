@@ -5,9 +5,11 @@ what the video is about and where to post it.
 Krish, 2026-10-06: "Can you ensure all videos are always archived properly in
 folder with date/subject/where I can post it in the folder name?"
 
-    2026-10-05 Who gets paid (post to YouTube, Substack, Shorts, Reels, LinkedIn)
+    2026-10-12 Who gets paid (post to YouTube, Substack, Shorts, Reels, TikTok, LinkedIn)
         Who gets paid - wide 16x9 - YouTube, Substack.mp4
-        Who gets paid - tall 9x16 - Shorts, Reels, LinkedIn.mp4
+        Who gets paid - wide 16x9 - thumbnail.jpg
+        Who gets paid - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4
+        Who gets paid - tall 9x16 - thumbnail.jpg
         share/     the same videos under the 30 MiB chat limit, when there are any
         where-to-post.txt
 
@@ -21,10 +23,16 @@ that exists: a second archive of the same piece gets " (2)" on the end.
 
 File videos you already have:
 
-    python archive.py --subject "Who gets paid" --date 2026-10-05 --tall X.mp4 --wide Y.mp4 [--package package.json] [ROOT]
+    python archive.py --subject "Who gets paid" --date 2026-10-12 --tall X.mp4 --wide Y.mp4 \
+        --tall-thumb thumb-tall-1080x1920.jpg --wide-thumb thumb-wide-1280x720.jpg [--package package.json] [ROOT]
 
-ROOT defaults to MINDMAKE_ARCHIVE_ROOT, the archive the Studio uses. A share
-copy is picked up from a `share` folder beside each video, as make.py writes
+Each cut has its own thumbnail (Krish, 2026-10-12: "I always want a video
+thumbnail for all video sizes produced as an asset every time"), drawn by
+scripts/pages/build.py --thumbs, and filed beside its video.
+
+ROOT defaults to MINDMAKE_ARCHIVE_ROOT, the archive the Studio uses, and on
+Windows, when that is not set, to runtime.archive_root in config/studio.json
+(as music.py finds the music folder). A share copy is picked up from a `share` folder beside each video, as make.py writes
 it. `make.py --archive` does all this after a render. Check the rule with:
 
     python archive.py --self-test
@@ -39,15 +47,21 @@ from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 
 PLACES = ('YouTube', 'Substack', 'Shorts', 'Reels', 'TikTok', 'LinkedIn')
-TALL = ('Shorts', 'Reels', 'LinkedIn')  # where a tall 9:16 video goes
-TALL_WITH_TIKTOK = ('Shorts', 'Reels', 'TikTok', 'LinkedIn')  # with "tiktok": true
+# Where a tall 9:16 video goes. TikTok is one of them every time since Krish,
+# 2026-10-11: "I always want to repost to YouTube and then Shorts, TikTok,
+# and Instagram" (house rule TWO_CUTS).
+TALL = ('Shorts', 'Reels', 'TikTok', 'LinkedIn')
+TALL_WITH_TIKTOK = TALL  # what "tiktok": true asked for before TikTok was always in; kept so old configs still read
 WIDE = ('YouTube', 'Substack')  # where a wide 16:9 video goes
 FOLDER_MAX = 150  # Windows stops a whole path at 260 by default; the Drive archive takes about 70
 COPY_MAX = 999
 TIME_ZONE = 'Europe/London'  # Krish's clock: the day a video was archived is the day in London
 SHAPES = {'tall': 'tall 9x16', 'wide': 'wide 16x9'}
+# Each shape's thumbnail, as scripts/pages/build.py --thumbs draws it.
+THUMB_SIZE = {'tall': (1080, 1920), 'wide': (1280, 720)}
 IN_FULL = {'Shorts': 'Shorts (YouTube Shorts)', 'Reels': 'Reels (Instagram Reels)'}
 CASES = Path(__file__).resolve().parents[2] / 'config' / 'archive-naming.cases.json'
+STUDIO = Path(__file__).resolve().parents[2] / 'config' / 'studio.json'
 
 # Control characters and every kind of space become a plain space, so a line
 # break between two words keeps them apart. Spelled out, here and in the
@@ -165,7 +179,7 @@ def next_folder(day, subject, names, existing):
 
 
 def file_name(subject, shape, names, extension='mp4'):
-    """'Who gets paid - tall 9x16 - Shorts, Reels, LinkedIn.mp4'."""
+    """'Who gets paid - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4'."""
     clean = safe_text(subject)
     if not clean:
         raise ArchiveError('the subject has nothing a folder name can keep')
@@ -175,12 +189,26 @@ def file_name(subject, shape, names, extension='mp4'):
     return f'{clean} - {SHAPES[shape]} - {listed}.{extension}'
 
 
+def thumbnail_name(subject, shape, extension='jpg'):
+    """'Who gets paid - wide 16x9 - thumbnail.jpg': the thumbnail for the
+    video of that shape, named so it sorts beside it."""
+    clean = safe_text(subject)
+    if not clean:
+        raise ArchiveError('the subject has nothing a folder name can keep')
+    if shape not in SHAPES:
+        raise ArchiveError(f'"{shape}" is not a video shape: use tall or wide')
+    if not re.fullmatch(r'[A-Za-z0-9]{1,8}', extension):
+        raise ArchiveError(f'"{extension}" is not a file extension')
+    return f'{clean} - {SHAPES[shape]} - thumbnail.{extension.lower()}'
+
+
 # Filing the videos.
 
 def video_places(shape, post_to=None, tiktok=False):
-    """Where one video goes: the tall one to Shorts, Reels and LinkedIn (and
-    TikTok when asked), the wide one to YouTube and Substack. post_to, when
-    given, is the whole list, and each video keeps the places it suits."""
+    """Where one video goes: the tall one to Shorts, Reels, TikTok and
+    LinkedIn, the wide one to YouTube and Substack. post_to, when given, is
+    the whole list, and each video keeps the places it suits. tiktok is
+    no longer needed: TikTok is always in."""
     if post_to is None:
         return list(TALL_WITH_TIKTOK if tiktok else TALL) if shape == 'tall' else list(WIDE)
     suits = TALL_WITH_TIKTOK if shape == 'tall' else WIDE
@@ -240,6 +268,11 @@ def where_to_post(subject, day, date_from, post_to, files, words, has_share):
     ]
     for item in files:
         lines += [f'- {item["file"]}', f'  Post to {", ".join(IN_FULL.get(p, p) for p in item["post_to"])}.']
+        if item.get('thumbnail'):
+            lines += [f'  Its thumbnail: {item["thumbnail"]}. {THUMBNAIL_USE[item["shape"]]}']
+        else:
+            lines += ['  No thumbnail was filed with it. Draw one with scripts/pages/build.py COVER_FACTS --thumbs '
+                      'and archive the pair again.']
     if has_share:
         lines += ['', 'The share folder holds smaller copies, under the 30 MiB a chat upload allows. '
                       'Post the full-size videos; send the smaller ones when you share a copy in a chat.']
@@ -263,6 +296,15 @@ def where_to_post(subject, day, date_from, post_to, files, words, has_share):
     if substack:
         lines += ['', 'SUBSTACK'] + substack
     return '\n'.join(lines) + '\n'
+
+
+# Which thumbnail each place uses (docs/AMPLIFICATION.md): the wide one on
+# YouTube and the Substack video post, the tall one as the cover on Reels and
+# TikTok.
+THUMBNAIL_USE = {
+    'wide': 'Set it as the YouTube thumbnail and as the Substack video\'s thumbnail.',
+    'tall': 'Set it as the cover on Reels and TikTok.',
+}
 
 
 def plan(subject, shapes, day=None, post_to=None, tiktok=False, now=None):
@@ -294,16 +336,33 @@ def plan(subject, shapes, day=None, post_to=None, tiktok=False, now=None):
 
 
 def archive_videos(root, subject, tall=None, wide=None, day=None, tall_share=None, wide_share=None,
-                   package=None, post_to=None, tiktok=False, now=None, find_shares=True):
+                   package=None, post_to=None, tiktok=False, now=None, find_shares=True,
+                   tall_thumb=None, wide_thumb=None):
     """Copies finished videos into a new folder under root, named by the rule,
-    with their share copies and a where-to-post.txt. A share copy is the one
-    given, or with find_shares the file of the same name in a `share` folder
-    beside the video. Returns what it did."""
+    with their share copies, their thumbnails and a where-to-post.txt. A share
+    copy is the one given, or with find_shares the file of the same name in a
+    `share` folder beside the video. A thumbnail goes beside its video as
+    '<Subject> - wide 16x9 - thumbnail.jpg'. Returns what it did."""
     sources = {shape: Path(src) for shape, src in (('tall', tall), ('wide', wide)) if src}
     planned = plan(subject, list(sources), day, post_to, tiktok, now)
     for src in sources.values():
         if not src.is_file():
             raise ArchiveError(f'{src} is not a file')
+    thumbs = {}
+    for shape, given in (('tall', tall_thumb), ('wide', wide_thumb)):
+        if not given:
+            continue
+        if shape not in sources:
+            raise ArchiveError(f'a thumbnail for the {SHAPES[shape]} video was given, but no {SHAPES[shape]} video')
+        thumb = Path(given)
+        if not thumb.is_file():
+            raise ArchiveError(f'{thumb} is not a file')
+        thumb_name(subject, shape, thumb)  # refuses an extension the rule does not take
+        size, want = image_size(thumb), THUMB_SIZE[shape]
+        if size != want:
+            raise ArchiveError(f'{thumb.name} is {"%d x %d" % size if size else "not a picture this can read"}, not the {want[0]} x {want[1]} '
+                               f'of the {SHAPES[shape]} video\'s thumbnail: give the one scripts/pages/build.py --thumbs drew for that shape')
+        thumbs[shape] = thumb
     shares = {}
     for shape, given in (('tall', tall_share), ('wide', wide_share)):
         if shape not in sources:
@@ -337,8 +396,12 @@ def archive_videos(root, subject, tall=None, wide=None, day=None, tall_share=Non
         copy_new(sources[shape], dest / name)
         if shape in shares:
             copy_new(shares[shape], dest / 'share' / name)
-        files.append({'file': name, 'post_to': item['post_to'], 'from': str(sources[shape]),
-                      **({'share': str(Path('share') / name)} if shape in shares else {})})
+        thumbnail = thumb_name(chosen['subject'], shape, thumbs[shape]) if shape in thumbs else None
+        if thumbnail:
+            copy_new(thumbs[shape], dest / thumbnail)
+        files.append({'file': name, 'shape': shape, 'post_to': item['post_to'], 'from': str(sources[shape]),
+                      **({'share': str(Path('share') / name)} if shape in shares else {}),
+                      **({'thumbnail': thumbnail} if thumbnail else {})})
     heading = re.sub(r'\s+', ' ', subject).strip()
     with open(long_path(dest / 'where-to-post.txt'), 'x', encoding='utf-8', newline='\n') as out:
         out.write(where_to_post(heading, when, planned['date_from'], every, files, words, bool(shares)))
@@ -346,12 +409,65 @@ def archive_videos(root, subject, tall=None, wide=None, day=None, tall_share=Non
             'date_from': planned['date_from'], 'post_to': every, 'files': files}
 
 
-def archive_root(given=None):
-    """The archive folder: the one given, else MINDMAKE_ARCHIVE_ROOT."""
-    root = given or os.environ.get('MINDMAKE_ARCHIVE_ROOT', '').strip()
+def image_size(path):
+    """(width, height) of a JPEG or PNG, read from its header, or None when
+    it is neither or cannot be read. No image library needed."""
+    try:
+        with open(path, 'rb') as f:
+            data = f.read(1 << 20)
+    except OSError:
+        return None
+    if data[:8] == b'\x89PNG\r\n\x1a\n' and data[12:16] == b'IHDR':
+        return int.from_bytes(data[16:20], 'big'), int.from_bytes(data[20:24], 'big')
+    if data[:2] != b'\xff\xd8':
+        return None
+    at = 2
+    while at + 9 < len(data):
+        if data[at] != 0xFF:
+            return None
+        marker = data[at + 1]
+        if marker == 0xFF:
+            at += 1
+            continue
+        if marker in (0xD8, 0x01) or 0xD0 <= marker <= 0xD7:
+            at += 2
+            continue
+        length = int.from_bytes(data[at + 2:at + 4], 'big')
+        if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+            return int.from_bytes(data[at + 7:at + 9], 'big'), int.from_bytes(data[at + 5:at + 7], 'big')
+        at += 2 + length
+    return None
+
+
+def jpeg_header(width, height):
+    """The smallest JPEG this file's image_size reads, for self-tests."""
+    return (b'\xff\xd8\xff\xc0' + (17).to_bytes(2, 'big') + b'\x08' + height.to_bytes(2, 'big') + width.to_bytes(2, 'big')
+            + b'\x03\x01\x22\x00\x02\x11\x01\x03\x11\x01\xff\xd9')
+
+
+def thumb_name(subject, shape, path):
+    """The archive name for a thumbnail file, keeping its own image type."""
+    extension = Path(path).suffix.lstrip('.').lower()
+    if extension not in ('jpg', 'jpeg', 'png'):
+        raise ArchiveError(f'{path} is not a JPEG or PNG picture, which YouTube, Reels and TikTok take as a thumbnail')
+    return thumbnail_name(subject, shape, 'jpg' if extension == 'jpeg' else extension)
+
+
+def archive_root(given=None, env=None, studio=STUDIO, windows=None):
+    """The archive folder: the one given, else MINDMAKE_ARCHIVE_ROOT, else on
+    Windows runtime.archive_root in config/studio.json (the archive the
+    Studio uses, on Drive), as music.py falls back to runtime.music_root."""
+    env = os.environ if env is None else env
+    windows = os.name == 'nt' if windows is None else windows
+    root = given or str(env.get('MINDMAKE_ARCHIVE_ROOT') or '').strip()
+    if not root and windows:
+        try:
+            root = str(json.loads(Path(studio).read_text(encoding='utf-8')).get('runtime', {}).get('archive_root') or '').strip()
+        except (OSError, ValueError):
+            root = ''
     if not root:
         raise ArchiveError('no archive folder: give one, or set MINDMAKE_ARCHIVE_ROOT '
-                           '(the archive the Studio uses, on Drive)')
+                           '(the archive the Studio uses, on Drive; on Windows runtime.archive_root in config/studio.json)')
     return root
 
 
@@ -403,6 +519,12 @@ def self_test(cases_path=CASES):
             refused(f'file: {item["why"]}', run, item['error'])
         else:
             check(f'file: {item["why"]}', run(), item['file'])
+    for item in cases['thumbnails']:
+        run = lambda item=item: thumbnail_name(item['subject'], item['shape'], item.get('extension', 'jpg'))
+        if 'error' in item:
+            refused(f'thumbnail: {item["why"]}', run, item['error'])
+        else:
+            check(f'thumbnail: {item["why"]}', run(), item['file'])
     for item in cases['existing']:
         got = next_folder(item['date'], item['subject'], item['places'], item['existing'])
         check(f'already exists: {item["why"]}', got['name'], item['folder'])
@@ -411,24 +533,62 @@ def self_test(cases_path=CASES):
         check(f'date: {item["why"]}', local_date(instant), item['date'])
         check(f'date without the time zone database: {item["why"]}', london_date(instant), item['date'])
 
-    # The filing itself, on two small stand-in files: a second run makes " (2)"
+    # Where the archive is: given, else the environment, else on Windows the
+    # Studio's runtime.archive_root, as the music folder is found.
+    studio_root = json.loads(STUDIO.read_text(encoding='utf-8'))['runtime']['archive_root']
+    check('the archive given wins', archive_root('X:/given', env={'MINDMAKE_ARCHIVE_ROOT': 'Y:/env'}, windows=True), 'X:/given')
+    check('then MINDMAKE_ARCHIVE_ROOT', archive_root(env={'MINDMAKE_ARCHIVE_ROOT': 'Y:/env'}, windows=True), 'Y:/env')
+    check('then, on Windows, runtime.archive_root in config/studio.json', archive_root(env={}, windows=True), studio_root)
+    check('which is the Video Engine archive on Drive', studio_root.endswith('\\Video Engine\\Archive'), True)
+    refused('off Windows, with nothing set, there is no archive', lambda: archive_root(env={'MINDMAKE_ARCHIVE_ROOT': '  '}, windows=False), 'no archive folder')
+    refused('nor on Windows without the Studio\'s config', lambda: archive_root(env={}, studio='/nowhere/studio.json', windows=True), 'no archive folder')
+
+    # The filing itself, on small stand-in files: a second run makes " (2)"
     # and leaves the first folder and the originals exactly as they were.
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         (tmp / 'out' / 'share').mkdir(parents=True)
         (tmp / 'archive').mkdir()
-        for name, body in (('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'), ('share/v-9x16.mp4', b'tall share')):
+        for name, body in (('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'), ('share/v-9x16.mp4', b'tall share'),
+                           ('thumb-tall-1080x1920.jpg', jpeg_header(1080, 1920)), ('thumb-wide-1280x720.jpg', jpeg_header(1280, 720)),
+                           ('thumb.gif', b'gif'), ('panel.jpg', jpeg_header(1314, 1080))):
             (tmp / 'out' / name).write_bytes(body)
-        first = archive_videos(tmp / 'archive', 'Who gets paid', tall=tmp / 'out' / 'v-9x16.mp4', wide=tmp / 'out' / 'v-16x9.mp4', day='2026-10-05')
-        second = archive_videos(tmp / 'archive', 'Who gets paid', tall=tmp / 'out' / 'v-9x16.mp4', wide=tmp / 'out' / 'v-16x9.mp4', day='2026-10-05')
-        launch = cases['folders'][0]['folder']
-        check('filed folder', first['folder'], launch)
-        check('filed again', second['folder'], f'{launch} (2)')
-        check('filed contents', sorted(str(p.relative_to(tmp / 'archive' / launch)) for p in (tmp / 'archive' / launch).rglob('*')), sorted([
-            'Who gets paid - tall 9x16 - Shorts, Reels, LinkedIn.mp4', 'Who gets paid - wide 16x9 - YouTube, Substack.mp4',
-            'share', str(Path('share') / 'Who gets paid - tall 9x16 - Shorts, Reels, LinkedIn.mp4'), 'where-to-post.txt']))
-        check('filed copy', (tmp / 'archive' / launch / 'share' / 'Who gets paid - tall 9x16 - Shorts, Reels, LinkedIn.mp4').read_bytes(), b'tall share')
+        both = dict(tall=tmp / 'out' / 'v-9x16.mp4', wide=tmp / 'out' / 'v-16x9.mp4', day='2026-10-12')
+        thumbs = dict(tall_thumb=tmp / 'out' / 'thumb-tall-1080x1920.jpg', wide_thumb=tmp / 'out' / 'thumb-wide-1280x720.jpg')
+        first = archive_videos(tmp / 'archive', 'Who gets paid', **both, **thumbs)
+        second = archive_videos(tmp / 'archive', 'Who gets paid', **both)
+        usual = next(item for item in cases['folders'] if item['why'].startswith('Both cuts with the usual places'))['folder']
+        tall_file, wide_file = 'Who gets paid - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4', 'Who gets paid - wide 16x9 - YouTube, Substack.mp4'
+        check('filed folder, TikTok in by default', first['folder'], usual)
+        check('filed again', second['folder'], f'{usual} (2)')
+        check('filed contents, each thumbnail beside its video', sorted(str(p.relative_to(tmp / 'archive' / usual)) for p in (tmp / 'archive' / usual).rglob('*')), sorted([
+            tall_file, wide_file, 'Who gets paid - tall 9x16 - thumbnail.jpg', 'Who gets paid - wide 16x9 - thumbnail.jpg',
+            'share', str(Path('share') / tall_file), 'where-to-post.txt']))
+        check('filed copy', (tmp / 'archive' / usual / 'share' / tall_file).read_bytes(), b'tall share')
+        check('filed thumbnail', (tmp / 'archive' / usual / 'Who gets paid - wide 16x9 - thumbnail.jpg').read_bytes(), jpeg_header(1280, 720))
+        check('a JPEG\'s and a PNG\'s size from the header', (image_size(tmp / 'out' / 'thumb-tall-1080x1920.jpg'), image_size(tmp / 'out' / 'thumb.gif')),
+              ((1080, 1920), None))
+        refused('the wide thumbnail given as the tall one', lambda: archive_videos(tmp / 'archive', 'Who gets paid', **both,
+                tall_thumb=thumbs['wide_thumb']), 'not the 1080 x 1920')
+        refused('a kit panel given as the wide thumbnail', lambda: archive_videos(tmp / 'archive', 'Who gets paid', **both,
+                wide_thumb=tmp / 'out' / 'panel.jpg'), 'not the 1280 x 720')
+        check('what it did names each thumbnail', [(item['shape'], item.get('thumbnail')) for item in first['files']],
+              [('wide', 'Who gets paid - wide 16x9 - thumbnail.jpg'), ('tall', 'Who gets paid - tall 9x16 - thumbnail.jpg')])
+        where = (tmp / 'archive' / usual / 'where-to-post.txt').read_text(encoding='utf-8')
+        for words in (f'- {wide_file}\n  Post to YouTube, Substack.\n  Its thumbnail: Who gets paid - wide 16x9 - thumbnail.jpg. {THUMBNAIL_USE["wide"]}',
+                      f'- {tall_file}\n  Post to Shorts (YouTube Shorts), Reels (Instagram Reels), TikTok, LinkedIn.\n'
+                      f'  Its thumbnail: Who gets paid - tall 9x16 - thumbnail.jpg. {THUMBNAIL_USE["tall"]}'):
+            check(f'where-to-post.txt says {words.splitlines()[0]!r} and its thumbnail', words in where, True)
+        check('a video filed with no thumbnail says so', 'No thumbnail was filed with it.' in (tmp / 'archive' / f'{usual} (2)' / 'where-to-post.txt').read_text(encoding='utf-8'), True)
+        check('no long dashes in where-to-post.txt', [ch for ch in where if ch in '\u2013\u2014'], [])
         check('originals kept', sorted(p.read_bytes() for p in (tmp / 'out').rglob('*.mp4')), [b'tall', b'tall share', b'wide'])
+        refused('a thumbnail with no video of its shape', lambda: archive_videos(tmp / 'archive', 'Who gets paid', wide=both['wide'], day='2026-10-12', **thumbs),
+                'but no tall 9x16 video')
+        refused('a thumbnail that is not a JPEG or PNG', lambda: archive_videos(tmp / 'archive', 'Who gets paid', **both, tall_thumb=tmp / 'out' / 'thumb.gif'),
+                'is not a JPEG or PNG picture')
+        refused('a thumbnail that is missing', lambda: archive_videos(tmp / 'archive', 'Who gets paid', **both, wide_thumb=tmp / 'out' / 'nope.jpg'),
+                'is not a file')
+        check('a refused filing makes no folder', sorted(os.listdir(tmp / 'archive')), [usual, f'{usual} (2)'])
         count += 1
         try:
             copy_new(tmp / 'out' / 'v-16x9.mp4', tmp / 'out' / 'v-9x16.mp4')
@@ -440,7 +600,7 @@ def self_test(cases_path=CASES):
 
 def main():
     ap = argparse.ArgumentParser(description='File finished videos in the archive, named by date, subject and where to post them.')
-    ap.add_argument('root', nargs='?', help='the archive folder (default: MINDMAKE_ARCHIVE_ROOT)')
+    ap.add_argument('root', nargs='?', help='the archive folder (default: MINDMAKE_ARCHIVE_ROOT, else on Windows runtime.archive_root in config/studio.json)')
     ap.add_argument('--subject', help='the piece\'s short title, as it should read: "Who gets paid"')
     ap.add_argument('--date', help='the publish date, YYYY-MM-DD (default: today, London time)')
     ap.add_argument('--tall', help='the tall 9:16 video')
@@ -450,7 +610,9 @@ def main():
     ap.add_argument('--no-share', action='store_true', help='leave out the share copies beside the videos')
     ap.add_argument('--package', help='the engine\'s package answer, for the YouTube and Substack words')
     ap.add_argument('--post-to', help='every place, comma separated, instead of the usual ones: "YouTube, LinkedIn"')
-    ap.add_argument('--tiktok', action='store_true', help='the tall video goes to TikTok too')
+    ap.add_argument('--tall-thumb', help='the tall video\'s thumbnail, thumb-tall-1080x1920.jpg (scripts/pages/build.py --thumbs)')
+    ap.add_argument('--wide-thumb', help='the wide video\'s thumbnail, thumb-wide-1280x720.jpg (scripts/pages/build.py --thumbs)')
+    ap.add_argument('--tiktok', action='store_true', help='kept for old commands: the tall video always goes to TikTok now')
     ap.add_argument('--self-test', action='store_true', help='check the rule against config/archive-naming.cases.json')
     a = ap.parse_args()
     if a.self_test:
@@ -466,10 +628,15 @@ def main():
         post_to = [part for part in a.post_to.split(',') if part.strip()] if a.post_to is not None else None
         result = archive_videos(archive_root(a.root), a.subject, tall=a.tall, wide=a.wide, day=a.date,
                                 tall_share=a.tall_share, wide_share=a.wide_share, package=a.package,
-                                post_to=post_to, tiktok=a.tiktok, find_shares=not a.no_share)
+                                post_to=post_to, tiktok=a.tiktok, find_shares=not a.no_share,
+                                tall_thumb=a.tall_thumb, wide_thumb=a.wide_thumb)
     except ArchiveError as error:
         sys.exit(f'archive: {error}')
     print(json.dumps(result, indent=1))
+    for item in result['files']:
+        if not item.get('thumbnail'):
+            print(f'archive: note: the {SHAPES[item["shape"]]} video was filed with no thumbnail. Every video size gets one: '
+                  f'draw it with scripts/pages/build.py COVER_FACTS --thumbs and archive again with --{item["shape"]}-thumb.', file=sys.stderr)
 
 
 if __name__ == '__main__':

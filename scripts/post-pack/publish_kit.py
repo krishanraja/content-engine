@@ -18,6 +18,8 @@ except title; a step whose words are missing says so instead of guessing):
 
     {"title": "...", "subtitle": "...", "date": "2026-10-09",
      "files": {"long_video": "3 Video/....mp4", "short_video": "3 Video/....mp4",
+               "wide_thumbnail": "3 Video/<Subject> - wide 16x9 - thumbnail.jpg",
+               "tall_thumbnail": "3 Video/<Subject> - tall 9x16 - thumbnail.jpg",
                "cover": "2 Covers and images/substack-cover-3x2.png",
                "substack_copy": "1 Article/substack-copy.html"},
      "youtube_title": "...", "youtube_description": "...",
@@ -28,6 +30,11 @@ except title; a step whose words are missing says so instead of guessing):
 The order (Krish, 2026-10-11): Substack, YouTube, then Shorts, TikTok and
 Instagram, every time; LinkedIn, WhatsApp and Notes after, when he wants
 them. "tiktok_caption" falls back to "short_caption".
+
+Each video size has its own thumbnail (Krish, 2026-10-12: "I always want a
+video thumbnail for all video sizes produced as an asset every time"): the
+wide one on YouTube and the Substack video post, the tall one as the cover on
+Reels and TikTok. The 3:2 cover stays the Substack post's cover image.
 
 Any text may hold {ARTICLE_URL} and {YOUTUBE_URL}. The page has a box for
 each: paste the link once and every Copy button carries it. Nothing here
@@ -55,6 +62,8 @@ def steps(p):
     long_video = f.get('long_video') or '3 Video/ the 3-minute wide (16:9) video'
     short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
     cover = f.get('cover') or '2 Covers and images/substack-cover-3x2.png'
+    wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
+    tall_thumb = f.get('tall_thumbnail') or '3 Video/ the tall (9:16) thumbnail'
     copy_page = f.get('substack_copy') or '1 Article/substack-copy.html'
     q = p.get('comment_question') or ''
     short_caption = p.get('short_caption')
@@ -63,12 +72,13 @@ def steps(p):
             'where': 'Substack', 'tag': 'The home: one post, one email',
             'why': 'One post holds the 3-minute video at the top and the whole article under it, so subscribers get one email '
                    'and every other channel points to one link.',
-            'files': [long_video, cover, copy_page],
+            'files': [long_video, wide_thumb, cover, copy_page],
             'do': [
                 'Create, then choose Video (not Article). Upload the 3-minute wide video.',
+                f'Set the video\'s thumbnail to the wide thumbnail, {wide_thumb}.',
                 'Paste the title and subtitle below.',
                 f'Open {copy_page}, press Copy post, and paste it into the text under the video.',
-                'Use the cover as the thumbnail.',
+                f'In the post\'s settings, use the cover, {cover}, as the cover image.',
                 'Settings, before you publish: YouTube upload on, with the Substack watermark off. '
                 'Shorts clips off and LinkedIn clips off (you post your own 90-second cut in steps 3 to 5).',
                 'Publish and send to everyone. Then paste the post\'s link into the Article link box at the top of this page.',
@@ -78,11 +88,11 @@ def steps(p):
         {
             'where': 'YouTube (the 3-minute video)', 'tag': 'Substack uploads it privately; you finish it',
             'why': 'Substack puts the video on YouTube as private. Swap in the YouTube words, then make it public.',
-            'files': [],
+            'files': [wide_thumb],
             'do': [
                 'In YouTube Studio, open the private video Substack just uploaded.',
                 'Replace the title and description with the ones below. The article link sits at the end of the description, under the read line.',
-                'Set the thumbnail to the cover, make it public, then pin the comment below.',
+                f'Under Thumbnail, upload the wide thumbnail, {wide_thumb}. Make it public, then pin the comment below.',
                 'Paste the video\'s link into the YouTube link box at the top of this page.',
             ],
             'copy': [('Title', p.get('youtube_title')), ('Description', p.get('youtube_description')),
@@ -100,16 +110,18 @@ def steps(p):
             'where': 'TikTok', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
             'why': 'Links in TikTok captions are not clickable, and a clickable link in your profile needs 1,000 followers '
                    'or a business account. The video says makeyourmindup.ai out loud, so the caption only has to name it.',
-            'files': [short_video],
-            'do': ['Upload the tall video, paste the caption below and post.',
+            'files': [short_video, tall_thumb],
+            'do': ['Upload the tall video and paste the caption below.',
+                   f'Edit cover, and set it to the tall thumbnail, {tall_thumb}. Then post.',
                    'Put makeyourmindup.ai in your profile, as a link once TikTok offers the Website field, as text until then.'],
             'copy': [('Caption', p.get('tiktok_caption') or short_caption)],
         },
         {
             'where': 'Instagram Reels', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
             'why': 'Reel captions cannot hold a clickable link, so the caption sends people to the link in your bio.',
-            'files': [short_video],
-            'do': ['New Reel, add the tall video, paste the caption below and share.',
+            'files': [short_video, tall_thumb],
+            'do': ['New Reel, add the tall video and paste the caption below.',
+                   f'Edit cover, add from your camera roll and choose the tall thumbnail, {tall_thumb}. Then share.',
                    'Check the link in your bio is makeyourmindup.ai.'],
             'copy': [('Caption', short_caption)],
         },
@@ -256,10 +268,26 @@ def self_test():
         failures.append('a missing text must say so, never be guessed')
     if '<script>alert' in page({'title': '<script>alert(1)</script>'}):
         failures.append('the title is not escaped')
+    # Which thumbnail each channel uses: the wide one on YouTube and the
+    # Substack video post, the tall one on Reels and TikTok.
+    named = dict(sample, files={'wide_thumbnail': '3 Video/W - wide 16x9 - thumbnail.jpg', 'tall_thumbnail': '3 Video/W - tall 9x16 - thumbnail.jpg'})
+    by_where = {x['where']: x for x in steps(named)}
+    for where, thumb in (('Substack', 'wide'), ('YouTube (the 3-minute video)', 'wide'), ('TikTok', 'tall'), ('Instagram Reels', 'tall')):
+        name = f'3 Video/W - {thumb} {"16x9" if thumb == "wide" else "9x16"} - thumbnail.jpg'
+        step = by_where[where]
+        if name not in step['files'] or not any(name in d for d in step['do']):
+            failures.append(f'{where} must use the {thumb} thumbnail, as a file to upload and in its steps')
+    if any('thumbnail' in d.lower() for d in by_where['YouTube Shorts']['do']):
+        failures.append('YouTube Shorts takes no thumbnail step')
+    if 'Set the thumbnail to the cover' in text or 'Use the cover as the thumbnail' in text:
+        failures.append('the 3:2 cover is no longer the video thumbnail')
+    if 'as the cover image' not in text:
+        failures.append('the cover stays the Substack post\'s cover image')
+    checks = 14
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1
-    print('publish kit self-test passed: 7 checks')
+    print(f'publish kit self-test passed: {checks} checks')
     return 0
 
 

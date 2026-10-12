@@ -3,7 +3,8 @@
   "about": [
     "How a finished video is filed in the archive. Krish, 2026-10-06: \"Can you ensure all videos are always archived properly in folder with date/subject/where I can post it in the folder name?\"",
     "Two programs follow this rule: the Studio (packages/core/src/archive-naming.ts) and quick-edit (scripts/quick-edit/archive.py). Both are tested against every case in this file, so they cannot drift apart. Change the rule here first, then in both programs.",
-    "Folder: YYYY-MM-DD <Subject> (post to <Where>). Files: <Subject> - tall 9x16 - <Where>.mp4 and <Subject> - wide 16x9 - <Where>.mp4.",
+    "Folder: YYYY-MM-DD <Subject> (post to <Where>). Files: <Subject> - tall 9x16 - <Where>.mp4 and <Subject> - wide 16x9 - <Where>.mp4, each with its thumbnail beside it: <Subject> - tall 9x16 - thumbnail.jpg and <Subject> - wide 16x9 - thumbnail.jpg. Krish, 2026-10-12: \"I always want a video thumbnail for all video sizes produced as an asset every time\".",
+    "quick_edit: where quick-edit sends each shape when nothing else is said. Since 2026-10-11 TikTok is one of the tall video's places every time (house rule TWO_CUTS, Krish: \"I always want to repost to YouTube and then Shorts, TikTok, and Instagram\"); tall_with_tiktok, what \"tiktok\": true used to ask for, is now the same list, so older configs still read.",
     "Date: the piece's publish date when known, else the day it was archived on Krish's clock (time_zone).",
     "Where: the places the files are for, always in the order of places, joined with a comma and a space. A name is matched whatever its capitals.",
     "Safe on Windows and Google Drive: every control character and every kind of space becomes a plain space, the characters < > : \" / \\ | ? * are removed, runs of spaces become one, and spaces and dots at either end are removed (dots only at the end).",
@@ -21,11 +22,19 @@
     "linkedin": "LinkedIn"
   },
   "quick_edit": {
-    "tall": ["Shorts", "Reels", "LinkedIn"],
+    "tall": ["Shorts", "Reels", "TikTok", "LinkedIn"],
     "tall_with_tiktok": ["Shorts", "Reels", "TikTok", "LinkedIn"],
     "wide": ["YouTube", "Substack"]
   },
   "folders": [
+    {
+      "why": "Both cuts with the usual places since 2026-10-11: TikTok is always in",
+      "date": "2026-10-12",
+      "subject": "Who gets paid",
+      "places": ["Shorts", "Reels", "TikTok", "LinkedIn", "YouTube", "Substack"],
+      "folder": "2026-10-12 Who gets paid (post to YouTube, Substack, Shorts, Reels, TikTok, LinkedIn)",
+      "subject_used": "Who gets paid"
+    },
     {
       "why": "Launch video Who gets paid, both shapes from quick-edit",
       "date": "2026-10-05",
@@ -155,10 +164,19 @@
     { "why": "Who gets paid, the wide video", "subject": "Who gets paid", "shape": "wide", "places": ["YouTube", "Substack"], "file": "Who gets paid - wide 16x9 - YouTube, Substack.mp4" },
     { "why": "Launch hello, the tall video", "subject": "Launch hello", "shape": "tall", "places": ["Shorts", "Reels", "LinkedIn"], "file": "Launch hello - tall 9x16 - Shorts, Reels, LinkedIn.mp4" },
     { "why": "Launch hello, the wide video", "subject": "Launch hello", "shape": "wide", "places": ["YouTube", "Substack"], "file": "Launch hello - wide 16x9 - YouTube, Substack.mp4" },
-    { "why": "A tall video for TikTok as well, when the config says so", "subject": "Who gets paid", "shape": "tall", "places": ["LinkedIn", "TikTok", "Reels", "Shorts"], "file": "Who gets paid - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4" },
+    { "why": "The tall video with its usual places since 2026-10-11, TikTok always in", "subject": "Who gets paid", "shape": "tall", "places": ["LinkedIn", "TikTok", "Reels", "Shorts"], "file": "Who gets paid - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4" },
     { "why": "One Studio master for one platform", "subject": "Who picks your AI?", "shape": "tall", "places": ["Shorts"], "file": "Who picks your AI - tall 9x16 - Shorts.mp4" },
     { "why": "The same cleaning as the folder", "subject": "Meta's \"Muse\": who pays? ", "shape": "wide", "places": ["youtube"], "file": "Meta's Muse who pays - wide 16x9 - YouTube.mp4" },
     { "why": "A file for nowhere is refused", "subject": "Who gets paid", "shape": "tall", "places": [], "error": "a video needs at least one place to post it" }
+  ],
+  "thumbnails": [
+    { "why": "The wide video's thumbnail, beside it", "subject": "Who gets paid", "shape": "wide", "file": "Who gets paid - wide 16x9 - thumbnail.jpg" },
+    { "why": "The tall video's thumbnail, beside it", "subject": "Who gets paid", "shape": "tall", "file": "Who gets paid - tall 9x16 - thumbnail.jpg" },
+    { "why": "The same cleaning as the folder", "subject": "Meta's \"Muse\": who pays? ", "shape": "wide", "file": "Meta's Muse who pays - wide 16x9 - thumbnail.jpg" },
+    { "why": "A PNG keeps its type, in small letters", "subject": "Who gets paid", "shape": "tall", "extension": "PNG", "file": "Who gets paid - tall 9x16 - thumbnail.png" },
+    { "why": "A subject with nothing a name can keep is refused", "subject": "???", "shape": "wide", "error": "the subject has nothing a folder name can keep" },
+    { "why": "A shape outside the two is refused", "subject": "Who gets paid", "shape": "square", "error": "is not a video shape" },
+    { "why": "An extension that is not one is refused", "subject": "Who gets paid", "shape": "wide", "extension": "j.pg", "error": "is not a file extension" }
   ],
   "existing": [
     {

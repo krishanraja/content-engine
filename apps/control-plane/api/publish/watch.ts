@@ -3,6 +3,7 @@ import { guardCronRoute, guardEngine } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
 import { closeBoardItemsForPiece, itemPiece, type OpenItem } from '../_boardClose.js'
+import { makingStamp } from '../_making.js'
 import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts, unmatchedItem, type Candidate } from '../_publishWatch.js'
 
 // GET (cron, hourly) or POST (an operator session): the publish watcher.
@@ -71,7 +72,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       if (meta.making && typeof meta.making === 'object') {
         const channels = { ...(meta.making.channels || {}) }
         if (!channels.substack) channels.substack = { url: post.url, posted_at: post.posted_at }
-        nextMeta = { ...meta, making: { ...meta.making, channels, updated_at: stamp, by: 'publish watcher' } }
+        nextMeta = { ...meta, making: { ...meta.making, channels, updated_at: makingStamp(meta.making, stamp), by: 'publish watcher' } }
       }
       const write = await supabase.from('content_ideas').update({
         state: 'published',

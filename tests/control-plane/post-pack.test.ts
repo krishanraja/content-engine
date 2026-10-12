@@ -110,6 +110,9 @@ describe('a pack Krish reads', () => {
       { kind: 'video-script', file: 'script.md' },
       { kind: 'video', shape: 'tall', file: 'v-9x16.mp4' },
       { kind: 'video', shape: 'wide', file: 'v-16x9.mp4' },
+      // A thumbnail for every video size, every time (Krish, 2026-10-12).
+      { kind: 'thumbnail', shape: 'tall', file: 'thumbs/thumb-tall-1080x1920.jpg' },
+      { kind: 'thumbnail', shape: 'wide', file: 'thumbs/thumb-wide-1280x720.jpg' },
       { kind: 'captions', file: 'captions.srt' },
       { kind: 'linkedin-post', text: 'One line for LinkedIn.' },
       { kind: 'linkedin-card', file: 'card.png' },
@@ -127,6 +130,16 @@ describe('a pack Krish reads', () => {
     writeFileSync(join(work, 'script.md'), 'Why does this matter? Say this.\n')
     // the house drawer's receipt beside the cover, so the visual gate takes it (visual_gate.py)
     writeFileSync(join(work, 'cover.json'), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, 'cover.png'))).digest('hex'), portrait: true, rows: [] }))
+    // Each thumbnail at its size, with the drawer's receipt (scripts/pages/build.py --thumbs).
+    mkdirSync(join(work, 'thumbs'))
+    const drawn = spawnSync(PY, ['-c', 'import sys; from PIL import Image; Image.new("RGB", (1280, 720)).save(sys.argv[1]); Image.new("RGB", (1080, 1920)).save(sys.argv[2])',
+      join(work, 'thumbs', 'thumb-wide-1280x720.jpg'), join(work, 'thumbs', 'thumb-tall-1080x1920.jpg')], { encoding: 'utf8' })
+    expect(drawn.status, drawn.stderr).toBe(0)
+    const hash = (name: string) => createHash('sha256').update(readFileSync(join(work, 'thumbs', name))).digest('hex')
+    writeFileSync(join(work, 'thumbs', 'thumbs.json'), JSON.stringify({ portrait: true, logos: [], files: [
+      { file: 'thumb-wide-1280x720.jpg', shape: 'wide', sha256: hash('thumb-wide-1280x720.jpg') },
+      { file: 'thumb-tall-1080x1920.jpg', shape: 'tall', sha256: hash('thumb-tall-1080x1920.jpg') },
+    ] }))
     writeFileSync(join(work, 'post.json'), JSON.stringify(post))
     const out = join(work, 'packs')
     mkdirSync(out)
@@ -136,13 +149,15 @@ describe('a pack Krish reads', () => {
     const readme = readFileSync(join(out, folder, 'READ ME.txt'), 'utf8')
     expect(readme.startsWith('Why Koa works\nunder.the.hood, Wednesday 7 October 2026\n')).toBe(true)
     for (const section of ['1 Article', '2 Covers and images', '3 Video', '4 Social']) expect(readme).toContain(`\n${section}\n`)
-    expect(readme).toContain('- Why Koa works - tall 9x16 - Shorts, Reels, LinkedIn.mp4')
+    expect(readme).toContain('- Why Koa works - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4')
     expect(readme).toContain('- Why Koa works - wide 16x9 - YouTube, Substack.mp4')
+    expect(readme).toContain('- Why Koa works - wide 16x9 - thumbnail.jpg\n  The thumbnail for the wide 16:9 video. Set it as the YouTube thumbnail')
+    expect(readme).toContain('- Why Koa works - tall 9x16 - thumbnail.jpg\n  The thumbnail for the tall 9:16 video. Set it as the cover on Reels and TikTok.')
     expect(readme).not.toMatch(/[\u2013\u2014]/)
     expect(notXYConstructions(readme)).toEqual([])
     const manifest = JSON.parse(readFileSync(join(out, folder, '.pack.json'), 'utf8')) as { library_prefix: string; files: Array<{ path: string; purpose: string }> }
     expect(manifest.library_prefix).toBe(`3 Posts/${folder}`)
-    expect(manifest.files).toHaveLength(16)
+    expect(manifest.files).toHaveLength(18)
     for (const item of manifest.files) {
       expect(item.purpose.length).toBeGreaterThan(10)
       expect(item.purpose.length).toBeLessThanOrEqual(200)
@@ -152,7 +167,7 @@ describe('a pack Krish reads', () => {
     const dry = run('send.py', [join(out, folder), '--dry-run'])
     expect(dry.status, dry.stderr).toBe(0)
     expect(dry.stdout).toContain(`3 Posts/${folder}/1 Article/substack-copy.html`)
-    expect(dry.stdout).toContain('16 files would be sent. Nothing was sent.')
+    expect(dry.stdout).toContain('18 files would be sent. Nothing was sent.')
   })
 
   it('send.py without a key says what to do, and sends nothing', () => {

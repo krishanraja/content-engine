@@ -7,8 +7,8 @@ import { closeBoardItemsForPiece } from '../../_boardClose.js'
 // GET  /api/content-ideas/:id/making           where this piece is: the record and its steps
 // POST /api/content-ideas/:id/making  body: a patch (apps/control-plane/api/_making.ts):
 //        { workroom: {url}, publish_manager: {url}, visual_gate: {passed, problems},
-//          script_check: {passed, problems, cuts}, pack: {folder, files, sent_at},
-//          recordings: [{cut, path}], video_assets: [{cut, name, path, url}],
+//          script_check: {passed, problems, cuts, hashes: {long, short}}, pack: {folder, files, sent_at},
+//          recordings: [{cut, path, seconds, script_sha256}], video_assets: [{cut, name, path, url}],
 //          channels: {substack: {url}, youtube: null, ...}, session: {url, by} }
 //
 // Every write lands on content_ideas.meta.making, so Control Center's realtime
@@ -16,6 +16,12 @@ import { closeBoardItemsForPiece } from '../../_boardClose.js'
 // session writes with the engine key (scripts/post-pack/making.py); Krish's
 // cookie writes when he ticks a channel off in Control Center. Nothing here
 // sends, posts, spends or deletes: it records what was done, and by whom.
+//
+// The write is guarded on the row's updated_at (docs/CADENCE.md, "The row
+// changes under a write"): when another write lands between this read and
+// this write, nothing is written and the answer is 409 stale_row, so the
+// caller sends its patch again and it is merged onto the fresh record.
+// making.py retries once by itself.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET', 'POST'])) return
@@ -42,11 +48,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const who = typeof body.by === 'string' && body.by.trim() ? body.by.trim().slice(0, 60) : operatorBearerAllowed(req) ? 'Claude Code' : 'Krish'
   const next = mergeMaking(prev, patch, who, now)
-  const { error: upErr } = await supabase
+  const { data: written, error: upErr } = await supabase
     .from('content_ideas')
     .update({ meta: { ...meta, making: next }, updated_at: now })
     .eq('id', ideaId)
+    .eq('updated_at', (row as any).updated_at)
+    .select('id')
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
+  if (!written?.length) return res.status(409).json({ ok: false, error: 'stale_row', problems: ['the piece changed while this was being written; nothing was written, so send it again'] })
   const after = { ...(row as any), meta: { ...meta, making: next } }
   // A step that lands closes the board items waiting on it (_boardClose.ts).
   const closed = await closeBoardItemsForPiece(after)

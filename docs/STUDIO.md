@@ -100,7 +100,16 @@ You've got the logos as per the website for all of that"
 (`fixtures/feedback/studio-branding-mark-channel-20260926.json`), then
 "placement approved" on the piece 2 storyboard: the mark alone on every
 beat, top left; the full logo and the channel once, at the end, and nothing
-at the opening. That placement still holds. Version 1 kept the Mindmake Studio look
+at the opening. That placement still holds in the Studio. The quick-edit
+cuts changed on 2026-10-12: both of a piece's videos are made with
+`scripts/quick-edit` (the only path that makes 16:9 as well as 9:16), and
+there Krish asked for an opening, "I also want the video to have a 1-2 sec
+animated make your mind up intro visual before my face comes in" (house rule
+INTRO_STING), with licensed music under the video (MUSIC_BED). The Studio
+stays without music or an intro until its audio ledger exists: its contract
+refuses music until then (`packages/contracts/src/v2.ts`), its dialogue
+timeline must start at 0, and `config/music-library.json` is the first
+ledger it could read. Version 1 kept the Mindmake Studio look
 around the new logo and Krish rejected it as rendered on 2026-09-28: "this is
 awful, and embarrasing. it does not even look like the makeyourmindup site in
 design aesthetic." Version 2 replaces its look, in the brand book's own

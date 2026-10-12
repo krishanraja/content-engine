@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, by a Claude Code session (cloud).
+Last updated: 2026-10-12, early afternoon, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -186,12 +186,195 @@ he has just dropped; `list` shows what has arrived). Both runner machines send
 every finished recording to the engine within about ten minutes, whichever is
 online. The Drive connector caps downloads at 10 MB, so never take a recording
 from Drive and never tell Krish one cannot be reached; if it is missing, say
-which step failed. Until he has merged `claude/recordings-lane` and pasted the
-install block on each runner machine, the lane is not running
+which step failed. The lane has run on both machines since 2026-10-06
 (`scripts/post-pack/README.md`, "Recordings: from the Inbox to a cloud
-session").
+session"). Which take is which piece and cut needs no file name:
+`python3 scripts/post-pack/recording_match.py` works it out from his opening
+words, and the `produce-video` skill takes it from there. Once this branch's
+change to the lane is on `main`, the home computers also place each take on
+its piece and cut by themselves at the end of every pass, and a take already
+on a piece is fetched by the path its record holds
+(`recording.py get "recordings/<sha256>.<ext>"`).
 
 ## Latest handoff
+
+- 2026-10-12, Monday, early afternoon: **The second review of the video
+  build is fixed** (two more reviewers; nothing committed, merged, deployed
+  or written outside this repository). In plain words:
+  - **The transcriber**: every fix line now points at the pinned set
+    (`requirements.lock.txt`), because an unpinned install gives a pair that
+    cannot decode sound; `make.py --doctor` and the lane's check decode a
+    second of sound (`scripts/quick-edit/transcriber.py`), and a take that
+    cannot be heard is one failed line, never a crash.
+  - **Captions**: numbers are whole again ("$150,000", "$5.4 billion",
+    "70%"), and a word heard the US way is captioned as the script spells it
+    ("cheque", "neighbour", "licence"); a cue ending on such a word is found.
+  - **The kit stops on what would go out wrong**: a picture no line brings
+    in, or one whose words come out too small to read in that cut's shape,
+    is a `CHECK` (exit 1), passed only with Krish's words (`--allow-missing`,
+    `--allow-small`), which also reach the cut's config so make.py quotes
+    them. Both cuts of a piece ask for music as long as the long cut, not a
+    fixed four minutes. An end card's own sound is never mixed.
+  - **The sting's approval** cannot be dodged by a value defined beside its
+    registration; a global stylesheet there is hashed.
+  - **The making record**: each cut keeps when its own words last changed;
+    a record with no hashes yet counts as changed (so Monday's first hashed
+    check stamps now, not 11 October); the record's start is fixed on its
+    first write; `making.py recorded` refuses a take of older words without
+    Krish's words (`--krish-words`); `making.py scripts` asks him on the
+    board about such a take; a thumbnail is recorded only as the drawer's
+    file of the right shape (`--thumb-file` always); `archive.py` checks the
+    shape too. A new database trigger keeps the newer making record when a
+    slow route (the chat, a revise, the fact check) writes back an old copy
+    of the piece's meta (`supabase/migrations/20261012120000_keep_newer_making.sql`,
+    to apply).
+  - **The lane**: a board question is never reopened once Krish or a
+    session closed it (the board's new `lane_if_new`), and is asked again
+    only when it is a new question, not when a score shifts; a take older
+    than every waiting piece is looked at again after six hours; a take
+    downloaded only to hear it is deleted once heard; the installer installs
+    a machine that sends but cannot place takes yet (its check's exit 3).
+  - **House rules**: `VOICE_ON_CAMERA` no longer asks for a "made with
+    Claude" line; his ruling is its own rule, `NO_AI_DISCLOSURE_LINE`, read
+    by the writers, the draft judges and the final pass, and the story check
+    and the Studio warn on such a line.
+  - **Step 8 of the skill**: a thumbnail's logos are copied from
+    `thumbs.json`'s new `companies`; the gate also reads a drawn row of two
+    companies as both.
+  Not done, because each is a write outside this repository: rebuilding and
+  sending Monday's and Friday's packs (their pictures still live only in
+  this cloud session's scratch: the first "Next" line below), the board
+  item saying so, rebuilding the publish page from today's drafts before
+  Krish records, and applying the migration.
+
+- 2026-10-12, Monday, late morning: **The video build's review is fixed, the
+  home computers will place takes by themselves, and Monday's and Friday's
+  scripts are in Descript.** Two reviewers checked the video build (the
+  produce-video skill and its tools); every finding is addressed on this
+  branch (the library send and the show-first guard by the skill's own
+  steps, the rest in code), uncommitted unless named below, nothing merged
+  or deployed. In plain words:
+  - **Committed today**: the matcher (`recording_match.py`), the sting, the
+    music bed and the loudness finish, a thumbnail per size, `kit.py`, the
+    `produce-video` skill, and Krish's Monday picks (the 3-minute script is
+    460 words, the "I made this with Claude's help" line cut; Friday's
+    3-minute is 457 words with the same line cut, as he ruled for every
+    script: "correct, make that a rule").
+  - **The kit finds a piece's files on any machine** (`kit.py`, new
+    `scripts/post-pack/plan_files.py`): the scripts come from the dated
+    drafts in `docs/plans/`, so Monday's no longer stops; a picture it cannot
+    find is a `CHECK` (exit 1), passed only with Krish's own words in
+    `--allow-missing`.
+  - **The mix**: a clip named in a config opens a cut only if it is the
+    approved sting or Krish's words say so, and its own sound is never used;
+    the sting's approval hash is the same on Windows and Linux and covers
+    everything the sting imports; each series gets its own colour; both cuts
+    of a piece get one music track; `make.py --doctor` fails without
+    faster-whisper; the archive folder falls back to `config/studio.json`;
+    a cut with no pictures warns before rendering.
+  - **The making record** keeps the hash of each script's words, keeps the
+    time the scripts were checked when the words have not changed, and
+    stamps each take with the script it was read from, so a take of older
+    words stops counting. The engine route refuses a write that lost a race
+    (409); Control Center shows "recorded from an older script". Thumbnails
+    are recorded only with the drawn file (`--thumb-file`) or its link.
+  - **Takes are placed by the home computers** (Descript lane, stage 1a):
+    `scripts/recordings-upload.ps1` now runs `recording_match.py --record
+    --board --by "Recordings lane" --json` with the pinned Python at the end
+    of every pass, on either machine, when the engine holds a take no piece
+    claims and the answered book does not hold; each unsure take is one
+    board item. `install-recordings-upload.ps1`'s check now also proves the
+    engine key, faster-whisper and ffmpeg. It starts only once this is on
+    `main` (the lane pulls `main`).
+  - **Thumbnails draw on any checkout**: Monday's and Friday's logos are SVG
+    in `docs/plans/<plan>/logos/`, so no `--assets`; both pieces' thumbnails
+    were drawn here, on plain ink (the pile-up background is a picture git
+    does not keep), and pass the visual gate's thumbnail checks.
+  - **The skills**: `produce-video` stops when a piece's Scripts step is not
+    done, fetches recorded takes by sha256, sets `MAKING_BY`, records a
+    thumbnail only when one was drawn, sends cuts to the library only with
+    both thumbnails and the gate passing for videos and thumbnails, and
+    never writes the Visual gate or Pack steps (`make-piece`'s publish board
+    step does; `docs/CADENCE.md` agrees). `.claude/skills` now holds real
+    copies, so Claude Code on Windows loads them; `npm run skills:validate`
+    fails when a copy differs (`python scripts/validate-skills.py
+    --sync-claude` refreshes them).
+  - **House rules**: INTRO_STING, MUSIC_BED and THUMBNAIL_EVERY_SIZE moved to
+    a new production stage, so the script writer and the channel cuts no
+    longer read LUFS figures or a sting that does not exist; INTRO_STING now
+    says no design is approved and quotes his rejection.
+  - **Descript, by hand**: Krish said, of each checked script going to his
+    Descript drive ("Krish Raja's Drive") as a view-access project per cut in
+    `Mindmake scripts`, about 5 media minutes a piece, nothing published,
+    edited or deleted, no AI credits: "yes ... go, upload". Of the takes: "a
+    standing yes for the video skill to make a private copy, never public,
+    of each take recorded in a Record here timeline, so it can download it".
+    Of the teleprompter: "fine, no issue with copy paste". Monday's and
+    Friday's four projects were made at 10:31 UTC, each with the script and
+    a "Record here" timeline; the board items `monday-record` and
+    `friday-record` link them. **Not built**: the automatic send, and
+    bringing a take recorded in Descript back to the engine, so such a take
+    does not reach the matcher or the record by itself yet. The making
+    record has no Descript field yet.
+  Waiting on Krish:
+  - **The sting.** He turned down the first design: "it's ok, it's a bit
+    boring and colourless and vanilla - and just what Powerpoint would do in
+    2008". Other designs drafted today sit only in this cloud session's
+    `.cache/sting` and use PNG pictures, which git does not keep and
+    `intro.py` refuses; his reaction decides which one is rebuilt in
+    `apps/renderer` with tracked assets, previewed in all three series and
+    both shapes, and approved in his words. Until then every cut has no sting.
+  - **Descript, still open**: whether Codex and his other Claude account
+    reach the same Descript drive; which Descript plan he is on (media
+    minutes); adding the Descript connector to the "Make a piece" routine
+    (he does it in the routines page; a session cannot); and running
+    `scripts/engine-key.ps1` on any runner that lacks the engine key, so
+    both machines can place takes.
+  - **Music**: NO CURVES needs its licence certificate beside it in
+    `00_Brand-Assets > 07_Music`, then `music.py add` on a home computer and
+    his approval in words; the levels are approved by ear once he has heard
+    a cut with music. Until then cuts have his voice only.
+  - **The 90-second question**: does the short cut's 90 seconds include the
+    1.5 second sting and the 4 second end card? Until he says, the check is
+    on his speech alone (`TALL_CAP` in `make.py`), and the report always
+    shows the whole length beside it. A 219-word script runs about 88
+    seconds of speech, about 93 with both.
+  - **Library Sync**, if he works on the backup machine: it runs only where
+    it is installed; he moves it.
+  - `Video Engine > Archive` in Drive, if it is missing (the connector saw
+    none on 12 October).
+  Next, for the session that picks this up:
+  - **Monday's and Friday's pictures exist only in this cloud session's
+    scratch folder**, and both packs were built on 11 October from the old
+    scripts and never sent. Before this session ends, a session holding
+    them should rebuild each pack with the current drafts (`build.py
+    --replace`) and send it (`send.py`, Krish's standing instruction), or
+    the pictures are lost and a home computer's kit stops with a `CHECK` for
+    every picture.
+  - Commit this work, merge and deploy the engine before anything relies on
+    the hashes (the old route drops them harmlessly), apply
+    `supabase/migrations/20261012120000_keep_newer_making.sql` through the
+    Supabase MCP, and deploy Control Center's mirror with it. Then run
+    `making.py <id> scripts` for Monday and Friday so their records hold the
+    hashes of today's words; with no hashes on their records yet, that check
+    is stamped now, so a take of the old words recorded before it is asked
+    about, not placed.
+  - Before Krish records: rebuild the publish page and the pack from today's
+    drafts (both still hold the line he cut), and put one board item on him
+    saying the pictures must reach the library first (the line above).
+  - Run `install-recordings-upload.ps1` once more on each runner to prove the
+    engine key and faster-whisper there (its check names what is missing).
+  - Build the Descript return (a take in a "Record here" timeline, privately
+    published under his standing yes, onto its piece and cut), then the
+    automatic send; `produce-video` says plainly until then that it cannot
+    fetch a Descript take.
+  - Smaller: the visual gate has no way to check only videos and
+    thumbnails, so the skill reads its lines by kind; `recording_match`
+    looks for scripts in a different order from `plan_files.py` (the same
+    files today). Friday's long cut cues 3 of its 7 pictures and Monday's
+    tall panels are under the 39 pixel floor: the kit now stops on both
+    (a `CHECK`), so those cuts need their cues added by hand, panels drawn
+    for video, or Krish's words.
 
 - 2026-10-12, Monday: **The social profiles are rebuilt, and their kit
   lives here now.** Over 11 and 12 October a Claude session in Cowork rebuilt

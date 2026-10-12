@@ -27,12 +27,14 @@ system knows about the folder structure and where stuff's supposed to go").
 ## Never move or rename
 
 These are bound by path. Renaming or moving them, or any folder above them
-(`Ventures`, `Active`, `makeyourmindup`), breaks a running system until every
-path below and the environment on both home computers are changed with it.
+(`Ventures`, `Active`, `makeyourmindup`, `00_Brand-Assets`), breaks a running
+system until every path below and the environment on both home computers are
+changed with it.
 
 | Folder | Who reads it | What goes in it |
 |---|---|---|
-| `makeyourmindup > Video Engine` (`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine`) | the Studio runner on both home computers (`MINDMAKE_DRIVE_ROOT`, `config/studio.json`, `packages/core/src/paths.ts`, `docs/OPERATIONS.md`) | `Inbox`: new recordings, and only there. `Archive`: finished videos, one folder per video named by date, subject and where to post it (the Studio and `scripts/quick-edit` file them). `Inspiration`: reference clips (`inspo/README.md`). Never add anything else to the root. |
+| `makeyourmindup > Video Engine` (`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine`) | the Studio runner on both home computers (`MINDMAKE_DRIVE_ROOT`, `config/studio.json`, `packages/core/src/paths.ts`, `docs/OPERATIONS.md`) | `Inbox`: new recordings, and only there: one file per cut, at the top (the upload lane never reads a subfolder), never music (the lane would send audio as a recording). `Archive`: finished videos and their thumbnails, one folder per piece named by date, subject and where to post it (the Studio and `scripts/quick-edit` file them). It must exist: `archive.py` and `make.py --archive` stop without it, and the Drive connector found no `Archive` there on 12 October (not yet checked on H:). If it is missing, Krish creates it; an agent never does. `Inspiration`: reference clips (`inspo/README.md`). Never add anything else to the root. |
+| `makeyourmindup > 00_Brand-Assets > 07_Music` (`H:\My Drive\Ventures\Active\makeyourmindup\00_Brand-Assets\07_Music`, Drive folder `1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK`) | `scripts/quick-edit` on both home computers (`MINDMAKE_MUSIC_ROOT`, `runtime.music_root` in `config/studio.json`, `root_default_windows` in `config/music-library.json`). Krish, 2026-10-12: "thats where it will live and the video runners need to know this" | Licensed music tracks, each with its licence certificate beside it. A track is used only once it is in the ledger `config/music-library.json` and approved by Krish; nothing browses the folder for audio. Audio is never committed. |
 | `makeyourmindup` (`H:\My Drive\Ventures\Active\makeyourmindup`) | the library sync on the home computer that files each post's assets (`MINDMAKE_LIBRARY_ROOT`, `runtime.library_root`), and the recordings upload on both, which reads `Video Engine > Inbox` | `1 Brand kit (permanent)`, `2 Channel art (permanent)`, `3 Posts` with one folder per post; the sync writes only under these three. Also `Video Engine`, `Video Engine brief and architecture (reference only)` and `00_Brand-Assets`. Its own `READ ME FIRST.txt` describes the inside. |
 
 The runner's KeePass file, elsewhere on the H: drive, is bound by path too.
@@ -50,7 +52,8 @@ The first three are in `04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`).
 
 ## Where a new thing goes
 
-- A raw recording: `makeyourmindup > Video Engine > Inbox`. It reaches the engine within about five minutes, from whichever home computer is on, and a cloud session gets it with `python scripts/post-pack/recording.py get NAME`.
+- A raw recording: the top of `makeyourmindup > Video Engine > Inbox`, one file per cut, any name. It reaches the engine within about ten minutes, from whichever home computer is on, and that machine then places it on its piece and cut by itself (`scripts/post-pack/recording_match.py`, run by the recordings upload), asking Krish on the board only when it is unsure. `python scripts/post-pack/recording.py get NAME` fetches it, or `get "recordings/<sha256>.<ext>"` once it is on a piece. Nothing in the Inbox is moved or renamed by any of it.
+- A licensed music track: `makeyourmindup > 00_Brand-Assets > 07_Music`, with its licence certificate beside it in the same folder (no subfolder). Then a session on a home computer adds it to the ledger with `scripts/quick-edit/music.py add`, and it is used once Krish approves it in words. Never the Inbox.
 - A finished Make Your Mind Up post and its pieces: `makeyourmindup > 3 Posts`, in the post's own folder.
 - A one-off main-channel script: `One Off Content Ideas`, next number, and a line in `00 Index`.
 - Sales material: `Sales Materials`.

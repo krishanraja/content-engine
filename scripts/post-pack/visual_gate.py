@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""The visual gate: a post's pictures and videos are not packed unless they
-carry the real logos of every company the piece names, show real evidence
-when the piece is about volume, and the cover came from the house drawer.
+"""The visual gate: a post's pictures, videos and thumbnails are not packed
+unless they carry the real logos of every company the piece names, show real
+evidence when the piece is about volume, and the cover and the thumbnails
+came from the house drawer.
 
 Krish, 2026-10-10, of Friday's first cover and pictures: "we need to add all
 the logos of the businesses that are related to what we are talking about.
@@ -19,12 +20,13 @@ through. What a rule cannot check (whether the picture is beautiful) is the
 house rules BOLD, VISUAL_EXPLAINS and VISUAL_EVIDENCE, which every writer,
 judge and the Studio read.
 
-The three checks:
+The four checks:
 
   1. LOGOS. Every company in config/logo-registry.json that the fact-checked
      body names (and is not a mentions-only source) appears in the "logos"
      of at least one packed picture and of the cover, and of every packed
-     video (declared: what the edit put on screen).
+     video (declared: what the edit put on screen) and every packed
+     thumbnail, as a video's.
   2. EVIDENCE. When the body is about volume (it says "so many", "every few
      months", "keeps growing", "more than a dozen", "flood", "pile", "one
      after another" or the like), the pack holds a picture of kind
@@ -34,6 +36,13 @@ The three checks:
      cover.json receipt matches the PNG byte for byte, it carries Krish's
      portrait, and when the piece names companies it carries at least one
      logo row.
+  4. THUMBNAILS. Each video thumbnail (Krish, 2026-10-12: "I always want a
+     video thumbnail for all video sizes produced as an asset every time")
+     was drawn by scripts/pages/build.py --thumbs: its thumbs.json receipt
+     holds a file of its shape that matches it byte for byte, it carries
+     Krish's portrait, and every logo its entry declares is one the drawer
+     drew, in a row or the strip. So a thumbnail cannot claim a logo it
+     does not show.
 
     python visual_gate.py post.json            # explain what would pass or fail
     python visual_gate.py --self-test
@@ -76,6 +85,33 @@ def about_volume(body):
     return bool(VOLUME.search(body))
 
 
+def drawn(declared, receipt_logos, reg):
+    """True when a declared logo is among those the drawer drew: the
+    receipt's row and strip names hold the company's name, or another of its
+    names from the registry. A row may show two companies ("Warner Music
+    Group and BMG")."""
+    names = next((c['names'] for c in reg if declared.lower() in (n.lower() for n in c['names'])), [declared])
+    text = ' | '.join(str(x) for x in receipt_logos or [])
+    return any(re.search(r'(?<!\w)' + re.escape(n) + r'(?!\w)', text, re.I) for n in names)
+
+
+def companies_in(declared, reg):
+    """The registry companies a declared logo entry names, by any of their
+    names: a drawn row may name two ("Warner Music Group and BMG")."""
+    text = str(declared)
+    return [c for c in reg if any(re.search(r'(?<!\w)' + re.escape(n) + r'(?!\w)', text, re.I) for n in c['names'])]
+
+
+def declared_drawn(declared, receipt_logos, reg):
+    """True when a declared entry was drawn: every company it names is among
+    the drawer's rows and strip (drawn), or, naming none the registry knows,
+    its own text is."""
+    found = companies_in(declared, reg)
+    if found:
+        return all(drawn(c['name'], receipt_logos, reg) for c in found)
+    return drawn(declared, receipt_logos, reg)
+
+
 def problems(post, planned, body, base, reg=None):
     """Plain-words reasons the pack fails the gate, or [] when it passes.
     `planned` is build.py's plan: dicts with 'kind' (as given), 'logos',
@@ -85,6 +121,7 @@ def problems(post, planned, body, base, reg=None):
     names = named(body or '', reg)
     pictures = [p for p in planned if p.get('kind') in ('image', 'share-card', 'cover', 'linkedin-card')]
     videos = [p for p in planned if p.get('kind') == 'video']
+    thumbs = [p for p in planned if p.get('kind') == 'thumbnail']
     cover = next((p for p in planned if p.get('kind') == 'cover'), None)
 
     # 1. LOGOS
@@ -96,11 +133,19 @@ def problems(post, planned, body, base, reg=None):
         if missing:
             found.append(f'the piece names {", ".join(names)} but no picture carries the real logo of {", ".join(missing)} '
                          '(give each picture a "logos" list of the companies it shows, from Brandfetch; config/logo-registry.json)')
+        # A video's or a thumbnail's declared logos may name a drawn row of two
+        # companies ("Warner Music Group and BMG", as thumbs.json lists rows):
+        # each company counts by any of its names (drawn), as the receipt does.
         for v in videos:
-            vm = [n for n in names if n not in set(v.get('logos') or [])]
+            vm = [n for n in names if not drawn(n, v.get('logos'), reg)]
             if vm:
                 found.append(f'the video {Path(str(v.get("source", ""))).name} declares no logo for {", ".join(vm)}: put the real logos on '
                              'screen in the edit and list them in its "logos"')
+        for t in thumbs:
+            tm = [n for n in names if not drawn(n, t.get('logos'), reg)]
+            if tm:
+                found.append(f'the {t.get("shape", "")} thumbnail {Path(str(t.get("source", ""))).name} declares no logo for {", ".join(tm)}: '
+                             'draw it with their logos (rows, or "strip", in the "thumbs" cover facts) and list them in its "logos"')
         if cover is not None and not set(cover.get('logos') or []) & set(names):
             found.append('the cover shows none of the companies the piece names: give it logo rows (the "cover" page facts) and list them in its "logos"')
     # 2. EVIDENCE
@@ -137,6 +182,32 @@ def problems(post, planned, body, base, reg=None):
                 found.append('the cover has no portrait: draw it with "portrait": true (house rule LOGOS_AND_FACE)')
             if names and not r.get('rows'):
                 found.append('the cover has no logo rows although the piece names companies: add "rows" with each real logo')
+    # 4. THUMBNAILS
+    for t in thumbs:
+        src = Path(str(t.get('source', '')))
+        shape = t.get('shape', '')
+        receipt = src.with_name('thumbs.json')
+        if not receipt.is_file():
+            found.append(f'the {shape} thumbnail {src.name} was not drawn by the house drawer (no thumbs.json beside it): draw it with '
+                         'scripts/pages/build.py COVER_FACTS --thumbs, so it carries the wordmark, Krish and the real logos')
+            continue
+        try:
+            r = json.loads(receipt.read_text(encoding='utf-8'))
+        except (OSError, ValueError):
+            r = {}
+        digest = hashlib.sha256(src.read_bytes()).hexdigest() if src.is_file() else None
+        made = next((f for f in r.get('files') or [] if isinstance(f, dict) and f.get('sha256') == digest), None)
+        if made is None:
+            found.append(f'thumbs.json does not match {src.name}: the thumbnail was changed after the drawer made it. Draw it again')
+            continue
+        if made.get('shape') != shape:
+            found.append(f'{src.name} is the drawer\'s {made.get("shape")} thumbnail, packed as the {shape} one')
+        if not r.get('portrait'):
+            found.append(f'the {shape} thumbnail has no portrait: draw it with "portrait": true (house rule LOGOS_AND_FACE)')
+        shown = [l for l in (t.get('logos') or []) if not declared_drawn(l, r.get('logos'), reg)]
+        if shown:
+            found.append(f'the {shape} thumbnail declares the logo of {", ".join(shown)}, but the drawer drew no row or strip for it: '
+                         'add it to the "thumbs" cover facts and draw it again')
     return found
 
 
@@ -155,7 +226,7 @@ def explain(post_path):
         for f in found:
             print(f'  - {f}')
         return 1
-    print('ready: logos, evidence and cover all pass')
+    print('ready: logos, evidence, cover and thumbnails all pass')
     return 0
 
 
@@ -205,6 +276,41 @@ def self_test():
         check('a cover edited after the drawer fails', any('does not match' in x for x in problems({}, full, body, t, reg)), True)
         (t / 'cover.json').unlink()
         check('a hand-made cover fails', any('not drawn by the house drawer' in x for x in problems({}, full, body, t, reg)), True)
+        # 4. THUMBNAILS: drawn by the house drawer, with the face and every logo they declare.
+        (t / 'cover.json').write_text(json.dumps(good_receipt))
+        (t / 'thumbs').mkdir()
+        wide_jpg, tall_jpg = b'\xff\xd8 wide', b'\xff\xd8 tall'
+        (t / 'thumbs' / 'thumb-wide-1280x720.jpg').write_bytes(wide_jpg)
+        (t / 'thumbs' / 'thumb-tall-1080x1920.jpg').write_bytes(tall_jpg)
+        thumbs_receipt = {'portrait': True, 'logos': ['OpenAI', 'Claude by Anthropic'],
+                          'files': [{'file': 'thumb-wide-1280x720.jpg', 'shape': 'wide', 'sha256': hashlib.sha256(wide_jpg).hexdigest()},
+                                    {'file': 'thumb-tall-1080x1920.jpg', 'shape': 'tall', 'sha256': hashlib.sha256(tall_jpg).hexdigest()}]}
+        (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt))
+        thumbs = [{'kind': 'thumbnail', 'shape': 'wide', 'source': t / 'thumbs' / 'thumb-wide-1280x720.jpg', 'logos': ['OpenAI', 'Anthropic'], 'path': '3/w.jpg'},
+                  {'kind': 'thumbnail', 'shape': 'tall', 'source': t / 'thumbs' / 'thumb-tall-1080x1920.jpg', 'logos': ['OpenAI', 'Anthropic'], 'path': '3/t.jpg'}]
+        check('a full pack with both thumbnails passes', problems({}, full + thumbs, body, t, reg), [])
+        check('a row may name a company by another of its names', drawn('Anthropic', ['Claude by Anthropic'], reg), True)
+        # The second reviewer's case (2026-10-12): logos copied from thumbs.json,
+        # where a row names two companies, failed the thumbnail name check.
+        rows = ['OpenAI and Anthropic']
+        check('a thumbnail or video whose declared logos are the drawer\'s rows of two companies passes',
+              problems({}, full[:3] + [full[3] | {'logos': rows}, thumbs[0] | {'logos': rows}, thumbs[1] | {'logos': rows}], body, t, reg), [])
+        check('a name inside another word is not a logo drawn', drawn('Meta', ['Metadata Inc'], []), False)
+        check('a thumbnail that declares no logo for a named company fails',
+              any('thumbnail thumb-tall-1080x1920.jpg declares no logo for Anthropic' in x for x in problems({}, full + [thumbs[0], thumbs[1] | {'logos': ['OpenAI']}], body, t, reg)), True)
+        (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | {'logos': ['OpenAI']}))
+        check('a thumbnail that declares a logo it does not show fails',
+              any('declares the logo of Anthropic, but the drawer drew no row or strip' in x for x in problems({}, full + thumbs, body, t, reg)), True)
+        (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | {'portrait': False}))
+        check('a thumbnail without the portrait fails', any('wide thumbnail has no portrait' in x for x in problems({}, full + thumbs, body, t, reg)), True)
+        (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt))
+        (t / 'thumbs' / 'thumb-wide-1280x720.jpg').write_bytes(wide_jpg + b' edited')
+        check('a thumbnail edited after the drawer fails', any('does not match thumb-wide-1280x720.jpg' in x for x in problems({}, full + thumbs, body, t, reg)), True)
+        (t / 'thumbs' / 'thumb-wide-1280x720.jpg').write_bytes(wide_jpg)
+        check('the tall picture packed as the wide thumbnail fails',
+              any('is the drawer\'s tall thumbnail, packed as the wide one' in x for x in problems({}, full + [thumbs[1] | {'shape': 'wide'}], body, t, reg)), True)
+        (t / 'thumbs' / 'thumbs.json').unlink()
+        check('a hand-made thumbnail fails', any('was not drawn by the house drawer (no thumbs.json' in x for x in problems({}, full + thumbs, body, t, reg)), True)
         check('volume words are found', about_volume('Claude Code lists more than a dozen models.'), True)
         check('no volume words, no evidence needed', about_volume('A quiet week for prices.'), False)
     if fails:
@@ -215,7 +321,7 @@ def self_test():
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description='The visual gate: logos, real evidence, a house cover.')
+    ap = argparse.ArgumentParser(description='The visual gate: logos, real evidence, a house cover and house thumbnails.')
     ap.add_argument('post', nargs='?')
     ap.add_argument('--self-test', action='store_true')
     a = ap.parse_args(argv)

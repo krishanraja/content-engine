@@ -293,7 +293,7 @@ describe('editorial judgement gates', () => {
   })
 })
 
-import { voiceOnCameraIssues, VOICE_NO_OPINION } from '@mindmake/core'
+import { voiceOnCameraIssues, VOICE_AI_LINE, VOICE_NO_OPINION } from '@mindmake/core'
 
 // The on-camera voice check (Krish, 2026-10-09; house rule VOICE_ON_CAMERA):
 // "making my scripts for video have more personality and opinion". A rule can
@@ -310,5 +310,10 @@ describe('the on-camera voice check', () => {
   })
   it('a short hook needs no opinion', () => {
     expect(voiceOnCameraIssues('Why does it matter? Because the price doubled.')).toEqual([])
+  })
+  it('a line saying it was made with AI is flagged, long or short (NO_AI_DISCLOSURE_LINE, Krish, 2026-10-12)', () => {
+    expect(voiceOnCameraIssues(`Is that billion real? ${filler} My bet: no. Yes, I made this with Claude's help. makeyourmindup.ai.`)).toEqual([VOICE_AI_LINE])
+    expect(voiceOnCameraIssues('This video was made with AI. Why does it matter?')).toEqual([VOICE_AI_LINE])
+    expect(voiceOnCameraIssues('I made a song with Suno in ten minutes.')).toEqual([])
   })
 })

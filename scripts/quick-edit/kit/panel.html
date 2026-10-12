@@ -1,0 +1,24 @@
+<!doctype html>
+<!--
+  kit.py: a picture from the post as a quick-edit panel. The tall panel is
+  1080 x 1000 (the top of the frame, over the face band); the wide one is
+  1314 x 1080 (right of the speaker). kit.py has already trimmed the picture,
+  laid a very tall one out in columns at its own gaps, and sized it to the
+  pixel, so this page only places it: the browser never scales a word.
+  Placeholders start with a dollar sign; kit.py fills every one.
+-->
+<html lang="en-GB"><head><meta charset="utf-8"><style>
+$fonts
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: ${W}px; height: ${H}px; overflow: hidden; }
+body { background: $accent; color: $ink; font-family: 'Archivo', sans-serif; -webkit-font-smoothing: antialiased; }
+.pill { position: absolute; left: ${pad}px; top: ${top}px; display: inline-block; background: $ink; color: $cream;
+        font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: ${pill}px; letter-spacing: .08em;
+        padding: .34em .62em .3em; border-radius: .26em; line-height: 1; text-transform: uppercase; white-space: nowrap; }
+.card { position: absolute; left: ${x}px; top: ${y}px; width: ${w}px; height: ${h}px; border-radius: 22px; overflow: hidden;
+        background: $picture_bg; box-shadow: 16px 16px 0 $shadow; }
+.card img { display: block; width: ${w}px; height: ${h}px; }
+</style></head><body>
+<span class="pill">$channel</span>
+<div class="card"><img src="$picture" alt=""></div>
+</body></html>
