@@ -149,6 +149,16 @@ jobs:
           psql_in tests/fixtures/control-plane/keep-newer-making-setup.sql
           psql_in supabase/migrations/20261012120000_keep_newer_making.sql
           psql_in tests/fixtures/control-plane/keep-newer-making-regression.sql
+          # An item waiting on Krish is ready for his list, or it is held in
+          # progress; run twice, because it must be safe to run again.
+          psql_in supabase/migrations/20261003130000_work_board.sql
+          psql_in supabase/migrations/20261011120000_board_items_follow_pieces.sql
+          psql_in supabase/migrations/20261013080000_board_on_you_fields.sql
+          psql_in supabase/migrations/20261013081000_board_closed_by.sql
+          psql_in tests/fixtures/control-plane/board-on-you-ready-setup.sql
+          psql_in supabase/migrations/20261013090000_board_on_you_is_ready.sql
+          psql_in supabase/migrations/20261013090000_board_on_you_is_ready.sql
+          psql_in tests/fixtures/control-plane/board-on-you-ready-regression.sql
           # Last, because it commits a seed that fences every later claim: an
           # open claim holds the active role row, so a switch must wait for it
           # and then refuse.

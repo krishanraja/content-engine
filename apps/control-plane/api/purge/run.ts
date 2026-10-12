@@ -160,6 +160,22 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       }
       observations_recorded = archive.written
 
+      // A board item about a row that is going is archived first, as a
+      // dropped piece's are (_boardClose.ts). The delete would empty its
+      // idea_id, and an item waiting on Krish must name its piece
+      // (work_board_items_on_you_is_ready), so one left on him would stop the
+      // whole delete.
+      const going = new Set((doomed || []).map((r: { id: string }) => r.id))
+      const { data: open, error: openErr } = await supabase.from('work_board_items').select('id,idea_id').in('lane', ['on_you', 'in_progress']).not('idea_id', 'is', null).limit(1000)
+      if (openErr) throw new Error(openErr.message)
+      const tied = ((open || []) as Array<{ id: string; idea_id: string }>).filter(i => going.has(i.idea_id)).map(i => i.id)
+      if (tied.length) {
+        const { error: boardErr } = await supabase.from('work_board_items')
+          .update({ lane: 'archived', updated_by: 'engine: piece purged', closed_by: 'engine: piece purged', updated_at: nowIso })
+          .in('id', tied).in('lane', ['on_you', 'in_progress'])
+        if (boardErr) throw new Error(boardErr.message)
+      }
+
       const { error: delErr, count } = await doomedOnly(supabase
         .from('content_ideas')
         .delete({ count: 'exact' }))

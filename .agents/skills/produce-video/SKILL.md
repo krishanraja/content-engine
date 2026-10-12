@@ -61,8 +61,8 @@ is built. Nothing here sends, edits or publishes anything in Descript.
 ## Before anything
 
 Read `AGENTS.md`, `WORKBENCH.md`, `docs/CADENCE.md` ("Who owns what, and
-where things live") and `scripts/quick-edit/README.md`. Read the board and
-his replies (`WORKBENCH.md`, "The board"). This skill does not use the
+where things live") and `scripts/quick-edit/README.md`. Read the board
+(`WORKBENCH.md`, "The board"). This skill does not use the
 Studio; if a session touches it, `docs/ENGINE_SESSION.md` applies and a
 cloud session is read-only for it.
 
@@ -77,8 +77,9 @@ cloud session is read-only for it.
   music folder and no archive. It may find and match the takes (step 2),
   build the kit (step 3), plan (step 4, with `faster-whisper` installed),
   and draw the thumbnails (step 5). It never renders the finished cuts: it
-  leaves a board item for a home computer with the piece's `idea_id` and
-  `"closes_on": "video"`, naming the commands still to run, and says so.
+  leaves a board item for a home computer (`"lane": "in_progress"`) with the
+  piece's `idea_id` and `"closes_on": "video"`, naming the commands still to
+  run, and says so.
 - **A home computer** (Windows): work in `C:\Users\krish\dev\content-engine`,
   never in `Documents\MindmakeVideoStudio\runner-source`, at the latest
   `main` (`git pull --ff-only`). Codex runs every step outside its sandbox
@@ -459,10 +460,17 @@ its thumbnail. `archive.py` refuses a thumbnail of the wrong shape too.
 ## 10. The board and the workbench
 
 Every board item about the piece carries `"idea_id": "PIECE_ID"` and, when
-one step finishes it, `"closes_on"` (`record`, `video`). Put on Krish only
-what is his: an unsure take, an approval, a missing folder, Library Sync to
-move. Update `WORKBENCH.md` and end every reply with
-https://controlcenter.krishraja.com/#/board.
+one step finishes it, `"closes_on"` (`record`, `video`). An item for a home
+computer or another session is `"lane": "in_progress"`. Put on Krish
+(`"on_you"`) only what is his, and only with `"only_you"`, an `https://`
+`"link"` to what he acts on and a `"closes_on"` step: the engine refuses an
+item on him without them and names the field it lacks (`WORKBENCH.md`, "The
+board"). A question of his that no step closes (an approval, a remake, a
+missing folder, Library Sync to move) goes `"in_progress"`, its detail
+saying what would show it done, and you ask him in your reply. The
+recordings lane writes its own take questions this way. Update
+`WORKBENCH.md` and end every reply with
+https://controlcenter.krishraja.com/#/home?waiting=1.
 
 ## The backup machine
 

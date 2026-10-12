@@ -54,6 +54,10 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
 })
 
 const TOKEN = 'eot_' + 'w'.repeat(40)
+const PIECE = 'f328382d-71b3-41a7-a221-d8615826f12e'
+// What an item waiting on Krish carries to be written at all: why only he can
+// do it, the link he presses, and how it closes itself (the piece and its step).
+const READY = { only_you: 'face', link: 'https://claude.ai/artifact/script', link_label: 'Open the script', idea_id: PIECE, closes_on: 'record' }
 const CODE = 'board-test-access-code'
 const COOKIE = `cc_access=${createHash('sha256').update(CODE).digest('hex')}`
 
@@ -89,7 +93,7 @@ describe('the work board route', () => {
 
   it('an agent adds items and sets the headline; Control Center reads the same board', async () => {
     const add = await call('POST', { action: 'upsert_items', client: 'codex', items: [
-      { id: 'p1-video', lane: 'on_you', rank: 1, area: 'Article 1', title: 'Say yes to the video', detail: 'Five things to confirm.', prompt: 'yes, make the video' },
+      { id: 'p1-video', lane: 'on_you', rank: 1, area: 'Article 1', title: 'Say yes to the video', detail: 'Five things to confirm.', ...READY },
       { id: 'next-picks', lane: 'in_progress', rank: 2, title: 'Your next two articles' },
     ] })
     expect(add.status).toBe(200)
@@ -104,7 +108,7 @@ describe('the work board route', () => {
   })
 
   it('an existing item is changed in place, only the fields sent', async () => {
-    await call('POST', { action: 'upsert_items', items: [{ id: 'p3', lane: 'on_you', title: 'Read article 3', detail: 'Facts checked.' }] })
+    await call('POST', { action: 'upsert_items', items: [{ id: 'p3', lane: 'on_you', title: 'Read article 3', detail: 'Facts checked.', ...READY }] })
     const move = await call('POST', { action: 'upsert_items', items: [{ id: 'p3', lane: 'done' }] })
     expect(move.status).toBe(200)
     const row = db.tables.work_board_items.find(r => r.id === 'p3')!
@@ -114,11 +118,11 @@ describe('the work board route', () => {
   })
 
   it('lane_if_new is the lane only for a new item: an item already closed is never reopened by a tool asking again', async () => {
-    await call('POST', { action: 'upsert_items', items: [{ id: 'take-aaaaaaaaaaaa', lane: 'on_you', title: 'Which piece is this take?' }] })
+    await call('POST', { action: 'upsert_items', items: [{ id: 'take-aaaaaaaaaaaa', lane: 'on_you', title: 'Which piece is this take?', ...READY }] })
     await call('POST', { action: 'upsert_items', items: [{ id: 'take-aaaaaaaaaaaa', lane: 'done' }] })
     const again = await call('POST', { action: 'upsert_items', client: 'runner', items: [
       { id: 'take-aaaaaaaaaaaa', lane_if_new: 'on_you', title: 'Which piece is this take?', detail: 'asked again from the other machine' },
-      { id: 'take-bbbbbbbbbbbb', lane_if_new: 'on_you', title: 'A new take' },
+      { id: 'take-bbbbbbbbbbbb', lane_if_new: 'on_you', title: 'A new take', ...READY },
     ] })
     expect(again.status).toBe(200)
     expect(db.tables.work_board_items.find(r => r.id === 'take-aaaaaaaaaaaa')!.lane).toBe('done')
@@ -129,7 +133,7 @@ describe('the work board route', () => {
   })
 
   it('a new item needs a lane and a title, and one bad item writes nothing', async () => {
-    const bad = await call('POST', { action: 'upsert_items', items: [{ id: 'ok-one', lane: 'on_you', title: 'Fine' }, { id: 'no-title', lane: 'on_you' }] })
+    const bad = await call('POST', { action: 'upsert_items', items: [{ id: 'ok-one', lane: 'on_you', title: 'Fine', ...READY }, { id: 'no-title', lane: 'on_you' }] })
     expect(bad.status).toBe(400)
     expect(bad.body.error).toBe('title_required')
     expect(db.tables.work_board_items).toHaveLength(0)
@@ -139,7 +143,7 @@ describe('the work board route', () => {
   })
 
   it('only Krish, from his cookie, can write a reply; an agent cannot speak for him', async () => {
-    await call('POST', { action: 'upsert_items', items: [{ id: 'p1-video', lane: 'on_you', title: 'Say yes to the video' }] })
+    await call('POST', { action: 'upsert_items', items: [{ id: 'p1-video', lane: 'on_you', title: 'Say yes to the video', ...READY }] })
     const agent = await call('POST', { action: 'reply', item_id: 'p1-video', text: 'yes, make the video', decided_by: 'Krish' })
     expect(agent.status).toBe(403)
     expect(agent.body.error).toBe('a_reply_is_krish_words')
@@ -151,7 +155,7 @@ describe('the work board route', () => {
   })
 
   it('an agent marks replies seen, and the board counts what is still unseen', async () => {
-    await call('POST', { action: 'upsert_items', items: [{ id: 'p3', lane: 'on_you', title: 'Read article 3' }] })
+    await call('POST', { action: 'upsert_items', items: [{ id: 'p3', lane: 'on_you', title: 'Read article 3', ...READY }] })
     await call('POST', { action: 'reply', item_id: 'p3', text: 'Approved' }, 'krish')
     let board = await call('GET')
     expect(board.body.unseen_replies).toBe(1)
@@ -206,8 +210,8 @@ describe('the fields for his one list', () => {
 
   it('the route writes them and the board returns them', async () => {
     const add = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [
-      { id: 'monday-record', lane: 'on_you', title: 'Record both cuts', only_you: 'face', closes_on: 'record' },
-      { id: 'week-2026-10-12', lane: 'on_you', title: 'Pick this week', only_you: 'judgment', closes_on: 'week_planned' },
+      { id: 'monday-record', lane: 'on_you', title: 'Record both cuts', only_you: 'face', link: 'https://web.descript.com/record-here', idea_id: PIECE, closes_on: 'record' },
+      { id: 'week-2026-10-12', lane: 'on_you', title: 'Pick this week', only_you: 'judgment', link: 'https://controlcenter.krishraja.com/#/week', closes_on: 'week_planned' },
     ] })
     expect(add.status).toBe(200)
     const bump = await call('POST', { action: 'upsert_items', items: [{ id: 'monday-record', bumped_until: '2026-10-13T04:00:00Z' }] }, 'krish')
@@ -226,7 +230,7 @@ describe('an item Krish closed stays closed to agents', () => {
   const item = (id: string) => db.tables.work_board_items.find(r => r.id === id)!
 
   async function closedByKrish(lane: 'done' | 'archived', id = 'you-launch') {
-    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id, lane: 'on_you', title: 'Swap the cover' }] })
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id, lane: 'on_you', title: 'Swap the cover', ...READY }] })
     expect(item(id).closed_by ?? null).toBe(null)
     const close = await call('POST', { action: 'upsert_items', items: [{ id, lane }] }, 'krish')
     expect(close.status).toBe(200)
@@ -290,7 +294,7 @@ describe('an item Krish closed stays closed to agents', () => {
   })
 
   it('a close an agent relays from his words is his too, and a relayed reopen is still an agent write', async () => {
-    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome-days', lane: 'on_you', title: 'Swap two days' }] })
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome-days', lane: 'on_you', title: 'Swap two days', ...READY }] })
     const relayed = await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', items: [{ id: 'you-welcome-days', lane: 'done' }] })
     expect(relayed.status).toBe(200)
     expect(item('you-welcome-days')).toMatchObject({ lane: 'done', updated_by: 'claude_code', closed_by: 'Krish' })
@@ -327,7 +331,8 @@ describe('an item Krish closed stays closed to agents', () => {
     expect(item('doing-build').closed_by).toBe(null)
     // The engine's own close (_boardClose.ts) records itself.
     Object.assign(item('doing-build'), { lane: 'done', updated_by: 'engine: record done', closed_by: 'engine: record done' })
-    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'on_you' }] })).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'on_you' }] })).body.error).toBe('on_you_needs_only_you')
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'on_you', ...READY }] })).status).toBe(200)
   })
 
   it('Krish moving an agent-closed item to archived makes the close his', async () => {
@@ -351,5 +356,150 @@ describe('an item Krish closed stays closed to agents', () => {
     expect(closedByAfter(his, 'done', 'control_center_slate')).toBe(undefined)
     expect(closedByAfter({ ...his, closed_by: 'codex' }, 'archived', 'Krish')).toBe('Krish')
     expect(closedByAfter(his, 'on_you', 'Krish')).toBe(null)
+  })
+})
+
+// Krish, 2026-10-11: "you are just capping the garbage. Surely we need to not
+// have garbage." An item waiting on him is ready for his one list when it is
+// written, or it is not written: why only he can do it, an https link to what
+// he acts on, and how it closes itself (with the piece, unless it is the
+// week's planning item). The write is merged with the row already there
+// before it is checked.
+describe('an item waiting on Krish is refused unless it is ready for his list', () => {
+  const item = (id: string) => db.tables.work_board_items.find(r => r.id === id)
+  const WEEK = { only_you: 'judgment', link: 'https://controlcenter.krishraja.com/#/week', link_label: 'Open the week', closes_on: 'week_planned' }
+  const without = (key: keyof typeof READY) => { const r: Row = { ...READY }; delete r[key]; return r }
+
+  it('each missing field is its own refusal, naming the item, the values allowed and in_progress; nothing is written', async () => {
+    const cases: Array<[Row, string, RegExp]> = [
+      [without('only_you'), 'on_you_needs_only_you', /send, post, spend, delete, permission, credential, face, login, judgment/],
+      [without('link'), 'on_you_needs_link', /https:\/\//],
+      [{ ...READY, link: null }, 'on_you_needs_link', /https:\/\//],
+      [without('closes_on'), 'on_you_needs_closes_on', /workroom, draft, visual_gate, scripts, pack, record, video, publish\), published, or week_planned for the week's planning item alone/],
+      [without('idea_id'), 'on_you_needs_idea_id', /the piece's uuid. Only closes_on week_planned needs none/],
+      [{ ...READY, idea_id: null }, 'on_you_needs_idea_id', /idea_id/],
+    ]
+    for (const [fields, error, names] of cases) {
+      for (const who of ['agent', 'krish'] as const) {
+        const out = await call('POST', { action: 'upsert_items', client: 'codex', items: [
+          { id: 'fine-one', lane: 'in_progress', title: 'Agent work' },
+          { id: 'you-welcome-days', lane: 'on_you', title: 'Swap two days in the welcome email', ...fields },
+        ] }, who)
+        expect(out.status).toBe(400)
+        expect(out.body).toMatchObject({ ok: false, error, item: 'you-welcome-days' })
+        expect(out.body.detail).toMatch(names)
+        expect(out.body.detail).toContain('keep the item in in_progress')
+        expect(db.writes).toEqual([])
+      }
+    }
+  })
+
+  it('the fields are checked in the order a writer fixes them, and an http link is still link_must_be_https', async () => {
+    const { cleanItem, onYouLacks, BoardRefusal } = await import('../../apps/control-plane/api/workbench.js')
+    expect(onYouLacks({ id: 'a1', lane: 'on_you' })).toBe('only_you')
+    expect(onYouLacks({ id: 'a1', lane: 'on_you', only_you: 'login' })).toBe('link')
+    expect(onYouLacks({ id: 'a1', lane: 'on_you', only_you: 'login', link: 'https://x' })).toBe('closes_on')
+    expect(onYouLacks({ id: 'a1', lane: 'on_you', only_you: 'login', link: 'https://x', closes_on: 'publish' })).toBe('idea_id')
+    expect(onYouLacks({ id: 'a1', lane: 'on_you', only_you: 'login', link: 'https://x', closes_on: 'week_planned' })).toBe('closes_on')
+    expect(onYouLacks({ id: 'week-2026-10-19', lane: 'on_you', only_you: 'judgment', link: 'https://x', closes_on: 'week_planned' })).toBe(null)
+    expect(onYouLacks({ id: 'a1', lane: 'in_progress' })).toBe(null)
+    expect(() => cleanItem({ id: 'a1', lane: 'on_you', title: 'x', ...READY, link: 'http://plain' }, true)).toThrow('link_must_be_https')
+    try {
+      cleanItem({ id: 'a1', lane: 'on_you', title: 'x' }, true)
+      expect.unreachable()
+    } catch (e) {
+      expect(e).toBeInstanceOf(BoardRefusal)
+      expect((e as InstanceType<typeof BoardRefusal>).message).toBe('on_you_needs_only_you')
+    }
+  })
+
+  it('a partial write is merged with the item already on him: an edit that keeps it ready passes, one that strips a field is refused', async () => {
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'monday-record', lane: 'on_you', title: 'Record both cuts', ...READY }] })).status).toBe(200)
+    const edit = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'monday-record', detail: 'The scripts changed at 11:00.', closes_on: 'video' }] })
+    expect(edit.status).toBe(200)
+    expect(item('monday-record')).toMatchObject({ lane: 'on_you', detail: 'The scripts changed at 11:00.', closes_on: 'video', only_you: 'face', idea_id: PIECE })
+    const writes = db.writes.length
+    for (const [strip, error] of [[{ link: null }, 'on_you_needs_link'], [{ only_you: null }, 'on_you_needs_only_you'], [{ closes_on: null }, 'on_you_needs_closes_on'], [{ idea_id: null }, 'on_you_needs_idea_id']] as const) {
+      const out = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'monday-record', ...strip }] })
+      expect(out.status).toBe(400)
+      expect(out.body).toMatchObject({ error, item: 'monday-record' })
+    }
+    expect(db.writes.length).toBe(writes)
+    expect(item('monday-record')).toMatchObject({ link: READY.link, only_you: 'face', closes_on: 'video', idea_id: PIECE })
+    // His Bump and his Clear are partial writes too, and an item on him passes them.
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'monday-record', bumped_until: '2026-10-13T04:00:00Z' }] }, 'krish')).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'monday-record', lane: 'done' }] }, 'krish')).status).toBe(200)
+  })
+
+  it('an item held in progress moves on to him only with what it lacks, from the row or the write', async () => {
+    // Live, 12 October: you-welcome-days has his login as the reason, but no link and no close.
+    db.tables.work_board_items.push({ id: 'you-welcome-days', lane: 'in_progress', title: 'Swap two days in the welcome email', only_you: 'login', link: null, closes_on: null, idea_id: null, closed_by: null })
+    const bare = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome-days', lane: 'on_you' }] })
+    expect(bare.status).toBe(400)
+    expect(bare.body.error).toBe('on_you_needs_link')
+    // The week's close is the week item's alone: on anything else it would never fire.
+    const faked = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome-days', lane: 'on_you', link: 'https://substack.com/publish/settings', closes_on: 'week_planned' }] })
+    expect(faked.status).toBe(400)
+    expect(faked.body.error).toBe('on_you_needs_closes_on')
+    expect(faked.body.detail).toContain('id week-<its Monday>')
+    expect(item('you-welcome-days')).toMatchObject({ lane: 'in_progress', link: null, closes_on: null })
+    // Still in progress, it may be edited freely.
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome-days', detail: 'Nothing can see the email changed yet.' }] })).status).toBe(200)
+    // A take held for want of a piece moves on once a session knows the piece.
+    db.tables.work_board_items.push({ id: 'take-dddddddddddd', lane: 'in_progress', title: 'Which piece and cut is this take?', only_you: null, link: null, closes_on: 'record', idea_id: null, closed_by: null })
+    const ready = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'take-dddddddddddd', lane: 'on_you', only_you: 'judgment', link: `https://controlcenter.krishraja.com/#/content?idea=${PIECE}`, idea_id: PIECE }] })
+    expect(ready.status).toBe(200)
+    expect(item('take-dddddddddddd')).toMatchObject({ lane: 'on_you', only_you: 'judgment', closes_on: 'record', idea_id: PIECE })
+  })
+
+  it('lane_if_new on_you is held to the same rule for a new item; for one already there it is not its lane, so not its rule', async () => {
+    const bare = await call('POST', { action: 'upsert_items', client: 'runner', items: [{ id: 'take-aaaaaaaaaaaa', lane_if_new: 'on_you', title: 'Which piece and cut is this take?', closes_on: 'record' }] })
+    expect(bare.status).toBe(400)
+    expect(bare.body).toMatchObject({ error: 'on_you_needs_only_you', item: 'take-aaaaaaaaaaaa' })
+    expect(item('take-aaaaaaaaaaaa')).toBeUndefined()
+    const tied = await call('POST', { action: 'upsert_items', client: 'runner', items: [{ id: 'take-aaaaaaaaaaaa', lane_if_new: 'on_you', title: 'Which piece and cut is this take?', ...READY, only_you: 'judgment' }] })
+    expect(tied.status).toBe(200)
+    expect(item('take-aaaaaaaaaaaa')).toMatchObject({ lane: 'on_you', only_you: 'judgment', idea_id: PIECE, closes_on: 'record' })
+    // A take with no piece goes in progress, where nothing more is asked of it.
+    const held = await call('POST', { action: 'upsert_items', client: 'runner', items: [{ id: 'take-bbbbbbbbbbbb', lane_if_new: 'in_progress', title: 'Which piece and cut is this take?', closes_on: 'record' }] })
+    expect(held.status).toBe(200)
+    expect(item('take-bbbbbbbbbbbb')!.lane).toBe('in_progress')
+    // Asked again with lane_if_new on_you, the item already there keeps its lane, and the write passes.
+    db.tables.work_board_items.push({ id: 'take-cccccccccccc', lane: 'done', title: 'Answered', closed_by: 'Krish' })
+    const again = await call('POST', { action: 'upsert_items', client: 'runner', items: [
+      { id: 'take-bbbbbbbbbbbb', lane_if_new: 'on_you', title: 'Which piece and cut is this take?', detail: 'Still no piece.' },
+      { id: 'take-cccccccccccc', lane_if_new: 'on_you', title: 'Answered', detail: 'Asked again from the other machine.' },
+    ] })
+    expect(again.status).toBe(200)
+    expect(item('take-bbbbbbbbbbbb')!.lane).toBe('in_progress')
+    expect(item('take-cccccccccccc')!.lane).toBe('done')
+  })
+
+  it('a ready item passes: a recording tied to its piece, and the week that needs no piece', async () => {
+    const out = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [
+      { id: 'friday-record', lane: 'on_you', rank: 2, area: 'Friday 16 Oct', title: 'Record both cuts', ...READY, idea_id: '904658db-4df2-4537-a0ed-ebe93e081db7' },
+      { id: 'week-2026-10-19', lane: 'on_you', rank: 1, title: 'What are we writing about this week?', ...WEEK },
+    ] })
+    expect(out.status).toBe(200)
+    expect(out.body.written).toEqual(['friday-record', 'week-2026-10-19'])
+    expect(item('friday-record')).toMatchObject({ lane: 'on_you', only_you: 'face', closes_on: 'record', idea_id: '904658db-4df2-4537-a0ed-ebe93e081db7', updated_by: 'claude_code' })
+    expect(item('week-2026-10-19')).toMatchObject({ lane: 'on_you', only_you: 'judgment', closes_on: 'week_planned' })
+    expect(item('week-2026-10-19')!.idea_id).toBeUndefined()
+    // Control Center's slate writes the week the same way, and archives an old one with a lane alone.
+    const slate = await call('POST', { action: 'upsert_items', client: 'control_center_slate', items: [
+      { id: 'week-2026-10-19', lane: 'on_you', title: 'What are we writing about this week? Pick Wednesday', ...WEEK, prompt: null },
+      { id: 'friday-record', lane: 'archived' },
+    ] }, 'krish')
+    expect(slate.status).toBe(200)
+    expect(item('friday-record')!.lane).toBe('archived')
+  })
+
+  it('an item that is not on him needs none of it', async () => {
+    const out = await call('POST', { action: 'upsert_items', client: 'codex', items: [
+      { id: 'doing-build', lane: 'in_progress', title: 'Build the Descript return' },
+      { id: 'old-note', lane: 'done', title: 'Sent' },
+      { id: 'gone', lane: 'archived', title: 'Dropped' },
+    ] })
+    expect(out.status).toBe(200)
   })
 })

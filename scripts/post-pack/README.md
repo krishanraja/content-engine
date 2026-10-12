@@ -465,8 +465,12 @@ its words and the cut by its words or its length:
   stamped with `script_sha256`, the hash of the script it was read from
   (the piece's current words for that cut). Record is done when both cuts
   have a take of their current words.
-- **Unsure**: one board item, `take-<first 12 of its sha256>`, on Krish,
-  tied to the piece when the piece is known, closing when Record is done.
+- **Unsure**: one board item, `take-<first 12 of its sha256>`, closing when
+  Record is done. When the piece is known it is on Krish and ready for his
+  list (his call, the piece's page in Control Center as its link, the
+  piece's id); with no piece nothing would close it, so it is held in
+  progress for a session to work out, and moves on to him once a later pass
+  ties it to a piece.
   It is asked once for each question (its status, its piece, older words or
   not), never again because a score or the closest piece shifted. The board
   is read first and an item is never reopened: one Krish answered, or a

@@ -65,9 +65,12 @@ about the piece once its publish step is done (the standing five ticked), so
 nothing about a finished piece lingers on Krish's board. An item waiting on
 him (`"lane": "on_you"`, such as recording both cuts) also carries
 `"only_you"` (`"face"` for a recording) and an `https://` `"link"` to what he
-acts on; without all three Control Center holds it back from his list.
+acts on; without all of them, and the `idea_id` and `"closes_on"` above, the
+engine refuses it and names the field it lacks. A job of his that no step
+closes goes `"in_progress"`, its detail saying what would show it done, and
+you ask him in your reply.
 
 ## Before you stop
 
 Update `WORKBENCH.md` and the board (`WORKBENCH.md`, "The board"), and end
-every reply with https://controlcenter.krishraja.com/#/board.
+every reply with https://controlcenter.krishraja.com/#/home?waiting=1.

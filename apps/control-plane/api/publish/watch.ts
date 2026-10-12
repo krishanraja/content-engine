@@ -4,7 +4,7 @@ import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
 import { closeBoardItemsForPiece, itemPiece, type OpenItem } from '../_boardClose.js'
 import { makingStamp } from '../_making.js'
-import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts, unmatchedItem, type Candidate } from '../_publishWatch.js'
+import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts, unmatchedItem, unmatchedItemId, type Candidate } from '../_publishWatch.js'
 
 // GET (cron, hourly) or POST (an operator session): the publish watcher.
 //
@@ -22,7 +22,9 @@ import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts
 //     items close on the publish as they always did.
 // Then it sweeps every open board item tied to a piece and closes the ones
 // whose piece has moved on by any route. A fresh post that matches no piece
-// becomes one board question, asked once.
+// becomes one board item in progress, for a session, asked once; it is never
+// put on Krish (it could not say how it closes), and the pass that matches
+// the post to a piece closes it.
 
 const PIECE_COLUMNS = 'id, idea, state, published_url, published_at, buried_at, meta, transformed_outputs, updated_at'
 
@@ -44,6 +46,10 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     .in('state', ['drafting', 'review', 'approved', 'published']).is('buried_at', null).limit(800)
   if (error) return res.status(500).json({ ok: false, error: error.message })
   const pieces = (data || []) as Array<Candidate & { published_at: string | null; buried_at: string | null; updated_at: string }>
+
+  // The board items earlier passes held for posts that matched no piece.
+  const held = await supabase.from('work_board_items').select('id').ilike('id', 'post-%').in('lane', ['on_you', 'in_progress']).limit(100)
+  const openQuestions = new Set(((held.data || []) as Array<{ id: string }>).map(i => i.id))
 
   const report: Array<Record<string, unknown>> = []
   let published = 0, ambiguous = 0, asked = 0
@@ -87,6 +93,14 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       published++
     }
     closed.push(...await closeBoardItemsForPiece(piece))
+    // The question an earlier pass held for this post is answered now.
+    const question = unmatchedItemId(post)
+    if (openQuestions.has(question)) {
+      const answered = await supabase.from('work_board_items')
+        .update({ lane: 'done', updated_by: 'engine: publish watcher', closed_by: 'engine: publish watcher', updated_at: now.toISOString() })
+        .eq('id', question).in('lane', ['on_you', 'in_progress'])
+      if (!answered.error) closed.push(question)
+    }
     report.push({ post: post.url, piece: piece.id, by: m.by, written: true })
   }
 

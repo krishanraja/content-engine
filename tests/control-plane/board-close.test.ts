@@ -147,7 +147,7 @@ describe('the board route', () => {
   it('takes idea_id and closes_on, and refuses a bad one', async () => {
     const { default: handler } = await import('../../apps/control-plane/api/workbench.js')
     const { out, res } = fakeRes()
-    await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: {}, body: { action: 'upsert_items', items: [{ id: 'new-one', lane: 'on_you', title: 'Record', idea_id: FRIDAY, closes_on: 'record' }] } } as never, res as never)
+    await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: {}, body: { action: 'upsert_items', items: [{ id: 'new-one', lane: 'on_you', title: 'Record', only_you: 'face', link: 'https://claude.ai/artifact/script', idea_id: FRIDAY, closes_on: 'record' }] } } as never, res as never)
     expect(out.status).toBe(200)
     expect(db.tables.work_board_items.find(r => r.id === 'new-one')).toMatchObject({ idea_id: FRIDAY, closes_on: 'record', updated_by: 'claude_code' })
     const bad = fakeRes()
@@ -157,8 +157,9 @@ describe('the board route', () => {
   it("Control Center's own job is recorded as itself, not as Krish, and cannot reply", async () => {
     const { default: handler } = await import('../../apps/control-plane/api/workbench.js')
     const a = fakeRes()
-    await handler({ method: 'POST', headers: { cookie: COOKIE }, query: {}, body: { action: 'upsert_items', client: 'control_center_slate', items: [{ id: 'slate-x-2026-10-12', lane: 'on_you', title: 'Pick' }] } } as never, a.res as never)
-    expect(db.tables.work_board_items.find(r => r.id === 'slate-x-2026-10-12')?.updated_by).toBe('control_center_slate')
+    await handler({ method: 'POST', headers: { cookie: COOKIE }, query: {}, body: { action: 'upsert_items', client: 'control_center_slate', items: [{ id: 'week-2026-10-12', lane: 'on_you', title: 'Pick', only_you: 'judgment', link: 'https://controlcenter.krishraja.com/#/week', closes_on: 'week_planned' }] } } as never, a.res as never)
+    expect(a.out.status).toBe(200)
+    expect(db.tables.work_board_items.find(r => r.id === 'week-2026-10-12')?.updated_by).toBe('control_center_slate')
     const krish = fakeRes()
     await handler({ method: 'POST', headers: { cookie: COOKIE }, query: {}, body: { action: 'upsert_items', items: [{ id: 'unrelated', lane: 'done' }] } } as never, krish.res as never)
     expect(db.tables.work_board_items.find(r => r.id === 'unrelated')?.updated_by).toBe('Krish')
@@ -180,7 +181,7 @@ describe('the making route closes what a step finishes', () => {
 })
 
 describe('the publish watcher', () => {
-  it('marks the matched piece published, ticks Substack, closes its items, and asks about a fresh unmatched post once', async () => {
+  it('marks the matched piece published, ticks Substack, closes its items, and holds a fresh unmatched post for a session once', async () => {
     const archive = [
       { id: 101, title: 'Higgsfield, taken apart: the $1bn AI video machine', canonical_url: 'https://home.makeyourmindup.ai/p/higgsfield-taken-apart-the-1bn-ai', post_date: '2026-10-07T16:06:00Z', type: 'newsletter' },
       { id: 102, title: 'VIDEO: Higgsfield deconstructed.', canonical_url: 'https://home.makeyourmindup.ai/p/higgs-video', post_date: '2026-10-07T16:09:00Z', type: 'podcast' },
@@ -201,7 +202,13 @@ describe('the publish watcher', () => {
       expect(higgs.meta.making).toBeUndefined()
       expect(out.body.closed.sort()).toEqual(['old-link-item', 'you-wed-pick'])
       expect(db.tables.work_board_items.find(r => r.id === 'unrelated')?.lane).toBe('on_you')
-      expect(db.tables.work_board_items.find(r => r.id === 'post-103')).toMatchObject({ lane: 'on_you', link: 'https://home.makeyourmindup.ai/p/fresh' })
+      // Nothing Krish can press answers it and it could not say how it
+      // closes, so it is never put on him: it is a session's to work out.
+      const question = db.tables.work_board_items.find(r => r.id === 'post-103')!
+      expect(question).toMatchObject({ lane: 'in_progress', link: 'https://home.makeyourmindup.ai/p/fresh', updated_by: 'engine: publish watcher' })
+      expect(question.only_you).toBeUndefined()
+      expect(question.prompt).toBeUndefined()
+      expect(question.detail).toContain('making.py <piece id> posted substack')
       // A second pass changes nothing it already changed, and asks nothing twice.
       db.tables.work_board_items.find(r => r.id === 'post-103')!.lane = 'archived'
       const again = fakeRes()
@@ -238,6 +245,33 @@ describe('the publish watcher', () => {
       expect(tick.out.status).toBe(200)
       expect(tick.out.body.steps.find((s: Row) => s.key === 'publish')).toMatchObject({ state: 'done', note: '5 of 5 channels' })
       expect(tick.out.body.closed.sort()).toEqual(['friday-record', 'friday-repost'])
+    } finally {
+      globalThis.fetch = realFetch
+    }
+  })
+
+  it('the question held for an unmatched post closes itself once a session records the post on its piece', async () => {
+    const post = { id: 104, title: 'A title changed at the last minute', canonical_url: 'https://home.makeyourmindup.ai/p/renamed', post_date: new Date(Date.now() - 3600_000).toISOString(), type: 'newsletter' }
+    const realFetch = globalThis.fetch
+    globalThis.fetch = (async () => ({ ok: true, status: 200, json: async () => [post] })) as never
+    try {
+      const { default: handler } = await import('../../apps/control-plane/api/publish/watch.js')
+      const first = fakeRes()
+      await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: {}, body: {} } as never, first.res as never)
+      expect(first.out.body).toMatchObject({ published: 0, asked: 1 })
+      expect(db.tables.work_board_items.find(r => r.id === 'post-104')?.lane).toBe('in_progress')
+      // A session works out it is Friday's piece: making.py <id> posted substack <link>.
+      const friday = db.tables.content_ideas.find(r => r.id === FRIDAY)!
+      friday.meta = { ...friday.meta, making: { ...friday.meta.making, channels: { substack: { url: post.canonical_url, posted_at: post.post_date } } } }
+      const second = fakeRes()
+      await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: {}, body: {} } as never, second.res as never)
+      expect(second.out.body).toMatchObject({ published: 1, asked: 0 })
+      expect(second.out.body.closed).toContain('post-104')
+      expect(db.tables.work_board_items.find(r => r.id === 'post-104')).toMatchObject({ lane: 'done', updated_by: 'engine: publish watcher', closed_by: 'engine: publish watcher' })
+      // The next pass has nothing left to close.
+      const third = fakeRes()
+      await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: {}, body: {} } as never, third.res as never)
+      expect(third.out.body.closed).not.toContain('post-104')
     } finally {
       globalThis.fetch = realFetch
     }

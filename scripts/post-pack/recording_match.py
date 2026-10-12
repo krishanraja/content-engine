@@ -71,8 +71,11 @@ then stops counting on the record.
 
 --board puts one item on Krish's board for each unsure take (POST
 /api/workbench, upsert_items, the route every session uses, through
-making.board_upsert): id take-<first 12 of its sha256>, on him, tied to the
-piece when the take is known to be one of its takes, closes_on "record". It
+making.board_upsert): id take-<first 12 of its sha256>, closes_on "record".
+Tied to a piece (the take is known to be one of its takes), it is on him and
+ready for his list: only_you "judgment", the piece's page in Control Center
+as its link, and the piece's idea_id. With no piece nothing would close it,
+so it is held off his list, in progress for a session. It
 reads the board first and never reopens an item: one done there (Krish
 answered, or a session closed it) is left alone, on either machine. Each
 take is asked about once for each question, its status, piece and whether
@@ -137,6 +140,7 @@ SHA = re.compile(r'[0-9a-f]{64}')
 ANSWERED = 'answered.json'   # .cache/recordings/answered.json: the takes already asked about, or left alone
 BOARD_PATH = '/api/workbench'
 BOARD_CLIENTS = {'codex': 'codex', 'claude code': 'claude_code'}  # anything else writes as the runner
+PIECE_PAGE = 'https://controlcenter.krishraja.com/#/content?idea='  # the piece in Control Center, with its making record
 BEFORE_CHANGE = 'recorded before the script last changed'
 TRANSCRIBER_FIX = transcriber.FIX  # the pinned set, never an unpinned install
 CLOCK_SLACK = timedelta(minutes=5)  # a phone's clock may run a little ahead of the engine's
@@ -834,30 +838,36 @@ board_client = making.board_client  # codex, claude_code, else the runner
 
 
 def board_item(answer, pieces):
-    """One board item for one unsure take: on Krish, tied to the piece when
-    the take is known to be one of its takes (or is one of two close
-    pieces'), closes when that piece's Record step is done."""
+    """One board item for one unsure take. Tied to a piece (the take is known
+    to be one of its takes, or is one of two close pieces'), it is on Krish
+    and ready for his list (WORKBENCH.md, "The board"): his call, a link to
+    the piece, closed when that piece's Record step is done. With no piece,
+    nothing could close it, so it is held off his list, in progress for a
+    session to work out."""
     by_id = {p['id']: p for p in pieces}
     sha, name = answer['sha256'], answer['name']
     shown = name if len(name) <= 80 else name[:77] + '...'
     pid = answer.get('piece_id') or (answer.get('closest') if (answer.get('score') or 0) >= SURE else None)
+    tied = bool(pid and pid in by_id)
     path = answer.get('path') or f'recordings/{sha}.{ext_of(name)}'
     if answer.get('older_script'):
         title = f'Use the take "{shown}", recorded before the script changed?'
-        prompt = 'Use it, or I will record it again'
-        ask = ('Reply "use it" and a session records it on the piece with your words, as a take of the current script, '
+        ask = ('Tell a session "use it" and it records it on the piece with your words, as a take of the current script, '
                'or record that cut again and drop the new take in the Inbox.')
+    elif tied:
+        title = f'Which piece and cut is the take "{shown}"?'
+        ask = ('Tell a session the piece and the cut (the 3-minute or the 90-second), or that it is not a take for a piece; '
+               'it then records it with making.py.')
     else:
         title = f'Which piece and cut is the take "{shown}"?'
-        prompt = 'Which piece and cut, or not a piece'
-        ask = ('Reply with the piece and the cut (the 3-minute or the 90-second), or say it is not a take for a piece; '
-               'a session then records it with making.py.')
+        ask = ('Held from Krish\'s list: no piece is known for it, so nothing would close it. A session hears it and records it on '
+               'its piece and cut with making.py, or asks Krish in words which piece and cut it is.')
     detail = (f'{answer["reason"][0].upper()}{answer["reason"][1:]}. It reached the engine {str(answer.get("at"))[:16].replace("T", " ")} '
               f'as {path}; nothing was recorded for it. {ask}')
-    item = {'id': f'take-{sha[:12]}', 'lane': 'on_you', 'rank': 5, 'area': 'Recordings', 'title': title[:200],
-            'detail': detail[:2000], 'prompt': prompt, 'closes_on': 'record'}
-    if pid and pid in by_id:
-        item['idea_id'] = pid
+    item = {'id': f'take-{sha[:12]}', 'lane': 'on_you' if tied else 'in_progress', 'rank': 5, 'area': 'Recordings',
+            'title': title[:200], 'detail': detail[:2000], 'closes_on': 'record'}
+    if tied:
+        item.update(idea_id=pid, only_you='judgment', link=PIECE_PAGE + pid, link_label='Open the piece')
     return item
 
 
@@ -1394,12 +1404,15 @@ def self_test():
               (['runner'], sorted([f'take-{early_sha[:12]}', f'take-{hashlib.sha256(b"evening mon long").hexdigest()[:12]}', f'take-{stale_sha[:12]}']), 2))
         stale_item = next(i for i in sent if i['id'] == f'take-{stale_sha[:12]}')
         check('--board: the take on the record of older words: use it or record again, on Monday, by its record path',
-              (stale_item.get('idea_id'), stale_item['prompt'], f'recordings/{stale_sha}.mp4' in stale_item['detail'], 'no longer counts' in stale_item['detail']),
-              (MON, 'Use it, or I will record it again', True, True))
+              (stale_item.get('idea_id'), 'use it' in stale_item['detail'], f'recordings/{stale_sha}.mp4' in stale_item['detail'],
+               'no longer counts' in stale_item['detail']),
+              (MON, True, True, True))
         first_item = next(i for i in sent if i['id'] == f'take-{early_sha[:12]}')
-        check('--board: on Krish (a new item\'s lane), tied to Monday, closed by its Record step',
-              (first_item.get('lane_if_new'), 'lane' in first_item, first_item.get('idea_id'), first_item['closes_on'], first_item['prompt']),
-              ('on_you', False, MON, 'record', 'Use it, or I will record it again'))
+        check('--board: on Krish (a new item\'s lane) and ready for his list: his call, the piece\'s page, tied to Monday, '
+              'closed by its Record step, with no reply asked for',
+              (first_item.get('lane_if_new'), 'lane' in first_item, first_item.get('only_you'), first_item.get('link'), first_item.get('link_label'),
+               first_item.get('idea_id'), first_item['closes_on'], 'prompt' in first_item, 'Reply' in first_item['detail']),
+              ('on_you', False, 'judgment', PIECE_PAGE + MON, 'Open the piece', MON, 'record', False, False))
         check('--board: the item says what happened and what to answer', ('recorded before the script last changed' in first_item['detail'], f'recordings/{early_sha}.mp4' in first_item['detail'],
                                                                            len(first_item['title']) <= 200, len(first_item['detail']) <= 2000), (True, True, True, True))
         book = load_answered(board)
@@ -1441,6 +1454,27 @@ def self_test():
         run({'week': '2026-10-12', 'board': True}, fake, lambda: engine_recordings(listing[1:2]), **{**common, 'cache': board})
         check('--board: a take placed since leaves the answered book', placed_sha in load_answered(board), False)
         check('board_client: Codex, Claude Code, else the runner', [board_client(n) for n in ('Codex', 'Claude Code', 'Recordings lane')], ['codex', 'claude_code', 'runner'])
+
+        # A take with no piece it could close on is held off his list, in
+        # progress for a session; once a question ties it to a piece, it
+        # moves on to him with everything his list needs.
+        lost = {'sha256': '5' * 64, 'name': 'lost.mp4', 'at': '2026-10-12T09:00:00Z', 'status': 'unsure',
+                'reason': 'its opening matches no waiting piece well enough (closest at 0.40)', 'closest': FRI, 'score': 0.4}
+        held_item = board_item(lost, [{'id': MON}, {'id': FRI}])
+        check('board_item: no piece is held off his list, in progress, with nothing that would put it on him',
+              (held_item['lane'], [k for k in ('only_you', 'link', 'idea_id', 'prompt') if k in held_item], 'Held from Krish\'s list' in held_item['detail']),
+              ('in_progress', [], True))
+        board_posts.clear()
+        board_lanes.pop(held_item['id'], None)
+        making.board_upsert([held_item], fake, 'Recordings lane')
+        check('board: a new item with no piece goes in progress', (board_posts[-1]['items'][0].get('lane_if_new'), board_lanes[held_item['id']]), ('in_progress', 'in_progress'))
+        tied_item = board_item({**lost, 'piece_id': MON}, [{'id': MON}, {'id': FRI}])
+        making.board_upsert([tied_item], fake, 'Codex')
+        sent_tied = board_posts[-1]['items'][0]
+        check('board: tied to a piece later, the held item moves on to him with his call, its link and its piece',
+              (sent_tied.get('lane'), sent_tied.get('only_you'), sent_tied.get('link'), sent_tied.get('idea_id'), board_lanes[held_item['id']]),
+              ('on_you', 'judgment', PIECE_PAGE + MON, MON, 'on_you'))
+        board_posts.clear()
 
         # Nothing waiting.
         lines.clear()

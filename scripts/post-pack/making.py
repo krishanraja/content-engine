@@ -512,7 +512,10 @@ def board_upsert(items, call=None, by=None):
     """Puts questions on Krish's board without ever reopening one. It reads
     the board first: an item that is done there was answered or closed by
     Krish or a session, so it is left alone; one still open is updated
-    without its lane; a new one goes in with its lane as "lane_if_new",
+    without its lane, except that one held in progress moves on to him once
+    the question carries what his list needs (an item on him says why only
+    he can do it, links to what he acts on and says how it closes, or the
+    engine refuses it); a new one goes in with its lane as "lane_if_new",
     which the engine uses only when the item does not exist yet, so an item
     archived out of sight stays archived. Returns (written ids, ids left
     alone). Raises MakingError when the board cannot be read or refuses."""
@@ -536,6 +539,8 @@ def board_upsert(items, call=None, by=None):
         if item['id'] not in lanes:
             item['lane_if_new'] = lane
             fresh[item['id']] = lane
+        elif lanes[item['id']] == 'in_progress' and lane == 'on_you':
+            item['lane'] = lane
         send.append(item)
     written = []
     for start in range(0, len(send), 50):
@@ -867,7 +872,7 @@ def self_test():
                older_take(hashed, 'long', 'recordings/' + '8' * 64 + '.mov', book)), (True, None))
 
     # The board: a question is never reopened once answered.
-    board_items = {'items': [{'id': 'take-done', 'lane': 'done'}, {'id': 'take-open', 'lane': 'on_you'}]}
+    board_items = {'items': [{'id': 'take-done', 'lane': 'done'}, {'id': 'take-open', 'lane': 'on_you'}, {'id': 'take-held', 'lane': 'in_progress'}]}
     board_sent = []
 
     def board(method, path, body):
@@ -882,6 +887,10 @@ def self_test():
           (left, sorted(sent_items), 'lane' in sent_items['take-open'], 'lane_if_new' in sent_items['take-open'], sent_items['take-new'].get('lane_if_new'),
            'lane' in sent_items['take-new'], board_sent[-1]['client']),
           (['take-done'], ['take-new', 'take-open'], False, False, 'on_you', False, 'runner'))
+    board_upsert([{'id': 'take-held', 'lane': 'on_you', 'title': 't'}, {'id': 'take-open', 'lane': 'in_progress', 'title': 't'}], board, 'Codex')
+    sent_items = {i['id']: i for i in board_sent[-1]['items']}
+    check('board: one held in progress moves on to him when the question is on him; one on him is never moved back',
+          (sent_items['take-held'].get('lane'), 'lane' in sent_items['take-open'], 'lane_if_new' in sent_items['take-open']), ('on_you', False, False))
     old_engine = []
 
     def older_board(method, path, body):
@@ -945,6 +954,8 @@ def self_test():
               (code, item.get('id'), item.get('idea_id'), item.get('closes_on'), item.get('lane_if_new'), 'Mon 12 Oct' in item.get('detail', ''),
                asked_posts[-1]['client'] if asked_posts else None, new_long != old_take['script_sha256']),
               (0, 'take-' + '7' * 12, pid, 'record', 'on_you', True, 'claude_code', True))
+        check('scripts: the question is ready for his list: his call and a link to the piece',
+              (item.get('only_you'), str(item.get('link', '')).startswith('https://') and pid in item.get('link', '')), ('judgment', True))
 
     run(['--by', 'Codex', pid, 'session', 'https://chatgpt.com/codex/tasks/x'])
     check('session: the session says who runs it', seen[-1][2]['session'], {'url': 'https://chatgpt.com/codex/tasks/x', 'by': 'Codex'})
