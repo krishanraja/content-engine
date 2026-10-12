@@ -244,6 +244,20 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, 
             cfg['cues'] = [c for c in cfg.get('cues') or [] if c.get('id') not in small]
             cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
             log(f'the {cut} cut leaves out {", ".join(sorted(small))}: too small to read in its shape (the other cut shows them)')
+    # The music is sized to the long cut as it will run (trimmed, with the
+    # story intro and outro), not to its raw take: a track a little shorter
+    # than the take still covers the finished cut. Both cuts ask for the same.
+    probe = run([PY, 'scripts/quick-edit/make.py', kit / 'long.json', '--out', work / 'long', '--only', '16x9', '--plan'],
+                env=env, ok=(0, 1), what='measuring the long cut')
+    try:
+        trimmed = json.loads(probe.stdout[probe.stdout.index('{'):probe.stdout.rindex('}') + 1])['cut_seconds']
+    except (ValueError, KeyError):
+        raise Stop('measuring the long cut gave no plan: ' + ' '.join(probe.stdout.strip().splitlines()[-3:])[:600])
+    for cut in SHAPE:
+        cfg_path = kit / f'{cut}.json'
+        cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
+        cfg['music_seconds'] = round(float(trimmed) + 3.0 + 4.0 + 2.0, 1)
+        cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
     rendered = {}
     for cut, shape in SHAPE.items():
         cfg_path = kit / f'{cut}.json'
