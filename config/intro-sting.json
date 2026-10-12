@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "candidate",
+  "seconds": 1.5,
+  "compositions": {
+    "9x16": "MakeyourmindupStingTall",
+    "16x9": "MakeyourmindupStingWide"
+  },
+  "approved_by": null,
+  "approved_on": null,
+  "approval_words": null,
+  "source_sha256": null
+}

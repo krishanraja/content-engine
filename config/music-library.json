@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "root_env": "MINDMAKE_MUSIC_ROOT",
+  "root_default_windows": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\00_Brand-Assets\\07_Music",
+  "drive_folder_id": "1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK",
+  "levels": {
+    "status": "proposed",
+    "intro_lufs": -16,
+    "bed_lufs": -31,
+    "outro_lufs": -18,
+    "ramp_down_s": 0.5,
+    "ramp_up_s": 0.8,
+    "final_integrated_lufs": -14,
+    "tolerance_lu": 1,
+    "max_true_peak_dbtp": -1.0
+  },
+  "tracks": [
+    {
+      "id": "no-curves-instrumental",
+      "title": "NO CURVES (Instrumental Version)",
+      "artist": "Superintendent McCupcakes",
+      "provider": "Epidemic Sound",
+      "provider_track_id": null,
+      "provider_url": null,
+      "licence_type": null,
+      "licence_id": null,
+      "licensee": null,
+      "licence_file": null,
+      "acquired_on": null,
+      "expires_on": null,
+      "platforms": [],
+      "monetisation_ok": null,
+      "content_id_cleared": null,
+      "attribution": null,
+      "restrictions": null,
+      "file": "ES_NO CURVES (Instrumental Version) - Superintendent McCupcakes.mp3",
+      "sha256": null,
+      "bytes": 6329958,
+      "duration_s": null,
+      "sample_rate": null,
+      "measured_lufs": null,
+      "measured_true_peak": null,
+      "intro_cue_s": null,
+      "outro_cue_s": null,
+      "mood": null,
+      "status": "proposed",
+      "approved_by": null,
+      "approved_on": null,
+      "approval_words": null,
+      "drive_file_id": "1dWXsVYqgRnNDk5UFppA70kkVcDB-xRNs"
+    }
+  ]
+}

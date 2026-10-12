@@ -1,9 +1,14 @@
 # quick-edit
 
 Turns one to-camera recording into a finished tall (9:16) and wide (16:9)
-video in the makeyourmindup look: stumbles and dead air cut, graphics on the
-right lines, captions timed to the words, even loudness, the end card on the
-end.
+video in the makeyourmindup look: the intro sting first, stumbles and dead
+air cut, graphics on the right lines, captions timed to the words, the
+licensed music bed under it all, even loudness, the end card on the end.
+
+It is the only path that makes both shapes, and the only one that carries
+music and an opening sting (the Studio renders 9:16 only and refuses both).
+By house rule TWO_CUTS each cut is its own recording: the long cut renders
+with `--only 16x9`, the short cut with `--only 9x16`, each from its own config.
 
 It is for videos that do not go through the Studio: a launch hello, a quick
 take, or a piece whose Studio job is not set up yet. It made both launch
@@ -22,26 +27,48 @@ Python 3.10 or later, `ffmpeg` and `ffprobe` on the PATH, and
 `pip install faster-whisper` for the transcript. The caption font,
 Archivo Black, is in `fonts/` under its open licence (`fonts/OFL.txt`).
 
+Check a machine before a video, the backup machine above all:
+
+```
+python make.py --doctor          # or --doctor --json
+```
+
+It names the machine (and on Windows whether it is the Studio's active or
+standby runner; quick-edit renders on either), then checks ffmpeg and
+ffprobe and every filter the edit and the mix use, the caption font,
+faster-whisper, Pillow, Playwright, node (for the sting), the
+`MINDMAKE_MUSIC_ROOT` and `MINDMAKE_ARCHIVE_ROOT` folders, the music ledger,
+every approved track's file against its sha256, and the intro sting. It exits
+1 when anything a render needs is missing.
+
 ## Run it
 
 ```
-python make.py path/to/video.json --out OUTDIR --plan
-python make.py path/to/video.json --out OUTDIR --share-mib 29 --archive
+python make.py long.json --out OUTDIR-long --only 16x9 --plan
+python make.py long.json --out OUTDIR-long --only 16x9 --share-mib 29
+python make.py short.json --out OUTDIR-short --only 9x16 --plan
+python make.py short.json --out OUTDIR-short --only 9x16 --share-mib 29
 ```
 
 1. **Plan first.** `--plan` transcribes (the first run takes a minute or two
    on a laptop), then prints every cut with its words, every graphic's start
-   and end in the edited video, and the caption count. It renders nothing. It
-   exits with an error if a graphic's anchor words were not found, and stops
-   if a cut's words were not found. Fix the config and plan again until it is
-   clean.
-2. **Render.** Without `--plan`, it renders both shapes into `OUTDIR`. Each
-   shape takes a few minutes. `--only 9x16` or `--only 16x9` renders one.
-3. **Look at it.** `OUTDIR` gets `preview-<shape>-NN.jpg`: one frame at the
-   opening, one inside every graphic, and one on the end card. Check that
-   every graphic sits on its line, the captions read, and in the tall shape
-   the face crop keeps the eyes in frame. `<name>.cut.txt` is the full caption
-   text after the cuts: proofread it for misheard names.
+   and end in the edited video, and the caption count. Under `shapes` it says
+   what each cut will get: the sting or why not, the music track or why not,
+   the sting, main and end card lengths, and any warning (a tall cut over 90
+   seconds, for one). It renders nothing. It exits with an error if a
+   graphic's anchor words were not found, and stops if a cut's words were not
+   found. Fix the config and plan again until it is clean.
+2. **Render.** Without `--plan`, it renders into `OUTDIR`. Each shape takes a
+   few minutes. Without `--only` it renders both shapes from one recording,
+   which is for a quick take only: a piece's two cuts are two recordings.
+3. **Look at it.** `OUTDIR` gets `preview-<shape>-intro.jpg` (a frame in the
+   sting, when there is one) and `preview-<shape>-NN.jpg`: one frame at the
+   opening, one inside every graphic, and one on the end card, all moved on
+   by the sting's length. Check that every graphic sits on its line, the
+   captions read, and in the tall shape the face crop keeps the eyes in
+   frame. `<name>.cut.txt` is the full caption text after the cuts: proofread
+   it for misheard names. `<name>.report.json` has the numbers (below): read
+   its `warnings` before the video goes anywhere.
 4. **Share.** `--share-mib 29` also writes `OUTDIR/share/` copies under 29 MiB,
    because chat uploads stop at 30 MiB and a two-minute 1080p master runs 35
    to 75 MB. Every platform re-compresses on upload, so the share copy looks
@@ -50,6 +77,8 @@ python make.py path/to/video.json --out OUTDIR --share-mib 29 --archive
 5. **File it.** `--archive` copies the finished videos, and their share
    copies, into the archive in a folder that says when, what and where to
    post (below). `--plan --archive` shows the folder and file names first.
+   With two cuts rendered in two runs, file them together once both are
+   done, with `archive.py --tall ... --wide ...`, so they share one folder.
 
 The transcript is cached as `OUTDIR/<name>.words.json`, and the cut is cached
 until the cuts or the pause rule change, so a re-render after a graphics or
@@ -67,12 +96,15 @@ One JSON file per video. Paths are relative to the config file.
 | `face` | Optional. `[y, h]` inside the crop: the band shown under a graphic in the tall shape. Keep the eyes and the top of the head in it. `[100, 450]` worked for the launch videos, so without it the band is 100 to 550 of every 720 pixels down. |
 | `remove` | The words to cut, as said: `{"say": "So, you know,", "after": "is coming"}`. `after` is the words just before, so the right instance is cut. `{"restart_near": "3:02"}` cuts a restarted sentence from the time alone: it finds the words said again near that point in the raw recording and cuts from the first time they were said up to the clean retake (Krish, 2026-10-06: "I messed up and restarted my sentence at 3m02s"). `--plan` prints the words it cut; check them. An index pair `[first, last]` into the words file also works, but only for that exact transcript. |
 | `replacements` | `[["Chris", "Krish"], ["theater", "theatre"], ["computing power group", "computing power grows"]]`: fixes what the transcriber mishears, and keeps British spelling. A phrase of several words is matched as a run and replaced as one caption word group. Every video also gets the fixes in `DEFAULT_FIXES` in `make.py` first, the names the transcriber has got wrong before ("Bike Dance" for ByteDance, Krish, 2026-10-07): when a video misspells a name, add it there so the next one cannot. Captions only; the audio is untouched. |
-| `logo` | The makeyourmindup logo in the opening seconds of the tall video, on by default (Krish, 2026-10-07: "put the Make Your Mind Up logo in the first few seconds of the video somewhere on vertical video"). Without the field, the masthead sits on an ink pill above the captions for 3 seconds and fades out. `{"png": ..., "seconds": 3}` uses another full-frame transparent image; `false` leaves it out. |
+| `logo` | The makeyourmindup logo in the opening seconds of the tall video, on by default (Krish, 2026-10-07: "put the Make Your Mind Up logo in the first few seconds of the video somewhere on vertical video"). Without the field, the masthead sits on an ink pill above the captions for 3 seconds and fades out. `{"png": ..., "seconds": 3}` uses another full-frame transparent image; `false` leaves it out. It is laid on the main before the sting is joined in front, so with a sting it starts as his face comes in, never over the sting. |
+| `intro` | The sting before his face. `"auto"` (the default) is the house sting once Krish has approved it (`config/intro-sting.json`, below); until then the cut has no intro and the report says so. `false` leaves it out. `{"9x16": file, "16x9": file}` uses those clips (1 to 2 seconds each); the report notes that it is not the approved house sting. A sting problem never stops a render. |
+| `music` | The bed under the whole video. `"auto"` (the default) is `music.py`'s pick for this piece among the approved, licensed tracks; with none, the cut has voice only and the report says why. `false` is voice only. A track id uses that track, if it can be used. |
+| `piece_id` | Optional. Ties both cuts of one piece to the same music (else `subject`, else `name`). |
 | `script` | The script the recording was made from. Its names (ByteDance, Higgsfield, OpenAI) go to the transcriber as a hint, so it spells them as written. |
 | `cues` | The graphics. Each has an `id`, a `panel` image (`{aspect}` becomes `9x16` or `16x9`), and the `start` and `end` words it covers. The graphic comes in 0.15 seconds before `start` and leaves 0.35 seconds after `end` (`lead` and `tail` change that). |
 | `frame16` | The wide shape's background: brand panels left and right of the speaker. |
 | `strap` | The name strap in the tall shape: a `png`, the words it follows (`after`) and how long it stays (`seconds`). |
-| `endcard` | `{"9x16": ..., "16x9": ...}`: a short clip with an audio track, joined to the end. |
+| `endcard` | `{"9x16": ..., "16x9": ...}`: a short clip, joined to the end. Its own sound, if it has any, goes under the bed. |
 | `max_gap`, `pad_before`, `pad_after` | The pause rule: any silence over `max_gap` seconds (0.35) is cut, keeping `pad_before` (0.10) before the next word and `pad_after` (0.16) after the last one. |
 | `subject` | For `--archive`: the piece's short title, as it should read in the archive, such as `"Who gets paid"`. `--archive` stops without it. |
 | `date` | For `--archive`: the publish date, `YYYY-MM-DD`. Without it, the folder carries the day it was filed, London time. |
@@ -96,6 +128,132 @@ background (Playwright, `omitBackground: true`).
 Captions are Archivo Black, cream on an ink box, with numbers in mint: 70
 pixels in the tall shape (top third, or under a panel), 48 in the wide shape
 (bottom of the speaker's column).
+
+## The intro sting
+
+Krish, 2026-10-12: "I also want the video to have a 1-2 sec animated make
+your mind up intro visual before my face comes in". It is a clip per shape,
+1.5 seconds (1 to 2 allowed), joined in front of the captioned main, so no
+word, caption or graphic moves. The music is high over it.
+
+The design is two Remotion compositions in `apps/renderer`, named in
+`config/intro-sting.json`. Their source is every file under
+`apps/renderer/src` with "sting" in its path. The design waits for Krish:
+
+```
+python intro.py status                            # approval, source hash, what is rendered here
+python intro.py render --preview                  # both shapes, to show Krish
+python intro.py approve --words "his exact words" # records them and the hash of the preview he saw
+python intro.py render                            # the approved sting, on each machine that renders
+```
+
+While `status` is `candidate`, `render` without `--preview` refuses and
+make.py renders without an intro. Renders go to
+`.cache/quick-edit/intro/<hash>-<shape>.mp4` (30 fps, square pixels,
+yuv420p, a silent 48 kHz stereo track), cached by the source's hash. A sting
+whose source changes after approval is not used until he approves it again.
+make.py (and `--plan`, so a problem shows early) renders an approved sting
+itself, once, if the machine has none yet.
+
+## The music
+
+Krish, 2026-10-12: "I am also going to get some licensed audio to put behind
+my videos, so help me prepare to put it somewhere you and codex will always
+know where that is, and use it correctly (high volume during the intro, low
+whilst I am talking, higher during the outro)."
+
+- **Where the audio lives.** Google Drive, makeyourmindup >
+  00_Brand-Assets > 07_Music (Drive folder
+  `1pmPWx8vTOZuUXkp-WjhLlCTvof8MrRxK`): on the runner machines
+  `H:\My Drive\Ventures\Active\makeyourmindup\00_Brand-Assets\07_Music`. The
+  folder is `MINDMAKE_MUSIC_ROOT`, else `runtime.music_root` in
+  `config/studio.json`. On a computer without that H: drive (a Mac, say),
+  set `MINDMAKE_MUSIC_ROOT` to where Google Drive puts the same folder. Keep
+  each licence certificate beside its track. Audio is never committed.
+- **The ledger** is `config/music-library.json`, committed. Each track
+  records who made it and where it came from, the licence (id, type,
+  licensee, certificate, start and end, which platforms, monetisation,
+  YouTube Content ID clearance, attribution, restrictions), the file
+  (relative to the music folder, sha256, bytes, length, sample rate), its
+  measured loudness and true peak, its intro and outro cue points, its mood,
+  and Krish's approval in his words. `"loopable": true` marks a track that
+  loops cleanly from its intro cue.
+- **What is ever used.** Only a track in the ledger, approved by Krish, whose
+  licence is in date and covers every place the cut goes (the wide cut:
+  YouTube and Substack; the tall cut: Shorts, Reels, TikTok and LinkedIn),
+  cleared for YouTube Content ID, long enough or loopable, and whose file
+  matches its sha256. Nothing browses Drive for audio.
+
+```
+python music.py list
+python music.py check                                    # the ledger, and the files where the folder is reachable
+python music.py add "<music folder>/track.wav" --provider NAME --licence-id ID --licence-file licences/track.pdf \
+    --title .. --artist .. --platforms youtube,substack,shorts,tiktok,reels,linkedin --content-id-cleared yes \
+    --acquired-on YYYY-MM-DD [--expires-on ..] [--intro-cue S] [--outro-cue S] [--loopable]
+python music.py approve TRACK_ID --words "his exact words"
+python music.py approve-levels --words "his exact words"
+python music.py pick --seconds 190 --piece PIECE_ID --shape 16x9
+```
+
+`add` measures the file and writes it as `proposed`; only `approve`, with
+Krish's own words, makes it usable. `pick` gives the same piece the same
+track and rotates different pieces through the approved ones.
+
+**The levels** are in the ledger's `levels`, proposed until Krish approves
+them by ear: the music at about -16 LUFS over the sting, about -31 LUFS under
+his voice (about 17 LU under his -14), and about -18 LUFS over the end card.
+It ramps down over 0.5 seconds as his face comes in, so it is at the bed
+level by his first word, and up over 0.8 seconds from his last word. A track
+with an outro cue has its ending crossfaded in there. It is a time envelope
+(`volume` with `eval=frame`), not sidechain compression: the cut is already
+tight, so a sidechain would only pump. Each stretch's gain comes from the
+track's own loudness where it sits, measured before the mix.
+
+**The mix.** His voice is set to -14 LUFS, the bed is laid under the whole
+video, the two are summed (`amix` with `normalize=0`), limited at -2 dBTP,
+and the final mix gets the two-pass loudness pass (`loudnorm`, linear, so it
+is one gain), steered by the ebur128 meter. After the encode the file is
+measured again: integrated -14 +-1 LU and true peak at most -1 dBTP, or the
+report warns.
+
+## The report
+
+`<name>.report.json` keeps what it always had and adds, per shape under
+`shapes`, and at the top level when one shape was rendered (the house way):
+
+- `intro_seconds`, `main_seconds`, `outro_seconds` (the end card) and
+  `total_seconds`, and `intro` (which sting, its sha256);
+- `music`: the track id, title, sha256, the levels used, the gain on each
+  stretch and how the track was laid (straight, looped, or to its outro
+  cue), or null;
+- `loudness`: `integrated`, `true_peak`, `intro_short_term`,
+  `voice_short_term` and `outro_short_term` (each stretch where its level
+  holds), `bed_to_voice_lu` (from the voice and bed stems alone), and whether
+  the final pass was a plain gain;
+- `warnings`: no sting and why, no music and why, levels still proposed, a
+  tall cut over 90 seconds, loudness out of range.
+
+The stems and the mix are in `OUTDIR/audio-<shape>/` (`dialog.wav`,
+`bed.wav`, `mix.wav`) for anyone who wants to listen to one alone.
+
+## Tests
+
+```
+python make.py --self-test       # the cuts, the clock, the previews, the join order
+python music.py --self-test      # the ledger, the pick, and a real bed measured against the levels
+python intro.py --self-test      # a synthetic sting through the finishing path, and the approval gate
+python mix_test.py               # three real renders from synthetic media, measured (about 3 minutes)
+```
+
+`mix_test.py` builds a 20 second voice-like recording, a looping chord with
+a stand-in licence and ledger, a synthetic sting and the graphics under
+`.cache/quick-edit/mix-test/`, renders a tall and a wide cut with the sting
+and the bed and a tall cut as things stand today (no approved sting, no
+approved track), and checks the measured numbers against the levels. It
+points make.py at its stand-in ledger with `MINDMAKE_MUSIC_LEDGER`; a real
+render never sets it, and a report made with any ledger but
+`config/music-library.json` says so in its warnings.
+`tests/quick-edit-mix.test.ts` runs all four in CI.
 
 ## The archive
 
@@ -153,6 +311,8 @@ Change a case there first, then both programs.
 
 ## What stays out of the repository
 
-Recordings, graphics and finished videos are media, and media are never
-committed (`scripts/check-no-secrets.ts`). The configs and this tool are
-committed; the files they point at live in a local working folder.
+Recordings, graphics, music and finished videos are media, and media are
+never committed (`scripts/check-no-secrets.ts`). The configs, the music
+ledger, the sting's settings and this tool are committed; the files they
+point at live in a local working folder, the music folder in Drive, or
+`.cache/`.
