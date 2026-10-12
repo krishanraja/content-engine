@@ -65,6 +65,19 @@ Last updated: 2026-10-12, about 18:00 UTC, by a Claude Code session (cloud).
   and one script per cut, updated in place, and nothing there is ever
   deleted (`AGENTS.md`, `config/teleprompter.json`).
 
+- Never hand him a blocker you have not checked is real, and never one a
+  session can clear itself. His words, 2026-10-12, after a session relayed
+  the runner's "Drive unavailable" light as his to fix: "I find it a bit
+  ridiculous that you're bringing me this blocker. I think you've done this
+  before and you just eventually realised you're making a mistake so you
+  need to fix this." Both home computers had Drive working. The runner's
+  `drive_state` light is not proof: check it on the machine before saying
+  anything.
+- Epidemic Sound gives no per-track licence number. His safelisted channels
+  are the licence record (`config/music-licences/`, screenshot of 12
+  October); never ask him for licence details again. LinkedIn is not on the
+  safelist.
+
 ## This week's publish board
 
 One page a week, with a tab for Monday, Wednesday and Friday and a tick for
@@ -107,9 +120,15 @@ Last week's publish board: none (the first board was made on 12 October).
   This session's account cannot read the board's tick store or open the
   Monday and Friday day pages (both made under another account), so the
   board was edited by hand, not rebuilt with `week_board.py`.
-- Main home computer: on, but reports Drive unavailable. Board item
-  `mon-produce-today` tells Krish to restore Drive and start Codex with
-  "produce Monday's video". After the cuts are recorded, a Claude Code
+- Krish said "Merge it": the exception is on main. Drive works on both
+  home computers (his words); the runner's light was wrong. Board item
+  `mon-produce-today`: start Codex on a home computer with "produce
+  Monday's video"; that run measures NO CURVES (`music.py add`) and records
+  his approval ("Yes I approve that licence track.") before rendering. The
+  tall cut's music check also asks for LinkedIn, which is not safelisted:
+  it renders without music unless LinkedIn is added to the safelist or he
+  rules the check should drop LinkedIn (a change to `music.py` was refused
+  by this session's permission check). After the cuts are recorded, a Claude Code
   session adds them to Monday's tab and republishes the board.
 - Story intro design: three blind concepts made (stand-off, receipt printer,
   song track); judges split (stand-off v receipt); a tie-break judge was run.
