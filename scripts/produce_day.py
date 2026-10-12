@@ -229,8 +229,21 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, 
     kit = work / 'kit'
     env = {'MINDMAKE_MUSIC_ROOT': music_root}
     for cut, take in takes_at.items():
-        run([PY, 'scripts/quick-edit/kit.py', post_path, '--cut', cut, '--recording', take, '--out', kit, '--force'],
-            env=env, what=f'the {cut} kit')
+        p = run([PY, 'scripts/quick-edit/kit.py', post_path, '--cut', cut, '--recording', take, '--out', kit, '--force'],
+                env=env, ok=(0, 1), what=f'the {cut} kit')
+        if p.returncode == 1:
+            # A picture whose words come out too small to read in this cut's
+            # shape (house rule SUBSTACK_FIT) stays out of this cut; the
+            # other cut keeps it. Any other CHECK stops the run.
+            checks = re.findall(r'^CHECK (\S+?): (.*)$', p.stdout, re.M)
+            small = {cid for cid, why in checks if 'a viewer can read' in why}
+            if not checks or len(small) != len(checks):
+                raise Stop(f'the {cut} kit: ' + '; '.join(f'{c}: {w}' for c, w in checks if c not in small)[:600])
+            cfg_path = kit / f'{cut}.json'
+            cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
+            cfg['cues'] = [c for c in cfg.get('cues') or [] if c.get('id') not in small]
+            cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
+            log(f'the {cut} cut leaves out {", ".join(sorted(small))}: too small to read in its shape (the other cut shows them)')
     rendered = {}
     for cut, shape in SHAPE.items():
         cfg_path = kit / f'{cut}.json'
@@ -240,10 +253,16 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, 
         cfg['endcard'] = {**(cfg.get('endcard') or {}), shape: str(clips[shape]['outro'])}
         cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
         out = work / cut
-        plan = run([PY, 'scripts/quick-edit/make.py', cfg_path, '--out', out, '--only', shape, '--plan'], env=env,
+        plan = run([PY, 'scripts/quick-edit/make.py', cfg_path, '--out', out, '--only', shape, '--plan'], env=env, ok=(0, 1),
                    what=f'planning the {cut} cut')
-        report = json.loads(plan.stdout[plan.stdout.index('{'):]) if '{' in plan.stdout else {}
+        try:
+            report = json.loads(plan.stdout[plan.stdout.index('{'):plan.stdout.rindex('}') + 1])
+        except ValueError:
+            raise Stop(f'planning the {cut} cut gave no plan: ' + ' '.join(plan.stdout.strip().splitlines()[-3:])[:600])
         if report.get('missing_cues'):
+            # The words he said differ from the script's: the picture stays out of this cut, said in the log.
+            cfg['cues'] = [c for c in cfg.get('cues') or [] if c.get('id') not in set(report['missing_cues'])]
+            cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
             log(f'the {cut} cut: no line found for {", ".join(report["missing_cues"])}; those pictures are left out')
         if not (report.get('shapes', {}).get(shape) or {}).get('music'):
             raise Stop(f'the {cut} cut would go out without music: ' + '; '.join((report.get('shapes', {}).get(shape) or {}).get('warnings') or []))
