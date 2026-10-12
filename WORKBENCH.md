@@ -149,7 +149,7 @@ https://controlcenter.krishraja.com/#/board:
    with a hash of the source he saw (as `scripts/quick-edit/intro.py` does
    for the sting; note the sting's own compositions are not registered in
    the renderer yet either, `intro.py status`), `make.py` reading the
-   config so a cut gets them, and tests. Commit, merge to main and deploy
+   config so a cut gets them, `produce-video` updated, and tests. Commit, merge to main and deploy
    only with his go in that session (a home computer pulls main). Then
    Krish starts Codex on a home computer with "produce Monday's video"
    (`produce-video`); a cloud session cannot render (`docs/ENGINE_SESSION.md`).
@@ -383,8 +383,9 @@ bring takes back, was retired on 12 October.
 ## Latest handoff
 
 - 2026-10-12, Monday, about 17:10 UTC: **the week's board carries the words
-  Krish actually reads, Wednesday is being made, and Monday waits on one
-  thing: the story intro and outro design.** Krish: "Good stuff, leave me
+  Krish actually reads, Wednesday's workroom is made and waits on two
+  calls from Krish, and Monday waits on one thing: the story intro and
+  outro design.** Krish: "Good stuff, leave me
   with the final Publish Board with Monday 100% ready to publish (post
   produced video links included), Weds and Fri in production". In plain
   words:
@@ -452,7 +453,8 @@ bring takes back, was retired on 12 October.
   Wednesday's tab of the board (not rebuilt yet: no publish page exists).
   Ticks copied: Monday's two Record ticks only (information; takes are on
   Monday's record). (Written by Wednesday's routine session, which pushed it
-  only to branch `claude/relaxed-bell-vmveum`; copied here word for word.)
+  only to branch `claude/relaxed-bell-vmveum`; copied here word for word.
+  The session itself stopped at 16:56 UTC.)
 
 - 2026-10-12, Monday, about 16:45 UTC: **Descript is out, teleprompter.com
   is in; every script opens with its series line and is held to a reading
