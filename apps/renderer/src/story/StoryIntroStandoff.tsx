@@ -20,7 +20,7 @@ const T = {
   flip: 30, // the big stamp: held until the question card covers it
   qIn: 46, // the question card slides in over the fight, eased, 10 frames
   qDur: 10,
-  word: (i: number) => 56 + 4 * i,
+  word: (i: number) => 54 + 4 * i,
 }
 
 interface Sizes { cw: number; ch: number; lw: number; lh: number; pad: number; nf: number; sf: number; so: number; gap: number }
