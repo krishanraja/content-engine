@@ -28,17 +28,23 @@ This must work as a SYSTEM: one structural template that holds across every stor
 - Title: "Warner sued Suno. Now it takes a cut. Who else gets paid?"
 - Krish's spoken opener (said on camera, right after the intro): "Here's what you need to know about how money is changing because of AI. I'm Krish."
 - The fact-checked script: docs/plans/2026-10-12-draft-script.md (3-minute) and docs/plans/2026-10-12-draft-script-90s.md. Use ONLY facts in those files. Never invent a number, date, quote or outcome.
-- The script's close (the outro follows it): "The full story, with every source, is free at makeyourmindup.ai. Tell me in the comments: should a singer get paid when an AI learns from their song? Make your mind up."
+- The scripts' closes (the outro follows them). The 3-minute cut: "The full story, with every source, is free at makeyourmindup.ai. Tell me in the comments: should a singer get paid when an AI learns from their song? Make your mind up." The 90-second cut: "The full story is free at makeyourmindup.ai. Tell me in the comments: should a singer get paid when an AI learns from their song? Make your mind up."
+- On screen, the intro carries the plain question "Who gets paid for AI songs?" (the piece's working title, and the name of its Teleprompter scripts); the article title above is there for context, not to be set in full.
 - Companies named: Suno (the AI app that writes and sings you a song), Warner Music, Universal Music, Sony Music. House rule: a visual that names a company shows its REAL logo from its own brand files, never redrawn. Real logos are embedded as images in Monday's publish page, https://claude.ai/artifact/QpGeGjaqZwvyXwRnSadqyS (the session saves it with an Artifact read and gives you the file; extract the data: URIs or <img> sources you need; config/logo-registry.json lists domains). If you cannot find a real logo file, show a clearly labelled grey placeholder box with the company name and say so in your spec. Never draw a fake logo.
 
 ## What Krish rejected before (failure signals, not a design to copy)
 On an earlier brand sting he said: "it's ok, it's a bit boring and colourless and vanilla - and just what Powerpoint would do in 2008". So: no generic slide transitions, no swoosh-and-fade, no centred-title-on-a-gradient, no stock "news intro". It must feel bold, colourful, current, physical and made for THIS story. He also rejects cramped density, cartoon faces, mascots, gradient-mesh heroes and glassmorphism.
 
+## The intro and the brand sting
+
+Assume the story intro carries the makeyourmindup brand itself and is the only thing before Krish's face: no separate brand sting plays in front of it. (A second brand sting design is still waiting on Krish; the synthesis says how it would fit if he wants both.)
+
 ## Hard constraints
 - Sizes: 16:9 at 1920x1080 (YouTube, Substack) and 9:16 at 1080x1920 (Shorts, TikTok, Reels). In 9:16 keep key content inside the safe zone (top 220px and bottom 420px are covered by platform UI).
 - 30 fps. Must be buildable later as a Remotion composition (React + CSS + SVG + images, deterministic per frame; no live video, no 3D engine). For this mock, write plain HTML/CSS/JS that animates on a timeline you control (use requestAnimationFrame with a time variable so a frame at time t is deterministic).
 - Readable by a 12-year-old in one glance: few words on screen, big type, plain words. No em dashes anywhere. Sentence case for any sentence. Never "I made this with AI" or any AI-disclosure line. The outro never says "I'm Krish".
-- Audio treatment: describe it as a cue sheet tied to your timeline: the music bed (licensed library, config/music-library.json in the repo, do not pick a track that is not listed there; you may describe the character wanted), its level at each moment (loud under the intro, ducked low under Krish's voice, rising into the outro), and any sound design hits synced to visual beats (describe them; no audio file needed). Show the cue sheet visually in the mock, aligned to the timeline.
+- Length: Monday's 90-second take is already 95 seconds of speech, so the intro and outro push the short cut further past 90 seconds; keep them as short as the story allows, give each a shorter tall-cut version if that helps, and state both lengths in your spec. Krish has not yet ruled whether the 90-second cap counts them.
+- Audio treatment: describe it as a cue sheet tied to your timeline: the music bed (licensed library, config/music-library.json in the repo, do not pick a track that is not listed there; its only track, NO CURVES, and its levels are both still proposed, not approved, so describe the character wanted and how NO CURVES would sit under it), its level at each moment (loud under the intro, ducked low under Krish's voice, rising into the outro), and any sound design hits synced to visual beats (describe them; no audio file needed). Show the cue sheet visually in the mock, aligned to the timeline.
 
 ## Deliverable (put everything in your own folder, which the session names: <its scratchpad>/story-io/<a, b or c>/)
 1. mock.html: ONE self-contained page (inline CSS/JS, images as data URIs, Google Fonts allowed via link). It shows the 16:9 and 9:16 intro side by side (scaled to fit the screen), then the outro card in both sizes, playing in sync, with: Play from start, Quarter speed, and a scrubber. Under it, the audio cue sheet aligned to time. Under that, one small panel showing how the same template carries a DIFFERENT story (Friday's mind.the.gap story "Why are there suddenly so many AIs?" in coral), so Krish sees it is a system. Keep the page itself plain and quiet so the video frames are the star. The page must work at 400px wide (no horizontal scroll) and on a laptop.
@@ -100,12 +106,25 @@ your own folder.
 3. Render one synthesis from the winner (grafting the best of the others),
    check it at 400px and at laptop width, and publish it as a private
    artifact. Show it to Krish cold: no rationale and no change log until his
-   first reaction. Also still pending with him: the second intro sting
-   design, https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH; say how the
-   story intro and the sting fit together (one after the other, or the
-   story intro carrying the brand itself).
+   first reaction. He may not be in the session, so put it to him both in
+   the chat and as an `on_you` board item (`only_you` `judgment`, `idea_id`
+   Monday's piece f328382d-71b3-41a7-a221-d8615826f12e, `closes_on` `video`,
+   `link` the artifact). Ask in the same breath, because each decides how
+   the cuts can be made: the music track and its levels (NO CURVES and the
+   levels are proposed; `scripts/quick-edit/music.py` records an approval),
+   and whether the 90-second cap counts the intro and outro. Also still
+   pending with him: the second intro sting design,
+   https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH; say how it would fit
+   if he wants it as well as the story intro.
 4. On his approval in words, record it in `config/story-intro-outro.json`
-   (status, his exact words, the date), build the compositions in
-   `apps/renderer` the way `scripts/quick-edit/intro.py` handles the sting
-   (a source hash and an approval tied to what he saw), and only then can a
-   home computer produce Monday's cuts (`produce-video`).
+   (status, his exact words, the date). Then build it: the story intro and
+   outro as Remotion compositions in `apps/renderer` (both sizes, the
+   story's words, logos and series colour as props), an approve step that
+   stores his words with a hash of the source he saw, as
+   `scripts/quick-edit/intro.py` does for the sting (whose own compositions
+   are not registered in the renderer yet either), `make.py` reading the
+   config so every cut gets them, `produce-video` updated, and tests.
+   Commit, merge to main and deploy only with his go in that session: a
+   home computer pulls main before it renders. Then Krish starts Codex on a
+   home computer with "produce Monday's video" (`produce-video`); a cloud
+   session cannot render.

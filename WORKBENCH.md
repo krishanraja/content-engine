@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, about 17:20 UTC, by a Claude Code session (cloud).
+Last updated: 2026-10-12, about 17:35 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -80,8 +80,8 @@ day on it is at 100% (Friday's reposts go out at the weekend).
 
 - Week of 12 to 16 October 2026 (board item
   `week-publish-board-2026-10-12`; Monday recorded, waiting on its
-  produced video; Wednesday being made; Friday made, waiting on Krish's
-  call and his recording):
+  produced video; Wednesday's workroom made, waiting on two calls from
+  Krish; Friday made, waiting on his call and his recording):
   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
 
 Last week's publish board: none (the first board was made on 12 October).
@@ -92,9 +92,13 @@ Krish closed the 12 October session with: "lets just close this session
 out here, I will get another session to pick up exactly from here with the
 prompt "resume this weeks publish board"". The goal he set it, his words:
 "leave me with the final Publish Board with Monday 100% ready to publish
-(post produced video links included), Weds and Fri in production". A
-session given that prompt picks up here, in this order, and ends every reply
-with https://controlcenter.krishraja.com/#/board:
+(post produced video links included), Weds and Fri in production". Where it
+stood at about 17:30 UTC: Monday recorded, its produced videos blocked on a
+design only he can approve; Wednesday has its workroom and waits on two
+calls from him; Friday's scripts are in his Teleprompter and wait on one
+call from him, then his recording. A session given that prompt picks up
+here, in this order, and ends every reply with
+https://controlcenter.krishraja.com/#/board:
 
 1. **Read where it stands.** The three pieces: `python3
    scripts/post-pack/making.py <piece> show` for Monday
@@ -105,69 +109,123 @@ with https://controlcenter.krishraja.com/#/board:
    --show <the saved file>`, then copy his ticks ("The week's ticks" in
    `make-piece`; Monday's two Record ticks are in its store already, written
    on 12 October from his words "the two Monday videos are now in Inbox").
-   The board's waiting list: `python3 scripts/engine.py GET /api/workbench
-   --full` (his replies are in `replies`). Wednesday's making session was
-   started on 12 October at about 17:00 UTC by firing the "Make a piece"
-   routine (trig_01BNH3a98CuVV9sGW9b56DNJ) with Wednesday's piece; its
-   session is cse_01FzzvZdb6pALs4La91JrMJb (read it with the remote
-   session tools, `get_session` and `list_events`). Do not start a second
-   one while it is working.
-2. **Monday's story intro and outro design** (the only thing between
-   Monday and its produced videos). Run the process in
-   `docs/plans/2026-10-12-story-intro-outro-brief.md`: three blind concepts,
-   blind judges, one synthesis, shown to Krish cold. The first attempt was
-   stopped unfinished when the 12 October session closed and nothing was
-   kept. Record nothing as approved without his words.
-3. **After his approval**: record it in `config/story-intro-outro.json`,
-   build it in the renderer, then a home computer (Codex, `produce-video`)
-   produces Monday's two cuts from the takes on the record and records them
-   (`making.py --by Codex <piece> video ...`). A cloud session cannot
-   produce them (`docs/ENGINE_SESSION.md`). When the video assets are on the
-   record, put the cuts and their thumbnails on Monday's publish page
-   (https://claude.ai/artifact/QpGeGjaqZwvyXwRnSadqyS), republish it to its
-   link, rebuild the board and republish it to its link (command below).
-   Monday is 100% when the standing five are posted: that is Krish's.
-4. **Friday** waits on his call on the prediction line (board item
-   `friday-record`): keep the dated call, or say the broader bet ("the list
-   disappears, the app picks for you") in the video and leave the exact call
-   to the article; the 12 October session recommended the broader bet. On
-   his answer: rewrite `docs/plans/2026-10-09-draft-script.md` and `-90s.md`,
-   `story_check.py --cut long|short --series mind_the_gap` until ready, two
-   fresh readers until both find nothing that loses them (`making.py <piece>
-   read-back CUT --readers ...`), `making.py <piece> scripts`, then
-   `teleprompter_send.py plan` and `update_script` in place (folder
+   The waiting list: `python3 scripts/engine.py GET /api/workbench --full`
+   (items `wed-muse-calls`, `friday-record`,
+   `week-publish-board-2026-10-12`; his replies are in `replies`).
+2. **Ask Krish, once, in the chat, the calls that are his**, with the
+   board link (Control Center's reply box is retiring, so his answer comes
+   in the chat): (a) Wednesday's headline and its go to spend (item
+   `wed-muse-calls`, workroom https://claude.ai/artifact/XW7uwdEJbMybpXVh2gjJRu:
+   the planned headline "The Opt-In Was Buried in the Onboarding" has no
+   source; the supported story is that Muse keeps a page on people who
+   never signed up, TIME, 6 October; he says "use it" or gives his own,
+   and "go" for the paid draft and fact check); (b) Friday's prediction
+   line (item `friday-record`: keep the dated call, by 30 September 2027
+   at least two of OpenAI, Anthropic and Google pick the brain for app
+   builders by default, 85%, which young readers keep getting lost at, or
+   say the broader bet "the list disappears, the app picks for you" in the
+   video and leave the exact call to the article; the 12 October session
+   recommended the broader bet); (c) the design, once step 3 has one to
+   show.
+3. **Monday's story intro, audio treatment and outro card** (what stands
+   between Monday and its produced videos). Run the process in
+   `docs/plans/2026-10-12-story-intro-outro-brief.md`: three blind
+   concepts, blind judges, one synthesis, shown to him cold. A first attempt
+   was stopped unfinished when the 12 October session closed and nothing
+   was kept. Put the design to him in the chat and as an `on_you` item
+   (`only_you` `judgment`, `idea_id` Monday's piece, `closes_on` `video`,
+   `link` the design). Settle with it, because they decide how the cuts can
+   be made: the music track and its levels (the only track in
+   `config/music-library.json`, NO CURVES, and the levels are both still
+   proposed; `scripts/quick-edit/music.py` records his approval), and the
+   90-second cap (Monday's short take is 95 seconds of speech before any
+   intro or outro; `produce-video` says tighten only where he stumbled,
+   never speed up, and tell him both numbers). Record nothing as approved
+   without his own words.
+4. **After his approval: build it, then the home computer makes the
+   videos.** Record his words in `config/story-intro-outro.json`. Then build
+   it in this repository: the story intro and outro as Remotion
+   compositions in `apps/renderer`, an approve step that stores his words
+   with a hash of the source he saw (as `scripts/quick-edit/intro.py` does
+   for the sting; note the sting's own compositions are not registered in
+   the renderer yet either, `intro.py status`), `make.py` reading the
+   config so a cut gets them, and tests. Commit, merge to main and deploy
+   only with his go in that session (a home computer pulls main). Then
+   Krish starts Codex on a home computer with "produce Monday's video"
+   (`produce-video`); a cloud session cannot render (`docs/ENGINE_SESSION.md`).
+   Codex records the cuts (`making.py --by Codex <piece> video ...`). Then a
+   Claude Code session puts the cuts and their thumbnails on Monday's
+   publish page (https://claude.ai/artifact/QpGeGjaqZwvyXwRnSadqyS),
+   republishes it to its link, rebuilds the board and republishes it to its
+   link (command below). Monday is 100% when he has posted the standing
+   five; that part is his.
+5. **Friday, on his answer.** Rewrite `docs/plans/2026-10-09-draft-script.md`
+   and `-90s.md`; `story_check.py --cut long|short --series mind_the_gap`
+   until ready; two fresh readers (the prompts in `make-piece`, "The
+   Scripts step") until both find nothing that loses them; `making.py
+   <piece> scripts long.md short.md`; then `making.py <piece> read-back long`
+   and `short` with the readers' answers; then `teleprompter_send.py plan`
+   and `update_script` in place (folder
    DD28154B-B6D1-47DB-803A-79410D83196D; 3-minute script
    185F739E-733F-43B9-B5B2-66846CB5EC44, 90-second
-   1165370C-68A6-444E-88D5-A326A131E58C), the record lines, then Friday's
-   page (https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV: the scripts are
-   the `<pre class="txt" id="c13">` and `id="c14"` blocks, the words
-   HTML-escaped in both `data-raw` and the text; replace the chip "Waiting:
-   your call on the prediction line, then recording") and the board. If he
-   has not answered, ask once, with the two options and the recommendation.
-5. **Wednesday**: when its session has made its publish page, rebuild the
-   board with it (that session should do so itself; check it did).
-6. **Only Krish can**: attach the Teleprompter connector to both routines
+   1165370C-68A6-444E-88D5-A326A131E58C) and the record lines it prints.
+   Then Friday's page (https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV)
+   and the board. With the post's working folder at hand, rebuild the page
+   with `publish_manager.py`; without it (a cloud session), edit it as the
+   12 October session did: the scripts are the `<pre class="txt"
+   id="c13">` (3-minute) and `id="c14"` (90-second) blocks, the words
+   HTML-escaped in both `data-raw` and the text, checked to round-trip, and
+   the chip "Waiting: your call on the prediction line, then recording"
+   replaced.
+6. **Wednesday, on his answer.** Its routine session
+   (session_01FzzvZdb6pALs4La91JrMJb, https://claude.ai/code/session_01FzzvZdb6pALs4La91JrMJb)
+   finished the Workroom and stopped at 16:56 UTC, waiting on him; its
+   notes are its entry under "Latest handoff". On his words, either carry
+   Wednesday on in this session (`make-piece`: draft, fact gate, visual
+   gate, scripts with the under.the.hood line, read-back, Teleprompter,
+   publish page, board) or fire the "Make a piece" routine
+   (trig_01BNH3a98CuVV9sGW9b56DNJ) with `piece_id:
+   7554ed4a-560b-4365-b266-ea72abeed7ef`, quoting his words in the fire
+   text. Never both.
+7. **Read-backs already behind us.** No cut, Monday's or Friday's, has a
+   two-reader pass on record, whatever the 16:45 entry below says ("each
+   cut passed `story_check.py` and two fresh 12-year-old readers": they
+   passed `story_check.py`; the strict readers still lost the thread in
+   places). Monday's takes are recorded, so leave Monday's words alone and
+   record no pass for them; Friday's get theirs in step 5.
+8. **Only Krish can**: attach the Teleprompter connector to both routines
    ("Plan the week" trig_016PWevC6fzViu6mHpKSAbHM and "Make a piece"
    trig_01BNH3a98CuVV9sGW9b56DNJ) and remove Descript from them, in
-   claude.ai. Until he does, a routine session stops at the Teleprompter
+   claude.ai; until he does, a routine session stops at the Teleprompter
    send and says so. Still open with him: the second sting design
-   (https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH), the NO CURVES
-   licence and levels, whether the 90-second cap counts the intro and outro,
-   and Library Sync on the backup computer.
+   (https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH, which the story
+   intro may absorb; step 3), and Library Sync on the backup computer.
+
+What a session may do without asking, and what needs his go in that
+session (`AGENTS.md`, "Authority"): his standing words cover the
+Teleprompter send (on the terms above), and the making work `make-piece`
+gives Claude covers republishing his private day pages and the week's
+board to their own links, making-record lines and board items. A paid
+draft or fact check, a merge or deploy, and anything that sends, posts,
+spends, deletes or changes a permission needs his words immediately
+before it.
 
 Rebuild the board with every made day's current page (each saved with an
 `Artifact` read), the board as last read as `--previous`, then republish it
 to its own link, never as a new artifact (the store, with every tick, stays
-with the page):
+with the page). In a cloud session `CLAUDE_CODE_REMOTE=1` lets the engine
+reads through with the environment's key (`scripts/engine.py`); on a home
+computer leave it off:
 
     CLAUDE_CODE_REMOTE=1 python3 scripts/post-pack/week_board.py --week 2026-10-12 --live \
       --previous <the board as Artifact read saved it> \
       --day mon=<Monday's page> --day fri=<Friday's page> [--day wed=<Wednesday's page>] \
-      --out <scratchpad>/week-board.html
+      --out .cache/week-board/2026-10-12/week-board.html
 
-With `--live` each cut's Teleprompter script comes from the making record,
-so `--teleprompter` is not needed (it takes a file when used). Check the
-built page for each day's current opening line before publishing.
+With `--live` each day's piece and each cut's Teleprompter script come from
+the engine, so `--piece` and `--teleprompter` are not needed (the second
+takes a file when used). Check the built page for each day's current
+opening line before publishing.
 
 ## The board: what is waiting on Krish, in progress and done
 
@@ -356,12 +414,15 @@ bring takes back, was retired on 12 October.
     The brief and the process are in
     `docs/plans/2026-10-12-story-intro-outro-brief.md`, and the next steps
     are under "Resume this week's publish board" above.
-  - **Wednesday is in production.** This session fired the "Make a piece"
+  - **Wednesday is started.** This session fired the "Make a piece"
     routine with Wednesday's piece (7554ed4a-560b-4365-b266-ea72abeed7ef)
-    on his "Weds and Fri in production". That routine still has no
-    Teleprompter connector (only he can attach it, and remove Descript, in
-    claude.ai), so it will stop at the send and say so; the next session
-    that has the connector sends what `teleprompter_send.py pending` lists.
+    on his "Weds and Fri in production". Its session
+    (session_01FzzvZdb6pALs4La91JrMJb) made the workroom and stopped,
+    waiting on two calls from him (its entry, next below). Its board item
+    `wed-muse-calls` had no `closes_on`, so Control Center held it back
+    from his list; this session gave it `closes_on: draft`. The routine
+    still has no Teleprompter connector (only he can attach it, and remove
+    Descript, in claude.ai).
   - **Friday waits on one call from him**, now in the `friday-record` board
     item (rewritten for Teleprompter, linking the board's Friday tab):
     keep the dated prediction (by 30 September 2027, at least two of
@@ -375,6 +436,23 @@ bring takes back, was retired on 12 October.
     "So Suno's judge could see it differently", "But that AI didn't make
     anything new", the investors' bet and "name about 60,000 songs"; the
     takes are already recorded, so nothing was changed).
+
+- 2026-10-12, Monday, about 17:10 UTC: **Wednesday's Meta Muse piece
+  (7554ed4a): workroom published, waiting on two calls from Krish.** Workroom:
+  https://claude.ai/artifact/XW7uwdEJbMybpXVh2gjJRu (recorded on the piece;
+  board item `wed-muse-calls`). The planned headline ("The Opt-In Was Buried
+  in the Onboarding") has no source: TIME (6 Oct, read in full) reports no
+  opt-in step for the people Muse maps, and the "Karan Joshi" and "Daniel
+  Roberts" names appear only in a roundup site's summary of WIRED, whose text
+  would not load. The supported angle is people who never signed up. Stopped
+  before the draft and fact check, which spend on the model and need his
+  "go". Next, once he answers: file TIME's text as a verbatim source, draft,
+  run the fact gate, then visual gate (Meta and Muse logos), both scripts with
+  the under.the.hood series line, read-back, Teleprompter send, publish page,
+  Wednesday's tab of the board (not rebuilt yet: no publish page exists).
+  Ticks copied: Monday's two Record ticks only (information; takes are on
+  Monday's record). (Written by Wednesday's routine session, which pushed it
+  only to branch `claude/relaxed-bell-vmveum`; copied here word for word.)
 
 - 2026-10-12, Monday, about 16:45 UTC: **Descript is out, teleprompter.com
   is in; every script opens with its series line and is held to a reading
