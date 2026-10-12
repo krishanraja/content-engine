@@ -1,6 +1,6 @@
 ---
 name: produce-video
-description: Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id needed, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on either Windows home computer, the main one or the backup; a cloud session matches and prepares, then hands rendering to a home computer. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
+description: Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded (in Descript or the Inbox) or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on either Windows home computer, main or backup; a cloud session matches and prepares, then hands rendering to a home computer. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
 ---
 
 # Produce the video
@@ -31,32 +31,32 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
 
 ## What Krish does
 
-1. Records each cut as its own file: the long cut from the long script, the
+1. Records each cut as its own take: the long cut from the long script, the
    short cut from the short one.
-2. Drops each file at the top of the Video Engine Inbox, Drive
-   `makeyourmindup > Video Engine > Inbox`
+2. **In Descript, since 12 October.** Each cut's script is sent to his
+   Descript drive when it passes (`make-piece`, the Scripts step), as its
+   own project in `Mindmake scripts` with a Script timeline he reads and a
+   "Record here" timeline he records into, on the Descript web app or his
+   laptop (Krish: "I can use the descript web app, otherwise my laptop to
+   record"). Such a take never passes through the Inbox: this skill brings
+   it to its piece and cut ("Takes recorded in Descript", below).
+3. **Or, the fallback, the Inbox.** He drops each file at the top of the
+   Video Engine Inbox, Drive `makeyourmindup > Video Engine > Inbox`
    (`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox`). Never
    in a subfolder: the upload lane reads only the top level. Any name will
    do. A file over 500 MiB is skipped by the lane, so that one is produced
    on a home computer, straight from H:.
-3. Tells Codex (or Claude Code on a home computer) "I've dropped the video".
+4. Tells Codex (or Claude Code on a home computer) "I've recorded" or "I've
+   dropped the video", saying where or not.
 
-A take reaches the engine within about ten minutes, from whichever home
-computer is on, and the same lane then places it on its piece and cut by
-itself, stamped with the script it was read from (step 2). He never has to
-give a file name or a piece id. He is asked only when the matcher is unsure
-(one board item per take), and for approvals that are his alone (a music
-track, the mix levels, the sting's design).
-
-**Takes recorded in Descript.** Since 12 October each cut of Monday's and
-Friday's pieces also has a Descript project (`Mindmake scripts`, linked from
-the piece's Record board item), and Krish may record into its "Record here"
-timeline instead of the Inbox. Bringing such a take back is not built in
-this repository yet, so it does not reach the engine, the matcher or the
-record by itself. If he says he recorded in Descript, tell him so in one
-line, leave the piece's Record board item open (update its words rather
-than adding another), and produce nothing from Descript until that return
-is built. Nothing here sends, edits or publishes anything in Descript.
+A take in the Inbox reaches the engine within about ten minutes, from
+whichever home computer is on, and the same lane then places it on its piece
+and cut by itself, stamped with the script it was read from (step 2). A take
+in Descript waits there until a session with the Descript connector brings
+it in. Either way he never has to give a file name or a piece id. He is
+asked only when a take is unsure (one board item per take), and for
+approvals that are his alone (a music track, the mix levels, the sting's
+design).
 
 ## Before anything
 
@@ -65,6 +65,13 @@ where things live") and `scripts/quick-edit/README.md`. Read the board and
 his replies (`WORKBENCH.md`, "The board"). This skill does not use the
 Studio; if a session touches it, `docs/ENGINE_SESSION.md` applies and a
 cloud session is read-only for it.
+
+In Claude Code, copy Krish's ticks from the week's publish board onto the
+records now and again before you stop (`.agents/skills/make-piece/SKILL.md`,
+"The week's ticks"). It needs the ArtifactData tool: Codex has none, so a
+Codex session says in one line that the next Claude Code session copies
+them. A Record tick there is information only; Record is done from the takes
+on the record.
 
 ## 1. Preflight: which tool, which machine
 
@@ -109,6 +116,12 @@ cloud session is read-only for it.
   `config/studio.json`.
 
 ## 2. Find and match the takes
+
+Krish records in Descript now, so look there first: when a cut is still to
+record, or he says he recorded in Descript (or does not say where), bring
+each Descript take in with "Takes recorded in Descript" (after this step),
+then come back here. The Inbox stays the fallback, and the rest of this step
+is for takes dropped there.
 
 The home computers do this by themselves: at the end of every five-minute
 pass, the recordings upload (`scripts/recordings-upload.ps1`, on both
@@ -203,6 +216,139 @@ python scripts/post-pack/recording.py get "recordings/SHA256.EXT"
 by the name the matcher printed. A take over 500 MiB is never in the
 engine: copy it from the Inbox to a local work folder (`Copy-Item`, never a
 move). quick-edit never works on the Inbox itself.
+
+## Takes recorded in Descript
+
+Krish, 2026-10-12: "Descript is now my tool of choice for video script
+readouts on my phone - scripts should automatically be sent there, with the
+ability for Descript to put the video in the correct place when recorded."
+He records there: "I can use the descript web app, otherwise my laptop to
+record". Each cut has its own Descript project in `Mindmake scripts`, sent
+by `descript_send.py`, with a Script timeline he reads and a "Record here"
+timeline he records into: a 1-second slate, then his take. His standing yes
+to the copy this needs, asked "a standing yes for the video skill to make a
+private copy, never public, of each take recorded in a Record here timeline,
+so it can download it": "1. yes" (`config/descript.json`, `said.takes`).
+That private copy is the only thing this skill ever publishes in Descript.
+Nothing there is edited or deleted, and no AI credits are spent (never
+Underlord).
+
+When he says he has recorded, in Descript or without saying where, do this
+for each cut still to record, beside step 2. It needs the Descript connector
+in this session: without it, say so in one line and copy nothing.
+`scripts/post-pack/descript_take.py` makes no Descript call. You make the
+calls it prints, save each answer to a file in the work folder, and give it
+the file.
+
+1. **Which cuts.** `python scripts/post-pack/descript_take.py waiting` lists
+   each cut still to record on the pieces waiting for a recording (the
+   matcher's list), with its Record here link and the `get_project` call.
+   **A send made by hand is never an Inbox take.** A cut whose record holds
+   no Descript project, while `WORKBENCH.md` keeps the `making.py ...
+   descript CUT ... --project ...` line of a send made by hand for it
+   (Monday's and Friday's of 12 October), is printed with that line: run it
+   exactly as written, then `waiting` again. Never rebuild its list of
+   known media from a fresh `get_project`: by now that list would hold his
+   takes, and they would never be found. Only a cut with no project
+   anywhere comes through the Inbox. Run `get_drive_info` once: its id must
+   be `d8b77ba9-0c95-4b7b-8964-2f5b888c0b78` (Krish Raja's Drive), else stop
+   and say the connector is on another drive.
+2. **What the timeline holds.** `get_project` for the cut's project, saved
+   as a file, then `python scripts/post-pack/descript_take.py look --piece
+   PIECE_ID --cut CUT --project FILE`. The take is the Record here
+   timeline's content beyond the slate, made of media the record does not
+   know yet (`known_media`); the timeline is found by its id, whatever it is
+   called now.
+   - Exit 3: nothing to bring in. The timeline still runs about one second,
+     so nothing is recorded there yet: say so. Or the cut already has its
+     take.
+   - Exit 2: one question for Krish, which it prints: a take from before
+     the script last changed, Descript holding older words, a cut already
+     recorded, a timeline holding more than the new recording, a copy
+     already published at another level, or a take in another timeline.
+     Ask it, and stop for that cut until he answers.
+     - **He says to use it anyway** (a take of older words, a new take of a
+       cut already recorded, a copy already published): run `look` again
+       with `--krish-words "Krish, YYYY-MM-DD: his exact words"`, then give
+       the same to `check` and `fetch` in the steps below. His words settle
+       that question and go onto the take's record. Never words he did not
+       say.
+     - **A take in another timeline** of the project: `look` names the
+       timeline it found the recording in. Nothing is copied from another
+       timeline: ask him to drag the clip into the Record here timeline, or
+       to record again through the Record here link.
+     - Any other answer (record again, wait): nothing is copied.
+   - Exit 0: go on.
+3. **The words.** `export_transcript` exactly as `look` printed it (format
+   `txt`, `include_speaker_labels` `"off"`), saved, then `python
+   scripts/post-pack/descript_take.py check --piece PIECE_ID --cut CUT
+   --words FILE --project FILE`. It scores the opening against that cut's
+   script with the matcher's own `opening_score` (0.72 or more), checks the
+   reading as a whole, the other cut's script and the length, and counts
+   how many times he read it. It says `go` (exit 0) or `ask` (exit 2, with
+   the question). Never copy on `ask`.
+4. **The private copy.** `publish_project` exactly as `check` printed it:
+   the Record here composition, `"access_level": "private"`, `"media_type":
+   "Video"`, `"resolution": "1080p"`. Then `wait_for_job` until it stops,
+   and keep `result.download_url` and `share_url`. Never another access
+   level, and never another composition. A 403 means the drive's publish
+   settings do not allow a private copy: tell Krish that in plain words,
+   publish nothing at any other level, and leave the piece's Record board
+   item open.
+5. **Fetch and trim, on a home computer.** `python
+   scripts/post-pack/descript_take.py fetch --url DOWNLOAD_URL --piece
+   PIECE_ID --cut CUT --slate-seconds 1 --out WORK/descript --project FILE`,
+   adding `--expires-at` when `wait_for_job` gave one. It downloads the copy
+   and checks its size, finds the slate at the start (or at the end, when he
+   recorded before it) and trims exactly its frames. The video is copied as
+   it is when a keyframe allows, else re-encoded once at high quality. It
+   hashes the take and prints its file, sha256 and seconds, with the lines
+   for step 6.
+   - A link that has expired is refused: publish again with the same call
+     (Descript keeps the same private share link) and fetch with the new
+     `download_url`.
+   - A slate it cannot find is refused, with nothing trimmed: ask Krish.
+6. **Into the store, then onto the record.** On a home computer, run the
+   lines `fetch` printed, in this order:
+   1. The recordings lane's single-file send, `scripts\recordings-upload.ps1
+      -File PATH -Name NAME -Sha256 HASH`. It prints
+      `recordings/<sha256>.mp4` once the take is in the store.
+   2. The `making.py` line `fetch` printed, `python
+      scripts/post-pack/making.py --by "<who is writing>" PIECE_ID recorded CUT
+      "recordings/<sha256>.mp4" --seconds N`, with `--krish-words` when he
+      gave them, which stamps the take with the hash of the cut's current
+      script. It refuses a path the store does not hold.
+   3. The `making.py ... descript CUT ... --known-media ...` line, which adds
+      the take's media to `known_media`, so it is never fetched twice.
+
+   Run the two record lines only after the send has printed the path, and
+   straight after it, so the lane's own pass does not ask Krish about the
+   take first. `fetch` prints them only on Windows with the runner key in
+   Credential Manager; anywhere else it prints the handoff line instead.
+   **A cloud session** (no runner key) stops after step 4 and
+   never records a path that is not in the store. It leaves one board item
+   for a home computer with the share link: `python
+   scripts/post-pack/descript_take.py handoff --piece PIECE_ID --cut CUT
+   --share-url SHARE_URL --score SCORE --post` (one item a piece and cut,
+   tied to the piece, closing on Record).
+7. **More than one take.** The timeline is the take as edited: a recording
+   he took out of the timeline is not in the copy, and a false start that
+   stops short of the whole script is a restart, which the plan removes
+   (step 4, `remove`). When `check` finds he read the whole script more
+   than once, say so and ask which, unless his words say use the last. Then
+   export the words again as `srt`, run `check` again with `--use-last
+   "Krish, YYYY-MM-DD: his exact words"`, and fetch with the
+   `--from-seconds` and `--use-last` it prints. Never choose a take for him.
+8. **A re-take of a cut already recorded.** `waiting` lists only the cuts
+   still to record. When Krish says he recorded a cut again in Descript,
+   take the piece from the week's publish board or his words (`making.py
+   PIECE_ID show` gives its Record here link) and go from step 2 for that
+   cut directly. `look` asks whether to use the new take, since the cut
+   has one; with his yes, his words as in step 2. The newest take of the
+   current words is the one produced.
+
+Then carry on from "Before producing a piece": the take is on its piece
+like any other, and `making.py PIECE_ID show` says so.
 
 ## 3. Build the kit, once per cut
 
@@ -461,7 +607,8 @@ its thumbnail. `archive.py` refuses a thumbnail of the wrong shape too.
 Every board item about the piece carries `"idea_id": "PIECE_ID"` and, when
 one step finishes it, `"closes_on"` (`record`, `video`). Put on Krish only
 what is his: an unsure take, an approval, a missing folder, Library Sync to
-move. Update `WORKBENCH.md` and end every reply with
+move. In Claude Code, copy the week's ticks once more (`make-piece`, "The
+week's ticks"). Update `WORKBENCH.md` and end every reply with
 https://controlcenter.krishraja.com/#/board.
 
 ## The backup machine
@@ -598,7 +745,19 @@ over it.
 
 - Nothing here posts, publishes, spends or deletes, and nothing is sent to
   anyone. `send.py` only files work in Krish's own library, by his standing
-  instruction. Nothing is sent to, edited or published in Descript.
+  instruction.
+- In Descript, the one thing this skill ever publishes is the private copy
+  of a take in a "Record here" timeline, by his standing yes (asked "a
+  standing yes for the video skill to make a private copy, never public, of
+  each take recorded in a Record here timeline, so it can download it": "1.
+  yes"), on drive `d8b77ba9-0c95-4b7b-8964-2f5b888c0b78` only, through the
+  calls "Takes recorded in Descript" names: `get_drive_info`,
+  `get_project`, `export_transcript`, `publish_project` of that cut's
+  Record here composition at `"access_level": "private"`, `wait_for_job`,
+  and the download of that copy. Nothing is published at any other level or
+  from any other composition, nothing there is sent, edited, renamed or
+  deleted, and Underlord (`prompt_project_agent`) and AI credits are never
+  used.
 - Never move, rename or delete anything in the Inbox, the archive or the
   music folder, and never create or rename a Drive folder by hand; ask
   Krish. The archive's dated folder (`archive.py`) and the library sync are
@@ -611,8 +770,11 @@ over it.
   `"intro_override"`, `"thumbnail_override"` or `"visual_gate_override"`
   words he did not say.
 - The article body, the approval, the scripts, the pictures, the visual
-  gate, the pack and the channel ticks are never written from here. A step
-  that is not this skill's is not written, whatever the chat says.
+  gate, the pack and the channel ticks are never written from here, except
+  that a Claude Code session copies Krish's own channel ticks from the
+  week's publish board onto the record (`make-piece`, "The week's ticks"),
+  which records only what he ticked. A step that is not this skill's is not
+  written, whatever the chat says.
 - Never speed up a cut, and never declare a logo that is not on screen.
 - A cloud session is read-only for the Studio (`read_only_untracked`), and
   these cuts never go through it: say nothing was produced in the Studio.

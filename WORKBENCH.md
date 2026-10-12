@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, early afternoon, by a Claude Code session (cloud).
+Last updated: 2026-10-12, late afternoon, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -43,6 +43,25 @@ Last updated: 2026-10-12, early afternoon, by a Claude Code session (cloud).
   (house rule `THREE_LENSES`). Every visual uses the real logos of the
   companies it names, and the cover and share picture carry Krish's face
   (`LOGOS_AND_FACE`; `scripts/pages` cover facts, `"portrait": true`).
+
+## This week's publish board
+
+One page a week, with a tab for Monday, Wednesday and Friday and a tick for
+every step, made each Sunday by `plan-week` and republished to the same link
+all week by every session that makes a piece (`make-piece`, "The week's
+publish board"). Krish ticks there as he goes; every making session in
+Claude Code copies his channel ticks onto the pieces at its start and before
+it stops (`make-piece`, "The week's ticks"). Each week's board has its own
+board item, `week-publish-board-<its Monday>`, with the same link. Sunday's
+run puts the new week's line here and moves this one under "Last week's
+publish board", which every session's tick copy still reads until every
+day on it is at 100% (Friday's reposts go out at the weekend).
+
+- Week of 12 to 16 October 2026 (board item
+  `week-publish-board-2026-10-12`, not made yet):
+  https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
+
+Last week's publish board: none (the first board was made on 12 October).
 
 ## The board: what is waiting on Krish, in progress and done
 
@@ -165,6 +184,189 @@ on a piece is fetched by the path its record holds
 (`recording.py get "recordings/<sha256>.<ext>"`).
 
 ## Latest handoff
+
+- 2026-10-12, Monday, late afternoon: **The review of the Descript lane and
+  the week's board is fixed** (nothing committed, pushed, deployed,
+  published or sent; the outside calls were engine reads only). In plain
+  words:
+  - **No second project, ever.** Until the four record lines below have
+    run, `descript_send.py pending` prints those lines for Monday and
+    Friday instead of a plan line, and `descript_take.py waiting` and
+    `look` print them instead of sending a take through the Inbox (checked
+    live this afternoon: both pieces show the hand-made lines). A send that
+    fails after Descript has made the project is recorded on that project,
+    and the next send finishes it there. A cut whose media minutes ran out,
+    or whose send failed less than six hours ago, waits until its words
+    change or Krish says go.
+  - **A published piece keeps its day.** The publish watcher marks a piece
+    published once its Substack post is live; the week options now list
+    every piece scheduled in the week in any state (`scheduled`), the
+    board reads each day's piece from there and from the board itself
+    (`week_board.py --show`), and the tick copy keeps a tick whose piece
+    is the one the board names for the day. A rebuild given the board it
+    replaces (`--previous`) refuses to drop a day or a made day's page, and
+    `--live` refuses a picked piece's publish page left out.
+  - **Last week's board stays read.** Each week's board has its own board
+    item, `week-publish-board-<Monday>`; `WORKBENCH.md` keeps last week's
+    line until every day on it is at 100%, so his weekend reposts reach
+    the record.
+  - **His answer to a take question can be given.** `look`, `check` and
+    `fetch` take `--krish-words` for a take of older words, a re-take of a
+    cut already recorded and a copy already published; the words go onto
+    the take's record. `produce-video` says so, and has a step for a
+    re-take, which the waiting list never shows.
+  - **A take in the wrong timeline is named.** Monday's 3-minute project has
+    a spare timeline called "Record here" beside the real one, now called
+    "Monday"; `look` names the timeline a stray recording is in, and
+    nothing is copied from it.
+  - **Only a take in the store is recorded.** `making.py recorded` checks
+    the engine's recordings store first, and `descript_take.py fetch`
+    prints the send and record lines only on a home computer with the
+    runner key, else the handoff line.
+  - **The board's own tick script is tested** in CI against a stand-in
+    page and store, with the published board's tick ids kept in
+    `fixtures/week-board/published-2026-10-12.json`; the board declares
+    `"downloads": true`, as the artifact contract writes it.
+  - `scripts/post-pack/README.md` has "Scripts into Descript" and "Takes
+    recorded in Descript" in place of "not built", and its Checks list the
+    new self-tests.
+  Next, added to the list in the entry below: step 5's board item is now
+  `week-publish-board-2026-10-12`, the rebuild takes `--previous` (the
+  published board, read with `Artifact read`), and one more step:
+  6. Put one line on Krish's board, on him: "Record Monday's 3-minute cut
+     only through its Record here link
+     (https://web.descript.com/16aa1f87-c054-4115-a11c-4342def815e5/f6eb1,
+     the timeline called "Monday"). The same project also holds an older
+     timeline called "Record here" and a spare Script timeline; a take
+     recorded there is not picked up. You may delete those two in
+     Descript; a session never does." (`idea_id`
+     f328382d-71b3-41a7-a221-d8615826f12e, `closes_on` `record`.)
+
+- 2026-10-12, Monday, afternoon: **Scripts go to Descript by themselves, a
+  take recorded there comes back to its piece and cut, and the week has one
+  publish board with a tick for every step.** Built on this branch; nothing
+  committed, pushed, deployed, published or sent, and the only outside calls
+  were reads (engine GETs, Descript `get_project`, the week board's store).
+  Krish's words, kept verbatim in `config/descript.json` and `AGENTS.md`:
+  "Descript is now my tool of choice for video script readouts on my phone -
+  scripts should automatically be sent there, with the ability for Descript
+  to put the video in the correct place when recorded."; "I can use the
+  descript web app, otherwise my laptop to record"; to the automatic send,
+  "3. yes", then "go, upload"; to private copies of his takes, "1. yes"; of
+  the teleprompter, "2 fine, no issue with copy paste"; and of the week, "just
+  give me one ... Publish Manager for the ... whole week with 3 tabs on it
+  for Mon / Weds / Fri, which we need to get to 100%. Give me a tick box next
+  to each one so I can tick as I go and you can durably record that
+  completion where it needs to be recorded." In plain words:
+  - **The send** (`scripts/post-pack/descript_send.py`, `config/descript.json`,
+    `making.py descript`): when a piece's scripts pass, `plan` renders each
+    cut's pages video and prints the exact Descript calls; the session makes
+    them and records the project on the piece (`meta.making.descript`).
+    Words that change go into the same project as a new Script timeline, so
+    the "Record here" timeline and any take in it stay put. The engine keeps
+    the field and says "in Descript" or "Descript has an older script" on the
+    Scripts step, never holding it back; Control Center's Record step shows
+    the two "record in Descript" links.
+  - **The take** (`scripts/post-pack/descript_take.py`, the single-file send
+    `recordings-upload.ps1 -File`, and `produce-video`'s new section "Takes
+    recorded in Descript"): it reads what the "Record here" timeline holds,
+    hears the words against the cut's script, makes the private copy, trims
+    the slate on a home computer, sends the take into the recordings lane
+    and records it on its piece and cut. A cloud session stops at the
+    private copy and leaves one board item for a home computer.
+  - **The week's publish board** (`scripts/post-pack/week_board.py`): one
+    page, a tab per day, a tick per step, the ticks kept in the page's own
+    store across every republish.
+  - **Skills and documents**: `make-piece` runs `descript_send.py pending`
+    first, sends at the Scripts step, names the send as its one standing
+    exception, republishes the week's board with each day's page, and copies
+    the week's ticks at the start and end of every session ("The week's
+    ticks", used by `plan-week` and `produce-video` too). `plan-week` closes
+    the ending week's ticks first and makes the new week's board last.
+    `produce-video` says he records in Descript now, with the Inbox as the
+    fallback. `AGENTS.md` has two new bold rules (the Descript scope; where
+    completion is recorded), `docs/CADENCE.md` the new rows, "Where
+    completion is recorded" and misreads 13 to 19, and `docs/INTEGRATIONS.md`
+    and `docs/DRIVE.md` the Descript lines.
+  Where things stand:
+  - **The four Descript projects**, made by hand at 10:31 UTC in `Mindmake
+    scripts`, each with the current words and a "Record here" timeline
+    (`get_project` this afternoon: nothing recorded in any of them yet).
+    Monday's 3-minute "Record here" timeline has been renamed "Monday" in
+    Descript; the tools find it by its id. Monday's 3-minute project also
+    holds the first attempt's media and two spare timelines; nothing was
+    deleted, and the record line below lists that media as known.
+
+    | Piece | Cut | Record here |
+    |---|---|---|
+    | Monday (f328382d) | 3-minute | https://web.descript.com/16aa1f87-c054-4115-a11c-4342def815e5/f6eb1 |
+    | Monday | 90-second | https://web.descript.com/6e1c3178-ba5c-4603-a5e2-ec23f3612071/36a32 |
+    | Friday (904658db) | 3-minute | https://web.descript.com/36040413-966a-417c-90a2-b2667f5ca4ef/d3f1e |
+    | Friday | 90-second | https://web.descript.com/a8be9a54-1247-41ad-ae9a-aebe3ef22fa1/c9778 |
+
+  - **This week's board**, https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV,
+    published this morning from the two day pages; its store held no ticks
+    and no links this afternoon. It shows Wednesday as not picked, but
+    Wednesday's piece is picked: "Meta Muse Builds a Profile on Every Person
+    in Your Life" (7554ed4a, under.the.hood, drafting, 14 October). The board
+    item `week-publish-board-2026-10-12` does not exist yet.
+  - **Both routines** ("Make a piece", "Plan the week") carry the Descript
+    connector. Their prompts do not name the new steps yet, and "Make a
+    piece"'s wall ("nothing sends ... without Krish's own words immediately
+    before") must name the Descript send as its one standing exception, or a
+    routine session may refuse to send.
+  Next, in this order (the order matters):
+  1. Commit, merge and deploy the engine. The live engine drops the
+     `descript` field, so a record line run before the deploy is refused
+     ("nothing to record") and nothing is stored.
+  2. Straight after, and before any session runs `descript_send.py plan` or
+     a send for Monday or Friday, record the four hand-made projects, from
+     the repository root. Until these run, `pending` and `plan` see both
+     pieces as never sent and would make second projects:
+
+     ```
+     python3 scripts/post-pack/making.py --by 'Claude Code' f328382d-71b3-41a7-a221-d8615826f12e descript long --drive d8b77ba9-0c95-4b7b-8964-2f5b888c0b78 --project 16aa1f87-c054-4115-a11c-4342def815e5 --script-composition 46c2a75a-615d-4ab5-bdc4-c84b57a88454 --record-composition f6eb149a-82e8-4604-836e-b78ea7c73797 --links https://web.descript.com/16aa1f87-c054-4115-a11c-4342def815e5/46c2a https://web.descript.com/16aa1f87-c054-4115-a11c-4342def815e5/f6eb1 --media 'Script 2026-10-12 3e329b9.mp4' --sha 3e329b90efcc3a4198b58641576eb9dc9f1f34deb095341a4d3ce596f908383b --sent-at 2026-10-12T10:31:16Z --known-media 'Record here 3-minute.mp4' 'Script 2026-10-12 8043955.mp4' 'Record here 3-minute slate.mp4' 'Script 2026-10-12 3e329b9.mp4'
+     python3 scripts/post-pack/making.py --by 'Claude Code' f328382d-71b3-41a7-a221-d8615826f12e descript short --drive d8b77ba9-0c95-4b7b-8964-2f5b888c0b78 --project 6e1c3178-ba5c-4603-a5e2-ec23f3612071 --script-composition f27bfc76-e71b-498d-a942-767063070c48 --record-composition 36a320ab-ed9a-4d7e-bddb-61668278faea --links https://web.descript.com/6e1c3178-ba5c-4603-a5e2-ec23f3612071/f27bf https://web.descript.com/6e1c3178-ba5c-4603-a5e2-ec23f3612071/36a32 --media 'Script 2026-10-12 38fe78d.mp4' --sha 38fe78d76748b5cd6c5c128c7a5e95b7839e9862fe972c67ef32daa0977188b5 --sent-at 2026-10-12T10:31:16Z --known-media 'Script 2026-10-12 38fe78d.mp4' 'Record here 90-second slate.mp4'
+     python3 scripts/post-pack/making.py --by 'Claude Code' 904658db-4df2-4537-a0ed-ebe93e081db7 descript long --drive d8b77ba9-0c95-4b7b-8964-2f5b888c0b78 --project 36040413-966a-417c-90a2-b2667f5ca4ef --script-composition a1b03023-61ee-4c1a-bf66-352b11f13f81 --record-composition d3f1eeaf-35ed-4ed7-a607-62f509ee253d --links https://web.descript.com/36040413-966a-417c-90a2-b2667f5ca4ef/a1b03 https://web.descript.com/36040413-966a-417c-90a2-b2667f5ca4ef/d3f1e --media 'Script 2026-10-12 c767efb.mp4' --sha c767efbecea962549dfa8a45b2ad869b68d152fd62422fde3ec0907f06aa03b3 --sent-at 2026-10-12T10:31:16Z --known-media 'Script 2026-10-12 c767efb.mp4' 'Record here 3-minute slate.mp4'
+     python3 scripts/post-pack/making.py --by 'Claude Code' 904658db-4df2-4537-a0ed-ebe93e081db7 descript short --drive d8b77ba9-0c95-4b7b-8964-2f5b888c0b78 --project a8be9a54-1247-41ad-ae9a-aebe3ef22fa1 --script-composition 7b38e479-2bf0-4b65-a328-c686f746a5a2 --record-composition c9778206-cc1e-4e45-b9c6-f161d34c707c --links https://web.descript.com/a8be9a54-1247-41ad-ae9a-aebe3ef22fa1/7b38e https://web.descript.com/a8be9a54-1247-41ad-ae9a-aebe3ef22fa1/c9778 --media 'Script 2026-10-12 de706a8.mp4' --sha de706a85f14fb3fe410737055acf46a594ef85b807af09a84ff77de1f997b289 --sent-at 2026-10-12T10:31:16Z --known-media 'Script 2026-10-12 de706a8.mp4' 'Record here 90-second slate.mp4'
+     ```
+
+     Then `making.py <id> show` for each piece should say both cuts hold
+     the current words, and `descript_send.py pending` should list neither.
+  3. Deploy Control Center's mirror (its making record and Record step).
+  4. Update both routines' prompts to name the new steps (the Descript
+     send's exact scope in "Make a piece"'s walls; the week's board, with
+     its own item `week-publish-board-<Monday>` and `"downloads": true`,
+     and the tick copy in both), with `update_trigger`.
+  5. Rebuild this week's board with `--live --previous <the published
+     board, as Artifact read saved it>` (so Wednesday shows as picked, not
+     made yet, and neither made day is lost) and republish it to the same
+     link, then put the board item `week-publish-board-2026-10-12` on
+     Krish (rank 0, its link).
+  Waiting on Krish:
+  - **His go to rebuild and send Monday's and Friday's packs.** Their
+    pictures still live only in this cloud session's scratch folder, and
+    both publish pages still hold the line he cut. Until the packs are sent,
+    a home computer has none of the pictures for the video kit.
+  - **The sting**: his reaction to the designs drafted today (the late
+    morning handoff below).
+  - **Music**: NO CURVES needs its licence certificate beside it, then his
+    approval in words; the levels are approved by ear once he has heard a
+    cut with music.
+  - **The 90-second question**: does the short cut's 90 seconds include the
+    sting and the end card?
+  - **Library Sync on the backup machine**, if he works there; he moves it.
+  - **Descript, still open**: whether Codex and his other Claude account
+    reach the same drive, and his plan's media minutes (about 5 a piece).
+  Not yet proven against a real take, because none exists: where Descript
+  puts a new recording beside the slate, whether camera and microphone come
+  as two files, the transcript's layout, the private copy's frame rate, and
+  whether its download link needs a sign-in. The tool refuses safely on each,
+  and the first take is the live test. Smaller gaps: a channel copied from
+  the board is stamped when it is copied, not when he ticked it
+  (`making.py posted` takes no time); the board does not show a channel he
+  ticked in Control Center; and the publish page has no Descript links of
+  its own (the board's Record card has them).
 
 - 2026-10-12, Monday, early afternoon: **The second review of the video
   build is fixed** (two more reviewers; nothing committed, merged, deployed

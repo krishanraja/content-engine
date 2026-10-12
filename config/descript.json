@@ -1,0 +1,74 @@
+{
+  "about": "Where each checked script goes in Descript, and what Krish allowed. Read by scripts/post-pack/descript_send.py and making.py descript; a send or a record refuses unless status is confirmed and the drive is this one. One view-access project per piece and cut, in folder_root/<pack folder>, with two compositions: Script (the pages video he reads on his phone) and Record here (a 1-second slate where he records, on a laptop or the Descript web app). Nothing in Descript is ever published, edited or deleted by the send, and no AI credits are spent.",
+  "status": "confirmed",
+  "confirmed_on": "2026-10-12",
+  "drive_id": "d8b77ba9-0c95-4b7b-8964-2f5b888c0b78",
+  "drive_name": "Krish Raja's Drive",
+  "folder_root": "Mindmake scripts",
+  "team_access": "view",
+  "timezone": "America/New_York",
+  "words_per_minute": 150,
+  "page": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "type_px": 72,
+    "min_type_px": 56,
+    "words": 30,
+    "title_seconds": 3,
+    "margin_px": 90
+  },
+  "record_here": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "seconds": 1
+  },
+  "cuts": {
+    "long": {
+      "name": "3-minute",
+      "title_card": ["3-minute cut", "Record wide, 16:9"],
+      "slate": "3-minute cut"
+    },
+    "short": {
+      "name": "90-second",
+      "title_card": ["90-second cut", "Sit in the centre: it is cut tall, 9:16"],
+      "slate": "90-second cut, sit in the centre"
+    }
+  },
+  "send_calls": ["get_drive_info", "import_media", "wait_for_job", "get_project"],
+  "never": [
+    "publish_project, except the private copy of a take his takes yes allows (the video skill, never this send)",
+    "prompt_project_agent (Underlord): no AI credits",
+    "deleting or renaming a project, a composition or a media file",
+    "editing a composition he has recorded in",
+    "a drive other than drive_id",
+    "team_access other than view"
+  ],
+  "said": {
+    "tool": {
+      "date": "2026-10-12",
+      "words": "Descript is now my tool of choice for video script readouts on my phone - scripts should automatically be sent there, with the ability for Descript to put the video in the correct place when recorded."
+    },
+    "records_in": {
+      "date": "2026-10-12",
+      "words": "I can use the descript web app, otherwise my laptop to record"
+    },
+    "send": {
+      "date": "2026-10-12",
+      "asked": "May every checked script go to that account automatically? One view-access project per cut, in a Mindmake scripts folder, about 5 media minutes a piece; nothing published, edited or deleted, no AI credits",
+      "words": "3. yes",
+      "then": "go, upload"
+    },
+    "takes": {
+      "date": "2026-10-12",
+      "asked": "a standing yes for the video skill to make a private copy, never public, of each take recorded in a Record here timeline, so it can download it",
+      "words": "1. yes"
+    },
+    "teleprompter": {
+      "date": "2026-10-12",
+      "words": "2 fine, no issue with copy paste",
+      "read_as": "No Underlord and no AI credits: Descript holds the pages video, and he pastes the script into its teleprompter himself."
+    }
+  }
+}

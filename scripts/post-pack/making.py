@@ -19,6 +19,10 @@ that everything is fresh and synchronised in real time".
                      [--thumb PATH --thumb-file LOCAL_PATH [--thumb-url https://...]] [--music TRACK_ID]
     python making.py PIECE_ID posted substack https://...    # after Krish posted it
     python making.py PIECE_ID session https://claude.ai/code/session_...
+    python making.py PIECE_ID descript long --drive ID --project ID --script-composition ID
+                     --record-composition ID --media NAME --known-media NAME [NAME ...] --sha SHA256
+                     [--links SCRIPT_URL RECORD_URL] [--sent-at TIME]
+    python making.py PIECE_ID descript long --drive ID [--project ID] --error "what Descript said"   # a send that failed
     python making.py --by Codex PIECE_ID ...                 # who wrote it
     python making.py --self-test
 
@@ -41,8 +45,12 @@ and a take of an older script stops counting (apps/control-plane/api/_making.ts)
 It refuses to stamp a take that is already on the record from an older
 script, or that the matcher found was recorded before the script last
 changed, unless --krish-words gives Krish's words to use it; they are kept
-on the take. Every write is retried once when the engine answers 409 (the
-piece changed under it).
+on the take. It also refuses a path the engine's recordings store does not
+hold (GET /api/library/recordings, by the take's sha256): a take is recorded
+only once it is in the store, where every later session fetches it from. A
+take over 500 MiB never reaches the store; recording_match.py --inbox
+--record places such a take on a home computer. Every write is retried once
+when the engine answers 409 (the piece changed under it).
 
 A video asset carries its thumbnail (Krish, 2026-10-12: "I always want a video
 thumbnail for all video sizes produced as an asset every time") and the
@@ -51,6 +59,19 @@ cuts are there, each with its thumbnail. A thumbnail is recorded only with
 proof it was drawn: --thumb-file, the file build.py --thumbs drew on this
 machine, of the cut's shape (1280 x 720 long, 1080 x 1920 short) and listed
 in the thumbs.json beside it, with --thumb-url once the library has its link.
+
+Descript (Krish, 2026-10-12: "Descript is now my tool of choice for video
+script readouts on my phone - scripts should automatically be sent there").
+`descript` records what descript_send.py put in his Descript drive for one
+cut: the project, its Script and Record here compositions and their links,
+the hash of the words the Script composition holds, the media it uploaded and
+every media name the project held after the send. It refuses a drive other
+than config/descript.json's, and ids that are not Descript's uuids. With
+--error it records a send that failed, with when it failed (failed_at):
+alone, it keeps the project the cut already had; with --project and no
+compositions, it keeps the project import_media made before the send
+failed, so the next send finishes it there and never makes a second one.
+The Descript state never holds a step back; `show` prints it.
 
 Everything here records something that already happened. It never sends,
 posts, spends or deletes. A piece id is the content_ideas row (post.json
@@ -85,6 +106,7 @@ CODEX_BY = 'Codex'
 # What a drawn thumbnail starts with: JPEG, PNG, WebP (RIFF....WEBP).
 IMAGE_MAGIC = (b'\xff\xd8\xff', b'\x89PNG\r\n\x1a\n')
 MAX_BY = 60  # the engine keeps the first 60 characters (content-ideas/[id]/making.ts)
+MAX_TEXT = 600  # the engine's limit on a line of text (_making.ts)
 
 
 class MakingError(Exception):
@@ -249,7 +271,154 @@ def show(piece_id, call=None):
     for rec in older_takes(record):
         lines.append(f"older script: the {rec['cut']} take {rec.get('path')} was recorded from words that have changed "
                      f"since, so it does not count; record it again, or Krish says to use it")
+    lines.extend(descript_lines(record))
     return '\n'.join(lines)
+
+
+# Descript: what descript_send.py put in Krish's Descript drive for each cut.
+DESCRIPT_HOST = 'https://web.descript.com/'
+DESCRIPT_LINK = re.compile(r'^https://web\.descript\.com/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/([A-Za-z0-9]{5})$')
+MAX_MEDIA = 100  # the engine's limit on known_media
+MAX_NAME = 200
+CUT_NAME = {'long': '3-minute', 'short': '90-second'}
+
+
+def descript_link(project, composition):
+    """The link that opens a composition: web.descript.com/<project>/<its
+    short id>, the composition id's first five characters (so it was for
+    every composition sent by hand on 12 October)."""
+    return f'{DESCRIPT_HOST}{project}/{composition[:5]}'
+
+
+def _uuid(value, what):
+    text = str(value or '').strip().lower()
+    if not UUID.match(text):
+        raise MakingError(f'{what} is a Descript id, a uuid (8-4-4-4-12 hexadecimal characters), not "{value}"')
+    return text
+
+
+def _time(value, what):
+    try:
+        datetime.fromisoformat(str(value).replace('Z', '+00:00'))
+    except ValueError:
+        raise MakingError(f'{what} is a time like 2026-10-12T10:31:16Z, not "{value}"')
+    return str(value)
+
+
+def descript_state(record, cut):
+    """(state, entry) for one cut. state is 'in' when Descript holds the
+    words the scripts' check passed, 'older' when it holds words that changed
+    since, 'failed' when the last send failed, 'missing' when it was never
+    sent, and None when the check has not passed with hashes (nothing to send
+    yet). The engine's descriptStates (apps/control-plane/api/_making.ts)."""
+    record = record if isinstance(record, dict) else {}
+    check = record.get('script_check')
+    current = current_hashes(record).get(cut) if isinstance(check, dict) and check.get('passed') is True else None
+    descript = record.get('descript') if isinstance(record.get('descript'), dict) else {}
+    entry = (descript.get('cuts') or {}).get(cut) if isinstance(descript.get('cuts'), dict) else None
+    entry = entry if isinstance(entry, dict) else None
+    if not current:
+        return None, entry
+    if entry and entry.get('error'):
+        return 'failed', entry
+    if not entry or not entry.get('project_id'):
+        return 'missing', entry
+    return ('in' if entry.get('script_sha256') == current else 'older'), entry
+
+
+def descript_lines(record):
+    """What `show` says about Descript, one line a cut; nothing for a piece
+    whose scripts have not passed with hashes and was never sent."""
+    lines = []
+    for cut in CUTS:
+        state, entry = descript_state(record, cut)
+        if state is None and not entry:
+            continue
+        name = f'Descript, {CUT_NAME[cut]} cut'
+        links = ''
+        if entry and entry.get('project_id') and entry.get('record_link'):
+            links = f"; read {entry.get('script_link')}; record here {entry.get('record_link')}"
+        elif entry and entry.get('project_id'):
+            links = f"; its project {entry['project_id']} has no timelines yet, and the next send finishes it there"
+        if state == 'in':
+            lines.append(f"{name}: holds the current words (sent {entry.get('sent_at')}){links}")
+        elif state == 'older':
+            lines.append(f"{name}: holds older words (sent {entry.get('sent_at')}); send the new ones with descript_send.py plan{links}")
+        elif state == 'failed':
+            lines.append(f"{name}: the last send failed ({entry.get('error')}); send it again with descript_send.py plan{links}")
+        elif state == 'missing':
+            lines.append(f'{name}: not sent yet; send it with descript_send.py plan')
+        else:
+            lines.append(f"{name}: sent {entry.get('sent_at')}, before the scripts' check passed with hashes{links}")
+    return lines
+
+
+def descript_patch(cut, drive, project=None, script_composition=None, record_composition=None, links=None, media=None,
+                   known_media=None, sha=None, sent_at=None, error=None, previous=None, by=None):
+    """One cut's place in Descript: {'descript': {'drive_id', 'cuts': {cut: entry}}}.
+    With a project, every part is required: its Script and Record here
+    compositions (two different uuids), their links (web.descript.com/
+    <project>/<the composition's short id>, built from the ids when not
+    given), the media just uploaded (a name the project lists), every media
+    name the project lists (known_media), and the sha256 of the words the
+    Script composition holds. With error, a send that failed, stamped with
+    when it failed (failed_at): with no project, the project the cut already
+    had (previous) is kept, with the error on it; with a project and no
+    compositions, the project import_media made before the send failed is
+    kept (previous, when it is that project), so the next send finishes it
+    and never makes a second. Checking the drive against config/descript.json
+    is the caller's (descript_send.check_drive)."""
+    cut = _cut(cut)
+    drive = _uuid(drive, '--drive')
+    said = None
+    if error is not None:
+        said = ' '.join(str(error).split())
+        if not said or len(said) > MAX_TEXT:
+            raise MakingError(f'--error is what Descript said, in at most {MAX_TEXT} characters')
+    if project is None and said is None:
+        raise MakingError('give --project and its compositions, or --error for a send that failed')
+    if said is not None and (project is None or (script_composition is None and record_composition is None)):
+        kept = previous if isinstance(previous, dict) and previous.get('project_id') else {}
+        if project is not None:
+            project = _uuid(project, '--project')
+            if kept.get('project_id') != project:
+                kept = {'project_id': project}
+        entry = {k: v for k, v in kept.items() if k not in ('error', 'failed_at')}
+        entry.update({'error': said, 'failed_at': now(), 'by': who(by)})
+        entry.setdefault('sent_at', _time(sent_at, '--sent-at') if sent_at else now())
+        return {'descript': {'drive_id': drive, 'cuts': {cut: entry}}}
+    project = _uuid(project, '--project')
+    script_composition = _uuid(script_composition, '--script-composition')
+    record_composition = _uuid(record_composition, '--record-composition')
+    if script_composition == record_composition:
+        raise MakingError('the Script and Record here compositions are two different compositions')
+    if links is None:
+        links = (descript_link(project, script_composition), descript_link(project, record_composition))
+    if len(links) != 2:
+        raise MakingError('--links is the Script link, then the Record here link')
+    for link, composition, what in ((links[0], script_composition, 'Script'), (links[1], record_composition, 'Record here')):
+        hit = DESCRIPT_LINK.match(str(link or '').strip())
+        if not hit or hit.group(1) != project:
+            raise MakingError(f'the {what} link is https://web.descript.com/{project}/<short id>, not "{link}"')
+        if not composition.startswith(hit.group(2).lower()):
+            raise MakingError(f'the {what} link opens composition {hit.group(2)}, not the {what} composition {composition}')
+    if not isinstance(sha, str) or not SHA256.match(sha):
+        raise MakingError('--sha is the sha256 of the words the Script composition holds, 64 lowercase hex characters')
+    media = str(media or '').strip()
+    if not media or len(media) > MAX_NAME or any(ch in media for ch in '\r\n\t'):
+        raise MakingError(f'--media is the name the pages video was uploaded under, one line of at most {MAX_NAME} characters')
+    names = list(dict.fromkeys(str(n).strip() for n in (known_media or []) if str(n).strip()))
+    if not names or len(names) > MAX_MEDIA or any(len(n) > MAX_NAME or any(ch in n for ch in '\r\n\t') for n in names):
+        raise MakingError(f'--known-media is every media name get_project lists for the project, 1 to {MAX_MEDIA} names')
+    if media not in names:
+        raise MakingError(f'--known-media does not hold "{media}": give every media name get_project lists, after the upload')
+    entry = {'project_id': project, 'script_composition': script_composition, 'record_composition': record_composition,
+             'script_link': str(links[0]).strip(), 'record_link': str(links[1]).strip(), 'script_sha256': sha, 'media': media,
+             'known_media': names, 'sent_at': _time(sent_at, '--sent-at') if sent_at else now(), 'by': who(by)}
+    if said is not None:
+        entry['error'] = said
+        entry['failed_at'] = now()
+    return {'descript': {'drive_id': drive, 'cuts': {cut: entry}}}
 
 
 def visual_gate_patch(post_path):
@@ -409,6 +578,55 @@ def older_take(record, cut, path, answered=ANSWERED):
     if isinstance(entry, dict) and entry.get('older_script'):
         return f'the matcher found the take {path} was recorded before the script last changed ({entry.get("reason") or "an older script"})'
     return None
+
+
+STORE_PATH = re.compile(r'^recordings/([0-9a-f]{64})\.[a-z0-9]{2,5}$')
+RECORDINGS_LIST = '/api/library/recordings?limit=200'
+
+
+def in_store(path, call=None):
+    """Refuses a take the engine's recordings store does not hold: its
+    newest 200 (GET /api/library/recordings, recording.py's listing), by
+    the sha256 in the path. A path no store holds would read as recorded
+    while no session could ever fetch it."""
+    text = str(path or '').strip()
+    hit = STORE_PATH.match(text)
+    if not hit:
+        raise MakingError(f'the path is the store\'s, "recordings/<sha256>.<ext>" as the send or the matcher printed it, not "{text}"')
+    status, body = (call or _engine_call)('GET', RECORDINGS_LIST, None)
+    try:
+        data = json.loads(body) if body else {}
+    except ValueError:
+        data = {}
+    if status != 200 or not isinstance(data, dict) or not isinstance(data.get('recordings'), list):
+        raise MakingError(f'the recordings store could not be read (HTTP {status}), so whether it holds the take is not known: nothing '
+                          'was recorded; run it again')
+    if not any(isinstance(r, dict) and str(r.get('sha256') or '').lower() == hit.group(1) for r in data['recordings']):
+        raise MakingError(f'the engine\'s recordings store does not hold {text} (its newest 200 were read): nothing was recorded. Send '
+                          'the take first (on a home computer, recordings-upload.ps1 -File, which prints this path once it is in; a take '
+                          'in the Inbox, the lane sends). A take over 500 MiB never reaches the store: recording_match.py --inbox '
+                          '--record places it on a home computer')
+    return text
+
+
+def descript_record_patch(piece_id, cut, a, call=None, by=None, config=None):
+    """The descript patch from the command line (making.py descript and
+    descript_send.py record): the drive checked against config/descript.json
+    first, and for a failed send the cut's entry on the record read, so its
+    project is kept."""
+    import descript_send  # the config and its guard live with the send
+    try:
+        descript_send.check_drive(descript_send.load_config() if config is None else config, a.drive)
+    except descript_send.making.MakingError as error:
+        # Run as a script, this file is __main__, and descript_send's errors
+        # come from its own import of it: said as this module's error.
+        raise MakingError(str(error)) from None
+    previous = None
+    if a.error is not None and (a.project is None or (a.script_composition is None and a.record_composition is None)):
+        previous = descript_state(record_of(piece_id, call), _cut(cut))[1]
+    return descript_patch(cut, a.drive, project=a.project, script_composition=a.script_composition,
+                          record_composition=a.record_composition, links=a.links, media=a.media, known_media=a.known_media,
+                          sha=a.sha, sent_at=a.sent_at, error=a.error, previous=previous, by=by)
 
 
 def drawn_image(path):
@@ -605,7 +823,14 @@ def self_test():
 
     seen = []
 
+    stored = ['a' * 64, 'd' * 64]
+
+    def listing(path):
+        return 200, json.dumps({'ok': True, 'recordings': [{'sha256': s, 'name': f'{s[:8]}.mp4'} for s in stored]})
+
     def fake(method, path, body):
+        if method == 'GET' and path == RECORDINGS_LIST:
+            return listing(path)
         seen.append((method, path, body))
         if 'refuse' in path:
             return 400, json.dumps({'ok': False, 'error': 'bad_patch', 'problems': ['workroom needs an https url']})
@@ -838,6 +1063,8 @@ def self_test():
                              {'cut': 'short', 'path': 'recordings/' + 'f' * 64 + '.mp4', 'script_sha256': 'c' * 64}]}
 
     def holds(method, path, body):
+        if method == 'GET' and path == RECORDINGS_LIST:
+            return listing(path)
         seen.append((method, path, body))
         if method == 'GET':
             return 200, json.dumps({'ok': True, 'making': hashed, 'steps': [{'key': 'record', 'label': 'Recorded', 'state': 'now', 'note': 'long cut recorded from an older script'}]})
@@ -898,6 +1125,15 @@ def self_test():
         check('recorded: a script hash that is not a sha256 is refused', 'sha256' in str(e), True)
     code, err = run([pid, 'recorded', 'long', 'recordings/x.mp4', '--seconds', '-3'])
     check('recorded: a length below zero is refused', (code, 'more than 0' in err), (1, True))
+    # A take is recorded only once the store holds it (a cloud session has no runner key to send one).
+    before = len(seen)
+    code, err = run(['--by', 'Claude Code', pid, 'recorded', 'long', 'recordings/' + 'b' * 64 + '.mp4', '--seconds', '185'])
+    check('recorded: a take the store does not hold is refused, nothing written', (code, 'does not hold' in err, 'recordings-upload.ps1 -File' in err,
+          sum(1 for m, _, _ in seen[before:] if m == 'POST')), (1, True, True, 0))
+    code, err = run([pid, 'recorded', 'long', 'C:/work/take.mp4'])
+    check('recorded: a path that is not the store\'s is refused', (code, 'recordings/<sha256>.<ext>' in err), (1, True))
+    code, err = run([pid, 'recorded', 'long', 'recordings/' + 'a' * 64 + '.mp4'], lambda m, path, b: (503, '{}') if path == RECORDINGS_LIST else fake(m, path, b))
+    check('recorded: a store that cannot be read records nothing', (code, 'could not be read' in err), (1, True))
 
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / 'long.md').write_text('the long script\n', encoding='utf-8')
@@ -946,6 +1182,88 @@ def self_test():
                asked_posts[-1]['client'] if asked_posts else None, new_long != old_take['script_sha256']),
               (0, 'take-' + '7' * 12, pid, 'record', 'on_you', True, 'claude_code', True))
 
+    # Descript: where each cut's script went, the drive checked first (config/descript.json).
+    drive = 'd8b77ba9-0c95-4b7b-8964-2f5b888c0b78'
+    project, script_comp, record_comp = '16aa1f87-c054-4115-a11c-4342def815e5', '46c2a75a-615d-4ab5-bdc4-c84b57a88454', 'f6eb149a-82e8-4604-836e-b78ea7c73797'
+    sha = 'a' * 64
+    sent = descript_patch('long', drive.upper(), project, script_comp, record_comp, media='Script 2026-10-12 3e329b9.mp4',
+                          known_media=['Record here 3-minute slate.mp4', 'Script 2026-10-12 3e329b9.mp4', 'Script 2026-10-12 3e329b9.mp4'],
+                          sha=sha, sent_at='2026-10-12T10:31:16Z', by='Claude Code')
+    check('descript: one cut, its links built from the ids, the names once each, the drive in lower case', sent,
+          {'descript': {'drive_id': drive, 'cuts': {'long': {
+              'project_id': project, 'script_composition': script_comp, 'record_composition': record_comp,
+              'script_link': f'https://web.descript.com/{project}/46c2a', 'record_link': f'https://web.descript.com/{project}/f6eb1',
+              'script_sha256': sha, 'media': 'Script 2026-10-12 3e329b9.mp4',
+              'known_media': ['Record here 3-minute slate.mp4', 'Script 2026-10-12 3e329b9.mp4'], 'sent_at': '2026-10-12T10:31:16Z', 'by': 'Claude Code'}}}})
+    good = dict(project=project, script_composition=script_comp, record_composition=record_comp, media='m.mp4', known_media=['m.mp4'], sha=sha)
+    for label, change, words in (
+            ('a project id that is not a uuid', {'project': 'my-project'}, 'is a Descript id'),
+            ('one composition for both', {'record_composition': script_comp}, 'two different compositions'),
+            ('a Script link to the Record here composition', {'links': (f'https://web.descript.com/{project}/f6eb1', f'https://web.descript.com/{project}/f6eb1')},
+             'not the Script composition'),
+            ('a link into another project', {'links': (f'https://web.descript.com/{record_comp}/46c2a', f'https://web.descript.com/{project}/f6eb1')}, 'Script link is'),
+            ('a link that is not Descript\'s', {'links': ('https://example.com/x', f'https://web.descript.com/{project}/f6eb1')}, 'Script link is'),
+            ('no hash', {'sha': None}, '--sha is the sha256'),
+            ('media the project does not list', {'known_media': ['other.mp4']}, 'does not hold "m.mp4"'),
+            ('no media names', {'known_media': []}, '--known-media is every media name'),
+            ('a sent time that is not a time', {'sent_at': 'this morning'}, 'is a time like'),
+            ('neither a project nor an error', {'project': None}, 'or --error')):
+        try:
+            descript_patch('long', drive, **{**good, **change})
+            check(f'descript: {label} is refused', 'no error', 'error')
+        except MakingError as e:
+            check(f'descript: {label} is refused', words in str(e), True)
+    given = descript_patch('short', drive, **good, links=(f'https://web.descript.com/{project}/46C2A', f'https://web.descript.com/{project}/f6eb1'))
+    check('descript: links given are kept when they open the right compositions', given['descript']['cuts']['short']['script_link'],
+          f'https://web.descript.com/{project}/46C2A')
+    alone = descript_patch('short', drive, error='HTTP 503:\n  try again later', by='Claude Code')['descript']['cuts']['short']
+    check('descript: a first send that failed is the error alone, on one line', (alone['error'], sorted(alone)),
+          ('HTTP 503: try again later', ['by', 'error', 'failed_at', 'sent_at']))
+    passed_check = {'script_check': {'passed': True, 'checked_at': 'x', 'problems': [], 'hashes': {'long': sha, 'short': 'b' * 64}}}
+    kept = descript_patch('long', drive, error='HTTP 402', previous=sent['descript']['cuts']['long'], by='Codex')['descript']['cuts']['long']
+    check('descript: a re-send that failed keeps the project, its links and its words, with the error and when it failed',
+          (kept['project_id'], kept['script_link'], kept['script_sha256'], kept['sent_at'], kept['error'], kept['by'], kept['failed_at'] >= '2026'),
+          (project, f'https://web.descript.com/{project}/46c2a', sha, '2026-10-12T10:31:16Z', 'HTTP 402', 'Codex', True))
+    check('descript: a failure with the same project as the record keeps the whole entry',
+          descript_patch('long', drive, project=project, error='HTTP 500', previous=sent['descript']['cuts']['long'])['descript']['cuts']['long']['record_link'],
+          f'https://web.descript.com/{project}/f6eb1')
+    half = descript_patch('short', drive, project=project.upper(), error='HTTP 500 on the PUT', previous=None, by='Claude Code')['descript']['cuts']['short']
+    check('descript: a send that failed after import_media made its project keeps that project alone, never a second',
+          sorted(half), ['by', 'error', 'failed_at', 'project_id', 'sent_at'])
+    check('descript: that project, in lower case', half['project_id'], project)
+    check('show: a project with no timelines yet says the next send finishes it',
+          'has no timelines yet' in descript_lines({**passed_check, 'descript': {'drive_id': drive, 'cuts': {'short': half}}})[-1], True)
+    passed = passed_check
+    states = lambda d: [descript_state({**passed, 'descript': d}, c)[0] for c in CUTS]
+    check('descript: the words held, older words, never sent', states(sent['descript']), ['in', 'missing'])
+    check('descript: older words, a failed send', states({'drive_id': drive, 'cuts': {'long': {**sent['descript']['cuts']['long'], 'script_sha256': 'c' * 64},
+                                                                                       'short': alone}}), ['older', 'failed'])
+    check('descript: nothing to say before the scripts pass with hashes', descript_state({'script_check': {'passed': False}}, 'long'), (None, None))
+    lines = descript_lines({**passed, 'descript': sent['descript']})
+    check('show: each cut\'s place in Descript, with both links', (len(lines), 'Descript, 3-minute cut: holds the current words' in lines[0],
+          f'record here https://web.descript.com/{project}/f6eb1' in lines[0], lines[1]),
+          (2, True, True, 'Descript, 90-second cut: not sent yet; send it with descript_send.py plan'))
+
+    def holds_descript(method, path, body):
+        seen.append((method, path, body))
+        if method == 'GET':
+            return 200, json.dumps({'ok': True, 'making': {**passed, 'descript': sent['descript']}, 'steps': []})
+        return 200, json.dumps({'ok': True, 'making': {**passed, **body}, 'steps': []})
+    code, _ = run(['--by', 'Claude Code', pid, 'descript', 'long', '--drive', drive, '--project', project, '--script-composition', script_comp,
+                   '--record-composition', record_comp, '--media', 'Script 2026-10-12 3e329b9.mp4', '--known-media', 'Record here 3-minute slate.mp4',
+                   'Script 2026-10-12 3e329b9.mp4', '--sha', sha, '--sent-at', '2026-10-12T10:31:16Z'], holds_descript)
+    check('descript: the command line records the cut on the piece', (code, seen[-1][2].get('descript')), (0, {**sent['descript'], 'cuts': {
+        'long': {**sent['descript']['cuts']['long']}}}))
+    before = len(seen)
+    code, err = run([pid, 'descript', 'long', '--drive', '00000000-0000-4000-8000-000000000000', '--project', project, '--script-composition', script_comp,
+                     '--record-composition', record_comp, '--media', 'm.mp4', '--known-media', 'm.mp4', '--sha', sha], holds_descript)
+    check('descript: another drive is refused, nothing read or written', (code, 'is not Krish\'s' in err, len(seen)), (1, True, before))
+    code, _ = run(['--by', 'Codex', pid, 'descript', 'long', '--drive', drive, '--error', 'HTTP 503'], holds_descript)
+    check('descript: a failed send read the record first, and kept its project', (code, seen[-2][0], seen[-1][2]['descript']['cuts']['long']['project_id']),
+          (0, 'GET', project))
+    shown = show(pid, holds_descript)
+    check('show: prints the Descript lines', 'Descript, 90-second cut: not sent yet' in shown, True)
+
     run(['--by', 'Codex', pid, 'session', 'https://chatgpt.com/codex/tasks/x'])
     check('session: the session says who runs it', seen[-1][2]['session'], {'url': 'https://chatgpt.com/codex/tasks/x', 'by': 'Codex'})
     if fails:
@@ -958,7 +1276,8 @@ def self_test():
 def main(argv=None, call=None):
     ap = argparse.ArgumentParser(description="Record where a piece is, for Control Center's board.")
     ap.add_argument('piece_id', nargs='?')
-    ap.add_argument('what', nargs='?', choices=['show', 'workroom', 'publish-manager', 'visual-gate', 'scripts', 'pack', 'recorded', 'video', 'posted', 'session'])
+    ap.add_argument('what', nargs='?', choices=['show', 'workroom', 'publish-manager', 'visual-gate', 'scripts', 'pack', 'recorded', 'video', 'posted', 'session',
+                                                     'descript'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--by', help=f'who is writing: Codex, Claude Code (default: {BY_ENV}, else {CODEX_BY} inside Codex, else {DEFAULT_BY})')
     ap.add_argument('--sent', action='store_true', help='with pack: the pack was sent to the library')
@@ -971,6 +1290,17 @@ def main(argv=None, call=None):
     ap.add_argument('--music', metavar='TRACK_ID', help='with video: the licensed track behind it (config/music-library.json)')
     ap.add_argument('--krish-words', metavar='WORDS', help='with recorded: Krish\'s own words, starting "Krish" and the date, letting a take '
                     'of older words count as a take of the current script; recorded on the take')
+    ap.add_argument('--drive', metavar='ID', help='with descript: the drive id get_drive_info gave (it must be config/descript.json\'s)')
+    ap.add_argument('--project', metavar='ID', help='with descript: the project id import_media gave')
+    ap.add_argument('--script-composition', metavar='ID', help='with descript: the id of the composition named Script')
+    ap.add_argument('--record-composition', metavar='ID', help='with descript: the id of the composition named Record here')
+    ap.add_argument('--links', nargs=2, metavar=('SCRIPT_URL', 'RECORD_URL'), help='with descript: the two links, when not the usual '
+                    'web.descript.com/<project>/<first five characters of the composition id>')
+    ap.add_argument('--media', metavar='NAME', help='with descript: the name the pages video was uploaded under')
+    ap.add_argument('--known-media', nargs='+', metavar='NAME', help='with descript: every media name get_project lists after the upload')
+    ap.add_argument('--sha', metavar='SHA256', help='with descript: the sha256 of the words the Script composition holds')
+    ap.add_argument('--sent-at', metavar='TIME', help='with descript: when it was sent (default now)')
+    ap.add_argument('--error', metavar='TEXT', help='with descript: what Descript said when the send failed')
     ap.add_argument('--self-test', action='store_true')
     a = ap.parse_args(argv)
     if a.self_test:
@@ -1011,6 +1341,8 @@ def main(argv=None, call=None):
                                   'or says in words to use this take: give them with --krish-words "Krish, YYYY-MM-DD: his words"')
             # Stamped with the script it was taken from: the current one for its cut.
             patch = recorded_patch(cut, a.args[1], a.seconds, current_hashes(record).get(cut), a.krish_words)
+            # Only a take the store holds: every later session fetches it from there.
+            in_store(a.args[1], call)
         elif a.what == 'video':
             patch = video_patch(a.args[0], a.args[1], a.args[2], url=a.url, seconds=a.seconds,
                                 thumb=a.thumb, thumb_url=a.thumb_url, music=a.music, thumb_file=a.thumb_file)
@@ -1019,6 +1351,10 @@ def main(argv=None, call=None):
             if channel not in CHANNELS:
                 ap.error(f'channel must be one of {", ".join(CHANNELS)}')
             patch = {'channels': {channel: {'url': a.args[1]} if len(a.args) > 1 else {}}}
+        elif a.what == 'descript':
+            if len(a.args) != 1:
+                ap.error('give the cut: descript long --drive ID --project ID ...')
+            patch = descript_record_patch(a.piece_id, a.args[0], a, call, by)
         else:
             patch = {'session': {'url': a.args[0], 'by': by}}
         data = post(a.piece_id, patch, call, by=by)

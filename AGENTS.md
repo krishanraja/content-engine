@@ -50,13 +50,65 @@ each take is stamped with the hash of the script it was read from, so a take
 of words that have changed since stops counting, and every take it is unsure
 of is one question on the board. A take already on a piece is fetched by the
 path its record holds: `recording.py get "recordings/<sha256>.<ext>"`.
-`scripts/post-pack/README.md`, "Placing takes on the runners". Descript is a
-separate lane: Krish said yes on 12 October to each checked script going to
-his Descript drive as a view-access project per cut (his words are in
-`WORKBENCH.md`), and Monday's and Friday's were sent by hand that day, but
-the automatic send and the return of a take recorded in Descript are not
-built yet. Nothing there is ever published, edited or deleted, and no AI
-credits are spent, beyond what his words allow.
+`scripts/post-pack/README.md`, "Placing takes on the runners". A take Krish
+records in Descript comes back through the video skill instead (the next
+rule).
+
+**Each checked script goes to Krish's Descript drive, a take he records
+there comes back through a private copy, and nothing else is done in
+Descript.** Krish, 2026-10-12: "Descript is now my tool of choice for video
+script readouts on my phone - scripts should automatically be sent there,
+with the ability for Descript to put the video in the correct place when
+recorded." He records there: "I can use the descript web app, otherwise my
+laptop to record". Asked "May every checked script go to that account
+automatically? One view-access project per cut, in a Mindmake scripts
+folder, about 5 media minutes a piece; nothing published, edited or deleted,
+no AI credits", he said "3. yes", then "go, upload". Asked for "a standing
+yes for the video skill to make a private copy, never public, of each take
+recorded in a Record here timeline, so it can download it", he said "1.
+yes". Of the teleprompter: "2 fine, no issue with copy paste", so no
+Underlord and no AI credits. The exact scope, on drive
+`d8b77ba9-0c95-4b7b-8964-2f5b888c0b78` (Krish Raja's Drive) only
+(`config/descript.json`):
+
+- **The send**, by `make-piece` at the Scripts step, or by any session
+  that `scripts/post-pack/descript_send.py pending` shows a cut still to
+  send: `get_drive_info`, `import_media` (a new view-access project per cut
+  in `Mindmake scripts/<pack folder>`, or a new Script pages video and
+  composition in that cut's own project), the `curl` PUT of the rendered
+  file to the upload link it returned, `wait_for_job` and `get_project`,
+  exactly as `descript_send.py plan` prints them, then `descript_send.py
+  record`.
+- **The take**, by `produce-video` ("Takes recorded in Descript"):
+  `get_drive_info`, `get_project`, `export_transcript`, and `publish_project`
+  of that cut's "Record here" composition at the `private` level only, then
+  `wait_for_job` and the download of that private copy
+  (`scripts/post-pack/descript_take.py`).
+- **Never**: a publish at any other level or of any other composition; an
+  edit, rename or deletion of a project, composition or media file;
+  Underlord (`prompt_project_agent`) or any AI credit; another drive; or any
+  call not named here. A private copy Descript refuses (403) is told to
+  Krish in plain words, and nothing is published another way.
+
+**The week's publish board is where Krish ticks; the piece's making record
+is where it counts.** Krish, 2026-10-12: "Give me a tick box next to each
+one so I can tick as I go and you can durably record that completion where
+it needs to be recorded. That Publish Manager is what you create every
+Sunday and let me iterate inside until we're done". The Sunday session makes
+one board a week (`scripts/post-pack/week_board.py`, a private artifact with
+a tab for Monday, Wednesday and Friday; its link is on that week's board
+item, `week-publish-board-<its Monday>`, and in `WORKBENCH.md`), and a
+session that makes a piece republishes it to that same link, so no tick is
+lost and no day it holds is dropped (`--previous`). Completion is recorded
+in this order: his tick is saved at once in the board's own store; every
+making session in Claude Code (`make-piece`, `plan-week`, `produce-video`)
+copies each channel tick onto the piece the board names for that day,
+published or not, at its start and again before it stops (`making.py
+<piece> posted <channel> [url]`; `.agents/skills/make-piece/SKILL.md`, "The
+week's ticks"), reading last week's board too until every day on it is at
+100%; and from the record the engine closes the board items and Control
+Center shows it. An untick never removes a record. A Record tick is
+information only: Record is done from the takes on the record.
 
 **Video production goes through `.agents/skills/produce-video`, and licensed
 music lives only at `MINDMAKE_MUSIC_ROOT` with its ledger

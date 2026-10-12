@@ -7,7 +7,13 @@ import { isMonday, keepThroughWeek, parseOptions, type WeekOptionMeta } from '..
 //        what the Sunday session needs to plan the week: each publishing
 //        series' mandate, the options already written for that week, what is
 //        in flight or scheduled, the judges' best ready pieces, and the ideas
-//        Krish dropped in during the last fortnight.
+//        Krish dropped in during the last fortnight. `scheduled` is every
+//        piece of the series scheduled inside that week (Monday to Sunday)
+//        in any picked state, published included: the publish watcher marks
+//        a piece published once its Substack post is live, and the day still
+//        holds it while Krish posts the rest (the week's publish board reads
+//        each day's piece from here; Control Center's weekPlan counts the
+//        same states as picked).
 // POST /api/week/options  { week_start, series, options: [{ id, rank, pitch, why_now, recommended }] }
 //        writes meta.week_option on each option's row (and its series, when
 //        the row has none), keeps each option alive through its week (a seed's
@@ -19,6 +25,15 @@ import { isMonday, keepThroughWeek, parseOptions, type WeekOptionMeta } from '..
 // picks, schedules, sends or spends; the pick is his press.
 
 const LIVE_STATES = ['seeded', 'researching', 'drafting', 'review', 'approved']
+/** A pick holds its day in these states (Control Center's weekPlan, PICKED_STATES). */
+export const PICKED_STATES = ['drafting', 'review', 'approved', 'published']
+
+/** The Sunday that ends the week starting on that Monday, YYYY-MM-DD. */
+export function weekEnd(monday: string): string {
+  const d = new Date(`${monday}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + 6)
+  return d.toISOString().slice(0, 10)
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET', 'POST'])) return
@@ -27,13 +42,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {
     const week = String(req.query.week_start || '')
     if (!isMonday(week)) return res.status(400).json({ ok: false, error: 'week_start must be a Monday, YYYY-MM-DD' })
-    const [formats, rows, dropped] = await Promise.all([
+    const [formats, rows, dropped, held] = await Promise.all([
       supabase.from('venture_formats').select('slug,label,cadence_label,mandate').eq('venture_slug', 'publication').eq('kind', 'subchannel').eq('active', true),
       supabase.from('content_ideas').select('id,idea,thesis,state,lane_slot,scheduled_for,meta,created_at,updated_at').in('state', LIVE_STATES).is('buried_at', null).is('library_at', null).limit(1500),
       supabase.from('content_ideas').select('id,idea,state,lane_slot,source_url,created_at').eq('source_type', 'manual').gte('created_at', new Date(Date.now() - 14 * 86_400_000).toISOString()).limit(50),
+      supabase.from('content_ideas').select('id,idea,state,lane_slot,scheduled_for').in('state', PICKED_STATES).is('buried_at', null).gte('scheduled_for', week).lte('scheduled_for', weekEnd(week)).limit(100),
     ])
-    if (formats.error || rows.error) return res.status(500).json({ ok: false, error: (formats.error || rows.error)!.message })
+    if (formats.error || rows.error || held.error) return res.status(500).json({ ok: false, error: (formats.error || rows.error || held.error)!.message })
     const all = (rows.data || []) as Array<Record<string, any>>
+    const scheduledRows = (held.data || []) as Array<Record<string, any>>
     const series = ((formats.data || []) as Array<Record<string, any>>).map(f => {
       const mine = all.filter(r => r.lane_slot === f.slug)
       const score = (r: Record<string, any>) => Number(r.meta?.ladder?.final?.score ?? r.meta?.ladder?.score ?? -1)
@@ -42,6 +59,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         options: all.filter(r => r.meta?.week_option?.week_start === week && r.meta?.week_option?.series === f.slug)
           .map(r => ({ id: r.id, idea: r.idea, state: r.state, ...r.meta.week_option })).sort((a, b) => a.rank - b.rank),
         in_flight: mine.filter(r => ['drafting', 'review', 'approved'].includes(r.state)).map(r => ({ id: r.id, idea: r.idea, state: r.state, scheduled_for: r.scheduled_for })),
+        scheduled: scheduledRows.filter(r => r.lane_slot === f.slug)
+          .map(r => ({ id: r.id, idea: r.idea, state: r.state, scheduled_for: r.scheduled_for }))
+          .sort((a, b) => String(a.scheduled_for).localeCompare(String(b.scheduled_for)) || String(a.id).localeCompare(String(b.id))),
         judged_best: mine.filter(r => (r.state === 'seeded' || r.state === 'researching') && score(r) >= 0)
           .sort((a, b) => score(b) - score(a)).slice(0, 8)
           .map(r => ({ id: r.id, idea: r.idea, thesis: r.thesis, state: r.state, score: score(r), band: r.meta?.ladder?.final?.band ?? null })),

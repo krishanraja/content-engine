@@ -1,0 +1,116 @@
+{
+  "about": "The week's publish board as published on 12 October 2026 (https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV), reduced to what a rebuild must keep: the doc id of every tick, the steps it writes and the piece each day held. A board republished to that page keeps every tick only while these stay the same (scripts/post-pack/week_board.py).",
+  "url": "https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV",
+  "week_start": "2026-10-12",
+  "tick_ids": [
+    "fri-linkedin",
+    "fri-notes",
+    "fri-record-long",
+    "fri-record-short",
+    "fri-reels",
+    "fri-shorts",
+    "fri-substack",
+    "fri-tiktok",
+    "fri-whatsapp",
+    "fri-youtube",
+    "mon-linkedin",
+    "mon-notes",
+    "mon-record-long",
+    "mon-record-short",
+    "mon-reels",
+    "mon-shorts",
+    "mon-substack",
+    "mon-tiktok",
+    "mon-whatsapp",
+    "mon-youtube"
+  ],
+  "steps": [
+    {
+      "key": "record-long",
+      "label": "Record the 3-minute cut (Descript)",
+      "channel": null,
+      "standing": true
+    },
+    {
+      "key": "record-short",
+      "label": "Record the 90-second cut (Descript)",
+      "channel": null,
+      "standing": true
+    },
+    {
+      "key": "substack",
+      "label": "Substack: video post with the article",
+      "channel": "substack",
+      "standing": true
+    },
+    {
+      "key": "youtube",
+      "label": "YouTube: the 3-minute video",
+      "channel": "youtube",
+      "standing": true
+    },
+    {
+      "key": "shorts",
+      "label": "YouTube Shorts",
+      "channel": "shorts",
+      "standing": true
+    },
+    {
+      "key": "tiktok",
+      "label": "TikTok",
+      "channel": "tiktok",
+      "standing": true
+    },
+    {
+      "key": "reels",
+      "label": "Instagram Reels",
+      "channel": "reels",
+      "standing": true
+    },
+    {
+      "key": "linkedin",
+      "label": "LinkedIn",
+      "channel": "linkedin",
+      "standing": false
+    },
+    {
+      "key": "whatsapp",
+      "label": "WhatsApp",
+      "channel": "whatsapp",
+      "standing": false
+    },
+    {
+      "key": "notes",
+      "label": "Substack Notes",
+      "channel": "notes",
+      "standing": false
+    }
+  ],
+  "pieces": {
+    "mon": "f328382d-71b3-41a7-a221-d8615826f12e",
+    "fri": "904658db-4df2-4537-a0ed-ebe93e081db7",
+    "wed": null
+  },
+  "db": {
+    "ticks": {
+      "doc_id": "<day>-<step>",
+      "fields": [
+        "done",
+        "at",
+        "day",
+        "piece_id",
+        "step",
+        "channel",
+        "label"
+      ]
+    },
+    "links": {
+      "doc_id": "<day>",
+      "fields": [
+        "article",
+        "youtube",
+        "at"
+      ]
+    }
+  }
+}

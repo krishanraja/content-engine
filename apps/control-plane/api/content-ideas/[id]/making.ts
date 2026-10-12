@@ -9,7 +9,9 @@ import { closeBoardItemsForPiece } from '../../_boardClose.js'
 //        { workroom: {url}, publish_manager: {url}, visual_gate: {passed, problems},
 //          script_check: {passed, problems, cuts, hashes: {long, short}}, pack: {folder, files, sent_at},
 //          recordings: [{cut, path, seconds, script_sha256}], video_assets: [{cut, name, path, url}],
-//          channels: {substack: {url}, youtube: null, ...}, session: {url, by} }
+//          channels: {substack: {url}, youtube: null, ...}, session: {url, by},
+//          descript: {drive_id, cuts: {long|short: {project_id, script_composition, record_composition,
+//            script_link, record_link, script_sha256, media, known_media, sent_at, error, failed_at}}} }
 //
 // Every write lands on content_ideas.meta.making, so Control Center's realtime
 // subscription on content_ideas shows it within a second. A Claude Code

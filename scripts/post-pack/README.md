@@ -164,6 +164,60 @@ writes `publish.html` for one post; pack it as `publish-kit`.
     python scripts/post-pack/publish_kit.py WORKDIR/publish.json --out DIR
     python scripts/post-pack/publish_kit.py --self-test
 
+## The week's publish board
+
+Krish, 2026-10-12: "just give me one ... Publish Manager for the ... whole
+week with 3 tabs on it for Mon / Weds / Fri, which we need to get to 100%.
+Give me a tick box next to each one so I can tick as I go and you can
+durably record that completion where it needs to be recorded. That Publish
+Manager is what you create every Sunday and let me iterate inside until
+we're done, and then I check off the list what I have done as I do it."
+
+`week_board.py` builds that one page (its template is `week_board/`). Each
+tab is a made piece's whole publish page (`publish_manager.py`'s, given with
+`--day`), or a designed "not made yet" or "not picked" state. A made tab
+opens with Record in Descript (each cut's "Record here" and script pages
+links, from the making record's Descript links or the hand send's record),
+the two scripts to copy and the checklist; a tick also sits by each
+channel's heading. Seven ticks make a day 100% (both cuts recorded, then
+Substack, YouTube, Shorts, TikTok, Instagram); LinkedIn, WhatsApp and Notes
+are optional. A day's piece comes from `--piece`, or from the week's picks
+(`--options`, a saved `GET /api/week/options` answer, or `--live`, which
+only reads): the piece of the day's series scheduled for its date in any
+picked state, published included (the options' `scheduled` list), since
+the publish watcher marks a piece published once its Substack post is live
+and Krish still posts the rest from its tab.
+
+    python scripts/post-pack/week_board.py --week 2026-10-12 --day mon=monday-publish.html --day fri=friday-publish.html \
+        --piece mon=<uuid> --piece fri=<uuid> --descript sent.json --live --previous <the board it replaces> --out week-board.html
+    python scripts/post-pack/week_board.py --show <a board page or week-board.json> [--json]
+    python scripts/post-pack/week_board.py --self-test
+    npx vitest run tests/control-plane/week-board.test.ts
+
+A rebuild never loses a day. `--previous` is the board being replaced (its
+`week-board.json`, or its page as `Artifact read` saved it): a day it holds
+as made or picked that the rebuild would show as not picked is refused, and
+so is a made day with no publish page in the rebuild; `--unpick DAY` says a
+day really has no piece now. With `--live`, a picked piece whose making
+record has a publish page must come with it (`--day`). `--show` prints the
+days a board holds, each day's state and piece: the piece a tick on that
+day belongs to.
+
+Every tick saves at once in the page's own store: `ticks/<day>-<step>`
+(`done, at, day, piece_id, step, channel, label`) and `links/<day>`
+(`article, youtube, at`). Publish it as an artifact with title "This Week's
+Publish Board", icon `calendar` and capabilities `{"db": {}, "downloads":
+true}`; the call is in `week-board.json`, written beside the page with the
+week, each day's state and piece, and every tick id. A rebuilt board
+republished to the same page keeps every tick, because the store stays with
+the page and the ids depend only on the day and the step
+(`fixtures/week-board/published-2026-10-12.json` holds the published
+board's tick ids and steps, and the test runs the page's own script against
+a stand-in store); make a new page each Sunday, with its own board item,
+`week-publish-board-<Monday>`. A session copies each channel tick onto the
+piece with `making.py <piece> posted <channel> [url]`; Record is done from
+the takes on the record, never from a tick.
+
 ## The visual gate
 
 Krish, 2026-10-10, of Friday's first cover and pictures: "we need to add all
@@ -521,17 +575,77 @@ places them (`-RequirePlacing` makes it a stop).
 It never writes to the Inbox, never sends anything outside the engine, and
 never produces a video: that is `.agents/skills/produce-video`.
 
-## Scripts into Descript (not built as code)
+## Scripts into Descript
 
-Krish said yes on 12 October to every checked script going to his Descript
-drive as a view-access project per cut, in a `Mindmake scripts` folder, with
-nothing published, edited or deleted and no AI credits (his words are in
-`WORKBENCH.md`). Monday's and Friday's four projects were made by hand that
-day, each with the script and a "Record here" timeline, linked from the
-piece's Record board item. Two things are not built yet: the automatic send
-when a piece's scripts pass, and bringing back a take he records in
-Descript, which therefore does not reach the engine or the matcher by
-itself. A take dropped in the Inbox is placed by the runners as above.
+Krish, 2026-10-12: "Descript is now my tool of choice for video script
+readouts on my phone - scripts should automatically be sent there, with the
+ability for Descript to put the video in the correct place when recorded."
+Asked "May every checked script go to that account automatically? One
+view-access project per cut, in a Mindmake scripts folder, about 5 media
+minutes a piece; nothing published, edited or deleted, no AI credits", he
+said "3. yes", then "go, upload". His words, the drive and the calls allowed
+are in `config/descript.json`.
+
+`descript_send.py` makes no Descript call. `plan` reads the piece's making
+record, refuses unless the scripts' check passed and each file holds the
+words it passed, renders each cut's Script pages video (and, for a cut never
+sent, its one-second "Record here" slate) and prints the calls the session
+makes with the Descript connector, in order: `get_drive_info` (Krish Raja's
+Drive, `d8b77ba9-0c95-4b7b-8964-2f5b888c0b78`, or stop), `import_media`, a
+`curl --fail` PUT of each file to the upload link it returned,
+`wait_for_job`, `get_project`, then the `record` line, which writes the
+cut's project, its two timelines and links and the hash of the words sent
+onto `meta.making.descript` (`making.py descript` is the same). Words that
+change go into the same project as a new Script timeline; the Record here
+timeline and any take in it stay put. A failed send is recorded with what
+Descript said and when (`record --error`, with `--project` once
+`import_media` gave one, so the next plan finishes that project and never
+makes a second). `pending` lists every cut in flight this week and next
+whose current words Descript lacks, with its plan line; a cut sent by hand
+that the record does not hold yet gets its `WORKBENCH.md` record line
+instead, and a cut whose minutes ran out (402), or whose send failed less
+than six hours ago, is held back until its words change or `--retry`.
+
+    python scripts/post-pack/descript_send.py pending [--week YYYY-MM-DD] [--retry]
+    python scripts/post-pack/descript_send.py plan PIECE post.json long.md short.md
+    python scripts/post-pack/descript_send.py record PIECE CUT --drive ID --project ID ... | --error "what Descript said"
+    python scripts/post-pack/descript_send.py --self-test
+
+## Takes recorded in Descript
+
+He records each cut in its project's "Record here" timeline, on the Descript
+web app or his laptop ("I can use the descript web app, otherwise my laptop
+to record"). Asked for "a standing yes for the video skill to make a private
+copy, never public, of each take recorded in a Record here timeline, so it
+can download it", he said "1. yes". `descript_take.py` makes no Descript
+call either; the video skill runs it (`.agents/skills/produce-video`, "Takes
+recorded in Descript"):
+
+- `waiting`: each cut still to record and its project (a cut sent by hand
+  and not on the record yet gets its `WORKBENCH.md` line, never the Inbox).
+- `look --project FILE`: what the Record here timeline holds beyond the
+  slate, from `get_project` saved to a file: a take (exit 0), a question for
+  Krish (exit 2) or nothing (exit 3). A recording in another timeline of
+  the project is named, never copied.
+- `check --words FILE`: the take's words, from `export_transcript`, heard
+  against the cut's script with the matcher's own bar; go or ask.
+- `fetch --url DOWNLOAD_URL`: the private copy (`publish_project` of the
+  Record here composition, `private`, 1080p) downloaded, its slate trimmed
+  to the frame, hashed and named "Descript <cut> take <date>.mp4". On a
+  home computer with the runner key it prints the single-file send
+  (`scripts\recordings-upload.ps1 -File PATH -Name NAME -Sha256 HASH`), then
+  `making.py recorded` (which refuses a path the store does not hold) and
+  the line that adds the take's media to `known_media`; anywhere else, the
+  `handoff --post` line for a home computer.
+- `--krish-words "Krish, YYYY-MM-DD: ..."` on `look`, `check` and `fetch`:
+  his words to use a take anyway (older words, a re-take of a cut already
+  recorded, a copy already published), kept on the take's record.
+
+    python scripts/post-pack/descript_take.py waiting [--week YYYY-MM-DD]
+    python scripts/post-pack/descript_take.py look --piece ID --cut long --project PROJECT.json
+    python scripts/post-pack/descript_take.py --self-test
+
+A take dropped in the Inbox is placed by the runners as above.
 
 ## Size and storage
 
@@ -551,7 +665,11 @@ python scripts/post-pack/recording.py --self-test
 python scripts/post-pack/recording_match.py --self-test
 python scripts/post-pack/making.py --self-test
 python scripts/post-pack/plan_files.py --self-test
+python scripts/post-pack/descript_send.py --self-test
+python scripts/post-pack/descript_take.py --self-test
+python scripts/post-pack/week_board.py --self-test
 npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/library-recordings.test.ts tests/control-plane/post-pack.test.ts tests/control-plane/making.test.ts tests/control-plane/recording-match.test.ts tests/library-sync.test.ts tests/recordings-upload.test.ts
+npx vitest run tests/control-plane/descript-send.test.ts tests/control-plane/descript-take.test.ts tests/control-plane/week-board.test.ts tests/control-plane/week-options.test.ts
 ```
 
 ## What stays out of the repository

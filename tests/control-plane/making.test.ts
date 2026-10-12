@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { makingStamp, makingSteps, mergeMaking, parseMakingPatch, takeCounts } from '../../apps/control-plane/api/_making.js'
+import { descriptNote, descriptStates, makingStamp, makingSteps, mergeMaking, parseMakingPatch, takeCounts } from '../../apps/control-plane/api/_making.js'
 
 // The making record on content_ideas.meta.making: where a piece is between
 // the workroom and every channel, written by Claude Code sessions and by
@@ -365,5 +365,113 @@ describe('the pure helpers', () => {
     expect(makingSteps({ state: 'approved', meta: { making: { channels: five, updated_at: 'x', by: 'Krish' } } }).find(s => s.key === 'publish')?.state).toBe('done')
     const { tiktok: _t, ...four } = five
     expect(makingSteps({ state: 'approved', meta: { making: { channels: { ...four, linkedin: { posted_at: 'x' }, whatsapp: { posted_at: 'x' } }, updated_at: 'x', by: 'Krish' } } }).find(s => s.key === 'publish')?.state).toBe('now')
+  })
+})
+
+// Descript: where each cut's script is (Krish, 2026-10-12: "Descript is now
+// my tool of choice for video script readouts on my phone - scripts should
+// automatically be sent there"). Written by scripts/post-pack/descript_send.py
+// record; it never holds a step back.
+const DRIVE = 'd8b77ba9-0c95-4b7b-8964-2f5b888c0b78'
+const LONG = { project: '16aa1f87-c054-4115-a11c-4342def815e5', script: '46c2a75a-615d-4ab5-bdc4-c84b57a88454', record: 'f6eb149a-82e8-4604-836e-b78ea7c73797' }
+const SHORT = { project: '6e1c3178-ba5c-4603-a5e2-ec23f3612071', script: 'f27bfc76-e71b-498d-a942-767063070c48', record: '36a320ab-ed9a-4d7e-bddb-61668278faea' }
+function sentCut(ids: typeof LONG, sha: string, extra: Row = {}): Row {
+  return {
+    project_id: ids.project, script_composition: ids.script, record_composition: ids.record,
+    script_link: `https://web.descript.com/${ids.project}/${ids.script.slice(0, 5)}`, record_link: `https://web.descript.com/${ids.project}/${ids.record.slice(0, 5)}`,
+    script_sha256: sha, media: 'Script 2026-10-12 3e329b9.mp4', known_media: ['Script 2026-10-12 3e329b9.mp4', 'Record here 3-minute slate.mp4'],
+    sent_at: '2026-10-12T10:31:16Z', by: 'Claude Code', ...extra,
+  }
+}
+const scriptsNote = (out: { body: Row }) => out.body.steps.find((s: Row) => s.key === 'scripts')
+
+describe('Descript on the making record', () => {
+  it('a cut sent is recorded; the other cut, sent later, merges beside it; the Scripts step says so and stays done', async () => {
+    await call('POST', { script_check: { passed: true, problems: [], cuts: ['long', 'short'], hashes: { long: SHA('a'), short: SHA('b') } } })
+    const one = await call('POST', { by: 'Claude Code', descript: { drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a')) } } })
+    expect(one.status).toBe(200)
+    expect(one.body.making.descript).toEqual({ drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a')) } })
+    expect(scriptsNote(one)).toMatchObject({ state: 'done', note: 'long and short; not in Descript yet for the short cut' })
+    const two = await call('POST', { descript: { drive_id: DRIVE, cuts: { short: sentCut(SHORT, SHA('b'), { media: 'm.mp4', known_media: ['m.mp4'] }) } } })
+    expect(Object.keys(two.body.making.descript.cuts)).toEqual(['long', 'short'])
+    expect(scriptsNote(two)).toMatchObject({ state: 'done', note: 'long and short; in Descript' })
+    // The short words change: the step stays done and says Descript has the older ones.
+    const changed = await call('POST', { script_check: { passed: true, problems: [], cuts: ['long', 'short'], hashes: { long: SHA('a'), short: SHA('c') } } })
+    expect(scriptsNote(changed)).toMatchObject({ state: 'done', note: 'long and short; Descript has an older script for the short cut' })
+    expect(changed.body.steps.filter((s: Row) => s.state === 'now').map((s: Row) => s.key)).toEqual(['workroom'])
+  })
+
+  it('a send that failed is recorded with what Descript said, on its project or alone, and said on the step', async () => {
+    await call('POST', { script_check: { passed: true, problems: [], hashes: { long: SHA('a'), short: SHA('b') } } })
+    const alone = await call('POST', { descript: { drive_id: DRIVE, cuts: { short: { error: 'HTTP 402: media minutes used up', by: 'Claude Code' } } } })
+    expect(alone.status).toBe(200)
+    expect(alone.body.making.descript.cuts.short).toMatchObject({ error: 'HTTP 402: media minutes used up', by: 'Claude Code' })
+    expect(alone.body.making.descript.cuts.short.project_id).toBeUndefined()
+    const kept = await call('POST', { descript: { drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a'), { error: 'HTTP 503', failed_at: '2026-10-12T14:05:00Z' }) } } })
+    expect(kept.body.making.descript.cuts.long).toMatchObject({ project_id: LONG.project, error: 'HTTP 503', failed_at: '2026-10-12T14:05:00Z' })
+    expect(scriptsNote(kept)).toMatchObject({ state: 'done', note: 'the Descript send failed' })
+    // import_media made the project, then the PUT failed: the bare project is kept, so the next send finishes it there.
+    const bare = await call('POST', { descript: { drive_id: DRIVE, cuts: { short: { project_id: SHORT.project, error: 'HTTP 500 on the upload', by: 'Claude Code' } } } })
+    expect(bare.status).toBe(200)
+    expect(bare.body.making.descript.cuts.short).toMatchObject({ project_id: SHORT.project, error: 'HTTP 500 on the upload' })
+    expect(bare.body.making.descript.cuts.short.record_composition).toBeUndefined()
+    expect(typeof bare.body.making.descript.cuts.short.failed_at).toBe('string')
+    expect(descriptStates(bare.body.making)).toMatchObject({ short: 'failed' })
+  })
+
+  it('bad ids and links are refused by name, and nothing is written', async () => {
+    const bad: Array<[Row, string]> = [
+      [{ drive_id: 'Krish Raja\'s Drive', cuts: { long: sentCut(LONG, SHA('a')) } }, "descript needs drive_id, the Descript drive's id (a lower case uuid)"],
+      [{ drive_id: DRIVE.toUpperCase(), cuts: { long: sentCut(LONG, SHA('a')) } }, "descript needs drive_id, the Descript drive's id (a lower case uuid)"],
+      [{ drive_id: DRIVE, cuts: {} }, 'descript.cuts needs the long or short cut'],
+      [{ drive_id: DRIVE, cuts: { wide: sentCut(LONG, SHA('a')) } }, 'unknown cut "wide" in descript.cuts (long, short)'],
+      [{ drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a'), { project_id: 'my project' }) } }, "descript.cuts.long.project_id is the Descript project's id, a lower case uuid"],
+      [{ drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a'), { record_composition: '46c2a' }) } }, 'descript.cuts.long.record_composition is a Descript composition id, a lower case uuid'],
+      [{ drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a'), { record_composition: LONG.script }) } }, 'descript.cuts.long: the Script and Record here compositions are two different compositions'],
+      [{ drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a'), { script_link: `https://web.descript.com/${SHORT.project}/46c2a` }) } }, `descript.cuts.long.script_link opens a composition of its project: https://web.descript.com/${LONG.project}/<short id>`],
+      [{ drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a'), { record_link: 'http://web.descript.com/x' }) } }, `descript.cuts.long.record_link opens a composition of its project: https://web.descript.com/${LONG.project}/<short id>`],
+      [{ drive_id: DRIVE, cuts: { long: sentCut(LONG, 'abc') } }, 'descript.cuts.long.script_sha256 is the sha256 of the words the Script composition holds, 64 lowercase hex characters'],
+      [{ drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a'), { known_media: ['other.mp4'] }) } }, 'descript.cuts.long.known_media does not hold its media, "Script 2026-10-12 3e329b9.mp4"'],
+      [{ drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a'), { known_media: [] }) } }, 'descript.cuts.long.known_media is every media name the project lists, 1 to 100 names'],
+      [{ drive_id: DRIVE, cuts: { long: { by: 'Claude Code' } } }, 'descript.cuts.long needs project_id and its compositions, or the error that stopped the send'],
+      // A bare project is kept only with the error that stopped its send.
+      [{ drive_id: DRIVE, cuts: { long: { project_id: LONG.project, by: 'Claude Code' } } }, 'descript.cuts.long.script_composition is a Descript composition id, a lower case uuid'],
+    ]
+    for (const [descript, problem] of bad) {
+      const out = await call('POST', { descript })
+      expect(out.status).toBe(400)
+      expect(out.body.problems).toEqual([problem])
+    }
+    // One good cut beside a bad one: nothing is written.
+    const half = await call('POST', { descript: { drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a')), short: sentCut(SHORT, 'x') } } })
+    expect(half.status).toBe(400)
+    expect(db.writes).toHaveLength(0)
+  })
+
+  it('a different drive replaces the record\'s Descript cuts; the same drive merges them', () => {
+    const now = '2026-10-12T11:00:00Z'
+    const first = mergeMaking(null, { descript: { drive_id: DRIVE, cuts: { long: sentCut(LONG, SHA('a')) as any } } }, 'Claude Code', now)
+    const same = mergeMaking(first, { descript: { drive_id: DRIVE, cuts: { short: sentCut(SHORT, SHA('b')) as any } } }, 'Claude Code', now)
+    expect(Object.keys(same.descript!.cuts)).toEqual(['long', 'short'])
+    const other = mergeMaking(same, { descript: { drive_id: '00000000-0000-4000-8000-000000000000', cuts: { short: sentCut(SHORT, SHA('b')) as any } } }, 'Claude Code', now)
+    expect(Object.keys(other.descript!.cuts)).toEqual(['short'])
+  })
+
+  it('descriptStates and descriptNote: nothing before the scripts pass with hashes; every state named, the cut named when only one is so', () => {
+    const check = { passed: true, checked_at: 'x', problems: [], hashes: { long: SHA('a'), short: SHA('b') } }
+    const cuts = (long: Row | undefined, short: Row | undefined) => ({ drive_id: DRIVE, cuts: { ...(long ? { long } : {}), ...(short ? { short } : {}) } }) as any
+    expect(descriptStates({ script_check: { ...check, passed: false } })).toEqual({})
+    expect(descriptStates({ script_check: { passed: true, checked_at: 'x', problems: [] } })).toEqual({})
+    expect(descriptNote({ script_check: { passed: true, checked_at: 'x', problems: [] }, descript: cuts(sentCut(LONG, SHA('a')), undefined) })).toBe('')
+    expect(descriptNote({ script_check: check })).toBe('not in Descript yet')
+    expect(descriptNote({ script_check: check, descript: cuts(sentCut(LONG, SHA('c')), sentCut(SHORT, SHA('d'))) })).toBe('Descript has an older script')
+    expect(descriptStates({ script_check: check, descript: cuts(sentCut(LONG, SHA('c')), { error: 'HTTP 503', sent_at: 'x', by: 'y' }) })).toEqual({ long: 'older', short: 'failed' })
+    expect(descriptNote({ script_check: check, descript: cuts(sentCut(LONG, SHA('c')), { error: 'HTTP 503', sent_at: 'x', by: 'y' }) }))
+      .toBe('Descript has an older script for the long cut; the Descript send failed for the short cut')
+    const steps = makingSteps({ state: 'review', meta: { making: { script_check: { ...check, cuts: ['long', 'short'] }, updated_at: 'x', by: 'Claude Code' } } })
+    expect(steps.find(s => s.key === 'scripts')).toMatchObject({ state: 'done', note: 'long and short; not in Descript yet' })
+    // A check from before the hashes says nothing about Descript.
+    const old = makingSteps({ state: 'review', meta: { making: { script_check: { passed: true, checked_at: 'x', problems: [], cuts: ['long', 'short'] }, updated_at: 'x', by: 'Claude Code' } } })
+    expect(old.find(s => s.key === 'scripts')!.note).toBe('long and short')
   })
 })
