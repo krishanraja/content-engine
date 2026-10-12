@@ -75,8 +75,9 @@ Last updated: 2026-10-12, about 18:00 UTC, by a Claude Code session (cloud).
   anything.
 - Epidemic Sound gives no per-track licence number. His safelisted channels
   are the licence record (`config/music-licences/`, screenshot of 12
-  October); never ask him for licence details again. LinkedIn is not on the
-  safelist.
+  October); never ask him for licence details again. LinkedIn and every
+  other platform need no safelisting (Epidemic's own screen, second
+  screenshot there).
 
 ## This week's publish board
 

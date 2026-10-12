@@ -33,12 +33,13 @@
         "shorts",
         "substack",
         "reels",
-        "tiktok"
+        "tiktok",
+        "linkedin"
       ],
       "monetisation_ok": null,
       "content_id_cleared": true,
       "attribution": null,
-      "restrictions": "Safelisted on Epidemic Sound (Krish's screenshot, 12 October): YouTube makeyourmindup, Instagram makeyourmind.up, TikTok therealkrisho, Facebook, website makeyourmindup.ai. LinkedIn is not on the safelist. Epidemic Sound issues no per-track licence number; the screenshot is the record.",
+      "restrictions": "Safelisted on Epidemic Sound (Krish's screenshot, 12 October): YouTube makeyourmindup, Instagram makeyourmind.up, TikTok therealkrisho, Facebook, website makeyourmindup.ai. Every other online platform, LinkedIn included, needs no safelisting: Epidemic's own words on the platform screen, 'All other online platforms are safe to publish on. No safelisting required.' (config/music-licences/epidemic-sound-other-platforms-2026-10-12.jpg). Epidemic Sound issues no per-track licence number; the screenshots are the record.",
       "file": "ES_NO CURVES (Instrumental Version) - Superintendent McCupcakes.mp3",
       "sha256": null,
       "bytes": 6329958,
