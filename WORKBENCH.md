@@ -73,6 +73,28 @@ Last updated: 2026-10-12, about 18:00 UTC, by a Claude Code session (cloud).
   need to fix this." Both home computers had Drive working. The runner's
   `drive_state` light is not proof: check it on the machine before saying
   anything.
+- **Any machine makes the videos; nobody is ever sent to a home computer.**
+  His words, 2026-10-12: "the audio is literally in the drive connected here
+  via MCP and also on Google drive, what the fuck is happening here? record
+  this capability of yours so you do not whine about this ever again". What
+  every session can do, in the cloud as anywhere:
+  - his takes: `python3 scripts/post-pack/recording.py get recordings/<sha>.<ext>`
+    (the path is on the piece's making record; the Inbox lane uploads every
+    take to the engine within minutes);
+  - the licensed music: `python3 scripts/quick-edit/music.py fetch`, then
+    `MINDMAKE_MUSIC_ROOT=<the folder it prints>` (both home computers publish
+    it to the engine's library every pass, `music.py publish`);
+  - a post's pictures: `GET /api/library/file?path=3 Posts/<post>/2 Covers and
+    images/<name>` (or the board's own copies);
+  - the tools: `pip install faster-whisper==1.2.0 ctranslate2==4.8.1 av==18.1.0
+    playwright`, `npm ci`, `MYMU_BROWSER=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`;
+  - the story intro and outro: `scripts/quick-edit/story_io.py props --plan
+    <plan>` then `render`.
+  Then kit.py, make.py, the thumbnails, send.py and making.py as
+  `produce-video` says. The midday run (`.github/workflows/produce-day.yml`,
+  `scripts/produce_day.py`) does all of it by itself at 12:00 New York on
+  Monday, Wednesday and Friday, on GitHub's machine (his choice: "GitHub
+  always renders"); its Run workflow button is the one click.
 - Epidemic Sound gives no per-track licence number. His safelisted channels
   are the licence record (`config/music-licences/`, screenshot of 12
   October); never ask him for licence details again. LinkedIn and every

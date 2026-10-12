@@ -1,6 +1,6 @@
 ---
 name: produce-video
-description: Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on either Windows home computer, main or backup; a cloud session matches and prepares, then hands rendering to a home computer. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
+description: Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session, GitHub's machine (the midday run, produce-day) or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
 ---
 
 # Produce the video
@@ -87,12 +87,21 @@ on the record.
   names the right tool: PowerShell `$env:MAKING_BY = "Codex"` in Codex, or
   `$env:MAKING_BY = "Claude Code"` in Claude Code (`export MAKING_BY=...` in
   the cloud). `making.py` also tells Codex by itself, but set it anyway.
-- **A cloud session** (Claude Code or Codex on the web) has no H: drive, no
-  music folder and no archive. It may find and match the takes (step 2),
-  build the kit (step 3), plan (step 4, with `faster-whisper` installed),
-  and draw the thumbnails (step 5). It never renders the finished cuts: it
-  leaves a board item for a home computer with the piece's `idea_id` and
-  `"closes_on": "video"`, naming the commands still to run, and says so.
+- **Any machine renders: a cloud session, GitHub's machine, a home
+  computer.** Krish, 2026-10-12: "record this capability of yours so you do
+  not whine about this ever again". Nothing here needs H:. The takes come
+  from the engine (`recording.py get`, step 2), the music from the
+  library (`python scripts/quick-edit/music.py fetch`, then
+  `MINDMAKE_MUSIC_ROOT=<the folder it prints>`; both home computers
+  publish it every pass), the pictures from the post's pack
+  (`GET /api/library/file`) or `--files`, and the finished cuts go to the
+  post's `3 Video` folder through `send.py` (Library Sync writes Drive).
+  Never send Krish to a home computer, never relay a runner's status light
+  as his blocker, and never ask him for a music licence number (Epidemic
+  Sound has none; `config/music-licences/` is the record). The midday run
+  (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`) does
+  every step below by itself on GitHub's machine at 12:00 New York on
+  Monday, Wednesday and Friday.
 - **A home computer** (Windows): work in `C:\Users\krish\dev\content-engine`,
   never in `Documents\MindmakeVideoStudio\runner-source`, at the latest
   `main` (`git pull --ff-only`). Codex runs every step outside its sandbox
@@ -304,6 +313,22 @@ render: the kit and `--plan` may go on, but no cut is rendered as finished,
 filed, sent to the library or recorded (`making.py video`) without them.
 Never build or improvise the designs here, and never ship a cut without
 them on anyone's word but Krish's own, quoted.
+
+Approved on 12 October: the stand-off (`config/story-intro-outro.json`,
+`approved`). Render the piece's own clips, then point each cut's config at
+them:
+
+```
+python scripts/quick-edit/story_io.py props --plan docs/plans/PLAN --out WORK/story-io/props.json
+python scripts/quick-edit/story_io.py render --piece-props WORK/story-io/props.json --out WORK/story-io
+```
+
+In `long.json` set `"intro": {"16x9": "WORK/story-io/intro-16x9.mp4"}` and
+`"endcard": {"16x9": "WORK/story-io/outro-16x9.mp4"}` (in `short.json` the
+`9x16` pair), and `"intro_override"` to `"Krish, <approved.on>:
+<approved.words>"` from the config. The intro runs 3 s and the outro 4 s;
+make.py takes an intro of up to 5 s on those words and sizes the music for
+both. `scripts/produce_day.py` does exactly this.
 
 ```
 python scripts/quick-edit/make.py WORK/kit/long.json --out WORK/long --only 16x9 --plan
