@@ -33,7 +33,8 @@ The four checks:
      "evidence" built from at least six real pages, each with its URL and
      date, and the screenshots exist.
   3. COVER. cover.png was drawn by scripts/pages/build.py --cover: its
-     cover.json receipt matches the PNG byte for byte, it carries Krish's
+     cover.json receipt matches the PNG byte for byte (and the 1200 x 630
+     Substack cover, cover-1200x630.png, its cover-1200x630.json), it carries Krish's
      portrait, and when the piece names companies it carries at least one
      logo row.
   4. THUMBNAILS. Each video thumbnail (Krish, 2026-10-12: "I always want a
@@ -119,7 +120,7 @@ def problems(post, planned, body, base, reg=None):
     reg = reg or registry()
     found = []
     names = named(body or '', reg)
-    pictures = [p for p in planned if p.get('kind') in ('image', 'share-card', 'cover', 'linkedin-card')]
+    pictures = [p for p in planned if p.get('kind') in ('image', 'share-card', 'cover', 'substack-cover', 'linkedin-card')]
     videos = [p for p in planned if p.get('kind') == 'video']
     thumbs = [p for p in planned if p.get('kind') == 'thumbnail']
     cover = next((p for p in planned if p.get('kind') == 'cover'), None)
@@ -164,24 +165,26 @@ def problems(post, planned, body, base, reg=None):
             lost = [x.get('shot') for x in pages if isinstance(x, dict) and x.get('shot') and not (base / x['shot']).is_file()]
             if lost:
                 found.append(f'"{p.get("path", "?")}": these screenshots are missing: {", ".join(map(str, lost))}')
-    # 3. COVER
-    if cover is not None:
-        src = Path(str(cover.get('source', '')))
-        receipt = src.with_name('cover.json')
+    # 3. COVER: the 3:2 one, and the 1200 x 630 one Substack's upload box asks
+    # for, each against its own receipt from scripts/pages/build.py --cover.
+    for c in [p for p in planned if p.get('kind') in ('cover', 'substack-cover')]:
+        src = Path(str(c.get('source', '')))
+        wide = c.get('kind') == 'substack-cover'
+        what, receipt = ('the Substack cover', src.with_name('cover-1200x630.json')) if wide else ('the cover', src.with_name('cover.json'))
         if not receipt.is_file():
-            found.append('the cover was not drawn by the house drawer (no cover.json beside it): draw it with scripts/pages/build.py --cover, '
+            found.append(f'{what} was not drawn by the house drawer (no {receipt.name} beside it): draw it with scripts/pages/build.py --cover, '
                          'with "portrait": true and logo rows, so it carries the wordmark, Krish and the real logos')
-        else:
-            try:
-                r = json.loads(receipt.read_text(encoding='utf-8'))
-            except (OSError, ValueError):
-                r = {}
-            if r.get('sha256') != hashlib.sha256(src.read_bytes()).hexdigest():
-                found.append('cover.json does not match cover.png: the cover was changed after the drawer made it. Draw it again')
-            if not r.get('portrait'):
-                found.append('the cover has no portrait: draw it with "portrait": true (house rule LOGOS_AND_FACE)')
-            if names and not r.get('rows'):
-                found.append('the cover has no logo rows although the piece names companies: add "rows" with each real logo')
+            continue
+        try:
+            r = json.loads(receipt.read_text(encoding='utf-8'))
+        except (OSError, ValueError):
+            r = {}
+        if r.get('sha256') != hashlib.sha256(src.read_bytes()).hexdigest():
+            found.append(f'{receipt.name} does not match {src.name}: {what} was changed after the drawer made it. Draw it again')
+        if not r.get('portrait'):
+            found.append(f'{what} has no portrait: draw it with "portrait": true (house rule LOGOS_AND_FACE)')
+        if names and not r.get('rows'):
+            found.append(f'{what} has no logo rows although the piece names companies: add "rows" with each real logo')
     # 4. THUMBNAILS
     for t in thumbs:
         src = Path(str(t.get('source', '')))
@@ -276,6 +279,17 @@ def self_test():
         check('a cover edited after the drawer fails', any('does not match' in x for x in problems({}, full, body, t, reg)), True)
         (t / 'cover.json').unlink()
         check('a hand-made cover fails', any('not drawn by the house drawer' in x for x in problems({}, full, body, t, reg)), True)
+        (t / 'cover.json').write_text(json.dumps(good_receipt))
+        # The 1200 x 630 cover Substack's upload box asks for, against its own receipt.
+        wide_png = b'\x89PNG wide'
+        (t / 'cover-1200x630.png').write_bytes(wide_png)
+        sub = {'kind': 'substack-cover', 'source': t / 'cover-1200x630.png', 'logos': ['OpenAI', 'Anthropic'], 'path': '2/substack-cover-1200x630.png'}
+        (t / 'cover-1200x630.json').write_text(json.dumps(good_receipt | {'sha256': hashlib.sha256(wide_png).hexdigest()}))
+        check('a full pack with the Substack cover passes', problems({}, full + [sub], body, t, reg), [])
+        (t / 'cover-1200x630.json').write_text(json.dumps(good_receipt))
+        check('a Substack cover that does not match its receipt fails', any('cover-1200x630.json does not match' in x for x in problems({}, full + [sub], body, t, reg)), True)
+        (t / 'cover-1200x630.json').unlink()
+        check('a hand-made Substack cover fails', any('the Substack cover was not drawn by the house drawer' in x for x in problems({}, full + [sub], body, t, reg)), True)
         # 4. THUMBNAILS: drawn by the house drawer, with the face and every logo they declare.
         (t / 'cover.json').write_text(json.dumps(good_receipt))
         (t / 'thumbs').mkdir()

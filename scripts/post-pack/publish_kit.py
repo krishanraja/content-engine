@@ -20,7 +20,7 @@ except title; a step whose words are missing says so instead of guessing):
      "files": {"long_video": "3 Video/....mp4", "short_video": "3 Video/....mp4",
                "wide_thumbnail": "3 Video/<Subject> - wide 16x9 - thumbnail.jpg",
                "tall_thumbnail": "3 Video/<Subject> - tall 9x16 - thumbnail.jpg",
-               "cover": "2 Covers and images/substack-cover-3x2.png",
+               "cover": "2 Covers and images/substack-cover-1200x630.png",
                "substack_copy": "1 Article/substack-copy.html"},
      "youtube_title": "...", "youtube_description": "...",
      "short_title": "...", "short_caption": "...", "tiktok_caption": "...",
@@ -34,7 +34,9 @@ them. "tiktok_caption" falls back to "short_caption".
 Each video size has its own thumbnail (Krish, 2026-10-12: "I always want a
 video thumbnail for all video sizes produced as an asset every time"): the
 wide one on YouTube and the Substack video post, the tall one as the cover on
-Reels and TikTok. The 3:2 cover stays the Substack post's cover image.
+Reels and TikTok. The Substack post's cover image is the 1200 x 630 cover
+(substack-cover-1200x630.png), the 1.91:1 Substack's upload box asks for: it
+crops any other shape itself (Krish, 2026-10-12).
 
 Any text may hold {ARTICLE_URL} and {YOUTUBE_URL}. The page has a box for
 each: paste the link once and every Copy button carries it. Nothing here
@@ -61,7 +63,7 @@ def steps(p):
     f = p.get('files') or {}
     long_video = f.get('long_video') or '3 Video/ the 3-minute wide (16:9) video'
     short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
-    cover = f.get('cover') or '2 Covers and images/substack-cover-3x2.png'
+    cover = f.get('cover') or '2 Covers and images/substack-cover-1200x630.png'
     wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
     tall_thumb = f.get('tall_thumbnail') or '3 Video/ the tall (9:16) thumbnail'
     copy_page = f.get('substack_copy') or '1 Article/substack-copy.html'
@@ -283,7 +285,9 @@ def self_test():
         failures.append('the 3:2 cover is no longer the video thumbnail')
     if 'as the cover image' not in text:
         failures.append('the cover stays the Substack post\'s cover image')
-    checks = 14
+    if 'substack-cover-1200x630.png' not in ' '.join(steps({'title': 'T'})[0]['do']) or 'substack-cover-3x2' in ' '.join(steps({'title': 'T'})[0]['do']):
+        failures.append('the Substack cover to upload is the 1200 x 630 one its upload box asks for, never the 3:2 one')
+    checks = 15
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1

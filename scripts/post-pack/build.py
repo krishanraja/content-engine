@@ -78,7 +78,11 @@ KINDS = {
                            'The email as Outlook and many work inboxes first show it, with every picture hidden. '
                            'Read it before publishing: a point that lives only in a picture is lost there.'),
     'cover': (COVERS, 'substack-cover-3x2.png',
-              "The post's cover. Upload it in Substack's post settings, as the cover image."),
+              'The cover at 3:2 (1200 x 800), for anywhere that asks for 3:2. Do not upload it to Substack: '
+              'its upload box crops it. Upload substack-cover-1200x630.png.'),
+    'substack-cover': (COVERS, 'substack-cover-1200x630.png',
+                       "The post's cover. Upload it in Substack's post settings, as the cover image: it is the 1200 x 630 (1.91:1) "
+                       'the upload box asks for, so Substack does not crop it.'),
     'cover-crops': (COVERS, 'cover-crops.png',
                     "What Substack's feed, share card and archive each show of the cover. For checking; it is never posted."),
     'phone-check': (COVERS, 'phone-images.png',
@@ -282,6 +286,8 @@ def plan(post, base):
             name = source.name
         planned.append({'kind': kind, 'logos': [l for l in (entry.get('logos') or []) if isinstance(l, str)], 'evidence': entry.get('evidence') if isinstance(entry.get('evidence'), dict) else None, 'section': section, 'name': safe_name(name), 'purpose': purpose, 'source': source})
 
+    substack_cover_or_refuse(planned)
+
     seen = {}
     for item in planned:
         relative = f'{item["section"]}/{item["name"]}'
@@ -298,6 +304,49 @@ def plan(post, base):
                             f'{library.MAX_BYTES // (1024 * 1024)} MiB')
         item['path'] = relative
     return folder, planned
+
+
+# Krish, 2026-10-12, with a screenshot of Substack's cover upload box
+# ("Recommended: 1200 x 630 px (1.91:1)"): "Once again, the Substack cover
+# image is incorrect. Why is this? Why did this not get fixed last time?"
+# Given the 3:2 cover, Substack cropped it itself and cut the headline in
+# half. scripts/pages/build.py --cover draws cover-1200x630.png beside
+# cover.png; every pack with a cover carries it, and none is built without it.
+SUBSTACK_COVER_FILE = 'cover-1200x630.png'
+SUBSTACK_COVER_SIZE = (1200, 630)
+
+
+def substack_cover_or_refuse(planned):
+    """A pack with a cover also carries the 1200 x 630 one Substack's upload
+    box asks for: the one given as "substack-cover", or else the drawer's
+    cover-1200x630.png beside the packed cover.png, added here with the
+    cover's logos. Refuses when there is none, or it is not 1200 x 630."""
+    given = [p for p in planned if p.get('kind') == 'substack-cover']
+    cover = next((p for p in planned if p.get('kind') == 'cover' and 'source' in p), None)
+    if not given and cover is not None:
+        wide = cover['source'].with_name(SUBSTACK_COVER_FILE)
+        if not wide.is_file():
+            raise PackError(f'the cover has no {SUBSTACK_COVER_FILE} beside it ({wide}): Substack\'s upload box asks for 1200 x 630 and crops '
+                            'any other shape itself. Draw both again with scripts/pages/build.py COVER_FACTS --cover')
+        section, name, purpose = KINDS['substack-cover']
+        item = {'kind': 'substack-cover', 'logos': list(cover.get('logos') or []), 'evidence': None,
+                'section': section, 'name': name, 'purpose': purpose, 'source': wide}
+        planned.insert(planned.index(cover), item)
+        given = [item]
+    for item in given:
+        try:
+            from PIL import Image
+        except ImportError:
+            warn('Pillow is not installed, so the Substack cover\'s size was not checked (pip install pillow)')
+            return
+        try:
+            with Image.open(item['source']) as im:
+                size = im.size
+        except Exception as e:  # noqa: BLE001
+            raise PackError(f'the Substack cover {item["source"].name} could not be opened as a picture ({e})')
+        if size != SUBSTACK_COVER_SIZE:
+            raise PackError(f'the Substack cover {item["source"].name} is {size[0]} x {size[1]}; Substack\'s upload box asks for '
+                            f'{SUBSTACK_COVER_SIZE[0]} x {SUBSTACK_COVER_SIZE[1]}. Draw it with scripts/pages/build.py COVER_FACTS --cover')
 
 
 def thumb_size_or_refuse(source, shape, label):
@@ -543,6 +592,12 @@ def self_test():
         whole.save(work / 'img/1-look-or-pay.png')
         whole.save(work / 'card.png')
         whole.crop((0, 0, 340, 270)).save(work / 'img/cut.png')
+        # The 1200 x 630 cover Substack's upload box asks for, beside cover.png
+        # with its receipt, as scripts/pages/build.py --cover writes them.
+        Image.new('RGB', (1200, 630), (12, 21, 18)).save(work / 'out' / SUBSTACK_COVER_FILE)
+        (work / 'out' / 'cover-1200x630.json').write_text(json.dumps({'sha256': sha256_of(work / 'out' / SUBSTACK_COVER_FILE),
+                                                                     'portrait': True, 'rows': []}), encoding='utf-8')
+        Image.new('RGB', (1200, 800), (12, 21, 18)).save(work / 'img/three-two.png')
         # A thumbnail for each video size, with the drawer's receipt beside them
         # (scripts/pages/build.py --thumbs), so the visual gate takes them.
         (work / 'thumbs').mkdir()
@@ -599,7 +654,7 @@ def self_test():
             '.pack.json', 'READ ME.txt',
             '1 Article/substack-copy.html', '1 Article/web-page.html', '1 Article/text-that-passed-the-fact-check.md',
             '1 Article/email-pictures-off.html',
-            '2 Covers and images/substack-cover-3x2.png', '2 Covers and images/1-look-or-pay.png',
+            '2 Covers and images/substack-cover-3x2.png', '2 Covers and images/substack-cover-1200x630.png', '2 Covers and images/1-look-or-pay.png',
             '3 Video/video-script.md', '3 Video/youtube-and-substack-words.txt',
             '3 Video/Who gets paid - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4',
             '3 Video/share/Who gets paid - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4',
@@ -615,6 +670,8 @@ def self_test():
         check('a thumbnail copied byte for byte', (pack / '3 Video/Who gets paid - wide 16x9 - thumbnail.jpg').read_bytes(),
               (work / 'thumbs/thumb-wide-1280x720.jpg').read_bytes())
         check('originals kept', (work / 'v-9x16.mp4').read_bytes(), b'tall')
+        check('the 1200 x 630 cover beside cover.png is packed, byte for byte', (pack / '2 Covers and images/substack-cover-1200x630.png').read_bytes(),
+              (work / 'out' / SUBSTACK_COVER_FILE).read_bytes())
         readme = (pack / POST_README).read_text(encoding='utf-8')
         manifest = json.loads((pack / MANIFEST).read_text(encoding='utf-8'))
         check('manifest prefix', manifest['library_prefix'], f'{POSTS}/{folder}')
@@ -649,6 +706,13 @@ def self_test():
         refused('an unknown kind', lambda: variant(files=[{'kind': 'tiktok-dance', 'file': 'card.png'}]), 'not a kind this tool knows')
         refused('a file with no purpose', lambda: variant(files=[{'category': 'social', 'file': 'card.png'}]), 'say what the file is for')
         refused('a file that is missing', lambda: variant(files=[{'kind': 'cover', 'file': 'nope.png'}]), 'is not a file')
+        (work / 'lone').mkdir()
+        shutil.copyfile(work / 'out/cover.png', work / 'lone/cover.png')
+        shutil.copyfile(work / 'out/cover.json', work / 'lone/cover.json')
+        refused('a cover with no 1200 x 630 one beside it', lambda: variant(files=[{'kind': 'cover', 'file': 'lone/cover.png'}]),
+                f'the cover has no {SUBSTACK_COVER_FILE} beside it')
+        refused('a Substack cover that is not 1200 x 630', lambda: variant(files=[{'kind': 'substack-cover', 'file': 'img/three-two.png'}]),
+                "is 1200 x 800; Substack's upload box asks for 1200 x 630")
         refused('two files with one name', lambda: variant(files=[{'kind': 'image', 'file': 'card.png'}, {'kind': 'share-card', 'file': 'card.png', 'name': 'CARD.png'}]), 'would both be')
         refused('a type the library does not take', lambda: variant(files=[{'category': 'social', 'file': 'card.png', 'name': 'card.exe', 'purpose': 'x'}]), 'does not take this kind of file')
         refused('a video with no shape', lambda: variant(files=[{'kind': 'video', 'file': 'v-9x16.mp4'}]), 'needs "shape"')

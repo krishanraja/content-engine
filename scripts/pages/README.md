@@ -22,7 +22,8 @@ or it writes neither (the rule in `editions/README.md`).
 | `page.html` | The piece in the makeyourmindup look, in its subchannel's colour: masthead, headline, deck and byline, the body with its source links and images, opinion labelled ("Our read:"), the choices as cards, the dated call with how sure we are, the sources and the subscribe band. One file: the fonts and images are inside it. |
 | `substack.html` | The same words in one column, ready for Substack. Copy buttons for the title, the subtitle and the post. The post is headings, paragraphs, lists, quotes, links and images, nothing else, because Substack's editor drops layout and crashes on pasted side-by-side blocks. The images are inside the copy, in place, so they paste with the words. |
 | `phone-images.png` | Every image in the post at the width a phone shows it (358 pixels). Look at it before publishing: a word you cannot read there, a reader on a phone cannot read either. |
-| `cover.png` | With `--cover`: the post's cover image, 1200 x 800, to upload in Substack's post settings. It is not written if a word or a logo would be cut off, or a word would be too small to read in a phone's feed ("What Substack does to your artwork", below). |
+| `cover-1200x630.png` | With `--cover`: the cover to upload in Substack's post settings, at the 1200 x 630 (1.91:1) its upload box asks for, with its receipt `cover-1200x630.json` and `cover-1200x630-crops.png`, what the upload box, the 16:9 share card and the phone feed each show of it. It is not written if a word or a logo would fall outside the part they all keep, or a word would be too small to read in a phone's feed. |
+| `cover.png` | With `--cover`: the same cover at 3:2, 1200 x 800, kept beside it. Do not upload it to Substack, whose upload box crops it. It is not written if a word or a logo would be cut off, or a word would be too small to read in a phone's feed ("What Substack does to your artwork", below). |
 | `cover-crops.png` | With `--cover`: what Substack's feed, share card and archive each show of the cover. |
 | `thumb-wide-1280x720.jpg`, `thumb-tall-1080x1920.jpg` | With `--thumbs`: a thumbnail for each video size, with `thumbs.json` (each file's sha256 and shape, the portrait, the rows and strip drawn as `logos`, and `companies`, one name per company those show, as config/logo-registry.json names it, for a post.json thumbnail entry's `logos`) and `thumbs-check.png` ("Thumbnails for the videos", below). |
 | `shots/` | With `--shots`: both files at a computer's width (1440) and a phone's (390). |
@@ -74,11 +75,11 @@ python scripts/pages/build.py WORKDIR/page.json --out WORKDIR/out --check --shot
    ```
 
    Anything less, and it says so and exits with an error. Then look at
-   `phone-images.png` and, with `--cover`, `cover-crops.png`.
+   `phone-images.png` and, with `--cover`, `cover-1200x630-crops.png` and `cover-crops.png`.
 6. **Paste.** On a computer, open `substack.html`, press Copy title, Copy
    subtitle and Copy post in turn, and paste each into the Substack editor. A
-   phone may paste the words without the images. Upload `cover.png` as the
-   post's cover image in its settings.
+   phone may paste the words without the images. Upload `cover-1200x630.png`
+   as the post's cover image in its settings.
 
 ## The page facts
 
@@ -138,9 +139,30 @@ post and his screenshot:
   7.5 to 8 pixels on a phone. The headlines could be read; the labels, the
   table text and the sources could not.
 
+**Upload `cover-1200x630.png`.** Krish, 2026-10-12, with a screenshot of
+Substack's cover upload box: "Once again, the Substack cover image is
+incorrect. Why is this? Why did this not get fixed last time?" The box says
+"Recommended: 1200 x 630 px (1.91:1). Keep important text and logos away from
+the edges", and it crops anything else itself: given the 3:2 cover, its own
+crop (`g_auto`) slid down to Krish's face and cut the headline in half. The
+1200 x 630 preview had been logged as next to build on 2026-10-07 and never
+built, so it came back. Now every `--cover` also draws `cover-1200x630.png`
+from the same cover facts, laid out for 1.91:1: Krish's face on the left, the
+real wordmark, the headline and the logo rows on the right. Every word and
+logo sits inside x 152 to 1048, y 36 to 594, at least 24 pixels inside both
+the 16:9 share card (1120 x 630, wherever `g_auto` slides it) and the phone
+feed's 3:2 (945 x 630 from the middle, x 127 to 1072), and its words are held
+to the same phone floors as the 3:2 cover's. The archive list's centre square
+(x 285 to 915) cannot hold a 1.91:1 layout, and the crop check shows what it
+keeps. `cover-1200x630-crops.png` shows each crop, with the 3:2 at a phone's
+width. post-pack puts it in every pack as
+`2 Covers and images/substack-cover-1200x630.png`, and refuses a pack whose
+cover has none beside it. The 3:2 `cover.png` below is kept for anywhere that
+asks for 3:2; never upload it to Substack.
+
 What the tools do about it:
 
-- **`--cover` draws the cover at 1200 x 800,** the feed's own 3:2, so the feed
+- **`--cover` also draws the cover at 1200 x 800,** the feed's own 3:2, so the feed
   shows all of it. Every word and logo sits inside x 220 to 980, y 84 to 716,
   which the 16:9 share card (it keeps y 62 to 738) and the archive square (it
   keeps x 200 to 1000) both keep.

@@ -131,6 +131,10 @@ describe('a pack Krish reads', () => {
     writeFileSync(join(work, 'script.md'), "Here's what's really inside the AI everyone's selling you. I'm Krish.\n\nWhy does this matter? Say this.\n")
     // the house drawer's receipt beside the cover, so the visual gate takes it (visual_gate.py)
     writeFileSync(join(work, 'cover.json'), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, 'cover.png'))).digest('hex'), portrait: true, rows: [] }))
+    // The 1200 x 630 cover Substack's upload box asks for, beside cover.png with its receipt (scripts/pages/build.py --cover).
+    const wideCover = spawnSync(PY, ['-c', 'import sys; from PIL import Image; Image.new("RGB", (1200, 630)).save(sys.argv[1])', join(work, 'cover-1200x630.png')], { encoding: 'utf8' })
+    expect(wideCover.status, wideCover.stderr).toBe(0)
+    writeFileSync(join(work, 'cover-1200x630.json'), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, 'cover-1200x630.png'))).digest('hex'), portrait: true, rows: [] }))
     // Each thumbnail at its size, with the drawer's receipt (scripts/pages/build.py --thumbs).
     mkdirSync(join(work, 'thumbs'))
     const drawn = spawnSync(PY, ['-c', 'import sys; from PIL import Image; Image.new("RGB", (1280, 720)).save(sys.argv[1]); Image.new("RGB", (1080, 1920)).save(sys.argv[2])',
@@ -158,7 +162,8 @@ describe('a pack Krish reads', () => {
     expect(notXYConstructions(readme)).toEqual([])
     const manifest = JSON.parse(readFileSync(join(out, folder, '.pack.json'), 'utf8')) as { library_prefix: string; files: Array<{ path: string; purpose: string }> }
     expect(manifest.library_prefix).toBe(`3 Posts/${folder}`)
-    expect(manifest.files).toHaveLength(18)
+    expect(manifest.files).toHaveLength(19) // with the 1200 x 630 Substack cover, added from beside cover.png
+    expect(manifest.files.map((f: { path: string }) => f.path)).toContain('2 Covers and images/substack-cover-1200x630.png')
     for (const item of manifest.files) {
       expect(item.purpose.length).toBeGreaterThan(10)
       expect(item.purpose.length).toBeLessThanOrEqual(200)
@@ -168,7 +173,7 @@ describe('a pack Krish reads', () => {
     const dry = run('send.py', [join(out, folder), '--dry-run'])
     expect(dry.status, dry.stderr).toBe(0)
     expect(dry.stdout).toContain(`3 Posts/${folder}/1 Article/substack-copy.html`)
-    expect(dry.stdout).toContain('18 files would be sent. Nothing was sent.')
+    expect(dry.stdout).toContain('19 files would be sent. Nothing was sent.')
   })
 
   it('send.py without a key says what to do, and sends nothing', () => {
