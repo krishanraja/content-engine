@@ -35,6 +35,10 @@ export const StoryStandoffPropsSchema = z.object({
   nextLabel: z.string().min(1).max(48),
   /** The next series' colour; by default looked up from its name. */
   nextColour: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
+  /** The brand's own image files (data URIs or URLs), shown unaltered on ink:
+   *  the one-line wordmark (3319x391) and the stacked masthead (2415x740),
+   *  from makeyourmindup.ai/brand/ (scripts/pages/brand.py fetch). */
+  brand: z.object({ wordmark: z.string().min(1), masthead: z.string().min(1) }).strict(),
 }).strict()
 
 export type StoryStandoffProps = z.infer<typeof StoryStandoffPropsSchema>

@@ -86,6 +86,15 @@ export function breakLines(text: string, maxChars: number, keep?: string): strin
 
 export const clamp = (x: number, a = 0, b = 1) => Math.max(a, Math.min(b, x))
 export const backOut = (x: number) => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2) }
+export const cubicOut = (x: number) => 1 - Math.pow(1 - clamp(x), 3)
+export const cubicIO = (x: number) => { const t = clamp(x); return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2 }
+/** An entrance without a pop: from f0 it fades in over `fade` frames while
+ *  its scale eases from `from` to 1 over `n` frames. null before f0. */
+export function settle(f: number, f0: number, from = 1.2, n = 6, fade = 3): { scale: number; opacity: number } | null {
+  const k = f - f0
+  if (k < 0) return null
+  return { scale: from + (1 - from) * cubicOut(k / n), opacity: clamp((k + 1) / fade) }
+}
 export const quadIO = (x: number) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2)
 
 const SLAM = [0.32, 0.12, -0.04, 0]
@@ -139,13 +148,14 @@ export function Logo({ src, alt, ink, style }: { src: string; alt: string; ink?:
   )
 }
 
-/** MAKE YOUR MIND/UP, with UP in mint. */
-export function Wordmark({ size, style, colour = C.cream, text = 'MAKE YOUR MIND/' }: { size: number; style: React.CSSProperties; colour?: string; text?: string }) {
-  return (
-    <div style={abs({ fontFamily: DISPLAY, fontSize: size, lineHeight: 1, whiteSpace: 'nowrap', letterSpacing: '-0.01em', color: colour, ...style })}>
-      {text}<span style={{ color: C.mint }}>UP</span>
-    </div>
-  )
+/** The brand's own image files, unaltered: never typed, recoloured,
+ *  redrawn or cropped. Cream and mint on transparent, so always on ink. */
+export const WORDMARK_PX: [number, number] = [3319, 391]
+export const MASTHEAD_PX: [number, number] = [2415, 740]
+
+export function BrandImage({ src, px, height, style, alt }: { src: string; px: [number, number]; height: number; style: React.CSSProperties; alt: string }) {
+  const width = (height * px[0]) / px[1]
+  return <Img src={logoSrc(src)} alt={alt} style={abs({ width, height, display: 'block', ...style })} />
 }
 
 export function Pill({ children, size, height, bg, fg, style }: { children: React.ReactNode; size: number; height: number; bg: string; fg: string; style: React.CSSProperties }) {
@@ -157,13 +167,15 @@ export function Pill({ children, size, height, bg, fg, style }: { children: Reac
   )
 }
 
-/** The ink brand strip: the wordmark and the series chip. */
-export function BrandStrip({ top, width, height, seriesName, seriesColour, pad }: { top: number; width: number; height: number; seriesName: string; seriesColour: string; pad: number }) {
-  const wm = Math.round(height * 0.5)
+/** The ink brand strip: the brand's one-line wordmark image and the series chip. */
+export function BrandStrip({ top, width, height, seriesName, seriesColour, pad, wordmark }: {
+  top: number; width: number; height: number; seriesName: string; seriesColour: string; pad: number; wordmark: string
+}) {
+  const wm = Math.round(height * 0.46)
   const ph = Math.round(height * 0.5)
   return (
     <div style={abs({ left: 0, top, width, height, background: C.ink })}>
-      <Wordmark size={wm} style={{ left: pad, top: (height - wm) / 2 }} />
+      <BrandImage src={wordmark} px={WORDMARK_PX} height={wm} alt="makeyourmindup" style={{ left: pad, top: (height - wm) / 2 }} />
       <Pill size={Math.round(ph * 0.56)} height={ph} bg={seriesColour} fg={C.ink} style={{ right: pad, top: (height - ph) / 2 }}>{seriesName}</Pill>
     </div>
   )

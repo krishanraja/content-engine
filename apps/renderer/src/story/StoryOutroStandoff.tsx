@@ -2,17 +2,23 @@ import React from 'react'
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion'
 import type { StoryStandoffProps } from './props'
 import {
-  abs, breakLines, C, clamp, DISPLAY, Field, fitSize, jolt, LABEL, Pill, SERIES_COLOURS, shade, slam, slideIn, textWidth, useStoryFonts,
+  abs, BrandImage, breakLines, C, clamp, cubicIO, cubicOut, DISPLAY, Field, fitSize, jolt, LABEL, MASTHEAD_PX, Pill, SERIES_COLOURS, settle, shade, textWidth, useStoryFonts,
 } from './standoff-kit'
 
 /** The story outro: the stand-off's last round (docs/plans/2026-10-12-story-io).
  *  Your corner (the comment question, yes or no), where to read it and the
- *  next round, then the brand close: the track runs out on a flat line and
- *  MAKE YOUR MIND/UP lands on it. The link is on screen from the first
- *  frame to the last. Every value is a pure function of the frame and props. */
-export const STORY_OUTRO_FRAMES = 120
+ *  next round, then one calm closing card: the brand's own masthead image on
+ *  ink with the link beneath, settling in and then holding still for the
+ *  last 2 s. Every change between beats is an eased move or a crossfade.
+ *  The link is on screen from the first frame to the last. Every value is a
+ *  pure function of the frame and the props. */
+export const STORY_OUTRO_FRAMES = 180
 
-const T = { yes: 12, no: 17, split: 45, close: 80, line: [80, 88] as const, mark: (i: number, n: number) => 92 - 5 * (n - 1 - i) }
+const T = {
+  yes: 12, no: 17,
+  split: 60, splitDur: 10, // the two panels slide in over the comment card
+  close: 104, closeDur: 14, // the closing card crossfades in, then holds still from frame 118
+}
 
 type SceneProps = StoryStandoffProps & { f: number; W: number; H: number; wide: boolean; nextDay: string; nextSeries: string; nextColour: string }
 
@@ -38,14 +44,15 @@ export function StoryOutroStandoff(props: StoryStandoffProps) {
   const nextSeries = rest.join(' · ')
   const nextColour = props.nextColour ?? SERIES_COLOURS[nextSeries.trim().toLowerCase()] ?? C.lilac
   const scene: SceneProps = { ...props, f, W, H, wide, nextDay: day ?? props.nextLabel, nextSeries, nextColour }
-  const n = wide ? 2 : 3
-  const hits = [0, T.yes, T.no, T.split, ...Array.from({ length: n }, (_, i) => T.mark(i, n))]
-  const y0 = jolt(f, hits)
+  const y0 = f < T.split ? jolt(f, [T.yes, T.no]) : 0
+  const fadeIn = cubicIO((f - T.close) / T.closeDur)
   return (
     <AbsoluteFill style={{ background: C.ink, overflow: 'hidden' }}>
-      <div style={abs({ left: 0, top: 0, width: W, height: H, transform: `translateY(${y0}px)` })}>
-        {f < T.split ? <Corner {...scene} /> : f < T.close ? <NextRound {...scene} /> : <Close {...scene} />}
-      </div>
+      {f < T.split + T.splitDur && (
+        <div style={abs({ left: 0, top: 0, width: W, height: H, transform: `translateY(${y0}px)` })}><Corner {...scene} /></div>
+      )}
+      {f >= T.split && f < T.close + T.closeDur && <NextRound {...scene} />}
+      {f >= T.close && <AbsoluteFill style={{ opacity: fadeIn }}><Close {...scene} /></AbsoluteFill>}
     </AbsoluteFill>
   )
 }
@@ -54,7 +61,7 @@ function Corner({ f, W, H, wide, commentQuestion, seriesColour, seriesName, link
   const lines = breakLines(commentQuestion, wide ? 16 : 12)
   const qX = wide ? 120 : 90
   const size = fitSize(lines, wide ? 104 : 96, wide ? 1180 : 900)
-  const s = slam(f, 0) ?? 1
+  const s = settle(f, 0, 1.05, 6)?.scale ?? 1
   // The link bar: on the comment card from the first frame, with a mint highlight.
   const barTop = wide ? H - 124 : 1268
   const barH = wide ? 124 : 200
@@ -73,12 +80,12 @@ function Corner({ f, W, H, wide, commentQuestion, seriesColour, seriesName, link
         {lines.join('\n')}
       </div>
       {(['Yes', 'No'] as const).map((w, i) => {
-        const k = slam(f, i ? T.no : T.yes)
+        const k = settle(f, i ? T.no : T.yes, 1.3, 5)
         if (k === null) return null
         const box = wide ? { left: 1430, top: 240 + i * 290, width: 380, height: 220 } : { left: 90 + i * 470, top: 1028, width: 430, height: 190 }
         return (
           <div key={w} style={abs({ ...box, background: i ? C.coral : C.mint, border: `8px solid ${C.ink}`, boxSizing: 'border-box', borderRadius: 18,
-            boxShadow: `12px 12px 0 ${shade(seriesColour)}`, transform: `rotate(${i ? 4 : -4}deg) scale(${k})`,
+            boxShadow: `12px 12px 0 ${shade(seriesColour)}`, opacity: k.opacity, transform: `rotate(${i ? 4 : -4}deg) scale(${k.scale})`,
             fontFamily: DISPLAY, fontSize: wide ? 130 : 120, lineHeight: `${box.height - 16}px`, textAlign: 'center', color: C.ink })}>{w}</div>
         )
       })}
@@ -98,7 +105,7 @@ function Corner({ f, W, H, wide, commentQuestion, seriesColour, seriesName, link
 }
 
 function NextRound({ f, W, H, wide, link, seriesColour, nextDay, nextSeries, nextColour }: SceneProps) {
-  const a = slideIn(f, T.split, 6) ?? 0
+  const a = cubicOut((f - T.split) / T.splitDur)
   const ls = fitSize([link], 96, wide ? 880 : 920)
   const linkW = textWidth(link, ls)
   const ds = fitSize([nextDay], wide ? 130 : 150, wide ? 740 : 920)
@@ -124,33 +131,25 @@ function NextRound({ f, W, H, wide, link, seriesColour, nextDay, nextSeries, nex
   )
 }
 
-function Close({ f, W, H, wide, link }: SceneProps) {
-  const marks = wide ? ['MAKE YOUR', 'MIND/'] : ['MAKE', 'YOUR', 'MIND/']
-  const X = wide ? 110 : 90
-  const size = fitSize(marks.map((m, i) => (i === marks.length - 1 ? `${m}UP` : m)), wide ? 250 : 230, (W - 2 * X) / 1.14)
-  const lineY = wide ? 740 : 1090
-  const lastTop = lineY - size * 0.93 - 4
-  const draw = clamp((f - T.line[0]) / (T.line[1] - T.line[0]))
-  const ls = wide ? 64 : 62
-  const linkW = textWidth(link, ls)
+function Close({ f, W, H, wide, link, brand, seriesColour }: SceneProps) {
+  // One calm card: the masthead image, centred and large, the link beneath.
+  // It eases in (scale 0.96 to 1 under the crossfade) and is then still.
+  const k = cubicIO((f - T.close) / T.closeDur)
+  const scale = 0.96 + 0.04 * k
+  const mw = wide ? 1150 : 900
+  const mh = (mw * MASTHEAD_PX[1]) / MASTHEAD_PX[0]
+  const ls = wide ? 64 : 60
+  const gap = wide ? 64 : 70
+  const block = mh + gap + ls
+  const top = (wide ? H / 2 : 865) - block / 2
+  const lw = textWidth(link, ls)
   return (
     <>
       <Field left={-60} top={-80} width={W + 120} height={H + 160} bg={C.ink} />
-      {/* The track running out: a flat line the wordmark lands on. */}
-      <div style={abs({ left: X, top: lineY, width: (W - 2 * X) * draw, height: 10, background: C.mint })} />
-      {marks.map((m, i) => {
-        const k0 = slam(f, T.mark(i, marks.length))
-        if (k0 === null) return null
-        const k = 1 + (k0 - 1) * 0.4
-        return (
-          <div key={m} style={abs({ left: X, top: lastTop - (marks.length - 1 - i) * size * 0.98, fontFamily: DISPLAY, fontSize: size, lineHeight: 1,
-            whiteSpace: 'nowrap', letterSpacing: '-0.01em', color: C.cream, transform: `scale(${k})`, transformOrigin: '0 100%' })}>
-            {m}{i === marks.length - 1 && <span style={{ color: C.mint }}>UP</span>}
-          </div>
-        )
-      })}
-      <div style={abs({ left: X, top: lineY + 44, height: ls * 1.5, width: linkW + ls * 0.7, background: C.mint, borderRadius: 10 })} />
-      <LinkText link={link} size={ls} colour={C.ink} tail={C.ink} style={{ left: X + ls * 0.35, top: lineY + 44 + ls * 0.27 }} />
+      <div style={abs({ left: 0, top: 0, width: W, height: H, transform: `scale(${scale})`, transformOrigin: `50% ${top + block / 2}px` })}>
+        <BrandImage src={brand.masthead} px={MASTHEAD_PX} height={mh} alt="Make your mind up" style={{ left: (W - mw) / 2, top }} />
+        <LinkText link={link} size={ls} colour={C.cream} tail={seriesColour} style={{ left: (W - lw) / 2, top: top + mh + gap }} />
+      </div>
     </>
   )
 }

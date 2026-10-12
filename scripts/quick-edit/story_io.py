@@ -12,7 +12,8 @@ docs/plans/2026-10-12-story-io/README.md.
         docs/plans/2026-10-12-monday/cover-facts.json, the real logo files
         from its logos folder as data URIs (Warner, Universal and Sony are the
         individual official marks embedded in the cover's composite files;
-        BMG is left out), and the story's words.
+        BMG is left out), the brand's own wordmark and masthead images
+        (scripts/pages/brand.py), and the story's words.
 
     python story_io.py render --piece-props PROPS.json --out DIR [--browser PATH] [--only intro-16x9,...]
         Bundles apps/renderer/src/index.ts once and renders
@@ -36,6 +37,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from intro import browser  # noqa: E402  (the same browser lookup as the sting)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'pages'))
+import brand as house_brand  # noqa: E402  (the brand's own image files, from makeyourmindup.ai/brand/)
 
 REPO = Path(__file__).resolve().parents[2]
 ENTRY = REPO / 'apps' / 'renderer' / 'src' / 'index.ts'
@@ -105,7 +108,15 @@ def monday_props(folder=MONDAY):
         'link': 'makeyourmindup.ai',
         'commentQuestion': 'Should a singer get paid when an AI learns from their song?',
         'nextLabel': 'Wednesday · under.the.hood',
+        'brand': brand_images(),
     }
+
+
+def brand_images():
+    """The brand's one-line wordmark and stacked masthead, full size and
+    unaltered, as data URIs (fetched through scripts/pages/brand.py, so any
+    machine gets them from makeyourmindup.ai/brand/ or its cache)."""
+    return {'wordmark': house_brand.brand_uri('wordmark', full=True), 'masthead': house_brand.brand_uri('masthead', full=True)}
 
 
 NEXT_DAY = {'follow.the.money': 'Wednesday · under.the.hood', 'under.the.hood': 'Friday · mind.the.gap',

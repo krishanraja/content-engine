@@ -25,5 +25,7 @@ export function mondayStandoffProps(shape: StoryStandoffProps['shape']): StorySt
     link: 'makeyourmindup.ai',
     commentQuestion: 'Should a singer get paid when an AI learns from their song?',
     nextLabel: 'Wednesday · under.the.hood',
+    // The live brand files; story_io.py props embeds them as data URIs instead.
+    brand: { wordmark: 'https://www.makeyourmindup.ai/brand/wordmark.png', masthead: 'https://www.makeyourmindup.ai/brand/masthead.png' },
   }
 }

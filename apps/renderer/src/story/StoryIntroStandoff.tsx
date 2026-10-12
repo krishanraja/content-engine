@@ -2,7 +2,7 @@ import React from 'react'
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion'
 import type { StoryRightPlayer, StoryStandoffProps } from './props'
 import {
-  abs, BrandStrip, breakLines, C, clamp, DISPLAY, Field, fitSize, jolt, Logo, Pill, quadIO, shade, slam, slideIn, Stamp, stampBox, textWidth, useStoryFonts,
+  abs, BrandStrip, breakLines, C, clamp, DISPLAY, Field, fitSize, jolt, Logo, Pill, quadIO, shade, cubicIO, settle, slam, slideIn, Stamp, stampBox, textWidth, useStoryFonts,
 } from './standoff-kit'
 
 /** The story intro: the stand-off (docs/plans/2026-10-12-story-io,
@@ -17,16 +17,17 @@ const T = {
   card: (i: number) => 4 + 4 * i,
   vs: 18,
   hop: [21, 29] as const,
-  flip: 30, // the big stamp: held to the cut, 0.6 s
-  cut: 48,
-  word: (i: number) => 48 + 4 * i,
+  flip: 30, // the big stamp: held until the question card covers it
+  qIn: 46, // the question card slides in over the fight, eased, 10 frames
+  qDur: 10,
+  word: (i: number) => 56 + 4 * i,
 }
 
 interface Sizes { cw: number; ch: number; lw: number; lh: number; pad: number; nf: number; sf: number; so: number; gap: number }
 
 function FighterCard({ p, S, x, y, rot, scale, shadow, z, stamp }: {
   p: StoryRightPlayer; S: Sizes; x: number; y: number; rot: number; scale: number; shadow: string; z: number
-  stamp: { text: string; bg: string; rot: number; scale: number } | null
+  stamp: { text: string; bg: string; rot: number; scale: number; opacity: number } | null
 }) {
   const nameX = S.pad * 2 + S.lw
   const nameMax = S.cw - nameX - S.pad
@@ -40,7 +41,7 @@ function FighterCard({ p, S, x, y, rot, scale, shadow, z, stamp }: {
       </div>
       {stamp && (
         <Stamp text={stamp.text} size={S.sf} bg={stamp.bg}
-          style={{ right: -S.so, top: -S.so * 1.6, transform: `rotate(${stamp.rot}deg) scale(${stamp.scale})`, transformOrigin: '50% 50%' }} />
+          style={{ right: -S.so, top: -S.so * 1.6, transform: `rotate(${stamp.rot}deg) scale(${stamp.scale})`, transformOrigin: '50% 50%', opacity: stamp.opacity }} />
       )}
     </div>
   )
@@ -52,9 +53,21 @@ export function StoryIntroStandoff(props: StoryStandoffProps) {
   const { width: W, height: H } = useVideoConfig()
   if (!ready) return <AbsoluteFill style={{ background: C.ink }} />
   const wide = props.shape === '16x9'
-  return f < T.cut
-    ? <Fight {...props} f={f} W={W} H={H} wide={wide} />
-    : <Question {...props} f={f} W={W} H={H} wide={wide} />
+  // No hard cut: the question card slides over the fight, and the brand
+  // strip stays put above both.
+  const slide = cubicIO((f - T.qIn) / T.qDur)
+  return (
+    <AbsoluteFill style={{ background: C.ink, overflow: 'hidden' }}>
+      {f < T.qIn + T.qDur && <Fight {...props} f={f} W={W} H={H} wide={wide} />}
+      {f >= T.qIn && (
+        <AbsoluteFill style={{ transform: `translateX(${(1 - slide) * (W + 40)}px)`, boxShadow: `-16px 0 0 ${C.ink}` }}>
+          <Question {...props} f={f} W={W} H={H} wide={wide} />
+        </AbsoluteFill>
+      )}
+      <BrandStrip top={wide ? 0 : 250} width={W} height={wide ? 104 : 100} seriesName={props.seriesName} seriesColour={props.seriesColour}
+        pad={wide ? 70 : 60} wordmark={props.brand.wordmark} />
+    </AbsoluteFill>
+  )
 }
 
 type SceneProps = StoryStandoffProps & { f: number; W: number; H: number; wide: boolean }
@@ -93,12 +106,12 @@ function Fight({ f, W, H, wide, left, right, seriesColour, seriesName }: ScenePr
 
   const hop = clamp((f - T.hop[0]) / (T.hop[1] - T.hop[0]))
   const e = quadIO(hop)
-  const hits = [0, ...right.map((_, i) => T.card(i)), T.vs, ...(hoppers.length ? [T.hop[1]] : []), T.flip]
-  const y0 = jolt(f, hits, [T.flip])
-  const heroScale = slam(f, 0) ?? 1
+  const hits = [...right.map((_, i) => T.card(i)), T.vs, ...(hoppers.length ? [T.hop[1]] : []), T.flip]
+  const y0 = jolt(f, hits)
+  const heroScale = settle(f, 0, 1.15, 6)?.scale ?? 1
   const hx = heroA[0] + (heroB[0] - heroA[0]) * e, hy = heroA[1] + (heroB[1] - heroA[1]) * e
   const vsD = wide ? 190 : 170
-  const vsS = slam(f, T.vs)
+  const vsS = settle(f, T.vs, 1.3, 5)
   const seamCorner = (x: number, y: number) => (wide ? (x + S.cw / 2 < 960 ? C.mint : seriesColour) : (y + S.ch / 2 < 900 ? C.mint : seriesColour))
 
   // The flip: one giant stamp over the card that changed, on its own beat.
@@ -112,11 +125,10 @@ function Fight({ f, W, H, wide, left, right, seriesColour, seriesName }: ScenePr
     // Just under the card that changed, overlapping its edge like a stamp hit.
     const cx = bx + S.cw / 2 + (wide ? 30 : 0)
     const cy = Math.min(by + S.ch + h / 2 - (wide ? 60 : 30), wide ? H - h / 2 - 80 : 1440 - h / 2)
-    const k = f - T.flip
-    const sc = [1.9, 1.32, 0.94, 1.04, 1][Math.min(k, 4)]!
+    const st = settle(f, T.flip, 1.6, 6, 3)!
     big = (
       <Stamp text={flipper.stampAfter} size={size} bg={C.mint}
-        style={{ left: clamp(cx - w / 2, 30, W - w - 30), top: cy - h / 2, zIndex: 10, transform: `rotate(-8deg) scale(${sc})`,
+        style={{ left: clamp(cx - w / 2, 30, W - w - 30), top: cy - h / 2, zIndex: 10, transform: `rotate(-8deg) scale(${st.scale})`, opacity: st.opacity,
           boxShadow: `16px 16px 0 ${shade(C.mint, 0.45)}` }} />
     )
   }
@@ -155,11 +167,14 @@ function Fight({ f, W, H, wide, left, right, seriesColour, seriesName }: ScenePr
             rot = -7 * Math.sin(Math.PI * hop)
             z = 6
           }
-          const landed = isHop && hop >= 1 ? (slam(f, T.hop[1]) ?? 1) : 1
+          const landed = isHop && hop >= 1 ? (settle(f, T.hop[1], 1.1, 5)?.scale ?? 1) : 1
           const flipped = !!p.stampAfter && f >= T.flip
-          const stamp = flipped
-            ? (p === flipper ? null : { text: p.stampAfter!, bg: C.mint, rot: -7, scale: slam(f, T.flip) ?? 1 })
-            : { text: p.stampBefore, bg: C.coral, rot: 6, scale: 1 }
+          const fl = settle(f, T.flip, 1.3, 5)
+          const stamp = !flipped
+            ? { text: p.stampBefore, bg: C.coral, rot: 6, scale: 1, opacity: 1 }
+            : p === flipper
+              ? (f < T.flip + 3 ? { text: p.stampBefore, bg: C.coral, rot: 6, scale: 1, opacity: 1 - (f - T.flip + 1) / 3 } : null)
+              : { text: p.stampAfter!, bg: C.mint, rot: -7, scale: fl?.scale ?? 1, opacity: fl?.opacity ?? 1 }
           return (
             <FighterCard key={`${p.name}-${i}`} p={p} S={S} x={x} y={y} rot={rot} scale={landed} z={z}
               shadow={shade(isHop && hop >= 1 ? C.mint : seamCorner(x, y))} stamp={stamp} />
@@ -168,10 +183,9 @@ function Fight({ f, W, H, wide, left, right, seriesColour, seriesName }: ScenePr
         {vsS !== null && (
           <div style={abs({ left: vsC[0] - vsD / 2, top: vsC[1] - vsD / 2, width: vsD, height: vsD, borderRadius: '50%', background: C.ink, color: C.cream,
             border: `8px solid ${C.cream}`, boxSizing: 'border-box', fontFamily: DISPLAY, fontSize: vsD * 0.4, lineHeight: `${vsD - 16}px`, textAlign: 'center',
-            zIndex: 4, transform: `scale(${vsS}) rotate(-8deg)` })}>vs</div>
+            zIndex: 4, opacity: vsS.opacity, transform: `scale(${vsS.scale}) rotate(-8deg)` })}>vs</div>
         )}
         {big}
-        <BrandStrip top={wide ? 0 : 250} width={W} height={wide ? 104 : 100} seriesName={seriesName} seriesColour={seriesColour} pad={wide ? 70 : 60} />
       </div>
     </AbsoluteFill>
   )
@@ -184,10 +198,7 @@ function Question({ f, W, H, wide, question, questionEmphasis, seriesColour, ser
   const size = fitSize(lines, wide ? 210 : 165, W - 2 * qX, 'display', 0.3)
   const lineH = size * (wide ? 1.1 : 1.06)
   const lastW = textWidth(lines[lines.length - 1] ?? '', size) + size * 0.3
-  const hits = [T.cut, ...lines.map((_, i) => T.word(i)).slice(1)]
   const qAt = T.word(lines.length - 1) + 6
-  hits.push(qAt)
-  const y0 = jolt(f, hits)
 
   // The "?" stamp: it slams in after the last word group and keeps wobbling.
   let D = wide ? 330 : 300
@@ -195,28 +206,28 @@ function Question({ f, W, H, wide, question, questionEmphasis, seriesColour, ser
   if (wide) {
     sx = qX + lastW + 60
     sy = top + (lines.length - 1) * lineH + size * 0.55 - D / 2
-    if (sx + D > W - 90) { sx = W - 110 - D; sy = H - 104 - 36 - D }
+    if (sx + D > W - 90) { sx = W - 110 - D; sy = H - 70 - D }
   } else {
     sy = top + lines.length * lineH + 40
     D = Math.min(D, 1440 - sy)
     sx = W - 90 - D
   }
-  const qs = slam(f, qAt)
+  const qs = settle(f, qAt, 1.3, 6)
   const wob = qs === null ? 0 : 9 * Math.sin(((f - qAt) * 2 * Math.PI) / 14)
   const pulse = qs === null ? 1 : 1 + 0.035 * Math.sin(((f - qAt) * 2 * Math.PI) / 7 + 1)
 
   return (
     <AbsoluteFill style={{ background: seriesColour, overflow: 'hidden' }}>
-      <div style={abs({ left: 0, top: 0, width: W, height: H, transform: `translateY(${y0}px)` })}>
+      <div style={abs({ left: 0, top: 0, width: W, height: H })}>
         <Field left={-60} top={-80} width={W + 120} height={H + 160} bg={seriesColour} />
         {lines.map((line, i) => {
-          const s = slam(f, T.word(i))
+          const s = settle(f, T.word(i), 1.12, 5)
           if (s === null) return null
           const em = questionEmphasis && line.includes(questionEmphasis) ? questionEmphasis : null
           const parts = em ? line.split(em) : [line]
           return (
             <div key={i} style={abs({ left: qX, top: top + i * lineH, fontFamily: DISPLAY, fontSize: size, lineHeight: 0.98, whiteSpace: 'pre',
-              letterSpacing: '-0.015em', color: C.ink, transform: `scale(${1 + (s - 1) * 0.5})`, transformOrigin: '0 80%' })}>
+              letterSpacing: '-0.015em', color: C.ink, opacity: s.opacity, transform: `scale(${s.scale})`, transformOrigin: '0 80%' })}>
               {em ? (
                 <>
                   {parts[0]}
@@ -230,9 +241,8 @@ function Question({ f, W, H, wide, question, questionEmphasis, seriesColour, ser
         {qs !== null && (
           <div style={abs({ left: sx, top: sy, width: D, height: D, borderRadius: '50%', background: C.mint, border: `12px solid ${C.ink}`, boxSizing: 'border-box',
             boxShadow: `14px 14px 0 ${shade(seriesColour)}`, color: C.ink, fontFamily: DISPLAY, fontSize: D * 0.66, lineHeight: `${D - 24}px`, textAlign: 'center',
-            transform: `rotate(${wob}deg) scale(${qs * pulse})` })}>?</div>
+            opacity: qs.opacity, transform: `rotate(${wob}deg) scale(${qs.scale * pulse})` })}>?</div>
         )}
-        <BrandStrip top={wide ? H - 104 : 250} width={W} height={wide ? 104 : 100} seriesName={seriesName} seriesColour={seriesColour} pad={wide ? 70 : 60} />
       </div>
     </AbsoluteFill>
   )
