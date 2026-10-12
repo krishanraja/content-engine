@@ -94,6 +94,16 @@ that something is done, or that is not about a piece, still moves it itself.
 Never leave an `in_progress` item behind you: when you stop, it is done,
 handed on, or back on him.
 
+**An item Krish closed himself stays closed** (his Clear or Purge in Control
+Center). The engine key cannot move it back to `on_you` or `in_progress`: the
+write is refused with `409 krish_closed_it`. If something new needs him, write
+a new item. An item waiting on him also says why only he can do it, in
+`"only_you"`: `send`, `post`, `spend`, `delete`, `permission`, `credential`,
+`face` (his face and voice), `login` or `judgment` (his call). The week's
+planning item uses `"closes_on": "week_planned"`; Control Center closes it
+once every day has a piece. `bumped_until` is written by his Bump; leave it
+alone.
+
 ## Pick up from any tool
 
 Everything that matters lives in two places every tool can reach: this

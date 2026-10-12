@@ -162,3 +162,105 @@ describe('the work board route', () => {
     expect((await call('POST', { action: 'set_state', signals: 'nope' })).body.error).toBe('signals_must_be_a_list')
   })
 })
+
+// Krish, 2026-10-11: one list of what waits on him, with Clear, Bump and Purge
+// on every item. An item says why only he can do it (only_you), his Bump hides
+// it until his next day (bumped_until), and the week's planning item closes
+// when every day has a piece (closes_on 'week_planned').
+describe('the fields for his one list', () => {
+  it('cleanItem takes only_you, bumped_until and week_planned, and refuses bad ones', async () => {
+    const { cleanItem, ONLY_YOU } = await import('../../apps/control-plane/api/workbench.js')
+    expect([...ONLY_YOU]).toEqual(['send', 'post', 'spend', 'delete', 'permission', 'credential', 'face', 'login', 'judgment'])
+    for (const only of ONLY_YOU) expect(cleanItem({ id: 'a1', only_you: only }, false)).toEqual({ id: 'a1', only_you: only })
+    expect(cleanItem({ id: 'a1', only_you: null }, false)).toEqual({ id: 'a1', only_you: null })
+    expect(() => cleanItem({ id: 'a1', only_you: 'whenever' }, false)).toThrow('only_you_invalid')
+    expect(() => cleanItem({ id: 'a1', only_you: 'Face' }, false)).toThrow('only_you_invalid')
+
+    expect(cleanItem({ id: 'a1', bumped_until: '2026-10-13T04:00:00Z' }, false)).toEqual({ id: 'a1', bumped_until: '2026-10-13T04:00:00.000Z' })
+    expect(cleanItem({ id: 'a1', bumped_until: '2026-11-02T00:00:00-05:00' }, false)).toEqual({ id: 'a1', bumped_until: '2026-11-02T05:00:00.000Z' })
+    expect(cleanItem({ id: 'a1', bumped_until: null }, false)).toEqual({ id: 'a1', bumped_until: null })
+    for (const bad of ['tomorrow', '2026-10-13', '2026-10-13T04:00:00', '2026-13-40T99:00:00Z', 42, '']) {
+      expect(() => cleanItem({ id: 'a1', bumped_until: bad }, false)).toThrow('bumped_until_invalid')
+    }
+
+    expect(cleanItem({ id: 'week-2026-10-12', closes_on: 'week_planned' }, false)).toEqual({ id: 'week-2026-10-12', closes_on: 'week_planned' })
+    expect(() => cleanItem({ id: 'a1', closes_on: 'week_done' }, false)).toThrow('closes_on_invalid')
+    // Fields not sent are left alone.
+    expect(cleanItem({ id: 'a1', lane: 'done' }, false)).toEqual({ id: 'a1', lane: 'done' })
+  })
+
+  it('the route writes them and the board returns them', async () => {
+    const add = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [
+      { id: 'monday-record', lane: 'on_you', title: 'Record both cuts', only_you: 'face', closes_on: 'record' },
+      { id: 'week-2026-10-12', lane: 'on_you', title: 'Pick this week', only_you: 'judgment', closes_on: 'week_planned' },
+    ] })
+    expect(add.status).toBe(200)
+    const bump = await call('POST', { action: 'upsert_items', items: [{ id: 'monday-record', bumped_until: '2026-10-13T04:00:00Z' }] }, 'krish')
+    expect(bump.status).toBe(200)
+    const board = await call('GET', {}, 'krish')
+    expect(board.body.items.find((i: Row) => i.id === 'monday-record')).toMatchObject({ only_you: 'face', bumped_until: '2026-10-13T04:00:00.000Z', updated_by: 'Krish' })
+    expect(board.body.items.find((i: Row) => i.id === 'week-2026-10-12')).toMatchObject({ only_you: 'judgment', closes_on: 'week_planned' })
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'monday-record', only_you: 'nobody' }] })).body.error).toBe('only_you_invalid')
+  })
+})
+
+describe('an item Krish closed stays closed to agents', () => {
+  async function closedByKrish(lane: 'done' | 'archived') {
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-launch', lane: 'on_you', title: 'Swap the cover' }] })
+    const close = await call('POST', { action: 'upsert_items', items: [{ id: 'you-launch', lane }] }, 'krish')
+    expect(close.status).toBe(200)
+    expect(db.tables.work_board_items[0]).toMatchObject({ lane, updated_by: 'Krish' })
+  }
+
+  it('an agent that moves it back out of done or archived is refused with 409, and nothing is written', async () => {
+    for (const lane of ['done', 'archived'] as const) {
+      db.tables.work_board_items = []
+      await closedByKrish(lane)
+      for (const back of ['on_you', 'in_progress']) {
+        const writes = db.writes.length
+        const out = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'fresh-one', lane: 'on_you', title: 'New' }, { id: 'you-launch', lane: back }] })
+        expect(out.status).toBe(409)
+        expect(out.body).toMatchObject({ ok: false, error: 'krish_closed_it', item: 'you-launch' })
+        expect(db.writes.length).toBe(writes)
+        expect(db.tables.work_board_items.map(r => r.id)).toEqual(['you-launch'])
+        expect(db.tables.work_board_items[0]).toMatchObject({ lane, updated_by: 'Krish' })
+      }
+    }
+  })
+
+  it('a relayed decision is still an agent write', async () => {
+    await closedByKrish('done')
+    const out = await call('POST', { action: 'upsert_items', decided_by: 'Krish', items: [{ id: 'you-launch', lane: 'on_you' }] })
+    expect(out.status).toBe(409)
+    expect(out.body.error).toBe('krish_closed_it')
+  })
+
+  it('his own Undo, from his cookie, reopens it', async () => {
+    await closedByKrish('done')
+    const undo = await call('POST', { action: 'upsert_items', items: [{ id: 'you-launch', lane: 'on_you' }] }, 'krish')
+    expect(undo.status).toBe(200)
+    expect(db.tables.work_board_items[0]).toMatchObject({ lane: 'on_you', updated_by: 'Krish' })
+  })
+
+  it('an agent may still edit it in place, or move it from done to archived', async () => {
+    await closedByKrish('done')
+    const edit = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', detail: 'Swapped on Monday.' }] })
+    expect(edit.status).toBe(200)
+    expect(db.tables.work_board_items[0]).toMatchObject({ lane: 'done', detail: 'Swapped on Monday.' })
+    // The edit made codex the last writer; put Krish back to test the move.
+    db.tables.work_board_items[0].updated_by = 'Krish'
+    const archive = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', lane: 'archived' }] })
+    expect(archive.status).toBe(200)
+    expect(db.tables.work_board_items[0].lane).toBe('archived')
+  })
+
+  it('an item an agent or the engine closed can be reopened by an agent', async () => {
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'in_progress', title: 'Build' }] })
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'done' }] })
+    const back = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'in_progress' }] })
+    expect(back.status).toBe(200)
+    db.tables.work_board_items[0].lane = 'done'
+    db.tables.work_board_items[0].updated_by = 'engine: record done'
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'on_you' }] })).status).toBe(200)
+  })
+})

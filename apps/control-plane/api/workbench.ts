@@ -19,9 +19,12 @@ import { supabase } from './_supabase.js'
 //
 // A reply is Krish's words. The engine key cannot write one, so nothing an
 // agent does can read as something he said (AGENTS.md, "Krish decides").
+// For the same reason an agent cannot reopen an item Krish closed himself:
+// that write is refused with 409 krish_closed_it.
 
 export const LANES = ['on_you', 'in_progress', 'done', 'archived'] as const
 type Lane = typeof LANES[number]
+const CLOSED_LANES = new Set<string>(['done', 'archived'])
 const ID = /^[a-z0-9][a-z0-9-]{1,79}$/
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const SIGNAL_STATES = new Set(['', 'ok', 'warn', 'bad'])
@@ -42,8 +45,12 @@ export interface BoardItemInput {
   prompt?: string | null
   /** The piece this item is about; it then closes when the piece moves on (_boardClose.ts). */
   idea_id?: string | null
-  /** The making step that closes it, or 'published'. */
+  /** The making step that closes it, 'published', or 'week_planned'. */
   closes_on?: string | null
+  /** Why only Krish can do it (ONLY_YOU). Control Center's list holds an item waiting on him without one. */
+  only_you?: string | null
+  /** Set by his Bump: off his list until this time (ISO, with a zone). */
+  bumped_until?: string | null
 }
 
 /** Control Center's own jobs write with the access-code cookie, the same
@@ -51,7 +58,13 @@ export interface BoardItemInput {
  *  recorded as that job instead of as Krish. It can only lower the
  *  attribution, never raise it, and a labelled call cannot write a reply. */
 export const COOKIE_AUTOMATIONS = new Set(['control_center_slate', 'control_center'])
-const CLOSE_STEPS = new Set(['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published'])
+// The making steps and 'published' close through _boardClose.ts; 'week_planned'
+// is the week's planning item, which Control Center's slate closes once every
+// day has a piece.
+const CLOSE_STEPS = new Set(['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published', 'week_planned'])
+/** Why only Krish can do an item: the walls only he passes, his face and voice, his login, his call. */
+export const ONLY_YOU = new Set(['send', 'post', 'spend', 'delete', 'permission', 'credential', 'face', 'login', 'judgment'])
+const ISO_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,6})?)?(Z|[+-]\d{2}:\d{2})$/
 
 function record(value: unknown): Json {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Json : {}
@@ -107,6 +120,18 @@ export function cleanItem(raw: unknown, isNew: boolean): Json & { id: string } {
     if (r.closes_on !== null && !CLOSE_STEPS.has(String(r.closes_on))) throw new Error('closes_on_invalid')
     row.closes_on = r.closes_on
   }
+  if (r.only_you !== undefined) {
+    if (r.only_you !== null && !ONLY_YOU.has(String(r.only_you))) throw new Error('only_you_invalid')
+    row.only_you = r.only_you
+  }
+  if (r.bumped_until !== undefined) {
+    if (r.bumped_until === null) row.bumped_until = null
+    else {
+      const at = typeof r.bumped_until === 'string' && ISO_TIME.test(r.bumped_until) ? Date.parse(r.bumped_until) : NaN
+      if (!Number.isFinite(at)) throw new Error('bumped_until_invalid')
+      row.bumped_until = new Date(at).toISOString()
+    }
+  }
   return row
 }
 
@@ -158,11 +183,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (body.items.length > MAX_ITEMS) return res.status(400).json({ ok: false, error: 'too_many_items' })
       const ids = body.items.map(i => String(record(i).id || ''))
       if (new Set(ids).size !== ids.length) return res.status(400).json({ ok: false, error: 'duplicate_item_ids' })
-      const found = await supabase.from('work_board_items').select('id').in('id', ids)
+      const found = await supabase.from('work_board_items').select('id,lane,updated_by').in('id', ids)
       if (found.error) return res.status(500).json({ ok: false, error: 'board_read_failed' })
-      const existing = new Set(((found.data || []) as Array<{ id: string }>).map(r => r.id))
+      const existing = new Map(((found.data || []) as Array<{ id: string; lane: string; updated_by: string }>).map(r => [r.id, r]))
       // Check every item before writing any, so a bad one changes nothing.
       const rows = body.items.map(i => cleanItem(i, !existing.has(String(record(i).id))))
+      // An item Krish closed himself (Clear or Purge) stays closed: an agent
+      // cannot move it back to on_you or in_progress. His own Undo comes from
+      // his cookie, never the engine key, so it is not refused. Done to
+      // archived keeps it closed and is allowed.
+      if (operator) {
+        const reopened = rows.find(row => {
+          const before = existing.get(row.id)
+          return before && before.updated_by === 'Krish' && CLOSED_LANES.has(before.lane) && row.lane !== undefined && !CLOSED_LANES.has(String(row.lane))
+        })
+        if (reopened) {
+          return res.status(409).json({ ok: false, error: 'krish_closed_it', item: reopened.id, detail: 'Krish closed this item himself, so an agent cannot reopen it. If something new needs him, write a new item.' })
+        }
+      }
       for (const row of rows) {
         const stamp = { updated_by: who, updated_at: now }
         const write = existing.has(row.id)
