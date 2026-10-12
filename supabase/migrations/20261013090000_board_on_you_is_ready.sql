@@ -8,7 +8,9 @@
 --   only_you   why only he can do it (work_board_items_only_you_check);
 --   link       the https link to the prepared thing he acts on;
 --   closes_on  how it closes itself (a making step, published, or
---              week_planned for the week's planning item);
+--              week_planned for the week's planning item, whose id is
+--              week-<its Monday>: Control Center closes the week by that id,
+--              so the week's close on any other item would never fire);
 --   idea_id    the piece whose step closes it, unless closes_on is
 --              week_planned (Control Center's slate closes the week).
 --
@@ -19,13 +21,15 @@
 -- 1. The CHECK is added NOT VALID: from here every insert and update is held
 --    to it, while the rows already there are not yet checked.
 -- 2. Every row still waiting on him that fails moves to in_progress, written
---    as control_center, with its detail starting "Held from Krish's list on
---    <date>: it does not say how the system will know it is done." and then
---    the detail it had (cut to the column's 2,000 characters). The default
---    that stands (the step 2 plan, question 2): a job only he can do that no
---    machine can see finished stays off his list until an agent gives it a
---    check. On 12 October that was you-launch-today, you-engine-github-key
---    and you-welcome-days.
+--    as control_center, with its detail starting "Held from your list on
+--    <date>: it ..." and the gates it fails, in Control Center's words for
+--    them (its heldWhy: "does not need you", "is not ready for one press",
+--    "does not say how it closes itself"), then the detail it had (cut to the
+--    column's 2,000 characters). The default that stands (the step 2 plan,
+--    question 2): a job only he can do that no machine can see finished stays
+--    off his list until an agent gives it a check. On 12 October that was
+--    you-launch-today, you-engine-github-key, you-welcome-days and
+--    week-publish-board-2026-10-12.
 -- 3. The CHECK is validated.
 --
 -- Safe to run again: the constraint is added once, a row already moved is
@@ -41,29 +45,45 @@ do $$ begin
       only_you is not null
       and link is not null
       and closes_on is not null
-      and (closes_on = 'week_planned' or idea_id is not null)
+      and case when closes_on = 'week_planned'
+        then id ~ '^week-[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+        else idea_id is not null end
     )) not valid;
 exception when duplicate_object then null; end $$;
 
-update public.work_board_items
+with failing as (
+  select id,
+    array_remove(array[
+      case when only_you is null then 'does not need you' end,
+      case when link is null then 'is not ready for one press' end,
+      case when closes_on is null
+             or (closes_on = 'week_planned' and id !~ '^week-[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+             or (closes_on <> 'week_planned' and idea_id is null)
+        then 'does not say how it closes itself' end
+    ], null) as gates
+  from public.work_board_items
+  where lane = 'on_you'
+)
+update public.work_board_items b
   set lane = 'in_progress',
       updated_by = 'control_center',
       updated_at = now(),
       detail = case
-        when detail like 'Held from Krish''s list on %' then detail
+        when b.detail like 'Held from your list on %' then b.detail
         else left(
-          'Held from Krish''s list on '
+          'Held from your list on '
             || to_char(now() at time zone 'America/New_York', 'FMDD FMMonth')
-            || ': it does not say how the system will know it is done.'
-            || case when detail = '' then '' else ' ' || detail end,
+            || ': it '
+            || case cardinality(f.gates)
+                 when 1 then f.gates[1]
+                 when 2 then f.gates[1] || ' and ' || f.gates[2]
+                 else f.gates[1] || ', ' || f.gates[2] || ' and ' || f.gates[3]
+               end
+            || '.'
+            || case when b.detail = '' then '' else ' ' || b.detail end,
           2000)
       end
-  where lane = 'on_you'
-    and not (
-      only_you is not null
-      and link is not null
-      and closes_on is not null
-      and (closes_on = 'week_planned' or idea_id is not null)
-    );
+  from failing f
+  where b.id = f.id and cardinality(f.gates) > 0;
 
 alter table public.work_board_items validate constraint work_board_items_on_you_is_ready;

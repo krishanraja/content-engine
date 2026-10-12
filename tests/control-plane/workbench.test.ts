@@ -18,6 +18,10 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
     let op: 'select' | 'insert' | 'update' = 'select'
     let payload: Row = {}
     let inserted: Row | null = null
+    // A read returns only the columns it names, as PostgREST does, so a route
+    // that reads too little before it merges a write is caught.
+    let columns: string[] | null = null
+    const pick = (r: Row) => columns ? Object.fromEntries(columns.filter(c => c in r).map(c => [c, r[c]])) : r
     const run = () => {
       if (op === 'insert') {
         inserted = { id: payload.id ?? `00000000-0000-4000-8000-${String(rows().length + 1).padStart(12, '0')}`, seen_at: null, ...payload }
@@ -33,10 +37,10 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
       }
       let out = [...hit]
       if (order) { const [k, asc] = order; out.sort((a, b) => (a[k] > b[k] ? 1 : a[k] < b[k] ? -1 : 0) * (asc ? 1 : -1)) }
-      return { data: out.slice(0, limit), error: null }
+      return { data: out.slice(0, limit).map(pick), error: null }
     }
     const chain: Record<string, any> = {
-      select() { return chain },
+      select(cols?: string) { if (op === 'select' && cols && cols.trim() !== '*') columns = cols.split(',').map(c => c.trim()); return chain },
       insert(row: Row) { op = 'insert'; payload = row; return chain },
       update(patch: Row) { op = 'update'; payload = patch; return chain },
       eq(k: string, v: unknown) { filters.push(r => r[k] === v); return chain },
@@ -142,21 +146,32 @@ describe('the work board route', () => {
     expect((await call('POST', { action: 'upsert_items', items: [{ id: 'x2', lane: 'on_you', title: 'x', link: 'http://plain' }] })).body.error).toBe('link_must_be_https')
   })
 
-  it('only Krish, from his cookie, can write a reply; an agent cannot speak for him', async () => {
+  it('replies are retired: no one writes one, and no item asks him for one; a null prompt clears an old one', async () => {
     await call('POST', { action: 'upsert_items', items: [{ id: 'p1-video', lane: 'on_you', title: 'Say yes to the video', ...READY }] })
-    const agent = await call('POST', { action: 'reply', item_id: 'p1-video', text: 'yes, make the video', decided_by: 'Krish' })
-    expect(agent.status).toBe(403)
-    expect(agent.body.error).toBe('a_reply_is_krish_words')
+    for (const [who, extra] of [['agent', { decided_by: 'Krish' }], ['krish', {}]] as const) {
+      const out = await call('POST', { action: 'reply', item_id: 'p1-video', text: 'yes, make the video', ...extra }, who)
+      expect(out.status).toBe(410)
+      expect(out.body).toMatchObject({ ok: false, error: 'replies_retired' })
+      expect(out.body.detail).toContain('in your reply to him')
+    }
     expect(db.tables.work_board_replies).toHaveLength(0)
-    const krish = await call('POST', { action: 'reply', item_id: 'p1-video', text: 'yes, make the video' }, 'krish')
-    expect(krish.status).toBe(200)
-    expect(db.tables.work_board_replies[0]).toMatchObject({ item_id: 'p1-video', text: 'yes, make the video', by: 'Krish' })
-    expect((await call('POST', { action: 'reply', item_id: 'nope', text: 'x' }, 'krish')).status).toBe(404)
+    const writes = db.writes.length
+    for (const who of ['agent', 'krish'] as const) {
+      const asks = await call('POST', { action: 'upsert_items', items: [{ id: 'p2-video', lane: 'in_progress', title: 'Which cut?', prompt: 'the long or the short' }] }, who)
+      expect(asks.status).toBe(400)
+      expect(asks.body).toMatchObject({ error: 'prompt_retired', item: 'p2-video' })
+    }
+    expect(db.writes.length).toBe(writes)
+    db.tables.work_board_items.find(r => r.id === 'p1-video')!.prompt = 'Reply with the cut'
+    const cleared = await call('POST', { action: 'upsert_items', items: [{ id: 'p1-video', prompt: null }] })
+    expect(cleared.status).toBe(200)
+    expect(db.tables.work_board_items.find(r => r.id === 'p1-video')!.prompt).toBe(null)
+    expect((await call('POST', { action: 'nonsense' })).body.actions).toEqual(['upsert_items', 'set_state', 'mark_seen'])
   })
 
-  it('an agent marks replies seen, and the board counts what is still unseen', async () => {
+  it('an agent marks the replies he wrote before seen, and the board counts what is still unseen', async () => {
     await call('POST', { action: 'upsert_items', items: [{ id: 'p3', lane: 'on_you', title: 'Read article 3', ...READY }] })
-    await call('POST', { action: 'reply', item_id: 'p3', text: 'Approved' }, 'krish')
+    db.tables.work_board_replies.push({ id: '00000000-0000-4000-8000-000000000001', item_id: 'p3', text: 'Approved', by: 'Krish', at: '2026-10-10T12:00:00Z', seen_at: null })
     let board = await call('GET')
     expect(board.body.unseen_replies).toBe(1)
     const id = board.body.replies[0].id

@@ -44,8 +44,9 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
 A take reaches the engine within about ten minutes, from whichever home
 computer is on, and the same lane then places it on its piece and cut by
 itself, stamped with the script it was read from (step 2). He never has to
-give a file name or a piece id. He is asked only when the matcher is unsure
-(one board item per take), and for approvals that are his alone (a music
+give a file name or a piece id. He is asked only when the matcher is unsure,
+in a session's reply to him (the lane holds one board item per take for a
+session, never on his list), and for approvals that are his alone (a music
 track, the mix levels, the sting's design).
 
 **Takes recorded in Descript.** Since 12 October each cut of Monday's and
@@ -136,7 +137,11 @@ yet, and prints one line per file:
   be a take of the older words, so Krish says whether to use it or record
   that cut again. Each cut has its own time, so a change to the long script
   never makes a short take look old. With `--board` each unsure take is one
-  board item, asked once, and never reopened once he or a session closed it.
+  board item held in progress for a session (never on his list: you ask him
+  in your reply), asked once, and never reopened once he or a session
+  closed it. Tied to a piece it closes on Record; the lane ends one with no
+  piece once its take is placed or no waiting piece can be it, and the
+  engine lets one no session touches go after a week.
 - `left alone`: an older take of the same cut, or a take that arrived
   before any waiting piece's record began, so it is none of their takes.
 - `failed`: say which step failed (the download broke, a transcriber that

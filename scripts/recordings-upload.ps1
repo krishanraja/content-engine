@@ -514,7 +514,8 @@ function Invoke-TakePlacing {
   Save-JsonFile $PlacingStatePath ([ordered]@{ claimed = $claimed; later = $later })
   $placed = @(Get-Field $report 'recorded').Count
   $asked = @(Get-Field $report 'asked').Count
-  Write-Log "placed and recorded $placed take(s) on their piece; asked Krish about $asked on the board (the matcher answered $($run.code))"
+  $ended = @(Get-Field $report 'closed').Count
+  Write-Log "placed and recorded $placed take(s) on their piece; held $asked question(s) on the board for a session and closed $ended (the matcher answered $($run.code))"
   return ($run.code -ne 1)
 }
 

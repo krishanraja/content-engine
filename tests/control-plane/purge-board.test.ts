@@ -91,7 +91,9 @@ describe('the purge and the board', () => {
       end() { return res },
     }
     await handler({ method: 'GET', headers: { authorization: `Bearer ${CRON}` }, query: {}, body: {} } as never, res as never)
-    expect(out.body).toMatchObject({ ok: true, expired: 1 })
+    // Counted like everything else the purge touches, in its response and its audit row.
+    expect(out.body).toMatchObject({ ok: true, expired: 1, board_items_archived: ['about-gone', 'agent-gone'], board_items_off_his_list: ['about-gone'] })
+    expect(db.tables.audit_log[0].details).toMatchObject({ board_items_archived: ['about-gone', 'agent-gone'], board_items_off_his_list: ['about-gone'] })
     const item = (id: string) => db.tables.work_board_items.find(r => r.id === id)!
     expect(item('about-gone')).toMatchObject({ lane: 'archived', updated_by: 'engine: piece purged', closed_by: 'engine: piece purged' })
     expect(item('agent-gone')).toMatchObject({ lane: 'archived', closed_by: 'engine: piece purged' })

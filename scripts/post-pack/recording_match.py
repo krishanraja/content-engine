@@ -69,13 +69,17 @@ would, stamped with script_sha256, the hash of the script it was taken from
 (the piece's script_check.hashes for that cut). A take of an older script
 then stops counting on the record.
 
---board puts one item on Krish's board for each unsure take (POST
+--board puts one item on the board for each unsure take (POST
 /api/workbench, upsert_items, the route every session uses, through
-making.board_upsert): id take-<first 12 of its sha256>, closes_on "record".
-Tied to a piece (the take is known to be one of its takes), it is on him and
-ready for his list: only_you "judgment", the piece's page in Control Center
-as its link, and the piece's idea_id. With no piece nothing would close it,
-so it is held off his list, in progress for a session. It
+making.board_upsert): id take-<first 12 of its sha256>, closes_on "record",
+in progress for a session and never on Krish's list, because nothing he can
+press answers it: a session works it out, or asks him in its reply. Tied to
+a piece (the take is known to be one of its takes), it carries the piece's
+idea_id and closes itself when that piece's Record step is done. One with
+no piece is ended by the lane once the take is placed (done) or no waiting
+piece can be it (archived; making.board_close), and by the engine's hourly
+pass once no session has touched it for a week (_boardClose.ts, HELD_DAYS).
+It
 reads the board first and never reopens an item: one done there (Krish
 answered, or a session closed it) is left alone, on either machine. Each
 take is asked about once for each question, its status, piece and whether
@@ -140,7 +144,6 @@ SHA = re.compile(r'[0-9a-f]{64}')
 ANSWERED = 'answered.json'   # .cache/recordings/answered.json: the takes already asked about, or left alone
 BOARD_PATH = '/api/workbench'
 BOARD_CLIENTS = {'codex': 'codex', 'claude code': 'claude_code'}  # anything else writes as the runner
-PIECE_PAGE = 'https://controlcenter.krishraja.com/#/content?idea='  # the piece in Control Center, with its making record
 BEFORE_CHANGE = 'recorded before the script last changed'
 TRANSCRIBER_FIX = transcriber.FIX  # the pinned set, never an unpinned install
 CLOCK_SLACK = timedelta(minutes=5)  # a phone's clock may run a little ahead of the engine's
@@ -838,36 +841,40 @@ board_client = making.board_client  # codex, claude_code, else the runner
 
 
 def board_item(answer, pieces):
-    """One board item for one unsure take. Tied to a piece (the take is known
-    to be one of its takes, or is one of two close pieces'), it is on Krish
-    and ready for his list (WORKBENCH.md, "The board"): his call, a link to
-    the piece, closed when that piece's Record step is done. With no piece,
-    nothing could close it, so it is held off his list, in progress for a
-    session to work out."""
+    """One board item for one unsure take, in progress for a session and
+    never on Krish's list (WORKBENCH.md, "The board"): nothing he can press
+    answers which take it is, so a session works it out, or asks him in its
+    reply. Tied to a piece (the take is known to be one of its takes, or is
+    one of two close pieces'), it closes itself when that piece's Record step
+    is done; with no piece, the lane closes it (ask_on_board)."""
     by_id = {p['id']: p for p in pieces}
     sha, name = answer['sha256'], answer['name']
     shown = name if len(name) <= 80 else name[:77] + '...'
     pid = answer.get('piece_id') or (answer.get('closest') if (answer.get('score') or 0) >= SURE else None)
     tied = bool(pid and pid in by_id)
+    cut = answer.get('cut') if tied and answer.get('piece_id') == pid else None
     path = answer.get('path') or f'recordings/{sha}.{ext_of(name)}'
     if answer.get('older_script'):
         title = f'Use the take "{shown}", recorded before the script changed?'
-        ask = ('Tell a session "use it" and it records it on the piece with your words, as a take of the current script, '
-               'or record that cut again and drop the new take in the Inbox.')
+        ask = ('A session asks Krish in its reply whether to use it (it then records it on the piece with his words, as a take of '
+               'the current script) or to record that cut again and drop the new take in the Inbox.')
+    elif cut:
+        title = f'Use the new take "{shown}" of the {cut} cut, which is already recorded?'
+        ask = ('A session asks Krish in its reply whether to use it in place of the take on the record, and with his words '
+               'records it with making.py.')
     elif tied:
-        title = f'Which piece and cut is the take "{shown}"?'
-        ask = ('Tell a session the piece and the cut (the 3-minute or the 90-second), or that it is not a take for a piece; '
-               'it then records it with making.py.')
+        title = f'Which cut is the take "{shown}"?'
+        ask = 'A session works out the cut (the 3-minute or the 90-second) and records it with making.py, or asks Krish in its reply.'
     else:
         title = f'Which piece and cut is the take "{shown}"?'
-        ask = ('Held from Krish\'s list: no piece is known for it, so nothing would close it. A session hears it and records it on '
-               'its piece and cut with making.py, or asks Krish in words which piece and cut it is.')
+        ask = ('No piece is known for it, so a session works out its piece and cut and records it with making.py, or asks Krish '
+               'in its reply. It is let go once no waiting piece can be it, or after a week that no session touches it.')
     detail = (f'{answer["reason"][0].upper()}{answer["reason"][1:]}. It reached the engine {str(answer.get("at"))[:16].replace("T", " ")} '
-              f'as {path}; nothing was recorded for it. {ask}')
-    item = {'id': f'take-{sha[:12]}', 'lane': 'on_you' if tied else 'in_progress', 'rank': 5, 'area': 'Recordings',
+              f'as {path}; nothing was recorded for it. Held for a session, off Krish\'s list: nothing he can press answers it. {ask}')
+    item = {'id': f'take-{sha[:12]}', 'lane': 'in_progress', 'rank': 5, 'area': 'Recordings',
             'title': title[:200], 'detail': detail[:2000], 'closes_on': 'record'}
     if tied:
-        item.update(idea_id=pid, only_you='judgment', link=PIECE_PAGE + pid, link_label='Open the piece')
+        item['idea_id'] = pid
     return item
 
 
@@ -901,27 +908,38 @@ def asked_as(entry):
 
 def ask_on_board(answers, pieces, call, by, cache, out, now=None):
     """Puts each unsure take on the board once for each question (asked_as:
-    its status, its piece, older words or not), and keeps the answered
-    book. The board is never made to reopen an item (making.board_upsert):
-    one Krish or a session closed stays closed, on either machine. A take
-    left alone as "old" is not booked: the recordings upload looks at it
-    again later, as a piece may start waiting for it. Returns (asked,
-    failed): the item ids written, and whether the board refused or could
-    not be reached."""
+    its status, its piece, older words or not), held for a session, and
+    keeps the answered book. The board is never made to reopen an item
+    (making.board_upsert): one Krish or a session closed stays closed, on
+    either machine. A take left alone as "old" is not booked: the recordings
+    upload looks at it again later, as a piece may start waiting for it.
+
+    It also ends the items it asked once their question is gone: done once
+    the take is placed, archived once no waiting piece can be it ("old")
+    (making.board_close). An item tied to a piece also closes on its Record
+    step, and one no session touches for a week is let go by the engine's
+    hourly pass (_boardClose.ts, HELD_DAYS). Returns (asked, closed,
+    failed): the item ids written, the ones closed, and whether the board
+    refused or could not be reached."""
     stamp = now or datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
     book = load_answered(cache)
     before = dict(book)
-    asked, items, entries = [], [], {}
+    asked, items, entries, ending = [], [], {}, {}
     for answer in answers:
         sha = answer.get('sha256')
         if not sha:
             continue
-        if answer['status'] == 'placed':
-            book.pop(sha, None)
+        booked = book.get(sha) or {}
+        if answer['status'] in ('placed', 'old'):
+            # Its question is answered (placed), or no waiting piece can be it any more (old).
+            if booked.get('status') == 'unsure' and booked.get('item'):
+                ending[booked['item']] = (sha, answer['status'])
+            elif answer['status'] == 'placed':
+                book.pop(sha, None)
             continue
         if answer['status'] == 'older take':
             # Heard, and a newer take of the same cut is used: nothing to ask.
-            if (book.get(sha) or {}).get('status') != 'older take':
+            if booked.get('status') != 'older take':
                 book[sha] = {'status': 'older take', 'reason': answer.get('reason'), 'name': answer['name'], 'at': stamp}
             continue
         if answer['status'] != 'unsure':
@@ -929,7 +947,7 @@ def ask_on_board(answers, pieces, call, by, cache, out, now=None):
         item = board_item(answer, pieces)
         entry = {'status': 'unsure', 'reason': answer['reason'], 'name': answer['name'], 'item': item['id'],
                  'piece_id': item.get('idea_id'), 'older_script': bool(answer.get('older_script')), 'at': stamp}
-        if asked_as(book.get(sha)) == asked_as(entry):
+        if asked_as(booked) == asked_as(entry):
             out(f'already asked on the board: "{answer["name"]}" ({item["id"]})')
             continue
         items.append(item)
@@ -945,12 +963,26 @@ def ask_on_board(answers, pieces, call, by, cache, out, now=None):
         book[sha] = entry
         if item_id in written:
             asked.append(item_id)
-            out(f'asked on the board: {item_id}, {next(i["title"] for i in items if i["id"] == item_id)}')
+            out(f'held on the board for a session: {item_id}, {next(i["title"] for i in items if i["id"] == item_id)}')
         else:
             out(f'not asked again: {item_id} is closed on the board (answered, or closed by a session)')
+    closed = []
+    if ending:
+        why = {'placed': 'its take is placed', 'old': 'no waiting piece can be it'}
+        try:
+            closed = making.board_close({item_id: 'done' if end == 'placed' else 'archived' for item_id, (_, end) in ending.items()}, call, by)
+        except making.MakingError as error:
+            failed = True
+            out(f'failed: {error}; closed on the next run')
+        else:
+            # Closed now, or already closed on the board: either way it is ended.
+            for item_id, (sha, end) in ending.items():
+                book.pop(sha, None)
+                if item_id in closed:
+                    out(f'closed on the board: {item_id}, {why[end]}')
     if book != before:
         save_answered(cache, book)
-    return asked, failed
+    return asked, closed, failed
 
 
 def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head, probe=probe_seconds,
@@ -963,7 +995,7 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
     named = {i['sha256']: i for i in listed if i.get('sha256')}
     items = fresh(listed, claimed)
     overrides = parse_overrides(opts.get('words'), [i for i in items if i.get('sha256')])
-    report = {'week_start': monday.isoformat(), 'waiting': [], 'files': [], 'recorded': [], 'asked': []}
+    report = {'week_start': monday.isoformat(), 'waiting': [], 'files': [], 'recorded': [], 'asked': [], 'closed': []}
     scripts = {}
     for piece in pieces:
         scripts[piece['id']] = scripts_for(piece, plans, roots)
@@ -1062,7 +1094,7 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
             out(f'to record it: {command_for(answer, by)}')
     board_failed = False
     if opts.get('board'):
-        report['asked'], board_failed = ask_on_board(answers, pieces, call, by, cache, out)
+        report['asked'], report['closed'], board_failed = ask_on_board(answers, pieces, call, by, cache, out)
     if board_failed or any(a['status'] == 'failed' for a in answers):
         code = 1
     elif any(a['status'] == 'unsure' for a in answers):
@@ -1408,11 +1440,11 @@ def self_test():
                'no longer counts' in stale_item['detail']),
               (MON, True, True, True))
         first_item = next(i for i in sent if i['id'] == f'take-{early_sha[:12]}')
-        check('--board: on Krish (a new item\'s lane) and ready for his list: his call, the piece\'s page, tied to Monday, '
-              'closed by its Record step, with no reply asked for',
-              (first_item.get('lane_if_new'), 'lane' in first_item, first_item.get('only_you'), first_item.get('link'), first_item.get('link_label'),
-               first_item.get('idea_id'), first_item['closes_on'], 'prompt' in first_item, 'Reply' in first_item['detail']),
-              ('on_you', False, 'judgment', PIECE_PAGE + MON, 'Open the piece', MON, 'record', False, False))
+        check('--board: held for a session (a new item\'s lane), never on Krish\'s list, tied to Monday, closed by its Record step, '
+              'with no reply asked of him: a session asks him in its reply',
+              (first_item.get('lane_if_new'), 'lane' in first_item, [k for k in ('only_you', 'link', 'link_label', 'prompt') if k in first_item],
+               first_item.get('idea_id'), first_item['closes_on'], 'Reply' in first_item['detail'], 'asks Krish in its reply' in first_item['detail']),
+              ('in_progress', False, [], MON, 'record', False, True))
         check('--board: the item says what happened and what to answer', ('recorded before the script last changed' in first_item['detail'], f'recordings/{early_sha}.mp4' in first_item['detail'],
                                                                            len(first_item['title']) <= 200, len(first_item['detail']) <= 2000), (True, True, True, True))
         book = load_answered(board)
@@ -1455,15 +1487,20 @@ def self_test():
         check('--board: a take placed since leaves the answered book', placed_sha in load_answered(board), False)
         check('board_client: Codex, Claude Code, else the runner', [board_client(n) for n in ('Codex', 'Claude Code', 'Recordings lane')], ['codex', 'claude_code', 'runner'])
 
-        # A take with no piece it could close on is held off his list, in
-        # progress for a session; once a question ties it to a piece, it
-        # moves on to him with everything his list needs.
+        # Nothing Krish can press answers which take it is, so every take
+        # question is held for a session, never on his list; its title says
+        # what is known, and one with no piece says the lane lets it go.
         lost = {'sha256': '5' * 64, 'name': 'lost.mp4', 'at': '2026-10-12T09:00:00Z', 'status': 'unsure',
                 'reason': 'its opening matches no waiting piece well enough (closest at 0.40)', 'closest': FRI, 'score': 0.4}
         held_item = board_item(lost, [{'id': MON}, {'id': FRI}])
-        check('board_item: no piece is held off his list, in progress, with nothing that would put it on him',
-              (held_item['lane'], [k for k in ('only_you', 'link', 'idea_id', 'prompt') if k in held_item], 'Held from Krish\'s list' in held_item['detail']),
-              ('in_progress', [], True))
+        check('board_item: no piece is held for a session, with nothing that would put it on him, and says the lane lets it go',
+              (held_item['lane'], [k for k in ('only_you', 'link', 'idea_id', 'prompt') if k in held_item], 'Held for a session' in held_item['detail'],
+               'after a week that no session touches it' in held_item['detail'], held_item['title']),
+              ('in_progress', [], True, True, 'Which piece and cut is the take "lost.mp4"?'))
+        known = {**lost, 'piece_id': MON, 'reason': 'it looks like a new take of Monday\'s long cut, which is already recorded; left alone', 'cut': 'long'}
+        check('board_item: a piece and cut already known is never asked as "which piece and cut"',
+              [board_item(a, [{'id': MON}, {'id': FRI}])['title'] for a in (known, {k: v for k, v in known.items() if k != 'cut'})],
+              ['Use the new take "lost.mp4" of the long cut, which is already recorded?', 'Which cut is the take "lost.mp4"?'])
         board_posts.clear()
         board_lanes.pop(held_item['id'], None)
         making.board_upsert([held_item], fake, 'Recordings lane')
@@ -1471,10 +1508,46 @@ def self_test():
         tied_item = board_item({**lost, 'piece_id': MON}, [{'id': MON}, {'id': FRI}])
         making.board_upsert([tied_item], fake, 'Codex')
         sent_tied = board_posts[-1]['items'][0]
-        check('board: tied to a piece later, the held item moves on to him with his call, its link and its piece',
-              (sent_tied.get('lane'), sent_tied.get('only_you'), sent_tied.get('link'), sent_tied.get('idea_id'), board_lanes[held_item['id']]),
-              ('on_you', 'judgment', PIECE_PAGE + MON, MON, 'on_you'))
+        check('board: tied to a piece later, the held item names its piece, so it closes on Record, and stays off his list',
+              (sent_tied.get('lane'), sent_tied.get('only_you'), sent_tied.get('idea_id'), board_lanes[held_item['id']]),
+              (None, None, MON, 'in_progress'))
+        # One the old lane put on him is moved off his list when it is asked again.
+        board_lanes[held_item['id']] = 'on_you'
+        making.board_upsert([tied_item], fake, 'Recordings lane')
+        check('board: a take question on his list (the old lane wrote them there) moves off it when asked again',
+              (board_posts[-1]['items'][0].get('lane'), board_lanes[held_item['id']]), ('in_progress', 'in_progress'))
         board_posts.clear()
+
+        # The lane ends the questions it asked once they are gone: done once
+        # the take is placed, archived once no waiting piece can be it. One
+        # Krish or a session closed keeps its close, and one still unsure is
+        # left (a tied one closes on Record; the engine lets an untouched one
+        # go after a week).
+        ends = tmp / 'ends-cache'
+        shas = {k: hashlib.sha256(k.encode()).hexdigest() for k in ('placed', 'gone', 'waiting', 'closed')}
+        save_answered(ends, {sha: {'status': 'unsure', 'reason': 'x', 'name': f'{k}.mp4', 'item': f'take-{sha[:12]}',
+                                   'piece_id': None, 'older_script': False, 'at': '2026-10-01T09:00:00Z'} for k, sha in shas.items()})
+        for k, sha in shas.items():
+            board_lanes[f'take-{sha[:12]}'] = 'done' if k == 'closed' else 'in_progress'
+        heard = [{'sha256': shas['placed'], 'name': 'placed.mp4', 'status': 'placed'}, {'sha256': shas['gone'], 'name': 'gone.mp4', 'status': 'old'},
+                 {'sha256': shas['closed'], 'name': 'closed.mp4', 'status': 'old'}]
+        lines.clear()
+        board_posts.clear()
+        asked, closed, failed = ask_on_board(heard, [{'id': MON}], fake, 'Recordings lane', ends, lines.append, now='2026-10-12T09:00:00Z')
+        item_of = lambda k: f'take-{shas[k][:12]}'
+        check('ask_on_board: placed is done, old is archived; one still unsure and one Krish or a session closed are left',
+              (sorted(closed), [board_lanes[item_of(k)] for k in ('placed', 'gone', 'waiting', 'closed')], failed,
+               sorted((i['id'], i['lane']) for i in board_posts[-1]['items']), board_posts[-1]['client']),
+              (sorted([item_of('placed'), item_of('gone')]), ['done', 'archived', 'in_progress', 'done'], False,
+               sorted([(item_of('placed'), 'done'), (item_of('gone'), 'archived')]), 'runner'))
+        book = load_answered(ends)
+        check('ask_on_board: the ended takes leave the book, so the upload looks at an old one again later; the one still unsure stays',
+              sorted(k for k, sha in shas.items() if sha in book), ['waiting'])
+        check('ask_on_board: each close says why', sorted(line.split(', ', 1)[1] for line in lines if line.startswith('closed on the board')),
+              ['its take is placed', 'no waiting piece can be it'])
+        board_posts.clear()
+        ask_on_board(heard, [{'id': MON}], fake, 'Recordings lane', ends, lines.append, now='2026-10-12T10:00:00Z')
+        check('ask_on_board: a question ended is not closed again', board_posts, [])
 
         # Nothing waiting.
         lines.clear()

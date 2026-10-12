@@ -119,6 +119,10 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     let expired = 0
     let archived_to: string | null = null
     let observations_recorded = 0
+    // The board items archived with their row, counted like everything else
+    // the purge touches; the ones that were on Krish's list left it.
+    let board_items_archived: string[] = []
+    let board_items_off_his_list: string[] = []
     if (toExpire) {
       // Export before deleting. This is the only hard delete in the engine and
       // it runs unattended every Monday, so "we purged the wrong thing" has
@@ -166,14 +170,18 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       // (work_board_items_on_you_is_ready), so one left on him would stop the
       // whole delete.
       const going = new Set((doomed || []).map((r: { id: string }) => r.id))
-      const { data: open, error: openErr } = await supabase.from('work_board_items').select('id,idea_id').in('lane', ['on_you', 'in_progress']).not('idea_id', 'is', null).limit(1000)
+      const { data: open, error: openErr } = await supabase.from('work_board_items').select('id,idea_id,lane').in('lane', ['on_you', 'in_progress']).not('idea_id', 'is', null).limit(1000)
       if (openErr) throw new Error(openErr.message)
-      const tied = ((open || []) as Array<{ id: string; idea_id: string }>).filter(i => going.has(i.idea_id)).map(i => i.id)
+      const tied = ((open || []) as Array<{ id: string; idea_id: string; lane: string }>).filter(i => going.has(i.idea_id))
       if (tied.length) {
-        const { error: boardErr } = await supabase.from('work_board_items')
+        const onHisList = new Set(tied.filter(i => i.lane === 'on_you').map(i => i.id))
+        const { data: moved, error: boardErr } = await supabase.from('work_board_items')
           .update({ lane: 'archived', updated_by: 'engine: piece purged', closed_by: 'engine: piece purged', updated_at: nowIso })
-          .in('id', tied).in('lane', ['on_you', 'in_progress'])
+          .in('id', tied.map(i => i.id)).in('lane', ['on_you', 'in_progress'])
+          .select('id')
         if (boardErr) throw new Error(boardErr.message)
+        board_items_archived = ((moved || []) as Array<{ id: string }>).map(i => i.id)
+        board_items_off_his_list = board_items_archived.filter(id => onHisList.has(id))
       }
 
       const { error: delErr, count } = await doomedOnly(supabase
@@ -261,6 +269,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       actor: 'content-engine-v2',
       details: {
         week, expired, archived_to, observations_recorded,
+        board_items_archived, board_items_off_his_list,
         briefs_archived: (archived || []).map(a => a.week),
         decisions_swept: (sweptRows || []).length + (sweptPreviews || []).length,
         swept_by_kind: swept,
@@ -269,6 +278,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.json({
       ok: true, week, expired, archived_to, observations_recorded,
+      board_items_archived, board_items_off_his_list,
       briefs_archived: (archived || []).length,
       decisions_swept: (sweptRows || []).length + (sweptPreviews || []).length,
       swept_by_kind: swept,
