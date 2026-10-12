@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, test } from 'vitest'
 import { HOUSE_RULES, houseRulesBlock, rulesFor, type Stage } from '../../apps/control-plane/api/_houseRules.js'
@@ -183,8 +183,19 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.match(faces.text, /"portrait": true/)
   })
   test('the stages named are the stages that exist', () => {
-    const stages: Stage[] = ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual']
+    const stages: Stage[] = ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual', 'production']
     for (const r of HOUSE_RULES) for (const s of r.stages) assert.ok(stages.includes(s), `${r.id}: ${s}`)
+  })
+  test('a production rule is enforced by the tools its source names, and those tools exist', () => {
+    // No prompt reads the production stage, so a rule there is enforced
+    // somewhere only when a tool holds it: its source must name that tool.
+    const production = rulesFor('production')
+    assert.ok(production.length > 0)
+    for (const r of production) {
+      const tools = r.source.match(/\b(?:scripts|config|apps)\/[\w./\-\[\]]+\.(?:py|ts|json)\b/g) || []
+      assert.ok(tools.length > 0, `${r.id} names no tool that enforces it`)
+      for (const tool of tools) assert.ok(existsSync(tool), `${r.id}: ${tool} does not exist`)
+    }
   })
 })
 
@@ -338,6 +349,28 @@ describe('the script is Krish reacting, with opinion and dry wit (VOICE_ON_CAMER
   })
 })
 
+describe('no line saying it was made with AI (NO_AI_DISCLOSURE_LINE, 2026-10-12)', () => {
+  test('the rule is live, carries his words and reaches the writers, the draft judges and the final pass', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'NO_AI_DISCLOSURE_LINE')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.match(r.said, /Eliminate the "I made this with AI" entirely - no need, it's like verbal diahorrea/)
+    assert.match(r.said, /correct, make that a rule/)
+  })
+  test('no stage asks for the line any more: VOICE_ON_CAMERA no longer says "it is made with Claude, say so"', () => {
+    const stages: Stage[] = ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual', 'production']
+    for (const stage of stages) {
+      const block = houseRulesBlock(stage)
+      assert.doesNotMatch(block, /made with Claude, say so|\(it is made with Claude/i, stage)
+    }
+    const voice = HOUSE_RULES.find(x => x.id === 'VOICE_ON_CAMERA')!
+    assert.match(voice.text, /never that it is made with AI or with Claude/)
+    assert.match(voice.said, /2026-10-12/)
+    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.match(houseRulesBlock(stage), /never says that it, the video or the publication was made with AI/, stage)
+  })
+})
+
 describe('the big picture, never the small headline (BIG_PICTURE, 2026-10-09)', () => {
   test('the rule is live and reaches idea judging, draft judging, the writers and the final pass', () => {
     const r = HOUSE_RULES.find(x => x.id === 'BIG_PICTURE')
@@ -429,24 +462,55 @@ describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-1
     assert.ok(r, id)
     return r
   }
-  test('all three are live, dated, in his words, and reach the visual stage', () => {
-    for (const id of ['INTRO_STING', 'MUSIC_BED', 'THUMBNAIL_EVERY_SIZE']) {
+  const VIDEO_RULES = ['INTRO_STING', 'MUSIC_BED', 'THUMBNAIL_EVERY_SIZE']
+  test('all three are live, dated, in his words, and on the production stage only', () => {
+    for (const id of VIDEO_RULES) {
       const r = rule(id)
       assert.equal(r.status, 'live', id)
       assert.equal(r.on, '2026-10-12', id)
-      assert.deepEqual(r.stages, ['visual'], id)
-      assert.ok(houseRulesBlock('visual').includes(r.text), id)
+      assert.deepEqual(r.stages, ['production'], id)
+      assert.ok(rulesFor('production').includes(r), id)
     }
     assert.ok(rule('INTRO_STING').said.includes('1-2 sec animated make your mind up intro visual before my face comes in'))
     assert.ok(rule('MUSIC_BED').said.includes('(high volume during the intro, low whilst I am talking, higher during the outro)'))
     assert.ok(rule('THUMBNAIL_EVERY_SIZE').said.includes('I always want a video thumbnail for all video sizes produced as an asset every time'))
   })
-  test('the sting is used only once approved, as config/intro-sting.json and make.py hold it', () => {
+  test('no writer, judge, final pass or shot planner reads them: the script writer and the channel cuts never carry LUFS or a sting', () => {
+    // The safety review of 2026-10-12: on the visual stage they reached the
+    // script writer's shots (_video.ts) and the channel cuts' visual
+    // suggestions (channel-cut.ts), which state the sting as present.
+    const stages: Stage[] = ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check', 'visual']
+    for (const id of VIDEO_RULES) {
+      const r = rule(id)
+      for (const stage of stages) {
+        for (const sub of [null, 'follow_the_money', 'mind_the_gap', 'under_the_hood']) {
+          assert.ok(!houseRulesBlock(stage, sub).includes(r.text), `${id} in ${stage} ${sub}`)
+        }
+      }
+      assert.ok(!VOICE_GUARDRAILS.includes(r.text), id)
+      assert.ok(!VOICE_ABSOLUTES.some(a => a.includes(r.text)), id)
+    }
+    assert.doesNotMatch(houseRulesBlock('visual'), /LUFS|intro-sting|thumbnail_override/)
+    assert.doesNotMatch(houseRulesBlock('write'), /LUFS|intro-sting|thumbnail_override/)
+  })
+  test('the sting rule says what is true today: used only once approved, and none approved while Krish\'s last word was a rejection', () => {
     const sting = JSON.parse(readFileSync('config/intro-sting.json', 'utf8'))
     const r = rule('INTRO_STING')
     assert.ok(r.text.includes(`(${sting.seconds} by default)`))
     assert.ok(['candidate', 'approved'].includes(sting.status))
     assert.match(r.text, /status "approved"/)
+    assert.match(r.text, /intro_override/)
+    if (sting.status === 'approved') {
+      assert.doesNotMatch(r.text, /No design is approved yet/, 'the rule still says no design is approved')
+    } else {
+      assert.match(r.text, /No design is approved yet/)
+      assert.equal(sting.source_sha256, null)
+    }
+    if (sting.last_decision?.decision === 'rejected') {
+      assert.equal(sting.last_decision.by, 'Krish')
+      assert.ok(r.text.includes(`on ${sting.last_decision.on} he rejected`), 'the date of his rejection')
+      assert.ok(r.text.includes(`("${sting.last_decision.words}")`), 'his words, exactly as the config holds them')
+    }
   })
   test('the music rule states the ledger\'s folder and levels, so the two cannot drift', () => {
     const ledger = JSON.parse(readFileSync('config/music-library.json', 'utf8'))

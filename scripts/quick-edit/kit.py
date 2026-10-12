@@ -8,8 +8,46 @@ render without them: it needs cues, an end card for each shape and, for the
 wide shape, the frame behind the speaker. This draws them the same way for
 every piece, in the house style from config/studio.json:
 
-    python kit.py POST_JSON --cut long|short --recording FILE --out DIR [--files DIR ...] [--force] [--json]
+    python kit.py POST_JSON --cut long|short --recording FILE --out DIR [--files DIR ...]
+                  [--allow-missing "Krish, DATE: his words"] [--allow-small "Krish, DATE: his words"] [--force] [--json]
     python kit.py --self-test
+
+Where the piece's files are. post.json names each script and picture as it
+was called in the working folder the piece was made in, which is on another
+machine more often than not. kit.py asks scripts/post-pack/plan_files.py, so
+it looks where every tool looks, in this order: beside post.json; for a
+script, the dated draft the repository keeps beside the plan
+(docs/plans/<date>-draft-script.md and -draft-script-90s.md); the pack
+build.py staged on this machine (.cache/post-pack/<pack folder>); each
+--files folder (the working folder by post.json names, or the post's
+library folder by packed names); then the library on this machine
+(MINDMAKE_LIBRARY_ROOT, and on Windows runtime.library_root). So a piece whose
+drafts are in the repository gets both its scripts with no --files at all.
+
+A script it cannot find stops the run (exit 2), naming every place it
+looked. Each of these is a CHECK problem (exit 1), because the cut would go
+out without the picture's evidence (house rules VISUAL_EVIDENCE and
+SUBSTACK_FIT):
+
+  - a picture it cannot find: give the folder that holds it with --files;
+  - a picture no line of the script brings in: add its cue to the config by
+    hand (a config edited by hand is kept, and its cues count); a picture
+    named only where his face is by design, the opening line or the call to
+    action, is a note, never a CHECK;
+  - a cued picture whose words come out under the size a viewer can read in
+    this cut's own shape (39 px tall, 21 px wide): draw a version for video
+    with fewer and bigger words, or take the cue out and ask Krish.
+
+Only Krish's own words, starting "Krish" and the date, turn them into notes:
+--allow-missing for a picture the cut goes without, --allow-small for a
+panel that goes out too small. His words are recorded in kit.json and in the
+cut's config (its "kit" block), with the pictures they let through, so
+make.py quotes them. Exit 0 is clean, 1 is CHECK problems (each printed as a
+CHECK line), 2 is bad input or a script that is nowhere.
+
+kit.json also keeps each cut's recording_seconds (ffprobe), which make.py
+reads so both cuts of the piece ask for the same music: as long as the long
+cut.
 
 It writes into DIR, and nowhere else:
 
@@ -40,7 +78,8 @@ label, alt text and caption from the manager.json beside it when there is
 one), a paragraph to a picture. The video's first sentence is Krish's face
 (the hook, and the logo in its first seconds), and the paragraph with the
 call to action is his face before the end card, so neither gets a picture.
-A picture no paragraph names is drawn but not cued, and kit.json says so.
+A picture no paragraph names is drawn but not cued, and kit.json says so
+(a CHECK, above, unless only the hook or the call to action names it).
 
 The cue words are the script's, chosen to survive the transcriber: no
 numbers, the opening words of the paragraph where they can be, each found
@@ -81,6 +120,8 @@ for _extra in (REPO / 'scripts' / 'pages', REPO / 'scripts' / 'post-pack'):
     if str(_extra) not in sys.path:
         sys.path.append(str(_extra))
 import brand  # noqa: E402  the house style, fonts, logos and browser
+import plan_files  # noqa: E402  where a piece's scripts and pictures are, on whichever machine runs this
+import spelling  # noqa: E402  make.py's spelling fold, so cue words match across British and US spellings
 import story_check  # noqa: E402  how a script file becomes the words he says
 
 KIT_VERSION = 1
@@ -140,8 +181,9 @@ class KitError(Exception):
 # ---------------------------------------------------------------- make.py's own word matching
 
 def norm(t):
-    """make.py's norm: how a word is compared with the transcript."""
-    return re.sub(r"[^a-z0-9%$]", '', t.lower())
+    """make.py's norm: how a word is compared with the transcript, its
+    British and US spellings folded into one (spelling.fold)."""
+    return spelling.fold(re.sub(r"[^a-z0-9%$]", '', t.lower()))
 
 
 def find(ws, phrase, after=0.0):
@@ -167,26 +209,17 @@ def load_post(path):
     return post
 
 
-def resolve_file(entry, roots, default_name=None):
-    """Where an entry's file is: beside post.json, in a folder given with
-    --files, or in a packed library folder, where it carries its packed name."""
-    names = [n for n in (entry.get('file'), entry.get('name'), default_name) if n]
-    for root in roots:
-        for n in names:
-            p = Path(root) / n
-            if p.is_file():
-                return p
-    for root in roots:
-        for n in names:
-            hits = sorted(p for p in Path(root).rglob(Path(n).name) if p.is_file())
-            if len(hits) == 1:
-                return hits[0]
-    return None
+def krish_words(words):
+    """Krish's own words, as every house override takes them: they start with "Krish"."""
+    return isinstance(words, str) and words.strip().lower().startswith('krish')
 
 
-def script_for(post, cut, roots):
-    """The cut's script as paragraphs of the words he says, and where it came from."""
-    entries = [e for e in post['files'] if e.get('kind') == 'video-script']
+def script_for(post, cut, post_path, files=(), staged=plan_files.STAGED, library_at=None):
+    """The cut's script as paragraphs of the words he says, and where it came
+    from. Where it is: plan_files, the same places in the same order as every
+    tool (beside post.json, the dated draft beside the plan, the staged pack,
+    --files, the library)."""
+    entries = [e for e in post['files'] if isinstance(e, dict) and e.get('kind') == 'video-script']
     mine = [e for e in entries if e.get('cut') == cut]
     if not mine:
         mine = [e for e in entries if not e.get('cut') and story_check.cut_of(e.get('name') or e.get('file')) == cut]
@@ -195,14 +228,19 @@ def script_for(post, cut, roots):
     if not mine:
         raise KitError(f'post.json has no video-script for the {cut} cut (an entry with "kind": "video-script", "cut": "{cut}")')
     entry = mine[0]
-    if entry.get('text'):
-        text, where = entry['text'], 'post.json'
+    if isinstance(entry.get('text'), str) and entry['text'].strip():
+        text, where = entry['text'], 'post.json (its text)'
     else:
-        ext = Path(entry.get('file') or 'x.md').suffix or '.md'
-        path = resolve_file(entry, roots, default_name='video-script' + ext)
-        if not path:
-            raise KitError(f'the {cut} script {entry.get("file")!r} is not beside post.json or in --files')
-        text, where = path.read_text(encoding='utf-8-sig'), str(path)
+        hit = plan_files.find(post_path, post, entry, files, staged, library_at, cut)
+        if not hit['path']:
+            raise KitError(f'the {cut} script {entry.get("file")!r} is in none of the places a piece\'s scripts are kept. '
+                           'Give the folder that holds it with --files (the working folder, or the post\'s library folder once '
+                           'the pack is sent). Looked in:\n  ' + '\n  '.join(hit['tried']))
+        try:
+            text = hit['path'].read_text(encoding='utf-8-sig')
+        except (OSError, UnicodeDecodeError) as e:
+            raise KitError(f'cannot read the {cut} script {hit["path"]}: {e}') from None
+        where = f'{plan_files.shown(hit["path"])} ({hit["why"]})'
     paragraphs = story_check.spoken_paragraphs(text)
     if not paragraphs:
         raise KitError(f'the {cut} script has no spoken words')
@@ -227,12 +265,14 @@ def slug(text, keep=48):
     return s[:keep].rstrip('-') or 'piece'
 
 
-def pictures(post, post_path, roots):
-    """The post's pictures (kind "image"), each with an id, its file and the words that say what it shows."""
-    notes = manager_notes(post_path, roots)
+def pictures(post, post_path, files=(), staged=plan_files.STAGED, library_at=None):
+    """The post's pictures (kind "image"), each with an id, its file (None
+    when it is nowhere plan_files looks), where it was found or every place
+    looked, and the words that say what it shows."""
+    notes = manager_notes(post_path, files)
     out, seen = [], set()
     for e in post['files']:
-        if e.get('kind') != 'image' or not e.get('file'):
+        if not isinstance(e, dict) or e.get('kind') != 'image' or not e.get('file'):
             continue
         pid = slug(Path(e['file']).stem, 32)
         n = 2
@@ -244,9 +284,27 @@ def pictures(post, post_path, roots):
         name = re.sub(r'^\d+[-_ ]*', '', Path(e.get('name') or e['file']).stem).replace('-', ' ')
         words = ' '.join(x for x in (purpose, note.get('label'), note.get('alt'), note.get('caption'), name,
                                      ' '.join(e.get('logos') or [])) if x)
-        out.append({'id': pid, 'entry': e, 'file': resolve_file(e, roots), 'words': words,
-                    'label': note.get('label') or name})
+        hit = plan_files.find(post_path, post, e, files, staged, library_at)
+        out.append({'id': pid, 'entry': e, 'file': hit['path'], 'found_in': hit['why'], 'tried': hit['tried'],
+                    'words': words, 'label': note.get('label') or name})
     return out
+
+
+def missing_pictures(pics, allow_missing=None):
+    """(problems, notes, let_through) for the pictures that are nowhere. Each
+    is a CHECK problem: the cut would go out without it. Only Krish's own
+    words (--allow-missing) turn them into notes, and say which they let through."""
+    gone = [p for p in pics if not p['file']]
+    if not gone:
+        return [], [], []
+    if krish_words(allow_missing):
+        notes = [f'{p["id"]}: its picture {p["entry"]["file"]!r} was not found, so this cut goes without it, as Krish said: '
+                 f'"{allow_missing.strip()}"' for p in gone]
+        return [], notes, [{'id': p['id'], 'file': p['entry']['file'], 'name': p['entry'].get('name')} for p in gone]
+    problems = [f'{p["id"]}: its picture {p["entry"]["file"]!r} is nowhere kit.py looks, so the cut would go out without it. '
+                'Give its folder with --files (the working folder, or the post\'s library folder once the pack is sent), or '
+                'Krish\'s own words with --allow-missing. Looked in:\n      ' + '\n      '.join(p['tried']) for p in gone]
+    return problems, [], []
 
 
 # ---------------------------------------------------------------- which line brings in which picture
@@ -354,6 +412,8 @@ def match_pictures(pics, units):
         return memo[(i, j)]
 
     total, _, chosen = best(0, 0)
+    # The lines that are his face by design: the opening line and the call to action.
+    face = [u for u in units if not u['open']]
     cues, taken = [], set()
     for i, para in chosen:
         score, idx, lead, per = options[i][para]
@@ -366,10 +426,14 @@ def match_pictures(pics, units):
     for pic in pics:
         if pic['id'] not in taken:
             top, score = best_line[pic['id']]
+            have = set(content_tokens(pic['words']))
+            # Named only where his face is by design (the hook or the call to
+            # action): left out on purpose, a note, never a CHECK.
+            face_only = score < MIN_SCORE and any(len(set(u['tokens']) & have) >= MIN_SHARED for u in face)
             not_shown.append({'id': pic['id'], 'why': 'no paragraph outside the opening line and the call to action names it'
                               if score < MIN_SCORE else 'the paragraphs that name it, in the article\'s order, went to pictures they name more',
                               'nearest_line': units[top]['text'] if top is not None and score > 0 else None,
-                              'score': round(score, 2)})
+                              'score': round(score, 2), 'face_only': face_only})
     return cues, not_shown
 
 
@@ -498,7 +562,7 @@ def build_cues(pics, units):
         end, left = end_anchor(words, m['last'], pos) if start else (None, 0)
         if not start or not end:
             not_shown.append({'id': m['id'], 'why': 'no words in its paragraph are said only there, so make.py could not place it',
-                              'nearest_line': units[m['lead']]['text'], 'score': m['score']})
+                              'nearest_line': units[m['lead']]['text'], 'score': m['score'], 'face_only': False})
             continue
         cue = {'id': m['id'], 'panel': f'panels/{m["id"]}-{{aspect}}.png', 'start': start, 'end': end}
         if skipped:
@@ -830,7 +894,10 @@ def relative(path, base):
         return str(Path(path).resolve())
 
 
-def starter_config(post, cut, recording, out, cues, strap_words, post_path):
+def starter_config(post, cut, recording, out, cues, strap_words, post_path, allowed=None):
+    """The config make.py renders the cut from. `allowed` is Krish's words
+    and what they let through (allow_missing, allow_small), copied into the
+    kit block so make.py quotes them and stops warning about those pictures."""
     shape = CUT_SHAPE[cut]
     cfg = {
         'name': f'{slug(post["subject"], 40)}-{cut}',
@@ -861,6 +928,9 @@ def starter_config(post, cut, recording, out, cues, strap_words, post_path):
         cfg['strap'].pop('after')
     if not cfg['piece_id']:
         cfg.pop('piece_id')
+    for key, value in (allowed or {}).items():
+        if value:
+            cfg['kit'][key] = value
     return cfg
 
 
@@ -883,12 +953,55 @@ def write_config(path, cfg, recorded_sha, force=False):
 
 # ---------------------------------------------------------------- the run
 
-def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None, logos=None, log=print):
+def recording_seconds(path):
+    """How long a recording runs, by ffprobe, or None (no file, no ffprobe)."""
+    if not Path(path).is_file() or not shutil.which('ffprobe'):
+        return None
+    out = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nk=1', str(path)],
+                         capture_output=True, text=True)
+    try:
+        return round(float(out.stdout.strip()), 3)
+    except ValueError:
+        return None
+
+
+def hand_cues(path, recorded_sha, force=False):
+    """The cues of a config kit.py will keep because it was edited by hand
+    since kit.py wrote it (write_config's rule), else []. A picture cued by
+    hand there is cued."""
+    path = Path(path)
+    if force or not path.is_file() or (recorded_sha is not None and sha256_file(path) == recorded_sha):
+        return []
+    try:
+        cues = json.loads(path.read_text(encoding='utf-8')).get('cues') or []
+    except (OSError, ValueError, AttributeError):
+        return []
+    return [c for c in cues if isinstance(c, dict) and c.get('id')]
+
+
+def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None, logos=None, log=print,
+             allow_missing=None, staged=plan_files.STAGED, library_at=None, allow_small=None):
+    """Draws the kit for one cut into `out`. `roots` are the --files folders;
+    `allow_missing` is Krish's own words letting the cut go without a picture
+    that is nowhere, or that no line of the script brings in; `allow_small`
+    his words letting a panel too small to read go out as it is; `staged`
+    and `library_at` say where the staged pack and the library are
+    (plan_files' defaults for this machine)."""
+    if allow_missing is not None and not krish_words(allow_missing):
+        raise KitError('--allow-missing takes Krish\'s own words, as he said them, starting "Krish" and the date '
+                       '(for example "Krish, 2026-10-12: go out without the pile-up"); without them a missing picture is a CHECK')
+    if allow_small is not None and not krish_words(allow_small):
+        raise KitError('--allow-small takes Krish\'s own words, as he said them, starting "Krish" and the date '
+                       '(for example "Krish, 2026-10-12: the money map can go out small"); without them a panel too small to read is a CHECK')
     post_path = Path(post_path).resolve()
     post = load_post(post_path)
+    if cut not in CUT_SHAPE:
+        raise KitError(f'--cut is long or short, not {cut!r}')
     out = Path(out).resolve()
-    out.mkdir(parents=True, exist_ok=True)
-    roots = [Path(r).resolve() for r in roots] + [post_path.parent]
+    files_given = [Path(r).resolve() for r in roots]
+    for folder in files_given:
+        if not folder.is_dir():
+            raise KitError(f'--files {folder} is not a folder on this machine')
     shape = CUT_SHAPE[cut]
     st = style_for(post['subchannel'])
     receipt_path = out / 'kit.json'
@@ -900,8 +1013,12 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         raise KitError(f'{out} holds the kit for another piece ({receipt.get("subject")}); use a folder of its own')
     made = receipt.get('made', {})
     warnings, problems, files = [], [], {}
-    paragraphs, script_from = script_for(post, cut, roots)
-    pics = pictures(post, post_path, roots)
+    paragraphs, script_from = script_for(post, cut, post_path, files_given, staged, library_at)
+    pics = pictures(post, post_path, files_given, staged, library_at)
+    gone, allowed, let_through = missing_pictures(pics, allow_missing)
+    problems += gone
+    warnings += allowed
+    out.mkdir(parents=True, exist_ok=True)
     fonts = brand.font_css()
     logos = logos or {'masthead': brand.brand_uri('masthead', full=True), 'wordmark': brand.brand_uri('wordmark', full=True)}
     own = drawer is None
@@ -939,11 +1056,17 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         from PIL import Image
         for pic in pics:
             if not pic['file']:
-                warnings.append(f'{pic["id"]}: its picture {pic["entry"]["file"]!r} is not beside post.json or in --files, so it has no panel')
+                continue  # missing_pictures has said so
+            try:
+                with Image.open(pic['file']) as opened:
+                    img = opened.convert('RGB')
+            except (OSError, ValueError, Image.DecompressionBombError) as e:
+                problems.append(f'{pic["id"]}: its picture {plan_files.shown(pic["file"])} cannot be opened as a picture '
+                                f'({type(e).__name__}: {e}), so it has no panel and no cue; replace the file')
+                log(f'CHECK {pic["id"]}: {plan_files.shown(pic["file"])} cannot be opened')
                 continue
-            with Image.open(pic['file']) as opened:
-                img = opened.convert('RGB')
-            info = {'source': str(pic['file']), 'source_sha256': sha256_file(pic['file']), 'label': pic['label'], 'shapes': {}}
+            info = {'source': str(pic['file']), 'found_in': pic['found_in'], 'source_sha256': sha256_file(pic['file']),
+                    'label': pic['label'], 'shapes': {}}
             for sh in ('9x16', '16x9'):
                 picture, facts = fit_picture(img, *panel_box(sh))
                 facts['floor_px'] = FLOOR_PX[sh]
@@ -958,21 +1081,55 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
 
     units = script_units(paragraphs)
     cues, not_shown = build_cues([p for p in pics if p['id'] in drawn], units)
-    for c in cues:
-        facts = panels[c['id']]['shapes'][shape]
-        if not facts['legible']:
-            warnings.append(f'{c["id"]}: in the {shape} panel its words come out about {facts["words_px"]:g} px, under the '
-                            f'{FLOOR_PX[shape]} px a viewer can read ({PHONE_FLOOR_PX} px at {SHOWN_AT[shape]} wide, house rule '
-                            f'SUBSTACK_FIT); look at panels/{c["id"]}-{shape}.png, and draw a panel for video or drop the cue')
+    cut_receipt = receipt.get('cuts', {}).get(cut, {})
+    # A config kept since it was edited by hand: a picture cued there is cued.
+    by_hand = hand_cues(out / f'{cut}.json', cut_receipt.get('config_sha256'), force)
+    cued = [c['id'] for c in cues] + [c['id'] for c in by_hand if c['id'] not in {x['id'] for x in cues}]
+    not_shown = [n for n in not_shown if n['id'] not in cued]
+    # A picture on screen that nobody can read is no evidence (house rule
+    # SUBSTACK_FIT): a CHECK, unless Krish has said in words it goes out so.
+    small, small_let = [], []
+    for cid in cued:
+        facts = (panels.get(cid) or {}).get('shapes', {}).get(shape)
+        if facts and not facts.get('legible', True):
+            small.append((cid, facts))
+    for cid, facts in small:
+        said = (f'{cid}: in the {shape} panel its words come out about {facts["words_px"]:g} px, under the {FLOOR_PX[shape]} px '
+                f'a viewer can read ({PHONE_FLOOR_PX} px at {SHOWN_AT[shape]} wide, house rule SUBSTACK_FIT)')
+        if krish_words(allow_small):
+            warnings.append(f'{said}; it goes out so, as Krish said: "{allow_small.strip()}"')
+            small_let.append(cid)
+        else:
+            problems.append(f'{said}, so on a phone it carries nothing. Look at panels/{cid}-{shape}.png; then draw a version of the '
+                            'picture for video, with fewer and bigger words, and give its folder with --files, or take the cue out of '
+                            f'{cut}.json by hand and ask Krish. Only his own words with --allow-small let it go out as it is')
+    # A picture no line brings in: the cut goes out without it. A CHECK, unless
+    # it is named only where his face is by design, or Krish's words let it go.
     for n in not_shown:
-        warnings.append(f'{n["id"]}: not cued ({n["why"]}); its panels are drawn if a cue is wanted')
+        if n.get('face_only'):
+            warnings.append(f'{n["id"]}: not cued ({n["why"]}); it is named only where his face is (the hook or the call to action), '
+                            'so this cut goes without it on purpose')
+        elif krish_words(allow_missing):
+            warnings.append(f'{n["id"]}: not cued ({n["why"]}), so this cut goes without it, as Krish said: "{allow_missing.strip()}"')
+            entry = next((p['entry'] for p in pics if p['id'] == n['id']), {})
+            let_through.append({'id': n['id'], 'file': entry.get('file'), 'name': entry.get('name'), 'not_cued': True})
+        else:
+            problems.append(f'{n["id"]}: not cued ({n["why"]}), so this cut would go out without it. Add a cue for it to {cut}.json by '
+                            f'hand ("id": "{n["id"]}", "panel": "panels/{n["id"]}-{{aspect}}.png", and the words he says over it as '
+                            '"start" and "end"); kit.py keeps a config edited by hand. Only Krish\'s own words with --allow-missing '
+                            'let the cut go without it')
     script_path = out / f'{cut}-script.txt'
     script_path.write_text('\n\n'.join(paragraphs) + '\n', encoding='utf-8')
     rec = Path(recording)
     if not rec.is_file():
         warnings.append(f'the recording {rec} is not there yet; the config points at it')
-    cfg = starter_config(post, cut, rec, out, cues, strap_after(units, cues), post_path)
-    cut_receipt = receipt.get('cuts', {}).get(cut, {})
+    his_words = {}
+    if allow_missing is not None:
+        # Krish's words, exactly as given, and the pictures they let this cut go without.
+        his_words['allow_missing'] = {'words': allow_missing.strip(), 'pictures': let_through}
+    if allow_small is not None:
+        his_words['allow_small'] = {'words': allow_small.strip(), 'pictures': small_let}
+    cfg = starter_config(post, cut, rec, out, cues, strap_after(units, cues), post_path, his_words)
     cfg_path, cfg_sha, kept = write_config(out / f'{cut}.json', cfg, cut_receipt.get('config_sha256'), force)
     if kept:
         warnings.append(f'{cut}.json was edited by hand since kit.py wrote it, so it is kept; the new one is {cfg_path.name} '
@@ -981,19 +1138,32 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         p = out / rel
         if p.exists():
             files[rel] = {'sha256': sha256_file(p), 'bytes': p.stat().st_size}
+    if kept and his_words:
+        warnings.append(f'Krish\'s words are in {cfg_path.name}, not in the {cut}.json kept by hand: copy its "kit" block across, '
+                        'so make.py quotes them')
+    cut_record = {
+        'shape': shape, 'config': (out / f'{cut}.json').name, 'config_sha256': cfg_sha if not kept else cut_receipt.get('config_sha256'),
+        'written': cfg_path.name, 'script': script_path.name, 'script_from': script_from, 'recording': str(rec),
+        'recording_seconds': recording_seconds(rec), 'cues': cues, 'cued_by_hand': [cid for cid in cued if cid not in {c['id'] for c in cues}],
+        'not_cued': not_shown, 'warnings': warnings, 'problems': problems, **his_words}
     receipt = {
         'schema_version': 1, 'made_by': 'scripts/quick-edit/kit.py', 'post': str(post_path), 'piece_id': post.get('piece_id'),
         'subchannel': st['channel']['name'], 'subject': post['subject'], 'date': post['date'],
+        'pack_folder': plan_files.pack_folder(post),
         'files': files, 'panels': panels,
-        'cuts': {**receipt.get('cuts', {}), cut: {
-            'shape': shape, 'config': (out / f'{cut}.json').name, 'config_sha256': cfg_sha if not kept else cut_receipt.get('config_sha256'),
-            'written': cfg_path.name, 'script': script_path.name, 'script_from': script_from, 'recording': str(rec),
-            'cues': cues, 'not_cued': not_shown, 'warnings': warnings}},
+        'cuts': {**receipt.get('cuts', {}), cut: cut_record},
         'problems': problems, 'made': made,
     }
     receipt_path.write_text(json.dumps(receipt, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
-    return {'out': str(out), 'config': str(cfg_path), 'cut': cut, 'shape': shape, 'cues': cues, 'not_cued': not_shown,
-            'warnings': warnings, 'problems': problems}
+    return {'out': str(out), 'config': str(cfg_path), 'cut': cut, 'shape': shape, 'script_from': script_from,
+            'cues': cues, 'not_cued': not_shown, 'warnings': warnings, 'problems': problems,
+            'missing': [p['entry']['file'] for p in pics if not p['file']],
+            'allow_missing': cut_record.get('allow_missing'), 'allow_small': cut_record.get('allow_small')}
+
+
+def exit_code(result):
+    """0 clean, 1 when there is anything to CHECK."""
+    return 1 if result['problems'] else 0
 
 
 # ---------------------------------------------------------------- self-test
@@ -1044,7 +1214,8 @@ def self_test():
     call = next((c for c in cues if c['id'] == 'call'), {})
     check('nor ends on one: "I am seventy percent sure" is stepped back over, and tail makes up the time',
           (call.get('end'), call.get('tail')), ('with the app', round(0.35 + 5 / 2.5, 2)))
-    check('a picture only the opening line names is not cued, and says why', [(n['id'], 'opening line' in n['why']) for n in not_shown], [('hook', True)])
+    check('a picture only the opening line names is not cued, says why, and is named only where his face is (never a CHECK)',
+          [(n['id'], 'opening line' in n['why'], n['face_only']) for n in not_shown], [('hook', True, True)])
     check('the strap comes in as the opening logo leaves (word 8, 3 s in), and is gone before the first picture',
           strap_after(units, cues), 'who really pays when')
     check('with no room before the first picture, it opens with his first word', strap_after(units, [{'start': 'makes a song with'}]), None)
@@ -1058,7 +1229,7 @@ def self_test():
         sys.path.insert(0, str(HERE))
         import make
         found, missing = make.cue_windows(ws, cues, t)
-        same = all(make.norm(x) == norm(x) for x in ('Suno\'s', '70%', '$5.4', 'makeyourmindup.ai', '"a portion"'))
+        same = all(make.norm(x) == norm(x) for x in ('Suno\'s', '70%', '$5.4', 'makeyourmindup.ai', '"a portion"', 'cheque', 'Neighbour,', 'licence'))
         check('make.py places every cue and misses none', (len(found), missing), (3, []))
         check('the money cue covers its paragraph in time', [round(c['s'], 2) for c in found if c['id'] == 'money'],
                [round(ws[[norm(w['w']) for w in ws].index('you')]['s'] - 0.15, 2)])
@@ -1176,9 +1347,161 @@ def self_test():
             finally:
                 drawer.close()
 
+    self_test_runs(check, {p['id']: p['words'] for p in pics})
+
     bad = [f'{label}: got {got!r}, want {want!r}' for label, got, want in checks if got != want]
     print('\n'.join(bad) if bad else f'kit self-test passed: {len(checks)} checks{browser_note}')
     return 1 if bad else 0
+
+
+class _PaperDrawer:
+    """A stand-in for the browser in the self-test: a plain picture of the size asked, nothing past an edge."""
+
+    def shoot(self, doc, size, path, clear=False):
+        from PIL import Image
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        Image.new('RGB', size, (12, 21, 18)).save(path)
+        return []
+
+    def close(self):
+        pass
+
+
+def self_test_runs(check, words):
+    """Whole runs of make_kit, drawn on paper (no browser, no ffmpeg): where
+    the scripts and pictures are found, and what a picture that is nowhere does."""
+    import contextlib
+    from PIL import Image, ImageDraw
+    global endcard_video
+    real_fonts, real_endcard = brand.font_css, endcard_video
+    brand.font_css = lambda *a, **k: ''
+    endcard_video = lambda png, mp4, seconds=ENDCARD_SECONDS: Path(mp4).write_bytes(b'end card')  # noqa: E731
+    dot = png_uri(Image.new('RGB', (8, 8), (12, 21, 18)))
+    logos = {'masthead': dot, 'wordmark': dot}
+    quiet = lambda *_: None  # noqa: E731
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            plans = tmp / 'docs' / 'plans'
+            plan = plans / '2026-10-12-monday'
+            plan.mkdir(parents=True)
+            post = {'piece_id': 'p1', 'date': '2026-10-12', 'subchannel': 'follow.the.money', 'subject': 'Who gets paid for AI songs',
+                    'files': [{'kind': 'image', 'file': 'money.png', 'name': '1-who-gets-paid.png', 'purpose': words['money']},
+                              {'kind': 'image', 'file': 'call.png', 'purpose': words['call']},
+                              {'kind': 'image', 'file': 'broken.png'},
+                              {'kind': 'video-script', 'file': 'script.md', 'cut': 'long'},
+                              {'kind': 'video-script', 'file': 'script-90s.md', 'name': 'video-script-90-seconds.md', 'cut': 'short'}]}
+            post_path = plan / 'post.json'
+            post_path.write_text(json.dumps(post), encoding='utf-8')
+            script = '\n\n'.join(SELF_SCRIPT) + '\n'
+            (plans / '2026-10-12-draft-script.md').write_text(script, encoding='utf-8')
+            work, staged = tmp / 'work', tmp / 'staged'
+            work.mkdir()
+            money = Image.new('RGB', (1360, 900), (12, 21, 18))
+            ImageDraw.Draw(money).rectangle((80, 80, 1280, 820), fill=(244, 239, 228))
+            money.save(work / 'money.png')
+            (work / 'broken.png').write_bytes(b'not a picture')
+            folder = plan_files.pack_folder(post)
+            lib = tmp / 'library' / '3 Posts'
+
+            def run(cut, out, **kw):
+                return make_kit(post_path, cut, tmp / 'take.mov', tmp / out, drawer=_PaperDrawer(), logos=logos, log=quiet,
+                                staged=staged, library_at=kw.pop('library_at', []), **kw)
+
+            first = run('long', 'kit', roots=[work])
+            check('the long script comes from the dated draft beside the plan, with no --files for it',
+                  first['script_from'], f'{plan_files.shown(plans / "2026-10-12-draft-script.md")} ({plan_files.DRAFT})')
+            check('the picture in --files is panelled and cued', [c['id'] for c in first['cues']], ['money'])
+            check('a picture that is nowhere, and one that is not a picture, are CHECK problems: exit 1',
+                  ([p.split(':')[0] for p in first['problems']], 'Looked in' in first['problems'][0], exit_code(first)),
+                  (['call', 'broken'], True, 1))
+            money.save(work / 'broken.png')
+            words_given = 'Krish, 2026-10-12: send it without the call picture'
+            second = run('long', 'kit', roots=[work], allow_missing=words_given)
+            receipt = json.loads((tmp / 'kit' / 'kit.json').read_text(encoding='utf-8'))
+            check('with Krish\'s words a missing picture, and one no line brings in, are notes, the run is clean, and kit.json keeps '
+                  'his words and what they let through',
+                  (exit_code(second), any('as Krish said' in w for w in second['warnings']), receipt['cuts']['long'].get('allow_missing')),
+                  (0, True, {'words': words_given, 'pictures': [{'id': 'call', 'file': 'call.png', 'name': None},
+                                                                {'id': 'broken', 'file': 'broken.png', 'name': None, 'not_cued': True}]}))
+            check('a picture put right since the last run is panelled', sorted(receipt['panels']), ['broken', 'money'])
+            long_cfg = json.loads((tmp / 'kit' / 'long.json').read_text(encoding='utf-8'))
+            check('his words go into the cut\'s config too, for make.py to quote', long_cfg['kit'].get('allow_missing', {}).get('words'), words_given)
+            nowords = run('long', 'kit', roots=[work], force=True)
+            check('without his words, a picture no line brings in is a CHECK that says how to cue it by hand',
+                  ([p.split(':')[0] for p in nowords['problems']], any('not cued' in p and 'by hand' in p for p in nowords['problems']), exit_code(nowords)),
+                  (['call', 'broken'], True, 1))
+            cfg_path = tmp / 'kit' / 'long.json'
+            edited = json.loads(cfg_path.read_text(encoding='utf-8'))
+            edited['cues'].append({'id': 'broken', 'panel': 'panels/broken-{aspect}.png', 'start': 'so here is the thing', 'end': 'evidence against you'})
+            cfg_path.write_text(json.dumps(edited), encoding='utf-8')
+            by_hand = run('long', 'kit', roots=[work])
+            check('a picture cued by hand in a config kept since it was edited is cued: no CHECK for it',
+                  ([p.split(':')[0] for p in by_hand['problems']], json.loads((tmp / 'kit' / 'kit.json').read_text())['cuts']['long']['cued_by_hand']),
+                  (['call'], ['broken']))
+            (lib / folder / '3 Video').mkdir(parents=True)
+            (lib / folder / '3 Video' / 'video-script-90-seconds.md').write_text(script, encoding='utf-8')
+            (lib / folder / '2 Covers and images').mkdir()
+            money.save(lib / folder / '2 Covers and images' / '1-who-gets-paid.png')
+            third = run('short', 'kit', library_at=[lib])
+            receipt = json.loads((tmp / 'kit' / 'kit.json').read_text(encoding='utf-8'))
+            check('a sent pack: the short script and a picture from the library, by their packed names',
+                  (third['script_from'].endswith(f'({plan_files.LIBRARY})'), receipt['panels']['money']['found_in']),
+                  (True, plan_files.LIBRARY))
+            check('the short cut keeps the long cut\'s record, and its own has no words it was not given',
+                  (sorted(receipt['cuts']), 'allow_missing' in receipt['cuts']['short'], exit_code(third)), (['long', 'short'], False, 1))
+            check('each cut\'s recording length is kept for the music (none while the take is not there)',
+                  ('recording_seconds' in receipt['cuts']['long'], receipt['cuts']['short']['recording_seconds']), (True, None))
+            # A picture twice as wide: on the tall panel its words come out far under the 39 px a phone can read.
+            wide = Image.new('RGB', (2720, 900), (12, 21, 18))
+            ImageDraw.Draw(wide).rectangle((80, 80, 2640, 820), fill=(244, 239, 228))
+            wide.save(lib / folder / '2 Covers and images' / '1-who-gets-paid.png')
+            tiny = run('short', 'kit6', library_at=[lib])
+            small = [p for p in tiny['problems'] if p.startswith('money:')]
+            check('a cued picture too small to read in its own shape is a CHECK, naming the size and the floor',
+                  (len(small), 'under the 39 px' in (small or [''])[0], exit_code(tiny)), (1, True, 1))
+            let = run('short', 'kit6', library_at=[lib], allow_missing='Krish, 2026-10-12: a self-test stand-in, not his words',
+                      allow_small='Krish, 2026-10-12: a self-test stand-in, not his words')
+            short_cfg = json.loads((tmp / 'kit6' / 'short.json').read_text(encoding='utf-8'))
+            check('with his words for both, the run is clean, and the config carries what they let through',
+                  (exit_code(let), any('goes out so, as Krish said' in w for w in let['warnings']), short_cfg['kit'].get('allow_small', {}).get('pictures')),
+                  (0, True, ['money']))
+            refused_small = None
+            try:
+                run('short', 'kit7', library_at=[lib], allow_small='fine, small is ok')
+            except KitError as e:
+                refused_small = 'Krish' in str(e)
+            check('--allow-small takes only Krish\'s own words', (refused_small, (tmp / 'kit7').exists()), (True, False))
+            refused = []
+            for kw in ({'allow_missing': 'go without it'}, {'allow_missing': ''}):
+                try:
+                    run('long', 'kit2', roots=[work], **kw)
+                    refused.append(None)
+                except KitError as e:
+                    refused.append('Krish' in str(e))
+            check('--allow-missing takes only Krish\'s own words', (refused, (tmp / 'kit2').exists()), ([True, True], False))
+            (plans / '2026-10-12-draft-script.md').unlink()
+            try:
+                run('long', 'kit3', roots=[work])
+                nowhere = None
+            except KitError as e:
+                nowhere = ('2026-10-12-draft-script.md' in str(e), 'Looked in' in str(e))
+            check('a script that is nowhere stops the run before anything is written, naming where it looked',
+                  (nowhere, (tmp / 'kit3').exists()), ((True, True), False))
+            with contextlib.redirect_stderr(io.StringIO()):
+                code = main([str(post_path), '--cut', 'long', '--recording', str(tmp / 'take.mov'), '--out', str(tmp / 'kit4'),
+                             '--allow-missing', 'fine by me'])
+            check('kit.py exits 2 on bad input', code, 2)
+            try:
+                run('long', 'kit5', roots=[tmp / 'no such folder'])
+                typo = None
+            except KitError as e:
+                typo = 'not a folder' in str(e)
+            check('a --files folder that is not there is bad input, not a missing picture', typo, True)
+    except Exception as e:  # noqa: BLE001 a fault in a run is a failed check, not a crash
+        check(f'whole runs on paper ({type(e).__name__}: {str(e)[:300]})', False, True)
+    finally:
+        brand.font_css, endcard_video = real_fonts, real_endcard
 
 
 # ---------------------------------------------------------------- command line
@@ -1192,20 +1515,26 @@ def main(argv=None):
     ap.add_argument('--cut', required=True, choices=sorted(CUT_SHAPE), help='long (the 16:9 cut) or short (the 9:16 cut)')
     ap.add_argument('--recording', required=True, help="the cut's recording; the config points at it")
     ap.add_argument('--out', required=True, help='the folder to write the kit into; both cuts can share one')
-    ap.add_argument('--files', action='append', default=[], help="where the post's pictures and scripts are, if not beside post.json "
-                                                                 '(a working folder or the packed library folder); may repeat')
+    ap.add_argument('--files', action='append', default=[], help="a folder that holds the post's pictures or scripts: the working folder "
+                                                                 "(post.json names) or the post's library folder (packed names); may repeat")
+    ap.add_argument('--allow-missing', metavar='WORDS', help="Krish's own words, starting \"Krish\" and the date, letting this cut go "
+                                                              'without a picture that is nowhere or that no line brings in; recorded in kit.json')
+    ap.add_argument('--allow-small', metavar='WORDS', help="Krish's own words, starting \"Krish\" and the date, letting a panel whose "
+                                                            'words come out too small to read go out as it is; recorded in kit.json')
     ap.add_argument('--force', action='store_true', help='replace a <cut>.json edited by hand')
     ap.add_argument('--json', action='store_true', help='print the result as JSON')
     args = ap.parse_args(argv)
     say = (lambda *_: None) if args.json else print
     try:
-        result = make_kit(args.post, args.cut, args.recording, args.out, args.files, args.force, log=say)
+        result = make_kit(args.post, args.cut, args.recording, args.out, args.files, args.force, log=say,
+                          allow_missing=args.allow_missing, allow_small=args.allow_small)
     except KitError as e:
         print(f'kit: {e}', file=sys.stderr)
         return 2
     if args.json:
         print(json.dumps(result, indent=1, ensure_ascii=False))
     else:
+        print(f'from  the {result["cut"]} script is {result["script_from"]}')
         for c in result['cues']:
             print(f'cue   {c["id"]}: "{c["start"]}" to "{c["end"]}"  ({c["line"][:70]})')
         for w in result['warnings']:
@@ -1214,7 +1543,7 @@ def main(argv=None):
             print(f'CHECK {p}')
         print(f'wrote {result["config"]}')
         print(f'next  python scripts/quick-edit/make.py {result["config"]} --out <render folder> --only {result["shape"]} --plan')
-    return 1 if result['problems'] else 0
+    return exit_code(result)
 
 
 if __name__ == '__main__':

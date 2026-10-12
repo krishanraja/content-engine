@@ -12,7 +12,12 @@ against the levels in config/music-library.json:
   up, the file is 30 fps with 48 kHz stereo sound, integrated loudness is
   -14 +-1 LUFS, true peak is at most -1 dBTP, the bed sits at its intro,
   voice and outro levels, the gap under the voice is about 17 LU, and the
-  tall logo pill shows only after the sting;
+  tall logo pill shows only after the sting. The synthetic sting is not the
+  approved house sting, so the configs carry a stand-in "intro_override"
+  (make.py lets a config-named intro through only on that, or when it is the
+  approved house render), and the tall one has a loud tone of its own, which
+  must not reach the mix: the intro stretch still measures at the bed's
+  level. The bed is the track chosen for the piece's needs, both cuts alike;
 
   tall 9x16 as things stand today (the sting a candidate, no approved track):
   no intro, voice only, and the report says why, at the same loudness.
@@ -34,6 +39,7 @@ import music  # noqa: E402
 REPO = HERE.parents[1]
 WORK = REPO / '.cache' / 'quick-edit' / 'mix-test'
 LILAC, MINT, INK = (0xB7, 0xA6, 0xFF), (0x7E, 0xF0, 0xC0), (0x0C, 0x15, 0x12)
+OVERRIDE = 'Krish (a stand-in for the mix test, not his words): open with the synthetic sting'
 TEXT = ('this is a test of the music under the voice and it should sit low while I am talking '
         'then rise again when I stop so the end card has music behind it and the intro is loud '
         'before my face comes in and the whole thing lands at minus fourteen').split()
@@ -96,6 +102,9 @@ def make_media():
        '-c:v', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', WORK / 'sting-src.mp4')
     for asp in intro.SHAPES:
         intro.finish(WORK / 'sting-src.mp4', WORK / f'sting-{asp}.mp4', asp, 1.5)
+    # The tall sting gets a loud tone of its own, which make.py must never mix.
+    ff('-i', WORK / 'sting-9x16.mp4', '-f', 'lavfi', '-i', 'sine=f=1000:d=1.5:r=48000', '-filter_complex', '[1:a]volume=0.9,aformat=channel_layouts=stereo[a]',
+       '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', WORK / 'sting-9x16-loud.mp4')
     # The stand-in ledger: the committed one's levels, one approved track.
     ledger = json.loads(music.LEDGER.read_text(encoding='utf-8'))
     facts = music.measure(WORK / 'music' / 'chord-loop.wav')
@@ -110,7 +119,8 @@ def make_media():
     cue = {'id': 'panel', 'panel': 'panel-{aspect}.png', 'start': 'then rise again', 'end': 'behind it'}
     base = {'source': 'source.mp4', 'words': 'words.json', 'crop': [720, 1280, 0, 0], 'cues': [cue], 'frame16': 'frame16.png',
             'endcard': {'9x16': 'end-9x16.mp4', '16x9': 'end-16x9.mp4'}, 'logo': {'png': 'logo.png'}, 'subject': 'Mix test', 'piece_id': 'mix-test'}
-    (WORK / 'full.json').write_text(json.dumps({**base, 'name': 'full', 'intro': {'9x16': 'sting-9x16.mp4', '16x9': 'sting-16x9.mp4'}}))
+    (WORK / 'full.json').write_text(json.dumps({**base, 'name': 'full', 'intro': {'9x16': 'sting-9x16-loud.mp4', '16x9': 'sting-16x9.mp4'},
+                                                'intro_override': OVERRIDE}))
     (WORK / 'today.json').write_text(json.dumps({**base, 'name': 'today'}))
     return ledger['levels']
 
@@ -163,6 +173,10 @@ def main():
              ('30/1', True, 48000, 2)),
             (f'{shape}: the file is as long as the clock', abs(info['seconds'] - r['total_seconds']) <= 0.05, True),
             (f'{shape}: the bed is the approved track', r['music'] and r['music']['track_id'], 'mix-test-chord'),
+            (f'{shape}: chosen for the piece\'s needs, the same whichever cut asks', r['music'] and r['music']['chosen_for'], music.piece_needs()),
+            (f'{shape}: the synthetic sting is in on the override\'s words, and the report says so',
+             (r['intro'] and r['intro']['source'], any(OVERRIDE in w for w in r['warnings'])), ('override', True)),
+            (f'{shape}: the sting\'s own sound track is replaced with silence', r['intro'] and r['intro']['own_sound_replaced'], True),
             (f'{shape}: the final pass was a plain gain', L['normalisation'], 'linear'),
             (f'{shape}: integrated {L["integrated"]} LUFS is -14 +-{tol}', abs(L['integrated'] - levels['final_integrated_lufs']) <= tol, True),
             (f'{shape}: true peak {L["true_peak"]} dBTP is at most {levels["max_true_peak_dbtp"]}', L['true_peak'] <= levels['max_true_peak_dbtp'], True),
@@ -182,6 +196,9 @@ def main():
                 ('9x16: the logo pill shows as his face comes in', near(pixel(final, I + 1.0, (540, 140)), MINT), True),
                 ('9x16: and is gone by 3 s into the main, as before', near(pixel(final, I + 3.3, (540, 140)), MINT), False),
             ]
+    tall_intro, wide_intro = (L['intro_short_term'] for _, _, L in table[:2])
+    checks.append((f'9x16: the sting\'s loud tone stays out: its intro {tall_intro} LUFS matches the silent wide sting\'s {wide_intro}',
+                   abs(tall_intro - wide_intro) <= 0.3, True))
     r = render('today.json', 'today', '9x16', today_env)
     L = r['loudness']
     table.append(('9x16 as today, voice only', r['total_seconds'], L))

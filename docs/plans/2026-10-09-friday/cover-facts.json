@@ -11,20 +11,36 @@
   ],
   "rows": [
    {
-    "logo": "../logos/openai-symbol-cream.svg",
+    "logo": "logos/openai-symbol-cream.svg",
     "name": "OpenAI",
     "tag": "4 GPT-6s",
     "colour": "coral"
    },
    {
-    "logo": "../logos/anthropic-symbol-cream.svg",
+    "logo": "logos/anthropic-symbol-cream.svg",
     "name": "Anthropic",
     "tag": "14 Claudes",
     "colour": "mint"
    }
   ],
   "label": "the headliner",
-  "background": "../pileup-bg.png",
+  "background": "pileup-bg.png",
   "portrait": true
+ },
+ "thumbs": {
+  "strip": [
+   {
+    "logo": "logos/google-cream.svg",
+    "name": "Google"
+   },
+   {
+    "logo": "logos/openrouter-cream.svg",
+    "name": "OpenRouter"
+   },
+   {
+    "logo": "logos/semianalysis-cream.svg",
+    "name": "SemiAnalysis"
+   }
+  ]
  }
 }

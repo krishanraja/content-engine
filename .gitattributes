@@ -4,3 +4,30 @@ editions/**/*.md text eol=lf
 
 # Stored piece bodies are LF; the writer tests use real ones as fixtures.
 tests/fixtures/control-plane/*.md text eol=lf
+
+# The renderer's source is LF on every checkout, Windows included, so the
+# intro sting's approval hash (scripts/quick-edit/intro.py) and every render
+# read the same bytes. text=auto lets git's own check leave any binary file
+# alone, a type not listed below included (a .lottie is a zip, a .riv a Rive
+# file); the lines after this one name the usual ones outright.
+apps/renderer/** text=auto eol=lf
+apps/renderer/**/*.png binary
+apps/renderer/**/*.jpg binary
+apps/renderer/**/*.jpeg binary
+apps/renderer/**/*.gif binary
+apps/renderer/**/*.webp binary
+apps/renderer/**/*.ico binary
+apps/renderer/**/*.woff binary
+apps/renderer/**/*.woff2 binary
+apps/renderer/**/*.ttf binary
+apps/renderer/**/*.otf binary
+apps/renderer/**/*.mp4 binary
+apps/renderer/**/*.mov binary
+apps/renderer/**/*.webm binary
+apps/renderer/**/*.wav binary
+apps/renderer/**/*.mp3 binary
+apps/renderer/**/*.m4a binary
+apps/renderer/**/*.pdf binary
+apps/renderer/**/*.lottie binary
+apps/renderer/**/*.riv binary
+apps/renderer/**/*.avif binary

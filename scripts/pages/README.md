@@ -24,6 +24,7 @@ or it writes neither (the rule in `editions/README.md`).
 | `phone-images.png` | Every image in the post at the width a phone shows it (358 pixels). Look at it before publishing: a word you cannot read there, a reader on a phone cannot read either. |
 | `cover.png` | With `--cover`: the post's cover image, 1200 x 800, to upload in Substack's post settings. It is not written if a word or a logo would be cut off, or a word would be too small to read in a phone's feed ("What Substack does to your artwork", below). |
 | `cover-crops.png` | With `--cover`: what Substack's feed, share card and archive each show of the cover. |
+| `thumb-wide-1280x720.jpg`, `thumb-tall-1080x1920.jpg` | With `--thumbs`: a thumbnail for each video size, with `thumbs.json` (each file's sha256 and shape, the portrait, the rows and strip drawn as `logos`, and `companies`, one name per company those show, as config/logo-registry.json names it, for a post.json thumbnail entry's `logos`) and `thumbs-check.png` ("Thumbnails for the videos", below). |
 | `shots/` | With `--shots`: both files at a computer's width (1440) and a phone's (390). |
 
 ## Setup
@@ -290,6 +291,38 @@ from it:
 
 `brand.py` holds all of that, and `scripts/channel-kit/` uses it too.
 
+## Thumbnails for the videos
+
+Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
+produced as an asset every time" (house rule `THUMBNAIL_EVERY_SIZE`).
+
+```
+python scripts/pages/build.py docs/plans/PLAN/cover-facts.json --thumbs --out WORK/thumbs
+```
+
+It draws `thumb-wide-1280x720.jpg` for the 16:9 long cut (YouTube and the
+Substack video post) and `thumb-tall-1080x1920.jpg` for the 9:16 short cut
+(the cover on Reels and TikTok) from the same cover facts and in the same
+look as the cover: the wordmark, the headline, Krish's face and a row per
+real logo. `"thumbs"` beside `"cover"` in the facts changes any of those
+fields for the thumbnails alone, and its `"strip": [{"logo", "name"}]` adds
+more real logos in a line under the rows, so a thumbnail can carry every
+company the piece names (the visual gate holds each one to that). Both or
+neither: it refuses if a word, the face or a logo would sit where a
+platform covers or crops it, or a word would be too small to read.
+
+**Any checkout can draw them, a home computer included.** A plan keeps its
+facts as `docs/plans/PLAN/cover-facts.json` and every logo they draw as SVG
+in `docs/plans/PLAN/logos/`, with paths relative to the facts
+(`"logos/suno-logo-cream.svg"`), so no `--assets` folder is needed (and
+passing one would point the logos at the wrong folder). A missing logo
+always stops the drawer. The `"background"` picture is optional, because git
+keeps no PNG or JPEG: on a machine without it the artwork is drawn on plain
+ink, the drawer prints a note, and the receipts record `"background": false`.
+To draw the background again, copy the picture beside the facts on the
+machine that has it; git ignores the copy. It needs the internet for Krish's
+portrait and the wordmark, and a browser (`MYMU_BROWSER`, as in Setup).
+
 ## Making it a web edition
 
 To keep a page in `editions/`, copy `page.html` there as `index.html`, beside
@@ -299,6 +332,8 @@ page.
 
 ## What stays out of the repository
 
-The body, the images, the logos, the cover's photo, the finished pages, the
-cover and the shots. The tool, this README and the example facts are
-committed; everything they make goes to a working folder or to `.cache/`.
+The body, the images, the cover's photo, the finished pages, the cover, the
+thumbnails and the shots. The tool, this README and the example facts are
+committed, and so are a plan's cover facts and its logos as SVG
+(`docs/plans/PLAN/logos/`), so any checkout can draw its cover and
+thumbnails; everything they make goes to a working folder or to `.cache/`.

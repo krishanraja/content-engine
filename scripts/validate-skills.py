@@ -8,8 +8,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT / ".agents" / "skills"
-# Claude Code reads skills from .claude/skills; each entry there is a link to
-# the one copy in .agents/skills, which Codex reads.
+# Claude Code reads skills from .claude/skills; Codex reads .agents/skills.
+# Each .claude/skills entry is a real folder holding a copy of its .agents
+# skill's SKILL.md, never a symbolic link: git on Windows checks a link out as
+# a small text file unless symbolic links are turned on (Developer Mode and
+# core.symlinks), and Claude Code then does not load the skill on Krish's home
+# computers. The copy must match its source; `--sync-claude` writes it.
 CLAUDE_SKILLS = ROOT / ".claude" / "skills"
 VALIDATOR = Path.home() / ".codex" / "skills" / ".system" / "skill-creator" / "scripts" / "quick_validate.py"
 MAX_DESCRIPTION = 1024
@@ -70,42 +74,79 @@ def local_validate(skill: Path) -> bool:
     return True
 
 
-def claude_link_problems() -> list[str]:
-    """Every .claude/skills entry must lead to the .agents skill of the same
-    name. A checkout without symbolic links (git on Windows with
-    core.symlinks off) holds the link as a small file naming its target:
-    that passes, with a note, because Claude Code on that checkout will not
-    load the skill until links are turned on."""
+def normal_text(raw: bytes) -> str:
+    """A SKILL.md as compared: UTF-8, a byte order mark dropped, CRLF and CR
+    turned to LF, so a Windows checkout (core.autocrlf) and a Linux one read
+    the same words."""
+    return raw.decode("utf-8").lstrip("\ufeff").replace("\r\n", "\n").replace("\r", "\n")
+
+
+def claude_copy_problems() -> list[str]:
+    """Every .claude/skills entry must be a real folder named after an
+    .agents skill, holding a SKILL.md that matches the source once line
+    endings are made the same. A link fails, whether the checkout made it a
+    link or held it as a plain file naming its target: on Windows without
+    symbolic links Claude Code reads it as a text file and loads no skill."""
     if not CLAUDE_SKILLS.is_dir():
         return []
     problems: list[str] = []
     for entry in sorted(CLAUDE_SKILLS.iterdir(), key=lambda p: p.name):
-        expected = SKILLS / entry.name
+        source = SKILLS / entry.name / "SKILL.md"
         where = f".claude/skills/{entry.name}"
-        if not (expected / "SKILL.md").is_file():
-            problems.append(f"{where}: no skill .agents/skills/{entry.name} to lead to")
+        fix = (f"run `python scripts/validate-skills.py --sync-claude`, which makes it a folder holding a copy of "
+               f".agents/skills/{entry.name}/SKILL.md")
+        if not source.is_file():
+            problems.append(f"{where}: no skill .agents/skills/{entry.name} to copy")
             continue
-        if entry.is_symlink() or entry.is_dir():
-            if entry.resolve() != expected.resolve():
-                problems.append(f"{where}: leads to {entry.resolve()}, not .agents/skills/{entry.name}")
-            elif not (entry / "SKILL.md").is_file():
-                problems.append(f"{where}: has no SKILL.md")
-            else:
-                print(f"{where}: leads to .agents/skills/{entry.name}")
-        elif entry.is_file():
-            target = entry.read_text(encoding="utf-8").strip().replace("\\", "/")
-            if target != f"../../.agents/skills/{entry.name}":
-                problems.append(f"{where}: is a file, not a link to ../../.agents/skills/{entry.name}")
-            else:
-                print(f"{where}: a link this checkout holds as a plain file; Claude Code here will not load it until "
-                      "git checks out symbolic links (Windows: Developer Mode, then `git config core.symlinks true` "
-                      "and check the file out again)")
-        else:
-            problems.append(f"{where}: neither a link nor a skill folder")
+        if entry.is_symlink():
+            problems.append(f"{where}: is a symbolic link; git on Windows checks a link out as a text file, so Claude Code "
+                            f"there loads no skill: {fix}")
+            continue
+        if entry.is_file():
+            held = entry.read_bytes()[:200].decode("utf-8", "replace").strip().replace("\\", "/")
+            kind = "a link held as a plain file" if held.endswith(f".agents/skills/{entry.name}") else "a plain file"
+            problems.append(f"{where}: is {kind}, not a skill folder, so Claude Code loads no skill from it: {fix}")
+            continue
+        if not entry.is_dir():
+            problems.append(f"{where}: neither a skill folder nor a file")
+            continue
+        copy = entry / "SKILL.md"
+        if not copy.is_file():
+            problems.append(f"{where}: has no SKILL.md: {fix}")
+            continue
+        if normal_text(copy.read_bytes()) != normal_text(source.read_bytes()):
+            problems.append(f"{where}/SKILL.md differs from .agents/skills/{entry.name}/SKILL.md (line endings aside): {fix}")
+            continue
+        print(f"{where}: a copy of .agents/skills/{entry.name}/SKILL.md")
     return problems
 
 
+def sync_claude() -> int:
+    """Writes each .claude/skills entry's SKILL.md from its .agents source,
+    byte for byte, turning a link or a plain file into a real folder. Only
+    the entries that are already there; a new one is made by hand, once."""
+    if not CLAUDE_SKILLS.is_dir():
+        print("no .claude/skills folder: nothing to copy")
+        return 0
+    for entry in sorted(CLAUDE_SKILLS.iterdir(), key=lambda p: p.name):
+        source = SKILLS / entry.name / "SKILL.md"
+        if not source.is_file():
+            print(f".claude/skills/{entry.name}: no .agents/skills/{entry.name}/SKILL.md to copy", file=sys.stderr)
+            return 1
+        if entry.is_symlink() or entry.is_file():
+            entry.unlink()
+        entry.mkdir(exist_ok=True)
+        (entry / "SKILL.md").write_bytes(source.read_bytes())
+        print(f".claude/skills/{entry.name}/SKILL.md: copied from .agents/skills/{entry.name}/SKILL.md")
+    return 0
+
+
 def main() -> int:
+    if sys.argv[1:] == ["--sync-claude"]:
+        return sync_claude()
+    if sys.argv[1:]:
+        print("usage: python scripts/validate-skills.py [--sync-claude]", file=sys.stderr)
+        return 2
     failed = False
     for skill in sorted(SKILLS.iterdir()):
         if not skill.is_dir():
@@ -118,7 +159,7 @@ def main() -> int:
         for problem in description_problems(skill):
             print(f"{skill.name}: {problem}", file=sys.stderr)
             failed = True
-    for problem in claude_link_problems():
+    for problem in claude_copy_problems():
         print(problem, file=sys.stderr)
         failed = True
     return 1 if failed else 0

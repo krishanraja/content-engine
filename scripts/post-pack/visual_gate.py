@@ -95,6 +95,23 @@ def drawn(declared, receipt_logos, reg):
     return any(re.search(r'(?<!\w)' + re.escape(n) + r'(?!\w)', text, re.I) for n in names)
 
 
+def companies_in(declared, reg):
+    """The registry companies a declared logo entry names, by any of their
+    names: a drawn row may name two ("Warner Music Group and BMG")."""
+    text = str(declared)
+    return [c for c in reg if any(re.search(r'(?<!\w)' + re.escape(n) + r'(?!\w)', text, re.I) for n in c['names'])]
+
+
+def declared_drawn(declared, receipt_logos, reg):
+    """True when a declared entry was drawn: every company it names is among
+    the drawer's rows and strip (drawn), or, naming none the registry knows,
+    its own text is."""
+    found = companies_in(declared, reg)
+    if found:
+        return all(drawn(c['name'], receipt_logos, reg) for c in found)
+    return drawn(declared, receipt_logos, reg)
+
+
 def problems(post, planned, body, base, reg=None):
     """Plain-words reasons the pack fails the gate, or [] when it passes.
     `planned` is build.py's plan: dicts with 'kind' (as given), 'logos',
@@ -116,13 +133,16 @@ def problems(post, planned, body, base, reg=None):
         if missing:
             found.append(f'the piece names {", ".join(names)} but no picture carries the real logo of {", ".join(missing)} '
                          '(give each picture a "logos" list of the companies it shows, from Brandfetch; config/logo-registry.json)')
+        # A video's or a thumbnail's declared logos may name a drawn row of two
+        # companies ("Warner Music Group and BMG", as thumbs.json lists rows):
+        # each company counts by any of its names (drawn), as the receipt does.
         for v in videos:
-            vm = [n for n in names if n not in set(v.get('logos') or [])]
+            vm = [n for n in names if not drawn(n, v.get('logos'), reg)]
             if vm:
                 found.append(f'the video {Path(str(v.get("source", ""))).name} declares no logo for {", ".join(vm)}: put the real logos on '
                              'screen in the edit and list them in its "logos"')
         for t in thumbs:
-            tm = [n for n in names if n not in set(t.get('logos') or [])]
+            tm = [n for n in names if not drawn(n, t.get('logos'), reg)]
             if tm:
                 found.append(f'the {t.get("shape", "")} thumbnail {Path(str(t.get("source", ""))).name} declares no logo for {", ".join(tm)}: '
                              'draw it with their logos (rows, or "strip", in the "thumbs" cover facts) and list them in its "logos"')
@@ -184,7 +204,7 @@ def problems(post, planned, body, base, reg=None):
             found.append(f'{src.name} is the drawer\'s {made.get("shape")} thumbnail, packed as the {shape} one')
         if not r.get('portrait'):
             found.append(f'the {shape} thumbnail has no portrait: draw it with "portrait": true (house rule LOGOS_AND_FACE)')
-        shown = [l for l in (t.get('logos') or []) if not drawn(l, r.get('logos'), reg)]
+        shown = [l for l in (t.get('logos') or []) if not declared_drawn(l, r.get('logos'), reg)]
         if shown:
             found.append(f'the {shape} thumbnail declares the logo of {", ".join(shown)}, but the drawer drew no row or strip for it: '
                          'add it to the "thumbs" cover facts and draw it again')
@@ -270,6 +290,11 @@ def self_test():
                   {'kind': 'thumbnail', 'shape': 'tall', 'source': t / 'thumbs' / 'thumb-tall-1080x1920.jpg', 'logos': ['OpenAI', 'Anthropic'], 'path': '3/t.jpg'}]
         check('a full pack with both thumbnails passes', problems({}, full + thumbs, body, t, reg), [])
         check('a row may name a company by another of its names', drawn('Anthropic', ['Claude by Anthropic'], reg), True)
+        # The second reviewer's case (2026-10-12): logos copied from thumbs.json,
+        # where a row names two companies, failed the thumbnail name check.
+        rows = ['OpenAI and Anthropic']
+        check('a thumbnail or video whose declared logos are the drawer\'s rows of two companies passes',
+              problems({}, full[:3] + [full[3] | {'logos': rows}, thumbs[0] | {'logos': rows}, thumbs[1] | {'logos': rows}], body, t, reg), [])
         check('a name inside another word is not a logo drawn', drawn('Meta', ['Metadata Inc'], []), False)
         check('a thumbnail that declares no logo for a named company fails',
               any('thumbnail thumb-tall-1080x1920.jpg declares no logo for Anthropic' in x for x in problems({}, full + [thumbs[0], thumbs[1] | {'logos': ['OpenAI']}], body, t, reg)), True)

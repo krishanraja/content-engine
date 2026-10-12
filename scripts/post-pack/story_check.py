@@ -169,20 +169,41 @@ OPINION = re.compile(r"\b(?:my (?:bet|call|take|guess)|i think|i reckon|i'd bet|
                      r"i'm not convinced|i am not convinced|i don't buy|here's where i land)\b", re.I)
 
 
+# A line saying the script, the video or the piece was made with AI (house
+# rule NO_AI_DISCLOSURE_LINE). Krish, 2026-10-12: "Eliminate the "I made this with AI"
+# entirely - no need, it's like verbal diahorrea", then "correct, make that a
+# rule".
+AI_LINE = re.compile(
+    r"\b(?:i|we)(?:'ve| have)?\s+(?:\w+\s+){0,2}?(?:made|make|wrote|written|write|built|build|researched|produced|created)\s+"
+    r"(?:all\s+of\s+)?(?:this|the\s+(?:video|script|piece|article|publication|newsletter))\b[^.!?]{0,40}?"
+    r"\b(?:with|using|thanks\s+to)\b[^.!?]{0,30}?\b(?:claude|chatgpt|an?\s+ai|ai|a\s+model|an\s+llm)\b"
+    r"|\bthis\s+(?:video|script|piece|article|publication|newsletter)\s+(?:was|is)\s+(?:made|written|built|produced)\s+"
+    r"(?:with|by|using)\s+(?:the\s+help\s+of\s+)?(?:claude|chatgpt|an?\s+ai|ai)\b", re.I)
+
+
 def warnings(text):
-    """The sixth point, as a warning and never a refusal.
+    """The sixth point, and the made-with-AI line, as warnings and never a refusal.
 
     Krish, 2026-10-09 (house rule VOICE_ON_CAMERA): the script is him reacting,
     with opinion and dry wit. A rule cannot grade a joke; it can see whether a
     script of a minute or more ever says an opinion as an opinion ("my bet",
     "I think", "my call"), kept apart from the checked facts. Whether the wit
-    landed is for him."""
+    landed is for him. And it can see a line saying the script was made with
+    AI (house rule NO_AI_DISCLOSURE_LINE), which he ruled out of every script on
+    2026-10-12: cut it."""
     beats = spoken_paragraphs(text)
     words = ' '.join(beats).split()
+    found = []
     if len(words) >= SHORT_WORDS and not OPINION.search(' '.join(beats)):
-        return ['it states no opinion as an opinion: somewhere say "my bet", "I think" or "my call", kept apart '
-                'from the checked facts (house rule VOICE_ON_CAMERA; a warning, not a refusal)']
-    return []
+        found.append('it states no opinion as an opinion: somewhere say "my bet", "I think" or "my call", kept apart '
+                     'from the checked facts (house rule VOICE_ON_CAMERA; a warning, not a refusal)')
+    for beat in beats:
+        hit = AI_LINE.search(beat)
+        if hit:
+            found.append(f'it says it was made with AI ("{hit.group(0)[:80]}"): cut the line; Krish, 2026-10-12: "Eliminate the '
+                         '"I made this with AI" entirely" (house rule NO_AI_DISCLOSURE_LINE; a warning, not a refusal)')
+            break
+    return found
 
 
 def check_file(path, cut=None):
@@ -285,6 +306,13 @@ def self_test():
     check('a long script that says "my bet" passes the voice check',
           warnings(GOOD.replace("So here's our call.", "So here's my bet.")), [])
     check('a short hook needs no opinion', warnings(short), [])
+    # House rule NO_AI_DISCLOSURE_LINE: the line Krish cut from Monday's and Friday's scripts on 2026-10-12.
+    said_ai = warnings(GOOD.replace("So here's our call.", "My bet: yes. Yes, I made this with Claude's help. So here's our call."))
+    check('a line saying it was made with Claude is a warning naming his rule, never a refusal',
+          ([w for w in said_ai if 'NO_AI_DISCLOSURE_LINE' in w] != [], problems(GOOD.replace("So here's our call.", "I made this with Claude's help. So here's our call."))
+           == problems(GOOD)), (True, True))
+    check('a song made with an app, or "it", is not that line', [bool(AI_LINE.search(x)) for x in (
+        'I made a song with Suno in ten minutes.', 'I made it with AI in ten minutes.', 'A fan made this with AI.')], [False, False, False])
     check('the voice warning never refuses', problems(GOOD), [])
     filler = lambda n: 'Why does the price matter? ' + ' '.join(['word'] * (n - 5))
     check('a 3-minute long cut passes the length rule', length_problem(filler(450).split(), 'long'), None)

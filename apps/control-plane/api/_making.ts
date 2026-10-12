@@ -31,12 +31,24 @@ export const MAKING_CUTS = ['long', 'short'] as const
 export type MakingCut = (typeof MAKING_CUTS)[number]
 
 export interface MakingCheck { passed: boolean; checked_at: string; problems: string[] }
+/** The scripts' check. `hashes` is the sha256 of each cut's words
+ *  (scripts/post-pack/making.py script_hash: NFC, LF line endings, trailing
+ *  spaces stripped, blank lines trimmed at both ends). `checked_at` moves
+ *  only when the words change, so re-checking the same words never makes a
+ *  take look older than its script. `changed_at` is when each cut's words
+ *  last changed, so a change to one cut never makes the other's take look
+ *  old (scripts/post-pack/recording_match.py's time rule). */
+export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>> }
 export interface MakingLink { url: string; at: string }
 export interface MakingPack { folder: string; packed_at: string; files: number; sent_at?: string; headline?: string }
 /** A recording's path is the engine's copy, `recordings/<sha256>.<ext>`
  *  (scripts/post-pack/recording_match.py writes it so), which says exactly
- *  which take it was and lets the next match skip it. */
-export interface MakingRecording { cut: MakingCut; path: string; at: string; seconds?: number }
+ *  which take it was and lets the next match skip it. `script_sha256` is the
+ *  hash of the script it was taken from; a take of an older script stops
+ *  counting (makingSteps). A take with none was recorded before the hashes
+ *  were kept, and still counts. `use_words` are Krish's words letting a take
+ *  of older words count for the current script (making.py --krish-words). */
+export interface MakingRecording { cut: MakingCut; path: string; at: string; seconds?: number; script_sha256?: string; use_words?: string }
 /** The thumbnail made with a cut, beside it in the pack (Krish, 2026-10-12:
  *  "I always want a video thumbnail for all video sizes produced as an asset
  *  every time"). */
@@ -47,10 +59,14 @@ export interface MakingChannelPost { url?: string; posted_at: string }
 export interface MakingSession { url: string; started_at: string; by: string }
 
 export interface Making {
+  /** When the record began: written on its first write and never moved, so
+   *  re-running a step never makes a take look as if it came before the
+   *  piece (recording_match.py's lower bound). */
+  started_at?: string
   workroom?: MakingLink
   publish_manager?: MakingLink
   visual_gate?: MakingCheck
-  script_check?: MakingCheck & { cuts?: MakingCut[] }
+  script_check?: MakingScriptCheck
   pack?: MakingPack
   recordings?: MakingRecording[]
   video_assets?: MakingVideoAsset[]
@@ -60,7 +76,7 @@ export interface Making {
   by: string
 }
 
-export type MakingPatch = Partial<Omit<Making, 'updated_at' | 'by'>>
+export type MakingPatch = Partial<Omit<Making, 'updated_at' | 'by' | 'started_at'>>
 
 const MAX_PROBLEMS = 40
 const MAX_LIST = 40
@@ -70,6 +86,8 @@ function isObj(v: unknown): v is Record<string, unknown> { return Boolean(v) && 
 function str(v: unknown, max = MAX_TEXT): string | null { return typeof v === 'string' && v.trim() && v.length <= max ? v.trim() : null }
 function when(v: unknown, fallback: string): string { const s = str(v, 40); return s && !Number.isNaN(Date.parse(s)) ? s : fallback }
 function https(v: unknown): string | null { const s = str(v, 2000); return s && /^https:\/\/\S+$/.test(s) ? s : null }
+/** A script's sha256, as making.py script_hash writes it. */
+export const SCRIPT_SHA256 = /^[a-f0-9]{64}$/
 
 /** Reads a patch from a request body: unknown keys are dropped, bad values
  *  are reported by name so the caller fixes its call instead of guessing. */
@@ -90,8 +108,24 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     const v = body[key]
     if (!isObj(v) || typeof v.passed !== 'boolean') { problems.push(`${key} needs {passed: boolean, problems: string[]}`); continue }
     const list = Array.isArray(v.problems) ? v.problems.filter(p => typeof p === 'string').map(p => String(p).slice(0, MAX_TEXT)).slice(0, MAX_PROBLEMS) : []
-    const check: MakingCheck & { cuts?: MakingCut[] } = { passed: v.passed, checked_at: when(v.checked_at, now), problems: list }
+    const check: MakingScriptCheck = { passed: v.passed, checked_at: when(v.checked_at, now), problems: list }
     if (key === 'script_check' && Array.isArray(v.cuts)) check.cuts = v.cuts.filter((c): c is MakingCut => (MAKING_CUTS as readonly string[]).includes(String(c)))
+    if (key === 'script_check' && v.hashes !== undefined) {
+      const entries = isObj(v.hashes) ? Object.entries(v.hashes) : null
+      if (!entries || !entries.every(([c, h]) => (MAKING_CUTS as readonly string[]).includes(c) && typeof h === 'string' && SCRIPT_SHA256.test(h))) {
+        problems.push('script_check.hashes is the sha256 of each cut\'s script: {long, short}, each 64 lowercase hex characters')
+        continue
+      }
+      check.hashes = Object.fromEntries(entries) as Partial<Record<MakingCut, string>>
+    }
+    if (key === 'script_check' && v.changed_at !== undefined) {
+      const entries = isObj(v.changed_at) ? Object.entries(v.changed_at) : null
+      if (!entries || !entries.every(([c, t]) => (MAKING_CUTS as readonly string[]).includes(c) && typeof t === 'string' && t.length <= 40 && !Number.isNaN(Date.parse(t)))) {
+        problems.push('script_check.changed_at is when each cut\'s words last changed: {long, short}, each a time')
+        continue
+      }
+      check.changed_at = Object.fromEntries(entries) as Partial<Record<MakingCut, string>>
+    }
     patch[key] = check
   }
   if (body.pack !== undefined) {
@@ -117,6 +151,15 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
         if (!cut || !path) { problems.push('each recording needs cut (long or short) and path'); continue }
         const rec: MakingRecording = { cut, path, at: when(r.at, now) }
         if (Number.isFinite(Number(r.seconds)) && Number(r.seconds) > 0) rec.seconds = Math.round(Number(r.seconds))
+        if (r.script_sha256 !== undefined) {
+          if (typeof r.script_sha256 !== 'string' || !SCRIPT_SHA256.test(r.script_sha256)) { problems.push(`the ${cut} recording's script_sha256 is the sha256 of the script it was taken from, 64 lowercase hex characters`); continue }
+          rec.script_sha256 = r.script_sha256
+        }
+        if (r.use_words !== undefined) {
+          const words = str(r.use_words)
+          if (!words || !/^krish/i.test(words)) { problems.push(`the ${cut} recording's use_words are Krish's own words, starting "Krish", at most ${MAX_TEXT} characters`); continue }
+          rec.use_words = words
+        }
         patch.recordings.push(rec)
       }
     }
@@ -173,17 +216,44 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
   return { patch, problems }
 }
 
+/** The record's stamp for a write at `now`: later than the record's own,
+ *  even when this server's clock runs a little behind the last writer's, so
+ *  a newer record always carries a later updated_at. The database keeps the
+ *  record with the later stamp when a stale copy of meta is written back
+ *  (supabase/migrations/20261012120000_keep_newer_making.sql). */
+export function makingStamp(prev: Pick<Making, 'updated_at'> | null | undefined, now: string): string {
+  const before = prev && typeof prev.updated_at === 'string' ? Date.parse(prev.updated_at) : NaN
+  const at = Date.parse(now)
+  return !Number.isNaN(before) && !Number.isNaN(at) && at <= before ? new Date(before + 1).toISOString() : now
+}
+
+/** When a record from before started_at was kept began: the earliest time
+ *  any of its steps holds. */
+function earliestStep(m: Partial<Making>): string | undefined {
+  const times = [
+    m.workroom?.at, m.publish_manager?.at, m.visual_gate?.checked_at, m.script_check?.checked_at, m.pack?.packed_at, m.session?.started_at,
+    ...(m.recordings || []).map(r => r.at), ...(m.video_assets || []).map(a => a.at),
+    ...Object.values(m.channels || {}).map(c => c?.posted_at),
+  ].filter((t): t is string => typeof t === 'string' && !Number.isNaN(Date.parse(t)))
+  return times.sort((a, b) => Date.parse(a) - Date.parse(b))[0]
+}
+
 /** The next record: lists are merged by their key (path, channel), a null
- *  channel removes it, everything else is replaced by the patch. */
+ *  channel removes it, everything else is replaced by the patch. started_at
+ *  is set on the first write (or, for a record from before it was kept,
+ *  from its earliest step) and never moves; updated_at always moves on. */
 export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch, by: string, now: string): Making {
   const base: Making = prev && isObj(prev) ? { ...prev } : { updated_at: now, by }
-  const next: Making = { ...base, updated_at: now, by }
+  const stamp = makingStamp(prev && isObj(prev) ? prev : null, now)
+  const started = typeof base.started_at === 'string' && !Number.isNaN(Date.parse(base.started_at))
+    ? base.started_at : (prev && isObj(prev) ? earliestStep(prev) : undefined) || stamp
+  const next: Making = { ...base, started_at: started, updated_at: stamp, by }
   for (const key of ['workroom', 'publish_manager', 'visual_gate', 'script_check', 'pack', 'session'] as const) {
     if (patch[key] !== undefined) (next as any)[key] = patch[key]
   }
   for (const key of ['recordings', 'video_assets'] as const) {
     if (!patch[key]) continue
-    const byPath = new Map<string, any>((base[key] || []).map((x: any) => [x.path, x]))
+    const byPath = new Map<string, any>(((base[key] || []) as any[]).map((x: any): [string, any] => [x.path, x]))
     for (const item of patch[key] as any[]) byPath.set(item.path, item)
     ;(next as any)[key] = [...byPath.values()].slice(-MAX_LIST)
   }
@@ -202,10 +272,6 @@ export type MakingStepState = 'done' | 'now' | 'todo' | 'failed'
 export type MakingOwner = 'Claude' | 'Krish' | 'Codex'
 export interface MakingStep { key: string; label: string; state: MakingStepState; owner: MakingOwner; at?: string; link?: string; note?: string }
 
-/** Who does each step (Krish, 2026-10-11): Claude Code owns ideation, the
- *  article and the publish board; Codex owns video production; Krish records
- *  and posts. A tool never writes a step it does not own. Mirrored in
- *  control-center/src/lib/making.ts and read by both tools' skills. */
 /**
  * Whether a piece was made with the making record: any step written by a
  * session, or any channel beyond the Substack post. The publish watcher's
@@ -221,6 +287,18 @@ export function madeWithRecord(meta: Record<string, any> | null | undefined): bo
   return isObj(m.channels) && Object.keys(m.channels).some(c => c !== 'substack')
 }
 
+/** Whether a take counts for its cut: it has no script_sha256 (recorded
+ *  before the hashes were kept), the check holds no hash for its cut, or the
+ *  two are the same script. Mirrored in control-center/src/lib/making.ts. */
+export function takeCounts(take: Pick<MakingRecording, 'cut' | 'script_sha256'>, check: MakingScriptCheck | null | undefined): boolean {
+  const current = check?.hashes?.[take.cut]
+  return !take.script_sha256 || !current || take.script_sha256 === current
+}
+
+/** Who does each step (Krish, 2026-10-11): Claude Code owns ideation, the
+ *  article and the publish board; Codex owns video production; Krish records
+ *  and posts. A tool never writes a step it does not own. Mirrored in
+ *  control-center/src/lib/making.ts and read by both tools' skills. */
 export const MAKING_OWNERS: Record<string, MakingOwner> = {
   workroom: 'Claude', draft: 'Claude', visual_gate: 'Claude', scripts: 'Claude', pack: 'Claude',
   record: 'Krish', video: 'Codex', publish: 'Krish',
@@ -250,10 +328,19 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
     : { key: 'pack', label: 'Pack', state: 'todo' })
   // Both cuts, every piece (TWO_CUTS, Krish, 2026-10-11), whatever cuts a
   // script check recorded: one recording or one video never finishes a step.
-  const recorded = new Set((m.recordings || []).map(r => r.cut))
-  const missingCuts = MAKING_CUTS.filter(c => !recorded.has(c))
-  steps.push(recorded.size
-    ? { key: 'record', label: 'Recorded', state: missingCuts.length ? 'now' : 'done', at: (m.recordings || []).map(r => r.at).sort().pop(), note: missingCuts.length ? `${missingCuts.join(' and ')} cut still to record` : undefined }
+  // A take counts only for the script it was taken from: one whose
+  // script_sha256 is not the current hash for its cut was recorded from words
+  // that have changed since (a take with no hash predates the hashes).
+  const takes = m.recordings || []
+  const recorded = new Set(takes.filter(r => takeCounts(r, m.script_check)).map(r => r.cut))
+  const olderScript = MAKING_CUTS.filter(c => !recorded.has(c) && takes.some(r => r.cut === c))
+  const missingCuts = MAKING_CUTS.filter(c => !recorded.has(c) && !olderScript.includes(c))
+  const recordTodo = [
+    olderScript.length ? `${olderScript.join(' and ')} cut recorded from an older script` : '',
+    missingCuts.length ? `${missingCuts.join(' and ')} cut still to record` : '',
+  ].filter(Boolean).join('; ')
+  steps.push(takes.length
+    ? { key: 'record', label: 'Recorded', state: recordTodo ? 'now' : 'done', at: takes.map(r => r.at).sort().pop(), note: recordTodo || undefined }
     : { key: 'record', label: 'Record', state: 'todo' })
   // A thumbnail for every size, every time (Krish, 2026-10-12): a cut is
   // made only when its video and its thumbnail are both on the record.

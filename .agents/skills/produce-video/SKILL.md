@@ -1,6 +1,6 @@
 ---
 name: produce-video
-description: Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id needed, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them, packs them and records them on the piece. Runs end to end on either Windows home computer, the main one or the backup; a cloud session matches and prepares, then hands rendering to a home computer. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
+description: Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id needed, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on either Windows home computer, the main one or the backup; a cloud session matches and prepares, then hands rendering to a home computer. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
 ---
 
 # Produce the video
@@ -16,9 +16,10 @@ This is that skill. Video is Codex's step (Krish, 2026-10-11: "I'm going to
 transfer all video production iteration through to Codex"; `MAKING_OWNERS`
 in `apps/control-plane/api/_making.ts`). Claude Code on a home computer runs
 the same skill when Krish engages it there. Every write says who wrote it:
-`--by Codex` or `--by "Claude Code"` (or `MAKING_BY`). Nothing before the
-recordings (the article, the scripts, the cover) and nothing after the
-record (the publish board, the posting) is this skill's to change.
+set `MAKING_BY` in the preflight (step 1), or pass `--by Codex` or
+`--by "Claude Code"`. Nothing before the recordings (the article, the
+scripts, the cover, the pictures, the visual gate, the pack) and nothing
+after Video assets (the publish board, the posting) is this skill's to write.
 
 Both cuts render through `scripts/quick-edit/make.py`, the only path that
 makes 16:9 as well as 9:16 and the only one that carries music and an
@@ -39,12 +40,23 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
    do. A file over 500 MiB is skipped by the lane, so that one is produced
    on a home computer, straight from H:.
 3. Tells Codex (or Claude Code on a home computer) "I've dropped the video".
-   A take reaches the engine within about ten minutes, from whichever home
-   computer is on.
 
-He never has to give a file name or a piece id. He is asked only when the
-matcher is unsure, and for approvals that are his alone (a music track, the
-mix levels, the sting's design).
+A take reaches the engine within about ten minutes, from whichever home
+computer is on, and the same lane then places it on its piece and cut by
+itself, stamped with the script it was read from (step 2). He never has to
+give a file name or a piece id. He is asked only when the matcher is unsure
+(one board item per take), and for approvals that are his alone (a music
+track, the mix levels, the sting's design).
+
+**Takes recorded in Descript.** Since 12 October each cut of Monday's and
+Friday's pieces also has a Descript project (`Mindmake scripts`, linked from
+the piece's Record board item), and Krish may record into its "Record here"
+timeline instead of the Inbox. Bringing such a take back is not built in
+this repository yet, so it does not reach the engine, the matcher or the
+record by itself. If he says he recorded in Descript, tell him so in one
+line, leave the piece's Record board item open (update its words rather
+than adding another), and produce nothing from Descript until that return
+is built. Nothing here sends, edits or publishes anything in Descript.
 
 ## Before anything
 
@@ -56,13 +68,17 @@ cloud session is read-only for it.
 
 ## 1. Preflight: which tool, which machine
 
+- **Who is writing.** Set it once, so every record this session makes (the
+  matcher's, `making.py`'s, and any that `send.py` or `build.py` write)
+  names the right tool: PowerShell `$env:MAKING_BY = "Codex"` in Codex, or
+  `$env:MAKING_BY = "Claude Code"` in Claude Code (`export MAKING_BY=...` in
+  the cloud). `making.py` also tells Codex by itself, but set it anyway.
 - **A cloud session** (Claude Code or Codex on the web) has no H: drive, no
   music folder and no archive. It may find and match the takes (step 2),
   build the kit (step 3), plan (step 4, with `faster-whisper` installed),
-  and draw the thumbnails if it holds the cover's work folder (step 5). It
-  never renders the finished cuts: it leaves a board item for a home
-  computer with the piece's `idea_id` and `"closes_on": "video"`, naming the
-  commands still to run, and says so.
+  and draw the thumbnails (step 5). It never renders the finished cuts: it
+  leaves a board item for a home computer with the piece's `idea_id` and
+  `"closes_on": "video"`, naming the commands still to run, and says so.
 - **A home computer** (Windows): work in `C:\Users\krish\dev\content-engine`,
   never in `Documents\MindmakeVideoStudio\runner-source`, at the latest
   `main` (`git pull --ff-only`). Codex runs every step outside its sandbox
@@ -79,30 +95,52 @@ cloud session is read-only for it.
   --doctor` (or `--doctor --json`). It checks ffmpeg and ffprobe and every
   filter, the caption font, `faster-whisper`, Pillow, Playwright, node, the
   music folder and the archive folder, the music ledger, every approved
-  track's file against its sha256, and the sting. Exit 1: stop and fix what
-  it names (`python -m pip install faster-whisper` for the transcriber).
-  "No approved track" and "sting still a candidate" are expected until Krish
-  approves them: the cuts then go without them and the report says so.
+  track's file against its sha256, and the sting for every shape and
+  series. **Exit 1 stops the run**: fix what it names first. A
+  `faster_whisper` that is missing, or that imports but cannot decode a
+  second of sound, is a FAIL, because the matcher and make.py both hear the
+  takes with it. Install the pinned set, never an unpinned `pip install
+  faster-whisper` (its newest pair cannot decode): `python -m pip install
+  --require-hashes -r requirements.lock.txt`, or on a runner machine `npm run
+  bootstrap:python`. "No approved track" and "sting still
+  a candidate" are expected until Krish approves them: the cuts then go
+  without them and the report says so. The archive folder is
+  `MINDMAKE_ARCHIVE_ROOT`, else on Windows `runtime.archive_root` in
+  `config/studio.json`.
 
 ## 2. Find and match the takes
 
+The home computers do this by themselves: at the end of every five-minute
+pass, the recordings upload (`scripts/recordings-upload.ps1`, on both
+machines) runs `recording_match.py --record --board --by "Recordings lane"`
+whenever the engine holds a take that no piece claims and that it has not
+already asked about. So by the time Krish says he has dropped the takes,
+they are often already on their piece. Look first, then match what is left:
+
 ```
-python scripts/post-pack/recording_match.py            # the engine's copies of the Inbox (any machine)
-python scripts/post-pack/recording_match.py --inbox    # a home computer: the Inbox on H: itself
+python scripts/post-pack/making.py PIECE_ID show              # Recorded, with a note for a cut still to record
+python scripts/post-pack/recording_match.py                   # the engine's copies of the Inbox (any machine)
+python scripts/post-pack/recording_match.py --inbox           # a home computer: the Inbox on H: itself
 ```
 
 It finds the pieces waiting for a recording this week and next (Scripts
-done, Record not), hears the first 45 seconds of every new take, and prints
-one line per file:
+done, Record not), hears the first 45 seconds of every take no piece holds
+yet, and prints one line per file:
 
 - `placed`: the piece and cut, and why (its words, its length or its name).
 - `unsure`: ask Krish, using the line it printed. Never guess. When he names
-  it in words, record it by hand with the command below.
-- `left alone`: an older take of the same cut, or a take that arrived before
-  the scripts were checked. Mention it to Krish in one line: if the scripts
-  were checked again after he recorded, his real take shows here.
-- `failed`: say which step failed (the download broke, no transcriber, the
-  engine could not be reached).
+  it in words, record it by hand with the command below. A take recorded
+  after the piece's record began but before its own cut's words last
+  changed is unsure too, "recorded before the script last changed": it may
+  be a take of the older words, so Krish says whether to use it or record
+  that cut again. Each cut has its own time, so a change to the long script
+  never makes a short take look old. With `--board` each unsure take is one
+  board item, asked once, and never reopened once he or a session closed it.
+- `left alone`: an older take of the same cut, or a take that arrived
+  before any waiting piece's record began, so it is none of their takes.
+- `failed`: say which step failed (the download broke, a transcriber that
+  is missing or cannot decode, the engine could not be reached). One take
+  failing never stops the others.
 - A file still arriving reads as unsure: run it again in a couple of minutes.
 - A take Krish says he dropped that shows nowhere: say which step it is
   stuck at. It has not reached the Inbox, or neither home computer has sent
@@ -112,32 +150,72 @@ one line per file:
 Exit 0: every new take placed (or none). Exit 2: at least one is unsure.
 Exit 1: something failed. `--json` gives the same answer to read.
 
-Then record the sure matches on their pieces (the recordings lane only
-uploads files; nothing else writes the Record step):
+Then record the sure matches the lane has not recorded yet (nothing else
+writes the Record step):
 
 ```
-python scripts/post-pack/recording_match.py [--inbox] --record --by Codex      # --by "Claude Code" in Claude Code
-python scripts/post-pack/making.py --by Codex PIECE_ID recorded long "PATH IT PRINTED" --seconds N   # a take Krish named in words
+python scripts/post-pack/recording_match.py [--inbox] --record              # writes as MAKING_BY
+python scripts/post-pack/making.py PIECE_ID recorded long "recordings/SHA256.EXT" --seconds N   # a take Krish named in words
 python scripts/post-pack/making.py PIECE_ID show
 ```
 
-Record reads done once both cuts are in. Work the pieces in the order it
-printed, the nearest first. When this session has an https link, record it
-on the piece: `python scripts/post-pack/making.py --by Codex PIECE_ID
-session LINK`.
+`making.py recorded` refuses a take that is on the record from an older
+script, or that the matcher found was recorded before the script last
+changed: stamping it would make it count for the current words. Only when
+Krish says in words to use it, add `--krish-words "Krish, YYYY-MM-DD: his
+exact words"`; they are kept on the take.
 
-Get each placed take onto this machine: `python
-scripts/post-pack/recording.py get "FILE NAME"` (the name the matcher
-printed; it uses the copy the matcher downloaded into `.cache/recordings`).
-A take over 500 MiB is never in the engine: copy it from the Inbox to a
-local work folder (`Copy-Item`, never a move). quick-edit never works on
-the Inbox itself.
+Each recorded take is stamped with the hash of the script it was read from,
+the piece's current words for that cut. Record reads done once both cuts
+have a take of their current words. Work the pieces in the order it
+printed, the nearest first. When this session has an https link, record it
+on the piece: `python scripts/post-pack/making.py PIECE_ID session LINK`.
+
+**Before producing a piece, read where it is**: `making.py PIECE_ID show`.
+
+- **Scripts must read done.** If it does not, stop: the scripts are Claude
+  Code's step (`make-piece`). Say so in one line, leave a board item with
+  the piece's `idea_id`, and produce nothing.
+- **Recorded must read done**, for both cuts. A cut still to record, or a
+  line "older script: the long take ... does not count", means that cut has
+  no take of its current words: never produce from a take of an older
+  script. Krish records it again, or says in words to use that take (then
+  record it with `making.py ... recorded ... --krish-words "Krish, DATE: his
+  words"`, which stamps the current words and keeps his).
+- **Video assets already done** means the cuts exist. A new take of a cut
+  that is already produced is never a remake by itself: put one board item
+  asking Krish, and remake only on his words.
+
+**Which take, and getting it onto this machine.** A piece's takes are on its
+record: `python scripts/engine.py GET /api/content-ideas/PIECE_ID/making
+--full` lists `making.recordings` (each take's `cut`, `path`, `at` and
+`script_sha256`) and `making.script_check.hashes` (the current hash of each
+cut's script). For each cut, use the newest take (the latest `at`) whose
+`script_sha256` is that cut's current hash; a take with no hash (recorded
+before hashes were kept) also counts. Fetch it by the path the record holds,
+which works on any machine and in any later session:
+
+```
+python scripts/post-pack/recording.py get "recordings/SHA256.EXT"
+```
+
+`--sha256 SHA256` does the same, and `get "FILE NAME"` still fetches a take
+by the name the matcher printed. A take over 500 MiB is never in the
+engine: copy it from the Inbox to a local work folder (`Copy-Item`, never a
+move). quick-edit never works on the Inbox itself.
 
 ## 3. Build the kit, once per cut
 
 Use a local work folder per piece, such as `.cache/produce/DATE-SUBJECT`
 (git ignores `.cache`). The piece's `post.json` is the one under
-`docs/plans/` whose `piece_id` is the piece.
+`docs/plans/` whose `piece_id` is the piece. First see where its files are:
+
+```
+python scripts/post-pack/plan_files.py docs/plans/PLAN/post.json [--files FOLDER]
+```
+
+It only reads. Exit 0: every script and picture is found. Exit 1: it lists
+each one it could not find and every place it looked. Then:
 
 ```
 python scripts/quick-edit/kit.py docs/plans/PLAN/post.json --cut long --recording LONG_TAKE --out WORK/kit [--files FOLDER]
@@ -147,12 +225,44 @@ python scripts/quick-edit/kit.py docs/plans/PLAN/post.json --cut short --recordi
 It draws the house end cards for both shapes, the wide frame in the
 subchannel's look, the tall strap, a panel per picture, and writes a
 starter `long.json` or `short.json` for make.py (intro and music on auto,
-the same piece id on both, so both cuts get the same track). `--files` says
-where the post's pictures and scripts are when they are not beside
-`post.json`: the working folder, or on a home computer the post's library
-folder, `H:\My Drive\Ventures\Active\makeyourmindup\3 Posts\POST FOLDER`
-(the pack folder `making.py show` names). Exit 1 prints `CHECK` lines: fix
-each and run it again. A config edited by hand is never overwritten.
+the same piece id on both, so both cuts get the same track).
+
+- **The scripts** come from the dated drafts the repository keeps beside
+  the plan (`docs/plans/DATE-draft-script.md` and `-draft-script-90s.md`),
+  so they need no `--files`.
+- **The pictures** need `--files` only until the pack is sent: the post's
+  working folder (in a cloud session that holds it). Once `send.py` has
+  sent the pack, a home computer finds the post's library folder by itself
+  (`runtime.library_root`, the `3 Posts` folder on H:), with no `--files`.
+- **Exit 2: stop and fix the input** it names (a script that is nowhere, a
+  bad `--files` folder, another piece's `--out`).
+- **Exit 1: a `CHECK` line for each problem**, and each one means the cut
+  would go out without a picture's evidence. Exit 0 is the only clean run:
+  never render on exit 1. Fix each one and run it again:
+  - **a picture that is nowhere on this machine**: find the folder that
+    holds it and give it with `--files`;
+  - **a picture no line of the script brings in** ("not cued"): add its cue
+    to `WORK/kit/long.json` (or `short.json`) by hand, with `id`, `panel`
+    and the words he says over it as `start` and `end`; kit.py keeps a
+    config edited by hand, and a picture cued there counts. A picture named
+    only in the opening line or the call to action is a note, never a CHECK;
+  - **a panel whose words come out under the size a viewer can read** in
+    this cut's own shape ("under the 39 px a viewer can read" in the tall
+    cut, 21 px in the wide one): draw a version of that picture for video,
+    with fewer and bigger words, and give its folder with `--files`; or take
+    the cue out by hand and ask Krish.
+  Only when Krish has said in words that this cut goes without those
+  pictures, or with a small panel, pass his words: `--allow-missing "Krish,
+  YYYY-MM-DD: his exact words"` or `--allow-small "Krish, YYYY-MM-DD: his
+  exact words"`. They must start with "Krish"; anything else is refused, and
+  they are recorded in `kit.json` and in the cut's config, so make.py quotes
+  them instead of warning. Never write words for him.
+
+A config edited by hand is never overwritten (when Krish's words come after
+the edit, copy the new config's `kit` block across: kit.py says so).
+kit.json also keeps each cut's recording length, which make.py reads so both
+cuts ask for the same music: make the kit for both cuts before rendering
+either.
 
 ## 4. Plan, then render each cut
 
@@ -168,13 +278,22 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
   seconds, and the warnings. A graphic whose words were not found: change
   its `start` and `end` to the words he actually said and plan again. A
   stumble or restart: `remove` (`{"say": ..., "after": ...}` or
-  `{"restart_near": "m:ss"}`). A misheard name: `replacements`.
+  `{"restart_near": "m:ss"}`). A misheard name: `replacements`. A US
+  spelling: the captions take the script's spelling by themselves where the
+  heard word lines up with a script word (`spellings` in the plan lists
+  each); a warning naming a US spelling no script word covers (an ad-lib)
+  needs a `replacements` entry, unless it is a name or a quotation (house
+  rule BRITISH_SPELLING).
+- **A plan that warns "the config has no cues, but its post has N
+  picture(s)"** would send the cut out as a bare talking head: go back to
+  step 3 and find the pictures. A line "this cut goes without ..., as Krish
+  said" quotes his words from step 3: it is not a reason to go back.
 - **Render** each cut from its own recording with its own `--only`. Never
   `--archive` on either run (that files the two cuts in two folders), and
   never one recording for both shapes.
-- Each cut carries the intro sting when Krish has approved it and the music
-  bed from the ledger when a licensed, approved track fits (both sections
-  below). Neither ever blocks a render.
+- Each cut carries the intro sting once Krish has approved one, and the
+  music bed from the ledger when a licensed, approved track fits (both
+  sections below). Neither ever blocks a render.
 
 ## 5. A thumbnail for every size
 
@@ -185,23 +304,26 @@ face and the real logos (LOGOS_AND_FACE), drawn from the piece's cover facts.
 
 ```
 $env:MYMU_BROWSER = "msedge"     # Windows; in the cloud container: MYMU_BROWSER=/opt/pw-browsers/chromium-1194/chrome-linux/chrome
-python scripts/pages/build.py docs/plans/PLAN/cover-facts.json --assets COVER_WORK_FOLDER --thumbs --out WORK/thumbs
+python scripts/pages/build.py docs/plans/PLAN/cover-facts.json --thumbs --out WORK/thumbs
 ```
 
 It writes `thumb-wide-1280x720.jpg`, `thumb-tall-1080x1920.jpg`,
 `thumbs.json` (each file's sha256, the portrait, the logos) and
-`thumbs-check.png`, both or neither. `--assets` is the folder the cover was
-drawn from, because the facts' logo paths are relative to it.
+`thumbs-check.png`, both or neither. It needs the internet for Krish's
+portrait and the wordmark. Never pass `--assets`: the logo paths are
+relative to the facts file.
 
-- The logos live only in the cover's work folder, so the session that drew
-  the cover draws the thumbnails with it and packs them (`make-piece`, its
-  visual gate step). On a machine without that folder, use the ones the
-  pack already holds: `3 Video\SUBJECT - wide 16x9 - thumbnail.jpg` and
-  `... - tall 9x16 - thumbnail.jpg` in the post's library folder.
-- If neither exists, never draw a thumbnail without the real logos. Render,
-  file and record the cuts anyway, and put a board item (`idea_id`,
-  `"closes_on": "video"`) asking the session that holds the cover to draw
-  and pack them. Video assets stays "thumbnail still to make" until then.
+- A plan keeps its real logos as SVG in `docs/plans/PLAN/logos/`, so any
+  checkout draws its thumbnails, a home computer included. The pile-up
+  background is a picture git does not keep: without it the thumbnails are
+  drawn on plain ink and the drawer says so. That is fine.
+- A plan with no `logos/` folder (made before 12 October) cannot be drawn
+  here: never draw a thumbnail without the real logos. Render and archive
+  the cuts, but do not send them to the library (step 8) and record them
+  without a thumbnail (step 9). Put a board item (`idea_id`,
+  `"closes_on": "video"`) asking the session that holds the cover's logos
+  to commit them as SVG under `docs/plans/PLAN/logos/` and draw the
+  thumbnails. Video assets stays "thumbnail still to make" until then.
 - Every company the piece names must be on each thumbnail. One missing goes
   into the cover facts as `"thumbs": {"strip": [{"logo": ..., "name": ...}]}`
   with its real logo, never a drawn stand-in.
@@ -217,15 +339,24 @@ report these numbers back in plain words:
   -18. `normalisation` should be `linear`; `limited` comes with a warning.
 - `intro_seconds`, `main_seconds`, `outro_seconds`, `total_seconds`, and
   `music` (the track id, its sha256 and the levels used).
-- **The 90 second check.** A short cut whose total runs over 90 seconds is
-  in `warnings`. Tighten it with `remove` where he stumbled; never speed it
-  up. Still over: tell Krish before it goes anywhere.
+- **The 90 second check is on his speech.** House rule TWO_CUTS gives the
+  short cut at most 90 seconds, and story_check holds its script to 225
+  words, 90 seconds at 150 words a minute. Krish has not yet ruled whether
+  those 90 seconds include the sting and the 4 second end card, so make.py
+  checks `main_seconds` (his words alone) and the warning gives
+  `total_seconds` beside it. When `main_seconds` is over 90, tighten it with
+  `remove` where he stumbled or paused; never speed it up. Still over: tell
+  Krish both numbers before it goes anywhere. When only `total_seconds` is
+  over 90 (his speech is inside it), say both numbers in your report; it is
+  not a stop, and it is his open question in `WORKBENCH.md`.
 - Every other line in `warnings`, said as it is.
 
 Then look, with your own eyes, at `preview-SHAPE-intro.jpg` (when there is
-a sting), every `preview-SHAPE-NN.jpg` (each graphic on its line, captions
-readable, his eyes in frame in the tall shape), `NAME.cut.txt` (misheard
-names) and `thumbs-check.png`. A fault goes back to step 4 or 5.
+a sting), every `preview-SHAPE-NN.jpg` (each graphic on its line, its words
+readable on a phone, captions readable, his eyes in frame in the tall
+shape), `NAME.cut.txt` (misheard names, US spellings, and every number
+whole: "$150,000", "70%") and `thumbs-check.png`. A fault goes back to step 4
+or 5.
 
 ## 7. File both cuts in the archive, once
 
@@ -234,45 +365,96 @@ python scripts/quick-edit/archive.py --subject "SUBJECT" --date YYYY-MM-DD --tal
 ```
 
 `SUBJECT` and the date are `post.json`'s `subject` and `date`. It makes one
-folder in `MINDMAKE_ARCHIVE_ROOT` (Drive, `Video Engine > Archive`), named
-by date, subject and where to post, with each thumbnail beside its video
-and `where-to-post.txt`; it never overwrites. Home computers only. If the
-`Archive` folder does not exist it stops: ask Krish to create it in Drive.
+folder in the archive (Drive, `Video Engine > Archive`:
+`MINDMAKE_ARCHIVE_ROOT`, else on Windows `runtime.archive_root` in
+`config/studio.json`), named by date, subject and where to post, with each
+thumbnail beside its video and `where-to-post.txt`; it never overwrites.
+Leave out `--tall-thumb` and `--wide-thumb` only when step 5 could not draw
+them. Home computers only. If the `Archive` folder does not exist it stops:
+ask Krish to create it in Drive.
 
-## 8. Into the pack and the library
+## 8. Into the post's library folder
 
-The cuts and thumbnails reach Krish's library the same day (`AGENTS.md`).
+The cuts and thumbnails reach Krish's library the same day (`AGENTS.md`),
+in the post's `3 Video` folder. This skill never rebuilds the pack and never
+writes the Visual gate or Pack steps: those are Claude Code's, and its
+publish board step (`make-piece`, last step) puts the cuts on the publish
+page and into the pack. Send the archive folder only when all of these hold:
 
-- **With the post's working folder on this machine** (every file
-  `post.json` names is there): add four entries to `post.json`, each
-  declaring the logo of every company the piece names:
-  `{"kind": "video", "shape": "wide", "file": ..., "share": ..., "logos": [...]}`,
-  `{"kind": "thumbnail", "shape": "wide", "file": ..., "logos": [...]}`,
-  and the same for `tall`. Then `python scripts/post-pack/visual_gate.py
-  post.json` must say ready, `python scripts/post-pack/making.py --by Codex
-  PIECE_ID visual-gate post.json`, `python scripts/post-pack/build.py
-  post.json --replace` (it refuses a video with no thumbnail of its shape),
-  and `python scripts/post-pack/send.py "PACK FOLDER"`.
-- **Without it** (the usual case on a home computer: the piece was made in
-  a cloud session), never build a partial pack. Send the archive folder
-  into the post's video section, dry run first:
-  `python scripts/post-pack/send.py "ARCHIVE FOLDER" --as "3 Posts/POST FOLDER/3 Video" --purpose "The finished videos and their thumbnails: wide 16:9 for YouTube and Substack, tall 9:16 for Shorts, Reels, TikTok and LinkedIn" --dry-run`,
-  then without `--dry-run`. The publish board step (`make-piece`, last
-  step) puts them in the publish page.
+1. **A thumbnail of each shape** was drawn in step 5 and filed beside its
+   video in step 7. Without both, stop here: the cuts stay in the archive,
+   the board item from step 5 stands, and nothing goes to the library.
+2. **The piece's Visual gate reads done** in `making.py PIECE_ID show` (the
+   pack's pictures and cover passed when it was built). If it does not,
+   stop here and say so.
+3. **The visual gate passes for the videos and thumbnails**, on a minimal
+   post file in the work folder, `WORK/gate/post.json`. It has no
+   `piece_id`, so nothing is recorded from it:
+
+   ```json
+   {"date": "YYYY-MM-DD", "subchannel": "SUBCHANNEL", "subject": "SUBJECT",
+    "files": [
+     {"kind": "fact-checked-text", "file": "FULL PATH TO docs/plans/DATE-draft-body.md"},
+     {"kind": "video", "shape": "wide", "file": "FULL PATH TO WORK/long/NAME-16x9.mp4", "logos": ["..."]},
+     {"kind": "video", "shape": "tall", "file": "FULL PATH TO WORK/short/NAME-9x16.mp4", "logos": ["..."]},
+     {"kind": "thumbnail", "shape": "wide", "file": "FULL PATH TO WORK/thumbs/thumb-wide-1280x720.jpg", "logos": ["..."]},
+     {"kind": "thumbnail", "shape": "tall", "file": "FULL PATH TO WORK/thumbs/thumb-tall-1080x1920.jpg", "logos": ["..."]}
+    ]}
+   ```
+
+   Write each path in full with forward slashes (`C:/Users/krish/...` on
+   Windows), so the JSON needs no escaping. A video's `logos` are the
+   companies whose real logos are on screen in
+   that cut: the logos of the pictures its cues show (`kit.json` and the
+   plan list the cues), never one more. A thumbnail's are the companies the
+   drawer drew: copy `thumbs.json`'s `companies`, one name per company (its
+   `logos` lists the drawn rows, such as "Warner Music Group and BMG", and
+   the gate reads those as both companies too). Then
+   `python scripts/post-pack/visual_gate.py WORK/gate/post.json`. It must
+   print **no line about a video or a thumbnail** ("declares no logo",
+   "thumbs.json", "portrait", "the drawer drew no row or strip"). On this
+   minimal post it always also prints the pack's own lines, "no picture
+   carries the real logo of ..." and, for a piece about volume, one about
+   the real pages: those are the pictures already gated in condition 2, and
+   are expected here. A video that misses a company the piece names goes
+   back to step 3 or 4 (cue the picture that carries it); never declare a
+   logo that is not on screen.
+
+Then send the archive folder into the post's video section, dry run first:
+
+```
+python scripts/post-pack/send.py "ARCHIVE FOLDER" --as "3 Posts/POST FOLDER/3 Video" --purpose "The finished videos and their thumbnails: wide 16:9 for YouTube and Substack, tall 9:16 for Shorts, Reels, TikTok and LinkedIn" --dry-run
+```
+
+then without `--dry-run`. `POST FOLDER` is the pack folder `making.py show`
+names. An archive folder is not a pack, so `send.py` records nothing on the
+piece.
 
 ## 9. Put both cuts on the record
 
+With a thumbnail drawn and filed for that cut:
+
 ```
-python scripts/post-pack/making.py --by Codex PIECE_ID video long "Long cut, 16:9" "3 Video/SUBJECT - wide 16x9 - YouTube, Substack.mp4" --seconds N --thumb "3 Video/SUBJECT - wide 16x9 - thumbnail.jpg" --music TRACK_ID
-python scripts/post-pack/making.py --by Codex PIECE_ID video short "Short cut, 9:16" "3 Video/SUBJECT - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4" --seconds N --thumb "3 Video/SUBJECT - tall 9x16 - thumbnail.jpg" --music TRACK_ID
+python scripts/post-pack/making.py PIECE_ID video long "Long cut, 16:9" "3 Video/SUBJECT - wide 16x9 - YouTube, Substack.mp4" --seconds N --thumb "3 Video/SUBJECT - wide 16x9 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-wide-1280x720.jpg --music TRACK_ID
+python scripts/post-pack/making.py PIECE_ID video short "Short cut, 9:16" "3 Video/SUBJECT - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4" --seconds N --thumb "3 Video/SUBJECT - tall 9x16 - thumbnail.jpg" --thumb-file WORK/thumbs/thumb-tall-1080x1920.jpg --music TRACK_ID
 python scripts/post-pack/making.py PIECE_ID show
 ```
 
-`--seconds` is the report's `total_seconds`; `--music` is the report's
-track id, left out when the cut has voice only. Add `--url https://...` and
-`--thumb-url https://...` once the library has the Drive links; sending the
-same video path again replaces that asset. Video assets is done only when
-both cuts are there, each with its thumbnail.
+With no thumbnail drawn for that cut, leave out `--thumb` and
+`--thumb-file`: the step then reads "thumbnail still to make", which is the
+truth. `--thumb` is refused without `--thumb-file`, the file `build.py
+--thumbs` drew on this machine (`WORK/thumbs/...`, never a copy): it must be
+that cut's shape (1280 x 720 for the long cut, 1080 x 1920 for the short)
+and listed, by its sha256 and shape, in the `thumbs.json` beside it.
+`--thumb-url` (its https link in the library) goes with `--thumb-file`,
+never in place of it.
+
+`--seconds` is the report's `total_seconds`; a fraction is fine, it is
+rounded. `--music` is the report's track id, left out when the cut has
+voice only. Add `--url https://...` and `--thumb-url https://...` once the
+library has the Drive links; sending the same video path again replaces
+that asset. Video assets is done only when both cuts are there, each with
+its thumbnail. `archive.py` refuses a thumbnail of the wrong shape too.
 
 ## 10. The board and the workbench
 
@@ -294,11 +476,14 @@ database changes. On the backup:
 - The work copy is at the latest `main` and `scripts/engine-key.ps1` has been
   run there once. `make.py --doctor` must say ready; an approved sting
   renders itself once on a machine that has none.
-- The recordings upload already runs on both machines: nothing to move.
+- The recordings upload already runs on both machines, and places takes on
+  both: nothing to move. Its `-Check` (`scripts/install-recordings-upload.ps1`
+  runs it) proves that machine has the engine key and a pinned Python that
+  imports faster_whisper.
 - **Library Sync runs only on the machine it is installed on, and does not
-  follow the runner role.** With the main machine off, the pack and the cuts
-  sent in step 8 wait in the engine until Krish moves it: install and enable
-  it on the machine in use (`docs/OPERATIONS.md`, "Library sync",
+  follow the runner role.** With the main machine off, the cuts sent in
+  step 8 wait in the engine until Krish moves it: install and enable it on
+  the machine in use (`docs/OPERATIONS.md`, "Library sync",
   `scripts/install-library-sync.ps1` from `library-source`) and
   `Disable-ScheduledTask -TaskName "Mindmake Library Sync"` on the other.
   Tell him; he does it.
@@ -341,24 +526,28 @@ whilst I am talking, higher during the outro)." (house rule MUSIC_BED)
   on the home computers
   `H:\My Drive\Ventures\Active\makeyourmindup\00_Brand-Assets\07_Music`,
   read from `MINDMAKE_MUSIC_ROOT`, else `runtime.music_root` in
-  `config/studio.json`. Each licence certificate sits beside its track.
-  Audio is never committed, and never goes in the Inbox (the lane would send
-  it as a recording).
+  `config/studio.json`. Each licence certificate sits beside its track, in
+  the same folder. Audio is never committed, and never goes in the Inbox
+  (the lane would send it as a recording).
 - **The ledger** is `config/music-library.json`, committed. A track is used
   only when it is in the ledger, approved by Krish in his words, its licence
-  in date and covering every place the cut goes (wide: YouTube and
-  Substack; tall: Shorts, Reels, TikTok and LinkedIn), cleared for YouTube
-  Content ID, long enough or loopable, and its file matches its sha256.
-  Never browse Drive for audio, and never use a file because it is in the
-  folder. `python scripts/quick-edit/music.py list` and `music.py check`
-  show where things stand; `music.py pick --seconds N --piece PIECE_ID
-  --shape 16x9` shows which track a cut gets and why the others were passed
-  over.
+  in date and covering every place either cut of the piece goes (wide:
+  YouTube and Substack; tall: Shorts, Reels, TikTok and LinkedIn), cleared
+  for YouTube Content ID, long enough for the piece's long cut (its
+  recording as kit.py measured it, plus the most a sting and the end card
+  add; 4 minutes only while the long cut's kit is not made) or loopable,
+  and its file matches its sha256. Both cuts ask for that same length, so
+  they carry the same track. Never browse Drive for audio, and never use a
+  file because it is in the folder. `python scripts/quick-edit/music.py
+  list` and `music.py check` show where things stand; `music.py pick --piece
+  PIECE_ID --both-cuts --seconds LONG_CUT` shows the one track both cuts get
+  and why the others were passed over.
 - **How a track gets in.** Krish licenses it, saves the audio and its
-  certificate in the music folder, and says so. On a home computer:
+  certificate side by side in the music folder, and says so. On a home
+  computer:
 
   ```
-  python scripts/quick-edit/music.py add "MUSIC FOLDER\track.wav" --provider NAME --licence-id ID --licence-file "licences\track.pdf" --title .. --artist .. --platforms youtube,substack,shorts,tiktok,reels,linkedin --content-id-cleared yes --acquired-on YYYY-MM-DD [--expires-on ..] [--intro-cue S] [--outro-cue S] [--loopable]
+  python scripts/quick-edit/music.py add "MUSIC FOLDER\TRACK.wav" --provider NAME --licence-id ID --licence-file "MUSIC FOLDER\TRACK CERTIFICATE.pdf" --title .. --artist .. --platforms youtube,substack,shorts,tiktok,reels,linkedin --content-id-cleared yes --acquired-on YYYY-MM-DD [--expires-on ..] [--intro-cue S] [--outro-cue S] [--loopable]
   ```
 
   It measures the file and writes it as `proposed`; a track already listed
@@ -380,27 +569,36 @@ whilst I am talking, higher during the outro)." (house rule MUSIC_BED)
 Krish, 2026-10-12: "I also want the video to have a 1-2 sec animated make
 your mind up intro visual before my face comes in" (house rule
 INTRO_STING). It is a 1.5 second clip per shape (1 to 2 allowed) with a
-silent track, joined in front of the captioned video, so no word, caption or
-graphic moves; the music is high over it.
+silent track, in the colour of the piece's series, joined in front of the
+captioned video, so no word, caption or graphic moves; the music is high
+over it.
 
+- **No design is approved.** On 2026-10-12 Krish turned down the first one
+  he was shown: "it's ok, it's a bit boring and colourless and vanilla - and
+  just what Powerpoint would do in 2008" (`config/intro-sting.json`,
+  `last_decision`). Every cut goes without a sting until he approves
+  another; never hold a render for it.
 - Its design is two Remotion compositions in `apps/renderer`, named in
-  `config/intro-sting.json`. make.py uses the sting only when that file's
-  `status` is `approved`; until then the cuts go without it and the report
-  says so. Never hold a render for it.
-- `python scripts/quick-edit/intro.py status` says where it stands (and if
-  the compositions are not in the renderer yet, the design is still being
-  built: carry on without it).
-- To approve it: `intro.py render --preview`, show Krish both shapes, and
-  only on his words `intro.py approve --words "his exact words"` (bound to
-  the preview he saw). Commit and push, then `intro.py render` on each
-  machine that renders. A sting changed after approval is not used until he
-  approves it again.
+  `config/intro-sting.json`, each taking the series as a prop. make.py uses
+  the sting only when that file's `status` is `approved`, with the source
+  hash of the previews he saw. `python scripts/quick-edit/intro.py status`
+  says where it stands (and if the compositions are not in the renderer
+  yet, the design is still being built: carry on without it).
+- To approve one: `intro.py render --preview` (every shape and series),
+  show Krish, and only on his words `intro.py approve --words "his exact
+  words"`. Commit and push, then `intro.py render` on each machine that
+  renders. A sting changed after approval is not used until he approves it
+  again.
+- A clip named in a cut's config (`"intro": {"9x16": file, ...}`) is used
+  only when it is the approved render for that shape and series, or when
+  the config carries Krish's own words in `"intro_override"`. Its own sound
+  is never used.
 
 ## Walls
 
 - Nothing here posts, publishes, spends or deletes, and nothing is sent to
   anyone. `send.py` only files work in Krish's own library, by his standing
-  instruction.
+  instruction. Nothing is sent to, edited or published in Descript.
 - Never move, rename or delete anything in the Inbox, the archive or the
   music folder, and never create or rename a Drive folder by hand; ask
   Krish. The archive's dated folder (`archive.py`) and the library sync are
@@ -408,10 +606,13 @@ graphic moves; the music is high over it.
 - Never browse Drive for audio. Only a ledger track that passes every check
   goes under a video.
 - Never record an approval Krish did not give in words: a track, the
-  levels, the sting, a take the matcher was unsure of.
-- The article body, the approval, the scripts and the channel ticks are
-  never written from here. A step that is not this skill's is not written,
-  whatever the chat says.
+  levels, the sting, a take the matcher was unsure of, a take of an older
+  script. Never write `--allow-missing`, `--allow-small`, `--krish-words`,
+  `"intro_override"`, `"thumbnail_override"` or `"visual_gate_override"`
+  words he did not say.
+- The article body, the approval, the scripts, the pictures, the visual
+  gate, the pack and the channel ticks are never written from here. A step
+  that is not this skill's is not written, whatever the chat says.
 - Never speed up a cut, and never declare a logo that is not on screen.
 - A cloud session is read-only for the Studio (`read_only_untracked`), and
   these cuts never go through it: say nothing was produced in the Studio.

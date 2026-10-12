@@ -74,16 +74,48 @@ describe('the music and the sting wait for Krish', () => {
     expect(ledger.root_default_windows.startsWith(`${studio.runtime.drive_root}\\`)).toBe(false)
   })
 
-  it('the sting is 1 to 2 seconds, one composition per shape, and is only used once approved', () => {
+  it('the sting is 1 to 2 seconds, one composition per shape, rendered per series, and is only used once approved', () => {
     const sting = JSON.parse(readFileSync(join(ROOT, 'config', 'intro-sting.json'), 'utf8'))
     expect(sting.schema_version).toBe(1)
     expect(['candidate', 'approved']).toContain(sting.status)
     expect(sting.seconds).toBeGreaterThanOrEqual(1)
     expect(sting.seconds).toBeLessThanOrEqual(2)
     expect(Object.keys(sting.compositions).sort()).toEqual(['16x9', '9x16'])
+    // Each series renders the sting in its own colour; a piece with none
+    // gets follow_the_money's.
+    expect([...sting.series].sort()).toEqual(['follow_the_money', 'mind_the_gap', 'under_the_hood'])
+    // His latest word on a design is kept, a rejection included, in his words.
+    if (sting.last_decision) {
+      expect(String(sting.last_decision.by)).toMatch(/^Krish/)
+      expect(['approved', 'rejected']).toContain(sting.last_decision.decision)
+      expect(String(sting.last_decision.words).trim()).not.toBe('')
+    }
     if (sting.status === 'approved') {
+      // An approval is bound to the exact source of the previews he saw:
+      // no 64-hex hash, no approval.
       expect(String(sting.approved_by)).toMatch(/^Krish/)
       expect(sting.source_sha256).toMatch(/^[0-9a-f]{64}$/)
+      if (sting.last_decision) expect(sting.last_decision.decision).toBe('approved')
+    } else {
+      expect(sting.source_sha256).toBeNull()
     }
+  })
+
+  it('the renderer\'s source is LF on every checkout, so the sting\'s approval hash is the same on Windows', () => {
+    const attributes = readFileSync(join(ROOT, '.gitattributes'), 'utf8')
+    // text=auto: git's own check leaves a binary of a type not listed alone (a .lottie, a .riv).
+    expect(attributes).toMatch(/^apps\/renderer\/\*\* text=auto eol=lf$/m)
+    // Pictures and fonts there stay binary: never turned into LF.
+    for (const ending of ['png', 'jpg', 'woff2', 'ttf', 'mp4', 'wav', 'lottie', 'riv']) {
+      expect(attributes).toMatch(new RegExp(`^apps/renderer/\\*\\*/\\*\\.${ending} binary$`, 'm'))
+    }
+  })
+})
+
+describe('archive.py checks itself', () => {
+  it('archive.py --self-test: the naming rule, and the archive folder found as the music folder is', () => {
+    const result = run('archive.py', ['--self-test'])
+    expect(result.status, result.stdout + result.stderr).toBe(0)
+    expect(result.stdout).toMatch(/archive naming self-test passed: \d+ checks/)
   })
 })

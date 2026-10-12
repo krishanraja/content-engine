@@ -81,10 +81,15 @@ export function cleanItem(raw: unknown, isNew: boolean): Json & { id: string } {
   const id = typeof r.id === 'string' ? r.id : ''
   if (!ID.test(id)) throw new Error('item_id_invalid')
   const row: Json & { id: string } = { id }
+  // lane_if_new is the lane for an item only when it does not exist yet: a
+  // tool asking a question it may have asked before (the recordings lane,
+  // making.py) never reopens one Krish or a session has closed.
+  if (r.lane_if_new !== undefined && !(LANES as readonly string[]).includes(String(r.lane_if_new))) throw new Error('lane_invalid')
   if (r.lane !== undefined) {
     if (!(LANES as readonly string[]).includes(String(r.lane))) throw new Error('lane_invalid')
     row.lane = r.lane
-  } else if (isNew) throw new Error('lane_required')
+  } else if (isNew && r.lane_if_new !== undefined) row.lane = r.lane_if_new
+  else if (isNew) throw new Error('lane_required')
   if (r.rank !== undefined) {
     if (!Number.isInteger(r.rank) || (r.rank as number) < 0 || (r.rank as number) > 999) throw new Error('rank_invalid')
     row.rank = r.rank

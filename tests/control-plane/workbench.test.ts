@@ -113,6 +113,21 @@ describe('the work board route', () => {
     expect(row.detail).toBe('Facts checked.')
   })
 
+  it('lane_if_new is the lane only for a new item: an item already closed is never reopened by a tool asking again', async () => {
+    await call('POST', { action: 'upsert_items', items: [{ id: 'take-aaaaaaaaaaaa', lane: 'on_you', title: 'Which piece is this take?' }] })
+    await call('POST', { action: 'upsert_items', items: [{ id: 'take-aaaaaaaaaaaa', lane: 'done' }] })
+    const again = await call('POST', { action: 'upsert_items', client: 'runner', items: [
+      { id: 'take-aaaaaaaaaaaa', lane_if_new: 'on_you', title: 'Which piece is this take?', detail: 'asked again from the other machine' },
+      { id: 'take-bbbbbbbbbbbb', lane_if_new: 'on_you', title: 'A new take' },
+    ] })
+    expect(again.status).toBe(200)
+    expect(db.tables.work_board_items.find(r => r.id === 'take-aaaaaaaaaaaa')!.lane).toBe('done')
+    expect(db.tables.work_board_items.find(r => r.id === 'take-bbbbbbbbbbbb')!.lane).toBe('on_you')
+    const bad = await call('POST', { action: 'upsert_items', items: [{ id: 'take-cccccccccccc', lane_if_new: 'sideways', title: 'x' }] })
+    expect(bad.status).toBe(400)
+    expect(bad.body.error).toBe('lane_invalid')
+  })
+
   it('a new item needs a lane and a title, and one bad item writes nothing', async () => {
     const bad = await call('POST', { action: 'upsert_items', items: [{ id: 'ok-one', lane: 'on_you', title: 'Fine' }, { id: 'no-title', lane: 'on_you' }] })
     expect(bad.status).toBe(400)

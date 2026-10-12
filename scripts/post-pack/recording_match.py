@@ -10,10 +10,16 @@ without me having to give the exact filename)".
     python scripts/post-pack/recording_match.py                   each new recording, and the piece and cut it is
     python scripts/post-pack/recording_match.py --record --by Codex
                                                                   ... and record each sure match on its piece
+    python scripts/post-pack/recording_match.py --record --board --by "Recordings lane" --json
+                                                                  ... and ask Krish about each unsure take on the
+                                                                  board, once (what the runners run each pass)
     python scripts/post-pack/recording_match.py --inbox           read the Inbox on this machine (H:) instead of
                                                                   the engine's copies; --inbox PATH names it
     python scripts/post-pack/recording_match.py --week 2026-10-12 start from that week (default: this one)
     python scripts/post-pack/recording_match.py --json            the whole answer as JSON
+    python scripts/post-pack/recording_match.py --check-transcriber
+                                                                  does faster-whisper decode a second of sound here
+                                                                  (the recordings upload's -Check asks this)
     python scripts/post-pack/recording_match.py --self-test
 
 How it decides, in order:
@@ -27,16 +33,26 @@ How it decides, in order:
    (GET /api/week/options), whose Scripts step is done and whose Record step
    is not, the nearest first by the day they go out.
 3. Each piece's two scripts. The post.json "video-script" entries with
-   "cut" (docs/plans/<plan>/post.json, the draft beside the plan, or the pack
-   in the library), or transformed_outputs video_3min and video_90s when the
-   engine's read of the piece carries them.
+   "cut" (docs/plans/<plan>/post.json, the file beside it, the pack staged
+   or in the library, or the draft beside the plan), then the pack by its
+   usual names.
 4. The words. faster-whisper small.en hears the first 45 seconds (cached as
    .cache/recordings/<sha256>.head.words.json), scored against the opening of
    each script with the ordered word match the Studio uses
    (orderedSimilarity, packages/core/src/candidates.ts).
-5. The piece. Sure at 0.72 or more, and 0.15 clear of the next piece. A take
-   that reached the engine (or the Inbox) before the piece's scripts were
-   checked cannot be its recording.
+5. The piece. Sure at 0.72 or more, and 0.15 clear of the next piece. The
+   time rule, cut by cut: making.py scripts keeps when each cut's words last
+   changed (script_check.changed_at), so a take recorded after its own
+   cut's time is a take of the current words and can be placed, and a
+   change to the long script never makes a short take look old. When the
+   take was recorded is the time its file says it was made (ffprobe's
+   creation_time), when that is after the piece's record began and no
+   later than it reached the engine; else when it reached the engine. A take
+   recorded before its cut's words last changed, but after the piece's
+   record began (the record's started_at, fixed on its first write), is
+   still heard: if it matches that piece it is unsure, "recorded before the
+   script last changed", and never silently left alone. A take from before
+   a piece's record began is none of its takes.
 6. The cut. The words decide when the two scripts open differently. Most
    open the same way, so then the length decides (ffprobe): a raw long take
    runs about 2:30 and over, a short one about 2:15 and under. Between the
@@ -49,8 +65,33 @@ none), 2 when any is unsure, 1 when something failed.
 
 --record writes each sure match exactly as
     making.py --by NAME PIECE_ID recorded CUT "recordings/<sha256>.<ext>" --seconds N
-would. It never sends, posts, spends, moves or deletes anything, and never
-writes to the Inbox.
+would, stamped with script_sha256, the hash of the script it was taken from
+(the piece's script_check.hashes for that cut). A take of an older script
+then stops counting on the record.
+
+--board puts one item on Krish's board for each unsure take (POST
+/api/workbench, upsert_items, the route every session uses, through
+making.board_upsert): id take-<first 12 of its sha256>, on him, tied to the
+piece when the take is known to be one of its takes, closes_on "record". It
+reads the board first and never reopens an item: one done there (Krish
+answered, or a session closed it) is left alone, on either machine. Each
+take is asked about once for each question, its status, piece and whether
+it is about older words, never again because a score or the closest piece
+shifted: .cache/recordings/answered.json (the answered book) holds {sha256:
+{status, reason, name, item, piece_id, older_script, at}} for every take
+asked about ("unsure") or left alone for a newer take ("older take"), so the
+runners' recordings upload can run the match only when a take that no piece
+claims is not in it. A take left alone as "old" is not booked: the upload
+looks at it again some hours later. A take placed later leaves the book. In
+the lane (--board), a take downloaded only to hear its opening is deleted
+once heard (its words are cached by sha256), so the runners' disks do not
+fill. A take already on a waiting piece's record whose script's words
+changed after it was recorded no longer counts there, and is asked about the
+same way ("use it", or record it again); `making.py scripts` asks the same
+question itself when it finds the words changed.
+
+It never sends, posts, spends, moves or deletes anything, and never writes
+to the Inbox.
 """
 import argparse
 import hashlib
@@ -69,7 +110,9 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
+sys.path.append(str(HERE.parent / 'quick-edit'))
 import making  # noqa: E402  the piece's record: making.post, making.who, making.recorded_patch
+import transcriber  # noqa: E402  whether faster-whisper decodes here, and the pinned fix
 import recording  # noqa: E402  the engine's copies of the Inbox
 import story_check  # noqa: E402  cut_of: what a file name says it is
 
@@ -90,8 +133,13 @@ SETTLING = 120      # seconds unchanged before a file counts as finished (the re
 LANE_LIMIT = 500 * 1024 * 1024  # the recordings upload skips files over 500 MiB
 MIN_HEAD_WORDS = 12
 PACK_NAMES = {'long': 'video-script.md', 'short': 'video-script-90-seconds.md'}
-OUTPUT_KEYS = {'long': 'video_3min', 'short': 'video_90s'}
 SHA = re.compile(r'[0-9a-f]{64}')
+ANSWERED = 'answered.json'   # .cache/recordings/answered.json: the takes already asked about, or left alone
+BOARD_PATH = '/api/workbench'
+BOARD_CLIENTS = {'codex': 'codex', 'claude code': 'claude_code'}  # anything else writes as the runner
+BEFORE_CHANGE = 'recorded before the script last changed'
+TRANSCRIBER_FIX = transcriber.FIX  # the pinned set, never an unpinned install
+CLOCK_SLACK = timedelta(minutes=5)  # a phone's clock may run a little ahead of the engine's
 DAYS = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 MONTHS = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')
 
@@ -220,6 +268,53 @@ def _get(call, path):
         raise MatchError(f'the engine answered GET {path.split("?")[0]} with something that is not JSON')
 
 
+STEP_TIMES = (('workroom', 'at'), ('publish_manager', 'at'), ('visual_gate', 'checked_at'), ('script_check', 'checked_at'),
+              ('pack', 'packed_at'), ('session', 'started_at'))
+
+
+def began_at(record):
+    """When the piece's record began: its started_at, which the engine
+    writes once, on the record's first write, and never moves
+    (apps/control-plane/api/_making.ts mergeMaking). A record from before
+    that was kept falls back to the earliest time any of its steps holds,
+    which can only move later as steps are run again. A take from before it
+    cannot be one of its takes."""
+    fixed = parse_time(record.get('started_at'))
+    if fixed:
+        return fixed.isoformat().replace('+00:00', 'Z')
+    times = [parse_time((record.get(step) or {}).get(field)) for step, field in STEP_TIMES if isinstance(record.get(step), dict)]
+    times = [t for t in times if t]
+    return min(times).isoformat().replace('+00:00', 'Z') if times else None
+
+
+def cut_changed(piece, cut=None):
+    """When the words of this cut of the piece last changed: its
+    script_check.changed_at for the cut (making.py scripts keeps one per
+    cut), else the check's checked_at. With no cut, the later of the two
+    cuts. None when the record holds neither."""
+    at = piece.get('changed_at') if isinstance(piece.get('changed_at'), dict) else {}
+    if cut:
+        return parse_time(at.get(cut)) or parse_time(piece.get('checked_at'))
+    times = [parse_time(at.get(c)) for c in CUTS if parse_time(at.get(c))]
+    return max(times) if times else parse_time(piece.get('checked_at'))
+
+
+def first_changed(piece):
+    """The earlier of the two cuts' times: a take after it is of the current
+    words of at least one cut."""
+    at = piece.get('changed_at') if isinstance(piece.get('changed_at'), dict) else {}
+    times = [parse_time(at.get(c)) for c in CUTS if parse_time(at.get(c))]
+    return min(times) if times else parse_time(piece.get('checked_at'))
+
+
+def take_counts(rec, hashes):
+    """The engine's takeCounts (apps/control-plane/api/_making.ts): a take
+    counts for its cut unless it was taken from a script whose words have
+    changed since."""
+    sha, current = rec.get('script_sha256'), hashes.get(rec.get('cut'))
+    return not sha or not current or sha == current
+
+
 def waiting_pieces(call, monday):
     """(waiting, claimed). waiting: the pieces in flight this week and next
     whose Scripts step is done and Record step is not, the nearest first.
@@ -243,8 +338,15 @@ def waiting_pieces(call, monday):
         steps = {s.get('key'): s for s in data.get('steps') or [] if isinstance(s, dict)}
         if (steps.get('scripts') or {}).get('state') != 'done' or (steps.get('record') or {}).get('state') == 'done':
             continue
-        piece['recorded'] = sorted({r.get('cut') for r in recordings if r.get('cut') in CUTS})
+        hashes = making.current_hashes(record)
+        # A cut counts as recorded only with a take of its current words.
+        piece['recorded'] = sorted({r.get('cut') for r in recordings if r.get('cut') in CUTS and take_counts(r, hashes)})
+        piece['hashes'] = hashes
+        # Takes on the record whose script's words changed after them: asked about, never used.
+        piece['older_takes'] = [r for r in recordings if r.get('cut') in CUTS and not take_counts(r, hashes) and r.get('cut') not in piece['recorded']]
         piece['checked_at'] = (record.get('script_check') or {}).get('checked_at')
+        piece['changed_at'] = (record.get('script_check') or {}).get('changed_at') or {}
+        piece['began'] = began_at(record)
         piece['folder'] = (record.get('pack') or {}).get('folder')
         waiting.append(piece)
     waiting.sort(key=lambda p: (p.get('scheduled_for') or '9999-12-31', p['id']))
@@ -301,12 +403,11 @@ def find_post(piece_id, plans):
     return None, None
 
 
-def scripts_for(piece, plans=PLANS, roots=None, call=None):
+def scripts_for(piece, plans=PLANS, roots=None):
     """{'long': {'text', 'from'}, 'short': {...}}: each script the piece has.
     For a post.json "video-script" entry: its own text, the file beside the
     post.json, the pack, then the draft beside the plan
-    (docs/plans/<date>-draft-<file>). Then the pack by its usual names, then
-    the engine's transformed_outputs when its read of the piece carries them."""
+    (docs/plans/<date>-draft-<file>). Then the pack by its usual names."""
     roots = library_roots() if roots is None else roots
     folder = piece.get('folder')
     found = {}
@@ -340,16 +441,6 @@ def scripts_for(piece, plans=PLANS, roots=None, call=None):
             if text and text.strip():
                 found[cut] = {'text': text, 'from': _shown(root / folder / VIDEO / PACK_NAMES[cut])}
                 break
-    if call and any(cut not in found for cut in CUTS):
-        try:
-            outputs = (_get(call, f'/api/content-ideas?id={piece["id"]}').get('piece') or {}).get('transformed_outputs') or {}
-        except MatchError:
-            outputs = {}
-        for cut in CUTS:
-            script = outputs.get(OUTPUT_KEYS[cut]) if isinstance(outputs, dict) else None
-            text = script.get('script') if isinstance(script, dict) else script
-            if cut not in found and isinstance(text, str) and text.strip():
-                found[cut] = {'text': text, 'from': f'the engine, transformed_outputs.{OUTPUT_KEYS[cut]}'}
     return found
 
 
@@ -475,8 +566,8 @@ def transcribe_head(src, seconds=HEAD_SECONDS, model=MODEL):
     try:
         from faster_whisper import WhisperModel
     except ImportError:
-        raise MatchError('faster-whisper is not installed here, so the first 45 seconds cannot be heard. '
-                         'Install it as quick-edit needs it (pip install faster-whisper), or give the words with --words')
+        raise MatchError(f'faster-whisper is not installed here, so the first 45 seconds cannot be heard: {TRANSCRIBER_FIX}; '
+                         'or give the words with --words')
     if not shutil.which('ffmpeg'):
         raise MatchError('ffmpeg is not on this machine, so the first 45 seconds cannot be cut out to hear')
     with tempfile.TemporaryDirectory() as tmp:
@@ -493,15 +584,30 @@ def transcribe_head(src, seconds=HEAD_SECONDS, model=MODEL):
 
 
 def probe_seconds(src):
-    """How long the whole take runs, by ffprobe, or None."""
+    """{'seconds': how long the whole take runs, 'recorded_at': the time its
+    file says it was made (the container's creation_time tag)}, by ffprobe;
+    each None when it cannot be read."""
     if not shutil.which('ffprobe'):
-        return None
-    out = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nk=1', str(src)],
+        return {'seconds': None, 'recorded_at': None}
+    out = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration:format_tags=creation_time', '-of', 'json', str(src)],
                          capture_output=True, text=True)
     try:
-        return float(out.stdout.strip())
+        fmt = json.loads(out.stdout or '{}').get('format') or {}
     except ValueError:
-        return None
+        fmt = {}
+    try:
+        seconds = float(fmt.get('duration'))
+    except (TypeError, ValueError):
+        seconds = None
+    made = parse_time((fmt.get('tags') or {}).get('creation_time'))
+    return {'seconds': seconds, 'recorded_at': made.isoformat().replace('+00:00', 'Z') if made else None}
+
+
+def probed(value):
+    """(seconds, recorded_at) from what a probe gave: probe_seconds' dict, or a plain number."""
+    if isinstance(value, dict):
+        return value.get('seconds'), value.get('recorded_at')
+    return value, None
 
 
 def read_words(path):
@@ -522,47 +628,88 @@ def read_words(path):
 
 
 def hear(item, get_file, transcribe=transcribe_head, probe=probe_seconds, override=None, cache=CACHE):
-    """(words heard in the first 45 seconds, how long the take runs). From
-    --words, then .cache/recordings/<sha256>.head.words.json, then by hearing
-    it, which is cached for next time."""
+    """(words heard in the first 45 seconds, how long the take runs, when
+    its file says it was recorded or None). From --words, then
+    .cache/recordings/<sha256>.head.words.json, then by hearing it, which is
+    cached for next time. Any failure to hear it (a transcriber that cannot
+    decode, a file ffmpeg cannot read) is a MatchError for this take alone,
+    never a stop for the whole run."""
+    try:
+        return _hear(item, get_file, transcribe, probe, override, cache)
+    except MatchError:
+        raise
+    except Exception as error:  # noqa: BLE001 one take that cannot be heard is that take's failure, said plainly
+        raise MatchError(f'it could not be heard ({type(error).__name__}: {str(error)[:200]}); {TRANSCRIBER_FIX}') from None
+
+
+def _hear(item, get_file, transcribe, probe, override, cache):
     if override:
         said, seconds = read_words(override)
-        return said, seconds if seconds is not None else probe(get_file())
+        found, made = probed(probe(get_file())) if seconds is None else (seconds, None)
+        return said, found, made
     book = cache / f'{item["sha256"]}.head.words.json'
     try:
         kept = json.loads(book.read_text(encoding='utf-8'))
     except (OSError, ValueError):
         kept = None
     if isinstance(kept, dict) and kept.get('model') == MODEL and kept.get('head_seconds') == HEAD_SECONDS and isinstance(kept.get('words'), list):
-        seconds = kept.get('recording_seconds')
+        seconds, made = kept.get('recording_seconds'), kept.get('recorded_at')
         if not isinstance(seconds, (int, float)):
-            seconds = probe(get_file())
-        return kept['words'], seconds
+            seconds, made = probed(probe(get_file()))
+        return kept['words'], seconds, made
     src = get_file()
-    seconds = probe(src)
+    seconds, made = probed(probe(src))
     said = transcribe(src)
     try:
         cache.mkdir(parents=True, exist_ok=True)
         book.write_text(json.dumps({'sha256': item['sha256'], 'name': item['name'], 'model': MODEL, 'head_seconds': HEAD_SECONDS,
-                                    'duration': HEAD_SECONDS, 'recording_seconds': seconds, 'words': said}, indent=0), encoding='utf-8')
+                                    'duration': HEAD_SECONDS, 'recording_seconds': seconds, 'recorded_at': made, 'words': said}, indent=0),
+                        encoding='utf-8')
     except OSError:
         pass
-    return said, seconds
+    return said, seconds, made
 
 
 # ------------------------------------------------------------- deciding
 
 def eligible_for(item, pieces):
-    """The pieces this take can belong to: not one whose scripts were checked
-    after the take arrived."""
+    """The pieces this take can be placed on: those where it arrived after
+    the words of at least one cut last changed (cut_changed), so it can be a
+    take of current words. Which cut it is, and whether that cut's words
+    changed after it, is settled once it is heard (older_words)."""
     arrived = parse_time(item.get('at'))
     keep = []
     for piece in pieces:
-        checked = parse_time(piece.get('checked_at'))
-        if arrived and checked and arrived < checked:
+        first = first_changed(piece)
+        if arrived and first and arrived < first:
             continue
         keep.append(piece)
     return keep
+
+
+def predated_by(item, pieces):
+    """The pieces whose words (either cut's) changed after this take
+    arrived, but whose record had already begun: it may be a take of their
+    older words, so it is heard, and a match on a cut whose words changed
+    after it is asked about, never placed."""
+    arrived = parse_time(item.get('at'))
+    keep = []
+    for piece in pieces:
+        latest, began = cut_changed(piece), parse_time(piece.get('began'))
+        if arrived and latest and arrived < latest and (not began or arrived >= began):
+            keep.append(piece)
+    return keep
+
+
+def taken_at(item, answer, piece):
+    """When the take was recorded, as best known: the time its file says it
+    was made, when that is after the piece's record began and no later than
+    it reached the engine (a phone uploads late; a wrong clock is ignored);
+    else when it reached the engine."""
+    arrived, made, began = parse_time(item.get('at')), parse_time(answer.get('recorded_at')), parse_time(piece.get('began'))
+    if made and arrived and made <= arrived + CLOCK_SLACK and (not began or made >= began):
+        return min(made, arrived)
+    return arrived
 
 
 def decide(item, said, seconds, pieces, scripts):
@@ -585,7 +732,7 @@ def decide(item, said, seconds, pieces, scripts):
     best, pid = ranked[0]
     runner = ranked[1][0] if len(ranked) > 1 else 0.0
     piece = by_id[pid]
-    answer.update(piece_id=pid, score=best, runner_up=round(runner, 3))
+    answer.update(piece_id=pid, closest=pid, score=best, runner_up=round(runner, 3))
     if best < SURE:
         return {**answer, 'piece_id': None, 'reason': f'its opening matches no waiting piece well enough (closest {label(piece)} at {best:.2f}; {SURE:.2f} needed)'}
     if best - runner < MARGIN:
@@ -640,9 +787,11 @@ def plain(answer, pieces):
     if answer['status'] == 'older take':
         return f'left alone: "{name}" is {answer["reason"]}.'
     if answer['status'] == 'old':
-        return f'left alone: "{name}" arrived before the scripts of every piece waiting for a recording were checked.'
+        return f'left alone: "{name}" {answer.get("reason") or "arrived before any piece waiting for a recording began"}.'
     if answer['status'] == 'failed':
         return f'failed: "{name}": {answer["reason"]}.'
+    if answer.get('older_script'):
+        return f'unsure: "{name}": {answer["reason"]}. Ask Krish whether to use it or record it again.'
     return f'unsure: "{name}": {answer["reason"]}. Ask Krish which piece and cut it is.'
 
 
@@ -651,18 +800,163 @@ def command_for(answer, by):
             f'"{answer["path"]}" --seconds {int(round(answer["seconds"]))}')
 
 
+def older_words(answer, item, before, pieces):
+    """A take that matches a piece's cut whose words changed after it was
+    recorded (taken_at against that cut's own time, cut_changed): unsure,
+    never placed, so a change to the long script never makes a short take
+    of unchanged words look old. One that matches none of the pieces it
+    predates and could be placed on no other: left alone."""
+    by_id = {p['id']: p for p in pieces}
+    before_ids = {p['id'] for p in before}
+    pid = answer.get('piece_id')
+    if pid and pid in by_id:
+        piece = by_id[pid]
+        changed = cut_changed(piece, answer.get('cut'))
+        when = taken_at(item, answer, piece)
+        if not (changed and when and when < changed):
+            return answer
+        cut = f"'s {answer['cut']} cut" if answer.get('cut') else ''
+        how = 'was recorded' if when != parse_time(item.get('at')) else 'arrived'
+        return {**answer, 'status': 'unsure', 'older_script': True,
+                'reason': f'it is {label(piece)}{cut}, but it was {BEFORE_CHANGE} '
+                          f'(it {how} {when.isoformat()[:16].replace("T", " ")}, the script was last changed '
+                          f'{changed.isoformat()[:16].replace("T", " ")}), so it may be a take of the older words'}
+    if not pid and len(before_ids) == len(pieces):
+        # Every piece it could be changed its words after it arrived.
+        if (answer.get('score') or 0) >= SURE:
+            return {**answer, 'older_script': True, 'reason': f'{answer["reason"]}; and it was {BEFORE_CHANGE}'}
+        return {**answer, 'status': 'old', 'reason': 'arrived before the scripts of every piece waiting for a recording last changed, '
+                                                     'and its opening matches none of them'}
+    return answer
+
+
+board_client = making.board_client  # codex, claude_code, else the runner
+
+
+def board_item(answer, pieces):
+    """One board item for one unsure take: on Krish, tied to the piece when
+    the take is known to be one of its takes (or is one of two close
+    pieces'), closes when that piece's Record step is done."""
+    by_id = {p['id']: p for p in pieces}
+    sha, name = answer['sha256'], answer['name']
+    shown = name if len(name) <= 80 else name[:77] + '...'
+    pid = answer.get('piece_id') or (answer.get('closest') if (answer.get('score') or 0) >= SURE else None)
+    path = answer.get('path') or f'recordings/{sha}.{ext_of(name)}'
+    if answer.get('older_script'):
+        title = f'Use the take "{shown}", recorded before the script changed?'
+        prompt = 'Use it, or I will record it again'
+        ask = ('Reply "use it" and a session records it on the piece with your words, as a take of the current script, '
+               'or record that cut again and drop the new take in the Inbox.')
+    else:
+        title = f'Which piece and cut is the take "{shown}"?'
+        prompt = 'Which piece and cut, or not a piece'
+        ask = ('Reply with the piece and the cut (the 3-minute or the 90-second), or say it is not a take for a piece; '
+               'a session then records it with making.py.')
+    detail = (f'{answer["reason"][0].upper()}{answer["reason"][1:]}. It reached the engine {str(answer.get("at"))[:16].replace("T", " ")} '
+              f'as {path}; nothing was recorded for it. {ask}')
+    item = {'id': f'take-{sha[:12]}', 'lane': 'on_you', 'rank': 5, 'area': 'Recordings', 'title': title[:200],
+            'detail': detail[:2000], 'prompt': prompt, 'closes_on': 'record'}
+    if pid and pid in by_id:
+        item['idea_id'] = pid
+    return item
+
+
+def load_answered(cache):
+    try:
+        book = json.loads((Path(cache) / ANSWERED).read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return {}
+    return {k: v for k, v in book.items() if SHA.fullmatch(str(k)) and isinstance(v, dict)} if isinstance(book, dict) else {}
+
+
+def save_answered(cache, book):
+    path = Path(cache) / ANSWERED
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        partial = path.with_suffix('.json.part')
+        partial.write_text(json.dumps(book, indent=1, sort_keys=True), encoding='utf-8')
+        os.replace(partial, path)
+    except OSError:
+        pass
+
+
+def asked_as(entry):
+    """What a question was, as the answered book keys it: its status, the
+    piece it is tied to and whether it is about older words. The free-text
+    reason (a score, the closest piece) is not part of it, so a reason that
+    shifts as the waiting pieces change never asks again."""
+    entry = entry if isinstance(entry, dict) else {}
+    return (entry.get('status'), entry.get('piece_id'), bool(entry.get('older_script')))
+
+
+def ask_on_board(answers, pieces, call, by, cache, out, now=None):
+    """Puts each unsure take on the board once for each question (asked_as:
+    its status, its piece, older words or not), and keeps the answered
+    book. The board is never made to reopen an item (making.board_upsert):
+    one Krish or a session closed stays closed, on either machine. A take
+    left alone as "old" is not booked: the recordings upload looks at it
+    again later, as a piece may start waiting for it. Returns (asked,
+    failed): the item ids written, and whether the board refused or could
+    not be reached."""
+    stamp = now or datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+    book = load_answered(cache)
+    before = dict(book)
+    asked, items, entries = [], [], {}
+    for answer in answers:
+        sha = answer.get('sha256')
+        if not sha:
+            continue
+        if answer['status'] == 'placed':
+            book.pop(sha, None)
+            continue
+        if answer['status'] == 'older take':
+            # Heard, and a newer take of the same cut is used: nothing to ask.
+            if (book.get(sha) or {}).get('status') != 'older take':
+                book[sha] = {'status': 'older take', 'reason': answer.get('reason'), 'name': answer['name'], 'at': stamp}
+            continue
+        if answer['status'] != 'unsure':
+            continue
+        item = board_item(answer, pieces)
+        entry = {'status': 'unsure', 'reason': answer['reason'], 'name': answer['name'], 'item': item['id'],
+                 'piece_id': item.get('idea_id'), 'older_script': bool(answer.get('older_script')), 'at': stamp}
+        if asked_as(book.get(sha)) == asked_as(entry):
+            out(f'already asked on the board: "{answer["name"]}" ({item["id"]})')
+            continue
+        items.append(item)
+        entries[item['id']] = (sha, entry)
+    failed = False
+    try:
+        written, left = making.board_upsert(items, call, by)
+    except making.MakingError as error:
+        failed, written, left = True, [], []
+        out(f'failed: {error}; asked again on the next run')
+    for item_id in written + left:
+        sha, entry = entries[item_id]
+        book[sha] = entry
+        if item_id in written:
+            asked.append(item_id)
+            out(f'asked on the board: {item_id}, {next(i["title"] for i in items if i["id"] == item_id)}')
+        else:
+            out(f'not asked again: {item_id} is closed on the board (answered, or closed by a session)')
+    if book != before:
+        save_answered(cache, book)
+    return asked, failed
+
+
 def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head, probe=probe_seconds,
         out=print, cache=CACHE, plans=PLANS, roots=None):
     """The whole run, with every outside thing passed in. Returns (exit code, report)."""
     monday = week_monday(opts.get('week'))
     by = making.who(opts.get('by'))
     pieces, claimed = waiting_pieces(call, monday)
-    items = fresh(list_items(), claimed)
+    listed = list_items()
+    named = {i['sha256']: i for i in listed if i.get('sha256')}
+    items = fresh(listed, claimed)
     overrides = parse_overrides(opts.get('words'), [i for i in items if i.get('sha256')])
-    report = {'week_start': monday.isoformat(), 'waiting': [], 'files': [], 'recorded': []}
+    report = {'week_start': monday.isoformat(), 'waiting': [], 'files': [], 'recorded': [], 'asked': []}
     scripts = {}
     for piece in pieces:
-        scripts[piece['id']] = scripts_for(piece, plans, roots, call)
+        scripts[piece['id']] = scripts_for(piece, plans, roots)
         report['waiting'].append({'id': piece['id'], 'day': day_of(piece.get('scheduled_for')), 'subject': subject_of(piece),
                                   'cuts': [c for c in CUTS if c not in piece['recorded']],
                                   'scripts': {c: s['from'] for c, s in scripts[piece['id']].items()}})
@@ -675,7 +969,7 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
         missing = [c for c in CUTS if c not in scripts[piece['id']]]
         if missing:
             out(f'note: no {" or ".join(missing)} script found for {label(piece)} (docs/plans post.json, the draft beside it, '
-                f'the pack, or the engine), so it is matched on what there is.')
+                f'or the pack), so it is matched on what there is.')
     if not items:
         out('No new recordings: everything that has arrived is already on a piece.')
     elif not pieces:
@@ -688,21 +982,50 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
             continue
         if not pieces:
             continue
-        eligible = eligible_for(item, pieces)
-        if not eligible:
-            answers.append({**base, 'status': 'old'})
+        # The time rule: placed only on a piece whose words last changed
+        # before it arrived; heard against one whose words changed after it
+        # arrived (once its record had begun), and a match is asked about.
+        before = predated_by(item, pieces)
+        candidates = eligible_for(item, pieces) + before
+        if not candidates:
+            answers.append({**base, 'status': 'old', 'reason': 'arrived before any piece waiting for a recording began, so it is none of their takes'})
             continue
+        # The lane (--board) keeps no copy of a take it downloads only to hear
+        # its opening: the words are cached by sha256, and a production
+        # session fetches the take on purpose (recording.py get).
+        copies = [cache / item['name'], cache / f'{item["sha256"]}.{ext_of(item["name"])}'] if item['source'] == 'engine' else []
+        there = {c for c in copies if c.exists()}
         try:
-            said, seconds = hear(item, lambda: get_file(item, cache), transcribe, probe, overrides.get(item['sha256']), cache)
+            said, seconds, made = hear(item, lambda: get_file(item, cache), transcribe, probe, overrides.get(item['sha256']), cache)
         except MatchError as error:
             answers.append({**base, 'status': 'failed', 'reason': str(error)})
             continue
-        answer = {**base, **decide(item, said, seconds, eligible, scripts)}
+        finally:
+            if opts.get('board'):
+                for copy in copies:
+                    if copy not in there and copy.exists():
+                        try:
+                            copy.unlink()
+                        except OSError:
+                            pass
+        answer = older_words({**base, 'recorded_at': made, **decide(item, said, seconds, candidates, scripts)}, item, before, candidates)
         answer['path'] = f'recordings/{item["sha256"]}.{ext_of(item["name"])}'
         if item['source'] == 'inbox' and item['bytes'] > LANE_LIMIT:
             answer['big'] = True
         answers.append(answer)
     settle(answers)
+    # A take already on the record, of words that changed after it, unless a new take of that cut is placed now.
+    placing = {(a['piece_id'], a['cut']) for a in answers if a['status'] == 'placed'}
+    for piece in pieces:
+        for rec in piece.get('older_takes') or []:
+            sha = (SHA.findall(str(rec.get('path') or '').lower()) or [None])[0]
+            if not sha or (piece['id'], rec['cut']) in placing:
+                continue
+            listed_as = named.get(sha) or {}
+            answers.append({'name': listed_as.get('name') or Path(str(rec['path'])).name, 'sha256': sha, 'at': listed_as.get('at') or rec.get('at'),
+                            'source': 'record', 'status': 'unsure', 'older_script': True, 'piece_id': piece['id'], 'cut': rec['cut'],
+                            'path': rec['path'], 'reason': f'it is on {label(piece)} as its {rec["cut"]} cut, but the script\'s words changed after it '
+                                                           f'was recorded, so it no longer counts'})
     for answer in answers:
         out(plain(answer, pieces))
         report['files'].append({k: v for k, v in answer.items() if k != 'scores'} | {'scores': answer.get('scores', {})})
@@ -712,18 +1035,25 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
     placed = sorted((a for a in answers if a['status'] == 'placed'), key=lambda a: (order[a['piece_id']], CUTS.index(a['cut'])))
     for answer in placed:
         if opts.get('record'):
-            patch = making.recorded_patch(answer['cut'], answer['path'], int(round(answer['seconds'])))
+            piece = by_id[answer['piece_id']]
+            # Stamped with the script it was taken from: the piece's current words for that cut.
+            patch = making.recorded_patch(answer['cut'], answer['path'], answer['seconds'], (piece.get('hashes') or {}).get(answer['cut']))
             try:
                 making.post(answer['piece_id'], patch, call, by=by)
             except making.MakingError as error:
                 answer['status'] = 'failed'
-                out(f'failed: "{answer["name"]}" was not recorded on {label(by_id[answer["piece_id"]])}: {error}')
+                answer['reason'] = f'it was not recorded: {error}'
+                out(f'failed: "{answer["name"]}" was not recorded on {label(piece)}: {error}')
                 continue
-            report['recorded'].append({'piece_id': answer['piece_id'], 'cut': answer['cut'], 'path': answer['path'], 'by': by})
-            out(f'recorded on the board, by {by}: {label(by_id[answer["piece_id"]])} {answer["cut"]} cut, "{answer["name"]}" ({answer["path"]})')
+            report['recorded'].append({'piece_id': answer['piece_id'], 'cut': answer['cut'], 'path': answer['path'], 'by': by,
+                                       **({'script_sha256': patch['recordings'][0]['script_sha256']} if 'script_sha256' in patch['recordings'][0] else {})})
+            out(f'recorded on the board, by {by}: {label(piece)} {answer["cut"]} cut, "{answer["name"]}" ({answer["path"]})')
         else:
             out(f'to record it: {command_for(answer, by)}')
-    if any(a['status'] == 'failed' for a in answers):
+    board_failed = False
+    if opts.get('board'):
+        report['asked'], board_failed = ask_on_board(answers, pieces, call, by, cache, out)
+    if board_failed or any(a['status'] == 'failed' for a in answers):
         code = 1
     elif any(a['status'] == 'unsure' for a in answers):
         code = 2
@@ -815,19 +1145,32 @@ def self_test():
     # The pieces, from the engine (a stand-in).
     MON, FRI, DONE, EARLY = ('f328382d-71b3-41a7-a221-d8615826f12e', '904658db-4df2-4537-a0ed-ebe93e081db7',
                              '5255dcd8-0000-4000-8000-000000000001', 'de5f0d87-0000-4000-8000-000000000002')
-    claimed_sha = 'c' * 64
+    claimed_sha, stale_sha = 'c' * 64, 'e' * 64
+    mon_hashes = {'long': making.script_hash(' '.join(mon_long)), 'short': making.script_hash(' '.join(mon_short))}
     makings = {
-        MON: {'making': {'script_check': {'passed': True, 'checked_at': '2026-10-11T19:14:16Z'}, 'pack': {'folder': '2026-10-12 Mon follow.the.money - Who gets paid for AI songs'}},
-              'steps': [{'key': 'scripts', 'state': 'done'}, {'key': 'record', 'state': 'todo'}]},
+        # Monday's record began on the 10th; its words last changed at 19:14 on the 11th; one long take of older words is on it.
+        MON: {'making': {'workroom': {'url': 'https://claude.ai/artifact/m', 'at': '2026-10-10T09:00:00Z'},
+                         'script_check': {'passed': True, 'checked_at': '2026-10-11T19:14:16Z', 'hashes': mon_hashes},
+                         'pack': {'folder': '2026-10-12 Mon follow.the.money - Who gets paid for AI songs'},
+                         'recordings': [{'cut': 'long', 'path': f'recordings/{stale_sha}.mp4', 'script_sha256': 'f' * 64}]},
+              'steps': [{'key': 'scripts', 'state': 'done'}, {'key': 'record', 'state': 'now'}]},
         FRI: {'making': {'script_check': {'passed': True, 'checked_at': '2026-10-11T18:13:41Z'}, 'pack': {'folder': '2026-10-16 Fri mind.the.gap - Why so many AIs'}},
               'steps': [{'key': 'scripts', 'state': 'done'}, {'key': 'record', 'state': 'todo'}]},
         DONE: {'making': {'recordings': [{'cut': 'long', 'path': f'recordings/{claimed_sha}.mp4'}, {'cut': 'short', 'path': 'recordings/x.mp4'}]},
                'steps': [{'key': 'scripts', 'state': 'done'}, {'key': 'record', 'state': 'done'}]},
         EARLY: {'making': {}, 'steps': [{'key': 'scripts', 'state': 'todo'}, {'key': 'record', 'state': 'todo'}]},
     }
-    weeks_asked, posts = [], []
+    weeks_asked, posts, board_posts = [], [], []
+    board_lanes = {}  # the board as the engine holds it: item id to lane
 
     def fake(method, path, body):
+        if method == 'GET' and path == BOARD_PATH:
+            return 200, json.dumps({'ok': True, 'items': [{'id': k, 'lane': v} for k, v in board_lanes.items()]})
+        if method == 'POST' and path == BOARD_PATH:
+            board_posts.append(body)
+            for i in body['items']:
+                board_lanes[i['id']] = i.get('lane') or board_lanes.get(i['id']) or i.get('lane_if_new')
+            return 200, json.dumps({'ok': True, 'written': [i['id'] for i in body['items']]})
         if method == 'POST':
             posts.append((path, body))
             return 200, json.dumps({'ok': True, 'steps': []})
@@ -844,8 +1187,14 @@ def self_test():
     pieces, claimed = waiting_pieces(fake, week_monday('2026-10-14'))
     check('weeks: this one and the next, from any day of the week', weeks_asked, ['2026-10-12', '2026-10-19'])
     check('waiting: scripts done and record not, the nearest first', [p['id'] for p in pieces], [MON, FRI])
-    check('claimed: a recording already on any piece is not new', claimed, {claimed_sha})
+    check('claimed: a recording already on any piece is not new', claimed, {claimed_sha, stale_sha})
     check('a piece is named by its day and its subject', label(pieces[0]), 'Mon 12 Oct "Who gets paid for AI songs"')
+    check('waiting: a take of an older script leaves its cut still to record', (pieces[0]['recorded'], pieces[1]['recorded']), ([], []))
+    check('waiting: each piece carries its scripts\' hashes (none on a record from before them)', (pieces[0]['hashes'], pieces[1]['hashes']), (mon_hashes, {}))
+    check('waiting: a piece\'s record began at its earliest step', (pieces[0]['began'], pieces[1]['began']), ('2026-10-10T09:00:00Z', '2026-10-11T18:13:41Z'))
+    check('take_counts: no hash, no current hash, or the same script', [take_counts(r, {'long': 'a' * 64}) for r in
+          ({'cut': 'long'}, {'cut': 'long', 'script_sha256': 'a' * 64}, {'cut': 'long', 'script_sha256': 'b' * 64}, {'cut': 'short', 'script_sha256': 'b' * 64})],
+          [True, True, False, True])
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
@@ -861,15 +1210,14 @@ def self_test():
         fri_video = library_posts / '2026-10-16 Fri mind.the.gap - Why so many AIs' / VIDEO
         fri_video.mkdir(parents=True)
         (fri_video / 'video-script.md').write_text(' '.join(fri_long), encoding='utf-8')
-        found = scripts_for(pieces[0], plans, [library_posts], fake)
+        found = scripts_for(pieces[0], plans, [library_posts])
         check('scripts: the long from beside post.json', (found['long']['from'].endswith('2026-10-12-monday/script.md'), words(found['long']['text'])), (True, mon_long))
         check('scripts: the short from the draft beside the plan', found['short']['from'].endswith('2026-10-12-draft-script-90s.md'), True)
-        outputs = {'transformed_outputs': {'video_90s': {'script': ' '.join(fri_short)}}}
-        engine_has = lambda m, p, b: (200, json.dumps({'ok': True, 'piece': outputs})) if p.startswith('/api/content-ideas?id=') else fake(m, p, b)
-        found = scripts_for(pieces[1], plans, [library_posts], engine_has)
+        found = scripts_for(pieces[1], plans, [library_posts])
         check('scripts: the long from the pack in the library, by its folder', found['long']['from'].endswith(f'{VIDEO}/video-script.md'), True)
-        check('scripts: the short from the engine when nothing else has it', found['short']['from'], 'the engine, transformed_outputs.video_90s')
-        check('scripts: none at all is an empty answer, not an error', scripts_for({'id': EARLY}, plans, [library_posts], fake), {})
+        check('scripts: nothing is read from the engine; a script found nowhere is missing', 'short' in found, False)
+        check('scripts: none at all is an empty answer, not an error', scripts_for({'id': EARLY}, plans, [library_posts]), {})
+        check('scripts: the dead engine fallback is gone', ('OUTPUT_KEYS' in globals(), 'transformed_outputs' in Path(__file__).read_text(encoding='utf-8').split('def scripts_for', 1)[1].split('def engine_recordings', 1)[0]), (False, False))
         scripts = {MON: {'long': {'text': ' '.join(mon_long)}, 'short': {'text': ' '.join(mon_short)}},
                    FRI: {'long': {'text': ' '.join(fri_long)}, 'short': {'text': ' '.join(fri_short)}}}
 
@@ -904,6 +1252,32 @@ def self_test():
         check('the time rule: a take that arrived before a piece\'s scripts were checked is not that piece\'s',
               [p['id'] for p in eligible_for({'at': '2026-10-11T18:30:00Z'}, pieces)], [FRI])
         check('the time rule: a take from 6 October belongs to neither', eligible_for({'at': '2026-10-06T21:53:00Z'}, pieces), [])
+        check('the time rule: a take from after a record began but before its words last changed is heard for it',
+              [p['id'] for p in predated_by({'at': '2026-10-11T08:00:00Z'}, pieces)], [MON])
+        check('the time rule: ... and one from before any record began is heard for none', predated_by({'at': '2026-10-06T21:53:00Z'}, pieces), [])
+        # The second reviewer's case: only the long script changed after the two takes arrived.
+        per_cut = [dict(pieces[0], checked_at='2026-10-12T12:00:00Z', changed_at={'long': '2026-10-12T12:00:00Z', 'short': '2026-10-11T19:14:16Z'})]
+        a_long = older_words({**decide(take, _heard(mon_long[:110]), 172.0, per_cut, scripts), 'name': 'IMG_4471.mov'}, {'at': '2026-10-12T11:00:00Z'},
+                             predated_by({'at': '2026-10-12T11:00:00Z'}, per_cut), per_cut)
+        a_short = older_words({**decide(take, _heard(mon_short[:110]), 98.0, per_cut, scripts), 'name': 'IMG_4472.mov'}, {'at': '2026-10-12T11:00:00Z'},
+                              predated_by({'at': '2026-10-12T11:00:00Z'}, per_cut), per_cut)
+        check('the time rule, cut by cut: a long script change asks about the long take and places the short one of unchanged words',
+              ((a_long['status'], a_long.get('older_script')), (a_short['status'], a_short.get('cut'))), (('unsure', True), ('placed', 'short')))
+        made_before = older_words({**decide(take, _heard(mon_long[:110]), 172.0, per_cut, scripts), 'name': 'late.mov', 'recorded_at': '2026-10-12T11:30:00Z'},
+                                  {'at': '2026-10-12T13:00:00Z'}, [], per_cut)
+        check('a take recorded before its cut changed, though it reached the engine after, is asked about (its file\'s own time)',
+              (made_before['status'], 'was recorded 2026-10-12 11:30' in made_before.get('reason', '')), ('unsure', True))
+        wrong_clock = older_words({**decide(take, _heard(mon_long[:110]), 172.0, per_cut, scripts), 'name': 'clock.mov', 'recorded_at': '2001-01-01T00:00:00Z'},
+                                  {'at': '2026-10-12T13:00:00Z'}, [], per_cut)
+        check('a file time from before the record began (a wrong clock) is ignored: it is placed on its arrival', wrong_clock['status'], 'placed')
+        check('a record\'s fixed started_at is when it began, however its steps move later',
+              began_at({'started_at': '2026-10-10T09:00:00Z', 'workroom': {'at': '2026-10-12T12:00:00Z'}, 'pack': {'packed_at': '2026-10-12T12:00:00Z'}}),
+              '2026-10-10T09:00:00Z')
+        a = older_words({**decide(take, _heard(mon_long[:110]), 172.0, pieces[:1], scripts), 'name': 'x.mp4'}, {'at': '2026-10-11T08:00:00Z'}, pieces[:1], pieces[:1])
+        check('older words: a match on a piece whose words changed after it arrived is unsure, and says so',
+              (a['status'], a.get('older_script'), BEFORE_CHANGE in a.get('reason', ''), 'long cut' in a.get('reason', '')), ('unsure', True, True, True))
+        a = older_words({**decide(take, _heard(_prose(9, 110)), 170.0, pieces[:1], scripts), 'name': 'x.mp4'}, {'at': '2026-10-11T08:00:00Z'}, pieces[:1], pieces[:1])
+        check('older words: no match on the pieces it predates is left alone', (a['status'], 'matches none' in a.get('reason', '')), ('old', True))
 
         # The Inbox on a runner machine: the top level only, as the upload reads it.
         inbox = tmp / 'Inbox'
@@ -949,21 +1323,39 @@ def self_test():
         code, report = run({'week': '2026-10-12', 'by': 'Codex'}, fake, lambda: engine_recordings(listing), **common)
         status = {f['name']: (f['status'], f.get('cut')) for f in report['files']}
         check('run: every new take is placed, so the exit is 0', code, 0)
-        check('run: the old take and the claimed one are never heard',
+        check('run: a new take of a cut whose take on the record is of older words replaces it; nothing is asked about the old one',
+              [f['name'] for f in report['files'] if f['source'] == 'record'], [])
+        check('run: a take from before every record began, and the claimed one, are never heard',
               (status.get('who gets paid.mp4'), 'claimed.mp4' in status, sorted(map(str, heard_calls))), (('old', None), False, ['IMG_0000.mov', 'IMG_0001.mov', 'monday long.mp4']))
         check('run: Monday long and Friday short placed; the older Friday take named and left alone',
               (status.get('monday long.mp4'), status.get('IMG_0001.mov'), status.get('IMG_0000.mov')), (('placed', 'long'), ('placed', 'short'), ('older take', 'short')))
         check('run: without --record, nothing is written and the command is given', (posts, any(line.startswith('to record it: python scripts/post-pack/making.py --by "Codex" ' + MON + ' recorded long "recordings/') for line in lines)), ([], True))
         check('run: one plain line per file', sum(1 for line in lines if line.split(':')[0] in ('placed', 'unsure', 'left alone', 'failed')), 4)
         check('run: the hearing is cached by sha256', (tmp / 'cache' / f'{hashlib.sha256(b"mon long").hexdigest()}.head.words.json').is_file(), True)
+        # The lane keeps no copy of a take it downloaded only to hear it.
+        fetching = dict(common, get_file=lambda i, cache: local_copy(i, cache, fetch=lambda url, handle: handle.write(
+            {'monday long.mp4': b'mon long', 'IMG_0001.mov': b'fri short', 'IMG_0000.mov': b'fri short, first try'}[i['name']])))
+        kept_by = tmp / 'kept'
+        kept_by.mkdir()
+        (kept_by / 'IMG_0000.mov').write_bytes(b'fri short, first try')  # a copy a session fetched on purpose
+        run({'week': '2026-10-12', 'board': True, 'by': 'Recordings lane'}, fake, lambda: engine_recordings(listing), **{**fetching, 'cache': kept_by})
+        check('--board: a take downloaded only to hear it is deleted once heard; a copy that was there before is kept; the words stay cached',
+              (sorted(p.name for p in kept_by.iterdir() if not p.name.endswith('.json')),
+               len([p for p in kept_by.iterdir() if p.name.endswith('.head.words.json')])), (['IMG_0000.mov'], 3))
+        board_posts.clear()
+        run({'week': '2026-10-12', 'by': 'Codex'}, fake, lambda: engine_recordings(listing), **{**fetching, 'cache': tmp / 'session'})
+        check('without --board (a session), the downloaded takes are kept', sorted(p.name for p in (tmp / 'session').iterdir() if not p.name.endswith('.json')),
+              ['IMG_0000.mov', 'IMG_0001.mov', 'monday long.mp4'])
         heard_calls.clear()
         lines.clear()
         code, report = run({'week': '2026-10-12', 'by': 'Codex', 'record': True}, fake, lambda: engine_recordings(listing), **common)
         check('run again: the cache is used, nothing is heard twice', heard_calls, [])
-        check('--record: one write per placed take, by Codex, the engine copy and its length',
+        check('--record: one write per placed take, by Codex, the engine copy, its length and the script it was taken from',
               [(p.split('/')[3], b['by'], b['recordings']) for p, b in posts],
-              [(MON, 'Codex', [{'cut': 'long', 'path': f'recordings/{hashlib.sha256(b"mon long").hexdigest()}.mp4', 'seconds': 174}]),
+              [(MON, 'Codex', [{'cut': 'long', 'path': f'recordings/{hashlib.sha256(b"mon long").hexdigest()}.mp4', 'seconds': 174,
+                                'script_sha256': mon_hashes['long']}]),
                (FRI, 'Codex', [{'cut': 'short', 'path': f'recordings/{hashlib.sha256(b"fri short").hexdigest()}.mov', 'seconds': 96}])])
+        check('--record: no board item without --board', board_posts, [])
         check('--record: the report lists what was written', [(r['cut'], r['by']) for r in report['recorded']], [('long', 'Codex'), ('short', 'Codex')])
 
         # Unsure: one file between the two lengths, so the run says so and exits 2.
@@ -975,6 +1367,80 @@ def self_test():
         check('unsure: the sure one is still recorded, the unsure one is not', [b['recordings'][0]['cut'] for _, b in posts], ['long'])
         check('unsure: said in one plain line naming the file', next((line for line in lines if line.startswith('unsure:')), '').startswith('unsure: "IMG_0001.mov": it is Fri 16 Oct "Why so many AIs", but it runs 2:20'), True)
         check('--by left out: MAKING_BY, else Claude Code', posts[0][1]['by'], making.who(None))
+
+        # The time rule in a whole run: Monday's words changed at 19:14 on the 11th, after these takes arrived.
+        posts.clear()
+        heard_text.update({'early monday long.mp4': (_heard(mon_long[:110]), 175.0), 'early other.mp4': (_heard(_prose(11, 110)), 170.0),
+                           'evening monday long.mp4': (_heard(mon_long[:110], junk=3), 176.0)})
+        early = [item('early monday long.mp4', b'early mon long', '2026-10-11T08:00:00Z'),
+                 item('early other.mp4', b'early other', '2026-10-11T08:30:00Z'),
+                 item('evening monday long.mp4', b'evening mon long', '2026-10-11T18:30:00Z')]
+        lines.clear()
+        code, report = run({'week': '2026-10-12', 'record': True, 'by': 'Recordings lane'}, fake, lambda: engine_recordings(early), **{**common, 'cache': tmp / 'cache5'})
+        status = {f['name']: (f['status'], f.get('older_script', False)) for f in report['files']}
+        check('time rule: a take of Monday\'s older words is heard and asked about, never placed or left alone (exit 2)',
+              (code, status.get('early monday long.mp4'), status.get('evening monday long.mp4'), posts), (2, ('unsure', True), ('unsure', True), []))
+        check('time rule: one that matches nothing it could be is heard, then left alone', status.get('early other.mp4'), ('old', False))
+        check('time rule: the line says it was recorded before the script last changed',
+              any(line.startswith('unsure: "early monday long.mp4": it is Mon 12 Oct "Who gets paid for AI songs"\'s long cut, but it was recorded before the script last changed') for line in lines), True)
+
+        # --board: one item per unsure take, once for each reason, and the answered book.
+        board = tmp / 'board-cache'
+        code, report = run({'week': '2026-10-12', 'record': True, 'board': True, 'by': 'Recordings lane'}, fake, lambda: engine_recordings(early), **{**common, 'cache': board})
+        sent = [i for b in board_posts for i in b['items']]
+        early_sha = hashlib.sha256(b'early mon long').hexdigest()
+        check('--board: one item for each unsure take, the older take already on the record too, as the runner',
+              ([b['client'] for b in board_posts], sorted(i['id'] for i in sent), code),
+              (['runner'], sorted([f'take-{early_sha[:12]}', f'take-{hashlib.sha256(b"evening mon long").hexdigest()[:12]}', f'take-{stale_sha[:12]}']), 2))
+        stale_item = next(i for i in sent if i['id'] == f'take-{stale_sha[:12]}')
+        check('--board: the take on the record of older words: use it or record again, on Monday, by its record path',
+              (stale_item.get('idea_id'), stale_item['prompt'], f'recordings/{stale_sha}.mp4' in stale_item['detail'], 'no longer counts' in stale_item['detail']),
+              (MON, 'Use it, or I will record it again', True, True))
+        first_item = next(i for i in sent if i['id'] == f'take-{early_sha[:12]}')
+        check('--board: on Krish (a new item\'s lane), tied to Monday, closed by its Record step',
+              (first_item.get('lane_if_new'), 'lane' in first_item, first_item.get('idea_id'), first_item['closes_on'], first_item['prompt']),
+              ('on_you', False, MON, 'record', 'Use it, or I will record it again'))
+        check('--board: the item says what happened and what to answer', ('recorded before the script last changed' in first_item['detail'], f'recordings/{early_sha}.mp4' in first_item['detail'],
+                                                                           len(first_item['title']) <= 200, len(first_item['detail']) <= 2000), (True, True, True, True))
+        book = load_answered(board)
+        check('--board: the answered book holds the questions, each with its piece and whether it is about older words; '
+              'a take left alone as old is not booked, so the upload looks at it again later',
+              sorted((v['status'], v.get('item', ''), v.get('older_script')) for v in book.values()),
+              sorted([('unsure', f'take-{early_sha[:12]}', True), ('unsure', f'take-{hashlib.sha256(b"evening mon long").hexdigest()[:12]}', True),
+                      ('unsure', f'take-{stale_sha[:12]}', True)]))
+        board_posts.clear()
+        lines.clear()
+        run({'week': '2026-10-12', 'board': True, 'by': 'Codex'}, fake, lambda: engine_recordings(early), **{**common, 'cache': board})
+        check('--board: asked once; the same question is not asked again', (board_posts, sum(1 for line in lines if line.startswith('already asked'))), ([], 3))
+        book[early_sha]['reason'] = 'its opening matches no waiting piece well enough (closest at 0.65)'
+        save_answered(board, book)
+        run({'week': '2026-10-12', 'board': True, 'by': 'Codex'}, fake, lambda: engine_recordings(early), **{**common, 'cache': board})
+        check('--board: a reason that shifts (a score, the closest piece) asks nothing again (the second reviewer\'s case)', board_posts, [])
+        book[early_sha]['piece_id'] = FRI
+        save_answered(board, book)
+        run({'week': '2026-10-12', 'board': True, 'by': 'Codex'}, fake, lambda: engine_recordings(early), **{**common, 'cache': board})
+        check('--board: a new question (another piece) asks again, as Codex, on the open item, without its lane',
+              [(b['client'], [(i['id'], 'lane' in i, 'lane_if_new' in i) for i in b['items']]) for b in board_posts],
+              [('codex', [(f'take-{early_sha[:12]}', False, False)])])
+        board_posts.clear()
+        # Krish answers "not a piece" and a session closes the item: on the other machine (a fresh cache), it is never reopened.
+        board_lanes[f'take-{early_sha[:12]}'] = 'done'
+        lines.clear()
+        run({'week': '2026-10-12', 'board': True, 'by': 'Recordings lane'}, fake, lambda: engine_recordings(early), **{**common, 'cache': tmp / 'other-machine'})
+        sent_ids = [i['id'] for b in board_posts for i in b['items']]
+        check('--board: an item closed on the board is not reopened from the other machine, and is booked there',
+              (f'take-{early_sha[:12]}' in sent_ids, any(line.startswith('not asked again') for line in lines),
+               load_answered(tmp / 'other-machine').get(early_sha, {}).get('item')), (False, True, f'take-{early_sha[:12]}'))
+        board_posts.clear()
+        refusing = lambda m, p, b: (500, '{"ok": false}') if p == BOARD_PATH else fake(m, p, b)
+        code, report = run({'week': '2026-10-12', 'board': True}, refusing, lambda: engine_recordings(early), **{**common, 'cache': tmp / 'board-refused'})
+        check('--board: a board that refuses is a failure (exit 1), and nothing is booked as asked',
+              (code, [v['status'] for v in load_answered(tmp / 'board-refused').values()]), (1, []))
+        placed_sha = hashlib.sha256(b'mon long').hexdigest()
+        save_answered(board, {**load_answered(board), placed_sha: {'status': 'unsure', 'reason': 'x', 'name': 'monday long.mp4'}})
+        run({'week': '2026-10-12', 'board': True}, fake, lambda: engine_recordings(listing[1:2]), **{**common, 'cache': board})
+        check('--board: a take placed since leaves the answered book', placed_sha in load_answered(board), False)
+        check('board_client: Codex, Claude Code, else the runner', [board_client(n) for n in ('Codex', 'Claude Code', 'Recordings lane')], ['codex', 'claude_code', 'runner'])
 
         # Nothing waiting.
         lines.clear()
@@ -988,6 +1454,15 @@ def self_test():
         lines.clear()
         code, report = run({'week': '2026-10-12'}, fake, lambda: engine_recordings(listing[1:2]), **{**common, 'transcribe': deaf, 'cache': tmp / 'cache4'})
         check('a take that cannot be heard fails with the reason, exit 1', (code, report['files'][0]['status'], 'faster-whisper' in report['files'][0]['reason']), (1, 'failed', True))
+
+        # The second reviewer's case: the unpinned pair imports, then raises a TypeError on every take.
+        def broken(src):
+            raise TypeError("open() got an unexpected keyword argument 'metadata_errors'")
+        code, report = run({'week': '2026-10-12'}, fake, lambda: engine_recordings(listing[1:3]), **{**common, 'transcribe': broken, 'cache': tmp / 'cache6'})
+        check('a transcriber that raises anything is a failed line per take, naming the pinned set, never a traceback',
+              (code, [f['status'] for f in report['files'] if f['source'] != 'record'],
+               all('requirements.lock.txt' in f['reason'] and 'TypeError' in f['reason'] for f in report['files'] if f['source'] != 'record')),
+              (1, ['failed', 'failed'], True))
 
         # --words for one file, and a words file in quick-edit's shape.
         words_file = tmp / 'w.json'
@@ -1029,8 +1504,12 @@ def self_test():
         if shutil.which('ffmpeg') and shutil.which('ffprobe'):
             clip = tmp / 'three seconds.m4a'
             made = subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', '3', '-c:a', 'aac', str(clip)], capture_output=True)
-            seconds = probe_seconds(clip) if made.returncode == 0 else None
+            seconds = probe_seconds(clip)['seconds'] if made.returncode == 0 else None
             check('ffprobe: how long a take runs', seconds is not None and abs(seconds - 3.0) < 0.2, True)
+            stamped = tmp / 'stamped.m4a'
+            subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', '1', '-c:a', 'aac',
+                            '-metadata', 'creation_time=2026-10-12T08:01:02.000000Z', str(stamped)], capture_output=True)
+            check('ffprobe: when the file says it was made', probe_seconds(stamped)['recorded_at'], '2026-10-12T08:01:02Z')
     if fails:
         print('recording match self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
@@ -1044,13 +1523,21 @@ def main(argv=None):
     ap.add_argument('--inbox', nargs='?', const='', metavar='PATH',
                     help="read the Inbox on this machine instead of the engine's copies (default: MINDMAKE_MEDIA_INBOX, else runtime.media_inbox)")
     ap.add_argument('--record', action='store_true', help='record each sure match on its piece (making.py recorded)')
+    ap.add_argument('--board', action='store_true', help='put each unsure take on Krish\'s board, once for each reason '
+                    '(item take-<sha12>, closes_on record), and keep .cache/recordings/answered.json')
     ap.add_argument('--by', help=f'who is recording it: Codex, Claude Code (default: {making.BY_ENV}, else {making.DEFAULT_BY})')
     ap.add_argument('--words', action='append', metavar='NAME=FILE', help='what was said in a take\'s first 45 seconds, instead of hearing it (for tests)')
     ap.add_argument('--json', action='store_true', help='print the whole answer as JSON')
     ap.add_argument('--self-test', action='store_true', help='check the matching against stand-ins (no network, no transcriber)')
+    ap.add_argument('--check-transcriber', action='store_true', help='decode a second of sound with faster-whisper, as the lane\'s -Check does: '
+                    'exit 0 when it works, 1 with the fix when it does not (an import alone proves nothing)')
     a = ap.parse_args(argv)
     if a.self_test:
         return self_test()
+    if a.check_transcriber:
+        ok, detail = transcriber.decodes()
+        print(('ok    ' if ok else 'FAIL  ') + f'faster_whisper: {detail}')
+        return 0 if ok else 1
     lines = []
     out = lines.append if a.json else print
     try:
@@ -1068,7 +1555,7 @@ def main(argv=None):
             except recording.RecordingError as error:
                 raise MatchError(str(error))
             list_items = lambda: items
-        code, report = run({'week': a.week, 'by': a.by, 'record': a.record, 'words': a.words}, making._engine_call, list_items, out=out)
+        code, report = run({'week': a.week, 'by': a.by, 'record': a.record, 'board': a.board, 'words': a.words}, making._engine_call, list_items, out=out)
     except (MatchError, making.MakingError) as error:
         print(f'recording_match: {error}', file=sys.stderr)
         return 1

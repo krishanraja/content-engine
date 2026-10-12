@@ -26,12 +26,17 @@ Where things live:
     python music.py add FILE --provider NAME --licence-id ID --licence-file FILE [--title ..] [--platforms youtube,substack,..]
     python music.py approve TRACK_ID --words "Krish's exact words"
     python music.py approve-levels --words "Krish's exact words"
-    python music.py pick --seconds N [--piece ID] [--platforms youtube,substack]
+    python music.py pick --piece ID --both-cuts [--seconds N]
+    python music.py pick --seconds N [--piece ID] [--shape 16x9|9x16 | --platforms youtube,substack]
     python music.py --self-test
 
 `add` measures the file (ebur128 loudness and true peak, length, sample rate,
 sha256) and writes it as "proposed". `approve` records Krish's words; it
-never approves on anyone else's say. make.py calls pick() and bed_filter().
+never approves on anyone else's say. make.py calls pick_for_piece() and
+bed_filter(): both cuts of a piece get one track, the first in the piece's
+rotation that is licensed for every place either cut goes and long enough for
+the long cut (`pick --both-cuts [--seconds LONG_CUT]` shows which; make.py
+takes the long cut's length from kit.json, else asks for PIECE_SECONDS).
 """
 import argparse
 import hashlib
@@ -51,6 +56,17 @@ PLATFORMS = ('youtube', 'substack', 'shorts', 'tiktok', 'reels', 'linkedin')
 # Where each cut is posted (house rules TWO_CUTS and CORE_CHANNELS): a track
 # must be licensed for every one of them.
 SHAPE_PLATFORMS = {'16x9': ('youtube', 'substack'), '9x16': ('shorts', 'reels', 'tiktok', 'linkedin')}
+# Both cuts of one piece carry the same track (TWO_CUTS: the long cut wide,
+# the short cut tall), so each cut asks for what the pair needs: a licence
+# for every place either shape is posted, and music as long as the piece's
+# longer cut. make.py gives that length (`longest`): the long cut's
+# recording, which kit.py measures into kit.json, plus the most a sting and
+# the end card add; the same number for both cuts. Only when it is not known
+# does a cut ask for PIECE_SECONDS, the longest a long cut runs (495 words at
+# an unhurried 150 a minute is 198 s, plus a sting of at most 2 s, the 4 s
+# end card and room for a slower pace).
+PIECE_SECONDS = 240.0
+PIECE_PLATFORMS = tuple(dict.fromkeys(p for shape in ('16x9', '9x16') for p in SHAPE_PLATFORMS[shape]))
 STATUSES = ('proposed', 'approved', 'retired')
 TRACK_FIELDS = (
     'id', 'title', 'artist', 'provider', 'provider_track_id', 'provider_url', 'licence_type', 'licence_id', 'licensee',
@@ -206,23 +222,57 @@ def problems(track, platforms=(), today=None, seconds=None):
     return why
 
 
+def rotation(piece, data):
+    """Every approved track, in the order this piece tries them: by id,
+    starting at a stable index from the piece. The index is taken over all
+    approved tracks, before any is checked against a cut, so the order is
+    the piece's alone and never depends on which cut is asking."""
+    approved = sorted((t for t in data.get('tracks', []) if t.get('status') == 'approved'), key=lambda t: str(t.get('id')))
+    if not approved:
+        return []
+    at = int(hashlib.sha256(str(piece).encode()).hexdigest()[:8], 16) % len(approved) if piece else 0
+    return approved[at:] + approved[:at]
+
+
 def pick(seconds, piece=None, platforms=(), data=None, today=None):
-    """The track for a cut of `seconds`, or None, and why each other track
-    was passed over. The same piece always gets the same track; different
-    pieces rotate through the approved tracks."""
+    """The track for `seconds` of music posted to `platforms`, or None, and
+    why each track was passed over: every track not approved, and each
+    approved one tried before the pick. It goes round the piece's rotation
+    and takes the first track that fits, so different pieces rotate through
+    the approved tracks and the same needs always get the same track. For
+    the two cuts of a piece, ask with the piece's needs (pick_for_piece), or
+    the long cut and the short cut can land on different tracks."""
     data = data if data is not None else load()
-    ok, skipped = [], {}
+    skipped = {}
     for track in data.get('tracks', []):
+        if track.get('status') != 'approved':
+            skipped[track.get('id', '?')] = problems(track, platforms, today, seconds)
+    for track in rotation(piece, data):
         why = problems(track, platforms, today, seconds)
-        if why:
-            skipped[track.get('id', '?')] = why
-        else:
-            ok.append(track)
-    if not ok:
-        return None, skipped
-    ok.sort(key=lambda t: t['id'])
-    at = int(hashlib.sha256(str(piece).encode()).hexdigest()[:8], 16) % len(ok) if piece else 0
-    return ok[at], skipped
+        if not why:
+            return track, skipped
+        skipped[track.get('id', '?')] = why
+    return None, skipped
+
+
+def piece_needs(*seconds, longest=None):
+    """What the music of a piece must cover, whichever cut asks: a licence
+    for every place either cut is posted, and the longest of the piece's
+    longer cut (`longest`, else PIECE_SECONDS) and any length given.
+    {'seconds': .., 'platforms': [..]}"""
+    given = [float(s) for s in seconds if isinstance(s, (int, float))]
+    floor = float(longest) if isinstance(longest, (int, float)) and longest > 0 else PIECE_SECONDS
+    return {'seconds': round(max([floor, *given]), 3), 'platforms': list(PIECE_PLATFORMS)}
+
+
+def pick_for_piece(piece, seconds=None, data=None, today=None, longest=None):
+    """The one track both cuts of a piece carry: (track or None, skipped,
+    needs). `longest` is the piece's longer cut, the same for both cuts
+    (make.py reads it from kit.json); `seconds` is the asking cut's own
+    length, which only counts if it is longer still (make.py says so)."""
+    needs = piece_needs(seconds, longest=longest)
+    track, skipped = pick(needs['seconds'], piece, needs['platforms'], data, today)
+    return track, skipped, needs
 
 
 def by_id(track_id, data=None):
@@ -511,6 +561,42 @@ def self_test():
         picks = {pick(30, f'piece-{n}', (), two)[0]['id'] for n in range(12)}
         checks.append(('pieces rotate through the approved tracks', picks, {'test-chord', 'test-chord-b'}))
         checks.append(('the same piece always gets the same track', pick(30, 'piece-7', (), two)[0]['id'], pick(30, 'piece-7', (), two)[0]['id']))
+        # The reviewer's case (2026-10-12): A runs 120 s and does not loop, B
+        # runs 300 s. Asked cut by cut, Monday's long cut (205 s, 16x9) got B
+        # and its short cut (92 s, 9x16) got A. Asked with the piece's needs,
+        # both cuts get B.
+        mon = 'f328382d-71b3-41a7-a221-d8615826f12e'
+        a_track = dict(data['tracks'][0], id='a-short-track', duration_s=120.0, intro_cue_s=0.0, loopable=False)
+        b_track = dict(data['tracks'][0], id='b-long-track', duration_s=300.0, intro_cue_s=0.0, loopable=False)
+        ab = {'tracks': [a_track, b_track]}
+        checks.append(('the A/B case: its rotation starts on A, the short track', [t['id'] for t in rotation(mon, ab)], ['a-short-track', 'b-long-track']))
+        checks.append(('the A/B case: cut by cut, the two cuts land on different tracks',
+                       (pick(205.0, mon, SHAPE_PLATFORMS['16x9'], ab)[0]['id'], pick(92.0, mon, SHAPE_PLATFORMS['9x16'], ab)[0]['id']),
+                       ('b-long-track', 'a-short-track')))
+        checks.append(('the A/B case: with the piece\'s needs both cuts get the same track',
+                       (pick_for_piece(mon, 205.0, ab)[0]['id'], pick_for_piece(mon, 92.0, ab)[0]['id']), ('b-long-track', 'b-long-track')))
+        checks.append(('the piece\'s needs: every place either cut goes, and at least PIECE_SECONDS when the long cut is not known',
+                       (piece_needs(92.0), piece_needs(300.0)['seconds']),
+                       ({'seconds': PIECE_SECONDS, 'platforms': ['youtube', 'substack', 'shorts', 'reels', 'tiktok', 'linkedin']}, 300.0)))
+        # The second reviewer's case (2026-10-12): one approved, licensed 200 s
+        # track that does not loop. Asked for a fixed 240 s, neither of
+        # Monday's cuts (177.8 s and 84.0 s) got it. Asked for the long cut's
+        # real length, both do.
+        c200 = dict(b_track, id='c-200-track', duration_s=200.0)
+        only = {'tracks': [c200]}
+        checks.append(('a 200 s track under a 4-minute floor goes under neither cut',
+                       (pick_for_piece(mon, 177.8, only)[0], pick_for_piece(mon, 84.0, only)[0]), (None, None)))
+        checks.append(('with the long cut\'s length both cuts get it, the same track',
+                       (pick_for_piece(mon, 177.8, only, longest=183.8)[0]['id'], pick_for_piece(mon, 84.0, only, longest=183.8)[0]['id'],
+                        pick_for_piece(mon, 84.0, only, longest=183.8)[2]['seconds']), ('c-200-track', 'c-200-track', 183.8)))
+        checks.append(('a long cut longer than its track still is not given it', pick_for_piece(mon, 205.0, only, longest=205.0)[0], None))
+        c_track = dict(b_track, id='c-long-track')
+        abc = {'tracks': [a_track, b_track, c_track]}
+        pairs = [(pick_for_piece(f'piece-{n}', 205.0, abc)[0]['id'], pick_for_piece(f'piece-{n}', 92.0, abc)[0]['id']) for n in range(12)]
+        checks.append(('every piece\'s two cuts share a track, and pieces still rotate', (all(x == y for x, y in pairs), {x for x, _ in pairs}),
+                       (True, {'b-long-track', 'c-long-track'})))
+        wide_only = dict(b_track, platforms=['youtube', 'substack'])
+        checks.append(('a track not licensed for the short cut\'s places goes under neither cut', pick_for_piece(mon, 205.0, {'tracks': [wide_only]})[0], None))
         lapsed = dict(data['tracks'][0], expires_on='2026-01-01')
         checks.append(('an expired licence is passed over', pick(30, 'p', (), {'tracks': [lapsed]})[0], None))
         narrow = dict(data['tracks'][0], platforms=['youtube', 'substack'])
@@ -623,9 +709,11 @@ def main():
     p.add_argument('--words')
     p.add_argument('--by', default='Krish')
     p.add_argument('--on', default=date.today().isoformat())
-    p = sub.add_parser('pick', help='the track for a cut')
-    p.add_argument('--seconds', type=float, required=True)
+    p = sub.add_parser('pick', help='the track for a cut, or the one track both cuts of a piece get')
+    p.add_argument('--seconds', type=float, help='the cut\'s length in seconds (with --both-cuts: optional, the piece\'s long cut, '
+                   f'the length both cuts ask for; without it, {PIECE_SECONDS:g} s)')
     p.add_argument('--piece')
+    p.add_argument('--both-cuts', action='store_true', help='the track both cuts of --piece get, chosen as make.py chooses it')
     p.add_argument('--platforms', help='where the cut is posted, such as youtube,substack (default: no limit)')
     p.add_argument('--shape', choices=sorted(SHAPE_PLATFORMS), help='the platforms for a 16x9 or a 9x16 cut')
     a = ap.parse_args()
@@ -676,9 +764,17 @@ def main():
             save(data, a.ledger)
             print(f'mix levels approved by {a.by} on {a.on}')
         elif a.cmd == 'pick':
-            platforms = SHAPE_PLATFORMS[a.shape] if a.shape else [p.strip() for p in (a.platforms or '').split(',') if p.strip()]
-            track, skipped = pick(a.seconds, a.piece, platforms, data)
-            print(json.dumps({'track': track and track['id'], 'file': track and track['file'], 'skipped': skipped}, indent=1))
+            if a.both_cuts:
+                if not a.piece or a.shape or a.platforms:
+                    raise MusicError('--both-cuts takes --piece PIECE_ID (and --seconds, optional), and no --shape or --platforms: it covers both')
+                track, skipped, needs = pick_for_piece(a.piece, None, data, longest=a.seconds)
+            else:
+                if a.seconds is None:
+                    raise MusicError('--seconds is the cut\'s length; or give --both-cuts --piece PIECE_ID for the track both cuts get')
+                platforms = SHAPE_PLATFORMS[a.shape] if a.shape else [p.strip() for p in (a.platforms or '').split(',') if p.strip()]
+                track, skipped = pick(a.seconds, a.piece, platforms, data)
+                needs = {'seconds': a.seconds, 'platforms': list(platforms)}
+            print(json.dumps({'track': track and track['id'], 'file': track and track['file'], 'needs': needs, 'skipped': skipped}, indent=1))
             sys.exit(0 if track else 1)
     except MusicError as e:
         sys.exit(f'music: {e}')

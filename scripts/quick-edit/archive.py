@@ -30,8 +30,9 @@ Each cut has its own thumbnail (Krish, 2026-10-12: "I always want a video
 thumbnail for all video sizes produced as an asset every time"), drawn by
 scripts/pages/build.py --thumbs, and filed beside its video.
 
-ROOT defaults to MINDMAKE_ARCHIVE_ROOT, the archive the Studio uses. A share
-copy is picked up from a `share` folder beside each video, as make.py writes
+ROOT defaults to MINDMAKE_ARCHIVE_ROOT, the archive the Studio uses, and on
+Windows, when that is not set, to runtime.archive_root in config/studio.json
+(as music.py finds the music folder). A share copy is picked up from a `share` folder beside each video, as make.py writes
 it. `make.py --archive` does all this after a render. Check the rule with:
 
     python archive.py --self-test
@@ -56,8 +57,11 @@ FOLDER_MAX = 150  # Windows stops a whole path at 260 by default; the Drive arch
 COPY_MAX = 999
 TIME_ZONE = 'Europe/London'  # Krish's clock: the day a video was archived is the day in London
 SHAPES = {'tall': 'tall 9x16', 'wide': 'wide 16x9'}
+# Each shape's thumbnail, as scripts/pages/build.py --thumbs draws it.
+THUMB_SIZE = {'tall': (1080, 1920), 'wide': (1280, 720)}
 IN_FULL = {'Shorts': 'Shorts (YouTube Shorts)', 'Reels': 'Reels (Instagram Reels)'}
 CASES = Path(__file__).resolve().parents[2] / 'config' / 'archive-naming.cases.json'
+STUDIO = Path(__file__).resolve().parents[2] / 'config' / 'studio.json'
 
 # Control characters and every kind of space become a plain space, so a line
 # break between two words keeps them apart. Spelled out, here and in the
@@ -354,6 +358,10 @@ def archive_videos(root, subject, tall=None, wide=None, day=None, tall_share=Non
         if not thumb.is_file():
             raise ArchiveError(f'{thumb} is not a file')
         thumb_name(subject, shape, thumb)  # refuses an extension the rule does not take
+        size, want = image_size(thumb), THUMB_SIZE[shape]
+        if size != want:
+            raise ArchiveError(f'{thumb.name} is {"%d x %d" % size if size else "not a picture this can read"}, not the {want[0]} x {want[1]} '
+                               f'of the {SHAPES[shape]} video\'s thumbnail: give the one scripts/pages/build.py --thumbs drew for that shape')
         thumbs[shape] = thumb
     shares = {}
     for shape, given in (('tall', tall_share), ('wide', wide_share)):
@@ -401,6 +409,42 @@ def archive_videos(root, subject, tall=None, wide=None, day=None, tall_share=Non
             'date_from': planned['date_from'], 'post_to': every, 'files': files}
 
 
+def image_size(path):
+    """(width, height) of a JPEG or PNG, read from its header, or None when
+    it is neither or cannot be read. No image library needed."""
+    try:
+        with open(path, 'rb') as f:
+            data = f.read(1 << 20)
+    except OSError:
+        return None
+    if data[:8] == b'\x89PNG\r\n\x1a\n' and data[12:16] == b'IHDR':
+        return int.from_bytes(data[16:20], 'big'), int.from_bytes(data[20:24], 'big')
+    if data[:2] != b'\xff\xd8':
+        return None
+    at = 2
+    while at + 9 < len(data):
+        if data[at] != 0xFF:
+            return None
+        marker = data[at + 1]
+        if marker == 0xFF:
+            at += 1
+            continue
+        if marker in (0xD8, 0x01) or 0xD0 <= marker <= 0xD7:
+            at += 2
+            continue
+        length = int.from_bytes(data[at + 2:at + 4], 'big')
+        if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+            return int.from_bytes(data[at + 7:at + 9], 'big'), int.from_bytes(data[at + 5:at + 7], 'big')
+        at += 2 + length
+    return None
+
+
+def jpeg_header(width, height):
+    """The smallest JPEG this file's image_size reads, for self-tests."""
+    return (b'\xff\xd8\xff\xc0' + (17).to_bytes(2, 'big') + b'\x08' + height.to_bytes(2, 'big') + width.to_bytes(2, 'big')
+            + b'\x03\x01\x22\x00\x02\x11\x01\x03\x11\x01\xff\xd9')
+
+
 def thumb_name(subject, shape, path):
     """The archive name for a thumbnail file, keeping its own image type."""
     extension = Path(path).suffix.lstrip('.').lower()
@@ -409,12 +453,21 @@ def thumb_name(subject, shape, path):
     return thumbnail_name(subject, shape, 'jpg' if extension == 'jpeg' else extension)
 
 
-def archive_root(given=None):
-    """The archive folder: the one given, else MINDMAKE_ARCHIVE_ROOT."""
-    root = given or os.environ.get('MINDMAKE_ARCHIVE_ROOT', '').strip()
+def archive_root(given=None, env=None, studio=STUDIO, windows=None):
+    """The archive folder: the one given, else MINDMAKE_ARCHIVE_ROOT, else on
+    Windows runtime.archive_root in config/studio.json (the archive the
+    Studio uses, on Drive), as music.py falls back to runtime.music_root."""
+    env = os.environ if env is None else env
+    windows = os.name == 'nt' if windows is None else windows
+    root = given or str(env.get('MINDMAKE_ARCHIVE_ROOT') or '').strip()
+    if not root and windows:
+        try:
+            root = str(json.loads(Path(studio).read_text(encoding='utf-8')).get('runtime', {}).get('archive_root') or '').strip()
+        except (OSError, ValueError):
+            root = ''
     if not root:
         raise ArchiveError('no archive folder: give one, or set MINDMAKE_ARCHIVE_ROOT '
-                           '(the archive the Studio uses, on Drive)')
+                           '(the archive the Studio uses, on Drive; on Windows runtime.archive_root in config/studio.json)')
     return root
 
 
@@ -480,6 +533,16 @@ def self_test(cases_path=CASES):
         check(f'date: {item["why"]}', local_date(instant), item['date'])
         check(f'date without the time zone database: {item["why"]}', london_date(instant), item['date'])
 
+    # Where the archive is: given, else the environment, else on Windows the
+    # Studio's runtime.archive_root, as the music folder is found.
+    studio_root = json.loads(STUDIO.read_text(encoding='utf-8'))['runtime']['archive_root']
+    check('the archive given wins', archive_root('X:/given', env={'MINDMAKE_ARCHIVE_ROOT': 'Y:/env'}, windows=True), 'X:/given')
+    check('then MINDMAKE_ARCHIVE_ROOT', archive_root(env={'MINDMAKE_ARCHIVE_ROOT': 'Y:/env'}, windows=True), 'Y:/env')
+    check('then, on Windows, runtime.archive_root in config/studio.json', archive_root(env={}, windows=True), studio_root)
+    check('which is the Video Engine archive on Drive', studio_root.endswith('\\Video Engine\\Archive'), True)
+    refused('off Windows, with nothing set, there is no archive', lambda: archive_root(env={'MINDMAKE_ARCHIVE_ROOT': '  '}, windows=False), 'no archive folder')
+    refused('nor on Windows without the Studio\'s config', lambda: archive_root(env={}, studio='/nowhere/studio.json', windows=True), 'no archive folder')
+
     # The filing itself, on small stand-in files: a second run makes " (2)"
     # and leaves the first folder and the originals exactly as they were.
     with tempfile.TemporaryDirectory() as tmp:
@@ -487,7 +550,8 @@ def self_test(cases_path=CASES):
         (tmp / 'out' / 'share').mkdir(parents=True)
         (tmp / 'archive').mkdir()
         for name, body in (('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'), ('share/v-9x16.mp4', b'tall share'),
-                           ('thumb-tall-1080x1920.jpg', b'tall thumb'), ('thumb-wide-1280x720.jpg', b'wide thumb'), ('thumb.gif', b'gif')):
+                           ('thumb-tall-1080x1920.jpg', jpeg_header(1080, 1920)), ('thumb-wide-1280x720.jpg', jpeg_header(1280, 720)),
+                           ('thumb.gif', b'gif'), ('panel.jpg', jpeg_header(1314, 1080))):
             (tmp / 'out' / name).write_bytes(body)
         both = dict(tall=tmp / 'out' / 'v-9x16.mp4', wide=tmp / 'out' / 'v-16x9.mp4', day='2026-10-12')
         thumbs = dict(tall_thumb=tmp / 'out' / 'thumb-tall-1080x1920.jpg', wide_thumb=tmp / 'out' / 'thumb-wide-1280x720.jpg')
@@ -501,7 +565,13 @@ def self_test(cases_path=CASES):
             tall_file, wide_file, 'Who gets paid - tall 9x16 - thumbnail.jpg', 'Who gets paid - wide 16x9 - thumbnail.jpg',
             'share', str(Path('share') / tall_file), 'where-to-post.txt']))
         check('filed copy', (tmp / 'archive' / usual / 'share' / tall_file).read_bytes(), b'tall share')
-        check('filed thumbnail', (tmp / 'archive' / usual / 'Who gets paid - wide 16x9 - thumbnail.jpg').read_bytes(), b'wide thumb')
+        check('filed thumbnail', (tmp / 'archive' / usual / 'Who gets paid - wide 16x9 - thumbnail.jpg').read_bytes(), jpeg_header(1280, 720))
+        check('a JPEG\'s and a PNG\'s size from the header', (image_size(tmp / 'out' / 'thumb-tall-1080x1920.jpg'), image_size(tmp / 'out' / 'thumb.gif')),
+              ((1080, 1920), None))
+        refused('the wide thumbnail given as the tall one', lambda: archive_videos(tmp / 'archive', 'Who gets paid', **both,
+                tall_thumb=thumbs['wide_thumb']), 'not the 1080 x 1920')
+        refused('a kit panel given as the wide thumbnail', lambda: archive_videos(tmp / 'archive', 'Who gets paid', **both,
+                wide_thumb=tmp / 'out' / 'panel.jpg'), 'not the 1280 x 720')
         check('what it did names each thumbnail', [(item['shape'], item.get('thumbnail')) for item in first['files']],
               [('wide', 'Who gets paid - wide 16x9 - thumbnail.jpg'), ('tall', 'Who gets paid - tall 9x16 - thumbnail.jpg')])
         where = (tmp / 'archive' / usual / 'where-to-post.txt').read_text(encoding='utf-8')
@@ -530,7 +600,7 @@ def self_test(cases_path=CASES):
 
 def main():
     ap = argparse.ArgumentParser(description='File finished videos in the archive, named by date, subject and where to post them.')
-    ap.add_argument('root', nargs='?', help='the archive folder (default: MINDMAKE_ARCHIVE_ROOT)')
+    ap.add_argument('root', nargs='?', help='the archive folder (default: MINDMAKE_ARCHIVE_ROOT, else on Windows runtime.archive_root in config/studio.json)')
     ap.add_argument('--subject', help='the piece\'s short title, as it should read: "Who gets paid"')
     ap.add_argument('--date', help='the publish date, YYYY-MM-DD (default: today, London time)')
     ap.add_argument('--tall', help='the tall 9:16 video')

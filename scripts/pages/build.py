@@ -47,7 +47,12 @@ Artwork made from HTML is checked before it becomes a PNG by card.py.
           platform covers or crops it, or a word would be too small to read.
 
 Facts with no deck or body (docs/plans/<plan>/cover-facts.json) draw only
-the artwork that --cover and --thumbs ask for.
+the artwork that --cover and --thumbs ask for. Paths in the facts are
+relative to the facts file (or to --assets). A plan keeps its real logos as
+SVG in docs/plans/<plan>/logos/, so any checkout can draw its artwork. A
+"background" picture is optional, because git keeps no pictures: on a
+machine without it the artwork is drawn on plain ink and the drawer says so.
+A logo that is missing always stops the drawer.
 """
 import argparse
 import base64
@@ -245,6 +250,23 @@ def load_facts(path, body_override, assets):
 def resolve(base, rel):
     p = Path(rel)
     return p if p.is_absolute() else base / p
+
+
+def background(c, base):
+    """The photo a cover or thumbnail is drawn over, or None. It is optional,
+    unlike a logo: git keeps no pictures (every PNG and JPEG is ignored), so
+    a plan's background is only on the machine that made it. Elsewhere the
+    artwork is drawn on plain ink, the drawer says so, and its receipt
+    records that no background was drawn."""
+    if not c.get('background'):
+        return None
+    p = resolve(base, c['background'])
+    return p if p.is_file() else None
+
+
+def no_background_note(c, base):
+    if c.get('background') and background(c, base) is None:
+        print(f'  note: the background {c["background"]} is not on this machine (git keeps no pictures), so it is drawn on plain ink')
 
 
 # ---------------------------------------------------------------- building
@@ -889,8 +911,8 @@ def cover_html(facts, base, refresh=False):
         source = brand.fetch('krish', refresh) if c['portrait'] is True else resolve(base, c['portrait'])
         face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 600)})"></div>'
     photo = ''
-    if c.get('background'):
-        photo = (f'<div class="ph" style="background-image:url({brand.data_uri(resolve(base, c["background"]), 2000)})"></div>'
+    if background(c, base):
+        photo = (f'<div class="ph" style="background-image:url({brand.data_uri(background(c, base), 2000)})"></div>'
                  '<div class="fade"></div>')
     label = c.get('label') or facts.get('issue') or long_date(facts['date'])
     deep = t['ink_deep'].lstrip('#')
@@ -1006,13 +1028,14 @@ def draw_cover(facts, base, out, refresh=False):
     (out / 'cover.json').write_text(json.dumps({
         'drawer': 'scripts/pages/build.py --cover', 'sha256': hashlib.sha256(png).hexdigest(),
         'portrait': bool(cv.get('portrait')), 'rows': [r.get('name', '') for r in cv.get('rows', [])],
-        'background': bool(cv.get('background')), 'headline_px': size, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
+        'background': background(cv, base) is not None, 'headline_px': size, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
     }, indent=1) + '\n', encoding='utf-8')
     print(f'{out / "cover.png"}  {COVER_W} x {COVER_H}: upload it as the post\'s cover image')
     print(f'  the headline is {size} px, in {lines} line(s); every word and logo is inside {keep}, so the feed, '
           'the share card and the archive keep all of it')
     if dropped:
         print('  the label line did not fit, so the cover leaves it out')
+    no_background_note(cv, base)
     print(f'  {feed}, and every word can be read there:')
     for w in sorted(words, key=lambda w: -w['px']):
         print(f'    {card.on_phone(w["px"], COVER_W):4.1f} px  "{card.short(w["text"])}"' + ('  (fine print)' if w['fine'] else ''))
@@ -1047,6 +1070,26 @@ def draw_cover(facts, base, out, refresh=False):
 # rows, so a thumbnail can carry every company the piece names (the visual
 # gate holds each thumbnail to that, as it holds a video).
 THUMB_RECEIPT = 'thumbs.json'
+LOGO_REGISTRY = Path(__file__).resolve().parents[2] / 'config' / 'logo-registry.json'
+
+
+def companies_of(rows, registry=LOGO_REGISTRY):
+    """One name per company the drawn rows and strip show, as the visual gate
+    and a post.json "logos" list want them: a row may name two ("Warner Music
+    Group and BMG"). Each company is named as config/logo-registry.json names
+    it first; a row the registry does not know is kept as it is."""
+    try:
+        reg = json.loads(Path(registry).read_text(encoding='utf-8')).get('companies') or []
+    except (OSError, ValueError):
+        reg = []
+    out = []
+    for row in rows:
+        found = [c['names'][0] for c in reg if c.get('names') and any(
+            re.search(r'(?<!\w)' + re.escape(n) + r'(?!\w)', str(row), re.I) for n in c['names'])]
+        for name in found or [str(row)]:
+            if name and name not in out:
+                out.append(name)
+    return out
 THUMBS = {
     'wide': {
         'file': 'thumb-wide-1280x720.jpg', 'w': 1280, 'h': 720,
@@ -1178,8 +1221,8 @@ def thumb_html(facts, base, shape, refresh=False):
         source = brand.fetch('krish', refresh) if c['portrait'] is True else resolve(base, c['portrait'])
         face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 900)})"></div>'
     photo = ''
-    if c.get('background'):
-        photo = (f'<div class="ph" style="background-image:url({brand.data_uri(resolve(base, c["background"]), 2000)})"></div>'
+    if background(c, base):
+        photo = (f'<div class="ph" style="background-image:url({brand.data_uri(background(c, base), 2000)})"></div>'
                  '<div class="fade"></div>')
     side = ((f'<div class="rows">{"".join(rows)}</div>' if rows else '') + (f'<div class="strip">{"".join(strip)}</div>' if strip else ''))
     side = f'<div class="side">{side}</div>' if side else ''
@@ -1360,7 +1403,8 @@ def draw_thumbs(facts, base, out, refresh=False):
     (out / THUMB_RECEIPT).write_text(json.dumps({
         'schema_version': 1, 'drawer': 'scripts/pages/build.py --thumbs', 'subchannel': facts['subchannel'],
         'headline': list(split_headline(c['headline']) if isinstance(c['headline'], str) else c['headline']),
-        'portrait': bool(c.get('portrait')), 'logos': [n for n in logos if n], 'background': bool(c.get('background')),
+        'portrait': bool(c.get('portrait')), 'logos': [n for n in logos if n], 'companies': companies_of([n for n in logos if n]),
+        'background': background(c, base) is not None,
         'files': files, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
     }, indent=1) + '\n', encoding='utf-8')
     for shape in THUMB_SHAPES:
@@ -1373,6 +1417,7 @@ def draw_thumbs(facts, base, out, refresh=False):
         left, top, right, bottom = spec['safe']
         print(f'  every word, face and logo is inside x {left} to {right}, y {top} to {bottom}'
               + ''.join(f'; nothing in {name}' for name, _ in spec['clear']))
+    no_background_note(c, base)
     print(f'{out / THUMB_RECEIPT}  the receipt: each file\'s sha256, the face and the logos drawn ({", ".join(n for n in logos if n) or "none"})')
     print(f'{out / "thumbs-check.png"}  how they show at a phone\'s width, at their smallest and in a grid. Look at it before publishing.')
     return True
@@ -1495,6 +1540,9 @@ def self_test():
         COVER_SAFE[0] >= x0 and COVER_SAFE[1] >= y0 and COVER_SAFE[2] <= x1 and COVER_SAFE[3] <= y1 for _, (x0, y0, x1, y1) in COVER_CROPS), True)
 
     # The facts: "thumbs" over "cover", field by field, then the page headline.
+    check('thumbs.json names each company of a row of two once, as the registry names it',
+          companies_of(['Suno', 'Warner Music Group and BMG', 'Sony Music and Universal Music Group', 'Believe', 'A row nobody knows']),
+          ['Suno', 'Warner Music Group', 'BMG', 'Sony Music', 'Universal Music Group', 'Believe', 'A row nobody knows'])
     check('a thumbnail falls back to the cover', thumb_facts({'cover': {'headline': ['A', 'B?'], 'rows': [1], 'portrait': True}}),
           {'headline': ['A', 'B?'], 'rows': [1], 'portrait': True})
     check('"thumbs" changes only what it names', thumb_facts({'cover': {'headline': ['A', 'B?'], 'portrait': True}, 'thumbs': {'headline': 'Who? Me.', 'strip': [2]}}),
@@ -1538,6 +1586,22 @@ def self_test():
                 except SystemExit:
                     refused.append(True)
             check('a strip logo with no name, a row with no tag and a three-part headline are refused', refused, [True, True, True])
+            # A background is optional (git keeps no pictures); a logo never is.
+            check('the background is named only when it is on this machine',
+                  (background({'background': 'bg.png'}, tmp), background({'background': 'gone.png'}, tmp), background({}, tmp)),
+                  (tmp / 'bg.png', None, None))
+            gone = dict(facts, cover=dict(facts['cover'], background='gone.png'))
+            for shape in THUMB_SHAPES:
+                check(f'{shape} page: a background on this machine is drawn', 'class="ph"' in thumb_html(facts, tmp, shape), True)
+                page = thumb_html(gone, tmp, shape)
+                check(f'{shape} page: one that is not is left out, and the rest is drawn',
+                      ('class="ph"' in page, 'class="face"' in page, 'alt="Udio"' in page), (False, True, True))
+            check('the cover: a background that is not on this machine is left out', 'class="ph"' in cover_html(dict(gone, date='2026-10-12'), tmp), False)
+            try:
+                thumb_html(dict(facts, thumbs={'strip': [{'logo': 'gone.svg', 'name': 'Udio'}]}), tmp, 'wide')
+                check('a logo that is not on this machine is refused', False, True)
+            except SystemExit:
+                check('a logo that is not on this machine is refused', True, True)
         finally:
             brand.font_css, brand.brand_uri, brand.fetch = saved
 

@@ -6,8 +6,20 @@
     "9x16": "MakeyourmindupStingTall",
     "16x9": "MakeyourmindupStingWide"
   },
+  "series": [
+    "follow_the_money",
+    "mind_the_gap",
+    "under_the_hood"
+  ],
   "approved_by": null,
   "approved_on": null,
   "approval_words": null,
-  "source_sha256": null
+  "source_sha256": null,
+  "last_decision": {
+    "on": "2026-10-12",
+    "by": "Krish",
+    "decision": "rejected",
+    "design": "the first sting design shown to him",
+    "words": "it's ok, it's a bit boring and colourless and vanilla - and just what Powerpoint would do in 2008"
+  }
 }

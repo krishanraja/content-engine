@@ -52,8 +52,8 @@ The first three are in `04_Content` (`1ELCdOmMGXWmLpuheEoAKA-_4jvYbmbn3`).
 
 ## Where a new thing goes
 
-- A raw recording: the top of `makeyourmindup > Video Engine > Inbox`, one file per cut, any name. It reaches the engine within about ten minutes, from whichever home computer is on; `python scripts/post-pack/recording_match.py` says which piece and cut each take is, and `python scripts/post-pack/recording.py get NAME` fetches it.
-- A licensed music track: `makeyourmindup > 00_Brand-Assets > 07_Music`, with its licence certificate beside it. Then a session on a home computer adds it to the ledger with `scripts/quick-edit/music.py add`, and it is used once Krish approves it in words. Never the Inbox.
+- A raw recording: the top of `makeyourmindup > Video Engine > Inbox`, one file per cut, any name. It reaches the engine within about ten minutes, from whichever home computer is on, and that machine then places it on its piece and cut by itself (`scripts/post-pack/recording_match.py`, run by the recordings upload), asking Krish on the board only when it is unsure. `python scripts/post-pack/recording.py get NAME` fetches it, or `get "recordings/<sha256>.<ext>"` once it is on a piece. Nothing in the Inbox is moved or renamed by any of it.
+- A licensed music track: `makeyourmindup > 00_Brand-Assets > 07_Music`, with its licence certificate beside it in the same folder (no subfolder). Then a session on a home computer adds it to the ledger with `scripts/quick-edit/music.py add`, and it is used once Krish approves it in words. Never the Inbox.
 - A finished Make Your Mind Up post and its pieces: `makeyourmindup > 3 Posts`, in the post's own folder.
 - A one-off main-channel script: `One Off Content Ideas`, next number, and a line in `00 Index`.
 - Sales material: `Sales Materials`.

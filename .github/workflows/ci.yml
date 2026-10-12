@@ -145,6 +145,10 @@ jobs:
           psql_in tests/fixtures/control-plane/projection-state-concurrency-verify.sql
           psql_in supabase/migrations/20260907091923_studio_session_learning_spine.sql
           psql_in tests/fixtures/control-plane/studio-session-learning-regression.sql
+          # A stale copy of a piece's meta never puts back an older making record.
+          psql_in tests/fixtures/control-plane/keep-newer-making-setup.sql
+          psql_in supabase/migrations/20261012120000_keep_newer_making.sql
+          psql_in tests/fixtures/control-plane/keep-newer-making-regression.sql
           # Last, because it commits a seed that fences every later claim: an
           # open claim holds the active role row, so a switch must wait for it
           # and then refuse.
