@@ -47,26 +47,30 @@ Last updated: 2026-10-12, early afternoon, by a Claude Code session (cloud).
 ## The board: what is waiting on Krish, in progress and done
 
 The live list lives in the shared database, not in this file. Krish sees it in
-Control Center at https://controlcenter.krishraja.com/#/board (phone or desk)
-and replies to items there. Every session, in Claude Code or Codex, reads and
-writes it through the engine:
+Control Center at https://controlcenter.krishraja.com/#/board (phone or desk),
+and what is waiting on him reaches his one list on Control Center's Home
+(https://controlcenter.krishraja.com/#/home?waiting=1), where he clears, bumps
+or purges it. Every session, in Claude Code or Codex, reads and writes it
+through the engine:
 
 - Read it: `python3 scripts/engine.py GET /api/workbench --full` (`python` on
-  Windows). His replies
-  are in `replies`; `unseen_replies` counts the ones no session has acted on.
+  Windows). Any replies he has written are in `replies`; `unseen_replies`
+  counts the ones no session has acted on.
 - Add or change items (up to 50 at once; an existing item changes only the
   fields you send):
   `python3 scripts/engine.py POST /api/workbench @items.json` with
-  `{"action": "upsert_items", "client": "codex", "items": [{"id": "p3-approve", "lane": "on_you", "rank": 2, "area": "Article 3", "title": "...", "detail": "...", "prompt": "Yes, or what to change"}]}`.
+  `{"action": "upsert_items", "client": "codex", "items": [{"id": "p3-record", "lane": "on_you", "rank": 2, "area": "Article 3", "title": "Record both cuts from the scripts", "detail": "...", "only_you": "face", "link": "https://...", "link_label": "Open the scripts", "idea_id": "<the piece's uuid>", "closes_on": "record"}]}`.
   Lanes: `on_you`, `in_progress`, `done`, `archived` (hidden). Ids are
   lowercase words joined by hyphens. Links must start with `https://`.
 - Change the headline or the status lights: `{"action": "set_state",
   "headline": "...", "signals": [{"label": "Home computer", "state": "ok",
   "text": "On and ready"}]}` (state is `ok`, `warn`, `bad` or empty).
-- After you act on his replies: `{"action": "mark_seen", "ids": ["<reply id>"],
+- After you act on a reply of his: `{"action": "mark_seen", "ids": ["<reply id>"],
   "client": "codex"}`. The board then shows him that you read it.
 - Only Krish writes a reply, from Control Center. The engine key cannot: a
-  session must never put words in his mouth.
+  session must never put words in his mouth. Never leave an item waiting for
+  one: Control Center is retiring the reply box, and an item on him ends when
+  it closes itself or when he clears, bumps or purges it on his list.
 
 Set `"client"` to `"codex"` or `"claude_code"` so the board says who changed it.
 Write every item in plain words: what happened, what it means for him, and what
@@ -93,6 +97,34 @@ whose title matches no piece becomes one board question. A session that hears fr
 that something is done, or that is not about a piece, still moves it itself.
 Never leave an `in_progress` item behind you: when you stop, it is done,
 handed on, or back on him.
+
+**An item waiting on him reaches his list only when it is ready** (Krish,
+2026-10-11: one list, holding only what he alone can do, what is prepared,
+and what says how it closes itself). Give every `on_you` item all three:
+
+- `"only_you"`, why only he can do it: `send`, `post`, `spend`, `delete`,
+  `permission`, `credential`, `face` (his face and voice), `login` or
+  `judgment` (his call).
+- `"link"`, an `https://` link to the prepared thing he acts on (the script,
+  the draft, the page), with a short `"link_label"` for its button. A typed
+  answer is not a link.
+- `"closes_on"` with the piece's `"idea_id"`, so the engine closes it when that
+  step lands (above). The week's planning item uses `"closes_on":
+  "week_planned"` and needs no `idea_id`; Control Center closes it once every
+  day has a piece. A `judgment` item needs one of these closes too.
+
+Control Center holds back an `on_you` item that lacks any of them: it is
+counted and named on the board's held lane, never shown on his list. That
+includes a job only he can do that nothing can see finished yet (a login, a
+key only he can change), so say in its detail what would show it done.
+`bumped_until` is written by his Bump; leave it alone.
+
+**An item Krish closed himself stays closed** (his Clear or Purge in Control
+Center, or a close you relay from his words with `decided_by: 'Krish'`). The
+engine key cannot move it back to `on_you` or `in_progress`: the write is
+refused with `409 krish_closed_it`. The board keeps who closed an item in
+`closed_by`, so your later edits to it (a line in its detail, done to
+archived) do not change that. If something new needs him, write a new item.
 
 ## Pick up from any tool
 

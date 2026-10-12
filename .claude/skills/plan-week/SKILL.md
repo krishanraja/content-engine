@@ -62,7 +62,10 @@ and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not
 read." Write it with `POST /api/workbench {"action": "upsert_items",
 "client": "claude_code", "items": [{"id": "week-<Monday>", "detail": "..."}]}`,
 keeping the detail already there (read it first with `GET /api/workbench`); if
-the item does not exist yet, give it `"lane": "on_you"` and a `"title"` too.
+the item does not exist yet, give it `"lane": "on_you"`, a `"title"`,
+`"only_you": "judgment"`, `"link": "https://controlcenter.krishraja.com/#/week"`,
+`"link_label": "Open the week"` and `"closes_on": "week_planned"` too, or
+Control Center holds it back from his list (`WORKBENCH.md`, the board).
 Put the same line in `WORKBENCH.md`, because the slate cron rewrites the week
 item's text each morning.
 
