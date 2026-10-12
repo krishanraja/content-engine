@@ -33,8 +33,9 @@ The four checks:
      "evidence" built from at least six real pages, each with its URL and
      date, and the screenshots exist.
   3. COVER. cover.png was drawn by scripts/pages/build.py --cover: its
-     cover.json receipt matches the PNG byte for byte (and the 1200 x 630
-     Substack cover, cover-1200x630.png, its cover-1200x630.json), it carries Krish's
+     cover.json receipt matches the PNG byte for byte (and each cover for
+     another place, cover-1200x630.png, cover-1200x675.png,
+     cover-1080x1080.png and cover-1080x1920.png, its own receipt), it carries Krish's
      portrait, and when the piece names companies it carries at least one
      logo row.
   4. THUMBNAILS. Each video thumbnail (Krish, 2026-10-12: "I always want a
@@ -113,6 +114,19 @@ def declared_drawn(declared, receipt_logos, reg):
     return drawn(declared, receipt_logos, reg)
 
 
+# Each cover kind a pack carries, and the receipt scripts/pages/build.py
+# --cover writes beside it (Krish, 2026-10-12: "the cover crops need to be
+# all individual images, a vertical cover thumbnail for the shorts/tiktok etc
+# as well, every post moving forward").
+COVER_RECEIPTS = {
+    'cover': ('the cover', 'cover.json'),
+    'substack-cover': ('the Substack cover', 'cover-1200x630.json'),
+    'share-card-cover': ('the share card cover', 'cover-1200x675.json'),
+    'square-cover': ('the square cover', 'cover-1080x1080.json'),
+    'vertical-cover': ('the vertical cover', 'cover-1080x1920.json'),
+}
+
+
 def problems(post, planned, body, base, reg=None):
     """Plain-words reasons the pack fails the gate, or [] when it passes.
     `planned` is build.py's plan: dicts with 'kind' (as given), 'logos',
@@ -120,7 +134,7 @@ def problems(post, planned, body, base, reg=None):
     reg = reg or registry()
     found = []
     names = named(body or '', reg)
-    pictures = [p for p in planned if p.get('kind') in ('image', 'share-card', 'cover', 'substack-cover', 'linkedin-card')]
+    pictures = [p for p in planned if p.get('kind') in ('image', 'share-card', 'linkedin-card') + tuple(COVER_RECEIPTS)]
     videos = [p for p in planned if p.get('kind') == 'video']
     thumbs = [p for p in planned if p.get('kind') == 'thumbnail']
     cover = next((p for p in planned if p.get('kind') == 'cover'), None)
@@ -165,12 +179,12 @@ def problems(post, planned, body, base, reg=None):
             lost = [x.get('shot') for x in pages if isinstance(x, dict) and x.get('shot') and not (base / x['shot']).is_file()]
             if lost:
                 found.append(f'"{p.get("path", "?")}": these screenshots are missing: {", ".join(map(str, lost))}')
-    # 3. COVER: the 3:2 one, and the 1200 x 630 one Substack's upload box asks
-    # for, each against its own receipt from scripts/pages/build.py --cover.
-    for c in [p for p in planned if p.get('kind') in ('cover', 'substack-cover')]:
+    # 3. COVER: the 3:2 one and the one for every other place it is shown,
+    # each against its own receipt from scripts/pages/build.py --cover.
+    for c in [p for p in planned if p.get('kind') in COVER_RECEIPTS]:
         src = Path(str(c.get('source', '')))
-        wide = c.get('kind') == 'substack-cover'
-        what, receipt = ('the Substack cover', src.with_name('cover-1200x630.json')) if wide else ('the cover', src.with_name('cover.json'))
+        what, name = COVER_RECEIPTS[c['kind']]
+        receipt = src.with_name(name)
         if not receipt.is_file():
             found.append(f'{what} was not drawn by the house drawer (no {receipt.name} beside it): draw it with scripts/pages/build.py --cover, '
                          'with "portrait": true and logo rows, so it carries the wordmark, Krish and the real logos')
@@ -290,6 +304,13 @@ def self_test():
         check('a Substack cover that does not match its receipt fails', any('cover-1200x630.json does not match' in x for x in problems({}, full + [sub], body, t, reg)), True)
         (t / 'cover-1200x630.json').unlink()
         check('a hand-made Substack cover fails', any('the Substack cover was not drawn by the house drawer' in x for x in problems({}, full + [sub], body, t, reg)), True)
+        tall_png = b'\x89PNG vertical'
+        (t / 'cover-1080x1920.png').write_bytes(tall_png)
+        vert = {'kind': 'vertical-cover', 'source': t / 'cover-1080x1920.png', 'logos': ['OpenAI', 'Anthropic'], 'path': '2/vertical.png'}
+        (t / 'cover-1080x1920.json').write_text(json.dumps(good_receipt | {'sha256': hashlib.sha256(tall_png).hexdigest()}))
+        check('a vertical cover drawn by the house drawer passes', problems({}, full + [vert], body, t, reg), [])
+        (t / 'cover-1080x1920.json').write_text(json.dumps(good_receipt | {'sha256': hashlib.sha256(tall_png).hexdigest(), 'portrait': False}))
+        check('a vertical cover without the portrait fails', any('the vertical cover has no portrait' in x for x in problems({}, full + [vert], body, t, reg)), True)
         # 4. THUMBNAILS: drawn by the house drawer, with the face and every logo they declare.
         (t / 'cover.json').write_text(json.dumps(good_receipt))
         (t / 'thumbs').mkdir()

@@ -37,11 +37,13 @@ Artwork made from HTML is checked before it becomes a PNG by card.py.
           "cover" page facts, and cover-crops.png, what Substack's feed, share
           card and archive each show of it. It refuses if a word or a logo
           would be cut off by any of them, or if a word would be too small to
-          read in a phone's feed. It also draws cover-1200x630.png, the
-          same cover laid out for the 1.91:1 that Substack's cover upload
-          box asks for, with its receipt cover-1200x630.json and
-          cover-1200x630-crops.png. Upload cover-1200x630.png: Substack
-          crops a cover of any other shape itself.
+          read in a phone's feed. It also draws a cover for every other
+          place it is shown, each laid out for its own shape, with its
+          receipt (.json) and check image (-crops.png): cover-1200x630.png
+          for Substack's upload box (upload this one: Substack crops any
+          other shape itself), cover-1200x675.png, the 16:9 share card,
+          cover-1080x1080.png, the square, and cover-1080x1920.png, the
+          vertical cover for Shorts, TikTok and Reels.
 --thumbs  draws a thumbnail for every video size from the same facts:
           thumb-wide-1280x720.jpg for the 16:9 long cut (YouTube and the
           Substack video post) and thumb-tall-1080x1920.jpg for the 9:16
@@ -1037,7 +1039,7 @@ def draw_cover(facts, base, out, refresh=False):
         'portrait': bool(cv.get('portrait')), 'rows': [r.get('name', '') for r in cv.get('rows', [])],
         'background': background(cv, base) is not None, 'headline_px': size, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
     }, indent=1) + '\n', encoding='utf-8')
-    print(f'{out / "cover.png"}  {COVER_W} x {COVER_H}, the 3:2 cover. Do not upload it to Substack, whose upload box crops it: upload {COVER_WIDE_FILE}, below')
+    print(f'{out / "cover.png"}  {COVER_W} x {COVER_H}, the 3:2 cover. Do not upload it to Substack, whose upload box crops it: upload {COVER_SHAPES["upload"]["file"]}, below')
     print(f'  the headline is {size} px, in {lines} line(s); every word and logo is inside {keep}, so the feed, '
           'the share card and the archive keep all of it')
     if dropped:
@@ -1050,72 +1052,121 @@ def draw_cover(facts, base, out, refresh=False):
     return True
 
 
-# ---------------------------------------------------------------- the cover Substack's upload box asks for
+# ---------------------------------------------------------------- a cover for every place it is shown
 
 # Krish, 2026-10-12, with a screenshot of Substack's cover upload box: "Once
 # again, the Substack cover image is incorrect. Why is this? Why did this not
 # get fixed last time?" The box says "Recommended: 1200 x 630 px (1.91:1).
 # Keep important text and logos away from the edges." Given the 3:2 cover,
 # Substack ran its own crop (g_auto), which slid down to his face and cut the
-# headline in half. The 1200 x 630 preview had been logged as "next to build"
-# on 2026-10-07 and never built, so it came back.
+# headline in half. Then, the same day: "the cover crops need to be all
+# individual images, a vertical cover thumbnail for the shorts/tiktok etc as
+# well, every post moving forward".
 #
-# So every --cover also draws cover-1200x630.png, from the same facts, and
-# that is the file to upload. It is laid out for 1.91:1: Krish's face on the
-# left, the wordmark, the headline and the rows on the right. Every word and
-# logo sits inside COVER_WIDE_SAFE, which keeps COVER_WIDE_MARGIN pixels
-# clear of the edge of the 16:9 share card (1120 x 630, wherever g_auto
-# slides it, from x 0 to 1120 up to x 80 to 1200) and of the phone feed's 3:2
-# (945 x 630 from the middle, x 127.5 to 1072.5). The archive list's centre
-# square (x 285 to 915) cannot hold a 1.91:1 layout; the crop check shows it.
-# Words are held to the same phone floors as the 3:2 cover's, card.needed at
-# the full 1200 width (in the feed this cover is shown bigger than that).
-COVER_WIDE_W, COVER_WIDE_H = 1200, 630
-COVER_WIDE_FILE = 'cover-1200x630.png'
-COVER_WIDE_CHECK = 'cover-1200x630-crops.png'
-COVER_WIDE_RECEIPT = 'cover-1200x630.json'  # scripts/post-pack/visual_gate.py reads it as it reads cover.json
-COVER_WIDE_SAFE = (152, 36, 1048, 594)  # left, top, right, bottom
-COVER_WIDE_MARGIN = 24
-COVER_WIDE_CROPS = [  # what each shows of it: left, top, right, bottom
-    ("Substack's upload box and a 1.91:1 share card: all of it", (0, 0, COVER_WIDE_W, COVER_WIDE_H)),
-    ('The share card at 16:9, slid fully left', (0, 0, COVER_WIDE_H * 16 / 9, COVER_WIDE_H)),
-    ('The share card at 16:9, slid fully right', (COVER_WIDE_W - COVER_WIDE_H * 16 / 9, 0, COVER_WIDE_W, COVER_WIDE_H)),
-    ("The feed on a phone: 3:2 from the middle", ((COVER_WIDE_W - COVER_WIDE_H * 3 / 2) / 2, 0, (COVER_WIDE_W + COVER_WIDE_H * 3 / 2) / 2, COVER_WIDE_H)),
-]
-COVER_WIDE_SQUARE = ((COVER_WIDE_W - COVER_WIDE_H) / 2, 0, (COVER_WIDE_W + COVER_WIDE_H) / 2, COVER_WIDE_H)
-COVER_WIDE_HEAD_PX = (100, 96, 92, 88, 84, 80, 76)  # largest first; the headline takes the largest that fits...
-COVER_WIDE_HEAD_LINES = 3                           # ...in this many lines
-COVER_WIDE_FACE_PX = (300, 280, 260, 240)           # largest first, after the headline
+# So every --cover draws, beside the 3:2 cover.png, one cover for each place
+# the post's cover is shown, each designed for its own shape from the same
+# cover facts (never a crop of another): the wordmark, the headline with its
+# last line in the subchannel's colour, Krish's face and a row per real logo.
+# Each has its own safe box, which keeps `margin` pixels clear of the edge of
+# every crop that place makes (`crops`), its own receipt and a check image.
+# Words are held to card.py's phone floors at the image's full width.
+#
+#   upload    1200 x 630, Substack's cover upload box (1.91:1). Its 16:9 share
+#             card (1120 x 630, wherever g_auto slides it) and the phone feed's
+#             3:2 (945 x 630 from the middle) both keep the safe box.
+#   share     1200 x 675, the 16:9 share card for LinkedIn and link previews.
+#             LinkedIn shows 1.91:1 from the middle (y 23 to 652).
+#   square    1080 x 1080, for Substack's archive list and the Instagram feed.
+#             Instagram's profile grid shows the middle 3:4 (x 135 to 945).
+#   vertical  1080 x 1920, the vertical cover for YouTube Shorts, TikTok and
+#             Instagram Reels. The apps lay their bars, caption and buttons
+#             over the top and bottom, so every word, the face and every logo
+#             sit inside x 60 to 1020, y 250 to 1480; profile grids show the
+#             middle 3:4 (y 240 to 1680).
+COVER_SHAPES = {
+    'upload': {
+        'w': 1200, 'h': 630, 'file': 'cover-1200x630.png', 'layout': 'side', 'safe': (152, 36, 1048, 594), 'margin': 24,
+        'use': "upload THIS one as the cover image in Substack's post settings",
+        'crops': [("Substack's upload box and a 1.91:1 share card: all of it", (0, 0, 1200, 630)),
+                  ('The share card at 16:9, slid fully left', (0, 0, 1120, 630)),
+                  ('The share card at 16:9, slid fully right', (80, 0, 1200, 630)),
+                  ('The feed on a phone: 3:2 from the middle', (127.5, 0, 1072.5, 630))],
+        'heads': (100, 96, 92, 88, 84, 80, 76), 'lines': 3, 'faces': (300, 280, 260, 240), 'wm': 44, 'logo': 56,
+    },
+    'share': {
+        'w': 1200, 'h': 675, 'file': 'cover-1200x675.png', 'layout': 'side', 'safe': (88, 72, 1112, 603), 'margin': 36,
+        'use': 'the 16:9 share card: attach it to LinkedIn posts and anywhere a link preview takes a picture',
+        'crops': [('The 16:9 share card: all of it', (0, 0, 1200, 675)),
+                  ("LinkedIn's link preview: 1.91:1 from the middle", (0, 675 / 2 - 1200 / 1.91 / 2, 1200, 675 / 2 + 1200 / 1.91 / 2))],
+        'heads': (108, 104, 100, 96, 92, 88, 84, 80), 'lines': 3, 'faces': (340, 320, 300, 280, 260), 'wm': 48, 'logo': 60,
+    },
+    'square': {
+        'w': 1080, 'h': 1080, 'file': 'cover-1080x1080.png', 'layout': 'band', 'safe': (167, 72, 913, 1008), 'margin': 32,
+        'use': "the square cover: Substack's archive list and the Instagram feed",
+        'crops': [('The square, as the Instagram feed and the archive list show it: all of it', (0, 0, 1080, 1080)),
+                  ("Instagram's profile grid: 3:4 from the middle", (135, 0, 945, 1080))],
+        'heads': (108, 100, 96, 90, 84, 78, 72), 'lines': 3, 'faces': (250, 230, 210, 200), 'wm': 48, 'logo': 52,
+        'tag': 48, 'photo': .2,  # a square shows more of the photo, so it is dimmer
+    },
+    'vertical': {
+        'w': 1080, 'h': 1920, 'file': 'cover-1080x1920.png', 'layout': 'stack', 'safe': (96, 286, 984, 1444), 'margin': 36,
+        'use': 'the vertical cover: set it as the cover on YouTube Shorts, TikTok and Instagram Reels',
+        'crops': [('Where Shorts, TikTok and Reels lay nothing over it', (60, 250, 1020, 1480)),
+                  ('A profile grid: 3:4 from the middle', (0, 240, 1080, 1680))],
+        'covered': [('the app\'s top bar', (0, 0, 1080, 250)), ('the caption and buttons', (0, 1480, 1080, 1920))],
+        'heads': (136, 128, 120, 112, 104, 96, 88), 'lines': 4, 'faces': (420, 380, 340, 300, 280), 'wm': 60, 'logo': 76,
+        'tag': 56, 'photo': .16,  # a landscape photo zoomed to fill 9:16 is louder, so it is dimmer
+    },
+}
+COVER_SHAPE_ORDER = ('upload', 'share', 'square', 'vertical')
 
-# --head, --face, --words and --fine are set per cover, as on the 3:2 one.
-COVER_WIDE_CSS = """
+
+def cover_receipt(shape):
+    """The receipt and check image names beside a shape's PNG."""
+    stem = COVER_SHAPES[shape]['file'].rsplit('.', 1)[0]
+    return f'{stem}.json', f'{stem}-crops.png'
+
+
+# --head, --face, --wm, --logo, --words and --fine are set per cover.
+COVER_SHAPE_CSS = """
 * { box-sizing: border-box; margin: 0; }
 body { background: var(--deep); }
 #card { position: relative; overflow: hidden; background: var(--deep); color: var(--cream); }
-#card .ph { position: absolute; inset: 0; background-position: center 30%; background-size: cover; opacity: .3; }
+#card .ph { position: absolute; inset: 0; background-position: center 30%; background-size: cover; opacity: var(--photo); }
 #card .fade { position: absolute; inset: 0; background: radial-gradient(70% 80% at 50% 50%, rgba(var(--shade), .92) 0%, rgba(var(--shade), .8) 55%, rgba(var(--shade), .4) 100%); }
-#safe { position: absolute; display: flex; align-items: center; gap: 36px; }
+#safe { position: absolute; display: flex; }
 .face { flex: none; width: var(--face); height: var(--face); border-radius: 50%; background-size: cover; background-position: center 28%; border: 6px solid var(--accent); box-shadow: 10px 10px 0 rgba(0, 0, 0, .35); }
-.col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
-.wm { height: 44px; }
+.wm { height: var(--wm); }
 h1 { margin-top: 16px; font-family: "Anton", Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: var(--head); line-height: .94; text-wrap: balance; }
 h1 span { display: block; color: var(--accent); }
 .sub { margin-top: 14px; font-family: "Archivo", Arial, sans-serif; font-size: var(--words); line-height: 1.1; font-weight: 700; }
 .rows { margin-top: 20px; width: 100%; display: flex; flex-direction: column; gap: 10px; }
 .row { background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 8px 18px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.row img { height: 56px; }
+.row img { height: var(--logo); }
 .mono { font-family: "IBM Plex Mono", monospace; }
-.tag { font-size: var(--words); line-height: 1; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 7px 13px; color: var(--ink); white-space: nowrap; }
+.tag { font-size: var(--tag); line-height: 1; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 7px 13px; color: var(--ink); white-space: nowrap; }
 .ft { margin-top: 14px; font-size: var(--fine); line-height: 1.1; color: #AEAEA5; white-space: nowrap; }
+.side { align-items: center; gap: 36px; }
+.side .col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+.band, .stack { flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.band .pair { margin-top: 28px; width: 100%; display: flex; align-items: center; gap: 28px; }
+.band .pair .col { flex: 1; min-width: 0; }
+.band .pair .rows { margin-top: 0; }
+.stack h1 { margin-top: 22px; }
+.stack .face { margin-top: 34px; }
+.stack .rows { margin-top: 34px; gap: 14px; }
+.stack .row { padding: 10px 22px; }
+.stack .ft { margin-top: 22px; }
 """
 
 
-def cover_wide_html(facts, base, refresh=False):
-    """The cover at 1200 x 630 for Substack's upload box, from the same facts
-    as the 3:2 one (cover_html): Krish's face on the left when the facts have
-    "portrait"; on the right the wordmark, the headline with its last line in
-    the subchannel's colour, the optional subline, a row per logo with its
-    tag, and the subchannel and label as fine print."""
+def cover_shape_html(facts, base, shape, refresh=False):
+    """One cover as a page, laid out for its shape from the "cover" facts (as
+    the 3:2 one is): "side" puts Krish's face on the left and the wordmark,
+    headline and rows on the right; "band" puts the wordmark and headline on
+    top and the face beside the rows under them; "stack" puts each under the
+    one before. The subchannel and label are fine print under the rest."""
+    spec = COVER_SHAPES[shape]
     hs = brand.house()
     ch = brand.channel(hs, facts['subchannel'])
     t = hs['tokens']
@@ -1132,175 +1183,203 @@ def cover_wide_html(facts, base, refresh=False):
             brand.fail('"cover": each row needs "logo" (one that reads on dark ink) and "tag" (the words beside it)')
         if not colour:
             brand.fail(f'"cover": a row\'s colour is one of {", ".join(colours)}, not {row.get("colour")!r}')
-        rows.append(f'<div class="row"><img src="{brand.data_uri(resolve(base, row["logo"]), 600)}" alt="{attr(row.get("name", ""))}">'
+        rows.append(f'<div class="row"><img src="{brand.data_uri(resolve(base, row["logo"]), 800)}" alt="{attr(row.get("name", ""))}">'
                     f'<span class="tag mono" style="background:{colour}">{esc(row["tag"])}</span></div>')
     face = ''
     if c.get('portrait'):
         source = brand.fetch('krish', refresh) if c['portrait'] is True else resolve(base, c['portrait'])
-        face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 700)})"></div>'
+        face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 900)})"></div>'
     photo = ''
     if background(c, base):
         photo = (f'<div class="ph" style="background-image:url({brand.data_uri(background(c, base), 2000)})"></div>'
                  '<div class="fade"></div>')
     label = c.get('label') or facts.get('issue') or long_date(facts['date'])
+    wm = f'<img class="wm" src="{brand.brand_uri("wordmark", refresh)}" alt="makeyourmindup">'
+    h1 = f'<h1>{esc(lead) + " " if lead else ""}<span>{esc(last)}</span></h1>'
+    sub = f'<p class="sub">{esc(c["subline"])}</p>' if c.get('subline') else ''
+    rws = f'<div class="rows">{"".join(rows)}</div>' if rows else ''
+    ft = f'<p class="ft mono" data-fine-print>{esc(ch["name"])} · {esc(label)}</p>'
+    if spec['layout'] == 'side':
+        inner = f'{face}<div class="col">{wm}{h1}{sub}{rws}{ft}</div>'
+    elif spec['layout'] == 'band':
+        pair = f'<div class="pair">{face}<div class="col">{rws}</div></div>' if face and rws else face + rws
+        inner = f'{wm}{h1}{sub}{pair}{ft}'
+    else:
+        inner = f'{wm}{h1}{face}{sub}{rws}{ft}'
     deep = t['ink_deep'].lstrip('#')
-    left, top, right, bottom = COVER_WIDE_SAFE
-    words, fine = card.needed(COVER_WIDE_W)
+    w, h = spec['w'], spec['h']
+    left, top, right, bottom = spec['safe']
+    words, fine = card.needed(w)
     return f"""<!doctype html>
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="artwork-size" content="{COVER_WIDE_W}x{COVER_WIDE_H}">
+<meta name="artwork-size" content="{w}x{h}">
 <style>{brand.font_css()}</style>
 <style>:root {{ --ink: {t['ink']}; --deep: {t['ink_deep']}; --cream: {t['cream']}; --accent: {ch['accent']}; --shade: {', '.join(str(int(deep[i:i + 2], 16)) for i in (0, 2, 4))};
-  --head: {COVER_WIDE_HEAD_PX[0]}px; --face: {COVER_WIDE_FACE_PX[0]}px; --words: {words}px; --fine: {fine}px; }}
-{COVER_WIDE_CSS}
-#card {{ width: {COVER_WIDE_W}px; height: {COVER_WIDE_H}px; }}
+  --head: {spec['heads'][0]}px; --face: {spec['faces'][0]}px; --wm: {spec['wm']}px; --logo: {spec['logo']}px; --words: {words}px; --fine: {fine}px;
+  --tag: {max(words, spec.get('tag') or 0)}px; --photo: {spec.get('photo', .3)}; }}
+{COVER_SHAPE_CSS}
+#card {{ width: {w}px; height: {h}px; }}
 #safe {{ left: {left}px; top: {top}px; width: {right - left}px; height: {bottom - top}px; }}</style>
 </head>
 <body>
-<div id="card" class="wide-cover">{photo}<div id="safe">{face}<div class="col">
-<img class="wm" src="{brand.brand_uri('wordmark', refresh)}" alt="makeyourmindup">
-<h1>{esc(lead) + ' ' if lead else ''}<span>{esc(last)}</span></h1>
-{f'<p class="sub">{esc(c["subline"])}</p>' if c.get('subline') else ''}{f'<div class="rows">{"".join(rows)}</div>' if rows else ''}
-<p class="ft mono" data-fine-print>{esc(ch['name'])} · {esc(label)}</p>
-</div></div></div>
+<div id="card" class="cover-{shape}">{photo}<div id="safe" class="{spec['layout']}">{inner}</div></div>
 </body>
 </html>
 """
 
 
-def fit_cover_wide(pg):
+# A row is cramped when its tag comes nearer its logo than this, even if both fit.
+COVER_ROW_GAP = 32
+COVER_ROW_ROOM_JS = r"""(gap) => [...document.querySelectorAll('#safe .row')].filter(r => {
+  const i = r.querySelector('img'), t = r.querySelector('.tag');
+  return i && t && t.getBoundingClientRect().left - i.getBoundingClientRect().right < gap;
+}).map(r => r.querySelector('img')?.alt || 'a row')"""
+
+
+def fit_cover_shape(pg, shape):
     """The largest headline, then the largest face, at which every word, the
-    face and every logo sit inside COVER_WIDE_SAFE, the headline takes at most
-    COVER_WIDE_HEAD_LINES lines and every row holds its logo and tag. At each
-    size it tries with the label line first, then without it, so the label
-    never costs the headline a size. Returns what it settled on."""
-    faces = COVER_WIDE_FACE_PX if pg.locator('#safe .face').count() else COVER_WIDE_FACE_PX[:1]
+    face and every logo sit inside the shape's safe box, the headline takes
+    at most its lines and every row holds its logo and tag. At each size it
+    tries with the label line first, then without it, so the label never
+    costs the headline or the face a size. Returns what it settled on."""
+    spec = COVER_SHAPES[shape]
+    faces = spec['faces'] if pg.locator('#safe .face').count() else spec['faces'][:1]
     tried = None
-    for head in COVER_WIDE_HEAD_PX:
+    for head in spec['heads']:
         for face in faces:
             for label in (True, False):
                 pg.evaluate("([h, f, l]) => { const s = document.documentElement.style; s.setProperty('--head', h + 'px'); s.setProperty('--face', f + 'px');"
                             " const ft = document.querySelector('#safe .ft'); if (ft) ft.style.display = l ? '' : 'none'; }", [head, face, label])
                 lines, spill = pg.evaluate(THUMB_MEASURE_JS)
-                cut = card.outside(card.boxes(pg, '#safe'), COVER_WIDE_SAFE)
+                spill = spill + [x for x in pg.evaluate(COVER_ROW_ROOM_JS, COVER_ROW_GAP) if x not in spill]
+                cut = card.outside(card.boxes(pg, '#safe'), spec['safe'])
                 tried = {'head': head, 'face': face, 'label': label, 'lines': lines, 'cut': cut, 'spill': spill}
-                if lines <= COVER_WIDE_HEAD_LINES and not cut and not spill:
+                if lines <= spec['lines'] and not cut and not spill:
                     return dict(tried, ok=True)
     return dict(tried, ok=False)
 
 
-def cover_wide_crops_html(png):
-    """What a person checks: the whole 1.91:1 cover with the safe box dashed,
-    the 16:9 share card slid fully left and fully right, the phone feed's 3:2
-    at a phone's width, and the archive's centre square at 150 pixels."""
+def cover_shape_check_html(png, shape):
+    """What a person checks: the whole image with its safe box dashed (and,
+    on the vertical one, what the apps lay over it shaded), each crop the
+    places it goes make, and the image as small as it is shown."""
+    spec = COVER_SHAPES[shape]
+    W, H = spec['w'], spec['h']
     src = 'data:image/png;base64,' + base64.b64encode(png).decode()
-    label = "font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:.04em;color:#333;margin:0 0 8px;max-width:520px"
+    label = "font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:.04em;color:#333;margin:0 0 8px;max-width:420px"
 
-    def panel(name, box, height, safe=False):
+    def panel(name, box, height, marks=False):
         x0, y0, x1, y1 = box
         s = height / (y1 - y0)
-        dash = ''
-        if safe:
-            l, t, r, b = COVER_WIDE_SAFE
-            dash = (f'<span style="position:absolute;left:{(l - x0) * s:.1f}px;top:{(t - y0) * s:.1f}px;width:{(r - l) * s:.1f}px;'
-                    f'height:{(b - t) * s:.1f}px;outline:2px dashed #FF6A4D"></span>')
+        over = ''
+        if marks:
+            for _, (l, t, r, b) in spec.get('covered', []):
+                over += (f'<span style="position:absolute;left:{(l - x0) * s:.1f}px;top:{(t - y0) * s:.1f}px;width:{(r - l) * s:.1f}px;'
+                         f'height:{(b - t) * s:.1f}px;background:rgba(255,106,77,.35)"></span>')
+            l, t, r, b = spec['safe']
+            over += (f'<span style="position:absolute;left:{(l - x0) * s:.1f}px;top:{(t - y0) * s:.1f}px;width:{(r - l) * s:.1f}px;'
+                     f'height:{(b - t) * s:.1f}px;outline:2px dashed #FF6A4D"></span>')
         return (f'<div><p style="{label}">{esc(name)}</p>'
                 f'<div style="position:relative;width:{(x1 - x0) * s:.1f}px;height:{height}px;background:url({src}) -{x0 * s:.1f}px -{y0 * s:.1f}px / '
-                f'{COVER_WIDE_W * s:.1f}px {COVER_WIDE_H * s:.1f}px no-repeat;outline:1px solid #ccc">{dash}</div></div>')
-    whole_name, whole = COVER_WIDE_CROPS[0]
-    feed_name, feed = COVER_WIDE_CROPS[3]
-    top = [panel(whole_name + '; the dashed box is what every crop keeps', whole, 300, safe=True)]
-    top += [panel(name, box, 300) for name, box in COVER_WIDE_CROPS[1:3]]
-    feed_w = feed[2] - feed[0]
-    bottom = [panel(f'{feed_name}, {card.PHONE_COLUMN} px wide as on a phone', feed, round(card.PHONE_COLUMN * COVER_WIDE_H / feed_w)),
-              panel("The archive list's centre square at 150 px: only the middle shows there, as on any 1.91:1 cover", COVER_WIDE_SQUARE, 150)]
-    row = 'display:flex;gap:20px;align-items:flex-end'
+                f'{W * s:.1f}px {H * s:.1f}px no-repeat;outline:1px solid #ccc">{over}</div></div>')
+    big = 640 if H > W else 360 if H == W else 300
+    whole = 'The whole image; the dashed box is what every crop keeps' + ('; shaded, what the apps lay over it' if spec.get('covered') else '')
+    panels = [panel(whole, (0, 0, W, H), big, marks=True)]
+    panels += [panel(name, box, big) for name, box in spec['crops'] if box != (0, 0, W, H)]
+    if shape == 'upload':
+        panels.append(panel("The archive list's centre square at 150 px (the square cover is drawn for it)", ((W - H) / 2, 0, (W + H) / 2, H), 150))
+    elif shape == 'square':
+        panels.append(panel("The archive list at its smallest, 150 px", (0, 0, W, H), 150))
+        panels.append(panel('In an Instagram profile grid, 120 px wide', spec['crops'][1][1], 160))
+    elif shape == 'vertical':
+        panels.append(panel('In a profile grid, 120 px wide', spec['crops'][1][1], 160))
+    else:
+        panels.append(panel(f'At a phone\'s width, {card.PHONE_COLUMN} px', (0, 0, W, H), round(card.PHONE_COLUMN * H / W)))
     return (f'<meta charset="utf-8"><style>{brand.font_css()}\n*{{box-sizing:border-box;margin:0}}</style>'
-            '<body style="margin:0;background:#fff"><div id="sheet" style="display:inline-flex;flex-direction:column;gap:24px;'
-            f'padding:20px;background:#fff"><div style="{row}">{"".join(top)}</div><div style="{row}">{"".join(bottom)}</div></div></body>')
+            '<body style="margin:0;background:#fff"><div id="sheet" style="display:inline-flex;flex-wrap:wrap;max-width:1700px;gap:24px;align-items:flex-end;'
+            f'padding:20px;background:#fff">{"".join(panels)}</div></body>')
 
 
-def draw_cover_wide(facts, base, out, refresh=False):
-    """cover-1200x630.png, the cover to upload in Substack's post settings, its
-    receipt cover-1200x630.json and its crop check cover-1200x630-crops.png.
-    Refuses, writing nothing and removing an older set, when no headline size
-    and face size fit everything inside COVER_WIDE_SAFE, or a word would be
-    too small to read in a phone's feed. True when it was written."""
+def draw_cover_shape(facts, base, out, shape, refresh=False):
+    """One shape's cover, its receipt and its check image. Refuses, writing
+    nothing and removing an older set, when no headline size and face size
+    fit everything inside its safe box, or a word would be too small to read
+    on a phone. True when it was written."""
+    spec = COVER_SHAPES[shape]
+    W, H, name = spec['w'], spec['h'], spec['file']
+    receipt, check = cover_receipt(shape)
     out = Path(out)
-    for name in (COVER_WIDE_FILE, COVER_WIDE_CHECK, COVER_WIDE_RECEIPT):
-        (out / name).unlink(missing_ok=True)
-    page = cover_wide_html(facts, base, refresh)
+    for n in (name, receipt, check):
+        (out / n).unlink(missing_ok=True)
+    page = cover_shape_html(facts, base, shape, refresh)
     png = crops = None
     with brand.playwright() as p:
         b = brand.browser(p)
-        pg = b.new_page(viewport={'width': COVER_WIDE_W, 'height': COVER_WIDE_H})
+        pg = b.new_page(viewport={'width': W, 'height': H})
         pg.set_content(page)
         card.settle(pg)
-        fit = fit_cover_wide(pg)
-        words = card.texts(pg, (0, 0, COVER_WIDE_W, COVER_WIDE_H))
-        small = card.too_small(words, COVER_WIDE_W)
+        fit = fit_cover_shape(pg, shape)
+        words = card.texts(pg, (0, 0, W, H))
+        small = card.too_small(words, W)
         ok = fit['ok'] and not small
         if ok:
-            png = pg.screenshot(clip={'x': 0, 'y': 0, 'width': COVER_WIDE_W, 'height': COVER_WIDE_H})
-            sheet = b.new_page(viewport={'width': 1800, 'height': 800})
-            sheet.set_content(cover_wide_crops_html(png))
+            png = pg.screenshot(clip={'x': 0, 'y': 0, 'width': W, 'height': H})
+            sheet = b.new_page(viewport={'width': 1800, 'height': 900})
+            sheet.set_content(cover_shape_check_html(png, shape))
             card.settle(sheet)
             crops = sheet.locator('#sheet').screenshot()
         b.close()
-    left, top, right, bottom = COVER_WIDE_SAFE
+    left, top, right, bottom = spec['safe']
     keep = f'x {left} to {right}, y {top} to {bottom}'
-    need_words, need_fine = card.needed(COVER_WIDE_W)
+    need_words, need_fine = card.needed(W)
     if not ok:
-        print(f'{COVER_WIDE_FILE}: not written.')
-        if fit['lines'] > COVER_WIDE_HEAD_LINES:
-            print(f'  the headline takes {fit["lines"]} lines even at {fit["head"]} px, and {COVER_WIDE_HEAD_LINES} fit: shorten the cover\'s "headline"')
+        print(f'{name}: not written.')
+        if fit['lines'] > spec['lines']:
+            print(f'  the headline takes {fit["lines"]} lines even at {fit["head"]} px, and {spec["lines"]} fit: shorten the cover\'s "headline"')
         if fit['cut']:
-            print(f'  these fall outside {keep}, the part the 16:9 share card and the phone feed both keep:')
+            print(f'  these fall outside {keep}, the part every place it is shown keeps:')
             for x in fit['cut']:
                 x0, y0, x1, y1 = x['box']
                 print(f'    {card.short(x["what"])}  at x {x0:.0f} to {x1:.0f}, y {y0:.0f} to {y1:.0f}')
             print('  shorten the headline or a tag, or take the subline or a row out (the "cover" facts)')
         for what in fit['spill']:
-            print(f'  the row "{what}" cannot hold its logo and tag: shorten the tag')
+            print(f'  the row "{what}" cannot hold its logo and tag with {COVER_ROW_GAP} px between them: shorten the tag')
         for w in small:
-            print(f'  too small to read in a phone\'s feed: {w["phone"]:4.1f} px, drawn at {w["px"]:.0f} px; it needs '
+            print(f'  too small to read on a phone: {w["phone"]:4.1f} px, drawn at {w["px"]:.0f} px; it needs '
                   f'{need_fine if w["fine"] else need_words} px  "{card.short(w["text"])}"')
-        print('  Substack crops any other shape itself, so upload no cover until this one is drawn.')
         return False
     import hashlib
     cv = facts.get('cover') or {}
-    (out / COVER_WIDE_FILE).write_bytes(png)
-    (out / COVER_WIDE_CHECK).write_bytes(crops)
+    (out / name).write_bytes(png)
+    (out / check).write_bytes(crops)
     # The drawer's receipt, as cover.json is the 3:2 cover's:
-    # scripts/post-pack/visual_gate.py packs it only when this matches the PNG.
-    (out / COVER_WIDE_RECEIPT).write_text(json.dumps({
-        'drawer': 'scripts/pages/build.py --cover', 'file': COVER_WIDE_FILE, 'width': COVER_WIDE_W, 'height': COVER_WIDE_H,
+    # scripts/post-pack/visual_gate.py packs the cover only when this matches it.
+    (out / receipt).write_text(json.dumps({
+        'drawer': 'scripts/pages/build.py --cover', 'shape': shape, 'file': name, 'width': W, 'height': H,
         'sha256': hashlib.sha256(png).hexdigest(), 'portrait': bool(cv.get('portrait')), 'rows': [r.get('name', '') for r in cv.get('rows', [])],
         'background': background(cv, base) is not None, 'headline_px': fit['head'], 'face_px': fit['face'] if cv.get('portrait') else 0,
-        'label': fit['label'], 'safe': list(COVER_WIDE_SAFE), 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
+        'label': fit['label'], 'safe': list(spec['safe']), 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
     }, indent=1) + '\n', encoding='utf-8')
-    print(f'{out / COVER_WIDE_FILE}  {COVER_WIDE_W} x {COVER_WIDE_H} (1.91:1): upload THIS one as the cover image in Substack\'s post settings')
+    print(f'{out / name}  {W} x {H}: {spec["use"]}')
     print(f'  the headline is {fit["head"]} px, in {fit["lines"]} line(s)' + (f'; the face is {fit["face"]} px' if cv.get('portrait') else '; no face: add "portrait": true')
-          + f'; every word and logo is inside {keep}, so the 16:9 share card and the phone feed keep all of it')
-    if not fit['label']:
-        print('  the label line did not fit, so this cover leaves it out')
-    no_background_note(cv, base)
-    print('  every word can be read in a phone\'s feed:')
-    for w in sorted(words, key=lambda w: -w['px']):
-        if w['text'].strip():
-            print(f'    {card.on_phone(w["px"], COVER_WIDE_W):4.1f} px  "{card.short(w["text"])}"' + ('  (fine print)' if w['fine'] else ''))
-    print(f'{out / COVER_WIDE_CHECK}  what the upload box, the share card and the feed each show of it. Look at it before publishing.')
+          + f'; every word and logo is inside {keep}' + ('' if fit['label'] else '; the label line did not fit, so it is left out'))
+    print('  on a phone: ' + ', '.join(f'"{card.short(w["text"], 30)}" {card.on_phone(w["px"], W):.1f} px'
+                                      for w in sorted(words, key=lambda w: -w['px']) if w['text'].strip()))
+    print(f'{out / check}  what each place shows of it. Look at it before publishing.')
     return True
 
 
 def draw_covers(facts, base, out, refresh=False):
-    """--cover: the 3:2 cover (cover.png) and the 1.91:1 one Substack's upload
-    box asks for (cover-1200x630.png). True when both were written."""
-    three_two = draw_cover(facts, base, out, refresh)
-    wide = draw_cover_wide(facts, base, out, refresh)
-    return three_two and wide
+    """--cover: the 3:2 cover (cover.png) and a cover for every other place
+    the post is shown (COVER_SHAPES). True when every one was written."""
+    done = [draw_cover(facts, base, out, refresh)]
+    for shape in COVER_SHAPE_ORDER:
+        done.append(draw_cover_shape(facts, base, out, shape, refresh))
+    if not all(done):
+        print('covers: not every shape was drawn. Every post needs all of them, so fix the facts and draw them again.')
+    return all(done)
 
 
 # ---------------------------------------------------------------- a thumbnail for every video size
@@ -1798,19 +1877,27 @@ def self_test():
           [x['what'] for x in overlapping(found, wide['clear'])], ['in the corner'])
     check('the cover safe area is inside each crop Substack makes', all(
         COVER_SAFE[0] >= x0 and COVER_SAFE[1] >= y0 and COVER_SAFE[2] <= x1 and COVER_SAFE[3] <= y1 for _, (x0, y0, x1, y1) in COVER_CROPS), True)
-    # The cover Substack's upload box asks for (Krish, 2026-10-12).
-    check('the upload cover is the 1200 x 630 the box asks for', (COVER_WIDE_W, COVER_WIDE_H, COVER_WIDE_FILE), (1200, 630, 'cover-1200x630.png'))
-    shapes = [round((x1 - x0) / (y1 - y0), 3) for _, (x0, y0, x1, y1) in COVER_WIDE_CROPS]
-    check('its crops: all of it, 16:9 slid either way, and the feed\'s 3:2', shapes, [round(1200 / 630, 3), round(16 / 9, 3), round(16 / 9, 3), 1.5])
-    check('its crops are as tall as the cover and lie inside it', all(y0 == 0 and y1 == COVER_WIDE_H and x0 >= 0 and x1 <= COVER_WIDE_W
-                                                                       for _, (x0, y0, x1, y1) in COVER_WIDE_CROPS), True)
-    check(f'its safe area keeps {COVER_WIDE_MARGIN} px clear of the edge of every crop', all(
-        COVER_WIDE_SAFE[0] - x0 >= COVER_WIDE_MARGIN and COVER_WIDE_SAFE[1] - y0 >= COVER_WIDE_MARGIN and x1 - COVER_WIDE_SAFE[2] >= COVER_WIDE_MARGIN
-        and y1 - COVER_WIDE_SAFE[3] >= COVER_WIDE_MARGIN for _, (x0, y0, x1, y1) in COVER_WIDE_CROPS), True)
-    check('its headline and face sizes run largest first', (list(COVER_WIDE_HEAD_PX), list(COVER_WIDE_FACE_PX)),
-          (sorted(COVER_WIDE_HEAD_PX, reverse=True), sorted(COVER_WIDE_FACE_PX, reverse=True)))
+    # A cover for every place it is shown, each its own image (Krish, 2026-10-12).
+    check('the covers and their sizes', {k: (v['w'], v['h'], v['file']) for k, v in COVER_SHAPES.items()},
+          {'upload': (1200, 630, 'cover-1200x630.png'), 'share': (1200, 675, 'cover-1200x675.png'),
+           'square': (1080, 1080, 'cover-1080x1080.png'), 'vertical': (1080, 1920, 'cover-1080x1920.png')})
+    check('every shape is drawn by --cover', sorted(COVER_SHAPE_ORDER), sorted(COVER_SHAPES))
+    check('each has its own receipt and check image', cover_receipt('vertical'), ('cover-1080x1920.json', 'cover-1080x1920-crops.png'))
+    check('the upload cover\'s crops: all of it, 16:9 slid either way, and the feed\'s 3:2',
+          [round((x1 - x0) / (y1 - y0), 3) for _, (x0, y0, x1, y1) in COVER_SHAPES['upload']['crops']], [round(1200 / 630, 3), round(16 / 9, 3), round(16 / 9, 3), 1.5])
+    check('the share card is 16:9', COVER_SHAPES['share']['w'] * 9 == COVER_SHAPES['share']['h'] * 16, True)
+    check('the vertical cover is 9:16', COVER_SHAPES['vertical']['w'] * 16 == COVER_SHAPES['vertical']['h'] * 9, True)
+    check('the vertical cover keeps clear of what Shorts, TikTok and Reels lay over it', COVER_SHAPES['vertical']['crops'][0][1], (60, 250, 1020, 1480))
+    for shape, spec in COVER_SHAPES.items():
+        l, t, r, b = spec['safe']
+        m = spec['margin']
+        check(f'{shape}: every crop lies inside the image', all(x0 >= 0 and y0 >= 0 and x1 <= spec['w'] and y1 <= spec['h'] for _, (x0, y0, x1, y1) in spec['crops']), True)
+        check(f'{shape}: its safe box keeps {m} px clear of the edge of every crop',
+              all(l - x0 >= m and t - y0 >= m and x1 - r >= m and y1 - b >= m for _, (x0, y0, x1, y1) in spec['crops']), True)
+        check(f'{shape}: headline and face sizes run largest first', (list(spec['heads']), list(spec['faces'])),
+              (sorted(spec['heads'], reverse=True), sorted(spec['faces'], reverse=True)))
     import inspect
-    check('--cover draws both covers', inspect.getsource(main).count('draw_covers('), 2)
+    check('--cover draws every cover', inspect.getsource(main).count('draw_covers('), 2)
 
     # The facts: "thumbs" over "cover", field by field, then the page headline.
     check('thumbs.json names each company of a row of two once, as the registry names it',
@@ -1870,16 +1957,20 @@ def self_test():
                 check(f'{shape} page: one that is not is left out, and the rest is drawn',
                       ('class="ph"' in page, 'class="face"' in page, 'alt="Udio"' in page), (False, True, True))
             check('the cover: a background that is not on this machine is left out', 'class="ph"' in cover_html(dict(gone, date='2026-10-12'), tmp), False)
-            wide = cover_wide_html(dict(facts, date='2026-10-12'), tmp)
-            check('the upload cover page: its size', 'content="1200x630"' in wide, True)
-            check('the upload cover page: the real wordmark, the headline with its last line in colour, the face and the row',
-                  ('alt="makeyourmindup"' in wide, "A fan's AI song. <span>Who gets paid?</span>" in wide or 'A fan&#x27;s AI song. <span>Who gets paid?</span>' in wide,
-                   'class="face"' in wide, 'alt="Suno"' in wide), (True, True, True, True))
-            check('the upload cover page: the face comes before the words, on the left', wide.index('class="face"') < wide.index('<h1>'), True)
-            check('the upload cover page: the label as fine print', 'data-fine-print>follow.the.money · ' in wide, True)
-            check('the upload cover page: no long dashes', [ch for ch in wide if ch in '\u2013\u2014'], [])
-            check('the upload cover: a background on this machine is drawn, one that is not is left out',
-                  ('class="ph"' in wide, 'class="ph"' in cover_wide_html(dict(gone, date='2026-10-12'), tmp)), (True, False))
+            for shape, spec in COVER_SHAPES.items():
+                page = cover_shape_html(dict(facts, date='2026-10-12'), tmp, shape)
+                check(f'{shape} cover page: its size and layout', (f'content="{spec["w"]}x{spec["h"]}"' in page, f'id="safe" class="{spec["layout"]}"' in page), (True, True))
+                check(f'{shape} cover page: the real wordmark, the headline with its last line in colour, the face and the row',
+                      ('alt="makeyourmindup"' in page, "A fan's AI song. <span>Who gets paid?</span>" in page or 'A fan&#x27;s AI song. <span>Who gets paid?</span>' in page,
+                       'class="face"' in page, 'alt="Suno"' in page), (True, True, True, True))
+                check(f'{shape} cover page: the label as fine print', 'data-fine-print>follow.the.money · ' in page, True)
+                check(f'{shape} cover page: no long dashes', [ch for ch in page if ch in '\u2013\u2014'], [])
+                check(f'{shape} cover: a background on this machine is drawn, one that is not is left out',
+                      ('class="ph"' in page, 'class="ph"' in cover_shape_html(dict(gone, date='2026-10-12'), tmp, shape)), (True, False))
+            up = cover_shape_html(dict(facts, date='2026-10-12'), tmp, 'upload')
+            check('the upload cover: the face on the left, before the words', up.index('class="face"') < up.index('<h1>'), True)
+            vert = cover_shape_html(dict(facts, date='2026-10-12'), tmp, 'vertical')
+            check('the vertical cover: the headline above the face', vert.index('<h1>') < vert.index('class="face"'), True)
             try:
                 thumb_html(dict(facts, thumbs={'strip': [{'logo': 'gone.svg', 'name': 'Udio'}]}), tmp, 'wide')
                 check('a logo that is not on this machine is refused', False, True)
@@ -1911,7 +2002,7 @@ def main():
     ap.add_argument('--assets', help='folder that image paths are relative to (default: the facts file\'s folder)')
     ap.add_argument('--check', action='store_true', help='copy the Substack post and report what survives')
     ap.add_argument('--shots', action='store_true', help='screenshot both files at 1440 and 390 wide')
-    ap.add_argument('--cover', action='store_true', help="draw cover-1200x630.png, the cover to upload to Substack, and cover.png at 3:2, each with its crop check")
+    ap.add_argument('--cover', action='store_true', help="draw a cover for every place it is shown: cover-1200x630.png (upload to Substack), cover-1200x675.png, cover-1080x1080.png, cover-1080x1920.png and cover.png at 3:2, each with its check")
     ap.add_argument('--thumbs', action='store_true', help='draw thumb-wide-1280x720.jpg and thumb-tall-1080x1920.jpg, a thumbnail for each video '
                     'size, with their receipt thumbs.json and thumbs-check.png')
     ap.add_argument('--refresh-brand', action='store_true', help='fetch the logo images again now')

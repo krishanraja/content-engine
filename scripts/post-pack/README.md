@@ -46,7 +46,7 @@ makeyourmindup\
       READ ME.txt               what every file is for and where it goes
       0 Publish\                publish.html: start here, every channel in order with Copy buttons (docs/AMPLIFICATION.md)
       1 Article\                substack-copy.html (paste into Substack), web-page.html, text-that-passed-the-fact-check.md, email-pictures-off.html
-      2 Covers and images\      substack-cover-1200x630.png (upload this one), substack-cover-3x2.png, the pictures in the post, share cards
+      2 Covers and images\      a cover for every place (below), the pictures in the post, share cards
       3 Video\                  the script, the YouTube and Substack words, the finished videos named by the archive rule
       4 Social\                 the LinkedIn post and its card
 ```
@@ -109,8 +109,21 @@ first post's facts.
 | `web-page` | 1 Article | `web-page.html` | `scripts/pages`' `page.html` |
 | `fact-checked-text` | 1 Article | `text-that-passed-the-fact-check.md` | the body whose fact check passed (or `"text"`) |
 | `email-pictures-off` | 1 Article | `email-pictures-off.html` | `scripts/pages`' email with pictures hidden |
-| `cover` | 2 Covers and images | `substack-cover-3x2.png` | `scripts/pages --cover`'s `cover.png`, the 3:2 cover. Never uploaded to Substack, whose upload box crops it |
-| `substack-cover` | 2 Covers and images | `substack-cover-1200x630.png` | `scripts/pages --cover`'s `cover-1200x630.png`, the cover to upload: the 1200 x 630 (1.91:1) Substack's upload box asks for (Krish, 2026-10-12). Added by itself from beside `cover.png`; a pack whose cover has none beside it is refused, and the visual gate holds it to its `cover-1200x630.json` receipt |
+| `cover` | 2 Covers and images | `substack-feed-1200x800.png` | `scripts/pages --cover`'s `cover.png`, the 3:2 cover. Never uploaded to Substack, whose upload box crops it |
+| `substack-cover` | 2 Covers and images | `substack-cover-1200x630.png` | `cover-1200x630.png`: upload it in Substack's post settings |
+| `share-card-cover` | 2 Covers and images | `share-card-1200x675.png` | `cover-1200x675.png`: LinkedIn and link previews |
+| `square-cover` | 2 Covers and images | `square-1080x1080.png` | `cover-1080x1080.png`: the Instagram feed and the archive |
+| `vertical-cover` | 2 Covers and images | `vertical-cover-1080x1920-shorts-tiktok-reels.png` | `cover-1080x1920.png`: the cover on Shorts, TikTok and Reels |
+
+Every pack with a `cover` carries all four of the others (Krish, 2026-10-12:
+"the cover crops need to be all individual images, a vertical cover thumbnail
+for the shorts/tiktok etc as well, every post moving forward"). Each is added
+by itself from beside `cover.png`, where `scripts/pages --cover` draws it;
+a pack missing any, or holding one of the wrong size, is refused, and the
+visual gate holds each to its own receipt (`cover-WxH.json`).
+
+| `kind` | Goes to | Named | What it is |
+|---|---|---|---|
 | `cover-crops`, `phone-check` | 2 Covers and images | `cover-crops.png`, `phone-images.png` | the checks `scripts/pages` draws; never posted |
 | `image`, `share-card` | 2 Covers and images | their own names | a picture in the post; a card for sharing it |
 | `video-script` | 3 Video | `video-script.md` (or its own type) | the script to record from (or `"text"`) |

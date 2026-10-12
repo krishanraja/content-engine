@@ -19,7 +19,9 @@ except title; a step whose words are missing says so instead of guessing):
     {"title": "...", "subtitle": "...", "date": "2026-10-09",
      "files": {"long_video": "3 Video/....mp4", "short_video": "3 Video/....mp4",
                "wide_thumbnail": "3 Video/<Subject> - wide 16x9 - thumbnail.jpg",
-               "tall_thumbnail": "3 Video/<Subject> - tall 9x16 - thumbnail.jpg",
+               "vertical_cover": "2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png",
+               "square": "2 Covers and images/square-1080x1080.png",
+               "share_card": "2 Covers and images/share-card-1200x675.png",
                "cover": "2 Covers and images/substack-cover-1200x630.png",
                "substack_copy": "1 Article/substack-copy.html"},
      "youtube_title": "...", "youtube_description": "...",
@@ -31,10 +33,13 @@ The order (Krish, 2026-10-11): Substack, YouTube, then Shorts, TikTok and
 Instagram, every time; LinkedIn, WhatsApp and Notes after, when he wants
 them. "tiktok_caption" falls back to "short_caption".
 
-Each video size has its own thumbnail (Krish, 2026-10-12: "I always want a
-video thumbnail for all video sizes produced as an asset every time"): the
-wide one on YouTube and the Substack video post, the tall one as the cover on
-Reels and TikTok. The Substack post's cover image is the 1200 x 630 cover
+The wide video's thumbnail goes on YouTube and the Substack video post
+(Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
+produced as an asset every time"). Every place the cover is shown has its own
+image (Krish, 2026-10-12: "the cover crops need to be all individual images, a
+vertical cover thumbnail for the shorts/tiktok etc as well"): the vertical
+cover on Shorts, TikTok and Reels, the square on the Instagram feed, the
+16:9 share card on LinkedIn. The Substack post's cover image is the 1200 x 630 cover
 (substack-cover-1200x630.png), the 1.91:1 Substack's upload box asks for: it
 crops any other shape itself (Krish, 2026-10-12).
 
@@ -65,7 +70,9 @@ def steps(p):
     short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
     cover = f.get('cover') or '2 Covers and images/substack-cover-1200x630.png'
     wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
-    tall_thumb = f.get('tall_thumbnail') or '3 Video/ the tall (9:16) thumbnail'
+    vertical = f.get('vertical_cover') or '2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png'
+    share_card = f.get('share_card') or '2 Covers and images/share-card-1200x675.png'
+    square = f.get('square') or '2 Covers and images/square-1080x1080.png'
     copy_page = f.get('substack_copy') or '1 Article/substack-copy.html'
     q = p.get('comment_question') or ''
     short_caption = p.get('short_caption')
@@ -103,8 +110,10 @@ def steps(p):
         {
             'where': 'YouTube Shorts', 'tag': f'The {VERTICAL_MAX_SECONDS}-second cut, linked to the full video',
             'why': 'Links in Shorts are not clickable, so the Short points to the full video instead.',
-            'files': [short_video],
+            'files': [short_video, vertical],
             'do': ['Upload the tall video as a Short with the title below.',
+                   f'Set its cover to the vertical cover, {vertical}, where YouTube lets you add a picture; '
+                   'where it offers only a frame, pick the one where you look at the camera.',
                    'Under Related video, choose the full video from step 2.'],
             'copy': [('Title', p.get('short_title') or p.get('youtube_title'))],
         },
@@ -112,27 +121,29 @@ def steps(p):
             'where': 'TikTok', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
             'why': 'Links in TikTok captions are not clickable, and a clickable link in your profile needs 1,000 followers '
                    'or a business account. The video says makeyourmindup.ai out loud, so the caption only has to name it.',
-            'files': [short_video, tall_thumb],
+            'files': [short_video, vertical],
             'do': ['Upload the tall video and paste the caption below.',
-                   f'Edit cover, and set it to the tall thumbnail, {tall_thumb}. Then post.',
+                   f'Edit cover, and set it to the vertical cover, {vertical}. Then post.',
                    'Put makeyourmindup.ai in your profile, as a link once TikTok offers the Website field, as text until then.'],
             'copy': [('Caption', p.get('tiktok_caption') or short_caption)],
         },
         {
             'where': 'Instagram Reels', 'tag': f'The same {VERTICAL_MAX_SECONDS}-second cut',
             'why': 'Reel captions cannot hold a clickable link, so the caption sends people to the link in your bio.',
-            'files': [short_video, tall_thumb],
+            'files': [short_video, vertical, square],
             'do': ['New Reel, add the tall video and paste the caption below.',
-                   f'Edit cover, add from your camera roll and choose the tall thumbnail, {tall_thumb}. Then share.',
-                   'Check the link in your bio is makeyourmindup.ai.'],
+                   f'Edit cover, add from your camera roll and choose the vertical cover, {vertical}. Then share.',
+                   'Check the link in your bio is makeyourmindup.ai.',
+                   f'For the feed, when you want it: post the square cover, {square}, with the same caption.'],
             'copy': [('Caption', short_caption)],
         },
         {
             'where': 'LinkedIn', 'tag': 'Optional: the same cut, uploaded natively',
             'why': 'When you want it: a native video travels further on LinkedIn than a link card. The link goes in the first comment.',
-            'files': [short_video],
+            'files': [short_video, share_card],
             'do': ['Start a post, add the tall video, paste the post text below and publish.',
-                   'Straight away, add the first comment below.'],
+                   'Straight away, add the first comment below.',
+                   f'Posting a picture with the link instead of the video? Attach the share card, {share_card}.'],
             'copy': [('Post text', p.get('linkedin_post')),
                      ('First comment', f'The full article, free, with every source: {ARTICLE}')],
         },
@@ -270,24 +281,28 @@ def self_test():
         failures.append('a missing text must say so, never be guessed')
     if '<script>alert' in page({'title': '<script>alert(1)</script>'}):
         failures.append('the title is not escaped')
-    # Which thumbnail each channel uses: the wide one on YouTube and the
-    # Substack video post, the tall one on Reels and TikTok.
-    named = dict(sample, files={'wide_thumbnail': '3 Video/W - wide 16x9 - thumbnail.jpg', 'tall_thumbnail': '3 Video/W - tall 9x16 - thumbnail.jpg'})
+    # Which picture each channel uses: the wide thumbnail on YouTube and the
+    # Substack video post; the vertical cover on Shorts, TikTok and Reels
+    # (Krish, 2026-10-12: "a vertical cover thumbnail for the shorts/tiktok
+    # etc as well"); the square on the Instagram feed; the share card on LinkedIn.
+    named = dict(sample, files={'wide_thumbnail': '3 Video/W - wide 16x9 - thumbnail.jpg'})
     by_where = {x['where']: x for x in steps(named)}
-    for where, thumb in (('Substack', 'wide'), ('YouTube (the 3-minute video)', 'wide'), ('TikTok', 'tall'), ('Instagram Reels', 'tall')):
-        name = f'3 Video/W - {thumb} {"16x9" if thumb == "wide" else "9x16"} - thumbnail.jpg'
+    vertical = '2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png'
+    for where, name in (('Substack', '3 Video/W - wide 16x9 - thumbnail.jpg'), ('YouTube (the 3-minute video)', '3 Video/W - wide 16x9 - thumbnail.jpg'),
+                        ('YouTube Shorts', vertical), ('TikTok', vertical), ('Instagram Reels', vertical),
+                        ('Instagram Reels', '2 Covers and images/square-1080x1080.png'), ('LinkedIn', '2 Covers and images/share-card-1200x675.png')):
         step = by_where[where]
         if name not in step['files'] or not any(name in d for d in step['do']):
-            failures.append(f'{where} must use the {thumb} thumbnail, as a file to upload and in its steps')
+            failures.append(f'{where} must name {name}, as a file to upload and in its steps')
     if any('thumbnail' in d.lower() for d in by_where['YouTube Shorts']['do']):
-        failures.append('YouTube Shorts takes no thumbnail step')
+        failures.append('a Short\'s picture is the vertical cover, never a thumbnail')
     if 'Set the thumbnail to the cover' in text or 'Use the cover as the thumbnail' in text:
         failures.append('the 3:2 cover is no longer the video thumbnail')
     if 'as the cover image' not in text:
         failures.append('the cover stays the Substack post\'s cover image')
     if 'substack-cover-1200x630.png' not in ' '.join(steps({'title': 'T'})[0]['do']) or 'substack-cover-3x2' in ' '.join(steps({'title': 'T'})[0]['do']):
         failures.append('the Substack cover to upload is the 1200 x 630 one its upload box asks for, never the 3:2 one')
-    checks = 15
+    checks = 18
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1

@@ -354,20 +354,20 @@ def self_test():
         tmp = Path(tmp)
         pack = tmp / '2026-10-05 Mon follow.the.money - Who gets paid'
         for name, body in (('READ ME.txt', b'read me'), ('1 Article/substack-copy.html', b'<p>post</p>'),
-                           ('2 Covers and images/substack-cover-3x2.png', b'cover'),
+                           ('2 Covers and images/substack-cover-1200x630.png', b'cover'),
                            ('4 Social/linkedin-card.png', b'cover'), ('.pack.json', b'')):
             (pack / name).parent.mkdir(parents=True, exist_ok=True)
             (pack / name).write_bytes(body)
         (pack / '.pack.json').write_text(json.dumps({'library_prefix': f'3 Posts/{pack.name}', 'files': [
             {'path': 'READ ME.txt', 'purpose': 'What every file is for.'},
             {'path': '1 Article/substack-copy.html', 'purpose': 'Paste into Substack.'},
-            {'path': '2 Covers and images/substack-cover-3x2.png', 'purpose': 'The cover.'},
+            {'path': '2 Covers and images/substack-cover-1200x630.png', 'purpose': 'The cover.'},
             {'path': '4 Social/linkedin-card.png', 'purpose': 'The LinkedIn picture.'}]}), encoding='utf-8')
 
         fake = FakeEngine()
         planned = plan(pack)
         check('the pack goes under its post folder', [t for t, _, _ in planned], [
-            f'3 Posts/{pack.name}/1 Article/substack-copy.html', f'3 Posts/{pack.name}/2 Covers and images/substack-cover-3x2.png',
+            f'3 Posts/{pack.name}/1 Article/substack-copy.html', f'3 Posts/{pack.name}/2 Covers and images/substack-cover-1200x630.png',
             f'3 Posts/{pack.name}/4 Social/linkedin-card.png', f'3 Posts/{pack.name}/READ ME.txt'])
         check('the purposes come from the pack', planned[0][2], 'Paste into Substack.')
         check('first send', send(planned, fake, quiet), {'sent': 3, 'already': 0, 'confirmed_only': 1})
