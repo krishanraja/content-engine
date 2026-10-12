@@ -162,10 +162,14 @@ All on main; each has its tests.
   shorter") and SHARP_PREDICTION (one checkable event on a date, not
   already happening). Open with him: the AI-detection score (93%); his
   answer is awaited on a voice note per piece and which detector flagged it.
-- **Known gaps in the midday run**: a picture too small for the tall frame,
-  or whose line he said differently, is left out of that cut rather than
-  cropped or matched loosely (Monday's were fixed by hand). Wednesday has no
-  made piece or takes yet, so its run will stop and say so.
+- **Pictures in every scheduled video**: a picture too small to read in a
+  shape is shown a readable part at a time, cut at its own gaps, crossfading
+  (`kit.py legible_pages`, `make.py expand_pages`); a picture as wide as the
+  frame within a pixel of the floor goes as it is (he passed exactly that on
+  Monday); a cue line he said his own way is still found (`make.py
+  find_loose`). Proven on Monday's takes on GitHub on 12 October: every
+  picture in both cuts. Wednesday has no made piece or takes yet, so its run
+  will stop and say so.
 
 ### Resumed 12 October, about 18:00 UTC (session_01YHC9kjnvJEzYDeFDdADLBq)
 
