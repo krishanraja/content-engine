@@ -811,7 +811,7 @@ def video_patch(cut, name, path, url=None, seconds=None, thumb=None, thumb_url=N
     return {'video_assets': [asset]}
 
 
-# Krish's board (WORKBENCH.md, "The board"): the questions a tool puts to him.
+# The board (WORKBENCH.md, "The board"): the questions a tool holds there for a session.
 BOARD_PATH = '/api/workbench'
 BOARD_CLIENTS = {'codex': 'codex', 'claude code': 'claude_code'}  # anything else writes as the runner
 CLOSED_LANES = ('done', 'archived')
@@ -821,34 +821,45 @@ def board_client(by):
     return BOARD_CLIENTS.get(str(by or '').strip().lower(), 'runner')
 
 
-def board_upsert(items, call=None, by=None):
-    """Puts questions on Krish's board without ever reopening one. It reads
-    the board first: an item that is done there was answered or closed by
-    Krish or a session, so it is left alone; one still open is updated
-    without its lane; a new one goes in with its lane as "lane_if_new",
-    which the engine uses only when the item does not exist yet, so an item
-    archived out of sight stays archived. Returns (written ids, ids left
-    alone). Raises MakingError when the board cannot be read or refuses."""
-    call = call or _engine_call
-    if not items:
-        return [], []
+def _board_lanes(call):
+    """{item id: lane} for every item the board returns (the open ones and the
+    latest done). Raises MakingError when the board cannot be read."""
     status, text = call('GET', BOARD_PATH, None)
     if status != 200:
         raise MakingError(f'the board could not be read ({status}: {str(text)[:200]})')
     try:
-        lanes = {i.get('id'): i.get('lane') for i in (json.loads(text) or {}).get('items') or [] if isinstance(i, dict)}
+        return {i.get('id'): i.get('lane') for i in (json.loads(text) or {}).get('items') or [] if isinstance(i, dict)}
     except ValueError:
         raise MakingError('the board answered with something that is not JSON')
+
+
+def board_upsert(items, call=None, by=None):
+    """Puts a tool's questions on the board without ever reopening one. It
+    reads the board first: an item that is done there was answered or closed
+    by Krish or a session, so it is left alone; one still open is updated
+    without its lane, except that one on Krish's list is moved off it when
+    the tool now holds the question in progress (a tool never moves one on
+    to him: an item on him must be ready for his list, or the engine refuses
+    it); a new one goes in with its lane as "lane_if_new", which the engine
+    uses only when the item does not exist yet, so an item archived out of
+    sight stays archived. Returns (written ids, ids left alone). Raises
+    MakingError when the board cannot be read or refuses."""
+    call = call or _engine_call
+    if not items:
+        return [], []
+    lanes = _board_lanes(call)
     send, left, fresh = [], [], {}
     for item in items:
         item = dict(item)
-        lane = item.pop('lane', 'on_you')
+        lane = item.pop('lane', 'in_progress')
         if lanes.get(item['id']) in CLOSED_LANES:
             left.append(item['id'])
             continue
         if item['id'] not in lanes:
             item['lane_if_new'] = lane
             fresh[item['id']] = lane
+        elif lanes[item['id']] == 'on_you' and lane == 'in_progress':
+            item['lane'] = lane
         send.append(item)
     written = []
     for start in range(0, len(send), 50):
@@ -864,11 +875,33 @@ def board_upsert(items, call=None, by=None):
     return written, left
 
 
+def board_close(lanes, call=None, by=None):
+    """Ends a tool's own questions: {item id: "done" or "archived"}. It reads
+    the board first and writes only the items still open there, so one Krish
+    or a session closed keeps its close, and one the board no longer lists is
+    left alone. Returns the ids written. Raises MakingError when the board
+    cannot be read or refuses."""
+    call = call or _engine_call
+    if not lanes:
+        return []
+    on_board = _board_lanes(call)
+    send = [{'id': item_id, 'lane': lane} for item_id, lane in lanes.items() if on_board.get(item_id) in ('on_you', 'in_progress')]
+    written = []
+    for start in range(0, len(send), 50):
+        chunk = send[start:start + 50]
+        status, text = call('POST', BOARD_PATH, {'action': 'upsert_items', 'client': board_client(by), 'items': chunk})
+        if status != 200:
+            raise MakingError(f'the board did not close {len(chunk)} question(s) ({status}: {str(text)[:200]})')
+        written += [i['id'] for i in chunk]
+    return written
+
+
 def ask_about_older_takes(piece_id, record, cuts, call=None, by=None):
     """One board question for each take on the record whose cut's words just
     changed (cuts): use it, or record that cut again. The same item as
-    recording_match.py asks (take-<sha12>, closes_on record), never reopened
-    once answered. Returns the item ids written."""
+    recording_match.py asks (take-<sha12>, closes_on record), held for a
+    session to ask Krish in its reply, and never reopened once answered.
+    Returns the item ids written."""
     import recording_match  # the one wording for a take's board question
     folder = ((record or {}).get('pack') or {}).get('folder') or ''
     piece = {'id': piece_id, 'folder': folder, 'scheduled_for': folder[:10] if re.match(r'\d{4}-\d{2}-\d{2}', folder) else None}
@@ -1189,7 +1222,7 @@ def self_test():
                older_take(hashed, 'long', 'recordings/' + '8' * 64 + '.mov', book)), (True, None))
 
     # The board: a question is never reopened once answered.
-    board_items = {'items': [{'id': 'take-done', 'lane': 'done'}, {'id': 'take-open', 'lane': 'on_you'}]}
+    board_items = {'items': [{'id': 'take-done', 'lane': 'done'}, {'id': 'take-open', 'lane': 'on_you'}, {'id': 'take-held', 'lane': 'in_progress'}]}
     board_sent = []
 
     def board(method, path, body):
@@ -1197,13 +1230,24 @@ def self_test():
             return 200, json.dumps(board_items)
         board_sent.append(body)
         return 200, json.dumps({'ok': True})
-    asked = [{'id': i, 'lane': 'on_you', 'title': 't', 'detail': 'd'} for i in ('take-done', 'take-open', 'take-new')]
+    asked = [{'id': i, 'lane': 'in_progress', 'title': 't', 'detail': 'd'} for i in ('take-done', 'take-held', 'take-new')]
     written, left = board_upsert(asked, board, 'Recordings lane')
     sent_items = {i['id']: i for i in board_sent[-1]['items']}
-    check('board: an item done on the board is left alone; an open one is updated without its lane; a new one goes in on him',
-          (left, sorted(sent_items), 'lane' in sent_items['take-open'], 'lane_if_new' in sent_items['take-open'], sent_items['take-new'].get('lane_if_new'),
+    check('board: an item done on the board is left alone; an open one is updated without its lane; a new one goes in with its lane',
+          (left, sorted(sent_items), 'lane' in sent_items['take-held'], 'lane_if_new' in sent_items['take-held'], sent_items['take-new'].get('lane_if_new'),
            'lane' in sent_items['take-new'], board_sent[-1]['client']),
-          (['take-done'], ['take-new', 'take-open'], False, False, 'on_you', False, 'runner'))
+          (['take-done'], ['take-held', 'take-new'], False, False, 'in_progress', False, 'runner'))
+    board_upsert([{'id': 'take-open', 'lane': 'in_progress', 'title': 't'}, {'id': 'take-held', 'lane': 'on_you', 'title': 't'}], board, 'Codex')
+    sent_items = {i['id']: i for i in board_sent[-1]['items']}
+    check('board: one on his list moves off it when the tool holds the question in progress; a tool never moves one on to him',
+          (sent_items['take-open'].get('lane'), 'lane' in sent_items['take-held'], 'lane_if_new' in sent_items['take-held']), ('in_progress', False, False))
+    board_sent.clear()
+    closed = board_close({'take-done': 'archived', 'take-open': 'done', 'take-held': 'archived', 'take-gone': 'archived'}, board, 'Recordings lane')
+    check('board_close: only the items still open are closed, one closed by Krish or a session keeps its close',
+          (sorted(closed), sorted((i['id'], i['lane']) for i in board_sent[-1]['items']), board_sent[-1]['client']),
+          (['take-held', 'take-open'], [('take-held', 'archived'), ('take-open', 'done')], 'runner'))
+    board_sent.clear()
+    check('board_close: nothing to close writes nothing', (board_close({'take-done': 'archived'}, board, 'Codex'), board_sent), ([], []))
     old_engine = []
 
     def older_board(method, path, body):
@@ -1212,7 +1256,7 @@ def self_test():
         old_engine.append(body)
         return (400, json.dumps({'ok': False, 'error': 'lane_required'})) if len(old_engine) == 1 else (200, '{"ok": true}')
     board_upsert(asked[2:], older_board, 'Codex')
-    check('board: an engine from before lane_if_new gets the lane for a new item, once', (len(old_engine), old_engine[-1]['items'][0].get('lane')), (2, 'on_you'))
+    check('board: an engine from before lane_if_new gets the lane for a new item, once', (len(old_engine), old_engine[-1]['items'][0].get('lane')), (2, 'in_progress'))
     try:
         recorded_patch('long', 'recordings/x.mp4', None, 'not-a-hash')
         check('recorded: a script hash that is not a sha256 is refused', 'no error', 'error')
@@ -1276,7 +1320,9 @@ def self_test():
         check('scripts: a take of the long words that just changed is one question on the board, tied to the piece, closed by Record',
               (code, item.get('id'), item.get('idea_id'), item.get('closes_on'), item.get('lane_if_new'), 'Mon 12 Oct' in item.get('detail', ''),
                asked_posts[-1]['client'] if asked_posts else None, new_long != old_take['script_sha256']),
-              (0, 'take-' + '7' * 12, pid, 'record', 'on_you', True, 'claude_code', True))
+              (0, 'take-' + '7' * 12, pid, 'record', 'in_progress', True, 'claude_code', True))
+        check('scripts: the question is held for a session to ask Krish in its reply, never on his list',
+              (item.get('only_you'), 'link' in item, 'prompt' in item, 'asks Krish in its reply' in item.get('detail', '')), (None, False, False, True))
 
     # The series line: `scripts` checks each script with the piece's series (house rule SERIES_OPENER).
     with tempfile.TemporaryDirectory() as tmp:
@@ -1537,7 +1583,7 @@ def main(argv=None, call=None):
             # A take on the record of the words that just changed: one question for Krish.
             try:
                 for item in ask_about_older_takes(a.piece_id, data.get('making') or {}, changed, call, by):
-                    print(f'making: asked Krish on the board whether to use the older take ({item})', file=sys.stderr)
+                    print(f'making: held on the board for a session: whether to use the older take ({item}); ask Krish in your reply', file=sys.stderr)
             except MakingError as error:
                 print(f'making: the scripts are recorded, but the question about the older take is not on the board: {error}', file=sys.stderr)
     except (MakingError, IndexError, OSError) as error:
