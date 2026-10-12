@@ -59,7 +59,29 @@ print(json.dumps([descript_take.SURE, recording_match.SURE, descript_take.MARGIN
 describe('what it prints for the record is what the engine takes', () => {
   // The lines fetch prints, run through making.py's own command line against a stand-in engine.
   const posted = python(`
-import json, shlex, descript_take, making
+import json, os, shlex, descript_take, making
+def split(line):
+    # The lines are quoted for the shell they run in: PowerShell on Windows
+    # ('it''s'), a POSIX shell elsewhere (descript_take._q).
+    if os.name != 'nt':
+        return shlex.split(line)
+    out, i, n = [], 0, len(line)
+    while i < n:
+        if line[i] == ' ':
+            i += 1
+        elif line[i] == "'":
+            j, word = i + 1, ''
+            while j < n and not (line[j] == "'" and line[j + 1:j + 2] != "'"):
+                word += line[j]
+                j += 2 if line[j] == "'" else 1
+            out.append(word)
+            i = j + 1
+        else:
+            j = line.find(' ', i)
+            j = n if j < 0 else j
+            out.append(line[i:j])
+            i = j
+    return out
 drive = 'd8b77ba9-0c95-4b7b-8964-2f5b888c0b78'
 project = '16aa1f87-c054-4115-a11c-4342def815e5'
 entry = {'project_id': project, 'script_composition': '46c2a75a-615d-4ab5-bdc4-c84b57a88454', 'record_composition': 'f6eb149a-82e8-4604-836e-b78ea7c73797',
@@ -82,13 +104,13 @@ def call(method, path, body):
         # The store holds the take once the single-file send has put it in.
         return 200, json.dumps({'ok': True, 'recordings': [{'sha256': 'a' * 64, 'name': 'Descript long take 2026-10-12.mp4'}]})
     return 200, json.dumps({'making': record, 'steps': []})
-codes = [making.main(shlex.split(line)[2:], call=call) for line in lines]
+codes = [making.main(split(line)[2:], call=call) for line in lines]
 def empty_store(method, path, body):
     if method == 'POST':
         bodies.append(body)
     return (200, json.dumps({'ok': True, 'recordings': []})) if path == making.RECORDINGS_LIST else (200, json.dumps({'making': record, 'steps': []}))
 before = len(bodies)
-refused = making.main(shlex.split(lines[0])[2:], call=empty_store)
+refused = making.main(split(lines[0])[2:], call=empty_store)
 print(json.dumps({'codes': codes, 'bodies': bodies[:before], 'refused': refused, 'written_when_refused': len(bodies) - before}))`)
 
   it('making.py records a take only once the store holds it', () => {

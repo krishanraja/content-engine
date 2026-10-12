@@ -299,7 +299,7 @@ import week_board
 out = Path(sys.argv[1])
 mon = week_board.stand_in(str(out), 'mon', 'Who gets paid for AI songs', 'follow.the.money')
 page, manifest, warnings = week_board.board(week_board.monday_of('2026-10-12'), {'mon': mon}, {'mon': '${MON}', 'wed': '${WED}'}, {}, pending={'wed': 'Watermarks'})
-(out / 'board.html').write_text(page, encoding='utf-8')
+(out / 'board.html').write_text(page, encoding='utf-8', newline='\\n')
 `, work], { encoding: 'utf8', env, maxBuffer: 64 * 1024 * 1024 })
   const page = made.status === 0 ? readFileSync(join(work, 'board.html'), 'utf8') : ''
   const at = '2026-10-12T15:00:00.000Z'
