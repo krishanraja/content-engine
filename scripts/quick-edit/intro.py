@@ -276,10 +276,12 @@ def git_state(top, paths):
     state = {p: 'tracked' for p, r in rel.items() if r in tracked}
     rest = [p for p in paths if p not in state]
     if rest:
-        p = subprocess.run(['git', '-C', str(top), 'check-ignore', '-v', '--stdin'], input='\n'.join(rel[x] for x in rest) + '\n',
-                           capture_output=True, text=True)
+        # Bytes, not text: on Windows text mode would send each name with a
+        # carriage return, and git would match none of them.
+        p = subprocess.run(['git', '-C', str(top), 'check-ignore', '-v', '--stdin'],
+                           input=('\n'.join(rel[x] for x in rest) + '\n').encode('utf-8'), capture_output=True)
         rules = {}
-        for line in p.stdout.splitlines():
+        for line in p.stdout.decode('utf-8', errors='replace').splitlines():
             how, _, name = line.partition('\t')
             rules[name.strip().strip('"')] = how.rsplit(':', 1)[-1] if how else ''
         for x in rest:
@@ -366,7 +368,9 @@ def sting_sources(cfg, root=None):
     if untracked:
         raise IntroError(f'git does not track these sting source files yet: {", ".join(untracked)}. git add them first, '
                          'so the approval binds what will be committed')
-    return sorted(seen), registrations, top
+    # Ordered by the posix path, case and all, so Windows (whose paths compare
+    # without case) hashes in the same order as everywhere else.
+    return sorted(seen, key=lambda f: f.relative_to(top).as_posix()), registrations, top
 
 
 def lf(data):

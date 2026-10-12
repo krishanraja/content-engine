@@ -945,9 +945,9 @@ def write_config(path, cfg, recorded_sha, force=False):
             if path.read_text(encoding='utf-8') == text:
                 return path, now, False
             beside = path.with_name(path.stem + '.kit-new.json')
-            beside.write_text(text, encoding='utf-8')
+            beside.write_text(text, encoding='utf-8', newline='\n')
             return beside, sha256_text(text), True
-    path.write_text(text, encoding='utf-8')
+    path.write_text(text, encoding='utf-8', newline='\n')
     return path, sha256_text(text), False
 
 

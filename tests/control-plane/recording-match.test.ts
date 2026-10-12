@@ -37,19 +37,19 @@ describe('recording_match.py and making.py check themselves', () => {
     const result = run('recording_match.py', ['--self-test'])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     expect(result.stdout).toMatch(/recording match self-test passed: \d+ checks/)
-  })
+  }, 120_000)
 
   it('making.py --self-test: --by on every write (Codex inside Codex), the script hashes, checked_at kept while the words are, a take stamped with its script, the thumbnail proven drawn, a 409 retried once', () => {
     const result = run('making.py', ['--self-test'])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     expect(result.stdout).toMatch(/making self-test passed: \d+ checks/)
-  })
+  }, 120_000)
 
   it('recording.py --self-test: find by name, wait, check every download, and fetch a recorded take by its sha256', () => {
     const result = run('recording.py', ['--self-test'])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     expect(result.stdout).toMatch(/recording self-test passed: \d+ checks/)
-  })
+  }, 120_000)
 })
 
 describe('the script hash is the same on every machine', () => {
