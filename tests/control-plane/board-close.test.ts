@@ -175,7 +175,7 @@ describe('the making route closes what a step finishes', () => {
     await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: { id: FRIDAY }, body: { recordings: [{ cut: 'long', path: 'r/long.mp4' }, { cut: 'short', path: 'r/short.mp4' }] } } as never, res as never)
     expect(out.status).toBe(200)
     expect(out.body.closed).toEqual(['friday-record'])
-    expect(db.tables.work_board_items.find(r => r.id === 'friday-record')).toMatchObject({ lane: 'done', updated_by: 'engine: record done' })
+    expect(db.tables.work_board_items.find(r => r.id === 'friday-record')).toMatchObject({ lane: 'done', updated_by: 'engine: record done', closed_by: 'engine: record done' })
   })
 })
 

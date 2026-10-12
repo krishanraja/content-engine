@@ -72,7 +72,7 @@ export async function closeBoardItemsForPiece(piece: PieceRow): Promise<string[]
     const now = new Date().toISOString()
     const closed: string[] = []
     for (const c of closes) {
-      const { error } = await supabase.from('work_board_items').update({ lane: c.lane, updated_by: c.by, updated_at: now }).eq('id', c.id).in('lane', ['on_you', 'in_progress'])
+      const { error } = await supabase.from('work_board_items').update({ lane: c.lane, updated_by: c.by, closed_by: c.by, updated_at: now }).eq('id', c.id).in('lane', ['on_you', 'in_progress'])
       if (!error) closed.push(c.id)
     }
     return closed

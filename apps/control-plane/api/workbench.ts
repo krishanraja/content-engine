@@ -20,7 +20,9 @@ import { supabase } from './_supabase.js'
 // A reply is Krish's words. The engine key cannot write one, so nothing an
 // agent does can read as something he said (AGENTS.md, "Krish decides").
 // For the same reason an agent cannot reopen an item Krish closed himself:
-// that write is refused with 409 krish_closed_it.
+// that write is refused with 409 krish_closed_it. Who closed an item is kept
+// in closed_by, never read from the last writer, so an agent's later edit to
+// a closed item does not lift the rule.
 
 export const LANES = ['on_you', 'in_progress', 'done', 'archived'] as const
 type Lane = typeof LANES[number]
@@ -135,6 +137,25 @@ export function cleanItem(raw: unknown, isNew: boolean): Json & { id: string } {
   return row
 }
 
+/** What the route reads of an item before writing it. */
+export interface BoardBefore { id: string; lane: string; closed_by: string | null }
+
+/** True when a write would move an item Krish closed back to an open lane. */
+export function reopensKrishsClose(before: BoardBefore | undefined, lane: unknown): boolean {
+  return Boolean(before) && before!.closed_by === 'Krish' && CLOSED_LANES.has(before!.lane) && lane !== undefined && !CLOSED_LANES.has(String(lane))
+}
+
+/** closed_by after a write: set by the write that closes an item, kept by
+ *  later edits and by done to archived (unless Krish makes that move, which
+ *  makes the close his), cleared when the item opens again. Undefined leaves
+ *  the column alone. */
+export function closedByAfter(before: BoardBefore | undefined, lane: unknown, closer: string): string | null | undefined {
+  if (lane === undefined) return undefined
+  if (!CLOSED_LANES.has(String(lane))) return before && CLOSED_LANES.has(before.lane) ? null : undefined
+  if (!before || !CLOSED_LANES.has(before.lane) || closer === 'Krish') return closer
+  return undefined
+}
+
 export function cleanSignals(raw: unknown): Array<{ label: string; state: string; text: string }> {
   if (!Array.isArray(raw)) throw new Error('signals_must_be_a_list')
   if (raw.length > 8) throw new Error('signals_too_many')
@@ -183,25 +204,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (body.items.length > MAX_ITEMS) return res.status(400).json({ ok: false, error: 'too_many_items' })
       const ids = body.items.map(i => String(record(i).id || ''))
       if (new Set(ids).size !== ids.length) return res.status(400).json({ ok: false, error: 'duplicate_item_ids' })
-      const found = await supabase.from('work_board_items').select('id,lane,updated_by').in('id', ids)
+      const found = await supabase.from('work_board_items').select('id,lane,closed_by').in('id', ids)
       if (found.error) return res.status(500).json({ ok: false, error: 'board_read_failed' })
-      const existing = new Map(((found.data || []) as Array<{ id: string; lane: string; updated_by: string }>).map(r => [r.id, r]))
+      const existing = new Map(((found.data || []) as BoardBefore[]).map(r => [r.id, r]))
       // Check every item before writing any, so a bad one changes nothing.
       const rows = body.items.map(i => cleanItem(i, !existing.has(String(record(i).id))))
-      // An item Krish closed himself (Clear or Purge) stays closed: an agent
-      // cannot move it back to on_you or in_progress. His own Undo comes from
-      // his cookie, never the engine key, so it is not refused. Done to
-      // archived keeps it closed and is allowed.
+      // An item Krish closed himself (Clear or Purge, or a close an agent
+      // relayed from his words) stays closed: an agent cannot move it back to
+      // on_you or in_progress. His own Undo comes from his cookie, never the
+      // engine key, so it is not refused. An edit in place, or done to
+      // archived, keeps it closed and is allowed.
       if (operator) {
-        const reopened = rows.find(row => {
-          const before = existing.get(row.id)
-          return before && before.updated_by === 'Krish' && CLOSED_LANES.has(before.lane) && row.lane !== undefined && !CLOSED_LANES.has(String(row.lane))
-        })
+        const reopened = rows.find(row => reopensKrishsClose(existing.get(row.id), row.lane))
         if (reopened) {
           return res.status(409).json({ ok: false, error: 'krish_closed_it', item: reopened.id, detail: 'Krish closed this item himself, so an agent cannot reopen it. If something new needs him, write a new item.' })
         }
       }
+      // Who decided: Krish for his cookie or a relayed decision, else the writer.
+      const closer = operator ? operator.actor : who
       for (const row of rows) {
+        const closedBy = closedByAfter(existing.get(row.id), row.lane, closer)
+        if (closedBy !== undefined) row.closed_by = closedBy
         const stamp = { updated_by: who, updated_at: now }
         const write = existing.has(row.id)
           ? await supabase.from('work_board_items').update({ ...row, ...stamp }).eq('id', row.id)

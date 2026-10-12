@@ -204,12 +204,26 @@ describe('the fields for his one list', () => {
   })
 })
 
+// Who closed an item is kept in closed_by, never read from the last writer:
+// every write restamps updated_by, including the edits an agent may still make
+// to a closed item, so a rule on updated_by lasted only until the first one.
 describe('an item Krish closed stays closed to agents', () => {
-  async function closedByKrish(lane: 'done' | 'archived') {
-    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-launch', lane: 'on_you', title: 'Swap the cover' }] })
-    const close = await call('POST', { action: 'upsert_items', items: [{ id: 'you-launch', lane }] }, 'krish')
+  const item = (id: string) => db.tables.work_board_items.find(r => r.id === id)!
+
+  async function closedByKrish(lane: 'done' | 'archived', id = 'you-launch') {
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id, lane: 'on_you', title: 'Swap the cover' }] })
+    expect(item(id).closed_by ?? null).toBe(null)
+    const close = await call('POST', { action: 'upsert_items', items: [{ id, lane }] }, 'krish')
     expect(close.status).toBe(200)
-    expect(db.tables.work_board_items[0]).toMatchObject({ lane, updated_by: 'Krish' })
+    expect(item(id)).toMatchObject({ lane, updated_by: 'Krish', closed_by: 'Krish' })
+  }
+
+  async function reopenRefused(id = 'you-launch') {
+    for (const back of ['on_you', 'in_progress']) {
+      const out = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id, lane: back }] })
+      expect(out.status).toBe(409)
+      expect(out.body).toMatchObject({ ok: false, error: 'krish_closed_it', item: id })
+    }
   }
 
   it('an agent that moves it back out of done or archived is refused with 409, and nothing is written', async () => {
@@ -223,44 +237,104 @@ describe('an item Krish closed stays closed to agents', () => {
         expect(out.body).toMatchObject({ ok: false, error: 'krish_closed_it', item: 'you-launch' })
         expect(db.writes.length).toBe(writes)
         expect(db.tables.work_board_items.map(r => r.id)).toEqual(['you-launch'])
-        expect(db.tables.work_board_items[0]).toMatchObject({ lane, updated_by: 'Krish' })
+        expect(db.tables.work_board_items[0]).toMatchObject({ lane, updated_by: 'Krish', closed_by: 'Krish' })
       }
     }
   })
 
-  it('a relayed decision is still an agent write', async () => {
-    await closedByKrish('done')
-    const out = await call('POST', { action: 'upsert_items', decided_by: 'Krish', items: [{ id: 'you-launch', lane: 'on_you' }] })
-    expect(out.status).toBe(409)
-    expect(out.body.error).toBe('krish_closed_it')
+  it('an agent edit in place leaves it his: the next agent still cannot reopen it', async () => {
+    // The review's case: he Clears you-launch-today, an agent closing out its
+    // session writes a line on it, and the next agent tries to put it back.
+    await closedByKrish('done', 'you-launch-today')
+    const edit = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-launch-today', lane: 'done', detail: 'Swapped on Monday.' }] })
+    expect(edit.status).toBe(200)
+    expect(item('you-launch-today')).toMatchObject({ lane: 'done', detail: 'Swapped on Monday.', updated_by: 'claude_code', closed_by: 'Krish' })
+    const noLane = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch-today', detail: 'Checked again.' }] })
+    expect(noLane.status).toBe(200)
+    expect(item('you-launch-today')).toMatchObject({ updated_by: 'codex', closed_by: 'Krish' })
+    await reopenRefused('you-launch-today')
+    expect(item('you-launch-today').lane).toBe('done')
   })
 
-  it('his own Undo, from his cookie, reopens it', async () => {
+  it('an agent may move it from done to archived, and it stays his', async () => {
+    await closedByKrish('done')
+    const archive = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', lane: 'archived' }] })
+    expect(archive.status).toBe(200)
+    expect(item('you-launch')).toMatchObject({ lane: 'archived', updated_by: 'codex', closed_by: 'Krish' })
+    await reopenRefused()
+  })
+
+  it("Control Center's slate rewriting a closed week item leaves it his", async () => {
+    await closedByKrish('done', 'week-2026-10-12')
+    for (const lane of ['done', 'archived']) {
+      const slate = await call('POST', { action: 'upsert_items', client: 'control_center_slate', items: [{ id: 'week-2026-10-12', lane, detail: 'Every day has a piece.' }] }, 'krish')
+      expect(slate.status).toBe(200)
+      expect(item('week-2026-10-12')).toMatchObject({ lane, updated_by: 'control_center_slate', closed_by: 'Krish' })
+    }
+    await reopenRefused('week-2026-10-12')
+  })
+
+  it('a close an agent relays from his words is his too, and a relayed reopen is still an agent write', async () => {
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome-days', lane: 'on_you', title: 'Swap two days' }] })
+    const relayed = await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', items: [{ id: 'you-welcome-days', lane: 'done' }] })
+    expect(relayed.status).toBe(200)
+    expect(item('you-welcome-days')).toMatchObject({ lane: 'done', updated_by: 'claude_code', closed_by: 'Krish' })
+    await reopenRefused('you-welcome-days')
+    const back = await call('POST', { action: 'upsert_items', decided_by: 'Krish', items: [{ id: 'you-welcome-days', lane: 'on_you' }] })
+    expect(back.status).toBe(409)
+    expect(back.body.error).toBe('krish_closed_it')
+  })
+
+  it('an agent cannot forge who closed it', async () => {
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'in_progress', title: 'Build' }] })
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'done', closed_by: 'codex' }] })
+    expect(item('doing-build').closed_by).toBe('claude_code')
+    await closedByKrish('done')
+    await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', closed_by: null }] })
+    expect(item('you-launch').closed_by).toBe('Krish')
+  })
+
+  it('his own Undo, from his cookie, reopens it, and an agent may then move it again', async () => {
     await closedByKrish('done')
     const undo = await call('POST', { action: 'upsert_items', items: [{ id: 'you-launch', lane: 'on_you' }] }, 'krish')
     expect(undo.status).toBe(200)
-    expect(db.tables.work_board_items[0]).toMatchObject({ lane: 'on_you', updated_by: 'Krish' })
-  })
-
-  it('an agent may still edit it in place, or move it from done to archived', async () => {
-    await closedByKrish('done')
-    const edit = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', detail: 'Swapped on Monday.' }] })
-    expect(edit.status).toBe(200)
-    expect(db.tables.work_board_items[0]).toMatchObject({ lane: 'done', detail: 'Swapped on Monday.' })
-    // The edit made codex the last writer; put Krish back to test the move.
-    db.tables.work_board_items[0].updated_by = 'Krish'
-    const archive = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', lane: 'archived' }] })
-    expect(archive.status).toBe(200)
-    expect(db.tables.work_board_items[0].lane).toBe('archived')
+    expect(item('you-launch')).toMatchObject({ lane: 'on_you', updated_by: 'Krish', closed_by: null })
+    const agent = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', lane: 'in_progress' }] })
+    expect(agent.status).toBe(200)
   })
 
   it('an item an agent or the engine closed can be reopened by an agent', async () => {
     await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'in_progress', title: 'Build' }] })
     await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'done' }] })
+    expect(item('doing-build').closed_by).toBe('claude_code')
     const back = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'in_progress' }] })
     expect(back.status).toBe(200)
-    db.tables.work_board_items[0].lane = 'done'
-    db.tables.work_board_items[0].updated_by = 'engine: record done'
+    expect(item('doing-build').closed_by).toBe(null)
+    // The engine's own close (_boardClose.ts) records itself.
+    Object.assign(item('doing-build'), { lane: 'done', updated_by: 'engine: record done', closed_by: 'engine: record done' })
     expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'on_you' }] })).status).toBe(200)
+  })
+
+  it('Krish moving an agent-closed item to archived makes the close his', async () => {
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'old-ask', lane: 'done', title: 'Old ask' }] })
+    expect(item('old-ask').closed_by).toBe('claude_code')
+    await call('POST', { action: 'upsert_items', items: [{ id: 'old-ask', lane: 'archived' }] }, 'krish')
+    expect(item('old-ask')).toMatchObject({ lane: 'archived', closed_by: 'Krish' })
+    await reopenRefused('old-ask')
+  })
+
+  it('closedByAfter: set on the close, kept through edits, cleared on reopen', async () => {
+    const { closedByAfter } = await import('../../apps/control-plane/api/workbench.js')
+    const open = { id: 'a1', lane: 'on_you', closed_by: null }
+    const his = { id: 'a1', lane: 'done', closed_by: 'Krish' }
+    expect(closedByAfter(undefined, 'done', 'codex')).toBe('codex')
+    expect(closedByAfter(undefined, 'on_you', 'codex')).toBe(undefined)
+    expect(closedByAfter(open, 'archived', 'Krish')).toBe('Krish')
+    expect(closedByAfter(open, 'in_progress', 'codex')).toBe(undefined)
+    expect(closedByAfter(his, undefined, 'codex')).toBe(undefined)
+    expect(closedByAfter(his, 'archived', 'codex')).toBe(undefined)
+    expect(closedByAfter(his, 'done', 'control_center_slate')).toBe(undefined)
+    expect(closedByAfter({ ...his, closed_by: 'codex' }, 'archived', 'Krish')).toBe('Krish')
+    expect(closedByAfter(his, 'on_you', 'Krish')).toBe(null)
   })
 })
