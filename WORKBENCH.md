@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-11, by a Claude Code session (cloud).
+Last updated: 2026-10-12, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -154,12 +154,49 @@ he has just dropped; `list` shows what has arrived). Both runner machines send
 every finished recording to the engine within about ten minutes, whichever is
 online. The Drive connector caps downloads at 10 MB, so never take a recording
 from Drive and never tell Krish one cannot be reached; if it is missing, say
-which step failed. Until he has merged `claude/recordings-lane` and pasted the
-install block on each runner machine, the lane is not running
+which step failed. The lane has run on both machines since 2026-10-06
 (`scripts/post-pack/README.md`, "Recordings: from the Inbox to a cloud
-session").
+session"). Which take is which piece and cut needs no file name:
+`python3 scripts/post-pack/recording_match.py` works it out from his opening
+words, and the `produce-video` skill takes it from there.
 
 ## Latest handoff
+
+- 2026-10-12, Monday: **One skill for making the videos, in Codex or Claude
+  Code.** Krish asked for "a skill (or the codex equivalent) that understands
+  everything going on here that invokes properly when I engage it for video
+  production". `.agents/skills/produce-video` is rewritten as that skill, and
+  `.claude/skills/produce-video` links to it, so Claude Code sees it too. He
+  drops each cut at the top of the Video Engine Inbox, any name, and says "I've
+  dropped the video"; the skill runs the machine check (`make.py --doctor`),
+  matches each take to its piece and cut (`recording_match.py`), builds the
+  kit (`kit.py`), renders the long cut 16:9 and the short cut 9:16 with the
+  sting and the music bed when approved, draws a thumbnail per size, checks
+  the report, archives both cuts once, sends them to the library and records
+  them on the piece with `--by`. It also says what the backup machine needs
+  (no switch for these cuts; Library Sync moved by Krish) and the Studio
+  failover steps, for queue work only. House rules INTRO_STING, MUSIC_BED and
+  THUMBNAIL_EVERY_SIZE carry his words. Waiting on Krish:
+  - The sting's design: its Remotion compositions are still being built; he
+    approves a preview in words (`intro.py approve`). Until then every cut goes
+    without it and says so.
+  - NO CURVES, the first track: its licence certificate beside it in
+    `00_Brand-Assets > 07_Music`, then `music.py add` on a home computer, then
+    his approval in words. Until a track is approved, cuts have his voice only.
+  - The mix levels, by ear, once he has heard a cut with music.
+  - `Video Engine > Archive` in Drive, if it is missing (the connector saw none).
+  - If he works on the backup machine: move Library Sync there.
+  Gaps the next session should know:
+  - The thumbnails need the cover's work folder (its logos). From now on
+    `make-piece` draws them with the cover and packs them. Monday's and
+    Friday's cover facts still miss logos the gate needs on a thumbnail
+    (Believe, Udio, ElevenLabs; Google, OpenRouter, SemiAnalysis): a
+    `"thumbs": {"strip": [...]}` with their real logos fixes each.
+  - `build.py` cannot rebuild a pack on a machine without the post's working
+    folder, so on a home computer the skill sends the archive folder into the
+    post's `3 Video` instead, and the publish board step adds them to the page.
+  - On Windows, Claude Code loads `.claude/skills` only if git checks out
+    symbolic links; `python scripts/validate-skills.py` now says when it does not.
 
 - 2026-10-11, Sunday evening: **The first planned week is set, and Monday is
   at its publish board.** Week of 12 October, on the week page (#/week):

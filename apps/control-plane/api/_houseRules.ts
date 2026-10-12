@@ -284,6 +284,27 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     on: '2026-10-11', source: 'chat, weekly planning; checked by scripts/post-pack/story_check.py (the cut lengths)', status: 'live',
     stages: ['write', 'final_pass'],
   },
+  {
+    id: 'INTRO_STING', name: 'A short animated makeyourmindup sting before Krish\'s face',
+    text: 'Every video opens with the animated makeyourmindup sting, 1 to 2 seconds (1.5 by default), before Krish\'s face comes in, in both shapes. It is joined in front of the captioned video, so no word, caption or graphic moves, and the music is up over it. Only the design Krish approved is used (config/intro-sting.json, status "approved", bound to the exact preview he saw); until he approves one, a cut goes without it and its report says so, and a missing sting never stops a render. For the quick-edit cuts this replaces "nothing at the opening" (2026-09-26); the Studio keeps that placement, with no music, until its own audio ledger exists.',
+    said: 'I also want the video to have a 1-2 sec animated make your mind up intro visual before my face comes in',
+    on: '2026-10-12', source: 'chat, the video production request; made by scripts/quick-edit/intro.py and make.py, the approval in config/intro-sting.json', status: 'live',
+    stages: ['visual'],
+  },
+  {
+    id: 'MUSIC_BED', name: 'Licensed music under every video: up for the intro, low under Krish, up for the outro',
+    text: 'Every video carries a licensed music bed: high over the intro, low while Krish is talking, higher over the outro. Only a track in the music ledger (config/music-library.json) that Krish approved in his words, whose licence is in date and covers every place the cut is posted, cleared for YouTube Content ID, is ever used. The files live in Drive at makeyourmindup > 00_Brand-Assets > 07_Music (MINDMAKE_MUSIC_ROOT), and nobody browses Drive for audio. The levels are about -16 LUFS over the intro, about -31 under his voice (about 17 LU below it) and about -18 over the end card, ramping down over half a second as his face comes in and up over 0.8 seconds after his last word; the whole mix then finishes at -14 LUFS integrated with true peak at most -1 dBTP, measured after the encode. The levels stay proposed until he approves them by ear. With no approved track, a cut has his voice only and its report says so.',
+    said: 'I am also going to get some licensed audio to put behind my videos, so help me prepare to put it somewhere you and codex will always know where that is, and use it correctly (high volume during the intro, low whilst I am talking, higher during the outro). Then, of makeyourmindup > 00_Brand-Assets > 07_Music: thats where it will live and the video runners need to know this',
+    on: '2026-10-12', source: 'chat, the video production request; mixed by scripts/quick-edit/make.py with music.py, the ledger config/music-library.json', status: 'live',
+    stages: ['visual'],
+  },
+  {
+    id: 'THUMBNAIL_EVERY_SIZE', name: 'A thumbnail for every video size, every time',
+    text: 'Every video comes with its own thumbnail, every time: 1280 x 720 for the wide 16:9 cut (YouTube and the Substack video) and 1080 x 1920 for the tall 9:16 cut (the cover on Reels and TikTok), drawn by the house cover drawer from the piece\'s cover facts, with Krish\'s face and the real logo of every company the piece names (LOGOS_AND_FACE), inside each platform\'s safe area. A cut without the thumbnail of its shape is not packed, and its Video assets step is not done; only Krish\'s own words in "thumbnail_override" let a pack through without one.',
+    said: 'I always want a video thumbnail for all video sizes produced as an asset every time.',
+    on: '2026-10-12', source: 'chat, the video production request; drawn by scripts/pages/build.py --thumbs, required by scripts/post-pack/build.py and visual_gate.py and by the Video assets step (apps/control-plane/api/_making.ts)', status: 'live',
+    stages: ['visual'],
+  },
 ])
 
 /** The rules a stage enforces, for one subchannel or the house as a whole. */

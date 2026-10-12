@@ -30,8 +30,8 @@ Times are Krish's, in New York (`system_config.operator_timezone`).
 | Sunday, 8am (7am in winter) | The work board | One item asks the Sunday question and links to the week page (`control-center api/content/slate.ts`, refreshed every morning, done when all three days have a piece) | Control Center |
 | Sunday | Control Center, the week page (`#/week`) | He picks a piece for each day, or drops in an idea to flesh out. A pick holds its day (scheduled_for) | Krish |
 | Sunday, on the Monday pick | Claude Code ("Make a piece" routine, `.agents/skills/make-piece`) | Monday's piece is made through to its publish board: workroom, fact-checked article, visual gate, both scripts, publish page, pack | Claude Code |
-| Monday morning | His desk | He records Monday's two cuts and drops them in the Video Engine Inbox | Krish |
-| Monday | Codex (`.agents/skills/produce-video`) | Both cuts produced, through the visual gate, onto the record | Codex |
+| Monday morning | His desk | He records Monday's two cuts and drops each as its own file at the top of the Video Engine Inbox (any name), then tells Codex "I've dropped the video" | Krish |
+| Monday | Codex on a home computer, or Claude Code there when he asks it (`.agents/skills/produce-video`) | Each take matched to its piece and cut and recorded (`recording_match.py`); both cuts produced with the intro sting once he approves it, the licensed music bed and a thumbnail for each size; filed, packed and onto the record | Codex |
 | Monday | The publish page | He posts in the standing order and ticks each channel | Krish |
 | When he is ready | The week page, Wednesday's and Friday's cards | "Make it in Claude Code" starts each one's making; it then follows Monday's path | Krish starts, Claude Code makes |
 
@@ -53,8 +53,8 @@ board, the strip and both skills read the same table.
 | Options for the week | Claude Code (Sunday routine) | `.agents/skills/plan-week` | `meta.week_option` through `/api/week/options` |
 | The Sunday question and the pick | Control Center (cron), Krish | `api/content/slate.ts`, the week page | the work board's week item; the pick and its day |
 | Workroom, fact-checked draft, visual gate, scripts, publish page, pack | Claude Code | `.agents/skills/make-piece` | `meta.making.workroom`, `.publish_manager`, `.visual_gate`, `.script_check`, `.pack`; the body through the engine |
-| Record | Krish, then the runner | the recordings lane | `meta.making.recordings` |
-| Video assets | Codex, on a runner machine | `.agents/skills/produce-video` | `meta.making.video_assets`; the pack rebuilt with the cuts |
+| Record | Krish records; the production session writes it | `scripts/post-pack/recording_match.py --record`, in `.agents/skills/produce-video` (the recordings lane only uploads the files) | `meta.making.recordings` |
+| Video assets | Codex, on a home computer (Claude Code there too when Krish engages it) | `.agents/skills/produce-video` | `meta.making.video_assets`, each cut with its thumbnail and music track; the cuts and thumbnails in the archive and the library |
 | Publish board with the cuts | Claude Code | `make-piece` (last step) | the publish page and pack, again |
 | Posting and ticks | Krish | Control Center | `meta.making.channels` |
 
@@ -67,7 +67,8 @@ Where each thing lives, and nowhere else:
 | The engine key | Claude Code cloud: a network secret bound to the engine's host. Codex cloud: the environment secret. Windows home machines: Credential Manager, read by `scripts/engine.py` | never a file, a chat or a commit |
 | The runner's bearer | Credential Manager on each runner machine | the recordings and library lanes |
 | Control Center's secrets (access code, cron secret, the routine's id and token) | Control Center's Vercel project | its own routes; the slate cron speaks to the board on the access-code cookie |
-| Recordings | the engine's recordings lane (object store plus manifest) | `scripts/post-pack/recording.py get`; never the Drive connector (10 MB cap) |
+| Recordings | the engine's recordings lane (object store plus manifest) | `scripts/post-pack/recording_match.py` says which take is which; `scripts/post-pack/recording.py get` fetches it; never the Drive connector (10 MB cap) |
+| Licensed music | Drive, `makeyourmindup > 00_Brand-Assets > 07_Music` (`MINDMAKE_MUSIC_ROOT`), each licence certificate beside its track; the ledger `config/music-library.json` in GitHub | `scripts/quick-edit/music.py` on a home computer; only approved ledger tracks, never browsed |
 | The pack, the publish page, the finished cuts | Krish's Drive library, written by his own machine from the engine's library store | `build.py`, `send.py`; the Drive folder is the canonical copy for every tool and for Krish |
 | The workroom and the publish page as artifacts | claude.ai | Claude Code and Krish only; a convenience view of what the pack holds. Codex and the runner never need them |
 | Code, rules, skills | GitHub `main` of this repository, and of `control-center` | both tools commit small and pull first; the docs steward writes `NOW.md` and the log |
@@ -76,7 +77,8 @@ What could be misread, and what stops it:
 
 1. **Both tools think a step is theirs.** The record carries the owner;
    each skill reads `making.py <id> show` first and stops at a step that
-   is not its own. `by` on every write says who wrote it.
+   is not its own. `by` on every write says who wrote it (`making.py
+   --by`, or `MAKING_BY`).
 2. **A Codex session is asked, in chat, to touch the article or the
    approval.** The produce-video skill names what it never writes. A
    decision Krish made in words is relayed with `decided_by: 'Krish'` by
@@ -90,8 +92,9 @@ What could be misread, and what stops it:
    Code's cloud the proxy adds it; the container never holds it.
 5. **Two sessions start for one piece.** Control Center fires one routine
    per press and opens a live session instead of firing again. Codex has
-   no trigger from Control Center: the Recorded step is its signal, and
-   the record shows the session making it.
+   no trigger from Control Center: Krish telling it he has dropped the
+   takes is its signal, `recording_match.py` works out which take is which
+   piece and cut, and the record shows the session making it.
 6. **The slate at the wrong time.** Krish is in New York
    (`system_config.operator_timezone`; the 10 October cron wrongly assumed
    Sydney). The slate cron runs every day at 12:00 UTC (8am New York in
@@ -105,8 +108,10 @@ What could be misread, and what stops it:
    the whole pack. Only Krish's own words in `visual_gate_override` pass
    one through.
 8. **A recording that never arrives.** The lane sends every finished
-   recording from whichever runner machine is on; a session fetches with
-   `recording.py get --wait`. A missing file is reported by step, never
+   recording from whichever runner machine is on, within about ten
+   minutes; a session fetches with `recording.py get --wait`. A take over
+   500 MiB never reaches the engine: `recording_match.py --inbox` on a home
+   computer reads it from H:. A missing file is reported by step, never
    worked around through Drive.
 9. **The row changes under a write.** Every writer of the making record
    merges and is guarded on `updated_at`; a lost race is reported, not

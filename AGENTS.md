@@ -42,6 +42,10 @@ neither runner machine has sent it, or the download broke.
 `scripts/post-pack/README.md`, "Recordings:
 from the Inbox to a cloud session".
 
+**Video production goes through `.agents/skills/produce-video`, and licensed
+music lives only at `MINDMAKE_MUSIC_ROOT` with its ledger
+`config/music-library.json`**; never browse Drive for audio.
+
 **Codex on a Windows home computer:** run `scripts/engine.py` and `git pull` or
 `git push` outside the sandbox, asking Krish to approve. The sandbox runs as a
 separate Windows user that cannot see the engine key or reach the internet.

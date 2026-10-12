@@ -422,3 +422,50 @@ describe('real logos, real pages, and a cover with personality (VISUAL_EVIDENCE,
     assert.match(r.source, /visual_gate\.py/)
   })
 })
+
+describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-10-12)', () => {
+  const rule = (id: string) => {
+    const r = HOUSE_RULES.find(x => x.id === id)
+    assert.ok(r, id)
+    return r
+  }
+  test('all three are live, dated, in his words, and reach the visual stage', () => {
+    for (const id of ['INTRO_STING', 'MUSIC_BED', 'THUMBNAIL_EVERY_SIZE']) {
+      const r = rule(id)
+      assert.equal(r.status, 'live', id)
+      assert.equal(r.on, '2026-10-12', id)
+      assert.deepEqual(r.stages, ['visual'], id)
+      assert.ok(houseRulesBlock('visual').includes(r.text), id)
+    }
+    assert.ok(rule('INTRO_STING').said.includes('1-2 sec animated make your mind up intro visual before my face comes in'))
+    assert.ok(rule('MUSIC_BED').said.includes('(high volume during the intro, low whilst I am talking, higher during the outro)'))
+    assert.ok(rule('THUMBNAIL_EVERY_SIZE').said.includes('I always want a video thumbnail for all video sizes produced as an asset every time'))
+  })
+  test('the sting is used only once approved, as config/intro-sting.json and make.py hold it', () => {
+    const sting = JSON.parse(readFileSync('config/intro-sting.json', 'utf8'))
+    const r = rule('INTRO_STING')
+    assert.ok(r.text.includes(`(${sting.seconds} by default)`))
+    assert.ok(['candidate', 'approved'].includes(sting.status))
+    assert.match(r.text, /status "approved"/)
+  })
+  test('the music rule states the ledger\'s folder and levels, so the two cannot drift', () => {
+    const ledger = JSON.parse(readFileSync('config/music-library.json', 'utf8'))
+    const r = rule('MUSIC_BED')
+    const folder = ledger.root_default_windows.split('\\makeyourmindup\\')[1].split('\\').join(' > ')
+    assert.ok(r.text.includes(`makeyourmindup > ${folder} (${ledger.root_env})`), folder)
+    const lv = ledger.levels
+    assert.ok(r.text.includes(`about ${lv.intro_lufs} LUFS over the intro, about ${lv.bed_lufs} under his voice (about ${lv.final_integrated_lufs - lv.bed_lufs} LU below it) and about ${lv.outro_lufs} over the end card`))
+    assert.ok(r.text.includes(`up over ${lv.ramp_up_s} seconds after his last word`) && lv.ramp_down_s === 0.5 && r.text.includes('over half a second'))
+    assert.ok(r.text.includes(`finishes at ${lv.final_integrated_lufs} LUFS integrated with true peak at most ${lv.max_true_peak_dbtp} dBTP`))
+    assert.match(r.text, /stay proposed until he approves them by ear/)
+  })
+  test('the thumbnail sizes are the ones the drawer writes', () => {
+    const build = readFileSync('scripts/pages/build.py', 'utf8')
+    const r = rule('THUMBNAIL_EVERY_SIZE')
+    for (const [file, size] of [['thumb-wide-1280x720.jpg', '1280 x 720'], ['thumb-tall-1080x1920.jpg', '1080 x 1920']]) {
+      assert.ok(build.includes(file), file)
+      assert.ok(r.text.includes(size), size)
+    }
+    assert.match(r.text, /thumbnail_override/)
+  })
+})
