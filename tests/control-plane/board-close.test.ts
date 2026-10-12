@@ -86,7 +86,7 @@ beforeEach(() => {
 
 // The fixtures hold only shapes the database admits: an item on Krish
 // carries why only he can do it, an https link, and a close with its piece
-// (supabase/migrations/20261013090000_board_on_you_is_ready.sql).
+// (supabase/migrations/20261013093000_board_on_you_is_ready.sql).
 const readyForHisList = (r: Row) => r.lane !== 'on_you' || Boolean(r.only_you && /^https:\/\//.test(r.link || '') && r.closes_on && (r.closes_on === 'week_planned' ? /^week-\d{4}-\d{2}-\d{2}$/.test(r.id) : r.idea_id))
 
 describe('the fixtures', () => {

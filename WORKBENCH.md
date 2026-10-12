@@ -136,7 +136,7 @@ has them. A job only he can do that nothing can see finished (a login, a key
 only he can change, an email only he can send) stays `in_progress`, its
 detail saying what would show it done, until an agent gives it a check; ask
 him in your reply. The database holds the same rule
-(`work_board_items_on_you_is_ready`, migration `20261013090000`), the
+(`work_board_items_on_you_is_ready`, migration `20261013093000`), the
 week's close on the week's item alone included: when it is applied, every
 item on him that fails it moves to `in_progress`, its detail starting "Held
 from your list on <date>: it" and the gates it fails in Control Center's
@@ -246,7 +246,7 @@ on a piece is fetched by the path its record holds
     `krish_closed_it` first. Replies are refused outright now
     (`replies_retired`, `prompt_retired`).
   - **The database holds the same rule**
-    (`supabase/migrations/20261013090000_board_on_you_is_ready.sql`, to
+    (`supabase/migrations/20261013093000_board_on_you_is_ready.sql`, to
     apply), the week's close on the week's own item included. It moves the
     four live items that fail it today (`you-launch-today`,
     `you-engine-github-key`, `you-welcome-days`, and this week's publish

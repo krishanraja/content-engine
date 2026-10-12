@@ -1,4 +1,4 @@
--- supabase/migrations/20261013090000_board_on_you_is_ready.sql, applied
+-- supabase/migrations/20261013093000_board_on_you_is_ready.sql, applied
 -- twice after board-on-you-ready-setup.sql: the ready rows stay on Krish,
 -- the rest are held in progress with their reason said once, and from then
 -- on no writer can put an item on him that is not ready.

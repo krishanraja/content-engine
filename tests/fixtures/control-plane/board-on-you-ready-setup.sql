@@ -1,5 +1,5 @@
 -- The board as it stood on 12 October, for the on_you readiness migration
--- (supabase/migrations/20261013090000_board_on_you_is_ready.sql) on a clean
+-- (supabase/migrations/20261013093000_board_on_you_is_ready.sql) on a clean
 -- Postgres (CI's control-plane-sql job). The board migrations before it have
 -- run; content_ideas is the stand-in from keep-newer-making-setup.sql. The
 -- rows that fail are the four live ones, a take with no piece whose detail is
