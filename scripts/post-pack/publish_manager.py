@@ -161,11 +161,22 @@ async function copyImage(src){
   return viaCommand(`<img src="${src}">`, "") ? "command" : "failed";
 }
 let downloads = null;
-(async () => { try { downloads = window.claude?.use ? await window.claude.use("downloads") : null } catch { downloads = null } })();
+const downloadsReady = (async () => { try { downloads = window.claude?.use ? await window.claude.use("downloads") : null } catch { downloads = null } return downloads })();
 async function download(src, name){
   const blob = await pngBlob(src);
-  if (downloads) { try { await downloads.save({ filename: name, data: blob }); toast("Saved"); return } catch (e) { if (e && e.code === "declined") return } }
-  if (window.claude) { toast("Saving is not available in this view. Use Copy picture."); return }
+  // Wait for the save capability (it answers a moment after load), and say why a save did not happen.
+  const saver = downloads || (window.claude ? await downloadsReady : null);
+  if (saver) {
+    try { await saver.save({ filename: name, data: blob }); toast("Saved " + name); return }
+    catch (e) {
+      const code = e && e.code;
+      if (code === "declined") return;
+      if (code === "rate_limited") { toast("Another save is still open. Finish it, then tap Download again."); return }
+      if (code === "too_large") { toast("This file is too big to save here. Use Copy picture."); return }
+      toast("This app view cannot save files (" + (code || "unknown") + "). Open the board in a browser, or use Copy picture."); return
+    }
+  }
+  if (window.claude) { toast("This app view cannot save files. Open the board in a browser, or use Copy picture."); return }
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast("Downloading " + name);
 }
