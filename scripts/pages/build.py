@@ -2,7 +2,9 @@
 """pages: a piece's branded web page and its Substack copy, from the text that
 passed the fact gate.
 
-    python build.py page.json --out OUTDIR [--check] [--shots] [--cover]
+    python build.py page.json --out OUTDIR [--check] [--shots] [--cover] [--thumbs]
+    python build.py cover-facts.json --out OUTDIR --cover --thumbs   (the artwork alone)
+    python build.py --self-test
 
 Reads the piece's body markdown and a small JSON file of page facts (README.md
 has every field), and writes two self-contained files into OUTDIR:
@@ -36,6 +38,16 @@ Artwork made from HTML is checked before it becomes a PNG by card.py.
           card and archive each show of it. It refuses if a word or a logo
           would be cut off by any of them, or if a word would be too small to
           read in a phone's feed.
+--thumbs  draws a thumbnail for every video size from the same facts:
+          thumb-wide-1280x720.jpg for the 16:9 long cut (YouTube and the
+          Substack video post) and thumb-tall-1080x1920.jpg for the 9:16
+          short cut (the cover on Reels and TikTok), with Krish's face and
+          the real logos, a receipt thumbs.json and thumbs-check.png. Both or
+          neither: it refuses if a word, the face or a logo would sit where a
+          platform covers or crops it, or a word would be too small to read.
+
+Facts with no deck or body (docs/plans/<plan>/cover-facts.json) draw only
+the artwork that --cover and --thumbs ask for.
 """
 import argparse
 import base64
@@ -1008,6 +1020,364 @@ def draw_cover(facts, base, out, refresh=False):
     return True
 
 
+# ---------------------------------------------------------------- a thumbnail for every video size
+
+# Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
+# produced as an asset every time." --thumbs draws one for each shape a video
+# is made in, from the same cover facts the 3:2 cover reads and in the same
+# look: the wordmark, the headline with its last line in the subchannel's
+# colour, Krish's face and a row per real logo (house rule LOGOS_AND_FACE).
+#
+#   wide  1280 x 720, for the 16:9 long cut: the size YouTube asks for in a
+#         custom thumbnail, and the Substack video post's. YouTube lays the
+#         video's length over the bottom-right corner (THUMBS['wide']
+#         ['clear']), so nothing is drawn there.
+#   tall  1080 x 1920, for the 9:16 short cut: the cover for Reels and
+#         TikTok. Their profile grids show only the middle 1080 x 1440 (3:4),
+#         so every word, face and logo sits inside it.
+#
+# Every word is held to card.py's phone floors at a phone's full width, as the
+# cover's are. The headline must also read where the thumbnail is shown
+# smallest: YouTube's Up next list on a computer, about 168 pixels wide, and a
+# profile grid on a phone, three across, about 120 pixels wide.
+#
+# The facts may hold "thumbs" beside "cover": the same fields ("headline",
+# "rows", "portrait", "background"), each falling back to the cover's, plus
+# "strip": [{"logo", "name"}], more real logos drawn small in a line under the
+# rows, so a thumbnail can carry every company the piece names (the visual
+# gate holds each thumbnail to that, as it holds a video).
+THUMB_RECEIPT = 'thumbs.json'
+THUMBS = {
+    'wide': {
+        'file': 'thumb-wide-1280x720.jpg', 'w': 1280, 'h': 720,
+        'safe': (56, 40, 1224, 680),  # left, top, right, bottom
+        # YouTube's video length badge keeps its own size however small the
+        # thumbnail is shown, so it covers most where the thumbnail is
+        # smallest: about 36 x 18 pixels, 4 in from the corner, on a 168-wide
+        # Up next thumbnail, which is this much of a 1280 x 720 one.
+        'clear': [("YouTube's video length, bottom right", (968, 548, 1280, 720))],
+        'small': (168, "YouTube's Up next list on a computer"),
+        'heads': (140, 132, 124, 116, 108), 'lines': 3,
+        'faces': (320, 290, 260, 230),
+        'band': 968 - 56 - 16,  # the face and rows stop short of the video length
+        'wm': 46, 'logo': 56, 'strip': 34, 'ring': 6, 'tag': None,
+    },
+    'tall': {
+        'file': 'thumb-tall-1080x1920.jpg', 'w': 1080, 'h': 1920,
+        'safe': (72, 260, 1008, 1660),  # inside the middle 1080 x 1440 (y 240 to 1680)
+        'clear': [],
+        'small': (120, 'a profile grid on a phone, three across'),
+        'heads': (200, 184, 168, 156, 144, 132), 'lines': 4,
+        'faces': (440, 400, 360, 320),  # never under 320: in a grid the face is what is seen first
+        'band': None,
+        'wm': 64, 'logo': 76, 'strip': 52, 'ring': 8, 'tag': 56,
+    },
+}
+THUMB_SHAPES = ('wide', 'tall')
+THUMB_MAX_BYTES = 2 * 1024 * 1024  # YouTube refuses a custom thumbnail over 2 MB
+THUMB_QUALITY = (92, 88, 84, 80)   # JPEG quality, highest first, until the file is under the limit
+
+THUMB_CSS = """
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--deep); }
+#card { position: relative; overflow: hidden; background: var(--deep); color: var(--cream); }
+#card .ph { position: absolute; inset: 0; background-position: center 30%; background-size: cover; opacity: .3; }
+#card .fade { position: absolute; inset: 0; background: radial-gradient(70% 70% at 50% 50%, rgba(var(--shade), .92) 0%, rgba(var(--shade), .8) 55%, rgba(var(--shade), .4) 100%); }
+#safe { position: absolute; display: flex; flex-direction: column; }
+.top { display: flex; align-items: center; gap: 22px; }
+.wm { height: var(--wm); }
+.mono { font-family: "IBM Plex Mono", monospace; }
+.pill { font-size: var(--fine); line-height: 1; font-weight: 700; letter-spacing: .04em; padding: 8px 14px; background: var(--accent); color: var(--ink); white-space: nowrap; }
+h1 { font-family: "Anton", Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: var(--head); line-height: .94; text-wrap: balance; }
+h1 span { display: block; color: var(--accent); }
+.face { flex: none; width: var(--face); height: var(--face); border-radius: 50%; background-size: cover; background-position: center 28%; border: var(--ring) solid var(--accent); box-shadow: 10px 10px 0 rgba(0, 0, 0, .35); }
+.side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.rows { display: flex; flex-direction: column; gap: 12px; }
+.row { background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.row img { height: var(--logo); }
+.tag { font-size: var(--tag); line-height: 1; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 8px 14px; color: var(--ink); white-space: nowrap; }
+.strip { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 30px; background: rgba(var(--shade), .9); border: 2px solid #2A3430; padding: 10px 18px; }
+.strip img { height: var(--strip); }
+.wide #safe { align-items: flex-start; text-align: left; }
+.wide h1 { margin-top: 18px; }
+.wide .band { margin-top: 24px; width: var(--band); display: flex; align-items: center; gap: 28px; }
+.wide .side { flex: 1; gap: 12px; }
+.wide .rows { gap: 10px; }
+.wide .row { padding: 6px 16px; }
+.wide .tag { padding: 6px 12px; }
+.wide .strip { padding: 6px 14px; gap: 10px 22px; }
+.tall #safe { align-items: center; text-align: center; }
+.tall .top { flex-direction: column; gap: 18px; }
+.tall h1 { margin-top: 30px; }
+.tall .face { margin-top: 40px; }
+.tall .side { margin-top: 40px; width: 100%; }
+.tall .strip { justify-content: center; }
+"""
+
+# How many lines the headline takes, and whether every row holds its logo and tag.
+THUMB_MEASURE_JS = r"""() => {
+  const h = document.querySelector('#safe h1');
+  const lines = Math.round(h.getBoundingClientRect().height / parseFloat(getComputedStyle(h).lineHeight));
+  const spill = [...document.querySelectorAll('#safe .row')].filter(r => r.scrollWidth > r.clientWidth + 1).map(r => r.querySelector('img')?.alt || 'a row');
+  return [lines, spill];
+}"""
+
+
+def thumb_facts(facts):
+    """The facts a thumbnail is drawn from: "thumbs" over "cover", field by field."""
+    c = dict(facts.get('cover') or {})
+    t = facts.get('thumbs') or {}
+    if not isinstance(t, dict):
+        brand.fail('"thumbs" is an object: the same fields as "cover", each falling back to the cover\'s, and "strip"')
+    c.update(t)
+    if not c.get('headline'):
+        c['headline'] = facts.get('headline')
+    return c
+
+
+def overlapping(found, zones):
+    """The boxes that reach into any zone (name, (left, top, right, bottom)),
+    as {'what', 'box', 'zone'}. Half a pixel is allowed for rounding."""
+    hit = []
+    for name, (l, t, r, b) in zones:
+        for x in found:
+            x0, y0, x1, y1 = x['box']
+            if x1 > l + .5 and x0 < r - .5 and y1 > t + .5 and y0 < b - .5:
+                hit.append({'what': x['what'], 'box': x['box'], 'zone': name})
+    return hit
+
+
+def thumb_html(facts, base, shape, refresh=False):
+    """One thumbnail as a page: the cover's look, laid out for its shape."""
+    spec = THUMBS[shape]
+    hs = brand.house()
+    ch = brand.channel(hs, facts['subchannel'])
+    t = hs['tokens']
+    c = thumb_facts(facts)
+    head = c.get('headline')
+    if not head or (not isinstance(head, str) and len(head) != 2):
+        brand.fail('the thumbnail\'s "headline" is one line of text, or two: the words in cream, then the last line in the subchannel\'s colour')
+    lead, last = split_headline(head) if isinstance(head, str) else head
+    colours = {'mint': t['mint'], **PALETTE}
+    rows = []
+    for row in c.get('rows', []):
+        colour = colours.get(row.get('colour', 'mint'))
+        if not row.get('logo') or not row.get('tag'):
+            brand.fail('a thumbnail row needs "logo" (one that reads on dark ink) and "tag" (the words beside it)')
+        if not colour:
+            brand.fail(f'a row\'s colour is one of {", ".join(colours)}, not {row.get("colour")!r}')
+        rows.append(f'<div class="row"><img src="{brand.data_uri(resolve(base, row["logo"]), 800)}" alt="{attr(row.get("name", ""))}">'
+                    f'<span class="tag mono" style="background:{colour}">{esc(row["tag"])}</span></div>')
+    strip = []
+    for item in c.get('strip', []):
+        if not isinstance(item, dict) or not item.get('logo') or not item.get('name'):
+            brand.fail('each logo in "strip" needs "logo" (one that reads on dark ink) and "name" (the company)')
+        strip.append(f'<img src="{brand.data_uri(resolve(base, item["logo"]), 800)}" alt="{attr(item["name"])}">')
+    face = ''
+    if c.get('portrait'):
+        source = brand.fetch('krish', refresh) if c['portrait'] is True else resolve(base, c['portrait'])
+        face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 900)})"></div>'
+    photo = ''
+    if c.get('background'):
+        photo = (f'<div class="ph" style="background-image:url({brand.data_uri(resolve(base, c["background"]), 2000)})"></div>'
+                 '<div class="fade"></div>')
+    side = ((f'<div class="rows">{"".join(rows)}</div>' if rows else '') + (f'<div class="strip">{"".join(strip)}</div>' if strip else ''))
+    side = f'<div class="side">{side}</div>' if side else ''
+    body = f'<div class="band">{face}{side}</div>' if shape == 'wide' else face + side
+    deep = t['ink_deep'].lstrip('#')
+    w, h = spec['w'], spec['h']
+    left, top, right, bottom = spec['safe']
+    words, fine = card.needed(w)
+    tag = max(words, spec['tag'] or 0)
+    return f"""<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="artwork-size" content="{w}x{h}">
+<style>{brand.font_css()}</style>
+<style>:root {{ --ink: {t['ink']}; --deep: {t['ink_deep']}; --cream: {t['cream']}; --accent: {ch['accent']}; --shade: {', '.join(str(int(deep[i:i + 2], 16)) for i in (0, 2, 4))};
+  --head: {spec['heads'][0]}px; --face: {spec['faces'][0]}px; --words: {words}px; --fine: {fine}px; --tag: {tag}px;
+  --wm: {spec['wm']}px; --logo: {spec['logo']}px; --strip: {spec['strip']}px; --ring: {spec['ring']}px; --band: {spec['band'] or 0}px; }}
+{THUMB_CSS}
+#card {{ width: {w}px; height: {h}px; }}
+#safe {{ left: {left}px; top: {top}px; width: {right - left}px; height: {bottom - top}px; }}</style>
+</head>
+<body>
+<div id="card" class="{shape}">{photo}<div id="safe">
+<div class="top"><img class="wm" src="{brand.brand_uri('wordmark', refresh)}" alt="makeyourmindup"><span class="pill mono" data-fine-print>{esc(ch['name'])}</span></div>
+<h1>{esc(lead) + ' ' if lead else ''}<span>{esc(last)}</span></h1>
+{body}
+</div></div>
+</body>
+</html>
+"""
+
+
+def fit_thumb(pg, shape):
+    """The largest headline, then the largest face, at which the thumbnail
+    fits: the headline in its lines, every word, face and logo inside the safe
+    area, nothing in a zone the platform covers, and every row holding its
+    logo and tag. Returns what it settled on and, when nothing fits, why."""
+    spec = THUMBS[shape]
+    faces = spec['faces'] if pg.locator('#safe .face').count() else spec['faces'][:1]
+    tried = None
+    for head in spec['heads']:
+        for face in faces:
+            pg.evaluate("([h, f]) => { const s = document.documentElement.style; s.setProperty('--head', h + 'px'); s.setProperty('--face', f + 'px'); }",
+                        [head, face])
+            lines, spill = pg.evaluate(THUMB_MEASURE_JS)
+            found = card.boxes(pg, '#safe')
+            cut = card.outside(found, spec['safe'])
+            hit = overlapping(found, spec['clear'])
+            tried = {'head': head, 'face': face, 'lines': lines, 'cut': cut, 'hit': hit, 'spill': spill}
+            if lines <= spec['lines'] and not cut and not hit and not spill:
+                return dict(tried, ok=True)
+    return dict(tried, ok=False)
+
+
+def thumbs_check_html(shots):
+    """What a person checks: the wide thumbnail at a phone's width and at its
+    smallest, with the video length where YouTube puts it, and the tall one
+    whole, with the 3:4 the profile grids keep marked, and in a grid tile."""
+    label = "font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.04em;color:#333;margin:0 0 8px;max-width:360px"
+
+    def uri(shape):
+        return 'data:image/jpeg;base64,' + base64.b64encode(shots[shape]).decode()
+
+    def wide(width):
+        # The badge at YouTube's own size, which it keeps at every thumbnail size.
+        badge = ('<span style="position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.8);color:#fff;'
+                 'font:600 12px/16px Arial,sans-serif;padding:1px 4px;border-radius:4px">3:04</span>')
+        return (f'<div><p style="{label}">The wide thumbnail {width} px wide, with the video length where YouTube puts it</p>'
+                f'<div style="position:relative;width:{width}px"><img src="{uri("wide")}" style="display:block;width:{width}px">{badge}</div></div>')
+
+    spec = THUMBS['tall']
+    full_h = 420
+    k = full_h / spec['h']
+    y0, y1 = (spec['h'] - spec['w'] * 4 / 3) / 2 * k, (spec['h'] + spec['w'] * 4 / 3) / 2 * k
+    line = 'position:absolute;left:0;right:0;border-top:2px dashed #FF6A4D'
+    tall_full = (f'<div><p style="{label}">The tall thumbnail whole; the dashed lines mark the middle 3:4 the grids keep</p>'
+                 f'<div style="position:relative;height:{full_h}px;width:{spec["w"] * k:.0f}px"><img src="{uri("tall")}" style="display:block;height:{full_h}px">'
+                 f'<span style="{line};top:{y0:.0f}px"></span><span style="{line};top:{y1:.0f}px"></span></div></div>')
+    tile_w = THUMBS['tall']['small'][0]
+    s = tile_w / spec['w']
+    tile = (f'<div><p style="{label}">In a profile grid, {tile_w} px wide</p>'
+            f'<div style="width:{tile_w}px;height:{tile_w * 4 / 3:.0f}px;background:url({uri("tall")}) 0 -{(spec["h"] - spec["w"] * 4 / 3) / 2 * s:.1f}px / '
+            f'{tile_w}px {spec["h"] * s:.0f}px no-repeat;outline:1px solid #ccc"></div></div>')
+    panels = [wide(card.PHONE_COLUMN), wide(THUMBS['wide']['small'][0]), tall_full, tile]
+    return (f'<meta charset="utf-8"><style>{brand.font_css()}\n*{{box-sizing:border-box;margin:0}}</style>'
+            '<body style="margin:0;background:#fff"><div id="sheet" style="display:inline-flex;gap:24px;align-items:flex-end;'
+            f'padding:20px;background:#fff">{"".join(panels)}</div></body>')
+
+
+def draw_thumbs(facts, base, out, refresh=False):
+    """thumb-wide-1280x720.jpg and thumb-tall-1080x1920.jpg, their receipt
+    thumbs.json and thumbs-check.png. Writes all of them or none: an older set
+    is removed first, and nothing is written when either shape cannot fit
+    every word and logo where its platforms show it, or a word would be too
+    small to read. True when the set was written."""
+    out = Path(out)
+    for name in [THUMBS[s]['file'] for s in THUMB_SHAPES] + [THUMB_RECEIPT, 'thumbs-check.png']:
+        (out / name).unlink(missing_ok=True)
+    c = thumb_facts(facts)
+    pages = {shape: thumb_html(facts, base, shape, refresh) for shape in THUMB_SHAPES}
+    shots, fits, problems, check = {}, {}, {}, None
+    with brand.playwright() as p:
+        b = brand.browser(p)
+        for shape in THUMB_SHAPES:
+            spec = THUMBS[shape]
+            pg = b.new_page(viewport={'width': spec['w'], 'height': spec['h']})
+            pg.set_content(pages[shape])
+            card.settle(pg)
+            fit = fit_thumb(pg, shape)
+            words = card.texts(pg, (0, 0, spec['w'], spec['h']))
+            small = card.too_small(words, spec['w'])
+            tiny = fit['head'] * spec['small'][0] / spec['w']
+            fits[shape] = dict(fit, words=words, small=small, tiny=tiny)
+            if fit['ok'] and not small and round(tiny, 2) >= card.MIN_READ_PX:
+                for quality in THUMB_QUALITY:
+                    shot = pg.screenshot(type='jpeg', quality=quality, clip={'x': 0, 'y': 0, 'width': spec['w'], 'height': spec['h']})
+                    if len(shot) <= THUMB_MAX_BYTES:
+                        break
+                if len(shot) <= THUMB_MAX_BYTES:
+                    shots[shape] = shot
+                    fits[shape]['quality'] = quality
+                else:
+                    problems[shape] = [f'even at JPEG quality {THUMB_QUALITY[-1]} it is {len(shot) / 1e6:.1f} MB, over the 2 MB YouTube takes: '
+                                       'use a plainer "background"']
+            pg.close()
+        if len(shots) == len(THUMB_SHAPES):
+            sheet = b.new_page(viewport={'width': 1600, 'height': 700})
+            sheet.set_content(thumbs_check_html(shots))
+            card.settle(sheet)
+            check = sheet.locator('#sheet').screenshot()
+        b.close()
+    ok = len(shots) == len(THUMB_SHAPES)
+    for shape in THUMB_SHAPES:
+        spec, fit = THUMBS[shape], fits[shape]
+        left, top, right, bottom = spec['safe']
+        name = f'{shape} {spec["w"]} x {spec["h"]}'
+        if shape in shots:
+            continue
+        print(f'{name}: not drawn.')
+        if fit['lines'] > spec['lines']:
+            print(f'  the headline takes {fit["lines"]} lines even at {fit["head"]} px, and {spec["lines"]} fit: '
+                  'give "thumbs" a shorter "headline"')
+        if fit['cut']:
+            print(f'  these fall outside x {left} to {right}, y {top} to {bottom}, the part every place it is shown keeps:')
+            for x in fit['cut']:
+                x0, y0, x1, y1 = x['box']
+                print(f'    {card.short(x["what"])}  at x {x0:.0f} to {x1:.0f}, y {y0:.0f} to {y1:.0f}')
+        for x in fit['hit']:
+            print(f'  {card.short(x["what"])} reaches into {x["zone"]}')
+        for what in fit['spill']:
+            print(f'  the row "{what}" cannot hold its logo and tag: shorten the tag')
+        if fit['cut'] or fit['hit'] or fit['spill']:
+            print('  shorten the headline or a tag, or take a row out (the "thumbs" or "cover" facts)')
+        for w in fit['small']:
+            print(f'  too small to read on a phone: {w["phone"]:4.1f} px, drawn at {w["px"]:.0f} px  "{card.short(w["text"])}"')
+        if round(fit['tiny'], 2) < card.MIN_READ_PX:
+            print(f'  the headline comes out at {fit["tiny"]:.1f} px in {spec["small"][1]} ({spec["small"][0]} px wide), '
+                  f'under the {card.MIN_READ_PX} px a word needs: shorten it so it can be drawn bigger')
+        for line in problems.get(shape, []):
+            print(f'  {line}')
+    if not ok:
+        print('thumbnails: none written. A thumbnail for every video size, every time, so both or neither.')
+        return False
+    import hashlib
+    logos = [r.get('name', '') for r in c.get('rows', [])] + [s.get('name', '') for s in c.get('strip', [])]
+    files = []
+    for shape in THUMB_SHAPES:
+        spec, fit = THUMBS[shape], fits[shape]
+        (out / spec['file']).write_bytes(shots[shape])
+        files.append({'file': spec['file'], 'shape': shape, 'width': spec['w'], 'height': spec['h'], 'bytes': len(shots[shape]),
+                      'sha256': hashlib.sha256(shots[shape]).hexdigest(), 'headline_px': fit['head'],
+                      'face_px': fit['face'] if c.get('portrait') else 0, 'jpeg_quality': fit['quality']})
+    (out / 'thumbs-check.png').write_bytes(check)
+    # The drawer's receipt: scripts/post-pack/visual_gate.py packs a thumbnail
+    # only when it matches a file here byte for byte, carries Krish's face,
+    # and every logo its post.json entry declares is one drawn here.
+    (out / THUMB_RECEIPT).write_text(json.dumps({
+        'schema_version': 1, 'drawer': 'scripts/pages/build.py --thumbs', 'subchannel': facts['subchannel'],
+        'headline': list(split_headline(c['headline']) if isinstance(c['headline'], str) else c['headline']),
+        'portrait': bool(c.get('portrait')), 'logos': [n for n in logos if n], 'background': bool(c.get('background')),
+        'files': files, 'drawn_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
+    }, indent=1) + '\n', encoding='utf-8')
+    for shape in THUMB_SHAPES:
+        spec, fit = THUMBS[shape], fits[shape]
+        use = 'for the 16:9 long cut: YouTube and the Substack video post' if shape == 'wide' else \
+              'for the 9:16 short cut: the cover on Reels and TikTok'
+        print(f'{out / spec["file"]}  {spec["w"]} x {spec["h"]}, {len(shots[shape]) / 1e3:.0f} KB, {use}')
+        print(f'  headline {fit["head"]} px in {fit["lines"]} line(s), {fit["tiny"]:.1f} px in {spec["small"][1]}'
+              + (f'; face {fit["face"]} px' if c.get('portrait') else '; no face: add "portrait": true (house rule LOGOS_AND_FACE)'))
+        left, top, right, bottom = spec['safe']
+        print(f'  every word, face and logo is inside x {left} to {right}, y {top} to {bottom}'
+              + ''.join(f'; nothing in {name}' for name, _ in spec['clear']))
+    print(f'{out / THUMB_RECEIPT}  the receipt: each file\'s sha256, the face and the logos drawn ({", ".join(n for n in logos if n) or "none"})')
+    print(f'{out / "thumbs-check.png"}  how they show at a phone\'s width, at their smallest and in a grid. Look at it before publishing.')
+    return True
+
+
 # Outlook, and many work inboxes, hide every picture in an email from a sender
 # the reader has not trusted yet and show its alt text instead (2026-10-06: a
 # subscriber's Outlook showed article 1's launch email as captions, with no
@@ -1071,20 +1441,160 @@ def phone_images(facts, base, out):
 
 # ---------------------------------------------------------------- main
 
+def page_ready(facts, base, body_override):
+    """True when the facts can build the page: a headline, a deck, a date and
+    a body. Cover facts (docs/plans/<plan>/cover-facts.json) hold only what
+    the artwork needs."""
+    if not all(facts.get(k) for k in ('headline', 'deck', 'date')):
+        return False
+    return (Path(body_override) if body_override else base / facts.get('body', 'body.md')).exists()
+
+
+# ---------------------------------------------------------------- self-test
+
+def self_test():
+    """The rules that need no browser: the thumbnail shapes and their safe
+    areas, the YouTube corner, the facts falling back to the cover's, the
+    thumbnail page itself (with stand-ins for the fonts and logos), and the
+    page check the build runs. Prints the result; 0 when every check passes."""
+    import tempfile
+    fails, count = [], 0
+
+    def check(label, got, want):
+        nonlocal count
+        count += 1
+        if got != want:
+            fails.append(f'{label}: got {got!r}, want {want!r}')
+
+    # The shapes, and where each platform shows them.
+    check('the wide thumbnail is 16:9', THUMBS['wide']['w'] * 9 == THUMBS['wide']['h'] * 16, True)
+    check('the tall thumbnail is 9:16', THUMBS['tall']['w'] * 16 == THUMBS['tall']['h'] * 9, True)
+    for shape in THUMB_SHAPES:
+        spec = THUMBS[shape]
+        l, t, r, b = spec['safe']
+        check(f'{shape}: the file name says its shape and size', spec['file'], f'thumb-{shape}-{spec["w"]}x{spec["h"]}.jpg')
+        check(f'{shape}: the safe area is inside the picture', 0 < l < r < spec['w'] and 0 < t < b < spec['h'], True)
+        check(f'{shape}: headline sizes run largest first', list(spec['heads']), sorted(spec['heads'], reverse=True))
+        check(f'{shape}: face sizes run largest first', list(spec['faces']), sorted(spec['faces'], reverse=True))
+        check(f'{shape}: the smallest headline still reads in {spec["small"][1]}',
+              min(spec['heads']) * spec['small'][0] / spec['w'] >= card.MIN_READ_PX, True)
+        check(f'{shape}: the tags are drawn at least as big as a phone needs', max(card.needed(spec['w'])[0], spec['tag'] or 0) >= card.needed(spec['w'])[0], True)
+    tall, wide = THUMBS['tall'], THUMBS['wide']
+    check('tall: everything sits inside the middle 1080 x 1440 the profile grids keep',
+          tall['safe'][1] >= (tall['h'] - tall['w'] * 4 / 3) / 2 and tall['safe'][3] <= (tall['h'] + tall['w'] * 4 / 3) / 2, True)
+    corner = wide['clear'][0][1]
+    check('wide: the video length zone is the bottom-right corner', (corner[2], corner[3]), (wide['w'], wide['h']))
+    check('wide: the face and rows stop short of the video length', wide['safe'][0] + wide['band'] <= corner[0], True)
+    check('wide: the video length zone reaches into the safe area, so it is checked', corner[0] < wide['safe'][2] and corner[1] < wide['safe'][3], True)
+    zx, zy = corner[0], corner[1]
+    found = [{'what': 'in the corner', 'box': [1100, 600, 1200, 650]}, {'what': 'top left', 'box': [60, 50, 300, 120]},
+             {'what': 'touching its edge', 'box': [600, 590, zx, 676]}, {'what': 'above it', 'box': [1100, 400, 1220, zy]}]
+    check('a box in the video length zone is found, one touching its edge is not',
+          [x['what'] for x in overlapping(found, wide['clear'])], ['in the corner'])
+    check('the cover safe area is inside each crop Substack makes', all(
+        COVER_SAFE[0] >= x0 and COVER_SAFE[1] >= y0 and COVER_SAFE[2] <= x1 and COVER_SAFE[3] <= y1 for _, (x0, y0, x1, y1) in COVER_CROPS), True)
+
+    # The facts: "thumbs" over "cover", field by field, then the page headline.
+    check('a thumbnail falls back to the cover', thumb_facts({'cover': {'headline': ['A', 'B?'], 'rows': [1], 'portrait': True}}),
+          {'headline': ['A', 'B?'], 'rows': [1], 'portrait': True})
+    check('"thumbs" changes only what it names', thumb_facts({'cover': {'headline': ['A', 'B?'], 'portrait': True}, 'thumbs': {'headline': 'Who? Me.', 'strip': [2]}}),
+          {'headline': 'Who? Me.', 'portrait': True, 'strip': [2]})
+    check('with neither, the page headline', thumb_facts({'headline': 'Who gets paid?'})['headline'], 'Who gets paid?')
+    check('a headline splits after its last stop', split_headline('Warner sued Suno. Now it takes a cut. Who else gets paid?'),
+          ('Warner sued Suno. Now it takes a cut.', 'Who else gets paid?'))
+    check('with no stop, all of it is in colour', split_headline('So many AIs'), ('', 'So many AIs'))
+
+    # The thumbnail page, with stand-ins for the fonts, the wordmark and the photo.
+    dot = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
+    saved = (brand.font_css, brand.brand_uri, brand.fetch)
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        for name in ('logo.png', 'krish.png', 'bg.png'):
+            (tmp / name).write_bytes(dot)
+        brand.font_css = lambda extra=(): ''
+        brand.brand_uri = lambda name, refresh=False, full=False: 'data:image/png;base64,'
+        brand.fetch = lambda name, refresh=False: tmp / 'krish.png'
+        try:
+            facts = {'subchannel': 'follow.the.money', 'headline': 'Who gets paid?',
+                     'cover': {'headline': ["A fan's AI song.", 'Who gets paid?'], 'portrait': True, 'background': 'bg.png',
+                               'rows': [{'logo': 'logo.png', 'name': 'Suno', 'tag': 'Pays', 'colour': 'butter'}]},
+                     'thumbs': {'strip': [{'logo': 'logo.png', 'name': 'Udio'}]}}
+            for shape in THUMB_SHAPES:
+                spec = THUMBS[shape]
+                page = thumb_html(facts, tmp, shape)
+                check(f'{shape} page: its size', f'content="{spec["w"]}x{spec["h"]}"' in page, True)
+                check(f'{shape} page: laid out for its shape', f'id="card" class="{shape}"' in page, True)
+                check(f'{shape} page: the headline, its last line in colour', 'A fan&#x27;s AI song. <span>Who gets paid?</span>' in page or "A fan's AI song. <span>Who gets paid?</span>" in page, True)
+                check(f'{shape} page: Krish\'s face', 'class="face"' in page, True)
+                check(f'{shape} page: the row and the strip carry their names', ('alt="Suno"' in page, 'alt="Udio"' in page), (True, True))
+                check(f'{shape} page: the subchannel, as fine print', '<span class="pill mono" data-fine-print>follow.the.money</span>' in page, True)
+                check(f'{shape} page: the face sits in a band only on the wide one', '<div class="band">' in page, shape == 'wide')
+                check(f'{shape} page: no long dashes', [ch for ch in page if ch in '\u2013\u2014'], [])
+            refused = []
+            for bad in ({'strip': [{'logo': 'logo.png'}]}, {'rows': [{'logo': 'logo.png', 'colour': 'mint'}]}, {'headline': ['one', 'two', 'three']}):
+                try:
+                    thumb_html(dict(facts, thumbs=bad), tmp, 'wide')
+                    refused.append(False)
+                except SystemExit:
+                    refused.append(True)
+            check('a strip logo with no name, a row with no tag and a three-part headline are refused', refused, [True, True, True])
+        finally:
+            brand.font_css, brand.brand_uri, brand.fetch = saved
+
+    # The page check every build runs.
+    check('markdown blocks', parse_blocks('## A head\n\nOne line\nand more.\n\n- a\n- b\n\n> said'),
+          [('h2', 'A head'), ('p', 'One line and more.'), ('ul', ['a', 'b']), ('quote', 'said')])
+    body = 'The first sentence is here. The second one follows.\n\nHow sure we are: 70%.'
+    check('every sentence on the page passes', missing_sentences(body, '<p>The first sentence is here. The second one follows.</p>'), [])
+    check('a lost sentence is named', missing_sentences(body, '<p>The first sentence is here.</p>'), ['The second one follows.'])
+    check('cover facts alone are not page facts', page_ready({'subchannel': 'x', 'headline': 'H', 'date': '2026-10-12'}, Path('.'), None), False)
+
+    if fails:
+        print('pages self-test FAILED:\n  ' + '\n  '.join(fails))
+        return 1
+    print(f'pages self-test passed: {count} checks')
+    return 0
+
+
 def main():
-    ap = argparse.ArgumentParser(description='A piece as a branded page and a Substack copy.')
-    ap.add_argument('facts', help='the page facts JSON (README.md)')
+    ap = argparse.ArgumentParser(description='A piece as a branded page and a Substack copy, its cover, and a thumbnail for every video size.')
+    ap.add_argument('facts', nargs='?', help='the page facts JSON (README.md), or the cover facts for --cover and --thumbs alone')
     ap.add_argument('--out', help='output folder (default: .cache/pages/<working folder name>/ in the repository, which git ignores)')
     ap.add_argument('--body', help='the body markdown, instead of the "body" field')
     ap.add_argument('--assets', help='folder that image paths are relative to (default: the facts file\'s folder)')
     ap.add_argument('--check', action='store_true', help='copy the Substack post and report what survives')
     ap.add_argument('--shots', action='store_true', help='screenshot both files at 1440 and 390 wide')
     ap.add_argument('--cover', action='store_true', help="draw cover.png, the post's cover image, and cover-crops.png, what Substack shows of it")
+    ap.add_argument('--thumbs', action='store_true', help='draw thumb-wide-1280x720.jpg and thumb-tall-1080x1920.jpg, a thumbnail for each video '
+                    'size, with their receipt thumbs.json and thumbs-check.png')
     ap.add_argument('--refresh-brand', action='store_true', help='fetch the logo images again now')
+    ap.add_argument('--self-test', action='store_true', help='check the thumbnail shapes, the facts and the page check, with no browser')
     a = ap.parse_args()
+    if a.self_test:
+        sys.exit(self_test())
+    if not a.facts:
+        ap.error('give the facts file, or --self-test')
+
+    out = Path(a.out) if a.out else brand.ROOT / '.cache' / 'pages' / Path(a.facts).resolve().parent.name
+    raw = json.loads(Path(a.facts).read_text(encoding='utf-8'))
+    base = Path(a.assets) if a.assets else Path(a.facts).resolve().parent
+    if (a.cover or a.thumbs) and not (a.check or a.shots) and not page_ready(raw, base, a.body):
+        # Cover facts: only the artwork.
+        for key in ('subchannel',) + (('date',) if a.cover else ()):
+            if not raw.get(key):
+                brand.fail(f'{a.facts}: "{key}" is required')
+        if not raw.get('headline') and not (raw.get('cover') or {}).get('headline'):
+            brand.fail(f'{a.facts}: give a "headline", or a "headline" in "cover"')
+        out.mkdir(parents=True, exist_ok=True)
+        print(f'{a.facts} has no deck or body, so only the artwork is drawn')
+        ok = True
+        if a.cover:
+            ok &= draw_cover(raw, base, out, a.refresh_brand)
+        if a.thumbs:
+            ok &= draw_thumbs(raw, base, out, a.refresh_brand)
+        sys.exit(0 if ok else 1)
 
     facts, base, body, sources = load_facts(a.facts, a.body, a.assets)
-    out = Path(a.out) if a.out else brand.ROOT / '.cache' / 'pages' / Path(a.facts).resolve().parent.name
     out.mkdir(parents=True, exist_ok=True)
     r = build(facts, base, body, sources)
     page_html = render_page(facts, base, body, r, a.refresh_brand)
@@ -1111,6 +1621,8 @@ def main():
         shots(out)
     if a.cover:
         ok &= draw_cover(facts, base, out, a.refresh_brand)
+    if a.thumbs:
+        ok &= draw_thumbs(facts, base, out, a.refresh_brand)
     if a.check:
         ok &= clipboard_check(out / 'substack.html', body)
     if not ok:

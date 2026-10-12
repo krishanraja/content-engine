@@ -44,17 +44,30 @@ optional and never hold a piece back.
 
 | # | Channel | What goes up | Where the link goes |
 |---|---|---|---|
-| 1 | Substack | Video post: the 3-minute cut on top, the article under it, the cover as thumbnail. Settings: YouTube upload on with the watermark off; Shorts and LinkedIn clips off | It is the link |
-| 2 | YouTube | Substack uploads the 3-minute cut as private. Swap in the engine's title and description, set the thumbnail, make it public, pin a comment | The description's read line and the pinned comment |
+| 1 | Substack | Video post: the 3-minute cut on top with the wide thumbnail, the article under it, the 3:2 cover as the post's cover image. Settings: YouTube upload on with the watermark off; Shorts and LinkedIn clips off | It is the link |
+| 2 | YouTube | Substack uploads the 3-minute cut as private. Swap in the engine's title and description, upload the wide thumbnail, make it public, pin a comment | The description's read line and the pinned comment |
 | 3 | YouTube Shorts | The 90-second cut, with Related video set to the long one | Related video (links in Shorts are not clickable) |
-| 4 | TikTok | The 90-second cut, with the caption | Said out loud in the video; makeyourmindup.ai in the profile |
-| 5 | Instagram Reels | The 90-second cut, with the caption | Link in bio (makeyourmindup.ai) |
+| 4 | TikTok | The 90-second cut, with the caption and the tall thumbnail as its cover | Said out loud in the video; makeyourmindup.ai in the profile |
+| 5 | Instagram Reels | The 90-second cut, with the caption and the tall thumbnail as its cover | Link in bio (makeyourmindup.ai) |
 | 6 | LinkedIn (optional) | The 90-second cut as a native video, with the LinkedIn post | First comment |
 | 7 | WhatsApp (optional) | Channel: the 90-second cut and the link. Status: the same cut | In the message |
 | 8 | Substack Notes (optional) | The 90-second cut, with the post attached | The attached post |
 
 Steps 1 and 2 come first because every later step needs their links. The
 page has a box for each link; paste it once and every Copy button carries it.
+
+**A thumbnail for every video size.** Krish, 2026-10-12: "I always want a
+video thumbnail for all video sizes produced as an asset every time".
+`python scripts/pages/build.py COVER_FACTS --thumbs` draws both from the
+cover facts, with his face and the real logos: the wide one (1280 x 720,
+`<Subject> - wide 16x9 - thumbnail.jpg` in `3 Video`) goes on YouTube and
+the Substack video post, and the tall one (1080 x 1920, `<Subject> - tall
+9x16 - thumbnail.jpg`) is the cover on Reels and TikTok. The 3:2 cover stays
+the Substack post's cover image and the LinkedIn picture. A pack with a video
+and no thumbnail of its shape is refused. Still to confirm in the apps:
+whether TikTok takes an uploaded cover picture or only a frame of the video,
+and whether YouTube lets a Short take a thumbnail at all; until then Shorts
+keep the frame YouTube picks.
 
 ## What the platforms do (checked 2026-10-09)
 
