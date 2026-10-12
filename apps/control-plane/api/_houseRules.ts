@@ -396,6 +396,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     on: '2026-10-12', source: 'chat, after Monday\'s piece (about 2,000 words) went to his publish board', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
+  {
+    id: 'SHARP_PREDICTION', name: 'A prediction a reader can check, and that is not already happening',
+    text: 'Every prediction names one specific event that a reader can check on a stated date. It must not be under way already in the piece\'s own evidence, and it must not be the safe, obvious outcome. Its confidence is honest: a bolder call carries a lower number. A vague trend ("more deals", "more options") is never a prediction.',
+    said: 'The current one feels pretty obvious that its going to happen in hindsight. (Asked which prediction Monday\'s piece should make, he chose: "Keep the current one. Leave the article and videos as they are, so they match, and post today. Use the sharper style of prediction from Wednesday.")',
+    on: '2026-10-12', source: 'chat, on Monday\'s prediction (Universal or Sony make a deal with Suno by 31 December 2027, 70%)', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
 ])
 
 /** The rules a stage enforces, for one subchannel or the house as a whole. */
