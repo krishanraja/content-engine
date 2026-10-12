@@ -14,7 +14,7 @@
  "files": {
   "long_video": "3 Video/<the wide 16:9 video>",
   "short_video": "3 Video/<the tall 9:16 video>",
-  "cover": "2 Covers and images/substack-cover-3x2.png",
+  "cover": "2 Covers and images/substack-cover-1200x630.png",
   "substack_copy": "1 Article/substack-copy.html"
  }
 }

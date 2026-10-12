@@ -1,17 +1,19 @@
-Claude Code now lets you pick from more versions of Claude than there are Harry Potter books. More than a dozen. And the longer that menu gets, the less you actually get to choose. So why are there suddenly so many AIs, and who is all this choice really for?
+Here's what's coming with AI, before everyone notices. I'm Krish.
 
-Claude and ChatGPT are the shop. Behind the counter sit lots of AI brains. They come in small, medium and large. And each one has a dial for how hard it thinks before it answers.
+Between them, ChatGPT and Claude now let you pick from more AI brains than there are Harry Potter books. And most of the time, the app won't tell you which brain answered you. So why are there suddenly so many AIs?
 
-So why so many? Because every name on that menu is doing four jobs at once. It's a version number. It's a price tag, like economy and business class. It's an advert, because every new name is a launch day. And it's a queue ticket, sending easy questions to cheap computers. One name can't do four jobs. So the menu keeps growing.
+Think of these apps as shops. Behind the counter are small, medium and large AI brains, each with its own name. Each has a dial for how hard it thinks.
 
-Is it a scam to charge you more? The prices say no. The cost of AI as good as the first ChatGPT fell from twenty dollars to seven cents for a million tokens, and a token is just a word or a piece of one. But the bills still go up, because AI agents now work for hours at a time.
+Each brain is there for a reason. Newer ones show off what's new, like a new phone each year. Bigger ones cost more, like posh seats on a plane. Every new name gets people talking, like an advert. And small brains handle the easy questions, so the big ones aren't busy when hard questions come in. So the list keeps growing.
 
-Here's the real catch. Most apps don't tell you which brain answered, how hard it thought, or how much of your allowance it ate. It's a taxi with no meter. The route might be fine. You just can't check.
+Is this a trick to make people pay more? No. AI keeps getting cheaper. Lots of other apps rent their brains from the makers of ChatGPT and Claude. They pay for every word. A huge pile of words from an AI as smart as the first ChatGPT used to cost 20 dollars. Now it costs 7 cents. Some apps still end up with bigger bills. That's only because they use AI a lot more now.
 
-What do you do with that? If you just use AI, stick to the default, and switch to the biggest brain when it really matters. If you run a business on AI, ask what a good answer costs you all in, and lock the exact version you build on. And the old idea of one product at one price is going. AI is turning into electricity, paid for by the size and the effort.
+Here's the real catch. Most apps don't tell you which brain answered you, or how hard it thought. It's like ordering food and never being told what went in it. You just can't check.
 
-Where does it go from here? My bet: the menu disappears and the app picks for you. Most of us want one button. And whoever picks the brain controls what every answer costs them. Nobody hands that over to be polite.
+If you just use AI, you don't need to do anything. But when something really matters, choose the biggest brain from the list. If your business makes an app that rents a brain, don't just look at the price per word. Work out what a good answer really costs you. And paying for AI works like pizza. A bigger one costs more, and so does more thinking.
 
-So here's my prediction. By the end of September 2027, at least two of OpenAI, Anthropic and Google will pick the brain for app builders automatically, by default. I'm eighty-five per cent sure, and we'll mark it right or wrong in public.
+I think the list of brains disappears, and the app just picks one for you. Most of us want one button. And the AI makers want to do the picking, because cheaper brains save them money.
 
-That's the short version. The full article has the rest: every source, the charts, and exactly what to do if your business runs on AI. It's free at makeyourmindup.ai. Read it, then tell me in the comments: do you pick your AI, or does it pick you? I'm Krish. See you on Monday.
+My prediction is about the other apps, the ones that rent a brain. Today, those apps have to name the brain they want. That's about to change. OpenAI makes ChatGPT, Anthropic makes Claude, and Google makes Gemini. By the end of September 2027, at least two of them will pick the brain for those apps. Those apps won't have to name one any more. I'm 85% sure, and we'll mark it right or wrong in public.
+
+The full story, with what to do if your business runs on AI, is free at makeyourmindup.ai. Tell me in the comments: would you rather pick your AI's brain, or let the app pick? See you on Monday.

@@ -12,7 +12,7 @@ import { alignScriptToTranscript } from '@mindmake/core'
 // scripts/post-pack/making.py: every write says who wrote it, and a video
 // carries its thumbnail and its music. Each script's words are hashed, and
 // each take carries the hash of the script it was taken from, so a take of
-// words that changed since stops counting (the Descript lane, stage 1a).
+// words that changed since stops counting (the recordings lane, stage 1a).
 // scripts/post-pack/recording.py: a take already recorded on a piece is
 // fetched by the path its making record holds.
 
@@ -148,5 +148,43 @@ describe('making.py and recording.py refuse plainly before any call', () => {
     const both = run('recording.py', ['get', 'take.mp4', '--sha256', 'a'.repeat(64)])
     expect(both.status).toBe(2)
     expect(both.stderr).toMatch(/in place of a name/)
+  })
+})
+
+// Monday's takes of 12 October scored 0.40 and 0.42 on a home computer: it
+// heard them against the morning's scripts (its own checkout and the pack in
+// Drive), while Krish had read the afternoon's words in teleprompter.com,
+// which names each file after the script's title.
+describe('a take is heard against the words its piece\'s record says are current, and named by its Teleprompter title', () => {
+  const py = (code: string) => {
+    const out = spawnSync(PY, ['-c', code], { encoding: 'utf8', env, cwd: join(ROOT, 'scripts', 'post-pack') })
+    expect(out.status, out.stderr).toBe(0)
+    return JSON.parse(out.stdout)
+  }
+
+  it('the copy whose words hash to the record\'s is used, over a stale copy found first', () => {
+    const found = py(`
+import json, tempfile, making, recording_match as rm
+from pathlib import Path
+with tempfile.TemporaryDirectory() as tmp:
+    plans = Path(tmp) / 'plans'
+    (plans / '2026-10-12-monday').mkdir(parents=True)
+    (plans / '2026-10-12-monday' / 'post.json').write_text(json.dumps({'piece_id': 'f328382d-71b3-41a7-a221-d8615826f12e', 'files': [{'kind': 'video-script', 'file': 'script.md', 'cut': 'long'}]}))
+    (plans / '2026-10-12-monday' / 'script.md').write_text('The morning words.\\n')
+    (plans / '2026-10-12-draft-script.md').write_text('The afternoon words Krish read.\\n')
+    piece = {'id': 'f328382d-71b3-41a7-a221-d8615826f12e', 'hashes': {'long': making.script_hash('The afternoon words Krish read.\\n')}}
+    got = rm.scripts_for(piece, plans, [], show=None)['long']
+    print(json.dumps([got['text'].strip(), got['current']]))`)
+    expect(found).toEqual(['The afternoon words Krish read.', true])
+  })
+
+  it('a file named after a cut\'s Teleprompter script on a waiting piece is that piece and cut', () => {
+    const named = py(`
+import json, recording_match as rm
+pieces = [{'id': 'f328382d-71b3-41a7-a221-d8615826f12e', 'titles': {'long': 'Mon 12 Oct - 3-minute - Who gets paid for AI songs', 'short': 'Mon 12 Oct - 90-second - Who gets paid for AI songs'}},
+          {'id': '904658db-4df2-4537-a0ed-ebe93e081db7', 'titles': {'long': 'Fri 16 Oct - 3-minute - Why so many AIs'}}]
+hits = [rm.titled(n, pieces) for n in ('Mon 12 Oct - 3-minute - Who gets paid for AI songs.mp4', 'Fri 16 Oct - 3-minute - Why so many AIs (2).mov', 'take.mp4')]
+print(json.dumps([[h[0]['id'][:8], h[1]] if h else None for h in hits]))`)
+    expect(named).toEqual([['f328382d', 'long'], ['904658db', 'long'], null])
   })
 })

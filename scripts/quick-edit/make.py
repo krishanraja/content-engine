@@ -346,10 +346,58 @@ def cue_windows(ws, cues, total):
         e = min(total, ws[b[1]]['e'] + c.get('tail', 0.35))
         found.append({**c, 's': round(s, 3), 'e': round(e, 3)})
     found.sort(key=lambda c: c['s'])
+    # Pictures close together share the screen without a gap: a gap of a
+    # frame or two flashed the frame behind them (Krish, 2026-10-12: "the
+    # title card flashes up for about 0.1s before the next card comes in.
+    # this is unacceptable"). The next picture crossfades in over this one.
     for x, y in zip(found, found[1:]):
-        if x['e'] > y['s'] - 0.05:
-            x['e'] = round(y['s'] - 0.05, 3)
+        if x['e'] > y['s'] or y['s'] - x['e'] < BRIDGE_S:
+            x['e'] = y['s']
     return found, missing
+
+
+# Two pictures less than this apart are bridged into one run on screen.
+BRIDGE_S = 1.5
+# How long every picture, and the speaker's move out of its way, takes to ease in or out.
+FADE_S = 0.35
+
+
+def runs_of(wins):
+    """The windows as runs: pictures that follow each other with no gap
+    between them are one stretch of the screen given to pictures."""
+    out = []
+    for c in wins:
+        if out and c['s'] <= out[-1][-1]['e'] + 1e-6:
+            out[-1].append(c)
+        else:
+            out.append([c])
+    return out
+
+
+def presence(wins, d=FADE_S):
+    """An ffmpeg expression in t: 0 with no picture on screen, 1 with one,
+    eased linearly over d at each run's start and end."""
+    parts = [f"clip(min((t-{r[0]['s']})/{d},({r[-1]['e']}-t)/{d}),0,1)" for r in runs_of(wins)]
+    return '+'.join(parts) or '0'
+
+
+def panel_layers(wins, d=FADE_S):
+    """[(window, fade filters, enable end)] for each picture: it fades in
+    (over the one before it, when they touch, so the change is a crossfade)
+    and fades out only when nothing follows it at once; a picture followed
+    at once stays under the next one until that has fully faded in."""
+    layers = []
+    for i, c in enumerate(wins):
+        nxt = wins[i + 1] if i + 1 < len(wins) else None
+        followed = nxt is not None and nxt['s'] <= c['e'] + 1e-6
+        f = f"fade=t=in:st={c['s']}:d={d}:alpha=1"
+        end = c['e']
+        if followed:
+            end = round(c['e'] + d, 3)
+        else:
+            f += f",fade=t=out:st={max(c['s'], c['e'] - d):.3f}:d={d}:alpha=1"
+        layers.append((c, f, end))
+    return layers
 
 
 # A piece of a word the transcriber starts on its own at a punctuation mark
@@ -652,6 +700,10 @@ def resolve_intro(cfg, asp, P, base='.'):
     except (ValueError, subprocess.CalledProcessError, KeyError) as e:
         return None, f'the intro {path} could not be read ({e}), so this cut has no intro'
     lo, hi = sting.SECONDS
+    if source == 'override':
+        # A story intro (house rule STORY_INTRO_OUTRO) runs longer than the
+        # 1 to 2 s sting: up to STORY_INTRO_MAX_S, on Krish's words.
+        lo, hi = sting.SECONDS[0], STORY_INTRO_MAX_S
     if not lo - 0.5 / FPS <= info['seconds'] <= hi + 0.5 / FPS:
         return None, f'the intro {path.name} runs {info["seconds"]} s, outside {lo} to {hi} s, so this cut has no intro'
     if source == 'house' and series_note:
@@ -669,8 +721,12 @@ def piece_key(cfg):
     return str(cfg.get('piece_id') or cfg.get('piece') or cfg.get('subject') or cfg['name'])
 
 
-# What a cut adds to its recording at most: the longest sting and the end card.
-CUT_EXTRA_S = sting.SECONDS[1] + 4.0
+# The story intro and outro (house rule STORY_INTRO_OUTRO,
+# config/story-intro-outro.json): the longest each may run.
+STORY_INTRO_MAX_S = 5.0
+STORY_OUTRO_MAX_S = 6.0
+# What a cut adds to its recording at most: the longest intro and end card.
+CUT_EXTRA_S = max(sting.SECONDS[1], STORY_INTRO_MAX_S) + STORY_OUTRO_MAX_S
 
 
 def piece_seconds(cfg, base='.'):
@@ -903,11 +959,13 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
     if asp == '9x16':
         fy, fh = cfg['face'][0], cfg['face'][1]
         fw_out = round(cw * 920 / fh)
-        g.append('[0:v]split=2[sp][fc]')
-        g.append(f"[sp]scale=1080:{round(ch * 1080 / cw)}:flags=lanczos,crop=1080:1920,unsharp=5:5:0.6,"
-                 f"drawbox=x=0:y=1000:w=1080:h=920:color=0x0C1512@1:t=fill:enable='{cut}'[s0]")
-        g.append(f"[fc]crop={cw}:{fh}:0:{fy},scale={fw_out}:920:flags=lanczos,unsharp=5:5:0.5[face]")
-        g.append(f"[s0][face]overlay=x={(1080 - fw_out) // 2}:y=1000:enable='{cut}'[s1]")
+        nr = len(runs_of(wins))
+        g.append(f'[0:v]split={1 + max(nr, 1)}[sp]' + ''.join(f'[fcs{i}]' for i in range(max(nr, 1))))
+        g.append(f"[sp]scale=1080:{round(ch * 1080 / cw)}:flags=lanczos,crop=1080:1920,unsharp=5:5:0.6[s1]")
+        for i in range(max(nr, 1)):
+            g.append(f"[fcs{i}]crop={cw}:{fh}:0:{fy},scale={fw_out}:920:flags=lanczos,unsharp=5:5:0.5[fc{i}]")
+        if not nr:
+            g.append('[fc0]nullsink')
         last = 's1'
         px, py = 0, 0
     else:
@@ -917,14 +975,41 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         sw = round(cw * 1080 / ch)
         g.append(f"[0:v]scale={sw}:1080:flags=lanczos,unsharp=5:5:0.4[spk]")
         g.append(f"[{fr}:v]format=rgba[fr]")
-        g.append(f"[fr][spk]overlay=x='if({cut},0,{(1920 - sw) // 2})':y=0[s1]")
+        # The speaker eases aside as a picture comes in, and back as it goes.
+        g.append(f"[fr][spk]overlay=x='{(1920 - sw) // 2}*(1-min(1,{presence(wins)}))':y=0:eval=frame[s1]")
         last = 's1'
         px, py = sw, 0
     k = 2
-    for c in wins:
-        inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
-        g.append(f"[{last}][{n}:v]overlay=x={px}:y={py}:enable='between(t,{c['s']},{c['e']})'[s{k}]")
-        last, n, k = f's{k}', n + 1, k + 1
+    if asp == '9x16':
+        # Tall: each run of pictures is one layer (the ink panel, his face
+        # below, the pictures above) that fades in over the full-frame
+        # speaker and out again; inside a run the pictures crossfade.
+        for r_i, run in enumerate(runs_of(wins)):
+            rs, re_ = run[0]['s'], run[-1]['e']
+            g.append(f"color=c=0x0C151200:s=1080x1920:r=30:d={total:.3f},format=rgba,"
+                     f"drawbox=x=0:y=1000:w=1080:h=920:color=0x0C1512@1:t=fill[cv{r_i}]")
+            g.append(f"[fc{r_i}]format=rgba[fa{r_i}]")
+            g.append(f"[cv{r_i}][fa{r_i}]overlay=x={(1080 - fw_out) // 2}:y=1000[c{r_i}_0]")
+            cur = f'c{r_i}_0'
+            layers = panel_layers(run)
+            for j, (c, f, stop) in enumerate(layers):
+                inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
+                if j == 0:
+                    f = f.split(',', 1)[1] if ',' in f else 'null'   # the layer itself fades in
+                if j == len(layers) - 1:
+                    f = ','.join(x for x in f.split(',') if not x.startswith('fade=t=out')) or 'null'
+                g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
+                g.append(f"[{cur}][pp{n}]overlay=0:0:enable='between(t,{c['s']},{stop})'[c{r_i}_{j + 1}]")
+                cur, n = f'c{r_i}_{j + 1}', n + 1
+            g.append(f"[{cur}]fade=t=in:st={rs}:d={FADE_S}:alpha=1,fade=t=out:st={max(rs, re_ - FADE_S):.3f}:d={FADE_S}:alpha=1[run{r_i}]")
+            g.append(f"[{last}][run{r_i}]overlay=0:0:enable='between(t,{rs},{re_})'[s{k}]")
+            last, k = f's{k}', k + 1
+    else:
+        for c, f, stop in panel_layers(wins):
+            inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
+            g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
+            g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
+            last, n, k = f's{k}', n + 1, k + 1
     if asp == '9x16' and cfg.get('logo', True) is not False:
         # The makeyourmindup logo in the opening seconds of every tall video
         # (Krish, 2026-10-07: "put the Make Your Mind Up logo in the first
@@ -1221,7 +1306,7 @@ def gate_self_test():
     (work / 'kit.json').write_text(json.dumps({'cuts': {'long': {'recording_seconds': 185.2}, 'short': {'recording_seconds': 88.0}}}))
     checks.append(('the piece\'s music length: the long cut\'s recording plus the most a sting and end card add, for both cuts',
                    (piece_seconds({'kit': {}}, work), piece_seconds({'kit': {}, 'music_seconds': 200}, work)[0], piece_seconds({}, work)[0]),
-                   ((191.2, 'the long cut\'s recording, as kit.py measured it'), 200.0, None)))
+                   ((round(185.2 + CUT_EXTRA_S, 3), 'the long cut\'s recording, as kit.py measured it'), 200.0, None)))
     (work / 'kit.json').write_text(json.dumps({'cuts': {'short': {'recording_seconds': 88.0}}}))
     checks.append(('with only the short cut\'s kit made, it is not known (music.py then asks for its floor)', piece_seconds({'kit': {}}, work)[0], None))
     # A sting with a loud tone on it, a voice, an end card.
@@ -1521,6 +1606,18 @@ def main():
         report[f'{asp}_file'] = final.name
         levels = bed['levels'] if bed else default_levels()
         loudness = measure_cut(final, tl, cut_audio)
+        if loudness.get('true_peak') is not None and loudness['true_peak'] > levels['max_true_peak_dbtp']:
+            # The AAC encode lifts inter-sample peaks over the ceiling: one
+            # oversampled limiter pass on the sound alone (the picture is
+            # copied) brings them under it without moving the loudness.
+            limited = final.with_name(final.stem + '.limited.mp4')
+            ceiling = 10 ** ((levels['max_true_peak_dbtp'] - 0.8) / 20)
+            run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-i', str(final), '-map', '0', '-c:v', 'copy',
+                 '-af', f'aresample=192000,alimiter=limit={ceiling:.3f}:attack=1:release=50:level=0,aresample=48000',
+                 '-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-movflags', '+faststart', str(limited)])
+            limited.replace(final)
+            loudness = measure_cut(final, tl, cut_audio)
+            loudness['peak_limited'] = True
         warnings += loudness_warnings(loudness, levels)
         shapes[asp] = {
             'file': final.name, 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],

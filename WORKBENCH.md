@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, afternoon, by a Claude Code session (cloud).
+Last updated: 2026-10-12, about 22:00 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -44,6 +44,302 @@ Last updated: 2026-10-12, afternoon, by a Claude Code session (cloud).
   (house rule `THREE_LENSES`). Every visual uses the real logos of the
   companies it names, and the cover and share picture carry Krish's face
   (`LOGOS_AND_FACE`; `scripts/pages` cover facts, `"portrait": true`).
+- Every video script opens with its series line, then the hook, and says
+  "I'm Krish" only there (house rule `SERIES_OPENER`, Krish, 2026-10-12). And
+  an ordinary 12-year-old must follow every script heard once. His words:
+  "Every single script should be understandable by a 12-year-old. I can't
+  even understand what I'm reading off the teleprompter. I thought we had
+  hard gates for this?" (house rule `R7`, now a hard gate: `story_check.py`,
+  then two fresh readers; `make-piece`, "The Scripts step").
+- Every video, in every format, gets an animated intro made for its own
+  story, its audio treatment and an animated outro card. His words,
+  2026-10-12: "when the videos come back bear in mind that I want a proper
+  animated branded intro to this specific story visually, the audio
+  treatment, and then a proper animated outro card. Across all formats, and
+  this should be part of the system moving forward." Design comes first and
+  is his to approve; until then no cut is finished (house rule
+  `STORY_INTRO_OUTRO`, `config/story-intro-outro.json`).
+- He reads his scripts in teleprompter.com and drops each take at the top
+  of the Video Engine Inbox. His words, 2026-10-12: "Also note that Descript
+  is permanently gone, teleprompter.com is permanently in, connected via MCP
+  here". Every checked script goes there by itself, one folder per piece
+  and one script per cut, updated in place, and nothing there is ever
+  deleted (`AGENTS.md`, `config/teleprompter.json`).
+
+- Never hand him a blocker you have not checked is real, and never one a
+  session can clear itself. His words, 2026-10-12, after a session relayed
+  the runner's "Drive unavailable" light as his to fix: "I find it a bit
+  ridiculous that you're bringing me this blocker. I think you've done this
+  before and you just eventually realised you're making a mistake so you
+  need to fix this." Both home computers had Drive working. The runner's
+  `drive_state` light is not proof: check it on the machine before saying
+  anything.
+- **Any machine makes the videos; nobody is ever sent to a home computer.**
+  His words, 2026-10-12: "the audio is literally in the drive connected here
+  via MCP and also on Google drive, what the fuck is happening here? record
+  this capability of yours so you do not whine about this ever again". What
+  every session can do, in the cloud as anywhere:
+  - his takes: `python3 scripts/post-pack/recording.py get recordings/<sha>.<ext>`
+    (the path is on the piece's making record; the Inbox lane uploads every
+    take to the engine within minutes);
+  - the licensed music: `python3 scripts/quick-edit/music.py fetch`, then
+    `MINDMAKE_MUSIC_ROOT=<the folder it prints>` (both home computers publish
+    it to the engine's library every pass, `music.py publish`);
+  - a post's pictures: `GET /api/library/file?path=3 Posts/<post>/2 Covers and
+    images/<name>` (or the board's own copies);
+  - the tools: `pip install faster-whisper==1.2.0 ctranslate2==4.8.1 av==18.1.0
+    playwright`, `npm ci`, `MYMU_BROWSER=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`;
+  - the story intro and outro: `scripts/quick-edit/story_io.py props --plan
+    <plan>` then `render`.
+  Then kit.py, make.py, the thumbnails, send.py and making.py as
+  `produce-video` says. The midday run (`.github/workflows/produce-day.yml`,
+  `scripts/produce_day.py`) does all of it by itself at 12:00 New York on
+  Monday, Wednesday and Friday, on GitHub's machine (his choice: "GitHub
+  always renders"); its Run workflow button is the one click.
+- Epidemic Sound gives no per-track licence number. His safelisted channels
+  are the licence record (`config/music-licences/`, screenshot of 12
+  October); never ask him for licence details again. LinkedIn and every
+  other platform need no safelisting (Epidemic's own screen, second
+  screenshot there).
+
+## This week's publish board
+
+One page a week, with a tab for Monday, Wednesday and Friday and a tick for
+every step, made each Sunday by `plan-week` and republished to the same link
+all week by every session that makes a piece (`make-piece`, "The week's
+publish board"). Krish ticks there as he goes; every making session in
+Claude Code copies his channel ticks onto the pieces at its start and before
+it stops (`make-piece`, "The week's ticks"). Each week's board has its own
+board item, `week-publish-board-<its Monday>`, with the same link. Sunday's
+run puts the new week's line here and moves this one under "Last week's
+publish board", which every session's tick copy still reads until every
+day on it is at 100% (Friday's reposts go out at the weekend).
+
+- Week of 12 to 16 October 2026 (board item
+  `week-publish-board-2026-10-12`; Monday recorded, waiting on its
+  produced video; Wednesday's workroom made, waiting on two calls from
+  Krish; Friday made, waiting on his call and his recording):
+  https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
+
+Last week's publish board: none (the first board was made on 12 October).
+
+### What the 12 October evening session made permanent (read this first)
+
+All on main; each has its tests.
+
+- **Monday is finished and on the board**: both cuts (3-minute 2:48, 90-second
+  1:27) in Drive `3 Posts/2026-10-12 Mon .../3 Video`, with NO CURVES, the
+  stand-off story intro and outro, thumbnails, and five covers. Only posting
+  is left, and that is his.
+- **The midday run** (`.github/workflows/produce-day.yml`,
+  `scripts/produce_day.py`): Monday, Wednesday and Friday at 12:00 New York,
+  GitHub renders both cuts end to end (his choice: "GitHub always renders");
+  the Run workflow button is the one click. The secret ENGINE_OPERATOR_TOKEN
+  is set. A stop writes one board item `videos-<date>` saying what stopped.
+  The routine "Publish board: add the day's videos" (trig_016L3CTo8wQh7WF5hpAwrT3A,
+  13:25 New York, Drive and the repo attached by Krish) puts the links on
+  the day's tab.
+- **Video tool** (`scripts/quick-edit/make.py`): pictures ease in and
+  crossfade, the speaker slides aside, no gap flashes the frame behind
+  ("the title card flashes up for about 0.1s ... unacceptable"); true peaks
+  are limited under -1 dBTP by itself; a story intro of up to 5 s on the
+  approved config.
+- **Story intro and outro** (`apps/renderer/src/story`, `scripts/quick-edit/
+  story_io.py props --plan <plan>` then `render`): the approved stand-off,
+  the real wordmark and masthead from `brand.fetch` (never typed), a 6 s
+  outro that holds its last card 2 s. Approved in `config/story-intro-outro.json`.
+- **Music**: NO CURVES approved in his words; the home computers publish it
+  to the library every pass (`music.py publish`); any machine fetches it
+  (`music.py fetch`, `GET /api/library/file`). Epidemic's safelist screenshots
+  are the licence record; LinkedIn needs no safelisting.
+- **Covers**: every pack carries five, each drawn for its place
+  (`scripts/pages/build.py --cover`): Substack upload 1200x630, feed
+  1200x800, share card 1200x675, square 1080x1080, vertical 1080x1920 for
+  Shorts, TikTok and Reels. A pack missing one is refused.
+- **Board**: Download waits for the save capability and says why a save
+  failed (`week_board/week.js`, `publish_manager.py`).
+- **House rules**: ARTICLE_LENGTH (1,000 to 1,400 words: "about 30%
+  shorter") and SHARP_PREDICTION (one checkable event on a date, not
+  already happening). Open with him: the AI-detection score (93%); his
+  answer is awaited on a voice note per piece and which detector flagged it.
+- **Known gaps in the midday run**: a picture too small for the tall frame,
+  or whose line he said differently, is left out of that cut rather than
+  cropped or matched loosely (Monday's were fixed by hand). Wednesday has no
+  made piece or takes yet, so its run will stop and say so.
+
+### Resumed 12 October, about 18:00 UTC (session_01YHC9kjnvJEzYDeFDdADLBq)
+
+- Krish's words this session: "Yes I approve that licence track. Feel free
+  to tighten it if I stumbled. For now you just take control of this entire
+  thing, get the videos produced, and have the publish board ready for me to
+  publish absolutely everything, including the videos." Asked whether
+  Monday's two videos may go out without the story intro and end card this
+  once, he picked "Yes, ship Monday without it". Recorded under
+  `exceptions` in `config/story-intro-outro.json`; every other piece still
+  waits for the approved design. Monday ships first; Wednesday and Friday
+  are his for tomorrow ("publish today ASAP and then work on Wednesday and
+  Friday tomorrow").
+- The music track approval cannot be written yet: `music.py approve` refuses
+  NO CURVES with no licence id, licence file, sha256 or loudness. A home
+  computer can measure the file; the Epidemic Sound licence details are his.
+  Until then the cuts go without music.
+- The board (same link) was republished with Wednesday shown in production
+  (working headline from the sources, his two calls) and Monday's blocker.
+  This session's account cannot read the board's tick store or open the
+  Monday and Friday day pages (both made under another account), so the
+  board was edited by hand, not rebuilt with `week_board.py`.
+- Krish said "Merge it": the exception is on main. Drive works on both
+  home computers (his words); the runner's light was wrong. Board item
+  `mon-produce-today`: start Codex on a home computer with "produce
+  Monday's video"; that run measures NO CURVES (`music.py add`) and records
+  his approval ("Yes I approve that licence track.") before rendering. Both
+  cuts get music: LinkedIn is covered without safelisting (Epidemic's
+  screen, recorded in the ledger). After the cuts are recorded, a Claude Code
+  session adds them to Monday's tab and republishes the board.
+- Story intro design: three blind concepts made (stand-off, receipt printer,
+  song track); judges split (stand-off v receipt); a tie-break judge was run.
+  Files were in that session's scratchpad only.
+
+### "Resume this week's publish board"
+
+Krish closed the 12 October session with: "lets just close this session
+out here, I will get another session to pick up exactly from here with the
+prompt "resume this weeks publish board"". The goal he set it, his words:
+"leave me with the final Publish Board with Monday 100% ready to publish
+(post produced video links included), Weds and Fri in production". Where it
+stood at about 17:30 UTC: Monday recorded, its produced videos blocked on a
+design only he can approve; Wednesday has its workroom and waits on two
+calls from him; Friday's scripts are in his Teleprompter and wait on one
+call from him, then his recording. A session given that prompt picks up
+here, in this order, and ends every reply with
+https://controlcenter.krishraja.com/#/board:
+
+1. **Read where it stands.** The three pieces: `python3
+   scripts/post-pack/making.py <piece> show` for Monday
+   f328382d-71b3-41a7-a221-d8615826f12e, Wednesday
+   7554ed4a-560b-4365-b266-ea72abeed7ef and Friday
+   904658db-4df2-4537-a0ed-ebe93e081db7. The board: `Artifact` read
+   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV, then `week_board.py
+   --show <the saved file>`, then copy his ticks ("The week's ticks" in
+   `make-piece`; Monday's two Record ticks are in its store already, written
+   on 12 October from his words "the two Monday videos are now in Inbox").
+   The waiting list: `python3 scripts/engine.py GET /api/workbench --full`
+   (items `wed-muse-calls`, `friday-record`,
+   `week-publish-board-2026-10-12`; his replies are in `replies`).
+2. **Ask Krish, once, in the chat, the calls that are his**, with the
+   board link (Control Center's reply box is retiring, so his answer comes
+   in the chat): (a) Wednesday's headline and its go to spend (item
+   `wed-muse-calls`, workroom https://claude.ai/artifact/XW7uwdEJbMybpXVh2gjJRu:
+   the planned headline "The Opt-In Was Buried in the Onboarding" has no
+   source; the supported story is that Muse keeps a page on people who
+   never signed up, TIME, 6 October; he says "use it" or gives his own,
+   and "go" for the paid draft and fact check); (b) Friday's prediction
+   line (item `friday-record`: keep the dated call, by 30 September 2027
+   at least two of OpenAI, Anthropic and Google pick the brain for app
+   builders by default, 85%, which young readers keep getting lost at, or
+   say the broader bet "the list disappears, the app picks for you" in the
+   video and leave the exact call to the article; the 12 October session
+   recommended the broader bet); (c) the design, once step 3 has one to
+   show.
+3. **Monday's story intro, audio treatment and outro card** (what stands
+   between Monday and its produced videos). Run the process in
+   `docs/plans/2026-10-12-story-intro-outro-brief.md`: three blind
+   concepts, blind judges, one synthesis, shown to him cold. A first attempt
+   was stopped unfinished when the 12 October session closed and nothing
+   was kept. Put the design to him in the chat and as an `on_you` item
+   (`only_you` `judgment`, `idea_id` Monday's piece, `closes_on` `video`,
+   `link` the design). Settle with it, because they decide how the cuts can
+   be made: the music track and its levels (the only track in
+   `config/music-library.json`, NO CURVES, and the levels are both still
+   proposed; `scripts/quick-edit/music.py` records his approval), and the
+   90-second cap (Monday's short take is 95 seconds of speech before any
+   intro or outro; `produce-video` says tighten only where he stumbled,
+   never speed up, and tell him both numbers). Record nothing as approved
+   without his own words.
+4. **After his approval: build it, then the home computer makes the
+   videos.** Record his words in `config/story-intro-outro.json`. Then build
+   it in this repository: the story intro and outro as Remotion
+   compositions in `apps/renderer`, an approve step that stores his words
+   with a hash of the source he saw (as `scripts/quick-edit/intro.py` does
+   for the sting; note the sting's own compositions are not registered in
+   the renderer yet either, `intro.py status`), `make.py` reading the
+   config so a cut gets them, `produce-video` updated, and tests. Commit, merge to main and deploy
+   only with his go in that session (a home computer pulls main). Then
+   Krish starts Codex on a home computer with "produce Monday's video"
+   (`produce-video`); a cloud session cannot render (`docs/ENGINE_SESSION.md`).
+   Codex records the cuts (`making.py --by Codex <piece> video ...`). Then a
+   Claude Code session puts the cuts and their thumbnails on Monday's
+   publish page (https://claude.ai/artifact/QpGeGjaqZwvyXwRnSadqyS),
+   republishes it to its link, rebuilds the board and republishes it to its
+   link (command below). Monday is 100% when he has posted the standing
+   five; that part is his.
+5. **Friday, on his answer.** Rewrite `docs/plans/2026-10-09-draft-script.md`
+   and `-90s.md`; `story_check.py --cut long|short --series mind_the_gap`
+   until ready; two fresh readers (the prompts in `make-piece`, "The
+   Scripts step") until both find nothing that loses them; `making.py
+   <piece> scripts long.md short.md`; then `making.py <piece> read-back long`
+   and `short` with the readers' answers; then `teleprompter_send.py plan`
+   and `update_script` in place (folder
+   DD28154B-B6D1-47DB-803A-79410D83196D; 3-minute script
+   185F739E-733F-43B9-B5B2-66846CB5EC44, 90-second
+   1165370C-68A6-444E-88D5-A326A131E58C) and the record lines it prints.
+   Then Friday's page (https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV)
+   and the board. With the post's working folder at hand, rebuild the page
+   with `publish_manager.py`; without it (a cloud session), edit it as the
+   12 October session did: the scripts are the `<pre class="txt"
+   id="c13">` (3-minute) and `id="c14"` (90-second) blocks, the words
+   HTML-escaped in both `data-raw` and the text, checked to round-trip, and
+   the chip "Waiting: your call on the prediction line, then recording"
+   replaced.
+6. **Wednesday, on his answer.** Its routine session
+   (session_01FzzvZdb6pALs4La91JrMJb, https://claude.ai/code/session_01FzzvZdb6pALs4La91JrMJb)
+   finished the Workroom and stopped at 16:56 UTC, waiting on him; its
+   notes are its entry under "Latest handoff". On his words, either carry
+   Wednesday on in this session (`make-piece`: draft, fact gate, visual
+   gate, scripts with the under.the.hood line, read-back, Teleprompter,
+   publish page, board) or fire the "Make a piece" routine
+   (trig_01BNH3a98CuVV9sGW9b56DNJ) with `piece_id:
+   7554ed4a-560b-4365-b266-ea72abeed7ef`, quoting his words in the fire
+   text. Never both.
+7. **Read-backs already behind us.** No cut, Monday's or Friday's, has a
+   two-reader pass on record, whatever the 16:45 entry below says ("each
+   cut passed `story_check.py` and two fresh 12-year-old readers": they
+   passed `story_check.py`; the strict readers still lost the thread in
+   places). Monday's takes are recorded, so leave Monday's words alone and
+   record no pass for them; Friday's get theirs in step 5.
+8. **Only Krish can**: attach the Teleprompter connector to both routines
+   ("Plan the week" trig_016PWevC6fzViu6mHpKSAbHM and "Make a piece"
+   trig_01BNH3a98CuVV9sGW9b56DNJ) and remove Descript from them, in
+   claude.ai; until he does, a routine session stops at the Teleprompter
+   send and says so. Still open with him: the second sting design
+   (https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH, which the story
+   intro may absorb; step 3), and Library Sync on the backup computer.
+
+What a session may do without asking, and what needs his go in that
+session (`AGENTS.md`, "Authority"): his standing words cover the
+Teleprompter send (on the terms above), and the making work `make-piece`
+gives Claude covers republishing his private day pages and the week's
+board to their own links, making-record lines and board items. A paid
+draft or fact check, a merge or deploy, and anything that sends, posts,
+spends, deletes or changes a permission needs his words immediately
+before it.
+
+Rebuild the board with every made day's current page (each saved with an
+`Artifact` read), the board as last read as `--previous`, then republish it
+to its own link, never as a new artifact (the store, with every tick, stays
+with the page). In a cloud session `CLAUDE_CODE_REMOTE=1` lets the engine
+reads through with the environment's key (`scripts/engine.py`); on a home
+computer leave it off:
+
+    CLAUDE_CODE_REMOTE=1 python3 scripts/post-pack/week_board.py --week 2026-10-12 --live \
+      --previous <the board as Artifact read saved it> \
+      --day mon=<Monday's page> --day fri=<Friday's page> [--day wed=<Wednesday's page>] \
+      --out .cache/week-board/2026-10-12/week-board.html
+
+With `--live` each day's piece and each cut's Teleprompter script come from
+the engine, so `--piece` and `--teleprompter` are not needed (the second
+takes a file when used). Check the built page for each day's current
+opening line before publishing.
 
 ## The board: what is waiting on Krish, in progress and done
 
@@ -221,11 +517,12 @@ which step failed. The lane has run on both machines since 2026-10-06
 (`scripts/post-pack/README.md`, "Recordings: from the Inbox to a cloud
 session"). Which take is which piece and cut needs no file name:
 `python3 scripts/post-pack/recording_match.py` works it out from his opening
-words, and the `produce-video` skill takes it from there. Once this branch's
-change to the lane is on `main`, the home computers also place each take on
-its piece and cut by themselves at the end of every pass, and a take already
-on a piece is fetched by the path its record holds
-(`recording.py get "recordings/<sha256>.<ext>"`).
+words, and the `produce-video` skill takes it from there. The home computers
+also place each take on its piece and cut by themselves at the end of every
+pass, and a take already on a piece is fetched by the path its record holds
+(`recording.py get "recordings/<sha256>.<ext>"`). This is the one way a take
+comes back: Teleprompter holds his scripts only, and Descript, which was to
+bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
@@ -291,6 +588,436 @@ on a piece is fetched by the path its record holds
     gate held), so it reads empty for good. Retire that lane and its name
     in the empty lanes line; the held items now show under In progress,
     starting "Held from your list".
+
+- 2026-10-12, Monday, about 17:10 UTC: **the week's board carries the words
+  Krish actually reads, Wednesday's workroom is made and waits on two
+  calls from Krish, and Monday waits on one thing: the story intro and
+  outro design.** Krish: "Good stuff, leave me
+  with the final Publish Board with Monday 100% ready to publish (post
+  produced video links included), Weds and Fri in production". In plain
+  words:
+  - **The board and both day pages are current.** Monday's publish page
+    (https://claude.ai/artifact/QpGeGjaqZwvyXwRnSadqyS) carries the two
+    scripts he recorded and "Recorded: both cuts, read from Teleprompter".
+    Friday's (https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV) now carries
+    the scripts in his Teleprompter (`docs/plans/2026-10-09-draft-script.md`
+    and `-90s.md`, the 16:08 sends) and says it waits on his call on the
+    prediction line. The board (https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV)
+    was rebuilt from both and republished to its link; no old script and no
+    Descript wording is left on it. Monday's two Record ticks were written
+    into its store from his words "the two Monday videos are now in Inbox"
+    (both takes are on the record).
+  - **Monday is not 100% and cannot be from a cloud session.** The produced
+    cuts come from a home computer (Codex, `produce-video`), and that skill
+    stops before the final render while `config/story-intro-outro.json`
+    says `awaiting_design`. The only Monday videos in Drive are his two raw
+    takes in the Inbox. Order: a design for the story intro, audio treatment
+    and outro card goes to him cold (`krish-design`), he approves it in
+    words, the approval and the build land in the renderer, Codex produces
+    both cuts and records them (`making.py --by Codex <piece> video ...`),
+    then a Claude Code session puts the cuts and thumbnails on Monday's
+    page and republishes the board. This session started that design (three
+    blind concepts, then blind judging, then one synthesis shown to him) and
+    stopped it unfinished when Krish closed the session; nothing was kept.
+    The brief and the process are in
+    `docs/plans/2026-10-12-story-intro-outro-brief.md`, and the next steps
+    are under "Resume this week's publish board" above.
+  - **Wednesday is started.** This session fired the "Make a piece"
+    routine with Wednesday's piece (7554ed4a-560b-4365-b266-ea72abeed7ef)
+    on his "Weds and Fri in production". Its session
+    (session_01FzzvZdb6pALs4La91JrMJb) made the workroom and stopped,
+    waiting on two calls from him (its entry, next below). Its board item
+    `wed-muse-calls` had no `closes_on`, so Control Center held it back
+    from his list; this session gave it `closes_on: draft`. The routine
+    still has no Teleprompter connector (only he can attach it, and remove
+    Descript, in claude.ai).
+  - **Friday waits on one call from him**, now in the `friday-record` board
+    item (rewritten for Teleprompter, linking the board's Friday tab):
+    keep the dated prediction (by 30 September 2027, at least two of
+    OpenAI, Anthropic and Google pick the brain for app builders by
+    default, 85%), which young readers keep getting lost at, or say the
+    broader bet in the video and leave the exact call to the article. On
+    his answer: rewrite, `story_check.py`, two fresh readers until both say
+    nothing lost them, `update_script` in place, the record lines, the
+    Friday page and the board. Neither Friday cut has a read-back pass on
+    record, and Monday's has none either (the strict readers were lost at
+    "So Suno's judge could see it differently", "But that AI didn't make
+    anything new", the investors' bet and "name about 60,000 songs"; the
+    takes are already recorded, so nothing was changed).
+
+- 2026-10-12, Monday, about 17:10 UTC: **Wednesday's Meta Muse piece
+  (7554ed4a): workroom published, waiting on two calls from Krish.** Workroom:
+  https://claude.ai/artifact/XW7uwdEJbMybpXVh2gjJRu (recorded on the piece;
+  board item `wed-muse-calls`). The planned headline ("The Opt-In Was Buried
+  in the Onboarding") has no source: TIME (6 Oct, read in full) reports no
+  opt-in step for the people Muse maps, and the "Karan Joshi" and "Daniel
+  Roberts" names appear only in a roundup site's summary of WIRED, whose text
+  would not load. The supported angle is people who never signed up. Stopped
+  before the draft and fact check, which spend on the model and need his
+  "go". Next, once he answers: file TIME's text as a verbatim source, draft,
+  run the fact gate, then visual gate (Meta and Muse logos), both scripts with
+  the under.the.hood series line, read-back, Teleprompter send, publish page,
+  Wednesday's tab of the board (not rebuilt yet: no publish page exists).
+  Ticks copied: Monday's two Record ticks only (information; takes are on
+  Monday's record). (Written by Wednesday's routine session, which pushed it
+  only to branch `claude/relaxed-bell-vmveum`; copied here word for word.
+  The session itself stopped at 16:56 UTC.)
+
+- 2026-10-12, Monday, about 16:45 UTC: **Descript is out, teleprompter.com
+  is in; every script opens with its series line and is held to a reading
+  age of 12 by a hard gate; takes are matched by their Teleprompter title;
+  and every video will get its own story intro and outro once Krish
+  approves a design.** Built on this branch in both
+  repositories; nothing committed, pushed, deployed, published or sent, and
+  the only outside calls were engine reads. His words, kept verbatim in
+  `config/teleprompter.json`, `AGENTS.md` and the house rules:
+  "Also note that Descript is permanently gone, teleprompter.com is
+  permanently in, connected via MCP here"; to "May every checked script go
+  into your teleprompter.com account automatically, starting with Monday's
+  two now?" he picked "Yes, automatic, Monday now", on the terms "One script
+  per cut, in a folder per piece (e.g. "Mon 12 Oct follow.the.money"). When
+  the words change, the same script is updated in place. Nothing is ever
+  deleted."; "We need something catchy at the start of a video script like
+  "Here's what you need to know about how money is changing because of AI.
+  I'm Krish." at the start of follow.the.money videos. And then similar for
+  the weds and fri scripts", with his picks for Wednesday and Friday and
+  "Drop it at the end" for the closing "I'm Krish"; and "I also feel like
+  these scripts are too complicated for a layman to understand. Every single
+  script should be understandable by a 12-year-old. I can't even understand
+  what I'm reading off the teleprompter. I thought we had hard gates for
+  this?" In plain words:
+  - **The series line.** The three lines live once, in the house rules
+    (`SERIES_OPENERS`, rule `SERIES_OPENER`); `HOOK_AND_CTA` now puts the
+    hook after the line and ends without his name. `story_check.py
+    --series` refuses a script that does not open with its line or says
+    "I'm Krish" again; `making.py scripts` passes the piece's series from
+    the engine (the making route now returns `lane_slot`), `build.py` from
+    the post, and the engine's script writer puts the line first itself.
+  - **Reading age 12, a hard gate** (rule `R7`, same id). `story_check.py`
+    refuses a spoken sentence over 20 words, more than 12 words a sentence on
+    average, a reading grade over 6, a quotation over four words, and any
+    word on the grown-up list (licensing, settlement, revenue, model,
+    copyright and the rest, `SCRIPT_READING` in the house rules) its sentence
+    does not explain. Then two fresh readers, each told to be an ordinary
+    12-year-old hearing it once, must find nothing that loses them; their
+    exact prompts are in `make-piece`, "The Scripts step", and the engine's
+    script writer runs the same two (`read_back` on each script it writes).
+    A pass is recorded with `making.py <piece> read-back CUT --readers ...`
+    on the script check, tied to the words heard, and `teleprompter_send.py
+    plan` sends no cut without it. Articles already have their own reading
+    gate (the publish checks block above age 13), so they get no new one.
+  - **The Teleprompter send** (`scripts/post-pack/teleprompter_send.py`,
+    `making.py teleprompter`, the engine's new `teleprompter` field): `plan`
+    prints the exact calls (a folder only when the record has none, then
+    `create_script` or `update_script` with only text and duration), `record`
+    writes the folder and each cut's script, `pending` lists what is missing
+    or older. Control Center's Record step now says, per cut, "Read from
+    Teleprompter: <title>"; the Scripts step says "in Teleprompter" or what
+    is missing. The week's board shows the same and how to send the take
+    back; its two Record ticks are now labelled "(Teleprompter)", same ids,
+    so saved ticks carry over (`--teleprompter` replaces `--descript`).
+  - **A take is matched against the current words, and by its title.**
+    Monday's two takes (now on the piece, 184 and 95 seconds) scored 0.40
+    and 0.42 on a home computer, because it heard them against the
+    morning's scripts in its own checkout and the Drive pack, while Krish
+    read the afternoon's words. `recording_match.py` now uses the copy whose
+    words hash to the record's (`script_check.hashes`), looking in the files
+    it knew and in the same files as committed on main, and says so when it
+    has no copy of the current words. And teleprompter.com names each
+    recording after its script ("Mon 12 Oct - 3-minute - Who gets paid for
+    AI songs.mp4"): a file named after a cut's script title on a waiting
+    piece's record is that piece and cut, unless its words are surely
+    another piece's or its length surely the other cut's.
+  - **A story intro and outro, in every format** (new house rule
+    `STORY_INTRO_OUTRO`, in his words: "when the videos come back bear in
+    mind that I want a proper animated branded intro to this specific story
+    visually, the audio treatment, and then a proper animated outro card.
+    Across all formats, and this should be part of the system moving
+    forward."). Nothing is designed or built: design comes first and is his
+    to approve. `produce-video` now stops before the final render, saying
+    "story intro and outro not designed yet", while
+    `config/story-intro-outro.json` says `awaiting_design`.
+  - **Descript is retired**: `descript_send.py`, `descript_take.py`,
+    `config/descript.json`, their tests and `making.py descript` are gone,
+    the recordings upload is back to its form before Descript (no
+    single-file send), and every skill and document now says a take comes
+    back one way: dropped at the top of the Video Engine Inbox. The engine
+    refuses a `descript` patch; records written today keep their `descript`
+    field, which nothing reads.
+  Next, in this order:
+  1. Commit, merge and deploy the engine, then Control Center. The live
+     engine drops the `teleprompter` field until then, so a record line run
+     first is refused ("nothing to record") and nothing is stored.
+  2. Straight after, from the repository root, record the four sends made
+     by hand this afternoon. Until they run, `teleprompter_send.py pending`
+     and `plan` print these lines and nothing else, so no second script is
+     made. Each line carries the hash of the words that script holds now:
+     Monday's as updated in place at about 15:49 UTC and Friday's at about
+     16:08 UTC, after both were rewritten for the reading gate (each cut
+     passed `story_check.py` and two fresh 12-year-old readers), the same
+     hashes `making.py scripts` recorded at 15:50 and 16:10 UTC.
+
+     ```
+     python3 scripts/post-pack/making.py --by 'Claude Code' f328382d-71b3-41a7-a221-d8615826f12e teleprompter long --folder 86B6F74B-2F8A-4477-AE44-8DA1119D1CD9 --folder-name 'Mon 12 Oct follow.the.money - Who gets paid for AI songs' --script 45F414D8-31E1-4B2D-BBE4-44EBA042B346 --title 'Mon 12 Oct - 3-minute - Who gets paid for AI songs' --sha 89c38280deb755f3e16c37b07020847d5564fe6877dba7e044d889eb7e4034c9 --sent-at 2026-10-12T15:49:00Z
+     python3 scripts/post-pack/making.py --by 'Claude Code' f328382d-71b3-41a7-a221-d8615826f12e teleprompter short --folder 86B6F74B-2F8A-4477-AE44-8DA1119D1CD9 --folder-name 'Mon 12 Oct follow.the.money - Who gets paid for AI songs' --script ED3DE98A-7158-4448-A622-A2A5115FFA83 --title 'Mon 12 Oct - 90-second - Who gets paid for AI songs' --sha d90a4415f9a86a6167379696b170320273a4314912f6365404733aff561a4693 --sent-at 2026-10-12T15:49:00Z
+     python3 scripts/post-pack/making.py --by 'Claude Code' 904658db-4df2-4537-a0ed-ebe93e081db7 teleprompter long --folder DD28154B-B6D1-47DB-803A-79410D83196D --folder-name 'Fri 16 Oct mind.the.gap - Why so many AIs' --script 185F739E-733F-43B9-B5B2-66846CB5EC44 --title 'Fri 16 Oct - 3-minute - Why so many AIs' --sha f8ef15d3f1eb0f62a86afb780ba2294dbb49a9352903e6a94548b324d5023645 --sent-at 2026-10-12T16:08:00Z
+     python3 scripts/post-pack/making.py --by 'Claude Code' 904658db-4df2-4537-a0ed-ebe93e081db7 teleprompter short --folder DD28154B-B6D1-47DB-803A-79410D83196D --folder-name 'Fri 16 Oct mind.the.gap - Why so many AIs' --script 1165370C-68A6-444E-88D5-A326A131E58C --title 'Fri 16 Oct - 90-second - Why so many AIs' --sha bc41bc8597977f90f95541f418006e8ae097033401779334a4c319982a286db5 --sent-at 2026-10-12T16:08:00Z
+     ```
+
+     Then `making.py <id> show` for each piece should say both cuts hold the
+     current words, and `teleprompter_send.py pending` should list neither.
+     Also record each cut's read-back of the words its two readers heard
+     (`making.py <id> read-back long --readers "..." "..."`, and `short`),
+     only for the exact words they heard; otherwise read them back again.
+  3. Update both routines' prompts with `update_trigger` to the text in the
+     parent session's scratchpad (`tp/routine-prompts.txt`): the Teleprompter
+     send as the one standing exception, `teleprompter_send.py pending`, the
+     series line and the reading-age gate. **Krish must attach the
+     Teleprompter connector to both routines in claude.ai**; a session cannot.
+  4. Rebuild this week's board with `--live --previous` and republish it to
+     its link, so the Record card shows the Teleprompter scripts and the new
+     labels (the ticks keep their ids).
+  5. Rewrite the board items that still send him to Descript (at least
+     `monday-record`, which names the "Record here" link and the timeline
+     called "Monday"): read each cut from its script in teleprompter.com,
+     then drop each take at the top of the Video Engine Inbox. Keep their
+     `idea_id` and `closes_on`. Read the board first (`GET /api/workbench
+     --full`) and change only the words.
+  Waiting on Krish: the designs for the story intro, its audio treatment and
+  the outro card (shown to him first, `krish-design`; no cut is finished
+  until he approves one, and then `config/story-intro-outro.json` records
+  it); attaching the Teleprompter connector to both routines;
+  and, if he recorded any take in Descript before it was retired, exporting
+  it and dropping the file in the Inbox. The four Descript projects of 12
+  October stay in his Descript drive; nothing reads them. Everything listed
+  as waiting in the entry below still is, except the Descript questions.
+  Not verified here: the read-back's model calls in the engine's script
+  writer (unit-tested with a stand-in, never called live), and the
+  Teleprompter calls themselves (this session made none).
+
+- 2026-10-12, Monday, about 15:30 UTC: **The Descript lane and the week's
+  board are merged, deployed and live**, and every step left by the entry
+  below is done. In plain words:
+  - Merged to `main` in both repositories (engine 70e44fb, Control Center
+    d337694) after the full checks passed (engine `npm run verify`: 126
+    files, 1582 tests; Control Center lint, types, 906 tests, the handoff
+    check). Both deployed from `main` and READY. The live week options now
+    list `scheduled` (Monday f328382d, Wednesday 7554ed4a, Friday 904658db).
+  - The four Descript record lines ran. `making.py show` says both cuts of
+    both pieces hold the current words, with their read and Record here
+    links; `descript_send.py pending` says every checked script is in
+    Descript; `descript_take.py waiting` lists the four Record here links.
+  - The week's board was rebuilt with `--live --previous` and republished
+    to the same link (version 2): Monday and Friday made, Wednesday picked
+    (Meta Muse, which Krish picked on the week page; the planning item
+    `week-2026-10-12` was closed by Control Center), 90 tick ids, no ticks
+    yet. The board item `week-publish-board-2026-10-12` is on him (rank 0,
+    `only_you` post). It has no `closes_on`, because no making step closes
+    a week, so Control Center holds it on the board's held lane, not his
+    list; the link is what later sessions need from it.
+  - `monday-record` now tells him to record the 3-minute cut only through
+    its Record here link, the timeline called "Monday", and names the two
+    6-second leftovers (one called "Record here") as not picked up.
+  - Both routines' prompts were updated with `update_trigger` to the text
+    the entry below names (the week's board, the tick copy, `pending`, and
+    the Descript send as the one standing exception to the walls).
+  - Both packs were rebuilt from the corrected scripts and sent earlier
+    this afternoon (Monday 12 files, Friday 15); no page holds the line he
+    cut.
+  - **A mistake, put right.** At 14:39 UTC this session redeployed engine
+    c948ad2 and Control Center 830435f by hand, after another session had
+    already shipped newer `main` (engine fb5b1e3 at 13:50, Control Center
+    d775916 at 14:27), so production ran older code for about 35 minutes.
+    Both were redeployed from their `main` heads by about 15:10 and then
+    replaced by the merge. No board item was written in that window. Rule
+    for every session: a hand redeploy takes the current `main` head
+    (`git fetch origin main`), never the commit you last pushed.
+  Waiting on Krish: his reaction to the sting
+  (https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH); recording in
+  Descript; the music licence and levels; the 90-second question; and
+  whether to delete the two leftover timelines in Monday's 3-minute project.
+
+- 2026-10-12, Monday, late afternoon: **The review of the Descript lane and
+  the week's board is fixed** (nothing committed, pushed, deployed,
+  published or sent; the outside calls were engine reads only). In plain
+  words:
+  - **No second project, ever.** Until the four record lines below have
+    run, `descript_send.py pending` prints those lines for Monday and
+    Friday instead of a plan line, and `descript_take.py waiting` and
+    `look` print them instead of sending a take through the Inbox (checked
+    live this afternoon: both pieces show the hand-made lines). A send that
+    fails after Descript has made the project is recorded on that project,
+    and the next send finishes it there. A cut whose media minutes ran out,
+    or whose send failed less than six hours ago, waits until its words
+    change or Krish says go.
+  - **A published piece keeps its day.** The publish watcher marks a piece
+    published once its Substack post is live; the week options now list
+    every piece scheduled in the week in any state (`scheduled`), the
+    board reads each day's piece from there and from the board itself
+    (`week_board.py --show`), and the tick copy keeps a tick whose piece
+    is the one the board names for the day. A rebuild given the board it
+    replaces (`--previous`) refuses to drop a day or a made day's page, and
+    `--live` refuses a picked piece's publish page left out.
+  - **Last week's board stays read.** Each week's board has its own board
+    item, `week-publish-board-<Monday>`; `WORKBENCH.md` keeps last week's
+    line until every day on it is at 100%, so his weekend reposts reach
+    the record.
+  - **His answer to a take question can be given.** `look`, `check` and
+    `fetch` take `--krish-words` for a take of older words, a re-take of a
+    cut already recorded and a copy already published; the words go onto
+    the take's record. `produce-video` says so, and has a step for a
+    re-take, which the waiting list never shows.
+  - **A take in the wrong timeline is named.** Monday's 3-minute project has
+    a spare timeline called "Record here" beside the real one, now called
+    "Monday"; `look` names the timeline a stray recording is in, and
+    nothing is copied from it.
+  - **Only a take in the store is recorded.** `making.py recorded` checks
+    the engine's recordings store first, and `descript_take.py fetch`
+    prints the send and record lines only on a home computer with the
+    runner key, else the handoff line.
+  - **The board's own tick script is tested** in CI against a stand-in
+    page and store, with the published board's tick ids kept in
+    `fixtures/week-board/published-2026-10-12.json`; the board declares
+    `"downloads": true`, as the artifact contract writes it.
+  - `scripts/post-pack/README.md` has "Scripts into Descript" and "Takes
+    recorded in Descript" in place of "not built", and its Checks list the
+    new self-tests.
+  Next, added to the list in the entry below: step 5's board item is now
+  `week-publish-board-2026-10-12`, the rebuild takes `--previous` (the
+  published board, read with `Artifact read`), and one more step:
+  6. Put one line on Krish's board, on him: "Record Monday's 3-minute cut
+     only through its Record here link
+     (https://web.descript.com/16aa1f87-c054-4115-a11c-4342def815e5/f6eb1,
+     the timeline called "Monday"). The same project also holds an older
+     timeline called "Record here" and a spare Script timeline; a take
+     recorded there is not picked up. You may delete those two in
+     Descript; a session never does." (`idea_id`
+     f328382d-71b3-41a7-a221-d8615826f12e, `closes_on` `record`.)
+
+- 2026-10-12, Monday, afternoon: **Scripts go to Descript by themselves, a
+  take recorded there comes back to its piece and cut, and the week has one
+  publish board with a tick for every step.** Built on this branch; nothing
+  committed, pushed, deployed, published or sent, and the only outside calls
+  were reads (engine GETs, Descript `get_project`, the week board's store).
+  Krish's words, kept verbatim in `config/descript.json` and `AGENTS.md`:
+  "Descript is now my tool of choice for video script readouts on my phone -
+  scripts should automatically be sent there, with the ability for Descript
+  to put the video in the correct place when recorded."; "I can use the
+  descript web app, otherwise my laptop to record"; to the automatic send,
+  "3. yes", then "go, upload"; to private copies of his takes, "1. yes"; of
+  the teleprompter, "2 fine, no issue with copy paste"; and of the week, "just
+  give me one ... Publish Manager for the ... whole week with 3 tabs on it
+  for Mon / Weds / Fri, which we need to get to 100%. Give me a tick box next
+  to each one so I can tick as I go and you can durably record that
+  completion where it needs to be recorded." In plain words:
+  - **The send** (`scripts/post-pack/descript_send.py`, `config/descript.json`,
+    `making.py descript`): when a piece's scripts pass, `plan` renders each
+    cut's pages video and prints the exact Descript calls; the session makes
+    them and records the project on the piece (`meta.making.descript`).
+    Words that change go into the same project as a new Script timeline, so
+    the "Record here" timeline and any take in it stay put. The engine keeps
+    the field and says "in Descript" or "Descript has an older script" on the
+    Scripts step, never holding it back; Control Center's Record step shows
+    the two "record in Descript" links.
+  - **The take** (`scripts/post-pack/descript_take.py`, the single-file send
+    `recordings-upload.ps1 -File`, and `produce-video`'s new section "Takes
+    recorded in Descript"): it reads what the "Record here" timeline holds,
+    hears the words against the cut's script, makes the private copy, trims
+    the slate on a home computer, sends the take into the recordings lane
+    and records it on its piece and cut. A cloud session stops at the
+    private copy and leaves one board item for a home computer.
+  - **The week's publish board** (`scripts/post-pack/week_board.py`): one
+    page, a tab per day, a tick per step, the ticks kept in the page's own
+    store across every republish.
+  - **Skills and documents**: `make-piece` runs `descript_send.py pending`
+    first, sends at the Scripts step, names the send as its one standing
+    exception, republishes the week's board with each day's page, and copies
+    the week's ticks at the start and end of every session ("The week's
+    ticks", used by `plan-week` and `produce-video` too). `plan-week` closes
+    the ending week's ticks first and makes the new week's board last.
+    `produce-video` says he records in Descript now, with the Inbox as the
+    fallback. `AGENTS.md` has two new bold rules (the Descript scope; where
+    completion is recorded), `docs/CADENCE.md` the new rows, "Where
+    completion is recorded" and misreads 13 to 19, and `docs/INTEGRATIONS.md`
+    and `docs/DRIVE.md` the Descript lines.
+  Where things stand:
+  - **The four Descript projects**, made by hand at 10:31 UTC in `Mindmake
+    scripts`, each with the current words and a "Record here" timeline
+    (`get_project` this afternoon: nothing recorded in any of them yet).
+    Monday's 3-minute "Record here" timeline has been renamed "Monday" in
+    Descript; the tools find it by its id. Monday's 3-minute project also
+    holds the first attempt's media and two spare timelines; nothing was
+    deleted, and the record line below lists that media as known.
+
+    | Piece | Cut | Record here |
+    |---|---|---|
+    | Monday (f328382d) | 3-minute | https://web.descript.com/16aa1f87-c054-4115-a11c-4342def815e5/f6eb1 |
+    | Monday | 90-second | https://web.descript.com/6e1c3178-ba5c-4603-a5e2-ec23f3612071/36a32 |
+    | Friday (904658db) | 3-minute | https://web.descript.com/36040413-966a-417c-90a2-b2667f5ca4ef/d3f1e |
+    | Friday | 90-second | https://web.descript.com/a8be9a54-1247-41ad-ae9a-aebe3ef22fa1/c9778 |
+
+  - **This week's board**, https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV,
+    published this morning from the two day pages; its store held no ticks
+    and no links this afternoon. It shows Wednesday as not picked, but
+    Wednesday's piece is picked: "Meta Muse Builds a Profile on Every Person
+    in Your Life" (7554ed4a, under.the.hood, drafting, 14 October). The board
+    item `week-publish-board-2026-10-12` does not exist yet.
+  - **Both routines** ("Make a piece", "Plan the week") carry the Descript
+    connector. Their prompts do not name the new steps yet, and "Make a
+    piece"'s wall ("nothing sends ... without Krish's own words immediately
+    before") must name the Descript send as its one standing exception, or a
+    routine session may refuse to send.
+  Next, in this order (the order matters; all five done on 12 October,
+  about 15:30 UTC, in the entry above):
+  1. Commit, merge and deploy the engine. The live engine drops the
+     `descript` field, so a record line run before the deploy is refused
+     ("nothing to record") and nothing is stored.
+  2. Straight after, and before any session runs `descript_send.py plan` or
+     a send for Monday or Friday, record the four hand-made projects, from
+     the repository root. Until these run, `pending` and `plan` see both
+     pieces as never sent and would make second projects:
+
+     ```
+     python3 scripts/post-pack/making.py --by 'Claude Code' f328382d-71b3-41a7-a221-d8615826f12e descript long --drive d8b77ba9-0c95-4b7b-8964-2f5b888c0b78 --project 16aa1f87-c054-4115-a11c-4342def815e5 --script-composition 46c2a75a-615d-4ab5-bdc4-c84b57a88454 --record-composition f6eb149a-82e8-4604-836e-b78ea7c73797 --links https://web.descript.com/16aa1f87-c054-4115-a11c-4342def815e5/46c2a https://web.descript.com/16aa1f87-c054-4115-a11c-4342def815e5/f6eb1 --media 'Script 2026-10-12 3e329b9.mp4' --sha 3e329b90efcc3a4198b58641576eb9dc9f1f34deb095341a4d3ce596f908383b --sent-at 2026-10-12T10:31:16Z --known-media 'Record here 3-minute.mp4' 'Script 2026-10-12 8043955.mp4' 'Record here 3-minute slate.mp4' 'Script 2026-10-12 3e329b9.mp4'
+     python3 scripts/post-pack/making.py --by 'Claude Code' f328382d-71b3-41a7-a221-d8615826f12e descript short --drive d8b77ba9-0c95-4b7b-8964-2f5b888c0b78 --project 6e1c3178-ba5c-4603-a5e2-ec23f3612071 --script-composition f27bfc76-e71b-498d-a942-767063070c48 --record-composition 36a320ab-ed9a-4d7e-bddb-61668278faea --links https://web.descript.com/6e1c3178-ba5c-4603-a5e2-ec23f3612071/f27bf https://web.descript.com/6e1c3178-ba5c-4603-a5e2-ec23f3612071/36a32 --media 'Script 2026-10-12 38fe78d.mp4' --sha 38fe78d76748b5cd6c5c128c7a5e95b7839e9862fe972c67ef32daa0977188b5 --sent-at 2026-10-12T10:31:16Z --known-media 'Script 2026-10-12 38fe78d.mp4' 'Record here 90-second slate.mp4'
+     python3 scripts/post-pack/making.py --by 'Claude Code' 904658db-4df2-4537-a0ed-ebe93e081db7 descript long --drive d8b77ba9-0c95-4b7b-8964-2f5b888c0b78 --project 36040413-966a-417c-90a2-b2667f5ca4ef --script-composition a1b03023-61ee-4c1a-bf66-352b11f13f81 --record-composition d3f1eeaf-35ed-4ed7-a607-62f509ee253d --links https://web.descript.com/36040413-966a-417c-90a2-b2667f5ca4ef/a1b03 https://web.descript.com/36040413-966a-417c-90a2-b2667f5ca4ef/d3f1e --media 'Script 2026-10-12 c767efb.mp4' --sha c767efbecea962549dfa8a45b2ad869b68d152fd62422fde3ec0907f06aa03b3 --sent-at 2026-10-12T10:31:16Z --known-media 'Script 2026-10-12 c767efb.mp4' 'Record here 3-minute slate.mp4'
+     python3 scripts/post-pack/making.py --by 'Claude Code' 904658db-4df2-4537-a0ed-ebe93e081db7 descript short --drive d8b77ba9-0c95-4b7b-8964-2f5b888c0b78 --project a8be9a54-1247-41ad-ae9a-aebe3ef22fa1 --script-composition 7b38e479-2bf0-4b65-a328-c686f746a5a2 --record-composition c9778206-cc1e-4e45-b9c6-f161d34c707c --links https://web.descript.com/a8be9a54-1247-41ad-ae9a-aebe3ef22fa1/7b38e https://web.descript.com/a8be9a54-1247-41ad-ae9a-aebe3ef22fa1/c9778 --media 'Script 2026-10-12 de706a8.mp4' --sha de706a85f14fb3fe410737055acf46a594ef85b807af09a84ff77de1f997b289 --sent-at 2026-10-12T10:31:16Z --known-media 'Script 2026-10-12 de706a8.mp4' 'Record here 90-second slate.mp4'
+     ```
+
+     Then `making.py <id> show` for each piece should say both cuts hold
+     the current words, and `descript_send.py pending` should list neither.
+  3. Deploy Control Center's mirror (its making record and Record step).
+  4. Update both routines' prompts to name the new steps (the Descript
+     send's exact scope in "Make a piece"'s walls; the week's board, with
+     its own item `week-publish-board-<Monday>` and `"downloads": true`,
+     and the tick copy in both), with `update_trigger`.
+  5. Rebuild this week's board with `--live --previous <the published
+     board, as Artifact read saved it>` (so Wednesday shows as picked, not
+     made yet, and neither made day is lost) and republish it to the same
+     link, then put the board item `week-publish-board-2026-10-12` on
+     Krish (rank 0, its link).
+  Waiting on Krish:
+  - Done since: his go ("go, rebuild and send Monday's and Friday's
+    packs"); both packs were rebuilt and sent the same afternoon.
+  - **The sting**: his reaction to the designs drafted today (the late
+    morning handoff below).
+  - **Music**: NO CURVES needs its licence certificate beside it, then his
+    approval in words; the levels are approved by ear once he has heard a
+    cut with music.
+  - **The 90-second question**: does the short cut's 90 seconds include the
+    sting and the end card?
+  - **Library Sync on the backup machine**, if he works there; he moves it.
+  - **Descript, still open**: whether Codex and his other Claude account
+    reach the same drive, and his plan's media minutes (about 5 a piece).
+  Not yet proven against a real take, because none exists: where Descript
+  puts a new recording beside the slate, whether camera and microphone come
+  as two files, the transcript's layout, the private copy's frame rate, and
+  whether its download link needs a sign-in. The tool refuses safely on each,
+  and the first take is the live test. Smaller gaps: a channel copied from
+  the board is stamped when it is copied, not when he ticked it
+  (`making.py posted` takes no time); the board does not show a channel he
+  ticked in Control Center; and the publish page has no Descript links of
+  its own (the board's Record card has them).
 
 - 2026-10-12, Monday, early afternoon: **The second review of the video
   build is fixed** (two more reviewers; nothing committed, merged, deployed

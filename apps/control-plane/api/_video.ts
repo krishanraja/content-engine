@@ -122,11 +122,11 @@ export function videoFormat(id?: string | null): VideoFormat | null {
 // approved the same evening, as the script writer reads it. The house rules
 // FOR_THE_EAR and STORY_ARC carry it to every other stage, and
 // scripts/post-pack/story_check.py refuses to pack a script that fails it.
-export const STORY_OUTRO = 'STORY_OUTRO: a script of a minute or more ends with one or two spoken lines after the call: what this was (the subchannel or makeyourmindup), that there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud so it works on every channel), one question for the comments, and Krish signing off (HOOK_AND_CTA). This outro is the only call to action a script makes, and it never asks for likes or subscribes.'
+export const STORY_OUTRO = 'STORY_OUTRO: a script of a minute or more ends with one or two spoken lines after the call: what this was (the subchannel or makeyourmindup), that there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud so it works on every channel), one question for the comments, and Krish signing off without repeating his name, which the series line already said (HOOK_AND_CTA, SERIES_OPENER). This outro is the only call to action a script makes, and it never asks for likes or subscribes.'
 
 export const SCRIPT_STORY = [
   'THE STORY CHECK (Krish, 2026-10-06). Before you answer, check the script against all five and fix any that fail:',
-  '1. One opening question, said out loud in the first beat, that the whole script answers. Before it, in the first two sentences, the most provocative true thing in the piece (HOOK_AND_CTA).',
+  '1. One opening question, said out loud in the first beat, that the whole script answers. Before it, in the first two sentences after the series line (SERIES_OPENER), the most provocative true thing in the piece (HOOK_AND_CTA).',
   '2. Every beat sets that question up or answers it, and follows from the beat before. A beat that could be moved anywhere is a list item: cut it or connect it.',
   '3. Every claim is set up before it is judged: say what was claimed and why it matters before calling it real or theatre.',
   '4. Every takeaway follows from a beat already told. Name the beat it comes from in your head; if there is none, cut the takeaway.',
@@ -158,9 +158,52 @@ import {
   robustJson, sanitizeVoice, type Material,
 } from './_content.js'
 import { UTILITY_MODEL } from './_models.js'
-import { houseRulesBlock } from './_houseRules.js'
+import { houseRulesBlock, seriesOpener } from './_houseRules.js'
 
 export interface VideoBeat { t: string; say: string; shot: string }
+
+// The read-back (house rule R7, the hard gate on every script). Krish,
+// 2026-10-12: "Every single script should be understandable by a
+// 12-year-old. I can't even understand what I'm reading off the
+// teleprompter. I thought we had hard gates for this?" A reading formula
+// misses a script that loses a child on its ideas, so two fresh readers hear
+// it as a 12-year-old would. These are their words, the same ones
+// .agents/skills/make-piece/SKILL.md gives a Claude Code session's two
+// readers (tests/control-plane/house-rules.test.ts holds the two together).
+export const READ_BACK_READERS: readonly string[] = Object.freeze([
+  'You are a sharp but ordinary 12-year-old in the UK. You know what an app, AI, a company, a court and a deal are, but you have never studied law, business, money or technology. You hear this video script read aloud once (no rewinding). List every word, phrase or sentence that would genuinely lose you: one you would not understand, or that would make you stop following. Say "nothing" if nothing lost you. Then retell the whole video in three sentences.',
+  'Pretend you are 12 years old, in Year 7. You use apps and have heard of AI, but you know nothing about how lawsuits, contracts, companies or money work. Someone reads you this video script out loud, once. Which words or sentences would you not understand, or would make you lose the thread? List each one exactly as it is said, or say "nothing" if you followed all of it. Then tell the whole video back in three sentences.',
+])
+
+/** One reader's answer: what lost them (empty when nothing did), and their
+ *  retelling in three sentences. */
+export interface ReadBackReader { reader: 'A' | 'B'; lost: string[]; retell: string; error?: string }
+/** The read-back of a script the engine wrote: passed only when both readers
+ *  answered and nothing lost either. Whether each retelling matches the
+ *  script's point is for the session that makes the piece, which reads them. */
+export interface ReadBack { passed: boolean; readers: ReadBackReader[]; checked_at: string }
+
+/** Two fresh readers, each told to be an ordinary 12-year-old hearing the
+ *  script once, in parallel. A reader whose call fails is said, and the
+ *  read-back does not pass. */
+export async function readBack(script: string, call: (o: { system: string; user: string }) => Promise<string>): Promise<ReadBack> {
+  const ask = async (prompt: string, reader: 'A' | 'B'): Promise<ReadBackReader> => {
+    try {
+      const out = await call({
+        system: `${prompt}\n\nAnswer as JSON only: {"lost": [each word, phrase or sentence exactly as it is said, or none], "retell": "your three sentences"}.`,
+        user: `The video script:\n\n${script}`,
+      })
+      const parsed = (robustJson(out) || {}) as { lost?: unknown; retell?: unknown }
+      const lost = (Array.isArray(parsed.lost) ? parsed.lost : [])
+        .map(x => String(x || '').trim()).filter(x => x && !/^nothing\.?$/i.test(x))
+      return { reader, lost, retell: String(parsed.retell || '').trim() }
+    } catch (e: unknown) {
+      return { reader, lost: [], retell: '', error: String((e as Error)?.message || e).slice(0, 200) }
+    }
+  }
+  const readers = await Promise.all([ask(READ_BACK_READERS[0]!, 'A'), ask(READ_BACK_READERS[1]!, 'B')])
+  return { passed: readers.every(r => !r.error && r.retell && r.lost.length === 0), readers, checked_at: new Date().toISOString() }
+}
 
 export interface VideoScript {
   duration: string
@@ -176,6 +219,8 @@ export interface VideoScript {
   target_words: number
   notes: string | null
   unsupported_numbers: string[]
+  /** Two fresh 12-year-old readers on the spoken words (house rule R7). */
+  read_back: ReadBack
   generated_at: string
   model: string
 }
@@ -190,6 +235,9 @@ export async function buildVideoScript(o: {
   citations?: string[]
   materials?: Material[]
   hint?: string | null
+  /** The piece's series (lane_slot): its script opens with that series'
+   *  line (house rule SERIES_OPENER). */
+  series?: string | null
 }): Promise<VideoScript> {
   const citations = (o.citations || []).filter(Boolean).slice(0, 8)
   const materials = o.materials || []
@@ -202,6 +250,7 @@ export async function buildVideoScript(o: {
   const register = corpusForChannel(corpus, 'youtube')
   const f = o.format
   const ceiling = wordCeiling(f)
+  const opener = seriesOpener(o.series)
 
   const system = [
     'You are cutting an existing piece into a spoken video script. The argument does not change. The length, register and scaffolding do.',
@@ -211,6 +260,9 @@ export async function buildVideoScript(o: {
     `This is a hard ceiling, not a style note: ${f.words} words is what fits in ${f.seconds} seconds at an unhurried pace. Going over does not produce a longer ${f.label}, it produces a script that overruns, and at the short lengths that is the difference between a hook and a rambling clip. If the material will not fit, cut material. Do not speed up the delivery to make room.`,
     `STRUCTURE FOR THIS LENGTH (not a suggestion, this is what this length can carry):\n${f.shape}`,
     SPOKEN_RULES,
+    // Krish, 2026-10-12: every video script of a series opens with its line,
+    // and his name is said once, there (house rule SERIES_OPENER).
+    opener ? `THE SERIES LINE (SERIES_OPENER): the first beat's "say" starts with exactly these words, then the hook: "${opener}" They count toward the ${ceiling}-word ceiling. Never say "I'm Krish" again after it, in the outro or anywhere else.` : '',
     // Formats under a minute have no room for the outro; everything longer carries the full story check.
     f.seconds >= 60 ? SCRIPT_STORY : 'THE STORY CHECK, short form: one clear question or claim, answered by the last line. Explain any number as it is said.',
     // Krish's house rules reach the spoken words and the shots. Before 2026-10-05 a script
@@ -278,11 +330,18 @@ export async function buildVideoScript(o: {
 
   const { parsed, beats } = attempt
   if (!beats.length) throw new Error('script came back empty')
+  // The series line is said first, word for word: when the writer left it
+  // out, it is put in front of the first beat rather than trusted to a retry.
+  if (opener && !beats[0]!.say.startsWith(opener)) beats.unshift({ t: '0:00', say: opener, shot: 'Krish to camera, the series line' })
 
   const spoken = beats.map(x => x.say).join(' ')
   // Same check channel-cut runs. A script is read to camera, so an invented
   // figure gets said out loud with total confidence.
   const grounding = `${o.source} ${materials.map(m => m.content || '').join(' ')} ${citations.join(' ')}`
+  // The read-back (house rule R7): two fresh readers, each a 12-year-old hearing it once.
+  const read_back = await readBack(beats.map(x => x.say).join('\n\n'), ({ system: sys, user: u }) => callClaude({
+    agent: 'video', timeoutMs: 45_000, model: MODEL, temperature: 0.2, maxTokens: 700, system: sys, user: u,
+  }))
 
   return {
     duration: f.id,
@@ -296,6 +355,7 @@ export async function buildVideoScript(o: {
     target_words: f.words,
     notes: parsed.notes ? String(parsed.notes) : null,
     unsupported_numbers: unsupportedNumbers(spoken, grounding),
+    read_back,
     generated_at: new Date().toISOString(),
     model: MODEL,
   }

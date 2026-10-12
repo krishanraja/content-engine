@@ -9,7 +9,21 @@ import { closeBoardItemsForPiece } from '../../_boardClose.js'
 //        { workroom: {url}, publish_manager: {url}, visual_gate: {passed, problems},
 //          script_check: {passed, problems, cuts, hashes: {long, short}}, pack: {folder, files, sent_at},
 //          recordings: [{cut, path, seconds, script_sha256}], video_assets: [{cut, name, path, url}],
-//          channels: {substack: {url}, youtube: null, ...}, session: {url, by} }
+//          channels: {substack: {url}, youtube: null, ...}, session: {url, by},
+//          teleprompter: {folder_id, folder_name, cuts: {long|short: {script_id, title, script_sha256,
+//            sent_at, error, failed_at}}} }
+//
+// teleprompter is where each cut's script is in Krish's teleprompter.com
+// account (scripts/post-pack/teleprompter_send.py record, making.py
+// teleprompter): one folder per piece, one script per cut, ids in upper case.
+// Descript was retired on 2026-10-12 (Krish: "Descript is permanently gone,
+// teleprompter.com is permanently in, connected via MCP here"): a descript
+// patch is refused, and the descript field records written before then still
+// hold is kept as it is and read by nothing.
+//
+// The GET answer also carries the piece's lane_slot, its series, so
+// making.py scripts can check each script opens with its series line
+// (house rule SERIES_OPENER).
 //
 // Every write lands on content_ideas.meta.making, so Control Center's realtime
 // subscription on content_ideas shows it within a second. A Claude Code
@@ -30,14 +44,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const ideaId = Array.isArray(raw) ? raw[0] : raw
   if (!ideaId) return res.status(400).json({ ok: false, error: 'id required' })
 
-  const { data: row, error } = await supabase.from('content_ideas').select('id, idea, state, meta, buried_at, updated_at').eq('id', ideaId).maybeSingle()
+  const { data: row, error } = await supabase.from('content_ideas').select('id, idea, state, lane_slot, meta, buried_at, updated_at').eq('id', ideaId).maybeSingle()
   if (error) return res.status(500).json({ ok: false, error: error.message })
   if (!row) return res.status(404).json({ ok: false, error: 'idea not found' })
   const meta = ((row as any).meta && typeof (row as any).meta === 'object' ? (row as any).meta : {}) as Record<string, unknown>
   const prev = (meta.making || null) as Making | null
 
   if (req.method === 'GET') {
-    return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, making: prev, steps: makingSteps(row as any) })
+    return res.status(200).json({ ok: true, idea_id: ideaId, state: (row as any).state, lane_slot: (row as any).lane_slot ?? null, making: prev, steps: makingSteps(row as any) })
   }
 
   const now = new Date().toISOString()

@@ -1,6 +1,6 @@
 ---
 name: produce-video
-description: Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id needed, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on either Windows home computer, the main one or the backup; a cloud session matches and prepares, then hands rendering to a home computer. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
+description: Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session, GitHub's machine (the midday run, produce-day) or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
 ---
 
 # Produce the video
@@ -31,15 +31,24 @@ Commands are written `python`, as on Windows; it is `python3` in the cloud.
 
 ## What Krish does
 
-1. Records each cut as its own file: the long cut from the long script, the
+1. Records each cut as its own take: the long cut from the long script, the
    short cut from the short one.
-2. Drops each file at the top of the Video Engine Inbox, Drive
+2. Reads each cut from its own script in his teleprompter.com account, on
+   his phone or his laptop: one folder per piece, one script per cut, put
+   there when the scripts pass (`make-piece`, "The Scripts step"; Krish,
+   2026-10-12: "Also note that Descript is permanently gone,
+   teleprompter.com is permanently in, connected via MCP here").
+   Teleprompter holds scripts only: it records nothing and sends nothing
+   back.
+3. Drops each take at the top of the Video Engine Inbox, Drive
    `makeyourmindup > Video Engine > Inbox`
    (`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox`). Never
    in a subfolder: the upload lane reads only the top level. Any name will
    do. A file over 500 MiB is skipped by the lane, so that one is produced
-   on a home computer, straight from H:.
-3. Tells Codex (or Claude Code on a home computer) "I've dropped the video".
+   on a home computer, straight from H:. This is the one way a take comes
+   back.
+4. Tells Codex (or Claude Code on a home computer) "I've recorded" or "I've
+   dropped the video".
 
 A take reaches the engine within about ten minutes, from whichever home
 computer is on, and the same lane then places it on its piece and cut by
@@ -47,17 +56,15 @@ itself, stamped with the script it was read from (step 2). He never has to
 give a file name or a piece id. He is asked only when the matcher is unsure,
 in a session's reply to him (the lane holds one board item per take for a
 session, never on his list), and for approvals that are his alone (a music
-track, the mix levels, the sting's design).
+track, the mix levels, the sting's design, the story intro and outro
+designs).
 
-**Takes recorded in Descript.** Since 12 October each cut of Monday's and
-Friday's pieces also has a Descript project (`Mindmake scripts`, linked from
-the piece's Record board item), and Krish may record into its "Record here"
-timeline instead of the Inbox. Bringing such a take back is not built in
-this repository yet, so it does not reach the engine, the matcher or the
-record by itself. If he says he recorded in Descript, tell him so in one
-line, leave the piece's Record board item open (update its words rather
-than adding another), and produce nothing from Descript until that return
-is built. Nothing here sends, edits or publishes anything in Descript.
+**Descript was retired on 12 October.** That morning his takes were to be
+recorded in Descript; the same afternoon Krish ruled "Descript is
+permanently gone". No session reads, copies or publishes anything there. A take he recorded in
+Descript before then reaches the engine only when he exports it and drops
+the file in the Inbox like any other: ask him to, in one line, and never
+fetch it another way.
 
 ## Before anything
 
@@ -67,6 +74,13 @@ where things live") and `scripts/quick-edit/README.md`. Read the board
 Studio; if a session touches it, `docs/ENGINE_SESSION.md` applies and a
 cloud session is read-only for it.
 
+In Claude Code, copy Krish's ticks from the week's publish board onto the
+records now and again before you stop (`.agents/skills/make-piece/SKILL.md`,
+"The week's ticks"). It needs the ArtifactData tool: Codex has none, so a
+Codex session says in one line that the next Claude Code session copies
+them. A Record tick there is information only; Record is done from the takes
+on the record.
+
 ## 1. Preflight: which tool, which machine
 
 - **Who is writing.** Set it once, so every record this session makes (the
@@ -74,13 +88,21 @@ cloud session is read-only for it.
   names the right tool: PowerShell `$env:MAKING_BY = "Codex"` in Codex, or
   `$env:MAKING_BY = "Claude Code"` in Claude Code (`export MAKING_BY=...` in
   the cloud). `making.py` also tells Codex by itself, but set it anyway.
-- **A cloud session** (Claude Code or Codex on the web) has no H: drive, no
-  music folder and no archive. It may find and match the takes (step 2),
-  build the kit (step 3), plan (step 4, with `faster-whisper` installed),
-  and draw the thumbnails (step 5). It never renders the finished cuts: it
-  leaves a board item for a home computer (`"lane": "in_progress"`) with the
-  piece's `idea_id` and `"closes_on": "video"`, naming the commands still to
-  run, and says so.
+- **Any machine renders: a cloud session, GitHub's machine, a home
+  computer.** Krish, 2026-10-12: "record this capability of yours so you do
+  not whine about this ever again". Nothing here needs H:. The takes come
+  from the engine (`recording.py get`, step 2), the music from the
+  library (`python scripts/quick-edit/music.py fetch`, then
+  `MINDMAKE_MUSIC_ROOT=<the folder it prints>`; both home computers
+  publish it every pass), the pictures from the post's pack
+  (`GET /api/library/file`) or `--files`, and the finished cuts go to the
+  post's `3 Video` folder through `send.py` (Library Sync writes Drive).
+  Never send Krish to a home computer, never relay a runner's status light
+  as his blocker, and never ask him for a music licence number (Epidemic
+  Sound has none; `config/music-licences/` is the record). The midday run
+  (`.github/workflows/produce-day.yml`, `scripts/produce_day.py`) does
+  every step below by itself on GitHub's machine at 12:00 New York on
+  Monday, Wednesday and Friday.
 - **A home computer** (Windows): work in `C:\Users\krish\dev\content-engine`,
   never in `Documents\MindmakeVideoStudio\runner-source`, at the latest
   `main` (`git pull --ff-only`). Codex runs every step outside its sandbox
@@ -130,6 +152,13 @@ done, Record not), hears the first 45 seconds of every take no piece holds
 yet, and prints one line per file:
 
 - `placed`: the piece and cut, and why (its words, its length or its name).
+  Each take is heard against the words its piece's record says are current
+  (the copy whose hash is the record's, on this machine or as committed on
+  main), never a stale pack. And teleprompter.com names each recording
+  after its script ("Mon 12 Oct - 3-minute - Who gets paid for AI
+  songs.mp4"): a file named after a cut's script title on a waiting piece
+  is that piece and cut, unless its words are surely another piece's or its
+  length surely the other cut's.
 - `unsure`: ask Krish, using the line it printed. Never guess. When he names
   it in words, record it by hand with the command below. A take recorded
   after the piece's record began but before its own cut's words last
@@ -271,6 +300,40 @@ cuts ask for the same music: make the kit for both cuts before rendering
 either.
 
 ## 4. Plan, then render each cut
+
+**First, the story intro, the audio treatment and the outro card: required
+before the final render** (house rule `STORY_INTRO_OUTRO`). Krish,
+2026-10-12: "when the videos come back bear in mind that I want a proper
+animated branded intro to this specific story visually, the audio
+treatment, and then a proper animated outro card. Across all formats, and
+this should be part of the system moving forward." A cut is finished only
+with all three made for its piece: an animated, branded intro to this
+story, in the 16:9 long cut and the 9:16 short cut; the audio treatment;
+and an animated outro card made for the piece, in both sizes. Design comes
+first, and the designs are his to approve (`krish-design`): read
+`config/story-intro-outro.json`. While its `status` is not `"approved"`,
+say "story intro and outro not designed yet" in one line, in the report and
+on the piece's board item for a home computer, and stop before the final
+render: the kit and `--plan` may go on, but no cut is rendered as finished,
+filed, sent to the library or recorded (`making.py video`) without them.
+Never build or improvise the designs here, and never ship a cut without
+them on anyone's word but Krish's own, quoted.
+
+Approved on 12 October: the stand-off (`config/story-intro-outro.json`,
+`approved`). Render the piece's own clips, then point each cut's config at
+them:
+
+```
+python scripts/quick-edit/story_io.py props --plan docs/plans/PLAN --out WORK/story-io/props.json
+python scripts/quick-edit/story_io.py render --piece-props WORK/story-io/props.json --out WORK/story-io
+```
+
+In `long.json` set `"intro": {"16x9": "WORK/story-io/intro-16x9.mp4"}` and
+`"endcard": {"16x9": "WORK/story-io/outro-16x9.mp4"}` (in `short.json` the
+`9x16` pair), and `"intro_override"` to `"Krish, <approved.on>:
+<approved.words>"` from the config. The intro runs 3 s and the outro 4 s;
+make.py takes an intro of up to 5 s on those words and sizes the music for
+both. `scripts/produce_day.py` does exactly this.
 
 ```
 python scripts/quick-edit/make.py WORK/kit/long.json --out WORK/long --only 16x9 --plan
@@ -473,7 +536,8 @@ item on him without them and names the field it lacks (`WORKBENCH.md`, "The
 board"). A question of his that no step closes (an approval, a remake, a
 missing folder, Library Sync to move) goes `"in_progress"`, its detail
 saying what would show it done, and you ask him in your reply. The
-recordings lane writes its own take questions this way. Update
+recordings lane writes its own take questions this way. In Claude Code, copy
+the week's ticks once more (`make-piece`, "The week's ticks"). Update
 `WORKBENCH.md` and end every reply with
 https://controlcenter.krishraja.com/#/home?waiting=1.
 
@@ -611,7 +675,14 @@ over it.
 
 - Nothing here posts, publishes, spends or deletes, and nothing is sent to
   anyone. `send.py` only files work in Krish's own library, by his standing
-  instruction. Nothing is sent to, edited or published in Descript.
+  instruction.
+- No cut is finished, filed or recorded without its story intro, its audio
+  treatment and its outro card, in both sizes, from a design Krish
+  approved (`STORY_INTRO_OUTRO`, `config/story-intro-outro.json`): until
+  then the report says "story intro and outro not designed yet".
+- Nothing is sent to, read from or published in Descript, which Krish
+  retired on 12 October, and nothing in Teleprompter is this skill's: it
+  holds his scripts, put there by `make-piece`.
 - Never move, rename or delete anything in the Inbox, the archive or the
   music folder, and never create or rename a Drive folder by hand; ask
   Krish. The archive's dated folder (`archive.py`) and the library sync are
@@ -624,8 +695,11 @@ over it.
   `"intro_override"`, `"thumbnail_override"` or `"visual_gate_override"`
   words he did not say.
 - The article body, the approval, the scripts, the pictures, the visual
-  gate, the pack and the channel ticks are never written from here. A step
-  that is not this skill's is not written, whatever the chat says.
+  gate, the pack and the channel ticks are never written from here, except
+  that a Claude Code session copies Krish's own channel ticks from the
+  week's publish board onto the record (`make-piece`, "The week's ticks"),
+  which records only what he ticked. A step that is not this skill's is not
+  written, whatever the chat says.
 - Never speed up a cut, and never declare a logo that is not on screen.
 - A cloud session is read-only for the Studio (`read_only_untracked`), and
   these cuts never go through it: say nothing was produced in the Studio.

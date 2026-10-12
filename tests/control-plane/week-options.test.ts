@@ -28,6 +28,7 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
       in(k: string, vs: unknown[]) { filters.push(r => vs.includes(read(r, k))); return chain },
       is(k: string, v: unknown) { filters.push(r => (read(r, k) ?? null) === v); return chain },
       gte(k: string, v: string) { filters.push(r => String(read(r, k) ?? '') >= v); return chain },
+      lte(k: string, v: string) { filters.push(r => read(r, k) != null && String(read(r, k)) <= v); return chain },
       limit() { return chain },
       async maybeSingle() { const r = run(); return { data: (r.data as Row[])[0] ?? null, error: null } },
       then(resolve: (v: unknown) => unknown, reject: (e: unknown) => unknown) { try { return Promise.resolve(run()).then(resolve, reject) } catch (e) { return reject(e) } },
@@ -42,6 +43,8 @@ const A = '00000000-0000-4000-8000-00000000000a'
 const B = '00000000-0000-4000-8000-00000000000b'
 const C = '00000000-0000-4000-8000-00000000000c'
 const OLD = '00000000-0000-4000-8000-0000000000dd'
+const PUB = '00000000-0000-4000-8000-0000000000ee'
+const NEXT = '00000000-0000-4000-8000-0000000000ff'
 
 async function call(method: 'GET' | 'POST', body: Row = {}, query: Row = {}) {
   const { default: handler } = await import('../../apps/control-plane/api/week/options.js')
@@ -63,6 +66,8 @@ beforeEach(() => {
       { id: B, idea: 'Lease bill', state: 'drafting', lane_slot: 'follow_the_money', meta: {}, updated_at: '2026-10-10T00:00:00Z', buried_at: null, library_at: null },
       { id: C, idea: 'No series yet', state: 'seeded', lane_slot: null, meta: {}, expires_at: null, updated_at: '2026-10-10T00:00:00Z', buried_at: null, library_at: null },
       { id: OLD, idea: 'Offered before', state: 'seeded', lane_slot: 'follow_the_money', meta: { week_option: { week_start: '2026-10-12', series: 'follow_the_money', rank: 1 } }, updated_at: '2026-10-10T00:00:00Z', buried_at: null, library_at: null },
+      { id: PUB, idea: 'Monday, posted on Substack', state: 'published', lane_slot: 'follow_the_money', scheduled_for: '2026-10-12', meta: {}, updated_at: '2026-10-12T15:00:00Z', buried_at: null, library_at: null },
+      { id: NEXT, idea: 'Next week', state: 'drafting', lane_slot: 'follow_the_money', scheduled_for: '2026-10-19', meta: {}, updated_at: '2026-10-12T15:00:00Z', buried_at: null, library_at: null },
     ],
   }
   db.writes = []
@@ -130,9 +135,21 @@ describe('the week options', () => {
     const ftm = out.body.series.find((s: Row) => s.slug === 'follow_the_money')
     expect(ftm.mandate).toBe('Where the money goes.')
     expect(ftm.options.map((o: Row) => o.id)).toEqual([OLD])
-    expect(ftm.in_flight.map((o: Row) => o.id)).toEqual([B])
+    expect(ftm.in_flight.map((o: Row) => o.id)).toEqual([B, NEXT])
     expect(ftm.judged_best.map((o: Row) => o.id)).toEqual([A])
     expect(out.body.series.find((s: Row) => s.slug === 'general')).toBeUndefined()
     expect((await call('GET', {}, { week_start: '2026-10-13' })).status).toBe(400)
+  })
+
+  it('GET names the piece each day of the week holds, published included, so a day posted on Substack still holds its piece', async () => {
+    // The publish watcher marks a piece published once its Substack post is
+    // live; Krish still posts YouTube, Shorts, TikTok and Instagram from the
+    // week's board, whose ticks are copied onto that piece.
+    const out = await call('GET', {}, { week_start: '2026-10-12' })
+    const ftm = out.body.series.find((s: Row) => s.slug === 'follow_the_money')
+    expect(ftm.in_flight.map((o: Row) => o.id)).not.toContain(PUB)
+    expect(ftm.scheduled).toEqual([{ id: PUB, idea: 'Monday, posted on Substack', state: 'published', scheduled_for: '2026-10-12' }])
+    const next = (await call('GET', {}, { week_start: '2026-10-19' })).body.series.find((s: Row) => s.slug === 'follow_the_money')
+    expect(next.scheduled.map((o: Row) => o.id)).toEqual([NEXT])
   })
 })

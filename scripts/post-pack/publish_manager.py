@@ -13,10 +13,15 @@ manager.json:
     {"title": "...", "subtitle": "...", "date": "2026-10-09", "kicker": "mind.the.gap",
      "status": ["Fact check passed on this exact text", ...],
      "body": "path/to/body.md",
-     "images": [{"id": "cover", "file": "img/cover.png", "alt": "...", "role": "cover"},
+     "images": [{"id": "cover", "file": "img/cover-1200x630.png", "alt": "...", "role": "cover"},
+                {"id": "vertical", "file": "img/cover-1080x1920.png", "alt": "...", "role": "vertical-cover"},
                 {"id": "decoder", "file": "img/decoder.png", "alt": "...", "after_heading": "FIRST, WHAT YOU ARE LOOKING AT"}],
      "words": "path/to/publish.json",              # the channel words (publish_kit.py's input)
      "scripts": [{"label": "Video script (long)", "file": "script.md"}, ...]}
+
+"role": "cover" is the 1200 x 630 cover to upload in Substack's settings;
+"vertical-cover", "square-cover" and "share-card-cover" each get their own
+card, saying where it goes (COVER_ROLES).
 
 Every picture is embedded in the page, so the page works offline and from
 Drive. Every Copy button tries the system clipboard first (rich text with the
@@ -161,11 +166,22 @@ async function copyImage(src){
   return viaCommand(`<img src="${src}">`, "") ? "command" : "failed";
 }
 let downloads = null;
-(async () => { try { downloads = window.claude?.use ? await window.claude.use("downloads") : null } catch { downloads = null } })();
+const downloadsReady = (async () => { try { downloads = window.claude?.use ? await window.claude.use("downloads") : null } catch { downloads = null } return downloads })();
 async function download(src, name){
   const blob = await pngBlob(src);
-  if (downloads) { try { await downloads.save({ filename: name, data: blob }); toast("Saved"); return } catch (e) { if (e && e.code === "declined") return } }
-  if (window.claude) { toast("Saving is not available in this view. Use Copy picture."); return }
+  // Wait for the save capability (it answers a moment after load), and say why a save did not happen.
+  const saver = downloads || (window.claude ? await downloadsReady : null);
+  if (saver) {
+    try { await saver.save({ filename: name, data: blob }); toast("Saved " + name); return }
+    catch (e) {
+      const code = e && e.code;
+      if (code === "declined") return;
+      if (code === "rate_limited") { toast("Another save is still open. Finish it, then tap Download again."); return }
+      if (code === "too_large") { toast("This file is too big to save here. Use Copy picture."); return }
+      toast("This app view cannot save files (" + (code || "unknown") + "). Open the board in a browser, or use Copy picture."); return
+    }
+  }
+  if (window.claude) { toast("This app view cannot save files. Open the board in a browser, or use Copy picture."); return }
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast("Downloading " + name);
 }
@@ -193,6 +209,13 @@ def text_card(cid, label, text):
     return (f'<div class="card"><div class="row"><span class="lab">{E(label)}</span><div class="btns">'
             f'<button data-act="text" data-ref="{cid}">Copy</button></div></div>'
             f'<pre class="txt" id="{cid}" data-raw="{E(text.strip())}">{E(text.strip())}</pre><div class="status" aria-live="polite"></div></div>')
+
+
+COVER_ROLES = {
+    'vertical-cover': 'Vertical cover: Shorts, TikTok and Reels (1080 x 1920)',
+    'square-cover': 'Square cover: the Instagram feed and the archive (1080 x 1080)',
+    'share-card-cover': 'Share card: LinkedIn and link previews (1200 x 675)',
+}
 
 
 def pic_card(img, slug):
@@ -231,9 +254,14 @@ def page(m, base):
 <pre id="art-text" hidden>{E(article_text(md, body_imgs))}</pre><div class="status" aria-live="polite"></div>
 <div class="files">Pastes as formatted text with headings and every picture in place. If a picture does not come through, use its own Copy picture button below.</div></div>''')
     if cover:
-        sub.append(pic_card({**cover, 'label': 'Cover and email thumbnail'}, slug))
+        sub.append(pic_card({**cover, 'label': "Cover and email thumbnail: upload it in the post's settings (1200 x 630)"}, slug))
     sub += [pic_card({**i, 'label': f'Picture {k}: {i.get("label") or i["id"]}'}, slug) for k, i in enumerate(body_imgs, 1)]
     sections.append(('substack', '1. Substack', 'One Video post: the 3-minute video on top, then this article under it. Copy each piece in turn.', ''.join(sub)))
+    # The cover for every other place it is shown, each its own image (Krish,
+    # 2026-10-12: "the cover crops need to be all individual images, a
+    # vertical cover thumbnail for the shorts/tiktok etc as well").
+    others = [i for i in images if i.get('role') in COVER_ROLES]
+    covers = ''.join(pic_card({**i, 'label': COVER_ROLES[i['role']]}, slug) for i in others)
 
     # 2 onwards: every other channel, from the same plan as publish_kit.py
     for k, s in enumerate(publish_kit.steps(words)[1:], 2):
@@ -242,6 +270,9 @@ def page(m, base):
         do = ''.join(f'<li>{E(d)}</li>' for d in s['do'])
         sections.append((f's{k}', f'{k}. {s["where"]}', s['why'],
                          f'<div class="card"><ol class="do">{do}</ol>' + (f'<div class="files">{files}</div>' if files else '') + f'</div>{cards}'))
+
+    if covers:
+        sections.append(('covers', 'Covers for every other place', 'Each drawn for its own shape. Copy or download the one a step names.', covers))
 
     # Scripts to record from: only the words to say
     sc = ''.join(text_card(cid(), s['label'], (base / s['file']).read_text(encoding='utf-8')) for s in m.get('scripts', []))
@@ -288,7 +319,8 @@ def self_test():
         (t / 'words.json').write_text(json.dumps({'title': 'T', 'linkedin_post': 'L {ARTICLE_URL}'}), encoding='utf-8')
         (t / 's.md').write_text('Why? Because.\n', encoding='utf-8')
         (t / 'm.json').write_text(json.dumps({'title': 'T <x>', 'subtitle': 'S', 'body': 'body.md', 'words': 'words.json',
-                                              'images': [{'id': 'pic', 'file': 'a.png', 'alt': 'A', 'after_heading': 'THE PART'}],
+                                              'images': [{'id': 'pic', 'file': 'a.png', 'alt': 'A', 'after_heading': 'THE PART'},
+                                                         {'id': 'vertical', 'file': 'a.png', 'alt': 'V', 'role': 'vertical-cover'}],
                                               'scripts': [{'label': 'Script', 'file': 's.md'}]}), encoding='utf-8')
         h = build(t / 'm.json', t / 'out').read_text(encoding='utf-8')
     checks = [
@@ -300,6 +332,7 @@ def self_test():
         ('scripts are copyable', 'Why? Because.' in h),
         ('a missing text says so', 'Not written yet' in h),
         ('nothing is fetched from outside', 'src="http' not in h and "src='http" not in h),
+        ('the vertical cover has its own card, saying where it goes', 'data-ref="img-vertical"' in h and 'Shorts, TikTok and Reels' in h),
     ]
     for name, ok in checks:
         if not ok:

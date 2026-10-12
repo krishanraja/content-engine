@@ -46,7 +46,7 @@ makeyourmindup\
       READ ME.txt               what every file is for and where it goes
       0 Publish\                publish.html: start here, every channel in order with Copy buttons (docs/AMPLIFICATION.md)
       1 Article\                substack-copy.html (paste into Substack), web-page.html, text-that-passed-the-fact-check.md, email-pictures-off.html
-      2 Covers and images\      substack-cover-3x2.png, the pictures in the post, share cards
+      2 Covers and images\      a cover for every place (below), the pictures in the post, share cards
       3 Video\                  the script, the YouTube and Substack words, the finished videos named by the archive rule
       4 Social\                 the LinkedIn post and its card
 ```
@@ -109,7 +109,21 @@ first post's facts.
 | `web-page` | 1 Article | `web-page.html` | `scripts/pages`' `page.html` |
 | `fact-checked-text` | 1 Article | `text-that-passed-the-fact-check.md` | the body whose fact check passed (or `"text"`) |
 | `email-pictures-off` | 1 Article | `email-pictures-off.html` | `scripts/pages`' email with pictures hidden |
-| `cover` | 2 Covers and images | `substack-cover-3x2.png` | `scripts/pages --cover`'s `cover.png` |
+| `cover` | 2 Covers and images | `substack-feed-1200x800.png` | `scripts/pages --cover`'s `cover.png`, the 3:2 cover. Never uploaded to Substack, whose upload box crops it |
+| `substack-cover` | 2 Covers and images | `substack-cover-1200x630.png` | `cover-1200x630.png`: upload it in Substack's post settings |
+| `share-card-cover` | 2 Covers and images | `share-card-1200x675.png` | `cover-1200x675.png`: LinkedIn and link previews |
+| `square-cover` | 2 Covers and images | `square-1080x1080.png` | `cover-1080x1080.png`: the Instagram feed and the archive |
+| `vertical-cover` | 2 Covers and images | `vertical-cover-1080x1920-shorts-tiktok-reels.png` | `cover-1080x1920.png`: the cover on Shorts, TikTok and Reels |
+
+Every pack with a `cover` carries all four of the others (Krish, 2026-10-12:
+"the cover crops need to be all individual images, a vertical cover thumbnail
+for the shorts/tiktok etc as well, every post moving forward"). Each is added
+by itself from beside `cover.png`, where `scripts/pages --cover` draws it;
+a pack missing any, or holding one of the wrong size, is refused, and the
+visual gate holds each to its own receipt (`cover-WxH.json`).
+
+| `kind` | Goes to | Named | What it is |
+|---|---|---|---|
 | `cover-crops`, `phone-check` | 2 Covers and images | `cover-crops.png`, `phone-images.png` | the checks `scripts/pages` draws; never posted |
 | `image`, `share-card` | 2 Covers and images | their own names | a picture in the post; a card for sharing it |
 | `video-script` | 3 Video | `video-script.md` (or its own type) | the script to record from (or `"text"`) |
@@ -163,6 +177,61 @@ writes `publish.html` for one post; pack it as `publish-kit`.
 
     python scripts/post-pack/publish_kit.py WORKDIR/publish.json --out DIR
     python scripts/post-pack/publish_kit.py --self-test
+
+## The week's publish board
+
+Krish, 2026-10-12: "just give me one ... Publish Manager for the ... whole
+week with 3 tabs on it for Mon / Weds / Fri, which we need to get to 100%.
+Give me a tick box next to each one so I can tick as I go and you can
+durably record that completion where it needs to be recorded. That Publish
+Manager is what you create every Sunday and let me iterate inside until
+we're done, and then I check off the list what I have done as I do it."
+
+`week_board.py` builds that one page (its template is `week_board/`). Each
+tab is a made piece's whole publish page (`publish_manager.py`'s, given with
+`--day`), or a designed "not made yet" or "not picked" state. A made tab
+opens with Record (each cut's script in Teleprompter by its title, and its
+folder, from the making record's teleprompter field or a small JSON of ids,
+and how the take comes back: dropped at the top of the Video Engine Inbox),
+the two scripts to copy and the checklist; a tick also sits by each
+channel's heading. Seven ticks make a day 100% (both cuts recorded, then
+Substack, YouTube, Shorts, TikTok, Instagram); LinkedIn, WhatsApp and Notes
+are optional. A day's piece comes from `--piece`, or from the week's picks
+(`--options`, a saved `GET /api/week/options` answer, or `--live`, which
+only reads): the piece of the day's series scheduled for its date in any
+picked state, published included (the options' `scheduled` list), since
+the publish watcher marks a piece published once its Substack post is live
+and Krish still posts the rest from its tab.
+
+    python scripts/post-pack/week_board.py --week 2026-10-12 --day mon=monday-publish.html --day fri=friday-publish.html \
+        --piece mon=<uuid> --piece fri=<uuid> [--teleprompter mon=record.json] --live --previous <the board it replaces> --out week-board.html
+    python scripts/post-pack/week_board.py --show <a board page or week-board.json> [--json]
+    python scripts/post-pack/week_board.py --self-test
+    npx vitest run tests/control-plane/week-board.test.ts
+
+A rebuild never loses a day. `--previous` is the board being replaced (its
+`week-board.json`, or its page as `Artifact read` saved it): a day it holds
+as made or picked that the rebuild would show as not picked is refused, and
+so is a made day with no publish page in the rebuild; `--unpick DAY` says a
+day really has no piece now. With `--live`, a picked piece whose making
+record has a publish page must come with it (`--day`). `--show` prints the
+days a board holds, each day's state and piece: the piece a tick on that
+day belongs to.
+
+Every tick saves at once in the page's own store: `ticks/<day>-<step>`
+(`done, at, day, piece_id, step, channel, label`) and `links/<day>`
+(`article, youtube, at`). Publish it as an artifact with title "This Week's
+Publish Board", icon `calendar` and capabilities `{"db": {}, "downloads":
+true}`; the call is in `week-board.json`, written beside the page with the
+week, each day's state and piece, and every tick id. A rebuilt board
+republished to the same page keeps every tick, because the store stays with
+the page and the ids depend only on the day and the step
+(`fixtures/week-board/published-2026-10-12.json` holds the published
+board's tick ids and steps, and the test runs the page's own script against
+a stand-in store); make a new page each Sunday, with its own board item,
+`week-publish-board-<Monday>`. A session copies each channel tick onto the
+piece with `making.py <piece> posted <channel> [url]`; Record is done from
+the takes on the record, never from a tick.
 
 ## The visual gate
 
@@ -528,17 +597,79 @@ places them (`-RequirePlacing` makes it a stop).
 It never writes to the Inbox, never sends anything outside the engine, and
 never produces a video: that is `.agents/skills/produce-video`.
 
-## Scripts into Descript (not built as code)
+## The scripts: the series line, reading age 12 and the read-back
 
-Krish said yes on 12 October to every checked script going to his Descript
-drive as a view-access project per cut, in a `Mindmake scripts` folder, with
-nothing published, edited or deleted and no AI credits (his words are in
-`WORKBENCH.md`). Monday's and Friday's four projects were made by hand that
-day, each with the script and a "Record here" timeline, linked from the
-piece's Record board item. Two things are not built yet: the automatic send
-when a piece's scripts pass, and bringing back a take he records in
-Descript, which therefore does not reach the engine or the matcher by
-itself. A take dropped in the Inbox is placed by the runners as above.
+`story_check.py --cut long|short --series <lane_slot> SCRIPT` refuses a
+script that does not open with its series line, word for word, or says
+"I'm Krish" again after it (house rule SERIES_OPENER; Krish, 2026-10-12: "We
+need something catchy at the start of a video script like "Here's what you
+need to know about how money is changing because of AI. I'm Krish." at the
+start of follow.the.money videos. And then similar for the weds and fri
+scripts", and "Drop it at the end"), and one a 12-year-old could not follow
+heard once (house rule R7; Krish, 2026-10-12: "Every single script should
+be understandable by a 12-year-old. I can't even understand what I'm
+reading off the teleprompter. I thought we had hard gates for this?"): a
+spoken sentence over 20 words, more than 12 words a sentence on average, a
+reading grade over 6, a quotation over four words, or a word on its list
+(licensing, settlement, revenue, model and the rest) its sentence does not
+explain. The lines and the gate's numbers are read from
+`apps/control-plane/api/_houseRules.ts` (`SERIES_OPENERS`, `SCRIPT_READING`),
+the one place they live. `making.py scripts` runs it with the piece's
+series, and `build.py` with the post's subchannel. Then two fresh readers,
+each an ordinary 12-year-old hearing the script once, must find nothing that
+loses them (their prompts are in `.agents/skills/make-piece/SKILL.md`, "The
+Scripts step"); `making.py PIECE read-back CUT --readers ...` records it on
+the script check, tied to the words they heard.
+
+    python scripts/post-pack/story_check.py --cut long --series follow_the_money docs/plans/2026-10-12-draft-script.md
+    python scripts/post-pack/making.py PIECE read-back long --readers "reader A, a fresh subagent" "reader B, a fresh subagent"
+
+## Scripts into Teleprompter
+
+Krish, 2026-10-12: "Also note that Descript is permanently gone,
+teleprompter.com is permanently in, connected via MCP here". Asked "May
+every checked script go into your teleprompter.com account automatically,
+starting with Monday's two now?", he picked "Yes, automatic, Monday now",
+whose terms were: "One script per cut, in a folder per piece (e.g. "Mon 12
+Oct follow.the.money"). When the words change, the same script is updated
+in place. Nothing is ever deleted." His words, the tools allowed and the
+names are in `config/teleprompter.json`.
+
+`teleprompter_send.py` makes no Teleprompter call. `plan` reads the piece's
+making record, refuses unless the scripts' check passed, each file holds the
+words it passed and each cut to send was read back, and prints the calls the
+session makes with the Teleprompter connector, in order: `list_folders` and
+`create_folder` only when the record holds no folder for the piece ("Mon 12
+Oct follow.the.money - Who gets paid for AI songs"); for each cut never
+sent, `list_scripts_in_folder` and `create_script` with its title ("Mon 12
+Oct - 3-minute - Who gets paid for AI songs"), its spoken words (markdown
+stripped, a blank line between paragraphs) and its duration (its words at
+150 a minute, in whole seconds); for a cut whose words changed,
+`update_script` of the same script with only its text and duration; then the
+`record` line, which writes the folder, the cut's script, its title and the
+hash of the words sent onto `meta.making.teleprompter` (`making.py
+teleprompter` is the same). Ids are uppercase UUIDs. His font size, speed,
+alignment and timed speed are never sent, and nothing is ever deleted,
+moved or renamed. A failed send is recorded with what Teleprompter said and
+when (`record --error`, with `--folder` once `create_folder` gave one, so no
+second folder is made). `pending` lists every cut in flight this week and
+next whose current words Teleprompter lacks or holds older, with its plan
+line; a cut sent by hand that the record does not hold yet gets its
+`WORKBENCH.md` record line instead, and a cut whose send failed less than
+six hours ago is held back until its words change or `--retry`.
+
+    python scripts/post-pack/teleprompter_send.py pending [--week YYYY-MM-DD] [--retry]
+    python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md [--post post.json]
+    python scripts/post-pack/teleprompter_send.py record PIECE CUT --folder ID --script ID --sha SHA256 [--title T] | --error "what Teleprompter said"
+    python scripts/post-pack/teleprompter_send.py --self-test
+
+Teleprompter holds scripts only. A take comes back one way: Krish drops it
+at the top of the Video Engine Inbox and the runners place it, as above.
+
+Descript was retired on 12 October, the day its lane was built (Krish:
+"Descript is permanently gone"); `descript_send.py` and `descript_take.py`
+were removed with it, and the recordings upload's single-file send that
+only they used.
 
 ## Size and storage
 
@@ -558,7 +689,11 @@ python scripts/post-pack/recording.py --self-test
 python scripts/post-pack/recording_match.py --self-test
 python scripts/post-pack/making.py --self-test
 python scripts/post-pack/plan_files.py --self-test
+python scripts/post-pack/story_check.py --self-test
+python scripts/post-pack/teleprompter_send.py --self-test
+python scripts/post-pack/week_board.py --self-test
 npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/library-recordings.test.ts tests/control-plane/post-pack.test.ts tests/control-plane/making.test.ts tests/control-plane/recording-match.test.ts tests/library-sync.test.ts tests/recordings-upload.test.ts
+npx vitest run tests/control-plane/teleprompter-send.test.ts tests/control-plane/week-board.test.ts tests/control-plane/week-options.test.ts tests/control-plane/house-rules.test.ts
 ```
 
 ## What stays out of the repository

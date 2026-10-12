@@ -126,10 +126,18 @@ describe('a pack Krish reads', () => {
     }
     // A picture must be whole to be packed (edge check, 2026-10-07): a plain one is.
     writeFileSync(join(work, 'stack.png'), Buffer.from('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGUlEQVR4nGPcvuw/AymAiSTVoxpGNQwpDQBpOQJ8Y386+gAAAABJRU5ErkJggg==', 'base64'))
-    // A script must pass the story check to be packed (walk log F75).
-    writeFileSync(join(work, 'script.md'), 'Why does this matter? Say this.\n')
+    // A script must pass the story check to be packed (walk log F75), opening
+    // with its series line (house rule SERIES_OPENER, Krish, 2026-10-12).
+    writeFileSync(join(work, 'script.md'), "Here's what's really inside the AI everyone's selling you. I'm Krish.\n\nWhy does this matter? Say this.\n")
     // the house drawer's receipt beside the cover, so the visual gate takes it (visual_gate.py)
     writeFileSync(join(work, 'cover.json'), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, 'cover.png'))).digest('hex'), portrait: true, rows: [] }))
+    // A cover for every place it is shown, beside cover.png with its receipt (scripts/pages/build.py --cover).
+    for (const [w, h] of [[1200, 630], [1200, 675], [1080, 1080], [1080, 1920]]) {
+      const file = `cover-${w}x${h}.png`
+      const drawnCover = spawnSync(PY, ['-c', 'import sys; from PIL import Image; Image.new("RGB", (int(sys.argv[2]), int(sys.argv[3]))).save(sys.argv[1])', join(work, file), String(w), String(h)], { encoding: 'utf8' })
+      expect(drawnCover.status, drawnCover.stderr).toBe(0)
+      writeFileSync(join(work, `cover-${w}x${h}.json`), JSON.stringify({ sha256: createHash('sha256').update(readFileSync(join(work, file))).digest('hex'), portrait: true, rows: [] }))
+    }
     // Each thumbnail at its size, with the drawer's receipt (scripts/pages/build.py --thumbs).
     mkdirSync(join(work, 'thumbs'))
     const drawn = spawnSync(PY, ['-c', 'import sys; from PIL import Image; Image.new("RGB", (1280, 720)).save(sys.argv[1]); Image.new("RGB", (1080, 1920)).save(sys.argv[2])',
@@ -157,7 +165,11 @@ describe('a pack Krish reads', () => {
     expect(notXYConstructions(readme)).toEqual([])
     const manifest = JSON.parse(readFileSync(join(out, folder, '.pack.json'), 'utf8')) as { library_prefix: string; files: Array<{ path: string; purpose: string }> }
     expect(manifest.library_prefix).toBe(`3 Posts/${folder}`)
-    expect(manifest.files).toHaveLength(18)
+    expect(manifest.files).toHaveLength(22) // with a cover for every place it is shown, added from beside cover.png
+    for (const name of ['substack-cover-1200x630.png', 'substack-feed-1200x800.png', 'share-card-1200x675.png', 'square-1080x1080.png',
+      'vertical-cover-1080x1920-shorts-tiktok-reels.png']) {
+      expect(manifest.files.map((f: { path: string }) => f.path)).toContain(`2 Covers and images/${name}`)
+    }
     for (const item of manifest.files) {
       expect(item.purpose.length).toBeGreaterThan(10)
       expect(item.purpose.length).toBeLessThanOrEqual(200)
@@ -167,7 +179,7 @@ describe('a pack Krish reads', () => {
     const dry = run('send.py', [join(out, folder), '--dry-run'])
     expect(dry.status, dry.stderr).toBe(0)
     expect(dry.stdout).toContain(`3 Posts/${folder}/1 Article/substack-copy.html`)
-    expect(dry.stdout).toContain('18 files would be sent. Nothing was sent.')
+    expect(dry.stdout).toContain('22 files would be sent. Nothing was sent.')
   })
 
   it('send.py without a key says what to do, and sends nothing', () => {

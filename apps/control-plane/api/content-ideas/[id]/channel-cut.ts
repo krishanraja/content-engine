@@ -51,7 +51,7 @@ const RETIRED_CHANNELS: Record<string, string> = {
 /** Fallback steer when the client sends none. The corpus carries the real
  *  register; this only has to name the shape so a cut is never shapeless. */
 const FALLBACK_HINT: Record<string, string> = {
-  substack: 'Adapt for Substack: 1200-2500 words, full evidence, one genuine counterpoint held properly, a verdict rather than a summary.',
+  substack: 'Adapt for Substack: 1000-1400 words, never more (house rule ARTICLE_LENGTH), full evidence, one genuine counterpoint held properly, a verdict rather than a summary.',
   linkedin: 'Adapt for LinkedIn: 150-250 words, one idea, open mid-argument, short paragraphs, no hashtags and no "thoughts?" closer.',
   youtube: 'Turn into a spoken first-person YouTube script, about three minutes: 405 to 495 spoken words (the long cut, house rule TWO_CUTS), one analogy carried the whole way including where it breaks, plain words, dry humour aimed at the industry and never the viewer.',
   // TikTok is a standing channel (Krish, 2026-10-11). The video is the

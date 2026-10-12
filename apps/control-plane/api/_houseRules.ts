@@ -50,6 +50,60 @@ export interface HouseRule {
   scope?: string
 }
 
+/** One series line: said first in every video script of its series. */
+export interface SeriesOpener { day: string; series: string; line: string }
+
+// The three series lines (house rule SERIES_OPENER), in one place for every
+// tool: scripts/post-pack/story_check.py reads the object between the two
+// marker lines below as JSON, so it stays JSON (double quotes, no trailing
+// commas) and keeps its markers. Krish, 2026-10-12, picked each line.
+// SERIES_OPENERS:BEGIN
+export const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>> = Object.freeze({
+  "follow_the_money": { "day": "Monday", "series": "follow.the.money", "line": "Here's what you need to know about how money is changing because of AI. I'm Krish." },
+  "under_the_hood": { "day": "Wednesday", "series": "under.the.hood", "line": "Here's what's really inside the AI everyone's selling you. I'm Krish." },
+  "mind_the_gap": { "day": "Friday", "series": "mind.the.gap", "line": "Here's what's coming with AI, before everyone notices. I'm Krish." }
+})
+// SERIES_OPENERS:END
+
+/** The line a video script of this series opens with, or null when the
+ *  series has none (a piece with no series, or a retired one). */
+export function seriesOpener(series?: string | null): string | null {
+  const hit = series ? SERIES_OPENERS[series] : undefined
+  return hit ? hit.line : null
+}
+
+const OPENER_LIST = Object.values(SERIES_OPENERS).map(o => `${o.series} (${o.day}): "${o.line}"`).join('; ')
+
+/** The mechanical half of the reading-age gate on a video script (house
+ *  rule R7). */
+export interface ScriptReading { max_sentence_words: number; max_average_words: number; max_grade: number; max_quote_words: number; jargon: string[] }
+
+// The reading-age gate's numbers and its grown-up words, in one place:
+// scripts/post-pack/story_check.py reads the object between the two marker
+// lines below as JSON and refuses a script that breaks any of them, so it
+// stays JSON (double quotes, no trailing commas) and keeps its markers.
+// Krish, 2026-10-12: "Every single script should be understandable by a
+// 12-year-old."
+// SCRIPT_READING:BEGIN
+export const SCRIPT_READING: Readonly<ScriptReading> = Object.freeze({
+  "max_sentence_words": 20,
+  "max_average_words": 12,
+  "max_grade": 6,
+  "max_quote_words": 4,
+  "jargon": [
+    "licensing", "licence", "licences", "licensed", "license", "licenses", "litigation", "complaint", "complaints",
+    "plaintiff", "plaintiffs", "settlement", "settlements", "revenue", "revenues", "royalty", "royalties", "token", "tokens",
+    "model", "models", "default", "defaults", "infrastructure", "monetise", "monetised", "monetising", "monetize",
+    "monetized", "monetizing", "margin", "margins", "subsidy", "subsidies", "inference", "compute", "API", "APIs",
+    "fair use", "copyright", "copyrighted", "copyrights", "damages", "statutory", "valuation", "valuations", "equity",
+    "stakeholder", "stakeholders", "leverage", "ecosystem", "ecosystems", "paradigm", "paradigms", "framework",
+    "frameworks", "scalable"
+  ]
+})
+// SCRIPT_READING:END
+
+const JARGON_LIST = SCRIPT_READING.jargon.join(', ')
+
 export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   {
     id: 'R2', name: 'No "Not X, Y"',
@@ -87,9 +141,9 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'R7', name: 'Reading age 12, with humour',
-    text: 'Write for a reading age of 12: short sentences, everyday words, and real humour and personality. The joke points at the hype, never the reader, and never replaces the finding.',
-    said: 'This entire media channel needs to be radically simplistic with an average reading age of 12 and a huge sense of humour and fun and personality.',
-    on: '2026-09-25', source: 'walk log R7', status: 'live',
+    text: `Write for a reading age of 12: short sentences, everyday words, and real humour and personality. The joke points at the hype, never the reader, and never replaces the finding. Every video script must be understood by an ordinary 12-year-old hearing it once, and a hard gate holds it to that before it is recorded, packed or sent: no spoken sentence over ${SCRIPT_READING.max_sentence_words} words; at most ${SCRIPT_READING.max_average_words} words a sentence on average; a reading grade of ${SCRIPT_READING.max_grade} or less; no quotation longer than ${SCRIPT_READING.max_quote_words} words (a quote cannot be heard as one, and it brings in grown-up language: say it in plain words); and none of these words unless the same sentence says what it means in plain words: ${JARGON_LIST}. Then two fresh readers, each an ordinary 12-year-old hearing it once, must find nothing that loses them, and their retellings must match the script's point.`,
+    said: 'This entire media channel needs to be radically simplistic with an average reading age of 12 and a huge sense of humour and fun and personality. Then, 2026-10-12, of the scripts on his teleprompter: I also feel like these scripts are too complicated for a layman to understand. Every single script should be understandable by a 12-year-old. I can\'t even understand what I\'m reading off the teleprompter. I thought we had hard gates for this?',
+    on: '2026-09-25', source: 'walk log R7; the hard gate on every script (2026-10-12): scripts/post-pack/story_check.py reads SCRIPT_READING in this file and refuses a script that breaks it, then make-piece\'s two read-back readers, recorded on the making record\'s script check (read_back)', status: 'live',
     stages: ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check'],
   },
   {
@@ -246,7 +300,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'STORY_ARC', name: 'One story, start to finish',
-    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes with a short spoken outro after the call (what this was, where the full piece is, and Krish signing off); it never ends on the number.',
+    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes with a short spoken outro after the call (what this was, where the full piece is, and Krish signing off without saying his name again, SERIES_OPENER); it never ends on the number.',
     said: 'what does that mean? We\'ve never introduced that concept yet, and I dont get why it matters to whats been said thus far. It also barely connects to the next bits, the takeaways. ... now it just ends randomly on 85%, with nothing after that, no outro. Then, of the five-point story check: yes, i agree with it being there. happy with that idea.',
     on: '2026-10-06', source: 'walk log F75', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
@@ -288,10 +342,17 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'HOOK_AND_CTA', name: 'Open on a provocation, close on the article',
-    text: 'A video opens on the most provocative true thing in the piece, said in the first two sentences: a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. It never opens on throat-clearing or a definition. It closes on a call to action: say there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud, so the line works on every channel without "link below"), ask one question for the comments, and Krish signs off. The vertical cut keeps both, inside 90 seconds.',
+    text: 'A video opens with its series line (SERIES_OPENER), then the hook: the most provocative true thing in the piece, said in the first two sentences after the series line: a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. It never opens on throat-clearing or a definition. It closes on a call to action: say there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud, so the line works on every channel without "link below"), ask one question for the comments, and Krish signs off without repeating "I\'m Krish": his name is said once, in the series line. The vertical cut keeps both, inside 90 seconds.',
     said: 'make the intro more provocative and hooking, and the outro more CTA based, acknowledging there is a full article',
     on: '2026-10-09', source: 'chat, Friday piece 2 script review; checked by scripts/post-pack/story_check.py', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
+  },
+  {
+    id: 'SERIES_OPENER', name: 'Every video opens with its series line, and Krish says his name once',
+    text: `Every video script opens with its series line, word for word, said first, before the hook: ${OPENER_LIST}. Both cuts carry it, the 3-minute and the 90-second, and its words count toward the cut's length (405 to 495 spoken words long, 160 to 225 short). Krish says his name once, in that line: the close never repeats "I'm Krish". A script whose series has no line yet opens on the hook. The article and the posts do not carry it.`,
+    said: 'We need something catchy at the start of a video script like "Here\'s what you need to know about how money is changing because of AI. I\'m Krish." at the start of follow.the.money videos. And then similar for the weds and fri scripts. Then, of the lines shown to him, he picked the Wednesday and Friday lines above; and to "The opener now says "I\'m Krish". Drop it from the sign-off at the end?" he picked "Drop it at the end".',
+    on: '2026-10-12', source: 'chat, Monday\'s and Friday\'s scripts (commit ee68a61, which opened all four on their lines); the lines are SERIES_OPENERS in this file, which scripts/post-pack/story_check.py reads; checked by story_check.py --series, which making.py scripts runs with the piece\'s series; the script writer opens on it (api/_video.ts)', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
     id: 'TWO_CUTS', name: 'A three-minute video and a ninety-second one',
@@ -320,6 +381,27 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     said: 'I always want a video thumbnail for all video sizes produced as an asset every time.',
     on: '2026-10-12', source: 'chat, the video production request; drawn by scripts/pages/build.py --thumbs, required by scripts/post-pack/build.py and scripts/post-pack/visual_gate.py and by the Video assets step (apps/control-plane/api/_making.ts)', status: 'live',
     stages: ['production'],
+  },
+  {
+    id: 'STORY_INTRO_OUTRO', name: 'An animated intro made for each story, its audio treatment, and an animated outro card, in every format',
+    text: 'Every video, in every format (the 16:9 long cut and the 9:16 short cut), opens with a proper animated, branded intro made for that specific story, carries a designed audio treatment, and closes on a proper animated outro card made for that piece. Design comes first: the designs are shown to Krish and only his words approve one (krish-design). Until then no cut is finished: its report says "story intro and outro not designed yet", and production stops before the final render.',
+    said: 'when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward.',
+    on: '2026-10-12', source: 'chat, as Monday\'s takes came back; held by .agents/skills/produce-video (the required step before the final render), which reads config/story-intro-outro.json, status "awaiting_design" until he approves a design', status: 'live',
+    stages: ['production'],
+  },
+  {
+    id: 'ARTICLE_LENGTH', name: 'Articles about 30% shorter: about 1,400 words at most',
+    text: 'An article (the Substack piece) runs about 1,000 to 1,400 words, never more than 1,400: about 30% shorter than the roughly 2,000-word pieces of 12 October. Cut by keeping one argument and its strongest evidence, never by thinning every paragraph: drop the second example, the recap and the throat-clearing first.',
+    said: 'moving forward the articles need to be about 30% shorter.',
+    on: '2026-10-12', source: 'chat, after Monday\'s piece (about 2,000 words) went to his publish board', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'SHARP_PREDICTION', name: 'A prediction a reader can check, and that is not already happening',
+    text: 'Every prediction names one specific event that a reader can check on a stated date. It must not be under way already in the piece\'s own evidence, and it must not be the safe, obvious outcome. Its confidence is honest: a bolder call carries a lower number. A vague trend ("more deals", "more options") is never a prediction.',
+    said: 'The current one feels pretty obvious that its going to happen in hindsight. (Asked which prediction Monday\'s piece should make, he chose: "Keep the current one. Leave the article and videos as they are, so they match, and post today. Use the sharper style of prediction from Wednesday.")',
+    on: '2026-10-12', source: 'chat, on Monday\'s prediction (Universal or Sony make a deal with Suno by 31 December 2027, 70%)', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
   },
 ])
 

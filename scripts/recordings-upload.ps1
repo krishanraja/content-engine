@@ -567,7 +567,22 @@ function Invoke-Pass {
       $placed = $false
     }
   }
+  if (-not $Check) {
+    # The licensed music goes to the engine's library too, so any machine
+    # that renders (GitHub's, a cloud session) has it without H: (Krish,
+    # 2026-10-12: "the audio is literally in the drive"). A file the library
+    # holds already is left alone; a problem here never stops a pass.
+    try { Publish-Music } catch { Write-Log "the music was not published this pass: $($_.Exception.Message)" }
+  }
   return ($sent -and $placed)
+}
+
+function Publish-Music {
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
+  $music = Join-Path $RepoRoot 'scripts\quick-edit\music.py'
+  $run = Invoke-StudioPython @($music, 'publish')
+  if ($run.code -ne 0) { Write-Log "music publish: $($run.err) $($run.out)"; return }
+  if ($run.out -match 'sent\s+1 Brand kit' -or $run.out -match '[1-9]\d* sent') { Write-Log "music published: $($run.out -replace "`n", ' | ')" }
 }
 
 function Update-Source {

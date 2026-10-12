@@ -1,0 +1,106 @@
+name: Produce the day's videos
+
+# Krish, 2026-10-12: "every Monday, Wednesday and Friday at midday there is a
+# scheduled task that checks the inbox for that days videos and produces the
+# videos and puts them in the right folder ... We just need to have that
+# schedule originate somewhere neutral like github". He chose "GitHub always
+# renders": this machine makes both cuts (scripts/produce_day.py); the home
+# computers only feed it (takes and music) and file the result in Drive.
+#
+# One click: Actions > Produce the day's videos > Run workflow (any day, any
+# date). On its own it runs at 12:00 New York on Monday, Wednesday and Friday:
+# GitHub's cron is UTC, so it fires at 16:00 and 17:00 UTC and only the run
+# that lands on noon in New York goes on (daylight saving either way).
+
+on:
+  schedule:
+    - cron: '0 16 * * 1,3,5'
+    - cron: '0 17 * * 1,3,5'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'The publishing day, YYYY-MM-DD (empty: today in New York)'
+        required: false
+      piece:
+        description: 'The piece id (empty: the one scheduled for the date)'
+        required: false
+      dry_run:
+        description: 'Plan both cuts only; render, send and record nothing'
+        type: boolean
+        default: false
+
+concurrency:
+  group: produce-day
+  cancel-in-progress: false
+
+jobs:
+  produce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Is it noon in New York?
+        id: when
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(TZ=America/New_York date +%H)" != "12" ]; then
+            echo "go=false" >> "$GITHUB_OUTPUT"; echo "Not noon in New York; the other trigger runs it."
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.when.outputs.go == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.when.outputs.go == 'true'
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v5
+        if: steps.when.outputs.go == 'true'
+        with:
+          python-version: '3.12'
+      - name: Install hash-pinned FFmpeg and FFprobe
+        if: steps.when.outputs.go == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          video_ffmpeg_build='ffmpeg-n8.1.2-53-g1005b294ff-linux64-gpl-8.1'
+          video_ffmpeg_sha256='e4a088c9b16d4b729396805e589394cef45a6d1e5427f8ca32ded8a86694d5b8'
+          video_ffmpeg_archive="$RUNNER_TEMP/$video_ffmpeg_build.tar.xz"
+          gh release download toolchain-ffmpeg-n8.1.2-53-g1005b294ff --repo "$GITHUB_REPOSITORY" --pattern "$video_ffmpeg_build.tar.xz" --dir "$RUNNER_TEMP"
+          echo "$video_ffmpeg_sha256  $video_ffmpeg_archive" | sha256sum --check --strict
+          tar -xJf "$video_ffmpeg_archive" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/$video_ffmpeg_build/bin" >> "$GITHUB_PATH"
+      - name: Install the video tools
+        if: steps.when.outputs.go == 'true'
+        shell: bash
+        run: |
+          python -m pip install --require-hashes -r requirements.lock.txt \
+            || python -m pip install faster-whisper==1.2.0 ctranslate2==4.8.1 av==18.1.0 pillow==12.3.0
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+          npm ci
+      - name: Make the day's two videos
+        if: steps.when.outputs.go == 'true'
+        shell: bash
+        env:
+          ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          MAKING_BY: Midday run
+        run: |
+          python scripts/quick-edit/make.py --doctor || true
+          args=()
+          [ -n "${{ inputs.date }}" ] && args+=(--date "${{ inputs.date }}")
+          [ -n "${{ inputs.piece }}" ] && args+=(--piece "${{ inputs.piece }}")
+          [ "${{ inputs.dry_run }}" = "true" ] && args+=(--dry-run)
+          python scripts/produce_day.py "${args[@]}"
+      - name: Keep the run's reports
+        if: always() && steps.when.outputs.go == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: produce-day-reports
+          path: |
+            .cache/produce/**/*.report.json
+            .cache/produce/**/*.cut.txt
+            .cache/produce/**/preview-*.jpg
+          if-no-files-found: ignore
+          retention-days: 14

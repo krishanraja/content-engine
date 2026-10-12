@@ -50,15 +50,77 @@ each take is stamped with the hash of the script it was read from, so a take
 of words that have changed since stops counting, and every take it is unsure
 of is one board item held in progress for a session, never on Krish's list
 (a session works it out, or asks him in its reply). A take already on a
-piece is fetched by the path its record holds:
-`recording.py get "recordings/<sha256>.<ext>"`.
-`scripts/post-pack/README.md`, "Placing takes on the runners". Descript is a
-separate lane: Krish said yes on 12 October to each checked script going to
-his Descript drive as a view-access project per cut (his words are in
-`WORKBENCH.md`), and Monday's and Friday's were sent by hand that day, but
-the automatic send and the return of a take recorded in Descript are not
-built yet. Nothing there is ever published, edited or deleted, and no AI
-credits are spent, beyond what his words allow.
+piece is fetched by the path its record holds: `recording.py get "recordings/<sha256>.<ext>"`.
+`scripts/post-pack/README.md`, "Placing takes on the runners". This is the
+one way a take comes back: Krish drops it at the top of the Video Engine
+Inbox.
+
+**Every video script opens with its series line, and a 12-year-old can
+follow it.** Krish, 2026-10-12: "We need something catchy at the start of a
+video script like "Here's what you need to know about how money is changing
+because of AI. I'm Krish." at the start of follow.the.money videos. And then
+similar for the weds and fri scripts." He picked the Wednesday and Friday
+lines, and "Drop it at the end" for the closing "I'm Krish", so his name is
+said once. The three lines live once, as `SERIES_OPENERS` in
+`apps/control-plane/api/_houseRules.ts` (house rule `SERIES_OPENER`). The
+same day: "I also feel like these scripts are too complicated for a layman
+to understand. Every single script should be understandable by a
+12-year-old. I can't even understand what I'm reading off the teleprompter.
+I thought we had hard gates for this?" House rule `R7` is that hard gate on
+every script: `scripts/post-pack/story_check.py` refuses a script that
+breaks the series line or the reading gate (`SCRIPT_READING`, beside the
+lines), and two fresh readers, each an ordinary 12-year-old hearing it once,
+must find nothing that loses them before it is sent (`make-piece`, "The
+Scripts step"; `making.py <piece> read-back`).
+
+**Each checked script goes to Krish's teleprompter.com account, and nothing
+there is ever deleted.** Krish, 2026-10-12: "Also note that Descript is
+permanently gone, teleprompter.com is permanently in, connected via MCP
+here". Asked "May every checked script go into your teleprompter.com account
+automatically, starting with Monday's two now?", he picked "Yes, automatic,
+Monday now", whose terms were: "One script per cut, in a folder per piece
+(e.g. "Mon 12 Oct follow.the.money"). When the words change, the same script
+is updated in place. Nothing is ever deleted." The exact scope
+(`config/teleprompter.json`):
+
+- **The send**, by `make-piece` at the Scripts step, or by any session that
+  `scripts/post-pack/teleprompter_send.py pending` shows a cut still to
+  send: `list_folders`, `list_scripts`, `list_scripts_in_folder`,
+  `get_folder` and `get_script` to look; `create_folder`, one folder per
+  piece, only when its record holds none; `create_script`, one script per
+  cut, only when its record holds none; `update_script` of the cut's own
+  script with only its `text` and `duration`, exactly as
+  `teleprompter_send.py plan` prints them, then `teleprompter_send.py
+  record`.
+- **Never**: `move_script` or `update_folder`; his font size, speed,
+  alignment or timed speed, which are his to set; a second folder for a
+  piece or a second script for a cut; and any deletion (Teleprompter has no
+  delete tool). Teleprompter holds scripts only: a take comes back through
+  the Inbox (the rule above).
+
+Descript was retired on 2026-10-12, the day it was set up, in his words
+above; no session calls it. Records written before then keep a `descript`
+field that nothing reads.
+
+**The week's publish board is where Krish ticks; the piece's making record
+is where it counts.** Krish, 2026-10-12: "Give me a tick box next to each
+one so I can tick as I go and you can durably record that completion where
+it needs to be recorded. That Publish Manager is what you create every
+Sunday and let me iterate inside until we're done". The Sunday session makes
+one board a week (`scripts/post-pack/week_board.py`, a private artifact with
+a tab for Monday, Wednesday and Friday; its link is on that week's board
+item, `week-publish-board-<its Monday>`, and in `WORKBENCH.md`), and a
+session that makes a piece republishes it to that same link, so no tick is
+lost and no day it holds is dropped (`--previous`). Completion is recorded
+in this order: his tick is saved at once in the board's own store; every
+making session in Claude Code (`make-piece`, `plan-week`, `produce-video`)
+copies each channel tick onto the piece the board names for that day,
+published or not, at its start and again before it stops (`making.py
+<piece> posted <channel> [url]`; `.agents/skills/make-piece/SKILL.md`, "The
+week's ticks"), reading last week's board too until every day on it is at
+100%; and from the record the engine closes the board items and Control
+Center shows it. An untick never removes a record. A Record tick is
+information only: Record is done from the takes on the record.
 
 **Video production goes through `.agents/skills/produce-video`, and licensed
 music lives only at `MINDMAKE_MUSIC_ROOT` with its ledger

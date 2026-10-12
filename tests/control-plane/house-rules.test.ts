@@ -533,3 +533,140 @@ describe('the sting, the music bed and a thumbnail for every size (Krish, 2026-1
     assert.match(r.text, /thumbnail_override/)
   })
 })
+
+describe('every video opens with its series line, and Krish says his name once (SERIES_OPENER, Krish, 2026-10-12)', () => {
+  test('the rule is live, carries his words and the three lines he picked, and reaches the writers, the draft judges and the final pass', async () => {
+    const { SERIES_OPENERS, seriesOpener } = await import('../../apps/control-plane/api/_houseRules.js')
+    const r = HOUSE_RULES.find(x => x.id === 'SERIES_OPENER')
+    assert.ok(r)
+    assert.equal(r.status, 'live')
+    assert.equal(r.on, '2026-10-12')
+    assert.ok(r.said.startsWith('We need something catchy at the start of a video script like "Here\'s what you need to know about how money is changing because of AI. I\'m Krish." at the start of follow.the.money videos. And then similar for the weds and fri scripts.'))
+    assert.match(r.said, /Drop it at the end/)
+    assert.deepEqual(Object.fromEntries(Object.entries(SERIES_OPENERS).map(([k, v]) => [k, v.line])), {
+      follow_the_money: "Here's what you need to know about how money is changing because of AI. I'm Krish.",
+      under_the_hood: "Here's what's really inside the AI everyone's selling you. I'm Krish.",
+      mind_the_gap: "Here's what's coming with AI, before everyone notices. I'm Krish.",
+    })
+    for (const o of Object.values(SERIES_OPENERS)) assert.ok(r.text.includes(o.line), o.series)
+    assert.match(r.text, /the close never repeats "I'm Krish"/)
+    for (const stage of ['write', 'judge_draft', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+    assert.equal(seriesOpener('mind_the_gap'), SERIES_OPENERS.mind_the_gap!.line)
+    assert.equal(seriesOpener('money_of_ai'), null)
+    assert.equal(seriesOpener(null), null)
+  })
+  test('HOOK_AND_CTA puts the hook after the series line and ends without his name again', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'HOOK_AND_CTA')!
+    assert.match(r.text, /opens with its series line \(SERIES_OPENER\), then the hook/)
+    assert.match(r.text, /in the first two sentences after the series line/)
+    assert.match(r.text, /without repeating "I'm Krish": his name is said once, in the series line/)
+    assert.match(r.text, /makeyourmindup\.ai/)
+  })
+  test('one source: story_check.py reads the lines from the house rules, and the script writer opens on them', async () => {
+    const { SERIES_OPENERS } = await import('../../apps/control-plane/api/_houseRules.js')
+    const ts = readFileSync('apps/control-plane/api/_houseRules.ts', 'utf8')
+    const block = ts.split('// SERIES_OPENERS:BEGIN')[1]!.split('// SERIES_OPENERS:END')[0]!
+    assert.deepEqual(JSON.parse(block.slice(block.indexOf('{'), block.lastIndexOf('}') + 1)), SERIES_OPENERS)
+    const check = readFileSync('scripts/post-pack/story_check.py', 'utf8')
+    assert.match(check, /house_block\('SERIES_OPENERS'\)/)
+    const { spawnSync } = await import('node:child_process')
+    const read = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['-c', 'import json, story_check; print(json.dumps([story_check.series_openers(), story_check.reading_rules()]))'],
+      { cwd: join(__dirname, '../../scripts/post-pack'), encoding: 'utf8' })
+    assert.equal(read.status, 0, read.stderr)
+    const [lines, reading] = JSON.parse(read.stdout)
+    assert.deepEqual(lines, Object.fromEntries(Object.entries(SERIES_OPENERS).map(([k, v]) => [k, v.line])))
+    const { SCRIPT_READING } = await import('../../apps/control-plane/api/_houseRules.js')
+    assert.deepEqual(reading, SCRIPT_READING)
+    const video = readFileSync('apps/control-plane/api/_video.ts', 'utf8')
+    assert.match(video, /seriesOpener\(o\.series\)/)
+    const route = readFileSync('apps/control-plane/api/content-ideas/[id]/video-script.ts', 'utf8')
+    assert.match(route, /series: \(idea as any\)\.lane_slot/)
+    const making = readFileSync('scripts/post-pack/making.py', 'utf8')
+    assert.match(making, /command \+= \['--series', series\]/)
+  })
+})
+
+describe('reading age 12 is a hard gate on every script (R7, Krish, 2026-10-12)', () => {
+  test('R7 keeps its id, carries his words, and states the gate it holds', async () => {
+    const { SCRIPT_READING } = await import('../../apps/control-plane/api/_houseRules.js')
+    const r = HOUSE_RULES.find(x => x.id === 'R7')!
+    assert.equal(r.status, 'live')
+    assert.match(r.said, /Every single script should be understandable by a 12-year-old\. I can't even understand what I'm reading off the teleprompter\. I thought we had hard gates for this\?/)
+    assert.deepEqual([SCRIPT_READING.max_sentence_words, SCRIPT_READING.max_average_words, SCRIPT_READING.max_grade, SCRIPT_READING.max_quote_words], [20, 12, 6, 4])
+    assert.ok(r.text.includes('no spoken sentence over 20 words'))
+    assert.ok(r.text.includes('a reading grade of 6 or less'))
+    for (const word of ['licensing', 'settlement', 'revenue', 'royalties', 'model', 'copyright', 'fair use', 'valuation', 'scalable']) {
+      assert.ok(SCRIPT_READING.jargon.includes(word), word)
+      assert.ok(r.text.includes(word), word)
+    }
+    assert.match(r.text, /two fresh readers, each an ordinary 12-year-old hearing it once/)
+    for (const stage of ['write', 'final_pass'] as Stage[]) assert.ok(r.stages.includes(stage), stage)
+  })
+  test('one source: story_check.py reads the gate from the house rules', async () => {
+    const { SCRIPT_READING } = await import('../../apps/control-plane/api/_houseRules.js')
+    const ts = readFileSync('apps/control-plane/api/_houseRules.ts', 'utf8')
+    const block = ts.split('// SCRIPT_READING:BEGIN')[1]!.split('// SCRIPT_READING:END')[0]!
+    assert.deepEqual(JSON.parse(block.slice(block.indexOf('{'), block.lastIndexOf('}') + 1)), SCRIPT_READING)
+    assert.match(readFileSync('scripts/post-pack/story_check.py', 'utf8'), /house_block\('SCRIPT_READING'\)/)
+  })
+  test('the read-back: the engine\'s two readers are the ones make-piece gives a session, word for word', async () => {
+    const { READ_BACK_READERS } = await import('../../apps/control-plane/api/_video.js')
+    assert.equal(READ_BACK_READERS.length, 2)
+    const skill = readFileSync('.agents/skills/make-piece/SKILL.md', 'utf8').replace(/\s+/g, ' ')
+    for (const prompt of READ_BACK_READERS) assert.ok(skill.includes(prompt), prompt.slice(0, 60))
+    for (const prompt of READ_BACK_READERS) assert.doesNotMatch(prompt, /music/)
+    assert.match(skill, /making\.py <uuid> read-back/)
+  })
+  test('the read-back passes only when both readers answered and nothing lost either', async () => {
+    const { readBack } = await import('../../apps/control-plane/api/_video.js')
+    const answers = ['{"lost": ["nothing"], "retell": "One. Two. Three."}', '{"lost": [], "retell": "A. B. C."}']
+    const ok = await readBack('Script.', async () => answers.shift()!)
+    assert.equal(ok.passed, true)
+    assert.deepEqual(ok.readers.map(r => [r.reader, r.lost]), [['A', []], ['B', []]])
+    const lost = await readBack('Script.', async ({ system }) => (system.startsWith('Pretend') ? '{"lost": ["fair use"], "retell": "x"}' : '{"lost": [], "retell": "y"}'))
+    assert.equal(lost.passed, false)
+    assert.deepEqual(lost.readers.find(r => r.reader === 'B')!.lost, ['fair use'])
+    const down = await readBack('Script.', async () => { throw new Error('timeout') })
+    assert.equal(down.passed, false)
+    assert.ok(down.readers.every(r => r.error === 'timeout'))
+  })
+})
+
+describe('a story intro, its audio treatment and an outro card, in every format (STORY_INTRO_OUTRO, Krish, 2026-10-12)', () => {
+  test('the rule is live, in his words, on the production stage, and the stand-off is approved in his words', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'STORY_INTRO_OUTRO')!
+    assert.equal(r.status, 'live')
+    assert.equal(r.on, '2026-10-12')
+    assert.deepEqual(r.stages, ['production'])
+    assert.equal(r.said, 'when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward.')
+    const cfg = JSON.parse(readFileSync('config/story-intro-outro.json', 'utf8'))
+    assert.equal(cfg.status, 'approved')
+    assert.equal(cfg.approved.by, 'Krish')
+    assert.ok(cfg.approved.words.includes('todays video goes out with the new intro and outro animations'))
+    assert.equal(cfg.said.words, r.said)
+    assert.equal(cfg.until_approved, 'story intro and outro not designed yet')
+    assert.ok(r.text.includes(cfg.until_approved))
+  })
+  test('produce-video stops before the final render until the designs are approved', () => {
+    const skill = readFileSync('.agents/skills/produce-video/SKILL.md', 'utf8').replace(/\s+/g, ' ')
+    assert.ok(skill.includes('house rule `STORY_INTRO_OUTRO`'))
+    assert.ok(skill.includes('config/story-intro-outro.json'))
+    assert.ok(skill.includes('say "story intro and outro not designed yet"'))
+    assert.ok(skill.includes('stop before the final render'))
+    assert.ok(skill.indexOf('STORY_INTRO_OUTRO') < skill.indexOf('python scripts/quick-edit/make.py WORK/kit/long.json --out WORK/long --only 16x9 --share-mib 29'))
+  })
+})
+
+describe('today\'s four scripts pass the gate they are held to (SERIES_OPENER and R7, 2026-10-12)', () => {
+  test('Monday\'s and Friday\'s two cuts open with their series line, say "I\'m Krish" once, and a 12-year-old can follow them', async () => {
+    const { spawnSync } = await import('node:child_process')
+    for (const [file, cut, series] of [
+      ['docs/plans/2026-10-12-draft-script.md', 'long', 'follow_the_money'], ['docs/plans/2026-10-12-draft-script-90s.md', 'short', 'follow_the_money'],
+      ['docs/plans/2026-10-09-draft-script.md', 'long', 'mind_the_gap'], ['docs/plans/2026-10-09-draft-script-90s.md', 'short', 'mind_the_gap'],
+    ] as const) {
+      const out = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['scripts/post-pack/story_check.py', '--cut', cut, '--series', series, file], { encoding: 'utf8' })
+      assert.equal(out.status, 0, `${file}: ${out.stdout}${out.stderr}`)
+      assert.match(out.stdout, /^ready /m)
+    }
+  })
+})

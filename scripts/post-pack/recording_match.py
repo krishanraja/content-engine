@@ -32,10 +32,17 @@ How it decides, in order:
 2. The pieces waiting for one. The pieces in flight this week and next
    (GET /api/week/options), whose Scripts step is done and whose Record step
    is not, the nearest first by the day they go out.
-3. Each piece's two scripts. The post.json "video-script" entries with
-   "cut" (docs/plans/<plan>/post.json, the file beside it, the pack staged
-   or in the library, or the draft beside the plan), then the pack by its
-   usual names.
+3. Each piece's two scripts: the words its record says are current. The
+   making record holds the hash of each cut's checked words
+   (script_check.hashes), so every copy this machine can find is hashed
+   and the one with those words is used: the post.json "video-script"
+   entries with "cut" (docs/plans/<plan>/post.json, the file beside it, the
+   pack staged or in the library, or the draft beside the plan), the pack
+   by its usual names, and each of those files in the repository as
+   committed on main (git show origin/main, then main), so a stale pack in
+   Drive or an old checkout never stands in for words that changed since.
+   With no copy of the current words, the first copy found is used, and
+   said.
 4. The words. faster-whisper small.en hears the first 45 seconds (cached as
    .cache/recordings/<sha256>.head.words.json), scored against the opening of
    each script with the ordered word match the Studio uses
@@ -58,6 +65,13 @@ How it decides, in order:
    runs about 2:30 and over, a short one about 2:15 and under. Between the
    two, a file name that says "long" or "short" decides. Words and length
    that disagree are unsure.
+7. The script's title. Krish reads each cut from its script in
+   teleprompter.com, which names the recording after the script ("Mon 12
+   Oct - 3-minute - Who gets paid for AI songs.mp4"). A file whose name is
+   the title of a cut's script on a waiting piece's record
+   (meta.making.teleprompter.cuts.<cut>.title) is that piece and cut: placed
+   without the words' bar, unless its words are surely another piece's or
+   its length is surely the other cut's (then unsure).
 
 Anything unsure is said in one plain line for that file, and nothing is
 recorded for it. Exit 0 when every new recording is placed (or there are
@@ -355,6 +369,10 @@ def waiting_pieces(call, monday):
         piece['changed_at'] = (record.get('script_check') or {}).get('changed_at') or {}
         piece['began'] = began_at(record)
         piece['folder'] = (record.get('pack') or {}).get('folder')
+        # Each cut's script in Teleprompter, whose title names the recording he makes from it.
+        tp = record.get('teleprompter') if isinstance(record.get('teleprompter'), dict) else {}
+        tp_cuts = tp.get('cuts') if isinstance(tp.get('cuts'), dict) else {}
+        piece['titles'] = {cut: c['title'] for cut, c in tp_cuts.items() if cut in CUTS and isinstance(c, dict) and isinstance(c.get('title'), str)}
         waiting.append(piece)
     waiting.sort(key=lambda p: (p.get('scheduled_for') or '9999-12-31', p['id']))
     return waiting, claimed
@@ -410,23 +428,51 @@ def find_post(piece_id, plans):
     return None, None
 
 
-def scripts_for(piece, plans=PLANS, roots=None):
-    """{'long': {'text', 'from'}, 'short': {...}}: each script the piece has.
-    For a post.json "video-script" entry: its own text, the file beside the
+GIT_REFS = ('origin/main', 'main')  # the scripts committed on main
+
+
+def committed(path, refs=GIT_REFS, repo=REPO):
+    """The text of a file in the repository as committed on main (git show),
+    or None: not in the repository, no git, or no such file there."""
+    try:
+        rel = Path(path).resolve().relative_to(Path(repo).resolve()).as_posix()
+    except (ValueError, OSError):
+        return None
+    for ref in refs:
+        try:
+            out = subprocess.run(['git', '-C', str(repo), 'show', f'{ref}:{rel}'], capture_output=True, timeout=20)
+        except (OSError, subprocess.TimeoutExpired):
+            return None
+        if out.returncode == 0:
+            try:
+                return out.stdout.decode('utf-8-sig')
+            except UnicodeDecodeError:
+                return None
+    return None
+
+
+def scripts_for(piece, plans=PLANS, roots=None, show=committed):
+    """{'long': {'text', 'from', 'current'}, 'short': {...}}: each script the
+    piece has, its current words first. Every copy is gathered: for a
+    post.json "video-script" entry, its own text, the file beside the
     post.json, the pack, then the draft beside the plan
-    (docs/plans/<date>-draft-<file>). Then the pack by its usual names."""
+    (docs/plans/<date>-draft-<file>); then the pack by its usual names; and
+    each of those files as committed on main (show). The copy whose words
+    hash to the record's for that cut (piece['hashes']) is used and marked
+    current; with none, the first copy found, not current."""
     roots = library_roots() if roots is None else roots
     folder = piece.get('folder')
-    found = {}
+    hashes = piece.get('hashes') if isinstance(piece.get('hashes'), dict) else {}
+    copies = {cut: [] for cut in CUTS}
     post_path, post = find_post(piece['id'], plans)
     for entry in (post or {}).get('files') or []:
         if not isinstance(entry, dict) or entry.get('kind') != 'video-script':
             continue
         cut = entry.get('cut') if entry.get('cut') in CUTS else story_check.cut_of(entry.get('name') or entry.get('file') or '')
-        if cut not in CUTS or cut in found:
+        if cut not in CUTS:
             continue
         if isinstance(entry.get('text'), str) and entry['text'].strip():
-            found[cut] = {'text': entry['text'], 'from': f'{_shown(post_path)} (its text)'}
+            copies[cut].append({'text': entry['text'], 'from': f'{_shown(post_path)} (its text)'})
             continue
         raw = entry.get('file') if isinstance(entry.get('file'), str) and entry['file'].strip() else None
         name = entry.get('name') or (f'video-script{Path(raw).suffix.lower() or ".md"}' if raw else PACK_NAMES[cut])
@@ -435,20 +481,50 @@ def scripts_for(piece, plans=PLANS, roots=None):
         dated = re.match(r'^(\d{4}-\d{2}-\d{2})-', post_path.parent.name)
         if raw and dated:
             places.append(post_path.parent.parent / f'{dated.group(1)}-draft-{Path(raw).name}')
-        for place in places:
-            text = _read(place)
-            if text and text.strip():
-                found[cut] = {'text': text, 'from': _shown(place)}
-                break
+        copies[cut] += [{'place': place} for place in places]
     for cut in CUTS:
-        if cut in found or not folder:
-            continue
-        for root in roots:
-            text = _read(root / folder / VIDEO / PACK_NAMES[cut])
+        if folder:
+            copies[cut] += [{'place': root / folder / VIDEO / PACK_NAMES[cut]} for root in roots]
+    found = {}
+    for cut in CUTS:
+        texts = []
+        for copy in copies[cut]:
+            if 'text' in copy:
+                texts.append(copy)
+                continue
+            text = _read(copy['place'])
             if text and text.strip():
-                found[cut] = {'text': text, 'from': _shown(root / folder / VIDEO / PACK_NAMES[cut])}
-                break
+                texts.append({'text': text, 'from': _shown(copy['place'])})
+            on_main = show(copy['place']) if show else None
+            if on_main and on_main.strip():
+                texts.append({'text': on_main, 'from': f'{_shown(copy["place"])} (as committed on main)'})
+        if not texts:
+            continue
+        want = hashes.get(cut)
+        current = next((t for t in texts if want and making.script_hash(t['text']) == want), None)
+        found[cut] = {**(current or texts[0]), 'current': bool(current)}
     return found
+
+
+TITLE_COPY = re.compile(r'\s*(?:\(\d{1,3}\)|-\s*copy|\bcopy)\s*$', re.I)  # "Title (1).mp4", "Title - Copy.mp4"
+
+
+def title_key(text):
+    """A script title or a file name's stem, as compared: one space between
+    words, any case, a trailing copy number dropped."""
+    stem = str(text or '').strip()
+    stem = re.sub(r'\.[A-Za-z0-9]{2,5}$', '', stem) if re.search(r'\.[A-Za-z0-9]{2,5}$', stem) else stem
+    stem = TITLE_COPY.sub('', stem)
+    return ' '.join(stem.replace('\u2019', "'").split()).casefold()
+
+
+def titled(name, pieces):
+    """(piece, cut) when the file's name is the title of exactly one cut's
+    Teleprompter script on a waiting piece's record, else None."""
+    key = title_key(name)
+    hits = [(piece, cut) for piece in pieces for cut, title in (piece.get('titles') or {}).items()
+            if cut in CUTS and title and title_key(title) == key]
+    return hits[0] if len(hits) == 1 else None
 
 
 # ------------------------------------------------------------- the recordings
@@ -732,9 +808,12 @@ def decide(item, said, seconds, pieces, scripts):
         if texts:
             scores[piece['id']] = {cut: opening_score(head, words(texts[cut]['text'])) for cut in CUTS if cut in texts}
     answer['scores'] = scores
+    by_id = {p['id']: p for p in pieces}
+    named = titled(item.get('name'), pieces)
+    if named:
+        return by_title(answer, named, scores, seconds, by_id)
     if not scores:
         return {**answer, 'reason': 'none of the pieces waiting for it has scripts this tool can read'}
-    by_id = {p['id']: p for p in pieces}
     ranked = sorted(((max(c.values()), pid) for pid, c in scores.items()), reverse=True)
     best, pid = ranked[0]
     runner = ranked[1][0] if len(ranked) > 1 else 0.0
@@ -764,6 +843,28 @@ def decide(item, said, seconds, pieces, scripts):
     return {**answer, 'status': 'placed', 'cut': cut, 'by': how}
 
 
+def by_title(answer, named, scores, seconds, by_id):
+    """A take named after a cut's Teleprompter script: that piece and cut,
+    whatever the words' bar, unless its words are surely another piece's or
+    its length is surely the other cut's."""
+    piece, cut = named
+    pid = piece['id']
+    own = max((scores.get(pid) or {}).values(), default=0.0)
+    others = sorted(((max(c.values()), other) for other, c in scores.items() if other != pid and c), reverse=True)
+    answer.update(piece_id=pid, closest=pid, score=round(own, 3), runner_up=round(others[0][0], 3) if others else 0.0, titled=True)
+    if others and others[0][0] >= SURE and others[0][0] - own >= MARGIN:
+        return {**answer, 'piece_id': None, 'reason': f'its name is {label(piece)}\'s {cut} script, but its words are '
+                                                    f'{label(by_id[others[0][1]])}\'s ({others[0][0]:.2f})'}
+    if not isinstance(seconds, (int, float)):
+        return {**answer, 'reason': f'its name is {label(piece)}\'s {cut} script, but how long it runs could not be read (ffprobe)'}
+    by_length = 'long' if seconds >= LONG_FROM else 'short' if seconds <= SHORT_UP_TO else None
+    if by_length and by_length != cut:
+        return {**answer, 'reason': f'its name is {label(piece)}\'s {cut} script, but it runs {clock(seconds)}, which is a {by_length} take'}
+    if cut in (piece.get('recorded') or []):
+        return {**answer, 'cut': cut, 'reason': f'it looks like a new take of {label(piece)}\'s {cut} cut, which is already recorded; left alone'}
+    return {**answer, 'status': 'placed', 'cut': cut, 'by': 'title'}
+
+
 def settle(answers):
     """Two takes placed on the same piece and cut: the newest is used, the
     others are named and left alone."""
@@ -785,9 +886,14 @@ def plain(answer, pieces):
     name = answer['name']
     if answer['status'] == 'placed':
         piece = by_id[answer['piece_id']]
-        why = {'words': 'its words', 'length': 'its length', 'name': 'its name (the length alone could not say)'}[answer['by']]
-        line = (f'placed: "{name}" is the {answer["cut"]} cut of {label(piece)}. Its opening matches {answer["score"]:.2f} '
-                f'(the next piece {answer["runner_up"]:.2f}), it runs {clock(answer["seconds"])}, and {why} chose the cut.')
+        why = {'words': 'its words', 'length': 'its length', 'name': 'its name (the length alone could not say)'}.get(answer['by'])
+        if answer['by'] == 'title':
+            line = (f'placed: "{name}" is the {answer["cut"]} cut of {label(piece)}: its name is the title of that cut\'s script in '
+                    f'Teleprompter. Its opening matches {answer["score"]:.2f} (the next piece {answer["runner_up"]:.2f}), and it runs '
+                    f'{clock(answer["seconds"])}.')
+        else:
+            line = (f'placed: "{name}" is the {answer["cut"]} cut of {label(piece)}. Its opening matches {answer["score"]:.2f} '
+                    f'(the next piece {answer["runner_up"]:.2f}), it runs {clock(answer["seconds"])}, and {why} chose the cut.')
         if answer.get('big'):
             line += ' It is over 500 MiB, so the upload lane skips it: produce it on this machine.'
         return line
@@ -1012,6 +1118,10 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
         if missing:
             out(f'note: no {" or ".join(missing)} script found for {label(piece)} (docs/plans post.json, the draft beside it, '
                 f'or the pack), so it is matched on what there is.')
+        stale = [c for c in CUTS if c in scripts[piece['id']] and piece.get('hashes', {}).get(c) and not scripts[piece['id']][c].get('current')]
+        if stale:
+            out(f'note: no copy of the current {" or ".join(stale)} words of {label(piece)} is on this machine or on main (its record\'s hash), '
+                f'so the nearest copy is used: pull main, or the take may be unsure.')
     if not items:
         out('No new recordings: everything that has arrived is already on a piece.')
     elif not pieces:
@@ -1194,6 +1304,9 @@ def self_test():
         MON: {'making': {'workroom': {'url': 'https://claude.ai/artifact/m', 'at': '2026-10-10T09:00:00Z'},
                          'script_check': {'passed': True, 'checked_at': '2026-10-11T19:14:16Z', 'hashes': mon_hashes},
                          'pack': {'folder': '2026-10-12 Mon follow.the.money - Who gets paid for AI songs'},
+                         'teleprompter': {'folder_id': '86B6F74B-2F8A-4477-AE44-8DA1119D1CD9', 'cuts': {
+                             'long': {'script_id': '45F414D8-31E1-4B2D-BBE4-44EBA042B346', 'title': 'Mon 12 Oct - 3-minute - Who gets paid for AI songs'},
+                             'short': {'script_id': 'ED3DE98A-7158-4448-A622-A2A5115FFA83', 'title': 'Mon 12 Oct - 90-second - Who gets paid for AI songs'}}},
                          'recordings': [{'cut': 'long', 'path': f'recordings/{stale_sha}.mp4', 'script_sha256': 'f' * 64}]},
               'steps': [{'key': 'scripts', 'state': 'done'}, {'key': 'record', 'state': 'now'}]},
         FRI: {'making': {'script_check': {'passed': True, 'checked_at': '2026-10-11T18:13:41Z'}, 'pack': {'folder': '2026-10-16 Fri mind.the.gap - Why so many AIs'}},
@@ -1260,8 +1373,45 @@ def self_test():
         check('scripts: nothing is read from the engine; a script found nowhere is missing', 'short' in found, False)
         check('scripts: none at all is an empty answer, not an error', scripts_for({'id': EARLY}, plans, [library_posts]), {})
         check('scripts: the dead engine fallback is gone', ('OUTPUT_KEYS' in globals(), 'transformed_outputs' in Path(__file__).read_text(encoding='utf-8').split('def scripts_for', 1)[1].split('def engine_recordings', 1)[0]), (False, False))
+        # The words the record says are current win over a stale copy: a pack in Drive or an old checkout.
+        (plans / '2026-10-12-monday' / 'script.md').write_text('An older long script, read this morning.\n', encoding='utf-8')
+        (plans / '2026-10-12-draft-script.md').write_text(' '.join(mon_long), encoding='utf-8')
+        found = scripts_for(pieces[0], plans, [library_posts], show=None)
+        check('scripts: the copy with the record\'s words wins over the first found, and is marked current',
+              (found['long']['from'].endswith('2026-10-12-draft-script.md'), found['long']['current'], words(found['long']['text'])), (True, True, mon_long))
+        (plans / '2026-10-12-draft-script.md').write_text('An older long script, read this morning.\n', encoding='utf-8')
+        on_main = lambda place: ' '.join(mon_long) if Path(place).name == '2026-10-12-draft-script.md' else None
+        found = scripts_for(pieces[0], plans, [library_posts], show=on_main)
+        check('scripts: with no current copy here, the one committed on main is used',
+              (found['long']['from'].endswith('2026-10-12-draft-script.md (as committed on main)'), found['long']['current']), (True, True))
+        found = scripts_for(pieces[0], plans, [library_posts], show=None)
+        check('scripts: with no current copy anywhere, the first found is used and said not current',
+              (found['long']['from'].endswith('2026-10-12-monday/script.md'), found['long']['current']), (True, False))
+        on_main_now = committed(REPO / 'scripts' / 'post-pack' / 'making.py')  # None where main is not fetched (a CI checkout of one commit)
+        check('scripts: a file in the repository is read as committed on main', on_main_now is None or 'def post(' in on_main_now, True)
+        check('scripts: a file outside the repository is never asked of git', committed(tmp / 'x.md'), None)
+        (plans / '2026-10-12-monday' / 'script.md').write_text(' '.join(mon_long), encoding='utf-8')
         scripts = {MON: {'long': {'text': ' '.join(mon_long)}, 'short': {'text': ' '.join(mon_short)}},
                    FRI: {'long': {'text': ' '.join(fri_long)}, 'short': {'text': ' '.join(fri_short)}}}
+
+        # A take named after its Teleprompter script: that piece and cut, whatever the words' bar.
+        check('waiting: each piece carries its Teleprompter scripts\' titles', (pieces[0]['titles']['long'], pieces[1].get('titles')),
+              ('Mon 12 Oct - 3-minute - Who gets paid for AI songs', {}))
+        stale_words = _heard(fri_long[:110])  # Friday's long words: surely another piece's
+        named_take = {'name': 'Mon 12 Oct - 3-minute - Who gets paid for AI songs.mp4', 'at': '2026-10-12T16:20:00Z'}
+        low = {MON: {'long': {'text': 'Something else entirely, said this morning, ' * 20}, 'short': {'text': 'Another thing, ' * 30}}}
+        a = decide(named_take, _heard(mon_long[:110]), 184.0, pieces[:1], low)
+        check('title: the file named after the long script is the long cut, its words below the bar',
+              (a['status'], a.get('piece_id'), a.get('cut'), a.get('by'), a['score'] < SURE), ('placed', MON, 'long', 'title', True))
+        check('title: said plainly', plain({**a, 'name': named_take['name']}, pieces).startswith(
+            'placed: "Mon 12 Oct - 3-minute - Who gets paid for AI songs.mp4" is the long cut of Mon 12 Oct "Who gets paid for AI songs": its name is the title'), True)
+        a = decide({**named_take, 'name': 'mon 12 oct - 90-second - who gets paid for AI songs (1).MOV'}, _heard(mon_short[:110]), 95.0, pieces, scripts)
+        check('title: any case, and a copy number, still the title', (a['status'], a.get('cut'), a.get('by')), ('placed', 'short', 'title'))
+        a = decide(named_take, _heard(mon_long[:110]), 95.0, pieces, scripts)
+        check('title: a length that is surely the other cut is unsure', (a['status'], 'which is a short take' in a.get('reason', '')), ('unsure', True))
+        a = decide(named_take, stale_words, 184.0, pieces, scripts)
+        check('title: words that are surely another piece\'s are unsure', (a['status'], 'but its words are' in a.get('reason', '')), ('unsure', True))
+        check('title: a name that is no script\'s title decides nothing', titled('Mon 12 Oct - 3-minute.mp4', pieces), None)
 
         # Deciding one file.
         take = {'name': 'take.mp4', 'at': '2026-10-12T08:00:00Z'}

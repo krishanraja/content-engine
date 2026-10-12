@@ -1,6 +1,6 @@
 ---
 name: plan-week
-description: Plan the publishing week on Sunday. Research three or four options for each publishing day (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap), stress-test them, write them onto the pieces through /api/week/options so Control Center's week page (#/week) shows them, flesh out the ideas Krish dropped in, and put the week's one question on the board. Use when the Sunday "Plan the week" routine fires, or when Krish asks to plan or re-plan the week.
+description: Plan the publishing week on Sunday. Research three or four options for each publishing day (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap), stress-test them, write them onto the pieces through /api/week/options so Control Center's week page (#/week) shows them, flesh out the ideas Krish dropped in, put the week's one question on the board, and make the week's publish board (one page, a tab for each day, a tick for every step). Use when the Sunday "Plan the week" routine fires, or when Krish asks to plan or re-plan the week.
 ---
 
 # Plan the week
@@ -19,6 +19,19 @@ The week runs Monday to Friday. On Sunday it is the coming week.
 
 ## Steps
 
+0. **Close out the week that is ending.** Copy Krish's ticks from its
+   publish board onto the records (`.agents/skills/make-piece/SKILL.md`,
+   "The week's ticks"), with that week's board link (its item
+   `week-publish-board-<that Monday>`). The board is not closed by this: its
+   item stays open, and every session's tick copy keeps reading it as last
+   week's board until every picked day on it is at 100%, because Krish
+   posts Friday's reposts at the weekend. Then `python3
+   scripts/post-pack/teleprompter_send.py pending`: a cut it lists is sent
+   to Teleprompter exactly as `make-piece`'s "The Scripts step" says, step 6
+   (his standing yes covers any session), or, without the Teleprompter
+   connector, named in one line on the week's board item. A cut sent by hand
+   gets its record line instead, and one held back after a failed send is
+   only named.
 1. Read `docs/CADENCE.md` and each series' mandate and the material on hand:
    `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>" --full`
    (mandates, options already written, what is in flight or scheduled, the
@@ -50,6 +63,56 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `week-<Monday>` exists; if the cron has not run yet, it will.
 6. Do not pick, schedule, draft or spend. Picking is Krish's press on the week
    page; his Monday pick starts the make-piece session on its own.
+7. **Make the week's publish board**, last, once the options are written.
+   Krish, 2026-10-12: "just give me one ... Publish Manager for the ...
+   whole week with 3 tabs on it for Mon / Weds / Fri, which we need to get
+   to 100%. Give me a tick box next to each one so I can tick as I go and
+   you can durably record that completion where it needs to be recorded.
+   That Publish Manager is what you create every Sunday and let me iterate
+   inside until we're done, and then I check off the list what I have done
+   as I do it."
+   - **Build it** with all three tabs, from the week's picks as they stand:
+     `python3 scripts/post-pack/week_board.py --week <Monday> --live --out
+     .cache/week-board/<Monday>/week-board.html`. A day whose piece already
+     has a publish page (a pick carried over) is a made tab: `Artifact`
+     `read` its `publish_manager` link (in its making record) and add
+     `--day DAY=<the saved file> --piece DAY=<uuid>`. A picked day not made
+     yet gets its "not made yet" tab with a working checklist; a day not
+     picked yet says so. It writes `week-board.json` beside the page: the
+     week, each day's state and piece, every tick id, and the publish call.
+     Exit 2 is a refusal it names: fix it and build again.
+   - **Publish it as a new private artifact**, a new one every Sunday, never
+     last week's link: `Artifact({action: "publish", file_path: "<absolute
+     path>/week-board.html", title: "This Week's Publish Board", icon:
+     "calendar", capabilities: {"db": {}, "downloads": true}, description:
+     "<the manifest's publish.description>"})`. Then one `ArtifactData`
+     `list` of `ticks` and one of `links` on its link: both are empty on a
+     new board, and the page's own store is then known to answer.
+   - **Record its link where every later session finds it.** On the board,
+     an item of its own for this week, `week-publish-board-<Monday>`, so
+     last week's item and link stay as they are: `POST /api/workbench` with
+     `{"action": "upsert_items", "client": "claude_code", "items": [{"id":
+     "week-publish-board-2026-10-19", "lane": "in_progress", "rank": 0, "area":
+     "This week", "title": "This week's publish board, 19 to 23 October",
+     "detail": "One page for Monday, Wednesday and Friday. Tick each step as
+     you do it; every tick is saved at once, and the next session copies it
+     onto the piece.", "link": "<its link>", "link_label": "Open this week's
+     publish board"}]}` (the id and the dates are the week's). It is held in
+     progress, never on his list: no step the engine can see closes it, so
+     the engine would refuse it on him (`WORKBENCH.md`, "The board"); each
+     day's own items (`monday-record` and the rest) are what reach his list. In
+     `WORKBENCH.md`, under "This week's publish board": the new week's line
+     goes first, and the ending week's line moves under "Last week's
+     publish board" (replacing the one there), where it stays until that
+     week's item is done.
+   - **When the picks come in.** This run is early on Sunday, before Krish
+     picks, so most tabs start as not picked. The session his Monday pick
+     starts (`make-piece`, "The week's publish board") rebuilds the board
+     with the picks and republishes it to this same link, with `--previous`
+     so no day it holds is lost, and no tick is lost; so does any session
+     that finds a day picked or made that the board does not show yet. When
+     this skill runs again in the same week (Krish asks to re-plan), it
+     republishes to this week's link rather than making another.
 
 ## Without the connectors
 
@@ -70,5 +133,15 @@ board).
 Put the same line in `WORKBENCH.md`, because the slate cron rewrites the week
 item's text each morning.
 
+Without the Teleprompter connector, nothing is sent to Teleprompter (step 0
+names what waits). Descript was retired on 12 October (Krish: "Descript is
+permanently gone, teleprompter.com is permanently in, connected via MCP
+here"): nothing is sent there. Without the Artifact or ArtifactData tools, the week's board
+cannot be made or read: say so on the week's board item and in
+`WORKBENCH.md`, and the session his Monday pick starts makes it.
+
+## Before you stop
+
+Copy the week's ticks once more (a board made this run has none yet).
 Update `WORKBENCH.md` and end every reply with
 https://controlcenter.krishraja.com/#/week.

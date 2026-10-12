@@ -135,8 +135,9 @@ only a reader; connector means reached through an MCP connector in a session.
 5. **Real logos and colours** (Brandfetch) on every graphic.
 6. **Captions** from the runner's transcriber, or AssemblyAI / Deepgram /
    ElevenLabs as a fallback, with the known-mishearing fixes.
-7. **Auto-cut candidates** (Descript, Captions, Opus Clip, or Riverside's own
-   tools) judged against `quick-edit` on the same recording, best one kept.
+7. **Auto-cut candidates** (Captions, Opus Clip, or Riverside's own tools;
+   not Descript, which Krish retired on 2026-10-12: "Descript is permanently
+   gone") judged against `quick-edit` on the same recording, best one kept.
 8. **The predictor** (Higgsfield) on the finished cut as a judge.
 
 ### Ship: out the door with the right words, and self-hosted where it pays

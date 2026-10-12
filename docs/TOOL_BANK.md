@@ -252,7 +252,7 @@ Cost bands: **free**, **pennies** (under $10 a month for us), **tens**
 
 | API | What it adds | Rough cost |
 |---|---|---|
-| Descript, Captions.ai, Submagic, Opus Clip | Automatic cuts, captions, zooms and clip selection from a long recording; a rival to `quick-edit` and Riverside, judged on the same recording | tens a month each |
+| Captions.ai, Submagic, Opus Clip | Automatic cuts, captions, zooms and clip selection from a long recording; a rival to `quick-edit` and Riverside, judged on the same recording. Not Descript: Krish retired it on 2026-10-12 ("Descript is permanently gone") | tens a month each |
 | Mux, Cloudflare Stream | Host the videos ourselves with view analytics, for the cover site's newsstand | tens a month |
 | Suno, Udio | A music bed in the house's tone when Runway's is wrong; check the licence for commercial use first | tens a month |
 
