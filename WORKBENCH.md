@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, about 16:45 UTC, by a Claude Code session (cloud).
+Last updated: 2026-10-12, about 17:10 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -371,6 +371,22 @@ bring takes back, was retired on 12 October.
   Not verified here: the read-back's model calls in the engine's script
   writer (unit-tested with a stand-in, never called live), and the
   Teleprompter calls themselves (this session made none).
+
+- 2026-10-12, Monday, about 17:10 UTC: **Wednesday's Meta Muse piece
+  (7554ed4a): workroom published, waiting on two calls from Krish.** Workroom:
+  https://claude.ai/artifact/XW7uwdEJbMybpXVh2gjJRu (recorded on the piece;
+  board item `wed-muse-calls`). The planned headline ("The Opt-In Was Buried
+  in the Onboarding") has no source: TIME (6 Oct, read in full) reports no
+  opt-in step for the people Muse maps, and the "Karan Joshi" and "Daniel
+  Roberts" names appear only in a roundup site's summary of WIRED, whose text
+  would not load. The supported angle is people who never signed up. Stopped
+  before the draft and fact check, which spend on the model and need his
+  "go". Next, once he answers: file TIME's text as a verbatim source, draft,
+  run the fact gate, then visual gate (Meta and Muse logos), both scripts with
+  the under.the.hood series line, read-back, Teleprompter send, publish page,
+  Wednesday's tab of the board (not rebuilt yet: no publish page exists).
+  Ticks copied: Monday's two Record ticks only (information; takes are on
+  Monday's record).
 
 - 2026-10-12, Monday, about 15:30 UTC: **The Descript lane and the week's
   board are merged, deployed and live**, and every step left by the entry
