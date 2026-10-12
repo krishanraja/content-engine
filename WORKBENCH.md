@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, about 18:00 UTC, by a Claude Code session (cloud).
+Last updated: 2026-10-12, about 22:00 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -121,6 +121,50 @@ day on it is at 100% (Friday's reposts go out at the weekend).
   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
 
 Last week's publish board: none (the first board was made on 12 October).
+
+### What the 12 October evening session made permanent (read this first)
+
+All on main; each has its tests.
+
+- **Monday is finished and on the board**: both cuts (3-minute 2:48, 90-second
+  1:27) in Drive `3 Posts/2026-10-12 Mon .../3 Video`, with NO CURVES, the
+  stand-off story intro and outro, thumbnails, and five covers. Only posting
+  is left, and that is his.
+- **The midday run** (`.github/workflows/produce-day.yml`,
+  `scripts/produce_day.py`): Monday, Wednesday and Friday at 12:00 New York,
+  GitHub renders both cuts end to end (his choice: "GitHub always renders");
+  the Run workflow button is the one click. The secret ENGINE_OPERATOR_TOKEN
+  is set. A stop writes one board item `videos-<date>` saying what stopped.
+  The routine "Publish board: add the day's videos" (trig_016L3CTo8wQh7WF5hpAwrT3A,
+  13:25 New York, Drive and the repo attached by Krish) puts the links on
+  the day's tab.
+- **Video tool** (`scripts/quick-edit/make.py`): pictures ease in and
+  crossfade, the speaker slides aside, no gap flashes the frame behind
+  ("the title card flashes up for about 0.1s ... unacceptable"); true peaks
+  are limited under -1 dBTP by itself; a story intro of up to 5 s on the
+  approved config.
+- **Story intro and outro** (`apps/renderer/src/story`, `scripts/quick-edit/
+  story_io.py props --plan <plan>` then `render`): the approved stand-off,
+  the real wordmark and masthead from `brand.fetch` (never typed), a 6 s
+  outro that holds its last card 2 s. Approved in `config/story-intro-outro.json`.
+- **Music**: NO CURVES approved in his words; the home computers publish it
+  to the library every pass (`music.py publish`); any machine fetches it
+  (`music.py fetch`, `GET /api/library/file`). Epidemic's safelist screenshots
+  are the licence record; LinkedIn needs no safelisting.
+- **Covers**: every pack carries five, each drawn for its place
+  (`scripts/pages/build.py --cover`): Substack upload 1200x630, feed
+  1200x800, share card 1200x675, square 1080x1080, vertical 1080x1920 for
+  Shorts, TikTok and Reels. A pack missing one is refused.
+- **Board**: Download waits for the save capability and says why a save
+  failed (`week_board/week.js`, `publish_manager.py`).
+- **House rules**: ARTICLE_LENGTH (1,000 to 1,400 words: "about 30%
+  shorter") and SHARP_PREDICTION (one checkable event on a date, not
+  already happening). Open with him: the AI-detection score (93%); his
+  answer is awaited on a voice note per piece and which detector flagged it.
+- **Known gaps in the midday run**: a picture too small for the tall frame,
+  or whose line he said differently, is left out of that cut rather than
+  cropped or matched loosely (Monday's were fixed by hand). Wednesday has no
+  made piece or takes yet, so its run will stop and say so.
 
 ### Resumed 12 October, about 18:00 UTC (session_01YHC9kjnvJEzYDeFDdADLBq)
 
