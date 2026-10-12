@@ -334,11 +334,45 @@ def find(ws, phrase, after=0.0):
     return None
 
 
+def find_loose(ws, phrase, after=0.0, need=0.6):
+    """Where he said a phrase his own way: the span whose words share the
+    longest in-order run with the phrase, when that run holds at least
+    `need` of its words and both its first and last matched words fall in
+    the span ("its singers get" finds "the singers are going to get").
+    (first, last) word indices, or None."""
+    p = [norm(x) for x in phrase.split() if norm(x)]
+    if not p:
+        return None
+    toks = [norm(w['w']) for w in ws]
+    best = None
+    for i in range(len(toks)):
+        if ws[i]['s'] < after or toks[i] not in p:
+            continue
+        span = toks[i:i + len(p) + 4]
+        # longest common subsequence of the phrase and the span, and where it ends
+        prev = [0] * (len(span) + 1)
+        end_at = [-1] * (len(span) + 1)
+        for a in p:
+            cur, cur_end = [0] * (len(span) + 1), [-1] * (len(span) + 1)
+            for k, b in enumerate(span, 1):
+                if a == b:
+                    cur[k], cur_end[k] = prev[k - 1] + 1, k - 1
+                elif cur[k - 1] >= prev[k]:
+                    cur[k], cur_end[k] = cur[k - 1], cur_end[k - 1]
+                else:
+                    cur[k], cur_end[k] = prev[k], end_at[k]
+            prev, end_at = cur, cur_end
+        score = prev[-1] / len(p)
+        if score >= need and (best is None or score > best[0]):
+            best = (score, i, i + end_at[-1])
+    return (best[1], best[2]) if best else None
+
+
 def cue_windows(ws, cues, total):
     found, missing = [], []
     for c in cues:
-        a = find(ws, c['start'])
-        b = find(ws, c['end'], after=ws[a[0]]['s']) if a else None
+        a = find(ws, c['start']) or find_loose(ws, c['start'])
+        b = (find(ws, c['end'], after=ws[a[0]]['s']) or find_loose(ws, c['end'], after=ws[a[0]]['s'])) if a else None
         if not a or not b:
             missing.append(c['id'])
             continue
@@ -946,12 +980,31 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
     return result
 
 
+def expand_pages(wins, asp):
+    """A picture shown a part at a time in this shape (kit.py "pages") as
+    one window per part, splitting its time evenly; the parts touch, so
+    each crossfades into the next."""
+    out = []
+    for c in wins:
+        pages = (c.get('pages') or {}).get(asp)
+        if not pages:
+            out.append(c)
+            continue
+        step = (c['e'] - c['s']) / len(pages)
+        for k, page in enumerate(pages):
+            s = round(c['s'] + k * step, 3)
+            e = c['e'] if k == len(pages) - 1 else round(c['s'] + (k + 1) * step, 3)
+            out.append({**c, 'id': f"{c['id']}-p{k + 1}", 'panel': page, 's': s, 'e': e})
+    return out
+
+
 def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix):
     """The ffmpeg inputs and filter graph for one shape: the captioned main
     (graphics, the tall logo, the strap, the captions), joined after the sting
     and before the end card, with the finished mix as its sound."""
     cw, ch, cx, cy = crop
     W, H = SIZE[asp]
+    wins = expand_pages(wins, asp)
     inputs = ['-i', str(edited)]
     n = 1
     g = []
@@ -1325,6 +1378,13 @@ def gate_self_test():
     here = lambda q: work / q
     named = {'name': 't', 'intro': {'9x16': loud.name}}
     got, why = resolve_intro(named, '9x16', here)
+    said = [{'w': w, 's': i * 0.4, 'e': i * 0.4 + 0.3} for i, w in enumerate('then the singers are going to get it'.split())]
+    checks.append(('a cue line he said his own way is still found', find_loose(said, 'its singers get'), (2, 6)))
+    checks.append(('a line he never said is not found', find_loose(said, 'labels pay songwriters'), None))
+    paged = expand_pages([{'id': 'm', 'panel': 'x', 's': 10.0, 'e': 16.0, 'pages': {'9x16': ['p1', 'p2', 'p3']}}], '9x16')
+    checks.append(('a picture in pages is shown a part at a time, touching, over its window',
+                   [(c['panel'], c['s'], c['e']) for c in paged], [('p1', 10.0, 12.0), ('p2', 12.0, 14.0), ('p3', 14.0, 16.0)]))
+    checks.append(('pages for another shape leave the picture whole', len(expand_pages(paged[:1] and [{'id': 'm', 'panel': 'x', 's': 1, 'e': 2, 'pages': {'9x16': ['a', 'b']}}], '16x9')), 1))
     checks.append(('a config-named intro with no approved sting and no words from Krish is left out', (got, 'intro_override' in (why or '')), (None, True)))
     got, why = resolve_intro(dict(named, intro_override='use it, said someone'), '9x16', here)
     checks.append(('an intro_override that does not start with Krish\'s words lets nothing through', got, None))

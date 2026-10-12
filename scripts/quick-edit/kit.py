@@ -721,6 +721,57 @@ def fit_picture(img, box_w, box_h, max_cols=3):
                  'size': list(out.size), 'background': '#{:02X}{:02X}{:02X}'.format(*bg[:3]), 'words_px': round(words_px, 1)}
 
 
+def legible_pages(img, shape):
+    """A picture too small to read in this shape, as pages: bands cut at its
+    own gaps, each as tall as still reads, in order, so the whole picture is
+    shown a part at a time (Krish, 2026-10-12, on the midday run: a scheduled
+    video must come out as good as one finished by hand). [(picture, facts),
+    ...], or [] when it cannot be split. A page held at the most the frame's
+    width allows counts as read: Krish passed exactly that on Monday's tall
+    cut ("Yes, ship them at full width")."""
+    bg = border_colour(img)
+    body = trim(img, bg)
+    gaps = [g[0] for g in gap_lines(body, bg)]
+    if not gaps:
+        return []
+    edges = [0, *gaps, body.height]
+    box_w, box_h = panel_box(shape)
+    floor = FLOOR_PX[shape]
+    pages, i = [], 0
+    while i < len(edges) - 1:
+        best = None
+        for j in range(i + 1, len(edges)):
+            band = body.crop((0, edges[i], body.width, edges[j]))
+            picture, facts = fit_picture(band, box_w, box_h, max_cols=1)
+            width_bound = facts['size'][0] >= box_w - 2
+            if facts['words_px'] >= floor or width_bound or best is None:
+                best = (j, picture, facts, facts['words_px'] >= floor or width_bound)
+            if not (facts['words_px'] >= floor or width_bound):
+                break
+        j, picture, facts, ok = best
+        facts['legible'] = ok
+        facts['band'] = [edges[i], edges[j]]
+        pages.append((picture, facts))
+        i = j
+    # A sliver (a source line, a footnote) is folded into the part before it
+    # when the two still read together; it never gets the screen to itself.
+    tallest = max(f['band'][1] - f['band'][0] for _, f in pages)
+    k = 1
+    while k < len(pages):
+        top, bottom = pages[k][1]['band']
+        if bottom - top < 0.3 * tallest:
+            a = pages[k - 1][1]['band'][0]
+            band = body.crop((0, a, body.width, bottom))
+            picture, facts = fit_picture(band, box_w, box_h, max_cols=1)
+            if facts['words_px'] >= floor or facts['size'][0] >= box_w - 2:
+                facts['legible'] = True
+                facts['band'] = [a, bottom]
+                pages[k - 1:k + 1] = [(picture, facts)]
+                continue
+        k += 1
+    return pages if len(pages) > 1 else []
+
+
 def panel_geometry(shape, pic_w=0, pic_h=0):
     """The panel's size, the box a picture may fill, and, for a picture of
     pic_w x pic_h, where the pill and the picture go: together, as one block,
@@ -1072,6 +1123,23 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
                 facts['floor_px'] = FLOOR_PX[sh]
                 facts['legible'] = facts['words_px'] >= FLOOR_PX[sh]
                 draw(f'panels/{pic["id"]}-{sh}.png', page_panel(st, sh, picture, facts, fonts), PANEL[sh])
+                if not facts['legible'] and facts['size'][0] >= panel_box(sh)[0] - 2 and facts['words_px'] >= FLOOR_PX[sh] - 1:
+                    # As wide as the frame allows and within a pixel of the
+                    # floor: Krish passed exactly this ("Yes, ship them at full width").
+                    facts['legible'] = True
+                    facts['full_width'] = True
+                if not facts['legible']:
+                    # Too small whole: shown a part at a time, each part readable.
+                    pages = legible_pages(img, sh)
+                    if pages and all(f['legible'] for _, f in pages):
+                        facts['pages'] = []
+                        for k, (pg, pf) in enumerate(pages, 1):
+                            pf['floor_px'] = FLOOR_PX[sh]
+                            name = f'panels/{pic["id"]}-{sh}-p{k}.png'
+                            draw(name, page_panel(st, sh, pg, pf, fonts), PANEL[sh])
+                            facts['pages'].append(name)
+                        facts['legible'] = True
+                        log(f'pages {pic["id"]}: too small whole in {sh}, so shown in {len(pages)} readable parts')
                 info['shapes'][sh] = facts
             panels[pic['id']] = info
             drawn.add(pic['id'])
@@ -1129,6 +1197,10 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         his_words['allow_missing'] = {'words': allow_missing.strip(), 'pictures': let_through}
     if allow_small is not None:
         his_words['allow_small'] = {'words': allow_small.strip(), 'pictures': small_let}
+    for c in cues:
+        pages = {sh: f['pages'] for sh, f in ((panels.get(c['id']) or {}).get('shapes') or {}).items() if f.get('pages')}
+        if pages:
+            c['pages'] = pages
     cfg = starter_config(post, cut, rec, out, cues, strap_after(units, cues), post_path, his_words)
     cfg_path, cfg_sha, kept = write_config(out / f'{cut}.json', cfg, cut_receipt.get('config_sha256'), force)
     if kept:
@@ -1452,9 +1524,11 @@ def self_test_runs(check, words):
                   (sorted(receipt['cuts']), 'allow_missing' in receipt['cuts']['short'], exit_code(third)), (['long', 'short'], False, 1))
             check('each cut\'s recording length is kept for the music (none while the take is not there)',
                   ('recording_seconds' in receipt['cuts']['long'], receipt['cuts']['short']['recording_seconds']), (True, None))
-            # A picture twice as wide: on the tall panel its words come out far under the 39 px a phone can read.
-            wide = Image.new('RGB', (2720, 900), (12, 21, 18))
-            ImageDraw.Draw(wide).rectangle((80, 80, 2640, 820), fill=(244, 239, 228))
+            # A very tall picture with no gaps to cut it at: on the tall panel its
+            # words come out far under the 39 px a phone can read, and it cannot
+            # be shown a part at a time.
+            wide = Image.new('RGB', (1360, 5200), (12, 21, 18))
+            ImageDraw.Draw(wide).rectangle((80, 80, 1280, 5120), fill=(244, 239, 228))
             wide.save(lib / folder / '2 Covers and images' / '1-who-gets-paid.png')
             tiny = run('short', 'kit6', library_at=[lib])
             small = [p for p in tiny['problems'] if p.startswith('money:')]
