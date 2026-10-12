@@ -526,7 +526,7 @@ export const CHANNEL_ADAPTS: LaneAdapt[] = [
   {
     value: 'substack',
     label: 'Substack',
-    hint: 'Adapt this for Substack, the long-form home. Expand to 1200-2500 words: this reader already chose to give it fifteen minutes, so attention is not the constraint and the evidence gets room. Sub-headings that are claims, not labels. Take the load-bearing claim apart and check each part separately, with dates and named parties. Hold one genuine counterpoint properly rather than knocking it down. Say plainly what is still unknown. End on a verdict, not a summary. Never pad: if there is not more evidence, there is not more piece.',
+    hint: 'Adapt this for Substack, the long-form home. Write it at 1000-1400 words, never more (house rule ARTICLE_LENGTH): keep one argument and its strongest evidence, and cut the second example, the recap and the throat-clearing before thinning anything else. Sub-headings that are claims, not labels. Take the load-bearing claim apart and check each part separately, with dates and named parties. Hold one genuine counterpoint properly rather than knocking it down. Say plainly what is still unknown. End on a verdict, not a summary. Never pad: if there is not more evidence, there is not more piece.',
   },
   {
     value: 'linkedin',

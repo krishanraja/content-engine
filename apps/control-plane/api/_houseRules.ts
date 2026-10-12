@@ -389,6 +389,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     on: '2026-10-12', source: 'chat, as Monday\'s takes came back; held by .agents/skills/produce-video (the required step before the final render), which reads config/story-intro-outro.json, status "awaiting_design" until he approves a design', status: 'live',
     stages: ['production'],
   },
+  {
+    id: 'ARTICLE_LENGTH', name: 'Articles about 30% shorter: about 1,400 words at most',
+    text: 'An article (the Substack piece) runs about 1,000 to 1,400 words, never more than 1,400: about 30% shorter than the roughly 2,000-word pieces of 12 October. Cut by keeping one argument and its strongest evidence, never by thinning every paragraph: drop the second example, the recap and the throat-clearing first.',
+    said: 'moving forward the articles need to be about 30% shorter.',
+    on: '2026-10-12', source: 'chat, after Monday\'s piece (about 2,000 words) went to his publish board', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
 ])
 
 /** The rules a stage enforces, for one subchannel or the house as a whole. */
