@@ -202,7 +202,10 @@ Every board item you write about this piece carries `"idea_id": "<uuid>"`
 and, when one step finishes it, `"closes_on": "<step>"` (WORKBENCH.md, "The
 board"). The engine closes it when that step lands, and closes every item
 about the piece once its publish step is done (the standing five ticked), so
-nothing about a finished piece lingers on Krish's board.
+nothing about a finished piece lingers on Krish's board. An item waiting on
+him (`"lane": "on_you"`, such as recording both cuts) also carries
+`"only_you"` (`"face"` for a recording) and an `https://` `"link"` to what he
+acts on; without all three Control Center holds it back from his list.
 
 ## Before you stop
 
