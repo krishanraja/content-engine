@@ -125,11 +125,9 @@ Last week's publish board: none (the first board was made on 12 October).
   home computers (his words); the runner's light was wrong. Board item
   `mon-produce-today`: start Codex on a home computer with "produce
   Monday's video"; that run measures NO CURVES (`music.py add`) and records
-  his approval ("Yes I approve that licence track.") before rendering. The
-  tall cut's music check also asks for LinkedIn, which is not safelisted:
-  it renders without music unless LinkedIn is added to the safelist or he
-  rules the check should drop LinkedIn (a change to `music.py` was refused
-  by this session's permission check). After the cuts are recorded, a Claude Code
+  his approval ("Yes I approve that licence track.") before rendering. Both
+  cuts get music: LinkedIn is covered without safelisting (Epidemic's
+  screen, recorded in the ledger). After the cuts are recorded, a Claude Code
   session adds them to Monday's tab and republishes the board.
 - Story intro design: three blind concepts made (stand-off, receipt printer,
   song track); judges split (stand-off v receipt); a tie-break judge was run.
