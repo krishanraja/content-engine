@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, late afternoon, by a Claude Code session (cloud).
+Last updated: 2026-10-12, about 15:30 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -58,7 +58,8 @@ publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
 - Week of 12 to 16 October 2026 (board item
-  `week-publish-board-2026-10-12`, not made yet):
+  `week-publish-board-2026-10-12`; Monday and Friday made, Wednesday
+  picked, not made yet):
   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
 
 Last week's publish board: none (the first board was made on 12 October).
@@ -217,6 +218,48 @@ on a piece is fetched by the path its record holds
 
 ## Latest handoff
 
+- 2026-10-12, Monday, about 15:30 UTC: **The Descript lane and the week's
+  board are merged, deployed and live**, and every step left by the entry
+  below is done. In plain words:
+  - Merged to `main` in both repositories (engine 70e44fb, Control Center
+    d337694) after the full checks passed (engine `npm run verify`: 126
+    files, 1582 tests; Control Center lint, types, 906 tests, the handoff
+    check). Both deployed from `main` and READY. The live week options now
+    list `scheduled` (Monday f328382d, Wednesday 7554ed4a, Friday 904658db).
+  - The four Descript record lines ran. `making.py show` says both cuts of
+    both pieces hold the current words, with their read and Record here
+    links; `descript_send.py pending` says every checked script is in
+    Descript; `descript_take.py waiting` lists the four Record here links.
+  - The week's board was rebuilt with `--live --previous` and republished
+    to the same link (version 2): Monday and Friday made, Wednesday picked
+    (Meta Muse, which Krish picked on the week page; the planning item
+    `week-2026-10-12` was closed by Control Center), 90 tick ids, no ticks
+    yet. The board item `week-publish-board-2026-10-12` is on him (rank 0,
+    `only_you` post). It has no `closes_on`, because no making step closes
+    a week, so Control Center holds it on the board's held lane, not his
+    list; the link is what later sessions need from it.
+  - `monday-record` now tells him to record the 3-minute cut only through
+    its Record here link, the timeline called "Monday", and names the two
+    6-second leftovers (one called "Record here") as not picked up.
+  - Both routines' prompts were updated with `update_trigger` to the text
+    the entry below names (the week's board, the tick copy, `pending`, and
+    the Descript send as the one standing exception to the walls).
+  - Both packs were rebuilt from the corrected scripts and sent earlier
+    this afternoon (Monday 12 files, Friday 15); no page holds the line he
+    cut.
+  - **A mistake, put right.** At 14:39 UTC this session redeployed engine
+    c948ad2 and Control Center 830435f by hand, after another session had
+    already shipped newer `main` (engine fb5b1e3 at 13:50, Control Center
+    d775916 at 14:27), so production ran older code for about 35 minutes.
+    Both were redeployed from their `main` heads by about 15:10 and then
+    replaced by the merge. No board item was written in that window. Rule
+    for every session: a hand redeploy takes the current `main` head
+    (`git fetch origin main`), never the commit you last pushed.
+  Waiting on Krish: his reaction to the sting
+  (https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH); recording in
+  Descript; the music licence and levels; the 90-second question; and
+  whether to delete the two leftover timelines in Monday's 3-minute project.
+
 - 2026-10-12, Monday, late afternoon: **The review of the Descript lane and
   the week's board is fixed** (nothing committed, pushed, deployed,
   published or sent; the outside calls were engine reads only). In plain
@@ -347,7 +390,8 @@ on a piece is fetched by the path its record holds
     piece"'s wall ("nothing sends ... without Krish's own words immediately
     before") must name the Descript send as its one standing exception, or a
     routine session may refuse to send.
-  Next, in this order (the order matters):
+  Next, in this order (the order matters; all five done on 12 October,
+  about 15:30 UTC, in the entry above):
   1. Commit, merge and deploy the engine. The live engine drops the
      `descript` field, so a record line run before the deploy is refused
      ("nothing to record") and nothing is stored.
@@ -376,10 +420,8 @@ on a piece is fetched by the path its record holds
      link, then put the board item `week-publish-board-2026-10-12` on
      Krish (rank 0, its link).
   Waiting on Krish:
-  - **His go to rebuild and send Monday's and Friday's packs.** Their
-    pictures still live only in this cloud session's scratch folder, and
-    both publish pages still hold the line he cut. Until the packs are sent,
-    a home computer has none of the pictures for the video kit.
+  - Done since: his go ("go, rebuild and send Monday's and Friday's
+    packs"); both packs were rebuilt and sent the same afternoon.
   - **The sting**: his reaction to the designs drafted today (the late
     morning handoff below).
   - **Music**: NO CURVES needs its licence certificate beside it, then his
