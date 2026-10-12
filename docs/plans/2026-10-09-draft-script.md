@@ -6,7 +6,7 @@ So why so many? Because every name on that menu is doing four jobs at once. It's
 
 Is it a scam to charge you more? The prices say no. The cost of AI as good as the first ChatGPT fell from twenty dollars to seven cents for a million tokens, and a token is just a word or a piece of one. But the bills still go up, because AI agents now work for hours at a time.
 
-Here's the real catch. Most apps don't tell you which brain answered, how hard it thought, or how much of your allowance it ate. It's a taxi with no meter. The route might be fine. You just can't check. And yes, I made this with Claude's help. So I'm the passenger moaning about the taxi while still sitting in it.
+Here's the real catch. Most apps don't tell you which brain answered, how hard it thought, or how much of your allowance it ate. It's a taxi with no meter. The route might be fine. You just can't check.
 
 What do you do with that? If you just use AI, stick to the default, and switch to the biggest brain when it really matters. If you run a business on AI, ask what a good answer costs you all in, and lock the exact version you build on. And the old idea of one product at one price is going. AI is turning into electricity, paid for by the size and the effort.
 
