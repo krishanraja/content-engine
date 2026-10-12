@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, about 16:45 UTC, by a Claude Code session (cloud).
+Last updated: 2026-10-12, about 17:10 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -79,8 +79,9 @@ publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
 - Week of 12 to 16 October 2026 (board item
-  `week-publish-board-2026-10-12`; Monday and Friday made, Wednesday
-  picked, not made yet):
+  `week-publish-board-2026-10-12`; Monday recorded, waiting on its
+  produced video; Wednesday being made; Friday made, waiting on Krish's
+  call and his recording):
   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
 
 Last week's publish board: none (the first board was made on 12 October).
@@ -239,6 +240,54 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-12, Monday, about 17:10 UTC: **the week's board carries the words
+  Krish actually reads, Wednesday is being made, and Monday waits on one
+  thing: the story intro and outro design.** Krish: "Good stuff, leave me
+  with the final Publish Board with Monday 100% ready to publish (post
+  produced video links included), Weds and Fri in production". In plain
+  words:
+  - **The board and both day pages are current.** Monday's publish page
+    (https://claude.ai/artifact/QpGeGjaqZwvyXwRnSadqyS) carries the two
+    scripts he recorded and "Recorded: both cuts, read from Teleprompter".
+    Friday's (https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV) now carries
+    the scripts in his Teleprompter (`docs/plans/2026-10-09-draft-script.md`
+    and `-90s.md`, the 16:08 sends) and says it waits on his call on the
+    prediction line. The board (https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV)
+    was rebuilt from both and republished to its link; no old script and no
+    Descript wording is left on it. Monday's two Record ticks were written
+    into its store from his words "the two Monday videos are now in Inbox"
+    (both takes are on the record).
+  - **Monday is not 100% and cannot be from a cloud session.** The produced
+    cuts come from a home computer (Codex, `produce-video`), and that skill
+    stops before the final render while `config/story-intro-outro.json`
+    says `awaiting_design`. The only Monday videos in Drive are his two raw
+    takes in the Inbox. Order: a design for the story intro, audio treatment
+    and outro card goes to him cold (`krish-design`), he approves it in
+    words, the approval and the build land in the renderer, Codex produces
+    both cuts and records them (`making.py --by Codex <piece> video ...`),
+    then a Claude Code session puts the cuts and thumbnails on Monday's
+    page and republishes the board. This session started that design: three
+    blind concepts, then blind judging, then one synthesis shown to him.
+  - **Wednesday is in production.** This session fired the "Make a piece"
+    routine with Wednesday's piece (7554ed4a-560b-4365-b266-ea72abeed7ef)
+    on his "Weds and Fri in production". That routine still has no
+    Teleprompter connector (only he can attach it, and remove Descript, in
+    claude.ai), so it will stop at the send and say so; the next session
+    that has the connector sends what `teleprompter_send.py pending` lists.
+  - **Friday waits on one call from him**, now in the `friday-record` board
+    item (rewritten for Teleprompter, linking the board's Friday tab):
+    keep the dated prediction (by 30 September 2027, at least two of
+    OpenAI, Anthropic and Google pick the brain for app builders by
+    default, 85%), which young readers keep getting lost at, or say the
+    broader bet in the video and leave the exact call to the article. On
+    his answer: rewrite, `story_check.py`, two fresh readers until both say
+    nothing lost them, `update_script` in place, the record lines, the
+    Friday page and the board. Neither Friday cut has a read-back pass on
+    record, and Monday's has none either (the strict readers were lost at
+    "So Suno's judge could see it differently", "But that AI didn't make
+    anything new", the investors' bet and "name about 60,000 songs"; the
+    takes are already recorded, so nothing was changed).
 
 - 2026-10-12, Monday, about 16:45 UTC: **Descript is out, teleprompter.com
   is in; every script opens with its series line and is held to a reading
