@@ -992,23 +992,23 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             g.append(f"[cv{r_i}][fa{r_i}]overlay=x={(1080 - fw_out) // 2}:y=1000[c{r_i}_0]")
             cur = f'c{r_i}_0'
             layers = panel_layers(run)
-            for j, (c, f, end) in enumerate(layers):
+            for j, (c, f, stop) in enumerate(layers):
                 inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
                 if j == 0:
                     f = f.split(',', 1)[1] if ',' in f else 'null'   # the layer itself fades in
                 if j == len(layers) - 1:
                     f = ','.join(x for x in f.split(',') if not x.startswith('fade=t=out')) or 'null'
                 g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
-                g.append(f"[{cur}][pp{n}]overlay=0:0:enable='between(t,{c['s']},{end})'[c{r_i}_{j + 1}]")
+                g.append(f"[{cur}][pp{n}]overlay=0:0:enable='between(t,{c['s']},{stop})'[c{r_i}_{j + 1}]")
                 cur, n = f'c{r_i}_{j + 1}', n + 1
             g.append(f"[{cur}]fade=t=in:st={rs}:d={FADE_S}:alpha=1,fade=t=out:st={max(rs, re_ - FADE_S):.3f}:d={FADE_S}:alpha=1[run{r_i}]")
             g.append(f"[{last}][run{r_i}]overlay=0:0:enable='between(t,{rs},{re_})'[s{k}]")
             last, k = f's{k}', k + 1
     else:
-        for c, f, end in panel_layers(wins):
+        for c, f, stop in panel_layers(wins):
             inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
             g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
-            g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{end})'[s{k}]")
+            g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
     if asp == '9x16' and cfg.get('logo', True) is not False:
         # The makeyourmindup logo in the opening seconds of every tall video
