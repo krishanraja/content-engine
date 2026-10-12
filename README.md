@@ -23,7 +23,8 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | understand how the pieces fit, or who owns what | `docs/SYSTEM_MAP.md` |
 | design how a piece looks, sounds or moves, on any surface | `docs/CREATIVE_IDENTITY_UPGRADE.md` |
 | make a piece's web page, the copy that pastes into Substack and its cover image, or check that its artwork can be read on a phone | `scripts/pages/README.md` |
-| make the YouTube banner, watermark and channel description | `scripts/channel-kit/README.md` |
+| make the YouTube banner, watermark and channel description, the profile pictures, the Facebook cover, the X header or the Instagram highlight covers | `scripts/channel-kit/README.md` |
+| see what each social profile carries (YouTube, Instagram, Facebook, Krish's TikTok and X) and what is left on them | `docs/AMPLIFICATION.md`, "The profiles every link lands on" |
 | put a post's assets, the brand kit or the channel art into Krish's asset library on Drive | `scripts/post-pack/README.md` |
 | use or change any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |
 | put anything in Google Drive, or move, rename or tidy a Drive folder | `docs/DRIVE.md` |

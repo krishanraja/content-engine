@@ -69,6 +69,55 @@ whether TikTok takes an uploaded cover picture or only a frame of the video,
 and whether YouTube lets a Short take a thumbnail at all; until then Shorts
 keep the frame YouTube picks.
 
+## The profiles every link lands on
+
+Every step above sends people to a profile, so the profiles have to explain
+the publication to someone who has never heard of it. Krish had them rebuilt
+on 11 and 12 October 2026 (a Claude session working in his browser, every
+change checked on the live page). This is what each one carries and what is
+left. The pictures are made by `scripts/channel-kit/` (`build.py` for the
+YouTube banner and watermark, `profiles.py` for everything else); the copies
+he uploaded are in Drive under `makeyourmindup > 2 Channel art (permanent)`,
+indexed in `READ ME - profiles.txt`.
+
+**Which accounts.** Three brand accounts carry the publication: YouTube
+`@makeyourmind-up`, Instagram `@makeyourmind.up` and the Facebook Page
+`Makeyourmind/up`. Krish's own TikTok (`@therealkrisho`) and X
+(`@TheRealKrisho`) carry him as its editor and amplify it. LinkedIn stays his
+personal profile, unchanged.
+
+| Profile | What it carries (checked live, 12 October 2026) | Left to do |
+|---|---|---|
+| YouTube `@makeyourmind-up` | Name `makeyourmindup` (the handle stays: the site links to it). The splashes picture. Banner and description from `build.py`. Links: Read free (makeyourmindup.ai), Instagram, and Build Your AI Brain, kept. The watermark for the whole video. Home tab: the launch video as trailer for new visitors, Higgsfield for subscribers, and a row of the three day playlists (follow.the.money, under.the.hood, mind.the.gap). The launch Short's Related video points at Higgsfield. Channel keywords; upload defaults of Science and Technology and a description footer. | A Scored playlist once the first call falls due. The three videos already up print mindmakerlive.substack.com on their thumbnails (seen 11 October); the next ones should print makeyourmindup.ai. |
+| Instagram `@makeyourmind.up` | The splashes picture. Category Magazine. Bio: "AI, unpicked, unboringly." then one line per day (yellow, purple and red dots): "Mon follow.the.money: who gets paid", "Wed under.the.hood: real or theatre", "Fri mind.the.gap: what's coming". Links: Read free (makeyourmindup.ai) and YouTube. Linked to the Facebook Page. | On Krish's phone: the name `makeyourmindup \| AI, unpicked` once Instagram's 14-day lock on name changes lifts; the five highlights once a full week of pieces is up (covers from `profiles.py`: Start here, Mon, Wed, Fri, Scored); pinned posts. |
+| Facebook Page `Makeyourmind/up` | The splashes picture and the cover from `profiles.py`. Category Media/news company. Intro: "AI, unpicked. Who gets paid, what's real and what's coming, in plain words. Free at makeyourmindup.ai". Website makeyourmindup.ai and a Sign up button to it. Instagram connected. No username (`makeyourmindup` and `makeyourmind.up` are taken). | Not yet checked: whether Instagram posts share to the Page on their own (a setting per account in Meta's Accounts Center), and the Sign up button as a visitor sees it. |
+| TikTok `@therealkrisho` (Krish) | Name `Krish Raja \| makeyourmindup`, his editor photo, bio "AI, unpicked. Who gets paid, what's real, what's coming. makeyourmindup.ai". | Nothing. A clickable profile link needs more followers or a business account (above). |
+| X `@TheRealKrisho` (Krish) | The header from `profiles.py`, the bio ("Editor of makeyourmindup. AI, unpicked: who gets paid, what's real, what's coming. Every call dated and scored in public, misses included."), location London and Brooklyn, website makeyourmindup.ai. | Name and photo left as they were on purpose: changing either hides his blue check until X reviews it. A pinned post introducing makeyourmindup, only with his approval. |
+
+Krish's decisions on the profiles, in his words:
+
+- 2026-10-11, the personal accounts: keep both handles and change only the
+  copy; X location "London and Brooklyn".
+- 2026-10-12, the Facebook Page: "I am happy with the current name", and no
+  username ("Dont need a new name if this is just my page, right?").
+- 2026-10-12, the highlights: "I can only put highlights up once I have a full
+  week done."
+- 2026-10-12, the profile picture: "can you change the logo to something a bit
+  more colourful? Maybe my mindmake icon but with splashes of these colors?"
+  He picked the splashes option over four coloured blocks and a swoosh. It is
+  a social picture only: the brand kit's logo stays as it is.
+
+**The wider plan is still a proposal.** The social playbook
+Krish was given on 11 October (a Claude doc in his account) sets one number,
+new Substack subscribers per week that arrive from social, read from
+Substack's subscriber sources, and a job for each channel. It also proposes
+a your.call loop (a two-option poll on the call the day a piece goes out,
+and a 30-second Scored cut when a call falls due) and five template jobs the
+engine does not do yet: a 1080 x 1350 carousel per piece, an X card, a
+1080 x 1920 poll frame and a Scored frame, a captions file, and a short-cut
+ending that says the call. None of these is a ruling; the standing five above
+are what the engine enforces. Ask Krish before building any of them.
+
 ## What the platforms do (checked 2026-10-09)
 
 - Substack: a video can be uploaded into an Article, but transcripts, clips and

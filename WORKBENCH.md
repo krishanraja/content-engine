@@ -344,6 +344,31 @@ on a piece is fetched by the path its record holds
     (a `CHECK`), so those cuts need their cues added by hand, panels drawn
     for video, or Krish's words.
 
+- 2026-10-12, Monday: **The social profiles are rebuilt, and their kit
+  lives here now.** Over 11 and 12 October a Claude session in Cowork rebuilt
+  the YouTube, Instagram and Facebook profiles and Krish's own TikTok and X,
+  in his browser, each change checked on the live page.
+  `docs/AMPLIFICATION.md`, "The profiles every link lands on", has what each
+  one carries, his decisions in his words, and what is left.
+  - New: `scripts/channel-kit/profiles.py` makes the profile picture, the
+    Facebook cover, the X header and the five Instagram highlight covers from
+    the house style, with crop and size checks. Rebuilt here, it matches the
+    uploaded avatars and highlight covers pixel for pixel; the cover and
+    header differ only in the pills' letter spacing (this repository's pill style).
+  - The profile picture on YouTube, Instagram and the Facebook Page is now the
+    Mindmake icon over butter, lilac and coral paint splashes (Krish: "my
+    mindmake icon but with splashes of these colors"). Social only; the brand
+    kit's logo is unchanged.
+  - Drive: the uploaded set is in `makeyourmindup > 2 Channel art
+    (permanent)`, indexed in `READ ME - profiles.txt`.
+  - Waiting on Krish, on his phone: the Instagram name (`makeyourmindup |
+    AI, unpicked`) once its 14-day lock lifts; the five highlights once a
+    full week of pieces is out; pinned posts; and, only if he wants it, a
+    pinned post on X. Not on the board: this session had no engine key.
+  - Proposed, not ruled: the playbook's your.call poll and Scored loop and
+    its five templates (carousel, X card, poll frame, captions file, a
+    short-cut ending with the call). Ask Krish before building any.
+
 - 2026-10-11, Sunday evening: **The first planned week is set, and Monday is
   at its publish board.** Week of 12 October, on the week page (#/week):
   - Monday, follow.the.money: "Warner sued Suno. Now it takes a cut. Who else
