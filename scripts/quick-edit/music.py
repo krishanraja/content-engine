@@ -28,6 +28,8 @@ Where things live:
     python music.py approve-levels --words "Krish's exact words"
     python music.py pick --piece ID --both-cuts [--seconds N]
     python music.py pick --seconds N [--piece ID] [--shape 16x9|9x16 | --platforms youtube,substack]
+    python music.py publish                 (a home computer: send every ledger file in the music folder to the engine's library)
+    python music.py fetch [--out DIR]       (any machine: get every ledger file from the library; prints MINDMAKE_MUSIC_ROOT)
     python music.py --self-test
 
 `add` measures the file (ebur128 loudness and true peak, length, sample rate,
@@ -678,6 +680,94 @@ def self_test():
     return 1 if bad else 0
 
 
+
+# ---------------------------------------------------------------- any machine renders
+# Krish, 2026-10-12: "the audio is literally in the drive ... record this
+# capability of yours so you do not whine about this ever again". The home
+# computers send each ledger file to the engine's library (`publish`, every
+# pass of scripts/recordings-upload.ps1); any machine that renders (GitHub's,
+# a cloud session, a home computer) gets it back with `fetch` and points
+# MINDMAKE_MUSIC_ROOT at the folder. No machine needs H: for music.
+LIBRARY_MUSIC = '1 Brand kit (permanent)/Music'
+FETCH_DEFAULT = Path(__file__).resolve().parents[2] / '.cache' / 'music'
+
+
+def _post_pack():
+    here = Path(__file__).resolve().parents[1]
+    for sub in (here, here / 'post-pack'):
+        if str(sub) not in sys.path:
+            sys.path.insert(0, str(sub))
+
+
+def cmd_publish(data, out=print):
+    """Sends every ledger file found in the music folder to the library.
+    A file the library already holds is left alone."""
+    root = music_root(data)
+    if not root or not Path(root).is_dir():
+        raise MusicError('the music folder is not reachable here (MINDMAKE_MUSIC_ROOT), so nothing was published')
+    _post_pack()
+    import send  # scripts/post-pack/send.py
+    planned = []
+    for t in data['tracks']:
+        if t.get('status') == 'retired' or not t.get('file'):
+            continue
+        path = in_root(root, t['file'])
+        if path.is_file():
+            planned.append((f'{LIBRARY_MUSIC}/{Path(t["file"]).name}', path, 'licensed music bed under the videos'))
+        else:
+            out(f'missing        {t["file"]} (not in the music folder)')
+    if not planned:
+        return {'sent': 0, 'already': 0, 'confirmed_only': 0}
+    try:
+        return send.send(planned, send.Engine('music-publish'), out=out)
+    except send.SendError as error:
+        raise MusicError(str(error))
+
+
+def cmd_fetch(data, out_dir=None, out=print):
+    """Downloads every ledger file from the library into out_dir, checked by
+    size and (once measured) sha256. Returns the folder."""
+    import urllib.parse
+    import urllib.request
+    _post_pack()
+    import engine  # scripts/engine.py
+    folder = Path(out_dir or FETCH_DEFAULT)
+    folder.mkdir(parents=True, exist_ok=True)
+    token = engine.operator_key()
+    got = 0
+    for t in data['tracks']:
+        if t.get('status') == 'retired' or not t.get('file'):
+            continue
+        name = Path(t['file']).name
+        target = folder / name
+        if target.is_file() and (not t.get('sha256') or sha256_of(target) == t['sha256']) \
+                and (not t.get('bytes') or target.stat().st_size == t['bytes']):
+            out(f'have           {name}')
+            got += 1
+            continue
+        status, text = engine.call('GET', '/api/library/file?path=' + urllib.parse.quote(f'{LIBRARY_MUSIC}/{name}'), None, token, timeout=60)
+        answer = json.loads(text) if text and text.strip().startswith('{') else {}
+        if status == 404:
+            out(f'not yet        {name} (no home computer has published it: recordings-upload.ps1 does on its next pass)')
+            continue
+        url = ((answer.get('download') or {}).get('url')) if isinstance(answer, dict) else None
+        if status != 200 or not url or not url.startswith('https://') or '/storage/v1/object/sign/' not in url:
+            raise MusicError(f'{name}: the library answered {status}')
+        partial = target.with_suffix(target.suffix + '.part')
+        with urllib.request.urlopen(url, timeout=600) as response, open(partial, 'wb') as handle:
+            shutil.copyfileobj(response, handle)
+        if t.get('bytes') and partial.stat().st_size != t['bytes']:
+            partial.unlink()
+            raise MusicError(f'{name}: came back {partial.stat().st_size if partial.exists() else 0} bytes, the ledger says {t["bytes"]}')
+        if t.get('sha256') and sha256_of(partial) != t['sha256']:
+            partial.unlink()
+            raise MusicError(f'{name}: its sha256 is not the one in the ledger')
+        partial.replace(target)
+        out(f'fetched        {name}  ({target.stat().st_size} bytes)')
+        got += 1
+    return folder, got
+
+
 def main():
     if sys.argv[1:2] == ['--self-test']:
         sys.exit(self_test())
@@ -709,6 +799,9 @@ def main():
     p.add_argument('--words')
     p.add_argument('--by', default='Krish')
     p.add_argument('--on', default=date.today().isoformat())
+    sub.add_parser('publish', help='send every ledger file in the music folder to the engine\'s library (a home computer)')
+    p = sub.add_parser('fetch', help='get every ledger file from the engine\'s library (any machine)')
+    p.add_argument('--out', help=f'the folder (default {FETCH_DEFAULT})')
     p = sub.add_parser('pick', help='the track for a cut, or the one track both cuts of a piece get')
     p.add_argument('--seconds', type=float, help='the cut\'s length in seconds (with --both-cuts: optional, the piece\'s long cut, '
                    f'the length both cuts ask for; without it, {PIECE_SECONDS:g} s)')
@@ -743,6 +836,13 @@ def main():
                     print(f'FAIL  {e}')
                 print('music ledger checks clean' if not errors else f'{len(errors)} problem(s)')
             sys.exit(1 if errors else 0)
+        elif a.cmd == 'publish':
+            done = cmd_publish(data)
+            print(f'music published: {done["sent"]} sent, {done["already"] + done["confirmed_only"]} already there')
+        elif a.cmd == 'fetch':
+            folder, got = cmd_fetch(data, a.out)
+            print(f'MINDMAKE_MUSIC_ROOT={folder}')
+            sys.exit(0 if got else 2)
         elif a.cmd == 'add':
             track = cmd_add(a, data)
             save(data, a.ledger)
