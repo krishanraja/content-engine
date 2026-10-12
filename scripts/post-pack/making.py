@@ -13,18 +13,32 @@ that everything is fresh and synchronised in real time".
     python making.py PIECE_ID visual-gate post.json          # runs the gate, records pass or fail
     python making.py PIECE_ID scripts long.md short.md       # story_check on each, by position; records
     python making.py PIECE_ID pack PACK_FOLDER [--sent]      # build.py and send.py call this themselves
-    python making.py PIECE_ID recorded long PATH [--seconds N]
-    python making.py PIECE_ID video long NAME PATH [--url https://...]
+    python making.py PIECE_ID recorded long "recordings/<sha256>.mp4" [--seconds N]
+    python making.py PIECE_ID video long NAME PATH [--url https://...] [--seconds N]
+                     [--thumb PATH [--thumb-url https://...]] [--music TRACK_ID]
     python making.py PIECE_ID posted substack https://...    # after Krish posted it
     python making.py PIECE_ID session https://claude.ai/code/session_...
+    python making.py --by Codex PIECE_ID ...                 # who wrote it
     python making.py --self-test
+
+Every write says who wrote it: --by NAME, else the MAKING_BY environment
+variable, else "Claude Code". Codex sets --by Codex (or MAKING_BY=Codex, which
+build.py and send.py pass on too), so the board never credits the wrong tool.
+
+A video asset carries its thumbnail (Krish, 2026-10-12: "I always want a video
+thumbnail for all video sizes produced as an asset every time") and the
+licensed music track behind it. The Video assets step is done only when both
+cuts are there, each with its thumbnail.
 
 Everything here records something that already happened. It never sends,
 posts, spends or deletes. A piece id is the content_ideas row (post.json
 "piece_id"). The engine key comes from scripts/engine.py, never from here.
 """
 import argparse
+import contextlib
+import io
 import json
+import os
 import re
 import subprocess
 import sys
@@ -39,6 +53,9 @@ import engine  # noqa: E402
 CHANNELS = ('substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes')
 CUTS = ('long', 'short')
 UUID = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', re.I)
+BY_ENV = 'MAKING_BY'
+DEFAULT_BY = 'Claude Code'
+MAX_BY = 60  # the engine keeps the first 60 characters (content-ideas/[id]/making.ts)
 
 
 class MakingError(Exception):
@@ -49,12 +66,27 @@ def now():
     return datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
 
 
-def post(piece_id, patch, call=None):
-    """One write. Returns the engine's answer as a dict, or raises MakingError."""
+def default_by():
+    """Who is writing when nobody said: MAKING_BY, else Claude Code."""
+    return (os.environ.get(BY_ENV) or '').strip() or DEFAULT_BY
+
+
+def who(by=None):
+    """The name a write goes out under: by, else default_by()."""
+    name = (by or '').strip() or default_by()
+    if len(name) > MAX_BY or any(ch in name for ch in '\r\n\t'):
+        raise MakingError(f'who wrote it (--by or {BY_ENV}) is one name of up to {MAX_BY} characters')
+    return name
+
+
+def post(piece_id, patch, call=None, by=None):
+    """One write, sent as written by `by` (default_by() when not given).
+    Returns the engine's answer as a dict, or raises MakingError."""
     if not UUID.match(piece_id or ''):
         raise MakingError('the piece id must be the content_ideas uuid (post.json "piece_id")')
+    body = {**patch, 'by': who(by)}
     call = call or _engine_call
-    status, text = call('POST', f'/api/content-ideas/{piece_id}/making', patch)
+    status, text = call('POST', f'/api/content-ideas/{piece_id}/making', body)
     try:
         data = json.loads(text) if text else {}
     except ValueError:
@@ -157,6 +189,50 @@ def pack_patch(pack_dir, sent=False):
     return patch
 
 
+def _cut(cut):
+    if cut not in CUTS:
+        raise MakingError(f'the cut is long or short, not "{cut}"')
+    return cut
+
+
+def recorded_patch(cut, path, seconds=None):
+    """One recording of one cut. The path is the engine's copy,
+    "recordings/<sha256>.<ext>" (recording_match.py writes it so), which
+    says exactly which take it was."""
+    if not isinstance(path, str) or not path.strip():
+        raise MakingError('give the recording\'s path, "recordings/<sha256>.<ext>"')
+    rec = {'cut': _cut(cut), 'path': path.strip()}
+    if seconds:
+        rec['seconds'] = int(seconds)
+    return {'recordings': [rec]}
+
+
+def video_patch(cut, name, path, url=None, seconds=None, thumb=None, thumb_url=None, music=None):
+    """One finished video of one cut, with its thumbnail and its music.
+    Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
+    produced as an asset every time"; a cut without one leaves the Video
+    assets step open."""
+    asset = {'cut': _cut(cut), 'name': name, 'path': path}
+    if url:
+        asset['url'] = url
+    if seconds:
+        asset['seconds'] = int(seconds)
+    if thumb_url and not thumb:
+        raise MakingError("--thumb-url needs --thumb, the thumbnail's path beside the video")
+    if thumb_url and not str(thumb_url).startswith('https://'):
+        raise MakingError('--thumb-url must be an https link')
+    if thumb:
+        asset['thumbnail'] = {'path': thumb}
+        if thumb_url:
+            asset['thumbnail']['url'] = thumb_url
+    if music is not None:
+        track = str(music).strip()
+        if not track or len(track) > 120 or any(ch in track for ch in '\r\n\t'):
+            raise MakingError('--music is the track id from config/music-library.json')
+        asset['music'] = track
+    return {'video_assets': [asset]}
+
+
 def piece_id_of(post_path):
     """The piece id a post.json names, or '' when it names none."""
     try:
@@ -254,6 +330,56 @@ def self_test():
         # The real story check, once: a two-line script is no 3-minute cut.
         real = scripts_patch([t / 'long.md', t / 'short.md'], warn=warned.append)['script_check']
         check('the real story check fails a script that is far too short', (real['passed'], any('long.md' in x for x in real['problems'])), (False, True))
+
+    # Who wrote it: --by, else MAKING_BY, else Claude Code, on every write.
+    saved = os.environ.pop(BY_ENV, None)
+    try:
+        post(pid, {'workroom': {'url': 'https://claude.ai/artifact/a'}}, fake)
+        check('a write with nobody named is by Claude Code', seen[-1][2].get('by'), 'Claude Code')
+        os.environ[BY_ENV] = 'Codex'
+        post(pid, {'workroom': {'url': 'https://claude.ai/artifact/a'}}, fake)
+        check('MAKING_BY names the writer, for build.py and send.py too', seen[-1][2].get('by'), 'Codex')
+        post(pid, {'workroom': {'url': 'https://claude.ai/artifact/a'}}, fake, by='Krish')
+        check('a name given beats MAKING_BY', seen[-1][2].get('by'), 'Krish')
+        check('the patch itself is untouched', seen[-1][2].get('workroom'), {'url': 'https://claude.ai/artifact/a'})
+        try:
+            post(pid, {'workroom': {'url': 'https://claude.ai/artifact/a'}}, fake, by='x' * 61)
+            check('a name over 60 characters is refused', 'no error', 'error')
+        except MakingError as e:
+            check('a name over 60 characters is refused', '60 characters' in str(e), True)
+    finally:
+        os.environ.pop(BY_ENV, None)
+        if saved is not None:
+            os.environ[BY_ENV] = saved
+
+    def run(argv):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = main(argv, call=fake)
+        return code, err.getvalue()
+
+    code, _ = run(['--by', 'Codex', pid, 'video', 'long', 'Substack video', '3 Video/long.mp4', '--url', 'https://drive.google.com/v',
+                   '--seconds', '184', '--thumb', '3 Video/thumb-wide-1280x720.jpg', '--thumb-url', 'https://drive.google.com/t', '--music', 'track-one'])
+    body = seen[-1][2]
+    check('video: written by Codex', (code, body.get('by')), (0, 'Codex'))
+    check('video: the asset carries its thumbnail, music and length', body['video_assets'][0],
+          {'cut': 'long', 'name': 'Substack video', 'path': '3 Video/long.mp4', 'url': 'https://drive.google.com/v', 'seconds': 184,
+           'thumbnail': {'path': '3 Video/thumb-wide-1280x720.jpg', 'url': 'https://drive.google.com/t'}, 'music': 'track-one'})
+    run([pid, 'video', 'short', 'Shorts video', '3 Video/short.mp4', '--thumb', '3 Video/thumb-tall-1080x1920.jpg'])
+    check('video: a thumbnail with no link is just its path', seen[-1][2]['video_assets'][0]['thumbnail'], {'path': '3 Video/thumb-tall-1080x1920.jpg'})
+    check('video: no music given, none sent', 'music' in seen[-1][2]['video_assets'][0], False)
+    before = len(seen)
+    code, err = run([pid, 'video', 'short', 'Shorts video', '3 Video/short.mp4', '--thumb-url', 'https://drive.google.com/t'])
+    check('video: a thumbnail link with no thumbnail path is refused, and nothing is sent', (code, 'needs --thumb' in err, len(seen)), (1, True, before))
+    code, err = run([pid, 'video', 'short', 'Shorts video', '3 Video/short.mp4', '--thumb', 't.jpg', '--thumb-url', 'http://plain'])
+    check('video: a thumbnail link must be https', (code, 'https' in err, len(seen)), (1, True, before))
+    code, err = run([pid, 'video', 'wide', 'Shorts video', '3 Video/short.mp4'])
+    check('video: a cut that is neither long nor short is refused', (code, 'long or short' in err, len(seen)), (1, True, before))
+    run(['--by', 'Codex', pid, 'recorded', 'short', 'recordings/' + 'a' * 64 + '.mp4', '--seconds', '118'])
+    check('recorded: the engine copy, its length and who recorded it', (seen[-1][2]['recordings'], seen[-1][2]['by']),
+          ([{'cut': 'short', 'path': 'recordings/' + 'a' * 64 + '.mp4', 'seconds': 118}], 'Codex'))
+    run(['--by', 'Codex', pid, 'session', 'https://chatgpt.com/codex/tasks/x'])
+    check('session: the session says who runs it', seen[-1][2]['session'], {'url': 'https://chatgpt.com/codex/tasks/x', 'by': 'Codex'})
     if fails:
         print('making self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
@@ -261,14 +387,18 @@ def self_test():
     return 0
 
 
-def main(argv=None):
+def main(argv=None, call=None):
     ap = argparse.ArgumentParser(description="Record where a piece is, for Control Center's board.")
     ap.add_argument('piece_id', nargs='?')
     ap.add_argument('what', nargs='?', choices=['show', 'workroom', 'publish-manager', 'visual-gate', 'scripts', 'pack', 'recorded', 'video', 'posted', 'session'])
     ap.add_argument('args', nargs='*')
+    ap.add_argument('--by', help=f'who is writing: Codex, Claude Code (default: {BY_ENV}, else {DEFAULT_BY})')
     ap.add_argument('--sent', action='store_true', help='with pack: the pack was sent to the library')
-    ap.add_argument('--seconds', type=int)
-    ap.add_argument('--url')
+    ap.add_argument('--seconds', type=int, help='with recorded or video: how long it runs')
+    ap.add_argument('--url', help='with video: the https link to the finished video')
+    ap.add_argument('--thumb', metavar='PATH', help="with video: the thumbnail's path, beside the video (every cut has one)")
+    ap.add_argument('--thumb-url', metavar='URL', help="with video and --thumb: the thumbnail's https link")
+    ap.add_argument('--music', metavar='TRACK_ID', help='with video: the licensed track behind it (config/music-library.json)')
     ap.add_argument('--self-test', action='store_true')
     a = ap.parse_args(argv)
     if a.self_test:
@@ -276,8 +406,9 @@ def main(argv=None):
     if not a.piece_id or not a.what:
         ap.error('give PIECE_ID and what to record')
     try:
+        by = who(a.by)
         if a.what == 'show':
-            print(show(a.piece_id))
+            print(show(a.piece_id, call))
             return 0
         if a.what in ('workroom', 'publish-manager'):
             if len(a.args) != 1:
@@ -290,25 +421,18 @@ def main(argv=None):
         elif a.what == 'pack':
             patch = pack_patch(a.args[0], a.sent)
         elif a.what == 'recorded':
-            cut, path = a.args[0], a.args[1]
-            rec = {'cut': cut, 'path': path}
-            if a.seconds:
-                rec['seconds'] = a.seconds
-            patch = {'recordings': [rec]}
+            patch = recorded_patch(a.args[0], a.args[1], a.seconds)
         elif a.what == 'video':
-            cut, name, path = a.args[0], a.args[1], a.args[2]
-            asset = {'cut': cut, 'name': name, 'path': path}
-            if a.url:
-                asset['url'] = a.url
-            patch = {'video_assets': [asset]}
+            patch = video_patch(a.args[0], a.args[1], a.args[2], url=a.url, seconds=a.seconds,
+                                thumb=a.thumb, thumb_url=a.thumb_url, music=a.music)
         elif a.what == 'posted':
             channel = a.args[0]
             if channel not in CHANNELS:
                 ap.error(f'channel must be one of {", ".join(CHANNELS)}')
             patch = {'channels': {channel: {'url': a.args[1]} if len(a.args) > 1 else {}}}
         else:
-            patch = {'session': {'url': a.args[0]}}
-        data = post(a.piece_id, patch)
+            patch = {'session': {'url': a.args[0], 'by': by}}
+        data = post(a.piece_id, patch, call, by=by)
     except (MakingError, IndexError, OSError) as error:
         print(f'making: {error}', file=sys.stderr)
         return 1

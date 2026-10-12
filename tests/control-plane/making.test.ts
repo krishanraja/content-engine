@@ -102,10 +102,51 @@ describe('the making record', () => {
     expect(two.body.making.recordings).toHaveLength(2)
     expect(two.body.making.recordings.find((r: Row) => r.cut === 'long').seconds).toBe(415)
     expect(two.body.steps.find((s: Row) => s.key === 'record').state).toBe('done')
-    const three = await call('POST', { video_assets: [{ cut: 'long', name: 'Substack video', path: '3 Video/long.mp4', url: 'https://drive.google.com/x' }] })
+    const three = await call('POST', { video_assets: [{ cut: 'long', name: 'Substack video', path: '3 Video/long.mp4', url: 'https://drive.google.com/x', thumbnail: { path: '3 Video/long thumbnail.jpg' } }] })
     expect(three.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'now', note: 'short cut still to produce' })
-    const four = await call('POST', { video_assets: [{ cut: 'short', name: 'Shorts video', path: '3 Video/short.mp4' }] })
+    const four = await call('POST', { video_assets: [{ cut: 'short', name: 'Shorts video', path: '3 Video/short.mp4', thumbnail: { path: '3 Video/short thumbnail.jpg' } }] })
     expect(four.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'done', note: '2 files' })
+  })
+
+  it('a cut is made only with its thumbnail: both videos without one leave the step open (Krish, 2026-10-12)', async () => {
+    await call('POST', { recordings: [{ cut: 'long', path: 'recordings/a.mp4' }, { cut: 'short', path: 'recordings/b.mp4' }] })
+    const bare = await call('POST', { video_assets: [{ cut: 'long', name: 'Substack video', path: '3 Video/long.mp4' }, { cut: 'short', name: 'Shorts video', path: '3 Video/short.mp4' }] })
+    expect(bare.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'now', note: 'long and short cut thumbnails still to make' })
+    // Sent again with the same path, the asset is replaced, now with its thumbnail.
+    const long = await call('POST', { video_assets: [{ cut: 'long', name: 'Substack video', path: '3 Video/long.mp4', thumbnail: { path: '3 Video/Who gets paid - wide 16x9 - thumbnail.jpg', url: 'https://drive.google.com/t' } }] })
+    expect(long.body.making.video_assets).toHaveLength(2)
+    expect(long.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'now', note: 'short cut thumbnail still to make' })
+    const short = await call('POST', { video_assets: [{ cut: 'short', name: 'Shorts video', path: '3 Video/short.mp4', thumbnail: '3 Video/Who gets paid - tall 9x16 - thumbnail.jpg' }] })
+    expect(short.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'done', note: '2 files' })
+    expect(short.body.making.video_assets.find((a: Row) => a.cut === 'short').thumbnail).toEqual({ path: '3 Video/Who gets paid - tall 9x16 - thumbnail.jpg' })
+  })
+
+  it('one cut still to produce and the other without its thumbnail are both said', async () => {
+    const out = await call('POST', { video_assets: [{ cut: 'long', name: 'Substack video', path: '3 Video/long.mp4' }] })
+    expect(out.body.steps.find((s: Row) => s.key === 'video')).toMatchObject({ state: 'now', note: 'short cut still to produce; long cut thumbnail still to make' })
+  })
+
+  it('a video asset carries its thumbnail and its music; a bad one is refused by name and nothing is written', async () => {
+    const ok = await call('POST', { by: 'Codex', video_assets: [{ cut: 'long', name: 'Substack video', path: '3 Video/long.mp4', thumbnail: { path: '3 Video/t.jpg', url: 'https://drive.google.com/t' }, music: 'track-one' }] })
+    expect(ok.status).toBe(200)
+    expect(ok.body.making.by).toBe('Codex')
+    expect(ok.body.making.video_assets[0]).toMatchObject({ thumbnail: { path: '3 Video/t.jpg', url: 'https://drive.google.com/t' }, music: 'track-one' })
+    db.writes = []
+    const plainLink = await call('POST', { video_assets: [{ cut: 'short', name: 'Shorts video', path: '3 Video/short.mp4', thumbnail: { path: '3 Video/t.jpg', url: 'http://plain' } }] })
+    expect(plainLink.status).toBe(400)
+    expect(plainLink.body.problems).toEqual(["the short cut's thumbnail needs a path, and an https url if it has one"])
+    const noPath = await call('POST', { video_assets: [{ cut: 'short', name: 'Shorts video', path: '3 Video/short.mp4', thumbnail: { url: 'https://drive.google.com/t' } }] })
+    expect(noPath.body.problems).toEqual(["the short cut's thumbnail needs a path, and an https url if it has one"])
+    const noTrack = await call('POST', { video_assets: [{ cut: 'short', name: 'Shorts video', path: '3 Video/short.mp4', music: '  ' }] })
+    expect(noTrack.body.problems).toEqual(["the short cut's music is the track id from config/music-library.json"])
+    expect(db.writes).toHaveLength(0)
+  })
+
+  it('every write says who wrote it: Codex when it says so, Claude Code on the engine key otherwise', async () => {
+    const codex = await call('POST', { by: 'Codex', recordings: [{ cut: 'long', path: `recordings/${'a'.repeat(64)}.mp4`, seconds: 172 }] })
+    expect(codex.body.making.by).toBe('Codex')
+    const plain = await call('POST', { workroom: 'https://claude.ai/artifact/x' })
+    expect(plain.body.making.by).toBe('Claude Code')
   })
 
   it('a script check that recorded one cut still needs both recordings (TWO_CUTS)', async () => {
@@ -155,6 +196,16 @@ describe('the pure helpers', () => {
     expect(Object.fromEntries(steps.map(s => [s.key, s.owner]))).toEqual({
       workroom: 'Claude', draft: 'Claude', visual_gate: 'Claude', scripts: 'Claude', pack: 'Claude', record: 'Krish', video: 'Codex', publish: 'Krish',
     })
+  })
+
+  it('makingSteps: a thumbnail on any asset of a cut counts for that cut', () => {
+    const base = { recordings: [{ cut: 'long', path: 'a', at: 'x' }, { cut: 'short', path: 'b', at: 'x' }], updated_at: 'x', by: 'Codex' }
+    const twoLong = makingSteps({ state: 'review', meta: { making: { ...base, video_assets: [
+      { cut: 'long', name: 'first render', path: 'long-1.mp4', at: '2026-10-12T09:00:00Z' },
+      { cut: 'long', name: 'second render', path: 'long-2.mp4', at: '2026-10-12T10:00:00Z', thumbnail: { path: 'wide.jpg' } },
+      { cut: 'short', name: 'Shorts video', path: 'short.mp4', at: '2026-10-12T10:00:00Z', thumbnail: { path: 'tall.jpg' } },
+    ] } } })
+    expect(twoLong.find(s => s.key === 'video')).toMatchObject({ state: 'done', note: '3 files', at: '2026-10-12T10:00:00Z' })
   })
 
   it('a published piece with every channel is done', () => {

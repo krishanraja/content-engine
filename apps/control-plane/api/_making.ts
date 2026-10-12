@@ -8,8 +8,10 @@
 // the durable system and then a session here picks up that durable system",
 // and "it's crucial that everything is fresh and synchronised in real time".
 //
-// Who writes it: Claude Code sessions (through scripts/post-pack/making.py
-// and the pack tools), the control centre's "Make it in Claude Code" button
+// Who writes it: Claude Code and Codex sessions (through
+// scripts/post-pack/making.py, whose --by names the tool on every write, and
+// the pack tools), scripts/post-pack/recording_match.py when it ties a take in
+// the Inbox to its piece, the control centre's "Make it in Claude Code" button
 // (session), and Krish's own cookie when he ticks a channel off. Everything
 // here is a record of something that happened; nothing here sends, posts,
 // spends or deletes.
@@ -31,8 +33,16 @@ export type MakingCut = (typeof MAKING_CUTS)[number]
 export interface MakingCheck { passed: boolean; checked_at: string; problems: string[] }
 export interface MakingLink { url: string; at: string }
 export interface MakingPack { folder: string; packed_at: string; files: number; sent_at?: string; headline?: string }
+/** A recording's path is the engine's copy, `recordings/<sha256>.<ext>`
+ *  (scripts/post-pack/recording_match.py writes it so), which says exactly
+ *  which take it was and lets the next match skip it. */
 export interface MakingRecording { cut: MakingCut; path: string; at: string; seconds?: number }
-export interface MakingVideoAsset { cut: MakingCut; name: string; path: string; at: string; url?: string; seconds?: number }
+/** The thumbnail made with a cut, beside it in the pack (Krish, 2026-10-12:
+ *  "I always want a video thumbnail for all video sizes produced as an asset
+ *  every time"). */
+export interface MakingThumbnail { path: string; url?: string }
+/** `music` is the licensed track's id in config/music-library.json. */
+export interface MakingVideoAsset { cut: MakingCut; name: string; path: string; at: string; url?: string; seconds?: number; thumbnail?: MakingThumbnail; music?: string }
 export interface MakingChannelPost { url?: string; posted_at: string }
 export interface MakingSession { url: string; started_at: string; by: string }
 
@@ -124,6 +134,18 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
         const url = https(a.url)
         if (url) asset.url = url
         if (Number.isFinite(Number(a.seconds)) && Number(a.seconds) > 0) asset.seconds = Math.round(Number(a.seconds))
+        if (a.thumbnail !== undefined) {
+          const t = a.thumbnail
+          const thumbPath = str(isObj(t) ? t.path : t, 400)
+          const thumbUrl = isObj(t) && t.url !== undefined ? https(t.url) : null
+          if (!thumbPath || (isObj(t) && t.url !== undefined && !thumbUrl)) { problems.push(`the ${cut} cut's thumbnail needs a path, and an https url if it has one`); continue }
+          asset.thumbnail = thumbUrl ? { path: thumbPath, url: thumbUrl } : { path: thumbPath }
+        }
+        if (a.music !== undefined) {
+          const music = str(a.music, 120)
+          if (!music) { problems.push(`the ${cut} cut's music is the track id from config/music-library.json`); continue }
+          asset.music = music
+        }
         patch.video_assets.push(asset)
       }
     }
@@ -233,11 +255,19 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   steps.push(recorded.size
     ? { key: 'record', label: 'Recorded', state: missingCuts.length ? 'now' : 'done', at: (m.recordings || []).map(r => r.at).sort().pop(), note: missingCuts.length ? `${missingCuts.join(' and ')} cut still to record` : undefined }
     : { key: 'record', label: 'Record', state: 'todo' })
+  // A thumbnail for every size, every time (Krish, 2026-10-12): a cut is
+  // made only when its video and its thumbnail are both on the record.
   const assets = m.video_assets || []
   const produced = new Set(assets.map(a => a.cut))
   const missingAssets = MAKING_CUTS.filter(c => !produced.has(c))
+  const thumbed = new Set(assets.filter(a => a.thumbnail?.path).map(a => a.cut))
+  const missingThumbs = MAKING_CUTS.filter(c => produced.has(c) && !thumbed.has(c))
+  const videoTodo = [
+    missingAssets.length ? `${missingAssets.join(' and ')} cut still to produce` : '',
+    missingThumbs.length ? `${missingThumbs.join(' and ')} cut thumbnail${missingThumbs.length === 1 ? '' : 's'} still to make` : '',
+  ].filter(Boolean).join('; ')
   steps.push(assets.length
-    ? { key: 'video', label: 'Video assets', state: missingAssets.length ? 'now' : 'done', at: assets.map(a => a.at).sort().pop(), note: missingAssets.length ? `${missingAssets.join(' and ')} cut still to produce` : `${assets.length} file${assets.length === 1 ? '' : 's'}` }
+    ? { key: 'video', label: 'Video assets', state: videoTodo ? 'now' : 'done', at: assets.map(a => a.at).sort().pop(), note: videoTodo || `${assets.length} file${assets.length === 1 ? '' : 's'}` }
     : { key: 'video', label: 'Video assets', state: 'todo' })
   // The publish step is done when the standing five are ticked (Krish,
   // 2026-10-11). State 'published' means the Substack post is live
