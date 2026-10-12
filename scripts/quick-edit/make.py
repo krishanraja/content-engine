@@ -1606,6 +1606,18 @@ def main():
         report[f'{asp}_file'] = final.name
         levels = bed['levels'] if bed else default_levels()
         loudness = measure_cut(final, tl, cut_audio)
+        if loudness.get('true_peak') is not None and loudness['true_peak'] > levels['max_true_peak_dbtp']:
+            # The AAC encode lifts inter-sample peaks over the ceiling: one
+            # oversampled limiter pass on the sound alone (the picture is
+            # copied) brings them under it without moving the loudness.
+            limited = final.with_name(final.stem + '.limited.mp4')
+            ceiling = 10 ** ((levels['max_true_peak_dbtp'] - 0.8) / 20)
+            run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-i', str(final), '-map', '0', '-c:v', 'copy',
+                 '-af', f'aresample=192000,alimiter=limit={ceiling:.3f}:attack=1:release=50:level=0,aresample=48000',
+                 '-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-movflags', '+faststart', str(limited)])
+            limited.replace(final)
+            loudness = measure_cut(final, tl, cut_audio)
+            loudness['peak_limited'] = True
         warnings += loudness_warnings(loudness, levels)
         shapes[asp] = {
             'file': final.name, 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],

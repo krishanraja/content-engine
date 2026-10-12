@@ -18,10 +18,11 @@
     "words": "This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
     "context": "He ruled it in the same message that asked for the midday run to make every video; the design is the blind-judging winner, shown to him in the publish board with Monday's videos.",
     "monday_renders": {
-      "intro-16x9.mp4": "615f1508f200e6a74a7de180a4e5cb744ed4ae906140d884a867e4e4c636d2fa",
-      "intro-9x16.mp4": "12e930bbdb01907270075c6273e9244d4b317b06697f191db80b5cf702be9483",
-      "outro-16x9.mp4": "78c8d8f3ea16f931d1dd75f294d273a9a2f27c1fc079cac4b70d78a69841fc46",
-      "outro-9x16.mp4": "bfb0b39dce78055dcb3f3ac5ef8544e3aff2d4cacb294698760cf3854c371ba3"
-    }
+      "intro-16x9.mp4": "e3cf0f1a8aa11673bb4b551989acd9fdcc62ec8671199f14055dc394a161b390",
+      "intro-9x16.mp4": "4ae3c42882f37d68d1439446ec979b45f7464ecbbf8c6c0474aae2f4ebb9c0fd",
+      "outro-16x9.mp4": "c10de48bcfdb16a86d0bf5831590dc2e6bc9f3fc56b5e133b5eee5ce499393a8",
+      "outro-9x16.mp4": "d96f936dd538079b5e479b60249329945a4805b19771356caebaf62011e9b1fe"
+    },
+    "revised": "2026-10-12: the real makeyourmindup wordmark and masthead in place of typed text, a calm 6 s outro that holds its last card 2 s, and eased transitions, on Krish's words: \"the last frame is way too chaotic, doesn't last long enough and is completely the wrong brand mark\""
   }
 }
