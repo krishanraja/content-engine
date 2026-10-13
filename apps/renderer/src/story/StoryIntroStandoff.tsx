@@ -77,7 +77,7 @@ function plan(props: StoryStandoffProps): Plan {
   // Every badge the same width: the widest one's, within its region.
   const regionW = wide ? (S.x1 - S.x0 - vsD - 2 * 40) / 2 : S.x1 - S.x0
   const logoCol = mode === 'row' ? Math.max(...all.map((p) => logoRowWidth(p, m))) : 0
-  const w = Math.max(...all.map((p) => badgeNaturalWidth(p, m, regionW, shape, logoCol)), regionW * (mode === 'stack' ? 0.7 : 0.82))
+  const w = Math.max(...all.map((p) => badgeNaturalWidth(p, m, regionW, shape, logoCol)), regionW * (mode === 'stack' ? (wide ? 0.78 : 0.94) : 0.86))
   const layouts = new Map(all.map((p) => [p, badgeLayout(p, m, Math.min(w, regionW), hasTag, shape, logoCol)] as const))
   const h = Math.max(...[...layouts.values()].map((l) => l.h))
   for (const l of layouts.values()) l.h = h
@@ -227,8 +227,8 @@ function titleBlock(props: StoryStandoffProps, shape: Shape): TitleBlock {
   // The line-up: one ink tile per name, its real logo, its name beneath.
   const cast = (props.cast ?? []).slice(0, 6)
   const gap = shape === '16x9' ? 34 : 30
-  const s = Math.min(shape === '16x9' ? 140 : 168, Math.floor((S.x1 - S.x0 - (cast.length - 1) * gap) / Math.max(1, cast.length)))
-  const labelGap = 14, label = shape === '16x9' ? 24 : 28
+  const s = Math.min(shape === '16x9' ? 156 : 200, Math.floor((S.x1 - S.x0 - (cast.length - 1) * gap) / Math.max(1, cast.length)))
+  const labelGap = 14, label = shape === '16x9' ? 28 : 34
   const rowH = cast.length ? s + labelGap + label * 1.2 : 0
   const rowY = S.y1 - rowH - 8
   const tiles: Tile[] = cast.map((c, i) => {
@@ -257,6 +257,8 @@ function titleBlock(props: StoryStandoffProps, shape: Shape): TitleBlock {
   const qy = cast.length ? (tallQ ? rowY - 40 - d - mq : S.y1 - d - mq) : S.y1 - d - mq
   return { lines: fit.lines, size: fit.size, emphasis: em, x: S.x0, y, lineH, q: isQ ? { x: S.x1 - d - mq, y: qy, d } : null, tiles }
 }
+
+const labelGapPx = 14
 
 function TitleCard({ f, P, title, seriesColour }: { f: number; P: Plan; title: TitleBlock; seriesColour: string }) {
   const { lines, size, emphasis: em, x, y, lineH, q, tiles } = title
@@ -289,8 +291,9 @@ function TitleCard({ f, P, title, seriesColour }: { f: number; P: Plan; title: T
       {tiles.map((tl, i) => {
         const k = settle(f, tileAt(i), 0.9, 6, 4)
         if (!k) return null
-        const lw = tl.s * 0.62
-        const [bw, bh] = tl.aspect >= 1 ? [lw, lw / Math.min(tl.aspect, 3)] : [lw * tl.aspect, lw]
+        // A wide wordmark (Google, Meta) gets most of the tile's width; a square mark sits a little smaller.
+        const lw = tl.s * (tl.aspect >= 2 ? 0.84 : 0.62)
+        const [bw, bh] = tl.aspect >= 1 ? [lw, lw / tl.aspect] : [lw * tl.aspect, lw]
         return (
           <div key={i} style={abs({ left: tl.x, top: tl.y, width: tl.s, height: tl.s + 60, opacity: k.opacity, transform: `scale(${k.scale})`, transformOrigin: '50% 40%' })}>
             <div data-safe="box" data-id={`cast-${i}`} data-group={`cast-${i}`}
@@ -299,7 +302,7 @@ function TitleCard({ f, P, title, seriesColour }: { f: number; P: Plan; title: T
                 style={{ left: (tl.s - bw) / 2, top: (tl.s - bh) / 2, width: bw, height: bh }} />
             </div>
             <Txt id={`cast-${i}-name`} group={`cast-${i}`} face="mono" size={tl.label} color={C.ink}
-              style={{ left: 0, top: tl.s + 14, width: tl.s, textAlign: 'center' }}>{tl.name}</Txt>
+              style={{ left: 0, top: tl.s + labelGapPx, width: tl.s, textAlign: 'center' }}>{tl.name}</Txt>
           </div>
         )
       })}
