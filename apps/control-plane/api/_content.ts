@@ -32,6 +32,14 @@ export function sanitizeVoice(input: string): string {
   return t
 }
 
+/** True when an insert failed only because content_ideas.source_type names a
+ *  source live has no intake_sources row for yet. A code merge deploys, but a
+ *  migration is applied by hand, so a new source can reach live before its
+ *  row does (2026-10-13, honest sources). Any other failure is false. */
+export function isUnregisteredSource(err: { code?: string; message?: string } | null | undefined): boolean {
+  return !!err && err.code === '23503' && String(err.message || '').includes('content_ideas_source_type_fkey')
+}
+
 export interface Material {
   id: string
   kind: 'paste' | 'link' | 'file' | 'research'

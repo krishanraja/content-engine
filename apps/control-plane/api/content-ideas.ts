@@ -3,7 +3,7 @@ import { publishChecks, publishStatus } from './_publishChecks.js'
 import { LIVE_SUBCHANNELS } from './_subchannels.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from './_supabase.js'
-import { callClaude, robustJson, sanitizeVoice } from './_content.js'
+import { callClaude, isUnregisteredSource, robustJson, sanitizeVoice } from './_content.js'
 import { checkDuplicate, recordDuplicateSource } from './_dedup.js'
 import { embed, vectorLiteral } from './_embeddings.js'
 import { canonicalUrl, titleNorm, contentHash } from './_text.js'
@@ -31,8 +31,10 @@ import { guardEngine } from './_auth.js'
 //   PATCH  — state transitions (seeded → drafting → published, etc.) and
 //            inline edits to idea/thesis/distribution/draft_link.
 //
-// One funnel for all six source types: manual, signal_inbox, cleo_chat,
-// agatha_chat, openclaw_workspace, zara_signal.
+// Every POST names its source. A missing or unknown source_type is refused
+// with 400 source_type_unknown, and the allowed values are in detail
+// (2026-10-13; until then it was stored as 'manual', which reads as Krish's
+// own words).
 
 // The live distribution channels, mirroring media_channels where active=true
 // and MEDIA_CHANNELS in src/lib/contentEngine.ts. TikTok joined the standing set
@@ -50,13 +52,18 @@ const ALLOWED_STATE = new Set([
   'dropped',
 ])
 
-// A source type not listed here is stored as 'manual', and GET
-// /api/week/options reports manual rows as ideas Krish dropped in. So an
-// agent's own sourcing must be listed: 'week_research' is the Sunday
-// planning session's finds (.agents/skills/plan-week). Every value must also
+// The source types POST accepts. Anything else is refused with 400
+// source_type_unknown, never stored as 'manual': GET /api/week/options reports
+// manual rows as ideas Krish dropped in, so 'manual' must mean his words. An
+// agent's own sourcing is listed under its own name: 'week_research' is the
+// Sunday planning session's finds (.agents/skills/plan-week). Every value must
 // be a row in intake_sources, which content_ideas.source_type references
-// (migration 20261011200000 adds this one). 'lane_sourcing' belongs to the
-// n8n Lane Sourcing workflow, whose quiet-source alarm reads its rows.
+// (migration 20261011200000 adds week_research; 20261021080000 adds
+// shift_write and pilot_build). 'shift_write' and 'pilot_build' write the
+// table directly today; they are listed so the same names are valid here.
+// 'lens_radar' was dropped on 2026-10-13: it has no intake_sources row, so a
+// write of it already failed the foreign key. The test
+// tests/control-plane/honest-sources.test.ts holds this list to the rows.
 export const ALLOWED_SOURCE = new Set([
   'signal_inbox',
   'cleo_chat',
@@ -65,11 +72,12 @@ export const ALLOWED_SOURCE = new Set([
   'zara_signal',
   'customer_voice',
   'crm_opportunity',
-  'lens_radar',
   'manual',
   'creator_move',
   'aeo_signal',
   'week_research',
+  'shift_write',
+  'pilot_build',
   'build_signal',
 ])
 
@@ -103,9 +111,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const rawText = (body.raw_text || '').trim()
     if (!rawText) return res.status(400).json({ ok: false, error: 'raw_text is required' })
 
-    const sourceType = body.source_type && ALLOWED_SOURCE.has(body.source_type)
-      ? body.source_type
-      : 'manual'
+    const sourceType = typeof body.source_type === 'string' ? body.source_type.trim() : ''
+    if (!ALLOWED_SOURCE.has(sourceType)) {
+      return res.status(400).json({
+        ok: false,
+        error: 'source_type_unknown',
+        detail: { allowed: [...ALLOWED_SOURCE] },
+      })
+    }
 
     // ── Dedup gate ──────────────────────────────────────────────────────────
     // Single tiered check against canonical_url / title_norm / content_hash /
@@ -313,6 +326,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .select()
       .single()
 
+    // An allowed source whose intake_sources row live does not have yet (its
+    // migration not applied) is the caller's to wait on, not a server fault.
+    if (isUnregisteredSource(error)) {
+      return res.status(400).json({ ok: false, error: 'source_type_not_registered', detail: { source_type: sourceType } })
+    }
     if (error) return res.status(500).json({ ok: false, error: error.message })
     return res.json({ ok: true, via: enriched.thesis ? 'enriched' : 'raw', idea: data })
   }
