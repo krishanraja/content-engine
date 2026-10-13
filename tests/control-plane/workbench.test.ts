@@ -546,7 +546,7 @@ describe('every item says how it ends, so a check can end it', () => {
   it('closeRefOk is the database rule, kind by kind', async () => {
     const { closeRefOk, CLOSE_KINDS } = await import('../../apps/control-plane/api/workbench.js')
     expect([...CLOSE_KINDS]).toEqual(['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published',
-      'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'session', 'his_word'])
+      'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'target_decided', 'session', 'his_word'])
     const cases: Array<[string, unknown, string | null, string, boolean]> = [
       ['record', {}, PIECE, 'monday-record', true],
       ['published', {}, null, 'monday-post', false],
@@ -563,6 +563,9 @@ describe('every item says how it ends, so a check can end it', () => {
       ['post_matched', {}, null, 'post-77', false],
       ['take_placed', {}, null, 'take-0123456789ab', true],
       ['take_placed', {}, null, 'take-NOTHEX', false],
+      ['target_decided', { target_id: '0a1b2c3d-1111-4222-8333-444455556666' }, null, 'visibility-take-x', true],
+      ['target_decided', { target_id: 'not-a-uuid' }, null, 'visibility-take-x', false],
+      ['target_decided', {}, null, 'visibility-take-x', false],
       ['session', {}, null, 'doing-x', true],
       ['his_word', null, null, 'you-x', true],
       ['someday', {}, null, 'x', false],
@@ -603,6 +606,17 @@ describe('every item says how it ends, so a check can end it', () => {
     // A later edit is merged with the ref already there.
     expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', detail: 'Still the old card.' }] })).status).toBe(200)
     expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', close_ref: { url: SHARE.url } }] })).body.error).toBe('on_you_needs_close_ref')
+  })
+
+  it("the visibility scorer's write puts a podcast on him as its own writer, closing when he decides it", async () => {
+    const TARGET = '0a1b2c3d-1111-4222-8333-444455556666'
+    const take = { id: 'visibility-take-0a1b2c3d', lane: 'on_you', rank: 2, area: 'Visibility', title: 'A podcast worth your time: Synthetic Show',
+      link: 'https://controlcenter.example/#/people?lane=visibility&target=x', link_label: 'Open it in Visibility', only_you: 'judgment', closes_on: 'target_decided', close_ref: { target_id: TARGET } }
+    const out = await call('POST', { action: 'upsert_items', client: 'visibility_score', items: [take] }, 'krish')
+    expect(out.status).toBe(200)
+    expect(item(take.id)).toMatchObject({ lane: 'on_you', closes_on: 'target_decided', close_ref: { target_id: TARGET }, updated_by: 'visibility_score' })
+    const noTarget = await call('POST', { action: 'upsert_items', client: 'visibility_score', items: [{ ...take, id: 'visibility-take-none', close_ref: {} }] }, 'krish')
+    expect(noTarget.body.error).toBe('on_you_needs_close_ref')
   })
 
   it('his_word goes on his list only from him: his cookie, his words relayed, or Control Center', async () => {

@@ -106,18 +106,21 @@ export interface BoardItemInput {
  *  credential as Krish's browser. A cookie call may name one of these to be
  *  recorded as that job instead of as Krish. It can only lower the
  *  attribution, never raise it. */
-export const COOKIE_AUTOMATIONS = new Set(['control_center_slate', 'control_center', 'done_check'])
+// visibility_score: Control Center's visibility scorer, which puts a podcast or
+// stage judged worth taking on Krish (api/_visibilityTake.ts there). Unnamed, its
+// writes would be recorded as his own.
+export const COOKIE_AUTOMATIONS = new Set(['control_center_slate', 'control_center', 'done_check', 'visibility_score'])
 /** The done-check sweep's client. It may only close an open item, with a proof. */
 export const DONE_CHECK = 'done_check'
 /** A piece's making steps and 'published': the item names the piece (idea_id). */
 export const PIECE_KINDS = ['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published'] as const
 /** Every way an item ends. The list in the newest migration's
  *  work_board_items_closes_on_check is the same. */
-export const CLOSE_KINDS = new Set<string>([...PIECE_KINDS, 'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'session', 'his_word'])
+export const CLOSE_KINDS = new Set<string>([...PIECE_KINDS, 'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'target_decided', 'session', 'his_word'])
 /** Kinds that are never on Krish: work a session holds, and the questions a machine holds for one. */
 export const NOT_ON_HIM = new Set(['session', 'post_matched', 'take_placed'])
 /** Kinds whose close_ref must be whole on any open item (the rest are checked on him). */
-const REF_KINDS = new Set(['week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed'])
+const REF_KINDS = new Set(['week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'target_decided'])
 const PIECE_KIND_SET = new Set<string>(PIECE_KINDS)
 /** Why only Krish can do an item: the walls only he passes, his face and voice, his login, his call. */
 export const ONLY_YOU = new Set(['send', 'post', 'spend', 'delete', 'permission', 'credential', 'face', 'login', 'judgment'])
@@ -170,6 +173,7 @@ export const CLOSE_REF_NEEDS: Record<string, string> = {
   job_ok: 'close_ref {"job": the job\'s name, "after": the time a clean run must be newer than, "probe": "dry" when a dry read can prove it}',
   post_matched: 'close_ref {"url": the post\'s https address}',
   take_placed: 'the id take-<the first 12 of its sha256>',
+  target_decided: 'close_ref {"target_id": the visibility target\'s uuid}',
 }
 
 /** True when an item carries what its kind needs. The same rule as the
@@ -185,6 +189,7 @@ export function closeRefOk(kind: unknown, ref: unknown, ideaId: unknown, id: unk
   if (k === 'job_ok') return str(r.job) !== '' && str(r.after) !== ''
   if (k === 'post_matched') return /^https:\/\//.test(str(r.url))
   if (k === 'take_placed') return TAKE_ITEM.test(String(id))
+  if (k === 'target_decided') return UUID.test(str(r.target_id))
   return k === 'session' || k === 'his_word'
 }
 
@@ -219,10 +224,10 @@ export const ON_YOU_NEEDS = {
   link: `An item waiting on Krish links to the prepared thing he acts on (the script, the draft, the page): "link" starts with https://, with a short "link_label". A typed answer is not a link. ${KEEP_IN_PROGRESS}`,
   closes_on: 'An item waiting on Krish says how it closes itself: "closes_on" is a making step (workroom, draft, visual_gate, scripts, pack, record, video, publish) or published, with the piece\'s "idea_id"; '
     + 'week_planned on the week\'s planning item alone (id week-<its Monday>); week_published on the week\'s publish board alone (id week-publish-board-<its Monday>); '
-    + 'share_image_changed with close_ref {url, was}; job_ok with close_ref {job, after}; or his_word, which only Krish puts on his list. '
+    + 'share_image_changed with close_ref {url, was}; job_ok with close_ref {job, after}; target_decided with close_ref {target_id} (a podcast or stage he decides on); or his_word, which only Krish puts on his list. '
     + `Never session, post_matched or take_placed: those are held for a session. ${KEEP_IN_PROGRESS}`,
   idea_id: `An item waiting on Krish that closes on a piece's step names the piece: "idea_id" is the piece's uuid. Only the kinds that are not a piece's step need none. ${KEEP_IN_PROGRESS}`,
-  close_ref: `An item waiting on Krish carries what its check needs: share_image_changed needs ${CLOSE_REF_NEEDS.share_image_changed}; job_ok needs ${CLOSE_REF_NEEDS.job_ok}. ${KEEP_IN_PROGRESS}`,
+  close_ref: `An item waiting on Krish carries what its check needs: share_image_changed needs ${CLOSE_REF_NEEDS.share_image_changed}; job_ok needs ${CLOSE_REF_NEEDS.job_ok}; target_decided needs ${CLOSE_REF_NEEDS.target_decided}. ${KEEP_IN_PROGRESS}`,
 } as const
 
 /** The first field an item waiting on Krish lacks once the write is merged
