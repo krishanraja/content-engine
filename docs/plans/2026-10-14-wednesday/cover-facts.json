@@ -6,19 +6,19 @@
  "cover": {
   "headline": [
    "I scored Muse",
-   "against its rivals."
+   "vs its rivals."
   ],
   "rows": [
    {
     "logo": "logos/muse-cream.svg",
     "name": "Muse",
-    "tag": "Does the most",
+    "tag": "Does most",
     "colour": "butter"
    },
    {
     "logo": "logos/apple-cream.svg",
     "name": "Siri",
-    "tag": "Keeps it private",
+    "tag": "Most private",
     "colour": "lilac"
    }
   ],
