@@ -465,6 +465,27 @@ def series_of(piece_id, answer=None, call=None):
     return (piece.get('lane_slot') or None) if isinstance(piece, dict) else None
 
 
+OUTLINE_FROM = '2026-10-09'  # dated drafts from here on need an approved outline (Friday 16 Oct's plan is dated 09)
+
+
+def outline_gate(paths):
+    """No script is recorded until Krish has approved its argument. The
+    outline sits beside the dated drafts (docs/plans/<date>-outline.md) and
+    carries a line "Approved by Krish: <his words>, <date>". Krish approved
+    this loop on 2026-10-13 ("Outline first, then script"), after a day of
+    scripts that "dont sound like me and I cant read them coherently"."""
+    import re
+    long = Path(paths[0]) if paths else None
+    m = re.match(r'(\d{4}-\d{2}-\d{2})-draft-script', long.name) if long else None
+    if not m or m.group(1) < OUTLINE_FROM:
+        return
+    outline = long.parent / f'{m.group(1)}-outline.md'
+    text = outline.read_text(encoding='utf-8') if outline.exists() else ''
+    if not re.search(r'^Approved by Krish:\s*\S', text, re.M):
+        sys.exit(f'making: no approved outline for these scripts. Write {outline} (the argument in a few plain sentences), '
+                 'show it to Krish, and add his words as "Approved by Krish: <his words>, <date>" before recording scripts.')
+
+
 def scripts_patch(paths, run=None, warn=None, previous=None, series=None):
     """Checks the two scripts by position: the first is the long cut, the
     second the short (house rule TWO_CUTS, Krish, 2026-10-11: every piece
@@ -1530,6 +1551,7 @@ def main(argv=None, call=None):
         elif a.what == 'visual-gate':
             patch = visual_gate_patch(a.args[0])
         elif a.what == 'scripts':
+            outline_gate(a.args)
             # The record first: checked_at stays put while the words do.
             answer = read(a.piece_id, call)
             previous = (answer.get('making') or {}).get('script_check') if isinstance(answer.get('making'), dict) else None

@@ -236,6 +236,14 @@ def main(argv=None):
         b.close()
     for d in drawn:
         print(f'drew   {d}')
+    # The receipt the video run checks: every picture it cuts in must be one this
+    # tool drew (scripts/produce_day.py, check_cards). Kept beside cards.json.
+    import hashlib
+    receipt = src.parent / 'cards.receipt.json'
+    old = json.loads(receipt.read_text(encoding='utf-8')) if receipt.exists() else {}
+    old.update({d.name: hashlib.sha256(d.read_bytes()).hexdigest() for d in drawn})
+    receipt.write_text(json.dumps(dict(sorted(old.items())), indent=1) + '\n', encoding='utf-8')
+    print(f'receipt {receipt}')
     if a.sheet and drawn:
         from PIL import Image
         cols = 3

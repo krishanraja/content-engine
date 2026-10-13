@@ -28,6 +28,10 @@ on:
         description: 'Plan both cuts only; render, send and record nothing'
         type: boolean
         default: false
+      redo:
+        description: 'Make the videos again even if both cuts are already on the record'
+        type: boolean
+        default: false
 
 concurrency:
   group: produce-day
@@ -92,6 +96,7 @@ jobs:
           [ -n "${{ inputs.date }}" ] && args+=(--date "${{ inputs.date }}")
           [ -n "${{ inputs.piece }}" ] && args+=(--piece "${{ inputs.piece }}")
           [ "${{ inputs.dry_run }}" = "true" ] && args+=(--dry-run)
+          [ "${{ inputs.redo }}" = "true" ] && args+=(--redo)
           python scripts/produce_day.py "${args[@]}"
       - name: Keep the run's reports
         if: always() && steps.when.outputs.go == 'true'
@@ -102,5 +107,6 @@ jobs:
             .cache/produce/**/*.report.json
             .cache/produce/**/*.cut.txt
             .cache/produce/**/preview-*.jpg
+            .cache/produce/**/review-*.png
           if-no-files-found: ignore
           retention-days: 14

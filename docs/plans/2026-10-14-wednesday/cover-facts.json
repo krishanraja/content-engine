@@ -2,6 +2,27 @@
  "subchannel": "under.the.hood",
  "title": "I scored Meta's Muse against ChatGPT, Gemini, Claude and Siri. It tied with Siri, for opposite reasons.",
  "headline": "I scored Meta's Muse against ChatGPT, Gemini, Claude and Siri. It tied with Siri, for opposite reasons.",
+ "video_title": "I scored Muse against its rivals",
+ "standoff": {
+  "left": {
+   "label": "Muse, by Meta",
+   "logos": [
+    "logos/meta-cream.svg",
+    "logos/instagram-cream.svg",
+    "logos/whatsapp-cream.svg"
+   ],
+   "tag": "Does the most"
+  },
+  "right": [
+   {
+    "label": "Siri",
+    "logos": [
+     "logos/apple-cream.svg"
+    ],
+    "tag": "Keeps it private"
+   }
+  ]
+ },
  "date": "2026-10-14",
  "cover": {
   "headline": [

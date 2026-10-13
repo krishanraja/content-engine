@@ -1,5 +1,20 @@
 # Story intro and outro: three blind concepts and the judging (12 October)
 
+**Revised 13 October on Krish's review of Wednesday's video** ("font
+consistency issues throughout ... text that falls off the page ... brand
+guidelines have been seriously violated"; the vertical stand-off "an absolute
+dog's dinner"; "we've not made any use of business logos"). The engine now:
+sets every text in the brand's faces by role (Anton headlines, Archivo text,
+IBM Plex Mono labels; Archivo Black is gone) and stops the render if one does
+not load; uses the short `video_title` from cover-facts.json, fitted to its
+area or the render fails (`STORY_FIT`); draws every player on one badge (its
+logos, its name in type, its tag) on both sides; builds each element in
+place, in order, inside the safe areas (`config/story-intro-outro.json`,
+`check`); adds a logo line-up under the title; and checks every frame of
+every render, failing it on anything outside the safe area, any collision or
+any non-brand face, with a contact sheet per clip for a person to look at.
+The intro is now 3.5 s (105 frames).
+
 Run as `docs/plans/2026-10-12-story-intro-outro-brief.md` says. Nothing here is
 approved; Krish has not seen any of it. Monday ships without a story intro on
 his words (`config/story-intro-outro.json`, `exceptions`).

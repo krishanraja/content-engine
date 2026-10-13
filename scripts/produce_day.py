@@ -83,9 +83,10 @@ def run(args, env=None, ok=(0,), what=''):
     return p
 
 
-def board(item_id, lane, title, detail, piece, link=None):
-    item = {'id': item_id, 'lane': lane, 'rank': 1, 'area': 'Videos', 'title': title, 'detail': detail, 'idea_id': piece,
-            'closes_on': 'video'}
+def board(item_id, lane, title, detail, piece, link=None, closes_on='video'):
+    item = {'id': item_id, 'lane': lane, 'rank': 1, 'area': 'Videos', 'title': title, 'detail': detail, 'idea_id': piece}
+    if closes_on:
+        item['closes_on'] = closes_on
     if link:
         item.update(link=link, link_label='Open')
     try:
@@ -182,6 +183,40 @@ def fetch_music():
     if p.returncode != 0 or not root:
         raise Stop('the licensed music is not in the engine yet: a home computer publishes it on its next five-minute pass')
     return root.group(1).strip()
+
+
+CARDS_FROM = date(2026, 10, 14)  # pieces from here on cut in only pictures video_card.py drew
+
+
+def check_cards(post_path):
+    """Every picture the video cuts in was drawn by scripts/pages/video_card.py,
+    byte for byte (its cards.receipt.json beside post.json). Krish, 2026-10-13:
+    "there are font consistency issues throughout ... we've not made any use of
+    business logos as we're supposed to", after a picture made outside the
+    house tool reached his video."""
+    post = plan_files.load_post(post_path)
+    try:
+        when = date.fromisoformat(str(post.get('date') or '')[:10])
+    except ValueError:
+        when = None
+    if when is None or when < CARDS_FROM:
+        return
+    receipt = post_path.parent / 'cards.receipt.json'
+    seen = json.loads(receipt.read_text(encoding='utf-8')) if receipt.exists() else {}
+    bad = []
+    for item in plan_files.video_files(post_path, post):
+        if item['kind'] != 'image':
+            continue
+        path = item.get('path')
+        if not path or not Path(path).exists():
+            bad.append(f'{item.get("file")} is not beside post.json')
+            continue
+        import hashlib
+        if seen.get(Path(path).name) != hashlib.sha256(Path(path).read_bytes()).hexdigest():
+            bad.append(f'{item.get("file")} was not drawn by video_card.py (or changed since)')
+    if bad:
+        raise Stop('pictures not made by the house tool: ' + '; '.join(bad)
+                   + '. Draw them with python scripts/pages/video_card.py cards.json beside post.json')
 
 
 def fetch_pictures(post_path):
@@ -305,6 +340,37 @@ def thumbs(post_path, work):
     return {'long': out / 'thumb-wide-1280x720.jpg', 'short': out / 'thumb-tall-1080x1920.jpg'}
 
 
+def review_sheet(src, out):
+    """One picture of the whole cut to look at before anyone calls it ready: a
+    frame every second, and every quarter second through the first 4 and the
+    last 7 seconds, where the intro and the outro animate. Krish, 2026-10-13:
+    "Did you actually watch these?" The runner's one-frame-per-beat previews
+    hid a title running off the page."""
+    from PIL import Image, ImageDraw
+    dur = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(src)],
+                               text=True, capture_output=True).stdout.strip() or 0)
+    times = sorted({round(t, 2) for t in [i * 0.25 for i in range(16)] + [dur - 7 + i * 0.25 for i in range(28)]
+                    + list(range(int(dur))) if 0 <= t < dur - 0.05})
+    shots = []
+    for t in times:
+        frame = out.parent / f'.frame-{t:.2f}.png'
+        subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-ss', f'{t:.2f}', '-i', str(src), '-frames:v', '1',
+                        '-vf', 'scale=480:-2', str(frame)], check=True)
+        shots.append((t, Image.open(frame).convert('RGB')))
+        frame.unlink()
+    w, h = shots[0][1].size
+    cols = 8 if w < h else 6
+    rows = (len(shots) + cols - 1) // cols
+    sheet = Image.new('RGB', (cols * w, rows * (h + 28)), '#0C1512')
+    pen = ImageDraw.Draw(sheet)
+    for i, (t, im) in enumerate(shots):
+        x, y = (i % cols) * w, (i // cols) * (h + 28)
+        pen.text((x + 6, y + 6), f'{int(t // 60)}:{t % 60:05.2f}', fill='#F4EFE4')
+        sheet.paste(im, (x, y + 28))
+    sheet.save(out)
+    return out
+
+
 def file_and_record(post_path, piece, rendered, thumb, work):
     post = plan_files.load_post(post_path)
     folder = plan_files.pack_folder(post)
@@ -319,6 +385,8 @@ def file_and_record(post_path, piece, rendered, thumb, work):
     for cut, src in rendered.items():
         (staged / f'{names[cut]}.mp4').write_bytes(Path(src).read_bytes())
         (staged / f'{names[cut]}.jpg').write_bytes(Path(thumb[cut]).read_bytes())
+        review_sheet(src, work / f'review-{cut}.png')
+        (staged / f'review - {cut} cut.png').write_bytes((work / f'review-{cut}.png').read_bytes())
     run([PY, 'scripts/post-pack/send.py', staged, '--as', f'3 Posts/{folder}/3 Video', '--purpose',
          'the finished video and its thumbnail, made by the midday run'], what='sending the videos to the library')
     for cut, src in rendered.items():
@@ -336,6 +404,7 @@ def main():
     ap.add_argument('--date', help='the publishing day, YYYY-MM-DD (default: today in New York)')
     ap.add_argument('--piece', help='the piece id (default: the one scheduled for the date)')
     ap.add_argument('--wait-minutes', type=int, default=120, help='how long to wait for both takes')
+    ap.add_argument('--redo', action='store_true', help='make the videos again even if both cuts are on the record (after an engine fix)')
     ap.add_argument('--dry-run', action='store_true', help='everything up to the plans; nothing rendered, sent or recorded')
     a = ap.parse_args()
     when = date.fromisoformat(a.date) if a.date else datetime.now(TZ).date()
@@ -348,13 +417,14 @@ def main():
         log(f'{when:%A %-d %B}: piece {piece}, plan {post_path.parent.name}')
         made = making(piece).get('video_assets') or []
         made = {v.get('cut') for v in made if isinstance(v, dict)} if isinstance(made, list) else set(made)
-        if all(c in made for c in SHAPE) and not a.dry_run:
+        if all(c in made for c in SHAPE) and not a.dry_run and not a.redo:
             # Already made (a run started by hand earlier, as on 13 October for
             # Wednesday): the scheduled run never makes a day's videos twice.
             log('both cuts are already on the record; nothing to do')
             return 0
         takes_at = fetch_takes(takes(piece, a.wait_minutes), work)
         music_root = fetch_music()
+        check_cards(post_path)
         fetch_pictures(post_path)
         clips, words = story_clips(post_path, work)
         rendered = make_cuts(post_path, piece, takes_at, music_root, clips, words, work, a.dry_run)
@@ -367,6 +437,12 @@ def main():
         # Control Center's done-check sweep closes an earlier stop's item by itself
         # (closes_on video), and a new item about a step already done is refused.
         log(f'both cuts are in 3 Posts/{folder}/3 Video; the publish board picks them up at 1:30 pm')
+        # Made is not reviewed: this item stays until someone has looked at both
+        # review sheets frame by frame and closed it (produce-video, "Never call a
+        # video good without watching it").
+        board(f'videos-review-{when.isoformat()}', 'in_progress', f'Review {when:%A}\'s videos before posting',
+              f'Both cuts are made. Look at "review - long cut.png" and "review - short cut.png" in 3 Posts/{folder}/3 Video, '
+              'every frame, before anyone calls them ready.', piece, closes_on=None)
         log('done')
         return 0
     except (Stop, engine.NoKey, engine.Unreachable, plan_files.PlanFilesError) as e:
