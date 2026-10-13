@@ -1,0 +1,43 @@
+{
+ "subchannel": "under.the.hood",
+ "title": "Millions handed Meta's Muse their chores. Here's the one thing it does that ChatGPT can't.",
+ "headline": "Millions handed Meta's Muse their chores. Here's the one thing it does that ChatGPT can't.",
+ "date": "2026-10-14",
+ "cover": {
+  "headline": [
+   "Millions use Muse.",
+   "Not for its brain."
+  ],
+  "rows": [
+   {
+    "logo": "logos/muse-cream.svg",
+    "name": "Muse",
+    "tag": "Inside",
+    "colour": "lilac"
+   },
+   {
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "ChatGPT",
+    "tag": "Outside",
+    "colour": "butter"
+   }
+  ],
+  "portrait": true
+ },
+ "thumbs": {
+  "strip": [
+   {
+    "logo": "logos/meta-cream.svg",
+    "name": "Meta"
+   },
+   {
+    "logo": "logos/instagram-cream.svg",
+    "name": "Instagram"
+   },
+   {
+    "logo": "logos/whatsapp-cream.svg",
+    "name": "WhatsApp"
+   }
+  ]
+ }
+}

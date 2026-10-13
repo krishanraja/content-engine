@@ -592,6 +592,33 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, Tuesday, about 07:40 UTC: **Wednesday's Muse piece is drafted,
+  fact-checked, scripted and has its covers; the read-back and Teleprompter
+  wait on Krish.** His words: "a mix of 1 and 3 - 3 will get more readers,
+  but 1 is more unique" (headline) and "Go: make Wednesday now".
+  - Headline on the piece: "Millions handed Meta's Muse their chores.
+    Here's the one thing it does that ChatGPT can't."
+  - Article: `docs/plans/2026-10-14-draft-body.md`, 1,294 words,
+    `voice_check.py` 3.0 (passes), fact gate passed (39 claims, none
+    blocking), 12 verbatim sources filed on the piece. The corpus's "2.8
+    million downloads" could not be traced; the piece uses CNN's "more than
+    2.5 million" (Sensor Tower). Wired refused the filer (403), so its line was
+    replaced with Meta's own help page ("is on when you first use Muse").
+    Prediction: Muse Confidential VM reaches free US users by 31 March 2027,
+    35%.
+  - Scripts: `docs/plans/2026-10-14-draft-script.md` (long) and `-90s.md`,
+    both `story_check.py` ready and recorded (`making.py scripts`). Four
+    rounds of two fresh readers: every retelling matches the point, but the
+    strict reader still lists small snags (some in the fixed series line), so
+    **no read-back pass is recorded** and `teleprompter_send.py plan` will
+    refuse. Krish decides: send as is, or another rewrite round.
+  - Covers: `docs/plans/2026-10-14-wednesday/cover-facts.json` and `logos/`
+    (Brandfetch: Muse, Meta, Instagram, WhatsApp; OpenAI and Google from
+    Friday). Drawn in this container with `MYMU_BROWSER=/opt/pw-browsers/chromium`
+    (Playwright wanted a newer headless shell): all five covers and both
+    thumbnails pass their checks. Not yet: visual gate record, publish page,
+    pack, board tab.
+
 - 2026-10-13, Tuesday, about 06:30 UTC: **Step 4 is live: one done-check
   sweep closes what can be seen done, and nothing else closes a board item.**
   Krish, 2026-10-13: "Go On the backfill, close everything out now to 100%.
