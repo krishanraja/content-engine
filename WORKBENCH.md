@@ -592,6 +592,23 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, 13:05 UTC: **Wednesday re-angled to a scorecard (Krish: "If I
+  went under the hood on Muse, I would literally do flash comparisons of it
+  against other tools on different criteria and rate them").** Muse vs
+  ChatGPT dots, Gemini Spark, Claude, Siri AI on six criteria, my scores out
+  of 10 (in `/tmp` card script, copied to post.json purposes): job, price,
+  reach, asks first, private, whose side. Muse 43 and Siri 43 tie, opposite
+  reasons. Thesis: shops stop paying to be seen and pay to be picked.
+  Prediction with no percentage (Krish: "I'm overall getting sick of these
+  percentage predictions"): by end 2027 businesses pay to be the one your AI
+  assistant picks. Nine cards in pics/ (score-*.png, chosen, scorecard,
+  prediction), all nine cue in the long cut. A fresh-listener subagent read the
+  scripts cold first; its fixes are in. Teleprompter retitled "Muse scored
+  against its rivals" and recorded current. Video run moved to 16:00 London
+  (trig_0189NYVCHupBTnpYS9cVRhAH, 15:00 UTC). **The article still has the old
+  angle**: rewrite it to the scorecard before publish, fact gate again (new
+  claims: Google ads business, Meta owns Instagram/WhatsApp).
+
 - 2026-10-13, 12:25 UTC: **Krish: "This is the most feedback and correction
   of basic things I've ever given on video scripts... things are just not
   making sense."** His last specifics: no reason given for Muse over Claude;
