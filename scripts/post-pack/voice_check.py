@@ -21,6 +21,11 @@ What it looks for, each a habit of machine prose:
   - a closing recap ("In short", "Ultimately", "The bottom line")
   - em dashes (house rule NO_EM_DASH)
   - no "I" or "my" anywhere: no person behind it
+  - stiff, uncontracted English ("it is", "do not", "you are") where a person
+    says "it's", "don't", "you're". Krish, 2026-10-13: "the article MUST not
+    trigger AI written scans either - you need to bake this in and figure out
+    how to add humanisms in there, abbreviations, "you're" instead of "you
+    are"". Words inside quotation marks are someone else's and never count.
 
     python voice_check.py ARTICLE.md [--json] [--max-score N]
 
@@ -55,6 +60,12 @@ TRIAD = re.compile(r"\b[\w'-]+(?:\s[\w'-]+){0,3},\s[\w'-]+(?:\s[\w'-]+){0,3},?\s
 REVEAL = re.compile(r"(?:^|[.!?]\s+)(?:here'?s\s+(?:why|how|what|the\s+\w+)|the\s+(?:answer|catch|twist|kicker|truth|short\s+answer)\s*(?:is)?)\s*:", re.I)
 RECAP = re.compile(r"^(?:in short|in summary|to sum up|ultimately|in the end|the bottom line|all in all|overall|in conclusion)\b", re.I)
 EM_DASH = re.compile(r"—|\s--\s")
+# Uncontracted forms a person would contract in speech. A form that ends its
+# clause ("that's what it is.") is left alone: there it is said in full.
+STIFF = re.compile(r"\b(?:(?:it|that|there|here|what|who|he|she) is|(?:you|we|they) are|I am|I would|(?:you|we|they) would|"
+                   r"(?:I|you|it|we|they) will|(?:do|does|did|is|are|was|were|have|has|had|would|could|should|will|must) not|cannot|let us)\b(?=\s+[\w$£])", re.I)
+CONTRACTED = re.compile(r"\b\w+(?:n't|'s|'re|'ve|'ll|'d|'m)\b|\bcan't\b|\bwon't\b|\blet's\b", re.I)
+QUOTED = re.compile(r'"[^"\n]*"|“[^”\n]*”')
 FIRST_PERSON = re.compile(r"\b(?:I|I'm|I've|I'd|I'll|[Mm]y|[Mm]e)\b")
 
 
@@ -157,6 +168,22 @@ def check(text):
         score += 3 + (4 - per_k)
         findings.append({'where': 'whole piece', 'habit': 'no person behind it',
                          'detail': f'{firsts} "I" or "my" in {words} words. Put in his own view, a moment from his work, a line he would say'})
+    stiff_by_para = []
+    for i, p in enumerate(paras, 1):
+        own = QUOTED.sub(' ', p.replace('’', "'"))
+        hits = [m.group(0) for m in STIFF.finditer(own)]
+        if hits:
+            stiff_by_para.append((i, p, hits))
+    stiff = sum(len(h) for _, _, h in stiff_by_para)
+    contracted = sum(len(CONTRACTED.findall(QUOTED.sub(' ', p.replace('’', "'")))) for p in paras)
+    if stiff >= 3 and stiff / max(1, stiff + contracted) > 0.25:
+        score += min(8, stiff * 0.75)
+        findings.append({'where': 'whole piece', 'habit': 'stiff, uncontracted English',
+                         'detail': f'{stiff} full forms against {contracted} contractions. Say it the way he says it: '
+                                   '"it\'s", "don\'t", "you\'re", "I\'d", outside quotes'})
+        for i, p, hits in stiff_by_para:
+            lead = p[:70] + ('...' if len(p) > 70 else '')
+            findings.append({'where': f'paragraph {i}: "{lead}"', 'habit': 'uncontracted', 'detail': ', '.join(hits)})
     return {'score': round(score, 1), 'max_score': MAX_SCORE, 'passes': score <= MAX_SCORE, 'paragraphs': len(paras),
             'words': words, 'findings': findings}
 
@@ -172,6 +199,9 @@ def self_test():
               'My whole contact book sits behind that one tap, and I gave it away in about four seconds without reading a word of what I '
               'was agreeing to, which is exactly what everyone else did too.\n\n'
               'Would I keep it? For the dull stuff, yes.')
+    stiff = ('It is a good app. You are going to like it. I do not think it is perfect, and they are not saying it is. '
+             'We are told it will not read your mail, and I would like to believe that.')
+    quoted = ('Meta says people "do not need to worry, it is safe and you are in control". I\'m not so sure. It\'s early.')
     a, b = check(machine), check(person)
     checks = [
         ('machine prose fails', a['passes'], False),
@@ -179,6 +209,8 @@ def self_test():
         ('stock phrases are named', any(f['habit'] == 'stock phrases' for f in a['findings']), True),
         ('"not X, it\'s Y" is found', any('not X' in f['habit'] for f in a['findings']), True),
         ('a closing recap is found', any(f['habit'] == 'a closing recap' for f in a['findings']), True),
+        ('stiff English is found', any(f['habit'] == 'stiff, uncontracted English' for f in check(stiff)['findings']), True),
+        ('quoted full forms do not count', any(f['habit'] == 'stiff, uncontracted English' for f in check(quoted)['findings']), False),
     ]
     bad = [(n, g, w) for n, g, w in checks if g != w]
     for n, g, w in bad:

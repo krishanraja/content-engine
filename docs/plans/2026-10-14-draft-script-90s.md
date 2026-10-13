@@ -1,13 +1,11 @@
-Here's what's really inside the AI everyone's selling you. I'm Krish.
+I've been looking at what's really inside the AI everyone's selling us. I'm Krish.
 
-Millions just handed their boring jobs to a new app from Meta called Muse. One person says a shop charged them $6,000 for clothes that cost about $1,500. Muse wrote to the shop to get the money back. So what can Muse do that ChatGPT can't?
+Millions of people just downloaded Meta's new helper app, Muse. It fills in forms, books things and argues for a better price. One person says it wrote to a shop that charged them $6,000 for $1,500 of clothes. So what does a company that sells adverts want with a helper like that?
 
-Muse is an AI helper that does jobs for you. But a CNN reporter found ChatGPT and Google's Gemini can do similar jobs. So I think Muse isn't cleverer.
+But a CNN reporter found ChatGPT and Gemini can do similar jobs. So I think it isn't cleverer. It's closer. Meta owns Instagram, Facebook and WhatsApp, so Muse can see your saved videos and chats.
 
-It just gets to your photos, chats and saved videos more easily. Meta owns Instagram, Facebook and WhatsApp. Muse can turn a recipe video you saved on Instagram into a shopping list. ChatGPT can't see your saved videos.
+And here's what I keep thinking about. Meta makes almost all its money from adverts. On Facebook, shops pay so you'll see them. Inside Muse, shops could pay so your helper chooses them. And when your helper picks for you, most of us just say yes.
 
-So there's a downside. The more apps you let Muse into, the more of your life Meta sees. And a setting lets Meta use your chats to teach its AI new things. It starts switched on. I'd switch it off.
+My prediction. By 30 June 2027, Meta will let businesses pay so Muse recommends them to you. I'm 70% sure.
 
-Meta has promised a locked mode, where not even Meta can read your stuff. My prediction. I don't think free users in the US will get it by 31 March 2027. I give it a 35% chance.
-
-The full story is free at makeyourmindup.ai. Tell me in the comments: would you trust Muse with your whole life? Make your mind up.
+The full story is free at makeyourmindup.ai. Tell me in the comments: would you trust a helper that someone else can pay? Make your mind up.

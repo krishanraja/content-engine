@@ -488,7 +488,7 @@ Changes from version 1, and why
 - No spoken sign-off.
 '''
 
-GOOD = '''Here's what's really inside the AI everyone's selling you. I'm Krish.
+GOOD = '''I've been looking at what's really inside the AI everyone's selling us. I'm Krish.
 
 So how do you lose your biggest supplier and keep growing? Let's take it apart.
 
@@ -578,12 +578,12 @@ def self_test():
     # The series line (house rule SERIES_OPENER), read from the house rules.
     lines = series_openers()
     check('the three series lines, as Krish picked them, from the house rules', lines, {
-        'follow_the_money': "Here's what you need to know about how money is changing because of AI. I'm Krish.",
-        'under_the_hood': "Here's what's really inside the AI everyone's selling you. I'm Krish.",
-        'mind_the_gap': "Here's what's coming with AI, before everyone notices. I'm Krish."})
+        'follow_the_money': "I've been following how money is changing because of AI. I'm Krish.",
+        'under_the_hood': "I've been looking at what's really inside the AI everyone's selling us. I'm Krish.",
+        'mind_the_gap': "I've been watching what's coming with AI, before everyone notices. I'm Krish."})
     check('a script that opens with its series line passes', problems(GOOD, None, 'under_the_hood'), [])
     check('another series\' line is refused, naming the right one',
-          any('SERIES_OPENER' in p and "inside the AI everyone's selling you" in p for p in problems(GOOD, None, 'under_the_hood')
+          any('SERIES_OPENER' in p and "inside the AI everyone's selling us" in p for p in problems(GOOD, None, 'under_the_hood')
               + problems(GOOD.replace(lines['under_the_hood'], lines['mind_the_gap']), None, 'under_the_hood')), True)
     no_line = GOOD.split('\n\n', 1)[1]
     check('a script with no series line is refused once its series is known, and passes when it is not',
@@ -625,9 +625,11 @@ def self_test():
           [syllables(w) for w in ('cat', 'table', 'wanted', 'jumped', 'everyone', 'music', '2027', '$150,000')], [1, 2, 2, 1, 3, 2, 1, 2])
     check('the gate refuses through problems(), for every script', any('house rule R7' in p for p in problems(fine + ' ' + long_one)), True)
 
-    # Today's scripts, as their pieces' records hold them.
+    # This week's unrecorded scripts, as their pieces' records hold them. Monday's
+    # were recorded on the 12 October lines and keep those words; a script
+    # already read on camera is never changed to suit a later line.
     plans = Path(__file__).resolve().parents[2] / 'docs' / 'plans'
-    for name, series in (('2026-10-12-draft-script.md', 'follow_the_money'), ('2026-10-12-draft-script-90s.md', 'follow_the_money'),
+    for name, series in (('2026-10-14-draft-script.md', 'under_the_hood'), ('2026-10-14-draft-script-90s.md', 'under_the_hood'),
                          ('2026-10-09-draft-script.md', 'mind_the_gap'), ('2026-10-09-draft-script-90s.md', 'mind_the_gap')):
         path = plans / name
         if path.is_file():

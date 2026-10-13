@@ -104,13 +104,15 @@ rewritten and checked again from the top.
    at the start of a video script like "Here's what you need to know about
    how money is changing because of AI. I'm Krish." at the start of
    follow.the.money videos. And then similar for the weds and fri scripts."
-   The lines he picked (`SERIES_OPENERS` in
-   `apps/control-plane/api/_houseRules.ts`, the one place they live):
-   follow.the.money (Monday) "Here's what you need to know about how money
-   is changing because of AI. I'm Krish."; under.the.hood (Wednesday)
-   "Here's what's really inside the AI everyone's selling you. I'm Krish.";
-   mind.the.gap (Friday) "Here's what's coming with AI, before everyone
-   notices. I'm Krish." His name is said once, there: to "Drop it from the
+   On 2026-10-13 he asked for a reflective, "here's what I'm seeing" tone
+   ("reduce the "breaking news, I'm Krish" tone ... Johnny Harris style",
+   house rule REFLECTIVE_VOICE) and picked the reflective lines
+   (`SERIES_OPENERS` in `apps/control-plane/api/_houseRules.ts`, the one
+   place they live): follow.the.money (Monday) "I've been following how
+   money is changing because of AI. I'm Krish."; under.the.hood (Wednesday)
+   "I've been looking at what's really inside the AI everyone's selling us.
+   I'm Krish."; mind.the.gap (Friday) "I've been watching what's coming with
+   AI, before everyone notices. I'm Krish." His name is said once, there: to "Drop it from the
    sign-off at the end?" he picked "Drop it at the end", so the close never
    says "I'm Krish" again. The line's words count toward the cut's length.
    Spoken words only, the provocative hook in the two sentences after the

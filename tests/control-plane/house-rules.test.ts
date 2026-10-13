@@ -544,9 +544,9 @@ describe('every video opens with its series line, and Krish says his name once (
     assert.ok(r.said.startsWith('We need something catchy at the start of a video script like "Here\'s what you need to know about how money is changing because of AI. I\'m Krish." at the start of follow.the.money videos. And then similar for the weds and fri scripts.'))
     assert.match(r.said, /Drop it at the end/)
     assert.deepEqual(Object.fromEntries(Object.entries(SERIES_OPENERS).map(([k, v]) => [k, v.line])), {
-      follow_the_money: "Here's what you need to know about how money is changing because of AI. I'm Krish.",
-      under_the_hood: "Here's what's really inside the AI everyone's selling you. I'm Krish.",
-      mind_the_gap: "Here's what's coming with AI, before everyone notices. I'm Krish.",
+      follow_the_money: "I've been following how money is changing because of AI. I'm Krish.",
+      under_the_hood: "I've been looking at what's really inside the AI everyone's selling us. I'm Krish.",
+      mind_the_gap: "I've been watching what's coming with AI, before everyone notices. I'm Krish.",
     })
     for (const o of Object.values(SERIES_OPENERS)) assert.ok(r.text.includes(o.line), o.series)
     assert.match(r.text, /the close never repeats "I'm Krish"/)
@@ -657,11 +657,13 @@ describe('a story intro, its audio treatment and an outro card, in every format 
   })
 })
 
-describe('today\'s four scripts pass the gate they are held to (SERIES_OPENER and R7, 2026-10-12)', () => {
-  test('Monday\'s and Friday\'s two cuts open with their series line, say "I\'m Krish" once, and a 12-year-old can follow them', async () => {
+// Monday's were recorded on the 12 October lines and keep their words; the
+// week's unrecorded cuts are held to the reflective lines of 13 October.
+describe('this week\'s unrecorded scripts pass the gate they are held to (SERIES_OPENER and R7)', () => {
+  test('Wednesday\'s and Friday\'s two cuts open with their series line, say "I\'m Krish" once, and a 12-year-old can follow them', async () => {
     const { spawnSync } = await import('node:child_process')
     for (const [file, cut, series] of [
-      ['docs/plans/2026-10-12-draft-script.md', 'long', 'follow_the_money'], ['docs/plans/2026-10-12-draft-script-90s.md', 'short', 'follow_the_money'],
+      ['docs/plans/2026-10-14-draft-script.md', 'long', 'under_the_hood'], ['docs/plans/2026-10-14-draft-script-90s.md', 'short', 'under_the_hood'],
       ['docs/plans/2026-10-09-draft-script.md', 'long', 'mind_the_gap'], ['docs/plans/2026-10-09-draft-script-90s.md', 'short', 'mind_the_gap'],
     ] as const) {
       const out = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['scripts/post-pack/story_check.py', '--cut', cut, '--series', series, file], { encoding: 'utf8' })

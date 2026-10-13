@@ -89,15 +89,15 @@ ws = (repo / 'docs/plans/2026-10-14-draft-script-90s.md').read_text()
 words = lambda t: len(t.split())
 cache = repo / '.cache/pages/2026-10-14-wednesday'
 covers = (f'<div class="draft-covers" id="wed-draft-covers">'
-          f'<figure><img id="wed-cover" alt="Substack cover: Millions use Muse. Not for its brain." src="{jpg(cache / "cover/cover-1200x630.png", 1200)}"><figcaption>Substack cover</figcaption></figure>'
+          f'<figure><img id="wed-cover" alt="Substack cover: Muse runs your life. Meta sells ads." src="{jpg(cache / "cover/cover-1200x630.png", 1200)}"><figcaption>Substack cover</figcaption></figure>'
           f'<figure><img id="wed-thumb-wide" alt="YouTube thumbnail" src="{jpg(cache / "thumbs/thumb-wide-1280x720.jpg", 1280)}"><figcaption>YouTube thumbnail</figcaption></figure>'
           f'<figure><img id="wed-thumb-tall" alt="Shorts, TikTok and Reels cover" src="{jpg(cache / "thumbs/thumb-tall-1080x1920.jpg", 540)}"><figcaption>Shorts, TikTok and Reels cover</figcaption></figure></div>')
 wed_new = ('<div class="kick">under.the.hood · Wed 14 Oct · draft</div>\n'
-           '<h1>Millions handed Meta&#x27;s Muse their chores. Here&#x27;s the one thing it does that ChatGPT can&#x27;t.</h1>'
-           '<div class="chips"><span class="chip">Fact check passed: 39 claims, none blocking</span>'
-           '<span class="chip">Sounds like Krish: voice check 3.0 (passes under 12)</span>'
+           '<h1>Millions handed Meta&#x27;s Muse their chores. What does an ad company do with an agent that runs your life?</h1>'
+           '<div class="chips"><span class="chip">Fact check passed: 34 claims, none blocking</span>'
+           '<span class="chip">Sounds like Krish: voice check 0.0 (passes under 12)</span>'
            f'<span class="chip">{words(wb):,} words</span>'
-           '<span class="chip">Scripts pass the reading-age check</span>'
+           '<span class="chip">Scripts: reflective tone, new opening line, reading-age check passed</span><span class="chip">Prediction: Meta sells Muse&#x27;s picks by 30 June 2027, 70%</span>'
            '<span class="chip warn">Not in Teleprompter yet: waiting on your sign-off</span></div>\n'
            + HOW + covers
            + doc('wed', 'article', 'The article', f'{words(wb):,} words · Substack', wb)
@@ -115,7 +115,7 @@ fri_open = re.search(r'<div class="pm" id="panel-friday"[^>]*>\n?', s)
 fri_new = ('<div class="kick">mind.the.gap · Fri 16 Oct · draft</div>\n'
            '<h1>Why are there suddenly so many AIs?</h1>'
            '<div class="chips"><span class="chip">Fact check passed on this exact text</span>'
-           '<span class="chip">Scripts in Teleprompter: both cuts</span>'
+           '<span class="chip warn">Scripts: new reflective opening line, so Teleprompter has the old one</span>'
            f'<span class="chip warn">Too long: {words(fb):,} words (the new limit is 1,400)</span>'
            '<span class="chip warn">Voice check 15.2 (needs under 12): due its voice pass</span>'
            '<span class="chip warn">Waiting: your call on the prediction line</span></div>\n'

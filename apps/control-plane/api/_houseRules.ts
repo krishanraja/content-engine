@@ -59,9 +59,9 @@ export interface SeriesOpener { day: string; series: string; line: string }
 // commas) and keeps its markers. Krish, 2026-10-12, picked each line.
 // SERIES_OPENERS:BEGIN
 export const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>> = Object.freeze({
-  "follow_the_money": { "day": "Monday", "series": "follow.the.money", "line": "Here's what you need to know about how money is changing because of AI. I'm Krish." },
-  "under_the_hood": { "day": "Wednesday", "series": "under.the.hood", "line": "Here's what's really inside the AI everyone's selling you. I'm Krish." },
-  "mind_the_gap": { "day": "Friday", "series": "mind.the.gap", "line": "Here's what's coming with AI, before everyone notices. I'm Krish." }
+  "follow_the_money": { "day": "Monday", "series": "follow.the.money", "line": "I've been following how money is changing because of AI. I'm Krish." },
+  "under_the_hood": { "day": "Wednesday", "series": "under.the.hood", "line": "I've been looking at what's really inside the AI everyone's selling us. I'm Krish." },
+  "mind_the_gap": { "day": "Friday", "series": "mind.the.gap", "line": "I've been watching what's coming with AI, before everyone notices. I'm Krish." }
 })
 // SERIES_OPENERS:END
 
@@ -350,7 +350,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   {
     id: 'SERIES_OPENER', name: 'Every video opens with its series line, and Krish says his name once',
     text: `Every video script opens with its series line, word for word, said first, before the hook: ${OPENER_LIST}. Both cuts carry it, the 3-minute and the 90-second, and its words count toward the cut's length (405 to 495 spoken words long, 160 to 225 short). Krish says his name once, in that line: the close never repeats "I'm Krish". A script whose series has no line yet opens on the hook. The article and the posts do not carry it.`,
-    said: 'We need something catchy at the start of a video script like "Here\'s what you need to know about how money is changing because of AI. I\'m Krish." at the start of follow.the.money videos. And then similar for the weds and fri scripts. Then, of the lines shown to him, he picked the Wednesday and Friday lines above; and to "The opener now says "I\'m Krish". Drop it from the sign-off at the end?" he picked "Drop it at the end".',
+    said: 'We need something catchy at the start of a video script like "Here\'s what you need to know about how money is changing because of AI. I\'m Krish." at the start of follow.the.money videos. And then similar for the weds and fri scripts. Then, of the lines shown to him, he picked the Wednesday and Friday lines above; and to "The opener now says "I\'m Krish". Drop it from the sign-off at the end?" he picked "Drop it at the end". Then, 2026-10-13: "I also want to reduce the "breaking news, I\'m Krish" tone, and have it be a more reflective, pensive, "here\'s what I\'m seeing" but still humorous dry wit tone. Johnny Harris style", and of the lines offered he picked "Reflective version": each series line now says what he has been doing ("I\'ve been looking at..."), his name still once.',
     on: '2026-10-12', source: 'chat, Monday\'s and Friday\'s scripts (commit ee68a61, which opened all four on their lines); the lines are SERIES_OPENERS in this file, which scripts/post-pack/story_check.py reads; checked by story_check.py --series, which making.py scripts runs with the piece\'s series; the script writer opens on it (api/_video.ts)', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
@@ -405,9 +405,16 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'SOUNDS_LIKE_KRISH', name: 'Sounds like Krish, not like a machine',
-    text: 'Write the way Krish talks, with his own view and his own details, and none of the habits of machine prose: no run of paragraphs that open the same way (at most three bold lead-ins), no formula on repeat ("My read:" and the like), no stock phrases (delve, landscape, navigate, seamless, unlock, heavy lifting, plainly, the reality is), no "it\'s not X, it\'s Y", no lists of three again and again, no question answered at once by the next line, no colon reveal ("Here\'s why:"), no neat signposting ("Two limits. First... Second..."), no closing recap, no em dash. Sentences vary a lot in length; some paragraphs are one line. "I" and "my" carry his view: a moment from his own work, what he did, what he would do. scripts/post-pack/voice_check.py measures it and every article passes it before the fact gate.',
-    said: 'And they get flagged as 93% AI generated, can we do anything about this? ... build the sounds like Krish pass now',
+    text: 'Write the way Krish talks, with his own view and his own details, and none of the habits of machine prose: no run of paragraphs that open the same way (at most three bold lead-ins), no formula on repeat ("My read:" and the like), no stock phrases (delve, landscape, navigate, seamless, unlock, heavy lifting, plainly, the reality is), no "it\'s not X, it\'s Y", no lists of three again and again, no question answered at once by the next line, no colon reveal ("Here\'s why:"), no neat signposting ("Two limits. First... Second..."), no closing recap, no em dash. Sentences vary a lot in length; some paragraphs are one line. "I" and "my" carry his view: a moment from his own work, what he did, what he would do. Contract the way he talks, outside quotes: "it\'s", "don\'t", "you\'re", "I\'d", never "it is", "do not", "you are", "I would", and use the everyday shortcuts a person types (vs, eg, "a bit", "honestly", "pretty much"), so no AI-writing scan flags it. scripts/post-pack/voice_check.py measures it and every article passes it before the fact gate.',
+    said: 'And they get flagged as 93% AI generated, can we do anything about this? ... build the sounds like Krish pass now. Then: the article MUST not trigger AI written scans either - you need to bake this in and figure out how to add humanisms in there, abbreviations, "you\'re" instead of "you are"',
     on: '2026-10-13', source: 'chat, on Monday\'s and Friday\'s articles; checked by scripts/post-pack/voice_check.py', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'REFLECTIVE_VOICE', name: 'Reflective, not breaking news',
+    text: 'Krish sounds like someone thinking out loud about what he has noticed, never a newsreader. Open from curiosity ("I keep noticing...", "Something odd is going on with..."), walk the viewer or reader through what he is seeing, the way Johnny Harris does: a question he could not shake, the evidence turned over slowly, his own doubt said out loud, then where he has landed. The wit stays dry and quiet, a raised eyebrow, never a punchline shouted. No urgency words (breaking, huge, insane, you need to know), no announcer cadence, no stacking of short punchy lines for drama. Applies to every script and every article.',
+    said: 'I also want to reduce the "breaking news, I\'m Krish" tone, and have it be a more reflective, pensive, "here\'s what I\'m seeing" but still humorous dry wit tone. Johnny Harris style',
+    on: '2026-10-13', source: 'chat, on Wednesday\'s Muse scripts', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
 ])

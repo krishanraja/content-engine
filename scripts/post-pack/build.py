@@ -600,7 +600,7 @@ def self_test():
         for name, body in (('out/substack.html', b'<p>post</p>'), ('out/page.html', b'<p>page</p>'),
                            ('body.md', b'The words.\n'), ('out/email-pictures-off.html', b'<p>email</p>'),
                            ('out/cover.png', b'cover'), ('img/1-look-or-pay.png', b'one'),
-                           ('script.md', b"Here's what you need to know about how money is changing because of AI. I'm Krish.\n\nWhy does this matter? Say this.\n"), ('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'),
+                           ('script.md', b"I've been following how money is changing because of AI. I'm Krish.\n\nWhy does this matter? Say this.\n"), ('v-9x16.mp4', b'tall'), ('v-16x9.mp4', b'wide'),
                            ('share/v-9x16.mp4', b'tall share'), ('card.png', b'card')):
             (work / name).parent.mkdir(parents=True, exist_ok=True)
             (work / name).write_bytes(body)

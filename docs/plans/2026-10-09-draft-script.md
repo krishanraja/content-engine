@@ -1,4 +1,4 @@
-Here's what's coming with AI, before everyone notices. I'm Krish.
+I've been watching what's coming with AI, before everyone notices. I'm Krish.
 
 Between them, ChatGPT and Claude now let you pick from more AI brains than there are Harry Potter books. And most of the time, the app won't tell you which brain answered you. So why are there suddenly so many AIs?
 

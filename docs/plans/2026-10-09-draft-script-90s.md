@@ -1,6 +1,6 @@
-Here's what's coming with AI, before everyone notices. I'm Krish.
+I've been watching what's coming with AI, before everyone notices. I'm Krish.
 
-Between them, ChatGPT and Claude now let you pick from more AI brains than there are Harry Potter books. And most of the time, the app won't tell you which brain answered you. So why are there suddenly so many AIs?
+Between them, ChatGPT and Claude now let you pick from more AI brains than there are Harry Potter books. Most of the time, the app won't tell you which brain answered you. So why are there suddenly so many AIs?
 
 The brains come in small, medium and large, each with its own name. Newer ones show off what's new, like a new phone. Bigger ones cost more, like posh seats on a plane. New names get people talking, like an advert. And small brains take the easy questions.
 

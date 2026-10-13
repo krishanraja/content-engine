@@ -1,24 +1,24 @@
 {
  "subchannel": "under.the.hood",
- "title": "Millions handed Meta's Muse their chores. Here's the one thing it does that ChatGPT can't.",
- "headline": "Millions handed Meta's Muse their chores. Here's the one thing it does that ChatGPT can't.",
+ "title": "Millions handed Meta's Muse their chores. What does an ad company do with an agent that runs your life?",
+ "headline": "Millions handed Meta's Muse their chores. What does an ad company do with an agent that runs your life?",
  "date": "2026-10-14",
  "cover": {
   "headline": [
-   "Millions use Muse.",
-   "Not for its brain."
+   "Muse runs your life.",
+   "Meta sells ads."
   ],
   "rows": [
    {
     "logo": "logos/muse-cream.svg",
     "name": "Muse",
-    "tag": "Inside",
+    "tag": "Runs it",
     "colour": "lilac"
    },
    {
-    "logo": "logos/openai-symbol-cream.svg",
-    "name": "ChatGPT",
-    "tag": "Outside",
+    "logo": "logos/meta-cream.svg",
+    "name": "Meta",
+    "tag": "Sells ads",
     "colour": "butter"
    }
   ],
@@ -27,8 +27,8 @@
  "thumbs": {
   "strip": [
    {
-    "logo": "logos/meta-cream.svg",
-    "name": "Meta"
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "ChatGPT"
    },
    {
     "logo": "logos/instagram-cream.svg",

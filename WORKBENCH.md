@@ -592,6 +592,41 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, Tuesday, about 08:30 UTC: **Wednesday re-angled, the tone
+  ruling, contractions, and the video run's real state.**
+  - Krish on the prediction: "the top one, but make the wording clearer, and
+    also Meta will 100% take ads, they are a known ads business. The question
+    is deeper than that - it's what happens when a business known for
+    harvesting data for ads will do with something like Muse - thats the
+    headline". Headline now "Millions handed Meta's Muse their chores. What
+    does an ad company do with an agent that runs your life?"; new section
+    "What an ad company does with this" (Meta's Q2 2026: $59.36 billion of
+    $60.8 billion from advertising, filed from Pulse 2.0); prediction "By 30
+    June 2027, Meta will let businesses pay to be the shop, restaurant or
+    service that Muse recommends to you", 70%. 1,384 words, voice 0.0, fact
+    gate passed (34 claims). Covers redrawn: "Muse runs your life. Meta sells
+    ads." Board version 10.
+  - New house rule REFLECTIVE_VOICE (his words: "reduce the "breaking news,
+    I'm Krish" tone ... Johnny Harris style") and, his pick, the reflective
+    series lines: "I've been following how money is changing because of
+    AI." / "I've been looking at what's really inside the AI everyone's
+    selling us." / "I've been watching what's coming with AI, before everyone
+    notices." each then "I'm Krish." Monday's recorded scripts keep their
+    words; Friday's two scripts got the new first line, so Teleprompter holds
+    the old one until the next send.
+  - SOUNDS_LIKE_KRISH now requires contractions and everyday shortcuts
+    (his words: "the article MUST not trigger AI written scans either ...
+    "you're" instead of "you are""); `voice_check.py` scores stiff,
+    uncontracted English outside quotes (self-test 7 checks).
+  - **The video run for Wednesday is not ready.** Home runners: active one
+    degraded with Drive unavailable; standby silent for about 350 hours;
+    Codex has no schedule (it runs when told "I've recorded"). GitHub's
+    midday run passed its dry runs on 12 October but has never rendered a
+    scheduled day, and for Wednesday it would stop at "no plan carries
+    piece_id": Wednesday has no `post.json`, no pack in the library, and its
+    files are on this branch only, not main. Also waiting: his sign-off on
+    the drafts, then Teleprompter, then his two takes by noon.
+
 - 2026-10-13, Tuesday, about 07:40 UTC: **Wednesday's Muse piece is drafted,
   fact-checked, scripted and has its covers; the read-back and Teleprompter
   wait on Krish.** His words: "a mix of 1 and 3 - 3 will get more readers,
