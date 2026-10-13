@@ -174,6 +174,10 @@ jobs:
           psql_in supabase/migrations/20261023090000_one_closer.sql
           psql_in supabase/migrations/20261023090000_one_closer.sql
           psql_in tests/fixtures/control-plane/board-one-closer-regression.sql
+          # A podcast or stage worth taking closes when Krish decides it; run twice.
+          psql_in supabase/migrations/20261023100000_board_target_decided.sql
+          psql_in supabase/migrations/20261023100000_board_target_decided.sql
+          psql_in tests/fixtures/control-plane/board-target-decided-regression.sql
           # Step 3, PR 1: honest sources. Before the migration a shift_write
           # insert fails the source foreign key; the migration runs twice; then
           # its read-back must refuse a missing owner foreign key and a source
