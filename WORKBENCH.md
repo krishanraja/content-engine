@@ -592,6 +592,15 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, about 18:30 UTC: **Brief notes have one home** (step 3 PR 7,
+  engine half). Cleo's standing brief preferences are now read from Control
+  Center's `brief_standing_notes` view: his notes about content, said through
+  the one door. `GET /api/briefs/notes` still lists them; `POST` and `DELETE`
+  answer 410 `notes_moved`, because Remember this and remove now live in
+  Control Center's brief composer. No notes existed in the old
+  `system_config` key, so nothing moved. Ships after Control Center's view
+  migration is applied; until then the brief reads no notes, as before.
+
 - 2026-10-13, about 15:15 UTC: **The story intro and outro engine fixed on
   Krish's review of Wednesday's video** (fonts, the title running off the
   page, the vertical stand-off, mismatched badges, no business logos). On a
