@@ -3,7 +3,7 @@ import { publishChecks, publishStatus } from './_publishChecks.js'
 import { LIVE_SUBCHANNELS } from './_subchannels.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from './_supabase.js'
-import { callClaude, robustJson, sanitizeVoice } from './_content.js'
+import { callClaude, isUnregisteredSource, robustJson, sanitizeVoice } from './_content.js'
 import { checkDuplicate, recordDuplicateSource } from './_dedup.js'
 import { embed, vectorLiteral } from './_embeddings.js'
 import { canonicalUrl, titleNorm, contentHash } from './_text.js'
@@ -326,6 +326,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .select()
       .single()
 
+    // An allowed source whose intake_sources row live does not have yet (its
+    // migration not applied) is the caller's to wait on, not a server fault.
+    if (isUnregisteredSource(error)) {
+      return res.status(400).json({ ok: false, error: 'source_type_not_registered', detail: { source_type: sourceType } })
+    }
     if (error) return res.status(500).json({ ok: false, error: error.message })
     return res.json({ ok: true, via: enriched.thesis ? 'enriched' : 'raw', idea: data })
   }

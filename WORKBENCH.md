@@ -610,12 +610,17 @@ bring takes back, was retired on 12 October.
     `pilot_build`, which its PR 2 starts writing. `lens_radar` is gone from
     the allowed list: it has no source row, so a write of it already failed.
   - **The migration** (`supabase/migrations/20261021080000_honest_sources.sql`)
-    adds the `control-center` owner, then the two sources, and checks the
-    owner foreign key in the same transaction. Replayed twice on a scratch
-    Postgres; it fails when the foreign key is missing.
-  - **To ship, in this order:** apply the migration and read it back (the
-    SQL is in the PR body); then merge and deploy. The shift card's write
-    fails the foreign key if the code deploys first.
+    adds the `control-center` owner, then the two sources, and checks in
+    the same transaction that each sits under its owner and the owner
+    foreign key is there. CI's control-plane-sql job now replays it twice
+    on a stand-in and checks it refuses both bad cases.
+  - **Merge order does not matter now.** Live has no `shift_write` row yet
+    (read on 2026-10-13). Until the migration is applied, the shift card
+    writes `manual` as before and says `source_pending: shift_write`; a POST
+    naming an unapplied source gets 400 `source_type_not_registered`, not a
+    500. Still to do by hand: apply the migration and read it back (2 rows
+    under their owners; `schema_migrations` has 20261021080000). Then the
+    shift card writes `shift_write` with no code change.
   - **Found, not fixed here:** the seed rail still offers lens radar
     candidates (`api/_seedSources.ts`, `lensRadar`); picking one now gets a
     clear 400 instead of a foreign key error. Retire it or give it a source

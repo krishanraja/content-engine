@@ -16,6 +16,11 @@ const db = vi.hoisted(() => ({
   calls: [] as string[],
   inserts: [] as Array<{ table: string; row: Record<string, unknown> }>,
   dedupSources: [] as Array<Record<string, unknown>>,
+  // Sources live has no intake_sources row for yet: an insert naming one
+  // fails content_ideas_source_type_fkey, as Postgres reports it.
+  unregistered: new Set<string>(),
+  // When set, POST /api/content-ideas gets past the dedup gate to its insert.
+  noDuplicate: false,
 }))
 
 vi.mock('../../apps/control-plane/api/_supabase.js', () => ({
@@ -28,8 +33,21 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => ({
         content_ideas: { id: 'idea-1' },
       }
       for (const m of ['select', 'eq', 'order', 'limit']) chain[m] = () => chain
-      chain.insert = (row: Record<string, unknown>) => { db.inserts.push({ table, row }); return chain }
-      chain.single = async () => ({ data: rows[table] ?? null, error: null })
+      let inserted: Record<string, unknown> | null = null
+      chain.insert = (row: Record<string, unknown>) => { db.inserts.push({ table, row }); inserted = row; return chain }
+      chain.single = async () => {
+        if (table === 'content_ideas' && inserted && db.unregistered.has(String(inserted.source_type))) {
+          return {
+            data: null,
+            error: {
+              code: '23503',
+              message: 'insert or update on table "content_ideas" violates foreign key constraint "content_ideas_source_type_fkey"',
+              details: `Key (source_type)=(${String(inserted.source_type)}) is not present in table "intake_sources".`,
+            },
+          }
+        }
+        return { data: rows[table] ?? null, error: null }
+      }
       chain.then = (resolve: (v: unknown) => unknown) => resolve({ data: [], error: null })
       return chain
     },
@@ -39,7 +57,9 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => ({
 vi.mock('../../apps/control-plane/api/_dedup.js', () => ({
   // Every accepted POST in these tests stops at the dedup gate, so no model,
   // embedding or insert runs: reaching it is the proof the source was accepted.
-  checkDuplicate: async () => ({ is_duplicate: true, match_id: 'existing-idea', match_reason: 'title_norm', similarity: 1 }),
+  checkDuplicate: async () => db.noDuplicate
+    ? { is_duplicate: false }
+    : { is_duplicate: true, match_id: 'existing-idea', match_reason: 'title_norm', similarity: 1 },
   recordDuplicateSource: async (_table: string, _id: string, src: Record<string, unknown>) => { db.dedupSources.push(src) },
 }))
 
@@ -70,6 +90,8 @@ beforeEach(() => {
   db.calls.length = 0
   db.inserts.length = 0
   db.dedupSources.length = 0
+  db.unregistered.clear()
+  db.noDuplicate = false
 })
 
 describe('POST /api/content-ideas names its source', () => {
@@ -157,6 +179,19 @@ describe('the allowed sources are rows the foreign key admits', () => {
     expect(sql).toMatch(/conname = 'intake_sources_owner_fkey'/)
     expect(sql).not.toMatch(/\b(drop|alter|delete|update)\b/i)
   })
+
+  it('CI replays the migration twice and runs both read-back guard cases', () => {
+    const ci = readFileSync('.github/workflows/ci.yml', 'utf8')
+    const replays = ci.match(/psql_in supabase\/migrations\/20261021080000_honest_sources\.sql/g) || []
+    expect(replays.length).toBeGreaterThanOrEqual(3)
+    expect(ci).toMatch(/for guard in no-fkey wrong-owner/)
+    expect(ci).toContain('honest-sources-guard-$guard.sql')
+    for (const f of ['setup', 'before', 'regression']) expect(ci, f).toContain(`honest-sources-${f}.sql`)
+    const fixtures = readdirSync('tests/fixtures/control-plane')
+    for (const f of ['setup', 'before', 'regression', 'guard-no-fkey', 'guard-wrong-owner']) {
+      expect(fixtures, f).toContain(`honest-sources-${f}.sql`)
+    }
+  })
 })
 
 describe('a piece started from a shift card', () => {
@@ -167,5 +202,47 @@ describe('a piece started from a shift card', () => {
     const ideas = db.inserts.filter(i => i.table === 'content_ideas')
     expect(ideas).toHaveLength(1)
     expect(ideas[0].row).toMatchObject({ source_type: 'shift_write', source_ref: 'shift:synthetic-shift' })
+  })
+})
+
+// Merge order (review, 2026-10-13): this code can reach live before
+// 20261021080000_honest_sources.sql is applied, because a merge deploys and a
+// migration is applied by hand. Until then live has no shift_write or
+// pilot_build row, and either order must leave the shift card working.
+describe('before the migration is applied', () => {
+  it('the shift card still starts a piece, as manual with its shift: ref, and says so', async () => {
+    db.unregistered.add('shift_write')
+    const r = await call('../../apps/control-plane/api/shifts/[id]/write.js', { method: 'POST', query: { id: 'shift-1' } })
+    expect(r.status).toBe(200)
+    expect(r.body).toEqual({ ok: true, idea_id: 'idea-1', source_type: 'manual', source_pending: 'shift_write' })
+    const ideas = db.inserts.filter(i => i.table === 'content_ideas').map(i => i.row)
+    expect(ideas.map(i => i.source_type)).toEqual(['shift_write', 'manual'])
+    expect(ideas[1]).toMatchObject({ source_ref: 'shift:synthetic-shift' })
+  })
+
+  it('the shift card does not retry on any other insert failure', async () => {
+    db.unregistered.add('shift_write')
+    db.unregistered.add('manual')
+    const r = await call('../../apps/control-plane/api/shifts/[id]/write.js', { method: 'POST', query: { id: 'shift-1' } })
+    expect(r.status).toBe(500)
+    expect(db.inserts.filter(i => i.table === 'content_ideas')).toHaveLength(2)
+  })
+
+  it('POST /api/content-ideas answers 400 source_type_not_registered, not a 500', async () => {
+    db.unregistered.add('pilot_build')
+    db.noDuplicate = true
+    const r = await postIdea({ raw_text: 'A synthetic idea', source_type: 'pilot_build' })
+    expect(r.status).toBe(400)
+    expect(r.body).toEqual({ ok: false, error: 'source_type_not_registered', detail: { source_type: 'pilot_build' } })
+  })
+})
+
+describe('isUnregisteredSource', () => {
+  it('is true only for the source_type foreign key', async () => {
+    const { isUnregisteredSource } = await import('../../apps/control-plane/api/_content.js')
+    expect(isUnregisteredSource({ code: '23503', message: 'violates foreign key constraint "content_ideas_source_type_fkey"' })).toBe(true)
+    expect(isUnregisteredSource({ code: '23503', message: 'violates foreign key constraint "content_ideas_shift_id_fkey"' })).toBe(false)
+    expect(isUnregisteredSource({ code: '23505', message: 'content_ideas_source_type_fkey' })).toBe(false)
+    expect(isUnregisteredSource(null)).toBe(false)
   })
 })

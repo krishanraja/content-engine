@@ -15,8 +15,13 @@
 -- openclaw), and the owner row says who writes. So the owner row comes first.
 --
 -- This file only adds rows. It changes no constraint and no existing row.
--- The engine's code that writes 'shift_write' must deploy after this is
--- applied, or a shift card's write fails the foreign key.
+-- The engine may deploy before or after it is applied: until it is, the
+-- shift card's insert of 'shift_write' fails the foreign key and the route
+-- writes 'manual' instead, as it did before (isUnregisteredSource in
+-- apps/control-plane/api/_content.ts). CI replays this file on a stand-in
+-- (tests/fixtures/control-plane/honest-sources-*.sql), twice, and checks its
+-- read-back refuses a missing owner foreign key and a source under another
+-- owner.
 
 begin;
 
@@ -35,8 +40,10 @@ insert into public.intake_sources (slug, label, what, active, owner, formerly, s
    true, 'control-center', 'content_ideas.source_type = manual, from api/pilot/build-one.ts', 130)
 on conflict (slug) do nothing;
 
--- Read back inside the same transaction: both rows exist, each owner row
--- resolves, and the owner foreign key is still the one the rows rely on.
+-- Read back inside the same transaction: both rows exist under the owner
+-- this file names (a row already there under another owner is skipped by
+-- on conflict, so it must fail here, not pass), each owner row resolves, and
+-- the owner foreign key is still the one the rows rely on.
 do $$
 declare
   n int;
@@ -44,9 +51,9 @@ begin
   select count(*) into n
     from public.intake_sources s
     join public.intake_owners o on o.slug = s.owner
-   where s.slug in ('shift_write', 'pilot_build');
+   where (s.slug, s.owner) in (('shift_write', 'content-engine'), ('pilot_build', 'control-center'));
   if n <> 2 then
-    raise exception 'honest_sources: expected 2 sources with an owner row, found %', n;
+    raise exception 'honest_sources: expected 2 sources under their owners, found %', n;
   end if;
 
   if not exists (
