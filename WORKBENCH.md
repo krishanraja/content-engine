@@ -592,6 +592,29 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, Tuesday, 12:05 UTC: **Krish: "I need a system that improves,
+  not regresses."** His read of the scripts: "still waffle, they dont sound
+  like me and I cant read them coherently" ("the companys computers",
+  "locked box", "sell what its helper picks", the overcharge opening). Cause,
+  owned: the reading gate (R7 word lists, syllables, the two 12-year-old
+  readers who have never once said nothing lost them) pushed rewrites into
+  baby talk; rules only accumulate; nothing anchors to what he liked; his
+  feedback was fixed per instance, never kept. Built and on main:
+  `config/rejected-lines.json`, read by `story_check.py`, refusing every line
+  he has rejected in any later script. **He approved four more loops, to
+  build next** (his picks, all four): (1) golden examples: a script or
+  article he calls good is saved and every new draft is compared to them by
+  a fresh reader before he sees it; (2) no rewrite may be worse: each edit
+  scored against the version before it on clarity, insight and sounding like
+  him, and a lower score is refused; (3) swap the 12-year-old test: the two
+  readers become advice, and the blocker becomes "would Krish say this out
+  loud to a smart friend, and does any line need decoding?" (this changes his
+  R7 ruling of 2026-10-12, with his yes today); (4) outline first: the
+  six-line thread goes to him before any script is written, and his OK
+  locks the angle. Wednesday's scripts were rewritten in plain adult speech
+  (servers, encrypted, said once and explained) and are in Teleprompter and
+  on main (794a0d6); the GitHub run is at 14:00 London (trig_0189NYVCHupBTnpYS9cVRhAH).
+
 - 2026-10-13, Tuesday, 10:20 UTC: **Wednesday goes to video today.** Krish:
   "GitHub renders, build the pack and merge to main, I will have videos
   recorded in 30 minutes, and the first runner can run at 12PM London time".
