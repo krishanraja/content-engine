@@ -12,7 +12,7 @@ import { supabase } from './_supabase.js'
 // at #/board with Krish's cookie; any agent session, Claude Code or Codex,
 // reads and writes it here with the engine key (scripts/engine.py).
 //
-//   GET                                   the board: state, items, and the replies he wrote before they were retired
+//   GET                                   the board: state, items (each open one with his said notes), and the replies he wrote before they were retired
 //   POST { action: 'upsert_items', items } add or change items (an agent, or Krish)
 //   POST { action: 'set_state', headline?, signals? }
 //   POST { action: 'mark_seen', ids }      a session has read and acted on an old reply
@@ -24,6 +24,15 @@ import { supabase } from './_supabase.js'
 // one). A question only his words answer is asked in a session's reply to
 // him. The replies he wrote before stay readable, and mark_seen still counts
 // them off.
+//
+// His words about an item reach it through that door (step 3, PR 6). Control
+// Center's filer keeps a note he says about a board item in said_parts, with
+// about 'board:<item id>'. GET returns them on each open item as said:
+// [{ part_id, excerpt, at }], newest first, at most SAID_SHOWN, only notes
+// that are filed or settled (a purged one is gone). A session reads them
+// before it works the item, and never answers them. Nothing here writes
+// said_parts. If they cannot be read, the board still loads, every open item
+// has said: [], and said_read says 'failed'.
 //
 // Nothing an agent does may read as something Krish said (AGENTS.md, "Krish
 // decides"), so an agent cannot reopen an item Krish closed himself: that
@@ -74,6 +83,8 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const SIGNAL_STATES = new Set(['', 'ok', 'warn', 'bad'])
 const MAX_ITEMS = 50
 const DONE_SHOWN = 30
+/** His said notes shown on one open item, newest first. */
+export const SAID_SHOWN = 10
 
 type Json = Record<string, unknown>
 
@@ -459,6 +470,46 @@ export function reopenRefusal(row: Json & { id: string }, before: BoardItemRow |
   return new BoardRefusal('check_closed_it', 'A check closed this item with its proof. Only Krish reopens it: his Undo on the Board, or his exact words relayed with decided_by "Krish" and "said".', row.id, 409)
 }
 
+export interface SaidNote { part_id: string; excerpt: string; at: string }
+interface SaidRow { id: string; about: string; excerpt: string; created_at: string }
+
+/** His said notes per item, newest first, at most SAID_SHOWN each, from rows
+ *  read newest first. Only notes about 'board:<an id given>' count. */
+export function groupSaid(rows: SaidRow[], ids: string[]): Map<string, SaidNote[]> {
+  const wanted = new Set(ids)
+  const out = new Map<string, SaidNote[]>()
+  for (const r of rows) {
+    const id = String(r.about || '').replace(/^board:/, '')
+    if (!String(r.about || '').startsWith('board:') || !wanted.has(id)) continue
+    const list = out.get(id) || []
+    if (list.length >= SAID_SHOWN) continue
+    list.push({ part_id: r.id, excerpt: r.excerpt, at: r.created_at })
+    out.set(id, list)
+  }
+  return out
+}
+
+/** Read his said notes about the open items: kind note, filed or settled.
+ *  One read per item, so a long thread on one item never crowds out another. */
+async function saidNotes(ids: string[]): Promise<{ notes: Map<string, SaidNote[]>; failed: boolean }> {
+  // allSettled: a read that throws degrades the board like one that returns
+  // an error, instead of failing the whole GET.
+  const settled = await Promise.allSettled(ids.map(async id => supabase
+    .from('said_parts')
+    .select('id,about,excerpt,created_at')
+    .eq('about', `board:${id}`)
+    .eq('kind', 'note')
+    .in('status', ['filed', 'settled'])
+    .order('created_at', { ascending: false })
+    .limit(SAID_SHOWN)))
+  const rows: SaidRow[] = []
+  for (const s of settled) {
+    if (s.status === 'rejected' || s.value.error) return { notes: new Map(), failed: true }
+    rows.push(...((s.value.data || []) as SaidRow[]))
+  }
+  return { notes: groupSaid(rows, ids), failed: false }
+}
+
 async function read(res: VercelResponse) {
   const since = new Date(Date.now() - LET_GO_SHOWN_DAYS * 86_400_000).toISOString()
   const [state, items, done, letGo, replies] = await Promise.all([
@@ -472,10 +523,13 @@ async function read(res: VercelResponse) {
   const failed = [state, items, done, letGo, replies].find(r => r.error)
   if (failed) return res.status(500).json({ ok: false, error: 'board_read_failed' })
   const list = (replies.data || []) as Array<{ seen_at: string | null }>
+  const open = (items.data || []) as Array<Json & { id: string }>
+  const said = await saidNotes(open.map(i => i.id))
   return res.status(200).json({
     ok: true,
     state: state.data || { headline: '', signals: [], updated_by: null, updated_at: null },
-    items: [...(items.data || []), ...(done.data || []), ...(letGo.data || [])],
+    items: [...open.map(i => ({ ...i, said: said.notes.get(i.id) || [] })), ...(done.data || []), ...(letGo.data || [])],
+    ...(said.failed ? { said_read: 'failed' } : {}),
     replies: list,
     unseen_replies: list.filter(r => !r.seen_at).length,
   })

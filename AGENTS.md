@@ -143,6 +143,16 @@ close is a new check in Control Center's `api/_doneChecks.ts`, never a
 closer here (`scripts/check-one-close.ts`). The rules and every refusal are
 in `WORKBENCH.md`, "The board".
 
+**`manual` means Krish's words; never write it.** A content idea with
+`source_type` `manual` is one he said, filed by Control Center's one door
+with `source_ref` `said:<said_parts id>`. Name your own source instead.
+(The engine and the database refuse a `manual` idea without that ref only
+once Control Center's step 3 PR 4 has retired its other idea doors.) Board
+items whose id starts `said-` are filed by Control Center from his words,
+and his notes about any open item come back on it as `said` from
+`GET /api/workbench`: read them before you work the item, and never answer
+them (`WORKBENCH.md`, "The board").
+
 **Video production goes through `.agents/skills/produce-video`, and licensed
 music lives only at `MINDMAKE_MUSIC_ROOT` with its ledger
 `config/music-library.json`**; never browse Drive for audio.

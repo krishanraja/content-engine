@@ -10,13 +10,11 @@ import { isUnregisteredSource, sanitizeVoice } from '../../_content.js'
 // materials are the shift's dated evidence, so every generation grounds in
 // the receipts. Returns the new idea id for the deep link.
 //
-// Its source is 'shift_write', never 'manual': a manual row reads as an idea
-// Krish dropped in (GET /api/week/options). The intake_sources row is added by
-// supabase/migrations/20261021080000_honest_sources.sql. Until that is applied
-// on live, the foreign key refuses 'shift_write'; the card then writes
-// 'manual' as it always did (its source_ref 'shift:<slug>' still says where it
-// came from) and says so in source_pending, so the order of merge and apply
-// cannot break the button.
+// Its source is 'shift_write', never 'manual': manual means words Krish said
+// (GET /api/week/options reports a manual row as an idea he dropped in). The
+// intake_sources row is supabase/migrations/20261021080000_honest_sources.sql,
+// live since 2026-10-13, so the old fallback to 'manual' is gone (step 3,
+// PR 6).
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res)) return
@@ -45,12 +43,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     added_at: new Date().toISOString(),
   }]
 
-  const insertIdea = (sourceType: string) => supabase
+  const { data: idea, error: insErr } = await supabase
     .from('content_ideas')
     .insert({
       idea: sanitizeVoice(shift.title),
       thesis: sanitizeVoice(shift.summary),
-      source_type: sourceType,
+      source_type: 'shift_write',
       source_ref: `shift:${shift.slug}`,
       source_snippet: sanitizeVoice(shift.implication),
       source_captured_at: new Date().toISOString(),
@@ -63,11 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .select('id')
     .single()
 
-  let { data: idea, error: insErr } = await insertIdea('shift_write')
-  if (insErr && isUnregisteredSource(insErr)) {
-    ;({ data: idea, error: insErr } = await insertIdea('manual'))
-    if (!insErr && idea) return res.json({ ok: true, idea_id: idea.id, source_type: 'manual', source_pending: 'shift_write' })
-  }
+  if (insErr && isUnregisteredSource(insErr)) return res.status(500).json({ ok: false, error: 'source_type_not_registered', detail: { source_type: 'shift_write' } })
   if (insErr || !idea) return res.status(500).json({ ok: false, error: insErr?.message || 'insert failed' })
 
   return res.json({ ok: true, idea_id: idea.id })

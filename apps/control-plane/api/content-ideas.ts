@@ -35,6 +35,13 @@ import { guardEngine } from './_auth.js'
 // with 400 source_type_unknown, and the allowed values are in detail
 // (2026-10-13; until then it was stored as 'manual', which reads as Krish's
 // own words).
+//
+// 'manual' means his words and nothing else (step 3 of the design entropy
+// session). Control Center's filer writes it for an idea he said, with
+// source_ref 'said:<said_parts id>'. The refusal of a manual idea without
+// that ref, and its database CHECK, wait for Control Center's step 3 PR 4:
+// until then its Week page and its Cmd+I capture still send manual with no
+// ref, and refusing them would close his idea doors with nothing open.
 
 // The live distribution channels, mirroring media_channels where active=true
 // and MEDIA_CHANNELS in src/lib/contentEngine.ts. TikTok joined the standing set

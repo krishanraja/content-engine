@@ -365,11 +365,18 @@ session, in Claude Code or Codex, reads and writes it through the engine:
 - Change the headline or the status lights: `{"action": "set_state",
   "headline": "...", "signals": [{"label": "Home computer", "state": "ok",
   "text": "On and ready"}]}` (state is `ok`, `warn`, `bad` or empty).
-- **Replies are retired.** Control Center has no reply box any more, and
-  step 3's voice input, one place where he speaks to the system, replaces
-  it. Never leave an item waiting for his words: an item on him ends when it
-  closes itself or when he clears, bumps or purges it on his list, and a
-  question only his words answer is asked in your reply to him. The engine
+- **Replies are retired; his words about an item arrive as its `said`
+  notes.** Control Center has no reply box any more. What he says about a
+  board item comes in through Control Center's one door, and its filer keeps
+  it as a note on that item. `GET /api/workbench` returns them on each open
+  item as `said: [{ "part_id", "excerpt", "at" }]`, newest first, at most
+  10 (a purged note is gone; `said_read: "failed"` means they could not be
+  read, and the board still loads). Read an item's `said` notes before you
+  work it, and act on them. Never answer them: they are his words to the
+  system, not a question to you. Never leave an item waiting for his words:
+  an item on him ends when it closes itself or when he clears, bumps or
+  purges it on his list, and a question only his words answer is asked in
+  your reply to him. The engine
   refuses the reply action (`410 replies_retired`) and an item with a
   `"prompt"` (`400 prompt_retired`; `"prompt": null` clears an old one).
   The replies he wrote before stay in `replies` (`unseen_replies` counts the ones no
@@ -600,6 +607,31 @@ bring takes back, was retired on 12 October.
   Control Center's brief composer. No notes existed in the old
   `system_config` key, so nothing moved. Ships after Control Center's view
   migration is applied; until then the brief reads no notes, as before.
+
+- 2026-10-13, 16:40 UTC: **Step 3 PR 6 built, not merged, split after
+  review: his words reach the board now; the `manual` refusal waits for
+  Control Center** (branch `ccr-25d9e81a-manual-his-words`; Control Center's
+  `docs/handoff/design-entropy-session/step3-plan.md`, PR 6, merge-order row
+  11 of `goal-focus-plan.md`). In this PR: `GET /api/workbench` returns each
+  open item's `said` notes (a failed or thrown read leaves the board up,
+  `said_read: "failed"`). The shift card's old fallback to `manual` is gone
+  (honest sources is live). New guard rules in
+  `scripts/check-control-plane.ts`: no transcription call under `apps/` but
+  `_whisper.ts`, and no `'manual'` a writer could store outside the allow
+  list. **Taken out, on purpose:** the 400 `manual_needs_his_words` refusal
+  and the CHECK migration. Control Center main still has two idea doors that
+  POST `manual` with no ref: the Week page's "Drop in an idea"
+  (`src/components/week/WeekBoard.tsx`) and the Cmd+I capture
+  (`src/components/QuickCaptureIdea.tsx`). The plan says PR 6's refusal
+  follows PR 4 (risks 10 and 11), which is Control Center #444, not live yet. A test now
+  holds that order (`tests/control-plane/honest-sources.test.ts`). **Next,
+  once PR 4 is live** and Control Center main has no `source_type: 'manual'`
+  outside `api/_sayRun.ts`: bring back the refusal, its tests and the CHECK
+  from commit `a686bd5` on this branch, with one change: exempt the one
+  older manual row by its `source_ref` `krish-worked-example-2026-09-23`,
+  not by date (a writer can backdate `created_at`). Delete
+  `api/content-ideas/voice.ts` and `api/_whisper.ts` in the same PR: Control
+  Center main still calls `/api/content-ideas/voice`. Nothing to apply.
 
 - 2026-10-13, about 15:15 UTC: **The story intro and outro engine fixed on
   Krish's review of Wednesday's video** (fonts, the title running off the
