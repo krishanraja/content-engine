@@ -599,6 +599,15 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, about 18:30 UTC: **Brief notes have one home** (step 3 PR 7,
+  engine half). Cleo's standing brief preferences are now read from Control
+  Center's `brief_standing_notes` view: his notes about content, said through
+  the one door. `GET /api/briefs/notes` still lists them; `POST` and `DELETE`
+  answer 410 `notes_moved`, because Remember this and remove now live in
+  Control Center's brief composer. No notes existed in the old
+  `system_config` key, so nothing moved. Ships after Control Center's view
+  migration is applied; until then the brief reads no notes, as before.
+
 - 2026-10-13, 16:40 UTC: **Step 3 PR 6 built, not merged, split after
   review: his words reach the board now; the `manual` refusal waits for
   Control Center** (branch `ccr-25d9e81a-manual-his-words`; Control Center's
@@ -614,7 +623,7 @@ bring takes back, was retired on 12 October.
   POST `manual` with no ref: the Week page's "Drop in an idea"
   (`src/components/week/WeekBoard.tsx`) and the Cmd+I capture
   (`src/components/QuickCaptureIdea.tsx`). The plan says PR 6's refusal
-  follows PR 4 (risks 10 and 11), and PR 4 has no branch yet. A test now
+  follows PR 4 (risks 10 and 11), which is Control Center #444, not live yet. A test now
   holds that order (`tests/control-plane/honest-sources.test.ts`). **Next,
   once PR 4 is live** and Control Center main has no `source_type: 'manual'`
   outside `api/_sayRun.ts`: bring back the refusal, its tests and the CHECK
