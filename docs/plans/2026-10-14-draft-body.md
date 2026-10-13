@@ -1,81 +1,71 @@
-I've been reading the reviews of Meta's new AI helper, Muse, and they're odd. They don't read like app reviews. They read like thank-you notes to an assistant. One reviewer says Muse took on a clothing company that had billed $6,000 for an order of around $1,500 and wrote the escalation letter. On Apple's US store it rates 4.9 out of 5.
+I've been having a little play around with Muse, Meta's new personal assistant, and it's an odd thing to review. Meta calls it "an agent that takes on more of the work so people can focus on what matters to them". On Apple's US store it rates 4.9 out of 5.
 
-That's what made it click for me. Muse isn't really an app. It's a stand-in for you on the internet, and Meta isn't the only one building one. So where are they all going? And how much of your life will you have to hand over to get there?
+So I did what I'd do with any new gadget. I lined it up against the four assistants it's actually competing with (OpenAI's dots inside ChatGPT, Google's Gemini Spark, Anthropic's Claude and Apple's Siri AI) and gave each one my own score out of 10 on six things. The scores are my judgement calls. The facts behind them are quoted from each company's own pages.
 
-## FIVE COMPANIES, FIVE BETS
+Short version? Muse wins on everything you'll feel this week, and loses on the two things you won't.
 
-Read the mission lines side by side and they rhyme. Meta says "personal superintelligence" is the goal, and calls Muse "a first step". OpenAI calls its dots "always-on agents built to handle everything". Google wants "a truly universal assistant". Apple says Siri AI keeps Siri "the world's most private digital assistant". Anthropic talks least about grand plans; its pitch is that you hand Claude a job and it "takes it from there, even after you've closed your laptop".
+## MY SCORECARD
 
-Look closer, though, and each is betting on a different slice of you.
+Add up my scores and Muse and Siri tie on 43 out of 60. I have Claude on 39, and dots and Spark on 36 each. (The full grid is in the scorecard picture.)
 
-Meta wants your personal life, your errands and the people you follow on Instagram and WhatsApp, and says Muse is "free for most of what people need". OpenAI wants your work. Its dots each get "their own cloud computer", and they're "rolling out today in ChatGPT to Pro and Business Premium users". Google wants the life that already sits in your Google account, with Gemini Spark on Google AI Pro at $19.99 a month. Anthropic wants to be the careful coworker inside your business tools, and its small-business version asks before anything sends, posts or pays. Apple wants to be the private one, built into the phone in your pocket.
+A tie at the top, for completely opposite reasons. Let's go through it.
 
-Different slices, same prize. Whoever sits between you and your digital life gets to remember for you and buy for you. Today you visit the internet. They'd like to visit it on your behalf.
+## 1. CAN IT DO THE JOB?
 
-## WHAT PEOPLE ACTUALLY FIND
+Meta says Muse can "open a browser, fill out forms, and negotiate on their behalf", and that it "runs on its own dedicated computer in the cloud", so it keeps going after you close the app. I give it a nine. OpenAI's dots are close: "always-on agents built to handle everything", each with its own cloud computer and browser. Spark keeps working in the background, and Google says "it might also use a remote browser". Claude will take a job and run with it ("Claude takes it from there, even after you've closed your laptop"), but I couldn't find an Anthropic page that names buying or booking. Apple describes Siri AI getting "things done across apps, like drafting an email from scratch, or editing and sharing a set of photos".
 
-Here's my read of the public verdict, from reviews, Reddit threads and hands-on videos (the ratings cover each whole app, not just its agent):
+Worth saying: the brains are roughly level. CNN's reviewer found ChatGPT and Gemini "can handle similar tasks and sometimes provided more detailed responses" than Muse, which also suggested two date-night spots that had closed years ago. So the scores here are about what each one is allowed to do, not how clever it is.
 
-| Assistant | Where people say it shines | Where it slips | App Store rating |
-|---|---|---|---|
-| Meta Muse | Errands, forms, Marketplace alerts | Trust in Meta, made-up details | 4.9 |
-| OpenAI dots | Hard work tasks | Silent or slow on some jobs | 4.8 (ChatGPT) |
-| Google Spark | Gmail, family planning | Asks to approve every small step | 4.7 (Gemini) |
-| Anthropic Claude | Documents, business tools | Thin evidence for home life | 4.7 (Claude) |
-| Apple Siri AI | Finding old things on your phone | Slow basics, invented details | 3.4 (Siri listing) |
+## 2. WHAT DOES IT COST?
 
-CNN's reviewer found ChatGPT and Gemini "can handle similar tasks and sometimes provided more detailed responses" than Muse, which also suggested two date-night spots that had closed years ago. So the brains are roughly level, and they all still slip. That matters a lot more once the thing can spend your money.
+Muse is "free for most of what people need". Spark needs Google AI Pro at $19.99 a month. Claude Pro is $20 if you pay monthly. Dots come with ChatGPT Pro, from $100 a month, and only for adults "outside the European Economic Area, United Kingdom, and Switzerland". So not us in Britain, not yet. I couldn't find a separate price for Siri AI at all.
 
-## WHAT YOU HAND OVER
+## 3. IS IT ALREADY IN YOUR LIFE?
 
-To run your errands, an assistant needs your inbox and usually a card. That has to live somewhere, and there are really only three places.
+This is the one people underrate. Meta also owns Instagram and WhatsApp, apps most of us open without thinking. Gemini works with your Gmail. Siri's already on your iPhone. I'd give Claude a four, because for most people it means going looking for it. I give Muse a ten here, and honestly, I think that's the whole game for a lot of people.
 
-The first is your own phone. Apple keeps a lot of Siri AI there, and when a job needs more muscle it uses what it calls Private Cloud Compute, where Apple says your data is "not stored nor made accessible to Apple or anyone else".
+## 4. DOES IT ASK BEFORE IT ACTS?
 
-The second is the company's cloud. Meta says Muse "runs on its own dedicated computer in the cloud", and OpenAI says "each dot works on its own cloud computer". Meta's own safety page says today's Muse design "does not prevent Meta from accessing data when necessary to support, secure or operate the service".
+Mostly, yes, and this is the good news. Muse "checks with the person before sensitive actions like sending an email or making a purchase", and pays with a one-time card so "your real card details stay hidden". OpenAI says that before a dot acts on your accounts, "an automatic review checks it against your instructions, permissions, custom rules, and built-in safety requirements". Spark is "designed to ask you first before performing high-stakes actions like spending money or sending emails", though Google admits that "if a schedule runs when you are offline, you may not be able to stop Gemini from completing an unintended action." Claude is the most careful of the lot: "By default, Claude asks before taking an action." Its own blog says "Nothing ships until you've reviewed and approved it."
 
-The third is a locked box in the cloud that the company says it can't open. Apple says its Private Cloud Compute works that way. Meta has promised Muse Confidential VM "later this year", encrypted "with a key only they hold, so not even Meta can access it". Google said on 23 September that it "will" bring private memory to its sealed cloud, "inaccessible to anyone else, even Google". Promised. Not shipped.
+Up to here, Muse is miles ahead. Now for the bits you can't see.
 
-The defaults tell you the rest. Meta's setting to use your Muse chats to train its AI "is on when you first use Muse". Spark needs Google's Keep Activity switched on to work at all. Anthropic makes you choose, and keeps your chats for five years if you say yes. Apple doesn't train on your personal data unless you opt in.
+## 5. WHO CAN READ YOUR STUFF?
 
-## WHAT "PRIVATE" WOULD ACTUALLY TAKE
+Muse "runs on its own dedicated computer in the cloud", which Meta says is "where the data and credentials for any service a person connects are securely stored". That's Meta's servers, and Meta's own safety page says today's design "does not prevent Meta from accessing data when necessary to support, secure or operate the service". Meta's setting to use your Muse chats to train its AI "is on when you first use Muse". Meta has promised a locked version, Muse Confidential VM, "later this year", encrypted "with a key only they hold, so not even Meta can access it". Until it ships, I give Muse a three.
 
-This is the part I think nobody's selling yet. Locking up the brain isn't enough for an assistant that acts. The thinking has to be sealed, the browsing has to be sealed, and your passwords and cards have to be usable without anyone seeing them. Even then, the shop it buys from still sees the order. As I see it, nobody has sealed all three yet for an assistant that books and buys for you on the web.
+I give Spark a three as well, because it won't work unless Google's Keep Activity is switched on, and Google says human reviewers read some of that data. OpenAI says "each dot works on its own cloud computer" and lets you turn off "Improve the model for everyone". Claude's cloud tasks run "on Anthropic's servers". Anthropic makes you choose, and keeps your chats for five years if you say yes.
 
-## AND YES, THE ADS
+Siri AI is the outlier. Apple says its models "run on device and on servers using Private Cloud Compute", where your data is "not stored nor made accessible to Apple or anyone else". It doesn't train on your personal data unless you opt in. I give it a nine.
 
-Meta made $59.36 billion from advertising last quarter, out of $60.8 billion in revenue. So of course it'll find a way to sell what Muse suggests, and I'd assume the same of every free assistant. Meta says your Muse conversations stay out of its ad systems, and I take that at face value. It's a promise about your data, though, not about who gets picked. That's the given. The open question is who can see your life while the choosing happens.
+## 6. WHOSE SIDE IS IT ON?
 
-## WHICH ONE FITS YOU
+Follow the money. Meta made $59.36 billion from advertising last quarter, out of $60.8 billion in revenue. Google makes most of its money from advertising too. OpenAI and Anthropic charge you a monthly plan for their assistants. And Apple, as far as I can tell, just wants to sell you the next iPhone. I give Muse a three.
 
-If your life runs on Instagram and WhatsApp and you want the most done for free, Muse is the obvious pick. Just switch the training setting off.
+## WHY THAT LAST SCORE MATTERS MOST
 
-If you live in Gmail and Google Calendar, Spark is built for you, and it asks before spending money or sending emails.
+Think about what an ad is. It's a shop paying so you'll see it. That's been the deal online for as long as most of us can remember.
 
-For work, like the email you keep putting off, Claude Pro ($20 if billed monthly) asks first.
+But when an assistant shops for you, you don't see a list. You get one answer. The restaurant, the flight, the plumber. So the money has to move somewhere, and I think it moves from paying to be seen to paying to be picked.
 
-If privacy is the deal-breaker, I'd say Siri AI does less, but keeps more to itself.
+Meta says Muse "doesn't share a person's conversations or the data in their VM with Meta's ad systems", and I take that at face value. It's a promise about your data, though, not about what gets picked. Those are different things.
 
-And if you want the heaviest lifting, there's OpenAI's dots on Pro, though they're only for adults "outside the European Economic Area, United Kingdom, and Switzerland". Not us in Britain. Not yet.
+## SO WHICH ONE SHOULD YOU USE?
 
-Whichever you pick, I'd start with small jobs you can undo.
+If your life runs through Instagram and WhatsApp and you want the most done for free, Muse is the obvious pick. Turn the training setting off, and give it small jobs you can undo.
 
-## IF YOU'RE BUILDING A BUSINESS
+If you live in Gmail, Spark's built for you. For work, Claude. If privacy's the deal-breaker, Siri AI does less but keeps more to itself. And if you want the heaviest lifting and live outside the UK and Europe, dots.
 
-When customers stop visiting and start asking, you're selling to their assistant. Meta says 200 million small businesses are on Facebook. My bet is the ones an agent can book without help get picked more often.
+Whichever you pick, ask it one question now and then: what were the other options?
 
-## HOW THE OLD WAY IS CHANGING
+## IF YOU RUN A BUSINESS
 
-The way I see it, for twenty years you searched and clicked, and companies paid for your attention along the way. The new deal is that you ask and something does it. The price is access, and the fight is over who holds the key.
+Your next customer might not be a person. It might be someone's assistant, picking on their behalf. Meta says 200 million small businesses are on Facebook. My bet is the ones an assistant can book without help get picked first, and later, the ones that pay.
 
 ## MY PREDICTION
 
-Apple says Siri AI's models "run on device and on servers using Private Cloud Compute". Meta has promised one for Muse. Google says one's coming. What's missing is an assistant from the other big names that books and buys for you inside a box nobody else can see into.
+By the end of 2027, businesses will be paying to be the one your AI assistant picks. And most people won't know it's happening.
 
-By 30 June 2027, OpenAI, Google or Anthropic will let an AI assistant do jobs for you, like booking and buying, inside a locked box that the company says even it can't open.
+I'll be wrong if every big assistant shows you the paid options clearly, the way search ads are labelled today. Check back then.
 
-How sure we are: 55%.
-
-Google is the likeliest, which is why it's not lower. It isn't higher because a locked box makes an assistant harder to train and earn from. Check it that day on their own announcement pages.
-
-Five companies want to run your errands. The one that can do it without seeing your life is the one I'd trust with mine.
+Five assistants want to run your errands. Only one of them makes almost all its money from ads, and it's the one winning on everything you can see.
