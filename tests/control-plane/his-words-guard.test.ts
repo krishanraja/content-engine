@@ -38,6 +38,12 @@ describe("rule 2: 'manual' is only for his words", () => {
     expect(manualProblems('apps/control-plane/api/_runs.ts', "const trigger = isScheduled ? 'cron' : 'manual'")).toEqual([])
   })
 
+  it('reads a Windows checkout the same: a comment ending in CRLF is still a comment', () => {
+    const src = "// source_type is never 'manual' here\r\nawait supabase.from('content_ideas').insert({ source_type: 'shift_write' })\r\n"
+    expect(manualProblems('apps/control-plane/api/shifts/[id]/write.ts', src)).toEqual([])
+    expect(transcriptionProblems('apps/control-plane/api/x.ts', '// audio/transcriptions went away\r\n')).toEqual([])
+  })
+
   it('the tree passes both rules', () => {
     expect(hisWordsProblems(ROOT)).toEqual([])
   })

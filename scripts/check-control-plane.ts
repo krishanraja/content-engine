@@ -71,10 +71,14 @@ export const MANUAL_ALLOW_LIST = 'apps/control-plane/api/content-ideas.ts'
 const CODE = /\.(ts|tsx|mts|js|mjs|cjs|py)$/
 const SKIP_DIRS = new Set(['node_modules', '.git', '__pycache__', 'dist', '.cache', '.vercel'])
 
+/** Line endings as Linux reads them. A Windows checkout ends lines in CRLF, and
+ *  stripComments' `.*$` stops at the \r, so a comment was read as code there. */
+const lf = (text: string) => text.replace(/\r\n?/g, '\n')
+
 /** Rule 1: a transcription call outside the one exception. */
 export function transcriptionProblems(path: string, text: string): string[] {
   if (path === TRANSCRIBE_EXCEPTION || !path.startsWith('apps/')) return []
-  return /audio\/transcriptions/.test(stripComments(path, text))
+  return /audio\/transcriptions/.test(stripComments(path, lf(text)))
     ? [`${path}: calls a transcription API. His words come in through Control Center's one door (POST /api/voice there).`]
     : []
 }
@@ -82,7 +86,7 @@ export function transcriptionProblems(path: string, text: string): string[] {
 /** Rule 2: a literal 'manual' a writer could store as content_ideas.source_type. */
 export function manualProblems(path: string, text: string): string[] {
   if (path === MANUAL_ALLOW_LIST || !path.startsWith('apps/')) return []
-  const code = stripComments(path, text)
+  const code = stripComments(path, lf(text))
   if (!/content_ideas|source_type/.test(code)) return []
   const out: string[] = []
   for (const m of code.matchAll(/(['"`])manual\1/g)) {
