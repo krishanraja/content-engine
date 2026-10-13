@@ -1,25 +1,25 @@
 {
  "subchannel": "under.the.hood",
- "title": "Every AI company wants to run your life. What will each one ask you to hand over?",
- "headline": "Every AI company wants to run your life. What will each one ask you to hand over?",
+ "title": "I scored Meta's Muse against ChatGPT, Gemini, Claude and Siri. It tied with Siri, for opposite reasons.",
+ "headline": "I scored Meta's Muse against ChatGPT, Gemini, Claude and Siri. It tied with Siri, for opposite reasons.",
  "date": "2026-10-14",
  "cover": {
   "headline": [
-   "AI wants your life.",
-   "What do you give up?"
+   "I scored Muse",
+   "against its rivals."
   ],
   "rows": [
    {
-    "logo": "logos/meta-cream.svg",
-    "name": "Meta",
-    "tag": "Your life",
-    "colour": "lilac"
+    "logo": "logos/muse-cream.svg",
+    "name": "Muse",
+    "tag": "Does the most",
+    "colour": "butter"
    },
    {
-    "logo": "logos/openai-symbol-cream.svg",
-    "name": "OpenAI",
-    "tag": "Your work",
-    "colour": "butter"
+    "logo": "logos/apple-cream.svg",
+    "name": "Siri",
+    "tag": "Keeps it private",
+    "colour": "lilac"
    }
   ],
   "portrait": true
@@ -27,16 +27,16 @@
  "thumbs": {
   "strip": [
    {
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "ChatGPT"
+   },
+   {
     "logo": "logos/google-cream.svg",
-    "name": "Google"
+    "name": "Gemini"
    },
    {
     "logo": "logos/anthropic-symbol-cream.svg",
-    "name": "Anthropic"
-   },
-   {
-    "logo": "logos/apple-cream.svg",
-    "name": "Apple"
+    "name": "Claude"
    }
   ]
  }

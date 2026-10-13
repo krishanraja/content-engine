@@ -44,6 +44,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / 'scripts'))
 sys.path.insert(0, str(REPO / 'scripts' / 'post-pack'))
 import engine  # noqa: E402
+import library  # noqa: E402
 import plan_files  # noqa: E402
 
 TZ = ZoneInfo('America/New_York')  # system_config.operator_timezone (docs/CADENCE.md)
@@ -309,6 +310,10 @@ def file_and_record(post_path, piece, rendered, thumb, work):
     folder = plan_files.pack_folder(post)
     subject = post.get('subject') or folder
     names = {'long': f'{subject} - wide 16x9 - YouTube, Substack', 'short': f'{subject} - tall 9x16 - Shorts, Reels, TikTok, LinkedIn'}
+    # A long subject pushes the library path past what Windows opens (library.PATH_MAX);
+    # the folder already carries the subject, so the files can drop it (2026-10-13).
+    if any(len(f'3 Posts/{folder}/3 Video/{n}.mp4') > library.PATH_MAX for n in names.values()):
+        names = {cut: n[len(subject) + 3:] for cut, n in names.items()}
     staged = work / 'send'
     staged.mkdir(parents=True, exist_ok=True)
     for cut, src in rendered.items():
