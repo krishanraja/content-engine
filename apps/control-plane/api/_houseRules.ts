@@ -403,6 +403,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     on: '2026-10-12', source: 'chat, on Monday\'s prediction (Universal or Sony make a deal with Suno by 31 December 2027, 70%)', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
+  {
+    id: 'SOUNDS_LIKE_KRISH', name: 'Sounds like Krish, not like a machine',
+    text: 'Write the way Krish talks, with his own view and his own details, and none of the habits of machine prose: no run of paragraphs that open the same way (at most three bold lead-ins), no formula on repeat ("My read:" and the like), no stock phrases (delve, landscape, navigate, seamless, unlock, heavy lifting, plainly, the reality is), no "it\'s not X, it\'s Y", no lists of three again and again, no question answered at once by the next line, no colon reveal ("Here\'s why:"), no neat signposting ("Two limits. First... Second..."), no closing recap, no em dash. Sentences vary a lot in length; some paragraphs are one line. "I" and "my" carry his view: a moment from his own work, what he did, what he would do. scripts/post-pack/voice_check.py measures it and every article passes it before the fact gate.',
+    said: 'And they get flagged as 93% AI generated, can we do anything about this? ... build the sounds like Krish pass now',
+    on: '2026-10-13', source: 'chat, on Monday\'s and Friday\'s articles; checked by scripts/post-pack/voice_check.py', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
 ])
 
 /** The rules a stage enforces, for one subchannel or the house as a whole. */
