@@ -12,10 +12,9 @@
 // door, Control Center's, so:
 //
 //   1. No code under apps/ calls a transcription API (audio/transcriptions).
-//      The one exception is the engine's old idea recorder,
-//      apps/control-plane/api/_whisper.ts, which Control Center main still
-//      calls through /api/content-ideas/voice. It goes, with this exception,
-//      once Control Center's step 3 PR 4 (retire the other doors) is live.
+//      There is no exception: the engine's old idea recorder (_whisper.ts and
+//      /api/content-ideas/voice) was deleted once Control Center's step 3
+//      PR 4 (retire the other doors) was live.
 //   2. A literal 'manual' in a file that touches content_ideas or source_type
 //      appears only in apps/control-plane/api/content-ideas.ts (the allow
 //      list) or as a read filter, .eq('source_type', 'manual'). No writer
@@ -64,8 +63,6 @@ const GUARDS = [
   'check-studio-session-gateway',
 ]
 
-/** The file allowed to call a transcription API, until Control Center stops calling it. */
-export const TRANSCRIBE_EXCEPTION = 'apps/control-plane/api/_whisper.ts'
 /** The one file whose allow list carries 'manual'. */
 export const MANUAL_ALLOW_LIST = 'apps/control-plane/api/content-ideas.ts'
 const CODE = /\.(ts|tsx|mts|js|mjs|cjs|py)$/
@@ -75,9 +72,9 @@ const SKIP_DIRS = new Set(['node_modules', '.git', '__pycache__', 'dist', '.cach
  *  stripComments' `.*$` stops at the \r, so a comment was read as code there. */
 const lf = (text: string) => text.replace(/\r\n?/g, '\n')
 
-/** Rule 1: a transcription call outside the one exception. */
+/** Rule 1: a transcription call under apps/. */
 export function transcriptionProblems(path: string, text: string): string[] {
-  if (path === TRANSCRIBE_EXCEPTION || !path.startsWith('apps/')) return []
+  if (!path.startsWith('apps/')) return []
   return /audio\/transcriptions/.test(stripComments(path, lf(text)))
     ? [`${path}: calls a transcription API. His words come in through Control Center's one door (POST /api/voice there).`]
     : []

@@ -37,11 +37,11 @@ import { guardEngine } from './_auth.js'
 // own words).
 //
 // 'manual' means his words and nothing else (step 3 of the design entropy
-// session). Control Center's filer writes it for an idea he said, with
-// source_ref 'said:<said_parts id>'. The refusal of a manual idea without
-// that ref, and its database CHECK, wait for Control Center's step 3 PR 4:
-// until then its Week page and its Cmd+I capture still send manual with no
-// ref, and refusing them would close his idea doors with nothing open.
+// session, PR 6). Only Control Center's filer writes it, for an idea he said,
+// and it names the part he said as source_ref 'said:<said_parts id>'. A
+// manual POST without that ref is refused with 400 manual_needs_his_words.
+// The database holds the same rule for new rows
+// (20261021100000_manual_is_his_words.sql), so a direct insert is refused too.
 
 // The live distribution channels, mirroring media_channels where active=true
 // and MEDIA_CHANNELS in src/lib/contentEngine.ts. TikTok joined the standing set
@@ -90,6 +90,10 @@ export const ALLOWED_SOURCE = new Set([
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
+/** The ref a manual idea carries: the said_parts row of his words. The
+ *  database CHECK content_ideas_manual_is_his_words uses the same pattern. */
+export const SAID_REF = /^said:[0-9a-f-]{36}$/
+
 /** The columns a read of one piece returns. */
 export const PIECE_COLUMNS = 'id,state,lane_slot,idea,thesis,body,updated_at'
 
@@ -124,6 +128,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ok: false,
         error: 'source_type_unknown',
         detail: { allowed: [...ALLOWED_SOURCE] },
+      })
+    }
+    if (sourceType === 'manual' && !(typeof body.source_ref === 'string' && SAID_REF.test(body.source_ref))) {
+      return res.status(400).json({
+        ok: false,
+        error: 'manual_needs_his_words',
+        detail: 'manual is only for words Krish said. Send source_ref "said:<said_parts id>", or name your own source.',
       })
     }
 

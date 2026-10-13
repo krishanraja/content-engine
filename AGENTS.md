@@ -146,8 +146,11 @@ in `WORKBENCH.md`, "The board".
 **`manual` means Krish's words; never write it.** A content idea with
 `source_type` `manual` is one he said, filed by Control Center's one door
 with `source_ref` `said:<said_parts id>`. Name your own source instead.
-(The engine and the database refuse a `manual` idea without that ref only
-once Control Center's step 3 PR 4 has retired its other idea doors.) Board
+The engine refuses a `manual` idea without that ref (400
+`manual_needs_his_words`), and so does the database once
+`20261021100000_manual_is_his_words.sql` is applied. No code under `apps/`
+calls a transcription API: his spoken ideas come in through Control
+Center's one door. Board
 items whose id starts `said-` are filed by Control Center from his words,
 and his notes about any open item come back on it as `said` from
 `GET /api/workbench`: read them before you work the item, and never answer
