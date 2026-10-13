@@ -1,6 +1,9 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { assertNeverCloses, ARCHIVE, dayOf, gatherFacts, oneNewsletterOn, planWrites, readArchive, shareFileId, stripHeld, type BoardRow, type Facts } from '../../scripts/backfill_closes.js'
 import { cleanItem } from '../../apps/control-plane/api/workbench.js'
+
+// workbench.js builds the database client on import; these tests never touch it, and CI has no keys.
+vi.mock('../../apps/control-plane/api/_supabase.js', () => ({ supabase: {} }))
 
 // Backfill step 1 of step 4: every open item that says nothing about how it
 // ends gets a kind, and the script never closes anything. Synthetic rows only.
