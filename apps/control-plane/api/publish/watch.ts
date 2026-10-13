@@ -67,6 +67,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         if (!seen.error && !seen.data) {
           const ins = await supabase.from('work_board_items').insert({ ...item, updated_by: 'engine: publish watcher', updated_at: now.toISOString() })
           if (!ins.error) held++
+          // A refused question is said in the report, never dropped.
+          else { report.push({ post: post.url, matched: null, question: item.id, held: false, note: `board_write_failed: ${ins.error.code || ''} ${ins.error.message || ''}`.trim().slice(0, 200) }); continue }
         }
       }
       report.push({ post: post.url, matched: null })

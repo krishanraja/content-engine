@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-12, about 22:00 UTC, by a Claude Code session (cloud).
+Last updated: 2026-10-13, about 03:30 UTC, by a Claude Code session (cloud).
 
 ## How Krish wants to be worked with
 
@@ -381,6 +381,46 @@ Set `"client"` to `"codex"` or `"claude_code"` so the board says who changed it.
 Write every item in plain words: what happened, what it means for him, and what
 you need from him.
 
+**Every item says how it ends. Record the fact; the check closes it. Close
+only items you hold (`closes_on` `session`).** Krish, 2026-10-11: "I am
+happy to Clear(complete)/Bump/Purge things off my lists as I go but the rest
+should be automatically done." Step 4 of his operating system is one
+done-check sweep in Control Center (`api/_doneChecks.ts`) that ends every
+item by its kind. The kinds (`closes_on`), with what each needs:
+
+- a making step (`workroom`, `draft`, `visual_gate`, `scripts`, `pack`,
+  `record`, `video`, `publish`) or `published`: the piece's `idea_id`;
+- `week_planned`: the week's planning item alone (`week-<its Monday>`);
+- `week_published`: the week's publish board alone
+  (`week-publish-board-<its Monday>`); it closes once every picked day is
+  at 100% on the record, so no session moves it to done;
+- `share_image_changed`: `"close_ref": {"url": "<the post>", "was": "<the
+  file id of the share image it shows now>"}`;
+- `job_ok`: `"close_ref": {"job": "<the job>", "after": "<a time a clean
+  run must be newer than>", "probe": "dry"}`;
+- `post_matched` (the watcher's `post-<id>`, with `"close_ref": {"url"}`)
+  and `take_placed` (the recordings lane's `take-<sha12>`): machine
+  questions, held for a session, never on him;
+- `session`: work you hold; you close it, or it is let go after 7 untouched
+  days;
+- `his_word`: nothing can see it done, so only his Clear ends it, and only
+  he puts one on his list (his cookie, his words relayed, or Control
+  Center); an agent gets `409 his_word_is_his`.
+
+The engine refuses, by name: a new open item from an agent with no kind
+(`400 open_needs_closes_on`); a kind on an open item without what it needs
+(`400 close_ref_invalid`); an item whose piece step it can already see done
+(`409 already_done`: nothing waits); a close or reopen relayed with
+`decided_by: 'Krish'` without his exact words in `"said"` (12 to 287
+characters; `400 relayed_close_needs_his_words`), which are kept on the item
+as `closed_proof`; and a `closed_proof` from anyone but the sweep (`400
+closed_proof_is_the_checks`). The sweep writes as client `done_check`: it
+only closes an open item, with its proof, recorded as `check: <kind>`
+(`409 done_check_only_closes` otherwise). A database refusal names its
+constraint (`board_write_failed`, `code`, `constraint`). Until the sweep is
+live the engine's own closes still run (`_boardClose.ts`, the watcher, the
+recordings lane).
+
 **An item about a piece names the piece, so it closes itself** (Krish,
 2026-10-11: items "should really be chalked off automatically when we are
 done with a publish flow"). Give it `"idea_id": "<the piece's uuid>"` and,
@@ -421,22 +461,28 @@ all three:
 - `"link"`, an `https://` link to the prepared thing he acts on (the script,
   the draft, the page), with a short `"link_label"` for its button. A typed
   answer is not a link.
-- `"closes_on"` with the piece's `"idea_id"`, so the engine closes it when that
-  step lands (above). The week's planning item (`week-<its Monday>`) uses
-  `"closes_on": "week_planned"` and needs no `idea_id`; Control Center closes
-  it once every day has a piece. A `judgment` item needs one of these closes
-  too.
+- `"closes_on"` with what its kind needs (above): a piece's step with the
+  piece's `"idea_id"`, so the engine closes it when that step lands; the
+  week's planning item (`week-<its Monday>`) with `"week_planned"`, which
+  Control Center closes once every day has a piece; the week's publish board
+  with `"week_published"`; `"share_image_changed"` or `"job_ok"` with their
+  `close_ref`; or `"his_word"`, which only he puts there. Never `session`,
+  `post_matched` or `take_placed`. A `judgment` item needs one of these
+  closes too.
 
 The engine refuses an `on_you` write that lacks any of them, checked with
 what the item already holds, so a partial edit of an item on him counts too
 (`lane_if_new` is held to it for a new item): `400` with `on_you_needs_only_you`,
-`on_you_needs_link`, `on_you_needs_closes_on` or `on_you_needs_idea_id`, and a
+`on_you_needs_link`, `on_you_needs_closes_on`, `on_you_needs_idea_id` or
+`on_you_needs_close_ref`, and a
 `detail` naming the values allowed. Keep such an item `in_progress` until it
 has them. A job only he can do that nothing can see finished (a login, a key
-only he can change, an email only he can send) stays `in_progress`, its
-detail saying what would show it done, until an agent gives it a check; ask
-him in your reply. The database holds the same rule
-(`work_board_items_on_you_is_ready`, migration `20261013093000`), the
+only he can change, an email only he can send) gets a check kind when one can
+see it (`share_image_changed`, `job_ok`), else stays `in_progress` with
+`session` until he says, in your reply, that it goes on his list as
+`his_word`. The database holds the same rule
+(`work_board_items_on_you_is_ready`, migration `20261013093000`, rewritten
+per kind by `20261022091000`), the
 week's close on the week's item alone included: when it is applied, every
 item on him that fails it moves to `in_progress`, its detail starting "Held
 from your list on <date>: it" and the gates it fails in Control Center's
@@ -529,6 +575,48 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-13, Tuesday, early: **Step 4, part A: every board item says how
+  it ends, so one check can end it.** Krish, 2026-10-11: "I am happy to
+  Clear(complete)/Bump/Purge things off my lists as I go but the rest should
+  be automatically done." On branch `ccr-25d9e81a-step4-kinds`, committed;
+  not pushed, not merged, not deployed, no migration applied, nothing written
+  to the live board. In plain words:
+  - **The kinds.** An item now ends by its kind (`closes_on`): a piece's
+    step, the week's two items, a post's share image, an engine job running
+    clean, a post or a take a machine could not place, work a session holds,
+    or `his_word` for what nothing can see. What a kind needs sits in
+    `close_ref`. The rules and refusals are in "The board" above.
+  - **The writers changed first**, so nothing later refuses them: the
+    publish watcher's post question says `post_matched` and reports a
+    refused write instead of dropping it; the recordings lane's take
+    questions say `take_placed`; `plan-week` writes next week's publish
+    board on his list as `week_published`, and `make-piece` stops moving it
+    to done by hand.
+  - **The sweep's own client** (`done_check`) may only close an open item,
+    with its proof. A close relayed from him needs his exact words. An item
+    whose step is already done is refused. Nothing closes differently yet:
+    the old closers still run until part C.
+  - **A drop never undoes a publish.** A Purge landing as the publish
+    watcher marks the piece published used to undo the publish. The drop
+    now reads the piece and writes only if nothing changed; a published
+    piece is refused (`409 published_cannot_be_dropped`).
+  - **To apply, in this order:** migration
+    `supabase/migrations/20261022090000_board_close_columns.sql` before this
+    branch deploys (the recordings lane's `take_placed` writes and every new
+    column need it); then deploy; then
+    `20261022091000_on_you_closes_itself.sql` once the deploy is ready, and
+    before Sunday's `plan-week` run, whose publish board item needs it; then
+    `ACCESS_CODE=... npx tsx scripts/backfill_closes.ts --dry-run`, read it,
+    and run it without `--dry-run`. It never closes anything. Its dry facts
+    on 13 October: the launch post is the 6 October newsletter, the Monday
+    card's share image is `894a89d0-..._1200x800.png`, and the launch post
+    already shows a different image, so the first check will close
+    `you-launch-today` with its proof. The home computers pull this branch's
+    `recording_match.py` only after the deploy.
+  - **Next:** part B in Control Center (the sweep itself), then backfill
+    step 2, then part C here (the old closers go, and the database trigger
+    lands). The plan is step 4's build plan, sections 3, 4, 6 and 7.
 
 - 2026-10-12, Monday, afternoon: **Nothing can be put on Krish unless it is
   ready for his list.** Krish, 2026-10-11: "you are just capping the

@@ -85,14 +85,14 @@ then stops counting on the record.
 
 --board puts one item on the board for each unsure take (POST
 /api/workbench, upsert_items, the route every session uses, through
-making.board_upsert): id take-<first 12 of its sha256>, closes_on "record",
-in progress for a session and never on Krish's list, because nothing he can
-press answers it: a session works it out, or asks him in its reply. Tied to
-a piece (the take is known to be one of its takes), it carries the piece's
-idea_id and closes itself when that piece's Record step is done. One with
-no piece is ended by the lane once the take is placed (done) or no waiting
-piece can be it (archived; making.board_close), and by the engine's hourly
-pass once no session has touched it for a week (_boardClose.ts, HELD_DAYS).
+making.board_upsert): id take-<first 12 of its sha256>, closes_on
+"take_placed", in progress for a session and never on Krish's list, because
+nothing he can press answers it: a session works it out, or asks him in its
+reply. Tied to a piece (the take is known to be one of its takes), it
+carries the piece's idea_id. The lane ends it once the take is placed (done)
+or no waiting piece can be it (archived; making.board_close), and the
+engine's hourly pass once no session has touched it for a week
+(_boardClose.ts, HELD_DAYS); step 4's done-check sweep takes both over.
 It
 reads the board first and never reopens an item: one done there (Krish
 answered, or a session closed it) is left alone, on either machine. Each
@@ -951,8 +951,8 @@ def board_item(answer, pieces):
     never on Krish's list (WORKBENCH.md, "The board"): nothing he can press
     answers which take it is, so a session works it out, or asks him in its
     reply. Tied to a piece (the take is known to be one of its takes, or is
-    one of two close pieces'), it closes itself when that piece's Record step
-    is done; with no piece, the lane closes it (ask_on_board)."""
+    one of two close pieces'), it names the piece. It ends when the take is
+    placed (closes_on take_placed): the lane closes it (ask_on_board)."""
     by_id = {p['id']: p for p in pieces}
     sha, name = answer['sha256'], answer['name']
     shown = name if len(name) <= 80 else name[:77] + '...'
@@ -978,7 +978,7 @@ def board_item(answer, pieces):
     detail = (f'{answer["reason"][0].upper()}{answer["reason"][1:]}. It reached the engine {str(answer.get("at"))[:16].replace("T", " ")} '
               f'as {path}; nothing was recorded for it. Held for a session, off Krish\'s list: nothing he can press answers it. {ask}')
     item = {'id': f'take-{sha[:12]}', 'lane': 'in_progress', 'rank': 5, 'area': 'Recordings',
-            'title': title[:200], 'detail': detail[:2000], 'closes_on': 'record'}
+            'title': title[:200], 'detail': detail[:2000], 'closes_on': 'take_placed'}
     if tied:
         item['idea_id'] = pid
     return item
@@ -1022,8 +1022,7 @@ def ask_on_board(answers, pieces, call, by, cache, out, now=None):
 
     It also ends the items it asked once their question is gone: done once
     the take is placed, archived once no waiting piece can be it ("old")
-    (making.board_close). An item tied to a piece also closes on its Record
-    step, and one no session touches for a week is let go by the engine's
+    (making.board_close). One no session touches for a week is let go by the engine's
     hourly pass (_boardClose.ts, HELD_DAYS). Returns (asked, closed,
     failed): the item ids written, the ones closed, and whether the board
     refused or could not be reached."""
@@ -1590,11 +1589,11 @@ def self_test():
                'no longer counts' in stale_item['detail']),
               (MON, True, True, True))
         first_item = next(i for i in sent if i['id'] == f'take-{early_sha[:12]}')
-        check('--board: held for a session (a new item\'s lane), never on Krish\'s list, tied to Monday, closed by its Record step, '
+        check('--board: held for a session (a new item\'s lane), never on Krish\'s list, tied to Monday, ended when the take is placed, '
               'with no reply asked of him: a session asks him in its reply',
               (first_item.get('lane_if_new'), 'lane' in first_item, [k for k in ('only_you', 'link', 'link_label', 'prompt') if k in first_item],
                first_item.get('idea_id'), first_item['closes_on'], 'Reply' in first_item['detail'], 'asks Krish in its reply' in first_item['detail']),
-              ('in_progress', False, [], MON, 'record', False, True))
+              ('in_progress', False, [], MON, 'take_placed', False, True))
         check('--board: the item says what happened and what to answer', ('recorded before the script last changed' in first_item['detail'], f'recordings/{early_sha}.mp4' in first_item['detail'],
                                                                            len(first_item['title']) <= 200, len(first_item['detail']) <= 2000), (True, True, True, True))
         book = load_answered(board)
@@ -1781,7 +1780,7 @@ def main(argv=None):
                     help="read the Inbox on this machine instead of the engine's copies (default: MINDMAKE_MEDIA_INBOX, else runtime.media_inbox)")
     ap.add_argument('--record', action='store_true', help='record each sure match on its piece (making.py recorded)')
     ap.add_argument('--board', action='store_true', help='put each unsure take on Krish\'s board, once for each reason '
-                    '(item take-<sha12>, closes_on record), and keep .cache/recordings/answered.json')
+                    '(item take-<sha12>, closes_on take_placed), and keep .cache/recordings/answered.json')
     ap.add_argument('--by', help=f'who is recording it: Codex, Claude Code (default: {making.BY_ENV}, else {making.DEFAULT_BY})')
     ap.add_argument('--words', action='append', metavar='NAME=FILE', help='what was said in a take\'s first 45 seconds, instead of hearing it (for tests)')
     ap.add_argument('--json', action='store_true', help='print the whole answer as JSON')

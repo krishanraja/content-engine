@@ -159,6 +159,14 @@ jobs:
           psql_in supabase/migrations/20261013093000_board_on_you_is_ready.sql
           psql_in supabase/migrations/20261013093000_board_on_you_is_ready.sql
           psql_in tests/fixtures/control-plane/board-on-you-ready-regression.sql
+          # Step 4: every item says how it ends, and an item on Krish carries
+          # what its check needs; each migration run twice.
+          psql_in supabase/migrations/20261022090000_board_close_columns.sql
+          psql_in supabase/migrations/20261022090000_board_close_columns.sql
+          psql_in tests/fixtures/control-plane/board-close-kinds-setup.sql
+          psql_in supabase/migrations/20261022091000_on_you_closes_itself.sql
+          psql_in supabase/migrations/20261022091000_on_you_closes_itself.sql
+          psql_in tests/fixtures/control-plane/board-close-kinds-regression.sql
           # Last, because it commits a seed that fences every later claim: an
           # open claim holds the active role row, so a switch must wait for it
           # and then refuse.

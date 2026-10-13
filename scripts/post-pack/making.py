@@ -899,7 +899,7 @@ def board_close(lanes, call=None, by=None):
 def ask_about_older_takes(piece_id, record, cuts, call=None, by=None):
     """One board question for each take on the record whose cut's words just
     changed (cuts): use it, or record that cut again. The same item as
-    recording_match.py asks (take-<sha12>, closes_on record), held for a
+    recording_match.py asks (take-<sha12>, closes_on take_placed), held for a
     session to ask Krish in its reply, and never reopened once answered.
     Returns the item ids written."""
     import recording_match  # the one wording for a take's board question
@@ -1317,10 +1317,10 @@ def self_test():
         finally:
             globals()['_story_check'] = real_check
         item = (asked_posts[-1]['items'][0] if asked_posts else {})
-        check('scripts: a take of the long words that just changed is one question on the board, tied to the piece, closed by Record',
+        check('scripts: a take of the long words that just changed is one question on the board, tied to the piece, ended when placed',
               (code, item.get('id'), item.get('idea_id'), item.get('closes_on'), item.get('lane_if_new'), 'Mon 12 Oct' in item.get('detail', ''),
                asked_posts[-1]['client'] if asked_posts else None, new_long != old_take['script_sha256']),
-              (0, 'take-' + '7' * 12, pid, 'record', 'in_progress', True, 'claude_code', True))
+              (0, 'take-' + '7' * 12, pid, 'take_placed', 'in_progress', True, 'claude_code', True))
         check('scripts: the question is held for a session to ask Krish in its reply, never on his list',
               (item.get('only_you'), 'link' in item, 'prompt' in item, 'asks Krish in its reply' in item.get('detail', '')), (None, False, False, True))
 

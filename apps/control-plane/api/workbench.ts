@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardEngine } from './_auth.js'
+import { itemPiece, itemsToClose, type PieceRow } from './_boardClose.js'
 import { operatorAttribution } from './_editEvents.js'
 import { supabase } from './_supabase.js'
 
@@ -39,6 +40,20 @@ import { supabase } from './_supabase.js'
 // a refusal names the missing field (400 on_you_needs_*). Krish, 2026-10-11:
 // "you are just capping the garbage. Surely we need to not have garbage."
 // The database holds the same rule (work_board_items_on_you_is_ready).
+//
+// Every item says how it ends (closes_on), so one done-check sweep can end
+// it (step 4; Control Center's api/_doneChecks.ts). Krish, 2026-10-11: "I am
+// happy to Clear(complete)/Bump/Purge things off my lists as I go but the
+// rest should be automatically done." The kinds are CLOSE_KINDS: a piece's
+// making step or published, the week's two items, a share image, a job, a
+// post or a take a machine could not place, work a session holds (session),
+// and his_word, which nothing can see, so only his Clear ends it. What a kind
+// needs beyond itself is in close_ref (closeRefOk, the same rule as the
+// database's board_close_ref_ok). The sweep writes as client done_check: it
+// may only close an open item, with its proof in closed_proof, and is
+// recorded as "check: <kind>". A session relaying Krish's close carries his
+// exact words (said), which are kept on the row. An item whose step the
+// engine can already see done is refused (409 already_done): nothing waits.
 
 export const LANES = ['on_you', 'in_progress', 'done', 'archived'] as const
 type Lane = typeof LANES[number]
@@ -64,8 +79,12 @@ export interface BoardItemInput {
   prompt?: null
   /** The piece this item is about; it then closes when the piece moves on (_boardClose.ts). */
   idea_id?: string | null
-  /** The making step that closes it, 'published', or 'week_planned'. */
+  /** How it ends: one of CLOSE_KINDS. */
   closes_on?: string | null
+  /** What its kind needs beyond itself (closeRefOk), at most 1 KB. */
+  close_ref?: Record<string, unknown> | null
+  /** The words a check closed it with; only the done_check client sends it. */
+  closed_proof?: string | null
   /** Why only Krish can do it (ONLY_YOU). The route refuses an item on him (lane on_you) without one (on_you_needs_only_you). */
   only_you?: string | null
   /** Set by his Bump: off his list until this time (ISO, with a zone). */
@@ -76,14 +95,31 @@ export interface BoardItemInput {
  *  credential as Krish's browser. A cookie call may name one of these to be
  *  recorded as that job instead of as Krish. It can only lower the
  *  attribution, never raise it. */
-export const COOKIE_AUTOMATIONS = new Set(['control_center_slate', 'control_center'])
-// The making steps and 'published' close through _boardClose.ts; 'week_planned'
-// is the week's planning item, which Control Center's slate closes once every
-// day has a piece.
-const CLOSE_STEPS = new Set(['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published', 'week_planned'])
+export const COOKIE_AUTOMATIONS = new Set(['control_center_slate', 'control_center', 'done_check'])
+/** The done-check sweep's client. It may only close an open item, with a proof. */
+export const DONE_CHECK = 'done_check'
+/** A piece's making steps and 'published': the item names the piece (idea_id). */
+export const PIECE_KINDS = ['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published'] as const
+/** Every way an item ends. The list in the newest migration's
+ *  work_board_items_closes_on_check is the same. */
+export const CLOSE_KINDS = new Set<string>([...PIECE_KINDS, 'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'session', 'his_word'])
+/** Kinds that are never on Krish: work a session holds, and the questions a machine holds for one. */
+export const NOT_ON_HIM = new Set(['session', 'post_matched', 'take_placed'])
+/** Kinds whose close_ref must be whole on any open item (the rest are checked on him). */
+const REF_KINDS = new Set(['week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed'])
+const PIECE_KIND_SET = new Set<string>(PIECE_KINDS)
 /** Why only Krish can do an item: the walls only he passes, his face and voice, his login, his call. */
 export const ONLY_YOU = new Set(['send', 'post', 'spend', 'delete', 'permission', 'credential', 'face', 'login', 'judgment'])
 const WEEK_ITEM = /^week-\d{4}-\d{2}-\d{2}$/
+const WEEK_BOARD = /^week-publish-board-\d{4}-\d{2}-\d{2}$/
+const TAKE_ITEM = /^take-[0-9a-f]{12}$/
+const OPEN_LANES = new Set<string>(['on_you', 'in_progress'])
+const MAX_CLOSE_REF = 1024
+const MAX_PROOF = 300
+const HIS_WORDS = (said: string) => `His words: "${said}"`
+/** His exact words, as a relayed close carries them: long enough to be his, short enough that the proof fits 300 characters. */
+export const SAID_MIN = 12
+export const SAID_MAX = MAX_PROOF - HIS_WORDS('').length
 const ISO_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,6})?)?(Z|[+-]\d{2}:\d{2})$/
 
 function record(value: unknown): Json {
@@ -111,8 +147,54 @@ function optionalText(value: unknown, max: number, field: string): string | null
 /** A write refused for a reason a writer can act on: a short code and, in
  *  `detail`, what to send instead. */
 export class BoardRefusal extends Error {
-  constructor(code: string, readonly detail: string, readonly item?: string) { super(code) }
+  constructor(code: string, readonly detail: string, readonly item?: string, readonly status = 400) { super(code) }
 }
+
+/** What each kind needs beyond itself, in the words a refusal uses. */
+export const CLOSE_REF_NEEDS: Record<string, string> = {
+  piece: '"idea_id", the piece\'s uuid',
+  week_planned: 'the id week-<its Monday>',
+  week_published: 'the id week-publish-board-<its Monday>',
+  share_image_changed: 'close_ref {"url": the post\'s https address, "was": the file id of the share image it shows now}',
+  job_ok: 'close_ref {"job": the job\'s name, "after": the time a clean run must be newer than, "probe": "dry" when a dry read can prove it}',
+  post_matched: 'close_ref {"url": the post\'s https address}',
+  take_placed: 'the id take-<the first 12 of its sha256>',
+}
+
+/** True when an item carries what its kind needs. The same rule as the
+ *  database's board_close_ref_ok (20261022090000_board_close_columns.sql). */
+export function closeRefOk(kind: unknown, ref: unknown, ideaId: unknown, id: unknown): boolean {
+  const k = String(kind ?? '')
+  const r = record(ref)
+  const str = (v: unknown) => (typeof v === 'string' ? v : v === undefined || v === null ? '' : String(v))
+  if (PIECE_KIND_SET.has(k)) return Boolean(ideaId)
+  if (k === 'week_planned') return WEEK_ITEM.test(String(id))
+  if (k === 'week_published') return WEEK_BOARD.test(String(id))
+  if (k === 'share_image_changed') return /^https:\/\//.test(str(r.url)) && str(r.was) !== ''
+  if (k === 'job_ok') return str(r.job) !== '' && str(r.after) !== ''
+  if (k === 'post_matched') return /^https:\/\//.test(str(r.url))
+  if (k === 'take_placed') return TAKE_ITEM.test(String(id))
+  return k === 'session' || k === 'his_word'
+}
+
+/** What a kind needs, for a refusal's detail. */
+function needsOf(kind: string): string {
+  return CLOSE_REF_NEEDS[PIECE_KIND_SET.has(kind) ? 'piece' : kind] || 'nothing more'
+}
+
+/** Who is writing: Krish (his cookie), a Control Center job (a cookie
+ *  automation), or an agent (the engine key), relaying him or not. */
+export interface WriteContext {
+  writer: string
+  /** True for his cookie with no automation named. */
+  krish: boolean
+  /** An agent relaying a decision he made in words (decided_by: 'Krish'). */
+  relayed: boolean
+  /** His exact words, when a relayed write carries them. */
+  said: string | null
+  agent: boolean
+}
+const KRISH: WriteContext = { writer: 'Krish', krish: true, relayed: false, said: null, agent: false }
 
 const KEEP_IN_PROGRESS = 'Until it has one, keep the item in in_progress.'
 /** Why nothing may ask Krish to reply on the board any more. */
@@ -124,8 +206,12 @@ export const REPLIES_RETIRED = 'Replies are retired: Control Center has no reply
 export const ON_YOU_NEEDS = {
   only_you: `An item waiting on Krish says why only he can do it: "only_you" is one of ${[...ONLY_YOU].join(', ')}. ${KEEP_IN_PROGRESS}`,
   link: `An item waiting on Krish links to the prepared thing he acts on (the script, the draft, the page): "link" starts with https://, with a short "link_label". A typed answer is not a link. ${KEEP_IN_PROGRESS}`,
-  closes_on: `An item waiting on Krish says how it closes itself: "closes_on" is a making step (workroom, draft, visual_gate, scripts, pack, record, video, publish), published, or week_planned for the week's planning item alone (id week-<its Monday>). ${KEEP_IN_PROGRESS}`,
-  idea_id: `An item waiting on Krish that closes on a piece's step names the piece: "idea_id" is the piece's uuid. Only closes_on week_planned needs none. ${KEEP_IN_PROGRESS}`,
+  closes_on: 'An item waiting on Krish says how it closes itself: "closes_on" is a making step (workroom, draft, visual_gate, scripts, pack, record, video, publish) or published, with the piece\'s "idea_id"; '
+    + 'week_planned on the week\'s planning item alone (id week-<its Monday>); week_published on the week\'s publish board alone (id week-publish-board-<its Monday>); '
+    + 'share_image_changed with close_ref {url, was}; job_ok with close_ref {job, after}; or his_word, which only Krish puts on his list. '
+    + `Never session, post_matched or take_placed: those are held for a session. ${KEEP_IN_PROGRESS}`,
+  idea_id: `An item waiting on Krish that closes on a piece's step names the piece: "idea_id" is the piece's uuid. Only the kinds that are not a piece's step need none. ${KEEP_IN_PROGRESS}`,
+  close_ref: `An item waiting on Krish carries what its check needs: share_image_changed needs ${CLOSE_REF_NEEDS.share_image_changed}; job_ok needs ${CLOSE_REF_NEEDS.job_ok}. ${KEEP_IN_PROGRESS}`,
 } as const
 
 /** The first field an item waiting on Krish lacks once the write is merged
@@ -135,17 +221,19 @@ export function onYouLacks(row: Json, before?: Partial<BoardItemRow>): keyof typ
   if (merged.lane !== 'on_you') return null
   if (!merged.only_you) return 'only_you'
   if (typeof merged.link !== 'string' || !/^https:\/\//.test(merged.link)) return 'link'
-  // week_planned closes only the week's own item (Control Center's slate);
-  // on any other item it would never fire.
-  if (!merged.closes_on || (merged.closes_on === 'week_planned' && !WEEK_ITEM.test(String(merged.id)))) return 'closes_on'
-  if (merged.closes_on !== 'week_planned' && !merged.idea_id) return 'idea_id'
+  const kind = String(merged.closes_on ?? '')
+  if (!CLOSE_KINDS.has(kind) || NOT_ON_HIM.has(kind)) return 'closes_on'
+  // The week's kinds close only the week's own items; on any other item they would never fire.
+  if ((kind === 'week_planned' || kind === 'week_published') && !closeRefOk(kind, merged.close_ref, merged.idea_id, merged.id)) return 'closes_on'
+  if (PIECE_KIND_SET.has(kind) && !merged.idea_id) return 'idea_id'
+  if (!closeRefOk(kind, merged.close_ref, merged.idea_id, merged.id)) return 'close_ref'
   return null
 }
 
 /** Checks one item and returns the columns to write. Throws a short code.
  *  `before` is the row already there: the write is merged with it to check
  *  an item waiting on Krish (onYouLacks). */
-export function cleanItem(raw: unknown, isNew: boolean, before?: Partial<BoardItemRow>): Json & { id: string } {
+export function cleanItem(raw: unknown, isNew: boolean, before?: Partial<BoardItemRow>, ctx: WriteContext = KRISH): Json & { id: string } {
   const r = record(raw)
   const id = typeof r.id === 'string' ? r.id : ''
   if (!ID.test(id)) throw new Error('item_id_invalid')
@@ -182,8 +270,22 @@ export function cleanItem(raw: unknown, isNew: boolean, before?: Partial<BoardIt
     row.idea_id = r.idea_id
   }
   if (r.closes_on !== undefined) {
-    if (r.closes_on !== null && !CLOSE_STEPS.has(String(r.closes_on))) throw new Error('closes_on_invalid')
+    if (r.closes_on !== null && !CLOSE_KINDS.has(String(r.closes_on))) throw new Error('closes_on_invalid')
     row.closes_on = r.closes_on
+  }
+  if (r.close_ref !== undefined) {
+    if (r.close_ref !== null && (typeof r.close_ref !== 'object' || Array.isArray(r.close_ref))) throw new Error('close_ref_must_be_an_object')
+    const ref = r.close_ref === null ? {} : r.close_ref as Json
+    if (JSON.stringify(ref).length > MAX_CLOSE_REF) throw new Error('close_ref_too_long')
+    row.close_ref = ref
+  }
+  if (r.closed_proof !== undefined) {
+    // Only the sweep writes a proof; a relayed close's is his words, set by the route.
+    if (ctx.writer !== DONE_CHECK) {
+      throw new BoardRefusal('closed_proof_is_the_checks', 'Only the done-check sweep writes closed_proof. To relay a close Krish made, send decided_by "Krish" and his exact words in "said".', id)
+    }
+    const proof = text(r.closed_proof, MAX_PROOF, 'closed_proof')
+    if (proof) row.closed_proof = proof
   }
   if (r.only_you !== undefined) {
     if (r.only_you !== null && !ONLY_YOU.has(String(r.only_you))) throw new Error('only_you_invalid')
@@ -197,15 +299,28 @@ export function cleanItem(raw: unknown, isNew: boolean, before?: Partial<BoardIt
       row.bumped_until = new Date(at).toISOString()
     }
   }
+  const merged: Json = { ...(isNew ? {} : before || {}), ...row }
   const lacks = onYouLacks(row, isNew ? undefined : before)
   if (lacks) throw new BoardRefusal(`on_you_needs_${lacks}`, ON_YOU_NEEDS[lacks], id)
+  // Nothing can see a his_word item finished, so only he puts one on his
+  // list: his cookie, his words relayed, or Control Center moving one there.
+  const putsHisWordOnHim = merged.lane === 'on_you' && merged.closes_on === 'his_word'
+    && (row.lane === 'on_you' || row.closes_on === 'his_word')
+  if (putsHisWordOnHim && !(ctx.krish || (ctx.relayed && ctx.said) || ctx.writer === 'control_center')) {
+    throw new BoardRefusal('his_word_is_his', 'Only Krish puts an item on his list that nothing can see. Give it a check kind, or hold it in progress.', id, 409)
+  }
+  // A check's kind carries what the check needs on every open item, or it could never close.
+  const kind = String(merged.closes_on ?? '')
+  if (OPEN_LANES.has(String(merged.lane)) && REF_KINDS.has(kind) && !closeRefOk(kind, merged.close_ref, merged.idea_id, id)) {
+    throw new BoardRefusal('close_ref_invalid', `closes_on ${kind} needs ${needsOf(kind)}.`, id)
+  }
   return row
 }
 
 /** What the route reads of an item before writing it. */
 export interface BoardBefore { id: string; lane: string; closed_by: string | null }
 /** The columns an item waiting on Krish is checked on. */
-export interface BoardItemRow extends BoardBefore { only_you: string | null; link: string | null; closes_on: string | null; idea_id: string | null }
+export interface BoardItemRow extends BoardBefore { only_you: string | null; link: string | null; closes_on: string | null; idea_id: string | null; close_ref?: Json | null }
 
 /** True when a write would move an item Krish closed back to an open lane. */
 export function reopensKrishsClose(before: BoardBefore | undefined, lane: unknown): boolean {
@@ -234,20 +349,73 @@ export function cleanSignals(raw: unknown): Array<{ label: string; state: string
   })
 }
 
+/** How long a check's let-go (archived) stays readable on the Board, where his Undo is. */
+const LET_GO_SHOWN_DAYS = 7
+
+/** A write the database refused, readable: its Postgres code and, for a CHECK, the constraint's name. */
+export function writeFailed(item: string, error: { code?: string; message?: string }) {
+  const constraint = /constraint "([^"]+)"/.exec(String(error.message || ''))?.[1] ?? null
+  return { ok: false, error: 'board_write_failed', item, code: error.code ?? null, constraint }
+}
+
+const DONE_CHECK_FIELDS = new Set(['id', 'lane', 'closed_proof'])
+/** Why the sweep may not make this write, or null. It only closes an open item, with its proof. */
+export function doneCheckRefusal(item: Json, before: BoardBefore | undefined): BoardRefusal | null {
+  const id = String(item.id ?? '')
+  const only = (detail: string) => new BoardRefusal('done_check_only_closes', detail, id, 409)
+  if (!before || !OPEN_LANES.has(before.lane)) return only('The done-check sweep only closes an item that is open; this one is not.')
+  if (!CLOSED_LANES.has(String(item.lane))) return only('The done-check sweep only moves an open item to done or archived. It never reopens or moves one between open lanes.')
+  const extra = Object.keys(item).filter(k => !DONE_CHECK_FIELDS.has(k))
+  if (extra.length) return only(`The done-check sweep sends only id, lane and closed_proof, not ${extra.join(', ')}.`)
+  if (typeof item.closed_proof !== 'string' || !item.closed_proof.trim()) return new BoardRefusal('done_check_needs_proof', 'A check closes an item only with its proof, in closed_proof (at most 300 characters).', id)
+  return null
+}
+
+/** The first item whose piece step the engine already sees done, so the
+ *  write would put up something nothing waits on; or null. Only writes
+ *  that are not Krish's (his Undo reopens a close on purpose), on an open
+ *  item that closes on a piece's step. A piece that cannot be read refuses
+ *  nothing. */
+async function alreadyDone(rows: Array<Json & { id: string }>, existing: Map<string, BoardItemRow>, closer: string): Promise<string | null> {
+  if (closer === 'Krish') return null
+  const asked = rows.map(row => {
+    const before = existing.get(row.id)
+    const merged = { ...(before || {}), ...row } as Json
+    const touches = !before || 'lane' in row || 'closes_on' in row || 'idea_id' in row
+    const kind = String(merged.closes_on ?? '')
+    if (!touches || !OPEN_LANES.has(String(merged.lane)) || !PIECE_KIND_SET.has(kind)) return null
+    const item = { id: row.id, lane: String(merged.lane), idea_id: (merged.idea_id as string | null) ?? null, closes_on: kind, link: (merged.link as string | null) ?? null }
+    const piece = itemPiece(item)
+    return piece ? { item, piece } : null
+  }).filter((x): x is NonNullable<typeof x> => Boolean(x))
+  if (!asked.length) return null
+  const read = await supabase.from('content_ideas').select('id,state,buried_at,meta').in('id', [...new Set(asked.map(a => a.piece))])
+  if (read.error) return null
+  const pieces = new Map(((read.data || []) as PieceRow[]).map(p => [p.id, p]))
+  for (const a of asked) {
+    const piece = pieces.get(a.piece)
+    if (piece && itemsToClose([a.item], piece).some(c => c.lane === 'done')) return a.item.id
+  }
+  return null
+}
+
 async function read(res: VercelResponse) {
-  const [state, items, done, replies] = await Promise.all([
+  const since = new Date(Date.now() - LET_GO_SHOWN_DAYS * 86_400_000).toISOString()
+  const [state, items, done, letGo, replies] = await Promise.all([
     supabase.from('work_board_state').select('headline,signals,updated_by,updated_at').eq('id', 'board').maybeSingle(),
     supabase.from('work_board_items').select('*').in('lane', ['on_you', 'in_progress']).order('rank', { ascending: true }).limit(200),
     supabase.from('work_board_items').select('*').eq('lane', 'done').order('updated_at', { ascending: false }).limit(DONE_SHOWN),
+    // An item a check let go (moot) is archived; it stays readable for a week so he can Undo it.
+    supabase.from('work_board_items').select('*').eq('lane', 'archived').like('closed_by', 'check: %').gte('updated_at', since).order('updated_at', { ascending: false }).limit(DONE_SHOWN),
     supabase.from('work_board_replies').select('*').order('at', { ascending: false }).limit(100),
   ])
-  const failed = [state, items, done, replies].find(r => r.error)
+  const failed = [state, items, done, letGo, replies].find(r => r.error)
   if (failed) return res.status(500).json({ ok: false, error: 'board_read_failed' })
   const list = (replies.data || []) as Array<{ seen_at: string | null }>
   return res.status(200).json({
     ok: true,
     state: state.data || { headline: '', signals: [], updated_by: null, updated_at: null },
-    items: [...(items.data || []), ...(done.data || [])],
+    items: [...(items.data || []), ...(done.data || []), ...(letGo.data || [])],
     replies: list,
     unseen_replies: list.filter(r => !r.seen_at).length,
   })
@@ -264,6 +432,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const automation = !operator && typeof body.client === 'string' && COOKIE_AUTOMATIONS.has(body.client) ? body.client : null
   const who = operator ? operator.client : automation ?? 'Krish'
   const now = new Date().toISOString()
+  const said = typeof body.said === 'string' ? body.said.trim() : ''
+  const ctx: WriteContext = {
+    writer: who,
+    krish: !operator && !automation,
+    relayed: Boolean(operator && !operator.observation),
+    said: said.length >= SAID_MIN && said.length <= SAID_MAX ? said : null,
+    agent: Boolean(operator),
+  }
 
   try {
     if (body.action === 'upsert_items') {
@@ -271,7 +447,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (body.items.length > MAX_ITEMS) return res.status(400).json({ ok: false, error: 'too_many_items' })
       const ids = body.items.map(i => String(record(i).id || ''))
       if (new Set(ids).size !== ids.length) return res.status(400).json({ ok: false, error: 'duplicate_item_ids' })
-      const found = await supabase.from('work_board_items').select('id,lane,closed_by,only_you,link,closes_on,idea_id').in('id', ids)
+      const found = await supabase.from('work_board_items').select('id,lane,closed_by,only_you,link,closes_on,idea_id,close_ref').in('id', ids)
       if (found.error) return res.status(500).json({ ok: false, error: 'board_read_failed' })
       const existing = new Map(((found.data || []) as BoardItemRow[]).map(r => [r.id, r]))
       // An item Krish closed himself (Clear or Purge, or a close an agent
@@ -289,20 +465,56 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Check every item before writing any, so a bad one changes nothing.
       // Each write is checked merged with the row already there, so an item
       // left on Krish by a partial edit is ready for his list too.
+      // The sweep only closes: an open item, to done or archived, with its proof.
+      if (who === DONE_CHECK) {
+        const refused = body.items.map(record).map(i => doneCheckRefusal(i, existing.get(String(i.id)))).find(Boolean)
+        if (refused) return res.status(refused.status).json({ ok: false, error: refused.message, item: refused.item, detail: refused.detail })
+      }
       const rows = body.items.map(i => {
         const id = String(record(i).id)
-        return cleanItem(i, !existing.has(id), existing.get(id))
+        return cleanItem(i, !existing.has(id), existing.get(id), ctx)
       })
       // Who decided: Krish for his cookie or a relayed decision, else the writer.
       const closer = operator ? operator.actor : who
       for (const row of rows) {
-        const closedBy = closedByAfter(existing.get(row.id), row.lane, closer)
-        if (closedBy !== undefined) row.closed_by = closedBy
+        const before = existing.get(row.id)
+        const isNew = !before
+        const lane = row.lane ?? before?.lane
+        // An agent's new open item says how it ends.
+        if (ctx.agent && isNew && OPEN_LANES.has(String(lane)) && !row.closes_on) {
+          throw new BoardRefusal('open_needs_closes_on', 'Say how it ends: a check kind, or session if you will close it yourself.', row.id)
+        }
+        const closedBy = closedByAfter(before, row.lane, closer)
+        // A close or reopen relayed from Krish carries his exact words, kept on the row.
+        if (ctx.relayed && closedBy !== undefined && !ctx.said) {
+          throw new BoardRefusal('relayed_close_needs_his_words', `A close or reopen relayed from Krish carries his exact words in "said" (${SAID_MIN} to ${SAID_MAX} characters). They are kept on the item, where he sees them and can Undo the close.`, row.id)
+        }
+      }
+      // A piece's step the engine can already see done: nothing waits on anyone.
+      const done = await alreadyDone(rows, existing, closer)
+      if (done) throw new BoardRefusal('already_done', 'That step is already done, so nothing waits on Krish. Do not write the item.', done, 409)
+      for (const row of rows) {
+        const before = existing.get(row.id)
+        const closedBy = closedByAfter(before, row.lane, closer)
+        if (who === DONE_CHECK) {
+          row.closed_by = `check: ${before?.closes_on || 'none'}`.slice(0, 40)
+        } else if (closedBy !== undefined) {
+          row.closed_by = closedBy
+          // Who closed it and why travel together: his relayed words, or nothing.
+          row.closed_proof = closedBy === 'Krish' && ctx.relayed && ctx.said ? HIS_WORDS(ctx.said) : null
+        }
         const stamp = { updated_by: who, updated_at: now }
-        const write = existing.has(row.id)
+        if (who === DONE_CHECK) {
+          // Two runs at once: only the first finds it open.
+          const write = await supabase.from('work_board_items').update({ ...row, ...stamp }).eq('id', row.id).in('lane', ['on_you', 'in_progress']).select('id')
+          if (write.error) return res.status(500).json(writeFailed(row.id, write.error))
+          if (!write.data?.length) return res.status(409).json({ ok: false, error: 'done_check_only_closes', item: row.id, detail: 'It was closed by another writer first; nothing was written.' })
+          continue
+        }
+        const write = before
           ? await supabase.from('work_board_items').update({ ...row, ...stamp }).eq('id', row.id)
           : await supabase.from('work_board_items').insert({ ...row, ...stamp })
-        if (write.error) return res.status(500).json({ ok: false, error: 'board_write_failed', item: row.id })
+        if (write.error) return res.status(500).json(writeFailed(row.id, write.error))
       }
       return res.status(200).json({ ok: true, written: rows.map(r => r.id) })
     }
@@ -328,7 +540,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(400).json({ ok: false, error: 'unknown_action', actions: ['upsert_items', 'set_state', 'mark_seen'] })
   } catch (e) {
-    if (e instanceof BoardRefusal) return res.status(400).json({ ok: false, error: e.message, item: e.item, detail: e.detail })
+    if (e instanceof BoardRefusal) return res.status(e.status).json({ ok: false, error: e.message, item: e.item, detail: e.detail })
     return res.status(400).json({ ok: false, error: (e as Error).message })
   }
 }
