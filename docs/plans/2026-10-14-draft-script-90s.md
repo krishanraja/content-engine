@@ -1,13 +1,13 @@
 I've been looking at what's really inside the AI everyone's selling us. I'm Krish.
 
-Meta has a new AI helper called Muse. Millions of people have downloaded it, and most of it is free. Here's what bugs me. Meta makes nearly all its money from ads. So why would it give you a free assistant?
+Meta's new AI helper, Muse, wrote to a shop that overcharged someone by thousands of dollars. People say it fills in their forms and books their stuff. That's when it clicked. Muse is a stand-in for you on the internet. And OpenAI, Google, Anthropic and Apple are all building one. So how much of your life will you hand over?
 
-It isn't smarter. A CNN reporter found that ChatGPT and Google's Gemini can do similar jobs. But Muse sits right next to your Instagram, Facebook and WhatsApp.
+To shop for you, a helper needs your email and your bank card. That lives in one of three places. Your phone. The company's computers. Or a locked box that even the company can't open.
 
-Now think about ads. For twenty years, you scrolled, and shops paid to get in front of you. With a helper, you don't scroll. You just ask. Find me a plumber. And it picks one.
+Muse works on Meta's computers. Apple keeps a lot of Siri's work in a locked box. Meta and Google say theirs are coming.
 
-So I think the ad doesn't need your eyes any more. It needs your helper's choice. And Meta owns the helper.
+And the ads? Of course Meta will sell what its helper picks. I think that's a given. The real question is who can see your life.
 
-My prediction. By 30 June 2027, Meta will let businesses pay so that Muse recommends them to you. I'm 70% sure.
+My prediction. By 30 June 2027, OpenAI, Google or Anthropic will have a helper that shops for you. And it'll work in a locked box the company can't open. I'm 55% sure.
 
-The full story is free at makeyourmindup.ai. Tell me in the comments: would you trust a helper that someone else can pay? Make your mind up.
+The full story is free at makeyourmindup.ai. Tell me in the comments: which helper would you trust with your life? Make your mind up.

@@ -1,65 +1,81 @@
-Going by the reviews, people keep telling Meta's new agent to go and do things, and it keeps doing them. That's why Muse went to the top of Apple's App Store in September, above ChatGPT.
+I've been reading the reviews of Meta's new AI helper, Muse, and they're odd. They don't read like app reviews. They read like thank-you notes to an assistant. One reviewer says Muse took on a clothing company that had billed $6,000 for an order of around $1,500 and wrote the escalation letter. On Apple's US store it rates 4.9 out of 5.
 
-Meta launched Muse on 8 September. By 23 September it had been downloaded more than 2.5 million times, according to Sensor Tower figures reported by CNN. On Apple's US store it rates 4.9 out of 5. Launch-week stars flatter every app, so I don't lean on them. I read the reviews instead.
+That's what made it click for me. Muse isn't really an app. It's a stand-in for you on the internet, and Meta isn't the only one building one. So where are they all going? And how much of your life will you have to hand over to get there?
 
-One reviewer says Muse took on a clothing company that had billed $6,000 for an order of around $1,500, tracked the orders, wrote the escalation letter, then found and closed subscriptions the household had forgotten about. Another uses it for job applications "from start to finish" and found cheaper health insurance with it. A self-described ChatGPT loyalist deleted ChatGPT from their phone and MacBook after two weeks. Each of these is one person, and nobody audited them. Still, an odd pattern. People describe jobs that got finished, where a year ago they described answers that sounded good.
+## FIVE COMPANIES, FIVE BETS
 
-Doubters are just as specific, funnily enough. The sharpest review on Apple's store is titled "Permanent Privacy Risk". Its writer connected their email, watched Muse fail to clean up the inbox, and then started worrying that an agent from Meta could read every one-time password email in it. Bank of America's analysts put it more politely, writing that "privacy and trust remain key considerations for broader adoption".
+Read the mission lines side by side and they rhyme. Meta says "personal superintelligence" is the goal, and calls Muse "a first step". OpenAI calls its dots "always-on agents built to handle everything". Google wants "a truly universal assistant". Apple says Siri AI keeps Siri "the world's most private digital assistant". Anthropic talks least about grand plans; its pitch is that you hand Claude a job and it "takes it from there, even after you've closed your laptop".
 
-So the public verdict is split, and in an interesting way. Fans and sceptics agree it works. They disagree about the price.
+Look closer, though, and each is betting on a different slice of you.
 
-## WHAT IS ACTUALLY UNDER THE BONNET
+Meta wants your personal life, your errands and the people you follow on Instagram and WhatsApp, and says Muse is "free for most of what people need". OpenAI wants your work. Its dots each get "their own cloud computer", and they're "rolling out today in ChatGPT to Pro and Business Premium users". Google wants the life that already sits in your Google account, with Gemini Spark on Google AI Pro at $19.99 a month. Anthropic wants to be the careful coworker inside your business tools, and its small-business version asks before anything sends, posts or pays. Apple wants to be the private one, built into the phone in your pocket.
 
-Meta calls Muse a personal AI agent, meaning an AI that does tasks for you rather than just chatting. Each one runs on its own computer in Meta's cloud, which Meta calls Muse Secure VM. It can open a browser, fill out forms and negotiate on your behalf. It keeps working after you close the app, and it checks with you before it sends an email or makes a purchase. You talk to it in its own app or straight from WhatsApp. Its brain is Muse Spark (Meta's own model).
+Different slices, same prize. Whoever sits between you and your digital life gets to remember for you and buy for you. Today you visit the internet. They'd like to visit it on your behalf.
 
-Now the honest part. Very little of that is unique. CNN's reviewer found that ChatGPT and Gemini "can handle similar tasks and sometimes provided more detailed responses", and Muse suggested two date-night spots that had closed years ago. On Lenny's How I AI, Claire watched it fail to buy a pair of New Balance 9060s in the right colour. Browser shopping is still flaky for every agent, Muse included.
+## WHAT PEOPLE ACTUALLY FIND
 
-So the brain isn't the moat. Craft helps. How I AI noticed Muse never showed a terminal or asked for permission at an awkward moment, and Meta calls it "free for most of what people need".
+Here's my read of the public verdict, from reviews, Reddit threads and hands-on videos (the ratings cover each whole app, not just its agent):
 
-What matters more, and I think it's the one thing ChatGPT can't copy, is where Muse sits. Meta's own launch example has it turning a recipe reel you saved on Instagram into a grocery list, then remembering your friends' dietary needs before it sends the dinner invites. On 29 September Meta added Muse for Small Business, which links to Meta ad accounts and professional Instagram and Facebook profiles, alongside tools like Slack and Canva. Its agent can act on what it finds in those apps. An outside agent would have to ask for that access piece by piece. This edge comes from proximity, and intelligence has little to do with it.
+| Assistant | Where people say it shines | Where it slips | App Store rating |
+|---|---|---|---|
+| Meta Muse | Errands, forms, Marketplace alerts | Trust in Meta, made-up details | 4.9 |
+| OpenAI dots | Hard work tasks | Silent or slow on some jobs | 4.8 (ChatGPT) |
+| Google Spark | Gmail, family planning | Asks to approve every small step | 4.7 (Gemini) |
+| Anthropic Claude | Documents, business tools | Thin evidence for home life | 4.7 (Claude) |
+| Apple Siri AI | Finding old things on your phone | Slow basics, invented details | 3.4 (Siri listing) |
 
-## THE BARGAIN PEOPLE ARE WEIGHING
+CNN's reviewer found ChatGPT and Gemini "can handle similar tasks and sometimes provided more detailed responses" than Muse, which also suggested two date-night spots that had closed years ago. So the brains are roughly level, and they all still slip. That matters a lot more once the thing can spend your money.
 
-Every account you connect makes Muse more useful, and it makes the bet bigger. Both rise together. That's the trade.
+## WHAT YOU HAND OVER
 
-Meta says Muse doesn't share your conversations or the data on its computer with Meta's ad systems. It also says people "can opt out of their interactions being used to train Meta's AI models". Its help page adds that this setting "is on when you first use Muse". I'd bet most people never find it.
+To run your errands, an assistant needs your inbox and usually a card. That has to live somewhere, and there are really only three places.
 
-Then there was the Mac flaw. On 21 September the security researcher Patrick Wardle showed that malware already running on a Mac could redirect Muse's dictation and abuse whatever access the user had given the app. A day later, Wardle said Meta had hot-fixed it. The attack needed the ability to run code on the Mac already. Apps like this, he told The Register, "basically could do anything on your computer" once you set them up to be useful.
+The first is your own phone. Apple keeps a lot of Siri AI there, and when a job needs more muscle it uses what it calls Private Cloud Compute, where Apple says your data is "not stored nor made accessible to Apple or anyone else".
 
-Meta has also promised Muse Confidential VM "later this year", with everything encrypted by a key only you hold, "so not even Meta can access it". Jules Polonetsky, a privacy specialist who tested Muse with accounts kept for testing, called handing over all your accounts "a leap of faith". He wants that protection for all users, "not just the paid tier".
+The second is the company's cloud. Meta says Muse "runs on its own dedicated computer in the cloud", and OpenAI says "each dot works on its own cloud computer". Meta's own safety page says today's Muse design "does not prevent Meta from accessing data when necessary to support, secure or operate the service".
 
-## WHAT AN AD COMPANY DOES WITH THIS
+The third is a locked box in the cloud that the company says it can't open. Apple says its Private Cloud Compute works that way. Meta has promised Muse Confidential VM "later this year", encrypted "with a key only they hold, so not even Meta can access it". Google said on 23 September that it "will" bring private memory to its sealed cloud, "inaccessible to anyone else, even Google". Promised. Not shipped.
 
-This is the bigger question, and it sits under every review. Last quarter Meta made $59.36 billion from advertising, out of $60.8 billion in revenue. In my view Meta sells attention, and everything else funds that machine or feeds it.
+The defaults tell you the rest. Meta's setting to use your Muse chats to train its AI "is on when you first use Muse". Spark needs Google's Keep Activity switched on to work at all. Anthropic makes you choose, and keeps your chats for five years if you say yes. Apple doesn't train on your personal data unless you opt in.
 
-Now hand that machine an agent that books your dinner, picks your plumber and buys your trainers. Meta says your Muse conversations stay out of its ad systems, and I take that promise at face value. It covers your data. It says nothing about the suggestions. When Muse picks a restaurant for you, somebody decides how it picks. Who, though?
+## WHAT "PRIVATE" WOULD ACTUALLY TAKE
 
-On Facebook, a business pays to be seen. Inside Muse, a business could pay to be chosen, and those are very different things. You scroll past an ad. A choice your agent made, you probably accept, because the whole point of an agent is that you stopped checking.
+This is the part I think nobody's selling yet. Locking up the brain isn't enough for an assistant that acts. The thinking has to be sealed, the browsing has to be sealed, and your passwords and cards have to be usable without anyone seeing them. Even then, the shop it buys from still sees the order. As I see it, nobody has sealed all three yet for an assistant that books and buys for you on the web.
 
-Meta already has the sellers. It says 200 million small businesses are on Facebook, and Muse for Small Business links to their Meta ad accounts. Buyers, meanwhile, are downloading Muse by the million. My read is that Meta has built both sides of a market, and the one thing missing is a price for a recommendation.
+## AND YES, THE ADS
 
-## WHAT IT MEANS FOR YOU
+Meta made $59.36 billion from advertising last quarter, out of $60.8 billion in revenue. So of course it'll find a way to sell what Muse suggests, and I'd assume the same of every free assistant. Meta says your Muse conversations stay out of its ad systems, and I take that at face value. It's a promise about your data, though, not about who gets picked. That's the given. The open question is who can see your life while the choosing happens.
 
-If you use it, give Muse the jobs where a mistake is small and easy to undo, like chasing a refund or sorting a calendar. Keep its approvals on for anything that sends money or messages, or deletes things. Turn off AI training in the settings, and connect only what the job in front of you needs. That's my read, and the bet stays yours. Meta's own app store listing says Muse "may be inaccurate or take unexpected actions".
+## WHICH ONE FITS YOU
 
-## WHAT IT MEANS IF YOU'RE BUILDING A BUSINESS
+If your life runs on Instagram and WhatsApp and you want the most done for free, Muse is the obvious pick. Just switch the training setting off.
 
-If you sell to the public, the old question was how to rank on Google. Now it's how an agent picks you (and soon, I suspect, what that costs).
+If you live in Gmail and Google Calendar, Spark is built for you, and it asks before spending money or sending emails.
 
-If you're building an agent yourself, I think the lesson is that Muse's brain isn't its edge. Ask what your product knows about its users that nobody else can see. If the honest answer is nothing, a bigger company can copy you with one release.
+For work, like the email you keep putting off, Claude Pro ($20 if billed monthly) asks first.
+
+If privacy is the deal-breaker, I'd say Siri AI does less, but keeps more to itself.
+
+And if you want the heaviest lifting, there's OpenAI's dots on Pro, though they're only for adults "outside the European Economic Area, United Kingdom, and Switzerland". Not us in Britain. Not yet.
+
+Whichever you pick, I'd start with small jobs you can undo.
+
+## IF YOU'RE BUILDING A BUSINESS
+
+When customers stop visiting and start asking, you're selling to their assistant. Meta says 200 million small businesses are on Facebook. My bet is the ones an agent can book without help get picked more often.
 
 ## HOW THE OLD WAY IS CHANGING
 
-For twenty years software waited for you. You searched, it answered, you did the work. Muse keeps working after you close the app and comes back when something changes. I think the contest is shifting from who has the best answer to who already holds the most of your life, and on your social life that's Meta.
+The way I see it, for twenty years you searched and clicked, and companies paid for your attention along the way. The new deal is that you ask and something does it. The price is access, and the fight is over who holds the key.
 
 ## MY PREDICTION
 
-Meta putting ads somewhere in Muse is close to certain, because ads are the business. My call is sharper than that. Meta will sell the choice itself.
+Apple says Siri AI's models "run on device and on servers using Private Cloud Compute". Meta has promised one for Muse. Google says one's coming. What's missing is an assistant from the other big names that books and buys for you inside a box nobody else can see into.
 
-By 30 June 2027, Meta will let businesses pay to be the shop, restaurant or service that Muse recommends to you.
+By 30 June 2027, OpenAI, Google or Anthropic will let an AI assistant do jobs for you, like booking and buying, inside a locked box that the company says even it can't open.
 
-How sure we are: 70%.
+How sure we are: 55%.
 
-What holds the number down is the date. Paid picks need trust first, and selling them too early would scare off the millions Meta just won. You can check it that day on Meta's own pages for Muse and for advertisers.
+Google is the likeliest, which is why it's not lower. It isn't higher because a locked box makes an assistant harder to train and earn from. Check it that day on their own announcement pages.
 
-The smartest agent was never going to win this round. The one already sitting inside your life was, and it belongs to a company that sells ads.
+Five companies want to run your errands. The one that can do it without seeing your life is the one I'd trust with mine.

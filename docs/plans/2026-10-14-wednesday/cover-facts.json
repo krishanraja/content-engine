@@ -1,24 +1,24 @@
 {
  "subchannel": "under.the.hood",
- "title": "Millions handed Meta's Muse their chores. What does an ad company do with an agent that runs your life?",
- "headline": "Millions handed Meta's Muse their chores. What does an ad company do with an agent that runs your life?",
+ "title": "Every AI company wants to run your life. What will each one ask you to hand over?",
+ "headline": "Every AI company wants to run your life. What will each one ask you to hand over?",
  "date": "2026-10-14",
  "cover": {
   "headline": [
-   "Muse runs your life.",
-   "Meta sells ads."
+   "AI wants your life.",
+   "What do you give up?"
   ],
   "rows": [
    {
-    "logo": "logos/muse-cream.svg",
-    "name": "Muse",
-    "tag": "Runs it",
+    "logo": "logos/meta-cream.svg",
+    "name": "Meta",
+    "tag": "Your life",
     "colour": "lilac"
    },
    {
-    "logo": "logos/meta-cream.svg",
-    "name": "Meta",
-    "tag": "Sells ads",
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "OpenAI",
+    "tag": "Your work",
     "colour": "butter"
    }
   ],
@@ -27,16 +27,16 @@
  "thumbs": {
   "strip": [
    {
-    "logo": "logos/openai-symbol-cream.svg",
-    "name": "ChatGPT"
+    "logo": "logos/google-cream.svg",
+    "name": "Google"
    },
    {
-    "logo": "logos/instagram-cream.svg",
-    "name": "Instagram"
+    "logo": "logos/anthropic-symbol-cream.svg",
+    "name": "Anthropic"
    },
    {
-    "logo": "logos/whatsapp-cream.svg",
-    "name": "WhatsApp"
+    "logo": "logos/apple-cream.svg",
+    "name": "Apple"
    }
   ]
  }

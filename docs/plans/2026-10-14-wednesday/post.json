@@ -2,8 +2,8 @@
  "piece_id": "7554ed4a-560b-4365-b266-ea72abeed7ef",
  "date": "2026-10-14",
  "subchannel": "under.the.hood",
- "subject": "What an ad company does with Muse",
- "headline": "Millions handed Meta's Muse their chores. What does an ad company do with an agent that runs your life?",
+ "subject": "What AI helpers will ask you to hand over",
+ "headline": "Every AI company wants to run your life. What will each one ask you to hand over?",
  "links": {},
  "files": [
   {
@@ -13,57 +13,62 @@
    "logos": [
     "Muse"
    ],
-   "purpose": "The reviews read like thank-you notes to an assistant. One person says a shop charged them $6,000 for clothes that cost about $1,500, and Muse wrote to the shop to get the money back."
+   "purpose": "One person says a shop charged them $6,000 for clothes that cost about $1,500. Muse wrote to the shop to get the money back."
   },
   {
    "kind": "image",
-   "file": "pics/ad-money.png",
-   "name": "4-where-meta-makes-its-money.png",
+   "file": "pics/five-bets.png",
+   "name": "2-five-bets.png",
    "logos": [
-    "Meta"
+    "Meta",
+    "OpenAI",
+    "Google",
+    "Anthropic",
+    "Apple"
    ],
-   "purpose": "Last quarter Meta made about 60 billion dollars, and nearly every dollar came from ads. What's in it for them?"
+   "purpose": "Each one is betting on a different part of you. Meta wants your personal life, OpenAI wants your work, Google wants the life in your Gmail, Anthropic the careful helper at work, Apple the private one."
   },
   {
    "kind": "image",
    "file": "pics/same-jobs.png",
-   "name": "2-similar-jobs.png",
+   "name": "3-how-good-are-they.png",
    "logos": [
     "OpenAI",
     "Google",
     "Muse"
    ],
-   "purpose": "A CNN reporter found that ChatGPT and Google's Gemini can do similar jobs."
+   "purpose": "How good are they? A CNN reporter found that ChatGPT and Google's Gemini can do similar jobs to Muse."
   },
   {
    "kind": "image",
-   "file": "pics/closer.png",
-   "name": "3-closer-not-cleverer.png",
+   "file": "pics/three-places.png",
+   "name": "4-three-places.png",
    "logos": [
-    "Instagram",
+    "Apple",
     "Meta",
-    "WhatsApp"
+    "Google"
    ],
-   "purpose": "Meta owns Instagram, Facebook and WhatsApp. Muse can turn a recipe video you saved on Instagram into a shopping list."
+   "purpose": "Your own phone. The company's computers. Or a locked box on the company's computers that even the company can't open."
   },
   {
    "kind": "image",
-   "file": "pics/pay-to-be-picked.png",
-   "name": "5-pay-to-be-picked.png",
+   "file": "pics/ad-money.png",
+   "name": "5-the-ads.png",
    "logos": [
-    "Meta",
-    "Muse"
+    "Meta"
    ],
-   "purpose": "With a helper you don't scroll, you just ask, and it picks one for you. The ad needs your helper's choice. Whoever owns the helper owns the choice."
+   "purpose": "And the ads? Meta makes nearly all its money from ads. Of course it'll sell what its helper suggests."
   },
   {
    "kind": "image",
    "file": "pics/prediction.png",
    "name": "6-my-prediction.png",
    "logos": [
-    "Muse"
+    "OpenAI",
+    "Google",
+    "Anthropic"
    ],
-   "purpose": "My prediction: by 30 June 2027 Meta will let businesses pay so that Muse recommends them to you. 70%."
+   "purpose": "My prediction: by 30 June 2027 OpenAI, Google or Anthropic will have a helper that shops for you, in a locked box the company can't open. 55%."
   },
   {
    "kind": "video-script",
