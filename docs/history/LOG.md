@@ -7,6 +7,7 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-10-13
 
+- reconciled at `ce0b205`: NOW.md takes the day's 65 commits (`manual` as Krish's own words, honest sources, the one board closer and its applied migrations, the rejected-lines ledger and voice and AI-scan gates, Wednesday and Friday re-angled, the story intro fit check and `video_card.py`). The three unapplied migrations are named as waiting on Krish. No bullet was old enough to roll and no document moved. STATE, SYSTEM_MAP, GLOSSARY, NORTH_STAR, STUDIO, CONTENT_ENGINE and README keep their stamps, because their bodies were not checked against this window; NOW.md names them under Do not trust.
 - reconciled at `1e2b053`: NOW.md takes the 12 October work (midday GitHub video run and music bed, Teleprompter replacing Descript with the hard reading gate, five covers per post, the board's readiness rule and its four unapplied migrations, ARTICLE_LENGTH and SHARP_PREDICTION). No bullet was old enough to roll. Stamps on STATE, SYSTEM_MAP, GLOSSARY, NORTH_STAR and STUDIO were not bumped because their bodies were not checked against the window; NOW.md names them under Do not trust.
 
 ## 2026-10-11
