@@ -118,8 +118,8 @@ copies each channel tick onto the piece the board names for that day,
 published or not, at its start and again before it stops (`making.py
 <piece> posted <channel> [url]`; `.agents/skills/make-piece/SKILL.md`, "The
 week's ticks"), reading last week's board too until every day on it is at
-100%; and from the record the engine closes the board items and Control
-Center shows it. An untick never removes a record. A Record tick is
+100%; and from the record Control Center's done-check sweep closes the
+board items and Control Center shows it. An untick never removes a record. A Record tick is
 information only: Record is done from the takes on the record.
 
 **Every board item says how it ends; record the fact and the check closes
@@ -132,10 +132,14 @@ piece's step or `published`, the week's `week_planned` or
 `week_published`, `share_image_changed`, `job_ok`, `post_matched`,
 `take_placed`, `session` for work you hold, or `his_word` when nothing
 can see it done (only Krish puts one of those on his list). Close only items
-you hold (`closes_on` `session`), and the week's publish board by hand
-until the sweep is live (`make-piece`, step 7). A close or reopen you relay from his words carries
-his exact words in `said`. The rules and every refusal are in
-`WORKBENCH.md`, "The board".
+you hold (`closes_on` `session`); the engine and the database refuse any
+other close from a session (`check_closes_it`). A close or reopen you relay
+from his words carries his exact words in `said`. Nothing in this
+repository closes a board item but the board route, which takes a close
+only from the sweep, Krish, or a session on its own work: a new kind of
+close is a new check in Control Center's `api/_doneChecks.ts`, never a
+closer here (`scripts/check-one-close.ts`). The rules and every refusal are
+in `WORKBENCH.md`, "The board".
 
 **Video production goes through `.agents/skills/produce-video`, and licensed
 music lives only at `MINDMAKE_MUSIC_ROOT` with its ledger

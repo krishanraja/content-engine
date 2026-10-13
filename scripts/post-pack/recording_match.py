@@ -89,13 +89,11 @@ making.board_upsert): id take-<first 12 of its sha256>, closes_on
 "take_placed", in progress for a session and never on Krish's list, because
 nothing he can press answers it: a session works it out, or asks him in its
 reply. Tied to a piece (the take is known to be one of its takes), it
-carries the piece's idea_id and also closes when that piece's Record step is
-done (_boardClose.ts). The lane ends it once the take is placed (done)
-or no waiting piece can be it (archived; making.board_close), and the
-engine's hourly pass once no session has touched it for a week
-(_boardClose.ts, HELD_DAYS); step 4's done-check sweep takes both over.
-It
-reads the board first and never reopens an item: one done there (Krish
+carries the piece's idea_id. The lane closes nothing: Control Center's
+done-check sweep ends it once the take is on a piece, and lets it go when
+the lane notes that no waiting piece can be it ("close_ref": {"no_piece":
+true}; making.board_note) or once no session has touched it for a week.
+It reads the board first and never reopens an item: one done there (Krish
 answered, or a session closed it) is left alone, on either machine. Each
 take is asked about once for each question, its status, piece and whether
 it is about older words, never again because a score or the closest piece
@@ -952,9 +950,9 @@ def board_item(answer, pieces):
     never on Krish's list (WORKBENCH.md, "The board"): nothing he can press
     answers which take it is, so a session works it out, or asks him in its
     reply. Tied to a piece (the take is known to be one of its takes, or is
-    one of two close pieces'), it names the piece and also closes when that
-    piece's Record step is done (_boardClose.ts). It ends when the take is
-    placed (closes_on take_placed): the lane closes it (ask_on_board)."""
+    one of two close pieces'), it names the piece. It ends when the take is
+    placed (closes_on take_placed): Control Center's done-check sweep sees
+    the take on a piece and closes it."""
     by_id = {p['id']: p for p in pieces}
     sha, name = answer['sha256'], answer['name']
     shown = name if len(name) <= 80 else name[:77] + '...'
@@ -1022,13 +1020,13 @@ def ask_on_board(answers, pieces, call, by, cache, out, now=None):
     either machine. A take left alone as "old" is not booked: the recordings
     upload looks at it again later, as a piece may start waiting for it.
 
-    It also ends the items it asked once their question is gone: done once
-    the take is placed, archived once no waiting piece can be it ("old")
-    (making.board_close). An item tied to a piece also closes on its Record
-    step (_boardClose.ts), and one no session touches for a week is let go by the engine's
-    hourly pass (_boardClose.ts, HELD_DAYS). Returns (asked, closed,
-    failed): the item ids written, the ones closed, and whether the board
-    refused or could not be reached."""
+    It closes nothing. Once a question is gone it says so: a take placed
+    needs no word (Control Center's done-check sweep sees it on its piece and
+    closes the item), and a take no waiting piece can be any more ("old")
+    is noted on its item ("close_ref": {"no_piece": true}; making.board_note),
+    so the sweep lets it go. One no session touches for a week is let go by
+    the same sweep. Returns (asked, noted, failed): the item ids written, the
+    ones noted, and whether the board refused or could not be reached."""
     stamp = now or datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
     book = load_answered(cache)
     before = dict(book)
@@ -1074,23 +1072,25 @@ def ask_on_board(answers, pieces, call, by, cache, out, now=None):
             out(f'held on the board for a session: {item_id}, {next(i["title"] for i in items if i["id"] == item_id)}')
         else:
             out(f'not asked again: {item_id} is closed on the board (answered, or closed by a session)')
-    closed = []
+    noted = []
     if ending:
-        why = {'placed': 'its take is placed', 'old': 'no waiting piece can be it'}
+        old = {item_id: {'close_ref': {'no_piece': True}} for item_id, (_, end) in ending.items() if end == 'old'}
         try:
-            closed = making.board_close({item_id: 'done' if end == 'placed' else 'archived' for item_id, (_, end) in ending.items()}, call, by)
+            noted = making.board_note(old, call, by)
         except making.MakingError as error:
             failed = True
-            out(f'failed: {error}; closed on the next run')
+            out(f'failed: {error}; noted on the next run')
         else:
-            # Closed now, or already closed on the board: either way it is ended.
+            # Noted now, placed, or already closed on the board: either way its question is gone.
             for item_id, (sha, end) in ending.items():
                 book.pop(sha, None)
-                if item_id in closed:
-                    out(f'closed on the board: {item_id}, {why[end]}')
+                if end == 'placed':
+                    out(f'placed: {item_id} closes itself once the check sees the take on its piece')
+                elif item_id in noted:
+                    out(f'noted on the board: {item_id}, no waiting piece can be it, so the check lets it go')
     if book != before:
         save_answered(cache, book)
-    return asked, closed, failed
+    return asked, noted, failed
 
 
 def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head, probe=probe_seconds,
@@ -1103,7 +1103,7 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
     named = {i['sha256']: i for i in listed if i.get('sha256')}
     items = fresh(listed, claimed)
     overrides = parse_overrides(opts.get('words'), [i for i in items if i.get('sha256')])
-    report = {'week_start': monday.isoformat(), 'waiting': [], 'files': [], 'recorded': [], 'asked': [], 'closed': []}
+    report = {'week_start': monday.isoformat(), 'waiting': [], 'files': [], 'recorded': [], 'asked': [], 'noted': []}
     scripts = {}
     for piece in pieces:
         scripts[piece['id']] = scripts_for(piece, plans, roots)
@@ -1206,7 +1206,7 @@ def run(opts, call, list_items, get_file=local_copy, transcribe=transcribe_head,
             out(f'to record it: {command_for(answer, by)}')
     board_failed = False
     if opts.get('board'):
-        report['asked'], report['closed'], board_failed = ask_on_board(answers, pieces, call, by, cache, out)
+        report['asked'], report['noted'], board_failed = ask_on_board(answers, pieces, call, by, cache, out)
     if board_failed or any(a['status'] == 'failed' for a in answers):
         code = 1
     elif any(a['status'] == 'unsure' for a in answers):
@@ -1660,7 +1660,7 @@ def self_test():
         tied_item = board_item({**lost, 'piece_id': MON}, [{'id': MON}, {'id': FRI}])
         making.board_upsert([tied_item], fake, 'Codex')
         sent_tied = board_posts[-1]['items'][0]
-        check('board: tied to a piece later, the held item names its piece, so it closes on Record, and stays off his list',
+        check('board: tied to a piece later, the held item names its piece, so the check can close it, and stays off his list',
               (sent_tied.get('lane'), sent_tied.get('only_you'), sent_tied.get('idea_id'), board_lanes[held_item['id']]),
               (None, None, MON, 'in_progress'))
         # One the old lane put on him is moved off his list when it is asked again.
@@ -1670,11 +1670,11 @@ def self_test():
               (board_posts[-1]['items'][0].get('lane'), board_lanes[held_item['id']]), ('in_progress', 'in_progress'))
         board_posts.clear()
 
-        # The lane ends the questions it asked once they are gone: done once
-        # the take is placed, archived once no waiting piece can be it. One
-        # Krish or a session closed keeps its close, and one still unsure is
-        # left (a tied one closes on Record; the engine lets an untouched one
-        # go after a week).
+        # The lane closes nothing. Once a question is gone it says so: a
+        # placed take needs no word (the done-check sweep sees it on its
+        # piece), and one no waiting piece can be is noted, so the sweep lets
+        # it go. One Krish or a session closed is left, and one still unsure
+        # is left too.
         ends = tmp / 'ends-cache'
         shas = {k: hashlib.sha256(k.encode()).hexdigest() for k in ('placed', 'gone', 'waiting', 'closed')}
         save_answered(ends, {sha: {'status': 'unsure', 'reason': 'x', 'name': f'{k}.mp4', 'item': f'take-{sha[:12]}',
@@ -1685,21 +1685,21 @@ def self_test():
                  {'sha256': shas['closed'], 'name': 'closed.mp4', 'status': 'old'}]
         lines.clear()
         board_posts.clear()
-        asked, closed, failed = ask_on_board(heard, [{'id': MON}], fake, 'Recordings lane', ends, lines.append, now='2026-10-12T09:00:00Z')
+        asked, noted, failed = ask_on_board(heard, [{'id': MON}], fake, 'Recordings lane', ends, lines.append, now='2026-10-12T09:00:00Z')
         item_of = lambda k: f'take-{shas[k][:12]}'
-        check('ask_on_board: placed is done, old is archived; one still unsure and one Krish or a session closed are left',
-              (sorted(closed), [board_lanes[item_of(k)] for k in ('placed', 'gone', 'waiting', 'closed')], failed,
-               sorted((i['id'], i['lane']) for i in board_posts[-1]['items']), board_posts[-1]['client']),
-              (sorted([item_of('placed'), item_of('gone')]), ['done', 'archived', 'in_progress', 'done'], False,
-               sorted([(item_of('placed'), 'done'), (item_of('gone'), 'archived')]), 'runner'))
+        check('ask_on_board: an old take is noted, never closed; a placed one, one still unsure and one Krish or a session closed get nothing',
+              (noted, [board_lanes[item_of(k)] for k in ('placed', 'gone', 'waiting', 'closed')], failed,
+               [(i['id'], i.get('lane'), i.get('close_ref')) for i in board_posts[-1]['items']], len(board_posts), board_posts[-1]['client']),
+              ([item_of('gone')], ['in_progress', 'in_progress', 'in_progress', 'done'], False,
+               [(item_of('gone'), None, {'no_piece': True})], 1, 'runner'))
         book = load_answered(ends)
         check('ask_on_board: the ended takes leave the book, so the upload looks at an old one again later; the one still unsure stays',
               sorted(k for k, sha in shas.items() if sha in book), ['waiting'])
-        check('ask_on_board: each close says why', sorted(line.split(', ', 1)[1] for line in lines if line.startswith('closed on the board')),
-              ['its take is placed', 'no waiting piece can be it'])
+        check('ask_on_board: each ending says why', sorted(line.split(': ', 1)[0] for line in lines if line.startswith(('placed:', 'noted on the board:'))),
+              ['noted on the board', 'placed'])
         board_posts.clear()
         ask_on_board(heard, [{'id': MON}], fake, 'Recordings lane', ends, lines.append, now='2026-10-12T10:00:00Z')
-        check('ask_on_board: a question ended is not closed again', board_posts, [])
+        check('ask_on_board: a question ended is not noted again', board_posts, [])
 
         # Nothing waiting.
         lines.clear()

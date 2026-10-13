@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardEngine } from './_auth.js'
-import { itemPiece, itemsToClose, type PieceRow } from './_boardClose.js'
-import { operatorAttribution } from './_editEvents.js'
+import { AGENT_CLIENTS, operatorAttribution } from './_editEvents.js'
+import { pieceVerdict, type PieceState } from './_making.js'
 import { supabase } from './_supabase.js'
 
 // The work board: what is waiting on Krish, what is in progress, what is done.
@@ -54,6 +54,15 @@ import { supabase } from './_supabase.js'
 // recorded as "check: <kind>". A session relaying Krish's close carries his
 // exact words (said), which are kept on the row. An item whose step the
 // engine can already see done is refused (409 already_done): nothing waits.
+//
+// Only the check, Krish, or a session on its own work closes an item. An
+// agent that is not relaying him may move an open item to done or archived
+// only when it closes_on session (409 check_closes_it), and may not reopen an
+// item a check closed (409 check_closed_it) unless it relays his words. Every
+// open item says how it ends (400 open_needs_closes_on). The database holds
+// the same rules (20261023090000_one_closer.sql: the open-item CHECK and the
+// only_a_check_or_krish_closes trigger), and nothing else in the engine
+// writes a close (scripts/check-one-close.ts).
 
 export const LANES = ['on_you', 'in_progress', 'done', 'archived'] as const
 type Lane = typeof LANES[number]
@@ -77,7 +86,7 @@ export interface BoardItemInput {
   link_label?: string | null
   /** Retired with replies: only null, which clears an old one. */
   prompt?: null
-  /** The piece this item is about; it then closes when the piece moves on (_boardClose.ts). */
+  /** The piece this item is about; the done-check sweep reads its steps. */
   idea_id?: string | null
   /** How it ends: one of CLOSE_KINDS. */
   closes_on?: string | null
@@ -390,20 +399,42 @@ async function alreadyDone(rows: Array<Json & { id: string }>, existing: Map<str
     const merged = { ...(before || {}), ...row } as Json
     const touches = !before || 'lane' in row || 'closes_on' in row || 'idea_id' in row
     const kind = String(merged.closes_on ?? '')
-    if (!touches || !OPEN_LANES.has(String(merged.lane)) || !PIECE_KIND_SET.has(kind)) return null
-    const item = { id: row.id, lane: String(merged.lane), idea_id: (merged.idea_id as string | null) ?? null, closes_on: kind, link: (merged.link as string | null) ?? null }
-    const piece = itemPiece(item)
-    return piece ? { item, piece } : null
+    const piece = typeof merged.idea_id === 'string' ? merged.idea_id : null
+    if (!touches || !OPEN_LANES.has(String(merged.lane)) || !PIECE_KIND_SET.has(kind) || !piece) return null
+    return { id: row.id, kind, piece }
   }).filter((x): x is NonNullable<typeof x> => Boolean(x))
   if (!asked.length) return null
   const read = await supabase.from('content_ideas').select('id,state,buried_at,meta').in('id', [...new Set(asked.map(a => a.piece))])
   if (read.error) return null
-  const pieces = new Map(((read.data || []) as PieceRow[]).map(p => [p.id, p]))
+  const pieces = new Map(((read.data || []) as PieceState[]).map(p => [p.id, p]))
   for (const a of asked) {
     const piece = pieces.get(a.piece)
-    if (piece && itemsToClose([a.item], piece).some(c => c.lane === 'done')) return a.item.id
+    if (piece && pieceVerdict(piece, a.kind) === 'done') return a.id
   }
   return null
+}
+
+/** Why this writer may not move this open item to done or archived, or null.
+ *  The check closes what it can see, Krish closes anything, and a session
+ *  closes only its own work (closes_on session). Cookie jobs other than the
+ *  sweep close nothing. */
+export function closeRefusal(row: Json & { id: string }, before: BoardItemRow | undefined, who: string, closer: string): BoardRefusal | null {
+  if (!before || !OPEN_LANES.has(before.lane) || row.lane === undefined || !CLOSED_LANES.has(String(row.lane))) return null
+  if (closer === 'Krish' || who === DONE_CHECK) return null
+  if (before.closes_on === 'session' && AGENT_CLIENTS.has(closer)) return null
+  const kind = before.closes_on || 'none'
+  return new BoardRefusal('check_closes_it', `This item closes on ${kind}, so the done-check sweep closes it when it can see it done, or Krish clears it. `
+    + 'Record the fact (making.py, the job, the post) and leave the item. A session closes only its own work (closes_on session); '
+    + 'to relay a close Krish made, send decided_by "Krish" and his exact words in "said".', row.id, 409)
+}
+
+/** Why this writer may not reopen an item a check closed, or null. Only
+ *  Krish reopens a check's close: his Undo, or his words relayed. */
+export function reopenRefusal(row: Json & { id: string }, before: BoardItemRow | undefined, ctx: WriteContext): BoardRefusal | null {
+  if (!before || !CLOSED_LANES.has(before.lane) || !String(before.closed_by || '').startsWith('check: ')) return null
+  if (row.lane === undefined || CLOSED_LANES.has(String(row.lane))) return null
+  if (ctx.krish || (ctx.relayed && ctx.said)) return null
+  return new BoardRefusal('check_closed_it', 'A check closed this item with its proof. Only Krish reopens it: his Undo on the Board, or his exact words relayed with decided_by "Krish" and "said".', row.id, 409)
 }
 
 async function read(res: VercelResponse) {
@@ -487,10 +518,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const closer = operator ? operator.actor : who
       for (const row of rows) {
         const before = existing.get(row.id)
-        const isNew = !before
         const lane = row.lane ?? before?.lane
-        // An agent's new open item says how it ends.
-        if (ctx.agent && isNew && OPEN_LANES.has(String(lane)) && !row.closes_on) {
+        // Every open item says how it ends, new or edited, whoever writes it.
+        if (OPEN_LANES.has(String(lane)) && !('closes_on' in row ? row.closes_on : before?.closes_on)) {
           throw new BoardRefusal('open_needs_closes_on', 'Say how it ends: a check kind, or session if you will close it yourself.', row.id)
         }
         const closedBy = closedByAfter(before, row.lane, closer)
@@ -498,6 +528,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (ctx.relayed && closedBy !== undefined && !ctx.said) {
           throw new BoardRefusal('relayed_close_needs_his_words', `A close or reopen relayed from Krish carries his exact words in "said" (${SAID_MIN} to ${SAID_MAX} characters). They are kept on the item (closed_proof); on a close he sees them there and can Undo it.`, row.id)
         }
+        // Only the check, Krish, or a session on its own work closes an item; only Krish reopens a check's close.
+        const refused = closeRefusal(row, before, who, closer) ?? reopenRefusal(row, before, ctx)
+        if (refused) throw refused
       }
       // A piece's step the engine can already see done: nothing waits on anyone.
       const done = await alreadyDone(rows, existing, closer)

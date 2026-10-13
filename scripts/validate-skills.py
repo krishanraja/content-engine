@@ -54,6 +54,49 @@ def description_problems(skill: Path) -> list[str]:
     return problems
 
 
+# The skills that write board items. Every item one of them writes says how
+# it ends, and none closes one: Control Center's done-check sweep does (step
+# 4; Krish, 2026-10-11: "I am happy to Clear(complete)/Bump/Purge things off
+# my lists as I go but the rest should be automatically done").
+BOARD_SKILLS = ("make-piece", "plan-week", "produce-video")
+CLOSING_LANE = re.compile(r'"lane"\s*:\s*"(done|archived)"')
+
+
+def board_items_in(text: str) -> list[str]:
+    """Each JSON object in the text that opens with an "id" and holds a
+    "lane": a board item the skill tells a session to write."""
+    items = []
+    for start in [m.start() for m in re.finditer(r'\{\s*"id"\s*:', text)]:
+        depth, end = 0, None
+        for at in range(start, min(len(text), start + 4000)):
+            depth += {"{": 1, "}": -1}.get(text[at], 0)
+            if depth == 0:
+                end = at
+                break
+        body = text[start:end + 1] if end is not None else text[start:start + 4000]
+        if '"lane"' in body:
+            items.append(body)
+    return items
+
+
+def board_item_problems(skill: Path) -> list[str]:
+    """A board skill names closes_on, every item it writes says how it ends,
+    and it never moves an item to done or archived."""
+    if skill.name not in BOARD_SKILLS:
+        return []
+    text = (skill / "SKILL.md").read_text(encoding="utf-8")
+    problems: list[str] = []
+    if "closes_on" not in text:
+        problems.append("writes board items but never says closes_on (WORKBENCH.md, \"The board\")")
+    for item in board_items_in(text):
+        if '"closes_on"' not in item:
+            problems.append(f"a board item it writes does not say how it ends (closes_on): {' '.join(item.split())[:120]}")
+    for m in CLOSING_LANE.finditer(text):
+        problems.append(f"tells a session to close a board item ({m.group(0)}); the done-check sweep closes items, "
+                        "a session closes only its own work (closes_on session)")
+    return problems
+
+
 def local_validate(skill: Path) -> bool:
     source = (skill / "SKILL.md").read_text(encoding="utf-8")
     problems: list[str] = []
@@ -156,7 +199,7 @@ def main() -> int:
             failed = failed or result.returncode != 0
         else:
             failed = failed or not local_validate(skill)
-        for problem in description_problems(skill):
+        for problem in description_problems(skill) + board_item_problems(skill):
             print(f"{skill.name}: {problem}", file=sys.stderr)
             failed = True
     for problem in claude_copy_problems():

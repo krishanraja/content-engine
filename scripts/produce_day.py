@@ -344,9 +344,10 @@ def main():
             return 0
         thumb = thumbs(post_path, work)
         folder = file_and_record(post_path, piece, rendered, thumb, work)
-        board(f'videos-{when.isoformat()}', 'done', f'{when:%A}\'s two videos are made',
-              f'Both cuts, with music, the story intro and outro and their thumbnails, are in 3 Posts/{folder}/3 Video '
-              '(Library Sync puts them in Drive within ten minutes). The publish board picks them up at 1:30 pm.', piece)
+        # Nothing is written on the board: the video step is on the record now, so
+        # Control Center's done-check sweep closes an earlier stop's item by itself
+        # (closes_on video), and a new item about a step already done is refused.
+        log(f'both cuts are in 3 Posts/{folder}/3 Video; the publish board picks them up at 1:30 pm')
         log('done')
         return 0
     except (Stop, engine.NoKey, engine.Unreachable, plan_files.PlanFilesError) as e:

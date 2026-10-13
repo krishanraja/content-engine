@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-13, about 03:30 UTC, by a Claude Code session (cloud); step 4 part A review fixes about 03:30 UTC.
+Last updated: 2026-10-13, about 04:30 UTC, by a Claude Code session (cloud); step 4 part C (one closer) built on its branch.
 
 ## How Krish wants to be worked with
 
@@ -382,8 +382,7 @@ Write every item in plain words: what happened, what it means for him, and what
 you need from him.
 
 **Every item says how it ends. Record the fact; the check closes it. Close
-only items you hold (`closes_on` `session`), and, until the sweep is live,
-the week's publish board (`make-piece`, "The week's ticks", step 7).** Krish, 2026-10-11: "I am
+only items you hold (`closes_on` `session`).** Krish, 2026-10-11: "I am
 happy to Clear(complete)/Bump/Purge things off my lists as I go but the rest
 should be automatically done." Step 4 of his operating system is one
 done-check sweep in Control Center (`api/_doneChecks.ts`) that ends every
@@ -393,9 +392,8 @@ item by its kind. The kinds (`closes_on`), with what each needs:
   `record`, `video`, `publish`) or `published`: the piece's `idea_id`;
 - `week_planned`: the week's planning item alone (`week-<its Monday>`);
 - `week_published`: the week's publish board alone
-  (`week-publish-board-<its Monday>`); the sweep will close it once every
-  picked day is at 100% on the record. Until the sweep is live it is held
-  in progress and `make-piece` step 7 moves it to done by hand;
+  (`week-publish-board-<its Monday>`); the sweep closes it once every
+  picked day is at 100% on the record, so no session moves it to done;
 - `share_image_changed`: `"close_ref": {"url": "<the post>", "was": "<the
   file id of the share image it shows now>"}`;
 - `job_ok`: `"close_ref": {"job": "<the job>", "after": "<a time a clean
@@ -403,14 +401,18 @@ item by its kind. The kinds (`closes_on`), with what each needs:
 - `post_matched` (the watcher's `post-<id>`, with `"close_ref": {"url"}`)
   and `take_placed` (the recordings lane's `take-<sha12>`): machine
   questions, held for a session, never on him;
-- `session`: work you hold; you close it, or it is let go after 7 untouched
-  days;
+- `session`: work you hold; you close it, or the sweep lets it go after 7
+  untouched days;
 - `his_word`: nothing can see it done, so only his Clear ends it, and only
   he puts one on his list (his cookie, his words relayed, or Control
   Center); an agent gets `409 his_word_is_his`.
 
-The engine refuses, by name: a new open item from an agent with no kind
-(`400 open_needs_closes_on`); a kind on an open item without what it needs
+The engine refuses, by name: an open item, new or edited, from anyone, with
+no kind (`400 open_needs_closes_on`); a session closing an item that is not
+its own work, that is anything but `closes_on` `session` (`409
+check_closes_it`: record the fact and leave it); a session reopening an item
+a check closed (`409 check_closed_it`; only Krish does, by his Undo or his
+words relayed); a kind on an open item without what it needs
 (`400 close_ref_invalid`); an item whose piece step it can already see done
 (`409 already_done`: nothing waits); a close or reopen relayed with
 `decided_by: 'Krish'` without his exact words in `"said"` (12 to 287
@@ -421,37 +423,43 @@ item a call (`400 done_check_one_item`): it only closes an open item that
 says how it ends and is not `his_word`, with its proof, recorded as `check:
 <kind>` (`409 done_check_only_closes` otherwise, and when another writer
 closed it first). A database refusal names its
-constraint (`board_write_failed`, `code`, `constraint`). Until the sweep is
-live the engine's own closes still run (`_boardClose.ts`, the watcher, the
-recordings lane).
+constraint (`board_write_failed`, `code`, `constraint`). The database holds
+the same rules: every open item says how it ends
+(`work_board_items_open_says_how_it_ends`), and a trigger
+(`only_a_check_or_krish_closes`) lets only Krish, a check with its proof, or
+a session on its own work move an item to done or archived. Nothing else in
+the engine closes an item (`scripts/check-one-close.ts`, in `npm run
+verify`): the making route, the publish watcher, the recordings lane, the
+purge and the midday run record what happened, and the sweep closes.
 
 **An item about a piece names the piece, so it closes itself** (Krish,
 2026-10-11: items "should really be chalked off automatically when we are
-done with a publish flow"). Give it `"idea_id": "<the piece's uuid>"` and,
-when one step finishes it, `"closes_on"`: a making step (`workroom`,
-`draft`, `visual_gate`, `scripts`, `pack`, `record`, `video`, `publish`) or
-`published`. The engine then moves it to done the moment that step lands on
-the piece's making record, moves every item tied to a piece to done when its
-publish step is done (the standing five ticked: Substack, YouTube, Shorts,
-TikTok and Instagram; Krish, 2026-10-11), and archives them when the piece is
-dropped (`apps/control-plane/api/_boardClose.ts`). The Substack post alone
-closes only the items whose `closes_on` is `published`, so use `published`
+done with a publish flow"). Give it `"idea_id": "<the piece's uuid>"` and
+`"closes_on"`: a making step (`workroom`, `draft`, `visual_gate`, `scripts`,
+`pack`, `record`, `video`, `publish`) or `published`. Control Center's
+done-check sweep closes it once that step is on the piece's making record,
+closes every item tied to a piece once its publish step is done (the
+standing five ticked: Substack, YouTube, Shorts, TikTok and Instagram;
+Krish, 2026-10-11), and lets them go when the piece is dropped, absorbed or
+buried. A making write asks the sweep to look at the piece's items at once
+(`apps/control-plane/api/_controlCenter.ts`), so an item leaves within
+seconds; otherwise the sweep looks every 15 minutes. The Substack post alone
+ends only the items whose `closes_on` is `published`, so use `published`
 only for an item about the Substack post itself; an item about the reposts
 uses `publish`. A piece made before the making record existed (no step a
-session wrote, at most the watcher's Substack tick) still closes everything
-on the Substack post. The
-publish watcher (`/api/publish/watch`, hourly) learns a piece is published
-from the publication's own archive, so Krish never has to say so; a post
-whose title matches no piece becomes one item in progress for a session,
-which closes itself once the post is recorded on its piece (`making.py
-<piece id> posted substack <link>`). A question an engine tool holds for a
-session with no piece to close it (an unmatched post, `post-<id>`, or a take
-with no piece, `take-<sha12>`) that no session touches for a week is let go
-by the watcher's hourly pass (archived, by "engine: no session took it",
-and counted in its `let_go`). A session that hears from Krish
-that something is done, or that is not about a piece, still moves it itself.
-Never leave an `in_progress` item behind you: when you stop, it is done,
-handed on, or back on him.
+session wrote, at most the watcher's Substack tick) still ends everything on
+the Substack post. The publish watcher (`/api/publish/watch`, hourly) learns
+a piece is published from the publication's own archive, so Krish never has
+to say so; a post whose title matches no piece becomes one item in progress
+for a session (`post_matched`), which closes itself once the post is
+recorded on its piece (`making.py <piece id> posted substack <link>`) and
+the watcher matches it. A machine question with no piece to end it (an
+unmatched post, `post-<id>`, or a take with no piece, `take-<sha12>`) that
+no session touches for a week is let go by the sweep. A session that hears
+from Krish that something is done relays his words (`decided_by: 'Krish'`
+and `"said"`); a session closes by itself only its own work. Never leave an
+`in_progress` item behind you: when you stop, it is closed (your own work),
+handed on with a kind that says how it ends, or back on him.
 
 **An item waiting on him is ready for his list, or it is not written**
 (Krish, 2026-10-11: one list, holding only what he alone can do, what is
@@ -466,7 +474,7 @@ all three:
   the draft, the page), with a short `"link_label"` for its button. A typed
   answer is not a link.
 - `"closes_on"` with what its kind needs (above): a piece's step with the
-  piece's `"idea_id"`, so the engine closes it when that step lands; the
+  piece's `"idea_id"`, so the sweep closes it when that step lands; the
   week's planning item (`week-<its Monday>`) with `"week_planned"`, which
   Control Center closes once every day has a piece; the week's publish board
   with `"week_published"`; `"share_image_changed"` or `"job_ok"` with their
@@ -494,10 +502,11 @@ own words ("does not need you", "is not ready for one press", "does not say
 how it closes itself"). The engine's own tools never put a question on him:
 nothing he can press answers which take a recording is, or which piece a
 post is, so the recordings lane and the publish watcher hold those in
-progress for a session, which asks him in its reply. A take tied to its
-piece closes on Record; the lane ends one with no piece once the take is
-placed or no waiting piece can be it; the watcher closes a post's once it
-matches a piece; and either is let go after a week untouched (above).
+progress for a session, which asks him in its reply. The sweep closes a
+take's once the take is on a piece, and lets one go once the lane notes no
+waiting piece can be it (`"close_ref": {"no_piece": true}`); it closes a
+post's once a piece holds the post; and it lets either go after a week
+untouched (above).
 `bumped_until` is written by his Bump; leave it alone.
 
 **An item Krish closed himself stays closed** (his Clear or Purge in Control
@@ -579,6 +588,51 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-13, Tuesday, early: **Step 4, part C: one closer.** Krish,
+  2026-10-11: "I think closing what you can check is already done is one of
+  the most obvious things I've ever heard of as a suggestion", and "this
+  entire session was created to deduplicate and eliminate entropy." On
+  branch `ccr-25d9e81a-step4-one-closer`, built on part A's branch
+  (`ccr-25d9e81a-step4-kinds`), committed; not pushed, not merged, not
+  deployed, the migration not applied, nothing written to the live board.
+  In plain words:
+  - **The engine closes nothing now.** `_boardClose.ts` is gone. A making
+    write asks Control Center's done-check sweep to look at the piece's
+    open items at once (`_controlCenter.ts`, 3 seconds, the shared access
+    cookie; a failed ask leaves it to the 15-minute cron). The publish
+    watcher still marks pieces published and asks the sweep to look, but
+    closes and lets go of nothing. The purge archives no item; it keeps any
+    piece an open item names (`kept_for_board`). The recordings lane notes a
+    take no piece can be (`"close_ref": {"no_piece": true}`) instead of
+    closing it. The midday run writes no item when it succeeds.
+  - **A session closes only its own work.** The board route refuses a
+    session closing anything but `closes_on` `session` (`409
+    check_closes_it`), reopening a check's close (`409 check_closed_it`)
+    unless it relays his words, and any open item, new or edited, with no
+    kind (`400 open_needs_closes_on`). `make-piece` no longer moves the
+    publish board to done; `plan-week` puts next week's publish board on
+    his list as `week_published`.
+  - **The database holds it too**
+    (`supabase/migrations/20261023090000_one_closer.sql`): every open item
+    says how it ends, a trigger lets only Krish, a check with its proof, or
+    a session on its own work close an item, and the stale archive no longer
+    buries a piece in the making. Replayed twice on a scratch Postgres, and
+    against five broken copies (four caught; the fifth was the same rule).
+  - **A guard stops a second closer** (`scripts/check-one-close.ts`, in
+    `npm run verify`): no code closes a board item but the board route, the
+    old closers' names stay gone, and the kinds and the session list match
+    the database. `npm run skills:validate` holds the board skills to it.
+  - **To ship, in this order, and only after Control Center's part B has
+    written two clean sweep runs 15 minutes apart and both backfill steps
+    have run:** merge and deploy this branch; then apply the migration,
+    after checking `select id from work_board_items where lane in
+    ('on_you','in_progress') and (closes_on is null or not
+    public.board_close_ref_ok(closes_on, close_ref, idea_id, id))` returns
+    nothing (on 13 October, 8 in-progress rows had no kind: backfill step
+    1 gives them one). Until part B is live, Control Center's slate still
+    closes the week's item with its own client, which this branch refuses.
+  - **Next:** part B's own readbacks, the backfill steps, then this branch.
 
 - 2026-10-13, Tuesday, early: **Step 4, part A: every board item says how
   it ends, so one check can end it.** Krish, 2026-10-11: "I am happy to

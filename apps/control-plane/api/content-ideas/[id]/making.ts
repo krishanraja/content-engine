@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import { guardEngine, operatorBearerAllowed } from '../../_auth.js'
 import { type Making, makingSteps, mergeMaking, parseMakingPatch } from '../../_making.js'
-import { closeBoardItemsForPiece } from '../../_boardClose.js'
+import { askChecksForPiece } from '../../_controlCenter.js'
 
 // GET  /api/content-ideas/:id/making           where this piece is: the record and its steps
 // POST /api/content-ideas/:id/making  body: a patch (apps/control-plane/api/_making.ts):
@@ -36,6 +36,14 @@ import { closeBoardItemsForPiece } from '../../_boardClose.js'
 // this write, nothing is written and the answer is 409 stale_row, so the
 // caller sends its patch again and it is merged onto the fresh record.
 // making.py retries once by itself.
+//
+// A step that lands closes nothing here. The engine asks Control Center's
+// done-check sweep to look at the piece's open board items now
+// (_controlCenter.ts), and the sweep closes the ones whose step is done.
+// Krish, 2026-10-11: "I am happy to Clear(complete)/Bump/Purge things off my
+// lists as I go but the rest should be automatically done." The answer's
+// `closed` stays empty for one release, for callers that still read it, and
+// `looked` names the items the sweep was asked to look at.
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res, ['GET', 'POST'])) return
@@ -71,7 +79,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
   if (!written?.length) return res.status(409).json({ ok: false, error: 'stale_row', problems: ['the piece changed while this was being written; nothing was written, so send it again'] })
   const after = { ...(row as any), meta: { ...meta, making: next } }
-  // A step that lands closes the board items waiting on it (_boardClose.ts).
-  const closed = await closeBoardItemsForPiece(after)
-  return res.status(200).json({ ok: true, idea_id: ideaId, making: next, steps: makingSteps(after), closed })
+  // The sweep looks at the items waiting on this piece now; a failed ask changes nothing.
+  const look = await askChecksForPiece(ideaId)
+  return res.status(200).json({ ok: true, idea_id: ideaId, making: next, steps: makingSteps(after), closed: [], looked: look.keys })
 }

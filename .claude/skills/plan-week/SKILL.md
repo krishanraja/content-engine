@@ -92,18 +92,18 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      an item of its own for this week, `week-publish-board-<Monday>`, so
      last week's item and link stay as they are: `POST /api/workbench` with
      `{"action": "upsert_items", "client": "claude_code", "items": [{"id":
-     "week-publish-board-2026-10-19", "lane": "in_progress", "rank": 0, "area":
+     "week-publish-board-2026-10-19", "lane": "on_you", "rank": 0, "area":
      "This week", "title": "This week's publish board, 19 to 23 October",
      "detail": "One page for Monday, Wednesday and Friday. Tick each step as
      you do it; every tick is saved at once, and the next session copies it
-     onto the piece.", "closes_on": "week_published", "link": "<its link>",
-     "link_label": "Open this week's publish board"}]}` (the id and the
-     dates are the week's). It says how it ends (`week_published`), and it
-     is held in progress, never on his list, until the done-check sweep that
-     can see a week published is live: until then `make-piece` moves it to
-     done by hand once every picked day is at 100% ("The week's ticks", step
-     7). Each day's own items (`monday-record` and the rest) are what reach
-     his list. In
+     onto the piece.", "only_you": "post", "closes_on": "week_published",
+     "link": "<its link>", "link_label": "Open this week's publish
+     board"}]}` (the id and the dates are the week's). Only he posts, and it
+     says how it ends: Control Center's done-check sweep closes it once
+     every picked day is at 100% on the record, so no session moves it to
+     done. While last week's board is still open, Control Center holds the
+     new one back from his list ("waits on last week's board") and shows it
+     once last week's is closed. In
      `WORKBENCH.md`, under "This week's publish board": the new week's line
      goes first, and the ending week's line moves under "Last week's
      publish board" (replacing the one there), where it stays until that

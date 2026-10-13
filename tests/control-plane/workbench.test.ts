@@ -122,7 +122,7 @@ describe('the work board route', () => {
 
   it('an existing item is changed in place, only the fields sent', async () => {
     await call('POST', { action: 'upsert_items', items: [{ id: 'p3', lane: 'on_you', title: 'Read article 3', detail: 'Facts checked.', ...READY }] })
-    const move = await call('POST', { action: 'upsert_items', items: [{ id: 'p3', lane: 'done' }] })
+    const move = await call('POST', { action: 'upsert_items', items: [{ id: 'p3', lane: 'done' }] }, 'krish')
     expect(move.status).toBe(200)
     const row = db.tables.work_board_items.find(r => r.id === 'p3')!
     expect(row.lane).toBe('done')
@@ -132,7 +132,7 @@ describe('the work board route', () => {
 
   it('lane_if_new is the lane only for a new item: an item already closed is never reopened by a tool asking again', async () => {
     await call('POST', { action: 'upsert_items', items: [{ id: 'take-aaaaaaaaaaaa', lane: 'on_you', title: 'Which piece is this take?', ...READY }] })
-    await call('POST', { action: 'upsert_items', items: [{ id: 'take-aaaaaaaaaaaa', lane: 'done' }] })
+    await call('POST', { action: 'upsert_items', items: [{ id: 'take-aaaaaaaaaaaa', lane: 'done' }] }, 'krish')
     const again = await call('POST', { action: 'upsert_items', client: 'runner', items: [
       { id: 'take-aaaaaaaaaaaa', lane_if_new: 'on_you', title: 'Which piece is this take?', detail: 'asked again from the other machine' },
       { id: 'take-bbbbbbbbbbbb', lane_if_new: 'on_you', title: 'A new take', ...READY },
@@ -353,7 +353,7 @@ describe('an item Krish closed stays closed to agents', () => {
     const back = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'in_progress' }] })
     expect(back.status).toBe(200)
     expect(item('doing-build').closed_by).toBe(null)
-    // The engine's own close (_boardClose.ts) records itself.
+    // A close the old engine closers wrote before step 4, part C, recorded themselves.
     Object.assign(item('doing-build'), { lane: 'done', updated_by: 'engine: record done', closed_by: 'engine: record done' })
     expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'on_you' }] })).body.error).toBe('on_you_needs_only_you')
     expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'on_you', ...READY }] })).status).toBe(200)
@@ -457,7 +457,8 @@ describe('an item waiting on Krish is refused unless it is ready for his list', 
 
   it('an item held in progress moves on to him only with what it lacks, from the row or the write', async () => {
     // Live, 12 October: you-welcome-days has his login as the reason, but no link and no close.
-    db.tables.work_board_items.push({ id: 'you-welcome-days', lane: 'in_progress', title: 'Swap two days in the welcome email', only_you: 'login', link: null, closes_on: null, idea_id: null, closed_by: null })
+    // After step 4's backfill it says how it ends: session work until something can see it.
+    db.tables.work_board_items.push({ id: 'you-welcome-days', lane: 'in_progress', title: 'Swap two days in the welcome email', only_you: 'login', link: null, closes_on: 'session', idea_id: null, closed_by: null })
     const bare = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome-days', lane: 'on_you' }] })
     expect(bare.status).toBe(400)
     expect(bare.body.error).toBe('on_you_needs_link')
@@ -466,7 +467,7 @@ describe('an item waiting on Krish is refused unless it is ready for his list', 
     expect(faked.status).toBe(400)
     expect(faked.body.error).toBe('on_you_needs_closes_on')
     expect(faked.body.detail).toContain('id week-<its Monday>')
-    expect(item('you-welcome-days')).toMatchObject({ lane: 'in_progress', link: null, closes_on: null })
+    expect(item('you-welcome-days')).toMatchObject({ lane: 'in_progress', link: null, closes_on: 'session' })
     // Still in progress, it may be edited freely.
     expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome-days', detail: 'Nothing can see the email changed yet.' }] })).status).toBe(200)
     // A take held for want of a piece moves on once a session knows the piece.
@@ -509,13 +510,14 @@ describe('an item waiting on Krish is refused unless it is ready for his list', 
     expect(item('friday-record')).toMatchObject({ lane: 'on_you', only_you: 'face', closes_on: 'record', idea_id: '904658db-4df2-4537-a0ed-ebe93e081db7', updated_by: 'claude_code' })
     expect(item('week-2026-10-19')).toMatchObject({ lane: 'on_you', only_you: 'judgment', closes_on: 'week_planned' })
     expect(item('week-2026-10-19')!.idea_id).toBeUndefined()
-    // Control Center's slate writes the week the same way, and archives an old one with a lane alone.
+    // Control Center's slate writes the week the same way; it closes nothing (the sweep does).
     const slate = await call('POST', { action: 'upsert_items', client: 'control_center_slate', items: [
       { id: 'week-2026-10-19', lane: 'on_you', title: 'What are we writing about this week? Pick Wednesday', ...WEEK, prompt: null },
-      { id: 'friday-record', lane: 'archived' },
     ] }, 'krish')
     expect(slate.status).toBe(200)
-    expect(item('friday-record')!.lane).toBe('archived')
+    const archive = await call('POST', { action: 'upsert_items', client: 'control_center_slate', items: [{ id: 'friday-record', lane: 'archived' }] }, 'krish')
+    expect([archive.status, archive.body.error]).toEqual([409, 'check_closes_it'])
+    expect(item('friday-record')!.lane).toBe('on_you')
   })
 
   it('an item that is not on him needs none of it', async () => {
@@ -755,15 +757,71 @@ describe('every item says how it ends, so a check can end it', () => {
     expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'old-post', lane: 'in_progress', title: 'x', idea_id: '11111111-2222-4333-8444-555555555555', closes_on: 'published' }] })).body.error).toBe('already_done')
   })
 
-  it("an agent's new open item says how it ends; an edit of an old one, and Krish's own, are not refused", async () => {
+  it('every open item says how it ends, new or edited, whoever writes it', async () => {
     const out = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-new', lane: 'in_progress', title: 'New work' }] })
     expect(out.status).toBe(400)
     expect(out.body).toMatchObject({ error: 'open_needs_closes_on', item: 'doing-new', detail: 'Say how it ends: a check kind, or session if you will close it yourself.' })
     expect((await call('POST', { action: 'upsert_items', client: 'runner', items: [{ id: 'doing-new', lane_if_new: 'in_progress', title: 'New work' }] })).body.error).toBe('open_needs_closes_on')
+    // An edit of an old item that says nothing is refused too, until it is given a kind.
     db.tables.work_board_items.push({ id: 'doing-remote', lane: 'in_progress', title: 'Old', closes_on: null, closed_by: null })
-    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-remote', detail: 'Still going.' }] })).status).toBe(200)
-    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'his-note', lane: 'in_progress', title: 'A note' }] }, 'krish')).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-remote', detail: 'Still going.' }] })).body.error).toBe('open_needs_closes_on')
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-remote', detail: 'Still going.', closes_on: 'session' }] })).status).toBe(200)
+    // An edit may not drop the kind, and Krish's own open item says how it ends too (the database holds it to it).
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-remote', closes_on: null }] })).body.error).toBe('open_needs_closes_on')
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'his-note', lane: 'in_progress', title: 'A note' }] }, 'krish')).body.error).toBe('open_needs_closes_on')
+    // A closed item needs none.
     expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'sent-note', lane: 'done', title: 'Sent' }] })).status).toBe(200)
+  })
+
+  it('only the check, Krish, or a session on its own work closes an item (check_closes_it)', async () => {
+    db.tables.work_board_items.push(
+      { id: 'monday-record', lane: 'on_you', title: 'Record both cuts', ...READY, closed_by: null },
+      { id: 'you-launch', lane: 'in_progress', title: 'Set the share image', closes_on: 'share_image_changed', close_ref: { url: 'https://example.com/p/a', was: 'f' }, closed_by: null },
+      { id: 'you-welcome', lane: 'on_you', title: 'Swap two days', only_you: 'login', link: 'https://example.com/settings', closes_on: 'his_word', closed_by: null },
+      { id: 'doing-mine', lane: 'in_progress', title: 'My own work', closes_on: 'session', closed_by: null },
+    )
+    const writes = db.writes.length
+    for (const [id, lane, client] of [['monday-record', 'done', 'claude_code'], ['you-launch', 'archived', 'codex'], ['you-welcome', 'done', 'runner'], ['monday-record', 'done', 'cron']] as const) {
+      const out = await call('POST', { action: 'upsert_items', client, items: [{ id, lane }] })
+      expect([id, out.status, out.body.error]).toEqual([id, 409, 'check_closes_it'])
+      expect(out.body.detail).toContain('Record the fact')
+    }
+    // A Control Center job other than the sweep closes nothing, session work included.
+    for (const id of ['monday-record', 'doing-mine']) {
+      const out = await call('POST', { action: 'upsert_items', client: 'control_center', items: [{ id, lane: 'done' }] }, 'krish')
+      expect([id, out.status, out.body.error]).toEqual([id, 409, 'check_closes_it'])
+    }
+    expect(db.writes.length).toBe(writes)
+    // A session closes its own work; a relayed close with his words and his own Clear close anything.
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-mine', lane: 'done' }] })).status).toBe(200)
+    expect(item('doing-mine')).toMatchObject({ lane: 'done', closed_by: 'codex' })
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', said: 'I swapped the image this morning', items: [{ id: 'you-launch', lane: 'done' }] })).status).toBe(200)
+    expect(item('you-launch')).toMatchObject({ lane: 'done', closed_by: 'Krish' })
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'you-welcome', lane: 'done' }] }, 'krish')).status).toBe(200)
+    // Done to archived is not a close, so a session may tidy any closed item.
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome', lane: 'archived' }] })).status).toBe(200)
+  })
+
+  it('only Krish reopens what a check closed (check_closed_it)', async () => {
+    db.tables.work_board_items.push(
+      { id: 'monday-record', lane: 'done', title: 'Record both cuts', ...READY, closed_by: 'check: record', closed_proof: 'The record step landed.' },
+      { id: 'doing-old', lane: 'archived', title: 'Old session work', closes_on: 'session', closed_by: 'check: session', closed_proof: 'No session touched it for 7 days.' },
+    )
+    for (const [id, lane] of [['monday-record', 'on_you'], ['doing-old', 'in_progress']] as const) {
+      const out = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id, lane }] })
+      expect([id, out.status, out.body.error]).toEqual([id, 409, 'check_closed_it'])
+    }
+    expect((await call('POST', { action: 'upsert_items', client: 'control_center', items: [{ id: 'doing-old', lane: 'in_progress' }] }, 'krish')).body.error).toBe('check_closed_it')
+    // Relayed without his words: told to bring them.
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', items: [{ id: 'doing-old', lane: 'in_progress' }] })).body.error).toBe('relayed_close_needs_his_words')
+    expect(item('doing-old')!.lane).toBe('archived')
+    // His words relayed, or his Undo.
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', said: 'I am still working on that one', items: [{ id: 'doing-old', lane: 'in_progress' }] })).status).toBe(200)
+    expect(item('doing-old')).toMatchObject({ lane: 'in_progress', closed_by: null, closed_proof: 'His words: "I am still working on that one"' })
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'monday-record', lane: 'on_you' }] }, 'krish')).status).toBe(200)
+    // An edit in place of a check's close is not a reopen.
+    db.tables.work_board_items.push({ id: 'friday-record', lane: 'done', title: 'Record', ...READY, closed_by: 'check: record', closed_proof: 'x' })
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'friday-record', detail: 'Both takes are in.' }] })).status).toBe(200)
   })
 
   it('the board returns what a check let go for a week, so he can Undo it, and nothing else archived', async () => {

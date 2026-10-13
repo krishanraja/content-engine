@@ -537,11 +537,12 @@ its words and the cut by its words or its length:
 - **Unsure**: one board item, `take-<first 12 of its sha256>`, held in
   progress for a session and never on Krish's list: nothing he can press
   answers which take it is, so a session works it out, or asks him in its
-  reply. When the piece is known the item names it (`idea_id`) and closes
-  when Record is done. The lane ends one with no piece itself: done once
-  the take is placed, archived once no waiting piece can be it; and the
-  engine's hourly pass lets go of one no session has touched for a week
-  (`_boardClose.ts`, `HELD_DAYS`). One the old lane put on him is moved off
+  reply. When the piece is known the item names it (`idea_id`). It says
+  `closes_on` `take_placed`, and the lane closes nothing: Control Center's
+  done-check sweep closes it once the take is on a piece, lets it go once
+  the lane notes that no waiting piece can be it (`"close_ref":
+  {"no_piece": true}`, `making.py` `board_note`), and lets go of one no
+  session has touched for a week. One the old lane put on him is moved off
   his list when it is asked again.
   It is asked once for each question (its status, its piece, older words or
   not), never again because a score or the closest piece shifted. The board

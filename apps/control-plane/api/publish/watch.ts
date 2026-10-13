@@ -2,31 +2,30 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardCronRoute, guardEngine } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { withContentRun } from '../_runs.js'
-import { LET_GO_BY, closeBoardItemsForPiece, heldToLetGo, itemPiece, type OpenItem } from '../_boardClose.js'
 import { makingStamp } from '../_making.js'
-import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts, unmatchedItem, unmatchedItemId, type Candidate } from '../_publishWatch.js'
+import { askChecksForPiece } from '../_controlCenter.js'
+import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts, unmatchedItem, type Candidate } from '../_publishWatch.js'
 
 // GET (cron, hourly) or POST (an operator session): the publish watcher.
 //
 // Krish, 2026-10-11: board items "should really be chalked off automatically
 // when we are done with a publish flow". The flow ends when the post is live
 // on Substack, so the engine reads the publication's public archive (no key)
-// and, for each post that matches one piece (_publishWatch.ts):
-//   - marks the piece published: state, published_at, published_url, and,
-//     when the piece has a making record, the Substack tick on it. This
-//     records a public fact; it publishes nothing, and it never unpublishes;
-//   - closes the board items the publish closes (_boardClose.ts): with a
-//     making record, only once the standing five are ticked (Krish,
-//     2026-10-11), so the reposts' items stay open after Substack; a piece
-//     made before the making record existed gets no record here, so its
-//     items close on the publish as they always did.
-// Then it sweeps every open board item tied to a piece and closes the ones
-// whose piece has moved on by any route. A fresh post that matches no piece
-// becomes one board item in progress, for a session, held once; it is never
-// put on Krish (it could not say how it closes), and the pass that matches
-// the post to a piece closes it. Last, a question held for a session that no
-// one has touched for a week is let go (_boardClose.ts, heldToLetGo): a post
-// that is not a piece, or a take no piece will claim.
+// and, for each post that matches one piece (_publishWatch.ts), marks the
+// piece published: state, published_at, published_url, and, when the piece
+// has a making record, the Substack tick on it. This records a public fact;
+// it publishes nothing, and it never unpublishes.
+//
+// A fresh post that matches no piece becomes one board item in progress for
+// a session, held once, closes_on post_matched with the post's address; it is
+// never put on Krish (nothing he can press answers it).
+//
+// The watcher closes no board item. Control Center's done-check sweep
+// (api/_doneChecks.ts there, step 4) ends each by its kind from what this
+// pass records: a piece's step or publish, a post question once a piece
+// holds its address, and one no session touched for a week. Krish,
+// 2026-10-11: "I am happy to Clear(complete)/Bump/Purge things off my lists
+// as I go but the rest should be automatically done."
 
 const PIECE_COLUMNS = 'id, idea, state, published_url, published_at, buried_at, meta, transformed_outputs, updated_at'
 
@@ -49,13 +48,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   if (error) return res.status(500).json({ ok: false, error: error.message })
   const pieces = (data || []) as Array<Candidate & { published_at: string | null; buried_at: string | null; updated_at: string }>
 
-  // The board items earlier passes held for posts that matched no piece.
-  const heldBefore = await supabase.from('work_board_items').select('id').ilike('id', 'post-%').in('lane', ['on_you', 'in_progress']).limit(100)
-  const openQuestions = new Set(((heldBefore.data || []) as Array<{ id: string }>).map(i => i.id))
-
   const report: Array<Record<string, unknown>> = []
   let published = 0, ambiguous = 0, held = 0
-  const closed: string[] = []
   for (const post of posts) {
     const m = matchPost(post, pieces)
     if (m.kind === 'ambiguous') { ambiguous++; report.push({ post: post.url, ambiguous: m.ids }); continue }
@@ -95,40 +89,13 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       piece.state = 'published'
       piece.meta = nextMeta
       published++
-    }
-    closed.push(...await closeBoardItemsForPiece(piece))
-    // The question an earlier pass held for this post is answered now.
-    const question = unmatchedItemId(post)
-    if (openQuestions.has(question)) {
-      const answered = await supabase.from('work_board_items')
-        .update({ lane: 'done', updated_by: 'engine: publish watcher', closed_by: 'engine: publish watcher', updated_at: now.toISOString() })
-        .eq('id', question).in('lane', ['on_you', 'in_progress'])
-      if (!answered.error) closed.push(question)
+      // The sweep looks at this piece's items now rather than at its next pass.
+      await askChecksForPiece(piece.id)
     }
     report.push({ post: post.url, piece: piece.id, by: m.by, written: true })
   }
 
-  // The sweep: every open item tied to a piece, whatever moved the piece.
-  const open = await supabase.from('work_board_items').select('id,lane,idea_id,closes_on,link,updated_at').in('lane', ['on_you', 'in_progress']).limit(300)
-  const openItems = (open.data || []) as Array<OpenItem & { updated_at: string }>
-  const ids = [...new Set(openItems.map(itemPiece).filter((x): x is string => Boolean(x)))]
-  if (ids.length) {
-    const tied = await supabase.from('content_ideas').select('id, state, buried_at, meta').in('id', ids)
-    for (const piece of (tied.data || []) as Array<{ id: string; state: string; buried_at: string | null; meta: Record<string, any> | null }>) {
-      closed.push(...await closeBoardItemsForPiece(piece))
-    }
-  }
-
-  // The questions held for a session that no one took up: let go, and counted.
-  let letGo = heldToLetGo(openItems, now).filter(id => !closed.includes(id))
-  if (letGo.length) {
-    const gone = await supabase.from('work_board_items')
-      .update({ lane: 'archived', updated_by: LET_GO_BY, closed_by: LET_GO_BY, updated_at: now.toISOString() })
-      .in('id', letGo).eq('lane', 'in_progress')
-    if (gone.error) letGo = []
-  }
-
-  return res.status(200).json({ ok: true, posts: posts.length, published, ambiguous, held, closed: [...new Set(closed)], let_go: letGo, report })
+  return res.status(200).json({ ok: true, posts: posts.length, published, ambiguous, held, report })
 }
 
 export default withContentRun('publish_watch', handler)

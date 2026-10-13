@@ -2,10 +2,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // The Monday purge deletes rows that expired unused. A board item about such
 // a row would have its idea_id emptied by the delete (on delete set null),
-// and an item waiting on Krish must name its piece
-// (work_board_items_on_you_is_ready), so one left on him would stop the whole
-// delete. The purge archives the open items about a row first, as a dropped
-// piece's are (_boardClose.ts).
+// and an open item that closes on a piece's step must name its piece
+// (work_board_items_open_says_how_it_ends), so the purge keeps any row an
+// open item names (kept_for_board) and closes no board item: Control
+// Center's done-check sweep ends each by its kind (step 4).
 
 type Row = Record<string, any>
 const db = vi.hoisted(() => ({ tables: {} as Record<string, Row[]>, writes: [] as Array<[string, string, Row]> }))
@@ -34,7 +34,11 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
       eq(k: string, v: unknown) { if (table !== 'content_ideas') filters.push(r => r[k] === v); return chain },
       in(k: string, vs: unknown[]) { filters.push(r => vs.includes(r[k])); return chain },
       is() { return chain },
-      not(k: string, how: string, v: unknown) { if (how === 'is' && v === null && table === 'work_board_items') filters.push(r => r[k] != null); return chain },
+      not(k: string, how: string, v: unknown) {
+        if (how === 'is' && v === null && table === 'work_board_items') filters.push(r => r[k] != null)
+        if (how === 'in' && k === 'id') { const out = String(v).replace(/[()]/g, '').split(','); filters.push(r => !out.includes(r[k])) }
+        return chain
+      },
       lte() { return chain },
       lt() { return chain },
       neq() { return chain },
@@ -60,17 +64,21 @@ vi.mock('../../apps/control-plane/api/_observations.js', () => ({
 const CRON = 'cron-secret-for-tests'
 const GONE = '11111111-1111-4111-8111-111111111111'
 const KEPT = '22222222-2222-4222-8222-222222222222'
+const NAMED = '33333333-3333-4333-8333-333333333333'
 
 beforeEach(() => {
   process.env.CRON_SECRET = CRON
   db.tables = {
-    content_ideas: [{ id: GONE, idea: 'An option nobody picked', state: 'seed', expires_at: '2026-10-01T00:00:00Z' }],
+    content_ideas: [
+      { id: GONE, idea: 'An option nobody picked', state: 'seed', expires_at: '2026-10-01T00:00:00Z' },
+      { id: NAMED, idea: 'An option an open item still names', state: 'seed', expires_at: '2026-10-01T00:00:00Z' },
+    ],
     work_board_items: [
-      { id: 'about-gone', lane: 'on_you', idea_id: GONE, only_you: 'judgment', link: 'https://controlcenter.krishraja.com/#/week', closes_on: 'workroom' },
-      { id: 'agent-gone', lane: 'in_progress', idea_id: GONE },
+      { id: 'about-named', lane: 'on_you', idea_id: NAMED, only_you: 'judgment', link: 'https://controlcenter.krishraja.com/#/week', closes_on: 'workroom' },
+      { id: 'agent-named', lane: 'in_progress', idea_id: NAMED, closes_on: 'draft' },
       { id: 'closed-gone', lane: 'done', idea_id: GONE, updated_by: 'Krish', closed_by: 'Krish' },
       { id: 'about-kept', lane: 'on_you', idea_id: KEPT, only_you: 'face', link: 'https://web.descript.com/x', closes_on: 'record' },
-      { id: 'no-piece', lane: 'in_progress', idea_id: null },
+      { id: 'no-piece', lane: 'in_progress', idea_id: null, closes_on: 'session' },
     ],
     weekly_briefs: [],
     content_decisions: [],
@@ -81,7 +89,7 @@ beforeEach(() => {
 })
 
 describe('the purge and the board', () => {
-  it('archives the open items about a row before it deletes the row, and nothing else', async () => {
+  it('keeps every row an open board item names, deletes the rest, and closes no board item', async () => {
     const { default: handler } = await import('../../apps/control-plane/api/purge/run.js')
     const out = { status: 0, body: undefined as any }
     const res: Record<string, any> = {
@@ -92,17 +100,14 @@ describe('the purge and the board', () => {
     }
     await handler({ method: 'GET', headers: { authorization: `Bearer ${CRON}` }, query: {}, body: {} } as never, res as never)
     // Counted like everything else the purge touches, in its response and its audit row.
-    expect(out.body).toMatchObject({ ok: true, expired: 1, board_items_archived: ['about-gone', 'agent-gone'], board_items_off_his_list: ['about-gone'] })
-    expect(db.tables.audit_log[0].details).toMatchObject({ board_items_archived: ['about-gone', 'agent-gone'], board_items_off_his_list: ['about-gone'] })
-    const item = (id: string) => db.tables.work_board_items.find(r => r.id === id)!
-    expect(item('about-gone')).toMatchObject({ lane: 'archived', updated_by: 'engine: piece purged', closed_by: 'engine: piece purged' })
-    expect(item('agent-gone')).toMatchObject({ lane: 'archived', closed_by: 'engine: piece purged' })
-    expect(item('closed-gone')).toMatchObject({ lane: 'done', closed_by: 'Krish' })
-    expect(item('about-kept').lane).toBe('on_you')
-    expect(item('no-piece').lane).toBe('in_progress')
-    const order = db.writes.map(([table, op]) => `${table} ${op}`)
-    expect(order.indexOf('work_board_items update')).toBeGreaterThanOrEqual(0)
-    expect(order.indexOf('work_board_items update')).toBeLessThan(order.indexOf('content_ideas delete'))
-    expect(db.tables.content_ideas).toEqual([])
+    expect(out.body).toMatchObject({ ok: true, expired: 1, kept_for_board: [NAMED] })
+    expect(out.body.board_items_archived).toBeUndefined()
+    expect(db.tables.audit_log[0].details).toMatchObject({ kept_for_board: [NAMED] })
+    expect(db.tables.content_ideas.map(r => r.id)).toEqual([NAMED])
+    // A done item about a deleted row keeps its close; nothing on the board was written.
+    expect(db.writes.filter(([table]) => table === 'work_board_items')).toEqual([])
+    expect(db.tables.work_board_items.map(r => [r.id, r.lane])).toEqual([
+      ['about-named', 'on_you'], ['agent-named', 'in_progress'], ['closed-gone', 'done'], ['about-kept', 'on_you'], ['no-piece', 'in_progress'],
+    ])
   })
 })
