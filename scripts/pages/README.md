@@ -343,6 +343,15 @@ company the piece names (the visual gate holds each one to that). Both or
 neither: it refuses if a word, the face or a logo would sit where a
 platform covers or crops it, or a word would be too small to read.
 
+**The video's story intro reads two more fields** (`scripts/quick-edit/story_io.py`):
+`"video_title"`, the title card's words (short, at most 60 characters; else
+the cover's `headline` lines; the article headline is never used), and
+`"standoff": {"left": PLAYER, "right": [PLAYER, ...]}`, each PLAYER
+`{"label", "logos": ["logos/..."], "tag"}`, so one side can show the marks
+people know (Meta, Instagram and WhatsApp for Muse) with the product's name
+in type. Without `"standoff"` the cover rows are used, one logo each. The
+line-up under the title is the players against the first, then `thumbs.strip`.
+
 **Any checkout can draw them, a home computer included.** A plan keeps its
 facts as `docs/plans/PLAN/cover-facts.json` and every logo they draw as SVG
 in `docs/plans/PLAN/logos/`, with paths relative to the facts
