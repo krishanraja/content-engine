@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-13, about 05:00 UTC, by a Claude Code session (cloud); step 4 part C (one closer) built on its branch, review fixes in.
+Last updated: 2026-10-13, about 06:30 UTC, by a Claude Code session (cloud); step 4 (one done-check sweep) is live, step 3 waits on Krish.
 
 ## How Krish wants to be worked with
 
@@ -591,6 +591,39 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-13, Tuesday, about 06:30 UTC: **Step 4 is live: one done-check
+  sweep closes what can be seen done, and nothing else closes a board item.**
+  Krish, 2026-10-13: "Go On the backfill, close everything out now to 100%.
+  Merge everything to main." In plain words:
+  - **Merged and deployed:** this repo's #78 (an item on Krish must be ready
+    for his list), #79 (every item says how it ends: `closes_on` kinds,
+    `close_ref`, `closed_proof`, the `done_check` client, the backfill
+    script, and a drop never undoes a publish) and #80 (the old closers end).
+    Control Center's #430 (Sunday's slate never archives the publish board)
+    and #431 (the sweep, every 15 minutes).
+  - **Migrations applied and recorded:** `20261013093000`, `20261022090000`,
+    `20261022091000`, `20261023090000`. Read back: the on-you rule and the
+    open-item rule are validated, the one-closer trigger is live, and the
+    stale archive spares pieces in the making.
+  - **Backfill step 1 ran:** every open item has a kind. The four items held
+    off his list (`you-launch-today`, `you-engine-github-key`,
+    `week-publish-board-2026-10-12`, `you-welcome-days`) now close by
+    themselves once their check sees it, or on his Clear for the welcome
+    email.
+  - **The sweep's runs at 05:30, 05:45 and 06:00 UTC were clean:** every
+    kind answered, nothing closed wrongly, nothing unread.
+  Waiting on Krish:
+  - **Backfill step 2:** moving those four items onto his list (lane
+    `on_you`, through `POST /api/workbench` as `control_center`). He said
+    go, but the cloud session's permission check refused the live write, so
+    the next session asks him once more.
+  - **Step 3, the voice input:** his first reaction to the rendered mock.
+    The plan and mock are in Control Center,
+    `docs/handoff/design-entropy-session/`.
+  For any session: close only your own `session` work. Anything else ends
+  by its check, or by Krish. The route refuses the rest (`check_closes_it`),
+  and so does the database.
 
 - 2026-10-13, Tuesday, early: **Step 4, part C: one closer.** Krish,
   2026-10-11: "I think closing what you can check is already done is one of
