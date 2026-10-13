@@ -472,17 +472,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
+    // A drop reads the row it drops and writes only if no one changed it
+    // since. The publish watcher marks a piece published from the live post,
+    // a public fact; a drop (a Purge from his list) landing at the same
+    // moment must not undo it. A published piece is never dropped (409
+    // published_cannot_be_dropped), and a drop that races any other write is
+    // refused (409 content_changed_retry) instead of overwriting it.
+    let dropGuard: { state: string; updated_at: string } | null = null
+    if (updates.state === 'dropped' && !current) {
+      const read = await supabase.from('content_ideas').select('state,updated_at').eq('id', id).maybeSingle()
+      if (read.error) return res.status(500).json({ ok: false, error: read.error.message })
+      if (!read.data) return res.status(404).json({ ok: false, error: 'idea_not_found' })
+      dropGuard = read.data as { state: string; updated_at: string }
+    }
+    if ((dropGuard ?? current)?.state === 'published' && updates.state === 'dropped') {
+      return res.status(409).json({
+        ok: false,
+        error: 'published_cannot_be_dropped',
+        detail: 'This piece is already published, so it cannot be dropped. Nothing was changed.',
+      })
+    }
+
     let updateQuery = supabase
       .from('content_ideas')
       .update(updates)
       .eq('id', id)
     if (current) updateQuery = updateQuery.eq('updated_at', current.updated_at)
+    else if (dropGuard) updateQuery = updateQuery.eq('updated_at', dropGuard.updated_at)
+    const seenAt = (current ?? dropGuard)?.updated_at
     const { data, error } = await updateQuery
       .select()
       .single()
 
     if (error) {
-      if (current && /0 rows|no rows|multiple \(or no\) rows/i.test(error.message)) {
+      if (seenAt && /0 rows|no rows|multiple \(or no\) rows/i.test(error.message)) {
         return res.status(409).json({ ok: false, error: 'content_changed_retry' })
       }
       return res.status(500).json({ ok: false, error: error.message })

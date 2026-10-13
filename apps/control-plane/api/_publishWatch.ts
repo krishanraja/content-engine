@@ -95,6 +95,9 @@ export function unmatchedItem(post: Post) {
       + 'left untouched for a week, the watcher lets it go.',
     link: post.url,
     link_label: 'Open the post',
+    // How it ends (step 4's done-check sweep): once a piece's published_url is this post.
+    closes_on: 'post_matched' as const,
+    close_ref: { url: post.url },
   }
 }
 

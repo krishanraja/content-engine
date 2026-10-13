@@ -8,7 +8,12 @@ import { matchPost, normTitle, readPosts, unmatchedItem, type Candidate } from '
 // engine learns a piece went out from the publication's own archive.
 
 type Row = Record<string, any>
-const db = vi.hoisted(() => ({ tables: {} as Record<string, Row[]>, writes: [] as Array<[string, string, Row]> }))
+const db = vi.hoisted(() => ({
+  tables: {} as Record<string, Row[]>,
+  writes: [] as Array<[string, string, Row]>,
+  /** An insert of this id is refused, as the database refuses a row its checks do not admit. */
+  refuseInsert: null as null | string,
+}))
 
 vi.mock('../../apps/control-plane/api/_supabase.js', () => {
   function query(table: string) {
@@ -21,6 +26,7 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
     let columns: string[] | null = null
     const pick = (r: Row) => columns ? Object.fromEntries(columns.filter(c => c in r).map(c => [c, r[c]])) : r
     const run = () => {
+      if (op === 'insert' && db.refuseInsert && payload.id === db.refuseInsert) return { data: null, error: { code: '23514', message: 'new row violates check constraint "work_board_items_closes_on_check"' } }
       if (op === 'insert') { rows().push({ ...payload }); db.writes.push([table, 'insert', payload]); return { data: [payload], error: null } }
       const hit = rows().filter(r => filters.every(f => f(r)))
       if (op === 'update') { hit.forEach(r => Object.assign(r, payload)); db.writes.push([table, 'update', { ...payload, ids: hit.map(h => h.id) }]); return { data: hit, error: null } }
@@ -82,6 +88,7 @@ beforeEach(() => {
     ],
   }
   db.writes = []
+  db.refuseInsert = null
 })
 
 // The fixtures hold only shapes the database admits: an item on Krish
@@ -129,6 +136,16 @@ describe('which items a piece closes', () => {
     expect(notYet).toEqual([])
     const both = itemsToClose(items(), { id: FRIDAY, state: 'review', meta: { making: { recordings: [{ cut: 'long', path: 'a', at: 'x' }, { cut: 'short', path: 'b', at: 'x' }], updated_at: 'x', by: 'x' } } })
     expect(both).toEqual([{ id: 'friday-record', lane: 'done', by: 'engine: record done' }])
+  })
+  it('a take question tied to a piece still ends when its takes are in, until the sweep takes it over', () => {
+    const takes = [
+      { id: 'take-aaaaaaaaaaaa', lane: 'in_progress', idea_id: FRIDAY, closes_on: 'take_placed', link: null },
+      { id: 'take-bbbbbbbbbbbb', lane: 'in_progress', idea_id: null, closes_on: 'take_placed', link: null },
+    ]
+    const one = { id: FRIDAY, state: 'review', meta: { making: { recordings: [{ cut: 'long', path: 'a', at: 'x' }], updated_at: 'x', by: 'x' } } }
+    expect(itemsToClose(takes, one)).toEqual([])
+    const both = { ...one, meta: { making: { recordings: [{ cut: 'long', path: 'a', at: 'x' }, { cut: 'short', path: 'b', at: 'x' }], updated_at: 'x', by: 'x' } } }
+    expect(itemsToClose(takes, both)).toEqual([{ id: 'take-aaaaaaaaaaaa', lane: 'done', by: 'engine: record done' }])
   })
   it('the piece an item is about comes from its column, else its link', () => {
     expect(itemPiece({ idea_id: null, link: `https://x/#/content?idea=${HIGGS}` })).toBe(HIGGS)
@@ -232,6 +249,27 @@ describe('the publish watcher', () => {
       await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: {}, body: {} } as never, again.res as never)
       expect(again.out.body).toMatchObject({ published: 0, held: 0, closed: [] })
       expect(db.tables.work_board_items.find(r => r.id === 'post-103')?.lane).toBe('archived')
+    } finally {
+      globalThis.fetch = realFetch
+    }
+  })
+
+  it('a question the database refuses is said once in the report, never dropped', async () => {
+    const archive = [{ id: 104, title: 'Another post nobody packed', canonical_url: 'https://home.makeyourmindup.ai/p/another', post_date: new Date(Date.now() - 3600_000).toISOString(), type: 'newsletter' }]
+    db.refuseInsert = 'post-104'
+    const realFetch = globalThis.fetch
+    globalThis.fetch = (async () => ({ ok: true, status: 200, json: async () => archive })) as never
+    try {
+      const { default: handler } = await import('../../apps/control-plane/api/publish/watch.js')
+      const { out, res } = fakeRes()
+      await handler({ method: 'POST', headers: { authorization: `Bearer ${TOKEN}` }, query: {}, body: {} } as never, res as never)
+      expect(out.status).toBe(200)
+      expect(out.body.held).toBe(0)
+      const said = (out.body.report as Row[]).filter(r => r.post === 'https://home.makeyourmindup.ai/p/another')
+      expect(said).toHaveLength(1)
+      expect(said[0]).toMatchObject({ matched: null, question: 'post-104', held: false })
+      expect(said[0]!.note).toMatch(/^board_write_failed: 23514 .*work_board_items_closes_on_check/)
+      expect(db.tables.work_board_items.find(r => r.id === 'post-104')).toBeUndefined()
     } finally {
       globalThis.fetch = realFetch
     }

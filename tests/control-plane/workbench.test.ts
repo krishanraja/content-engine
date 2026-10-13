@@ -7,7 +7,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // (the engine key). Only Krish's cookie may write a reply.
 
 type Row = Record<string, any>
-const db = vi.hoisted(() => ({ tables: {} as Record<string, Row[]>, writes: [] as Array<[string, string]> }))
+const db = vi.hoisted(() => ({
+  tables: {} as Record<string, Row[]>,
+  writes: [] as Array<[string, string]>,
+  /** Runs once, just before the next update: another writer landing between the route's read and its write. */
+  between: null as null | (() => void),
+}))
 
 vi.mock('../../apps/control-plane/api/_supabase.js', () => {
   function query(table: string) {
@@ -29,6 +34,7 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
         db.writes.push([table, 'insert'])
         return { data: [inserted], error: null }
       }
+      if (op === 'update' && db.between) { const go = db.between; db.between = null; go() }
       const hit = rows().filter(r => filters.every(f => f(r)))
       if (op === 'update') {
         hit.forEach(r => Object.assign(r, payload))
@@ -46,6 +52,8 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
       eq(k: string, v: unknown) { filters.push(r => r[k] === v); return chain },
       in(k: string, vs: unknown[]) { filters.push(r => vs.includes(r[k])); return chain },
       is(k: string, v: unknown) { filters.push(r => (r[k] ?? null) === v); return chain },
+      like(k: string, p: string) { const re = new RegExp('^' + p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/%/g, '.*') + '$'); filters.push(r => typeof r[k] === 'string' && re.test(r[k])); return chain },
+      gte(k: string, v: string) { filters.push(r => String(r[k] ?? '') >= v); return chain },
       order(k: string, o?: { ascending?: boolean }) { order = [k, o?.ascending !== false]; return chain },
       limit(n: number) { limit = n; return chain },
       async maybeSingle() { const r = run(); return { data: r.data[0] ?? null, error: null } },
@@ -84,6 +92,7 @@ beforeEach(() => {
   process.env.ACCESS_CODE = CODE
   db.tables = { work_board_state: [{ id: 'board', headline: '', signals: [], updated_by: 'agent', updated_at: '2026-10-03T00:00:00Z' }], work_board_items: [], work_board_replies: [] }
   db.writes = []
+  db.between = null
 })
 
 describe('the work board route', () => {
@@ -98,7 +107,7 @@ describe('the work board route', () => {
   it('an agent adds items and sets the headline; Control Center reads the same board', async () => {
     const add = await call('POST', { action: 'upsert_items', client: 'codex', items: [
       { id: 'p1-video', lane: 'on_you', rank: 1, area: 'Article 1', title: 'Say yes to the video', detail: 'Five things to confirm.', ...READY },
-      { id: 'next-picks', lane: 'in_progress', rank: 2, title: 'Your next two articles' },
+      { id: 'next-picks', lane: 'in_progress', rank: 2, title: 'Your next two articles', closes_on: 'session' },
     ] })
     expect(add.status).toBe(200)
     expect(add.body.written).toEqual(['p1-video', 'next-picks'])
@@ -310,9 +319,9 @@ describe('an item Krish closed stays closed to agents', () => {
 
   it('a close an agent relays from his words is his too, and a relayed reopen is still an agent write', async () => {
     await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome-days', lane: 'on_you', title: 'Swap two days', ...READY }] })
-    const relayed = await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', items: [{ id: 'you-welcome-days', lane: 'done' }] })
+    const relayed = await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', said: 'I swapped the two days this morning', items: [{ id: 'you-welcome-days', lane: 'done' }] })
     expect(relayed.status).toBe(200)
-    expect(item('you-welcome-days')).toMatchObject({ lane: 'done', updated_by: 'claude_code', closed_by: 'Krish' })
+    expect(item('you-welcome-days')).toMatchObject({ lane: 'done', updated_by: 'claude_code', closed_by: 'Krish', closed_proof: 'His words: "I swapped the two days this morning"' })
     await reopenRefused('you-welcome-days')
     const back = await call('POST', { action: 'upsert_items', decided_by: 'Krish', items: [{ id: 'you-welcome-days', lane: 'on_you' }] })
     expect(back.status).toBe(409)
@@ -320,7 +329,7 @@ describe('an item Krish closed stays closed to agents', () => {
   })
 
   it('an agent cannot forge who closed it', async () => {
-    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'in_progress', title: 'Build' }] })
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'in_progress', title: 'Build', closes_on: 'session' }] })
     await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'done', closed_by: 'codex' }] })
     expect(item('doing-build').closed_by).toBe('claude_code')
     await closedByKrish('done')
@@ -338,7 +347,7 @@ describe('an item Krish closed stays closed to agents', () => {
   })
 
   it('an item an agent or the engine closed can be reopened by an agent', async () => {
-    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'in_progress', title: 'Build' }] })
+    await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'in_progress', title: 'Build', closes_on: 'session' }] })
     await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-build', lane: 'done' }] })
     expect(item('doing-build').closed_by).toBe('claude_code')
     const back = await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-build', lane: 'in_progress' }] })
@@ -390,8 +399,8 @@ describe('an item waiting on Krish is refused unless it is ready for his list', 
       [without('only_you'), 'on_you_needs_only_you', /send, post, spend, delete, permission, credential, face, login, judgment/],
       [without('link'), 'on_you_needs_link', /https:\/\//],
       [{ ...READY, link: null }, 'on_you_needs_link', /https:\/\//],
-      [without('closes_on'), 'on_you_needs_closes_on', /workroom, draft, visual_gate, scripts, pack, record, video, publish\), published, or week_planned for the week's planning item alone/],
-      [without('idea_id'), 'on_you_needs_idea_id', /the piece's uuid. Only closes_on week_planned needs none/],
+      [without('closes_on'), 'on_you_needs_closes_on', /workroom, draft, visual_gate, scripts, pack, record, video, publish\) or published.*week_planned on the week's planning item alone.*week_published.*his_word.*Never session, post_matched or take_placed/],
+      [without('idea_id'), 'on_you_needs_idea_id', /the piece's uuid. Only the kinds that are not a piece's step need none/],
       [{ ...READY, idea_id: null }, 'on_you_needs_idea_id', /idea_id/],
     ]
     for (const [fields, error, names] of cases) {
@@ -511,10 +520,277 @@ describe('an item waiting on Krish is refused unless it is ready for his list', 
 
   it('an item that is not on him needs none of it', async () => {
     const out = await call('POST', { action: 'upsert_items', client: 'codex', items: [
-      { id: 'doing-build', lane: 'in_progress', title: 'Build the Descript return' },
+      { id: 'doing-build', lane: 'in_progress', title: 'Build the Descript return', closes_on: 'session' },
       { id: 'old-note', lane: 'done', title: 'Sent' },
       { id: 'gone', lane: 'archived', title: 'Dropped' },
     ] })
     expect(out.status).toBe(200)
+  })
+})
+
+// Step 4, one done-check sweep. Krish, 2026-10-11: "I think closing what you
+// can check is already done is one of the most obvious things I've ever heard
+// of as a suggestion." And: "I am happy to Clear(complete)/Bump/Purge things
+// off my lists as I go but the rest should be automatically done." Every item
+// says how it ends; the sweep (client done_check) only closes, with proof; a
+// close relayed from him carries his words; an item whose step is already
+// done is never written.
+describe('every item says how it ends, so a check can end it', () => {
+  const item = (id: string) => db.tables.work_board_items.find(r => r.id === id)
+  const SHARE = { url: 'https://example.substack.com/p/launch', was: '0a1b2c3d-1111-4222-8333-444455556666_1200x630.png' }
+  const JOB = { job: 'build_signals', after: '2026-10-22T09:00:00Z', probe: 'dry' }
+  const ON_HIM = { only_you: 'login', link: 'https://example.substack.com/publish/post/1', link_label: 'Open the post settings' }
+
+  it('closeRefOk is the database rule, kind by kind', async () => {
+    const { closeRefOk, CLOSE_KINDS } = await import('../../apps/control-plane/api/workbench.js')
+    expect([...CLOSE_KINDS]).toEqual(['workroom', 'draft', 'visual_gate', 'scripts', 'pack', 'record', 'video', 'publish', 'published',
+      'week_planned', 'week_published', 'share_image_changed', 'job_ok', 'post_matched', 'take_placed', 'session', 'his_word'])
+    const cases: Array<[string, unknown, string | null, string, boolean]> = [
+      ['record', {}, PIECE, 'monday-record', true],
+      ['published', {}, null, 'monday-post', false],
+      ['week_planned', {}, null, 'week-2026-10-19', true],
+      ['week_planned', {}, null, 'plan-week-oct-19', false],
+      ['week_published', {}, null, 'week-publish-board-2026-10-19', true],
+      ['week_published', {}, null, 'week-2026-10-19', false],
+      ['share_image_changed', SHARE, null, 'you-launch', true],
+      ['share_image_changed', { url: SHARE.url }, null, 'you-launch', false],
+      ['share_image_changed', { url: 'http://plain/p', was: 'x' }, null, 'you-launch', false],
+      ['job_ok', JOB, null, 'you-key', true],
+      ['job_ok', { job: 'build_signals' }, null, 'you-key', false],
+      ['post_matched', { url: 'https://example.substack.com/p/x' }, null, 'post-77', true],
+      ['post_matched', {}, null, 'post-77', false],
+      ['take_placed', {}, null, 'take-0123456789ab', true],
+      ['take_placed', {}, null, 'take-NOTHEX', false],
+      ['session', {}, null, 'doing-x', true],
+      ['his_word', null, null, 'you-x', true],
+      ['someday', {}, null, 'x', false],
+    ]
+    for (const [kind, ref, idea, id, ok] of cases) expect([kind, id, closeRefOk(kind, ref, idea, id)]).toEqual([kind, id, ok])
+  })
+
+  it('close_ref is an object of at most 1 KB, and a check kind on an open item carries what it needs', async () => {
+    const { cleanItem } = await import('../../apps/control-plane/api/workbench.js')
+    expect(cleanItem({ id: 'a1', close_ref: SHARE }, false)).toEqual({ id: 'a1', close_ref: SHARE })
+    expect(cleanItem({ id: 'a1', close_ref: null }, false)).toEqual({ id: 'a1', close_ref: {} })
+    expect(() => cleanItem({ id: 'a1', close_ref: ['x'] }, false)).toThrow('close_ref_must_be_an_object')
+    expect(() => cleanItem({ id: 'a1', close_ref: { note: 'x'.repeat(1100) } }, false)).toThrow('close_ref_too_long')
+    const out = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-launch', lane: 'in_progress', title: 'Set the share image', closes_on: 'share_image_changed', close_ref: { url: SHARE.url } }] })
+    expect(out.status).toBe(400)
+    expect(out.body).toMatchObject({ error: 'close_ref_invalid', item: 'you-launch' })
+    expect(out.body.detail).toContain('"was"')
+    const take = await call('POST', { action: 'upsert_items', client: 'runner', items: [{ id: 'take-bad', lane_if_new: 'in_progress', title: 'Which take?', closes_on: 'take_placed' }] })
+    expect(take.body.error).toBe('close_ref_invalid')
+  })
+
+  it('on him, the kinds a session or a machine holds are refused, and each check kind needs its ref', async () => {
+    for (const kind of ['session', 'post_matched', 'take_placed']) {
+      const out = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'take-0123456789ab', lane: 'on_you', title: 'x', ...ON_HIM, closes_on: kind, close_ref: { url: SHARE.url } }] })
+      expect([kind, out.status, out.body.error]).toEqual([kind, 400, 'on_you_needs_closes_on'])
+    }
+    const noWas = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-launch', lane: 'on_you', title: 'x', ...ON_HIM, closes_on: 'share_image_changed', close_ref: { url: SHARE.url } }] })
+    expect(noWas.body.error).toBe('on_you_needs_close_ref')
+    const wrongWeek = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'week-2026-10-19', lane: 'on_you', title: 'x', ...ON_HIM, only_you: 'post', closes_on: 'week_published' }] })
+    expect(wrongWeek.body.error).toBe('on_you_needs_closes_on')
+    const ready = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [
+      { id: 'you-launch', lane: 'on_you', title: 'Set the share image', ...ON_HIM, closes_on: 'share_image_changed', close_ref: SHARE },
+      { id: 'you-key', lane: 'on_you', title: 'Replace the key, then press Redeploy', ...ON_HIM, only_you: 'credential', closes_on: 'job_ok', close_ref: JOB },
+      { id: 'week-publish-board-2026-10-19', lane: 'on_you', title: 'This week\'s publish board', ...ON_HIM, only_you: 'post', closes_on: 'week_published' },
+    ] })
+    expect(ready.status).toBe(200)
+    expect(item('you-launch')).toMatchObject({ lane: 'on_you', closes_on: 'share_image_changed', close_ref: SHARE })
+    // A later edit is merged with the ref already there.
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', detail: 'Still the old card.' }] })).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-launch', close_ref: { url: SHARE.url } }] })).body.error).toBe('on_you_needs_close_ref')
+  })
+
+  it('his_word goes on his list only from him: his cookie, his words relayed, or Control Center', async () => {
+    const put = (id: string) => ({ id, lane: 'on_you', title: 'Swap two days in the welcome email', ...ON_HIM, closes_on: 'his_word' })
+    const agent = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [put('you-welcome-a')] })
+    expect(agent.status).toBe(409)
+    expect(agent.body).toMatchObject({ error: 'his_word_is_his', item: 'you-welcome-a' })
+    expect(agent.body.detail).toBe('Only Krish puts an item on his list that nothing can see. Give it a check kind, or hold it in progress.')
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', items: [put('you-welcome-a')] })).body.error).toBe('his_word_is_his')
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', said: 'put the welcome email on my list', items: [put('you-welcome-a')] })).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', client: 'control_center', items: [put('you-welcome-b')] }, 'krish')).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', items: [put('you-welcome-c')] }, 'krish')).status).toBe(200)
+    expect(item('you-welcome-b')).toMatchObject({ lane: 'on_you', closes_on: 'his_word', updated_by: 'control_center' })
+    // Held in progress, any writer may give it his_word; an edit of one already on him is not putting it there.
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-welcome-d', lane: 'in_progress', title: 'x', closes_on: 'his_word' }] })).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-welcome-b', detail: 'Two days swapped in the draft.' }] })).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'you-welcome-d', lane: 'on_you', ...ON_HIM }] })).body.error).toBe('his_word_is_his')
+  })
+
+  it('the sweep closes an open item with its proof, as "check: <kind>", and does nothing else', async () => {
+    db.tables.work_board_items.push(
+      { id: 'monday-record', lane: 'on_you', title: 'Record both cuts', ...READY, closed_by: null },
+      { id: 'doing-old', lane: 'in_progress', title: 'Old session work', closes_on: 'session', closed_by: null },
+      { id: 'old-note', lane: 'done', title: 'Sent', closes_on: 'session', closed_by: 'Krish' },
+    )
+    const sweep = (items: Row[]) => call('POST', { action: 'upsert_items', client: 'done_check', items }, 'krish')
+    const close = await sweep([{ id: 'monday-record', lane: 'done', closed_proof: 'The record step landed, 14 Oct 10:14 AM.' }])
+    expect(close.status).toBe(200)
+    expect(item('monday-record')).toMatchObject({ lane: 'done', closed_by: 'check: record', closed_proof: 'The record step landed, 14 Oct 10:14 AM.', updated_by: 'done_check' })
+    const letGo = await sweep([{ id: 'doing-old', lane: 'archived', closed_proof: 'No session touched it for 7 days.' }])
+    expect(letGo.status).toBe(200)
+    expect(item('doing-old')).toMatchObject({ lane: 'archived', closed_by: 'check: session' })
+    const writes = db.writes.length
+    const refusals: Array<[Row, number, string]> = [
+      [{ id: 'monday-record', lane: 'on_you' }, 409, 'done_check_only_closes'],
+      [{ id: 'old-note', lane: 'archived', closed_proof: 'x' }, 409, 'done_check_only_closes'],
+      [{ id: 'never-was', lane: 'done', closed_proof: 'x' }, 409, 'done_check_only_closes'],
+      [{ id: 'friday', lane: 'in_progress' }, 409, 'done_check_only_closes'],
+    ]
+    db.tables.work_board_items.push({ id: 'friday', lane: 'on_you', title: 'Record', ...READY, closed_by: null })
+    refusals.push([{ id: 'friday', lane: 'done' }, 400, 'done_check_needs_proof'])
+    refusals.push([{ id: 'friday', lane: 'done', closed_proof: 'x', title: 'renamed' }, 409, 'done_check_only_closes'])
+    refusals.push([{ id: 'friday', lane: 'done', closed_proof: 'x'.repeat(301) }, 400, 'closed_proof_too_long'])
+    for (const [it, status, error] of refusals) {
+      const out = await sweep([it])
+      expect([it.id, out.status, out.body.error]).toEqual([it.id, status, error])
+    }
+    expect(db.writes.length).toBe(writes)
+    expect(item('friday')!.lane).toBe('on_you')
+  })
+
+  it('the sweep never closes what only his Clear ends, or an item that does not say how it ends', async () => {
+    db.tables.work_board_items.push(
+      { id: 'you-welcome-days', lane: 'on_you', title: 'Swap two days', only_you: 'login', link: 'https://example.com/settings', closes_on: 'his_word', closed_by: null },
+      { id: 'old-silent', lane: 'in_progress', title: 'Says nothing', closes_on: null, closed_by: null },
+    )
+    for (const id of ['you-welcome-days', 'old-silent']) {
+      const out = await call('POST', { action: 'upsert_items', client: 'done_check', items: [{ id, lane: 'done', closed_proof: 'The check saw it.' }] }, 'krish')
+      expect([id, out.status, out.body.error]).toEqual([id, 409, 'done_check_only_closes'])
+    }
+    expect(db.writes).toEqual([])
+    expect(item('you-welcome-days')).toMatchObject({ lane: 'on_you', closed_by: null })
+    expect(item('old-silent')).toMatchObject({ lane: 'in_progress', closed_by: null })
+  })
+
+  it('the sweep sends one item a call, so a lost race never leaves part of a call written', async () => {
+    db.tables.work_board_items.push(
+      { id: 'monday-record', lane: 'on_you', title: 'Record', ...READY, closed_by: null },
+      { id: 'friday-record', lane: 'on_you', title: 'Record', ...READY, closed_by: null },
+    )
+    const out = await call('POST', { action: 'upsert_items', client: 'done_check', items: [
+      { id: 'monday-record', lane: 'done', closed_proof: 'The record step landed.' },
+      { id: 'friday-record', lane: 'done', closed_proof: 'The record step landed.' },
+    ] }, 'krish')
+    expect(out.status).toBe(400)
+    expect(out.body.error).toBe('done_check_one_item')
+    expect(db.writes).toEqual([])
+  })
+
+  it('his Clear landing between the sweep\'s read and its write wins: the sweep writes nothing', async () => {
+    db.tables.work_board_items.push({ id: 'monday-record', lane: 'on_you', title: 'Record', ...READY, closed_by: null })
+    db.between = () => Object.assign(item('monday-record')!, { lane: 'done', closed_by: 'Krish', closed_proof: null, updated_by: 'Krish' })
+    const out = await call('POST', { action: 'upsert_items', client: 'done_check', items: [{ id: 'monday-record', lane: 'done', closed_proof: 'The record step landed.' }] }, 'krish')
+    expect(out.status).toBe(409)
+    expect(out.body).toMatchObject({ error: 'done_check_only_closes', item: 'monday-record' })
+    expect(item('monday-record')).toMatchObject({ lane: 'done', closed_by: 'Krish', closed_proof: null, updated_by: 'Krish' })
+  })
+
+  it('only the sweep writes a proof; a later close by anyone else, or a reopen, clears it', async () => {
+    db.tables.work_board_items.push({ id: 'doing-x', lane: 'in_progress', title: 'x', closes_on: 'session', closed_by: null })
+    for (const [who, extra] of [['agent', { client: 'codex' }], ['krish', {}], ['krish', { client: 'control_center' }]] as const) {
+      const out = await call('POST', { action: 'upsert_items', ...extra, items: [{ id: 'doing-x', lane: 'done', closed_proof: 'I say so.' }] }, who)
+      expect(out.status).toBe(400)
+      expect(out.body.error).toBe('closed_proof_is_the_checks')
+    }
+    await call('POST', { action: 'upsert_items', client: 'done_check', items: [{ id: 'doing-x', lane: 'done', closed_proof: 'No session touched it for 7 days.' }] }, 'krish')
+    expect(item('doing-x')!.closed_proof).toBe('No session touched it for 7 days.')
+    // His Undo comes with no client: the route records him, and the proof goes with the close.
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'doing-x', lane: 'in_progress' }] }, 'krish')).status).toBe(200)
+    expect(item('doing-x')).toMatchObject({ lane: 'in_progress', closed_by: null, closed_proof: null })
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-x', lane: 'done' }] })).status).toBe(200)
+    expect(item('doing-x')).toMatchObject({ lane: 'done', closed_by: 'claude_code', closed_proof: null })
+  })
+
+  it('a close or reopen relayed from Krish carries his exact words, kept on the row', async () => {
+    db.tables.work_board_items.push(
+      { id: 'you-a', lane: 'on_you', title: 'x', ...READY, closed_by: null },
+      { id: 'doing-b', lane: 'done', title: 'x', closes_on: 'session', closed_by: 'claude_code' },
+    )
+    const relay = (items: Row[], said?: string) => call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', ...(said === undefined ? {} : { said }), items })
+    for (const said of [undefined, 'done', 'x'.repeat(300)]) {
+      const out = await relay([{ id: 'you-a', lane: 'done' }], said)
+      expect(out.status).toBe(400)
+      expect(out.body).toMatchObject({ error: 'relayed_close_needs_his_words', item: 'you-a' })
+    }
+    expect((await relay([{ id: 'doing-b', lane: 'in_progress' }])).body.error).toBe('relayed_close_needs_his_words')
+    // An edit he relayed that neither closes nor reopens needs no words.
+    expect((await relay([{ id: 'you-a', detail: 'He said the cut is fine.' }])).status).toBe(200)
+    expect((await relay([{ id: 'you-a', lane: 'done' }], '  I recorded both cuts last night  ')).status).toBe(200)
+    expect(item('you-a')).toMatchObject({ lane: 'done', closed_by: 'Krish', closed_proof: 'His words: "I recorded both cuts last night"' })
+    expect((await relay([{ id: 'doing-b', lane: 'in_progress' }], 'that one is not finished yet')).status).toBe(200)
+    // A relayed reopen keeps his words too, so a forged relay is never invisible.
+    expect(item('doing-b')).toMatchObject({ lane: 'in_progress', closed_by: null, closed_proof: 'His words: "that one is not finished yet"' })
+  })
+
+  it('an item whose step the engine already sees done is refused: nothing waits on Krish', async () => {
+    const FRIDAY = '904658db-4df2-4537-a0ed-ebe93e081db7'
+    const recorded = { making: { recordings: [{ cut: 'long', path: 'a', at: '2026-10-14T10:14:00Z' }, { cut: 'short', path: 'b', at: '2026-10-14T10:20:00Z' }], updated_at: 'x', by: 'x' } }
+    db.tables.content_ideas = [
+      { id: PIECE, state: 'review', buried_at: null, meta: recorded },
+      { id: FRIDAY, state: 'review', buried_at: null, meta: { making: { recordings: [{ cut: 'long', path: 'a', at: 'x' }], updated_at: 'x', by: 'x' } } },
+    ]
+    const out = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [
+      { id: 'friday-record', lane: 'on_you', title: 'Record both cuts', ...READY, idea_id: FRIDAY },
+      { id: 'monday-record', lane: 'on_you', title: 'Record both cuts', ...READY },
+    ] })
+    expect(out.status).toBe(409)
+    expect(out.body).toMatchObject({ ok: false, error: 'already_done', item: 'monday-record' })
+    expect(out.body.detail).toBe('That step is already done, so nothing waits on Krish. Do not write the item.')
+    expect(item('friday-record')).toBeUndefined()
+    // A step not yet done passes; so does one in progress closing on another step.
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'friday-record', lane: 'on_you', title: 'Record both cuts', ...READY, idea_id: FRIDAY }] })).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'monday-video', lane: 'in_progress', title: 'Cut the video', idea_id: PIECE, closes_on: 'video' }] })).status).toBe(200)
+    // An edit that does not touch the lane, the kind or the piece is not asked about.
+    Object.assign(db.tables.content_ideas.find(p => p.id === FRIDAY)!, { meta: recorded })
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'friday-record', detail: 'Both takes are in.' }] })).status).toBe(200)
+    // His Undo reopens a check's close on purpose, so his writes are never refused for it.
+    db.tables.work_board_items.push({ id: 'monday-record', lane: 'done', title: 'Record both cuts', ...READY, closed_by: 'check: record' })
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'monday-record', lane: 'on_you' }] }, 'krish')).status).toBe(200)
+    // A published piece made before the making record closes everything on it.
+    db.tables.content_ideas.push({ id: '11111111-2222-4333-8444-555555555555', state: 'published', buried_at: null, meta: null })
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'old-post', lane: 'in_progress', title: 'x', idea_id: '11111111-2222-4333-8444-555555555555', closes_on: 'published' }] })).body.error).toBe('already_done')
+  })
+
+  it("an agent's new open item says how it ends; an edit of an old one, and Krish's own, are not refused", async () => {
+    const out = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-new', lane: 'in_progress', title: 'New work' }] })
+    expect(out.status).toBe(400)
+    expect(out.body).toMatchObject({ error: 'open_needs_closes_on', item: 'doing-new', detail: 'Say how it ends: a check kind, or session if you will close it yourself.' })
+    expect((await call('POST', { action: 'upsert_items', client: 'runner', items: [{ id: 'doing-new', lane_if_new: 'in_progress', title: 'New work' }] })).body.error).toBe('open_needs_closes_on')
+    db.tables.work_board_items.push({ id: 'doing-remote', lane: 'in_progress', title: 'Old', closes_on: null, closed_by: null })
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'doing-remote', detail: 'Still going.' }] })).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'his-note', lane: 'in_progress', title: 'A note' }] }, 'krish')).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'sent-note', lane: 'done', title: 'Sent' }] })).status).toBe(200)
+  })
+
+  it('the board returns what a check let go for a week, so he can Undo it, and nothing else archived', async () => {
+    const day = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString()
+    db.tables.work_board_items.push(
+      { id: 'let-go-new', lane: 'archived', title: 'x', closed_by: 'check: session', updated_at: day(1) },
+      { id: 'let-go-old', lane: 'archived', title: 'x', closed_by: 'check: session', updated_at: day(8) },
+      { id: 'purged', lane: 'archived', title: 'x', closed_by: 'Krish', updated_at: day(1) },
+    )
+    const board = await call('GET', {}, 'krish')
+    expect(board.body.items.map((i: Row) => i.id)).toEqual(['let-go-new'])
+  })
+
+  it('a database refusal says its code and the constraint', async () => {
+    const { writeFailed } = await import('../../apps/control-plane/api/workbench.js')
+    expect(writeFailed('you-x', { code: '23514', message: 'new row for relation "work_board_items" violates check constraint "work_board_items_on_you_is_ready"' }))
+      .toEqual({ ok: false, error: 'board_write_failed', item: 'you-x', code: '23514', constraint: 'work_board_items_on_you_is_ready' })
+    expect(writeFailed('you-x', { message: 'timeout' })).toEqual({ ok: false, error: 'board_write_failed', item: 'you-x', code: null, constraint: null })
+  })
+
+  it("the watcher's question for an unmatched post passes the rule: held in progress, ended when it matches", async () => {
+    const { unmatchedItem } = await import('../../apps/control-plane/api/_publishWatch.js')
+    const { cleanItem, closeRefOk } = await import('../../apps/control-plane/api/workbench.js')
+    const q = unmatchedItem({ id: 77, title: 'A post', url: 'https://example.substack.com/p/a-post', posted_at: '2026-10-12T10:00:00Z', type: 'newsletter' })
+    expect(q).toMatchObject({ id: 'post-77', lane: 'in_progress', closes_on: 'post_matched', close_ref: { url: 'https://example.substack.com/p/a-post' } })
+    expect(closeRefOk(q.closes_on, q.close_ref, null, q.id)).toBe(true)
+    expect(cleanItem(q, true)).toMatchObject({ id: 'post-77', closes_on: 'post_matched' })
+    expect(() => cleanItem({ ...q, lane: 'on_you', only_you: 'judgment' }, true)).toThrow('on_you_needs_closes_on')
   })
 })

@@ -122,6 +122,21 @@ week's ticks"), reading last week's board too until every day on it is at
 Center shows it. An untick never removes a record. A Record tick is
 information only: Record is done from the takes on the record.
 
+**Every board item says how it ends; record the fact and the check closes
+it.** Krish, 2026-10-11: "I think closing what you can check is already
+done is one of the most obvious things I've ever heard of as a
+suggestion", and "I am happy to Clear(complete)/Bump/Purge things off my
+lists as I go but the rest should be automatically done." Every open item
+you write states `closes_on` (and `close_ref` when its kind needs one): a
+piece's step or `published`, the week's `week_planned` or
+`week_published`, `share_image_changed`, `job_ok`, `post_matched`,
+`take_placed`, `session` for work you hold, or `his_word` when nothing
+can see it done (only Krish puts one of those on his list). Close only items
+you hold (`closes_on` `session`), and the week's publish board by hand
+until the sweep is live (`make-piece`, step 7). A close or reopen you relay from his words carries
+his exact words in `said`. The rules and every refusal are in
+`WORKBENCH.md`, "The board".
+
 **Video production goes through `.agents/skills/produce-video`, and licensed
 music lives only at `MINDMAKE_MUSIC_ROOT` with its ledger
 `config/music-library.json`**; never browse Drive for audio.

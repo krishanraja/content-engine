@@ -96,11 +96,14 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      "This week", "title": "This week's publish board, 19 to 23 October",
      "detail": "One page for Monday, Wednesday and Friday. Tick each step as
      you do it; every tick is saved at once, and the next session copies it
-     onto the piece.", "link": "<its link>", "link_label": "Open this week's
-     publish board"}]}` (the id and the dates are the week's). It is held in
-     progress, never on his list: no step the engine can see closes it, so
-     the engine would refuse it on him (`WORKBENCH.md`, "The board"); each
-     day's own items (`monday-record` and the rest) are what reach his list. In
+     onto the piece.", "closes_on": "week_published", "link": "<its link>",
+     "link_label": "Open this week's publish board"}]}` (the id and the
+     dates are the week's). It says how it ends (`week_published`), and it
+     is held in progress, never on his list, until the done-check sweep that
+     can see a week published is live: until then `make-piece` moves it to
+     done by hand once every picked day is at 100% ("The week's ticks", step
+     7). Each day's own items (`monday-record` and the rest) are what reach
+     his list. In
      `WORKBENCH.md`, under "This week's publish board": the new week's line
      goes first, and the ending week's line moves under "Last week's
      publish board" (replacing the one there), where it stays until that

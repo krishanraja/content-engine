@@ -289,7 +289,9 @@ making record, which the engine, the board items and Control Center read.
 7. When every picked day of a board is at 100% (both cuts recorded and the
    standing five on the record), move that week's item
    (`week-publish-board-<its Monday>`) to `done`. Last week's board is then
-   no longer read, and its line leaves `WORKBENCH.md`.
+   no longer read, and its line leaves `WORKBENCH.md`. This hand close stays
+   until the done-check sweep that can see a week published is live; the
+   item already says `closes_on` `week_published` for it.
 8. Say in one line what was copied, for example "Copied from the week's
    board: Monday's Substack and YouTube".
 
@@ -309,8 +311,12 @@ him (`"lane": "on_you"`, such as recording both cuts) also carries
 `"only_you"` (`"face"` for a recording) and an `https://` `"link"` to what he
 acts on; without all of them, and the `idea_id` and `"closes_on"` above, the
 engine refuses it and names the field it lacks. A job of his that no step
-closes goes `"in_progress"`, its detail saying what would show it done, and
-you ask him in your reply.
+closes goes `"in_progress"` with `"closes_on": "session"`, its detail
+saying what would show it done, and you ask him in your reply. Every new
+open item says how it ends (the engine refuses one that does not,
+`open_needs_closes_on`). Record the fact; the check closes the item. Close
+only items you hold (`closes_on` `session`), and the week's publish board
+by hand ("The week's ticks", step 7) until the sweep can.
 
 ## Before you stop
 
