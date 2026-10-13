@@ -120,30 +120,38 @@ describe('POST /api/content-ideas names its source', () => {
     })
   }
 
-  // Merge order (review of step 3 PR 6, 2026-10-13). Control Center main still
-  // has two idea doors that POST manual with no ref: the Week page's "Drop in
-  // an idea" and the Cmd+I capture. Step 3 PR 4 retires them. Until it is
-  // live, the engine must keep filing what they send, so the refusal of a
-  // manual idea with no said: ref, and its database CHECK, ship after PR 4,
-  // never before (step3-plan.md, risks 10 and 11). The filer's said: ref is
-  // carried as written.
+  // Manual is his words (step 3, PR 6): only with a said: ref to the part he
+  // said. Control Center's step 3 PR 4 retired its other idea doors, so its
+  // filer (api/_sayRun.ts) is the one writer of manual, always with said:.
   for (const [label, ref] of [
-    ['no ref, as the Week page and the Cmd+I capture send it', undefined],
-    ['the said: ref the filer sends', 'said:00000000-0000-4000-8000-000000000001'],
+    ['no ref', undefined],
+    ['a ref that is not his words', 'shift:synthetic-shift'],
+    ['a said: ref that is not a part id', 'said:not-a-uuid'],
   ] as const) {
-    it(`until Control Center's doors are retired, files manual with ${label}`, async () => {
+    it(`refuses manual with ${label}: 400 manual_needs_his_words, and writes nothing`, async () => {
       const r = await postIdea({ raw_text: 'A synthetic idea', source_type: 'manual', ...(ref ? { source_ref: ref } : {}) })
-      expect(r.status).toBe(200)
-      expect(r.body).toMatchObject({ ok: true, via: 'dedup', id: 'existing-idea' })
-      expect(db.dedupSources).toEqual([{ source_type: 'manual', source_ref: ref ?? null, source_url: null }])
+      expect(r.status).toBe(400)
+      expect(r.body).toMatchObject({ ok: false, error: 'manual_needs_his_words' })
+      expect(db.calls).toEqual([])
+      expect(db.dedupSources).toEqual([])
     })
   }
 
-  it('no refusal of manual and no CHECK on it ship before Control Center step 3 PR 4 is live', () => {
-    const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')
-    expect(src).not.toMatch(/manual_needs_his_words/)
-    const migrations = readdirSync('supabase/migrations').map(f => readFileSync(`supabase/migrations/${f}`, 'utf8'))
-    expect(migrations.filter(m => /add constraint content_ideas_manual_is_his_words/i.test(m))).toEqual([])
+  it('accepts manual that names the part he said, and carries the ref', async () => {
+    const ref = 'said:00000000-0000-4000-8000-000000000001'
+    const r = await postIdea({ raw_text: 'A synthetic idea', source_type: 'manual', source_ref: ref })
+    expect(r.status).toBe(200)
+    expect(r.body).toMatchObject({ ok: true, via: 'dedup', id: 'existing-idea' })
+    expect(db.dedupSources).toEqual([{ source_type: 'manual', source_ref: ref, source_url: null }])
+  })
+
+  it('the database CHECK holds the same pattern, and exempts the one older row by its ref, not its date', async () => {
+    const { SAID_REF } = await import('../../apps/control-plane/api/content-ideas.js')
+    const sql = readFileSync('supabase/migrations/20261021100000_manual_is_his_words.sql', 'utf8')
+    expect(sql).toContain(`'${SAID_REF.source}'`)
+    expect(sql).toMatch(/source_ref, ''\) = 'krish-worked-example-2026-09-23'/)
+    expect(sql).not.toMatch(/created_at\s*</)
+    expect(sql).toMatch(/\bnot valid\b/)
   })
 
   it('never stores an unknown source as manual', () => {

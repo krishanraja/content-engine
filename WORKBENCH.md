@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-13, about 15:15 UTC, by a Claude Code session (cloud); the story intro and outro fix is on a local branch (Latest handoff); step 4 (one done-check sweep) is live; step 3's PR 1 (honest sources) is on its branch, waiting to ship.
+Last updated: 2026-10-13, about 19:40 UTC, by a Claude Code session (cloud); the `manual` refusal (step 3 PR 6, second half) is on branch `ccr-25d9e81a-manual-refusal`, live once merged (Latest handoff); step 4 (one done-check sweep) is live.
 
 ## How Krish wants to be worked with
 
@@ -599,6 +599,26 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, about 19:40 UTC: **`manual` now means his words, enforced**
+  (step 3 PR 6, second half; branch `ccr-25d9e81a-manual-refusal`). Control
+  Center #444 (retire the other doors) is merged and live: its main no
+  longer calls `/api/content-ideas/voice` and writes `source_type: 'manual'`
+  only from `api/_sayRun.ts`, always with `source_ref` `said:<said_parts id>`
+  (read on its main). Once this merges, `POST /api/content-ideas` refuses a
+  `manual` idea without that ref (400 `manual_needs_his_words`; `SAID_REF`
+  exported). Migration `20261021100000_manual_is_his_words.sql` (not
+  applied; version unused live) adds a NOT VALID CHECK with the same rule,
+  exempting the one older manual row by its `source_ref`
+  `krish-worked-example-2026-09-23`, not by date (a writer can backdate
+  `created_at`). Read live on 2026-10-13: one manual row, and it passes. CI
+  replays it twice and refuses a new manual row with no ref and a backdated
+  one with no ref, keeps one with `said:` and the exempt ref. Deleted:
+  `api/content-ideas/voice.ts` and `api/_whisper.ts`, and the transcription
+  guard's exception (`scripts/check-control-plane.ts`). **Next:** after the
+  merge, apply the migration by hand and read it back; Step 3 PR 8
+  validates the CHECK after 7 days with no `manual_needs_his_words` in the
+  engine log.
+
 - 2026-10-13, about 18:30 UTC: **Brief notes have one home** (step 3 PR 7,
   engine half). Cleo's standing brief preferences are now read from Control
   Center's `brief_standing_notes` view: his notes about content, said through
@@ -608,9 +628,10 @@ bring takes back, was retired on 12 October.
   `system_config` key, so nothing moved. Ships after Control Center's view
   migration is applied; until then the brief reads no notes, as before.
 
-- 2026-10-13, 16:40 UTC: **Step 3 PR 6 built, not merged, split after
-  review: his words reach the board now; the `manual` refusal waits for
-  Control Center** (branch `ccr-25d9e81a-manual-his-words`; Control Center's
+- 2026-10-13, 16:40 UTC: **Step 3 PR 6 (merged as #85), split after
+  review: his words reach the board now; the `manual` refusal followed
+  once Control Center's other doors were retired** (branch
+  `ccr-25d9e81a-manual-his-words`; Control Center's
   `docs/handoff/design-entropy-session/step3-plan.md`, PR 6, merge-order row
   11 of `goal-focus-plan.md`). In this PR: `GET /api/workbench` returns each
   open item's `said` notes (a failed or thrown read leaves the board up,
@@ -623,15 +644,11 @@ bring takes back, was retired on 12 October.
   POST `manual` with no ref: the Week page's "Drop in an idea"
   (`src/components/week/WeekBoard.tsx`) and the Cmd+I capture
   (`src/components/QuickCaptureIdea.tsx`). The plan says PR 6's refusal
-  follows PR 4 (risks 10 and 11), which is Control Center #444, not live yet. A test now
-  holds that order (`tests/control-plane/honest-sources.test.ts`). **Next,
-  once PR 4 is live** and Control Center main has no `source_type: 'manual'`
-  outside `api/_sayRun.ts`: bring back the refusal, its tests and the CHECK
-  from commit `a686bd5` on this branch, with one change: exempt the one
-  older manual row by its `source_ref` `krish-worked-example-2026-09-23`,
-  not by date (a writer can backdate `created_at`). Delete
-  `api/content-ideas/voice.ts` and `api/_whisper.ts` in the same PR: Control
-  Center main still calls `/api/content-ideas/voice`. Nothing to apply.
+  follows PR 4 (risks 10 and 11), which is Control Center #444. A test held
+  that order (`tests/control-plane/honest-sources.test.ts`). **Next:** done.
+  Control Center #444 is merged and live, and the refusal, its CHECK and the
+  deletion of the old idea recorder are on branch
+  `ccr-25d9e81a-manual-refusal` (the entry above).
 
 - 2026-10-13, about 15:15 UTC: **The story intro and outro engine fixed on
   Krish's review of Wednesday's video** (fonts, the title running off the

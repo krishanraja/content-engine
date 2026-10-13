@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { hisWordsProblems, manualProblems, MANUAL_ALLOW_LIST, TRANSCRIBE_EXCEPTION, transcriptionProblems } from '../../scripts/check-control-plane.js'
+import { hisWordsProblems, manualProblems, MANUAL_ALLOW_LIST, transcriptionProblems } from '../../scripts/check-control-plane.js'
 
 // Manual is his words (step 3 of the design entropy session, PR 6). The guard
 // in scripts/check-control-plane.ts holds two rules: no transcription call
-// under apps/ but the one named exception, and no 'manual' a writer could
-// store as a content idea's source outside the allow list. Synthetic sources.
+// under apps/ (no exception since the old idea recorder was deleted), and no
+// 'manual' a writer could store as a content idea's source outside the allow
+// list. Synthetic sources.
 
 const ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 
@@ -16,9 +17,12 @@ describe('rule 1: one way his voice becomes words', () => {
     expect(transcriptionProblems('apps/control-plane/api/notes/voice.ts', src)).toHaveLength(1)
   })
 
-  it('ignores one in a comment, and the named exception', () => {
+  it('ignores one in a comment', () => {
     expect(transcriptionProblems('apps/control-plane/api/x.ts', '// audio/transcriptions went away')).toEqual([])
-    expect(transcriptionProblems(TRANSCRIBE_EXCEPTION, "const U = 'https://api.openai.com/v1/audio/transcriptions'")).toEqual([])
+  })
+
+  it('has no exception: the old idea recorder fails too', () => {
+    expect(transcriptionProblems('apps/control-plane/api/_whisper.ts', "const U = 'https://api.openai.com/v1/audio/transcriptions'")).toHaveLength(1)
   })
 })
 
