@@ -1,0 +1,413 @@
+{
+ "series": "under_the_hood",
+ "logos": "logos/",
+ "cards": [
+  {
+   "file": "score-job.png",
+   "kind": "bars",
+   "kicker": "My scores, out of 10",
+   "title": "Can it do the job?",
+   "highlight": "Muse",
+   "rows": [
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "score": 9
+    },
+    {
+     "name": "ChatGPT",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 8
+    },
+    {
+     "name": "Gemini",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 7
+    },
+    {
+     "name": "Claude",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 6
+    },
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "score": 3
+    }
+   ],
+   "note": "Muse books, buys and negotiates. Siri works inside your apps."
+  },
+  {
+   "file": "score-price.png",
+   "kind": "bars",
+   "kicker": "My scores, out of 10",
+   "title": "What does it cost?",
+   "highlight": "Muse",
+   "rows": [
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "score": 10
+    },
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "score": 8
+    },
+    {
+     "name": "Gemini",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 6
+    },
+    {
+     "name": "Claude",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 6
+    },
+    {
+     "name": "ChatGPT",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 2
+    }
+   ],
+   "note": "Muse free \u00b7 Gemini $19.99 \u00b7 Claude $20 \u00b7 ChatGPT from $100"
+  },
+  {
+   "file": "score-reach.png",
+   "kind": "bars",
+   "kicker": "My scores, out of 10",
+   "title": "Is it already in your life?",
+   "highlight": "Muse",
+   "rows": [
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "score": 10
+    },
+    {
+     "name": "Gemini",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 9
+    },
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "score": 8
+    },
+    {
+     "name": "ChatGPT",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 7
+    },
+    {
+     "name": "Claude",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 4
+    }
+   ],
+   "note": "Meta owns Instagram and WhatsApp \u00b7 Gemini works with Gmail"
+  },
+  {
+   "file": "score-asks.png",
+   "kind": "bars",
+   "kicker": "My scores, out of 10",
+   "title": "Does it ask before it acts?",
+   "highlight": "Muse",
+   "rows": [
+    {
+     "name": "Claude",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 9
+    },
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "score": 8
+    },
+    {
+     "name": "ChatGPT",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 8
+    },
+    {
+     "name": "Gemini",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 7
+    },
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "score": 7
+    }
+   ],
+   "note": "All check before buying or sending. Claude asks the most."
+  },
+  {
+   "file": "score-private.png",
+   "kind": "bars",
+   "kicker": "My scores, out of 10",
+   "title": "Who can read your stuff?",
+   "highlight": "Muse",
+   "rows": [
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "score": 9
+    },
+    {
+     "name": "Claude",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 6
+    },
+    {
+     "name": "ChatGPT",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 4
+    },
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "score": 3
+    },
+    {
+     "name": "Gemini",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 3
+    }
+   ],
+   "note": "Meta can get to Muse data \"when necessary\". Apple: Private Cloud Compute."
+  },
+  {
+   "file": "score-side.png",
+   "kind": "bars",
+   "kicker": "My scores, out of 10",
+   "title": "Whose side is it on?",
+   "highlight": "Muse",
+   "rows": [
+    {
+     "name": "Claude",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 8
+    },
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "score": 8
+    },
+    {
+     "name": "ChatGPT",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 7
+    },
+    {
+     "name": "Gemini",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 4
+    },
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "score": 3
+    }
+   ],
+   "note": "Meta: $59.36bn of $60.8bn from ads last quarter"
+  },
+  {
+   "file": "chosen.png",
+   "kind": "statement",
+   "kicker": "What changes for shops",
+   "logos": [
+    "meta-cream.svg",
+    "instagram-cream.svg",
+    "google-cream.svg"
+   ],
+   "lines": [
+    {
+     "text": "Shops paid to be seen.",
+     "tone": "dim"
+    },
+    {
+     "text": "Next, they'll pay",
+     "tone": "plain"
+    },
+    {
+     "text": "to be picked.",
+     "tone": "answer"
+    }
+   ],
+   "note": "An assistant gives you one answer, not a list"
+  },
+  {
+   "file": "scorecard.png",
+   "kind": "table",
+   "kicker": "My scores, out of 10",
+   "title": "Muse and Siri tie, for opposite reasons",
+   "highlight": "Muse",
+   "columns": [
+    "Job",
+    "Price",
+    "Reach",
+    "Asks",
+    "Private",
+    "Side"
+   ],
+   "rows": [
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "scores": [
+      9,
+      10,
+      10,
+      8,
+      3,
+      3
+     ]
+    },
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "scores": [
+      3,
+      8,
+      8,
+      7,
+      9,
+      8
+     ]
+    },
+    {
+     "name": "Claude",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "scores": [
+      6,
+      6,
+      4,
+      9,
+      6,
+      8
+     ]
+    },
+    {
+     "name": "ChatGPT",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "scores": [
+      8,
+      2,
+      7,
+      8,
+      4,
+      7
+     ]
+    },
+    {
+     "name": "Gemini",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "scores": [
+      7,
+      6,
+      9,
+      7,
+      3,
+      4
+     ]
+    }
+   ]
+  },
+  {
+   "file": "prediction.png",
+   "kind": "statement",
+   "kicker": "My prediction",
+   "logos": [
+    "meta-cream.svg",
+    "openai-symbol-cream.svg",
+    "google-cream.svg",
+    "apple-cream.svg"
+   ],
+   "lines": [
+    {
+     "text": "By the end of 2027,",
+     "tone": "plain"
+    },
+    {
+     "text": "businesses pay to be",
+     "tone": "plain"
+    },
+    {
+     "text": "the one your AI picks.",
+     "tone": "answer"
+    }
+   ]
+  }
+ ]
+}

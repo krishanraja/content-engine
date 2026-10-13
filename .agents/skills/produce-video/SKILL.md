@@ -5,6 +5,19 @@ description: Produce Krish's finished videos once he has recorded them. Use when
 
 # Produce the video
 
+## Never call a video good without watching it
+
+Krish, 2026-10-13, after Wednesday's runner video went out with a title running
+off the page: "Did you actually watch these? ... I'm pissed off that you didn't
+pick them up." The runner's preview stills (one frame per beat) are not a
+review. Before telling Krish a video is ready, download both finished files and
+look at a frame every second of the whole cut, plus every quarter second of the
+intro and the outro, as one contact sheet per shape. Check: every word inside
+the frame at every moment of every animation, the brand faces only (Anton,
+Archivo, IBM Plex Mono), logos people recognise, badges and labels drawn the
+same way, nothing half-built in the 9:16 layout, no kicker that uses another
+series' ground. If anything fails, say so and fix the engine, not just the file.
+
 Krish, 2026-10-12: "give me a skill (or the codex equivalent) that
 understands everything going on here that invokes properly when I engage it
 for video production - i.e I will need to have dropped a video in the exact
