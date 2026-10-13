@@ -12,11 +12,17 @@
 //
 //   1. No code under apps/ or scripts/ writes a board item into done or
 //      archived, except the board route (apps/control-plane/api/workbench.ts).
+//      What is checked: a line in a file that touches the board naming lane
+//      with a literal 'done' or 'archived', or a board helper called with
+//      one; and, in any file, a write of closed_by, which only a close makes
+//      (so a closer that passes the lane through a variable is caught too).
+//      A lane passed through a variable with no closed_by is not seen here;
+//      the database trigger refuses that close (check_closes_it).
 //   2. The old closers' names are gone for good (tombstones).
 //   3. CLOSE_KINDS in the board route equals the kinds the newest migration's
 //      work_board_items_closes_on_check allows.
-//   4. The database trigger's session list (only_a_check_or_krish_closes)
-//      equals AGENT_CLIENTS (apps/control-plane/api/_editEvents.ts).
+//   4. The database trigger's agent list (only_a_check_or_krish_closes,
+//      agents) equals AGENT_CLIENTS (apps/control-plane/api/_editEvents.ts).
 //
 // The skills that write board items are held to the same rule by
 // `npm run skills:validate` (scripts/validate-skills.py, board_item_problems).
@@ -69,14 +75,17 @@ const CLOSING_LANE = /['"]?\blane['"]?\s*[:=]\s*['"](done|archived)['"]/
 /** A board helper called with a closing lane among its arguments. */
 const CLOSING_CALL = /\bboard(?:_upsert|_note|Call)?\(([^()]|\([^()]*\))*['"](done|archived)['"]/
 
+/** A write of closed_by: closed_by: x, 'closed_by': x, row['closed_by'] = x, closed_by=x. Not ==, ===, or a type. */
+const CLOSED_BY_WRITE = /['"]?\bclosed_by['"]?\]?\s*(?::(?!\s*(?:string|null|unknown|any)\b)|=(?!=))/
+
 /** Rule 1: the lines of one file that close a board item, or [] when none do. */
 export function closingWrites(path: string, text: string): string[] {
   if (path === ROUTE) return []
   const code = stripSelfTests(path, stripComments(path, text))
-  if (!TOUCHES_BOARD.test(code)) return []
+  const board = TOUCHES_BOARD.test(code)
   return code.split('\n')
     .map((line, i) => ({ line, n: i + 1 }))
-    .filter(({ line }) => CLOSING_LANE.test(line) || CLOSING_CALL.test(line))
+    .filter(({ line }) => CLOSED_BY_WRITE.test(line) || (board && (CLOSING_LANE.test(line) || CLOSING_CALL.test(line))))
     .map(({ line, n }) => `${path}:${n}: ${line.trim().slice(0, 120)}`)
 }
 
@@ -115,13 +124,35 @@ export function triggerClients(migrations: Array<[string, string]>): { file: str
   const defs = migrations.filter(([, sql]) => /function\s+public\.only_a_check_or_krish_closes\s*\(/i.test(sql)).sort(([a], [b]) => a.localeCompare(b))
   const newest = defs.at(-1)
   if (!newest) return null
-  const list = /old\.closes_on\s*=\s*'session'\s+and\s+new\.closed_by\s+in\s*\(([^)]*)\)/i.exec(newest[1])?.[1] ?? ''
+  const list = /\bagents\s+constant\s+text\[\]\s*:=\s*array\[([^\]]*)\]/i.exec(newest[1])?.[1] ?? ''
   return { file: newest[0], clients: quoted(list).sort() }
 }
 
 /** Rule 4: AGENT_CLIENTS in _editEvents.ts. */
 export function agentClients(editEvents: string): string[] {
   return quoted(/AGENT_CLIENTS\s*=\s*new Set\(\[([^\]]*)\]\)/.exec(editEvents)?.[1] ?? '').sort()
+}
+
+/** Rule 3: why the route's kinds and the newest migration's differ, or null when they agree. */
+export function kindsProblem(routeSrc: string, migrations: Array<[string, string]>): string | null {
+  const route = routeKinds(routeSrc)
+  const db = migrationKinds(migrations)
+  if (!route.length) return `rule 3: CLOSE_KINDS could not be read from ${ROUTE}`
+  if (!db) return 'rule 3: no migration sets work_board_items_closes_on_check'
+  if (route.join(',') !== db.kinds.join(',')) return `rule 3: CLOSE_KINDS in ${ROUTE} (${route.join(', ')}) differs from ${db.file} (${db.kinds.join(', ')})`
+  return null
+}
+
+/** Rule 4: why the trigger's agent list and AGENT_CLIENTS differ, or null when they agree. */
+export function clientsProblem(editEventsSrc: string, migrations: Array<[string, string]>): string | null {
+  const clients = agentClients(editEventsSrc)
+  const trigger = triggerClients(migrations)
+  if (!clients.length) return 'rule 4: AGENT_CLIENTS could not be read from apps/control-plane/api/_editEvents.ts'
+  if (!trigger) return 'rule 4: no migration defines only_a_check_or_krish_closes'
+  if (clients.join(',') !== trigger.clients.join(',')) {
+    return `rule 4: the trigger in ${trigger.file} lets ${trigger.clients.join(', ') || 'no client'} close session work, but AGENT_CLIENTS is ${clients.join(', ')}`
+  }
+  return null
 }
 
 function walk(dir: string, out: string[] = []): string[] {
@@ -146,19 +177,8 @@ export function check(): string[] {
 
   const migrations = readdirSync(join(ROOT, 'supabase/migrations')).filter(f => f.endsWith('.sql'))
     .map(f => [f, read(join('supabase/migrations', f))] as [string, string])
-  const route = routeKinds(read(ROUTE))
-  const db = migrationKinds(migrations)
-  if (!route.length) problems.push(`rule 3: CLOSE_KINDS could not be read from ${ROUTE}`)
-  else if (!db) problems.push('rule 3: no migration sets work_board_items_closes_on_check')
-  else if (route.join(',') !== db.kinds.join(',')) {
-    problems.push(`rule 3: CLOSE_KINDS in ${ROUTE} (${route.join(', ')}) differs from ${db.file} (${db.kinds.join(', ')})`)
-  }
-  const clients = agentClients(read('apps/control-plane/api/_editEvents.ts'))
-  const trigger = triggerClients(migrations)
-  if (!clients.length) problems.push('rule 4: AGENT_CLIENTS could not be read from apps/control-plane/api/_editEvents.ts')
-  else if (!trigger) problems.push('rule 4: no migration defines only_a_check_or_krish_closes')
-  else if (clients.join(',') !== trigger.clients.join(',')) {
-    problems.push(`rule 4: the trigger in ${trigger.file} lets ${trigger.clients.join(', ')} close session work, but AGENT_CLIENTS is ${clients.join(', ')}`)
+  for (const problem of [kindsProblem(read(ROUTE), migrations), clientsProblem(read('apps/control-plane/api/_editEvents.ts'), migrations)]) {
+    if (problem) problems.push(problem)
   }
   return problems
 }

@@ -58,7 +58,9 @@ import { supabase } from './_supabase.js'
 // Only the check, Krish, or a session on its own work closes an item. An
 // agent that is not relaying him may move an open item to done or archived
 // only when it closes_on session (409 check_closes_it), and may not reopen an
-// item a check closed (409 check_closed_it) unless it relays his words. Every
+// item a check closed (409 check_closed_it) unless it relays his words. No
+// agent turns a check's open item into session work, which would let it
+// close the item next (409 kind_is_the_checks). Every
 // open item says how it ends (400 open_needs_closes_on). The database holds
 // the same rules (20261023090000_one_closer.sql: the open-item CHECK and the
 // only_a_check_or_krish_closes trigger), and nothing else in the engine
@@ -428,6 +430,21 @@ export function closeRefusal(row: Json & { id: string }, before: BoardItemRow | 
     + 'to relay a close Krish made, send decided_by "Krish" and his exact words in "said".', row.id, 409)
 }
 
+/** Why an agent may not make a check's open item its own work, or null.
+ *  A session closes only closes_on session, so moving an open item from a
+ *  check's kind to session and then closing it would make it a second
+ *  closer. Only Krish (his cookie) or Control Center does that. A relayed
+ *  close of his is relayed as the close itself: the database cannot tell a
+ *  relay from a session (only_a_check_or_krish_closes). An item that said
+ *  nothing (no kind) may still be given session. */
+export function kindRefusal(row: Json & { id: string }, before: BoardItemRow | undefined, ctx: WriteContext): BoardRefusal | null {
+  if (!ctx.agent || !before || !OPEN_LANES.has(before.lane) || !('closes_on' in row)) return null
+  if (row.closes_on !== 'session' || !before.closes_on || before.closes_on === 'session') return null
+  return new BoardRefusal('kind_is_the_checks', `This item closes on ${before.closes_on}, so the done-check sweep closes it when it can see it done, or Krish clears it. `
+    + 'A session may not make it session work. Record the fact and leave the item; to relay a close Krish made, relay the close itself: '
+    + 'send lane done with decided_by "Krish" and his exact words in "said".', row.id, 409)
+}
+
 /** Why this writer may not reopen an item a check closed, or null. Only
  *  Krish reopens a check's close: his Undo, or his words relayed. */
 export function reopenRefusal(row: Json & { id: string }, before: BoardItemRow | undefined, ctx: WriteContext): BoardRefusal | null {
@@ -528,8 +545,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (ctx.relayed && closedBy !== undefined && !ctx.said) {
           throw new BoardRefusal('relayed_close_needs_his_words', `A close or reopen relayed from Krish carries his exact words in "said" (${SAID_MIN} to ${SAID_MAX} characters). They are kept on the item (closed_proof); on a close he sees them there and can Undo it.`, row.id)
         }
-        // Only the check, Krish, or a session on its own work closes an item; only Krish reopens a check's close.
-        const refused = closeRefusal(row, before, who, closer) ?? reopenRefusal(row, before, ctx)
+        // Only the check, Krish, or a session on its own work closes an item; only Krish reopens a
+        // check's close; and no agent makes a check's item session work to close it itself.
+        const refused = closeRefusal(row, before, who, closer) ?? reopenRefusal(row, before, ctx) ?? kindRefusal(row, before, ctx)
         if (refused) throw refused
       }
       // A piece's step the engine can already see done: nothing waits on anyone.

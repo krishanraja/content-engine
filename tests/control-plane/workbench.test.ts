@@ -802,6 +802,34 @@ describe('every item says how it ends, so a check can end it', () => {
     expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'you-welcome', lane: 'archived' }] })).status).toBe(200)
   })
 
+  it("a session cannot make a check's item its own work and then close it (kind_is_the_checks)", async () => {
+    db.tables.work_board_items.push(
+      { id: 'monday-record', lane: 'on_you', title: 'Record both cuts', ...READY, closed_by: null },
+      { id: 'you-launch', lane: 'in_progress', title: 'Set the share image', closes_on: 'share_image_changed', close_ref: { url: 'https://example.com/p/a', was: 'f' }, closed_by: null },
+      { id: 'you-welcome', lane: 'in_progress', title: 'Swap two days', closes_on: 'his_word', closed_by: null },
+      { id: 'doing-mine', lane: 'in_progress', title: 'My own work', closes_on: 'session', closed_by: null },
+    )
+    const writes = db.writes.length
+    // The two-step path: take the item off his list as session work, then close it.
+    const first = await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'monday-record', lane: 'in_progress', closes_on: 'session' }] })
+    expect([first.status, first.body.error, first.body.item]).toEqual([409, 'kind_is_the_checks', 'monday-record'])
+    for (const [id, client] of [['you-launch', 'codex'], ['you-welcome', 'runner'], ['you-launch', 'cron']] as const) {
+      const out = await call('POST', { action: 'upsert_items', client, items: [{ id, closes_on: 'session' }] })
+      expect([id, out.status, out.body.error]).toEqual([id, 409, 'kind_is_the_checks'])
+    }
+    // Relaying him does not change a kind either: the database cannot tell a relay from a session, so his close is relayed as a close.
+    const relayed = await call('POST', { action: 'upsert_items', client: 'claude_code', decided_by: 'Krish', said: 'That one is mine to finish now', items: [{ id: 'you-launch', closes_on: 'session' }] })
+    expect(relayed.body.error).toBe('kind_is_the_checks')
+    expect(relayed.body.detail).toContain('relay the close')
+    expect(db.writes.length).toBe(writes)
+    expect(item('monday-record')).toMatchObject({ lane: 'on_you', closes_on: 'record' })
+    expect((await call('POST', { action: 'upsert_items', client: 'claude_code', items: [{ id: 'monday-record', lane: 'done' }] })).body.error).toBe('check_closes_it')
+    // A session's own work may take a check kind, and Krish may make anything session work.
+    expect((await call('POST', { action: 'upsert_items', client: 'codex', items: [{ id: 'doing-mine', closes_on: 'his_word' }] })).status).toBe(200)
+    expect((await call('POST', { action: 'upsert_items', items: [{ id: 'you-launch', closes_on: 'session' }] }, 'krish')).status).toBe(200)
+    expect(item('you-launch')!.closes_on).toBe('session')
+  })
+
   it('only Krish reopens what a check closed (check_closed_it)', async () => {
     db.tables.work_board_items.push(
       { id: 'monday-record', lane: 'done', title: 'Record both cuts', ...READY, closed_by: 'check: record', closed_proof: 'The record step landed.' },

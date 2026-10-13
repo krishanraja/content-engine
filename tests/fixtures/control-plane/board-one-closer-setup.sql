@@ -20,7 +20,12 @@ insert into public.work_board_items (id, lane, title, detail, only_you, link, cl
   ('closer-session-b', 'in_progress', 'Another session''s own work', 'Synthetic.', null, null, 'session', '{}', null, 'claude_ai'),
   ('closer-image', 'in_progress', 'Set the share image', 'Synthetic.', 'login', 'https://example.com/settings', 'share_image_changed',
      '{"url": "https://example.com/p/a-post", "was": "0a1b2c3d-1111-4222-8333-444455556666_1200x800.png"}', null, 'control_center'),
-  ('closer-word', 'in_progress', 'Swap two days in the welcome email', 'Synthetic.', 'login', 'https://example.com/welcome', 'his_word', '{}', null, 'control_center')
+  ('closer-word', 'in_progress', 'Swap two days in the welcome email', 'Synthetic.', 'login', 'https://example.com/welcome', 'his_word', '{}', null, 'control_center'),
+  -- A check's items a session may not make its own work (kind_is_the_checks).
+  ('closer-kind-a', 'in_progress', 'Post the reposts', 'Synthetic.', null, null, 'publish', '{}', '6b3c0a51-2f0e-4d8a-9c41-7e2d5b9a0c11', 'claude_code'),
+  ('closer-kind-b', 'in_progress', 'Rerun the job', 'Synthetic.', null, null, 'job_ok', '{"job": "a-job", "after": "2026-10-13T00:00:00Z"}', null, 'codex'),
+  ('closer-kind-c', 'in_progress', 'Another note', 'Synthetic.', null, null, 'his_word', '{}', null, 'control_center'),
+  ('closer-kind-d', 'in_progress', 'A session''s own work, later checkable', 'Synthetic.', null, null, 'session', '{}', null, 'codex')
 on conflict (id) do nothing;
 
 -- What the re-created stale archive reads, beside the stand-in's columns.

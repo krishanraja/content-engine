@@ -79,7 +79,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
   if (!written?.length) return res.status(409).json({ ok: false, error: 'stale_row', problems: ['the piece changed while this was being written; nothing was written, so send it again'] })
   const after = { ...(row as any), meta: { ...meta, making: next } }
-  // The sweep looks at the items waiting on this piece now; a failed ask changes nothing.
+  // The sweep looks at the items waiting on this piece now. The write waits up
+  // to 3 s for the ask (_controlCenter.ts, ASK_MS); a failed ask changes nothing.
   const look = await askChecksForPiece(ideaId)
   return res.status(200).json({ ok: true, idea_id: ideaId, making: next, steps: makingSteps(after), closed: [], looked: look.keys })
 }

@@ -13,11 +13,16 @@ import { supabase } from './_supabase.js'
 // Both apps derive the same access cookie from the same ACCESS_CODE, which
 // is how Control Center speaks to the board here too (its api/_slate.ts).
 //
-// The ask is short and never fails the write that made it: when Control
-// Center is slow or down, its cron looks within 15 minutes anyway.
+// The ask is not fire-and-forget: the write that made it waits for it, up to
+// ASK_MS (3 seconds), before it answers, because a serverless function may
+// be frozen once it has answered and an ask left running would then never
+// be sent. Control Center runs the checks before it answers, so the ask
+// often takes the full 3 seconds, and every making write, Krish's channel
+// ticks included, answers up to 3 seconds later. It never fails the write:
+// when Control Center is slow or down, its cron looks within 15 minutes.
 
 export const DEFAULT_CONTROL_CENTER_URL = 'https://controlcenter.krishraja.com'
-/** How long a making write waits for the ask. */
+/** How long a making write (and the publish watcher) waits for the ask before it answers. */
 export const ASK_MS = 3_000
 /** The most keys one ask may carry (Control Center's route takes 1 to 10). */
 const MAX_KEYS = 10

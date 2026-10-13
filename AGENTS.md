@@ -133,7 +133,9 @@ piece's step or `published`, the week's `week_planned` or
 `take_placed`, `session` for work you hold, or `his_word` when nothing
 can see it done (only Krish puts one of those on his list). Close only items
 you hold (`closes_on` `session`); the engine and the database refuse any
-other close from a session (`check_closes_it`). A close or reopen you relay
+other close from a session (`check_closes_it`), and turning an open item
+that closes on a check's kind into `session` work (`kind_is_the_checks`).
+A close or reopen you relay
 from his words carries his exact words in `said`. Nothing in this
 repository closes a board item but the board route, which takes a close
 only from the sweep, Krish, or a session on its own work: a new kind of

@@ -303,6 +303,44 @@ describe('the publish watcher', () => {
     expect(asks.map(a => a.body.keys.sort())).toEqual([['board-friday-record', 'board-friday-substack']])
   })
 
+  it("a post a session recorded on a piece already published fills the piece's empty published_url, so the sweep's post_matched check sees it", async () => {
+    const url = 'https://home.makeyourmindup.ai/p/a-changed-title'
+    const friday = db.tables.content_ideas.find(r => r.id === FRIDAY)!
+    // Published through the content-ideas PATCH with no address; a session then ran making.py <piece> posted substack <url>.
+    friday.state = 'published'
+    friday.meta = { ...friday.meta, making: { ...friday.meta.making, channels: { substack: { url, posted_at: '2026-10-16T13:00:00Z' } } } }
+    db.tables.work_board_items.push({ id: 'post-401', lane: 'in_progress', idea_id: null, closes_on: 'post_matched', close_ref: { url }, link: url, title: 'Which piece is this post?' })
+    archive.posts = [{ id: 401, title: 'A title Krish changed at the last minute', canonical_url: url, post_date: '2026-10-16T13:00:00Z', type: 'newsletter' }]
+    const out = await run()
+    expect(out.status).toBe(200)
+    expect(friday).toMatchObject({ state: 'published', published_url: url })
+    expect(friday.published_at).toBe('2026-10-16T13:00:00Z')
+    // It records the address and closes nothing: the sweep ends post-401 once published_url is the post.
+    expect(db.tables.work_board_items.find(r => r.id === 'post-401')!.lane).toBe('in_progress')
+    expect(db.writes.filter(([t]) => t === 'work_board_items')).toEqual([])
+    expect((out.body.report as Row[]).find(r => r.post === url)).toMatchObject({ piece: FRIDAY, by: 'address', written: true })
+    // A second pass writes nothing more.
+    const pieceWrites = () => db.writes.filter(([t]) => t === 'content_ideas').length
+    const writes = pieceWrites()
+    await run()
+    expect(pieceWrites()).toBe(writes)
+  })
+
+  it('a piece already published under another address keeps it, and the report says so', async () => {
+    const url = 'https://home.makeyourmindup.ai/p/the-post'
+    const friday = db.tables.content_ideas.find(r => r.id === FRIDAY)!
+    friday.state = 'published'
+    friday.published_url = 'https://www.linkedin.com/posts/elsewhere'
+    friday.published_at = '2026-10-15T09:00:00Z'
+    friday.meta = { ...friday.meta, making: { ...friday.meta.making, channels: { substack: { url, posted_at: '2026-10-16T13:00:00Z' } } } }
+    archive.posts = [{ id: 402, title: 'Another changed title', canonical_url: url, post_date: '2026-10-16T13:00:00Z', type: 'newsletter' }]
+    const out = await run()
+    expect(friday.published_url).toBe('https://www.linkedin.com/posts/elsewhere')
+    expect(db.writes.filter(([t]) => t === 'content_ideas')).toEqual([])
+    expect((out.body.report as Row[]).find(r => r.post === url)).toMatchObject({ piece: FRIDAY, by: 'address', written: false })
+    expect((out.body.report as Row[]).find(r => r.post === url)!.note).toMatch(/published under another address/)
+  })
+
   it('never lets go of a question: an old one stays for the sweep, which ends it by its kind', async () => {
     const days = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString()
     db.tables.work_board_items.push(

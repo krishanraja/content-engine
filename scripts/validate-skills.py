@@ -97,6 +97,39 @@ def board_item_problems(skill: Path) -> list[str]:
     return problems
 
 
+def board_rule_self_test() -> list[str]:
+    """Proves board_item_problems can fail: a made-up board skill with an
+    item that says nothing of how it ends and a step that closes one gets one
+    problem for each, and a clean one gets none. Returns what went wrong."""
+    import tempfile
+
+    bad_item = '{"id": "friday-record", "lane": "on_you", "title": "Record both cuts"}'
+    closes = '{"id": "week-publish-board-2026-10-12", "lane": "done", "closes_on": "week_published"}'
+    clean = '{"id": "friday-record", "lane": "on_you", "closes_on": "record", "idea_id": "x"}'
+    cases = [
+        ("an item with no closes_on", f"Write closes_on on each item.\n\n```json\n{bad_item}\n```\n", 1, "does not say how it ends"),
+        ("a step that closes an item", f"Write closes_on on each item.\n\n```json\n{closes}\n```\n", 1, "tells a session to close"),
+        ("both at once", f"closes_on\n{bad_item}\n{closes}\n", 2, ""),
+        ("a skill that never says closes_on", "Write the item.\n", 1, "never says closes_on"),
+        ("a clean skill", f"Write closes_on on each item.\n\n```json\n{clean}\n```\n", 0, ""),
+    ]
+    failures: list[str] = []
+    with tempfile.TemporaryDirectory() as tmp:
+        skill = Path(tmp) / BOARD_SKILLS[0]
+        skill.mkdir()
+        for what, text, want, says in cases:
+            (skill / "SKILL.md").write_text(text, encoding="utf-8")
+            got = board_item_problems(skill)
+            if len(got) != want or (says and not all(says in g for g in got)):
+                failures.append(f"board rule self-test, {what}: wanted {want} problem(s), got {got}")
+        other = Path(tmp) / "not-a-board-skill"
+        other.mkdir()
+        (other / "SKILL.md").write_text(f"{bad_item}\n", encoding="utf-8")
+        if board_item_problems(other):
+            failures.append("board rule self-test: a skill that writes no board items was held to the rule")
+    return failures
+
+
 def local_validate(skill: Path) -> bool:
     source = (skill / "SKILL.md").read_text(encoding="utf-8")
     problems: list[str] = []
@@ -187,10 +220,21 @@ def sync_claude() -> int:
 def main() -> int:
     if sys.argv[1:] == ["--sync-claude"]:
         return sync_claude()
+    if sys.argv[1:] == ["--self-test"]:
+        failures = board_rule_self_test()
+        for failure in failures:
+            print(failure, file=sys.stderr)
+        if not failures:
+            print("board rule self-test: an item with no closes_on and a close are each caught; a clean skill passes")
+        return 1 if failures else 0
     if sys.argv[1:]:
-        print("usage: python scripts/validate-skills.py [--sync-claude]", file=sys.stderr)
+        print("usage: python scripts/validate-skills.py [--sync-claude | --self-test]", file=sys.stderr)
         return 2
+    # The board rule proves it can fail before it passes the real skills.
     failed = False
+    for failure in board_rule_self_test():
+        print(failure, file=sys.stderr)
+        failed = True
     for skill in sorted(SKILLS.iterdir()):
         if not skill.is_dir():
             continue

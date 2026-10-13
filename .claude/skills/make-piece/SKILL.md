@@ -319,7 +319,8 @@ open item says how it ends (the engine refuses one that does not,
 only items you hold (`closes_on` `session`): the engine refuses any other
 close from a session (`409 check_closes_it`) and any reopen of a check's
 close (`409 check_closed_it`), unless you relay Krish's own words in
-`"said"`.
+`"said"`. It never lets a session turn a check's item into `session` work
+(`409 kind_is_the_checks`); a close he made is relayed as the close.
 
 ## Before you stop
 

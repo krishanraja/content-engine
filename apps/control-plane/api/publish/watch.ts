@@ -13,8 +13,10 @@ import { ASK_WITHIN_HOURS, PUBLICATION_ARCHIVE, WATCH_FROM, matchPost, readPosts
 // on Substack, so the engine reads the publication's public archive (no key)
 // and, for each post that matches one piece (_publishWatch.ts), marks the
 // piece published: state, published_at, published_url, and, when the piece
-// has a making record, the Substack tick on it. This records a public fact;
-// it publishes nothing, and it never unpublishes.
+// has a making record, the Substack tick on it. A piece already published
+// with no published_url takes the address of the post that matched it, so
+// the sweep's post_matched check can see the post question answered. This
+// records a public fact; it publishes nothing, and it never unpublishes.
 //
 // A fresh post that matches no piece becomes one board item in progress for
 // a session, held once, closes_on post_matched with the post's address; it is
@@ -91,6 +93,21 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       published++
       // The sweep looks at this piece's items now rather than at its next pass.
       await askChecksForPiece(piece.id)
+    } else if (piece.published_url !== post.url) {
+      // Already published, matched by the post a session recorded on it
+      // (making.py <piece> posted substack <url>). The sweep's post_matched
+      // check reads published_url, so an empty one takes the post's address;
+      // one that names another address is kept and said.
+      if (piece.published_url) { report.push({ post: post.url, piece: piece.id, by: m.by, written: false, note: `published under another address (${piece.published_url.slice(0, 120)}); kept` }); continue }
+      const stamp = now.toISOString()
+      const write = await supabase.from('content_ideas').update({
+        published_url: post.url,
+        published_at: piece.published_at || post.posted_at,
+        updated_at: stamp,
+      }).eq('id', piece.id).eq('updated_at', piece.updated_at).select('id')
+      if (write.error || !write.data?.length) { report.push({ post: post.url, piece: piece.id, by: m.by, written: false, note: write.error?.message || 'the row changed; the next pass tries again' }); continue }
+      piece.published_url = post.url
+      piece.updated_at = stamp
     }
     report.push({ post: post.url, piece: piece.id, by: m.by, written: true })
   }

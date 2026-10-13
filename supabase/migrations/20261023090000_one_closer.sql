@@ -22,7 +22,10 @@
 --    ('check: <kind>' with its proof in closed_proof), or an agent client on
 --    an item that closes_on session. The agent clients are AGENT_CLIENTS in
 --    apps/control-plane/api/_editEvents.ts (scripts/check-one-close.ts fails
---    when the two lists differ). Anything else raises check_closes_it. It
+--    when the two lists differ). Anything else raises check_closes_it. And
+--    an agent client (updated_by) may not turn an open item that closes on a
+--    check's kind into session work, which would let it close the item next:
+--    that raises kind_is_the_checks. Krish and Control Center still can. It
 --    stops mistakes: an old closer left in a script, a session closing a
 --    check's item, a flow writing done. It does not stop forgery: a writer
 --    with the service role can still set closed_by 'Krish'. The engine's
@@ -45,14 +48,23 @@ alter table public.work_board_items validate constraint work_board_items_open_sa
 
 create or replace function public.only_a_check_or_krish_closes() returns trigger
 language plpgsql as $$
+declare
+  -- AGENT_CLIENTS in apps/control-plane/api/_editEvents.ts (scripts/check-one-close.ts).
+  agents constant text[] := array['codex', 'claude_code', 'claude_ai', 'chatgpt', 'runner', 'cron'];
 begin
   if old.lane in ('on_you', 'in_progress') and new.lane in ('done', 'archived') then
     if new.closed_by = 'Krish'
        or (new.closed_by like 'check: %' and new.closed_proof is not null)
-       or (old.closes_on = 'session' and new.closed_by in ('codex', 'claude_code', 'claude_ai', 'chatgpt', 'runner', 'cron')) then
+       or (old.closes_on = 'session' and new.closed_by = any(agents)) then
       return new;
     end if;
     raise exception 'check_closes_it: % may not close % (closes_on %)', coalesce(new.closed_by, 'nobody'), old.id, coalesce(old.closes_on, 'none')
+      using errcode = 'P0001';
+  end if;
+  -- A session that made a check's open item session work could close it next.
+  if old.lane in ('on_you', 'in_progress') and new.closes_on = 'session' and old.closes_on <> 'session'
+     and new.updated_by = any(agents) then
+    raise exception 'kind_is_the_checks: % may not make % session work (closes_on %)', new.updated_by, old.id, old.closes_on
       using errcode = 'P0001';
   end if;
   return new;
@@ -60,7 +72,7 @@ end $$;
 
 drop trigger if exists only_a_check_or_krish_closes on public.work_board_items;
 create trigger only_a_check_or_krish_closes
-  before update of lane on public.work_board_items
+  before update of lane, closes_on on public.work_board_items
   for each row execute function public.only_a_check_or_krish_closes();
 
 CREATE OR REPLACE FUNCTION public.archive_stale_content_ideas(p_days integer DEFAULT NULL::integer, p_dry_run boolean DEFAULT false)

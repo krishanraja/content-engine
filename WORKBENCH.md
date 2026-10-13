@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-13, about 04:30 UTC, by a Claude Code session (cloud); step 4 part C (one closer) built on its branch.
+Last updated: 2026-10-13, about 05:00 UTC, by a Claude Code session (cloud); step 4 part C (one closer) built on its branch, review fixes in.
 
 ## How Krish wants to be worked with
 
@@ -410,7 +410,10 @@ item by its kind. The kinds (`closes_on`), with what each needs:
 The engine refuses, by name: an open item, new or edited, from anyone, with
 no kind (`400 open_needs_closes_on`); a session closing an item that is not
 its own work, that is anything but `closes_on` `session` (`409
-check_closes_it`: record the fact and leave it); a session reopening an item
+check_closes_it`: record the fact and leave it); a session turning an open
+item that closes on a check's kind into `session` work, relayed or not,
+which would let it close the item next (`409 kind_is_the_checks`; a close
+Krish made is relayed as the close itself); a session reopening an item
 a check closed (`409 check_closed_it`; only Krish does, by his Undo or his
 words relayed); a kind on an open item without what it needs
 (`400 close_ref_invalid`); an item whose piece step it can already see done
@@ -599,8 +602,9 @@ bring takes back, was retired on 12 October.
   In plain words:
   - **The engine closes nothing now.** `_boardClose.ts` is gone. A making
     write asks Control Center's done-check sweep to look at the piece's
-    open items at once (`_controlCenter.ts`, 3 seconds, the shared access
-    cookie; a failed ask leaves it to the 15-minute cron). The publish
+    open items at once (`_controlCenter.ts`, the shared access cookie; the
+    write waits up to 3 seconds for the ask before it answers, so a tick can
+    answer that much slower; a failed ask leaves it to the 15-minute cron). The publish
     watcher still marks pieces published and asks the sweep to look, but
     closes and lets go of nothing. The purge archives no item; it keeps any
     piece an open item names (`kept_for_board`). The recordings lane notes a
@@ -632,6 +636,20 @@ bring takes back, was retired on 12 October.
     nothing (on 13 October, 8 in-progress rows had no kind: backfill step
     1 gives them one). Until part B is live, Control Center's slate still
     closes the week's item with its own client, which this branch refuses.
+  - **Review fixes, same branch, later on 13 October.** A session could
+    still close a check's item in two writes: first make it `session` work,
+    then close it. The board route now refuses that (`409
+    kind_is_the_checks`), and so does the database trigger (it also fires
+    on a change of `closes_on`; replayed twice on a scratch Postgres, and the
+    new regression fails on the old trigger). The guard now proves rules 3
+    and 4 can fail, catches any write of `closed_by` outside the board route,
+    and `skills:validate` proves its board rule can fail before it runs. The
+    publish watcher fills an empty `published_url` on a piece already
+    published when a session recorded the post on it, so the sweep can end
+    that post's question as done. Still open, in Control Center: a piece
+    already published under another address keeps it, so its post question
+    is let go after a week instead of closed as done, until the sweep's
+    `post_matched` check also reads the piece's recorded Substack post.
   - **Next:** part B's own readbacks, the backfill steps, then this branch.
 
 - 2026-10-13, Tuesday, early: **Step 4, part A: every board item says how

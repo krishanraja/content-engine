@@ -55,6 +55,40 @@ begin
     where id in ('closer-record', 'closer-publish', 'closer-image', 'closer-word', 'closer-session-a') and lane not in ('on_you', 'in_progress');
   if n <> 0 then raise exception 'a refused close moved an item'; end if;
 
+  -- No agent makes a check's open item session work, alone or on the way to closing it.
+  for r in select * from (values
+      ('a session taking a check''s item', $q$update public.work_board_items set closes_on = 'session', updated_by = 'claude_code' where id = 'closer-kind-a'$q$),
+      ('a session taking a job''s item', $q$update public.work_board_items set closes_on = 'session', close_ref = '{}', updated_by = 'codex' where id = 'closer-kind-b'$q$),
+      ('a runner taking his_word', $q$update public.work_board_items set closes_on = 'session', updated_by = 'runner' where id = 'closer-kind-c'$q$),
+      ('the cron taking one', $q$update public.work_board_items set closes_on = 'session', updated_by = 'cron' where id = 'closer-kind-a'$q$)
+    ) as t(what, stmt) loop
+    refused := false;
+    begin
+      execute r.stmt;
+    exception when raise_exception then
+      refused := sqlerrm like 'kind_is_the_checks:%';
+    end;
+    if not refused then raise exception 'a check''s item became session work: %', r.what; end if;
+  end loop;
+  -- And the close that would follow is still refused.
+  refused := false;
+  begin
+    update public.work_board_items set lane = 'done', closes_on = 'session', closed_by = 'claude_code', updated_by = 'claude_code' where id = 'closer-kind-a';
+  exception when raise_exception then
+    refused := sqlerrm like 'check_closes_it:%';
+  end;
+  if not refused then raise exception 'a session closed a check''s item by making it session work in the same write'; end if;
+  select count(*) into n from public.work_board_items
+    where id in ('closer-kind-a', 'closer-kind-b', 'closer-kind-c') and (closes_on = 'session' or lane not in ('on_you', 'in_progress'));
+  if n <> 0 then raise exception 'a refused change of kind was written'; end if;
+  -- Krish and Control Center may; a session may give its own work a check's kind.
+  update public.work_board_items set closes_on = 'session', updated_by = 'Krish' where id = 'closer-kind-a';
+  update public.work_board_items set closes_on = 'session', updated_by = 'control_center' where id = 'closer-kind-c';
+  update public.work_board_items set closes_on = 'his_word', updated_by = 'codex' where id = 'closer-kind-d';
+  select count(*) into n from public.work_board_items
+    where (id in ('closer-kind-a', 'closer-kind-c') and closes_on = 'session') or (id = 'closer-kind-d' and closes_on = 'his_word');
+  if n <> 3 then raise exception 'an allowed change of kind was refused: % of 3', n; end if;
+
   -- What may close one.
   update public.work_board_items set lane = 'done', closed_by = 'check: record', closed_proof = 'The record step landed, 14 Oct 10:14 AM.' where id = 'closer-record';
   update public.work_board_items set lane = 'done', closed_by = 'Krish' where id = 'closer-word';
