@@ -168,9 +168,9 @@ yet, and prints one line per file:
   never makes a short take look old. With `--board` each unsure take is one
   board item held in progress for a session (never on his list: you ask him
   in your reply), asked once, and never reopened once he or a session
-  closed it. Tied to a piece it closes on Record; the lane ends one with no
-  piece once its take is placed or no waiting piece can be it, and the
-  engine lets one no session touches go after a week.
+  closed it. Control Center's done-check sweep closes it once the take is
+  on a piece; the lane notes one no waiting piece can be (the sweep then
+  lets it go), and the sweep lets one no session touches go after a week.
 - `left alone`: an older take of the same cut, or a take that arrived
   before any waiting piece's record began, so it is none of their takes.
 - `failed`: say which step failed (the download broke, a transcriber that

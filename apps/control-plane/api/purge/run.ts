@@ -6,6 +6,8 @@ import { isoWeekLabel, queueWindowStart } from '../_weeks.js'
 import { withContentRun } from '../_runs.js'
 import { recordObservations, type ObservationInput, type ObservationOrigin } from '../_observations.js'
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 // The Monday purge (Content Engine v2, spec §4). Mon 14:00 UTC, after send.
 //
 // R10: hard delete, no cold archive. Every time-sensitive item meets one of
@@ -105,13 +107,29 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     // scheduled piece waits for its day). Options offered for the week have
     // their expiry moved past it when they are offered (api/week/options.ts).
     const today = nowIso.slice(0, 10)
-    const doomedOnly = <Q extends { not: Function; lte: Function; is: Function; or: Function }>(q: Q): Q => q
+    // A row an open board item names is kept until the item ends (kept_for_board):
+    // the delete would empty the item's idea_id, and an open item that closes
+    // on a piece's step must name its piece (work_board_items_open_says_how_it_ends).
+    // The purge closes no board item; Control Center's done-check sweep ends
+    // each by its kind (step 4).
+    const { data: open, error: openErr } = await supabase.from('work_board_items').select('idea_id').in('lane', ['on_you', 'in_progress']).not('idea_id', 'is', null).limit(1000)
+    if (openErr) throw new Error(openErr.message)
+    const named = [...new Set(((open || []) as Array<{ idea_id: string }>).map(i => i.idea_id))].filter(id => UUID.test(id))
+    const expiring = <Q extends { not: Function; lte: Function; is: Function; or: Function }>(q: Q): Q => q
       .not('expires_at', 'is', null)
       .lte('expires_at', nowIso)
       .is('shift_id', null)
       .is('library_at', null)
       .not('state', 'in', '("drafting","review","approved","published")')
       .or(`scheduled_for.is.null,scheduled_for.lt.${today}`)
+    const doomedOnly = <Q extends { not: Function; lte: Function; is: Function; or: Function }>(q: Q): Q =>
+      named.length ? expiring(q).not('id', 'in', `(${named.join(',')})`) : expiring(q)
+    // Rows that would go but for an open board item, counted so the run says so.
+    const { data: keptRows, error: keptErr } = named.length
+      ? await expiring(supabase.from('content_ideas').select('id').in('id', named))
+      : { data: [], error: null }
+    if (keptErr) throw new Error(keptErr.message)
+    const kept_for_board = ((keptRows || []) as Array<{ id: string }>).map(r => r.id)
     const { count: toExpire } = await doomedOnly(supabase
       .from('content_ideas')
       .select('id', { count: 'exact', head: true }))
@@ -119,10 +137,6 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     let expired = 0
     let archived_to: string | null = null
     let observations_recorded = 0
-    // The board items archived with their row, counted like everything else
-    // the purge touches; the ones that were on Krish's list left it.
-    let board_items_archived: string[] = []
-    let board_items_off_his_list: string[] = []
     if (toExpire) {
       // Export before deleting. This is the only hard delete in the engine and
       // it runs unattended every Monday, so "we purged the wrong thing" has
@@ -163,26 +177,6 @@ async function handler(req: VercelRequest, res: VercelResponse) {
         })
       }
       observations_recorded = archive.written
-
-      // A board item about a row that is going is archived first, as a
-      // dropped piece's are (_boardClose.ts). The delete would empty its
-      // idea_id, and an item waiting on Krish must name its piece
-      // (work_board_items_on_you_is_ready), so one left on him would stop the
-      // whole delete.
-      const going = new Set((doomed || []).map((r: { id: string }) => r.id))
-      const { data: open, error: openErr } = await supabase.from('work_board_items').select('id,idea_id,lane').in('lane', ['on_you', 'in_progress']).not('idea_id', 'is', null).limit(1000)
-      if (openErr) throw new Error(openErr.message)
-      const tied = ((open || []) as Array<{ id: string; idea_id: string; lane: string }>).filter(i => going.has(i.idea_id))
-      if (tied.length) {
-        const onHisList = new Set(tied.filter(i => i.lane === 'on_you').map(i => i.id))
-        const { data: moved, error: boardErr } = await supabase.from('work_board_items')
-          .update({ lane: 'archived', updated_by: 'engine: piece purged', closed_by: 'engine: piece purged', updated_at: nowIso })
-          .in('id', tied.map(i => i.id)).in('lane', ['on_you', 'in_progress'])
-          .select('id')
-        if (boardErr) throw new Error(boardErr.message)
-        board_items_archived = ((moved || []) as Array<{ id: string }>).map(i => i.id)
-        board_items_off_his_list = board_items_archived.filter(id => onHisList.has(id))
-      }
 
       const { error: delErr, count } = await doomedOnly(supabase
         .from('content_ideas')
@@ -269,7 +263,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       actor: 'content-engine-v2',
       details: {
         week, expired, archived_to, observations_recorded,
-        board_items_archived, board_items_off_his_list,
+        kept_for_board,
         briefs_archived: (archived || []).map(a => a.week),
         decisions_swept: (sweptRows || []).length + (sweptPreviews || []).length,
         swept_by_kind: swept,
@@ -278,7 +272,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.json({
       ok: true, week, expired, archived_to, observations_recorded,
-      board_items_archived, board_items_off_his_list,
+      kept_for_board,
       briefs_archived: (archived || []).length,
       decisions_swept: (sweptRows || []).length + (sweptPreviews || []).length,
       swept_by_kind: swept,

@@ -522,3 +522,29 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   if (first && first.state === 'todo') first.state = 'now'
   return steps.map(s => ({ ...s, owner: MAKING_OWNERS[s.key] || 'Claude' }))
 }
+
+/** A piece as pieceVerdict reads it. */
+export interface PieceState { id: string; state?: string | null; buried_at?: string | null; meta?: Record<string, any> | null }
+
+/**
+ * Whether a piece's state ends an item that waits on one of its steps
+ * (closes_on a making step or 'published'): 'done' when the step is done,
+ * 'moot' when the piece is gone, else null. The engine uses it only to
+ * refuse an item whose step is already done (api/workbench.ts,
+ * already_done); Control Center's done-check sweep closes items by the same
+ * rules, from this piece's steps (GET /api/content-ideas/<id>/making).
+ *
+ *   - the publish step is done (the standing five; Krish, 2026-10-11), or
+ *     the piece is published and was not made with the making record -> done
+ *   - closes_on 'published' and the Substack post is live          -> done
+ *   - the piece is dropped, absorbed or buried                       -> moot
+ *   - its closes_on step is done                                     -> done
+ */
+export function pieceVerdict(piece: PieceState, closesOn: string, steps: MakingStep[] = makingSteps(piece)): 'done' | 'moot' | null {
+  const published = piece.state === 'published'
+  const done = new Set(steps.filter(s => s.state === 'done').map(s => s.key))
+  if (done.has('publish') || (published && !madeWithRecord(piece.meta))) return 'done'
+  if (piece.state === 'dropped' || piece.state === 'absorbed' || piece.buried_at) return 'moot'
+  if (published && closesOn === 'published') return 'done'
+  return closesOn !== 'published' && done.has(closesOn) ? 'done' : null
+}

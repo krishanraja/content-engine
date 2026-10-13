@@ -286,27 +286,28 @@ making record, which the engine, the board items and Control Center read.
 6. An untick never removes anything: a channel on the record whose tick now
    reads not done stays on the record. Tell Krish in one line and ask
    whether it went out.
-7. When every picked day of a board is at 100% (both cuts recorded and the
-   standing five on the record), move that week's item
-   (`week-publish-board-<its Monday>`) to `done`. Last week's board is then
-   no longer read, and its line leaves `WORKBENCH.md`. This hand close stays
-   until the done-check sweep that can see a week published is live; the
-   item already says `closes_on` `week_published` for it.
+7. Leave the week's item (`week-publish-board-<its Monday>`) alone: it says
+   `closes_on` `week_published`, and Control Center's done-check sweep
+   closes it once every picked day is at 100% on the record (both cuts
+   recorded and the standing five there). Copying the ticks is what lets it
+   see that. Once that item is done, last week's board is no longer read,
+   and its line leaves `WORKBENCH.md`.
 8. Say in one line what was copied, for example "Copied from the week's
    board: Monday's Substack and YouTube".
 
 Where completion is recorded: in the board's store the moment he ticks; on
 the piece's making record when the next session copies it; and from the
-record, on the board items (the publish step closes every item tied to the
-piece once the standing five are there) and in Control Center.
+record, on the board items (the done-check sweep closes every item tied to
+the piece once the standing five are there) and in Control Center.
 
 ## Board items about this piece
 
 Every board item you write about this piece carries `"idea_id": "<uuid>"`
 and, when one step finishes it, `"closes_on": "<step>"` (WORKBENCH.md, "The
-board"). The engine closes it when that step lands, and closes every item
-about the piece once its publish step is done (the standing five ticked), so
-nothing about a finished piece lingers on Krish's board. An item waiting on
+board"). Control Center's done-check sweep closes it when that step lands,
+and closes every item about the piece once its publish step is done (the
+standing five ticked), so nothing about a finished piece lingers on Krish's
+board. An item waiting on
 him (`"lane": "on_you"`, such as recording both cuts) also carries
 `"only_you"` (`"face"` for a recording) and an `https://` `"link"` to what he
 acts on; without all of them, and the `idea_id` and `"closes_on"` above, the
@@ -315,8 +316,11 @@ closes goes `"in_progress"` with `"closes_on": "session"`, its detail
 saying what would show it done, and you ask him in your reply. Every new
 open item says how it ends (the engine refuses one that does not,
 `open_needs_closes_on`). Record the fact; the check closes the item. Close
-only items you hold (`closes_on` `session`), and the week's publish board
-by hand ("The week's ticks", step 7) until the sweep can.
+only items you hold (`closes_on` `session`): the engine refuses any other
+close from a session (`409 check_closes_it`) and any reopen of a check's
+close (`409 check_closed_it`), unless you relay Krish's own words in
+`"said"`. It never lets a session turn a check's item into `session` work
+(`409 kind_is_the_checks`); a close he made is relayed as the close.
 
 ## Before you stop
 

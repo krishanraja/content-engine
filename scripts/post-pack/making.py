@@ -875,23 +875,26 @@ def board_upsert(items, call=None, by=None):
     return written, left
 
 
-def board_close(lanes, call=None, by=None):
-    """Ends a tool's own questions: {item id: "done" or "archived"}. It reads
-    the board first and writes only the items still open there, so one Krish
-    or a session closed keeps its close, and one the board no longer lists is
-    left alone. Returns the ids written. Raises MakingError when the board
-    cannot be read or refuses."""
+def board_note(fields, call=None, by=None):
+    """Adds what a tool learned to its own open questions, never their lane:
+    {item id: {field: value}}, for example a take no waiting piece can be
+    ({"close_ref": {"no_piece": true}}). It reads the board first and writes
+    only the items still open there. A tool closes nothing: Control Center's
+    done-check sweep ends each item by its kind (take_placed: once the take
+    is on a piece, or no piece can be it). Returns the ids written. Raises
+    MakingError when the board cannot be read or refuses."""
     call = call or _engine_call
-    if not lanes:
+    if not fields:
         return []
     on_board = _board_lanes(call)
-    send = [{'id': item_id, 'lane': lane} for item_id, lane in lanes.items() if on_board.get(item_id) in ('on_you', 'in_progress')]
+    send = [dict({k: v for k, v in f.items() if k not in ('lane', 'lane_if_new')}, id=item_id)
+            for item_id, f in fields.items() if on_board.get(item_id) in ('on_you', 'in_progress')]
     written = []
     for start in range(0, len(send), 50):
         chunk = send[start:start + 50]
         status, text = call('POST', BOARD_PATH, {'action': 'upsert_items', 'client': board_client(by), 'items': chunk})
         if status != 200:
-            raise MakingError(f'the board did not close {len(chunk)} question(s) ({status}: {str(text)[:200]})')
+            raise MakingError(f'the board did not take {len(chunk)} note(s) ({status}: {str(text)[:200]})')
         written += [i['id'] for i in chunk]
     return written
 
@@ -1242,12 +1245,13 @@ def self_test():
     check('board: one on his list moves off it when the tool holds the question in progress; a tool never moves one on to him',
           (sent_items['take-open'].get('lane'), 'lane' in sent_items['take-held'], 'lane_if_new' in sent_items['take-held']), ('in_progress', False, False))
     board_sent.clear()
-    closed = board_close({'take-done': 'archived', 'take-open': 'done', 'take-held': 'archived', 'take-gone': 'archived'}, board, 'Recordings lane')
-    check('board_close: only the items still open are closed, one closed by Krish or a session keeps its close',
-          (sorted(closed), sorted((i['id'], i['lane']) for i in board_sent[-1]['items']), board_sent[-1]['client']),
-          (['take-held', 'take-open'], [('take-held', 'archived'), ('take-open', 'done')], 'runner'))
+    noted = board_note({'take-done': {'close_ref': {'no_piece': True}}, 'take-open': {'close_ref': {'no_piece': True}, 'lane': 'done'},
+                        'take-held': {'close_ref': {'no_piece': True}}, 'take-gone': {'close_ref': {'no_piece': True}}}, board, 'Recordings lane')
+    check('board_note: only the items still open are noted, never with a lane, so a tool closes nothing',
+          (sorted(noted), sorted((i['id'], i.get('lane'), i['close_ref']) for i in board_sent[-1]['items']), board_sent[-1]['client']),
+          (['take-held', 'take-open'], [('take-held', None, {'no_piece': True}), ('take-open', None, {'no_piece': True})], 'runner'))
     board_sent.clear()
-    check('board_close: nothing to close writes nothing', (board_close({'take-done': 'archived'}, board, 'Codex'), board_sent), ([], []))
+    check('board_note: nothing to note writes nothing', (board_note({'take-done': {'close_ref': {}}}, board, 'Codex'), board_sent), ([], []))
     old_engine = []
 
     def older_board(method, path, body):

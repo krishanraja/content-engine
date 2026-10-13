@@ -16,9 +16,10 @@
 // A title Krish changed in Substack at the last minute matches nothing, and
 // the board then holds one item for a session, once: which piece it is. It
 // is not on Krish, because nothing he can press answers it and it would not
-// say how it closes; it closes itself once a session records the post on its
-// piece and the post matches by address (publish/watch.ts), and one no
-// session touches for a week is let go (_boardClose.ts, heldToLetGo).
+// say how it closes; it closes itself (post_matched, Control Center's
+// done-check sweep) once a session records the post on its piece and the
+// watcher matches the post by address, and one no session touches for a
+// week is let go by the same sweep.
 
 export const PUBLICATION_ARCHIVE = 'https://home.makeyourmindup.ai/api/v1/archive?sort=new&limit=25'
 /** Posts older than this are history the engine never tracked; the first piece it made went out on 5 October 2026. */
@@ -91,8 +92,8 @@ export function unmatchedItem(post: Post) {
     title: `Which piece is this post? ${post.title}`.slice(0, 200),
     detail: 'It went out on Substack, but its title matches no piece, so the engine cannot mark anything published or close the items waiting on it. '
       + 'A session works out which piece it is and records the post on it (making.py <piece id> posted substack <the post link>); '
-      + 'this item then closes itself on the watcher\'s next hourly pass. If it is not a piece, the session archives this item; '
-      + 'left untouched for a week, the watcher lets it go.',
+      + 'this item then closes itself once the watcher\'s next hourly pass matches the post. If it is not a piece, leave it: '
+      + 'untouched for a week, it is let go.',
     link: post.url,
     link_label: 'Open the post',
     // How it ends (step 4's done-check sweep): once a piece's published_url is this post.
@@ -101,7 +102,7 @@ export function unmatchedItem(post: Post) {
   }
 }
 
-/** The id of a post's board item, so the pass that matches the post can close it. */
+/** The id of a post's board item: one question for each post. */
 export function unmatchedItemId(post: Pick<Post, 'id'>): string {
   return `post-${post.id}`.slice(0, 80)
 }

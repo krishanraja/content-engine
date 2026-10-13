@@ -167,6 +167,13 @@ jobs:
           psql_in supabase/migrations/20261022091000_on_you_closes_itself.sql
           psql_in supabase/migrations/20261022091000_on_you_closes_itself.sql
           psql_in tests/fixtures/control-plane/board-close-kinds-regression.sql
+          # Step 4, part C: one closer. Every open item says how it ends, and
+          # only a check, Krish, or a session on its own work closes one;
+          # run twice.
+          psql_in tests/fixtures/control-plane/board-one-closer-setup.sql
+          psql_in supabase/migrations/20261023090000_one_closer.sql
+          psql_in supabase/migrations/20261023090000_one_closer.sql
+          psql_in tests/fixtures/control-plane/board-one-closer-regression.sql
           # Last, because it commits a seed that fences every later claim: an
           # open claim holds the active role row, so a switch must wait for it
           # and then refuse.
