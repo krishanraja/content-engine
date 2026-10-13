@@ -286,12 +286,12 @@ making record, which the engine, the board items and Control Center read.
 6. An untick never removes anything: a channel on the record whose tick now
    reads not done stays on the record. Tell Krish in one line and ask
    whether it went out.
-7. Never move the week's item (`week-publish-board-<its Monday>`) yourself:
-   it closes itself (`closes_on` `week_published`). Copy the ticks, as
-   above; once every picked day is at 100% on the record (both cuts
-   recorded and the standing five), the done-check sweep closes it. Last
-   week's board is no longer read once its item is done, and its line then
-   leaves `WORKBENCH.md`.
+7. When every picked day of a board is at 100% (both cuts recorded and the
+   standing five on the record), move that week's item
+   (`week-publish-board-<its Monday>`) to `done`. Last week's board is then
+   no longer read, and its line leaves `WORKBENCH.md`. This hand close stays
+   until the done-check sweep that can see a week published is live; the
+   item already says `closes_on` `week_published` for it.
 8. Say in one line what was copied, for example "Copied from the week's
    board: Monday's Substack and YouTube".
 
@@ -315,7 +315,8 @@ closes goes `"in_progress"` with `"closes_on": "session"`, its detail
 saying what would show it done, and you ask him in your reply. Every new
 open item says how it ends (the engine refuses one that does not,
 `open_needs_closes_on`). Record the fact; the check closes the item. Close
-only items you hold (`closes_on` `session`).
+only items you hold (`closes_on` `session`), and the week's publish board
+by hand ("The week's ticks", step 7) until the sweep can.
 
 ## Before you stop
 

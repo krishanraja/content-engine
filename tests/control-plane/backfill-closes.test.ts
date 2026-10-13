@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { assertNeverCloses, dayOf, oneNewsletterOn, planWrites, readArchive, shareFileId, stripHeld, type BoardRow, type Facts } from '../../scripts/backfill_closes.js'
+import { assertNeverCloses, ARCHIVE, dayOf, gatherFacts, oneNewsletterOn, planWrites, readArchive, shareFileId, stripHeld, type BoardRow, type Facts } from '../../scripts/backfill_closes.js'
 import { cleanItem } from '../../apps/control-plane/api/workbench.js'
 
 // Backfill step 1 of step 4: every open item that says nothing about how it
 // ends gets a kind, and the script never closes anything. Synthetic rows only.
 
 const NOW = '2026-10-22T09:30:00.000Z'
-const CARD = '0a1b2c3d-1111-4222-8333-444455556666_1200x800.png'
+// The share image the launch post shows now (the Monday series card), and another post's, which must never be used.
+const SHOWS_NOW = '0a1b2c3d-1111-4222-8333-444455556666_1360x1110.png'
+const OTHER_POST = '9f8e7d6c-1111-4222-8333-444455556666_1200x800.png'
 const LAUNCH = { id: 4242, url: 'https://example.substack.com/p/the-launch', posted_at: '2026-10-06T06:42:00Z', type: 'newsletter' }
 const HELD = 'Held from your list on 12 October: it does not say how it closes itself. '
 
@@ -25,7 +27,7 @@ function board(): BoardRow[] {
     { id: 'something-new', lane: 'in_progress', title: 'Not planned', closes_on: null },
   ]
 }
-const FACTS: Facts = { launch: LAUNCH, cardFileId: CARD, now: NOW }
+const FACTS: Facts = { launch: LAUNCH, launchFileId: SHOWS_NOW, now: NOW }
 
 describe('backfill step 1', () => {
   it('gives each planned item its kind, strips the held line, and leaves every lane alone', () => {
@@ -33,7 +35,7 @@ describe('backfill step 1', () => {
     const by = Object.fromEntries(writes.map(w => [w.id, w]))
     expect(Object.keys(by).sort()).toEqual(['doing-first-lease', 'doing-remote-studio', 'ruling-fascinating', 'week-publish-board-2026-10-12', 'you-engine-github-key', 'you-launch-today', 'you-outside-tools', 'you-welcome-days'])
     expect(by['you-launch-today']).toEqual({
-      id: 'you-launch-today', closes_on: 'share_image_changed', close_ref: { url: LAUNCH.url, was: CARD },
+      id: 'you-launch-today', closes_on: 'share_image_changed', close_ref: { url: LAUNCH.url, was: SHOWS_NOW },
       link: 'https://home.makeyourmindup.ai/publish/post/4242', link_label: 'Open the post settings', detail: 'The launch post still shows the old card.',
     })
     expect(by['you-engine-github-key']).toMatchObject({ title: "Replace the engine's GitHub key, then press Redeploy", closes_on: 'job_ok', close_ref: { job: 'build_signals', after: NOW, probe: 'dry' } })
@@ -66,8 +68,42 @@ describe('backfill step 1', () => {
     expect(skipped).toContainEqual({ id: 'you-welcome-days', why: 'already says how it ends (his_word)' })
   })
 
-  it('an uncertain launch post or card leaves the launch item as it is, and says to ask', () => {
-    for (const facts of [{ ...FACTS, launch: '2 newsletters went out on 2026-10-06, so which one it is is not certain' }, { ...FACTS, cardFileId: null, cardWhy: 'the Monday post shows no share image with a file id' }]) {
+  it("the launch item's 'was' is the image the launch post shows now, so nothing closes until he swaps it", () => {
+    const launch = planWrites(board(), FACTS).writes.find(w => w.id === 'you-launch-today')!
+    const ref = launch.close_ref as { url: string; was: string }
+    expect(ref.url).toBe(LAUNCH.url)
+    // The check compares the post's own image with was: the same file today, so it reads not yet.
+    const page = `<meta property="og:image" content="https://substackcdn.com/image/fetch/w_1200/https%3A%2F%2Fbucket.s3.amazonaws.com%2Fpublic%2Fimages%2F${SHOWS_NOW}">`
+    expect(shareFileId(page)).toBe(ref.was)
+    expect(ref.was).not.toBe(OTHER_POST)
+  })
+
+  it('reads the share image from the launch post itself, never from the Monday post before it', async () => {
+    const archive = [
+      { id: 4242, canonical_url: 'https://example.substack.com/p/the-launch', post_date: '2026-10-06T06:42:00Z', type: 'newsletter' },
+      { id: 4141, canonical_url: 'https://example.substack.com/p/the-monday-post', post_date: '2026-10-05T14:04:00Z', type: 'newsletter' },
+    ]
+    const pages: Record<string, string> = {
+      'https://example.substack.com/p/the-launch': `<meta property="og:image" content="https://x/${SHOWS_NOW}">`,
+      'https://example.substack.com/p/the-monday-post': `<meta property="og:image" content="https://x/${OTHER_POST}">`,
+    }
+    const realFetch = globalThis.fetch
+    globalThis.fetch = (async (url: string) => {
+      const body = url === ARCHIVE ? JSON.stringify(archive) : pages[url]
+      return { ok: body !== undefined, status: body === undefined ? 404 : 200, text: async () => body ?? '' }
+    }) as never
+    try {
+      const facts = await gatherFacts(NOW)
+      expect(facts).toMatchObject({ launch: { id: 4242 }, launchFileId: SHOWS_NOW })
+      delete pages['https://example.substack.com/p/the-launch']
+      expect(await gatherFacts(NOW)).toMatchObject({ launchFileId: null, launchWhy: 'the launch post answered 404' })
+    } finally {
+      globalThis.fetch = realFetch
+    }
+  })
+
+  it('an uncertain launch post or share image leaves the launch item as it is, and says to ask', () => {
+    for (const facts of [{ ...FACTS, launch: '2 newsletters went out on 2026-10-06, so which one it is is not certain', launchFileId: null }, { ...FACTS, launchFileId: null, launchWhy: 'the launch post shows no share image with a file id' }]) {
       const { writes, skipped } = planWrites(board(), facts)
       expect(writes.map(w => w.id)).not.toContain('you-launch-today')
       expect(skipped.find(s => s.id === 'you-launch-today')!.why).toContain('Ask Krish which post it is.')
@@ -82,9 +118,9 @@ describe('backfill step 1', () => {
   it('reads the facts: the held line, the share image file id, the post on a day', () => {
     expect(stripHeld(`${HELD}Rest.`)).toBe('Rest.')
     expect(stripHeld('No held line here.')).toBe('No held line here.')
-    const page = `<head><meta property="og:image" content="https://substackcdn.com/image/fetch/w_1200,c_fill/https%3A%2F%2Fbucket.s3.amazonaws.com%2Fpublic%2Fimages%2F${CARD}"></head>`
-    expect(shareFileId(page)).toBe(CARD)
-    expect(shareFileId(`<meta content="https://x/${CARD}" property="og:image">`)).toBe(CARD)
+    const page = `<head><meta property="og:image" content="https://substackcdn.com/image/fetch/w_1200,c_fill/https%3A%2F%2Fbucket.s3.amazonaws.com%2Fpublic%2Fimages%2F${OTHER_POST}"></head>`
+    expect(shareFileId(page)).toBe(OTHER_POST)
+    expect(shareFileId(`<meta content="https://x/${SHOWS_NOW}" property="og:image">`)).toBe(SHOWS_NOW)
     expect(shareFileId('<meta property="og:title" content="x">')).toBe(null)
     expect(dayOf('2026-10-06T03:30:00Z')).toBe('2026-10-05')
     const posts = readArchive([

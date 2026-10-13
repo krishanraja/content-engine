@@ -7,7 +7,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // (the engine key). Only Krish's cookie may write a reply.
 
 type Row = Record<string, any>
-const db = vi.hoisted(() => ({ tables: {} as Record<string, Row[]>, writes: [] as Array<[string, string]> }))
+const db = vi.hoisted(() => ({
+  tables: {} as Record<string, Row[]>,
+  writes: [] as Array<[string, string]>,
+  /** Runs once, just before the next update: another writer landing between the route's read and its write. */
+  between: null as null | (() => void),
+}))
 
 vi.mock('../../apps/control-plane/api/_supabase.js', () => {
   function query(table: string) {
@@ -29,6 +34,7 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
         db.writes.push([table, 'insert'])
         return { data: [inserted], error: null }
       }
+      if (op === 'update' && db.between) { const go = db.between; db.between = null; go() }
       const hit = rows().filter(r => filters.every(f => f(r)))
       if (op === 'update') {
         hit.forEach(r => Object.assign(r, payload))
@@ -86,6 +92,7 @@ beforeEach(() => {
   process.env.ACCESS_CODE = CODE
   db.tables = { work_board_state: [{ id: 'board', headline: '', signals: [], updated_by: 'agent', updated_at: '2026-10-03T00:00:00Z' }], work_board_items: [], work_board_replies: [] }
   db.writes = []
+  db.between = null
 })
 
 describe('the work board route', () => {
@@ -645,6 +652,43 @@ describe('every item says how it ends, so a check can end it', () => {
     expect(item('friday')!.lane).toBe('on_you')
   })
 
+  it('the sweep never closes what only his Clear ends, or an item that does not say how it ends', async () => {
+    db.tables.work_board_items.push(
+      { id: 'you-welcome-days', lane: 'on_you', title: 'Swap two days', only_you: 'login', link: 'https://example.com/settings', closes_on: 'his_word', closed_by: null },
+      { id: 'old-silent', lane: 'in_progress', title: 'Says nothing', closes_on: null, closed_by: null },
+    )
+    for (const id of ['you-welcome-days', 'old-silent']) {
+      const out = await call('POST', { action: 'upsert_items', client: 'done_check', items: [{ id, lane: 'done', closed_proof: 'The check saw it.' }] }, 'krish')
+      expect([id, out.status, out.body.error]).toEqual([id, 409, 'done_check_only_closes'])
+    }
+    expect(db.writes).toEqual([])
+    expect(item('you-welcome-days')).toMatchObject({ lane: 'on_you', closed_by: null })
+    expect(item('old-silent')).toMatchObject({ lane: 'in_progress', closed_by: null })
+  })
+
+  it('the sweep sends one item a call, so a lost race never leaves part of a call written', async () => {
+    db.tables.work_board_items.push(
+      { id: 'monday-record', lane: 'on_you', title: 'Record', ...READY, closed_by: null },
+      { id: 'friday-record', lane: 'on_you', title: 'Record', ...READY, closed_by: null },
+    )
+    const out = await call('POST', { action: 'upsert_items', client: 'done_check', items: [
+      { id: 'monday-record', lane: 'done', closed_proof: 'The record step landed.' },
+      { id: 'friday-record', lane: 'done', closed_proof: 'The record step landed.' },
+    ] }, 'krish')
+    expect(out.status).toBe(400)
+    expect(out.body.error).toBe('done_check_one_item')
+    expect(db.writes).toEqual([])
+  })
+
+  it('his Clear landing between the sweep\'s read and its write wins: the sweep writes nothing', async () => {
+    db.tables.work_board_items.push({ id: 'monday-record', lane: 'on_you', title: 'Record', ...READY, closed_by: null })
+    db.between = () => Object.assign(item('monday-record')!, { lane: 'done', closed_by: 'Krish', closed_proof: null, updated_by: 'Krish' })
+    const out = await call('POST', { action: 'upsert_items', client: 'done_check', items: [{ id: 'monday-record', lane: 'done', closed_proof: 'The record step landed.' }] }, 'krish')
+    expect(out.status).toBe(409)
+    expect(out.body).toMatchObject({ error: 'done_check_only_closes', item: 'monday-record' })
+    expect(item('monday-record')).toMatchObject({ lane: 'done', closed_by: 'Krish', closed_proof: null, updated_by: 'Krish' })
+  })
+
   it('only the sweep writes a proof; a later close by anyone else, or a reopen, clears it', async () => {
     db.tables.work_board_items.push({ id: 'doing-x', lane: 'in_progress', title: 'x', closes_on: 'session', closed_by: null })
     for (const [who, extra] of [['agent', { client: 'codex' }], ['krish', {}], ['krish', { client: 'control_center' }]] as const) {
@@ -678,7 +722,8 @@ describe('every item says how it ends, so a check can end it', () => {
     expect((await relay([{ id: 'you-a', lane: 'done' }], '  I recorded both cuts last night  ')).status).toBe(200)
     expect(item('you-a')).toMatchObject({ lane: 'done', closed_by: 'Krish', closed_proof: 'His words: "I recorded both cuts last night"' })
     expect((await relay([{ id: 'doing-b', lane: 'in_progress' }], 'that one is not finished yet')).status).toBe(200)
-    expect(item('doing-b')).toMatchObject({ lane: 'in_progress', closed_by: null, closed_proof: null })
+    // A relayed reopen keeps his words too, so a forged relay is never invisible.
+    expect(item('doing-b')).toMatchObject({ lane: 'in_progress', closed_by: null, closed_proof: 'His words: "that one is not finished yet"' })
   })
 
   it('an item whose step the engine already sees done is refused: nothing waits on Krish', async () => {

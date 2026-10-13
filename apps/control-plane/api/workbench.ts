@@ -359,11 +359,18 @@ export function writeFailed(item: string, error: { code?: string; message?: stri
 }
 
 const DONE_CHECK_FIELDS = new Set(['id', 'lane', 'closed_proof'])
-/** Why the sweep may not make this write, or null. It only closes an open item, with its proof. */
-export function doneCheckRefusal(item: Json, before: BoardBefore | undefined): BoardRefusal | null {
+/** Why the sweep may not make this write, or null. It only closes an open
+ *  item that a check can see, with its proof: never a his_word item (only
+ *  his Clear ends one) and never one that does not say how it ends. */
+export function doneCheckRefusal(item: Json, before: (BoardBefore & { closes_on?: string | null }) | undefined): BoardRefusal | null {
   const id = String(item.id ?? '')
   const only = (detail: string) => new BoardRefusal('done_check_only_closes', detail, id, 409)
   if (!before || !OPEN_LANES.has(before.lane)) return only('The done-check sweep only closes an item that is open; this one is not.')
+  if (!before.closes_on || before.closes_on === 'his_word') {
+    return only(before.closes_on
+      ? 'Nothing can see this item done (his_word), so only his Clear ends it. The done-check sweep never closes it.'
+      : 'This item does not say how it ends, so no check can close it. A session gives it a kind first.')
+  }
   if (!CLOSED_LANES.has(String(item.lane))) return only('The done-check sweep only moves an open item to done or archived. It never reopens or moves one between open lanes.')
   const extra = Object.keys(item).filter(k => !DONE_CHECK_FIELDS.has(k))
   if (extra.length) return only(`The done-check sweep sends only id, lane and closed_proof, not ${extra.join(', ')}.`)
@@ -467,6 +474,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // left on Krish by a partial edit is ready for his list too.
       // The sweep only closes: an open item, to done or archived, with its proof.
       if (who === DONE_CHECK) {
+        // One item a call, so a close another writer wins first leaves nothing half written.
+        if (body.items.length !== 1) return res.status(400).json({ ok: false, error: 'done_check_one_item', detail: 'The done-check sweep sends one item a call.' })
         const refused = body.items.map(record).map(i => doneCheckRefusal(i, existing.get(String(i.id)))).find(Boolean)
         if (refused) return res.status(refused.status).json({ ok: false, error: refused.message, item: refused.item, detail: refused.detail })
       }
@@ -487,7 +496,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const closedBy = closedByAfter(before, row.lane, closer)
         // A close or reopen relayed from Krish carries his exact words, kept on the row.
         if (ctx.relayed && closedBy !== undefined && !ctx.said) {
-          throw new BoardRefusal('relayed_close_needs_his_words', `A close or reopen relayed from Krish carries his exact words in "said" (${SAID_MIN} to ${SAID_MAX} characters). They are kept on the item, where he sees them and can Undo the close.`, row.id)
+          throw new BoardRefusal('relayed_close_needs_his_words', `A close or reopen relayed from Krish carries his exact words in "said" (${SAID_MIN} to ${SAID_MAX} characters). They are kept on the item (closed_proof); on a close he sees them there and can Undo it.`, row.id)
         }
       }
       // A piece's step the engine can already see done: nothing waits on anyone.
@@ -500,8 +509,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           row.closed_by = `check: ${before?.closes_on || 'none'}`.slice(0, 40)
         } else if (closedBy !== undefined) {
           row.closed_by = closedBy
-          // Who closed it and why travel together: his relayed words, or nothing.
-          row.closed_proof = closedBy === 'Krish' && ctx.relayed && ctx.said ? HIS_WORDS(ctx.said) : null
+          // Who closed or reopened it and why travel together: his relayed
+          // words (a relayed reopen keeps them too, on the open item), or nothing.
+          row.closed_proof = (closedBy === 'Krish' || closedBy === null) && ctx.relayed && ctx.said ? HIS_WORDS(ctx.said) : null
         }
         const stamp = { updated_by: who, updated_at: now }
         if (who === DONE_CHECK) {

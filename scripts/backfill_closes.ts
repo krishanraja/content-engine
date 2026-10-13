@@ -18,11 +18,14 @@
 // one). It strips the "Held from your list on <date>: ..." line the readiness
 // migration wrote, because the held line is now Control Center's to say.
 //
-// The launch post's share image needs two facts from the publication's own
-// archive: the launch post (the one newsletter on the launch date) and the
-// file id of the Monday card it shows (the og:image of the one newsletter on
-// the card's date). If either is not certain, that item is left as it is and
-// the run says why, so the building session asks Krish which post it is.
+// The launch post's share image needs two facts from the launch post
+// itself: which post it is (the one newsletter on the launch date, in the
+// publication's own archive) and the file id of the share image it shows
+// now (its own og:image: the Monday follow.the.money card the item names).
+// That file id is "was", so the check closes the item only once the post
+// shows a different image; it is never compared with another post's image.
+// If either fact is not certain, the item is left as it is and the run says
+// why, so the building session asks Krish which post it is.
 //
 // Read back with SQL afterwards (the step 4 plan, 4.4):
 //   select id from work_board_items where lane in ('on_you','in_progress') and closes_on is null   -- no rows
@@ -33,9 +36,8 @@ import { pathToFileURL } from 'node:url'
 export const ENGINE = (process.env.ENGINE_BASE_URL || 'https://content-engine-flame-nu.vercel.app').replace(/\/$/, '')
 export const PUBLICATION = 'https://home.makeyourmindup.ai'
 export const ARCHIVE = `${PUBLICATION}/api/v1/archive?sort=new&limit=25`
-/** The launch post went out on 6 October; the Monday card it shows is the 5 October post's. */
+/** The launch post went out on 6 October. */
 export const LAUNCH_DATE = '2026-10-06'
-export const CARD_DATE = '2026-10-05'
 const ZONE = 'America/New_York'
 
 export interface BoardRow {
@@ -87,9 +89,10 @@ export function oneNewsletterOn(posts: readonly ArchivePost[], day: string): Arc
 export interface Facts {
   /** The launch post, or why it is not certain. */
   launch: ArchivePost | string
-  /** The Monday card's share image file id, or why it could not be read. */
-  cardFileId: string | null
-  cardWhy?: string
+  /** The file id of the share image the launch post shows now (its own og:image), or null. */
+  launchFileId: string | null
+  /** Why that file id could not be read. */
+  launchWhy?: string
   now: string
 }
 
@@ -110,12 +113,13 @@ export function planWrites(board: readonly BoardRow[], facts: Facts): Plan {
   const launch = take('you-launch-today')
   if (launch) {
     if (typeof facts.launch === 'string') skipped.push({ id: launch.id, why: `the launch post: ${facts.launch}. Ask Krish which post it is.` })
-    else if (!facts.cardFileId || facts.cardWhy) skipped.push({ id: launch.id, why: `the Monday card's share image: ${facts.cardWhy || 'its file id could not be read'}. Ask Krish which post it is.` })
+    else if (!facts.launchFileId || facts.launchWhy) skipped.push({ id: launch.id, why: `the launch post's share image: ${facts.launchWhy || 'its file id could not be read'}. Ask Krish which post it is.` })
     else {
       writes.push({
         id: launch.id,
         closes_on: 'share_image_changed',
-        close_ref: { url: facts.launch.url, was: facts.cardFileId },
+        // What the launch post shows now: only a real swap closes it.
+        close_ref: { url: facts.launch.url, was: facts.launchFileId },
         link: `${PUBLICATION}/publish/post/${facts.launch.id}`,
         link_label: 'Open the post settings',
         ...detail(launch),
@@ -193,18 +197,18 @@ export function readArchive(raw: unknown): ArchivePost[] {
   })
 }
 
-async function gatherFacts(now: string): Promise<Facts> {
+export async function gatherFacts(now: string): Promise<Facts> {
   const posts = readArchive(await getJson(ARCHIVE, { headers: { accept: 'application/json' } }))
   const launch = oneNewsletterOn(posts, LAUNCH_DATE)
-  const card = oneNewsletterOn(posts, CARD_DATE)
-  if (typeof card === 'string') return { launch, cardFileId: null, cardWhy: `the Monday post: ${card}`, now }
+  if (typeof launch === 'string') return { launch, launchFileId: null, now }
+  // The share image the launch post itself shows now, never another post's.
   try {
-    const r = await fetch(card.url, { signal: AbortSignal.timeout(20_000) })
-    if (!r.ok) return { launch, cardFileId: null, cardWhy: `the Monday post answered ${r.status}`, now }
+    const r = await fetch(launch.url, { signal: AbortSignal.timeout(20_000) })
+    if (!r.ok) return { launch, launchFileId: null, launchWhy: `the launch post answered ${r.status}`, now }
     const id = shareFileId(await r.text())
-    return id ? { launch, cardFileId: id, now } : { launch, cardFileId: null, cardWhy: 'the Monday post shows no share image with a file id', now }
+    return id ? { launch, launchFileId: id, now } : { launch, launchFileId: null, launchWhy: 'the launch post shows no share image with a file id', now }
   } catch (e) {
-    return { launch, cardFileId: null, cardWhy: `the Monday post could not be read (${(e as Error).message.slice(0, 80)})`, now }
+    return { launch, launchFileId: null, launchWhy: `the launch post could not be read (${(e as Error).message.slice(0, 80)})`, now }
   }
 }
 

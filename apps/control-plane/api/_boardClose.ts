@@ -66,8 +66,12 @@ export function itemsToClose(items: readonly OpenItem[], piece: PieceRow, steps:
     if (finished) { out.push({ id: item.id, lane: 'done', by: 'engine: piece published' }); continue }
     if (gone) { out.push({ id: item.id, lane: 'archived', by: 'engine: piece dropped' }); continue }
     if (published && item.closes_on === 'published') { out.push({ id: item.id, lane: 'done', by: 'engine: piece published' }); continue }
-    if (item.closes_on && item.closes_on !== 'published' && done.has(item.closes_on)) {
-      out.push({ id: item.id, lane: 'done', by: `engine: ${item.closes_on} done`.slice(0, 40) })
+    // A take question tied to a piece ends when the piece's takes are in,
+    // as it did before it said take_placed, until the done-check sweep's
+    // take_placed check takes it over (step 4, part C).
+    const step = item.closes_on === 'take_placed' ? 'record' : item.closes_on
+    if (step && step !== 'published' && done.has(step)) {
+      out.push({ id: item.id, lane: 'done', by: `engine: ${step} done`.slice(0, 40) })
     }
   }
   return out

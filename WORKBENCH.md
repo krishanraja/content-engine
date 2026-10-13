@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-13, about 03:30 UTC, by a Claude Code session (cloud).
+Last updated: 2026-10-13, about 03:30 UTC, by a Claude Code session (cloud); step 4 part A review fixes about 03:30 UTC.
 
 ## How Krish wants to be worked with
 
@@ -382,7 +382,8 @@ Write every item in plain words: what happened, what it means for him, and what
 you need from him.
 
 **Every item says how it ends. Record the fact; the check closes it. Close
-only items you hold (`closes_on` `session`).** Krish, 2026-10-11: "I am
+only items you hold (`closes_on` `session`), and, until the sweep is live,
+the week's publish board (`make-piece`, "The week's ticks", step 7).** Krish, 2026-10-11: "I am
 happy to Clear(complete)/Bump/Purge things off my lists as I go but the rest
 should be automatically done." Step 4 of his operating system is one
 done-check sweep in Control Center (`api/_doneChecks.ts`) that ends every
@@ -392,8 +393,9 @@ item by its kind. The kinds (`closes_on`), with what each needs:
   `record`, `video`, `publish`) or `published`: the piece's `idea_id`;
 - `week_planned`: the week's planning item alone (`week-<its Monday>`);
 - `week_published`: the week's publish board alone
-  (`week-publish-board-<its Monday>`); it closes once every picked day is
-  at 100% on the record, so no session moves it to done;
+  (`week-publish-board-<its Monday>`); the sweep will close it once every
+  picked day is at 100% on the record. Until the sweep is live it is held
+  in progress and `make-piece` step 7 moves it to done by hand;
 - `share_image_changed`: `"close_ref": {"url": "<the post>", "was": "<the
   file id of the share image it shows now>"}`;
 - `job_ok`: `"close_ref": {"job": "<the job>", "after": "<a time a clean
@@ -414,9 +416,11 @@ The engine refuses, by name: a new open item from an agent with no kind
 `decided_by: 'Krish'` without his exact words in `"said"` (12 to 287
 characters; `400 relayed_close_needs_his_words`), which are kept on the item
 as `closed_proof`; and a `closed_proof` from anyone but the sweep (`400
-closed_proof_is_the_checks`). The sweep writes as client `done_check`: it
-only closes an open item, with its proof, recorded as `check: <kind>`
-(`409 done_check_only_closes` otherwise). A database refusal names its
+closed_proof_is_the_checks`). The sweep writes as client `done_check`, one
+item a call (`400 done_check_one_item`): it only closes an open item that
+says how it ends and is not `his_word`, with its proof, recorded as `check:
+<kind>` (`409 done_check_only_closes` otherwise, and when another writer
+closed it first). A database refusal names its
 constraint (`board_write_failed`, `code`, `constraint`). Until the sweep is
 live the engine's own closes still run (`_boardClose.ts`, the watcher, the
 recordings lane).
@@ -590,13 +594,16 @@ bring takes back, was retired on 12 October.
   - **The writers changed first**, so nothing later refuses them: the
     publish watcher's post question says `post_matched` and reports a
     refused write instead of dropping it; the recordings lane's take
-    questions say `take_placed`; `plan-week` writes next week's publish
-    board on his list as `week_published`, and `make-piece` stops moving it
-    to done by hand.
-  - **The sweep's own client** (`done_check`) may only close an open item,
-    with its proof. A close relayed from him needs his exact words. An item
-    whose step is already done is refused. Nothing closes differently yet:
-    the old closers still run until part C.
+    questions say `take_placed`, and one tied to a piece still closes when
+    that piece's Record step lands (`_boardClose.ts`); `plan-week` writes
+    next week's publish board in progress as `week_published`, and
+    `make-piece` still moves it to done by hand. Putting the board on his
+    list and dropping that hand close wait for the sweep (part C).
+  - **The sweep's own client** (`done_check`) may only close an open item
+    that says how it ends and is not `his_word`, one item a call, with its
+    proof. A close or reopen relayed from him needs his exact words, kept
+    on the item. An item whose step is already done is refused. Nothing
+    closes differently yet: the old closers still run until part C.
   - **A drop never undoes a publish.** A Purge landing as the publish
     watcher marks the piece published used to undo the publish. The drop
     now reads the piece and writes only if nothing changed; a published
@@ -608,12 +615,18 @@ bring takes back, was retired on 12 October.
     `20261022091000_on_you_closes_itself.sql` once the deploy is ready, and
     before Sunday's `plan-week` run, whose publish board item needs it; then
     `ACCESS_CODE=... npx tsx scripts/backfill_closes.ts --dry-run`, read it,
-    and run it without `--dry-run`. It never closes anything. Its dry facts
-    on 13 October: the launch post is the 6 October newsletter, the Monday
-    card's share image is `894a89d0-..._1200x800.png`, and the launch post
-    already shows a different image, so the first check will close
-    `you-launch-today` with its proof. The home computers pull this branch's
+    and run it without `--dry-run`. It never closes anything. The launch
+    item's `was` is the share image the launch post shows when the script
+    runs (on 13 October the 6 October newsletter showed the Monday
+    follow.the.money series card, `4b61bd44-..._1360x1110.png`), so the
+    check closes it only once Krish swaps that image. The home computers pull this branch's
     `recording_match.py` only after the deploy.
+  - **A review's twelve findings, fixed on the same branch.** The launch
+    item's image is read from the launch post itself, never from the post
+    before it. The week's publish board and tied take questions close as
+    they did until the sweep is live. The sweep may not close a `his_word`
+    item or one that does not say how it ends, sends one item a call, and
+    a relayed reopen keeps his words. Each has a test that failed first.
   - **Next:** part B in Control Center (the sweep itself), then backfill
     step 2, then part C here (the old closers go, and the database trigger
     lands). The plan is step 4's build plan, sections 3, 4, 6 and 7.

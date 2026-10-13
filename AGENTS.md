@@ -132,7 +132,8 @@ piece's step or `published`, the week's `week_planned` or
 `week_published`, `share_image_changed`, `job_ok`, `post_matched`,
 `take_placed`, `session` for work you hold, or `his_word` when nothing
 can see it done (only Krish puts one of those on his list). Close only items
-you hold (`closes_on` `session`). A close you relay from his words carries
+you hold (`closes_on` `session`), and the week's publish board by hand
+until the sweep is live (`make-piece`, step 7). A close or reopen you relay from his words carries
 his exact words in `said`. The rules and every refusal are in
 `WORKBENCH.md`, "The board".
 

@@ -89,7 +89,8 @@ making.board_upsert): id take-<first 12 of its sha256>, closes_on
 "take_placed", in progress for a session and never on Krish's list, because
 nothing he can press answers it: a session works it out, or asks him in its
 reply. Tied to a piece (the take is known to be one of its takes), it
-carries the piece's idea_id. The lane ends it once the take is placed (done)
+carries the piece's idea_id and also closes when that piece's Record step is
+done (_boardClose.ts). The lane ends it once the take is placed (done)
 or no waiting piece can be it (archived; making.board_close), and the
 engine's hourly pass once no session has touched it for a week
 (_boardClose.ts, HELD_DAYS); step 4's done-check sweep takes both over.
@@ -951,7 +952,8 @@ def board_item(answer, pieces):
     never on Krish's list (WORKBENCH.md, "The board"): nothing he can press
     answers which take it is, so a session works it out, or asks him in its
     reply. Tied to a piece (the take is known to be one of its takes, or is
-    one of two close pieces'), it names the piece. It ends when the take is
+    one of two close pieces'), it names the piece and also closes when that
+    piece's Record step is done (_boardClose.ts). It ends when the take is
     placed (closes_on take_placed): the lane closes it (ask_on_board)."""
     by_id = {p['id']: p for p in pieces}
     sha, name = answer['sha256'], answer['name']
@@ -1022,7 +1024,8 @@ def ask_on_board(answers, pieces, call, by, cache, out, now=None):
 
     It also ends the items it asked once their question is gone: done once
     the take is placed, archived once no waiting piece can be it ("old")
-    (making.board_close). One no session touches for a week is let go by the engine's
+    (making.board_close). An item tied to a piece also closes on its Record
+    step (_boardClose.ts), and one no session touches for a week is let go by the engine's
     hourly pass (_boardClose.ts, HELD_DAYS). Returns (asked, closed,
     failed): the item ids written, the ones closed, and whether the board
     refused or could not be reached."""
