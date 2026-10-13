@@ -89,16 +89,16 @@ ws = (repo / 'docs/plans/2026-10-14-draft-script-90s.md').read_text()
 words = lambda t: len(t.split())
 cache = repo / '.cache/pages/2026-10-14-wednesday'
 covers = (f'<div class="draft-covers" id="wed-draft-covers">'
-          f'<figure><img id="wed-cover" alt="Substack cover: Muse runs your life. Meta sells ads." src="{jpg(cache / "cover/cover-1200x630.png", 1200)}"><figcaption>Substack cover</figcaption></figure>'
+          f'<figure><img id="wed-cover" alt="Substack cover: AI wants your life. What do you give up?" src="{jpg(cache / "cover/cover-1200x630.png", 1200)}"><figcaption>Substack cover</figcaption></figure>'
           f'<figure><img id="wed-thumb-wide" alt="YouTube thumbnail" src="{jpg(cache / "thumbs/thumb-wide-1280x720.jpg", 1280)}"><figcaption>YouTube thumbnail</figcaption></figure>'
           f'<figure><img id="wed-thumb-tall" alt="Shorts, TikTok and Reels cover" src="{jpg(cache / "thumbs/thumb-tall-1080x1920.jpg", 540)}"><figcaption>Shorts, TikTok and Reels cover</figcaption></figure></div>')
 wed_new = ('<div class="kick">under.the.hood · Wed 14 Oct · draft</div>\n'
-           '<h1>Millions handed Meta&#x27;s Muse their chores. What does an ad company do with an agent that runs your life?</h1>'
-           '<div class="chips"><span class="chip">Fact check passed: 38 claims, none blocking</span>'
-           '<span class="chip">AI scans: voice check 0.0 (bar 6) and model scan passes (4.05, floor 3.2)</span>'
+           '<h1>Every AI company wants to run your life. What will each one ask you to hand over?</h1>'
+           '<div class="chips"><span class="chip">Fact check passed: 39 claims, none blocking</span>'
+           '<span class="chip">AI scans: voice check 3.3 (bar 6)</span>'
            f'<span class="chip">{words(wb):,} words</span>'
-           '<span class="chip">Scripts: reflective tone, new opening line, reading-age check passed</span><span class="chip">Prediction: Meta sells Muse&#x27;s picks by 30 June 2027, 70%</span>'
-           '<span class="chip">Scripts in Teleprompter: both cuts (folder Wed 14 Oct under.the.hood)</span><span class="chip">Videos: GitHub run starts 12:00 London</span></div>\n'
+           '<span class="chip">Scripts: one thread, five companies, reading-age check passed</span><span class="chip">Prediction: a shopping helper in a locked box from OpenAI, Google or Anthropic by 30 June 2027, 55%</span>'
+           '<span class="chip">Scripts in Teleprompter: both cuts (folder Wed 14 Oct under.the.hood)</span><span class="chip">Videos: GitHub run starts 14:00 London</span></div>\n'
            + HOW + covers
            + doc('wed', 'article', 'The article', f'{words(wb):,} words · Substack', wb)
            + doc('wed', 'long', 'The 3-minute script', f'{words(wl)} words · YouTube and Substack, 16:9', wl)
