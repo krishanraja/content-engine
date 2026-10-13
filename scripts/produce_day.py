@@ -237,13 +237,20 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, 
             # other cut keeps it. Any other CHECK stops the run.
             checks = re.findall(r'^CHECK (\S+?): (.*)$', p.stdout, re.M)
             small = {cid for cid, why in checks if 'a viewer can read' in why}
+            # The 90-second cut has fewer beats than the long cut has pictures:
+            # a picture none of its paragraphs brings in is left out of it, the
+            # way a too-small one is, and the long cut still shows it. The long
+            # cut never drops one (Krish, 2026-10-13: "GitHub renders, build the
+            # pack", the first scheduled run).
+            if cut == 'short':
+                small |= {cid for cid, why in checks if why.startswith('not cued')}
             if not checks or len(small) != len(checks):
                 raise Stop(f'the {cut} kit: ' + '; '.join(f'{c}: {w}' for c, w in checks if c not in small)[:600])
             cfg_path = kit / f'{cut}.json'
             cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
             cfg['cues'] = [c for c in cfg.get('cues') or [] if c.get('id') not in small]
             cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
-            log(f'the {cut} cut leaves out {", ".join(sorted(small))}: too small to read in its shape (the other cut shows them)')
+            log(f'the {cut} cut leaves out {", ".join(sorted(small))}: too small to read in its shape, or no beat for it (the long cut shows them)')
     # The music is sized to the long cut as it will run (trimmed, with the
     # story intro and outro), not to its raw take: a track a little shorter
     # than the take still covers the finished cut. Both cuts ask for the same.
@@ -334,6 +341,13 @@ def main():
         work = WORK_ROOT / f'{when.isoformat()}-{piece[:8]}'
         work.mkdir(parents=True, exist_ok=True)
         log(f'{when:%A %-d %B}: piece {piece}, plan {post_path.parent.name}')
+        made = making(piece).get('video_assets') or []
+        made = {v.get('cut') for v in made if isinstance(v, dict)} if isinstance(made, list) else set(made)
+        if all(c in made for c in SHAPE) and not a.dry_run:
+            # Already made (a run started by hand earlier, as on 13 October for
+            # Wednesday): the scheduled run never makes a day's videos twice.
+            log('both cuts are already on the record; nothing to do')
+            return 0
         takes_at = fetch_takes(takes(piece, a.wait_minutes), work)
         music_root = fetch_music()
         fetch_pictures(post_path)

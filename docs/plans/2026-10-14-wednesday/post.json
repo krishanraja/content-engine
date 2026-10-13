@@ -1,0 +1,80 @@
+{
+ "piece_id": "7554ed4a-560b-4365-b266-ea72abeed7ef",
+ "date": "2026-10-14",
+ "subchannel": "under.the.hood",
+ "subject": "What an ad company does with Muse",
+ "headline": "Millions handed Meta's Muse their chores. What does an ad company do with an agent that runs your life?",
+ "links": {},
+ "files": [
+  {
+   "kind": "image",
+   "file": "pics/reviews.png",
+   "name": "1-what-the-reviews-say.png",
+   "logos": [
+    "Muse"
+   ],
+   "purpose": "One person says a shop charged them $6,000 for clothes that cost about $1,500, and Muse wrote to the shop to get the money back. The reviews of Muse."
+  },
+  {
+   "kind": "image",
+   "file": "pics/same-jobs.png",
+   "name": "2-similar-jobs.png",
+   "logos": [
+    "OpenAI",
+    "Google",
+    "Muse"
+   ],
+   "purpose": "A CNN reporter found that ChatGPT and Google's Gemini can do similar jobs."
+  },
+  {
+   "kind": "image",
+   "file": "pics/closer.png",
+   "name": "3-closer-not-cleverer.png",
+   "logos": [
+    "Instagram",
+    "Meta",
+    "WhatsApp"
+   ],
+   "purpose": "Meta owns Instagram, Facebook and WhatsApp. Muse can turn a recipe video you saved on Instagram into a shopping list."
+  },
+  {
+   "kind": "image",
+   "file": "pics/ad-money.png",
+   "name": "4-where-meta-makes-its-money.png",
+   "logos": [
+    "Meta"
+   ],
+   "purpose": "Meta makes almost all its money from adverts: last quarter 60 billion dollars, nearly every dollar from ads."
+  },
+  {
+   "kind": "image",
+   "file": "pics/pay-to-be-picked.png",
+   "name": "5-pay-to-be-picked.png",
+   "logos": [
+    "Meta",
+    "Muse"
+   ],
+   "purpose": "On Facebook a shop pays so you'll see it. Inside Muse a shop could pay so your helper chooses it."
+  },
+  {
+   "kind": "image",
+   "file": "pics/prediction.png",
+   "name": "6-my-prediction.png",
+   "logos": [
+    "Muse"
+   ],
+   "purpose": "My prediction: by 30 June 2027 Meta will let businesses pay so that Muse recommends them to you. 70%."
+  },
+  {
+   "kind": "video-script",
+   "file": "script.md",
+   "cut": "long"
+  },
+  {
+   "kind": "video-script",
+   "file": "script-90s.md",
+   "name": "video-script-90-seconds.md",
+   "cut": "short"
+  }
+ ]
+}
