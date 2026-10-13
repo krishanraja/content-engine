@@ -98,7 +98,7 @@ wed_new = ('<div class="kick">under.the.hood · Wed 14 Oct · draft</div>\n'
            '<span class="chip">AI scans: voice check 0.0 (bar 6) and model scan passes (4.05, floor 3.2)</span>'
            f'<span class="chip">{words(wb):,} words</span>'
            '<span class="chip">Scripts: reflective tone, new opening line, reading-age check passed</span><span class="chip">Prediction: Meta sells Muse&#x27;s picks by 30 June 2027, 70%</span>'
-           '<span class="chip warn">Not in Teleprompter yet: waiting on your sign-off</span></div>\n'
+           '<span class="chip">Scripts in Teleprompter: both cuts (folder Wed 14 Oct under.the.hood)</span><span class="chip">Videos: GitHub run starts 12:00 London</span></div>\n'
            + HOW + covers
            + doc('wed', 'article', 'The article', f'{words(wb):,} words · Substack', wb)
            + doc('wed', 'long', 'The 3-minute script', f'{words(wl)} words · YouTube and Substack, 16:9', wl)

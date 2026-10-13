@@ -592,6 +592,23 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, Tuesday, 10:20 UTC: **Wednesday goes to video today.** Krish:
+  "GitHub renders, build the pack and merge to main, I will have videos
+  recorded in 30 minutes, and the first runner can run at 12PM London time".
+  Both scripts were sent to Teleprompter by hand on his standing yes (folder
+  666CEBFC-4487-4320-9589-34D094CE4E91; scripts 28E350A4-... long and
+  681018D3-... short), recorded with `teleprompter_send.py record`; no
+  read-back pass is recorded (his recording now is the sign-off).
+  `docs/plans/2026-10-14-wednesday/post.json` with six pictures in `pics/`
+  (found beside the plan, so no library pack is needed for the run); the
+  long kit cues all six. `produce_day.py`: the 90-second cut leaves out a
+  picture it has no beat for (the long cut keeps it), and a day whose two
+  cuts are already on the record is skipped (Wednesday's own scheduled run
+  tomorrow). On main at 16dcd61. A self check-in (trig_012JUrC3qeyaPWHsatgYCTY7)
+  dispatches `produce-day.yml` with date 2026-10-14 at 11:00 UTC. Still to
+  do after the videos: the full pack (five covers, publish page) via build.py
+  and send.py, and the board's Wednesday tab to green.
+
 - 2026-10-13, Tuesday, about 09:30 UTC: **AI-scan defence, 10x** (Krish: "we
   need more aggressive anti AI scanning techniques by 10X"). `voice_check.py`
   gained a scanner layer (chat-model vocabulary, connective openers, the same
