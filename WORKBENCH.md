@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-13, about 08:00 UTC, by a Claude Code session (cloud); step 4 (one done-check sweep) is live; step 3's PR 1 (honest sources) is on its branch, waiting to ship.
+Last updated: 2026-10-13, about 15:15 UTC, by a Claude Code session (cloud); the story intro and outro fix is on a local branch (Latest handoff); step 4 (one done-check sweep) is live; step 3's PR 1 (honest sources) is on its branch, waiting to ship.
 
 ## How Krish wants to be worked with
 
@@ -591,6 +591,20 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-13, about 15:15 UTC: **The story intro and outro engine fixed on
+  Krish's review of Wednesday's video** (fonts, the title running off the
+  page, the vertical stand-off, mismatched badges, no business logos). On a
+  local branch `fix/story-io-brand-fit-check`, not pushed or merged yet:
+  brand faces by role only, the short `video_title` (new in cover-facts.json)
+  fitted or the render stops, one badge for both sides with real logos
+  (Wednesday: Meta, Instagram and WhatsApp for "Muse, by Meta"; Apple for
+  Siri), a logo line-up under the title, and every frame of every render
+  checked against the safe areas with a contact sheet per clip
+  (`scripts/quick-edit/story_io.py`; `config/story-intro-outro.json`,
+  `check`). Monday, Wednesday and Friday all render clean in both shapes.
+  Wednesday's videos need re-making with the new clips once it ships; Krish
+  has not seen the new design yet.
 
 - 2026-10-13, 14:20 UTC: **Friday re-angled on Krish's thesis** ("models are
   fragmenting right now, and our prediction is that soon, nobody will get a
