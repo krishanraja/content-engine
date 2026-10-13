@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-13, about 06:30 UTC, by a Claude Code session (cloud); step 4 (one done-check sweep) is live, step 3 waits on Krish.
+Last updated: 2026-10-13, about 08:00 UTC, by a Claude Code session (cloud); step 4 (one done-check sweep) is live; step 3's PR 1 (honest sources) is on its branch, waiting to ship.
 
 ## How Krish wants to be worked with
 
@@ -591,6 +591,35 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-13, Tuesday: **Step 3, PR 1: honest sources.** Krish,
+  2026-10-13, on the goal-focus mock: "Love it, build it and merge
+  everything". This is row 3 of the goal-focus plan's merge order, the step
+  3 plan's PR 1 unchanged (Control Center,
+  `docs/handoff/design-entropy-session/`). On branch
+  `ccr-25d9e81a-step3-honest-sources`, committed; not pushed, not merged,
+  the migration not applied. In plain words:
+  - **An idea must say where it came from.** `POST /api/content-ideas` used
+    to file a missing or unknown source as `manual`, which reads as an idea
+    Krish dropped in. Now it refuses it: 400 `source_type_unknown`, with the
+    allowed values in `detail`. Every caller found already names its source
+    (Control Center's capture and week board send `manual`; plan-week sends
+    `week_research`).
+  - **Two writers get their own names.** The shift card's "Write from this
+    shift" writes `shift_write`. Control Center's pilot builder gets
+    `pilot_build`, which its PR 2 starts writing. `lens_radar` is gone from
+    the allowed list: it has no source row, so a write of it already failed.
+  - **The migration** (`supabase/migrations/20261021080000_honest_sources.sql`)
+    adds the `control-center` owner, then the two sources, and checks the
+    owner foreign key in the same transaction. Replayed twice on a scratch
+    Postgres; it fails when the foreign key is missing.
+  - **To ship, in this order:** apply the migration and read it back (the
+    SQL is in the PR body); then merge and deploy. The shift card's write
+    fails the foreign key if the code deploys first.
+  - **Found, not fixed here:** the seed rail still offers lens radar
+    candidates (`api/_seedSources.ts`, `lensRadar`); picking one now gets a
+    clear 400 instead of a foreign key error. Retire it or give it a source
+    row in its own change.
 
 - 2026-10-13, Tuesday, about 06:30 UTC: **Step 4 is live: one done-check
   sweep closes what can be seen done, and nothing else closes a board item.**
