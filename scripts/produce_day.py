@@ -336,6 +336,7 @@ def main():
     ap.add_argument('--date', help='the publishing day, YYYY-MM-DD (default: today in New York)')
     ap.add_argument('--piece', help='the piece id (default: the one scheduled for the date)')
     ap.add_argument('--wait-minutes', type=int, default=120, help='how long to wait for both takes')
+    ap.add_argument('--redo', action='store_true', help='make the videos again even if both cuts are on the record (after an engine fix)')
     ap.add_argument('--dry-run', action='store_true', help='everything up to the plans; nothing rendered, sent or recorded')
     a = ap.parse_args()
     when = date.fromisoformat(a.date) if a.date else datetime.now(TZ).date()
@@ -348,7 +349,7 @@ def main():
         log(f'{when:%A %-d %B}: piece {piece}, plan {post_path.parent.name}')
         made = making(piece).get('video_assets') or []
         made = {v.get('cut') for v in made if isinstance(v, dict)} if isinstance(made, list) else set(made)
-        if all(c in made for c in SHAPE) and not a.dry_run:
+        if all(c in made for c in SHAPE) and not a.dry_run and not a.redo:
             # Already made (a run started by hand earlier, as on 13 October for
             # Wednesday): the scheduled run never makes a day's videos twice.
             log('both cuts are already on the record; nothing to do')
