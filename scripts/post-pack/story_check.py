@@ -261,10 +261,17 @@ def reading(paragraphs, rules=None):
             q = m.group(1) or m.group(2) or ''
             if len(words_of(q)) > rules['max_quote_words']:
                 quotes.append(q.strip())
-    jargon = {}
+    # A word explained once stays explained: a listener remembers it (Krish,
+    # 2026-10-13, on scripts made to re-explain every word: "they dont sound like me").
+    jargon, explained = {}, set()
     for s in sents:
-        for term in jargon_in(s, rules):
-            jargon.setdefault(term, s)
+        unexplained = jargon_in(s, rules)
+        for term in rules['jargon']:
+            if re.search(rf'(?<![\w-]){re.escape(term.lower())}(?![\w-])', _plain(s).lower()) and term not in unexplained:
+                explained.add(_family(term))
+        for term in unexplained:
+            if _family(term) not in explained:
+                jargon.setdefault(term, s)
     hard, total = [], 0
     for s in sents:
         for i, w in enumerate(words_of(s)):
@@ -580,6 +587,8 @@ def self_test():
     check('notes after the script are never spoken', any('heading or stamp' in p for p in problems(ONE_OFF)), False)
     short = 'Why does it matter? Because the price doubled. That is the whole story.\n'
     check('a short hook needs no outro', problems(short), [])
+    once = reading(['Models are the AI engines underneath. ChatGPT has lots of models now.'])['jargon']
+    check('a word explained once stays explained for the rest of the script', 'models' in once or 'model' in once, False)
     def warns(t):
         return [w for w in warnings(t) if 'PERSONAL_INTRO' not in w]
     check('a long script with no opinion gets a warning, never a refusal', len(warns(GOOD)), 1)

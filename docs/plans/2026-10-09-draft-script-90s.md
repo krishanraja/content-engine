@@ -1,11 +1,13 @@
 I've been watching what's coming with AI, before everyone notices. I'm Krish.
 
-Between them, ChatGPT and Claude now let you pick from more AI brains than there are Harry Potter books. Most of the time, the app won't tell you which brain answered you. So why are there suddenly so many AIs?
+So I've been noticing something about the AI apps I use every day. Each app now runs lots of models, which are the AI engines underneath. So I wanted to break it down for you. What happens when the app picks your AI for you?
 
-The brains come in small, medium and large, each with its own name. Newer ones show off what's new, like a new phone. Bigger ones cost more, like posh seats on a plane. New names get people talking, like an advert. And small brains take the easy questions.
+Claude Code alone lists more than a dozen. But that menu is going. In 2025, OpenAI launched GPT-5 with a router that picks the engine for you.
 
-Is it a trick to make people pay more? No. AI keeps getting cheaper to make. But most apps still don't tell you which brain answered you. It's like ordering food and never being told what went in it.
+First, money. The app maker, OpenAI or Anthropic, decides how much engine your money buys. On a busy day, I'd bet you get the cheaper one. Second, getting the job done. When OpenAI's router broke for part of a day, Sam Altman said GPT-5 "seemed way dumber". So when a task fails, you can't tell if it was you or the router.
 
-Lots of other apps rent their brains from the makers of ChatGPT and Claude. Today, those apps have to name the brain they want. I think that's about to change. My prediction: by the end of September 2027, at least two AI makers will pick the brain for them. I mean the makers of ChatGPT, Claude and Google's Gemini. I'm 85% sure.
+If you build on AI, measure what a finished job costs, not the price per word.
 
-The full story is free at makeyourmindup.ai. Tell me in the comments: would you rather pick your AI's brain, or let the app pick?
+My prediction. By the end of 2027, the big AI apps won't show you a list of models unless you ask. You'll get one box. Choosing will be for people who really go looking.
+
+The full article is free at makeyourmindup.ai. Tell me in the comments: do you want to pick your AI, or let the app pick? Make your mind up.

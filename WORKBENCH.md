@@ -592,6 +592,24 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, 14:20 UTC: **Friday re-angled on Krish's thesis** ("models are
+  fragmenting right now, and our prediction is that soon, nobody will get a
+  choice unless they really want one - and the long tail consequences"). He
+  approved the outline ("yes, go"). Article (`docs/plans/2026-10-09-draft-body.md`)
+  rewritten: menu history, GPT-5 router, four consequences (money, getting the
+  job done, building a business, power), what to do, prediction with no
+  percentage (by end 2027 the big AI apps show no model list unless you ask).
+  Fact gate passed (22 claims, 0 blocking), voice 5.0, model scan passes. Both
+  scripts rewritten after a fresh-listener check (it caught "people love that",
+  contradicted by the research), pass story_check, are in Teleprompter retitled
+  "Soon you won't pick your AI" and recorded current. The Anthropic "wrong
+  tradeoff" quote was cut: no primary source found. story_check now treats a
+  word explained once as explained for the rest of the script. **Friday's
+  pictures and cover are still the old angle** (pileup, decoder, belt, menu,
+  jobs, money, forks): redo them to the new beats before the run. Wednesday:
+  videos made by run 38405529804; Krish keeps the ChatGPT ads ad-lib ("it's
+  true").
+
 - 2026-10-13, 13:05 UTC: **Wednesday re-angled to a scorecard (Krish: "If I
   went under the hood on Muse, I would literally do flash comparisons of it
   against other tools on different criteria and rate them").** Muse vs
