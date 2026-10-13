@@ -1,27 +1,25 @@
 I've been looking at what's really inside the AI everyone's selling us. I'm Krish.
 
-I've been reading the reviews of Meta's new AI helper, Muse. And they're strange. They read like thank-you notes to an assistant. And that made me wonder. How much of our lives are we about to hand over?
+So Meta launched Muse last month. It's an AI assistant that doesn't just answer questions. It actually does things for you. It books things, buys things, fills in forms and sends emails. And people love it. One person says a shop charged them six thousand dollars for fifteen hundred dollars of clothes. Muse chased the shop for the money. So what are we giving up to get one?
 
-One person says a shop charged them $6,000 for clothes that cost about $1,500. Muse wrote to the shop to get the money back. Another says it fills in their job forms from start to finish.
+But Meta isn't alone. OpenAI, Google, Anthropic and Apple have all launched their own version this year. So where is all this heading?
 
-That's when it clicked. Muse isn't really an app. It's a stand-in for you on the internet. And this year, OpenAI, Google, Anthropic and Apple all built one too. So where are they all going?
+Here's how I see it. Each company is going after a different part of your life. Meta wants your personal life. Your errands, your Instagram, your WhatsApp. OpenAI wants your work, and its version starts at a hundred dollars a month. Google wants everything that's already in your Gmail. Anthropic is building the careful assistant for work. And Apple is pitching itself as the private one.
 
-Each one is betting on a different part of you. Meta wants your personal life. Your errands, your Instagram, your WhatsApp, mostly free. OpenAI wants your work. Its helpers cost 100 dollars a month or more. Google wants the life in your Gmail. Anthropic wants to be the careful helper at work. Apple wants to be the private one, inside your phone.
+Different parts, same prize. Whoever becomes your assistant sits between you and the whole internet. You stop going to websites. Your assistant goes for you.
 
-Different parts, same prize. Whoever sits between you and the internet gets to buy for you.
+So are they any good? They're all about level. CNN tested Muse and found ChatGPT and Gemini could do the same jobs, sometimes better.
 
-So how good are they? Roughly level. A CNN reporter found that ChatGPT and Google's Gemini can do similar jobs to Muse. And Muse suggested two date night spots that had closed years ago. Very romantic.
+Here's what matters. To do your errands, an assistant needs your email, your calendar and your bank card. So the real question is where all that lives, and who can see it.
 
-Here's the bit I can't shake. To run your errands, a helper needs your email and your bank card. That has to live somewhere. And there are only three places.
+There are three options. It stays on your phone. It sits on the company's servers, where the company can get to it. Or it sits on their servers but encrypted, which means scrambled so even the company can't read it.
 
-Your own phone. The company's computers. Or a locked box on the company's computers that even the company can't open.
+Muse and OpenAI's assistant both run on their own servers. Meta even says its setup doesn't stop Meta getting to your data when it needs to. Apple does a lot of Siri's work in a private cloud it says even Apple can't see into. And Meta and Google say encrypted versions are coming.
 
-Muse and OpenAI's helper both work on the company's computers. Meta even says its design doesn't stop Meta getting at your data. Apple keeps a lot of Siri's work in a locked box. But I don't see a locked-up helper that shops for you yet. Meta and Google say theirs are coming.
+And yes, the ads. Meta makes almost all its money from ads. I think one day, shops will pay to be the one Muse recommends. That's a given. The bigger question is who can see your life.
 
-And the ads? Meta makes nearly all its money from ads. So of course it'll sell what its helper suggests. I think that's a given. The real question is who can see your life while it picks.
+So which one should you use? If you live on Instagram and WhatsApp, Muse is free. Just turn off the setting that lets Meta train its AI on your chats. If you live in Gmail, try Google's. For work, Claude. And if privacy matters most, Siri does less, but keeps more to itself.
 
-So which one should you pick? If you live on Instagram, Muse is free. Just switch off the setting that lets Meta use your chats to teach its AI. If you live in Gmail, try Google's. For work, Claude. If privacy matters most, Siri does less, but keeps more to itself.
+My prediction. By 30 June 2027, OpenAI, Google or Anthropic will launch an assistant that shops for you. And your data will stay encrypted, even from them. I'd put that at 55%.
 
-Here's my prediction. By 30 June 2027, I think OpenAI, Google or Anthropic will have a helper that shops for you. And it'll work in a locked box the company can't open. I'd put it at 55%.
-
-The full story, with every link I used, is free at makeyourmindup.ai. Tell me in the comments: which helper would you trust with your life? Make your mind up.
+The full story, with every source, is free at makeyourmindup.ai. Tell me in the comments: which assistant would you trust with your life? Make your mind up.
