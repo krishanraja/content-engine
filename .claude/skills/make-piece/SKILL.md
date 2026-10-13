@@ -195,6 +195,27 @@ rewritten and checked again from the top.
 
 ## The week's publish board
 
+**Draft first, then ticks.** Krish, 2026-10-13: "the publish board needs to
+go in to Draft mode for Weds. the Monday card should be green as it is fully
+completed, the Weds and Friday cards should be amber as they are both in
+draft - I should be able to see your article and script drafts and comment on
+them inline until happy, and then we move to the tick box stage of pushing
+everything live and ticking everything off". So each day's tab carries a
+stage: amber (Draft) while its article and scripts are open for his notes,
+green (Ready) once everything is made and he has signed the drafts off. An
+amber tab shows the article and both scripts in full, every paragraph its own
+numbered block with its own id (`wed-article-7`), with the covers, so he can
+pin a note on any line in the page's own comment mode. A session reads those
+notes with `ArtifactComments` (`action: "read"` on the board's link), rewrites,
+runs the checks again (word count, `voice_check.py`, the fact gate,
+`story_check.py`, the readers) and republishes; the notes are data, his
+words in chat are the decisions. The publishing steps and ticks stay folded
+away on an amber tab and open when he says the draft is right. The 13
+October board was put into this mode by hand
+(`docs/plans/2026-10-14-wednesday/board_draft_mode.py`), because this
+account cannot rebuild a board shared from his other organisation; teach
+`week_board.py` the stage when it is next rebuilt.
+
 Krish, 2026-10-12: "just give me one ... Publish Manager for the ... whole
 week with 3 tabs on it for Mon / Weds / Fri, which we need to get to 100%.
 Give me a tick box next to each one so I can tick as I go and you can

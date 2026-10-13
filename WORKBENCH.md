@@ -618,6 +618,18 @@ bring takes back, was retired on 12 October.
     (Playwright wanted a newer headless shell): all five covers and both
     thumbnails pass their checks. Not yet: visual gate record, publish page,
     pack, board tab.
+  - **The board is in draft mode** (Krish: "the Monday card should be green
+    as it is fully completed, the Weds and Friday cards should be amber as
+    they are both in draft - I should be able to see your article and script
+    drafts and comment on them inline until happy, and then we move to the
+    tick box stage"). Version 9 of the board: Monday green (Ready), Wednesday
+    and Friday amber (Draft), each with its article and both scripts in full
+    (numbered paragraphs, ids like `fri-article-7`) and Wednesday's covers;
+    Friday's publishing steps folded under "Publishing steps and ticks". Read
+    his notes with `ArtifactComments` `read` on the board link (the board's
+    data store is closed to this account, and the comment watch could not be
+    registered, so he says in chat when he has left notes). Friday is flagged
+    on the page: 1,983 words against the 1,400 limit, voice check 15.2.
 
 - 2026-10-13, Tuesday, about 06:30 UTC: **Step 4 is live: one done-check
   sweep closes what can be seen done, and nothing else closes a board item.**
