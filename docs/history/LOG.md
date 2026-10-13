@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-13
+
+- reconciled at `1e2b053`: NOW.md takes the 12 October work (midday GitHub video run and music bed, Teleprompter replacing Descript with the hard reading gate, five covers per post, the board's readiness rule and its four unapplied migrations, ARTICLE_LENGTH and SHARP_PREDICTION). No bullet was old enough to roll. Stamps on STATE, SYSTEM_MAP, GLOSSARY, NORTH_STAR and STUDIO were not bumped because their bodies were not checked against the window; NOW.md names them under Do not trust.
+
 ## 2026-10-11
 
 - reconciled at `cf66032`: NOW.md takes the single Sunday plan for the week (`/api/week/options`, the `plan-week` skill, TWO_CUTS), which supersedes the Sunday, Tuesday and Thursday slates of 2026-10-10, the two cuts and five standing channels, the hourly `publish_watch` job that closes board items (cron count 22 to 23, read from `apps/control-plane/vercel.json`), the move of video production to Codex, the purge and `week_research` fixes, and the CI repair. The commits already reconciled `docs/CADENCE.md`, `docs/CONTENT_ENGINE.md`, `docs/AMPLIFICATION.md`, `docs/OPERATIONS.md`, `docs/STUDIO.md`, `README.md` and `WORKBENCH.md`; this run did not re-verify them or bump their stamps. `docs/STATE.md`, `docs/SYSTEM_MAP.md` and `docs/GLOSSARY.md` keep their 2026-09-25 stamps and are named in "Do not trust". No document moved. The repeated `SKILL.md`, `STATION.md` and dated `draft-*` basenames are per-skill, per-station and per-day by convention, not duplicates.
