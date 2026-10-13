@@ -107,5 +107,6 @@ jobs:
             .cache/produce/**/*.report.json
             .cache/produce/**/*.cut.txt
             .cache/produce/**/preview-*.jpg
+            .cache/produce/**/review-*.png
           if-no-files-found: ignore
           retention-days: 14
