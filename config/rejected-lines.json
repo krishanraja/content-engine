@@ -1,0 +1,15 @@
+{
+ "about": "Lines Krish read and rejected, in his words. Every script is checked against them (scripts/post-pack/story_check.py): a pattern here is refused in any future script, so the same mistake is never made twice. Add each new rejection the moment he gives it, with his words.",
+ "rejected": [
+  {"pattern": "\\bthe company'?s computers\\b", "instead": "say servers, once, plainly",
+   "said": "\"the companys computers\" makes no sense", "on": "2026-10-13"},
+  {"pattern": "\\blocked box\\b", "instead": "say encrypted, and what it means, once",
+   "said": "\"Or a locked box that even the company can't open\" needs so much interpretation to understand", "on": "2026-10-13"},
+  {"pattern": "\\bsell what its helper (?:picks|suggests)\\b", "instead": "say who pays and for what: shops paying to be the one it recommends",
+   "said": "\"Of course Meta will sell what its helper picks.\" makes no sense either", "on": "2026-10-13"},
+  {"pattern": "\\bwrote to a shop that overcharged someone\\b", "instead": "open on the thing itself, then the example",
+   "said": "\"Meta's new AI helper, Muse, wrote to a shop that overcharged someone by thousands of dollars.\" is such a weird opening line", "on": "2026-10-13"},
+  {"pattern": "\\byour helper'?s choice\\b|\\bhomework for a robot\\b", "instead": "say the idea the way he'd say it to a friend",
+   "said": "these video scripts are still waffle, they dont sound like me and I cant read them coherently", "on": "2026-10-13"}
+ ]
+}

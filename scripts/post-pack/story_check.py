@@ -362,6 +362,25 @@ def length_problem(words, cut):
     return None
 
 
+REJECTED = Path(__file__).resolve().parents[2] / 'config' / 'rejected-lines.json'
+
+
+def rejected_problems(spoken):
+    """Lines Krish has already read and rejected (config/rejected-lines.json),
+    refused in every later script so no mistake is made twice. Krish,
+    2026-10-13: "I need a system that improves, not regresses"."""
+    try:
+        items = json.loads(REJECTED.read_text(encoding='utf-8')).get('rejected') or []
+    except (OSError, ValueError):
+        return []
+    out = []
+    for r in items:
+        m = re.search(r['pattern'], spoken, re.I)
+        if m:
+            out.append(f'"{m.group(0)}" is a line Krish rejected ({r["on"]}: {r["said"]}); {r["instead"]}')
+    return out
+
+
 def problems(text, cut=None, series=None):
     """Plain-words reasons this script is not ready, or [] when it passes.
     `cut` ('long' or 'short') adds the length rule; `series` (the piece's
@@ -375,6 +394,7 @@ def problems(text, cut=None, series=None):
     if not words:
         return found + ['no spoken words found: a script is only the words Krish says, one plain paragraph per thought (house rule SCRIPT_ONLY)']
     found += series_problems(beats, series)
+    found += rejected_problems(' '.join(beats))
     # The hook's room starts after the series line, so the line never uses it up.
     opened = opener_of(' '.join(beats))
     hook = words[len(opened.split()):] if opened else words
@@ -623,6 +643,8 @@ def self_test():
     check('a name inside a sentence is no long word', reading([fine + ' Ask Anthropic.'])['long_words'], [])
     check('syllables: rough, but right for the usual words',
           [syllables(w) for w in ('cat', 'table', 'wanted', 'jumped', 'everyone', 'music', '2027', '$150,000')], [1, 2, 2, 1, 3, 2, 1, 2])
+    check('a line Krish rejected is refused in any later script (config/rejected-lines.json)',
+          any('Krish rejected' in p for p in problems('It lives in a locked box on the company\'s computers.')), True)
     check('the gate refuses through problems(), for every script', any('house rule R7' in p for p in problems(fine + ' ' + long_one)), True)
 
     # This week's unrecorded scripts, as their pieces' records hold them. Monday's
