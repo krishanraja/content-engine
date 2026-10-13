@@ -1,24 +1,22 @@
 I've been having a little play around with Muse, Meta's new personal assistant, and it's an odd thing to review. Meta calls it "an agent that takes on more of the work so people can focus on what matters to them". On Apple's US store it rates 4.9 out of 5.
 
-So I did what I'd do with any new gadget. I lined it up against the four assistants it's actually competing with (OpenAI's dots inside ChatGPT, Google's Gemini Spark, Anthropic's Claude and Apple's Siri AI) and gave each one my own score out of 10 on six things. The scores are my judgement calls. The facts behind them are quoted from each company's own pages.
-
-Short version? Muse wins on everything you'll feel this week, and loses on the two things you won't.
+So I did what I'd do with any new gadget. I lined it up against the four assistants it's actually competing with (OpenAI's dots, Google's Gemini Spark, Anthropic's Claude and Apple's Siri AI). Then I scored them. Those numbers are just my opinion; the facts under them are quoted from each company's own pages.
 
 ## MY SCORECARD
 
-Add up my scores and Muse and Siri tie on 43 out of 60. I have Claude on 39, and dots and Spark on 36 each. (The full grid is in the scorecard picture.)
+Add up my scores (the full grid's in the scorecard picture) and Muse and Siri come out level at the top, with Claude just behind and dots and Spark tied a little further back.
 
 A tie at the top, for completely opposite reasons. Let's go through it.
 
 ## 1. CAN IT DO THE JOB?
 
-Meta says Muse can "open a browser, fill out forms, and negotiate on their behalf", and that it "runs on its own dedicated computer in the cloud", so it keeps going after you close the app. I give it a nine. OpenAI's dots are close: "always-on agents built to handle everything", each with its own cloud computer and browser. Spark keeps working in the background, and Google says "it might also use a remote browser". Claude will take a job and run with it ("Claude takes it from there, even after you've closed your laptop"), but I couldn't find an Anthropic page that names buying or booking. Apple describes Siri AI getting "things done across apps, like drafting an email from scratch, or editing and sharing a set of photos".
+Meta says Muse can "open a browser, fill out forms, and negotiate on their behalf", and that it "runs on its own dedicated computer in the cloud", so it keeps going after you close the app. I give it a nine. OpenAI's dots are close: "always-on agents built to handle everything". Spark keeps working in the background, and Google says "it might also use a remote browser". Claude will take a job and run with it ("Claude takes it from there, even after you've closed your laptop"), but I couldn't find an Anthropic page that names buying or booking. Apple describes Siri AI getting "things done across apps, like drafting an email from scratch, or editing and sharing a set of photos".
 
 Worth saying: the brains are roughly level. CNN's reviewer found ChatGPT and Gemini "can handle similar tasks and sometimes provided more detailed responses" than Muse, which also suggested two date-night spots that had closed years ago. So the scores here are about what each one is allowed to do, not how clever it is.
 
 ## 2. WHAT DOES IT COST?
 
-Muse is "free for most of what people need". Spark needs Google AI Pro at $19.99 a month. Claude Pro is $20 if you pay monthly. Dots come with ChatGPT Pro, from $100 a month, and only for adults "outside the European Economic Area, United Kingdom, and Switzerland". So not us in Britain, not yet. I couldn't find a separate price for Siri AI at all.
+Muse is "free for most of what people need". Spark needs a "Google AI Pro or Ultra subscription", and the cheapest of those is $19.99 a month. Claude Pro is $20 if you pay monthly. Dots come with ChatGPT Pro, from $100 a month, and only for adults "outside the European Economic Area, United Kingdom, and Switzerland". So not us in Britain, not yet. I couldn't find a separate price for Siri AI at all.
 
 ## 3. IS IT ALREADY IN YOUR LIFE?
 
@@ -34,19 +32,19 @@ Up to here, Muse is miles ahead. Now for the bits you can't see.
 
 Muse "runs on its own dedicated computer in the cloud", which Meta says is "where the data and credentials for any service a person connects are securely stored". That's Meta's servers, and Meta's own safety page says today's design "does not prevent Meta from accessing data when necessary to support, secure or operate the service". Meta's setting to use your Muse chats to train its AI "is on when you first use Muse". Meta has promised a locked version, Muse Confidential VM, "later this year", encrypted "with a key only they hold, so not even Meta can access it". Until it ships, I give Muse a three.
 
-I give Spark a three as well, because it won't work unless Google's Keep Activity is switched on, and Google says human reviewers read some of that data. OpenAI says "each dot works on its own cloud computer" and lets you turn off "Improve the model for everyone". Claude's cloud tasks run "on Anthropic's servers". Anthropic makes you choose, and keeps your chats for five years if you say yes.
+I give Spark a three as well, because it won't work unless Google's Keep Activity is switched on, and Google says human reviewers read some of that data. OpenAI says "each dot works on its own cloud computer", and that you "control whether your dots' conversations and the work they carry out are used to improve our models". Claude's cloud tasks run "on Anthropic's servers". Anthropic makes you choose, and keeps your chats for five years if you say yes.
 
 Siri AI is the outlier. Apple says its models "run on device and on servers using Private Cloud Compute", where your data is "not stored nor made accessible to Apple or anyone else". It doesn't train on your personal data unless you opt in. I give it a nine.
 
 ## 6. WHOSE SIDE IS IT ON?
 
-Follow the money. Meta made $59.36 billion from advertising last quarter, out of $60.8 billion in revenue. Google makes most of its money from advertising too. OpenAI and Anthropic charge you a monthly plan for their assistants. And Apple, as far as I can tell, just wants to sell you the next iPhone. I give Muse a three.
+Follow the money. Meta made $59.36 billion from advertising last quarter, out of $60.8 billion in revenue. Google makes most of its money from advertising too. With OpenAI and Anthropic, you're the customer, as the prices above make clear. And Apple, as far as I can tell, just wants to sell you the next iPhone. I give Muse a three.
 
 ## WHY THAT LAST SCORE MATTERS MOST
 
 Think about what an ad is. It's a shop paying so you'll see it. That's been the deal online for as long as most of us can remember.
 
-But when an assistant shops for you, you don't see a list. You get one answer. The restaurant, the flight, the plumber. So the money has to move somewhere, and I think it moves from paying to be seen to paying to be picked.
+But when an assistant shops for you, you don't see a list. You get one answer. The restaurant. The plumber. So the money has to move somewhere, and I think it moves from paying to be seen to paying to be picked.
 
 Meta says Muse "doesn't share a person's conversations or the data in their VM with Meta's ad systems", and I take that at face value. It's a promise about your data, though, not about what gets picked. Those are different things.
 
@@ -68,4 +66,4 @@ By the end of 2027, businesses will be paying to be the one your AI assistant pi
 
 I'll be wrong if every big assistant shows you the paid options clearly, the way search ads are labelled today. Check back then.
 
-Five assistants want to run your errands. Only one of them makes almost all its money from ads, and it's the one winning on everything you can see.
+Five assistants want to run your errands. Only one of them makes almost all its money from ads, and on my scores it's the one winning on everything you can see.
