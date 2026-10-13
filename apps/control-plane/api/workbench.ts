@@ -492,7 +492,9 @@ export function groupSaid(rows: SaidRow[], ids: string[]): Map<string, SaidNote[
 /** Read his said notes about the open items: kind note, filed or settled.
  *  One read per item, so a long thread on one item never crowds out another. */
 async function saidNotes(ids: string[]): Promise<{ notes: Map<string, SaidNote[]>; failed: boolean }> {
-  const reads = await Promise.all(ids.map(id => supabase
+  // allSettled: a read that throws degrades the board like one that returns
+  // an error, instead of failing the whole GET.
+  const settled = await Promise.allSettled(ids.map(async id => supabase
     .from('said_parts')
     .select('id,about,excerpt,created_at')
     .eq('about', `board:${id}`)
@@ -500,8 +502,12 @@ async function saidNotes(ids: string[]): Promise<{ notes: Map<string, SaidNote[]
     .in('status', ['filed', 'settled'])
     .order('created_at', { ascending: false })
     .limit(SAID_SHOWN)))
-  if (reads.some(r => r.error)) return { notes: new Map(), failed: true }
-  return { notes: groupSaid(reads.flatMap(r => (r.data || []) as SaidRow[]), ids), failed: false }
+  const rows: SaidRow[] = []
+  for (const s of settled) {
+    if (s.status === 'rejected' || s.value.error) return { notes: new Map(), failed: true }
+    rows.push(...((s.value.data || []) as SaidRow[]))
+  }
+  return { notes: groupSaid(rows, ids), failed: false }
 }
 
 async function read(res: VercelResponse) {

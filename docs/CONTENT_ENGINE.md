@@ -83,7 +83,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 
 | Route | What it does | Model and external services |
 |---|---|---|
-| `POST /api/content-ideas` | capture: refuses a missing or unknown `source_type` (400 `source_type_unknown`, the allowed values in `detail`), and `manual` without `source_ref` `said:<said_parts id>` (400 `manual_needs_his_words`: manual means Krish's words, filed by Control Center; the database holds the same rule, `content_ideas_manual_is_his_words`), then dedup, relevance gate for non-manual sources, enrich, embed, insert as `seeded` | Haiku relevance [`relevance-classifier`], Sonnet enrich [`cleo`], OpenAI embeddings |
+| `POST /api/content-ideas` | capture: refuses a missing or unknown `source_type` (400 `source_type_unknown`, the allowed values in `detail`) (`manual` means Krish's words, filed by Control Center with `source_ref` `said:<said_parts id>`; a `manual` idea without that ref is refused only after Control Center's step 3 PR 4 retires its other idea doors), then dedup, relevance gate for non-manual sources, enrich, embed, insert as `seeded` | Haiku relevance [`relevance-classifier`], Sonnet enrich [`cleo`], OpenAI embeddings |
 | `POST /api/content-ideas/voice` | transcribe a spoken idea. Retiring: it goes once Control Center's one door (its `POST /api/voice`) has replaced its last callers there | OpenAI `gpt-4o-transcribe` |
 | `POST /api/content-ideas/research-topic` | research a topic Krish names; inserts a `drafting` row with a live `lane_slot` | Perplexity `sonar-pro`, then Exa, then Brave; Sonnet [`cleo-research-topic`] |
 | `/api/content-ideas/[id]/materials` | list, attach or remove `meta.materials` | none |

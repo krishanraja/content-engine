@@ -18,10 +18,9 @@
 //      once Control Center's step 3 PR 4 (retire the other doors) is live.
 //   2. A literal 'manual' in a file that touches content_ideas or source_type
 //      appears only in apps/control-plane/api/content-ideas.ts (the allow
-//      list, which needs a said: ref) or as a read filter,
-//      .eq('source_type', 'manual'). No writer under apps/ may store manual.
-//      The database refuses one that is not his words too
-//      (content_ideas_manual_is_his_words).
+//      list) or as a read filter, .eq('source_type', 'manual'). No writer
+//      under apps/ may store manual: only Control Center's filer sends it,
+//      with a said: ref.
 //
 // Comments are stripped before a file is read (stripComments, from the one
 // closer guard). tests/control-plane/his-words-guard.test.ts proves each rule

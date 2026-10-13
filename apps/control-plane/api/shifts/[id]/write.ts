@@ -14,8 +14,7 @@ import { isUnregisteredSource, sanitizeVoice } from '../../_content.js'
 // (GET /api/week/options reports a manual row as an idea he dropped in). The
 // intake_sources row is supabase/migrations/20261021080000_honest_sources.sql,
 // live since 2026-10-13, so the old fallback to 'manual' is gone (step 3,
-// PR 6). The database refuses a new manual row that does not name his words
-// (20261021100000_manual_is_his_words.sql).
+// PR 6).
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res)) return

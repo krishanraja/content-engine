@@ -599,26 +599,30 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-13, 15:45 UTC: **Step 3 PR 6 built, not merged: `manual` means his
-  words, and his words reach the board** (branch
-  `ccr-25d9e81a-manual-his-words`; Control Center's
+- 2026-10-13, 16:40 UTC: **Step 3 PR 6 built, not merged, split after
+  review: his words reach the board now; the `manual` refusal waits for
+  Control Center** (branch `ccr-25d9e81a-manual-his-words`; Control Center's
   `docs/handoff/design-entropy-session/step3-plan.md`, PR 6, merge-order row
-  11 of `goal-focus-plan.md`). `POST /api/content-ideas` refuses `manual`
-  without `source_ref` `said:<said_parts id>` (400 `manual_needs_his_words`).
-  The shift card's old fallback to `manual` is gone (honest sources is live).
-  `GET /api/workbench` returns each open item's `said` notes. New guard rules
-  in `scripts/check-control-plane.ts`: no transcription call under `apps/`
-  but `_whisper.ts`, and no `'manual'` a writer could store outside the allow
-  list. **Kept, on purpose:** `api/content-ideas/voice.ts` and `api/_whisper.ts`,
-  because Control Center main still calls `/api/content-ideas/voice`
-  (`QuickCaptureIdea.tsx`, `StartFromResearch.tsx`). They go, with the guard's
-  exception, once Control Center's retire PR (step 3 PR 4) is live.
-  **Not applied:** `supabase/migrations/20261021100000_manual_is_his_words.sql`
-  (NOT VALID CHECK). Its cutoff is 2026-10-13, not the plan's 2026-10-21: a
-  future cutoff would let a new manual row with no ref through until then. It
-  wraps `source_ref` in `coalesce`: the plan's CHECK passed a null ref. Apply
-  after merge, then read back `convalidated = false` and the
-  `schema_migrations` row. PR 8 validates it after 7 quiet days.
+  11 of `goal-focus-plan.md`). In this PR: `GET /api/workbench` returns each
+  open item's `said` notes (a failed or thrown read leaves the board up,
+  `said_read: "failed"`). The shift card's old fallback to `manual` is gone
+  (honest sources is live). New guard rules in
+  `scripts/check-control-plane.ts`: no transcription call under `apps/` but
+  `_whisper.ts`, and no `'manual'` a writer could store outside the allow
+  list. **Taken out, on purpose:** the 400 `manual_needs_his_words` refusal
+  and the CHECK migration. Control Center main still has two idea doors that
+  POST `manual` with no ref: the Week page's "Drop in an idea"
+  (`src/components/week/WeekBoard.tsx`) and the Cmd+I capture
+  (`src/components/QuickCaptureIdea.tsx`). The plan says PR 6's refusal
+  follows PR 4 (risks 10 and 11), and PR 4 has no branch yet. A test now
+  holds that order (`tests/control-plane/honest-sources.test.ts`). **Next,
+  once PR 4 is live** and Control Center main has no `source_type: 'manual'`
+  outside `api/_sayRun.ts`: bring back the refusal, its tests and the CHECK
+  from commit `a686bd5` on this branch, with one change: exempt the one
+  older manual row by its `source_ref` `krish-worked-example-2026-09-23`,
+  not by date (a writer can backdate `created_at`). Delete
+  `api/content-ideas/voice.ts` and `api/_whisper.ts` in the same PR: Control
+  Center main still calls `/api/content-ideas/voice`. Nothing to apply.
 
 - 2026-10-13, 14:20 UTC: **Friday re-angled on Krish's thesis** ("models are
   fragmenting right now, and our prediction is that soon, nobody will get a

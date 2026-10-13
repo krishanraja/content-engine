@@ -12,6 +12,8 @@ const db = vi.hoisted(() => ({
   writes: [] as Array<[string, string]>,
   /** Runs once, just before the next update: another writer landing between the route's read and its write. */
   between: null as null | (() => void),
+  /** A table whose reads fail: 'error' returns { error }, 'throw' rejects. */
+  failRead: {} as Record<string, 'error' | 'throw'>,
 }))
 
 vi.mock('../../apps/control-plane/api/_supabase.js', () => {
@@ -41,6 +43,8 @@ vi.mock('../../apps/control-plane/api/_supabase.js', () => {
         db.writes.push([table, 'update'])
         return { data: hit, error: null }
       }
+      if (db.failRead[table] === 'error') return { data: null, error: { message: `synthetic ${table} read failure` } }
+      if (db.failRead[table] === 'throw') throw new Error(`synthetic ${table} network failure`)
       let out = [...hit]
       if (order) { const [k, asc] = order; out.sort((a, b) => (a[k] > b[k] ? 1 : a[k] < b[k] ? -1 : 0) * (asc ? 1 : -1)) }
       return { data: out.slice(0, limit).map(pick), error: null }
@@ -93,6 +97,7 @@ beforeEach(() => {
   db.tables = { work_board_state: [{ id: 'board', headline: '', signals: [], updated_by: 'agent', updated_at: '2026-10-03T00:00:00Z' }], work_board_items: [], work_board_replies: [] }
   db.writes = []
   db.between = null
+  db.failRead = {}
 })
 
 describe('the work board route', () => {
@@ -949,6 +954,20 @@ describe('his said notes on the board', () => {
     expect(said[9].at).toBe('2026-10-03T09:00:00Z')
     expect(db.writes).toEqual([])
   })
+
+  for (const how of ['error', 'throw'] as const) {
+    it(`a said_parts read that fails (${how}) leaves the board up: every open item said [], said_read failed`, async () => {
+      db.tables.said_parts = [note('00000000-0000-4000-8000-000000000001', 'board:p1-video', '2026-10-13T09:00:00Z')]
+      db.failRead.said_parts = how
+      const board = await call('GET', {}, 'krish')
+      expect(board.status).toBe(200)
+      expect(board.body.said_read).toBe('failed')
+      const open = board.body.items.filter((i: Row) => i.lane !== 'done')
+      expect(open.map((i: Row) => i.id)).toEqual(['p1-video', 'p2-video'])
+      for (const i of open) expect(i.said).toEqual([])
+      expect(db.writes).toEqual([])
+    })
+  }
 
   it('groupSaid keeps only notes about the items asked for', async () => {
     const { groupSaid } = await import('../../apps/control-plane/api/workbench.js')

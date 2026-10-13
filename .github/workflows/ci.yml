@@ -197,15 +197,6 @@ jobs:
             psql_in tests/fixtures/control-plane/honest-sources-before.sql
           done
           psql_in tests/fixtures/control-plane/honest-sources-setup.sql
-          # Step 3, PR 6: manual is his words. On a minimal content_ideas
-          # with the live vocabularies, after honest sources, the CHECK runs
-          # twice; a new manual row with no said: ref is refused, one with it
-          # is kept, and an old-dated row is kept.
-          psql_in tests/fixtures/control-plane/content-ideas-minimal.sql
-          psql_in supabase/migrations/20261021080000_honest_sources.sql
-          psql_in supabase/migrations/20261021100000_manual_is_his_words.sql
-          psql_in supabase/migrations/20261021100000_manual_is_his_words.sql
-          psql_in tests/fixtures/control-plane/manual-is-his-words.sql
           # Last, because it commits a seed that fences every later claim: an
           # open claim holds the active role row, so a switch must wait for it
           # and then refuse.
