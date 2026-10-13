@@ -39,7 +39,7 @@ import statistics
 import sys
 from pathlib import Path
 
-MAX_SCORE = 12  # the bar: a score over this fails
+MAX_SCORE = 6  # the bar: a score over this fails. Halved on 2026-10-13: "we need more aggressive anti AI scanning techniques by 10X"
 
 STOCK = [
     'delve', 'in today\'s', 'in the world of', 'in a world where', 'it\'s worth noting', 'it is worth noting', 'it\'s important to note',
@@ -66,6 +66,35 @@ STIFF = re.compile(r"\b(?:(?:it|that|there|here|what|who|he|she) is|(?:you|we|th
                    r"(?:I|you|it|we|they) will|(?:do|does|did|is|are|was|were|have|has|had|would|could|should|will|must) not|cannot|let us)\b(?=\s+[\w$£])", re.I)
 CONTRACTED = re.compile(r"\b\w+(?:n't|'s|'re|'ve|'ll|'d|'m)\b|\bcan't\b|\bwon't\b|\blet's\b", re.I)
 QUOTED = re.compile(r'"[^"\n]*"|“[^”\n]*”')
+# The scanner layer (Krish, 2026-10-13: "we need more aggressive anti AI
+# scanning techniques by 10X"). What commercial scanners score besides
+# predictability: the words chat models reach for, the connective tissue they
+# glue paragraphs with, sentences that all sit in the same comfortable length,
+# no fragments, no asides, no specifics, the same opener again and again.
+LLM_WORDS = re.compile(r"\b(?:significant(?:ly)?|notabl[ey]|comprehensive|intricate|nuanced|multifaceted|myriad|plethora|"
+    r"streamlin\w*|foster\w*|bolster\w*|underscor\w*|showcas\w*|highlight(?:s|ed|ing)?|garner\w*|embark\w*|empower\w*|"
+    r"enhanc\w*|elevat\w*|unleash\w*|optimi[sz]\w*|facilitat\w*|utili[sz]\w*|ensur\w*|enabl\w*|meticulous\w*|"
+    r"commendabl\w*|noteworthy|vibrant|dynamic|holistic|interplay|resonat\w*|align(?:s|ed|ing)?|insights?|stakeholders?|"
+    r"ecosystem|framework|journey|evolving|evolution|considerabl[ey]|essential(?:ly)?|vital|key factor|potential(?:ly)?|"
+    r"various|numerous|wide range|ultimately|consequently|thus|therefore|hence|nevertheless|nonetheless|arguably|"
+    r"remarkabl[ey]|profound(?:ly)?|crucially|indeed|undeniabl[ey]|seamless\w*|ever-\w+|game-chang\w*|steward\w*|"
+    r"cautionary tale|double-edged|at its core|it remains to be seen|only time will tell|in the realm|paves? the way|"
+    r"a testament|serves? as|stands? as|marks? a|represents? a)\b", re.I)
+TRANSITION_OPEN = re.compile(r"^(?:however|additionally|moreover|furthermore|in addition|overall|notably|importantly|consequently|"
+                             r"meanwhile|ultimately|similarly|likewise|conversely|nevertheless|nonetheless|that said|in fact|indeed|"
+                             r"as a result|for instance|for example|in contrast|on the other hand|to that end|with that in mind)\b,?", re.I)
+TAIL = re.compile(r",\s(?:making|allowing|enabling|ensuring|highlighting|underscoring|leaving|giving|creating|raising|"
+                  r"providing|offering|signalling|signaling|reflecting|suggesting)\s", re.I)
+PAIRED = re.compile(r"\bnot only\b[^.]{1,80}\bbut also\b|\bwhether (?:you're|you are)\b|\bfrom [\w' -]{2,30} to [\w' -]{2,30}(?:,| and)|"
+                    r"\bboth [\w' -]{2,25} and [\w' -]{2,25}\balike\b|\b\w+ and \w+ alike\b", re.I)
+EXPLAINER = re.compile(r"\b(?:quick jargon check|think of it as|think of it like|in other words|put simply|simply put|"
+                       r"here'?s the question|so here is the question|let'?s (?:break|look|take|unpack|dig)|imagine (?:a|that|you)|"
+                       r"picture this|the short answer|the long answer|this is where|that'?s where .{1,30} comes in|enter\s[A-Z])", re.I)
+HEDGE = re.compile(r"\b(?:may|might|could|perhaps|possibly|potentially|likely|arguably|somewhat|relatively|generally|typically|often|tends? to)\b", re.I)
+VAGUE_START = re.compile(r"^(?:this|that|these|those|it)\s+(?:is|are|was|means|shows|suggests|highlights|matters|makes|raises|creates|reflects)\b", re.I)
+SPECIFIC = re.compile(r"\$?\d[\d,.]*%?|\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\b|"
+                      r"\b[A-Z][a-z]+(?:\s[A-Z][a-z]+)+\b")
+ASIDE = re.compile(r"\([^)]{3,}\)")
 FIRST_PERSON = re.compile(r"\b(?:I|I'm|I've|I'd|I'll|[Mm]y|[Mm]e)\b")
 
 
@@ -184,8 +213,95 @@ def check(text):
         for i, p, hits in stiff_by_para:
             lead = p[:70] + ('...' if len(p) > 70 else '')
             findings.append({'where': f'paragraph {i}: "{lead}"', 'habit': 'uncontracted', 'detail': ', '.join(hits)})
+    s2, f2 = scanner_layer(paras, all_sents, words)
+    score += s2
+    findings += f2
     return {'score': round(score, 1), 'max_score': MAX_SCORE, 'passes': score <= MAX_SCORE, 'paragraphs': len(paras),
             'words': words, 'findings': findings}
+
+
+def scanner_layer(paras, sents, words):
+    """The habits AI scanners score beyond the ones above. Each is a rate, so a
+    long piece is held to the same standard as a short one."""
+    score, out = 0.0, []
+    if words < 150 or not sents:
+        return score, out
+    own = [QUOTED.sub(' ', p) for p in paras]
+    text = ' '.join(own)
+    k = 1000 / max(1, words)
+    hits = sorted({m.group(0).lower() for m in LLM_WORDS.finditer(text)})
+    n = len(LLM_WORDS.findall(text))
+    if n * k > 2:
+        score += min(8, (n * k - 2) * 1.5)
+        out.append({'where': 'whole piece', 'habit': 'chat-model vocabulary',
+                    'detail': f'{n} in {words} words ({n * k:.1f} per 1,000; keep it under 2): ' + ', '.join(hits[:14])})
+    trans = [p[:50] for p in own if TRANSITION_OPEN.match(p)] + [s[:50] for s in sents if TRANSITION_OPEN.match(s)]
+    if len(trans) >= 2:
+        score += min(6, 1.5 * len(trans))
+        out.append({'where': 'whole piece', 'habit': 'joined with connectives',
+                    'detail': f'{len(trans)} sentences open on "However", "Additionally" and the like: ' + '; '.join(trans[:4])})
+    firsts = {}
+    for x in sents:
+        w = re.sub(r'\W', '', x.split()[0].lower())
+        firsts[w] = firsts.get(w, 0) + 1
+    top, c = max(firsts.items(), key=lambda kv: kv[1])
+    if len(sents) >= 15 and c / len(sents) > 0.14 and top not in ('i',):
+        score += min(4, (c / len(sents) - 0.14) * 40)
+        out.append({'where': 'whole piece', 'habit': 'the same first word',
+                    'detail': f'"{top.capitalize()}" starts {c} of {len(sents)} sentences. Start some on the thing, the person, the number'})
+    vague = [x[:50] for x in sents if VAGUE_START.match(x)]
+    if len(vague) * k > 4:
+        score += min(4, len(vague) * k - 4)
+        out.append({'where': 'whole piece', 'habit': '"This is", "It means" openers',
+                    'detail': f'{len(vague)}: ' + '; '.join(vague[:4]) + '. Name the thing instead of "this"'})
+    tails = TAIL.findall(text)
+    if len(tails) * k > 1.5:
+        score += min(4, (len(tails) * k - 1.5) * 1.5)
+        out.append({'where': 'whole piece', 'habit': 'the ", making it..." tail',
+                    'detail': f'{len(tails)} sentences end on ", making / allowing / ensuring ...". Make it its own sentence'})
+    paired = [m.group(0)[:50] for m in PAIRED.finditer(text)]
+    if paired:
+        score += 1.5 * len(paired)
+        out.append({'where': 'whole piece', 'habit': 'paired formulas', 'detail': '; '.join(paired[:4])})
+    expl = [m.group(0) for m in EXPLAINER.finditer(text)]
+    if expl:
+        score += 1.5 * len(expl)
+        out.append({'where': 'whole piece', 'habit': 'explainer tics', 'detail': ', '.join(expl[:5])})
+    hedges = len(HEDGE.findall(text))
+    if hedges * k > 9:
+        score += min(4, (hedges * k - 9) * 0.5)
+        out.append({'where': 'whole piece', 'habit': 'hedged everywhere',
+                    'detail': f'{hedges} may/might/could/likely ({hedges * k:.1f} per 1,000). Say it, or say how sure'})
+    lengths = [len(x.split()) for x in sents]
+    mid = sum(1 for L in lengths if 12 <= L <= 24) / len(lengths)
+    if len(lengths) >= 15 and mid > 0.55:
+        score += (mid - 0.55) * 20
+        out.append({'where': 'whole piece', 'habit': 'every sentence a comfortable length',
+                    'detail': f'{mid:.0%} of sentences are 12 to 24 words. Machines live there. Use more under 6 and a few over 30'})
+    frags = sum(1 for L in lengths if L <= 5) / len(lengths)
+    if len(lengths) >= 15 and frags < 0.08:
+        score += (0.08 - frags) * 40
+        out.append({'where': 'whole piece', 'habit': 'no fragments',
+                    'detail': f'{frags:.0%} of sentences are five words or fewer. People drop short ones in. Like this'})
+    asides = len(ASIDE.findall(text)) + text.count('?')
+    if asides * k < 2:
+        score += 2
+        out.append({'where': 'whole piece', 'habit': 'no asides or questions',
+                    'detail': f'{asides} brackets or questions in {words} words. Add a (small) aside or a question you then sit with'})
+    specific = len(SPECIFIC.findall(text))
+    if specific * k < 25:
+        score += min(4, (25 - specific * k) * 0.2)
+        out.append({'where': 'whole piece', 'habit': 'too few specifics',
+                    'detail': f'{specific} numbers, dates and names ({specific * k:.0f} per 1,000; aim above 25)'})
+    toks = re.findall(r"[a-z']+", text.lower())
+    if len(toks) >= 300:
+        win = 100
+        ttr = statistics.mean(len(set(toks[i:i + win])) / win for i in range(0, len(toks) - win, 25))
+        if ttr < 0.62:
+            score += (0.62 - ttr) * 30
+            out.append({'where': 'whole piece', 'habit': 'a small vocabulary on repeat',
+                        'detail': f'word variety {ttr:.2f} in any 100 words (aim above 0.62). Fewer repeats of the same plain words'})
+    return score, out
 
 
 def self_test():
@@ -202,7 +318,17 @@ def self_test():
     stiff = ('It is a good app. You are going to like it. I do not think it is perfect, and they are not saying it is. '
              'We are told it will not read your mail, and I would like to believe that.')
     quoted = ('Meta says people "do not need to worry, it is safe and you are in control". I\'m not so sure. It\'s early.')
+    chat = ('Meta\'s Muse represents a significant step forward in the evolution of personal AI agents. Unlike traditional chatbots, '
+            'which simply respond to user queries, Muse is designed to take meaningful action on behalf of its users, making everyday '
+            'tasks easier. From booking reservations to managing calendars, the agent aims to streamline the tasks that consume valuable time.\n\n'
+            'However, the rise of Muse also raises important questions about privacy and trust. To function effectively, the agent requires '
+            'access to a wide range of personal data, including email, calendars and financial information. Additionally, critics argue that '
+            'these assurances may not be sufficient, particularly given the company\'s track record on data privacy.\n\n'
+            'Looking ahead, the success of Muse will likely depend on the ability to balance utility with trust. If the company can demonstrate '
+            'that it is a responsible steward of user data, Muse could become a central part of how people manage their digital lives. '
+            'Ultimately, the choice will rest with users, who must weigh the convenience of an agent against the potential costs to privacy.')
     a, b = check(machine), check(person)
+    c = check(chat)
     checks = [
         ('machine prose fails', a['passes'], False),
         ('his kind of prose passes', b['passes'], True),
@@ -210,6 +336,9 @@ def self_test():
         ('"not X, it\'s Y" is found', any('not X' in f['habit'] for f in a['findings']), True),
         ('a closing recap is found', any(f['habit'] == 'a closing recap' for f in a['findings']), True),
         ('stiff English is found', any(f['habit'] == 'stiff, uncontracted English' for f in check(stiff)['findings']), True),
+        ('chat-model prose fails the scanner layer', c['passes'], False),
+        ('chat-model vocabulary is named', any(f['habit'] == 'chat-model vocabulary' for f in c['findings']), True),
+        ('paragraphs glued with connectives are named', any(f['habit'] == 'joined with connectives' for f in c['findings']), True),
         ('quoted full forms do not count', any(f['habit'] == 'stiff, uncontracted English' for f in check(quoted)['findings']), False),
     ]
     bad = [(n, g, w) for n, g, w in checks if g != w]

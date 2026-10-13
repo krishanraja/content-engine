@@ -592,6 +592,21 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, Tuesday, about 09:30 UTC: **AI-scan defence, 10x** (Krish: "we
+  need more aggressive anti AI scanning techniques by 10X"). `voice_check.py`
+  gained a scanner layer (chat-model vocabulary, connective openers, the same
+  first word, "This is" openers, ", making it" tails, paired formulas,
+  explainer tics, hedging, comfortable-length sentences, no fragments, no
+  asides or questions, too few specifics, small vocabulary) and its bar went
+  from 12 to 6. Calibration: a machine-written Muse article 52.5, Monday's
+  (flagged 93%) 41.4, Friday's 18.2, Wednesday's 0.0. New
+  `scripts/post-pack/ai_scan.py`: Qwen2.5-0.5B perplexity plus Binoculars on
+  this machine (needs torch and transformers, pip lines in the file), floors
+  3.2 and 1.02; Wednesday 4.05 / 1.073, a machine sample 2.31 / 0.996.
+  Both gates are in SOUNDS_LIKE_KRISH and make-piece. Wednesday's fact gate
+  passed again (38 claims). Friday's article fails both length and voice and
+  needs its rewrite.
+
 - 2026-10-13, Tuesday, about 08:30 UTC: **Wednesday re-angled, the tone
   ruling, contractions, and the video run's real state.**
   - Krish on the prediction: "the top one, but make the wording clearer, and
