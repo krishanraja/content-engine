@@ -351,7 +351,10 @@ def script_units(paragraphs):
             units.append({'para': p, 'text': s, 'n': len(s.split()), 'tokens': content_tokens(s)})
     for i, u in enumerate(units):
         # The opening line is his face (the hook) and the call to action is his face before the end card.
-        u['open'] = i > 0 and u['para'] != outro
+        # The series line and his intro paragraph are his face too: Wednesday's 90-second cut put the
+        # price card over "I've been having a little play around with Muse" (Krish's review, 2026-10-13).
+        first_open = 2 if len(paragraphs) > 2 and story_check.PERSONAL_INTRO.search(paragraphs[1]) else 0
+        u['open'] = i > 0 and u['para'] >= first_open and u['para'] != outro
     return units
 
 
@@ -1261,6 +1264,10 @@ def self_test():
     # The script into sentences, and which may carry a picture.
     units = script_units(SELF_SCRIPT)
     check('sentences split at full stops and question marks', [len(sentences(p)) for p in SELF_SCRIPT], [2, 3, 2, 2, 2, 3])
+    intro = script_units(["I've been looking inside the AI. I'm Krish.", "So I've been having a play with Muse. So I wanted to break it down for you.",
+                          'Muse costs nothing. Siri costs nothing too.', 'The full article is free at makeyourmindup.ai.'])
+    check('no picture starts over the series line or his intro paragraph (Wednesday, 2026-10-13)',
+          [u['para'] for u in intro if u['open']], [2, 2])
     check('the opening line and the call to action (three sentences) carry no picture',
           [i for i, u in enumerate(units) if not u['open']], [0, len(units) - 3, len(units) - 2, len(units) - 1])
 
