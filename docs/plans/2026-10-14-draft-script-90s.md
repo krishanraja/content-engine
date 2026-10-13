@@ -1,11 +1,13 @@
 I've been looking at what's really inside the AI everyone's selling us. I'm Krish.
 
-Millions of people just downloaded Meta's new helper app, Muse. It fills in forms, books things and argues for a better price. One person says it wrote to a shop that charged them $6,000 for $1,500 of clothes. So what does a company that sells adverts want with a helper like that?
+Meta has a new AI helper called Muse. Millions of people have downloaded it, and most of it is free. Here's what bugs me. Meta makes nearly all its money from ads. So why would it give you a free assistant?
 
-But a CNN reporter found ChatGPT and Gemini can do similar jobs. So I think it isn't cleverer. It's closer. Meta owns Instagram, Facebook and WhatsApp, so Muse can see your saved videos and chats.
+It isn't smarter. A CNN reporter found that ChatGPT and Google's Gemini can do similar jobs. But Muse sits right next to your Instagram, Facebook and WhatsApp.
 
-And here's what I keep thinking about. Meta makes almost all its money from adverts. On Facebook, shops pay so you'll see them. Inside Muse, shops could pay so your helper chooses them. And when your helper picks for you, most of us just say yes.
+Now think about ads. For twenty years, you scrolled, and shops paid to get in front of you. With a helper, you don't scroll. You just ask. Find me a plumber. And it picks one.
 
-My prediction. By 30 June 2027, Meta will let businesses pay so Muse recommends them to you. I'm 70% sure.
+So I think the ad doesn't need your eyes any more. It needs your helper's choice. And Meta owns the helper.
+
+My prediction. By 30 June 2027, Meta will let businesses pay so that Muse recommends them to you. I'm 70% sure.
 
 The full story is free at makeyourmindup.ai. Tell me in the comments: would you trust a helper that someone else can pay? Make your mind up.

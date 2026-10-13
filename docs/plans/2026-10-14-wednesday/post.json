@@ -13,7 +13,16 @@
    "logos": [
     "Muse"
    ],
-   "purpose": "One person says a shop charged them $6,000 for clothes that cost about $1,500, and Muse wrote to the shop to get the money back. The reviews of Muse."
+   "purpose": "The reviews read like thank-you notes to an assistant. One person says a shop charged them $6,000 for clothes that cost about $1,500, and Muse wrote to the shop to get the money back."
+  },
+  {
+   "kind": "image",
+   "file": "pics/ad-money.png",
+   "name": "4-where-meta-makes-its-money.png",
+   "logos": [
+    "Meta"
+   ],
+   "purpose": "Last quarter Meta made about 60 billion dollars, and nearly every dollar came from ads. What's in it for them?"
   },
   {
    "kind": "image",
@@ -39,22 +48,13 @@
   },
   {
    "kind": "image",
-   "file": "pics/ad-money.png",
-   "name": "4-where-meta-makes-its-money.png",
-   "logos": [
-    "Meta"
-   ],
-   "purpose": "Meta makes almost all its money from adverts: last quarter 60 billion dollars, nearly every dollar from ads."
-  },
-  {
-   "kind": "image",
    "file": "pics/pay-to-be-picked.png",
    "name": "5-pay-to-be-picked.png",
    "logos": [
     "Meta",
     "Muse"
    ],
-   "purpose": "On Facebook a shop pays so you'll see it. Inside Muse a shop could pay so your helper chooses it."
+   "purpose": "With a helper you don't scroll, you just ask, and it picks one for you. The ad needs your helper's choice. Whoever owns the helper owns the choice."
   },
   {
    "kind": "image",
