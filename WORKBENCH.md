@@ -365,11 +365,18 @@ session, in Claude Code or Codex, reads and writes it through the engine:
 - Change the headline or the status lights: `{"action": "set_state",
   "headline": "...", "signals": [{"label": "Home computer", "state": "ok",
   "text": "On and ready"}]}` (state is `ok`, `warn`, `bad` or empty).
-- **Replies are retired.** Control Center has no reply box any more, and
-  step 3's voice input, one place where he speaks to the system, replaces
-  it. Never leave an item waiting for his words: an item on him ends when it
-  closes itself or when he clears, bumps or purges it on his list, and a
-  question only his words answer is asked in your reply to him. The engine
+- **Replies are retired; his words about an item arrive as its `said`
+  notes.** Control Center has no reply box any more. What he says about a
+  board item comes in through Control Center's one door, and its filer keeps
+  it as a note on that item. `GET /api/workbench` returns them on each open
+  item as `said: [{ "part_id", "excerpt", "at" }]`, newest first, at most
+  10 (a purged note is gone; `said_read: "failed"` means they could not be
+  read, and the board still loads). Read an item's `said` notes before you
+  work it, and act on them. Never answer them: they are his words to the
+  system, not a question to you. Never leave an item waiting for his words:
+  an item on him ends when it closes itself or when he clears, bumps or
+  purges it on his list, and a question only his words answer is asked in
+  your reply to him. The engine
   refuses the reply action (`410 replies_retired`) and an item with a
   `"prompt"` (`400 prompt_retired`; `"prompt": null` clears an old one).
   The replies he wrote before stay in `replies` (`unseen_replies` counts the ones no
@@ -591,6 +598,27 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-13, 15:45 UTC: **Step 3 PR 6 built, not merged: `manual` means his
+  words, and his words reach the board** (branch
+  `ccr-25d9e81a-manual-his-words`; Control Center's
+  `docs/handoff/design-entropy-session/step3-plan.md`, PR 6, merge-order row
+  11 of `goal-focus-plan.md`). `POST /api/content-ideas` refuses `manual`
+  without `source_ref` `said:<said_parts id>` (400 `manual_needs_his_words`).
+  The shift card's old fallback to `manual` is gone (honest sources is live).
+  `GET /api/workbench` returns each open item's `said` notes. New guard rules
+  in `scripts/check-control-plane.ts`: no transcription call under `apps/`
+  but `_whisper.ts`, and no `'manual'` a writer could store outside the allow
+  list. **Kept, on purpose:** `api/content-ideas/voice.ts` and `api/_whisper.ts`,
+  because Control Center main still calls `/api/content-ideas/voice`
+  (`QuickCaptureIdea.tsx`, `StartFromResearch.tsx`). They go, with the guard's
+  exception, once Control Center's retire PR (step 3 PR 4) is live.
+  **Not applied:** `supabase/migrations/20261021100000_manual_is_his_words.sql`
+  (NOT VALID CHECK). Its cutoff is 2026-10-13, not the plan's 2026-10-21: a
+  future cutoff would let a new manual row with no ref through until then. It
+  wraps `source_ref` in `coalesce`: the plan's CHECK passed a null ref. Apply
+  after merge, then read back `convalidated = false` and the
+  `schema_migrations` row. PR 8 validates it after 7 quiet days.
 
 - 2026-10-13, 14:20 UTC: **Friday re-angled on Krish's thesis** ("models are
   fragmenting right now, and our prediction is that soon, nobody will get a

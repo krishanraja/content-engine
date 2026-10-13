@@ -894,3 +894,70 @@ describe('every item says how it ends, so a check can end it', () => {
     expect(() => cleanItem({ ...q, lane: 'on_you', only_you: 'judgment' }, true)).toThrow('on_you_needs_closes_on')
   })
 })
+
+// His words reach the board (step 3 of the design entropy session, PR 6).
+// Control Center's filer keeps a note he says about an item in said_parts with
+// about 'board:<item id>'; GET returns them on each open item. Synthetic notes.
+describe('his said notes on the board', () => {
+  const note = (id: string, about: string, at: string, extra: Row = {}) =>
+    ({ id, about, kind: 'note', status: 'filed', excerpt: `A synthetic note ${id}.`, created_at: at, ...extra })
+
+  beforeEach(() => {
+    db.tables.work_board_items = [
+      { id: 'p1-video', lane: 'in_progress', rank: 1, title: 'A synthetic item', closes_on: 'video', idea_id: PIECE },
+      { id: 'p2-video', lane: 'on_you', rank: 2, title: 'Another synthetic item', ...READY },
+      { id: 'old-item', lane: 'done', rank: 3, title: 'A closed synthetic item', closes_on: 'session', updated_at: '2026-10-12T00:00:00Z' },
+    ]
+  })
+
+  it('an open item with two notes returns both, newest first, as part_id, excerpt and at', async () => {
+    db.tables.said_parts = [
+      note('00000000-0000-4000-8000-000000000001', 'board:p1-video', '2026-10-12T09:00:00Z'),
+      note('00000000-0000-4000-8000-000000000002', 'board:p1-video', '2026-10-13T09:00:00Z', { status: 'settled' }),
+    ]
+    const board = await call('GET')
+    expect(board.status).toBe(200)
+    const item = board.body.items.find((i: Row) => i.id === 'p1-video')
+    expect(item.said).toEqual([
+      { part_id: '00000000-0000-4000-8000-000000000002', excerpt: 'A synthetic note 00000000-0000-4000-8000-000000000002.', at: '2026-10-13T09:00:00Z' },
+      { part_id: '00000000-0000-4000-8000-000000000001', excerpt: 'A synthetic note 00000000-0000-4000-8000-000000000001.', at: '2026-10-12T09:00:00Z' },
+    ])
+    expect(board.body.items.find((i: Row) => i.id === 'p2-video').said).toEqual([])
+    expect(board.body.said_read).toBeUndefined()
+  })
+
+  it('a purged note, a held one, a part that is not a note, and a note about a closed item return none', async () => {
+    db.tables.said_parts = [
+      note('00000000-0000-4000-8000-000000000003', 'board:p1-video', '2026-10-13T09:00:00Z', { status: 'purged' }),
+      note('00000000-0000-4000-8000-000000000004', 'board:p1-video', '2026-10-13T09:00:00Z', { status: 'held' }),
+      note('00000000-0000-4000-8000-000000000005', 'board:p1-video', '2026-10-13T09:00:00Z', { kind: 'task' }),
+      note('00000000-0000-4000-8000-000000000006', 'board:old-item', '2026-10-13T09:00:00Z'),
+      note('00000000-0000-4000-8000-000000000007', 'content', '2026-10-13T09:00:00Z'),
+    ]
+    const board = await call('GET', {}, 'krish')
+    expect(board.body.items.find((i: Row) => i.id === 'p1-video').said).toEqual([])
+    expect(board.body.items.find((i: Row) => i.id === 'old-item').said).toBeUndefined()
+  })
+
+  it('shows at most ten on an item, the newest, and writes nothing', async () => {
+    db.tables.said_parts = Array.from({ length: 12 }, (_, n) =>
+      note(`00000000-0000-4000-8000-0000000001${String(n).padStart(2, '0')}`, 'board:p1-video', `2026-10-${String(n + 1).padStart(2, '0')}T09:00:00Z`))
+    const board = await call('GET')
+    const said = board.body.items.find((i: Row) => i.id === 'p1-video').said
+    expect(said).toHaveLength(10)
+    expect(said[0].at).toBe('2026-10-12T09:00:00Z')
+    expect(said[9].at).toBe('2026-10-03T09:00:00Z')
+    expect(db.writes).toEqual([])
+  })
+
+  it('groupSaid keeps only notes about the items asked for', async () => {
+    const { groupSaid } = await import('../../apps/control-plane/api/workbench.js')
+    const out = groupSaid([
+      { id: 'a', about: 'board:p1-video', excerpt: 'x', created_at: '2026-10-13T00:00:00Z' },
+      { id: 'b', about: 'board:other', excerpt: 'y', created_at: '2026-10-13T00:00:00Z' },
+      { id: 'c', about: 'p1-video', excerpt: 'z', created_at: '2026-10-13T00:00:00Z' },
+    ], ['p1-video'])
+    expect([...out.keys()]).toEqual(['p1-video'])
+    expect(out.get('p1-video')!.map(n => n.part_id)).toEqual(['a'])
+  })
+})

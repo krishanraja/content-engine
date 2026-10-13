@@ -111,7 +111,7 @@ describe('POST /api/content-ideas names its source', () => {
     })
   }
 
-  for (const source of ['shift_write', 'pilot_build', 'manual', 'week_research']) {
+  for (const source of ['shift_write', 'pilot_build', 'week_research']) {
     it(`accepts ${source} and carries it as written`, async () => {
       const r = await postIdea({ raw_text: 'A synthetic idea', source_type: source })
       expect(r.status).toBe(200)
@@ -119,6 +119,29 @@ describe('POST /api/content-ideas names its source', () => {
       expect(db.dedupSources).toEqual([{ source_type: source, source_ref: null, source_url: null }])
     })
   }
+
+  // Manual is his words (step 3, PR 6): only with a said: ref to the part he said.
+  for (const [label, ref] of [
+    ['no ref', undefined],
+    ['a ref that is not his words', 'shift:synthetic-shift'],
+    ['a said: ref that is not a part id', 'said:not-a-uuid'],
+  ] as const) {
+    it(`refuses manual with ${label}: 400 manual_needs_his_words, and writes nothing`, async () => {
+      const r = await postIdea({ raw_text: 'A synthetic idea', source_type: 'manual', ...(ref ? { source_ref: ref } : {}) })
+      expect(r.status).toBe(400)
+      expect(r.body).toMatchObject({ ok: false, error: 'manual_needs_his_words' })
+      expect(db.calls).toEqual([])
+      expect(db.dedupSources).toEqual([])
+    })
+  }
+
+  it('accepts manual that names the part he said, and carries the ref', async () => {
+    const ref = 'said:00000000-0000-4000-8000-000000000001'
+    const r = await postIdea({ raw_text: 'A synthetic idea', source_type: 'manual', source_ref: ref })
+    expect(r.status).toBe(200)
+    expect(r.body).toMatchObject({ ok: true, via: 'dedup', id: 'existing-idea' })
+    expect(db.dedupSources).toEqual([{ source_type: 'manual', source_ref: ref, source_url: null }])
+  })
 
   it('never stores an unknown source as manual', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')
@@ -205,27 +228,19 @@ describe('a piece started from a shift card', () => {
   })
 })
 
-// Merge order (review, 2026-10-13): this code can reach live before
-// 20261021080000_honest_sources.sql is applied, because a merge deploys and a
-// migration is applied by hand. Until then live has no shift_write or
-// pilot_build row, and either order must leave the shift card working.
-describe('before the migration is applied', () => {
-  it('the shift card still starts a piece, as manual with its shift: ref, and says so', async () => {
+// Merge order (review, 2026-10-13): code can reach live before a migration
+// that adds its source is applied, because a merge deploys and a migration is
+// applied by hand. 20261021080000_honest_sources.sql is live (2026-10-13), so
+// the shift card no longer falls back to 'manual' (step 3, PR 6): manual
+// means his words. A missing source row is a plain refusal, never manual.
+describe('when a source row is missing', () => {
+  it('the shift card refuses, names the source, and never writes manual', async () => {
     db.unregistered.add('shift_write')
-    const r = await call('../../apps/control-plane/api/shifts/[id]/write.js', { method: 'POST', query: { id: 'shift-1' } })
-    expect(r.status).toBe(200)
-    expect(r.body).toEqual({ ok: true, idea_id: 'idea-1', source_type: 'manual', source_pending: 'shift_write' })
-    const ideas = db.inserts.filter(i => i.table === 'content_ideas').map(i => i.row)
-    expect(ideas.map(i => i.source_type)).toEqual(['shift_write', 'manual'])
-    expect(ideas[1]).toMatchObject({ source_ref: 'shift:synthetic-shift' })
-  })
-
-  it('the shift card does not retry on any other insert failure', async () => {
-    db.unregistered.add('shift_write')
-    db.unregistered.add('manual')
     const r = await call('../../apps/control-plane/api/shifts/[id]/write.js', { method: 'POST', query: { id: 'shift-1' } })
     expect(r.status).toBe(500)
-    expect(db.inserts.filter(i => i.table === 'content_ideas')).toHaveLength(2)
+    expect(r.body).toEqual({ ok: false, error: 'source_type_not_registered', detail: { source_type: 'shift_write' } })
+    const ideas = db.inserts.filter(i => i.table === 'content_ideas').map(i => i.row)
+    expect(ideas.map(i => i.source_type)).toEqual(['shift_write'])
   })
 
   it('POST /api/content-ideas answers 400 source_type_not_registered, not a 500', async () => {
