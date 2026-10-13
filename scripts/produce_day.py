@@ -204,15 +204,20 @@ def check_cards(post_path):
     receipt = post_path.parent / 'cards.receipt.json'
     seen = json.loads(receipt.read_text(encoding='utf-8')) if receipt.exists() else {}
     bad = []
+    import hashlib
+    folder = plan_files.pack_folder(post)
     for item in plan_files.video_files(post_path, post):
         if item['kind'] != 'image':
             continue
-        path = item.get('path')
-        if not path or not Path(path).exists():
-            bad.append(f'{item.get("file")} is not beside post.json')
+        # Pictures are never committed (.gitignore): on GitHub's machine they come
+        # from the post's library pack (fetch_pictures), beside post.json elsewhere.
+        here = Path(item['path']) if item.get('path') else None
+        staged = plan_files.STAGED / folder / plan_files.SECTION['image'] / item['name'] if folder and item.get('name') else None
+        path = here if here and here.exists() else staged if staged and staged.exists() else None
+        if path is None:
+            bad.append(f'{item.get("file")} was not found beside post.json or in the library pack')
             continue
-        import hashlib
-        if seen.get(Path(path).name) != hashlib.sha256(Path(path).read_bytes()).hexdigest():
+        if seen.get(Path(item.get('file') or path).name) != hashlib.sha256(path.read_bytes()).hexdigest():
             bad.append(f'{item.get("file")} was not drawn by video_card.py (or changed since)')
     if bad:
         raise Stop('pictures not made by the house tool: ' + '; '.join(bad)
@@ -424,8 +429,8 @@ def main():
             return 0
         takes_at = fetch_takes(takes(piece, a.wait_minutes), work)
         music_root = fetch_music()
-        check_cards(post_path)
         fetch_pictures(post_path)
+        check_cards(post_path)
         clips, words = story_clips(post_path, work)
         rendered = make_cuts(post_path, piece, takes_at, music_root, clips, words, work, a.dry_run)
         if a.dry_run:
