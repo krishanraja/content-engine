@@ -411,6 +411,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
+    id: 'PERSONAL_INTRO', name: 'The script opens the way Krish would',
+    text: 'Straight after the series line, a script opens the way Krish talks: what he has been doing with the thing, why it matters in plain words, and that he wants to break it down for you. His own example (config/golden-examples.json): "I\'ve been having a little play around with Muse, Meta\'s new personal assistant. It\'s an important evolution in how AI is going to come into our personal lives, and so I wanted to break it down for you." Never open on a fact out of context, a news-reader line or an anecdote with no set-up; the example comes after the intro. Only say he has used something when he has said so.',
+    said: 'I think these scripts need to be a little sharper on the intro as well. The first line should be more like something like: "I\'ve been having a little play around with Muse Meta\'s new personal assistant. It\'s an important evolution in how AI is going to come into our personal lives, and so I wanted to break it down for you." Thats something I would actually say, how can you redo todays scripts and then log that for the future?',
+    on: '2026-10-13', source: 'chat, on Wednesday\'s Muse scripts; his line is the first entry in config/golden-examples.json; checked softly by scripts/post-pack/story_check.py', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
     id: 'ONE_THREAD', name: 'A script follows one line of thought',
     text: 'A video script is one line of thought, never a list of facts. It opens on a puzzle Krish noticed, asks the one question it answers, follows the clues in the order they lead, lands one insight of his own said as an idea (Wednesday 14 October: "the ad doesn\'t need your eyes any more, it needs your helper\'s choice"), then what it means and the prediction. Every beat leads to the next with "so", "but", "now think about": a viewer can say why each line follows the one before. Plain words for a 12-year-old (R7) are applied to that thread, never by chopping it into separate facts; when a reading-age fix breaks the flow, rewrite the beat, do not delete the link.',
     said: 'these video scripts are absolute garbage in terms of making any sense - the quality has deteriorated drastically in terms narrative flow, unique insight',

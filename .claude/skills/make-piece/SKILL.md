@@ -115,6 +115,14 @@ rewritten and checked again from the top.
    AI, before everyone notices. I'm Krish." His name is said once, there: to "Drop it from the
    sign-off at the end?" he picked "Drop it at the end", so the close never
    says "I'm Krish" again. The line's words count toward the cut's length.
+   Then the intro, the way he talks (house rule PERSONAL_INTRO, Krish,
+   2026-10-13): what he's been doing with the thing, why it matters, and that
+   he wants to break it down for you, before any fact or anecdote. His own
+   line is golden example #1 in `config/golden-examples.json`: "I've been
+   having a little play around with Muse Meta's new personal assistant. It's
+   an important evolution in how AI is going to come into our personal
+   lives, and so I wanted to break it down for you." Read that file before
+   you write; `story_check.py` warns when the second beat skips it.
    Spoken words only, the provocative hook in the two sentences after the
    series line, the article in the outro (HOOK_AND_CTA). A script never says
    it was made with AI or with Claude (house rule NO_AI_DISCLOSURE_LINE;

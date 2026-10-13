@@ -439,6 +439,9 @@ AI_LINE = re.compile(
     r"(?:with|by|using)\s+(?:the\s+help\s+of\s+)?(?:claude|chatgpt|an?\s+ai|ai)\b", re.I)
 
 
+PERSONAL_INTRO = re.compile(r"\bI've been\b|\bI have been\b|\bbreak (?:it|this) down\b", re.I)
+
+
 def warnings(text):
     """The sixth point, and the made-with-AI line, as warnings and never a refusal.
 
@@ -461,6 +464,12 @@ def warnings(text):
             found.append(f'it says it was made with AI ("{hit.group(0)[:80]}"): cut the line; Krish, 2026-10-12: "Eliminate the '
                          '"I made this with AI" entirely" (house rule NO_AI_DISCLOSURE_LINE; a warning, not a refusal)')
             break
+    # PERSONAL_INTRO (Krish, 2026-10-13): after the series line, open on what he's
+    # been doing with the thing and why it matters, then the break-down promise.
+    if len(beats) > 1 and not PERSONAL_INTRO.search(beats[1]):
+        found.append('the beat after the series line does not open the way Krish would: say what you have been doing with '
+                     'the thing, why it matters, and that you wanted to break it down (house rule PERSONAL_INTRO; his line is in '
+                     'config/golden-examples.json; a warning, not a refusal)')
     # The share of long words: a rough figure (names left out), told, never refused.
     if beats:
         r = reading(beats)
@@ -571,9 +580,15 @@ def self_test():
     check('notes after the script are never spoken', any('heading or stamp' in p for p in problems(ONE_OFF)), False)
     short = 'Why does it matter? Because the price doubled. That is the whole story.\n'
     check('a short hook needs no outro', problems(short), [])
-    check('a long script with no opinion gets a warning, never a refusal', len(warnings(GOOD)), 1)
+    def warns(t):
+        return [w for w in warnings(t) if 'PERSONAL_INTRO' not in w]
+    check('a long script with no opinion gets a warning, never a refusal', len(warns(GOOD)), 1)
+    check('a script whose second beat skips the personal intro gets a PERSONAL_INTRO warning',
+          any('PERSONAL_INTRO' in w for w in warnings(GOOD)), True)
+    check("his intro, \"I've been having a little play around with...\", clears it",
+          any('PERSONAL_INTRO' in w for w in warnings(open(Path(__file__).resolve().parents[2] / 'docs/plans/2026-10-14-draft-script.md', encoding='utf-8').read())), False)
     check('a long script that says "my bet" passes the voice check',
-          warnings(GOOD.replace("So here's our call.", "So here's my bet.")), [])
+          warns(GOOD.replace("So here's our call.", "So here's my bet.")), [])
     check('a short hook needs no opinion', warnings(short), [])
     # House rule NO_AI_DISCLOSURE_LINE: the line Krish cut from Monday's and Friday's scripts on 2026-10-12.
     said_ai = warnings(GOOD.replace("So here's our call.", "My bet: yes. Yes, I made this with Claude's help. So here's our call."))

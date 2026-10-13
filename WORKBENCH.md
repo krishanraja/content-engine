@@ -592,6 +592,22 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, Tuesday, 12:20 UTC: **Krish's intro, logged.** He asked for
+  sharper intros: "I've been having a little play around with Muse Meta's new
+  personal assistant. It's an important evolution in how AI is going to come
+  into our personal lives, and so I wanted to break it down for you. Thats
+  something I would actually say". Done: both Wednesday scripts open that way
+  after the series line (his words, the 21-word line split in two for R7),
+  pass story_check, and are in Teleprompter (long 495 words / 198 s, short
+  224 / 90 s) and recorded current with --sha. Pictures still cue (long all
+  six; short leaves reviews and same-jobs, tolerated). Logged for the future:
+  house rule PERSONAL_INTRO (his words in `said`), `config/golden-examples.json`
+  (golden example #1, the first piece of the golden-examples loop), a soft
+  PERSONAL_INTRO warning in `story_check.py`, the make-piece skill's script
+  step. Still to build: the other three approved loops (swap the 12-year-old
+  test, no rewrite may be worse, outline first). Friday's scripts don't have
+  an intro like this yet. The 14:00 London produce-day run is unchanged.
+
 - 2026-10-13, Tuesday, 12:05 UTC: **Krish: "I need a system that improves,
   not regresses."** His read of the scripts: "still waffle, they dont sound
   like me and I cant read them coherently" ("the companys computers",
