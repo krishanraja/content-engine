@@ -13,7 +13,18 @@
    "logos": [
     "Muse"
    ],
-   "purpose": "Muse is an AI assistant that actually does things for you. One person says a shop charged them six thousand dollars for fifteen hundred dollars of clothes, and Muse chased the shop for the money."
+   "purpose": "So why not just use ChatGPT or Claude? You ask those a question and they answer. Muse goes off and does the job. Meta gives Muse its own computer in the cloud. Muse opens websites, fills in forms and sends emails for you."
+  },
+  {
+   "kind": "image",
+   "file": "pics/same-jobs.png",
+   "name": "3-how-good-are-they.png",
+   "logos": [
+    "OpenAI",
+    "Google",
+    "Muse"
+   ],
+   "purpose": "ChatGPT and Claude can do jobs like this too. But you usually pay. Muse is free, and it's built into apps you already use, like Instagram and WhatsApp. That's the real difference."
   },
   {
    "kind": "image",
@@ -30,17 +41,6 @@
   },
   {
    "kind": "image",
-   "file": "pics/same-jobs.png",
-   "name": "3-how-good-are-they.png",
-   "logos": [
-    "OpenAI",
-    "Google",
-    "Muse"
-   ],
-   "purpose": "Are they any good? They're all about level. CNN tested Muse and found ChatGPT and Gemini could do the same jobs."
-  },
-  {
-   "kind": "image",
    "file": "pics/three-places.png",
    "name": "4-three-places.png",
    "logos": [
@@ -48,7 +48,7 @@
     "Meta",
     "Google"
    ],
-   "purpose": "Three options. It stays on your phone. It sits on the company's servers. Or on their servers but encrypted, so even the company can't read it."
+   "purpose": "Here's the catch. To do your errands, an assistant needs your emails, your passwords and your bank card. All of that has to be kept somewhere. There are three ways. Your details stay on your own phone."
   },
   {
    "kind": "image",
@@ -68,7 +68,7 @@
     "Google",
     "Anthropic"
    ],
-   "purpose": "My prediction: by 30 June 2027 OpenAI, Google or Anthropic will launch an assistant that shops for you, with your data encrypted, even from them. 55%."
+   "purpose": "My prediction: by 30 June 2027 OpenAI, Google or Anthropic will launch an assistant that shops for you, with your data scrambled, so even they can't read it. 55%."
   },
   {
    "kind": "video-script",

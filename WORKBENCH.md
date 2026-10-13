@@ -592,6 +592,20 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-13, 12:25 UTC: **Krish: "This is the most feedback and correction
+  of basic things I've ever given on video scripts... things are just not
+  making sense."** His last specifics: no reason given for Muse over Claude;
+  "It can live in three places... the company's servers" ("Who is \"the
+  company\"? What is \"It\"?"). Rewritten: Muse vs ChatGPT/Claude beat added
+  (does the job, free, inside Instagram and WhatsApp), every actor named,
+  three options numbered with names; pictures reviews/same-jobs/three-places
+  redrawn; both rejections in `config/rejected-lines.json`; PERSONAL_INTRO
+  extended. Teleprompter and the record are current. Root cause owned: scripts
+  were patched line by line to pass word-count and reading gates, never
+  written from an argument he approved. Next: outline-first loop (five-line
+  argument he signs off before any script text) and a fresh-listener check
+  that must restate each beat and name every "it" / "the company".
+
 - 2026-10-13, Tuesday, 12:20 UTC: **Krish's intro, logged.** He asked for
   sharper intros: "I've been having a little play around with Muse Meta's new
   personal assistant. It's an important evolution in how AI is going to come

@@ -1,13 +1,13 @@
 I've been looking at what's really inside the AI everyone's selling us. I'm Krish.
 
-So I've been having a little play around with Muse, Meta's new personal assistant. It's an important evolution in how AI is going to come into our personal lives. So I wanted to break it down for you. OpenAI, Google, Anthropic and Apple are building their own. What are we giving up to get one?
+So I've been having a little play around with Muse, Meta's new personal assistant. It's an important evolution in how AI is going to come into our personal lives. So I wanted to break it down for you. Why Muse, and not ChatGPT or Claude?
 
-To do your errands, an assistant needs your email and your bank card. It can live in three places. On your phone. On the company's servers, where the company can get to it. Or on their servers but encrypted, so even the company can't read it.
+ChatGPT and Claude mostly answer questions. Muse goes off and does the job. Muse opens websites, fills in forms and sends emails for you. ChatGPT and Claude can do some of this too, but you usually pay. Muse is free, inside Instagram and WhatsApp.
 
-Muse runs on Meta's servers, and Meta says that doesn't stop Meta getting to your data. Meta and Google say encrypted versions are coming.
+Here's the catch. To do your errands, Muse needs your emails and bank card. Muse keeps them on Meta's servers. Meta says it can still get to your data when it needs to. Meta and Google say they'll soon scramble your data, so even they can't read it.
 
-And the ads? Meta makes almost all its money from ads. I think shops will pay to be the one Muse recommends. The bigger question is who can see your life.
+And Meta's an ads business, so I think shops will pay to be the one Muse recommends.
 
-My prediction. By 30 June 2027, OpenAI, Google or Anthropic will launch an assistant that shops for you. And your data will stay encrypted, even from them. I'm 55% sure.
+My prediction. By 30 June 2027, OpenAI, Google or Anthropic will launch an assistant that shops for you. And your data will stay scrambled, so even they can't read it. I'm 55% sure.
 
 The full story is free at makeyourmindup.ai. Tell me in the comments: which assistant would you trust with your life? Make your mind up.
