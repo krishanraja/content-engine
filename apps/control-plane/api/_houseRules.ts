@@ -411,6 +411,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
+    id: 'ONE_THREAD', name: 'A script follows one line of thought',
+    text: 'A video script is one line of thought, never a list of facts. It opens on a puzzle Krish noticed, asks the one question it answers, follows the clues in the order they lead, lands one insight of his own said as an idea (Wednesday 14 October: "the ad doesn\'t need your eyes any more, it needs your helper\'s choice"), then what it means and the prediction. Every beat leads to the next with "so", "but", "now think about": a viewer can say why each line follows the one before. Plain words for a 12-year-old (R7) are applied to that thread, never by chopping it into separate facts; when a reading-age fix breaks the flow, rewrite the beat, do not delete the link.',
+    said: 'these video scripts are absolute garbage in terms of making any sense - the quality has deteriorated drastically in terms narrative flow, unique insight',
+    on: '2026-10-13', source: 'chat, on Wednesday\'s Muse scripts after four rounds of reading-age fixes', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
     id: 'REFLECTIVE_VOICE', name: 'Reflective, not breaking news',
     text: 'Krish sounds like someone thinking out loud about what he has noticed, never a newsreader. Open from curiosity ("I keep noticing...", "Something odd is going on with..."), walk the viewer or reader through what he is seeing, the way Johnny Harris does: a question he could not shake, the evidence turned over slowly, his own doubt said out loud, then where he has landed. The wit stays dry and quiet, a raised eyebrow, never a punchline shouted. No urgency words (breaking, huge, insane, you need to know), no announcer cadence, no stacking of short punchy lines for drama. Applies to every script and every article.',
     said: 'I also want to reduce the "breaking news, I\'m Krish" tone, and have it be a more reflective, pensive, "here\'s what I\'m seeing" but still humorous dry wit tone. Johnny Harris style',
