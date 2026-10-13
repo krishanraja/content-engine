@@ -613,11 +613,11 @@ bring takes back, was retired on 12 October.
     email.
   - **The sweep's runs at 05:30, 05:45 and 06:00 UTC were clean:** every
     kind answered, nothing closed wrongly, nothing unread.
+  - **Backfill step 2 ran, later the same morning:** the four are on his
+    list now, each closing by its own check (the welcome email on his
+    Clear). Read back on Control Center's `GET /api/act`: all four in
+    `items`.
   Waiting on Krish:
-  - **Backfill step 2:** moving those four items onto his list (lane
-    `on_you`, through `POST /api/workbench` as `control_center`). He said
-    go, but the cloud session's permission check refused the live write, so
-    the next session asks him once more.
   - **Step 3, the voice input:** his first reaction to the rendered mock.
     The plan and mock are in Control Center,
     `docs/handoff/design-entropy-session/`.
