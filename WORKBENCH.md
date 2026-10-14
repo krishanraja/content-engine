@@ -622,6 +622,22 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14, 15:30 UTC: **Wednesday titles: rounds in chat; Siri section added.**
+  The hooks research Krish shared is in `docs/research/2026-10-14-viral-hooks-corpus.md`,
+  boiled down per surface in `config/hook-playbook.json`; start every title
+  round with `title_check.py lessons --surface <surface>`. Picked so far:
+  article T1 "I tried Meta's new AI. Amazon's already blocked it.", card A2,
+  cover "Muse's real rival: Siri.", YouTube Y2 "Meta's Muse: I break down the
+  rival nobody's talking about." (on condition the article proves Siri is a
+  real contender). So the article has a new section, "WHY SIRI, OF ALL
+  THINGS?" (Apple's 2025 delay, the lawsuit, the Gemini deal, personal
+  context, 2.5bn devices, the beta's limits), approved by Krish; fact gate
+  passed (48 claims), voice 3.9. Still to pick, one at a time and with nothing
+  generated: Shorts title, the other card headings, the prediction card,
+  Friday's titles. Then one regeneration pass. Gate note: filing a source
+  restarts every check, and a full re-run can flag framing lines it set
+  aside before; reword only the flagged lines and re-run without filing.
+
 - 2026-10-14, 12:20 UTC: **Board rebuilt by the engine; Drive videos linked.**
   Every made day on the publish board now has a Finished videos card drawn
   by week_board.py from the piece's video_assets: Download (direct from

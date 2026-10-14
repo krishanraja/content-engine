@@ -44,6 +44,39 @@
  ],
  "verdicts": [
   {
+   "title": "I tried Meta's Muse. I break down who it's really for.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "not picked: Y2's 'nobody's talking about' promise beat it",
+   "krish": "Y2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Meta's Muse shops for you. I break down why Amazon said no.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "not picked: Y2's 'nobody's talking about' promise beat it",
+   "krish": "Y2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I tried Meta's Muse. I break down its real rival.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "not picked: Y2's 'nobody's talking about' promise beat it",
+   "krish": "Y2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Meta's Muse: I break down the rival nobody's talking about.",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "names Muse, then a cryptic promise; 'nobody's talking about' frame; the rival (Siri) is the payoff",
+   "krish": "Y2 - as long as the article actually explains why Siri is emerging as a real rival",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
    "title": "I tried Meta's new AI. Amazon's already blocked it.",
    "surface": "article",
    "verdict": "picked",
