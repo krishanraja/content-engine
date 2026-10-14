@@ -10,6 +10,15 @@ Last updated: 2026-10-13, about 19:40 UTC, by a Claude Code session (cloud); the
 
 ## How Krish wants to be worked with
 
+- **Every day on the publish board is built the same way, by the engine.**
+  Each made day is its own `publish_manager.py` page (Copy on every word and
+  picture), and the board is `week_board.py` over those pages, republished
+  to its own link. Never lay a hand-written script over the board (a
+  scratchpad "draft mode" did on 2026-10-13 and stripped Wednesday's and
+  Friday's Copy cards; Krish, 2026-10-14: "why are Wednesday and Friday
+  built differently to Monday? ... I thought I didn't need to keep telling
+  you this sort of stuff?"). A day whose page link is lost is carried over
+  with `week_board.py --keep DAY --previous <the board as read>`.
 - Plain words. Nothing he reads may contain codes, labels, hashes, version
   numbers or project shorthand. Say what happened, what it means for him, and
   what you need from him. If a sentence would confuse someone outside the
