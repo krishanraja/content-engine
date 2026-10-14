@@ -14,35 +14,40 @@
      "logos": [
       "meta-cream.svg"
      ],
-     "score": 9
-    },
-    {
-     "name": "ChatGPT",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "score": 8
-    },
-    {
-     "name": "Gemini",
-     "logos": [
-      "google-cream.svg"
-     ],
-     "score": 7
-    },
-    {
-     "name": "Claude",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "score": 6
+     "score": 9,
+     "group": "Ready-made assistants"
     },
     {
      "name": "Siri",
      "logos": [
       "apple-cream.svg"
      ],
-     "score": 3
+     "score": 3,
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "ChatGPT dots",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 8,
+     "group": "Work agents"
+    },
+    {
+     "name": "Gemini Spark",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 7,
+     "group": "Work agents"
+    },
+    {
+     "name": "Claude Cowork",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 6,
+     "group": "Work agents"
     }
    ],
    "note": "Muse books, buys and negotiates. Siri works inside your apps."
@@ -59,38 +64,43 @@
      "logos": [
       "meta-cream.svg"
      ],
-     "score": 10
+     "score": 10,
+     "group": "Ready-made assistants"
     },
     {
      "name": "Siri",
      "logos": [
       "apple-cream.svg"
      ],
-     "score": 8
+     "score": 8,
+     "group": "Ready-made assistants"
     },
     {
-     "name": "Gemini",
+     "name": "Gemini Spark",
      "logos": [
       "google-cream.svg"
      ],
-     "score": 6
+     "score": 6,
+     "group": "Work agents"
     },
     {
-     "name": "Claude",
+     "name": "Claude Cowork",
      "logos": [
       "anthropic-symbol-cream.svg"
      ],
-     "score": 6
+     "score": 6,
+     "group": "Work agents"
     },
     {
-     "name": "ChatGPT",
+     "name": "ChatGPT dots",
      "logos": [
       "openai-symbol-cream.svg"
      ],
-     "score": 2
+     "score": 2,
+     "group": "Work agents"
     }
    ],
-   "note": "Muse free \u00b7 Gemini $19.99 \u00b7 Claude $20 \u00b7 ChatGPT from $100"
+   "note": "Muse free · Gemini $19.99 · Claude $20 · ChatGPT from $100"
   },
   {
    "file": "score-reach.png",
@@ -104,38 +114,43 @@
      "logos": [
       "meta-cream.svg"
      ],
-     "score": 10
-    },
-    {
-     "name": "Gemini",
-     "logos": [
-      "google-cream.svg"
-     ],
-     "score": 9
+     "score": 10,
+     "group": "Ready-made assistants"
     },
     {
      "name": "Siri",
      "logos": [
       "apple-cream.svg"
      ],
-     "score": 8
+     "score": 8,
+     "group": "Ready-made assistants"
     },
     {
-     "name": "ChatGPT",
+     "name": "Gemini Spark",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 9,
+     "group": "Work agents"
+    },
+    {
+     "name": "ChatGPT dots",
      "logos": [
       "openai-symbol-cream.svg"
      ],
-     "score": 7
+     "score": 7,
+     "group": "Work agents"
     },
     {
-     "name": "Claude",
+     "name": "Claude Cowork",
      "logos": [
       "anthropic-symbol-cream.svg"
      ],
-     "score": 4
+     "score": 4,
+     "group": "Work agents"
     }
    ],
-   "note": "Meta owns Instagram and WhatsApp \u00b7 Gemini works with Gmail"
+   "note": "Meta owns Instagram and WhatsApp · Gemini works with Gmail"
   },
   {
    "file": "score-asks.png",
@@ -145,39 +160,44 @@
    "highlight": "Muse",
    "rows": [
     {
-     "name": "Claude",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "score": 9
-    },
-    {
      "name": "Muse",
      "logos": [
       "meta-cream.svg"
      ],
-     "score": 8
-    },
-    {
-     "name": "ChatGPT",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "score": 8
-    },
-    {
-     "name": "Gemini",
-     "logos": [
-      "google-cream.svg"
-     ],
-     "score": 7
+     "score": 8,
+     "group": "Ready-made assistants"
     },
     {
      "name": "Siri",
      "logos": [
       "apple-cream.svg"
      ],
-     "score": 7
+     "score": 7,
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Claude Cowork",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 9,
+     "group": "Work agents"
+    },
+    {
+     "name": "ChatGPT dots",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 8,
+     "group": "Work agents"
+    },
+    {
+     "name": "Gemini Spark",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 7,
+     "group": "Work agents"
     }
    ],
    "note": "All check before buying or sending. Claude asks the most."
@@ -194,35 +214,40 @@
      "logos": [
       "apple-cream.svg"
      ],
-     "score": 9
-    },
-    {
-     "name": "Claude",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "score": 6
-    },
-    {
-     "name": "ChatGPT",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "score": 4
+     "score": 9,
+     "group": "Ready-made assistants"
     },
     {
      "name": "Muse",
      "logos": [
       "meta-cream.svg"
      ],
-     "score": 3
+     "score": 3,
+     "group": "Ready-made assistants"
     },
     {
-     "name": "Gemini",
+     "name": "Claude Cowork",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 6,
+     "group": "Work agents"
+    },
+    {
+     "name": "ChatGPT dots",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 4,
+     "group": "Work agents"
+    },
+    {
+     "name": "Gemini Spark",
      "logos": [
       "google-cream.svg"
      ],
-     "score": 3
+     "score": 3,
+     "group": "Work agents"
     }
    ],
    "note": "Meta can get to Muse data \"when necessary\". Apple: Private Cloud Compute."
@@ -235,39 +260,44 @@
    "highlight": "Muse",
    "rows": [
     {
-     "name": "Claude",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "score": 8
-    },
-    {
      "name": "Siri",
      "logos": [
       "apple-cream.svg"
      ],
-     "score": 8
-    },
-    {
-     "name": "ChatGPT",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "score": 7
-    },
-    {
-     "name": "Gemini",
-     "logos": [
-      "google-cream.svg"
-     ],
-     "score": 4
+     "score": 8,
+     "group": "Ready-made assistants"
     },
     {
      "name": "Muse",
      "logos": [
       "meta-cream.svg"
      ],
-     "score": 3
+     "score": 3,
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Claude Cowork",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 8,
+     "group": "Work agents"
+    },
+    {
+     "name": "ChatGPT dots",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 7,
+     "group": "Work agents"
+    },
+    {
+     "name": "Gemini Spark",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 4,
+     "group": "Work agents"
     }
    ],
    "note": "Meta: $59.36bn of $60.8bn from ads last quarter"
@@ -301,7 +331,7 @@
    "file": "scorecard.png",
    "kind": "table",
    "kicker": "My scores, out of 10",
-   "title": "Muse and Siri tie, for opposite reasons",
+   "title": "Ready-made: Muse and Siri tie, for opposite reasons",
    "highlight": "Muse",
    "columns": [
     "Job",
@@ -324,7 +354,8 @@
       8,
       3,
       3
-     ]
+     ],
+     "group": "Ready-made assistants"
     },
     {
      "name": "Siri",
@@ -338,10 +369,11 @@
       7,
       9,
       8
-     ]
+     ],
+     "group": "Ready-made assistants"
     },
     {
-     "name": "Claude",
+     "name": "Claude Cowork",
      "logos": [
       "anthropic-symbol-cream.svg"
      ],
@@ -352,10 +384,11 @@
       9,
       6,
       8
-     ]
+     ],
+     "group": "Work agents"
     },
     {
-     "name": "ChatGPT",
+     "name": "ChatGPT dots",
      "logos": [
       "openai-symbol-cream.svg"
      ],
@@ -366,10 +399,11 @@
       8,
       4,
       7
-     ]
+     ],
+     "group": "Work agents"
     },
     {
-     "name": "Gemini",
+     "name": "Gemini Spark",
      "logos": [
       "google-cream.svg"
      ],
@@ -380,7 +414,8 @@
       7,
       3,
       4
-     ]
+     ],
+     "group": "Work agents"
     }
    ]
   },

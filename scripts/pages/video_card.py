@@ -24,7 +24,8 @@ with logo paths relative to the JSON file, and each CARD one of:
 
   {"file": "score-job.png", "kind": "bars", "kicker": "My scores, out of 10",
    "title": "Can it do the job?", "highlight": "Muse",
-   "rows": [{"name": "Muse", "logos": ["meta-cream.svg"], "score": 9}, ...],
+   "rows": [{"name": "Muse", "logos": ["meta-cream.svg"], "score": 9, "group": "Ready-made assistants"}, ...],
+   ("group" is optional: rows in the same group sit under one labelled band, in the order given)
    "note": "Muse books, buys and negotiates"}
   {"file": "scorecard.png", "kind": "table", "kicker": ..., "title": ...,
    "columns": ["Does the job", ...], "highlight": "Muse",
@@ -63,6 +64,15 @@ body { padding: 84px 96px; display: flex; flex-direction: column; justify-conten
 .k { font: 700 26px/1 'IBM Plex Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
 h1 { font: 400 80px/1.0 'Anton', sans-serif; text-transform: uppercase; letter-spacing: .005em; }
 .rows { display: flex; flex-direction: column; gap: 14px; }
+/* Rows grouped into labelled bands ("group" on a row): a mono label over each band, rows a little tighter. */
+h1.g { font-size: 68px; }
+.rows.g { gap: 8px; }
+.rows.g .r { height: 56px; }
+.band { font: 700 20px/1 'IBM Plex Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+        border-top: 2px solid var(--line); padding-top: 12px; margin-top: 8px; }
+.band:first-child { margin-top: 0; }
+tr.bandrow td { font: 700 18px/1 'IBM Plex Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+                text-align: left; padding: 14px 8px 4px; }
 .r { display: grid; grid-template-columns: 400px 1fr 90px; align-items: center; gap: 28px; height: 70px; }
 .who { display: flex; align-items: center; gap: 16px; min-width: 0; }
 .who img { height: 40px; width: 120px; object-fit: contain; object-position: left center; flex: none; }
@@ -159,8 +169,13 @@ def body_of(card, base):
     e = html.escape
     out = [f'<div class="k">{e(card["kicker"])}</div>'] if card.get('kicker') else []
     if card['kind'] == 'bars':
-        out.append(f'<h1>{e(card["title"])}</h1><div class="rows">')
+        grouped = any(r.get('group') for r in card['rows'])
+        out.append(f'<h1{" class=g" if grouped else ""}>{e(card["title"])}</h1><div class="rows{" g" if grouped else ""}">')
+        last = None
         for r in card['rows']:
+            if r.get('group') and r['group'] != last:
+                out.append(f'<div class="band">{e(r["group"])}</div>')
+                last = r['group']
             hi = ' hi' if r['name'] == card.get('highlight') else ''
             logos = ''.join(img(base, l) for l in r.get('logos', []))
             out.append(f'<div class="r{hi}"><div class="who">{logos}<span>{e(r["name"])}</span></div>'
@@ -170,7 +185,11 @@ def body_of(card, base):
     elif card['kind'] == 'table':
         out.append(f'<h1 style="font-size:64px">{e(card["title"])}</h1><table><tr><th></th>'
                    + ''.join(f'<th>{e(c)}</th>' for c in card['columns']) + '<th>Total</th></tr>')
+        last = None
         for r in card['rows']:
+            if r.get('group') and r['group'] != last:
+                out.append(f'<tr class="bandrow"><td colspan="{len(card["columns"]) + 2}">{e(r["group"])}</td></tr>')
+                last = r['group']
             hi = ' class="hi"' if r['name'] == card.get('highlight') else ''
             logos = ''.join(img(base, l) for l in r.get('logos', []))
             out.append(f'<tr{hi}><td class="who">{logos}{e(r["name"])}</td>'
