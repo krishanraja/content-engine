@@ -612,7 +612,7 @@ def drop_channels(panel, key):
     keys = '|'.join(DROPPED_CHANNELS)
     names = '|'.join(re.escape(n) for n in DROPPED_CHANNELS.values())
     panel = re.sub(rf'<label class="tick row-tick"><input type="checkbox" data-tick="{key}-(?:{keys})".*?</label>', '', panel, flags=re.S)
-    panel = re.sub(rf'<section id="{key}-s\d+"><div class="sec-head"><h2>\d+\. (?:{names})</h2>.*?</section>', '', panel, flags=re.S)
+    panel = re.sub(rf'<section id="{key}-s\d+">(?:<div class="sec-head">)?<h2>\d+\. (?:{names})</h2>.*?</section>', '', panel, flags=re.S)
     return re.sub(rf'<a href="#{key}-s\d+">(?:{names})</a>', '', panel)
 
 
@@ -1268,6 +1268,8 @@ def _self_test():
                      '<section id="mon-s6"><div class="sec-head"><h2>6. LinkedIn</h2></div></section>')
     check('a kept day loses the channels Krish dropped, and keeps the rest',
           'whatsapp' not in drop_channels(dropped_panel, 'mon').lower() and '6. LinkedIn' in drop_channels(dropped_panel, 'mon'))
+    check('a kept day drawn before section ticks (no sec-head) loses the dropped channels too',
+          'notes' not in drop_channels('<section id="wed-s8"><h2>8. Substack Notes</h2><p>x</p></section>', 'wed').lower())
     check('finished videos: each cut offers its thumbnail, and one not linked yet says where it is',
           'download?id=1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ' in tcard and 'Download thumbnail' in tcard and 'x - tall.jpg' in tcard)
     if fails:

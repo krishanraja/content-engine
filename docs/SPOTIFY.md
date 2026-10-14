@@ -47,7 +47,7 @@ show name, description and category (Technology, or News > Tech News).
 
 ## On the publish board
 
-Every day page has a Spotify step after Substack Notes (`publish_kit.py`),
+Every day page has a Spotify step after LinkedIn (`publish_kit.py`),
 and the board has a Spotify tick (`week_board.py`, step `spotify`). It is
 optional, so it does not count towards 100%, until the show exists. Then it
 joins the standing channels. `making.py <piece> posted spotify [url]` records

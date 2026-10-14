@@ -627,6 +627,19 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14, 23:45 UTC: **Friday is approved and parked; read `docs/plans/2026-10-14-handoff.md`.**
+  Krish approved Friday's trimmed short (194 words, on Teleprompter) and
+  will look again on 15 Oct; then the title rounds, then he records.
+  Dropped for now (Krish: "I don't think I need Substack notes or WhatsApp to
+  be honest, right now"): no Notes or WhatsApp steps on the board, packs or
+  growth jobs. Spotify is a channel (`docs/SPOTIFY.md`): a board step after
+  LinkedIn, audio scripts for all four published pieces and a trailer in
+  `docs/plans/spotify/`. Waiting on Krish: the show name (options in chat),
+  creating the show, the music licence check. Growth runs
+  (`docs/GROWTH.md`): two routines live (daily pack 06:45, Sunday report
+  07:14 New York); his setup steps are in "Setting it up". Both board links
+  republished from one build.
+
 - 2026-10-14, 23:00 UTC: **Friday is next; read `docs/plans/2026-10-14-handoff.md`.**
   Wednesday is live as it is. One spine per piece is built (house rule
   ONE_SPINE: `spine_check.py`, engine judge `/api/content-ideas/:id/spine-check`,
