@@ -3,254 +3,42 @@
  "logos": "logos/",
  "cards": [
   {
-   "file": "score-job.png",
-   "kind": "bars",
-   "kicker": "My scores, out of 10",
-   "title": "Can it do the job?",
-   "highlight": "Muse",
-   "rows": [
+   "file": "three-kinds.png",
+   "kind": "columns",
+   "kicker": "Three kinds of AI",
+   "title": "Muse vs ChatGPT isn't a fair fight",
+   "columns": [
     {
-     "name": "Muse",
+     "label": "Chatbots",
      "logos": [
-      "meta-cream.svg"
-     ],
-     "score": 9,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "Siri",
-     "logos": [
-      "apple-cream.svg"
-     ],
-     "score": 3,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "ChatGPT dots",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "score": 8,
-     "group": "Work agents"
-    },
-    {
-     "name": "Gemini Spark",
-     "logos": [
+      "openai-symbol-cream.svg",
+      "anthropic-symbol-cream.svg",
       "google-cream.svg"
      ],
-     "score": 7,
-     "group": "Work agents"
+     "names": "ChatGPT, Claude, Gemini",
+     "line": "You ask, it answers"
     },
     {
-     "name": "Claude Cowork",
+     "label": "Work agents",
      "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "score": 6,
-     "group": "Work agents"
-    }
-   ],
-   "note": "Muse books, buys and negotiates. Siri works inside your apps."
-  },
-  {
-   "file": "score-price.png",
-   "kind": "bars",
-   "kicker": "My scores, out of 10",
-   "title": "What does it cost?",
-   "highlight": "Muse",
-   "rows": [
-    {
-     "name": "Muse",
-     "logos": [
-      "meta-cream.svg"
-     ],
-     "score": 10,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "Siri",
-     "logos": [
-      "apple-cream.svg"
-     ],
-     "score": 8,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "Gemini Spark",
-     "logos": [
+      "anthropic-symbol-cream.svg",
+      "openai-symbol-cream.svg",
       "google-cream.svg"
      ],
-     "score": 6,
-     "group": "Work agents"
+     "names": "Claude Cowork, ChatGPT dots, Gemini Spark",
+     "line": "Your work email and documents"
     },
     {
-     "name": "Claude Cowork",
+     "label": "Ready-made assistants",
      "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "score": 6,
-     "group": "Work agents"
-    },
-    {
-     "name": "ChatGPT dots",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "score": 2,
-     "group": "Work agents"
-    }
-   ],
-   "note": "Muse free · Gemini $19.99 · Claude $20 · ChatGPT from $100"
-  },
-  {
-   "file": "score-reach.png",
-   "kind": "bars",
-   "kicker": "My scores, out of 10",
-   "title": "Is it already in your life?",
-   "highlight": "Muse",
-   "rows": [
-    {
-     "name": "Muse",
-     "logos": [
-      "meta-cream.svg"
-     ],
-     "score": 10,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "Siri",
-     "logos": [
+      "meta-cream.svg",
       "apple-cream.svg"
      ],
-     "score": 8,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "Gemini Spark",
-     "logos": [
-      "google-cream.svg"
-     ],
-     "score": 9,
-     "group": "Work agents"
-    },
-    {
-     "name": "ChatGPT dots",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "score": 7,
-     "group": "Work agents"
-    },
-    {
-     "name": "Claude Cowork",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "score": 4,
-     "group": "Work agents"
+     "names": "Muse, Siri",
+     "line": "Already on your phone. Runs your errands",
+     "hi": true
     }
-   ],
-   "note": "Meta owns Instagram and WhatsApp · Gemini works with Gmail"
-  },
-  {
-   "file": "score-asks.png",
-   "kind": "bars",
-   "kicker": "My scores, out of 10",
-   "title": "Does it ask before it acts?",
-   "highlight": "Muse",
-   "rows": [
-    {
-     "name": "Muse",
-     "logos": [
-      "meta-cream.svg"
-     ],
-     "score": 8,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "Siri",
-     "logos": [
-      "apple-cream.svg"
-     ],
-     "score": 7,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "Claude Cowork",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "score": 9,
-     "group": "Work agents"
-    },
-    {
-     "name": "ChatGPT dots",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "score": 8,
-     "group": "Work agents"
-    },
-    {
-     "name": "Gemini Spark",
-     "logos": [
-      "google-cream.svg"
-     ],
-     "score": 7,
-     "group": "Work agents"
-    }
-   ],
-   "note": "All check before buying or sending. Claude asks the most."
-  },
-  {
-   "file": "score-private.png",
-   "kind": "bars",
-   "kicker": "My scores, out of 10",
-   "title": "Who can read your stuff?",
-   "highlight": "Muse",
-   "rows": [
-    {
-     "name": "Siri",
-     "logos": [
-      "apple-cream.svg"
-     ],
-     "score": 9,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "Muse",
-     "logos": [
-      "meta-cream.svg"
-     ],
-     "score": 3,
-     "group": "Ready-made assistants"
-    },
-    {
-     "name": "Claude Cowork",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "score": 6,
-     "group": "Work agents"
-    },
-    {
-     "name": "ChatGPT dots",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "score": 4,
-     "group": "Work agents"
-    },
-    {
-     "name": "Gemini Spark",
-     "logos": [
-      "google-cream.svg"
-     ],
-     "score": 3,
-     "group": "Work agents"
-    }
-   ],
-   "note": "Meta can get to Muse data \"when necessary\". Apple: Private Cloud Compute."
+   ]
   },
   {
    "file": "score-side.png",
@@ -301,31 +89,6 @@
     }
    ],
    "note": "Meta: $59.36bn of $60.8bn from ads last quarter"
-  },
-  {
-   "file": "chosen.png",
-   "kind": "statement",
-   "kicker": "What changes for shops",
-   "logos": [
-    "meta-cream.svg",
-    "instagram-cream.svg",
-    "google-cream.svg"
-   ],
-   "lines": [
-    {
-     "text": "Shops paid to be seen.",
-     "tone": "dim"
-    },
-    {
-     "text": "Next, they'll pay",
-     "tone": "plain"
-    },
-    {
-     "text": "to be picked.",
-     "tone": "answer"
-    }
-   ],
-   "note": "An assistant gives you one answer, not a list"
   },
   {
    "file": "scorecard.png",
@@ -420,13 +183,94 @@
    ]
   },
   {
+   "file": "score-private.png",
+   "kind": "bars",
+   "kicker": "My scores, out of 10",
+   "title": "Who can read your stuff?",
+   "highlight": "Muse",
+   "rows": [
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "score": 9,
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "score": 3,
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Claude Cowork",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 6,
+     "group": "Work agents"
+    },
+    {
+     "name": "ChatGPT dots",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 4,
+     "group": "Work agents"
+    },
+    {
+     "name": "Gemini Spark",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 3,
+     "group": "Work agents"
+    }
+   ],
+   "note": "Meta can get to Muse data \"when necessary\". Apple: Private Cloud Compute."
+  },
+  {
+   "file": "shops.png",
+   "kind": "columns",
+   "kicker": "Can Muse shop there?",
+   "title": "Each shop decides",
+   "columns": [
+    {
+     "label": "Lets Muse buy",
+     "logos": [
+      "walmart-cream.svg"
+     ],
+     "names": "Walmart",
+     "line": "ChatGPT too"
+    },
+    {
+     "label": "Blocked Muse",
+     "logos": [
+      "amazon-cream.svg"
+     ],
+     "names": "Amazon",
+     "line": "Since September",
+     "hi": true
+    },
+    {
+     "label": "Local businesses",
+     "logos": [
+      "whatsapp-cream.svg"
+     ],
+     "names": "Bookings on WhatsApp",
+     "line": "Meta sells the AI helper"
+    }
+   ]
+  },
+  {
    "file": "prediction.png",
    "kind": "statement",
    "kicker": "My prediction",
    "logos": [
     "meta-cream.svg",
-    "openai-symbol-cream.svg",
-    "google-cream.svg",
     "apple-cream.svg"
    ],
    "lines": [
@@ -435,14 +279,15 @@
      "tone": "plain"
     },
     {
-     "text": "businesses pay to be",
+     "text": "a big airline sells only",
      "tone": "plain"
     },
     {
-     "text": "the one your AI picks.",
+     "text": "through Muse and Siri.",
      "tone": "answer"
     }
-   ]
+   ],
+   "note": "Ask ChatGPT for that flight, and it won't show up"
   }
  ]
 }

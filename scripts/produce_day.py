@@ -19,6 +19,13 @@ Nothing here needs H:. Every input comes from the engine:
   - the pictures:           GET /api/library/file for the post's pack, staged where plan_files.py looks
   - the story intro/outro:  scripts/quick-edit/story_io.py, from the plan's cover-facts.json
 
+A fix Krish calls out in words ("in the short version, I botched from 1m11s
+to 1m15s and restarted my sentence", 2026-10-14) sits beside post.json in
+edits.json, one list a cut, each entry make.py's own removal ({"restart_near":
+"1:15"} or {"say": ..., "after": ...}) with his words in "krish":
+
+    {"short": [{"restart_near": "1:15", "krish": "Krish, 2026-10-14: ..."}]}
+
 Then kit.py (both cuts), make.py (plan, then render), the thumbnails, send.py
 into the post's "3 Video" folder (Library Sync writes it into Drive) and
 making.py video for both cuts. On a stop it writes one board item saying
@@ -266,6 +273,26 @@ def story_clips(post_path, work):
 
 # ---------------------------------------------------------------- the cuts
 
+def take_edits(post_path):
+    """The fixes Krish called out for each cut's take (edits.json beside
+    post.json), as make.py removals. Each carries his words ("krish",
+    starting "Krish"): nothing is cut from his take on anyone else's say."""
+    path = Path(post_path).parent / 'edits.json'
+    if not path.is_file():
+        return {}
+    data = json.loads(path.read_text(encoding='utf-8'))
+    out = {}
+    for cut, entries in data.items():
+        if cut not in ('long', 'short') or not isinstance(entries, list):
+            raise Stop(f'{path.name}: "{cut}" is not a cut; give "long" or "short", each a list of removals')
+        for e in entries:
+            if not (isinstance(e, dict) and str(e.get('krish', '')).strip().lower().startswith('krish')
+                    and ('restart_near' in e or 'say' in e)):
+                raise Stop(f'{path.name}: each removal is {{"restart_near": "M:SS"}} or {{"say": ...}}, with Krish\'s words in "krish"')
+        out[cut] = [{k: v for k, v in e.items() if k != 'krish'} for e in entries]
+    return out
+
+
 def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, dry_run):
     kit = work / 'kit'
     env = {'MINDMAKE_MUSIC_ROOT': music_root}
@@ -292,6 +319,13 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, 
             cfg['cues'] = [c for c in cfg.get('cues') or [] if c.get('id') not in small]
             cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
             log(f'the {cut} cut leaves out {", ".join(sorted(small))}: too small to read in its shape, or no beat for it (the long cut shows them)')
+    for cut, removals in take_edits(post_path).items():
+        cfg_path = kit / f'{cut}.json'
+        if removals and cfg_path.is_file():
+            cfg = json.loads(cfg_path.read_text(encoding='utf-8'))
+            cfg['remove'] = (cfg.get('remove') or []) + removals
+            cfg_path.write_text(json.dumps(cfg, indent=2), encoding='utf-8')
+            log(f'the {cut} cut takes out what Krish called out: {removals}')
     # The music is sized to the long cut as it will run (trimmed, with the
     # story intro and outro), not to its raw take: a track a little shorter
     # than the take still covers the finished cut. Both cuts ask for the same.

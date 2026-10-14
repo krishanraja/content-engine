@@ -94,6 +94,15 @@ tr.hi td { color: var(--accent); }
 .lines { display: flex; flex-direction: column; gap: 6px; }
 .lines div { font: 400 104px/1.02 'Anton', sans-serif; text-transform: uppercase; }
 .logos { display: flex; align-items: center; gap: 40px; }
+.cols { display: grid; grid-auto-columns: 1fr; grid-auto-flow: column; gap: 28px; }
+.col { border-top: 4px solid var(--line); padding-top: 22px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.col.hi { border-top-color: var(--accent); }
+.cl { font: 700 24px/1.1 'IBM Plex Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.col.hi .cl { color: var(--accent); }
+.cg { display: flex; align-items: center; gap: 22px; height: 56px; }
+.cg img { height: 48px; width: auto; max-width: 150px; object-fit: contain; }
+.cn { font: 700 34px/1.15 'Archivo', sans-serif; }
+.cf { font: 500 22px/1.35 'IBM Plex Mono', monospace; color: var(--muted); }
 .logos img { height: 56px; width: auto; max-width: 260px; object-fit: contain; }
 """
 
@@ -130,12 +139,13 @@ def check_spec(spec):
         if hit:
             fail(f'{name}: the kicker "{card["kicker"]}" uses "{hit}", another series\' ground (Krish, 2026-10-13: '
                  '"having \'where the money moves\' inside under the hood makes no sense")')
-        logos = list(card.get('logos') or []) + [l for r in card.get('rows', []) for l in r.get('logos', [])]
+        logos = (list(card.get('logos') or []) + [l for r in card.get('rows', []) for l in r.get('logos', [])]
+                 + [l for c in card.get('columns', []) if isinstance(c, dict) for l in c.get('logos', [])])
         if not logos:
             fail(f'{name}: no company logo on it; every card shows the companies it is about (Krish, 2026-10-13: '
                  '"we\'ve not made any use of business logos as we\'re supposed to")')
-        if card.get('kind') not in ('bars', 'table', 'statement'):
-            fail(f'{name}: kind must be bars, table or statement')
+        if card.get('kind') not in ('bars', 'table', 'statement', 'columns'):
+            fail(f'{name}: kind must be bars, table, statement or columns')
 
 
 TRIMMED = {}  # logo path -> data URI of the SVG cut to its own artwork
@@ -195,6 +205,15 @@ def body_of(card, base):
             out.append(f'<tr{hi}><td class="who">{logos}{e(r["name"])}</td>'
                        + ''.join(f'<td>{v}</td>' for v in r['scores']) + f'<td class="t">{sum(r["scores"])}</td></tr>')
         out.append('</table>')
+    elif card['kind'] == 'columns':
+        # Side-by-side groups (the three kinds of AI, which shops let an agent in): a mono label,
+        # the companies' logos, the names, and one plain line under each. "hi" marks the one the card is about.
+        out.append(f'<h1>{e(card["title"])}</h1><div class="cols">')
+        for c in card['columns']:
+            out.append(f'<div class="col{" hi" if c.get("hi") else ""}"><div class="cl">{e(c["label"])}</div>'
+                       f'<div class="cg">{"".join(img(base, l) for l in c.get("logos", []))}</div>'
+                       f'<div class="cn">{e(c["names"])}</div>' + (f'<div class="cf">{e(c["line"])}</div>' if c.get('line') else '') + '</div>')
+        out.append('</div>')
     else:
         out.append('<div class="lines">' + ''.join(
             f'<div style="color:{TONES.get(l.get("tone", "plain"), TONES["plain"])}">{e(l["text"])}</div>'

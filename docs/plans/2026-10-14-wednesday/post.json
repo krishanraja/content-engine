@@ -3,121 +3,81 @@
  "date": "2026-10-14",
  "subchannel": "under.the.hood",
  "subject": "Muse scored against its rivals",
- "headline": "I scored Meta's Muse against ChatGPT, Gemini, Claude and Siri. It tied with Siri, for opposite reasons.",
+ "headline": "Muse isn't ChatGPT. There are now three kinds of AI, and Meta's is built for everyone.",
  "links": {},
  "files": [
   {
    "kind": "image",
-   "file": "pics/score-job.png",
-   "name": "1-can-it-do-the-job.png",
+   "file": "pics/three-kinds.png",
+   "name": "1-three-kinds-of-ai.png",
    "logos": [
-    "Muse",
     "OpenAI",
-    "Google",
     "Anthropic",
+    "Google",
+    "Meta",
     "Apple"
    ],
-   "purpose": "First, can it actually do the job for you? Muse opens websites, fills in forms and books things. It'll even negotiate for you. Muse gets a nine."
-  },
-  {
-   "kind": "image",
-   "file": "pics/score-price.png",
-   "name": "2-what-it-costs.png",
-   "logos": [
-    "Muse",
-    "OpenAI",
-    "Google",
-    "Anthropic",
-    "Apple"
-   ],
-   "purpose": "Then price. Muse is free for most things. Gemini and Claude cost about twenty dollars a month. ChatGPT's assistant, called dots, starts at a hundred dollars a month."
-  },
-  {
-   "kind": "image",
-   "file": "pics/score-reach.png",
-   "name": "3-reach.png",
-   "logos": [
-    "Muse",
-    "Instagram",
-    "WhatsApp",
-    "Google",
-    "Anthropic"
-   ],
-   "purpose": "Then reach. Meta also owns Instagram and WhatsApp, apps you already open every day. Gemini works with your Gmail. Another ten for Muse."
-  },
-  {
-   "kind": "image",
-   "file": "pics/score-asks.png",
-   "name": "4-asks-first.png",
-   "logos": [
-    "Anthropic",
-    "Muse",
-    "OpenAI",
-    "Google",
-    "Apple"
-   ],
-   "purpose": "Do these assistants ask before they spend your money or send your emails? Claude is the most careful. Muse checks too, and gets an eight."
-  },
-  {
-   "kind": "image",
-   "file": "pics/score-private.png",
-   "name": "5-who-can-read-it.png",
-   "logos": [
-    "Apple",
-    "Anthropic",
-    "OpenAI",
-    "Muse",
-    "Google"
-   ],
-   "purpose": "Who can read your stuff? Muse keeps your emails and logins on Meta's servers. Meta says it can still get to your data if it needs to. Muse gets a three. Siri gets a nine."
+   "purpose": "Three kinds of AI. Chatbots, ChatGPT or Claude. Work agents, Claude Cowork. Ready-made assistants run your errands, Muse by Meta and Siri by Apple. Not a fair fight."
   },
   {
    "kind": "image",
    "file": "pics/score-side.png",
-   "name": "6-whose-side.png",
+   "name": "2-who-pays.png",
    "logos": [
     "Meta",
-    "Google",
-    "Anthropic",
-    "OpenAI",
-    "Apple"
-   ],
-   "purpose": "And whose side is it on? Meta makes almost all its money from ads. Google is an ads business too. Claude and ChatGPT charge you a subscription. Muse gets another three."
-  },
-  {
-   "kind": "image",
-   "file": "pics/chosen.png",
-   "name": "7-seen-to-picked.png",
-   "logos": [
-    "Meta",
-    "Google",
-    "Instagram"
-   ],
-   "purpose": "When an assistant shops for you, you don't see a list. You get one answer. Shops will stop paying to be seen, and start paying to be picked."
-  },
-  {
-   "kind": "image",
-   "file": "pics/scorecard.png",
-   "name": "8-the-scorecard.png",
-   "logos": [
-    "Muse",
     "Apple",
     "Anthropic",
     "OpenAI",
     "Google"
    ],
-   "purpose": "Add it all up, and Muse ties with Siri. Muse does the most, but Meta can see the most. Siri does the least, but keeps your stuff private."
+   "purpose": "Each company builds the kind that makes it money. Almost all of Meta's money comes from ads. OpenAI and Anthropic charge office workers a monthly fee."
+  },
+  {
+   "kind": "image",
+   "file": "pics/scorecard.png",
+   "name": "3-the-scorecard.png",
+   "logos": [
+    "Meta",
+    "Apple",
+    "Anthropic",
+    "OpenAI",
+    "Google"
+   ],
+   "purpose": "I scored Muse against Siri on six things. Muse and Siri tie on 43 out of 60, for opposite reasons. Siri keeps your stuff private."
+  },
+  {
+   "kind": "image",
+   "file": "pics/score-private.png",
+   "name": "4-who-can-read-it.png",
+   "logos": [
+    "Apple",
+    "Meta",
+    "Anthropic",
+    "OpenAI",
+    "Google"
+   ],
+   "purpose": "Muse falls behind Siri. Muse keeps your emails and passwords on Meta's computers. Meta says it can still look at them."
+  },
+  {
+   "kind": "image",
+   "file": "pics/shops.png",
+   "name": "5-each-shop-decides.png",
+   "logos": [
+    "Walmart",
+    "Amazon",
+    "WhatsApp"
+   ],
+   "purpose": "Muse can shop for you. Each shop decides whether to let Muse buy on its website. Walmart lets it in. Amazon blocked Muse. WhatsApp bookings."
   },
   {
    "kind": "image",
    "file": "pics/prediction.png",
-   "name": "9-prediction.png",
+   "name": "6-prediction.png",
    "logos": [
     "Meta",
-    "OpenAI",
-    "Google"
+    "Apple"
    ],
-   "purpose": "My prediction. By the end of 2027, businesses will be paying to be the one your AI assistant picks."
+   "purpose": "My prediction. By the end of 2027, a big airline signs a deal with Meta and Apple. Only Muse and Siri can sell its tickets."
   },
   {
    "kind": "video-script",
