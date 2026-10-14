@@ -599,6 +599,19 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14: **Next Wednesday (21 Oct) cued.** Krish: "Next week's under the
+  hood should include and expand on today's data, but be a follow-up which
+  focuses on: Adding Grokbot and any other emerging personal assistant agents,
+  using open claw as, the start of this story. Focusing a lot more on what
+  people use it for and what it is actually good at compared to what it is
+  marketed to be good at and for." Idea d7a20885-7001-4661-b444-9d7ca1043416
+  (source week_research: manual is only for words filed through Control
+  Center's Say it door), written as under_the_hood's recommended option for
+  week 2026-10-19. Sunday's plan-week should keep it first and research it:
+  OpenClaw as the opening, Grok's assistant and other new personal agents
+  added to the 14 Oct scorecard (`docs/plans/2026-10-14-wednesday/cards.json`),
+  marketed-for vs used-for vs good-at from user evidence.
+
 - 2026-10-13, about 19:40 UTC: **`manual` now means his words, enforced**
   (step 3 PR 6, second half; branch `ccr-25d9e81a-manual-refusal`). Control
   Center #444 (retire the other doors) is merged and live: its main no
