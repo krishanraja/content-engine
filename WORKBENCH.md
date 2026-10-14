@@ -10,6 +10,14 @@ Last updated: 2026-10-13, about 19:40 UTC, by a Claude Code session (cloud); the
 
 ## How Krish wants to be worked with
 
+- **Every title earns the click, from the piece, never from nothing** (house
+  rule TITLE_EARNS_THE_CLICK; `scripts/post-pack/title_check.py`). No straw
+  man ("Muse isn't ChatGPT", "X vs Y isn't a fair fight"), no bare topic
+  ("Three kinds of AI"), no stock phrase; name who did what or give the
+  surprising number, from the checked piece. The card tool, publish page,
+  cover drawer and story intro all refuse what it refuses. Krish,
+  2026-10-14: "We need an anti-dumb filter ... this sort of crap cannot be
+  allowed to pass in the future, ever". He liked "Muse's real rival: Siri."
 - **Every day on the publish board is built the same way, by the engine.**
   Each made day is its own `publish_manager.py` page (Copy on every word and
   picture), and the board is `week_board.py` over those pages, republished
