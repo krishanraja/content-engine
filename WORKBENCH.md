@@ -622,6 +622,22 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14, 16:20 UTC: **Thumbnails on the board; Krish's own titles; picture downloads.**
+  Krish rewrote Wednesday's titles himself (recorded as picks, with six new
+  lessons in `config/title-verdicts.json`): article "Meta's Muse AI, reviewed.
+  Amazon already locked it out, and Walmart let it right in."; Substack video
+  post and auto YouTube post "VIDEO: We unpack Meta's Muse and look at why
+  it's on par with Siri but for OPPOSITE reasons!". What they teach: name the
+  product exactly, say the format, give the real finding with the why left
+  open, two named opposites, "we" on video. The midday run always made both
+  thumbnails into 3 Video, but only the videos were linked, so the board
+  showed none: `making.py <piece> drive-link CUT <video> --thumb-url <thumb>`
+  now records each thumbnail, the board's video card offers Download
+  thumbnail / Open thumbnail per cut, and the 13:25 routine records them.
+  Picture Download buttons fetched data: URLs, which the viewer blocks; they
+  now decode in the page. Board at version 24. Wednesday's thumbnails still
+  carry the old, un-picked headline: redraw them in the regeneration pass.
+
 - 2026-10-14, 15:30 UTC: **Wednesday titles: rounds in chat; Siri section added.**
   The hooks research Krish shared is in `docs/research/2026-10-14-viral-hooks-corpus.md`,
   boiled down per surface in `config/hook-playbook.json`; start every title

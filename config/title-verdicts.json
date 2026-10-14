@@ -40,9 +40,75 @@
    "lesson": "Name the subject (Muse) in the title, then a more cryptic promise of what he reveals ('I break down ...'): the name is what people search and recognise; the promise is the open loop.",
    "from": "Krish on the YouTube round: 'we need to name Muse in the title, and then say something more cryptic like \"I break down XYZ\"'",
    "on": "2026-10-14"
+  },
+  {
+   "lesson": "Name the product exactly as people would search it ('Meta's Muse AI'), never a vague stand-in ('Meta's new AI').",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Say the format up front: 'reviewed' for the article, 'VIDEO:' for the Substack video post (it is also the email subject and the auto YouTube post).",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Give the real finding and keep the open loop in the why ('on par with Siri but for OPPOSITE reasons'); a tease that hides the finding ('the rival nobody's talking about') loses to it. This supersedes the 'cryptic I break down' lesson: name it, then a clear promise.",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Two named companies doing opposite things (Amazon locked it out, Walmart let it in) beats one twist.",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "The video speaks as 'we' ('We unpack'); the article can stay first person or plain. One word in capitals for emphasis is fine ('OPPOSITE').",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "His titles run longer than the playbook's 60 characters when the extra words carry the finding; length is a guide, the finding wins.",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
   }
  ],
  "verdicts": [
+  {
+   "title": "I tried Meta's new AI. Amazon's already blocked it.",
+   "surface": "article",
+   "verdict": "rejected",
+   "why": "replaced by Krish's own: 'Meta's new AI' is vague (name the product); one twist where the pair Amazon/Walmart is stronger",
+   "krish": "replaced it with \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "Meta's Muse: I break down the rival nobody's talking about.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "replaced by Krish's own: too cryptic; he gave the actual finding instead",
+   "krish": "replaced it with \"VIDEO: We unpack Meta's Muse ...\"",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.",
+   "surface": "article",
+   "verdict": "picked",
+   "why": "Krish wrote it himself: the exact searchable product name plus the format ('reviewed'), then two named companies doing opposite things; the contrast is the hook",
+   "krish": "I changed the Substack article title to \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "Krish wrote it himself: format first (VIDEO:), names the product exactly, gives the real finding (on par with Siri) and keeps the open loop in the why (OPPOSITE reasons); 'we' for the video; clarity over a cryptic tease",
+   "krish": "I changed the Substack (and auto Youtube post) title to \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
   {
    "title": "I tried Meta's Muse. I break down who it's really for.",
    "surface": "youtube",
@@ -66,24 +132,6 @@
    "why": "not picked: Y2's 'nobody's talking about' promise beat it",
    "krish": "Y2 (picked over it)",
    "on": "2026-10-14"
-  },
-  {
-   "title": "Meta's Muse: I break down the rival nobody's talking about.",
-   "surface": "youtube",
-   "verdict": "picked",
-   "why": "names Muse, then a cryptic promise; 'nobody's talking about' frame; the rival (Siri) is the payoff",
-   "krish": "Y2 - as long as the article actually explains why Siri is emerging as a real rival",
-   "on": "2026-10-14",
-   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
-  },
-  {
-   "title": "I tried Meta's new AI. Amazon's already blocked it.",
-   "surface": "article",
-   "verdict": "picked",
-   "why": "first person, then a concrete twist about a named company, surprise last",
-   "krish": "T1",
-   "on": "2026-10-14",
-   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
   },
   {
    "title": "I tried Meta's new AI. The catch? Meta can get to your data.",

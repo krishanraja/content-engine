@@ -21,7 +21,7 @@ that everything is fresh and synchronised in real time".
     python making.py PIECE_ID session https://claude.ai/code/session_...
     python making.py PIECE_ID read-back long --readers "reader A, ..." "reader B, ..." [--at TIME]
     python making.py PIECE_ID read-back long --krish-words "Krish, DATE: his words" [--readers ...]
-    python making.py PIECE_ID drive-link long https://drive.google.com/file/d/<id>/view
+    python making.py PIECE_ID drive-link long https://drive.google.com/file/d/<id>/view [--thumb-url https://drive.google.com/file/d/<thumb id>/view]
     python making.py PIECE_ID teleprompter long --folder ID --script ID --sha SHA256 [--title TITLE]
                      [--folder-name NAME] [--sent-at TIME]
     python making.py PIECE_ID teleprompter long [--folder ID] --error "what Teleprompter said"   # a send that failed
@@ -666,7 +666,7 @@ def krish_words(words):
 DRIVE_FILE = re.compile(r'^https://drive\.google\.com/file/d/([A-Za-z0-9_-]{20,})(?:/view)?(?:\?[^\s]*)?$')
 
 
-def drive_link_patch(record, cut, url):
+def drive_link_patch(record, cut, url, thumb_url=None):
     """The cut's finished video with its Drive link added, so the week's
     publish board can link it to download (Krish, 2026-10-14: "You should
     always link the Google Drive videos because I need to actually download
@@ -681,6 +681,13 @@ def drive_link_patch(record, cut, url):
         raise MakingError(f'the {cut} cut has no finished video on the record yet; record it first (making.py PIECE video {cut} ...)')
     asset = {k: v for k, v in videos[-1].items() if k != 'at'}
     asset['url'] = f'https://drive.google.com/file/d/{m.group(1)}/view'
+    # Its thumbnail's Drive link too, so the board offers it beside the video
+    # (Krish, 2026-10-14: "I do not see any video thumbnail assets anywhere").
+    if thumb_url:
+        t = DRIVE_FILE.match(str(thumb_url).strip())
+        if not t:
+            raise MakingError('the thumbnail\'s Drive link is the file\'s own: https://drive.google.com/file/d/<id>/view')
+        asset['thumbnail'] = {**(asset.get('thumbnail') or {}), 'url': f'https://drive.google.com/file/d/{t.group(1)}/view'}
     return {'video_assets': [asset]}
 
 
@@ -1475,6 +1482,10 @@ def self_test():
           {'video_assets': [{'cut': 'long', 'name': 'w.mp4', 'path': '3 Posts/x/3 Video/w.mp4', 'seconds': 168, 'music': 'm',
                              'thumbnail': {'path': '3 Posts/x/3 Video/w.jpg'},
                              'url': 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view'}]})
+    thumbed = drive_link_patch(vrec, 'long', 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view',
+                               thumb_url='https://drive.google.com/file/d/1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ/view?usp=drivesdk')
+    check('drive-link: the thumbnail\'s Drive link joins its path', thumbed['video_assets'][0]['thumbnail'],
+          {'path': '3 Posts/x/3 Video/w.jpg', 'url': 'https://drive.google.com/file/d/1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ/view'})
     for label, rec, cut, url in (('a link that is not a Drive file', vrec, 'long', 'https://example.com/x'),
                                  ('a cut with no video', vrec, 'short', 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view')):
         try:
@@ -1669,7 +1680,7 @@ def main(argv=None, call=None):
         elif a.what == 'drive-link':
             if len(a.args) != 2:
                 ap.error('give the cut and its Drive link: drive-link long https://drive.google.com/file/d/<id>/view')
-            patch = drive_link_patch(record_of(a.piece_id, call), a.args[0], a.args[1])
+            patch = drive_link_patch(record_of(a.piece_id, call), a.args[0], a.args[1], thumb_url=a.thumb_url)
         elif a.what == 'video':
             patch = video_patch(a.args[0], a.args[1], a.args[2], url=a.url, seconds=a.seconds,
                                 thumb=a.thumb, thumb_url=a.thumb_url, music=a.music, thumb_file=a.thumb_file)

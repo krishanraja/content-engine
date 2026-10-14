@@ -327,6 +327,17 @@ def videos_card(day, p, videos):
         else:
             links = (f'<span class="rec-none">Not in Drive yet: it is in the post\'s folder as {E(v.get("name") or "")}, '
                      'and its link joins this card once Library Sync has written it</span>')
+        # Its thumbnail, beside it: Krish, 2026-10-12: "I always want a video thumbnail for all video sizes produced
+        # as an asset every time"; 2026-10-14: "I do not see any video thumbnail assets anywhere".
+        thumb = v.get('thumbnail') if isinstance(v.get('thumbnail'), dict) else {}
+        tm = DRIVE_ID.search(str(thumb.get('url') or ''))
+        if tm:
+            tid = tm.group(1)
+            links += (f'<div class="vid-thumb"><span class="rec-shape">Thumbnail</span> '
+                      f'<a class="btnlink" href="{E(f"https://drive.usercontent.google.com/download?id={tid}&export=download")}" target="_blank" rel="noopener">Download thumbnail</a> '
+                      f'<a class="btnlink ghost" href="{E(f"https://drive.google.com/file/d/{tid}/view")}" target="_blank" rel="noopener">Open thumbnail</a></div>')
+        elif thumb.get('path'):
+            links += f'<div class="vid-thumb"><span class="rec-none">Thumbnail: in the same folder as {E(Path(thumb["path"]).name)}; its link joins this card once recorded</span></div>'
         rows.append(f'<div class="rec-row vid-row"><span class="rec-cut"><span class="rec-name">{E(label)}</span>'
                     f'<span class="rec-shape">For {E(where)}{". " + E(length) if length else ""}</span></span>'
                     f'<div class="rec-links">{links}</div></div>')
@@ -1204,6 +1215,12 @@ def _self_test():
           'https://drive.usercontent.google.com/download?id=1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg&amp;export=download' in card
           and 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view' in card and 'data-act="text"' in card
           and 'Not in Drive yet' in card and '2 min 48 s' in card and videos_card('wed', 'wed-', []) == '')
+    tv = [{'cut': 'long', 'url': 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view',
+           'thumbnail': {'path': '3 Posts/x/3 Video/x - wide.jpg', 'url': 'https://drive.google.com/file/d/1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ/view'}},
+          {'cut': 'short', 'url': 'https://drive.google.com/file/d/12BfoG1GQ_wQQFMi1h9NLZyo72g4uEcgQ/view', 'thumbnail': {'path': '3 Posts/x/3 Video/x - tall.jpg'}}]
+    tcard = videos_card('wed', 'wed-', tv)
+    check('finished videos: each cut offers its thumbnail, and one not linked yet says where it is',
+          'download?id=1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ' in tcard and 'Download thumbnail' in tcard and 'x - tall.jpg' in tcard)
     if fails:
         print('week board self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
