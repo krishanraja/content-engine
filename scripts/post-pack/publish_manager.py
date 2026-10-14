@@ -39,6 +39,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import publish_kit  # noqa: E402
+import engine_stamp  # noqa: E402  the engine's stamp on a page it built
 import title_check  # noqa: E402  the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK)
 
 E = html.escape
@@ -322,7 +323,9 @@ def build(src, out_dir):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     target = out / 'publish-manager.html'
-    target.write_text(page(m, src.parent), encoding='utf-8')
+    # Stamped, and LF on every machine, so the publish hook can tell the engine built it and nothing changed it.
+    with open(target, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(engine_stamp.stamp(page(m, src.parent), 'publish_page'))
     return target
 
 

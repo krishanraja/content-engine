@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 import {
   bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   sourcesText, splitFresh, summarise, sweep,
-  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, factLedgerCoverage, settle, sentenceKey, sourcesHash, type FactCheck, FACT_GATE_VERSION,
+  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, factLedgerCoverage, settle, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
 import { readPieceCall } from '../../packages/contracts/src/call.js'
@@ -588,6 +588,22 @@ describe('a checked sentence keeps its result until it changes (walk log F52)', 
     expect(carryForward(BODY, [across], [], ledger, hash).toCheck).toEqual([across])
     const both = { sentence: `${A} ${B}`, claim: 'both', kind: 'other' as const }
     expect(carryForward(BODY, [both], [], ledger, hash).toCheck).toEqual([])
+  })
+
+  test('a source only added keeps every line that passed or was set aside; a source removed or changed does not', () => {
+    // Krish, 2026-10-14: filing one source re-checked the whole piece, and lines that had passed failed.
+    const parts = sourcePartHashes(meta)
+    const kept = settle(BODY, run1, null, hash, parts)
+    expect(kept.source_parts).toEqual(parts)
+    const listed = [A, B, C, D].map(sentence => ({ sentence, claim: sentence, kind: 'other' as const }))
+    const added = { materials: [...meta.materials, { id: 'm2', kind: 'paste', title: 'new', content: 'A new source.' }] }
+    const r = carryForward(BODY, listed, [], kept, sourcesHash(added), sourcePartHashes(added))
+    expect(r.toCheck.map(c => c.sentence)).toEqual([C])
+    expect(r.carried).toHaveLength(3)
+    expect(Object.keys(settle(BODY, { ...run1, claims: [], set_aside: [] }, kept, sourcesHash(added), sourcePartHashes(added)).sentences)).toHaveLength(3)
+    const changed = { materials: [{ ...meta.materials[0], content: 'Koa 0.80. GPT-5.5 0.90.' }] }
+    expect(carryForward(BODY, listed, [], kept, sourcesHash(changed), sourcePartHashes(changed)).toCheck).toEqual(listed)
+    expect(factLedgerCoverage(BODY, kept, sourcesHash(added), sourcePartHashes(added)).ledger_usable).toBe(true)
   })
 
   test('new or changed sources, or another gate version, start the ledger again', () => {

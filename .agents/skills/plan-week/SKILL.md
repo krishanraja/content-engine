@@ -85,7 +85,16 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      last week's link: `Artifact({action: "publish", file_path: "<absolute
      path>/week-board.html", title: "This Week's Publish Board", icon:
      "calendar", capabilities: {"db": {}, "downloads": true}, description:
-     "<the manifest's publish.description>"})`. Then one `ArtifactData`
+     "<the manifest's publish.description>", pin: true})`, from a session
+     signed in as Krish's own account, so it lands pinned in his sidebar
+     (Krish, 2026-10-14: "lets pin this weeks artifact (I cant seem to do
+     that myself)"; a board made under another organisation cannot be
+     pinned, and its ticks cannot be read from Claude Code). The publish
+     hook (`scripts/hooks/artifact_gate.py`) refuses a board the engine did
+     not build. Add its link under the week in `config/boards.json` (Krish
+     works from two Claude accounts; every board publish goes to every link
+     listed there), and ask Krish to add his other account as an editor so
+     both accounts share one board and one store of ticks. Then one `ArtifactData`
      `list` of `ticks` and one of `links` on its link: both are empty on a
      new board, and the page's own store is then known to answer.
    - **Record its link where every later session finds it.** On the board,

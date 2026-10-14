@@ -298,10 +298,12 @@ describe('the board\'s own script saves each tick in the page\'s store', () => {
 import sys
 from pathlib import Path
 sys.path.insert(0, ${JSON.stringify(join(ROOT, 'scripts', 'post-pack'))})
-import week_board
+import week_board, title_check
 out = Path(sys.argv[1])
-mon = week_board.stand_in(str(out), 'mon', 'Who gets paid for AI songs', 'follow.the.money')
-page, manifest, warnings = week_board.board(week_board.monday_of('2026-10-12'), {'mon': mon}, {'mon': '${MON}', 'wed': '${WED}'}, {}, pending={'wed': 'Watermarks'})
+# A title Krish picked: the publish page refuses any other (house rule TITLE_EARNS_THE_CLICK).
+with title_check.picked_for_tests(['Warner sued Suno. Now it takes a cut.'], str(out)):
+    mon = week_board.stand_in(str(out), 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money')
+    page, manifest, warnings = week_board.board(week_board.monday_of('2026-10-12'), {'mon': mon}, {'mon': '${MON}', 'wed': '${WED}'}, {}, pending={'wed': 'Watermarks'})
 (out / 'board.html').write_text(page, encoding='utf-8', newline='\\n')
 `, work], { encoding: 'utf8', env, maxBuffer: 64 * 1024 * 1024 })
   const page = made.status === 0 ? readFileSync(join(work, 'board.html'), 'utf8') : ''

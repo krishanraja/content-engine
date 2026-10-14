@@ -364,13 +364,36 @@ def make_cuts(post_path, piece, takes_at, music_root, clips, intro_words, work, 
             raise Stop(f'the {cut} cut would go out without music: ' + '; '.join((report.get('shapes', {}).get(shape) or {}).get('warnings') or []))
         if dry_run:
             continue
-        run([PY, 'scripts/quick-edit/make.py', cfg_path, '--out', out, '--only', shape, '--share-mib', '29'], env=env,
-            what=f'rendering the {cut} cut')
+        made = run([PY, 'scripts/quick-edit/make.py', cfg_path, '--out', out, '--only', shape, '--share-mib', '29'], env=env,
+                   what=f'rendering the {cut} cut')
+        loud_gate(cut, made.stdout, shape)
         files = sorted(out.glob(f'*-{shape}.mp4'))
         if not files:
             raise Stop(f'the {cut} cut rendered no {shape} file')
         rendered[cut] = files[0]
     return rendered
+
+
+SHORT_MAX_SECONDS = 89  # every platform's line: docs/research/2026-10-14-platform-length-limits.md
+
+
+def loud_gate(cut, stdout, shape):
+    """A cut whose finished loudness or true peak is off target never goes to Drive (Krish, 2026-10-14: the
+    long cut went out at -15.2 LUFS, the target is -14 +-1 with a true peak at most -1 dBTP)."""
+    try:
+        report = json.loads(stdout[stdout.index('{'):stdout.rindex('}') + 1])
+    except ValueError:
+        raise Stop(f'the {cut} cut rendered but gave no report, so its loudness is unchecked')
+    shape_report = (report.get('shapes') or {}).get(shape) or {}
+    loud = shape_report.get('loudness') or {}
+    off = [w for w in shape_report.get('warnings') or [] if 'integrated loudness' in w or 'true peak' in w]
+    if loud.get('integrated') is None or off:
+        raise Stop(f'the {cut} cut is off its loudness target, so it was not sent: ' + ('; '.join(off) or 'no loudness measured'))
+    secs = shape_report.get('total_seconds')
+    if shape == '9x16' and isinstance(secs, (int, float)) and secs > SHORT_MAX_SECONDS:
+        raise Stop(f'the {cut} cut runs {secs:.1f} s, over {SHORT_MAX_SECONDS} s: Reels, Facebook and X free accounts cut it off '
+                   '(Krish, 2026-10-14). Trim the take (edits.json) or the script, then run again')
+    log(f'the {cut} cut: {loud["integrated"]} LUFS, true peak {loud.get("true_peak")} dBTP')
 
 
 def thumbs(post_path, work):

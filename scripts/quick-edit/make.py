@@ -1697,6 +1697,20 @@ def main():
             limited.replace(final)
             loudness = measure_cut(final, tl, cut_audio)
             loudness['peak_limited'] = True
+        # A limited (or otherwise off) cut is brought back to the target: a plain gain on the sound with the
+        # same oversampled limiter, measured again, at most twice. Wednesday's long cut went out at -15.2 LUFS
+        # because the peak pass lowered it and nothing put it back (Krish, 2026-10-14).
+        for _ in range(2):
+            off = None if loudness.get('integrated') is None else levels['final_integrated_lufs'] - loudness['integrated']
+            if off is None or abs(off) <= levels['tolerance_lu'] / 2:
+                break
+            ceiling = 10 ** ((levels['max_true_peak_dbtp'] - 0.8) / 20)
+            fixed = final.with_name(final.stem + '.level.mp4')
+            run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-i', str(final), '-map', '0', '-c:v', 'copy',
+                 '-af', f'volume={off:.2f}dB,aresample=192000,alimiter=limit={ceiling:.3f}:attack=1:release=50:level=0,aresample=48000',
+                 '-c:a', 'aac', '-b:a', '256k', '-ar', '48000', '-movflags', '+faststart', str(fixed)])
+            fixed.replace(final)
+            loudness = {**measure_cut(final, tl, cut_audio), 'level_corrected_db': round(off, 2)}
         warnings += loudness_warnings(loudness, levels)
         shapes[asp] = {
             'file': final.name, 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],

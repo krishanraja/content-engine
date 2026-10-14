@@ -71,7 +71,10 @@ WORDS_PER_MINUTE = 150
 CUTS = {
     # cut: (fewest words, most words, what Krish asked for)
     'long': (405, 495, 'a 3-minute video'),
-    'short': (160, 225, 'a 90-second version'),
+    # 195: Wednesday's 222 words ran 99 seconds with the intro and outro, and Reels over 90 s were cut off
+    # (Krish, 2026-10-14: "I'm noticing on Instagram that sometimes my reels are getting cut off"). At his pace
+    # 195 words keep the finished cut under 89 s, inside every platform's line (docs/research/2026-10-14-platform-length-limits.md).
+    'short': (160, 195, 'a 90-second version that finishes under 89 seconds'),
 }
 OUTRO = re.compile(r'makeyourmindup', re.I)
 META_START = re.compile(r'^\s*(changes from|before you record|the story in one line|#{1,3}\s)', re.I)
@@ -610,7 +613,7 @@ def self_test():
     filler = lambda n: 'Why does the price matter? ' + ' '.join(['word'] * (n - 5))
     check('a 3-minute long cut passes the length rule', length_problem(filler(450).split(), 'long'), None)
     check('a 4-minute long cut is refused', 'cut it to 405 to 495' in (length_problem(filler(617).split(), 'long') or ''), True)
-    check('a 90-second short cut passes', length_problem(filler(198).split(), 'short'), None)
+    check('a 90-second short cut passes', length_problem(filler(185).split(), 'short'), None)
     check('a two-minute short cut is refused', 'TWO_CUTS' in (length_problem(filler(300).split(), 'short') or ''), True)
     check('a long cut far too short is refused', 'short of a 3-minute video' in (length_problem(filler(250).split(), 'long') or ''), True)
     check('no cut, no length rule', length_problem(filler(900).split(), None), None)

@@ -67,6 +67,26 @@ jobs:
         run: powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts/verify-runner-source.ps1
       - run: npm run verify
 
+  browser-buttons:
+    # Every Download, Copy picture and Copy button on a built publish board
+    # and publish page, clicked in Chromium with fetch() blocked the way
+    # claude.ai's page rules block it (Krish, 2026-10-14: "the download
+    # buttons for the images STILL do not work!!!!").
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install the hash-pinned Python the tests need
+        run: python -m pip install --require-hashes --no-deps -r requirements-ci.txt
+      - name: Install Playwright and its Chromium
+        run: |
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Click every button on the board and a publish page
+        run: python scripts/post-pack/buttons_in_browser.py
+
   control-plane-sql:
     # The Video Studio control plane's projection CAS, ancestry and race
     # invariants, replayed on a clean Postgres 17 from the migration copies in

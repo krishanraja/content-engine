@@ -225,6 +225,11 @@ export const SOURCES_BUDGET = 120_000
  *  names it is stored with; the older names are still read if a row has
  *  them. */
 export function sourcesText(meta: Record<string, any>): string {
+  return sourceParts(meta).join('\n\n').slice(0, SOURCES_BUDGET)
+}
+
+/** Each source the checkers read, in order: a filed excerpt, a story, research, a dive. */
+export function sourceParts(meta: Record<string, any>): string[] {
   const parts: string[] = []
   const materials = readMaterials(meta)
   for (const m of materials) {
@@ -245,7 +250,7 @@ export function sourcesText(meta: Record<string, any>): string {
     const links = Array.isArray(d?.citations) ? d.citations : Array.isArray(d?.sources) ? d.sources : []
     parts.push(`${SOURCE_MARK}deep dive${question ? `: ${question}` : ''}\n${findings}${links.length ? `\n\nSources:\n${links.join('\n')}` : ''}`)
   }
-  return parts.filter(p => p && p.trim()).join('\n\n').slice(0, SOURCES_BUDGET)
+  return parts.filter(p => p && p.trim())
 }
 
 /** Whether a dive's findings are already on the piece as the material
@@ -469,6 +474,12 @@ export interface FactLedger {
   version: typeof FACT_GATE_VERSION
   /** sourcesHash() of the sources the entries were checked against. */
   sources_hash: string
+  /** One hash per source part (sourcePartHashes()). A later run whose sources
+   *  hold every one of these, plus new ones, keeps this ledger: filing a source
+   *  adds evidence and takes none away, so a line that passed or was set aside
+   *  stays so and only the rest are checked again (Krish, 2026-10-14: filing
+   *  one source re-checked the whole piece, and lines that had passed failed). */
+  source_parts?: string[]
   /** By sentenceKey(). */
   sentences: Record<string, LedgerEntry>
 }
@@ -482,6 +493,11 @@ export function sentenceKey(sentence: string): string {
  *  gives a new hash, and the ledger starts again. */
 export function sourcesHash(meta: Record<string, any>): string {
   return createHash('sha256').update(sourcesText(meta || {})).digest('hex')
+}
+
+/** One short hash per source part, for source_parts. */
+export function sourcePartHashes(meta: Record<string, any>): string[] {
+  return sourceParts(meta || {}).map(p => createHash('sha256').update(p).digest('hex').slice(0, 24))
 }
 
 /** The body sentences a claim's or a set-aside's sentence covers. A lister's
@@ -499,8 +515,13 @@ function overlapping(sentence: string, bodySentences: string[]): string[] {
   })
 }
 
-function usable(ledger: FactLedger | null | undefined, hash: string): ledger is FactLedger {
-  return !!ledger && ledger.version === FACT_GATE_VERSION && ledger.sources_hash === hash && !!ledger.sentences
+function usable(ledger: FactLedger | null | undefined, hash: string, parts?: string[]): ledger is FactLedger {
+  if (!ledger || ledger.version !== FACT_GATE_VERSION || !ledger.sentences) return false
+  if (ledger.sources_hash === hash) return true
+  // Only sources added since: every part the ledger was checked against is still there.
+  if (!parts || !Array.isArray(ledger.source_parts) || !ledger.source_parts.length) return false
+  const now = new Set(parts)
+  return ledger.source_parts.every(p => now.has(p))
 }
 
 export interface FactLedgerCoverage {
@@ -517,9 +538,10 @@ export function factLedgerCoverage(
   body: string,
   ledger: FactLedger | null | undefined,
   hash: string,
+  parts?: string[],
 ): FactLedgerCoverage {
   const bodySentences = sentences(body).filter(s => !isConfidenceLine(s))
-  const ledgerUsable = usable(ledger, hash)
+  const ledgerUsable = usable(ledger, hash, parts)
   const reusable = ledgerUsable
     ? bodySentences.filter(s => !!ledger.sentences[sentenceKey(s)]).length
     : 0
@@ -543,8 +565,9 @@ export function carryForward(
   setAside: Array<{ sentence: string; reason: string }>,
   ledger: FactLedger | null | undefined,
   hash: string,
+  parts?: string[],
 ): { toCheck: Claim[]; carried: CheckedClaim[]; setAside: Array<{ sentence: string; reason: string }>; sentences: number } {
-  if (!usable(ledger, hash)) return { toCheck: claims, carried: [], setAside, sentences: 0 }
+  if (!usable(ledger, hash, parts)) return { toCheck: claims, carried: [], setAside, sentences: 0 }
   const bodySentences = sentences(body)
   const toCheck: Claim[] = []
   const carried: CheckedClaim[] = []
@@ -581,11 +604,11 @@ export function splitFresh<T>(toCheck: T[], max: number): { now: T[]; later: num
 /** The ledger after a run: what it already held for sentences still in the
  *  body, and every sentence this run passed or set aside. A sentence with a
  *  failing claim is not added. */
-export function settle(body: string, result: FactCheck, prior: FactLedger | null | undefined, hash: string): FactLedger {
+export function settle(body: string, result: FactCheck, prior: FactLedger | null | undefined, hash: string, parts?: string[]): FactLedger {
   const bodySentences = sentences(body)
   const keys = new Set(bodySentences.map(sentenceKey))
   const out: Record<string, LedgerEntry> = {}
-  if (usable(prior, hash)) for (const [k, v] of Object.entries(prior.sentences)) if (keys.has(k)) out[k] = v
+  if (usable(prior, hash, parts)) for (const [k, v] of Object.entries(prior.sentences)) if (keys.has(k)) out[k] = v
   for (const s of bodySentences) {
     const key = sentenceKey(s)
     if (out[key] || isConfidenceLine(s)) continue
@@ -597,7 +620,7 @@ export function settle(body: string, result: FactCheck, prior: FactLedger | null
     const aside = result.set_aside.find(a => overlapping(a.sentence, [s]).length > 0)
     if (aside) out[key] = { status: 'set_aside', at: result.ran_at, reason: aside.reason }
   }
-  return { version: FACT_GATE_VERSION, sources_hash: hash, sentences: out }
+  return { version: FACT_GATE_VERSION, sources_hash: hash, ...(parts ? { source_parts: parts } : {}), sentences: out }
 }
 
 // ── The prompts ─────────────────────────────────────────────────────────────

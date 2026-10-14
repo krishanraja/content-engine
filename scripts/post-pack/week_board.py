@@ -98,6 +98,7 @@ from urllib.parse import urlparse
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+import engine_stamp  # noqa: E402  the engine's stamp on a page it built
 import publish_kit  # noqa: E402
 import publish_manager  # noqa: E402
 
@@ -762,6 +763,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     problems = check_page(page)
     if problems:
         raise BoardError('the board failed its own checks:\n  ' + '\n  '.join(problems))
+    page = engine_stamp.stamp(page, 'week_board')
     # The board's own words have none (the self-test reads the templates); a piece's words are its own.
     dashes = sum(page.count(d) for d in DASHES)
     if dashes:
@@ -818,6 +820,36 @@ def check_page(page):
     if 'Mark done' in page:
         problems.append('a Mark done button is left; its tick would live in one browser only')
     return problems
+
+
+def verify(page):
+    """Why this board may not be published, or []. scripts/hooks/artifact_gate.py runs it before every board
+    publish (Krish, 2026-10-14: "how are you going to ensure all this stuff ... can never be had again"):
+    the engine built it and nothing changed it since, every made day carries its Copy buttons, and every
+    finished video on it has its Drive link and its thumbnail's ("I do not see any video thumbnail assets
+    anywhere", "You should always link the Google Drive videos")."""
+    out = []
+    why = engine_stamp.stamp_problem(page, 'week_board')
+    if why:
+        out.append(why)
+    starts = [m.start() for m in re.finditer(r'<div class="pm" id="panel-', page)] + [len(page)]
+    for a, b in zip(starts, starts[1:]):
+        panel = page[a:b]
+        head = re.match(r'<div class="pm" id="panel-(\w+)"[^>]*>', panel)
+        name, tag = head.group(1), head.group(0)
+        if 'data-state="made"' not in tag:
+            continue
+        p = (re.search(r'data-prefix="([^"]*)"', tag) or [None, ''])[1]
+        if 'data-act="text"' not in panel:
+            out.append(f'{name}: a made day with no Copy buttons')
+        vid = re.search(r'<div class="rec" id="' + re.escape(p) + r'videos".*?<p class="rec-how">', panel, re.S)
+        if vid:
+            card = vid.group(0)
+            if 'Not in Drive yet' in card:
+                out.append(f'{name}: a finished video with no Drive link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
+            if 'its link joins this card once recorded' in card or card.count('Download thumbnail') < card.count('>Download</a>'):
+                out.append(f'{name}: a finished video with no thumbnail link; record it (making.py PIECE drive-link CUT URL --thumb-url URL)')
+    return out
 
 
 def write(page, manifest, out):
@@ -1243,6 +1275,7 @@ def parser():
     ap.add_argument('--keep', action='append', metavar='DAY', help='with --previous (its page): carry a made day over exactly as the board holds it, '
                     'when its publish page cannot be read any more')
     ap.add_argument('--unpick', action='append', metavar='DAY', help='with --previous: a day Krish moved or dropped, which really has no piece now')
+    ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')
     ap.add_argument('--out', default='week-board.html', help='the page; the manifest is written beside it as .json')
@@ -1255,6 +1288,10 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.self_test:
         return self_test()
+    if a.verify:
+        why = verify(Path(a.verify).read_text(encoding='utf-8'))
+        print('\n'.join(why) if why else 'the board may be published')
+        return 1 if why else 0
     if a.show:
         try:
             info = board_days(Path(a.show).read_text(encoding='utf-8-sig'), a.show)

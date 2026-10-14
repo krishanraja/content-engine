@@ -142,7 +142,12 @@ day on it is at 100% (Friday's reposts go out at the weekend).
   `week-publish-board-2026-10-12`; Monday recorded, waiting on its
   produced video; Wednesday's workroom made, waiting on two calls from
   Krish; Friday made, waiting on his call and his recording):
-  https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
+  https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E (pinned in Krish's
+  sidebar, published under his own account on 14 October; the older copy,
+  https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV, belongs to another
+  organisation, so it could not be pinned and its ticks cannot be read from
+  Claude Code. Republish to the pinned one only. For next week, plan-week
+  makes a new board from the same builder and publishes it with `pin: true`.)
 
 Last week's publish board: none (the first board was made on 12 October).
 
@@ -246,7 +251,7 @@ https://controlcenter.krishraja.com/#/board:
    f328382d-71b3-41a7-a221-d8615826f12e, Wednesday
    7554ed4a-560b-4365-b266-ea72abeed7ef and Friday
    904658db-4df2-4537-a0ed-ebe93e081db7. The board: `Artifact` read
-   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV, then `week_board.py
+   https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E, then `week_board.py
    --show <the saved file>`, then copy his ticks ("The week's ticks" in
    `make-piece`; Monday's two Record ticks are in its store already, written
    on 12 October from his words "the two Monday videos are now in Inbox").
@@ -621,6 +626,19 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-14, 21:00 UTC: **Read `docs/plans/2026-10-14-handoff.md` first.**
+  Five durable guards built (failure register `config/failures.json`, run
+  `python3 scripts/check_failures.py`): the board publish hook (engine stamp,
+  Copy buttons, video and thumbnail links), the browser button test in CI,
+  the loudness correction and gate, the fact gate keeping passed lines when a
+  source is only added, and the register itself. Also: shorts capped at 89 s
+  (scripts 160 to 195 words; Friday's short is 224 and must be trimmed before
+  he records), the split-screen face band fixed, both board links kept in sync
+  (`config/boards.json`, Krish works from two accounts), the board pinned
+  under his account. Waiting on Krish: Friday's titles and short-script trim;
+  Wednesday's remaining title picks; go on the spine gate, photo rotation,
+  site positioning line and growth plan.
 
 - 2026-10-14, 16:20 UTC: **Thumbnails on the board; Krish's own titles; picture downloads.**
   Krish rewrote Wednesday's titles himself (recorded as picks, with six new

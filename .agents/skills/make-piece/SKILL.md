@@ -213,6 +213,15 @@ rewritten and checked again from the top.
 
 ## The week's publish board
 
+**Every link, every time.** Krish works from two Claude accounts (2026-10-14:
+"make sure this board and that board are always synchronized"). The week's
+board links are in `config/boards.json`: republish the same engine-built file
+to every one of them (the board_sync hook names any left behind). Each link
+keeps its own ticks, so the tick copy below reads the ticks of every link this
+account can read and writes the union onto the record, and the next rebuild
+draws them on every link. Only the engine builds a board: the publish hook
+refuses any other.
+
 **Draft first, then ticks.** Krish, 2026-10-13: "the publish board needs to
 go in to Draft mode for Weds. the Monday card should be green as it is fully
 completed, the Weds and Friday cards should be amber as they are both in
