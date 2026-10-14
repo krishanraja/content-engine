@@ -187,6 +187,32 @@ class picked_for_tests:
             os.environ['MYMU_TITLE_VERDICTS'] = self.before
 
 
+def load_playbook():
+    path = Path(__file__).resolve().parents[2] / 'config' / 'hook-playbook.json'
+    return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+
+
+def too_long(title, surface, playbook=None):
+    """The surface's first readable space, from the hooks research; None when it fits."""
+    limit = ((playbook or load_playbook()).get('surfaces', {}).get(surface) or {}).get('limit_chars')
+    return f'{len(title)} characters; {surface} shows about {limit}' if limit and len(title) > limit else None
+
+
+def playbook_text(surface=None, playbook=None):
+    pb = playbook or load_playbook()
+    if not pb:
+        return ''
+    lines = ['What the hooks research says (config/hook-playbook.json; his picks win where they differ):', '  ' + pb['formula']]
+    lines += [f'  - {r}' for r in pb.get('everywhere', [])]
+    for name, s in pb.get('surfaces', {}).items():
+        if surface and name != surface:
+            continue
+        lines.append(f'{name} (about {s["limit_chars"]} characters): {s["formula"]}')
+        lines.append('  works: ' + '; '.join(s.get('strong', [])))
+        lines.append('  weak: ' + '; '.join(s.get('weak', [])))
+    return '\n'.join(lines)
+
+
 def lessons_text(data=None):
     data = data or load_verdicts()
     lines = ['What Krish likes in a title (config/title-verdicts.json):']
@@ -228,6 +254,11 @@ def self_test():
             record_verdict('Amazon locked Muse out. Walmart let it in.', 'rejected', 'flat', 'no, boring', 'card')
             check('gate: a later rejection wins, with his words', any('no, boring' in p for p in gate('Amazon locked Muse out. Walmart let it in.')), True)
             check('lessons list his picked and rejected titles', 'Amazon locked Muse out' in lessons_text(), True)
+            pb = {'formula': 'f', 'everywhere': ['name it'], 'surfaces': {'youtube': {'limit_chars': 10, 'formula': 'yt', 'strong': ['s'], 'weak': ['w']},
+                                                                        'blog': {'limit_chars': 60, 'formula': 'bl'}}}
+            check('playbook: one surface only', ('yt' in playbook_text('youtube', pb), 'bl' in playbook_text('youtube', pb)), (True, False))
+            check('playbook: too long for the surface', bool(too_long('eleven char', 'youtube', pb)), True)
+            check('playbook: fits', too_long('short', 'youtube', pb), None)
             try:
                 record_verdict('X did Y', 'picked', '', '', 'card')
                 check('a verdict without his words is refused', 'no error', 'error')
@@ -245,7 +276,9 @@ def self_test():
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv[:1] == ['lessons']:
-        print(lessons_text())
+        lp = argparse.ArgumentParser(description='Krish\'s lessons, then the hooks research for one surface.')
+        lp.add_argument('--surface', help='youtube, shorts, cover, card, article, linkedin or blog')
+        print(lessons_text() + '\n\n' + playbook_text(lp.parse_args(argv[1:]).surface))
         return 0
     if argv[:1] == ['verdict']:
         vp = argparse.ArgumentParser(description='Record Krish\'s verdict on a title.')
@@ -264,6 +297,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description='The anti-dumb filter on titles (house rule TITLE_EARNS_THE_CLICK).')
     ap.add_argument('titles', nargs='*')
     ap.add_argument('--source', action='append', default=[], help='the piece\'s words (body, scripts), to check names and numbers')
+    ap.add_argument('--surface', help='also check the length against that surface\'s first readable space')
     ap.add_argument('--self-test', action='store_true')
     a = ap.parse_args(argv)
     if a.self_test:
@@ -272,6 +306,8 @@ def main(argv=None):
     bad = 0
     for t in a.titles:
         why = gate(t, source)
+        if a.surface and too_long(t, a.surface):
+            why.append(too_long(t, a.surface))
         print(('REFUSED  ' if why else 'passes   ') + t)
         for w in why:
             print('  - ' + w)
