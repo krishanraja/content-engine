@@ -338,8 +338,19 @@
    "on": "2026-10-14",
    "krish": "We also need to rotate this picture, as I think it's going to be intensely annoying if my Substack page is just full of hundreds of these pictures.",
    "what": "Every cover and thumbnail uses the same circular photo of Krish.",
-   "status": "open",
-   "guards": []
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/pages/brand.py",
+     "contains": "def portrait_for",
+     "how": "each publishing day takes the next photo in PORTRAITS, so no two posts in a row share one"
+    },
+    {
+     "file": "scripts/pages/build.py",
+     "contains": "brand.portrait_for(facts.get('date'))",
+     "how": "every cover and thumbnail with Krish's face uses it"
+    }
+   ]
   }
  ]
 }

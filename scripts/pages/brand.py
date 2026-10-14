@@ -41,7 +41,33 @@ REMOTE = {
     'mark': ('/brand/mark.png', 400),
     'wordmark': ('/brand/wordmark.png', 1400),
     'krish': ('/krish-closer-look.jpg', 160),
+    'krish-pointing': ('/krish-pointing.jpg', 160),
+    'krish-this-guy': ('/krish-this-guy.jpg', 160),
 }
+
+# Krish's photo on covers and thumbnails turns over by publishing day (Monday, Wednesday, Friday), so no two
+# posts in a row share one. Krish, 2026-10-14: "We also need to rotate this picture, as I think it's going to be
+# intensely annoying if my Substack page is just full of hundreds of these pictures", then "Here are two other
+# photos you can use for the next two before you can use the current one again". Friday 16 October takes the
+# first; add a photo to the cover site (makeyourmindup/apps/cover/public) and to REMOTE, then to this order.
+PORTRAITS = ['krish-pointing', 'krish-this-guy', 'krish']
+PORTRAITS_FROM = '2026-10-16'
+PUBLISHING_DAYS = (0, 2, 4)
+
+
+def portrait_for(date):
+    """The photo for a post published on this date (YYYY-MM-DD): the next in PORTRAITS for each publishing day
+    since PORTRAITS_FROM. A post with no date, or before it, keeps the original photo."""
+    import datetime as dt
+    try:
+        day = dt.date.fromisoformat(str(date)[:10])
+    except ValueError:
+        return 'krish'
+    start = dt.date.fromisoformat(PORTRAITS_FROM)
+    if day < start:
+        return 'krish'
+    slots = sum(1 for n in range((day - start).days) if (start + dt.timedelta(days=n)).weekday() in PUBLISHING_DAYS)
+    return PORTRAITS[slots % len(PORTRAITS)]
 REFRESH_DAYS = 7
 
 WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']

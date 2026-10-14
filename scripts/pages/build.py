@@ -922,7 +922,7 @@ def cover_html(facts, base, refresh=False):
                     f'<span class="tag mono" style="background:{colour}">{esc(row["tag"])}</span></div>')
     face = ''
     if c.get('portrait'):
-        source = brand.fetch('krish', refresh) if c['portrait'] is True else resolve(base, c['portrait'])
+        source = brand.fetch(brand.portrait_for(facts.get('date')), refresh) if c['portrait'] is True else resolve(base, c['portrait'])
         face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 600)})"></div>'
     photo = ''
     if background(c, base):
@@ -1195,7 +1195,7 @@ def cover_shape_html(facts, base, shape, refresh=False):
                     f'<span class="tag mono" style="background:{colour}">{esc(row["tag"])}</span></div>')
     face = ''
     if c.get('portrait'):
-        source = brand.fetch('krish', refresh) if c['portrait'] is True else resolve(base, c['portrait'])
+        source = brand.fetch(brand.portrait_for(facts.get('date')), refresh) if c['portrait'] is True else resolve(base, c['portrait'])
         face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 900)})"></div>'
     photo = ''
     if background(c, base):
@@ -1568,7 +1568,7 @@ def thumb_html(facts, base, shape, refresh=False):
         strip.append(f'<img src="{brand.data_uri(resolve(base, item["logo"]), 800)}" alt="{attr(item["name"])}">')
     face = ''
     if c.get('portrait'):
-        source = brand.fetch('krish', refresh) if c['portrait'] is True else resolve(base, c['portrait'])
+        source = brand.fetch(brand.portrait_for(facts.get('date')), refresh) if c['portrait'] is True else resolve(base, c['portrait'])
         face = f'<div class="face" role="img" aria-label="{attr(facts.get("author", brand.AUTHOR))}" style="background-image:url({brand.data_uri(source, 900)})"></div>'
     photo = ''
     if background(c, base):
@@ -1848,6 +1848,15 @@ def page_ready(facts, base, body_override):
 # ---------------------------------------------------------------- self-test
 
 def self_test():
+    """self_test with the sample headline marked as picked: the cover refuses any title Krish has not picked
+    (house rule TITLE_EARNS_THE_CLICK), and the sample is a stand-in, not one of his."""
+    import tempfile
+    import title_check
+    with tempfile.TemporaryDirectory() as tmp, title_check.picked_for_tests(['Warner sued Suno. Now it takes a cut.'], tmp):
+        return _self_test()
+
+
+def _self_test():
     """The rules that need no browser: the thumbnail shapes and their safe
     areas, the YouTube corner, the facts falling back to the cover's, the
     thumbnail page itself (with stand-ins for the fonts and logos), and the
@@ -1935,7 +1944,7 @@ def self_test():
         brand.fetch = lambda name, refresh=False: tmp / 'krish.png'
         try:
             facts = {'subchannel': 'follow.the.money', 'headline': 'Who gets paid?',
-                     'cover': {'headline': ["A fan's AI song.", 'Who gets paid?'], 'portrait': True, 'background': 'bg.png',
+                     'cover': {'headline': ['Warner sued Suno.', 'Now it takes a cut.'], 'portrait': True, 'background': 'bg.png',
                                'rows': [{'logo': 'logo.png', 'name': 'Suno', 'tag': 'Pays', 'colour': 'butter'}]},
                      'thumbs': {'strip': [{'logo': 'logo.png', 'name': 'Udio'}]}}
             for shape in THUMB_SHAPES:
@@ -1943,7 +1952,7 @@ def self_test():
                 page = thumb_html(facts, tmp, shape)
                 check(f'{shape} page: its size', f'content="{spec["w"]}x{spec["h"]}"' in page, True)
                 check(f'{shape} page: laid out for its shape', f'id="card" class="{shape}"' in page, True)
-                check(f'{shape} page: the headline, its last line in colour', 'A fan&#x27;s AI song. <span>Who gets paid?</span>' in page or "A fan's AI song. <span>Who gets paid?</span>" in page, True)
+                check(f'{shape} page: the headline, its last line in colour', 'Warner sued Suno. <span>Now it takes a cut.</span>' in page, True)
                 check(f'{shape} page: Krish\'s face', 'class="face"' in page, True)
                 check(f'{shape} page: the row and the strip carry their names', ('alt="Suno"' in page, 'alt="Udio"' in page), (True, True))
                 check(f'{shape} page: the subchannel, as fine print', '<span class="pill mono" data-fine-print>follow.the.money</span>' in page, True)
@@ -1972,7 +1981,7 @@ def self_test():
                 page = cover_shape_html(dict(facts, date='2026-10-12'), tmp, shape)
                 check(f'{shape} cover page: its size and layout', (f'content="{spec["w"]}x{spec["h"]}"' in page, f'id="safe" class="{spec["layout"]}"' in page), (True, True))
                 check(f'{shape} cover page: the real wordmark, the headline with its last line in colour, the face and the row',
-                      ('alt="makeyourmindup"' in page, "A fan's AI song. <span>Who gets paid?</span>" in page or 'A fan&#x27;s AI song. <span>Who gets paid?</span>' in page,
+                      ('alt="makeyourmindup"' in page, 'Warner sued Suno. <span>Now it takes a cut.</span>' in page,
                        'class="face"' in page, 'alt="Suno"' in page), (True, True, True, True))
                 check(f'{shape} cover page: the label as fine print', 'data-fine-print>follow.the.money · ' in page, True)
                 check(f'{shape} cover page: no long dashes', [ch for ch in page if ch in '\u2013\u2014'], [])

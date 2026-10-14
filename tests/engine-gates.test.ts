@@ -23,12 +23,18 @@ describe('the engine gates', () => {
     ['the publish page', ['scripts/post-pack/publish_manager.py', '--self-test']],
     ['the making record, drive-link and thumbnails', ['scripts/post-pack/making.py', '--self-test']],
     ['one spine per piece', ['scripts/post-pack/spine_check.py', '--self-test']],
+    ['the cover drawer and thumbnails', ['scripts/pages/build.py', '--self-test']],
   ] as const) {
     it(name, () => {
       const r = py([...args])
       expect(r.status, r.stdout + r.stderr).toBe(0)
     }, 240_000)
   }
+
+  it('the photo turns over each publishing day: two new photos, then the original (Krish, 2026-10-14)', () => {
+    const r = py(['-c', 'import sys; sys.path.insert(0, "scripts/pages"); import brand; print(",".join(brand.portrait_for(d) for d in ["2026-10-14", "2026-10-16", "2026-10-19", "2026-10-21", "2026-10-23"]))'])
+    expect(r.stdout.trim(), r.stderr).toBe('krish,krish-pointing,krish-this-guy,krish,krish-pointing')
+  })
 
   it('the publish hook blocks a hand-edited board and lets an engine-built one through', () => {
     const dir = mkdtempSync(join(tmpdir(), 'gate-'))
