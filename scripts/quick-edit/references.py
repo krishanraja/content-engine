@@ -23,10 +23,10 @@ likes about it in the "What I like" sheet beside it. Then:
         Writes study.json and contact.jpg for a session to read and look at.
     python references.py --self-test
 
-A study measures; it does not judge. The judging (what to borrow, in which
-part of the craft) is written by a session into config/style-references.json
-with Krish's own words, as docs/STYLE_REFERENCES.md says. A move becomes a
-house default only when Krish says so.
+A study measures; it does not judge. What a reference teaches goes into the
+style bank in config/style-references.json as modules, one per layer, to be
+mixed into a piece's recipe (docs/STYLE_REFERENCES.md). Krish's existing
+likes and dislikes (the base) always apply and are never overwritten.
 """
 import argparse
 import hashlib
@@ -46,7 +46,6 @@ LIBRARY_REFERENCES = '1 Brand kit (permanent)/Style references'
 FETCH_DEFAULT = REPO / '.cache' / 'references'
 VIDEO_EXTENSIONS = {'.mp4', '.mov', '.webm', '.m4v'}
 SCENE_THRESHOLD = 0.30  # ffmpeg scene score that counts as a cut
-CRAFT = ('narrative', 'editing', 'camerawork', 'zoom', 'breakdown', 'tone', 'production')
 
 
 class ReferenceError(Exception):
@@ -345,21 +344,43 @@ def load_ledger(path=LEDGER):
 
 
 def ledger_problems(data):
+    """The bank's shape: modules on known layers, references pointing at real
+    modules, and every recipe carrying Krish's words and known modules."""
     out = []
+    layers = set(data.get('layers') or [])
+    ids = [m.get('id') for m in data.get('bank', [])]
+    if len(ids) != len(set(ids)):
+        out.append('two modules share an id')
+    known = set(ids)
+    for m in data.get('bank', []):
+        if m.get('layer') not in layers:
+            out.append(f'module {m.get("id")}: layer "{m.get("layer")}" is not one of {", ".join(sorted(layers))}')
+        if m.get('krish_verdict') not in ('untested', 'liked', 'not for us'):
+            out.append(f'module {m.get("id")}: krish_verdict must be untested, liked or not for us')
+        if not (m.get('how') and m.get('from')):
+            out.append(f'module {m.get("id")} needs how and from')
     for i, r in enumerate(data.get('references', [])):
         at = f'reference {i + 1} ({r.get("file") or r.get("url") or "?"})'
         if not (r.get('file') or r.get('url')):
             out.append(f'{at} has neither a file nor a url')
         if r.get('status') not in ('waiting_for_study', 'studied', 'retired'):
             out.append(f'{at} status must be waiting_for_study, studied or retired')
-        for m in r.get('moves', []):
-            if m.get('craft') not in CRAFT:
-                out.append(f'{at}: move craft "{m.get("craft")}" is not one of {", ".join(CRAFT)}')
-            if m.get('house_default') and not m.get('krish_said'):
-                out.append(f'{at}: a move is a house default only with Krish\'s words in krish_said')
-    for i, tr in enumerate(data.get('trials', [])):
-        if not tr.get('piece') or not tr.get('krish_said') or not tr.get('moves'):
-            out.append(f'trial {i + 1} needs a piece, Krish\'s words in krish_said, and its moves')
+        for mid in r.get('modules', []):
+            if mid not in known:
+                out.append(f'{at} names module {mid}, which is not in the bank')
+    for i, rc in enumerate(data.get('recipes', [])):
+        if not rc.get('piece') or not rc.get('krish_said') or not rc.get('mix'):
+            out.append(f'recipe {i + 1} needs a piece, Krish\'s words in krish_said, and its mix')
+        for layer, mids in (rc.get('mix') or {}).items():
+            if layer not in layers:
+                out.append(f'recipe {i + 1}: layer "{layer}" is not a layer')
+            for mid in mids:
+                if mid not in known:
+                    out.append(f'recipe {i + 1}: module {mid} is not in the bank')
+                elif next(m for m in data['bank'] if m['id'] == mid).get('krish_verdict') == 'not for us':
+                    out.append(f'recipe {i + 1}: module {mid} is one Krish marked not for us')
+    if not (data.get('base') or {}).get('sources'):
+        out.append('the base (what Krish already likes and does not) must be named: it is never overwritten')
     return out
 
 
@@ -375,10 +396,14 @@ def self_test():
     p = pace(shots, 10.0)
     t('pace counts cuts a minute', p['cuts_per_minute'] == 18.0 and p['shots_under_1s'] == 1 and p['shots_over_5s'] == 1)
     t('speech summary', speech_summary([{'start': 0, 'end': 30, 'text': 'one two three?'}], 60)['questions_asked'] == 1)
-    t('the ledger refuses a house default without his words',
-      any('house default' in e for e in ledger_problems({'references': [{'file': 'a.mp4', 'status': 'studied', 'moves': [{'craft': 'zoom', 'house_default': True}]}]})))
-    t('the ledger refuses an unknown craft', any('craft' in e for e in ledger_problems({'references': [{'file': 'a.mp4', 'status': 'studied', 'moves': [{'craft': 'vibes'}]}]})))
-    t('a trial needs his words', any('trial 1' in e for e in ledger_problems({'references': [], 'trials': [{'piece': 'x', 'moves': ['a']}]})))
+    bank = {'layers': ['tone', 'close'], 'base': {'sources': ['x']},
+            'bank': [{'id': 'a', 'layer': 'tone', 'how': 'h', 'from': 'f', 'krish_verdict': 'untested'},
+                     {'id': 'b', 'layer': 'close', 'how': 'h', 'from': 'f', 'krish_verdict': 'not for us'}]}
+    t('a sound bank passes', ledger_problems({**bank, 'recipes': [{'piece': 'p', 'krish_said': 'yes', 'mix': {'tone': ['a']}}]}) == [])
+    t('a recipe needs his words', any('recipe 1' in e for e in ledger_problems({**bank, 'recipes': [{'piece': 'p', 'mix': {'tone': ['a']}}]})))
+    t('a recipe cannot use a module he turned down', any('not for us' in e for e in ledger_problems({**bank, 'recipes': [{'piece': 'p', 'krish_said': 'y', 'mix': {'close': ['b']}}]})))
+    t('a module needs a known layer', any('layer' in e for e in ledger_problems({**bank, 'bank': bank['bank'] + [{'id': 'c', 'layer': 'vibes', 'how': 'h', 'from': 'f', 'krish_verdict': 'untested'}]})))
+    t('the base cannot be dropped', any('base' in e for e in ledger_problems({**bank, 'base': {}})))
     t('the committed ledger is valid', ledger_problems(json.loads(LEDGER.read_text())) == [])
     if shutil.which('ffmpeg'):
         with tempfile.TemporaryDirectory() as tmp:

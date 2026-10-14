@@ -1,14 +1,32 @@
 {
- "_about": "The videos Krish wants his own to look and sound like, and what each one teaches, by part of the craft. He drops a video in Drive > makeyourmindup > Video Engine > Inspiration and, if he likes, writes what he likes about it in the 'What I like' sheet in that folder. scripts/quick-edit/references.py measures it; a session writes the moves below (docs/STYLE_REFERENCES.md). Krish, 2026-10-14: 'Can you set up a folder where I can put videos that I really like the production quality of, as well as the narrative style, editing, camerawork, zooming, the way they break down a point, and the tone and style of communication, so that you can learn from them?' A move with house_default true changes how every video is made, and needs Krish's own words in krish_said.",
- "craft": [
-  "narrative",
+ "_about": "A bank of styles to mix, layer by layer, like an alchemist. Krish, 2026-10-14: \"I don't think that these things are just one way of everything being in the future. I think we need to build a bank of different styles that we know can be modularized and used. You already have a tonne of pre-existing knowledge of what I like and, more importantly, what I don't like, which you can lean on and I don't think should be totally overwritten. I would prefer to build a modular bank of styles over time that we can draw inspiration from and mix together at different layers, like an alchemist.\" The base always applies and is never overwritten by a module; a module is mixed into one piece's recipe, and Krish's verdict after the piece says whether it stays in the bank as liked, untested or not for us.",
+ "base": {
+  "about": "What Krish already likes and, more importantly, does not like. Every recipe sits on top of this; where a module disagrees with the base, the base wins unless Krish says otherwise for that piece.",
+  "sources": [
+   "apps/control-plane/api/_houseRules.ts (house rules, his words on each)",
+   "config/golden-examples.json (his own lines, e.g. the personal intro)",
+   "config/title-verdicts.json (titles he picked and rejected, and the lessons)",
+   "config/hook-playbook.json (hooks by surface)",
+   "scripts/post-pack/voice_check.py and story_check.py (sounds like Krish; reading age 12; series line; outro)"
+  ]
+ },
+ "layers": [
+  "opening",
+  "structure",
+  "breakdown",
+  "proof",
+  "tone",
+  "close",
   "editing",
   "camerawork",
-  "zoom",
-  "breakdown",
-  "tone",
+  "graphics",
   "production"
  ],
+ "folder": {
+  "drive_id": "1eqdc1hoMn6CwqkbKlG5mAmKCYNoR8otU",
+  "windows": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Inspiration"
+ },
+ "what_i_like_sheet": "1_XBxxMUcU4CFHB5iJqWc1WtYKmJCftMOe5UlZYSM-_U",
  "references": [
   {
    "file": "igexport-DCHp2RLIxMt.mp4",
@@ -45,45 +63,14 @@
     "loudness_lufs": -14.2,
     "studied": "2026-10-14"
    },
-   "moves": [
-    {
-     "craft": "editing",
-     "move": "Fast cut on every phrase: about 33 cuts a minute, median shot 1.2s, nine shots under a second.",
-     "evidence": "pace",
-     "where_it_applies": "edit (make.py), short cut only"
-    },
-    {
-     "craft": "production",
-     "move": "The money reveal as a big yellow number laid into the scene (EUR 1000 a night, then EUR 71 each on the table).",
-     "evidence": "26.0s and 33.8s on the contact sheet",
-     "where_it_applies": "graphics"
-    },
-    {
-     "craft": "production",
-     "move": "Words placed inside the picture (behind a person, on a wall, on a table) rather than a caption strip.",
-     "evidence": "8.3s, 16.8s, 33.8s",
-     "where_it_applies": "graphics"
-    },
-    {
-     "craft": "narrative",
-     "move": "The payoff promised in the first sentence (\"here is how we got this ... for less than the price of a Travelodge\") and paid with one number.",
-     "evidence": "0.0s and 30.0s",
-     "where_it_applies": "script"
-    },
-    {
-     "craft": "tone",
-     "move": "Close with a send ask, not a follow ask: \"send this to your mates\".",
-     "evidence": "39.0s",
-     "where_it_applies": "script"
-    },
-    {
-     "craft": "camerawork",
-     "move": "Wide-angle, handheld, first-person shots with constant motion (25 push-ins and 27 pull-outs in 42s).",
-     "evidence": "zoom; contact sheet",
-     "where_it_applies": "b-roll"
-    }
-   ],
-   "creator": "an Instagram travel Reel (creator not recorded)"
+   "creator": "an Instagram travel Reel (creator not recorded)",
+   "modules": [
+    "fast-phrase-cuts",
+    "number-in-scene",
+    "words-in-scene",
+    "send-ask",
+    "pov-handheld"
+   ]
   },
   {
    "file": "stamp-duty-is-stupid-ytshorts.savetube.vip.mp4",
@@ -122,76 +109,184 @@
     "studied": "2026-10-14",
     "note": "The zoom count is high because she moves inside a tight frame; the contact sheet shows the framing changes (tight at 26.6s, wider at 167.8s) as punch-ins inside long takes, not cuts."
    },
-   "moves": [
-    {
-     "craft": "narrative",
-     "move": "Open with a disarming concession, then the provocative claim, inside 15 seconds (\"I think tax is a good thing ... one of the stupidest taxes in the entire world\").",
-     "evidence": "0.0 to 14.6s",
-     "where_it_applies": "script"
-    },
-    {
-     "craft": "breakdown",
-     "move": "Explain the system through one ordinary person in one situation (\"imagine somebody who bought their house 30 years ago ... they would love to downsize\"), then widen to what it does to everyone.",
-     "evidence": "51.7 to 125.8s",
-     "where_it_applies": "script"
-    },
-    {
-     "craft": "breakdown",
-     "move": "One reframing metaphor that names the mechanism: \"it stops the housing market being a market and turns it into a queue\".",
-     "evidence": "43.2 to 51.7s",
-     "where_it_applies": "script"
-    },
-    {
-     "craft": "breakdown",
-     "move": "Exactly one hard number as proof, placed after the story, not before it (\"every 1 increase in stamp duty reduces transactions by about 10\").",
-     "evidence": "128.6s",
-     "where_it_applies": "script"
-    },
-    {
-     "craft": "narrative",
-     "move": "Show the better way briefly (\"there is another way\"), then end on a wry observation instead of a call to action (\"the most British thing imaginable\").",
-     "evidence": "137.1 to 166.2s",
-     "where_it_applies": "script"
-    },
-    {
-     "craft": "tone",
-     "move": "Conversational asides (\"by the way\", \"okay\", \"right?\") and self-aware humour at about 211 words a minute: a person thinking out loud, not presenting.",
-     "evidence": "transcript; 211 words a minute",
-     "where_it_applies": "script and record"
-    },
-    {
-     "craft": "editing",
-     "move": "Long talking-head holds (median shot 11.5s, one of 53s) with framing punch-ins inside the take instead of hard cuts; about 3 cuts a minute.",
-     "evidence": "pace; contact sheet",
-     "where_it_applies": "edit (make.py)"
-    },
-    {
-     "craft": "production",
-     "move": "Simple flat illustrated scenes (a house, small figures) only at the moments the story needs a picture, about a fifth of the runtime; small captions, low-middle, no big word pops.",
-     "evidence": "59.4s, 78.1s, 160.1s on the contact sheet",
-     "where_it_applies": "edit and graphics"
-    }
+   "modules": [
+    "concession-open",
+    "one-person-story",
+    "mechanism-image",
+    "one-number-after",
+    "better-way",
+    "wry-close",
+    "thinking-aloud",
+    "long-holds",
+    "flat-illustration"
    ]
   }
  ],
- "folder": {
-  "drive_id": "1eqdc1hoMn6CwqkbKlG5mAmKCYNoR8otU",
-  "windows": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Inspiration"
- },
- "what_i_like_sheet": "1_XBxxMUcU4CFHB5iJqWc1WtYKmJCftMOe5UlZYSM-_U",
- "trials": [
+ "bank": [
+  {
+   "id": "concession-open",
+   "layer": "opening",
+   "name": "Concede, then claim",
+   "how": "Grant the reasonable view first, then make the sharp claim inside 15 seconds.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "concept pieces and arguments against a popular view",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "one-person-story",
+   "layer": "breakdown",
+   "name": "One person, one situation",
+   "how": "Explain the system through one ordinary person in one moment, then widen to everyone.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "any mechanism that is abstract",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "mechanism-image",
+   "layer": "breakdown",
+   "name": "The image that names it",
+   "how": "One everyday metaphor that names how it works (\"a market becomes a queue\").",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "concept pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "one-number-after",
+   "layer": "proof",
+   "name": "One number, after the story",
+   "how": "A single hard number as proof, placed after the story so it lands.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "any piece with one strong figure",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "better-way",
+   "layer": "structure",
+   "name": "The better way, briefly",
+   "how": "Show the alternative in two lines before the close.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "critiques",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "wry-close",
+   "layer": "close",
+   "name": "A wry close",
+   "how": "End on an observation that makes them smile, not a lecture.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "concept pieces; not money-moving news",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "thinking-aloud",
+   "layer": "tone",
+   "name": "Thinking out loud",
+   "how": "Asides (\"by the way\", \"right?\"), self-aware humour, a person thinking, not presenting.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "the long cut",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "long-holds",
+   "layer": "editing",
+   "name": "Long holds with punch-ins",
+   "how": "Few cuts (about 3 a minute); step in inside the take on key lines.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "the long cut",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "flat-illustration",
+   "layer": "graphics",
+   "name": "Simple flat illustrations",
+   "how": "Plain illustrated scenes only where the story needs a picture, about a fifth of the runtime.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "concept pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "fast-phrase-cuts",
+   "layer": "editing",
+   "name": "Cut on every phrase",
+   "how": "About 33 cuts a minute, shots around a second.",
+   "from": "Portugal villa Reel",
+   "fits": "the short cut, energy pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "number-in-scene",
+   "layer": "graphics",
+   "name": "The number in the scene",
+   "how": "The key number as a big graphic laid into the picture, not a caption.",
+   "from": "Portugal villa Reel",
+   "fits": "any piece with one money or scale number",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "words-in-scene",
+   "layer": "graphics",
+   "name": "Words inside the picture",
+   "how": "Key words placed in the scene (on a wall, a table) instead of a caption strip.",
+   "from": "Portugal villa Reel",
+   "fits": "b-roll heavy cuts",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "send-ask",
+   "layer": "close",
+   "name": "Ask for a send",
+   "how": "End with \"send this to someone who ...\" instead of \"tell me in the comments\".",
+   "from": "Portugal villa Reel",
+   "fits": "shareable pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "pov-handheld",
+   "layer": "camerawork",
+   "name": "Wide handheld first-person",
+   "how": "Wide-angle, moving, first-person shots.",
+   "from": "Portugal villa Reel",
+   "fits": "b-roll from a place or an event",
+   "krish_verdict": "untested"
+  }
+ ],
+ "recipes": [
   {
    "piece": "904658db-4df2-4537-a0ed-ebe93e081db7",
-   "piece_name": "Fri 16 Oct mind.the.gap, who picks your AI",
+   "piece_name": "Fri 16 Oct mind.the.gap",
    "krish_said": "Let's trial all of this on the next one. I think the next one's actually perfect for it.",
    "date": "2026-10-14",
-   "moves": [
-    "Fry's script structure: a concession, then the claim, one ordinary person's story, one image that names the mechanism, one number after the story, the better way, a wry close",
-    "Fry's long-cut edit: long holds, punch-ins inside a take instead of cuts, simple illustrations only where the story needs a picture",
-    "The villa Reel's money reveal: the key number as a big graphic in the scene (short cut)",
-    "The send ask at the end instead of 'tell me in the comments'"
-   ],
-   "then": "After the piece, the report sets this cut beside the references; Krish decides which moves become house defaults."
+   "mix": {
+    "opening": [
+     "concession-open"
+    ],
+    "breakdown": [
+     "one-person-story",
+     "mechanism-image"
+    ],
+    "proof": [
+     "one-number-after"
+    ],
+    "structure": [
+     "better-way"
+    ],
+    "tone": [
+     "thinking-aloud"
+    ],
+    "close": [
+     "wry-close",
+     "send-ask"
+    ],
+    "editing": [
+     "long-holds"
+    ],
+    "graphics": [
+     "flat-illustration",
+     "number-in-scene"
+    ]
+   },
+   "keeps_from_base": "the series line, his personal intro beat, reading age 12, the dated prediction, the outro to the article",
+   "status": "waiting on the new outline (spine changed 2026-10-14)"
   }
  ]
 }

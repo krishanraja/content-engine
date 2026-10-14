@@ -59,39 +59,61 @@ When asked to study the style references, or when one is listed as
    - **tone:** person, energy, humour, and how it asks for something.
 4. Read Krish's row in **What I like** (the Drive connector reads the
    sheet). His words decide which crafts matter most.
-5. Write the reference into `config/style-references.json`:
-   - `study`: the measured numbers (pace, zoom, speech, loudness);
-   - `krish_likes`: his words, verbatim;
-   - `moves`: 3 to 8 specific, borrowable moves, each with:
-     - `craft`: one of narrative, editing, camerawork, zoom, breakdown,
-       tone or production;
-     - `move`: what to do, concrete enough to apply ("a push-in of about
-       one twentieth on the sentence that states the finding", not
-       "dynamic camera");
-     - `evidence`: the timestamp or number in the study;
-     - `where_it_applies`: the script, the record, the edit (`make.py`) or
-       the thumbnail.
-   - `status`: set it to `studied`.
-6. `python scripts/quick-edit/references.py --self-test` must still pass,
-   because it checks the ledger.
-7. Tell Krish the three moves you'd adopt first, and ask which to make
-   house defaults. A move with `house_default: true` changes how every
-   video is made. It needs his words in `krish_said`, and the ledger check
-   refuses one without them.
+5. Add what it teaches to the **style bank** in
+   `config/style-references.json`:
+   - one module per technique, each with:
+     - `id`;
+     - `layer`: one of opening, structure, breakdown, proof, tone, close,
+       editing, camerawork, graphics or production;
+     - `name`;
+     - `how`: concrete enough to apply;
+     - `from`: the reference;
+     - `fits`: the kind of piece it suits;
+     - `krish_verdict`: `untested` to start.
+
+     Reuse a module the bank already holds rather than adding a twin.
+   - On the reference itself: list the modules it gave, and copy Krish's
+     row from the sheet into `krish_likes`, word for word.
+6. `python scripts/quick-edit/references.py --self-test` must still pass.
+   It checks the bank.
+
+## The bank, the base and the recipes
+
+Krish, 2026-10-14: "I think we need to build a bank of different styles that
+we know can be modularized and used. You already have a tonne of
+pre-existing knowledge of what I like and, more importantly, what I don't
+like, which you can lean on and I don't think should be totally
+overwritten. I would prefer to build a modular bank of styles over time that
+we can draw inspiration from and mix together at different layers, like an
+alchemist."
+
+- **The base** is what he already likes and dislikes. It always applies,
+  and no module overwrites it. It includes:
+  - the house rules, with his words;
+  - his golden lines, such as the personal intro;
+  - the title verdicts;
+  - the hook playbook;
+  - the voice check and story check.
+- **The bank** grows with every reference. It holds techniques, not
+  templates. No single reference becomes "the way".
+- **A recipe** mixes modules for one piece, layer by layer: for example a
+  Fry opening, a villa number reveal, and his own tone. A recipe needs his
+  words. A module he has marked `not for us` can never be mixed in again.
+- **After the piece**, he gives each module he saw a verdict: `liked`
+  (draw on it more), `untested`, or `not for us`. The bank learns. The base
+  changes only when he changes a house rule.
 
 ## How it changes the videos
 
-- **Scripts** (make-piece, "The Scripts step"): read the moves whose craft
-  is narrative, breakdown or tone, and apply the house defaults to the
-  opening, the order of the breakdown and the sign-off.
-- **The edit** (produce-video, step 4): read the editing, zoom and
-  camerawork moves. House defaults guide the `make.py` plan: where to cut,
-  where to push in, how long a shot holds. Each finished video is compared
-  with its references' pace in the report ("our cuts a minute against
-  theirs").
-- **Recording** (what Krish does): camerawork and production defaults are
-  shown to him before he records, as a short line on the day's publish
-  board ("today: tighter framing, push in on the finding").
+- **Scripts** (make-piece): when a piece has a recipe, apply its opening,
+  structure, breakdown, proof, tone and close modules, on top of the base.
+  Without a recipe, propose one from the bank, using modules he has
+  `liked` first, and ask him before writing.
+- **The edit** (produce-video, step 4): apply the recipe's editing,
+  camerawork and graphics modules. The report sets the cut's pace beside
+  the pace of the references it drew on.
+- **Recording**: the recipe's camerawork and production modules go to him
+  as one line on the day's publish board before he records.
 
 A reference is a teacher, never a template. Never copy its words, music,
 footage or graphics. Take the move and make it his.

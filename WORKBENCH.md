@@ -627,6 +627,17 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14, 23:00 UTC: **Styles are a bank, and Friday has a new spine.**
+  Krish: "build a modular bank of styles ... mix together at different
+  layers, like an alchemist", leaning on what he already likes and dislikes
+  (the base, never overwritten). `config/style-references.json` now holds
+  a bank of 14 modules by layer, the base and per-piece recipes
+  (`docs/STYLE_REFERENCES.md`). Friday's question is now "How much does
+  picking your AI model actually matter?": outline v2 is in
+  `docs/plans/2026-10-09-outline-v2.md` and waits on his approval. After
+  that: rewrite the draft, fact-gate the two new sources (Altman, 10 Aug
+  2025; NBER w34255), then the scripts with the recipe.
+
 - 2026-10-14, 22:40 UTC: **Friday is the style trial.** Krish: "Let's trial
   all of this on the next one." Both references are studied
   (`config/style-references.json`). Trial scripts in Hannah Fry's structure

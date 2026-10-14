@@ -1,5 +1,13 @@
 # Friday 16 Oct: the style trial
 
+**Superseded on 2026-10-14 (22:55 UTC).** Krish sharpened the spine ("How
+much does it really matter, picking your model?"). The new outline is
+`docs/plans/2026-10-09-outline-v2.md` and waits on his approval. The two
+`.trial.md` scripts below were written on the old spine and are not for
+Teleprompter. The style mix is now a recipe in the style bank
+(`config/style-references.json`, recipes), on top of his base, which is
+never overwritten. The edit notes below still hold for the new scripts.
+
 Krish, 2026-10-14: "Let's trial all of this on the next one. I think the
 next one's actually perfect for it." Every move listed under `trials` in
 `config/style-references.json` applies to this piece only. After it, the

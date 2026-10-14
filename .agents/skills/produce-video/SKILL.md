@@ -314,12 +314,12 @@ either.
 
 ## 4. Plan, then render each cut
 
-**First, the style references** (`docs/STYLE_REFERENCES.md`). Read
-`config/style-references.json`. Plan the cut with every editing, zoom and
-camerawork move marked `house_default`, and every move in a `trials` entry for this piece (with its plan, e.g. `docs/plans/<plan>/style-trial.md`). In the report, set this cut's pace
-(cuts a minute, median shot) beside its references' pace. A reference still
-`waiting_for_study` is studied first when there is time, and named in the
-report when there isn't.
+**First, the style recipe** (`docs/STYLE_REFERENCES.md`). If
+`config/style-references.json` has a recipe for this piece, plan the cut
+with its editing, camerawork and graphics modules, always on top of the
+base (Krish's house rules win). Say in the report which modules were used,
+and set this cut's pace (cuts a minute, median shot) beside the pace of the
+references they came from. Then ask Krish for his verdict on each one.
 
 **First, the story intro, the audio treatment and the outro card: required
 before the final render** (house rule `STORY_INTRO_OUTRO`). Krish,
