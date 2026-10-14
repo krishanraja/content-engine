@@ -36,6 +36,9 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | publish a finished post to every channel, from Drive (one Substack video post, then the rest) | `docs/AMPLIFICATION.md` |
 | read a free public signal: prediction-market odds, news velocity, Hacker News, SEC filings | `scripts/signals/README.md` |
 | pin a Call to a prediction market, or read the scoreboard feed | `docs/CONTENT_ENGINE.md`, `/api/content-ideas/[id]/call-market` and `/api/calls` |
+| treat Spotify as a channel: the show, the audio editions, the sizes | `docs/SPOTIFY.md` |
+| learn from the videos Krish likes, or apply a style recipe to a piece | `docs/STYLE_REFERENCES.md` |
+| see every failure Krish has raised and the guard that now stops it | `python3 scripts/check_failures.py` (`config/failures.json`) |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |
 
 The asset library is Krish's instruction of 2026-10-06 ("I want every single

@@ -5,6 +5,11 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-14
+
+- rolled from NOW.md: 2026-09-13 **Production as station harnesses** (PR #69). Ruling (Krish, 2026-09-13): "production machinery must use independently governed station harnesses, not one accumulating Markdown file."
+- reconciled at `4431eed`: NOW.md takes the failure register and its guards, ONE_SPINE and DEEP_CUT, the style bank and reference folder, Spotify as a channel, the dropped Notes and WhatsApp, growth leaving for its own repository, the engine-built two-link board and the silent Download failure; README gains rows for Spotify and the style bank. No document moved and none was archived; the five stamped 2026-09-25 documents were not checked against this window and stay on NOW.md's "Do not trust" list.
+
 ## 2026-10-13
 
 - reconciled at `ce0b205`: NOW.md takes the day's 65 commits (`manual` as Krish's own words, honest sources, the one board closer and its applied migrations, the rejected-lines ledger and voice and AI-scan gates, Wednesday and Friday re-angled, the story intro fit check and `video_card.py`). The three unapplied migrations are named as waiting on Krish. No bullet was old enough to roll and no document moved. STATE, SYSTEM_MAP, GLOSSARY, NORTH_STAR, STUDIO, CONTENT_ENGINE and README keep their stamps, because their bodies were not checked against this window; NOW.md names them under Do not trust.
