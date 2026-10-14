@@ -627,6 +627,15 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14, 22:10 UTC: **Style references.** Krish drops videos he wants
+  his to be like in Drive > Video Engine > Inspiration, with what he likes in
+  the "What I like" sheet there. Home computers send them to the library on
+  every pass; `scripts/quick-edit/references.py study` measures cuts, zooms,
+  words and loudness; a session writes the moves into
+  `config/style-references.json` (`docs/STYLE_REFERENCES.md`); house
+  defaults need his words. produce-video and make-piece read it. The first
+  reference (igexport-DCHp2RLIxMt.mp4) waits for study.
+
 - 2026-10-14, 23:45 UTC: **Friday is approved and parked; read `docs/plans/2026-10-14-handoff.md`.**
   Krish approved Friday's trimmed short (194 words, on Teleprompter) and
   will look again on 15 Oct; then the title rounds, then he records.

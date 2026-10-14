@@ -1,0 +1,29 @@
+{
+ "_about": "The videos Krish wants his own to look and sound like, and what each one teaches, by part of the craft. He drops a video in Drive > makeyourmindup > Video Engine > Inspiration and, if he likes, writes what he likes about it in the 'What I like' sheet in that folder. scripts/quick-edit/references.py measures it; a session writes the moves below (docs/STYLE_REFERENCES.md). Krish, 2026-10-14: 'Can you set up a folder where I can put videos that I really like the production quality of, as well as the narrative style, editing, camerawork, zooming, the way they break down a point, and the tone and style of communication, so that you can learn from them?' A move with house_default true changes how every video is made, and needs Krish's own words in krish_said.",
+ "craft": [
+  "narrative",
+  "editing",
+  "camerawork",
+  "zoom",
+  "breakdown",
+  "tone",
+  "production"
+ ],
+ "references": [
+  {
+   "file": "igexport-DCHp2RLIxMt.mp4",
+   "drive_id": "1Kmxoapg3dOH5vcPuLWAZFG8aq8TYbu-y",
+   "sha256": "acd429d8fd6edc62e2bd18b9b506008149622799fcc6035d4393b2451f17402f",
+   "added": "2026-10-04",
+   "krish_likes": "",
+   "status": "waiting_for_study",
+   "study": null,
+   "moves": []
+  }
+ ],
+ "folder": {
+  "drive_id": "1eqdc1hoMn6CwqkbKlG5mAmKCYNoR8otU",
+  "windows": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Inspiration"
+ },
+ "what_i_like_sheet": "1_XBxxMUcU4CFHB5iJqWc1WtYKmJCftMOe5UlZYSM-_U"
+}

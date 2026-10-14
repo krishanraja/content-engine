@@ -314,6 +314,13 @@ either.
 
 ## 4. Plan, then render each cut
 
+**First, the style references** (`docs/STYLE_REFERENCES.md`). Read
+`config/style-references.json`. Plan the cut with every editing, zoom and
+camerawork move marked `house_default`. In the report, set this cut's pace
+(cuts a minute, median shot) beside its references' pace. A reference still
+`waiting_for_study` is studied first when there is time, and named in the
+report when there isn't.
+
 **First, the story intro, the audio treatment and the outro card: required
 before the final render** (house rule `STORY_INTRO_OUTRO`). Krish,
 2026-10-12: "when the videos come back bear in mind that I want a proper

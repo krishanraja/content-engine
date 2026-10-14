@@ -23,6 +23,7 @@ describe('the engine gates', () => {
     ['the publish page', ['scripts/post-pack/publish_manager.py', '--self-test']],
     ['the making record, drive-link and thumbnails', ['scripts/post-pack/making.py', '--self-test']],
     ['one spine per piece', ['scripts/post-pack/spine_check.py', '--self-test']],
+    ['the style references: cuts, zooms and the ledger', ['scripts/quick-edit/references.py', '--self-test']],
     ['the cover drawer and thumbnails', ['scripts/pages/build.py', '--self-test']],
   ] as const) {
     it(name, () => {

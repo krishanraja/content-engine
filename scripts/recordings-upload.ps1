@@ -573,6 +573,11 @@ function Invoke-Pass {
     # 2026-10-12: "the audio is literally in the drive"). A file the library
     # holds already is left alone; a problem here never stops a pass.
     try { Publish-Music } catch { Write-Log "the music was not published this pass: $($_.Exception.Message)" }
+    # The style references Krish drops in Video Engine > Inspiration go to
+    # the library too, so any session can study them (docs/STYLE_REFERENCES.md;
+    # Krish, 2026-10-14: "a folder where I can put videos that I really like
+    # ... so that you can learn from them"). Never a reason to fail a pass.
+    try { Publish-References } catch { Write-Log "the style references were not published this pass: $($_.Exception.Message)" }
   }
   return ($sent -and $placed)
 }
@@ -583,6 +588,14 @@ function Publish-Music {
   $run = Invoke-StudioPython @($music, 'publish')
   if ($run.code -ne 0) { Write-Log "music publish: $($run.err) $($run.out)"; return }
   if ($run.out -match 'sent\s+1 Brand kit' -or $run.out -match '[1-9]\d* sent') { Write-Log "music published: $($run.out -replace "`n", ' | ')" }
+}
+
+function Publish-References {
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
+  $references = Join-Path $RepoRoot 'scripts\quick-edit\references.py'
+  $run = Invoke-StudioPython @($references, 'publish')
+  if ($run.code -ne 0) { Write-Log "style references publish: $($run.err) $($run.out)"; return }
+  if ($run.out -match '"sent":\s*[1-9]') { Write-Log "style references published: $($run.out -replace "`n", ' | ')" }
 }
 
 function Update-Source {
