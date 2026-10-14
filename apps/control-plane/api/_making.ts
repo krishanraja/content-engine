@@ -44,8 +44,11 @@ export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Par
  *  gate on every script; Krish, 2026-10-12: "Every single script should be
  *  understandable by a 12-year-old"). `script_sha256` is the hash of the
  *  words they heard: a read-back holds only while the cut's words are the
- *  same. Written by making.py read-back; only a pass is recorded. */
-export interface MakingReadBack { script_sha256: string; at: string; by: string; readers: string[]; found: 'nothing lost' }
+ *  same. Written by making.py read-back; only a pass is recorded. Krish's
+ *  own sign-off stands in for the readers when he gives it in words (Krish,
+ *  2026-10-14: "Fix it in the engine"): found 'approved by Krish', with his
+ *  words in `krish_words` (starting "Krish"), and any readers who heard it. */
+export interface MakingReadBack { script_sha256: string; at: string; by: string; readers: string[]; found: 'nothing lost' | 'approved by Krish'; krish_words?: string }
 export interface MakingLink { url: string; at: string }
 export interface MakingPack { folder: string; packed_at: string; files: number; sent_at?: string; headline?: string }
 /** A recording's path is the engine's copy, `recordings/<sha256>.<ext>`
@@ -193,15 +196,18 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     }
     if (key === 'script_check' && v.read_back !== undefined) {
       const entries = isObj(v.read_back) ? Object.entries(v.read_back) : null
+      const krish = (r: Record<string, unknown>) => r.found === 'approved by Krish' && typeof r.krish_words === 'string'
+        && str(r.krish_words, 600) === r.krish_words && /^krish/i.test(r.krish_words)
       const ok = (c: string, r: unknown) => (MAKING_CUTS as readonly string[]).includes(c) && isObj(r) && typeof r.script_sha256 === 'string' && SCRIPT_SHA256.test(r.script_sha256)
-        && r.found === 'nothing lost' && Array.isArray(r.readers) && r.readers.length >= 2 && r.readers.length <= 6
+        && (r.found === 'nothing lost' || krish(r)) && Array.isArray(r.readers) && r.readers.length >= (r.found === 'nothing lost' ? 2 : 0) && r.readers.length <= 6
         && r.readers.every(n => typeof n === 'string' && str(n, 200) === n && !/[\r\n\t]/.test(n))
       if (!entries || !entries.every(([c, r]) => ok(c, r))) {
-        problems.push('script_check.read_back is each cut\'s read-back: {long, short}, each {script_sha256, at, by, readers: two to six names, found: "nothing lost"}')
+        problems.push('script_check.read_back is each cut\'s read-back: {long, short}, each {script_sha256, at, by, readers: two to six names, found: "nothing lost"}, or Krish\'s sign-off {script_sha256, at, by, readers: up to six, found: "approved by Krish", krish_words: his words, starting "Krish"}')
         continue
       }
       check.read_back = Object.fromEntries(entries.map(([c, r]: [string, any]) => [c, {
-        script_sha256: r.script_sha256, at: when(r.at, now), by: str(r.by, 60) || str(body.by, 60) || 'Claude Code', readers: [...r.readers], found: 'nothing lost' as const,
+        script_sha256: r.script_sha256, at: when(r.at, now), by: str(r.by, 60) || str(body.by, 60) || 'Claude Code', readers: [...r.readers],
+        ...(r.found === 'approved by Krish' ? { found: 'approved by Krish' as const, krish_words: r.krish_words } : { found: 'nothing lost' as const }),
       }])) as Partial<Record<MakingCut, MakingReadBack>>
     }
     patch[key] = check

@@ -507,6 +507,20 @@ describe('the read-back on the script check', () => {
       expect(out.body.problems[0]).toMatch(/^script_check\.read_back is each cut's read-back/)
     }
   })
+  // Krish's own sign-off (Krish, 2026-10-14: "Fix it in the engine"), kept as his, never as "nothing lost".
+  const signOff = (sha: string, extra: Row = {}) => ({ script_sha256: sha, at: '2026-10-14T12:00:00Z', by: 'Claude Code', readers: [], found: 'approved by Krish', krish_words: 'Krish, 2026-10-14: all looks good', ...extra })
+  it('Krish\'s sign-off is kept with his words, with or without readers', async () => {
+    const out = await call('POST', { script_check: { passed: true, problems: [], cuts: ['long', 'short'], hashes: { long: SHA('a'), short: SHA('b') }, read_back: { long: signOff(SHA('a')), short: signOff(SHA('b'), { readers: ['reader A: nothing lost'] }) } } })
+    expect(out.status).toBe(200)
+    expect(out.body.making.script_check.read_back).toEqual({ long: signOff(SHA('a')), short: signOff(SHA('b'), { readers: ['reader A: nothing lost'] }) })
+  })
+  it('a sign-off without his words, or words that are not his, is refused', async () => {
+    for (const read_back of [{ long: signOff(SHA('a'), { krish_words: undefined }) }, { long: signOff(SHA('a'), { krish_words: 'all looks good' }) }]) {
+      const out = await call('POST', { script_check: { passed: true, problems: [], hashes: { long: SHA('a') }, read_back } })
+      expect(out.status).toBe(400)
+      expect(out.body.problems[0]).toMatch(/^script_check\.read_back is each cut's read-back/)
+    }
+  })
 })
 
 describe('the GET carries the piece\'s series', () => {

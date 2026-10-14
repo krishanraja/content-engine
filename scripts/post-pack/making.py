@@ -20,6 +20,7 @@ that everything is fresh and synchronised in real time".
     python making.py PIECE_ID posted substack https://...    # after Krish posted it
     python making.py PIECE_ID session https://claude.ai/code/session_...
     python making.py PIECE_ID read-back long --readers "reader A, ..." "reader B, ..." [--at TIME]
+    python making.py PIECE_ID read-back long --krish-words "Krish, DATE: his words" [--readers ...]
     python making.py PIECE_ID teleprompter long --folder ID --script ID --sha SHA256 [--title TITLE]
                      [--folder-name NAME] [--sent-at TIME]
     python making.py PIECE_ID teleprompter long [--folder ID] --error "what Teleprompter said"   # a send that failed
@@ -75,6 +76,13 @@ of the words they heard (script_check.read_back). It refuses a cut whose
 check has not passed with its hash. `scripts` keeps a cut's read-back while
 its words are the same; new words need a new one, and teleprompter_send.py
 sends no cut without it.
+
+Krish's own sign-off stands in for the readers when he gives it in words
+(Krish, 2026-10-14, after ten rounds in which one reader prompt never once
+said nothing lost it: "Fix it in the engine"). `read-back CUT --krish-words
+"Krish, DATE: his words"` records it as what it is: found "approved by
+Krish", with his words, never as the readers' "nothing lost". Readers who
+did hear it may be listed beside it.
 
 Teleprompter (Krish, 2026-10-12: "Also note that Descript is permanently
 gone, teleprompter.com is permanently in, connected via MCP here").
@@ -557,7 +565,8 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None):
     return {'script_check': check}
 
 
-READ_BACK_FOUND = 'nothing lost'  # the only read-back recorded: one that found something means the words change first
+READ_BACK_FOUND = 'nothing lost'  # the readers' pass: one that found something means the words change first
+READ_BACK_KRISH = 'approved by Krish'  # Krish read the words himself and signed them off in his own words (krish_words)
 
 
 def read_back_of(record, cut):
@@ -565,15 +574,20 @@ def read_back_of(record, cut):
     check = record.get('script_check') if isinstance(record, dict) and isinstance(record.get('script_check'), dict) else {}
     entry = (check.get('read_back') or {}).get(cut) if isinstance(check.get('read_back'), dict) else None
     current = current_hashes(record).get(cut)
-    if isinstance(entry, dict) and current and entry.get('script_sha256') == current and entry.get('found') == READ_BACK_FOUND:
+    if not (isinstance(entry, dict) and current and entry.get('script_sha256') == current):
+        return None
+    if entry.get('found') == READ_BACK_FOUND or (entry.get('found') == READ_BACK_KRISH and krish_words(entry.get('krish_words'))):
         return entry
     return None
 
 
-def read_back_patch(record, cut, readers, at=None, by=None):
+def read_back_patch(record, cut, readers, at=None, by=None, krish=None):
     """The script check with one cut's read-back added: the readers (two or
     more, one line each), when, "nothing lost", and the hash of the words
-    they heard, which must be the cut's current, passed words."""
+    they heard, which must be the cut's current, passed words. With `krish`,
+    Krish's own words signing the cut off ("Krish, DATE: ..."), it is his
+    approval instead: found "approved by Krish", his words kept, and any
+    readers who heard it listed beside them."""
     cut = _cut(cut)
     check = record.get('script_check') if isinstance(record, dict) and isinstance(record.get('script_check'), dict) else None
     current = current_hashes(record).get(cut)
@@ -581,6 +595,16 @@ def read_back_patch(record, cut, readers, at=None, by=None):
         raise MakingError(f'the {cut} script has not passed its check with its words\' hash on the record: run making.py PIECE scripts '
                           'long.md short.md first, then read it back')
     names = [' '.join(str(r).split()) for r in (readers or []) if str(r).strip()]
+    if krish is not None:
+        if not krish_words(krish) or len(krish.strip()) > 600:
+            raise MakingError('--krish-words are Krish\'s own words signing the cut off, as he said them, starting "Krish" and the date '
+                              '(for example "Krish, 2026-10-14: all looks good"), at most 600 characters')
+        if len(names) > 6 or any(len(n) > 200 for n in names):
+            raise MakingError('--readers beside Krish\'s words: at most six, one line of at most 200 characters each')
+        read = dict(check.get('read_back') or {}) if isinstance(check.get('read_back'), dict) else {}
+        read[cut] = {'script_sha256': current, 'at': _time(at, '--at') if at else now(), 'by': who(by), 'readers': names,
+                     'found': READ_BACK_KRISH, 'krish_words': ' '.join(krish.split())}
+        return {'script_check': {**check, 'read_back': read}}
     if len(names) < 2 or any(len(n) > 200 for n in names):
         raise MakingError('--readers names the two fresh readers who heard it (or more), one line of at most 200 characters each')
     read = dict(check.get('read_back') or {}) if isinstance(check.get('read_back'), dict) else {}
@@ -597,7 +621,10 @@ def read_back_lines(record):
             continue
         entry = read_back_of(record, cut)
         if entry:
-            lines.append(f"Read back, {CUT_NAME[cut]} cut: nothing lost ({len(entry.get('readers') or [])} readers, {entry.get('at')})")
+            if entry.get('found') == READ_BACK_KRISH:
+                lines.append(f"Read back, {CUT_NAME[cut]} cut: approved by Krish ({entry.get('krish_words')}, {entry.get('at')})")
+            else:
+                lines.append(f"Read back, {CUT_NAME[cut]} cut: nothing lost ({len(entry.get('readers') or [])} readers, {entry.get('at')})")
         else:
             lines.append(f'Read back, {CUT_NAME[cut]} cut: not yet for these words; two fresh readers hear it as a 12-year-old '
                          '(make-piece, "The Scripts step"), then making.py PIECE read-back ' + cut)
@@ -1418,6 +1445,22 @@ def self_test():
         check('scripts: a read-back is kept for words that did not change, and dropped for words that did', sorted(rechecked.get('read_back') or {}), ['long'])
     code, err = run([pid, 'read-back', 'long', '--readers', 'only one'], lambda m, path, b: (200, json.dumps({'ok': True, 'making': passed, 'steps': []})))
     check('read-back: the command line refuses one reader', (code, 'two fresh readers' in err), (1, True))
+    # Krish's own sign-off: recorded as his approval, with his words, never as the readers' "nothing lost".
+    signed = read_back_patch(passed, 'short', ['reader A, round 10: nothing lost'], '2026-10-14T12:00:00Z', 'Claude Code',
+                             krish='Krish, 2026-10-14: all looks good')['script_check']['read_back']['short']
+    check('read-back: Krish\'s words record his approval, with his words and the readers who heard it',
+          signed, {'script_sha256': 'b' * 64, 'at': '2026-10-14T12:00:00Z', 'by': 'Claude Code', 'readers': ['reader A, round 10: nothing lost'],
+                   'found': 'approved by Krish', 'krish_words': 'Krish, 2026-10-14: all looks good'})
+    signed_held = {'script_check': {**passed['script_check'], 'read_back': {'short': signed}}}
+    check('read-back: his approval holds for the words he read, and shows as his', (bool(read_back_of(signed_held, 'short')), read_back_lines(signed_held)[1]),
+          (True, 'Read back, 90-second cut: approved by Krish (Krish, 2026-10-14: all looks good, 2026-10-14T12:00:00Z)'))
+    check('read-back: an approval without his words does not hold',
+          read_back_of({'script_check': {**passed['script_check'], 'read_back': {'short': {**signed, 'krish_words': 'all looks good'}}}}, 'short'), None)
+    try:
+        read_back_patch(passed, 'short', [], krish='all looks good')
+        check('read-back: words that are not his are refused', 'no error', 'error')
+    except MakingError as e:
+        check('read-back: words that are not his are refused', 'starting "Krish"' in str(e), True)
 
     # Teleprompter: where each cut's script is, in Krish's teleprompter.com account (config/teleprompter.json).
     folder, script = '86B6F74B-2F8A-4477-AE44-8DA1119D1CD9', '45F414D8-31E1-4B2D-BBE4-44EBA042B346'
@@ -1520,7 +1563,7 @@ def main(argv=None, call=None):
     ap.add_argument('--thumb-file', metavar='LOCAL_PATH', help='with video and --thumb: the drawn thumbnail on this machine, which must be there')
     ap.add_argument('--thumb-url', metavar='URL', help="with video and --thumb: the thumbnail's https link")
     ap.add_argument('--music', metavar='TRACK_ID', help='with video: the licensed track behind it (config/music-library.json)')
-    ap.add_argument('--krish-words', metavar='WORDS', help='with recorded: Krish\'s own words, starting "Krish" and the date, letting a take '
+    ap.add_argument('--krish-words', metavar='WORDS', help='with read-back: Krish\'s own words signing the cut off. With recorded: Krish\'s own words, starting "Krish" and the date, letting a take '
                     'of older words count as a take of the current script; recorded on the take')
     ap.add_argument('--readers', nargs='+', metavar='READER', help='with read-back: the two fresh readers who heard the cut, one line each')
     ap.add_argument('--at', metavar='TIME', help='with read-back: when they read it (default now)')
@@ -1597,7 +1640,7 @@ def main(argv=None, call=None):
         elif a.what == 'read-back':
             if len(a.args) != 1:
                 ap.error('give the cut: read-back long --readers "reader A, ..." "reader B, ..."')
-            patch = read_back_patch(record_of(a.piece_id, call), a.args[0], a.readers, a.at, by)
+            patch = read_back_patch(record_of(a.piece_id, call), a.args[0], a.readers, a.at, by, krish=a.krish_words)
         elif a.what == 'teleprompter':
             if len(a.args) != 1:
                 ap.error('give the cut: teleprompter long --folder ID --script ID --sha SHA256, or --error TEXT')

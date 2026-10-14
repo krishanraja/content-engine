@@ -168,7 +168,12 @@ rewritten and checked again from the top.
    either lists is rewritten in plainer words, then steps 3 and 4 again with
    two new readers. A script the engine wrote carries its own two readers'
    answers (`read_back` on the script), but the words you will send are read
-   back here, whatever the engine said.
+   back here, whatever the engine said. When rounds of readers keep finding
+   smaller things while every retelling matches, show Krish the words and
+   ask him. His sign-off in words is recorded as his, never as the readers'
+   "nothing lost": `making.py <uuid> read-back CUT --krish-words "Krish,
+   DATE: his words"`, with any readers who did pass it in `--readers`
+   (Krish, 2026-10-14: "Fix it in the engine").
 5. **Record the check, then the read-back.** `python3
    scripts/post-pack/making.py <uuid> scripts long.md short.md`, the long cut
    first. It runs `story_check.py` on each with the piece's series (the
