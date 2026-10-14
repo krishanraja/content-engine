@@ -599,6 +599,26 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14, 11:15 UTC: **Wednesday re-pivoted to three kinds of AI and
+  re-recorded.** Krish: "we are comparing apples and oranges"; names chosen:
+  Chatbots / Work agents / Ready-made assistants. Outline approved
+  ("approved", docs/plans/2026-10-14-outline.md). Prediction A, sharpened
+  after the evidence check (DoorDash already in talks with Meta): by end 2027
+  a big airline signs a deal so only Muse and Siri sell its tickets. Scripts
+  went through ten reader rounds; reader B never said "nothing", so Krish
+  read them and signed off ("all looks good"). **Engine fixes:** making.py
+  `read-back CUT --krish-words` records his sign-off as "approved by Krish",
+  never as "nothing lost" (API validator, tests, make-piece skill);
+  produce_day.py reads `edits.json` beside post.json for fixes he calls out
+  (short take: restart at 1:11-1:15, {"restart_near": "1:15"}); video_card.py
+  has `group` bands and a `columns` kind. Cards: three-kinds, score-side,
+  scorecard, score-private, shops (Walmart spark from Brandfetch, Amazon,
+  WhatsApp), prediction (Meta + Apple only). Pack rebuilt and sent (subject
+  kept "Muse scored against its rivals" so the library folder stays). Run
+  38553123315 rendering; review every frame of both review sheets before
+  calling it good. Article rewritten: fact gate passed (30 claims), voice
+  5.0, AI scan passes. Board not yet updated.
+
 - 2026-10-14: **Next Wednesday (21 Oct) cued.** Krish: "Next week's under the
   hood should include and expand on today's data, but be a follow-up which
   focuses on: Adding Grokbot and any other emerging personal assistant agents,
