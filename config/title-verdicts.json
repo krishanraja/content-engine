@@ -74,6 +74,14 @@
  ],
  "verdicts": [
   {
+   "title": "Make Your Mind Up",
+   "surface": "spotify-show",
+   "verdict": "picked",
+   "why": "the show takes the publication's own name: one name across Substack, YouTube and Spotify, so listeners who know it find it",
+   "krish": "Spotify is just S1 (S1 was \"Make Your Mind Up\")",
+   "on": "2026-10-14"
+  },
+  {
    "title": "I tried Meta's new AI. Amazon's already blocked it.",
    "surface": "article",
    "verdict": "rejected",

@@ -634,11 +634,12 @@ bring takes back, was retired on 12 October.
   be honest, right now"): no Notes or WhatsApp steps on the board, packs or
   growth jobs. Spotify is a channel (`docs/SPOTIFY.md`): a board step after
   LinkedIn, audio scripts for all four published pieces and a trailer in
-  `docs/plans/spotify/`. Waiting on Krish: the show name (options in chat),
-  creating the show, the music licence check. Growth runs
-  (`docs/GROWTH.md`): two routines live (daily pack 06:45, Sunday report
-  07:14 New York); his setup steps are in "Setting it up". Both board links
-  republished from one build.
+  `docs/plans/spotify/`. Show name picked: "Make Your Mind Up" (Krish: "Spotify
+  is just S1"); show art drawn by `docs/plans/spotify/show-art.py`, waiting on
+  his look. Waiting on Krish: creating the show, the music licence check.
+  Growth is not this repository's: it is krishanraja/growth-makeyourmindup
+  (Codex), reporting into Control Center > Growth > Packs. The two Claude
+  growth routines are paused. Both board links republished from one build.
 
 - 2026-10-14, 23:00 UTC: **Friday is next; read `docs/plans/2026-10-14-handoff.md`.**
   Wednesday is live as it is. One spine per piece is built (house rule

@@ -55,8 +55,12 @@ it.
 
 ## Waiting on Krish
 
-1. **The show's name** (a title, so Krish picks it from options, house rule
-   TITLE_EARNS_THE_CLICK). The show art is drawn only after he picks.
+1. **The show's name: picked.** "Make Your Mind Up" (Krish, 2026-10-14:
+   "Spotify is just S1"), recorded in `config/title-verdicts.json` (surface
+   `spotify-show`). Show art at `docs/plans/spotify/show-art.jpg` (3000x3000
+   sRGB JPEG, under 1 MB), drawn by `docs/plans/spotify/show-art.py` in the
+   house look; the JPEG is git-ignored, so the script redraws it. Waiting on
+   Krish's look at the art before it goes up.
 2. **Create the show** in Spotify for Creators (creators.spotify.com), signed
    in as himself. Only the account owner can do this.
 3. **Confirm the music bed's licence covers Spotify** before the first upload.
