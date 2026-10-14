@@ -1,25 +1,17 @@
 I've been looking at what's really inside the AI everyone's selling us. I'm Krish.
 
-So I've been having a little play around with Muse, Meta's new personal assistant. It's an important evolution in how AI is going to come into our personal lives. So I wanted to break it down for you. I scored Muse against ChatGPT, Google's Gemini, Claude and Siri on six things. How does it really stack up?
+So I've been having a little play around with Muse, Meta's new AI assistant. Meta owns Instagram and WhatsApp. Everyone keeps comparing Muse with ChatGPT and Claude. But is that even a fair fight?
 
-First, can it actually do the job for you? Muse opens websites, fills in forms and books things. It'll even negotiate for you. ChatGPT is close behind. Siri mostly works inside the apps on your phone. Muse gets a nine.
+There are now three kinds of AI. First, chatbots. You ask, it answers. That's ChatGPT or Claude in your browser. Second, work agents. These are AI helpers for your job. You hook them up to your email and documents at work, give them a job, and leave them running. Claude Cowork is one. Third, the new kid: ready-made assistants. They come ready inside the phone and apps you already have, and they run your errands. That's Muse, by Meta, and Siri, by Apple. So Muse against ChatGPT isn't a fair fight.
 
-Then price. Muse is free for most things. Gemini and Claude cost about twenty dollars a month. ChatGPT's assistant, called dots, starts at a hundred dollars a month, and it isn't even out in the UK yet. Muse gets a ten.
+Each company builds the kind that makes it money. Almost all of Meta's money comes from ads. The more people use its apps, the more ads it sells. Apple wants a great Siri, so you buy the next iPhone. That's why both want everyone using their assistant. OpenAI, which makes ChatGPT, and Anthropic, which makes Claude, charge office workers a monthly fee. So they build helpers for work.
 
-Then reach. Meta also owns Instagram and WhatsApp, apps you already open every day. Gemini works with your Gmail. Claude is a separate app. Another ten for Muse.
+So I scored Muse against its real rival, Siri. Six things, like price and privacy, out of ten each. Muse and Siri tie, on 43 out of 60. But for opposite reasons: Muse does more jobs for you, and Siri keeps your stuff private. The work agents score lower, mostly because they cost more. Muse is free. OpenAI's work agent costs a hundred dollars a month.
 
-Do these assistants ask before they spend your money or send your emails? Claude is the most careful. Nothing goes out until you say so. Muse checks too, and gets an eight.
+Here's where Muse falls behind Siri. Muse keeps your emails and passwords on Meta's computers. And Meta says it can still look at them if it needs to. Siri keeps most of your stuff on your phone. And Apple says even Apple can't read what Siri sends to its computers.
 
-So far, Muse is miles ahead. Now for the two things you can't see.
+Muse can even shop for you. Say you ask it for trainers. Each shop decides whether to let Muse buy on its website. Walmart, the giant American supermarket, lets ChatGPT and Muse buy there. Amazon went the other way, and blocked Muse from buying on its site. I think Amazon wants you in its own app. A local restaurant can't set up bookings with every AI company. So I think it'll take bookings on WhatsApp, where its customers already message it. Meta sells businesses an AI helper there that books appointments.
 
-Who can read your stuff? Muse keeps your emails and logins on Meta's servers. Meta says it can still get to your data if it needs to, to run the service. A locked version is coming later this year, Meta says. Until then, Muse gets a three. Siri keeps your stuff on your phone, or in a cloud Apple says even Apple can't see into. Siri gets a nine.
+My prediction. By the end of 2027, I bet a big airline signs a deal with Meta and Apple. Only Muse and Siri can sell its tickets. Ask ChatGPT for that flight, and it won't show up. So the assistant you pick decides who you can buy from.
 
-And whose side is it on? Meta makes almost all its money from ads. Google is an ads business too. Claude and ChatGPT charge you a subscription. Apple sells you the phone. Muse gets another three.
-
-I think that last score matters most. Shops have paid Google and Instagram for years, so you'd see them. But when an assistant shops for you, you don't see a list. You get one answer. So shops will stop paying to be seen, and start paying to be picked. Meta says your Muse chats stay out of its ads. But one day, I think the restaurant Muse picks for you will have paid to be picked.
-
-Add it all up, and Muse ties with Siri. Muse does the most, but Meta can see the most. Siri does the least, but keeps your stuff private.
-
-My prediction. By the end of 2027, businesses will be paying to be the one your AI assistant picks. And most people won't know it's happening.
-
-The full article, with the scorecard and every source, is free at makeyourmindup.ai. Tell me in the comments: would you let an ad company choose for you? Make your mind up.
+The full article, with the scorecard, is free at makeyourmindup.ai. Tell me in the comments: which kind of AI do you actually use? Make your mind up.

@@ -1,15 +1,13 @@
 I've been looking at what's really inside the AI everyone's selling us. I'm Krish.
 
-So I've been having a little play around with Muse, Meta's new personal assistant. It's an important evolution in how AI is going to come into our personal lives. So I wanted to break it down for you. I scored it against ChatGPT, Gemini, Claude and Siri on six things. How did Muse do?
+So I've been having a little play around with Muse, Meta's new AI assistant. People compare Muse with ChatGPT. Is that a fair fight?
 
-On doing the job, price and reach, Muse wins. It does errands for you, it's free, and Meta owns Instagram and WhatsApp.
+There are now three kinds of AI. Chatbots, like ChatGPT, answer your questions. Work agents do jobs in your work email and documents. And the new kid, ready-made assistants, come ready inside the phone and apps you already have. That's Muse and Siri. So Muse and ChatGPT aren't a fair fight.
 
-But it loses on privacy, and on whose side it's on. Meta says it can still get to your data if it needs to. And Meta makes almost all its money from ads.
+I scored Muse against Siri on six things. They tie, on 43 points out of 60. Muse does more jobs for you. Siri keeps your stuff private.
 
-That last one matters most. When an assistant shops for you, you don't see a list. You get one answer. I think shops will stop paying to be seen, and pay to be picked.
+Muse can shop for you. Say you want trainers. Each shop decides whether to let Muse buy on its website. America's Walmart lets it in. Amazon blocked it. I think Amazon wants you in its own app.
 
-Add it up, and Muse ties with Siri. Muse does the most. Siri keeps your stuff private.
+By the end of 2027, I bet a big airline signs a deal with Meta and Apple. Only Muse and Siri can sell its tickets. Ask ChatGPT for that flight, and it won't show up. So the assistant you pick decides who you can buy from.
 
-My prediction. By the end of 2027, businesses will pay to be the one your AI assistant picks. Most people won't know.
-
-The full article, with the scorecard, is free at makeyourmindup.ai. Tell me in the comments: would you let an ad company choose for you? Make your mind up.
+The full article is free at makeyourmindup.ai. Tell me in the comments: which kind of AI do you actually use? Make your mind up.
