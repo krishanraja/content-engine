@@ -998,6 +998,18 @@ def expand_pages(wins, asp):
     return out
 
 
+def face_band(cw, ch, fy, fh):
+    """The part of the frame that fills the tall cut's 1080 x 920 face band edge to edge, as (x, y, w, h):
+    a wide recording keeps the face rows and loses its sides; a narrow (phone) one keeps its full width
+    and the rows around the face. Never fitted inside the band with gaps beside it."""
+    if cw * 920 >= fh * 1080:
+        bw = min(cw, round(fh * 1080 / 920)) // 2 * 2
+        return (cw - bw) // 2 // 2 * 2, fy, bw, fh // 2 * 2
+    bw, bh = cw // 2 * 2, min(ch, round(cw * 920 / 1080)) // 2 * 2
+    by = max(0, min(ch - bh, fy + fh // 2 - bh // 2)) // 2 * 2
+    return 0, by, bw, bh
+
+
 def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix):
     """The ffmpeg inputs and filter graph for one shape: the captioned main
     (graphics, the tall logo, the strap, the captions), joined after the sting
@@ -1010,13 +1022,13 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
     g = []
     cut = between(wins)
     if asp == '9x16':
-        fy, fh = cfg['face'][0], cfg['face'][1]
-        fw_out = round(cw * 920 / fh)
+        bx, by, bw, bh = face_band(cw, ch, cfg['face'][0], cfg['face'][1])
+        fw_out = 1080
         nr = len(runs_of(wins))
         g.append(f'[0:v]split={1 + max(nr, 1)}[sp]' + ''.join(f'[fcs{i}]' for i in range(max(nr, 1))))
         g.append(f"[sp]scale=1080:{round(ch * 1080 / cw)}:flags=lanczos,crop=1080:1920,unsharp=5:5:0.6[s1]")
         for i in range(max(nr, 1)):
-            g.append(f"[fcs{i}]crop={cw}:{fh}:0:{fy},scale={fw_out}:920:flags=lanczos,unsharp=5:5:0.5[fc{i}]")
+            g.append(f"[fcs{i}]crop={bw}:{bh}:{bx}:{by},scale=1080:920:flags=lanczos,unsharp=5:5:0.5[fc{i}]")
         if not nr:
             g.append('[fc0]nullsink')
         last = 's1'
@@ -1039,8 +1051,12 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         # speaker and out again; inside a run the pictures crossfade.
         for r_i, run in enumerate(runs_of(wins)):
             rs, re_ = run[0]['s'], run[-1]['e']
-            g.append(f"color=c=0x0C151200:s=1080x1920:r=30:d={total:.3f},format=rgba,"
-                     f"drawbox=x=0:y=1000:w=1080:h=920:color=0x0C1512@1:t=fill[cv{r_i}]")
+            # The band under the pictures is solid ink: drawbox on a clear rgba canvas left it see-through, so
+            # the full-frame speaker showed at its sides, a bigger Krish behind Krish (Krish, 2026-10-14:
+            # "I also really hate my larger self in the background of the split screen").
+            g.append(f"color=c=0x0C151200:s=1080x1920:r=30:d={total:.3f},format=rgba[cvc{r_i}]")
+            g.append(f"color=c=0x0C1512:s=1080x920:r=30:d={total:.3f},format=rgba[ink{r_i}]")
+            g.append(f"[cvc{r_i}][ink{r_i}]overlay=x=0:y=1000[cv{r_i}]")
             g.append(f"[fc{r_i}]format=rgba[fa{r_i}]")
             g.append(f"[cv{r_i}][fa{r_i}]overlay=x={(1080 - fw_out) // 2}:y=1000[c{r_i}_0]")
             cur = f'c{r_i}_0'
@@ -1287,6 +1303,9 @@ def caption_self_test():
     checks.append(('nothing cut between is checked by the source word', said(heard(' $150', ' more', ',000', cut_after=0)), ['$150', ',000']))
     chunked = chunks(tokens(heard(' Warner', ' sued', ' over', ' 60', ',202', ' recordings', ' and', ' Suno', ' is', ' worth', ' $2', '.45', ' billion.'),
                             DEFAULT_FIXES), [])
+    bands = [face_band(cw, ch, round(ch * 100 / 720), round(ch * 450 / 720)) for cw, ch in ((1080, 1920), (1920, 1080), (720, 1280))]
+    checks.append(('the tall face band is filled edge to edge from inside the frame, never fitted with gaps a bigger Krish shows through',
+                   all(abs(bw / bh - 1080 / 920) < 0.01 and bx >= 0 and by >= 0 for bx, by, bw, bh in bands)))
     checks.append(('a joined number never splits across two caption groups',
                    any(t['w'] in ('60,202', '$2.45') for g in chunked for t in g) and not any(t['w'] in (',202', '.45') for g in chunked for t in g), True))
     # The script's spellings (house rule BRITISH_SPELLING).
