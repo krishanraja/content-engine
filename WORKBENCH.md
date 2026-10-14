@@ -18,6 +18,12 @@ Last updated: 2026-10-13, about 19:40 UTC, by a Claude Code session (cloud); the
   cover drawer and story intro all refuse what it refuses. Krish,
   2026-10-14: "We need an anti-dumb filter ... this sort of crap cannot be
   allowed to pass in the future, ever". He liked "Muse's real rival: Siri."
+  **Titles go to him as options first, and nothing is made from a title he
+  has not picked** (make-piece "Titles (Krish picks)"; config/title-verdicts.json
+  holds every verdict and what it teaches; `title_check.py lessons`). Krish,
+  2026-10-14: "Stop ... generating assets ... when I haven't actually
+  approved your new approach ... iterate, and understand what I actually
+  like, and then encode that into the system forever."
 - **Every day on the publish board is built the same way, by the engine.**
   Each made day is its own `publish_manager.py` page (Copy on every word and
   picture), and the board is `week_board.py` over those pages, republished

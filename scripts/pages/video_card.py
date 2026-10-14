@@ -150,9 +150,9 @@ def check_spec(spec):
         if card.get('kind') not in ('bars', 'table', 'statement', 'columns'):
             fail(f'{name}: kind must be bars, table, statement or columns')
         heading = card.get('title') or ' '.join(l.get('text', '') for l in card.get('lines', []))
-        why = title_check.problems(heading, spec.get('_source'))
+        why = title_check.gate(heading, spec.get('_source'))
         if why:
-            fail(f'{name}: its heading "{heading}" fails the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK): ' + '; '.join(why))
+            fail(f'{name}: its heading "{heading}" is not ready (house rule TITLE_EARNS_THE_CLICK: the anti-dumb floor, then only a title Krish picked): ' + '; '.join(why))
 
 
 TRIMMED = {}  # logo path -> data URI of the SVG cut to its own artwork

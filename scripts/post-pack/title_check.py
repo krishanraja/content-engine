@@ -24,15 +24,32 @@ A title passes only when it is none of these (house rule TITLE_EARNS_THE_CLICK):
     (checked when the piece's words are given).
 
     python title_check.py "Title" [more titles] [--source body.md [--source script.md]]
+    python title_check.py lessons            what Krish's verdicts teach, and his picked and rejected titles
+    python title_check.py verdict "Title" --picked|--rejected --why "..." --krish "his words" [--surface card] [--piece UUID]
     python title_check.py --self-test
+
+The filter is the floor. What is good is what Krish picks (Krish, 2026-10-14:
+"figure out why I dislike it, and iterate, and understand what I actually
+like, and then encode that into the system forever"). Every title is written
+against config/title-verdicts.json (its lessons and his picked and rejected
+titles), offered to him as a few options, and used only once he has picked
+it: `gate()` refuses a title with no "picked" verdict, and names his reason
+for one he rejected. No card, cover, publish page or video title is made
+from a title he has not picked.
 
 Exit 0 when every title passes, 1 with each refusal named. video_card.py,
 publish_manager.py and build.py (covers) call `problems()` on their titles.
 """
 import argparse
+import json
+import os
 import re
 import sys
+from datetime import date
 from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+VERDICTS = REPO / 'config' / 'title-verdicts.json'
 
 STRAWMAN = [
     (re.compile(r"\b(isn'?t|is not|aren'?t|are not|wasn'?t|was not)\s+(a\s+)?fair\s+fight\b", re.I), 'calls a comparison unfair that nobody made'),
@@ -99,6 +116,88 @@ def problems(title, source=None):
     return out
 
 
+def verdicts_path():
+    return Path(os.environ.get('MYMU_TITLE_VERDICTS') or VERDICTS)
+
+
+def load_verdicts():
+    path = verdicts_path()
+    return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'lessons': [], 'verdicts': []}
+
+
+def norm(title):
+    t = str(title or '').replace('’', "'").replace('‘', "'").replace('“', '"').replace('”', '"')
+    return ' '.join(t.split()).strip().lower()
+
+
+def verdict_of(title, data=None):
+    """Krish's latest verdict on this exact title, or None."""
+    data = data or load_verdicts()
+    hits = [v for v in data.get('verdicts', []) if norm(v.get('title')) == norm(title)]
+    return hits[0] if hits else None
+
+
+def gate(title, source=None, data=None):
+    """problems() and Krish's verdict: [] only for a title he picked that also clears the floor."""
+    out = problems(title, source)
+    v = verdict_of(title, data)
+    if v is None:
+        out.append('Krish has not picked this title: offer him a few options written against `title_check.py lessons`, '
+                   'and record his pick with `title_check.py verdict`')
+    elif v.get('verdict') != 'picked':
+        out.append(f'Krish rejected this title ({v.get("why")}; his words: "{v.get("krish")}")')
+    return out
+
+
+def record_verdict(title, verdict, why, krish, surface=None, piece=None, on=None):
+    if verdict not in ('picked', 'rejected'):
+        raise ValueError('a verdict is picked or rejected')
+    if not str(why or '').strip() or not str(krish or '').strip():
+        raise ValueError('a verdict carries why (what it teaches) and Krish\'s own words')
+    data = load_verdicts()
+    entry = {'title': ' '.join(str(title).split()), 'surface': surface or 'any', 'verdict': verdict, 'why': why.strip(),
+             'krish': krish.strip(), 'on': on or date.today().isoformat()}
+    if piece:
+        entry['piece'] = piece
+    data['verdicts'] = [entry] + [v for v in data.get('verdicts', []) if norm(v.get('title')) != norm(title)]
+    verdicts_path().write_text(json.dumps(data, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
+    return entry
+
+
+class picked_for_tests:
+    """A self-test's own verdicts: the given titles marked picked, in a file of
+    their own, so a tool's tests check the tool, never Krish's real picks."""
+
+    def __init__(self, titles, tmp):
+        self.path = Path(tmp) / 'title-verdicts.test.json'
+        self.path.write_text(json.dumps({'lessons': [], 'verdicts': [
+            {'title': t, 'surface': 'test', 'verdict': 'picked', 'why': 'a test fixture', 'krish': 'test', 'on': '2026-10-14'}
+            for t in titles]}), encoding='utf-8')
+        self.before = None
+
+    def __enter__(self):
+        self.before = os.environ.get('MYMU_TITLE_VERDICTS')
+        os.environ['MYMU_TITLE_VERDICTS'] = str(self.path)
+        return self
+
+    def __exit__(self, *exc):
+        if self.before is None:
+            os.environ.pop('MYMU_TITLE_VERDICTS', None)
+        else:
+            os.environ['MYMU_TITLE_VERDICTS'] = self.before
+
+
+def lessons_text(data=None):
+    data = data or load_verdicts()
+    lines = ['What Krish likes in a title (config/title-verdicts.json):']
+    lines += [f'  - {l["lesson"]}' for l in data.get('lessons', [])]
+    lines.append('Picked:')
+    lines += [f'  + "{v["title"]}" ({v["surface"]}): {v["why"]}' for v in data.get('verdicts', []) if v.get('verdict') == 'picked']
+    lines.append('Rejected:')
+    lines += [f'  - "{v["title"]}" ({v["surface"]}): {v["why"]}' for v in data.get('verdicts', []) if v.get('verdict') != 'picked']
+    return '\n'.join(lines)
+
+
 def self_test():
     fails = []
 
@@ -118,6 +217,24 @@ def self_test():
         check(f'passes: {good}', problems(good, body if '97' not in good else body + ' 97%'), [])
     check('made from nothing: a name the piece never says', any('Tesco' in p for p in problems('Tesco blocked Muse', body)), True)
     check('made from nothing: a number the piece never says', any('"12"' in p for p in problems('Muse wins 12 to 3', body)), True)
+    # The gate: only a title Krish picked; a rejected one says why.
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        os.environ['MYMU_TITLE_VERDICTS'] = str(Path(tmp) / 'v.json')
+        try:
+            check('gate: a title nobody picked is refused', any('has not picked' in p for p in gate('Amazon locked Muse out. Walmart let it in.')), True)
+            record_verdict('Amazon locked Muse out. Walmart let it in.', 'picked', 'a concrete twist', 'that one', 'card')
+            check('gate: once picked it passes (quotes and spaces aside)', gate('Amazon locked Muse out.  Walmart let it in.'), [])
+            record_verdict('Amazon locked Muse out. Walmart let it in.', 'rejected', 'flat', 'no, boring', 'card')
+            check('gate: a later rejection wins, with his words', any('no, boring' in p for p in gate('Amazon locked Muse out. Walmart let it in.')), True)
+            check('lessons list his picked and rejected titles', 'Amazon locked Muse out' in lessons_text(), True)
+            try:
+                record_verdict('X did Y', 'picked', '', '', 'card')
+                check('a verdict without his words is refused', 'no error', 'error')
+            except ValueError:
+                check('a verdict without his words is refused', True, True)
+        finally:
+            os.environ.pop('MYMU_TITLE_VERDICTS', None)
     if fails:
         print('title_check self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
@@ -126,6 +243,24 @@ def self_test():
 
 
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ['lessons']:
+        print(lessons_text())
+        return 0
+    if argv[:1] == ['verdict']:
+        vp = argparse.ArgumentParser(description='Record Krish\'s verdict on a title.')
+        vp.add_argument('title')
+        g = vp.add_mutually_exclusive_group(required=True)
+        g.add_argument('--picked', action='store_true')
+        g.add_argument('--rejected', action='store_true')
+        vp.add_argument('--why', required=True, help='what it teaches')
+        vp.add_argument('--krish', required=True, help='his own words')
+        vp.add_argument('--surface', default='any')
+        vp.add_argument('--piece')
+        v = vp.parse_args(argv[1:])
+        e = record_verdict(v.title, 'picked' if v.picked else 'rejected', v.why, v.krish, v.surface, v.piece)
+        print(f'recorded: {e["verdict"]} "{e["title"]}"')
+        return 0
     ap = argparse.ArgumentParser(description='The anti-dumb filter on titles (house rule TITLE_EARNS_THE_CLICK).')
     ap.add_argument('titles', nargs='*')
     ap.add_argument('--source', action='append', default=[], help='the piece\'s words (body, scripts), to check names and numbers')
@@ -136,7 +271,7 @@ def main(argv=None):
     source = ' '.join(Path(p).read_text(encoding='utf-8') for p in a.source) if a.source else None
     bad = 0
     for t in a.titles:
-        why = problems(t, source)
+        why = gate(t, source)
         print(('REFUSED  ' if why else 'passes   ') + t)
         for w in why:
             print('  - ' + w)

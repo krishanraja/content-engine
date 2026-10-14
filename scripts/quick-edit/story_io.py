@@ -185,9 +185,9 @@ def video_title(facts, where='cover-facts.json'):
     if len(said) > TITLE_MAX_CHARS:
         raise StoryError(f'{where}: the video title "{said}" is {len(said)} characters; a title card holds at most '
                          f'{TITLE_MAX_CHARS}. Write a shorter "video_title".')
-    why = title_check.problems(said)
+    why = title_check.gate(said)
     if why:
-        raise StoryError(f'{where}: the video title "{said}" fails the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK): ' + '; '.join(why))
+        raise StoryError(f'{where}: the video title "{said}" is not ready (house rule TITLE_EARNS_THE_CLICK: the anti-dumb floor, then only a title Krish picked): ' + '; '.join(why))
     return said
 
 
@@ -605,6 +605,14 @@ def render(props_path, out_dir, browser_path=None, only=None, entry=ENTRY):
 # ---------------------------------------------------------------- self-test
 
 def self_test():
+    import tempfile
+    # The title gate is title_check's to test; these checks use their own picked titles.
+    with tempfile.TemporaryDirectory() as tmp, title_check.picked_for_tests(
+            ['I scored Muse against its rivals', "Muse's real rival: Siri.", 'OpenAI tried to pick your AI.'], tmp):
+        return _self_test()
+
+
+def _self_test():
     failed, checks = [], 0
 
     def ok(cond, what):
@@ -626,8 +634,8 @@ def self_test():
     ok(video_title({'video_title': 'I scored Muse against its rivals', 'headline': long}) == 'I scored Muse against its rivals', 'video_title wins')
     ok(video_title({'headline': long, 'cover': {'headline': ["Muse's real", 'rival: Siri.']}}) == "Muse's real rival: Siri.", 'cover lines next')
     raises(lambda: video_title({'headline': long}), r'no video_title', 'the article headline is never the title')
-    raises(lambda: video_title({'video_title': "Muse vs ChatGPT isn't a fair fight"}), r'anti-dumb filter', 'a straw man title is refused')
-    raises(lambda: video_title({'video_title': 'Three kinds of AI'}), r'anti-dumb filter', 'a bare topic title is refused')
+    raises(lambda: video_title({'video_title': "Muse vs ChatGPT isn't a fair fight"}), r'anti-dumb floor', 'a straw man title is refused')
+    raises(lambda: video_title({'video_title': 'Three kinds of AI'}), r'anti-dumb floor', 'a bare topic title is refused')
     raises(lambda: video_title({'video_title': 'x' * 61}), r'61 characters', 'a long title fails before rendering')
 
     # The SVG aspect, for optical logo sizes.
@@ -688,7 +696,7 @@ def self_test():
         wed = plans / '2026-10-14-wednesday'
         if (wed / 'cover-facts.json').is_file():
             p = plan_props(wed)
-            ok(p['title'] == 'Three kinds of AI', f'Wednesday title: {p["title"]}')
+            ok(p['title'] == "Muse's real rival: Siri.", f'Wednesday title: {p["title"]}')
             ok([len(p['left']['logos'])] + [len(r['logos']) for r in p['right']] == [3, 1], 'Wednesday: Meta, Instagram and WhatsApp against Apple')
             ok(p['left']['name'] == 'Muse, by Meta' and p['left'].get('tag') == 'Does the most', 'Wednesday left badge')
             ok(p['right'][0]['name'] == 'Siri' and p['right'][0].get('tag') == 'Keeps it private', 'Wednesday right badge')
@@ -697,7 +705,7 @@ def self_test():
         fri = plans / '2026-10-09-friday'
         if (fri / 'cover-facts.json').is_file():
             p = plan_props(fri)
-            ok(p['title'] == 'Your AI, picked for you.', f'Friday title: {p["title"]}')
+            ok(p['title'] == 'OpenAI tried to pick your AI.', f'Friday title: {p["title"]}')
             ok(p['left']['name'] == 'OpenAI' and p['right'][0]['name'] == 'Anthropic', 'Friday players from the cover rows')
         if (MONDAY / 'cover-facts.json').is_file():
             p = plan_props(MONDAY)

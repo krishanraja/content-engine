@@ -943,6 +943,14 @@ def stand_in(tmp, name, title, kicker):
 
 
 def self_test():
+    import tempfile
+    import title_check
+    with tempfile.TemporaryDirectory() as tmp, title_check.picked_for_tests(
+            ['Warner sued Suno. Now it takes a cut.', 'OpenAI tried to pick your AI.'], tmp):
+        return _self_test()
+
+
+def _self_test():
     checks, fails = [], []
 
     def check(name, ok):

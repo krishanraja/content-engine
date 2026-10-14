@@ -1,0 +1,157 @@
+{
+ "_about": "Krish's verdicts on titles, and what each teaches. Every title a reader sees first (article, YouTube, Shorts, cover, video title card, card headings) is written against these, offered to Krish as a few options, and used only once he has picked it: scripts/post-pack/title_check.py refuses an asset whose title has no 'picked' verdict here. Record a verdict with `title_check.py verdict`. Krish, 2026-10-14: 'figure out why I dislike it, and iterate, and understand what I actually like, and then encode that into the system forever.'",
+ "lessons": [
+  {
+   "lesson": "First person beats explaining: put Krish in it (I tried, I tested, I scored).",
+   "from": "A2 picked over B, C and D; 'It should be personal ... It could be first person'",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "A question in the middle makes the reader answer before the reveal ('Its rival?').",
+   "from": "A2 picked over A1, A3, A4",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "The payoff points at the reader ('your pocket'), not at the companies.",
+   "from": "'I like both elements' (the first person and the pocket line)",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Short, with the surprise last. Giving the answer early (a score, a tie) kills it.",
+   "from": "A2 picked over A3 ('It's a draw') and A4 ('Siri tied it')",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "A reveal that flips what people assume works; a straw man that denies what nobody said does not.",
+   "from": "'Muse's real rival: Siri.' liked; 'Muse vs ChatGPT isn't a fair fight' called dumb",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Never a textbook label or taxonomy ('Three kinds of AI. Only one runs your errands.'): no person, no tension, no stake.",
+   "from": "'such a boring title ... It should be personal and much more ... more entertaining'",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "A concrete, newsy twist about a named company ('Amazon's already blocked it') beats a privacy 'catch' or a quiz question.",
+   "from": "T1 picked over T2 (the catch), T3 (guess which), T4 (A2 reused)",
+   "on": "2026-10-14"
+  }
+ ],
+ "verdicts": [
+  {
+   "title": "I tried Meta's new AI. Amazon's already blocked it.",
+   "surface": "article",
+   "verdict": "picked",
+   "why": "first person, then a concrete twist about a named company, surprise last",
+   "krish": "T1",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "I tried Meta's new AI. The catch? Meta can get to your data.",
+   "surface": "article",
+   "verdict": "rejected",
+   "why": "not picked: the privacy catch is less surprising than Amazon blocking it",
+   "krish": "T1 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I scored Meta's new AI against Siri. Guess which one knows you better?",
+   "surface": "article",
+   "verdict": "rejected",
+   "why": "not picked: a quiz question, weaker than a concrete twist",
+   "krish": "T1 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Muse's real rival: Siri.",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "a reveal that flips the assumed fight; short; two names you know",
+   "krish": "I like \"Muses' real rival, Siri.\" on that card",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "I tried Meta's new AI. Its rival? Already in your pocket.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "first person; a question mid-title; the payoff points at the reader; surprise last",
+   "krish": "A2 ... I like both elements",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "I tested Meta's new AI. Its real rival is already in your pocket.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "the right idea, too long and flat: needed punchier",
+   "krish": "A is closest, but punchier",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I put Meta's new AI up against Siri. It's a draw.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "gives the answer away",
+   "krish": "A2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I tested Meta's Muse. Siri tied it.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "gives the answer away",
+   "krish": "A2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Everyone's comparing Muse to ChatGPT. Wrong fight.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "about other people, not Krish or the reader",
+   "krish": "A is closest (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "One of these AIs will do your shopping. It isn't ChatGPT.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "impersonal; leans on a denial",
+   "krish": "A is closest (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "ChatGPT answers. Cowork works. Muse runs your errands.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "a neat list, no person and no surprise",
+   "krish": "A is closest (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Three kinds of AI. Only one runs your errands.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "a textbook taxonomy: boring, impersonal, not entertaining",
+   "krish": "such a boring title. It should be personal and much more. It could be first person. It could be more entertaining. That title is terrible.",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Muse vs ChatGPT isn't a fair fight",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "a straw man: denies a claim nobody made",
+   "krish": "no one has ever said \"Muse versus ChatGPT\" is a fair fight!",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Muse isn't ChatGPT. There are now three kinds of AI.",
+   "surface": "article",
+   "verdict": "rejected",
+   "why": "states the obvious, as a denial",
+   "krish": "Of course, Muse isn't ChatGPT. That's a stupid thing to say. It's dumb.",
+   "on": "2026-10-14"
+  }
+ ]
+}
