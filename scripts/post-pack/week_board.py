@@ -133,6 +133,7 @@ STEPS = (
     ('linkedin', 'LinkedIn', 'linkedin', False),
     ('whatsapp', 'WhatsApp', 'whatsapp', False),
     ('notes', 'Substack Notes', 'notes', False),
+    ('spotify', 'Spotify: the video episode, its clip and chapters', 'spotify', False),
 )
 LABEL = {k: label for k, label, *_ in STEPS}
 STANDING = sum(1 for *_, s in STEPS if s)
@@ -140,7 +141,7 @@ STANDING = sum(1 for *_, s in STEPS if s)
 SECTION_STEP = {
     'Substack': 'substack', 'YouTube (the 3-minute video)': 'youtube', 'YouTube Shorts': 'shorts',
     'TikTok': 'tiktok', 'Instagram Reels': 'reels', 'LinkedIn': 'linkedin', 'WhatsApp': 'whatsapp',
-    'Substack Notes': 'notes',
+    'Substack Notes': 'notes', 'Spotify': 'spotify',
 }
 # The two cuts (house rule TWO_CUTS): the cut, its tick, its name, how it is filmed.
 CUTS = (
@@ -1180,7 +1181,7 @@ def _self_test():
           written['week_start'] == '2026-10-12' and written['made'] == ['mon', 'fri'] and written['picked'] == ['mon', 'wed', 'fri']
           and [d['piece_id'] for d in written['days']] == [MON_ID, WED_ID, FRI_ID]
           and [d['state'] for d in written['days']] == ['made', 'picked', 'made']
-          and written['days'][0]['tick_ids'][0] == 'mon-record-long' and len(written['days'][1]['tick_ids']) == 10
+          and written['days'][0]['tick_ids'][0] == 'mon-record-long' and len(written['days'][1]['tick_ids']) == 11
           and written['publish']['capabilities'] == {'db': {}, 'downloads': True} and written['publish']['icon'] == 'calendar'
           and written['publish']['file_path'] == out_path and written['html'] == 'week-board.html'
           and written['sha256'] == hashlib.sha256(page.encode('utf-8')).hexdigest() == on_disk)

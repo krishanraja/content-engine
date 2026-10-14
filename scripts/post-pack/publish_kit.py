@@ -162,6 +162,22 @@ def steps(p):
             'do': ['New Note, add the tall video, paste the text below, and attach the post from step 1.'],
             'copy': [('Note', p.get('note_text'))],
         },
+        {
+            # Krish, 2026-10-14: "I think we should create a Spotify strategy ASAP ... treat it as a media channel and
+            # create the assets for it as well (in the sizes it requires)". docs/SPOTIFY.md; specs in
+            # docs/research/2026-10-14-spotify.md. Hosted on Spotify for Creators, never the Substack feed.
+            'where': 'Spotify', 'tag': 'The video episode, with its clip and chapters',
+            'why': 'Spotify plays the same 16:9 video as YouTube as a video podcast episode, and the 90-second cut is its clip. '
+                   'Upload in Spotify for Creators (not through Substack), the same day as the Substack post.',
+            'files': [long_video, wide_thumb, short_video],
+            'do': ['In Spotify for Creators, New episode: upload the 3-minute wide video.',
+                   f'Set the episode thumbnail to the wide thumbnail, {wide_thumb}. Leave episode art empty: the show art is used.',
+                   'Paste the title and description below, then the chapters into the description.',
+                   'Add the 90-second tall video as the episode\'s clip. Publish.'],
+            'copy': [('Episode title', p.get('spotify_title') or p.get('youtube_title')),
+                     ('Description', p.get('spotify_description') or p.get('youtube_description')),
+                     ('Chapters', p.get('spotify_chapters'))],
+        },
     ]
 
 

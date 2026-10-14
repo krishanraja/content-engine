@@ -33,7 +33,7 @@ const SCRIPTS = DAY_PAGES && join(DAY_PAGES, 'teleprompter', 'ids.json')
 const MON = 'f328382d-71b3-41a7-a221-d8615826f12e'
 const WED = '7554ed4a-560b-4365-b266-ea72abeed7ef'
 const FRI = '904658db-4df2-4537-a0ed-ebe93e081db7'
-const STEPS = ['record-long', 'record-short', 'substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes']
+const STEPS = ['record-long', 'record-short', 'substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify']
 
 function run(args: string[]) {
   return spawnSync(PY, [join(ROOT, 'scripts', 'post-pack', 'week_board.py'), ...args], { encoding: 'utf8', env, cwd: work, maxBuffer: 64 * 1024 * 1024 })
@@ -253,8 +253,13 @@ describe('week_board.py builds the week\'s one publish board', () => {
     const result = run(['--week', '2026-10-12', '--piece', `mon=${MON}`, '--pending', 'mon=Monday', '--piece', `fri=${FRI}`, '--pending', 'fri=Friday', '--out', out])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     const page = readFileSync(out, 'utf8')
-    expect(new Set([...page.matchAll(/data-tick="([^"]+)"/g)].map(m => m[1]))).toEqual(new Set(PUBLISHED.tick_ids))
-    expect(conf(page).steps).toEqual(PUBLISHED.steps)
+    // Every tick the published board held is still there under the same id; a channel added since (Spotify,
+    // 14 October) only adds ticks after them, so no saved tick is orphaned.
+    const ticks = new Set([...page.matchAll(/data-tick="([^"]+)"/g)].map(m => m[1]))
+    for (const id of PUBLISHED.tick_ids) expect(ticks.has(id), id).toBe(true)
+    expect([...ticks].filter(id => !PUBLISHED.tick_ids.includes(id)).every(id => id.endsWith('-spotify'))).toBe(true)
+    expect(conf(page).steps.slice(0, PUBLISHED.steps.length)).toEqual(PUBLISHED.steps)
+    expect(conf(page).steps.slice(PUBLISHED.steps.length).map((s: { key: string }) => s.key)).toEqual(['spotify'])
     expect(Object.fromEntries(conf(page).days.map(d => [d.key, d.piece_id]))).toEqual(PUBLISHED.pieces)
     expect(PUBLISHED.tick_ids.length).toBe(20)
     // Descript was retired on 2026-10-12: the Record ticks keep their ids under their new labels.

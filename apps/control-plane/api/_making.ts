@@ -24,7 +24,7 @@
  *  YouTube and then Shorts, TikTok, and Instagram." The first five are the
  *  standing set; LinkedIn, WhatsApp and Substack Notes stay available when
  *  he wants them and never hold a piece back. */
-export const MAKING_CHANNELS = ['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes'] as const
+export const MAKING_CHANNELS = ['substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify'] as const
 export type MakingChannel = (typeof MAKING_CHANNELS)[number]
 export const CORE_CHANNELS: readonly MakingChannel[] = ['substack', 'youtube', 'shorts', 'tiktok', 'reels']
 export const MAKING_CUTS = ['long', 'short'] as const

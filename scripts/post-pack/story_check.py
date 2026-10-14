@@ -75,6 +75,9 @@ CUTS = {
     # (Krish, 2026-10-14: "I'm noticing on Instagram that sometimes my reels are getting cut off"). At his pace
     # 195 words keep the finished cut under 89 s, inside every platform's line (docs/research/2026-10-14-platform-length-limits.md).
     'short': (160, 195, 'a 90-second version that finishes under 89 seconds'),
+    # The Spotify audio edition (docs/SPOTIFY.md; Krish, 2026-10-14: "create scripts for everything"): the article
+    # read for the ear, about 8 to 12 minutes; [CHAPTER: ...] lines are stage lines and not counted.
+    'audio': (1200, 1700, 'a Spotify audio edition of about 8 to 12 minutes'),
 }
 OUTRO = re.compile(r'makeyourmindup', re.I)
 META_START = re.compile(r'^\s*(changes from|before you record|the story in one line|#{1,3}\s)', re.I)
@@ -348,6 +351,8 @@ def spoken_paragraphs(text):
 def cut_of(name):
     """The cut a file name says it is, or None."""
     n = str(name or '').lower()
+    if re.search(r'audio|spotify|podcast', n):
+        return 'audio'
     if re.search(r'90|short|vertical|tall', n):
         return 'short'
     if re.search(r'long|3.?min|wide|three', n):
@@ -619,6 +624,8 @@ def self_test():
     check('no cut, no length rule', length_problem(filler(900).split(), None), None)
     check('a file named 90s is the short cut', cut_of('script-90s.md'), 'short')
     check('a file named long is the long cut', cut_of('script_long.md'), 'long')
+    check('a file named audio is the Spotify audio edition', cut_of('2026-10-12-warner-suno-audio.md'), 'audio')
+    check('a 1,400-word audio edition passes the length rule', length_problem(filler(1400).split(), 'audio'), None)
     check('a plain name says nothing', cut_of('script.md'), None)
     check('problems() carries the length rule when the cut is known', any('TWO_CUTS' in p for p in problems(GOOD, 'long')), len(' '.join(spoken_paragraphs(GOOD)).split()) not in range(405, 496))
 
