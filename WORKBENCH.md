@@ -627,6 +627,14 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14, 23:00 UTC: **Friday is next; read `docs/plans/2026-10-14-handoff.md`.**
+  Wednesday is live as it is. One spine per piece is built (house rule
+  ONE_SPINE: `spine_check.py`, engine judge `/api/content-ideas/:id/spine-check`,
+  making.py gates). Friday's draft passes it. The cover photo rotates. The site
+  carries the new positioning and Krish's X and TikTok. Waiting on Krish:
+  approve Friday's trimmed short, then Friday's title rounds, then he
+  records. The growth plan's running model waits on his go.
+
 - 2026-10-14, 21:00 UTC: **Read `docs/plans/2026-10-14-handoff.md` first.**
   Five durable guards built (failure register `config/failures.json`, run
   `python3 scripts/check_failures.py`): the board publish hook (engine stamp,
