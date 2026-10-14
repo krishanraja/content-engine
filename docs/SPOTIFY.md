@@ -21,12 +21,18 @@ through it can't earn.
    90-second tall cut as its Spotify clip. The four long cuts already made
    (5, 7, 12 and 14 October) go up first, so the show opens with four
    episodes, past Spotify's three-episode bar.
-2. **From the week of 19 October:** the audio edition. Krish reads the
+2. **From 16 October: the week's deep cut** (house rule DEEP_CUT,
+   `config/deep-cuts.json`). One piece a week, picked by its breakout score,
+   records 8 to 12 minutes in place of its 3-minute cut. That deep cut is
+   the week's Spotify video episode and the YouTube long-form video. The
+   first is Friday 16 October. The other pieces' long cuts can still go up
+   as shorter episodes. The audio edition below is the same script.
+3. **The audio edition** (as planned before the deep cut). Krish reads the
    article, rewritten for the ear (1,200 to 1,700 words, about 8 to 12
    minutes), on the teleprompter in the same sitting as the two cuts. It goes
    up as a 16:9 video episode. `story_check.py --cut audio` checks the script.
    Scripts for everything already published are in `docs/plans/spotify/`.
-3. **Not yet:** a conversational show. It costs the most to make, and nothing
+4. **Not yet:** a conversational show. It costs the most to make, and nothing
    in the engine supports it.
 
 Cadence: Monday, Wednesday and Friday, the same day as the Substack post.

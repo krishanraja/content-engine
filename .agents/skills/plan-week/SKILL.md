@@ -63,6 +63,16 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `week-<Monday>` exists; if the cron has not run yet, it will.
 6. Do not pick, schedule, draft or spend. Picking is Krish's press on the week
    page; his Monday pick starts the make-piece session on its own.
+6b. **Propose the week's deep cut** (house rule DEEP_CUT, Krish, 2026-10-14:
+   "I like your logic for the pick on the shareability score approach").
+   Once Krish has picked the week's pieces, score each one's breakout
+   potential with the ten-point test in the growth playbook (novel, useful,
+   identity-rich, specific, timely, credible, works across formats, tense
+   enough to discuss, ownable, leads to subscribing), 0 to 2 each. A concept
+   piece breaks a tie. Write the pick to `config/deep-cuts.json` under the
+   week's Monday, with the scores and the reason, and say it in one line on
+   the board. Krish can swap it. That piece records an 8 to 12 minute deep
+   cut instead of its 3-minute cut; every piece keeps its 90-second cut.
 7. **Make the week's publish board**, last, once the options are written.
    Krish, 2026-10-12: "just give me one ... Publish Manager for the ...
    whole week with 3 tabs on it for Mon / Weds / Fri, which we need to get

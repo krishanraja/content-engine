@@ -79,6 +79,10 @@ CUTS = {
     # read for the ear, about 8 to 12 minutes. Its chapters live beside it in <script>.chapters.md: the script is
     # only the spoken words (house rule SCRIPT_ONLY), because it goes straight onto the teleprompter.
     'audio': (1200, 1700, 'a Spotify audio edition of about 8 to 12 minutes'),
+    # The week's deep cut (house rule DEEP_CUT; config/deep-cuts.json): one piece a week, chosen by its breakout
+    # score, records 8 to 12 minutes in place of its 3-minute cut, for YouTube long-form and Spotify. Krish,
+    # 2026-10-14: "perhaps the third video length also becomes the Spotify audio track".
+    'deep': (1200, 1700, 'the week\'s deep video of about 8 to 12 minutes'),
 }
 OUTRO = re.compile(r'makeyourmindup', re.I)
 META_START = re.compile(r'^\s*(changes from|before you record|the story in one line|#{1,3}\s)', re.I)
@@ -352,6 +356,8 @@ def spoken_paragraphs(text):
 def cut_of(name):
     """The cut a file name says it is, or None."""
     n = str(name or '').lower()
+    if re.search(r'deep', n):
+        return 'deep'
     if re.search(r'audio|spotify|podcast', n):
         return 'audio'
     if re.search(r'90|short|vertical|tall', n):
@@ -371,10 +377,10 @@ def length_problem(words, cut):
     when = f'{secs // 60}:{secs % 60:02d}'
     if n > high:
         return (f'the {cut} cut runs {n} spoken words, about {when} at an unhurried pace, and Krish asked for {asked}: '
-                f'cut it to {low} to {high} words (house rule TWO_CUTS)')
+                f'cut it to {low} to {high} words (house rule {"DEEP_CUT" if cut == "deep" else "TWO_CUTS"})')
     if n < low:
         return (f'the {cut} cut is {n} spoken words, about {when}, short of {asked}: '
-                f'it should run {low} to {high} words (house rule TWO_CUTS)')
+                f'it should run {low} to {high} words (house rule {"DEEP_CUT" if cut == "deep" else "TWO_CUTS"})')
     return None
 
 
@@ -626,6 +632,9 @@ def self_test():
     check('a file named 90s is the short cut', cut_of('script-90s.md'), 'short')
     check('a file named long is the long cut', cut_of('script_long.md'), 'long')
     check('a file named audio is the Spotify audio edition', cut_of('2026-10-12-warner-suno-audio.md'), 'audio')
+    check('a file named deep is the week\'s deep cut', cut_of('2026-10-09-draft-script-deep.md'), 'deep')
+    check('a 1,500-word deep cut passes the length rule', length_problem(filler(1500).split(), 'deep'), None)
+    check('a 450-word deep cut is refused, naming DEEP_CUT', 'DEEP_CUT' in (length_problem(filler(450).split(), 'deep') or ''), True)
     check('a 1,400-word audio edition passes the length rule', length_problem(filler(1400).split(), 'audio'), None)
     check('a plain name says nothing', cut_of('script.md'), None)
     check('problems() carries the length rule when the cut is known', any('TWO_CUTS' in p for p in problems(GOOD, 'long')), len(' '.join(spoken_paragraphs(GOOD)).split()) not in range(405, 496))

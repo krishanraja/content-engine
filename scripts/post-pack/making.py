@@ -451,6 +451,17 @@ def visual_gate_patch(post_path):
     return {'visual_gate': {'passed': not problems, 'problems': problems, 'checked_at': now()}}
 
 
+def deep_piece(piece_id, path=None):
+    """True when this piece is a week's deep cut (config/deep-cuts.json,
+    house rule DEEP_CUT): its long script is then checked at 8 to 12
+    minutes instead of 3."""
+    try:
+        data = json.loads(Path(path or HERE.parents[1] / 'config' / 'deep-cuts.json').read_text())
+    except (OSError, ValueError):
+        return False
+    return any(isinstance(w, dict) and w.get('piece') == piece_id for w in (data.get('weeks') or {}).values())
+
+
 def _story_check(cut, path, series=None):
     command = [sys.executable, str(HERE / 'story_check.py'), '--cut', cut]
     if series:
@@ -532,7 +543,7 @@ def spine_problem(piece_id, call):
         f' Run: python3 scripts/post-pack/spine_check.py judge {piece_id} --outline <the outline>'
 
 
-def scripts_patch(paths, run=None, warn=None, previous=None, series=None):
+def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=False):
     """Checks the two scripts by position: the first is the long cut, the
     second the short (house rule TWO_CUTS, Krish, 2026-10-11: every piece
     gets both). A missing script, or one that fails its check, records
@@ -554,7 +565,7 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None):
     series line and never say "I'm Krish" again (story_check --series,
     house rule SERIES_OPENER)."""
     import story_check
-    run = run or (lambda cut, path: _story_check(cut, path, series))
+    run = run or (lambda cut, path: _story_check('deep' if (deep and cut == 'long') else cut, path, series))
     warn = warn or (lambda line: print(line, file=sys.stderr))
     paths = list(paths or [])
     if not paths or len(paths) > len(CUTS):
@@ -563,7 +574,7 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None):
     for cut, p in zip(CUTS, paths):
         name = Path(p).name
         said = story_check.cut_of(name)
-        if said and said != cut:
+        if said and said != cut and not (deep and cut == 'long' and said == 'deep'):
             warn(f'making: {name} says it is the {said} cut but is in the {cut} cut\'s place; '
                  f'it is checked as the {cut} cut (the long cut comes first, then the short)')
         if not Path(p).is_file():
@@ -1182,6 +1193,16 @@ def self_test():
         later = scripts_patch([t / 'long.md', t / 'short.md'], ok, warned.append, previous=moved)['script_check']
         check('scripts: checked again, each cut keeps the time its words last changed', later['changed_at'], moved['changed_at'])
         check('scripts: and the changed cut is named', changed_cuts(prev, moved['hashes']), ['short'])
+        deep_cfg = t / 'deep-cuts.json'
+        deep_cfg.write_text(json.dumps({'weeks': {'2026-10-12': {'piece': 'p-deep'}}}))
+        check('a week\'s deep piece is known, any other is not', (deep_piece('p-deep', deep_cfg), deep_piece('p-other', deep_cfg)), (True, False))
+        asked = []
+        globals()['_story_check'], real_sc = (lambda cut, path, series=None: (asked.append(cut), (0, ''))[1]), globals()['_story_check']
+        try:
+            scripts_patch([t / 'long.md', t / 'short.md'], warn=warned.append, deep=True)
+        finally:
+            globals()['_story_check'] = real_sc
+        check('the deep piece\'s long script is checked at the deep length', asked, ['deep', 'short'])
         failed_before = scripts_patch([t / 'long.md', t / 'short.md'], ok, warned.append, previous={**prev, 'passed': False})['script_check']
         check('scripts: a check that failed before keeps nothing', failed_before['checked_at'] != earlier, True)
         check('scripts: no record before, nothing changed', changed_cuts(None, moved['hashes']), [])
@@ -1699,7 +1720,7 @@ def main(argv=None, call=None):
             elif not series:
                 print('making: the engine names no series for the piece, so the series line was not checked; give --series '
                       'follow_the_money, under_the_hood or mind_the_gap', file=sys.stderr)
-            patch = scripts_patch(a.args, previous=previous, series=series)
+            patch = scripts_patch(a.args, previous=previous, series=series, deep=deep_piece(a.piece_id))
             if spine:
                 patch['script_check']['spine'] = spine
             changed = changed_cuts(previous, patch['script_check']['hashes'])

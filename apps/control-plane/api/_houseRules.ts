@@ -362,6 +362,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'final_pass'],
   },
   {
+    id: 'DEEP_CUT', name: 'One deep video a week, for YouTube long-form and Spotify',
+    text: 'Once a week, the piece with the highest breakout score (the shareability score in its pack; a concept piece breaks a tie) gets a deep cut of 8 to 12 minutes, 1,200 to 1,700 spoken words, wide, in place of its 3-minute cut. It is recorded in the same sitting, goes to YouTube as long-form and to Spotify as the week\'s video episode, and is written from the full article for the ear, with the same series line, reading age 12 and outro to the article. Every piece keeps its 90-second cut. plan-week records the pick in config/deep-cuts.json; Krish can swap it.',
+    said: 'I like your logic for the pick on the shareability score approach.',
+    on: '2026-10-14', source: 'chat, after "perhaps the third video length also becomes the Spotify audio track"; checked by scripts/post-pack/story_check.py (--cut deep) and making.py (deep_piece)', status: 'live',
+    stages: ['write', 'final_pass', 'production'],
+  },
+  {
     id: 'INTRO_STING', name: 'A short animated makeyourmindup sting before Krish\'s face',
     text: 'Every video is to open with the animated makeyourmindup sting, 1 to 2 seconds (1.5 by default), before Krish\'s face comes in, in both shapes and in the colour of the piece\'s series (follow.the.money\'s when it has none). It is joined in front of the captioned video, so no word, caption or graphic moves, and the music is up over it. Only a design Krish approved in words is used (config/intro-sting.json, status "approved", bound to the source hash of the exact previews he saw). No design is approved yet: on 2026-10-12 he rejected the first one shown to him ("it\'s ok, it\'s a bit boring and colourless and vanilla - and just what Powerpoint would do in 2008"), so until he approves another, every cut goes without a sting, its report says so, and a missing sting never stops a render. A clip named in a cut\'s config is used only when it is the approved render, or on Krish\'s own words in "intro_override". For the quick-edit cuts this replaces "nothing at the opening" (2026-09-26); the Studio keeps that placement, with no music, until its own audio ledger exists.',
     said: 'I also want the video to have a 1-2 sec animated make your mind up intro visual before my face comes in',
