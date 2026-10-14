@@ -627,6 +627,15 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-15, 00:30 UTC: **Friday's v2 is written and passes every gate.**
+  Article `docs/plans/2026-10-09-draft-body-v2.md` (1,284 words) is saved on
+  the piece: fact gate 0 blocking, spine judge passes on every section.
+  Scripts on the record: deep cut `...-script-deep-v2.md` (1,461 words, with
+  `.chapters.md`) and short `...-script-90s-v2.md` (185 words). Waiting on
+  Krish: approve the scripts (then `teleprompter_send.py`), set the
+  prediction's confidence (`How sure we are: [Krish to set]`), and the
+  title rounds (the spine changed, so the old titles and cover are stale).
+
 - 2026-10-14, 23:00 UTC: **Styles are a bank, and Friday has a new spine.**
   Krish: "build a modular bank of styles ... mix together at different
   layers, like an alchemist", leaning on what he already likes and dislikes
