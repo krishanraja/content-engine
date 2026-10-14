@@ -351,6 +351,30 @@
      "how": "every cover and thumbnail with Krish's face uses it"
     }
    ]
+  },
+  {
+   "id": "one-style-for-everything",
+   "on": "2026-10-14",
+   "krish": "I don't think that these things are just one way of everything being in the future. I think we need to build a bank of different styles that we know can be modularized and used. You already have a tonne of pre-existing knowledge of what I like and, more importantly, what I don't like, which you can lean on and I don't think should be totally overwritten.",
+   "what": "A liked reference video was turned into house defaults for every video, over the top of what Krish already likes and dislikes.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/references.py",
+     "contains": "the base (what Krish already likes and does not) must be named",
+     "how": "the style bank refuses to drop the base, a recipe without his words, or a module he marked not for us"
+    },
+    {
+     "file": "tests/engine-gates.test.ts",
+     "contains": "scripts/quick-edit/references.py",
+     "how": "CI runs the style bank's self-test on every push"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "| Style recipe |",
+     "how": "scripts are written from a per-piece recipe on top of the base, never from one house style"
+    }
+   ]
   }
  ]
 }
