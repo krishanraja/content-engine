@@ -67,9 +67,11 @@ export const VIDEO_FORMATS: VideoFormat[] = [
   {
     // The short cut of every piece (house rule TWO_CUTS, Krish 2026-10-11):
     // YouTube Shorts, TikTok and Instagram Reels, at most 90 seconds. The
-    // target sits under story_check.py's 160 to 225 so its ceiling (220)
-    // does too; aiming at 225 made the writer overshoot what the check takes.
-    id: '90s', label: '90 seconds', seconds: 90, words: 200,
+    // target sits under story_check.py's 160 to 195 so its ceiling (195)
+    // does too; aiming at the top made the writer overshoot what the check takes.
+    // 195 keeps the finished cut under 89 s with its intro and outro (Krish,
+    // 2026-10-14: "sometimes my reels are getting cut off").
+    id: '90s', label: '90 seconds', seconds: 90, words: 177,
     shape: [
       'Hook (the most provocative true thing, then the one question), then two beats, then the call, then a one-line spoken outro.',
       'Each beat is one point with its one number. No third beat: there is no room.',
