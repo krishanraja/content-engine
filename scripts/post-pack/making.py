@@ -495,6 +495,43 @@ def outline_gate(paths):
                  'show it to Krish, and add his words as "Approved by Krish: <his words>, <date>" before recording scripts.')
 
 
+def spine_gate(paths, piece_id, call):
+    """One spine per piece (house rule ONE_SPINE; Krish, 2026-10-14: "the engine cannot do this again"). For
+    dated drafts from spine_check.SPINE_FROM: the outline states the spine, its answer and what each section
+    proves; the draft's sections are exactly the approved ones; and the engine's judge has passed every section
+    against the spine on the body it holds now. Returns the spine, or None for an older piece."""
+    import re
+    import spine_check
+    long = Path(paths[0]) if paths else None
+    m = re.match(r'(\d{4}-\d{2}-\d{2})-draft-script', long.name) if long else None
+    if not m or m.group(1) < spine_check.SPINE_FROM:
+        return None
+    outline = long.parent / f'{m.group(1)}-outline.md'
+    text = outline.read_text(encoding='utf-8') if outline.exists() else ''
+    why = spine_check.outline_problems(text)
+    body = long.parent / f'{m.group(1)}-draft-body.md'
+    if not why and body.exists():
+        why = spine_check.draft_problems(body.read_text(encoding='utf-8'), text)
+    if not why:
+        why = spine_problem(piece_id, call)
+    if why:
+        sys.exit('making: the piece drifts from its one spine (house rule ONE_SPINE):\n  ' + '\n  '.join([why] if isinstance(why, str) else why))
+    return spine_check.parse_outline(text)['spine']
+
+
+def spine_problem(piece_id, call):
+    """The engine's judge on the body it holds now, or why it has not passed."""
+    status, text = call('GET', f'/api/content-ideas/{piece_id}/spine-check', None)
+    try:
+        data = json.loads(text) if text else {}
+    except ValueError:
+        data = {}
+    if status != 200 or not data.get('ok'):
+        return f'the spine check could not be read (HTTP {status})'
+    return None if data.get('current') else (data.get('reason') or 'no passing spine check on these words') + \
+        f' Run: python3 scripts/post-pack/spine_check.py judge {piece_id} --outline <the outline>'
+
+
 def scripts_patch(paths, run=None, warn=None, previous=None, series=None):
     """Checks the two scripts by position: the first is the long cut, the
     second the short (house rule TWO_CUTS, Krish, 2026-10-11: every piece
@@ -1638,11 +1675,18 @@ def main(argv=None, call=None):
         if a.what in ('workroom', 'publish-manager'):
             if len(a.args) != 1:
                 ap.error('give the https link')
+            if a.what == 'publish-manager':
+                # A piece whose scripts carried a spine publishes only words the judge passed against it.
+                held = ((read(a.piece_id, call).get('making') or {}).get('script_check') or {})
+                why = spine_problem(a.piece_id, call) if held.get('spine') else None
+                if why:
+                    raise MakingError('the piece drifts from its one spine (house rule ONE_SPINE): ' + why)
             patch = {a.what.replace('-', '_'): {'url': a.args[0]}}
         elif a.what == 'visual-gate':
             patch = visual_gate_patch(a.args[0])
         elif a.what == 'scripts':
             outline_gate(a.args)
+            spine = spine_gate(a.args, a.piece_id, call)
             # The record first: checked_at stays put while the words do.
             answer = read(a.piece_id, call)
             previous = (answer.get('making') or {}).get('script_check') if isinstance(answer.get('making'), dict) else None
@@ -1656,6 +1700,8 @@ def main(argv=None, call=None):
                 print('making: the engine names no series for the piece, so the series line was not checked; give --series '
                       'follow_the_money, under_the_hood or mind_the_gap', file=sys.stderr)
             patch = scripts_patch(a.args, previous=previous, series=series)
+            if spine:
+                patch['script_check']['spine'] = spine
             changed = changed_cuts(previous, patch['script_check']['hashes'])
             for cut in changed:
                 print(f'making: the {cut} script\'s words changed since the last check, so a {cut} take '

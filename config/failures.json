@@ -309,8 +309,29 @@
    "on": "2026-10-14",
    "krish": "we ended up with an absolute ton of drift ... All of this could have been turned into something coherent, but it's ended up sprawling quite a lot ... the engine cannot do this again.",
    "what": "Wednesday's piece re-angled several times and each new angle was added as sections instead of replacing the spine.",
-   "status": "open",
-   "guards": []
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/spine_check.py",
+     "contains": "never sections added on top",
+     "how": "the outline states one spine and what each section proves; a section added on top of the approved outline is refused"
+    },
+    {
+     "file": "apps/control-plane/api/_spine.ts",
+     "contains": "SPINE_SYSTEM",
+     "how": "the engine's judge reads every section against the spine"
+    },
+    {
+     "file": "scripts/post-pack/making.py",
+     "contains": "def spine_gate",
+     "how": "scripts and the publish page are refused until all of it passes"
+    },
+    {
+     "file": "tests/control-plane/spine.test.ts",
+     "contains": "one section off the spine fails the piece",
+     "how": "tested"
+    }
+   ]
   },
   {
    "id": "same-photo-every-cover",

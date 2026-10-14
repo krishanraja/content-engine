@@ -38,7 +38,7 @@ export interface MakingCheck { passed: boolean; checked_at: string; problems: st
  *  take look older than its script. `changed_at` is when each cut's words
  *  last changed, so a change to one cut never makes the other's take look
  *  old (scripts/post-pack/recording_match.py's time rule). */
-export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>> }
+export type MakingScriptCheck = MakingCheck & { cuts?: MakingCut[]; hashes?: Partial<Record<MakingCut, string>>; changed_at?: Partial<Record<MakingCut, string>>; read_back?: Partial<Record<MakingCut, MakingReadBack>>; /** The one question the piece answers (house rule ONE_SPINE): the publish page then needs a passing spine check. */ spine?: string }
 /** A cut read back by two fresh readers, each an ordinary 12-year-old
  *  hearing it once, who found nothing that lost them (house rule R7, the hard
  *  gate on every script; Krish, 2026-10-12: "Every single script should be
@@ -177,6 +177,7 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     if (!isObj(v) || typeof v.passed !== 'boolean') { problems.push(`${key} needs {passed: boolean, problems: string[]}`); continue }
     const list = Array.isArray(v.problems) ? v.problems.filter(p => typeof p === 'string').map(p => String(p).slice(0, MAX_TEXT)).slice(0, MAX_PROBLEMS) : []
     const check: MakingScriptCheck = { passed: v.passed, checked_at: when(v.checked_at, now), problems: list }
+    if (key === 'script_check' && typeof v.spine === 'string' && v.spine.trim()) (check as MakingScriptCheck).spine = String(v.spine).trim().slice(0, 300)
     if (key === 'script_check' && Array.isArray(v.cuts)) check.cuts = v.cuts.filter((c): c is MakingCut => (MAKING_CUTS as readonly string[]).includes(String(c)))
     if (key === 'script_check' && v.hashes !== undefined) {
       const entries = isObj(v.hashes) ? Object.entries(v.hashes) : null

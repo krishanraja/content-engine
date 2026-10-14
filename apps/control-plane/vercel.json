@@ -129,6 +129,9 @@
     },
     "api/content-ideas/[id]/fact-check.ts": {
       "maxDuration": 300
+    },
+    "api/content-ideas/[id]/spine-check.ts": {
+      "maxDuration": 120
     }
   }
 }

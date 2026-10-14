@@ -22,6 +22,7 @@ describe('the engine gates', () => {
     ['the week board, its publish check and its thumbnails', ['scripts/post-pack/week_board.py', '--self-test']],
     ['the publish page', ['scripts/post-pack/publish_manager.py', '--self-test']],
     ['the making record, drive-link and thumbnails', ['scripts/post-pack/making.py', '--self-test']],
+    ['one spine per piece', ['scripts/post-pack/spine_check.py', '--self-test']],
   ] as const) {
     it(name, () => {
       const r = py([...args])
