@@ -16,9 +16,74 @@
    "sha256": "acd429d8fd6edc62e2bd18b9b506008149622799fcc6035d4393b2451f17402f",
    "added": "2026-10-04",
    "krish_likes": "",
-   "status": "waiting_for_study",
-   "study": null,
-   "moves": []
+   "status": "studied",
+   "study": {
+    "duration_s": 42.11,
+    "shape": "vertical",
+    "pace": {
+     "shots": 24,
+     "cuts_per_minute": 32.8,
+     "median_shot_s": 1.16,
+     "shortest_shot_s": 0.52,
+     "longest_shot_s": 4.72,
+     "shots_under_1s": 9,
+     "shots_over_5s": 0,
+     "first_cut_s": 2.72
+    },
+    "zoom": {
+     "moves": 52,
+     "push_ins": 25,
+     "pull_outs": 27
+    },
+    "speech": {
+     "words": 144,
+     "words_per_minute": 211.0,
+     "speech_share_of_runtime": "41 of 42 seconds",
+     "first_10_seconds": "Okay, here's how we got this Airbnb in Portugal for less than the price of a travel lodge. So I've just come back from Portugal and this villa was definitely one of the nicest I've ever stayed in.",
+     "questions_asked": 0
+    },
+    "loudness_lufs": -14.2,
+    "studied": "2026-10-14"
+   },
+   "moves": [
+    {
+     "craft": "editing",
+     "move": "Fast cut on every phrase: about 33 cuts a minute, median shot 1.2s, nine shots under a second.",
+     "evidence": "pace",
+     "where_it_applies": "edit (make.py), short cut only"
+    },
+    {
+     "craft": "production",
+     "move": "The money reveal as a big yellow number laid into the scene (EUR 1000 a night, then EUR 71 each on the table).",
+     "evidence": "26.0s and 33.8s on the contact sheet",
+     "where_it_applies": "graphics"
+    },
+    {
+     "craft": "production",
+     "move": "Words placed inside the picture (behind a person, on a wall, on a table) rather than a caption strip.",
+     "evidence": "8.3s, 16.8s, 33.8s",
+     "where_it_applies": "graphics"
+    },
+    {
+     "craft": "narrative",
+     "move": "The payoff promised in the first sentence (\"here is how we got this ... for less than the price of a Travelodge\") and paid with one number.",
+     "evidence": "0.0s and 30.0s",
+     "where_it_applies": "script"
+    },
+    {
+     "craft": "tone",
+     "move": "Close with a send ask, not a follow ask: \"send this to your mates\".",
+     "evidence": "39.0s",
+     "where_it_applies": "script"
+    },
+    {
+     "craft": "camerawork",
+     "move": "Wide-angle, handheld, first-person shots with constant motion (25 push-ins and 27 pull-outs in 42s).",
+     "evidence": "zoom; contact sheet",
+     "where_it_applies": "b-roll"
+    }
+   ],
+   "creator": "an Instagram travel Reel (creator not recorded)"
   },
   {
    "file": "stamp-duty-is-stupid-ytshorts.savetube.vip.mp4",
@@ -27,9 +92,86 @@
    "source": "https://youtube.com/@fryrsquared",
    "added": "2026-10-14",
    "krish_likes": "I generally love how she talks about complex topics observationally. She's not commentating on a specific thing or company but she's just unpacking how something works that people probably don't even realise they wondered about. I think the same is going to happen in AI and we could do a really good job of talking less about companies and more about concepts.",
-   "status": "waiting_for_study",
-   "study": null,
-   "moves": []
+   "status": "studied",
+   "study": {
+    "duration_s": 173.92,
+    "shape": "vertical",
+    "pace": {
+     "shots": 10,
+     "cuts_per_minute": 3.1,
+     "median_shot_s": 11.51,
+     "shortest_shot_s": 0.17,
+     "longest_shot_s": 52.9,
+     "shots_under_1s": 1,
+     "shots_over_5s": 7,
+     "first_cut_s": 0.17
+    },
+    "zoom": {
+     "moves": 138,
+     "push_ins": 46,
+     "pull_outs": 92
+    },
+    "speech": {
+     "words": 572,
+     "words_per_minute": 211.0,
+     "speech_share_of_runtime": "163 of 174 seconds",
+     "first_10_seconds": "Okay, let me start this one off by saying that I think tax is a good thing. Okay schools roads the NHS massive fan I also think that Britain has One of the stupidest taxes in the entire world because of the way that it makes people behave",
+     "questions_asked": 3
+    },
+    "loudness_lufs": -23.3,
+    "studied": "2026-10-14",
+    "note": "The zoom count is high because she moves inside a tight frame; the contact sheet shows the framing changes (tight at 26.6s, wider at 167.8s) as punch-ins inside long takes, not cuts."
+   },
+   "moves": [
+    {
+     "craft": "narrative",
+     "move": "Open with a disarming concession, then the provocative claim, inside 15 seconds (\"I think tax is a good thing ... one of the stupidest taxes in the entire world\").",
+     "evidence": "0.0 to 14.6s",
+     "where_it_applies": "script"
+    },
+    {
+     "craft": "breakdown",
+     "move": "Explain the system through one ordinary person in one situation (\"imagine somebody who bought their house 30 years ago ... they would love to downsize\"), then widen to what it does to everyone.",
+     "evidence": "51.7 to 125.8s",
+     "where_it_applies": "script"
+    },
+    {
+     "craft": "breakdown",
+     "move": "One reframing metaphor that names the mechanism: \"it stops the housing market being a market and turns it into a queue\".",
+     "evidence": "43.2 to 51.7s",
+     "where_it_applies": "script"
+    },
+    {
+     "craft": "breakdown",
+     "move": "Exactly one hard number as proof, placed after the story, not before it (\"every 1 increase in stamp duty reduces transactions by about 10\").",
+     "evidence": "128.6s",
+     "where_it_applies": "script"
+    },
+    {
+     "craft": "narrative",
+     "move": "Show the better way briefly (\"there is another way\"), then end on a wry observation instead of a call to action (\"the most British thing imaginable\").",
+     "evidence": "137.1 to 166.2s",
+     "where_it_applies": "script"
+    },
+    {
+     "craft": "tone",
+     "move": "Conversational asides (\"by the way\", \"okay\", \"right?\") and self-aware humour at about 211 words a minute: a person thinking out loud, not presenting.",
+     "evidence": "transcript; 211 words a minute",
+     "where_it_applies": "script and record"
+    },
+    {
+     "craft": "editing",
+     "move": "Long talking-head holds (median shot 11.5s, one of 53s) with framing punch-ins inside the take instead of hard cuts; about 3 cuts a minute.",
+     "evidence": "pace; contact sheet",
+     "where_it_applies": "edit (make.py)"
+    },
+    {
+     "craft": "production",
+     "move": "Simple flat illustrated scenes (a house, small figures) only at the moments the story needs a picture, about a fifth of the runtime; small captions, low-middle, no big word pops.",
+     "evidence": "59.4s, 78.1s, 160.1s on the contact sheet",
+     "where_it_applies": "edit and graphics"
+    }
+   ]
   }
  ],
  "folder": {
