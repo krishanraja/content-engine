@@ -63,8 +63,9 @@ def steps(p):
 
     Krish, 2026-10-11: "I always want a 3-minute video and a 90-second
     version. I always want to repost to YouTube and then Shorts, TikTok, and
-    Instagram." Those five come first, every time. LinkedIn, WhatsApp and
-    Substack Notes follow as optional steps, for when he wants them."""
+    Instagram." Those five come first, every time. LinkedIn and Spotify follow.
+    WhatsApp and Substack Notes were dropped on 2026-10-14 (Krish: "I don't think
+    I need Substack notes or WhatsApp to be honest, right now")."""
     f = p.get('files') or {}
     long_video = f.get('long_video') or '3 Video/ the 3-minute wide (16:9) video'
     short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
@@ -146,21 +147,6 @@ def steps(p):
                    f'Posting a picture with the link instead of the video? Attach the share card, {share_card}.'],
             'copy': [('Post text', p.get('linkedin_post')),
                      ('First comment', f'The full article, free, with every source: {ARTICLE}')],
-        },
-        {
-            'where': 'WhatsApp', 'tag': f'Optional: the same cut, inside {VERTICAL_MAX_SECONDS} seconds',
-            'why': 'When you want it: your channel gets the video and the link; your Status gets the video and the line.',
-            'files': [short_video],
-            'do': ['Channel: send the tall video with the message below.',
-                   'Status: add the same video with the message below.'],
-            'copy': [('Message', p.get('whatsapp_text') or f'{p.get("title") or ""}\n\nThe full article: {ARTICLE}'.strip())],
-        },
-        {
-            'where': 'Substack Notes', 'tag': 'Optional: the same cut for Substack readers who don\'t subscribe yet',
-            'why': 'Notes is where Substack readers find new writers. A Note can hold a video of up to five minutes.',
-            'files': [short_video],
-            'do': ['New Note, add the tall video, paste the text below, and attach the post from step 1.'],
-            'copy': [('Note', p.get('note_text'))],
         },
         {
             # Krish, 2026-10-14: "I think we should create a Spotify strategy ASAP ... treat it as a media channel and
@@ -281,7 +267,7 @@ def self_test():
     sample = {'title': 'Why are there suddenly so many AIs?', 'date': '2026-10-09',
               'youtube_title': 'T', 'linkedin_post': 'L', 'short_caption': 'C'}
     text = page(sample)
-    for where in ('1. Substack', '2. YouTube', '3. YouTube Shorts', '4. TikTok', '5. Instagram Reels', '6. LinkedIn', '7. WhatsApp', '8. Substack Notes'):
+    for where in ('1. Substack', '2. YouTube', '3. YouTube Shorts', '4. TikTok', '5. Instagram Reels', '6. LinkedIn', '7. Spotify'):
         if where not in text:
             failures.append(f'missing step {where}')
     if 'Optional: the same cut, uploaded natively' not in text:

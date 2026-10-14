@@ -33,7 +33,7 @@ const SCRIPTS = DAY_PAGES && join(DAY_PAGES, 'teleprompter', 'ids.json')
 const MON = 'f328382d-71b3-41a7-a221-d8615826f12e'
 const WED = '7554ed4a-560b-4365-b266-ea72abeed7ef'
 const FRI = '904658db-4df2-4537-a0ed-ebe93e081db7'
-const STEPS = ['record-long', 'record-short', 'substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'whatsapp', 'notes', 'spotify']
+const STEPS = ['record-long', 'record-short', 'substack', 'youtube', 'shorts', 'tiktok', 'reels', 'linkedin', 'spotify']
 
 function run(args: string[]) {
   return spawnSync(PY, [join(ROOT, 'scripts', 'post-pack', 'week_board.py'), ...args], { encoding: 'utf8', env, cwd: work, maxBuffer: 64 * 1024 * 1024 })
@@ -253,13 +253,16 @@ describe('week_board.py builds the week\'s one publish board', () => {
     const result = run(['--week', '2026-10-12', '--piece', `mon=${MON}`, '--pending', 'mon=Monday', '--piece', `fri=${FRI}`, '--pending', 'fri=Friday', '--out', out])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     const page = readFileSync(out, 'utf8')
-    // Every tick the published board held is still there under the same id; a channel added since (Spotify,
-    // 14 October) only adds ticks after them, so no saved tick is orphaned.
+    // Every tick the published board held keeps its id, except the two channels Krish dropped on 14 October
+    // (WhatsApp and Substack Notes: "I don't think I need Substack notes or WhatsApp"); Spotify was added that day.
+    const DROPPED = ['whatsapp', 'notes']
+    const kept = (ids: string[]) => ids.filter(id => !DROPPED.some(d => id.endsWith(`-${d}`)))
     const ticks = new Set([...page.matchAll(/data-tick="([^"]+)"/g)].map(m => m[1]))
-    for (const id of PUBLISHED.tick_ids) expect(ticks.has(id), id).toBe(true)
+    for (const id of kept(PUBLISHED.tick_ids)) expect(ticks.has(id), id).toBe(true)
     expect([...ticks].filter(id => !PUBLISHED.tick_ids.includes(id)).every(id => id.endsWith('-spotify'))).toBe(true)
-    expect(conf(page).steps.slice(0, PUBLISHED.steps.length)).toEqual(PUBLISHED.steps)
-    expect(conf(page).steps.slice(PUBLISHED.steps.length).map((s: { key: string }) => s.key)).toEqual(['spotify'])
+    const keptSteps = PUBLISHED.steps.filter((s: { key: string }) => !DROPPED.includes(s.key))
+    expect(conf(page).steps.slice(0, keptSteps.length)).toEqual(keptSteps)
+    expect(conf(page).steps.slice(keptSteps.length).map((s: { key: string }) => s.key)).toEqual(['spotify'])
     expect(Object.fromEntries(conf(page).days.map(d => [d.key, d.piece_id]))).toEqual(PUBLISHED.pieces)
     expect(PUBLISHED.tick_ids.length).toBe(20)
     // Descript was retired on 2026-10-12: the Record ticks keep their ids under their new labels.

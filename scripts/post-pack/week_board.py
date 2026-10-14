@@ -63,7 +63,7 @@ at once in the page's own store (the artifact's db capability):
     links/<day>          {article, youtube, at}
 
 with <day> mon, wed or fri and <step> record-long, record-short, substack,
-youtube, shorts, tiktok, reels, linkedin, whatsapp or notes. These are the
+youtube, shorts, tiktok, reels, linkedin or spotify (whatsapp and notes were dropped on 14 October). These are the
 documents of the board published on 12 October, so a rebuilt board
 republished to the same page keeps every tick and link: the store lives
 with the page, and the ids depend only on the day and the step. A tick
@@ -131,8 +131,7 @@ STEPS = (
     ('tiktok', 'TikTok', 'tiktok', True),
     ('reels', 'Instagram Reels', 'reels', True),
     ('linkedin', 'LinkedIn', 'linkedin', False),
-    ('whatsapp', 'WhatsApp', 'whatsapp', False),
-    ('notes', 'Substack Notes', 'notes', False),
+    # WhatsApp and Substack Notes dropped 2026-10-14 (Krish: "I don't think I need Substack notes or WhatsApp").
     ('spotify', 'Spotify: the video episode, its clip and chapters', 'spotify', False),
 )
 LABEL = {k: label for k, label, *_ in STEPS}
@@ -140,8 +139,7 @@ STANDING = sum(1 for *_, s in STEPS if s)
 # A channel section of the day page, by its heading (publish_kit.steps "where"), and the step it ticks.
 SECTION_STEP = {
     'Substack': 'substack', 'YouTube (the 3-minute video)': 'youtube', 'YouTube Shorts': 'shorts',
-    'TikTok': 'tiktok', 'Instagram Reels': 'reels', 'LinkedIn': 'linkedin', 'WhatsApp': 'whatsapp',
-    'Substack Notes': 'notes', 'Spotify': 'spotify',
+    'TikTok': 'tiktok', 'Instagram Reels': 'reels', 'LinkedIn': 'linkedin', 'Spotify': 'spotify',
 }
 # The two cuts (house rule TWO_CUTS): the cut, its tick, its name, how it is filmed.
 CUTS = (
@@ -1121,7 +1119,7 @@ def _self_test():
     check('seven steps make 100%: the two cuts and the standing five', standing == ['record-long', 'record-short', 'substack', 'youtube', 'shorts', 'tiktok', 'reels'])
     check('a made day ticks in three places: checklist, Record card and each channel heading',
           page.count('data-tick="mon-record-long"') == 2 and page.count('data-tick="mon-substack"') == 2
-          and page.count('data-tick="mon-notes"') == 2 and page.count('data-tick="wed-substack"') == 1)
+          and page.count('data-tick="mon-linkedin"') == 2 and page.count('data-tick="wed-substack"') == 1)
     check('the old Mark done buttons are gone', 'Mark done' not in page and 'data-act="done"' not in page)
     js = script({'week': '2026-10-12', 'days': [], 'steps': []})
     check('db wiring: ticks/<day>-<step> and links/<day> in the page\'s own store',
@@ -1181,7 +1179,7 @@ def _self_test():
           written['week_start'] == '2026-10-12' and written['made'] == ['mon', 'fri'] and written['picked'] == ['mon', 'wed', 'fri']
           and [d['piece_id'] for d in written['days']] == [MON_ID, WED_ID, FRI_ID]
           and [d['state'] for d in written['days']] == ['made', 'picked', 'made']
-          and written['days'][0]['tick_ids'][0] == 'mon-record-long' and len(written['days'][1]['tick_ids']) == 11
+          and written['days'][0]['tick_ids'][0] == 'mon-record-long' and len(written['days'][1]['tick_ids']) == 9
           and written['publish']['capabilities'] == {'db': {}, 'downloads': True} and written['publish']['icon'] == 'calendar'
           and written['publish']['file_path'] == out_path and written['html'] == 'week-board.html'
           and written['sha256'] == hashlib.sha256(page.encode('utf-8')).hexdigest() == on_disk)
