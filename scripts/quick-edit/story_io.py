@@ -681,7 +681,7 @@ def self_test():
         wed = plans / '2026-10-14-wednesday'
         if (wed / 'cover-facts.json').is_file():
             p = plan_props(wed)
-            ok(p['title'] == 'I scored Muse against its rivals', f'Wednesday title: {p["title"]}')
+            ok(p['title'] == 'Three kinds of AI', f'Wednesday title: {p["title"]}')
             ok([len(p['left']['logos'])] + [len(r['logos']) for r in p['right']] == [3, 1], 'Wednesday: Meta, Instagram and WhatsApp against Apple')
             ok(p['left']['name'] == 'Muse, by Meta' and p['left'].get('tag') == 'Does the most', 'Wednesday left badge')
             ok(p['right'][0]['name'] == 'Siri' and p['right'][0].get('tag') == 'Keeps it private', 'Wednesday right badge')
@@ -690,7 +690,7 @@ def self_test():
         fri = plans / '2026-10-09-friday'
         if (fri / 'cover-facts.json').is_file():
             p = plan_props(fri)
-            ok(p['title'] == 'Why are there suddenly so many AIs?', f'Friday title: {p["title"]}')
+            ok(p['title'] == 'Your AI, picked for you.', f'Friday title: {p["title"]}')
             ok(p['left']['name'] == 'OpenAI' and p['right'][0]['name'] == 'Anthropic', 'Friday players from the cover rows')
         if (MONDAY / 'cover-facts.json').is_file():
             p = plan_props(MONDAY)

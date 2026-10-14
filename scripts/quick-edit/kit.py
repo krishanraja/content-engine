@@ -1103,7 +1103,10 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
                 endcard_video(png, mp4)
                 made[mp4.name] = sig
                 log(f'made  {mp4.name}')
-        draw('frame-16x9.png', page_frame16(st, post['subject'], logos['wordmark'], fonts), FRAME['16x9'])
+        # The title on screen beside his face: post.json's "video_title" when it has one, else the
+        # subject. The subject also names the post's library folder, so a re-angled piece keeps its
+        # folder and still shows its new title (Krish, 2026-10-14: the plate read the old angle).
+        draw('frame-16x9.png', page_frame16(st, post.get('video_title') or post['subject'], logos['wordmark'], fonts), FRAME['16x9'])
         draw('strap-9x16.png', page_strap(st, fonts), FRAME['9x16'], clear=True)
         panels = receipt.get('panels', {})
         drawn = set()  # the pictures panelled in this run: a panel left from an earlier run is never cued

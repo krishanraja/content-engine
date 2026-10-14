@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { fitError, fitLine, fitText, tokens, type FitBox, type Measure } from '../apps/renderer/src/story/fit'
+import { fitError, fitLine, fitText, tokens, YES_NO, type FitBox, type Measure } from '../apps/renderer/src/story/fit'
 
 // The story intro and outro (apps/renderer/src/story, rendered by
 // scripts/quick-edit/story_io.py). Krish, 2026-10-13, on Wednesday's title
@@ -61,6 +61,15 @@ describe('fitting a title to its area', () => {
   it('says what failed in words story_io.py surfaces', () => {
     const e = fitError('video title', 'X', '9x16', { maxWidth: 840, maxHeight: 900 }, 84, 'Shorten video_title.')
     expect(e.message).toMatch(/^STORY_FIT: the video title "X" does not fit its 9x16 area \(840 x 900 px\)/)
+  })
+})
+
+describe('the outro\'s vote', () => {
+  it('shows YES and NO only for a question answered yes or no', () => {
+    expect(YES_NO.test('Would you let an ad company choose for you?')).toBe(true)
+    expect(YES_NO.test('Do you ever change the model?')).toBe(true)
+    expect(YES_NO.test('Which kind of AI do you actually use?')).toBe(false)
+    expect(YES_NO.test('What would you hand over first?')).toBe(false)
   })
 })
 

@@ -1,30 +1,29 @@
 {
  "subchannel": "mind.the.gap",
- "title": "Why are there suddenly so many AIs?",
- "headline": "Why are there suddenly so many AIs?",
+ "title": "Soon, you won't pick your AI. The app will.",
+ "headline": "Soon, you won't pick your AI. The app will.",
  "date": "2026-10-16",
  "issue": "The headliner",
  "cover": {
   "headline": [
-   "Why are there suddenly",
-   "so many AIs?"
+   "Your AI,",
+   "picked for you."
   ],
   "rows": [
    {
     "logo": "logos/openai-symbol-cream.svg",
     "name": "OpenAI",
-    "tag": "4 GPT-6s",
+    "tag": "Router",
     "colour": "coral"
    },
    {
     "logo": "logos/anthropic-symbol-cream.svg",
     "name": "Anthropic",
-    "tag": "14 Claudes",
+    "tag": "12+ models",
     "colour": "mint"
    }
   ],
   "label": "the headliner",
-  "background": "pileup-bg.png",
   "portrait": true
  },
  "thumbs": {

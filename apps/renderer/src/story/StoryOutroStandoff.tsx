@@ -1,6 +1,6 @@
 import React from 'react'
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion'
-import { fitError, fitLine, fitText } from './fit'
+import { fitError, fitLine, fitText, YES_NO } from './fit'
 import type { StoryStandoffProps } from './props'
 import {
   abs, BrandImage, C, cubicIO, cubicOut, Field, Header, headerH, MASTHEAD_PX, measureWith, Pill, SAFE, SafeProbe, SERIES_COLOURS, settle, shade,
@@ -78,19 +78,22 @@ function Corner({ f, W, H, wide, shape, commentQuestion, seriesColour, seriesNam
   const linkY = wide ? barTop + (S.y1 - barTop - ls * 1.15) / 2 : barTop + 36 + kickerS + 20
   const linkW = textWidth(link, ls, 'ui')
   const sweep = cubicOut((f - 6) / 10)
-  // Yes and No: a column on the right in 16:9, a row under the question in 9:16.
-  const yn = wide ? { w: 320, h: 180, gap: 34 } : { w: 360, h: 160, gap: 56 }
+  // Yes and No: a column on the right in 16:9, a row under the question in 9:16, only for a
+  // question that is answered yes or no (Krish, 2026-10-14: "Which kind of AI do you actually
+  // use?" showed YES and NO). Any other question takes the whole width.
+  const yesNo = YES_NO.test(commentQuestion.trim())
+  const yn = !yesNo ? { w: 0, h: 0, gap: 0 } : wide ? { w: 320, h: 180, gap: 34 } : { w: 360, h: 160, gap: 56 }
   const ynTop0 = wide ? qTop : barTop - 70 - yn.h
   const box = wide
-    ? { maxWidth: S.x1 - S.x0 - yn.w - 120, maxHeight: barTop - 50 - qTop }
-    : { maxWidth: S.x1 - S.x0, maxHeight: ynTop0 - 50 - qTop }
+    ? { maxWidth: S.x1 - S.x0 - (yesNo ? yn.w + 120 : 0), maxHeight: barTop - 50 - qTop }
+    : { maxWidth: S.x1 - S.x0, maxHeight: (yesNo ? ynTop0 : barTop) - 50 - qTop }
   const spec = { ...box, lineHeight: 1.0, maxSize: wide ? 150 : 132, minSize: wide ? 60 : 56, maxLines: 4 }
   const fit = fitText(commentQuestion.toUpperCase(), measureWith('display'), spec)
   if (!fit) throw fitError('comment question', commentQuestion, shape, spec, spec.minSize, 'Shorten the "Tell me in the comments" question in the script.')
   // The question and the vote, centred as one group between the kicker and the bar.
   const qH = fit.lines.length * fit.size
   const ynH = 2 * yn.h + yn.gap
-  const qY = wide ? qTop + Math.max(0, (barTop - 50 - qTop - qH) / 2) : qTop + Math.max(0, (ynTop0 - 50 - qTop - qH) / 2)
+  const qY = wide || !yesNo ? qTop + Math.max(0, (barTop - 50 - qTop - qH) / 2) : qTop + Math.max(0, (ynTop0 - 50 - qTop - qH) / 2)
   const ynTop = wide ? qTop + Math.max(0, (barTop - 50 - qTop - ynH) / 2) : ynTop0
   const ynAt = T.line(fit.lines.length - 1) + 5
   const pill = settle(f, T.pill, 0.94, 5)
@@ -109,7 +112,7 @@ function Corner({ f, W, H, wide, shape, commentQuestion, seriesColour, seriesNam
             style={{ left: S.x0, top: qY + i * fit.size, opacity: s.opacity, transform: `scale(${s.scale})`, transformOrigin: '0 60%' }}>{line}</Txt>
         )
       })}
-      {(['YES', 'NO'] as const).map((w, i) => {
+      {yesNo && (['YES', 'NO'] as const).map((w, i) => {
         const k = settle(f, ynAt + i * 4, 0.88, 6)
         if (k === null) return null
         const b = wide

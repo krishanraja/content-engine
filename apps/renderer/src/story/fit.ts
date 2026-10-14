@@ -115,3 +115,8 @@ export function fitError(what: string, text: string, shape: string, box: { maxWi
   const area = box.maxHeight ? `${Math.round(box.maxWidth)} x ${Math.round(box.maxHeight)} px` : `${Math.round(box.maxWidth)} px wide`
   return new Error(`STORY_FIT: the ${what} "${text}" does not fit its ${shape} area (${area}) even at the smallest size, ${minSize} px. ${fix}`)
 }
+
+/** A question answered yes or no opens with a helping verb ("Would you let...", "Do you...").
+ *  The outro shows its YES and NO only for one (Krish, 2026-10-14: "Which kind of AI do you
+ *  actually use?" showed them). */
+export const YES_NO = /^(do|does|did|is|are|was|were|will|would|should|shall|can|could|may|might|must|has|have|had|am)\b/i

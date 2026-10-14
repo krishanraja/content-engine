@@ -36,6 +36,12 @@ picked state, published included: the options' `scheduled` list, or
 /api/week/options answer (--options) or live (--live). --pending
 wed="Title" names a picked piece by hand.
 
+--keep DAY carries a made day over from --previous (the board's page as
+`Artifact read` saved it) exactly as it stands, ticks and Record card
+included, when its publish page cannot be read any more (Krish, 2026-10-14:
+"why are Wednesday and Friday built differently to Monday?" Monday's page
+link was gone, and only the board still held its tab).
+
 A rebuild never loses a day. --previous is the board being replaced: its
 manifest (week-board.json) or its page as `Artifact read` saved it. A day
 it held as made or picked that this build would show as not picked is
@@ -512,6 +518,33 @@ def board_days(text, where='the board'):
     return {'week': conf.get('week'), 'days': days}
 
 
+def div_at(text, start):
+    """The whole <div ...>...</div> that opens at start, nested divs included."""
+    depth = 0
+    for m in re.finditer(r'<div\b|</div>', text[start:]):
+        depth += 1 if m.group(0) == '<div' else -1
+        if depth == 0:
+            return text[start:start + m.end()]
+    raise BoardError('a day\'s panel on the previous board is never closed')
+
+
+def kept_panel(text, key):
+    """A made day's whole panel from a board's page (--keep), as it stands.
+    A banner any session laid over it by hand (class "stage") is dropped:
+    the board draws its own."""
+    name = next(n for k, n, *_ in DAYS if k == key)
+    start = text.find(f'<div class="pm" id="panel-{name}"')
+    if start < 0 or f'data-prefix="{key}-"' not in text[start:start + 400]:
+        raise BoardError(f'--keep {key}: the previous board has no made {name} tab to keep')
+    panel = div_at(text, start)
+    while True:
+        m = re.search(r'<div class="stage[ "]', panel)
+        if not m:
+            break
+        panel = panel.replace(div_at(panel, m.start()), '', 1)
+    return panel
+
+
 def keep_previous(previous, days, unpick, monday):
     """Refusals for a rebuild that would lose a day the board it replaces
     held: a made or picked day now not picked, or a made day now without
@@ -589,15 +622,15 @@ def by_day(values, what, has_value=True):
 
 # ------------------------------------------------------------------ the board
 
-def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None):
+def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None):
     """(page, manifest, warnings). pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
     {day: {'id', 'title'}} from the week options; pending: {day: title}."""
-    pages, pieces, teleprompter, picks, pending = pages or {}, pieces or {}, teleprompter or {}, picks or {}, pending or {}
+    pages, pieces, teleprompter, picks, pending, kept = pages or {}, pieces or {}, teleprompter or {}, picks or {}, pending or {}, kept or {}
     warnings, days, panels, tabs, blocks = [], [], [], [], []
     parsed = {k: parse_day_page(v, f'the {k} publish page') for k, v in pages.items()}
     order = [k for k, *_ in DAYS]
-    opened = next((k for k in order if k in parsed), None) or next((k for k in order if k in pieces or k in picks or k in pending), 'mon')
+    opened = next((k for k in order if k in parsed or k in kept), None) or next((k for k in order if k in pieces or k in picks or k in pending), 'mon')
     for key, name, weekday, offset, slug, series_label in DAYS:
         when = monday + timedelta(days=offset)
         page = parsed.get(key)
@@ -609,7 +642,13 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             if piece and other and other != piece:
                 warnings.append(f'{weekday}: {label} says {other}, the board uses {piece}')
         title = pending.get(key) or (page or {}).get('title') or pick.get('title') or ''
-        if page:
+        if key in kept and not page:
+            if not piece:
+                raise BoardError(f'{weekday} is kept from the previous board but has no piece id: give --piece {key}=<uuid>')
+            state = 'made'
+            panel = re.sub(r'^(<div class="pm"[^>]*?)( hidden)?>', lambda m: m.group(1) + (' hidden' if key != opened else '') + '>', kept[key], count=1)
+            panels.append(panel)
+        elif page:
             if not piece:
                 raise BoardError(f'{weekday} is made but has no piece id: give --piece {key}=<uuid>, or --options or --live '
                                  'so the week\'s pick names it; every tick carries it')
@@ -767,6 +806,17 @@ def build(args, get=None):
                 raise BoardError(f'--teleprompter {v}: a file without a day must hold each piece by its id ({{"pieces": {{"<uuid>": ...}}}}); '
                                  'give one piece\'s record or ids as --teleprompter mon=PATH')
             shared.append(data)
+    kept = {}
+    for key in set(by_day([f'{d}=x' for d in (getattr(args, 'keep', None) or [])], '--keep')):
+        if not args.previous:
+            raise BoardError('--keep needs --previous, the board page to keep the day from')
+        if key in pages:
+            raise BoardError(f'--keep {key} and --day {key}: give one; --day builds the tab from its publish page')
+        kept[key] = kept_panel(Path(args.previous).read_text(encoding='utf-8-sig'), key)
+        if previous and not pieces.get(key):
+            held = (previous['days'].get(key) or {}).get('piece_id')
+            if held:
+                pieces[key] = held
     scripts, unmade = {}, []
     for key, _, weekday, *_ in DAYS:
         # The same order as board(): --piece, then the publish page's own, then the week's pick.
@@ -783,7 +833,7 @@ def build(args, get=None):
                 found = teleprompter_info(answer, piece, warnings, f'{weekday}\'s making record')
                 made_at = (((answer.get('making') or {}) if isinstance(answer, dict) else {}).get('publish_manager') or {})
                 url = made_at.get('url') if isinstance(made_at, dict) else None
-                if isinstance(url, str) and url.strip() and key not in pages:
+                if isinstance(url, str) and url.strip() and key not in pages and key not in kept:
                     unmade.append(f'{weekday}: piece {piece} has its publish page ({url.strip()}); Artifact read it and give '
                                   f'--day {key}=<the saved file>, or its tab loses every Copy card')
         for data in shared:
@@ -796,7 +846,7 @@ def build(args, get=None):
         raise BoardError('a made day has no publish page in this build:\n  ' + '\n  '.join(unmade))
     for key in unpick:
         picks.pop(key, None)
-    page, manifest, more = board(monday, pages, pieces, scripts, picks, pending)
+    page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday)
     manifest['warnings'] = warnings + more
@@ -1061,6 +1111,22 @@ def self_test():
     check('the first made day opens first', re.search(r'id="tab-monday"[^>]*aria-selected="true"', page) is not None
           and 'id="panel-wednesday"' in page and re.search(r'id="panel-wednesday"[^>]*hidden>', page) is not None)
     check('warnings: the stand-ins raise none', warnings == [])
+    # --keep: a made day carried over from the previous board's page, as it stands, minus a hand-laid banner.
+    opened_at = page.index('<div class="pm" id="panel-monday"')
+    head_end = page.index('>', opened_at) + 1
+    bannered = page[:head_end] + '<div class="stage ready-stage"><strong>Ready</strong> <div>to post</div></div>' + page[head_end:]
+    kept_mon = kept_panel(bannered, 'mon')
+    original = div_at(page, opened_at)
+    kept_page, kept_manifest, _ = board(date(2026, 10, 12), pieces={'mon': MON_ID}, kept={'mon': kept_mon})
+    check('--keep: the day\'s whole panel, its banner dropped, made and open in the new board',
+          kept_mon == original and 'ready-stage' not in kept_page and original.split('>', 1)[1] in kept_page
+          and [d['state'] for d in kept_manifest['days']] == ['made', 'not_picked', 'not_picked']
+          and re.search(r'<div class="pm" id="panel-monday"[^>]*hidden>', kept_page) is None)
+    try:
+        kept_panel(page, 'wed')
+        check('--keep: a day the board does not hold as made is refused', False)
+    except BoardError:
+        check('--keep: a day the board does not hold as made is refused', True)
     if fails:
         print('week board self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
@@ -1080,6 +1146,8 @@ def parser():
     ap.add_argument('--pending', action='append', metavar='DAY=TITLE', help='a picked piece not made yet, named by hand')
     ap.add_argument('--previous', metavar='BOARD', help='the board this one replaces: its week-board.json, or its page as Artifact read saved it; '
                     'a day it held is never lost')
+    ap.add_argument('--keep', action='append', metavar='DAY', help='with --previous (its page): carry a made day over exactly as the board holds it, '
+                    'when its publish page cannot be read any more')
     ap.add_argument('--unpick', action='append', metavar='DAY', help='with --previous: a day Krish moved or dropped, which really has no piece now')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')

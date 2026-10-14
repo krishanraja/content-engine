@@ -26,7 +26,7 @@ When you pick the model, you know roughly what you're getting. When the app pick
 
 The plans already work like this, quietly. A report from a research firm called SemiAnalysis, dated 5 October, compared both companies' plans. On the everyday brains, they found Claude's plans gave about five times the value of ChatGPT's. On a Claude plan, the newest top brain, Fable 5.1, "can only be used for 50% of your limit". Same plan, very different amounts of brain, depending on which name gets used.
 
-Now take the name away. My bet is that on a busy day, or in a tight quarter, you get the cheaper engine, and you'd never know. Once the pick belongs to the company, it becomes something they can package: a "fast" tier, a "deep" tier, a premium that guarantees the big model. It's the same shift as Wednesday's piece on Meta's Muse, where shops start paying to be picked. Here, the thing being picked for you is the brain itself.
+Now take the name away. My bet is that on a busy day, or in a tight quarter, you get the cheaper engine, and you'd never know. Once the pick belongs to the company, it becomes something they can package: a "fast" tier, a "deep" tier, a premium that guarantees the big model. The thing being picked for you is the brain itself.
 
 ## 2. GETTING THE JOB DONE: SAME QUESTION, DIFFERENT ANSWER
 
