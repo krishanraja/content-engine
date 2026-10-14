@@ -928,8 +928,8 @@ def stand_in(tmp, name, title, kicker):
     d = Path(tmp) / name
     d.mkdir()
     (d / 'a.png').write_bytes(base64.b64decode(PNG))
-    (d / 'body.md').write_text('Opening line.\n\n## THE PART\n\nA **bold** fact.\n', encoding='utf-8')
-    (d / 'words.json').write_text(json.dumps({'title': title, 'youtube_title': 'Y', 'short_caption': 'C',
+    (d / 'body.md').write_text(f'{title}\n\n## THE PART\n\nA **bold** fact.\n', encoding='utf-8')
+    (d / 'words.json').write_text(json.dumps({'title': title, 'youtube_title': title, 'short_caption': 'C',
                                               'linkedin_post': 'L {ARTICLE_URL}'}), encoding='utf-8')
     (d / 'long.md').write_text('The long script, said out loud.\n', encoding='utf-8')
     (d / 'short.md').write_text('The short script.\n', encoding='utf-8')
@@ -952,8 +952,8 @@ def self_test():
 
     monday = monday_of('2026-10-12')
     with tempfile.TemporaryDirectory() as tmp:
-        mon = stand_in(tmp, 'mon', 'Who gets paid for AI songs', 'follow.the.money')
-        fri = stand_in(tmp, 'fri', 'Why so many AIs', 'mind.the.gap')
+        mon = stand_in(tmp, 'mon', 'Warner sued Suno. Now it takes a cut.', 'follow.the.money')
+        fri = stand_in(tmp, 'fri', 'OpenAI tried to pick your AI.', 'mind.the.gap')
         sent = {'pieces': {MON_ID: {'folder_id': TP_FOLDER, 'folder_name': 'Mon 12 Oct follow.the.money - Who gets paid for AI songs', 'cuts': {
             'long': {'script_id': TP_LONG, 'title': 'Mon 12 Oct - 3-minute - Who gets paid for AI songs'},
             'short': {'script_id': 'not-an-id', 'title': 'Mon 12 Oct - 90-second - Who gets paid for AI songs'}}}}}

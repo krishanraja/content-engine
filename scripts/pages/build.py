@@ -71,6 +71,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import brand  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
+import title_check  # noqa: E402  the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK)
 import card  # noqa: E402
 
 CHOICE = re.compile(r'^(Guess|Future|Scenario|Option|Outcome) (one|two|three|four|five)\. (.+)$', re.S)
@@ -905,6 +907,9 @@ def cover_html(facts, base, refresh=False):
     if not isinstance(head, str) and len(head) != 2:
         brand.fail('"cover": "headline" is one line of text, or two: the words in cream, then the last line in the subchannel\'s colour')
     lead, last = split_headline(head) if isinstance(head, str) else head
+    why = title_check.problems(f'{lead} {last}')
+    if why:
+        brand.fail(f'the cover headline "{lead} {last}" fails the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK): ' + '; '.join(why))
     colours = {'mint': t['mint'], **PALETTE}
     rows = []
     for row in c.get('rows', []):
@@ -1175,6 +1180,9 @@ def cover_shape_html(facts, base, shape, refresh=False):
     if not isinstance(head, str) and len(head) != 2:
         brand.fail('"cover": "headline" is one line of text, or two: the words in cream, then the last line in the subchannel\'s colour')
     lead, last = split_headline(head) if isinstance(head, str) else head
+    why = title_check.problems(f'{lead} {last}')
+    if why:
+        brand.fail(f'the cover headline "{lead} {last}" fails the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK): ' + '; '.join(why))
     colours = {'mint': t['mint'], **PALETTE}
     rows = []
     for row in c.get('rows', []):
@@ -1540,6 +1548,9 @@ def thumb_html(facts, base, shape, refresh=False):
     if not head or (not isinstance(head, str) and len(head) != 2):
         brand.fail('the thumbnail\'s "headline" is one line of text, or two: the words in cream, then the last line in the subchannel\'s colour')
     lead, last = split_headline(head) if isinstance(head, str) else head
+    why = title_check.problems(f'{lead} {last}')
+    if why:
+        brand.fail(f'the cover headline "{lead} {last}" fails the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK): ' + '; '.join(why))
     colours = {'mint': t['mint'], **PALETTE}
     rows = []
     for row in c.get('rows', []):

@@ -46,6 +46,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import brand  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
+import title_check  # noqa: E402  the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK)
 
 W, H = 1600, 900
 PAD = 96
@@ -62,7 +64,8 @@ html, body { width: 1600px; height: 900px; overflow: hidden; background: var(--i
 body { padding: 84px 96px; display: flex; flex-direction: column; justify-content: center; gap: 28px;
        font-family: 'Archivo', sans-serif; -webkit-font-smoothing: antialiased; }
 .k { font: 700 26px/1 'IBM Plex Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
-h1 { font: 400 80px/1.0 'Anton', sans-serif; text-transform: uppercase; letter-spacing: .005em; }
+/* Lines of a heading balanced, so a word never sits alone on the last line. */
+h1 { text-wrap: balance; font: 400 80px/1.0 'Anton', sans-serif; text-transform: uppercase; letter-spacing: .005em; }
 .rows { display: flex; flex-direction: column; gap: 14px; }
 /* Rows grouped into labelled bands ("group" on a row): a mono label over each band, rows a little tighter. */
 h1.g { font-size: 68px; }
@@ -146,6 +149,10 @@ def check_spec(spec):
                  '"we\'ve not made any use of business logos as we\'re supposed to")')
         if card.get('kind') not in ('bars', 'table', 'statement', 'columns'):
             fail(f'{name}: kind must be bars, table, statement or columns')
+        heading = card.get('title') or ' '.join(l.get('text', '') for l in card.get('lines', []))
+        why = title_check.problems(heading, spec.get('_source'))
+        if why:
+            fail(f'{name}: its heading "{heading}" fails the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK): ' + '; '.join(why))
 
 
 TRIMMED = {}  # logo path -> data URI of the SVG cut to its own artwork
@@ -240,6 +247,12 @@ def main(argv=None):
     a = ap.parse_args(argv)
     src = Path(a.cards).resolve()
     spec = json.loads(src.read_text(encoding='utf-8'))
+    # "source": the piece's body and scripts (paths beside the cards file), so a card's names and numbers are the piece's.
+    srcs = [src.parent / x for x in (spec.get('source') or [])]
+    missing = [str(x) for x in srcs if not x.exists()]
+    if missing:
+        fail(f'"source" names files that are not there: {", ".join(missing)}')
+    spec['_source'] = ' '.join(x.read_text(encoding='utf-8') for x in srcs) if srcs else None
     check_spec(spec)
     base = src.parent / spec.get('logos', '.')
     out = Path(a.out) if a.out else src.parent / 'pics'

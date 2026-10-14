@@ -39,6 +39,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import publish_kit  # noqa: E402
+import title_check  # noqa: E402  the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK)
 
 E = html.escape
 
@@ -237,6 +238,14 @@ def page(m, base):
     md = (base / m['body']).read_text(encoding='utf-8')
     body_imgs = [i for i in images if i.get('after_heading')]
     words = json.loads((base / m['words']).read_text(encoding='utf-8')) if m.get('words') else {}
+    # Every title a reader sees first passes the anti-dumb filter, made from the piece's own words.
+    source = md + ' ' + ' '.join((base / s['file']).read_text(encoding='utf-8') for s in m.get('scripts', []) if (base / s['file']).exists())
+    refused = [(label, t, why) for label, t in (('title', m.get('title')), ('YouTube title', words.get('youtube_title')),
+                                                 ('Shorts title', words.get('short_title')))
+               if t for why in [title_check.problems(t, source)] if why]
+    if refused:
+        sys.exit('publish_manager: a title fails the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK):\n'
+                 + '\n'.join(f'  {label}: "{t}": ' + '; '.join(why) for label, t, why in refused))
     slug = re.sub(r'[^a-z0-9]+', '-', (m.get('title') or 'post').lower()).strip('-')[:40]
     n = [0]
 

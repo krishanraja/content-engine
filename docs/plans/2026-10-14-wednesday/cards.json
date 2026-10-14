@@ -6,7 +6,7 @@
    "file": "three-kinds.png",
    "kind": "columns",
    "kicker": "Three kinds of AI",
-   "title": "Muse vs ChatGPT isn't a fair fight",
+   "title": "Three kinds of AI. Only one runs your errands.",
    "columns": [
     {
      "label": "Chatbots",
@@ -44,7 +44,7 @@
    "file": "score-side.png",
    "kind": "bars",
    "kicker": "My scores, out of 10",
-   "title": "Whose side is it on?",
+   "title": "Meta made $59.36bn from ads last quarter",
    "highlight": "Muse",
    "rows": [
     {
@@ -94,7 +94,7 @@
    "file": "scorecard.png",
    "kind": "table",
    "kicker": "My scores, out of 10",
-   "title": "Ready-made: Muse and Siri tie, for opposite reasons",
+   "title": "Muse and Siri tie on 43. For opposite reasons.",
    "highlight": "Muse",
    "columns": [
     "Job",
@@ -186,7 +186,7 @@
    "file": "score-private.png",
    "kind": "bars",
    "kicker": "My scores, out of 10",
-   "title": "Who can read your stuff?",
+   "title": "Meta can get to your Muse data. Apple says it can't get to Siri's.",
    "highlight": "Muse",
    "rows": [
     {
@@ -236,7 +236,7 @@
    "file": "shops.png",
    "kind": "columns",
    "kicker": "Can Muse shop there?",
-   "title": "Each shop decides",
+   "title": "Amazon locked Muse out. Walmart let it in.",
    "columns": [
     {
      "label": "Lets Muse buy",
@@ -289,5 +289,10 @@
    ],
    "note": "Ask ChatGPT for that flight, and it won't show up"
   }
+ ],
+ "source": [
+  "../2026-10-14-draft-body.md",
+  "../2026-10-14-draft-script.md",
+  "../2026-10-14-draft-script-90s.md"
  ]
 }

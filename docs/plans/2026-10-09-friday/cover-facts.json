@@ -1,13 +1,13 @@
 {
  "subchannel": "mind.the.gap",
- "title": "Soon, you won't pick your AI. The app will.",
- "headline": "Soon, you won't pick your AI. The app will.",
+ "title": "OpenAI tried to pick your AI for you. It broke on day one.",
+ "headline": "OpenAI tried to pick your AI for you. It broke on day one.",
  "date": "2026-10-16",
  "issue": "The headliner",
  "cover": {
   "headline": [
-   "Your AI,",
-   "picked for you."
+   "OpenAI tried to",
+   "pick your AI."
   ],
   "rows": [
    {

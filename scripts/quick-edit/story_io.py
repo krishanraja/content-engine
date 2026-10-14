@@ -54,6 +54,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from intro import browser  # noqa: E402  (the same browser lookup as the sting)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'pages'))
 import brand as house_brand  # noqa: E402  (the brand's own image files, from makeyourmindup.ai/brand/)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "post-pack"))
+import title_check  # noqa: E402  the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK)
 
 REPO = Path(__file__).resolve().parents[2]
 ENTRY = REPO / 'apps' / 'renderer' / 'src' / 'index.ts'
@@ -183,6 +185,9 @@ def video_title(facts, where='cover-facts.json'):
     if len(said) > TITLE_MAX_CHARS:
         raise StoryError(f'{where}: the video title "{said}" is {len(said)} characters; a title card holds at most '
                          f'{TITLE_MAX_CHARS}. Write a shorter "video_title".')
+    why = title_check.problems(said)
+    if why:
+        raise StoryError(f'{where}: the video title "{said}" fails the anti-dumb filter (house rule TITLE_EARNS_THE_CLICK): ' + '; '.join(why))
     return said
 
 
@@ -619,8 +624,10 @@ def self_test():
     # The title: video_title, else the cover lines; never the long headline.
     long = "I scored Meta's Muse against ChatGPT, Gemini, Claude and Siri. It tied with Siri, for opposite reasons."
     ok(video_title({'video_title': 'I scored Muse against its rivals', 'headline': long}) == 'I scored Muse against its rivals', 'video_title wins')
-    ok(video_title({'headline': long, 'cover': {'headline': ['I scored Muse', 'vs its rivals.']}}) == 'I scored Muse vs its rivals.', 'cover lines next')
+    ok(video_title({'headline': long, 'cover': {'headline': ["Muse's real", 'rival: Siri.']}}) == "Muse's real rival: Siri.", 'cover lines next')
     raises(lambda: video_title({'headline': long}), r'no video_title', 'the article headline is never the title')
+    raises(lambda: video_title({'video_title': "Muse vs ChatGPT isn't a fair fight"}), r'anti-dumb filter', 'a straw man title is refused')
+    raises(lambda: video_title({'video_title': 'Three kinds of AI'}), r'anti-dumb filter', 'a bare topic title is refused')
     raises(lambda: video_title({'video_title': 'x' * 61}), r'61 characters', 'a long title fails before rendering')
 
     # The SVG aspect, for optical logo sizes.
