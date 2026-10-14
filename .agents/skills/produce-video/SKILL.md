@@ -316,7 +316,7 @@ either.
 
 **First, the style references** (`docs/STYLE_REFERENCES.md`). Read
 `config/style-references.json`. Plan the cut with every editing, zoom and
-camerawork move marked `house_default`. In the report, set this cut's pace
+camerawork move marked `house_default`, and every move in a `trials` entry for this piece (with its plan, e.g. `docs/plans/<plan>/style-trial.md`). In the report, set this cut's pace
 (cuts a minute, median shot) beside its references' pace. A reference still
 `waiting_for_study` is studied first when there is time, and named in the
 report when there isn't.

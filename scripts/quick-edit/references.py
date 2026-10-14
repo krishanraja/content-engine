@@ -357,6 +357,9 @@ def ledger_problems(data):
                 out.append(f'{at}: move craft "{m.get("craft")}" is not one of {", ".join(CRAFT)}')
             if m.get('house_default') and not m.get('krish_said'):
                 out.append(f'{at}: a move is a house default only with Krish\'s words in krish_said')
+    for i, tr in enumerate(data.get('trials', [])):
+        if not tr.get('piece') or not tr.get('krish_said') or not tr.get('moves'):
+            out.append(f'trial {i + 1} needs a piece, Krish\'s words in krish_said, and its moves')
     return out
 
 
@@ -375,6 +378,7 @@ def self_test():
     t('the ledger refuses a house default without his words',
       any('house default' in e for e in ledger_problems({'references': [{'file': 'a.mp4', 'status': 'studied', 'moves': [{'craft': 'zoom', 'house_default': True}]}]})))
     t('the ledger refuses an unknown craft', any('craft' in e for e in ledger_problems({'references': [{'file': 'a.mp4', 'status': 'studied', 'moves': [{'craft': 'vibes'}]}]})))
+    t('a trial needs his words', any('trial 1' in e for e in ledger_problems({'references': [], 'trials': [{'piece': 'x', 'moves': ['a']}]})))
     t('the committed ledger is valid', ledger_problems(json.loads(LEDGER.read_text())) == [])
     if shutil.which('ffmpeg'):
         with tempfile.TemporaryDirectory() as tmp:

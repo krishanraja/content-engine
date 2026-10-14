@@ -627,6 +627,14 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14, 22:40 UTC: **Friday is the style trial.** Krish: "Let's trial
+  all of this on the next one." Both references are studied
+  (`config/style-references.json`). Trial scripts in Hannah Fry's structure
+  wait on his approval: `docs/plans/2026-10-09-draft-script.trial.md` (436
+  words) and `...-90s.trial.md` (195 words); the approved short stays on
+  Teleprompter until he picks. The edit plan is
+  `docs/plans/2026-10-09-friday/style-trial.md`.
+
 - 2026-10-14, 22:10 UTC: **Style references.** Krish drops videos he wants
   his to be like in Drive > Video Engine > Inspiration, with what he likes in
   the "What I like" sheet there. Home computers send them to the library on
