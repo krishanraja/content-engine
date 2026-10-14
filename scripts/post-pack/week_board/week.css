@@ -73,3 +73,9 @@ label.tick.on .t-label{font-weight:700}
 .empty-mark{display:flex;gap:6px}.empty-mark span{width:34px;height:8px;border-radius:999px;background:var(--line)}.empty-mark span:nth-child(2){background:var(--mint)}
 .empty-line{margin:0;font-size:18px;max-width:46ch}
 @media (prefers-reduced-motion:reduce){#toast,.meter span,label.tick .box{transition:none}}
+/* Finished videos (Krish, 2026-10-14: always link the Drive videos, to download): big plain links, then the link to copy. */
+.vid-row{align-items:flex-start}
+.vid-row .rec-links{flex-direction:column;align-items:stretch;flex:1 1 320px;gap:8px}
+.btnlink{display:inline-block;text-align:center;font:700 15px/1 inherit;padding:12px 16px;border-radius:999px;background:var(--mint,#7BEFC0);color:#0D1512;text-decoration:none}
+.btnlink.ghost{background:transparent;border:2px solid currentColor;color:inherit}
+.vid-row .txt{font-size:12px;white-space:pre-wrap;word-break:break-all;margin:0}

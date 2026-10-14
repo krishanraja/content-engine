@@ -21,6 +21,7 @@ that everything is fresh and synchronised in real time".
     python making.py PIECE_ID session https://claude.ai/code/session_...
     python making.py PIECE_ID read-back long --readers "reader A, ..." "reader B, ..." [--at TIME]
     python making.py PIECE_ID read-back long --krish-words "Krish, DATE: his words" [--readers ...]
+    python making.py PIECE_ID drive-link long https://drive.google.com/file/d/<id>/view
     python making.py PIECE_ID teleprompter long --folder ID --script ID --sha SHA256 [--title TITLE]
                      [--folder-name NAME] [--sent-at TIME]
     python making.py PIECE_ID teleprompter long [--folder ID] --error "what Teleprompter said"   # a send that failed
@@ -660,6 +661,27 @@ def _cut(cut):
 def krish_words(words):
     """Krish's own words, as every house override takes them: they start with "Krish"."""
     return isinstance(words, str) and words.strip().lower().startswith('krish')
+
+
+DRIVE_FILE = re.compile(r'^https://drive\.google\.com/file/d/([A-Za-z0-9_-]{20,})(?:/view)?(?:\?[^\s]*)?$')
+
+
+def drive_link_patch(record, cut, url):
+    """The cut's finished video with its Drive link added, so the week's
+    publish board can link it to download (Krish, 2026-10-14: "You should
+    always link the Google Drive videos because I need to actually download
+    them"). The video is the one already on the record for the cut, kept
+    whole: the engine keeps one entry a path, so this replaces it in place."""
+    cut = _cut(cut)
+    m = DRIVE_FILE.match(str(url or '').strip())
+    if not m:
+        raise MakingError('the Drive link is the file\'s own: https://drive.google.com/file/d/<id>/view')
+    videos = [v for v in (record.get('video_assets') or []) if isinstance(v, dict) and v.get('cut') == cut]
+    if not videos:
+        raise MakingError(f'the {cut} cut has no finished video on the record yet; record it first (making.py PIECE video {cut} ...)')
+    asset = {k: v for k, v in videos[-1].items() if k != 'at'}
+    asset['url'] = f'https://drive.google.com/file/d/{m.group(1)}/view'
+    return {'video_assets': [asset]}
 
 
 def recorded_patch(cut, path, seconds=None, script_sha256=None, use_words=None):
@@ -1445,6 +1467,21 @@ def self_test():
         check('scripts: a read-back is kept for words that did not change, and dropped for words that did', sorted(rechecked.get('read_back') or {}), ['long'])
     code, err = run([pid, 'read-back', 'long', '--readers', 'only one'], lambda m, path, b: (200, json.dumps({'ok': True, 'making': passed, 'steps': []})))
     check('read-back: the command line refuses one reader', (code, 'two fresh readers' in err), (1, True))
+    # The Drive link: added to the cut's video already on the record, the rest of it kept.
+    vrec = {'video_assets': [{'cut': 'long', 'name': 'w.mp4', 'path': '3 Posts/x/3 Video/w.mp4', 'seconds': 168, 'music': 'm',
+                              'thumbnail': {'path': '3 Posts/x/3 Video/w.jpg'}, 'at': '2026-10-12T20:42:27Z'}]}
+    linked = drive_link_patch(vrec, 'long', 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view?usp=drivesdk')
+    check('drive-link: the video kept whole, its Drive link added', linked,
+          {'video_assets': [{'cut': 'long', 'name': 'w.mp4', 'path': '3 Posts/x/3 Video/w.mp4', 'seconds': 168, 'music': 'm',
+                             'thumbnail': {'path': '3 Posts/x/3 Video/w.jpg'},
+                             'url': 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view'}]})
+    for label, rec, cut, url in (('a link that is not a Drive file', vrec, 'long', 'https://example.com/x'),
+                                 ('a cut with no video', vrec, 'short', 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view')):
+        try:
+            drive_link_patch(rec, cut, url)
+            check(f'drive-link: {label} is refused', 'no error', 'error')
+        except MakingError:
+            check(f'drive-link: {label} is refused', True, True)
     # Krish's own sign-off: recorded as his approval, with his words, never as the readers' "nothing lost".
     signed = read_back_patch(passed, 'short', ['reader A, round 10: nothing lost'], '2026-10-14T12:00:00Z', 'Claude Code',
                              krish='Krish, 2026-10-14: all looks good')['script_check']['read_back']['short']
@@ -1552,7 +1589,7 @@ def main(argv=None, call=None):
     ap = argparse.ArgumentParser(description="Record where a piece is, for Control Center's board.")
     ap.add_argument('piece_id', nargs='?')
     ap.add_argument('what', nargs='?', choices=['show', 'workroom', 'publish-manager', 'visual-gate', 'scripts', 'pack', 'recorded', 'video', 'posted', 'session',
-                                                     'read-back', 'teleprompter'])
+                                                     'read-back', 'teleprompter', 'drive-link'])
     ap.add_argument('args', nargs='*')
     ap.add_argument('--by', help=f'who is writing: Codex, Claude Code (default: {BY_ENV}, else {CODEX_BY} inside Codex, else {DEFAULT_BY})')
     ap.add_argument('--sent', action='store_true', help='with pack: the pack was sent to the library')
@@ -1629,6 +1666,10 @@ def main(argv=None, call=None):
             patch = recorded_patch(cut, a.args[1], a.seconds, current_hashes(record).get(cut), a.krish_words)
             # Only a take the store holds: every later session fetches it from there.
             in_store(a.args[1], call)
+        elif a.what == 'drive-link':
+            if len(a.args) != 2:
+                ap.error('give the cut and its Drive link: drive-link long https://drive.google.com/file/d/<id>/view')
+            patch = drive_link_patch(record_of(a.piece_id, call), a.args[0], a.args[1])
         elif a.what == 'video':
             patch = video_patch(a.args[0], a.args[1], a.args[2], url=a.url, seconds=a.seconds,
                                 thumb=a.thumb, thumb_url=a.thumb_url, music=a.music, thumb_file=a.thumb_file)

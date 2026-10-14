@@ -287,6 +287,53 @@ def checklist(day, p):
 
 INBOX = 'makeyourmindup > Video Engine > Inbox'
 
+DRIVE_ID = re.compile(r'drive\.google\.com/(?:file/d/|open\?id=|uc\?(?:export=download&)?id=)([A-Za-z0-9_-]{20,})')
+VIDEO_CUTS = (('long', '3-minute video (wide, 16:9)', 'YouTube and the Substack video post'),
+              ('short', '90-second video (tall, 9:16)', 'Shorts, Reels, TikTok and LinkedIn'))
+
+
+def videos_card(day, p, videos):
+    """The finished videos at the top of a made day: each cut's Drive file,
+    to open, to download straight to the computer, and its link to copy.
+    Krish, 2026-10-14: "You should always link the Google Drive videos
+    because I need to actually download them onto my computer and then
+    upload them into Substack or YouTube". videos: the making record's
+    video_assets; a video's "url" is its Drive link once it is in Drive."""
+    by_cut = {}
+    for v in videos or []:
+        if isinstance(v, dict) and v.get('cut') in ('long', 'short'):
+            by_cut[v['cut']] = v
+    if not by_cut:
+        return ''
+    rows = []
+    for cut, label, where in VIDEO_CUTS:
+        v = by_cut.get(cut)
+        if not v:
+            rows.append(f'<div class="rec-row"><span class="rec-cut"><span class="rec-name">{E(label)}</span></span>'
+                        '<div class="rec-links"><span class="rec-none">Not made yet</span></div></div>')
+            continue
+        secs = v.get('seconds')
+        length = f'{int(secs) // 60} min {int(secs) % 60:02d} s' if isinstance(secs, (int, float)) and secs else ''
+        m = DRIVE_ID.search(str(v.get('url') or ''))
+        if m:
+            fid = m.group(1)
+            view = f'https://drive.google.com/file/d/{fid}/view'
+            down = f'https://drive.usercontent.google.com/download?id={fid}&export=download'
+            cid = f'{p}video-{cut}'
+            links = (f'<a class="btnlink" href="{E(down)}" target="_blank" rel="noopener">Download</a> '
+                     f'<a class="btnlink ghost" href="{E(view)}" target="_blank" rel="noopener">Open in Drive</a>'
+                     f'<div class="btns"><button data-act="text" data-ref="{cid}">Copy link</button></div>'
+                     f'<pre class="txt" id="{cid}" data-raw="{E(view)}">{E(view)}</pre><div class="status" aria-live="polite"></div>')
+        else:
+            links = (f'<span class="rec-none">Not in Drive yet: it is in the post\'s folder as {E(v.get("name") or "")}, '
+                     'and its link joins this card once Library Sync has written it</span>')
+        rows.append(f'<div class="rec-row vid-row"><span class="rec-cut"><span class="rec-name">{E(label)}</span>'
+                    f'<span class="rec-shape">For {E(where)}{". " + E(length) if length else ""}</span></span>'
+                    f'<div class="rec-links">{links}</div></div>')
+    return (f'<div class="rec" id="{p}videos" role="region" aria-labelledby="{p}videos-h"><div class="rec-head">'
+            f'<h2 id="{p}videos-h">Finished videos</h2><span class="kick">In Drive, 3 Video</span></div>'
+            + ''.join(rows) + '<p class="rec-how">Download each to your computer, then upload it where its line says.</p></div>')
+
 
 def record_card(day, p, scripts):
     """The Record card: each cut's script in Teleprompter (its title, and
@@ -322,7 +369,7 @@ def record_card(day, p, scripts):
             + ''.join(rows) + f'<p class="rec-how">{E(how)}</p></div>')
 
 
-def made_panel(page, day, name, p, links, hidden, warnings):
+def made_panel(page, day, name, p, links, hidden, warnings, videos=None):
     body = page['body']
     # The Scripts section's cards, copied to the top beside the Record card.
     sec = re.search(r'<section id="scripts"><h2>[^<]*</h2>(?:<p class="why">[^<]*</p>)?(.*?)</section>', body, re.S)
@@ -358,7 +405,7 @@ def made_panel(page, day, name, p, links, hidden, warnings):
     anchor = '<div class="card links">'
     if body.count(anchor) != 1:
         raise BoardError(f'{name}: its publish page needs one links card ({anchor}); is it from publish_manager.py?')
-    extra = record_card(day, p, links) + scripts + checklist(day, p)
+    extra = videos_card(day, p, videos) + record_card(day, p, links) + scripts + checklist(day, p)
     if links_line not in page['body']:
         extra += '<p class="files"><span class="link-state" data-linkstate></span></p>'
     body = body.replace(anchor, extra + anchor, 1)
@@ -622,7 +669,7 @@ def by_day(values, what, has_value=True):
 
 # ------------------------------------------------------------------ the board
 
-def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None):
+def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None):
     """(page, manifest, warnings). pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
     {day: {'id', 'title'}} from the week options; pending: {day: title}."""
@@ -647,6 +694,14 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 raise BoardError(f'{weekday} is kept from the previous board but has no piece id: give --piece {key}=<uuid>')
             state = 'made'
             panel = re.sub(r'^(<div class="pm"[^>]*?)( hidden)?>', lambda m: m.group(1) + (' hidden' if key != opened else '') + '>', kept[key], count=1)
+            card = videos_card(key, f'{key}-', (videos or {}).get(key))
+            if card:
+                # The kept day's finished videos come from the record, as every other day's do.
+                at = panel.find(f'<div class="rec" id="{key}-videos"')
+                if at >= 0:
+                    panel = panel.replace(div_at(panel, at), card, 1)
+                elif '<div class="rec"' in panel:
+                    panel = panel.replace('<div class="rec"', card + '<div class="rec"', 1)
             panels.append(panel)
         elif page:
             if not piece:
@@ -657,7 +712,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 if blocks:
                     warnings.append(f'{weekday}: its publish page was built with other styles than the first; both are kept')
                 blocks.append(page['css'])
-            panels.append(made_panel(page, key, name, f'{key}-', teleprompter.get(key) or {}, key != opened, warnings))
+            panels.append(made_panel(page, key, name, f'{key}-', teleprompter.get(key) or {}, key != opened, warnings,
+                                     (videos or {}).get(key)))
         else:
             state = 'picked' if (piece or key in pending or pick) else 'not_picked'
             panels.append(not_made_panel(key, name, weekday, short_date(when), series_label,
@@ -817,7 +873,7 @@ def build(args, get=None):
             held = (previous['days'].get(key) or {}).get('piece_id')
             if held:
                 pieces[key] = held
-    scripts, unmade = {}, []
+    scripts, unmade, videos = {}, [], {}
     for key, _, weekday, *_ in DAYS:
         # The same order as board(): --piece, then the publish page's own, then the week's pick.
         piece = pieces.get(key) or (parse_day_page(pages[key], f'the {key} publish page')['piece'] if key in pages else None) \
@@ -831,7 +887,10 @@ def build(args, get=None):
                 warnings.append(f'{weekday}: its making record could not be read ({error}); no Teleprompter scripts from it')
             if answer is not None:
                 found = teleprompter_info(answer, piece, warnings, f'{weekday}\'s making record')
-                made_at = (((answer.get('making') or {}) if isinstance(answer, dict) else {}).get('publish_manager') or {})
+                making_rec = ((answer.get('making') or {}) if isinstance(answer, dict) else {})
+                if isinstance(making_rec.get('video_assets'), list):
+                    videos[key] = making_rec['video_assets']
+                made_at = (making_rec.get('publish_manager') or {})
                 url = made_at.get('url') if isinstance(made_at, dict) else None
                 if isinstance(url, str) and url.strip() and key not in pages and key not in kept:
                     unmade.append(f'{weekday}: piece {piece} has its publish page ({url.strip()}); Artifact read it and give '
@@ -846,7 +905,7 @@ def build(args, get=None):
         raise BoardError('a made day has no publish page in this build:\n  ' + '\n  '.join(unmade))
     for key in unpick:
         picks.pop(key, None)
-    page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept)
+    page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday)
     manifest['warnings'] = warnings + more
@@ -1127,6 +1186,14 @@ def self_test():
         check('--keep: a day the board does not hold as made is refused', False)
     except BoardError:
         check('--keep: a day the board does not hold as made is refused', True)
+    # The finished videos: each cut's Drive file to download, open and copy; one not in Drive yet says so.
+    vids = [{'cut': 'long', 'name': 'x - wide.mp4', 'seconds': 168, 'url': 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view'},
+            {'cut': 'short', 'name': 'x - tall.mp4', 'seconds': 87}]
+    card = videos_card('wed', 'wed-', vids)
+    check('finished videos: Download and Open in Drive for a cut in Drive, its link to copy, and the other says it is not in Drive yet',
+          'https://drive.usercontent.google.com/download?id=1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg&amp;export=download' in card
+          and 'https://drive.google.com/file/d/1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg/view' in card and 'data-act="text"' in card
+          and 'Not in Drive yet' in card and '2 min 48 s' in card and videos_card('wed', 'wed-', []) == '')
     if fails:
         print('week board self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
