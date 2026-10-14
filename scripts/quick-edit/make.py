@@ -1305,7 +1305,7 @@ def caption_self_test():
                             DEFAULT_FIXES), [])
     bands = [face_band(cw, ch, round(ch * 100 / 720), round(ch * 450 / 720)) for cw, ch in ((1080, 1920), (1920, 1080), (720, 1280))]
     checks.append(('the tall face band is filled edge to edge from inside the frame, never fitted with gaps a bigger Krish shows through',
-                   all(abs(bw / bh - 1080 / 920) < 0.01 and bx >= 0 and by >= 0 for bx, by, bw, bh in bands)))
+                   all(abs(bw / bh - 1080 / 920) < 0.01 and bx >= 0 and by >= 0 for bx, by, bw, bh in bands), True))
     checks.append(('a joined number never splits across two caption groups',
                    any(t['w'] in ('60,202', '$2.45') for g in chunked for t in g) and not any(t['w'] in (',202', '.45') for g in chunked for t in g), True))
     # The script's spellings (house rule BRITISH_SPELLING).
