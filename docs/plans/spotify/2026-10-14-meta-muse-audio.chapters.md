@@ -1,0 +1,6 @@
+- Is Muse really a ChatGPT rival? | starts: "I've been looking at what's really"
+- Three kinds of AI | starts: "To see why the ChatGPT comparison"
+- Who pays for each assistant | starts: "Why did the camps split like"
+- My scorecard | starts: "So I gave all five my"
+- Why Siri, and who reads your stuff | starts: "Now, I know what you're thinking."
+- Each shop decides | starts: "Here's the bit I think matters"

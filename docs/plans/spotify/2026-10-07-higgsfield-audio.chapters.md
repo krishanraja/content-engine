@@ -1,0 +1,6 @@
+- Sora shut, Higgsfield boomed | starts: "I've been looking at what's really"
+- The billion and the engines | starts: "The article has a picture of"
+- The chooser, and the theatre | starts: "Now the chooser. For me, this"
+- What I didn't expect | starts: "A few things in the interview"
+- What it means for you | starts: "So what does all this mean"
+- My prediction | starts: "So, real or theatre? I'd say"

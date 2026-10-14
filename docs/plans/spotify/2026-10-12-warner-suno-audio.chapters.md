@@ -1,0 +1,6 @@
+- Who gets paid for an AI song? | starts: "I've been following how money is"
+- How Warner changed sides | starts: "First, the engine. The AI behind"
+- Follow one fan's song | starts: "So let's follow the money from"
+- The court case everyone is reading | starts: "Now to the ruling everyone in"
+- Every cheque is evidence | starts: "This next bit is my favourite."
+- Where the money goes dark | starts: "So who gets paid?"

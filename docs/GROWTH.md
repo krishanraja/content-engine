@@ -24,13 +24,14 @@ named facts from his own checked pieces.
   (https://drive.google.com/drive/folders/1Ck0Eulgcs5pFIpS_Ds1vJ6mEAW__Xjwy).
   One Google Doc a day, `Growth pack YYYY-MM-DD`, holds every draft with its
   target link. A Google Sheet, `Growth numbers`, holds the weekly numbers.
-- **Control Center:** one item a day on Krish's list, area `Growth`, id
-  `growth-YYYY-MM-DD`, linking that day's doc. It closes when he says it is
-  done (closes_on `his_word`). Until the routines have the Google Drive and
-  Gmail connectors (Krish adds them in claude.ai, see "Setting it up"), the
-  whole pack lives in this item's detail, ready to copy: a routine made from a
-  session cannot carry connectors or push to GitHub (14 Oct: the first run's
-  pack was lost on a refused push).
+- **Control Center:** one item a day on the board, area `Growth`, id
+  `growth-YYYY-MM-DD`, in progress, linking that day's pack. (The board puts
+  an item on Krish's own list only when something can see it done, so packs
+  stay in progress; he works from the Growth area.) Until the routines have
+  the Google Drive and Gmail connectors, each pack is a private page (an
+  Artifact) with a Copy button on every draft: a routine made from a session
+  cannot carry connectors or push to GitHub (14 Oct: the first run's pack was
+  lost on a refused push).
 - **Gmail:** pitches and swap asks as drafts only, subject starting
   `[makeyourmindup]`.
 

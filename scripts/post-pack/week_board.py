@@ -600,7 +600,20 @@ def kept_panel(text, key):
         if not m:
             break
         panel = panel.replace(div_at(panel, m.start()), '', 1)
-    return panel
+    return drop_channels(panel, key)
+
+
+# Channels Krish dropped (2026-10-14: "I don't think I need Substack notes or WhatsApp to be honest, right now"):
+# a kept panel loses their ticks, their sections and their contents links, so no carried day still shows them.
+DROPPED_CHANNELS = {'whatsapp': 'WhatsApp', 'notes': 'Substack Notes'}
+
+
+def drop_channels(panel, key):
+    keys = '|'.join(DROPPED_CHANNELS)
+    names = '|'.join(re.escape(n) for n in DROPPED_CHANNELS.values())
+    panel = re.sub(rf'<label class="tick row-tick"><input type="checkbox" data-tick="{key}-(?:{keys})".*?</label>', '', panel, flags=re.S)
+    panel = re.sub(rf'<section id="{key}-s\d+"><div class="sec-head"><h2>\d+\. (?:{names})</h2>.*?</section>', '', panel, flags=re.S)
+    return re.sub(rf'<a href="#{key}-s\d+">(?:{names})</a>', '', panel)
 
 
 def keep_previous(previous, days, unpick, monday):
@@ -1250,6 +1263,11 @@ def _self_test():
            'thumbnail': {'path': '3 Posts/x/3 Video/x - wide.jpg', 'url': 'https://drive.google.com/file/d/1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ/view'}},
           {'cut': 'short', 'url': 'https://drive.google.com/file/d/12BfoG1GQ_wQQFMi1h9NLZyo72g4uEcgQ/view', 'thumbnail': {'path': '3 Posts/x/3 Video/x - tall.jpg'}}]
     tcard = videos_card('wed', 'wed-', tv)
+    dropped_panel = ('<label class="tick row-tick"><input type="checkbox" data-tick="mon-whatsapp" aria-label="WhatsApp"><span>W</span></label>'
+                     '<a href="#mon-s7">WhatsApp</a><section id="mon-s7"><div class="sec-head"><h2>7. WhatsApp</h2></div><p>x</p></section>'
+                     '<section id="mon-s6"><div class="sec-head"><h2>6. LinkedIn</h2></div></section>')
+    check('a kept day loses the channels Krish dropped, and keeps the rest',
+          'whatsapp' not in drop_channels(dropped_panel, 'mon').lower() and '6. LinkedIn' in drop_channels(dropped_panel, 'mon'))
     check('finished videos: each cut offers its thumbnail, and one not linked yet says where it is',
           'download?id=1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ' in tcard and 'Download thumbnail' in tcard and 'x - tall.jpg' in tcard)
     if fails:
