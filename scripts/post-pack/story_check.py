@@ -76,7 +76,8 @@ CUTS = {
     # 195 words keep the finished cut under 89 s, inside every platform's line (docs/research/2026-10-14-platform-length-limits.md).
     'short': (160, 195, 'a 90-second version that finishes under 89 seconds'),
     # The Spotify audio edition (docs/SPOTIFY.md; Krish, 2026-10-14: "create scripts for everything"): the article
-    # read for the ear, about 8 to 12 minutes; [CHAPTER: ...] lines are stage lines and not counted.
+    # read for the ear, about 8 to 12 minutes. Its chapters live beside it in <script>.chapters.md: the script is
+    # only the spoken words (house rule SCRIPT_ONLY), because it goes straight onto the teleprompter.
     'audio': (1200, 1700, 'a Spotify audio edition of about 8 to 12 minutes'),
 }
 OUTRO = re.compile(r'makeyourmindup', re.I)

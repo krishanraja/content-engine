@@ -38,7 +38,7 @@ Cadence: Monday, Wednesday and Friday, the same day as the Substack post.
 | Video episode | MP4, 1920x1080, H.264, AAC stereo 192 kbps | the long cut, or the recorded audio edition |
 | Thumbnail | 1920x1080 (16:9) | the wide thumbnail (draw at 1920x1080 for Spotify) |
 | Clip | 1080x1920, 15 to 90 seconds | the 90-second tall cut (already under 89 s) |
-| Chapters | at least 3, first at 00:00, 30 s apart, titles under 40 characters | the `[CHAPTER: ...]` lines of the script |
+| Chapters | at least 3, first at 00:00, 30 s apart, titles under 40 characters | the script's sidecar `<script>.chapters.md` (titles and where each part starts); times set after recording |
 | Description | the first 250 characters show before "more" | the episode's words in `words.json` (`spotify_description`) |
 | Episode art | none: the show art is used (once set, it cannot be removed) | |
 
