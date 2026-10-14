@@ -26,7 +26,11 @@ named facts from his own checked pieces.
   target link. A Google Sheet, `Growth numbers`, holds the weekly numbers.
 - **Control Center:** one item a day on Krish's list, area `Growth`, id
   `growth-YYYY-MM-DD`, linking that day's doc. It closes when he says it is
-  done (closes_on `his_word`).
+  done (closes_on `his_word`). Until the routines have the Google Drive and
+  Gmail connectors (Krish adds them in claude.ai, see "Setting it up"), the
+  whole pack lives in this item's detail, ready to copy: a routine made from a
+  session cannot carry connectors or push to GitHub (14 Oct: the first run's
+  pack was lost on a refused push).
 - **Gmail:** pitches and swap asks as drafts only, subject starting
   `[makeyourmindup]`.
 
@@ -100,3 +104,16 @@ Paste as the task's instructions:
 > columns: date, platform, followers or subscribers, new this week, top
 > source, note). Write only numbers you read on screen; leave a cell empty
 > when a number is not shown. Never estimate.
+
+## Setting it up (Krish, once)
+
+1. In claude.ai, open Routines. For "Growth: daily pack" and "Growth: Sunday
+   report": add the connectors **Google Drive** and **Gmail**, and the
+   repository **krishanraja/content-engine**. Save.
+2. In the Claude desktop app on the Mac, make two Cowork scheduled tasks
+   with the instructions above: "Conversation radar" daily at 06:30 New York,
+   and "Growth numbers" on Sundays at 06:00. Turn on "ask before acting".
+   Chrome must be logged in to LinkedIn, X, Substack, YouTube Studio,
+   Instagram and TikTok.
+3. Leave the Mac awake at those times (System Settings > Battery > Options:
+   prevent sleeping on power adapter).
