@@ -608,6 +608,21 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-14, 12:20 UTC: **Board rebuilt by the engine; Drive videos linked.**
+  Every made day on the publish board now has a Finished videos card drawn
+  by week_board.py from the piece's video_assets: Download (direct from
+  Drive), Open in Drive and Copy link per cut. `making.py <piece> drive-link
+  CUT <Drive file link>` records a video's link; the 13:25 New York routine
+  (trig_016L3CTo8wQh7WF5hpAwrT3A) now does exactly that and rebuilds the
+  board, never hand-editing it. Wednesday's final videos (plate "Three kinds
+  of AI", outro question without a yes/no vote, short's 1:11-1:15 restart
+  cut) are in Drive: wide 1zSxJUNIzeM_7YvS_-vdLftSN0zOrhbgQ, tall
+  1t2vYb1vMFSV5cj94wCuFmzEt96LAhb1J; every frame of both review sheets
+  checked. Open: the long cut is -15.2 LUFS (target -14 +-1), flagged by
+  make.py but shipped. Friday's publish page is now
+  https://claude.ai/artifact/VS5swZnLXVkF8EHnERMp9H (the old one could not
+  be read); Friday still needs recording and its video cards.
+
 - 2026-10-14, 11:15 UTC: **Wednesday re-pivoted to three kinds of AI and
   re-recorded.** Krish: "we are comparing apples and oranges"; names chosen:
   Chatbots / Work agents / Ready-made assistants. Outline approved
