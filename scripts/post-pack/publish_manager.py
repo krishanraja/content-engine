@@ -161,7 +161,15 @@ async function copyRich(htmlStr, text){
   } catch {}
   return viaCommand(htmlStr, text) ? "command" : "failed";
 }
-async function pngBlob(src){ return (await fetch(src)).blob() }
+// A picture is a data: URL. Decode it here: the viewer's page rules can block fetch() on data: URLs,
+// which once made every Download and Copy picture die without a word (Krish, 14 Oct: "STILL do not work").
+function dataBlob(src){
+  const m = /^data:([^;,]+)?(;base64)?,(.*)$/s.exec(src || ""); if (!m) return null;
+  const raw = m[2] ? atob(m[3]) : decodeURIComponent(m[3]);
+  const bytes = new Uint8Array(raw.length); for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+  return new Blob([bytes], { type: m[1] || "image/png" });
+}
+async function pngBlob(src){ return dataBlob(src) || (await fetch(src)).blob() }
 async function copyImage(src){
   try { await navigator.clipboard.write([new ClipboardItem({ "image/png": pngBlob(src) })]); return "clipboard" } catch {}
   return viaCommand(`<img src="${src}">`, "") ? "command" : "failed";
@@ -169,7 +177,8 @@ async function copyImage(src){
 let downloads = null;
 const downloadsReady = (async () => { try { downloads = window.claude?.use ? await window.claude.use("downloads") : null } catch { downloads = null } return downloads })();
 async function download(src, name){
-  const blob = await pngBlob(src);
+  let blob;
+  try { blob = await pngBlob(src) } catch (e) { toast("Could not read this picture (" + ((e && e.message) || "unknown") + "). Use Copy picture."); return }
   // Wait for the save capability (it answers a moment after load), and say why a save did not happen.
   const saver = downloads || (window.claude ? await downloadsReady : null);
   if (saver) {
@@ -320,23 +329,24 @@ def build(src, out_dir):
 def self_test():
     import tempfile
     fails = []
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory() as tmp, title_check.picked_for_tests(['Amazon locked Muse out <x>'], tmp):
         t = Path(tmp)
         png = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
         (t / 'a.png').write_bytes(png)
-        (t / 'body.md').write_text('Opening line.\n\n## THE PART\n\nA **bold** fact.\n', encoding='utf-8')
+        (t / 'body.md').write_text('Amazon locked Muse out.\n\n## THE PART\n\nA **bold** fact.\n', encoding='utf-8')
         (t / 'words.json').write_text(json.dumps({'title': 'T', 'linkedin_post': 'L {ARTICLE_URL}'}), encoding='utf-8')
         (t / 's.md').write_text('Why? Because.\n', encoding='utf-8')
-        (t / 'm.json').write_text(json.dumps({'title': 'T <x>', 'subtitle': 'S', 'body': 'body.md', 'words': 'words.json',
+        (t / 'm.json').write_text(json.dumps({'title': 'Amazon locked Muse out <x>', 'subtitle': 'S', 'body': 'body.md', 'words': 'words.json',
                                               'images': [{'id': 'pic', 'file': 'a.png', 'alt': 'A', 'after_heading': 'THE PART'},
                                                          {'id': 'vertical', 'file': 'a.png', 'alt': 'V', 'role': 'vertical-cover'}],
                                               'scripts': [{'label': 'Script', 'file': 's.md'}]}), encoding='utf-8')
         h = build(t / 'm.json', t / 'out').read_text(encoding='utf-8')
     checks = [
         ('the article copies with its pictures', 'data-act="article"' in h and '<h2>THE PART</h2>\n<figure><img src="data:image/png;base64,' in h),
+        ('pictures decode in the page, no fetch() on data: URLs', 'function dataBlob(src)' in h and 'Could not read this picture' in h),
         ('every picture has Copy picture and Download', 'data-act="image" data-ref="img-pic"' in h and 'data-act="download" data-ref="img-pic"' in h),
         ('bold stays bold', '<strong>bold</strong>' in h),
-        ('the title is escaped', 'T &lt;x&gt;' in h and 'T <x>' not in h),
+        ('the title is escaped', 'out &lt;x&gt;' in h and 'out <x>' not in h),
         ('the article link fills every copy', '{ARTICLE_URL}' in h and 'id="link-article"' in h),
         ('scripts are copyable', 'Why? Because.' in h),
         ('a missing text says so', 'Not written yet' in h),

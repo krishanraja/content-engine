@@ -30,7 +30,15 @@ async function copyRich(htmlStr, text){
   } catch {}
   return viaCommand(htmlStr, text) ? "command" : "failed";
 }
-async function pngBlob(src){ return (await fetch(src)).blob() }
+// A picture is a data: URL. Decode it here: the viewer's page rules can block fetch() on data: URLs,
+// which once made every Download and Copy picture die without a word (Krish, 14 Oct: "STILL do not work").
+function dataBlob(src){
+  const m = /^data:([^;,]+)?(;base64)?,(.*)$/s.exec(src || ""); if (!m) return null;
+  const raw = m[2] ? atob(m[3]) : decodeURIComponent(m[3]);
+  const bytes = new Uint8Array(raw.length); for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+  return new Blob([bytes], { type: m[1] || "image/png" });
+}
+async function pngBlob(src){ return dataBlob(src) || (await fetch(src)).blob() }
 async function copyImage(src){
   try { await navigator.clipboard.write([new ClipboardItem({ "image/png": pngBlob(src) })]); return "clipboard" } catch {}
   return viaCommand(`<img src="${src}">`, "") ? "command" : "failed";
@@ -38,7 +46,8 @@ async function copyImage(src){
 let downloads = null;
 const downloadsReady = (async () => { try { downloads = window.claude?.use ? await window.claude.use("downloads") : null } catch { downloads = null } return downloads })();
 async function download(src, name){
-  const blob = await pngBlob(src);
+  let blob;
+  try { blob = await pngBlob(src) } catch (e) { toast("Could not read this picture (" + ((e && e.message) || "unknown") + "). Use Copy picture."); return }
   // Wait for the save capability (it answers a moment after load), and say why a save did not happen.
   const saver = downloads || (window.claude ? await downloadsReady : null);
   if (saver) {

@@ -1084,6 +1084,8 @@ def _self_test():
           'db.collection("ticks").doc(id).set(body)' in js and 'db.collection("ticks").onSnapshot(' in js
           and 'db.doc("links/" + day).set(body)' in js and 'db.doc("links/" + day).onSnapshot(' in js
           and 'window.claude.use("db")' in js and 'window.claude.use("downloads")' in js)
+    check('pictures decode in the page: Download never needs fetch() on a data: URL, and says when it fails',
+          'function dataBlob(src)' in js and 'dataBlob(src) ||' in js and 'Could not read this picture' in js)
     check('db wiring: a tick saves done, at, day, piece_id, step, channel and label',
           '{ done, at: new Date().toISOString(), day: m.day, piece_id: m.piece_id, step: m.step, channel: m.channel, label: m.label }' in js)
     conf = json.loads(re.search(r'const CONF = (\{.*?\});\n', page).group(1))
