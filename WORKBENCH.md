@@ -156,9 +156,15 @@ day on it is at 100% (Friday's reposts go out at the weekend).
   the article, the deep cut script and the 90-second script. Krish's saves
   land in the board's store as `edits/fri-<item>`, and Comment opens the
   comment composer. Read them with ArtifactData `list edits` and
-  ArtifactComments on the PINNED board. The other copy's store cannot be read
-  from this account (another organisation), so Krish edits on the pinned
-  one, and a session in his other account reads its own copy.
+  ArtifactComments. The other copy's store cannot be read from this account
+  (another organisation), but its comments can, so (build `1be8fff`) every
+  Save also posts the changed paragraphs as a comment thread on its block
+  ("EDIT fri-<item>", WAS/NOW lines). Krish, 15 October: "I will be editing
+  from the other board until Sunday and then I'll move back here. Just make
+  sure they catch it." Until Sunday, read his edits and comments with
+  `ArtifactComments read` on https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
+  (and on the pinned one), apply them to the plan files, rerun the gates,
+  and republish to both links.
 
 Last week's publish board: none (the first board was made on 12 October).
 
