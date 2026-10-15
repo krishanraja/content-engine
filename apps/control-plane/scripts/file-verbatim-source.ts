@@ -115,6 +115,18 @@ function args(argv: string[]) {
   return out
 }
 
+/** In a Claude Code cloud session the engine key is added by the session's
+ *  proxy, which Node's fetch only uses when NODE_USE_ENV_PROXY=1. Without it
+ *  the request goes straight to the engine with no real key and comes back
+ *  401 (2026-10-15: 28 filings refused that way). Returns what to do, or
+ *  null when nothing is in the way. Pure, so it is tested. */
+export function cloudProxyProblem(env: Record<string, string | undefined>): string | null {
+  const proxy = env.HTTPS_PROXY || env.https_proxy
+  if (!env.CLAUDE_CODE_REMOTE || !proxy || env.NODE_USE_ENV_PROXY === '1') return null
+  return 'In a cloud session, file through the session proxy: run again with NODE_USE_ENV_PROXY=1 ' +
+    'and ENGINE_OPERATOR_TOKEN=injected-by-the-session-proxy (the proxy puts the real key on the request).'
+}
+
 async function main() {
   const a = args(process.argv.slice(2))
   if (!a.idea || !a.url || !a.match.length) {
@@ -131,6 +143,8 @@ async function main() {
   const title = a.title || (text.match(/^Title:\s*(.+)$/m)?.[1] || a.url).trim()
   console.log(`--- ${title} (verbatim, ${a.url}) ---\n${content}\n---`)
   if (a.dry) return
+  const proxyProblem = cloudProxyProblem(process.env)
+  if (proxyProblem) throw new Error(proxyProblem)
   const token = process.env.ENGINE_OPERATOR_TOKEN
   if (!token) throw new Error('ENGINE_OPERATOR_TOKEN is not set')
   const res = await fetch(`${ENGINE}/api/content-ideas/${a.idea}/materials`, {
