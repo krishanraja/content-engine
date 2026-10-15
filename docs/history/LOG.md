@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-15
+
+- reconciled at `1bc3161`: NOW.md takes Friday v3 and the board's draft-day build, the editable and commentable board with saves posted as comments, the free fact-check pre-check, and the move of the steward and of the wordmark fallback after control-center went private. README.md, CONTENT_ENGINE.md, STATE.md, SYSTEM_MAP.md, GLOSSARY.md, NORTH_STAR.md and STUDIO.md keep their 2026-09-25 stamps because the steward did not check them against this window; NOW.md "Do not trust" still names them.
+
 ## 2026-10-14
 
 - rolled from NOW.md: 2026-09-13 **Production as station harnesses** (PR #69). Ruling (Krish, 2026-09-13): "production machinery must use independently governed station harnesses, not one accumulating Markdown file."
