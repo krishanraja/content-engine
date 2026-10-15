@@ -3,5 +3,5 @@
 - The gear that matters | starts: "So what does matter? Let"
 - What thinking costs them | starts: "When an AI thinks, it"
 - Who decides next | starts: "So who decides how hard"
-- The good and the bad | starts: "If I'm right, is that"
+- The good and the bad | starts: "Is that good? Some of"
 - What to do about it | starts: "So what should you actually"

@@ -504,8 +504,34 @@ def warnings(text):
 LONG_WORD_SHARE = 0.06  # long words above this share are told, never refused
 
 
+CHAPTER_START = re.compile(r'starts:\s*"([^"]+)"')
+
+
+def chapter_problems(text, chapters):
+    """Why a chapter list beside a script (<script>.chapters.md) no longer
+    fits it, or []. Each chapter's "starts:" words must be said in the
+    script, in the list's order: once a script is cut, a stale start would
+    put a YouTube or Spotify chapter on words that are never said."""
+    said = _plain(' '.join(spoken_paragraphs(text)))
+    found, at = [], 0
+    for want in CHAPTER_START.findall(chapters):
+        where = said.find(_plain(want), at)
+        if where < 0:
+            where_any = said.find(_plain(want))
+            found.append(f'chapter start "{want}" is ' + ('said before the chapter above it' if where_any >= 0 else 'not in the script')
+                         + '; fix the .chapters.md beside it')
+        else:
+            at = where
+    return found
+
+
 def check_file(path, cut=None, series=None):
-    return problems(Path(path).read_text(encoding='utf-8-sig'), cut or cut_of(Path(path).name), series)
+    text = Path(path).read_text(encoding='utf-8-sig')
+    found = problems(text, cut or cut_of(Path(path).name), series)
+    chapters = Path(path).with_suffix('.chapters.md')
+    if chapters.is_file():
+        found += chapter_problems(text, chapters.read_text(encoding='utf-8-sig'))
+    return found
 
 
 def warn_file(path):
@@ -690,6 +716,14 @@ def self_test():
     check('a line Krish rejected is refused in any later script (config/rejected-lines.json)',
           any('Krish rejected' in p for p in problems('It lives in a locked box on the company\'s computers.')), True)
     check('the gate refuses through problems(), for every script', any('house rule R7' in p for p in problems(fine + ' ' + long_one)), True)
+
+    # The chapter list beside a deep cut follows the words as they are now.
+    listed = '- One | starts: "Why does it"\n- Two | starts: "That is the whole"\n'
+    check('chapter starts said in order pass', chapter_problems(fine, listed), [])
+    check('a chapter start the script no longer says is refused',
+          any('not in the script' in p for p in chapter_problems(fine.replace('That is the whole story.', 'Some of both.'), listed)), True)
+    check('chapter starts out of order are refused',
+          any('before the chapter above it' in p for p in chapter_problems(fine, '- Two | starts: "That is the whole"\n- One | starts: "Why does it"\n')), True)
 
     # This week's unrecorded scripts, as their pieces' records hold them. Monday's
     # were recorded on the 12 October lines and keep those words; a script
