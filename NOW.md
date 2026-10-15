@@ -9,7 +9,7 @@ state_doc: docs/STATE.md
 history_log: docs/history/LOG.md
 truth_files: []
 authority_order: [production readback (the Vercel project content-engine and the Supabase database), AGENTS.md, docs/NORTH_STAR.md, docs/STATE.md, docs/SYSTEM_MAP.md, docs/CONTENT_ENGINE.md, docs/STUDIO.md, docs/ENGINE_SESSION.md, docs/GLOSSARY.md, README.md]
-steward: https://github.com/krishanraja/control-center/blob/main/docs/steward/RUNBOOK.md
+steward: https://github.com/krishanraja/ai-harness/blob/main/docs/steward/RUNBOOK.md
 never_publish: [the Epidemic Sound licence ids and the Teleprompter and Descript account details, Drive folder ids, the Claude routine and trigger ids, the Supabase project id, any credential or secret name including the operator token, the cron secret, Drive paths, Windows runner host names and local paths, runner bearer and signing key target names, any Remotion licence status detail, any client or guest name in config, the text of any subchannel mandate or of the voice block]
 ---
 # Mindmake content engine: where it is right now
