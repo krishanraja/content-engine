@@ -46,6 +46,18 @@ export interface BrandWordmarkLegibilityReport {
 
 const MAX_BRAND_ASSET_BYTES = 2_000_000
 
+// Every pinned official mark is also served publicly by its own sha256 from
+// Control Center (api/brand-mark in krishanraja/control-center). That
+// repository went private on 2026-10-15 and its raw URLs began answering 404,
+// so a source that refuses or cannot be reached falls back to it. The pinned
+// source in config/studio.json stays the provenance and the theme hash is
+// unchanged: the bytes are held to the same sha256 wherever they come from.
+export const BRAND_MARK_MIRROR = 'https://controlcenter.krishraja.com/api/brand-mark'
+
+export function mirroredWordmarkUrl(asset: BrandWordmarkAssetV1): string {
+  return `${BRAND_MARK_MIRROR}/${asset.sha256}`
+}
+
 export function officialWordmarkUrl(theme: BrandThemeV1, asset: BrandWordmarkAssetV1): string {
   if (!/^[a-z0-9_.-]+\/[a-z0-9_.-]+$/i.test(theme.source.repository)) throw new Error('brand source repository must be an owner/name GitHub repository')
   if (theme.source.commit === PENDING_BRAND_SOURCE_COMMIT) throw new Error(`${theme.theme_id} has no recorded source commit yet (${PENDING_BRAND_SOURCE_COMMIT}); its marks cannot be fetched`)
@@ -82,8 +94,9 @@ async function cachedOfficialAsset(theme: BrandThemeV1, asset: BrandWordmarkAsse
   }
 
   const expectedContentType = extension === '.svg' ? 'image/svg+xml' : 'image/png'
-  const response = await fetchImpl(officialWordmarkUrl(theme, asset), { headers: { accept: expectedContentType } })
-  if (!response.ok) throw new Error(`official wordmark download failed for ${asset.source_path}: HTTP ${response.status}`)
+  const response = await fetchOfficialAsset(officialWordmarkUrl(theme, asset), expectedContentType, fetchImpl)
+    ?? await fetchOfficialAsset(mirroredWordmarkUrl(asset), expectedContentType, fetchImpl)
+  if (!response) throw new Error(`official wordmark download failed for ${asset.source_path}: neither the pinned source nor ${BRAND_MARK_MIRROR} answered`)
   const contentType = response.headers.get('content-type')?.split(';')[0]?.trim().toLowerCase()
   if (contentType !== expectedContentType && contentType !== 'application/octet-stream') throw new Error(`official wordmark returned unsupported content type ${contentType || 'unknown'}`)
   const bytes = new Uint8Array(await response.arrayBuffer())
@@ -96,6 +109,18 @@ async function cachedOfficialAsset(theme: BrandThemeV1, asset: BrandWordmarkAsse
     if (await hashFile(cachePath) !== asset.sha256) throw new Error(`concurrent official wordmark cache mismatch for ${asset.source_path}`)
   })
   return cachePath
+}
+
+/** A response with the asset, or null when that host refused or could not be
+ *  reached, so the caller can try the next one. A host that answers with the
+ *  wrong bytes is not skipped: the hash check refuses it. */
+async function fetchOfficialAsset(url: string, accept: string, fetchImpl: typeof fetch): Promise<Response | null> {
+  try {
+    const response = await fetchImpl(url, { headers: { accept } })
+    return response.ok ? response : null
+  } catch {
+    return null
+  }
 }
 
 async function stageAsset(theme: BrandThemeV1, asset: BrandWordmarkAssetV1, targetDirectory: string, label: string, fetchImpl: typeof fetch): Promise<StagedWordmarkAsset> {
