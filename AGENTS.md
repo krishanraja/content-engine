@@ -192,10 +192,10 @@ Run `npm run verify` before pushing. Validate all repo-scoped skills with
 typecheck:control-plane` and `npm run check:control-plane`. Known failures on
 `main` are listed in `docs/STATE.md`; anything else failing is yours to fix.
 
-<!-- krish-canon:start release=v2026.10.06.3 sha=f44b2f1dd6ba rendered=2026-10-06 -->
+<!-- krish-canon:start release=v2026.10.15.2 sha=2ff48457ce5b rendered=2026-10-15 -->
 ## Krish canon
 
-Rendered from `krishanraja/ai-harness` at release v2026.10.06.3. Nothing inside these
+Rendered from `krishanraja/ai-harness` at release v2026.10.15.2. Nothing inside these
 markers is hand-maintained: an edit here is detected and proposed back to the canon,
 never silently overwritten, and never lost. Everything outside the markers belongs to
 this repository and is never read or rewritten by the harness.
@@ -243,7 +243,7 @@ Heartside, Full Time, Legibility, CTRL and Pulse roll into it. One queue: the mi
 leads, and product work is ordered beneath it by the live priority ladder. Profile,
 decision rules and standing rulings: `skills/krish-principles/references/who-krish-is.md`
 in the harness. What he works on is live, never copied here; read it from Control Center at
-https://raw.githubusercontent.com/krishanraja/control-center/main/docs/KRISH.md (and `docs/PORTFOLIO.md` beside it).
+https://controlcenter.krishraja.com/api/canon/KRISH.md (and `PORTFOLIO.md` beside it).
 
 **Where the rest lives.** The operating contract, the routing contract and the
 29 curated skills are in `krishanraja/ai-harness`. On a machine with the
