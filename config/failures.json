@@ -375,6 +375,30 @@
      "how": "scripts are written from a per-piece recipe on top of the base, never from one house style"
     }
    ]
+  },
+  {
+   "id": "paid-fact-check-loops",
+   "on": "2026-10-15",
+   "krish": "can you figure out if there is a way to have future sessions not cost so much via Anthropic API credits? ... yes, if you are 110% sure this does not degrade the quality of the output - this cannot happen.",
+   "what": "59 paid fact-check runs in two days (13 and 14 October, about $14) went round run, learn a number was not on file, fix, run again, when the number could be read against the filed sources for free.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/engine.py",
+     "contains": "Not running the paid fact check",
+     "how": "a POST to fact-check first reads the free GET and refuses while any stated number is on no filed source, unless --despite-precheck"
+    },
+    {
+     "file": "apps/control-plane/api/_factGate.ts",
+     "contains": "export function numbersNotOnFile",
+     "how": "the free pre-check, read by value as the gate reads numbers; the paid gate's own logic is unchanged"
+    },
+    {
+     "file": "tests/control-plane/fact-gate.test.ts",
+     "contains": "describe('numbersNotOnFile'",
+     "how": "the pre-check lists only numbers no source carries, and leaves forecasts and the confidence line to the gate"
+    }
+   ]
   }
  ]
 }

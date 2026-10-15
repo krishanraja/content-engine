@@ -24,7 +24,7 @@ import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  carryForward, combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  carryForward, combine, ENTAIL_SYSTEM, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -376,7 +376,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // a carousel or a web edition to show on screen (api/_receipts.ts). Only
     // for the exact version that passed.
     const proof = gate.ok ? receipts(meta.fact_check, readMaterials(meta)) : []
-    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun })
+    // The free pre-check (api/_factGate.ts numbersNotOnFile): what a paid run
+    // would have to lean on the web for, read before anyone pays for one.
+    const precheck = { numbers_not_on_file: numbersNotOnFile(body, meta) }
+    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck })
   }
 
   if (body.trim().length < 200) return res.status(409).json({ ok: false, error: 'There is no draft to check yet.' })

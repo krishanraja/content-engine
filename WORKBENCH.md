@@ -2507,9 +2507,13 @@ measurement window. Its exact meter delta has not yet been read back.
 
 Measured again over the 7 days to 2026-10-15 (`meter_daily`, provider
 anthropic): $45.51 in all. The fact gate was $21.39 of it (4,367 calls:
-on-file $11.99, second look $4.21, extract $3.30, entail $1.89), because every
-check re-extracts and re-checks every claim, even when only a sentence
-changed. The weekly AEO probe (GitHub Actions, Sundays, about 96 web-search
-probes) was $9.87. The editorial radars were $3.48, and the eight timer judges
+on-file $11.99, second look $4.21, extract $3.30, entail $1.89): 59 paid runs
+on 13 and 14 October, mostly run, fix one number, run again. (Unchanged
+sentences already keep their verdict: carryForward, walk log F52.) Since
+2026-10-15 the free GET of the fact check returns `precheck`, and
+`engine.py` refuses a paid run while any stated number is on no filed source
+(`--despite-precheck` overrides); the gate's own checks are unchanged. The AEO probe (AEO-Engine on GitHub Actions, about 96 web-search probes) was
+$9.87; it now runs fortnightly (odd ISO weeks, next 25 October; AEO-Engine
+`6041cb5`). The editorial radars were $3.48, and the eight timer judges
 were about $3. This chat-side work runs on Krish's plan, not on API credits.
 Krish (2026-10-15) asked for "optimizations we can make".

@@ -27,6 +27,9 @@ the key, it says which of these is the cause.
 
 --sse   for routes that stream (revise): prints only the last data event.
 --full  prints the whole response instead of the first 1,500 characters.
+--despite-precheck  run a paid fact check although the free pre-check lists
+        numbers on no filed source (POST .../fact-check first reads the free
+        GET, prints what the run will check, and refuses until then).
 A body field "idempotency_key": "NEW" is replaced with a fresh UUID.
 
 Your own calls are observations. Relay a decision only when Krish made it in
@@ -170,6 +173,21 @@ def call(method: str, path: str, body=None, token: str = '', sse: bool = False, 
                           'sandbox with no internet, run it again outside the sandbox.')
 
 
+def precheck_refusal(answer: dict, flags: set) -> str:
+    """Why a paid fact check should wait, from the free GET's answer: numbers
+    the piece states that no filed source carries (Krish, 2026-10-15, on the
+    model bill; 59 paid runs on 13 and 14 October went round the run-fix-run
+    loop this catches for free). Empty when the run may go."""
+    listed = ((answer or {}).get('precheck') or {}).get('numbers_not_on_file') or []
+    if not listed or '--despite-precheck' in flags:
+        return ''
+    lines = [f'  {", ".join(x["numbers"])}: {x["sentence"][:140]}' for x in listed]
+    return ('Not running the paid fact check: these numbers are on no filed source, so only the '
+            'web check could bear them out. File the source that carries each one (or fix the '
+            'number), then run again; or pass --despite-precheck when the web check is meant '
+            'to carry them.\n' + '\n'.join(lines))
+
+
 def main() -> int:
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     flags = {a for a in sys.argv[1:] if a.startswith('--')}
@@ -188,6 +206,24 @@ def main() -> int:
         body = json.loads(raw)
         if isinstance(body, dict) and body.get('idempotency_key') == 'NEW':
             body['idempotency_key'] = str(uuid.uuid4())
+    if method == 'POST' and path.split('?')[0].rstrip('/').endswith('/fact-check'):
+        try:
+            gs, gt = call('GET', path.split('?')[0], None, token, timeout=60)
+        except Unreachable as unreachable:
+            print(unreachable, file=sys.stderr)
+            return 3
+        try:
+            answer = json.loads(gt) if gs == 200 else {}
+        except ValueError:
+            answer = {}
+        scope = answer.get('next_run') or {}
+        if scope:
+            print(f'This run checks {scope.get("fresh_sentences")} fresh sentences; '
+                  f'{scope.get("reusable_sentences")} keep their last result.', file=sys.stderr)
+        why = precheck_refusal(answer, flags)
+        if why:
+            print(why, file=sys.stderr)
+            return 4
     try:
         status, text = call(method, path, body, token, sse='--sse' in flags)
     except Unreachable as unreachable:

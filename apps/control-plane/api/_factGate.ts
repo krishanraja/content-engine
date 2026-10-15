@@ -205,6 +205,26 @@ export function numbersIn(s: string): string[] {
     .map(n => { const v = Number(n); return Number.isFinite(v) ? String(v) : n })
 }
 
+/** The free pre-check (Krish, 2026-10-15, on cutting the model bill: "if you
+ *  are 110% sure this does not degrade the quality of the output"). Every
+ *  stated sentence whose numbers, read by value as numbersIn reads them,
+ *  appear in none of the sources on file. Such a number can only be borne out
+ *  by the web check, and on 13 and 14 October 59 paid runs went round the
+ *  same loop: run, learn a number was not on file as written, fix, run again.
+ *  This reads no model and changes no verdict: the gate itself is untouched,
+ *  so a session can fix or file before it pays for a run. Forecasts and
+ *  Krish's confidence line are left out, as the gate leaves them out. */
+export function numbersNotOnFile(body: string, meta: Record<string, any>): Array<{ sentence: string; numbers: string[] }> {
+  const onFile = new Set(numbersIn(stripMarkdownLinks(sourcesText(meta || {}))))
+  const out: Array<{ sentence: string; numbers: string[] }> = []
+  for (const s of sentences(body)) {
+    if (isConfidenceLine(s) || readsAsForecast(s)) continue
+    const missing = [...new Set(numbersIn(stripMarkdownLinks(s)).filter(n => !onFile.has(n)))]
+    if (missing.length) out.push({ sentence: s, numbers: missing })
+  }
+  return out
+}
+
 /** Where one source ends and the next begins in the text the checkers read. */
 export const SOURCE_MARK = '### SOURCE: '
 

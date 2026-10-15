@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 import {
-  bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
+  bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, numbersNotOnFile, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, factLedgerCoverage, settle, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
 } from '../../apps/control-plane/api/_factGate.js'
@@ -677,5 +677,23 @@ describe('a long piece is checked across runs, never blocked for its length (F57
     expect(waiting.reason).toMatch(/7 claims are still to check/)
     const mixed = gateStatus({ fact_check: { ...base, body_hash: bodyHash(body), passed: false, blocking: 8, unchecked: 7 } }, body)
     expect(mixed.reason).toMatch(/8 claims failed the fact check/)
+  })
+})
+
+// The free pre-check: no model, no verdict, only what a paid run would find.
+describe('numbersNotOnFile', () => {
+  const meta = { materials: [{ kind: 'paste', verbatim: true, url: 'https://example.com/a', content: SOURCES }] }
+  test('a number on file by value is not listed, whatever its spelling', () => {
+    expect(numbersNotOnFile('Cisco pays about $10000 a year per person. It has 90,000 employees.', meta)).toEqual([])
+  })
+  test('a number on no source is listed with its sentence', () => {
+    expect(numbersNotOnFile('Glean says 96% of usage runs on frontier models.', meta))
+      .toEqual([{ sentence: 'Glean says 96% of usage runs on frontier models.', numbers: ['96'] }])
+  })
+  test('forecasts and the confidence line are left to the gate, as the gate leaves them', () => {
+    expect(numbersNotOnFile('By 30 June 2027, OpenAI will make thinking the default.\n\nHow sure we are: 35%.', meta)).toEqual([])
+  })
+  test('headings are not sentences', () => {
+    expect(numbersNotOnFile('## GPT-5 IN 2031\n\nCisco has 90,000 employees.', meta)).toEqual([])
   })
 })
