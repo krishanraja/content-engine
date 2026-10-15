@@ -399,6 +399,30 @@
      "how": "the pre-check lists only numbers no source carries, and leaves forecasts and the confidence line to the gate"
     }
    ]
+  },
+  {
+   "id": "marks-fetched-from-a-private-repo",
+   "on": "2026-10-15",
+   "krish": "this control center touches a LOT of stuff so verify these are not the only things at risk if the repo is made private",
+   "what": "The Studio fetched six pinned official wordmarks anonymously from raw.githubusercontent.com/krishanraja/control-center, which answers 404 once that repository is private, so a runner with an empty cache could not stage them.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "packages/core/src/brand-assets.ts",
+     "contains": "bundledWordmarkPath(asset)",
+     "how": "a pinned mark is read from config/brand-wordmarks, by its own sha256, before any network fetch"
+    },
+    {
+     "file": "tests/brand-assets.test.ts",
+     "contains": "keeps every pinned wordmark in the repository under its own hash",
+     "how": "every mark pinned in studio.json has a bundled copy that hashes to its name, and nothing extra is bundled"
+    },
+    {
+     "file": "tests/brand-assets.test.ts",
+     "contains": "stages every pinned theme with the network refused",
+     "how": "all pinned marks load with a fetch that throws"
+    }
+   ]
   }
  ]
 }

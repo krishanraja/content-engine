@@ -50,5 +50,8 @@ __pycache__/
 .env
 .env.*
 !.env.example
+# The official wordmarks, kept by their own sha256 so a render never depends on
+# the repository they came from staying public (config/brand-wordmarks/README.md).
+!config/brand-wordmarks/*.png
 apps/renderer/public/runtime/
 .steward/

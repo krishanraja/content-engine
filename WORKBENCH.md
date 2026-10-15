@@ -644,6 +644,15 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-15, 15:00 UTC: **The official wordmarks live in this repository
+  now.** control-center is going private, and the Studio fetched its six
+  pinned marks from control-center's raw URLs, which would answer 404. Each
+  pinned mark is in `config/brand-wordmarks/`, named by its sha256, and
+  `brand-assets.ts` reads it before any network fetch, held to the same hash.
+  `config/studio.json` and every theme hash are unchanged, so nothing approved
+  needs approving again. A newly pinned mark goes into that folder in the same
+  change (`tests/brand-assets.test.ts` fails otherwise). Nothing waits on Krish.
+
 - 2026-10-15, 00:30 UTC: **Friday's v2 is written and passes every gate.**
   Article `docs/plans/2026-10-09-draft-body-v2.md` (1,284 words) is saved on
   the piece: fact gate 0 blocking, spine judge passes on every section.
