@@ -256,31 +256,68 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
 
 // Review the words (week_board.py review_card). Krish edits a block and saves
 // it, or comments on it; a session reads the saves from edits/<day>-<item>.
+// Each save is also posted as a comment on its block ("EDIT <id>", the
+// paragraphs it changed): a board's store can only be read from the account
+// that owns it, but its comments can be read from either of Krish's accounts.
 (() => {
   const boxes = [...document.querySelectorAll("textarea[data-review-id]")];
   if (!boxes.length) return;
   const stateOf = id => document.querySelector(`[data-state-for="${id}"]`);
   const say = (id, text, bad) => { const s = stateOf(id); if (s) { s.textContent = text; s.className = "rv-state" + (bad ? " bad" : "") } };
   const base = {}; for (const b of boxes) base[b.dataset.reviewId] = b.value;
+  const prev = { ...base }; // the last saved text of each block: what a save's comment is measured against
   let rdb = null, comments = null;
   for (const b of boxes) say(b.dataset.reviewId, "Connecting so your edits can be saved…");
   (async () => {
     try { rdb = window.claude?.use ? await window.claude.use("db") : null } catch { rdb = null }
-    if (!rdb) { for (const b of boxes) say(b.dataset.reviewId, "Saving isn't available in this view. Use Comment instead.", true); return }
+    if (!rdb) { for (const b of boxes) say(b.dataset.reviewId, ""); return }
     for (const b of boxes) {
       const id = b.dataset.reviewId;
       say(id, "");
       rdb.doc("edits/" + id).onSnapshot(s => {
         if (!s.exists) return;
         const v = s.data() || {};
-        if (document.activeElement === b || typeof v.text !== "string") return; // never overwrite what is being typed
+        if (typeof v.text !== "string") return;
+        prev[id] = v.text;
+        if (document.activeElement === b) return; // never overwrite what is being typed
         b.value = v.text;
         say(id, "Your edit, saved " + (v.at ? new Date(v.at).toLocaleString() : "") + ".");
       }, () => {});
     }
   })();
+  const paras = t => t.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+  // The paragraphs a save took out and put in, in page order.
+  const changes = (was, now) => {
+    const a = paras(was), b = paras(now), inA = new Set(a), inB = new Set(b), out = [];
+    for (const p of a) if (!inB.has(p)) out.push("WAS: " + p);
+    for (const p of b) if (!inA.has(p)) out.push("NOW: " + p);
+    return out;
+  };
+  const bytes = s => new TextEncoder().encode(s).length;
+  // Comments hold at most 4 KiB: split on paragraph lines, a long line by characters.
+  const chunks = (head, lines) => {
+    const pieces = [];
+    for (const line of lines) for (let i = 0; i < line.length; i += 1000) pieces.push(line.slice(i, i + 1000));
+    const out = []; let cur = head;
+    for (const p of pieces) {
+      if (bytes(cur + "\n\n" + p) > 3800) { out.push(cur); cur = "(continued)" }
+      cur += "\n\n" + p;
+    }
+    out.push(cur);
+    return out;
+  };
+  const postEdit = async (id, box, was, now) => {
+    const lines = changes(was, now);
+    if (!lines.length) return true;
+    const parts = chunks(`EDIT ${id} · ${new Date().toISOString()}`, lines);
+    const anchor = await comments.anchorFor(box.closest(".rv-item") || box);
+    const first = await comments.create({ anchor, text: parts[0] });
+    for (const p of parts.slice(1)) await comments.reply(first.threadId, p);
+    return true;
+  };
   (async () => { try { comments = window.claude?.use ? await window.claude.use("comments") : null } catch { comments = null }
-    if (!comments) for (const btn of document.querySelectorAll('[data-act="comment-review"]')) btn.hidden = true })();
+    if (!comments) for (const btn of document.querySelectorAll('[data-act="comment-review"]')) btn.hidden = true;
+    if (!comments && !rdb) for (const b of boxes) say(b.dataset.reviewId, "Saving isn't available in this view.", true) })();
   document.addEventListener("click", async e => {
     const btn = e.target.closest && e.target.closest('[data-act="save-review"],[data-act="comment-review"]'); if (!btn) return;
     const id = btn.dataset.for, box = document.querySelector(`textarea[data-review-id="${id}"]`); if (!box) return;
@@ -289,14 +326,21 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
       try { await comments.openComposer({ element: box.closest(".rv-item") || box }) } catch { say(id, "The comment box didn't open. Try the page's comment button.", true) }
       return;
     }
-    if (!rdb) { say(id, "Saving isn't available in this view. Use Comment instead.", true); return }
-    const text = box.value;
-    if (text === base[id] && !stateOf(id)?.textContent.startsWith("Your edit")) { say(id, "Nothing changed yet."); return }
+    if (!rdb && !comments) { say(id, "Saving isn't available in this view. Use Comment instead.", true); return }
+    const text = box.value, was = prev[id];
+    if (text === was) { say(id, "Nothing changed since your last save."); return }
     btn.disabled = true; say(id, "Saving…");
-    try {
+    let stored = false, posted = false;
+    if (rdb) try {
       await rdb.doc("edits/" + id).set({ text, day: box.dataset.day, item: box.dataset.item, at: new Date().toISOString(), words: text.trim().split(/\s+/).length });
-      say(id, "Saved. Claude will pick this up.");
-    } catch { say(id, "Not saved. Press Save again.", true) }
+      stored = true;
+    } catch {}
+    if (comments) try { posted = await postEdit(id, box, was, text) } catch {}
+    if (stored || posted) prev[id] = text;
+    say(id, stored && posted ? "Saved, and your changes are posted as a comment. Claude will pick this up."
+      : posted ? "Your changes are posted as a comment. Claude will pick this up."
+      : stored ? "Saved. Claude can read it from this account's sessions; the comment copy didn't post."
+      : "Not saved. Press Save again.", !(stored || posted));
     btn.disabled = false;
   });
 })();

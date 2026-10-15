@@ -848,7 +848,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                    'records_with': f'making.py <piece> posted {c} [url]' if c else None,
                    'note': None if c else 'Record is done from the takes on the record, never from a tick'}
                   for k, label, c, s in STEPS],
-        'publish': {'title': TITLE, 'icon': 'calendar', 'capabilities': {'db': {}, 'downloads': True, 'comments': {'composer_only': True}},
+        'publish': {'title': TITLE, 'icon': 'calendar', 'capabilities': {'db': {}, 'downloads': True, 'comments': {}},
                     'description': f'The week of {week_span(monday)}: Monday, Wednesday and Friday, with a tick for every step.'},
         'warnings': warnings,
     }
@@ -1253,7 +1253,7 @@ def _self_test():
           and [d['piece_id'] for d in written['days']] == [MON_ID, WED_ID, FRI_ID]
           and [d['state'] for d in written['days']] == ['made', 'picked', 'made']
           and written['days'][0]['tick_ids'][0] == 'mon-record-long' and len(written['days'][1]['tick_ids']) == 9
-          and written['publish']['capabilities'] == {'db': {}, 'downloads': True, 'comments': {'composer_only': True}} and written['publish']['icon'] == 'calendar'
+          and written['publish']['capabilities'] == {'db': {}, 'downloads': True, 'comments': {}} and written['publish']['icon'] == 'calendar'
           and written['publish']['file_path'] == out_path and written['html'] == 'week-board.html'
           and written['sha256'] == hashlib.sha256(page.encode('utf-8')).hexdigest() == on_disk)
     check('the manifest says how each tick reaches the engine, and that Record comes from takes',
