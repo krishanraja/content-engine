@@ -146,8 +146,19 @@ day on it is at 100% (Friday's reposts go out at the weekend).
   sidebar, published under his own account on 14 October; the older copy,
   https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV, belongs to another
   organisation, so it could not be pinned and its ticks cannot be read from
-  Claude Code. Republish to the pinned one only. For next week, plan-week
-  makes a new board from the same builder and publishes it with `pin: true`.)
+  Claude Code. Krish, 15 October: "make sure publish boards on both claude
+  accounts are syncd, always": every publish goes to BOTH links in
+  `config/boards.json`, from the same built file (board_sync hook). For next
+  week, plan-week makes a new board from the same builder and publishes it
+  with `pin: true`.)
+- Friday's words are editable on the board (build `0aa49ec`, published to
+  both links 15 October): the "Review the words" card on Friday's tab holds
+  the article, the deep cut script and the 90-second script. Krish's saves
+  land in the board's store as `edits/fri-<item>`, and Comment opens the
+  comment composer. Read them with ArtifactData `list edits` and
+  ArtifactComments on the PINNED board. The other copy's store cannot be read
+  from this account (another organisation), so Krish edits on the pinned
+  one, and a session in his other account reads its own copy.
 
 Last week's publish board: none (the first board was made on 12 October).
 
