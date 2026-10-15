@@ -52,8 +52,8 @@ For anything you'll act on, change the gear. A contract, a medical question, mon
 
 If you build products on AI, don't choose a model by its name or its launch chart. Run your own hard questions through each setting, check the answers, and pay for thinking only where it changes the result.
 
-There's a better way the apps could do this. They could show you, under every answer, whether the AI actually stopped to think. A small label, like the gear on a dashboard. Then you'd know when to ask again.
+There's a better way the apps could do this. They could show you, under every answer, whether the AI actually stopped to think. A small label, like the gear showing on a car's dashboard. Then you'd know when to ask again.
 
-My prediction. By 31 December 2027, the main picker in ChatGPT for paying users won't show any model names at all, only how hard it should think. How sure we are: [Krish to set] I'd be wrong if the next big launch needs a name on the button to sell it.
+My prediction. By 30 June 2027, OpenAI will make thinking the starting setting for paying ChatGPT users, instead of Instant. Claude has already gone that way: on its newest top models, Opus 5.5 and Fable 5.1, thinking is always on. How sure we are: [Krish to set] I'd be wrong if speed keeps winning, and people keep choosing the quick answer over the careful one.
 
-We've spent two years learning their names. The thing worth learning was where they hid the dial.
+We've spent two years learning the badges. Nobody showed us where the gearstick was.

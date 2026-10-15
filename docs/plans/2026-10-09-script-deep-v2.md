@@ -82,8 +82,8 @@ If you build products on AI, here's my advice. Don't choose an AI by its name or
 
 There's also a better way the apps could do this. Under every answer, they could show you whether the AI actually stopped to think. A small label, like the gear on a car's dashboard. Then you'd know when to ask again, with the gear up.
 
-So here's my bet. By the end of 2027, the main picker in ChatGPT for paying users won't show any AI names at all. Just how hard it should think. I'd be wrong if the next big launch needs a name on the button to sell it.
+So here's my bet. By the end of June 2027, OpenAI will flip it back. Paying ChatGPT users will start in thinking mode again. Claude's newest top AIs already think on every single answer. I'd be wrong if speed keeps winning, and we all keep choosing the quick answer over the careful one.
 
-We've spent two years learning their names. The thing worth learning was where they hid the dial.
+We've spent two years learning the badges. Nobody showed us where the gearstick was.
 
 That's mind.the.gap for this week. The full article, with every source, is free at makeyourmindup.ai. If you know someone who trusts their AI with contracts or money, send this to them. Make your mind up.
