@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-15, about 17:00 UTC, by a Claude Code session (cloud); Friday v3 merged and on both boards, waits on Krish (Latest handoff).
+Last updated: 2026-10-15, about 17:10 UTC, by a Claude Code session (cloud); both board links show Friday v3 in review with his calls (Latest handoff).
 
 ## How Krish wants to be worked with
 
@@ -648,6 +648,59 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-15, about 17:10 UTC: **Both board links now show Friday as it
+  really is: v3 in review, with his calls.** Krish: "As long as both publish
+  boards have everything up to date for my review tonight and the things you
+  said needed fixing are fixed, I'm happy for now." An audit (four readers and
+  a critic) found the board was not up to date: under Friday's v3 review
+  card sat the FIRST version's publish page, with chips saying the new words
+  were fact-checked and in Teleprompter, and Monday's and Wednesday's status
+  lines said nothing was posted. No builder option could fix it, so
+  `week_board.py` learned a day in review (`--draft`, `--waiting`), on main in
+  `a8ddf93` and `76f014a` with 19 new self-test checks (80) and two
+  failure-register entries (board-old-page-under-new-words,
+  board-older-save-over-new-words). A second independent check (browser,
+  claims against the engine, code) shaped the second commit.
+  - **Published** from one build (engine stamp 9ed2686a) to
+    https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV (version 30) and the
+    pinned https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E (version 7); both
+    read back byte for byte the same. Friday: status line on top ("in review,
+    not ready to post"), four boxes (article, deep cut, 90-second script,
+    outline; the outline last so his 13:58 EDIT thread, pinned by position,
+    stays on the article), six calls under them, and a checklist that says
+    "deep cut", not "3-minute". Monday and Wednesday: unchanged except their
+    status lines, now "posted on Substack 12 Oct" and "14 Oct".
+  - **The build command, for any rebuild while Friday is in review** (from
+    the repo root; `--previous` is the board page as `Artifact read` saved it):
+    `CLAUDE_CODE_REMOTE=1 python3 scripts/post-pack/week_board.py --week
+    2026-10-12 --live --previous <page> --keep mon --keep wed --draft fri
+    --review "fri=Article|docs/plans/2026-10-09-draft-body-v3.md" --review
+    "fri=Deep cut (8 to 12 min)|docs/plans/2026-10-09-script-deep-v3.md"
+    --review "fri=90-second script|docs/plans/2026-10-09-script-90s-v3.md"
+    --review "fri=Outline|docs/plans/2026-10-09-outline-v3.md" --out
+    .cache/week-board/2026-10-12/week-board.html` (the six calls carry over
+    from the page when no `--waiting` is given). A rebuild that leaves Friday
+    out of `--draft`, drops a box, or brings back the first version's page is
+    refused, so the scheduled "Publish board: add the day's videos" can only
+    leave the board standing. That task is not visible from this account
+    (`get_trigger` says not found): it lives in Krish's other account.
+  - **Fixed claims**: the "nearly 80%" figure now has its two pages on file
+    (the NBER abstract and OpenAI's write-up), so the free pre-check lists
+    only "Opus 5.56". The outline no longer says the Opus 5.1 line was kept
+    word for word, and its prose is unwrapped.
+  - **Open, not on the board**: the engine's CALL check wants a prediction
+    heading in the article (add one when the confidence goes in), and R6 wants
+    benchmark, token, inference and prompt explained where they first appear.
+    Wednesday's carried chip says 30 claims (the stored check is 48). Mon and
+    Wed ticks are all done on RjLHJ but not copied onto the records (Control
+    Center shows 1 of 5 channels), and H6q's ticks can only be read from the
+    other account. His 13:58 EDIT thread is open and not sent to Claude, so
+    only he can resolve it; v3 holds that edit.
+  - Waiting on Krish (the board lists them): approve the outline; set the
+    confidence; go for one paid fact check (and keep or reword "Opus 5.56");
+    sign off both scripts (then Teleprompter); pick the title; the Manifold
+    market.
 
 - 2026-10-15, about 15:35 UTC: **Friday v3 on Krish's new angle: written,
   checked and on the board for his review; five calls wait on him.** Krish
