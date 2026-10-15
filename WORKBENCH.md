@@ -2504,3 +2504,12 @@ true.
 
 One Article 1 fact-check run completed on 2026-10-03 after this table's
 measurement window. Its exact meter delta has not yet been read back.
+
+Measured again over the 7 days to 2026-10-15 (`meter_daily`, provider
+anthropic): $45.51 in all. The fact gate was $21.39 of it (4,367 calls:
+on-file $11.99, second look $4.21, extract $3.30, entail $1.89), because every
+check re-extracts and re-checks every claim, even when only a sentence
+changed. The weekly AEO probe (GitHub Actions, Sundays, about 96 web-search
+probes) was $9.87. The editorial radars were $3.48, and the eight timer judges
+were about $3. This chat-side work runs on Krish's plan, not on API credits.
+Krish (2026-10-15) asked for "optimizations we can make".
