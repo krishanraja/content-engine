@@ -32,7 +32,10 @@ Last updated: 2026-10-15, about 17:00 UTC, by a Claude Code session (cloud); Fri
   Friday's Copy cards; Krish, 2026-10-14: "why are Wednesday and Friday
   built differently to Monday? ... I thought I didn't need to keep telling
   you this sort of stuff?"). A day whose page link is lost is carried over
-  with `week_board.py --keep DAY --previous <the board as read>`.
+  with `week_board.py --keep DAY --previous <the board as read>`. A day whose
+  words are in review is built with `--draft DAY` and its `--review` files,
+  never kept or given an older publish page (15 October: Friday v3 sat on
+  its first version's page, whose chips said the new words were checked).
 - Plain words. Nothing he reads may contain codes, labels, hashes, version
   numbers or project shorthand. Say what happened, what it means for him, and
   what you need from him. If a sentence would confuse someone outside the
@@ -139,14 +142,16 @@ publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
 - Week of 12 to 16 October 2026 (board item
-  `week-publish-board-2026-10-12`; Monday recorded, waiting on its
-  produced video; Wednesday's workroom made, waiting on two calls from
-  Krish; Friday made, waiting on his call and his recording):
+  `week-publish-board-2026-10-12`; Monday posted 12 October and Wednesday
+  posted 14 October, every standing channel ticked on RjLHJ; Friday v3 in
+  review, its words and his calls on its tab):
   https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E (pinned in Krish's
-  sidebar, published under his own account on 14 October; the older copy,
-  https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV, belongs to another
-  organisation, so it could not be pinned and its ticks cannot be read from
-  Claude Code. Krish, 15 October: "make sure publish boards on both claude
+  sidebar, published under one of his two accounts on 14 October) and
+  https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV (the older copy). Each
+  link is owned by one of his two accounts and shared with the other: from
+  the owning account its store (ticks, edits) can be read; from the other,
+  only its comments. On 15 October the cloud sessions ran under the account
+  that owns RjLHJ (its store read fine; H6q's refused). Krish, 15 October: "make sure publish boards on both claude
   accounts are syncd, always": every publish goes to BOTH links in
   `config/boards.json`, from the same built file (board_sync hook). For next
   week, plan-week makes a new board from the same builder and publishes it
@@ -644,7 +649,7 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-15, about 16:00 UTC: **Friday v3 on Krish's new angle: written,
+- 2026-10-15, about 15:35 UTC: **Friday v3 on Krish's new angle: written,
   checked and on the board for his review; five calls wait on him.** Krish
   (after his board edit at 13:58): "I think the article and long form video
   needs more substantive evidence that higher thinking = better results, that
@@ -661,14 +666,16 @@ bring takes back, was retired on 12 October.
     (four researchers, each re-checked by an independent checker; brief in
     `evidence-v3-brief.md`). Nobody publishes a margin per thinking level:
     the piece says so and shows company-wide reported figures instead.
-  - **Article** `docs/plans/2026-10-09-draft-body-v3.md`, 2,210 words (his
+  - **Article** `docs/plans/2026-10-09-draft-body-v3.md`, 2,237 words (his
     words above are the exception to ARTICLE_LENGTH for this piece), saved
     on the piece. His board edits kept, except "Opus 5.1", which does not
     exist (Opus 4.8 May, Opus 5 July, Opus 5.5 September): now "Opus 4.8,
     Opus 5, Opus 5.5". Voice 3.5, AI scan passes, spine judge passes every
     section. 38 new verbatim sources filed (one, WIRED's router piece, would
-    not load; the gate's web check must carry it). Free pre-check: only
-    "Opus 5.56" (his joke) is a number on no source. The paid fact gate has
+    not load; the gate's web check must carry it). Free pre-check: this
+    entry first said only "Opus 5.56" was on no source; "nearly 80%" (the
+    OpenAI and Harvard study) was too, until its two pages were filed at
+    about 16:50. Now only "Opus 5.56" (his joke) is. The paid fact gate has
     NOT run: it waits on his go.
   - **Scripts** `...-script-deep-v3.md` (1,699 words, about 11:20, chapters in
     `.chapters.md`) and `...-script-90s-v3.md` (195 words) pass story_check
@@ -687,10 +694,12 @@ bring takes back, was retired on 12 October.
   - **Board**: rebuilt by `week_board.py --review` and published from the one
     file `.cache/week-board/2026-10-12/week-board.html` (engine stamp
     502ea989) to both links: https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
-    (version 29) and, about 17:00 after Krish's "Merge", the pinned
+    (version 29, 15:21) and, at 15:56 after Krish's "Merge", the pinned
     https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E (version 6; it held v2,
-    with Priya, until then). Both read back with the same content.
-  - **Guards, merged to main about 17:00** (with main's wordmark work; the
+    with Priya, until then). Both read back with the same content. Below
+    the review card, Friday's tab still carried its FIRST version's publish
+    page, with chips false for v3: replaced in the entry above.
+  - **Guards, merged to main at 15:55** (with main's wordmark work; the
     WORKBENCH conflict kept both entries): the board page no longer shows a
     saved edit older than the build over new words (`data-built-at`; proven
     in a browser with an old and a new save), so the 13:25 routine's rebuilds
