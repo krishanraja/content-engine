@@ -860,9 +860,11 @@ def parse_time(value):
     if not isinstance(value, str) or not value.strip():
         return None
     try:
-        return datetime.fromisoformat(value.strip().replace('Z', '+00:00'))
+        when = datetime.fromisoformat(value.strip().replace('Z', '+00:00'))
     except ValueError:
         return None
+    # A time with no zone is the engine's UTC; comparing it with one that has a zone would crash the build.
+    return when if when.tzinfo else when.replace(tzinfo=timezone.utc)
 
 
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
@@ -1702,6 +1704,8 @@ def _draft_checks(check, page, fri):
     check('--draft on a posted day is refused: its tab keeps the page that went out', 'is posted' in posted_draft)
     check('--live fails closed when a kept day\'s making record cannot be read', 'could not be read' in unread and 'Monday' in unread)
     check('a manifest as --previous keeps each unchanged block\'s build time too', from_manifest == times(drafted))
+    check('an engine time with no zone is read as UTC, so comparing it never crashes the build',
+          parse_time('2026-10-15T15:18:20') == parse_time('2026-10-15T15:18:20Z') and parse_time('2026-10-15T15:18:20') > parse_time('2026-10-14T11:21:49.233Z'))
 
 
 def parser():
