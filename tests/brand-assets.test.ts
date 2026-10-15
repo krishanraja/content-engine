@@ -1,11 +1,11 @@
 import { createHash } from 'node:crypto'
-import { mkdtemp, readFile, rm } from 'node:fs/promises'
+import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { BrandWordmarkAssetV1Schema, TreatmentRegistryV1Schema, type BrandThemeV1, type RenderManifestV1 } from '@mindmake/contracts'
-import { brandWordmarkLegibilityIssues, brandWordmarkLegibilityReport, officialWordmarkUrl, stageOfficialWordmarks } from '@mindmake/core'
+import { BRAND_MARK_MIRROR, brandWordmarkLegibilityIssues, brandWordmarkLegibilityReport, mirroredWordmarkUrl, officialWordmarkUrl, stageOfficialWordmarks } from '@mindmake/core'
 import studioConfig from '../config/studio.json'
 
 function activeTheme(): BrandThemeV1 {
@@ -195,5 +195,59 @@ describe('official brand wordmarks', () => {
     expect(brandWordmarkLegibilityIssues(theme)).toEqual(['approved responsive wordmark lockup is missing'])
     const manifest = { branding: 'series', brand_theme: theme, series: 'built_with_ai' } as RenderManifestV1
     await expect(stageOfficialWordmarks(manifest, tmpdir())).rejects.toThrow('branded renders require the approved responsive wordmark lockup')
+  })
+  it('falls back to the Control Center mirror when the pinned source answers 404', async () => {
+    // krishanraja/control-center went private on 2026-10-15; its raw URLs
+    // answer 404, and the same bytes are served by hash from Control Center.
+    const bytes = Buffer.from('deterministic-official-png-fixture-for-the-mirror')
+    const sha256 = createHash('sha256').update(bytes).digest('hex')
+    const base = activeTheme()
+    if (!base.wordmarks) throw new Error('active theme is missing official wordmarks')
+    const fixture = { ...base.wordmarks.mindmake, source_path: 'src/assets/fixture.png', sha256 }
+    const theme: BrandThemeV1 = { ...base, wordmarks: { ...base.wordmarks, mindmake: fixture, series: { money_of_ai: fixture, built_with_ai: fixture } } }
+    const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-brand-mirror-'))
+    const previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
+    process.env.MINDMAKE_RUNTIME_ROOT = runtimeRoot
+    const asked: string[] = []
+    try {
+      const fetchImpl = async (input: string | URL | Request) => {
+        asked.push(String(input))
+        return String(input).startsWith(BRAND_MARK_MIRROR)
+          ? new Response(bytes, { status: 200, headers: { 'content-type': 'image/png' } })
+          : new Response('Not Found', { status: 404 })
+      }
+      const staged = await stageOfficialWordmarks({ branding: 'series', brand_theme: theme, series: 'built_with_ai' } as RenderManifestV1, join(runtimeRoot, 'job-media'), fetchImpl as typeof fetch)
+      expect(await readFile(join(runtimeRoot, 'job-media', staged!.mindmake.assetFile))).toEqual(bytes)
+      expect(asked[0]).toBe(officialWordmarkUrl(theme, fixture))
+      expect(asked[1]).toBe(`${BRAND_MARK_MIRROR}/${sha256}`)
+      expect(mirroredWordmarkUrl(fixture)).toBe(`https://controlcenter.krishraja.com/api/brand-mark/${sha256}`)
+    } finally {
+      if (previousRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
+      else process.env.MINDMAKE_RUNTIME_ROOT = previousRuntimeRoot
+      await rm(runtimeRoot, { recursive: true, force: true })
+    }
+  })
+
+  it('refuses mirror bytes that do not match the pin, and says when nothing answered', async () => {
+    const theme = activeTheme()
+    const manifest = { branding: 'series', brand_theme: theme, series: 'money_of_ai' } as RenderManifestV1
+    const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-brand-mirror-bad-'))
+    const previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
+    process.env.MINDMAKE_RUNTIME_ROOT = runtimeRoot
+    try {
+      const wrongMirror = async (input: string | URL | Request) => String(input).startsWith(BRAND_MARK_MIRROR)
+        ? new Response(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 1"><path d="M0 0h2v1H0z"/></svg>'), { status: 200, headers: { 'content-type': 'application/octet-stream' } })
+        : new Response('Not Found', { status: 404 })
+      await expect(stageOfficialWordmarks(manifest, join(runtimeRoot, 'a'), wrongMirror as typeof fetch)).rejects.toThrow('official wordmark hash mismatch')
+      // Refused before the cache: wrong bytes never sit under a pinned hash.
+      const cached = await readdir(join(runtimeRoot, 'cache', 'brand-wordmarks')).catch(() => [] as string[])
+      expect(cached).toEqual([])
+      const nothing = async () => { throw new Error('offline') }
+      await expect(stageOfficialWordmarks(manifest, join(runtimeRoot, 'b'), nothing as unknown as typeof fetch)).rejects.toThrow('neither the pinned source nor')
+    } finally {
+      if (previousRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
+      else process.env.MINDMAKE_RUNTIME_ROOT = previousRuntimeRoot
+      await rm(runtimeRoot, { recursive: true, force: true })
+    }
   })
 })

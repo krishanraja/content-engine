@@ -701,6 +701,15 @@ bring takes back, was retired on 12 October.
     fact-gate run (and keep or change "Opus 5.56"); sign off the scripts (then
     Teleprompter); title rounds (the spine changed again); merge the branch.
 
+- 2026-10-15, 15:00 UTC: **The official wordmarks no longer depend on
+  control-center being public.** The Studio fetched its six pinned marks from
+  control-center's raw URLs, which answer 404 once it is private. When the
+  pinned source refuses, `brand-assets.ts` now fetches the same mark by its
+  sha256 from Control Center (`https://controlcenter.krishraja.com/api/brand-mark/<sha256>`),
+  held to the same hash. No image is committed here (`check-no-secrets` keeps
+  media out). `config/studio.json` and every theme hash are unchanged, so
+  nothing approved needs approving again. Nothing waits on Krish.
+
 - 2026-10-15, 00:30 UTC: **Friday's v2 is written and passes every gate.**
   Article `docs/plans/2026-10-09-draft-body-v2.md` (1,284 words) is saved on
   the piece: fact gate 0 blocking, spine judge passes on every section.
