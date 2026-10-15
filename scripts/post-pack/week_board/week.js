@@ -253,3 +253,50 @@ const setH = () => document.documentElement.style.setProperty("--tabh", bar.offs
 setH();
 try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("resize", setH) }
 })();
+
+// Review the words (week_board.py review_card). Krish edits a block and saves
+// it, or comments on it; a session reads the saves from edits/<day>-<item>.
+(() => {
+  const boxes = [...document.querySelectorAll("textarea[data-review-id]")];
+  if (!boxes.length) return;
+  const stateOf = id => document.querySelector(`[data-state-for="${id}"]`);
+  const say = (id, text, bad) => { const s = stateOf(id); if (s) { s.textContent = text; s.className = "rv-state" + (bad ? " bad" : "") } };
+  const base = {}; for (const b of boxes) base[b.dataset.reviewId] = b.value;
+  let rdb = null, comments = null;
+  for (const b of boxes) say(b.dataset.reviewId, "Connecting so your edits can be saved…");
+  (async () => {
+    try { rdb = window.claude?.use ? await window.claude.use("db") : null } catch { rdb = null }
+    if (!rdb) { for (const b of boxes) say(b.dataset.reviewId, "Saving isn't available in this view. Use Comment instead.", true); return }
+    for (const b of boxes) {
+      const id = b.dataset.reviewId;
+      say(id, "");
+      rdb.doc("edits/" + id).onSnapshot(s => {
+        if (!s.exists) return;
+        const v = s.data() || {};
+        if (document.activeElement === b || typeof v.text !== "string") return; // never overwrite what is being typed
+        b.value = v.text;
+        say(id, "Your edit, saved " + (v.at ? new Date(v.at).toLocaleString() : "") + ".");
+      }, () => {});
+    }
+  })();
+  (async () => { try { comments = window.claude?.use ? await window.claude.use("comments") : null } catch { comments = null }
+    if (!comments) for (const btn of document.querySelectorAll('[data-act="comment-review"]')) btn.hidden = true })();
+  document.addEventListener("click", async e => {
+    const btn = e.target.closest && e.target.closest('[data-act="save-review"],[data-act="comment-review"]'); if (!btn) return;
+    const id = btn.dataset.for, box = document.querySelector(`textarea[data-review-id="${id}"]`); if (!box) return;
+    if (btn.dataset.act === "comment-review") {
+      if (!comments) return;
+      try { await comments.openComposer({ element: box.closest(".rv-item") || box }) } catch { say(id, "The comment box didn't open. Try the page's comment button.", true) }
+      return;
+    }
+    if (!rdb) { say(id, "Saving isn't available in this view. Use Comment instead.", true); return }
+    const text = box.value;
+    if (text === base[id] && !stateOf(id)?.textContent.startsWith("Your edit")) { say(id, "Nothing changed yet."); return }
+    btn.disabled = true; say(id, "Saving…");
+    try {
+      await rdb.doc("edits/" + id).set({ text, day: box.dataset.day, item: box.dataset.item, at: new Date().toISOString(), words: text.trim().split(/\s+/).length });
+      say(id, "Saved. Claude will pick this up.");
+    } catch { say(id, "Not saved. Press Save again.", true) }
+    btn.disabled = false;
+  });
+})();

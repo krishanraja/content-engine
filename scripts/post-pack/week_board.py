@@ -380,6 +380,47 @@ def record_card(day, p, scripts):
             + ''.join(rows) + f'<p class="rec-how">{E(how)}</p></div>')
 
 
+REVIEW_START, REVIEW_END = '<!--review-->', '<!--/review-->'
+
+
+def review_card(day, items):
+    """The words Krish reviews on the board: each block (the article, each
+    script) as text he can edit and save, or comment on. Krish, 2026-10-15:
+    "get Fridays publish board ready in the artifact, and enable me to make
+    comments or edit text myself, and then you can either iterate based on my
+    comments or observe my text edits." A save goes to the board's own store
+    (edits/<day>-<item>); a session reads it back with ArtifactData. Comment
+    opens the page's comment box on that block."""
+    if not items:
+        return ''
+    parts = [f'{REVIEW_START}<div class="rec rv" id="{day}-review">'
+             '<div class="rec-head"><h2>Review the words</h2></div>'
+             '<p class="rv-how">Change any word below and press Save, or press Comment to say what to change. '
+             'Claude reads your saved words and your comments and comes back with the next version.</p>']
+    for slug, label, text in items:
+        rid = f'{day}-{slug}'
+        words = len(text.split())
+        parts.append(
+            f'<section class="rv-item" data-review="{E(rid)}"><div class="sec-head"><h3>{E(label)}</h3>'
+            f'<span class="rv-n">{words:,} words</span></div>'
+            f'<textarea class="rv-text" id="rv-{E(rid)}" data-review-id="{E(rid)}" data-day="{day}" data-item="{E(slug)}" '
+            f'rows="14" spellcheck="true" aria-label="{E(label)}">{E(text)}</textarea>'
+            f'<div class="rv-bar"><button type="button" class="btn-s" data-act="save-review" data-for="{E(rid)}">Save my edits</button>'
+            f'<button type="button" class="btn-s ghost" data-act="comment-review" data-for="{E(rid)}">Comment</button>'
+            f'<span class="rv-state" data-state-for="{E(rid)}" aria-live="polite"></span></div></section>')
+    parts.append(f'</div>{REVIEW_END}')
+    return ''.join(parts)
+
+
+def with_review(panel, card):
+    """The panel with its review card replaced (or added after its opening tag)."""
+    panel = re.sub(re.escape(REVIEW_START) + r'.*?' + re.escape(REVIEW_END), '', panel, flags=re.S)
+    if not card:
+        return panel
+    m = re.match(r'<div class="pm"[^>]*>', panel)
+    return panel[:m.end()] + card + panel[m.end():] if m else card + panel
+
+
 def made_panel(page, day, name, p, links, hidden, warnings, videos=None):
     body = page['body']
     # The Scripts section's cards, copied to the top beside the Record card.
@@ -693,7 +734,7 @@ def by_day(values, what, has_value=True):
 
 # ------------------------------------------------------------------ the board
 
-def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None):
+def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None):
     """(page, manifest, warnings). pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
     {day: {'id', 'title'}} from the week options; pending: {day: title}."""
@@ -742,6 +783,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             state = 'picked' if (piece or key in pending or pick) else 'not_picked'
             panels.append(not_made_panel(key, name, weekday, short_date(when), series_label,
                                          {'title': title} if state == 'picked' else None, key != opened))
+        if state == 'made' and (review or {}).get(key):
+            panels[-1] = with_review(panels[-1], review_card(key, review[key]))
         picked = state != 'not_picked'
         tabs.append(
             f'<button type="button" role="tab" id="tab-{name}" aria-controls="panel-{name}" '
@@ -796,12 +839,16 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
         'db': {
             'ticks': {'doc_id': '<day>-<step>', 'fields': ['done', 'at', 'day', 'piece_id', 'step', 'channel', 'label']},
             'links': {'doc_id': '<day>', 'fields': ['article', 'youtube', 'at']},
+            'edits': {'doc_id': '<day>-<item>', 'fields': ['text', 'day', 'item', 'base_sha256', 'at']},
         },
+        'review': {k: [{'item': slug, 'label': label, 'words': len(t.split()),
+                        'sha256': hashlib.sha256(t.encode('utf-8')).hexdigest()} for slug, label, t in v]
+                   for k, v in (review or {}).items()},
         'steps': [{'key': k, 'label': label, 'channel': c, 'standing': s,
                    'records_with': f'making.py <piece> posted {c} [url]' if c else None,
                    'note': None if c else 'Record is done from the takes on the record, never from a tick'}
                   for k, label, c, s in STEPS],
-        'publish': {'title': TITLE, 'icon': 'calendar', 'capabilities': {'db': {}, 'downloads': True},
+        'publish': {'title': TITLE, 'icon': 'calendar', 'capabilities': {'db': {}, 'downloads': True, 'comments': {'composer_only': True}},
                     'description': f'The week of {week_span(monday)}: Monday, Wednesday and Friday, with a tick for every step.'},
         'warnings': warnings,
     }
@@ -960,7 +1007,20 @@ def build(args, get=None):
         raise BoardError('a made day has no publish page in this build:\n  ' + '\n  '.join(unmade))
     for key in unpick:
         picks.pop(key, None)
-    page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos)
+    review = {}
+    for v in getattr(args, 'review', None) or []:
+        k, sep, rest = v.partition('=')
+        key = DAY_KEYS.get(k.strip().lower())
+        label, bar, path = rest.partition('|')
+        if not (sep and key and bar and path.strip()):
+            raise BoardError(f'--review {v}: give DAY=LABEL|PATH, e.g. fri=Article|docs/plans/x.md')
+        try:
+            text = Path(path.strip()).read_text(encoding='utf-8').strip()
+        except OSError as error:
+            raise BoardError(f'--review {v}: cannot read {path.strip()}: {error.strerror}')
+        slug = re.sub(r'[^a-z0-9]+', '-', label.lower()).strip('-') or 'text'
+        review.setdefault(key, []).append((slug, label.strip(), text))
+    page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday)
     manifest['warnings'] = warnings + more
@@ -1193,7 +1253,7 @@ def _self_test():
           and [d['piece_id'] for d in written['days']] == [MON_ID, WED_ID, FRI_ID]
           and [d['state'] for d in written['days']] == ['made', 'picked', 'made']
           and written['days'][0]['tick_ids'][0] == 'mon-record-long' and len(written['days'][1]['tick_ids']) == 9
-          and written['publish']['capabilities'] == {'db': {}, 'downloads': True} and written['publish']['icon'] == 'calendar'
+          and written['publish']['capabilities'] == {'db': {}, 'downloads': True, 'comments': {'composer_only': True}} and written['publish']['icon'] == 'calendar'
           and written['publish']['file_path'] == out_path and written['html'] == 'week-board.html'
           and written['sha256'] == hashlib.sha256(page.encode('utf-8')).hexdigest() == on_disk)
     check('the manifest says how each tick reaches the engine, and that Record comes from takes',
@@ -1268,6 +1328,18 @@ def _self_test():
                      '<section id="mon-s6"><div class="sec-head"><h2>6. LinkedIn</h2></div></section>')
     check('a kept day loses the channels Krish dropped, and keeps the rest',
           'whatsapp' not in drop_channels(dropped_panel, 'mon').lower() and '6. LinkedIn' in drop_channels(dropped_panel, 'mon'))
+    card = review_card('fri', [('article', 'Article', 'One <b>two</b> three.'), ('deep-cut', 'Deep cut', 'Four five.')])
+    check('the review card holds each block as editable text, escaped, with Save and Comment',
+          card.count('<textarea') == 2 and '&lt;b&gt;two&lt;/b&gt;' in card and card.count('data-act="save-review"') == 2
+          and card.count('data-act="comment-review"') == 2 and 'data-review-id="fri-article"' in card)
+    panel = '<div class="pm" id="panel-friday"><div class="rec">x</div></div>'
+    once = with_review(panel, card)
+    check('the review card goes first in the tab, and a rebuild replaces it rather than stacking a second',
+          once.startswith('<div class="pm" id="panel-friday">' + REVIEW_START) and with_review(once, card).count(REVIEW_START) == 1
+          and REVIEW_START not in with_review(once, ''))
+    js = template('week.js')
+    check('the page saves each review block to edits/<day>-<item> and opens the comment box on it',
+          'rdb.doc("edits/" + id).set(' in js and 'comments.openComposer({ element:' in js and 'window.claude.use("comments")' in js)
     check('a kept day drawn before section ticks (no sec-head) loses the dropped channels too',
           'notes' not in drop_channels('<section id="wed-s8"><h2>8. Substack Notes</h2><p>x</p></section>', 'wed').lower())
     check('finished videos: each cut offers its thumbnail, and one not linked yet says where it is',
@@ -1294,6 +1366,8 @@ def parser():
     ap.add_argument('--keep', action='append', metavar='DAY', help='with --previous (its page): carry a made day over exactly as the board holds it, '
                     'when its publish page cannot be read any more')
     ap.add_argument('--unpick', action='append', metavar='DAY', help='with --previous: a day Krish moved or dropped, which really has no piece now')
+    ap.add_argument('--review', action='append', metavar='DAY=LABEL|PATH', help='words for Krish to edit or comment on in that day\'s tab '
+                    '(the article, each script); his saves land in the board\'s store as edits/<day>-<item>')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')

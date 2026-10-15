@@ -79,3 +79,15 @@ label.tick.on .t-label{font-weight:700}
 .btnlink{display:inline-block;text-align:center;font:700 15px/1 inherit;padding:12px 16px;border-radius:999px;background:var(--mint,#7BEFC0);color:#0D1512;text-decoration:none}
 .btnlink.ghost{background:transparent;border:2px solid currentColor;color:inherit}
 .vid-row .txt{font-size:12px;white-space:pre-wrap;word-break:break-all;margin:0}
+.rv-how{margin:0;color:var(--muted);font-size:14px}
+.rv-item{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.rv-item h3{margin:0;font:700 16px Archivo,system-ui,sans-serif}
+.rv-n{font:600 12px "IBM Plex Mono",ui-monospace,monospace;color:var(--muted);font-variant-numeric:tabular-nums}
+.rv-text{width:100%;box-sizing:border-box;min-height:240px;resize:vertical;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:400 15px/1.55 system-ui,sans-serif}
+.rv-text:focus-visible{outline:3px solid var(--ok);outline-offset:1px}
+.rv-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn-s{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid var(--mint);background:var(--mint);color:#0C1512;font:700 13px Archivo,system-ui,sans-serif;cursor:pointer}
+.btn-s.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn-s:disabled{opacity:.6;cursor:default}
+.btn-s:focus-visible{outline:3px solid var(--ok);outline-offset:2px}
+.rv-state{font-size:13px;color:var(--muted)}.rv-state.bad{color:var(--bad,#b3261e)}
