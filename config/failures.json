@@ -423,6 +423,64 @@
      "how": "mirror bytes that do not match the pin are refused before the cache"
     }
    ]
+  },
+  {
+   "id": "board-old-page-under-new-words",
+   "on": "2026-10-15",
+   "krish": "As long as both publish boards have everything up to date for my review tonight and the things you said needed fixing are fixed, I'm happy for now.",
+   "what": "Friday v3's review card was put on top of Friday's kept first-version publish page (--keep fri). Below his new words the tab still showed the old title, article, scripts and channel copy, with chips saying \"Fact check passed on this exact text\" and \"Both scripts approved and in Teleprompter\", both false for v3. No builder option could show a day in review honestly, and Monday's and Wednesday's tabs still said nothing was posted after both went out.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "a day in review shows its review card, never an older publish page",
+     "how": "--draft DAY builds the tab from the review card, the calls waiting on Krish (--waiting) and the checklist; --draft with --day or --keep for the same day is refused"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "is older than its words",
+     "how": "with --live, a piece not yet posted whose publish page was made before its words last changed is refused unless it is built with --draft"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "holds its words in review",
+     "how": "a rebuild of a board holding a day in draft without --draft is refused, so a scheduled run leaves the board standing"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "so its words would not show",
+     "how": "--review on a day that is neither made nor in draft is refused, never dropped without a word"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def posted_kick",
+     "how": "a made day whose piece is posted says so in its status line, from the record"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def _draft_checks",
+     "how": "the self-test builds a day in draft from Friday's real record times and checks every refusal above"
+    }
+   ]
+  },
+  {
+   "id": "board-older-save-over-new-words",
+   "on": "2026-10-15",
+   "krish": "get Fridays publish board ready in the artifact, and enable me to make comments or edit text myself, and then you can either iterate based on my comments or observe my text edits.",
+   "what": "After his 13:58 save was folded into Friday v3 and the board rebuilt, the page would have shown his older saved text over the new words, and a Save would have put the old words back. Then any rebuild re-stamped the build time, which would hide a save he made after the last build behind \"is in this version\".",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/week_board/week.js",
+     "contains": "v.at < built",
+     "how": "the page shows a saved edit only when it is newer than the build time on its block (data-built-at)"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def previous_review_times",
+     "how": "a rebuild keeps a review block's build time while its words are unchanged, so a newer save still shows"
+    }
+   ]
   }
  ]
 }

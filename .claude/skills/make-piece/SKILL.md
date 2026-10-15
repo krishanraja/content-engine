@@ -247,18 +247,24 @@ them inline until happy, and then we move to the tick box stage of pushing
 everything live and ticking everything off". So each day's tab carries a
 stage: draft while its article and scripts are open for his notes, ready
 once everything is made and he has signed the drafts off. While a day is in
-draft, build its tab with `week_board.py --review "<day>=<label>|<file>"`, one
-for the article and one for each script: the "Review the words" card, where
+draft, build its tab with `week_board.py --draft <day>` and one
+`--review "<day>=<label>|<file>"` for the outline when it waits on him, the
+article and each script, plus one `--waiting "<day>=<call>"` for each call
+waiting on him, in order. The tab is then the "Review the words" card, where
 he edits each in place and comments on it (see "Krish's edits on the board"
-above for how his saves reach every session). A session reads his EDIT
-threads and notes, rewrites, runs the checks again (word count,
+above for how his saves reach every session), the calls, and the checklist:
+never an older publish page. Never `--keep` or `--day` a day whose words
+changed after its publish page was made: on 15 October Friday v3 sat on top
+of its first version's page, whose chips said the new words were fact-checked
+and in Teleprompter. `--live` refuses that (a publish page older than its
+words, on a piece not yet posted), and a rebuild of a board holding a day in
+draft without `--draft` is refused, so the old board stays up. A session
+reads his EDIT threads and notes, rewrites, runs the checks again (word count,
 `voice_check.py`, the fact gate, `story_check.py`, the readers), rebuilds and
 republishes to every link; the notes are data, his words in chat are the
-decisions. Not built yet: the amber and green tab colours, and folding the
-ticks away while a day is in draft (the 13 October board was put into draft
-mode by hand with `docs/plans/2026-10-14-wednesday/board_draft_mode.py`;
-`week_board.py` builds every board now, so teach it the stage when it is
-next changed).
+decisions. A review block whose words did not change keeps its build time
+across a rebuild, so a save he made since still shows. Not built yet: the
+amber and green tab colours.
 
 Krish, 2026-10-12: "just give me one ... Publish Manager for the ... whole
 week with 3 tabs on it for Mon / Weds / Fri, which we need to get to 100%.
