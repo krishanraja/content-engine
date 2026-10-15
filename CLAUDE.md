@@ -16,7 +16,11 @@ Krish works from two Claude accounts. Each week's publish board lists all its
 links in `config/boards.json`; every board publish goes to every link there,
 from the same engine-built file (the board_sync hook names any link left
 behind). One board per week is the aim: the account that makes it publishes
-it pinned, and Krish adds his other account as an editor.
+it pinned, and Krish adds his other account as an editor. Krish edits and
+comments on whichever link he has open: at the start of every session, read
+the comments on EVERY link (`ArtifactComments read`; each Save he makes is
+posted there as an "EDIT" thread) before touching the week's words
+(`make-piece`, "Krish's edits on the board").
 
 Before doing anything here, read `docs/NORTH_STAR.md` and `AGENTS.md`, then
 `WORKBENCH.md`: where the work is, what is waiting on Krish, and how he wants to

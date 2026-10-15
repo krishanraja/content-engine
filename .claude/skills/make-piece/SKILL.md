@@ -224,6 +224,21 @@ account can read and writes the union onto the record, and the next rebuild
 draws them on every link. Only the engine builds a board: the publish hook
 refuses any other.
 
+**Krish's edits on the board.** A day's "Review the words" card (built with
+`week_board.py --review`) holds the article and each script in an editable
+box. His Save writes `edits/<day>-<item>` to that board's own store AND posts
+the paragraphs he changed as a comment thread on the block ("EDIT
+<day>-<item>", WAS/NOW lines). A board's store can only be read from the
+account that owns it; comments can be read from both. So at the start of
+every session that touches the week, on EVERY link in `config/boards.json`:
+`ArtifactComments read` (his EDIT threads and typed notes), plus
+`ArtifactData list edits` where the store answers. Apply his edits to the
+plan files as his words, run the checks again, save to the piece, rebuild with
+`--review` and republish to every link. Never decide from one link alone: he
+may be editing on either (Krish, 2026-10-15: "I will be editing from the
+other board until Sunday and then I'll move back here. Just make sure they
+catch it.").
+
 **Draft first, then ticks.** Krish, 2026-10-13: "the publish board needs to
 go in to Draft mode for Weds. the Monday card should be green as it is fully
 completed, the Weds and Friday cards should be amber as they are both in
