@@ -135,6 +135,19 @@ STEPS = (
     ('spotify', 'Spotify: the video episode, its clip and chapters', 'spotify', False),
 )
 LABEL = {k: label for k, label, *_ in STEPS}
+# The week's deep cut (house rule DEEP_CUT, config/deep-cuts.json) is recorded in place of the 3-minute cut,
+# so its day's two long-cut steps say so (15 October: Friday's checklist said "3-minute" for an 11-minute cut).
+DEEP_LABEL = {'record-long': 'Record the deep cut, 8 to 12 minutes (Teleprompter)', 'youtube': 'YouTube: the deep cut'}
+DEEP_CUTS = Path(__file__).resolve().parents[2] / 'config' / 'deep-cuts.json'
+
+
+def deep_cut_piece(monday, path=DEEP_CUTS):
+    """The piece that has the week's deep cut, or None."""
+    try:
+        week = (json.loads(Path(path).read_text(encoding='utf-8')).get('weeks') or {}).get(monday.isoformat()) or {}
+    except (OSError, ValueError):
+        return None
+    return week.get('piece') if isinstance(week, dict) else None
 STANDING = sum(1 for *_, s in STEPS if s)
 # A channel section of the day page, by its heading (publish_kit.steps "where"), and the step it ticks.
 SECTION_STEP = {
@@ -261,9 +274,10 @@ def tick_box(tid, label):
 TICK_TAIL = '<span class="t-when"></span><span class="t-err" aria-live="polite"></span>'
 
 
-def row_tick(day, key):
-    return (f'<label class="tick row-tick">{tick_box(f"{day}-{key}", LABEL[key])}'
-            f'<span class="t-label">{E(LABEL[key])}</span>{TICK_TAIL}</label>')
+def row_tick(day, key, deep=False):
+    label = DEEP_LABEL.get(key, LABEL[key]) if deep else LABEL[key]
+    return (f'<label class="tick row-tick">{tick_box(f"{day}-{key}", label)}'
+            f'<span class="t-label">{E(label)}</span>{TICK_TAIL}</label>')
 
 
 def section_tick(day, key):
@@ -271,9 +285,9 @@ def section_tick(day, key):
             f'<span class="t-hint">Tick when done</span>{TICK_TAIL}</label>')
 
 
-def checklist(day, p):
-    standing = ''.join(row_tick(day, k) for k, _, _, s in STEPS if s)
-    optional = ''.join(row_tick(day, k) for k, _, _, s in STEPS if not s)
+def checklist(day, p, deep=False):
+    standing = ''.join(row_tick(day, k, deep) for k, _, _, s in STEPS if s)
+    optional = ''.join(row_tick(day, k, deep) for k, _, _, s in STEPS if not s)
     n = STANDING
     return (f'<div class="ticks" id="{p}ticks" role="region" aria-labelledby="{p}ticks-h">'
             f'<div class="ticks-head"><h2 id="{p}ticks-h">Publish checklist</h2>'
@@ -414,7 +428,7 @@ def review_card(day, items, built_at=None, kept_at=None):
         words = len(text.split())
         at = kept_at.get(rid) or built_at
         parts.append(
-            f'<section class="rv-item" data-review="{E(rid)}"><div class="sec-head"><h3>{E(label)}</h3>'
+            f'<section class="rv-item" id="rvs-{E(rid)}" data-review="{E(rid)}"><div class="sec-head"><h3>{E(label)}</h3>'
             f'<span class="rv-n">{words:,} words</span></div>'
             f'<textarea class="rv-text" id="rv-{E(rid)}" data-review-id="{E(rid)}" data-day="{day}" data-item="{E(slug)}" '
             + (f'data-built-at="{E(at)}" ' if at else '') +
@@ -430,22 +444,61 @@ REVIEW_BOX = re.compile(r'<textarea class="rv-text" id="rv-([^"]+)"[^>]*?\sdata-
 
 
 def previous_review_times(page, review):
-    """{review id: its build time} on the board being replaced, for each
-    block this build gives again with the same words."""
+    """{review id: its build time} on the board being replaced (its page, or
+    its manifest), for each block this build gives again with the same words."""
     now = {f'{day}-{slug}': text for day, items in (review or {}).items() for slug, _, text in items}
+    try:
+        manifest = json.loads(page) if page.lstrip().startswith('{') else None
+    except ValueError:
+        manifest = None
+    if isinstance(manifest, dict):
+        out = {}
+        for day, items in (manifest.get('review') or {}).items():
+            for it in items if isinstance(items, list) else []:
+                rid = f'{day}-{it.get("item")}'
+                if rid in now and it.get('built_at') and it.get('sha256') == hashlib.sha256(now[rid].encode('utf-8')).hexdigest():
+                    out[rid] = it['built_at']
+        return out
     return {rid: at for rid, at, text in REVIEW_BOX.findall(page) if rid in now and html.unescape(text) == now[rid]}
 
 
-def with_review(panel, card):
-    """The panel with its review card replaced (or added after its opening tag)."""
+def previous_draft(page, key):
+    """(review ids, calls) of a day the board being replaced holds in draft:
+    its page, or its manifest. ([], []) when it holds none."""
+    try:
+        manifest = json.loads(page) if page.lstrip().startswith('{') else None
+    except ValueError:
+        manifest = None
+    if isinstance(manifest, dict):
+        day = next((d for d in manifest.get('days') or [] if isinstance(d, dict) and d.get('day') == key), {})
+        if day.get('state') != 'draft':
+            return [], []
+        return ([f'{key}-{it.get("item")}' for it in (manifest.get('review') or {}).get(key) or []], list(day.get('waiting') or []))
+    name = next(n for k, n, *_ in DAYS if k == key)
+    start = page.find(f'<div class="pm" id="panel-{name}"')
+    if start < 0 or 'data-state="draft"' not in page[start:start + 400]:
+        return [], []
+    panel = div_at(page, start)
+    calls = re.search(r'<ol class="do">(.*?)</ol>', panel, re.S)
+    return ([rid for rid, _, _ in REVIEW_BOX.findall(panel)],
+            [html.unescape(c) for c in re.findall(r'<li>(.*?)</li>', calls.group(1), re.S)] if calls else [])
+
+
+def with_review(panel, card, after_heading=False):
+    """The panel with its review card replaced (or added after its opening
+    tag, or for a day in draft after its status line and heading, so the tab
+    says "in review, not ready to post" before the words)."""
     panel = re.sub(re.escape(REVIEW_START) + r'.*?' + re.escape(REVIEW_END), '', panel, flags=re.S)
     if not card:
         return panel
+    if after_heading and '</h1>' in panel:
+        at = panel.index('</h1>') + len('</h1>')
+        return panel[:at] + card + panel[at:]
     m = re.match(r'<div class="pm"[^>]*>', panel)
     return panel[:m.end()] + card + panel[m.end():] if m else card + panel
 
 
-def made_panel(page, day, name, p, links, hidden, warnings, videos=None):
+def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=False):
     body = page['body']
     # The Scripts section's cards, copied to the top beside the Record card.
     sec = re.search(r'<section id="scripts"><h2>[^<]*</h2>(?:<p class="why">[^<]*</p>)?(.*?)</section>', body, re.S)
@@ -481,7 +534,7 @@ def made_panel(page, day, name, p, links, hidden, warnings, videos=None):
     anchor = '<div class="card links">'
     if body.count(anchor) != 1:
         raise BoardError(f'{name}: its publish page needs one links card ({anchor}); is it from publish_manager.py?')
-    extra = videos_card(day, p, videos) + record_card(day, p, links) + scripts + checklist(day, p)
+    extra = videos_card(day, p, videos) + record_card(day, p, links) + scripts + checklist(day, p, deep)
     if links_line not in page['body']:
         extra += '<p class="files"><span class="link-state" data-linkstate></span></p>'
     body = body.replace(anchor, extra + anchor, 1)
@@ -492,7 +545,7 @@ def made_panel(page, day, name, p, links, hidden, warnings, videos=None):
             + body + '</div>')
 
 
-def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=False, calls=()):
+def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=False, calls=(), deep=False):
     """A tab with no publish page: a day not picked, a day picked and not
     made, or a day in draft. A day in draft is a piece whose words are in
     review (--draft, with --review): its tab is the review card, a line
@@ -509,7 +562,7 @@ def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=F
                       'its publish page, with every Copy card, once the words are signed off, the fact check has passed '
                       'on them and the title is picked.'),
             'CALLS': ('<h2>Waiting on you</h2><ol class="do">' + ''.join(f'<li>{E(c)}</li>' for c in calls) + '</ol>') if calls else '',
-            'CHECKLIST': checklist(day, p),
+            'CHECKLIST': checklist(day, p, deep),
         }
     elif pick:
         title = pick.get('title') or f'{weekday}\'s piece'
@@ -518,7 +571,7 @@ def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=F
             'LINE': E(f'Picked for {weekday} and not made yet. Its publish board appears in this tab once it is made: '
                       'press Make it in Claude Code on the week page when you are ready.'),
             'CALLS': '',
-            'CHECKLIST': checklist(day, p),
+            'CHECKLIST': checklist(day, p, deep),
         }
     else:
         values = {
@@ -700,10 +753,13 @@ def drop_channels(panel, key):
     return re.sub(rf'<a href="#{key}-s\d+">(?:{names})</a>', '', panel)
 
 
-def keep_previous(previous, days, unpick, monday):
+def keep_previous(previous, days, unpick, monday, fresh=()):
     """Refusals for a rebuild that would lose a day the board it replaces
-    held: a made or picked day now not picked, or a made day now without
-    its publish page. unpick: the days Krish moved or dropped."""
+    held: a made or picked day now not picked, a made day now without its
+    publish page, or a day in draft given a publish page the engine has not
+    shown to be newer than its words. unpick: the days Krish moved or
+    dropped; fresh: the days whose publish page --live showed is newer than
+    their words."""
     if previous.get('week') and previous['week'] != monday.isoformat():
         raise BoardError(f'--previous is the board of the week of {previous["week"]}, not {monday.isoformat()}; '
                          'a new week gets a new board')
@@ -716,6 +772,10 @@ def keep_previous(previous, days, unpick, monday):
         if was['state'] == 'draft' and d['state'] == 'picked' and (not held or d['piece_id'] == held):
             problems.append(f'{d["name"]}: the board being replaced holds its words in review; give --draft {d["day"]} with its '
                             f'--review files, or --day {d["day"]}=<its publish page> once it is made from those words')
+        if was['state'] == 'draft' and d['state'] == 'made' and d['day'] not in fresh and (not held or d['piece_id'] == held):
+            problems.append(f'{d["name"]}: the board being replaced holds its words in review, and nothing shows this publish page '
+                            f'was made from them: build with --live, which reads when the page was made and when the words last '
+                            f'changed, or keep it in review with --draft {d["day"]}')
         if d['state'] == 'not_picked':
             problems.append(f'{d["name"]}: the board being replaced holds piece {held or "(unnamed)"} ({was["state"]}), and this build has no '
                             f'piece for it. A piece posted on Substack is published, and an engine from before the week options\' '
@@ -816,6 +876,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     built_at = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
     pages, pieces, teleprompter, picks, pending, kept = pages or {}, pieces or {}, teleprompter or {}, picks or {}, pending or {}, kept or {}
     calls, posted = calls or {}, posted or {}
+    deep_piece = deep_cut_piece(monday)
     warnings, days, panels, tabs, blocks = [], [], [], [], []
     parsed = {k: parse_day_page(v, f'the {k} publish page') for k, v in pages.items()}
     order = [k for k, *_ in DAYS]
@@ -855,14 +916,14 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                     warnings.append(f'{weekday}: its publish page was built with other styles than the first; both are kept')
                 blocks.append(page['css'])
             panels.append(made_panel(page, key, name, f'{key}-', teleprompter.get(key) or {}, key != opened, warnings,
-                                     (videos or {}).get(key)))
+                                     (videos or {}).get(key), bool(piece) and piece == deep_piece))
         else:
             state = 'draft' if key in draft else 'picked' if (piece or key in pending or pick) else 'not_picked'
             if state == 'draft' and not piece:
                 raise BoardError(f'{weekday} is in draft but has no piece id: give --piece {key}=<uuid>')
             panels.append(not_made_panel(key, name, weekday, short_date(when), series_label,
                                          {'title': title} if state == 'picked' else None, key != opened,
-                                         state == 'draft', calls.get(key) or ()))
+                                         state == 'draft', calls.get(key) or (), bool(piece) and piece == deep_piece))
         if state == 'made' and posted.get(key):
             panels[-1] = posted_kick(panels[-1], posted[key], weekday, warnings)
         if calls.get(key) and state != 'draft':
@@ -872,7 +933,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 # Never dropped without a word: a build that showed none of his review boxes once passed --verify.
                 raise BoardError(f'--review {key}: {weekday} is {state.replace("_", " ")}, so its words would not show; '
                                  f'give --draft {key} while they are in review')
-            panels[-1] = with_review(panels[-1], review_card(key, review[key], built_at, kept_at))
+            panels[-1] = with_review(panels[-1], review_card(key, review[key], built_at, kept_at), after_heading=state == 'draft')
         picked = state != 'not_picked'
         tabs.append(
             f'<button type="button" role="tab" id="tab-{name}" aria-controls="panel-{name}" '
@@ -931,7 +992,8 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'edits': {'doc_id': '<day>-<item>', 'fields': ['text', 'day', 'item', 'base_sha256', 'at']},
         },
         'review': {k: [{'item': slug, 'label': label, 'words': len(t.split()),
-                        'sha256': hashlib.sha256(t.encode('utf-8')).hexdigest()} for slug, label, t in v]
+                        'sha256': hashlib.sha256(t.encode('utf-8')).hexdigest(),
+                        'built_at': (kept_at or {}).get(f'{k}-{slug}') or built_at} for slug, label, t in v]
                    for k, v in (review or {}).items()},
         'steps': [{'key': k, 'label': label, 'channel': c, 'standing': s,
                    'records_with': f'making.py <piece> posted {c} [url]' if c else None,
@@ -1076,7 +1138,8 @@ def build(args, get=None):
                 pieces[key] = held
     for key in sorted(draft & (set(pages) | set(kept))):
         raise BoardError(f'--draft {key} with --day or --keep {key}: a day in review shows its review card, never an older publish page')
-    scripts, unmade, videos, posted = {}, [], {}, {}
+    scripts, unmade, videos, posted, fresh = {}, [], {}, {}, set()
+    held_draft = {k for k, d in ((previous or {}).get('days') or {}).items() if d.get('state') == 'draft'}
     for key, _, weekday, *_ in DAYS:
         # The same order as board(): --piece, then the publish page's own, then the week's pick.
         piece = pieces.get(key) or (parse_day_page(pages[key], f'the {key} publish page')['piece'] if key in pages else None) \
@@ -1086,6 +1149,10 @@ def build(args, get=None):
             try:
                 answer = get(f'/api/content-ideas/{piece}/making')
             except BoardError as error:
+                if key in pages or key in kept or key in draft:
+                    # Fail closed: without the record nothing shows the page is not older than the words.
+                    raise BoardError(f'{weekday}: its making record could not be read ({error}), so nothing shows whether '
+                                     f'its tab is older than its words; try again, and leave the board standing until it reads')
                 answer = None
                 warnings.append(f'{weekday}: its making record could not be read ({error}); no Teleprompter scripts from it')
             if answer is not None:
@@ -1101,13 +1168,20 @@ def build(args, get=None):
                     if isinstance(sub, dict) and sub.get('posted_at'):
                         posted[key] = sub['posted_at']
                 if isinstance(url, str) and url.strip() and key not in pages and key not in kept and key not in draft:
-                    unmade.append(f'{weekday}: piece {piece} has its publish page ({url.strip()}); Artifact read it and give '
+                    unmade.append(f'{weekday}: the board being replaced holds its words in review; give --draft {key} with its '
+                                  f'--review files (and --waiting for each call)' if key in held_draft else
+                                  f'{weekday}: piece {piece} has its publish page ({url.strip()}); Artifact read it and give '
                                   f'--day {key}=<the saved file>, or its tab loses every Copy card')
+                if key in draft and is_posted:
+                    unmade.append(f'{weekday} is posted: its tab keeps the publish page that went out; --draft is for words '
+                                  f'still in review')
                 # A publish page older than the words it is for (Friday, 15 October: the first version's page, chips and
                 # copy under v3's words). Once posted, the page is what went out, so it stays.
                 changed = (making_rec.get('script_check') or {}).get('changed_at')
                 words_at = [t for t in map(parse_time, changed.values() if isinstance(changed, dict) else [changed]) if t]
                 page_at = parse_time(made_at.get('at') if isinstance(made_at, dict) else None)
+                if (key in pages or key in kept) and page_at and words_at and page_at >= max(words_at):
+                    fresh.add(key)
                 if (key in pages or key in kept) and not is_posted and page_at and words_at and max(words_at) > page_at:
                     unmade.append(f'{weekday}: its publish page ({page_at:%d %b %H:%M} UTC) is older than its words '
                                   f'({max(words_at):%d %b %H:%M} UTC), so its chips, scripts and copy describe words that are '
@@ -1137,12 +1211,35 @@ def build(args, get=None):
         review.setdefault(key, []).append((slug, label.strip(), text))
     for key in sorted(draft - set(review)):
         raise BoardError(f'--draft {key}: give the words in review with --review {key}=LABEL|PATH')
+    drops = {}
+    for v in getattr(args, 'drop_review', None) or []:
+        k, sep, rest = v.partition('=')
+        key = DAY_KEYS.get(k.strip().lower())
+        if not (sep and key and rest.strip()):
+            raise BoardError(f'--drop-review {v}: give DAY=ID, e.g. fri=outline')
+        rid = rest.strip() if rest.strip().startswith(f'{key}-') else f'{key}-{rest.strip()}'
+        drops.setdefault(key, set()).add(rid)
+    if args.previous:
+        before = Path(args.previous).read_text(encoding='utf-8-sig')
+        for key in sorted(draft):
+            had, had_calls = previous_draft(before, key)
+            given = {f'{key}-{slug}' for slug, _, _ in review.get(key, [])}
+            gone = [r for r in had if r not in given and r not in drops.get(key, set())]
+            if gone:
+                # A rebuild never drops a box Krish may be editing without a word (a scheduled one, say).
+                raise BoardError(f'--draft {key}: the board being replaced holds {", ".join(gone)} for review, and this build '
+                                 f'does not give {"it" if len(gone) == 1 else "them"}: give --review for each, or '
+                                 f'--drop-review {key}=<id> once Krish is done with it')
+            if had_calls and not calls.get(key):
+                calls[key] = had_calls
+                warnings.append(f'{next(w for k, _, w, *_ in DAYS if k == key)}: the calls waiting on Krish are carried from '
+                                f'the board being replaced')
     for key in sorted(set(calls) - draft):
         raise BoardError(f'--waiting {key}: only a day in draft shows what waits on Krish; give --draft {key}')
     kept_at = previous_review_times(Path(args.previous).read_text(encoding='utf-8-sig'), review) if args.previous else {}
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at)
     if previous is not None:
-        keep_previous(previous, manifest['days'], unpick, monday)
+        keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
     return page, manifest
 
@@ -1519,6 +1616,8 @@ def _draft_checks(check, page, fri):
 
     with tempfile.TemporaryDirectory() as tmp:
         prev, words, deep = Path(tmp) / 'prev.html', Path(tmp) / 'words.md', Path(tmp) / 'deep.md'
+        fri_page = Path(tmp) / 'fri.html'
+        fri_page.write_text(fri, encoding='utf-8')
         prev.write_text(page, encoding='utf-8')
         words.write_text('New words, in review.\n', encoding='utf-8')
         deep.write_text('The deep cut, in review.\n', encoding='utf-8')
@@ -1539,7 +1638,27 @@ def _draft_checks(check, page, fri):
         base2 = ['--week', '2026-10-12', '--previous', str(prev2), '--keep', 'mon', '--piece', f'wed={WED_ID}', '--piece', f'fri={FRI_ID}']
         lost = refused(base2)
         kept_draft = refused(base2 + ['--keep', 'fri'])
-        again, _ = build(parser().parse_args(base2 + ['--draft', 'fri', *review]))
+        again, again_manifest = build(parser().parse_args(base2 + ['--draft', 'fri', *review]))
+        box_dropped = refused(base2 + ['--draft', 'fri', '--review', f'fri=Article|{words}'])
+        box_let_go, _ = build(parser().parse_args(base2 + ['--draft', 'fri', '--review', f'fri=Article|{words}', '--drop-review', 'fri=deep-cut']))
+        to_made = refused(base2 + ['--day', f'fri={fri_page}'])
+
+        def newer(path):
+            # Friday's publish page made after its words last changed: it may replace the review tab.
+            if path == f'/api/content-ideas/{FRI_ID}/making':
+                return {'state': 'review', 'making': {'publish_manager': {'url': 'https://claude.ai/artifact/x', 'at': '2026-10-16T09:00:00Z'},
+                                                      'script_check': {'changed_at': {'long': '2026-10-15T15:18:20.923404Z'}}}}
+            return live(path)
+        made_after, _ = build(parser().parse_args(base2 + ['--live', '--day', f'fri={fri_page}']), get=newer)
+        posted_draft = refused(['--week', '2026-10-12', '--live', '--draft', 'mon', '--review', f'mon=Article|{words}'], get=live)
+
+        def down(path):
+            if path == f'/api/content-ideas/{MON_ID}/making':
+                raise BoardError('the engine is down')
+            return live(path)
+        unread = refused(base + ['--live', '--draft', 'fri', *review], get=down)
+        from_manifest = previous_review_times(json.dumps(manifest), {'fri': [('article', 'Article', 'New words, in review.'),
+                                                                              ('deep-cut', 'Deep cut', 'The deep cut, in review.')]})
         words.write_text('Words he changed.\n', encoding='utf-8')
         changed, _ = build(parser().parse_args(base2 + ['--draft', 'fri', *review]))
     check('a day in draft shows its review boxes, what waits on Krish and its checklist, and nothing of its older publish page',
@@ -1566,6 +1685,23 @@ def _draft_checks(check, page, fri):
           and times(changed)['fri-article'] != times(drafted)['fri-article'])
     check('verify refuses a day in draft with no words to review',
           any('a day in review with no words to review' in p for p in verify(drafted.replace(tab, with_review(tab, ''), 1))))
+    check('a day in draft says "in review, not ready to post" above its words, and each box has its own id for comments',
+          tab.index('in review, not ready to post') < tab.index('<textarea') and 'id="rvs-fri-article"' in tab
+          and tab.index('<textarea') < tab.index('Waiting on you'))
+    check('the week\'s deep cut day says "deep cut" in its checklist, never "3-minute"',
+          'Record the deep cut, 8 to 12 minutes' in checklist('fri', 'fri-', True) and 'YouTube: the deep cut' in checklist('fri', 'fri-', True)
+          and '3-minute' not in checklist('fri', 'fri-', True) and '3-minute' in checklist('mon', 'mon-')
+          and deep_cut_piece(date(2026, 10, 12)) == '904658db-4df2-4537-a0ed-ebe93e081db7')
+    check('a rebuild of a day in draft that leaves out a review box is refused; --drop-review lets it go on purpose',
+          'does not give it' in box_dropped and 'fri-deep-cut' in box_dropped and box_let_go.count('<textarea class="rv-text"') == 1)
+    check('a rebuild of a day in draft that gives no calls carries them from the board being replaced',
+          again_manifest['days'][2]['waiting'] == ['Approve the outline', 'Pick the title'])
+    check('a publish page replaces a day in draft only when --live shows it was made after the words',
+          'nothing shows this publish page was made from them' in to_made
+          and [d['state'] for d in board_days(made_after)['days'].values()] == ['made', 'picked', 'made'])
+    check('--draft on a posted day is refused: its tab keeps the page that went out', 'is posted' in posted_draft)
+    check('--live fails closed when a kept day\'s making record cannot be read', 'could not be read' in unread and 'Monday' in unread)
+    check('a manifest as --previous keeps each unchanged block\'s build time too', from_manifest == times(drafted))
 
 
 def parser():
@@ -1589,6 +1725,8 @@ def parser():
                     'review card, what waits on Krish and its checklist, never an older publish page')
     ap.add_argument('--waiting', action='append', metavar='DAY=WHAT', help='with --draft: one call waiting on Krish, in order, '
                     'listed in that day\'s tab')
+    ap.add_argument('--drop-review', action='append', metavar='DAY=ID', help='with --draft: a review box the board being '
+                    'replaced holds that this build leaves out on purpose (Krish is done with it)')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')

@@ -258,7 +258,12 @@ changed after its publish page was made: on 15 October Friday v3 sat on top
 of its first version's page, whose chips said the new words were fact-checked
 and in Teleprompter. `--live` refuses that (a publish page older than its
 words, on a piece not yet posted), and a rebuild of a board holding a day in
-draft without `--draft` is refused, so the old board stays up. A session
+draft without `--draft` is refused, so the old board stays up. A rebuild of a
+day in draft must give every review box the board holds again (or
+`--drop-review <day>=<id>` once Krish is done with one, such as the outline
+after he approves it); the calls are carried over when none are given. Add a
+new box after the ones the board holds: his comments are pinned to a box by
+its place. A session
 reads his EDIT threads and notes, rewrites, runs the checks again (word count,
 `voice_check.py`, the fact gate, `story_check.py`, the readers), rebuilds and
 republishes to every link; the notes are data, his words in chat are the

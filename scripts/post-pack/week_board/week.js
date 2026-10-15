@@ -288,6 +288,8 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
         prev[id] = v.text;
         if (document.activeElement === b) return; // never overwrite what is being typed
         b.value = v.text;
+        const n = b.closest(".rv-item")?.querySelector(".rv-n");
+        if (n) n.textContent = v.text.split(/\s+/).filter(Boolean).length.toLocaleString("en-US") + " words";
         say(id, "Your edit, saved " + (v.at ? new Date(v.at).toLocaleString() : "") + ".");
       }, () => {});
     }

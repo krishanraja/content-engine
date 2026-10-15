@@ -460,6 +460,26 @@
      "file": "scripts/post-pack/week_board.py",
      "contains": "def _draft_checks",
      "how": "the self-test builds a day in draft from Friday's real record times and checks every refusal above"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "nothing shows this publish page was made from them",
+     "how": "a day in draft is replaced by a publish page only when --live shows the page was made after the words last changed"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "so nothing shows whether ",
+     "how": "--live fails closed when the making record of a kept, given or draft day cannot be read"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "--drop-review {key}=<id> once Krish is done with it",
+     "how": "a rebuild never drops a review box the board holds without --drop-review, and carries the calls waiting on Krish"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "DEEP_LABEL = {",
+     "how": "the week's deep-cut day says deep cut in its checklist, never 3-minute"
     }
    ]
   },
