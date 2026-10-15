@@ -383,14 +383,20 @@ def record_card(day, p, scripts):
 REVIEW_START, REVIEW_END = '<!--review-->', '<!--/review-->'
 
 
-def review_card(day, items):
+def review_card(day, items, built_at=None):
     """The words Krish reviews on the board: each block (the article, each
     script) as text he can edit and save, or comment on. Krish, 2026-10-15:
     "get Fridays publish board ready in the artifact, and enable me to make
     comments or edit text myself, and then you can either iterate based on my
     comments or observe my text edits." A save goes to the board's own store
     (edits/<day>-<item>); a session reads it back with ArtifactData. Comment
-    opens the page's comment box on that block."""
+    opens the page's comment box on that block.
+
+    Each block carries the time this board was built (data-built-at). The
+    page shows a save from the store only when it is newer than that: a
+    session that folds his saved edit into a new version and rebuilds must
+    not have his older save shown over the new words (2026-10-15, Friday v3
+    over his 13:58 save), where a Save would then put the old words back."""
     if not items:
         return ''
     parts = [f'{REVIEW_START}<div class="rec rv" id="{day}-review">'
@@ -404,6 +410,7 @@ def review_card(day, items):
             f'<section class="rv-item" data-review="{E(rid)}"><div class="sec-head"><h3>{E(label)}</h3>'
             f'<span class="rv-n">{words:,} words</span></div>'
             f'<textarea class="rv-text" id="rv-{E(rid)}" data-review-id="{E(rid)}" data-day="{day}" data-item="{E(slug)}" '
+            + (f'data-built-at="{E(built_at)}" ' if built_at else '') +
             f'rows="14" spellcheck="true" aria-label="{E(label)}">{E(text)}</textarea>'
             f'<div class="rv-bar"><button type="button" class="btn-s" data-act="save-review" data-for="{E(rid)}">Save my edits</button>'
             f'<button type="button" class="btn-s ghost" data-act="comment-review" data-for="{E(rid)}">Comment</button>'
@@ -738,6 +745,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     """(page, manifest, warnings). pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
     {day: {'id', 'title'}} from the week options; pending: {day: title}."""
+    built_at = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
     pages, pieces, teleprompter, picks, pending, kept = pages or {}, pieces or {}, teleprompter or {}, picks or {}, pending or {}, kept or {}
     warnings, days, panels, tabs, blocks = [], [], [], [], []
     parsed = {k: parse_day_page(v, f'the {k} publish page') for k, v in pages.items()}
@@ -784,7 +792,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             panels.append(not_made_panel(key, name, weekday, short_date(when), series_label,
                                          {'title': title} if state == 'picked' else None, key != opened))
         if state == 'made' and (review or {}).get(key):
-            panels[-1] = with_review(panels[-1], review_card(key, review[key]))
+            panels[-1] = with_review(panels[-1], review_card(key, review[key], built_at))
         picked = state != 'not_picked'
         tabs.append(
             f'<button type="button" role="tab" id="tab-{name}" aria-controls="panel-{name}" '
@@ -831,7 +839,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     manifest = {
         'kind': 'week_board', 'version': 1, 'title': TITLE,
         'week_start': monday.isoformat(), 'week_end': (monday + timedelta(days=4)).isoformat(),
-        'built_at': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
+        'built_at': built_at,
         'bytes': size, 'sha256': hashlib.sha256(page.encode('utf-8')).hexdigest(),
         'days': days,
         'made': [d['day'] for d in days if d['state'] == 'made'],
@@ -1329,6 +1337,8 @@ def _self_test():
     check('a kept day loses the channels Krish dropped, and keeps the rest',
           'whatsapp' not in drop_channels(dropped_panel, 'mon').lower() and '6. LinkedIn' in drop_channels(dropped_panel, 'mon'))
     card = review_card('fri', [('article', 'Article', 'One <b>two</b> three.'), ('deep-cut', 'Deep cut', 'Four five.')])
+    check('each review block carries the time the board was built, so an older save never covers new words',
+          review_card('fri', [('article', 'Article', 'x')], '2026-10-15T16:00:00Z').count('data-built-at="2026-10-15T16:00:00Z"') == 1)
     check('the review card holds each block as editable text, escaped, with Save and Comment',
           card.count('<textarea') == 2 and '&lt;b&gt;two&lt;/b&gt;' in card and card.count('data-act="save-review"') == 2
           and card.count('data-act="comment-review"') == 2 and 'data-review-id="fri-article"' in card)
@@ -1338,6 +1348,8 @@ def _self_test():
           once.startswith('<div class="pm" id="panel-friday">' + REVIEW_START) and with_review(once, card).count(REVIEW_START) == 1
           and REVIEW_START not in with_review(once, ''))
     js = template('week.js')
+    check('the page never shows a save older than the build over the new words',
+          'v.at < built' in js and 'b.dataset.builtAt' in js)
     check('the page saves each review block to edits/<day>-<item> and opens the comment box on it',
           'rdb.doc("edits/" + id).set(' in js and 'comments.openComposer({ element:' in js and 'window.claude.use("comments")' in js)
     check('a kept day drawn before section ticks (no sec-head) loses the dropped channels too',

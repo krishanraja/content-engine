@@ -278,6 +278,13 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
         if (!s.exists) return;
         const v = s.data() || {};
         if (typeof v.text !== "string") return;
+        // A save older than this build was folded into these words by a
+        // session: show the new words, never the older save over them.
+        const built = b.dataset.builtAt;
+        if (built && v.at && v.at < built) {
+          say(id, "Your edit saved " + new Date(v.at).toLocaleString() + " is in this version.");
+          return;
+        }
         prev[id] = v.text;
         if (document.activeElement === b) return; // never overwrite what is being typed
         b.value = v.text;

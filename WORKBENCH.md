@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-13, about 19:40 UTC, by a Claude Code session (cloud); the `manual` refusal (step 3 PR 6, second half) is on branch `ccr-25d9e81a-manual-refusal`, live once merged (Latest handoff); step 4 (one done-check sweep) is live.
+Last updated: 2026-10-15, about 16:00 UTC, by a Claude Code session (cloud); Friday v3 waits on Krish (Latest handoff).
 
 ## How Krish wants to be worked with
 
@@ -643,6 +643,63 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-15, about 16:00 UTC: **Friday v3 on Krish's new angle: written,
+  checked and on the board for his review; five calls wait on him.** Krish
+  (after his board edit at 13:58): "I think the article and long form video
+  needs more substantive evidence that higher thinking = better results, that
+  there is deliberate incentive from a product marketing POV to keep
+  announcing models for perception, and even what margins Claude and ChatGPT
+  actually make when you make it think more compared to less. I think what we
+  are saying here is that the future of how hard an AI thinks is likely to
+  itself be decided on by AI, and then we should unpack the consequences and
+  trade offs of that - there are pros and cons to that prediction. The
+  article and deep cut should run a bit longer for this article to narrate
+  all of this solidly in."
+  - **Outline v3** `docs/plans/2026-10-09-outline-v3.md` (new spine; waits on
+    his approval). **Evidence** `docs/plans/2026-10-09-friday/evidence-v3.md`
+    (four researchers, each re-checked by an independent checker; brief in
+    `evidence-v3-brief.md`). Nobody publishes a margin per thinking level:
+    the piece says so and shows company-wide reported figures instead.
+  - **Article** `docs/plans/2026-10-09-draft-body-v3.md`, 2,210 words (his
+    words above are the exception to ARTICLE_LENGTH for this piece), saved
+    on the piece. His board edits kept, except "Opus 5.1", which does not
+    exist (Opus 4.8 May, Opus 5 July, Opus 5.5 September): now "Opus 4.8,
+    Opus 5, Opus 5.5". Voice 3.5, AI scan passes, spine judge passes every
+    section. 38 new verbatim sources filed (one, WIRED's router piece, would
+    not load; the gate's web check must carry it). Free pre-check: only
+    "Opus 5.56" (his joke) is a number on no source. The paid fact gate has
+    NOT run: it waits on his go.
+  - **Scripts** `...-script-deep-v3.md` (1,699 words, about 11:20, chapters in
+    `.chapters.md`) and `...-script-90s-v3.md` (195 words) pass story_check
+    and are recorded (`making.py scripts`). Three rounds of two fresh
+    readers: every retelling matches the point, but neither reader has said
+    "nothing" yet (round 3: one reader three small lines, the other stricter).
+    Per make-piece, his sign-off in words is what records the read-back
+    (`--krish-words`); then Teleprompter (still holds the older scripts).
+    The scripts use a bike (sticker and gears) where the article uses a car:
+    the readers did not follow car gears.
+  - **Prediction** (both cuts and the article): by 30 June 2027 ChatGPT will
+    again start paying users on a setting where the AI picks how hard to
+    think. "How sure we are: [Krish to set]". Alternatives in the evidence
+    pack (Claude app Auto effort; Gemini Auto for paying users). The Manifold
+    market of 9 Oct is on an older call: his call.
+  - **Board**: rebuilt by `week_board.py --review` and published to
+    https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV (version 29). The pinned
+    copy https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E was NOT updated:
+    this session's permission settings refused that publish. Same file:
+    `.cache/week-board/2026-10-12/week-board.html` (rebuild it from this
+    branch's `week_board.py`).
+  - **Guards** (on branch `ccr-3020025f-qsl89s`, not on main): the board page
+    no longer shows a saved edit older than the build over new words
+    (`data-built-at`; proven in a browser with an old and a new save); before
+    this, his 13:58 save would have covered v3 on the copy he edits. Until it
+    is on main, any rebuild from main (the 13:25 routine included) brings the
+    old behaviour back. And `file-verbatim-source.ts` refuses a cloud session
+    without `NODE_USE_ENV_PROXY=1` (28 filings had failed 401 without it).
+  - Waiting on Krish: approve outline v3; set the confidence; go for one paid
+    fact-gate run (and keep or change "Opus 5.56"); sign off the scripts (then
+    Teleprompter); title rounds (the spine changed again); merge the branch.
 
 - 2026-10-15, 00:30 UTC: **Friday's v2 is written and passes every gate.**
   Article `docs/plans/2026-10-09-draft-body-v2.md` (1,284 words) is saved on

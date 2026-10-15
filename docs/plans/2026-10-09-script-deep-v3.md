@@ -2,7 +2,7 @@ I've been watching what's coming with AI, before everyone notices. I'm Krish.
 
 I've been using AI apps every day for years now. And I've noticed something odd about how they're sold. Every launch is about a name. A new number, a livestream, a chart. Claude Opus 4.8. Then Opus 5. Then Opus 5.5. At this rate, when's Opus 5.56 coming out? So I wanted to break it down. Does the name you pick actually change the answer you get?
 
-Let me say this first. Some of the new AIs really are better. The people building them aren't lying to you. But I think the name is the least important thing on your screen.
+First, some of the new AIs really are better. The people building them aren't lying to you. But I think the name is the least important thing on your screen.
 
 There's a setting that changes your answer much more. It decides how hard the AI thinks before it answers. The app usually starts it low, and almost nobody changes it. There are a few reasons the AI companies would rather you look at the name. Let's unpack them.
 
@@ -14,9 +14,9 @@ Why so many? The companies don't say it's to get in the news. So this next bit i
 
 In March 2025, OpenAI added picture making to ChatGPT. Sam Altman, who runs OpenAI, then said a million new people joined in one hour. That same day, OpenAI said investors were giving it forty billion dollars. That money had been planned for months. But launching on the same day made OpenAI look even more exciting.
 
-Here's a detail I love. Anthropic's page for Opus 5.5 has a small note at the bottom. It says the scores in its charts come from the AI thinking as hard as it possibly can. But for people building apps, Anthropic starts Opus 5.5 at medium thinking. So the chart shows it trying its hardest. You get the middle, unless you ask for more.
+Here's a detail I love. The page for Opus 5.5 has a small note at the bottom. It says the scores in its charts come from the AI thinking as hard as it possibly can. But for people building apps, Anthropic starts Opus 5.5 at medium thinking. So the chart shows it trying its hardest. You get the middle, unless you ask for more.
 
-Here's my favourite example. In September, Anthropic's boss, Dario Amodei, wrote that AI companies should slow down how fast AI gets smarter. In the next few weeks, Anthropic brought out three new Claude names. OpenAI brought out two. To be fair, he meant making AI smarter, and a new name doesn't make it smarter. That's my point.
+Here's my favourite example. In September, Anthropic's boss, Dario Amodei, wrote that AI companies should slow down how fast AI gets smarter. In the next few weeks, Anthropic brought out three new Claude names. OpenAI brought out two. To be fair, he was talking about making AI smarter. And that's my point. You can get a new name without getting a smarter AI.
 
 So what does matter? Let me explain with one person.
 
@@ -34,11 +34,11 @@ How big is the difference? A group called Artificial Analysis tests these AIs. T
 
 But more thinking isn't always better. Each extra bit helps a little less than the last. And sometimes it's a total waste. Researchers asked thinking AIs a really simple question. What is two plus three? They used about twenty times more words than normal AIs to get there. One of them worked out the answer thirteen times.
 
-So the gear matters most on hard jobs, like Sally's deal. On easy ones, extra thinking is money down the drain. Whose money, though?
+So the gear matters most on hard jobs, like Sally's deal. On easy ones, extra thinking is wasted money. Whose money?
 
 When an AI thinks, it writes out its working behind the scenes. Every word of that uses computer time, and computer time costs money. For Opus 5.5, thinking as hard as it can cost about eleven times as much as thinking a little.
 
-Here's the twist. Who pays for that thinking depends on how you pay.
+Who pays for that thinking depends on how you pay.
 
 Some people pay by the word. Usually that's businesses building apps. For them, more thinking means a bigger bill. So when businesses turn up the thinking, OpenAI and Anthropic earn more.
 
@@ -46,11 +46,11 @@ But most of us pay the same amount every month, however much we use. Then every 
 
 Anthropic had the same problem. One person on a two hundred dollar plan used tens of thousands of dollars' worth of AI. So Anthropic added weekly limits.
 
-Picture a café with an all-you-can-eat deal. The people on that deal pay just a tenth of the café's money. But they eat over four in every ten plates. A research firm called SemiAnalysis says Anthropic's monthly plans work a bit like that.
+Picture a café where some customers pay one price and eat as much as they like. They pay one in every ten coins the café takes. But they eat more than four in every ten plates. A research firm called SemiAnalysis says Anthropic's monthly plans work a bit like that.
 
 I wanted to know how much they make on one hard-thinking answer, compared with a quick one. Neither company tells us. I looked.
 
-News reports say that for every dollar people pay OpenAI, about seventy cents is left after paying for the computers. And Altman says that, overall, answering people's questions makes OpenAI money.
+Across the whole company, it looks better. If you pay OpenAI a dollar, about seventy cents is left after it pays for the computers. That's what news reports say.
 
 But on a monthly plan, the hard-thinking answer is the expensive one. That, I think, is why the app starts you in an easy gear. That's my opinion. Nobody has said it out loud.
 
