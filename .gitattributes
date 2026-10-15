@@ -31,8 +31,3 @@ apps/renderer/**/*.pdf binary
 apps/renderer/**/*.lottie binary
 apps/renderer/**/*.riv binary
 apps/renderer/**/*.avif binary
-
-# The official wordmarks are read and held to their sha256 byte for byte, on
-# Windows runners too, so git must never touch their line endings.
-config/brand-wordmarks/*.png binary
-config/brand-wordmarks/*.svg binary

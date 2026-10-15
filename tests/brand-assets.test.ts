@@ -4,8 +4,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { BrandWordmarkAssetV1Schema, TreatmentRegistryV1Schema, type BrandThemeV1, type BrandWordmarkAssetV1, type RenderManifestV1, type Series } from '@mindmake/contracts'
-import { BUNDLED_WORDMARKS_DIR, brandWordmarkLegibilityIssues, brandWordmarkLegibilityReport, bundledWordmarkPath, cachedOfficialAsset, officialWordmarkUrl, stageOfficialSeriesWordmarks, stageOfficialWordmarks } from '@mindmake/core'
+import { BrandWordmarkAssetV1Schema, TreatmentRegistryV1Schema, type BrandThemeV1, type RenderManifestV1 } from '@mindmake/contracts'
+import { BRAND_MARK_MIRROR, brandWordmarkLegibilityIssues, brandWordmarkLegibilityReport, mirroredWordmarkUrl, officialWordmarkUrl, stageOfficialWordmarks } from '@mindmake/core'
 import studioConfig from '../config/studio.json'
 
 function activeTheme(): BrandThemeV1 {
@@ -139,12 +139,7 @@ describe('official brand wordmarks', () => {
   })
 
   it('fails closed when GitHub bytes do not match the pinned asset hash', async () => {
-    // A pin with no bundled copy, so the bytes can only come from the source.
-    const base = activeTheme()
-    if (!base.wordmarks) throw new Error('active theme is missing official wordmarks')
-    const unbundled = createHash('sha256').update('a mark that is not bundled').digest('hex')
-    const fixtureMindmake = { ...base.wordmarks.mindmake, sha256: unbundled }
-    const theme: BrandThemeV1 = { ...base, wordmarks: { ...base.wordmarks, mindmake: fixtureMindmake } }
+    const theme = activeTheme()
     const manifest = { branding: 'series', brand_theme: theme, series: 'money_of_ai' } as RenderManifestV1
     const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-brand-mismatch-'))
     const previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
@@ -201,56 +196,54 @@ describe('official brand wordmarks', () => {
     const manifest = { branding: 'series', brand_theme: theme, series: 'built_with_ai' } as RenderManifestV1
     await expect(stageOfficialWordmarks(manifest, tmpdir())).rejects.toThrow('branded renders require the approved responsive wordmark lockup')
   })
-  it('keeps every pinned wordmark in the repository under its own hash', async () => {
-    // krishanraja/control-center went private on 2026-10-15 and its raw URLs
-    // answer 404, so no render may depend on fetching a pinned mark from it.
-    const registry = TreatmentRegistryV1Schema.parse(studioConfig)
-    const pinned = new Map<string, string>()
-    const walk = (value: unknown): void => {
-      if (Array.isArray(value)) { value.forEach(walk); return }
-      if (!value || typeof value !== 'object') return
-      const record = value as Record<string, unknown>
-      if (typeof record.sha256 === 'string' && typeof record.source_path === 'string') pinned.set(record.sha256, record.source_path)
-      Object.values(record).forEach(walk)
-    }
-    walk(registry.brand_themes)
-    expect(pinned.size).toBeGreaterThanOrEqual(6)
-    for (const [sha256, sourcePath] of pinned) {
-      const bytes = await readFile(bundledWordmarkPath({ sha256, source_path: sourcePath } as BrandWordmarkAssetV1)).catch(() => null)
-      expect(bytes, `${sourcePath} has no bundled copy in config/brand-wordmarks`).not.toBeNull()
-      expect(createHash('sha256').update(bytes!).digest('hex'), `${sourcePath} bundled copy does not hash to its name`).toBe(sha256)
-    }
-    const files = (await readdir(BUNDLED_WORDMARKS_DIR)).filter((name) => name !== 'README.md')
-    for (const name of files) expect(pinned.has(name.replace(/\.(png|svg)$/, '')), `${name} is bundled but pinned by no theme`).toBe(true)
-  })
-
-  it('stages every pinned theme with the network refused', async () => {
-    const registry = TreatmentRegistryV1Schema.parse(studioConfig)
-    const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-brand-offline-'))
+  it('falls back to the Control Center mirror when the pinned source answers 404', async () => {
+    // krishanraja/control-center went private on 2026-10-15; its raw URLs
+    // answer 404, and the same bytes are served by hash from Control Center.
+    const bytes = Buffer.from('deterministic-official-png-fixture-for-the-mirror')
+    const sha256 = createHash('sha256').update(bytes).digest('hex')
+    const base = activeTheme()
+    if (!base.wordmarks) throw new Error('active theme is missing official wordmarks')
+    const fixture = { ...base.wordmarks.mindmake, source_path: 'src/assets/fixture.png', sha256 }
+    const theme: BrandThemeV1 = { ...base, wordmarks: { ...base.wordmarks, mindmake: fixture, series: { money_of_ai: fixture, built_with_ai: fixture } } }
+    const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-brand-mirror-'))
     const previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
     process.env.MINDMAKE_RUNTIME_ROOT = runtimeRoot
-    const refuse = (async () => { throw new Error('the network was used') }) as unknown as typeof fetch
+    const asked: string[] = []
     try {
-      const stagedHashes = new Set<string>()
-      for (const theme of registry.brand_themes) {
-        const assets = [
-          ...(theme.wordmarks ? [theme.wordmarks.mindmake, ...Object.values(theme.wordmarks.series)] : []),
-          ...(theme.publication ? [theme.publication.mark, theme.publication.logo, ...(theme.publication.stacked ? [theme.publication.stacked] : [])] : []),
-        ].filter((asset): asset is NonNullable<typeof asset> => Boolean(asset))
-        for (const asset of assets) {
-          const path = await cachedOfficialAsset(theme, asset, refuse)
-          expect(createHash('sha256').update(await readFile(path)).digest('hex')).toBe(asset.sha256)
-          stagedHashes.add(asset.sha256)
-        }
-        // A live theme also stages end to end through the render path.
-        if (theme.wordmarks && theme.status === 'active') {
-          for (const series of Object.keys(theme.wordmarks.series) as Series[]) {
-            await stageOfficialSeriesWordmarks(theme, series, join(runtimeRoot, theme.theme_id, series), refuse)
-          }
-        }
+      const fetchImpl = async (input: string | URL | Request) => {
+        asked.push(String(input))
+        return String(input).startsWith(BRAND_MARK_MIRROR)
+          ? new Response(bytes, { status: 200, headers: { 'content-type': 'image/png' } })
+          : new Response('Not Found', { status: 404 })
       }
-      // All six pinned marks, both themes, with no network at all.
-      expect(stagedHashes.size).toBeGreaterThanOrEqual(6)
+      const staged = await stageOfficialWordmarks({ branding: 'series', brand_theme: theme, series: 'built_with_ai' } as RenderManifestV1, join(runtimeRoot, 'job-media'), fetchImpl as typeof fetch)
+      expect(await readFile(join(runtimeRoot, 'job-media', staged!.mindmake.assetFile))).toEqual(bytes)
+      expect(asked[0]).toBe(officialWordmarkUrl(theme, fixture))
+      expect(asked[1]).toBe(`${BRAND_MARK_MIRROR}/${sha256}`)
+      expect(mirroredWordmarkUrl(fixture)).toBe(`https://controlcenter.krishraja.com/api/brand-mark/${sha256}`)
+    } finally {
+      if (previousRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
+      else process.env.MINDMAKE_RUNTIME_ROOT = previousRuntimeRoot
+      await rm(runtimeRoot, { recursive: true, force: true })
+    }
+  })
+
+  it('refuses mirror bytes that do not match the pin, and says when nothing answered', async () => {
+    const theme = activeTheme()
+    const manifest = { branding: 'series', brand_theme: theme, series: 'money_of_ai' } as RenderManifestV1
+    const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-brand-mirror-bad-'))
+    const previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
+    process.env.MINDMAKE_RUNTIME_ROOT = runtimeRoot
+    try {
+      const wrongMirror = async (input: string | URL | Request) => String(input).startsWith(BRAND_MARK_MIRROR)
+        ? new Response(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 1"><path d="M0 0h2v1H0z"/></svg>'), { status: 200, headers: { 'content-type': 'application/octet-stream' } })
+        : new Response('Not Found', { status: 404 })
+      await expect(stageOfficialWordmarks(manifest, join(runtimeRoot, 'a'), wrongMirror as typeof fetch)).rejects.toThrow('official wordmark hash mismatch')
+      // Refused before the cache: wrong bytes never sit under a pinned hash.
+      const cached = await readdir(join(runtimeRoot, 'cache', 'brand-wordmarks')).catch(() => [] as string[])
+      expect(cached).toEqual([])
+      const nothing = async () => { throw new Error('offline') }
+      await expect(stageOfficialWordmarks(manifest, join(runtimeRoot, 'b'), nothing as unknown as typeof fetch)).rejects.toThrow('neither the pinned source nor')
     } finally {
       if (previousRuntimeRoot === undefined) delete process.env.MINDMAKE_RUNTIME_ROOT
       else process.env.MINDMAKE_RUNTIME_ROOT = previousRuntimeRoot

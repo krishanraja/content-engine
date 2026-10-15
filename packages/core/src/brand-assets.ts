@@ -1,7 +1,6 @@
 import { createHash } from 'node:crypto'
-import { access, copyFile, mkdir, readFile, writeFile } from 'node:fs/promises'
-import { basename, dirname, extname, join, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { access, copyFile, mkdir, writeFile } from 'node:fs/promises'
+import { basename, dirname, extname, join } from 'node:path'
 import { isLiveSeries, PENDING_BRAND_SOURCE_COMMIT, PUBLIC_SERIES_NAMES, SERIES_IDS, type BrandHouseStyleV1, type BrandPublicationLockupV1, type BrandThemeV1, type BrandWordmarkAssetV1, type BrandWordmarkLockupV1, type RenderManifestV1, type Series } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
 import { studioPaths } from './paths.js'
@@ -47,16 +46,16 @@ export interface BrandWordmarkLegibilityReport {
 
 const MAX_BRAND_ASSET_BYTES = 2_000_000
 
-// Every pinned official wordmark is also kept in this repository, named by its
-// own sha256 (config/brand-wordmarks), so a render never depends on the source
-// repository staying public. krishanraja/control-center went private on
-// 2026-10-15 and its raw URLs began answering 404. The pinned source in
-// config/studio.json stays the provenance, and the theme hash is unchanged:
-// the bytes are held to the same sha256 wherever they come from.
-export const BUNDLED_WORDMARKS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '../../../config/brand-wordmarks')
+// Every pinned official mark is also served publicly by its own sha256 from
+// Control Center (api/brand-mark in krishanraja/control-center). That
+// repository went private on 2026-10-15 and its raw URLs began answering 404,
+// so a source that refuses or cannot be reached falls back to it. The pinned
+// source in config/studio.json stays the provenance and the theme hash is
+// unchanged: the bytes are held to the same sha256 wherever they come from.
+export const BRAND_MARK_MIRROR = 'https://controlcenter.krishraja.com/api/brand-mark'
 
-export function bundledWordmarkPath(asset: BrandWordmarkAssetV1): string {
-  return join(BUNDLED_WORDMARKS_DIR, `${asset.sha256}${wordmarkExtension(asset)}`)
+export function mirroredWordmarkUrl(asset: BrandWordmarkAssetV1): string {
+  return `${BRAND_MARK_MIRROR}/${asset.sha256}`
 }
 
 export function officialWordmarkUrl(theme: BrandThemeV1, asset: BrandWordmarkAssetV1): string {
@@ -82,9 +81,7 @@ function assertSafeSvg(bytes: Uint8Array, sourcePath: string): void {
   if (/<!DOCTYPE|<!ENTITY|<\s*(?:script|foreignObject|iframe|object|embed|link)\b|@import\b|\bon[a-z]+\s*=|javascript\s*:|(?:href|xlink:href)\s*=\s*["'](?!#)|url\(\s*["']?(?!#)/i.test(text)) throw new Error(`official SVG wordmark contains unsafe active or external content: ${sourcePath}`)
 }
 
-/** The local path of one pinned mark: the runner's cache, then the bundled
- *  copy, then the source repository, always held to the pinned sha256. */
-export async function cachedOfficialAsset(theme: BrandThemeV1, asset: BrandWordmarkAssetV1, fetchImpl: typeof fetch): Promise<string> {
+async function cachedOfficialAsset(theme: BrandThemeV1, asset: BrandWordmarkAssetV1, fetchImpl: typeof fetch): Promise<string> {
   const extension = wordmarkExtension(asset)
   const cachePath = join(studioPaths().cacheRoot, 'brand-wordmarks', `${asset.sha256}${extension}`)
   try {
@@ -96,23 +93,13 @@ export async function cachedOfficialAsset(theme: BrandThemeV1, asset: BrandWordm
     if (error instanceof Error && /hash mismatch/.test(error.message)) throw error
   }
 
-  // The copy in this repository first; the source repository only for a mark
-  // not bundled yet.
-  const bundled = await readFile(bundledWordmarkPath(asset)).catch((error: NodeJS.ErrnoException) => {
-    if (error.code === 'ENOENT') return null
-    throw error
-  })
-  if (bundled) return cacheVerifiedAsset(new Uint8Array(bundled), asset, cachePath, extension)
-
   const expectedContentType = extension === '.svg' ? 'image/svg+xml' : 'image/png'
-  const response = await fetchImpl(officialWordmarkUrl(theme, asset), { headers: { accept: expectedContentType } })
-  if (!response.ok) throw new Error(`official wordmark download failed for ${asset.source_path}: HTTP ${response.status}`)
+  const response = await fetchOfficialAsset(officialWordmarkUrl(theme, asset), expectedContentType, fetchImpl)
+    ?? await fetchOfficialAsset(mirroredWordmarkUrl(asset), expectedContentType, fetchImpl)
+  if (!response) throw new Error(`official wordmark download failed for ${asset.source_path}: neither the pinned source nor ${BRAND_MARK_MIRROR} answered`)
   const contentType = response.headers.get('content-type')?.split(';')[0]?.trim().toLowerCase()
   if (contentType !== expectedContentType && contentType !== 'application/octet-stream') throw new Error(`official wordmark returned unsupported content type ${contentType || 'unknown'}`)
-  return cacheVerifiedAsset(new Uint8Array(await response.arrayBuffer()), asset, cachePath, extension)
-}
-
-async function cacheVerifiedAsset(bytes: Uint8Array, asset: BrandWordmarkAssetV1, cachePath: string, extension: '.png' | '.svg'): Promise<string> {
+  const bytes = new Uint8Array(await response.arrayBuffer())
   if (!bytes.length || bytes.length > MAX_BRAND_ASSET_BYTES) throw new Error(`official wordmark size is outside the allowed range for ${asset.source_path}`)
   if (extension === '.svg') assertSafeSvg(bytes, asset.source_path)
   if (contentHash(bytes) !== asset.sha256) throw new Error(`official wordmark hash mismatch for ${asset.source_path}`)
@@ -122,6 +109,18 @@ async function cacheVerifiedAsset(bytes: Uint8Array, asset: BrandWordmarkAssetV1
     if (await hashFile(cachePath) !== asset.sha256) throw new Error(`concurrent official wordmark cache mismatch for ${asset.source_path}`)
   })
   return cachePath
+}
+
+/** A response with the asset, or null when that host refused or could not be
+ *  reached, so the caller can try the next one. A host that answers with the
+ *  wrong bytes is not skipped: the hash check refuses it. */
+async function fetchOfficialAsset(url: string, accept: string, fetchImpl: typeof fetch): Promise<Response | null> {
+  try {
+    const response = await fetchImpl(url, { headers: { accept } })
+    return response.ok ? response : null
+  } catch {
+    return null
+  }
 }
 
 async function stageAsset(theme: BrandThemeV1, asset: BrandWordmarkAssetV1, targetDirectory: string, label: string, fetchImpl: typeof fetch): Promise<StagedWordmarkAsset> {

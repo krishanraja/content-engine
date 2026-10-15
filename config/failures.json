@@ -409,18 +409,18 @@
    "guards": [
     {
      "file": "packages/core/src/brand-assets.ts",
-     "contains": "bundledWordmarkPath(asset)",
-     "how": "a pinned mark is read from config/brand-wordmarks, by its own sha256, before any network fetch"
+     "contains": "mirroredWordmarkUrl(asset)",
+     "how": "a source that refuses or cannot be reached falls back to Control Center's public api/brand-mark/<sha256>, held to the same pinned hash"
     },
     {
      "file": "tests/brand-assets.test.ts",
-     "contains": "keeps every pinned wordmark in the repository under its own hash",
-     "how": "every mark pinned in studio.json has a bundled copy that hashes to its name, and nothing extra is bundled"
+     "contains": "falls back to the Control Center mirror when the pinned source answers 404",
+     "how": "the source answers 404 and the mark still stages from the mirror"
     },
     {
      "file": "tests/brand-assets.test.ts",
-     "contains": "stages every pinned theme with the network refused",
-     "how": "all pinned marks load with a fetch that throws"
+     "contains": "wrong bytes never sit under a pinned hash",
+     "how": "mirror bytes that do not match the pin are refused before the cache"
     }
    ]
   }
