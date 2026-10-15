@@ -94,7 +94,7 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    - **Publish it as a new private artifact**, a new one every Sunday, never
      last week's link: `Artifact({action: "publish", file_path: "<absolute
      path>/week-board.html", title: "This Week's Publish Board", icon:
-     "calendar", capabilities: {"db": {}, "downloads": true}, description:
+     "calendar", capabilities: <the manifest's publish.capabilities>, description:
      "<the manifest's publish.description>", pin: true})`, from a session
      signed in as Krish's own account, so it lands pinned in his sidebar
      (Krish, 2026-10-14: "lets pin this weeks artifact (I cant seem to do
@@ -104,7 +104,10 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      not build. Add its link under the week in `config/boards.json` (Krish
      works from two Claude accounts; every board publish goes to every link
      listed there), and ask Krish to add his other account as an editor so
-     both accounts share one board and one store of ticks. Then one `ArtifactData`
+     both accounts can open it. Each link keeps its own store (ticks, saved
+     edits), readable only from the account that owns it; comments are
+     readable from both, which is why a Save is also posted as a comment
+     (`make-piece`, "Krish's edits on the board"). Then one `ArtifactData`
      `list` of `ticks` and one of `links` on its link: both are empty on a
      new board, and the page's own store is then known to answer.
    - **Record its link where every later session finds it.** On the board,

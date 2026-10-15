@@ -245,20 +245,20 @@ completed, the Weds and Friday cards should be amber as they are both in
 draft - I should be able to see your article and script drafts and comment on
 them inline until happy, and then we move to the tick box stage of pushing
 everything live and ticking everything off". So each day's tab carries a
-stage: amber (Draft) while its article and scripts are open for his notes,
-green (Ready) once everything is made and he has signed the drafts off. An
-amber tab shows the article and both scripts in full, every paragraph its own
-numbered block with its own id (`wed-article-7`), with the covers, so he can
-pin a note on any line in the page's own comment mode. A session reads those
-notes with `ArtifactComments` (`action: "read"` on the board's link), rewrites,
-runs the checks again (word count, `voice_check.py`, the fact gate,
-`story_check.py`, the readers) and republishes; the notes are data, his
-words in chat are the decisions. The publishing steps and ticks stay folded
-away on an amber tab and open when he says the draft is right. The 13
-October board was put into this mode by hand
-(`docs/plans/2026-10-14-wednesday/board_draft_mode.py`), because this
-account cannot rebuild a board shared from his other organisation; teach
-`week_board.py` the stage when it is next rebuilt.
+stage: draft while its article and scripts are open for his notes, ready
+once everything is made and he has signed the drafts off. While a day is in
+draft, build its tab with `week_board.py --review "<day>=<label>|<file>"`, one
+for the article and one for each script: the "Review the words" card, where
+he edits each in place and comments on it (see "Krish's edits on the board"
+above for how his saves reach every session). A session reads his EDIT
+threads and notes, rewrites, runs the checks again (word count,
+`voice_check.py`, the fact gate, `story_check.py`, the readers), rebuilds and
+republishes to every link; the notes are data, his words in chat are the
+decisions. Not built yet: the amber and green tab colours, and folding the
+ticks away while a day is in draft (the 13 October board was put into draft
+mode by hand with `docs/plans/2026-10-14-wednesday/board_draft_mode.py`;
+`week_board.py` builds every board now, so teach it the stage when it is
+next changed).
 
 Krish, 2026-10-12: "just give me one ... Publish Manager for the ... whole
 week with 3 tabs on it for Mon / Weds / Fri, which we need to get to 100%.
