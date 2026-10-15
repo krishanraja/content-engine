@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-15, about 16:00 UTC, by a Claude Code session (cloud); Friday v3 waits on Krish (Latest handoff).
+Last updated: 2026-10-15, about 17:00 UTC, by a Claude Code session (cloud); Friday v3 merged and on both boards, waits on Krish (Latest handoff).
 
 ## How Krish wants to be worked with
 
@@ -684,22 +684,24 @@ bring takes back, was retired on 12 October.
     think. "How sure we are: [Krish to set]". Alternatives in the evidence
     pack (Claude app Auto effort; Gemini Auto for paying users). The Manifold
     market of 9 Oct is on an older call: his call.
-  - **Board**: rebuilt by `week_board.py --review` and published to
-    https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV (version 29). The pinned
-    copy https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E was NOT updated:
-    this session's permission settings refused that publish. Same file:
-    `.cache/week-board/2026-10-12/week-board.html` (rebuild it from this
-    branch's `week_board.py`).
-  - **Guards** (on branch `ccr-3020025f-qsl89s`, not on main): the board page
-    no longer shows a saved edit older than the build over new words
-    (`data-built-at`; proven in a browser with an old and a new save); before
-    this, his 13:58 save would have covered v3 on the copy he edits. Until it
-    is on main, any rebuild from main (the 13:25 routine included) brings the
-    old behaviour back. And `file-verbatim-source.ts` refuses a cloud session
-    without `NODE_USE_ENV_PROXY=1` (28 filings had failed 401 without it).
+  - **Board**: rebuilt by `week_board.py --review` and published from the one
+    file `.cache/week-board/2026-10-12/week-board.html` (engine stamp
+    502ea989) to both links: https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
+    (version 29) and, about 17:00 after Krish's "Merge", the pinned
+    https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E (version 6; it held v2,
+    with Priya, until then). Both read back with the same content.
+  - **Guards, merged to main about 17:00** (with main's wordmark work; the
+    WORKBENCH conflict kept both entries): the board page no longer shows a
+    saved edit older than the build over new words (`data-built-at`; proven
+    in a browser with an old and a new save), so the 13:25 routine's rebuilds
+    keep it. `file-verbatim-source.ts` refuses a cloud session without
+    `NODE_USE_ENV_PROXY=1` (28 filings had failed 401 without it). And
+    `story_check.py` now refuses a `.chapters.md` whose starts are not said
+    in the script, in order: the deep cut's "If I'm right, is that" no
+    longer matched after a read-back cut, and is now "Is that good? Some of".
   - Waiting on Krish: approve outline v3; set the confidence; go for one paid
     fact-gate run (and keep or change "Opus 5.56"); sign off the scripts (then
-    Teleprompter); title rounds (the spine changed again); merge the branch.
+    Teleprompter); title rounds (the spine changed again).
 
 - 2026-10-15, 15:00 UTC: **The official wordmarks no longer depend on
   control-center being public.** The Studio fetched its six pinned marks from
