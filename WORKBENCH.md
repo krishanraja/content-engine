@@ -696,7 +696,12 @@ bring takes back, was retired on 12 October.
     Wed ticks are all done on RjLHJ but not copied onto the records (Control
     Center shows 1 of 5 channels), and H6q's ticks can only be read from the
     other account. His 13:58 EDIT thread is open and not sent to Claude, so
-    only he can resolve it; v3 holds that edit.
+    only he can resolve it; v3 holds that edit. The "older than its words"
+    guard compares times (`publish_manager.at` against
+    `script_check.changed_at`), so a publish page republished in place
+    without a new `at` would be refused (it fails safe; compare the page's
+    script hashes instead when it bites). Posted dates on the status lines
+    are in UTC, not New York time.
   - Waiting on Krish (the board lists them): approve the outline; set the
     confidence; go for one paid fact check (and keep or reword "Opus 5.56");
     sign off both scripts (then Teleprompter); pick the title; the Manifold
