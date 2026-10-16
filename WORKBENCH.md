@@ -649,6 +649,23 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-17, about 00:10 UTC: **The 14-minute take is on the record; the titles went to Krish again.**
+  - Krish: "https://drive.google.com/file/d/1Tmz-Z1GDN4VhgbIXqCjW7kfzvumfRj4Z/view?usp=drivesdk it's the long
+    video and has audio. This machine also has a video runner. You are right: the 90-second video didn't capture
+    audio and I'm going to have to re-record it in the morning. I also didn't get the title options from you."
+  - The long take (1.1 GB, 14:18, mono 44.1 kHz, sound throughout) is in
+    `.cache/produce/2026-10-16-904658db/takes/` on this cloud machine only. Too big for the store, so it was
+    placed the way the engine places a big take: `recording_match.py --inbox <a folder holding only it> --record`
+    (by its Teleprompter title). On the piece as `recordings/ee91ab41...0fd9f.mp4`, 858 s. A later session
+    needs the file itself: this container, or Krish's copy on Drive (the link above) or H:.
+  - The 90-second cut waits on his re-record in the morning; the speed-up on his words applies to it.
+  - `title_check.py` passed nothing that started "VIDEO:", the format his own picked YouTube title uses: the
+    label is now skipped by the names check (two tests).
+  - Lesson for sessions: never run Python from the scratchpad's root. A file there shadows a standard module
+    and PyAV segfaulted on import. Run helpers from an empty folder, with `python -I`.
+  - Waiting on Krish: the YouTube title, the Shorts title and the thumbnail words (resent in chat, 00:10 UTC,
+    with a stand-off proposal), and yes to the 20 card headings and 7 chapter titles.
+
 - 2026-10-16, about 23:45 UTC: **Krish's three calls on the long episode, built and tested.** "Happy with you
   burning them in and agree with your recommendation on the ending. Feel free to raise the music slightly during
   the section dividers." So: burned captions (and the caption file), `"end_hold_s": 13` (the approved outro's

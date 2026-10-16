@@ -79,7 +79,13 @@ OPENERS = {'the', 'a', 'an', 'this', 'that', 'these', 'those', 'why', 'how', 'wh
 STAKE = re.compile(r"\b(only|every|none|nobody|no one|first|last|most|least|never|always|already|just)\b", re.I)
 
 
+# The format label Krish puts first on a video post's title (title-verdicts.json: "Say the format up front ... 'VIDEO:' for the
+# Substack video post"): a label, never a name the piece has to say.
+FORMAT_LABEL = re.compile(r"^\s*VIDEO\s*:\s*")
+
+
 def names_in(title):
+    title = FORMAT_LABEL.sub('', title)
     found = set(NAME.findall(title))
     first = re.match(r"\s*([\w'’]+)", title)
     if first and re.sub(r"['’]s$", '', first.group(1)).lower() not in OPENERS and not first.group(1)[0].isdigit():
@@ -243,6 +249,8 @@ def self_test():
         check(f'passes: {good}', problems(good, body if '97' not in good else body + ' 97%'), [])
     check('made from nothing: a name the piece never says', any('Tesco' in p for p in problems('Tesco blocked Muse', body)), True)
     check('made from nothing: a number the piece never says', any('"12"' in p for p in problems('Muse wins 12 to 3', body)), True)
+    check('the VIDEO: format label is not a name', problems("VIDEO: We unpack why Amazon blocked Muse, and Walmart let it in", body), [])
+    check('a name after the label is still checked', any('Tesco' in p for p in problems('VIDEO: Tesco blocked Muse', body)), True)
     # The gate: only a title Krish picked; a rejected one says why.
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
