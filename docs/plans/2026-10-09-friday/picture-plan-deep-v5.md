@@ -1,5 +1,18 @@
 # Friday deep cut v5: the picture plan
 
+> **Being redone, 16 October, evening.** Krish, of a drawn car race made for
+> the 90-second cut: "I don't think the visuals should have analogies in them.
+> The visuals should look like genuine reviews of the actual product, with
+> statistics, rather than having analogies. The analogies should only be in my
+> casual narrative explanation style." That replaces his earlier asks for car
+> logos and car pictures in this video. Every beat below that draws a car, a
+> badge, a gearbox, a race, a rev counter or a fuel gauge (the car key B23 to
+> B29a, B30 to B30b, B33 to B33b, the X-ray car, the F1 wheel, treatments B and
+> C) changes to the real thing: the apps' own screens and charts of real
+> statistics from a named source (house rule ANALOGY_IN_SCRIPTS_ONLY; the
+> visual gate's REAL THINGS check). The spoken words keep the car. Build
+> nothing from this file until it is redone.
+
 Piece `904658db-4df2-4537-a0ed-ebe93e081db7`, mind.the.gap, Friday. Script:
 `docs/plans/2026-10-09-script-deep-v5.md` (1,689 words, about 11 minutes 16
 at Krish's pace), chapters in `-script-deep-v5.chapters.md`. The script stays

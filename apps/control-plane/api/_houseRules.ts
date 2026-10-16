@@ -134,10 +134,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'RELATABLE_EXPLANATION', name: 'Make unfamiliar ideas relatable',
-    text: 'When a mechanism is unfamiliar, add a real historical parallel, a familiar analogy or a comical exaggeration that makes the point easier to grasp. Make the comparison visibly a comparison, keep the underlying fact exact, and remove it if it changes what happened.',
-    said: 'We should also add parallels (when this has happened before), analogies to things people will relate to, or comical exaggerations to make the point where it does not distort fact.',
-    on: '2026-10-03', source: 'workbench reply on piece 1', status: 'live',
-    stages: ['judge_draft', 'write', 'final_pass', 'visual'],
+    text: 'When a mechanism is unfamiliar, add a real historical parallel, a familiar analogy or a comical exaggeration that makes the point easier to grasp. Make the comparison visibly a comparison, keep the underlying fact exact, and remove it if it changes what happened. The analogy and the exaggeration live in the video scripts, where Krish explains casually; an article uses a real parallel or a worked example, with at most a brief comparison, and a picture never acts one out (ANALOGY_IN_SCRIPTS_ONLY).',
+    said: 'We should also add parallels (when this has happened before), analogies to things people will relate to, or comical exaggerations to make the point where it does not distort fact. Then, 2026-10-16: The analogies should only be in my casual narrative explanation style.',
+    on: '2026-10-03', source: 'workbench reply on piece 1; narrowed to the scripts on 2026-10-16 (ANALOGY_IN_SCRIPTS_ONLY)', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass'],
   },
   {
     id: 'R7', name: 'Reading age 12, with humour',
@@ -244,7 +244,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'VISUAL_EXPLAINS', name: 'A visual makes a critical point land faster',
-    text: 'A visual exists only to make one critical point of the piece land faster than the words can. Before making one, write that point in one sentence and the reader\'s question it answers. Build it from the piece\'s real, checked numbers, quotes and evidence, and show the mechanism or the comparison that carries the point. Never decorate: no figures walking to boxes, no icons acting out an analogy, no motion that adds nothing the words already said. Test: a reader who sees only the visual understands the point. If it fails, cut it.',
+    text: 'A visual exists only to make one critical point of the piece land faster than the words can. Before making one, write that point in one sentence and the reader\'s question it answers. Build it from the piece\'s real, checked numbers, quotes and evidence, and show the mechanism or the comparison that carries the point. Show the actual product, the way a genuine review does: real screenshots of the apps and their settings, and charts of real statistics from a named source, each labelled with what it measures, its scale and which way is better. Never decorate: no figures walking to boxes, no icons acting out an analogy, no motion that adds nothing the words already said. Test: a reader who sees only the visual understands the point. If it fails, cut it.',
     said: 'The visuals need to explain something critical in the article in a way that would help them understand the point quicker. this needs to be a permanent rule, right now the visuals just feel like gimmicks - who cares about a person walking to a box that says "till"?',
     on: '2026-10-05', source: 'chat, launch visuals for piece 1', status: 'live',
     stages: ['visual'],
@@ -454,9 +454,16 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'PLAIN_SCORES', name: 'No score without something to measure it against',
-    text: 'Never give a reader or a viewer a bare score: a benchmark or index number ("it scored 42", "58 in top gear", "7 to 20 points") means nothing to someone who has never seen the test. Say what the number shows as a plain comparison ("it did much better in its top gear", "the older one in top gear beat the new one in its lowest"), a share ("about a third higher") or a multiple ("about eleven times the cost"). A score may appear only with its scale and what it compares to in the same sentence. The same holds for every number on screen: a picture shows only numbers the words say, and says what they mean.',
+    text: 'Never give a reader or a viewer a bare score: a benchmark or index number ("it scored 42", "58 in top gear", "7 to 20 points") means nothing to someone who has never seen the test. Say what the number shows as a plain comparison ("it did much better in its top gear", "the older one in top gear beat the new one in its lowest"), a share ("about a third higher") or a multiple ("about eleven times the cost"). A score may appear only with its scale and what it compares to in the same sentence. On screen, a chart may show the real statistic the spoken words leave out, when it names its source and says what the number measures, its scale and which way is better (Krish, 2026-10-16: "The visuals should look like genuine reviews of the actual product, with statistics"); a bare number is as lost on screen as aloud.',
     said: 'What does 42 even mean? that is not understandable. We need to simplify this. (Earlier the same day: 7-20 points of improvement is too complex)',
     on: '2026-10-16', source: 'board comment on Friday\'s 90-second script; checked by scripts/post-pack/story_check.py (score_problems), which refuses a script that says one', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass', 'visual'],
+  },
+  {
+    id: 'ANALOGY_IN_SCRIPTS_ONLY', name: 'Analogies in the spoken scripts; the article and the pictures show the real thing',
+    text: 'Analogies, comic comparisons and exaggeration belong in the video scripts, where Krish explains things casually in his own voice (the Hannah Fry style he is trying). The article stays more professional: describe the product in its own terms (the model, its thinking setting, the price, the test result), with at most a brief comparison where a reader would otherwise be lost, never an analogy carried through the piece. Pictures and video graphics never act out an analogy: they look like a genuine review of the actual product, with real screenshots of the apps and their settings and charts of real statistics from a named source, each labelled with what it measures, its scale and which way is better. A picture of a car, a race or a gearbox standing for an AI is out, however clear it seems.',
+    said: 'No that\'s car visual is not clear. The gear beat the new badge. I don\'t think the visuals should have analogies in them. The visuals should look like genuine reviews of the actual product, with statistics, rather than having analogies. The analogies should only be in my casual narrative explanation style. The article itself shouldn\'t have them as they shouldn\'t go 10 out of 10 on analogies. The article should remain slightly more professional. Only the script is what I wanted to experiment with in the casual Hannah Fry style.',
+    on: '2026-10-16', source: 'chat, on the race picture drawn for Friday\'s 90-second cut; checked by scripts/post-pack/visual_gate.py (REAL THINGS), which refuses a picture that does not say what real thing it shows', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass', 'visual'],
   },
 ])

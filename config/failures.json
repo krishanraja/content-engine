@@ -544,6 +544,30 @@
      "how": "every writer, judge, final pass and the visual stage read the rule: plain comparisons, a share or a multiple, never a bare score, on the page or on screen"
     }
    ]
+  },
+  {
+   "id": "analogy-drawn-as-a-picture",
+   "on": "2026-10-16",
+   "krish": "No that's car visual is not clear. The gear beat the new badge. I don't think the visuals should have analogies in them. The visuals should look like genuine reviews of the actual product, with statistics, rather than having analogies.",
+   "what": "For Friday's 90-second cut a session drew the test result as two cars racing, \"The gear beat the new badge\", and the deep cut's picture plan was built on car badges, gearboxes, car logos and a fuel gauge. The house rule VISUAL_EXPLAINS already said \"no icons acting out an analogy\", but nothing refused one. The article was also leaning on the same car analogy throughout, where Krish wants it more professional.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/visual_gate.py",
+     "contains": "def real_thing_problems",
+     "how": "from posts dated 16 Oct 2026, the pack is refused unless every article and video picture says what real thing it shows (screenshot, chart, photo, evidence, quote or logos), and a chart names its data source and what it measures"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "id: 'ANALOGY_IN_SCRIPTS_ONLY'",
+     "how": "every writer, judge, final pass and the visual stage read it: analogies in the spoken scripts only, the article more professional, pictures of the actual product and real statistics"
+    },
+    {
+     "file": "tests/control-plane/house-rules.test.ts",
+     "contains": "no analogy reaches the picture stage",
+     "how": "fails the build if RELATABLE_EXPLANATION reaches the visual stage again, or ANALOGY_IN_SCRIPTS_ONLY stops reaching any stage"
+    }
+   ]
   }
  ]
 }

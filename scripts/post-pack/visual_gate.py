@@ -20,7 +20,7 @@ through. What a rule cannot check (whether the picture is beautiful) is the
 house rules BOLD, VISUAL_EXPLAINS and VISUAL_EVIDENCE, which every writer,
 judge and the Studio read.
 
-The four checks:
+The five checks:
 
   1. LOGOS. Every company in config/logo-registry.json that the fact-checked
      body names (and is not a mentions-only source) appears in the "logos"
@@ -45,6 +45,13 @@ The four checks:
      Krish's portrait, and every logo its entry declares is one the drawer
      drew, in a row or the strip. So a thumbnail cannot claim a logo it
      does not show.
+  5. REAL THINGS. From posts dated 16 October 2026, every article and
+     video picture says what real thing it shows ("shows": screenshot,
+     chart, photo, evidence, quote or logos), and a chart names its
+     "data_source" and what it "measures". Krish, 2026-10-16: "I don't think
+     the visuals should have analogies in them. The visuals should look like
+     genuine reviews of the actual product, with statistics, rather than
+     having analogies." (house rule ANALOGY_IN_SCRIPTS_ONLY)
 
     python visual_gate.py post.json            # explain what would pass or fail
     python visual_gate.py --self-test
@@ -225,6 +232,56 @@ def problems(post, planned, body, base, reg=None):
         if shown:
             found.append(f'the {shape} thumbnail declares the logo of {", ".join(shown)}, but the drawer drew no row or strip for it: '
                          'add it to the "thumbs" cover facts and draw it again')
+    # 5. REAL THINGS
+    found += real_thing_problems(post)
+    return found
+
+
+# Krish, 2026-10-16, of a drawn race between two cars standing for two AIs:
+# "No that's car visual is not clear ... I don't think the visuals should have
+# analogies in them. The visuals should look like genuine reviews of the actual
+# product, with statistics, rather than having analogies. The analogies should
+# only be in my casual narrative explanation style." (house rule
+# ANALOGY_IN_SCRIPTS_ONLY). Every article and video picture of a post dated
+# from then declares what real thing it shows; a chart names its source and
+# says what it measures, so a number on screen is never bare (PLAIN_SCORES).
+REAL_FROM = '2026-10-16'
+SHOWS = {
+    'screenshot': 'a real page or app, as it is',
+    'chart': 'real statistics, with "data_source" and "measures"',
+    'photo': 'the real product, place or person',
+    'evidence': 'real pages piled up ("evidence")',
+    'quote': 'a real quote, from its source',
+    'logos': 'the companies\' own logos',
+}
+
+
+def real_thing_problems(post):
+    """Why a post's pictures are not the real thing, or []: posts dated from
+    REAL_FROM only, so a pack already posted is never refused afterwards."""
+    if str((post or {}).get('date') or '') < REAL_FROM:
+        return []
+    found = []
+    for f in (post or {}).get('files') or []:
+        if not isinstance(f, dict) or f.get('kind') != 'image':
+            continue
+        label = f.get('name') or f.get('file') or '?'
+        shows = f.get('shows')
+        if shows not in SHOWS:
+            found.append(f'"{label}" does not say what real thing it shows: give it "shows": one of '
+                         + ', '.join(f'"{k}" ({v})' for k, v in SHOWS.items())
+                         + '. A drawing that acts out an analogy is not one: analogies belong in the spoken script '
+                         '(house rule ANALOGY_IN_SCRIPTS_ONLY; Krish, 2026-10-16: "The visuals should look like genuine reviews '
+                         'of the actual product, with statistics, rather than having analogies")')
+        elif shows == 'chart':
+            if not str(f.get('data_source') or '').strip():
+                found.append(f'"{label}" is a chart with no "data_source": name who measured the numbers and when '
+                             '(for example "Artificial Analysis, 16 Oct 2026")')
+            if not str(f.get('measures') or '').strip():
+                found.append(f'"{label}" is a chart with no "measures": say what its numbers measure, the scale and which way '
+                             'is better, and draw that on the chart too, so no number on it is bare (house rule PLAIN_SCORES)')
+        elif shows == 'evidence' and not (f.get('evidence') or {}).get('pages'):
+            found.append(f'"{label}" says it shows evidence but lists no "evidence" pages')
     return found
 
 
@@ -346,6 +403,22 @@ def self_test():
               any('is the drawer\'s tall thumbnail, packed as the wide one' in x for x in problems({}, full + [thumbs[1] | {'shape': 'wide'}], body, t, reg)), True)
         (t / 'thumbs' / 'thumbs.json').unlink()
         check('a hand-made thumbnail fails', any('was not drawn by the house drawer (no thumbs.json' in x for x in problems({}, full + thumbs, body, t, reg)), True)
+        # 5. REAL THINGS (Krish, 2026-10-16)
+        race = {'kind': 'image', 'name': 'race.png', 'purpose': 'two cars racing, standing for two AIs'}
+        chart = {'kind': 'image', 'name': 'scores.png', 'shows': 'chart', 'data_source': 'Artificial Analysis, 16 Oct 2026',
+                 'measures': 'Intelligence Index: 10 hard tests, 0 to 100, higher is better'}
+        check('a picture of a post from 16 Oct that does not say what real thing it shows is refused, naming his rule',
+              any('ANALOGY_IN_SCRIPTS_ONLY' in x for x in real_thing_problems({'date': '2026-10-16', 'files': [race]})), True)
+        check('the same picture on a post already made before then is left alone',
+              real_thing_problems({'date': '2026-10-14', 'files': [race]}), [])
+        check('a chart with its source and what it measures passes; a screenshot passes',
+              real_thing_problems({'date': '2026-10-19', 'files': [chart, {'kind': 'image', 'name': 's.png', 'shows': 'screenshot'}]}), [])
+        check('a chart with no source and no measure is refused twice',
+              len(real_thing_problems({'date': '2026-10-19', 'files': [{'kind': 'image', 'name': 'c.png', 'shows': 'chart'}]})), 2)
+        check('"shows": "analogy" is not a real thing',
+              len(real_thing_problems({'date': '2026-10-19', 'files': [race | {'shows': 'analogy'}]})), 1)
+        check('the real-thing check runs through problems()',
+              any('ANALOGY_IN_SCRIPTS_ONLY' in x for x in problems({'date': '2026-10-16', 'files': [race]}, full + thumbs, body, t, reg)), True)
         check('volume words are found', about_volume('Claude Code lists more than a dozen models.'), True)
         check('no volume words, no evidence needed', about_volume('A quiet week for prices.'), False)
     if fails:

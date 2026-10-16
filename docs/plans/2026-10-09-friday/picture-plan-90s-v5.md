@@ -11,6 +11,18 @@ much only going to be used for vertical video. Let me know if you need me to
 point up at any point. To get the user's attention I can point upwards at the
 visual but it is up to you. This actually is a good idea."
 
+Then, of a drawn race between two cars: "No that's car visual is not clear.
+The gear beat the new badge. I don't think the visuals should have analogies
+in them. The visuals should look like genuine reviews of the actual product,
+with statistics, rather than having analogies. The analogies should only be
+in my casual narrative explanation style." (house rule
+ANALOGY_IN_SCRIPTS_ONLY; the visual gate refuses a picture that does not say
+what real thing it shows.)
+
+So the words keep the car (it is his spoken style), and every picture shows
+the real thing: the apps' own screens and real statistics from a named
+source. No car, race, gearbox or badge is drawn anywhere.
+
 ## The frame
 
 The tall cut (1080 x 1920) puts each picture in the top 1000 pixels and
@@ -27,59 +39,54 @@ leaves the band and is cut off.
 
 ## Point up three times, no more
 
-| # | On these words | Time | Picture above him |
+| # | On these words | Time | The real thing above him |
 |---|---|---|---|
-| 1 | "The name is the badge." | 0:20 | the car: badge = the name, gearstick = how hard it thinks |
-| 2 | "In a hard test," | 0:38 | the race (drawn, `video-pictures/fri-90-race-1.png`) |
-| 3 | "It picks the gear." | 0:59 | the automatic selector, its gear hidden |
-
-Three is enough to make each one count; more reads as a tic. Each lands as
-its picture arrives, so the eye follows the finger up.
+| 1 | "The name is the badge." | 0:20 | the Claude app's own model menu: the model's name, and its effort setting |
+| 2 | "In a hard test," | 0:38 | the score chart (`video-pictures/fri-90-claude-scores.html`) |
+| 3 | "It picks the gear." | 0:59 | Google's Gemini help page on its Auto setting |
 
 ## Beat by beat
 
-Times at 150 words a minute from his first word.
+Times at 150 words a minute from his first word. "shows" is what each
+picture declares in `post.json` for the visual gate.
 
 - **0:00 "I've been keeping a beady eye..."** FACE, full frame, under the
   opening logo and the strap.
-- **0:08 "Each AI gets a new name."** Picture: the names stacking up, each
-  card landing on the last: "Opus 4.8", "Opus 5", "Opus 5.5", then "Opus
-  5.56?" with its question mark (the joke from the deep cut). Back to FACE
-  for "Does the name you pick change the answer you get?"
-- **0:20 "The name is the badge."** POINT UP. Picture, drawn: a plain car
-  front, its badge ringed and labelled "THE NAME"; on "How hard it thinks is
-  the gear." a gearstick beside it labelled "HOW HARD IT THINKS". No real car
-  or car logo: those are for the long video only (Krish, 16 October: "only in
-  the long video though").
-- **0:24 "Today, it's a manual car. You change gear."** Same picture, page
-  two: the H-pattern gearstick with a hand on it, "YOU CHANGE GEAR".
-- **0:28 "Picture Sally."** FACE: a story told to camera.
-- **0:32 "misses a costly hidden rule."** Picture: the deal, one line of
-  small print ringed in amber, and the gear readout "1ST". FACE again for
-  "Sally never changed gear."
-- **0:38 "In a hard test,"** POINT UP. The race, page one
-  (`fri-90-race-1.png`): "ONE HARD TEST", credited "Test by Artificial
-  Analysis"; the newest Claude AI in LOW GEAR and the older Claude AI in TOP
-  GEAR on the start line; "WHICH ONE WINS?"
-- **0:42 "lost to the older one in top gear."** The race, page two
-  (`fri-90-race-2.png`), cut on "lost": the older car over the line with
-  speed lines and "WINS"; the newest car behind it, drawn where its score
-  puts it (0.82 of the way: Artificial Analysis, 42 against 51, never shown);
-  "THE GEAR BEAT THE NEW BADGE".
-- **0:46 "Why do apps start you in low gear?"** FACE, through "but you pay
-  the same": his guess lands best on his face.
-- **0:54 "My bet:"** Picture: the automatic selector P R N D with "AUTO" lit
-  and "JUNE 2027" above it.
-- **0:59 "It picks the gear."** POINT UP. Same picture: the gear readout
-  turns to "?" on "You won't see which."
-- **1:02 "I'm 85% sure."** The house call meter at 85%.
+- **0:08 "Each AI gets a new name."** shows: evidence. Anthropic's own launch
+  pages for Claude Opus 4.8 (May), Opus 5 (July) and Opus 5.5 (September),
+  each screenshot dated, landing one on the last. Back to FACE for "Does the
+  name you pick change the answer you get?"
+- **0:20 "The name is the badge."** POINT UP. shows: screenshot. Krish's own
+  capture of the Claude app's model menu, as it is, with two plain labels
+  pointing at the real controls: "Model" at the name, "Effort" at the
+  setting that decides how hard it thinks.
+- **0:24 "Today, it's a manual car. You change gear."** shows: screenshot.
+  His capture of ChatGPT's own thinking setting open (Instant to Extra High),
+  labelled "You pick it".
+- **0:28 "Picture Sally."** FACE through "Sally never changed gear.": Sally
+  is a made-up example, so nothing on screen pretends she is real.
+- **0:38 "In a hard test,"** POINT UP. shows: chart. "Newest vs older
+  Claude", Artificial Analysis Intelligence Index (10 hard tests, higher is
+  better), axis from 0 to 60: Opus 5.5 (newest) at low effort, 42; Opus 5
+  (older) at max effort, 51. data_source: "Artificial Analysis, 16 Oct 2026"
+  (read from its API that day: 42.3 and 50.8, shown whole as its model pages
+  say them). The chart stays up through "lost to the older one in top gear."
+- **0:46 "Why do apps start you in low gear?"** FACE through "but you pay the
+  same": his guess lands best on his face.
+- **0:54 "My bet:"** shows: screenshot. Google's Gemini help page, the line
+  "Auto will be the default setting for users without a Google AI plan."
+  (support.google.com/gemini/answer/17004136), with its date.
+- **0:59 "It picks the gear."** POINT UP. The same page, the Auto setting
+  ringed.
+- **1:02 "I'm 85% sure."** shows: chart. The house call meter at 85%,
+  data_source "our call, 16 Oct 2026", measures "how sure we are".
 - **1:08 "Sources are in the free article..."** FACE to the end card.
 
-## The race picture
+## The score chart
 
-`video-pictures/fri-90-race.html` draws both pages (`?p=1`, `?p=2`) at the
-picture box size, 968 x 773; render it with the house fonts beside it as
-`fonts.css` (`scripts/pages/brand.py`, `font_css()`), at device scale 2. The
-PNGs in the folder are those renders. Every number it implies comes from the
-filed Artificial Analysis pages; it prints none. The deep cut's B30 to B30b
-can use the same drawing laid out wide.
+`video-pictures/fri-90-claude-scores.html` draws it at the picture box size,
+968 x 773; render it with the house fonts beside it as `fonts.css`
+(`scripts/pages/brand.py`, `font_css()`), at device scale 2. Its post.json
+entry: `"shows": "chart"`, `"data_source": "Artificial Analysis, 16 Oct
+2026"`, `"measures": "Artificial Analysis Intelligence Index: 10 hard tests,
+0 to 100, higher is better"`.

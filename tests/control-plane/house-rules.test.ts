@@ -94,10 +94,21 @@ describe('every ruling carries his words and reaches a stage', () => {
     assert.ok(clear)
     assert.match(clear.text, /one reasonable reading differs/)
     assert.ok(relatable)
-    assert.deepEqual(relatable.stages, ['judge_draft', 'write', 'final_pass', 'visual'])
+    assert.deepEqual(relatable.stages, ['judge_draft', 'write', 'final_pass'])
     assert.match(relatable.text, /keep the underlying fact exact/)
     assert.ok(houseRulesBlock('write').includes(relatable.text))
-    assert.ok(houseRulesBlock('visual').includes(relatable.text))
+    // Krish, 2026-10-16: "I don't think the visuals should have analogies in them": no analogy reaches the picture stage.
+    assert.ok(!houseRulesBlock('visual').includes(relatable.text))
+  })
+  test('analogies live in the spoken scripts; the article and the pictures show the real product (Krish, 2026-10-16)', () => {
+    const r = HOUSE_RULES.find(x => x.id === 'ANALOGY_IN_SCRIPTS_ONLY')
+    assert.ok(r)
+    assert.match(r.said, /The visuals should look like genuine reviews of the actual product, with statistics/)
+    assert.match(r.said, /The article should remain slightly more professional/)
+    for (const stage of ['write', 'judge_draft', 'final_pass', 'visual'] as const) assert.ok(houseRulesBlock(stage).includes(r.text), stage)
+    assert.match(HOUSE_RULES.find(x => x.id === 'VISUAL_EXPLAINS')!.text, /genuine review/)
+    // The visual gate refuses a picture that does not say what real thing it shows.
+    assert.match(readFileSync(join(__dirname, '../../scripts/post-pack/visual_gate.py'), 'utf8'), /def real_thing_problems/)
   })
   test('a visual must make a critical point land faster, and the script and channel cut planners read that', () => {
     const r = HOUSE_RULES.find(x => x.id === 'VISUAL_EXPLAINS')
