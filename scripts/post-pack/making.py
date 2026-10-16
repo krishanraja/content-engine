@@ -13,6 +13,7 @@ that everything is fresh and synchronised in real time".
     python making.py PIECE_ID visual-gate post.json          # runs the gate, records pass or fail
     python making.py PIECE_ID scripts long.md short.md       # story_check on each, by position, with the
                                                              # piece's series, and each script's sha256; records
+    python making.py PIECE_ID scripts long.md short.md --krish-words "Krish, DATE: ..."   # his own scripts, findings waived and kept
     python making.py PIECE_ID pack PACK_FOLDER [--sent]      # build.py and send.py call this themselves
     python making.py PIECE_ID recorded long "recordings/<sha256>.mp4" [--seconds N] [--krish-words "Krish, DATE: ..."]
     python making.py PIECE_ID video long NAME PATH [--url https://...] [--seconds N]
@@ -543,7 +544,10 @@ def spine_problem(piece_id, call):
         f' Run: python3 scripts/post-pack/spine_check.py judge {piece_id} --outline <the outline>'
 
 
-def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=False):
+WAIVED_BY_KRISH = 'Waived on Krish\'s own words'  # the first problem line of a check passed on his say-so
+
+
+def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=False, krish=None):
     """Checks the two scripts by position: the first is the long cut, the
     second the short (house rule TWO_CUTS, Krish, 2026-10-11: every piece
     gets both). A missing script, or one that fails its check, records
@@ -563,14 +567,25 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
 
     series is the piece's lane_slot: each script must then open with its
     series line and never say "I'm Krish" again (story_check --series,
-    house rule SERIES_OPENER)."""
+    house rule SERIES_OPENER).
+
+    krish is Krish's own words ("Krish, DATE: ...") putting scripts he wrote
+    himself through although their story check fails (Krish, 2026-10-16, of
+    his own late edits: "just put them in teleprompter"). It waives only what
+    story_check found, never a missing or unreadable script, and keeps every
+    waived finding: passed true, problems led by WAIVED_BY_KRISH and his
+    words. A waiver holds for those words only; changed words are checked
+    again without it unless he gives it again."""
     import story_check
+    if krish is not None and (not krish_words(krish) or len(krish.strip()) > 600):
+        raise MakingError('--krish-words are Krish\'s own words putting the scripts through as they are, starting "Krish" and the date '
+                          '(for example "Krish, 2026-10-16: just put them in teleprompter"), at most 600 characters')
     run = run or (lambda cut, path: _story_check('deep' if (deep and cut == 'long') else cut, path, series))
     warn = warn or (lambda line: print(line, file=sys.stderr))
     paths = list(paths or [])
     if not paths or len(paths) > len(CUTS):
         raise MakingError('give the two scripts, the long cut first: scripts long.md short.md')
-    problems, cuts, hashes = [], [], {}
+    problems, cuts, hashes, found = [], [], {}, []
     for cut, p in zip(CUTS, paths):
         name = Path(p).name
         said = story_check.cut_of(name)
@@ -589,9 +604,14 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
         code, out = run(cut, p)
         if code != 0:
             lines = [line.strip() for line in out.strip().splitlines() if line.strip()]
-            problems.extend([f'{name}: {line}' for line in lines][:10] or [f'{name}: the {cut} cut failed its check'])
+            found.extend([f'{name}: {line}' for line in lines][:10] or [f'{name}: the {cut} cut failed its check'])
     for cut in CUTS[len(paths):]:
         problems.append(f'{cut} cut: no script given; every piece gets both cuts (scripts long.md short.md)')
+    waived = []
+    if krish is not None and found and not problems:
+        waived = [f'{WAIVED_BY_KRISH} ({" ".join(krish.split())}): the story check below found these, and he put the words through as they are'] + found
+    elif found:
+        problems.extend(found)
     prev = previous if isinstance(previous, dict) else {}
     before = current_hashes({'script_check': prev})
     passed_before = prev.get('passed') is True and isinstance(prev.get('checked_at'), str)
@@ -604,7 +624,7 @@ def scripts_patch(paths, run=None, warn=None, previous=None, series=None, deep=F
         changed_at[cut] = kept_at if same_words else stamp
     same = bool(hashes) and all(before.get(cut) == h for cut, h in hashes.items())
     kept = prev['checked_at'] if passed_before and same else None
-    check = {'passed': not problems, 'problems': problems, 'cuts': cuts, 'hashes': hashes,
+    check = {'passed': not problems, 'problems': problems or waived, 'cuts': cuts, 'hashes': hashes,
              'checked_at': kept or stamp, 'changed_at': changed_at}
     # A read-back holds for the words the readers heard: kept while they stay the same.
     read = prev.get('read_back') if isinstance(prev.get('read_back'), dict) else {}
@@ -1151,6 +1171,25 @@ def self_test():
         real = scripts_patch([t / 'long.md', t / 'short.md'], warn=warned.append)['script_check']
         check('the real story check fails a script that is far too short', (real['passed'], any('long.md' in x for x in real['problems'])), (False, True))
 
+        # Krish's own words put scripts he wrote through a failing story check (2026-10-16: "just put them in teleprompter").
+        his = 'Krish, 2026-10-16: just put them in teleprompter'
+        waived = scripts_patch([t / 'long.md', t / 'short.md'], bad, warned.append, krish=his)['script_check']
+        check('his words pass a failing story check, keeping every finding after his words',
+              (waived['passed'], waived['problems'][0].startswith(WAIVED_BY_KRISH), his in waived['problems'][0], waived['problems'][1:]),
+              (True, True, True, ['short.md: NOT READY  ' + str(t / 'short.md'), 'short.md: - the short cut runs 600 spoken words']))
+        check('words that pass need no waiver', scripts_patch([t / 'long.md', t / 'short.md'], ok, warned.append, krish=his)['script_check']['problems'], [])
+        missing = scripts_patch([t / 'long.md', t / 'missing.md'], bad, warned.append, krish=his)['script_check']
+        check('his words never waive a missing script', (missing['passed'], missing['problems']), (False, ['short cut: missing.md is not there']))
+        lone = scripts_patch([t / 'long.md'], bad, warned.append, krish=his)['script_check']
+        check('nor a missing cut', (lone['passed'], any('no script given' in p for p in lone['problems'])), (False, True))
+        try:
+            scripts_patch([t / 'long.md', t / 'short.md'], bad, warned.append, krish='put them in')
+            check('words that are not his are refused', 'no error', 'error')
+        except MakingError as e:
+            check('words that are not his are refused', 'starting "Krish"' in str(e), True)
+        again = scripts_patch([t / 'long.md', t / 'short.md'], bad, warned.append, previous=waived)['script_check']
+        check('the same words checked again without his words fail again', again['passed'], False)
+
     # The script hash: the same words give the same hash on every machine.
     plain_words = 'Warner, Universal and Sony sued Suno.\nCaf\u00e9 owners asked who gets paid.\n'
     check('hash: a script already in shape hashes as its bytes', script_hash(plain_words), hashlib.sha256(plain_words.encode('utf-8')).hexdigest())
@@ -1670,7 +1709,8 @@ def main(argv=None, call=None):
     ap.add_argument('--thumb-url', metavar='URL', help="with video and --thumb: the thumbnail's https link")
     ap.add_argument('--music', metavar='TRACK_ID', help='with video: the licensed track behind it (config/music-library.json)')
     ap.add_argument('--krish-words', metavar='WORDS', help='with read-back: Krish\'s own words signing the cut off. With recorded: Krish\'s own words, starting "Krish" and the date, letting a take '
-                    'of older words count as a take of the current script; recorded on the take')
+                    'of older words count as a take of the current script; recorded on the take. With scripts: his words putting scripts he '
+                    'wrote himself through although the story check fails; every finding is kept on the record')
     ap.add_argument('--readers', nargs='+', metavar='READER', help='with read-back: the two fresh readers who heard the cut, one line each')
     ap.add_argument('--at', metavar='TIME', help='with read-back: when they read it (default now)')
     ap.add_argument('--series', metavar='LANE_SLOT', help='with scripts: the piece\'s series, when the engine does not say '
@@ -1720,7 +1760,11 @@ def main(argv=None, call=None):
             elif not series:
                 print('making: the engine names no series for the piece, so the series line was not checked; give --series '
                       'follow_the_money, under_the_hood or mind_the_gap', file=sys.stderr)
-            patch = scripts_patch(a.args, previous=previous, series=series, deep=deep_piece(a.piece_id))
+            patch = scripts_patch(a.args, previous=previous, series=series, deep=deep_piece(a.piece_id), krish=a.krish_words)
+            if a.krish_words is not None and patch['script_check']['problems'][:1] and \
+                    patch['script_check']['problems'][0].startswith(WAIVED_BY_KRISH):
+                print(f'making: the story check\'s {len(patch["script_check"]["problems"]) - 1} findings are waived on Krish\'s words '
+                      'and kept on the record', file=sys.stderr)
             if spine:
                 patch['script_check']['spine'] = spine
             changed = changed_cuts(previous, patch['script_check']['hashes'])

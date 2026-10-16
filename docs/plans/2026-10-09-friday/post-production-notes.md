@@ -90,3 +90,11 @@ The 90-second cut's pictures and his three point-ups are in `picture-plan-90s-v5
 "No that's car visual is not clear. The gear beat the new badge. I don't think the visuals should have analogies in them. The visuals should look like genuine reviews of the actual product, with statistics, rather than having analogies. The analogies should only be in my casual narrative explanation style. The article itself shouldn't have them as they shouldn't go 10 out of 10 on analogies. The article should remain slightly more professional. Only the script is what I wanted to experiment with in the casual Hannah Fry style."
 
 This replaces his earlier asks for car logos and car pictures in the long video, and for the article to carry the car analogy. House rule ANALOGY_IN_SCRIPTS_ONLY; the visual gate's REAL THINGS check. The 90-second picture plan is redone (`picture-plan-90s-v5.md`); the deep cut's is marked to be redone.
+
+## Krish, 16 Oct (his own late edits, and the speed)
+
+After signing the scripts off, he re-edited both on the board himself (21:28 to 21:32 UTC), then in chat: "edited the scripts again, log what changed and reflect on why i changed them, and push these to releprompter", and a minute later:
+
+"just put them in teleprompter, and then if I go over 90sec, just speed the video up a bit in post"
+
+So the 90-second cut is his v6 words (`docs/plans/2026-10-09-script-90s-v6.md`, 274 words, about 1:50 read at 150 a minute) sped up in post to land at about 90 seconds: about 1.2x for a take at that pace, less if he reads faster. Speed picture and voice together with the pitch held. The cut points are in `picture-plan-90s-v6.md`. The deep cut is his v6 words too (`script-deep-v6.md`, 1,810 words, about 12 minutes); nothing is said about speeding it up, so it plays at his pace.

@@ -410,7 +410,8 @@ def rejected_problems(spoken):
 # "7 to 20 points": "7-20 points of improvement is too complex".
 SCORE_TALK = re.compile(r'\b(?:scor(?:e|es|ed|ing)|points?|rated|rank(?:s|ed)?|index|benchmark|test)\b', re.I)
 _TENS = r'twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety'
-SCORE_NUMBER = re.compile(rf'(?<![\w$£€.])(?:\d+(?:\.\d+)?|(?:{_TENS})(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?)(?![\w.]*\d)', re.I)
+# An ordinal is a place, not a score: "start you in 1st gear" (Krish's own line, 16 Oct).
+SCORE_NUMBER = re.compile(rf'(?<![\w$£€.])(?:\d+(?:\.\d+)?(?!(?:st|nd|rd|th)\b)|(?:{_TENS})(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?)(?![\w.]*\d)', re.I)
 # What makes a number mean something to the ear: a share, a multiple, a scale, an amount.
 MEASURED = re.compile(r'[\s-]*(?:%|percent\b|per\s+cent\b|times\b|x\b|out\s+of\b|in\s+(?:a|every|each)\s+(?:hundred|ten|thousand)\b|'
                       r'(?:thousand|million|billion|hundred|dollars?|pounds?|euros?|seconds?|minutes?|hours?|days?|weeks?|months?|years?|'
@@ -774,6 +775,10 @@ def self_test():
         'Its score only goes up by about a third. It costs about eleven times as much.',
         'It scored 58 out of 100. I\'m 85% sure. In March 2025, a test ran on GPT 6.1 for 4 seconds.',
         'Before, one user in a hundred used thinking. After, seven in a hundred did.']), [])
+    check('an ordinal after a test sentence is a place, not a score; a bare score next to one still is', (score_problems([
+        'In a tough reasoning test, the newest Claude Opus in its lowest gear lost to the older one in top gear.',
+        'So why do these tools start you in 1st gear? How hard it thinks is the gear - 1st, 2nd, 3rd, 21st.']),
+        [p.split('"')[1] for p in score_problems(['In 1st gear it scored 42 on their test.'])]), ([], ['42']))
     check('a score refuses through problems(), for every script', any('PLAIN_SCORES' in p for p in problems(fine + ' ' + old_90s)), True)
 
     # The chapter list beside a deep cut follows the words as they are now.
@@ -786,7 +791,9 @@ def self_test():
 
     # This week's unrecorded scripts, as their pieces' records hold them. Monday's
     # were recorded on the 12 October lines and keep those words; a script
-    # already read on camera is never changed to suit a later line.
+    # already read on camera is never changed to suit a later line. Friday's v5
+    # is the last the gate passed; his own v6 went through on his words
+    # (making.py scripts --krish-words), so it is not held to the gate here.
     plans = Path(__file__).resolve().parents[2] / 'docs' / 'plans'
     for name, series in (('2026-10-14-draft-script.md', 'under_the_hood'), ('2026-10-14-draft-script-90s.md', 'under_the_hood'),
                          ('2026-10-09-script-deep-v5.md', 'mind_the_gap'), ('2026-10-09-script-90s-v5.md', 'mind_the_gap')):

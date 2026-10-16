@@ -1,5 +1,8 @@
 # Friday 90-second cut v5: the picture plan (vertical only)
 
+**Replaced by `picture-plan-90s-v6.md`** (Krish's own edit of the script, 16 Oct 21:32 UTC).
+Build nothing from this file.
+
 Piece `904658db-4df2-4537-a0ed-ebe93e081db7`, mind.the.gap. Script:
 `docs/plans/2026-10-09-script-90s-v5.md` (187 words, about 85 seconds
 finished). The script stays words only; this file is what goes on screen.

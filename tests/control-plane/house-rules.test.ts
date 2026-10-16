@@ -668,10 +668,13 @@ describe('a story intro, its audio treatment and an outro card, in every format 
   })
 })
 
-// Monday's and Wednesday's were recorded and keep their words. Friday's v5,
-// as Krish edited both scripts on the board on 16 October, is what he
-// records: both cuts open on the mind.the.gap line he rewrote that day, and
-// pass at their lengths (deep 1,200 to 1,700 words, short 160 to 195).
+// Monday's and Wednesday's were recorded and keep their words. Friday's v5 is
+// the last version the gate passed: both cuts open on the mind.the.gap line
+// and pass at their lengths (deep 1,200 to 1,700 words, short 160 to 195).
+// What he records is v6, his own edit of both at 21:32 UTC on 16 October,
+// put through on his words ("just put them in teleprompter"; making.py
+// scripts --krish-words keeps every finding on the record), so it is not
+// held to the gate here.
 describe('this week\'s unrecorded scripts pass the gate they are held to (SERIES_OPENER and R7)', () => {
   test('Friday\'s deep cut and 90-second cut open with the series line, say "I\'m Krish" once, fit their lengths, and a 12-year-old can follow them', async () => {
     const { spawnSync } = await import('node:child_process')
