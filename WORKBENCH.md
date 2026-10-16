@@ -649,7 +649,18 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
-- 2026-10-16, about 20:30 UTC: **Friday v5, no bare scores anywhere; still waits on his sign-off.**
+- 2026-10-16, about 19:45 UTC: **Friday v5 is on both board links.** Krish sent a phone screenshot
+  of the board at 20:36 his time: the 90-second box still showed his 17:16 UTC save (222 words, "scored
+  42"), because the board had not been rebuilt since v4 (15:44 UTC). Rebuilt from the v5 files with
+  `--draft fri`, the four `--review` boxes and eight `--waiting` calls brought up to date (sign-off,
+  filing the prepared sources, the paid check, the 3,438-word article against ARTICLE_LENGTH's 1,400,
+  his opening line, title, the Manifold market, the picture treatments), and published to RjLHJ
+  (version 33) and H6qK (version 9). Both read back with the same file (sha256 b194aeba...). A phone
+  render with his saves mocked shows the new words, with "Your edit saved ... is in this version."
+  Monday's and Wednesday's tabs are byte for byte as they were. H6qK's wake subscription still fails
+  (404), so read its comments by hand. Times in the entries below were corrected from the commit log.
+
+- 2026-10-16, about 19:20 UTC: **Friday v5, no bare scores anywhere; still waits on his sign-off.**
   - His board comment (thread 0fcb8c74, now answered and resolved): "What does 42 even mean? that is
     not understandable. We need to simplify this", and in chat: apply it across the board and keep
     the 90-second cut "well under, around 85 seconds". The 90-second cut now says "In a hard test,
@@ -664,10 +675,10 @@ bring takes back, was retired on 12 October.
     (Opus 5 in top passes Opus 5.5 in first, then Haiku edges past) and a rev needle with no
     number on it; the plan's numbers list has no score in it.
   - Commits 8c0b939 and 6901637 on `ccr-3020025f-qsl89s`, not merged (merging needs his words).
-  - Still waiting on his one line: "scripts signed off, yes to Teleprompter, both boards and filing
-    the sources". The boards do not carry these words until then.
+  - Still waiting on his one line: "scripts signed off, yes to Teleprompter and filing the sources".
+    (The boards carry these words since 19:45 UTC, the entry above.)
 
-- 2026-10-16, about 19:50 UTC: **Friday v5, later the same evening, on Krish's notes in chat.**
+- 2026-10-16, about 18:40 UTC: **Friday v5, later the same evening, on Krish's notes in chat.**
   - **The car spelled out** (his words: "leave nothing to a users assumption or expertise - but we
     should be clear what we are equating the business name, LLM name, model name and thinking levels
     to"): OpenAI and Anthropic are the carmakers (BMW, Audi); ChatGPT and Claude the cars they make;
@@ -695,7 +706,7 @@ bring takes back, was retired on 12 October.
   - He pasted an Artificial Analysis key in chat; it was not used from chat. He then added it to the
     environment and connected the AA connector; the pasted copy should be replaced with a new key.
 
-- 2026-10-16, about 19:00 UTC: **Friday v5, from Krish's own script edits, waits on his sign-off to
+- 2026-10-16, about 17:50 UTC: **Friday v5, from Krish's own script edits, waits on his sign-off to
   record.** He edited both scripts on the RjLHJ board at 17:16 (EDIT threads 4bfe29e0 and 2a6c426d,
   not sent to Claude, so they stay open; full text in that board's `edits` store) and asked for it to
   be cohesive, readable end to end, and brought to consistency. Then: "The imagery that goes with the
@@ -734,7 +745,7 @@ bring takes back, was retired on 12 October.
     merge of e622537 (filer stamp fix), 66c28d5, a4f8dfa and this one. The Manifold market draft
     still has an older call.
 
-- 2026-10-16, about 18:30 UTC: **Friday v4 is on both board links for Krish's review: the manual
+- 2026-10-16, about 15:45 UTC: **Friday v4 is on both board links for Krish's review: the manual
   versus automatic car, what thinking means, and the call at 85%.** From his five board comments of
   16 Oct (RjLHJ threads 1fc7967d, 850e2a1b, cadb226c, a3773143, a08b6e38: each answered in its
   thread and resolved; 94b58cc2 is not sent to Claude, so it stays open). Files:
