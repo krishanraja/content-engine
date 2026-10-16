@@ -1,0 +1,476 @@
+{
+ "pictures": [
+  {
+   "id": "fri-deep-15-claude-names",
+   "cuts": [
+    "long"
+   ],
+   "shows": "chart",
+   "kicker": "CLAUDE LAUNCHES, ONE YEAR",
+   "title": "15 new Claude names in 12 months",
+   "logos": [
+    "Anthropic"
+   ],
+   "data_source": "Anthropic model deprecations table and launch pages, read 15 Oct 2026",
+   "measures": "A count, not a score: one mark per new Claude model name on its launch day, 16 Oct 2025 to 15 Oct 2026. More marks means more launches.",
+   "card": "A dated timeline, Oct 2025 to Oct 2026, one mark per name: Opus 4.5 (24 Nov 2025), Opus 4.6 (5 Feb 2026), Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr, partners only), Opus 4.7 (16 Apr), Opus 4.8 (28 May), Fable 5 and Mythos 5 (9 Jun), Sonnet 5 (30 Jun), Opus 5 (24 Jul), Fable 5.1 and Mythos 5.1 (1 Sep), Opus 5.5 (22 Sep), Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct). The six Opus marks in coral, the rest cream. A total line: '15 names, 13 launch days'. A footnote: 'Fable 5.1 and Mythos 5.1 are the same model with different safeguards (Anthropic)'. Opus 4.8, Opus 5 and Opus 5.5 light up one by one as he says them. Every date is from P2-03 (passage and checker's note).",
+   "start_long": "the amount of new releases of AI models",
+   "end_long": "Then Opus 5. Now Opus 5.5.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P2-03 (lines 182-190): the model-deprecations table rows and the checker's per-page launch dates; there is no Opus 5.1"
+  },
+  {
+   "id": "fri-claude-launch-pages",
+   "cuts": [
+    "long",
+    "short"
+   ],
+   "shows": "evidence",
+   "kicker": "ANTHROPIC LAUNCH PAGES",
+   "title": "Opus 4.8, Opus 5, Opus 5.5, each dated",
+   "logos": [
+    "Anthropic"
+   ],
+   "data_source": "Anthropic launch pages: 28 May 2026, 24 Jul 2026, 22 Sep 2026; captured 16 Oct 2026",
+   "url": "https://www.anthropic.com/news/claude-opus-4-8",
+   "capture": "Three live captures piled one on the last, each cropped to its title and its date line: anthropic.com/news/claude-opus-4-8 ('Introducing Claude Opus 4.8', May 28, 2026); Anthropic's Opus 5 announcement (24 Jul 2026, checked by the P2-03 checker, but its URL is not filed in the evidence: record it at capture, or use the claude-opus-5 row of platform.claude.com/docs/en/about-claude/model-deprecations); anthropic.com/claude-opus-5-5 (title and 'September 22, 2026'). Long cut: one page lands on each month he says (May, July, September). Short cut: the three land one on the last, with the last on 'EVERY DAY' (picture-plan-90s-v6, 0:03). Never edit a page; write the capture date on the frame.",
+   "start_long": "It launched Opus 4.8 in May,",
+   "end_long": "and Opus 5.5 in September.",
+   "start_short": "I use AI apps daily,",
+   "end_short": "there's a new model release EVERY DAY.",
+   "evidence": "evidence-v3.md P2-02 (lines 172-180: Opus 4.8 page dated May 28, 2026), P2-03 (Opus 5, 24 Jul 2026), P1-01 (line 13: Opus 5.5 page 'September 22, 2026'); picture-plan-90s-v6.md line 43"
+  },
+  {
+   "id": "fri-deep-openai-5-1-to-6-1",
+   "cuts": [
+    "long"
+   ],
+   "shows": "screenshot",
+   "kicker": "CHATGPT RELEASE NOTES",
+   "title": "GPT-5.1 to GPT-6.1, under a year",
+   "logos": [
+    "OpenAI"
+   ],
+   "data_source": "OpenAI ChatGPT release notes, entries 12 Nov 2025 and 29 Sep 2026; captured 16 Oct 2026",
+   "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+   "capture": "Two entries of the same page, stacked, each with its date header: 'November 12, 2025' with 'We're updating GPT-5 to GPT-5.1 Instant and GPT-5.1 Thinking, making answers both smarter and more conversational.', and 'September 29, 2026' with 'GPT-6.1 Sol improves on GPT-6 Sol in agentic coding, computer use, and professional work.' Ring the two dates in coral.",
+   "start_long": "OpenAI's ChatGPT went from GPT 5.1",
+   "end_long": "to GPT 6.1 in under a year.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P2-04 (lines 192-200): both passages verbatim on the release notes; GPT-5.1 12 Nov 2025 and GPT-6.1 Sol 29 Sep 2026 confirmed on this page by the checker"
+  },
+  {
+   "id": "fri-deep-altman-same-day",
+   "cuts": [
+    "long"
+   ],
+   "shows": "evidence",
+   "kicker": "31 MARCH 2025",
+   "title": "Same day: one million users, $40 billion",
+   "logos": [
+    "OpenAI"
+   ],
+   "data_source": "Sam Altman on X, 31 Mar 2025, 18:11 UTC; OpenAI, 31 Mar 2025; The Decoder, 31 Jan 2025",
+   "url": "https://x.com/sama/status/1906771292390666325",
+   "capture": "Three dated tiles, in the order he says them. 1) Altman's post, cropped to 'we added one million users in the last hour.' with its date. 2) openai.com/index/march-funding-updates/, cropped to 'March 31, 2025' and 'Today we're announcing new funding\u2014$40 billion' (crop off the valuation, which he does not say). 3) On 'lining up that money for months', The Decoder, 31 Jan 2025 (https://the-decoder.com/openai-in-talks-for-massive-40-billion-funding-round-at-300-billion-valuation/), its headline and date: the raise was in talks two months before.",
+   "start_long": "Sam Altman, who runs OpenAI, then said",
+   "end_long": "lining up that money for months.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P2-05 (lines 202-210): Altman's post verbatim, the funding page sentence, and the checker's Decoder line ('in talks two months earlier')"
+  },
+  {
+   "id": "fri-deep-thinking-settings",
+   "cuts": [
+    "long"
+   ],
+   "shows": "screenshot",
+   "kicker": "THINKING SETTINGS, OCT 2026",
+   "title": "ChatGPT and Claude: you pick the thinking",
+   "logos": [
+    "OpenAI",
+    "Anthropic"
+   ],
+   "data_source": "OpenAI Help Center, about 9 Oct 2026; Claude Help Center, updated 7 Oct 2026; captured 16 Oct 2026",
+   "url": "https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt",
+   "capture": "Split in two. Left, OpenAI's help page: 'Use the Thinking slider to choose your effort. When GPT-6 is selected, GPT-6 Sol powers Instant, Medium, High, and Extra High'. Right, support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings: the effort list as the page renders it (Low, Medium, High, Extra high, Max, with its 'Default' marker) and 'The effort level controls how much thinking Claude applies to a response.' Krish's own dated captures of the two apps (as in the 90-second cut) may replace the help pages; the pages are the public record.",
+   "start_long": "ChatGPT and Claude both let you choose",
+   "end_long": "how hard the AI thinks. For now.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v2.md 1.4 (lines 39-45, the Thinking slider line); evidence-v3.md P4-06 (lines 532-540, the effort list and 'Default' marker confirmed in the page HTML) and P3-04 (lines 349-357)"
+  },
+  {
+   "id": "fri-deep-aa-same-claude",
+   "cuts": [
+    "long"
+   ],
+   "shows": "chart",
+   "kicker": "INDEPENDENT TEST",
+   "title": "Same Claude, different settings, different scores",
+   "logos": [
+    "Anthropic"
+   ],
+   "data_source": "Artificial Analysis, 15 Oct 2026",
+   "measures": "Artificial Analysis Intelligence Index v4.3.2: 10 hard tests, scored 0 to 100, higher is better. The dollar chips are its cost per task to run them, lower is cheaper.",
+   "card": "Horizontal bars drawn from zero (ticks 0, 20, 40, 60), headed 'Scored 0 to 100. Higher is better.', and built in three steps on his three sentences. Step 1 ('In its top gear, it did much better'): Opus 5.5 at Low effort 42, Opus 5.5 at Max effort 58. Step 2 ('The older Opus 5, in its top gear'): add Opus 5 at Max effort 51, set against Opus 5.5 at Low 42. Step 3 ('To be fair, the new one's middle gear'): add Opus 5.5 at Medium effort 51, with cost chips: Opus 5.5 Medium $1.34 a task, Opus 5 Max $5.86 a task. Each effort shown as the chip label (LOW EFFORT, MEDIUM EFFORT, MAX EFFORT), never as a gear. Values from P1-02 (42, 51 at $1.34, 58) and its checker's matched-effort note (Opus 5 Max 50.8 at $5.86, shown as 51); the 90-second chart's 16 Oct API read gives the same 42 and 51.",
+   "start_long": "A group called Artificial Analysis ran",
+   "end_long": "top gear, for much less money.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P1-02 (lines 19-27: AA sentences for Low 42, Max 58, Opus 5 Max 51; medium page 51 at $1.34; checker's note: Opus 5.5 medium 51.2 at $1.34 matches Opus 5 max 50.8 at $5.86) and line 149"
+  },
+  {
+   "id": "fri-deep-cost-vs-score",
+   "cuts": [
+    "long"
+   ],
+   "shows": "chart",
+   "kicker": "LOW VS MAX EFFORT",
+   "title": "Eleven times the cost, a third higher",
+   "logos": [
+    "Anthropic"
+   ],
+   "data_source": "Artificial Analysis, 15 Oct 2026",
+   "measures": "Left: cost per task to run Artificial Analysis's 10 tests, in US dollars, lower is cheaper. Right: Intelligence Index, 0 to 100, higher is better. Both for Claude Opus 5.5 at Low and at Max effort.",
+   "card": "Two paired bar groups, each drawn from zero. Cost per task: Low $0.55, Max $5.98, labelled 'about 11x'. Score: Low 42, Max 58, labelled 'about a third higher'. The cost pair builds on 'about eleven times as much', the score pair on 'only goes up by about a third'. Header for Opus 5.5 only.",
+   "start_long": "If Opus 5.5 thinks as hard as",
+   "end_long": "goes up by about a third.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P1-02 (lines 19-27): '$0.55 per task' (Low), '$5.98 per task' (Max), scores 42 and 58; checker: 5.98/0.55 = 10.9x"
+  },
+  {
+   "id": "fri-deep-altman-losing-on-pro",
+   "cuts": [
+    "long"
+   ],
+   "shows": "screenshot",
+   "kicker": "ALTMAN, 6 JAN 2025",
+   "title": "Altman: OpenAI losing money on Pro",
+   "logos": [
+    "OpenAI"
+   ],
+   "data_source": "Sam Altman on X, 6 Jan 2025, 03:11 UTC",
+   "url": "https://x.com/sama/status/1876104315296968813",
+   "capture": "The post whole, with its date: 'insane thing: we are currently losing money on openai pro subscriptions! people use it much more than we expected.' Beside it, small, OpenAI's Pro launch page (https://openai.com/index/introducing-chatgpt-pro/, December 5, 2024), cropped to the plan's $200 price line, checked on the page at capture.",
+   "start_long": "In January 2025, Sam Altman said",
+   "end_long": "losing money on its two hundred dollar plan.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P3-03 (lines 337-347): the post verbatim (X embed data, 2025-01-06T03:11:39Z) and the Pro launch page"
+  },
+  {
+   "id": "fri-gemini-auto",
+   "cuts": [
+    "long",
+    "short"
+   ],
+   "shows": "screenshot",
+   "kicker": "GOOGLE GEMINI HELP",
+   "title": "Free Gemini now starts on Auto",
+   "logos": [
+    "Google"
+   ],
+   "data_source": "Google Gemini Apps Help, changes from 9 Oct 2026; captured 16 Oct 2026",
+   "url": "https://support.google.com/gemini/answer/17004136?hl=en",
+   "capture": "The page's own lines, cropped: 'Auto will be the default setting for users without a Google AI plan.' and 'Most prompts will go to Flash-Lite, our fastest model. Prompts that need deeper reasoning may go to Flash or Pro.', plus its start line ('on October 9th'); the page is undated, so the capture date goes on the frame. Long cut: highlight the lines as he says them. Short cut: the default line under 'My bet:', then Auto ringed in coral on 'ChatGPT will pick the gear' (POINT UP), as picture-plan-90s-v6 sets.",
+   "start_long": "Since the ninth of October, the free",
+   "end_long": "how much power each question gets",
+   "start_short": "My bet: by the end of June 2027,",
+   "end_short": "You won't actually get much of a choice.",
+   "evidence": "evidence-v3.md P4-01 (lines 482-490): passage verbatim, 'October 9th' start; picture-plan-90s-v6.md lines 61-64"
+  },
+  {
+   "id": "fri-deep-openai-free-dec-2025",
+   "cuts": [
+    "long"
+   ],
+   "shows": "evidence",
+   "kicker": "FREE USERS, DEC 2025",
+   "title": "OpenAI's reason, and what WIRED found",
+   "logos": [
+    "OpenAI"
+   ],
+   "data_source": "OpenAI ChatGPT release notes, 11 Dec 2025; WIRED (Maxwell Zeff), 16 Dec 2025",
+   "url": "https://www.wired.com/story/openai-router-relaunch-gpt-5-sam-altman/",
+   "capture": "Built in three steps. 1) On 'Last December, free users lost it': the release notes (https://help.openai.com/en/articles/6825453-chatgpt-release-notes), the 'December 11, 2025' entry: 'We're removing automatic model switching for reasoning in ChatGPT.' 2) On 'OpenAI said free users liked the normal setting better': WIRED's line 'An OpenAI spokesperson tells WIRED that the company determined, based on user feedback, that Free and Go users preferred staying in the default chat experience'. 3) On 'But WIRED magazine said': 'In practice, the router seemed to send many more free users to OpenAI's advanced reasoning models, which are more expensive for OpenAI to serve.' WIRED's headline, byline and date stay in frame.",
+   "start_long": "OpenAI has gone the other way,",
+   "end_long": "Those cost OpenAI more.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P4-03 (lines 502-510): WIRED passages verbatim and the 11 Dec 2025 release-note quote in its limits"
+  },
+  {
+   "id": "fri-deep-openai-plus-pro-sep-2026",
+   "cuts": [
+    "long"
+   ],
+   "shows": "screenshot",
+   "kicker": "CHATGPT RELEASE NOTES",
+   "title": "Plus and Pro lose automatic switching",
+   "logos": [
+    "OpenAI"
+   ],
+   "data_source": "OpenAI ChatGPT release notes, 14 Sep 2026; OpenAI Help Center, about 9 Oct 2026",
+   "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+   "capture": "The 14 September 2026 entry 'Changes to automatic switching to thinking in ChatGPT (Plus and Pro)', with its date: 'We're retiring automatic switching from Instant to Thinking (reasoning) for ChatGPT Plus and Pro users globally. You can still select an available option in the model picker to give ChatGPT more time to think or reason.' On 'you pick', add help.openai.com/articles/20001354: 'On Plus and Pro plans, Instant doesn't automatically switch to a higher thinking level for complex requests.' No reason is given on the page, which is his point.",
+   "start_long": "Then in September, people on the",
+   "end_long": "Now, on those plans, you pick the gear.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P4-02 (lines 492-500, entry verbatim; MIXED: 'OpenAI gives no reason for the change'); evidence-v2.md 4.5 (lines 174-180)"
+  },
+  {
+   "id": "fri-deep-thinking-use-1-to-7",
+   "cuts": [
+    "long"
+   ],
+   "shows": "chart",
+   "kicker": "FREE CHATGPT USERS, 2025",
+   "title": "Free users thinking daily: <1% to 7%",
+   "logos": [
+    "OpenAI"
+   ],
+   "data_source": "Sam Altman on X, 10 Aug 2025",
+   "measures": "Share of free ChatGPT users who used a thinking (reasoning) model each day, out of 100 users, as Altman gave it after GPT-5's automatic switching arrived. More means more people getting careful answers.",
+   "card": "Two 10 x 10 dot grids. Left, 'Before': under 1 dot in 100 lit ('under 1 in 100'). Right, 'After': 7 dots in 100 lit ('7 in 100'). Source line under them, his words: 'for free users we went from <1% to 7%' (Sam Altman, 10 Aug 2025). Do not show the Plus figures (not said), and do not present 'before GPT-5' as his words.",
+   "start_long": "In 2025, when ChatGPT's automatic gear picker",
+   "end_long": "After, seven in a hundred did.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v2.md 2.1 (lines 60-66): x.com/sama/status/1954603417252532479, verbatim, and its framing caution; 'Do not use' list (line 234 on)"
+  },
+  {
+   "id": "fri-deep-claude-code-reversal",
+   "cuts": [
+    "long"
+   ],
+   "shows": "screenshot",
+   "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
+   "title": "Claude Code: medium by default, then reversed",
+   "logos": [
+    "Anthropic"
+   ],
+   "data_source": "Anthropic Engineering blog, 23 Apr 2026",
+   "url": "https://www.anthropic.com/engineering/april-23-postmortem",
+   "capture": "The post's title and date, then three lines highlighted as he says them: 'On March 4, we changed Claude Code's default reasoning effort from high to medium' (moved it down); 'users began reporting that Claude Code felt less intelligent' and 'most users retained the medium effort default' (kept it there); 'This was the wrong tradeoff. We reverted this change on April 7' (called it a mistake, undid it).",
+   "start_long": "This March, it moved its coding app",
+   "end_long": "called that a mistake, and undid it.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P4-04 (lines 512-520): all passages verbatim, dated 23 April 2026"
+  },
+  {
+   "id": "fri-deep-extended-cut-by-mistake",
+   "cuts": [
+    "long"
+   ],
+   "shows": "screenshot",
+   "kicker": "OPENAI, 4 FEB 2026",
+   "title": "Extended cut by mistake, fixed weeks later",
+   "logos": [
+    "OpenAI"
+   ],
+   "data_source": "OpenAI ChatGPT release notes, entry of 4 Feb 2026",
+   "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+   "capture": "The entry 'Update on thinking time settings for GPT-5.2 Thinking in ChatGPT' under its 'February 4, 2026' header, dates kept: 'Jan 10, 2026: We lowered the Standard and Light thinking time as we observed users prefer faster responses. As part of this update, the Extended thinking setting for GPT-5.2 was unintentionally changed to be lower' and 'February 4, 2026: We're restoring the Extended thinking level for GPT-5.2 Thinking to its prior setting, correcting the inadvertent reduction from January.' Ring 'unintentionally' and the two dates.",
+   "start_long": "This January, OpenAI made ChatGPT think",
+   "end_long": "It took weeks to fix.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v3.md P4-05 (lines 522-530): passage verbatim, dates confirmed"
+  },
+  {
+   "id": "fri-deep-where-to-turn-it-up",
+   "cuts": [
+    "long"
+   ],
+   "shows": "screenshot",
+   "kicker": "WHAT TO PICK",
+   "title": "Where to turn the thinking up",
+   "logos": [
+    "OpenAI",
+    "Anthropic",
+    "Google"
+   ],
+   "data_source": "OpenAI Help Center, about 9 Oct 2026; Claude Help Center, updated 7 Oct 2026; Google Gemini Apps Help; captured 16 Oct 2026",
+   "url": "https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt",
+   "capture": "Three crops, each landing on his words. 'On ChatGPT, pick Medium or High': the Thinking slider line, Medium and High ringed in mint. 'On the free plan, pick Think': 'Free and Go users can use Think for harder questions.' (same page). 'On Claude and Gemini ... effort': support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings, its effort list with High ringed, and support.google.com/gemini/answer/17004136, 'you can also select the model's effort level from low, medium, and high'.",
+   "start_long": "On ChatGPT, pick Medium or High.",
+   "end_long": "called effort, so turn it up.",
+   "start_short": "",
+   "end_short": "",
+   "evidence": "evidence-v2.md 1.4 and 5.1 (lines 39-45, 193-199); evidence-v3.md P4-06 (lines 532-540) and P4-01 (lines 482-490, the effort tip)"
+  },
+  {
+   "id": "fri-call-85",
+   "cuts": [
+    "long",
+    "short"
+   ],
+   "shows": "chart",
+   "kicker": "OUR CALL, 85%",
+   "title": "ChatGPT free picks its own thinking, 2027",
+   "logos": [
+    "OpenAI"
+   ],
+   "data_source": "our call, 16 Oct 2026",
+   "measures": "How sure we are, 0 to 100%, higher is surer.",
+   "card": "The house call meter filling to 85%, with the call as the piece gives it: 'By 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message.' and 'How sure we are: 85%.' Long cut only, a small third line: 'Wrong if a new free chat still starts on a setting you pick.'",
+   "start_long": "I'll chalk this one at 85% confident,",
+   "end_long": "so pretty certain this will happen.",
+   "start_short": "I'm 85% sure. Easier for the masses.",
+   "end_short": "always help AI companies control costs.",
+   "evidence": "draft-body-v5.md 'OUR PREDICTION' (line 99 on); picture-plan-90s-v6.md line 65"
+  },
+  {
+   "id": "fri-90-claude-model-menu",
+   "cuts": [
+    "short"
+   ],
+   "shows": "screenshot",
+   "kicker": "CLAUDE APP, MODEL MENU",
+   "title": "The model name and its effort setting",
+   "logos": [
+    "Anthropic"
+   ],
+   "data_source": "Krish's own capture of the Claude app, dated at capture; Claude Help Center, updated 7 Oct 2026",
+   "url": "https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings",
+   "capture": "POINT UP. His capture of the Claude app's model menu, labelled 'Model' at the name and 'Effort' at the setting, up through 'Opus 5.5, Mercedes C Class.' No car is drawn. The help page is the public fallback.",
+   "start_long": "",
+   "end_long": "",
+   "start_short": "The name of the model is like the badge.",
+   "end_short": "Opus 5.5, Mercedes C Class.",
+   "evidence": "picture-plan-90s-v6.md lines 33 and 47; evidence-v3.md P4-06"
+  },
+  {
+   "id": "fri-90-claude-effort-list",
+   "cuts": [
+    "short"
+   ],
+   "shows": "screenshot",
+   "kicker": "CLAUDE APP, EFFORT",
+   "title": "Claude's real effort levels, in order",
+   "logos": [
+    "Anthropic"
+   ],
+   "data_source": "Krish's own capture of the Claude app, dated at capture; Claude Help Center, updated 7 Oct 2026",
+   "url": "https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings",
+   "capture": "The same menu with the effort list open (Low, Medium, High, Extra high, Max), one level lit for each ordinal he says: Low on '1st', Medium on '2nd', High on '3rd'.",
+   "start_long": "",
+   "end_long": "",
+   "start_short": "How hard it thinks is the gear",
+   "end_short": "the gear - 1st, 2nd, 3rd.",
+   "evidence": "picture-plan-90s-v6.md line 50; evidence-v3.md P4-06 (lines 532-540, the effort list)"
+  },
+  {
+   "id": "fri-90-chatgpt-thinking-setting",
+   "cuts": [
+    "short"
+   ],
+   "shows": "screenshot",
+   "kicker": "CHATGPT, THINKING SETTING",
+   "title": "ChatGPT's thinking setting: you pick it",
+   "logos": [
+    "OpenAI"
+   ],
+   "data_source": "Krish's own capture of ChatGPT, dated at capture; OpenAI Help Center, about 9 Oct 2026",
+   "url": "https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt",
+   "capture": "His capture of ChatGPT's own thinking setting open (Instant, Medium, High, Extra High), labelled 'You pick it'. The help page's Thinking slider line is the public fallback.",
+   "start_long": "",
+   "end_long": "",
+   "start_short": "And right now, AI tools are like",
+   "end_short": "like a manual car.",
+   "evidence": "picture-plan-90s-v6.md line 52; evidence-v2.md 1.4 and 4.5"
+  },
+  {
+   "id": "fri-90-claude-scores",
+   "cuts": [
+    "short"
+   ],
+   "shows": "chart",
+   "kicker": "INDEPENDENT TEST",
+   "title": "Newest vs older Claude Opus",
+   "logos": [
+    "Anthropic"
+   ],
+   "data_source": "Artificial Analysis, 16 Oct 2026",
+   "measures": "Artificial Analysis Intelligence Index: 10 hard tests, 0 to 100, higher is better",
+   "card": "As built in video-pictures/fri-90-claude-scores.html: 'Opus 5.5 (newest)' LOW EFFORT 42 against 'Opus 5 (older)' MAX EFFORT 51, bars from zero, ticks 0, 20, 40, 60, sub-line 'Intelligence Index: 10 hard tests. Higher is better.', footer 'Source: Artificial Analysis, 16 Oct 2026'. POINT UP; it stays up through 'lost to the older one in top gear.'",
+   "start_long": "",
+   "end_long": "",
+   "start_short": "In a tough reasoning test,",
+   "end_short": "lost to the older one in top gear.",
+   "evidence": "video-pictures/fri-90-claude-scores.html (API read 16 Oct 2026: Opus 5.5 Low 42.3, Opus 5 Max 50.8); evidence-v3.md P1-02; picture-plan-90s-v6.md lines 57 and 71-75"
+  }
+ ],
+ "chapters": [
+  {
+   "n": 1,
+   "title": "Does the name matter?",
+   "starts": "I've been using all the well-known",
+   "logos": [
+    "Anthropic",
+    "OpenAI"
+   ]
+  },
+  {
+   "n": 2,
+   "title": "Why the names keep coming",
+   "starts": "First, the names. Anthropic makes",
+   "logos": [
+    "Anthropic",
+    "OpenAI"
+   ]
+  },
+  {
+   "n": 3,
+   "title": "The setting that matters",
+   "starts": "So what does matter? Picture",
+   "logos": [
+    "OpenAI",
+    "Anthropic"
+   ]
+  },
+  {
+   "n": 4,
+   "title": "What thinking costs them",
+   "starts": "All that hidden working runs",
+   "logos": [
+    "Anthropic",
+    "OpenAI"
+   ]
+  },
+  {
+   "n": 5,
+   "title": "Who decides next",
+   "starts": "So who decides how hard",
+   "logos": [
+    "Google",
+    "OpenAI"
+   ]
+  },
+  {
+   "n": 6,
+   "title": "The good and the bad",
+   "starts": "Is that good? Some of",
+   "logos": [
+    "OpenAI",
+    "Anthropic"
+   ]
+  },
+  {
+   "n": 7,
+   "title": "What to do about it",
+   "starts": "So what should you do?",
+   "logos": [
+    "OpenAI",
+    "Anthropic",
+    "Google"
+   ]
+  }
+ ]
+}

@@ -649,6 +649,27 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 23:35 UTC: **The long-episode editor is built and tested; Friday's videos wait on three
+  things from Krish.** He said: "You're welcome to put chapter dividers in the long video and things like
+  that. I'm sure you've got the corpus and know how to do this."
+  - Built (all opt-in, so other cuts render as before; tested on Wednesday's 3:18 take, which has sound):
+    `scripts/quick-edit/episode.py` with make.py wiring: `"voice": "repair"` (noise floor -56 to -62 dB, loudness
+    range 5.3 to 3.3 LU, level unchanged), the one-take pause rule (`max_gap` 0.9: 8 stretches, not dozens of
+    jump cuts), `"reframe"` (a push under each hidden cut, held at least 1.5 s) and `"emphasis"`, the caption file
+    for every cut and `"captions": false`, the YouTube chapter list (00:00 first, 10 s apart), `"end_screen_s"`,
+    `"music_mode": "episode"` (`music.episode_bed`: the open, a lift at each chapter turn, the close; each piece
+    measured where it sits: bed 17.5 LU under the voice, mix -14.1 LUFS, true peak -1.3), and `"speed"` only on
+    Krish's words. `video_card.py` kind `"shot"`: a real captured page, cropped to its passage, the line ringed
+    in mint, source and capture date under it. `sync_audio.py`: puts a mic's own recording back on a silent
+    picture by his mouth (self-test: a 7.3 s shift found to within a frame). The matcher now names a silent take.
+  - NO CURVES (3:10, not loopable) is the only licensed track: the long cut can carry music only in episode mode.
+  - Evidence pictures: workflow wf_d81a9d90-dab planned 20 real-thing pictures and 7 literal chapter titles
+    (`scratchpad` plan.json; to commit with the cards) and captured the public pages. Nothing is drawn: the card
+    tool passes only headings Krish has picked (`title_check.gate`), so the headings go to him as one list.
+  - Waiting on Krish: (1) sound for the 90-second take (the mic's own file, or a new take) and the 15-minute take
+    under 500 MiB in the Inbox; (2) the YouTube title, the Shorts title and the thumbnail words (options in his
+    chat, 22:55 UTC); (3) yes to the card headings and chapter titles.
+
 - 2026-10-16, about 22:40 UTC: **Friday's videos: both takes are blocked, titles go to Krish first.**
   - Krish: "The two videos are uploaded ... We now have a 15-minute episode and a 90-second video to
     produce ... what you're going to do to 10x the production quality. Get going from here and create

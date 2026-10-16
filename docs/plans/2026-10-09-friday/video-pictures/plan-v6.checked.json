@@ -1,0 +1,126 @@
+{
+ "pictures": [
+  {
+   "id": "fri-deep-15-claude-names",
+   "keep": true,
+   "fix": "Optional: widen the footnote to 'Fable 5.1 and Mythos 5.1 are the same model with different safeguards; Mythos 5 is Fable 5 with cyber safeguards lifted (Anthropic)', since the P2-03 checker confirms both pairs.",
+   "why": "Every name and date matches P2-03 (evidence-v3 lines 182-190, deprecations table plus the checker's per-page dates). It has 15 names on 13 launch days and six Opus marks (4.5, 4.6, 4.7, 4.8, 5, 5.5), and no Opus 5.1. It is a count, its scale is stated, and more marks means more launches, so PLAIN_SCORES holds. Both cues are verbatim in script-deep-v6 line 1. It shows real launches, with no analogy, and does not run over Sally or the last 20 seconds."
+  },
+  {
+   "id": "fri-claude-launch-pages",
+   "keep": true,
+   "fix": "Not captured yet. At capture, record the URL of Anthropic's Opus 5 announcement page (24 Jul 2026) in the evidence file, because no file in docs/plans holds it. If it cannot be found, use the claude-opus-5 row of platform.claude.com/docs/en/about-claude/model-deprecations ('Not sooner than July 24, 2027'). Write 'captured <date>' on each of the three frames.",
+   "why": "The dates come from P2-02 (Opus 4.8, May 28, 2026), P2-03 (Opus 5, 24 Jul 2026) and P1-01 (anthropic.com/claude-opus-5-5, 'September 22, 2026'). All four cues are verbatim: long line 11, short line 1. These are real pages, not a picture of an idea. It does not run over Sally or the last 20 seconds of either cut."
+  },
+  {
+   "id": "fri-deep-openai-5-1-to-6-1",
+   "keep": true,
+   "fix": "Add a source strip like the other captures: 'OpenAI Help Center \u00b7 help.openai.com/en/articles/6825453-chatgpt-release-notes \u00b7 captured 16 Oct 2026'. Keep the dashed cut line as it is. It honestly marks the four skipped Sep 29 sections.",
+   "why": "I opened the PNG. It is readable and sharp, and it is the release notes page. The Nov 12, 2025 entry and the Sep 29, 2026 'GPT-6.1 Sol improves on GPT-6 Sol...' text match P2-04 word for word, with the dates ringed in coral. Cues are verbatim on long line 11. The heading 'GPT-6.1 Sol in ChatGPT Work and Codex' is the page's own, so leave it as it is."
+  },
+  {
+   "id": "fri-deep-altman-same-day",
+   "keep": true,
+   "fix": "Tile 1: show Altman's whole post, both sentences ('...we added one million users in five days. we added one million users in the last hour.'), and highlight the last sentence instead of cropping it alone. Keep the post's date and time in UTC (31 Mar 2025, 18:11). Tile 3: The Decoder's headline carries '$300 billion valuation'. Show it whole, because a headline cannot be cropped, and do not ring the valuation.",
+   "why": "P2-05 (lines 202-210) supports all three tiles: Altman's post, the funding page sentence, and the checker's Decoder line from 31 Jan 2025 ('in talks two months earlier'). Cues are verbatim on long line 15. It shows real posts and pages. Not captured yet."
+  },
+  {
+   "id": "fri-deep-thinking-settings",
+   "keep": true,
+   "fix": "",
+   "why": "I opened the PNG. Both panels are readable. Left is OpenAI's 'Choose a thinking level' with the Thinking slider line, verbatim to evidence-v2 1.4. Right is Claude's 'Choose an effort level' with 'The effort level controls how much thinking...', the 'Default' sentence and the list Low/Medium, High, Extra high, Max, matching P4-06 and P3-04. The label strips carry the URLs and the capture date. Cues are verbatim on long line 23, which is after Sally ends (line 21)."
+  },
+  {
+   "id": "fri-deep-aa-same-claude",
+   "keep": true,
+   "fix": "",
+   "why": "The values come from P1-02: Low 42, Max 58, Opus 5 Max 51, and Medium 51 at $1.34. The checker's matched-effort note gives Opus 5 Max 50.8 at $5.86. The header states the scale, 0 to 100, and that higher is better. Bars start at zero, and cost chips say lower is cheaper, so PLAIN_SCORES holds. Efforts are shown as LOW/MEDIUM/MAX EFFORT, never as gears. Cues are verbatim on long line 29."
+  },
+  {
+   "id": "fri-deep-cost-vs-score",
+   "keep": true,
+   "fix": "",
+   "why": "P1-02 gives $0.55 and $5.98 per task (the checker says 10.9x) and 42 vs 58 (+38%, which the script calls 'about a third'). Both measures name their units and which direction is better, and the bars start at zero. Cues are verbatim on long line 35."
+  },
+  {
+   "id": "fri-deep-altman-losing-on-pro",
+   "keep": true,
+   "fix": "",
+   "why": "I opened the PNG. It is readable. The post is whole and verbatim to P3-03, with the page's own date '3:11 AM \u00b7 Jan 6, 2025' (UTC, matching the embed data). The inset is the Pro launch page, 'December 5, 2024', with '$200 monthly plan' underlined, matching the capture's DOM check. Cues are verbatim on long line 39. The 4:1 strip needs padding in a 16:9 frame."
+  },
+  {
+   "id": "fri-gemini-auto",
+   "keep": true,
+   "fix": "Long cut: use as captured and highlight the lines as he says them. Short cut: at full size the frame shrinks to about 0.4x in the 968x773 box and the text becomes too small to read. Use two sub-crops of the PNG instead. (a) The default paragraph, PNG y about 1700-1950 at full width, on 'My bet:'. (b) The table, PNG y about 1200-1660, x 90-900, with the coral ring on the Auto cell (PNG x 417-903, y 1376-1451) on 'ChatGPT will pick the gear'. Keep the kicker 'GOOGLE GEMINI HELP' and the Google logo on the short so 'ChatGPT will pick the gear' is not read as ChatGPT's page.",
+   "why": "I opened the PNG. It is the right page and readable at full size, with 'October 9th', the Auto table cell, and both quoted lines verbatim to P4-01. All four cues are verbatim (long line 45, short line 11). On the sped-up short it runs to about 16 s before the end. YouTube's end-screen reserve is a 16:9 rule and does not apply to Shorts, so this is not a breach. Leave end_screen_s unset on the tall cut."
+  },
+  {
+   "id": "fri-deep-openai-free-dec-2025",
+   "keep": true,
+   "fix": "",
+   "why": "P4-03 (lines 502-510) has WIRED's two passages verbatim and the release-notes quote of 11 Dec 2025 ('We're removing automatic model switching for reasoning in ChatGPT.'). The three steps follow long line 47 in order. Cues are verbatim. Not captured yet."
+  },
+  {
+   "id": "fri-deep-openai-plus-pro-sep-2026",
+   "keep": true,
+   "fix": "Recompose as two crops, as in fri-deep-openai-5-1-to-6-1. Take the date header 'September 14, 2026' (PNG y 0 to about 180), then a dashed cut line, then the target entry from 'Changes to automatic switching to thinking in ChatGPT (Plus and Pro)' to 'For more information...' (PNG y about 1200-1880). This drops the Health entry, which now fills the top half. Then capture the second source the plan names, help.openai.com/articles/20001354: 'On Plus and Pro plans, Instant doesn't automatically switch to a higher thinking level for complex requests.' It lands on 'you pick the gear' and is missing from this PNG.",
+   "why": "I opened the PNG. It is the right page, readable, and its entry is verbatim to P4-02 and evidence-v2 4.5. But half the frame is an unrelated Health entry, and the second crop the plan asks for is missing. Cues are verbatim on long line 47."
+  },
+  {
+   "id": "fri-deep-thinking-use-1-to-7",
+   "keep": true,
+   "fix": "On the left grid, draw no full lit dot, because the figure is under 1 in 100. Use one dot partly filled, or an empty grid labelled 'under 1 in 100'. A whole lit dot would show 1%.",
+   "why": "Evidence-v2 2.1 has Altman's 'for free users we went from <1% to 7%' verbatim, measured each day. The card heeds the 'Do not use' cautions: no Plus figures, and 'before GPT-5' is not quoted. It says what it measures, out of 100, and which way is better. Cues are verbatim on long line 51."
+  },
+  {
+   "id": "fri-deep-claude-code-reversal",
+   "keep": true,
+   "fix": "Do not pan the 2640x6948 strip with all four highlights burned in. On the page the 'wrong tradeoff' highlight sits in item 1, above the 'felt less intelligent' paragraph, so the payoff would show early. Build four frames in his order. 1) Title and 'Published Apr 23, 2026' (y 0-900). 2) List item 1 with ONLY 'On March 4, we changed Claude Code's default reasoning effort from high to medium' highlighted (y about 1780-1990): re-run capture_postmortem.py with that phrase alone. 3) The 'Soon after rolling out' paragraph with its two highlights (y about 6600-6900). 4) Item 1 again with 'This was the wrong tradeoff. We reverted this change on April 7' highlighted, on 'called that a mistake, and undid it.'",
+   "why": "I opened sub-frames of the PNG. It is the real postmortem, readable at full size, and every highlighted phrase is verbatim to P4-04. Cues are verbatim on long line 53. The fault is the order: as captured, the reversal is lit before he says it."
+  },
+  {
+   "id": "fri-deep-extended-cut-by-mistake",
+   "keep": true,
+   "fix": "",
+   "why": "I opened the PNG. It is readable and on the right page, under the 'February 4, 2026' header. The Jan 10 and Feb 4 lines are verbatim to P4-05, and 'Jan 10, 2026:', 'unintentionally' and 'February 4, 2026:' are ringed. The Feb 3 line is kept honestly. Cues are verbatim on long line 55."
+  },
+  {
+   "id": "fri-deep-where-to-turn-it-up",
+   "keep": true,
+   "fix": "Relabel the Gemini strip '4' instead of a second '3', or give both right-hand crops '3a/3b', so each label is unique.",
+   "why": "I opened the PNG. It is readable. Each crop is real and matches its source: the slider list with Medium and High ringed in mint (evidence-v2 1.4 and 5.1); 'Free and Go users can use Think for harder questions.' (5.1); Claude's effort list with High ringed (P4-06); and Gemini's effort tip verbatim to P4-01. Cues are verbatim on long line 65. Caveat for the words, not the picture: P4-01's checker says it is unclear whether free Auto users get Gemini effort levels."
+  },
+  {
+   "id": "fri-call-85",
+   "keep": true,
+   "fix": "",
+   "why": "The card's call and '85%' are verbatim to draft-body-v5's OUR PREDICTION. The long cut's 'Wrong if...' line fairly condenses that section's own wording. The meter states 0 to 100% and that higher is surer. All cues are verbatim (long line 71, short line 11). On the long cut it ends about 39 s before the end, so it is clear of the 20 s end-screen reserve. On the short it sits in the last ~15 s, but Shorts carry no end-screen tiles and picture-plan-90s-v6 line 65 places it there."
+  },
+  {
+   "id": "fri-90-claude-model-menu",
+   "keep": true,
+   "fix": "Use Krish's own capture of the Claude app's model menu if he supplies one. Until then, the 1750x2985 page will not read in the 968x773 box (about 0.26x, body text about 10 px). Crop to the H1, 'Updated over a week ago' and the intro paragraph (original PNG y 0 to about 840). Then draw 'Model' at 'which Claude model you're chatting with' and 'Effort' at 'how much effort it puts into each response'. These are real words on the page, so labelling them is not an analogy.",
+   "why": "I opened the PNG. It is the right page (support.claude.com/en/articles/8664678, as P4-06 names) and sharp at full size. The page has no picture of the menu, which the capture note confirms. Cues are verbatim on short line 3. No car is drawn."
+  },
+  {
+   "id": "fri-90-claude-effort-list",
+   "keep": true,
+   "fix": "Crop to the 'Each model has a recommended effort level, marked as \"Default\" in the menu:' line and the four bullets (PNG y about 900-1475, full width) so the list fills the box. Highlight in the edit: 'Low' on '1st' and 'Medium' on '2nd' (both on one line, one word at a time), then 'High' on '3rd'.",
+   "why": "I opened the PNG. It is the real 'Choose an effort level' section, readable, with Low, Medium, High, Extra high and Max in the page's order, matching P4-06. Cues are verbatim on short line 3. Lighting the real levels for the ordinals shows the product, not a gearbox. As captured, the list sits in the bottom half and nothing is lit."
+  },
+  {
+   "id": "fri-90-chatgpt-thinking-setting",
+   "keep": true,
+   "fix": "Replace this soft, 1.48x-upscaled Firecrawl frame. The thinking section sits in its bottom third, under an unrelated GPT-6 rollout box. Use the same section, sharp, from the left panel of fri-deep-thinking-settings.png: the OpenAI 'Choose a thinking level' heading, paragraph and the Instant/Medium/High/Extra High/Pro list, original PNG x 0 to about 1456, y 0 to about 845. Put the 'You pick it' label on 'Use the Thinking slider to choose your effort.' Use Krish's own app capture instead if he supplies it.",
+   "why": "I opened the PNG. It is the right page, help.openai.com/articles/20001354 (evidence-v2 1.4 and 4.5), and readable at full size. But the slider line is small and low in the frame, and the text is soft. Cues are verbatim on short line 3."
+  },
+  {
+   "id": "fri-90-claude-scores",
+   "keep": true,
+   "fix": "In video-pictures/fri-90-claude-scores.html, change the sub-line 'Intelligence Index: 10 hard tests. Higher is better.' to 'Intelligence Index: 10 hard tests, scored 0 to 100. Higher is better.', then re-render the PNG. As drawn, the chart never states its scale, only 0-60 ticks.",
+   "why": "The values are 42 (Opus 5.5 Low, 42.3) and 51 (Opus 5 Max, 50.8), from P1-02 and its checker. Bars start at zero, the efforts are chips, the title is real, and no cars are drawn. Cues are verbatim on short line 7, after Sally (line 5). PLAIN_SCORES needs the scale on screen, and the post.json 'measures' field has it but the picture does not."
+  }
+ ],
+ "chapters_ok": false,
+ "chapter_fixes": "All seven start phrases are verbatim, both in docs/plans/2026-10-09-script-deep-v6.chapters.md and in docs/plans/2026-10-09-script-deep-v6.md (lines 1, 11, 17, 35, 43, 51, 61). They are in order. The first chapter starts with the script, which gives 00:00. The plan's seven titles are literal. The chapters file does not match them. Two titles there still carry the car analogy, and the chapter cards are on-screen pictures, so ANALOGY_IN_SCRIPTS_ONLY applies to them. Fix the chapters file: line 1 '- The name on the badge | starts: \"I've been using all the well-known\"' becomes '- Does the name matter? | starts: \"I've been using all the well-known\"'. Line 3 '- The gear that matters | starts: \"So what does matter? Picture\"' becomes '- The setting that matters | starts: \"So what does matter? Picture\"'. Lines 2 and 4-7 already match the plan."
+}
