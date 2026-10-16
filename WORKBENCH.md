@@ -649,6 +649,33 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 22:40 UTC: **Friday's videos: both takes are blocked, titles go to Krish first.**
+  - Krish: "The two videos are uploaded ... We now have a 15-minute episode and a 90-second video to
+    produce ... what you're going to do to 10x the production quality. Get going from here and create
+    my final publish board", with a post-production corpus, now `docs/production/one-shot-episode-corpus.md`
+    (the standard for every long episode). Then: "Just remember to run the title of the video and what
+    appears on the thumbnails, and pass it to me before production. We need to make these videos
+    irresistible and a little bit provocative." So nothing renders until he picks the YouTube title, the
+    Shorts title and the thumbnail words (`title_check.py verdict` for each); `cover-facts.json` is still
+    the first version's ("OpenAI tried to pick your AI for you", Google/OpenRouter/SemiAnalysis logos)
+    and gets his picks, the stand-off and the real Claude, ChatGPT and Gemini logos.
+  - **The 90-second take has no sound.** `recordings/7390d7d4...` ("Fri 16 Oct - 90-second - Soon you
+    won't pick your AI.mp4", 1:59, 1080x1920, uploaded 21:52 UTC) carries an audio track of digital
+    silence (-91 dB throughout) while he talks on camera with his DJI clip mic on, red light showing.
+    Not recorded on the piece; board item take-7390d7d48769 says why. Asked him for the mic's own
+    recording (a session syncs it to the picture by his mouth movement against the sound) or a new take.
+  - **The 15-minute take is not in the engine.** At about 100 MB a minute it is near 1.5 GB, over the
+    500 MiB the upload lane takes, and the main home computer has been silent since 22:14 UTC with
+    Drive unavailable. Either he exports it under 500 MiB (1080p at about 4 Mbps is about 450 MB for 15
+    minutes) and drops it in the Inbox, or a home computer produces the long cut from H:.
+  - This cloud machine renders: Python 3.12 venv at `.cache/py312` from `requirements.lock.txt` (the
+    3.13 system Python cannot take numpy 1.26.4), music fetched to `.cache/music`.
+  - Where the corpus and the house editor differ, for the long episode: make.py cuts every pause over
+    0.35 s (the corpus: protect the one-shot, cut only real dead air, hide repairs under a reframe);
+    the voice gets only a 70 Hz high-pass and loudness (the corpus: a gentle repair chain first); no
+    caption file is published separately; no chapter cards; the 4-second outro leaves no end-screen
+    space. Proposed to Krish as the production plan; nothing changed in the engine yet.
+
 - 2026-10-16, about 21:50 UTC: **Friday's scripts are Krish's own v6 edits, in Teleprompter as he
   wrote them.**
   - After the sign-off he re-edited both on the board (21:28 to 21:32 UTC; EDIT threads 974513e6,
