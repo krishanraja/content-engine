@@ -1,0 +1,39 @@
+{
+ "title": "OpenAI tried to pick your AI for you. It broke on day one.",
+ "subtitle": "ChatGPT and Claude now offer dozens of models. My bet is the menu disappears, and the choosing moves behind the counter. Here's what that does to money, to getting the job done, and to power.",
+ "date": "2026-10-16",
+ "kicker": "mind.the.gap",
+ "status": [
+  "Fact check passed on this exact text (22 claims)",
+  "Cover redrawn for the new angle",
+  "Both scripts approved and in Teleprompter",
+  "Waiting: recording, then the video cards for the new angle"
+ ],
+ "body": "body.md",
+ "words": "words.json",
+ "images": [
+  {
+   "id": "cover",
+   "file": "img/cover.png",
+   "role": "cover",
+   "alt": "OpenAI tried to pick your AI. Krish on the mind.the.gap cover, with OpenAI marked Router and Anthropic marked 12+ models",
+   "caption": "Drawn by the house cover drawer. Every word sits inside Substack's crops."
+  },
+  {
+   "id": "vertical",
+   "file": "img/cover-vertical.png",
+   "role": "vertical-cover",
+   "alt": "The vertical cover: Your AI, picked for you"
+  }
+ ],
+ "scripts": [
+  {
+   "label": "The 3-minute video",
+   "file": "script-long.md"
+  },
+  {
+   "label": "The 90-second cut",
+   "file": "script-90s.md"
+  }
+ ]
+}

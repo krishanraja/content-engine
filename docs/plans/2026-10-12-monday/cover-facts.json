@@ -1,0 +1,50 @@
+{
+ "subchannel": "follow.the.money",
+ "title": "Who gets paid when a fan makes a song with AI?",
+ "headline": "Who gets paid when a fan makes a song with AI?",
+ "date": "2026-10-12",
+ "cover": {
+  "headline": [
+   "A fan's AI song.",
+   "Who gets paid?"
+  ],
+  "rows": [
+   {
+    "logo": "logos/suno-logo-cream.svg",
+    "name": "Suno",
+    "tag": "Pays",
+    "colour": "butter"
+   },
+   {
+    "logo": "logos/cover-partners-cream.svg",
+    "name": "Warner Music Group and BMG",
+    "tag": "Paid",
+    "colour": "mint"
+   },
+   {
+    "logo": "logos/cover-suing-cream.svg",
+    "name": "Sony Music and Universal Music Group",
+    "tag": "Suing",
+    "colour": "coral"
+   }
+  ],
+  "background": "pileup-bg.png",
+  "portrait": true
+ },
+ "thumbs": {
+  "strip": [
+   {
+    "logo": "logos/believe-logo-cream.svg",
+    "name": "Believe"
+   },
+   {
+    "logo": "logos/udio-logo-cream.svg",
+    "name": "Udio"
+   },
+   {
+    "logo": "logos/elevenlabs-logo-cream.svg",
+    "name": "ElevenLabs"
+   }
+  ]
+ }
+}

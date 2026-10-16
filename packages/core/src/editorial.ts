@@ -169,6 +169,30 @@ export function storyArcIssues(script: string): string[] {
   return issues
 }
 
+/**
+ * The on-camera voice check (Krish, 2026-10-09; house rule VOICE_ON_CAMERA): "making my scripts for video have more
+ * personality and opinion ... Self deprecating dry wit, sarcasm, exaggeration, analogy". A rule cannot grade a joke, so
+ * this checks the one marker it can see: a script of a minute or more says an opinion as an opinion ("my bet",
+ * "I think", "my call"), kept apart from the checked facts. It is a soft block: the writer and the judges carry the
+ * rest of the rule, and a reader decides whether the wit landed.
+ */
+export const VOICE_NO_OPINION = 'the script states no opinion as an opinion: somewhere say "my bet", "I think" or "my call", kept apart from the checked facts, so the listener knows which is which'
+
+const VOICE_OPINION_MARKER = /\b(?:my (?:bet|call|take|guess)|i think|i reckon|i'd bet|i would bet|if you ask me|i'm not convinced|i am not convinced|i don't buy|here's where i land)\b/i
+
+// House rule NO_AI_DISCLOSURE_LINE (Krish, 2026-10-12): "Eliminate the "I made this
+// with AI" entirely - no need, it's like verbal diahorrea", then "correct,
+// make that a rule". scripts/post-pack/story_check.py AI_LINE is the same.
+export const VOICE_AI_LINE = 'the script says it was made with AI or with Claude: cut the line (house rule NO_AI_DISCLOSURE_LINE)'
+const AI_LINE_MARKER = /\b(?:i|we)(?:'ve| have)?\s+(?:\w+\s+){0,2}?(?:made|make|wrote|written|write|built|build|researched|produced|created)\s+(?:all\s+of\s+)?(?:this|the\s+(?:video|script|piece|article|publication|newsletter))\b[^.!?]{0,40}?\b(?:with|using|thanks\s+to)\b[^.!?]{0,30}?\b(?:claude|chatgpt|an?\s+ai|ai|a\s+model|an\s+llm)\b|\bthis\s+(?:video|script|piece|article|publication|newsletter)\s+(?:was|is)\s+(?:made|written|built|produced)\s+(?:with|by|using)\s+(?:the\s+help\s+of\s+)?(?:claude|chatgpt|an?\s+ai|ai)\b/i
+
+export function voiceOnCameraIssues(script: string): string[] {
+  const issues = AI_LINE_MARKER.test(script) ? [VOICE_AI_LINE] : []
+  const words = script.split(/\s+/).filter(Boolean)
+  if (words.length < STORY_OUTRO_FROM_WORDS) return issues
+  return VOICE_OPINION_MARKER.test(script) ? issues : [VOICE_NO_OPINION, ...issues]
+}
+
 export function normalizeSpokenToken(value: string): string {
   return value.toLowerCase().replace(/[’]/g, "'").replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, '')
 }
@@ -402,6 +426,7 @@ export function validateEditorialCandidate(candidate: CandidateV1, transcript: T
   softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
   // A recorded cut keeps what was said, so its story is reported for review rather than refused.
   softBlocks.push(...storyArcIssues(plan.caption_script))
+  softBlocks.push(...voiceOnCameraIssues(plan.caption_script))
   const openingContract = openingContractIssues(candidate, thresholds, opening, true)
   hardBlocks.push(...openingContract.hard_blocks)
   softBlocks.push(...openingContract.soft_blocks)
@@ -436,6 +461,7 @@ export function validateShortNativeEditorialCandidate(candidate: CandidateV1, th
   if (presenterName?.toLowerCase() === 'krish' && /\bchris\b/i.test(`${candidate.transcript} ${candidate.hook} ${candidate.payoff}`) && !declaredNonPresenterChris) hardBlocks.push('unresolved identity mention: the verified presenter is Krish; declare a real guest or subject named Chris explicitly')
   if (candidate.transcript.split(/\s+/).length > 180) softBlocks.push('short-native script may exceed the intended short-form duration; verify delivery time before recording')
   hardBlocks.push(...storyArcIssues(candidate.transcript))
+  softBlocks.push(...voiceOnCameraIssues(candidate.transcript))
   softBlocks.push(...editorialPreferenceIssues(candidate, preferences))
   const openingContract = openingContractIssues(candidate, thresholds, opening, false)
   hardBlocks.push(...openingContract.hard_blocks)

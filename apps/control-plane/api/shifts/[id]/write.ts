@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import { guardEngine } from '../../_auth.js'
-import { sanitizeVoice } from '../../_content.js'
+import { isUnregisteredSource, sanitizeVoice } from '../../_content.js'
 
 // POST /api/shifts/:id/write
 //
@@ -9,6 +9,12 @@ import { sanitizeVoice } from '../../_content.js'
 // seeded with the dossier. Creates one evergreen content_ideas row whose
 // materials are the shift's dated evidence, so every generation grounds in
 // the receipts. Returns the new idea id for the deep link.
+//
+// Its source is 'shift_write', never 'manual': manual means words Krish said
+// (GET /api/week/options reports a manual row as an idea he dropped in). The
+// intake_sources row is supabase/migrations/20261021080000_honest_sources.sql,
+// live since 2026-10-13, so the old fallback to 'manual' is gone (step 3,
+// PR 6).
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (guardEngine(req, res)) return
@@ -42,7 +48,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .insert({
       idea: sanitizeVoice(shift.title),
       thesis: sanitizeVoice(shift.summary),
-      source_type: 'manual',
+      source_type: 'shift_write',
       source_ref: `shift:${shift.slug}`,
       source_snippet: sanitizeVoice(shift.implication),
       source_captured_at: new Date().toISOString(),
@@ -54,6 +60,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
     .select('id')
     .single()
+
+  if (insErr && isUnregisteredSource(insErr)) return res.status(500).json({ ok: false, error: 'source_type_not_registered', detail: { source_type: 'shift_write' } })
   if (insErr || !idea) return res.status(500).json({ ok: false, error: insErr?.message || 'insert failed' })
 
   return res.json({ ok: true, idea_id: idea.id })

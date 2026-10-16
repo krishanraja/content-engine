@@ -20,7 +20,32 @@ one Drive folder would leave "name (2)" copies; this writes nothing to Drive.
 
 It only reads the Inbox: it never writes, moves, renames or deletes anything
 there. Its log and state (recordings.json: name, size and time to sha256, for
-what this machine has sent) are in Documents\MindmakeVideoStudio\recordings-upload.
+what this machine has sent; placing.json: the takes a piece holds and when to
+look again at the others) are in Documents\MindmakeVideoStudio\recordings-upload.
+
+At the end of every pass it also places the takes, on either machine (Krish,
+2026-10-12: each recording "goes to the right place when recorded"). When the
+engine holds a take that no piece claims and that the answered book
+(.cache\recordings\answered.json in this copy, kept by the matcher) does not
+hold, it runs, with the pinned Python that scripts\bootstrap-python.ps1 builds:
+
+  scripts\post-pack\recording_match.py --record --board --by "Recordings lane" --json
+
+which hears each new take, records each sure match on its piece and cut,
+stamped with the hash of the script it was read from, and asks Krish once on
+the board about each take it is unsure of. Which takes a piece claims, it learns
+from the matcher's own answer; a take no piece was waiting for is looked at
+again an hour later, and one the matcher left alone as older than every
+waiting piece six hours later (a piece may start waiting for it). A problem
+placing takes never stops the sending. It needs the engine key
+(scripts\engine-key.ps1) and faster_whisper in the pinned Python, able to
+decode sound (recording_match.py --check-transcriber); -Check proves both.
+
+-Check exits 0 when this machine sends and places, 1 when it cannot send
+(no Inbox, the runner key refused, the engine down), and 3 when it sends but
+cannot place takes yet (no pinned Python, a transcriber that cannot decode,
+no ffmpeg, no engine key), naming which. install-recordings-upload.ps1
+installs on 3 and says so, since the other machine places takes meanwhile.
 
 The Inbox is MINDMAKE_MEDIA_INBOX, else runtime.media_inbox in
 config/studio.json, else the Drive root's Inbox folder. The engine's address is
@@ -28,7 +53,7 @@ ENGINE_BASE_URL, else the one scripts/engine.py uses. It authenticates with the
 runner's own bearer, read from Windows Credential Manager through
 scripts/get-credential.ps1 exactly as the runner reads it, and never shows it.
 
-  powershell -NoProfile -ExecutionPolicy Bypass -File scripts\recordings-upload.ps1 -Check   what it would send, sending nothing
+  powershell -NoProfile -ExecutionPolicy Bypass -File scripts\recordings-upload.ps1 -Check   what it would send and place, sending and placing nothing
   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\recordings-upload.ps1          one pass
   powershell -NoProfile -ExecutionPolicy Bypass -File scripts\recordings-upload.ps1 -Loop    a pass every five minutes (the scheduled task)
 
@@ -56,11 +81,26 @@ $RecordingExtensions = @('.mp4', '.mov', '.m4a', '.wav', '.mp3', '.mkv', '.webm'
 $RecordingMaxBytes = 524288000  # 500 MiB, the bucket's cap
 $RecordingSettleSeconds = 120
 $PassBudget = [TimeSpan]::FromMinutes(25)
+# Placing takes: the pinned Python scripts\bootstrap-python.ps1 builds (it
+# holds faster_whisper), the matcher, who it writes as, and the book of takes
+# it has asked about or left alone (recording_match.py, ANSWERED).
+$StudioPython = Join-Path $env:USERPROFILE 'Documents\MindmakeVideoStudio\runtime\python\Scripts\python.exe'
+$Matcher = Join-Path $RepoRoot 'scripts\post-pack\recording_match.py'
+$Lister = Join-Path $RepoRoot 'scripts\post-pack\recording.py'
+$MatchBy = 'Recordings lane'
+$AnsweredPath = Join-Path $RepoRoot '.cache\recordings\answered.json'
+$NoPieceRetryMinutes = 60   # a take no piece was waiting for: looked at again an hour later
+$FailedRetryMinutes = 15    # a take the matcher could not hear or record: tried again after a quarter of an hour
+$OldRetryMinutes = 360      # a take older than every waiting piece: looked at again six hours later, never booked for good
 
 if (-not $StateRoot) { $StateRoot = Join-Path $env:USERPROFILE 'Documents\MindmakeVideoStudio\recordings-upload' }
 $StateRoot = [System.IO.Path]::GetFullPath($StateRoot)
 $LogPath = Join-Path $StateRoot 'recordings-upload.log'
 $StatePath = Join-Path $StateRoot 'recordings.json'
+$PlacingStatePath = Join-Path $StateRoot 'placing.json'
+$script:LastPlacingNote = ''
+$script:PlacingNotReady = ''
+$script:PassSent = $true
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 Add-Type -AssemblyName System.Net.Http
@@ -92,7 +132,8 @@ function Get-Field($Object, [string]$Name) {
 }
 
 function Save-JsonFile([string]$Path, $Value) {
-  # Only ever called with $StatePath, beside the log: never anywhere in Drive.
+  # Only ever called with $StatePath or $PlacingStatePath, beside the log:
+  # never anywhere in Drive.
   [void][System.IO.Directory]::CreateDirectory($StateRoot)
   $temporary = "$Path.tmp"
   [System.IO.File]::WriteAllText($temporary, ($Value | ConvertTo-Json -Depth 6), (New-Object System.Text.UTF8Encoding($false)))
@@ -339,27 +380,222 @@ function Sync-Recordings([string]$Inbox, [string]$Base, [string]$Token) {
   return $result
 }
 
+# ---- placing each take on its piece and cut ----------------------------------
+
+function Invoke-StudioPython([string[]]$Arguments) {
+  # The pinned Python, with these arguments. Returns @{ code; out; err }: what
+  # it printed, and what it said on stderr apart. Under Continue, because
+  # Windows PowerShell turns a line on stderr into an error under Stop. The
+  # engine key never passes through here: scripts\engine.py reads it itself.
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    $lines = @(& $StudioPython @Arguments 2>&1)
+    $code = $LASTEXITCODE
+  } finally { $ErrorActionPreference = $previous }
+  $out = @($lines | Where-Object { $_ -isnot [System.Management.Automation.ErrorRecord] } | ForEach-Object { [string]$_ })
+  $err = @($lines | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] } | ForEach-Object { $_.Exception.Message })
+  return @{ code = $code; out = ($out -join "`n"); err = (($err -join ' ').Trim()) }
+}
+
+function Write-PlacingNote([string]$Message) {
+  # A problem placing takes, logged once until it changes, so a machine
+  # without the engine key does not log the same line every five minutes.
+  if ($Message -eq $script:LastPlacingNote) { return }
+  $script:LastPlacingNote = $Message
+  Write-Log $Message
+}
+
+function Test-TakePlacing {
+  # For -Check: what placing takes needs on this machine. The pinned Python,
+  # faster_whisper inside it decoding a second of sound (an import alone
+  # proves nothing: an unpinned pair imports and then fails on every take),
+  # ffmpeg, and the engine key, proved by listing the engine's recordings
+  # with it. Throws, naming which one is missing.
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) {
+    throw "the pinned Python is not on this machine ($StudioPython), so takes cannot be placed here. Run npm run bootstrap:python in a copy of the repository (docs\OPERATIONS.md)."
+  }
+  $whisper = Invoke-StudioPython @($Matcher, '--check-transcriber')
+  if ($whisper.code -ne 0) {
+    throw "the pinned Python's faster_whisper cannot hear takes here ($($whisper.out)). Run npm run bootstrap:python in a copy of the repository (docs\OPERATIONS.md)."
+  }
+  if ($null -eq (Get-Command ffmpeg.exe -ErrorAction SilentlyContinue)) {
+    throw 'ffmpeg is not on the PATH, so takes cannot be heard here.'
+  }
+  $listing = Invoke-StudioPython @($Lister, 'list', '--json')
+  if ($listing.code -ne 0) {
+    throw "the engine key could not list the recordings ($($listing.err)). Run scripts\engine-key.ps1 once on this machine (WORKBENCH.md, Pick up from any tool)."
+  }
+}
+
+function Get-EngineTakes {
+  # The sha256 of every take the engine holds, on the engine key
+  # (recording.py list --json). Throws with the reason when it cannot.
+  $listing = Invoke-StudioPython @($Lister, 'list', '--json')
+  if ($listing.code -ne 0) { throw "the recordings could not be listed: $($listing.err)" }
+  $parsed = $listing.out | ConvertFrom-Json
+  $takes = @{}
+  foreach ($item in @($parsed)) {
+    $sha = [string](Get-Field $item 'sha256')
+    if ($sha -match '^[0-9a-f]{64}$') { $takes[$sha] = $true }
+  }
+  return $takes
+}
+
+function Read-PlacingState {
+  # claimed: the takes a piece holds, as the matcher last showed. later: when
+  # to look again at a take no piece was waiting for, or one that failed.
+  $saved = Read-JsonFile $PlacingStatePath
+  $state = @{ claimed = @{}; later = @{} }
+  foreach ($section in @('claimed', 'later')) {
+    $value = Get-Field $saved $section
+    if ($null -eq $value) { continue }
+    foreach ($property in $value.PSObject.Properties) { $state[$section][$property.Name] = [int64]$property.Value }
+  }
+  return $state
+}
+
+function Invoke-TakePlacing {
+  # Runs the matcher only when the engine holds a take that no piece claims,
+  # that the answered book does not hold, and that is not waiting for a later
+  # look. Returns $true when nothing failed.
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) {
+    Write-PlacingNote "takes are not placed from this machine: the pinned Python is not at $StudioPython (npm run bootstrap:python). The other machine still places them."
+    return $false
+  }
+  $takes = Get-EngineTakes
+  $answered = @{}
+  $book = Read-JsonFile $AnsweredPath
+  if ($null -ne $book) { foreach ($property in $book.PSObject.Properties) { $answered[$property.Name] = $true } }
+  $state = Read-PlacingState
+  $now = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+  $unknown = @($takes.Keys | Where-Object { -not $answered.ContainsKey($_) -and -not $state.claimed.ContainsKey($_) })
+  $due = @($unknown | Where-Object { -not $state.later.ContainsKey($_) -or $state.later[$_] -le $now })
+  if ($due.Count -eq 0) { return $true }
+  if ($Check) {
+    Write-Log "Checking only: nothing is placed. $($due.Count) take(s) the engine holds are on no piece and in no answer yet; a pass would run the matcher on them."
+    return $true
+  }
+  $run = Invoke-StudioPython @($Matcher, '--record', '--board', '--by', $MatchBy, '--json')
+  $report = $null
+  try { $report = $run.out | ConvertFrom-Json } catch { }
+  # Get-Field would give an empty list back as nothing, so ask for the property itself.
+  if ($null -eq $report -or $null -eq $report.PSObject.Properties['files']) {
+    Write-PlacingNote "takes were not placed: the matcher stopped ($($run.code)): $($run.err)"
+    return $false
+  }
+  $script:LastPlacingNote = ''
+  foreach ($line in @(Get-Field $report 'lines')) { if ($line) { Write-Log "match: $line" } }
+  # What the matcher said about each take it looked at, by sha256.
+  $looked = @{}
+  foreach ($file in @(Get-Field $report 'files')) {
+    $sha = [string](Get-Field $file 'sha256')
+    if ($sha) { $looked[$sha] = [string](Get-Field $file 'status') }
+  }
+  $claimed = @{}
+  $later = @{}
+  if (@(Get-Field $report 'waiting').Count -gt 0) {
+    # A piece was waiting, so the matcher looked at every take no piece holds:
+    # a take it did not look at is one a piece holds.
+    foreach ($sha in $takes.Keys) { if (-not $looked.ContainsKey($sha)) { $claimed[$sha] = $now } }
+  } else {
+    foreach ($sha in $unknown) { $later[$sha] = $now + 60 * $NoPieceRetryMinutes }
+  }
+  foreach ($recorded in @(Get-Field $report 'recorded')) {
+    $match = [regex]::Match([string](Get-Field $recorded 'path'), '[0-9a-f]{64}')
+    if ($match.Success) { $claimed[$match.Value] = $now }
+  }
+  foreach ($sha in $looked.Keys) {
+    if ($looked[$sha] -eq 'failed') { $later[$sha] = $now + 60 * $FailedRetryMinutes }
+    elseif ($looked[$sha] -eq 'old') { $later[$sha] = $now + 60 * $OldRetryMinutes }
+  }
+  # Only the takes the engine still holds are kept, so the state stays small.
+  foreach ($sha in $state.claimed.Keys) { if ($takes.ContainsKey($sha) -and -not $claimed.ContainsKey($sha)) { $claimed[$sha] = $state.claimed[$sha] } }
+  Save-JsonFile $PlacingStatePath ([ordered]@{ claimed = $claimed; later = $later })
+  $placed = @(Get-Field $report 'recorded').Count
+  $asked = @(Get-Field $report 'asked').Count
+  $ended = @(Get-Field $report 'closed').Count
+  Write-Log "placed and recorded $placed take(s) on their piece; held $asked question(s) on the board for a session and closed $ended (the matcher answered $($run.code))"
+  return ($run.code -ne 1)
+}
+
+# ---- a pass: send, then place --------------------------------------------------
+
 function Invoke-Pass {
+  # One pass: every finished recording sent to the engine, then every take no
+  # piece holds yet placed on its piece and cut. A problem with one never
+  # stops the other. Returns $true when both went through.
+  $sent = $true
   $config = Get-StudioConfig
   $inbox = Resolve-MediaInbox $config
   if (-not $inbox) {
     Write-Log 'no Inbox is set (MINDMAKE_MEDIA_INBOX, or runtime.media_inbox or drive_root in config\studio.json); nothing to send'
-    return (-not $Check)
-  }
-  if (-not (Test-Path -LiteralPath $inbox -PathType Container)) {
+    $sent = (-not $Check)
+  } elseif (-not (Test-Path -LiteralPath $inbox -PathType Container)) {
     Write-Log "the Inbox $inbox cannot be reached. Check that Google Drive is running and signed in."
-    return $false
+    $sent = $false
+  } else {
+    $base = Resolve-EngineUrl
+    $token = Get-RunnerToken
+    if ($Check) {
+      $probe = New-HttpClient ([TimeSpan]::FromMinutes(2))
+      try { Test-Engine $probe $base $token } finally { $probe.Dispose() }
+      Write-Log "Checking only: nothing is sent. Inbox: $inbox. The engine accepts this machine's runner key."
+    }
+    $result = Sync-Recordings $inbox $base $token
+    if ($result.sent -gt 0 -or $result.failed -gt 0) { Write-Log "sent or listed $($result.sent) recording(s); $($result.failed) could not be sent and will be tried again" }
+    $sent = ($result.failed -eq 0)
   }
-  $base = Resolve-EngineUrl
-  $token = Get-RunnerToken
+  $script:PassSent = $sent
   if ($Check) {
-    $probe = New-HttpClient ([TimeSpan]::FromMinutes(2))
-    try { Test-Engine $probe $base $token } finally { $probe.Dispose() }
-    Write-Log "Checking only: nothing is sent. Inbox: $inbox. The engine accepts this machine's runner key."
+    # Placing is checked on its own: a machine that cannot place takes yet
+    # still sends (exit 3, which the installer installs past).
+    try {
+      Test-TakePlacing
+      Write-Log 'The pinned Python hears takes and the engine key lists them: this machine places takes on their piece and cut.'
+    } catch {
+      $script:PlacingNotReady = $_.Exception.Message
+      Write-Log "Placing takes is not ready on this machine: $($script:PlacingNotReady) Sending is not affected."
+    }
   }
-  $result = Sync-Recordings $inbox $base $token
-  if ($result.sent -gt 0 -or $result.failed -gt 0) { Write-Log "sent or listed $($result.sent) recording(s); $($result.failed) could not be sent and will be tried again" }
-  return ($result.failed -eq 0)
+  $placed = $true
+  if ($Check -and $script:PlacingNotReady) { $placed = $false }
+  else {
+    try { $placed = Invoke-TakePlacing }
+    catch {
+      Write-PlacingNote "takes were not placed this pass: $($_.Exception.Message)"
+      $placed = $false
+    }
+  }
+  if (-not $Check) {
+    # The licensed music goes to the engine's library too, so any machine
+    # that renders (GitHub's, a cloud session) has it without H: (Krish,
+    # 2026-10-12: "the audio is literally in the drive"). A file the library
+    # holds already is left alone; a problem here never stops a pass.
+    try { Publish-Music } catch { Write-Log "the music was not published this pass: $($_.Exception.Message)" }
+    # The style references Krish drops in Video Engine > Inspiration go to
+    # the library too, so any session can study them (docs/STYLE_REFERENCES.md;
+    # Krish, 2026-10-14: "a folder where I can put videos that I really like
+    # ... so that you can learn from them"). Never a reason to fail a pass.
+    try { Publish-References } catch { Write-Log "the style references were not published this pass: $($_.Exception.Message)" }
+  }
+  return ($sent -and $placed)
+}
+
+function Publish-Music {
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
+  $music = Join-Path $RepoRoot 'scripts\quick-edit\music.py'
+  $run = Invoke-StudioPython @($music, 'publish')
+  if ($run.code -ne 0) { Write-Log "music publish: $($run.err) $($run.out)"; return }
+  if ($run.out -match 'sent\s+1 Brand kit' -or $run.out -match '[1-9]\d* sent') { Write-Log "music published: $($run.out -replace "`n", ' | ')" }
+}
+
+function Publish-References {
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
+  $references = Join-Path $RepoRoot 'scripts\quick-edit\references.py'
+  $run = Invoke-StudioPython @($references, 'publish')
+  if ($run.code -ne 0) { Write-Log "style references publish: $($run.err) $($run.out)"; return }
+  if ($run.out -match '"sent":\s*[1-9]') { Write-Log "style references published: $($run.out -replace "`n", ' | ')" }
 }
 
 function Update-Source {
@@ -392,7 +628,9 @@ if (-not $owned) {
 try {
   if (-not $Loop) {
     try {
-      if (Invoke-Pass) { exit 0 } else { exit 1 }
+      $ok = Invoke-Pass
+      if ($Check -and $script:PlacingNotReady -and $script:PassSent) { exit 3 }
+      if ($ok) { exit 0 } else { exit 1 }
     } catch {
       Write-Log "recordings upload stopped: $($_.Exception.Message)"
       exit 1

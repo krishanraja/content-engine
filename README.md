@@ -23,11 +23,22 @@ published yet. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | understand how the pieces fit, or who owns what | `docs/SYSTEM_MAP.md` |
 | design how a piece looks, sounds or moves, on any surface | `docs/CREATIVE_IDENTITY_UPGRADE.md` |
 | make a piece's web page, the copy that pastes into Substack and its cover image, or check that its artwork can be read on a phone | `scripts/pages/README.md` |
-| make the YouTube banner, watermark and channel description | `scripts/channel-kit/README.md` |
+| make the YouTube banner, watermark and channel description, the profile pictures, the Facebook cover, the X header or the Instagram highlight covers | `scripts/channel-kit/README.md` |
+| see what each social profile carries (YouTube, Instagram, Facebook, Krish's TikTok and X) and what is left on them | `docs/AMPLIFICATION.md`, "The profiles every link lands on" |
 | put a post's assets, the brand kit or the channel art into Krish's asset library on Drive | `scripts/post-pack/README.md` |
 | use or change any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |
 | put anything in Google Drive, or move, rename or tidy a Drive folder | `docs/DRIVE.md` |
 | write a one-off script for the main channel, outside the three subchannels | `docs/one-offs/README.md` |
+| use an outside tool on a post, or record what one added | `docs/TOOL_BANK.md` |
+| reach a service (which are live, their secret names, what to rotate) | `docs/INTEGRATIONS.md` |
+| see every plausible way a tool could make the content far better | `docs/ENGINE_100X.md` |
+| run the week: plan all three pieces on Sunday, make Monday's the same day, Wednesday and Friday when Krish starts them; the standing answers (two cuts, the channels) | `docs/CADENCE.md` |
+| publish a finished post to every channel, from Drive (one Substack video post, then the rest) | `docs/AMPLIFICATION.md` |
+| read a free public signal: prediction-market odds, news velocity, Hacker News, SEC filings | `scripts/signals/README.md` |
+| pin a Call to a prediction market, or read the scoreboard feed | `docs/CONTENT_ENGINE.md`, `/api/content-ideas/[id]/call-market` and `/api/calls` |
+| treat Spotify as a channel: the show, the audio editions, the sizes | `docs/SPOTIFY.md` |
+| learn from the videos Krish likes, or apply a style recipe to a piece | `docs/STYLE_REFERENCES.md` |
+| see every failure Krish has raised and the guard that now stops it | `python3 scripts/check_failures.py` (`config/failures.json`) |
 | know what works, what is broken and what waits on Krish | `docs/STATE.md` |
 
 The asset library is Krish's instruction of 2026-10-06 ("I want every single

@@ -5,6 +5,34 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-15
+
+- reconciled at `1bc3161`: NOW.md takes Friday v3 and the board's draft-day build, the editable and commentable board with saves posted as comments, the free fact-check pre-check, and the move of the steward and of the wordmark fallback after control-center went private. README.md, CONTENT_ENGINE.md, STATE.md, SYSTEM_MAP.md, GLOSSARY.md, NORTH_STAR.md and STUDIO.md keep their 2026-09-25 stamps because the steward did not check them against this window; NOW.md "Do not trust" still names them.
+
+## 2026-10-14
+
+- rolled from NOW.md: 2026-09-13 **Production as station harnesses** (PR #69). Ruling (Krish, 2026-09-13): "production machinery must use independently governed station harnesses, not one accumulating Markdown file."
+- reconciled at `4431eed`: NOW.md takes the failure register and its guards, ONE_SPINE and DEEP_CUT, the style bank and reference folder, Spotify as a channel, the dropped Notes and WhatsApp, growth leaving for its own repository, the engine-built two-link board and the silent Download failure; README gains rows for Spotify and the style bank. No document moved and none was archived; the five stamped 2026-09-25 documents were not checked against this window and stay on NOW.md's "Do not trust" list.
+
+## 2026-10-13
+
+- reconciled at `ce0b205`: NOW.md takes the day's 65 commits (`manual` as Krish's own words, honest sources, the one board closer and its applied migrations, the rejected-lines ledger and voice and AI-scan gates, Wednesday and Friday re-angled, the story intro fit check and `video_card.py`). The three unapplied migrations are named as waiting on Krish. No bullet was old enough to roll and no document moved. STATE, SYSTEM_MAP, GLOSSARY, NORTH_STAR, STUDIO, CONTENT_ENGINE and README keep their stamps, because their bodies were not checked against this window; NOW.md names them under Do not trust.
+- reconciled at `1e2b053`: NOW.md takes the 12 October work (midday GitHub video run and music bed, Teleprompter replacing Descript with the hard reading gate, five covers per post, the board's readiness rule and its four unapplied migrations, ARTICLE_LENGTH and SHARP_PREDICTION). No bullet was old enough to roll. Stamps on STATE, SYSTEM_MAP, GLOSSARY, NORTH_STAR and STUDIO were not bumped because their bodies were not checked against the window; NOW.md names them under Do not trust.
+
+## 2026-10-11
+
+- reconciled at `cf66032`: NOW.md takes the single Sunday plan for the week (`/api/week/options`, the `plan-week` skill, TWO_CUTS), which supersedes the Sunday, Tuesday and Thursday slates of 2026-10-10, the two cuts and five standing channels, the hourly `publish_watch` job that closes board items (cron count 22 to 23, read from `apps/control-plane/vercel.json`), the move of video production to Codex, the purge and `week_research` fixes, and the CI repair. The commits already reconciled `docs/CADENCE.md`, `docs/CONTENT_ENGINE.md`, `docs/AMPLIFICATION.md`, `docs/OPERATIONS.md`, `docs/STUDIO.md`, `README.md` and `WORKBENCH.md`; this run did not re-verify them or bump their stamps. `docs/STATE.md`, `docs/SYSTEM_MAP.md` and `docs/GLOSSARY.md` keep their 2026-09-25 stamps and are named in "Do not trust". No document moved. The repeated `SKILL.md`, `STATION.md` and dated `draft-*` basenames are per-skill, per-station and per-day by convention, not duplicates.
+
+## 2026-10-10
+
+- reconciled at `31efbf4`: NOW.md takes the visual gate and publish manager, the making record and the make-piece routine, and the weekly rhythm ruled in `docs/CADENCE.md`; no document moved and none was archived.
+- reconciled at `f77d316`: NOW.md takes Friday's passed fact check, the BIG_PICTURE, SCRIPT_ONLY and HOOK_AND_CTA house rules, the publish page and amplification plan, the Call scoreboard and news velocity crons, and the network-secret route for cloud sessions; cron count 20 to 22.
+- rolled from NOW.md: 2026-09-08 **The content engine moved into this repository** (PR #42, ADR-019 in control-center). Why: Control Center kept the desk and gave the machinery to its own project; the routes, crons and guards now deploy from here.
+
+## 2026-10-08
+
+- reconciled at `09f316b`: NOW.md takes the Right, Wrong, Too close to call wording, the picture edge check, the logo on tall videos with the caption mishearing fixes, and the move of makeyourmindup to its own venture folder in Drive. `docs/STATE.md`, `docs/STUDIO.md`, `docs/SYSTEM_MAP.md`, `docs/GLOSSARY.md` and `docs/NORTH_STAR.md` keep their 2026-09-25 stamps; their bodies were not re-checked.
+
 ## 2026-10-06
 
 - reconciled at `2651635`: NOW.md takes the story check (house rules FOR_THE_EAR and STORY_ARC, `story_check.py`, `storyArcIssues` in the Studio script station, walk log F75), the recordings lane, the quick-edit restart and memory fixes, the one-off scripts and the Drive map. `docs/STATE.md`, `docs/STUDIO.md`, `docs/SYSTEM_MAP.md`, `docs/GLOSSARY.md` and `docs/NORTH_STAR.md` keep their 2026-09-25 stamps: their bodies were not re-read against these commits, and NOW.md says so. `WORKBENCH.md` still says in its standing section that the recordings lane is not running until Krish installs it; its own latest handoff says he did.

@@ -37,7 +37,7 @@
     },
     "treatment_lanes": ["restrained", "premium", "experimental"],
     "default_lane": "premium",
-    "normal_duration_ms": { "minimum": 20000, "maximum": 60000 },
+    "normal_duration_ms": { "minimum": 20000, "maximum": 90000 },
     "cloud": {
       "policy": "local_first_exact_clip_only",
       "default_job_ceiling_gbp": 15,
@@ -85,10 +85,11 @@
     "promise_match_min_terms": 1
   },
   "runtime": {
-    "drive_root": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine",
-    "media_inbox": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Inbox",
-    "archive_root": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\Video Engine\\Archive",
-    "library_root": "H:\\My Drive\\Ventures\\Active\\Mindmaker\\04_Content\\makeyourmindup"
+    "drive_root": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine",
+    "media_inbox": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Inbox",
+    "archive_root": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Archive",
+    "library_root": "H:\\My Drive\\Ventures\\Active\\makeyourmindup",
+    "music_root": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\00_Brand-Assets\\07_Music"
   },
   "radar_providers": {
     "mm_ctrl_url": "https://bkyuxvschuwngtcdhsyg.supabase.co/functions/v1/video-radar-export",
@@ -376,7 +377,7 @@
             "under_the_hood": { "day": "Wednesdays", "sticker": "Screwdriver included", "promise": "Free from jargon", "question": "What actually goes together in a shipped thing, and why did this one work?" },
             "mind_the_gap": { "day": "Fridays", "sticker": "The headliner", "promise": "Every call scored in public", "question": "What is the pattern, and what does it mean is coming?" }
           },
-          "copy": { "site": "makeyourmindup.ai", "call_kicker": "The call", "call_headline": "Our call.", "call_footnote": "On the day, we mark it held, broke or unclear. Misses go up as big as hits.", "question_kicker": "The question", "cover_call_sticker": "Swipe for the call", "thumbnail_call_sticker": "Our call, dated" }
+          "copy": { "site": "makeyourmindup.ai", "call_kicker": "The call", "call_headline": "Our call.", "call_footnote": "On the day, we mark it right, wrong or too close to call. The wrong ones go up as big as the right ones.", "question_kicker": "The question", "cover_call_sticker": "Swipe for the call", "thumbnail_call_sticker": "Our call, dated" }
         }
       }
     }

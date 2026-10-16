@@ -1,0 +1,251 @@
+{
+ "_about": "Krish's verdicts on titles, and what each teaches. Every title a reader sees first (article, YouTube, Shorts, cover, video title card, card headings) is written against these, offered to Krish as a few options, and used only once he has picked it: scripts/post-pack/title_check.py refuses an asset whose title has no 'picked' verdict here. Record a verdict with `title_check.py verdict`. Krish, 2026-10-14: 'figure out why I dislike it, and iterate, and understand what I actually like, and then encode that into the system forever.'",
+ "lessons": [
+  {
+   "lesson": "First person beats explaining: put Krish in it (I tried, I tested, I scored).",
+   "from": "A2 picked over B, C and D; 'It should be personal ... It could be first person'",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "A question in the middle makes the reader answer before the reveal ('Its rival?').",
+   "from": "A2 picked over A1, A3, A4",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "The payoff points at the reader ('your pocket'), not at the companies.",
+   "from": "'I like both elements' (the first person and the pocket line)",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Short, with the surprise last. Giving the answer early (a score, a tie) kills it.",
+   "from": "A2 picked over A3 ('It's a draw') and A4 ('Siri tied it')",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "A reveal that flips what people assume works; a straw man that denies what nobody said does not.",
+   "from": "'Muse's real rival: Siri.' liked; 'Muse vs ChatGPT isn't a fair fight' called dumb",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Never a textbook label or taxonomy ('Three kinds of AI. Only one runs your errands.'): no person, no tension, no stake.",
+   "from": "'such a boring title ... It should be personal and much more ... more entertaining'",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "A concrete, newsy twist about a named company ('Amazon's already blocked it') beats a privacy 'catch' or a quiz question.",
+   "from": "T1 picked over T2 (the catch), T3 (guess which), T4 (A2 reused)",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Name the subject (Muse) in the title, then a more cryptic promise of what he reveals ('I break down ...'): the name is what people search and recognise; the promise is the open loop.",
+   "from": "Krish on the YouTube round: 'we need to name Muse in the title, and then say something more cryptic like \"I break down XYZ\"'",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Name the product exactly as people would search it ('Meta's Muse AI'), never a vague stand-in ('Meta's new AI').",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Say the format up front: 'reviewed' for the article, 'VIDEO:' for the Substack video post (it is also the email subject and the auto YouTube post).",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Give the real finding and keep the open loop in the why ('on par with Siri but for OPPOSITE reasons'); a tease that hides the finding ('the rival nobody's talking about') loses to it. This supersedes the 'cryptic I break down' lesson: name it, then a clear promise.",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "Two named companies doing opposite things (Amazon locked it out, Walmart let it in) beats one twist.",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "The video speaks as 'we' ('We unpack'); the article can stay first person or plain. One word in capitals for emphasis is fine ('OPPOSITE').",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  },
+  {
+   "lesson": "His titles run longer than the playbook's 60 characters when the extra words carry the finding; length is a guide, the finding wins.",
+   "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14"
+  }
+ ],
+ "verdicts": [
+  {
+   "title": "Make Your Mind Up",
+   "surface": "spotify-show",
+   "verdict": "picked",
+   "why": "the show takes the publication's own name: one name across Substack, YouTube and Spotify, so listeners who know it find it",
+   "krish": "Spotify is just S1 (S1 was \"Make Your Mind Up\")",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I tried Meta's new AI. Amazon's already blocked it.",
+   "surface": "article",
+   "verdict": "rejected",
+   "why": "replaced by Krish's own: 'Meta's new AI' is vague (name the product); one twist where the pair Amazon/Walmart is stronger",
+   "krish": "replaced it with \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "Meta's Muse: I break down the rival nobody's talking about.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "replaced by Krish's own: too cryptic; he gave the actual finding instead",
+   "krish": "replaced it with \"VIDEO: We unpack Meta's Muse ...\"",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.",
+   "surface": "article",
+   "verdict": "picked",
+   "why": "Krish wrote it himself: the exact searchable product name plus the format ('reviewed'), then two named companies doing opposite things; the contrast is the hook",
+   "krish": "I changed the Substack article title to \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "Krish wrote it himself: format first (VIDEO:), names the product exactly, gives the real finding (on par with Siri) and keeps the open loop in the why (OPPOSITE reasons); 'we' for the video; clarity over a cryptic tease",
+   "krish": "I changed the Substack (and auto Youtube post) title to \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "I tried Meta's Muse. I break down who it's really for.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "not picked: Y2's 'nobody's talking about' promise beat it",
+   "krish": "Y2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Meta's Muse shops for you. I break down why Amazon said no.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "not picked: Y2's 'nobody's talking about' promise beat it",
+   "krish": "Y2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I tried Meta's Muse. I break down its real rival.",
+   "surface": "youtube",
+   "verdict": "rejected",
+   "why": "not picked: Y2's 'nobody's talking about' promise beat it",
+   "krish": "Y2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I tried Meta's new AI. The catch? Meta can get to your data.",
+   "surface": "article",
+   "verdict": "rejected",
+   "why": "not picked: the privacy catch is less surprising than Amazon blocking it",
+   "krish": "T1 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I scored Meta's new AI against Siri. Guess which one knows you better?",
+   "surface": "article",
+   "verdict": "rejected",
+   "why": "not picked: a quiz question, weaker than a concrete twist",
+   "krish": "T1 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Muse's real rival: Siri.",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "a reveal that flips the assumed fight; short; two names you know",
+   "krish": "I like \"Muses' real rival, Siri.\" on that card",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "I tried Meta's new AI. Its rival? Already in your pocket.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "first person; a question mid-title; the payoff points at the reader; surprise last",
+   "krish": "A2 ... I like both elements",
+   "on": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef"
+  },
+  {
+   "title": "I tested Meta's new AI. Its real rival is already in your pocket.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "the right idea, too long and flat: needed punchier",
+   "krish": "A is closest, but punchier",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I put Meta's new AI up against Siri. It's a draw.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "gives the answer away",
+   "krish": "A2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "I tested Meta's Muse. Siri tied it.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "gives the answer away",
+   "krish": "A2 (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Everyone's comparing Muse to ChatGPT. Wrong fight.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "about other people, not Krish or the reader",
+   "krish": "A is closest (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "One of these AIs will do your shopping. It isn't ChatGPT.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "impersonal; leans on a denial",
+   "krish": "A is closest (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "ChatGPT answers. Cowork works. Muse runs your errands.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "a neat list, no person and no surprise",
+   "krish": "A is closest (picked over it)",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Three kinds of AI. Only one runs your errands.",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "a textbook taxonomy: boring, impersonal, not entertaining",
+   "krish": "such a boring title. It should be personal and much more. It could be first person. It could be more entertaining. That title is terrible.",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Muse vs ChatGPT isn't a fair fight",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "a straw man: denies a claim nobody made",
+   "krish": "no one has ever said \"Muse versus ChatGPT\" is a fair fight!",
+   "on": "2026-10-14"
+  },
+  {
+   "title": "Muse isn't ChatGPT. There are now three kinds of AI.",
+   "surface": "article",
+   "verdict": "rejected",
+   "why": "states the obvious, as a denial",
+   "krish": "Of course, Muse isn't ChatGPT. That's a stupid thing to say. It's dumb.",
+   "on": "2026-10-14"
+  }
+ ]
+}

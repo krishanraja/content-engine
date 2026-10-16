@@ -1,0 +1,167 @@
+{
+ "piece_id": "f328382d-71b3-41a7-a221-d8615826f12e",
+ "date": "2026-10-12",
+ "subchannel": "follow.the.money",
+ "subject": "Who gets paid for AI songs",
+ "headline": "Warner sued Suno. Now it takes a cut. Who else gets paid?",
+ "links": {},
+ "files": [
+  {
+   "kind": "publish-kit",
+   "file": "publish.html"
+  },
+  {
+   "kind": "fact-checked-text",
+   "file": "body.md"
+  },
+  {
+   "kind": "cover",
+   "file": "cover.png",
+   "logos": [
+    "Suno",
+    "Warner Music Group",
+    "BMG",
+    "Sony Music",
+    "Universal Music Group"
+   ]
+  },
+  {
+   "kind": "cover-crops",
+   "file": "cover-crops.png"
+  },
+  {
+   "kind": "image",
+   "file": "pileup.png",
+   "name": "the-pile-up.png",
+   "logos": [
+    "Universal Music Group",
+    "Warner Music Group",
+    "Suno",
+    "ElevenLabs"
+   ],
+   "purpose": "Twelve real, dated pages piled up: one app, two opposite bets, 29 Oct 2025 to 5 Oct 2026. Goes after the heading HOW WE GOT HERE.",
+   "evidence": {
+    "pages": [
+     {
+      "url": "https://www.universalmusic.com/universal-music-group-and-udio-announce-udios-first-strategic-agreements-for-new-licensed-ai-music-creation-platform/",
+      "date": "2025-10-29",
+      "shot": "shots/umg-udio.png"
+     },
+     {
+      "url": "https://www.wmg.com/news/warner-music-group-and-suno-forge-groundbreaking-partnership",
+      "date": "2025-11-25",
+      "shot": "shots/wmg-suno.png"
+     },
+     {
+      "url": "https://suno.com/blog/series-d-announcement",
+      "date": "2026-06-03",
+      "shot": "shots/suno-series-d.png"
+     },
+     {
+      "url": "https://suno.com/blog/suno-partnership-bmg",
+      "date": "2026-08-12",
+      "shot": "shots/suno-bmg.png"
+     },
+     {
+      "url": "https://suno.com/blog/introducing-v6",
+      "date": "2026-09-09",
+      "shot": "shots/suno-v6.png"
+     },
+     {
+      "url": "https://www.musicbusinessworldwide.com/suno-v6-ai-music-models-launch-in-partnership-with-wmg-bmg-and-believe/",
+      "date": "2026-09-09",
+      "shot": "shots/mbw-v6.png"
+     },
+     {
+      "url": "https://elevenlabs.io/blog/umg",
+      "date": "2026-09-10",
+      "shot": "shots/elevenlabs-umg.png"
+     },
+     {
+      "url": "https://www.musicbusinessworldwide.com/universal-and-sony-sue-suno-for-a-second-time-claiming-platforms-v6-models-are-the-fruit-of-the-same-poisoned-tree/",
+      "date": "2026-09-18",
+      "shot": "shots/mbw-second-suit.png"
+     },
+     {
+      "url": "https://thenextweb.com/news/universal-sony-second-lawsuit-suno-60202-recordings",
+      "date": "2026-09-18",
+      "shot": "shots/tnw-second-suit.png"
+     },
+     {
+      "url": "https://au.variety.com/2026/music/news/sony-music-universal-music-sue-suno-label-backed-model-40495/",
+      "date": "2026-09-19",
+      "shot": "shots/variety-second-suit.png"
+     },
+     {
+      "url": "https://www.musicbusinessworldwide.com/us-appeals-court-rejects-fair-use-defense-over-ai-training-as-thomson-reuters-wins-copyright-case-backed-by-riaa-and-nmpa/",
+      "date": "2026-09-30",
+      "shot": "shots/mbw-ross-ruling.png"
+     },
+     {
+      "url": "https://www.musicbusinessworldwide.com/a-us-appeals-court-has-rejected-a-fair-use-defense-over-ai-training-what-does-it-mean-for-the-labels-fight-with-suno/",
+      "date": "2026-10-05",
+      "shot": "shots/mbw-ross-suno.png"
+     }
+    ]
+   }
+  },
+  {
+   "kind": "image",
+   "file": "money.png",
+   "name": "1-who-gets-paid.png",
+   "logos": [
+    "Suno",
+    "Warner Music Group",
+    "BMG",
+    "Believe",
+    "Sony Music",
+    "Universal Music Group"
+   ],
+   "purpose": "The money path from one fan's song, and where it goes dark. Goes after the heading THE MONEY MAP."
+  },
+  {
+   "kind": "image",
+   "file": "camps.png",
+   "name": "2-two-opposite-bets.png",
+   "logos": [
+    "Suno",
+    "Warner Music Group",
+    "BMG",
+    "Believe",
+    "Sony Music",
+    "Universal Music Group",
+    "Udio",
+    "ElevenLabs"
+   ],
+   "purpose": "The partners and the suers, with their dates. Goes after the heading WHY EACH SIDE MOVED."
+  },
+  {
+   "kind": "image",
+   "file": "prediction.png",
+   "name": "3-how-these-fights-end.png",
+   "logos": [
+    "Warner Music Group",
+    "Suno",
+    "Universal Music Group",
+    "Udio",
+    "Sony Music"
+   ],
+   "purpose": "How the earlier fights ended, and our 70% call on this one. Goes after the heading MY CALL."
+  },
+  {
+   "kind": "video-script",
+   "file": "script.md",
+   "cut": "long"
+  },
+  {
+   "kind": "video-script",
+   "file": "script-90s.md",
+   "name": "video-script-90-seconds.md",
+   "cut": "short"
+  },
+  {
+   "kind": "linkedin-post",
+   "text": "Warner Music Group sued Suno, the AI song maker. Now it gets a share of Suno's revenue. Universal and Sony are suing Suno again, and their new complaint turns that money against it.\n\nThe suit, filed on 18 September in Boston, covers 60,202 recordings. It calls Suno paying its partners \"a functioning licensing market\". Suno says the revenue share is \"not in exchange for training\". Settle a fence dispute with one neighbour, and the other two bring your cheque to court.\n\nFollow the money from one fan's song. The fan pays Suno. Since 9 September, Warner, BMG and Believe get \"a portion\" of Suno's revenue. Then the labels decide what the artists get, under contracts nobody has published. The money is real as far as the labels. Past the labels, it goes dark.\n\nFor anyone building a business on AI, a licence can become evidence. Pay one supplier, and the ones you did not pay can point at your cheque. A new model does not wipe the slate clean either: the labels call Suno's v6 \"the fruit of the same poisoned tree\". That is their allegation, and you would still have to answer it.\n\nOn 29 September a US appeals court held that ROSS Intelligence's use of Thomson Reuters' legal summaries to train its AI was not fair use. That ruling does not bind the court hearing Suno's cases, and ROSS's AI \"cannot generate original expression\". Suno's AI writes songs.\n\nMy call, dated: by 31 December 2027, Universal Music Group or Sony Music Entertainment will have announced a settlement or a licensing deal with Suno. 70% sure.\n\nFull article, with every source, in the first comment."
+  }
+ ]
+}

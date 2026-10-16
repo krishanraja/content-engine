@@ -262,7 +262,7 @@ describe('carousel cards in the makeyourmindup house style', () => {
   it('sets the cover as the mock: the section block, its day and pill, the call sticker and the question', async () => {
     const cards = houseCards(await forkStory())
     const cover = cards[0]!
-    expect(cover.branding.publication?.house).toEqual({ tokens: { ink: '#0C1512', inkDeep: '#070D0B', inkSoft: '#16221D', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' }, day: 'Fridays', coverSticker: 'Swipe for the call', questionKicker: 'The question', question: 'What is the pattern, and what does it mean is coming?', callFootnote: 'On the day, we mark it held, broke or unclear. Misses go up as big as hits.', site: 'makeyourmindup.ai' })
+    expect(cover.branding.publication?.house).toEqual({ tokens: { ink: '#0C1512', inkDeep: '#070D0B', inkSoft: '#16221D', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' }, day: 'Fridays', coverSticker: 'Swipe for the call', questionKicker: 'The question', question: 'What is the pattern, and what does it mean is coming?', callFootnote: 'On the day, we mark it right, wrong or too close to call. The wrong ones go up as big as the right ones.', site: 'makeyourmindup.ai' })
     expect(cover.branding.typography).toEqual({ structure: 'Archivo', claim: 'Anton', body: 'Archivo', data: 'IBM Plex Mono' })
     // "Who picks your AI?" at the mock's 178 px, on two lines.
     expect(houseCardModel(cover)).toMatchObject({ kind: 'cover', counter: null, headlineSize: 178, headlineLines: 2, swipeIndex: -1, sticker: 'Swipe for the call', question: 'What is the pattern, and what does it mean is coming?' })
@@ -282,7 +282,7 @@ describe('carousel cards in the makeyourmindup house style', () => {
     }
     const last = cards.at(-1)!
     expect(last.slide.call).toBe(true)
-    expect(houseCardModel(last)).toMatchObject({ kind: 'last', counter: `${count} / ${count}`, headlineSize: 160, swipeIndex: 2, footnote: 'On the day, we mark it held, broke or unclear. Misses go up as big as hits.' })
+    expect(houseCardModel(last)).toMatchObject({ kind: 'last', counter: `${count} / ${count}`, headlineSize: 160, swipeIndex: 2, footnote: 'On the day, we mark it right, wrong or too close to call. The wrong ones go up as big as the right ones.' })
     // A long headline shrinks to fit rather than running off the card.
     const long = { ...middle[0]!, slide: { ...middle[0]!.slide, headline: 'A green tick can outlive the thing it checked, and nobody notices until it breaks.' } }
     const fitted = houseCardModel(long)!

@@ -5,7 +5,7 @@ import { readMaterials } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/video-script
-//   body: { duration: '15s'|'30s'|'60s'|'3min'|'10min'|'20min', hint?, source_text? }
+//   body: { duration: '15s'|'30s'|'60s'|'90s'|'3min'|'10min'|'20min', hint?, source_text? }
 //
 // Turns an existing piece into a spoken script at a chosen length. Modelled on
 // channel-cut: it compresses a draft that already exists, it never invents one,
@@ -30,7 +30,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { data: idea, error: iErr } = await supabase
     .from('content_ideas')
-    .select('id, idea, thesis, body, meta, source_url, transformed_outputs')
+    .select('id, idea, thesis, body, meta, lane_slot, source_url, transformed_outputs')
     .eq('id', ideaId).single()
   if (iErr || !idea) return res.status(404).json({ ok: false, error: 'idea not found' })
 
@@ -53,6 +53,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       citations: [idea.source_url, ...(Array.isArray(meta.research) ? meta.research : []), ...(Array.isArray(meta.sources) ? meta.sources : [])].filter(Boolean),
       materials: readMaterials(meta),
       hint: b.hint,
+      // Its series line opens the script (house rule SERIES_OPENER).
+      series: (idea as any).lane_slot ?? null,
     })
 
     // Non-destructive, and keyed by duration so a 60 second cut and a 10 minute

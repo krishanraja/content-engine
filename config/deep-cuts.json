@@ -1,0 +1,11 @@
+{
+ "_about": "Once a week, the piece with the highest breakout score (the shareability score in its pack; a concept piece breaks a tie) gets the deep cut, 8 to 12 minutes (1,200 to 1,700 spoken words), in place of its 3-minute cut. It goes to YouTube as long-form and to Spotify as the week's video episode. Every piece keeps its 90-second cut. Krish, 2026-10-14: 'perhaps the third video length also becomes the Spotify audio track', then 'I like your logic for the pick on the shareability score approach.' House rule DEEP_CUT. plan-week writes the week's pick here; making.py checks that piece's long script at the deep length.",
+ "weeks": {
+  "2026-10-12": {
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7",
+   "piece_name": "Fri 16 Oct mind.the.gap: how much does picking your AI model matter",
+   "why": "the concept piece Krish named as deserving a real explanation",
+   "krish_said": "I like your logic for the pick on the shareability score approach. I like the middle ground piece."
+  }
+ }
+}

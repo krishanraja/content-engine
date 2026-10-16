@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, test } from 'vitest'
-import { excerpt, htmlToText } from '../../apps/control-plane/scripts/file-verbatim-source.js'
+import { cloudProxyProblem, excerpt, htmlToText } from '../../apps/control-plane/scripts/file-verbatim-source.js'
 
 const PAGE = [
   'Title: Model Release Notes', '', 'URL Source: https://help.openai.com/x', '',
@@ -54,5 +54,17 @@ describe('htmlToText, for a page the reader refuses', () => {
     ])
     assert.ok(!text.includes('var x'))
     assert.ok(!text.includes('color:red'))
+  })
+})
+
+describe('file-verbatim-source files through the cloud session proxy', () => {
+  test('a cloud session with a proxy and no NODE_USE_ENV_PROXY is refused, saying what to run', () => {
+    const msg = cloudProxyProblem({ CLAUDE_CODE_REMOTE: 'true', HTTPS_PROXY: 'http://proxy:8080' })
+    assert.match(String(msg), /NODE_USE_ENV_PROXY=1/)
+  })
+  test('with NODE_USE_ENV_PROXY=1, or outside a cloud session, nothing is in the way', () => {
+    assert.equal(cloudProxyProblem({ CLAUDE_CODE_REMOTE: 'true', HTTPS_PROXY: 'http://proxy:8080', NODE_USE_ENV_PROXY: '1' }), null)
+    assert.equal(cloudProxyProblem({ HTTPS_PROXY: 'http://proxy:8080' }), null)
+    assert.equal(cloudProxyProblem({ CLAUDE_CODE_REMOTE: 'true' }), null)
   })
 })

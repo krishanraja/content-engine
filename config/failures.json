@@ -1,0 +1,506 @@
+{
+ "_about": "Every failure Krish has raised, and the machine that now stops it: code that refuses, a test that fails the build, or a hook that blocks the publish. A failure with no guard is 'open', never called fixed. scripts/check_failures.py checks each guard is still in place and CI runs it, so removing one fails the build. Read it at the start of any session: `python3 scripts/check_failures.py`. Krish, 2026-10-14: \"how are you going to ensure all this stuff and all the other issues we've had today can never be had again in a 100% guaranteed durable way?\"",
+ "failures": [
+  {
+   "id": "assets-before-titles-picked",
+   "on": "2026-10-14",
+   "krish": "Stop fucking generating assets and wasting tokens when I haven't actually approved your new approach.",
+   "what": "Cards, covers, plates and pages were made from titles Krish had not picked.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/title_check.py",
+     "contains": "Krish has not picked this title",
+     "how": "every title-drawing tool refuses a title with no 'picked' verdict"
+    },
+    {
+     "file": "scripts/pages/video_card.py",
+     "contains": "title_check",
+     "how": "cards"
+    },
+    {
+     "file": "scripts/pages/build.py",
+     "contains": "title_check",
+     "how": "covers and thumbnails"
+    },
+    {
+     "file": "scripts/quick-edit/story_io.py",
+     "contains": "title_check",
+     "how": "the video's title plate"
+    },
+    {
+     "file": "scripts/post-pack/publish_manager.py",
+     "contains": "title_check",
+     "how": "publish pages"
+    }
+   ]
+  },
+  {
+   "id": "dumb-titles",
+   "on": "2026-10-14",
+   "krish": "Of course, Muse isn't ChatGPT. That's a stupid thing to say. It's dumb. We need an anti-dumb filter.",
+   "what": "Straw-man, obvious and textbook titles.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/title_check.py",
+     "contains": "is a matchup label",
+     "how": "the floor refuses straw men, bare topics and names or numbers not in the piece"
+    },
+    {
+     "file": "config/title-verdicts.json",
+     "contains": "\"lessons\"",
+     "how": "his picks and rejections, and what they teach, start every title round"
+    }
+   ]
+  },
+  {
+   "id": "read-back-never-clears",
+   "on": "2026-10-14",
+   "krish": "Fix it in the engine.",
+   "what": "Scripts Krish approved could not be recorded as read back.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/making.py",
+     "contains": "approved by Krish",
+     "how": "read-back --krish-words records his approval"
+    }
+   ]
+  },
+  {
+   "id": "plate-old-title",
+   "on": "2026-10-14",
+   "krish": "(Wednesday's video plate showed the old subject)",
+   "what": "The video's title plate kept a superseded title.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/kit.py",
+     "contains": "video_title",
+     "how": "the plate reads post.json video_title, which the title gate holds"
+    }
+   ]
+  },
+  {
+   "id": "outro-yes-no",
+   "on": "2026-10-14",
+   "krish": "(the outro showed YES/NO on a question that was not yes or no)",
+   "what": "Vote buttons on a non-yes/no question.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "apps/renderer/src/story/fit.ts",
+     "contains": "YES_NO",
+     "how": "YES/NO only for a yes/no question; tested in tests/story-io.test.ts"
+    }
+   ]
+  },
+  {
+   "id": "board-built-differently",
+   "on": "2026-10-14",
+   "krish": "why are Wednesday and Friday built differently to Monday? ... I thought I didn't need to keep telling you this sort of stuff?",
+   "what": "A day of the publish board was hand-made, without its Copy buttons.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/engine_stamp.py",
+     "contains": "a hand edit",
+     "how": "the engine stamps every board and publish page it builds"
+    },
+    {
+     "file": "scripts/hooks/artifact_gate.py",
+     "contains": "week_board.verify",
+     "how": "the publish hook refuses an unstamped or edited board"
+    },
+    {
+     "file": ".claude/settings.json",
+     "contains": "artifact_gate.py",
+     "how": "the hook is wired for every Claude Code session in this repository"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "a made day with no Copy buttons",
+     "how": "the board's own publish check"
+    }
+   ]
+  },
+  {
+   "id": "drive-videos-not-linked",
+   "on": "2026-10-14",
+   "krish": "You should always link the Google Drive videos because I need to actually download them onto my computer",
+   "what": "The board had no download links for the finished videos.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "a finished video with no Drive link",
+     "how": "the publish hook refuses a board with an unlinked video"
+    },
+    {
+     "file": "scripts/post-pack/making.py",
+     "contains": "def drive_link_patch",
+     "how": "drive-link records it; the 13:25 routine runs it"
+    }
+   ]
+  },
+  {
+   "id": "thumbnails-not-linked",
+   "on": "2026-10-14",
+   "krish": "I do not see any video thumbnail assets anywhere ... Where are the vertical video thumbnails?",
+   "what": "Thumbnails were made into Drive but never linked on the board.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "a finished video with no thumbnail link",
+     "how": "the publish hook refuses a board with an unlinked thumbnail"
+    },
+    {
+     "file": "scripts/post-pack/making.py",
+     "contains": "Drive link joins its path",
+     "how": "drive-link --thumb-url records it, tested"
+    }
+   ]
+  },
+  {
+   "id": "picture-downloads-dead",
+   "on": "2026-10-14",
+   "krish": "the download buttons for the images STILL do not work!!!!",
+   "what": "Download and Copy picture fetched data: URLs, which the viewer blocks; every click died silently.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/week_board/week.js",
+     "contains": "function dataBlob(src)",
+     "how": "pictures decode in the page"
+    },
+    {
+     "file": "scripts/post-pack/buttons_in_browser.py",
+     "contains": "connect-src 'none'",
+     "how": "every button clicked in Chromium with fetch blocked"
+    },
+    {
+     "file": ".github/workflows/ci.yml",
+     "contains": "buttons_in_browser.py",
+     "how": "CI runs it on every push"
+    }
+   ]
+  },
+  {
+   "id": "boards-out-of-sync",
+   "on": "2026-10-14",
+   "krish": "I work from two different Claude accounts, so make sure this board and that board are always synchronized.",
+   "what": "The week's board has a link per account; a publish to one left the other behind.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "config/boards.json",
+     "contains": "H6qKiPdmSWETVQftpHBS5E",
+     "how": "every link of the week's board"
+    },
+    {
+     "file": "scripts/hooks/board_sync.py",
+     "contains": "Publish this same file",
+     "how": "after each board publish, names any link still behind"
+    },
+    {
+     "file": ".claude/settings.json",
+     "contains": "board_sync.py",
+     "how": "wired for every session in this repository"
+    }
+   ]
+  },
+  {
+   "id": "board-not-pinnable",
+   "on": "2026-10-14",
+   "krish": "lets pin this weeks artifact (I cant seem to do that myself)",
+   "what": "The board was made under another organisation, so it could not be pinned.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "pin: true",
+     "how": "each Sunday's board is published pinned, from Krish's own account"
+    }
+   ]
+  },
+  {
+   "id": "fact-gate-flips",
+   "on": "2026-10-14",
+   "krish": "(lines that passed failed after one source was filed)",
+   "what": "Filing a source re-checked the whole piece, and the fresh run flagged lines that had passed.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "apps/control-plane/api/_factGate.ts",
+     "contains": "source_parts",
+     "how": "a source only added keeps every passed and set-aside line"
+    },
+    {
+     "file": "tests/control-plane/fact-gate.test.ts",
+     "contains": "a source only added keeps every line",
+     "how": "tested"
+    }
+   ]
+  },
+  {
+   "id": "long-cut-too-quiet",
+   "on": "2026-10-14",
+   "krish": "(Wednesday's long cut went out at -15.2 LUFS)",
+   "what": "The peak limiter lowered a cut below -14 LUFS and nothing put it back.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/make.py",
+     "contains": "level_corrected_db",
+     "how": "a correction pass brings the cut back to target"
+    },
+    {
+     "file": "scripts/produce_day.py",
+     "contains": "def loud_gate",
+     "how": "a cut still off target is never sent to Drive"
+    }
+   ]
+  },
+  {
+   "id": "bigger-krish-behind-krish",
+   "on": "2026-10-14",
+   "krish": "I also really hate my larger self in the background of the split screen.",
+   "what": "The tall cut's face band was see-through at its sides.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/make.py",
+     "contains": "def face_band",
+     "how": "the face fills the band edge to edge; self-test checks it"
+    }
+   ]
+  },
+  {
+   "id": "reels-cut-off",
+   "on": "2026-10-14",
+   "krish": "I'm noticing on Instagram that sometimes my reels are getting cut off.",
+   "what": "Short cuts ran 87 to 99 s; over 89 s some platforms and composers cut them, and the engine's 90 s rule was never checked on the finished file.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "finishes under 89 seconds",
+     "how": "a short script over 195 words is refused before Krish records it"
+    },
+    {
+     "file": "scripts/produce_day.py",
+     "contains": "SHORT_MAX_SECONDS = 89",
+     "how": "a finished vertical cut over 89 s is never sent"
+    }
+   ]
+  },
+  {
+   "id": "caption-splits-names",
+   "on": "2026-10-14",
+   "krish": "(the posted Reel's caption read \"like co -work and ChatGPT\")",
+   "what": "The transcriber split \"Cowork\" and the caption kept the split.",
+   "status": "open",
+   "guards": []
+  },
+  {
+   "id": "piece-drift",
+   "on": "2026-10-14",
+   "krish": "we ended up with an absolute ton of drift ... All of this could have been turned into something coherent, but it's ended up sprawling quite a lot ... the engine cannot do this again.",
+   "what": "Wednesday's piece re-angled several times and each new angle was added as sections instead of replacing the spine.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/spine_check.py",
+     "contains": "never sections added on top",
+     "how": "the outline states one spine and what each section proves; a section added on top of the approved outline is refused"
+    },
+    {
+     "file": "apps/control-plane/api/_spine.ts",
+     "contains": "SPINE_SYSTEM",
+     "how": "the engine's judge reads every section against the spine"
+    },
+    {
+     "file": "scripts/post-pack/making.py",
+     "contains": "def spine_gate",
+     "how": "scripts and the publish page are refused until all of it passes"
+    },
+    {
+     "file": "tests/control-plane/spine.test.ts",
+     "contains": "one section off the spine fails the piece",
+     "how": "tested"
+    }
+   ]
+  },
+  {
+   "id": "same-photo-every-cover",
+   "on": "2026-10-14",
+   "krish": "We also need to rotate this picture, as I think it's going to be intensely annoying if my Substack page is just full of hundreds of these pictures.",
+   "what": "Every cover and thumbnail uses the same circular photo of Krish.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/pages/brand.py",
+     "contains": "def portrait_for",
+     "how": "each publishing day takes the next photo in PORTRAITS, so no two posts in a row share one"
+    },
+    {
+     "file": "scripts/pages/build.py",
+     "contains": "brand.portrait_for(facts.get('date'))",
+     "how": "every cover and thumbnail with Krish's face uses it"
+    }
+   ]
+  },
+  {
+   "id": "one-style-for-everything",
+   "on": "2026-10-14",
+   "krish": "I don't think that these things are just one way of everything being in the future. I think we need to build a bank of different styles that we know can be modularized and used. You already have a tonne of pre-existing knowledge of what I like and, more importantly, what I don't like, which you can lean on and I don't think should be totally overwritten.",
+   "what": "A liked reference video was turned into house defaults for every video, over the top of what Krish already likes and dislikes.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/references.py",
+     "contains": "the base (what Krish already likes and does not) must be named",
+     "how": "the style bank refuses to drop the base, a recipe without his words, or a module he marked not for us"
+    },
+    {
+     "file": "tests/engine-gates.test.ts",
+     "contains": "scripts/quick-edit/references.py",
+     "how": "CI runs the style bank's self-test on every push"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "| Style recipe |",
+     "how": "scripts are written from a per-piece recipe on top of the base, never from one house style"
+    }
+   ]
+  },
+  {
+   "id": "paid-fact-check-loops",
+   "on": "2026-10-15",
+   "krish": "can you figure out if there is a way to have future sessions not cost so much via Anthropic API credits? ... yes, if you are 110% sure this does not degrade the quality of the output - this cannot happen.",
+   "what": "59 paid fact-check runs in two days (13 and 14 October, about $14) went round run, learn a number was not on file, fix, run again, when the number could be read against the filed sources for free.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/engine.py",
+     "contains": "Not running the paid fact check",
+     "how": "a POST to fact-check first reads the free GET and refuses while any stated number is on no filed source, unless --despite-precheck"
+    },
+    {
+     "file": "apps/control-plane/api/_factGate.ts",
+     "contains": "export function numbersNotOnFile",
+     "how": "the free pre-check, read by value as the gate reads numbers; the paid gate's own logic is unchanged"
+    },
+    {
+     "file": "tests/control-plane/fact-gate.test.ts",
+     "contains": "describe('numbersNotOnFile'",
+     "how": "the pre-check lists only numbers no source carries, and leaves forecasts and the confidence line to the gate"
+    }
+   ]
+  },
+  {
+   "id": "marks-fetched-from-a-private-repo",
+   "on": "2026-10-15",
+   "krish": "this control center touches a LOT of stuff so verify these are not the only things at risk if the repo is made private",
+   "what": "The Studio fetched six pinned official wordmarks anonymously from raw.githubusercontent.com/krishanraja/control-center, which answers 404 once that repository is private, so a runner with an empty cache could not stage them.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "packages/core/src/brand-assets.ts",
+     "contains": "mirroredWordmarkUrl(asset)",
+     "how": "a source that refuses or cannot be reached falls back to Control Center's public api/brand-mark/<sha256>, held to the same pinned hash"
+    },
+    {
+     "file": "tests/brand-assets.test.ts",
+     "contains": "falls back to the Control Center mirror when the pinned source answers 404",
+     "how": "the source answers 404 and the mark still stages from the mirror"
+    },
+    {
+     "file": "tests/brand-assets.test.ts",
+     "contains": "wrong bytes never sit under a pinned hash",
+     "how": "mirror bytes that do not match the pin are refused before the cache"
+    }
+   ]
+  },
+  {
+   "id": "board-old-page-under-new-words",
+   "on": "2026-10-15",
+   "krish": "As long as both publish boards have everything up to date for my review tonight and the things you said needed fixing are fixed, I'm happy for now.",
+   "what": "Friday v3's review card was put on top of Friday's kept first-version publish page (--keep fri). Below his new words the tab still showed the old title, article, scripts and channel copy, with chips saying \"Fact check passed on this exact text\" and \"Both scripts approved and in Teleprompter\", both false for v3. No builder option could show a day in review honestly, and Monday's and Wednesday's tabs still said nothing was posted after both went out.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "a day in review shows its review card, never an older publish page",
+     "how": "--draft DAY builds the tab from the review card, the calls waiting on Krish (--waiting) and the checklist; --draft with --day or --keep for the same day is refused"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "is older than its words",
+     "how": "with --live, a piece not yet posted whose publish page was made before its words last changed is refused unless it is built with --draft"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "holds its words in review",
+     "how": "a rebuild of a board holding a day in draft without --draft is refused, so a scheduled run leaves the board standing"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "so its words would not show",
+     "how": "--review on a day that is neither made nor in draft is refused, never dropped without a word"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def posted_kick",
+     "how": "a made day whose piece is posted says so in its status line, from the record"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def _draft_checks",
+     "how": "the self-test builds a day in draft from Friday's real record times and checks every refusal above"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "nothing shows this publish page was made from them",
+     "how": "a day in draft is replaced by a publish page only when --live shows the page was made after the words last changed"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "so nothing shows whether ",
+     "how": "--live fails closed when the making record of a kept, given or draft day cannot be read"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "--drop-review {key}=<id> once Krish is done with it",
+     "how": "a rebuild never drops a review box the board holds without --drop-review, and carries the calls waiting on Krish"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "DEEP_LABEL = {",
+     "how": "the week's deep-cut day says deep cut in its checklist, never 3-minute"
+    }
+   ]
+  },
+  {
+   "id": "board-older-save-over-new-words",
+   "on": "2026-10-15",
+   "krish": "get Fridays publish board ready in the artifact, and enable me to make comments or edit text myself, and then you can either iterate based on my comments or observe my text edits.",
+   "what": "After his 13:58 save was folded into Friday v3 and the board rebuilt, the page would have shown his older saved text over the new words, and a Save would have put the old words back. Then any rebuild re-stamped the build time, which would hide a save he made after the last build behind \"is in this version\".",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/week_board/week.js",
+     "contains": "v.at < built",
+     "how": "the page shows a saved edit only when it is newer than the build time on its block (data-built-at)"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "def previous_review_times",
+     "how": "a rebuild keeps a review block's build time while its words are unchanged, so a newer save still shows"
+    }
+   ]
+  }
+ ]
+}

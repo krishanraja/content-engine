@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  kit.py: the wide cut's background, 1920 x 1080, in the subchannel's look.
+  The speaker's column, x 657 to 1263, is left plain: the recording covers
+  it. Left of it, the subchannel, the piece's subject and the subchannel's
+  sticker; right of it, the publication on ink with its day and address.
+  Placeholders start with a dollar sign; kit.py fills every one.
+-->
+<html lang="en-GB"><head><meta charset="utf-8"><style>
+$fonts
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; }
+body { background: $accent; color: $ink; font-family: 'Archivo', sans-serif; -webkit-font-smoothing: antialiased; }
+.fl { position: absolute; left: 64px; top: 0; bottom: 0; width: 529px; display: flex; flex-direction: column; justify-content: center; }
+.pill { align-self: flex-start; display: inline-block; background: $ink; color: $cream; font-family: 'IBM Plex Mono', monospace;
+        font-weight: 700; font-size: 32px; letter-spacing: .08em; padding: .34em .62em .3em; border-radius: .26em; line-height: 1;
+        text-transform: uppercase; white-space: nowrap; }
+h1 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; font-size: 150px; line-height: .95;
+     letter-spacing: .005em; margin-top: 30px; overflow-wrap: break-word; text-wrap: balance; }
+/* Stickers tilt (brand book: -8 to +5 degrees); type, logos and layout never do. */
+.sticker { align-self: flex-start; margin-top: 44px; display: inline-block; font-family: 'IBM Plex Mono', monospace; font-weight: 700;
+           font-size: 34px; letter-spacing: .08em; text-transform: uppercase; padding: 14px 28px 12px; border-radius: 999px;
+           border: 5px solid $ink; background: $cream; color: $ink; transform: rotate(-4deg); box-shadow: 8px 8px 0 $ink;
+           white-space: nowrap; }
+.fr { position: absolute; left: 1263px; right: 0; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; }
+.inkcard { width: 529px; background: $ink; border-radius: 30px; padding: 48px 44px; box-shadow: 16px 16px 0 $shadow;
+           display: flex; flex-direction: column; gap: 26px; }
+.inkcard img { width: 100%; height: auto; display: block; }
+.day { color: $accent; font-family: 'Anton', sans-serif; text-transform: uppercase; font-size: 76px; line-height: 1; margin-top: 10px; }
+.url { color: $cream; font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 34px; }
+</style></head><body>
+<div class="fl">
+  <span class="pill">$channel</span>
+  <h1 data-fit="3">$subject</h1>
+  $sticker
+</div>
+<div class="fr"><div class="inkcard">
+  <img src="$wordmark" alt="makeyourmindup">
+  <div class="day">$days</div>
+  <div class="url">$site</div>
+</div></div>
+</body></html>

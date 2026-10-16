@@ -8,11 +8,14 @@ import {
   ARCHIVE_FOLDER_MAX,
   ARCHIVE_PLACE_FOR_PLATFORM,
   ARCHIVE_PLACES,
+  ARCHIVE_QUICK_EDIT_PLACES,
   ARCHIVE_TIME_ZONE,
   archiveFileName,
   archiveFolder,
   archiveJob,
   archiveLocalDate,
+  archiveThumbnailName,
+  archiveVideoPlaces,
   hashFile,
   nextArchiveFolder,
   type ArchivePackageInput,
@@ -29,6 +32,7 @@ interface Cases {
   quick_edit: { tall: string[]; tall_with_tiktok: string[]; wide: string[] }
   folders: Array<{ why: string; date: string; subject: string; places: string[]; copy?: number; folder?: string; subject_used?: string; error?: string }>
   files: Array<{ why: string; subject: string; shape: 'tall' | 'wide'; places: string[]; file?: string; error?: string }>
+  thumbnails: Array<{ why: string; subject: string; shape: string; extension?: string; file?: string; error?: string }>
   existing: Array<{ why: string; date: string; subject: string; places: string[]; existing: string[]; folder: string }>
   dates: Array<{ why: string; instant: string; date: string }>
 }
@@ -41,6 +45,25 @@ describe('the archive naming rule, from the shared cases', () => {
     expect(ARCHIVE_COPY_MAX).toBe(cases.copy_max)
     expect(ARCHIVE_TIME_ZONE).toBe(cases.time_zone)
     expect(ARCHIVE_PLACE_FOR_PLATFORM).toEqual(cases.studio_platforms)
+    expect(ARCHIVE_QUICK_EDIT_PLACES).toEqual(cases.quick_edit)
+  })
+
+  it('sends the tall video to TikTok every time, as the standing five ask (Krish, 2026-10-11)', () => {
+    expect(archiveVideoPlaces('tall')).toEqual(cases.quick_edit.tall)
+    expect(archiveVideoPlaces('tall')).toContain('TikTok')
+    expect(archiveVideoPlaces('tall', undefined, true)).toEqual(cases.quick_edit.tall_with_tiktok)
+    expect(archiveVideoPlaces('wide')).toEqual(cases.quick_edit.wide)
+    // A given list is the whole list, and each video keeps the places it suits.
+    expect(archiveVideoPlaces('tall', ['youtube', 'TikTok', 'LinkedIn'])).toEqual(['TikTok', 'LinkedIn'])
+    expect(archiveVideoPlaces('wide', ['youtube', 'TikTok'])).toEqual(['YouTube'])
+    const usual = cases.folders.find((item) => item.why.startsWith('Both cuts with the usual places'))
+    expect(usual?.folder).toBe(archiveFolder({ date: '2026-10-12', subject: 'Who gets paid', places: [...archiveVideoPlaces('tall'), ...archiveVideoPlaces('wide')] }).name)
+  })
+
+  it.each(cases.thumbnails.map((item) => [item.why, item] as const))('thumbnail: %s', (_why, item) => {
+    const input = { subject: item.subject, shape: item.shape as 'tall' | 'wide', ...(item.extension === undefined ? {} : { extension: item.extension }) }
+    if (item.error) expect(() => archiveThumbnailName(input)).toThrow(item.error)
+    else expect(archiveThumbnailName(input)).toBe(item.file)
   })
 
   it.each(cases.folders.map((item) => [item.why, item] as const))('folder: %s', (_why, item) => {

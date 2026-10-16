@@ -1,0 +1,6 @@
+- The name on the box | starts: "I've been watching what's coming with"
+- What people actually ask | starts: "Here's why. Most people don't use"
+- The setting nobody touched | starts: "And people asking like that don't"
+- The badge and the gear | starts: "So what is that setting? Let"
+- Who sets the starting point | starts: "So who decides how hard your"
+- What to do about it | starts: "So what should you actually do?"

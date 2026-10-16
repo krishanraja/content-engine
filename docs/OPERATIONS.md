@@ -122,8 +122,8 @@ If the order is broken the failure is closed and visible: control-plane code dep
 The default directories are:
 
 ```text
-H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
-H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
+H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox
+H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Archive
 ```
 
 They moved from G: to H: on 2026-09-28 (Krish's decision; `docs/DEPLOYMENT.md`, "Independent runner setup"). Every runner machine sets `MINDMAKE_DRIVE_ROOT`, `MINDMAKE_MEDIA_INBOX` and `MINDMAKE_ARCHIVE_ROOT` to these paths as user environment variables. The G: folder stays intact as the rollback copy. The move changed the Inbox fingerprint, and the standby's Inbox was rebound with Krish's confirmation through the flow below; the primary reports the same H: fingerprint.
@@ -419,7 +419,7 @@ Krish, 2026-10-06: "Can you ensure all videos are always archived properly in fo
 
 - **Date.** `--date` is the piece's publish date. A Studio job holds no publish date, so without it the folder carries the day it was archived, London time.
 - **Subject.** The approved title of the production brief bound to the job. A job made without a brief, and every V1 job, uses the approved package's first title, which is the Short's hook. A folder is never named by a job id.
-- **Where to post.** The package's platforms in plain names, always in the order YouTube, Substack, Shorts, Reels, TikTok, LinkedIn: `youtube_shorts` is Shorts and `instagram_reels` is Reels. Platforms whose masters are the same exact file share one file, named for all of them. Each copied master is hashed again against its approved hash.
+- **Where to post.** The package's platforms in plain names, always in the order YouTube, Substack, Shorts, Reels, TikTok, LinkedIn. That is the archive's file-naming order, kept so folder and file names stay stable; it is not the order Krish posts in, which is in `docs/AMPLIFICATION.md`. `youtube_shorts` is Shorts and `instagram_reels` is Reels. Platforms whose masters are the same exact file share one file, named for all of them. Each copied master is hashed again against its approved hash.
 - **Inside.** `where-to-post.txt` lists each file and where it goes, then each platform's approved titles, description, post and pinned comment, and where its cover and captions are in the job copy. `job.txt` names the job, the approved package hash and where the subject came from. `job` is an exact copy of the job folder, as the archive always held.
 - **Safe and never overwritten.** Names drop `< > : " / \ | ? *`, never end in a dot or a space, and stay within 150 characters by cutting only the subject. A folder that exists is never written into: a second archive of the same job lands in a folder ending ` (2)`. The job folder is never moved or changed.
 - **One rule.** The rule is written once as cases in `config/archive-naming.cases.json`, implemented in `packages/core/src/archive-naming.ts` and in `scripts/quick-edit/archive.py`, which files the videos made outside the Studio. Both are tested against every case.

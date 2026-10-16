@@ -42,6 +42,124 @@ neither runner machine has sent it, or the download broke.
 `scripts/post-pack/README.md`, "Recordings:
 from the Inbox to a cloud session".
 
+**The home computers place each take on its piece and cut by themselves.**
+Krish, 2026-10-12: each recording "goes to the right place when recorded".
+The recordings upload runs `scripts/post-pack/recording_match.py --record
+--board --by "Recordings lane"` at the end of every pass, on either machine;
+each take is stamped with the hash of the script it was read from, so a take
+of words that have changed since stops counting, and every take it is unsure
+of is one board item held in progress for a session, never on Krish's list
+(a session works it out, or asks him in its reply). A take already on a
+piece is fetched by the path its record holds: `recording.py get "recordings/<sha256>.<ext>"`.
+`scripts/post-pack/README.md`, "Placing takes on the runners". This is the
+one way a take comes back: Krish drops it at the top of the Video Engine
+Inbox.
+
+**Every video script opens with its series line, and a 12-year-old can
+follow it.** Krish, 2026-10-12: "We need something catchy at the start of a
+video script like "Here's what you need to know about how money is changing
+because of AI. I'm Krish." at the start of follow.the.money videos. And then
+similar for the weds and fri scripts." He picked the Wednesday and Friday
+lines, and "Drop it at the end" for the closing "I'm Krish", so his name is
+said once. The three lines live once, as `SERIES_OPENERS` in
+`apps/control-plane/api/_houseRules.ts` (house rule `SERIES_OPENER`). The
+same day: "I also feel like these scripts are too complicated for a layman
+to understand. Every single script should be understandable by a
+12-year-old. I can't even understand what I'm reading off the teleprompter.
+I thought we had hard gates for this?" House rule `R7` is that hard gate on
+every script: `scripts/post-pack/story_check.py` refuses a script that
+breaks the series line or the reading gate (`SCRIPT_READING`, beside the
+lines), and two fresh readers, each an ordinary 12-year-old hearing it once,
+must find nothing that loses them before it is sent (`make-piece`, "The
+Scripts step"; `making.py <piece> read-back`).
+
+**Each checked script goes to Krish's teleprompter.com account, and nothing
+there is ever deleted.** Krish, 2026-10-12: "Also note that Descript is
+permanently gone, teleprompter.com is permanently in, connected via MCP
+here". Asked "May every checked script go into your teleprompter.com account
+automatically, starting with Monday's two now?", he picked "Yes, automatic,
+Monday now", whose terms were: "One script per cut, in a folder per piece
+(e.g. "Mon 12 Oct follow.the.money"). When the words change, the same script
+is updated in place. Nothing is ever deleted." The exact scope
+(`config/teleprompter.json`):
+
+- **The send**, by `make-piece` at the Scripts step, or by any session that
+  `scripts/post-pack/teleprompter_send.py pending` shows a cut still to
+  send: `list_folders`, `list_scripts`, `list_scripts_in_folder`,
+  `get_folder` and `get_script` to look; `create_folder`, one folder per
+  piece, only when its record holds none; `create_script`, one script per
+  cut, only when its record holds none; `update_script` of the cut's own
+  script with only its `text` and `duration`, exactly as
+  `teleprompter_send.py plan` prints them, then `teleprompter_send.py
+  record`.
+- **Never**: `move_script` or `update_folder`; his font size, speed,
+  alignment or timed speed, which are his to set; a second folder for a
+  piece or a second script for a cut; and any deletion (Teleprompter has no
+  delete tool). Teleprompter holds scripts only: a take comes back through
+  the Inbox (the rule above).
+
+Descript was retired on 2026-10-12, the day it was set up, in his words
+above; no session calls it. Records written before then keep a `descript`
+field that nothing reads.
+
+**The week's publish board is where Krish ticks; the piece's making record
+is where it counts.** Krish, 2026-10-12: "Give me a tick box next to each
+one so I can tick as I go and you can durably record that completion where
+it needs to be recorded. That Publish Manager is what you create every
+Sunday and let me iterate inside until we're done". The Sunday session makes
+one board a week (`scripts/post-pack/week_board.py`, a private artifact with
+a tab for Monday, Wednesday and Friday; its link is on that week's board
+item, `week-publish-board-<its Monday>`, and in `WORKBENCH.md`), and a
+session that makes a piece republishes it to that same link, so no tick is
+lost and no day it holds is dropped (`--previous`). Completion is recorded
+in this order: his tick is saved at once in the board's own store; every
+making session in Claude Code (`make-piece`, `plan-week`, `produce-video`)
+copies each channel tick onto the piece the board names for that day,
+published or not, at its start and again before it stops (`making.py
+<piece> posted <channel> [url]`; `.agents/skills/make-piece/SKILL.md`, "The
+week's ticks"), reading last week's board too until every day on it is at
+100%; and from the record Control Center's done-check sweep closes the
+board items and Control Center shows it. An untick never removes a record. A Record tick is
+information only: Record is done from the takes on the record.
+
+**Every board item says how it ends; record the fact and the check closes
+it.** Krish, 2026-10-11: "I think closing what you can check is already
+done is one of the most obvious things I've ever heard of as a
+suggestion", and "I am happy to Clear(complete)/Bump/Purge things off my
+lists as I go but the rest should be automatically done." Every open item
+you write states `closes_on` (and `close_ref` when its kind needs one): a
+piece's step or `published`, the week's `week_planned` or
+`week_published`, `share_image_changed`, `job_ok`, `post_matched`,
+`take_placed`, `session` for work you hold, or `his_word` when nothing
+can see it done (only Krish puts one of those on his list). Close only items
+you hold (`closes_on` `session`); the engine and the database refuse any
+other close from a session (`check_closes_it`), and turning an open item
+that closes on a check's kind into `session` work (`kind_is_the_checks`).
+A close or reopen you relay
+from his words carries his exact words in `said`. Nothing in this
+repository closes a board item but the board route, which takes a close
+only from the sweep, Krish, or a session on its own work: a new kind of
+close is a new check in Control Center's `api/_doneChecks.ts`, never a
+closer here (`scripts/check-one-close.ts`). The rules and every refusal are
+in `WORKBENCH.md`, "The board".
+
+**`manual` means Krish's words; never write it.** A content idea with
+`source_type` `manual` is one he said, filed by Control Center's one door
+with `source_ref` `said:<said_parts id>`. Name your own source instead.
+The engine refuses a `manual` idea without that ref (400
+`manual_needs_his_words`), and so does the database once
+`20261021100000_manual_is_his_words.sql` is applied. No code under `apps/`
+calls a transcription API: his spoken ideas come in through Control
+Center's one door. Board
+items whose id starts `said-` are filed by Control Center from his words,
+and his notes about any open item come back on it as `said` from
+`GET /api/workbench`: read them before you work the item, and never answer
+them (`WORKBENCH.md`, "The board").
+
+**Video production goes through `.agents/skills/produce-video`, and licensed
+music lives only at `MINDMAKE_MUSIC_ROOT` with its ledger
+`config/music-library.json`**; never browse Drive for audio.
+
 **Codex on a Windows home computer:** run `scripts/engine.py` and `git pull` or
 `git push` outside the sandbox, asking Krish to approve. The sandbox runs as a
 separate Windows user that cannot see the engine key or reach the internet.
@@ -188,7 +306,12 @@ refuses. Every other retired name is in `docs/GLOSSARY.md`.
 ## Verification
 
 Run `npm run verify` before pushing. Validate all repo-scoped skills with
-`npm run skills:validate`. For the content engine, `npm run
+`npm run skills:validate`. Codex reads `.agents/skills`; Claude Code reads
+`.claude/skills`, which holds a real copy of the `SKILL.md` of each skill it
+loads (make-piece, plan-week, produce-video), never a link, because git on
+Windows checks a link out as a text file. After editing one of those skills,
+run `python scripts/validate-skills.py --sync-claude`; the validator fails
+while a copy differs from its source. For the content engine, `npm run
 typecheck:control-plane` and `npm run check:control-plane`. Known failures on
 `main` are listed in `docs/STATE.md`; anything else failing is yours to fix.
 

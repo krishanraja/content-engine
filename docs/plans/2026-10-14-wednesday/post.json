@@ -1,0 +1,95 @@
+{
+ "piece_id": "7554ed4a-560b-4365-b266-ea72abeed7ef",
+ "date": "2026-10-14",
+ "subchannel": "under.the.hood",
+ "subject": "Muse scored against its rivals",
+ "headline": "Amazon locked Meta's new AI out. Walmart let it in.",
+ "links": {},
+ "files": [
+  {
+   "kind": "image",
+   "file": "pics/three-kinds.png",
+   "name": "1-three-kinds-of-ai.png",
+   "logos": [
+    "OpenAI",
+    "Anthropic",
+    "Google",
+    "Meta",
+    "Apple"
+   ],
+   "purpose": "Three kinds of AI. Chatbots, ChatGPT or Claude. Work agents, Claude Cowork. Ready-made assistants run your errands, Muse by Meta and Siri by Apple. Not a fair fight."
+  },
+  {
+   "kind": "image",
+   "file": "pics/score-side.png",
+   "name": "2-who-pays.png",
+   "logos": [
+    "Meta",
+    "Apple",
+    "Anthropic",
+    "OpenAI",
+    "Google"
+   ],
+   "purpose": "Each company builds the kind that makes it money. Almost all of Meta's money comes from ads. OpenAI and Anthropic charge office workers a monthly fee."
+  },
+  {
+   "kind": "image",
+   "file": "pics/scorecard.png",
+   "name": "3-the-scorecard.png",
+   "logos": [
+    "Meta",
+    "Apple",
+    "Anthropic",
+    "OpenAI",
+    "Google"
+   ],
+   "purpose": "I scored Muse against Siri on six things. Muse and Siri tie on 43 out of 60, for opposite reasons. Siri keeps your stuff private."
+  },
+  {
+   "kind": "image",
+   "file": "pics/score-private.png",
+   "name": "4-who-can-read-it.png",
+   "logos": [
+    "Apple",
+    "Meta",
+    "Anthropic",
+    "OpenAI",
+    "Google"
+   ],
+   "purpose": "Muse falls behind Siri. Muse keeps your emails and passwords on Meta's computers. Meta says it can still look at them."
+  },
+  {
+   "kind": "image",
+   "file": "pics/shops.png",
+   "name": "5-each-shop-decides.png",
+   "logos": [
+    "Walmart",
+    "Amazon",
+    "WhatsApp"
+   ],
+   "purpose": "Muse can shop for you. Each shop decides whether to let Muse buy on its website. Walmart lets it in. Amazon blocked Muse. WhatsApp bookings."
+  },
+  {
+   "kind": "image",
+   "file": "pics/prediction.png",
+   "name": "6-prediction.png",
+   "logos": [
+    "Meta",
+    "Apple"
+   ],
+   "purpose": "My prediction. By the end of 2027, a big airline signs a deal with Meta and Apple. Only Muse and Siri can sell its tickets."
+  },
+  {
+   "kind": "video-script",
+   "file": "script.md",
+   "cut": "long"
+  },
+  {
+   "kind": "video-script",
+   "file": "script-90s.md",
+   "name": "video-script-90-seconds.md",
+   "cut": "short"
+  }
+ ],
+ "video_title": "Muse's real rival: Siri."
+}

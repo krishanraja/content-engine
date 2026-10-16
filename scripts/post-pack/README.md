@@ -44,8 +44,9 @@ makeyourmindup\
   3 Posts\
     2026-10-05 Mon follow.the.money - Who gets paid\
       READ ME.txt               what every file is for and where it goes
+      0 Publish\                publish.html: start here, every channel in order with Copy buttons (docs/AMPLIFICATION.md)
       1 Article\                substack-copy.html (paste into Substack), web-page.html, text-that-passed-the-fact-check.md, email-pictures-off.html
-      2 Covers and images\      substack-cover-3x2.png, the pictures in the post, share cards
+      2 Covers and images\      a cover for every place (below), the pictures in the post, share cards
       3 Video\                  the script, the YouTube and Substack words, the finished videos named by the archive rule
       4 Social\                 the LinkedIn post and its card
 ```
@@ -97,15 +98,32 @@ first post's facts.
 | `subject` | The post's short title, as it should read in the folder name: `Who gets paid`. |
 | `headline` | Optional. The headline, shown in `READ ME.txt`. |
 | `links` | Where it is published: `{"Substack": "https://...", "YouTube": "https://..."}`. |
+| `piece_id` | The piece's `content_ideas` id. With it, `build.py` and `send.py` record the pack and the visual gate on the piece's board row (`making.py`), so Control Center shows them within a second. |
 | `files` | Every file, each with a `kind` (below), or a `category` (`article`, `covers`, `video` or `social`) and a `purpose`. Paths are relative to `post.json`. `name` renames a file; `purpose` replaces the usual words. |
 
 | `kind` | Goes to | Named | What it is |
 |---|---|---|---|
+| `publish-kit` | 0 Publish | `publish.html` | `publish_kit.py`'s page: every channel in order, the file for each, and Copy buttons (docs/AMPLIFICATION.md) |
+| `publish-manager` | 0 Publish | `publish-manager.html` | `publish_manager.py`'s self-contained page: the article with its pictures, every picture, every channel's words and the scripts, each with a Copy button |
 | `substack-copy` | 1 Article | `substack-copy.html` | `scripts/pages`' `substack.html`: open it, press the Copy buttons, paste into Substack |
 | `web-page` | 1 Article | `web-page.html` | `scripts/pages`' `page.html` |
 | `fact-checked-text` | 1 Article | `text-that-passed-the-fact-check.md` | the body whose fact check passed (or `"text"`) |
 | `email-pictures-off` | 1 Article | `email-pictures-off.html` | `scripts/pages`' email with pictures hidden |
-| `cover` | 2 Covers and images | `substack-cover-3x2.png` | `scripts/pages --cover`'s `cover.png` |
+| `cover` | 2 Covers and images | `substack-feed-1200x800.png` | `scripts/pages --cover`'s `cover.png`, the 3:2 cover. Never uploaded to Substack, whose upload box crops it |
+| `substack-cover` | 2 Covers and images | `substack-cover-1200x630.png` | `cover-1200x630.png`: upload it in Substack's post settings |
+| `share-card-cover` | 2 Covers and images | `share-card-1200x675.png` | `cover-1200x675.png`: LinkedIn and link previews |
+| `square-cover` | 2 Covers and images | `square-1080x1080.png` | `cover-1080x1080.png`: the Instagram feed and the archive |
+| `vertical-cover` | 2 Covers and images | `vertical-cover-1080x1920-shorts-tiktok-reels.png` | `cover-1080x1920.png`: the cover on Shorts, TikTok and Reels |
+
+Every pack with a `cover` carries all four of the others (Krish, 2026-10-12:
+"the cover crops need to be all individual images, a vertical cover thumbnail
+for the shorts/tiktok etc as well, every post moving forward"). Each is added
+by itself from beside `cover.png`, where `scripts/pages --cover` draws it;
+a pack missing any, or holding one of the wrong size, is refused, and the
+visual gate holds each to its own receipt (`cover-WxH.json`).
+
+| `kind` | Goes to | Named | What it is |
+|---|---|---|---|
 | `cover-crops`, `phone-check` | 2 Covers and images | `cover-crops.png`, `phone-images.png` | the checks `scripts/pages` draws; never posted |
 | `image`, `share-card` | 2 Covers and images | their own names | a picture in the post; a card for sharing it |
 | `video-script` | 3 Video | `video-script.md` (or its own type) | the script to record from (or `"text"`) |
@@ -115,19 +133,165 @@ first post's facts.
 | `linkedin-post` | 4 Social | `linkedin-post.txt` | the LinkedIn post (or `"text"`) |
 | `linkedin-card` | 4 Social | `linkedin-card` and its type | the picture for the LinkedIn post |
 
+## The edge check
+
+Krish, 2026-10-07, of the Higgsfield picture "Who keeps what", whose source
+line was cut off at the bottom: "stuff like this can't happen - why do we not
+check basic things like this?" "What's inside Higgsfield" had the same fault,
+its dark card running off the bottom. Both had passed the phone check, which
+measured how big the words were and never whether they fitted.
+
+`build.py` now runs `edge_check.py` on every picture packed as an `image`:
+anything other than the background along an edge (words, a card, a bar) means
+the picture is cut off, and it is not packed. A solid frame or accent bar
+painted along an edge is allowed. Only Krish's own words in
+`"edge_check_override"` let a cut picture through. `scripts/pages/card.py`
+checks the same thing before a picture becomes a PNG, from the page itself: it
+refuses any word that the card's edge, or a box hiding what spills out of it,
+cuts through.
+
+    python scripts/post-pack/edge_check.py IMAGE [IMAGE ...]
+    python scripts/post-pack/edge_check.py --self-test
+
+## The publish manager
+
+Krish, 2026-10-10: "there should just be a copy button. Same for pictures."
+`publish_manager.py manager.json --out DIR` writes `publish-manager.html`,
+one self-contained page with every picture embedded, a Copy button on every
+word and every picture, Copy article (headings and pictures in place, as
+Substack takes it), and Download on each picture. Pack it as
+`publish-manager`.
+
+    python scripts/post-pack/publish_manager.py WORKDIR/manager.json --out DIR
+    python scripts/post-pack/publish_manager.py --self-test
+
+## The publish page
+
+Krish, 2026-10-09: "Build a durable amplification strategy that looks cohesive
+and is really easy for me to take from Drive to Publish." The plan is
+`docs/AMPLIFICATION.md`: one Substack Video post (the 3-minute long cut on
+top, the article under it), then YouTube, then Shorts, TikTok and Instagram
+with the 90-second short cut; LinkedIn, WhatsApp and Notes are optional.
+`publish_kit.py publish.json --out DIR`
+writes `publish.html` for one post; pack it as `publish-kit`.
+
+    python scripts/post-pack/publish_kit.py WORKDIR/publish.json --out DIR
+    python scripts/post-pack/publish_kit.py --self-test
+
+## The week's publish board
+
+Krish, 2026-10-12: "just give me one ... Publish Manager for the ... whole
+week with 3 tabs on it for Mon / Weds / Fri, which we need to get to 100%.
+Give me a tick box next to each one so I can tick as I go and you can
+durably record that completion where it needs to be recorded. That Publish
+Manager is what you create every Sunday and let me iterate inside until
+we're done, and then I check off the list what I have done as I do it."
+
+`week_board.py` builds that one page (its template is `week_board/`). Each
+tab is a made piece's whole publish page (`publish_manager.py`'s, given with
+`--day`), or a designed "not made yet" or "not picked" state. A made tab
+opens with Record (each cut's script in Teleprompter by its title, and its
+folder, from the making record's teleprompter field or a small JSON of ids,
+and how the take comes back: dropped at the top of the Video Engine Inbox),
+the two scripts to copy and the checklist; a tick also sits by each
+channel's heading. Seven ticks make a day 100% (both cuts recorded, then
+Substack, YouTube, Shorts, TikTok, Instagram); LinkedIn, WhatsApp and Notes
+are optional. A day's piece comes from `--piece`, or from the week's picks
+(`--options`, a saved `GET /api/week/options` answer, or `--live`, which
+only reads): the piece of the day's series scheduled for its date in any
+picked state, published included (the options' `scheduled` list), since
+the publish watcher marks a piece published once its Substack post is live
+and Krish still posts the rest from its tab.
+
+    python scripts/post-pack/week_board.py --week 2026-10-12 --day mon=monday-publish.html --day fri=friday-publish.html \
+        --piece mon=<uuid> --piece fri=<uuid> [--teleprompter mon=record.json] --live --previous <the board it replaces> --out week-board.html
+    python scripts/post-pack/week_board.py --show <a board page or week-board.json> [--json]
+    python scripts/post-pack/week_board.py --self-test
+    npx vitest run tests/control-plane/week-board.test.ts
+
+A rebuild never loses a day. `--previous` is the board being replaced (its
+`week-board.json`, or its page as `Artifact read` saved it): a day it holds
+as made or picked that the rebuild would show as not picked is refused, and
+so is a made day with no publish page in the rebuild; `--unpick DAY` says a
+day really has no piece now. With `--live`, a picked piece whose making
+record has a publish page must come with it (`--day`). `--show` prints the
+days a board holds, each day's state and piece: the piece a tick on that
+day belongs to.
+
+Every tick saves at once in the page's own store: `ticks/<day>-<step>`
+(`done, at, day, piece_id, step, channel, label`) and `links/<day>`
+(`article, youtube, at`). Publish it as an artifact with title "This Week's
+Publish Board", icon `calendar` and capabilities `{"db": {}, "downloads":
+true}`; the call is in `week-board.json`, written beside the page with the
+week, each day's state and piece, and every tick id. A rebuilt board
+republished to the same page keeps every tick, because the store stays with
+the page and the ids depend only on the day and the step
+(`fixtures/week-board/published-2026-10-12.json` holds the published
+board's tick ids and steps, and the test runs the page's own script against
+a stand-in store); make a new page each Sunday, with its own board item,
+`week-publish-board-<Monday>`. A session copies each channel tick onto the
+piece with `making.py <piece> posted <channel> [url]`; Record is done from
+the takes on the record, never from a tick.
+
+## The visual gate
+
+Krish, 2026-10-10, of Friday's first cover and pictures: "we need to add all
+the logos of the businesses that are related to what we are talking about ...
+an article like this should screenshot as many live articles of model
+releases ... it should pile up on top of one another visually ... The cover
+and email thumbnail is really boring and losing it's personality ... it needs
+to be a literal gate that stuff like this cannot be produced, whether in
+static asset form or video."
+
+`build.py` runs `visual_gate.py` on every pack and refuses it when:
+
+- a company the fact-checked body names (`config/logo-registry.json`) has its
+  real logo on no picture, not on the cover, or not declared on a video
+  (`"logos": ["OpenAI", "Anthropic"]` on each `image`, `cover` and `video`
+  entry: the companies whose real logos, from Brandfetch, it shows);
+- the body is about volume ("so many", "every few months", a count of
+  releases) and no picture is built from real pages: an `image` entry with
+  `"evidence": {"pages": [{"url", "date", "shot"}, ...]}` of at least six
+  real, dated pages, screenshotted and piled up;
+- the cover did not come from `scripts/pages/build.py --cover` (its
+  `cover.json` receipt must match the PNG), has no portrait, or has no logo
+  rows when the piece names companies.
+
+Only Krish's own words in the post file's `"visual_gate_override"` let a pack
+through without. `python scripts/post-pack/visual_gate.py post.json` explains
+what would pass or fail before packing.
+
 ## The story check
 
 A `video-script` is packed only if it passes `story_check.py` (Krish,
 2026-10-06, walk log F75: "they need to actually make sense to humans", then
 "happy with that idea" of the five-point story check). It refuses a script
-that does not open on a question, one of a minute or more with no spoken
+that holds anything but the words Krish says (stage directions, labels,
+timings, headings, joke options: house rule SCRIPT_ONLY), one whose outro
+never sends people to the article (HOOK_AND_CTA), one that does not open on a question, one of a minute or more with no spoken
 outro after the call (so it never ends on the number), one that speaks an
 article heading or a REAL or THEATRE stamp aloud, and one with lines still
 marked NOT YET FACT-CHECKED. Run it on any script before sending it to Krish:
 
 ```
-python scripts/post-pack/story_check.py SCRIPT
+python scripts/post-pack/story_check.py --cut long SCRIPT    # or --cut short
 ```
+
+Every piece has two scripts, one per cut, each with its own hook and outro
+(house rule TWO_CUTS, Krish, 2026-10-11): the 3-minute long cut, 405 to 495
+spoken words, and the 90-second short cut, 160 to 225. Give each
+`video-script` entry its `"cut": "long"` or `"cut": "short"` so the length is
+checked; a file name that says `long`, `3min`, `short` or `90` does the same.
+An entry that says neither is packed with a warning that its length was
+checked against neither cut. `making.py <piece id> scripts long.md short.md`
+checks both and records them on the piece, the long cut first; one script
+alone never passes. It records each script's hash and when each cut's words
+last changed, and when a cut's words change while a take of it is on the
+piece, it asks Krish on the board whether to use that take (one item,
+`take-<sha12>`, never reopened once answered). The story check also warns
+about a line saying the script was made with AI (house rule
+NO_AI_DISCLOSURE_LINE, Krish, 2026-10-12: "Eliminate the "I made this with
+AI" entirely - no need, it's like verbal diahorrea").
 
 Only Krish's own words, in the file's `"story_check_override"` (starting
 "Krish"), let a failing script through. The rest of the story check (every
@@ -224,10 +388,32 @@ Before the first install, the engine's migration
 (`supabase/migrations/20261006120000_content_library.sql`) must be applied and
 the engine deployed: the check asks the engine for its library.
 
+## Where a piece's files are
+
+```
+python scripts/post-pack/plan_files.py docs/plans/PLAN/post.json [--files DIR ...] [--json]
+python scripts/post-pack/plan_files.py --self-test
+```
+
+A piece's `post.json` names each script and picture as it was called in the
+working folder it was made in, which is usually on another machine.
+`plan_files.py` finds the same files wherever they are on this machine, in
+one order every tool shares (`scripts/quick-edit/kit.py` asks it): beside
+`post.json`; for a script, the dated draft the repository keeps beside the
+plan (`docs/plans/<date>-draft-script.md` and `-draft-script-90s.md`); the
+pack staged here (`.cache/post-pack/<pack folder>`); each `--files` folder
+(the working folder, or the post's library folder by packed names); then the
+library on this machine (`MINDMAKE_LIBRARY_ROOT`, and on Windows
+`runtime.library_root`). It only reads. Exit 0 when every script and picture
+is found, 1 when any is not (each listed with every place it looked), 2 when
+`post.json` cannot be read. So a piece's scripts are found anywhere the
+repository is, and its pictures once the pack is sent, or with `--files`
+until then.
+
 ## Recordings: from the Inbox to a cloud session
 
 **What.** Every recording Krish drops into the Video Engine Inbox
-(`H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox`,
+(`H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox`,
 `MINDMAKE_MEDIA_INBOX` on the runner machines) reaches the engine's private
 storage within about ten minutes, and any cloud session fetches it with one
 command.
@@ -269,12 +455,18 @@ python scripts/post-pack/recording.py list
 python scripts/post-pack/recording.py get "2026-10-06 take 1.mp4"
 python scripts/post-pack/recording.py get "2026-10-06 take 1.mp4" --wait 15
 python scripts/post-pack/recording.py get NAME --out DIR
+python scripts/post-pack/recording.py get "recordings/<sha256>.mp4"     # a take already on a piece, by the path its record holds
+python scripts/post-pack/recording.py get --sha256 <sha256>
 ```
 
 `list` prints the recordings, the newest first. `get` downloads the newest
 recording with that name (an exact match first, then ignoring case, then
 without the extension) into `.cache/recordings/` (git ignores it) or `--out`,
-and checks its size and sha256 before keeping it. `--wait MINUTES` polls until
+and checks its size and sha256 before keeping it. A piece's making record
+names each take by the engine's copy, `recordings/<sha256>.<ext>`
+(`python scripts/engine.py GET /api/content-ideas/<id>/making --full` lists
+them), so a session that picks up a piece whose takes are already recorded
+fetches them by that path or by `--sha256`, with no file name. `--wait MINUTES` polls until
 it appears, for a file Krish has just dropped. It authenticates as
 `scripts/engine.py` does. Then edit it with `scripts/quick-edit`.
 
@@ -316,6 +508,170 @@ lets the bucket hold Matroska. Until it is applied an `.mkv` is refused with
 without it. The project's storage upload limit must be at least 500 MiB, as
 for the library.
 
+## Placing takes on the runners
+
+**What.** Each take Krish drops in the Inbox is placed on its piece and cut by
+the home computers themselves, within about fifteen minutes, with nothing
+for him or a session to do. Krish, 2026-10-12: each recording "goes to the
+right place when recorded".
+
+**How.** At the end of every pass, on either machine, the recordings upload
+(`scripts/recordings-upload.ps1`, above) lists the engine's takes and, when
+one is held by no piece and is not in the answered book, runs with the pinned
+Python (`%USERPROFILE%\Documents\MindmakeVideoStudio\runtime\python\Scripts\python.exe`,
+built by `npm run bootstrap:python`):
+
+```
+python scripts/post-pack/recording_match.py --record --board --by "Recordings lane" --json
+```
+
+`recording_match.py` finds the pieces waiting for a recording this week and
+next (Scripts done, Record not), hears the first 45 seconds of each new take
+(faster-whisper; the words are cached by sha256), and decides the piece by
+its words and the cut by its words or its length:
+
+- **Sure**: it records the take on its piece and cut (`making.py recorded`),
+  stamped with `script_sha256`, the hash of the script it was read from
+  (the piece's current words for that cut). Record is done when both cuts
+  have a take of their current words.
+- **Unsure**: one board item, `take-<first 12 of its sha256>`, held in
+  progress for a session and never on Krish's list: nothing he can press
+  answers which take it is, so a session works it out, or asks him in its
+  reply. When the piece is known the item names it (`idea_id`). It says
+  `closes_on` `take_placed`, and the lane closes nothing: Control Center's
+  done-check sweep closes it once the take is on a piece, lets it go once
+  the lane notes that no waiting piece can be it (`"close_ref":
+  {"no_piece": true}`, `making.py` `board_note`), and lets go of one no
+  session has touched for a week. One the old lane put on him is moved off
+  his list when it is asked again.
+  It is asked once for each question (its status, its piece, older words or
+  not), never again because a score or the closest piece shifted. The board
+  is read first and an item is never reopened: one Krish answered, or a
+  session closed, stays closed on both machines.
+- **Old**: a take that arrived before any waiting piece's record began is
+  none of their takes, and is left alone without being heard. It is not
+  booked for good: the upload looks at it again six hours later.
+- **Failed**: a take that cannot be heard (a transcriber that cannot decode,
+  a file ffmpeg cannot read) is one `failed` line, naming the pinned install,
+  never a stop for the others.
+
+**The time rule, cut by cut.** `making.py scripts` keeps when each cut's
+words last changed (`script_check.changed_at`), which moves only when that
+cut's words change; a record from before the hashes counts as changed. A take
+recorded after its own cut's time is a take of the current words and can be
+placed, so a change to the long script never makes a short take of unchanged
+words look old. When a take was recorded is the time its file says it was
+made (its `creation_time`), when that falls after the piece's record began and
+no later than it reached the engine; otherwise when it reached the engine. A
+take recorded after the piece's record began (`started_at`, written once on
+the record's first write and never moved) but before its cut's words last
+changed is heard too: if it matches, it is unsure, "recorded before the
+script last changed", and Krish says whether to use it. A take already on a
+piece whose script's words changed after it no longer counts: `making.py
+show` says so, Record shows "recorded from an older script", and it is asked
+about the same way. `making.py recorded` refuses to stamp such a take as
+current without his words (`--krish-words "Krish, DATE: ..."`), which it keeps
+on the take.
+
+**What it keeps.** The matcher keeps `.cache/recordings/answered.json` in the
+recordings-source copy: every take it asked about, or left alone for a newer
+take of the same cut, so it is never asked twice. A take it downloads only to
+hear its opening is deleted once heard (the words stay cached by sha256), so
+the runners' disks do not fill; a session that fetches a take on purpose
+(`recording.py get`) keeps it. The upload keeps `placing.json` beside its log:
+the takes a piece holds (learnt from the matcher's own answer) and when to
+look again at a take no piece was waiting for (an hour), one that failed (a
+quarter of an hour) or one older than every waiting piece (six hours). Both
+runners may place the same take: recordings merge by path and the board
+item's id is fixed, so nothing is doubled. Each machine's log says what it
+placed and asked (`match:` lines).
+
+**What it needs.** On each runner: the engine key in Credential Manager
+(`scripts/engine-key.ps1`, once), the pinned Python with a faster_whisper
+that decodes sound (`recording_match.py --check-transcriber`), and ffmpeg.
+`install-recordings-upload.ps1` runs the upload with `-Check`. A problem with
+sending (the Inbox, the runner key, the engine) stops the install, naming
+it. A problem only with placing is the check's exit 3: it names it and
+installs anyway, so that machine still sends recordings while the other
+places them (`-RequirePlacing` makes it a stop).
+
+It never writes to the Inbox, never sends anything outside the engine, and
+never produces a video: that is `.agents/skills/produce-video`.
+
+## The scripts: the series line, reading age 12 and the read-back
+
+`story_check.py --cut long|short --series <lane_slot> SCRIPT` refuses a
+script that does not open with its series line, word for word, or says
+"I'm Krish" again after it (house rule SERIES_OPENER; Krish, 2026-10-12: "We
+need something catchy at the start of a video script like "Here's what you
+need to know about how money is changing because of AI. I'm Krish." at the
+start of follow.the.money videos. And then similar for the weds and fri
+scripts", and "Drop it at the end"), and one a 12-year-old could not follow
+heard once (house rule R7; Krish, 2026-10-12: "Every single script should
+be understandable by a 12-year-old. I can't even understand what I'm
+reading off the teleprompter. I thought we had hard gates for this?"): a
+spoken sentence over 20 words, more than 12 words a sentence on average, a
+reading grade over 6, a quotation over four words, or a word on its list
+(licensing, settlement, revenue, model and the rest) its sentence does not
+explain. The lines and the gate's numbers are read from
+`apps/control-plane/api/_houseRules.ts` (`SERIES_OPENERS`, `SCRIPT_READING`),
+the one place they live. `making.py scripts` runs it with the piece's
+series, and `build.py` with the post's subchannel. Then two fresh readers,
+each an ordinary 12-year-old hearing the script once, must find nothing that
+loses them (their prompts are in `.agents/skills/make-piece/SKILL.md`, "The
+Scripts step"); `making.py PIECE read-back CUT --readers ...` records it on
+the script check, tied to the words they heard.
+
+    python scripts/post-pack/story_check.py --cut long --series follow_the_money docs/plans/2026-10-12-draft-script.md
+    python scripts/post-pack/making.py PIECE read-back long --readers "reader A, a fresh subagent" "reader B, a fresh subagent"
+
+## Scripts into Teleprompter
+
+Krish, 2026-10-12: "Also note that Descript is permanently gone,
+teleprompter.com is permanently in, connected via MCP here". Asked "May
+every checked script go into your teleprompter.com account automatically,
+starting with Monday's two now?", he picked "Yes, automatic, Monday now",
+whose terms were: "One script per cut, in a folder per piece (e.g. "Mon 12
+Oct follow.the.money"). When the words change, the same script is updated
+in place. Nothing is ever deleted." His words, the tools allowed and the
+names are in `config/teleprompter.json`.
+
+`teleprompter_send.py` makes no Teleprompter call. `plan` reads the piece's
+making record, refuses unless the scripts' check passed, each file holds the
+words it passed and each cut to send was read back, and prints the calls the
+session makes with the Teleprompter connector, in order: `list_folders` and
+`create_folder` only when the record holds no folder for the piece ("Mon 12
+Oct follow.the.money - Who gets paid for AI songs"); for each cut never
+sent, `list_scripts_in_folder` and `create_script` with its title ("Mon 12
+Oct - 3-minute - Who gets paid for AI songs"), its spoken words (markdown
+stripped, a blank line between paragraphs) and its duration (its words at
+150 a minute, in whole seconds); for a cut whose words changed,
+`update_script` of the same script with only its text and duration; then the
+`record` line, which writes the folder, the cut's script, its title and the
+hash of the words sent onto `meta.making.teleprompter` (`making.py
+teleprompter` is the same). Ids are uppercase UUIDs. His font size, speed,
+alignment and timed speed are never sent, and nothing is ever deleted,
+moved or renamed. A failed send is recorded with what Teleprompter said and
+when (`record --error`, with `--folder` once `create_folder` gave one, so no
+second folder is made). `pending` lists every cut in flight this week and
+next whose current words Teleprompter lacks or holds older, with its plan
+line; a cut sent by hand that the record does not hold yet gets its
+`WORKBENCH.md` record line instead, and a cut whose send failed less than
+six hours ago is held back until its words change or `--retry`.
+
+    python scripts/post-pack/teleprompter_send.py pending [--week YYYY-MM-DD] [--retry]
+    python scripts/post-pack/teleprompter_send.py plan PIECE long.md short.md [--post post.json]
+    python scripts/post-pack/teleprompter_send.py record PIECE CUT --folder ID --script ID --sha SHA256 [--title T] | --error "what Teleprompter said"
+    python scripts/post-pack/teleprompter_send.py --self-test
+
+Teleprompter holds scripts only. A take comes back one way: Krish drops it
+at the top of the Video Engine Inbox and the runners place it, as above.
+
+Descript was retired on 12 October, the day its lane was built (Krish:
+"Descript is permanently gone"); `descript_send.py` and `descript_take.py`
+were removed with it, and the recordings upload's single-file send that
+only they used.
+
 ## Size and storage
 
 The library's bucket is private, holds only the file types a post, the brand
@@ -331,7 +687,14 @@ signed URLs and never pass through the engine's functions.
 python scripts/post-pack/build.py --self-test
 python scripts/post-pack/send.py --self-test
 python scripts/post-pack/recording.py --self-test
-npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/library-recordings.test.ts tests/control-plane/post-pack.test.ts tests/library-sync.test.ts tests/recordings-upload.test.ts
+python scripts/post-pack/recording_match.py --self-test
+python scripts/post-pack/making.py --self-test
+python scripts/post-pack/plan_files.py --self-test
+python scripts/post-pack/story_check.py --self-test
+python scripts/post-pack/teleprompter_send.py --self-test
+python scripts/post-pack/week_board.py --self-test
+npx vitest run tests/control-plane/library-path.test.ts tests/control-plane/library-routes.test.ts tests/control-plane/library-recordings.test.ts tests/control-plane/post-pack.test.ts tests/control-plane/making.test.ts tests/control-plane/recording-match.test.ts tests/library-sync.test.ts tests/recordings-upload.test.ts
+npx vitest run tests/control-plane/teleprompter-send.test.ts tests/control-plane/week-board.test.ts tests/control-plane/week-options.test.ts tests/control-plane/house-rules.test.ts
 ```
 
 ## What stays out of the repository

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Produce the video"
+  short_description: "Both cuts from Krish's takes, with music, sting and thumbnails"
+  default_prompt: "Use $produce-video: my recordings are in the Video Engine Inbox."
+policy:
+  allow_implicit_invocation: true

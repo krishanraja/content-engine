@@ -24,8 +24,8 @@ import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  carryForward, combine, ENTAIL_SYSTEM, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
-  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, sourcesHash, sourcesText, splitFresh, summarise, sweep,
+  carryForward, combine, ENTAIL_SYSTEM, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
 
@@ -312,7 +312,8 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   // A sentence an earlier run passed or set aside, unchanged since and checked
   // against the same sources, keeps that result (walk log F52).
   const hash = sourcesHash(meta)
-  const carry = carryForward(body, all, looked.setAside, meta.fact_ledger as FactLedger | undefined, hash)
+  const parts = sourcePartHashes(meta)
+  const carry = carryForward(body, all, looked.setAside, meta.fact_ledger as FactLedger | undefined, hash, parts)
   const fresh = splitFresh(carry.toCheck, MAX_CLAIMS)
 
   const checked = await pool(fresh.now, POOL, async (c): Promise<CheckedClaim> => {
@@ -330,7 +331,7 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   result.second_look = { sentences: leftovers.length, unanswered: second.unanswered }
   result.carried = carry.sentences
   if (fresh.later) { result.passed = false; result.blocking += fresh.later; result.unchecked = fresh.later }
-  return { result, ledger: settle(body, result, meta.fact_ledger as FactLedger | undefined, hash) }
+  return { result, ledger: settle(body, result, meta.fact_ledger as FactLedger | undefined, hash, parts) }
 }
 
 /** A run the provider stopped: revise's typed answer, and nothing written. */
@@ -367,7 +368,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'GET') {
     const gate = gateStatus(meta, body)
-    const nextRun = factLedgerCoverage(body, ledger, sourceHash)
+    const nextRun = factLedgerCoverage(body, ledger, sourceHash, sourcePartHashes(meta))
     // The whole pre-publish checklist rides along, so Control Center can show
     // Krish every house rule this exact version passes or fails in one place.
     const checks = publishChecks(body, gate)
@@ -375,7 +376,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // a carousel or a web edition to show on screen (api/_receipts.ts). Only
     // for the exact version that passed.
     const proof = gate.ok ? receipts(meta.fact_check, readMaterials(meta)) : []
-    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun })
+    // The free pre-check (api/_factGate.ts numbersNotOnFile): what a paid run
+    // would have to lean on the web for, read before anyone pays for one.
+    const precheck = { numbers_not_on_file: numbersNotOnFile(body, meta) }
+    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck })
   }
 
   if (body.trim().length < 200) return res.status(409).json({ ok: false, error: 'There is no draft to check yet.' })
@@ -387,7 +391,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (rawCap !== undefined && (!Number.isInteger(rawCap) || Number(rawCap) < 0 || Number(rawCap) > MAX_CLAIMS)) {
     return res.status(400).json({ ok: false, error: `max_fresh_sentences must be a whole number from 0 to ${MAX_CLAIMS}.` })
   }
-  const scope = factLedgerCoverage(body, ledger, sourceHash)
+  const scope = factLedgerCoverage(body, ledger, sourceHash, sourcePartHashes(meta))
   if (rawCap !== undefined && scope.fresh_sentences > Number(rawCap)) {
     return res.status(409).json({
       ok: false,

@@ -83,8 +83,7 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 
 | Route | What it does | Model and external services |
 |---|---|---|
-| `POST /api/content-ideas` | capture: dedup, relevance gate for non-manual sources, enrich, embed, insert as `seeded` | Haiku relevance [`relevance-classifier`], Sonnet enrich [`cleo`], OpenAI embeddings |
-| `POST /api/content-ideas/voice` | transcribe a spoken idea | OpenAI `gpt-4o-transcribe` |
+| `POST /api/content-ideas` | capture: refuses a missing or unknown `source_type` (400 `source_type_unknown`, the allowed values in `detail`) (`manual` means Krish's words, filed only by Control Center's filer with `source_ref` `said:<said_parts id>`; a `manual` idea without that ref is refused with 400 `manual_needs_his_words`, and the database CHECK `content_ideas_manual_is_his_words` refuses it at write once its migration is applied), then dedup, relevance gate for non-manual sources, enrich, embed, insert as `seeded` | Haiku relevance [`relevance-classifier`], Sonnet enrich [`cleo`], OpenAI embeddings |
 | `POST /api/content-ideas/research-topic` | research a topic Krish names; inserts a `drafting` row with a live `lane_slot` | Perplexity `sonar-pro`, then Exa, then Brave; Sonnet [`cleo-research-topic`] |
 | `/api/content-ideas/[id]/materials` | list, attach or remove `meta.materials` | none |
 | `/api/feed/ingest` (cron) | two days of the CTRL corroborated-headlines pool through the beat gate and relevance classifier; every story to `trend_observations`, survivors to `content_ideas` as news that expires at the Monday purge | CTRL Supabase, Haiku [`feed-ingest`] |
@@ -110,6 +109,13 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/content-ideas/cluster` (cron) | embeddings backfill, then clustering at cosine 0.78 or more | Haiku [`cleo-cluster`] |
 | `/api/content-ideas/archive-stale` (cron) | archives idle ideas | none |
 | `/api/shifts/detect` (cron), `/api/shifts/[id]` | proposes shifts over a 21-day corpus through a deterministic gate; Krish's rulings on them | Sonnet [`shifts-*`] |
+| `/api/signals/news` (cron) | news velocity for the pieces in play: what GDELT saw about each subject in two days and what Hacker News said, every headline to `trend_observations` (origin `gdelt` or `hn`, story key the piece's id, `gathered_not_selected`); a subject that doubles in a day turns the board's "News velocity" signal to warn (`api/_signals.ts`, docs/ENGINE_100X.md) | none, keyless |
+| `/api/signals/odds` (cron) | the market's odds on every Call with a market pinned: reads Polymarket or Kalshi once a day and appends the reading to `meta.call_market.history` | none, keyless |
+| `/api/content-ideas/[id]/call-market` | pin a prediction market (Polymarket slug or Kalshi ticker) to a piece's dated Call, read once to refuse a wrong one; GET reads it, `{clear: true}` unpins | none, keyless |
+| `/api/content-ideas/[id]/making` | where the piece is between the workroom and every channel (`meta.making`: workroom and publish page links, visual gate, script check, pack, recordings, video assets, channels posted, the session making it); GET reads it with the steps, POST merges a patch. Written by Claude Code sessions (`scripts/post-pack/making.py`) and by Krish's cookie when he ticks a channel off; read by Control Center over its realtime subscription on `content_ideas`, and by its done-check sweep for each piece's steps. After a write lands it asks that sweep to look at the piece's open board items (`POST /api/done-checks {keys}` with the access cookie, `_controlCenter.ts`; the write waits up to 3 s for it before it answers); it closes none itself | none, keyless |
+| `/api/week/options` | the week's options (Krish, 2026-10-11: one Sunday decision for Monday, Wednesday and Friday). GET `?week_start=<Monday>` hands a session each series' mandate, the options written for that week, what is in flight, the judges' best and the ideas Krish dropped in; POST `{week_start, series, options:[{id, rank, pitch, why_now, recommended}]}` writes `meta.week_option` on each row and clears it from rows the day no longer offers. Read live by Control Center's week page. Picks nothing | none, keyless |
+| `/api/publish/watch` | hourly: marks a piece published from the publication's public archive (and ticks Substack on its making record, when it has one), asks the done-check sweep to look at its board items, and holds a fresh post that matches no piece as one `post_matched` question for a session (`_publishWatch.ts`). It closes no board item: Control Center's done-check sweep does (step 4) | none, keyless |
+| `/api/calls` | public, read-only: every published piece's Call, our confidence, `not_due_yet` or `due`, Krish's verdict when he has made it, and the pinned market's odds; the scoreboard on makeyourmindup.ai reads it | none |
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
 
@@ -137,7 +143,7 @@ has passed. `POST /api/content-ideas/:id/judge` answers such a panel with 503
 | `POST /api/content-ideas/[id]/draft` | writes a 700 to 1000 word draft to the subchannel's mandate from everything curation left on the row (`api/_curation.ts`); refuses an unrouted idea (409 `no_subchannel`); moves `seeded` or `researching` to `drafting`; keeps the last 10 drafts. Self-checked before it is written (below) | Sonnet [`cleo-draft`; the self-check's retry `cleo-draft-retry`] |
 | `POST /api/content-ideas/[id]/revise` | streams a rewrite preview (tone, length, zoom, feedback, humour; in place when given a selection). Reads the mandate. Never writes `body`; the caller saves an accepted rewrite. Self-checked before `done` (below) | Sonnet, or Opus for humour [`cleo-revise`; the self-check's retry `cleo-revise-retry`], prompt caching on |
 | `POST /api/content-ideas/[id]/final-pass` | the ship-moment rubric: instant fails, autofixes, suggestions, a verify list; judged against the subchannel's mandate, or the investigation rubric when an evidence manifest is attached | Sonnet [`cleo-final-pass`] |
-| `POST /api/content-ideas/[id]/fact-check` (`GET` reads the last result) | the fact gate (`api/_factGate.ts`). Lists every checkable claim, sweeps the body so no sentence with a number or a quotation escapes, then checks each claim twice: against the sources on file (the model must quote up to three passages verbatim that carry the claim's numbers, and code confirms them) and independently on the web (Perplexity `sonar-pro`, else Exa or Brave judged), whose verdict counts only when a second model finds its quoted evidence bears it out. One source is enough only when it is a verbatim excerpt (a material filed with `verbatim: true` and its URL); a claim found only in a summary needs the web to agree. Stores `meta.fact_check`, pinned to a hash of the exact body. A sentence an earlier run passed or set aside keeps that result while its words and the sources are unchanged (`meta.fact_ledger`, walk log F52); a failed sentence is always checked again, and any change to the sources starts the ledger again. `GET` reports how many exact sentences the next run can reuse. A paid rerun may send `max_fresh_sentences`; when the current body exceeds that hard scope, the route refuses before its first model or web call (`rerun_scope`, walk log F55) | Sonnet [`fact-gate-*`], Perplexity |
+| `POST /api/content-ideas/[id]/fact-check` (`GET` reads the last result) | the fact gate (`api/_factGate.ts`). Lists every checkable claim, sweeps the body so no sentence with a number or a quotation escapes, then checks each claim twice: against the sources on file (the model must quote up to three passages verbatim that carry the claim's numbers, and code confirms them) and independently on the web (Perplexity `sonar-pro`, else Exa or Brave judged), whose verdict counts only when a second model finds its quoted evidence bears it out. One source is enough only when it is a verbatim excerpt (a material filed with `verbatim: true` and its URL); a claim found only in a summary needs the web to agree. Stores `meta.fact_check`, pinned to a hash of the exact body. A sentence an earlier run passed or set aside keeps that result while its words and the sources are unchanged (`meta.fact_ledger`, walk log F52); a failed sentence is always checked again, and any change to the sources starts the ledger again. `GET` reports how many exact sentences the next run can reuse, and `precheck.numbers_not_on_file`: every stated number no filed source carries, read without a model (2026-10-15). `scripts/engine.py` reads that `GET` before every `POST` and refuses the paid run while the list is not empty, unless `--despite-precheck`. A paid rerun may send `max_fresh_sentences`; when the current body exceeds that hard scope, the route refuses before its first model or web call (`rerun_scope`, walk log F55) | Sonnet [`fact-gate-*`], Perplexity |
 | `POST /api/content-ideas/[id]/dive-deeper` | suggests research questions or runs one scoped dive and files it as a material | Perplexity `sonar-pro`, Sonnet [`cleo-dive-deeper`] |
 | `POST /api/content-ideas/[id]/challenge` | steelman, counter-case, sharper take | Perplexity, NewsAPI, Apify, Sonnet [`cleo-challenge`] |
 | `POST /api/content-ideas/[id]/deepen` | comparison research. Accepts only `paid` and `built` | Sonnet [`cleo-deepen`] |
@@ -507,7 +513,7 @@ accept is recorded by whoever accepted it.
 | `GET /api/content-engine/health` | commit, auth configured, missing variables, each job's last run, runner state, and `model_provider`: whether Anthropic is usable, its last failure (class, status, the provider's words, agent, time), the reset time it gave, when the judge sweep will try again, and `says`, a plain sentence that begins "The engine cannot write or check anything" when every call is being refused. Readable on the operator bearer |
 | `GET /api/content-engine/ping` | commit and a ready flag, no auth |
 | `/api/content-engine/runs/replay` | re-runs a registered job by calling its GET with `CRON_SECRET`; refuses `manual_only` jobs |
-| `/api/purge/run` (cron, Mondays), `/api/purge/restore` | exports doomed rows to the `content-engine-archive` bucket and `trend_observations`, then hard-deletes expired news rows; deletes nothing if either copy fails. The engine's only hard delete |
+| `/api/purge/run` (cron, Mondays), `/api/purge/restore` | exports doomed rows to the `content-engine-archive` bucket and `trend_observations`, then hard-deletes expired news rows; deletes nothing if either copy fails, and keeps any row an open board item names (`kept_for_board`). The engine's only hard delete |
 | `POST /api/aeo/meter` | prices the AEO engine's token use into `meter_daily` |
 
 Every scheduled route is wrapped in `withContentRun` (`api/_runs.ts`), which
@@ -600,6 +606,8 @@ All 20 have run-ledger rows in the last seven days (read back 2026-09-25).
 | Tue 08:00 | `creator_posts` | `/api/discover-creator-posts` |
 | Thu 21:00 | `investigations` | `/api/investigations/run` |
 | Fri 17:30 | `shifts_detect` | `/api/shifts/detect` |
+| daily 06:30 | `signals_news` | `/api/signals/news` |
+| daily 06:45 | `signals_odds` | `/api/signals/odds` |
 | Fri 17:50 | `arcs_surface` | `/api/arcs/surface` |
 | Fri 18:00 | `briefs_assemble` | `/api/briefs/assemble` |
 | Sat 05:00 | `build_signals` | `/api/discover-build-signals` |
@@ -728,7 +736,9 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 ## Driving it from an agent session
 
 1. Use the operator bearer from a secret store the session was given; never
-   print it, commit it or paste it into chat.
+   print it, commit it or paste it into chat. In Claude Code's cloud it is a
+   network secret bound to the engine's host and `/api/`: the session proxy
+   adds it to each request, and `scripts/engine.py` needs no key set.
 2. Check the engine's health before you spend: `GET
    /api/content-engine/health` on the operator bearer. When
    `model_provider.usable` is false, stop: `model_provider.says` names the
@@ -767,8 +777,10 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    yourself is a hand edit: save it without the field, so it is counted.
 10. Before a piece can move on, its facts must pass the gate. File the sources
    you used as verbatim excerpts with `file-verbatim-source.ts` (a summary
-   alone never passes a fact), run `POST /api/content-ideas/:id/fact-check`,
-   and fix or cut what it lists. An answer of `model_unavailable` recorded
+   alone never passes a fact), run `POST /api/content-ideas/:id/fact-check`
+   through `scripts/engine.py` (it shows what the run will check and refuses
+   while the free pre-check lists a number on no filed source), and fix or
+   cut everything it lists before running it again. An answer of `model_unavailable` recorded
    nothing: read health, and run it again once the provider is back.
    Where you attribute words, use the source's
    own words; the piece's house translations ("brain" for model) belong in
@@ -804,12 +816,39 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
    `api/_houseRules.ts` as step 12 says, and the part a machine can check into
    `PACKAGING_RULES` and `lintPackage` or `lintSubstack` in
    `api/_packaging.ts`.
-15. The same day a post's launch set is made, pack it with
+15. Every pack passes the visual gate (`scripts/post-pack/visual_gate.py`,
+    house rule VISUAL_EVIDENCE): the real logo of every company the piece
+    names, real pages piled up when the piece is about volume, and a cover
+    from the house drawer with Krish's face. Every launch set includes the publish page (`docs/AMPLIFICATION.md`,
+    `scripts/post-pack/publish_kit.py`): one Substack Video post, then YouTube,
+    then Shorts, TikTok and Instagram, with LinkedIn, WhatsApp and Notes as
+    optional steps, and Copy buttons on each. The same day a post's launch set is made, pack it with
    `python3 scripts/post-pack/build.py post.json` and send it with
    `python3 scripts/post-pack/send.py <pack folder>`; send a brand kit change
    with `send.py --brand-kit` (Krish, 2026-10-06, section 9 above). Read
    `--dry-run` first: it shows every path and what it is for. A refused path
    stops the whole send before anything goes.
+16. **The split.** Control Center plans, suggests and tracks; Claude Code
+    makes (Krish, 2026-10-10). The week is planned on Sunday
+    (`docs/CADENCE.md`, `.agents/skills/plan-week`): a session writes each
+    day's options with `/api/week/options`, Krish picks on the week page, and
+    his Monday pick starts the making. A session that starts with `piece_id: <uuid>`
+    (Control Center's "Make it in Claude Code" button fires a Claude Code
+    routine with that line) follows `.agents/skills/make-piece/SKILL.md`:
+    workroom, fact gate, visual gate, scripts, publish page, pack, recording,
+    video assets, channels. Every step is recorded on the piece with
+    `python3 scripts/post-pack/making.py <uuid> ...` (`build.py` and `send.py`
+    record themselves when `post.json` carries `piece_id`), which writes
+    `content_ideas.meta.making` through `/api/content-ideas/:id/making`.
+    Control Center's realtime subscription on `content_ideas` shows each
+    change within a second: no second table, no polling, no copy of the
+    state anywhere else. Each step names its owner (`MAKING_OWNERS`):
+    Claude Code makes the workroom, the draft, the pictures, the scripts
+    and the pack and builds the publish board; Krish records and posts;
+    Codex produces the video (`.agents/skills/produce-video/SKILL.md`).
+    A tool never writes a step it does not own (`docs/CADENCE.md`). The record's shape lives in
+    `apps/control-plane/api/_making.ts` and is mirrored in
+    `control-center/src/lib/making.ts`; change both together.
 
 ## Development notes
 

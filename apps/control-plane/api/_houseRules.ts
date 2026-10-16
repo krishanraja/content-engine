@@ -16,6 +16,14 @@
 //
 // Pure and import-free, so every module can read it. The mechanical checks
 // that enforce the rules before approval live in api/_publishChecks.ts.
+//
+// A rule about finishing a recorded video (its sting, its music bed, its
+// thumbnails) is on the 'production' stage only. No writer, judge or shot
+// planner reads that stage: the tools that make the cut enforce it
+// (scripts/quick-edit, scripts/pages --thumbs, the visual gate and the making
+// record), so a script or a channel cut never carries LUFS figures or a sting
+// that is not approved. tests/control-plane/house-rules.test.ts holds each
+// such rule to the tools its source names.
 
 export type Stage =
   | 'judge_idea'    // the panel, judging an idea or angle
@@ -24,6 +32,7 @@ export type Stage =
   | 'final_pass'    // the ship-moment check
   | 'publish_check' // a mechanical check before approval or publication
   | 'visual'        // pages, Shorts and carousels
+  | 'production'    // finishing a recorded video: enforced by the tools, read by no prompt
 
 export interface HouseRule {
   id: string
@@ -40,6 +49,60 @@ export interface HouseRule {
   /** A subchannel slug when the rule belongs to one subchannel only. */
   scope?: string
 }
+
+/** One series line: said first in every video script of its series. */
+export interface SeriesOpener { day: string; series: string; line: string }
+
+// The three series lines (house rule SERIES_OPENER), in one place for every
+// tool: scripts/post-pack/story_check.py reads the object between the two
+// marker lines below as JSON, so it stays JSON (double quotes, no trailing
+// commas) and keeps its markers. Krish, 2026-10-12, picked each line.
+// SERIES_OPENERS:BEGIN
+export const SERIES_OPENERS: Readonly<Record<string, SeriesOpener>> = Object.freeze({
+  "follow_the_money": { "day": "Monday", "series": "follow.the.money", "line": "I've been following how money is changing because of AI. I'm Krish." },
+  "under_the_hood": { "day": "Wednesday", "series": "under.the.hood", "line": "I've been looking at what's really inside the AI everyone's selling us. I'm Krish." },
+  "mind_the_gap": { "day": "Friday", "series": "mind.the.gap", "line": "I've been watching what's coming with AI, before everyone notices. I'm Krish." }
+})
+// SERIES_OPENERS:END
+
+/** The line a video script of this series opens with, or null when the
+ *  series has none (a piece with no series, or a retired one). */
+export function seriesOpener(series?: string | null): string | null {
+  const hit = series ? SERIES_OPENERS[series] : undefined
+  return hit ? hit.line : null
+}
+
+const OPENER_LIST = Object.values(SERIES_OPENERS).map(o => `${o.series} (${o.day}): "${o.line}"`).join('; ')
+
+/** The mechanical half of the reading-age gate on a video script (house
+ *  rule R7). */
+export interface ScriptReading { max_sentence_words: number; max_average_words: number; max_grade: number; max_quote_words: number; jargon: string[] }
+
+// The reading-age gate's numbers and its grown-up words, in one place:
+// scripts/post-pack/story_check.py reads the object between the two marker
+// lines below as JSON and refuses a script that breaks any of them, so it
+// stays JSON (double quotes, no trailing commas) and keeps its markers.
+// Krish, 2026-10-12: "Every single script should be understandable by a
+// 12-year-old."
+// SCRIPT_READING:BEGIN
+export const SCRIPT_READING: Readonly<ScriptReading> = Object.freeze({
+  "max_sentence_words": 20,
+  "max_average_words": 12,
+  "max_grade": 6,
+  "max_quote_words": 4,
+  "jargon": [
+    "licensing", "licence", "licences", "licensed", "license", "licenses", "litigation", "complaint", "complaints",
+    "plaintiff", "plaintiffs", "settlement", "settlements", "revenue", "revenues", "royalty", "royalties", "token", "tokens",
+    "model", "models", "default", "defaults", "infrastructure", "monetise", "monetised", "monetising", "monetize",
+    "monetized", "monetizing", "margin", "margins", "subsidy", "subsidies", "inference", "compute", "API", "APIs",
+    "fair use", "copyright", "copyrighted", "copyrights", "damages", "statutory", "valuation", "valuations", "equity",
+    "stakeholder", "stakeholders", "leverage", "ecosystem", "ecosystems", "paradigm", "paradigms", "framework",
+    "frameworks", "scalable"
+  ]
+})
+// SCRIPT_READING:END
+
+const JARGON_LIST = SCRIPT_READING.jargon.join(', ')
 
 export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   {
@@ -78,9 +141,9 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'R7', name: 'Reading age 12, with humour',
-    text: 'Write for a reading age of 12: short sentences, everyday words, and real humour and personality. The joke points at the hype, never the reader, and never replaces the finding.',
-    said: 'This entire media channel needs to be radically simplistic with an average reading age of 12 and a huge sense of humour and fun and personality.',
-    on: '2026-09-25', source: 'walk log R7', status: 'live',
+    text: `Write for a reading age of 12: short sentences, everyday words, and real humour and personality. The joke points at the hype, never the reader, and never replaces the finding. Every video script must be understood by an ordinary 12-year-old hearing it once, and a hard gate holds it to that before it is recorded, packed or sent: no spoken sentence over ${SCRIPT_READING.max_sentence_words} words; at most ${SCRIPT_READING.max_average_words} words a sentence on average; a reading grade of ${SCRIPT_READING.max_grade} or less; no quotation longer than ${SCRIPT_READING.max_quote_words} words (a quote cannot be heard as one, and it brings in grown-up language: say it in plain words); and none of these words unless the same sentence says what it means in plain words: ${JARGON_LIST}. Then two fresh readers, each an ordinary 12-year-old hearing it once, must find nothing that loses them, and their retellings must match the script's point.`,
+    said: 'This entire media channel needs to be radically simplistic with an average reading age of 12 and a huge sense of humour and fun and personality. Then, 2026-10-12, of the scripts on his teleprompter: I also feel like these scripts are too complicated for a layman to understand. Every single script should be understandable by a 12-year-old. I can\'t even understand what I\'m reading off the teleprompter. I thought we had hard gates for this?',
+    on: '2026-09-25', source: 'walk log R7; the hard gate on every script (2026-10-12): scripts/post-pack/story_check.py reads SCRIPT_READING in this file and refuses a script that breaks it, then make-piece\'s two read-back readers, recorded on the making record\'s script check (read_back)', status: 'live',
     stages: ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check'],
   },
   {
@@ -92,7 +155,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'CALL', name: 'Every piece makes a dated prediction',
-    text: 'Every piece ends with our prediction: what will happen, a date to check it by, and how sure we are as a percentage. It is ruled held, broke or unclear in public on that date, and misses go up as big as hits. Write it as a last section headed "## OUR PREDICTION": one paragraph that opens with the date ("By 30 June 2027, ..."), then a line on its own, "How sure we are: 75%." The Short shows that call word for word, so give one date and one whole percentage.',
+    text: 'Every piece ends with our prediction: what will happen, a date to check it by, and how sure we are as a percentage. It is ruled right, wrong or too close to call in public on that date, and the wrong ones go up as big as the right ones. Write it as a last section headed "## OUR PREDICTION": one paragraph that opens with the date ("By 30 June 2027, ..."), then a line on its own, "How sure we are: 75%." The Short shows that call word for word, so give one date and one whole percentage.',
     said: 'I want these to be signature bulletproof formats that can run across any article FYI, if they are going in, they need to go in for everything.',
     on: '2026-09-25', source: 'docs/CREATIVE_IDENTITY_UPGRADE.md (P6); makeyourmindup.ai, "Every piece makes a call. We keep score."', status: 'live',
     stages: ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check'],
@@ -115,20 +178,20 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     id: 'NO_EXCLAMATION', name: 'No exclamation marks',
     text: 'No exclamation marks, except inside a quotation.',
     said: 'No em dashes. No exclamation marks.', on: '2026-09-25', source: 'makeyourmindup brand book v1.0, "The house rules"', status: 'live',
-    stages: ['write', 'final_pass', 'publish_check'],
+    stages: ['write', 'final_pass'],
   },
   {
     id: 'NO_EM_DASH', name: 'No em dashes',
     text: 'No em dashes anywhere. Use commas, full stops or brackets.',
     said: 'No em dashes. No exclamation marks.', on: '2026-09-25', source: 'makeyourmindup brand book v1.0; voice doctrine', status: 'live',
-    stages: ['write', 'final_pass', 'publish_check'],
+    stages: ['write', 'final_pass'],
   },
   {
     id: 'BRITISH_SPELLING', name: 'British spelling',
     text: 'Use British spelling: colour, centre, theatre, organise, analyse, defence, labour, modelling, travelled, grey. A quotation and a name keep their own spelling.',
     said: 'Just get in line with what those updates are at the live website.',
     on: '2026-09-26', source: 'makeyourmindup.ai, "Contains British spelling" (live 2026-09-26)', status: 'live',
-    stages: ['write', 'final_pass', 'publish_check'],
+    stages: ['write', 'final_pass'],
   },
   {
     id: 'STAMPS', name: 'Real or theatre stamps, as the brand book sets them',
@@ -237,10 +300,157 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'STORY_ARC', name: 'One story, start to finish',
-    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes with a short spoken outro after the call (what this was, where the full piece is, and Krish signing off); it never ends on the number.',
+    text: 'Every piece and every script tells one story. Open on one clear question, in plain words. Every section or beat either sets that question up or answers it, and each one follows from the last. Set up every claim before judging it: say what was claimed and why it matters before stamping it real or theatre. Every takeaway follows from something already told. The ending answers the opening question, then makes the call. A spoken script of a minute or more then closes with a short spoken outro after the call (what this was, where the full piece is, and Krish signing off without saying his name again, SERIES_OPENER); it never ends on the number.',
     said: 'what does that mean? We\'ve never introduced that concept yet, and I dont get why it matters to whats been said thus far. It also barely connects to the next bits, the takeaways. ... now it just ends randomly on 85%, with nothing after that, no outro. Then, of the five-point story check: yes, i agree with it being there. happy with that idea.',
     on: '2026-10-06', source: 'walk log F75', status: 'live',
     stages: ['judge_draft', 'write', 'final_pass'],
+  },
+  {
+    id: 'BIG_PICTURE', name: 'The big picture, never the small headline',
+    text: 'Every piece is about the big, lasting shift, never one small, temporary news headline. A headline of the week (a report, a price change, a launch) is evidence inside the bigger story, one section at most, and never the story itself. Before choosing an angle or a title, name the bigger pattern it belongs to and lead with that; if a draft would be out of date in a month, it is about the headline and must be reframed.',
+    said: 'I think the story is bigger - it\'s story I asked for about why there are so many models now, and what that actually means. ... The $20/5X the AI is a sub story within that bigger story. We need to always focus on the bigger picture, never the one small picture temporary news headline - make sure you ALWAYS remember this',
+    on: '2026-10-09', source: 'the Friday workroom, his own words on the angle card', status: 'live',
+    stages: ['judge_idea', 'judge_draft', 'write', 'final_pass'],
+  },
+  {
+    id: 'VOICE_ON_CAMERA', name: 'The script is Krish reacting, with opinion and dry wit',
+    text: 'The article states the facts. A video script is Krish reacting to them, in his own voice, with opinion and humour. A script of a minute or more carries at least three of these five: one dry, self-deprecating line about himself or this publication (never that it is made with AI or with Claude: NO_AI_DISCLOSURE_LINE); one sarcastic line aimed at the hype, never at the reader or a named person; one exaggeration made obvious by its size; one analogy a twelve-year-old would get; and one opinion said as opinion ("my bet", "I think", "my call"), kept apart from the checked facts so the listener and the fact gate both know which is which. A joke never sits inside a sentence the fact gate holds and never replaces the finding. Offer two options for each joke as a choice beside the script, never inside it; cutting them is Krish\'s.',
+    said: 'What about making my scripts for video have more personality and opinion, not in a factual way? More humor? Self deprecating dry wit, sarcasm, exaggeration, analogy? Then, of the proposed rule: do all the things you suggested. Then, 2026-10-12, of the self-deprecating line about making it with Claude: Eliminate the "I made this with AI" entirely - no need, it\'s like verbal diahorrea. Then, for every script: correct, make that a rule.',
+    on: '2026-10-09', source: 'chat, planning piece 2 and the 100x plan (docs/ENGINE_100X.md); the made-with-Claude example cut on 2026-10-12 (NO_AI_DISCLOSURE_LINE); checked softly by storyArcIssues\' companion voiceOnCameraIssues and scripts/post-pack/story_check.py', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass'],
+  },
+  {
+    id: 'NO_AI_DISCLOSURE_LINE', name: 'No line saying it was made with AI',
+    text: 'A script, a piece or a post never says that it, the video or the publication was made with AI, with Claude or with any other model ("I made this with Claude\'s help", "this video was made with AI"). It adds nothing for the viewer. A self-deprecating line is about something else.',
+    said: 'Eliminate the "I made this with AI" entirely - no need, it\'s like verbal diahorrea. Then, for Friday\'s script and every script: correct, make that a rule.',
+    on: '2026-10-12', source: 'his workroom picks for Monday\'s piece, then Friday\'s (commits dd43765 and 39e08c6, which cut the line from both 3-minute scripts); checked softly by scripts/post-pack/story_check.py and voiceOnCameraIssues (packages/core/src/editorial.ts)', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass'],
+  },
+  {
+    id: 'SCRIPT_ONLY', name: 'A script is only the words Krish says',
+    text: 'A video script handed to Krish is only the words he says, in the order he says them, as plain paragraphs. Nothing else goes in it: no stage directions or "on screen" notes, no beat numbers, headings or timings, no joke alternatives, no notes to him, and no lines that talk about the script instead of the subject ("here is what you are looking at", "now the part that matters"). What goes on screen lives in a separate shot list, and joke options are offered as choices beside the script.',
+    said: 'make sure my video scripts are literally just scripts without all the excess internal monologue commentary (forever)',
+    on: '2026-10-09', source: 'chat, Friday piece 2 script review; checked by scripts/post-pack/story_check.py', status: 'live',
+    stages: ['write', 'final_pass'],
+  },
+  {
+    id: 'VISUAL_EVIDENCE', name: 'Real logos, real pages, and a cover with personality',
+    text: 'Every picture and every video frame that names a company shows that company\'s real logo, from its own brand files (Brandfetch), and all of them when the piece is about several (every AI lab, every bank). A piece about volume or velocity (so many launches, releases every few months, a growing menu) shows the real thing: screenshots of the actual pages, dated, piled on top of one another so the reader feels the overwhelm, never a drawn stand-in. The cover is drawn by the house cover drawer with the wordmark, Krish\'s face, the real logos and the evidence behind it, in the house colours and type, never a flat card. A plan for any visual starts by listing the companies it names and the real artefacts it can show.',
+    said: 'we need to add all the logos of the busineses that are related to what we are talking about. Sometimes, that is just one business - but here, it\'s all the LLMs. This needs to be considered in every post possible. ... an article like this should screenshot as many live articles of model releases ... it should pile up on top of one another visually. That kind of visual creative thinking has to apply to every video moving forward. I also think The cover and email thumbnail is really boring and losing it\'s personality ... it needs to be a literal gate that stuff like this cannot be produced, whether in static asset form or video.',
+    on: '2026-10-10', source: 'chat, Friday piece 2 cover review; the mechanical gate is scripts/post-pack/visual_gate.py (logos, evidence pages, the cover drawer\'s receipt), run by build.py before any pack', status: 'live',
+    stages: ['visual', 'write', 'judge_draft'],
+  },
+  {
+    id: 'HOOK_AND_CTA', name: 'Open on a provocation, close on the article',
+    text: 'A video opens with its series line (SERIES_OPENER), then the hook: the most provocative true thing in the piece, said in the first two sentences after the series line: a surprising number, a comparison or a claim that makes the viewer feel they are missing something, then the one question the video answers. It never opens on throat-clearing or a definition. It closes on a call to action: say there is a full article, what it has that the video does not, that it is free and where it is (makeyourmindup.ai, said out loud, so the line works on every channel without "link below"), ask one question for the comments, and Krish signs off without repeating "I\'m Krish": his name is said once, in the series line. The vertical cut keeps both, inside 90 seconds.',
+    said: 'make the intro more provocative and hooking, and the outro more CTA based, acknowledging there is a full article',
+    on: '2026-10-09', source: 'chat, Friday piece 2 script review; checked by scripts/post-pack/story_check.py', status: 'live',
+    stages: ['judge_draft', 'write', 'final_pass'],
+  },
+  {
+    id: 'SERIES_OPENER', name: 'Every video opens with its series line, and Krish says his name once',
+    text: `Every video script opens with its series line, word for word, said first, before the hook: ${OPENER_LIST}. Both cuts carry it, the 3-minute and the 90-second, and its words count toward the cut's length (405 to 495 spoken words long, 160 to 225 short). Krish says his name once, in that line: the close never repeats "I'm Krish". A script whose series has no line yet opens on the hook. The article and the posts do not carry it.`,
+    said: 'We need something catchy at the start of a video script like "Here\'s what you need to know about how money is changing because of AI. I\'m Krish." at the start of follow.the.money videos. And then similar for the weds and fri scripts. Then, of the lines shown to him, he picked the Wednesday and Friday lines above; and to "The opener now says "I\'m Krish". Drop it from the sign-off at the end?" he picked "Drop it at the end". Then, 2026-10-13: "I also want to reduce the "breaking news, I\'m Krish" tone, and have it be a more reflective, pensive, "here\'s what I\'m seeing" but still humorous dry wit tone. Johnny Harris style", and of the lines offered he picked "Reflective version": each series line now says what he has been doing ("I\'ve been looking at..."), his name still once.',
+    on: '2026-10-12', source: 'chat, Monday\'s and Friday\'s scripts (commit ee68a61, which opened all four on their lines); the lines are SERIES_OPENERS in this file, which scripts/post-pack/story_check.py reads; checked by story_check.py --series, which making.py scripts runs with the piece\'s series; the script writer opens on it (api/_video.ts)', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'TWO_CUTS', name: 'A three-minute video and a ninety-second one',
+    text: 'Every piece gets two videos, each recorded from its own script with its own hook and its own outro. The long cut is about three minutes: 405 to 495 spoken words at an unhurried 150 a minute, wide, for the Substack post and YouTube. The short cut is at most 90 seconds: 160 to 225 spoken words, tall, for YouTube Shorts, TikTok and Instagram Reels. Both keep the hook and the call to action (HOOK_AND_CTA). Material that does not fit is cut, never spoken faster.',
+    said: 'I always want a 3-minute video and a 90-second version. I always want to repost to YouTube and then Shorts, TikTok, and Instagram.',
+    on: '2026-10-11', source: 'chat, weekly planning; checked by scripts/post-pack/story_check.py (the cut lengths)', status: 'live',
+    stages: ['write', 'final_pass'],
+  },
+  {
+    id: 'DEEP_CUT', name: 'One deep video a week, for YouTube long-form and Spotify',
+    text: 'Once a week, the piece with the highest breakout score (the shareability score in its pack; a concept piece breaks a tie) gets a deep cut of 8 to 12 minutes, 1,200 to 1,700 spoken words, wide, in place of its 3-minute cut. It is recorded in the same sitting, goes to YouTube as long-form and to Spotify as the week\'s video episode, and is written from the full article for the ear, with the same series line, reading age 12 and outro to the article. Every piece keeps its 90-second cut. plan-week records the pick in config/deep-cuts.json; Krish can swap it.',
+    said: 'I like your logic for the pick on the shareability score approach.',
+    on: '2026-10-14', source: 'chat, after "perhaps the third video length also becomes the Spotify audio track"; checked by scripts/post-pack/story_check.py (--cut deep) and making.py (deep_piece)', status: 'live',
+    stages: ['write', 'final_pass', 'production'],
+  },
+  {
+    id: 'INTRO_STING', name: 'A short animated makeyourmindup sting before Krish\'s face',
+    text: 'Every video is to open with the animated makeyourmindup sting, 1 to 2 seconds (1.5 by default), before Krish\'s face comes in, in both shapes and in the colour of the piece\'s series (follow.the.money\'s when it has none). It is joined in front of the captioned video, so no word, caption or graphic moves, and the music is up over it. Only a design Krish approved in words is used (config/intro-sting.json, status "approved", bound to the source hash of the exact previews he saw). No design is approved yet: on 2026-10-12 he rejected the first one shown to him ("it\'s ok, it\'s a bit boring and colourless and vanilla - and just what Powerpoint would do in 2008"), so until he approves another, every cut goes without a sting, its report says so, and a missing sting never stops a render. A clip named in a cut\'s config is used only when it is the approved render, or on Krish\'s own words in "intro_override". For the quick-edit cuts this replaces "nothing at the opening" (2026-09-26); the Studio keeps that placement, with no music, until its own audio ledger exists.',
+    said: 'I also want the video to have a 1-2 sec animated make your mind up intro visual before my face comes in',
+    on: '2026-10-12', source: 'chat, the video production request, then his word on the first design (config/intro-sting.json, "last_decision"); made by scripts/quick-edit/intro.py and make.py, the approval in config/intro-sting.json', status: 'live',
+    stages: ['production'],
+  },
+  {
+    id: 'MUSIC_BED', name: 'Licensed music under every video: up for the intro, low under Krish, up for the outro',
+    text: 'Every video carries a licensed music bed: high over the intro, low while Krish is talking, higher over the outro. Only a track in the music ledger (config/music-library.json) that Krish approved in his words, whose licence is in date and covers every place the cut is posted, cleared for YouTube Content ID, is ever used. The files live in Drive at makeyourmindup > 00_Brand-Assets > 07_Music (MINDMAKE_MUSIC_ROOT), and nobody browses Drive for audio. The levels are about -16 LUFS over the intro, about -31 under his voice (about 17 LU below it) and about -18 over the end card, ramping down over half a second as his face comes in and up over 0.8 seconds after his last word; the whole mix then finishes at -14 LUFS integrated with true peak at most -1 dBTP, measured after the encode. The levels stay proposed until he approves them by ear. With no approved track, a cut has his voice only and its report says so.',
+    said: 'I am also going to get some licensed audio to put behind my videos, so help me prepare to put it somewhere you and codex will always know where that is, and use it correctly (high volume during the intro, low whilst I am talking, higher during the outro). Then, of makeyourmindup > 00_Brand-Assets > 07_Music: thats where it will live and the video runners need to know this',
+    on: '2026-10-12', source: 'chat, the video production request; mixed by scripts/quick-edit/make.py with music.py, the ledger config/music-library.json', status: 'live',
+    stages: ['production'],
+  },
+  {
+    id: 'THUMBNAIL_EVERY_SIZE', name: 'A thumbnail for every video size, every time',
+    text: 'Every video comes with its own thumbnail, every time: 1280 x 720 for the wide 16:9 cut (YouTube and the Substack video) and 1080 x 1920 for the tall 9:16 cut (the cover on Reels and TikTok), drawn by the house cover drawer from the piece\'s cover facts, with Krish\'s face and the real logo of every company the piece names (LOGOS_AND_FACE), inside each platform\'s safe area. A cut without the thumbnail of its shape is not packed, and its Video assets step is not done; only Krish\'s own words in "thumbnail_override" let a pack through without one.',
+    said: 'I always want a video thumbnail for all video sizes produced as an asset every time.',
+    on: '2026-10-12', source: 'chat, the video production request; drawn by scripts/pages/build.py --thumbs, required by scripts/post-pack/build.py and scripts/post-pack/visual_gate.py and by the Video assets step (apps/control-plane/api/_making.ts)', status: 'live',
+    stages: ['production'],
+  },
+  {
+    id: 'STORY_INTRO_OUTRO', name: 'An animated intro made for each story, its audio treatment, and an animated outro card, in every format',
+    text: 'Every video, in every format (the 16:9 long cut and the 9:16 short cut), opens with a proper animated, branded intro made for that specific story, carries a designed audio treatment, and closes on a proper animated outro card made for that piece. Design comes first: the designs are shown to Krish and only his words approve one (krish-design). Until then no cut is finished: its report says "story intro and outro not designed yet", and production stops before the final render.',
+    said: 'when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward.',
+    on: '2026-10-12', source: 'chat, as Monday\'s takes came back; held by .agents/skills/produce-video (the required step before the final render), which reads config/story-intro-outro.json, status "awaiting_design" until he approves a design', status: 'live',
+    stages: ['production'],
+  },
+  {
+    id: 'ARTICLE_LENGTH', name: 'Articles about 30% shorter: about 1,400 words at most',
+    text: 'An article (the Substack piece) runs about 1,000 to 1,400 words, never more than 1,400: about 30% shorter than the roughly 2,000-word pieces of 12 October. Cut by keeping one argument and its strongest evidence, never by thinning every paragraph: drop the second example, the recap and the throat-clearing first.',
+    said: 'moving forward the articles need to be about 30% shorter.',
+    on: '2026-10-12', source: 'chat, after Monday\'s piece (about 2,000 words) went to his publish board', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'SHARP_PREDICTION', name: 'A prediction a reader can check, and that is not already happening',
+    text: 'Every prediction names one specific event that a reader can check on a stated date. It must not be under way already in the piece\'s own evidence, and it must not be the safe, obvious outcome. Its confidence is honest: a bolder call carries a lower number. A vague trend ("more deals", "more options") is never a prediction.',
+    said: 'The current one feels pretty obvious that its going to happen in hindsight. (Asked which prediction Monday\'s piece should make, he chose: "Keep the current one. Leave the article and videos as they are, so they match, and post today. Use the sharper style of prediction from Wednesday.")',
+    on: '2026-10-12', source: 'chat, on Monday\'s prediction (Universal or Sony make a deal with Suno by 31 December 2027, 70%)', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'TITLE_EARNS_THE_CLICK', name: 'Every title earns the click, from the piece, never from nothing',
+    text: 'Every title a reader sees first (the article title, the YouTube and Shorts titles, the cover headline, the video title card and every picture\'s heading) makes someone think "I need to read that". It names who did what, or gives the number that surprises, taken from the piece\'s own checked words. Never a straw man (knocking down a claim nobody made: "X isn\'t Y", "X vs Y isn\'t a fair fight", "X isn\'t just Y"), never the obvious, never a bare topic label ("Three kinds of AI", "Whose side is it on?"), never a stock phrase (explained, here\'s why, everything you need to know, the truth about). scripts/post-pack/title_check.py is the floor. What is good is what Krish picks: every title goes to him as a few options written against the lessons of his past picks (config/title-verdicts.json: first person, a question mid-title, a payoff that points at the reader, short with the surprise last), and is used only once he has picked it; video_card.py, publish_manager.py, the cover drawer and story_io.py refuse any other.',
+    said: 'no one has ever said "Muse versus ChatGPT" is a fair fight! The titles can\'t be boring, but they also can\'t just be made from nothing. Of course, Muse isn\'t ChatGPT. That\'s a stupid thing to say. It\'s dumb. We need an anti-dumb filter. We need titles that people will go, "Oh, I need to read that. That\'s going to be awesome." ... this sort of crap cannot be allowed to pass in the future, ever',
+    on: '2026-10-14', source: 'chat, on Wednesday\'s title and card headings ("Muse isn\'t ChatGPT", "Muse vs ChatGPT isn\'t a fair fight"); he liked "Muse\'s real rival: Siri."', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'ONE_SPINE', name: 'One spine: every section answers the one question',
+    text: 'Every piece answers ONE question, its spine, approved by Krish at the outline with its one-line answer. The outline states "Spine: <question>?", "Answer: <one line>" and at most six sections, each as "<HEADING> | proves: <the part of the answer it proves>"; the draft\'s sections are exactly those, in that order. Every section must help the reader reach the spine\'s answer: a section that is true, interesting or related but answers a different question is cut. A new angle is a new spine and a new outline from scratch, approved again, never sections added on top of an approved outline. scripts/post-pack/spine_check.py checks the outline and the draft\'s sections; the engine\'s judge (POST /api/content-ideas/:id/spine-check) reads every section against the spine; making.py refuses scripts and the publish page until both pass on the current words.',
+    said: 'I also think we ended up with an absolute ton of drift here. We were supposed to be scoring Muse and Siri, then we started talking about Apple and Walmart, then we started talking about ads, but then we have content about the three different types of AI. All of this could have been turned into something coherent, but it\'s ended up sprawling quite a lot. I\'m not sure why that is, but the engine cannot do this again.',
+    on: '2026-10-14', source: 'chat, on Wednesday\'s Muse piece, re-angled five times with each angle added as sections; then "Build out number 3 to sort out the drift"', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'SOUNDS_LIKE_KRISH', name: 'Sounds like Krish, not like a machine',
+    text: 'Write the way Krish talks, with his own view and his own details, and none of the habits of machine prose: no run of paragraphs that open the same way (at most three bold lead-ins), no formula on repeat ("My read:" and the like), no stock phrases (delve, landscape, navigate, seamless, unlock, heavy lifting, plainly, the reality is), no "it\'s not X, it\'s Y", no lists of three again and again, no question answered at once by the next line, no colon reveal ("Here\'s why:"), no neat signposting ("Two limits. First... Second..."), no closing recap, no em dash. Sentences vary a lot in length; some paragraphs are one line. "I" and "my" carry his view: a moment from his own work, what he did, what he would do. Contract the way he talks, outside quotes: "it\'s", "don\'t", "you\'re", "I\'d", never "it is", "do not", "you are", "I would", and use the everyday shortcuts a person types (vs, eg, "a bit", "honestly", "pretty much"), so no AI-writing scan flags it. Then the scanner habits: no chat-model vocabulary (significant, comprehensive, foster, ensure, insights, ultimately and the rest), no paragraphs glued with "However" or "Additionally", no ", making it..." tails, no "not only... but also", no explainer tics ("think of it as", "here\'s the question"), not every sentence a comfortable 12 to 24 words: some fragments of five words or fewer, a bracketed aside or an open question every few hundred words, and names, numbers and dates throughout. Two gates, both before the fact gate: scripts/post-pack/voice_check.py (bar 6) and scripts/post-pack/ai_scan.py, which reads the piece with a language model and fails it when it is as predictable as machine prose, naming the sentences to rewrite.',
+    said: 'And they get flagged as 93% AI generated, can we do anything about this? ... build the sounds like Krish pass now. Then: the article MUST not trigger AI written scans either - you need to bake this in and figure out how to add humanisms in there, abbreviations, "you\'re" instead of "you are". Then: we need more aggressive anti AI scanning techniques by 10X',
+    on: '2026-10-13', source: 'chat, on Monday\'s and Friday\'s articles; checked by scripts/post-pack/voice_check.py', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'PERSONAL_INTRO', name: 'The script opens the way Krish would',
+    text: 'Straight after the series line, a script opens the way Krish talks: what he has been doing with the thing, why it matters in plain words, and that he wants to break it down for you. His own example (config/golden-examples.json): "I\'ve been having a little play around with Muse, Meta\'s new personal assistant. It\'s an important evolution in how AI is going to come into our personal lives, and so I wanted to break it down for you." Then, before anything else, say why this thing is different from what the viewer already uses (for Muse: why not just ChatGPT or Claude). Krish, 2026-10-13: "it doesn\'t introduce why Muse is different to just using Claude". Name every actor and every thing on every line: never "the company" or a bare "it" that the ear has to work out ("Who is \"the company\"? What is \"It\"?"; both are in config/rejected-lines.json). Never open on a fact out of context, a news-reader line or an anecdote with no set-up; the example comes after the intro. Only say he has used something when he has said so.',
+    said: 'I think these scripts need to be a little sharper on the intro as well. The first line should be more like something like: "I\'ve been having a little play around with Muse Meta\'s new personal assistant. It\'s an important evolution in how AI is going to come into our personal lives, and so I wanted to break it down for you." Thats something I would actually say, how can you redo todays scripts and then log that for the future?',
+    on: '2026-10-13', source: 'chat, on Wednesday\'s Muse scripts; his line is the first entry in config/golden-examples.json; checked softly by scripts/post-pack/story_check.py', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'ONE_THREAD', name: 'A script follows one line of thought',
+    text: 'A video script is one line of thought, never a list of facts. It opens on a puzzle Krish noticed, asks the one question it answers, follows the clues in the order they lead, lands one insight of his own said as an idea (Wednesday 14 October: "the ad doesn\'t need your eyes any more, it needs your helper\'s choice"), then what it means and the prediction. Every beat leads to the next with "so", "but", "now think about": a viewer can say why each line follows the one before. Plain words for a 12-year-old (R7) are applied to that thread, never by chopping it into separate facts; when a reading-age fix breaks the flow, rewrite the beat, do not delete the link.',
+    said: 'these video scripts are absolute garbage in terms of making any sense - the quality has deteriorated drastically in terms narrative flow, unique insight',
+    on: '2026-10-13', source: 'chat, on Wednesday\'s Muse scripts after four rounds of reading-age fixes', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
+  },
+  {
+    id: 'REFLECTIVE_VOICE', name: 'Reflective, not breaking news',
+    text: 'Krish sounds like someone thinking out loud about what he has noticed, never a newsreader. Open from curiosity ("I keep noticing...", "Something odd is going on with..."), walk the viewer or reader through what he is seeing, the way Johnny Harris does: a question he could not shake, the evidence turned over slowly, his own doubt said out loud, then where he has landed. The wit stays dry and quiet, a raised eyebrow, never a punchline shouted. No urgency words (breaking, huge, insane, you need to know), no announcer cadence, no stacking of short punchy lines for drama. Applies to every script and every article.',
+    said: 'I also want to reduce the "breaking news, I\'m Krish" tone, and have it be a more reflective, pensive, "here\'s what I\'m seeing" but still humorous dry wit tone. Johnny Harris style',
+    on: '2026-10-13', source: 'chat, on Wednesday\'s Muse scripts', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass'],
   },
 ])
 

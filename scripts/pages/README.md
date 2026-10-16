@@ -22,8 +22,14 @@ or it writes neither (the rule in `editions/README.md`).
 | `page.html` | The piece in the makeyourmindup look, in its subchannel's colour: masthead, headline, deck and byline, the body with its source links and images, opinion labelled ("Our read:"), the choices as cards, the dated call with how sure we are, the sources and the subscribe band. One file: the fonts and images are inside it. |
 | `substack.html` | The same words in one column, ready for Substack. Copy buttons for the title, the subtitle and the post. The post is headings, paragraphs, lists, quotes, links and images, nothing else, because Substack's editor drops layout and crashes on pasted side-by-side blocks. The images are inside the copy, in place, so they paste with the words. |
 | `phone-images.png` | Every image in the post at the width a phone shows it (358 pixels). Look at it before publishing: a word you cannot read there, a reader on a phone cannot read either. |
-| `cover.png` | With `--cover`: the post's cover image, 1200 x 800, to upload in Substack's post settings. It is not written if a word or a logo would be cut off, or a word would be too small to read in a phone's feed ("What Substack does to your artwork", below). |
+| `cover-1200x630.png` | With `--cover`: the cover to upload in Substack's post settings, at the 1200 x 630 (1.91:1) its upload box asks for. |
+| `cover-1200x675.png` | With `--cover`: the 16:9 share card, for LinkedIn and link previews. |
+| `cover-1080x1080.png` | With `--cover`: the square cover, for Substack's archive list and the Instagram feed. |
+| `cover-1080x1920.png` | With `--cover`: the vertical cover for YouTube Shorts, TikTok and Instagram Reels. |
+| `cover-WxH.json`, `cover-WxH-crops.png` | Beside each of those four: its receipt and its check image ("A cover for every place it is shown", below). None is written if a word or a logo would fall outside the part its places keep, or a word would be too small to read on a phone. |
+| `cover.png` | With `--cover`: the same cover at 3:2, 1200 x 800, kept beside it. Do not upload it to Substack, whose upload box crops it. It is not written if a word or a logo would be cut off, or a word would be too small to read in a phone's feed ("What Substack does to your artwork", below). |
 | `cover-crops.png` | With `--cover`: what Substack's feed, share card and archive each show of the cover. |
+| `thumb-wide-1280x720.jpg`, `thumb-tall-1080x1920.jpg` | With `--thumbs`: a thumbnail for each video size, with `thumbs.json` (each file's sha256 and shape, the portrait, the rows and strip drawn as `logos`, and `companies`, one name per company those show, as config/logo-registry.json names it, for a post.json thumbnail entry's `logos`) and `thumbs-check.png` ("Thumbnails for the videos", below). |
 | `shots/` | With `--shots`: both files at a computer's width (1440) and a phone's (390). |
 
 ## Setup
@@ -73,11 +79,11 @@ python scripts/pages/build.py WORKDIR/page.json --out WORKDIR/out --check --shot
    ```
 
    Anything less, and it says so and exits with an error. Then look at
-   `phone-images.png` and, with `--cover`, `cover-crops.png`.
+   `phone-images.png` and, with `--cover`, every `cover-*-crops.png` and `cover-crops.png`.
 6. **Paste.** On a computer, open `substack.html`, press Copy title, Copy
    subtitle and Copy post in turn, and paste each into the Substack editor. A
-   phone may paste the words without the images. Upload `cover.png` as the
-   post's cover image in its settings.
+   phone may paste the words without the images. Upload `cover-1200x630.png`
+   as the post's cover image in its settings.
 
 ## The page facts
 
@@ -137,9 +143,36 @@ post and his screenshot:
   7.5 to 8 pixels on a phone. The headlines could be read; the labels, the
   table text and the sources could not.
 
+**A cover for every place it is shown.** Krish, 2026-10-12, with a
+screenshot of Substack's cover upload box: "Once again, the Substack cover
+image is incorrect. Why is this? Why did this not get fixed last time?" The
+box says "Recommended: 1200 x 630 px (1.91:1). Keep important text and logos
+away from the edges", and it crops anything else itself: given the 3:2 cover,
+its own crop (`g_auto`) slid down to Krish's face and cut the headline in
+half. Then, the same day: "the cover crops need to be all individual images, a
+vertical cover thumbnail for the shorts/tiktok etc as well, every post moving
+forward". So every `--cover` draws, beside the 3:2 `cover.png`, one image per
+place, each laid out for its own shape from the same cover facts (the real
+wordmark, the headline, Krish's face and the real logos), never cropped from
+another: `cover-1200x630.png`, the one to upload in Substack's settings (face
+left, words right, everything inside x 152 to 1048 so the 16:9 share card and
+the phone feed's 3:2 keep it); `cover-1200x675.png`, the 16:9 share card for
+LinkedIn and link previews (LinkedIn's 1.91:1 keeps it); `cover-1080x1080.png`,
+the square for the archive list and the Instagram feed (Instagram's 3:4
+profile grid keeps it); and `cover-1080x1920.png`, the vertical cover for
+Shorts, TikTok and Reels, with every word, the face and every logo inside x 60
+to 1020, y 250 to 1480, which those apps lay nothing over. Each picks the
+biggest headline and face that fit, is held to the phone word floors, and has
+its receipt and check image; if one does not fit, it is not written and the
+drawer says why. post-pack puts all of them in every pack under plain names
+(`substack-cover-1200x630.png`, `substack-feed-1200x800.png`,
+`share-card-1200x675.png`, `square-1080x1080.png`,
+`vertical-cover-1080x1920-shorts-tiktok-reels.png`) and refuses a pack that
+is missing any. Never upload the 3:2 `cover.png` to Substack.
+
 What the tools do about it:
 
-- **`--cover` draws the cover at 1200 x 800,** the feed's own 3:2, so the feed
+- **`--cover` also draws the cover at 1200 x 800,** the feed's own 3:2, so the feed
   shows all of it. Every word and logo sits inside x 220 to 980, y 84 to 716,
   which the 16:9 share card (it keeps y 62 to 738) and the archive square (it
   keeps x 200 to 1000) both keep.
@@ -290,6 +323,47 @@ from it:
 
 `brand.py` holds all of that, and `scripts/channel-kit/` uses it too.
 
+## Thumbnails for the videos
+
+Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
+produced as an asset every time" (house rule `THUMBNAIL_EVERY_SIZE`).
+
+```
+python scripts/pages/build.py docs/plans/PLAN/cover-facts.json --thumbs --out WORK/thumbs
+```
+
+It draws `thumb-wide-1280x720.jpg` for the 16:9 long cut (YouTube and the
+Substack video post) and `thumb-tall-1080x1920.jpg` for the 9:16 short cut
+(the cover on Reels and TikTok) from the same cover facts and in the same
+look as the cover: the wordmark, the headline, Krish's face and a row per
+real logo. `"thumbs"` beside `"cover"` in the facts changes any of those
+fields for the thumbnails alone, and its `"strip": [{"logo", "name"}]` adds
+more real logos in a line under the rows, so a thumbnail can carry every
+company the piece names (the visual gate holds each one to that). Both or
+neither: it refuses if a word, the face or a logo would sit where a
+platform covers or crops it, or a word would be too small to read.
+
+**The video's story intro reads two more fields** (`scripts/quick-edit/story_io.py`):
+`"video_title"`, the title card's words (short, at most 60 characters; else
+the cover's `headline` lines; the article headline is never used), and
+`"standoff": {"left": PLAYER, "right": [PLAYER, ...]}`, each PLAYER
+`{"label", "logos": ["logos/..."], "tag"}`, so one side can show the marks
+people know (Meta, Instagram and WhatsApp for Muse) with the product's name
+in type. Without `"standoff"` the cover rows are used, one logo each. The
+line-up under the title is the players against the first, then `thumbs.strip`.
+
+**Any checkout can draw them, a home computer included.** A plan keeps its
+facts as `docs/plans/PLAN/cover-facts.json` and every logo they draw as SVG
+in `docs/plans/PLAN/logos/`, with paths relative to the facts
+(`"logos/suno-logo-cream.svg"`), so no `--assets` folder is needed (and
+passing one would point the logos at the wrong folder). A missing logo
+always stops the drawer. The `"background"` picture is optional, because git
+keeps no PNG or JPEG: on a machine without it the artwork is drawn on plain
+ink, the drawer prints a note, and the receipts record `"background": false`.
+To draw the background again, copy the picture beside the facts on the
+machine that has it; git ignores the copy. It needs the internet for Krish's
+portrait and the wordmark, and a browser (`MYMU_BROWSER`, as in Setup).
+
 ## Making it a web edition
 
 To keep a page in `editions/`, copy `page.html` there as `index.html`, beside
@@ -299,6 +373,8 @@ page.
 
 ## What stays out of the repository
 
-The body, the images, the logos, the cover's photo, the finished pages, the
-cover and the shots. The tool, this README and the example facts are
-committed; everything they make goes to a working folder or to `.cache/`.
+The body, the images, the cover's photo, the finished pages, the cover, the
+thumbnails and the shots. The tool, this README and the example facts are
+committed, and so are a plan's cover facts and its logos as SVG
+(`docs/plans/PLAN/logos/`), so any checkout can draw its cover and
+thumbnails; everything they make goes to a working folder or to `.cache/`.

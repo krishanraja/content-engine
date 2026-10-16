@@ -1,73 +1,35 @@
 import { supabase } from './_supabase.js'
-import { parseVal } from './_content.js'
 
-// Standing brief preferences — the "Tell Cleo remembers" store.
+// Standing brief preferences: Krish's recurring editorial notes.
 //
-// A one-off Cleo instruction ("harder ending", "more skeptical about vendor
-// claims") applies once and is forgotten. A STANDING note is Krish's recurring
-// editorial preference: it is folded into the system prompt every time the brief
-// is assembled or revised, so the same correction never has to be re-typed. The
-// list lives in system_config under one key (same key/value store as the voice
-// block and corpus).
+// A one-off Cleo instruction ("harder ending") applies once. A STANDING note is
+// a recurring preference, folded into the system prompt every time the brief is
+// assembled or revised. Since step 3 PR 7 these notes have one home: what he
+// says through Control Center's one door, filed as said_parts notes about
+// 'content'. The engine only reads them, through the brief_standing_notes view
+// (security_invoker, service role only). Adding and removing happen in Control
+// Center, where Remember this files through the door and remove is a Purge.
 
-const KEY = 'brief_standing_notes'
+const VIEW = 'brief_standing_notes'
 const MAX_NOTES = 20
-const MAX_LEN = 280
 
 export interface StandingNote { id: string; text: string; at: string }
 
-function coerce(raw: unknown): StandingNote[] {
-  if (!Array.isArray(raw)) return []
-  const out: StandingNote[] = []
-  for (const r of raw) {
-    if (r && typeof r === 'object' && typeof (r as any).text === 'string') {
-      const text = (r as any).text.trim()
-      if (text) out.push({ id: String((r as any).id || text.slice(0, 24)), text, at: String((r as any).at || '') })
-    } else if (typeof r === 'string' && r.trim()) {
-      out.push({ id: r.slice(0, 24), text: r.trim(), at: '' })
-    }
-  }
-  return out
-}
-
+/** His standing notes, newest first. A failed read is no notes, never an error. */
 export async function loadStandingNotes(): Promise<StandingNote[]> {
-  const { data } = await supabase.from('system_config').select('value').eq('key', KEY).single()
-  return coerce(parseVal((data as any)?.value)).slice(0, MAX_NOTES)
-}
-
-export async function saveStandingNotes(notes: StandingNote[]): Promise<void> {
-  await supabase.from('system_config').upsert({
-    key: KEY,
-    value: notes.slice(0, MAX_NOTES),
-    updated_at: new Date().toISOString(),
-  })
-}
-
-/** Add a note (trimmed, deduped by normalized text). Returns the new list. */
-export async function addStandingNote(text: string): Promise<StandingNote[]> {
-  const clean = String(text || '').trim().slice(0, MAX_LEN)
-  if (!clean) return loadStandingNotes()
-  const notes = await loadStandingNotes()
-  const norm = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim()
-  if (notes.some(n => norm(n.text) === norm(clean))) return notes
-  const id = (globalThis.crypto?.randomUUID?.() || `n_${Date.now()}_${notes.length}`)
-  const next = [...notes, { id, text: clean, at: new Date().toISOString() }].slice(-MAX_NOTES)
-  await saveStandingNotes(next)
-  return next
-}
-
-export async function removeStandingNote(id: string): Promise<StandingNote[]> {
-  const notes = await loadStandingNotes()
-  const next = notes.filter(n => n.id !== id)
-  await saveStandingNotes(next)
-  return next
+  const { data, error } = await supabase.from(VIEW).select('id, text, at')
+  if (error || !Array.isArray(data)) return []
+  return data
+    .filter((r: any) => r && typeof r.text === 'string' && r.text.trim())
+    .map((r: any) => ({ id: String(r.id), text: String(r.text).trim(), at: String(r.at || '') }))
+    .slice(0, MAX_NOTES)
 }
 
 /** The system-prompt block. Empty string when there are no standing notes. */
 export function standingNotesPrompt(notes: StandingNote[]): string {
   if (!notes.length) return ''
   return [
-    "STANDING PREFERENCES (Krish's recurring editorial notes — honor every one unless a direct instruction overrides it):",
+    "STANDING PREFERENCES (Krish's recurring editorial notes; honor every one unless a direct instruction overrides it):",
     ...notes.map(n => `- ${n.text}`),
   ].join('\n')
 }

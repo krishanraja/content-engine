@@ -1,0 +1,292 @@
+{
+ "_about": "A bank of styles to mix, layer by layer, like an alchemist. Krish, 2026-10-14: \"I don't think that these things are just one way of everything being in the future. I think we need to build a bank of different styles that we know can be modularized and used. You already have a tonne of pre-existing knowledge of what I like and, more importantly, what I don't like, which you can lean on and I don't think should be totally overwritten. I would prefer to build a modular bank of styles over time that we can draw inspiration from and mix together at different layers, like an alchemist.\" The base always applies and is never overwritten by a module; a module is mixed into one piece's recipe, and Krish's verdict after the piece says whether it stays in the bank as liked, untested or not for us.",
+ "base": {
+  "about": "What Krish already likes and, more importantly, does not like. Every recipe sits on top of this; where a module disagrees with the base, the base wins unless Krish says otherwise for that piece.",
+  "sources": [
+   "apps/control-plane/api/_houseRules.ts (house rules, his words on each)",
+   "config/golden-examples.json (his own lines, e.g. the personal intro)",
+   "config/title-verdicts.json (titles he picked and rejected, and the lessons)",
+   "config/hook-playbook.json (hooks by surface)",
+   "scripts/post-pack/voice_check.py and story_check.py (sounds like Krish; reading age 12; series line; outro)"
+  ]
+ },
+ "layers": [
+  "opening",
+  "structure",
+  "breakdown",
+  "proof",
+  "tone",
+  "close",
+  "editing",
+  "camerawork",
+  "graphics",
+  "production"
+ ],
+ "folder": {
+  "drive_id": "1eqdc1hoMn6CwqkbKlG5mAmKCYNoR8otU",
+  "windows": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Inspiration"
+ },
+ "what_i_like_sheet": "1_XBxxMUcU4CFHB5iJqWc1WtYKmJCftMOe5UlZYSM-_U",
+ "references": [
+  {
+   "file": "igexport-DCHp2RLIxMt.mp4",
+   "drive_id": "1Kmxoapg3dOH5vcPuLWAZFG8aq8TYbu-y",
+   "sha256": "acd429d8fd6edc62e2bd18b9b506008149622799fcc6035d4393b2451f17402f",
+   "added": "2026-10-04",
+   "krish_likes": "",
+   "status": "studied",
+   "study": {
+    "duration_s": 42.11,
+    "shape": "vertical",
+    "pace": {
+     "shots": 24,
+     "cuts_per_minute": 32.8,
+     "median_shot_s": 1.16,
+     "shortest_shot_s": 0.52,
+     "longest_shot_s": 4.72,
+     "shots_under_1s": 9,
+     "shots_over_5s": 0,
+     "first_cut_s": 2.72
+    },
+    "zoom": {
+     "moves": 52,
+     "push_ins": 25,
+     "pull_outs": 27
+    },
+    "speech": {
+     "words": 144,
+     "words_per_minute": 211.0,
+     "speech_share_of_runtime": "41 of 42 seconds",
+     "first_10_seconds": "Okay, here's how we got this Airbnb in Portugal for less than the price of a travel lodge. So I've just come back from Portugal and this villa was definitely one of the nicest I've ever stayed in.",
+     "questions_asked": 0
+    },
+    "loudness_lufs": -14.2,
+    "studied": "2026-10-14"
+   },
+   "creator": "an Instagram travel Reel (creator not recorded)",
+   "modules": [
+    "fast-phrase-cuts",
+    "number-in-scene",
+    "words-in-scene",
+    "send-ask",
+    "pov-handheld"
+   ]
+  },
+  {
+   "file": "stamp-duty-is-stupid-ytshorts.savetube.vip.mp4",
+   "drive_id": "1_5xn_Wj3QwuG2qfTSG8k8Is4tlR2Grw0",
+   "creator": "Hannah Fry",
+   "source": "https://youtube.com/@fryrsquared",
+   "added": "2026-10-14",
+   "krish_likes": "I generally love how she talks about complex topics observationally. She's not commentating on a specific thing or company but she's just unpacking how something works that people probably don't even realise they wondered about. I think the same is going to happen in AI and we could do a really good job of talking less about companies and more about concepts.",
+   "status": "studied",
+   "study": {
+    "duration_s": 173.92,
+    "shape": "vertical",
+    "pace": {
+     "shots": 10,
+     "cuts_per_minute": 3.1,
+     "median_shot_s": 11.51,
+     "shortest_shot_s": 0.17,
+     "longest_shot_s": 52.9,
+     "shots_under_1s": 1,
+     "shots_over_5s": 7,
+     "first_cut_s": 0.17
+    },
+    "zoom": {
+     "moves": 138,
+     "push_ins": 46,
+     "pull_outs": 92
+    },
+    "speech": {
+     "words": 572,
+     "words_per_minute": 211.0,
+     "speech_share_of_runtime": "163 of 174 seconds",
+     "first_10_seconds": "Okay, let me start this one off by saying that I think tax is a good thing. Okay schools roads the NHS massive fan I also think that Britain has One of the stupidest taxes in the entire world because of the way that it makes people behave",
+     "questions_asked": 3
+    },
+    "loudness_lufs": -23.3,
+    "studied": "2026-10-14",
+    "note": "The zoom count is high because she moves inside a tight frame; the contact sheet shows the framing changes (tight at 26.6s, wider at 167.8s) as punch-ins inside long takes, not cuts."
+   },
+   "modules": [
+    "concession-open",
+    "one-person-story",
+    "mechanism-image",
+    "one-number-after",
+    "better-way",
+    "wry-close",
+    "thinking-aloud",
+    "long-holds",
+    "flat-illustration"
+   ]
+  }
+ ],
+ "bank": [
+  {
+   "id": "concession-open",
+   "layer": "opening",
+   "name": "Concede, then claim",
+   "how": "Grant the reasonable view first, then make the sharp claim inside 15 seconds.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "concept pieces and arguments against a popular view",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "one-person-story",
+   "layer": "breakdown",
+   "name": "One person, one situation",
+   "how": "Explain the system through one ordinary person in one moment, then widen to everyone.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "any mechanism that is abstract",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "mechanism-image",
+   "layer": "breakdown",
+   "name": "The image that names it",
+   "how": "One everyday metaphor that names how it works (\"a market becomes a queue\").",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "concept pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "one-number-after",
+   "layer": "proof",
+   "name": "One number, after the story",
+   "how": "A single hard number as proof, placed after the story so it lands.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "any piece with one strong figure",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "better-way",
+   "layer": "structure",
+   "name": "The better way, briefly",
+   "how": "Show the alternative in two lines before the close.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "critiques",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "wry-close",
+   "layer": "close",
+   "name": "A wry close",
+   "how": "End on an observation that makes them smile, not a lecture.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "concept pieces; not money-moving news",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "thinking-aloud",
+   "layer": "tone",
+   "name": "Thinking out loud",
+   "how": "Asides (\"by the way\", \"right?\"), self-aware humour, a person thinking, not presenting.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "the long cut",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "long-holds",
+   "layer": "editing",
+   "name": "Long holds with punch-ins",
+   "how": "Few cuts (about 3 a minute); step in inside the take on key lines.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "the long cut",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "flat-illustration",
+   "layer": "graphics",
+   "name": "Simple flat illustrations",
+   "how": "Plain illustrated scenes only where the story needs a picture, about a fifth of the runtime.",
+   "from": "Hannah Fry, stamp duty Short",
+   "fits": "concept pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "fast-phrase-cuts",
+   "layer": "editing",
+   "name": "Cut on every phrase",
+   "how": "About 33 cuts a minute, shots around a second.",
+   "from": "Portugal villa Reel",
+   "fits": "the short cut, energy pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "number-in-scene",
+   "layer": "graphics",
+   "name": "The number in the scene",
+   "how": "The key number as a big graphic laid into the picture, not a caption.",
+   "from": "Portugal villa Reel",
+   "fits": "any piece with one money or scale number",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "words-in-scene",
+   "layer": "graphics",
+   "name": "Words inside the picture",
+   "how": "Key words placed in the scene (on a wall, a table) instead of a caption strip.",
+   "from": "Portugal villa Reel",
+   "fits": "b-roll heavy cuts",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "send-ask",
+   "layer": "close",
+   "name": "Ask for a send",
+   "how": "End with \"send this to someone who ...\" instead of \"tell me in the comments\".",
+   "from": "Portugal villa Reel",
+   "fits": "shareable pieces",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "pov-handheld",
+   "layer": "camerawork",
+   "name": "Wide handheld first-person",
+   "how": "Wide-angle, moving, first-person shots.",
+   "from": "Portugal villa Reel",
+   "fits": "b-roll from a place or an event",
+   "krish_verdict": "untested"
+  }
+ ],
+ "recipes": [
+  {
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7",
+   "piece_name": "Fri 16 Oct mind.the.gap",
+   "krish_said": "Let's trial all of this on the next one. I think the next one's actually perfect for it.",
+   "date": "2026-10-14",
+   "mix": {
+    "opening": [
+     "concession-open"
+    ],
+    "breakdown": [
+     "one-person-story",
+     "mechanism-image"
+    ],
+    "proof": [
+     "one-number-after"
+    ],
+    "structure": [
+     "better-way"
+    ],
+    "tone": [
+     "thinking-aloud"
+    ],
+    "close": [
+     "wry-close",
+     "send-ask"
+    ],
+    "editing": [
+     "long-holds"
+    ],
+    "graphics": [
+     "flat-illustration",
+     "number-in-scene"
+    ]
+   },
+   "keeps_from_base": "the series line, his personal intro beat, reading age 12, the dated prediction, the outro to the article",
+   "status": "scripts written on outline v2 (docs/plans/2026-10-09-script-deep-v2.md, -90s-v2.md); waiting on Krish before Teleprompter"
+  }
+ ]
+}

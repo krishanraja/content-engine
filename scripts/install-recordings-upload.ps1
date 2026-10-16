@@ -19,22 +19,32 @@ time? the runner exists on both". Both machines run it; whichever is online
 sends the recording, and the engine keeps one copy by its sha256.
 
 It brings recordings-source up to date first. Then it runs the upload once
-with -Check, which sends nothing: the Inbox must be reachable, the runner key
-must be in Windows Credential Manager and the engine must accept it on the
-recordings route. If any of that fails it says why and installs nothing. Then
-it registers "Mindmake Recordings Upload": one hidden PowerShell process
-started at logon that pulls recordings-source and sends every five minutes,
-and a trigger every five minutes that starts it again if it has stopped
-(Windows ignores that trigger while it runs). It runs as Krish, in his own
-session, because Google Drive for desktop mounts the drive there. It never
-touches the runner's task, folders or credentials, or the library sync.
+with -Check, which sends and places nothing. Sending: the Inbox must be
+reachable, the runner key must be in Windows Credential Manager and the
+engine must accept it on the recordings route; if any of that fails it says
+which and installs nothing. Placing, because every pass also places each
+take on its piece and cut (scripts\post-pack\recording_match.py): the pinned
+Python (npm run bootstrap:python) must have a faster_whisper that decodes
+sound (recording_match.py --check-transcriber), ffmpeg must be on the PATH,
+and the engine key (scripts\engine-key.ps1, once per machine) must list the
+engine's recordings. If only placing fails (the check's exit 3), it says
+which and installs anyway, so this machine still sends; the other machine
+places takes until this one is set up. -RequirePlacing makes that a stop.
+Then it registers "Mindmake Recordings Upload": one hidden PowerShell
+process started at logon that pulls recordings-source and sends and places
+every five minutes, and a trigger every five minutes that starts it again if
+it has stopped (Windows ignores that trigger while it runs). It runs as Krish,
+in his own session, because Google Drive for desktop mounts the drive there and
+Credential Manager holds his keys there. It never touches the runner's task,
+folders or credentials, or the library sync.
 
 To stop it on a machine: Disable-ScheduledTask -TaskName "Mindmake Recordings Upload"
 #>
 param(
   [string]$TaskName = 'Mindmake Recordings Upload',
   [ValidateRange(2, 60)][int]$EveryMinutes = 5,
-  [switch]$SkipCheck
+  [switch]$SkipCheck,
+  [switch]$RequirePlacing
 )
 
 $ErrorActionPreference = 'Stop'
@@ -62,9 +72,14 @@ if ([string]::IsNullOrWhiteSpace($userId)) { throw 'Current Windows user could n
 $powershell = (Get-Command powershell.exe -ErrorAction Stop).Source
 
 if (-not $SkipCheck) {
-  Write-Output 'Checking the Inbox, the runner key and the engine (nothing is sent)...'
+  Write-Output 'Checking the Inbox, the runner key, the engine key, the transcriber and the engine (nothing is sent or placed)...'
   & $powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $uploadScript -Check
-  if ($LASTEXITCODE -ne 0) {
+  $checked = $LASTEXITCODE
+  if ($checked -eq 3) {
+    # Sending works; placing takes does not yet. A problem placing never stops the sending.
+    if ($RequirePlacing) { throw 'Sending is ready, but placing takes is not (the reason is above). Nothing was installed, as -RequirePlacing asks.' }
+    Write-Output 'Sending is ready; placing takes is not ready on this machine yet (the reason is above). The task is installed so this machine sends; the other machine places takes until this one is set up, and the next check here says when it is.'
+  } elseif ($checked -ne 0) {
     throw 'The check failed (the reason is above). Nothing was installed.'
   }
 }
@@ -93,7 +108,7 @@ if ($null -ne $existing -and $existing.State -eq 'Running') {
   Stop-ScheduledTask -TaskName $TaskName
 }
 
-$task = New-ScheduledTask -Action $action -Trigger @($logonTrigger, $repeatTrigger) -Principal $principal -Settings $settings -Description "Sends every finished recording in the Video Engine Inbox to the engine, for cloud sessions to fetch. Reads the Inbox only. Runs on both runner machines. scripts/recordings-upload.ps1."
+$task = New-ScheduledTask -Action $action -Trigger @($logonTrigger, $repeatTrigger) -Principal $principal -Settings $settings -Description "Sends every finished recording in the Video Engine Inbox to the engine, for cloud sessions to fetch, and places each take on its piece and cut. Reads the Inbox only. Runs on both runner machines. scripts/recordings-upload.ps1."
 Register-ScheduledTask -TaskName $TaskName -InputObject $task -Force | Out-Null
 
 $installed = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop

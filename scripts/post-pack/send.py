@@ -47,6 +47,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
 import engine  # noqa: E402  scripts/engine.py: the engine's address and key
 import library  # noqa: E402
+import making  # noqa: E402  records the send on the piece's board row
 from library import BRAND_KIT, LibraryError  # noqa: E402
 
 MANIFEST = '.pack.json'
@@ -353,20 +354,20 @@ def self_test():
         tmp = Path(tmp)
         pack = tmp / '2026-10-05 Mon follow.the.money - Who gets paid'
         for name, body in (('READ ME.txt', b'read me'), ('1 Article/substack-copy.html', b'<p>post</p>'),
-                           ('2 Covers and images/substack-cover-3x2.png', b'cover'),
+                           ('2 Covers and images/substack-cover-1200x630.png', b'cover'),
                            ('4 Social/linkedin-card.png', b'cover'), ('.pack.json', b'')):
             (pack / name).parent.mkdir(parents=True, exist_ok=True)
             (pack / name).write_bytes(body)
         (pack / '.pack.json').write_text(json.dumps({'library_prefix': f'3 Posts/{pack.name}', 'files': [
             {'path': 'READ ME.txt', 'purpose': 'What every file is for.'},
             {'path': '1 Article/substack-copy.html', 'purpose': 'Paste into Substack.'},
-            {'path': '2 Covers and images/substack-cover-3x2.png', 'purpose': 'The cover.'},
+            {'path': '2 Covers and images/substack-cover-1200x630.png', 'purpose': 'The cover.'},
             {'path': '4 Social/linkedin-card.png', 'purpose': 'The LinkedIn picture.'}]}), encoding='utf-8')
 
         fake = FakeEngine()
         planned = plan(pack)
         check('the pack goes under its post folder', [t for t, _, _ in planned], [
-            f'3 Posts/{pack.name}/1 Article/substack-copy.html', f'3 Posts/{pack.name}/2 Covers and images/substack-cover-3x2.png',
+            f'3 Posts/{pack.name}/1 Article/substack-copy.html', f'3 Posts/{pack.name}/2 Covers and images/substack-cover-1200x630.png',
             f'3 Posts/{pack.name}/4 Social/linkedin-card.png', f'3 Posts/{pack.name}/READ ME.txt'])
         check('the purposes come from the pack', planned[0][2], 'Paste into Substack.')
         check('first send', send(planned, fake, quiet), {'sent': 3, 'already': 0, 'confirmed_only': 1})
@@ -484,6 +485,12 @@ def main():
             shutil.rmtree(unpacked, ignore_errors=True)
     print(f'Sent {done["sent"] + done["confirmed_only"]}, already there {done["already"]}. '
           "Krish's always-on machine writes them into the library within about ten minutes.")
+    if a.folder and (Path(a.folder) / MANIFEST).is_file():
+        post_json = Path(a.folder) / 'post.json'
+        pack_json = json.loads((Path(a.folder) / MANIFEST).read_text(encoding='utf-8'))
+        piece_id = str(pack_json.get('piece_id') or '') or making.piece_id_of(post_json)
+        if piece_id:
+            making.report(piece_id, making.pack_patch(a.folder, sent=True), 'pack sent to the library')
 
 
 if __name__ == '__main__':

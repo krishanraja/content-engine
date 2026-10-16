@@ -1,0 +1,298 @@
+{
+ "series": "under_the_hood",
+ "logos": "logos/",
+ "cards": [
+  {
+   "file": "three-kinds.png",
+   "kind": "columns",
+   "kicker": "Three kinds of AI",
+   "title": "Three kinds of AI. Only one runs your errands.",
+   "columns": [
+    {
+     "label": "Chatbots",
+     "logos": [
+      "openai-symbol-cream.svg",
+      "anthropic-symbol-cream.svg",
+      "google-cream.svg"
+     ],
+     "names": "ChatGPT, Claude, Gemini",
+     "line": "You ask, it answers"
+    },
+    {
+     "label": "Work agents",
+     "logos": [
+      "anthropic-symbol-cream.svg",
+      "openai-symbol-cream.svg",
+      "google-cream.svg"
+     ],
+     "names": "Claude Cowork, ChatGPT dots, Gemini Spark",
+     "line": "Your work email and documents"
+    },
+    {
+     "label": "Ready-made assistants",
+     "logos": [
+      "meta-cream.svg",
+      "apple-cream.svg"
+     ],
+     "names": "Muse, Siri",
+     "line": "Already on your phone. Runs your errands",
+     "hi": true
+    }
+   ]
+  },
+  {
+   "file": "score-side.png",
+   "kind": "bars",
+   "kicker": "My scores, out of 10",
+   "title": "Meta made $59.36bn from ads last quarter",
+   "highlight": "Muse",
+   "rows": [
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "score": 8,
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "score": 3,
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Claude Cowork",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 8,
+     "group": "Work agents"
+    },
+    {
+     "name": "ChatGPT dots",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 7,
+     "group": "Work agents"
+    },
+    {
+     "name": "Gemini Spark",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 4,
+     "group": "Work agents"
+    }
+   ],
+   "note": "Meta: $59.36bn of $60.8bn from ads last quarter"
+  },
+  {
+   "file": "scorecard.png",
+   "kind": "table",
+   "kicker": "My scores, out of 10",
+   "title": "Muse and Siri tie on 43. For opposite reasons.",
+   "highlight": "Muse",
+   "columns": [
+    "Job",
+    "Price",
+    "Reach",
+    "Asks",
+    "Private",
+    "Side"
+   ],
+   "rows": [
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "scores": [
+      9,
+      10,
+      10,
+      8,
+      3,
+      3
+     ],
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "scores": [
+      3,
+      8,
+      8,
+      7,
+      9,
+      8
+     ],
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Claude Cowork",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "scores": [
+      6,
+      6,
+      4,
+      9,
+      6,
+      8
+     ],
+     "group": "Work agents"
+    },
+    {
+     "name": "ChatGPT dots",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "scores": [
+      8,
+      2,
+      7,
+      8,
+      4,
+      7
+     ],
+     "group": "Work agents"
+    },
+    {
+     "name": "Gemini Spark",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "scores": [
+      7,
+      6,
+      9,
+      7,
+      3,
+      4
+     ],
+     "group": "Work agents"
+    }
+   ]
+  },
+  {
+   "file": "score-private.png",
+   "kind": "bars",
+   "kicker": "My scores, out of 10",
+   "title": "Meta can get to your Muse data. Apple says it can't get to Siri's.",
+   "highlight": "Muse",
+   "rows": [
+    {
+     "name": "Siri",
+     "logos": [
+      "apple-cream.svg"
+     ],
+     "score": 9,
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Muse",
+     "logos": [
+      "meta-cream.svg"
+     ],
+     "score": 3,
+     "group": "Ready-made assistants"
+    },
+    {
+     "name": "Claude Cowork",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 6,
+     "group": "Work agents"
+    },
+    {
+     "name": "ChatGPT dots",
+     "logos": [
+      "openai-symbol-cream.svg"
+     ],
+     "score": 4,
+     "group": "Work agents"
+    },
+    {
+     "name": "Gemini Spark",
+     "logos": [
+      "google-cream.svg"
+     ],
+     "score": 3,
+     "group": "Work agents"
+    }
+   ],
+   "note": "Meta can get to Muse data \"when necessary\". Apple: Private Cloud Compute."
+  },
+  {
+   "file": "shops.png",
+   "kind": "columns",
+   "kicker": "Can Muse shop there?",
+   "title": "Amazon locked Muse out. Walmart let it in.",
+   "columns": [
+    {
+     "label": "Lets Muse buy",
+     "logos": [
+      "walmart-cream.svg"
+     ],
+     "names": "Walmart",
+     "line": "ChatGPT too"
+    },
+    {
+     "label": "Blocked Muse",
+     "logos": [
+      "amazon-cream.svg"
+     ],
+     "names": "Amazon",
+     "line": "Since September",
+     "hi": true
+    },
+    {
+     "label": "Local businesses",
+     "logos": [
+      "whatsapp-cream.svg"
+     ],
+     "names": "Bookings on WhatsApp",
+     "line": "Meta sells the AI helper"
+    }
+   ]
+  },
+  {
+   "file": "prediction.png",
+   "kind": "statement",
+   "kicker": "My prediction",
+   "logos": [
+    "meta-cream.svg",
+    "apple-cream.svg"
+   ],
+   "lines": [
+    {
+     "text": "By the end of 2027,",
+     "tone": "plain"
+    },
+    {
+     "text": "a big airline sells only",
+     "tone": "plain"
+    },
+    {
+     "text": "through Muse and Siri.",
+     "tone": "answer"
+    }
+   ],
+   "note": "Ask ChatGPT for that flight, and it won't show up"
+  }
+ ],
+ "source": [
+  "../2026-10-14-draft-body.md",
+  "../2026-10-14-draft-script.md",
+  "../2026-10-14-draft-script-90s.md"
+ ]
+}

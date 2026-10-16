@@ -36,7 +36,7 @@ export const LIBRARY_BRAND_KIT = '1 Brand kit (permanent)'
 export const LIBRARY_CHANNEL_ART = '2 Channel art (permanent)'
 export const LIBRARY_POSTS = '3 Posts'
 export const LIBRARY_TOP_FOLDERS = [LIBRARY_BRAND_KIT, LIBRARY_CHANNEL_ART, LIBRARY_POSTS] as const
-export const LIBRARY_POST_SECTIONS = ['1 Article', '2 Covers and images', '3 Video', '4 Social'] as const
+export const LIBRARY_POST_SECTIONS = ['0 Publish', '1 Article', '2 Covers and images', '3 Video', '4 Social'] as const
 export const LIBRARY_POST_README = 'READ ME.txt'
 /** The live subchannels as the brand writes them, from the Studio's series. */
 export const LIBRARY_SUBCHANNELS = LIVE_SERIES.map((id) => id.replace(/_/g, '.'))

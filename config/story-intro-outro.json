@@ -1,0 +1,53 @@
+{
+  "about": "House rule STORY_INTRO_OUTRO: every video, in both sizes, opens with an animated branded intro made for its own story, carries a designed audio treatment, and closes on an animated outro card made for that piece. Read by .agents/skills/produce-video, which stops before the final render while status is not \"approved\". Nothing here is designed yet: the designs go to Krish first (krish-design), and only his words approve one. A piece listed under \"exceptions\", with Krish's own quoted words, is the one case a cut is finished without them.",
+  "status": "approved",
+  "said": {
+    "on": "2026-10-12",
+    "words": "when the videos come back bear in mind that I want a proper animated branded intro to this specific story visually, the audio treatment, and then a proper animated outro card. Across all formats, and this should be part of the system moving forward."
+  },
+  "required": {
+    "story_intro": "a proper animated, branded intro made for this specific story, in the 16:9 long cut and the 9:16 short cut",
+    "audio_treatment": "the audio treatment that goes with it, across the intro, the voice and the outro",
+    "outro_card": "a proper animated outro card made for this piece, in the 16:9 long cut and the 9:16 short cut"
+  },
+  "until_approved": "story intro and outro not designed yet",
+  "approved": {
+    "on": "2026-10-12",
+    "by": "Krish",
+    "design": "the stand-off (docs/plans/2026-10-12-story-io): apps/renderer/src/story StoryIntroStandoff and StoryOutroStandoff, rendered per piece by scripts/quick-edit/story_io.py",
+    "words": "This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
+    "context": "He ruled it in the same message that asked for the midday run to make every video; the design is the blind-judging winner, shown to him in the publish board with Monday's videos.",
+    "monday_renders": {
+      "intro-16x9.mp4": "e3cf0f1a8aa11673bb4b551989acd9fdcc62ec8671199f14055dc394a161b390",
+      "intro-9x16.mp4": "4ae3c42882f37d68d1439446ec979b45f7464ecbbf8c6c0474aae2f4ebb9c0fd",
+      "outro-16x9.mp4": "c10de48bcfdb16a86d0bf5831590dc2e6bc9f3fc56b5e133b5eee5ce499393a8",
+      "outro-9x16.mp4": "d96f936dd538079b5e479b60249329945a4805b19771356caebaf62011e9b1fe"
+    },
+    "revised": "2026-10-12: the real makeyourmindup wordmark and masthead in place of typed text, a calm 6 s outro that holds its last card 2 s, and eased transitions, on Krish's words: \"the last frame is way too chaotic, doesn't last long enough and is completely the wrong brand mark\"",
+    "revised_2026_10_13": "On Krish's review of Wednesday's video (\"there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated\"; \"the 'Does the most' / 'Keeps it private' badges are differently branded to one another\"; \"we've not made any use of business logos as we're supposed to\"): brand faces by role only, the short video_title fitted or the render fails, one badge for both sides with each side's real logos, elements built in place inside the safe areas, a logo line-up under the title, and every frame checked (check, below). The intro is 3.5 s. monday_renders above are the earlier design's."
+  },
+  "check": {
+    "about": "What scripts/quick-edit/story_io.py checks on every frame of every story clip it renders, and fails the render on (Krish, 2026-10-13, on Wednesday's video: \"text that falls off the page and looks ridiculous, amateur, plain, and horrible ... brand guidelines have been seriously violated\"). safe_areas: where text, logos and badges may go, in pixels of the frame; 9:16 keeps clear of the Shorts, Reels and TikTok top bar (250 px), caption block (bottom 440 px) and right-hand buttons (120 px a side, kept symmetric); 16:9 is the 5 % title-safe margin. The renderer lays out to the same numbers (apps/renderer/src/story/standoff-kit.tsx, SAFE). faces: the only faces text may be set in (brand book: Anton headlines, Archivo text, IBM Plex Mono labels; apps/renderer/src/house/fonts.css).",
+    "safe_areas": {
+      "16x9": {
+        "x0": 96,
+        "y0": 54,
+        "x1": 1824,
+        "y1": 1026
+      },
+      "9x16": {
+        "x0": 120,
+        "y0": 250,
+        "x1": 960,
+        "y1": 1480
+      }
+    },
+    "faces": [
+      "MYMU Anton",
+      "MYMU Archivo",
+      "MYMU Plex Mono"
+    ],
+    "tolerance_px": 1,
+    "overlap_share": 0.04
+  }
+}

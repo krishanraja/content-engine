@@ -102,5 +102,6 @@
    "start": "so here's our call",
    "end": "on the day"
   }
- ]
+ ],
+ "script": "video-script-v4.txt"
 }

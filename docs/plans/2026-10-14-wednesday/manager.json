@@ -1,0 +1,83 @@
+{
+ "title": "Amazon locked Meta's new AI out. Walmart let it in.",
+ "subtitle": "There are now three kinds of AI. Meta's Muse is the new kind, its real rival is Siri, and the shops are already picking sides.",
+ "date": "2026-10-14",
+ "kicker": "under.the.hood",
+ "status": [
+  "Fact check passed on this exact text (30 claims)",
+  "Visual gate passed: house cover, six cards with real logos",
+  "Both scripts approved by Krish and recorded",
+  "Videos made: both cuts, every frame checked, in Drive"
+ ],
+ "body": "body.md",
+ "words": "words.json",
+ "images": [
+  {
+   "id": "cover",
+   "file": "img/cover.png",
+   "role": "cover",
+   "alt": "Muse's real rival: Siri. Krish on the under.the.hood cover, with Muse marked Does most and Siri marked Most private",
+   "caption": "Drawn by the house cover drawer. Every word sits inside Substack's crops."
+  },
+  {
+   "id": "vertical",
+   "file": "img/cover-vertical.png",
+   "role": "vertical-cover",
+   "alt": "The vertical cover: Muse's real rival: Siri"
+  },
+  {
+   "id": "kinds",
+   "label": "Three kinds of AI",
+   "file": "img/three-kinds.png",
+   "after_heading": "THERE ARE NOW THREE KINDS OF AI",
+   "alt": "Three kinds of AI. Chatbots: ChatGPT, Claude, Gemini, you ask, it answers. Work agents: Claude Cowork, ChatGPT dots, Gemini Spark, your work email and documents. Ready-made assistants: Muse and Siri, already on your phone, runs your errands."
+  },
+  {
+   "id": "side",
+   "label": "Whose side is it on?",
+   "file": "img/score-side.png",
+   "after_heading": "EACH COMPANY BUILDS THE KIND THAT MAKES IT MONEY",
+   "alt": "My scores out of 10 for whose side it is on. Ready-made assistants: Siri 8, Muse 3. Work agents: Claude Cowork 8, ChatGPT dots 7, Gemini Spark 4. Meta: $59.36bn of $60.8bn from ads last quarter.",
+   "caption": "My scores, my opinion"
+  },
+  {
+   "id": "scorecard",
+   "label": "My scorecard",
+   "file": "img/scorecard.png",
+   "after_heading": "MY SCORECARD",
+   "alt": "My scorecard, out of 10 on six things. Ready-made assistants: Muse 43, Siri 43. Work agents: Claude Cowork 39, ChatGPT dots 36, Gemini Spark 36.",
+   "caption": "My scores, my opinion; the facts under them are quoted from each company's own pages"
+  },
+  {
+   "id": "private",
+   "label": "Who can read your stuff?",
+   "file": "img/score-private.png",
+   "after_heading": "WHERE MUSE FALLS BEHIND SIRI",
+   "alt": "My scores out of 10 for who can read your stuff. Siri 9, Muse 3, Claude Cowork 6, ChatGPT dots 4, Gemini Spark 3."
+  },
+  {
+   "id": "shops",
+   "label": "Each shop decides",
+   "file": "img/shops.png",
+   "after_heading": "EACH SHOP DECIDES",
+   "alt": "Can Muse shop there? Walmart lets Muse buy, and ChatGPT too. Amazon blocked Muse in September. Local businesses take bookings on WhatsApp, where Meta sells the AI helper."
+  },
+  {
+   "id": "prediction",
+   "label": "My prediction",
+   "file": "img/prediction.png",
+   "after_heading": "MY PREDICTION",
+   "alt": "My prediction: by the end of 2027, a big airline sells only through Muse and Siri. Ask ChatGPT for that flight, and it won't show up."
+  }
+ ],
+ "scripts": [
+  {
+   "label": "The 3-minute video",
+   "file": "script-long.md"
+  },
+  {
+   "label": "The 90-second cut",
+   "file": "script-90s.md"
+  }
+ ]
+}

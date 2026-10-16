@@ -205,6 +205,26 @@ export function numbersIn(s: string): string[] {
     .map(n => { const v = Number(n); return Number.isFinite(v) ? String(v) : n })
 }
 
+/** The free pre-check (Krish, 2026-10-15, on cutting the model bill: "if you
+ *  are 110% sure this does not degrade the quality of the output"). Every
+ *  stated sentence whose numbers, read by value as numbersIn reads them,
+ *  appear in none of the sources on file. Such a number can only be borne out
+ *  by the web check, and on 13 and 14 October 59 paid runs went round the
+ *  same loop: run, learn a number was not on file as written, fix, run again.
+ *  This reads no model and changes no verdict: the gate itself is untouched,
+ *  so a session can fix or file before it pays for a run. Forecasts and
+ *  Krish's confidence line are left out, as the gate leaves them out. */
+export function numbersNotOnFile(body: string, meta: Record<string, any>): Array<{ sentence: string; numbers: string[] }> {
+  const onFile = new Set(numbersIn(stripMarkdownLinks(sourcesText(meta || {}))))
+  const out: Array<{ sentence: string; numbers: string[] }> = []
+  for (const s of sentences(body)) {
+    if (isConfidenceLine(s) || readsAsForecast(s)) continue
+    const missing = [...new Set(numbersIn(stripMarkdownLinks(s)).filter(n => !onFile.has(n)))]
+    if (missing.length) out.push({ sentence: s, numbers: missing })
+  }
+  return out
+}
+
 /** Where one source ends and the next begins in the text the checkers read. */
 export const SOURCE_MARK = '### SOURCE: '
 
@@ -225,6 +245,11 @@ export const SOURCES_BUDGET = 120_000
  *  names it is stored with; the older names are still read if a row has
  *  them. */
 export function sourcesText(meta: Record<string, any>): string {
+  return sourceParts(meta).join('\n\n').slice(0, SOURCES_BUDGET)
+}
+
+/** Each source the checkers read, in order: a filed excerpt, a story, research, a dive. */
+export function sourceParts(meta: Record<string, any>): string[] {
   const parts: string[] = []
   const materials = readMaterials(meta)
   for (const m of materials) {
@@ -245,7 +270,7 @@ export function sourcesText(meta: Record<string, any>): string {
     const links = Array.isArray(d?.citations) ? d.citations : Array.isArray(d?.sources) ? d.sources : []
     parts.push(`${SOURCE_MARK}deep dive${question ? `: ${question}` : ''}\n${findings}${links.length ? `\n\nSources:\n${links.join('\n')}` : ''}`)
   }
-  return parts.filter(p => p && p.trim()).join('\n\n').slice(0, SOURCES_BUDGET)
+  return parts.filter(p => p && p.trim())
 }
 
 /** Whether a dive's findings are already on the piece as the material
@@ -469,6 +494,12 @@ export interface FactLedger {
   version: typeof FACT_GATE_VERSION
   /** sourcesHash() of the sources the entries were checked against. */
   sources_hash: string
+  /** One hash per source part (sourcePartHashes()). A later run whose sources
+   *  hold every one of these, plus new ones, keeps this ledger: filing a source
+   *  adds evidence and takes none away, so a line that passed or was set aside
+   *  stays so and only the rest are checked again (Krish, 2026-10-14: filing
+   *  one source re-checked the whole piece, and lines that had passed failed). */
+  source_parts?: string[]
   /** By sentenceKey(). */
   sentences: Record<string, LedgerEntry>
 }
@@ -482,6 +513,11 @@ export function sentenceKey(sentence: string): string {
  *  gives a new hash, and the ledger starts again. */
 export function sourcesHash(meta: Record<string, any>): string {
   return createHash('sha256').update(sourcesText(meta || {})).digest('hex')
+}
+
+/** One short hash per source part, for source_parts. */
+export function sourcePartHashes(meta: Record<string, any>): string[] {
+  return sourceParts(meta || {}).map(p => createHash('sha256').update(p).digest('hex').slice(0, 24))
 }
 
 /** The body sentences a claim's or a set-aside's sentence covers. A lister's
@@ -499,8 +535,13 @@ function overlapping(sentence: string, bodySentences: string[]): string[] {
   })
 }
 
-function usable(ledger: FactLedger | null | undefined, hash: string): ledger is FactLedger {
-  return !!ledger && ledger.version === FACT_GATE_VERSION && ledger.sources_hash === hash && !!ledger.sentences
+function usable(ledger: FactLedger | null | undefined, hash: string, parts?: string[]): ledger is FactLedger {
+  if (!ledger || ledger.version !== FACT_GATE_VERSION || !ledger.sentences) return false
+  if (ledger.sources_hash === hash) return true
+  // Only sources added since: every part the ledger was checked against is still there.
+  if (!parts || !Array.isArray(ledger.source_parts) || !ledger.source_parts.length) return false
+  const now = new Set(parts)
+  return ledger.source_parts.every(p => now.has(p))
 }
 
 export interface FactLedgerCoverage {
@@ -517,9 +558,10 @@ export function factLedgerCoverage(
   body: string,
   ledger: FactLedger | null | undefined,
   hash: string,
+  parts?: string[],
 ): FactLedgerCoverage {
   const bodySentences = sentences(body).filter(s => !isConfidenceLine(s))
-  const ledgerUsable = usable(ledger, hash)
+  const ledgerUsable = usable(ledger, hash, parts)
   const reusable = ledgerUsable
     ? bodySentences.filter(s => !!ledger.sentences[sentenceKey(s)]).length
     : 0
@@ -543,8 +585,9 @@ export function carryForward(
   setAside: Array<{ sentence: string; reason: string }>,
   ledger: FactLedger | null | undefined,
   hash: string,
+  parts?: string[],
 ): { toCheck: Claim[]; carried: CheckedClaim[]; setAside: Array<{ sentence: string; reason: string }>; sentences: number } {
-  if (!usable(ledger, hash)) return { toCheck: claims, carried: [], setAside, sentences: 0 }
+  if (!usable(ledger, hash, parts)) return { toCheck: claims, carried: [], setAside, sentences: 0 }
   const bodySentences = sentences(body)
   const toCheck: Claim[] = []
   const carried: CheckedClaim[] = []
@@ -581,11 +624,11 @@ export function splitFresh<T>(toCheck: T[], max: number): { now: T[]; later: num
 /** The ledger after a run: what it already held for sentences still in the
  *  body, and every sentence this run passed or set aside. A sentence with a
  *  failing claim is not added. */
-export function settle(body: string, result: FactCheck, prior: FactLedger | null | undefined, hash: string): FactLedger {
+export function settle(body: string, result: FactCheck, prior: FactLedger | null | undefined, hash: string, parts?: string[]): FactLedger {
   const bodySentences = sentences(body)
   const keys = new Set(bodySentences.map(sentenceKey))
   const out: Record<string, LedgerEntry> = {}
-  if (usable(prior, hash)) for (const [k, v] of Object.entries(prior.sentences)) if (keys.has(k)) out[k] = v
+  if (usable(prior, hash, parts)) for (const [k, v] of Object.entries(prior.sentences)) if (keys.has(k)) out[k] = v
   for (const s of bodySentences) {
     const key = sentenceKey(s)
     if (out[key] || isConfidenceLine(s)) continue
@@ -597,7 +640,7 @@ export function settle(body: string, result: FactCheck, prior: FactLedger | null
     const aside = result.set_aside.find(a => overlapping(a.sentence, [s]).length > 0)
     if (aside) out[key] = { status: 'set_aside', at: result.ran_at, reason: aside.reason }
   }
-  return { version: FACT_GATE_VERSION, sources_hash: hash, sentences: out }
+  return { version: FACT_GATE_VERSION, sources_hash: hash, ...(parts ? { source_parts: parts } : {}), sentences: out }
 }
 
 // ── The prompts ─────────────────────────────────────────────────────────────
@@ -606,6 +649,9 @@ export const EXTRACT_SYSTEM = [
   'You list the factual claims in a piece of writing so that each can be checked. You do not judge them.',
   'A claim is anything a reader could check as true or false: a number, price, percentage, date, a name with a role, a quotation, who said what, what a company did or released or wrote, what a document says, what happened when.',
   'Split compound sentences: one claim per checkable fact. Keep "sentence" as the EXACT sentence from the text, copied character for character, so it can be found again.',
+  // Krish, 2026-10-13 (Wednesday's Muse scorecard): "I would literally do flash
+  // comparisons of it against other tools on different criteria and rate them".
+  'The writer\'s own scores, ratings, rankings and totals ("I give Muse a nine", "my scorecard", "I have Claude on 39") are opinion, never claims: set them aside with reason opinion. The facts quoted to justify a score are still claims.',
   'Not claims: opinions, jokes, analogies, labelled inference or guesses, predictions, scenarios, and the piece\'s own prediction or bet. List any such sentence that contains a number or a quotation under "set_aside" with its reason (prediction, scenario, labelled_inference, opinion, analogy), so nothing with a number goes unaccounted for.',
   'Return JSON only: {"claims":[{"sentence":"...","claim":"the single fact, stated plainly","kind":"number|date|quote|attribution|event|name|other"}],"set_aside":[{"sentence":"...","reason":"..."}]}',
 ].join('\n')
@@ -626,6 +672,7 @@ export const ON_FILE_SYSTEM = [
 export const SECOND_LOOK_SYSTEM = [
   'These sentences come from a piece of writing, and nobody has listed a factual claim in them yet. Each comes with the heading of the section it sits in: a sentence in a section about possible futures, scenarios or a forecast describes a possible future unless it states something that has already happened.',
   'For each sentence, list every factual claim a reader could check as true or false: a number, a date, a quotation or who said something, what a company or person did, a definition presented as fact. One claim per fact, stated plainly.',
+  'The writer\'s own score or rating of something ("I give it a nine", "my totals") is an opinion, never a claim.',
   'A scare quote, an analogy, a joke, a made-up example line, an opinion, a hypothetical or a description of a possible future is not a claim; for such a sentence return no claims and give the reason in a few words.',
   'The piece\'s own prediction or bet (what the writers say will happen, often with a future date) is never a claim: it cannot be checked until its date. What a company or person SAID they will do is a claim about what they said.',
   'Return JSON only: {"answers":[{"i":0,"claims":[{"claim":"...","kind":"number|date|quote|attribution|event|name|other"}],"reason":"..."}]}',

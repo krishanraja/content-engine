@@ -295,10 +295,21 @@ describe('a sentence an earlier run settled keeps its result (walk log F52)', ()
     expect(carried.map((c: any) => c.claim).sort()).toEqual([CLAIMS[1]!.claim, CLAIMS[2]!.claim].sort())
   })
 
-  it('a changed source checks everything again', async () => {
+  it('a source only added keeps every passed line (Krish, 2026-10-14: filing one source re-checked the whole piece)', async () => {
     await factCheck({})
     const stored = written()[0]!.values.meta
     db.row = { id: ID, body: BODY, meta: { ...stored, materials: [...MATERIALS, { id: 'm3', kind: 'paste', title: 'New', content: 'A new source.' }] } }
+    calls.perplexity.length = 0
+    const again = await factCheck({})
+    expect(again.body).toMatchObject({ ok: true, passed: true })
+    expect((again.body as { carried: number }).carried).toBeGreaterThan(0)
+    expect(calls.perplexity).toHaveLength(0)
+  })
+
+  it('a changed source checks everything again', async () => {
+    await factCheck({})
+    const stored = written()[0]!.values.meta
+    db.row = { id: ID, body: BODY, meta: { ...stored, materials: [{ ...MATERIALS[0], content: String(MATERIALS[0].content) + ' Changed.' }, ...MATERIALS.slice(1)] } }
     calls.perplexity.length = 0
     const again = await factCheck({})
     expect(again.body).toMatchObject({ ok: true, passed: true, carried: 0 })

@@ -60,9 +60,9 @@ Set the control-plane API base URL as environment configuration, never as a cred
 MINDMAKE_CONTROL_PLANE_URL=https://controlcenter.krishraja.com/api/video-studio/runner
 MINDMAKE_PREVIEW_STORAGE_ORIGIN=https://gojpffsrxybbpbdzzrvs.supabase.co
 MINDMAKE_RUNTIME_ROOT=%USERPROFILE%\Documents\MindmakeVideoStudio\runtime
-MINDMAKE_DRIVE_ROOT=H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine
-MINDMAKE_MEDIA_INBOX=H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Inbox
-MINDMAKE_ARCHIVE_ROOT=H:\My Drive\Ventures\Active\Mindmaker\04_Content\Video Engine\Archive
+MINDMAKE_DRIVE_ROOT=H:\My Drive\Ventures\Active\makeyourmindup\Video Engine
+MINDMAKE_MEDIA_INBOX=H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Inbox
+MINDMAKE_ARCHIVE_ROOT=H:\My Drive\Ventures\Active\makeyourmindup\Video Engine\Archive
 MINDMAKE_DISCOVERY_STABILITY_SECONDS=30
 MINDMAKE_DISCOVERY_MAX_FILES=500
 MINDMAKE_DISCOVERY_MAX_ENTRIES=2000

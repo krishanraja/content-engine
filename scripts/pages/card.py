@@ -114,6 +114,41 @@ BOXES_JS = r"""(selector) => {
   return out;
 }"""
 
+# Every run of words that the card's edge, or a box that hides what spills out
+# of it (overflow hidden), cuts through. Krish, 2026-10-07, of a source line
+# cut off at the bottom of the Higgsfield picture "Who keeps what": "stuff like
+# this can't happen - why do we not check basic things like this?"
+CUT_JS = r"""([x0, y0, x1, y1]) => {
+  const words = (t) => t.replace(/\s+/g, ' ').trim();
+  const inside = (r, a) => r.left >= a[0] - .5 && r.top >= a[1] - .5 && r.right <= a[2] + .5 && r.bottom <= a[3] + .5;
+  const cut = new Map();
+  // The words that belong to the artwork: everything inside #card when there
+  // is one, else the whole page. A word wholly outside the card is lost too.
+  const root = document.getElementById('card') || document.body;
+  const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+    const text = words(n.nodeValue);
+    const el = n.parentElement;
+    if (!text || !el || el.closest('script, style, noscript, template, title')) continue;
+    if (!el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) continue;
+    const range = document.createRange();
+    range.selectNodeContents(n);
+    for (const r of range.getClientRects()) {
+      if (!r.width || !r.height) continue;
+      let clip = [x0, y0, x1, y1];
+      for (let a = el; a && a !== document.body; a = a.parentElement) {
+        const cs = getComputedStyle(a);
+        if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') {
+          const b = a.getBoundingClientRect();
+          clip = [Math.max(clip[0], b.left), Math.max(clip[1], b.top), Math.min(clip[2], b.right), Math.min(clip[3], b.bottom)];
+        }
+      }
+      if (!inside(r, clip)) cut.set(text, true);
+    }
+  }
+  return [...cut.keys()];
+}"""
+
 SIZE_JS = r"""() => {
   const meta = document.querySelector('meta[name="artwork-size"]');
   if (meta) return meta.content;
@@ -245,10 +280,18 @@ def main():
         pg.set_viewport_size({'width': x + w, 'height': y + h})
         settle(pg)
         found = texts(pg, (x, y, x + w, y + h))
+        cut = pg.evaluate(CUT_JS, [x, y, x + w, y + h])
         png = pg.screenshot(clip={'x': x, 'y': y, 'width': w, 'height': h})
         phone = phone_preview(b, png, w)
         b.close()
     ok = report(src.name, w, h, found)
+    if cut:
+        print('  cut off by an edge (the card, or a box that hides what spills out of it):')
+        for text in cut:
+            print(f'    "{short(text)}"')
+        print('  to fix: make the card taller, or the words fewer or smaller, so every word sits inside it')
+        print('  result: words are cut off')
+        ok = False
     (out / f'{src.stem}-phone.png').write_bytes(phone)
     print(f'  {out / f"{src.stem}-phone.png"}  how a phone shows it')
     if ok:

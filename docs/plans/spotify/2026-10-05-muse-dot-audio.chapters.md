@@ -1,0 +1,6 @@
+- Same agent, opposite answers | starts: "I've been following how money is"
+- The shelf and the till | starts: "Amazon first. Amazon took in 716.9"
+- Why Amazon shut the door | starts: "Now think about an AI agent"
+- The rules, and the money | starts: "Of course, Amazon gives a different"
+- Where you could get stung | starts: "So who carries the risk when"
+- My call | starts: "The article sets out three guesses"

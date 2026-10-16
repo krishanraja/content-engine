@@ -1,0 +1,9 @@
+{
+ "_about": "Every link of each week's publish board. Krish works from two Claude accounts and is an editor of both copies: every board publish goes to every link here, from the same engine-built file (Krish, 2026-10-14: \"I work from two different Claude accounts, so make sure this board and that board are always synchronized. And make sure the other session in the other account knows to do the same.\"). scripts/hooks/board_sync.py names, after each board publish, any link still holding an older build. Each board keeps its own ticks: copy ticks across both with the make-piece tick copy, then onto the record.",
+ "weeks": {
+  "2026-10-12": [
+   "https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E",
+   "https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV"
+  ]
+ }
+}

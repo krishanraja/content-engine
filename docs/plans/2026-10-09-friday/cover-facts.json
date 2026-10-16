@@ -1,0 +1,45 @@
+{
+ "subchannel": "mind.the.gap",
+ "title": "OpenAI tried to pick your AI for you. It broke on day one.",
+ "headline": "OpenAI tried to pick your AI for you. It broke on day one.",
+ "date": "2026-10-16",
+ "issue": "The headliner",
+ "cover": {
+  "headline": [
+   "OpenAI tried to",
+   "pick your AI."
+  ],
+  "rows": [
+   {
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "OpenAI",
+    "tag": "Router",
+    "colour": "coral"
+   },
+   {
+    "logo": "logos/anthropic-symbol-cream.svg",
+    "name": "Anthropic",
+    "tag": "12+ models",
+    "colour": "mint"
+   }
+  ],
+  "label": "the headliner",
+  "portrait": true
+ },
+ "thumbs": {
+  "strip": [
+   {
+    "logo": "logos/google-cream.svg",
+    "name": "Google"
+   },
+   {
+    "logo": "logos/openrouter-cream.svg",
+    "name": "OpenRouter"
+   },
+   {
+    "logo": "logos/semianalysis-cream.svg",
+    "name": "SemiAnalysis"
+   }
+  ]
+ }
+}

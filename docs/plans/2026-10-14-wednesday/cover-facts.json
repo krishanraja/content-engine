@@ -1,0 +1,64 @@
+{
+ "subchannel": "under.the.hood",
+ "title": "Amazon locked Meta's new AI out. Walmart let it in.",
+ "headline": "Amazon locked Meta's new AI out. Walmart let it in.",
+ "video_title": "Muse's real rival: Siri.",
+ "standoff": {
+  "left": {
+   "label": "Muse, by Meta",
+   "logos": [
+    "logos/meta-cream.svg",
+    "logos/instagram-cream.svg",
+    "logos/whatsapp-cream.svg"
+   ],
+   "tag": "Does the most"
+  },
+  "right": [
+   {
+    "label": "Siri",
+    "logos": [
+     "logos/apple-cream.svg"
+    ],
+    "tag": "Keeps it private"
+   }
+  ]
+ },
+ "date": "2026-10-14",
+ "cover": {
+  "headline": [
+   "Muse's real",
+   "rival: Siri."
+  ],
+  "rows": [
+   {
+    "logo": "logos/muse-cream.svg",
+    "name": "Muse",
+    "tag": "Does most",
+    "colour": "butter"
+   },
+   {
+    "logo": "logos/apple-cream.svg",
+    "name": "Siri",
+    "tag": "Most private",
+    "colour": "lilac"
+   }
+  ],
+  "portrait": true
+ },
+ "thumbs": {
+  "strip": [
+   {
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "ChatGPT"
+   },
+   {
+    "logo": "logos/google-cream.svg",
+    "name": "Gemini"
+   },
+   {
+    "logo": "logos/anthropic-symbol-cream.svg",
+    "name": "Claude"
+   }
+  ]
+ }
+}

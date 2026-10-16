@@ -29,6 +29,17 @@ export const ARCHIVE_PLACE_FOR_PLATFORM: Readonly<Record<VideoPlatformV1, Archiv
   linkedin: 'LinkedIn',
 })
 
+/** Where quick-edit sends each shape when nothing else is said. TikTok is one
+ *  of the tall video's places every time since Krish, 2026-10-11: "I always
+ *  want to repost to YouTube and then Shorts, TikTok, and Instagram" (house
+ *  rule TWO_CUTS). tall_with_tiktok, what "tiktok": true used to ask for, is
+ *  the same list, so older configs still read. */
+export const ARCHIVE_QUICK_EDIT_PLACES: Readonly<{ tall: readonly ArchivePlace[]; tall_with_tiktok: readonly ArchivePlace[]; wide: readonly ArchivePlace[] }> = Object.freeze({
+  tall: Object.freeze(['Shorts', 'Reels', 'TikTok', 'LinkedIn'] as const),
+  tall_with_tiktok: Object.freeze(['Shorts', 'Reels', 'TikTok', 'LinkedIn'] as const),
+  wide: Object.freeze(['YouTube', 'Substack'] as const),
+})
+
 /** The longest folder name, in characters. Windows stops a whole path at 260
  *  by default, and the Drive archive folder takes about 70 of them. */
 export const ARCHIVE_FOLDER_MAX = 150
@@ -175,8 +186,8 @@ export interface ArchiveFileInput {
   extension?: string
 }
 
-/** "Who gets paid - tall 9x16 - Shorts, Reels, LinkedIn.mp4": what the file
- *  is, its shape, and where it goes. */
+/** "Who gets paid - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4": what
+ *  the file is, its shape, and where it goes. */
 export function archiveFileName(input: ArchiveFileInput): string {
   const subject = archiveSafeText(input.subject)
   if (!subject) throw new Error('the subject has nothing a folder name can keep')
@@ -184,4 +195,34 @@ export function archiveFileName(input: ArchiveFileInput): string {
   const extension = input.extension ?? 'mp4'
   if (!/^[a-z0-9]{1,8}$/i.test(extension)) throw new Error(`"${extension}" is not a file extension`)
   return `${subject} - ${SHAPE_LABEL[input.shape]} - ${where}.${extension}`
+}
+
+/** Where one quick-edit video goes: the tall one to Shorts, Reels, TikTok and
+ *  LinkedIn, the wide one to YouTube and Substack. postTo, when given, is the
+ *  whole list, and each video keeps the places it suits. The twin of
+ *  video_places in scripts/quick-edit/archive.py. */
+export function archiveVideoPlaces(shape: ArchiveShape, postTo?: readonly string[], tiktok = false): ArchivePlace[] {
+  const suits = shape === 'tall' ? (tiktok ? ARCHIVE_QUICK_EDIT_PLACES.tall_with_tiktok : ARCHIVE_QUICK_EDIT_PLACES.tall) : ARCHIVE_QUICK_EDIT_PLACES.wide
+  if (postTo === undefined) return [...suits]
+  const every = shape === 'tall' ? ARCHIVE_QUICK_EDIT_PLACES.tall_with_tiktok : ARCHIVE_QUICK_EDIT_PLACES.wide
+  return archivePlaces(postTo).filter((place) => every.includes(place))
+}
+
+export interface ArchiveThumbnailInput {
+  subject: string
+  shape: ArchiveShape
+  extension?: string
+}
+
+/** "Who gets paid - wide 16x9 - thumbnail.jpg": the thumbnail for the video of
+ *  that shape, named so it sorts beside it. Krish, 2026-10-12: "I always want
+ *  a video thumbnail for all video sizes produced as an asset every time". */
+export function archiveThumbnailName(input: ArchiveThumbnailInput): string {
+  const subject = archiveSafeText(input.subject)
+  if (!subject) throw new Error('the subject has nothing a folder name can keep')
+  const label = (SHAPE_LABEL as Readonly<Record<string, string>>)[input.shape]
+  if (!label) throw new Error(`"${input.shape}" is not a video shape: use tall or wide`)
+  const extension = input.extension ?? 'jpg'
+  if (!/^[a-z0-9]{1,8}$/i.test(extension)) throw new Error(`"${extension}" is not a file extension`)
+  return `${subject} - ${label} - thumbnail.${extension.toLowerCase()}`
 }

@@ -3,7 +3,7 @@ import { publishChecks, publishStatus } from './_publishChecks.js'
 import { LIVE_SUBCHANNELS } from './_subchannels.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from './_supabase.js'
-import { callClaude, robustJson, sanitizeVoice } from './_content.js'
+import { callClaude, isUnregisteredSource, robustJson, sanitizeVoice } from './_content.js'
 import { checkDuplicate, recordDuplicateSource } from './_dedup.js'
 import { embed, vectorLiteral } from './_embeddings.js'
 import { canonicalUrl, titleNorm, contentHash } from './_text.js'
@@ -31,13 +31,23 @@ import { guardEngine } from './_auth.js'
 //   PATCH  — state transitions (seeded → drafting → published, etc.) and
 //            inline edits to idea/thesis/distribution/draft_link.
 //
-// One funnel for all six source types: manual, signal_inbox, cleo_chat,
-// agatha_chat, openclaw_workspace, zara_signal.
+// Every POST names its source. A missing or unknown source_type is refused
+// with 400 source_type_unknown, and the allowed values are in detail
+// (2026-10-13; until then it was stored as 'manual', which reads as Krish's
+// own words).
+//
+// 'manual' means his words and nothing else (step 3 of the design entropy
+// session, PR 6). Only Control Center's filer writes it, for an idea he said,
+// and it names the part he said as source_ref 'said:<said_parts id>'. A
+// manual POST without that ref is refused with 400 manual_needs_his_words.
+// The database holds the same rule for new rows
+// (20261021100000_manual_is_his_words.sql), so a direct insert is refused too.
 
 // The live distribution channels, mirroring media_channels where active=true
-// and MEDIA_CHANNELS in src/lib/contentEngine.ts. TikTok is absent on purpose:
-// it has no voice register, so nothing can be produced for it.
-const CAPTURE_CHANNELS = ['substack', 'linkedin', 'instagram', 'youtube', 'podcast', 'signal_noise']
+// and MEDIA_CHANNELS in src/lib/contentEngine.ts. TikTok joined the standing set
+// on 2026-10-11 (Krish: "I always want to repost to YouTube and then Shorts,
+// TikTok, and Instagram").
+const CAPTURE_CHANNELS = ['substack', 'linkedin', 'instagram', 'tiktok', 'youtube', 'podcast', 'signal_noise']
 
 const ALLOWED_STATE = new Set([
   'seeded',
@@ -49,7 +59,19 @@ const ALLOWED_STATE = new Set([
   'dropped',
 ])
 
-const ALLOWED_SOURCE = new Set([
+// The source types POST accepts. Anything else is refused with 400
+// source_type_unknown, never stored as 'manual': GET /api/week/options reports
+// manual rows as ideas Krish dropped in, so 'manual' must mean his words. An
+// agent's own sourcing is listed under its own name: 'week_research' is the
+// Sunday planning session's finds (.agents/skills/plan-week). Every value must
+// be a row in intake_sources, which content_ideas.source_type references
+// (migration 20261011200000 adds week_research; 20261021080000 adds
+// shift_write and pilot_build). 'shift_write' and 'pilot_build' write the
+// table directly today; they are listed so the same names are valid here.
+// 'lens_radar' was dropped on 2026-10-13: it has no intake_sources row, so a
+// write of it already failed the foreign key. The test
+// tests/control-plane/honest-sources.test.ts holds this list to the rows.
+export const ALLOWED_SOURCE = new Set([
   'signal_inbox',
   'cleo_chat',
   'agatha_chat',
@@ -57,14 +79,20 @@ const ALLOWED_SOURCE = new Set([
   'zara_signal',
   'customer_voice',
   'crm_opportunity',
-  'lens_radar',
   'manual',
   'creator_move',
   'aeo_signal',
+  'week_research',
+  'shift_write',
+  'pilot_build',
   'build_signal',
 ])
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/** The ref a manual idea carries: the said_parts row of his words. The
+ *  database CHECK content_ideas_manual_is_his_words uses the same pattern. */
+export const SAID_REF = /^said:[0-9a-f-]{36}$/
 
 /** The columns a read of one piece returns. */
 export const PIECE_COLUMNS = 'id,state,lane_slot,idea,thesis,body,updated_at'
@@ -94,9 +122,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const rawText = (body.raw_text || '').trim()
     if (!rawText) return res.status(400).json({ ok: false, error: 'raw_text is required' })
 
-    const sourceType = body.source_type && ALLOWED_SOURCE.has(body.source_type)
-      ? body.source_type
-      : 'manual'
+    const sourceType = typeof body.source_type === 'string' ? body.source_type.trim() : ''
+    if (!ALLOWED_SOURCE.has(sourceType)) {
+      return res.status(400).json({
+        ok: false,
+        error: 'source_type_unknown',
+        detail: { allowed: [...ALLOWED_SOURCE] },
+      })
+    }
+    if (sourceType === 'manual' && !(typeof body.source_ref === 'string' && SAID_REF.test(body.source_ref))) {
+      return res.status(400).json({
+        ok: false,
+        error: 'manual_needs_his_words',
+        detail: 'manual is only for words Krish said. Send source_ref "said:<said_parts id>", or name your own source.',
+      })
+    }
 
     // ── Dedup gate ──────────────────────────────────────────────────────────
     // Single tiered check against canonical_url / title_norm / content_hash /
@@ -304,6 +344,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .select()
       .single()
 
+    // An allowed source whose intake_sources row live does not have yet (its
+    // migration not applied) is the caller's to wait on, not a server fault.
+    if (isUnregisteredSource(error)) {
+      return res.status(400).json({ ok: false, error: 'source_type_not_registered', detail: { source_type: sourceType } })
+    }
     if (error) return res.status(500).json({ ok: false, error: error.message })
     return res.json({ ok: true, via: enriched.thesis ? 'enriched' : 'raw', idea: data })
   }
@@ -463,17 +508,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
+    // A drop reads the row it drops and writes only if no one changed it
+    // since. The publish watcher marks a piece published from the live post,
+    // a public fact; a drop (a Purge from his list) landing at the same
+    // moment must not undo it. A published piece is never dropped (409
+    // published_cannot_be_dropped), and a drop that races any other write is
+    // refused (409 content_changed_retry) instead of overwriting it.
+    let dropGuard: { state: string; updated_at: string } | null = null
+    if (updates.state === 'dropped' && !current) {
+      const read = await supabase.from('content_ideas').select('state,updated_at').eq('id', id).maybeSingle()
+      if (read.error) return res.status(500).json({ ok: false, error: read.error.message })
+      if (!read.data) return res.status(404).json({ ok: false, error: 'idea_not_found' })
+      dropGuard = read.data as { state: string; updated_at: string }
+    }
+    if ((dropGuard ?? current)?.state === 'published' && updates.state === 'dropped') {
+      return res.status(409).json({
+        ok: false,
+        error: 'published_cannot_be_dropped',
+        detail: 'This piece is already published, so it cannot be dropped. Nothing was changed.',
+      })
+    }
+
     let updateQuery = supabase
       .from('content_ideas')
       .update(updates)
       .eq('id', id)
     if (current) updateQuery = updateQuery.eq('updated_at', current.updated_at)
+    else if (dropGuard) updateQuery = updateQuery.eq('updated_at', dropGuard.updated_at)
+    const seenAt = (current ?? dropGuard)?.updated_at
     const { data, error } = await updateQuery
       .select()
       .single()
 
     if (error) {
-      if (current && /0 rows|no rows|multiple \(or no\) rows/i.test(error.message)) {
+      if (seenAt && /0 rows|no rows|multiple \(or no\) rows/i.test(error.message)) {
         return res.status(409).json({ ok: false, error: 'content_changed_retry' })
       }
       return res.status(500).json({ ok: false, error: error.message })

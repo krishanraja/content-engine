@@ -8,6 +8,20 @@ schemas, configuration and instructions; the shared Supabase database owns
 live state, including every subchannel's mandate; the Windows runner owns
 exact media artifacts and execution history.
 
+Run `python3 scripts/check_failures.py` first: every failure Krish has raised
+and the machine that now stops it (`config/failures.json`). A fix is a guard
+there (code that refuses, a test, or a hook), never only a note.
+
+Krish works from two Claude accounts. Each week's publish board lists all its
+links in `config/boards.json`; every board publish goes to every link there,
+from the same engine-built file (the board_sync hook names any link left
+behind). One board per week is the aim: the account that makes it publishes
+it pinned, and Krish adds his other account as an editor. Krish edits and
+comments on whichever link he has open: at the start of every session, read
+the comments on EVERY link (`ArtifactComments read`; each Save he makes is
+posted there as an "EDIT" thread) before touching the week's words
+(`make-piece`, "Krish's edits on the board").
+
 Before doing anything here, read `docs/NORTH_STAR.md` and `AGENTS.md`, then
 `WORKBENCH.md`: where the work is, what is waiting on Krish, and how he wants to
 be worked with. Update `WORKBENCH.md` before you stop. `README.md` says which

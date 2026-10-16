@@ -292,3 +292,28 @@ describe('editorial judgement gates', () => {
     expect(openingContractIssues(staged, thresholds).soft_blocks).not.toContain(OPENING_POSITION_UNSTATED)
   })
 })
+
+import { voiceOnCameraIssues, VOICE_AI_LINE, VOICE_NO_OPINION } from '@mindmake/core'
+
+// The on-camera voice check (Krish, 2026-10-09; house rule VOICE_ON_CAMERA):
+// "making my scripts for video have more personality and opinion". A rule can
+// only see the opinion marker, and only on a script long enough to carry one;
+// it is a soft block, never a refusal.
+describe('the on-camera voice check', () => {
+  const filler = Array.from({ length: 30 }, () => 'words that carry the middle of the script along.').join(' ')
+  it('a script of a minute or more that never says an opinion as an opinion is flagged', () => {
+    expect(voiceOnCameraIssues(`Is that billion real? ${filler} So that is the call. The full piece is at makeyourmindup.ai.`)).toEqual([VOICE_NO_OPINION])
+  })
+  it('"my bet" or "I think" clears it', () => {
+    expect(voiceOnCameraIssues(`Is that billion real? ${filler} My bet: no. The full piece is at makeyourmindup.ai.`)).toEqual([])
+    expect(voiceOnCameraIssues(`Is that billion real? ${filler} I think it is theatre. makeyourmindup.ai.`)).toEqual([])
+  })
+  it('a short hook needs no opinion', () => {
+    expect(voiceOnCameraIssues('Why does it matter? Because the price doubled.')).toEqual([])
+  })
+  it('a line saying it was made with AI is flagged, long or short (NO_AI_DISCLOSURE_LINE, Krish, 2026-10-12)', () => {
+    expect(voiceOnCameraIssues(`Is that billion real? ${filler} My bet: no. Yes, I made this with Claude's help. makeyourmindup.ai.`)).toEqual([VOICE_AI_LINE])
+    expect(voiceOnCameraIssues('This video was made with AI. Why does it matter?')).toEqual([VOICE_AI_LINE])
+    expect(voiceOnCameraIssues('I made a song with Suno in ten minutes.')).toEqual([])
+  })
+})
