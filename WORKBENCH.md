@@ -649,6 +649,24 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 20:30 UTC: **Friday v5, no bare scores anywhere; still waits on his sign-off.**
+  - His board comment (thread 0fcb8c74, now answered and resolved): "What does 42 even mean? that is
+    not understandable. We need to simplify this", and in chat: apply it across the board and keep
+    the 90-second cut "well under, around 85 seconds". The 90-second cut now says "In a hard test,
+    the newest Claude AI in low gear lost to the older one in top gear." (187 words, about 85
+    seconds finished). The deep cut and the article say the results as plain comparisons. Two fresh
+    12-year-old readers retold the test line correctly; their other stumbles ("beady eye", "the
+    masses", "the name you pick", Sally's deal) are his own lines, left for his sign-off.
+  - Guard: house rule PLAIN_SCORES (write, judges, final pass, visual) and `score_problems` in
+    `scripts/post-pack/story_check.py`, which refuses a script that says a score or points with no
+    share, multiple or scale; registered as `bare-score-in-script` in `config/failures.json`.
+  - The deep cut's picture plan is re-keyed: B30 to B30b show the test as a race on a drawn road
+    (Opus 5 in top passes Opus 5.5 in first, then Haiku edges past) and a rev needle with no
+    number on it; the plan's numbers list has no score in it.
+  - Commits 8c0b939 and 6901637 on `ccr-3020025f-qsl89s`, not merged (merging needs his words).
+  - Still waiting on his one line: "scripts signed off, yes to Teleprompter, both boards and filing
+    the sources". The boards do not carry these words until then.
+
 - 2026-10-16, about 19:50 UTC: **Friday v5, later the same evening, on Krish's notes in chat.**
   - **The car spelled out** (his words: "leave nothing to a users assumption or expertise - but we
     should be clear what we are equating the business name, LLM name, model name and thinking levels
