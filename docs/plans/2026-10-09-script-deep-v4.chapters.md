@@ -1,4 +1,4 @@
-- The name on the box | starts: "I've been using AI apps"
+- The name on the badge | starts: "I've been watching what's coming"
 - Why the names keep coming | starts: "First, the names. Anthropic makes"
 - The gear that matters | starts: "So what does matter? Picture"
 - What thinking costs them | starts: "Every word of that hidden"

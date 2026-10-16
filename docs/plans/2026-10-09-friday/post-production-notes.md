@@ -15,17 +15,22 @@ And on the deep cut: "Lets stick with the manual car vs automatic car analogy".
 What the words now carry (v4, `docs/plans/2026-10-09-draft-body-v4.md`,
 `-script-deep-v4.md`, `-script-90s-v4.md`):
 
-- The name is the badge on the car; how hard the AI thinks is the gears.
-  Today's AI apps are manual cars; the companies are moving them to automatic.
-- The companies want your eyes on the badge (a name sells) and their hand on
-  the gearbox (the gears decide the bill).
-- The F1 answer: since Ferrari's 640 in 1989, drivers change gear with a paddle
-  behind the steering wheel and software handles the clutch; software that
-  changed gear by itself was banned for good in 2004 (Raceteq, filed on the
-  piece). Let the AI drive, give us the paddles and a dashboard showing which
-  gear it picked.
-- The close: most people will be happier in the automatic, but racing drivers
-  want their paddles and some people who love driving still choose a manual.
+- The name is the badge on the car; how hard the AI thinks is the gear.
+  Today's AI apps are manual cars: you pick the gear. In Krish's view the
+  apps are going automatic next.
+- As Krish reads it, OpenAI and Anthropic want your eyes on the badge (a new
+  name buys attention; the headline scores show top gear) and their own hand
+  on the gearstick (the gears decide the bill).
+- The Formula 1 answer, the semi-automatic: Ferrari brought in the paddle on
+  its 640 in 1989 and by 1996 every team had followed. The driver changes gear
+  with a paddle behind the steering wheel and no longer works the clutch for
+  each change; software that changed gear by itself was banned for good in
+  2004, so the driver still picks the gear (Raceteq, filed on the piece). Let
+  the AI pick the gear, if it must, but give us the paddles and a dashboard
+  showing which gear it picked.
+- The close: most people will find the automatic easier, but Formula 1 still
+  keeps the paddles in the driver's hands, and some people who love driving
+  still choose a manual. "For anything that matters, I'll be one of them."
 
 For the picture plan and the edit (the visual gate and produce-video read
 this file):
