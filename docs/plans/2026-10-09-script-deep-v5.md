@@ -24,11 +24,11 @@ Nothing was wrong with the name on her screen. The AI just never stopped to thin
 
 ChatGPT and Claude both let you choose how hard the AI thinks. For now.
 
-I looked up what thinking means. The AI writes out its working first. At most, you see a short summary of it. It breaks the question into steps. Then it checks its own answer. If the app lets it search the web, a higher setting usually means more searching.
+I looked up what thinking means. The AI writes out its working first. At most, you see a short summary of it. It breaks the question into steps. Then it checks its own answer. If it can search the web, a higher setting usually means more searching.
 
 Think of a car. The name of the AI model is like the badge on the front of a car. The thinking setting is like the gears of the car. Right now, these apps are like a manual car, where you change gear yourself. In a low gear, it barely thinks. In a high gear, it thinks hardest. The novice argues about BMW's X3 versus Audi's Q5, but the pro is looking at the gear systems beneath. But with AI, most of us drive everywhere in first gear all the time, the lowest one.
 
-So how big is the difference in going up a gear? A group called Artificial Analysis ran the very same Claude, Opus 5.5, through a hard test in different gears. In its top gear, it did much better than in its lowest. The older Opus 5, in its top gear, beat the new one in its lowest. So changing gear beat getting a new badge. To be fair, its middle gear matched the old one's top gear, for far less.
+So how big is the difference in going up a gear? A group called Artificial Analysis ran the very same Claude, Opus 5.5, through a hard test in different gears. In its top gear, it did much better than in its lowest. The older Opus 5, in its top gear, beat the new one in its lowest. So changing gear beat getting a new badge. To be fair, the new one's middle gear matched the old one's top gear, for much less money.
 
 But more thinking isn't always better. Researchers asked thinking AIs a simple question. What is two plus three? One of them worked out the answer thirteen times.
 
