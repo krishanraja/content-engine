@@ -2,7 +2,7 @@ I've been keeping a beady eye on what's coming with AI, before everyone notices.
 
 I've been using all the well-known AI apps every day for years now. And I've noticed something odd about how they're sold. Every launch is about a name. A new number, a livestream, a chart. Claude Opus 4.8. Then Opus 5. Then Opus 5.5. At this rate, when's Opus 5.56 coming out?
 
-So I wanted to break it down. Does the name you pick actually change the answer you get? And what happens when companies like OpenAI make more money by making products easier, and less transparent? Most modern software businesses tend to do that, so you see less of what's going on. And isn't a lack of control over what you're getting a bit scarier if the product is intelligence itself?
+So I wanted to break it down. Does the name you pick actually change the answer you get? And what happens when companies like OpenAI make more money by making products easier, and less transparent? Most modern software businesses tend to do that, so you see less of what's going on. And isn't a lack of control over what you're getting a bit scarier if the product is general intelligence?
 
 Some of the new AIs are better. The people building them aren't lying to you. But I think the name is the least important thing on your screen.
 
@@ -10,7 +10,7 @@ There's a setting that changes your answer much more. It decides how hard the AI
 
 And I think the AI itself will end up deciding how hard it thinks. That's good news for people who want an easier experience with AI. It's also good news for OpenAI and Anthropic. They'll be able to give you the product they want to give you. But it's bad news in other ways.
 
-First, the names. Anthropic makes Claude. It launched Opus 4.8 in May, Opus 5 in July, and Opus 5.5 in September. OpenAI makes ChatGPT. It went from GPT 5.1 last November to GPT 6.1 by the end of September.
+First, the names. Anthropic makes Claude. It launched Opus 4.8 in May, Opus 5 in July, and Opus 5.5 in September. OpenAI's ChatGPT went from GPT 5.1 to GPT 6.1 in under a year.
 
 Why so many? This bit is my own opinion. Look at what a launch gets them.
 
@@ -28,7 +28,7 @@ I looked up what thinking means. The AI writes out its working first. At most, y
 
 Think of a car. The name of the AI model is like the badge on the front of a car. The thinking setting is like the gears of the car. Right now, these apps are like a manual car, where you change gear yourself. In a low gear, it barely thinks. In a high gear, it thinks hardest. The novice argues about BMW's X3 versus Audi's Q5, but the pro is looking at the gear systems beneath. But with AI, most of us drive everywhere in first gear all the time, the lowest one.
 
-So how big is the difference in going up a gear? A group called Artificial Analysis ran the very same Claude, Opus 5.5, through a hard test in different gears. In its top gear, it did much better than in its lowest. The older Opus 5, in its top gear, beat the new one in its lowest. So did Anthropic's cheapest AI, Haiku. So changing gear beat getting a new badge.
+So how big is the difference in going up a gear? A group called Artificial Analysis ran the very same Claude, Opus 5.5, through a hard test in different gears. In its top gear, it did much better than in its lowest. The older Opus 5, in its top gear, beat the new one in its lowest. Even Haiku, Anthropic's cheapest AI, just edged past it in top gear. So changing gear beat getting a new badge. To be fair, its middle gear matched the old one's top gear, for far less.
 
 But more thinking isn't always better. Researchers asked thinking AIs a simple question. What is two plus three? One of them worked out the answer thirteen times.
 
@@ -38,7 +38,7 @@ All that hidden working runs on huge computers, which cost money to run. If Opus
 
 Businesses that put AI inside their own apps pay for every word it writes. When they turn up the thinking, OpenAI and Anthropic earn more.
 
-But most of us pay the same amount every month, however much we use. Then OpenAI or Anthropic pays for every extra thought. In January 2025, Sam Altman said OpenAI was losing money on its two hundred dollar plan. People used it far more than OpenAI expected.
+But most of us pay the same amount every month, however much we use. Then OpenAI or Anthropic pays for every extra thought. In January 2025, Sam Altman said OpenAI was losing money on its two hundred dollar plan.
 
 That, I think, is why the app starts you in a low gear.
 
@@ -48,7 +48,7 @@ The next step is the AI choosing the gear for you, and Google has started. Since
 
 OpenAI has gone the other way, and taken ChatGPT's automatic gear picker away, twice. Last December, free users lost it. OpenAI said free users liked the normal setting better. But WIRED magazine said the automatic picker seemed to send lots more free users to the slower, thinking answers. Those cost OpenAI more. Then in September, people on the Plus and Pro plans lost it too. OpenAI didn't say why. Now, on those plans, you pick the gear.
 
-I don't think that lasts, and here's my guess why. Think what each part of the car is worth to OpenAI or Anthropic. The badge brings attention. So they make sure you watch the badge. Then you don't notice the gear. Even the scores Anthropic shows off for Opus 5.5 were in top gear. Out of the box, it starts in a lower gear. The gears decide the bill. On a monthly plan, every high gear costs them. They'd like their own hand on the gearstick, so they decide how much thinking each question gets. Most of us would rather not change gear at all. So I think the automatic wins.
+I don't think that lasts, and here's my guess why. Think what each part of the car is worth to OpenAI or Anthropic. The badge on the front brings attention. So they make sure you watch the badge. Then you don't notice the gear. Even the scores Anthropic shows off for Opus 5.5 were in top gear. Out of the box, it starts in a lower gear. The gears decide the bill. On a monthly plan, every high gear costs them. They'd like their own hand on the gearstick, so they decide how much thinking each question gets. Most of us would rather not change gear at all. So I think the automatic wins.
 
 Is that good? Some of both. People don't change settings. Back in 2025, when ChatGPT's automatic gear picker first arrived, far more people ended up with careful, thinking answers. Before, fewer than one free user in a hundred used thinking each day. After, seven in a hundred did.
 
@@ -68,6 +68,6 @@ Formula 1 found a better way decades ago, called a semi-automatic. The driver pi
 
 We've just spent time learning to drive a car with a manual transmission. I think the car is going automatic next. For most people, that's easier. But an F1 car still keeps the paddles in the driver's hands. And some people who love driving still choose a manual transmission. For anything that matters, I'll be one of them.
 
-Here's my bet. By the end of June 2027, ChatGPT's free plan will start in automatic again. You'll be able to just drive the car in auto mode the whole time. I'm 85% sure, so pretty certain this will happen. Paid users will start in automatic too. Less transparent products always help the AI company control its costs. But paid plans will have a semi-automatic setting, like an F1 car, so those users can still take control.
+Here's my bet. By the end of June 2027, ChatGPT's free plan will start in automatic again. You'll be able to just drive the car in auto mode the whole time. Paid users will start in automatic too, because less transparent products always make the AI company more money. But paid plans will have a semi-automatic setting, like an F1 car, so those users can still control performance. I'm 85% sure, so pretty certain this will happen.
 
 That's it for this week's mind.the.gap. The full article, with every source, is free at makeyourmindup.ai. If you know someone who trusts their AI with deals or money, send this to them. Tell me in the comments: do you pick the gear, or leave it? Make your mind up.
