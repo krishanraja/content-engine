@@ -1,7 +1,7 @@
 # Friday deep cut v5: the picture plan
 
 Piece `904658db-4df2-4537-a0ed-ebe93e081db7`, mind.the.gap, Friday. Script:
-`docs/plans/2026-10-09-script-deep-v5.md` (1,700 words, about 11 minutes 20
+`docs/plans/2026-10-09-script-deep-v5.md` (1,692 words, about 11 minutes 17
 at Krish's pace), chapters in `-script-deep-v5.chapters.md`. The script stays
 words only; everything that goes on screen is here. Krish's direction, word
 for word, is in `post-production-notes.md` beside this file. On 16 October he
@@ -12,11 +12,13 @@ for really powerful clear points landed." Then, of the car: "leave nothing to
 a users assumption or expertise - but we should be clear what we are equating
 the business name, LLM name, model name and thinking levels to here", and
 "make sure the post production has the pics of car logos and cars in the
-videos etc, to really bring clarity to life". The final script now spells the
-car out, one pairing a sentence (¶15), and this plan puts each pairing on
-screen as he says it (B23 to B28, and "What stands for what" below).
+videos etc, to really bring clarity to life". He then rewrote the car
+paragraph himself (¶15): the AI model's name is the badge on the front of a
+car, the thinking setting is the gears, and today's apps are a manual car.
+This plan puts each pairing on screen as he says it, then follows the rest of
+his paragraph line by line (B23 to B29a, and "What stands for what" below).
 
-Later on 16 October, of the cost lines (¶20): "and visualize this problem
+Later on 16 October, of the cost lines (¶19): "and visualize this problem
 really well in post". The problem: a higher gear costs far more, but the AI
 gets only a little smarter. It now has its own strongest moment (B33 to B33b,
 the fuel gauge against the speedometer). And of the pictures: "we need to
@@ -29,11 +31,11 @@ no-affiliation line in the description (all under "Sourcing" below).
 **Car logos and car photographs are for the long video only.** Krish, 16
 October: "only in the long video though". The BMW and Audi logos, the
 pictures of the BMW X3 and the Audi Q5 (cleared photographs, or drawings that
-name them), the Q5's rear badge and the driving footage in this plan go into
-the long video and nowhere else. The 90-second video keeps its own pictures
-and carries no car logos or car photographs; this plan does not set its
-pictures. The three rows this plan lets the 90-second cut reuse (B30, B56 and
-B65, see the last list) carry neither.
+name them) and the Q5's front badge in this plan go into the long video and
+nowhere else. The 90-second video keeps its own pictures and carries no car
+logos or car photographs; this plan does not set its pictures. The three rows
+this plan lets the 90-second cut reuse (B30, B56 and B65, see the last list)
+carry neither.
 
 Status: a plan, not yet built. Three treatments (A, B and C below) wait on
 Krish's pick; his notes say to propose them and build only the ones he picks.
@@ -42,18 +44,21 @@ Every row works without them, and says what it falls back to.
 ## How to read this
 
 - One row per beat, in script order, written as a block. Every one of the
-  script's 38 paragraphs (marked ¶) has at least one row. Each row starts on
+  script's 37 paragraphs (marked ¶) has at least one row. Each row starts on
   the quoted words exactly as the script has them, so an editor can search
   the transcript for them. A row's picture runs until the next row's start
   words unless the row says otherwise. If Krish changes words on the take,
   the transcript wins and the row moves with it.
-- The car sequence was re-cut for the final script. Its added rows carry a
-  letter (B29a to B29c), so every other row keeps its number. B34 is gone:
-  its line ("Who pays for that thinking...") was cut from the script, and its
-  rest for Krish's face moves into B36. The final script's new lines got
-  lettered rows too: B30a (Haiku in top gear passing Opus 5.5 stuck in
-  first) and B33a and B33b (the cost problem: the fuel gauge against the
-  speedometer).
+- The car sequence was re-cut for Krish's own car paragraph, which is now
+  one paragraph (¶15): B23 to B29a follow it sentence by sentence, with new
+  ids, and the rows for words he cut (the carmakers, "the cars they make",
+  the badge on the back, first gear crawling and top speed) are gone. Every
+  paragraph after it moved up one. Nothing was built on the old rows. B34 is
+  gone too: its line ("Who pays for that thinking...") was cut from the
+  script, and its rest for Krish's face moves into B36. The final script's
+  new lines got lettered rows: B30a (Haiku in top gear passing Opus 5.5
+  stuck in first) and B33a and B33b (the cost problem: the fuel gauge
+  against the speedometer).
 - Times are estimates at about 150 words a minute from Krish's first word
   (after the sting and the story intro).
 - Picture ids (`fri-...`) are the ids to cue in `long.json` for kit.py (`id`,
@@ -73,8 +78,8 @@ Every row works without them, and says what it falls back to.
     domain or CC0, or the free Pexels or Unsplash licence. Its source and
     licence are recorded (see "Sourcing"). Never a press-site photograph
     unless written permission is on file.
-  - **FOOTAGE**: cleared real video of a real car, on the same terms, never
-    generated (B28).
+  - **FOOTAGE**: cleared real video, on the same terms, never generated
+    (only the optional paddle clip at B63).
   - **SHOT**: a screenshot of the named public page, captured live, with its
     URL and capture date recorded the way `pileup` records its pages in
     `post.json`.
@@ -109,8 +114,8 @@ Every row works without them, and says what it falls back to.
 4. **Every number drawn on screen is one the script says** (the list is near
    the end). No axis numbers, tick labels, totals or differences the script
    does not say: the rev counter's dial has no numbers on it, only the needle
-   values, and the fuel gauge and speedometer at B33a carry none at all (the
-   gauge has only its E and F). Screenshots are real pages and are never
+   values, and the fuel gauge and speedometer at B33 to B33b carry none at
+   all (the gauge has only its E and F). Screenshots are real pages and are never
    edited: crop each to the sentence that carries the point, and crop out
    figures the script does not say wherever the crop allows.
 5. **Real or drawn, never faked.** Photographs are cleared real
@@ -121,7 +126,7 @@ Every row works without them, and says what it falls back to.
    the car in text, and never a computer render passed off as a photograph.
    No press-site photograph (BMW Group PressClub, Audi MediaCenter) unless
    written permission is on file. No AI badge pasted onto a photo of a real
-   car: the one drawn badge beside a real one (B26) sits beside it, flat and
+   car: the one drawn badge beside a real one (B24) sits beside it, flat and
    labelled as a drawing. No copy of a real app's screen: the one place we
    show what Krish is asking for (B65) is a house-drawn mock labelled as one.
    Sally is made up, and the script says so ("Picture a woman called Sally"),
@@ -134,13 +139,13 @@ Every row works without them, and says what it falls back to.
    words in a kicker), and every video_card.py card carries a real logo.
 7. **Real logos** (house rule VISUAL_EVIDENCE): OpenAI, Anthropic and Google
    wherever a row names them, declared on the packed video for the visual
-   gate. In the long video only, BMW and Audi wherever the car rows name
-   them, and the ChatGPT and Claude app marks where the car stands for the
-   app. Official files only, by the house Brandfetch route. A logo is never
+   gate. In the long video only, BMW and Audi where the script names them
+   (B28), and the ChatGPT and Claude app marks beside the manual car
+   (B26). Official files only, by the house Brandfetch route. A logo is never
    redrawn, altered, recoloured or combined with another mark, and is used
-   only to say whose thing is on screen: in "OpenAI = BMW" the two logos
-   stand apart, each whole with its own clear space, and the "=" sits between
-   them. No car logo on a drawn car, the thumbnail or the cover.
+   only to say whose thing is on screen: where two logos share a frame
+   (BMW and Audi at B28) they stand apart, each whole with its own clear
+   space. No car logo on a drawn car, the thumbnail or the cover.
 8. **Readable.** Nothing under the kit's 21 px floor in the wide cut; headline
    words 90 px tall or more. Ticks, crosses and arrows are drawn marks, not
    font characters: the house faces may not carry them, and a render that
@@ -153,8 +158,9 @@ Every row works without them, and says what it falls back to.
 10. **Nothing left to assumption.** Krish, 16 October: "leave nothing to a
    users assumption or expertise". Wherever the car stands in for the AI,
    the screen shows both sides at once, the AI thing and the car thing, and
-   names the pairing in six words or fewer ("OpenAI = BMW"). Each complete
-   pairing stays readable for at least 2.5 seconds before it moves on.
+   names the pairing in six words or fewer ("Model name = the badge"). Each
+   complete pairing stays readable for at least 2.5 seconds before it moves
+   on.
 
 ## Three treatments for Krish to pick
 
@@ -169,7 +175,8 @@ out, with two deliberate bursts (the badge parade in B03 and B04, and the advice
 list in B60), so it stays punctuation. It ties the edit itself to
 the gears, and it trains the ear for B56, the one gear change with no sound.
 Without A: plain hard cuts, and B56 falls back to a held frame. Needs a
-licensed sound effect, logged with the music; the music ledger
+sound effect whose licence clearly allows a monetised video, logged with the
+music; the music ledger
 (`config/music-library.json`) holds no effects yet. No sound ripped from F1
 broadcasts.
 
@@ -179,8 +186,8 @@ with the model's name (Archivo, muted, small); on the right the gear as a
 big word in IBM Plex Mono Bold, coral (mint in chapter 7 and for the call).
 States: `1st`, `LOW`, `MID`, `HIGH`, `TOP`, `AUTO`, `EXTENDED`, `?`. About
 380 by 150 px, 64 px in from the top and right edges, on ink_soft
-(`#16221D`) with a cream line. It first appears at B27 ("And how hard it
-thinks is the gear.") and after that shows only when an example on screen ran in a
+(`#16221D`) with a cream line. It first appears at B25 ("The thinking
+setting is like the gears of the car.") and after that shows only when an example on screen ran in a
 gear the script or its source names (the gear log below). It pays off at B65:
 when Krish says "show us which gear it picked, under every answer", viewers
 have watched the video do exactly that for six minutes, so the ask lands as
@@ -200,28 +207,32 @@ version, because they are Krish's ask.
 
 ### 1. What stands for what: the car key (long video only)
 
-The script spells the analogy out in ¶15, one pairing a sentence, and the
-screen does the same, one pairing at a time, in the order he says them:
+Krish wrote the car paragraph himself (¶15). It pairs three things, one a
+sentence, and the screen does the same, one pairing at a time, in the order
+he says them:
 
 | Row | He says | The AI side | The car side | On screen |
 |---|---|---|---|---|
-| B24 | "OpenAI and Anthropic are the carmakers, like BMW and Audi." | the OpenAI and Anthropic logos | the BMW and Audi logos | "OpenAI = BMW", "Anthropic = Audi" |
-| B25 | "ChatGPT and Claude are the cars they make." | the ChatGPT and Claude app marks | a BMW X3 and an Audi Q5 (cleared photographs, or drawings), each named in text | "ChatGPT = the car", "Claude = the car" |
-| B26 | "The version, like Opus 5.5, is the badge on the back." | a drawn "Opus 5.5" badge, labelled as a drawing | the Q5's badge on its tailgate (a cleared photograph, or drawn) | "Opus 5.5 = the badge" |
-| B27 | "And how hard it thinks is the gear." | Krish's own effort menu (the B08 capture) | a gearstick (a cleared photograph, or drawn) | "Thinking = the gear" |
+| B24 | "The name of the AI model is like the badge on the front of a car." | a drawn "Opus 5.5" badge, labelled as a drawing | the badge on the front of an Audi Q5 (a cleared photograph, or a plain drawn car front) | "Model name = the badge" |
+| B25 | "The thinking setting is like the gears of the car." | Krish's own effort menu (the B08 capture) | a gearstick (a cleared photograph, or drawn) | "Thinking = the gear" |
+| B26 | "Right now, these apps are like a manual car, where you change gear yourself." | the ChatGPT and Claude app marks | an H-pattern gearstick and a clutch pedal (cleared photographs, or drawn) | "Today's apps = a manual car" |
 
-- **One side each, always.** OpenAI, ChatGPT, BMW and the X3 on the left;
-  Anthropic, Claude, Audi and the Q5 on the right; the AI side above, the car
-  side below. Opus 5.5 is Claude's version, so its badge is the Q5's.
-- **The key.** At B23 an empty key slides in: four rows, each an "=" with a
-  space either side, under "What stands for what". From B24 the key sits as
-  a narrow strip down the left edge of the frame. Each pairing grows out of
-  its row to fill the frame for its line, then shrinks back into its row, so
-  the strip fills one row at a time. By "the gear" all four rows sit on
-  screen together, and they stay there through B28.
+The rest of the paragraph then uses the key: low gear and high gear (B27),
+the novice's X3 against the Q5, which lights the badge row (B28), the pro's
+gearbox beneath, which lights the gear row (B29), and most of us in first
+gear (B29a).
+
+- **One side each, always.** The AI side above, the car side below, an "="
+  between.
+- **The key.** At B23 an empty key slides in: three rows, each an "=" with a
+  space either side, headed "AI" and "Car". From B24 the key sits as a narrow
+  strip down the left edge of the frame. Each pairing grows out of its row
+  to fill the frame for its line, then shrinks back into its row, so the
+  strip fills one row at a time. By "a manual car" all three rows sit on
+  screen together, and they stay there through B29.
 - **Long enough to read.** In each pairing the AI side lands on the AI words
-  and the car side on the car words ("the carmakers", "the cars they make",
-  "the badge on the back", "the gear"). The complete pairing then holds full
+  and the car side on the car words ("the badge on the front of a car", "the
+  gears of the car", "a manual car"). The complete pairing then holds full
   frame for at least 2.5 seconds before the next one starts. Where Krish's
   take runs faster, the next pairing waits for it, up to one second behind
   his words, never ahead of them. After that, each pairing stays readable in
@@ -236,21 +247,22 @@ photograph or, where none clears, a drawing:
 
 | Row | He says | On screen |
 |---|---|---|
-| B29 | "a car with a manual transmission" | an H-pattern gearstick and a clutch pedal |
+| B26 | "like a manual car" | an H-pattern gearstick and a clutch pedal |
 | B40 | "like a car with an automatic transmission" | a P R N D selector |
 | B63 | "called a semi-automatic" | an F1 steering wheel with its paddles |
 | B66 | "a car with a manual transmission" and "still choose a manual transmission" | the manual again, then all three side by side |
 
 ### 2. Three transmissions, three acts
 
-The film moves through three gearboxes, each named by the script as a
-transmission. They are generic car parts, so they need no brand: each is a
-cleared photograph showing no maker's, team's or sponsor's mark, or else
-drawn in the house style:
+The film moves through three gearboxes, each named by the script. They are
+generic car parts, so they need no brand: each is a cleared photograph
+showing no maker's, team's or sponsor's mark, or else drawn in the house
+style:
 
 - **The manual transmission (an H-pattern stick and a clutch pedal)**: today.
-  The gearstick first stands beside the real settings menu at B27 ("is the
-  gear"); the script names the manual transmission at B29; it runs to B39.
+  The gearstick first stands beside the real settings menu at B25 ("the
+  gears of the car"); the script names the manual car at B26; it runs to
+  B39.
 - **The automatic transmission (a P R N D selector)**: what's coming. From
   B40, where it pushes the manual stick off the frame ("The next step is the
   AI choosing the gear for you"), and named on "like a car with an automatic
@@ -259,7 +271,7 @@ drawn in the house style:
   way. From B63 ("called a semi-automatic").
 
 B66 puts all three side by side as the close lands. A gearbox cutaway is the
-"beneath" picture (B29b), and the X-ray car (B45 to B48) is its drawn cousin.
+"beneath" picture (B29), and the X-ray car (B45 to B48) is its drawn cousin.
 Pick gearstick, clutch, selector and cutaway photographs that show no
 carmaker's logo, and an F1 wheel with no team, sponsor or F1 mark readable
 (if none clears, draw the wheel): the only carmakers on screen are BMW and
@@ -275,8 +287,8 @@ script or its filed source does not name.
 
 | Row | Badge chip | Gear shown | What says so |
 |---|---|---|---|
-| B28 | none | 1st, then TOP | "In the AI's lowest gear, it barely thinks. In its top gear, it thinks hardest." |
-| B29c | none | 1st | "most of us drive everywhere in first gear" |
+| B27 | none | LOW, then HIGH | "In a low gear, it barely thinks. In a high gear, it thinks hardest." |
+| B29a | none | 1st | "most of us drive everywhere in first gear all the time, the lowest one" |
 | B30 | Opus 5.5, then Opus 5 | LOW, TOP, TOP | Artificial Analysis pages; "trying its hardest" |
 | B30a | Haiku; Opus 5.5 (a tag on each drawn car, not the corner) | TOP; 1st | "Haiku, in its top gear, beat Opus 5.5 in its lowest" |
 | B32 | Sally's deal; 2 + 3 | 1st to HIGH; TOP | "matters most on hard jobs"; "extra thinking is wasted" |
@@ -300,19 +312,20 @@ script or its filed source does not name.
 ### 4. The badges
 
 - **AI names as car badges** (DRAWN): chrome-look lettering, drawn flat on
-  the tailgate of a drawn car, seen from behind (the script puts the badge
-  "on the back"), never photoreal. "Opus 4.8", "Opus 5", "Opus 5.5", the
+  the grille of a drawn car, seen head on (the script puts the badge "on the
+  front of a car"), never photoreal. "Opus 4.8", "Opus 5", "Opus 5.5", the
   joke "Opus 5.56?" (with a coral "?" stamp so it can never read as real),
   "GPT 5.1" and "GPT 6.1". The drawn car carries no maker's logo.
-- **The badge on the back** (cleared PHOTO or DRAWN, long video only): the
-  Audi Q5's badge on its tailgate, beside the drawn "Opus 5.5" in the same
-  chrome lettering style, never on it (B26).
+- **The badge on the front** (cleared PHOTO or DRAWN, long video only): the
+  badge on the Audi Q5's grille, below the drawn "Opus 5.5", never with the
+  drawing on it (B24).
 - **The novice compares cars** (cleared PHOTO or DRAWN, long video only):
-  the BMW X3 and Audi Q5 fronts, each named in text, with the ChatGPT and
-  Claude marks above them, so the argument reads as ChatGPT versus Claude
-  (B29a).
+  the BMW X3 and Audi Q5 fronts, each named in text, their badges ringed,
+  with the official BMW and Audi logos small above them, while the key's
+  "Model name = the badge" row lights, so the argument reads as one about
+  names (B28).
 - **The pro looks beneath** (cleared PHOTO or DRAWN): the cars slide apart
-  to a gearbox cutaway (B29b). On screen it is "looks beneath", never "under
+  to a gearbox cutaway (B29). On screen it is "looks beneath", never "under
   the hood" (another series' name).
 - **Two badges on one road** (DRAWN, B30a): a small drawn car badged
   "Haiku" in top gear edges past a big drawn car badged "Opus 5.5" stuck in
@@ -372,8 +385,8 @@ concession), B13 ("my own opinion"), B16 (end of the launch story), B38
 ("That, I think, is why..."), B44 ("my guess why"), B51 ("Is that good?"),
 B57 (the question about profit, about 22 seconds, the longest), B67 (the
 close), and B70 (the sign-off). Shorter face moments sit inside B05, B10,
-B21, B30, B32, B43, B50, B55, B58, B62, B68 and B69, and he shares the frame
-(SPLIT) at B23, B29 and B36.
+B21, B30, B31, B32, B43, B50, B55, B58, B62, B68 and B69, and he shares the frame
+(SPLIT) at B23 and B36.
 
 ## Beat by beat
 
@@ -410,8 +423,8 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 
 **B04 · ¶2 · 0:20 · "Claude Opus 4.8. Then Opus 5."** `fri-04-badge-parade`
 - Point: the names keep stepping up.
-- Screen: FULL. A drawn car's tailgate, seen from behind (the badge is on the
-  back, as the script says at B26). The badge "Opus 4.8" sits on it; "Opus 5"
+- Screen: FULL. A drawn car's front, seen head on (the badge is on the
+  front, as the script says at B24). The badge "Opus 4.8" sits on its grille; "Opus 5"
   knocks it off; "Opus 5.5" knocks that off. Anthropic logo small, top left.
 - Text: the badges themselves.
 - Move: each badge drops on its word [A: a clack per badge].
@@ -419,8 +432,8 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 
 **B05 · ¶2 · 0:24 · "At this rate, when's Opus 5.56 coming out?"** `fri-05-badge-joke`
 - Point: the joke: the numbers are getting silly.
-- Screen: the same tailgate; a fourth badge, "Opus 5.56", squeezes in, too
-  long for the tailgate, wonky, with a coral "?" stamp. Then PUNCH on Krish for the
+- Screen: the same car front; a fourth badge, "Opus 5.56", squeezes in, too
+  long for the grille, wonky, with a coral "?" stamp. Then PUNCH on Krish for the
   look after the line.
 - Text: "Opus 5.56?"
 - Move: the badge squeezes on "5.56"; cut to his face on "coming out?".
@@ -461,7 +474,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 
 **B09 · ¶5 · 1:18 · "There are a few reasons OpenAI and Anthropic would rather you look at the name."** `fri-09-eyes-on-badge`
 - Point: they want your eyes on the name.
-- Screen: SPLIT. The Opus 5.5 badge on its drawn tailgate, lit by a spotlight; the
+- Screen: SPLIT. The Opus 5.5 badge on its drawn car front, lit by a spotlight; the
   settings menu from B08 beside it, dimmed. OpenAI and Anthropic logos above.
 - Text: "Look at the name"
 - Move: the spotlight swings onto the badge on "look at the name"; cut to
@@ -602,168 +615,131 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Text, one at a time: "Writes out its working", "You see a summary",
   "Steps", "More than one way", "Checks its answer", "Searches more".
 - Move: each element builds on its sentence; no cuts inside. This notebook
-  comes back in B28.
+  comes back in B27.
 - Source: DRAWN.
 
-**B23 · ¶15 · 3:38 · "Think of a car. Here's what stands for what."** `fri-23-what-stands-for-what` (strongest moment 1)
+**B23 · ¶15 · 3:38 · "Think of a car."** `fri-23-think-of-a-car` (strongest moment 1)
 - Point: a car is coming, with a key: each thing on the AI side has its
   thing on the car side.
 - Screen: SPLIT. Krish in the left third. On the right the empty key slides
-  in on "Think of a car": four blank rows, each an "=" with a space either
-  side, the AI side headed "AI" and the car side headed "Car". The rows
-  pulse once on "what stands for what". (The key is described under "What
-  stands for what" above.)
-- Text: "What stands for what", "AI", "Car".
-- Move: the slide; PUNCH on "Here's what stands for what."
-- Source: DRAWN. Long video only: it is the frame the car logos fill.
+  in on "Think of a car": three blank rows, each an "=" with a space either
+  side, the AI side headed "AI" and the car side headed "Car". (The key is
+  described under "What stands for what" above.)
+- Text: "AI", "Car".
+- Move: the slide; PUNCH on "Think of a car."
+- Source: DRAWN. Long video only: it is the frame the car pictures fill.
 
-**B24 · ¶15 · 3:42 · "OpenAI and Anthropic are the carmakers, like BMW and Audi."** `fri-24-carmakers` (strongest moment 1)
-- Point: the AI companies are the carmakers: OpenAI is BMW, Anthropic is
-  Audi.
-- Screen: FULL, two columns, grown out of the key's first row. Left: the
-  OpenAI logo above, the BMW logo below, an "=" between. Right: the Anthropic
-  logo above, the Audi logo below, an "=" between. The OpenAI and Anthropic
-  logos land on "OpenAI and Anthropic"; the BMW and Audi logos land on "the
-  carmakers", and a coral ring draws round each as he names it ("like BMW
-  and Audi"). The complete pairing holds at least 2.5 seconds, then shrinks
-  into the key's first row on the left edge.
-- Text: "The carmakers", "OpenAI = BMW", "Anthropic = Audi".
-- Move: each logo lands on its words; hold.
-- Source: LOGO OpenAI, Anthropic, BMW, Audi (each whole, with its own clear
-  space, never combined, never recoloured). Long video only.
-
-**B25 · ¶15 · 3:46 · "ChatGPT and Claude are the cars they make."** `fri-25-the-cars`
-- Point: the apps are the cars: ChatGPT is a BMW X3, Claude is an Audi Q5.
-- Screen: FULL, the same two columns, grown out of the key's second row.
-  Left: the ChatGPT app mark above, a BMW X3 below (a three-quarter front
-  view of the whole car). Right: the Claude app mark above, an Audi Q5 below
-  (the same angle). Each car is a cleared photograph where one exists;
-  otherwise a house-style drawing of a plain car of that shape, no logo on
-  it. Either way the make and model sit in text under each car ("BMW X3",
-  "Audi Q5"), so nobody has to recognise the car. The small OpenAI and
-  Anthropic logos sit over their columns, so maker and car read together.
-  The marks land on "ChatGPT and Claude"; the cars roll in on "the cars they
-  make". The marks sit beside the cars, never on them. Hold at least 2.5
-  seconds, then shrink into the second row.
-- Text: "ChatGPT = the car", "Claude = the car", "BMW X3", "Audi Q5".
-- Move: each car slides in from its own side (a slide only: a photograph is
-  never stretched or distorted).
-- Source: LOGO ChatGPT and Claude app marks; the X3 and the Q5 each a
-  cleared PHOTO (public domain, CC0, Pexels or Unsplash, source and licence
-  recorded), else DRAWN with the car named in text. Long video only.
-
-**B26 · ¶15 · 3:49 · "The version, like Opus 5.5, is the badge on the back."** `fri-26-badge-on-the-back`
-- Point: the version, like Opus 5.5, is only the badge on the back of the
-  car.
-- Screen: FULL, the right column only (Opus 5.5 is Claude's version, so its
-  car is the Q5), grown out of the key's third row. On "Opus 5.5" a drawn
-  "Opus 5.5" badge lands above: flat chrome lettering in Archivo, the size,
-  weight and spacing of a real tailgate badge, on ink, with a small IBM Plex
-  Mono label under it, "Illustration", so nobody takes it for a real badge.
-  On "the badge on the back" the Audi Q5's tailgate, close on its badge,
-  lands below, with the "=" between and "Audi Q5" in text under it: a
-  cleared photograph where one exists; otherwise a drawn tailgate with "Q5"
-  set in the same house lettering as the Opus badge (not Audi's typeface,
-  and no rings), labelled "Illustration" too. The drawn badge is never put
-  on the photograph, and the photograph is never edited. Hold at least 2.5
-  seconds, then shrink into the third row.
-- Text: "Opus 5.5 = the badge", "Illustration", "Audi Q5".
-- Move: a slow push into the Q5's badge; hold.
+**B24 · ¶15 · 3:40 · "The name of the AI model is like the badge on the front of a car."** `fri-24-badge-on-the-front` (strongest moment 1)
+- Point: the AI model's name, like Opus 5.5, is only the badge on the front
+  of the car.
+- Screen: FULL, grown out of the key's first row: the AI side above, the car
+  side below, an "=" between. Above, on "The name of the AI model": the
+  drawn "Opus 5.5" badge, flat chrome lettering in Archivo, the size, weight
+  and spacing of a real car badge, on ink, with a small IBM Plex Mono label
+  under it, "Illustration", so nobody takes it for a real badge. Below, on
+  "the badge on the front of a car": the front of an Audi Q5 (one of the two
+  cars the paragraph names), close on the badge on its grille, with "Audi
+  Q5" in text under it. That is a cleared photograph where one exists;
+  otherwise a plain drawn car front with its empty badge plate lit coral, no
+  logo on it and no make named. The drawn badge is never put on the
+  photograph, and the photograph is never edited. Hold at least 2.5
+  seconds, then shrink into the key's first row on the left edge.
+- Text: "Model name = the badge", "Illustration", and "Audi Q5" under the
+  photograph.
+- Move: the badge lands on "the AI model"; the car front on "the badge on
+  the front"; a slow push into the car's badge; hold.
 - Source: DRAWN badge (the same badge as B04, which is why B04's badges sit
-  on a drawn tailgate); the Q5's rear badge a cleared PHOTO, else DRAWN as
-  above. Long video only.
+  on a drawn car front); the Q5's front a cleared PHOTO (public domain, CC0,
+  Pexels or Unsplash, source and licence recorded), else DRAWN as above.
+  Long video only.
 
-**B27 · ¶15 · 3:53 · "And how hard it thinks is the gear."** `fri-27-the-gear` (strongest moment 1)
-- Point: how hard it thinks is the gear, and the setting you saw at B08 is
-  the gearstick.
-- Screen: FULL, grown out of the key's fourth row. Above: Krish's own effort
-  menu from B08, the coral ring on its current level, landing on "how hard
-  it thinks". Below: a gearstick, its knob's gear numbers readable, landing
-  on "the gear", with a coral line drawn from the ringed level to the stick.
-  [B] The dash appears for the first time, empty. Hold at least 2.5 seconds,
-  then shrink into the fourth row: the key is complete, and stays on the
-  left edge through B28.
+**B25 · ¶15 · 3:46 · "The thinking setting is like the gears of the car."** `fri-25-the-gear` (strongest moment 1)
+- Point: the thinking setting is the gears, and the setting you saw at B08
+  is the gearstick.
+- Screen: FULL, grown out of the key's second row. Above: Krish's own effort
+  menu from B08, the coral ring on its current level, landing on "The
+  thinking setting". Below: a gearstick, its knob's gear numbers readable,
+  landing on "the gears of the car", with a coral line drawn from the ringed
+  level to the stick. [B] The dash appears for the first time, empty. Hold
+  at least 2.5 seconds, then shrink into the second row.
 - Text: "Thinking = the gear".
-- Move: [A] clack as the gearstick lands on "the gear".
+- Move: [A] clack as the gearstick lands on "the gears of the car".
 - Source: CAPTURE (reused from B08); the gearstick a cleared PHOTO with no
   maker's mark, else DRAWN.
 
-**B28 · ¶15 · 3:56 · "In first gear, a car crawls."** `fri-28-crawl-to-top-speed`
-- Point: in first gear a car crawls and in top gear it flies; in its lowest
-  gear the AI barely thinks, and in its top gear it thinks hardest.
-- Screen: FULL, a grid of four that builds one cell a sentence, the AI row
-  above and the car row below, as in the key, so each car gear lines up under
-  its AI gear. The car row builds first, because he says it first:
-  - Bottom left, on "In first gear, a car crawls.": cleared footage of one
-    car creeping through town at walking pace, no maker's badge readable,
-    the gearstick inset in first.
-  - Bottom right, on "In top gear, it reaches its top speed.": cleared
-    footage of the same car at speed on an open road, the inset in top gear.
-    One car in both gears, as B30 tests one Claude in different gears.
-  - Top left, on "In the AI's lowest gear, it barely thinks.": the B22
-    notebook with one line of working. [B] Dash `1st`.
-  - Top right, on "In its top gear, it thinks hardest.": the notebook full.
-    [B] Dash `TOP`.
-  The key stays on the left edge, then folds away as the grid ends.
-- Text: "First gear: a crawl", "Top gear: top speed", "AI's lowest gear:
-  barely thinks", "AI's top gear: thinks hardest".
-- Move: each cell lands on its sentence; [A] clack on "In top gear".
-- Source: FOOTAGE of one real car, never generated, cleared (a Pexels or
-  Unsplash clip, or a public domain or CC0 one, source and licence
-  recorded), with no maker's badge readable (only BMW and Audi are paired
-  with an AI); if no footage clears, two cleared photographs with real
-  motion blur; if none clears, DRAWN (the little car from B29c, crawling,
-  then flying). No speedometer figure and no number plate readable in frame.
-  The gearstick (reused); DRAWN notebook. Long video only.
+**B26 · ¶15 · 3:50 · "Right now, these apps are like a manual car, where you change gear yourself."** `fri-26-manual-car`
+- Point: today's apps are a manual car: you change gear yourself.
+- Screen: FULL, grown out of the key's third row. Above, on "these apps":
+  the ChatGPT and Claude app marks, side by side, each whole. Below, on "a
+  manual car": act 1 of the transmissions, an H-pattern gearstick, then the
+  three pedals in a manual car's footwell with the clutch pedal ringed in
+  coral (the third pedal is what makes it a manual). On "where you change
+  gear yourself" a hand moves the stick and a foot presses the clutch. Hold
+  at least 2.5 seconds, then shrink into the third row: the key is
+  complete, and stays on the left edge through B29.
+- Text: "Today's apps = a manual car", then "You change gear yourself".
+- Move: hold; the hand and foot move on "where you change gear yourself".
+- Source: LOGO ChatGPT and Claude app marks; the H-pattern gearstick, the
+  clutch pedal, and the hand and foot (one shot, or two side by side): each
+  a cleared PHOTO with no maker's mark, else DRAWN.
 
-**B29 · ¶16 · 4:08 · "Right now, these apps are like a car with a manual transmission."** `fri-29-manual-transmission`
-- Point: today's apps are a manual transmission: you change gear yourself.
-- Screen: FULL. Act 1 of the transmissions: an H-pattern gearstick, then,
-  still on this sentence, the three pedals in a manual car's footwell with
-  the clutch pedal ringed in coral (the third pedal is what makes it a
-  manual). Then SPLIT on "You change gear yourself.": Krish in the left
-  third; on the right a hand moving the stick and a foot on the clutch.
-- Text: "Today: a manual transmission", then "You change gear yourself".
-- Move: hold; the split lands on "You change gear yourself."
-- Source: the H-pattern gearstick, the clutch pedal, and the hand and foot
-  (one shot, or two side by side): each a cleared PHOTO with no maker's
-  mark, else DRAWN.
+**B27 · ¶15 · 3:56 · "In a low gear, it barely thinks."** `fri-27-low-high`
+- Point: in a low gear the AI barely thinks; in a high gear it thinks
+  hardest.
+- Screen: FULL, two cells side by side, each with the B22 notebook above
+  and the gearstick below, as in the key:
+  - Left, on "In a low gear, it barely thinks.": the stick in a low gear;
+    the notebook with one line of working. [B] Dash `LOW`.
+  - Right, on "In a high gear, it thinks hardest.": the stick in a high
+    gear; the notebook full. [B] Dash `HIGH`.
+- Text: "Low gear: barely thinks", "High gear: thinks hardest".
+- Move: each cell lands on its sentence; [A] clack on "In a high gear".
+- Source: the gearstick in two gears (two cleared photographs, or the
+  drawing moved); DRAWN notebook.
 
-**B29a · ¶16 · 4:14 · "The novice argues about BMW's X3 versus Audi's Q5,"** `fri-29a-x3-q5`
-- Point: the novice argues about which car, which here means which app.
-- Screen: FULL. The BMW X3 and Audi Q5 fronts, straight on, matched in
-  angle and as near in colour as the cleared pictures allow, "vs" between
-  them: cleared photographs where they exist, otherwise the B25 drawings
-  turned to face us. The ChatGPT and Claude marks sit small above their
-  cars, as in the key, so the argument reads as ChatGPT versus Claude.
+**B28 · ¶15 · 4:01 · "The novice argues about BMW's X3 versus Audi's Q5,"** `fri-28-x3-q5`
+- Point: the novice argues about which car, by its badge, which here means
+  which model name.
+- Screen: FULL. The BMW X3 and Audi Q5 fronts, straight on, "vs" between
+  them, "BMW X3" and "Audi Q5" in text under each, the badge on each grille
+  ringed in coral. They are cleared photographs where they exist, matched in
+  angle and as near in colour as they allow; otherwise house-style drawings
+  of a plain car of each shape, with no logo on them, named in text. The
+  official BMW and Audi logos sit small above their cars, each whole and
+  apart from the car and from each other, to say whose car it is. As the
+  rings draw, the key's first row, "Model name = the badge", lights in the
+  strip, so the argument reads as one about names.
 - Text: "BMW X3 vs Audi Q5".
-- Move: each car slams in from its side on its name.
+- Move: each car slams in from its side on its name; the rings draw on
+  "argues".
 - Source: the X3 and Q5 fronts each a cleared PHOTO, else DRAWN with the
-  car named in text, as at B25; LOGO ChatGPT, Claude. Long video only.
+  car named in text; LOGO BMW, Audi (official files, unaltered, only to say
+  whose car it is). Long video only.
 
-**B29b · ¶16 · 4:18 · "but the pro is looking at the gearbox beneath."** `fri-29b-cutaway`
-- Point: the pro looks at what makes it drive: the gears, how hard it
-  thinks.
+**B29 · ¶15 · 4:05 · "but the pro is looking at the gear systems beneath."** `fri-29-cutaway`
+- Point: the pro looks at what makes it go: the gears, how hard it thinks.
 - Screen: FULL. The two cars slide apart to reveal a gearbox cutaway; a
-  coral ring on the gears.
+  coral ring on the gears; the key's second row, "Thinking = the gear",
+  lights in the strip. The key folds away as the line ends.
 - Text: "The pro looks beneath"
 - Move: the reveal on "beneath" [A: clack].
 - Source: the gearbox cutaway a cleared PHOTO (Wikimedia Commons marked
   public domain or CC0, Pexels or Unsplash) with no maker's mark, else
-  DRAWN; the cars from B29a reused (long video only).
+  DRAWN; the cars and logos from B28 reused (long video only).
 
-**B29c · ¶16 · 4:22 · "With AI, most of us drive everywhere in first gear."** `fri-29c-everywhere-in-first`
-- Point: most of us never leave first gear.
+**B29a · ¶15 · 4:09 · "But with AI, most of us drive everywhere in first gear all the time, the lowest one."** `fri-29a-everywhere-in-first`
+- Point: most of us never leave first gear, the lowest one.
 - Screen: FULL. A drawn road map; a little drawn car, with no maker's badge,
   crawls the whole route (motorway, town, a hill) while [B] the dash stays
-  in first the whole way (without B, a small first-gear tag rides on the
-  car). The joke is the point: nobody drives a motorway in first.
+  in `1st` the whole way (without B, a small first-gear tag rides on the
+  car). On "the lowest one" the gear pulses. The joke is the point: nobody
+  drives a motorway in first.
 - Text: "Everywhere in first gear"
 - Move: the scenes change under the car; the gear never does. Cut to FACE as
   the line ends, for B30's question.
 - Source: DRAWN.
 
-**B30 · ¶17 · 4:27 · "So how big is the difference in going up a gear?"** `fri-30-rev-counter` (strongest moment 2)
+**B30 · ¶16 · 4:16 · "So how big is the difference in going up a gear?"** `fri-30-rev-counter` (strongest moment 2)
 - Point: the same badge in a higher gear jumps further than a new badge does.
 - Screen: FACE for the question (the return to his face after the car
   sequence). Then FULL from "A group called Artificial Analysis": first the
@@ -787,16 +763,44 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
   each cropped to its sentence and ending before the median figure. LOGO
   Anthropic.
 
-**B31 · ¶18 · 4:50 · "But more thinking isn't always better."** `fri-31-two-plus-three`
+**B30a · ¶16 · 4:39 · "Even Anthropic's cheapest AI, Haiku, in its top gear, beat Opus 5.5 in its lowest."** `fri-30a-haiku-passes` (strongest moment 2)
+- Point: the gear can beat the model: Anthropic's cheapest AI in its top
+  gear beat Opus 5.5 in its lowest.
+- Screen: FULL, drawn, a two-lane road seen side on, in the house style. In
+  the slow lane a big drawn car, badge "Opus 5.5" on its nose in the B04
+  chrome lettering and a gear tag on `1st`, crawling, a puff of exhaust
+  behind it. On "Anthropic's cheapest AI" a small drawn car, badge "Haiku",
+  gear tag `TOP`, comes up from behind in the fast lane with speed lines.
+  On "beat Opus 5.5 in its lowest" it draws level and edges past by a nose.
+  It passes by a nose, not by a mile: in the article Haiku's top-gear score
+  is only just above Opus 5.5's lowest, so the small car does not leave the
+  big one behind. Neither car looks like a real model or carries a maker's
+  logo. The gear tags are in the dash's style, so the row reads the same
+  without B, and [B] the corner dash steps aside while the two tags show.
+  Anthropic logo small, top left (both are Anthropic's).
+- Text: "Anthropic's cheapest AI" (over the small car as it enters), the
+  badges "Haiku" and "Opus 5.5", the tags "TOP" and "1st". Source line under
+  the road: "Artificial Analysis". No scores: the script gives none here.
+- Move: the small car enters on "Haiku"; it edges past on "beat Opus 5.5";
+  [A] a clack as its tag lights `TOP`. Then cut to FULL for B31.
+- Source: DRAWN, LOGO Anthropic. The fact is on Artificial Analysis
+  (artificialanalysis.ai/articles/claude-haiku-5-5, 7 October 2026, with
+  the Opus 5.5 low page from B30); neither page is shown, because both carry
+  scores the script does not say.
+
+**B31 · ¶17 · 4:45 · "But more thinking isn't always better."** `fri-31-two-plus-three`
 - Point: on an easy question, more thinking is waste.
-- Screen: FULL. The paper's title page, then "2 + 3 = 5" written out again
-  and again, stacking down the frame faster and faster, a counter beside it.
+- Screen: FACE, PUNCH on "But more thinking isn't always better." (the turn,
+  and the return to his face after B30's and B30a's pictures). Then FULL from
+  "Researchers asked": the paper's title page, then "2 + 3 = 5" written out
+  again and again, stacking down the frame faster and faster, a counter
+  beside it.
 - Text: "2 + 3", then "13 times".
 - Move: the stack stops dead at 13 on "thirteen times", with a thud.
 - Source: SHOT arxiv.org/abs/2412.21187 (title: "Do NOT Think That Much for
   2+3=?"). DRAWN stack.
 
-**B32 · ¶19 · 5:01 · "So the thinking gear matters most on hard jobs, like Sally's deal."** `fri-32-hard-easy`
+**B32 · ¶18 · 4:56 · "The thinking gear matters most on hard jobs, like Sally's deal."** `fri-32-hard-easy`
 - Point: gear up for hard jobs; on easy ones extra thinking is waste.
   (Sally S4.)
 - Screen: SPLIT in two pictures: left, Sally's deal, the dash going from 1st
@@ -808,20 +812,64 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 
 ### Chapter 4. What thinking costs them
 
-**Card 4** lands before "Every word of that hidden" (four lights).
+**Card 4** lands before "All that hidden working runs" (four lights).
 
-**B33 · ¶20 · 5:11 · "Every word of that hidden working runs on huge computers,"** `fri-33-eleven-stacks`
-- Point: thinking hard costs about 11 times as much as thinking a little.
-- Screen: FULL. A photo of a data centre aisle, then a drawn pair: one stack
-  of coins under "a little" (dash LOW), then eleven stacks under "as hard as
-  it can" (dash TOP). [C] The needle pushes into the red as the stacks pop
-  in.
-- Text: "About 11x the cost"
-- Move: the stacks pop in on "eleven times".
-- Source: PHOTO data centre; DRAWN stacks. The cost figures behind it are on
-  the Artificial Analysis pages and are not shown.
+**B33 · ¶19 · 5:06 · "All that hidden working runs on huge computers,"** `fri-33-data-centre`
+- Point: all that hidden working costs money to run.
+- Screen: FULL. A cleared photograph of a data centre aisle, no company's
+  name or logo in frame. On "which cost money to run" it slides up into a
+  thin strip and a drawn dashboard rises in below it: two round dials on
+  ink, a fuel gauge on the left and a speedometer on the right, each with
+  its pairing label under it, landing in turn: "Fuel = the cost", then
+  "Speed = the score". The fuel gauge is marked only E and F; the
+  speedometer carries no numbers at all.
+- Text: "Fuel = the cost", "Speed = the score".
+- Move: the dashboard rises on "cost money to run"; the two labels land one
+  after the other and stay through B33b.
+- Source: the data centre a cleared PHOTO (Pexels or Unsplash, source and
+  licence recorded); DRAWN dashboard.
 
-**B35 · ¶21 · 5:25 · "Businesses that put AI inside their own apps"** `fri-35-meter`
+**B33a · ¶19 · 5:11 · "If Opus 5.5 thinks as hard as it can,"** `fri-33a-fuel-vs-speed` (strongest moment 3)
+- Point: the cost problem, Krish's "visualize this problem really well in
+  post": thinking as hard as it can burns about eleven times the fuel...
+- Screen: FULL. The dashboard splits into two, side by side: the same car on
+  the same trip, twice. Left: badge chip "Opus 5.5", gear `LOW` (thinking a
+  little). Right: the same chip, gear `TOP` (as hard as it can). A thin
+  drawn road under each scrolls at the same rate, so the viewer sees both
+  cover the same trip. Both tanks start full. From "thinks as hard as it
+  can" both fuel needles fall at once: the left one drops a single notch,
+  one twelfth of the way from F to E, and stops; the right one keeps
+  falling, eleven notches, until it sits just above E and a drawn low-fuel
+  lamp glows coral. The gauge on the right empties about eleven times
+  faster, the script's "about eleven times as much", and the ratio on
+  screen is the true one (Artificial Analysis: about $0.55 a task in low,
+  $5.98 in max; neither figure is shown). The car truth that makes it read
+  at a glance: driving flat out burns far more fuel for not much more
+  speed.
+- Text: "About 11x the fuel" (on "eleven times").
+- Move: both needles start together on "thinks as hard"; the text lands on
+  "eleven times"; the left gear chip pulses on "thinking a little". No
+  sound on the needles, so the gear clacks keep their meaning.
+- Source: DRAWN. The figures behind it are on the Artificial Analysis pages
+  filed for B30 and are not shown.
+
+**B33b · ¶19 · 5:19 · "But its score only goes up by about a third."** `fri-33a-fuel-vs-speed` (continues)
+- Point: ...and its score goes up by only about a third.
+- Screen: the same two dashboards; now the speedometers. The left needle
+  rests where the low gear's score puts it. On "only goes up" the right
+  needle climbs, and stops a short way past it, about a third further round
+  the dial. The needle angles are proportional to the scores, measured from
+  the dial's resting point: the needles stop at the 42 and 58 positions, the
+  same scores as B30, unlabelled here, so the step on screen is the true
+  one. Hold the finished pair for 2 seconds: a nearly empty tank beside a
+  needle barely past its neighbour (B35's meter waits for the hold, up to 2
+  seconds behind his words). [B] The corner dash steps aside through
+  B33a and B33b; the gear chips sit on the dials.
+- Text: "Only about a third faster" (on "about a third").
+- Move: the right needle climbs on "goes up" and stops on "a third"; hold.
+- Source: DRAWN (the same dashboard).
+
+**B35 · ¶20 · 5:23 · "Businesses that put AI inside their own apps"** `fri-35-meter`
 - Point: businesses pay per word, so more thinking earns OpenAI and
   Anthropic more. (B34 merged here and into B36: its line, "Who pays for
   that thinking depends on how you pay.", was cut from the script. The turn
@@ -835,7 +883,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN, LOGO. No pricing page: it would put prices on screen that
   the script does not say.
 
-**B36 · ¶22 · 5:35 · "But most of us pay the same amount every month,"** `fri-36-meter-flips`
+**B36 · ¶21 · 5:33 · "But most of us pay the same amount every month,"** `fri-36-meter-flips`
 - Point: on a flat plan, the company pays for every extra thought.
 - Screen: SPLIT, the return to his face in this chapter: Krish in the left
   third. On the right the meter swings across: your side now shows a flat
@@ -845,19 +893,22 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: the swing lands on "Then OpenAI or Anthropic pays".
 - Source: DRAWN, LOGO.
 
-**B37 · ¶22 · 5:44 · "In January 2025, Sam Altman said OpenAI was losing money"** `fri-37-200-a-month`
-- Point: even $200 a month did not cover the heaviest users.
-- Screen: FULL. Altman's post on X: "insane thing: we are currently losing
-  money on openai pro subscriptions!" (highlighted), then OpenAI's Pro launch
-  page at its price.
-- Text: "$200 a month, still losing money"
-- Move: the highlighter on "losing money"; "$200 a month" lands on "two
-  hundred dollars a month".
+**B37 · ¶21 · 5:42 · "In January 2025, Sam Altman said OpenAI was losing money"** `fri-37-200-a-month`
+- Point: even the $200 plan lost OpenAI money, because people used it far
+  more than OpenAI expected.
+- Screen: FULL. Altman's post on X, "insane thing: we are currently losing
+  money on openai pro subscriptions! people use it much more than we
+  expected.", with "losing money" highlighted first; then OpenAI's Pro
+  launch page, cropped to its price line, slides in beside it; then the
+  highlighter sweeps the post's second sentence.
+- Text: "$200 plan, still losing money", then "Used far more than expected".
+- Move: the highlighter on "losing money"; "$200 plan" lands on "two
+  hundred dollar plan"; the second sweep on "People used it far more".
 - Source: SHOT x.com/sama/status/1876104315296968813; SHOT
   openai.com/index/introducing-chatgpt-pro/ (cropped to the price line).
   LOGO OpenAI.
 
-**B38 · ¶23 · 5:58 · "That, I think, is why the app starts you in a low gear."**
+**B38 · ¶22 · 5:52 · "That, I think, is why the app starts you in a low gear."**
 - Point: so the app starts you in a low gear (his reading, so his face).
 - Screen: FACE ALONE (rest). PUNCH on "starts you in a low gear." With B,
   the dash shows LOW in the corner and nothing else is over him.
@@ -870,7 +921,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 
 **Card 5** lands before "So who decides how hard" (five lights).
 
-**B39 · ¶24 · 6:04 · "So who decides how hard your AI thinks?"** `fri-39-inside-one-gear`
+**B39 · ¶23 · 5:57 · "So who decides how hard your AI thinks?"** `fri-39-inside-one-gear`
 - Point: even now, inside one gear, the AI decides how much to think.
 - Screen: FACE for the question. Then [B] the dash shows a single gear slot
   with a small needle moving inside it, on "Right now, you do". Without B:
@@ -880,24 +931,24 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN. The fact is in OpenAI's reasoning guide ("reason
   adaptively") and Anthropic's "Steering thinking" docs; not shown.
 
-**B40 · ¶25 · 6:10 · "The next step is the AI choosing the gear for you, and Google has started."** `fri-40-gemini-auto`
+**B40 · ¶24 · 6:03 · "The next step is the AI choosing the gear for you, and Google has started."** `fri-40-gemini-auto`
 - Point: Gemini's free app is now an automatic transmission: it picks the
   gear for you.
-- Screen: FULL. The automatic selector photo (P R N D) pushes the manual stick
+- Screen: FULL. The automatic selector (P R N D) pushes the manual stick
   off the frame: act 2 begins. Then Google's help page with "Auto will be the
   default setting for users without a Google AI plan." highlighted. [B] Dash
-  AUTO. Then, on "like a car with an automatic transmission", the real
+  AUTO. Then, on "like a car with an automatic transmission", the
   selector again, close, its P R N D letters readable and the lever in D,
   with the Google logo above it and an "=" between: the second transmission,
-  named as he names it. The selector photograph shows no carmaker's logo:
-  the script pairs Google with no carmaker.
+  named as he names it. The selector shows no carmaker's logo: the script
+  pairs Google with no carmaker.
 - Text: "Gemini: Auto, from 9 October", then "Auto = an automatic transmission".
 - Move: [A] a clunk as the selector lands on "choosing the gear for you".
-- Source: PHOTO automatic selector; SHOT
-  support.google.com/gemini/answer/17004136 and
+- Source: the automatic selector a cleared PHOTO with no maker's mark,
+  else DRAWN; SHOT support.google.com/gemini/answer/17004136 and
   9to5google.com/2026/10/09/gemini-auto-free-users/. LOGO Google.
 
-**B41 · ¶26 · 6:29 · "OpenAI has gone the other way, and taken ChatGPT's automatic gear picker away, twice."** `fri-41-taken-away-twice`
+**B41 · ¶25 · 6:22 · "OpenAI has gone the other way, and taken ChatGPT's automatic gear picker away, twice."** `fri-41-taken-away-twice`
 - Point: OpenAI took its automatic away twice.
 - Screen: FULL. A drawn strip with two places for coral stamps: "December:
   free users" and "September: Plus and Pro". [B] Dash AUTO.
@@ -906,7 +957,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
   September" (B43); the dash's AUTO is struck out at each.
 - Source: DRAWN, LOGO OpenAI.
 
-**B42 · ¶26 · 6:34 · "Last December, free users lost it."** `fri-42-wired`
+**B42 · ¶25 · 6:28 · "Last December, free users lost it."** `fri-42-wired`
 - Point: OpenAI gave one reason; WIRED reported that the picker sent many
   more free users to costlier thinking.
 - Screen: FULL. WIRED's story with this sentence highlighted: "the router
@@ -917,38 +968,38 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: SHOT wired.com/story/openai-router-relaunch-gpt-5-sam-altman/
   (16 December 2025).
 
-**B43 · ¶26 · 6:50 · "Then in September, people on the Plus and Pro plans lost it too."** `fri-43-plus-pro`
+**B43 · ¶25 · 6:43 · "Then in September, people on the Plus and Pro plans lost it too."** `fri-43-plus-pro`
 - Point: paid users lost it too, with no reason given; now you pick.
 - Screen: FULL. OpenAI's release note: "We're retiring automatic switching
   from Instant to Thinking (reasoning) for ChatGPT Plus and Pro users
   globally." Then FACE on "OpenAI didn't say why." (a dry look, held). Then
-  the manual stick photo returns on "Now, on those plans, you pick the gear."
+  the manual stick returns on "Now, on those plans, you pick the gear."
 - Text: "You pick the gear" (on the last line).
 - Move: the second stamp from B41 lands as the note appears.
 - Source: SHOT help.openai.com/en/articles/6825453-chatgpt-release-notes
-  (the 14 September 2026 entry). PHOTO (reused). LOGO OpenAI.
+  (the 14 September 2026 entry). The manual stick (reused). LOGO OpenAI.
 
-**B44 · ¶27 · 7:00 · "I don't think that lasts, and here's my guess why."**
+**B44 · ¶26 · 6:53 · "I don't think that lasts, and here's my guess why."**
 - Point: his guess is coming.
 - Screen: FACE ALONE (rest). PUNCH on "my guess why."
 - Text: none.
 - Move: hold.
 - Source: none.
 
-**B45 · ¶27 · 7:04 · "Think what each part of the car is worth to OpenAI or Anthropic."** `fri-45-xray-car` (strongest moment 3)
+**B45 · ¶26 · 6:57 · "Think what each part of the car is worth to OpenAI or Anthropic."** `fri-45-xray-car` (strongest moment 4)
 - Point: each part of the car is worth something different to them.
 - Screen: FULL. First, for 2 seconds, the car key from ¶15 returns full
-  frame (long video only), its badge and gear rows lit: "Opus 5.5 = the
+  frame (long video only), its badge and gear rows lit: "Model name = the
   badge", "Thinking = the gear". Then a drawn car in side view; on the word
-  "part" it turns X-ray: the badge on the back, the gearbox beneath. Two
+  "part" it turns X-ray: the badge on the front, the gearbox beneath. Two
   empty labels wait. OpenAI and Anthropic logos at the top.
-- Text: "Opus 5.5 = the badge", "Thinking = the gear" (the key's own
+- Text: "Model name = the badge", "Thinking = the gear" (the key's own
   words); then "Badge: ?" and "Gears: ?"
 - Move: the key cuts in on "Think what"; the X-ray switches on.
-- Source: DRAWN, LOGO; the key reused from B23 to B27 (its logos and
-  photographs, long video only).
+- Source: DRAWN, LOGO; the key reused from B23 to B26 (its marks and
+  pictures, long video only).
 
-**B46 · ¶27 · 7:09 · "The badge brings attention."** `fri-45-xray-car` (continues)
+**B46 · ¶26 · 7:02 · "The badge brings attention."** `fri-45-xray-car` (continues)
 - Point: the badge buys attention, so they keep your eyes on it and off the
   gear.
 - Screen: the same car. The badge lights coral and its label fills; the
@@ -958,7 +1009,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: continuous.
 - Source: DRAWN, SHOT (reused).
 
-**B47 · ¶27 · 7:16 · "Even the scores Anthropic shows off for Opus 5.5 were in top gear."** `fri-47-top-gear-scores` (strongest moment 3)
+**B47 · ¶26 · 7:09 · "Even the scores Anthropic shows off for Opus 5.5 were in top gear."** `fri-47-top-gear-scores` (strongest moment 4)
 - Point: the scores you are shown are top gear; the app starts you lower.
 - Screen: FULL, two pages side by side. Left: the footnote on Anthropic's
   Opus 5.5 page, "all Claude Opus 5.5 results use adaptive thinking at max
@@ -971,7 +1022,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
   values); SHOT platform.claude.com/docs/en/build-with-claude/effort (the
   default line). LOGO Anthropic.
 
-**B48 · ¶27 · 7:25 · "The gears decide the bill."** `fri-45-xray-car` (continues)
+**B48 · ¶26 · 7:18 · "The gears decide the bill."** `fri-45-xray-car` (continues)
 - Point: the gears are the bill: on a monthly plan, every high gear costs
   them.
 - Screen: back to the X-ray car. The gearbox lights; its label fills; the
@@ -981,35 +1032,36 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: continuous.
 - Source: DRAWN.
 
-**B49 · ¶27 · 7:31 · "They'd like their own hand on the gearstick,"** `fri-49-their-hand`
+**B49 · ¶26 · 7:24 · "They'd like their own hand on the gearstick,"** `fri-49-their-hand`
 - Point: they want to decide how much thinking each question gets.
-- Screen: FULL. The manual stick photo; the OpenAI and Anthropic logos slide
-  in and stop just beside the gear knob, reaching for it (beside it, never
-  printed onto the photograph).
+- Screen: FULL. The manual stick from B26; the OpenAI and Anthropic logos
+  slide in and stop just beside the gear knob, reaching for it (beside it,
+  never printed onto the picture).
 - Text: "Their hand on the gearstick"
 - Move: the logos land on "their own hand".
-- Source: PHOTO (reused), LOGO.
+- Source: the manual stick (reused), LOGO.
 
-**B50 · ¶27 · 7:38 · "Most of us would rather not change gear at all."** `fri-50-automatic-wins`
+**B50 · ¶26 · 7:31 · "Most of us would rather not change gear at all."** `fri-50-automatic-wins`
 - Point: most of us would rather not shift, so the automatic wins (his call).
 - Screen: the manual stick dissolves into the automatic selector, which
   clunks into D. Then FACE, PUNCH on "So I think the automatic wins."
 - Text: none.
 - Move: [A] clunk into D.
-- Source: PHOTO (reused).
+- Source: the manual stick and the selector (reused).
 
 ### Chapter 6. The good and the bad
 
 **Card 6** lands before "Is that good? Some of" (six lights).
 
-**B51 · ¶28 · 7:44 · "Is that good? Some of both."**
-- Point: some of both; the good first: people don't change settings.
+**B51 · ¶27 · 7:37 · "Is that good? Some of both."**
+- Point: some of both, and the good: people don't change settings, so the
+  starting gear is the gear they get.
 - Screen: FACE ALONE (rest) through "People don't change settings."
 - Text: none.
 - Move: hold.
 - Source: none.
 
-**B52 · ¶28 · 7:49 · "Back in 2025, when ChatGPT's automatic gear picker first arrived,"** `fri-52-hundred-dots`
+**B52 · ¶27 · 7:41 · "Back in 2025, when ChatGPT's automatic gear picker first arrived,"** `fri-52-hundred-dots`
 - Point: when the app picked, far more people got thinking answers.
 - Screen: FULL. A grid of 100 dots, 10 by 10. "Before": no dot fully lit,
   labelled "Under 1 in 100". "After": seven dots light coral. A small inset
@@ -1020,7 +1072,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN grid; SHOT x.com/sama/status/1954603417252532479 (cropped
   before the Plus figures). LOGO OpenAI.
 
-**B53 · ¶29 · 8:04 · "Anthropic learned this too. This March, it moved its coding app down to the middle gear."** `fri-53-claude-code-mid`
+**B53 · ¶28 · 7:56 · "Anthropic learned this too. This March, it moved its coding app down to the middle gear."** `fri-53-claude-code-mid`
 - Point: Anthropic moved the starting gear down, and most people stayed in
   it.
 - Screen: FULL. Anthropic's engineering post with "we changed Claude Code's
@@ -1031,25 +1083,25 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: SHOT anthropic.com/engineering/april-23-postmortem (crop the
   sentence so the date is out). LOGO Anthropic.
 
-**B54 · ¶29 · 8:18 · "So whoever picks the starting gear decides how hard most people's AI thinks."** `fri-54-whoever-picks`
+**B54 · ¶28 · 8:10 · "So whoever picks the starting gear decides how hard most people's AI thinks."** `fri-54-whoever-picks`
 - Point: the default is the decision; an automatic would at least think hard
   when it matters. (Sally S5.)
 - Screen: CARD: "Whoever picks the starting gear decides." Then, on "An AI that picks
-  for each question", SPLIT: the automatic selector photo with [B] the dash
+  for each question", SPLIT: the automatic selector with [B] the dash
   on AUTO; Sally's deal goes to HIGH, "2 + 3" goes to LOW.
 - Text: "Whoever picks the starting gear decides"
 - Move: [A] clack as the card lands.
 - Source: DRAWN (video_card.py `statement`, with the OpenAI and Anthropic
-  logos), PHOTO (reused).
+  logos), the selector (reused).
 
-**B55 · ¶30 · 8:30 · "Now the bad. You can't see it."**
+**B55 · ¶29 · 8:22 · "Now the bad. You can't see it."**
 - Point: the bad: you can't see it.
 - Screen: FACE. PUNCH on "You can't see it."
 - Text: none.
 - Move: hold.
 - Source: none.
 
-**B56 · ¶30 · 8:32 · "This January, OpenAI made ChatGPT think for less time."** `fri-56-silent-downshift` (strongest moment 4)
+**B56 · ¶29 · 8:24 · "This January, OpenAI made ChatGPT think for less time."** `fri-56-silent-downshift` (strongest moment 5)
 - Point: OpenAI turned the thinking down, by mistake cut Extended too, and
   nobody could see it.
 - Screen: FULL. OpenAI's release note, "We lowered the Standard and Light
@@ -1069,7 +1121,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
   (the "Update on thinking time settings" entry; crop the dates out). DRAWN
   dash. LOGO OpenAI.
 
-**B57 · ¶31 · 8:46 · "When the AI picks your gear, is it thinking about your ease of use, or about their profit?"**
+**B57 · ¶30 · 8:38 · "When the AI picks your gear, is it thinking about your ease of use, or about their profit?"**
 - Point: the question that matters: whose interest, and can you see it?
 - Screen: FACE ALONE (rest), the longest hold in the film. PUNCH on "about
   their profit?"; out again on "And can you see what it picked?", where [B]
@@ -1084,21 +1136,21 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 **Card 7** lands before "So what should you do?" (all seven lights flash
 and turn mint).
 
-**B58 · ¶32 · 9:08 · "So what should you do?"**
+**B58 · ¶31 · 9:00 · "So what should you do?"**
 - Point: the turn to advice.
 - Screen: FACE.
 - Text: none.
 - Move: hold.
 - Source: none.
 
-**B59 · ¶33 · 9:10 · "For quick, everyday stuff, a low gear is fine."** `fri-59-low-is-fine`
+**B59 · ¶32 · 9:02 · "For quick, everyday stuff, a low gear is fine."** `fri-59-low-is-fine`
 - Point: low gear is fine for quick stuff.
 - Screen: FACE. [B] Dash LOW, in mint (the answer). Without B: the text alone.
 - Text: "Quick stuff: low gear is fine"
 - Move: hold.
 - Source: DRAWN.
 
-**B60 · ¶34 · 9:13 · "For anything you'll act on, change the gear yourself."** `fri-60-act-on-it` (Sally S6)
+**B60 · ¶33 · 9:05 · "For anything you'll act on, change the gear yourself."** `fri-60-act-on-it` (Sally S6)
 - Point: gear up for anything you'll act on.
 - Screen: FULL. A hand shifts the manual stick up; [B] dash HIGH in mint.
   Then four fast cards, one on each phrase: Sally flicks her gear up before
@@ -1107,9 +1159,10 @@ and turn mint).
 - Text: each card's words, the script's own, six or fewer.
 - Move: [A] clack on "change the gear yourself"; a cut on each phrase, the
   one burst of fast cuts in the long cut.
-- Source: PHOTO (a hand shifting up), DRAWN cards and Sally.
+- Source: a hand shifting up, a cleared PHOTO with no maker's mark, else
+  DRAWN; DRAWN cards and Sally.
 
-**B61 · ¶34 · 9:22 · "On ChatGPT, pick Medium or High."** `fri-61-where-to-click`
+**B61 · ¶33 · 9:14 · "On ChatGPT, pick Medium or High."** `fri-61-where-to-click`
 - Point: exactly where to click.
 - Screen: FULL. Krish's ChatGPT picker with Medium and High ringed in mint;
   then Claude's effort menu, the ring on the upper levels; then Gemini's
@@ -1120,63 +1173,72 @@ and turn mint).
   help.openai.com/en/articles/20001354, support.claude.com/en/articles/8664678,
   support.google.com/gemini/answer/17004136. LOGO OpenAI, Anthropic, Google.
 
-**B62 · ¶34 · 9:32 · "It takes longer, sometimes minutes."**
-- Point: slower, and worth it for the questions that matter.
-- Screen: FACE. [B] Dash HIGH in mint. PUNCH on "it's worth it."
-- Text: none.
-- Move: hold.
-- Source: none.
+**B62 · ¶33 · 9:24 · "It takes longer, sometimes minutes, and uses up your plan's limit faster."** `fri-62-your-limit`
+- Point: the cost to you: slower, and it uses up your plan's limit faster;
+  worth it for the questions that matter.
+- Screen: FACE. [B] Dash HIGH in mint. On "uses up your plan's limit
+  faster" a small fuel gauge, the one from B33a, sits beside the corner and
+  drops a notch: here the fuel is your plan's limit. PUNCH on "it's worth
+  it."
+- Text: "Uses up your limit faster"
+- Move: the gauge drops on "your plan's limit"; hold.
+- Source: DRAWN (the gauge from B33a). The fact is on
+  support.claude.com/en/articles/8664678 ("you'll reach your usage limits
+  faster"), not shown.
 
-**B63 · ¶35 · 9:38 · "Formula 1 found a better way decades ago, called a semi-automatic."** `fri-63-paddles` (strongest moment 5)
-- Point: F1's better way is the semi-automatic: the driver picks every gear
-  with a paddle; a computer does the fiddly part.
-- Screen: FULL. A real photograph of an F1 steering wheel with its paddles
-  (act 3), landing on "called a semi-automatic", the third transmission named
-  as he names it. On "a paddle behind the steering wheel", a close-up of a
-  paddle and the paddle flick: a licensed clip of a driver's hand if one is
-  bought, otherwise a drawn paddle animated over the still. On "A computer
-  does the fiddly part" small drawn gears turn behind the wheel.
-- Text: "Formula 1: a semi-automatic", then "Drivers change gear with a
-  paddle".
+**B63 · ¶34 · 9:32 · "Formula 1 found a better way decades ago, called a semi-automatic."** `fri-63-paddles` (strongest moment 6)
+- Point: F1's better way is the semi-automatic: the driver picks each gear
+  by flicking a paddle; a computer does the rest.
+- Screen: FULL. An F1 steering wheel with its paddles (act 3), landing on
+  "called a semi-automatic", the third transmission named as he names it.
+  On "flicking a paddle behind the steering wheel", a close-up of a paddle
+  and the paddle flick: a drawn paddle animated over the still (or a cleared
+  clip of a driver's hand, only if one exists with no team, sponsor or F1
+  mark readable). On "A computer does the rest." small drawn gears turn
+  behind the wheel.
+- Text: "Formula 1: a semi-automatic", then "The driver picks each gear".
 - Move: [A] clack on each flick.
-- Source: PHOTO F1 wheel; optional licensed clip; DRAWN overlay.
+- Source: the F1 wheel a cleared PHOTO (public domain, CC0, Pexels or
+  Unsplash) with no team, sponsor or F1 mark readable, else DRAWN; the
+  paddle flick DRAWN over it; never broadcast footage.
 
-**B64 · ¶35 · 9:50 · "Software that changes gear by itself was tried,"** `fri-64-banned`
+**B64 · ¶34 · 9:44 · "Software that changes gear by itself was tried,"** `fri-64-banned`
 - Point: gearboxes that changed by themselves were banned; the driver still
   picks every gear.
 - Screen: FULL. A coral stamp, "Banned since 2004", lands on a drawn
-  self-shifting box; back to the wheel photo on "The driver still picks every
+  self-shifting box; back to the wheel on "The driver still picks every
   gear."
 - Text: "Banned since 2004"
 - Move: the stamp lands on "banned".
 - Source: DRAWN. The fact is from Raceteq, filed on the piece.
 
-**B65 · ¶35 · 9:58 · "Let the AI pick our gear, if it must."** `fri-65-gear-under-answer` (strongest moment 5)
+**B65 · ¶34 · 9:52 · "Let the AI pick our gear, if it must."** `fri-65-gear-under-answer` (strongest moment 6)
 - Point: Krish's ask: let it pick, give us paddles, and show which gear it
   picked under every answer.
 - Screen: FULL. A house-drawn mock, labelled "What I'm asking for": a plain
   answer box with a paddle on each side. On "so we can take over" a paddle
   flicks. On "And show us which gear it picked, under every answer." the dash
-  that has sat in the corner since B27 slides down and docks under the
+  that has sat in the corner since B25 slides down and docks under the
   answer as a line: "Answered in: HIGH".
 - Text: "Which gear, under every answer"
 - Move: the dock is the payoff of treatment B. Hold 3 seconds.
 - Source: DRAWN. Not ChatGPT's, Claude's or Gemini's screen.
 
-**B66 · ¶36 · 10:09 · "We've just spent time learning to drive a car with a manual transmission."** `fri-66-three-gearboxes`
+**B66 · ¶35 · 10:03 · "We've just spent time learning to drive a car with a manual transmission."** `fri-66-three-gearboxes`
 - Point: the whole arc: a manual transmission now, an automatic next,
   paddles for those who care.
-- Screen: FULL. The three transmissions side by side, as real photographs
-  (the H-pattern stick with its clutch pedal from B29, the P R N D selector,
-  the F1 wheel), each lighting on its line: the manual on "learning to drive
-  a car with a manual transmission", the automatic on "going automatic next",
-  the F1 wheel on "keeps the paddles", and the manual again, a hand on the
+- Screen: FULL. The three transmissions side by side, as used before (the
+  H-pattern stick with its clutch pedal from B26, the P R N D selector from
+  B40, the F1 wheel from B63), each lighting on its line: the manual on
+  "learning to drive a car with a manual transmission", the automatic on
+  "going automatic next", the F1 wheel on "an F1 car still keeps the
+  paddles", and the manual again, a hand on the
   stick and a foot on the clutch, on "still choose a manual transmission".
 - Text: one word under each panel: "Manual", "Automatic", "Semi-automatic".
 - Move: each panel lights on its line.
-- Source: PHOTO (reused).
+- Source: the three transmissions (reused).
 
-**B67 · ¶36 · 10:28 · "For anything that matters, I'll be one of them."**
+**B67 · ¶35 · 10:23 · "For anything that matters, I'll be one of them."**
 - Point: where Krish stands.
 - Screen: FACE ALONE (rest). Hold, no punch: let it land. The music lifts a
   touch after the line.
@@ -1184,26 +1246,26 @@ and turn mint).
 - Move: hold.
 - Source: none.
 
-**B68 · ¶37 · 10:32 · "Here's my bet."** `fri-68-the-call`
+**B68 · ¶36 · 10:26 · "Here's my bet."** `fri-68-the-call`
 - Point: the dated call, and how sure he is.
 - Screen: FACE, PUNCH on "Here's my bet." Then CARD, mint: "June 2027: free
   users automatic again", with [B] the dash on AUTO and the OpenAI logo. On "drive
-  the car in auto mode" the automatic selector photo in D. On "I'm 85% sure"
+  the car in auto mode" the automatic selector in D. On "I'm 85% sure"
   the rev needle settles at 85% [C] (without C: the house call meter).
 - Text: "June 2027: free users automatic again", then "85% sure".
 - Move: the needle settles on "85%".
-- Source: DRAWN, PHOTO (reused), LOGO OpenAI.
+- Source: DRAWN, the selector (reused), LOGO OpenAI.
 
-**B69 · ¶37 · 10:48 · "Paid users will start in automatic too."** `fri-69-semi-automatic`
+**B69 · ¶36 · 10:42 · "Paid users will start in automatic too."** `fri-69-semi-automatic`
 - Point: paid users go automatic too, but with a semi-automatic setting.
 - Screen: FACE (opinion) through "help the AI company control its costs." Then the
-  F1 wheel photo for "But paid plans will have a semi-automatic setting",
+  F1 wheel for "But paid plans will have a semi-automatic setting",
   with one last paddle flick.
 - Text: none.
 - Move: [A] clack on the last flick.
-- Source: PHOTO (reused).
+- Source: the F1 wheel (reused).
 
-**B70 · ¶38 · 11:02 · "That's it for this week's mind.the.gap."** `fri-70-sign-off`
+**B70 · ¶37 · 10:57 · "That's it for this week's mind.the.gap."** `fri-70-sign-off`
 - Point: the full article, send it on, tell him in the comments.
 - Screen: FACE ALONE (rest). Lower third "makeyourmindup.ai" on "free at
   makeyourmindup.ai". On "do you pick the gear, or leave it?" [B] the dash
@@ -1213,151 +1275,196 @@ and turn mint).
 - Move: into the outro.
 - Source: DRAWN, the house outro.
 
-## The five strongest moments
+## The six strongest moments
 
 Spend most of the post-production effort here, in this order.
 
-1. **"Think of a car. Here's what stands for what." (B23 to B29c, about
-   3:38 to 4:27): the car key, one pairing at a time.** The whole film rests
-   on this. Real logos and real cars make the analogy concrete for someone
-   who has never thought about either: OpenAI and Anthropic beside BMW and
-   Audi, ChatGPT and Claude beside an X3 and a Q5, a drawn Opus 5.5 badge
-   beside the Q5's real badge on its back, and Krish's own settings menu
-   beside a real gearstick, each pairing named in a few words and kept on
-   screen in the key. If the viewer gets "the version is the badge, the
+1. **"Think of a car." (B23 to B29a, about 3:38 to 4:16): the car key, one
+   pairing at a time, in Krish's own words.** The whole film rests on this.
+   A car's front badge beside the drawn Opus 5.5 badge, Krish's own settings
+   menu beside a gearstick, and the ChatGPT and Claude marks beside a manual
+   gearstick and clutch make the analogy concrete for someone who has never
+   thought about either, each pairing named in a few words and kept on
+   screen in the key. If the viewer gets "the model's name is the badge, the
    thinking is the gear" here, every later gear line lands without
-   explanation. Then one car crawling in first and flying in top gear above
-   the AI's lowest and top gears, the manual transmission with its clutch,
-   and the X3 and Q5 sliding apart to the gearbox cutaway make the claim
-   plain, and the little car crawling the motorway in first makes it funny.
-   The press photographs and the footage are the biggest sourcing job in the
-   film (long video only): start them first.
-2. **"So how big is the difference in going up a gear?" (B30, about 4:27):
-   the rev counter.** The only hard proof of the main claim, in three
-   numbers. The needle sweep from 42 to 58 is the biggest movement in the
-   film, and the two arrows (gear 42 to 58, badge 51 to 58) make "changing
-   gear beat a new badge" readable in one look.
-3. **"Think what each part of the car is worth" (B45 to B50, about 7:04 to
-   7:44): the X-ray car.** The motive, and the most surprising evidence: the
+   explanation. Then the notebook filling as the stick goes up, the X3 and
+   Q5 with their badges ringed sliding apart to the gearbox cutaway make the
+   claim plain, and the little car crawling the motorway in first makes it
+   funny. Clearing the car pictures is the biggest sourcing job in the film
+   (long video only): search the cleared libraries first, and draw whatever
+   does not clear, with the car named in text.
+2. **"So how big is the difference in going up a gear?" (B30 and B30a, about
+   4:16 to 4:45): the rev counter, then Haiku passing Opus 5.5.** The only
+   hard proof of the main claim, in three numbers. The needle sweep from 42
+   to 58 is the biggest movement in the film, and the two arrows (gear 42 to
+   58, badge 51 to 58) make "changing gear beat a new badge" readable in one
+   look. The small Haiku in top gear edging past the big Opus 5.5 stuck in
+   first then says it again with no numbers at all, and makes it funny.
+3. **"If Opus 5.5 thinks as hard as it can" (B33 to B33b, about 5:06 to
+   5:23): the fuel gauge against the speedometer.** Krish's ask: "and
+   visualize this problem really well in post". The cost problem in one
+   look: the same car on the same trip, a tank emptying about eleven times
+   faster beside a needle that climbs only about a third further. Both dials
+   are drawn to the true ratios, so the picture is the proof. It is drawn,
+   so it is cheap to build and raises no licensing question, but the timing
+   must be exact: the fuel falls on "eleven times", the speed stops on "a
+   third", and the pair holds long enough to read.
+4. **"Think what each part of the car is worth" (B45 to B50, about 6:57 to
+   7:37): the X-ray car.** The motive, and the most surprising evidence: the
    headline scores are top gear while the app starts lower. "The badge
    brings attention" and "The gears decide the bill" on one car, after a
    2-second return of the car key, then their logos reaching for the gear
    knob, land the thesis of the piece.
-4. **"This January, OpenAI made ChatGPT think for less time." (B56, about
-   8:32): the silent downshift.** After about 20 gear changes with a sound,
+5. **"This January, OpenAI made ChatGPT think for less time." (B56, about
+   8:24): the silent downshift.** After about 20 gear changes with a sound,
    this one has none, and the label never moves. "You can't see it" is felt
    rather than told. Cheap to build, but it needs exact timing and a sound
    pass. It is strongest with treatment A; without A, the music dip and the
    held label still carry it.
-5. **"Formula 1 found a better way decades ago, called a semi-automatic."
-   (B63 to B65, about 9:38 to 10:09): the paddles, and the dash docking under
+6. **"Formula 1 found a better way decades ago, called a semi-automatic."
+   (B63 to B65, about 9:32 to 10:03): the paddles, and the dash docking under
    the answer.** The payoff of the whole system: the corner readout viewers
-   have watched since 3:53 turns out to be the thing Krish is asking for. The
-   F1 wheel is also the most exciting photograph in the film, so buy the best
-   one available.
+   have watched since 3:46 turns out to be the thing Krish is asking for. The
+   F1 wheel is also the most exciting picture in the film: find the best
+   cleared photograph with no team, sponsor or F1 mark readable, or draw it
+   well.
 
-Sally is the sixth thing to spend on, built once as a set and reused six
+Sally is the seventh thing to spend on, built once as a set and reused six
 times.
 
 ## Sourcing: the shopping list
 
+Krish, 16 October: "we need to avoid licensing risks but be clear". So every
+picture in this film is one of five things: a cleared photograph or clip, an
+official logo file, a screenshot of a public page, a capture of Krish's own
+app, or a house-style drawing. Nothing else goes on screen.
+
 **Long video only.** Krish, 16 October: "only in the long video though".
 Everything under "Car logos and car pictures" below (the BMW and Audi logos,
-the ChatGPT and Claude marks as used beside the cars, the X3 and Q5
-photographs, the Q5's rear badge and the driving footage) goes into the long
-video and nowhere else. The 90-second video keeps its own pictures and
-carries no car logos or car photographs: none of these files is cued in its
-edit, packed with it or declared on it.
+the ChatGPT and Claude marks as used beside the cars, and the X3 and Q5
+pictures, the Q5's front badge among them) goes into the long video and
+nowhere else. The 90-second video keeps its own pictures and carries no car
+logos or car photographs: none of these files is cued in its edit, packed
+with it or declared on it.
+
+### The clearance rule (every photograph and clip)
+
+- **Cleared** means a licence that clearly allows commercial use in a
+  monetised video, and nothing else: public domain, CC0, the Pexels licence
+  or the Unsplash licence. Pexels: "All photos and videos on Pexels are free
+  to use" and "Attribution is not required" (pexels.com/license, read 16
+  October 2026). Unsplash: free to use "for commercial and noncommercial
+  purposes" with "No permission needed" (unsplash.com/license, read 16
+  October 2026). Only the free Unsplash licence counts: Unsplash+ images
+  sit in the same search under a different licence, so skip them.
+- **Not cleared**, so not used: press-site photographs and footage (BMW
+  Group PressClub, Audi MediaCenter) unless written permission for this
+  video is on file; anything marked "editorial use only"; Creative Commons
+  licences with NC, ND or SA terms; anything on Wikimedia Commons not marked
+  public domain or CC0; broadcast footage. Audi says its MediaCenter content
+  is "freely accessible and free of charge for press purposes and personal
+  use" (audi.com/en/service-2305, read 16 October 2026) and "generally
+  license-free for editorial and private purposes" (audi.com/en/help-faq-3696);
+  BMW Group PressClub offers its material to the press. Neither clearly
+  covers a monetised video, so neither is used without that written
+  permission.
+- **What a free licence does not cover.** Pexels and Unsplash license the
+  photograph, not the brand in it. Pexels says so plainly: "Don't imply
+  endorsement of your product by people or brands on the imagery." So a car
+  in a cleared photograph is there only to show which car the script names,
+  never as an endorsement, and the description carries the line below.
+- **Where nothing clears**, the picture is drawn in the house style, and a
+  car is named in text beside it ("BMW X3"). A drawing is a plain car of
+  that shape, not a tracing of the real one, and never carries a logo.
+- **Record for each**, in the post's evidence the way `pileup` records its
+  pages: the library or archive, the image or clip id and URL, the
+  photographer or creator, the licence as named on the page, the date read
+  and downloaded, and the file's sha256. Credit the photographer in the
+  description where the licence asks (none of the four requires it; it is
+  appreciated).
+- Real photographs and footage only: never AI-generated, never a computer
+  render passed off as a photograph, and never edited (no badge swapped, no
+  plate blurred: choose or crop frames in which no number plate or
+  speedometer figure is readable).
+
+**For the long video's description**, word for word:
+
+> Car brand names and logos are used only to explain an analogy. This video is not affiliated with or endorsed by BMW, Audi or any carmaker.
 
 ### Car logos and car pictures (long video only)
 
-**Logos.** The same route as every logo this repo already shows: Brandfetch,
-by the company's domain, as `config/logo-registry.json` names each company's
-domain, and as this folder's `logos/` already holds OpenAI's, Anthropic's
-and Google's (and Wednesday's folder, `2026-10-14-wednesday/logos/`, holds
-the logos fetched from Brandfetch for that piece). Save each as SVG beside
-them, so the renderer and the cover drawer read it from this plan folder.
+**Logos.** Official files only, by the house route: Brandfetch, by the
+company's domain, as `config/logo-registry.json` names each company's domain,
+and as this folder's `logos/` already holds OpenAI's, Anthropic's and
+Google's (and Wednesday's folder, `2026-10-14-wednesday/logos/`, holds the
+logos fetched from Brandfetch for that piece). Save each as SVG beside them,
+so the renderer and the cover drawer read it from this plan folder.
 
 | Logo | Brandfetch domain | File to save | Used at |
 |---|---|---|---|
-| BMW, the roundel | bmw.com (Brandfetch serves its logo as SVG; looked up 16 October) | `logos/bmw.svg` | B24, the key, B45 |
-| Audi, the four rings | audi.com (a verified listing; looked up 16 October) | `logos/audi.svg` | B24, the key, B45 |
-| ChatGPT, the app mark | chatgpt.com (a verified listing) | `logos/chatgpt-mark.svg` | B25, B29a, the key |
-| Claude, the app mark | claude.ai (a verified listing) | `logos/claude-mark.svg` | B25, B29a, the key |
+| BMW, the roundel | bmw.com (Brandfetch serves its logo as SVG; looked up 16 October) | `logos/bmw.svg` | B28, B29 |
+| Audi, the four rings | audi.com (a verified listing; looked up 16 October) | `logos/audi.svg` | B28, B29 |
+| ChatGPT, the app mark | chatgpt.com (a verified listing) | `logos/chatgpt-mark.svg` | B26, the key |
+| Claude, the app mark | claude.ai (a verified listing) | `logos/claude-mark.svg` | B26, the key |
 
 - Use each maker's own file as it comes: its own colours, or the light
   version the maker made for dark backgrounds where Brandfetch serves one.
   Where a full-colour logo would not read on the ink (the BMW roundel's black
   ring), set it whole on a plain cream plate; the plate is a background and
-  the logo is untouched. Never redraw, trace, recolour (not even to the house
-  cream), crop into a new shape, add an effect to, or combine a logo with
-  another mark. In every "=" pairing the two logos stand apart, each with its
-  own clear space.
+  the logo is untouched. Never redraw, trace, alter, recolour (not even to
+  the house cream), crop into a new shape, add an effect to, or combine a
+  logo with another mark. Where two logos share a frame they stand apart,
+  each with its own clear space.
+- Used only to say whose car or app is on screen: never as decoration,
+  never on a drawn car, never on the thumbnail, the cover or a card outside
+  the long video's edit.
 - Record for each logo: the Brandfetch domain, the file's URL as served, the
   date fetched and its sha256. If the session cannot reach
   `*.brandfetch.io`, the Brandfetch connector's `bf://asset/<domain>/logo`
   resource gives the same bytes.
 - **The visual gate.** BMW and Audi are not companies in
-  `config/logo-registry.json`, and must not be added there as subjects as
-  things stand: the gate would then demand their logos on every packed
-  video, the 90-second one included, against "only in the long video
-  though". Declare BMW and Audi in the long video's `"logos"` list in
-  `post.json` only (the list of what its edit put on screen); the 90-second
-  video's list never names them. If a gate check on them is wanted later,
-  the registry first needs a long-video-only mark, which is an engine change,
-  not made here. ChatGPT and Claude already count as OpenAI and Anthropic in
-  the registry.
+  `config/logo-registry.json`, and must not be added there as things stand:
+  the gate would then demand their logos on every packed video, the
+  90-second one included, against "only in the long video though". Declare
+  BMW and Audi in the long video's `"logos"` list in `post.json` only (the
+  list of what its edit put on screen); the 90-second video's list never
+  names them. If a gate check on them is wanted later, the registry first
+  needs a long-video-only mark, which is an engine change, not made here.
+  ChatGPT and Claude already count as OpenAI and Anthropic in the registry.
 
-**Car photographs and footage.** Real photographs and real footage only:
-never AI-generated, never a computer render passed off as a photograph (press
-galleries sometimes include renders; skip any image that is not a
-photograph), and never edited (no badge swapped, no plate blurred: choose or
-crop frames in which no number plate or speedometer figure is readable).
+**Car pictures.** Cleared photographs where they exist; otherwise drawn,
+with the car named in text. No press-site photographs.
 
-| Picture | Row | Where from |
+| Picture | Row | Search for | If none clears |
+|---|---|---|---|
+| Audi Q5, close on the badge on its grille | B24 | "Audi Q5 front grille" | a plain drawn car front, its badge plate lit, no logo, no make named |
+| BMW X3, straight-on front, its badge readable | B28, B29 | "BMW X3 front" | a drawn plain car of that shape, "BMW X3" in text |
+| Audi Q5, straight-on front, matched to the X3 | B28, B29 | "Audi Q5 front" | a drawn plain car of that shape, "Audi Q5" in text |
+
+Search Pexels and Unsplash first, then Wikimedia Commons filtered to public
+domain and CC0. A car in a cleared photograph must be the model named
+(check the badge or the photographer's caption), and no person in frame may
+be identifiable.
+
+### Car parts and other photographs (cleared or drawn)
+
+Generic car parts need no brand. Each is a cleared photograph that shows no
+carmaker's, team's or sponsor's mark (see "Three transmissions"), recorded as
+above, or else drawn.
+
+| Picture | Row | Search for |
 |---|---|---|
-| BMW X3, three-quarter front, the whole car, the roundel visible | B25 | BMW Group PressClub (press.bmwgroup.com), the current X3's photo gallery |
-| BMW X3, straight-on front | B29a, B29b | the same gallery |
-| Audi Q5, three-quarter front, at the X3's angle | B25 | Audi MediaCenter (audi-mediacenter.com), the current Q5's gallery |
-| Audi Q5, straight-on front, matched to the X3 | B29a, B29b | the same gallery |
-| Audi Q5, rear detail: the badge on its tailgate | B26 | the same gallery |
-| One real car crawling through town, then the same car at speed on an open road | B28 | the makers' own press footage first (both press sites carry video); otherwise a licensed stock clip (Getty Images, Shutterstock or Pond5) with one car in both; otherwise two real photographs with real motion blur |
+| Manual gearstick, H pattern, numbers readable on the knob; with and without a hand on it; in a low gear and in a high gear (B27's two cells) | B25 to B27, B43, B49, B50, B60, B66 | "manual gear stick H pattern knob close up", "hand on manual gear shift" |
+| The three pedals of a manual car, the clutch on the left; a foot on the clutch | B26, B66 | "manual car pedals clutch", "foot on clutch pedal" |
+| Automatic selector, P R N D readable, close up, in D | B40, B50, B54, B66, B68 | "automatic gear selector PRND close up" |
+| F1 steering wheel with its paddles clearly visible, and a close-up from behind of one paddle | B63, B64, B66, B69 | "Formula 1 steering wheel paddle shifters", "racing steering wheel paddles" |
+| Optional: a clip of a hand flicking a paddle | B63 | "paddle shift close up" (Pexels videos); never broadcast footage |
+| Gearbox cutaway | B29 | "gearbox cutaway", "transmission cutaway" (Wikimedia Commons, public domain or CC0 only) |
+| Data centre aisle, no company's name or logo in frame | B33 | "data centre server racks aisle" |
 
-Terms, recorded per image. Audi says its MediaCenter content is "freely
-accessible and free of charge for press purposes and personal use"
-(audi.com/en/service-2305, read 16 October 2026), and its help page says
-downloadable material is "generally license-free for editorial and private
-purposes" (audi.com/en/help-faq-3696). BMW Group PressClub says it provides
-its material, photos, video and TV footage among it, to the press free of
-charge; its terms sit on each image's page and in the site's legal notices,
-to be read and recorded at download. Neither says plainly whether a monetised
-YouTube video counts as press or editorial use, so ask both press offices in
-writing before the edit (BMW: support.pressclub@bmwgroup.com, as the
-PressClub lists it; Audi: the MediaCenter's contact page) and file the
-answers with the images. If either says no, or has not answered when the
-edit starts, buy the same kind of shot (the same model, the same angle) from
-Getty Images editorial or Alamy, with a licence that covers a monetised
-online video, and record that licence instead. For every image record the
-gallery or library, the image id and URL, the photographer or credit line,
-the date downloaded and the terms. Credit in the YouTube description wherever
-the terms ask.
-
-### Other licensed photographs
-
-Record for each: where it came from, the photographer, the licence and its
-terms, in the post's evidence the way `pileup` records its pages. Credit in
-the YouTube description wherever the licence asks. None of these shows a
-carmaker's logo (see "Three transmissions").
-
-| Picture | Search for | Where |
-|---|---|---|
-| Manual gearstick, H pattern, numbers readable on the knob; with and without a hand on it; two angles, one in first gear and one in top gear (B28's insets) | "manual gear stick H pattern knob close up", "hand on manual gear shift" | Unsplash or Pexels (free licences that allow this use), or Adobe Stock, Getty Images or Shutterstock |
-| The three pedals of a manual car, the clutch on the left; a foot on the clutch | "manual car pedals clutch", "foot on clutch pedal" | as above |
-| Automatic selector, P R N D readable, close up, in D | "automatic gear selector PRND close up" | as above |
-| F1 steering wheel with its paddles clearly visible, and a close-up from behind of one paddle | "Formula 1 steering wheel paddle shifters" | Motorsport Images or Getty Images editorial (confirm the licence covers a monetised YouTube video before buying), or Wikimedia Commons (CC BY or CC BY-SA, credit as asked). Avoid sponsor logos filling the frame; no F1 logo as a graphic |
-| Optional: a clip of a driver's hand flicking a paddle | "F1 driver paddle shift onboard" | an editorial video licence only; never broadcast footage without Formula One Management's licence |
-| Gearbox cutaway | "gearbox cutaway museum", "transmission cutaway" | Wikimedia Commons or stock |
-| Data centre aisle | "data centre server racks aisle" | Unsplash, Pexels or stock |
+An F1 wheel almost always carries a team's or sponsor's marks, so expect to
+draw it unless a cleared photograph shows none readable; never an F1 logo as
+a graphic.
 
 ### Screenshots of named public pages
 
@@ -1387,21 +1494,25 @@ point, highlight in coral, never edit the page.
 ### Captures (Krish's own apps)
 
 The Claude effort menu open, ChatGPT's picker with its thinking levels, and
-Gemini's effort setting (B08, B21, B27, B61), recorded on his own accounts,
+Gemini's effort setting (B08, B21, B25, B61), recorded on his own accounts,
 with the date.
 
 ### Drawn in the house style
 
-The tailgate and badges (B04, B05, B09, B30), the drawn "Opus 5.5" badge
-with its "Illustration" label (B26), the car key (B23 to B28, B45), the
-three-question card (B06), the verdict chips (B10), the split-flap badge
-(B12), Sally's set (S1 to S6), the thinking notebook (B22, B28), the
-first-gear map (B29c), the rev counter (B30, B33, B68), the 2 + 3 stack
-(B31), the coin stacks (B33), the meter (B35, B36, B48), the X-ray car (B45
-to B48), the 100-dot grid (B52), the timeline stamps (B41), the statement
-card (B54), the silent dash (B56), the answer mock with paddles (B65), the
-banned stamp (B64), the call card (B68), the dash and the chapter cards
-throughout. No drawn car carries a maker's logo.
+The drawn car front and badges (B04, B05, B09, B30), the drawn "Opus 5.5"
+badge with its "Illustration" label (B24), the car key (B23 to B29, B45),
+the three-question card (B06), the verdict chips (B10), the split-flap badge
+(B12), Sally's set (S1 to S6), the thinking notebook (B22, B27), the
+first-gear map (B29a), the rev counter (B30, B68), the two cars on the road
+(B30a), the 2 + 3 stack (B31), the fuel gauge and speedometer dashboard
+(B33 to B33b, and its gauge again at B62), the meter (B35, B36, B48), the
+X-ray car (B45 to B48), the 100-dot grid (B52), the timeline stamps (B41),
+the statement card (B54), the silent dash (B56), the answer mock with
+paddles (B65), the banned stamp (B64), the call card (B68), the dash and the
+chapter cards throughout. And, wherever no cleared photograph exists, the
+fallbacks: the Q5's front (B24), the X3 and Q5 named in text (B28, B29),
+and any car part (the gearstick, clutch, selector, cutaway and F1 wheel). No
+drawn car carries a maker's logo.
 
 ### Logos
 
@@ -1417,11 +1528,13 @@ are declared on the long video alone.
 Only these, because the script says them: Opus 4.8, Opus 5, Opus 5.5, Opus
 5.56 (the joke, always with its "?"), GPT 5.1, GPT 6.1, May, July,
 September, November, March 2025, 1 million in one hour, $40 billion, 4
-seconds, 6 months later, 42, 58, 51, 2 + 3, 13 times, about 11x, January
-2025, $200 a month, 9 October, December, 2025, under 1 in 100, 7 in 100,
-2004, June 2027, 85%, and the model names X3 and Q5. The arrows in B30 use
-only 42, 51 and 58; no difference between them is printed. The dial has no
-numbers of its own. A screenshot keeps any figure its cropped sentence holds,
+seconds, 6 months later, 42, 58, 51, 2 + 3, 13 times, about 11x, about a
+third, January 2025, $200 plan, 9 October, December, 2025, under 1 in 100,
+7 in 100, 2004, June 2027, 85%, and the model names X3 and Q5. The arrows in
+B30 use only 42, 51 and 58; no difference between them is printed. The dials
+have no numbers of their own (the fuel gauge only its E and F); B30a and
+B33 to B33b show no scores or prices, though their drawings keep the true
+ratios. A screenshot keeps any figure its cropped sentence holds,
 and a photograph keeps what is on the thing itself (the lettering of the
 Q5's badge, the numbers on a gear knob), but no number plate or speedometer
 figure is in frame, and nothing points at a figure the script does not say.
@@ -1435,14 +1548,18 @@ figure is in frame, and nothing points at a figure the script does not say.
    ids before kit.py runs, or the story intro shows the old title and kit.py
    reports the new pictures as not cued.
 3. Krish records the three captures on his own accounts (B08, B61).
-4. Every photograph's licence and every screenshot's URL and date are
-   recorded before the pack is built.
-5. The car logos are fetched from Brandfetch into `logos/` and recorded, and
-   both press offices have answered on monetised video, or the library shots
-   are bought (see "Car logos and car pictures"). Long video only.
-6. After the edit, check the visual gate (BMW and Audi declared on the long
+4. Every photograph and clip is cleared (public domain, CC0, Pexels or
+   Unsplash) with its source and licence recorded, or the row uses its
+   drawing; no press-site picture is used unless written permission is on
+   file. Every screenshot's URL and date are recorded. All of it before the
+   pack is built (see "The clearance rule").
+5. The car logos are fetched from Brandfetch into `logos/` and recorded,
+   official and unaltered. Long video only.
+6. The long video's description carries the no-affiliation line, word for
+   word (under "The clearance rule"), with any photographer credits.
+7. After the edit, check the visual gate (BMW and Audi declared on the long
    video's `logos` alone), the kit's readable floor at 16:9, and every
    on-screen number against the list above.
-7. For the 90-second cut: build B30, B56 and B65 so their middle third also
+8. For the 90-second cut: build B30, B56 and B65 so their middle third also
    works at 9:16. None of them carries a car logo or a car photograph, and
    none may: Krish, 16 October, "only in the long video though".
