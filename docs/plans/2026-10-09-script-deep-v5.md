@@ -26,9 +26,7 @@ ChatGPT and Claude both let you choose how hard the AI thinks. For now.
 
 I looked up what thinking means. The AI writes out its working first. At most, you see a short summary of it. It breaks the question into steps. Then it checks its own answer. If the app lets it search the web, a higher setting usually means more searching.
 
-Think of a car. Here's what stands for what. OpenAI and Anthropic are the carmakers, like BMW and Audi. ChatGPT and Claude are the cars they make. The version, like Opus 5.5, is the badge on the back. And how hard it thinks is the gear. In first gear, a car crawls. In top gear, it reaches its top speed. In the AI's lowest gear, it barely thinks. In its top gear, it thinks hardest.
-
-Right now, these apps are like a car with a manual transmission. You change gear yourself. The novice argues about BMW's X3 versus Audi's Q5, but the pro is looking at the gearbox beneath. With AI, most of us drive everywhere in first gear.
+Think of a car. The name of the AI model is like the badge on the front of a car. The thinking setting is like the gears of the car. Right now, these apps are like a manual car, where you change gear yourself. In a low gear, it barely thinks. In a high gear, it thinks hardest. The novice argues about BMW's X3 versus Audi's Q5, but the pro is looking at the gear systems beneath. But with AI, most of us drive everywhere in first gear all the time, the lowest one.
 
 So how big is the difference in going up a gear? A group called Artificial Analysis ran the very same Claude, Opus 5.5, in different gears. In a low gear, it scored 42 on their test. In its top gear, 58. The older Opus 5, trying its hardest, only got 51. So changing gear beat getting a new badge. Even Anthropic's cheapest AI, Haiku, in its top gear, beat Opus 5.5 in its lowest.
 
@@ -68,8 +66,8 @@ For anything you'll act on, change the gear yourself. A deal you're signing. A h
 
 Formula 1 found a better way decades ago, called a semi-automatic. The driver picks each gear by flicking a paddle behind the steering wheel. A computer does the rest. Software that changes gear by itself was tried, but it's been banned since 2004. The driver still picks every gear. Let the AI pick our gear, if it must. But give us paddles, so we can take over. And show us which gear it picked, under every answer.
 
-We've just spent time learning to drive a car with a manual transmission. I think the car is going automatic next. For most people, that's easier. But Formula 1 still keeps the paddles in the driver's hands. And some people who love driving still choose a manual transmission. For anything that matters, I'll be one of them.
+We've just spent time learning to drive a car with a manual transmission. I think the car is going automatic next. For most people, that's easier. But an F1 car still keeps the paddles in the driver's hands. And some people who love driving still choose a manual transmission. For anything that matters, I'll be one of them.
 
 Here's my bet. By the end of June 2027, ChatGPT's free plan will start in automatic again. You'll be able to just drive the car in auto mode the whole time. I'm 85% sure, so pretty certain this will happen. Paid users will start in automatic too. Less transparent products always help the AI company control its costs. But paid plans will have a semi-automatic setting, like an F1 car, so those users can still take control.
 
-That's it for this week's mind.the.gap. The full article, with every source, is free at makeyourmindup.ai. Tell me in the comments: do you pick the gear, or leave it? Make your mind up.
+That's it for this week's mind.the.gap. The full article, with every source, is free at makeyourmindup.ai. If you know someone who trusts their AI with deals or money, send this to them. Tell me in the comments: do you pick the gear, or leave it? Make your mind up.
