@@ -680,8 +680,14 @@ bring takes back, was retired on 12 October.
   - The old first-version publish page (https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV, which
     Control Center still links as Friday's publish page) now carries a red "First version, replaced"
     banner with links to the boards; nothing else on it changed.
-  - Still running: the comparison of v1 to v4 against v5 and the split judges (workflow
-    wf_11a015df-fe3).
+  - The split call (workflow wf_11a015df-fe3; record in
+    `docs/plans/2026-10-09-friday/split-decision.md`): both judges, fresh and in opposite orders,
+    "one piece, cut", high confidence. Deep cut: three lines from his own saves back ("OpenAI had
+    been lining up that money for months.", "It took weeks to fix.", "And whatever does the deciding
+    has two jobs ..."), room made only from session-added lines; 1,699 words, ready. Boards RjLHJ
+    version 35 and H6qK version 11, same file (sha256 856564bd...). The article rewrite (about
+    2,000 words, professional, no analogies, the judges' article bring-backs and the checker's
+    article fixes) waits on his "cut it".
 
 - 2026-10-16, about 19:45 UTC: **Friday v5 is on both board links.** Krish sent a phone screenshot
   of the board at 20:36 his time: the 90-second box still showed his 17:16 UTC save (222 words, "scored
