@@ -649,6 +649,28 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 21:05 UTC: **Friday's two scripts are signed off and in Teleprompter.**
+  - Krish, in chat: "OK, signed off." It covers the 90-second cut
+    (`docs/plans/2026-10-09-script-90s-v5.md`, 190 words, about 87 s) and the deep cut
+    (`docs/plans/2026-10-09-script-deep-v5.md`, 1,700 words). `making.py scripts` took both;
+    `read-back long` and `read-back short` were recorded with his words ("Krish, 2026-10-16: OK,
+    signed off.").
+  - Teleprompter, folder "Fri 16 Oct mind.the.gap - Soon you won't pick your AI": the 90-second
+    script (1165370C) updated in place at 21:03:47Z, the long one (185F739E) at 21:04:20Z; the text
+    each returned matches the files. The long one is still titled "3-minute" but holds the deep cut
+    (renaming is his; no session calls `update_script` with a title). `teleprompter_send.py pending`:
+    every checked script this week and next is in Teleprompter with its current words.
+  - Boards: the first waiting call is now "Record both cuts from Teleprompter", with his three
+    point-ups in the 90-second cut. RjLHJ version 37 and H6qK version 13, same file (sha256
+    f5622a07...).
+  - Not done: copying Mon and Wed ticks onto the records. RjLHJ's store (read 16 Oct, no links
+    saved) has YouTube, Shorts, TikTok, Reels and LinkedIn ticked for both days; each record holds
+    only Substack. The `making.py --by "Claude Code" <piece> posted <channel>` writes were refused by
+    this session's permission check, so the next session copies them (Monday f328382d, Wednesday
+    7554ed4a; no URLs on the board). Mon's notes and WhatsApp read not done.
+  - Still waiting on Krish: "cut it" for the article; yes to filing the prepared sources; the paid
+    check; his opening line; the title; the Manifold market; whether the 85% covers paid plans too.
+
 - 2026-10-16, about 20:15 UTC: **Friday: no analogies in the pictures or the article; the scripts'
   checked facts fixed; both boards current.**
   - Krish, of a drawn car race for the 90-second cut: "I don't think the visuals should have
