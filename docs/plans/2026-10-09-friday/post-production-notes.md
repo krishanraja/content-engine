@@ -82,3 +82,11 @@ So no test score is said or shown anywhere. The scripts and the article say the 
 "The visual is going to need to be a lot sharper. The point is simplified, which is fine. Just make sure it is clearer and then let me know about the 90-second script. Now this is pretty much only going to be used for vertical video. Let me know if you need me to point up at any point. To get the user's attention I can point upwards at the visual but it is up to you. This actually is a good idea."
 
 The 90-second cut's pictures and his three point-ups are in `picture-plan-90s-v5.md`; the race picture for the test line is drawn in `video-pictures/`.
+
+## Krish, 16 Oct (no analogies in the pictures or the article)
+
+"I'm a little bit worried about the length of the article, particularly given that we're making so much effort to put impactful visuals in there. Do you think there's a way of cutting it down without losing narrative quality? Or, like I said earlier, do you think we do a part one and a part two?"
+
+"No that's car visual is not clear. The gear beat the new badge. I don't think the visuals should have analogies in them. The visuals should look like genuine reviews of the actual product, with statistics, rather than having analogies. The analogies should only be in my casual narrative explanation style. The article itself shouldn't have them as they shouldn't go 10 out of 10 on analogies. The article should remain slightly more professional. Only the script is what I wanted to experiment with in the casual Hannah Fry style."
+
+This replaces his earlier asks for car logos and car pictures in the long video, and for the article to carry the car analogy. House rule ANALOGY_IN_SCRIPTS_ONLY; the visual gate's REAL THINGS check. The 90-second picture plan is redone (`picture-plan-90s-v5.md`); the deep cut's is marked to be redone.
