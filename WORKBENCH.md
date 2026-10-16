@@ -684,8 +684,10 @@ bring takes back, was retired on 12 October.
     `docs/plans/2026-10-09-friday/split-decision.md`): both judges, fresh and in opposite orders,
     "one piece, cut", high confidence. Deep cut: three lines from his own saves back ("OpenAI had
     been lining up that money for months.", "It took weeks to fix.", "And whatever does the deciding
-    has two jobs ..."), room made only from session-added lines; 1,699 words, ready. Boards RjLHJ
-    version 35 and H6qK version 11, same file (sha256 856564bd...). The article rewrite (about
+    has two jobs ..."), room made only from session-added lines. Two fresh readers then retold it
+    correctly; the fairness line was made clear ("the new one's middle gear ... for much less
+    money"); what still trips them is mostly his own wording. 1,700 words, ready. Boards RjLHJ
+    version 36 and H6qK version 12, same file (sha256 d1c794a2...). The article rewrite (about
     2,000 words, professional, no analogies, the judges' article bring-backs and the checker's
     article fixes) waits on his "cut it".
 
