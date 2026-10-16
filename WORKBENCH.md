@@ -684,6 +684,16 @@ bring takes back, was retired on 12 October.
     the Opus 5.5 launch page, WIRED's router story, the 14 Sep release note, Altman's 8 and 10 Aug
     2025 posts and the effort docs' medium default. Do not file more until the guard is live, then
     refile those before the paid fact check.
+  - **The guard is built, on the branch (3f364cf), not yet merged or deployed.** `withMaterial`
+    (`_content.ts`) drops the oldest research, links and notes to make room, never a filed source,
+    and refuses a new one past 150; all three routes use it. `filedSourcesCut` (`_factGate.ts`)
+    names any filed source past the 120,000 characters the checkers read: the free pre-check lists
+    it (`precheck.filed_sources_cut`) and a paid run refuses with 409 `sources_cut` before any model
+    call. Tests in `tests/control-plane/materials-cap.test.ts`; registered as
+    `filed-source-dropped-past-40`. Full `npm run verify` steps pass (1,728 tests). Friday now holds
+    40 filed sources, about 38,000 characters, so the eight to refile should fit. Order once Krish
+    says go: merge, deploy, refile the eight, free pre-check (both lists empty), then his call on
+    the paid run.
   - **Board**: rebuilt with `--draft fri`, the v4 files as `--review` boxes and seven `--waiting`
     calls (outline and the 2,760-word length; paid fact check after the guard; script sign-off; his
     own two lines; title; Manifold market, still on the older call; edit treatments). Published to
