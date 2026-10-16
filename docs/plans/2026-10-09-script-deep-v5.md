@@ -28,19 +28,19 @@ I looked up what thinking means. The AI writes out its working first. At most, y
 
 Think of a car. Here's what stands for what. OpenAI and Anthropic are the carmakers, like BMW and Audi. ChatGPT and Claude are the cars they make. The version, like Opus 5.5, is the badge on the back. And how hard it thinks is the gear. In first gear, a car crawls. In top gear, it reaches its top speed. In the AI's lowest gear, it barely thinks. In its top gear, it thinks hardest.
 
-Right now, these apps are like a car with a manual transmission. You change gear yourself. The novice argues about BMW's X3 versus Audi's Q5, but the pro is looking at the gearbox beneath. With AI, most of us drive everywhere in first gear all the time.
+Right now, these apps are like a car with a manual transmission. You change gear yourself. The novice argues about BMW's X3 versus Audi's Q5, but the pro is looking at the gearbox beneath. With AI, most of us drive everywhere in first gear.
 
-So how big is the difference in going up a gear? A group called Artificial Analysis ran the very same Claude, Opus 5.5, in different gears. In a low gear, it scored 42 on their test. In its top gear, 58. The older Opus 5, trying its hardest, only got 51. So changing gear beat getting a new badge.
+So how big is the difference in going up a gear? A group called Artificial Analysis ran the very same Claude, Opus 5.5, in different gears. In a low gear, it scored 42 on their test. In its top gear, 58. The older Opus 5, trying its hardest, only got 51. So changing gear beat getting a new badge. Even Anthropic's cheapest AI, Haiku, in its top gear, beat Opus 5.5 in its lowest.
 
 But more thinking isn't always better. Researchers asked thinking AIs a simple question. What is two plus three? One of them worked out the answer thirteen times.
 
-So the thinking gear matters most on hard jobs, like Sally's deal. On easy questions, extra thinking is wasted money. But whose money is wasted?
+The thinking gear matters most on hard jobs, like Sally's deal. On easy questions, extra thinking is wasted money. But whose money is wasted?
 
-Every word of that hidden working runs on huge computers, and running them costs money. If Opus 5.5 thinks as hard as it can, it costs about eleven times as much as thinking a little.
+All that hidden working runs on huge computers, which cost money to run. If Opus 5.5 thinks as hard as it can, it costs about eleven times as much as thinking a little. But its score only goes up by about a third.
 
 Businesses that put AI inside their own apps pay for every word it writes. When they turn up the thinking, OpenAI and Anthropic earn more.
 
-But most of us pay the same amount every month, however much we use. Then OpenAI or Anthropic pays for every extra thought. In January 2025, Sam Altman said OpenAI was losing money on its most expensive plan. It cost two hundred dollars a month. People used it so much that running it cost more than they paid.
+But most of us pay the same amount every month, however much we use. Then OpenAI or Anthropic pays for every extra thought. In January 2025, Sam Altman said OpenAI was losing money on its two hundred dollar plan. People used it far more than OpenAI expected.
 
 That, I think, is why the app starts you in a low gear.
 
@@ -52,7 +52,7 @@ OpenAI has gone the other way, and taken ChatGPT's automatic gear picker away, t
 
 I don't think that lasts, and here's my guess why. Think what each part of the car is worth to OpenAI or Anthropic. The badge brings attention. So they make sure you watch the badge. Then you don't notice the gear. Even the scores Anthropic shows off for Opus 5.5 were in top gear. Out of the box, it starts in a lower gear. The gears decide the bill. On a monthly plan, every high gear costs them. They'd like their own hand on the gearstick, so they decide how much thinking each question gets. Most of us would rather not change gear at all. So I think the automatic wins.
 
-Is that good? Some of both. The good first. People don't change settings. Back in 2025, when ChatGPT's automatic gear picker first arrived, far more people ended up with careful, thinking answers. Before, fewer than one free user in a hundred used thinking each day. After, seven in a hundred did.
+Is that good? Some of both. People don't change settings. Back in 2025, when ChatGPT's automatic gear picker first arrived, far more people ended up with careful, thinking answers. Before, fewer than one free user in a hundred used thinking each day. After, seven in a hundred did.
 
 Anthropic learned this too. This March, it moved its coding app down to the middle gear. Most people kept it there, though it felt less smart. Anthropic later called that a mistake, and undid it. So whoever picks the starting gear decides how hard most people's AI thinks. An AI that picks for each question would at least think hard when it matters.
 
@@ -64,12 +64,12 @@ So what should you do?
 
 For quick, everyday stuff, a low gear is fine.
 
-For anything you'll act on, change the gear yourself. A deal you're signing. A health question. Money. A choice you can't take back. On ChatGPT, pick Medium or High. On the free plan, pick Think. On Claude and Gemini, the gear is called effort, so turn it up. It takes longer, sometimes minutes. For the questions that matter, it's worth it.
+For anything you'll act on, change the gear yourself. A deal you're signing. A health question. Money. A choice you can't take back. On ChatGPT, pick Medium or High. On the free plan, pick Think. On Claude and Gemini, the gear is called effort, so turn it up. It takes longer, sometimes minutes, and uses up your plan's limit faster. For the questions that matter, it's worth it.
 
-Formula 1 found a better way decades ago, called a semi-automatic. Drivers change gear with a paddle behind the steering wheel. A computer does the fiddly part of each change. Software that changes gear by itself was tried, but it's been banned since 2004. The driver still picks every gear. Let the AI pick our gear, if it must. But give us paddles, so we can take over. And show us which gear it picked, under every answer.
+Formula 1 found a better way decades ago, called a semi-automatic. The driver picks each gear by flicking a paddle behind the steering wheel. A computer does the rest. Software that changes gear by itself was tried, but it's been banned since 2004. The driver still picks every gear. Let the AI pick our gear, if it must. But give us paddles, so we can take over. And show us which gear it picked, under every answer.
 
 We've just spent time learning to drive a car with a manual transmission. I think the car is going automatic next. For most people, that's easier. But Formula 1 still keeps the paddles in the driver's hands. And some people who love driving still choose a manual transmission. For anything that matters, I'll be one of them.
 
 Here's my bet. By the end of June 2027, ChatGPT's free plan will start in automatic again. You'll be able to just drive the car in auto mode the whole time. I'm 85% sure, so pretty certain this will happen. Paid users will start in automatic too. Less transparent products always help the AI company control its costs. But paid plans will have a semi-automatic setting, like an F1 car, so those users can still take control.
 
-That's it for this week's mind.the.gap. The full article, with every source, is free at makeyourmindup.ai. Know someone who trusts their AI with money? Send them this. Tell me in the comments: do you pick the gear, or leave it? Make your mind up.
+That's it for this week's mind.the.gap. The full article, with every source, is free at makeyourmindup.ai. Tell me in the comments: do you pick the gear, or leave it? Make your mind up.
