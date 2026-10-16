@@ -76,3 +76,9 @@ On the board, of the 90-second script's "In a low gear, it scored 42 on their te
 Earlier the same day: "7-20 points of improvement is too complex"
 
 So no test score is said or shown anywhere. The scripts and the article say the results as plain comparisons (the newest Claude in low gear lost to the older Claude in top gear; "about a third higher"), and the picture plan shows them as a race on a drawn road (B30 to B30b) and a rev needle placed by the true scores with no number on it. House rule PLAIN_SCORES now holds every writer, judge and picture to it, and the script check refuses a script that says a bare score.
+
+## Krish, 16 Oct (the 90-second cut, vertical)
+
+"The visual is going to need to be a lot sharper. The point is simplified, which is fine. Just make sure it is clearer and then let me know about the 90-second script. Now this is pretty much only going to be used for vertical video. Let me know if you need me to point up at any point. To get the user's attention I can point upwards at the visual but it is up to you. This actually is a good idea."
+
+The 90-second cut's pictures and his three point-ups are in `picture-plan-90s-v5.md`; the race picture for the test line is drawn in `video-pictures/`.
