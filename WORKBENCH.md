@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-15, about 17:10 UTC, by a Claude Code session (cloud); both board links show Friday v3 in review with his calls (Latest handoff).
+Last updated: 2026-10-16, about 13:05 UTC, by a Claude Code session (cloud); Krish's question on the board answered, his yes awaited (Latest handoff).
 
 ## How Krish wants to be worked with
 
@@ -648,6 +648,19 @@ comes back: Teleprompter holds his scripts only, and Descript, which was to
 bring takes back, was retired on 12 October.
 
 ## Latest handoff
+
+- 2026-10-16, about 13:05 UTC: **Krish asked on the board what "thinking" means.** His comment on
+  the Article box (RjLHJ thread 1fc7967d, sent to Claude): "What does \"thinking\" even mean? Does it go
+  on more sites? Does it cross reference things more? Does it stop to verify? Or all of the above?"
+  Answered in the thread from the filed and read sources: it writes out its working (steps, other
+  approaches, checking itself; OpenAI's reasoning guide: "plan, use tools effectively, inspect
+  alternatives, recover from ambiguity"); it searches more only when the app gives it search
+  (Anthropic's effort guide: lower effort means "fewer and terser tool calls", xhigh recommended for
+  "detailed web search"); it checks against itself, not the world (2+3 study, inverse-scaling
+  study). Offered to add three or four plain sentences to the article's THE SWITCH THAT MATTERS and
+  a line to each script, after filing the two guides and rerunning the free checks. Waiting on his
+  yes in that thread; the thread stays open until then. Pages read on 15 Oct are in the session
+  scratchpad only (not filed yet): Anthropic effort and extended-thinking docs, OpenAI reasoning guide.
 
 - 2026-10-15, about 17:10 UTC: **Both board links now show Friday as it
   really is: v3 in review, with his calls.** Krish: "As long as both publish
