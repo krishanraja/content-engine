@@ -694,6 +694,26 @@ bring takes back, was retired on 12 October.
     40 filed sources, about 38,000 characters, so the eight to refile should fit. Order once Krish
     says go: merge, deploy, refile the eight, free pre-check (both lists empty), then his call on
     the paid run.
+  - **Merged and live, 16 Oct about 16:10 UTC, on Krish's "go, merge and deploy".** main
+    fast-forwarded 64dcb33..7c914fe; Vercel production `dpl_J9UsotKKF6qbu52fGWzzndHA9VaR` READY on
+    7c914fe (rollback target: `dpl_FYeDGcHndLgaEeaqPLoFjxQuxxij`, 64dcb33). main's CI run
+    38929388060 green on all five jobs. The live free pre-check on Friday returns
+    `filed_sources_cut: []` (the guard is serving) and `numbers_not_on_file` only "5.56".
+  - **Refiling is NOT done: the session's auto-mode safety check refused the filing** (writing
+    to the live engine counts as changing shared resources) and needs Krish's own yes for it.
+    Prepared and verified, ready to run in one go: `refile-plan.json` in the session scratchpad,
+    nine filings (the two lost at 14:50, restored from a 14:49 copy: OpenAI's release notes with
+    the 90-day line, GPT-5.1 and GPT-6.1 Sol, and Artificial Analysis's Haiku 5.5 page; plus
+    Anthropic's Opus 5.5 page, WIRED's 16 Dec 2025 router story, the 14 Sep 2026 release note,
+    Altman's posts of 8 and 10 Aug 2025, Introducing GPT-5's router lines, and the effort docs'
+    medium default). Each was found by one agent and re-run by a skeptic with `--dry-run`.
+    A coverage check of 409 factual sentences found 57 with no filed source; the nine cover most,
+    and about ten more (image making in March 2025, a dated $40 billion line, Amodei's September
+    date, the Claude app's effort setting, ChatGPT free's Think, "OpenAI didn't confirm it",
+    "sometimes minutes", Sonnet 5.5, GPT-6 in ChatGPT, shrinking steps) are being prepared the
+    same way. Filer quirk found: its keep rule `^(Title|Published( Time)?|Updated)\b` also keeps
+    body lines that start with "Updated", under the wrong dated heading (the release-notes filing
+    adds an anchored pattern so that line carries its real 21 Aug 2026 heading).
   - **Board**: rebuilt with `--draft fri`, the v4 files as `--review` boxes and seven `--waiting`
     calls (outline and the 2,760-word length; paid fact check after the guard; script sign-off; his
     own two lines; title; Manifold market, still on the older call; edit treatments). Published to
