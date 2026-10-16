@@ -53,3 +53,14 @@ this file):
 "The imagery that goes with the longer read out is going to have to be 10X better than any previous post production, as its such a long piece. Make sure the script is designed such that the imagery dovetails with it perfectly in post production for really powerful clear points landed"
 
 The deep cut v5 is written in beats, one point a paragraph, each with something concrete to show. The beat-by-beat plan, keyed to the exact words each beat starts on, is `picture-plan-deep-v5.md` beside this file.
+
+## Krish, 16 Oct (the car, spelled out)
+
+"just make sure the article matches the clarity of analogy - it's not just a manual, it's a manual transmission car etc. leave nothing to a users assumption or expertise - but we should be clear what we are equating the business name, LLM name, model name and thinking levels to here"
+
+"and then make sure the post production has the pics of car logos and cars in the videos etc, to really bring clarity to life"
+
+"only in the long video though"
+
+So, in the words: OpenAI and Anthropic are the carmakers (BMW, Audi); ChatGPT and Claude are the cars they make (an X3, a Q5); the version, like Opus 5.5, is the badge on the back; the thinking level is the gear, and the app's setting is the gearstick; today's apps are a manual transmission, Gemini's Auto an automatic transmission, F1's paddles a semi-automatic. In the pictures: real carmaker logos and real cars at each of those points, in the long video only. The 90-second video keeps its own pictures, with no car logos or car photographs.
+
