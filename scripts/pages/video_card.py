@@ -35,6 +35,14 @@ with logo paths relative to the JSON file, and each CARD one of:
              {"text": "Now they'll pay to be picked.", "tone": "answer"}],
    "note": "An assistant gives you one answer, not a list"}
 
+  {"file": "gemini-auto.png", "kind": "shot", "kicker": "Google Gemini help", "title": "Free Gemini now starts on Auto",
+   "image": "shots/gemini-auto.png", "source": "support.google.com, changes from 9 Oct 2026; captured 16 Oct 2026",
+   "logos": ["google-cream.svg"]}
+   (a real page, captured: never redrawn. Krish, 2026-10-16: "The visuals should look like genuine reviews
+   of the actual product". Optional "crop": [x, y, w, h] cuts it to the passage that matters so its words
+   read on a phone, and "mark": [x, y, w, h] rings the line he is talking about in mint; both in the
+   capture's own pixels. Its source and date sit under it.)
+
 tone: "plain" (cream), "dim" (muted), "answer" (mint: the answer, and only the answer), "moved" (the series accent).
 The card's subject ("highlight") is drawn in the series accent; mint is kept for the answer.
 """
@@ -107,6 +115,14 @@ tr.hi td { color: var(--accent); }
 .cn { font: 700 34px/1.15 'Archivo', sans-serif; }
 .cf { font: 500 22px/1.35 'IBM Plex Mono', monospace; color: var(--muted); }
 .logos img { height: 56px; width: auto; max-width: 260px; object-fit: contain; }
+body.shot { justify-content: flex-start; gap: 18px; padding: 64px 96px; }
+.shothead { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; }
+.shothead h1 { font-size: 64px; }
+.shothead .logos img { height: 48px; }
+.shotbox { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; background: #F6F4EE;
+           border: 2px solid var(--line); border-radius: 10px; overflow: hidden; padding: 18px; }
+.shotbox img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.src { font: 500 22px/1.2 'IBM Plex Mono', monospace; color: var(--muted); }
 """
 
 # Every visible element must sit inside the page box, and no text box may
@@ -147,8 +163,10 @@ def check_spec(spec):
         if not logos:
             fail(f'{name}: no company logo on it; every card shows the companies it is about (Krish, 2026-10-13: '
                  '"we\'ve not made any use of business logos as we\'re supposed to")')
-        if card.get('kind') not in ('bars', 'table', 'statement', 'columns'):
-            fail(f'{name}: kind must be bars, table, statement or columns')
+        if card.get('kind') not in ('bars', 'table', 'statement', 'columns', 'shot'):
+            fail(f'{name}: kind must be bars, table, statement, columns or shot')
+        if card['kind'] == 'shot' and not (card.get('image') and str(card.get('source') or '').strip()):
+            fail(f'{name}: a shot shows a real captured page ("image") and says where and when it is from ("source")')
         heading = card.get('title') or ' '.join(l.get('text', '') for l in card.get('lines', []))
         why = title_check.gate(heading, spec.get('_source'))
         if why:
@@ -156,6 +174,7 @@ def check_spec(spec):
 
 
 TRIMMED = {}  # logo path -> data URI of the SVG cut to its own artwork
+CARDS_DIR = Path('.')  # the cards file's folder: a shot's "image" is relative to it
 
 
 def trim_svg(pg, path):
@@ -180,6 +199,31 @@ def img(base, rel):
     if not path.exists():
         fail(f'logo not found: {path}')
     return f'<img src="{TRIMMED.get(path) or brand.data_uri(path)}" alt="{html.escape(path.stem)}">'
+
+
+def framed_shot(path, card):
+    """The captured page cut to the passage that matters ("crop": [x, y, w, h]
+    in the capture's pixels), so its words read on a phone, with the line he
+    is talking about ringed in mint ("mark": [x, y, w, h], same pixels). Only
+    the page's own pixels and the ring: nothing on the page is redrawn."""
+    if not card.get('crop') and not card.get('mark'):
+        return path
+    from PIL import Image, ImageDraw
+    im = Image.open(path).convert('RGB')
+    x0, y0 = 0, 0
+    if card.get('crop'):
+        x0, y0, w, h = (int(v) for v in card['crop'])
+        if x0 < 0 or y0 < 0 or x0 + w > im.width or y0 + h > im.height:
+            fail(f'{card["file"]}: "crop" {card["crop"]} runs outside the capture ({im.width} x {im.height})')
+        im = im.crop((x0, y0, x0 + w, y0 + h))
+    if card.get('mark'):
+        x, y, w, h = (int(v) for v in card['mark'])
+        pad, line = 10, max(4, im.width // 260)
+        ImageDraw.Draw(im).rounded_rectangle((x - x0 - pad, y - y0 - pad, x - x0 + w + pad, y - y0 + h + pad), radius=12,
+                                             outline=brand.house()['tokens']['mint'], width=line)
+    out = path.with_name(f'{path.stem}.{card["file"].rsplit(".", 1)[0]}.framed.png')
+    im.save(out)
+    return out
 
 
 def body_of(card, base):
@@ -212,6 +256,17 @@ def body_of(card, base):
             out.append(f'<tr{hi}><td class="who">{logos}{e(r["name"])}</td>'
                        + ''.join(f'<td>{v}</td>' for v in r['scores']) + f'<td class="t">{sum(r["scores"])}</td></tr>')
         out.append('</table>')
+    elif card['kind'] == 'shot':
+        # A real page, captured, shown whole: the heading and logos over it, its source and date under it.
+        shot = (CARDS_DIR / card['image']).resolve()  # relative to the cards file, like "source"
+        if not shot.exists():
+            fail(f'{card["file"]}: the captured page {card["image"]} is not there')
+        shot = framed_shot(shot, card)
+        out = [f'<div class="shothead"><div>{"".join(out)}<h1>{e(card["title"])}</h1></div>'
+               f'<div class="logos">{"".join(img(base, l) for l in card.get("logos", []))}</div></div>',
+               f'<div class="shotbox"><img src="{brand.data_uri(shot)}" alt="the page"></div>',
+               f'<div class="src">{e(card["source"])}</div>']
+        return ''.join(out)
     elif card['kind'] == 'columns':
         # Side-by-side groups (the three kinds of AI, which shops let an agent in): a mono label,
         # the companies' logos, the names, and one plain line under each. "hi" marks the one the card is about.
@@ -236,7 +291,7 @@ def page(card, base, accent):
     css = (CSS.replace('INKSOFT', t['ink_soft']).replace('INK', t['ink']).replace('CREAM', t['cream'])
            .replace('MINT', t['mint']).replace('ACCENT', accent))
     return (f'<!doctype html><html><head><meta charset="utf-8"><style>{brand.font_css()}{css}</style></head>'
-            f'<body>{body_of(card, base)}</body></html>')
+            f'<body{" class=shot" if card.get("kind") == "shot" else ""}>{body_of(card, base)}</body></html>')
 
 
 def main(argv=None):
@@ -246,6 +301,8 @@ def main(argv=None):
     ap.add_argument('--sheet', action='store_true', help='also write sheet.png, every card at a glance')
     a = ap.parse_args(argv)
     src = Path(a.cards).resolve()
+    global CARDS_DIR
+    CARDS_DIR = src.parent
     spec = json.loads(src.read_text(encoding='utf-8'))
     # "source": the piece's body and scripts (paths beside the cards file), so a card's names and numbers are the piece's.
     srcs = [src.parent / x for x in (spec.get('source') or [])]
