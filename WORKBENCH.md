@@ -649,6 +649,47 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 21:50 UTC: **Friday's scripts are Krish's own v6 edits, in Teleprompter as he
+  wrote them.**
+  - After the sign-off he re-edited both on the board (21:28 to 21:32 UTC; EDIT threads 974513e6,
+    7953818e, aef216ab, 1ee337c8, none sent to Claude, so they stay open), then: "edited the scripts
+    again, log what changed and reflect on why i changed them, and push these to releprompter" and
+    "just put them in teleprompter, and then if I go over 90sec, just speed the video up a bit in post".
+  - His words, unchanged: `docs/plans/2026-10-09-script-90s-v6.md` (274 words, about 1:50) and
+    `-script-deep-v6.md` (1,810 words, about 12:04; chapters `-v6.chapters.md`). Teleprompter updated
+    in place at 21:44 UTC (90-second 1165370C, 110 s; long 185F739E, 724 s); `making.py scripts`
+    took them with `--krish-words` (new: it waives only story-check findings on scripts he wrote,
+    never a missing one, and keeps every finding on the record), read-back approved by Krish on both,
+    `teleprompter_send.py record` for both, `pending` clean. The log of every change and the
+    reflection on why: `docs/plans/2026-10-09-friday/krish-edits-16-oct.md`.
+  - The gates his words fail, kept on the record: no series line in either, 90-second at 274 words
+    (he chose a speed-up in post, about 1.2x), deep cut 1,810 words, long sentences. "1st gear" was
+    wrongly called a bare score: fixed in `story_check.py` (an ordinal is a place), with a test.
+  - Pictures: `picture-plan-90s-v6.md` replaces v5; point-ups now on "The name of the model is like
+    the badge.", "In a tough reasoning test," and "ChatGPT will pick the gear". "Opus 5.5, Mercedes C
+    Class" is shown as the real Claude menu, never a car (ANALOGY_IN_SCRIPTS_ONLY). His speed-up
+    words are in `post-production-notes.md` for the edit.
+  - **Next week is now promised in the deep cut's close**: "next week's episodes where we deep dive
+    under the hood of the emerging AI products that are about to hit your phone and start taking a
+    lot more control of it". Sunday's plan-week must honour it (Wednesday 21 Oct under.the.hood is
+    seeded as the Muse follow-up, which fits), or tell him before he posts Friday.
+  - Boards: RjLHJ version 38 and H6qK version 14, same file (served sha256 6a4b90f0...); the first
+    call now says his own edits are in Teleprompter, with the new cues and the speed-up; a new call
+    asks whether dropping the series opener and "Make your mind up" is for good or just this piece.
+    Mon and Wed tabs byte for byte unchanged.
+  - The reflection (workflow wf_b7306cb6-595: four fresh readers, two lenses, a skeptic, a fact pass
+    on his new lines) is in the log. Readers all retold both cuts correctly. One fact for him before
+    it is said: "So why do these tools start you in 1st gear?" is true of ChatGPT (Instant) but not
+    Claude (Opus 5.5 starts on medium); "So why does ChatGPT start you in 1st gear?" is exact. Told
+    him in chat; his words stay as written unless he says. Worth a word at the fact check: "a tough
+    reasoning test", "all the choices will go away" against the 85% call, "Mercedes C Class" against
+    the article's mapping. His three new lines are in `config/golden-examples.json`.
+  - Asked him (chat and board): series line, his name and "Make your mind up" gone for good or this
+    piece only; speed-up in post as the plan from now on or this piece only; long cuts ending on next
+    week with no comments question. Until he answers, the rules stand, and no session puts the
+    series line back into these v6 scripts.
+  - Still not done: Mon and Wed channel ticks onto the records (the entry below).
+
 - 2026-10-16, about 21:05 UTC: **Friday's two scripts are signed off and in Teleprompter.**
   - Krish, in chat: "OK, signed off." It covers the 90-second cut
     (`docs/plans/2026-10-09-script-90s-v5.md`, 190 words, about 87 s) and the deep cut

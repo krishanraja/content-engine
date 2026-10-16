@@ -7,6 +7,30 @@
    "why": "Opens on what he has been doing with the thing, says plainly why it matters, and says what this video does for you. Said the way he talks.",
    "said": "The first line should be more like something like: ... Thats something I would actually say",
    "on": "2026-10-13"
+  },
+  {
+   "kind": "script-intro",
+   "text": "I've been using all the well-known AI apps every day for years now. And I don't know about you, but I feel like the amount of new releases of AI models is getting out of hand. Every launch is about a name. A new intelligence number, pegged to a new model number. Claude Opus 4.8. Then Opus 5. Now Opus 5.5. I kind of got lost and so I went down a rabbit hole to figure out where we've come from and where this is all heading.",
+   "why": "Opens on what he does every day, invites the viewer in with a feeling they may share (\"I don't know about you, but\"), and sets up the video as his own search (\"I kind of got lost ... went down a rabbit hole\") instead of a lesson. It replaced a drafted \"I've noticed something odd about how they're sold\"; his own \"Opus 5.56\" joke went too, probably because no source backs 5.56. Two fresh 12-year-old readers stumbled on \"pegged to\": keep the shape, use plainer words.",
+   "said": "He wrote it himself, on the board, after signing off the drafted version; then in chat: \"just put them in teleprompter\"",
+   "on": "2026-10-16",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "kind": "script-hook",
+   "text": "Something weird is happening with ChatGPT and Claude. I use AI apps daily, and I'm not sure if I'm the only one but it feels like there's a new model release EVERY DAY. So I investigated if it actually means anything, and what its pointing at.",
+   "why": "A 90-second vertical cut that opens on the two apps the viewer knows and a mystery, in his voice, then promises he looked into it. He put it in place of the series line and a drafted question (\"Does the name you pick change the answer you get?\"). Its first long sentence is 25 words: keep the hook, split the sentence.",
+   "said": "He wrote it himself, on the board, after signing off the drafted version; then in chat: \"just put them in teleprompter\"",
+   "on": "2026-10-16",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "kind": "script-close",
+   "text": "Tell me: do you prefer to control how your AI thinks, or are you going to outsource it?",
+   "why": "The comment question as a real choice about control, the piece's own question, in place of a drafted \"do you change gear?\" that only made sense inside the car comparison. Fresh 12-year-old readers did not know \"outsource\".",
+   "said": "He wrote it himself, on the board, after signing off the drafted version; then in chat: \"just put them in teleprompter\"",
+   "on": "2026-10-16",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
   }
  ]
 }
