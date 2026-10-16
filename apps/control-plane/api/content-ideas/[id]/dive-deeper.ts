@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
 import { supabase } from '../../_supabase.js'
-import { callClaude, readMaterials, robustJson, type Material } from '../../_content.js'
+import { callClaude, readMaterials, robustJson, withMaterial, type Material } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
 
 // POST /api/content-ideas/:id/dive-deeper
@@ -132,7 +132,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         bytes: findings.length,
         at: entry.at,
       }
-      materials = [material, ...materials].slice(0, 40)
+      materials = withMaterial(materials, material)
     }
 
     const { error: uErr } = await supabase

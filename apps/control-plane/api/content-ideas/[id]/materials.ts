@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { randomUUID } from 'node:crypto'
 import { supabase } from '../../_supabase.js'
-import { pathId, readMaterials, type Material } from '../../_content.js'
+import { MaterialsFull, pathId, readMaterials, withMaterial, type Material } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
 import { operatorAttribution } from '../../_editEvents.js'
 
@@ -67,7 +67,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       bytes: kind === 'link' ? url.length : content.length,
       at: new Date().toISOString(),
     }
-    const next = [material, ...materials].slice(0, 40)
+    let next: Material[]
+    try {
+      next = withMaterial(materials, material)
+    } catch (e) {
+      if (e instanceof MaterialsFull) return res.status(409).json({ ok: false, error: e.message })
+      throw e
+    }
     const { error: upErr } = await supabase.from('content_ideas')
       .update({ meta: { ...meta, materials: next }, updated_at: new Date().toISOString() })
       .eq('id', id)

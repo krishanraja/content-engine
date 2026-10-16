@@ -88,6 +88,36 @@ export function readMaterials(meta: any): Material[] {
   return m.filter((x: any) => x && typeof x === 'object')
 }
 
+/** How many materials a piece keeps before the oldest research, links and
+ *  notes make room. A filed source is never dropped to make room: until
+ *  2026-10-16 every route cut the list to the newest 40, so four filings on
+ *  Friday's piece pushed OpenAI's release notes and Artificial Analysis's
+ *  Haiku 5.5 page off without a word, and the fact gate lost the sources it
+ *  holds the piece to. */
+export const MAX_MATERIALS = 40
+
+/** The most filed sources one piece may hold; past it, filing another is
+ *  refused with a reason instead of dropping one. */
+export const MAX_FILED_SOURCES = 150
+
+/** Filing a source would take the piece past MAX_FILED_SOURCES. */
+export class MaterialsFull extends Error {}
+
+/** The materials with `material` added first (newest first, as stored). The
+ *  oldest materials that are not filed sources go until the piece is back to
+ *  MAX_MATERIALS; filed sources and the one just added always stay. Throws
+ *  MaterialsFull rather than drop a filed source. */
+export function withMaterial(materials: Material[], material: Material): Material[] {
+  const next = [material, ...materials]
+  if (isFiledSource(material) && next.filter(isFiledSource).length > MAX_FILED_SOURCES) {
+    throw new MaterialsFull(`This piece already holds ${MAX_FILED_SOURCES} filed sources. Remove one it no longer uses before filing another; none is dropped to make room.`)
+  }
+  for (let i = next.length - 1; next.length > MAX_MATERIALS && i > 0; i--) {
+    if (!isFiledSource(next[i])) next.splice(i, 1)
+  }
+  return next
+}
+
 /** Compact the corpus into a grounding block for the model.
  *
  *  Filed sources come first, each in full, up to FILED_SOURCES_BUDGET: they

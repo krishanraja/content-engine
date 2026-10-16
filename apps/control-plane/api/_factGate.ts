@@ -248,6 +248,20 @@ export function sourcesText(meta: Record<string, any>): string {
   return sourceParts(meta).join('\n\n').slice(0, SOURCES_BUDGET)
 }
 
+/** The filed sources (verbatim excerpts) that do not fit whole inside the
+ *  SOURCES_BUDGET the checkers read, by title or page. A claim resting on one
+ *  of them would read as not on file, so a paid run refuses until this is
+ *  empty, and the free pre-check lists them. Since 2026-10-16 a piece keeps
+ *  every filed source (_content.ts withMaterial), so the cut happens here or
+ *  nowhere, and never silently. */
+export function filedSourcesCut(meta: Record<string, any>): string[] {
+  const seen = sourcesText(meta || {})
+  return readMaterials(meta || {})
+    .filter(m => m.verbatim === true && m.url && (m.content || '').trim())
+    .filter(m => !seen.includes(`${SOURCE_MARK}verbatim excerpt from ${m.url}\n${m.content}`))
+    .map(m => m.title || String(m.url))
+}
+
 /** Each source the checkers read, in order: a filed excerpt, a story, research, a dive. */
 export function sourceParts(meta: Record<string, any>): string[] {
   const parts: string[] = []

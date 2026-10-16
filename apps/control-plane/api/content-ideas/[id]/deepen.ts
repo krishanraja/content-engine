@@ -4,7 +4,7 @@ import { supabase } from '../../_supabase.js'
 import { webResearch } from '../../_enrich.js'
 import { unsupportedNumbers } from '../../_numbers.js'
 import {
-  callClaude, corpusForChannel, loadCorpus, readMaterials, robustJson, type Material,
+  callClaude, corpusForChannel, loadCorpus, readMaterials, robustJson, withMaterial, type Material,
 } from '../../_content.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { guardEngine } from '../../_auth.js'
@@ -189,7 +189,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ...meta,
         deepen: [...(Array.isArray(meta.deepen) ? meta.deepen : []), entry].slice(-6),
         research: Array.from(new Set([...(Array.isArray(meta.research) ? meta.research : []), ...sources])),
-        materials: [material, ...readMaterials(meta)].slice(0, 40),
+        materials: withMaterial(readMaterials(meta), material),
       },
       updated_at: at,
     })

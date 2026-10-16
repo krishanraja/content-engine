@@ -24,8 +24,8 @@ import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  carryForward, combine, ENTAIL_SYSTEM, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
-  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
+  carryForward, combine, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
 
@@ -378,7 +378,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const proof = gate.ok ? receipts(meta.fact_check, readMaterials(meta)) : []
     // The free pre-check (api/_factGate.ts numbersNotOnFile): what a paid run
     // would have to lean on the web for, read before anyone pays for one.
-    const precheck = { numbers_not_on_file: numbersNotOnFile(body, meta) }
+    const precheck = { numbers_not_on_file: numbersNotOnFile(body, meta), filed_sources_cut: filedSourcesCut(meta) }
     return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck })
   }
 
@@ -390,6 +390,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const rawCap = request.max_fresh_sentences
   if (rawCap !== undefined && (!Number.isInteger(rawCap) || Number(rawCap) < 0 || Number(rawCap) > MAX_CLAIMS)) {
     return res.status(400).json({ ok: false, error: `max_fresh_sentences must be a whole number from 0 to ${MAX_CLAIMS}.` })
+  }
+  // A filed source past what the checkers read would turn its claims into
+  // "not on file" after the money is spent; refuse first, with the list.
+  const cut = filedSourcesCut(meta)
+  if (cut.length) {
+    return res.status(409).json({
+      ok: false,
+      reason: 'sources_cut',
+      error: `${cut.length} filed source${cut.length === 1 ? '' : 's'} would not reach the checkers, who read the first ${SOURCES_BUDGET.toLocaleString('en-GB')} characters of the sources: ${cut.join('; ')}. Remove research or links the piece no longer needs, then run it. No model was called.`,
+    })
   }
   const scope = factLedgerCoverage(body, ledger, sourceHash, sourcePartHashes(meta))
   if (rawCap !== undefined && scope.fresh_sentences > Number(rawCap)) {

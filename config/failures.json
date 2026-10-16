@@ -501,6 +501,30 @@
      "how": "a rebuild keeps a review block's build time while its words are unchanged, so a newer save still shows"
     }
    ]
+  },
+  {
+   "id": "filed-source-dropped-past-40",
+   "on": "2026-10-16",
+   "krish": "(filing four sources on Friday's piece silently pushed two filed sources off it)",
+   "what": "Every route that adds a material cut the piece's list to the newest 40, so four filings on Friday v4 pushed OpenAI's ChatGPT release notes and Artificial Analysis's Haiku 5.5 page off its materials without a word. The fact gate holds a piece to its filed sources, so lines resting on them would have read as not on file. Separately, the checkers read only the first 120,000 characters of sources, so a filed source past that point was unseen without a word too.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "apps/control-plane/api/_content.ts",
+     "contains": "export function withMaterial",
+     "how": "adding a material drops the oldest research, links and notes to make room, never a filed source; past 150 filed sources a new one is refused with a reason"
+    },
+    {
+     "file": "tests/control-plane/materials-cap.test.ts",
+     "contains": "every route that adds a material goes through withMaterial",
+     "how": "fails the build if materials.ts, dive-deeper.ts or deepen.ts adds a material any other way, or cuts to 40"
+    },
+    {
+     "file": "apps/control-plane/api/content-ideas/[id]/fact-check.ts",
+     "contains": "reason: 'sources_cut'",
+     "how": "a paid fact check refuses before any model call while a filed source would not reach the checkers whole; the free pre-check names each one (filed_sources_cut)"
+    }
+   ]
   }
  ]
 }
