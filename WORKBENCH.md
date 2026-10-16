@@ -649,6 +649,15 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 23:45 UTC: **Krish's three calls on the long episode, built and tested.** "Happy with you
+  burning them in and agree with your recommendation on the ending. Feel free to raise the music slightly during
+  the section dividers." So: burned captions (and the caption file), `"end_hold_s": 13` (the approved outro's
+  last frame held, a close of about 18 s for YouTube's end-screen tiles), and the chapter lifts 4 dB over the bed
+  (`music.ACCENT_LIFT_DB`). Wednesday's test: -14.0 LUFS, true peak -1.0, bed 17.5 LU under the voice, close 17 s
+  at -17.5 LUFS. Still waiting on him: sound for both takes, the title picks, yes to the headings. The main home
+  computer has been silent since 22:14 UTC with Drive unavailable, so nothing he drops in the Inbox reaches the
+  engine until it is awake.
+
 - 2026-10-16, about 23:35 UTC: **The long-episode editor is built and tested; Friday's videos wait on three
   things from Krish.** He said: "You're welcome to put chapter dividers in the long video and things like
   that. I'm sure you've got the corpus and know how to do this."
