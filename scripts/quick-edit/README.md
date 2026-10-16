@@ -133,6 +133,14 @@ One JSON file per video. Paths are relative to the config file.
 | `date` | For `--archive`: the publish date, `YYYY-MM-DD`. Without it, the folder carries the day it was filed, London time. |
 | `post_to` | For `--archive`: every place to post, in place of the usual ones, such as `["YouTube", "LinkedIn"]`. Each video keeps the places it suits. |
 | `tiktok` | For `--archive`: `true` sends the tall video to TikTok as well. |
+| `voice` | `"repair"`: the gentle dialogue chain before any level is set (rumble, a light tracking noise reduction, less mud, a little presence, softer s sounds, a slow 2.5:1 levelling; `episode.py`). On Wednesday's 3:18 take it lowered the noise floor 6 dB and the loudness range from 5.3 to 3.3 LU without moving his level. The report's `voice_repair` gives both. |
+| `reframe` | `true`: each hidden cut sits under a change of framing, from the base to a slight push (90% of the frame, about his face) and back, held at least 1.5 s, so a jump reads as a cut. The tall cut's face band is never reframed. |
+| `emphasis` | `[{"start": WORDS, "end": WORDS}]`: a closer framing (82%) for a pivotal line, back to the base after. |
+| `captions` | `false`: no captions in the picture. The caption file `NAME-SHAPE.srt` is written for every cut either way, on the finished cut's clock (the sting included), lines of 42 characters or fewer, two at most. |
+| `chapters` | `[{"title", "starts"}]` or a `.chapters.md` path: `NAME-SHAPE.chapters.txt` for the YouTube description, 00:00 first, ascending, each at least 10 s on. The dividers themselves are ordinary cues. |
+| `end_screen_s` | `20`: warns when a picture runs into the last N seconds, kept for YouTube's end-screen tiles. |
+| `music_mode` | `"episode"`: the bed plays under the sting and his first 30 s, lifts for 5.5 s at each chapter turn and comes back under his last 8 s and the end card, each piece measured where it sits and set to the approved levels (`music.episode_bed`). Give `music_seconds` (about 80 for seven chapters) so a three-minute track qualifies. |
+| `speed` | `{"factor": 1.2, "krish": "Krish, DATE: his words"}`: the take sped up, picture and sound, pitch kept, before anything else. Refused without his own words and over 1.35. |
 
 ## The kit: a piece's graphics and starter config
 

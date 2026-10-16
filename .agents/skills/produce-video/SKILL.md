@@ -384,6 +384,18 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
   music bed from the ledger when a licensed, approved track fits (both
   sections below). Neither ever blocks a render.
 
+**A long episode** (the week's deep cut, house rule DEEP_CUT) is made to
+`docs/production/one-shot-episode-corpus.md`, the standard Krish gave on 16
+October. Its config carries the episode settings (`scripts/quick-edit/
+episode.py`, and the README's table): `"voice": "repair"`, the one-take pause
+rule (`"max_gap": 0.9, "pad_before": 0.2, "pad_after": 0.3`),
+`"reframe": true` and `"emphasis"` on the pivotal lines, the chapter dividers
+as cues and `"chapters"` for the description's chapter list,
+`"captions": false` with the caption file (`NAME-16x9.srt`) uploaded to
+YouTube, `"end_screen_s": 20`, and `"music_mode": "episode"` with
+`"music_seconds"` so a three-minute track covers the open, the chapter lifts
+and the close. The short cut keeps the house look.
+
 ## 5. A thumbnail for every size
 
 Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
@@ -434,8 +446,11 @@ report these numbers back in plain words:
   those 90 seconds include the sting and the 4 second end card, so make.py
   checks `main_seconds` (his words alone) and the warning gives
   `total_seconds` beside it. When `main_seconds` is over 90, tighten it with
-  `remove` where he stumbled or paused; never speed it up. Still over: tell
-  Krish both numbers before it goes anywhere. When only `total_seconds` is
+  `remove` where he stumbled or paused; never speed it up unless Krish has
+  said so in words for that cut, and then only through the config's
+  `"speed": {"factor": F, "krish": "Krish, DATE: his words"}` (make.py
+  refuses it without his words, and over 1.35). Still over: tell Krish both
+  numbers before it goes anywhere. When only `total_seconds` is
   over 90 (his speech is inside it), say both numbers in your report; it is
   not a stop, and it is his open question in `WORKBENCH.md`.
 - Every other line in `warnings`, said as it is.
@@ -722,6 +737,9 @@ over it.
   week's publish board onto the record (`make-piece`, "The week's ticks"),
   which records only what he ticked. A step that is not this skill's is not
   written, whatever the chat says.
-- Never speed up a cut, and never declare a logo that is not on screen.
+- Never speed up a cut except on Krish's own words, quoted in its config's
+  `"speed"` (Krish, 2026-10-16, of Friday's 90-second cut: "if I go over
+  90sec, just speed the video up a bit in post"), and never declare a logo
+  that is not on screen.
 - A cloud session is read-only for the Studio (`read_only_untracked`), and
   these cuts never go through it: say nothing was produced in the Studio.

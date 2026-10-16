@@ -393,6 +393,91 @@ def bed_filter(track, timeline, levels, src='0:a', out='bed', unity=False):
             f'afade=t=in:st=0:d={FADE_IN_S}{tail},atrim=end_sample={round(T * RATE)},asetpts=PTS-STARTPTS[{out}]')
 
 
+EPISODE_OPEN_S = 30.0    # the bed under the sting and his first 30 seconds
+EPISODE_CLOSE_S = 8.0    # and under his last 8, rising after his last word
+ACCENT_BEFORE_S, ACCENT_AFTER_S = 1.5, 4.0   # a short lift at each chapter turn
+
+
+def episode_windows(timeline, accents=(), levels=None):
+    """Where the bed plays in a long episode (make.py "music_mode": "episode";
+    docs/production/one-shot-episode-corpus.md, "Music and rights": reserve
+    music for the cold open, chapter transitions or outro, ducked under
+    speech): [(start, end, kind)] on the video's clock, kind 'open',
+    'accent' or 'close', never overlapping."""
+    T, vs, ve = float(timeline['total_s']), float(timeline['voice_start_s']), float(timeline['voice_end_s'])
+    out = [(0.0, min(T, vs + EPISODE_OPEN_S), 'open')]
+    close = (max(out[0][1], ve - EPISODE_CLOSE_S), T, 'close')
+    for t in sorted(accents):
+        a, b = t - ACCENT_BEFORE_S, t + ACCENT_AFTER_S
+        if a > out[-1][1] + 1.0 and b < close[0] - 1.0:
+            out.append((round(a, 3), round(b, 3), 'accent'))
+    return [(round(a, 3), round(b, 3), k) for a, b, k in out + [close] if b - a > 0.5]
+
+
+def episode_seconds(timeline_or_total, accents=()):
+    """The music a long episode needs: the open, the accents and the close."""
+    return EPISODE_OPEN_S + len(accents) * (ACCENT_BEFORE_S + ACCENT_AFTER_S) + EPISODE_CLOSE_S + 10.0
+
+
+def episode_bed(track, timeline, levels, accents=(), src='0:a', out='bed', refs=None, unity=False):
+    """The bed for a long episode: the track in pieces, one per window
+    (episode_windows), taken in order from its intro cue and the close from
+    its outro cue when it has one, each set to the approved levels (intro
+    over the sting, the bed under his voice, the outro after his last word),
+    faded in and out, and laid at its time. (filter, what the report needs).
+    `unity` lays every piece at its own level, for measuring; `refs` is each
+    piece's measured loudness where it sits (else the track's average), so
+    each is set from what it really measures there, as the bed under a
+    short cut is (make.py build_audio)."""
+    T, I = float(timeline['total_s']), float(timeline.get('intro_s') or 0)
+    vs, ve = float(timeline['voice_start_s']), float(timeline['voice_end_s'])
+    ref = float(track['measured_lufs'])
+    cue, length = float(track.get('intro_cue_s') or 0), float(track.get('duration_s') or 0)
+    outro_cue = track.get('outro_cue_s')
+    norm = f'aresample={RATE},aformat=sample_fmts=fltp:sample_rates={RATE}:channel_layouts=stereo'
+    wins = episode_windows(timeline, accents, levels)
+    lines, labels, at, placed = [f'[{src}]{norm},asplit={len(wins)}' + ''.join(f'[{out}_s{k}]' for k in range(len(wins)))], [], cue, []
+    for k, (a, b, kind) in enumerate(wins):
+        d = b - a
+        own = refs[k] if refs and isinstance(refs[k], (int, float)) else ref
+        g = {'intro': levels['intro_lufs'] - own, 'bed': levels['bed_lufs'] - own, 'outro': levels['outro_lufs'] - own}
+        if unity:
+            g = {'intro': 0.0, 'bed': 0.0, 'outro': 0.0}
+        if kind == 'close' and isinstance(outro_cue, (int, float)) and length - outro_cue >= d:
+            start = float(outro_cue)
+        else:
+            start = at if at + d <= length else cue
+            at = start + d
+        if kind == 'open':
+            r0, r1 = max(0.0, vs - levels['ramp_down_s']) if I > 0 else 0.0, vs if I > 0 else 0.0
+            pts = [(0.0, g['intro'] if I > 0 else g['bed']), (r0, g['intro'] if I > 0 else g['bed']), (r1, g['bed']), (d, g['bed'])]
+            fades = f'afade=t=in:st=0:d={FADE_IN_S},afade=t=out:st={max(0.0, d - 3.0):.3f}:d=3'
+        elif kind == 'accent':
+            pts = [(0.0, g['bed']), (d, g['bed'])]
+            fades = f'afade=t=in:st=0:d=1.0,afade=t=out:st={max(0.0, d - 1.5):.3f}:d=1.5'
+        else:
+            c, e = max(0.0, ve - a), min(d, ve - a + levels['ramp_up_s'])
+            pts = [(0.0, g['bed']), (c, g['bed']), (e, g['outro']), (d, g['outro'])]
+            fade = min(FADE_OUT_S, d)
+            fades = f'afade=t=in:st=0:d=1.0,afade=t=out:st={d - fade:.3f}:d={fade:.3f}'
+        ms = round(a * 1000)
+        lines.append(f'[{out}_s{k}]atrim=start={start:.4f}:duration={d:.4f},asetpts=PTS-STARTPTS,asetnsamples=n=480:p=0,'
+                     f"volume='{gain_expr(pts)}':eval=frame,{fades},adelay={ms}|{ms}[{out}_w{k}]")
+        labels.append(f'[{out}_w{k}]')
+        core = {'open': (max(a, vs), b - 3.0), 'accent': (a + 1.0, b - 1.5), 'close': (a + 1.0, min(b, ve))}[kind]
+        placed.append({'kind': kind, 'at': [round(a, 3), round(b, 3)], 'from_track_s': round(start, 3),
+                       'core': [round(core[0], 3), round(core[1], 3)] if core[1] - core[0] >= MIN_WINDOW_S else None,
+                       'gain_db': round(g['bed'], 2)})
+    lines.append(f'{"".join(labels)}amix=inputs={len(labels)}:normalize=0:duration=longest,apad,'
+                 f'atrim=end_sample={round(T * RATE)},asetpts=PTS-STARTPTS[{out}]')
+    first = wins[0]
+    windows = {'intro': [0.0, round(max(0.0, vs - levels['ramp_down_s']), 4)] if I > 0 and vs - levels['ramp_down_s'] >= MIN_WINDOW_S else None,
+               'voice': [round(vs, 4), round(first[1] - 3.0, 4)] if first[1] - 3.0 - vs >= MIN_WINDOW_S else None,
+               'outro': [round(min(T, ve + levels['ramp_up_s']), 4), round(T - FADE_OUT_S, 4)] if T - FADE_OUT_S - ve - levels['ramp_up_s'] >= MIN_WINDOW_S else None}
+    base = {'intro': levels['intro_lufs'] - ref, 'bed': levels['bed_lufs'] - ref, 'outro': levels['outro_lufs'] - ref}
+    return ';'.join(lines), {'gains_db': {k: round(v, 2) for k, v in base.items()}, 'windows': windows, 'pieces': placed}
+
+
 # The commands.
 
 def check(data, strict=False):
@@ -673,6 +758,18 @@ def self_test():
                 os.environ.pop(k, None)
             else:
                 os.environ[k] = v
+    # A long episode's bed: the open, a lift at each chapter turn, the close (episode_windows, episode_bed).
+    tl = {'total_s': 900.0, 'intro_s': 3.0, 'voice_start_s': 3.2, 'voice_end_s': 893.0}
+    wins = episode_windows(tl, [3.5, 200.0, 400.0, 890.0])
+    checks.append(('an episode bed: the open, lifts at the turns clear of the open and the close, then the close',
+                   [(k, a, b) for a, b, k in wins], [('open', 0.0, 33.2), ('accent', 198.5, 204.0), ('accent', 398.5, 404.0), ('close', 885.0, 900.0)]))
+    fake = {'measured_lufs': -16.0, 'intro_cue_s': 2.0, 'duration_s': 190.0, 'outro_cue_s': 170.0}
+    lv = {'intro_lufs': -16, 'bed_lufs': -31, 'outro_lufs': -18, 'ramp_down_s': 0.5, 'ramp_up_s': 0.8}
+    chain, said = episode_bed(fake, tl, lv, [200.0, 400.0])
+    checks.append(('each piece laid at its time, the close from the outro cue, the levels from the ledger',
+                   ([p['from_track_s'] for p in said['pieces']], 'adelay=198500|198500' in chain, said['gains_db']),
+                   ([2.0, 35.2, 40.7, 170.0], True, {'intro': 0.0, 'bed': -15.0, 'outro': -2.0})))
+    checks.append(('an episode needs about 80 s of music, so one 3-minute track covers it', episode_seconds(900.0, [1, 2, 3, 4, 5, 6]) < 189.8, True))
     errors, _ = check(load(), strict=False)
     checks.append(('the committed ledger checks clean', errors, []))
     bad = [f'{label}: got {got!r}, want {want!r}' for label, got, want in checks if got != want]

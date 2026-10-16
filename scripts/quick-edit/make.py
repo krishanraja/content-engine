@@ -71,6 +71,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import episode
 import intro as sting
 import music
 import spelling
@@ -794,6 +795,9 @@ def resolve_music(cfg, asp, seconds, base='.'):
     if want is False or want is None:
         return None, None
     notes = []
+    if cfg.get('music_mode') == 'episode':
+        # A long episode's bed plays only in its open, lifts and close, so it needs that much music, not the whole cut.
+        seconds = float(cfg.get('music_seconds') or music.episode_seconds(seconds, range(8)))
     try:
         data = music.load()
         platforms = music.SHAPE_PLATFORMS[asp]
@@ -827,7 +831,11 @@ def resolve_music(cfg, asp, seconds, base='.'):
     ledger = music.ledger_path()
     if ledger.resolve() != music.LEDGER.resolve():
         notes.append(f'the music came from {ledger}, not config/music-library.json')
-    return {'track': track, 'file': path, 'levels': levels, 'ledger': str(ledger), 'needs': needs, 'needs_from': needs_from}, '; '.join(notes) or None
+    mode = 'episode' if cfg.get('music_mode') == 'episode' else None
+    if mode:
+        notes.append('a long episode: the bed plays under the open, a lift at each chapter turn and the close, not under the whole talk')
+    return ({'track': track, 'file': path, 'levels': levels, 'ledger': str(ledger), 'needs': needs, 'needs_from': needs_from, 'mode': mode},
+            '; '.join(notes) or None)
 
 
 def timeline(intro_frames, main_frames, end_frames, ws):
@@ -926,7 +934,27 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
     result = {'dialog': dialog, 'bed': None, 'music': None}
     mix_in = ['-i', str(dialog)]
     mix = '[0:a]anull[m]'
-    if bed:
+    if bed and bed.get('mode') == 'episode':
+        # A long episode: the bed under the open, a lift at each chapter turn and
+        # the close, not under the whole talk (music.episode_bed; the corpus).
+        track, levels = bed['track'], bed['levels']
+        accents = tl.get('accents') or ()
+        # Each piece measured where it sits, then set from that, as the bed under a short cut is.
+        chain, placed = music.episode_bed(track, tl, levels, accents, unity=True)
+        raw = work / 'bed-raw.wav'
+        ffmpeg('-i', str(bed['file']), '-filter_complex', chain, '-map', '[bed]', '-c:a', 'pcm_f32le', str(raw))
+        refs = [music.ebur128(raw, *p['core'])['I'] if p['core'] else None for p in placed['pieces']]
+        raw.unlink()
+        chain, placed = music.episode_bed(track, tl, levels, accents, refs=refs)
+        stem = work / 'bed.wav'
+        ffmpeg('-i', str(bed['file']), '-filter_complex', chain, '-map', '[bed]', '-c:a', 'pcm_f32le', str(stem))
+        result.update(bed=stem, music={
+            'track_id': track['id'], 'title': track.get('title'), 'artist': track.get('artist'), 'sha256': track['sha256'], 'file': track['file'],
+            'ledger': bed['ledger'], 'levels': levels, 'gains_db': placed['gains_db'], 'windows': placed['windows'], 'mode': 'episode',
+            'pieces': placed['pieces'], 'chosen_for': bed.get('needs'), 'chosen_for_from': bed.get('needs_from')})
+        mix_in += ['-i', str(stem)]
+        mix = '[0:a][1:a]amix=inputs=2:duration=first:normalize=0[m]'
+    elif bed:
         track, levels = bed['track'], bed['levels']
         # Measure the track where it will sit, then set each stretch's gain
         # from what it really measures there, not from its average.
@@ -1021,11 +1049,16 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
     n = 1
     g = []
     cut = between(wins)
+    # The episode framings (episode.py): a push under each hidden cut, closer on
+    # a pivotal line. Laid on the speaker's own picture, never on the tall
+    # cut's face band, whose crop is fixed.
+    framing = cfg.get('_framing') or []
     if asp == '9x16':
         bx, by, bw, bh = face_band(cw, ch, cfg['face'][0], cfg['face'][1])
         fw_out = 1080
         nr = len(runs_of(wins))
-        g.append(f'[0:v]split={1 + max(nr, 1)}[sp]' + ''.join(f'[fcs{i}]' for i in range(max(nr, 1))))
+        g.append(f'[0:v]split={1 + max(nr, 1)}[sp0]' + ''.join(f'[fcs{i}]' for i in range(max(nr, 1))))
+        g.extend(episode.framing_graph('sp0', 'sp', framing, cw, ch, cfg['face']))
         g.append(f"[sp]scale=1080:{round(ch * 1080 / cw)}:flags=lanczos,crop=1080:1920,unsharp=5:5:0.6[s1]")
         for i in range(max(nr, 1)):
             g.append(f"[fcs{i}]crop={bw}:{bh}:{bx}:{by},scale=1080:920:flags=lanczos,unsharp=5:5:0.5[fc{i}]")
@@ -1038,7 +1071,8 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         fr = n
         n += 1
         sw = round(cw * 1080 / ch)
-        g.append(f"[0:v]scale={sw}:1080:flags=lanczos,unsharp=5:5:0.4[spk]")
+        g.extend(episode.framing_graph('0:v', 'spf', framing, cw, ch, cfg['face']))
+        g.append(f"[spf]scale={sw}:1080:flags=lanczos,unsharp=5:5:0.4[spk]")
         g.append(f"[{fr}:v]format=rgba[fr]")
         # The speaker eases aside as a picture comes in, and back as it goes.
         g.append(f"[fr][spk]overlay=x='{(1920 - sw) // 2}*(1-min(1,{presence(wins)}))':y=0:eval=frame[s1]")
@@ -1099,7 +1133,11 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(st['png']))]
         g.append(f"[{last}][{n}:v]overlay=0:0:enable='between(t,{t0:.2f},{t0 + st.get('seconds', 3.5):.2f})'[s{k}]")
         last, n, k = f's{k}', n + 1, k + 1
-    g.append(f"[{last}]ass={cfg['name']}-{asp}.ass:fontsdir=fonts,fps=30,setsar=1,format=yuv420p[vm]")
+    if cfg.get('captions', True) is False:
+        # No captions in the picture: the caption file goes to the platform instead (episode.py).
+        g.append(f"[{last}]fps=30,setsar=1,format=yuv420p[vm]")
+    else:
+        g.append(f"[{last}]ass={cfg['name']}-{asp}.ass:fontsdir=fonts,fps=30,setsar=1,format=yuv420p[vm]")
     inputs += ['-i', str(end['file'])]
     g.append(f"[{n}:v]fps=30,setsar=1,format=yuv420p,trim=end_frame={end['frames']},setpts=PTS-STARTPTS[ev]")
     n += 1
@@ -1142,6 +1180,28 @@ def cut_plan(cfg, asp, P, main_frames, ws, base='.'):
         notes.append('the mix levels are still proposed until Krish approves them by ear (music.py approve-levels)')
     notes += length_warnings(asp, tl)
     return {'intro': intro, 'end': end, 'timeline': tl, 'bed': bed, 'warnings': notes}
+
+
+def episode_extras(cfg, P, ws, wins, toks, tl):
+    """The long-episode files and checks for one shape, on the finished cut's
+    clock (episode.py): the caption file, the description's chapter lines and
+    the end-screen space. (what the report says, warnings, files to write)."""
+    srt_text = episode.srt(toks, tl['intro_s'])
+    lines, warns = [], []
+    chs = episode.chapters_of(cfg, P)
+    if chs:
+        starts = []
+        for c in chs:
+            hit = find_loose(ws, c['starts'])
+            starts.append(ws[hit[0]]['s'] if hit else None)
+        lines, warns = episode.chapter_list(chs, starts, tl['intro_s'])
+    warns += episode.end_screen_warnings(wins, tl['intro_s'], tl['total_s'], cfg.get('end_screen_s'))
+    framing = cfg.get('_framing') or []
+    said = {'captions_burned': cfg.get('captions', True) is not False, 'caption_lines': srt_text.count(' --> '),
+            'chapters': lines, 'voice': cfg.get('voice') or 'plain',
+            'framings': {'push': sum(1 for *_, s in framing if s == episode.PUSH), 'close': sum(1 for *_, s in framing if s == episode.TIGHT)},
+            'end_screen_from_s': round(tl['total_s'] - cfg['end_screen_s'], 2) if cfg.get('end_screen_s') else None}
+    return said, warns, {'srt': srt_text, 'chapters': '\n'.join(lines) + '\n' if lines else None}
 
 
 def measure_cut(final, tl, cut_audio):
@@ -1476,7 +1536,7 @@ def doctor(as_json=False):
         listed = subprocess.run(['ffmpeg', '-hide_banner', '-filters'], capture_output=True, text=True).stdout
         have = {parts[1] for parts in (line.split() for line in listed.splitlines()) if len(parts) > 2}
         need = ('ass', 'overlay', 'concat', 'loudnorm', 'ebur128', 'amix', 'alimiter', 'volume', 'aloop', 'asetnsamples', 'acrossfade',
-                'afade', 'apad', 'atrim', 'tpad', 'anullsrc')
+                'afade', 'apad', 'atrim', 'tpad', 'anullsrc') + episode.FILTERS
         gone = [f for f in need if f not in have]
         add('ffmpeg filters', 'fail' if gone else 'ok', f'missing: {", ".join(gone)}' if gone else 'all the filters the edit and the mix use')
     fonts = sorted(p.name for p in (Path(__file__).resolve().parent / 'fonts').glob('*.ttf'))
@@ -1573,8 +1633,16 @@ def main():
     out = Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     src = P(cfg['source'])
+    # A take sped up before anything else, only on Krish's own words (episode.py, "speed").
+    try:
+        speed = episode.speed_settings(cfg)
+    except episode.EpisodeError as e:
+        sys.exit(f'make: {e}')
+    tag = ''
+    if speed:
+        src, tag = episode.sped_source(src, out, speed[0]), f'.speed-{speed[0]:.3f}'
     dur = float(json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'json', str(src)], capture_output=True, text=True).stdout)['format']['duration'])
-    wpath = P(cfg['words']) if cfg.get('words') else out / f"{cfg['name']}.words.json"
+    wpath = P(cfg['words']) if cfg.get('words') else out / f"{cfg['name']}{tag}.words.json"
     words = json.loads(wpath.read_text())['words'] if wpath.exists() else transcribe(src, wpath, cfg.get('model', 'small.en'), cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''))
 
     cuts = resolve_removals(words, cfg.get('remove', []) + cfg.get('remove_words', []))
@@ -1582,6 +1650,19 @@ def main():
     ws = retime(words, segs)
     wins, missing = cue_windows(ws, cfg.get('cues') or [], total)
     early = picture_warnings(cfg, base)
+    # The episode framings: a push under each hidden cut, closer on a pivotal line (episode.py).
+    emphasis = []
+    for e in cfg.get('emphasis') or []:
+        a = find_loose(ws, e['start'])
+        b = find_loose(ws, e['end'], after=ws[a[0]]['s']) if a else None
+        if a and b:
+            emphasis.append((round(max(0.0, ws[a[0]]['s'] - 0.1), 3), round(min(total, ws[b[1]]['e'] + 0.3), 3)))
+        else:
+            early.append(f'the emphasis "{e["start"]}" ... "{e["end"]}" was not found in what he said, so that line keeps its framing')
+    if cfg.get('reframe') or emphasis:
+        cfg['_framing'] = episode.framing_windows(segs if cfg.get('reframe') else segs[:1], total, emphasis)
+    if speed:
+        early.append(f'the take is sped up {speed[0]:g} times, picture and sound, pitch kept, as Krish said: "{speed[1]}"')
     # The captions spell a word as the script does (house rule BRITISH_SPELLING).
     spell = spellings(ws, script_words(cfg, P))
     spelt = [{'heard': ws[i]['w'], 'script': respell(ws[i]['w'], w), 'at': ws[i]['s']} for i, w in sorted(spell.items())]
@@ -1607,10 +1688,11 @@ def main():
                 shapes[asp] = {'error': f'cannot plan the {asp} cut: {e}'}
                 continue
             tl = plan['timeline']
+            said, warns, _ = episode_extras(cfg, P, ws, wins, toks, tl)
             shapes[asp] = {'intro': plan['intro'] and str(plan['intro']['file']), 'intro_source': plan['intro'] and plan['intro']['source'],
                            'intro_series': plan['intro'] and plan['intro']['series'], 'music': plan['bed'] and plan['bed']['track']['id'],
                            'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],
-                           'total_seconds': tl['total_s'], 'warnings': plan['warnings']}
+                           'total_seconds': tl['total_s'], 'episode': said, 'warnings': plan['warnings'] + warns}
         print(json.dumps({'name': cfg['name'], 'source_seconds': round(dur, 2), 'cut_seconds': total, 'segments': len(segs),
                           'cuts': [{'words': ' '.join(words[i]['w'].strip() for i in range(a, b + 1)), 'at': words[a]['s']} for a, b in cuts],
                           'cues': [{k: c[k] for k in ('id', 's', 'e')} for c in wins], 'missing_cues': missing,
@@ -1648,6 +1730,18 @@ def main():
         run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', listing, '-c', 'copy', edited])
         g1.write_text('\n'.join(plan_lines))
     loud = measure_loudness(edited)
+    # The dialogue repair (episode.py), before any level is set, so the level is set on the voice as it will be heard.
+    voice_src, repaired = edited, None
+    if cfg.get('voice') == 'repair':
+        voice_src = out / f"{cfg['name']}.voice.wav"
+        stamp, want = out / 'voice.plan', f'{edited.stat().st_size} {edited.stat().st_mtime_ns} {episode.VOICE_REPAIR}'
+        if not (voice_src.exists() and stamp.exists() and stamp.read_text() == want):
+            run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-i', str(edited), '-vn', '-af', f'{NORM},{episode.VOICE_REPAIR}',
+                 '-c:a', 'pcm_f32le', str(voice_src)])
+            stamp.write_text(want)
+        repaired = {'chain': episode.VOICE_REPAIR, 'before_lufs': loud['input_i'], 'before_lra': loud.get('input_lra')}
+        loud = measure_loudness(voice_src)
+        repaired.update(after_lufs=loud['input_i'], after_lra=loud.get('input_lra'))
     voice_in = float(loud['input_i'])
     toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell)
     early += spelling_warnings(toks)
@@ -1655,20 +1749,30 @@ def main():
     groups = chunks(toks, bounds)
     report = {'name': cfg['name'], 'source_seconds': round(dur, 2), 'cut_seconds': total, 'segments': len(segs),
               'cues': [{k: c[k] for k in ('id', 's', 'e')} for c in wins], 'missing_cues': missing,
-              'captions': len(groups), 'spellings': spelt, 'loudness_in': loud['input_i']}
+              'captions': len(groups), 'spellings': spelt, 'loudness_in': loud['input_i'],
+              **({'voice_repair': repaired} if repaired else {}),
+              **({'speed': {'factor': speed[0], 'krish': speed[1]}} if speed else {})}
     fonts = Path(__file__).resolve().parent / 'fonts'
     shapes = {}
     for asp in aspects:
         plan = cut_plan(cfg, asp, P, main_frames, ws, base)
         tl, intro, end, bed = plan['timeline'], plan['intro'], plan['end'], plan['bed']
         warnings = list(plan['warnings'])
+        # The chapter turns on the video's clock, for an episode bed's lifts.
+        tl['accents'] = [ws[h[0]]['s'] + tl['intro_s'] for c in episode.chapters_of(cfg, P)[1:]
+                         for h in [find_loose(ws, c['starts'])] if h]
         target = (bed['levels'] if bed else default_levels())['final_integrated_lufs']
         if voice_in <= -69.9:
             warnings.append('the recording measured as silence, so its level was left alone')
         voice_gain = 0.0 if voice_in <= -69.9 else max(-30.0, min(30.0, target - voice_in))
-        cut_audio = build_audio(out / f'audio-{asp}', edited, voice_gain, intro, end, tl, bed)
+        cut_audio = build_audio(out / f'audio-{asp}', voice_src, voice_gain, intro, end, tl, bed)
         ass = out / f"{cfg['name']}-{asp}.ass"
         write_ass(ass, groups, wins, asp)
+        said, warns, files = episode_extras(cfg, P, ws, wins, toks, tl)
+        warnings += warns
+        (out / f"{cfg['name']}-{asp}.srt").write_text(files['srt'], encoding='utf-8')
+        if files['chapters']:
+            (out / f"{cfg['name']}-{asp}.chapters.txt").write_text(files['chapters'], encoding='utf-8')
         inputs, g, audio_map = video_graph(cfg, asp, P, out, edited, total, wins, ws, cfg['crop'], intro, end, cut_audio['mix'])
         gfile = out / f'stage2-{asp}.graph'
         gfile.write_text(';\n'.join(g))
@@ -1717,7 +1821,8 @@ def main():
             'total_seconds': tl['total_s'], 'voice_start_seconds': tl['voice_start_s'], 'voice_end_seconds': tl['voice_end_s'],
             'intro': intro and {'source': intro['source'], 'series': intro['series'], 'file': str(intro['file']), 'sha256': intro['sha256'],
                                 'seconds': intro['seconds'], 'own_sound_replaced': intro['own_sound_replaced']},
-            'music': cut_audio['music'], 'voice_gain_db': round(voice_gain, 2), 'loudness': loudness, 'warnings': warnings}
+            'music': cut_audio['music'], 'voice_gain_db': round(voice_gain, 2), 'loudness': loudness, 'episode': said,
+            'srt': f"{cfg['name']}-{asp}.srt", 'warnings': warnings}
         if args.share_mib:
             report[f'{asp}_share'] = share_copy(final, out / 'share' / final.name, args.share_mib)
         # Preview: a frame in the sting, the opening, inside every graphic,
