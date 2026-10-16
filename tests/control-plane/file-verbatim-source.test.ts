@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, test } from 'vitest'
-import { cloudProxyProblem, excerpt, htmlToText } from '../../apps/control-plane/scripts/file-verbatim-source.js'
+import { cloudProxyProblem, excerpt, htmlToText, isStampLine } from '../../apps/control-plane/scripts/file-verbatim-source.js'
 
 const PAGE = [
   'Title: Model Release Notes', '', 'URL Source: https://help.openai.com/x', '',
@@ -21,6 +21,26 @@ describe('file-verbatim-source keeps the words and their date', () => {
   test('undated headings in between are left out', () => {
     const page = ['Title: T', '## News (May 1, 2026)', '## Pricing', '## Use cases', 'It costs 40% less to run.'].join('\n')
     assert.equal(excerpt(page, [/40% less/]).content, 'Title: T\n\n## News (May 1, 2026)\n\n## Use cases\n\nIt costs 40% less to run.')
+  })
+  test('a sentence that starts with "Updated" is not a date stamp, so it never lands under another date', () => {
+    // 2026-10-16: OpenAI's release notes. The plugin line is from 21 Aug 2026;
+    // kept as a stamp, it was filed under the 29 Sep 2026 heading.
+    const page = [
+      'Title: ChatGPT release notes | OpenAI Help Center', '', 'Updated: 17 hours ago', '',
+      '# September 29, 2026', '', '## GPT-6.1 Sol in ChatGPT Work and Codex', '',
+      'GPT-6.1 Sol improves on GPT-6 Sol in agentic coding, computer use, and professional work.', '',
+      '# August 21, 2026', '', '## Improved plugin discovery on web and mobile', '',
+      'Updated plugin recommendations make it easier to find tools people continue to use.',
+    ].join('\n')
+    const { content } = excerpt(page, [/GPT-6\.1 Sol improves/])
+    assert.match(content, /^Title: ChatGPT release notes \| OpenAI Help Center\n\nUpdated: 17 hours ago\n\n# September 29, 2026/)
+    assert.doesNotMatch(content, /plugin/)
+    for (const stamp of ['Updated: 6 days ago', 'Updated 3 May 2026', 'Updated yesterday', 'Published Time: 2025-08-10T17:59:04.000Z', 'Published: Sep 22, 2026']) {
+      assert.ok(isStampLine(stamp), stamp)
+    }
+    for (const body of ['Updated plugin recommendations make it easier to find tools people continue to use.', 'Published research shows 40% gains.', 'Updated pricing', 'Titles change often']) {
+      assert.ok(!isStampLine(body), body)
+    }
   })
   test('a pattern that matches nothing is reported, so nothing is filed', () => {
     assert.deepEqual(excerpt(PAGE, [/router/i, /never on this page/i]).unmatched, ['/never on this page/i'])

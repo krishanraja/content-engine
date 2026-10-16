@@ -38,7 +38,7 @@ const ENGINE = process.env.ENGINE_URL || 'https://content-engine-flame-nu.vercel
 export function excerpt(text: string, patterns: RegExp[]): { content: string; unmatched: string[] } {
   const lines = String(text || '').split('\n').map(stripMarkdownLinks)
   const keep = new Set<number>()
-  lines.forEach((l, i) => { if (/^(Title|Published( Time)?|Updated)\b/i.test(l.trim())) keep.add(i) })
+  lines.forEach((l, i) => { if (isStampLine(l)) keep.add(i) })
   const unmatched: string[] = []
   for (const p of patterns) {
     let hit = false
@@ -60,6 +60,19 @@ export function excerpt(text: string, patterns: RegExp[]): { content: string; un
   }
   const content = [...keep].sort((a, b) => a - b).map(i => lines[i].trim()).filter(Boolean).join('\n\n')
   return { content, unmatched }
+}
+
+/** A line that titles or dates the page itself: "Title: ...", "Published
+ *  Time: ...", "Updated: 6 days ago", "Updated 3 May 2026". A sentence that
+ *  only starts with the word is not one. Kept as a stamp, it was filed with no
+ *  heading of its own, under the dated heading of the passage before it: on
+ *  2026-10-16 OpenAI's "Updated plugin recommendations make it easier to find
+ *  tools people continue to use." (a 21 Aug 2026 note) read as 29 Sep 2026. */
+export function isStampLine(line: string): boolean {
+  const t = String(line || '').trim()
+  if (/^(Title|Published( Time)?|Updated)\s*:/i.test(t)) return true
+  return /^(Published|Updated)\b/i.test(t) && t.length <= 60 && !/[.!?]$/.test(t)
+    && /\d|\bago\b|\byesterday\b|\btoday\b/i.test(t)
 }
 
 const ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '\u2019', lsquo: '\u2018', rdquo: '\u201d', ldquo: '\u201c', ndash: '\u2013', hellip: '\u2026' }
