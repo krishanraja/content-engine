@@ -649,6 +649,42 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 16:00 UTC: **Friday v4 is on both board links for Krish's review: the manual
+  versus automatic car, what thinking means, and the call at 85%.** From his five board comments of
+  16 Oct (RjLHJ threads 1fc7967d, 850e2a1b, cadb226c, a3773143, a08b6e38; each answered in its
+  thread). Files: `docs/plans/2026-10-09-draft-body-v4.md` (about 2,740 words, saved on the piece),
+  `-script-deep-v4.md` (1,663 words, chapters beside it), `-script-90s-v4.md` (194 words),
+  `-outline-v4.md` and `docs/plans/2026-10-09-friday/post-production-notes.md` (his picture and
+  edit direction, word for word).
+  - **What changed from v3**: the name is the badge, how hard it thinks is the gear; apps today are
+    manual; what OpenAI and Anthropic gain from your eyes on the badge (the launch chart in top gear
+    while apps start you lower); what thinking means (writes out its working, you see a summary at
+    most, searches more only when the app gives it search); Formula 1's paddles (semi-automatic,
+    every team by 1996, self-shifting software banned in 2004, so the driver still picks the gear);
+    the close (most will like the automatic, Formula 1 keeps the paddles, "I'll be one of them").
+  - **The call**, back under `## OUR PREDICTION` so the page's meter draws: "By 30 June 2027,
+    ChatGPT will once again start Plus users on a setting where the AI chooses how hard to think
+    for each message. How sure we are: 85%." Plus, not "paying users": Business already has
+    automatic reasoning. That makes seven sections; ONE_SPINE's cap applies from outlines dated
+    19 Oct, so `making.py` lets it through (`spine_check.py outline` alone still says 7 over 6).
+  - **Checks**: a claims checker and a consistency checker on the first v4 (findings in the session
+    scratchpad, applied), then six rounds of two fresh readers per script. Every retelling matched
+    the point; each round still found smaller things, so the sign-off is Krish's
+    (`making.py ... read-back CUT --krish-words`). Story check ready on both; voice 1.5; AI scan and
+    spine draft pass; scripts recorded with `making.py scripts`. Free pre-check: only "Opus 5.56".
+    Four sources filed today (OpenAI reasoning summaries, Raceteq 1996 line, Artificial Analysis
+    GPT-5 82M against 3.5M tokens, Anthropic's Opus 4.8 launch page): the last two had dropped off
+    the piece's materials, so the pre-check had started listing their numbers again.
+  - **Board**: rebuilt with `--draft fri`, the v4 files as `--review` boxes and seven `--waiting`
+    calls (outline; paid fact check and "Opus 5.56"; script sign-off; his three own lines; title;
+    Manifold market, still on the older call; which edit treatments to build). Published to both
+    links in `config/boards.json`.
+  - **Offered to Krish, not changed** (his own words): "make you think about how hard AI thinks"
+    reads as the opposite of the point; "Opus 5.5 - when is Opus 5.56 coming out?!" (spaced dash and
+    "?!"); "Nothing was wrong with the name..." (a "not X, Y" shape). The article is long for the
+    outline's 1,800 to 2,000; first cuts if he wants them: the Amodei paragraph, the Llama 4 one.
+  - `docs/plans/2026-10-09-manifold-market.md` and `-publish.json` still carry the old call.
+
 - 2026-10-16, about 13:05 UTC: **Krish asked on the board what "thinking" means.** His comment on
   the Article box (RjLHJ thread 1fc7967d, sent to Claude): "What does \"thinking\" even mean? Does it go
   on more sites? Does it cross reference things more? Does it stop to verify? Or all of the above?"
