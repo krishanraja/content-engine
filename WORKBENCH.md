@@ -649,6 +649,34 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 19:50 UTC: **Friday v5, later the same evening, on Krish's notes in chat.**
+  - **The car spelled out** (his words: "leave nothing to a users assumption or expertise - but we
+    should be clear what we are equating the business name, LLM name, model name and thinking levels
+    to"): OpenAI and Anthropic are the carmakers (BMW, Audi); ChatGPT and Claude the cars they make;
+    the version the badge on the back; the thinking level the gear, the app's setting the gearstick;
+    every "manual" a manual transmission, Gemini's Auto an automatic transmission, F1's paddles a
+    semi-automatic. In the article and the deep cut; the 90-second cut says "manual transmission".
+  - **His questions answered in the piece**: a higher gear uses up your plan's limit faster (Claude
+    Help Center); a newer version often costs less, a pricier one doesn't always score higher; cost
+    rises far faster than the score (Opus 5.5 on Artificial Analysis: about 11 times the cost, a
+    score just over a third higher; the last step is the worst deal; Haiku 5.5 in top gear beat
+    Opus 5.5 in its lowest for under half the cost). He found "7 to 20 points" too complex: plain
+    words only. Data from the Artificial Analysis connector he added (free tier, 200 calls a day);
+    every figure in the piece must still be filed from AA's public pages for the fact check, and
+    AA's model pages hide the key sentence from the r.jina.ai reader, so the filer needs a direct
+    read option first (dry runs refuse today). Also prepared: the Opus 5.5 model page (both prices,
+    2.5 times) and the models overview line for Fable 5.1 ("when your evals on Claude Opus 5.5 at
+    higher effort still fall short"); `two-filings.json` in the session scratchpad.
+  - **Pictures** (his words: car logos and cars "only in the long video though", "visualize this
+    problem really well in post", "we need to avoid licensing risks but be clear"): the deep cut's
+    picture plan carries the mapping beat by beat with real logos (Brandfetch, unaltered,
+    identification only, a no-affiliation line in the description), cleared or drawn cars, no
+    press-site photos without written permission, and a cost-versus-smarts visual (fuel gauge
+    against speedometer). BMW and Audi stay out of `config/logo-registry.json`, so the 90-second
+    cut is never asked for them.
+  - He pasted an Artificial Analysis key in chat; it was not used from chat. He then added it to the
+    environment and connected the AA connector; the pasted copy should be replaced with a new key.
+
 - 2026-10-16, about 19:00 UTC: **Friday v5, from Krish's own script edits, waits on his sign-off to
   record.** He edited both scripts on the RjLHJ board at 17:16 (EDIT threads 4bfe29e0 and 2a6c426d,
   not sent to Claude, so they stay open; full text in that board's `edits` store) and asked for it to
