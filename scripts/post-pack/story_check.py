@@ -403,6 +403,49 @@ def rejected_problems(spoken):
     return out
 
 
+# A score said with nothing to measure it against (house rule PLAIN_SCORES).
+# Krish, 2026-10-16, of Friday's 90-second script ("In a low gear, it scored
+# 42 on their test. In its top gear, 58."): "What does 42 even mean? that is
+# not understandable. We need to simplify this". Earlier the same day, of
+# "7 to 20 points": "7-20 points of improvement is too complex".
+SCORE_TALK = re.compile(r'\b(?:scor(?:e|es|ed|ing)|points?|rated|rank(?:s|ed)?|index|benchmark|test)\b', re.I)
+_TENS = r'twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety'
+SCORE_NUMBER = re.compile(rf'(?<![\w$£€.])(?:\d+(?:\.\d+)?|(?:{_TENS})(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?)(?![\w.]*\d)', re.I)
+# What makes a number mean something to the ear: a share, a multiple, a scale, an amount.
+MEASURED = re.compile(r'[\s-]*(?:%|percent\b|per\s+cent\b|times\b|x\b|out\s+of\b|in\s+(?:a|every|each)\s+(?:hundred|ten|thousand)\b|'
+                      r'(?:thousand|million|billion|hundred|dollars?|pounds?|euros?|seconds?|minutes?|hours?|days?|weeks?|months?|years?|'
+                      r'words?|people|users?)\b)', re.I)
+
+
+def score_problems(paragraphs):
+    """Scores a 12-year-old cannot weigh, heard once: a number said as a score
+    or points, with no share, multiple or scale to tell the ear what it means.
+    A sentence that follows a score sentence and says a bare number is one
+    too ("In its top gear, 58.")."""
+    found, after_score = [], False
+    for s in sentences(paragraphs):
+        plain = _plain(s)
+        talk = bool(SCORE_TALK.search(plain))
+        bare = []
+        for m in SCORE_NUMBER.finditer(plain):
+            n = m.group(0)
+            before = plain[:m.start()].split()
+            if re.fullmatch(r'(?:19|20)\d\d', n):
+                continue  # a year
+            if before and re.match(r'[A-Z]', before[-1]) and not before[-1].endswith((',', '.')):
+                continue  # a name's number: Opus 5, GPT 6.1
+            if MEASURED.match(plain[m.end():]) or re.search(r'\bout\s+of\s*$', plain[:m.start()], re.I):
+                continue  # a share, a multiple, an amount, or the scale itself ("out of 100")
+            bare.append(n)
+        if bare and (talk or after_score):
+            found.append(f'it says a score with nothing to measure it against ("{bare[0]}" in "{s[:80]}"): a listener cannot tell '
+                         'what the number means. Say it as a plain comparison ("did much better", "about a third higher", '
+                         '"beat the new one"), a share or a multiple (house rule PLAIN_SCORES; Krish, 2026-10-16: '
+                         '"What does 42 even mean?")')
+        after_score = talk or bool(bare and after_score)
+    return found
+
+
 def problems(text, cut=None, series=None):
     """Plain-words reasons this script is not ready, or [] when it passes.
     `cut` ('long' or 'short') adds the length rule; `series` (the piece's
@@ -417,6 +460,7 @@ def problems(text, cut=None, series=None):
         return found + ['no spoken words found: a script is only the words Krish says, one plain paragraph per thought (house rule SCRIPT_ONLY)']
     found += series_problems(beats, series)
     found += rejected_problems(' '.join(beats))
+    found += score_problems(beats)
     # The hook's room starts after the series line, so the line never uses it up.
     opened = opener_of(' '.join(beats))
     hook = words[len(opened.split()):] if opened else words
@@ -716,6 +760,21 @@ def self_test():
     check('a line Krish rejected is refused in any later script (config/rejected-lines.json)',
           any('Krish rejected' in p for p in problems('It lives in a locked box on the company\'s computers.')), True)
     check('the gate refuses through problems(), for every script', any('house rule R7' in p for p in problems(fine + ' ' + long_one)), True)
+
+    # A score with nothing to measure it against (house rule PLAIN_SCORES; Krish, 2026-10-16: "What does 42 even mean?").
+    old_90s = ('In a low gear, it scored 42 on their test. In its top gear, 58. '
+               'The older Opus 5, trying its hardest, only got 51.')
+    check('Friday\'s bare scores are refused, each one, the follow-on "58." and "got 51" too',
+          [p.split('"')[1] for p in score_problems([old_90s])], ['42', '58', '51'])
+    check('"7 to 20 points" is a bare score', len(score_problems(['It scored 7 to 20 points higher in top gear.'])), 1)
+    check('the forty-two said as a word is the same score', len(score_problems(['It scored forty-two on their test.'])), 1)
+    check('plain comparisons, shares, multiples, names and years pass', score_problems([
+        'In a hard test, the newest Claude in low gear lost to the older Claude in top gear.',
+        'In its top gear, it did much better than in its lowest. The older Opus 5, in its top gear, beat the new one.',
+        'Its score only goes up by about a third. It costs about eleven times as much.',
+        'It scored 58 out of 100. I\'m 85% sure. In March 2025, a test ran on GPT 6.1 for 4 seconds.',
+        'Before, one user in a hundred used thinking. After, seven in a hundred did.']), [])
+    check('a score refuses through problems(), for every script', any('PLAIN_SCORES' in p for p in problems(fine + ' ' + old_90s)), True)
 
     # The chapter list beside a deep cut follows the words as they are now.
     listed = '- One | starts: "Why does it"\n- Two | starts: "That is the whole"\n'

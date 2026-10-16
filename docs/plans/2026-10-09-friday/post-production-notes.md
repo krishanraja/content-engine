@@ -40,8 +40,9 @@ this file):
   Real photographs where licensed; otherwise drawn in the house style, never a
   generated picture passed off as a photo.
 - The beats to land on screen: the badge versus the gears; "most of us drive
-  everywhere in first"; the Artificial Analysis scores as a rev counter or gear
-  readout (42 in low, 58 in top); the paddle flick at the end.
+  everywhere in first"; the Artificial Analysis results as a rev counter or gear
+  readout, with no score on screen (Krish, 16 Oct, below); the paddle flick at
+  the end.
 - Krish asked for this piece to try more impactful, different kinds of post
   production than the house default. Propose two or three treatments to him
   before building (for example: gear-change cuts on the beat, a dashboard
@@ -64,3 +65,14 @@ The deep cut v5 is written in beats, one point a paragraph, each with something 
 
 So, in the words: OpenAI and Anthropic are the carmakers (BMW, Audi); ChatGPT and Claude are the cars they make (an X3, a Q5); the version, like Opus 5.5, is the badge on the back; the thinking level is the gear, and the app's setting is the gearstick; today's apps are a manual transmission, Gemini's Auto an automatic transmission, F1's paddles a semi-automatic. In the pictures: real carmaker logos and real cars at each of those points, in the long video only. The 90-second video keeps its own pictures, with no car logos or car photographs.
 
+His own car paragraph, later the same day, replaced that mapping in the deep cut (¶15, word for word): the name of the AI model is the badge on the front of a car, the thinking setting is the gears, today's apps are a manual car, and the novice argues about BMW's X3 versus Audi's Q5 while the pro looks at the gear systems beneath. The picture plan follows his paragraph.
+
+## Krish, 16 Oct (the scores)
+
+On the board, of the 90-second script's "In a low gear, it scored 42 on their test. In its top gear, 58.":
+
+"What does 42 even mean? that is not understandable. We need to simplify this"
+
+Earlier the same day: "7-20 points of improvement is too complex"
+
+So no test score is said or shown anywhere. The scripts and the article say the results as plain comparisons (the newest Claude in low gear lost to the older Claude in top gear; "about a third higher"), and the picture plan shows them as a race on a drawn road (B30 to B30b) and a rev needle placed by the true scores with no number on it. House rule PLAIN_SCORES now holds every writer, judge and picture to it, and the script check refuses a script that says a bare score.

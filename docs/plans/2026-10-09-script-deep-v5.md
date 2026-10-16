@@ -28,7 +28,7 @@ I looked up what thinking means. The AI writes out its working first. At most, y
 
 Think of a car. The name of the AI model is like the badge on the front of a car. The thinking setting is like the gears of the car. Right now, these apps are like a manual car, where you change gear yourself. In a low gear, it barely thinks. In a high gear, it thinks hardest. The novice argues about BMW's X3 versus Audi's Q5, but the pro is looking at the gear systems beneath. But with AI, most of us drive everywhere in first gear all the time, the lowest one.
 
-So how big is the difference in going up a gear? A group called Artificial Analysis ran the very same Claude, Opus 5.5, in different gears. In a low gear, it scored 42 on their test. In its top gear, 58. The older Opus 5, trying its hardest, only got 51. So changing gear beat getting a new badge. Even Anthropic's cheapest AI, Haiku, in its top gear, beat Opus 5.5 in its lowest.
+So how big is the difference in going up a gear? A group called Artificial Analysis ran the very same Claude, Opus 5.5, through a hard test in different gears. In its top gear, it did much better than in its lowest. The older Opus 5, in its top gear, beat the new one in its lowest. So did Anthropic's cheapest AI, Haiku. So changing gear beat getting a new badge.
 
 But more thinking isn't always better. Researchers asked thinking AIs a simple question. What is two plus three? One of them worked out the answer thirteen times.
 

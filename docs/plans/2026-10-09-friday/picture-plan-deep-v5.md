@@ -1,7 +1,7 @@
 # Friday deep cut v5: the picture plan
 
 Piece `904658db-4df2-4537-a0ed-ebe93e081db7`, mind.the.gap, Friday. Script:
-`docs/plans/2026-10-09-script-deep-v5.md` (1,692 words, about 11 minutes 17
+`docs/plans/2026-10-09-script-deep-v5.md` (1,689 words, about 11 minutes 16
 at Krish's pace), chapters in `-script-deep-v5.chapters.md`. The script stays
 words only; everything that goes on screen is here. Krish's direction, word
 for word, is in `post-production-notes.md` beside this file. On 16 October he
@@ -27,6 +27,13 @@ written permission on file; every car photograph cleared for a monetised
 video, with its source and licence recorded, or else drawn with the car named
 in text; logos only as their official files, only to say whose they are; and a
 no-affiliation line in the description (all under "Sourcing" below).
+
+Last on 16 October, of the test scores in the 90-second script: "What does 42
+even mean? that is not understandable. We need to simplify this". Both
+scripts now say the test results as plain comparisons, and so does the
+screen: no test score appears anywhere in this plan. The rev needle at B30
+is placed by the true scores and shows none, and a race on a drawn road (B30
+to B30b) says who beat whom.
 
 **Car logos and car photographs are for the long video only.** Krish, 16
 October: "only in the long video though". The BMW and Audi logos, the
@@ -57,7 +64,7 @@ Every row works without them, and says what it falls back to.
   gone too: its line ("Who pays for that thinking...") was cut from the
   script, and its rest for Krish's face moves into B36. The final script's
   new lines got lettered rows: B30a (Haiku in top gear passing Opus 5.5
-  stuck in first) and B33a and B33b (the cost problem: the fuel gauge
+  stuck in first), B30b (changing gear beat a new badge) and B33a and B33b (the cost problem: the fuel gauge
   against the speedometer).
 - Times are estimates at about 150 words a minute from Krish's first word
   (after the sting and the story intro).
@@ -113,8 +120,8 @@ Every row works without them, and says what it falls back to.
    third faster" say his "eleven times as much" and "about a third".
 4. **Every number drawn on screen is one the script says** (the list is near
    the end). No axis numbers, tick labels, totals or differences the script
-   does not say: the rev counter's dial has no numbers on it, only the needle
-   values, and the fuel gauge and speedometer at B33 to B33b carry none at
+   does not say: the rev counter's dial has no numbers on it, and its needle shows a
+   value only where the script says one (the 85% at B68), and the fuel gauge and speedometer at B33 to B33b carry none at
    all (the gauge has only its E and F). Screenshots are real pages and are never
    edited: crop each to the sentence that carries the point, and crop out
    figures the script does not say wherever the crop allows.
@@ -195,10 +202,12 @@ something they already want. Without B: the gear shows only inside the full
 pictures, and B65 introduces the readout fresh.
 
 **C. The rev needle.** A drawn rev counter, an arc with no numbers printed on
-it, whose needle carries the script's numbers: 42, 58 and 51 (B30) and 85%
-for the call (B68). As a transition, a needle sweep wipes each chapter card
+it. At B30 its needle sweeps from the low-gear result to the top-gear one,
+placed by the true scores but showing none (Krish, 16 October: "What does 42
+even mean?"); at B68 it carries the call's 85%, a number the script says. As a transition, a needle sweep wipes each chapter card
 in. A number you watch move is a number you remember. Without C: a
-video_card.py `bars` card with the same three numbers at B30, the house call
+pair of unlabelled bars at B30 (low gear short, top gear long, drawn to the
+true ratio), the house call
 meter at B68, and hard cuts into the chapter cards. The fuel gauge and
 speedometer at B33 to B33b are not part of C: they are built in every
 version, because they are Krish's ask.
@@ -289,8 +298,9 @@ script or its filed source does not name.
 |---|---|---|---|
 | B27 | none | LOW, then HIGH | "In a low gear, it barely thinks. In a high gear, it thinks hardest." |
 | B29a | none | 1st | "most of us drive everywhere in first gear all the time, the lowest one" |
-| B30 | Opus 5.5, then Opus 5 | LOW, TOP, TOP | Artificial Analysis pages; "trying its hardest" |
-| B30a | Haiku; Opus 5.5 (a tag on each drawn car, not the corner) | TOP; 1st | "Haiku, in its top gear, beat Opus 5.5 in its lowest" |
+| B30 | Opus 5.5 on the dial; then Opus 5 and Opus 5.5 (a tag on each drawn car) | LOW, then TOP; then TOP beside 1st | "In its top gear, it did much better than in its lowest"; "The older Opus 5, in its top gear, beat the new one in its lowest" |
+| B30a | Haiku; Opus 5.5 (a tag on each drawn car, not the corner) | TOP; 1st | "So did Anthropic's cheapest AI, Haiku" (top gear against Opus 5.5's lowest, as the line before it) |
+| B30b | Opus 5, Haiku, Opus 5.5 (on the cars) | TOP, TOP, 1st | "So changing gear beat getting a new badge" |
 | B32 | Sally's deal; 2 + 3 | 1st to HIGH; TOP | "matters most on hard jobs"; "extra thinking is wasted" |
 | B33a, B33b | Opus 5.5 on both dials (the dials, not the corner) | LOW beside TOP | "thinks as hard as it can ... thinking a little" |
 | B38 | none | LOW | "starts you in a low gear" |
@@ -327,9 +337,9 @@ script or its filed source does not name.
 - **The pro looks beneath** (cleared PHOTO or DRAWN): the cars slide apart
   to a gearbox cutaway (B29). On screen it is "looks beneath", never "under
   the hood" (another series' name).
-- **Two badges on one road** (DRAWN, B30a): a small drawn car badged
-  "Haiku" in top gear edges past a big drawn car badged "Opus 5.5" stuck in
-  first. Neither car looks like a real model or carries a maker's logo.
+- **Badges on one road** (DRAWN, B30 to B30b): a drawn car badged "Opus
+  5", older, in top gear, passes a big drawn car badged "Opus 5.5" stuck in
+  first; then a small car badged "Haiku" in top gear edges past it too. Neither car looks like a real model or carries a maker's logo.
 - The badge chip on the dash keeps the idea running: the name small and
   grey, the gear big and bright. The layout itself says which matters more.
 
@@ -740,58 +750,75 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN.
 
 **B30 · ¶16 · 4:16 · "So how big is the difference in going up a gear?"** `fri-30-rev-counter` (strongest moment 2)
-- Point: the same badge in a higher gear jumps further than a new badge does.
+- Point: the same badge does much better in a higher gear, and an older
+  badge in top gear beats the new one in its lowest.
 - Screen: FACE for the question (the return to his face after the car
-  sequence). Then FULL from "A group called Artificial Analysis": first the
-  Artificial Analysis page header for Claude Opus 5.5, then the rev counter
-  [C] (an arc with no numbers printed on it; the needle carries each score):
-  - "In a low gear, it scored 42": badge "Opus 5.5", dash LOW, needle to 42.
-  - "In its top gear, 58.": dash TOP, the needle sweeps to 58, the biggest
-    movement in the film so far.
-  - "The older Opus 5, trying its hardest, only got 51.": the badge swaps to
-    "Opus 5" in duller chrome, dash TOP, needle to 51. The 42 and 58 needles
-    stay as ghosts.
-  - "So changing gear beat getting a new badge.": two arrows under the dial:
-    a long one, "Gear: 42 → 58", and a short one, "Badge: 51 → 58".
-- Text: "42", "58", "51" at the needle tips; then "Changing gear beat a new
-  badge". Source line under the dial: "Artificial Analysis".
-- Move: [A] clack on "top gear"; the arrows draw on "changing gear" and "a
-  new badge". Without C: a video_card.py `bars` card with the same three
-  numbers and the same two arrows.
-- Source: SHOT artificialanalysis.ai/models/claude-opus-5-5-low (the "scores
-  42" sentence), /models/claude-opus-5-5 (58), /models/claude-opus-5 (51),
-  each cropped to its sentence and ending before the median figure. LOGO
-  Anthropic.
+  sequence). Then FULL from "A group called Artificial Analysis": the
+  Artificial Analysis page header for Claude Opus 5.5 (the header only),
+  then a drawn sheet marked "hard test" slides under the badge "Opus 5.5",
+  then the rev counter [C] (an arc with no numbers printed on it, and no
+  number on the needle):
+  - "In its top gear, it did much better than in its lowest.": dash LOW,
+    the needle rests low; on "top gear" the dash steps to TOP and the needle
+    sweeps far round, the biggest movement in the film so far. The low
+    needle stays as a ghost. Both positions are placed by the true scores,
+    so the gap on screen is the real one, but no score is shown.
+  - "The older Opus 5, in its top gear, beat the new one in its lowest.":
+    cut to a drawn two-lane road seen side on, in the house style (the race
+    runs on to B30b). In the slow lane a big drawn car, badge "Opus 5.5" on
+    its nose in the B04 chrome lettering, gear tag `1st`, crawling, a puff
+    of exhaust behind it. An older car, badge "Opus 5" in duller chrome,
+    gear tag `TOP`, comes up in the fast lane and passes it clearly.
+- Text: "Same badge, top gear: much better" (on the needle sweep); then
+  "Older badge, top gear, wins" (on the pass). Source line under the dial
+  and the road: "Artificial Analysis". No scores.
+- Move: [A] a clack on "top gear" as the needle sweeps; the older car passes
+  on "beat the new one", and [A] clacks as its tag lights `TOP`. Without C:
+  two unlabelled bars, low gear short and top gear long, drawn to the true
+  ratio, then the same road.
+- Source: SHOT artificialanalysis.ai/models/claude-opus-5-5 (the page header
+  only; it and the pages for Opus 5.5 in low gear and Opus 5, filed with it,
+  carry the scores, which are not shown). DRAWN (the sheet, the dial, the
+  road). LOGO Anthropic.
 
-**B30a · ¶16 · 4:39 · "Even Anthropic's cheapest AI, Haiku, in its top gear, beat Opus 5.5 in its lowest."** `fri-30a-haiku-passes` (strongest moment 2)
-- Point: the gear can beat the model: Anthropic's cheapest AI in its top
-  gear beat Opus 5.5 in its lowest.
-- Screen: FULL, drawn, a two-lane road seen side on, in the house style. In
-  the slow lane a big drawn car, badge "Opus 5.5" on its nose in the B04
-  chrome lettering and a gear tag on `1st`, crawling, a puff of exhaust
-  behind it. On "Anthropic's cheapest AI" a small drawn car, badge "Haiku",
-  gear tag `TOP`, comes up from behind in the fast lane with speed lines.
-  On "beat Opus 5.5 in its lowest" it draws level and edges past by a nose.
-  It passes by a nose, not by a mile: in the article Haiku's top-gear score
-  is only just above Opus 5.5's lowest, so the small car does not leave the
-  big one behind. Neither car looks like a real model or carries a maker's
-  logo. The gear tags are in the dash's style, so the row reads the same
-  without B, and [B] the corner dash steps aside while the two tags show.
-  Anthropic logo small, top left (both are Anthropic's).
+**B30a · ¶16 · 4:38 · "So did Anthropic's cheapest AI, Haiku."** `fri-30a-haiku-passes` (strongest moment 2)
+- Point: the gear can beat the badge: Anthropic's cheapest AI, in its top
+  gear, beat Opus 5.5 in its lowest too.
+- Screen: FULL, the same drawn road. Opus 5.5 still crawling in `1st`, the
+  Opus 5 car now ahead. On "Anthropic's cheapest AI" a small drawn car,
+  badge "Haiku" in the B04 chrome lettering, gear tag `TOP`, comes up from
+  behind with speed lines, and on "Haiku" it draws level and edges past by a
+  nose. By a nose, not by a mile: Haiku's top-gear result is only just above
+  Opus 5.5's lowest, so the small car does not leave the big one behind.
+  Neither car looks like a real model or carries a maker's logo. The gear
+  tags are in the dash's style, so the row reads the same without B, and [B]
+  the corner dash steps aside while the tags show. Anthropic logo small, top
+  left (all three are Anthropic's).
 - Text: "Anthropic's cheapest AI" (over the small car as it enters), the
-  badges "Haiku" and "Opus 5.5", the tags "TOP" and "1st". Source line under
-  the road: "Artificial Analysis". No scores: the script gives none here.
-- Move: the small car enters on "Haiku"; it edges past on "beat Opus 5.5";
-  [A] a clack as its tag lights `TOP`. Then cut to FULL for B31.
+  badges "Haiku", "Opus 5" and "Opus 5.5", the tags "TOP" and "1st". No
+  scores: the script gives none.
+- Move: the small car enters on "Anthropic's cheapest AI" and edges past on
+  "Haiku"; [A] a clack as its tag lights `TOP`.
 - Source: DRAWN, LOGO Anthropic. The fact is on Artificial Analysis
   (artificialanalysis.ai/articles/claude-haiku-5-5, 7 October 2026, with
   the Opus 5.5 low page from B30); neither page is shown, because both carry
   scores the script does not say.
 
-**B31 · ¶17 · 4:45 · "But more thinking isn't always better."** `fri-31-two-plus-three`
+**B30b · ¶16 · 4:41 · "So changing gear beat getting a new badge."** `fri-30b-gear-beats-badge` (strongest moment 2)
+- Point: what the test shows: changing gear beat getting a new badge.
+- Screen: FULL, the view lifts from the road to above it: the two top-gear
+  cars ahead, Opus 5.5 behind in `1st`. The three badges shrink, small and
+  grey, and the three gear tags grow big and bright, so the picture says
+  which matters more (the badge chip's idea from the dash).
+- Text: "Changing gear beat a new badge".
+- Move: the lift starts on "changing gear"; the text lands on "a new
+  badge". Then cut to FACE for B31.
+- Source: DRAWN.
+
+**B31 · ¶17 · 4:44 · "But more thinking isn't always better."** `fri-31-two-plus-three`
 - Point: on an easy question, more thinking is waste.
 - Screen: FACE, PUNCH on "But more thinking isn't always better." (the turn,
-  and the return to his face after B30's and B30a's pictures). Then FULL from
+  and the return to his face after the race, B30 to B30b). Then FULL from
   "Researchers asked": the paper's title page, then "2 + 3 = 5" written out
   again and again, stacking down the frame faster and faster, a counter
   beside it.
@@ -800,7 +827,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: SHOT arxiv.org/abs/2412.21187 (title: "Do NOT Think That Much for
   2+3=?"). DRAWN stack.
 
-**B32 · ¶18 · 4:56 · "The thinking gear matters most on hard jobs, like Sally's deal."** `fri-32-hard-easy`
+**B32 · ¶18 · 4:55 · "The thinking gear matters most on hard jobs, like Sally's deal."** `fri-32-hard-easy`
 - Point: gear up for hard jobs; on easy ones extra thinking is waste.
   (Sally S4.)
 - Screen: SPLIT in two pictures: left, Sally's deal, the dash going from 1st
@@ -814,7 +841,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 
 **Card 4** lands before "All that hidden working runs" (four lights).
 
-**B33 · ¶19 · 5:06 · "All that hidden working runs on huge computers,"** `fri-33-data-centre`
+**B33 · ¶19 · 5:04 · "All that hidden working runs on huge computers,"** `fri-33-data-centre`
 - Point: all that hidden working costs money to run.
 - Screen: FULL. A cleared photograph of a data centre aisle, no company's
   name or logo in frame. On "which cost money to run" it slides up into a
@@ -829,7 +856,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: the data centre a cleared PHOTO (Pexels or Unsplash, source and
   licence recorded); DRAWN dashboard.
 
-**B33a · ¶19 · 5:11 · "If Opus 5.5 thinks as hard as it can,"** `fri-33a-fuel-vs-speed` (strongest moment 3)
+**B33a · ¶19 · 5:10 · "If Opus 5.5 thinks as hard as it can,"** `fri-33a-fuel-vs-speed` (strongest moment 3)
 - Point: the cost problem, Krish's "visualize this problem really well in
   post": thinking as hard as it can burns about eleven times the fuel...
 - Screen: FULL. The dashboard splits into two, side by side: the same car on
@@ -853,15 +880,15 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN. The figures behind it are on the Artificial Analysis pages
   filed for B30 and are not shown.
 
-**B33b · ¶19 · 5:19 · "But its score only goes up by about a third."** `fri-33a-fuel-vs-speed` (continues)
+**B33b · ¶19 · 5:18 · "But its score only goes up by about a third."** `fri-33a-fuel-vs-speed` (continues)
 - Point: ...and its score goes up by only about a third.
 - Screen: the same two dashboards; now the speedometers. The left needle
   rests where the low gear's score puts it. On "only goes up" the right
   needle climbs, and stops a short way past it, about a third further round
   the dial. The needle angles are proportional to the scores, measured from
-  the dial's resting point: the needles stop at the 42 and 58 positions, the
-  same scores as B30, unlabelled here, so the step on screen is the true
-  one. Hold the finished pair for 2 seconds: a nearly empty tank beside a
+  the dial's resting point: the needles stop where the low-gear and
+  top-gear scores put them, the same ratio as the rev needle at B30, with
+  no number on either, so the step on screen is the true one. Hold the finished pair for 2 seconds: a nearly empty tank beside a
   needle barely past its neighbour (B35's meter waits for the hold, up to 2
   seconds behind his words). [B] The corner dash steps aside through
   B33a and B33b; the gear chips sit on the dials.
@@ -869,7 +896,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: the right needle climbs on "goes up" and stops on "a third"; hold.
 - Source: DRAWN (the same dashboard).
 
-**B35 · ¶20 · 5:23 · "Businesses that put AI inside their own apps"** `fri-35-meter`
+**B35 · ¶20 · 5:22 · "Businesses that put AI inside their own apps"** `fri-35-meter`
 - Point: businesses pay per word, so more thinking earns OpenAI and
   Anthropic more. (B34 merged here and into B36: its line, "Who pays for
   that thinking depends on how you pay.", was cut from the script. The turn
@@ -883,7 +910,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN, LOGO. No pricing page: it would put prices on screen that
   the script does not say.
 
-**B36 · ¶21 · 5:33 · "But most of us pay the same amount every month,"** `fri-36-meter-flips`
+**B36 · ¶21 · 5:32 · "But most of us pay the same amount every month,"** `fri-36-meter-flips`
 - Point: on a flat plan, the company pays for every extra thought.
 - Screen: SPLIT, the return to his face in this chapter: Krish in the left
   third. On the right the meter swings across: your side now shows a flat
@@ -893,7 +920,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: the swing lands on "Then OpenAI or Anthropic pays".
 - Source: DRAWN, LOGO.
 
-**B37 · ¶21 · 5:42 · "In January 2025, Sam Altman said OpenAI was losing money"** `fri-37-200-a-month`
+**B37 · ¶21 · 5:41 · "In January 2025, Sam Altman said OpenAI was losing money"** `fri-37-200-a-month`
 - Point: even the $200 plan lost OpenAI money, because people used it far
   more than OpenAI expected.
 - Screen: FULL. Altman's post on X, "insane thing: we are currently losing
@@ -908,7 +935,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
   openai.com/index/introducing-chatgpt-pro/ (cropped to the price line).
   LOGO OpenAI.
 
-**B38 · ¶22 · 5:52 · "That, I think, is why the app starts you in a low gear."**
+**B38 · ¶22 · 5:50 · "That, I think, is why the app starts you in a low gear."**
 - Point: so the app starts you in a low gear (his reading, so his face).
 - Screen: FACE ALONE (rest). PUNCH on "starts you in a low gear." With B,
   the dash shows LOW in the corner and nothing else is over him.
@@ -921,7 +948,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 
 **Card 5** lands before "So who decides how hard" (five lights).
 
-**B39 · ¶23 · 5:57 · "So who decides how hard your AI thinks?"** `fri-39-inside-one-gear`
+**B39 · ¶23 · 5:56 · "So who decides how hard your AI thinks?"** `fri-39-inside-one-gear`
 - Point: even now, inside one gear, the AI decides how much to think.
 - Screen: FACE for the question. Then [B] the dash shows a single gear slot
   with a small needle moving inside it, on "Right now, you do". Without B:
@@ -931,7 +958,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN. The fact is in OpenAI's reasoning guide ("reason
   adaptively") and Anthropic's "Steering thinking" docs; not shown.
 
-**B40 · ¶24 · 6:03 · "The next step is the AI choosing the gear for you, and Google has started."** `fri-40-gemini-auto`
+**B40 · ¶24 · 6:02 · "The next step is the AI choosing the gear for you, and Google has started."** `fri-40-gemini-auto`
 - Point: Gemini's free app is now an automatic transmission: it picks the
   gear for you.
 - Screen: FULL. The automatic selector (P R N D) pushes the manual stick
@@ -948,7 +975,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
   else DRAWN; SHOT support.google.com/gemini/answer/17004136 and
   9to5google.com/2026/10/09/gemini-auto-free-users/. LOGO Google.
 
-**B41 · ¶25 · 6:22 · "OpenAI has gone the other way, and taken ChatGPT's automatic gear picker away, twice."** `fri-41-taken-away-twice`
+**B41 · ¶25 · 6:21 · "OpenAI has gone the other way, and taken ChatGPT's automatic gear picker away, twice."** `fri-41-taken-away-twice`
 - Point: OpenAI took its automatic away twice.
 - Screen: FULL. A drawn strip with two places for coral stamps: "December:
   free users" and "September: Plus and Pro". [B] Dash AUTO.
@@ -957,7 +984,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
   September" (B43); the dash's AUTO is struck out at each.
 - Source: DRAWN, LOGO OpenAI.
 
-**B42 · ¶25 · 6:28 · "Last December, free users lost it."** `fri-42-wired`
+**B42 · ¶25 · 6:26 · "Last December, free users lost it."** `fri-42-wired`
 - Point: OpenAI gave one reason; WIRED reported that the picker sent many
   more free users to costlier thinking.
 - Screen: FULL. WIRED's story with this sentence highlighted: "the router
@@ -968,7 +995,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: SHOT wired.com/story/openai-router-relaunch-gpt-5-sam-altman/
   (16 December 2025).
 
-**B43 · ¶25 · 6:43 · "Then in September, people on the Plus and Pro plans lost it too."** `fri-43-plus-pro`
+**B43 · ¶25 · 6:42 · "Then in September, people on the Plus and Pro plans lost it too."** `fri-43-plus-pro`
 - Point: paid users lost it too, with no reason given; now you pick.
 - Screen: FULL. OpenAI's release note: "We're retiring automatic switching
   from Instant to Thinking (reasoning) for ChatGPT Plus and Pro users
@@ -979,14 +1006,14 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: SHOT help.openai.com/en/articles/6825453-chatgpt-release-notes
   (the 14 September 2026 entry). The manual stick (reused). LOGO OpenAI.
 
-**B44 · ¶26 · 6:53 · "I don't think that lasts, and here's my guess why."**
+**B44 · ¶26 · 6:52 · "I don't think that lasts, and here's my guess why."**
 - Point: his guess is coming.
 - Screen: FACE ALONE (rest). PUNCH on "my guess why."
 - Text: none.
 - Move: hold.
 - Source: none.
 
-**B45 · ¶26 · 6:57 · "Think what each part of the car is worth to OpenAI or Anthropic."** `fri-45-xray-car` (strongest moment 4)
+**B45 · ¶26 · 6:56 · "Think what each part of the car is worth to OpenAI or Anthropic."** `fri-45-xray-car` (strongest moment 4)
 - Point: each part of the car is worth something different to them.
 - Screen: FULL. First, for 2 seconds, the car key from ¶15 returns full
   frame (long video only), its badge and gear rows lit: "Model name = the
@@ -999,7 +1026,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN, LOGO; the key reused from B23 to B26 (its marks and
   pictures, long video only).
 
-**B46 · ¶26 · 7:02 · "The badge brings attention."** `fri-45-xray-car` (continues)
+**B46 · ¶26 · 7:01 · "The badge brings attention."** `fri-45-xray-car` (continues)
 - Point: the badge buys attention, so they keep your eyes on it and off the
   gear.
 - Screen: the same car. The badge lights coral and its label fills; the
@@ -1009,7 +1036,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: continuous.
 - Source: DRAWN, SHOT (reused).
 
-**B47 · ¶26 · 7:09 · "Even the scores Anthropic shows off for Opus 5.5 were in top gear."** `fri-47-top-gear-scores` (strongest moment 4)
+**B47 · ¶26 · 7:08 · "Even the scores Anthropic shows off for Opus 5.5 were in top gear."** `fri-47-top-gear-scores` (strongest moment 4)
 - Point: the scores you are shown are top gear; the app starts you lower.
 - Screen: FULL, two pages side by side. Left: the footnote on Anthropic's
   Opus 5.5 page, "all Claude Opus 5.5 results use adaptive thinking at max
@@ -1022,7 +1049,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
   values); SHOT platform.claude.com/docs/en/build-with-claude/effort (the
   default line). LOGO Anthropic.
 
-**B48 · ¶26 · 7:18 · "The gears decide the bill."** `fri-45-xray-car` (continues)
+**B48 · ¶26 · 7:17 · "The gears decide the bill."** `fri-45-xray-car` (continues)
 - Point: the gears are the bill: on a monthly plan, every high gear costs
   them.
 - Screen: back to the X-ray car. The gearbox lights; its label fills; the
@@ -1032,7 +1059,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: continuous.
 - Source: DRAWN.
 
-**B49 · ¶26 · 7:24 · "They'd like their own hand on the gearstick,"** `fri-49-their-hand`
+**B49 · ¶26 · 7:23 · "They'd like their own hand on the gearstick,"** `fri-49-their-hand`
 - Point: they want to decide how much thinking each question gets.
 - Screen: FULL. The manual stick from B26; the OpenAI and Anthropic logos
   slide in and stop just beside the gear knob, reaching for it (beside it,
@@ -1041,7 +1068,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: the logos land on "their own hand".
 - Source: the manual stick (reused), LOGO.
 
-**B50 · ¶26 · 7:31 · "Most of us would rather not change gear at all."** `fri-50-automatic-wins`
+**B50 · ¶26 · 7:30 · "Most of us would rather not change gear at all."** `fri-50-automatic-wins`
 - Point: most of us would rather not shift, so the automatic wins (his call).
 - Screen: the manual stick dissolves into the automatic selector, which
   clunks into D. Then FACE, PUNCH on "So I think the automatic wins."
@@ -1053,7 +1080,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 
 **Card 6** lands before "Is that good? Some of" (six lights).
 
-**B51 · ¶27 · 7:37 · "Is that good? Some of both."**
+**B51 · ¶27 · 7:36 · "Is that good? Some of both."**
 - Point: some of both, and the good: people don't change settings, so the
   starting gear is the gear they get.
 - Screen: FACE ALONE (rest) through "People don't change settings."
@@ -1061,7 +1088,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: hold.
 - Source: none.
 
-**B52 · ¶27 · 7:41 · "Back in 2025, when ChatGPT's automatic gear picker first arrived,"** `fri-52-hundred-dots`
+**B52 · ¶27 · 7:40 · "Back in 2025, when ChatGPT's automatic gear picker first arrived,"** `fri-52-hundred-dots`
 - Point: when the app picked, far more people got thinking answers.
 - Screen: FULL. A grid of 100 dots, 10 by 10. "Before": no dot fully lit,
   labelled "Under 1 in 100". "After": seven dots light coral. A small inset
@@ -1072,7 +1099,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN grid; SHOT x.com/sama/status/1954603417252532479 (cropped
   before the Plus figures). LOGO OpenAI.
 
-**B53 · ¶28 · 7:56 · "Anthropic learned this too. This March, it moved its coding app down to the middle gear."** `fri-53-claude-code-mid`
+**B53 · ¶28 · 7:55 · "Anthropic learned this too. This March, it moved its coding app down to the middle gear."** `fri-53-claude-code-mid`
 - Point: Anthropic moved the starting gear down, and most people stayed in
   it.
 - Screen: FULL. Anthropic's engineering post with "we changed Claude Code's
@@ -1083,7 +1110,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: SHOT anthropic.com/engineering/april-23-postmortem (crop the
   sentence so the date is out). LOGO Anthropic.
 
-**B54 · ¶28 · 8:10 · "So whoever picks the starting gear decides how hard most people's AI thinks."** `fri-54-whoever-picks`
+**B54 · ¶28 · 8:09 · "So whoever picks the starting gear decides how hard most people's AI thinks."** `fri-54-whoever-picks`
 - Point: the default is the decision; an automatic would at least think hard
   when it matters. (Sally S5.)
 - Screen: CARD: "Whoever picks the starting gear decides." Then, on "An AI that picks
@@ -1094,14 +1121,14 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Source: DRAWN (video_card.py `statement`, with the OpenAI and Anthropic
   logos), the selector (reused).
 
-**B55 · ¶29 · 8:22 · "Now the bad. You can't see it."**
+**B55 · ¶29 · 8:20 · "Now the bad. You can't see it."**
 - Point: the bad: you can't see it.
 - Screen: FACE. PUNCH on "You can't see it."
 - Text: none.
 - Move: hold.
 - Source: none.
 
-**B56 · ¶29 · 8:24 · "This January, OpenAI made ChatGPT think for less time."** `fri-56-silent-downshift` (strongest moment 5)
+**B56 · ¶29 · 8:23 · "This January, OpenAI made ChatGPT think for less time."** `fri-56-silent-downshift` (strongest moment 5)
 - Point: OpenAI turned the thinking down, by mistake cut Extended too, and
   nobody could see it.
 - Screen: FULL. OpenAI's release note, "We lowered the Standard and Light
@@ -1121,7 +1148,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
   (the "Update on thinking time settings" entry; crop the dates out). DRAWN
   dash. LOGO OpenAI.
 
-**B57 · ¶30 · 8:38 · "When the AI picks your gear, is it thinking about your ease of use, or about their profit?"**
+**B57 · ¶30 · 8:37 · "When the AI picks your gear, is it thinking about your ease of use, or about their profit?"**
 - Point: the question that matters: whose interest, and can you see it?
 - Screen: FACE ALONE (rest), the longest hold in the film. PUNCH on "about
   their profit?"; out again on "And can you see what it picked?", where [B]
@@ -1136,21 +1163,21 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 **Card 7** lands before "So what should you do?" (all seven lights flash
 and turn mint).
 
-**B58 · ¶31 · 9:00 · "So what should you do?"**
+**B58 · ¶31 · 8:58 · "So what should you do?"**
 - Point: the turn to advice.
 - Screen: FACE.
 - Text: none.
 - Move: hold.
 - Source: none.
 
-**B59 · ¶32 · 9:02 · "For quick, everyday stuff, a low gear is fine."** `fri-59-low-is-fine`
+**B59 · ¶32 · 9:00 · "For quick, everyday stuff, a low gear is fine."** `fri-59-low-is-fine`
 - Point: low gear is fine for quick stuff.
 - Screen: FACE. [B] Dash LOW, in mint (the answer). Without B: the text alone.
 - Text: "Quick stuff: low gear is fine"
 - Move: hold.
 - Source: DRAWN.
 
-**B60 · ¶33 · 9:05 · "For anything you'll act on, change the gear yourself."** `fri-60-act-on-it` (Sally S6)
+**B60 · ¶33 · 9:04 · "For anything you'll act on, change the gear yourself."** `fri-60-act-on-it` (Sally S6)
 - Point: gear up for anything you'll act on.
 - Screen: FULL. A hand shifts the manual stick up; [B] dash HIGH in mint.
   Then four fast cards, one on each phrase: Sally flicks her gear up before
@@ -1162,7 +1189,7 @@ and turn mint).
 - Source: a hand shifting up, a cleared PHOTO with no maker's mark, else
   DRAWN; DRAWN cards and Sally.
 
-**B61 · ¶33 · 9:14 · "On ChatGPT, pick Medium or High."** `fri-61-where-to-click`
+**B61 · ¶33 · 9:13 · "On ChatGPT, pick Medium or High."** `fri-61-where-to-click`
 - Point: exactly where to click.
 - Screen: FULL. Krish's ChatGPT picker with Medium and High ringed in mint;
   then Claude's effort menu, the ring on the upper levels; then Gemini's
@@ -1173,7 +1200,7 @@ and turn mint).
   help.openai.com/en/articles/20001354, support.claude.com/en/articles/8664678,
   support.google.com/gemini/answer/17004136. LOGO OpenAI, Anthropic, Google.
 
-**B62 · ¶33 · 9:24 · "It takes longer, sometimes minutes, and uses up your plan's limit faster."** `fri-62-your-limit`
+**B62 · ¶33 · 9:23 · "It takes longer, sometimes minutes, and uses up your plan's limit faster."** `fri-62-your-limit`
 - Point: the cost to you: slower, and it uses up your plan's limit faster;
   worth it for the questions that matter.
 - Screen: FACE. [B] Dash HIGH in mint. On "uses up your plan's limit
@@ -1186,7 +1213,7 @@ and turn mint).
   support.claude.com/en/articles/8664678 ("you'll reach your usage limits
   faster"), not shown.
 
-**B63 · ¶34 · 9:32 · "Formula 1 found a better way decades ago, called a semi-automatic."** `fri-63-paddles` (strongest moment 6)
+**B63 · ¶34 · 9:31 · "Formula 1 found a better way decades ago, called a semi-automatic."** `fri-63-paddles` (strongest moment 6)
 - Point: F1's better way is the semi-automatic: the driver picks each gear
   by flicking a paddle; a computer does the rest.
 - Screen: FULL. An F1 steering wheel with its paddles (act 3), landing on
@@ -1202,7 +1229,7 @@ and turn mint).
   Unsplash) with no team, sponsor or F1 mark readable, else DRAWN; the
   paddle flick DRAWN over it; never broadcast footage.
 
-**B64 · ¶34 · 9:44 · "Software that changes gear by itself was tried,"** `fri-64-banned`
+**B64 · ¶34 · 9:43 · "Software that changes gear by itself was tried,"** `fri-64-banned`
 - Point: gearboxes that changed by themselves were banned; the driver still
   picks every gear.
 - Screen: FULL. A coral stamp, "Banned since 2004", lands on a drawn
@@ -1212,7 +1239,7 @@ and turn mint).
 - Move: the stamp lands on "banned".
 - Source: DRAWN. The fact is from Raceteq, filed on the piece.
 
-**B65 · ¶34 · 9:52 · "Let the AI pick our gear, if it must."** `fri-65-gear-under-answer` (strongest moment 6)
+**B65 · ¶34 · 9:51 · "Let the AI pick our gear, if it must."** `fri-65-gear-under-answer` (strongest moment 6)
 - Point: Krish's ask: let it pick, give us paddles, and show which gear it
   picked under every answer.
 - Screen: FULL. A house-drawn mock, labelled "What I'm asking for": a plain
@@ -1224,7 +1251,7 @@ and turn mint).
 - Move: the dock is the payoff of treatment B. Hold 3 seconds.
 - Source: DRAWN. Not ChatGPT's, Claude's or Gemini's screen.
 
-**B66 · ¶35 · 10:03 · "We've just spent time learning to drive a car with a manual transmission."** `fri-66-three-gearboxes`
+**B66 · ¶35 · 10:02 · "We've just spent time learning to drive a car with a manual transmission."** `fri-66-three-gearboxes`
 - Point: the whole arc: a manual transmission now, an automatic next,
   paddles for those who care.
 - Screen: FULL. The three transmissions side by side, as used before (the
@@ -1238,7 +1265,7 @@ and turn mint).
 - Move: each panel lights on its line.
 - Source: the three transmissions (reused).
 
-**B67 · ¶35 · 10:23 · "For anything that matters, I'll be one of them."**
+**B67 · ¶35 · 10:22 · "For anything that matters, I'll be one of them."**
 - Point: where Krish stands.
 - Screen: FACE ALONE (rest). Hold, no punch: let it land. The music lifts a
   touch after the line.
@@ -1246,7 +1273,7 @@ and turn mint).
 - Move: hold.
 - Source: none.
 
-**B68 · ¶36 · 10:26 · "Here's my bet."** `fri-68-the-call`
+**B68 · ¶36 · 10:25 · "Here's my bet."** `fri-68-the-call`
 - Point: the dated call, and how sure he is.
 - Screen: FACE, PUNCH on "Here's my bet." Then CARD, mint: "June 2027: free
   users automatic again", with [B] the dash on AUTO and the OpenAI logo. On "drive
@@ -1256,7 +1283,7 @@ and turn mint).
 - Move: the needle settles on "85%".
 - Source: DRAWN, the selector (reused), LOGO OpenAI.
 
-**B69 · ¶36 · 10:42 · "Paid users will start in automatic too."** `fri-69-semi-automatic`
+**B69 · ¶36 · 10:41 · "Paid users will start in automatic too."** `fri-69-semi-automatic`
 - Point: paid users go automatic too, but with a semi-automatic setting.
 - Screen: FACE (opinion) through "help the AI company control its costs." Then the
   F1 wheel for "But paid plans will have a semi-automatic setting",
@@ -1265,7 +1292,7 @@ and turn mint).
 - Move: [A] clack on the last flick.
 - Source: the F1 wheel (reused).
 
-**B70 · ¶37 · 10:57 · "That's it for this week's mind.the.gap."** `fri-70-sign-off`
+**B70 · ¶37 · 10:56 · "That's it for this week's mind.the.gap."** `fri-70-sign-off`
 - Point: the full article, send it on, tell him in the comments.
 - Screen: FACE ALONE (rest). Lower third "makeyourmindup.ai" on "free at
   makeyourmindup.ai". On "do you pick the gear, or leave it?" [B] the dash
@@ -1293,13 +1320,17 @@ Spend most of the post-production effort here, in this order.
    funny. Clearing the car pictures is the biggest sourcing job in the film
    (long video only): search the cleared libraries first, and draw whatever
    does not clear, with the car named in text.
-2. **"So how big is the difference in going up a gear?" (B30 and B30a, about
-   4:16 to 4:45): the rev counter, then Haiku passing Opus 5.5.** The only
-   hard proof of the main claim, in three numbers. The needle sweep from 42
-   to 58 is the biggest movement in the film, and the two arrows (gear 42 to
-   58, badge 51 to 58) make "changing gear beat a new badge" readable in one
-   look. The small Haiku in top gear edging past the big Opus 5.5 stuck in
-   first then says it again with no numbers at all, and makes it funny.
+2. **"So how big is the difference in going up a gear?" (B30 to B30b,
+   about 4:16 to 4:45): the rev needle, then the race.** The only hard proof
+   of the main claim, now with no numbers in it at all (Krish, 16 October:
+   "What does 42 even mean? that is not understandable. We need to simplify
+   this"). The needle sweeping from low gear to top is the biggest movement
+   in the film, placed by the true scores but showing none. Then the race
+   says it in a way anyone gets: the older Opus 5 in top gear passes the new
+   Opus 5.5 stuck in first, Anthropic's cheapest AI, Haiku, edges past it
+   too, and the lift shows the gears big and the badges small. "Changing
+   gear beat a new badge" reads in one look, and the little car passing the
+   big one makes it funny.
 3. **"If Opus 5.5 thinks as hard as it can" (B33 to B33b, about 5:06 to
    5:23): the fuel gauge against the speedometer.** Krish's ask: "and
    visualize this problem really well in post". The cost problem in one
@@ -1480,7 +1511,7 @@ point, highlight in coral, never edit the page.
 | B14 | openai.com/index/introducing-4o-image-generation/ | title |
 | B14, B15 | x.com/sama/status/1906771292390666325 | "we added one million users in the last hour." and the date |
 | B15 | openai.com/index/march-funding-updates/ | the date and the $40 billion sentence |
-| B30 | artificialanalysis.ai/models/claude-opus-5-5-low, /models/claude-opus-5-5, /models/claude-opus-5 | each score sentence, ending before the median figure; the page header for Opus 5.5 |
+| B30 | artificialanalysis.ai/models/claude-opus-5-5 | the page header for Opus 5.5 only; its score sentence, and those on /models/claude-opus-5-5-low and /models/claude-opus-5, are filed as sources and never shown, because the script says no scores |
 | B31 | arxiv.org/abs/2412.21187 | the title |
 | B37 | x.com/sama/status/1876104315296968813; openai.com/index/introducing-chatgpt-pro/ | the post; the price line |
 | B40 | support.google.com/gemini/answer/17004136; 9to5google.com/2026/10/09/gemini-auto-free-users/ | "Auto will be the default setting for users without a Google AI plan."; the headline and date |
@@ -1503,8 +1534,8 @@ The drawn car front and badges (B04, B05, B09, B30), the drawn "Opus 5.5"
 badge with its "Illustration" label (B24), the car key (B23 to B29, B45),
 the three-question card (B06), the verdict chips (B10), the split-flap badge
 (B12), Sally's set (S1 to S6), the thinking notebook (B22, B27), the
-first-gear map (B29a), the rev counter (B30, B68), the two cars on the road
-(B30a), the 2 + 3 stack (B31), the fuel gauge and speedometer dashboard
+first-gear map (B29a), the rev counter (B30, B68), the three cars on the road
+(B30 to B30b), the 2 + 3 stack (B31), the fuel gauge and speedometer dashboard
 (B33 to B33b, and its gauge again at B62), the meter (B35, B36, B48), the
 X-ray car (B45 to B48), the 100-dot grid (B52), the timeline stamps (B41),
 the statement card (B54), the silent dash (B56), the answer mock with
@@ -1528,11 +1559,13 @@ are declared on the long video alone.
 Only these, because the script says them: Opus 4.8, Opus 5, Opus 5.5, Opus
 5.56 (the joke, always with its "?"), GPT 5.1, GPT 6.1, May, July,
 September, November, March 2025, 1 million in one hour, $40 billion, 4
-seconds, 6 months later, 42, 58, 51, 2 + 3, 13 times, about 11x, about a
+seconds, 6 months later, 2 + 3, 13 times, about 11x, about a
 third, January 2025, $200 plan, 9 October, December, 2025, under 1 in 100,
-7 in 100, 2004, June 2027, 85%, and the model names X3 and Q5. The arrows in
-B30 use only 42, 51 and 58; no difference between them is printed. The dials
-have no numbers of their own (the fuel gauge only its E and F); B30a and
+7 in 100, 2004, June 2027, 85%, and the model names X3 and Q5. No test score is
+on screen anywhere (Krish, 16 October: "What does 42 even mean?"): B30 to
+B30b say the results as who beat whom, and the rev needle keeps the true
+ratio with no number on it. The dials
+have no numbers of their own (the fuel gauge only its E and F); B30 to B30b and
 B33 to B33b show no scores or prices, though their drawings keep the true
 ratios. A screenshot keeps any figure its cropped sentence holds,
 and a photograph keeps what is on the thing itself (the lettering of the

@@ -452,6 +452,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     on: '2026-10-13', source: 'chat, on Wednesday\'s Muse scripts', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
+  {
+    id: 'PLAIN_SCORES', name: 'No score without something to measure it against',
+    text: 'Never give a reader or a viewer a bare score: a benchmark or index number ("it scored 42", "58 in top gear", "7 to 20 points") means nothing to someone who has never seen the test. Say what the number shows as a plain comparison ("it did much better in its top gear", "the older one in top gear beat the new one in its lowest"), a share ("about a third higher") or a multiple ("about eleven times the cost"). A score may appear only with its scale and what it compares to in the same sentence. The same holds for every number on screen: a picture shows only numbers the words say, and says what they mean.',
+    said: 'What does 42 even mean? that is not understandable. We need to simplify this. (Earlier the same day: 7-20 points of improvement is too complex)',
+    on: '2026-10-16', source: 'board comment on Friday\'s 90-second script; checked by scripts/post-pack/story_check.py (score_problems), which refuses a script that says one', status: 'live',
+    stages: ['write', 'judge_draft', 'final_pass', 'visual'],
+  },
 ])
 
 /** The rules a stage enforces, for one subchannel or the house as a whole. */

@@ -525,6 +525,25 @@
      "how": "a paid fact check refuses before any model call while a filed source would not reach the checkers whole; the free pre-check names each one (filed_sources_cut)"
     }
    ]
+  },
+  {
+   "id": "bare-score-in-script",
+   "on": "2026-10-16",
+   "krish": "What does 42 even mean? that is not understandable. We need to simplify this",
+   "what": "Friday's 90-second script and deep cut said Artificial Analysis's index scores aloud (\"it scored 42 on their test. In its top gear, 58. ... only got 51\"), and the article printed them. A listener who has never seen the test cannot tell what 42 means, so the proof of the main claim was lost on the ear. Earlier the same day he had said the same of \"7-20 points of improvement\".",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "def score_problems",
+     "how": "refuses a script that says a score or points with no share, multiple or scale, and a bare number said straight after one (\"In its top gear, 58.\"); the self-test holds Friday's old lines refused"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "id: 'PLAIN_SCORES'",
+     "how": "every writer, judge, final pass and the visual stage read the rule: plain comparisons, a share or a multiple, never a bare score, on the page or on screen"
+    }
+   ]
   }
  ]
 }
