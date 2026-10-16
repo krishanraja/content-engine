@@ -98,3 +98,11 @@ After signing the scripts off, he re-edited both on the board himself (21:28 to 
 "just put them in teleprompter, and then if I go over 90sec, just speed the video up a bit in post"
 
 So the 90-second cut is his v6 words (`docs/plans/2026-10-09-script-90s-v6.md`, 274 words, about 1:50 read at 150 a minute) sped up in post to land at about 90 seconds: about 1.2x for a take at that pace, less if he reads faster. Speed picture and voice together with the pitch held. The cut points are in `picture-plan-90s-v6.md`. The deep cut is his v6 words too (`script-deep-v6.md`, 1,810 words, about 12 minutes); nothing is said about speeding it up, so it plays at his pace.
+
+## Krish, 16 Oct (the long episode: captions, the ending, the music at dividers)
+
+Handing over the takes with a post-production corpus (`docs/production/one-shot-episode-corpus.md`): "I'm very keen to see how you produce this in the slickest, most professional way possible ... what you're going to do to 10x the production quality." Then: "You're welcome to put chapter dividers in the long video and things like that. I'm sure you've got the corpus and know how to do this." And, on the three calls put to him:
+
+"Happy with you burning them in and agree with your recommendation on the ending. Feel free to raise the music slightly during the section dividers."
+
+So the 15-minute cut keeps burned captions (the caption file goes to YouTube as well), ends on a close of about 18 seconds (the approved outro, its last frame held 13 seconds, `"end_hold_s": 13`) with nothing else on screen in the last 20 seconds so YouTube's end-screen tiles sit over it, and the music lifts 4 dB over the bed at each chapter divider (`music.ACCENT_LIFT_DB`), still well under his voice.

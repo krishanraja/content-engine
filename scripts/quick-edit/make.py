@@ -1139,7 +1139,8 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
     else:
         g.append(f"[{last}]ass={cfg['name']}-{asp}.ass:fontsdir=fonts,fps=30,setsar=1,format=yuv420p[vm]")
     inputs += ['-i', str(end['file'])]
-    g.append(f"[{n}:v]fps=30,setsar=1,format=yuv420p,trim=end_frame={end['frames']},setpts=PTS-STARTPTS[ev]")
+    held = f",tpad=stop_mode=clone:stop_duration={end['held_s']:.3f}" if end.get('held_s') else ''
+    g.append(f"[{n}:v]fps=30,setsar=1,format=yuv420p{held},trim=end_frame={end['frames']},setpts=PTS-STARTPTS[ev]")
     n += 1
     parts = ['[vm]', '[ev]']
     if intro:
@@ -1169,6 +1170,12 @@ def cut_plan(cfg, asp, P, main_frames, ws, base='.'):
     notes += [note] if note else []
     end_file = P(cfg['endcard'][asp])
     end = {'file': end_file, **clip_info(end_file)}
+    hold = cfg.get('end_hold_s')
+    if isinstance(hold, (int, float)) and hold > 0:
+        # A long episode's close: the end card's last frame held, so YouTube's end-screen tiles sit over it
+        # (Krish, 2026-10-16, agreeing to a 15 to 20 second close for long episodes; episode.py).
+        end['held_s'] = float(hold)
+        end['frames'] += round(hold * FPS)
     end['own_sound'] = bool(end['audio']) and max_volume(end_file) > SILENT_DB
     if end['own_sound']:
         notes.append(f'the end card {end_file.name} has a sound track of its own; it is replaced with silence, under the music bed '
@@ -1325,6 +1332,10 @@ def self_test():
     checks.append(('the sound is the finished mix', audio, '4:a'))
     _, g, audio = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None, {'file': 'end.mp4', 'frames': 120}, Path('mix.wav'))
     checks.append(('without a sting it is the main and the end card', (g[-1], audio), ('[vm][ev]concat=n=2:v=1:a=0[V]', '3:a')))
+    _, g, _ = video_graph(fake, '9x16', same, Path('.'), Path('edited.mkv'), 20.0, [], ws, [720, 1280, 0, 0], None,
+                          {'file': 'end.mp4', 'frames': 510, 'held_s': 13.0}, Path('mix.wav'))
+    checks.append(('a long episode\'s end card holds its last frame for the end-screen tiles',
+                   any('tpad=stop_mode=clone:stop_duration=13.000,trim=end_frame=510' in line for line in g), True))
     got, why = resolve_intro({'name': 't'}, '9x16', same)
     checks.append(('a candidate sting is left out and the report says why', (got, 'candidate' in (why or '')), (None, sting.load()['status'] == 'candidate')))
     checks.append(('"intro": false is no intro and no note', resolve_intro({'intro': False}, '9x16', same), (None, None)))

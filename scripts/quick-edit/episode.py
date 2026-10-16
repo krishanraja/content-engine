@@ -24,15 +24,20 @@ always has:
   "emphasis": [{"start": WORDS, "end": WORDS}, ...]
                         a closer framing for the pivotal lines ("A subtle
                         digital push-in for a pivotal claim"); return to base after
-  "captions": false     no captions burned into the picture; the caption file
+  "captions": false     no captions burned into the picture. The caption file
                         (always written, NAME-SHAPE.srt, on the finished cut's
-                        clock) goes to YouTube instead ("Publish a separate
-                        caption track")
+                        clock) goes to YouTube either way. Krish, 2026-10-16:
+                        "Happy with you burning them in", so a long episode
+                        keeps its burned captions and uploads the file too
   "chapters": [{"title": ..., "starts": WORDS}, ...] or "path/to/x.chapters.md"
                         NAME-SHAPE.chapters.txt for the description: 00:00
                         first, ascending, each at least 10 s (YouTube's rules)
   "end_screen_s": 20    no picture in the last N seconds, kept for YouTube's
                         end-screen tiles ("Reserve the final 15-20 seconds")
+  "end_hold_s": 13      the end card's last frame held this long, so the
+                        close runs 15 to 20 seconds under the tiles (Krish,
+                        2026-10-16: "agree with your recommendation on the
+                        ending")
   "speed": {"factor": 1.2, "krish": "Krish, DATE: his words"}
                         the take sped up, pitch kept, before anything else;
                         only on Krish's own words (2026-10-16, of the 90-second

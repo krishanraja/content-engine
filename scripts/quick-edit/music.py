@@ -396,6 +396,9 @@ def bed_filter(track, timeline, levels, src='0:a', out='bed', unity=False):
 EPISODE_OPEN_S = 30.0    # the bed under the sting and his first 30 seconds
 EPISODE_CLOSE_S = 8.0    # and under his last 8, rising after his last word
 ACCENT_BEFORE_S, ACCENT_AFTER_S = 1.5, 4.0   # a short lift at each chapter turn
+# Krish, 2026-10-16: "Feel free to raise the music slightly during the section dividers." The lift
+# sits this far over the bed level, still well under his voice (the bed is about 17 LU under it).
+ACCENT_LIFT_DB = 4.0
 
 
 def episode_windows(timeline, accents=(), levels=None):
@@ -443,6 +446,7 @@ def episode_bed(track, timeline, levels, accents=(), src='0:a', out='bed', refs=
         g = {'intro': levels['intro_lufs'] - own, 'bed': levels['bed_lufs'] - own, 'outro': levels['outro_lufs'] - own}
         if unity:
             g = {'intro': 0.0, 'bed': 0.0, 'outro': 0.0}
+        lift = 0.0
         if kind == 'close' and isinstance(outro_cue, (int, float)) and length - outro_cue >= d:
             start = float(outro_cue)
         else:
@@ -453,7 +457,8 @@ def episode_bed(track, timeline, levels, accents=(), src='0:a', out='bed', refs=
             pts = [(0.0, g['intro'] if I > 0 else g['bed']), (r0, g['intro'] if I > 0 else g['bed']), (r1, g['bed']), (d, g['bed'])]
             fades = f'afade=t=in:st=0:d={FADE_IN_S},afade=t=out:st={max(0.0, d - 3.0):.3f}:d=3'
         elif kind == 'accent':
-            pts = [(0.0, g['bed']), (d, g['bed'])]
+            lift = 0.0 if unity else ACCENT_LIFT_DB  # measured at its own level, then lifted
+            pts = [(0.0, g['bed'] + lift), (d, g['bed'] + lift)]
             fades = f'afade=t=in:st=0:d=1.0,afade=t=out:st={max(0.0, d - 1.5):.3f}:d=1.5'
         else:
             c, e = max(0.0, ve - a), min(d, ve - a + levels['ramp_up_s'])
@@ -467,7 +472,7 @@ def episode_bed(track, timeline, levels, accents=(), src='0:a', out='bed', refs=
         core = {'open': (max(a, vs), b - 3.0), 'accent': (a + 1.0, b - 1.5), 'close': (a + 1.0, min(b, ve))}[kind]
         placed.append({'kind': kind, 'at': [round(a, 3), round(b, 3)], 'from_track_s': round(start, 3),
                        'core': [round(core[0], 3), round(core[1], 3)] if core[1] - core[0] >= MIN_WINDOW_S else None,
-                       'gain_db': round(g['bed'], 2)})
+                       'gain_db': round(g['bed'] + (lift if kind == 'accent' else 0.0), 2)})
     lines.append(f'{"".join(labels)}amix=inputs={len(labels)}:normalize=0:duration=longest,apad,'
                  f'atrim=end_sample={round(T * RATE)},asetpts=PTS-STARTPTS[{out}]')
     first = wins[0]
@@ -769,6 +774,9 @@ def self_test():
     checks.append(('each piece laid at its time, the close from the outro cue, the levels from the ledger',
                    ([p['from_track_s'] for p in said['pieces']], 'adelay=198500|198500' in chain, said['gains_db']),
                    ([2.0, 35.2, 40.7, 170.0], True, {'intro': 0.0, 'bed': -15.0, 'outro': -2.0})))
+    checks.append(('the music lifts slightly at each section divider (Krish, 2026-10-16), measured without the lift',
+                   ([p['gain_db'] for p in said['pieces']], [p['gain_db'] for p in episode_bed(fake, tl, lv, [200.0, 400.0], unity=True)[1]['pieces']]),
+                   ([-15.0, -11.0, -11.0, -15.0], [0.0, 0.0, 0.0, 0.0])))
     checks.append(('an episode needs about 80 s of music, so one 3-minute track covers it', episode_seconds(900.0, [1, 2, 3, 4, 5, 6]) < 189.8, True))
     errors, _ = check(load(), strict=False)
     checks.append(('the committed ledger checks clean', errors, []))
