@@ -546,7 +546,7 @@ describe('every video opens with its series line, and Krish says his name once (
     assert.deepEqual(Object.fromEntries(Object.entries(SERIES_OPENERS).map(([k, v]) => [k, v.line])), {
       follow_the_money: "I've been following how money is changing because of AI. I'm Krish.",
       under_the_hood: "I've been looking at what's really inside the AI everyone's selling us. I'm Krish.",
-      mind_the_gap: "I've been watching what's coming with AI, before everyone notices. I'm Krish.",
+      mind_the_gap: "I've been keeping a beady eye on what's coming with AI, before everyone notices. I'm Krish.",
     })
     for (const o of Object.values(SERIES_OPENERS)) assert.ok(r.text.includes(o.line), o.series)
     assert.match(r.text, /the close never repeats "I'm Krish"/)
@@ -657,24 +657,16 @@ describe('a story intro, its audio treatment and an outro card, in every format 
   })
 })
 
-// Monday's and Wednesday's were recorded and keep their words; the week's
-// unrecorded cuts are held to the reflective lines of 13 October. Friday's
-// short (224 words) is over the 14 October limit of 195 and is trimmed with
-// Krish before he records it (docs/plans/2026-10-14-handoff.md): until then
-// the length rule is its only refusal.
+// Monday's and Wednesday's were recorded and keep their words. Friday's v5,
+// as Krish edited both scripts on the board on 16 October, is what he
+// records: both cuts open on the mind.the.gap line he rewrote that day, and
+// pass at their lengths (deep 1,200 to 1,700 words, short 160 to 195).
 describe('this week\'s unrecorded scripts pass the gate they are held to (SERIES_OPENER and R7)', () => {
-  test('Friday\'s short is refused for its length alone, until Krish approves the trim', async () => {
-    const { spawnSync } = await import('node:child_process')
-    const out = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['scripts/post-pack/story_check.py', '--cut', 'short', '--series', 'mind_the_gap', 'docs/plans/2026-10-09-draft-script-90s.md'], { encoding: 'utf8' })
-    const refusals = out.stdout.split('\n').filter(l => /^\s+- /.test(l))
-    if (out.status === 0) return
-    assert.equal(refusals.length, 1, out.stdout)
-    assert.match(refusals[0]!, /cut it to 160 to 195 words/)
-  })
-  test('Friday\'s long cut opens with its series line, says "I\'m Krish" once, and a 12-year-old can follow it', async () => {
+  test('Friday\'s deep cut and 90-second cut open with the series line, say "I\'m Krish" once, fit their lengths, and a 12-year-old can follow them', async () => {
     const { spawnSync } = await import('node:child_process')
     for (const [file, cut, series] of [
-      ['docs/plans/2026-10-09-draft-script.md', 'long', 'mind_the_gap'],
+      ['docs/plans/2026-10-09-script-deep-v5.md', 'deep', 'mind_the_gap'],
+      ['docs/plans/2026-10-09-script-90s-v5.md', 'short', 'mind_the_gap'],
     ] as const) {
       const out = spawnSync(process.platform === 'win32' ? 'python' : 'python3', ['scripts/post-pack/story_check.py', '--cut', cut, '--series', series, file], { encoding: 'utf8' })
       assert.equal(out.status, 0, `${file}: ${out.stdout}${out.stderr}`)

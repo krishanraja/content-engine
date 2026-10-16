@@ -1,0 +1,7 @@
+- The name on the badge | starts: "I've been keeping a beady eye"
+- Why the names keep coming | starts: "First, the names. Anthropic makes"
+- The gear that matters | starts: "So what does matter? Picture"
+- What thinking costs them | starts: "Every word of that hidden"
+- Who decides next | starts: "So who decides how hard"
+- The good and the bad | starts: "Is that good? Some of"
+- What to do about it | starts: "So what should you do?"

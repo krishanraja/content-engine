@@ -670,7 +670,7 @@ def self_test():
     check('the three series lines, as Krish picked them, from the house rules', lines, {
         'follow_the_money': "I've been following how money is changing because of AI. I'm Krish.",
         'under_the_hood': "I've been looking at what's really inside the AI everyone's selling us. I'm Krish.",
-        'mind_the_gap': "I've been watching what's coming with AI, before everyone notices. I'm Krish."})
+        'mind_the_gap': "I've been keeping a beady eye on what's coming with AI, before everyone notices. I'm Krish."})
     check('a script that opens with its series line passes', problems(GOOD, None, 'under_the_hood'), [])
     check('another series\' line is refused, naming the right one',
           any('SERIES_OPENER' in p and "inside the AI everyone's selling us" in p for p in problems(GOOD, None, 'under_the_hood')
@@ -730,7 +730,7 @@ def self_test():
     # already read on camera is never changed to suit a later line.
     plans = Path(__file__).resolve().parents[2] / 'docs' / 'plans'
     for name, series in (('2026-10-14-draft-script.md', 'under_the_hood'), ('2026-10-14-draft-script-90s.md', 'under_the_hood'),
-                         ('2026-10-09-draft-script.md', 'mind_the_gap'), ('2026-10-09-draft-script-90s.md', 'mind_the_gap')):
+                         ('2026-10-09-script-deep-v5.md', 'mind_the_gap'), ('2026-10-09-script-90s-v5.md', 'mind_the_gap')):
         path = plans / name
         if path.is_file():
             text = path.read_text(encoding='utf-8')

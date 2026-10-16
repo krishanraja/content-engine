@@ -47,3 +47,9 @@ this file):
   before building (for example: gear-change cuts on the beat, a dashboard
   overlay showing "which gear it picked", a rev-needle transition), and build
   only the ones he picks.
+
+## Krish, 16 Oct (after editing both scripts)
+
+"The imagery that goes with the longer read out is going to have to be 10X better than any previous post production, as its such a long piece. Make sure the script is designed such that the imagery dovetails with it perfectly in post production for really powerful clear points landed"
+
+The deep cut v5 is written in beats, one point a paragraph, each with something concrete to show. The beat-by-beat plan, keyed to the exact words each beat starts on, is `picture-plan-deep-v5.md` beside this file.
