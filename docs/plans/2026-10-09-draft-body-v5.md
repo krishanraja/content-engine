@@ -44,7 +44,7 @@ So the gear matters most on hard jobs, like Sally's contract. On easy ones, extr
 
 When an AI thinks, it writes out its working behind the scenes, and every word of that costs computer time. Artificial Analysis found GPT-5 on its high setting wrote 82 million tokens to get through their tests, against 3.5 million on minimal. Claude Opus 5.5's hardest-thinking run cost $5.98 per task, against $0.55 on low.
 
-That's also why a higher gear eats into your plan faster. Anthropic's help page for the Claude app says higher effort means responses "take longer and use more tokens, so you'll reach your usage limits faster." Changing model can do the same, but not always. A bigger model costs more for the same amount of writing: Anthropic charges developers two and a half times as much for Fable 5.1, its top model, as for Opus 5.5. A newer version often costs less, as the Opus 5.5 example above shows.
+That's also why a higher gear eats into your plan faster. Anthropic's help page for the Claude app says higher effort means responses "take longer and use more tokens, so you'll reach your usage limits faster." Changing model can do the same, but not always. Anthropic charges developers two and a half times as much for the same amount of writing from Fable 5.1, the model it points them to when Opus 5.5 falls short, as from Opus 5.5. A newer version often costs less, as the Opus 5.5 example above shows.
 
 Here's the twist. Whether that thinking makes OpenAI and Anthropic money or loses it depends on how you pay.
 
