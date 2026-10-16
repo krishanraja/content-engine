@@ -1,4 +1,22 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(python3 scripts/engine.py GET *)",
+      "Bash(CLAUDE_CODE_REMOTE=1 python3 scripts/engine.py GET *)",
+      "Bash(python3 scripts/check_failures.py *)",
+      "Bash(python3 scripts/post-pack/story_check.py *)",
+      "Bash(python3 scripts/post-pack/voice_check.py *)",
+      "Bash(python3 scripts/post-pack/ai_scan.py *)",
+      "Bash(python3 scripts/post-pack/spine_check.py outline *)",
+      "Bash(python3 scripts/post-pack/spine_check.py draft *)",
+      "Bash(python3 scripts/post-pack/week_board.py --verify *)",
+      "Bash(CLAUDE_CODE_REMOTE=1 python3 scripts/post-pack/week_board.py --verify *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
