@@ -162,7 +162,7 @@ script or its filed source does not name.
 | B32 | Sally's deal; 2 + 3 | 1st to HIGH; TOP | "matters most on hard jobs"; "extra thinking is wasted" |
 | B33 | Opus 5.5 | LOW, then TOP | "thinks as hard as it can ... thinking a little" |
 | B38 | none | LOW | "starts you in a low gear" |
-| B39 | none | one gear, a needle moving inside it | "Even in one gear, the AI already thinks less" |
+| B39 | none | one gear, a needle moving inside it | "Right now, you do, if you change gear." |
 | B40 | Gemini | AUTO | Google's Gemini help page |
 | B41 to B43 | ChatGPT | AUTO, struck out twice | OpenAI release notes; WIRED |
 | B47 | Opus 5.5 | TOP, then MID | Anthropic's footnote ("max effort"); Anthropic's effort docs (default medium) |
@@ -649,7 +649,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 **B39 · ¶24 · 6:06 · "So who decides how hard your AI thinks?"** `fri-39-inside-one-gear`
 - Point: even now, inside one gear, the AI decides how much to think.
 - Screen: FACE for the question. Then [B] the dash shows a single gear slot
-  with a small needle moving inside it, on "Even in one gear". Without B:
+  with a small needle moving inside it, on "Right now, you do". Without B:
   a small full-frame version of the same drawing.
 - Text: none.
 - Move: hold.
@@ -775,7 +775,7 @@ stand-off design, `story_io.py`), then B01 on Krish's first word.
 - Move: hold.
 - Source: none.
 
-**B52 · ¶28 · 7:51 · "Back in 2025, when ChatGPT's gear picker first arrived,"** `fri-52-hundred-dots`
+**B52 · ¶28 · 7:51 · "Back in 2025, when ChatGPT's automatic gear picker first arrived,"** `fri-52-hundred-dots`
 - Point: when the app picked, far more people got thinking answers.
 - Screen: FULL. A grid of 100 dots, 10 by 10. "Before": no dot fully lit,
   labelled "Under 1 in 100". "After": seven dots light coral. A small inset

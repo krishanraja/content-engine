@@ -649,6 +649,45 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 19:00 UTC: **Friday v5, from Krish's own script edits, waits on his sign-off to
+  record.** He edited both scripts on the RjLHJ board at 17:16 (EDIT threads 4bfe29e0 and 2a6c426d,
+  not sent to Claude, so they stay open; full text in that board's `edits` store) and asked for it to
+  be cohesive, readable end to end, and brought to consistency. Then: "The imagery that goes with the
+  longer read out is going to have to be 10X better than any previous post production ... Make sure
+  the script is designed such that the imagery dovetails with it perfectly in post production".
+  - **Files**: `docs/plans/2026-10-09-script-deep-v5.md` (1,693 words, chapters beside it),
+    `-script-90s-v5.md` (195), `-draft-body-v5.md` (about 2,940 words, not yet saved on the piece),
+    `-outline-v5.md`, `docs/plans/2026-10-09-friday/picture-plan-deep-v5.md` (70 beats keyed to the
+    deep cut's exact words, three treatments for him to pick, five strongest moments), and his
+    picture direction added word for word to `post-production-notes.md`.
+  - **What his edits do**: turn a settings tip into an argument about incentives. Easier, less
+    transparent products make the company more; that matters more when the product is
+    intelligence; Sally didn't know to control the thinking; "For now."; the novice compares BMW
+    and Audi badges, the pro looks at the gearbox. The bet moves from Plus to the free plan: ChatGPT's
+    free plan starts in automatic again by the end of June 2027 (85%), paid plans start in automatic
+    too, with an F1-style semi-automatic.
+  - **Where v5 departs from his words, and why**: long sentences split (cap 20); both cuts back
+    inside their lengths; his reason "always make the AI company more money" said as his 90-second
+    version had it ("control margins"), in plain words "help the AI company control its costs",
+    because the script's own WIRED line says the automatic cost OpenAI more; the 85% sits on the
+    free-plan claim (what the article's call scores), the paid part is his view after it; one opener
+    in both cuts, his deep-cut version, now the mind.the.gap series line in `_houseRules.ts`
+    (SERIES_OPENERS; his words in the rule's record). His 90-second variant ("to try and map out
+    what you're likely to be up against next") is not used.
+  - **Checks**: story check ready on both with `--series mind_the_gap` (chapters too); AI scan
+    passes; article voice 1.5, spine passes, `readPieceCall` reads "By 30 June 2027, ChatGPT will
+    once again start free users on a setting where the AI chooses how hard to think for each
+    message." at 85%. Two rounds of fresh readers (make-piece prompts, Explore agents): every
+    retelling matches; what they still trip on is mostly his own lines ("intelligence itself",
+    "big impacts") and lines earlier rounds passed, so the sign-off is his
+    (`making.py ... read-back CUT --krish-words`). The gap workflow's fix "a new picture maker" is in.
+  - **Not done, waiting on his yes** (the session's safety check refuses engine writes without it):
+    `making.py scripts` and read-back on the piece, the Teleprompter update in place, saving the
+    v5 article on the piece, the board rebuild to both links, the nine prepared source filings
+    plus the ten gap filings (`refile-plan.json`, `gap-wf.json` in the session scratchpad), and the
+    merge of e622537 (filer stamp fix), 66c28d5, a4f8dfa and this one. The Manifold market draft
+    still has an older call.
+
 - 2026-10-16, about 18:30 UTC: **Friday v4 is on both board links for Krish's review: the manual
   versus automatic car, what thinking means, and the call at 85%.** From his five board comments of
   16 Oct (RjLHJ threads 1fc7967d, 850e2a1b, cadb226c, a3773143, a08b6e38: each answered in its

@@ -2,7 +2,7 @@ I've been keeping a beady eye on what's coming with AI, before everyone notices.
 
 I've been using all the well-known AI apps every day for years now. And I've noticed something odd about how they're sold. Every launch is about a name. A new number, a livestream, a chart. Claude Opus 4.8. Then Opus 5. Then Opus 5.5. At this rate, when's Opus 5.56 coming out?
 
-So I wanted to break it down. Does the name you pick actually change the answer you get? And what happens when companies like OpenAI make more money by making products easier, and less transparent? Most modern software businesses tend to do that. And isn't a lack of control over what you're getting a bit scarier if the product is intelligence itself?
+So I wanted to break it down. Does the name you pick actually change the answer you get? And what happens when companies like OpenAI make more money by making products easier, and less transparent? Most modern software businesses tend to do that, so you see less of what's going on. And isn't a lack of control over what you're getting a bit scarier if the product is intelligence itself?
 
 To be fair, some of the new AIs are better. The people building them aren't lying to you. But I think the name is the least important thing on your screen.
 
@@ -44,7 +44,7 @@ But most of us pay the same amount every month, however much we use. Then OpenAI
 
 On a monthly plan, a hard-thinking answer costs OpenAI far more than a quick one, while you pay the same. That, I think, is why the app starts you in a low gear.
 
-So who decides how hard your AI thinks? Even in one gear, the AI already thinks less on easy questions, and harder on tricky ones.
+So who decides how hard your AI thinks? Right now, you do, if you change gear.
 
 The next step is the AI choosing the gear for you, and Google has started. Since the ninth of October, the free Gemini app starts on a setting called Auto. It decides for you how much power each question gets, like an automatic car.
 
@@ -52,7 +52,7 @@ OpenAI has gone the other way, and taken ChatGPT's automatic gear picker away, t
 
 I don't think that lasts, and here's my guess why. Think what each part of the car is worth to OpenAI or Anthropic. The badge on the front brings attention. So they make sure you watch the badge. Then you don't notice the gear. Even the scores Anthropic shows off for Opus 5.5 were in top gear. Out of the box, it starts in a lower gear. The gears decide the bill. On a monthly plan, every high gear costs them. They'd like their own hand on the gearstick, so they decide how much thinking each question gets. Most of us would rather not change gear at all. So I think the automatic wins.
 
-Is that good? Some of both. The good first. People don't change settings. Back in 2025, when ChatGPT's gear picker first arrived, far more people ended up with careful, thinking answers. Before, fewer than one free user in a hundred used thinking each day. After, seven in a hundred did.
+Is that good? Some of both. The good first. People don't change settings. Back in 2025, when ChatGPT's automatic gear picker first arrived, far more people ended up with careful, thinking answers. Before, fewer than one free user in a hundred used thinking each day. After, seven in a hundred did.
 
 Anthropic learned this too. This March, it moved its coding app down to the middle gear. Most people kept it there, though it felt less smart. Anthropic later called that a mistake, and undid it. So whoever picks the starting gear decides how hard most people's AI thinks. An AI that picks for each question would at least think hard when it matters.
 
