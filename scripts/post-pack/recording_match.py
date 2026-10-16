@@ -709,6 +709,20 @@ def read_words(path):
     return said, float(seconds) if isinstance(seconds, (int, float)) else None
 
 
+SILENT_DB = -80.0  # a take whose loudest point is under this recorded no sound at all
+
+
+def loudest_db(src):
+    """The loudest point of the take's sound, in dB (None when it has no sound track or ffmpeg cannot read it)."""
+    try:
+        out = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-t', str(HEAD_SECONDS), '-i', str(src), '-vn', '-af', 'volumedetect',
+                              '-f', 'null', '-'], capture_output=True, text=True, timeout=300).stderr
+    except (OSError, subprocess.SubprocessError):
+        return None
+    m = re.search(r'max_volume: (-?[\d.]+|-inf) dB', out)
+    return None if not m else (-120.0 if m.group(1) == '-inf' else float(m.group(1)))
+
+
 def hear(item, get_file, transcribe=transcribe_head, probe=probe_seconds, override=None, cache=CACHE):
     """(words heard in the first 45 seconds, how long the take runs, when
     its file says it was recorded or None). From --words, then
@@ -736,16 +750,21 @@ def _hear(item, get_file, transcribe, probe, override, cache):
         kept = None
     if isinstance(kept, dict) and kept.get('model') == MODEL and kept.get('head_seconds') == HEAD_SECONDS and isinstance(kept.get('words'), list):
         seconds, made = kept.get('recording_seconds'), kept.get('recorded_at')
+        if isinstance(kept.get('max_db'), (int, float)):
+            item['max_db'] = kept['max_db']
         if not isinstance(seconds, (int, float)):
             seconds, made = probed(probe(get_file()))
         return kept['words'], seconds, made
     src = get_file()
     seconds, made = probed(probe(src))
     said = transcribe(src)
+    if len(words(' '.join(str(w.get('w', '')) for w in said))) < MIN_HEAD_WORDS:
+        item['max_db'] = loudest_db(src)
     try:
         cache.mkdir(parents=True, exist_ok=True)
         book.write_text(json.dumps({'sha256': item['sha256'], 'name': item['name'], 'model': MODEL, 'head_seconds': HEAD_SECONDS,
-                                    'duration': HEAD_SECONDS, 'recording_seconds': seconds, 'recorded_at': made, 'words': said}, indent=0),
+                                    'duration': HEAD_SECONDS, 'recording_seconds': seconds, 'recorded_at': made, 'words': said,
+                                    **({'max_db': item['max_db']} if item.get('max_db') is not None else {})}, indent=0),
                         encoding='utf-8')
     except OSError:
         pass
@@ -800,6 +819,13 @@ def decide(item, said, seconds, pieces, scripts):
     answer = {'status': 'unsure', 'seconds': round(seconds, 1) if isinstance(seconds, (int, float)) else None}
     head = words(' '.join(str(w.get('w', '')) for w in said))
     if len(head) < MIN_HEAD_WORDS:
+        loud = item.get('max_db')
+        if isinstance(loud, (int, float)) and loud <= SILENT_DB:
+            # Friday 16 October: a 1:59 take reached the engine with a sound track of digital silence (-91 dB) while
+            # Krish talked with his clip mic on. Say what it is, so he is asked for the mic's own file at once.
+            return {**answer, 'silent': True, 'reason': f'its sound is silent (loudest point {loud:g} dB): the camera recorded the picture '
+                                                        'but no sound. Ask Krish for the clip mic\'s own recording of it (scripts/quick-edit/'
+                                                        'sync_audio.py lines it up with the picture) or a new take'}
         return {**answer, 'reason': f'too little speech in the first {HEAD_SECONDS} seconds to tell what it is'}
     scores = {}
     for piece in pieces:
@@ -1440,6 +1466,9 @@ def self_test():
         check('decide: two pieces within 0.15 of each other are unsure, and both are named', (a['status'], 'Why so many AIs' in a.get('reason', '') and 'A twin' in a.get('reason', '')), ('unsure', True))
         a = decide(take, _heard(mon_long[:6]), 170.0, pieces, scripts)
         check('decide: too little speech is unsure', (a['status'], 'too little speech' in a.get('reason', '')), ('unsure', True))
+        a = decide(dict(take, max_db=-91.0), _heard(mon_long[:6]), 118.8, pieces, scripts)
+        check('decide: a take with a silent sound track says so, and points at the mic\'s own file',
+              (a['status'], a.get('silent'), 'sound is silent' in a.get('reason', ''), 'sync_audio.py' in a.get('reason', '')), ('unsure', True, True, True))
         done_long = [dict(pieces[0], recorded=['long']), pieces[1]]
         a = decide(take, _heard(mon_long[:110]), 172.0, done_long, scripts)
         check('decide: a new take of a cut already recorded is left for Krish', (a['status'], 'already recorded' in a.get('reason', '')), ('unsure', True))
