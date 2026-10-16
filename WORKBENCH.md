@@ -649,6 +649,40 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-16, about 20:15 UTC: **Friday: no analogies in the pictures or the article; the scripts'
+  checked facts fixed; both boards current.**
+  - Krish, of a drawn car race for the 90-second cut: "I don't think the visuals should have
+    analogies in them. The visuals should look like genuine reviews of the actual product, with
+    statistics ... The analogies should only be in my casual narrative explanation style. ... The
+    article should remain slightly more professional." This replaces his earlier asks for car
+    logos and car pictures, and for the article to carry the car. House rule ANALOGY_IN_SCRIPTS_ONLY;
+    the visual gate's REAL THINGS check (from posts dated 16 Oct, every picture declares "shows":
+    screenshot, chart, photo, evidence, quote or logos; a chart names "data_source" and "measures");
+    registered as `analogy-drawn-as-a-picture`. Friday's old v1 pictures fail it until redone.
+  - The 90-second picture plan is redone (`picture-plan-90s-v5.md`): the apps' own screens, Google's
+    Gemini Auto page, and a score chart (`video-pictures/fri-90-claude-scores.html`; Artificial
+    Analysis read live today: Opus 5.5 low 42.3, medium 51.2, max 57.6; Opus 5 max 50.8; Haiku 5.5
+    max 43.4). His three point-ups stay (hand at forehead height: the tall crop cuts a raised arm).
+    The deep cut's picture plan is marked to be redone the same way; build nothing from it.
+  - An independent check (edits kept, claims against the data, fresh deep-cut readers, each finding
+    put to a skeptic) led to: 90s "the newest Claude Opus in its lowest gear" (Sonnet 5.5 and Haiku
+    5.5 came out after Opus 5.5) and his bet reason back in his words (190 words, about 87 s); deep
+    cut his "general intelligence", "The badge on the front", "control performance", his reason
+    for paid users and his order with the 85% last; Haiku "just edged past"; and, to be fair, the
+    new one's middle gear matched the old one's top gear for far less (1,700 words). Article fixes
+    from the same check (GPT-6.1 Sol "edged past", "each step up buys less", "a newer version often
+    costs less") wait for the article rewrite. His 90-second opener variant stays out (the series
+    line must match and carry his name once): mention it at sign-off.
+  - Boards: RjLHJ version 34 and H6qK version 10, same file (sha256 9af1cf35...). The waiting list
+    now asks: sign-off (and whether the 85% covers the paid plans too); the article, cut to about
+    2,000 professional words (recommended) or Part 1 and Part 2; sources; paid check; his opening
+    line; title; Manifold. The old picture-treatment call is gone.
+  - The old first-version publish page (https://claude.ai/artifact/SHPLKcPPVDkg3j4Yy7vUVV, which
+    Control Center still links as Friday's publish page) now carries a red "First version, replaced"
+    banner with links to the boards; nothing else on it changed.
+  - Still running: the comparison of v1 to v4 against v5 and the split judges (workflow
+    wf_11a015df-fe3).
+
 - 2026-10-16, about 19:45 UTC: **Friday v5 is on both board links.** Krish sent a phone screenshot
   of the board at 20:36 his time: the 90-second box still showed his 17:16 UTC save (222 words, "scored
   42"), because the board had not been rebuilt since v4 (15:44 UTC). Rebuilt from the v5 files with
