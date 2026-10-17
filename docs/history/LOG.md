@@ -5,6 +5,11 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-16
+
+- rolled from NOW.md: 2026-09-15 Station artifact handoffs proven (PR #70). Why: the station check proved order but not that every artifact had exactly one producer and a consumer.
+- reconciled at `7c914fe`: NOW.md takes the filed-source guard (committed, deploy waiting on Krish's go) and Friday v4 after Krish's board notes and the final check. The seven documents stamped 2026-09-25 are still unchecked and still named in NOW.md "Do not trust".
+
 ## 2026-10-15
 
 - reconciled at `1bc3161`: NOW.md takes Friday v3 and the board's draft-day build, the editable and commentable board with saves posted as comments, the free fact-check pre-check, and the move of the steward and of the wordmark fallback after control-center went private. README.md, CONTENT_ENGINE.md, STATE.md, SYSTEM_MAP.md, GLOSSARY.md, NORTH_STAR.md and STUDIO.md keep their 2026-09-25 stamps because the steward did not check them against this window; NOW.md "Do not trust" still names them.
