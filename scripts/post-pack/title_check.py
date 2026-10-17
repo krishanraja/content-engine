@@ -63,6 +63,10 @@ STRAWMAN = [
 STOCK = re.compile(r"\b(explained|everything you need to know|here'?s why|here is why|the truth about|you won'?t believe|what you need to "
                    r"know|game[- ]changer|a closer look|deep dive|the future of|all you need|why it matters|let'?s talk about)\b", re.I)
 NUMBER = re.compile(r"\d")
+# A number in words ("a million new ChatGPT users in one hour", "every four weeks") earns a line only beside a name:
+# "Three kinds of AI" is still a bare taxonomy.
+NUMBER_WORD = re.compile(r"\b(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|hundred|thousand|"
+                         r"million|billion|trillion|half|third|quarter|dozen|twice)\b", re.I)
 # A capitalised word that is not the first word: a named company, product or person.
 NAME = re.compile(r"(?<!^)(?<![.!?]\s)\b([A-Z][\w'’&.-]*[a-z0-9][\w'’&.-]*|[A-Z]{2,}[a-z]*)\b")
 VERB_HINT = re.compile(r"\b(\w{3,}ed|is|are|was|were|has|have|had|can|will|won'?t|can'?t|does|did|makes?|made|gets?|got|pays?|paid|"
@@ -139,7 +143,7 @@ def problems(title, source=None):
     if m:
         out.append(f'"{m.group(0)}" is a stock headline phrase')
     names = names_in(t)
-    earned = (NUMBER.search(t) or (names and VERB_HINT.search(t)) or len(names) >= 2
+    earned = (NUMBER.search(t) or (names and (VERB_HINT.search(t) or NUMBER_WORD.search(t))) or len(names) >= 2
               or (STAKE.search(t) and VERB_HINT.search(t)))
     if not earned:
         out.append('a bare topic or the obvious: name who does what, or give the number that surprises (why would someone have to read it?)')
@@ -420,6 +424,8 @@ def self_test():
         check(f'passes: {good}', problems(good, body if '97' not in good else body + ' 97%'), [])
     check('made from nothing: a name the piece never says', any('Tesco' in p for p in problems('Tesco blocked Muse', body)), True)
     check('made from nothing: a number the piece never says', any('"12"' in p for p in problems('Muse wins 12 to 3', body)), True)
+    for good in ('A million new ChatGPT users in one hour', 'Three Opus models in four months'):
+        check(f'a number in words earns it: {good}', problems(good, 'ChatGPT users Opus models million hour three four months'), [])
     check('the VIDEO: format label is not a name', problems("VIDEO: We unpack why Amazon blocked Muse, and Walmart let it in", body), [])
     check('a name after the label is still checked', any('Tesco' in p for p in problems('VIDEO: Tesco blocked Muse', body)), True)
     # The gate: only a title Krish picked; a rejected one says why.

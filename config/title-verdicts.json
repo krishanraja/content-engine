@@ -89,19 +89,442 @@
  "verdicts": [
   {
    "title": "ChatGPT and Claude, faster than ever. Does it matter?",
-   "surface": "title_card",
+   "surface": "tall_cover",
    "verdict": "picked",
-   "why": "his line cut to the title card's 60 characters, keeping both names and his question",
+   "why": "his line cut for the 90-second cover frame",
    "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\" It could be misinterpreted and it's just vague and confusing. I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
    "on": "2026-10-17",
    "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
   },
   {
    "title": "ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?",
-   "surface": "shorts",
+   "surface": "cover",
    "verdict": "picked",
-   "why": "Krish wrote it: names both, the pattern (faster than ever), then the real question (does it make a difference); replaces 'Soon you won't pick your AI' on the cover, the Shorts title and the 90-second cover",
+   "why": "Krish's own line, on the cover in place of 'Soon you won't pick your AI'",
    "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\" It could be misinterpreted and it's just vague and confusing. I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "What should ChatGPT still let you choose?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "his approved line \"What should you still get to choose?\" with the product named, so the engine's filter passes it; meaning unchanged",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "What will ChatGPT hide from you?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "his approved line \"What will the app hide from you?\" with the product named, so the engine's filter passes it; meaning unchanged",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Who decides how hard ChatGPT and Claude think?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "his approved line \"Who decides how hard your AI thinks?\" with the product named, so the engine's filter passes it; meaning unchanged",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Why are Claude and ChatGPT launches speeding up?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "his approved line \"Why are AI launches speeding up?\" with the product named, so the engine's filter passes it; meaning unchanged",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "You pick how hard ChatGPT and Claude think. For now.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "his approved line \"You pick how hard the AI thinks. For now.\" with the product named, so the engine's filter passes it; meaning unchanged",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "For anything you act on, pick Medium or High",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "his approved line \"Acting on the answer? Pick Medium or High\" with the product named, so the engine's filter passes it; meaning unchanged",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "In top gear, Opus 5.5 did far better",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "his approved line \"In top gear, it did far better\" with the product named, so the engine's filter passes it; meaning unchanged",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Opus 5.5's score? Only about a third higher.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "his approved line \"The score? Only about a third higher.\" with the product named, so the engine's filter passes it; meaning unchanged",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Will ChatGPT decide for you again?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Why are AI launches speeding up?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Who pays when ChatGPT thinks?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Who decides how hard your AI thinks?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "What will the app hide from you?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "What should you still get to choose?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Does every new Claude and ChatGPT matter?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Can Opus 5 beat Opus 5.5?",
+   "surface": "divider",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "You pick how hard the AI thinks. For now.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Weeks to fix. Your screen never showed it.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "WIRED: OpenAI was footing the thinking bill",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Under 1 free user in 100 used thinking daily",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Top-gear Opus 5 beat first-gear Opus 5.5",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Top gear costs about 11 times the lowest",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Three Opus models in four months",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "The score? Only about a third higher.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "The same day, a $40 billion raise",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "The $40 billion was months in the making",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Same Claude Opus 5.5, tested in every gear",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Plus and Pro lost automatic too. No reason given.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "OpenAI took ChatGPT's automatic away. Twice.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "OpenAI cut ChatGPT's thinking time for speed",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "OpenAI also cut Extended thinking by mistake",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Once the AI chose, 7 free users in 100 did",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Most stayed put, though it felt less smart",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Middle-gear Opus 5.5 matched Opus 5, for far less",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "In top gear, it did far better",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Google's free Gemini has already gone automatic",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Gemini decides how much thinking you get",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "GPT went up a whole number in just 46 weeks",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Free plan? Pick Think.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Even at $200 a month, OpenAI was losing money",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Claude or Gemini? Turn effort up.",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "By mid-2027, free ChatGPT goes automatic again",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Anthropic turned Claude Code down a gear",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Anthropic admitted the mistake and reversed it",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Acting on the answer? Pick Medium or High",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "A new Claude roughly every four weeks",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "A million new ChatGPT users in one hour",
+   "surface": "card",
+   "verdict": "picked",
+   "why": "story-first channel heading on the approved sign-off sheet: built on what he says at that moment, in one device",
+   "krish": "Krish, 2026-10-17, to the sign-off sheet listing every chapter name and picture heading: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
    "on": "2026-10-17",
    "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
   },
