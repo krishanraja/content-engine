@@ -119,4 +119,6 @@ export function fitError(what: string, text: string, shape: string, box: { maxWi
 /** A question answered yes or no opens with a helping verb ("Would you let...", "Do you...").
  *  The outro shows its YES and NO only for one (Krish, 2026-10-14: "Which kind of AI do you
  *  actually use?" showed them). */
-export const YES_NO = /^(do|does|did|is|are|was|were|will|would|should|shall|can|could|may|might|must|has|have|had|am)\b/i
+// A question answered yes or no opens with a helper verb and offers no choice of two: "Do you want to pick
+// your AI, or let the app pick?" opens with "Do" but asks which, so it gets no YES and NO (Friday, 17 Oct).
+export const YES_NO = /^(do|does|did|is|are|was|were|will|would|should|shall|can|could|may|might|must|has|have|had|am)\b(?![^?]*\bor\b)/i

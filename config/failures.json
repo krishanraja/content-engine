@@ -72,13 +72,13 @@
    "id": "plate-old-title",
    "on": "2026-10-14",
    "krish": "(Wednesday's video plate showed the old subject)",
-   "what": "The video's title plate kept a superseded title.",
+   "what": "The video's title plate kept a superseded title. It came back on 17 October (Friday's plate read the subject 'Why so many AIs', a line he had rejected): the old guard only preferred video_title and drew the subject unchecked when there was none.",
    "status": "guarded",
    "guards": [
     {
      "file": "scripts/quick-edit/kit.py",
-     "contains": "video_title",
-     "how": "the plate reads post.json video_title, which the title gate holds"
+     "contains": "def frame_title_problems",
+     "how": "the plate's title goes through title_check's gate (his pick and the floor), or the kit refuses; self-tested"
     }
    ]
   },
@@ -86,13 +86,13 @@
    "id": "outro-yes-no",
    "on": "2026-10-14",
    "krish": "(the outro showed YES/NO on a question that was not yes or no)",
-   "what": "Vote buttons on a non-yes/no question.",
+   "what": "Vote buttons on a non-yes/no question. It came back on 17 October: 'Do you want to pick your AI, or let the app pick?' opens with 'Do', so it got YES and NO although it asks which.",
    "status": "guarded",
    "guards": [
     {
      "file": "apps/renderer/src/story/fit.ts",
-     "contains": "YES_NO",
-     "how": "YES/NO only for a yes/no question; tested in tests/story-io.test.ts"
+     "contains": "(?![^?]*\\bor\\b)",
+     "how": "a question offering a choice of two gets no YES and NO; tested in tests/story-io.test.ts"
     }
    ]
   },

@@ -70,6 +70,8 @@ describe('the outro\'s vote', () => {
     expect(YES_NO.test('Do you ever change the model?')).toBe(true)
     expect(YES_NO.test('Which kind of AI do you actually use?')).toBe(false)
     expect(YES_NO.test('What would you hand over first?')).toBe(false)
+    expect(YES_NO.test('Do you want to pick your AI, or let the app pick?')).toBe(false)
+    expect(YES_NO.test('Would you let your AI decide how hard it thinks?')).toBe(true)
   })
 })
 

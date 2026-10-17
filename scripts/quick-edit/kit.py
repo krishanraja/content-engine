@@ -174,6 +174,13 @@ seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninet
 first second third fourth fifth half quarter percent per cent""".split())
 
 
+def frame_title_problems(title):
+    """Why the title beside his face may not be drawn: title_check's gate (his pick, and the floor)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'post-pack'))
+    import title_check
+    return title_check.gate(title)
+
+
 class KitError(Exception):
     """A reason to stop, in words a person can act on."""
 
@@ -1106,7 +1113,14 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
         # The title on screen beside his face: post.json's "video_title" when it has one, else the
         # subject. The subject also names the post's library folder, so a re-angled piece keeps its
         # folder and still shows its new title (Krish, 2026-10-14: the plate read the old angle).
-        draw('frame-16x9.png', page_frame16(st, post.get('video_title') or post['subject'], logos['wordmark'], fonts), FRAME['16x9'])
+        # A title Krish has not picked is never drawn (house rule TITLE_EARNS_THE_CLICK): on 17 October the plate
+        # still read the subject "Why so many AIs", a line he had rejected, the second time a plate showed a stale title.
+        on_frame = post.get('video_title') or post['subject']
+        why_not = frame_title_problems(on_frame)
+        if why_not:
+            raise KitError(f'the title beside his face, {on_frame!r}, cannot be drawn: ' + '; '.join(why_not) +
+                           '. Put the title card he picked in post.json as "video_title".')
+        draw('frame-16x9.png', page_frame16(st, on_frame, logos['wordmark'], fonts), FRAME['16x9'])
         draw('strap-9x16.png', page_strap(st, fonts), FRAME['9x16'], clear=True)
         panels = receipt.get('panels', {})
         drawn = set()  # the pictures panelled in this run: a panel left from an earlier run is never cued
@@ -1467,7 +1481,15 @@ def self_test_runs(check, words):
             plans = tmp / 'docs' / 'plans'
             plan = plans / '2026-10-12-monday'
             plan.mkdir(parents=True)
+            # The plate's title must be one Krish picked: a stand-in verdicts file, never the real one.
+            os.environ['MYMU_TITLE_VERDICTS'] = str(tmp / 'verdicts.json')
+            (tmp / 'verdicts.json').write_text(json.dumps({'lessons': [], 'verdicts': [
+                {'title': 'Suno pays Warner. Who pays the singers?', 'verdict': 'picked', 'why': 'self-test', 'krish': 'self-test'}]}),
+                encoding='utf-8')
+            check('the plate refuses a title Krish has not picked', bool(frame_title_problems('Who gets paid for AI songs')), True)
+            check('the plate draws a title he picked', frame_title_problems('Suno pays Warner. Who pays the singers?'), [])
             post = {'piece_id': 'p1', 'date': '2026-10-12', 'subchannel': 'follow.the.money', 'subject': 'Who gets paid for AI songs',
+                    'video_title': 'Suno pays Warner. Who pays the singers?',
                     'files': [{'kind': 'image', 'file': 'money.png', 'name': '1-who-gets-paid.png', 'purpose': words['money']},
                               {'kind': 'image', 'file': 'call.png', 'purpose': words['call']},
                               {'kind': 'image', 'file': 'broken.png'},

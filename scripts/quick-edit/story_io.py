@@ -608,7 +608,7 @@ def self_test():
     import tempfile
     # The title gate is title_check's to test; these checks use their own picked titles.
     with tempfile.TemporaryDirectory() as tmp, title_check.picked_for_tests(
-            ['I scored Muse against its rivals', "Muse's real rival: Siri.", 'OpenAI tried to pick your AI.'], tmp):
+            ['I scored Muse against its rivals', "Muse's real rival: Siri.", 'ChatGPT and Claude: faster than ever. Does it matter?'], tmp):
         return _self_test()
 
 
@@ -705,8 +705,9 @@ def _self_test():
         fri = plans / '2026-10-09-friday'
         if (fri / 'cover-facts.json').is_file():
             p = plan_props(fri)
-            ok(p['title'] == 'OpenAI tried to pick your AI.', f'Friday title: {p["title"]}')
-            ok(p['left']['name'] == 'OpenAI' and p['right'][0]['name'] == 'Anthropic', 'Friday players from the cover rows')
+            ok(p['title'] == 'ChatGPT and Claude: faster than ever. Does it matter?', f'Friday title: {p["title"]}')
+            ok(p['left']['name'] == 'Claude' and p['right'][0]['name'] == 'ChatGPT', 'Friday stand-off: Claude against ChatGPT')
+            ok(p['commentQuestion'] == 'Would you let your AI decide how hard it thinks?', 'Friday outro question')
         if (MONDAY / 'cover-facts.json').is_file():
             p = plan_props(MONDAY)
             ok(p['right'][0].get('tagAfter') == 'Paid' and p['right'][0].get('switchesSides'), 'Monday keeps its twist')
