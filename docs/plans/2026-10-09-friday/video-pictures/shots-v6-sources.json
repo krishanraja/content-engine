@@ -1,0 +1,558 @@
+{
+ "about": "Evidence captures for three Friday pictures in plan-v6.json that had none: fri-claude-launch-pages, fri-deep-altman-same-day and fri-deep-openai-free-dec-2025. Real pages only, never redrawn, nothing added to the frame.",
+ "made": "2026-10-17",
+ "how": "Playwright (Python) driving Chromium 1194 (/opt/pw-browsers): plain 1440x900 viewport screenshots at device scale 2, so every PNG is 2880x1800. Logged out, locale en-US, browser time zone UTC. Nothing was drawn on or injected into any page; the only interaction was clicking The Decoder's cookie-consent button ('Agree', its only one-click choice). Crop and mark boxes were measured from the live page (element boxes and exact text ranges); the Opus 5.5 hero is drawn on a WebGL canvas, so its boxes were measured from the capture's own pixels.",
+ "coordinates": "Every crop, mark and other box is [x, y, w, h] in the capture's own pixels (2880x1800, origin top-left). 'mark' is one box around the words he talks about; 'mark_lines' gives the same words line by line where they wrap or stop mid-line, so a highlight does not spill onto the next words. 'also_mark' boxes are optional extras (a title, a time line).",
+ "rules_kept": [
+  "No header strip, label or highlight is burned into any PNG; marks and the 'captured <date>' line are for the edit to draw.",
+  "Headlines are kept whole in their crops (The Decoder's carries '$300 billion valuation'; it is not ringed).",
+  "Altman's post is cropped whole, both sentences, with only the last sentence marked; its time line reads in UTC (6:11 PM, Mar 31, 2025).",
+  "The OpenAI funding sentence has a crop that stops right after '$40 billion' so the valuation he does not say stays out; crop_whole_sentence keeps it all."
+ ],
+ "opus_5_url": {
+  "url": "https://www.anthropic.com/news/claude-opus-5",
+  "title": "Introducing Claude Opus 5",
+  "page_date": "Jul 24, 2026",
+  "published_time": "2026-07-24T17:00:00.000Z",
+  "note": "The skeptic (plan-v6.checked.json) asked for this URL to be recorded; no file in docs/plans held it. It is recorded here only: evidence-v3.md (P2-03) was not edited, per this task's rule to edit no existing file. anthropic.com/claude-opus-5 returns 404; the /news/ path is the live page. The model-deprecations fallback was not needed."
+ },
+ "captures": [
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-claude-launch-pages-1.png",
+   "picture": "fri-claude-launch-pages",
+   "n": 1,
+   "url": "https://www.anthropic.com/news/claude-opus-4-8",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T05:57:05Z",
+   "shows": "Anthropic's launch page 'Introducing Claude Opus 4.8', dated May 28, 2026 (title, date line, hero art).",
+   "page_date": "May 28, 2026",
+   "page_date_iso": "2026-05-28T17:00:00.000Z",
+   "lands_on": {
+    "long": "[01:47.96] 'it launched Opus 4 .8 in May,'",
+    "short": "first of the three, from 'I use AI apps daily,' (plan-v6 start_short)"
+   },
+   "crop": [
+    611,
+    362,
+    1658,
+    362
+   ],
+   "mark": [
+    1328,
+    602,
+    224,
+    62
+   ],
+   "mark_is": "the date line 'May 28, 2026'",
+   "also_mark": {
+    "title": [
+     707,
+     426,
+     1466,
+     130
+    ]
+   },
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "title_on_page": true,
+    "date_on_page": true,
+    "published_time_meta": "2026-05-28T17:00:00.000Z",
+    "time_datetime": "2026-05-28T17:00:00.000Z",
+    "expected_iso_date": "2026-05-28",
+    "date_matches": true
+   }
+  },
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-claude-launch-pages-2.png",
+   "picture": "fri-claude-launch-pages",
+   "n": 2,
+   "url": "https://www.anthropic.com/news/claude-opus-5",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T05:57:19Z",
+   "shows": "Anthropic's launch page 'Introducing Claude Opus 5', dated Jul 24, 2026 (title, date line, hero art). This is the Opus 5 announcement URL the skeptic asked to record.",
+   "page_date": "Jul 24, 2026",
+   "page_date_iso": "2026-07-24T17:00:00.000Z",
+   "lands_on": {
+    "long": "[01:47.96] 'Opus 5 in July,'",
+    "short": "second of the three, piled on the first"
+   },
+   "crop": [
+    656,
+    362,
+    1569,
+    362
+   ],
+   "mark": [
+    1337,
+    602,
+    206,
+    62
+   ],
+   "mark_is": "the date line 'Jul 24, 2026'",
+   "also_mark": {
+    "title": [
+     752,
+     426,
+     1377,
+     130
+    ]
+   },
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "title_on_page": true,
+    "date_on_page": true,
+    "published_time_meta": "2026-07-24T17:00:00.000Z",
+    "time_datetime": "2026-07-24T17:00:00.000Z",
+    "expected_iso_date": "2026-07-24",
+    "date_matches": true
+   }
+  },
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-claude-launch-pages-3.png",
+   "picture": "fri-claude-launch-pages",
+   "n": 3,
+   "url": "https://www.anthropic.com/claude-opus-5-5",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T06:04:10Z",
+   "shows": "Anthropic's Claude Opus 5.5 launch page hero: 'SEPTEMBER 22, 2026' over the title 'Claude Opus 5.5' (browser tab title 'Introducing Claude Opus 5.5'), with the page's four-part contents list.",
+   "page_date": "September 22, 2026",
+   "lands_on": {
+    "long": "[01:47.96] 'Opus 5 .5 in September.'",
+    "short": "last of the three, on 'there's a new model release EVERY DAY.' (plan-v6 end_short)"
+   },
+   "crop": [
+    565,
+    556,
+    1753,
+    530
+   ],
+   "mark": [
+    1244,
+    636,
+    388,
+    56
+   ],
+   "mark_is": "the date line 'SEPTEMBER 22, 2026'",
+   "also_mark": {
+    "title": [
+     709,
+     754,
+     1465,
+     246
+    ]
+   },
+   "measured_from": "pixels: the hero title and date are drawn on a WebGL canvas, so their boxes come from the PNG itself (cream text against the sky)",
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "hero_is_canvas": true,
+    "tab_title": "Introducing Claude Opus 5.5 \\ Anthropic",
+    "dom_date_text": "SEPTEMBER 22, 2026",
+    "intro_sentence_found": true,
+    "date_px": [
+     1268,
+     652,
+     340,
+     24
+    ],
+    "title_px": [
+     725,
+     764,
+     1433,
+     226
+    ]
+   }
+  },
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-deep-altman-same-day-1.png",
+   "picture": "fri-deep-altman-same-day",
+   "n": 1,
+   "url": "https://x.com/sama/status/1906771292390666325",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T06:05:56Z",
+   "shows": "Sam Altman's post on X, whole: 'the chatgpt launch 26 months ago was one of the craziest viral moments i'd ever seen, and we added one million users in five days. / we added one million users in the last hour.', time line '6:11 PM · Mar 31, 2025' (UTC).",
+   "page_date": "6:11 PM · Mar 31, 2025",
+   "page_date_iso": "2025-03-31T18:11:16.000Z",
+   "lands_on": {
+    "long": "[02:08.66-02:19.94] 'Sam Altman, who runs OpenAI. Then said a million new people joined chat GPT in one hour.'"
+   },
+   "crop": [
+    716,
+    102,
+    1200,
+    490
+   ],
+   "mark": [
+    738,
+    348,
+    608,
+    52
+   ],
+   "mark_is": "the sentence 'we added one million users in the last hour.'",
+   "mark_lines": [
+    [
+     738,
+     350,
+     608,
+     48
+    ]
+   ],
+   "also_mark": {
+    "date_time": [
+     736,
+     410,
+     326,
+     56
+    ]
+   },
+   "note": "Times on X follow the viewer's time zone; this capture was taken with the browser set to UTC, so the post's time line reads in UTC. The crop keeps the whole post (both sentences) as the skeptic asked; the mark is the last sentence only.",
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "text: the chatgpt launch 26 months ago was one of the craziest viral moments i'd ever seen, and we added one million users in five days.": true,
+    "text: we added one million users in the last hour.": true,
+    "published_time_meta": "2025-03-31T18:11:16.000Z"
+   }
+  },
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-deep-altman-same-day-2.png",
+   "picture": "fri-deep-altman-same-day",
+   "n": 2,
+   "url": "https://openai.com/index/march-funding-updates/",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T05:59:32Z",
+   "shows": "OpenAI's page 'New funding to build towards AGI', top of page: the date 'March 31, 2025' above the title.",
+   "page_date": "March 31, 2025",
+   "lands_on": {
+    "long": "[02:20.64] 'That same day,' (the date)"
+   },
+   "crop": [
+    435,
+    240,
+    2011,
+    487
+   ],
+   "mark": [
+    1244,
+    292,
+    235,
+    63
+   ],
+   "mark_is": "the date 'March 31, 2025'",
+   "pair_with": "fri-deep-altman-same-day-3 (the $40 billion sentence sits about 1,400 px further down the same page, below the hero image)",
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "date_text": "March 31, 2025",
+    "title_text": "New funding to build towards AGI"
+   }
+  },
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-deep-altman-same-day-3.png",
+   "picture": "fri-deep-altman-same-day",
+   "n": 3,
+   "url": "https://openai.com/index/march-funding-updates/",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T06:06:09Z",
+   "shows": "The same OpenAI page, scrolled to its first paragraph: 'Today we’re announcing new funding—$40 billion at a $300 billion post-money valuation, ... for the 500 million people who use ChatGPT every week.'",
+   "page_date": "March 31, 2025 (shown at the top of the page; see fri-deep-altman-same-day-2)",
+   "lands_on": {
+    "long": "[02:20.64-02:24.80] 'OpenAI said investors were putting in $40 billion.'"
+   },
+   "crop": [
+    736,
+    641,
+    785,
+    80
+   ],
+   "crop_note": "Stops right after '$40 billion' on the paragraph's first line, so the valuation (which he does not say) is off. crop_whole_sentence keeps the full sentence if wanted.",
+   "crop_whole_sentence": [
+    716,
+    629,
+    1446,
+    272
+   ],
+   "mark": [
+    754,
+    653,
+    767,
+    56
+   ],
+   "mark_is": "'Today we’re announcing new funding—$40 billion'",
+   "mark_lines": [
+    [
+     754,
+     655,
+     767,
+     52
+    ]
+   ],
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "sentence_found": true,
+    "said_text": "Today we’re announcing new funding—$40 billion",
+    "sentence_lines": 4,
+    "said_on_one_line": true
+   }
+  },
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-deep-altman-same-day-4.png",
+   "picture": "fri-deep-altman-same-day",
+   "n": 4,
+   "url": "https://the-decoder.com/openai-in-talks-for-massive-40-billion-funding-round-at-300-billion-valuation/",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T06:06:29Z",
+   "shows": "The Decoder, Jan 31, 2025: headline 'OpenAI in talks for massive $40 billion funding round at $300 billion valuation', byline Maximilian Schreiner, date, and the first sentence citing the Wall Street Journal. The article is marked 'Plus'; below its first paragraph a subscriber box covers the rest, which this picture does not need.",
+   "page_date": "Jan 31, 2025",
+   "page_date_iso": "2025-01-31T15:52:07+00:00",
+   "lands_on": {
+    "long": "[02:25.56] 'OpenAI had been lining up that money for months,'"
+   },
+   "crop": [
+    360,
+    304,
+    1299,
+    406
+   ],
+   "mark": [
+    448,
+    509,
+    441,
+    50
+   ],
+   "mark_is": "the byline-and-date line 'Maximilian Schreiner · Jan 31, 2025' (the headline stays whole and unringed, per the skeptic)",
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "consent_clicked": "Agree",
+    "headline": "OpenAI in talks for massive $40 billion funding round at $300 billion valuation",
+    "first_sentence_found": true,
+    "date_text": "Jan 31, 2025"
+   }
+  },
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-deep-openai-free-dec-2025-1.png",
+   "picture": "fri-deep-openai-free-dec-2025",
+   "n": 1,
+   "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T06:06:41Z",
+   "shows": "OpenAI's ChatGPT release notes, the 'December 11, 2025' entry: the date header at the top (start of the GPT-5.2 release text below it) and, at the bottom of the same entry, 'Update for free and Go users: We’re removing automatic model switching for reasoning in ChatGPT.'",
+   "page_date": "December 11, 2025",
+   "lands_on": {
+    "long": "[07:35.42] 'Last December, free users lost it,'"
+   },
+   "crop": [
+    368,
+    0,
+    1440,
+    1800
+   ],
+   "crop_note": "Whole entry from date to line. For a tighter tile, stack crop_date over crop_line with a dashed cut between, as fri-deep-openai-5-1-to-6-1 does.",
+   "crop_date": [
+    368,
+    0,
+    1440,
+    100
+   ],
+   "crop_line": [
+    368,
+    1688,
+    1374,
+    112
+   ],
+   "mark": [
+    406,
+    1700,
+    1294,
+    100
+   ],
+   "mark_is": "'Update for free and Go users: We’re removing automatic model switching for reasoning in ChatGPT.'",
+   "mark_lines": [
+    [
+     406,
+     1702,
+     1294,
+     50
+    ],
+    [
+     406,
+     1750,
+     152,
+     50
+    ]
+   ],
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "header_text": "December 11, 2025",
+    "sentence": "Update for free and Go users: We’re removing automatic model switching for reasoning in ChatGPT.",
+    "header_in_frame": true,
+    "sentence_in_frame": true,
+    "both_in_one_frame": true,
+    "paragraph": "Update for free and Go users: We’re removing automatic model switching for reasoning in ChatGPT. Previously, some questions were automatically routed to the Thinking model when ChatGPT determined it might help. To maximize choice, free users will now use GPT-5.2 Instant by default, and can still choose to use reasoning anytime by selecting Thinking from the tools menu in the message composer.",
+    "page_updated_label": "Updated: 9 hours ago",
+    "note_two_headers": "The page has 2 headers dated December 11, 2025; this is the one holding the GPT-5.2 release and the free-user update."
+   }
+  },
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-deep-openai-free-dec-2025-2.png",
+   "picture": "fri-deep-openai-free-dec-2025",
+   "n": 2,
+   "url": "https://www.wired.com/story/openai-router-relaunch-gpt-5-sam-altman/",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T06:04:35Z",
+   "shows": "WIRED's article header as served to a logged-out reader: byline 'MAXWELL ZEFF', 'BUSINESS', 'DEC 16, 2025 12:30 PM', the headline 'OpenAI Rolls Back ChatGPT’s Model Router System for Most Users' and the standfirst, with the article photo on the right.",
+   "page_date": "Dec 16, 2025",
+   "page_date_iso": "2025-12-16T17:30:00.000Z",
+   "lands_on": {
+    "long": "[07:35.42-07:52.78] stays in frame from 'and OpenAI said free users liked the normal setting better.' through 'But Wired magazine said ...' (plan: WIRED's headline, byline and date stay in frame)"
+   },
+   "crop": [
+    172,
+    260,
+    1096,
+    712
+   ],
+   "mark": [
+    204,
+    288,
+    758,
+    88
+   ],
+   "mark_is": "the byline-and-date row 'MAXWELL ZEFF · BUSINESS · DEC 16, 2025 12:30 PM' (12:30 PM US Eastern = 17:30 UTC)",
+   "blocked": "PAYWALL: the article is part of WIRED's 'Model Behavior' newsletter. A logged-out reader sees only the header and the first sentence ('OpenAI has quietly reversed a major change to how hundreds of millions of people use ChatGPT.'), then 'Model Behavior is exclusive to subscribers.' / 'Start your free trial to access Model Behavior and all premium newsletters.' Neither quoted line (the spokesperson line, the 'In practice' line) is on screen. The Internet Archive's copies of 16 Dec 2025 and 3 Oct 2026 show the same wall (read through Firecrawl; web.archive.org itself resets from this container).",
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "headline": "OpenAI Rolls Back ChatGPT’s Model Router System for Most Users",
+    "date_text": "DEC 16, 2025 12:30 PM",
+    "byline_text": "MAXWELL ZEFF",
+    "first_sentence_visible": true,
+    "paywall_box_visible": false,
+    "on_screen_in_practice_line": false,
+    "on_screen_spokesperson_line": false
+   }
+  },
+  {
+   "file": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-deep-openai-free-dec-2025-3.png",
+   "picture": "fri-deep-openai-free-dec-2025",
+   "n": 3,
+   "url": "https://x.com/ZeffMax/status/2000984660852310409",
+   "captured": "2026-10-17",
+   "captured_at": "2026-10-17T06:06:54Z",
+   "shows": "Alternative for WIRED's paywalled 'In practice' line: the WIRED reporter Maxwell Zeff's own post on X, 16 Dec 2025: 'New: OpenAI quietly rolled back ChatGPT's model router for free users last week. The router—which was costly for the company to serve, but aimed to improve answer quality—was thought to be hurting engagement, one person familiar with the matter told WIRED.' The post carries WIRED's article card (headline, byline, date) and its time line '5:41 PM · Dec 16, 2025' (UTC). His reply below it links the article: 'More here in my latest Model Behavior: OpenAI Rolls Back ChatGPT’s Model Router System for Most Users, From wired.com'.",
+   "page_date": "5:41 PM · Dec 16, 2025",
+   "page_date_iso": "2025-12-16T17:41:34.000Z",
+   "lands_on": {
+    "long": "[07:40.80-07:54.40] 'But Wired magazine said the automatic picker seemed to send lots more free users to slower, higher thinking odds, ... that costs OpenAI a lot more.'"
+   },
+   "crop": [
+    716,
+    102,
+    1200,
+    1090
+   ],
+   "mark": [
+    738,
+    308,
+    776,
+    52
+   ],
+   "mark_is": "the sentence 'The router—which was costly for the company to serve,'",
+   "mark_lines": [
+    [
+     738,
+     310,
+     776,
+     48
+    ]
+   ],
+   "also_mark": {
+    "date_time": [
+     736,
+     1010,
+     334,
+     56
+    ]
+   },
+   "note": "Times on X follow the viewer's time zone; this capture was taken with the browser set to UTC, so the post's time line reads in UTC. The X post's own words are 'costly for the company to serve', not WIRED's exact sentence; it stands in for step 3 only.",
+   "png_size": [
+    2880,
+    1800
+   ],
+   "checks": {
+    "status": 200,
+    "text: New: OpenAI quietly rolled back ChatGPT's model router for free users last week.": true,
+    "text: The router—which was costly for the company to serve, but aimed to improve answer quality—was thought to be hurting engagement, one person familiar with the matter told WIRED.": true,
+    "published_time_meta": "2025-12-16T17:41:34.000Z"
+   }
+  }
+ ],
+ "unreachable": [
+  {
+   "picture": "fri-deep-openai-free-dec-2025",
+   "steps": "2 ('OpenAI said free users liked the normal setting better': WIRED's spokesperson line) and 3 ('But Wired magazine said ...': WIRED's 'In practice, the router seemed ...' line)",
+   "source": "WIRED, Maxwell Zeff, 'OpenAI Rolls Back ChatGPT’s Model Router System for Most Users', 16 Dec 2025",
+   "url": "https://www.wired.com/story/openai-router-relaunch-gpt-5-sam-altman/",
+   "why": "Paywall. The piece is in WIRED's 'Model Behavior' subscriber newsletter. A logged-out reader sees the header and one sentence, then 'Model Behavior is exclusive to subscribers.' Neither quoted line is rendered on the page (the text sits only in the page's hidden data, and revealing it would mean editing the page, which this task forbids).",
+   "tried": [
+    "Live page in Chromium, logged out: header captured as fri-deep-openai-free-dec-2025-2.png; body stops after the first sentence.",
+    "Internet Archive copies of 16 Dec 2025 18:39 UTC and 3 Oct 2026 (757 captures listed), read through Firecrawl: the same wall from day one.",
+    "web.archive.org from this container: connection reset at the network edge; archive.ph: HTTP 429."
+   ],
+   "alternatives": [
+    {
+     "for": "step 3",
+     "use": "docs/plans/2026-10-09-friday/video-pictures/shots/fri-deep-openai-free-dec-2025-3.png",
+     "url": "https://x.com/ZeffMax/status/2000984660852310409",
+     "what": "The WIRED reporter's own public post, 16 Dec 2025, 5:41 PM UTC, with WIRED's article card in it: 'The router—which was costly for the company to serve, but aimed to improve answer quality—was thought to be hurting engagement, one person familiar with the matter told WIRED.' Its words are 'costly for the company to serve', not WIRED's exact 'In practice' sentence, and it does not say 'seemed to send many more free users' to reasoning."
+    },
+    {
+     "for": "steps 2 and 3, the exact WIRED lines",
+     "use": "not captured",
+     "url": "https://www.wired.com/story/openai-router-relaunch-gpt-5-sam-altman/",
+     "what": "Best real source: a capture of the same WIRED page from a subscriber's signed-in browser (Krish's, if he has WIRED), of the paragraphs 'In practice, the router seemed to send many more free users to OpenAI’s advanced reasoning models, which are more expensive for OpenAI to serve.' and 'An OpenAI spokesperson tells WIRED that the company determined, based on user feedback, that Free and Go users preferred staying in the default chat experience'. The only open pages carrying these lines are a news-scraper copy (https://ng.headtopics.com/news/openai-rolls-back-chatgpt-s-model-router-system-for-most-77262276) and a Mastodon post quoting it (https://tldr.nettime.org/@remixtures/115736616072887427); neither is fit to show on screen as WIRED."
+    }
+   ],
+   "related_fact": "OpenAI's own release note (capture -1, the paragraph continuing past the frame's bottom edge) gives its reason as 'To maximize choice, free users will now use GPT-5.2 Instant by default'. It does not say users preferred the default; that reason exists only in WIRED's spokesperson quote."
+  }
+ ],
+ "for_the_edit": [
+  "fri-claude-launch-pages: three frames, one per month he says; each crop holds the page title and its date. Write 'captured 17 Oct 2026' on each frame in the edit (the skeptic's fix); the PNGs carry nothing added.",
+  "fri-deep-altman-same-day: four frames for three tiles. Tile 2 is two crops of one OpenAI page (-2 date and title, -3 the sentence about 1,400 px further down, below the hero image); stack them with a cut line between.",
+  "fri-deep-openai-free-dec-2025: -1 holds the 'December 11, 2025' header (top edge) and the free-user line (bottom edge) in one frame; for a tighter tile stack crop_date over crop_line. -2 is WIRED's header (headline, byline, date) for steps 2 and 3. -3 is the alternative for step 3. Step 2 has no capture of its own (paywall, above).",
+  "The Decoder article is marked 'Plus': its headline, byline, date and first paragraph are open; a subscriber box covers the rest, outside the crop.",
+  "On X, a logged-out 'See all the replies / Continue to X' panel covers the lower replies in both X frames; it sits outside the crops."
+ ]
+}

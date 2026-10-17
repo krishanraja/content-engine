@@ -1,0 +1,152 @@
+{
+ "title": null,
+ "subtitle": null,
+ "youtube_title": null,
+ "youtube_description": "Claude Opus 4.8 in May, Opus 5 in July, Opus 5.5 in September. I got lost in all the new AI names, so I went looking for what changes your answer.\n\nWhat I found is that the name matters less than how hard the AI thinks. Think of a car. The model's name is the badge on the front, and the thinking setting is the gears. ChatGPT and Claude both let you change gear, for now. But the apps usually start it low, and most people leave it there. When Artificial Analysis ran the same Claude Opus 5.5 through its hard tests, the older Opus 5 at its hardest beat the new one at its lowest. More thinking isn't always better, though. Researchers asked thinking AIs what 2 plus 3 is, and one of them wrote out 13 solutions.\n\nPicture Sally, a small business owner. Her AI read a supplier contract and gave her a tidy, confident answer in four seconds. She signed. Six months later a clause bit her that a careful reader would have caught. So why do the apps start you low? I think it comes down to who pays, because on a flat monthly plan every extra thought comes out of OpenAI's or Anthropic's pocket.\n\nSince 9 October, Google's free Gemini app has started on Auto. OpenAI has gone the other way and taken ChatGPT's automatic picker away twice. I don't think that lasts. My prediction: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message. I'm 85% sure. What I'd want is what Formula 1 has, a semi-automatic: let the AI pick the gear if it must, but give us the paddles, and show us which gear it picked.\n\nRead the full article, with every source, free at makeyourmindup.ai\n{ARTICLE_URL}\n\nSources\n- Artificial Analysis: Claude Opus 5.5 (Low), https://artificialanalysis.ai/models/claude-opus-5-5-low\n- Artificial Analysis: Claude Opus 5.5 (Max), https://artificialanalysis.ai/models/claude-opus-5-5\n- Artificial Analysis: Claude Opus 5 (Max), https://artificialanalysis.ai/models/claude-opus-5\n- Chen et al., arXiv: Do NOT Think That Much for 2+3=? On the Overthinking of o1-Like LLMs, https://arxiv.org/html/2412.21187v2\n- Sam Altman on X, 31 March 2025: one million users in the last hour, https://x.com/sama/status/1906771292390666325\n- OpenAI: New funding to build towards AGI, https://openai.com/index/march-funding-updates/\n- Sam Altman on X, 6 January 2025: losing money on Pro subscriptions, https://x.com/sama/status/1876104315296968813\n- Google, Gemini Apps Help: Changes to Gemini model access and limits, https://support.google.com/gemini/answer/17004136?hl=en\n- OpenAI Help Center: ChatGPT release notes, https://help.openai.com/en/articles/6825453-chatgpt-release-notes\n- Anthropic: An update on recent Claude Code quality reports, https://www.anthropic.com/engineering/april-23-postmortem\n- Anthropic, Claude Help Center: Change the model, effort, and thinking settings, https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings\n- Raceteq: From manual to mind-bending: The decades-long evolution of the F1 gearbox, https://www.raceteq.com/articles/2026/01/evolution-of-the-f1-gearbox-1950-to-2025",
+ "spotify_description": "Claude Opus 4.8 in May, Opus 5 in July, Opus 5.5 in September. I got lost in all the new AI names, so I went looking for what changes your answer.\n\nWhat I found is that the name matters less than how hard the AI thinks. Think of a car. The model's name is the badge on the front, and the thinking setting is the gears. ChatGPT and Claude both let you change gear, for now. But the apps usually start it low, and most people leave it there. When Artificial Analysis ran the same Claude Opus 5.5 through its hard tests, the older Opus 5 at its hardest beat the new one at its lowest. More thinking isn't always better, though. Researchers asked thinking AIs what 2 plus 3 is, and one of them wrote out 13 solutions.\n\nPicture Sally, a small business owner. Her AI read a supplier contract and gave her a tidy, confident answer in four seconds. She signed. Six months later a clause bit her that a careful reader would have caught. So why do the apps start you low? I think it comes down to who pays, because on a flat monthly plan every extra thought comes out of OpenAI's or Anthropic's pocket.\n\nSince 9 October, Google's free Gemini app has started on Auto. OpenAI has gone the other way and taken ChatGPT's automatic picker away twice. I don't think that lasts. My prediction: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message. I'm 85% sure. What I'd want is what Formula 1 has, a semi-automatic: let the AI pick the gear if it must, but give us the paddles, and show us which gear it picked.\n\nRead the full article, with every source, free at makeyourmindup.ai\n{ARTICLE_URL}",
+ "short_title": null,
+ "_titles": "Left for Krish's pick after recording (title_check.py packaging rule).",
+ "linkedin_post": "I've been using AI apps every day for years, and the new model names are getting out of hand. Claude Opus 4.8 in May. Opus 5 in July. Opus 5.5 in September.\n\nI went looking for what actually changes your answer. I think the name is the least important thing on the screen. What matters most is how hard the AI thinks, and apps usually start that low.\n\nPicture Sally, a small business owner. She pastes a supplier contract into her AI app and gets a tidy, confident answer in four seconds. She signs. Six months later a clause bites her that a careful reader would have caught.\n\nWhy start you low? My guess is cost, because when Artificial Analysis tested Opus 5.5, thinking as hard as it can cost about 11 times as much as thinking a little, and on a flat monthly plan that comes out of OpenAI's or Anthropic's pocket.\n\nFor anything you'll act on, like a contract or money, change it yourself. Pick Medium or High in ChatGPT, and turn the effort up in Claude.\n\nMy prediction: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message. I'm 85% sure.\n\nFull article, with every source, in the first comment.",
+ "short_caption": "{SHORTS_TITLE}\n\nClaude Opus 4.8 in May, Opus 5 in July, Opus 5.5 in September. So I looked into whether the name of the AI model actually changes your answer. What I found is that how hard it thinks matters more. The name is like the badge on a car, and the thinking setting is the gear. On a set of hard tests from Artificial Analysis, the older Claude Opus 5 at its hardest beat the newest Opus 5.5 at its lowest. So why do the apps usually start you low? My guess is that thinking costs OpenAI and Anthropic money, but you pay the same every month. My bet: by the end of June 2027, ChatGPT's free plan goes back to letting the AI pick how hard it thinks for each message. I'm 85% sure.\n\nThe full article is free at makeyourmindup.ai. Link in bio.",
+ "tiktok_caption": "{SHORTS_TITLE}\n\nEvery AI launch is about a new name. Claude went from Opus 4.8 in May to Opus 5.5 in September. So I looked into whether the name actually changes your answer. What I found is that how hard the AI thinks matters more, and the apps usually start you low. My guess is that's because thinking costs OpenAI and Anthropic money, while you pay the same flat fee. Google's free Gemini app now starts on Auto, where it decides how much power each question gets. OpenAI took that away from ChatGPT twice. My bet: by the end of June 2027, ChatGPT's free plan lets the AI choose how hard to think again. I'm 85% sure.\n\nRead the full article free at makeyourmindup.ai\n\nDo you want to control how hard your AI thinks, or would you rather let it decide?",
+ "whatsapp_text": "New on mind.the.gap: I think how hard your AI thinks matters more than the name of the model. ChatGPT and Claude usually start you low. Here's why, and who I think gets to choose next.\n\nThe full article, free: {ARTICLE_URL}",
+ "note_text": "I honestly got lost in all the new AI names, so I went looking for what actually changes your answer. I think it's less the name and more how hard the AI thinks. ChatGPT and Claude usually start that low, and on a flat monthly plan every extra thought costs OpenAI or Anthropic money. My bet: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI picks how hard to think. I'm 85% sure.",
+ "comment_question": "Do you want to control how hard your AI thinks, or would you rather let it decide?",
+ "date": "2026-10-16",
+ "files": {
+  "long_video": "3 Video/<the wide 16:9 video>",
+  "short_video": "3 Video/<the tall 9:16 video>",
+  "cover": "2 Covers and images/substack-cover-1200x630.png",
+  "substack_copy": "1 Article/substack-copy.html"
+ },
+ "_facts": [
+  {
+   "claim": "Krish has used AI apps every day for years.",
+   "article_sentence": "I've been using AI apps every day for years now, and I've started to notice something odd about how they're sold."
+  },
+  {
+   "claim": "Anthropic launched Claude Opus 4.8 in May, Opus 5 in July and Opus 5.5 in September (so Claude went from Opus 4.8 in May to Opus 5.5 in September).",
+   "article_sentence": "Anthropic, which makes Claude, launched Claude Opus 4.8 in May, Claude Opus 5 in July and Claude Opus 5.5 in September, with Sonnet, Fable and Haiku versions alongside."
+  },
+  {
+   "claim": "Every AI launch is about a new name.",
+   "article_sentence": "Every launch is about a name."
+  },
+  {
+   "claim": "The name of the model is the least important thing on the screen; how hard the AI thinks matters more.",
+   "article_sentence": "But I think the name is the least important thing on the screen."
+  },
+  {
+   "claim": "The setting that changes your answer most, how hard the AI thinks, usually starts low in the apps, and most people leave it there.",
+   "article_sentence": "The setting that changes your answer most has a boring label, the app usually starts it low, and most people leave it there.",
+   "note": "Kept to 'usually start you low', never 'first gear': the article also says \"Anthropic's developer guide says Opus 5.5 defaults to medium, well below max.\" The take said ChatGPT and Claude \"often start with this quite low\", which agrees."
+  },
+  {
+   "claim": "The model's name is like the badge on the front of a car.",
+   "article_sentence": "The name of the AI model, such as Claude Opus 5.5 or GPT-6.1 Sol, is like the badge on the front of the car."
+  },
+  {
+   "claim": "The thinking setting is the gears.",
+   "article_sentence": "The thinking levels, such as ChatGPT's Instant and Thinking, or Claude's low, medium, high and max effort, are the gears, and the setting in the app is the gearstick."
+  },
+  {
+   "claim": "ChatGPT and Claude both let you change how hard the AI thinks, for now.",
+   "article_sentence": "ChatGPT and Claude both let you choose how hard the AI thinks. For now."
+  },
+  {
+   "claim": "Artificial Analysis ran the same Claude Opus 5.5 through its hard tests at different settings.",
+   "article_sentence": "Artificial Analysis, an independent group that tests these models, ran the same Claude Opus 5.5 through its long set of hard tests at different settings.",
+   "take_differs": "The take says \"a really tough reasoning test\" (one test, about reasoning). The article says \"its long set of hard tests\"; the copy says \"its hard tests\" or \"a set of hard tests\"."
+  },
+  {
+   "claim": "The older Claude Opus 5 at its hardest beat the newest Opus 5.5 at its lowest.",
+   "article_sentence": "The older Opus 5, at its hardest, beat the new one at its lowest."
+  },
+  {
+   "claim": "More thinking isn't always better: researchers asked thinking AIs what 2 plus 3 is.",
+   "article_sentence": "Thinking can be pure waste, too: researchers asked reasoning models \"what is the answer of 2 plus 3?\" and found they \"consumed 1,953% more tokens than conventional models to reach the same answer.\"",
+   "note": "The copy says \"thinking AIs\", as Krish does in the take; the article says \"reasoning models\"."
+  },
+  {
+   "claim": "One of them wrote out 13 solutions.",
+   "article_sentence": "One wrote out 13 solutions.",
+   "take_differs": "The take says \"One of the AI's worked out the answer 13 times\". The copy keeps the article's \"wrote out 13 solutions\"."
+  },
+  {
+   "claim": "Sally is a small business owner.",
+   "article_sentence": "Picture a small business owner.",
+   "take_differs": "The take says \"she runs a small shop\" (as do the brief and the 90-second script, \"her shop's deal\"). The article says \"a small business owner\"; the copy uses the article's words."
+  },
+  {
+   "claim": "Sally pastes a supplier contract into her AI app (her AI read a supplier contract).",
+   "article_sentence": "She pastes a supplier contract into her AI app and asks what she should worry about."
+  },
+  {
+   "claim": "Her AI gives her a tidy, confident answer in four seconds.",
+   "article_sentence": "It gives her a tidy, confident answer in four seconds."
+  },
+  {
+   "claim": "She signs.",
+   "article_sentence": "She signs."
+  },
+  {
+   "claim": "Six months later a clause bites her that a careful reader would have caught.",
+   "article_sentence": "Six months later a clause bites her that a careful reader would have caught.",
+   "take_differs": "The take says \"one small rule hidden in the deal, which costs her a lot of money\". The copy keeps the article's \"a clause bites her\" and names no sum."
+  },
+  {
+   "claim": "On a flat monthly plan, every extra thought comes out of OpenAI's or Anthropic's pocket, while you pay the same.",
+   "article_sentence": "If you pay a flat monthly fee, every extra thought comes out of their pocket."
+  },
+  {
+   "claim": "Krish's guess is that cost is why the apps start you low.",
+   "article_sentence": "That, I think, is why the app starts you in a low gear."
+  },
+  {
+   "claim": "On Artificial Analysis's tests, Claude Opus 5.5 thinking as hard as it can cost about 11 times as much as thinking a little.",
+   "article_sentence": "Bottom to top, that's about 11 times the cost for a score just over a third higher.",
+   "take_differs": "The take says the score \"only goes up by about 30%\". The article says \"a score just over a third higher\". The copy does not state the score rise; where one is needed, it is the article's \"just over a third\"."
+  },
+  {
+   "claim": "For anything you'll act on, like a contract or money, change the setting yourself.",
+   "article_sentence": "For anything you'll act on, change the gear yourself. A contract, a medical question, money, a decision you can't take back."
+  },
+  {
+   "claim": "Pick Medium or High in ChatGPT, and turn the effort up in Claude.",
+   "article_sentence": "On ChatGPT, pick Medium or High. On Claude, turn the effort up."
+  },
+  {
+   "claim": "Since 9 October, Google's free Gemini app has started on Auto.",
+   "article_sentence": "Since 9 October, the free Gemini app has started on \"Auto\"."
+  },
+  {
+   "claim": "Gemini's Auto setting picks for you.",
+   "article_sentence": "The next step is the AI choosing the gear itself, like a car with an automatic transmission, and Google just took it."
+  },
+  {
+   "claim": "OpenAI has gone the other way and taken ChatGPT's automatic picker away twice.",
+   "article_sentence": "OpenAI has gone the other way, twice."
+  },
+  {
+   "claim": "Krish doesn't think that lasts.",
+   "article_sentence": "I don't think that lasts, because each part of the car is worth something different to OpenAI and Anthropic."
+  },
+  {
+   "claim": "Prediction: by 30 June 2027 (the end of June 2027), ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message.",
+   "article_sentence": "By 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message.",
+   "take_differs": "The take says \"by the end of mid-2027\" and puts paid users inside the same bet (\"paid users will start in automatic too ... But paid plans will have that semi automatic setting\") before giving 85%. In the article the dated 85% call covers ChatGPT's free plan only, and the paid plans are Krish's view (\"I think that's where the paid plans end up\"). The copy ties 85% to the free-plan call only. The take and the v6 script also say less transparent products \"always make the AI company more money\"; the article says they \"always help the AI company control its costs\". The copy uses neither line."
+  },
+  {
+   "claim": "Krish is 85% sure of the prediction.",
+   "article_sentence": "How sure we are: 85%."
+  },
+  {
+   "claim": "Formula 1 has a better way: the semi-automatic.",
+   "article_sentence": "There's a better way the apps could do this, and Formula 1 found it decades ago: the semi-automatic transmission."
+  },
+  {
+   "claim": "Let the AI pick the gear if it must, but give us the paddles, and show us which gear it picked.",
+   "article_sentence": "Let the AI pick the gear, if it must, but give us the paddles, and a dashboard that shows which gear it picked and how hard it thought."
+  }
+ ]
+}
