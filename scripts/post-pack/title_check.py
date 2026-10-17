@@ -93,6 +93,38 @@ def names_in(title):
     return {re.sub(r"['’]s$", '', n) for n in found if n.upper() not in {'I', 'AI', 'AIS', 'MY', 'A'} and n.lower() not in {'i', 'my'}}
 
 
+# Words that are capitalised in a piece but name nothing a stranger knows.
+NOT_A_SUBJECT = {'i', 'ai', 'ais', 'a', 'the', 'my', 'we', 'you', 'it', 'this', 'that', 'so', 'now', 'and', 'but', 'video', 'think', 'free',
+                 'plus', 'pro', 'medium', 'high', 'low', 'auto', 'extended', 'sally'}
+
+
+def piece_names(source):
+    """The real things the piece names (products, companies, people): words it
+    capitalises mid-sentence, less the ones that name nothing a stranger knows."""
+    text = ' '.join(str(source or '').split())
+    found = set()
+    for m in re.finditer(r"(?<![.!?:]\s)(?<!^)\b([A-Z][\w'’&.-]*[A-Za-z0-9])", text):
+        w = re.sub(r"['’]s$", '', m.group(1)).lower()
+        if w not in NOT_A_SUBJECT and len(w) >= 2:
+            found.add(w)
+    return found
+
+
+def names_nothing(title, source):
+    """A line on a surface a stranger sees first that names no real thing from
+    the piece (Krish, 2026-10-17, of "YOU'RE ON LOW", "OLD BEAT NEW" and "WHO
+    PICKED LOW?": "This isn't a well-known concept and it's not a well-known
+    media business"), or None when it names one."""
+    known = piece_names(source)
+    words = {re.sub(r"['’]s$", '', w).lower() for w in re.findall(r"[\w'’&.-]+", str(title))}
+    words |= {w.rstrip('.') for w in words}
+    if known and not (words & known):
+        return ('names no real thing a stranger would know (a product, a company, a person from the piece): the piece\'s own '
+                'shorthand is only legible to someone who has already watched it (Krish, 2026-10-17: "I can\'t release a Substack cover '
+                'image that says you\'re on low. What the hell does that even mean?")')
+    return None
+
+
 def problems(title, source=None):
     """The reasons a title fails, [] when it passes. source: the piece's own
     words (body and scripts), to check its names and numbers are the piece's."""
@@ -141,6 +173,18 @@ def verdict_of(title, data=None):
     data = data or load_verdicts()
     hits = [v for v in data.get('verdicts', []) if norm(v.get('title')) == norm(title)]
     return hits[0] if hits else None
+
+
+def surface_problems(title, surface, source=None):
+    """The checks that depend on where the line shows: a line on a surface a
+    stranger sees first must name a real thing from the piece."""
+    if surface in PACKAGING_FIRST_SEEN and source:
+        why = names_nothing(title, source)
+        return [why] if why else []
+    return []
+
+
+PACKAGING_FIRST_SEEN = {'article', 'cover', 'youtube', 'thumbnail', 'shorts', 'tall_cover', 'title_card'}
 
 
 def gate(title, source=None, data=None):
@@ -324,6 +368,14 @@ def self_test():
             record_verdict('Amazon locked Muse out. Walmart let it in.', 'rejected', 'flat', 'no, boring', 'card')
             check('gate: a later rejection wins, with his words', any('no, boring' in p for p in gate('Amazon locked Muse out. Walmart let it in.')), True)
             check('lessons list his picked and rejected titles', 'Amazon locked Muse out' in lessons_text(), True)
+            piece = ('Anthropic makes Claude. It launched Opus 5.5 in September. OpenAI runs ChatGPT. Picture a woman called Sally. '
+                     'It starts on Low, in a low gear. The old one beat the new one.')
+            for bad in ("YOU'RE ON LOW.", 'OLD BEAT NEW.', 'WHO PICKED LOW?', 'Sally signs'):
+                check(f'a line strangers see first that names nothing real is refused: {bad}',
+                      any('names no real thing' in w for w in surface_problems(bad, 'thumbnail', piece)), True)
+            for good in ("Claude's new model lost to its old one", 'ChatGPT starts you on its lowest setting', 'OPUS 5.5 LOST'):
+                check(f'one that names a real thing passes: {good}', surface_problems(good, 'cover', piece), [])
+            check('a card heading is not held to it (his words at that moment)', surface_problems('So what does matter?', 'card', piece), [])
             none = lambda m, path, b: (200, json.dumps({'ok': True, 'making': {'recordings': []}}))
             one = lambda m, path, b: (200, json.dumps({'ok': True, 'making': {'recordings': [{'cut': 'long', 'path': 'recordings/x.mp4'}]}}))
             down = lambda m, path, b: (503, '{}')
@@ -398,6 +450,8 @@ def main(argv=None):
     bad = 0
     for t in a.titles:
         why = gate(t, source)
+        if a.surface:
+            why += surface_problems(t, a.surface, source)
         if a.surface and too_long(t, a.surface):
             why.append(too_long(t, a.surface))
         print(('REFUSED  ' if why else 'passes   ') + t)

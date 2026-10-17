@@ -32,6 +32,31 @@
    ]
   },
   {
+   "id": "legible-to-a-stranger",
+   "on": "2026-10-17",
+   "krish": "This isn't a well-known concept and it's not a well-known media business. ... Why can't you understand why I absolutely hate, detest, loathe these? They're offensive to me. They hurt my soul.",
+   "why": "His purpose is to make what is coming legible to people; a line only legible to someone who has already watched the video is the opposite of it, and a cheap, cryptic one costs the credibility a new brand for senior people depends on. It also proved lessons already on file were ignored: the surface formula (\"under 4 words\", \"a curiosity gap\") was followed over his principle.",
+   "means": "Every line a stranger sees first names a real thing in plain words and says something true about it; his principles outrank any formula; nothing reaches him before a cold reader with no context can explain it; fewer, better options, never a pile.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/title_check.py",
+     "contains": "def names_nothing",
+     "how": "refuses a first-seen line that names nothing real"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "Then the cold read, before anything reaches him",
+     "how": "the cold read"
+    },
+    {
+     "file": "config/title-verdicts.json",
+     "contains": "a stranger must understand the line in one second",
+     "how": "the first lesson"
+    }
+   ]
+  },
+  {
    "id": "headings-from-his-words",
    "on": "2026-10-17",
    "krish": "These headings are so stupid it's insane. I can't believe you're putting these to me.",

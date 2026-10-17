@@ -2,6 +2,11 @@
  "_about": "Krish's verdicts on titles, and what each teaches. Every title a reader sees first (article, YouTube, Shorts, cover, video title card, card headings) is written against these, offered to Krish as a few options, and used only once he has picked it: scripts/post-pack/title_check.py refuses an asset whose title has no 'picked' verdict here. Record a verdict with `title_check.py verdict`. Krish, 2026-10-14: 'figure out why I dislike it, and iterate, and understand what I actually like, and then encode that into the system forever.'",
  "lessons": [
   {
+   "lesson": "Above every formula and every surface: a stranger must understand the line in one second. It names a real thing people know (the product, the company, the person) in plain words, and says something true about it. Never the piece's own shorthand (low, high, gear, old and new, the badge): that is only legible to someone who has already watched it. makeyourmindup is not a famous channel, so a cryptic line reads as confusing, not intriguing, and a cheap one costs him the credibility the brand is built on. If a fresh reader cannot say what it is about and who it names, it never reaches him.",
+   "from": "Krish, 2026-10-17: \"Old beat new\" and \"who picked low\" and you're on low are really stupid. This isn't a well-known concept and it's not a well-known media business. I can't release a Substack cover image that says you're on low. What the hell does that even mean? ... They're offensive to me. They hurt my soul. It's not as though I want to tweak it. It's that I am appalled that you keep bringing this shit to me.",
+   "on": "2026-10-17"
+  },
+  {
    "lesson": "First person beats explaining: put Krish in it (I tried, I tested, I scored).",
    "from": "A2 picked over B, C and D; 'It should be personal ... It could be first person'",
    "on": "2026-10-14"
@@ -78,6 +83,33 @@
   }
  ],
  "verdicts": [
+  {
+   "title": "YOU'RE ON LOW.",
+   "surface": "cover",
+   "verdict": "rejected",
+   "why": "Insider shorthand from inside the script (low, old and new, picking a gear) that means nothing to a stranger scrolling past; it names no real thing, so it is illegible, and cryptic only works for a famous channel. It also broke lessons already on file: name the product, give the real finding, clarity over a cryptic tease.",
+   "krish": "Krish, 2026-10-17: \"Old beat new\" and \"who picked low\" and you're on low are really stupid. This isn't a well-known concept and it's not a well-known media business. I can't release a Substack cover image that says you're on low. What the hell does that even mean? ... They're offensive to me. They hurt my soul. It's not as though I want to tweak it. It's that I am appalled that you keep bringing this shit to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "WHO PICKED LOW?",
+   "surface": "thumbnail",
+   "verdict": "rejected",
+   "why": "Insider shorthand from inside the script (low, old and new, picking a gear) that means nothing to a stranger scrolling past; it names no real thing, so it is illegible, and cryptic only works for a famous channel. It also broke lessons already on file: name the product, give the real finding, clarity over a cryptic tease.",
+   "krish": "Krish, 2026-10-17: \"Old beat new\" and \"who picked low\" and you're on low are really stupid. This isn't a well-known concept and it's not a well-known media business. I can't release a Substack cover image that says you're on low. What the hell does that even mean? ... They're offensive to me. They hurt my soul. It's not as though I want to tweak it. It's that I am appalled that you keep bringing this shit to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "OLD BEAT NEW.",
+   "surface": "thumbnail",
+   "verdict": "rejected",
+   "why": "Insider shorthand from inside the script (low, old and new, picking a gear) that means nothing to a stranger scrolling past; it names no real thing, so it is illegible, and cryptic only works for a famous channel. It also broke lessons already on file: name the product, give the real finding, clarity over a cryptic tease.",
+   "krish": "Krish, 2026-10-17: \"Old beat new\" and \"who picked low\" and you're on low are really stupid. This isn't a well-known concept and it's not a well-known media business. I can't release a Substack cover image that says you're on low. What the hell does that even mean? ... They're offensive to me. They hurt my soul. It's not as though I want to tweak it. It's that I am appalled that you keep bringing this shit to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
   {
    "title": "My prediction for 2027",
    "surface": "card",

@@ -579,6 +579,30 @@
      "how": "fails the build if RELATABLE_EXPLANATION reaches the visual stage again, or ANALOGY_IN_SCRIPTS_ONLY stops reaching any stage"
     }
    ]
+  },
+  {
+   "id": "packaging-in-shorthand",
+   "on": "2026-10-17",
+   "krish": "\"Old beat new\" and \"who picked low\" and you're on low are really stupid. This isn't a well-known concept and it's not a well-known media business. I can't release a Substack cover image that says you're on low. What the hell does that even mean? ... It's not as though I want to tweak it. It's that I am appalled that you keep bringing this shit to me.",
+   "what": "Cover and thumbnail words written in the piece's own shorthand (low, old and new, picking a gear) that no stranger can read, put to him after lessons on file already said to name the product and give the real finding.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/title_check.py",
+     "contains": "def names_nothing",
+     "how": "a line on a surface strangers see first (headline, cover, YouTube title, thumbnail, Shorts title, title card) that names no real thing from the piece is refused"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "Then the cold read, before anything reaches him",
+     "how": "a fresh reader with no context must explain each line, and calls out cheap ones, before any option is offered"
+    },
+    {
+     "file": "config/title-verdicts.json",
+     "contains": "a stranger must understand the line in one second",
+     "how": "the first lesson every title round prints"
+    }
+   ]
   }
  ]
 }
