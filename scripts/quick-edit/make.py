@@ -81,6 +81,12 @@ from share import share_copy
 
 CREAM, INK, MINT = '&H00E4EFF4', '&H0012150C', '&H00C0F07E'
 FPS, RATE = 30, 48000
+# The cut's frame rate is the take's own (render_fps): the episode corpus,
+# "Frame rate: Same as recorded source", and YouTube's own advice to upload at
+# the rate it was recorded at. Krish's takes come from teleprompter.com at about
+# 24 fps, a little uneven; until 17 October every cut was made at 30, which
+# shows one frame in four twice. FPS above is the default until main() sets it.
+HOUSE_RATES = (24, 25, 30, 50, 60)
 SIZE = {'9x16': (1080, 1920), '16x9': (1920, 1080)}
 # The voice is set to the target before the mix, and the mix is limited this
 # far under full scale (true peak, 4x oversampled) before the final loudness
@@ -285,15 +291,37 @@ def segments(words, remove, max_gap, pad_before, pad_after, src_dur):
             out[-1]['idx'] += g['idx']
         else:
             out.append({'a': round(a, 3), 'b': round(b, 3), 'idx': g['idx']})
-    # Each window is a whole number of frames at 30 fps, so its picture and
-    # sound are the same length and the joined cut never drifts out of sync.
+    # Each window is a whole number of frames at the cut's rate, so its picture
+    # and sound are the same length and the joined cut never drifts out of sync.
     for g in out:
-        g['b'] = round(g['a'] + max(1, round((g['b'] - g['a']) * 30)) / 30, 4)
+        g['b'] = round(g['a'] + max(1, round((g['b'] - g['a']) * FPS)) / FPS, 4)
     t = 0.0
     for g in out:
         g['off'] = round(t, 3)
         t += g['b'] - g['a']
     return out, round(t, 3)
+
+
+def render_fps(cfg, src):
+    """The cut's frame rate: `"fps"` in the config (one of HOUSE_RATES), else
+    ("source", the default) the house rate nearest the take's average rate."""
+    want = cfg.get('fps', 'source')
+    if want != 'source':
+        if want not in HOUSE_RATES:
+            raise ValueError(f'"fps" is "source" or one of {", ".join(map(str, HOUSE_RATES))}, not {want!r}')
+        return int(want)
+    out = json.loads(subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=avg_frame_rate,r_frame_rate',
+                                     '-of', 'json', str(src)], capture_output=True, text=True).stdout or '{}')
+    v = (out.get('streams') or [{}])[0]
+    for key in ('avg_frame_rate', 'r_frame_rate'):
+        n, _, d = str(v.get(key) or '0/0').partition('/')
+        try:
+            rate = float(n) / float(d or 1)
+        except (ValueError, ZeroDivisionError):
+            continue
+        if rate > 0:
+            return min(HOUSE_RATES, key=lambda r: abs(r - rate))
+    raise ValueError(f'{src} reports no frame rate; set "fps" in the config')
 
 
 def auto_crop(src, dur):
@@ -503,6 +531,50 @@ def spellings(ws, said):
     return fixes
 
 
+def script_names(said):
+    """The names the script spells as one word, which the transcriber can split
+    ("co -work" for Cowork, Krish, 2026-10-14, of a posted Reel's caption: "like
+    co -work and ChatGPT"): a word of five letters or more with a capital inside
+    it (ChatGPT, OpenAI) or a capital where no sentence starts (Cowork, Anthropic)."""
+    out = []
+    for k, w in enumerate(said):
+        core = re.sub(r"(?:['’]s)?\W*$", '', re.sub(r'^\W+', '', w))
+        if len(norm(core)) < 5 or not core[:1].isalpha():
+            continue
+        starts = k == 0 or re.search(r'[.!?:]["’”)]*$', said[k - 1])
+        inner = any(c.isupper() for c in core[1:])
+        if (inner or (core[:1].isupper() and not starts)) and core not in out:
+            out.append(core)
+    return out
+
+
+def join_names(ws, names, max_gap=0.3):
+    """Words the transcriber split out of one of the script's names put back
+    as that name, its first piece's capital and its last piece's punctuation
+    kept: two or three pieces said without a pause whose letters are the name's."""
+    want = {norm(n): n for n in names}
+    out, i = [], 0
+    while i < len(ws):
+        hit = None
+        for k in (3, 2):
+            run = ws[i:i + k]
+            if len(run) < k or any(b['s'] - a['e'] > max_gap for a, b in zip(run, run[1:])):
+                continue
+            name = want.get(''.join(norm(w['w']) for w in run))
+            if name:
+                lead = re.match(r'^\W*', run[0]['w'].strip()).group(0)
+                tail = re.sub(r'^.*?([.,!?;:]*)$', r'\1', run[-1]['w'])
+                hit = ({**run[0], 'w': ' ' + lead + name + tail, 'e': run[-1]['e'], 'src': run[-1].get('src', run[0].get('src'))}, k)
+                break
+        if hit:
+            out.append(hit[0])
+            i += hit[1]
+        else:
+            out.append(ws[i])
+            i += 1
+    return out
+
+
 def spelling_warnings(toks):
     """US spellings left in the captions (an ad-lib the script does not
     cover, or a script that spells it so): one warning naming them."""
@@ -514,12 +586,15 @@ def spelling_warnings(toks):
             'unless it is a name or a quotation']
 
 
-def tokens(ws, replacements, spell=None):
+def tokens(ws, replacements, spell=None, names=()):
     """Words as caption tokens: the script's spellings (spellings()), the
-    pieces the transcriber split off put back (joined()), brand names
-    joined, fixes applied, sentence case restored after a cut."""
+    pieces the transcriber split off put back (joined()), the script's names
+    put back whole (join_names()), brand names joined, fixes applied,
+    sentence case restored after a cut."""
     ws = [dict(w, w=respell(w['w'], spell[i])) if spell and i in spell else w for i, w in enumerate(ws)]
     ws = joined(ws)
+    if names:
+        ws = join_names(ws, names)
     out, i = [], 0
     while i < len(ws):
         hit = None
@@ -1067,7 +1142,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         last = 's1'
         px, py = 0, 0
     else:
-        inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(cfg['frame16']))]
+        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(cfg['frame16']))]
         fr = n
         n += 1
         sw = round(cw * 1080 / ch)
@@ -1088,15 +1163,15 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             # The band under the pictures is solid ink: drawbox on a clear rgba canvas left it see-through, so
             # the full-frame speaker showed at its sides, a bigger Krish behind Krish (Krish, 2026-10-14:
             # "I also really hate my larger self in the background of the split screen").
-            g.append(f"color=c=0x0C151200:s=1080x1920:r=30:d={total:.3f},format=rgba[cvc{r_i}]")
-            g.append(f"color=c=0x0C1512:s=1080x920:r=30:d={total:.3f},format=rgba[ink{r_i}]")
+            g.append(f"color=c=0x0C151200:s=1080x1920:r={FPS}:d={total:.3f},format=rgba[cvc{r_i}]")
+            g.append(f"color=c=0x0C1512:s=1080x920:r={FPS}:d={total:.3f},format=rgba[ink{r_i}]")
             g.append(f"[cvc{r_i}][ink{r_i}]overlay=x=0:y=1000[cv{r_i}]")
             g.append(f"[fc{r_i}]format=rgba[fa{r_i}]")
             g.append(f"[cv{r_i}][fa{r_i}]overlay=x={(1080 - fw_out) // 2}:y=1000[c{r_i}_0]")
             cur = f'c{r_i}_0'
             layers = panel_layers(run)
             for j, (c, f, stop) in enumerate(layers):
-                inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
+                inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
                 if j == 0:
                     f = f.split(',', 1)[1] if ',' in f else 'null'   # the layer itself fades in
                 if j == len(layers) - 1:
@@ -1109,7 +1184,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             last, k = f's{k}', k + 1
     else:
         for c, f, stop in panel_layers(wins):
-            inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
+            inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
             g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
             g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
@@ -1122,7 +1197,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         # with a sting it starts as his face comes in, never over the sting.
         lg = cfg['logo'] if isinstance(cfg.get('logo'), dict) else {}
         secs = lg.get('seconds', 3.0)
-        inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(lg['png']) if lg.get('png') else default_logo(out))]
+        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(lg['png']) if lg.get('png') else default_logo(out))]
         g.append(f"[{n}:v]format=rgba,fade=t=out:st={max(0.0, secs - 0.4):.2f}:d=0.4:alpha=1[lg]")
         g.append(f"[{last}][lg]overlay=0:0:enable='between(t,0,{secs:.2f})'[s{k}]")
         last, n, k = f's{k}', n + 1, k + 1
@@ -1130,22 +1205,22 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         st = cfg['strap']
         hit = find(ws, st['after']) if st.get('after') else (0, 0)
         t0 = ws[hit[0]]['s'] if hit else 0.3
-        inputs += ['-loop', '1', '-framerate', '30', '-t', f'{total:.3f}', '-i', str(P(st['png']))]
+        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(st['png']))]
         g.append(f"[{last}][{n}:v]overlay=0:0:enable='between(t,{t0:.2f},{t0 + st.get('seconds', 3.5):.2f})'[s{k}]")
         last, n, k = f's{k}', n + 1, k + 1
     if cfg.get('captions', True) is False:
         # No captions in the picture: the caption file goes to the platform instead (episode.py).
-        g.append(f"[{last}]fps=30,setsar=1,format=yuv420p[vm]")
+        g.append(f"[{last}]fps={FPS},setsar=1,format=yuv420p[vm]")
     else:
-        g.append(f"[{last}]ass={cfg['name']}-{asp}.ass:fontsdir=fonts,fps=30,setsar=1,format=yuv420p[vm]")
+        g.append(f"[{last}]ass={cfg['name']}-{asp}.ass:fontsdir=fonts,fps={FPS},setsar=1,format=yuv420p[vm]")
     inputs += ['-i', str(end['file'])]
     held = f",tpad=stop_mode=clone:stop_duration={end['held_s']:.3f}" if end.get('held_s') else ''
-    g.append(f"[{n}:v]fps=30,setsar=1,format=yuv420p{held},trim=end_frame={end['frames']},setpts=PTS-STARTPTS[ev]")
+    g.append(f"[{n}:v]fps={FPS},setsar=1,format=yuv420p{held},trim=end_frame={end['frames']},setpts=PTS-STARTPTS[ev]")
     n += 1
     parts = ['[vm]', '[ev]']
     if intro:
         inputs += ['-i', str(intro['file'])]
-        g.append(f"[{n}:v]fps=30,scale={W}:{H}:force_original_aspect_ratio=decrease:flags=lanczos,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color=0x0C1512,"
+        g.append(f"[{n}:v]fps={FPS},scale={W}:{H}:force_original_aspect_ratio=decrease:flags=lanczos,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color=0x0C1512,"
                  f"setsar=1,format=yuv420p,trim=end_frame={intro['frames']},setpts=PTS-STARTPTS[iv]")
         n += 1
         parts.insert(0, '[iv]')
@@ -1388,6 +1463,18 @@ def caption_self_test():
                    ['cheque', 'to', 'court,', 'one', 'neighbour']))
     checks.append(('a cue ending on "cheque to court" is found where the transcriber wrote "check to court"', find(ws, 'cheque to court') is not None, True))
     checks.append(('nothing to fix where the script says what was heard', spellings(ws, [w['w'] for w in ws]), {}))
+    # A name the script spells as one word is captioned whole (failure caption-splits-names).
+    split = heard(' like', ' co', ' -work', ' and', ' chat,', ' GPT.', ' An', ' thropic', ' makes', ' it,', ' and', ' so', ' meone', ' else')
+    names = script_names('He tried Cowork and ChatGPT. Anthropic makes it, and someone else.'.split())
+    checks.append(('the script\'s names: an inner capital, or a capital where no sentence starts', names, ['Cowork', 'ChatGPT']))
+    names = script_names('like Cowork and ChatGPT, and Anthropic makes it.'.split())
+    checks.append(('a name the transcriber split is captioned whole, its punctuation kept; other words are left alone',
+                   [t['w'].strip() for t in tokens(split, [], None, names)],
+                   ['Like', 'Cowork', 'and', 'ChatGPT.', 'Anthropic', 'makes', 'it,', 'and', 'so', 'meone', 'else']))
+    paused = heard(' co', ' -work')
+    paused[1] = dict(paused[1], s=paused[0]['e'] + 0.6, e=paused[0]['e'] + 0.9)
+    checks.append(('pieces with a pause between them are two words, not a split name', [t['w'].strip() for t in tokens(paused, [], None, ['Cowork'])],
+                   ['Co', '-work']))
     loose = spelling_warnings(tokens(heard(' the', ' color', ' of', ' money'), DEFAULT_FIXES))
     checks.append(('a US spelling no script word covers is one warning naming it', (len(loose), '"color"' in ' '.join(loose)), (1, True)))
     checks.append(('a replacement in the config clears it', spelling_warnings(tokens(heard(' the', ' color'), DEFAULT_FIXES + [['color', 'colour']])), []))
@@ -1470,6 +1557,25 @@ def gate_self_test():
     got, why = resolve_intro(named, '9x16', here)
     said = [{'w': w, 's': i * 0.4, 'e': i * 0.4 + 0.3} for i, w in enumerate('then the singers are going to get it'.split())]
     checks.append(('a cue line he said his own way is still found', find_loose(said, 'its singers get'), (2, 6)))
+    # The cut's rate is the take's own: about 24 fps from teleprompter.com is made at 24, never 30.
+    uneven = work / 'uneven-24.mp4'
+    ff('-f', 'lavfi', '-i', 'color=c=0x0C1512:s=108x192:r=24:d=2', '-vf', "setpts='PTS+0.002*sin(N)/TB'", '-fps_mode', 'passthrough',
+       '-c:v', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', uneven)
+    checks.append(('a take at about 24 fps is cut at 24; at 30, at 30; "fps" in the config wins',
+                   (render_fps({}, uneven), render_fps({}, end), render_fps({'fps': 25}, uneven)), (24, 30, 25)))
+    try:
+        render_fps({'fps': 29.97}, uneven)
+        checks.append(('an "fps" that is not a house rate is refused', False, True))
+    except ValueError:
+        checks.append(('an "fps" that is not a house rate is refused', True, True))
+    global FPS
+    keep = FPS
+    try:
+        FPS = 24
+        at24, _ = segments([{'w': 'a', 's': 1.0, 'e': 1.37}], [], 0.35, 0.1, 0.16, 5.0)
+    finally:
+        FPS = keep
+    checks.append(('at 24 fps every window is a whole number of frames', round((at24[0]['b'] - at24[0]['a']) * 24, 6) == round((at24[0]['b'] - at24[0]['a']) * 24), True))
     checks.append(('a line he never said is not found', find_loose(said, 'labels pay songwriters'), None))
     paged = expand_pages([{'id': 'm', 'panel': 'x', 's': 10.0, 'e': 16.0, 'pages': {'9x16': ['p1', 'p2', 'p3']}}], '9x16')
     checks.append(('a picture in pages is shown a part at a time, touching, over its window',
@@ -1620,6 +1726,7 @@ def doctor(as_json=False):
 
 
 def main():
+    global FPS
     if sys.argv[1:2] == ['--self-test']:
         sys.exit(self_test())
     if sys.argv[1:2] == ['--doctor']:
@@ -1649,9 +1756,13 @@ def main():
         speed = episode.speed_settings(cfg)
     except episode.EpisodeError as e:
         sys.exit(f'make: {e}')
+    try:
+        FPS = render_fps(cfg, src)
+    except ValueError as e:
+        sys.exit(f'make: {e}')
     tag = ''
     if speed:
-        src, tag = episode.sped_source(src, out, speed[0]), f'.speed-{speed[0]:.3f}'
+        src, tag = episode.sped_source(src, out, speed[0], FPS), f'.speed-{speed[0]:.3f}'
     dur = float(json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'json', str(src)], capture_output=True, text=True).stdout)['format']['duration'])
     wpath = P(cfg['words']) if cfg.get('words') else out / f"{cfg['name']}{tag}.words.json"
     words = json.loads(wpath.read_text())['words'] if wpath.exists() else transcribe(src, wpath, cfg.get('model', 'small.en'), cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''))
@@ -1676,6 +1787,8 @@ def main():
         early.append(f'the take is sped up {speed[0]:g} times, picture and sound, pitch kept, as Krish said: "{speed[1]}"')
     # The captions spell a word as the script does (house rule BRITISH_SPELLING).
     spell = spellings(ws, script_words(cfg, P))
+    # And a name the script spells as one word is captioned whole, however the transcriber split it.
+    names = script_names(script_words(cfg, P))
     spelt = [{'heard': ws[i]['w'], 'script': respell(ws[i]['w'], w), 'at': ws[i]['s']} for i, w in sorted(spell.items())]
     if cfg['crop'] == 'auto':
         cfg['crop'] = auto_crop(src, dur)
@@ -1688,7 +1801,7 @@ def main():
     # The main's length in whole frames: every window is whole frames already.
     main_frames = sum(max(1, round((g['b'] - g['a']) * FPS)) for g in segs)
     if args.plan:
-        toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell)
+        toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names)
         early += spelling_warnings(toks)
         groups = chunks(toks, sorted({c['s'] for c in wins} | {c['e'] for c in wins}))
         shapes = {}
@@ -1719,7 +1832,7 @@ def main():
     # filter graph over every window held each window's frames in memory at
     # once, and a 3:38 upright 1080x1920 recording with 57 windows was killed
     # for running out of it (2026-10-06).
-    plan_lines = [f"{g['a']:.4f} {g['b']:.4f} crop={cw}:{ch}:{cx}:{cy}" for g in segs]
+    plan_lines = [f"fps {FPS}"] + [f"{g['a']:.4f} {g['b']:.4f} crop={cw}:{ch}:{cx}:{cy}" for g in segs]
     g1 = out / 'stage1.plan'
     # The cut only changes when the words to remove or the pause rule change, so reuse it otherwise.
     if not (edited.exists() and g1.exists() and g1.read_text() == '\n'.join(plan_lines)):
@@ -1732,9 +1845,9 @@ def main():
             d = g['b'] - g['a']
             part = parts / f'{i:04d}.mkv'
             run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', f"{g['a']:.4f}", '-i', src, '-t', f'{d:.4f}',
-                 '-vf', f'crop={cw}:{ch}:{cx}:{cy},fps=30,setpts=PTS-STARTPTS',
+                 '-vf', f'crop={cw}:{ch}:{cx}:{cy},fps={FPS},setpts=PTS-STARTPTS',
                  '-af', f'aresample=48000,asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.012,afade=t=out:st={max(0, d - 0.012):.4f}:d=0.012',
-                 '-frames:v', str(round(d * 30)), '-c:v', 'libx264', '-preset', 'fast', '-crf', '10', '-c:a', 'pcm_s16le', part], quiet=True)
+                 '-frames:v', str(round(d * FPS)), '-c:v', 'libx264', '-preset', 'fast', '-crf', '10', '-c:a', 'pcm_s16le', part], quiet=True)
             names.append(f"file '{part.as_posix()}'")
         listing = parts / 'list.txt'
         listing.write_text('\n'.join(names) + '\n')
@@ -1754,7 +1867,7 @@ def main():
         loud = measure_loudness(voice_src)
         repaired.update(after_lufs=loud['input_i'], after_lra=loud.get('input_lra'))
     voice_in = float(loud['input_i'])
-    toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell)
+    toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names)
     early += spelling_warnings(toks)
     bounds = sorted({c['s'] for c in wins} | {c['e'] for c in wins})
     groups = chunks(toks, bounds)
@@ -1762,7 +1875,7 @@ def main():
               'cues': [{k: c[k] for k in ('id', 's', 'e')} for c in wins], 'missing_cues': missing,
               'captions': len(groups), 'spellings': spelt, 'loudness_in': loud['input_i'],
               **({'voice_repair': repaired} if repaired else {}),
-              **({'speed': {'factor': speed[0], 'krish': speed[1]}} if speed else {})}
+              **({'speed': {'factor': speed[0], 'krish': speed[1]}} if speed else {}), 'fps': FPS}
     fonts = Path(__file__).resolve().parent / 'fonts'
     shapes = {}
     for asp in aspects:

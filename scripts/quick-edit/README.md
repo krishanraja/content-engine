@@ -128,6 +128,7 @@ One JSON file per video. Paths are relative to the config file.
 | `frame16` | The wide shape's background: brand panels left and right of the speaker. |
 | `strap` | The name strap in the tall shape: a `png`, the words it follows (`after`) and how long it stays (`seconds`). |
 | `endcard` | `{"9x16": ..., "16x9": ...}`: a short clip, joined to the end. Its own sound is never used: silence is laid under it, as under the sting, with the bed over it, and the plan and the report say so when the clip had a sound of its own (only a track in the music ledger goes under a cut, house rule MUSIC_BED). kit.py's end cards are silent. |
+| `fps` | The cut's frame rate. `"source"` (the default): the house rate (24, 25, 30, 50 or 60) nearest the take's own, so a teleprompter.com take at about 24 fps is cut at 24 and never shows a frame twice (the episode corpus: "Frame rate: Same as recorded source"; YouTube asks for the recorded rate too). Stings, end cards, story clips and pictures are conformed to it. A number from that list overrides it. Until 17 October every cut was made at 30. |
 | `max_gap`, `pad_before`, `pad_after` | The pause rule: any silence over `max_gap` seconds (0.35) is cut, keeping `pad_before` (0.10) before the next word and `pad_after` (0.16) after the last one. |
 | `subject` | For `--archive`: the piece's short title, as it should read in the archive, such as `"Who gets paid"`. `--archive` stops without it. |
 | `date` | For `--archive`: the publish date, `YYYY-MM-DD`. Without it, the folder carries the day it was filed, London time. |

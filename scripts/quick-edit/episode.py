@@ -95,18 +95,19 @@ def speed_settings(cfg):
     return float(f), ' '.join(words.split())
 
 
-def sped_path(src, out, factor):
-    return Path(out) / f'{Path(src).stem}.speed-{factor:.3f}.mkv'
+def sped_path(src, out, factor, fps=30):
+    return Path(out) / f'{Path(src).stem}.speed-{factor:.3f}-{fps}fps.mkv'
 
 
-def sped_source(src, out, factor):
+def sped_source(src, out, factor, fps=30):
     """The take at `factor`, picture and sound together, pitch kept (atempo),
-    at 30 fps. Made once per take and factor, beside the run's other files."""
-    dest = sped_path(src, out, factor)
+    at the cut's frame rate. Made once per take, factor and rate, beside the
+    run's other files."""
+    dest = sped_path(src, out, factor, fps)
     if not dest.exists() or dest.stat().st_mtime < Path(src).stat().st_mtime:
         part = dest.with_name(dest.stem + '.part.mkv')
         subprocess.run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-i', str(src),
-                        '-filter_complex', f'[0:v]setpts=PTS/{factor},fps=30[v];[0:a]atempo={factor}[a]', '-map', '[v]', '-map', '[a]',
+                        '-filter_complex', f'[0:v]setpts=PTS/{factor},fps={fps}[v];[0:a]atempo={factor}[a]', '-map', '[v]', '-map', '[a]',
                         '-c:v', 'libx264', '-preset', 'fast', '-crf', '12', '-c:a', 'pcm_s16le', str(part)], check=True)
         part.replace(dest)
     return dest

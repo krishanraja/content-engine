@@ -301,8 +301,19 @@
    "on": "2026-10-14",
    "krish": "(the posted Reel's caption read \"like co -work and ChatGPT\")",
    "what": "The transcriber split \"Cowork\" and the caption kept the split.",
-   "status": "open",
-   "guards": []
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/make.py",
+     "contains": "def join_names",
+     "how": "a name the script spells as one word (an inner capital, or a capital where no sentence starts) is captioned whole when the transcriber split it into two or three pieces said without a pause"
+    },
+    {
+     "file": "scripts/quick-edit/make.py",
+     "contains": "a name the transcriber split is captioned whole",
+     "how": "make.py --self-test: \"co -work\" and \"chat, GPT.\" captioned Cowork and ChatGPT., with a pause between pieces left alone"
+    }
+   ]
   },
   {
    "id": "piece-drift",
