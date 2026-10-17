@@ -277,6 +277,15 @@ after reading a script out loud than I do creating a script."
   those words on it (a title card, a thumbnail, a card heading) is drawn before
   he picks; `title_check.py verdict --picked` refuses a packaging pick while
   the piece has no take on the record.
+- **His sign-off first, then punch through without him** (SIGN_OFF_FIRST;
+  Krish, 2026-10-17: "do you not want to get sign off on headings and titles first so you can punch through to 100% without me?").
+  The round is the first thing done once a take is on the record, before any
+  render, capture, drawing or copy that waits on it, and it is one sheet with
+  every decision that is his for the piece: the lines above, the headings and
+  dividers, the intro stand-off, any script or speed choice for a cut still to
+  record. Never queue it behind a slow machine step. Once he answers, finish
+  to publish-ready without coming back to him, except for a send, publish,
+  spend or delete.
 
 ## 3. Build the kit, once per cut
 

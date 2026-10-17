@@ -219,6 +219,26 @@
      "how": "the check run first in every session"
     }
    ]
+  },
+  {
+   "id": "sign-off-first",
+   "on": "2026-10-17",
+   "krish": "do you not want to get sign off on headings and titles first so you can punch through to 100% without me?",
+   "why": "His decisions are the only part of production that needs him. Asked mid-run, or queued behind slow machine work (screen captures, renders), they keep him on call for hours and the piece waits on him at the end instead of the start. He wants to answer once and then not be needed.",
+   "means": "Once a take is on the record, the first thing a session does is put ONE sign-off sheet to him with every decision that is his for the piece (titles, cover and thumbnail words, title card, headings and chapter dividers, the intro stand-off, any script or speed choice), before any machine step that waits on it; then it finishes to publish-ready without coming back, except for a send, publish, spend or delete.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "SIGN_OFF_FIRST",
+     "how": "the titles step: one sign-off sheet, first, then finish without him"
+    },
+    {
+     "file": ".claude/skills/produce-video/SKILL.md",
+     "contains": "SIGN_OFF_FIRST",
+     "how": "after the takes: his sign-off first, never queued behind a machine step"
+    }
+   ]
   }
  ]
 }

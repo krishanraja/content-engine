@@ -1041,7 +1041,7 @@ class PlateTreat(Treat):
         self.stats = {'noise': [], 'diff_px': [], 'gain': []}
         self.offline = 1.0
 
-    def apply(self, frame_u8, m_small, band_r=12, fidx=None, face=None):
+    def estimate(self, frame_u8, m_small, band_r=12, face=None):
         half_u8 = cv2.resize(frame_u8, (PW, PH), interpolation=cv2.INTER_AREA)
         half = half_u8.astype(np.float32)
         p = cv2.resize(m_small, (PW, PH), interpolation=cv2.INTER_LINEAR)
@@ -1147,18 +1147,57 @@ class PlateTreat(Treat):
         alpha = cv2.GaussianBlur(alpha, (0, 0), 0.7)
         alpha[alpha < 0.01] = 0
         self.raw_alpha = alpha
-        # composite: the person over the set; at the edge the room's light is taken out
-        # and the set's put in its place (out = I - (1-a) room + (1-a) set)
-        out = cv2.blendLinear(frame_u8.astype(np.float32), self.set_full, alpha, 1.0 - alpha)
-        a_b = alpha.reshape(-1)[idx][:, None]
-        Fest = (Ib - (1 - a_b) * Bb) / np.maximum(a_b, 0.08)
-        Fest = np.clip(np.minimum(Fest, Fb[:, 3:] * 1.08 + 16), 0, 255)       # never lighter than him
-        S_b = self.set_full.reshape(-1, 3)[idx]
-        out.reshape(-1, 3)[idx] = a_b * Fest + (1 - a_b) * S_b
         self.stats['noise'].append(noise)
         self.stats['diff_px'].append(int(diff.sum()))
         self.stats['gain'].append([round(float(v), 3) for v in self.g])
-        return out, alpha
+        grey_q = cv2.GaussianBlur(cv2.cvtColor(quarter, cv2.COLOR_RGB2GRAY).astype(np.float32), (5, 5), 0)
+        return {'frame': frame_u8, 'alpha': alpha, 'idx': idx, 'cap': Fb[:, 3:] * 1.08 + 16, 'g': self.g.copy(),
+                'grey_q': grey_q}
+
+    def composite(self, st, alpha=None):
+        """The person over the set. Wherever the alpha is partial the room's light is taken
+        out and the set's put in its place (out = I - (1-a) room + (1-a) set), and an edge
+        pixel is never lighter than him just inside it."""
+        alpha = st['alpha'] if alpha is None else alpha
+        I = st['frame'].astype(np.float32)
+        out = cv2.blendLinear(I, self.set_full, alpha, 1.0 - alpha)
+        fi = np.flatnonzero((alpha > 0) & (alpha < 1))
+        if len(fi):
+            B = cv2.resize(self.P * st['g'], (W, H), interpolation=cv2.INTER_LINEAR)
+            cap = I.copy()
+            cap.reshape(-1, 3)[st['idx']] = st['cap']
+            a = alpha.reshape(-1)[fi][:, None]
+            Ii = I.reshape(-1, 3)[fi]
+            Fest = (Ii - (1 - a) * B.reshape(-1, 3)[fi]) / np.maximum(a, 0.08)
+            Fest = np.clip(np.minimum(Fest, cap.reshape(-1, 3)[fi]), 0, 255)
+            out.reshape(-1, 3)[fi] = a * Fest + (1 - a) * self.set_full.reshape(-1, 3)[fi]
+        return out
+
+    def apply(self, frame_u8, m_small, band_r=12, fidx=None, face=None):
+        st = self.estimate(frame_u8, m_small, band_r=band_r, face=face)
+        return self.composite(st), st['alpha']
+
+
+def steady_alpha(prev, cur, nxt, last=None, thr=4.0, keep=0.6):
+    """Steady the edge without trails. Where the picture has not changed across the last,
+    this and the next frame, each edge pixel's alpha is the median of its three; then,
+    where it is still a partial (edge) pixel and close to what the last output frame had
+    (within 0.25), it keeps `keep` of that. A pixel the plate now says is room (alpha 0)
+    or surely him (1), or one that changed a lot, takes this frame's value outright, so
+    a passing hand leaves nothing behind. (Trial A carried 60% of the last frame's alpha
+    forward everywhere the picture was still.)"""
+    a1 = cur['alpha']
+    if prev is None or nxt is None:
+        return a1
+    a0, a2 = prev['alpha'], nxt['alpha']
+    med = np.maximum(np.minimum(a0, a1), np.minimum(np.maximum(a0, a1), a2))
+    still_q = (np.abs(cur['grey_q'] - prev['grey_q']) < thr) & (np.abs(nxt['grey_q'] - cur['grey_q']) < thr)
+    still = cv2.resize(still_q.astype(np.float32), (W, H), interpolation=cv2.INTER_LINEAR)
+    a = a1 + still * (med - a1)
+    if last is not None:
+        ok = still * ((a > 0.02) & (a < 0.98) & (np.abs(a - last) < 0.25))
+        a = a + keep * ok * (last - a)
+    return a.astype(np.float32)
 
 
 # ----------------------------------------------------------------------------- dark object card
@@ -1297,6 +1336,7 @@ class Shot:
     eye_y: float = H * 0.45
     eye_target: float = 0.34
     y_shift: float = 0.0
+    cx_track: object = None      # per-frame face x inside the shot (smoothed), so the frame follows him
 
 
 def plan_shots(segments, words, clip_start, recipe, cuts=None, payoffs=(), group_starts=(), every=2.0):
@@ -1308,7 +1348,7 @@ def plan_shots(segments, words, clip_start, recipe, cuts=None, payoffs=(), group
     possible. payoffs: (start, end) of each payoff line on the clip clock."""
     full = 'full-face-vertical' in recipe
     motion = 'constant-motion' in recipe
-    zooms = (1.18, 1.34, 1.46) if full else (1.0, 1.12, 1.22)    # close, closer, punch-in
+    zooms = (1.18, 1.34, 1.5) if full else (1.0, 1.12, 1.26)     # close, closer, punch-in
     shots = []
     cand = [(w['on'] - clip_start - 2.0 / FPS, False) for w in words if w.get('quiet', 0) >= 0.2]
     cand += [(g0 - 1.0 / FPS, None) for g0 in group_starts]
@@ -1316,7 +1356,7 @@ def plan_shots(segments, words, clip_start, recipe, cuts=None, payoffs=(), group
     pay_starts = {round((a - 1.0 / FPS) * FPS) for a, _ in payoffs}
     if cuts is not None:
         cand = [(c - clip_start, False) for c in cuts]
-    flip = 0
+    prev_z = None
     for a, b in segments:
         pts = [a]
         if motion:
@@ -1343,25 +1383,20 @@ def plan_shots(segments, words, clip_start, recipe, cuts=None, payoffs=(), group
                 last = c
         pts.append(b)
         spans = [(round(pts[k] * FPS) / FPS, round(pts[k + 1] * FPS) / FPS) for k in range(len(pts) - 1)]
-        best = None
-        for phase in ((flip % 2), (flip + 1) % 2):
-            # cost: seconds of payoff line shown in the wider framing
-            cost = 0.0
-            for k, (t0, t1) in enumerate(spans):
-                if zooms[(k + phase) % 2] == zooms[0] and motion:
-                    cost += sum(max(0.0, min(t1, pe) - max(t0, ps)) for ps, pe in payoffs)
-            if best is None or cost < best[0] - 1e-6:
-                best = (cost, phase)
-        phase = best[1]
-        prev_z = None
+        # framings alternate close / closer; a cut on a payoff is a push in, one step tighter
+        # than the shot before (trial A could cut 1.46 to 1.34 or 1.34 to 1.28, steps of 5 to
+        # 9 per cent that read as a glitch, not a cut: every step here is at least 12 per cent)
         for k, (t0, t1) in enumerate(spans):
-            z = zooms[(k + phase) % 2] if motion else zooms[0]
-            if motion and round(t0 * FPS) in pay_starts and k > 0:
-                # a cut on a payoff is always a push in: tighter than the shot before it
+            if not motion:
+                z = zooms[0]
+            elif round(t0 * FPS) in pay_starts and (k > 0 or prev_z is not None):
                 z = zooms[1] if prev_z == zooms[0] else zooms[2]
+            elif prev_z is None or prev_z != zooms[0]:
+                z = zooms[0]
+            else:
+                z = zooms[1]
             shots.append(Shot(t0, t1, z))
             prev_z = z
-        flip = phase + len(spans)
     return shots
 
 
@@ -1371,7 +1406,10 @@ def frame_transform(shot: Shot, t, recipe):
     u = (t - shot.t0) / max(shot.t1 - shot.t0, 1e-3)
     z = shot.zoom * (1.0 + (0.05 * ease_in_out(u) if motion else 0.0))
     ww, hh = W / z, H / z
-    x0 = min(max(shot.cx - ww / 2, 0), W - ww)
+    cx = shot.cx
+    if shot.cx_track is not None and len(shot.cx_track):
+        cx = float(shot.cx_track[min(max(int(round((t - shot.t0) * FPS)), 0), len(shot.cx_track) - 1)])
+    x0 = min(max(cx - ww / 2, 0), W - ww)
     y0 = min(max(shot.eye_y - shot.eye_target * hh + shot.y_shift, 0), H - hh)
     return np.array([[z, 0, -x0 * z], [0, z, -y0 * z]], np.float32), z, x0, y0
 
@@ -1499,10 +1537,16 @@ def render(args):
     cap_bottom = cap_bottom_limit
     cap_top = cap_bottom - max_block
     prev_zoom = None
+    cx_smooth = cv2.GaussianBlur(faces[:, 0].reshape(-1, 1).astype(np.float32), (1, 0), 8).reshape(-1) \
+        if len(faces) else faces[:, 0]
     for s in shots:
         f0, f1 = int(s.t0 * FPS), max(int(s.t1 * FPS), int(s.t0 * FPS) + 1)
         fs = faces[f0:f1]
         s.cx = float(np.median(fs[:, 0]))
+        if 'constant-motion' in recipe:
+            # the frame drifts after him sideways, gently (trial A held each shot's middle, so
+            # a lean cut his ear off in the tight framings, e.g. 19.25 s)
+            s.cx_track = cx_smooth[f0:f1]
         s.eye_y = float(np.median(fs[:, 1]))
         # the highest caption ink in this shot (a one-line group sits lower than a two-line one)
         over = [g for g in groups if min(g.t1, s.t1) - max(g.t0, s.t0) > 0.1]
@@ -1602,32 +1646,17 @@ def render(args):
     alpha_flicker, raw_flicker_f = [], []
     cap_boxes = []
     t1 = time.time()
-    for k, fr in enumerate(read_frames(decode_cmd(take, start, nframes, W, H), W, H)):
-        if k >= nframes:
-            break
+    plate_mode = isinstance(treat_obj, PlateTreat)
+
+    def finish(k, fr, img):
+        """Frame the speaker, grade, caption and write output frame k (img: the treated
+        frame in the source's coordinates, or None for a card)."""
         t = k / FPS
         card = next((c for c in cards if c.t0 <= t < c.t1), None)
         if card is not None:
             img = card.render(t, k)
         else:
-            if treat_obj is not None:
-                if isinstance(treat_obj, PlateTreat):
-                    img, alpha = treat_obj.apply(fr, masks[k], fidx=k, face=faces[k])
-                else:
-                    img, alpha = treat_obj.apply(fr, masks[k], fidx=k)
-                # flicker of the final cut-out: frame-to-frame alpha change at the edge,
-                # where the picture itself is still (0-255)
-                a_s = cv2.resize(alpha, (W // 4, H // 4), interpolation=cv2.INTER_AREA)
-                r_s = cv2.resize(treat_obj.raw_alpha, (W // 4, H // 4), interpolation=cv2.INTER_AREA)
-                g_s = cv2.GaussianBlur(cv2.cvtColor(cv2.resize(fr, (W // 4, H // 4), interpolation=cv2.INTER_AREA),
-                                                    cv2.COLOR_RGB2GRAY).astype(np.float32), (5, 5), 0)
-                if prev_a is not None and prev_k == k - 1:
-                    sel = (np.abs(g_s - prev_g) < 4) & (((a_s > 0.05) & (a_s < 0.95)) | ((prev_a > 0.05) & (prev_a < 0.95)))
-                    if sel.sum() > 50:
-                        alpha_flicker.append(float(np.abs(a_s - prev_a)[sel].mean() * 255))
-                        raw_flicker_f.append(float(np.abs(r_s - prev_r)[sel].mean() * 255))
-                prev_a, prev_r, prev_g, prev_k = a_s, r_s, g_s, k
-            else:
+            if img is None:
                 img = fr.astype(np.float32)
             s = next((s for s in shots if s.t0 <= t < s.t1), shots[-1])
             if 'full-face-vertical' in recipe or 'constant-motion' in recipe:
@@ -1646,6 +1675,56 @@ def render(args):
         if k % 48 == 0:
             el = time.time() - t1
             log(f'  frame {k}/{nframes}  {el:.0f}s  ({el / max(k, 1):.2f}s/frame)')
+
+    def flicker(k, fr, alpha, raw):
+        """Frame-to-frame alpha change at the edge where the picture itself is still (0-255)."""
+        nonlocal prev_a, prev_r, prev_g, prev_k
+        a_s = cv2.resize(alpha, (W // 4, H // 4), interpolation=cv2.INTER_AREA)
+        r_s = cv2.resize(raw, (W // 4, H // 4), interpolation=cv2.INTER_AREA)
+        g_s = cv2.GaussianBlur(cv2.cvtColor(cv2.resize(fr, (W // 4, H // 4), interpolation=cv2.INTER_AREA),
+                                            cv2.COLOR_RGB2GRAY).astype(np.float32), (5, 5), 0)
+        if prev_a is not None and prev_k == k - 1:
+            sel = (np.abs(g_s - prev_g) < 4) & (((a_s > 0.05) & (a_s < 0.95)) | ((prev_a > 0.05) & (prev_a < 0.95)))
+            if sel.sum() > 50:
+                alpha_flicker.append(float(np.abs(a_s - prev_a)[sel].mean() * 255))
+                raw_flicker_f.append(float(np.abs(r_s - prev_r)[sel].mean() * 255))
+        prev_a, prev_r, prev_g, prev_k = a_s, r_s, g_s, k
+
+    # with the plate, each frame's cut-out is finished one frame late, so its edge can be
+    # steadied against the frames either side of it
+    pend = []      # (k, fr, state or None): the frame before this one, and this one
+    last_a = [None, -9]          # the last output frame's alpha and its index
+
+    def flush(j):
+        kj, fj, sj = pend[j]
+        img = None
+        if sj is not None:
+            a = steady_alpha(pend[j - 1][2] if j > 0 else None, sj, pend[j + 1][2] if j + 1 < len(pend) else None,
+                             last=last_a[0] if last_a[1] == kj - 1 else None)
+            last_a[:] = [a, kj]
+            img = treat_obj.composite(sj, a)
+            flicker(kj, fj, a, sj['alpha'])
+        finish(kj, fj, img)
+
+    for k, fr in enumerate(read_frames(decode_cmd(take, start, nframes, W, H), W, H)):
+        if k >= nframes:
+            break
+        t = k / FPS
+        card = next((c for c in cards if c.t0 <= t < c.t1), None)
+        if not plate_mode:
+            img = None
+            if card is None and treat_obj is not None:
+                img, alpha = treat_obj.apply(fr, masks[k], fidx=k)
+                flicker(k, fr, alpha, treat_obj.raw_alpha)
+            finish(k, fr, img)
+            continue
+        pend.append((k, fr, treat_obj.estimate(fr, masks[k], face=faces[k]) if card is None else None))
+        if len(pend) >= 2:
+            flush(len(pend) - 2)
+        if len(pend) > 2:
+            pend.pop(0)
+    if plate_mode and pend:
+        flush(len(pend) - 1)       # the last frame: nothing after it to steady against
     encp.stdin.close()
     if encp.wait() != 0:
         raise SystemExit('ffmpeg encode failed')
