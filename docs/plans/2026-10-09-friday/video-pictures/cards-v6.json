@@ -10,11 +10,12 @@
  "draw": "python3 scripts/pages/video_card.py docs/plans/2026-10-09-friday/video-pictures/cards-v6.json --out <kit folder>/panels --sheet",
  "not_ready": {
   "aa_logo": "The 7 Artificial Analysis cards (fri-deep-aa-same-claude, -s1, -s2, -s3, fri-deep-cost-vs-score, -cost, -score) carry artificialanalysis-cream.svg in the card's \"logos\", but they are \"columns\" cards and video_card.py draws a columns card's logos only per column (and its trim step skips column logos): until video_card draws card-level logos on columns cards, these cards show the Anthropic symbol and name Artificial Analysis only in the kicker.",
-  "wired_lines": "fri-deep-openai-free-dec-2025-s2 and -s3: WIRED's own two lines (the spokesperson's \"preferred staying in the default chat experience\" and \"In practice, the router seemed to send many more free users...\") are behind WIRED's paywall and were not captured. -s2 shows WIRED's headline, byline and date (ringed: the byline and date row); -s3 shows Maxwell Zeff's own post on X with WIRED's article card, ringed on \"The router, which was costly for the company to serve,\". A signed-in WIRED capture of the exact lines would replace both. On -s3 the post's lines sit closer than video_card's ring padding, so the ring's lower edge runs through the next line (\"answer quality, was thought to be hurting engagement\").",
-  "free_dec_2025_1": "fri-deep-openai-free-dec-2025 uses the capture's \"crop_line\" (the free-user line only), not its whole-entry \"crop\" (1440 x 1800), which would shrink the words to about a third on the card; so the \"December 11, 2025\" header is not on it (the date is in the kicker and the source line). The capture stops mid-way down its second line, so the ring's bottom edge sits on the page edge and the ring also takes in \"Previously, some questions were automatically routed...\".",
-  "altman_t2": "fri-deep-altman-same-day-t2 shows only OpenAI's sentence \"Today we're announcing new funding, $40 billion\" (crop stops before the valuation he does not say); the page's date line (shots/fri-deep-altman-same-day-2.png, \"March 31, 2025\") is not on the card, because video_card draws one capture per card. The date is in the kicker and the source line. The capture's crop ends right after \"billion\", so the ring's right edge is cut off at the page edge.",
+  "wired_lines": "fri-deep-openai-free-dec-2025-s2 and -s3: WIRED's own two lines (the spokesperson's \"preferred staying in the default chat experience\" and \"In practice, the router seemed to send many more free users...\") are behind WIRED's paywall and were not captured. -s2 shows WIRED's headline, byline and date (ringed: the byline and date row); -s3 shows Maxwell Zeff's own post on X, cropped (17 Oct review) to the post's header and words only so they read at full size, ringed on \"The router, which was costly for the company to serve,\" with the ring between the lines. WIRED's article card and the post's time line are off -s3 (WIRED's header is on -s2; the date is in the kicker and the source line). A signed-in WIRED capture of the exact lines would replace both.",
+  "free_dec_2025_1": "fri-deep-openai-free-dec-2025 uses the capture's \"crop_line\" (the free-user line only), not its whole-entry \"crop\" (1440 x 1800), which would shrink the words to about a third on the card; so the \"December 11, 2025\" header is not on it (the date is in the kicker and the source line). The capture ends 8 px under the entry's second line, too close for a ring round both lines, so since the 17 Oct review the ring takes the first line only (\"Update for free and Go users: We're removing automatic model switching for reasoning in\"); \"ChatGPT.\" sits just under it, unringed.",
+  "altman_t2": "fri-deep-altman-same-day-t2 shows only OpenAI's sentence \"Today we're announcing new funding, $40 billion\" (crop stops before the valuation he does not say); the page's date line (shots/fri-deep-altman-same-day-2.png, \"March 31, 2025\") is not on the card, because video_card draws one capture per card. The date is in the kicker and the source line. The capture is drawn at its own size (video_card never enlarges a capture), so the sentence is small in a wide box. Since the 17 Oct review the ring is 10 px narrower and closes inside the crop, in the space after \"billion\".",
   "reversal_f2": "fri-deep-claude-code-reversal-f2: no recapture exists, so it uses the capture as is, ringed only on the March 4 sentence. The capture's burned-in yellow on \"This was the wrong tradeoff. We reverted this change on April 7\" still shows two lines below the ring, before he says it. A recapture (capture_postmortem.py with only the March 4 sentence highlighted) would clear it.",
-  "plus_pro_c2": "fri-deep-openai-plus-pro-sep-2026-c2: its second source (help.openai.com/articles/20001354, \"On Plus and Pro plans, Instant doesn't automatically switch...\") is not in this capture (\"to_capture_later\" on the card)."
+  "plus_pro_c2": "fri-deep-openai-plus-pro-sep-2026-c2: its second source (help.openai.com/articles/20001354, \"On Plus and Pro plans, Instant doesn't automatically switch...\") is not in this capture (\"to_capture_later\" on the card).",
+  "thinking_settings_mark": "fri-deep-thinking-settings has no ring: video_card takes one \"mark\" box, and one box round both page headings (\"Choose a thinking level\", \"Choose an effort level\") would run through the first line of Claude's paragraph, which starts 17 px under the OpenAI heading. The capture is the two help pages side by side, so its body text is small on the card; the two headings read."
  },
  "cards": [
   {
@@ -36,7 +37,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 4.6",
-     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
+     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
     },
     {
      "label": "16 Apr 2026",
@@ -51,7 +52,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 4.8",
-     "line": "then Fable 5 and Mythos 5 (9 Jun), Sonnet 5 (30 Jun)"
+     "line": "then Fable 5 and Mythos 5 (9 Jun) and Sonnet 5 (30 Jun)"
     },
     {
      "label": "24 Jul 2026",
@@ -59,7 +60,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 5",
-     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)"
+     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)"
     },
     {
      "label": "22 Sep 2026",
@@ -67,7 +68,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 5.5",
-     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)"
+     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)"
     }
    ],
    "note": "15 new Claude names on 13 launch days, 16 Oct 2025 to 15 Oct 2026. Source: Anthropic model deprecations table and launch pages, read 15 Oct 2026.",
@@ -98,7 +99,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 4.6",
-     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
+     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
     },
     {
      "label": "16 Apr 2026",
@@ -113,7 +114,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 4.8",
-     "line": "then Fable 5 and Mythos 5 (9 Jun), Sonnet 5 (30 Jun)",
+     "line": "then Fable 5 and Mythos 5 (9 Jun) and Sonnet 5 (30 Jun)",
      "hi": true
     },
     {
@@ -122,7 +123,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 5",
-     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)"
+     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)"
     },
     {
      "label": "22 Sep 2026",
@@ -130,7 +131,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 5.5",
-     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)"
+     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)"
     }
    ],
    "note": "15 new Claude names on 13 launch days, 16 Oct 2025 to 15 Oct 2026. Source: Anthropic model deprecations table and launch pages, read 15 Oct 2026.",
@@ -161,7 +162,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 4.6",
-     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
+     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
     },
     {
      "label": "16 Apr 2026",
@@ -176,7 +177,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 4.8",
-     "line": "then Fable 5 and Mythos 5 (9 Jun), Sonnet 5 (30 Jun)",
+     "line": "then Fable 5 and Mythos 5 (9 Jun) and Sonnet 5 (30 Jun)",
      "hi": true
     },
     {
@@ -185,7 +186,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 5",
-     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)",
+     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)",
      "hi": true
     },
     {
@@ -194,7 +195,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 5.5",
-     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)"
+     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)"
     }
    ],
    "note": "15 new Claude names on 13 launch days, 16 Oct 2025 to 15 Oct 2026. Source: Anthropic model deprecations table and launch pages, read 15 Oct 2026.",
@@ -225,7 +226,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 4.6",
-     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
+     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
     },
     {
      "label": "16 Apr 2026",
@@ -240,7 +241,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 4.8",
-     "line": "then Fable 5 and Mythos 5 (9 Jun), Sonnet 5 (30 Jun)",
+     "line": "then Fable 5 and Mythos 5 (9 Jun) and Sonnet 5 (30 Jun)",
      "hi": true
     },
     {
@@ -249,7 +250,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 5",
-     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)",
+     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)",
      "hi": true
     },
     {
@@ -258,7 +259,7 @@
       "anthropic-symbol-cream.svg"
      ],
      "names": "Opus 5.5",
-     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)",
+     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)",
      "hi": true
     }
    ],
@@ -478,7 +479,7 @@
    "mark": [
     754,
     653,
-    767,
+    757,
     56
    ],
    "cue": "fri-deep-altman-same-day-t2",
@@ -684,7 +685,7 @@
      "names": "58 out of 100"
     },
     {
-     "label": "Opus 5 · Max effort",
+     "label": "Opus 5 (older) · Max effort",
      "logos": [
       "anthropic-symbol-cream.svg"
      ],
@@ -752,7 +753,7 @@
      "line": "$5.98 a task"
     },
     {
-     "label": "Opus 5 · Max effort",
+     "label": "Opus 5 (older) · Max effort",
      "logos": [
       "anthropic-symbol-cream.svg"
      ],
@@ -1017,10 +1018,10 @@
     330
    ],
    "mark": [
-    1490,
-    918,
+    1465,
+    924,
     290,
-    60
+    46
    ],
    "cue": "fri-gemini-auto",
    "at": 425.06
@@ -1036,16 +1037,16 @@
     "google-cream.svg"
    ],
    "crop": [
-    80,
-    1190,
-    1840,
-    640
+    60,
+    1196,
+    900,
+    504
    ],
    "mark": [
-    417,
-    1376,
-    486,
-    75
+    102,
+    1371,
+    800,
+    73
    ],
    "cue": "fri-gemini-auto-h1",
    "at": 431.22
@@ -1068,9 +1069,9 @@
    ],
    "mark": [
     100,
-    1805,
-    1680,
-    115
+    1809,
+    1696,
+    105
    ],
    "cue": "fri-gemini-auto-h2",
    "at": 435.5
@@ -1092,10 +1093,10 @@
     112
    ],
    "mark": [
-    406,
-    1700,
-    1294,
-    100
+    414,
+    1713,
+    1281,
+    30
    ],
    "cue": "fri-deep-openai-free-dec-2025",
    "at": 455.42
@@ -1141,13 +1142,13 @@
     716,
     102,
     1200,
-    1090
+    340
    ],
    "mark": [
-    738,
-    308,
-    776,
-    52
+    747,
+    321,
+    755,
+    24
    ],
    "cue": "fri-deep-openai-free-dec-2025-s3",
    "at": 460.8
@@ -1295,7 +1296,7 @@
     0,
     0,
     2640,
-    880
+    905
    ],
    "mark": [
     40,
@@ -1323,10 +1324,10 @@
     330
    ],
    "mark": [
-    715,
+    690,
     1828,
-    1250,
-    100
+    1275,
+    97
    ],
    "cue": "fri-deep-claude-code-reversal-f2",
    "at": 575.62
@@ -1349,9 +1350,9 @@
    ],
    "mark": [
     675,
-    6812,
+    6816,
     1240,
-    100
+    96
    ],
    "cue": "fri-deep-claude-code-reversal-f3",
    "at": 579.94
@@ -1374,9 +1375,9 @@
    ],
    "mark": [
     715,
-    1932,
+    1938,
     1250,
-    100
+    94
    ],
    "cue": "fri-deep-claude-code-reversal-f4",
    "at": 583.92
@@ -1398,10 +1399,10 @@
     480
    ],
    "mark": [
-    335,
-    336,
-    1115,
-    52
+    138,
+    338,
+    1307,
+    48
    ],
    "cue": "fri-deep-extended-cut-by-mistake",
    "at": 604.16
@@ -1424,9 +1425,9 @@
    ],
    "mark": [
     140,
-    390,
+    401,
     1240,
-    98
+    85
    ],
    "cue": "fri-deep-extended-cut-by-mistake-r2",
    "at": 614.2
@@ -1512,10 +1513,10 @@
     245
    ],
    "mark": [
-    85,
-    1022,
-    905,
-    50
+    88,
+    1032,
+    1314,
+    76
    ],
    "cue": "fri-deep-where-to-turn-it-up-c2",
    "at": 684.8
@@ -1538,10 +1539,10 @@
     862
    ],
    "mark": [
-    1625,
-    1532,
-    1350,
-    95
+    1632,
+    1542,
+    1343,
+    80
    ],
    "cue": "fri-deep-where-to-turn-it-up-c3",
    "at": 687.52
@@ -1608,5 +1609,6 @@
    "cue": "fri-call-85-fill",
    "at": 815.58
   }
- ]
+ ],
+ "review_17_oct": "Drawn and looked at card by card on 17 Oct 2026. Fixed in the spec, headings untouched: rings that cut through words (fri-gemini-auto, -h2, fri-deep-openai-free-dec-2025, -s3, fri-deep-claude-code-reversal-f2, fri-deep-extended-cut-by-mistake, -r2, fri-deep-where-to-turn-it-up-c2, -c3) or ran off the crop (fri-deep-altman-same-day-t2, fri-deep-openai-free-dec-2025) now sit in the gaps between words and lines; fri-deep-claude-code-reversal-f4 and -f3 rings moved off the line above; fri-gemini-auto-h1 cropped to the plans table alone (no half-cut line under it, table larger) and ringed on the whole \"Without a plan: Auto\" row; fri-deep-openai-free-dec-2025-s3 cropped to the post's words; fri-deep-claude-code-reversal crop taken 25 px lower so \"Here's what happened\" is not clipped; Opus 5 labelled \"Opus 5 (older)\" on -s2 and -s3 so all four labels on -s3 wrap alike and the rows line up; model names and dates in the Claude-names columns kept whole with no-break spaces."
 }

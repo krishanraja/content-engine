@@ -6,8 +6,8 @@
  "issue": "The headliner",
  "cover": {
   "headline": [
-   "ChatGPT and Claude: faster than ever.",
-   "Does it matter?"
+   "New Claude. New ChatGPT.",
+   "Does it even matter?"
   ],
   "rows": [
    {
@@ -38,7 +38,7 @@
    }
   ]
  },
- "video_title": "ChatGPT and Claude: faster than ever. Does it matter?",
+ "video_title": "New Claude. New ChatGPT. Does it even matter?",
  "standoff": {
   "left": {
    "label": "Claude",

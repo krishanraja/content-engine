@@ -264,7 +264,9 @@
     "input_usd_per_1m_tokens": 4,
     "output_usd_per_1m_tokens": 20
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Opus 5.5",
@@ -345,7 +347,9 @@
     "input_usd_per_1m_tokens": 4,
     "output_usd_per_1m_tokens": 20
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Opus 5.5",
@@ -426,7 +430,9 @@
     "input_usd_per_1m_tokens": 4,
     "output_usd_per_1m_tokens": 20
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Opus 5.5",
@@ -507,7 +513,9 @@
     "input_usd_per_1m_tokens": 4,
     "output_usd_per_1m_tokens": 20
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Opus 5.5",
@@ -588,7 +596,9 @@
     "input_usd_per_1m_tokens": 4,
     "output_usd_per_1m_tokens": 20
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Opus 5",
@@ -669,7 +679,9 @@
     "input_usd_per_1m_tokens": 5,
     "output_usd_per_1m_tokens": 25
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "Claude Opus 5",
@@ -750,7 +762,9 @@
     "input_usd_per_1m_tokens": 5,
     "output_usd_per_1m_tokens": 25
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "Claude Opus 5",
@@ -831,7 +845,9 @@
     "input_usd_per_1m_tokens": 5,
     "output_usd_per_1m_tokens": 25
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "Claude Opus 5",
@@ -912,7 +928,9 @@
     "input_usd_per_1m_tokens": 5,
     "output_usd_per_1m_tokens": 25
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "Claude Opus 5",
@@ -993,7 +1011,9 @@
     "input_usd_per_1m_tokens": 5,
     "output_usd_per_1m_tokens": 25
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "Claude Sonnet 5.5",
@@ -1074,7 +1094,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Sonnet 5.5",
@@ -1155,7 +1177,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Sonnet 5.5",
@@ -1236,7 +1260,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Sonnet 5.5",
@@ -1317,7 +1343,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Sonnet 5.5",
@@ -1398,7 +1426,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Haiku 5.5",
@@ -1894,7 +1924,9 @@
     "input_usd_per_1m_tokens": 10,
     "output_usd_per_1m_tokens": 50
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Fable 5.1",
@@ -1975,7 +2007,9 @@
     "input_usd_per_1m_tokens": 10,
     "output_usd_per_1m_tokens": 50
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Fable 5.1",
@@ -2056,7 +2090,9 @@
     "input_usd_per_1m_tokens": 10,
     "output_usd_per_1m_tokens": 50
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Fable 5.1",
@@ -2137,7 +2173,9 @@
     "input_usd_per_1m_tokens": 10,
     "output_usd_per_1m_tokens": 50
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "Claude Fable 5.1",
@@ -2218,7 +2256,9 @@
     "input_usd_per_1m_tokens": 10,
     "output_usd_per_1m_tokens": 50
    },
-   "notes": []
+   "notes": [
+    "'Default Fallback' is part of AA's name for this model; the page does not define it. Use the setting name (Max, Xhigh, High, Medium, Low) on charts and leave 'Default Fallback' to a source note."
+   ]
   },
   {
    "family": "GPT-6 Sol",
@@ -2299,7 +2339,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "GPT-6 Sol",
@@ -2380,7 +2422,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "GPT-6 Sol",
@@ -2461,7 +2505,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "GPT-6 Sol",
@@ -2542,7 +2588,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "GPT-6 Sol",
@@ -2623,7 +2671,9 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "GPT-6 Sol",
@@ -2704,7 +2754,10 @@
     "input_usd_per_1m_tokens": 2,
     "output_usd_per_1m_tokens": 10
    },
-   "notes": []
+   "notes": [
+    "On these pages thinking off costs more than the Low setting: $0.33 v $0.13 per task, and $449 v $269 to run the index. The page does not say why; the page data shows thinking off read about 1.10 billion input tokens across the index against about 0.34 billion at Low. Why it read more is not stated. Do not chart 'off' as the cheapest point without saying so.",
+    "AA marks this model deprecated (sentence quoted in deprecated_on_page). Its scores stay on the page."
+   ]
   },
   {
    "family": "GPT-6.1 Sol",
@@ -3510,7 +3563,14 @@
  },
  "which_gemini_is_current_pro": "Artificial Analysis has no Gemini 4 Pro. Google's top model on the site is Gemini 4 Argon (High), released 30 September 2026 and listed at one setting only (the Google creator page: 'For intelligence, the top model from Google is Gemini 4 Argon (High) at 53.'). The newest model named Pro is Gemini 3.1 Pro Preview (released 19 February 2026, score 30, one setting). Gemini 3.8 Flash is the only current Google model the site shows at more than one thinking level (high, medium, low), and its low setting has no cost.",
  "gaps": [
-  "Gemini 3.8 Flash (Low) (https://artificialanalysis.ai/models/gemini-3-8-flash-low): score only; the page shows no cost per task and no cost to run the index"
+  "Gemini 3.8 Flash (Low) (https://artificialanalysis.ai/models/gemini-3-8-flash-low): score only; the page shows no cost per task and no cost to run the index",
+  "Google: no Gemini 4 Pro on Artificial Analysis. Gemini 4 Argon (Google's top model on the site) and Gemini 3.1 Pro Preview (the newest model named Pro) are each listed at one setting only, so neither shows how thinking level changes score or cost. Gemini 3.8 Flash is the only current Google model with more than one setting (High, Medium, Low).",
+  "Claude Haiku 5.5: every cost on its pages carries an asterisk; AA's note says its 5x higher long-context input pricing is not yet reflected, so its costs are understated by an amount AA does not give.",
+  "Claude Opus 5 and GPT-6 Sol: both pages say 'This model is deprecated.' Their scores and costs are still shown.",
+  "Cost to run the whole index is shown only as chart bar labels (whole dollars), never in a sentence. Each label here was matched to its model by bar position and confirmed against the page data for every bar on that chart.",
+  "Category weights: the index page FAQ says four categories at 25% each; the methodology page says 30/20/20/30. Unresolved on AA's own pages.",
+  "No Claude model in these releases has a thinking-off setting on AA; the lowest Claude setting shown is Low. Only GPT-6 Sol has a 'Non-reasoning' (thinking off) row.",
+  "The /models list page shows each model at one setting only (the default chart selection of 27 of 704 models). Per-setting values come from each model page and its release page."
  ],
  "article_figures_check": {
   "note": "Our arithmetic on the page values above, set against the article's sentences that cite Artificial Analysis (docs/plans/2026-10-09-draft-body-v5.md). Not new data.",

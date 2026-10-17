@@ -33,7 +33,8 @@ export interface Fitted {
 
 /** Words, with `keep` (a word group) held together as one token. */
 export function tokens(text: string, keep?: string | null): string[] {
-  const t = text.trim().replace(/\s+/g, ' ')
+  // A no-break space (U+00A0) keeps a phrase on one line ("New\u00a0Claude."), so only ordinary spaces break.
+  const t = text.trim().replace(/[ \t\r\n]+/g, ' ')
   if (keep && t.includes(keep)) {
     const i = t.indexOf(keep)
     return [...t.slice(0, i).trim().split(' ').filter(Boolean), keep, ...t.slice(i + keep.length).trim().split(' ').filter(Boolean)]

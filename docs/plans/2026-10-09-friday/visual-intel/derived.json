@@ -1,0 +1,1672 @@
+{
+ "what_this_is": "OUR ARITHMETIC on data-final.json, not figures Artificial Analysis publishes. Every input is a confirmed row in data-final.json (named by slug in each entry). Built 2026-10-17T07:29:29Z.",
+ "credit": "Underlying scores and costs: Artificial Analysis (artificialanalysis.ai), read 17 Oct 2026. Calculations: ours.",
+ "formulas": {
+  "points_gained": "score(to) minus score(from): Intelligence Index points on Artificial Analysis's 0 to 100 scale, from the API's one-decimal scores in data-final.json. Exact to one decimal.",
+  "points_gained_page_whole_numbers": "score_on_page(to) minus score_on_page(from): the same gap on the whole numbers the pages print. Can differ from points_gained by up to 1; an exhibit uses one or the other, never both.",
+  "cost_multiple": "cost_usd(to) divided by cost_usd(from): how many times as much it cost Artificial Analysis to run its full test set, in US dollars at list prices. Rounded half up to two decimals. Below 1 means it cost less.",
+  "cost_multiple_per_task": "cost_per_task_usd(to) divided by cost_per_task_usd(from): the same on Artificial Analysis's cost per task, the measure the article quotes. Rounded half up to two decimals. Shown so exhibits and article can be squared; label which measure an exhibit uses.",
+  "thinking_range": "For each model listed at two or more settings: lowest setting Artificial Analysis lists to highest (order: Non-reasoning, Low, Medium, High, Xhigh, Max).",
+  "thinking_steps": "Each pair of neighbouring settings in that order, for each model, using only the settings Artificial Analysis lists.",
+  "model_upgrades_matched_level": "Older version to newer version of the same model line at the same thinking level: Claude Opus 5 to Claude Opus 5.5, GPT-6 Sol to GPT-6.1 Sol."
+ },
+ "thinking_range": [
+  {
+   "from": {
+    "slug": "claude-fable-5-1-low",
+    "thinking_level": "Low",
+    "model": "Claude Fable 5.1",
+    "score": 46.8,
+    "score_on_page": 47,
+    "cost_usd": 3157.66,
+    "cost_per_task_usd": 2.371
+   },
+   "to": {
+    "slug": "claude-fable-5-1",
+    "thinking_level": "Max",
+    "model": "Claude Fable 5.1",
+    "score": 53.4,
+    "score_on_page": 53,
+    "cost_usd": 13128.86,
+    "cost_per_task_usd": 7.6297
+   },
+   "points_gained": 6.6,
+   "points_gained_page_whole_numbers": 6,
+   "cost_multiple": 4.16,
+   "cost_multiple_per_task": 3.22,
+   "flags": [
+    "The two cost measures differ here (4.16x full test set v 3.22x per task): say which one the exhibit shows.",
+    "On the page's whole numbers this step reads 6 points, not 6.6: use one set of numbers throughout an exhibit."
+   ],
+   "model": "Claude Fable 5.1",
+   "creator": "Anthropic",
+   "levels_listed": [
+    "Low",
+    "Medium",
+    "High",
+    "Xhigh",
+    "Max"
+   ]
+  },
+  {
+   "from": {
+    "slug": "claude-haiku-5-5-low",
+    "thinking_level": "Low",
+    "model": "Claude Haiku 5.5",
+    "score": 29.5,
+    "score_on_page": 29,
+    "cost_usd": 34.31,
+    "cost_per_task_usd": 0.0245
+   },
+   "to": {
+    "slug": "claude-haiku-5-5",
+    "thinking_level": "Max",
+    "model": "Claude Haiku 5.5",
+    "score": 43.4,
+    "score_on_page": 43,
+    "cost_usd": 330.25,
+    "cost_per_task_usd": 0.2128
+   },
+   "points_gained": 13.9,
+   "points_gained_page_whole_numbers": 14,
+   "cost_multiple": 9.63,
+   "cost_multiple_per_task": 8.69,
+   "flags": [
+    "The two cost measures differ here (9.63x full test set v 8.69x per task): say which one the exhibit shows."
+   ],
+   "model": "Claude Haiku 5.5",
+   "creator": "Anthropic",
+   "levels_listed": [
+    "Low",
+    "Medium",
+    "High",
+    "Xhigh",
+    "Max"
+   ]
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-low",
+    "thinking_level": "Low",
+    "model": "Claude Opus 5",
+    "score": 39.4,
+    "score_on_page": 39,
+    "cost_usd": 1560.91,
+    "cost_per_task_usd": 1.0983
+   },
+   "to": {
+    "slug": "claude-opus-5",
+    "thinking_level": "Max",
+    "model": "Claude Opus 5",
+    "score": 50.8,
+    "score_on_page": 51,
+    "cost_usd": 7274.74,
+    "cost_per_task_usd": 5.8584
+   },
+   "points_gained": 11.4,
+   "points_gained_page_whole_numbers": 12,
+   "cost_multiple": 4.66,
+   "cost_multiple_per_task": 5.33,
+   "flags": [
+    "The two cost measures differ here (4.66x full test set v 5.33x per task): say which one the exhibit shows.",
+    "On the page's whole numbers this step reads 12 points, not 11.4: use one set of numbers throughout an exhibit."
+   ],
+   "model": "Claude Opus 5",
+   "creator": "Anthropic",
+   "levels_listed": [
+    "Low",
+    "Medium",
+    "High",
+    "Xhigh",
+    "Max"
+   ]
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-5-low",
+    "thinking_level": "Low",
+    "model": "Claude Opus 5.5",
+    "score": 42.3,
+    "score_on_page": 42,
+    "cost_usd": 860.33,
+    "cost_per_task_usd": 0.5512
+   },
+   "to": {
+    "slug": "claude-opus-5-5",
+    "thinking_level": "Max",
+    "model": "Claude Opus 5.5",
+    "score": 57.6,
+    "score_on_page": 58,
+    "cost_usd": 8708.2,
+    "cost_per_task_usd": 5.982
+   },
+   "points_gained": 15.3,
+   "points_gained_page_whole_numbers": 16,
+   "cost_multiple": 10.12,
+   "cost_multiple_per_task": 10.85,
+   "flags": [
+    "On the page's whole numbers this step reads 16 points, not 15.3: use one set of numbers throughout an exhibit."
+   ],
+   "model": "Claude Opus 5.5",
+   "creator": "Anthropic",
+   "levels_listed": [
+    "Low",
+    "Medium",
+    "High",
+    "Xhigh",
+    "Max"
+   ]
+  },
+  {
+   "from": {
+    "slug": "claude-sonnet-5-5-low",
+    "thinking_level": "Low",
+    "model": "Claude Sonnet 5.5",
+    "score": 35.9,
+    "score_on_page": 36,
+    "cost_usd": 482.13,
+    "cost_per_task_usd": 0.3452
+   },
+   "to": {
+    "slug": "claude-sonnet-5-5",
+    "thinking_level": "Max",
+    "model": "Claude Sonnet 5.5",
+    "score": 56,
+    "score_on_page": 56,
+    "cost_usd": 7259.5,
+    "cost_per_task_usd": 5.4609
+   },
+   "points_gained": 20.1,
+   "points_gained_page_whole_numbers": 20,
+   "cost_multiple": 15.06,
+   "cost_multiple_per_task": 15.82,
+   "flags": [],
+   "model": "Claude Sonnet 5.5",
+   "creator": "Anthropic",
+   "levels_listed": [
+    "Low",
+    "Medium",
+    "High",
+    "Xhigh",
+    "Max"
+   ]
+  },
+  {
+   "from": {
+    "slug": "gemini-3-8-flash-low",
+    "thinking_level": "Low",
+    "model": "Gemini 3.8 Flash",
+    "score": 33.5,
+    "score_on_page": 33,
+    "cost_usd": null,
+    "cost_per_task_usd": null
+   },
+   "to": {
+    "slug": "gemini-3-8-flash",
+    "thinking_level": "High",
+    "model": "Gemini 3.8 Flash",
+    "score": 40.9,
+    "score_on_page": 41,
+    "cost_usd": 1622.73,
+    "cost_per_task_usd": 1.2428
+   },
+   "points_gained": 7.4,
+   "points_gained_page_whole_numbers": 8,
+   "cost_multiple": null,
+   "cost_multiple_per_task": null,
+   "flags": [
+    "No cost multiple: Artificial Analysis publishes no cost for Gemini 3.8 Flash (Low).",
+    "On the page's whole numbers this step reads 8 points, not 7.4: use one set of numbers throughout an exhibit."
+   ],
+   "model": "Gemini 3.8 Flash",
+   "creator": "Google",
+   "levels_listed": [
+    "Low",
+    "Medium",
+    "High"
+   ]
+  },
+  {
+   "from": {
+    "slug": "gpt-6-sol-non-reasoning",
+    "thinking_level": "Non-reasoning",
+    "model": "GPT-6 Sol",
+    "score": 28.5,
+    "score_on_page": 29,
+    "cost_usd": 449.37,
+    "cost_per_task_usd": 0.3337
+   },
+   "to": {
+    "slug": "gpt-6-sol",
+    "thinking_level": "Max",
+    "model": "GPT-6 Sol",
+    "score": 47.6,
+    "score_on_page": 48,
+    "cost_usd": 1535.8,
+    "cost_per_task_usd": 1.0447
+   },
+   "points_gained": 19.1,
+   "points_gained_page_whole_numbers": 19,
+   "cost_multiple": 3.42,
+   "cost_multiple_per_task": 3.13,
+   "flags": [],
+   "model": "GPT-6 Sol",
+   "creator": "OpenAI",
+   "levels_listed": [
+    "Non-reasoning",
+    "Low",
+    "Medium",
+    "High",
+    "Xhigh",
+    "Max"
+   ]
+  },
+  {
+   "from": {
+    "slug": "gpt-6-1-sol-low",
+    "thinking_level": "Low",
+    "model": "GPT-6.1 Sol",
+    "score": 42.1,
+    "score_on_page": 42,
+    "cost_usd": 250.48,
+    "cost_per_task_usd": 0.1308
+   },
+   "to": {
+    "slug": "gpt-6-1-sol",
+    "thinking_level": "Max",
+    "model": "GPT-6.1 Sol",
+    "score": 51.8,
+    "score_on_page": 52,
+    "cost_usd": 1081.55,
+    "cost_per_task_usd": 0.7242
+   },
+   "points_gained": 9.7,
+   "points_gained_page_whole_numbers": 10,
+   "cost_multiple": 4.32,
+   "cost_multiple_per_task": 5.54,
+   "flags": [
+    "The two cost measures differ here (4.32x full test set v 5.54x per task): say which one the exhibit shows."
+   ],
+   "model": "GPT-6.1 Sol",
+   "creator": "OpenAI",
+   "levels_listed": [
+    "Low",
+    "Medium",
+    "High",
+    "Xhigh",
+    "Max"
+   ]
+  }
+ ],
+ "thinking_steps": [
+  {
+   "from": {
+    "slug": "claude-fable-5-1-low",
+    "thinking_level": "Low",
+    "model": "Claude Fable 5.1",
+    "score": 46.8,
+    "score_on_page": 47,
+    "cost_usd": 3157.66,
+    "cost_per_task_usd": 2.371
+   },
+   "to": {
+    "slug": "claude-fable-5-1-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Fable 5.1",
+    "score": 48.9,
+    "score_on_page": 49,
+    "cost_usd": 3983.28,
+    "cost_per_task_usd": 2.9826
+   },
+   "points_gained": 2.1,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 1.26,
+   "cost_multiple_per_task": 1.26,
+   "flags": [],
+   "model": "Claude Fable 5.1",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-fable-5-1-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Fable 5.1",
+    "score": 48.9,
+    "score_on_page": 49,
+    "cost_usd": 3983.28,
+    "cost_per_task_usd": 2.9826
+   },
+   "to": {
+    "slug": "claude-fable-5-1-high",
+    "thinking_level": "High",
+    "model": "Claude Fable 5.1",
+    "score": 51.2,
+    "score_on_page": 51,
+    "cost_usd": 5241.59,
+    "cost_per_task_usd": 3.9125
+   },
+   "points_gained": 2.3,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 1.32,
+   "cost_multiple_per_task": 1.31,
+   "flags": [],
+   "model": "Claude Fable 5.1",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-fable-5-1-high",
+    "thinking_level": "High",
+    "model": "Claude Fable 5.1",
+    "score": 51.2,
+    "score_on_page": 51,
+    "cost_usd": 5241.59,
+    "cost_per_task_usd": 3.9125
+   },
+   "to": {
+    "slug": "claude-fable-5-1-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Fable 5.1",
+    "score": 53.2,
+    "score_on_page": 53,
+    "cost_usd": 9063.11,
+    "cost_per_task_usd": 5.9783
+   },
+   "points_gained": 2.0,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 1.73,
+   "cost_multiple_per_task": 1.53,
+   "flags": [
+    "The two cost measures differ here (1.73x full test set v 1.53x per task): say which one the exhibit shows."
+   ],
+   "model": "Claude Fable 5.1",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-fable-5-1-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Fable 5.1",
+    "score": 53.2,
+    "score_on_page": 53,
+    "cost_usd": 9063.11,
+    "cost_per_task_usd": 5.9783
+   },
+   "to": {
+    "slug": "claude-fable-5-1",
+    "thinking_level": "Max",
+    "model": "Claude Fable 5.1",
+    "score": 53.4,
+    "score_on_page": 53,
+    "cost_usd": 13128.86,
+    "cost_per_task_usd": 7.6297
+   },
+   "points_gained": 0.2,
+   "points_gained_page_whole_numbers": 0,
+   "cost_multiple": 1.45,
+   "cost_multiple_per_task": 1.28,
+   "flags": [
+    "The two cost measures differ here (1.45x full test set v 1.28x per task): say which one the exhibit shows."
+   ],
+   "model": "Claude Fable 5.1",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-haiku-5-5-low",
+    "thinking_level": "Low",
+    "model": "Claude Haiku 5.5",
+    "score": 29.5,
+    "score_on_page": 29,
+    "cost_usd": 34.31,
+    "cost_per_task_usd": 0.0245
+   },
+   "to": {
+    "slug": "claude-haiku-5-5-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Haiku 5.5",
+    "score": 34.5,
+    "score_on_page": 34,
+    "cost_usd": 56.36,
+    "cost_per_task_usd": 0.047
+   },
+   "points_gained": 5.0,
+   "points_gained_page_whole_numbers": 5,
+   "cost_multiple": 1.64,
+   "cost_multiple_per_task": 1.92,
+   "flags": [
+    "The two cost measures differ here (1.64x full test set v 1.92x per task): say which one the exhibit shows."
+   ],
+   "model": "Claude Haiku 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-haiku-5-5-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Haiku 5.5",
+    "score": 34.5,
+    "score_on_page": 34,
+    "cost_usd": 56.36,
+    "cost_per_task_usd": 0.047
+   },
+   "to": {
+    "slug": "claude-haiku-5-5-high",
+    "thinking_level": "High",
+    "model": "Claude Haiku 5.5",
+    "score": 37.8,
+    "score_on_page": 38,
+    "cost_usd": 94.07,
+    "cost_per_task_usd": 0.0794
+   },
+   "points_gained": 3.3,
+   "points_gained_page_whole_numbers": 4,
+   "cost_multiple": 1.67,
+   "cost_multiple_per_task": 1.69,
+   "flags": [
+    "On the page's whole numbers this step reads 4 points, not 3.3: use one set of numbers throughout an exhibit."
+   ],
+   "model": "Claude Haiku 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-haiku-5-5-high",
+    "thinking_level": "High",
+    "model": "Claude Haiku 5.5",
+    "score": 37.8,
+    "score_on_page": 38,
+    "cost_usd": 94.07,
+    "cost_per_task_usd": 0.0794
+   },
+   "to": {
+    "slug": "claude-haiku-5-5-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Haiku 5.5",
+    "score": 41.2,
+    "score_on_page": 41,
+    "cost_usd": 157.58,
+    "cost_per_task_usd": 0.1238
+   },
+   "points_gained": 3.4,
+   "points_gained_page_whole_numbers": 3,
+   "cost_multiple": 1.68,
+   "cost_multiple_per_task": 1.56,
+   "flags": [],
+   "model": "Claude Haiku 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-haiku-5-5-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Haiku 5.5",
+    "score": 41.2,
+    "score_on_page": 41,
+    "cost_usd": 157.58,
+    "cost_per_task_usd": 0.1238
+   },
+   "to": {
+    "slug": "claude-haiku-5-5",
+    "thinking_level": "Max",
+    "model": "Claude Haiku 5.5",
+    "score": 43.4,
+    "score_on_page": 43,
+    "cost_usd": 330.25,
+    "cost_per_task_usd": 0.2128
+   },
+   "points_gained": 2.2,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 2.1,
+   "cost_multiple_per_task": 1.72,
+   "flags": [
+    "The two cost measures differ here (2.1x full test set v 1.72x per task): say which one the exhibit shows."
+   ],
+   "model": "Claude Haiku 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-low",
+    "thinking_level": "Low",
+    "model": "Claude Opus 5",
+    "score": 39.4,
+    "score_on_page": 39,
+    "cost_usd": 1560.91,
+    "cost_per_task_usd": 1.0983
+   },
+   "to": {
+    "slug": "claude-opus-5-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Opus 5",
+    "score": 44.8,
+    "score_on_page": 45,
+    "cost_usd": 2731.91,
+    "cost_per_task_usd": 2.1895
+   },
+   "points_gained": 5.4,
+   "points_gained_page_whole_numbers": 6,
+   "cost_multiple": 1.75,
+   "cost_multiple_per_task": 1.99,
+   "flags": [
+    "The two cost measures differ here (1.75x full test set v 1.99x per task): say which one the exhibit shows.",
+    "On the page's whole numbers this step reads 6 points, not 5.4: use one set of numbers throughout an exhibit."
+   ],
+   "model": "Claude Opus 5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Opus 5",
+    "score": 44.8,
+    "score_on_page": 45,
+    "cost_usd": 2731.91,
+    "cost_per_task_usd": 2.1895
+   },
+   "to": {
+    "slug": "claude-opus-5-high",
+    "thinking_level": "High",
+    "model": "Claude Opus 5",
+    "score": 48.1,
+    "score_on_page": 48,
+    "cost_usd": 4331.68,
+    "cost_per_task_usd": 3.6133
+   },
+   "points_gained": 3.3,
+   "points_gained_page_whole_numbers": 3,
+   "cost_multiple": 1.59,
+   "cost_multiple_per_task": 1.65,
+   "flags": [],
+   "model": "Claude Opus 5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-high",
+    "thinking_level": "High",
+    "model": "Claude Opus 5",
+    "score": 48.1,
+    "score_on_page": 48,
+    "cost_usd": 4331.68,
+    "cost_per_task_usd": 3.6133
+   },
+   "to": {
+    "slug": "claude-opus-5-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Opus 5",
+    "score": 49.7,
+    "score_on_page": 50,
+    "cost_usd": 5867.76,
+    "cost_per_task_usd": 4.8778
+   },
+   "points_gained": 1.6,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 1.35,
+   "cost_multiple_per_task": 1.35,
+   "flags": [],
+   "model": "Claude Opus 5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Opus 5",
+    "score": 49.7,
+    "score_on_page": 50,
+    "cost_usd": 5867.76,
+    "cost_per_task_usd": 4.8778
+   },
+   "to": {
+    "slug": "claude-opus-5",
+    "thinking_level": "Max",
+    "model": "Claude Opus 5",
+    "score": 50.8,
+    "score_on_page": 51,
+    "cost_usd": 7274.74,
+    "cost_per_task_usd": 5.8584
+   },
+   "points_gained": 1.1,
+   "points_gained_page_whole_numbers": 1,
+   "cost_multiple": 1.24,
+   "cost_multiple_per_task": 1.2,
+   "flags": [],
+   "model": "Claude Opus 5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-5-low",
+    "thinking_level": "Low",
+    "model": "Claude Opus 5.5",
+    "score": 42.3,
+    "score_on_page": 42,
+    "cost_usd": 860.33,
+    "cost_per_task_usd": 0.5512
+   },
+   "to": {
+    "slug": "claude-opus-5-5-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Opus 5.5",
+    "score": 51.2,
+    "score_on_page": 51,
+    "cost_usd": 1626.81,
+    "cost_per_task_usd": 1.336
+   },
+   "points_gained": 8.9,
+   "points_gained_page_whole_numbers": 9,
+   "cost_multiple": 1.89,
+   "cost_multiple_per_task": 2.42,
+   "flags": [
+    "The two cost measures differ here (1.89x full test set v 2.42x per task): say which one the exhibit shows."
+   ],
+   "model": "Claude Opus 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-5-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Opus 5.5",
+    "score": 51.2,
+    "score_on_page": 51,
+    "cost_usd": 1626.81,
+    "cost_per_task_usd": 1.336
+   },
+   "to": {
+    "slug": "claude-opus-5-5-high",
+    "thinking_level": "High",
+    "model": "Claude Opus 5.5",
+    "score": 53.6,
+    "score_on_page": 54,
+    "cost_usd": 2172.43,
+    "cost_per_task_usd": 1.8225
+   },
+   "points_gained": 2.4,
+   "points_gained_page_whole_numbers": 3,
+   "cost_multiple": 1.34,
+   "cost_multiple_per_task": 1.36,
+   "flags": [
+    "On the page's whole numbers this step reads 3 points, not 2.4: use one set of numbers throughout an exhibit."
+   ],
+   "model": "Claude Opus 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-5-high",
+    "thinking_level": "High",
+    "model": "Claude Opus 5.5",
+    "score": 53.6,
+    "score_on_page": 54,
+    "cost_usd": 2172.43,
+    "cost_per_task_usd": 1.8225
+   },
+   "to": {
+    "slug": "claude-opus-5-5-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Opus 5.5",
+    "score": 56,
+    "score_on_page": 56,
+    "cost_usd": 4056.65,
+    "cost_per_task_usd": 3.4591
+   },
+   "points_gained": 2.4,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 1.87,
+   "cost_multiple_per_task": 1.9,
+   "flags": [],
+   "model": "Claude Opus 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-opus-5-5-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Opus 5.5",
+    "score": 56,
+    "score_on_page": 56,
+    "cost_usd": 4056.65,
+    "cost_per_task_usd": 3.4591
+   },
+   "to": {
+    "slug": "claude-opus-5-5",
+    "thinking_level": "Max",
+    "model": "Claude Opus 5.5",
+    "score": 57.6,
+    "score_on_page": 58,
+    "cost_usd": 8708.2,
+    "cost_per_task_usd": 5.982
+   },
+   "points_gained": 1.6,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 2.15,
+   "cost_multiple_per_task": 1.73,
+   "flags": [
+    "The two cost measures differ here (2.15x full test set v 1.73x per task): say which one the exhibit shows."
+   ],
+   "model": "Claude Opus 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-sonnet-5-5-low",
+    "thinking_level": "Low",
+    "model": "Claude Sonnet 5.5",
+    "score": 35.9,
+    "score_on_page": 36,
+    "cost_usd": 482.13,
+    "cost_per_task_usd": 0.3452
+   },
+   "to": {
+    "slug": "claude-sonnet-5-5-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Sonnet 5.5",
+    "score": 40.8,
+    "score_on_page": 41,
+    "cost_usd": 622.28,
+    "cost_per_task_usd": 0.4833
+   },
+   "points_gained": 4.9,
+   "points_gained_page_whole_numbers": 5,
+   "cost_multiple": 1.29,
+   "cost_multiple_per_task": 1.4,
+   "flags": [],
+   "model": "Claude Sonnet 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-sonnet-5-5-medium",
+    "thinking_level": "Medium",
+    "model": "Claude Sonnet 5.5",
+    "score": 40.8,
+    "score_on_page": 41,
+    "cost_usd": 622.28,
+    "cost_per_task_usd": 0.4833
+   },
+   "to": {
+    "slug": "claude-sonnet-5-5-high",
+    "thinking_level": "High",
+    "model": "Claude Sonnet 5.5",
+    "score": 46.8,
+    "score_on_page": 47,
+    "cost_usd": 1027.4,
+    "cost_per_task_usd": 0.8844
+   },
+   "points_gained": 6.0,
+   "points_gained_page_whole_numbers": 6,
+   "cost_multiple": 1.65,
+   "cost_multiple_per_task": 1.83,
+   "flags": [
+    "The two cost measures differ here (1.65x full test set v 1.83x per task): say which one the exhibit shows."
+   ],
+   "model": "Claude Sonnet 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-sonnet-5-5-high",
+    "thinking_level": "High",
+    "model": "Claude Sonnet 5.5",
+    "score": 46.8,
+    "score_on_page": 47,
+    "cost_usd": 1027.4,
+    "cost_per_task_usd": 0.8844
+   },
+   "to": {
+    "slug": "claude-sonnet-5-5-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Sonnet 5.5",
+    "score": 51.9,
+    "score_on_page": 52,
+    "cost_usd": 2176.82,
+    "cost_per_task_usd": 2.012
+   },
+   "points_gained": 5.1,
+   "points_gained_page_whole_numbers": 5,
+   "cost_multiple": 2.12,
+   "cost_multiple_per_task": 2.27,
+   "flags": [],
+   "model": "Claude Sonnet 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "claude-sonnet-5-5-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "Claude Sonnet 5.5",
+    "score": 51.9,
+    "score_on_page": 52,
+    "cost_usd": 2176.82,
+    "cost_per_task_usd": 2.012
+   },
+   "to": {
+    "slug": "claude-sonnet-5-5",
+    "thinking_level": "Max",
+    "model": "Claude Sonnet 5.5",
+    "score": 56,
+    "score_on_page": 56,
+    "cost_usd": 7259.5,
+    "cost_per_task_usd": 5.4609
+   },
+   "points_gained": 4.1,
+   "points_gained_page_whole_numbers": 4,
+   "cost_multiple": 3.33,
+   "cost_multiple_per_task": 2.71,
+   "flags": [
+    "The two cost measures differ here (3.33x full test set v 2.71x per task): say which one the exhibit shows."
+   ],
+   "model": "Claude Sonnet 5.5",
+   "creator": "Anthropic"
+  },
+  {
+   "from": {
+    "slug": "gemini-3-8-flash-low",
+    "thinking_level": "Low",
+    "model": "Gemini 3.8 Flash",
+    "score": 33.5,
+    "score_on_page": 33,
+    "cost_usd": null,
+    "cost_per_task_usd": null
+   },
+   "to": {
+    "slug": "gemini-3-8-flash-medium",
+    "thinking_level": "Medium",
+    "model": "Gemini 3.8 Flash",
+    "score": 39.8,
+    "score_on_page": 40,
+    "cost_usd": 1100.06,
+    "cost_per_task_usd": 0.931
+   },
+   "points_gained": 6.3,
+   "points_gained_page_whole_numbers": 7,
+   "cost_multiple": null,
+   "cost_multiple_per_task": null,
+   "flags": [
+    "No cost multiple: Artificial Analysis publishes no cost for Gemini 3.8 Flash (Low).",
+    "On the page's whole numbers this step reads 7 points, not 6.3: use one set of numbers throughout an exhibit."
+   ],
+   "model": "Gemini 3.8 Flash",
+   "creator": "Google"
+  },
+  {
+   "from": {
+    "slug": "gemini-3-8-flash-medium",
+    "thinking_level": "Medium",
+    "model": "Gemini 3.8 Flash",
+    "score": 39.8,
+    "score_on_page": 40,
+    "cost_usd": 1100.06,
+    "cost_per_task_usd": 0.931
+   },
+   "to": {
+    "slug": "gemini-3-8-flash",
+    "thinking_level": "High",
+    "model": "Gemini 3.8 Flash",
+    "score": 40.9,
+    "score_on_page": 41,
+    "cost_usd": 1622.73,
+    "cost_per_task_usd": 1.2428
+   },
+   "points_gained": 1.1,
+   "points_gained_page_whole_numbers": 1,
+   "cost_multiple": 1.48,
+   "cost_multiple_per_task": 1.33,
+   "flags": [
+    "The two cost measures differ here (1.48x full test set v 1.33x per task): say which one the exhibit shows."
+   ],
+   "model": "Gemini 3.8 Flash",
+   "creator": "Google"
+  },
+  {
+   "from": {
+    "slug": "gpt-6-sol-non-reasoning",
+    "thinking_level": "Non-reasoning",
+    "model": "GPT-6 Sol",
+    "score": 28.5,
+    "score_on_page": 29,
+    "cost_usd": 449.37,
+    "cost_per_task_usd": 0.3337
+   },
+   "to": {
+    "slug": "gpt-6-sol-low",
+    "thinking_level": "Low",
+    "model": "GPT-6 Sol",
+    "score": 34.2,
+    "score_on_page": 34,
+    "cost_usd": 268.73,
+    "cost_per_task_usd": 0.1328
+   },
+   "points_gained": 5.7,
+   "points_gained_page_whole_numbers": 5,
+   "cost_multiple": 0.6,
+   "cost_multiple_per_task": 0.4,
+   "flags": [
+    "Cost falls (multiple below 1).",
+    "The two cost measures differ here (0.6x full test set v 0.4x per task): say which one the exhibit shows.",
+    "On the page's whole numbers this step reads 5 points, not 5.7: use one set of numbers throughout an exhibit."
+   ],
+   "model": "GPT-6 Sol",
+   "creator": "OpenAI"
+  },
+  {
+   "from": {
+    "slug": "gpt-6-sol-low",
+    "thinking_level": "Low",
+    "model": "GPT-6 Sol",
+    "score": 34.2,
+    "score_on_page": 34,
+    "cost_usd": 268.73,
+    "cost_per_task_usd": 0.1328
+   },
+   "to": {
+    "slug": "gpt-6-sol-medium",
+    "thinking_level": "Medium",
+    "model": "GPT-6 Sol",
+    "score": 39.8,
+    "score_on_page": 40,
+    "cost_usd": 416.32,
+    "cost_per_task_usd": 0.2473
+   },
+   "points_gained": 5.6,
+   "points_gained_page_whole_numbers": 6,
+   "cost_multiple": 1.55,
+   "cost_multiple_per_task": 1.86,
+   "flags": [
+    "The two cost measures differ here (1.55x full test set v 1.86x per task): say which one the exhibit shows."
+   ],
+   "model": "GPT-6 Sol",
+   "creator": "OpenAI"
+  },
+  {
+   "from": {
+    "slug": "gpt-6-sol-medium",
+    "thinking_level": "Medium",
+    "model": "GPT-6 Sol",
+    "score": 39.8,
+    "score_on_page": 40,
+    "cost_usd": 416.32,
+    "cost_per_task_usd": 0.2473
+   },
+   "to": {
+    "slug": "gpt-6-sol-high",
+    "thinking_level": "High",
+    "model": "GPT-6 Sol",
+    "score": 42.4,
+    "score_on_page": 42,
+    "cost_usd": 604.52,
+    "cost_per_task_usd": 0.3728
+   },
+   "points_gained": 2.6,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 1.45,
+   "cost_multiple_per_task": 1.51,
+   "flags": [
+    "On the page's whole numbers this step reads 2 points, not 2.6: use one set of numbers throughout an exhibit."
+   ],
+   "model": "GPT-6 Sol",
+   "creator": "OpenAI"
+  },
+  {
+   "from": {
+    "slug": "gpt-6-sol-high",
+    "thinking_level": "High",
+    "model": "GPT-6 Sol",
+    "score": 42.4,
+    "score_on_page": 42,
+    "cost_usd": 604.52,
+    "cost_per_task_usd": 0.3728
+   },
+   "to": {
+    "slug": "gpt-6-sol-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "GPT-6 Sol",
+    "score": 44.2,
+    "score_on_page": 44,
+    "cost_usd": 854.6,
+    "cost_per_task_usd": 0.5208
+   },
+   "points_gained": 1.8,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 1.41,
+   "cost_multiple_per_task": 1.4,
+   "flags": [],
+   "model": "GPT-6 Sol",
+   "creator": "OpenAI"
+  },
+  {
+   "from": {
+    "slug": "gpt-6-sol-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "GPT-6 Sol",
+    "score": 44.2,
+    "score_on_page": 44,
+    "cost_usd": 854.6,
+    "cost_per_task_usd": 0.5208
+   },
+   "to": {
+    "slug": "gpt-6-sol",
+    "thinking_level": "Max",
+    "model": "GPT-6 Sol",
+    "score": 47.6,
+    "score_on_page": 48,
+    "cost_usd": 1535.8,
+    "cost_per_task_usd": 1.0447
+   },
+   "points_gained": 3.4,
+   "points_gained_page_whole_numbers": 4,
+   "cost_multiple": 1.8,
+   "cost_multiple_per_task": 2.01,
+   "flags": [
+    "The two cost measures differ here (1.8x full test set v 2.01x per task): say which one the exhibit shows.",
+    "On the page's whole numbers this step reads 4 points, not 3.4: use one set of numbers throughout an exhibit."
+   ],
+   "model": "GPT-6 Sol",
+   "creator": "OpenAI"
+  },
+  {
+   "from": {
+    "slug": "gpt-6-1-sol-low",
+    "thinking_level": "Low",
+    "model": "GPT-6.1 Sol",
+    "score": 42.1,
+    "score_on_page": 42,
+    "cost_usd": 250.48,
+    "cost_per_task_usd": 0.1308
+   },
+   "to": {
+    "slug": "gpt-6-1-sol-medium",
+    "thinking_level": "Medium",
+    "model": "GPT-6.1 Sol",
+    "score": 47.8,
+    "score_on_page": 48,
+    "cost_usd": 361.37,
+    "cost_per_task_usd": 0.2137
+   },
+   "points_gained": 5.7,
+   "points_gained_page_whole_numbers": 6,
+   "cost_multiple": 1.44,
+   "cost_multiple_per_task": 1.63,
+   "flags": [
+    "The two cost measures differ here (1.44x full test set v 1.63x per task): say which one the exhibit shows."
+   ],
+   "model": "GPT-6.1 Sol",
+   "creator": "OpenAI"
+  },
+  {
+   "from": {
+    "slug": "gpt-6-1-sol-medium",
+    "thinking_level": "Medium",
+    "model": "GPT-6.1 Sol",
+    "score": 47.8,
+    "score_on_page": 48,
+    "cost_usd": 361.37,
+    "cost_per_task_usd": 0.2137
+   },
+   "to": {
+    "slug": "gpt-6-1-sol-high",
+    "thinking_level": "High",
+    "model": "GPT-6.1 Sol",
+    "score": 50.2,
+    "score_on_page": 50,
+    "cost_usd": 521.32,
+    "cost_per_task_usd": 0.3191
+   },
+   "points_gained": 2.4,
+   "points_gained_page_whole_numbers": 2,
+   "cost_multiple": 1.44,
+   "cost_multiple_per_task": 1.49,
+   "flags": [],
+   "model": "GPT-6.1 Sol",
+   "creator": "OpenAI"
+  },
+  {
+   "from": {
+    "slug": "gpt-6-1-sol-high",
+    "thinking_level": "High",
+    "model": "GPT-6.1 Sol",
+    "score": 50.2,
+    "score_on_page": 50,
+    "cost_usd": 521.32,
+    "cost_per_task_usd": 0.3191
+   },
+   "to": {
+    "slug": "gpt-6-1-sol-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "GPT-6.1 Sol",
+    "score": 51,
+    "score_on_page": 51,
+    "cost_usd": 662.28,
+    "cost_per_task_usd": 0.3929
+   },
+   "points_gained": 0.8,
+   "points_gained_page_whole_numbers": 1,
+   "cost_multiple": 1.27,
+   "cost_multiple_per_task": 1.23,
+   "flags": [],
+   "model": "GPT-6.1 Sol",
+   "creator": "OpenAI"
+  },
+  {
+   "from": {
+    "slug": "gpt-6-1-sol-xhigh",
+    "thinking_level": "Xhigh",
+    "model": "GPT-6.1 Sol",
+    "score": 51,
+    "score_on_page": 51,
+    "cost_usd": 662.28,
+    "cost_per_task_usd": 0.3929
+   },
+   "to": {
+    "slug": "gpt-6-1-sol",
+    "thinking_level": "Max",
+    "model": "GPT-6.1 Sol",
+    "score": 51.8,
+    "score_on_page": 52,
+    "cost_usd": 1081.55,
+    "cost_per_task_usd": 0.7242
+   },
+   "points_gained": 0.8,
+   "points_gained_page_whole_numbers": 1,
+   "cost_multiple": 1.63,
+   "cost_multiple_per_task": 1.84,
+   "flags": [
+    "The two cost measures differ here (1.63x full test set v 1.84x per task): say which one the exhibit shows."
+   ],
+   "model": "GPT-6.1 Sol",
+   "creator": "OpenAI"
+  }
+ ],
+ "model_upgrades_matched_level": [
+  {
+   "from_model": "Claude Opus 5",
+   "to_model": "Claude Opus 5.5",
+   "release_dates": {
+    "Claude Opus 5": "2026-07-24",
+    "Claude Opus 5.5": "2026-09-22"
+   },
+   "matched_levels": [
+    "Low",
+    "Medium",
+    "High",
+    "Xhigh",
+    "Max"
+   ],
+   "unmatched_levels": [],
+   "by_level": [
+    {
+     "from": {
+      "slug": "claude-opus-5-low",
+      "thinking_level": "Low",
+      "model": "Claude Opus 5",
+      "score": 39.4,
+      "score_on_page": 39,
+      "cost_usd": 1560.91,
+      "cost_per_task_usd": 1.0983
+     },
+     "to": {
+      "slug": "claude-opus-5-5-low",
+      "thinking_level": "Low",
+      "model": "Claude Opus 5.5",
+      "score": 42.3,
+      "score_on_page": 42,
+      "cost_usd": 860.33,
+      "cost_per_task_usd": 0.5512
+     },
+     "points_gained": 2.9,
+     "points_gained_page_whole_numbers": 3,
+     "cost_multiple": 0.55,
+     "cost_multiple_per_task": 0.5,
+     "flags": [
+      "Cost falls (multiple below 1).",
+      "The two cost measures differ here (0.55x full test set v 0.5x per task): say which one the exhibit shows."
+     ],
+     "thinking_level": "Low"
+    },
+    {
+     "from": {
+      "slug": "claude-opus-5-medium",
+      "thinking_level": "Medium",
+      "model": "Claude Opus 5",
+      "score": 44.8,
+      "score_on_page": 45,
+      "cost_usd": 2731.91,
+      "cost_per_task_usd": 2.1895
+     },
+     "to": {
+      "slug": "claude-opus-5-5-medium",
+      "thinking_level": "Medium",
+      "model": "Claude Opus 5.5",
+      "score": 51.2,
+      "score_on_page": 51,
+      "cost_usd": 1626.81,
+      "cost_per_task_usd": 1.336
+     },
+     "points_gained": 6.4,
+     "points_gained_page_whole_numbers": 6,
+     "cost_multiple": 0.6,
+     "cost_multiple_per_task": 0.61,
+     "flags": [
+      "Cost falls (multiple below 1)."
+     ],
+     "thinking_level": "Medium"
+    },
+    {
+     "from": {
+      "slug": "claude-opus-5-high",
+      "thinking_level": "High",
+      "model": "Claude Opus 5",
+      "score": 48.1,
+      "score_on_page": 48,
+      "cost_usd": 4331.68,
+      "cost_per_task_usd": 3.6133
+     },
+     "to": {
+      "slug": "claude-opus-5-5-high",
+      "thinking_level": "High",
+      "model": "Claude Opus 5.5",
+      "score": 53.6,
+      "score_on_page": 54,
+      "cost_usd": 2172.43,
+      "cost_per_task_usd": 1.8225
+     },
+     "points_gained": 5.5,
+     "points_gained_page_whole_numbers": 6,
+     "cost_multiple": 0.5,
+     "cost_multiple_per_task": 0.5,
+     "flags": [
+      "Cost falls (multiple below 1)."
+     ],
+     "thinking_level": "High"
+    },
+    {
+     "from": {
+      "slug": "claude-opus-5-xhigh",
+      "thinking_level": "Xhigh",
+      "model": "Claude Opus 5",
+      "score": 49.7,
+      "score_on_page": 50,
+      "cost_usd": 5867.76,
+      "cost_per_task_usd": 4.8778
+     },
+     "to": {
+      "slug": "claude-opus-5-5-xhigh",
+      "thinking_level": "Xhigh",
+      "model": "Claude Opus 5.5",
+      "score": 56,
+      "score_on_page": 56,
+      "cost_usd": 4056.65,
+      "cost_per_task_usd": 3.4591
+     },
+     "points_gained": 6.3,
+     "points_gained_page_whole_numbers": 6,
+     "cost_multiple": 0.69,
+     "cost_multiple_per_task": 0.71,
+     "flags": [
+      "Cost falls (multiple below 1)."
+     ],
+     "thinking_level": "Xhigh"
+    },
+    {
+     "from": {
+      "slug": "claude-opus-5",
+      "thinking_level": "Max",
+      "model": "Claude Opus 5",
+      "score": 50.8,
+      "score_on_page": 51,
+      "cost_usd": 7274.74,
+      "cost_per_task_usd": 5.8584
+     },
+     "to": {
+      "slug": "claude-opus-5-5",
+      "thinking_level": "Max",
+      "model": "Claude Opus 5.5",
+      "score": 57.6,
+      "score_on_page": 58,
+      "cost_usd": 8708.2,
+      "cost_per_task_usd": 5.982
+     },
+     "points_gained": 6.8,
+     "points_gained_page_whole_numbers": 7,
+     "cost_multiple": 1.2,
+     "cost_multiple_per_task": 1.02,
+     "flags": [
+      "The two cost measures differ here (1.2x full test set v 1.02x per task): say which one the exhibit shows."
+     ],
+     "thinking_level": "Max"
+    }
+   ]
+  },
+  {
+   "from_model": "GPT-6 Sol",
+   "to_model": "GPT-6.1 Sol",
+   "release_dates": {
+    "GPT-6 Sol": "2026-09-22",
+    "GPT-6.1 Sol": "2026-09-29"
+   },
+   "matched_levels": [
+    "Low",
+    "Medium",
+    "High",
+    "Xhigh",
+    "Max"
+   ],
+   "unmatched_levels": [
+    "Non-reasoning (GPT-6 Sol only)"
+   ],
+   "by_level": [
+    {
+     "from": {
+      "slug": "gpt-6-sol-low",
+      "thinking_level": "Low",
+      "model": "GPT-6 Sol",
+      "score": 34.2,
+      "score_on_page": 34,
+      "cost_usd": 268.73,
+      "cost_per_task_usd": 0.1328
+     },
+     "to": {
+      "slug": "gpt-6-1-sol-low",
+      "thinking_level": "Low",
+      "model": "GPT-6.1 Sol",
+      "score": 42.1,
+      "score_on_page": 42,
+      "cost_usd": 250.48,
+      "cost_per_task_usd": 0.1308
+     },
+     "points_gained": 7.9,
+     "points_gained_page_whole_numbers": 8,
+     "cost_multiple": 0.93,
+     "cost_multiple_per_task": 0.98,
+     "flags": [
+      "Cost falls (multiple below 1)."
+     ],
+     "thinking_level": "Low"
+    },
+    {
+     "from": {
+      "slug": "gpt-6-sol-medium",
+      "thinking_level": "Medium",
+      "model": "GPT-6 Sol",
+      "score": 39.8,
+      "score_on_page": 40,
+      "cost_usd": 416.32,
+      "cost_per_task_usd": 0.2473
+     },
+     "to": {
+      "slug": "gpt-6-1-sol-medium",
+      "thinking_level": "Medium",
+      "model": "GPT-6.1 Sol",
+      "score": 47.8,
+      "score_on_page": 48,
+      "cost_usd": 361.37,
+      "cost_per_task_usd": 0.2137
+     },
+     "points_gained": 8.0,
+     "points_gained_page_whole_numbers": 8,
+     "cost_multiple": 0.87,
+     "cost_multiple_per_task": 0.86,
+     "flags": [
+      "Cost falls (multiple below 1)."
+     ],
+     "thinking_level": "Medium"
+    },
+    {
+     "from": {
+      "slug": "gpt-6-sol-high",
+      "thinking_level": "High",
+      "model": "GPT-6 Sol",
+      "score": 42.4,
+      "score_on_page": 42,
+      "cost_usd": 604.52,
+      "cost_per_task_usd": 0.3728
+     },
+     "to": {
+      "slug": "gpt-6-1-sol-high",
+      "thinking_level": "High",
+      "model": "GPT-6.1 Sol",
+      "score": 50.2,
+      "score_on_page": 50,
+      "cost_usd": 521.32,
+      "cost_per_task_usd": 0.3191
+     },
+     "points_gained": 7.8,
+     "points_gained_page_whole_numbers": 8,
+     "cost_multiple": 0.86,
+     "cost_multiple_per_task": 0.86,
+     "flags": [
+      "Cost falls (multiple below 1)."
+     ],
+     "thinking_level": "High"
+    },
+    {
+     "from": {
+      "slug": "gpt-6-sol-xhigh",
+      "thinking_level": "Xhigh",
+      "model": "GPT-6 Sol",
+      "score": 44.2,
+      "score_on_page": 44,
+      "cost_usd": 854.6,
+      "cost_per_task_usd": 0.5208
+     },
+     "to": {
+      "slug": "gpt-6-1-sol-xhigh",
+      "thinking_level": "Xhigh",
+      "model": "GPT-6.1 Sol",
+      "score": 51,
+      "score_on_page": 51,
+      "cost_usd": 662.28,
+      "cost_per_task_usd": 0.3929
+     },
+     "points_gained": 6.8,
+     "points_gained_page_whole_numbers": 7,
+     "cost_multiple": 0.77,
+     "cost_multiple_per_task": 0.75,
+     "flags": [
+      "Cost falls (multiple below 1)."
+     ],
+     "thinking_level": "Xhigh"
+    },
+    {
+     "from": {
+      "slug": "gpt-6-sol",
+      "thinking_level": "Max",
+      "model": "GPT-6 Sol",
+      "score": 47.6,
+      "score_on_page": 48,
+      "cost_usd": 1535.8,
+      "cost_per_task_usd": 1.0447
+     },
+     "to": {
+      "slug": "gpt-6-1-sol",
+      "thinking_level": "Max",
+      "model": "GPT-6.1 Sol",
+      "score": 51.8,
+      "score_on_page": 52,
+      "cost_usd": 1081.55,
+      "cost_per_task_usd": 0.7242
+     },
+     "points_gained": 4.2,
+     "points_gained_page_whole_numbers": 4,
+     "cost_multiple": 0.7,
+     "cost_multiple_per_task": 0.69,
+     "flags": [
+      "Cost falls (multiple below 1)."
+     ],
+     "thinking_level": "Max"
+    }
+   ]
+  }
+ ],
+ "single_setting_models": [
+  {
+   "model": "Gemini 4 Argon",
+   "only_setting": "High",
+   "why": "Artificial Analysis lists one setting only; no thinking-level range."
+  },
+  {
+   "model": "Gemini 3.1 Pro Preview",
+   "only_setting": null,
+   "why": "Artificial Analysis names no thinking level and lists one setting only."
+  }
+ ],
+ "article_spans": {
+  "why": "The article (docs/plans/2026-10-09-draft-body-v5.md, not to be changed) quotes these spans on cost PER TASK. The house rule for exhibits is cost to run the FULL TEST SET, which gives different multiples. Each entry has both, so an exhibit placed beside the sentence can match it or say plainly which measure it shows.",
+  "spans": [
+   {
+    "from": {
+     "slug": "claude-opus-5-5-low",
+     "thinking_level": "Low",
+     "model": "Claude Opus 5.5",
+     "score": 42.3,
+     "score_on_page": 42,
+     "cost_usd": 860.33,
+     "cost_per_task_usd": 0.5512
+    },
+    "to": {
+     "slug": "claude-opus-5-5-medium",
+     "thinking_level": "Medium",
+     "model": "Claude Opus 5.5",
+     "score": 51.2,
+     "score_on_page": 51,
+     "cost_usd": 1626.81,
+     "cost_per_task_usd": 1.336
+    },
+    "points_gained": 8.9,
+    "points_gained_page_whole_numbers": 9,
+    "cost_multiple": 1.89,
+    "cost_multiple_per_task": 2.42,
+    "flags": [
+     "The two cost measures differ here (1.89x full test set v 2.42x per task): say which one the exhibit shows."
+    ],
+    "article_sentence": "moving Opus 5.5 from low to medium cost about two and a half times as much per task",
+    "article_measure": "per task",
+    "holds_per_task": true
+   },
+   {
+    "from": {
+     "slug": "claude-opus-5-5-medium",
+     "thinking_level": "Medium",
+     "model": "Claude Opus 5.5",
+     "score": 51.2,
+     "score_on_page": 51,
+     "cost_usd": 1626.81,
+     "cost_per_task_usd": 1.336
+    },
+    "to": {
+     "slug": "claude-opus-5-5",
+     "thinking_level": "Max",
+     "model": "Claude Opus 5.5",
+     "score": 57.6,
+     "score_on_page": 58,
+     "cost_usd": 8708.2,
+     "cost_per_task_usd": 5.982
+    },
+    "points_gained": 6.4,
+    "points_gained_page_whole_numbers": 7,
+    "cost_multiple": 5.35,
+    "cost_multiple_per_task": 4.48,
+    "flags": [
+     "The two cost measures differ here (5.35x full test set v 4.48x per task): say which one the exhibit shows.",
+     "On the page's whole numbers this step reads 7 points, not 6.4: use one set of numbers throughout an exhibit."
+    ],
+    "article_sentence": "Moving it from medium to max cost another four and a half times as much, for a smaller jump.",
+    "article_measure": "per task",
+    "holds_per_task": true
+   },
+   {
+    "from": {
+     "slug": "claude-opus-5-5-low",
+     "thinking_level": "Low",
+     "model": "Claude Opus 5.5",
+     "score": 42.3,
+     "score_on_page": 42,
+     "cost_usd": 860.33,
+     "cost_per_task_usd": 0.5512
+    },
+    "to": {
+     "slug": "claude-opus-5-5",
+     "thinking_level": "Max",
+     "model": "Claude Opus 5.5",
+     "score": 57.6,
+     "score_on_page": 58,
+     "cost_usd": 8708.2,
+     "cost_per_task_usd": 5.982
+    },
+    "points_gained": 15.3,
+    "points_gained_page_whole_numbers": 16,
+    "cost_multiple": 10.12,
+    "cost_multiple_per_task": 10.85,
+    "flags": [
+     "On the page's whole numbers this step reads 16 points, not 15.3: use one set of numbers throughout an exhibit."
+    ],
+    "article_sentence": "Bottom to top, that's about 11 times the cost for a score just over a third higher.",
+    "article_measure": "per task",
+    "holds_per_task": true
+   },
+   {
+    "from": {
+     "slug": "claude-fable-5-1-xhigh",
+     "thinking_level": "Xhigh",
+     "model": "Claude Fable 5.1",
+     "score": 53.2,
+     "score_on_page": 53,
+     "cost_usd": 9063.11,
+     "cost_per_task_usd": 5.9783
+    },
+    "to": {
+     "slug": "claude-fable-5-1",
+     "thinking_level": "Max",
+     "model": "Claude Fable 5.1",
+     "score": 53.4,
+     "score_on_page": 53,
+     "cost_usd": 13128.86,
+     "cost_per_task_usd": 7.6297
+    },
+    "points_gained": 0.2,
+    "points_gained_page_whole_numbers": 0,
+    "cost_multiple": 1.45,
+    "cost_multiple_per_task": 1.28,
+    "flags": [
+     "The two cost measures differ here (1.45x full test set v 1.28x per task): say which one the exhibit shows."
+    ],
+    "article_sentence": "On Fable 5.1, it costs 28% more and barely moves the score.",
+    "article_measure": "per task",
+    "holds_per_task": true
+   },
+   {
+    "from": {
+     "slug": "claude-opus-5-5-low",
+     "thinking_level": "Low",
+     "model": "Claude Opus 5.5",
+     "score": 42.3,
+     "score_on_page": 42,
+     "cost_usd": 860.33,
+     "cost_per_task_usd": 0.5512
+    },
+    "to": {
+     "slug": "claude-haiku-5-5",
+     "thinking_level": "Max",
+     "model": "Claude Haiku 5.5",
+     "score": 43.4,
+     "score_on_page": 43,
+     "cost_usd": 330.25,
+     "cost_per_task_usd": 0.2128
+    },
+    "points_gained": 1.1,
+    "points_gained_page_whole_numbers": 1,
+    "cost_multiple": 0.38,
+    "cost_multiple_per_task": 0.39,
+    "flags": [
+     "Cost falls (multiple below 1)."
+    ],
+    "article_sentence": "Claude Haiku 5.5, the cheapest of Anthropic's current models, on its highest setting edged past Opus 5.5 on its lowest, for less than half the cost per task.",
+    "article_measure": "per task",
+    "holds_per_task": true
+   }
+  ]
+ }
+}

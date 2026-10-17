@@ -73,6 +73,10 @@ describe('the outro\'s vote', () => {
     expect(YES_NO.test('Do you want to pick your AI, or let the app pick?')).toBe(false)
     expect(YES_NO.test('Would you let your AI decide how hard it thinks?')).toBe(true)
   })
+
+  it('keeps a phrase joined by no-break spaces on one line', () => {
+    expect(tokens('New\u00a0Claude. New\u00a0ChatGPT. Does\u00a0it\u00a0even\u00a0matter?')).toEqual(['New\u00a0Claude.', 'New\u00a0ChatGPT.', 'Does\u00a0it\u00a0even\u00a0matter?'])
+  })
 })
 
 describe('the safe areas and faces', () => {

@@ -10,11 +10,11 @@ Every line below was cold-read by three fresh readers (understood 3 of 3 unless 
 1. YouTube: So many new AI models from OpenAI and Anthropic. Does it matter, and what are they about to take out of your hands?  (Substack video post: "VIDEO: " in front)
 2. Thumbnail: ANOTHER CLAUDE?
 3. Substack headline: Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks
-4. Substack cover: ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?  (Krish's line)
+4. Substack cover: New Claude. New ChatGPT. Does it even matter?  (his line, shortened to fit every cover shape)
 5. Substack subtitle: A new Claude every four weeks, and ChatGPT from GPT-5.1 to 6.1 in under a year. Does the name matter, why is it speeding up, and why I think the choice of how hard your AI thinks is about to be made for you.  (not cold-read)
-6. Shorts title: ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?  (Krish's line)
-7. 90-second cover: ChatGPT and Claude, faster than ever. Does it matter?
-8. Title card in the intro: ChatGPT and Claude, faster than ever. Does it matter?
+6. Shorts title: Claude and ChatGPT are releasing models faster than ever. Does it even matter?  (Krish's line, 17 Oct)
+7. 90-second cover: New Claude. New ChatGPT. Does it even matter?
+8. Title card in the intro: New Claude. New ChatGPT. Does it even matter?
 9. Intro stand-off: A. Claude "A new Claude every four weeks" vs ChatGPT "GPT-5.1 to 6.1 in 46 weeks"  B. Gemini "Already picks for you" vs ChatGPT "You pick, for now"
 
 ## Chapters (YouTube chapters and on-screen dividers)
@@ -62,3 +62,6 @@ Every line below was cold-read by three fresh readers (understood 3 of 3 unless 
 
 ## The 90-second take
 The shorter version (v7, only his words, about 1:22): on the record and in Teleprompter, 17 Oct.
+
+
+Krish, 2026-10-17, on the tall cover: "Claude and ChatGPT are releasing models faster than ever. I don't think it's accurate to say that they are faster than ever. \"Does it even matter?\" is a better framing." Every 'faster than ever' cut is replaced.

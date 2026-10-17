@@ -1096,7 +1096,7 @@ COVER_SHAPES = {
                   ('The share card at 16:9, slid fully left', (0, 0, 1120, 630)),
                   ('The share card at 16:9, slid fully right', (80, 0, 1200, 630)),
                   ('The feed on a phone: 3:2 from the middle', (127.5, 0, 1072.5, 630))],
-        'heads': (100, 96, 92, 88, 84, 80, 76), 'lines': 3, 'faces': (300, 280, 260, 240), 'wm': 44, 'logo': 56,
+        'heads': (100, 96, 92, 88, 84, 80, 76, 72, 68), 'lines': 3, 'faces': (300, 280, 260, 240), 'wm': 44, 'logo': 56,
     },
     'share': {
         'w': 1200, 'h': 675, 'file': 'cover-1200x675.png', 'layout': 'side', 'safe': (88, 72, 1112, 603), 'margin': 36,

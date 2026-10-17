@@ -6,6 +6,10 @@
    "from": "Krish, 2026-10-17: \"These are still awful. I'm getting exhausted. The story is about there being so many recent AI model releases and figuring out if that's actually important, why it's speeding up, and what choices a user is going to have to make (or what gears are going to be hidden from them in the future). It's a \"mind the gap\" piece remember. Why do I have to remind you about what this story is about?\""
   },
   {
+   "lesson": "When his line is cut to fit a cover, card or title card, keep the words that carry its claim. 'ChatGPT and Claude: faster than ever' dropped 'releasing models' and so said the AIs are faster, which is not the piece's claim. If it will not fit, use a shorter line that keeps the claim ('New Claude. New ChatGPT.'), never a cut that changes it.",
+   "from": "Krish, 2026-10-17: \"Claude and ChatGPT are releasing models faster than ever. I don't think it's accurate to say that they are faster than ever. \\\"Does it even matter?\\\" is a better framing.\""
+  },
+  {
    "lesson": "Above every formula and every surface: a stranger must understand the line in one second. It names a real thing people know (the product, the company, the person) in plain words, and says something true about it. Never the piece's own shorthand (low, high, gear, old and new, the badge): that is only legible to someone who has already watched it. makeyourmindup is not a famous channel, so a cryptic line reads as confusing, not intriguing, and a cheap one costs him the credibility the brand is built on. If a fresh reader cannot say what it is about and who it names, it never reaches him.",
    "from": "Krish, 2026-10-17: \"Old beat new\" and \"who picked low\" and you're on low are really stupid. This isn't a well-known concept and it's not a well-known media business. I can't release a Substack cover image that says you're on low. What the hell does that even mean? ... They're offensive to me. They hurt my soul. It's not as though I want to tweak it. It's that I am appalled that you keep bringing this shit to me.",
    "on": "2026-10-17"
@@ -88,20 +92,56 @@
  ],
  "verdicts": [
   {
-   "title": "ChatGPT and Claude: faster than ever. Does it matter?",
+   "title": "New Claude. New ChatGPT. Does it even matter?",
    "surface": "title_card",
    "verdict": "picked",
-   "why": "his line cut to fit; a colon, because a comma mid-line dropped into the next line on the tall covers",
-   "krish": "Krish, 2026-10-17: \"I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
+   "why": "his line in the title card's 60 characters",
+   "krish": "Krish, 2026-10-17: \"Claude and ChatGPT are releasing models faster than ever. I don't think it's accurate to say that they are faster than ever. \\\"Does it even matter?\\\" is a better framing.\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Another Claude. Another ChatGPT. Does it even matter?",
+   "surface": "tall_cover",
+   "verdict": "picked",
+   "why": "his line where space is short: the pace of releases ('Another Claude. Another ChatGPT.', cold-read 3 of 3 earlier) and his question; his full line did not fit the covers",
+   "krish": "Krish, 2026-10-17: \"Claude and ChatGPT are releasing models faster than ever. I don't think it's accurate to say that they are faster than ever. \\\"Does it even matter?\\\" is a better framing.\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Claude and ChatGPT keep releasing models. Does it even matter?",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "his line shortened to fit the covers, keeping 'releasing models' (the claim) and his question",
+   "krish": "Krish, 2026-10-17: \"Claude and ChatGPT are releasing models faster than ever. I don't think it's accurate to say that they are faster than ever. \\\"Does it even matter?\\\" is a better framing.\"",
    "on": "2026-10-17",
    "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
   },
   {
    "title": "ChatGPT and Claude, faster than ever. Does it matter?",
-   "surface": "cover",
+   "surface": "title_card",
+   "verdict": "rejected",
+   "why": "inaccurate: says the AIs are faster, not that models are released faster",
+   "krish": "Krish, 2026-10-17: \"Claude and ChatGPT are releasing models faster than ever. I don't think it's accurate to say that they are faster than ever. \\\"Does it even matter?\\\" is a better framing.\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "ChatGPT and Claude: faster than ever. Does it matter?",
+   "surface": "title_card",
+   "verdict": "rejected",
+   "why": "inaccurate: cut to 'faster than ever' it says the AIs are faster, not that models are released faster; never cut the words that carry the claim",
+   "krish": "Krish, 2026-10-17: \"Claude and ChatGPT are releasing models faster than ever. I don't think it's accurate to say that they are faster than ever. \\\"Does it even matter?\\\" is a better framing.\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Claude and ChatGPT are releasing models faster than ever. Does it even matter?",
+   "surface": "thumbnail",
    "verdict": "picked",
-   "why": "his line cut to fit every cover shape; the same words as the title card and the 90-second cover",
-   "krish": "Krish, 2026-10-17: \"I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
+   "why": "his line: 'releasing models' carries the claim (the pace of launches); 'Does it even matter?' is his framing",
+   "krish": "Krish, 2026-10-17: \"Claude and ChatGPT are releasing models faster than ever. I don't think it's accurate to say that they are faster than ever. \\\"Does it even matter?\\\" is a better framing.\"",
    "on": "2026-10-17",
    "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
   },

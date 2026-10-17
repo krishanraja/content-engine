@@ -178,7 +178,8 @@ def video_title(facts, where='cover-facts.json'):
     if not said:
         lines = (facts.get('cover') or {}).get('headline') or []
         said = ' '.join(str(x).strip() for x in lines if str(x).strip())
-    said = re.sub(r'\s+', ' ', said).strip()
+    # Ordinary spaces collapse; a no-break space (U+00A0) is kept, so a phrase stays on one line of the card.
+    said = re.sub(r'[ \t\r\n]+', ' ', said).strip()
     if not said:
         raise StoryError(f'{where} has no video_title and no cover headline lines, so the title card has no words; '
                          'add a short "video_title" (the article headline is never used: it does not fit a title card)')
@@ -608,7 +609,7 @@ def self_test():
     import tempfile
     # The title gate is title_check's to test; these checks use their own picked titles.
     with tempfile.TemporaryDirectory() as tmp, title_check.picked_for_tests(
-            ['I scored Muse against its rivals', "Muse's real rival: Siri.", 'ChatGPT and Claude: faster than ever. Does it matter?'], tmp):
+            ['I scored Muse against its rivals', "Muse's real rival: Siri.", 'New Claude. New ChatGPT. Does it even matter?'], tmp):
         return _self_test()
 
 
@@ -705,7 +706,7 @@ def _self_test():
         fri = plans / '2026-10-09-friday'
         if (fri / 'cover-facts.json').is_file():
             p = plan_props(fri)
-            ok(p['title'] == 'ChatGPT and Claude: faster than ever. Does it matter?', f'Friday title: {p["title"]}')
+            ok(p['title'] == 'New\u00a0Claude. New\u00a0ChatGPT. Does\u00a0it\u00a0even\u00a0matter?', f'Friday title: {p["title"]!r}')
             ok(p['left']['name'] == 'Claude' and p['right'][0]['name'] == 'ChatGPT', 'Friday stand-off: Claude against ChatGPT')
             ok(p['commentQuestion'] == 'Would you let your AI decide how hard it thinks?', 'Friday outro question')
         if (MONDAY / 'cover-facts.json').is_file():
