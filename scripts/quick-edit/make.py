@@ -237,7 +237,15 @@ def resolve_removals(words, remove):
             continue
         if 'restart_near' in r:
             hit = restart_cut(words, r['restart_near'])
-            if hit:
+            ended = [words[k]['w'].strip() for k in range(hit[0], hit[1]) if re.search(r'[.!?]["’”)]*$', words[k]['w'].strip())] if hit else []
+            if hit and ended:
+                # A false start is a sentence he did not finish. A cut that holds a
+                # finished one would take out words he meant (17 October: "13:20" on
+                # Friday's take found 7.1 s, the end of his prediction among them).
+                said = ' '.join(w['w'].strip() for w in words[hit[0]:hit[1] + 1])
+                missing.append({**r, 'refused': f'it would cut a finished sentence ("{ended[0]}" ends one inside it): "{said}". '
+                                                 'Give the false start\'s own words as {"say": ..., "after": ...}'})
+            elif hit:
                 ranges.append(hit)
             else:
                 t = seconds(r['restart_near'])
@@ -257,8 +265,58 @@ def resolve_removals(words, remove):
         else:
             missing.append(r)
     if missing:
+        refused = [m for m in missing if isinstance(m, dict) and m.get('refused')]
+        if refused:
+            raise SystemExit('cuts refused: ' + '; '.join(f'{m.get("restart_near")}: {m["refused"]}' for m in refused)
+                             + (f'; and not found: {[m for m in missing if m not in refused]}' if len(refused) < len(missing) else ''))
         raise SystemExit(f'cuts not found in the transcript: {missing}')
     return ranges
+
+
+def thin_cuts(words, remove, segs, least=0.1):
+    """Each cut that takes out less than `least` seconds of sound: its words'
+    span, less what the kept windows (with their pads) still play. Such a row
+    does nothing a viewer hears, so it is named in the warnings."""
+    out = []
+    for a, b in remove:
+        s0, s1 = words[a]['s'], words[b]['e']
+        kept = sum(max(0.0, min(s1, g['b']) - max(s0, g['a'])) for g in segs)
+        if (s1 - s0) - kept < least:
+            out.append(f'the cut "{" ".join(w["w"].strip() for w in words[a:b + 1])}" ({s0:.2f} s) takes out '
+                       f'{max(0.0, (s1 - s0) - kept):.2f} s of sound, which nobody hears: the pause rule\'s pads keep it. '
+                       'Cut more of the words, or drop the row')
+    return out
+
+
+def removal_joins(segs, remove):
+    """The edited-clock times where a cut row (not a pause) joins two windows."""
+    gone = {i for a, b in remove for i in range(a, b + 1)}
+    return [round(g['off'], 3) for prev, g in zip(segs, segs[1:])
+            if prev.get('idx') and g.get('idx') and any(prev['idx'][-1] < i < g['idx'][0] for i in gone)]
+
+
+def snap_to_join(start, word_s, segs, within=0.6):
+    """A push-in's start moved back onto a hidden cut in the pause just before
+    its first word (at most `within` seconds before it), so the closer framing
+    lands on the join and hides it, never a beat after it (a flick)."""
+    for g in segs[1:]:
+        t = g['off']
+        if word_s - within <= t <= word_s:
+            return round(t, 3)
+    return round(start, 3)
+
+
+def bare_joins(segs, framing, wins, frame=1 / 24):
+    """Hidden cuts a viewer could see: a join with no framing change on it and
+    no picture over it (the episode framings change at most every HOLD_S)."""
+    edges = {round(t, 3) for a, b, _ in framing for t in (a, b)}
+    out = []
+    for g in segs[1:]:
+        t = round(g['off'], 3)
+        if any(abs(t - e) <= frame for e in edges) or any(c['s'] <= t <= c['e'] for c in wins):
+            continue
+        out.append(t)
+    return out
 
 
 def segments(words, remove, max_gap, pad_before, pad_after, src_dur):
@@ -1590,6 +1648,29 @@ def gate_self_test():
     got, why = resolve_intro(named, '9x16', here)
     said = [{'w': w, 's': i * 0.4, 'e': i * 0.4 + 0.3} for i, w in enumerate('then the singers are going to get it'.split())]
     checks.append(('a cue line he said his own way is still found', find_loose(said, 'its singers get'), (2, 6)))
+    # A restart cut never takes a finished sentence (Friday 16 October, "13:20").
+    told = [{'w': w, 's': i * 0.4, 'e': i * 0.4 + 0.3} for i, w in enumerate(
+        ' will start in automatic again. And you will drive it in auto. And paid users will start in automatic too'.split())]
+    try:
+        resolve_removals(told, [{'restart_near': '0:07.6'}])
+        checks.append(('a restart cut holding a finished sentence is refused, with the words it would take', False, True))
+    except SystemExit as e:
+        checks.append(('a restart cut holding a finished sentence is refused, with the words it would take',
+                       'finished sentence' in str(e) and 'again.' in str(e), True))
+    # A cut the pads keep is named; one that takes out sound is not.
+    pads = [{'w': w, 's': s, 'e': e} for w, s, e in (('found', 0.0, 0.4), ('a', 0.45, 0.5), ('better', 0.55, 0.9), ('way', 0.95, 1.3))]
+    kept, _ = segments(pads, [(1, 1)], 0.9, 0.2, 0.3, 2.0)
+    checks.append(('a cut row the pause rule\'s pads put back is a warning', len(thin_cuts(pads, [(1, 1)], kept)), 1))
+    kept2, _ = segments(pads, [(1, 2)], 0.9, 0.0, 0.0, 2.0)
+    checks.append(('a cut that takes out sound is not', thin_cuts(pads, [(1, 2)], kept2), []))
+    checks.append(('a join made by a cut row is told from a pause cut',
+                   removal_joins([{'off': 0.0, 'idx': [0, 1]}, {'off': 1.0, 'idx': [3, 4]}, {'off': 2.0, 'idx': [5]}], [(2, 2)]), [1.0]))
+    checks.append(('a join with no framing change and no picture over it is listed',
+                   bare_joins([{'off': 0.0}, {'off': 3.0}, {'off': 5.0}, {'off': 8.0}], [(3.0, 8.0, 0.9)], [{'s': 4.5, 'e': 6.0}]), []))
+    checks.append(('a push-in starting just after a hidden cut starts on it; one with no cut near keeps its start',
+                   (snap_to_join(10.3, 10.4, [{'off': 0.0}, {'off': 10.0}]), snap_to_join(20.3, 20.4, [{'off': 0.0}, {'off': 10.0}])), (10.0, 20.3)))
+    checks.append(('and found when nothing covers it',
+                   bare_joins([{'off': 0.0}, {'off': 3.0}, {'off': 4.0}], [(3.0, 9.0, 0.9)], []), [4.0]))
     # The cut's rate is the take's own: about 24 fps from teleprompter.com is made at 24, never 30.
     uneven = work / 'uneven-24.mp4'
     ff('-f', 'lavfi', '-i', 'color=c=0x0C1512:s=108x192:r=24:d=2', '-vf', "setpts='PTS+0.002*sin(N)/TB'", '-fps_mode', 'passthrough',
@@ -1815,11 +1896,18 @@ def main():
         a = find_loose(ws, e['start'])
         b = find_loose(ws, e['end'], after=ws[a[0]]['s']) if a else None
         if a and b:
-            emphasis.append((round(max(0.0, ws[a[0]]['s'] - 0.1), 3), round(min(total, ws[b[1]]['e'] + 0.3), 3)))
+            emphasis.append((snap_to_join(max(0.0, ws[a[0]]['s'] - 0.1), ws[a[0]]['s'], segs), round(min(total, ws[b[1]]['e'] + 0.3), 3)))
         else:
             early.append(f'the emphasis "{e["start"]}" ... "{e["end"]}" was not found in what he said, so that line keeps its framing')
     if cfg.get('reframe') or emphasis:
-        cfg['_framing'] = episode.framing_windows(segs if cfg.get('reframe') else segs[:1], total, emphasis)
+        # A join made by a cut row has its framing change first; a plain pause cut gives way to it.
+        cfg['_framing'] = episode.framing_windows(segs if cfg.get('reframe') else segs[:1], total, emphasis,
+                                                  prefer=removal_joins(segs, cuts) if cfg.get('reframe') else ())
+        bare = bare_joins(segs, cfg['_framing'], wins, 1 / FPS) if cfg.get('reframe') else []
+        if bare:
+            early.append(f'{len(bare)} hidden cut(s) have no framing change and no picture over them, so a viewer may see the jump: '
+                         + ', '.join(f'{t // 60:.0f}:{t % 60:05.2f}' for t in bare) + ' (edited clock). Look at each in the preview')
+    early += thin_cuts(words, cuts, segs)
     if speed:
         early.append(f'the take is sped up {speed[0]:g} times, picture and sound, pitch kept, as Krish said: "{speed[1]}"')
     # The captions spell a word as the script does (house rule BRITISH_SPELLING).

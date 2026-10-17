@@ -117,12 +117,20 @@ def sped_source(src, out, factor, fps=30, even=False):
 
 # ---------------------------------------------------------------- framing
 
-def framing_windows(segs, total, emphasis=(), hold=HOLD_S):
+def framing_windows(segs, total, emphasis=(), hold=HOLD_S, prefer=()):
     """[(s, e, scale)] on the edited clock: a push from one hidden cut to the
     next, alternating with the base framing, never changed again within
     `hold` seconds; then each emphasis window at TIGHT over whatever was
-    there. Only windows that are not the base framing are returned."""
+    there. Only windows that are not the base framing are returned.
+    `prefer`: joins made by a cut row (a stumble taken out), which have their
+    change first; a plain pause cut within `hold` of one gives way to it."""
     cuts = [round(g['off'], 3) for g in segs[1:]]
+    if prefer:
+        chosen = []
+        for t in sorted(round(x, 3) for x in prefer if round(x, 3) in cuts):
+            if not chosen or t - chosen[-1] >= hold:
+                chosen.append(t)
+        cuts = sorted(chosen + [t for t in cuts if t not in chosen and all(abs(t - c) >= hold for c in chosen)])
     out, level, since = [], False, 0.0
     start = 0.0
     for t in cuts:
@@ -284,6 +292,9 @@ def self_test():
                    wins, [(2.0, 6.0, PUSH), (9.0, 12.0, PUSH)]))
     checks.append(('a pivotal line is closer, over whatever framing was there',
                    framing_windows(segs, 12.0, [(5.0, 7.0)]), [(2.0, 5.0, PUSH), (5.0, 7.0, TIGHT), (9.0, 12.0, PUSH)]))
+    checks.append(('a join made by a cut row has its change first; the pause cut 1.08 s before it gives way',
+                   framing_windows([{'off': 0.0}, {'off': 5.0}, {'off': 6.08}, {'off': 9.0}], 12.0, prefer=[6.08]),
+                   [(6.08, 9.0, PUSH)]))
     w, h, x, y = framing_crop(1080, 1920, [200, 900], PUSH)
     checks.append(('the push zooms about his face and stays inside the frame, even sizes',
                    (w, h, x, y, x + w <= 1080, y + h <= 1920), (972, 1728, 54, 64, True, True)))
