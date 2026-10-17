@@ -649,6 +649,23 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-17, about 02:30 UTC: **Friday's long cut has a verified edit list; it waits on Krish's picks.**
+  - `docs/plans/2026-10-09-friday/long-cut/` (README there): the config as said and a recommended one, the take's
+    transcript, and the analysis. Workflow wf_f9964bd6-49b (31 agents) placed the 16 pictures as 44 build steps on
+    his own words, found 7 cuts (edges measured, re-heard), 29 caption fixes (the four least sure re-heard with
+    large-v3: "them new PR", "pastes the deal"; "answers" and "dumber" follow his script where the sound is one
+    blurred syllable), 8 chapters (a new one, "My prediction for 2027") and 6 push-ins, plus one more on "You
+    can't see it." over the only bare join. make.py --plan: no missing cue, no bare join, main 13:28, close 17 s.
+  - New make.py guards from it (tested): restart_near never cuts a finished sentence; a cut the pads put back is a
+    warning; --plan names a bare join; cut-row joins get the framing change first; a push-in starts on the join.
+  - Waiting on Krish (asked in chat): the titles and thumbnail words; yes to the headings, with three changed
+    ("Eleven times the cost, from 42 to 58"; "ChatGPT, Claude, Gemini: where to turn the thinking up"; "By June
+    2027, ChatGPT picks how hard it thinks: 85%", which no longer names a plan, since the article says Plus and his
+    words say free) and seven chapter-divider headings that clear the floor; yes to the recommended cuts (the F1
+    contradiction, the Altman reason); the publish date (after Sunday 18 Oct, "which is just last week" goes).
+  - Not done: the cards (three pages still to capture: Anthropic's launch pages, the Altman and Decoder pair, the
+    OpenAI December note with WIRED), the story intro (needs the picked title), post.json v6, the render.
+
 - 2026-10-17, about 00:40 UTC: **Every cut now runs at the take's own 24 fps, every frame shown once.**
   - Found while checking Friday's 14-minute take against the corpus ("Frame rate: Same as recorded source"):
     every teleprompter.com take this week is 24 fps on average, and make.py made every cut at 30 (one frame in
