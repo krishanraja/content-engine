@@ -302,14 +302,8 @@ def segments(words, remove, max_gap, pad_before, pad_after, src_dur):
     return out, round(t, 3)
 
 
-def render_fps(cfg, src):
-    """The cut's frame rate: `"fps"` in the config (one of HOUSE_RATES), else
-    ("source", the default) the house rate nearest the take's average rate."""
-    want = cfg.get('fps', 'source')
-    if want != 'source':
-        if want not in HOUSE_RATES:
-            raise ValueError(f'"fps" is "source" or one of {", ".join(map(str, HOUSE_RATES))}, not {want!r}')
-        return int(want)
+def source_rate(src):
+    """The take's average frame rate (frames over duration), or None."""
     out = json.loads(subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=avg_frame_rate,r_frame_rate',
                                      '-of', 'json', str(src)], capture_output=True, text=True).stdout or '{}')
     v = (out.get('streams') or [{}])[0]
@@ -320,8 +314,41 @@ def render_fps(cfg, src):
         except (ValueError, ZeroDivisionError):
             continue
         if rate > 0:
-            return min(HOUSE_RATES, key=lambda r: abs(r - rate))
-    raise ValueError(f'{src} reports no frame rate; set "fps" in the config')
+            return rate
+    return None
+
+
+def render_fps(cfg, src):
+    """The cut's frame rate: `"fps"` in the config (one of HOUSE_RATES), else
+    ("source", the default) the house rate nearest the take's average rate."""
+    want = cfg.get('fps', 'source')
+    if want != 'source':
+        if want not in HOUSE_RATES:
+            raise ValueError(f'"fps" is "source" or one of {", ".join(map(str, HOUSE_RATES))}, not {want!r}')
+        return int(want)
+    rate = source_rate(src)
+    if not rate:
+        raise ValueError(f'{src} reports no frame rate; set "fps" in the config')
+    return min(HOUSE_RATES, key=lambda r: abs(r - rate))
+
+
+# A take whose average rate is the cut's to within this is laid one frame a
+# frame period (conform_filter), never resampled.
+CONFORM_TOLERANCE = 0.001
+
+
+def conform_filter(rate, fps):
+    """How a part of the take becomes frames at the cut's rate. A
+    teleprompter.com take is 24 fps on average (24.0005 on 16 October) but its
+    frames are stamped unevenly, 30 to 60 ms apart, so resampling it to 24
+    dropped one frame and showed the next twice about 40 times in 30 s. Its
+    camera captured evenly, so when the average is the cut's rate (within
+    CONFORM_TOLERANCE) every frame is shown once, laid 1/fps apart from the
+    part's start (no frame strays a frame and a half from its stamp over a
+    14-minute take: within lip sync); otherwise it is resampled."""
+    if rate and abs(rate / fps - 1) <= CONFORM_TOLERANCE:
+        return f'setpts=N/({fps}*TB),tpad=stop_mode=clone:stop_duration={2 / fps:.4f}'
+    return f'fps={fps},setpts=PTS-STARTPTS'
 
 
 def auto_crop(src, dur):
@@ -1581,6 +1608,9 @@ def gate_self_test():
         at24, _ = segments([{'w': 'a', 's': 1.0, 'e': 1.37}], [], 0.35, 0.1, 0.16, 5.0)
     finally:
         FPS = keep
+    checks.append(('a take at 24 on average is laid one frame a period; one at 29.97 cut at 30 is resampled',
+                   (conform_filter(24.00047, 24).startswith('setpts=N/(24*TB)'), conform_filter(29.97, 30).startswith('fps=30'),
+                    conform_filter(None, 24).startswith('fps=24')), (True, True, True)))
     checks.append(('at 24 fps every window is a whole number of frames', round((at24[0]['b'] - at24[0]['a']) * 24, 6) == round((at24[0]['b'] - at24[0]['a']) * 24), True))
     checks.append(('a line he never said is not found', find_loose(said, 'labels pay songwriters'), None))
     paged = expand_pages([{'id': 'm', 'panel': 'x', 's': 10.0, 'e': 16.0, 'pages': {'9x16': ['p1', 'p2', 'p3']}}], '9x16')
@@ -1768,7 +1798,8 @@ def main():
         sys.exit(f'make: {e}')
     tag = ''
     if speed:
-        src, tag = episode.sped_source(src, out, speed[0], FPS), f'.speed-{speed[0]:.3f}'
+        src, tag = episode.sped_source(src, out, speed[0], FPS, conform_filter(source_rate(src), FPS).startswith('setpts')), f'.speed-{speed[0]:.3f}'
+    conform = conform_filter(source_rate(src), FPS)
     dur = float(json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'json', str(src)], capture_output=True, text=True).stdout)['format']['duration'])
     wpath = P(cfg['words']) if cfg.get('words') else out / f"{cfg['name']}{tag}.words.json"
     words = json.loads(wpath.read_text())['words'] if wpath.exists() else transcribe(src, wpath, cfg.get('model', 'small.en'), cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''))
@@ -1838,7 +1869,7 @@ def main():
     # filter graph over every window held each window's frames in memory at
     # once, and a 3:38 upright 1080x1920 recording with 57 windows was killed
     # for running out of it (2026-10-06).
-    plan_lines = [f"fps {FPS}"] + [f"{g['a']:.4f} {g['b']:.4f} crop={cw}:{ch}:{cx}:{cy}" for g in segs]
+    plan_lines = [f"fps {FPS} {conform}"] + [f"{g['a']:.4f} {g['b']:.4f} crop={cw}:{ch}:{cx}:{cy}" for g in segs]
     g1 = out / 'stage1.plan'
     # The cut only changes when the words to remove or the pause rule change, so reuse it otherwise.
     if not (edited.exists() and g1.exists() and g1.read_text() == '\n'.join(plan_lines)):
@@ -1851,7 +1882,7 @@ def main():
             d = g['b'] - g['a']
             part = parts / f'{i:04d}.mkv'
             run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', f"{g['a']:.4f}", '-i', src, '-t', f'{d:.4f}',
-                 '-vf', f'crop={cw}:{ch}:{cx}:{cy},fps={FPS},setpts=PTS-STARTPTS',
+                 '-vf', f'crop={cw}:{ch}:{cx}:{cy},{conform}',
                  '-af', f'aresample=48000,asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.012,afade=t=out:st={max(0, d - 0.012):.4f}:d=0.012',
                  '-frames:v', str(round(d * FPS)), '-c:v', 'libx264', '-preset', 'fast', '-crf', '10', '-c:a', 'pcm_s16le', part], quiet=True)
             names.append(f"file '{part.as_posix()}'")
