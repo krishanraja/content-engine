@@ -1,0 +1,602 @@
+{
+ "label": "wed-long-b",
+ "script": ".cache/produce/2026-10-16-904658db/analysis/narration/wed-long-b.script.md",
+ "words": ".cache/produce/2026-10-16-904658db/analysis/narration/wed-long-b.words.json",
+ "rates": {
+  "script_words": 490,
+  "said_words": 591,
+  "word_for_word": 442,
+  "said_more_pct": 20.6,
+  "own_words_pct": 25.2,
+  "script_kept_pct": 90.2,
+  "minutes": 3.27,
+  "words_a_minute": 180.8,
+  "words_a_minute_talking": 183.5,
+  "differences": 33,
+  "differences_a_minute": 10.1,
+  "tags": {
+   "rephrase": 17,
+   "addition": 7,
+   "filler": 5,
+   "intensifier": 4,
+   "aside": 4,
+   "number": 3,
+   "hedge": 3,
+   "signpost": 2,
+   "to the viewer": 1
+  },
+  "tags_a_minute": {
+   "rephrase": 5.2,
+   "addition": 2.14,
+   "filler": 1.53,
+   "intensifier": 1.22,
+   "aside": 1.22,
+   "number": 0.92,
+   "hedge": 0.92,
+   "signpost": 0.61,
+   "to the viewer": 0.31
+  },
+  "sentence_words_said": 11.8,
+  "sentence_words_script": 9.1,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 28.0,
+   "script": 18.5
+  },
+  "top_starts_said": [
+   [
+    "so",
+    7
+   ],
+   [
+    "and",
+    4
+   ],
+   [
+    "muse",
+    4
+   ],
+   [
+    "the",
+    3
+   ],
+   [
+    "meta",
+    2
+   ],
+   [
+    "but",
+    2
+   ],
+   [
+    "you",
+    2
+   ],
+   [
+    "that's",
+    2
+   ]
+  ],
+  "top_words_added": [
+   [
+    "and",
+    8
+   ],
+   [
+    "this",
+    4
+   ],
+   [
+    "or",
+    4
+   ],
+   [
+    "which",
+    3
+   ],
+   [
+    "because",
+    3
+   ],
+   [
+    "ai",
+    3
+   ],
+   [
+    "on",
+    3
+   ],
+   [
+    "so",
+    3
+   ],
+   [
+    "will",
+    3
+   ],
+   [
+    "giant",
+    3
+   ],
+   [
+    "obviously",
+    2
+   ],
+   [
+    "one",
+    2
+   ],
+   [
+    "thing",
+    2
+   ],
+   [
+    "for",
+    2
+   ],
+   [
+    "having",
+    1
+   ],
+   [
+    "look",
+    1
+   ],
+   [
+    "owns",
+    1
+   ],
+   [
+    "instagram",
+    1
+   ],
+   [
+    "facebook",
+    1
+   ],
+   [
+    "whatsapp",
+    1
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "and",
+    4
+   ],
+   [
+    "looking",
+    1
+   ],
+   [
+    "owns",
+    1
+   ],
+   [
+    "instagram",
+    1
+   ],
+   [
+    "whatsapp",
+    1
+   ],
+   [
+    "kinds",
+    1
+   ],
+   [
+    "one",
+    1
+   ],
+   [
+    "third",
+    1
+   ],
+   [
+    "that's",
+    1
+   ],
+   [
+    "isn't",
+    1
+   ],
+   [
+    "for",
+    1
+   ],
+   [
+    "score",
+    1
+   ],
+   [
+    "lower",
+    1
+   ],
+   [
+    "mostly",
+    1
+   ],
+   [
+    "because",
+    1
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 1.46,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "looking",
+   "said": "having a look",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 8.26,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "which is",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 11.18,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "owns Instagram and WhatsApp.",
+   "said": "obviously owns Instagram, Facebook, and WhatsApp. And",
+   "script_words": 4,
+   "said_words": 7
+  },
+  {
+   "at": 16.7,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "because it's AI.",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 20.12,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "Because",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 20.92,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "kinds",
+   "said": "types",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 23.9,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it",
+   "said": "get",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 26.96,
+   "kind": "added",
+   "tags": [
+    "number"
+   ],
+   "script": "",
+   "said": "one is",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 32.46,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 36.06,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "one. Third,",
+   "said": "obviously one of the big ones. And third type of AI is",
+   "script_words": 2,
+   "said_words": 12
+  },
+  {
+   "at": 40.44,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "on the block, which is these",
+   "script_words": 0,
+   "said_words": 6
+  },
+  {
+   "at": 48.34,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "That's",
+   "said": "This is",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 49.86,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "and",
+   "said": "This is",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 55.3,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "isn't",
+   "said": "probably not",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 56.98,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "See,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 59.14,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "of thing",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 90.94,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "actually",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 93.64,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "intensifier",
+    "aside",
+    "rephrase"
+   ],
+   "script": "for",
+   "said": "the best thing about this is they tie for completely",
+   "script_words": 1,
+   "said_words": 10
+  },
+  {
+   "at": 104.34,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "score lower, mostly because",
+   "said": "tend to score lower because mostly",
+   "script_words": 4,
+   "said_words": 6
+  },
+  {
+   "at": 107.2,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 110.94,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "costs a hundred",
+   "said": "for example, costs $100",
+   "script_words": 3,
+   "said_words": 4
+  },
+  {
+   "at": 115.3,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 145.26,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "did a piece on that last week. So I",
+   "script_words": 0,
+   "said_words": 9
+  },
+  {
+   "at": 148.28,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "to shop",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 154.44,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it'll",
+   "said": "it will",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 156.32,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "which is",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 159.94,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "sells businesses an AI helper there that books appointments. My prediction.",
+   "said": "already sells businesses and AI helper that helps book appointments. So my prediction on this is",
+   "script_words": 11,
+   "said_words": 16
+  },
+  {
+   "at": 167.76,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "number",
+    "aside",
+    "rephrase"
+   ],
+   "script": "bet a big airline signs a deal with Meta and Apple.",
+   "said": "reckon a giant airline or a giant bank or a giant supermarket will sign an exclusive deal with either Meta or Apple, or maybe just the two of them, where",
+   "script_words": 11,
+   "said_words": 30
+  },
+  {
+   "at": 179.06,
+   "kind": "added",
+   "tags": [
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "And if you were to",
+   "script_words": 0,
+   "said_words": 5
+  },
+  {
+   "at": 182.32,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "and it won't",
+   "said": "it won't even",
+   "script_words": 3,
+   "said_words": 3
+  },
+  {
+   "at": 183.84,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "in the future,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 185.92,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "decides",
+   "said": "will decide",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 194.66,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "actually",
+   "said": "prefer and want to",
+   "script_words": 1,
+   "said_words": 4
+  }
+ ]
+}

@@ -649,6 +649,28 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-17, about 05:45 UTC: **Krish's 17 October calls, and his narration measured against his scripts.**
+  - Headings: "These headings are so stupid it's insane. I can't believe you're putting these to me." All 30 Friday
+    card and divider headings recorded as rejected, with the lesson (never write one to pass the floor; start from
+    his own words at that moment). Proposed in chat: every heading and divider from his own words in the take.
+  - "Happy with your cuts.": `docs/plans/2026-10-09-friday/long-cut/long.json` carries them (10 cuts; plan clean).
+  - His hook playbook (`docs/research/2026-10-17-ai-hook-title-thumbnail-playbook.md`) leads `config/hook-playbook.json`
+    with a surface map; `title_check.py lessons --surface X` prints the surface's job and his formulas first. Its fear
+    and urgency are for packaging only (REFLECTIVE_VOICE holds for the body); every line stays true to the piece.
+  - Narration: `scripts/post-pack/narration_diff.py` (16 checks) lines a take up with the script he read. The week's
+    seven takes are in `docs/narration/week-of-12-oct/` (every difference, in order) and `config/narration-ledger.json`.
+    His own words rose from 9% (Mon) to 20 to 25% (Wed) to 33 to 38% (Wed short b, Fri). In every take he opens about
+    twice as many sentences with So/And/But/Now/See as the script, and runs longer sentences. story_check now warns
+    when a script will run long as he says it (the 90-second v6 script: about 1:54; his silent take ran 1:58).
+    Workflow wf_4cd7b536-250 is turning the readings into verified script rules; then a house rule
+    (SCRIPT_AS_HE_TALKS), golden lines and the skills, still to do.
+  - Style: the Jack Roberts Story ad and his notes ("words all bounce in", "a lot more movement", "the background ...
+    treated") are in `config/style-references.json` as eight untested modules. Workflow wf_2e17463a-9c1 is building
+    `scripts/quick-edit/style_trial.py` (new files only) and a 20 s test on Wednesday's take in `.cache/style-trial/`.
+  - Next week: board item `krish-ideas-week-2026-10-19` holds his two ideas in his words (the Grok, Muse and Viktor
+    bake-off with his framework, `docs/research/2026-10-17-ai-utility-and-risk-framework.md`; and what connectors can
+    reach). The engine takes "manual" ideas only through Control Center's voice door, so they are not rows yet.
+
 - 2026-10-17, about 02:30 UTC: **Friday's long cut has a verified edit list; it waits on Krish's picks.**
   - `docs/plans/2026-10-09-friday/long-cut/` (README there): the config as said and a recommended one, the take's
     transcript, and the analysis. Workflow wf_f9964bd6-49b (31 agents) placed the 16 pictures as 44 build steps on

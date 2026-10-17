@@ -1,0 +1,722 @@
+{
+ "label": "wed-long-a",
+ "script": ".cache/produce/2026-10-16-904658db/analysis/narration/wed-long-a.script.md",
+ "words": ".cache/produce/2026-10-16-904658db/analysis/narration/wed-long-a.words.json",
+ "rates": {
+  "script_words": 493,
+  "said_words": 592,
+  "word_for_word": 451,
+  "said_more_pct": 20.1,
+  "own_words_pct": 23.8,
+  "script_kept_pct": 91.5,
+  "minutes": 3.43,
+  "words_a_minute": 172.5,
+  "words_a_minute_talking": 175.3,
+  "differences": 43,
+  "differences_a_minute": 12.5,
+  "tags": {
+   "rephrase": 21,
+   "filler": 12,
+   "signpost": 9,
+   "number": 8,
+   "to the viewer": 5,
+   "addition": 3,
+   "intensifier": 2,
+   "aside": 2,
+   "hedge": 1,
+   "skip": 1
+  },
+  "tags_a_minute": {
+   "rephrase": 6.12,
+   "filler": 3.5,
+   "signpost": 2.62,
+   "number": 2.33,
+   "to the viewer": 1.46,
+   "addition": 0.87,
+   "intensifier": 0.58,
+   "aside": 0.58,
+   "hedge": 0.29,
+   "skip": 0.29
+  },
+  "sentence_words_said": 9.7,
+  "sentence_words_script": 8.5,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 36.1,
+   "script": 15.5
+  },
+  "top_starts_said": [
+   [
+    "so",
+    11
+   ],
+   [
+    "now",
+    5
+   ],
+   [
+    "muse",
+    5
+   ],
+   [
+    "and",
+    4
+   ],
+   [
+    "siri",
+    3
+   ],
+   [
+    "meta",
+    3
+   ],
+   [
+    "that",
+    2
+   ],
+   [
+    "gemini",
+    2
+   ]
+  ],
+  "top_words_added": [
+   [
+    "so",
+    7
+   ],
+   [
+    "one",
+    6
+   ],
+   [
+    "now",
+    5
+   ],
+   [
+    "on",
+    5
+   ],
+   [
+    "and",
+    5
+   ],
+   [
+    "this",
+    4
+   ],
+   [
+    "you",
+    4
+   ],
+   [
+    "matters",
+    3
+   ],
+   [
+    "not",
+    2
+   ],
+   [
+    "into",
+    2
+   ],
+   [
+    "actually",
+    2
+   ],
+   [
+    "from",
+    2
+   ],
+   [
+    "angle",
+    2
+   ],
+   [
+    "would",
+    2
+   ],
+   [
+    "all",
+    1
+   ],
+   [
+    "right",
+    1
+   ],
+   [
+    "i've",
+    1
+   ],
+   [
+    "been",
+    1
+   ],
+   [
+    "having",
+    1
+   ],
+   [
+    "look",
+    1
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "you",
+    2
+   ],
+   [
+    "see",
+    2
+   ],
+   [
+    "i've",
+    1
+   ],
+   [
+    "been",
+    1
+   ],
+   [
+    "looking",
+    1
+   ],
+   [
+    "muse",
+    1
+   ],
+   [
+    "it's",
+    1
+   ],
+   [
+    "come",
+    1
+   ],
+   [
+    "lives",
+    1
+   ],
+   [
+    "mostly",
+    1
+   ],
+   [
+    "works",
+    1
+   ],
+   [
+    "dollars",
+    1
+   ],
+   [
+    "hundred",
+    1
+   ],
+   [
+    "then",
+    1
+   ],
+   [
+    "reach",
+    1
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 0.08,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "I've been looking",
+   "said": "All right, I've been having a look",
+   "script_words": 3,
+   "said_words": 7
+  },
+  {
+   "at": 3.8,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 7.98,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Muse,",
+   "said": "the Muse, which is",
+   "script_words": 1,
+   "said_words": 4
+  },
+  {
+   "at": 12.0,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "It's",
+   "said": "Not LLM, personal assistant. That is",
+   "script_words": 1,
+   "said_words": 6
+  },
+  {
+   "at": 17.18,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "come",
+   "said": "start creeping",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 18.86,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "lives.",
+   "said": "life.",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 28.16,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 30.48,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 39.74,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "hedge"
+   ],
+   "script": "",
+   "said": "kind of",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 41.04,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "mostly works",
+   "said": "works mostly",
+   "script_words": 2,
+   "said_words": 2
+  },
+  {
+   "at": 45.2,
+   "kind": "added",
+   "tags": [
+    "signpost",
+    "number"
+   ],
+   "script": "",
+   "said": "So, on this one,",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 52.18,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "dollars",
+   "said": "bucks",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 56.08,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "a hundred",
+   "said": "$100",
+   "script_words": 2,
+   "said_words": 1
+  },
+  {
+   "at": 59.42,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 60.16,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "Then reach. Meta",
+   "said": "on this one. Now, Reach. Meta, who",
+   "script_words": 3,
+   "said_words": 7
+  },
+  {
+   "at": 68.24,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "already open",
+   "said": "open already",
+   "script_words": 2,
+   "said_words": 2
+  },
+  {
+   "at": 75.16,
+   "kind": "added",
+   "tags": [
+    "number"
+   ],
+   "script": "",
+   "said": "Next one is,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 85.6,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "checks",
+   "said": "does check",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 87.48,
+   "kind": "added",
+   "tags": [
+    "number"
+   ],
+   "script": "",
+   "said": "on this one.",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 93.92,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "you can't",
+   "said": "that you can't even",
+   "script_words": 2,
+   "said_words": 4
+  },
+  {
+   "at": 103.58,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "to",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 105.54,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "the",
+   "said": "that",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 108.04,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "apparently",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 119.64,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "see into.",
+   "said": "get into. So,",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 121.36,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "And",
+   "said": "here. And finally,",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 125.22,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "actually",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 128.2,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "of",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 129.96,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 131.72,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 133.36,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "you a subscription.",
+   "said": "your subscription, and ChatGPT is now also going into ads.",
+   "script_words": 3,
+   "said_words": 10
+  },
+  {
+   "at": 139.6,
+   "kind": "added",
+   "tags": [
+    "signpost",
+    "number"
+   ],
+   "script": "",
+   "said": "So, on this one, unfortunately,",
+   "script_words": 0,
+   "said_words": 5
+  },
+  {
+   "at": 142.66,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "aside",
+    "rephrase"
+   ],
+   "script": "I think that last score matters most.",
+   "said": "And I think, for me, that score matters. That last one matters the most, because not from a privacy angle, but more from a commerce angle.",
+   "script_words": 7,
+   "said_words": 26
+  },
+  {
+   "at": 155.36,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "you'd see them.",
+   "said": "that you would see their business.",
+   "script_words": 3,
+   "said_words": 6
+  },
+  {
+   "at": 163.16,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "shops",
+   "said": "businesses",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 166.52,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 170.48,
+   "kind": "added",
+   "tags": [
+    "signpost",
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "let's face it,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 175.88,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "currently",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 182.72,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "it",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 184.72,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "My prediction.",
+   "said": "So, it depends on what matters to you. So, my prediction is,",
+   "script_words": 2,
+   "said_words": 12
+  },
+  {
+   "at": 193.34,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "actually",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 195.3,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 196.82,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "scorecard",
+   "said": "scoreboard",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 204.02,
+   "kind": "added",
+   "tags": [
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "It's fine if you would.",
+   "script_words": 0,
+   "said_words": 5
+  }
+ ]
+}

@@ -1,0 +1,431 @@
+{
+ "label": "wed-short-a",
+ "script": ".cache/produce/2026-10-16-904658db/analysis/narration/wed-short-a.script.md",
+ "words": ".cache/produce/2026-10-16-904658db/analysis/narration/wed-short-a.words.json",
+ "rates": {
+  "script_words": 225,
+  "said_words": 260,
+  "word_for_word": 208,
+  "said_more_pct": 15.6,
+  "own_words_pct": 20.0,
+  "script_kept_pct": 92.4,
+  "minutes": 1.46,
+  "words_a_minute": 178.5,
+  "words_a_minute_talking": 178.8,
+  "differences": 18,
+  "differences_a_minute": 12.4,
+  "tags": {
+   "rephrase": 9,
+   "filler": 5,
+   "intensifier": 3,
+   "addition": 2,
+   "to the viewer": 2,
+   "hedge": 1,
+   "skip": 1,
+   "signpost": 1,
+   "aside": 1
+  },
+  "tags_a_minute": {
+   "rephrase": 6.18,
+   "filler": 3.43,
+   "intensifier": 2.06,
+   "addition": 1.37,
+   "to the viewer": 1.37,
+   "hedge": 0.69,
+   "skip": 0.69,
+   "signpost": 0.69,
+   "aside": 0.69
+  },
+  "sentence_words_said": 12.4,
+  "sentence_words_script": 9.0,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 33.3,
+   "script": 16.0
+  },
+  "top_starts_said": [
+   [
+    "so",
+    4
+   ],
+   [
+    "and",
+    2
+   ],
+   [
+    "i've",
+    1
+   ],
+   [
+    "i'm",
+    1
+   ],
+   [
+    "it's",
+    1
+   ],
+   [
+    "i",
+    1
+   ],
+   [
+    "how",
+    1
+   ],
+   [
+    "on",
+    1
+   ]
+  ],
+  "top_words_added": [
+   [
+    "actually",
+    3
+   ],
+   [
+    "and",
+    3
+   ],
+   [
+    "which",
+    2
+   ],
+   [
+    "it's",
+    2
+   ],
+   [
+    "so",
+    2
+   ],
+   [
+    "having",
+    1
+   ],
+   [
+    "look",
+    1
+   ],
+   [
+    "i'm",
+    1
+   ],
+   [
+    "sure",
+    1
+   ],
+   [
+    "you've",
+    1
+   ],
+   [
+    "heard",
+    1
+   ],
+   [
+    "quite",
+    1
+   ],
+   [
+    "whatsapp",
+    1
+   ],
+   [
+    "facebook",
+    1
+   ],
+   [
+    "because",
+    1
+   ],
+   [
+    "i",
+    1
+   ],
+   [
+    "think",
+    1
+   ],
+   [
+    "businesses",
+    1
+   ],
+   [
+    "are",
+    1
+   ],
+   [
+    "going",
+    1
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "it's",
+    2
+   ],
+   [
+    "looking",
+    1
+   ],
+   [
+    "and",
+    1
+   ],
+   [
+    "whatsapp",
+    1
+   ],
+   [
+    "on",
+    1
+   ],
+   [
+    "i",
+    1
+   ],
+   [
+    "think",
+    1
+   ],
+   [
+    "shops",
+    1
+   ],
+   [
+    "will",
+    1
+   ],
+   [
+    "pay",
+    1
+   ],
+   [
+    "add",
+    1
+   ],
+   [
+    "ai",
+    1
+   ],
+   [
+    "assistant",
+    1
+   ],
+   [
+    "picks",
+    1
+   ],
+   [
+    "know",
+    1
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 3.16,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "looking",
+   "said": "having a look",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 9.56,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "which is",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 11.6,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "intensifier",
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "It's",
+   "said": "which I'm sure you've heard of. It's actually quite",
+   "script_words": 1,
+   "said_words": 9
+  },
+  {
+   "at": 32.74,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "actually",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 35.72,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it's",
+   "said": "is",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 38.56,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "and WhatsApp.",
+   "said": "WhatsApp, and Facebook.",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 42.42,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "on",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 49.78,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "of",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 51.58,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 52.86,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "because",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 57.36,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "rephrase"
+   ],
+   "script": "I think shops will",
+   "said": "So I think businesses are going to",
+   "script_words": 4,
+   "said_words": 7
+  },
+  {
+   "at": 60.16,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "pay",
+   "said": "paying",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 61.48,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "Add it",
+   "said": "instead in this world. So add all these scores",
+   "script_words": 2,
+   "said_words": 9
+  },
+  {
+   "at": 65.8,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "actually",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 71.42,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "is",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 75.72,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "AI assistant picks.",
+   "said": "assistant picks. And",
+   "script_words": 3,
+   "said_words": 3
+  },
+  {
+   "at": 78.64,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "know.",
+   "said": "even know that it's being picked.",
+   "script_words": 1,
+   "said_words": 6
+  },
+  {
+   "at": 87.18,
+   "kind": "added",
+   "tags": [
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "your life",
+   "script_words": 0,
+   "said_words": 2
+  }
+ ]
+}

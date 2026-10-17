@@ -15,6 +15,9 @@ how he starts a sentence) are what the next script is written to, and
 
     python scripts/post-pack/narration_diff.py SCRIPT WORDS.json [--md OUT.md] [--json OUT.json] [--label NAME]
     python scripts/post-pack/narration_diff.py patterns A.json B.json ... [--md OUT.md]
+    python scripts/post-pack/narration_diff.py ledger REPORT.json --cut short|long|deep --date YYYY-MM-DD [--piece ID]
+                                     keep the take's rates in config/narration-ledger.json, which
+                                     story_check reads to say how long a script will run when he says it
     python scripts/post-pack/narration_diff.py --self-test
 
 SCRIPT is the text he read (a Teleprompter script, or a draft whose spoken lines
@@ -434,6 +437,47 @@ def patterns(paths):
     return '\n'.join(lines) + '\n'
 
 
+# --------------------------------------------------------------------------- the ledger
+
+LEDGER = HERE.parent.parent / 'config' / 'narration-ledger.json'
+KEEP = ('script_words', 'said_words', 'said_more_pct', 'own_words_pct', 'script_kept_pct', 'minutes', 'words_a_minute',
+        'words_a_minute_talking', 'sentence_words_said', 'sentence_words_script', 'sentences_starting_with_a_joiner_pct', 'tags_a_minute')
+
+
+def ledger_add(report, cut, date, piece=None, path=None):
+    """Keep one take's rates (replacing an earlier entry for the same take)."""
+    path = Path(path or LEDGER)
+    data = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {
+        '_about': ('Every take Krish has recorded, set against the script he read (scripts/post-pack/narration_diff.py): how much he '
+                   'adds, how fast he talks, how he opens his sentences. Krish, 2026-10-17: "I also need you to list everything about my '
+                   'narration that deviated from the script ... Thats how script should be written in the future." story_check.py reads '
+                   'it to say how long a script will run when he says it. Add a take with narration_diff.py ledger.'),
+        'takes': []}
+    entry = {'take': report['label'], 'cut': cut, 'date': date, **({'piece': piece} if piece else {}),
+             **{k: report['rates'][k] for k in KEEP if k in report['rates']}}
+    data['takes'] = [t for t in data['takes'] if t['take'] != entry['take']] + [entry]
+    data['takes'].sort(key=lambda t: (t['date'], t['take']))
+    path.write_text(json.dumps(data, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
+    return entry
+
+
+def spoken_estimate(script_words, cut, path=None, last=5):
+    """How long a script of this many words runs when he says it, from his
+    last takes of the same cut: (seconds, how it was worked out), or None
+    when no take of that cut is in the ledger."""
+    path = Path(path or LEDGER)
+    if not path.exists():
+        return None
+    takes = [t for t in json.loads(path.read_text(encoding='utf-8')).get('takes', []) if t.get('cut') == cut][-last:]
+    if not takes:
+        return None
+    # The mean, not the median: he adds more as the weeks go on (9% on 12 Oct, 38% by 16 Oct), and the mean follows that.
+    mean = lambda xs: round(sum(xs) / len(xs), 1)
+    more, wpm = mean([t['said_more_pct'] for t in takes]), mean([t['words_a_minute'] for t in takes])
+    secs = script_words * (1 + more / 100) / wpm * 60
+    return round(secs, 1), f'his last {len(takes)} {cut} take(s): he adds about {more:g}% to the script and talks at about {wpm:g} words a minute'
+
+
 # --------------------------------------------------------------------------- tests
 
 def self_test():
@@ -474,9 +518,18 @@ def self_test():
     fixed = apply_fixes([{'w': ' She', 's': 0.0, 'e': 0.3}, {'w': ' pays', 's': 0.4, 'e': 0.7}, {'w': ' the', 's': 0.8, 'e': 0.9},
                          {'w': ' deal.', 's': 1.0, 'e': 1.3}], [['pays the deal', 'pastes the deal']])
     check('a verified mishearing is fixed before the diff, its punctuation kept', [w['w'].strip() for w in fixed], ['She', 'pastes', 'the', 'deal.'])
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        led = Path(tmp) / 'ledger.json'
+        rep = {'label': 'a', 'rates': {**r, 'said_more_pct': 20.0, 'words_a_minute': 180.0}}
+        ledger_add(rep, 'short', '2026-10-12', path=led)
+        ledger_add({**rep, 'label': 'a'}, 'short', '2026-10-12', path=led)
+        check('the ledger keeps one entry a take', len(json.loads(led.read_text())['takes']), 1)
+        check('a 225-word script runs 90 s when he adds 20% at 180 a minute', spoken_estimate(225, 'short', led)[0], 90.0)
+        check('no take of that cut, no estimate', spoken_estimate(225, 'long', led), None)
     md = markdown('test', r, devs)
     check('the report lists every difference', md.count('\n| ') - 1, len(devs))
-    print('\n'.join(fails) if fails else f'narration_diff self-test passed: {13} checks')
+    print('\n'.join(fails) if fails else f'narration_diff self-test passed: {16} checks')
     return 1 if fails else 0
 
 
@@ -484,6 +537,16 @@ def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     if argv[:1] == ['--self-test']:
         return self_test()
+    if argv[:1] == ['ledger']:
+        ap = argparse.ArgumentParser(prog='narration_diff.py ledger')
+        ap.add_argument('report')
+        ap.add_argument('--cut', required=True, choices=['short', 'long', 'deep'])
+        ap.add_argument('--date', required=True)
+        ap.add_argument('--piece')
+        a = ap.parse_args(argv[1:])
+        e = ledger_add(json.loads(Path(a.report).read_text(encoding='utf-8')), a.cut, a.date, a.piece)
+        print(f'kept {e["take"]} ({e["cut"]}, {e["date"]}): +{e["said_more_pct"]}% said, {e["own_words_pct"]}% his own words')
+        return 0
     if argv[:1] == ['patterns']:
         ap = argparse.ArgumentParser(prog='narration_diff.py patterns')
         ap.add_argument('reports', nargs='+')

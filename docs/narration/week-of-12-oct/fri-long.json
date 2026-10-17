@@ -1,0 +1,2231 @@
+{
+ "label": "Fri long",
+ "script": ".cache/produce/2026-10-16-904658db/analysis/narration/fri-long-teleprompter.txt",
+ "words": ".cache/produce/2026-10-16-904658db/words/long.words.json",
+ "rates": {
+  "script_words": 1754,
+  "said_words": 2403,
+  "word_for_word": 1494,
+  "said_more_pct": 37.0,
+  "own_words_pct": 37.8,
+  "script_kept_pct": 85.2,
+  "minutes": 14.26,
+  "words_a_minute": 168.5,
+  "words_a_minute_talking": 171.9,
+  "differences": 172,
+  "differences_a_minute": 12.1,
+  "tags": {
+   "rephrase": 77,
+   "filler": 44,
+   "aside": 36,
+   "addition": 24,
+   "intensifier": 20,
+   "hedge": 20,
+   "number": 18,
+   "signpost": 16,
+   "to the viewer": 14,
+   "dropped": 4,
+   "skip": 2,
+   "restart": 1,
+   "contraction": 1
+  },
+  "tags_a_minute": {
+   "rephrase": 5.4,
+   "filler": 3.08,
+   "aside": 2.52,
+   "addition": 1.68,
+   "intensifier": 1.4,
+   "hedge": 1.4,
+   "number": 1.26,
+   "signpost": 1.12,
+   "to the viewer": 0.98,
+   "dropped": 0.28,
+   "skip": 0.14,
+   "restart": 0.07,
+   "contraction": 0.07
+  },
+  "sentence_words_said": 14.9,
+  "sentence_words_script": 10.3,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 49.7,
+   "script": 17.0
+  },
+  "top_starts_said": [
+   [
+    "and",
+    36
+   ],
+   [
+    "so",
+    22
+   ],
+   [
+    "the",
+    12
+   ],
+   [
+    "but",
+    12
+   ],
+   [
+    "see",
+    6
+   ],
+   [
+    "i",
+    5
+   ],
+   [
+    "now",
+    4
+   ],
+   [
+    "this",
+    4
+   ]
+  ],
+  "top_words_added": [
+   [
+    "and",
+    55
+   ],
+   [
+    "thinking",
+    18
+   ],
+   [
+    "so",
+    17
+   ],
+   [
+    "this",
+    16
+   ],
+   [
+    "actually",
+    11
+   ],
+   [
+    "model",
+    10
+   ],
+   [
+    "i",
+    10
+   ],
+   [
+    "lot",
+    8
+   ],
+   [
+    "ai",
+    8
+   ],
+   [
+    "really",
+    8
+   ],
+   [
+    "about",
+    8
+   ],
+   [
+    "are",
+    7
+   ],
+   [
+    "more",
+    7
+   ],
+   [
+    "it's",
+    7
+   ],
+   [
+    "for",
+    7
+   ],
+   [
+    "gear",
+    7
+   ],
+   [
+    "but",
+    7
+   ],
+   [
+    "which",
+    6
+   ],
+   [
+    "your",
+    6
+   ],
+   [
+    "not",
+    6
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "and",
+    5
+   ],
+   [
+    "on",
+    4
+   ],
+   [
+    "them",
+    4
+   ],
+   [
+    "automatic",
+    4
+   ],
+   [
+    "your",
+    3
+   ],
+   [
+    "more",
+    3
+   ],
+   [
+    "new",
+    3
+   ],
+   [
+    "are",
+    3
+   ],
+   [
+    "think",
+    3
+   ],
+   [
+    "so",
+    3
+   ],
+   [
+    "one",
+    3
+   ],
+   [
+    "day",
+    2
+   ],
+   [
+    "name",
+    2
+   ],
+   [
+    "ai",
+    2
+   ],
+   [
+    "openai",
+    2
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 0.08,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 2.92,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "every day",
+   "said": "",
+   "script_words": 2,
+   "said_words": 0
+  },
+  {
+   "at": 4.46,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "every single day,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 13.86,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "name.",
+   "said": "new model name, and there are more releases than I release these videos, which is a lot. And it's always",
+   "script_words": 1,
+   "said_words": 20
+  },
+  {
+   "at": 23.02,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Then Opus 5. Now",
+   "said": "Opus 5,",
+   "script_words": 4,
+   "said_words": 2
+  },
+  {
+   "at": 26.22,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "kind of got lost and",
+   "said": "honestly got lost,",
+   "script_words": 5,
+   "said_words": 3
+  },
+  {
+   "at": 28.64,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "hedge"
+   ],
+   "script": "",
+   "said": "a bit of",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 30.96,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "what's happening here,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 34.48,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 38.02,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "up your business with AI.",
+   "said": "your business up with AI, for example, to know this stuff. And",
+   "script_words": 5,
+   "said_words": 12
+  },
+  {
+   "at": 42.0,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "of the model",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 46.06,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "happens when companies like OpenAI make more",
+   "said": "actually happens when OpenAI or Claude make",
+   "script_words": 7,
+   "said_words": 7
+  },
+  {
+   "at": 53.54,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 55.1,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "do",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 59.32,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "getting a",
+   "said": "going to get from these models a little",
+   "script_words": 2,
+   "said_words": 8
+  },
+  {
+   "at": 63.2,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "general intelligence?",
+   "said": "intelligence? Now, don't get me wrong,",
+   "script_words": 2,
+   "said_words": 6
+  },
+  {
+   "at": 66.48,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "restart",
+    "aside"
+   ],
+   "script": "new AIs are better.",
+   "said": "AI models out recently are really, really good. They're improving at a huge rate, and",
+   "script_words": 4,
+   "said_words": 15
+  },
+  {
+   "at": 71.88,
+   "kind": "said differently",
+   "tags": [
+    "contraction"
+   ],
+   "script": "aren't",
+   "said": "are not",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 73.24,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "But I think",
+   "said": "I'm just saying that",
+   "script_words": 3,
+   "said_words": 4
+  },
+  {
+   "at": 74.7,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "the least important thing on your screen.",
+   "said": "not as important as the hype of the name in the PR releases.",
+   "script_words": 7,
+   "said_words": 13
+  },
+  {
+   "at": 83.16,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "much more.",
+   "said": "that you get back from your AI much more than what model you pick. And",
+   "script_words": 2,
+   "said_words": 15
+  },
+  {
+   "at": 90.9,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "aside",
+    "rephrase"
+   ],
+   "script": "The app usually starts it",
+   "said": "and that's the thinking toggle. And the funny thing is, chat, GPT, and Claude often start with this quite",
+   "script_words": 5,
+   "said_words": 18
+  },
+  {
+   "at": 97.06,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "nobody changes it. There are",
+   "said": "no one changes it. And there's",
+   "script_words": 5,
+   "said_words": 6
+  },
+  {
+   "at": 99.5,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 102.82,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "name. Let's unpack them. First,",
+   "said": "model name rather than the thinking. And let's unpack that a little bit. Firstly,",
+   "script_words": 5,
+   "said_words": 14
+  },
+  {
+   "at": 112.3,
+   "kind": "skipped",
+   "tags": [
+    "dropped"
+   ],
+   "script": "and",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 114.36,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 117.86,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "GPT",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 119.78,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "with a lot in between.",
+   "script_words": 0,
+   "said_words": 5
+  },
+  {
+   "at": 124.02,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "right?",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 125.14,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "gets them.",
+   "said": "of a new model gets, and it gets them new PR.",
+   "script_words": 2,
+   "said_words": 11
+  },
+  {
+   "at": 137.94,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "chat GPT",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 148.02,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 155.12,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "Picture a woman called",
+   "said": "The thinking of the model, not the model name. Now, picture a small business owner, let's call her",
+   "script_words": 4,
+   "said_words": 18
+  },
+  {
+   "at": 165.5,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "a",
+   "said": "an important",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 169.64,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "then",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 171.86,
+   "kind": "added",
+   "tags": [
+    "hedge"
+   ],
+   "script": "",
+   "said": "about",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 173.6,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "tidy answer. It sounds sure. She signs.",
+   "said": "pretty tidy answer, and she sounds pretty sure, signs the contract.",
+   "script_words": 7,
+   "said_words": 11
+  },
+  {
+   "at": 182.92,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "It",
+   "said": "which",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 186.88,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "or a longer thinker,",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 190.58,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "really",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 193.74,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "really",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 196.82,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "realise",
+   "said": "think to realise that",
+   "script_words": 1,
+   "said_words": 4
+  },
+  {
+   "at": 200.68,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "of her AI. See,",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 209.92,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 216.12,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 221.86,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 225.88,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "and more websites checked for that response.",
+   "script_words": 0,
+   "said_words": 7
+  },
+  {
+   "at": 230.6,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "for example.",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 234.14,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "is",
+   "said": "Sonnet 5, Sonnet 5.5, it's",
+   "script_words": 1,
+   "said_words": 5
+  },
+  {
+   "at": 237.28,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "a car.",
+   "said": "the car, like Mercedes C-Class, BMW M5.",
+   "script_words": 2,
+   "said_words": 7
+  },
+  {
+   "at": 241.54,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "more",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 243.18,
+   "kind": "added",
+   "tags": [
+    "signpost",
+    "number",
+    "aside"
+   ],
+   "script": "",
+   "said": "first gear, second gear, third gear. And",
+   "script_words": 0,
+   "said_words": 7
+  },
+  {
+   "at": 247.2,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "have to",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 250.2,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 251.42,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it barely thinks.",
+   "said": "the intelligence barely thinks, and",
+   "script_words": 3,
+   "said_words": 5
+  },
+  {
+   "at": 254.92,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "hardest.",
+   "said": "the hardest. And",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 262.86,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "actually",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 265.0,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "the hood.",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 267.74,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "most of us drive",
+   "said": "everyone is actually driving",
+   "script_words": 4,
+   "said_words": 4
+  },
+  {
+   "at": 274.9,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "thinking",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 277.54,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "ran",
+   "said": "found",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 281.78,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "hard test in different gears.",
+   "said": "really tough reasoning test in all the different gears. And",
+   "script_words": 5,
+   "said_words": 10
+  },
+  {
+   "at": 287.0,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "obviously",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 288.68,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "gear, and",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 293.58,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "new",
+   "said": "newest",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 294.76,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "number",
+    "aside",
+    "rephrase"
+   ],
+   "script": "So changing gear beat getting a new badge.",
+   "said": "gear, in gear 1. So, changing gears definitely beats getting a model upgrade. The thinking matters more than the model name.",
+   "script_words": 8,
+   "said_words": 21
+  },
+  {
+   "at": 307.88,
+   "kind": "added",
+   "tags": [
+    "number"
+   ],
+   "script": "",
+   "said": "one for the old",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 311.64,
+   "kind": "added",
+   "tags": [
+    "signpost",
+    "aside"
+   ],
+   "script": "",
+   "said": "So, efficiencies are being had there for sure,",
+   "script_words": 0,
+   "said_words": 8
+  },
+  {
+   "at": 316.38,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "always better.",
+   "said": "actually always better. The",
+   "script_words": 2,
+   "said_words": 4
+  },
+  {
+   "at": 322.52,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "three? One of them",
+   "said": "3? One of the AIs",
+   "script_words": 3,
+   "said_words": 5
+  },
+  {
+   "at": 328.92,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "gear matters most",
+   "said": "that's not really necessary, right? The thinking gear matters more",
+   "script_words": 3,
+   "said_words": 10
+  },
+  {
+   "at": 335.08,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "for example, something that could cost a lot of money.",
+   "script_words": 0,
+   "said_words": 10
+  },
+  {
+   "at": 344.26,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "See,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 347.36,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "computers, which cost",
+   "said": "computer servers and data centres, which costs a lot of",
+   "script_words": 3,
+   "said_words": 10
+  },
+  {
+   "at": 351.14,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "We all hear about how data centres gobble up all the resources. Now,",
+   "script_words": 0,
+   "said_words": 13
+  },
+  {
+   "at": 362.06,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "a little.",
+   "said": "just a little bit.",
+   "script_words": 2,
+   "said_words": 4
+  },
+  {
+   "at": 365.34,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "the output, the quality of the output,",
+   "script_words": 0,
+   "said_words": 7
+  },
+  {
+   "at": 368.4,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "a third.",
+   "said": "30%.",
+   "script_words": 2,
+   "said_words": 2
+  },
+  {
+   "at": 375.12,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "single",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 376.44,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "everything it spits out.",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 377.88,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "pay, as a consumer, we",
+   "script_words": 0,
+   "said_words": 5
+  },
+  {
+   "at": 385.86,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "on top of that.",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 392.76,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "That,",
+   "said": "because most people who buy that plan are doing heavy thinking tasks. And this,",
+   "script_words": 1,
+   "said_words": 14
+  },
+  {
+   "at": 400.52,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "you in a low",
+   "said": "people in a lower",
+   "script_words": 4,
+   "said_words": 4
+  },
+  {
+   "at": 406.0,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "thinks?",
+   "said": "really thinks? And",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 412.08,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "But",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 414.94,
+   "kind": "skipped",
+   "tags": [
+    "dropped"
+   ],
+   "script": "the",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 417.8,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "signpost",
+    "to the viewer",
+    "number",
+    "aside",
+    "rephrase"
+   ],
+   "script": "and Google has started. Since the ninth of October,",
+   "said": "so thinking about how hard to think itself and making that choice, rather than you changing all the settings. And Google's already started doing this since the 9th of October of this year, which is just last week.",
+   "script_words": 9,
+   "said_words": 38
+  },
+  {
+   "at": 432.26,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "actually already",
+   "said": "already actually",
+   "script_words": 2,
+   "said_words": 2
+  },
+  {
+   "at": 439.9,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "aside"
+   ],
+   "script": "",
+   "said": "how much thinking power. Kind of",
+   "script_words": 0,
+   "said_words": 6
+  },
+  {
+   "at": 443.36,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "an automatic transmission.",
+   "said": "a semi-automatic transmission, famously F1 cars. So,",
+   "script_words": 3,
+   "said_words": 7
+  },
+  {
+   "at": 457.06,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 466.66,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "the slower, thinking answers. Those cost OpenAI more.",
+   "said": "slower, higher thinking answers, which when no one's paying anything and it's free, that costs OpenAI a lot more. See,",
+   "script_words": 8,
+   "said_words": 20
+  },
+  {
+   "at": 476.08,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "on",
+   "said": "put on to",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 478.78,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it too.",
+   "said": "that too, and",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 481.82,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 485.28,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "think that lasts",
+   "said": "actually think this is going to last, actually",
+   "script_words": 3,
+   "said_words": 8
+  },
+  {
+   "at": 491.04,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "this car, we're doing the car analogy, think what each part of",
+   "script_words": 0,
+   "said_words": 12
+  },
+  {
+   "at": 497.26,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "See,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 499.56,
+   "kind": "said differently",
+   "tags": [
+    "aside",
+    "rephrase"
+   ],
+   "script": "brings attention.",
+   "said": "Opus, Sonnet, Astra, whatever, brings attention, brings a lot of PR,",
+   "script_words": 2,
+   "said_words": 11
+  },
+  {
+   "at": 507.78,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "even",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 508.9,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "the thinking level.",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 516.7,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "But",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 518.6,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 521.36,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 526.32,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 528.64,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "can",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 531.6,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 533.02,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "would rather not",
+   "said": "actually can't be bothered to",
+   "script_words": 3,
+   "said_words": 5
+  },
+  {
+   "at": 535.9,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "aside",
+    "rephrase"
+   ],
+   "script": "I think the automatic wins. Is that good?",
+   "said": "when ease trumps quality, the automatic car wins the day. Is that a good thing though? Sort of",
+   "script_words": 8,
+   "said_words": 18
+  },
+  {
+   "at": 548.94,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "don't change settings.",
+   "said": "tend not to change setting, most of us anyway, I do, but a lot of people don't. And",
+   "script_words": 3,
+   "said_words": 18
+  },
+  {
+   "at": 557.2,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "far",
+   "said": "a lot",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 559.32,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "like I said,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 562.4,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Before,",
+   "said": "But before that,",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 565.5,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "number",
+    "aside",
+    "rephrase"
+   ],
+   "script": "a hundred used thinking each day. After, seven in a hundred did. Anthropic learned this too. This",
+   "said": "100 used thinking every day, but obviously they ended up using it because the AI was choosing for them. So Anthropic learned its lesson too in",
+   "script_words": 17,
+   "said_words": 25
+  },
+  {
+   "at": 578.76,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "Claude Code.",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 581.2,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "though",
+   "said": "Although",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 583.92,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "Anthropic later",
+   "said": "And Anthropic themselves",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 599.62,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "See,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 600.38,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "side.",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 604.16,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 611.3,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "Fair enough. I like faster answers.",
+   "script_words": 0,
+   "said_words": 6
+  },
+  {
+   "at": 617.56,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "It",
+   "said": "thinking. This",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 619.7,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "Nobody",
+   "said": "and no one",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 621.64,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "even",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 626.94,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "has",
+   "said": "in this automatic thinking setting has basically",
+   "script_words": 1,
+   "said_words": 7
+  },
+  {
+   "at": 636.92,
+   "kind": "added",
+   "tags": [
+    "number"
+   ],
+   "script": "",
+   "said": "two",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 639.02,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "See,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 643.2,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "about their",
+   "said": "is it thinking about OpenAI's",
+   "script_words": 2,
+   "said_words": 5
+  },
+  {
+   "at": 647.56,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "It's",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 651.36,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "what",
+   "said": "the",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 655.46,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "hedge"
+   ],
+   "script": "",
+   "said": "pretty",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 657.56,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "if you're a business owner or someone thinking about putting AI into their business,",
+   "script_words": 0,
+   "said_words": 14
+  },
+  {
+   "at": 667.12,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "This is the thinking setting, not the model, remember. But",
+   "script_words": 0,
+   "said_words": 10
+  },
+  {
+   "at": 670.58,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "act on,",
+   "said": "actually act on and send out or impacts your business bottom line, you need to",
+   "script_words": 2,
+   "said_words": 15
+  },
+  {
+   "at": 677.38,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "This is",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 681.62,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "rephrase"
+   ],
+   "script": "On ChatGPT, pick",
+   "said": "So on chat GPT,",
+   "script_words": 3,
+   "said_words": 3
+  },
+  {
+   "at": 684.8,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 687.52,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 690.4,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it",
+   "said": "that",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 693.8,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "sometimes",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 696.84,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "But",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 698.74,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it's worth it. Formula 1",
+   "said": "it is worth it. Now, I mentioned Formula One earlier, and they",
+   "script_words": 5,
+   "said_words": 12
+  },
+  {
+   "at": 705.06,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "it's",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 712.04,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 717.2,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "number",
+    "rephrase"
+   ],
+   "script": "been banned",
+   "said": "actually been banned in F1",
+   "script_words": 2,
+   "said_words": 5
+  },
+  {
+   "at": 722.1,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 724.82,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "give us paddles, so",
+   "said": "it should also follow, I reckon it should follow that type of thinking and give us those paddles so that we should,",
+   "script_words": 4,
+   "said_words": 22
+  },
+  {
+   "at": 732.0,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "And",
+   "said": "when we want. And the chat GPT and Claude toggles should also",
+   "script_words": 1,
+   "said_words": 11
+  },
+  {
+   "at": 741.6,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "Those are the things that I would come to expect from my AI. So where are we with all this?",
+   "script_words": 0,
+   "said_words": 20
+  },
+  {
+   "at": 750.1,
+   "kind": "skipped",
+   "tags": [
+    "dropped"
+   ],
+   "script": "a",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 754.0,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "automatic next.",
+   "said": "to go automatic next. And",
+   "script_words": 2,
+   "said_words": 5
+  },
+  {
+   "at": 759.26,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "aside"
+   ],
+   "script": "",
+   "said": "in my opinion, the best of the best is what",
+   "script_words": 0,
+   "said_words": 10
+  },
+  {
+   "at": 762.6,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "still keeps",
+   "said": "would do, which is still keep",
+   "script_words": 2,
+   "said_words": 6
+  },
+  {
+   "at": 766.38,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "whilst changing semi-automatically.",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 772.54,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "a manual transmission.",
+   "said": "manual cars. And",
+   "script_words": 3,
+   "said_words": 3
+  },
+  {
+   "at": 774.72,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "number",
+    "aside",
+    "rephrase"
+   ],
+   "script": "I'll be one of them. Here's my bet.",
+   "said": "that's me. So where does this go from here? And what big prediction or gap do I think is going to be met over the next year? I reckon",
+   "script_words": 8,
+   "said_words": 29
+  },
+  {
+   "at": 786.38,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "June 2027,",
+   "said": "mid-2027,",
+   "script_words": 2,
+   "said_words": 1
+  },
+  {
+   "at": 792.48,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 796.14,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 799.08,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "like I said,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 807.7,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "a semi-automatic setting,",
+   "said": "that semi-automatic setting, kind of",
+   "script_words": 3,
+   "said_words": 5
+  },
+  {
+   "at": 811.94,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "intensifier",
+    "number",
+    "rephrase"
+   ],
+   "script": "performance.",
+   "said": "and tweak performance. I'm actually pretty confident of this one.",
+   "script_words": 1,
+   "said_words": 10
+  },
+  {
+   "at": 816.12,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "number",
+    "rephrase"
+   ],
+   "script": "one at 85% confident, so",
+   "said": "at about 85%. I'm",
+   "script_words": 6,
+   "said_words": 5
+  },
+  {
+   "at": 820.18,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "If this has resonated with you, it's made you think about how your AI thinks.",
+   "script_words": 0,
+   "said_words": 15
+  },
+  {
+   "at": 826.7,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "free at makeyourmindup ai.",
+   "said": "at make your mind up and it's free. And",
+   "script_words": 4,
+   "said_words": 9
+  },
+  {
+   "at": 838.14,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "a",
+   "said": "this kind of",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 846.54,
+   "kind": "skipped",
+   "tags": [
+    "dropped"
+   ],
+   "script": "the",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  },
+  {
+   "at": 848.36,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "that are about to hit your phone and start",
+   "said": "They're about to start hitting your phone apps and",
+   "script_words": 9,
+   "said_words": 9
+  },
+  {
+   "at": 852.46,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it",
+   "said": "them. So",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 854.04,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "really",
+   "script_words": 0,
+   "said_words": 1
+  }
+ ]
+}

@@ -1,0 +1,436 @@
+{
+ "label": "mon-long",
+ "script": ".cache/produce/2026-10-16-904658db/analysis/narration/mon-long.script.md",
+ "words": ".cache/produce/2026-10-16-904658db/analysis/narration/mon-long.words.json",
+ "rates": {
+  "script_words": 486,
+  "said_words": 519,
+  "word_for_word": 471,
+  "said_more_pct": 6.8,
+  "own_words_pct": 9.2,
+  "script_kept_pct": 96.9,
+  "minutes": 3.04,
+  "words_a_minute": 170.7,
+  "words_a_minute_talking": 173.9,
+  "differences": 20,
+  "differences_a_minute": 6.6,
+  "tags": {
+   "filler": 9,
+   "signpost": 9,
+   "rephrase": 8,
+   "addition": 2,
+   "intensifier": 1,
+   "hedge": 1,
+   "number": 1,
+   "skip": 1
+  },
+  "tags_a_minute": {
+   "filler": 2.96,
+   "signpost": 2.96,
+   "rephrase": 2.63,
+   "addition": 0.66,
+   "intensifier": 0.33,
+   "hedge": 0.33,
+   "number": 0.33,
+   "skip": 0.33
+  },
+  "sentence_words_said": 10.2,
+  "sentence_words_script": 9.7,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 41.2,
+   "script": 20.0
+  },
+  "top_starts_said": [
+   [
+    "so",
+    10
+   ],
+   [
+    "now",
+    5
+   ],
+   [
+    "and",
+    5
+   ],
+   [
+    "universal",
+    3
+   ],
+   [
+    "i'm",
+    2
+   ],
+   [
+    "suno",
+    2
+   ],
+   [
+    "it",
+    2
+   ],
+   [
+    "here's",
+    1
+   ]
+  ],
+  "top_words_added": [
+   [
+    "so",
+    7
+   ],
+   [
+    "now",
+    3
+   ],
+   [
+    "him",
+    1
+   ],
+   [
+    "just",
+    1
+   ],
+   [
+    "breadcrumbs",
+    1
+   ],
+   [
+    "no",
+    1
+   ],
+   [
+    "one's",
+    1
+   ],
+   [
+    "really",
+    1
+   ],
+   [
+    "singers",
+    1
+   ],
+   [
+    "are",
+    1
+   ],
+   [
+    "gonna",
+    1
+   ],
+   [
+    "and",
+    1
+   ],
+   [
+    "as",
+    1
+   ],
+   [
+    "consumer",
+    1
+   ],
+   [
+    "get",
+    1
+   ],
+   [
+    "paid",
+    1
+   ],
+   [
+    "those",
+    1
+   ],
+   [
+    "my",
+    1
+   ],
+   [
+    "prediction",
+    1
+   ],
+   [
+    "end",
+    1
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "crumbs",
+    1
+   ],
+   [
+    "nobody's",
+    1
+   ],
+   [
+    "its",
+    1
+   ],
+   [
+    "singers",
+    1
+   ],
+   [
+    "see",
+    1
+   ],
+   [
+    "do",
+    1
+   ],
+   [
+    "my",
+    1
+   ],
+   [
+    "prediction",
+    1
+   ],
+   [
+    "december",
+    1
+   ],
+   [
+    "an",
+    1
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 24.74,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 27.54,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it.",
+   "said": "him.",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 36.4,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 43.1,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now, is that",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 44.88,
+   "kind": "said differently",
+   "tags": [
+    "intensifier",
+    "rephrase"
+   ],
+   "script": "the crumbs? Nobody's",
+   "said": "is it just breadcrumbs? No one's really",
+   "script_words": 3,
+   "said_words": 7
+  },
+  {
+   "at": 50.56,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "its singers",
+   "said": "the singers are gonna",
+   "script_words": 2,
+   "said_words": 4
+  },
+  {
+   "at": 56.4,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 66.16,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now, the",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 105.92,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 108.86,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "as a consumer,",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 128.5,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "rephrase"
+   ],
+   "script": "see,",
+   "said": "so",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 130.92,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 140.06,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "do.",
+   "said": "get paid. So",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 146.3,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "the",
+   "said": "those",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 153.32,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 161.42,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "rephrase"
+   ],
+   "script": "My prediction:",
+   "said": "So my prediction is that",
+   "script_words": 2,
+   "said_words": 5
+  },
+  {
+   "at": 165.26,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "number",
+    "rephrase"
+   ],
+   "script": "31 December 2027,",
+   "said": "the end of December, 2027, I reckon",
+   "script_words": 3,
+   "said_words": 7
+  },
+  {
+   "at": 169.36,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "if not both.",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 171.68,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "of this.",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 180.02,
+   "kind": "skipped",
+   "tags": [
+    "skip"
+   ],
+   "script": "an",
+   "said": "",
+   "script_words": 1,
+   "said_words": 0
+  }
+ ]
+}

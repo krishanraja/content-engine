@@ -1,0 +1,413 @@
+{
+ "label": "mon-short",
+ "script": ".cache/produce/2026-10-16-904658db/analysis/narration/mon-short.script.md",
+ "words": ".cache/produce/2026-10-16-904658db/analysis/narration/mon-short.words.json",
+ "rates": {
+  "script_words": 227,
+  "said_words": 257,
+  "word_for_word": 217,
+  "said_more_pct": 13.2,
+  "own_words_pct": 15.6,
+  "script_kept_pct": 95.6,
+  "minutes": 1.52,
+  "words_a_minute": 169.5,
+  "words_a_minute_talking": 173.7,
+  "differences": 19,
+  "differences_a_minute": 12.5,
+  "tags": {
+   "filler": 8,
+   "rephrase": 7,
+   "signpost": 5,
+   "addition": 2,
+   "to the viewer": 2,
+   "number": 2,
+   "aside": 1,
+   "intensifier": 1,
+   "hedge": 1
+  },
+  "tags_a_minute": {
+   "filler": 5.27,
+   "rephrase": 4.62,
+   "signpost": 3.3,
+   "addition": 1.32,
+   "to the viewer": 1.32,
+   "number": 1.32,
+   "aside": 0.66,
+   "intensifier": 0.66,
+   "hedge": 0.66
+  },
+  "sentence_words_said": 10.7,
+  "sentence_words_script": 9.5,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 33.3,
+   "script": 12.5
+  },
+  "top_starts_said": [
+   [
+    "so",
+    4
+   ],
+   [
+    "now",
+    3
+   ],
+   [
+    "i'm",
+    2
+   ],
+   [
+    "suno",
+    2
+   ],
+   [
+    "warner",
+    2
+   ],
+   [
+    "it's",
+    2
+   ],
+   [
+    "here's",
+    1
+   ],
+   [
+    "universal",
+    1
+   ]
+  ],
+  "top_words_added": [
+   [
+    "so",
+    3
+   ],
+   [
+    "your",
+    2
+   ],
+   [
+    "recently",
+    1
+   ],
+   [
+    "learnt",
+    1
+   ],
+   [
+    "them",
+    1
+   ],
+   [
+    "for",
+    1
+   ],
+   [
+    "dog's",
+    1
+   ],
+   [
+    "birthday",
+    1
+   ],
+   [
+    "actually",
+    1
+   ],
+   [
+    "now",
+    1
+   ],
+   [
+    "just",
+    1
+   ],
+   [
+    "releasing",
+    1
+   ],
+   [
+    "see",
+    1
+   ],
+   [
+    "one",
+    1
+   ],
+   [
+    "his",
+    1
+   ],
+   [
+    "end",
+    1
+   ],
+   [
+    "or",
+    1
+   ],
+   [
+    "both",
+    1
+   ],
+   [
+    "as",
+    1
+   ],
+   [
+    "well",
+    1
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "learned",
+    1
+   ],
+   [
+    "saying",
+    1
+   ],
+   [
+    "warner",
+    1
+   ],
+   [
+    "for",
+    1
+   ],
+   [
+    "too",
+    1
+   ],
+   [
+    "i'm",
+    1
+   ],
+   [
+    "comments",
+    1
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 7.94,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 10.12,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "recently",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 24.04,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "learned",
+   "said": "is learnt",
+   "script_words": 1,
+   "said_words": 2
+  },
+  {
+   "at": 29.16,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "it.",
+   "said": "them.",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 34.22,
+   "kind": "added",
+   "tags": [
+    "to the viewer",
+    "aside"
+   ],
+   "script": "",
+   "said": "for your dog's birthday",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 36.4,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "intensifier"
+   ],
+   "script": "",
+   "said": "actually",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 44.4,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "Now, is that",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 45.66,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "just",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 47.28,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "saying.",
+   "said": "releasing.",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 52.56,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "See,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 55.1,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "Warner for",
+   "said": "one of his",
+   "script_words": 2,
+   "said_words": 3
+  },
+  {
+   "at": 59.14,
+   "kind": "added",
+   "tags": [
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "your",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 63.48,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 73.86,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "So,",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 75.16,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "31",
+   "said": "the end of",
+   "script_words": 1,
+   "said_words": 3
+  },
+  {
+   "at": 78.3,
+   "kind": "added",
+   "tags": [
+    "addition"
+   ],
+   "script": "",
+   "said": "or both,",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 81.66,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "rephrase"
+   ],
+   "script": "too. I'm",
+   "said": "as well. I'm pretty much sure of this. It's about",
+   "script_words": 2,
+   "said_words": 10
+  },
+  {
+   "at": 88.14,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "and",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 88.66,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "the comments:",
+   "said": "a comment,",
+   "script_words": 2,
+   "said_words": 2
+  }
+ ]
+}

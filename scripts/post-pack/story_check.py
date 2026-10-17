@@ -384,6 +384,30 @@ def length_problem(words, cut):
     return None
 
 
+# How long each cut may run as he says it (seconds): the 90-second cut under 89 s (TWO_CUTS, the platforms' line),
+# the 3-minute cut by about 3:30, the deep cut 8 to 12 minutes (DEEP_CUT).
+SPOKEN_CAP_S = {'short': 89, 'long': 210, 'deep': 720}
+
+
+def spoken_length_warning(words, cut, ledger=None):
+    """How long the script will run as Krish says it, from his own takes
+    (config/narration-ledger.json, narration_diff.py): he adds to every script
+    (9% on Monday 12 Oct, 38% by Friday 16 Oct) at 170 to 180 words a minute, so
+    a script inside its word count can still run over. A warning, never a refusal."""
+    if cut not in SPOKEN_CAP_S:
+        return None
+    import narration_diff
+    got = narration_diff.spoken_estimate(len(words), cut, ledger)
+    if not got:
+        return None
+    secs, how = got
+    if secs <= SPOKEN_CAP_S[cut]:
+        return None
+    cap = SPOKEN_CAP_S[cut]
+    return (f'as Krish says it, this {cut} cut will run about {int(secs) // 60}:{int(secs) % 60:02d}, over {cap // 60}:{cap % 60:02d} '
+            f'({how}): cut about {round(len(words) * (1 - cap / secs))} words (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+
+
 REJECTED = Path(__file__).resolve().parents[2] / 'config' / 'rejected-lines.json'
 
 
@@ -693,6 +717,15 @@ def self_test():
     check('a song made with an app, or "it", is not that line', [bool(AI_LINE.search(x)) for x in (
         'I made a song with Suno in ten minutes.', 'I made it with AI in ten minutes.', 'A fan made this with AI.')], [False, False, False])
     check('the voice warning never refuses', problems(GOOD), [])
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        led = Path(tmp) / 'ledger.json'
+        led.write_text(json.dumps({'takes': [{'take': 'x', 'cut': 'short', 'date': '2026-10-14', 'said_more_pct': 38.3, 'words_a_minute': 174.2}]}))
+        warned = spoken_length_warning(['w'] * 190, 'short', led)
+        check('a 90-second script that will run long as he says it is a warning naming the time and the cut to make',
+              (bool(warned), '1:30' in (warned or '') or '1:3' in (warned or ''), 'SCRIPT_AS_HE_TALKS' in (warned or '')), (True, True, True))
+        check('one that fits is not', spoken_length_warning(['w'] * 150, 'short', led), None)
+        check('no take of the cut, no warning', spoken_length_warning(['w'] * 900, 'deep', led), None)
     filler = lambda n: 'Why does the price matter? ' + ' '.join(['word'] * (n - 5))
     check('a 3-minute long cut passes the length rule', length_problem(filler(450).split(), 'long'), None)
     check('a 4-minute long cut is refused', 'cut it to 405 to 495' in (length_problem(filler(617).split(), 'long') or ''), True)
@@ -841,6 +874,9 @@ def main(argv):
             print(f'ready      {path}')
         for item in warn_file(path):
             print(f'  WARN {item}')
+        long_said = spoken_length_warning(words_of(' '.join(spoken_paragraphs(Path(path).read_text(encoding='utf-8-sig')))), cut)
+        if long_said:
+            print(f'  WARN {long_said}')
     return worst
 
 

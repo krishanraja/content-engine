@@ -1,0 +1,224 @@
+{
+ "_about": "Every take Krish has recorded, set against the script he read (scripts/post-pack/narration_diff.py): how much he adds, how fast he talks, how he opens his sentences. Krish, 2026-10-17: \"I also need you to list everything about my narration that deviated from the script ... Thats how script should be written in the future.\" story_check.py reads it to say how long a script will run when he says it. Add a take with narration_diff.py ledger.",
+ "takes": [
+  {
+   "take": "mon-long",
+   "cut": "long",
+   "date": "2026-10-12",
+   "piece": "f328382d-71b3-41a7-a221-d8615826f12e",
+   "script_words": 486,
+   "said_words": 519,
+   "said_more_pct": 6.8,
+   "own_words_pct": 9.2,
+   "script_kept_pct": 96.9,
+   "minutes": 3.04,
+   "words_a_minute": 170.7,
+   "words_a_minute_talking": 173.9,
+   "sentence_words_said": 10.2,
+   "sentence_words_script": 9.7,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 41.2,
+    "script": 20.0
+   },
+   "tags_a_minute": {
+    "filler": 2.96,
+    "signpost": 2.96,
+    "rephrase": 2.63,
+    "addition": 0.66,
+    "intensifier": 0.33,
+    "hedge": 0.33,
+    "number": 0.33,
+    "skip": 0.33
+   }
+  },
+  {
+   "take": "mon-short",
+   "cut": "short",
+   "date": "2026-10-12",
+   "piece": "f328382d-71b3-41a7-a221-d8615826f12e",
+   "script_words": 227,
+   "said_words": 257,
+   "said_more_pct": 13.2,
+   "own_words_pct": 15.6,
+   "script_kept_pct": 95.6,
+   "minutes": 1.52,
+   "words_a_minute": 169.5,
+   "words_a_minute_talking": 173.7,
+   "sentence_words_said": 10.7,
+   "sentence_words_script": 9.5,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 33.3,
+    "script": 12.5
+   },
+   "tags_a_minute": {
+    "filler": 5.27,
+    "rephrase": 4.62,
+    "signpost": 3.3,
+    "addition": 1.32,
+    "to the viewer": 1.32,
+    "number": 1.32,
+    "aside": 0.66,
+    "intensifier": 0.66,
+    "hedge": 0.66
+   }
+  },
+  {
+   "take": "wed-long-a",
+   "cut": "long",
+   "date": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef",
+   "script_words": 493,
+   "said_words": 592,
+   "said_more_pct": 20.1,
+   "own_words_pct": 23.8,
+   "script_kept_pct": 91.5,
+   "minutes": 3.43,
+   "words_a_minute": 172.5,
+   "words_a_minute_talking": 175.3,
+   "sentence_words_said": 9.7,
+   "sentence_words_script": 8.5,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 36.1,
+    "script": 15.5
+   },
+   "tags_a_minute": {
+    "rephrase": 6.12,
+    "filler": 3.5,
+    "signpost": 2.62,
+    "number": 2.33,
+    "to the viewer": 1.46,
+    "addition": 0.87,
+    "intensifier": 0.58,
+    "aside": 0.58,
+    "hedge": 0.29,
+    "skip": 0.29
+   }
+  },
+  {
+   "take": "wed-long-b",
+   "cut": "long",
+   "date": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef",
+   "script_words": 490,
+   "said_words": 591,
+   "said_more_pct": 20.6,
+   "own_words_pct": 25.2,
+   "script_kept_pct": 90.2,
+   "minutes": 3.27,
+   "words_a_minute": 180.8,
+   "words_a_minute_talking": 183.5,
+   "sentence_words_said": 11.8,
+   "sentence_words_script": 9.1,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 28.0,
+    "script": 18.5
+   },
+   "tags_a_minute": {
+    "rephrase": 5.2,
+    "addition": 2.14,
+    "filler": 1.53,
+    "intensifier": 1.22,
+    "aside": 1.22,
+    "number": 0.92,
+    "hedge": 0.92,
+    "signpost": 0.61,
+    "to the viewer": 0.31
+   }
+  },
+  {
+   "take": "wed-short-a",
+   "cut": "short",
+   "date": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef",
+   "script_words": 225,
+   "said_words": 260,
+   "said_more_pct": 15.6,
+   "own_words_pct": 20.0,
+   "script_kept_pct": 92.4,
+   "minutes": 1.46,
+   "words_a_minute": 178.5,
+   "words_a_minute_talking": 178.8,
+   "sentence_words_said": 12.4,
+   "sentence_words_script": 9.0,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 33.3,
+    "script": 16.0
+   },
+   "tags_a_minute": {
+    "rephrase": 6.18,
+    "filler": 3.43,
+    "intensifier": 2.06,
+    "addition": 1.37,
+    "to the viewer": 1.37,
+    "hedge": 0.69,
+    "skip": 0.69,
+    "signpost": 0.69,
+    "aside": 0.69
+   }
+  },
+  {
+   "take": "wed-short-b",
+   "cut": "short",
+   "date": "2026-10-14",
+   "piece": "7554ed4a-560b-4365-b266-ea72abeed7ef",
+   "script_words": 227,
+   "said_words": 314,
+   "said_more_pct": 38.3,
+   "own_words_pct": 33.4,
+   "script_kept_pct": 92.1,
+   "minutes": 1.8,
+   "words_a_minute": 174.2,
+   "words_a_minute_talking": 174.4,
+   "sentence_words_said": 11.2,
+   "sentence_words_script": 9.5,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 35.7,
+    "script": 16.7
+   },
+   "tags_a_minute": {
+    "rephrase": 6.1,
+    "to the viewer": 4.44,
+    "filler": 1.66,
+    "aside": 1.66,
+    "signpost": 1.11,
+    "hedge": 1.11,
+    "number": 0.55
+   }
+  },
+  {
+   "take": "Fri long",
+   "cut": "deep",
+   "date": "2026-10-16",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7",
+   "script_words": 1754,
+   "said_words": 2403,
+   "said_more_pct": 37.0,
+   "own_words_pct": 37.8,
+   "script_kept_pct": 85.2,
+   "minutes": 14.26,
+   "words_a_minute": 168.5,
+   "words_a_minute_talking": 171.9,
+   "sentence_words_said": 14.9,
+   "sentence_words_script": 10.3,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 49.7,
+    "script": 17.0
+   },
+   "tags_a_minute": {
+    "rephrase": 5.4,
+    "filler": 3.08,
+    "aside": 2.52,
+    "addition": 1.68,
+    "intensifier": 1.4,
+    "hedge": 1.4,
+    "number": 1.26,
+    "signpost": 1.12,
+    "to the viewer": 0.98,
+    "dropped": 0.28,
+    "skip": 0.14,
+    "restart": 0.07,
+    "contraction": 0.07
+   }
+  }
+ ]
+}

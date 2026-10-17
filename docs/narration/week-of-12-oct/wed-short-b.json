@@ -1,0 +1,442 @@
+{
+ "label": "wed-short-b",
+ "script": ".cache/produce/2026-10-16-904658db/analysis/narration/wed-short-b.script.md",
+ "words": ".cache/produce/2026-10-16-904658db/analysis/narration/wed-short-b.words.json",
+ "rates": {
+  "script_words": 227,
+  "said_words": 314,
+  "word_for_word": 209,
+  "said_more_pct": 38.3,
+  "own_words_pct": 33.4,
+  "script_kept_pct": 92.1,
+  "minutes": 1.8,
+  "words_a_minute": 174.2,
+  "words_a_minute_talking": 174.4,
+  "differences": 19,
+  "differences_a_minute": 10.5,
+  "tags": {
+   "rephrase": 11,
+   "to the viewer": 8,
+   "filler": 3,
+   "aside": 3,
+   "signpost": 2,
+   "hedge": 2,
+   "number": 1
+  },
+  "tags_a_minute": {
+   "rephrase": 6.1,
+   "to the viewer": 4.44,
+   "filler": 1.66,
+   "aside": 1.66,
+   "signpost": 1.11,
+   "hedge": 1.11,
+   "number": 0.55
+  },
+  "sentence_words_said": 11.2,
+  "sentence_words_script": 9.5,
+  "sentences_starting_with_a_joiner_pct": {
+   "said": 35.7,
+   "script": 16.7
+  },
+  "top_starts_said": [
+   [
+    "so",
+    5
+   ],
+   [
+    "muse",
+    4
+   ],
+   [
+    "and",
+    3
+   ],
+   [
+    "i'm",
+    2
+   ],
+   [
+    "i've",
+    1
+   ],
+   [
+    "why",
+    1
+   ],
+   [
+    "see",
+    1
+   ],
+   [
+    "think",
+    1
+   ]
+  ],
+  "top_words_added": [
+   [
+    "you",
+    5
+   ],
+   [
+    "and",
+    4
+   ],
+   [
+    "it's",
+    2
+   ],
+   [
+    "into",
+    2
+   ],
+   [
+    "but",
+    2
+   ],
+   [
+    "know",
+    2
+   ],
+   [
+    "this",
+    2
+   ],
+   [
+    "your",
+    2
+   ],
+   [
+    "so",
+    2
+   ],
+   [
+    "certainly",
+    2
+   ],
+   [
+    "worth",
+    2
+   ],
+   [
+    "having",
+    1
+   ],
+   [
+    "look",
+    1
+   ],
+   [
+    "at",
+    1
+   ],
+   [
+    "what's",
+    1
+   ],
+   [
+    "right",
+    1
+   ],
+   [
+    "now",
+    1
+   ],
+   [
+    "i'm",
+    1
+   ],
+   [
+    "sure",
+    1
+   ],
+   [
+    "you've",
+    1
+   ]
+  ],
+  "top_words_dropped": [
+   [
+    "looking",
+    1
+   ],
+   [
+    "at",
+    1
+   ],
+   [
+    "what's",
+    1
+   ],
+   [
+    "really",
+    1
+   ],
+   [
+    "it's",
+    1
+   ],
+   [
+    "not",
+    1
+   ],
+   [
+    "you",
+    1
+   ],
+   [
+    "usually",
+    1
+   ],
+   [
+    "say",
+    1
+   ],
+   [
+    "and",
+    1
+   ],
+   [
+    "meta's",
+    1
+   ],
+   [
+    "will",
+    1
+   ],
+   [
+    "muse",
+    1
+   ],
+   [
+    "recommends",
+    1
+   ],
+   [
+    "june",
+    1
+   ]
+  ]
+ },
+ "differences": [
+  {
+   "at": 2.82,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "looking at what's really",
+   "said": "having a look at what's",
+   "script_words": 4,
+   "said_words": 5
+  },
+  {
+   "at": 5.42,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "that",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 6.54,
+   "kind": "added",
+   "tags": [
+    "filler",
+    "signpost"
+   ],
+   "script": "",
+   "said": "right now.",
+   "script_words": 0,
+   "said_words": 2
+  },
+  {
+   "at": 11.98,
+   "kind": "said differently",
+   "tags": [
+    "hedge",
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "It's",
+   "said": "I'm sure you've heard of it. And it's kind of",
+   "script_words": 1,
+   "said_words": 10
+  },
+  {
+   "at": 14.92,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "in",
+   "said": "into",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 21.82,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "not",
+   "said": "why not just use",
+   "script_words": 1,
+   "said_words": 4
+  },
+  {
+   "at": 24.14,
+   "kind": "added",
+   "tags": [
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "like you always do? See,",
+   "script_words": 0,
+   "said_words": 5
+  },
+  {
+   "at": 31.22,
+   "kind": "added",
+   "tags": [
+    "aside"
+   ],
+   "script": "",
+   "said": "Think of Claude co-work, but even more self-contained.",
+   "script_words": 0,
+   "said_words": 8
+  },
+  {
+   "at": 41.58,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "you usually",
+   "said": "usually you",
+   "script_words": 2,
+   "said_words": 2
+  },
+  {
+   "at": 47.24,
+   "kind": "added",
+   "tags": [
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "You know this catch.",
+   "script_words": 0,
+   "said_words": 4
+  },
+  {
+   "at": 51.56,
+   "kind": "added",
+   "tags": [
+    "to the viewer"
+   ],
+   "script": "",
+   "said": "it needs your",
+   "script_words": 0,
+   "said_words": 3
+  },
+  {
+   "at": 58.2,
+   "kind": "added",
+   "tags": [
+    "filler"
+   ],
+   "script": "",
+   "said": "And",
+   "script_words": 0,
+   "said_words": 1
+  },
+  {
+   "at": 59.6,
+   "kind": "said differently",
+   "tags": [
+    "rephrase"
+   ],
+   "script": "say",
+   "said": "says",
+   "script_words": 1,
+   "said_words": 1
+  },
+  {
+   "at": 65.02,
+   "kind": "said differently",
+   "tags": [
+    "signpost",
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "And Meta's",
+   "said": "So Meta, as we know, is",
+   "script_words": 2,
+   "said_words": 6
+  },
+  {
+   "at": 70.14,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "aside",
+    "rephrase"
+   ],
+   "script": "will",
+   "said": "and businesses that want to advertise to you will be the ones that",
+   "script_words": 1,
+   "said_words": 13
+  },
+  {
+   "at": 76.46,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "Muse recommends.",
+   "said": "that Muse recommends to you. So",
+   "script_words": 2,
+   "said_words": 6
+  },
+  {
+   "at": 79.72,
+   "kind": "said differently",
+   "tags": [
+    "number",
+    "rephrase"
+   ],
+   "script": "30 June",
+   "said": "middle of",
+   "script_words": 2,
+   "said_words": 2
+  },
+  {
+   "at": 84.84,
+   "kind": "said differently",
+   "tags": [
+    "to the viewer",
+    "rephrase"
+   ],
+   "script": "shops",
+   "said": "does all your shopping",
+   "script_words": 1,
+   "said_words": 4
+  },
+  {
+   "at": 91.92,
+   "kind": "added",
+   "tags": [
+    "hedge",
+    "aside"
+   ],
+   "script": "",
+   "said": "of this. Who knows what happens with data legislation over the course of the next year. But it's certainly worth thinking about and certainly worth researching into.",
+   "script_words": 0,
+   "said_words": 27
+  }
+ ]
+}
