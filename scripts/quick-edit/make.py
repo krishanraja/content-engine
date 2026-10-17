@@ -1978,6 +1978,10 @@ def main():
         listing.write_text('\n'.join(names) + '\n')
         run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', listing, '-c', 'copy', edited])
         g1.write_text('\n'.join(plan_lines))
+        # The join holds every frame, so the parts only double the disk a long take needs
+        # (a 14-minute take filled a cloud session's allowance on 2026-10-17).
+        for part in parts.glob('*.mkv'):
+            part.unlink()
     loud = measure_loudness(edited)
     # The dialogue repair (episode.py), before any level is set, so the level is set on the voice as it will be heard.
     voice_src, repaired = edited, None

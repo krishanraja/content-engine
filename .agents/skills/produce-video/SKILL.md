@@ -271,7 +271,9 @@ after reading a script out loud than I do creating a script."
 - **The packaging round comes now, never earlier**: the Substack headline and
   cover words, the YouTube title and thumbnail words, the Shorts title, the
   video's title card, every picture heading and chapter divider, written from
-  what he said on camera and his playbook for each surface, put to him in one
+  what he said on camera and his playbook for each surface (headings and
+  dividers in one channel style, never pasted from the transcript:
+  CHANNEL_HEADINGS), put to him in one
   round (`make-piece`, "Titles, headlines and headings"). Claude Code runs it;
   Codex leaves one board item for the next Claude Code session. Nothing with
   those words on it (a title card, a thumbnail, a card heading) is drawn before

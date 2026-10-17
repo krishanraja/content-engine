@@ -59,20 +59,25 @@
   {
    "id": "headings-from-his-words",
    "on": "2026-10-17",
-   "krish": "These headings are so stupid it's insane. I can't believe you're putting these to me.",
-   "why": "They were written to pass the title checker (names stuffed in, label strings, bare numbers), not to be read by a viewer in a second.",
-   "means": "A picture heading or chapter divider starts from what he says on camera at that moment, in his words; the checker is a floor, never the writer.",
+   "krish": "These headings are so stupid it's insane. I can't believe you're putting these to me. Then: \"I do worry that using my own words for headings and chapter names will lose some of what makes this feel like a real media channel\"",
+   "why": "First they were written to pass the title checker (names stuffed in, label strings, bare numbers), not to be read in a second. The fix overcorrected into pasting his transcript, which loses the edited layer that makes a channel feel professional.",
+   "means": "Headings and chapter dividers are an editorial layer in one channel style: one device across the episode, each line a short claim or promise naming the real thing, a kicker with the source and date, built on what he says at that moment and his best phrases, never pasted from the transcript and never written to pass the checker.",
    "status": "encoded",
    "encoded": [
     {
      "file": "config/title-verdicts.json",
-     "contains": "Never write a card heading or chapter divider to pass",
+     "contains": "that reads like a transcript, not a channel",
      "how": "the lesson every title round prints"
     },
     {
      "file": ".claude/skills/make-piece/SKILL.md",
-     "contains": "his own words in the take",
-     "how": "how headings are written"
+     "contains": "CHANNEL_HEADINGS",
+     "how": "how headings and dividers are written"
+    },
+    {
+     "file": ".claude/skills/produce-video/SKILL.md",
+     "contains": "CHANNEL_HEADINGS",
+     "how": "the packaging round after the takes"
     }
    ]
   },
