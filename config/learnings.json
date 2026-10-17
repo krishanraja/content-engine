@@ -269,6 +269,26 @@
      "how": "the packaging round after the takes"
     }
    ]
+  },
+  {
+   "id": "sniffs-dampened",
+   "on": "2026-10-17",
+   "krish": "i was sniffing a bit so dampen that out surgically.",
+   "why": "A sniff between lines sounds amateur, and cutting it would move the picture against his voice; he wants it gone without the edit showing.",
+   "means": "Every cut finds sniffs in the gaps between his words and turns only those spans down, with soft fades, never cutting; each one is listed in the render report and checked before a cut ships.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/quick-edit/make.py",
+     "contains": "desniff",
+     "how": "on by default in every render"
+    },
+    {
+     "file": "scripts/quick-edit/episode.py",
+     "contains": "def sniffs",
+     "how": "the detector and the duck, self-tested"
+    }
+   ]
   }
  ]
 }
