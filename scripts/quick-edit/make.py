@@ -1128,11 +1128,17 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
     # a pivotal line. Laid on the speaker's own picture, never on the tall
     # cut's face band, whose crop is fixed.
     framing = cfg.get('_framing') or []
+    # The cut's frames on exact times: its container (Matroska) keeps them to
+    # the millisecond, which 1/24 s never is, and an overlay then showed a
+    # frame twice whenever one landed a fraction of a millisecond late (241
+    # times in 30 s of a 24 fps cut, 17 October). Every window of the cut is
+    # whole frames (segments()), so frame N is at N/FPS exactly.
+    g.append(f'[0:v]setpts=N/({FPS}*TB)[v0]')
     if asp == '9x16':
         bx, by, bw, bh = face_band(cw, ch, cfg['face'][0], cfg['face'][1])
         fw_out = 1080
         nr = len(runs_of(wins))
-        g.append(f'[0:v]split={1 + max(nr, 1)}[sp0]' + ''.join(f'[fcs{i}]' for i in range(max(nr, 1))))
+        g.append(f'[v0]split={1 + max(nr, 1)}[sp0]' + ''.join(f'[fcs{i}]' for i in range(max(nr, 1))))
         g.extend(episode.framing_graph('sp0', 'sp', framing, cw, ch, cfg['face']))
         g.append(f"[sp]scale=1080:{round(ch * 1080 / cw)}:flags=lanczos,crop=1080:1920,unsharp=5:5:0.6[s1]")
         for i in range(max(nr, 1)):
@@ -1146,7 +1152,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         fr = n
         n += 1
         sw = round(cw * 1080 / ch)
-        g.extend(episode.framing_graph('0:v', 'spf', framing, cw, ch, cfg['face']))
+        g.extend(episode.framing_graph('v0', 'spf', framing, cw, ch, cfg['face']))
         g.append(f"[spf]scale={sw}:1080:flags=lanczos,unsharp=5:5:0.4[spk]")
         g.append(f"[{fr}:v]format=rgba[fr]")
         # The speaker eases aside as a picture comes in, and back as it goes.
