@@ -1,0 +1,386 @@
+{
+ "fri-deep-15-claude-names": {
+  "heading": "Claude Opus 4.8, Opus 5, Opus 5.5",
+  "said": "And it's always a new intelligence number pegged to a new model number, Claude Opus 4.8, Opus 5, Opus 5.5.",
+  "at": 18.6,
+  "on_screen": "And it's always a new intelligence number pegged to a new model number,"
+ },
+ "fri-deep-15-claude-names-s2": {
+  "heading": "Claude Opus 4.8, Opus 5, Opus 5.5",
+  "said": "Claude Opus 4.8, Opus 5, Opus 5.5.",
+  "at": 21.28,
+  "on_screen": "Claude Opus 4.8,"
+ },
+ "fri-deep-15-claude-names-s3": {
+  "heading": "Claude Opus 4.8, Opus 5, Opus 5.5",
+  "said": "Opus 5, Opus 5.5.",
+  "at": 23.02,
+  "on_screen": "Opus 5,",
+  "held_from": "fri-deep-15-claude-names-s2",
+  "own_words": "Opus 5, Opus 5.5",
+  "why_held": "its own words are two bare names over 0.7 s"
+ },
+ "fri-deep-15-claude-names-s4": {
+  "heading": "Claude Opus 4.8, Opus 5, Opus 5.5",
+  "said": "Opus 5.5.",
+  "at": 23.72,
+  "on_screen": "Opus 5.5.",
+  "held_from": "fri-deep-15-claude-names-s2",
+  "own_words": "Opus 5.5",
+  "why_held": "its own words are one bare name"
+ },
+ "fri-claude-launch-pages": {
+  "heading": "It launched Opus 4.8 in May",
+  "said": "it launched Opus 4.8 in May, Opus 5 in July, Opus 5.5 in September.",
+  "at": 109.06,
+  "on_screen": "it launched Opus 4.8 in May,"
+ },
+ "fri-claude-launch-pages-p2": {
+  "heading": "Opus 5 in July",
+  "said": "Opus 5 in July, Opus 5.5 in September.",
+  "at": 111.12,
+  "on_screen": "Opus 5 in July,"
+ },
+ "fri-claude-launch-pages-p3": {
+  "heading": "Opus 5.5 in September",
+  "said": "Opus 5.5 in September.",
+  "at": 112.3,
+  "on_screen": "Opus 5.5 in September."
+ },
+ "fri-deep-openai-5-1-to-6-1": {
+  "heading": "From GPT-5.1 to 6.1 in under a year",
+  "said": "OpenAI's ChatGPT went from GPT 5.1 to 6.1 in under a year, with a lot in between.",
+  "at": 114.46,
+  "on_screen": "OpenAI's ChatGPT went from GPT"
+ },
+ "fri-deep-openai-5-1-to-6-1-r1": {
+  "heading": "From GPT-5.1 to 6.1 in under a year",
+  "said": "5.1 to 6.1 in under a year, with a lot in between.",
+  "at": 116.8,
+  "on_screen": "5.1",
+  "held_from": "fri-deep-openai-5-1-to-6-1",
+  "own_words": "5.1 to 6.1 in under a year",
+  "why_held": "1.1 s on screen; its own words name no product"
+ },
+ "fri-deep-openai-5-1-to-6-1-r2": {
+  "heading": "From GPT-5.1 to 6.1 in under a year",
+  "said": "6.1 in under a year, with a lot in between.",
+  "at": 117.86,
+  "on_screen": "6.1 in under a year, with a lot in between.",
+  "held_from": "fri-deep-openai-5-1-to-6-1",
+  "own_words": "6.1 in under a year",
+  "why_held": "its own words name no product"
+ },
+ "fri-deep-altman-same-day": {
+  "heading": "A million new people joined ChatGPT in one hour",
+  "said": "Sam Altman, who runs OpenAI, then said a million new people joined ChatGPT in one hour. That same day, OpenAI said investors were putting in $40 billion. OpenAI had been lining up that money for months,",
+  "at": 133.24,
+  "on_screen": "Sam Altman, who runs OpenAI, then said a million new people joined ChatGPT in one hour."
+ },
+ "fri-deep-altman-same-day-t2": {
+  "heading": "OpenAI said investors were putting in $40 billion",
+  "said": "That same day, OpenAI said investors were putting in $40 billion. OpenAI had been lining up that money for months,",
+  "at": 140.64,
+  "on_screen": "That same day, OpenAI said investors were putting in $40 billion."
+ },
+ "fri-deep-altman-same-day-t3": {
+  "heading": "OpenAI had been lining up that money for months",
+  "said": "OpenAI had been lining up that money for months,",
+  "at": 145.56,
+  "on_screen": "OpenAI had been lining up that money for months, and announcing"
+ },
+ "fri-deep-thinking-settings": {
+  "heading": "ChatGPT and Claude both let you choose, for now",
+  "said": "See, ChatGPT and Claude both let you choose how hard the AI thinks for now.",
+  "at": 202.6,
+  "on_screen": "See, ChatGPT and Claude both let you choose how hard the AI thinks for now."
+ },
+ "fri-deep-aa-same-claude": {
+  "heading": "Claude Opus 5.5 through a really tough reasoning test",
+  "said": "A group called Artificial Analysis found the very same Claude Opus 5.5 through a really tough reasoning test in all the different gears. And in its top gear, it did obviously much better than in its lowest gear, and the older Opus 5 in its top gear, beat the newest one in its lowest gear, in gear 1. So, changing gears definitely beats getting a model upgrade. The thinking matters more than the model name. To be fair, the new one's middle gear matched the old one's top gear for much less money.",
+  "at": 275.82,
+  "on_screen": "A group called Artificial Analysis found the very same Claude Opus 5.5 through a really tough reasoning test in all the different gears."
+ },
+ "fri-deep-aa-same-claude-s1": {
+  "heading": "Claude Opus 5.5 through a really tough reasoning test",
+  "said": "in its top gear, it did obviously much better than in its lowest gear, and the older Opus 5 in its top gear, beat the newest one in its lowest gear, in gear 1. So, changing gears definitely beats getting a model upgrade. The thinking matters more than the model name. To be fair, the new one's middle gear matched the old one's top gear for much less money.",
+  "at": 285.58,
+  "on_screen": "in its top gear, it did obviously much better than in its lowest gear, and",
+  "held_from": "fri-deep-aa-same-claude",
+  "own_words": "In its top gear, it did obviously much better",
+  "why_held": "its own words are the piece's shorthand (top gear, lowest gear)"
+ },
+ "fri-deep-aa-same-claude-s2": {
+  "heading": "Claude Opus 5.5 through a really tough reasoning test",
+  "said": "the older Opus 5 in its top gear, beat the newest one in its lowest gear, in gear 1. So, changing gears definitely beats getting a model upgrade. The thinking matters more than the model name. To be fair, the new one's middle gear matched the old one's top gear for much less money.",
+  "at": 289.38,
+  "on_screen": "the older Opus 5 in its top gear, beat the newest one in its lowest gear, in gear 1. So, changing gears definitely beats getting a model upgrade. The thinking matters more than the model name.",
+  "held_from": "fri-deep-aa-same-claude",
+  "own_words": "The thinking matters more than the model name",
+  "why_held": "its words are shorthand ('the older Opus 5 in its top gear, beat the newest one in its lowest gear'); his clean line here names no product and fails video_card's floor"
+ },
+ "fri-deep-aa-same-claude-s3": {
+  "heading": "Claude Opus 5.5 through a really tough reasoning test",
+  "said": "To be fair, the new one's middle gear matched the old one's top gear for much less money.",
+  "at": 305.32,
+  "on_screen": "To be fair, the new one's middle gear matched the old one's top gear for much less money.",
+  "held_from": "fri-deep-aa-same-claude",
+  "own_words": "For much less money",
+  "why_held": "its own words are shorthand ('the new one's middle gear matched the old one's top gear')"
+ },
+ "fri-deep-cost-vs-score": {
+  "heading": "If Opus 5.5 thinks as hard as it can",
+  "said": "if Opus 5.5 thinks as hard as it can, it costs about 11 times as much as thinking just a little bit. But its score, the quality of the output, only goes up by about 30%.",
+  "at": 355.68,
+  "on_screen": "if Opus 5.5 thinks as hard as it can,"
+ },
+ "fri-deep-cost-vs-score-cost": {
+  "heading": "It costs about 11 times as much",
+  "said": "it costs about 11 times as much as thinking just a little bit. But its score, the quality of the output, only goes up by about 30%.",
+  "at": 358.64,
+  "on_screen": "it costs about 11 times as much as thinking just a little bit."
+ },
+ "fri-deep-cost-vs-score-score": {
+  "heading": "It costs about 11 times as much",
+  "said": "But its score, the quality of the output, only goes up by about 30%.",
+  "at": 363.52,
+  "on_screen": "But its score, the quality of the output, only goes up by about 30%.",
+  "held_from": "fri-deep-cost-vs-score-cost",
+  "own_words": "Its score only goes up by about 30%",
+  "why_held": "he says 'about 30%'; Artificial Analysis's 42 to 58 is 38% (about a third), so his number is not put on the card"
+ },
+ "fri-deep-altman-losing-on-pro": {
+  "heading": "OpenAI was losing money on its $200 plan",
+  "said": "In January 2025, Sam Altman said OpenAI was losing money on its $200 plan. And this,",
+  "at": 387.64,
+  "on_screen": "In January 2025, Sam Altman said OpenAI was losing money on its $200 plan. And this,"
+ },
+ "fri-gemini-auto": {
+  "heading": "Google's already started doing this",
+  "said": "Google's already started doing this since the 9th of October of this year, which is just last week. The free Gemini app already actually starts on a setting called Auto. It decides for you how much power each question gets, how much thinking power.",
+  "at": 425.06,
+  "on_screen": "Google's already started doing this since the 9th of October of this year, which is just last week."
+ },
+ "fri-gemini-auto-h1": {
+  "heading": "Free Gemini app starts on a setting called Auto",
+  "said": "The free Gemini app already actually starts on a setting called Auto. It decides for you how much power each question gets, how much thinking power.",
+  "at": 431.22,
+  "on_screen": "The free Gemini app already actually starts on a setting called Auto."
+ },
+ "fri-gemini-auto-h2": {
+  "heading": "Free Gemini app starts on a setting called Auto",
+  "said": "It decides for you how much power each question gets, how much thinking power.",
+  "at": 435.5,
+  "on_screen": "It decides for you how much power each question gets, how much thinking power.",
+  "held_from": "fri-gemini-auto-h1",
+  "own_words": "It decides for you how much power each question gets",
+  "why_held": "10 words; trimmed to 9 or fewer it names nothing and fails video_card's floor"
+ },
+ "fri-deep-openai-free-dec-2025": {
+  "heading": "Last December, free users lost it",
+  "said": "Last December, free users lost it, and OpenAI said free users liked the normal setting better. But WIRED magazine said the automatic picker seemed to send lots more free users to slower, higher thinking answers, which when no one's paying anything and it's free, that costs OpenAI a lot more.",
+  "at": 455.42,
+  "on_screen": "Last December, free users lost it,"
+ },
+ "fri-deep-openai-free-dec-2025-s2": {
+  "heading": "OpenAI said free users liked the normal setting better",
+  "said": "and OpenAI said free users liked the normal setting better. But WIRED magazine said the automatic picker seemed to send lots more free users to slower, higher thinking answers, which when no one's paying anything and it's free, that costs OpenAI a lot more.",
+  "at": 457.06,
+  "on_screen": "and OpenAI said free users liked the normal setting better."
+ },
+ "fri-deep-openai-free-dec-2025-s3": {
+  "heading": "WIRED magazine said that costs OpenAI a lot more",
+  "said": "But WIRED magazine said the automatic picker seemed to send lots more free users to slower, higher thinking answers, which when no one's paying anything and it's free, that costs OpenAI a lot more.",
+  "at": 460.8,
+  "on_screen": "But WIRED magazine said the automatic picker seemed to send lots more free users to slower, higher thinking answers, which when no one's paying anything and it's free, that costs OpenAI a lot more."
+ },
+ "fri-deep-openai-plus-pro-sep-2026": {
+  "heading": "OpenAI didn't say why",
+  "said": "See, then in September people put on to the Plus and Pro plans lost that too, and OpenAI didn't say why. And now on those plans, you pick the gear.",
+  "at": 475.08,
+  "on_screen": "See, then in September people put on to the Plus and Pro plans lost that too, and OpenAI didn't say why."
+ },
+ "fri-deep-openai-plus-pro-sep-2026-c2": {
+  "heading": "OpenAI didn't say why",
+  "said": "And now on those plans, you pick the gear.",
+  "at": 481.82,
+  "on_screen": "And now on those plans, you pick the gear.",
+  "held_from": "fri-deep-openai-plus-pro-sep-2026",
+  "own_words": "On those plans, you pick",
+  "why_held": "its own words end on the shorthand 'the gear'"
+ },
+ "fri-deep-thinking-use-1-to-7": {
+  "heading": "Fewer than one free user in 100 used thinking",
+  "said": "But before that, fewer than one free user in 100 used thinking every day, but obviously they ended up using it because the AI was choosing for them.",
+  "at": 562.4,
+  "on_screen": "But before that, fewer than one free user in 100 used thinking every day, but obviously"
+ },
+ "fri-deep-thinking-use-1-to-7-after": {
+  "heading": "Fewer than one free user in 100 used thinking",
+  "said": "they ended up using it because the AI was choosing for them.",
+  "at": 567.66,
+  "on_screen": "they ended up using it because the AI was choosing for them.",
+  "held_from": "fri-deep-thinking-use-1-to-7",
+  "own_words": "Because the AI was choosing for them",
+  "why_held": "names nothing and fails video_card's floor (no name, number or stake)"
+ },
+ "fri-deep-claude-code-reversal": {
+  "heading": "Anthropic learned its lesson too in March",
+  "said": "So Anthropic learned its lesson too in March. It moved its coding app down to the middle gear, Claude Code. Most people kept it there. Although it felt less smart. And Anthropic themselves called that a mistake and undid it.",
+  "at": 573.04,
+  "on_screen": "So Anthropic learned its lesson too in March."
+ },
+ "fri-deep-claude-code-reversal-f2": {
+  "heading": "It moved its coding app down, Claude Code",
+  "said": "It moved its coding app down to the middle gear, Claude Code. Most people kept it there. Although it felt less smart. And Anthropic themselves called that a mistake and undid it.",
+  "at": 575.62,
+  "on_screen": "It moved its coding app down to the middle gear, Claude Code."
+ },
+ "fri-deep-claude-code-reversal-f3": {
+  "heading": "Most people kept it there",
+  "said": "Most people kept it there. Although it felt less smart. And Anthropic themselves called that a mistake and undid it.",
+  "at": 579.94,
+  "on_screen": "Most people kept it there. Although it felt less smart."
+ },
+ "fri-deep-claude-code-reversal-f4": {
+  "heading": "Anthropic called that a mistake and undid it",
+  "said": "And Anthropic themselves called that a mistake and undid it.",
+  "at": 583.92,
+  "on_screen": "And Anthropic themselves called that a mistake and undid it."
+ },
+ "fri-deep-extended-cut-by-mistake": {
+  "heading": "OpenAI made ChatGPT think for less time",
+  "said": "And this January, OpenAI made ChatGPT think for less time. OpenAI said people like faster answers. Fair enough. I like faster answers. By mistake, it also cut a longer thinking setting called extended thinking. This took weeks to fix",
+  "at": 604.16,
+  "on_screen": "And this January, OpenAI made ChatGPT think for less time. OpenAI said people like faster answers. Fair enough. I like faster answers."
+ },
+ "fri-deep-extended-cut-by-mistake-r2": {
+  "heading": "By mistake, it cut a setting called Extended thinking",
+  "said": "By mistake, it also cut a longer thinking setting called extended thinking. This took weeks to fix",
+  "at": 614.2,
+  "on_screen": "By mistake, it also cut a longer thinking setting called extended thinking."
+ },
+ "fri-deep-extended-cut-by-mistake-r3": {
+  "heading": "By mistake, it cut a setting called Extended thinking",
+  "said": "This took weeks to fix",
+  "at": 618.72,
+  "on_screen": "This took weeks to fix and",
+  "held_from": "fri-deep-extended-cut-by-mistake-r2",
+  "own_words": "This took weeks to fix",
+  "why_held": "names nothing and fails video_card's floor"
+ },
+ "fri-deep-where-to-turn-it-up": {
+  "heading": "On ChatGPT, Medium or High",
+  "said": "So on ChatGPT, Medium or High. And on the free plan, pick Think. And on Claude and Gemini, the gear is called effort. So turn that up.",
+  "at": 681.62,
+  "on_screen": "So on ChatGPT, Medium or High."
+ },
+ "fri-deep-where-to-turn-it-up-c2": {
+  "heading": "On the free plan, pick Think",
+  "said": "And on the free plan, pick Think. And on Claude and Gemini, the gear is called effort. So turn that up.",
+  "at": 684.8,
+  "on_screen": "And on the free plan, pick Think."
+ },
+ "fri-deep-where-to-turn-it-up-c3": {
+  "heading": "On Claude and Gemini: effort. So turn that up.",
+  "said": "And on Claude and Gemini, the gear is called effort. So turn that up.",
+  "at": 687.52,
+  "on_screen": "And on Claude and Gemini, the gear is called effort. So turn that up."
+ },
+ "fri-call-85": {
+  "heading": "I'll chalk this at about 85%",
+  "said": "I'm actually pretty confident of this one. I'll chalk this at about 85%. I'm pretty certain this will happen.",
+  "at": 814.02,
+  "on_screen": "I'm actually pretty confident of this one."
+ },
+ "fri-call-85-fill": {
+  "heading": "I'll chalk this at about 85%",
+  "said": "I'll chalk this at about 85%. I'm pretty certain this will happen.",
+  "at": 815.58,
+  "on_screen": "I'll chalk this at about 85%. I'm pretty certain this will happen."
+ },
+ "fri-chapter-2": {
+  "heading": "Firstly, the names. Anthropic makes Claude",
+  "said": "Firstly, the names. Anthropic makes Claude,",
+  "at": 106.44,
+  "chapter": "Why the names keep coming",
+  "proposed_cue": {
+   "id": "fri-chapter-2",
+   "panel": "panels/fri-chapter-2-{aspect}.png",
+   "start": "Firstly, the names. Anthropic makes Claude",
+   "end": "Anthropic makes Claude,"
+  }
+ },
+ "fri-chapter-3": {
+  "heading": "What does matter? The thinking, not the model name.",
+  "said": "So, what does matter? The thinking of the model, not the model name.",
+  "at": 152.26,
+  "chapter": "The setting that matters",
+  "proposed_cue": {
+   "id": "fri-chapter-3",
+   "panel": "panels/fri-chapter-3-{aspect}.png",
+   "start": "So, what does matter? The thinking of the model",
+   "end": "not the model name."
+  }
+ },
+ "fri-chapter-4": {
+  "heading": "Hidden working costs a lot of money to run.",
+  "said": "See, all that hidden working runs on huge computer servers and data centres, which costs a lot of money to run.",
+  "at": 344.26,
+  "chapter": "What thinking costs them",
+  "proposed_cue": {
+   "id": "fri-chapter-4",
+   "panel": "panels/fri-chapter-4-{aspect}.png",
+   "start": "See, all that hidden working runs on huge",
+   "end": "costs a lot of money to run."
+  }
+ },
+ "fri-chapter-5": {
+  "heading": "Who decides how hard your AI really thinks?",
+  "said": "So, who decides how hard your AI really thinks?",
+  "at": 403.36,
+  "chapter": "Who decides next",
+  "proposed_cue": {
+   "id": "fri-chapter-5",
+   "panel": "panels/fri-chapter-5-{aspect}.png",
+   "start": "So, who decides how hard your AI really thinks?",
+   "end": "how hard your AI really thinks?"
+  }
+ },
+ "fri-chapter-6": {
+  "heading": "Is that a good thing though? Some of both.",
+  "said": "Is that a good thing though? Sort of some of both.",
+  "at": 544.2,
+  "chapter": "The good and the bad",
+  "proposed_cue": {
+   "id": "fri-chapter-6",
+   "panel": "panels/fri-chapter-6-{aspect}.png",
+   "start": "Is that a good thing though?",
+   "end": "Sort of some of both."
+  }
+ },
+ "fri-chapter-7": {
+  "heading": "If you're a business owner, what should you do?",
+  "said": "So if you're a business owner or someone thinking about putting AI into their business, what should you do?",
+  "at": 657.34,
+  "chapter": "What to do about it",
+  "proposed_cue": {
+   "id": "fri-chapter-7",
+   "panel": "panels/fri-chapter-7-{aspect}.png",
+   "start": "So if you're a business owner or someone",
+   "end": "what should you do?"
+  }
+ },
+ "fri-chapter-8": {
+  "heading": "Where does this go from here?",
+  "said": "So where does this go from here?",
+  "at": 776.7,
+  "chapter": "My prediction for 2027",
+  "proposed_cue": {
+   "id": "fri-chapter-8",
+   "panel": "panels/fri-chapter-8-{aspect}.png",
+   "start": "So where does this go from here?",
+   "end": "So where does this go from here?"
+  }
+ }
+}
