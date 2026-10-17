@@ -175,13 +175,35 @@ def verdict_of(title, data=None):
     return hits[0] if hits else None
 
 
+# A pointer at something the line never names ("one setting", "this setting",
+# "the setting behind it"). Friday 17 October's cold read: every fresh reader
+# got the gist and still asked "which setting?", and called each line a tease.
+HIDDEN_POINTER = re.compile(r"\b(?:this|that|one|a|the)\s+(?:\w+\s+)?(setting|thing|trick|secret|feature|switch|button)\b"
+                            r"(?!\s+(?:for|called|named|that (?:decides|sets|controls))\b)", re.I)
+
+
+def hidden_pointer(title):
+    """The line points at a thing it never names, or None."""
+    m = HIDDEN_POINTER.search(str(title or ''))
+    if not m:
+        return None
+    return (f'points at something it never names ("{m.group(0)}"): say what it is (e.g. "the setting for how hard it thinks"); '
+            'a line that hides what it is about reads as a tease (cold read, 2026-10-17: every reader asked which setting)')
+
+
 def surface_problems(title, surface, source=None):
     """The checks that depend on where the line shows: a line on a surface a
-    stranger sees first must name a real thing from the piece."""
-    if surface in PACKAGING_FIRST_SEEN and source:
-        why = names_nothing(title, source)
-        return [why] if why else []
-    return []
+    stranger sees first must name a real thing from the piece, and must not
+    point at a thing it never names."""
+    out = []
+    if surface in PACKAGING_FIRST_SEEN:
+        why = names_nothing(title, source) if source else None
+        if why:
+            out.append(why)
+        hid = hidden_pointer(title)
+        if hid:
+            out.append(hid)
+    return out
 
 
 PACKAGING_FIRST_SEEN = {'article', 'cover', 'youtube', 'thumbnail', 'shorts', 'tall_cover', 'title_card'}
@@ -376,6 +398,15 @@ def self_test():
             for good in ("Claude's new model lost to its old one", 'ChatGPT starts you on its lowest setting', 'OPUS 5.5 LOST'):
                 check(f'one that names a real thing passes: {good}', surface_problems(good, 'cover', piece), [])
             check('a card heading is not held to it (his words at that moment)', surface_problems('So what does matter?', 'card', piece), [])
+            for bad in ('The newest Claude lost to an older Claude. One setting most people never change decided it.',
+                        'ChatGPT and Claude: the setting that matters more than the model you pick',
+                        'We unpack why the newest Claude lost to an older one, and the setting behind it',
+                        'Why ChatGPT and Claude want you watching the model name, not this setting'):
+                check(f'a hidden pointer is refused: {bad}', any('never names' in w for w in surface_problems(bad, 'youtube', piece)), True)
+            for good in ('We unpack why the newest Claude lost to an older one, and the setting for how hard it thinks',
+                         'ChatGPT has a setting for how hard it thinks. It matters more than the model.',
+                         'The free Gemini app starts on a setting called Auto'):
+                check(f'a named setting passes: {good}', any('never names' in w for w in surface_problems(good, 'shorts', piece)), False)
             none = lambda m, path, b: (200, json.dumps({'ok': True, 'making': {'recordings': []}}))
             one = lambda m, path, b: (200, json.dumps({'ok': True, 'making': {'recordings': [{'cut': 'long', 'path': 'recordings/x.mp4'}]}}))
             down = lambda m, path, b: (503, '{}')
