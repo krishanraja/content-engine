@@ -363,6 +363,10 @@ def refine_onsets(words, db, env_t0, hop=0.01):
                 new, how = t_of(jj), 'moved earlier (voice starts before whisper)'
         w['on'] = round(new, 3)
         w['on_how'] = how
+        q = idx(new) - 1
+        while q >= 0 and not speech[q]:
+            q -= 1
+        w['quiet'] = round((idx(new) - 1 - q) * hop, 2)     # silence just before the word
         prev_on = new
     return thr
 
@@ -448,6 +452,10 @@ def plan_groups(words, clip_start, cut_windows, bold, payoffs, lead, max_words=3
                  or nxt.on - t.end > 0.45 or crosses_cut(t, nxt))
         if not close and len(cur) >= max_words:
             close = pay_id[i + 1] is None or len(cur) > 3
+            nn = toks[i + 2] if i + 2 < len(toks) else None
+            if close and len(cur) == 3 and pay_id[i + 1] is None and nxt.on - t.end < 0.3 and \
+                    (ends_sentence(nxt) or nn is None) and not crosses_cut(t, nxt):
+                close = False      # no one-word orphan: the fourth word ends the sentence
         if close:
             groups.append(Group([cur]))
             cur = []
@@ -696,8 +704,8 @@ class Treat:
         leaves a bright rim of the room on the person. So the model's mask only decides
         where the edge is (a band either side of it); inside the band each pixel's alpha
         comes from its colour, placed between the person's colour and the room's colour
-        just either side of it, and the room's light is taken back out of the edge pixels."""
-        I = frame_u8.astype(np.float32)
+        just either side of it, and the room's light is taken back out of the edge pixels.
+        The colour work runs on the band's pixels only, at full size."""
         hw, hh = W // 2, H // 2
         half = cv2.resize(frame_u8, (hw, hh), interpolation=cv2.INTER_AREA)
         g_mid = cv2.cvtColor(half, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255.0
@@ -709,61 +717,93 @@ class Treat:
         k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * band_r + 1, 2 * band_r + 1))
         fg_sure = cv2.erode(core, k).astype(np.float32)
         bg_sure = (1 - cv2.dilate(core, k)).astype(np.float32)
-        # colour space for the edge: Lab with lightness turned down, so a wall in the
-        # shadow of an ear (same lightness as skin, different colour) is still wall
-        lab = cv2.cvtColor(half, cv2.COLOR_RGB2LAB).astype(np.float32)
-        lab[..., 0] *= self.l_weight
-        halff = lab
-        F_far, _ = normconv(halff, fg_sure, 30)
-        F_loc, dF = normconv(halff, fg_sure, 7)
-        F_loc = F_loc * smoothstep(0.02, 0.2, dF)[..., None] + F_far * (1 - smoothstep(0.02, 0.2, dF)[..., None])
-        B_far, _ = normconv(halff, bg_sure, 30)
-        B_loc, dB = normconv(halff, bg_sure, 7)
-        B_loc = B_loc * smoothstep(0.02, 0.2, dB)[..., None] + B_far * (1 - smoothstep(0.02, 0.2, dB)[..., None])
         band = cv2.GaussianBlur(1 - fg_sure - bg_sure, (0, 0), 2.0)
-        B_rgb, dBr = normconv(half.astype(np.float32), bg_sure, 7)
-        B_rgbf, _ = normconv(half.astype(np.float32), bg_sure, 30)
-        B_rgb = B_rgb * smoothstep(0.02, 0.2, dBr)[..., None] + B_rgbf * (1 - smoothstep(0.02, 0.2, dBr)[..., None])
-        # colour alpha at full size
-        Fu = cv2.resize(F_loc, (W, H), interpolation=cv2.INTER_LINEAR)
-        Bu = cv2.resize(B_loc, (W, H), interpolation=cv2.INTER_LINEAR)
-        Il = cv2.cvtColor(frame_u8, cv2.COLOR_RGB2LAB).astype(np.float32)
-        Il[..., 0] *= self.l_weight
-        d = Fu - Bu
-        den = (d * d).sum(2)
-        ac = ((Il - Bu) * d).sum(2) / np.maximum(den, 1.0)
-        ac = cv2.GaussianBlur(np.clip(ac, 0, 1), (0, 0), 0.8)
+        fgs = cv2.GaussianBlur(fg_sure, (0, 0), 2.0)
+        # colours just inside and just outside the edge: Lab with lightness turned down
+        # (so a wall in the shadow of an ear, as light as skin but not its colour, is
+        # still wall), plus plain RGB for taking the room's light out
+        qw, qh = W // 4, H // 4
+        quarter = cv2.resize(half, (qw, qh), interpolation=cv2.INTER_AREA)
+        lab = cv2.cvtColor(quarter, cv2.COLOR_RGB2LAB).astype(np.float32)
+        lab[..., 0] *= self.l_weight
+        fq = cv2.resize(fg_sure, (qw, qh), interpolation=cv2.INTER_AREA)
+        bq = cv2.resize(bg_sure, (qw, qh), interpolation=cv2.INTER_AREA)
+        fq, bq = (fq > 0.99).astype(np.float32), (bq > 0.99).astype(np.float32)
+        qf = quarter.astype(np.float32)
+        F_loc = np.concatenate([fill_conv(lab, fq, 3.5), fill_conv(qf, fq, 3.5)], axis=2)
+        B_loc = np.concatenate([fill_conv(lab, bq, 3.5), fill_conv(qf, bq, 3.5)], axis=2)
+        # full size, band pixels only
+        bandu = cv2.resize(band, (W, H), interpolation=cv2.INTER_LINEAR)
+        alpha = cv2.resize(fgs, (W, H), interpolation=cv2.INTER_LINEAR)
+        idx = np.flatnonzero(bandu > 0.01)
+        ys, xs = np.divmod(idx, W)
+        Fb = sample(F_loc, xs, ys, 4)
+        Bb = sample(B_loc, xs, ys, 4)
+        prior_b = sample(pr.astype(np.float32), xs, ys, 2).reshape(-1)
+        Ib = frame_u8.reshape(-1, 3)[idx]
+        Ilab = cv2.cvtColor(Ib.reshape(-1, 1, 3), cv2.COLOR_RGB2LAB).reshape(-1, 3).astype(np.float32)
+        Ilab[:, 0] *= self.l_weight
+        d = Fb[:, :3] - Bb[:, :3]
+        den = (d * d).sum(1)
+        ac = ((Ilab - Bb[:, :3]) * d).sum(1) / np.maximum(den, 1.0)
         ac = np.clip((ac - 0.04) / 0.92, 0, 1)          # linear: a half-covered pixel stays half
         conf = smoothstep(self.conf_lo, self.conf_hi, np.sqrt(den))   # can colour tell person from room here?
-        prior = cv2.resize(pr, (W, H), interpolation=cv2.INTER_LINEAR)
-        bandu = cv2.resize(band, (W, H), interpolation=cv2.INTER_LINEAR)
-        a_band = conf * ac + (1 - conf) * prior
-        fgs = cv2.resize(cv2.GaussianBlur(fg_sure, (0, 0), 2.0), (W, H), interpolation=cv2.INTER_LINEAR)
-        alpha = np.clip(fgs + a_band * bandu, 0, 1)     # sure room stays exactly room
+        a_band = conf * ac + (1 - conf) * prior_b
+        af = alpha.reshape(-1)
+        af[idx] = np.clip(af[idx] + a_band * bandu.reshape(-1)[idx], 0, 1)   # sure room stays exactly room
+        alpha = cv2.GaussianBlur(alpha, (0, 0), 0.7)
         alpha[alpha < 0.01] = 0
+        # take the room's light back out of the edge pixels; an edge pixel is never
+        # brighter than the person just inside it (no light rim)
+        a_b = alpha.reshape(-1)[idx][:, None]
+        Fpix = (Ib.astype(np.float32) - (1 - a_b) * Bb[:, 3:]) / np.maximum(a_b, 0.15)
+        Fpix = np.clip(np.minimum(Fpix, Fb[:, 3:] * 1.05 + 12), 0, 255)
+        F = frame_u8.astype(np.float32)
+        F.reshape(-1, 3)[idx] = Fpix
         # the room at quarter size, the person filled out with the room's own colour
         # (normalised blur) so no skin or shirt bleeds into the soft background
         small = cv2.resize(frame_u8, (W // 4, H // 4), interpolation=cv2.INTER_AREA).astype(np.float32)
         hard = (cv2.resize(m_small, (W // 4, H // 4)) > 0.25).astype(np.uint8)
         hard = cv2.dilate(hard, np.ones((5, 5), np.uint8))
-        wgt = (1 - hard).astype(np.float32)
-        far, _ = normconv(small, wgt, 40)
-        soft, den2 = normconv(small, wgt, 9)
-        fill2 = smoothstep(0.02, 0.25, den2)[..., None]
-        b_new = self.grade(soft * fill2 + far * (1 - fill2))
+        b_new = self.grade(fill_conv(small, (1 - hard).astype(np.float32), 9))
         B_new = cv2.resize(b_new, (W, H), interpolation=cv2.INTER_LINEAR)
-        # take the room's light back out of the edge pixels, then lay them on the set
-        a3 = alpha[..., None]
-        Brgb = cv2.resize(B_rgb, (W, H), interpolation=cv2.INTER_LINEAR)
-        F = np.clip((I - (1 - a3) * Brgb) / np.maximum(a3, 0.15), 0, 255)
-        # an edge pixel is never brighter than the person just inside it: no light rim
-        F_rgb, dFr = normconv(half.astype(np.float32), fg_sure, 7)
-        F_rgbf, _ = normconv(half.astype(np.float32), fg_sure, 30)
-        F_rgb = F_rgb * smoothstep(0.02, 0.2, dFr)[..., None] + F_rgbf * (1 - smoothstep(0.02, 0.2, dFr)[..., None])
-        cap = cv2.resize(F_rgb, (W, H), interpolation=cv2.INTER_LINEAR) * 1.05 + 12
-        F = np.where(bandu[..., None] > 0.02, np.minimum(F, cap), F)
-        out = a3 * F + (1 - a3) * B_new
+        out = cv2.blendLinear(F, B_new, alpha, 1.0 - alpha)
         return out, alpha
+
+
+def fill_conv(img, wgt, sigma):
+    """Normalised blur of img over the pixels where wgt is 1; far from any, the colour
+    comes from a much wider blur (done small, for speed)."""
+    if img.shape[2] > 3:      # OpenCV filters take at most four channels
+        return np.concatenate([fill_conv(np.ascontiguousarray(img[..., c:c + 3]), wgt, sigma)
+                               for c in range(0, img.shape[2], 3)], axis=2)
+    near, den = normconv(img, wgt, sigma)
+    h, w = wgt.shape
+    s_img = cv2.resize(img, (w // 8, h // 8), interpolation=cv2.INTER_AREA)
+    s_w = cv2.resize(wgt, (w // 8, h // 8), interpolation=cv2.INTER_AREA)
+    far, _ = normconv(s_img.reshape(h // 8, w // 8, -1), s_w, 5)
+    far = cv2.resize(far, (w, h), interpolation=cv2.INTER_LINEAR).reshape(near.shape)
+    f = smoothstep(0.02, 0.2, den)[..., None]
+    return near * f + far * (1 - f)
+
+
+def sample(img, xs, ys, scale):
+    """Bilinear samples of a map made at 1/scale size, at full-size pixels (xs, ys)."""
+    n = len(xs)
+    cols = 1024                       # remap wants maps under 32767 rows
+    rows = max(1, -(-n // cols))
+    mx = np.zeros(rows * cols, np.float32)
+    my = np.zeros(rows * cols, np.float32)
+    mx[:n] = (xs + 0.5) / scale - 0.5
+    my[:n] = (ys + 0.5) / scale - 0.5
+    mx, my = mx.reshape(rows, cols), my.reshape(rows, cols)
+    chans = img.shape[2] if img.ndim == 3 else 1
+    outs = []
+    for c in range(0, chans, 4):     # and at most four channels
+        part = np.ascontiguousarray(img[..., c:c + 4]) if img.ndim == 3 else img
+        r = cv2.remap(part, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+        outs.append(r.reshape(rows * cols, -1)[:n])
+    return np.concatenate(outs, axis=1)
 
 
 # ----------------------------------------------------------------------------- dark object card
@@ -808,7 +848,7 @@ class Card:
                 raise SystemExit(f'logo not found: {path}')
             im = raster_logo(path, cache_dir)
             hit = next((w for w in spoken if cue and key_word(w['w']) == key_word(cue)), None)
-            at = (hit['on'] - clip_start - 0.04) if hit else self.t0 + 0.10 + 0.45 * k
+            at = (hit['on'] - clip_start - 0.04) if hit else self.t0 + 0.45 * k
             self.logos.append({'img': im, 'at': max(at, self.t0), 'name': path.name})
         n = len(self.logos)
         for k, lg in enumerate(self.logos):
@@ -904,42 +944,61 @@ class Shot:
     y_shift: float = 0.0
 
 
-def plan_shots(segments, words, clip_start, recipe, cuts=None):
-    """Speaker segments split into shots at the pauses before sentences (a punch-in cut),
-    roughly every three seconds, alternating a close and a closer framing."""
+def plan_shots(segments, words, clip_start, recipe, cuts=None, payoffs=()):
+    """Speaker segments split into shots, roughly every three seconds: a cut lands in
+    the pause before a sentence (the silence measured in his voice), or on a payoff
+    phrase as it arrives (a punch-in). Shots alternate a close and a closer framing,
+    phased so the payoff lines fall in the closer one where possible.
+    payoffs: (start, end) of each payoff line on the clip clock."""
     full = 'full-face-vertical' in recipe
     motion = 'constant-motion' in recipe
     zooms = (1.18, 1.34) if full else (1.0, 1.12)
     shots = []
-    cand = []
-    prev_e = None
-    for w in words:
-        if prev_e is not None and w['s'] - prev_e >= 0.25:
-            cand.append(w['on'] - clip_start - 2.0 / FPS)
-        prev_e = w['e']
+    cand = [(w['on'] - clip_start - 2.0 / FPS, False) for w in words if w.get('quiet', 0) >= 0.2]
+    cand += [(a - 1.0 / FPS, True) for a, _ in payoffs]
     if cuts is not None:
-        cand = [c - clip_start for c in cuts]
+        cand = [(c - clip_start, False) for c in cuts]
     flip = 0
     for a, b in segments:
         pts = [a]
         if motion:
             last = a
             while True:
-                opts = [c for c in cand if last + 1.8 <= c <= last + 4.5 and c <= b - 1.2]
                 if cuts is not None:
-                    opts = [c for c in cand if last + 0.5 <= c <= b - 0.5]
-                if not opts:
-                    break
-                c = min(opts, key=lambda c: abs(c - (last + 3.0))) if cuts is None else opts[0]
+                    opts = [c for c, _ in cand if last + 0.5 <= c <= b - 0.5]
+                    if not opts:
+                        break
+                    c = min(opts)
+                else:
+                    win = [(c, pay) for c, pay in cand if last + 1.8 <= c <= min(last + 4.5, b - 1.2)]
+                    pay = [c for c, p_ in win if p_]
+                    if pay:
+                        c = min(pay, key=lambda c: abs(c - (last + 3.0)))
+                    elif win:
+                        c = min((c for c, _ in win), key=lambda c: abs(c - (last + 3.0)))
+                    else:      # a long run with no pause in range: take the next one there is
+                        later = [c for c, _ in cand if last + 4.5 < c <= b - 1.2]
+                        if not later:
+                            break
+                        c = min(later)
                 pts.append(c)
                 last = c
         pts.append(b)
-        for k in range(len(pts) - 1):
-            t0 = round(pts[k] * FPS) / FPS
-            t1 = round(pts[k + 1] * FPS) / FPS
-            z = zooms[flip % 2] if motion else zooms[0]
+        spans = [(round(pts[k] * FPS) / FPS, round(pts[k + 1] * FPS) / FPS) for k in range(len(pts) - 1)]
+        best = None
+        for phase in ((flip % 2), (flip + 1) % 2):
+            # cost: seconds of payoff line shown in the wider framing
+            cost = 0.0
+            for k, (t0, t1) in enumerate(spans):
+                if zooms[(k + phase) % 2] == zooms[0] and motion:
+                    cost += sum(max(0.0, min(t1, pe) - max(t0, ps)) for ps, pe in payoffs)
+            if best is None or cost < best[0] - 1e-6:
+                best = (cost, phase)
+        phase = best[1]
+        for k, (t0, t1) in enumerate(spans):
+            z = zooms[(k + phase) % 2] if motion else zooms[0]
             shots.append(Shot(t0, t1, z))
-            flip += 1
+        flip = phase + len(spans)
     return shots
 
 
@@ -1060,7 +1119,13 @@ def render(args):
         cur = max(cur, b)
     if cur < dur:
         segs.append((cur, dur))
-    shots = plan_shots(segs, words, start, recipe, [float(x) for x in args.cuts.split(',')] if args.cuts else None)
+    pay_spans = []
+    for g in groups:
+        serif = [t for ln in g.lines for t in ln if t.kind == 'serif']
+        if serif:
+            pay_spans.append((serif[0].on, g.t1))
+    shots = plan_shots(segs, words, start, recipe, [float(x) for x in args.cuts.split(',')] if args.cuts else None,
+                       pay_spans)
     # caption block height (largest group) and the caption line
     max_block = max([g.height for g in groups], default=0)
     cap_bottom_limit = H * SAFE_BOTTOM - 16
@@ -1085,6 +1150,8 @@ def render(args):
                     chin_out = (np.percentile(fs[:, 3], 95) - y0) * z
                     worst = max(worst, chin_out)
                 if not groups or worst + 24 <= cap_top:
+                    break
+                if y0 >= H - H / z - 0.5:      # the frame's bottom edge: cannot lift further
                     break
                 s.y_shift += 12
     # report the framing against the caption line, frame by frame
@@ -1128,9 +1195,13 @@ def render(args):
     treat_obj = Treat() if treat else None
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     rv = np.sqrt(((xx - W / 2) / (W * 0.62)) ** 2 + ((yy - H * 0.47) / (H * 0.62)) ** 2)
-    vignette = (1 - 0.22 * smoothstep(0.55, 1.35, rv))[..., None].astype(np.float32) if treat else None
+    vig1 = (1 - 0.22 * smoothstep(0.55, 1.35, rv)).astype(np.float32)
+    vignette = cv2.merge([vig1, vig1, vig1]) if treat else None
     rng = np.random.default_rng(3)
-    fine_grain = [rng.normal(0, 2.2, (H, W, 1)).astype(np.float32) for _ in range(4)] if treat else None
+    fine_grain = [cv2.merge([g, g, g]) for g in (rng.normal(0, 2.2, (H, W)).astype(np.float32) for _ in range(4))] if treat else None
+    prev_a = prev_g = None
+    prev_k = -9
+    alpha_flicker = []
     cap_boxes = []
     t1 = time.time()
     for k, fr in enumerate(read_frames(decode_cmd(take, start, nframes, W, H), W, H)):
@@ -1142,7 +1213,17 @@ def render(args):
             img = card.render(t, k)
         else:
             if treat_obj is not None:
-                img, _ = treat_obj.apply(fr, masks[k])
+                img, alpha = treat_obj.apply(fr, masks[k])
+                # flicker of the final cut-out: frame-to-frame alpha change at the edge,
+                # where the picture itself is still (0-255)
+                a_s = cv2.resize(alpha, (W // 4, H // 4), interpolation=cv2.INTER_AREA)
+                g_s = cv2.GaussianBlur(cv2.cvtColor(cv2.resize(fr, (W // 4, H // 4), interpolation=cv2.INTER_AREA),
+                                                    cv2.COLOR_RGB2GRAY).astype(np.float32), (5, 5), 0)
+                if prev_a is not None and prev_k == k - 1:
+                    sel = (np.abs(g_s - prev_g) < 4) & (((a_s > 0.05) & (a_s < 0.95)) | ((prev_a > 0.05) & (prev_a < 0.95)))
+                    if sel.sum() > 50:
+                        alpha_flicker.append(float(np.abs(a_s - prev_a)[sel].mean() * 255))
+                prev_a, prev_g, prev_k = a_s, g_s, k
             else:
                 img = fr.astype(np.float32)
             s = next((s for s in shots if s.t0 <= t < s.t1), shots[-1])
@@ -1150,7 +1231,7 @@ def render(args):
                 M, *_ = frame_transform(s, t, recipe)
                 img = cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
             if vignette is not None:
-                img = img * vignette + fine_grain[k % 4]
+                img = cv2.add(cv2.multiply(img, vignette), fine_grain[k % 4])
             if groups:
                 bb = draw_captions(img, groups, t, cap_centre, bounce='word-bounce-in' in recipe)
                 if bb:
@@ -1166,6 +1247,11 @@ def render(args):
     if encp.wait() != 0:
         raise SystemExit('ffmpeg encode failed')
     report['render_s'] = round(time.time() - t1, 1)
+    if alpha_flicker:
+        report['mask']['final_alpha_flicker'] = {'mean': round(float(np.mean(alpha_flicker)), 2),
+                                                 'p95': round(float(np.percentile(alpha_flicker, 95)), 2),
+                                                 'max': round(float(np.max(alpha_flicker)), 2),
+                                                 'note': 'mean frame-to-frame change of the final alpha at the edge where the picture is still, 0-255'}
     if cap_boxes:
         report['caption_ink'] = {'min_top_px': min(b[2] for b in cap_boxes), 'max_bottom_px': max(b[4] for b in cap_boxes),
                                  'min_left_px': min(b[1] for b in cap_boxes), 'max_right_px': max(b[3] for b in cap_boxes),
