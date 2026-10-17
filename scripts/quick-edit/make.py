@@ -1995,6 +1995,18 @@ def main():
         repaired = {'chain': episode.VOICE_REPAIR, 'before_lufs': loud['input_i'], 'before_lra': loud.get('input_lra')}
         loud = measure_loudness(voice_src)
         repaired.update(after_lufs=loud['input_i'], after_lra=loud.get('input_lra'))
+    # Sniffs (episode.sniffs; Krish, 2026-10-17: "dampen that out surgically"): found only in the gaps between his
+    # words and turned down with soft fades, never cut, so no word, timing or lip sync moves. On unless "desniff": false.
+    sniffed = []
+    if cfg.get('desniff', True):
+        sniffed = episode.sniffs(voice_src, ws)
+        if sniffed:
+            dst = out / f"{cfg['name']}.desniff.wav"
+            stamp2, want2 = out / 'desniff.plan', f'{voice_src.stat().st_size} {voice_src.stat().st_mtime_ns} {json.dumps(sniffed)}'
+            if not (dst.exists() and stamp2.exists() and stamp2.read_text() == want2):
+                episode.duck(voice_src, dst, sniffed)
+                stamp2.write_text(want2)
+            voice_src = dst
     voice_in = float(loud['input_i'])
     toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names)
     early += spelling_warnings(toks)
@@ -2004,6 +2016,7 @@ def main():
               'cues': [{k: c[k] for k in ('id', 's', 'e')} for c in wins], 'missing_cues': missing,
               'captions': len(groups), 'spellings': spelt, 'loudness_in': loud['input_i'],
               **({'voice_repair': repaired} if repaired else {}),
+              'sniffs': [{'at': f"{e['s'] // 60:.0f}:{e['s'] % 60:05.2f}", **e} for e in sniffed],
               **({'speed': {'factor': speed[0], 'krish': speed[1]}} if speed else {}), 'fps': FPS}
     fonts = Path(__file__).resolve().parent / 'fonts'
     shapes = {}
