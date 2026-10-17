@@ -289,9 +289,11 @@ def end_screen_warnings(wins, intro_s, total_s, seconds):
 # long, far quieter than speech. The "s" that starts or ends a word sits against the word (the transcriber times
 # fricatives late), so the search keeps clear of both edges; voiced sound (a mumble, an untranscribed word) and
 # anything near speech level are left alone. Only those spans are turned down, with soft fades, never cut, so no
-# word, timing or lip sync changes; every one found is listed in the report to check.
+# word, timing or lip sync changes; every one found is listed in the report to check. 18 dB down: on his take a
+# sniff sits 25 to 40 dB over the room's floor, so it ends up near the room tone (an eighth as loud) without
+# leaving a hole of silence in the pause.
 SNIFF = {'after_word': 0.15, 'before_word': 0.22, 'min_gap': 0.15, 'min_s': 0.12, 'max_s': 1.2, 'over_floor_db': 12.0,
-         'under_speech_db': 42.0, 'voiced_max': 0.35, 'duck_db': -12.0, 'fade_s': 0.04}
+         'under_speech_db': 42.0, 'voiced_max': 0.35, 'duck_db': -18.0, 'fade_s': 0.04}
 
 
 def read_audio(path, rate=48000):
@@ -403,7 +405,8 @@ def _sniff_self_test(checks):
                                  np.sqrt(np.mean(x0[int(1.4 * rate):int(1.5 * rate), 0] ** 2)))
         same = bool(np.allclose(y[int(0.3 * rate):int(0.9 * rate), 0], x0[int(0.3 * rate):int(0.9 * rate), 0], atol=1e-6)
                     and np.allclose(y[int(1.79 * rate):int(1.87 * rate), 0], x0[int(1.79 * rate):int(1.87 * rate), 0], atol=1e-6))
-        checks.append(('the sniff is turned down about 12 dB; the words and the "s" are untouched', (round(burst_db) <= -11, same), (True, True)))
+        checks.append(('the sniff is turned down by the set depth; the words and the "s" are untouched',
+                       (abs(burst_db - SNIFF['duck_db']) < 1.0, same), (True, True)))
         checks.append(('a burst inside a word is never touched', sniffs(src, [{'s': 0.2, 'e': 2.8}], rate), []))
 
 
