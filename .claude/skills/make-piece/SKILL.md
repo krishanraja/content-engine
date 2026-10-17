@@ -132,6 +132,7 @@ rewritten and checked again from the top.
    series line, the article in the outro (HOOK_AND_CTA). A script never says
    it was made with AI or with Claude (house rule NO_AI_DISCLOSURE_LINE;
    Krish, 2026-10-12: "Eliminate the "I made this with AI" entirely").
+1b. **Write it the way he says it** (house rule SCRIPT_AS_HE_TALKS; Krish, 2026-10-17: "Thats how script should be written in the future"). Measured from his takes (`docs/narration/week-of-12-oct`, the rules in `habits-and-rules.json`): about one sentence in three opens with So, And, But, Now or See; the prediction runs straight into the claim ("So my prediction is that...") with its deadline as a period; "no one" and "I reckon"; every fact in one short fixed line; and about 200 script words for the 90-second cut, 400 for the 3-minute cut. The `spoken-line` entries in `config/golden-examples.json` are his own lines from the takes. `story_check.py` warns on each of these, and on a script that will run long as he says it, from his ledger.
 2. **Write it for a 12-year-old.** Krish, 2026-10-12: "I also feel like
    these scripts are too complicated for a layman to understand. Every
    single script should be understandable by a 12-year-old. I can't even

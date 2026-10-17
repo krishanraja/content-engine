@@ -31,6 +31,55 @@
    "said": "He wrote it himself, on the board, after signing off the drafted version; then in chat: \"just put them in teleprompter\"",
    "on": "2026-10-16",
    "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "kind": "spoken-line",
+   "text": "Now, is that half the cake or is it just breadcrumbs? No one's really saying.",
+   "why": "A question given its verb, \"just\" to shrink the small side, \"no one\" for the script's \"nobody\".",
+   "said": "He said it on camera, reading from the script and changing it (mon-long in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
+   "on": "2026-10-12"
+  },
+  {
+   "kind": "spoken-line",
+   "text": "So my prediction is that Universal and Sony make peace too.",
+   "why": "The prediction run straight into the claim, never a bare label.",
+   "said": "He said it on camera, reading from the script and changing it (mon-long in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
+   "on": "2026-10-12"
+  },
+  {
+   "kind": "spoken-line",
+   "text": "By the end of December, 2027, I reckon one of them will announce a deal with Suno, if not both.",
+   "why": "The deadline said as a period, \"I reckon\", and a raise of his own (\"if not both\").",
+   "said": "He said it on camera, reading from the script and changing it (mon-long in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
+   "on": "2026-10-12"
+  },
+  {
+   "kind": "spoken-line",
+   "text": "And they get paid before the singers get paid.",
+   "why": "The shared word said again in a contrast, where the script had \"before the singers do\".",
+   "said": "He said it on camera, reading from the script and changing it (mon-long in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
+   "on": "2026-10-12"
+  },
+  {
+   "kind": "spoken-line",
+   "text": "See, each company builds the kind of thing that makes it money.",
+   "why": "\"See,\" to carry the point on.",
+   "said": "He said it on camera, reading from the script and changing it (wed-long-b in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
+   "on": "2026-10-14"
+  },
+  {
+   "kind": "spoken-line",
+   "text": "So add all these scores up, and Muse actually ties with Siri.",
+   "why": "\"So\" before the result, \"actually\" on the turn.",
+   "said": "He said it on camera, reading from the script and changing it (wed-short-a in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
+   "on": "2026-10-14"
+  },
+  {
+   "kind": "spoken-line",
+   "text": "Now, don't get me wrong, some of the AI models out recently are really, really good.",
+   "why": "The concession in his own words before the claim.",
+   "said": "He said it on camera, reading from the script and changing it (fri-long in docs/narration/week-of-12-oct); Krish, 2026-10-17: \"Thats how script should be written in the future.\"",
+   "on": "2026-10-16"
   }
  ]
 }

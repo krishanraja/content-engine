@@ -547,7 +547,7 @@ def warnings(text):
     words = ' '.join(beats).split()
     found = []
     if len(words) >= SHORT_WORDS and not OPINION.search(' '.join(beats)):
-        found.append('it states no opinion as an opinion: somewhere say "my bet", "I think" or "my call", kept apart '
+        found.append('it states no opinion as an opinion: somewhere say "I reckon", "I think" or "my call", kept apart '
                      'from the checked facts (house rule VOICE_ON_CAMERA; a warning, not a refusal)')
     for beat in beats:
         hit = AI_LINE.search(beat)
@@ -561,6 +561,8 @@ def warnings(text):
         found.append('the beat after the series line does not open the way Krish would: say what you have been doing with '
                      'the thing, why it matters, and that you wanted to break it down (house rule PERSONAL_INTRO; his line is in '
                      'config/golden-examples.json; a warning, not a refusal)')
+    # How he says it, measured from his takes (SCRIPT_AS_HE_TALKS).
+    found += spoken_habit_warnings(beats)
     # The share of long words: a rough figure (names left out), told, never refused.
     if beats:
         r = reading(beats)
@@ -571,6 +573,44 @@ def warnings(text):
 
 
 LONG_WORD_SHARE = 0.06  # long words above this share are told, never refused
+
+# How Krish says a script, measured from his takes (house rule SCRIPT_AS_HE_TALKS;
+# docs/narration/week-of-12-oct): about one sentence in three opens with one of
+# these, in every take, about twice the scripts' share.
+JOINERS = ('so', 'and', 'but', 'now', 'see')
+JOINER_SHARE = 0.25
+BARE_PREDICTION = re.compile(r"^\s*(?:my prediction\s*[:.]|here'?s my bet\s*[:.]|my bet\s*[:.])\s*$", re.I)
+DAY_DEADLINE = re.compile(r"\b\d{1,2}(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)"
+                          r"\s+20\d\d\b")
+HIS_WORDS = [(re.compile(r"\bnobody\b", re.I), '"no one", not "nobody"'),
+             (re.compile(r"\b(?:my bet|I bet|I'd bet)\b", re.I), '"I reckon", not "my bet" or "I bet"')]
+
+
+def spoken_habit_warnings(beats):
+    """Where a script is not written the way he says it (house rule
+    SCRIPT_AS_HE_TALKS): warnings, never refusals."""
+    found = []
+    sents = [x for b in beats for x in re.split(r'(?<=[.!?])\s+', b) if words_of(x)]
+    if len(sents) >= 12:
+        share = sum(1 for x in sents if words_of(x)[0].lower() in JOINERS) / len(sents)
+        if share < JOINER_SHARE:
+            found.append(f'only {share:.0%} of its sentences open with So, And, But, Now or See; he opens about one in three that way '
+                         'in every take (So before a result or the prediction, "Now," before a new step or a question): say the link in '
+                         'the opening word (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+    for x in sents:
+        if BARE_PREDICTION.match(x):
+            found.append(f'"{x.strip()}" stands alone; he never says a prediction label on its own: run it into the claim, "So my '
+                         'prediction is that..." (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+            break
+    text = ' '.join(beats)
+    day = DAY_DEADLINE.search(text)
+    if day:
+        found.append(f'"{day.group(0)}" is a day number; he says a deadline as a period ("by the end of December 2027"): keep the '
+                     'exact day in the article and the prediction record (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+    for rx, say in HIS_WORDS:
+        if rx.search(text):
+            found.append(f'write his words: {say} (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+    return found
 
 
 CHAPTER_START = re.compile(r'starts:\s*"([^"]+)"')
@@ -700,12 +740,22 @@ def self_test():
     once = reading(['Models are the AI engines underneath. ChatGPT has lots of models now.'])['jargon']
     check('a word explained once stays explained for the rest of the script', 'models' in once or 'model' in once, False)
     def warns(t):
-        return [w for w in warnings(t) if 'PERSONAL_INTRO' not in w]
+        # The voice check alone: the intro and the spoken-habit warnings have their own tests.
+        return [w for w in warnings(t) if 'PERSONAL_INTRO' not in w and 'SCRIPT_AS_HE_TALKS' not in w]
     check('a long script with no opinion gets a warning, never a refusal', len(warns(GOOD)), 1)
     check('a script whose second beat skips the personal intro gets a PERSONAL_INTRO warning',
           any('PERSONAL_INTRO' in w for w in warnings(GOOD)), True)
     check("his intro, \"I've been having a little play around with...\", clears it",
           any('PERSONAL_INTRO' in w for w in warnings(open(Path(__file__).resolve().parents[2] / 'docs/plans/2026-10-14-draft-script.md', encoding='utf-8').read())), False)
+    talky = ' '.join(['So it costs more. And nobody checks. Now, is that fair? The app starts low.'] * 4)
+    flat = ' '.join(['It costs more. People never check. Is that fair? The app starts low.'] * 4)
+    check('a script that opens few sentences with a joiner is warned; one written his way is not',
+          (any('So, And, But, Now or See' in w for w in spoken_habit_warnings([flat])),
+           any('So, And, But, Now or See' in w for w in spoken_habit_warnings([talky]))), (True, False))
+    check('a bare "My prediction:" and a day-number deadline are warned',
+          (any('stands alone' in w for w in spoken_habit_warnings(['My prediction:', 'By 31 December 2027, it ships.'])),
+           any('day number' in w for w in spoken_habit_warnings(['By 31 December 2027, it ships.']))), (True, True))
+    check('"nobody" is warned towards his "no one"', any('"no one"' in w for w in spoken_habit_warnings([talky])), True)
     check('a long script that says "my bet" passes the voice check',
           warns(GOOD.replace("So here's our call.", "So here's my bet.")), [])
     check('a short hook needs no opinion', warnings(short), [])

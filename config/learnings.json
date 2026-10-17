@@ -157,6 +157,26 @@
      "file": "config/narration-ledger.json",
      "contains": "said_more_pct",
      "how": "the week's takes"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "SCRIPT_AS_HE_TALKS",
+     "how": "the house rule every writer and judge reads"
+    },
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "def spoken_habit_warnings",
+     "how": "soft checks for his spoken habits"
+    },
+    {
+     "file": "config/golden-examples.json",
+     "contains": "\"kind\": \"spoken-line\"",
+     "how": "his own lines from the takes"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "Write it the way he says it",
+     "how": "the scripts step"
     }
    ]
   },
