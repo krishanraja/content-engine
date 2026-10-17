@@ -88,6 +88,69 @@
  ],
  "verdicts": [
   {
+   "title": "ChatGPT and Claude, faster than ever. Does it matter?",
+   "surface": "title_card",
+   "verdict": "picked",
+   "why": "his line cut to the title card's 60 characters, keeping both names and his question",
+   "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\" It could be misinterpreted and it's just vague and confusing. I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?",
+   "surface": "shorts",
+   "verdict": "picked",
+   "why": "Krish wrote it: names both, the pattern (faster than ever), then the real question (does it make a difference); replaces 'Soon you won't pick your AI' on the cover, the Shorts title and the 90-second cover",
+   "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\" It could be misinterpreted and it's just vague and confusing. I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Soon you won't pick your AI.",
+   "surface": "cover",
+   "verdict": "rejected",
+   "why": "vague: 'pick your AI' reads as choosing which AI tool, not how hard it thinks, and it skips the story's first question (does the flood of models matter). Lead with the flood and his question instead",
+   "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\" It could be misinterpreted and it's just vague and confusing. I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "ANOTHER CLAUDE?",
+   "surface": "thumbnail",
+   "verdict": "picked",
+   "why": "the thumbnail shows the pattern (yet another Claude) next to the Claude logo; cold-read 3 of 3 as a thumbnail",
+   "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "A new Claude every four weeks, and ChatGPT from GPT-5.1 to 6.1 in under a year. Does the name matter, why is it speeding up, and why I think the choice of how hard your AI thinks is about to be made for you.",
+   "surface": "subtitle",
+   "verdict": "picked",
+   "why": "the subtitle carries his story in his order, with the bet as his view",
+   "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks",
+   "surface": "article",
+   "verdict": "picked",
+   "why": "story-first: names both, why it is speeding up, the mind.the.gap question of who decides next; cold-read 3 of 3",
+   "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "So many new AI models from OpenAI and Anthropic. Does it matter, and what are they about to take out of your hands?",
+   "surface": "youtube",
+   "verdict": "picked",
+   "why": "story-first: the flood of named releases, does it matter, what is about to be taken out of your hands; cold-read 3 of 3",
+   "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
    "title": "YOU'RE ON LOW.",
    "surface": "cover",
    "verdict": "rejected",
