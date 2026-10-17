@@ -1485,6 +1485,11 @@ def render(args):
     pay_spans = [(g.t0, g.t1) for g in groups if any(t.kind == 'serif' for ln in g.lines for t in ln)]
     shots = plan_shots(segs, words, start, recipe, [float(x) for x in args.cuts.split(',')] if args.cuts else None,
                        pay_spans, [g.t0 for g in groups], every=args.shot_every)
+    # a caption that would hang on for a frame or two after a cut clears on the cut
+    for g in groups:
+        for s_ in shots[1:]:
+            if g.t0 < s_.t0 < g.t1 <= s_.t0 + 0.1:
+                g.t1 = s_.t0
     # caption block height (largest group) and the caption line
     max_block = max([g.height for g in groups], default=0)
     cap_bottom_limit = H * SAFE_BOTTOM - 16
@@ -1500,7 +1505,7 @@ def render(args):
         s.cx = float(np.median(fs[:, 0]))
         s.eye_y = float(np.median(fs[:, 1]))
         # the highest caption ink in this shot (a one-line group sits lower than a two-line one)
-        over = [g for g in groups if g.t0 < s.t1 and g.t1 > s.t0]
+        over = [g for g in groups if min(g.t1, s.t1) - max(g.t0, s.t0) > 0.1]
         s_cap_top = min((cap_bottom - g.height for g in over), default=H)
         if 'full-face-vertical' in recipe and over:
             # keep the chin clear of the captions: if the chin would reach them at the end of
