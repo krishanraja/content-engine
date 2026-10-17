@@ -603,6 +603,35 @@
      "how": "the first lesson every title round prints"
     }
    ]
+  },
+  {
+   "id": "packaging-loses-the-story",
+   "on": "2026-10-17",
+   "krish": "These are still awful. I'm getting exhausted. The story is about there being so many recent AI model releases and figuring out if that's actually important, why it's speeding up, and what choices a user is going to have to make (or what gears are going to be hidden from them in the future). It's a \"mind the gap\" piece remember. Why do I have to remind you about what this story is about?",
+   "what": "Packaging lines rewritten round after round to meet the last complaint (legible to a stranger, naming real things, no shorthand) until they read fine but told the wrong story: a how-to tip ('Make Claude think harder') on a mind.the.gap piece about the flood of new AI models and the choice about to be hidden from users. The outline's spine had already drifted from the release flood to the thinking setting.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/title_check.py",
+     "contains": "def story_text",
+     "how": "lessons --plan prints the story every line must tell first (his story.md, the outline's spine, the series' question), and says NO STORY GIVEN without it; its self-test reads Friday's"
+    },
+    {
+     "file": "config/title-verdicts.json",
+     "contains": "every packaging line tells the piece's story in its series' lens",
+     "how": "the first lesson every title round prints"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "STORY_FIRST",
+     "how": "the titles step starts from the story and judges every line by it"
+    },
+    {
+     "file": "docs/plans/2026-10-09-friday/story.md",
+     "contains": "so many recent AI model releases",
+     "how": "Friday's story in his words, read by every later round"
+    }
+   ]
   }
  ]
 }

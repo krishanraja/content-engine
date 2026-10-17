@@ -273,7 +273,9 @@ after reading a script out loud than I do creating a script."
   video's title card, every picture heading and chapter divider, written from
   what he said on camera and his playbook for each surface (headings and
   dividers in one channel style, never pasted from the transcript:
-  CHANNEL_HEADINGS), put to him in one
+  CHANNEL_HEADINGS), every line judged by whether it tells the piece's
+  story (STORY_FIRST: `title_check.py lessons --plan docs/plans/<plan>`
+  prints it), put to him in one
   round (`make-piece`, "Titles, headlines and headings"). Claude Code runs it;
   Codex leaves one board item for the next Claude Code session. Nothing with
   those words on it (a title card, a thumbnail, a card heading) is drawn before

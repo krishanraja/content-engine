@@ -14,7 +14,8 @@ Modules it knows:
   kinetic-serif-captions  2-4 words at a time, light/bold sans + italic serif payoff
   word-bounce-in          each word arrives on its frame with an overshoot
   dark-object-card        full-screen dark grainy card, two words, real logos
-  constant-motion         a slow push inside every shot, punch-in cuts, drifting cards
+  constant-motion         a slow push inside every shot, a cut about every 2 s, the frame
+                          follows him sideways, punch-in cuts, drifting cards
 
 Every time on the command line (start, end, cutaways) is on the take's clock.
 Run it with the Python that has mediapipe and cv2 (.cache/py312/bin/python).
@@ -456,6 +457,7 @@ class Group:
     t1: float = 0.0
     layout: list = field(default_factory=list)   # (token, sprite, x_anchor, y_anchor)
     height: float = 0.0
+    swap: bool = False   # the next group follows at once: no fade-out (trial A blanked a frame between them)
 
 
 GLUE_END = set('a an the of to for on in and about with your its my our their than at by from but so or '
@@ -655,8 +657,8 @@ def draw_captions(frame, groups, t, bottom, bounce=True):
             continue
         top = bottom - g.height        # every block sits on one bottom line; a lead-in stacks above
         out_u = (g.t1 - t)
-        g_alpha = min(1.0, out_u / 0.08) if g.t1 - g.t0 > 0.2 else 1.0
-        g_scale = 0.97 + 0.03 * min(1.0, out_u / 0.08)
+        g_alpha = min(1.0, out_u / 0.08) if g.t1 - g.t0 > 0.2 and not g.swap else 1.0
+        g_scale = 0.97 + 0.03 * min(1.0, out_u / 0.08) if not g.swap else 1.0
         drift = -6.0 * min(1.0, (t - g.t0) / max(g.t1 - g.t0, 0.1))     # the group keeps moving
         for tok, sp, ax, ay in g.layout:
             if bounce:
@@ -1178,7 +1180,7 @@ class PlateTreat(Treat):
         return self.composite(st), st['alpha']
 
 
-def steady_alpha(prev, cur, nxt, last=None, thr=4.0, keep=0.6):
+def steady_alpha(prev, cur, nxt, last=None, thr=6.0, keep=0.8, blur=1.0):
     """Steady the edge without trails. Where the picture has not changed across the last,
     this and the next frame, each edge pixel's alpha is the median of its three; then,
     where it is still a partial (edge) pixel and close to what the last output frame had
@@ -1197,6 +1199,9 @@ def steady_alpha(prev, cur, nxt, last=None, thr=4.0, keep=0.6):
     if last is not None:
         ok = still * ((a > 0.02) & (a < 0.98) & (np.abs(a - last) < 0.25))
         a = a + keep * ok * (last - a)
+    if blur:
+        # a touch of softening along the edge, never spreading out into the set (no rim)
+        a = np.where(a > 0.004, cv2.GaussianBlur(a, (0, 0), blur), 0)
     return a.astype(np.float32)
 
 
@@ -1344,8 +1349,8 @@ def plan_shots(segments, words, clip_start, recipe, cuts=None, payoffs=(), group
     three to four and a quarter seconds, slower than the reference): a cut lands on a
     payoff phrase as it arrives (a punch-in), else in a pause before a word (the silence
     measured in his voice), else as a new caption group comes in. Shots alternate a
-    close and a closer framing, phased so the payoff lines fall in the closer one where
-    possible. payoffs: (start, end) of each payoff line on the clip clock."""
+    close and a closer framing; a payoff cut pushes one step tighter.
+    payoffs: (start, end) of each payoff line on the clip clock."""
     full = 'full-face-vertical' in recipe
     motion = 'constant-motion' in recipe
     zooms = (1.18, 1.34, 1.5) if full else (1.0, 1.12, 1.26)     # close, closer, punch-in
@@ -1528,6 +1533,10 @@ def render(args):
         for s_ in shots[1:]:
             if g.t0 < s_.t0 < g.t1 <= s_.t0 + 0.1:
                 g.t1 = s_.t0
+    # back-to-back groups swap on the frame the next one starts (no blank frame between)
+    for g, nx in zip(groups, groups[1:]):
+        g.swap = nx.t0 - g.t1 < 0.05 or any(abs(s_.t0 - g.t1) < 0.05 for s_ in shots[1:]) \
+            or any(abs(a - g.t1) < 0.05 for a, _ in cut_windows)
     # caption block height (largest group) and the caption line
     max_block = max([g.height for g in groups], default=0)
     cap_bottom_limit = H * SAFE_BOTTOM - 16

@@ -244,6 +244,31 @@
      "how": "after the takes: his sign-off first, never queued behind a machine step"
     }
    ]
+  },
+  {
+   "id": "story-first",
+   "on": "2026-10-17",
+   "krish": "These are still awful. I'm getting exhausted. The story is about there being so many recent AI model releases and figuring out if that's actually important, why it's speeding up, and what choices a user is going to have to make (or what gears are going to be hidden from them in the future). It's a \"mind the gap\" piece remember. Why do I have to remind you about what this story is about?",
+   "why": "He judges a line first by whether it tells the piece's story; each round I fixed the last complaint and lost the story, so he had to restate it and is exhausted by it.",
+   "means": "When he states what a piece is about, his words go in the plan's story.md and every later line (titles, cover, thumbnail, title card, chapters, headings, channel copy) is judged against them first; without a statement, the outline's spine and the series' question.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/title_check.py",
+     "contains": "def story_text",
+     "how": "the round prints the story first"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "STORY_FIRST",
+     "how": "the titles step"
+    },
+    {
+     "file": ".claude/skills/produce-video/SKILL.md",
+     "contains": "STORY_FIRST",
+     "how": "the packaging round after the takes"
+    }
+   ]
   }
  ]
 }

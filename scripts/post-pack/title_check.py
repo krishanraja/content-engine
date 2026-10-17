@@ -347,6 +347,49 @@ def playbook_text(surface=None, playbook=None):
     return '\n'.join(lines)
 
 
+def story_text(plan):
+    """The story every packaging line must tell (house rule STORY_FIRST), from
+    the plan folder: Krish's own statement of it (story.md), then the outline's
+    spine and answer, then the series' question. Krish, 2026-10-17: "The story
+    is about ... It's a "mind the gap" piece remember. Why do I have to remind
+    you about what this story is about?" """
+    P = Path(plan)
+    if not P.is_absolute():
+        P = REPO / P
+    out = []
+    mine = P / 'story.md'
+    if mine.exists():
+        out.append('What the piece is about, in Krish\'s words:\n  ' + ' '.join(mine.read_text(encoding='utf-8').split()))
+    outlines = sorted((P.parent).glob(f'{P.name[:10]}-outline*.md'), key=lambda f: (len(f.name), f.name))
+    if outlines:
+        text = outlines[-1].read_text(encoding='utf-8')
+        for key in ('Spine', 'Answer'):
+            m = re.search(rf'^{key}:\s*(.+)$', text, re.M)
+            if m:
+                out.append(f'{key} ({outlines[-1].name}): {m.group(1).strip()}')
+    post = P / 'post.json'
+    if post.exists():
+        sub = json.loads(post.read_text(encoding='utf-8')).get('subchannel', '')
+        key = sub.replace('.', '_')
+        try:
+            ch = json.loads((REPO / 'config' / 'studio.json').read_text(encoding='utf-8'))
+            ch = ch['videos']['quick_edit']['house_style']['channels'] if 'videos' in ch else None
+        except (KeyError, ValueError):
+            ch = None
+        if ch is None:
+            raw = (REPO / 'config' / 'studio.json').read_text(encoding='utf-8')
+            m = re.search(rf'"{key}":\s*\{{[^}}]*"question":\s*"([^"]+)"', raw)
+            q = m.group(1) if m else None
+        else:
+            q = (ch.get(key) or {}).get('question')
+        if q:
+            out.append(f'The series ({sub}) asks: "{q}"')
+    if not out:
+        return ('NO STORY FOUND for ' + str(P) + ': write the piece\'s story first (story.md in the plan folder, Krish\'s words if he has '
+                'said it), and judge every line by whether it tells it (house rule STORY_FIRST)')
+    return 'THE STORY EVERY LINE MUST TELL (house rule STORY_FIRST):\n' + '\n'.join('  ' + o for o in out)
+
+
 def lessons_text(data=None):
     data = data or load_verdicts()
     lines = ['What Krish likes in a title (config/title-verdicts.json):']
@@ -438,6 +481,10 @@ def self_test():
     if fails:
         print('title_check self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
+    s = story_text('docs/plans/2026-10-09-friday')
+    if 'STORY_FIRST' not in s or 'so many recent AI model releases' not in s or 'What is the pattern' not in s:
+        print('title_check self-test failed: story_text did not print the Friday story, spine and series question:\n' + s)
+        return 1
     print('title_check self-test passed')
     return 0
 
@@ -447,7 +494,11 @@ def main(argv=None):
     if argv[:1] == ['lessons']:
         lp = argparse.ArgumentParser(description='Krish\'s lessons, then the hooks research for one surface.')
         lp.add_argument('--surface', help='youtube, shorts, cover, card, article, linkedin or blog')
-        print(lessons_text() + '\n\n' + playbook_text(lp.parse_args(argv[1:]).surface))
+        lp.add_argument('--plan', help="the piece's plan folder (docs/plans/...): prints the story every line must tell first")
+        la = lp.parse_args(argv[1:])
+        head = story_text(la.plan) if la.plan else ('NO STORY GIVEN: pass --plan docs/plans/<plan> so the round starts from the '
+                                                     "piece's story (house rule STORY_FIRST)")
+        print(head + '\n\n' + lessons_text() + '\n\n' + playbook_text(la.surface))
         return 0
     if argv[:1] == ['verdict']:
         vp = argparse.ArgumentParser(description='Record Krish\'s verdict on a title.')

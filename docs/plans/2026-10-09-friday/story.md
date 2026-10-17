@@ -1,0 +1,1 @@
+Krish, 2026-10-17: "The story is about there being so many recent AI model releases and figuring out if that's actually important, why it's speeding up, and what choices a user is going to have to make (or what gears are going to be hidden from them in the future). It's a "mind the gap" piece remember."
