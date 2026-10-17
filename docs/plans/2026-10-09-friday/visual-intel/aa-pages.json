@@ -1,0 +1,3581 @@
+{
+ "what_this_is": "Cross-check for the Artificial Analysis API pull: the public artificialanalysis.ai pages, read with Firecrawl (not the API) on 17 October 2026. Every value is copied from the page, with the URL and the exact sentence, card, table cell or chart label it came from.",
+ "read_date": "2026-10-17",
+ "how_it_was_read": [
+  "Each model page was read twice with Firecrawl scrape, maxAge 0 (live fetch): once as markdown plus raw HTML, and once as rendered markdown after a 6 second wait so the chart bar labels appear.",
+  "Score and cost per task come from the page's own sentences (\"... scores N on the Artificial Analysis Intelligence Index ...\" and \"On average, it costs $X per task to evaluate ... on the Intelligence Index.\"), cross-checked against the summary card and, for scores, the release page table cell.",
+  "The cost to run the whole index appears on the page only as a bar label on the chart \"Cost to Run Artificial Analysis Intelligence Index\". The bar for this model was found by position: the chart lists its linked models in bar order and prints one total per bar. That mapping was accepted only when every bar's label on the chart equalled that model's total in the page's embedded data, rounded to whole dollars.",
+  "Unrounded values are copied from the page's embedded data (the data the charts draw from). They are not visible text and should be cited only as 'unrounded figure in the page data'.",
+  "Raw page copies are in /home/user/content-engine/.cache/visual-intel/aa-pages; scripts in /home/user/content-engine/.cache/visual-intel/scripts."
+ ],
+ "index_definition": {
+  "page": "https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index",
+  "page_reads": [
+   {
+    "kind": "full",
+    "read_at_utc": "2026-10-17T07:08:13Z",
+    "scrapeId": "01a148b0-75c7-722c-b134-7b27f1a84535",
+    "http_status": 200
+   }
+  ],
+  "title": "Artificial Analysis Intelligence Index v4.3.2",
+  "scale_sentence": "The Artificial Analysis Intelligence Index is calculated as a weighted average of production benchmark scores, scaled from 0 to 100. Four categories each contribute 25%: agents, coding, general capability, and scientific reasoning.",
+  "what_it_measures_sentence": "The Artificial Analysis Intelligence Index is a composite benchmark score that measures language model capabilities across reasoning, coding, knowledge, instruction following, scientific reasoning, and completing multi-step tasks.",
+  "evaluations_sentence": "Artificial Analysis Intelligence Index v4.3.2 incorporates 10 evaluations: AA-Briefcase v1.1, GDPval-AA v2.1, AutomationBench-AA, Terminal-Bench 4.0, SciCode, Humanity's Last Exam, GDP.pdf, CritPt, AA-Omniscience, AA-LCR v1.1",
+  "methodology_page": "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
+  "methodology_weighting_sentence": "Intelligence Index is calculated as a weighted average across four categories: Agents (30%), Coding (20%), Scientific Reasoning (20%) and General (30%). The weighting emphasizes agentic tasks. Category membership and per-evaluation weights are shown below.",
+  "conflict": "The two AA pages disagree on the category weights. The index page FAQ says 'Four categories each contribute 25%'; the methodology page says 'Agents (30%), Coding (20%), Scientific Reasoning (20%) and General (30%)'. The methodology table (per-evaluation weights) adds up to the 30/20/20/30 split. Cite the methodology page if weights are mentioned."
+ },
+ "cost_definitions": {
+  "cost_per_task": {
+   "chart_subtitle": "Weighted average cost (USD) per Intelligence Index task · Lower is better",
+   "definition_sentence": "Weighted average cost per Intelligence Index task. Each evaluation’s cost is calculated from input, cache hit, cache write, reasoning, and answer token prices, divided by task count, and weighted by its Intelligence Index weight."
+  },
+  "cost_to_run_index": {
+   "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+   "definition_sentence": "The cost to run the evaluations in the Artificial Analysis Intelligence Index, calculated using the model's input, cache hit, cache write, reasoning, and answer token prices and the number of tokens used across evaluations (excluding repeats)."
+  },
+  "methodology_sentence": "For the Artificial Analysis Intelligence Index evaluations, we use the token counts reported by each model's API provider where available, to accurately report the cost of running the Intelligence Index. In the rare cases where provider token counts are unavailable, we use a canonical-tokenizer fallback. This contrasts with the approach in performance benchmarking, where we use client-side token counts from the `o200k_base` tokenizer to standardize token counts for the same text across models. When reporting cache hit rates and cost, we combine these token counts with live measurements of the model's typical cache hit rate, rather than relying on the one-off measurement when the evaluation was run.",
+  "price_basis": "Model pages say prices are 'based on Anthropic's API' (or the maker's own API) and list input and output prices per million tokens. The methodology adds that cost combines provider token counts 'with live measurements of the model's typical cache hit rate'. So these are list-price costs including AA's cache assumption, not what any customer was billed."
+ },
+ "families": [
+  {
+   "family": "Claude Opus 5.5",
+   "maker": "Anthropic",
+   "release_page": "https://artificialanalysis.ai/models/releases/claude-opus-5-5",
+   "release_page_read": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T06:58:31Z",
+     "scrapeId": "01a148a7-a535-727f-bc85-e716d1b10170",
+     "http_status": 200
+    }
+   ],
+   "variant_count_sentence": "The Claude Opus 5.5 release offers 5 models, each with different intelligence, performance, and pricing characteristics. Below is a comparison of the key metrics across the 5 models.",
+   "summary_sentences": [
+    "For intelligence, the top model of Claude Opus 5.5 is Claude Opus 5.5 (Max, Default Fallback) at 58.",
+    "For pricing, Claude Opus 5.5 (Low, Default Fallback) at $0.55 offers the lowest cost per task. Prices vary up to 11x across models."
+   ]
+  },
+  {
+   "family": "Claude Opus 5",
+   "maker": "Anthropic",
+   "release_page": "https://artificialanalysis.ai/models/releases/claude-opus-5",
+   "release_page_read": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:02:18Z",
+     "scrapeId": "01a148ab-142e-77f7-8017-94fb0f1cc937",
+     "http_status": 200
+    }
+   ],
+   "variant_count_sentence": "The Claude Opus 5 release offers 5 models, each with different intelligence, performance, and pricing characteristics. Below is a comparison of the key metrics across the 5 models.",
+   "summary_sentences": [
+    "For intelligence, the top model of Claude Opus 5 is Claude Opus 5 (Max) at 51.",
+    "For pricing, Claude Opus 5 (Low) at $1.10 offers the lowest cost per task. Prices vary up to 5.3x across models."
+   ]
+  },
+  {
+   "family": "Claude Sonnet 5.5",
+   "maker": "Anthropic",
+   "release_page": "https://artificialanalysis.ai/models/releases/claude-sonnet-5-5",
+   "release_page_read": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:02:20Z",
+     "scrapeId": "01a148ab-1456-713c-b4fe-3e8b52df13b5",
+     "http_status": 200
+    }
+   ],
+   "variant_count_sentence": "The Claude Sonnet 5.5 release offers 5 models, each with different intelligence, performance, and pricing characteristics. Below is a comparison of the key metrics across the 5 models.",
+   "summary_sentences": [
+    "For intelligence, the top model of Claude Sonnet 5.5 is Claude Sonnet 5.5 (Max, Default Fallback) at 56.",
+    "For pricing, Claude Sonnet 5.5 (Low, Default Fallback) at $0.35 offers the lowest cost per task. Prices vary up to 16x across models."
+   ]
+  },
+  {
+   "family": "Claude Haiku 5.5",
+   "maker": "Anthropic",
+   "release_page": "https://artificialanalysis.ai/models/releases/claude-haiku-5-5",
+   "release_page_read": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:02:16Z",
+     "scrapeId": "01a148ab-1423-77fb-ba22-7daff95e57b7",
+     "http_status": 200
+    }
+   ],
+   "variant_count_sentence": "The Claude Haiku 5.5 release offers 5 models, each with different intelligence, performance, and pricing characteristics. Below is a comparison of the key metrics across the 5 models.",
+   "summary_sentences": [
+    "For intelligence, the top model of Claude Haiku 5.5 is Claude Haiku 5.5 (Max) at 43.",
+    "For pricing, Claude Haiku 5.5 (Low) at $0.02 offers the lowest cost per task. Prices vary up to 8.7x across models."
+   ]
+  },
+  {
+   "family": "Claude Fable 5.1",
+   "maker": "Anthropic",
+   "release_page": "https://artificialanalysis.ai/models/releases/claude-fable-5-1",
+   "release_page_read": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:02:18Z",
+     "scrapeId": "01a148ab-1426-7288-8e26-80973733f50f",
+     "http_status": 200
+    }
+   ],
+   "variant_count_sentence": "The Claude Fable 5.1 release offers 5 models, each with different intelligence, performance, and pricing characteristics. Below is a comparison of the key metrics across the 5 models.",
+   "summary_sentences": [
+    "For intelligence, the top model of Claude Fable 5.1 is Claude Fable 5.1 (Max, Default Fallback) at 53.",
+    "For pricing, Claude Fable 5.1 (Low, Default Fallback) at $2.37 offers the lowest cost per task. Prices vary up to 3.2x across models."
+   ]
+  },
+  {
+   "family": "GPT-6 Sol",
+   "maker": "OpenAI",
+   "release_page": "https://artificialanalysis.ai/models/releases/gpt-6-sol",
+   "release_page_read": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:02:28Z",
+     "scrapeId": "01a148ab-1426-749d-a5de-0e0ee031e1ad",
+     "http_status": 200
+    }
+   ],
+   "variant_count_sentence": "The GPT-6 Sol release offers 6 models, each with different intelligence, performance, and pricing characteristics. Below is a comparison of the key metrics across the 6 models.",
+   "summary_sentences": [
+    "For intelligence, the top model of GPT-6 Sol is GPT-6 Sol (Max) at 48.",
+    "For pricing, GPT-6 Sol (Low) at $0.13 offers the lowest cost per task. Prices vary up to 7.9x across models."
+   ]
+  },
+  {
+   "family": "GPT-6.1 Sol",
+   "maker": "OpenAI",
+   "release_page": "https://artificialanalysis.ai/models/releases/gpt-6-1-sol",
+   "release_page_read": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:02:21Z",
+     "scrapeId": "01a148ab-1454-745c-9b15-dbc072f76f5b",
+     "http_status": 200
+    }
+   ],
+   "variant_count_sentence": "The GPT-6.1 Sol release offers 5 models, each with different intelligence, performance, and pricing characteristics. Below is a comparison of the key metrics across the 5 models.",
+   "summary_sentences": [
+    "For intelligence, the top model of GPT-6.1 Sol is GPT-6.1 Sol (Max) at 52.",
+    "For pricing, GPT-6.1 Sol (Low) at $0.13 offers the lowest cost per task. Prices vary up to 5.5x across models."
+   ]
+  },
+  {
+   "family": "Gemini 3.8 Flash",
+   "maker": "Google",
+   "release_page": "https://artificialanalysis.ai/models/releases/gemini-3-8-flash",
+   "release_page_read": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:19:03Z",
+     "scrapeId": "01a148ba-7500-7680-952d-0289918fba52",
+     "http_status": 200
+    }
+   ],
+   "variant_count_sentence": "The Gemini 3.8 Flash release offers 3 models, each with different intelligence, performance, and pricing characteristics. Below is a comparison of the key metrics across the 3 models.",
+   "summary_sentences": [
+    "For intelligence, the top model of Gemini 3.8 Flash is Gemini 3.8 Flash (High) at 41.",
+    "For pricing, Gemini 3.8 Flash (Medium) at $0.93 offers the lowest cost per task. Prices vary up to 1.3x across models."
+   ]
+  }
+ ],
+ "variants": [
+  {
+   "family": "Claude Opus 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5.5 (Max, Default Fallback)",
+   "thinking_level_on_page": "max",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:10:16Z",
+     "scrapeId": "01a148b2-4bea-71f8-9624-f3f1d73a5155",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:03:00Z",
+     "scrapeId": "01a148ab-bfd9-73f5-9f4a-0162267427f1",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "Claude Opus 5.5 (Max, Default Fallback) was released on September 22, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 58,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5.5 (Max, Default Fallback) scores 58 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5.5 (Max, Default Fallback) scores 58 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "58",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5-5",
+     "model_name_cell": "Claude Opus 5.5 (Max, Default Fallback)",
+     "intelligence_cell": "58",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 57.6223698102963,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 5.98,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $5.98 per task to evaluate Claude Opus 5.5 (Max, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$5.98",
+    "unrounded_from_page_data": 5.982012
+   },
+   "cost_to_run_index_usd": {
+    "value": 8708,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$8,708",
+    "bar_name": "Claude Opus 5.5 (max with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 24 bars match embedded values",
+    "unrounded_from_page_data": 8708.2,
+    "parts_from_page_data": {
+     "total": 8708.2,
+     "input": 3510.43,
+     "nonCacheInput": 142.21,
+     "cacheRead": 2139.4,
+     "cacheWrite": 1228.82,
+     "output": 5197.77,
+     "reasoning": 4277.14,
+     "answer": 920.63
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "260M",
+    "sentence": "When evaluating the Intelligence Index, it generated 260M tokens, which is very verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5.5 (Max, Default Fallback) is $4.00 per 1M input tokens (somewhat expensive, median: $2.00) and $20.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 4,
+    "output_usd_per_1m_tokens": 20
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Opus 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5.5 (Xhigh, Default Fallback)",
+   "thinking_level_on_page": "xhigh",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-xhigh",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:03:11Z",
+     "scrapeId": "01a148ab-bfed-702c-9e4a-c85328a4bdee",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:10:24Z",
+     "scrapeId": "01a148b2-4c05-71f8-bbd6-b27c92a95c42",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "Claude Opus 5.5 (Xhigh, Default Fallback) was released on September 22, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 56,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5.5 (Xhigh, Default Fallback) scores 56 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5.5 (Xhigh, Default Fallback) scores 56 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "56",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5-5",
+     "model_name_cell": "Claude Opus 5.5 (Xhigh, Default Fallback)",
+     "intelligence_cell": "56",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 55.9873505840139,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 3.46,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $3.46 per task to evaluate Claude Opus 5.5 (Xhigh, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$3.46",
+    "unrounded_from_page_data": 3.45911
+   },
+   "cost_to_run_index_usd": {
+    "value": 4057,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$4,057",
+    "bar_name": "Claude Opus 5.5 (xhigh with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 4056.65,
+    "parts_from_page_data": {
+     "total": 4056.65,
+     "input": 2063.29,
+     "nonCacheInput": 141.57,
+     "cacheRead": 1153.84,
+     "cacheWrite": 767.87,
+     "output": 1993.37,
+     "reasoning": 1295.75,
+     "answer": 697.62
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "100M",
+    "sentence": "When evaluating the Intelligence Index, it generated 100M tokens, which is somewhat verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5.5 (Xhigh, Default Fallback) is $4.00 per 1M input tokens (somewhat expensive, median: $2.00) and $20.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 4,
+    "output_usd_per_1m_tokens": 20
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Opus 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5.5 (High, Default Fallback)",
+   "thinking_level_on_page": "high",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-high",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:03:08Z",
+     "scrapeId": "01a148ab-bfd9-77cc-aa58-001b312020cc",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:10:19Z",
+     "scrapeId": "01a148b2-4bf3-766f-b0e5-fd7b4eee374e",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "Claude Opus 5.5 (High, Default Fallback) was released on September 22, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 54,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5.5 (High, Default Fallback) scores 54 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5.5 (High, Default Fallback) scores 54 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "54",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5-5",
+     "model_name_cell": "Claude Opus 5.5 (High, Default Fallback)",
+     "intelligence_cell": "54",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 53.5831959822067,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 1.82,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $1.82 per task to evaluate Claude Opus 5.5 (High, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$1.82",
+    "unrounded_from_page_data": 1.822505
+   },
+   "cost_to_run_index_usd": {
+    "value": 2172,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$2,172",
+    "bar_name": "Claude Opus 5.5 (high with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 2172.43,
+    "parts_from_page_data": {
+     "total": 2172.43,
+     "input": 1122.12,
+     "nonCacheInput": 141.33,
+     "cacheRead": 497.48,
+     "cacheWrite": 483.31,
+     "output": 1050.31,
+     "reasoning": 539.46,
+     "answer": 510.85
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "53M",
+    "sentence": "When evaluating the Intelligence Index, it generated 53M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5.5 (High, Default Fallback) is $4.00 per 1M input tokens (somewhat expensive, median: $2.00) and $20.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 4,
+    "output_usd_per_1m_tokens": 20
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Opus 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5.5 (Medium, Default Fallback)",
+   "thinking_level_on_page": "medium",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-medium",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:03:49Z",
+     "scrapeId": "01a148ac-6d91-7758-8005-05d02413dbbe",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:10:42Z",
+     "scrapeId": "01a148b2-4bf3-77e8-8c8d-e7ecfac9d7c8",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "Claude Opus 5.5 (Medium, Default Fallback) was released on September 22, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 51,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5.5 (Medium, Default Fallback) scores 51 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5.5 (Medium, Default Fallback) scores 51 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "51",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5-5",
+     "model_name_cell": "Claude Opus 5.5 (Medium, Default Fallback)",
+     "intelligence_cell": "51",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 51.2434931792768,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 1.34,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $1.34 per task to evaluate Claude Opus 5.5 (Medium, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$1.34",
+    "unrounded_from_page_data": 1.336009
+   },
+   "cost_to_run_index_usd": {
+    "value": 1627,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$1,627",
+    "bar_name": "Claude Opus 5.5 (medium with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 1626.81,
+    "parts_from_page_data": {
+     "total": 1626.81,
+     "input": 863.69,
+     "nonCacheInput": 141.15,
+     "cacheRead": 337.24,
+     "cacheWrite": 385.3,
+     "output": 763.12,
+     "reasoning": 328.67,
+     "answer": 434.46
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "38M",
+    "sentence": "When evaluating the Intelligence Index, it generated 38M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5.5 (Medium, Default Fallback) is $4.00 per 1M input tokens (somewhat expensive, median: $2.00) and $20.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 4,
+    "output_usd_per_1m_tokens": 20
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Opus 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5.5 (Low, Default Fallback)",
+   "thinking_level_on_page": "low",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-low",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:09:08Z",
+     "scrapeId": "01a148b1-4756-71f1-92c7-e7302448e819",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T06:59:19Z",
+     "scrapeId": "01a148a8-6384-72ad-a3ac-1f93c4bb16d1",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "Claude Opus 5.5 (Low, Default Fallback) was released on September 22, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 42,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5.5 (Low, Default Fallback) scores 42 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5.5 (Low, Default Fallback) scores 42 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "42",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5-5",
+     "model_name_cell": "Claude Opus 5.5 (Low, Default Fallback)",
+     "intelligence_cell": "42",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 42.3077781466168,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.55,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.55 per task to evaluate Claude Opus 5.5 (Low, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$0.55",
+    "unrounded_from_page_data": 0.55118
+   },
+   "cost_to_run_index_usd": {
+    "value": 860,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$860",
+    "bar_name": "Claude Opus 5.5 (low with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 860.33,
+    "parts_from_page_data": {
+     "total": 860.33,
+     "input": 469.0,
+     "nonCacheInput": 140.8,
+     "cacheRead": 116.86,
+     "cacheWrite": 211.35,
+     "output": 391.33,
+     "reasoning": 112.4,
+     "answer": 278.93
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "20M",
+    "sentence": "When evaluating the Intelligence Index, it generated 20M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5.5 (Low, Default Fallback) is $4.00 per 1M input tokens (somewhat expensive, median: $2.00) and $20.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 4,
+    "output_usd_per_1m_tokens": 20
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Opus 5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5 (Max)",
+   "thinking_level_on_page": "max",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:03:52Z",
+     "scrapeId": "01a148ac-6db2-72fd-ba4e-da11c604cd6b",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:10:32Z",
+     "scrapeId": "01a148b2-4bf3-756a-b80a-56da07fcbfce",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-07-24",
+    "sentence": "Claude Opus 5 (Max) was released on July 24, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 51,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5 (Max) scores 51 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5 (Max) scores 51 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "51",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5",
+     "model_name_cell": "Claude Opus 5 (Max)",
+     "intelligence_cell": "51",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 50.7771115797629,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 5.86,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $5.86 per task to evaluate Claude Opus 5 (Max) on the Intelligence Index.",
+    "summary_card": "$5.86",
+    "unrounded_from_page_data": 5.858396
+   },
+   "cost_to_run_index_usd": {
+    "value": 7275,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$7,275",
+    "bar_name": "Claude Opus 5 (max)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 7274.74,
+    "parts_from_page_data": {
+     "total": 7274.74,
+     "input": 3765.84,
+     "nonCacheInput": 177.56,
+     "cacheRead": 2670.23,
+     "cacheWrite": 918.06,
+     "output": 3508.9,
+     "reasoning": 2517.59,
+     "answer": 991.31
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "140M",
+    "sentence": "When evaluating the Intelligence Index, it generated 140M tokens, which is very verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5 (Max) is $5.00 per 1M input tokens (expensive, median: $2.00) and $25.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 5,
+    "output_usd_per_1m_tokens": 25
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Opus 5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5 (Xhigh)",
+   "thinking_level_on_page": "xhigh",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5-xhigh",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:10:33Z",
+     "scrapeId": "01a148b2-4bff-718a-9360-005da3004293",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:03:07Z",
+     "scrapeId": "01a148ab-bfdf-72eb-a7cc-82ebd36adb47",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-07-24",
+    "sentence": "Claude Opus 5 (Xhigh) was released on July 24, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 50,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5 (Xhigh) scores 50 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5 (Xhigh) scores 50 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "50",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5",
+     "model_name_cell": "Claude Opus 5 (Xhigh)",
+     "intelligence_cell": "50",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 49.6773552926939,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 4.88,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $4.88 per task to evaluate Claude Opus 5 (Xhigh) on the Intelligence Index.",
+    "summary_card": "$4.88",
+    "unrounded_from_page_data": 4.877844
+   },
+   "cost_to_run_index_usd": {
+    "value": 5868,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$5,868",
+    "bar_name": "Claude Opus 5 (xhigh)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 5867.76,
+    "parts_from_page_data": {
+     "total": 5867.76,
+     "input": 3105.06,
+     "nonCacheInput": 177.24,
+     "cacheRead": 2137.87,
+     "cacheWrite": 789.95,
+     "output": 2762.7,
+     "reasoning": 1900.81,
+     "answer": 861.89
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "110M",
+    "sentence": "When evaluating the Intelligence Index, it generated 110M tokens, which is somewhat verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5 (Xhigh) is $5.00 per 1M input tokens (expensive, median: $2.00) and $25.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 5,
+    "output_usd_per_1m_tokens": 25
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Opus 5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5 (High)",
+   "thinking_level_on_page": "high",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5-high",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:11:43Z",
+     "scrapeId": "01a148b3-a343-70e3-b7e2-903f7e2f695d",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:03:55Z",
+     "scrapeId": "01a148ac-6d9c-7398-8f75-6e3956d4b5e9",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-07-24",
+    "sentence": "Claude Opus 5 (High) was released on July 24, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 48,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5 (High) scores 48 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5 (High) scores 48 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "48",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5",
+     "model_name_cell": "Claude Opus 5 (High)",
+     "intelligence_cell": "48",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 48.1219182595908,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 3.61,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $3.61 per task to evaluate Claude Opus 5 (High) on the Intelligence Index.",
+    "summary_card": "$3.61",
+    "unrounded_from_page_data": 3.613267
+   },
+   "cost_to_run_index_usd": {
+    "value": 4332,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$4,332",
+    "bar_name": "Claude Opus 5 (high)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 4331.68,
+    "parts_from_page_data": {
+     "total": 4331.68,
+     "input": 2318.41,
+     "nonCacheInput": 176.87,
+     "cacheRead": 1503.11,
+     "cacheWrite": 638.44,
+     "output": 2013.27,
+     "reasoning": 1291.94,
+     "answer": 721.33
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "81M",
+    "sentence": "When evaluating the Intelligence Index, it generated 81M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5 (High) is $5.00 per 1M input tokens (expensive, median: $2.00) and $25.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 5,
+    "output_usd_per_1m_tokens": 25
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Opus 5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5 (Medium)",
+   "thinking_level_on_page": "medium",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5-medium",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:12:00Z",
+     "scrapeId": "01a148b3-a39f-70d9-a4dd-866d511d2748",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:03:47Z",
+     "scrapeId": "01a148ac-6d90-7553-a53c-e9365d29845b",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-07-24",
+    "sentence": "Claude Opus 5 (Medium) was released on July 24, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 45,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5 (Medium) scores 45 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5 (Medium) scores 45 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "45",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5",
+     "model_name_cell": "Claude Opus 5 (Medium)",
+     "intelligence_cell": "45",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 44.8253265420613,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 2.19,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $2.19 per task to evaluate Claude Opus 5 (Medium) on the Intelligence Index.",
+    "summary_card": "$2.19",
+    "unrounded_from_page_data": 2.189479
+   },
+   "cost_to_run_index_usd": {
+    "value": 2732,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$2,732",
+    "bar_name": "Claude Opus 5 (medium)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 2731.91,
+    "parts_from_page_data": {
+     "total": 2731.91,
+     "input": 1496.58,
+     "nonCacheInput": 176.74,
+     "cacheRead": 859.91,
+     "cacheWrite": 459.93,
+     "output": 1235.34,
+     "reasoning": 702.54,
+     "answer": 532.8
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "49M",
+    "sentence": "When evaluating the Intelligence Index, it generated 49M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5 (Medium) is $5.00 per 1M input tokens (expensive, median: $2.00) and $25.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 5,
+    "output_usd_per_1m_tokens": 25
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Opus 5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Opus 5 (Low)",
+   "thinking_level_on_page": "low",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-opus-5-low",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:11:52Z",
+     "scrapeId": "01a148b3-a346-7686-a184-94b4822d7611",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:03:47Z",
+     "scrapeId": "01a148ac-6d91-7418-ba70-6d2ad6e0a1bb",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-07-24",
+    "sentence": "Claude Opus 5 (Low) was released on July 24, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 39,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Opus 5 (Low) scores 39 on the Artificial Analysis Intelligence Index, placing it above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Opus 5 (Low) scores 39 on the Artificial Analysis Intelligence Index, placing it above average among other models in a similar price tier (median: 27).",
+    "summary_card": "39",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-opus-5",
+     "model_name_cell": "Claude Opus 5 (Low)",
+     "intelligence_cell": "39",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 39.3543357992936,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 1.1,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $1.10 per task to evaluate Claude Opus 5 (Low) on the Intelligence Index.",
+    "summary_card": "$1.10",
+    "unrounded_from_page_data": 1.098302
+   },
+   "cost_to_run_index_usd": {
+    "value": 1561,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$1,561",
+    "bar_name": "Claude Opus 5 (low)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 1560.91,
+    "parts_from_page_data": {
+     "total": 1560.91,
+     "input": 921.11,
+     "nonCacheInput": 176.16,
+     "cacheRead": 427.54,
+     "cacheWrite": 317.4,
+     "output": 639.81,
+     "reasoning": 274.13,
+     "answer": 365.68
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "26M",
+    "sentence": "When evaluating the Intelligence Index, it generated 26M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Opus 5 (Low) is $5.00 per 1M input tokens (expensive, median: $2.00) and $25.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 5,
+    "output_usd_per_1m_tokens": 25
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Sonnet 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Sonnet 5.5 (Max, Default Fallback)",
+   "thinking_level_on_page": "max",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:22Z",
+     "scrapeId": "01a148ad-e130-708a-b93e-e8f8ab41b986",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:12:30Z",
+     "scrapeId": "01a148b4-44df-7169-9cbb-ac5fb71a6e3d",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-28",
+    "sentence": "Claude Sonnet 5.5 (Max, Default Fallback) was released on September 28, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 56,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Sonnet 5.5 (Max, Default Fallback) scores 56 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Sonnet 5.5 (Max, Default Fallback) scores 56 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "56",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-sonnet-5-5",
+     "model_name_cell": "Claude Sonnet 5.5 (Max, Default Fallback)",
+     "intelligence_cell": "56",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 56.0001286580794,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 5.46,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $5.46 per task to evaluate Claude Sonnet 5.5 (Max, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$5.46",
+    "unrounded_from_page_data": 5.460853
+   },
+   "cost_to_run_index_usd": {
+    "value": 7260,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$7,260",
+    "bar_name": "Claude Sonnet 5.5 (max with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 24 bars match embedded values",
+    "unrounded_from_page_data": 7259.5,
+    "parts_from_page_data": {
+     "total": 7259.5,
+     "input": 3101.8,
+     "nonCacheInput": 70.93,
+     "cacheRead": 1814.63,
+     "cacheWrite": 1216.24,
+     "output": 4157.7,
+     "reasoning": 3579.46,
+     "answer": 578.24
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "420M",
+    "sentence": "When evaluating the Intelligence Index, it generated 420M tokens, which is very verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Sonnet 5.5 (Max, Default Fallback) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Sonnet 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Sonnet 5.5 (Xhigh, Default Fallback)",
+   "thinking_level_on_page": "xhigh",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5-xhigh",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:12:24Z",
+     "scrapeId": "01a148b4-44ec-70aa-8827-f6808d88192e",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:20Z",
+     "scrapeId": "01a148ad-e146-700d-a42c-e8ee9fc9566a",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-28",
+    "sentence": "Claude Sonnet 5.5 (Xhigh, Default Fallback) was released on September 28, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 52,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Sonnet 5.5 (Xhigh, Default Fallback) scores 52 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Sonnet 5.5 (Xhigh, Default Fallback) scores 52 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "52",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-sonnet-5-5",
+     "model_name_cell": "Claude Sonnet 5.5 (Xhigh, Default Fallback)",
+     "intelligence_cell": "52",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 51.8955544183089,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 2.01,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $2.01 per task to evaluate Claude Sonnet 5.5 (Xhigh, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$2.01",
+    "unrounded_from_page_data": 2.012035
+   },
+   "cost_to_run_index_usd": {
+    "value": 2177,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$2,177",
+    "bar_name": "Claude Sonnet 5.5 (xhigh with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 2176.82,
+    "parts_from_page_data": {
+     "total": 2176.82,
+     "input": 1125.37,
+     "nonCacheInput": 70.73,
+     "cacheRead": 571.06,
+     "cacheWrite": 483.58,
+     "output": 1051.45,
+     "reasoning": 709.58,
+     "answer": 341.87
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "110M",
+    "sentence": "When evaluating the Intelligence Index, it generated 110M tokens, which is somewhat verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Sonnet 5.5 (Xhigh, Default Fallback) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Sonnet 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Sonnet 5.5 (High, Default Fallback)",
+   "thinking_level_on_page": "high",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5-high",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:12:32Z",
+     "scrapeId": "01a148b4-451c-7588-b141-5e9fafaee7b3",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:22Z",
+     "scrapeId": "01a148ad-e147-735d-9a55-1f7ee2c0b48c",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-28",
+    "sentence": "Claude Sonnet 5.5 (High, Default Fallback) was released on September 28, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 47,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Sonnet 5.5 (High, Default Fallback) scores 47 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Sonnet 5.5 (High, Default Fallback) scores 47 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "47",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-sonnet-5-5",
+     "model_name_cell": "Claude Sonnet 5.5 (High, Default Fallback)",
+     "intelligence_cell": "47",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 46.7533528066958,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.88,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.88 per task to evaluate Claude Sonnet 5.5 (High, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$0.88",
+    "unrounded_from_page_data": 0.88445
+   },
+   "cost_to_run_index_usd": {
+    "value": 1027,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$1,027",
+    "bar_name": "Claude Sonnet 5.5 (high with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 1027.4,
+    "parts_from_page_data": {
+     "total": 1027.4,
+     "input": 506.88,
+     "nonCacheInput": 70.57,
+     "cacheRead": 187.61,
+     "cacheWrite": 248.7,
+     "output": 520.52,
+     "reasoning": 268.35,
+     "answer": 252.17
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "52M",
+    "sentence": "When evaluating the Intelligence Index, it generated 52M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Sonnet 5.5 (High, Default Fallback) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Sonnet 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Sonnet 5.5 (Medium, Default Fallback)",
+   "thinking_level_on_page": "medium",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5-medium",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:12:38Z",
+     "scrapeId": "01a148b4-451f-7068-b099-d9995bf079d6",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:29Z",
+     "scrapeId": "01a148ad-e14b-7384-9e78-d2d0bfca7d75",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-28",
+    "sentence": "Claude Sonnet 5.5 (Medium, Default Fallback) was released on September 28, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 41,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Sonnet 5.5 (Medium, Default Fallback) scores 41 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Sonnet 5.5 (Medium, Default Fallback) scores 41 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "41",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-sonnet-5-5",
+     "model_name_cell": "Claude Sonnet 5.5 (Medium, Default Fallback)",
+     "intelligence_cell": "41",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 40.838652287929,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.48,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.48 per task to evaluate Claude Sonnet 5.5 (Medium, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$0.48",
+    "unrounded_from_page_data": 0.483264
+   },
+   "cost_to_run_index_usd": {
+    "value": 622,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$622",
+    "bar_name": "Claude Sonnet 5.5 (medium with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 622.28,
+    "parts_from_page_data": {
+     "total": 622.28,
+     "input": 311.49,
+     "nonCacheInput": 70.48,
+     "cacheRead": 87.78,
+     "cacheWrite": 153.23,
+     "output": 310.79,
+     "reasoning": 98.02,
+     "answer": 212.77
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "31M",
+    "sentence": "When evaluating the Intelligence Index, it generated 31M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Sonnet 5.5 (Medium, Default Fallback) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Sonnet 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Sonnet 5.5 (Low, Default Fallback)",
+   "thinking_level_on_page": "low",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5-low",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:13:22Z",
+     "scrapeId": "01a148b5-25be-754b-81c8-46db311774ab",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:29Z",
+     "scrapeId": "01a148ad-e14a-739b-a524-fef361b383b4",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-28",
+    "sentence": "Claude Sonnet 5.5 (Low, Default Fallback) was released on September 28, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 36,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Sonnet 5.5 (Low, Default Fallback) scores 36 on the Artificial Analysis Intelligence Index, placing it above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Sonnet 5.5 (Low, Default Fallback) scores 36 on the Artificial Analysis Intelligence Index, placing it above average among other models in a similar price tier (median: 27).",
+    "summary_card": "36",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-sonnet-5-5",
+     "model_name_cell": "Claude Sonnet 5.5 (Low, Default Fallback)",
+     "intelligence_cell": "36",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 35.8681594577587,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.35,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.35 per task to evaluate Claude Sonnet 5.5 (Low, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$0.35",
+    "unrounded_from_page_data": 0.345161
+   },
+   "cost_to_run_index_usd": {
+    "value": 482,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$482",
+    "bar_name": "Claude Sonnet 5.5 (low with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 482.13,
+    "parts_from_page_data": {
+     "total": 482.13,
+     "input": 255.39,
+     "nonCacheInput": 70.44,
+     "cacheRead": 63.33,
+     "cacheWrite": 121.61,
+     "output": 226.75,
+     "reasoning": 45.99,
+     "answer": 180.75
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "23M",
+    "sentence": "When evaluating the Intelligence Index, it generated 23M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Sonnet 5.5 (Low, Default Fallback) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Haiku 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Haiku 5.5 (Max)",
+   "thinking_level_on_page": "max",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:11:59Z",
+     "scrapeId": "01a148b3-a366-756c-9b70-51395c841b5e",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:04:20Z",
+     "scrapeId": "01a148ac-dc05-7313-8883-bb11acc86955",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-10-07",
+    "sentence": "Claude Haiku 5.5 (Max) was released on October 7, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 43,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Haiku 5.5 (Max) scores 43 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 13).",
+    "faq_sentence": "Claude Haiku 5.5 (Max) scores 43 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 13).",
+    "summary_card": "43",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-haiku-5-5",
+     "model_name_cell": "Claude Haiku 5.5 (Max)",
+     "intelligence_cell": "43",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 43.3950199670746,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.21,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.21 per task to evaluate Claude Haiku 5.5 (Max) on the Intelligence Index.",
+    "summary_card": "$0.21",
+    "unrounded_from_page_data": 0.21277
+   },
+   "cost_to_run_index_usd": {
+    "value": 330,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$330",
+    "bar_name": "Claude Haiku 5.5 (max)",
+    "bar_footnote_star": true,
+    "label_check": "all 24 bars match embedded values",
+    "unrounded_from_page_data": 330.25,
+    "parts_from_page_data": {
+     "total": 330.25,
+     "input": 112.66,
+     "nonCacheInput": 3.53,
+     "cacheRead": 74.19,
+     "cacheWrite": 34.94,
+     "output": 217.59,
+     "reasoning": 198.79,
+     "answer": 18.8
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "440M",
+    "sentence": "When evaluating the Intelligence Index, it generated 440M tokens, which is very verbose in comparison to the median of 96M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Haiku 5.5 (Max) is $0.10 per 1M input tokens (competitively priced, median: $0.25) and $0.50 per 1M output tokens (competitively priced, median: $0.87).",
+    "input_usd_per_1m_tokens": 0.1,
+    "output_usd_per_1m_tokens": 0.5
+   },
+   "notes": [
+    "The page marks this cost with an asterisk. The chart note in the page data reads: \"* Claude Haiku 5.5 has 5x higher pricing on longer-context inputs which are not currently reflected; we are working to include this in cost figures across Artificial Analysis.\" So this cost is understated by an amount the page does not give."
+   ]
+  },
+  {
+   "family": "Claude Haiku 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Haiku 5.5 (Xhigh)",
+   "thinking_level_on_page": "xhigh",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-xhigh",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:11:43Z",
+     "scrapeId": "01a148b3-a345-735d-be08-d57a01b8ad8e",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:04:13Z",
+     "scrapeId": "01a148ac-dbf2-746c-98c7-f337e3684278",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-10-07",
+    "sentence": "Claude Haiku 5.5 (Xhigh) was released on October 7, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 41,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Haiku 5.5 (Xhigh) scores 41 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 13).",
+    "faq_sentence": "Claude Haiku 5.5 (Xhigh) scores 41 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 13).",
+    "summary_card": "41",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-haiku-5-5",
+     "model_name_cell": "Claude Haiku 5.5 (Xhigh)",
+     "intelligence_cell": "41",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 41.2489304677024,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.12,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.12 per task to evaluate Claude Haiku 5.5 (Xhigh) on the Intelligence Index.",
+    "summary_card": "$0.12",
+    "unrounded_from_page_data": 0.123786
+   },
+   "cost_to_run_index_usd": {
+    "value": 158,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$158",
+    "bar_name": "Claude Haiku 5.5 (xhigh)",
+    "bar_footnote_star": true,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 157.58,
+    "parts_from_page_data": {
+     "total": 157.58,
+     "input": 67.58,
+     "nonCacheInput": 3.53,
+     "cacheRead": 42.47,
+     "cacheWrite": 21.58,
+     "output": 89.99,
+     "reasoning": 75.25,
+     "answer": 14.75
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "180M",
+    "sentence": "When evaluating the Intelligence Index, it generated 180M tokens, which is very verbose in comparison to the median of 96M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Haiku 5.5 (Xhigh) is $0.10 per 1M input tokens (competitively priced, median: $0.25) and $0.50 per 1M output tokens (competitively priced, median: $0.87).",
+    "input_usd_per_1m_tokens": 0.1,
+    "output_usd_per_1m_tokens": 0.5
+   },
+   "notes": [
+    "The page marks this cost with an asterisk. The chart note in the page data reads: \"* Claude Haiku 5.5 has 5x higher pricing on longer-context inputs which are not currently reflected; we are working to include this in cost figures across Artificial Analysis.\" So this cost is understated by an amount the page does not give."
+   ]
+  },
+  {
+   "family": "Claude Haiku 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Haiku 5.5 (High)",
+   "thinking_level_on_page": "high",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-high",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:04:13Z",
+     "scrapeId": "01a148ac-dbf7-741f-9b65-a987ac9baacd",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:11:51Z",
+     "scrapeId": "01a148b3-a34a-753d-8c90-752bd3a88985",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-10-07",
+    "sentence": "Claude Haiku 5.5 (High) was released on October 7, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 38,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Haiku 5.5 (High) scores 38 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 13).",
+    "faq_sentence": "Claude Haiku 5.5 (High) scores 38 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 13).",
+    "summary_card": "38",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-haiku-5-5",
+     "model_name_cell": "Claude Haiku 5.5 (High)",
+     "intelligence_cell": "38",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 37.8240211671094,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.08,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.08 per task to evaluate Claude Haiku 5.5 (High) on the Intelligence Index.",
+    "summary_card": "$0.08",
+    "unrounded_from_page_data": 0.079427
+   },
+   "cost_to_run_index_usd": {
+    "value": 94,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$94",
+    "bar_name": "Claude Haiku 5.5 (high)",
+    "bar_footnote_star": true,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 94.07,
+    "parts_from_page_data": {
+     "total": 94.07,
+     "input": 45.52,
+     "nonCacheInput": 3.53,
+     "cacheRead": 26.59,
+     "cacheWrite": 15.4,
+     "output": 48.55,
+     "reasoning": 36.43,
+     "answer": 12.12
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "97M",
+    "sentence": "When evaluating the Intelligence Index, it generated 97M tokens, which is somewhat verbose in comparison to the median of 96M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Haiku 5.5 (High) is $0.10 per 1M input tokens (competitively priced, median: $0.25) and $0.50 per 1M output tokens (competitively priced, median: $0.87).",
+    "input_usd_per_1m_tokens": 0.1,
+    "output_usd_per_1m_tokens": 0.5
+   },
+   "notes": [
+    "The page marks this cost with an asterisk. The chart note in the page data reads: \"* Claude Haiku 5.5 has 5x higher pricing on longer-context inputs which are not currently reflected; we are working to include this in cost figures across Artificial Analysis.\" So this cost is understated by an amount the page does not give."
+   ]
+  },
+  {
+   "family": "Claude Haiku 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Haiku 5.5 (Medium)",
+   "thinking_level_on_page": "medium",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-medium",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:13:29Z",
+     "scrapeId": "01a148b5-2616-7040-b6a2-cbcdd974af01",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:04:18Z",
+     "scrapeId": "01a148ac-dc59-70cb-bb1f-47ed63426aa1",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-10-07",
+    "sentence": "Claude Haiku 5.5 (Medium) was released on October 7, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 34,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Haiku 5.5 (Medium) scores 34 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 13).",
+    "faq_sentence": "Claude Haiku 5.5 (Medium) scores 34 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 13).",
+    "summary_card": "34",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-haiku-5-5",
+     "model_name_cell": "Claude Haiku 5.5 (Medium)",
+     "intelligence_cell": "34",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 34.4646519474657,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.05,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.05 per task to evaluate Claude Haiku 5.5 (Medium) on the Intelligence Index.",
+    "summary_card": "$0.05",
+    "unrounded_from_page_data": 0.047031
+   },
+   "cost_to_run_index_usd": {
+    "value": 56,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$56",
+    "bar_name": "Claude Haiku 5.5 (medium)",
+    "bar_footnote_star": true,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 56.36,
+    "parts_from_page_data": {
+     "total": 56.36,
+     "input": 29.47,
+     "nonCacheInput": 3.53,
+     "cacheRead": 15.14,
+     "cacheWrite": 10.8,
+     "output": 26.89,
+     "reasoning": 17.39,
+     "answer": 9.5
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "54M",
+    "sentence": "When evaluating the Intelligence Index, it generated 54M tokens, which is fairly concise in comparison to the median of 96M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Haiku 5.5 (Medium) is $0.10 per 1M input tokens (competitively priced, median: $0.25) and $0.50 per 1M output tokens (competitively priced, median: $0.87).",
+    "input_usd_per_1m_tokens": 0.1,
+    "output_usd_per_1m_tokens": 0.5
+   },
+   "notes": [
+    "The page marks this cost with an asterisk. The chart note in the page data reads: \"* Claude Haiku 5.5 has 5x higher pricing on longer-context inputs which are not currently reflected; we are working to include this in cost figures across Artificial Analysis.\" So this cost is understated by an amount the page does not give."
+   ]
+  },
+  {
+   "family": "Claude Haiku 5.5",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Haiku 5.5 (Low)",
+   "thinking_level_on_page": "low",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-low",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:04:18Z",
+     "scrapeId": "01a148ac-dc23-7596-909e-b04dc8a8472e",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:13:22Z",
+     "scrapeId": "01a148b5-25cb-7638-93df-0d637b2943da",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-10-07",
+    "sentence": "Claude Haiku 5.5 (Low) was released on October 7, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 29,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Haiku 5.5 (Low) scores 29 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 13).",
+    "faq_sentence": "Claude Haiku 5.5 (Low) scores 29 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 13).",
+    "summary_card": "29",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-haiku-5-5",
+     "model_name_cell": "Claude Haiku 5.5 (Low)",
+     "intelligence_cell": "29",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 29.4523685891139,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.02,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.02 per task to evaluate Claude Haiku 5.5 (Low) on the Intelligence Index.",
+    "summary_card": "$0.02",
+    "unrounded_from_page_data": 0.024459
+   },
+   "cost_to_run_index_usd": {
+    "value": 34,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$34",
+    "bar_name": "Claude Haiku 5.5 (low)",
+    "bar_footnote_star": true,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 34.31,
+    "parts_from_page_data": {
+     "total": 34.31,
+     "input": 18.16,
+     "nonCacheInput": 3.53,
+     "cacheRead": 7.52,
+     "cacheWrite": 7.11,
+     "output": 16.14,
+     "reasoning": 9.03,
+     "answer": 7.11
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "32M",
+    "sentence": "When evaluating the Intelligence Index, it generated 32M tokens, which is very concise in comparison to the median of 96M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Haiku 5.5 (Low) is $0.10 per 1M input tokens (competitively priced, median: $0.25) and $0.50 per 1M output tokens (competitively priced, median: $0.87).",
+    "input_usd_per_1m_tokens": 0.1,
+    "output_usd_per_1m_tokens": 0.5
+   },
+   "notes": [
+    "The page marks this cost with an asterisk. The chart note in the page data reads: \"* Claude Haiku 5.5 has 5x higher pricing on longer-context inputs which are not currently reflected; we are working to include this in cost figures across Artificial Analysis.\" So this cost is understated by an amount the page does not give."
+   ]
+  },
+  {
+   "family": "Claude Fable 5.1",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Fable 5.1 (Max, Default Fallback)",
+   "thinking_level_on_page": "max",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:53Z",
+     "scrapeId": "01a148ae-560e-7234-905a-6007e61fe211",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:13:39Z",
+     "scrapeId": "01a148b5-262e-742f-93b3-6e857f3ee1c5",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-01",
+    "sentence": "Claude Fable 5.1 (Max, Default Fallback) was released on September 1, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 53,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Fable 5.1 (Max, Default Fallback) scores 53 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Fable 5.1 (Max, Default Fallback) scores 53 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "53",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-fable-5-1",
+     "model_name_cell": "Claude Fable 5.1 (Max, Default Fallback)",
+     "intelligence_cell": "53",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 53.3549259623252,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 7.63,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $7.63 per task to evaluate Claude Fable 5.1 (Max, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$7.63",
+    "unrounded_from_page_data": 7.629706
+   },
+   "cost_to_run_index_usd": {
+    "value": 13129,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$13,129",
+    "bar_name": "Claude Fable 5.1 (max with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 24 bars match embedded values",
+    "unrounded_from_page_data": 13128.86,
+    "parts_from_page_data": {
+     "total": 13128.86,
+     "input": 3891.48,
+     "nonCacheInput": 351.27,
+     "cacheRead": 1387.59,
+     "cacheWrite": 2152.62,
+     "output": 9237.38,
+     "reasoning": 7218.92,
+     "answer": 2018.46
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "190M",
+    "sentence": "When evaluating the Intelligence Index, it generated 190M tokens, which is very verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Fable 5.1 (Max, Default Fallback) is $10.00 per 1M input tokens (expensive, median: $2.00) and $50.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 10,
+    "output_usd_per_1m_tokens": 50
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Fable 5.1",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Fable 5.1 (Xhigh, Default Fallback)",
+   "thinking_level_on_page": "xhigh",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1-xhigh",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:53Z",
+     "scrapeId": "01a148ae-566d-7029-b968-72d07ca0df1a",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:13:30Z",
+     "scrapeId": "01a148b5-261a-738c-8302-d0a545807036",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-01",
+    "sentence": "Claude Fable 5.1 (Xhigh, Default Fallback) was released on September 1, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 53,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Fable 5.1 (Xhigh, Default Fallback) scores 53 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Fable 5.1 (Xhigh, Default Fallback) scores 53 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "53",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-fable-5-1",
+     "model_name_cell": "Claude Fable 5.1 (Xhigh, Default Fallback)",
+     "intelligence_cell": "53",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 53.2032587538944,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 5.98,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $5.98 per task to evaluate Claude Fable 5.1 (Xhigh, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$5.98",
+    "unrounded_from_page_data": 5.978304
+   },
+   "cost_to_run_index_usd": {
+    "value": 9063,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$9,063",
+    "bar_name": "Claude Fable 5.1 (xhigh with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 9063.11,
+    "parts_from_page_data": {
+     "total": 9063.11,
+     "input": 3148.47,
+     "nonCacheInput": 350.21,
+     "cacheRead": 1022.56,
+     "cacheWrite": 1775.71,
+     "output": 5914.64,
+     "reasoning": 4131.35,
+     "answer": 1783.29
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "120M",
+    "sentence": "When evaluating the Intelligence Index, it generated 120M tokens, which is somewhat verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Fable 5.1 (Xhigh, Default Fallback) is $10.00 per 1M input tokens (expensive, median: $2.00) and $50.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 10,
+    "output_usd_per_1m_tokens": 50
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Fable 5.1",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Fable 5.1 (High, Default Fallback)",
+   "thinking_level_on_page": "high",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1-high",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:13:37Z",
+     "scrapeId": "01a148b5-2628-70c3-8c68-4befd96c5cca",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:50Z",
+     "scrapeId": "01a148ae-55ec-71dd-b920-f6c534053bb9",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-01",
+    "sentence": "Claude Fable 5.1 (High, Default Fallback) was released on September 1, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 51,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Fable 5.1 (High, Default Fallback) scores 51 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Fable 5.1 (High, Default Fallback) scores 51 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "51",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-fable-5-1",
+     "model_name_cell": "Claude Fable 5.1 (High, Default Fallback)",
+     "intelligence_cell": "51",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 51.1515708852237,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 3.91,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $3.91 per task to evaluate Claude Fable 5.1 (High, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$3.91",
+    "unrounded_from_page_data": 3.912527
+   },
+   "cost_to_run_index_usd": {
+    "value": 5242,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$5,242",
+    "bar_name": "Claude Fable 5.1 (high with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 5241.59,
+    "parts_from_page_data": {
+     "total": 5241.59,
+     "input": 2202.04,
+     "nonCacheInput": 349.7,
+     "cacheRead": 585.68,
+     "cacheWrite": 1266.66,
+     "output": 3039.55,
+     "reasoning": 1670.01,
+     "answer": 1369.53
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "62M",
+    "sentence": "When evaluating the Intelligence Index, it generated 62M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Fable 5.1 (High, Default Fallback) is $10.00 per 1M input tokens (expensive, median: $2.00) and $50.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 10,
+    "output_usd_per_1m_tokens": 50
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Fable 5.1",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Fable 5.1 (Medium, Default Fallback)",
+   "thinking_level_on_page": "medium",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1-medium",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:14:21Z",
+     "scrapeId": "01a148b5-c99e-729d-9134-4a2cbae7a33a",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:55Z",
+     "scrapeId": "01a148ae-55f8-7529-9b3d-0701deebadb3",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-01",
+    "sentence": "Claude Fable 5.1 (Medium, Default Fallback) was released on September 1, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 49,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Fable 5.1 (Medium, Default Fallback) scores 49 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Fable 5.1 (Medium, Default Fallback) scores 49 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "49",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-fable-5-1",
+     "model_name_cell": "Claude Fable 5.1 (Medium, Default Fallback)",
+     "intelligence_cell": "49",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 48.9206162609523,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 2.98,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $2.98 per task to evaluate Claude Fable 5.1 (Medium, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$2.98",
+    "unrounded_from_page_data": 2.982597
+   },
+   "cost_to_run_index_usd": {
+    "value": 3983,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$3,983",
+    "bar_name": "Claude Fable 5.1 (medium with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 3983.28,
+    "parts_from_page_data": {
+     "total": 3983.28,
+     "input": 1816.85,
+     "nonCacheInput": 348.86,
+     "cacheRead": 419.47,
+     "cacheWrite": 1048.52,
+     "output": 2166.43,
+     "reasoning": 998.85,
+     "answer": 1167.59
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "44M",
+    "sentence": "When evaluating the Intelligence Index, it generated 44M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Fable 5.1 (Medium, Default Fallback) is $10.00 per 1M input tokens (expensive, median: $2.00) and $50.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 10,
+    "output_usd_per_1m_tokens": 50
+   },
+   "notes": []
+  },
+  {
+   "family": "Claude Fable 5.1",
+   "maker": "Anthropic",
+   "variant_name_on_page": "Claude Fable 5.1 (Low, Default Fallback)",
+   "thinking_level_on_page": "low",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "effort",
+   "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1-low",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:05:50Z",
+     "scrapeId": "01a148ae-55ef-748e-89dc-b04b947c4d4d",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:15:03Z",
+     "scrapeId": "01a148b6-7365-7561-ac2c-248d5d87b058",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-01",
+    "sentence": "Claude Fable 5.1 (Low, Default Fallback) was released on September 1, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 47,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Claude Fable 5.1 (Low, Default Fallback) scores 47 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Claude Fable 5.1 (Low, Default Fallback) scores 47 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "47",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/claude-fable-5-1",
+     "model_name_cell": "Claude Fable 5.1 (Low, Default Fallback)",
+     "intelligence_cell": "47",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 46.8163422014862,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 2.37,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $2.37 per task to evaluate Claude Fable 5.1 (Low, Default Fallback) on the Intelligence Index.",
+    "summary_card": "$2.37",
+    "unrounded_from_page_data": 2.371025
+   },
+   "cost_to_run_index_usd": {
+    "value": 3158,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$3,158",
+    "bar_name": "Claude Fable 5.1 (low with fallback)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 3157.66,
+    "parts_from_page_data": {
+     "total": 3157.66,
+     "input": 1551.77,
+     "nonCacheInput": 349.93,
+     "cacheRead": 311.11,
+     "cacheWrite": 890.73,
+     "output": 1605.89,
+     "reasoning": 572.52,
+     "answer": 1033.38
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "33M",
+    "sentence": "When evaluating the Intelligence Index, it generated 33M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Claude Fable 5.1 (Low, Default Fallback) is $10.00 per 1M input tokens (expensive, median: $2.00) and $50.00 per 1M output tokens (expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 10,
+    "output_usd_per_1m_tokens": 50
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6 Sol (Max)",
+   "thinking_level_on_page": "max",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-sol",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:07:01Z",
+     "scrapeId": "01a148af-4568-7230-96a5-12c0d8e527ac",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:14:13Z",
+     "scrapeId": "01a148b5-c984-7277-adf1-99c780370bfa",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "GPT-6 Sol (Max) was released on September 22, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 48,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6 Sol (Max) scores 48 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6 Sol (Max) scores 48 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "48",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-sol",
+     "model_name_cell": "GPT-6 Sol (Max)",
+     "intelligence_cell": "48",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 47.6305176437724,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 1.04,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $1.04 per task to evaluate GPT-6 Sol (Max) on the Intelligence Index.",
+    "summary_card": "$1.04",
+    "unrounded_from_page_data": 1.044662
+   },
+   "cost_to_run_index_usd": {
+    "value": 1536,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$1,536",
+    "bar_name": "GPT-6 Sol (max)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 1535.8,
+    "parts_from_page_data": {
+     "total": 1535.8,
+     "input": 768.28,
+     "nonCacheInput": 55.52,
+     "cacheRead": 474.37,
+     "cacheWrite": 238.39,
+     "output": 767.51,
+     "reasoning": 625.68,
+     "answer": 141.84
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "77M",
+    "sentence": "When evaluating the Intelligence Index, it generated 77M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6 Sol (Max) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6 Sol (Xhigh)",
+   "thinking_level_on_page": "xhigh",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-xhigh",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:14:48Z",
+     "scrapeId": "01a148b6-7341-75bf-bf94-f5f902faabc4",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:06:57Z",
+     "scrapeId": "01a148af-4596-75f2-a984-630e6b602c06",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "GPT-6 Sol (Xhigh) was released on September 22, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 44,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6 Sol (Xhigh) scores 44 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6 Sol (Xhigh) scores 44 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "44",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-sol",
+     "model_name_cell": "GPT-6 Sol (Xhigh)",
+     "intelligence_cell": "44",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 44.2448955516407,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.52,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.52 per task to evaluate GPT-6 Sol (Xhigh) on the Intelligence Index.",
+    "summary_card": "$0.52",
+    "unrounded_from_page_data": 0.52081
+   },
+   "cost_to_run_index_usd": {
+    "value": 855,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$855",
+    "bar_name": "GPT-6 Sol (xhigh)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 854.6,
+    "parts_from_page_data": {
+     "total": 854.6,
+     "input": 453.0,
+     "nonCacheInput": 55.51,
+     "cacheRead": 234.66,
+     "cacheWrite": 162.83,
+     "output": 401.6,
+     "reasoning": 290.13,
+     "answer": 111.47
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "40M",
+    "sentence": "When evaluating the Intelligence Index, it generated 40M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6 Sol (Xhigh) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6 Sol (High)",
+   "thinking_level_on_page": "high",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-high",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:06:53Z",
+     "scrapeId": "01a148af-4568-75fd-8981-88723e74fa88",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:14:04Z",
+     "scrapeId": "01a148b5-c977-7399-8239-47ba30e27b3b",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "GPT-6 Sol (High) was released on September 22, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 42,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6 Sol (High) scores 42 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6 Sol (High) scores 42 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "42",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-sol",
+     "model_name_cell": "GPT-6 Sol (High)",
+     "intelligence_cell": "42",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 42.4004513642985,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.37,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.37 per task to evaluate GPT-6 Sol (High) on the Intelligence Index.",
+    "summary_card": "$0.37",
+    "unrounded_from_page_data": 0.372841
+   },
+   "cost_to_run_index_usd": {
+    "value": 605,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$605",
+    "bar_name": "GPT-6 Sol (high)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 604.52,
+    "parts_from_page_data": {
+     "total": 604.52,
+     "input": 351.67,
+     "nonCacheInput": 55.48,
+     "cacheRead": 167.48,
+     "cacheWrite": 128.71,
+     "output": 252.85,
+     "reasoning": 156.66,
+     "answer": 96.19
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "25M",
+    "sentence": "When evaluating the Intelligence Index, it generated 25M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6 Sol (High) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6 Sol (Medium)",
+   "thinking_level_on_page": "medium",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-medium",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:06:53Z",
+     "scrapeId": "01a148af-4568-7608-94ec-8b81d4daa396",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:14:17Z",
+     "scrapeId": "01a148b5-c9ca-729e-aeb3-20fbf9d0e29c",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "GPT-6 Sol (Medium) was released on September 22, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 40,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6 Sol (Medium) scores 40 on the Artificial Analysis Intelligence Index, placing it above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6 Sol (Medium) scores 40 on the Artificial Analysis Intelligence Index, placing it above average among other models in a similar price tier (median: 27).",
+    "summary_card": "40",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-sol",
+     "model_name_cell": "GPT-6 Sol (Medium)",
+     "intelligence_cell": "40",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 39.8118971749522,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.25,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.25 per task to evaluate GPT-6 Sol (Medium) on the Intelligence Index.",
+    "summary_card": "$0.25",
+    "unrounded_from_page_data": 0.247286
+   },
+   "cost_to_run_index_usd": {
+    "value": 416,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$416",
+    "bar_name": "GPT-6 Sol (medium)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 416.32,
+    "parts_from_page_data": {
+     "total": 416.32,
+     "input": 257.31,
+     "nonCacheInput": 55.47,
+     "cacheRead": 105.17,
+     "cacheWrite": 96.66,
+     "output": 159.01,
+     "reasoning": 76.69,
+     "answer": 82.32
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "16M",
+    "sentence": "When evaluating the Intelligence Index, it generated 16M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6 Sol (Medium) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6 Sol (Low)",
+   "thinking_level_on_page": "low",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-low",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:14:47Z",
+     "scrapeId": "01a148b6-7339-77ec-88b4-91d2c84377e0",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:06:58Z",
+     "scrapeId": "01a148af-4576-74de-8442-1dfc7a55654c",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "GPT-6 Sol (Low) was released on September 22, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 34,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6 Sol (Low) scores 34 on the Artificial Analysis Intelligence Index, placing it above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6 Sol (Low) scores 34 on the Artificial Analysis Intelligence Index, placing it above average among other models in a similar price tier (median: 27).",
+    "summary_card": "34",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-sol",
+     "model_name_cell": "GPT-6 Sol (Low)",
+     "intelligence_cell": "34",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 34.1548755585733,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.13,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.13 per task to evaluate GPT-6 Sol (Low) on the Intelligence Index.",
+    "summary_card": "$0.13",
+    "unrounded_from_page_data": 0.132777
+   },
+   "cost_to_run_index_usd": {
+    "value": 269,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$269",
+    "bar_name": "GPT-6 Sol (low)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 268.73,
+    "parts_from_page_data": {
+     "total": 268.73,
+     "input": 179.57,
+     "nonCacheInput": 55.48,
+     "cacheRead": 57.03,
+     "cacheWrite": 67.06,
+     "output": 89.17,
+     "reasoning": 26.89,
+     "answer": 62.28
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "8.9M",
+    "sentence": "When evaluating the Intelligence Index, it generated 8.9M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6 Sol (Low) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6 Sol (Non-reasoning)",
+   "thinking_level_on_page": "non-reasoning",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-non-reasoning",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:15:05Z",
+     "scrapeId": "01a148b6-7372-76e8-a17d-39ea728cdf93",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:07:25Z",
+     "scrapeId": "01a148af-b689-7579-9ee5-9ca2e459ed18",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-22",
+    "sentence": "GPT-6 Sol (Non-reasoning) was released on September 22, 2026."
+   },
+   "deprecated_on_page": "This model is deprecated. We only continue performance benchmarking for the default 10k input token workload. Results for other workloads are historical and no longer updated.",
+   "intelligence_index": {
+    "value": 29,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6 Sol (Non-reasoning) scores 29 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 16).",
+    "faq_sentence": "GPT-6 Sol (Non-reasoning) scores 29 on the Artificial Analysis Intelligence Index, placing it well above average among other non-reasoning models in a similar price tier (median: 16).",
+    "summary_card": "29",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-sol",
+     "model_name_cell": "GPT-6 Sol (Non-reasoning)",
+     "intelligence_cell": "29",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 28.5121413410513,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.33,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.33 per task to evaluate GPT-6 Sol (Non-reasoning) on the Intelligence Index.",
+    "summary_card": "$0.33",
+    "unrounded_from_page_data": 0.333656
+   },
+   "cost_to_run_index_usd": {
+    "value": 449,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$449",
+    "bar_name": "GPT-6 Sol (non-reasoning)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 449.37,
+    "parts_from_page_data": {
+     "total": 449.37,
+     "input": 366.26,
+     "nonCacheInput": 55.53,
+     "cacheRead": 206.32,
+     "cacheWrite": 104.41,
+     "output": 83.11,
+     "reasoning": 0,
+     "answer": 83.11
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "8.3M",
+    "sentence": "When evaluating the Intelligence Index, it generated 8.3M tokens, which is very concise in comparison to the median of 12M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6 Sol (Non-reasoning) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6.1 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6.1 Sol (Max)",
+   "thinking_level_on_page": "max",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:07:29Z",
+     "scrapeId": "01a148af-bb40-747b-afe5-621fdd06dc30",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:14:56Z",
+     "scrapeId": "01a148b6-7371-71ee-8ae9-65269fe42f69",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-29",
+    "sentence": "GPT-6.1 Sol (Max) was released on September 29, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 52,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6.1 Sol (Max) scores 52 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6.1 Sol (Max) scores 52 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "52",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-1-sol",
+     "model_name_cell": "GPT-6.1 Sol (Max)",
+     "intelligence_cell": "52",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 51.8332597011541,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.72,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.72 per task to evaluate GPT-6.1 Sol (Max) on the Intelligence Index.",
+    "summary_card": "$0.72",
+    "unrounded_from_page_data": 0.724167
+   },
+   "cost_to_run_index_usd": {
+    "value": 1082,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$1,082",
+    "bar_name": "GPT-6.1 Sol (max)",
+    "bar_footnote_star": false,
+    "label_check": "all 24 bars match embedded values",
+    "unrounded_from_page_data": 1081.55,
+    "parts_from_page_data": {
+     "total": 1081.55,
+     "input": 409.56,
+     "nonCacheInput": 55.83,
+     "cacheRead": 126.46,
+     "cacheWrite": 227.27,
+     "output": 671.99,
+     "reasoning": 498.38,
+     "answer": 173.61
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "67M",
+    "sentence": "When evaluating the Intelligence Index, it generated 67M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6.1 Sol (Max) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6.1 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6.1 Sol (Xhigh)",
+   "thinking_level_on_page": "xhigh",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-xhigh",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:07:22Z",
+     "scrapeId": "01a148af-b6a1-75fd-953c-acf983381496",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:14:55Z",
+     "scrapeId": "01a148b6-735f-700e-9a77-eb7bcad864c3",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-29",
+    "sentence": "GPT-6.1 Sol (Xhigh) was released on September 29, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 51,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6.1 Sol (Xhigh) scores 51 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6.1 Sol (Xhigh) scores 51 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "51",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-1-sol",
+     "model_name_cell": "GPT-6.1 Sol (Xhigh)",
+     "intelligence_cell": "51",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 51.0377679093761,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.39,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.39 per task to evaluate GPT-6.1 Sol (Xhigh) on the Intelligence Index.",
+    "summary_card": "$0.39",
+    "unrounded_from_page_data": 0.392861
+   },
+   "cost_to_run_index_usd": {
+    "value": 662,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$662",
+    "bar_name": "GPT-6.1 Sol (xhigh)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 662.28,
+    "parts_from_page_data": {
+     "total": 662.28,
+     "input": 302.22,
+     "nonCacheInput": 55.83,
+     "cacheRead": 84.17,
+     "cacheWrite": 162.23,
+     "output": 360.06,
+     "reasoning": 222.8,
+     "answer": 137.25
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "36M",
+    "sentence": "When evaluating the Intelligence Index, it generated 36M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6.1 Sol (Xhigh) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6.1 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6.1 Sol (High)",
+   "thinking_level_on_page": "high",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-high",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:16:41Z",
+     "scrapeId": "01a148b8-33b4-730c-a778-092101ec2707",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:07:20Z",
+     "scrapeId": "01a148af-b69b-746e-9d30-461cada8e35f",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-29",
+    "sentence": "GPT-6.1 Sol (High) was released on September 29, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 50,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6.1 Sol (High) scores 50 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6.1 Sol (High) scores 50 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "50",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-1-sol",
+     "model_name_cell": "GPT-6.1 Sol (High)",
+     "intelligence_cell": "50",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 50.2377777519769,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.32,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.32 per task to evaluate GPT-6.1 Sol (High) on the Intelligence Index.",
+    "summary_card": "$0.32",
+    "unrounded_from_page_data": 0.319144
+   },
+   "cost_to_run_index_usd": {
+    "value": 521,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$521",
+    "bar_name": "GPT-6.1 Sol (high)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 521.32,
+    "parts_from_page_data": {
+     "total": 521.32,
+     "input": 267.55,
+     "nonCacheInput": 55.8,
+     "cacheRead": 69.74,
+     "cacheWrite": 142.01,
+     "output": 253.77,
+     "reasoning": 129.3,
+     "answer": 124.47
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "25M",
+    "sentence": "When evaluating the Intelligence Index, it generated 25M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6.1 Sol (High) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6.1 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6.1 Sol (Medium)",
+   "thinking_level_on_page": "medium",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-medium",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:07:30Z",
+     "scrapeId": "01a148af-b6fd-744c-b6b6-0f13b12b8638",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:15:29Z",
+     "scrapeId": "01a148b7-17a4-7570-93f0-440a7a733b4a",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-29",
+    "sentence": "GPT-6.1 Sol (Medium) was released on September 29, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 48,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6.1 Sol (Medium) scores 48 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6.1 Sol (Medium) scores 48 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "48",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-1-sol",
+     "model_name_cell": "GPT-6.1 Sol (Medium)",
+     "intelligence_cell": "48",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 47.7833271274065,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.21,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.21 per task to evaluate GPT-6.1 Sol (Medium) on the Intelligence Index.",
+    "summary_card": "$0.21",
+    "unrounded_from_page_data": 0.213701
+   },
+   "cost_to_run_index_usd": {
+    "value": 361,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$361",
+    "bar_name": "GPT-6.1 Sol (medium)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 361.37,
+    "parts_from_page_data": {
+     "total": 361.37,
+     "input": 208.71,
+     "nonCacheInput": 55.76,
+     "cacheRead": 47.63,
+     "cacheWrite": 105.32,
+     "output": 152.66,
+     "reasoning": 55.34,
+     "answer": 97.32
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "15M",
+    "sentence": "When evaluating the Intelligence Index, it generated 15M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6.1 Sol (Medium) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "GPT-6.1 Sol",
+   "maker": "OpenAI",
+   "variant_name_on_page": "GPT-6.1 Sol (Low)",
+   "thinking_level_on_page": "low",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "reasoning effort",
+   "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-low",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:15:38Z",
+     "scrapeId": "01a148b7-17ac-7778-9cd2-f5da572afbcc",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:08:17Z",
+     "scrapeId": "01a148b0-75cb-76e0-a20f-85785e7e2f86",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-29",
+    "sentence": "GPT-6.1 Sol (Low) was released on September 29, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 42,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "GPT-6.1 Sol (Low) scores 42 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "GPT-6.1 Sol (Low) scores 42 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "42",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gpt-6-1-sol",
+     "model_name_cell": "GPT-6.1 Sol (Low)",
+     "intelligence_cell": "42",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 42.0835618555848,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.13,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.13 per task to evaluate GPT-6.1 Sol (Low) on the Intelligence Index.",
+    "summary_card": "$0.13",
+    "unrounded_from_page_data": 0.130752
+   },
+   "cost_to_run_index_usd": {
+    "value": 250,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$250",
+    "bar_name": "GPT-6.1 Sol (low)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 250.48,
+    "parts_from_page_data": {
+     "total": 250.48,
+     "input": 160.33,
+     "nonCacheInput": 55.71,
+     "cacheRead": 31.27,
+     "cacheWrite": 73.35,
+     "output": 90.14,
+     "reasoning": 24.51,
+     "answer": 65.63
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "9.0M",
+    "sentence": "When evaluating the Intelligence Index, it generated 9.0M tokens, which is very concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for GPT-6.1 Sol (Low) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "Gemini 4 Argon",
+   "maker": "Google",
+   "variant_name_on_page": "Gemini 4 Argon (High)",
+   "thinking_level_on_page": "high",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "thinking level",
+   "page_url": "https://artificialanalysis.ai/models/gemini-4-argon",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:08:10Z",
+     "scrapeId": "01a148b0-759d-76bc-8835-2a1e0a0ee35f",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:15:30Z",
+     "scrapeId": "01a148b7-1799-720f-88be-71c126444944",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-30",
+    "sentence": "Gemini 4 Argon (High) was released on September 30, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 53,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Gemini 4 Argon (High) scores 53 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Gemini 4 Argon (High) scores 53 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "53",
+    "release_table_cell": null,
+    "unrounded_from_page_data": 52.5605655745982,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 1.99,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $1.99 per task to evaluate Gemini 4 Argon (High) on the Intelligence Index.",
+    "summary_card": "$1.99",
+    "unrounded_from_page_data": 1.990322
+   },
+   "cost_to_run_index_usd": {
+    "value": 2407,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$2,407",
+    "bar_name": "Gemini 4 Argon (high)",
+    "bar_footnote_star": false,
+    "label_check": "all 24 bars match embedded values",
+    "unrounded_from_page_data": 2407.24,
+    "parts_from_page_data": {
+     "total": 2407.24,
+     "input": 1278.77,
+     "nonCacheInput": 117.72,
+     "cacheRead": 263.86,
+     "cacheWrite": 897.19,
+     "output": 1128.47,
+     "reasoning": 815.12,
+     "answer": 313.35
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "110M",
+    "sentence": "When evaluating the Intelligence Index, it generated 110M tokens, which is somewhat verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Gemini 4 Argon (High) is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $10.00 per 1M output tokens (moderately priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 10
+   },
+   "notes": []
+  },
+  {
+   "family": "Gemini 3.1 Pro Preview",
+   "maker": "Google",
+   "variant_name_on_page": "Gemini 3.1 Pro Preview",
+   "thinking_level_on_page": null,
+   "thinking_level_note": "The page names no setting for this model; it is listed once, as a reasoning model.",
+   "maker_calls_the_setting": "thinking level",
+   "page_url": "https://artificialanalysis.ai/models/gemini-3-1-pro-preview",
+   "page_reads": [
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:16:43Z",
+     "scrapeId": "01a148b8-33a7-73ae-b51a-82b646e025cb",
+     "http_status": 200
+    },
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:08:17Z",
+     "scrapeId": "01a148b0-75c6-776d-9071-f722ee9bf4f6",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-02-19",
+    "sentence": "Gemini 3.1 Pro Preview was released on February 19, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 30,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Gemini 3.1 Pro Preview scores 30 on the Artificial Analysis Intelligence Index, placing it above average among comparable models (median: 27).",
+    "faq_sentence": "Gemini 3.1 Pro Preview scores 30 on the Artificial Analysis Intelligence Index, placing it above average among other models in a similar price tier (median: 27).",
+    "summary_card": "30",
+    "release_table_cell": null,
+    "unrounded_from_page_data": 29.7185656132261,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 1.3,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $1.30 per task to evaluate Gemini 3.1 Pro Preview on the Intelligence Index.",
+    "summary_card": "$1.30",
+    "unrounded_from_page_data": 1.298586
+   },
+   "cost_to_run_index_usd": {
+    "value": 1935,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$1,935",
+    "bar_name": "Gemini 3.1 Pro Preview",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 1935.39,
+    "parts_from_page_data": {
+     "total": 1935.39,
+     "input": 1130.49,
+     "nonCacheInput": 41.12,
+     "cacheRead": 143.46,
+     "cacheWrite": 945.91,
+     "output": 804.9,
+     "reasoning": 691.82,
+     "answer": 113.08
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "67M",
+    "sentence": "When evaluating the Intelligence Index, it generated 67M tokens, which is fairly concise in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Gemini 3.1 Pro Preview is $2.00 per 1M input tokens (moderately priced, median: $2.00) and $12.00 per 1M output tokens (somewhat expensive, median: $10.00).",
+    "input_usd_per_1m_tokens": 2,
+    "output_usd_per_1m_tokens": 12
+   },
+   "notes": []
+  },
+  {
+   "family": "Gemini 3.8 Flash",
+   "maker": "Google",
+   "variant_name_on_page": "Gemini 3.8 Flash (High)",
+   "thinking_level_on_page": "high",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "thinking level",
+   "page_url": "https://artificialanalysis.ai/models/gemini-3-8-flash",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:09:10Z",
+     "scrapeId": "01a148b1-475b-77b3-a8e7-9a3929a93745",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:15:39Z",
+     "scrapeId": "01a148b7-17ae-7006-8c01-a86bc1ebe2d1",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-02",
+    "sentence": "Gemini 3.8 Flash (High) was released on September 2, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 41,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Gemini 3.8 Flash (High) scores 41 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27).",
+    "faq_sentence": "Gemini 3.8 Flash (High) scores 41 on the Artificial Analysis Intelligence Index, placing it well above average among other models in a similar price tier (median: 27).",
+    "summary_card": "41",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gemini-3-8-flash",
+     "model_name_cell": "Gemini 3.8 Flash (High)",
+     "intelligence_cell": "41",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 40.9262321765904,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 1.24,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $1.24 per task to evaluate Gemini 3.8 Flash (High) on the Intelligence Index.",
+    "summary_card": "$1.24",
+    "unrounded_from_page_data": 1.242795
+   },
+   "cost_to_run_index_usd": {
+    "value": 1623,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$1,623",
+    "bar_name": "Gemini 3.8 Flash (high)",
+    "bar_footnote_star": false,
+    "label_check": "all 24 bars match embedded values",
+    "unrounded_from_page_data": 1622.73,
+    "parts_from_page_data": {
+     "total": 1622.73,
+     "input": 976.87,
+     "nonCacheInput": 15.99,
+     "cacheRead": 389.25,
+     "cacheWrite": 571.63,
+     "output": 645.86,
+     "reasoning": 509.95,
+     "answer": 135.91
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "170M",
+    "sentence": "When evaluating the Intelligence Index, it generated 170M tokens, which is very verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Gemini 3.8 Flash (High) is $0.75 per 1M input tokens (competitively priced, median: $2.00) and $3.75 per 1M output tokens (competitively priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 0.75,
+    "output_usd_per_1m_tokens": 3.75
+   },
+   "notes": []
+  },
+  {
+   "family": "Gemini 3.8 Flash",
+   "maker": "Google",
+   "variant_name_on_page": "Gemini 3.8 Flash (Medium)",
+   "thinking_level_on_page": "medium",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "thinking level",
+   "page_url": "https://artificialanalysis.ai/models/gemini-3-8-flash-medium",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:09:04Z",
+     "scrapeId": "01a148b1-4756-725a-8017-a5bd4413d3df",
+     "http_status": 200
+    },
+    {
+     "kind": "rendered",
+     "read_at_utc": "2026-10-17T07:16:50Z",
+     "scrapeId": "01a148b8-33d0-762e-824f-e38656578881",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-02",
+    "sentence": "Gemini 3.8 Flash (Medium) was released on September 2, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 40,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Gemini 3.8 Flash (Medium) scores 40 on the Artificial Analysis Intelligence Index, placing it above average among comparable models (median: 27).",
+    "faq_sentence": "Gemini 3.8 Flash (Medium) scores 40 on the Artificial Analysis Intelligence Index, placing it above average among other models in a similar price tier (median: 27).",
+    "summary_card": "40",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gemini-3-8-flash",
+     "model_name_cell": "Gemini 3.8 Flash (Medium)",
+     "intelligence_cell": "40",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 39.7740187061926,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": 0.93,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": "On average, it costs $0.93 per task to evaluate Gemini 3.8 Flash (Medium) on the Intelligence Index.",
+    "summary_card": "$0.93",
+    "unrounded_from_page_data": 0.931038
+   },
+   "cost_to_run_index_usd": {
+    "value": 1100,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": "$1,100",
+    "bar_name": "Gemini 3.8 Flash (medium)",
+    "bar_footnote_star": false,
+    "label_check": "all 25 bars match embedded values",
+    "unrounded_from_page_data": 1100.06,
+    "parts_from_page_data": {
+     "total": 1100.06,
+     "input": 743.69,
+     "nonCacheInput": 16.41,
+     "cacheRead": 290.64,
+     "cacheWrite": 436.64,
+     "output": 356.37,
+     "reasoning": 233.69,
+     "answer": 122.68
+    }
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": "95M",
+    "sentence": "When evaluating the Intelligence Index, it generated 95M tokens, which is somewhat verbose in comparison to the median of 85M."
+   },
+   "list_prices": {
+    "sentence": "Pricing for Gemini 3.8 Flash (Medium) is $0.75 per 1M input tokens (competitively priced, median: $2.00) and $3.75 per 1M output tokens (competitively priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 0.75,
+    "output_usd_per_1m_tokens": 3.75
+   },
+   "notes": []
+  },
+  {
+   "family": "Gemini 3.8 Flash",
+   "maker": "Google",
+   "variant_name_on_page": "Gemini 3.8 Flash (Low)",
+   "thinking_level_on_page": "low",
+   "thinking_level_note": null,
+   "maker_calls_the_setting": "thinking level",
+   "page_url": "https://artificialanalysis.ai/models/gemini-3-8-flash-low",
+   "page_reads": [
+    {
+     "kind": "full",
+     "read_at_utc": "2026-10-17T07:09:06Z",
+     "scrapeId": "01a148b1-4796-77b4-bcae-7894f8cdec23",
+     "http_status": 200
+    }
+   ],
+   "released": {
+    "value": "2026-09-02",
+    "sentence": "Gemini 3.8 Flash (Low) was released on September 2, 2026."
+   },
+   "deprecated_on_page": null,
+   "intelligence_index": {
+    "value": 33,
+    "scale": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better",
+    "sentence": "Gemini 3.8 Flash (Low) scores 33 on the Artificial Analysis Intelligence Index, placing it above average among comparable models (median: 27).",
+    "faq_sentence": "Gemini 3.8 Flash (Low) scores 33 on the Artificial Analysis Intelligence Index, placing it above average among other models in a similar price tier (median: 27).",
+    "summary_card": "33",
+    "release_table_cell": {
+     "page": "https://artificialanalysis.ai/models/releases/gemini-3-8-flash",
+     "model_name_cell": "Gemini 3.8 Flash (Low)",
+     "intelligence_cell": "33",
+     "row_header": "Model Name | Model Creator | Intelligence | Parameters | Context Window | Price | Output SpeedTokens/s | Weights | Providers | Provider Benchmarks"
+    },
+    "unrounded_from_page_data": 33.4548106699132,
+    "estimated_flag_in_page_data": false
+   },
+   "cost_per_task_usd": {
+    "value": null,
+    "what_it_is": "Weighted average cost in US dollars per Intelligence Index task, at the token prices the page lists",
+    "sentence": null,
+    "summary_card": null,
+    "unrounded_from_page_data": null
+   },
+   "cost_to_run_index_usd": {
+    "value": null,
+    "what_it_is": "Cost in US dollars to run all evaluations in the Artificial Analysis Intelligence Index once, at the token prices the page lists",
+    "chart_title": "Cost to Run Artificial Analysis Intelligence Index",
+    "chart_subtitle": "Cost (USD) to run all evaluations in the Artificial Analysis Intelligence Index",
+    "bar_label": null,
+    "bar_name": null,
+    "bar_footnote_star": null,
+    "label_check": null,
+    "unrounded_from_page_data": null,
+    "parts_from_page_data": null
+   },
+   "output_tokens_to_run_index": {
+    "summary_card": null,
+    "sentence": null
+   },
+   "list_prices": {
+    "sentence": "Pricing for Gemini 3.8 Flash (Low) is $0.75 per 1M input tokens (competitively priced, median: $2.00) and $3.75 per 1M output tokens (competitively priced, median: $10.00).",
+    "input_usd_per_1m_tokens": 0.75,
+    "output_usd_per_1m_tokens": 3.75
+   },
+   "notes": [
+    "The page gives a score but no cost per task and no cost to run the index for this setting."
+   ]
+  }
+ ],
+ "models_page": {
+  "page": "https://artificialanalysis.ai/models",
+  "page_reads": [
+   {
+    "kind": "rendered",
+    "read_at_utc": "2026-10-17T06:57:03Z",
+    "scrapeId": "01a148a6-3cd3-75cb-9b90-4e9625b167e7",
+    "http_status": 200
+   }
+  ],
+  "faq_top_models_sentence": "The top AI models by Intelligence Index are: 1. Claude Opus 5.5 (Max, Default Fallback) (58), 2. Claude Sonnet 5.5 (Max, Default Fallback) (56), 3. Claude Opus 5.5 (Xhigh, Default Fallback) (56), 4. Muse Wonder Full (Max) (56), and 5. Claude Opus 5.5 (High, Default Fallback) (54).",
+  "faq_most_intelligent_sentence": "Claude Opus 5.5 (Max, Default Fallback) currently leads the Artificial Analysis Intelligence Index with a score of 58, out of 134 models evaluated.",
+  "note": "The models list shows each model at one default setting only (27 of 704 models selected); the other settings are on each model's own page and its release page."
+ },
+ "which_gemini_is_current_pro": "Artificial Analysis has no Gemini 4 Pro. Google's top model on the site is Gemini 4 Argon (High), released 30 September 2026 and listed at one setting only (the Google creator page: 'For intelligence, the top model from Google is Gemini 4 Argon (High) at 53.'). The newest model named Pro is Gemini 3.1 Pro Preview (released 19 February 2026, score 30, one setting). Gemini 3.8 Flash is the only current Google model the site shows at more than one thinking level (high, medium, low), and its low setting has no cost.",
+ "gaps": [
+  "Gemini 3.8 Flash (Low) (https://artificialanalysis.ai/models/gemini-3-8-flash-low): score only; the page shows no cost per task and no cost to run the index"
+ ],
+ "article_figures_check": {
+  "note": "Our arithmetic on the page values above, set against the article's sentences that cite Artificial Analysis (docs/plans/2026-10-09-draft-body-v5.md). Not new data.",
+  "checks": [
+   {
+    "article": "Thinking as hard as it can, it scored more than a third higher than when thinking a little.",
+    "pages": "Opus 5.5 Max 58, Low 42",
+    "ratio": 1.38,
+    "ratio_unrounded": 1.36,
+    "holds": true
+   },
+   {
+    "article": "The older Opus 5, at its hardest, beat the new one at its lowest.",
+    "pages": "Opus 5 Max 51, Opus 5.5 Low 42",
+    "holds": true
+   },
+   {
+    "article": "GPT-6 Sol ... scored about two thirds higher at its top developer setting than with thinking off",
+    "pages": "GPT-6 Sol Max 48, Non-reasoning 29",
+    "ratio": 1.66,
+    "ratio_unrounded": 1.67,
+    "holds": true
+   },
+   {
+    "article": "while the newer GPT-6.1 Sol at its top only edged past it",
+    "pages": "GPT-6.1 Sol Max 52 vs GPT-6 Sol Max 48",
+    "holds": true
+   },
+   {
+    "article": "moving Opus 5.5 from low to medium cost about two and a half times as much per task",
+    "pages": "$1.34 vs $0.55 per task",
+    "ratio": 2.44,
+    "holds": true
+   },
+   {
+    "article": "Moving it from medium to max cost another four and a half times as much",
+    "pages": "$5.98 vs $1.34 per task",
+    "ratio": 4.46,
+    "holds": true
+   },
+   {
+    "article": "Bottom to top, that's about 11 times the cost for a score just over a third higher.",
+    "pages": "$5.98 vs $0.55 per task; 58 vs 42",
+    "ratio_cost": 10.87,
+    "ratio_cost_to_run_index": 10.13,
+    "holds": true
+   },
+   {
+    "article": "On Fable 5.1, it costs 28% more and barely moves the score.",
+    "pages": "Fable 5.1 Max $7.63 vs Xhigh $5.98 per task; both score 53 (unrounded 53.35 vs 53.20)",
+    "ratio": 1.28,
+    "holds": true
+   },
+   {
+    "article": "Claude Haiku 5.5 ... on its highest setting edged past Opus 5.5 on its lowest, for less than half the cost per task.",
+    "pages": "Haiku 5.5 Max 43 at $0.21 per task; Opus 5.5 Low 42 at $0.55 per task",
+    "ratio": 0.38,
+    "holds": true,
+    "caveat": "AA marks Haiku 5.5 costs with an asterisk: its 5x higher long-context input pricing is not yet reflected, so Haiku's true cost is higher than shown. The gap is wide ($0.21 vs $0.55) but AA does not say by how much Haiku's cost is understated."
+   },
+   {
+    "article": "Claude Opus 5.5's hardest-thinking run cost $5.98 per task, against $0.55 on low.",
+    "pages": "$5.98 (Max) and $0.55 (Low) per task",
+    "holds": true
+   }
+  ]
+ }
+}

@@ -204,6 +204,12 @@
    "end": "Opus 5 .5."
   },
   {
+   "id": "fri-chapter-2",
+   "panel": "panels/fri-chapter-2-{aspect}.png",
+   "start": "Firstly, the names.",
+   "end": "the names. Anthropic"
+  },
+  {
    "id": "fri-claude-launch-pages",
    "panel": "panels/fri-claude-launch-pages-{aspect}.png",
    "start": "it launched Opus 4 .8 in May,",
@@ -258,6 +264,12 @@
    "end": "lining up that money for months,"
   },
   {
+   "id": "fri-chapter-3",
+   "panel": "panels/fri-chapter-3-{aspect}.png",
+   "start": "So, what does matter?",
+   "end": "what does matter?"
+  },
+  {
    "id": "fri-deep-thinking-settings",
    "panel": "panels/fri-deep-thinking-settings-{aspect}.png",
    "start": "See, chat GPT and Claude both let you choose",
@@ -288,6 +300,12 @@
    "end": "top gear for much less money."
   },
   {
+   "id": "fri-chapter-4",
+   "panel": "panels/fri-chapter-4-{aspect}.png",
+   "start": "See, all that hidden working",
+   "end": "all that hidden working"
+  },
+  {
    "id": "fri-deep-cost-vs-score",
    "panel": "panels/fri-deep-cost-vs-score-{aspect}.png",
    "start": "if Opus 5 .5 thinks as hard as",
@@ -310,6 +328,12 @@
    "panel": "panels/fri-deep-altman-losing-on-pro-{aspect}.png",
    "start": "In January 2025, Sam Altman said OpenAI",
    "end": "losing money on its $200 plan,"
+  },
+  {
+   "id": "fri-chapter-5",
+   "panel": "panels/fri-chapter-5-{aspect}.png",
+   "start": "So, who decides how hard",
+   "end": "who decides how hard"
   },
   {
    "id": "fri-gemini-auto",
@@ -358,6 +382,12 @@
    "panel": "panels/fri-deep-openai-plus-pro-sep-2026-c2-{aspect}.png",
    "start": "And now on those plans, you pick the gear.",
    "end": "And now on those plans, you pick the gear."
+  },
+  {
+   "id": "fri-chapter-6",
+   "panel": "panels/fri-chapter-6-{aspect}.png",
+   "start": "Is that a good thing though?",
+   "end": "a good thing though?"
   },
   {
    "id": "fri-deep-thinking-use-1-to-7",
@@ -411,7 +441,13 @@
    "id": "fri-deep-extended-cut-by-mistake-r3",
    "panel": "panels/fri-deep-extended-cut-by-mistake-r3-{aspect}.png",
    "start": "This took weeks to fix",
-   "end": "This took weeks to fix"
+   "end": "would even have known"
+  },
+  {
+   "id": "fri-chapter-7",
+   "panel": "panels/fri-chapter-7-{aspect}.png",
+   "start": "So if you're a business owner",
+   "end": "a business owner"
   },
   {
    "id": "fri-deep-where-to-turn-it-up",
@@ -430,6 +466,12 @@
    "panel": "panels/fri-deep-where-to-turn-it-up-c3-{aspect}.png",
    "start": "And on Claude and Gemini, the gear",
    "end": "the gear is called effort. So turn that up."
+  },
+  {
+   "id": "fri-chapter-8",
+   "panel": "panels/fri-chapter-8-{aspect}.png",
+   "start": "So where does this go from here?",
+   "end": "go from here?"
   },
   {
    "id": "fri-call-85",
@@ -474,35 +516,35 @@
  "end_hold_s": 13,
  "chapters": [
   {
-   "title": "Does the name matter?",
+   "title": "Does every new Claude and ChatGPT matter?",
    "starts": "So I've been using all the well"
   },
   {
-   "title": "Why the names keep coming",
+   "title": "Why are Claude and ChatGPT launches speeding up?",
    "starts": "Firstly, the names. Anthropic makes Claude"
   },
   {
-   "title": "The setting that matters",
+   "title": "Can Opus 5 beat Opus 5.5?",
    "starts": "So, what does matter? The thinking of the model"
   },
   {
-   "title": "What thinking costs them",
+   "title": "Who pays when ChatGPT thinks?",
    "starts": "See, all that hidden working runs on huge"
   },
   {
-   "title": "Who decides next",
+   "title": "Who decides how hard ChatGPT and Claude think?",
    "starts": "So, who decides how hard your AI really thinks?"
   },
   {
-   "title": "The good and the bad",
+   "title": "What will ChatGPT hide from you?",
    "starts": "Is that a good thing though?"
   },
   {
-   "title": "What to do about it",
+   "title": "What should ChatGPT still let you choose?",
    "starts": "So if you're a business owner or someone"
   },
   {
-   "title": "My prediction for 2027",
+   "title": "Will ChatGPT decide for you again?",
    "starts": "So where does this go from here?"
   }
  ],
