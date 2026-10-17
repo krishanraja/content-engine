@@ -326,7 +326,24 @@ def audio_envelope(take, t0, t1, sr=16000, hop=0.01):
     return db
 
 
-def refine_onsets(words, db, env_t0, hop=0.01):
+def hiss_envelope(take, t0, t1, sr=16000, hop=0.01):
+    """Loudness of the 2.5-7.5 kHz band (dB), 10 ms hops: the hiss of an f, th, s or h,
+    which starts a word before the voice does and is too quiet to count as voice."""
+    raw = run(['ffmpeg', '-v', 'error', '-ss', f'{t0:.3f}', '-t', f'{t1 - t0:.3f}', '-i', str(take),
+               '-ac', '1', '-ar', str(sr), '-f', 's16le', '-'], capture_output=True).stdout
+    a = np.frombuffer(raw, np.int16).astype(np.float32) / 32768.0
+    n, win = int(sr * hop), int(sr * 0.02)
+    k = max(0, (len(a) - win) // n + 1)
+    if k == 0:
+        return np.zeros(0, np.float32)
+    frames = np.lib.stride_tricks.sliding_window_view(a, win)[::n][:k] * np.hanning(win)
+    spec = np.abs(np.fft.rfft(frames, axis=1)) ** 2
+    f = np.fft.rfftfreq(win, 1 / sr)
+    band = spec[:, (f >= 2500) & (f <= 7500)].sum(1)
+    return (10 * np.log10(band + 1e-12)).astype(np.float32)
+
+
+def refine_onsets(words, db, env_t0, hop=0.01, hiss=None):
     """Snap whisper word starts to the voice. Whisper often starts a word inside the
     silence before it, or a little after the voice begins; a word that begins after a
     real pause is moved to where the sound rises. Words inside running speech keep
@@ -342,35 +359,81 @@ def refine_onsets(words, db, env_t0, hop=0.01):
     def t_of(j):
         return env_t0 + j * hop
 
-    prev_on = -1e9
-    for k, w in enumerate(words):
+    # 1. a word whisper starts in the silence moves to where the voice comes in
+    for w in words:
         s, e = w['s'], w['e']
-        lo = max(s - 0.45, prev_on + 0.06)
-        if k > 0:
-            lo = max(lo, words[k - 1]['s'] + 0.06)
         j = idx(s)
-        new, how = s, 'kept'
+        w['on'], w['on_how'] = s, 'kept'
         if not speech[max(j - 1, 0):j + 2].any():
-            hi = max(e - 0.03, s)
             jj = j
-            while jj < idx(hi) and not speech[jj]:
+            while jj < idx(max(e - 0.03, s)) and not speech[jj]:
                 jj += 1
             if speech[jj]:
-                new, how = t_of(jj), 'moved later (whisper start was in silence)'
-        else:
-            jj = j
-            while jj - 1 >= idx(lo) and speech[jj - 1]:
+                w['on'], w['on_how'] = t_of(jj), 'moved later (whisper start was in silence)'
+    # 2. every place the voice comes in after at least 60 ms of quiet belongs to one word:
+    #    the word whisper has running there if whisper started that word inside the quiet
+    #    (its start was early), otherwise the next word (whisper stretched the word before
+    #    over the pause). Trial A gave each onset to the nearest later start instead, which
+    #    pulled "and" back onto the start of "price" (5.78 s), 0.3 s before he says it.
+    onsets = []
+    for j in range(1, n):
+        if speech[j] and not speech[j - 1] and j >= 6 and not speech[j - 6:j].any():
+            q = j - 1
+            while q >= 0 and not speech[q]:
+                q -= 1
+            onsets.append((t_of(j), (j - 1 - q) * hop))
+    hiss_on = None
+    if hiss is not None and len(hiss):
+        hfloor = float(np.percentile(hiss, 10))
+        hiss_on = hiss > hfloor + 18.0
+    for t_on, quiet in onsets:
+        k = next((k for k, w in enumerate(words) if w['s'] <= t_on < w['e']), None)
+        if k is not None and words[k]['s'] < t_on - quiet - 0.05:
+            k = k + 1 if k + 1 < len(words) else None           # stretched over the pause: the next word
+        elif k is None:
+            k = next((k for k, w in enumerate(words) if w['s'] > t_on), None)
+        if k is None or abs(words[k]['s'] - t_on) > 0.45:
+            continue
+        w = words[k]
+        if hiss_on is not None and t_on > w['s']:
+            # a word that starts with a hiss (f, th, s, h) starts at the hiss, not at the
+            # voice after it: "43" and "thing" had been moved 0.1 s late in testing
+            # only a hiss that runs up to the voice (not the tail of the word before)
+            lo_j, jj = idx(max(w['s'] - 0.06, t_on - quiet)), idx(t_on) + 1
+            while jj > lo_j and not hiss_on[jj]:
                 jj -= 1
-            # a genuine onset: at least 60 ms of quiet just before it
-            if jj > idx(lo) and not speech[max(jj - 6, 0):jj].any() and jj < j:
-                new, how = t_of(jj), 'moved earlier (voice starts before whisper)'
-        w['on'] = round(new, 3)
-        w['on_how'] = how
-        q = idx(new) - 1
+            if jj >= idx(t_on) - 3:
+                j0 = jj
+                while j0 - 1 >= lo_j and (hiss_on[j0 - 1] or (j0 - 2 >= lo_j and hiss_on[j0 - 2])):
+                    j0 -= 1
+                if jj - j0 >= 2 and j0 < idx(t_on):
+                    t_on = t_of(j0)
+        w['on'] = t_on
+        w['on_how'] = 'moved earlier (voice starts before whisper)' if t_on < w['s'] else \
+            'moved later (whisper start was in the quiet before the voice)' if t_on > w['s'] else 'kept'
+    # 3. in order, never two words closer than 60 ms; the silence before each word
+    prev_on = -1e9
+    for w in words:
+        if w['on'] < prev_on + 0.06:
+            w['on'], w['on_how'] = prev_on + 0.06, w['on_how'] + ' (kept 60 ms after the word before)'
+        w['on'] = round(w['on'], 3)
+        q = idx(w['on']) - 1
         while q >= 0 and not speech[q]:
             q -= 1
-        w['quiet'] = round((idx(new) - 1 - q) * hop, 2)     # silence just before the word
-        prev_on = new
+        w['quiet'] = round((idx(w['on']) - 1 - q) * hop, 2)     # silence just before the word
+        prev_on = w['on']
+    # 4. where his voice stops after each word (whisper often stretches a word over the
+    #    pause after it, which hid the pause in "But the ... best" in trial A)
+    for k, w in enumerate(words):
+        nxt = words[k + 1]['on'] if k + 1 < len(words) else w['e'] + 0.3
+        j0, j1 = idx(w['on']), idx(max(nxt, w['on'] + hop))
+        last = None
+        for j in range(j0, j1):          # the voice from the word on, until 50 ms of quiet (a breath after is not the word)
+            if speech[j]:
+                last = j
+            elif last is not None and j - last > 5:
+                break
+        w['off'] = round(min(t_of(last) + hop, nxt) if last is not None else min(w['e'], nxt), 3)
     return thr
 
 
@@ -383,6 +446,7 @@ class Token:
     on: float            # arrival on the clip clock (seconds from clip start)
     end: float
     src: dict = field(default_factory=dict)
+    nth: int = 1         # which time he says this word in the clip
 
 
 @dataclass
@@ -394,10 +458,59 @@ class Group:
     height: float = 0.0
 
 
-def plan_groups(words, clip_start, cut_windows, bold, payoffs, lead, max_words=3):
-    """Group the spoken words into 2-4 word captions; payoff phrases get their own serif line."""
+GLUE_END = set('a an the of to for on in and about with your its my our their than at by from but so or '
+               'like is are was i as into'.split())   # a caption never ends on one of these
+NUM_WORDS = set('one two three four five six seven eight nine ten eleven twelve twenty thirty forty fifty '
+                'sixty seventy eighty ninety hundred thousand million billion half twice'.split())
+WEAK = set('thing things about actually really completely against just very'.split())
+
+
+def is_number(word):
+    k = key_word(word)
+    return bool(re.search(r'\d', k)) or k in NUM_WORDS
+
+
+def split_phrases(toks, gaps, final_lead=False):
+    """Best 2-4 word groups for one run of words (no sentence end, pause or cut inside):
+    a group should not end on a little word ("the", "of", "about") or start with "of",
+    three words is the natural size, and a break where he pauses or a comma falls is
+    cheap. Returns a list of lists."""
+    n = len(toks)
+    size_cost = {1: 6.0, 2: 1.0, 3: 0.0, 4: 0.8}
+    best = [0.0] + [math.inf] * n
+    back = [0] * (n + 1)
+    for j in range(1, n + 1):
+        for size in (1, 2, 3, 4):
+            i = j - size
+            if i < 0:
+                break
+            c = best[i] + size_cost[size]
+            last, first = toks[j - 1], toks[i]
+            if j < n:
+                if key_word(last.src['w']) in GLUE_END:
+                    c += 4.0
+                if key_word(toks[j].src['w']) == 'of':
+                    c += 6.0           # "out / of 10 each": never split a phrase before "of"
+                elif re.search(r'[,;:]\s*$', last.src['w']) or gaps[j - 1] >= 0.2:
+                    c -= 1.5
+            if c < best[j]:
+                best[j], back[j] = c, i
+    out, j = [], n
+    while j > 0:
+        out.append(toks[back[j]:j])
+        j = back[j]
+    return out[::-1]
+
+
+def plan_groups(words, clip_start, cut_windows, bold, payoffs, lead, auto_bold=True):
+    """Group the spoken words into 2-4 word captions at the phrase breaks; payoff phrases
+    get their own serif line, with the words just before them as a lead-in above.
+    bold: words set bold wherever said, or word#n for the nth time he says it in the clip."""
     toks = []
+    count = {}
     for w in words:
+        kw = key_word(w['w'])
+        count[kw] = count.get(kw, 0) + 1
         on = w['on'] - clip_start
         inside = [(a, b) for a, b in cut_windows if a - 1e-3 <= on < b]
         if inside:
@@ -408,7 +521,9 @@ def plan_groups(words, clip_start, cut_windows, bold, payoffs, lead, max_words=3
         txt = clean_word(w['w'])
         if not txt:
             continue
-        toks.append(Token(txt, 'light', max(on - lead, 0.0), w['e'] - clip_start, w))
+        t = Token(txt, 'light', max(on - lead, 0.0), w.get('off', w['e']) - clip_start, w)
+        t.nth = count[kw]
+        toks.append(t)
     # payoff phrases (in order of appearance)
     keys = [key_word(t.src['w']) for t in toks]
     pay_id = [None] * len(toks)
@@ -420,60 +535,63 @@ def plan_groups(words, clip_start, cut_windows, bold, payoffs, lead, max_words=3
                     pay_id[j] = pid
                     toks[j].kind = 'serif'
                 break
-    boldk = {key_word(b) for b in bold}
+    every, nth = set(), set()
+    for b in bold:
+        b = b.strip()
+        if '#' in b:
+            wd, _, k = b.partition('#')
+            nth.add((key_word(wd), int(k)))
+        elif b:
+            every.add(key_word(b))
     for t, k, p in zip(toks, keys, pay_id):
-        if p is None and k in boldk:
+        if p is None and (k in every or (k, t.nth) in nth):
             t.kind = 'bold'
 
-    def ends_sentence(t):
-        return bool(re.search(r'[.?!]\s*$', t.src['w']))
+    def hard_break(a, b):
+        """No caption runs across a sentence end, a real pause or a cut."""
+        return (bool(re.search(r'[.?!]\s*$', a.src['w'])) or b.on - a.end > 0.45
+                or any(a.on < x <= b.on for x, _ in cut_windows) or any(a.on < x <= b.on for _, x in cut_windows))
 
-    def ends_clause(t):
-        return bool(re.search(r'[,;:]\s*$', t.src['w']))
-
-    def crosses_cut(a, b):
-        return any(a.on < x <= b.on for x, _ in cut_windows) or any(a.on < x <= b.on for _, x in cut_windows)
-
-    groups, cur, i = [], [], 0
+    groups, i = [], 0
     while i < len(toks):
-        t = toks[i]
         if pay_id[i] is not None:
             j = i
             while j < len(toks) and pay_id[j] == pay_id[i]:
                 j += 1
-            phrase = toks[i:j]
-            lead_ok = cur and len(cur) <= 3 and not ends_sentence(cur[-1]) and phrase[0].on - cur[-1].end < 0.5 \
-                and not crosses_cut(cur[-1], phrase[0])
-            if cur and not lead_ok:
-                groups.append(Group([cur]))
-            groups.append(Group([cur, phrase] if lead_ok else [phrase]))
-            cur, i = [], j
+            groups.append(Group([toks[i:j]]))
+            i = j
             continue
-        cur.append(t)
-        nxt = toks[i + 1] if i + 1 < len(toks) else None
-        close = (nxt is None or ends_sentence(t) or (ends_clause(t) and len(cur) >= 2)
-                 or nxt.on - t.end > 0.45 or crosses_cut(t, nxt))
-        if not close and len(cur) >= max_words:
-            close = pay_id[i + 1] is None or len(cur) > 3
-            nn = toks[i + 2] if i + 2 < len(toks) else None
-            if close and len(cur) == 3 and pay_id[i + 1] is None and nxt.on - t.end < 0.3 and \
-                    (ends_sentence(nxt) or nn is None) and not crosses_cut(t, nxt):
-                close = False      # no one-word orphan: the fourth word ends the sentence
-        if close:
-            groups.append(Group([cur]))
-            cur = []
-        i += 1
-    if cur:
-        groups.append(Group([cur]))
-    # a group with no emphasis gets its strongest content word in bold (the reference
-    # sets the word that carries the meaning in bold)
-    for g in groups:
-        flat = [t for ln in g.lines for t in ln]
-        if any(t.kind != 'light' for t in flat):
+        j = i + 1
+        while j < len(toks) and pay_id[j] is None and not hard_break(toks[j - 1], toks[j]):
+            j += 1
+        run_ = toks[i:j]
+        gaps = [run_[k + 1].on - run_[k].end for k in range(len(run_) - 1)] + [0.0]
+        parts = split_phrases(run_, gaps)
+        # the run leads straight into a payoff: its last part (up to three words) sits
+        # above the payoff line as its lead-in
+        if j < len(toks) and pay_id[j] is not None and len(parts[-1]) <= 3 \
+                and not hard_break(toks[j - 1], toks[j]):
+            pj = j
+            while pj < len(toks) and pay_id[pj] == pay_id[j]:
+                pj += 1
+            groups.extend(Group([pt]) for pt in parts[:-1])
+            groups.append(Group([parts[-1], toks[j:pj]]))
+            i = pj
             continue
-        cands = [t for t in flat if key_word(t.src['w']) not in STOP and len(t.text) >= 4]
-        if cands:
-            max(cands, key=lambda t: len(t.text)).kind = 'bold'
+        groups.extend(Group([pt]) for pt in parts)
+        i = j
+    # a group with no emphasis gets the word that carries its meaning in bold: a number
+    # first, else its longest content word (five letters or more); a group of little
+    # words ("But the", "Muse and Siri") stays light, as in the reference ("is what I")
+    if auto_bold:
+        for g in groups:
+            flat = [t for ln in g.lines for t in ln]
+            if any(t.kind != 'light' for t in flat):
+                continue
+            nums = [t for t in flat if is_number(t.src['w'])]
+            cands = nums or [t for t in flat if key_word(t.src['w']) not in STOP | WEAK and len(t.text) >= 5]
+            if cands:
+                max(cands, key=lambda t: len(t.text)).kind = 'bold'
     return groups
 
 
@@ -529,13 +647,13 @@ def layout_group(g: Group, max_w=0.86 * W):
     return g.height
 
 
-def draw_captions(frame, groups, t, centre, bounce=True):
+def draw_captions(frame, groups, t, bottom, bounce=True):
     """Draw the caption group showing at clip time t, its block centred on y=centre. Returns ink bbox."""
     bbox = None
     for g in groups:
         if not (g.t0 <= t < g.t1):
             continue
-        top = centre - g.height / 2
+        top = bottom - g.height        # every block sits on one bottom line; a lead-in stacks above
         out_u = (g.t1 - t)
         g_alpha = min(1.0, out_u / 0.08) if g.t1 - g.t0 > 0.2 else 1.0
         g_scale = 0.97 + 0.03 * min(1.0, out_u / 0.08)
@@ -921,6 +1039,7 @@ class PlateTreat(Treat):
         self.set_full = cv2.resize(self.grade(cv2.GaussianBlur(Pq, (0, 0), 9)), (W, H),
                                    interpolation=cv2.INTER_LINEAR).astype(np.float32)
         self.stats = {'noise': [], 'diff_px': [], 'gain': []}
+        self.offline = 1.0
 
     def apply(self, frame_u8, m_small, band_r=12, fidx=None, face=None):
         half_u8 = cv2.resize(frame_u8, (PW, PH), interpolation=cv2.INTER_AREA)
@@ -990,6 +1109,7 @@ class PlateTreat(Treat):
             Fb = Fb * (1 - wsk) + skin[None, :] * wsk
         Bb = sample(Bh, xs, ys, 2)
         prior_b = sample(pr.astype(np.float32), xs, ys, 2).reshape(-1)
+        p_b = sample(p.astype(np.float32), xs, ys, 2).reshape(-1)
         Ib = frame_u8.reshape(-1, 3)[idx].astype(np.float32)
 
         def to_lab(rgb):
@@ -1006,10 +1126,24 @@ class PlateTreat(Treat):
         Dpix = np.sqrt(((Ib - Bb) ** 2).sum(1))
         ac = ac * smoothstep(noise * 1.5 + 2.0, noise * 3.0 + 10.0, Dpix)
         ac = np.clip((ac - 0.03) / 0.94, 0, 1)
+        # a colour that is neither the room nor a mix of the room and his colour just
+        # inside (far off the line between them) is another part of him, e.g. the shadowed
+        # neck under the jaw next to a beard: it is him, not a half-covered pixel
+        resid = np.sqrt((((Ilab - Blab) - ac[:, None] * d) ** 2).sum(1))
+        # only for a coloured pixel (skin, not a dark-hair-and-wall mix, which is neutral
+        # and must stay soft) that the model is sure is him
+        chroma = np.sqrt(((Ilab[:, 1:] - Blab[:, 1:]) ** 2).sum(1))
+        a_res = (smoothstep(10.0, 25.0, resid) * smoothstep(noise * 3 + 10, noise * 3 + 30, Dpix)
+                 * smoothstep(10.0, 20.0, chroma) * smoothstep(0.85, 0.97, p_b) * self.offline)
+        ac = ac + (1 - ac) * a_res
         conf = smoothstep(self.conf_lo, self.conf_hi, np.sqrt(dn))
+        conf = np.maximum(conf, a_res)
         a_band = conf * ac + (1 - conf) * prior_b
         af = alpha.reshape(-1)
         af[idx] = np.clip(af[idx] + a_band * bandu.reshape(-1)[idx], 0, 1)
+        if getattr(self, 'debug', False):
+            self.dbg = dict(idx=idx, ac=ac, resid=resid, chroma=chroma, conf=conf, a_res=a_res, prior=prior_b,
+                            Dpix=Dpix, band=bandu.reshape(-1)[idx], Fb=Fb, Bb=Bb)
         alpha = cv2.GaussianBlur(alpha, (0, 0), 0.7)
         alpha[alpha < 0.01] = 0
         self.raw_alpha = alpha
@@ -1165,17 +1299,19 @@ class Shot:
     y_shift: float = 0.0
 
 
-def plan_shots(segments, words, clip_start, recipe, cuts=None, payoffs=()):
-    """Speaker segments split into shots, roughly every three seconds: a cut lands in
-    the pause before a sentence (the silence measured in his voice), or on a payoff
-    phrase as it arrives (a punch-in). Shots alternate a close and a closer framing,
-    phased so the payoff lines fall in the closer one where possible.
-    payoffs: (start, end) of each payoff line on the clip clock."""
+def plan_shots(segments, words, clip_start, recipe, cuts=None, payoffs=(), group_starts=(), every=2.0):
+    """Speaker segments split into shots, about every `every` seconds (trial A cut every
+    three to four and a quarter seconds, slower than the reference): a cut lands on a
+    payoff phrase as it arrives (a punch-in), else in a pause before a word (the silence
+    measured in his voice), else as a new caption group comes in. Shots alternate a
+    close and a closer framing, phased so the payoff lines fall in the closer one where
+    possible. payoffs: (start, end) of each payoff line on the clip clock."""
     full = 'full-face-vertical' in recipe
     motion = 'constant-motion' in recipe
     zooms = (1.18, 1.34, 1.46) if full else (1.0, 1.12, 1.22)    # close, closer, punch-in
     shots = []
     cand = [(w['on'] - clip_start - 2.0 / FPS, False) for w in words if w.get('quiet', 0) >= 0.2]
+    cand += [(g0 - 1.0 / FPS, None) for g0 in group_starts]
     cand += [(a - 1.0 / FPS, True) for a, _ in payoffs]
     pay_starts = {round((a - 1.0 / FPS) * FPS) for a, _ in payoffs}
     if cuts is not None:
@@ -1192,17 +1328,17 @@ def plan_shots(segments, words, clip_start, recipe, cuts=None, payoffs=()):
                         break
                     c = min(opts)
                 else:
-                    win = [(c, pay) for c, pay in cand if last + 1.8 <= c <= min(last + 4.5, b - 1.2)]
-                    pay = [c for c, p_ in win if p_]
-                    if pay:
-                        c = min(pay, key=lambda c: abs(c - (last + 3.0)))
-                    elif win:
-                        c = min((c for c, _ in win), key=lambda c: abs(c - (last + 3.0)))
-                    else:      # a long run with no pause in range: take the next one there is
-                        later = [c for c, _ in cand if last + 4.5 < c <= b - 1.2]
+                    lo, hi, aim = last + 0.55 * every, min(last + 1.45 * every, b - 1.0), last + every
+                    win = [(c, pay) for c, pay in cand if lo <= c <= hi]
+                    if not win:      # a long run with no cut point in range: take the next one there is
+                        later = [c for c, _ in cand if hi < c <= b - 1.0]
                         if not later:
                             break
                         c = min(later)
+                    else:
+                        # a payoff beats a pause, a pause beats a caption change; then the nearest the aim
+                        rank = {True: 2.0, False: 1.0, None: 0.0}
+                        c = max(win, key=lambda cp: rank[cp[1]] - 1.2 * abs(cp[0] - aim))[0]
                 pts.append(c)
                 last = c
         pts.append(b)
@@ -1299,7 +1435,7 @@ def render(args):
     words, _ = load_words(args.words, start - 0.5, end)
     env_t0 = max(start - 1.0, 0)
     db = audio_envelope(take, env_t0, end + 1.0)
-    thr = refine_onsets(words, db, env_t0)
+    thr = refine_onsets(words, db, env_t0, hiss=hiss_envelope(take, env_t0, end + 1.0))
     report['onsets'] = {'speech_threshold_db': round(thr, 1),
                         'words': [{'w': w['w'].strip(), 'whisper_s': w['s'], 'onset': w['on'],
                                    'shift_ms': int(round((w['on'] - w['s']) * 1000)), 'how': w['on_how']}
@@ -1311,7 +1447,7 @@ def render(args):
     if 'kinetic-serif-captions' in recipe:
         bold = [b for b in (args.bold or '').split(',') if b.strip()]
         payoffs = [p.strip() for p in (args.payoff or '').split(';') if p.strip()]
-        groups = plan_groups(words, start, cut_windows, bold, payoffs, args.lead)
+        groups = plan_groups(words, start, cut_windows, bold, payoffs, args.lead, auto_bold=not args.no_auto_bold)
         time_groups(groups, dur, cut_windows)
         check_glyphs([t.text for g in groups for ln in g.lines for t in ln] +
                      [c['words'] for c in cutaways])
@@ -1348,35 +1484,47 @@ def render(args):
         segs.append((cur, dur))
     pay_spans = [(g.t0, g.t1) for g in groups if any(t.kind == 'serif' for ln in g.lines for t in ln)]
     shots = plan_shots(segs, words, start, recipe, [float(x) for x in args.cuts.split(',')] if args.cuts else None,
-                       pay_spans)
+                       pay_spans, [g.t0 for g in groups], every=args.shot_every)
     # caption block height (largest group) and the caption line
     max_block = max([g.height for g in groups], default=0)
     cap_bottom_limit = H * SAFE_BOTTOM - 16
-    # every caption block is centred on one line, set as low as the tallest block allows;
-    # cap_top is the highest any caption reaches
-    cap_centre = H * 0.72
-    if groups:
-        cap_centre = cap_bottom_limit - max_block / 2
-    cap_top = cap_centre - max_block / 2
+    # every caption block sits on one bottom line just above the platform UI (trial A centred
+    # them, which put one-line groups 70 px higher, on his chin); a two-line payoff block
+    # grows upwards. cap_top is the highest any caption reaches
+    cap_bottom = cap_bottom_limit
+    cap_top = cap_bottom - max_block
+    prev_zoom = None
     for s in shots:
         f0, f1 = int(s.t0 * FPS), max(int(s.t1 * FPS), int(s.t0 * FPS) + 1)
         fs = faces[f0:f1]
         s.cx = float(np.median(fs[:, 0]))
         s.eye_y = float(np.median(fs[:, 1]))
-        if 'full-face-vertical' in recipe:
-            # keep the chin clear of the caption line: if the chin would reach it at the end
-            # of the push, lift the face (move the window down) as far as the frame allows
-            for _ in range(40):
+        # the highest caption ink in this shot (a one-line group sits lower than a two-line one)
+        over = [g for g in groups if g.t0 < s.t1 and g.t1 > s.t0]
+        s_cap_top = min((cap_bottom - g.height for g in over), default=H)
+        if 'full-face-vertical' in recipe and over:
+            # keep the chin clear of the captions: if the chin would reach them at the end of
+            # the push, lift the face (move the window down) as far as the frame allows, and
+            # if the frame's bottom edge stops that, frame a little wider (trial A left the
+            # lead-in line on his beard for 29 frames at the end)
+            # (with the window on the source's bottom edge, a closer framing is what lifts the
+            # chin: the chin's height in the output is H - (H - chin) * zoom). A shot may go
+            # 0.10 closer than planned, never past 1.5 (the source is only 1080 wide).
+            ceiling = min(1.5, s.zoom + 0.10)
+            for _ in range(80):
                 worst = 0.0
                 for t in (s.t0, s.t1 - 1e-3):
                     M, z, x0, y0 = frame_transform(s, t, recipe)
-                    chin_out = (np.percentile(fs[:, 3], 95) - y0) * z
-                    worst = max(worst, chin_out)
-                if not groups or worst + 24 <= cap_top:
+                    worst = max(worst, (np.percentile(fs[:, 3], 95) - y0) * z)
+                if worst + 24 <= s_cap_top:
                     break
-                if y0 >= H - H / z - 0.5:      # the frame's bottom edge: cannot lift further
+                if y0 < H - H / z - 0.5:
+                    s.y_shift += 12
+                elif s.zoom + 0.02 <= ceiling + 1e-6:
+                    s.zoom = round(s.zoom + 0.02, 3)
+                else:
                     break
-                s.y_shift += 12
+        prev_zoom = s.zoom
     # report the framing against the caption line, frame by frame
     clash = []
     for k in range(nframes):
@@ -1387,17 +1535,24 @@ def render(args):
         M, z, x0, y0 = frame_transform(s, t, recipe)
         mouth_out = (faces[k, 2] - y0) * z
         chin_out = (faces[k, 3] - y0) * z
-        clash.append((t, mouth_out, chin_out))
+        g = next((g for g in groups if g.t0 <= t < g.t1), None)
+        clash.append((t, mouth_out, chin_out, cap_bottom - g.height if g else None))
     report['framing'] = {
         'shots': [{'t0': round(s.t0, 3), 't1': round(s.t1, 3), 'take_t0': round(s.t0 + start, 3), 'zoom': s.zoom,
                    'cx': round(s.cx), 'eye_y': round(s.eye_y), 'y_shift': s.y_shift} for s in shots],
-        'caption_centre_px': round(cap_centre), 'caption_top_px': round(cap_top), 'caption_block_max_px': round(max_block),
+        'caption_bottom_px': round(cap_bottom), 'caption_top_px': round(cap_top), 'caption_block_max_px': round(max_block),
         'safe_area_px': [round(H * SAFE_TOP), round(H * SAFE_BOTTOM)],
         'max_mouth_y_out': round(max(c[1] for c in clash)) if clash else None,
         'max_chin_y_out': round(max(c[2] for c in clash)) if clash else None,
         'frames_chin_below_caption_top': sum(1 for c in clash if c[2] > cap_top),
         'frames_mouth_below_caption_top': sum(1 for c in clash if c[1] > cap_top),
+        'frames_chin_below_showing_caption': sum(1 for c in clash if c[3] is not None and c[2] > c[3]),
     }
+    if args.plan_only:
+        report['captions'] = [{'t0': round(g.t0, 3), 't1': round(g.t1, 3), 'lines': [[t.text for t in ln] for ln in g.lines]}
+                              for g in groups]
+        print(json.dumps(report['framing'], indent=1))
+        return report
     report['captions'] = [{'t0': round(g.t0, 3), 't1': round(g.t1, 3),
                            'lines': [[f'{t.text}' + ('*' if t.kind == 'bold' else '~' if t.kind == 'serif' else '')
                                       for t in ln] for ln in g.lines],
@@ -1414,8 +1569,23 @@ def render(args):
            '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv',
            '-af', f'aresample=48000,afade=t=in:d=0.02,afade=t=out:st={max(dur - 0.05, 0):.3f}:d=0.05',
            '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-ac', '2', '-movflags', '+faststart', '-shortest', str(out)]
+    treat_obj = None
+    if treat:
+        t_p = time.time()
+        plate = build_plate(take, start, nframes, masks) if not args.no_plate else None
+        if plate is not None and plate['residual_mean'] is not None and plate['residual_mean'] <= 6.0 \
+                and plate['coverage'] >= 0.15:
+            treat_obj = PlateTreat(plate)
+            how = 'clean plate (trial B): edge alpha against the known room, set made from the plate'
+        else:
+            treat_obj = Treat()
+            how = 'colour-band cut-out (trial A): ' + ('--no-plate' if plate is None else
+                                                       'the camera moved or the room was never seen, no plate')
+        report['plate'] = {'used': isinstance(treat_obj, PlateTreat), 'how': how, 's': round(time.time() - t_p, 1)}
+        if plate is not None:
+            report['plate'].update({k: plate[k] for k in ('frames', 'residual_mean', 'residual_max', 'coverage')})
+        log(f'background: {how}')
     encp = subprocess.Popen(enc, stdin=subprocess.PIPE)
-    treat_obj = Treat() if treat else None
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     rv = np.sqrt(((xx - W / 2) / (W * 0.62)) ** 2 + ((yy - H * 0.47) / (H * 0.62)) ** 2)
     vig1 = (1 - 0.22 * smoothstep(0.55, 1.35, rv)).astype(np.float32)
@@ -1436,7 +1606,10 @@ def render(args):
             img = card.render(t, k)
         else:
             if treat_obj is not None:
-                img, alpha = treat_obj.apply(fr, masks[k], fidx=k)
+                if isinstance(treat_obj, PlateTreat):
+                    img, alpha = treat_obj.apply(fr, masks[k], fidx=k, face=faces[k])
+                else:
+                    img, alpha = treat_obj.apply(fr, masks[k], fidx=k)
                 # flicker of the final cut-out: frame-to-frame alpha change at the edge,
                 # where the picture itself is still (0-255)
                 a_s = cv2.resize(alpha, (W // 4, H // 4), interpolation=cv2.INTER_AREA)
@@ -1458,7 +1631,7 @@ def render(args):
             if vignette is not None:
                 img = cv2.add(cv2.multiply(img, vignette), fine_grain[k % 4])
             if groups:
-                bb = draw_captions(img, groups, t, cap_centre, bounce='word-bounce-in' in recipe)
+                bb = draw_captions(img, groups, t, cap_bottom, bounce='word-bounce-in' in recipe)
                 if bb:
                     framed = 'full-face-vertical' in recipe or 'constant-motion' in recipe
                     M, z, x0, y0 = frame_transform(s, t, recipe) if framed else (None, 1.0, 0, 0)
@@ -1472,6 +1645,12 @@ def render(args):
     if encp.wait() != 0:
         raise SystemExit('ffmpeg encode failed')
     report['render_s'] = round(time.time() - t1, 1)
+    if isinstance(treat_obj, PlateTreat) and treat_obj.stats['noise']:
+        st_ = treat_obj.stats
+        report['plate'].update({'room_noise_median': round(float(np.median(st_['noise'])), 2),
+                                'room_noise_max': round(float(np.max(st_['noise'])), 2),
+                                'frames_with_hand_held_by_difference': int(sum(1 for d in st_['diff_px'] if d > 0)),
+                                'exposure_gain_range': [round(float(np.min(st_['gain'])), 3), round(float(np.max(st_['gain'])), 3)]})
     if alpha_flicker:
         report['mask']['final_alpha_flicker'] = {'mean': round(float(np.mean(alpha_flicker)), 2),
                                                  'p95': round(float(np.percentile(alpha_flicker, 95)), 2),
@@ -1556,11 +1735,15 @@ def main(argv=None):
     ap.add_argument('--recipe', default='all', help=f'"all" or a comma list of: {", ".join(MODULES)}')
     ap.add_argument('--cutaway', action='append', help='START-END|logo.svg,logo2.svg@SpokenWord|two words (take clock)')
     ap.add_argument('--logo-dir', default=str(DEFAULT_LOGO_DIR))
-    ap.add_argument('--bold', default='', help='comma list of words set in bold')
+    ap.add_argument('--bold', default='', help='comma list of words set in bold; word#n for only the nth time he says it')
+    ap.add_argument('--no-auto-bold', action='store_true', help='do not bold a word in groups with no bold word')
     ap.add_argument('--payoff', default='', help='semicolon list of payoff phrases set in the italic serif')
     ap.add_argument('--cuts', default='', help='optional comma list of punch-in cut times (take clock)')
     ap.add_argument('--lead', type=float, default=0.04, help='seconds a word arrives before its onset')
+    ap.add_argument('--shot-every', type=float, default=2.0, help='aim for a cut about this often (seconds)')
     ap.add_argument('--mask-model', type=int, default=0, help='mediapipe selfie segmentation: 0 general, 1 landscape')
+    ap.add_argument('--no-plate', action='store_true', help="trial A's cut-out (no clean plate of the room)")
+    ap.add_argument('--plan-only', action='store_true', help='plan captions, shots and framing, print them, render nothing')
     ap.add_argument('--out', required=True)
     ap.add_argument('--sheet', default='')
     ap.add_argument('--sheet-every', type=float, default=0.5)
