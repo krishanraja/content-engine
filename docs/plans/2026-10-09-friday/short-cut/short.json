@@ -1,0 +1,107 @@
+{
+ "name": "why-so-many-ais-short",
+ "source": "../takes90/Fri 16 Oct - 90-second - Soon you won't pick your AI (1).mp4",
+ "crop": "auto",
+ "subject": "Why so many AIs",
+ "date": "2026-10-16",
+ "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+ "tiktok": true,
+ "intro": {
+  "9x16": "../story/intro-9x16.mp4"
+ },
+ "endcard": {
+  "9x16": "../story/outro-9x16.mp4"
+ },
+ "music": "auto",
+ "script": "../../../../docs/plans/2026-10-09-script-90s-v7.md",
+ "series": "mind_the_gap",
+ "fps": "source",
+ "max_gap": 0.6,
+ "pad_before": 0.15,
+ "pad_after": 0.25,
+ "voice": "repair",
+ "cues": [
+  {
+   "id": "fri90-launch",
+   "panel": "panels/fri90-launch-p1-{aspect}.png",
+   "start": "the amount of AI models getting released",
+   "end": "every single day.",
+   "pages": {
+    "9x16": [
+     "panels/fri90-launch-p1-9x16.png",
+     "panels/fri90-launch-p2-9x16.png",
+     "panels/fri90-launch-p3-9x16.png"
+    ]
+   }
+  },
+  {
+   "id": "fri90-badge",
+   "panel": "panels/fri90-badge-{aspect}.png",
+   "start": "The name of the AI model is the badge.",
+   "end": "Mercedes C -Class."
+  },
+  {
+   "id": "fri90-gears",
+   "panel": "panels/fri90-gears-{aspect}.png",
+   "start": "it thinks is like the gear.",
+   "end": "third, again."
+  },
+  {
+   "id": "fri90-manual",
+   "panel": "panels/fri90-manual-{aspect}.png",
+   "start": "And right now, AI tools",
+   "end": "like a manual car."
+  },
+  {
+   "id": "fri90-test",
+   "panel": "panels/fri90-test-{aspect}.png",
+   "start": "And in a tough reasoning test,",
+   "end": "in its top gear."
+  },
+  {
+   "id": "fri90-cost",
+   "panel": "panels/fri90-cost-{aspect}.png",
+   "start": "thinking costs AI companies money,",
+   "end": "the same subscription."
+  },
+  {
+   "id": "fri90-auto",
+   "panel": "panels/fri90-auto-{aspect}.png",
+   "start": "say mid -2027,",
+   "end": "start you in automatic"
+  },
+  {
+   "id": "fri90-auto-picks",
+   "panel": "panels/fri90-auto-picks-{aspect}.png",
+   "start": "and chat GPT will pick",
+   "end": "how it thinks."
+  }
+ ],
+ "words": "../words/short.words.json",
+ "intro_override": "Krish, 2026-10-12: This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
+ "music_seconds": 100,
+ "speed": {
+  "factor": 1.06,
+  "krish": "Krish, 2026-10-16: just put them in teleprompter, and then if I go over 90sec, just speed the video up a bit in post"
+ },
+ "strap": {
+  "png": "strap-9x16.png",
+  "after": "So I've got to be in my bonnet",
+  "seconds": 3.5
+ },
+ "replacements": [
+  [
+   "got to be in my bonnet",
+   "got a bee in my bonnet"
+  ],
+  [
+   "Now it thinks",
+   "How it thinks"
+  ],
+  [
+   "Maybe 5%",
+   "I'm 85%"
+  ]
+ ],
+ "note": "Hand-made 17 Oct: cues for the v7 take on the source timeline; tall panels from short-cut/tall90.py; caption fixes checked by re-hearing (large-v3 and medium.en hear \"I'm 85% sure of this\" in 7 of 8 passes). Copy to the work folder kit/ as short.json."
+}

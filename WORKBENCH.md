@@ -8,6 +8,15 @@ are in `AGENTS.md`; this file is the live state of the work.
 
 Last updated: 2026-10-17, about 07:15 UTC, by a Claude Code session (cloud); Friday signed off, finishing it (Latest handoff).
 
+## Friday 16 Oct: handed over, 17 Oct
+
+Krish ran out of usage on this account and asked for a handover. Everything the next session
+needs is in `docs/plans/2026-10-09-friday/HANDOVER.md` (its first section is the prompt to
+start with). Signed off: all titles, headings, cuts. Done: the sniff finder (18 dB, on by
+default), the 90-second take's caption fixes and cues (`short-cut/short.json`), the tall
+panels' spec, 51 long-cut cards (open faults listed), five Substack exhibits (checks not run).
+Not done: both renders and their frame checks, the Substack page, pack, library, board video tabs.
+
 ## How Krish wants to be worked with
 
 - **Every title earns the click, from the piece, never from nothing** (house

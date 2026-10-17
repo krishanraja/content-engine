@@ -1,0 +1,3465 @@
+{
+ "what_this_is": "The design for Friday's Substack exhibits (mind.the.gap, piece 904658db-4df2-4537-a0ed-ebe93e081db7): five figures, in the story's order, each answering one question a business leader would ask. A spec to draw from, not a render. Built by .cache/visual-intel/scripts/exhibits_build.py from data-final.json and derived.json; nothing published, sent or committed.",
+ "built_at": "2026-10-17T08:04:41Z",
+ "krish_asked": {
+  "on": "2026-10-17",
+  "words": "I expect some pretty heavyweight beautiful stunning visual intel as to what difference models versus thinking levels make to intelligence and how that correlates to the cost of it. I don't want you to change the article clips but I just want to make sure that those insights are enterprise-grade and available inside the substack."
+ },
+ "story": "Krish, 2026-10-17: \"The story is about there being so many recent AI model releases and figuring out if that's actually important, why it's speeding up, and what choices a user is going to have to make (or what gears are going to be hidden from them in the future). It's a \"mind the gap\" piece remember.\"",
+ "article": "docs/plans/2026-10-09-draft-body-v5.md (not changed; every \"after\" is copied from it and found exactly once)",
+ "headline": "Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks",
+ "design_contract": {
+  "state_of_use": "A business reader on Substack, mostly on a phone (358 px column), reading the piece through; often a figure is screenshotted and shared alone.",
+  "user_and_action": "Understand, in one look per figure, whether a new model or the thinking level matters more, what each costs, and what to buy.",
+  "governing_rule": "Real Artificial Analysis rows only, by slug; every derived number has its formula; a score always with its scale; costs say what they are.",
+  "data_truth": "Sparse where Artificial Analysis is: Google has one ranged model and its Low has no cost; ChatGPT's app settings are not mapped; Haiku costs understated.",
+  "materiality": "Material: new figures for a piece Krish has signed off. He sees the rendered set before it goes into the page.",
+  "brand_and_voice": "makeyourmindup house style from config/studio.json via scripts/pages/brand.py; mind.the.gap accent; krish-voice rules for every word.",
+  "authority": "Design spec only. Rendering, the pack and posting are later steps; posting is his.",
+  "proof": "Each render passes scripts/pages/card.py at 1360 wide (phone floor), is looked at at full size and at 358 px, and is checked against this file."
+ },
+ "design_system": {
+  "canvas": {
+   "width": 1360,
+   "height": "per exhibit, set by its content (see each size); nothing clipped, no inner scroll",
+   "background": "#0C1512",
+   "padding": {
+    "sides": 64,
+    "top": 64,
+    "bottom": 56
+   },
+   "content_width": 1232
+  },
+  "phone_floor": {
+   "why": "scripts/pages/card.py: Substack shows a 1360-wide image at about 358 CSS pixels on a phone, so a word a reader needs must be drawn at 54 px or more and fine print (sources, marked data-fine-print) at 42 px or more. Every exhibit is checked with card.py before it becomes a PNG.",
+   "words_min_px": 54,
+   "fine_print_min_px": 42
+  },
+  "faces": {
+   "heading": "Anton 400, 92 px, line-height 1.04, cream; one sentence of 72 to 81 characters, which sets as three lines at 1232 px (measured), the same shape on all five",
+   "kicker": "IBM Plex Mono 500, 42 px, letter-spacing 0.03em, upper case, #FF6A4D; one line, at most 46 characters (44 px with wider spacing wrapped to two lines when measured); marked data-fine-print (it is the source and date)",
+   "standfirst": "Archivo 500, 54 px, line-height 1.25, cream at 82%; says what is drawn, its scale and which way is better",
+   "labels": "Archivo 700, 54 to 60 px, cream or the series colour of the mark it names",
+   "big_numbers": "Anton 400, 72 to 96 px",
+   "axis_ticks": "IBM Plex Mono 500, 54 px, cream at 70%",
+   "source_block": "IBM Plex Mono 400, 42 px, line-height 1.3, cream at 70%, data-fine-print, under a 2 px rule of cream at 20%",
+   "files": "scripts/pages/brand.py FONT_FILES (node_modules/@fontsource*): Anton 400, Archivo variable, IBM Plex Mono 400/500/700 (no 600)"
+  },
+  "colours": {
+   "ink": "#0C1512",
+   "ink_soft": "#16221D",
+   "cream": "#F4EFE4",
+   "mint": "#7EF0C0",
+   "mind_the_gap_accent": "#FF6A4D",
+   "grammar": {
+    "mint": "the answer: the mark the heading is about (the newest version, the lever that adds most, the step that pays)",
+    "accent": "#FF6A4D, mind.the.gap: the kicker, and where money buys little (the top step, the costly multiple, the callout ring)",
+    "cream": "words, and context marks at 45 to 60% (older versions, other models)",
+    "grid": "cream at 14%, 2 px; no chart borders, no shadows, no gradients"
+   },
+   "contrast": "cream, mint and #FF6A4D on ink all pass 4.5:1; dashed context lines at 55% stay above 3:1"
+  },
+  "device": "One device for all five, in the channel style (CHANNEL_HEADINGS): a numbered kicker \"EXHIBIT N · SOURCE · DATE\", then one heading of one shape, a short claim (or, for the last, a promise) naming the real products, then a one-line standfirst saying what is measured. Every chart labels its marks directly; no separate legend box.",
+  "words": [
+   "Thinking level is the term on every exhibit. Exhibit 2, the first data exhibit, defines it as what Anthropic calls effort and OpenAI calls reasoning.",
+   "Settings are printed with Artificial Analysis's names: Non-reasoning (thinking off), Low, Medium, High, Xhigh (extra high, glossed once per exhibit), Max.",
+   "No car, gear or badge words on any exhibit: the article carries the car; the charts carry the real setting names (ANALOGY_IN_SCRIPTS_ONLY).",
+   "No em dashes or en dashes; British spelling; \"times\" in words, not a multiplication sign; a score always with its scale (PLAIN_SCORES)."
+  ],
+  "logos": {
+   "anthropic": {
+    "company": "Anthropic",
+    "file": "docs/plans/2026-10-09-friday/logos/anthropic-symbol-cream.svg",
+    "sha256": "941d5afe77fe772e39e53d30dc5ccc44fb0846f71f40d3569eef4e86a028303c",
+    "use": "symbol, 56 px tall, beside the Anthropic lane, panel or row group"
+   },
+   "openai": {
+    "company": "OpenAI",
+    "file": "docs/plans/2026-10-09-friday/logos/openai-symbol-cream.svg",
+    "sha256": "7586050f0d0420fd754711b255ab7002fa904572ad21767f92dfd3ee626ca558",
+    "use": "symbol, 56 px tall, beside the OpenAI lane, panel or row group"
+   },
+   "google": {
+    "company": "Google",
+    "file": "docs/plans/2026-10-09-friday/logos/google-cream.svg",
+    "sha256": "3e77864a250e2eb825398d1e630804e7212c7814aca66b79c93933de21724e43",
+    "use": "wordmark, 44 px tall, beside the Gemini row"
+   },
+   "aa": {
+    "company": "Artificial Analysis",
+    "file": "docs/plans/2026-10-09-friday/logos/artificialanalysis-cream.svg",
+    "sha256": "bdde41ee5880ce157945a0de0c68f8052849dc9807013c889ffb263c2b4069f6",
+    "use": "lockup, 44 px tall (402 x 44), first item of the source block: the credit"
+   }
+  },
+  "footer": "Optional, fine print, right of the source block: \"mind.the.gap · makeyourmindup\""
+ },
+ "cost_measure": {
+  "plotted": "cost_per_task_usd",
+  "printed_as": "cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices",
+  "why": "Every Artificial Analysis dollar figure and multiple in the article is cost per task ($5.98 v $0.55; \"about two and a half times as much per task\"; \"another four and a half times\"; \"about 11 times\"; \"28% more\"; \"less than half the cost per task\"), and Friday's video cards use cost per task too. An exhibit printed beside those sentences on the full-test-set cost would show 1.89, 5.35, 10.12, 1.45 and 0.38 times instead, so the reader would see two sets of numbers for one claim. data-final.json allows either, if the exhibit says which.",
+  "alternative": "cost_usd (what it cost Artificial Analysis to run its full test set once, US dollars, at list prices) is kept beside every plotted row as cost_usd_full_test_set, so any exhibit can be redrawn on it. Every pattern claimed below holds on both measures (checked: see checks)."
+ },
+ "score_basis": "The API's one-decimal score (data-final.json score; derived.json points_gained) throughout. Artificial Analysis's pages print whole numbers; never round a one-decimal figure again (29.5, 34.5 and 33.5 are rounding traps).",
+ "exhibits": [
+  {
+   "id": "launches",
+   "order": 1,
+   "optional": true,
+   "optional_why": "Krish asked for model v thinking level v cost; this one sets up the story's first beat (\"so many recent AI model releases\") from the evidence file. Drop it if the page needs fewer figures: the other four stand alone. It is a dated record, unlike the pile-up of page screenshots, so the two can sit together or this can replace it.",
+   "question": "How often are Anthropic and OpenAI putting out new models?",
+   "kicker": "EXHIBIT 1 · ANTHROPIC, OPENAI · 15 OCT 2026",
+   "heading": "Anthropic and OpenAI put out a new model about every two weeks for a year",
+   "standfirst": "Each dot is a day one of them launched a new model, as dated on its own pages.",
+   "takeaway": "Between them the two labs launched new models on at least 26 days in under a year, and six of those launches came in the 16 days from 22 September to 7 October 2026.",
+   "notes": [
+    {
+     "text": "GPT-5.5 is dated 24 April 2026, the date its OpenAI post gives.",
+     "placement": "source block, second line"
+    }
+   ],
+   "chart": {
+    "type": "two-lane dot timeline (a strip plot on a date axis)",
+    "encoding": {
+     "x": "date, linear, 1 Nov 2025 to 15 Oct 2026, full content width (1232 px, about 103 px a month)",
+     "lanes": "two horizontal lanes, Anthropic above OpenAI, each a 2 px cream-at-30% rule with its logo and label above it",
+     "mark": "one filled dot, 30 px, per launch day; a day with two new names is still one dot (counts are in the lane label)",
+     "colour": "cream dots; the five the article names (Opus 4.8, Opus 5, Opus 5.5, GPT-5.1, GPT-6.1 Sol) in mint with a direct label; the 22 Sep to 7 Oct cluster on a band of the accent colour at 16% behind both lanes, a 5 px accent rule along its top and its label above that, right-aligned",
+     "stacking": "dots closer than 32 px stack upward in 32 px steps (3 and 5 Mar, 7 and 16 Apr, 6 and 9 Jul, 22 Sep), so every launch day stays countable"
+    },
+    "axis": {
+     "ticks": "a 12 px tick at the first of every month",
+     "tick_labels": [
+      "Nov",
+      "Jan",
+      "Mar",
+      "May",
+      "Jul",
+      "Sep"
+     ],
+     "year_labels": {
+      "Nov": "2025",
+      "Jan": "2026"
+     },
+     "font": "IBM Plex Mono 500, 54 px"
+    },
+    "lane_labels": {
+     "Anthropic": "Anthropic: 15 new Claude names on 13 days",
+     "OpenAI": "OpenAI: at least 16 launch days"
+    },
+    "point_labels": [
+     {
+      "lane": "Anthropic",
+      "date": "2026-05-28",
+      "text": "Opus 4.8",
+      "placement": "below the lane, first tier, right edge at the dot; a 2 px mint leader from the dot; tiers 96 and 162 px below the lane"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-07-24",
+      "text": "Opus 5",
+      "placement": "below the lane, first tier, centred; a 2 px mint leader from the dot; tiers 96 and 162 px below the lane"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-09-22",
+      "text": "Opus 5.5",
+      "placement": "below the lane, second tier, right edge at the dot; a 2 px mint leader from the dot; tiers 96 and 162 px below the lane"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2025-11-12",
+      "text": "GPT-5.1",
+      "placement": "below the lane, left edge at the dot; a 2 px mint leader from the dot; tiers 96 and 162 px below the lane"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-09-29",
+      "text": "GPT-6.1 Sol",
+      "placement": "below the lane, right edge at the dot; a 2 px mint leader from the dot; tiers 96 and 162 px below the lane"
+     }
+    ],
+    "annotations": [
+     {
+      "kind": "bracket",
+      "from": "2026-09-22",
+      "to": "2026-10-07",
+      "spans": "both lanes",
+      "colour": "#FF6A4D",
+      "text": "6 launches in 16 days",
+      "placement": "its own row above the Anthropic lane label, right edge at the band's right edge"
+     }
+    ]
+   },
+   "data": {
+    "kind": "dated launches from the companies' own pages (evidence-v3.md P2-03 and P2-04, checker-confirmed or corrected; the cluster is P2-10)",
+    "rows": [
+     {
+      "lane": "Anthropic",
+      "date": "2025-11-24",
+      "names": [
+       "Claude Opus 4.5"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-02-05",
+      "names": [
+       "Claude Opus 4.6"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-02-17",
+      "names": [
+       "Claude Sonnet 4.6"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-04-07",
+      "names": [
+       "Claude Mythos Preview (partners only)"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-04-16",
+      "names": [
+       "Claude Opus 4.7"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-05-28",
+      "names": [
+       "Claude Opus 4.8"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-06-09",
+      "names": [
+       "Claude Fable 5",
+       "Claude Mythos 5"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-06-30",
+      "names": [
+       "Claude Sonnet 5"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-07-24",
+      "names": [
+       "Claude Opus 5"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-09-01",
+      "names": [
+       "Claude Fable 5.1",
+       "Claude Mythos 5.1"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-09-22",
+      "names": [
+       "Claude Opus 5.5"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-09-28",
+      "names": [
+       "Claude Sonnet 5.5"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "Anthropic",
+      "date": "2026-10-07",
+      "names": [
+       "Claude Haiku 5.5"
+      ],
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2025-11-12",
+      "names": [
+       "GPT-5.1 Instant",
+       "GPT-5.1 Thinking"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2025-11-19",
+      "names": [
+       "GPT-5.1 Pro"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2025-12-11",
+      "names": [
+       "GPT-5.2"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-02-05",
+      "names": [
+       "GPT-5.3-Codex"
+      ],
+      "source": "https://help.openai.com/en/articles/9624314-model-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-03-03",
+      "names": [
+       "GPT-5.3 Instant"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-03-05",
+      "names": [
+       "GPT-5.4 Thinking"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-03-18",
+      "names": [
+       "GPT-5.4 mini"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-04-09",
+      "names": [
+       "GPT-5.3 Instant Mini"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-04-24",
+      "names": [
+       "GPT-5.5"
+      ],
+      "source": "OpenAI GPT-5.5 post, \"Update on April 24, 2026\" (developer availability); its 23 April ChatGPT date is from press coverage only"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-05-05",
+      "names": [
+       "GPT-5.5 Instant"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-07-06",
+      "names": [
+       "GPT-5.5 Instant Mini"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-07-09",
+      "names": [
+       "GPT-5.6 Sol in ChatGPT"
+      ],
+      "source": "https://help.openai.com/en/articles/9624314-model-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-09-03",
+      "names": [
+       "GPT-6 Astra"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-09-22",
+      "names": [
+       "GPT-6 Sol",
+       "GPT-6 Luna (Work and Codex)"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-09-29",
+      "names": [
+       "GPT-6.1 Sol"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     },
+     {
+      "lane": "OpenAI",
+      "date": "2026-10-07",
+      "names": [
+       "GPT-6 in ChatGPT"
+      ],
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+     }
+    ],
+    "derived": [
+     {
+      "what": "Anthropic launch days and new names, 16 Oct 2025 to 15 Oct 2026",
+      "value": {
+       "days": 13,
+       "names": 15
+      },
+      "formula": "count of rows in lane Anthropic; names counted one by one (Fable 5 and Mythos 5 share a day, as do Fable 5.1 and Mythos 5.1)"
+     },
+     {
+      "what": "OpenAI launch days dated on its release notes, 12 Nov 2025 to 7 Oct 2026",
+      "value": 16,
+      "formula": "count of rows in lane OpenAI; \"at least\" because the list holds the dated entries the evidence found, not a complete catalogue"
+     },
+     {
+      "what": "launch days, both labs",
+      "value": 26,
+      "formula": "union of the two lanes (13 + 16 - 3 shared days: 5 Feb, 22 Sep, 7 Oct)"
+     },
+     {
+      "what": "weeks per launch day",
+      "value": 1.88,
+      "formula": "2025-11-12 to 2026-10-07 is 47.0 weeks; 25 gaps between 26 days, so about every two weeks"
+     },
+     {
+      "what": "launches 22 Sep to 7 Oct 2026",
+      "value": 6,
+      "formula": "one per lane per day: Opus 5.5, GPT-6 Sol and Luna (22 Sep), Sonnet 5.5 (28 Sep), GPT-6.1 Sol (29 Sep), Haiku 5.5 and GPT-6 in ChatGPT (7 Oct)"
+     },
+     {
+      "what": "Anthropic launch days before and after 16 Apr 2026 (for the story, not printed)",
+      "value": {
+       "before": 4,
+       "after": 9
+      },
+      "formula": "count by half year"
+     }
+    ]
+   },
+   "source_line": "Sources: Anthropic, model deprecations table and launch pages; OpenAI, ChatGPT and model release notes; read 15 Oct 2026. Days counted by us.",
+   "logos": [
+    "anthropic",
+    "openai"
+   ],
+   "size": {
+    "width": 1360,
+    "height_estimate": 2062,
+    "height_basis": "measured on the feasibility proof drawn to this spec (house faces, real logos, real rows); the final may differ by a little"
+   },
+   "alt": "Timeline from November 2025 to October 2026. Anthropic launched 15 new Claude models on 13 days, including Opus 4.8 in May, Opus 5 in July and Opus 5.5 in September. OpenAI launched models on at least 16 days, from GPT-5.1 in November 2025 to GPT-6.1 Sol in September 2026. Six launches came between 22 September and 7 October 2026.",
+   "after": "Start with why your eyes are on the name at all, because while we watch the names, the setting that decides your answer gets chosen out of sight. Look at how often the names change. Anthropic, which makes Claude, launched Claude Opus 4.8 in May, Claude Opus 5 in July and Claude Opus 5.5 in September, with Sonnet, Fable and Haiku versions alongside. OpenAI's release notes climb from GPT-5.1 last November to GPT-6.1 Sol at the end of September. OpenAI even says a model will \"generally remain available in ChatGPT for 90 days after a successor is released.\" Ninety days, and then the next name takes over.",
+   "after_paragraph_number": 6,
+   "after_section": "THE NAME GAME",
+   "post_json_entry": {
+    "kind": "image",
+    "file": "exhibit-1-launches.png",
+    "name": "exhibit-1-launches.png",
+    "logos": [
+     "Anthropic",
+     "OpenAI"
+    ],
+    "shows": "chart",
+    "data_source": "Anthropic and OpenAI release pages, 15 Oct 2026",
+    "measures": "launch days of new models, by date",
+    "purpose": "How often are Anthropic and OpenAI putting out new models?",
+    "after": "Start with why your eyes are on the name at all, because while we watch the name..."
+   },
+   "article_check": {},
+   "feasibility_proof": {
+    "html": ".cache/visual-intel/design/exhibit-1-launches.html",
+    "png": ".cache/visual-intel/design/exhibit-1-launches.png",
+    "phone_png": ".cache/visual-intel/design/exhibit-1-launches-phone.png",
+    "size": [
+     1360,
+     2062
+    ],
+    "card_py": [
+     "every word can be read on a phone"
+    ],
+    "passed": true,
+    "png_sha256": "5da1ca59b764f3f774b7419e7602b3c3a0e0a0ba09469c9577443911e93fb468"
+   }
+  },
+  {
+   "id": "model-or-thinking-level",
+   "order": 2,
+   "hero": true,
+   "question": "Which changes the score more, a new model version or the thinking level, and what does each cost?",
+   "kicker": "EXHIBIT 2 · ARTIFICIAL ANALYSIS · 17 OCT 2026",
+   "heading": "Turning up the thinking lifted Claude and GPT more than a new version did",
+   "standfirst": "Each line is one model, from its lowest thinking level (what Anthropic calls effort and OpenAI calls reasoning) to its highest.",
+   "takeaway": "On Artificial Analysis's 0 to 100 index, each line climbs 9.7 to 19.1 points from its lowest to its highest thinking level, while the newer version sits only 2.9 to 8.0 points above the older one at the same level, and mostly to its left, because it costs less to run.",
+   "notes": [
+    {
+     "text": "Max is a developer setting; ChatGPT's highest is Extra High.",
+     "placement": "fine print under the OpenAI panel, left-aligned"
+    },
+    {
+     "text": "Artificial Analysis now lists Claude Opus 5 and GPT-6 Sol as deprecated; results as measured.",
+     "placement": "source block, second sentence"
+    }
+   ],
+   "chart": {
+    "type": "connected scatter, two stacked panels on the same axes (small multiples), one per company",
+    "why_two_panels": "At the 54 px phone floor, four lines in one plot collide where GPT-6 Sol at Xhigh ($0.52, 44.2) sits on Opus 5.5 at Low ($0.55, 42.3). Two panels with identical axes keep every label legible and still let the eye compare across them.",
+    "encoding": {
+     "x": "cost per task, US dollars, log scale, domain $0.05 to $10 over the full 1232 px (the extra room left of $0.10 holds the Low labels); labelled gridlines at $0.10, $1 and $10, faint unlabelled ones at $0.30 and $3",
+     "y": "Artificial Analysis's Intelligence Index, 0 to 100, higher is better; domain 24 to 62 over a 470 px plot, gridlines at 30, 40, 50, 60 with their numbers inside the plot at the left, above each line (a line chart, so the axis need not start at zero)",
+     "lines": "one line per model version, joining its settings in order (Non-reasoning, Low, Medium, High, Xhigh, Max), so moving along a line is turning up the thinking and the gap between lines is the new version",
+     "newer_version": "mint #7EF0C0, 8 px solid line, 26 px filled dots",
+     "older_version": "cream at 55%, 6 px dashed line (16 on, 12 off), 24 px hollow dots with a 5 px ring",
+     "direction": "draw lines in setting order, never sorted by cost: GPT-6 Sol runs left from Non-reasoning to Low, because thinking off cost more to run"
+    },
+    "panels": [
+     {
+      "company": "Anthropic",
+      "logo": "anthropic",
+      "title": "Claude Opus",
+      "lines": [
+       {
+        "model": "Claude Opus 5.5",
+        "style": "newer_version",
+        "label": "Claude Opus 5.5 · 22 Sep 2026",
+        "slugs": [
+         "claude-opus-5-5-low",
+         "claude-opus-5-5-medium",
+         "claude-opus-5-5-high",
+         "claude-opus-5-5-xhigh",
+         "claude-opus-5-5"
+        ]
+       },
+       {
+        "model": "Claude Opus 5",
+        "style": "older_version",
+        "label": "Claude Opus 5 · 24 Jul 2026",
+        "slugs": [
+         "claude-opus-5-low",
+         "claude-opus-5-medium",
+         "claude-opus-5-high",
+         "claude-opus-5-xhigh",
+         "claude-opus-5"
+        ]
+       }
+      ],
+      "key": "under the panel title, one line each with its swatch: \"Claude Opus 5.5 · 22 Sep 2026\" (mint) and \"Claude Opus 5 · 24 Jul 2026\" (cream at 75%)",
+      "end_labels": "setting names beside the end dots, 54 px Archivo 700 in the line's colour: Opus 5.5 \"Low\" left of its dot and \"Max\" above it; Opus 5 \"Low\" left of its dot and \"Max\" right of it",
+      "callout": {
+       "rings": [
+        "claude-opus-5",
+        "claude-opus-5-5-low"
+       ],
+       "ring": "#FF6A4D, 5 px, 44 px across",
+       "text": "Opus 5 at Max beat Opus 5.5 at Low",
+       "placement": "two lines (\"Opus 5 at Max beat\" / \"Opus 5.5 at Low\") in the empty lower right, from x 760; a straight 2 px leader down from the Opus 5 Max ring, and an L-shaped one down from the Opus 5.5 Low ring then right to the text, so neither crosses a label"
+      }
+     },
+     {
+      "company": "OpenAI",
+      "logo": "openai",
+      "title": "GPT Sol",
+      "lines": [
+       {
+        "model": "GPT-6.1 Sol",
+        "style": "newer_version",
+        "label": "GPT-6.1 Sol · 29 Sep 2026",
+        "slugs": [
+         "gpt-6-1-sol-low",
+         "gpt-6-1-sol-medium",
+         "gpt-6-1-sol-high",
+         "gpt-6-1-sol-xhigh",
+         "gpt-6-1-sol"
+        ]
+       },
+       {
+        "model": "GPT-6 Sol",
+        "style": "older_version",
+        "label": "GPT-6 Sol · 22 Sep 2026",
+        "slugs": [
+         "gpt-6-sol-non-reasoning",
+         "gpt-6-sol-low",
+         "gpt-6-sol-medium",
+         "gpt-6-sol-high",
+         "gpt-6-sol-xhigh",
+         "gpt-6-sol"
+        ]
+       }
+      ],
+      "key": "under the panel title: \"GPT-6.1 Sol · 29 Sep 2026\" (mint) and \"GPT-6 Sol · 22 Sep 2026\" (cream at 75%)",
+      "end_labels": "GPT-6.1 Sol: \"Low\" left of its dot, \"Max\" above it. GPT-6 Sol: \"Low\" left of its dot, \"Max\" right of it; its Non-reasoning dot is named by the callout",
+      "callout": {
+       "rings": [
+        "gpt-6-sol-non-reasoning"
+       ],
+       "ring": "#FF6A4D, 5 px, 44 px across",
+       "text": "Non-reasoning (thinking off) cost more to run than Low",
+       "placement": "two lines (\"Non-reasoning (thinking off)\" / \"cost more to run than Low\") starting 50 px right of the ring, in the empty right half"
+      }
+     }
+    ],
+    "axes_text": {
+     "y_title": "Intelligence Index, 0 to 100, higher is better",
+     "x_title": "Cost per task, US dollars, log scale: each labelled gridline is 10 times the last",
+     "x_ticks": [
+      "$0.10",
+      "$1",
+      "$10"
+     ],
+     "y_ticks": [
+      "30",
+      "40",
+      "50",
+      "60"
+     ],
+     "placement": "y title set horizontally above each panel's plot, left-aligned (never rotated); x ticks and title under the lower panel only, the upper panel keeps the gridlines"
+    },
+    "layout_px": {
+     "heading_block": "about 560",
+     "panel": "title row 80 + plot 470",
+     "between_panels": 40,
+     "x_axis_block": 150,
+     "source_block": "about 230"
+    }
+   },
+   "data": {
+    "rows": [
+     {
+      "slug": "claude-opus-5-5-low",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Low",
+      "score": 42.3,
+      "cost_per_task_usd": 0.5512,
+      "cost_usd_full_test_set": 860.33,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-low",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-opus-5-5-medium",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Medium",
+      "score": 51.2,
+      "cost_per_task_usd": 1.336,
+      "cost_usd_full_test_set": 1626.81,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-medium",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5-high",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "High",
+      "score": 53.6,
+      "cost_per_task_usd": 1.8225,
+      "cost_usd_full_test_set": 2172.43,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-high",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Xhigh",
+      "score": 56,
+      "cost_per_task_usd": 3.4591,
+      "cost_usd_full_test_set": 4056.65,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-xhigh",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Max",
+      "score": 57.6,
+      "cost_per_task_usd": 5.982,
+      "cost_usd_full_test_set": 8708.2,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-opus-5-low",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "Low",
+      "score": 39.4,
+      "cost_per_task_usd": 1.0983,
+      "cost_usd_full_test_set": 1560.91,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-low",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-opus-5-medium",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "Medium",
+      "score": 44.8,
+      "cost_per_task_usd": 2.1895,
+      "cost_usd_full_test_set": 2731.91,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-medium",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-high",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "High",
+      "score": 48.1,
+      "cost_per_task_usd": 3.6133,
+      "cost_usd_full_test_set": 4331.68,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-high",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-opus-5-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "Xhigh",
+      "score": 49.7,
+      "cost_per_task_usd": 4.8778,
+      "cost_usd_full_test_set": 5867.76,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-xhigh",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-opus-5",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "Max",
+      "score": 50.8,
+      "cost_per_task_usd": 5.8584,
+      "cost_usd_full_test_set": 7274.74,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-low",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Low",
+      "score": 42.1,
+      "cost_per_task_usd": 0.1308,
+      "cost_usd_full_test_set": 250.48,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-low",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-medium",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Medium",
+      "score": 47.8,
+      "cost_per_task_usd": 0.2137,
+      "cost_usd_full_test_set": 361.37,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-medium",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-high",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "High",
+      "score": 50.2,
+      "cost_per_task_usd": 0.3191,
+      "cost_usd_full_test_set": 521.32,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-high",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-xhigh",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Xhigh",
+      "score": 51,
+      "cost_per_task_usd": 0.3929,
+      "cost_usd_full_test_set": 662.28,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-xhigh",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-1-sol",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Max",
+      "score": 51.8,
+      "cost_per_task_usd": 0.7242,
+      "cost_usd_full_test_set": 1081.55,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-non-reasoning",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Non-reasoning",
+      "score": 28.5,
+      "cost_per_task_usd": 0.3337,
+      "cost_usd_full_test_set": 449.37,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-non-reasoning",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-low",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Low",
+      "score": 34.2,
+      "cost_per_task_usd": 0.1328,
+      "cost_usd_full_test_set": 268.73,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-low",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-sol-medium",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Medium",
+      "score": 39.8,
+      "cost_per_task_usd": 0.2473,
+      "cost_usd_full_test_set": 416.32,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-medium",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-high",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "High",
+      "score": 42.4,
+      "cost_per_task_usd": 0.3728,
+      "cost_usd_full_test_set": 604.52,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-high",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-xhigh",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Xhigh",
+      "score": 44.2,
+      "cost_per_task_usd": 0.5208,
+      "cost_usd_full_test_set": 854.6,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-xhigh",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "gpt-6-sol",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Max",
+      "score": 47.6,
+      "cost_per_task_usd": 1.0447,
+      "cost_usd_full_test_set": 1535.8,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     }
+    ],
+    "derived": [
+     {
+      "what": "Claude Opus 5.5, lowest to highest thinking level",
+      "from": "claude-opus-5-5-low",
+      "to": "claude-opus-5-5",
+      "points": 15.3,
+      "cost_times_per_task": 10.85,
+      "cost_times_full_test_set": 10.12,
+      "formula": "points: score(to) - score(from); cost_times_per_task: cost_per_task_usd(to) / cost_per_task_usd(from)"
+     },
+     {
+      "what": "Claude Opus 5, lowest to highest thinking level",
+      "from": "claude-opus-5-low",
+      "to": "claude-opus-5",
+      "points": 11.4,
+      "cost_times_per_task": 5.33,
+      "cost_times_full_test_set": 4.66,
+      "formula": "points: score(to) - score(from); cost_times_per_task: cost_per_task_usd(to) / cost_per_task_usd(from)"
+     },
+     {
+      "what": "GPT-6.1 Sol, lowest to highest thinking level",
+      "from": "gpt-6-1-sol-low",
+      "to": "gpt-6-1-sol",
+      "points": 9.7,
+      "cost_times_per_task": 5.54,
+      "cost_times_full_test_set": 4.32,
+      "formula": "points: score(to) - score(from); cost_times_per_task: cost_per_task_usd(to) / cost_per_task_usd(from)"
+     },
+     {
+      "what": "GPT-6 Sol, lowest to highest thinking level",
+      "from": "gpt-6-sol-non-reasoning",
+      "to": "gpt-6-sol",
+      "points": 19.1,
+      "cost_times_per_task": 3.13,
+      "cost_times_full_test_set": 3.42,
+      "formula": "points: score(to) - score(from); cost_times_per_task: cost_per_task_usd(to) / cost_per_task_usd(from)"
+     },
+     {
+      "what": "Claude Opus 5 to Claude Opus 5.5 at each matched level",
+      "by_level": [
+       {
+        "level": "Low",
+        "from": "claude-opus-5-low",
+        "to": "claude-opus-5-5-low",
+        "points": 2.9,
+        "cost_times_per_task": 0.5,
+        "cost_times_full_test_set": 0.55
+       },
+       {
+        "level": "Medium",
+        "from": "claude-opus-5-medium",
+        "to": "claude-opus-5-5-medium",
+        "points": 6.4,
+        "cost_times_per_task": 0.61,
+        "cost_times_full_test_set": 0.6
+       },
+       {
+        "level": "High",
+        "from": "claude-opus-5-high",
+        "to": "claude-opus-5-5-high",
+        "points": 5.5,
+        "cost_times_per_task": 0.5,
+        "cost_times_full_test_set": 0.5
+       },
+       {
+        "level": "Xhigh",
+        "from": "claude-opus-5-xhigh",
+        "to": "claude-opus-5-5-xhigh",
+        "points": 6.3,
+        "cost_times_per_task": 0.71,
+        "cost_times_full_test_set": 0.69
+       },
+       {
+        "level": "Max",
+        "from": "claude-opus-5",
+        "to": "claude-opus-5-5",
+        "points": 6.8,
+        "cost_times_per_task": 1.02,
+        "cost_times_full_test_set": 1.2
+       }
+      ],
+      "formula": "derived.json model_upgrades_matched_level; points and cost multiple as above"
+     },
+     {
+      "what": "GPT-6 Sol to GPT-6.1 Sol at each matched level",
+      "by_level": [
+       {
+        "level": "Low",
+        "from": "gpt-6-sol-low",
+        "to": "gpt-6-1-sol-low",
+        "points": 7.9,
+        "cost_times_per_task": 0.98,
+        "cost_times_full_test_set": 0.93
+       },
+       {
+        "level": "Medium",
+        "from": "gpt-6-sol-medium",
+        "to": "gpt-6-1-sol-medium",
+        "points": 8.0,
+        "cost_times_per_task": 0.86,
+        "cost_times_full_test_set": 0.87
+       },
+       {
+        "level": "High",
+        "from": "gpt-6-sol-high",
+        "to": "gpt-6-1-sol-high",
+        "points": 7.8,
+        "cost_times_per_task": 0.86,
+        "cost_times_full_test_set": 0.86
+       },
+       {
+        "level": "Xhigh",
+        "from": "gpt-6-sol-xhigh",
+        "to": "gpt-6-1-sol-xhigh",
+        "points": 6.8,
+        "cost_times_per_task": 0.75,
+        "cost_times_full_test_set": 0.77
+       },
+       {
+        "level": "Max",
+        "from": "gpt-6-sol",
+        "to": "gpt-6-1-sol",
+        "points": 4.2,
+        "cost_times_per_task": 0.69,
+        "cost_times_full_test_set": 0.7
+       }
+      ],
+      "formula": "as above; GPT-6.1 Sol has no Non-reasoning setting on Artificial Analysis"
+     },
+     {
+      "what": "callout: Opus 5 at Max v Opus 5.5 at Low",
+      "value": {
+       "opus_5_max": 50.8,
+       "opus_5_5_low": 42.3
+      },
+      "formula": "score(claude-opus-5) > score(claude-opus-5-5-low)",
+      "holds": true
+     },
+     {
+      "what": "callout: GPT-6 Sol thinking off v Low, cost per task",
+      "value": {
+       "non_reasoning": 0.3337,
+       "low": 0.1328
+      },
+      "formula": "cost_per_task_usd(gpt-6-sol-non-reasoning) > cost_per_task_usd(gpt-6-sol-low); also true on the full test set ($449.37 v $268.73)",
+      "holds": true
+     }
+    ]
+   },
+   "source_line": "Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026. Cost per task: its average cost to run one test task, US dollars at list prices.",
+   "logos": [
+    "anthropic",
+    "openai",
+    "aa"
+   ],
+   "size": {
+    "width": 1360,
+    "height_estimate": 3213,
+    "height_basis": "measured on the feasibility proof drawn to this spec (house faces, real logos, real rows); the final may differ by a little"
+   },
+   "alt": "Two charts of score against cost per task. Claude Opus 5.5 rises from 42.3 at Low ($0.55 a task) to 57.6 at Max ($5.98); Claude Opus 5, released two months earlier, runs from 39.4 to 50.8 and costs more at most levels. GPT-6 Sol rises from 28.5 with thinking off to 47.6 at Max; GPT-6.1 Sol, a week newer, runs from 42.1 at Low to 51.8 at Max and costs less at every level.",
+   "after": "The size of the gear change surprised me. Artificial Analysis, an independent group that tests these models, ran the same Claude Opus 5.5 through its long set of hard tests at different settings. Thinking as hard as it can, it scored more than a third higher than when thinking a little. The older Opus 5, at its hardest, beat the new one at its lowest. OpenAI's GPT-6 Sol, which OpenAI's help page says powers ChatGPT's thinking settings, scored about two thirds higher at its top developer setting than with thinking off, while the newer GPT-6.1 Sol at its top only edged past it. In both cases the gear moved the score more than the new badge did.",
+   "after_paragraph_number": 18,
+   "after_section": "THE SWITCH THAT MATTERS",
+   "post_json_entry": {
+    "kind": "image",
+    "file": "exhibit-2-model-or-thinking-level.png",
+    "name": "exhibit-2-model-or-thinking-level.png",
+    "logos": [
+     "Anthropic",
+     "OpenAI",
+     "Artificial Analysis"
+    ],
+    "shows": "chart",
+    "data_source": "Artificial Analysis, 17 Oct 2026",
+    "measures": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better; cost per task in US dollars at list prices, lower is cheaper",
+    "purpose": "Which changes the score more, a new model version or the thinking level, and what does each cost?",
+    "after": "The size of the gear change surprised me. Artificial Analysis, an independent gr..."
+   },
+   "article_check": {},
+   "feasibility_proof": {
+    "html": ".cache/visual-intel/design/exhibit-2-model-or-thinking-level.html",
+    "png": ".cache/visual-intel/design/exhibit-2-model-or-thinking-level.png",
+    "phone_png": ".cache/visual-intel/design/exhibit-2-model-or-thinking-level-phone.png",
+    "size": [
+     1360,
+     3213
+    ],
+    "card_py": [
+     "every word can be read on a phone"
+    ],
+    "passed": true,
+    "png_sha256": "08b99acda8c4c8923ea9967127a041f13e2bbe486e42d197f46e086ba8ae390c"
+   }
+  },
+  {
+   "id": "each-step-buys-less",
+   "order": 3,
+   "question": "Is each step up in thinking level worth what it costs?",
+   "kicker": "EXHIBIT 3 · ARTIFICIAL ANALYSIS · 17 OCT 2026",
+   "heading": "Each step up in thinking buys Claude and GPT less for every extra dollar",
+   "standfirst": "One model per panel, its thinking level rising from Low to Max. The last step, Xhigh (extra high) to Max, is in coral.",
+   "takeaway": "On Artificial Analysis's 0 to 100 index, in all six, every step up added fewer points per extra dollar than the one before: Claude Opus 5.5's first step added 8.9 points for 2.4 times the cost, its last 1.6 points for 1.7 times.",
+   "notes": [
+    {
+     "text": "* Artificial Analysis says Claude Haiku 5.5's costs are understated: its 5 times higher price for long inputs is left out.",
+     "placement": "fine print inside the Claude Haiku 5.5 panel, under its title (the title carries the *)"
+    },
+    {
+     "text": "Starts at Low: with thinking off it cost more to run than at Low.",
+     "placement": "fine print inside the GPT-6 Sol panel, under its title"
+    },
+    {
+     "text": "Claude Opus 5, now listed as deprecated, shows the same pattern.",
+     "placement": "source block, last sentence"
+    }
+   ],
+   "chart": {
+    "type": "small multiples: six connected line charts on shared axes, two columns by three rows",
+    "why": "On a straight (not log) cost axis a run of diminishing returns is a curve that flattens; every one of the six flattens at every step. Indexing cost to each model's own Low setting puts a $0.02 model and a $7 model on one scale without hiding either.",
+    "encoding": {
+     "x": "cost per task as a multiple of the model's own Low cost, linear, 1 to 16; gridlines at 1, 4, 8, 12, 16",
+     "y": "points added since Low on the Intelligence Index, 0 to 21; gridlines at 0, 10, 20",
+     "line": "dots at each setting (Low, Medium, High, Xhigh, Max) joined in order; segments Low to Xhigh in mint, 7 px; the last segment, Xhigh to Max, in the accent colour, 7 px",
+     "dots": "20 px, mint; the Max dot in the accent colour",
+     "shared": "same x and y in all six panels, so slopes and lengths compare; y tick labels on the left column only, x tick labels on the bottom row only"
+    },
+    "panels": [
+     {
+      "model": "Claude Opus 5.5",
+      "logo": "anthropic",
+      "title": "Claude Opus 5.5",
+      "end_label": {
+       "model": "Claude Opus 5.5",
+       "line1": "+15.3 points",
+       "line2": "10.9 times the cost"
+      },
+      "points": [
+       {
+        "slug": "claude-opus-5-5-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "claude-opus-5-5-medium",
+        "level": "Medium",
+        "x_times_low_cost": 2.42,
+        "y_points_added": 8.9
+       },
+       {
+        "slug": "claude-opus-5-5-high",
+        "level": "High",
+        "x_times_low_cost": 3.31,
+        "y_points_added": 11.3
+       },
+       {
+        "slug": "claude-opus-5-5-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 6.28,
+        "y_points_added": 13.7
+       },
+       {
+        "slug": "claude-opus-5-5",
+        "level": "Max",
+        "x_times_low_cost": 10.85,
+        "y_points_added": 15.3
+       }
+      ]
+     },
+     {
+      "model": "Claude Sonnet 5.5",
+      "logo": "anthropic",
+      "title": "Claude Sonnet 5.5",
+      "end_label": {
+       "model": "Claude Sonnet 5.5",
+       "line1": "+20.1 points",
+       "line2": "15.8 times the cost"
+      },
+      "points": [
+       {
+        "slug": "claude-sonnet-5-5-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "claude-sonnet-5-5-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.4,
+        "y_points_added": 4.9
+       },
+       {
+        "slug": "claude-sonnet-5-5-high",
+        "level": "High",
+        "x_times_low_cost": 2.56,
+        "y_points_added": 10.9
+       },
+       {
+        "slug": "claude-sonnet-5-5-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 5.83,
+        "y_points_added": 16.0
+       },
+       {
+        "slug": "claude-sonnet-5-5",
+        "level": "Max",
+        "x_times_low_cost": 15.82,
+        "y_points_added": 20.1
+       }
+      ]
+     },
+     {
+      "model": "Claude Haiku 5.5",
+      "logo": "anthropic",
+      "title": "Claude Haiku 5.5",
+      "end_label": {
+       "model": "Claude Haiku 5.5",
+       "line1": "+13.9 points",
+       "line2": "8.7 times the cost"
+      },
+      "points": [
+       {
+        "slug": "claude-haiku-5-5-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "claude-haiku-5-5-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.92,
+        "y_points_added": 5.0
+       },
+       {
+        "slug": "claude-haiku-5-5-high",
+        "level": "High",
+        "x_times_low_cost": 3.24,
+        "y_points_added": 8.3
+       },
+       {
+        "slug": "claude-haiku-5-5-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 5.05,
+        "y_points_added": 11.7
+       },
+       {
+        "slug": "claude-haiku-5-5",
+        "level": "Max",
+        "x_times_low_cost": 8.69,
+        "y_points_added": 13.9
+       }
+      ]
+     },
+     {
+      "model": "Claude Fable 5.1",
+      "logo": "anthropic",
+      "title": "Claude Fable 5.1",
+      "end_label": {
+       "model": "Claude Fable 5.1",
+       "line1": "+6.6 points",
+       "line2": "3.2 times the cost"
+      },
+      "points": [
+       {
+        "slug": "claude-fable-5-1-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "claude-fable-5-1-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.26,
+        "y_points_added": 2.1
+       },
+       {
+        "slug": "claude-fable-5-1-high",
+        "level": "High",
+        "x_times_low_cost": 1.65,
+        "y_points_added": 4.4
+       },
+       {
+        "slug": "claude-fable-5-1-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 2.52,
+        "y_points_added": 6.4
+       },
+       {
+        "slug": "claude-fable-5-1",
+        "level": "Max",
+        "x_times_low_cost": 3.22,
+        "y_points_added": 6.6
+       }
+      ]
+     },
+     {
+      "model": "GPT-6.1 Sol",
+      "logo": "openai",
+      "title": "GPT-6.1 Sol",
+      "end_label": {
+       "model": "GPT-6.1 Sol",
+       "line1": "+9.7 points",
+       "line2": "5.5 times the cost"
+      },
+      "points": [
+       {
+        "slug": "gpt-6-1-sol-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "gpt-6-1-sol-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.63,
+        "y_points_added": 5.7
+       },
+       {
+        "slug": "gpt-6-1-sol-high",
+        "level": "High",
+        "x_times_low_cost": 2.44,
+        "y_points_added": 8.1
+       },
+       {
+        "slug": "gpt-6-1-sol-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 3.0,
+        "y_points_added": 8.9
+       },
+       {
+        "slug": "gpt-6-1-sol",
+        "level": "Max",
+        "x_times_low_cost": 5.54,
+        "y_points_added": 9.7
+       }
+      ]
+     },
+     {
+      "model": "GPT-6 Sol",
+      "logo": "openai",
+      "title": "GPT-6 Sol",
+      "end_label": {
+       "model": "GPT-6 Sol",
+       "line1": "+13.4 points",
+       "line2": "7.9 times the cost"
+      },
+      "points": [
+       {
+        "slug": "gpt-6-sol-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "gpt-6-sol-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.86,
+        "y_points_added": 5.6
+       },
+       {
+        "slug": "gpt-6-sol-high",
+        "level": "High",
+        "x_times_low_cost": 2.81,
+        "y_points_added": 8.2
+       },
+       {
+        "slug": "gpt-6-sol-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 3.92,
+        "y_points_added": 10.0
+       },
+       {
+        "slug": "gpt-6-sol",
+        "level": "Max",
+        "x_times_low_cost": 7.87,
+        "y_points_added": 13.4
+       }
+      ]
+     }
+    ],
+    "panel_px": {
+     "width": 600,
+     "gap": 32,
+     "row_gap": 44,
+     "title_row": 70,
+     "plot": 300,
+     "x_domain": "1 to 16 over 600 px",
+     "y_domain": "0 to 22 over 300 px",
+     "end_label": "two lines of 54 px inside the plot, right-aligned at the lower right; every line leaves that corner empty"
+    },
+    "panel_titles": {
+     "Claude Haiku 5.5": "Claude Haiku 5.5 *",
+     "GPT-6 Sol": "GPT-6 Sol, from Low"
+    },
+    "annotations": [
+     {
+      "panel": "Claude Fable 5.1",
+      "text": "Last step: +0.2 points for 28% more",
+      "placement": "two lines (\"Last step: +0.2 points\" / \"for 28% more\"), right-aligned at the top right of the Fable panel, 54 px, accent colour",
+      "matches_article": "On Fable 5.1, it costs 28% more and barely moves the score."
+     }
+    ],
+    "axes_text": {
+     "x_title": "Cost per task, times the model's Low cost",
+     "y_title": "Points added on the Intelligence Index (0 to 100)",
+     "x_ticks": [
+      "1",
+      "4",
+      "8",
+      "12",
+      "16"
+     ],
+     "y_ticks": [
+      "0",
+      "10",
+      "20"
+     ],
+     "placement": "y title once, above the grid, left-aligned; x title once, under the bottom row"
+    }
+   },
+   "data": {
+    "rows": [
+     {
+      "slug": "claude-opus-5-5-low",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Low",
+      "score": 42.3,
+      "cost_per_task_usd": 0.5512,
+      "cost_usd_full_test_set": 860.33,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-low",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-opus-5-5-medium",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Medium",
+      "score": 51.2,
+      "cost_per_task_usd": 1.336,
+      "cost_usd_full_test_set": 1626.81,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-medium",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5-high",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "High",
+      "score": 53.6,
+      "cost_per_task_usd": 1.8225,
+      "cost_usd_full_test_set": 2172.43,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-high",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Xhigh",
+      "score": 56,
+      "cost_per_task_usd": 3.4591,
+      "cost_usd_full_test_set": 4056.65,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-xhigh",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Max",
+      "score": 57.6,
+      "cost_per_task_usd": 5.982,
+      "cost_usd_full_test_set": 8708.2,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-sonnet-5-5-low",
+      "creator": "Anthropic",
+      "model": "Claude Sonnet 5.5",
+      "thinking_level": "Low",
+      "score": 35.9,
+      "cost_per_task_usd": 0.3452,
+      "cost_usd_full_test_set": 482.13,
+      "release_date": "2026-09-28",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5-low",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-sonnet-5-5-medium",
+      "creator": "Anthropic",
+      "model": "Claude Sonnet 5.5",
+      "thinking_level": "Medium",
+      "score": 40.8,
+      "cost_per_task_usd": 0.4833,
+      "cost_usd_full_test_set": 622.28,
+      "release_date": "2026-09-28",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5-medium",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-sonnet-5-5-high",
+      "creator": "Anthropic",
+      "model": "Claude Sonnet 5.5",
+      "thinking_level": "High",
+      "score": 46.8,
+      "cost_per_task_usd": 0.8844,
+      "cost_usd_full_test_set": 1027.4,
+      "release_date": "2026-09-28",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5-high",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-sonnet-5-5-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Sonnet 5.5",
+      "thinking_level": "Xhigh",
+      "score": 51.9,
+      "cost_per_task_usd": 2.012,
+      "cost_usd_full_test_set": 2176.82,
+      "release_date": "2026-09-28",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5-xhigh",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-sonnet-5-5",
+      "creator": "Anthropic",
+      "model": "Claude Sonnet 5.5",
+      "thinking_level": "Max",
+      "score": 56,
+      "cost_per_task_usd": 5.4609,
+      "cost_usd_full_test_set": 7259.5,
+      "release_date": "2026-09-28",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-sonnet-5-5",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-haiku-5-5-low",
+      "creator": "Anthropic",
+      "model": "Claude Haiku 5.5",
+      "thinking_level": "Low",
+      "score": 29.5,
+      "cost_per_task_usd": 0.0245,
+      "cost_usd_full_test_set": 34.31,
+      "release_date": "2026-10-07",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-low",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-haiku-5-5-medium",
+      "creator": "Anthropic",
+      "model": "Claude Haiku 5.5",
+      "thinking_level": "Medium",
+      "score": 34.5,
+      "cost_per_task_usd": 0.047,
+      "cost_usd_full_test_set": 56.36,
+      "release_date": "2026-10-07",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-medium",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-haiku-5-5-high",
+      "creator": "Anthropic",
+      "model": "Claude Haiku 5.5",
+      "thinking_level": "High",
+      "score": 37.8,
+      "cost_per_task_usd": 0.0794,
+      "cost_usd_full_test_set": 94.07,
+      "release_date": "2026-10-07",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-high",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-haiku-5-5-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Haiku 5.5",
+      "thinking_level": "Xhigh",
+      "score": 41.2,
+      "cost_per_task_usd": 0.1238,
+      "cost_usd_full_test_set": 157.58,
+      "release_date": "2026-10-07",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-xhigh",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-haiku-5-5",
+      "creator": "Anthropic",
+      "model": "Claude Haiku 5.5",
+      "thinking_level": "Max",
+      "score": 43.4,
+      "cost_per_task_usd": 0.2128,
+      "cost_usd_full_test_set": 330.25,
+      "release_date": "2026-10-07",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-fable-5-1-low",
+      "creator": "Anthropic",
+      "model": "Claude Fable 5.1",
+      "thinking_level": "Low",
+      "score": 46.8,
+      "cost_per_task_usd": 2.371,
+      "cost_usd_full_test_set": 3157.66,
+      "release_date": "2026-09-01",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1-low",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-fable-5-1-medium",
+      "creator": "Anthropic",
+      "model": "Claude Fable 5.1",
+      "thinking_level": "Medium",
+      "score": 48.9,
+      "cost_per_task_usd": 2.9826,
+      "cost_usd_full_test_set": 3983.28,
+      "release_date": "2026-09-01",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1-medium",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-fable-5-1-high",
+      "creator": "Anthropic",
+      "model": "Claude Fable 5.1",
+      "thinking_level": "High",
+      "score": 51.2,
+      "cost_per_task_usd": 3.9125,
+      "cost_usd_full_test_set": 5241.59,
+      "release_date": "2026-09-01",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1-high",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-fable-5-1-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Fable 5.1",
+      "thinking_level": "Xhigh",
+      "score": 53.2,
+      "cost_per_task_usd": 5.9783,
+      "cost_usd_full_test_set": 9063.11,
+      "release_date": "2026-09-01",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1-xhigh",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-fable-5-1",
+      "creator": "Anthropic",
+      "model": "Claude Fable 5.1",
+      "thinking_level": "Max",
+      "score": 53.4,
+      "cost_per_task_usd": 7.6297,
+      "cost_usd_full_test_set": 13128.86,
+      "release_date": "2026-09-01",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-fable-5-1",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-low",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Low",
+      "score": 42.1,
+      "cost_per_task_usd": 0.1308,
+      "cost_usd_full_test_set": 250.48,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-low",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-medium",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Medium",
+      "score": 47.8,
+      "cost_per_task_usd": 0.2137,
+      "cost_usd_full_test_set": 361.37,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-medium",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-high",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "High",
+      "score": 50.2,
+      "cost_per_task_usd": 0.3191,
+      "cost_usd_full_test_set": 521.32,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-high",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-xhigh",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Xhigh",
+      "score": 51,
+      "cost_per_task_usd": 0.3929,
+      "cost_usd_full_test_set": 662.28,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-xhigh",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-1-sol",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Max",
+      "score": 51.8,
+      "cost_per_task_usd": 0.7242,
+      "cost_usd_full_test_set": 1081.55,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-low",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Low",
+      "score": 34.2,
+      "cost_per_task_usd": 0.1328,
+      "cost_usd_full_test_set": 268.73,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-low",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-sol-medium",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Medium",
+      "score": 39.8,
+      "cost_per_task_usd": 0.2473,
+      "cost_usd_full_test_set": 416.32,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-medium",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-high",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "High",
+      "score": 42.4,
+      "cost_per_task_usd": 0.3728,
+      "cost_usd_full_test_set": 604.52,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-high",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-xhigh",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Xhigh",
+      "score": 44.2,
+      "cost_per_task_usd": 0.5208,
+      "cost_usd_full_test_set": 854.6,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-xhigh",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "gpt-6-sol",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Max",
+      "score": 47.6,
+      "cost_per_task_usd": 1.0447,
+      "cost_usd_full_test_set": 1535.8,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     }
+    ],
+    "derived": [
+     {
+      "what": "Claude Opus 5.5: each step up from Low",
+      "points_from_low": [
+       {
+        "slug": "claude-opus-5-5-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "claude-opus-5-5-medium",
+        "level": "Medium",
+        "x_times_low_cost": 2.42,
+        "y_points_added": 8.9
+       },
+       {
+        "slug": "claude-opus-5-5-high",
+        "level": "High",
+        "x_times_low_cost": 3.31,
+        "y_points_added": 11.3
+       },
+       {
+        "slug": "claude-opus-5-5-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 6.28,
+        "y_points_added": 13.7
+       },
+       {
+        "slug": "claude-opus-5-5",
+        "level": "Max",
+        "x_times_low_cost": 10.85,
+        "y_points_added": 15.3
+       }
+      ],
+      "steps": [
+       {
+        "from": "Low",
+        "to": "Medium",
+        "points": 8.9,
+        "extra_cost_per_task_usd": 0.7848,
+        "extra_cost_per_point_usd": 0.0882,
+        "step_cost_times_per_task": 2.42,
+        "extra_cost_per_point_full_test_set_usd": 86.12
+       },
+       {
+        "from": "Medium",
+        "to": "High",
+        "points": 2.4,
+        "extra_cost_per_task_usd": 0.4865,
+        "extra_cost_per_point_usd": 0.2027,
+        "step_cost_times_per_task": 1.36,
+        "extra_cost_per_point_full_test_set_usd": 227.34
+       },
+       {
+        "from": "High",
+        "to": "Xhigh",
+        "points": 2.4,
+        "extra_cost_per_task_usd": 1.6366,
+        "extra_cost_per_point_usd": 0.6819,
+        "step_cost_times_per_task": 1.9,
+        "extra_cost_per_point_full_test_set_usd": 785.09
+       },
+       {
+        "from": "Xhigh",
+        "to": "Max",
+        "points": 1.6,
+        "extra_cost_per_task_usd": 2.5229,
+        "extra_cost_per_point_usd": 1.5768,
+        "step_cost_times_per_task": 1.73,
+        "extra_cost_per_point_full_test_set_usd": 2907.22
+       }
+      ],
+      "formula": "x_times_low_cost: cost_per_task_usd(level) / cost_per_task_usd(Low); y_points_added: score(level) - score(Low); extra_cost_per_point_usd: (cost_per_task_usd(to) - cost_per_task_usd(from)) / (score(to) - score(from)). Not printed: it is the slope the chart draws, and it rises at every step for every model (checked on both cost measures and on the unrounded scores)"
+     },
+     {
+      "what": "Claude Sonnet 5.5: each step up from Low",
+      "points_from_low": [
+       {
+        "slug": "claude-sonnet-5-5-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "claude-sonnet-5-5-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.4,
+        "y_points_added": 4.9
+       },
+       {
+        "slug": "claude-sonnet-5-5-high",
+        "level": "High",
+        "x_times_low_cost": 2.56,
+        "y_points_added": 10.9
+       },
+       {
+        "slug": "claude-sonnet-5-5-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 5.83,
+        "y_points_added": 16.0
+       },
+       {
+        "slug": "claude-sonnet-5-5",
+        "level": "Max",
+        "x_times_low_cost": 15.82,
+        "y_points_added": 20.1
+       }
+      ],
+      "steps": [
+       {
+        "from": "Low",
+        "to": "Medium",
+        "points": 4.9,
+        "extra_cost_per_task_usd": 0.1381,
+        "extra_cost_per_point_usd": 0.0282,
+        "step_cost_times_per_task": 1.4,
+        "extra_cost_per_point_full_test_set_usd": 28.6
+       },
+       {
+        "from": "Medium",
+        "to": "High",
+        "points": 6.0,
+        "extra_cost_per_task_usd": 0.4011,
+        "extra_cost_per_point_usd": 0.0668,
+        "step_cost_times_per_task": 1.83,
+        "extra_cost_per_point_full_test_set_usd": 67.52
+       },
+       {
+        "from": "High",
+        "to": "Xhigh",
+        "points": 5.1,
+        "extra_cost_per_task_usd": 1.1276,
+        "extra_cost_per_point_usd": 0.2211,
+        "step_cost_times_per_task": 2.27,
+        "extra_cost_per_point_full_test_set_usd": 225.38
+       },
+       {
+        "from": "Xhigh",
+        "to": "Max",
+        "points": 4.1,
+        "extra_cost_per_task_usd": 3.4489,
+        "extra_cost_per_point_usd": 0.8412,
+        "step_cost_times_per_task": 2.71,
+        "extra_cost_per_point_full_test_set_usd": 1239.68
+       }
+      ],
+      "formula": "x_times_low_cost: cost_per_task_usd(level) / cost_per_task_usd(Low); y_points_added: score(level) - score(Low); extra_cost_per_point_usd: (cost_per_task_usd(to) - cost_per_task_usd(from)) / (score(to) - score(from)). Not printed: it is the slope the chart draws, and it rises at every step for every model (checked on both cost measures and on the unrounded scores)"
+     },
+     {
+      "what": "Claude Haiku 5.5: each step up from Low",
+      "points_from_low": [
+       {
+        "slug": "claude-haiku-5-5-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "claude-haiku-5-5-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.92,
+        "y_points_added": 5.0
+       },
+       {
+        "slug": "claude-haiku-5-5-high",
+        "level": "High",
+        "x_times_low_cost": 3.24,
+        "y_points_added": 8.3
+       },
+       {
+        "slug": "claude-haiku-5-5-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 5.05,
+        "y_points_added": 11.7
+       },
+       {
+        "slug": "claude-haiku-5-5",
+        "level": "Max",
+        "x_times_low_cost": 8.69,
+        "y_points_added": 13.9
+       }
+      ],
+      "steps": [
+       {
+        "from": "Low",
+        "to": "Medium",
+        "points": 5.0,
+        "extra_cost_per_task_usd": 0.0225,
+        "extra_cost_per_point_usd": 0.0045,
+        "step_cost_times_per_task": 1.92,
+        "extra_cost_per_point_full_test_set_usd": 4.41
+       },
+       {
+        "from": "Medium",
+        "to": "High",
+        "points": 3.3,
+        "extra_cost_per_task_usd": 0.0324,
+        "extra_cost_per_point_usd": 0.0098,
+        "step_cost_times_per_task": 1.69,
+        "extra_cost_per_point_full_test_set_usd": 11.43
+       },
+       {
+        "from": "High",
+        "to": "Xhigh",
+        "points": 3.4,
+        "extra_cost_per_task_usd": 0.0444,
+        "extra_cost_per_point_usd": 0.0131,
+        "step_cost_times_per_task": 1.56,
+        "extra_cost_per_point_full_test_set_usd": 18.68
+       },
+       {
+        "from": "Xhigh",
+        "to": "Max",
+        "points": 2.2,
+        "extra_cost_per_task_usd": 0.089,
+        "extra_cost_per_point_usd": 0.0405,
+        "step_cost_times_per_task": 1.72,
+        "extra_cost_per_point_full_test_set_usd": 78.49
+       }
+      ],
+      "formula": "x_times_low_cost: cost_per_task_usd(level) / cost_per_task_usd(Low); y_points_added: score(level) - score(Low); extra_cost_per_point_usd: (cost_per_task_usd(to) - cost_per_task_usd(from)) / (score(to) - score(from)). Not printed: it is the slope the chart draws, and it rises at every step for every model (checked on both cost measures and on the unrounded scores)"
+     },
+     {
+      "what": "Claude Fable 5.1: each step up from Low",
+      "points_from_low": [
+       {
+        "slug": "claude-fable-5-1-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "claude-fable-5-1-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.26,
+        "y_points_added": 2.1
+       },
+       {
+        "slug": "claude-fable-5-1-high",
+        "level": "High",
+        "x_times_low_cost": 1.65,
+        "y_points_added": 4.4
+       },
+       {
+        "slug": "claude-fable-5-1-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 2.52,
+        "y_points_added": 6.4
+       },
+       {
+        "slug": "claude-fable-5-1",
+        "level": "Max",
+        "x_times_low_cost": 3.22,
+        "y_points_added": 6.6
+       }
+      ],
+      "steps": [
+       {
+        "from": "Low",
+        "to": "Medium",
+        "points": 2.1,
+        "extra_cost_per_task_usd": 0.6116,
+        "extra_cost_per_point_usd": 0.2912,
+        "step_cost_times_per_task": 1.26,
+        "extra_cost_per_point_full_test_set_usd": 393.15
+       },
+       {
+        "from": "Medium",
+        "to": "High",
+        "points": 2.3,
+        "extra_cost_per_task_usd": 0.9299,
+        "extra_cost_per_point_usd": 0.4043,
+        "step_cost_times_per_task": 1.31,
+        "extra_cost_per_point_full_test_set_usd": 547.09
+       },
+       {
+        "from": "High",
+        "to": "Xhigh",
+        "points": 2.0,
+        "extra_cost_per_task_usd": 2.0658,
+        "extra_cost_per_point_usd": 1.0329,
+        "step_cost_times_per_task": 1.53,
+        "extra_cost_per_point_full_test_set_usd": 1910.76
+       },
+       {
+        "from": "Xhigh",
+        "to": "Max",
+        "points": 0.2,
+        "extra_cost_per_task_usd": 1.6514,
+        "extra_cost_per_point_usd": 8.257,
+        "step_cost_times_per_task": 1.28,
+        "extra_cost_per_point_full_test_set_usd": 20328.75
+       }
+      ],
+      "formula": "x_times_low_cost: cost_per_task_usd(level) / cost_per_task_usd(Low); y_points_added: score(level) - score(Low); extra_cost_per_point_usd: (cost_per_task_usd(to) - cost_per_task_usd(from)) / (score(to) - score(from)). Not printed: it is the slope the chart draws, and it rises at every step for every model (checked on both cost measures and on the unrounded scores)"
+     },
+     {
+      "what": "GPT-6.1 Sol: each step up from Low",
+      "points_from_low": [
+       {
+        "slug": "gpt-6-1-sol-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "gpt-6-1-sol-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.63,
+        "y_points_added": 5.7
+       },
+       {
+        "slug": "gpt-6-1-sol-high",
+        "level": "High",
+        "x_times_low_cost": 2.44,
+        "y_points_added": 8.1
+       },
+       {
+        "slug": "gpt-6-1-sol-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 3.0,
+        "y_points_added": 8.9
+       },
+       {
+        "slug": "gpt-6-1-sol",
+        "level": "Max",
+        "x_times_low_cost": 5.54,
+        "y_points_added": 9.7
+       }
+      ],
+      "steps": [
+       {
+        "from": "Low",
+        "to": "Medium",
+        "points": 5.7,
+        "extra_cost_per_task_usd": 0.0829,
+        "extra_cost_per_point_usd": 0.0145,
+        "step_cost_times_per_task": 1.63,
+        "extra_cost_per_point_full_test_set_usd": 19.45
+       },
+       {
+        "from": "Medium",
+        "to": "High",
+        "points": 2.4,
+        "extra_cost_per_task_usd": 0.1054,
+        "extra_cost_per_point_usd": 0.0439,
+        "step_cost_times_per_task": 1.49,
+        "extra_cost_per_point_full_test_set_usd": 66.65
+       },
+       {
+        "from": "High",
+        "to": "Xhigh",
+        "points": 0.8,
+        "extra_cost_per_task_usd": 0.0738,
+        "extra_cost_per_point_usd": 0.0923,
+        "step_cost_times_per_task": 1.23,
+        "extra_cost_per_point_full_test_set_usd": 176.2
+       },
+       {
+        "from": "Xhigh",
+        "to": "Max",
+        "points": 0.8,
+        "extra_cost_per_task_usd": 0.3313,
+        "extra_cost_per_point_usd": 0.4141,
+        "step_cost_times_per_task": 1.84,
+        "extra_cost_per_point_full_test_set_usd": 524.09
+       }
+      ],
+      "formula": "x_times_low_cost: cost_per_task_usd(level) / cost_per_task_usd(Low); y_points_added: score(level) - score(Low); extra_cost_per_point_usd: (cost_per_task_usd(to) - cost_per_task_usd(from)) / (score(to) - score(from)). Not printed: it is the slope the chart draws, and it rises at every step for every model (checked on both cost measures and on the unrounded scores)"
+     },
+     {
+      "what": "GPT-6 Sol: each step up from Low",
+      "points_from_low": [
+       {
+        "slug": "gpt-6-sol-low",
+        "level": "Low",
+        "x_times_low_cost": 1.0,
+        "y_points_added": 0.0
+       },
+       {
+        "slug": "gpt-6-sol-medium",
+        "level": "Medium",
+        "x_times_low_cost": 1.86,
+        "y_points_added": 5.6
+       },
+       {
+        "slug": "gpt-6-sol-high",
+        "level": "High",
+        "x_times_low_cost": 2.81,
+        "y_points_added": 8.2
+       },
+       {
+        "slug": "gpt-6-sol-xhigh",
+        "level": "Xhigh",
+        "x_times_low_cost": 3.92,
+        "y_points_added": 10.0
+       },
+       {
+        "slug": "gpt-6-sol",
+        "level": "Max",
+        "x_times_low_cost": 7.87,
+        "y_points_added": 13.4
+       }
+      ],
+      "steps": [
+       {
+        "from": "Low",
+        "to": "Medium",
+        "points": 5.6,
+        "extra_cost_per_task_usd": 0.1145,
+        "extra_cost_per_point_usd": 0.0204,
+        "step_cost_times_per_task": 1.86,
+        "extra_cost_per_point_full_test_set_usd": 26.36
+       },
+       {
+        "from": "Medium",
+        "to": "High",
+        "points": 2.6,
+        "extra_cost_per_task_usd": 0.1255,
+        "extra_cost_per_point_usd": 0.0483,
+        "step_cost_times_per_task": 1.51,
+        "extra_cost_per_point_full_test_set_usd": 72.38
+       },
+       {
+        "from": "High",
+        "to": "Xhigh",
+        "points": 1.8,
+        "extra_cost_per_task_usd": 0.148,
+        "extra_cost_per_point_usd": 0.0822,
+        "step_cost_times_per_task": 1.4,
+        "extra_cost_per_point_full_test_set_usd": 138.93
+       },
+       {
+        "from": "Xhigh",
+        "to": "Max",
+        "points": 3.4,
+        "extra_cost_per_task_usd": 0.5239,
+        "extra_cost_per_point_usd": 0.1541,
+        "step_cost_times_per_task": 2.01,
+        "extra_cost_per_point_full_test_set_usd": 200.35
+       }
+      ],
+      "formula": "x_times_low_cost: cost_per_task_usd(level) / cost_per_task_usd(Low); y_points_added: score(level) - score(Low); extra_cost_per_point_usd: (cost_per_task_usd(to) - cost_per_task_usd(from)) / (score(to) - score(from)). Not printed: it is the slope the chart draws, and it rises at every step for every model (checked on both cost measures and on the unrounded scores)"
+     },
+     {
+      "what": "Claude Opus 5 (deprecated, not drawn): same check",
+      "steps": [
+       {
+        "from": "Low",
+        "to": "Medium",
+        "points": 5.4,
+        "extra_cost_per_task_usd": 1.0912,
+        "extra_cost_per_point_usd": 0.2021,
+        "step_cost_times_per_task": 1.99,
+        "extra_cost_per_point_full_test_set_usd": 216.85
+       },
+       {
+        "from": "Medium",
+        "to": "High",
+        "points": 3.3,
+        "extra_cost_per_task_usd": 1.4238,
+        "extra_cost_per_point_usd": 0.4315,
+        "step_cost_times_per_task": 1.65,
+        "extra_cost_per_point_full_test_set_usd": 484.78
+       },
+       {
+        "from": "High",
+        "to": "Xhigh",
+        "points": 1.6,
+        "extra_cost_per_task_usd": 1.2645,
+        "extra_cost_per_point_usd": 0.7903,
+        "step_cost_times_per_task": 1.35,
+        "extra_cost_per_point_full_test_set_usd": 960.05
+       },
+       {
+        "from": "Xhigh",
+        "to": "Max",
+        "points": 1.1,
+        "extra_cost_per_task_usd": 0.9806,
+        "extra_cost_per_point_usd": 0.8915,
+        "step_cost_times_per_task": 1.2,
+        "extra_cost_per_point_full_test_set_usd": 1279.07
+       }
+      ],
+      "formula": "as above; it rises at every step too"
+     }
+    ],
+    "not_printed_why": "Cost per extra point is not printed as a number: on the one-decimal scores Fable 5.1's last step is 0.2 points, so a per-point price ($8.26 on one-decimal scores, $10.89 on the unrounded ones) is too sensitive to rounding to print. The slope says it without the number."
+   },
+   "source_line": "Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026. Cost per task in US dollars at list prices. Points and multiples: our arithmetic.",
+   "logos": [
+    "anthropic",
+    "openai",
+    "aa"
+   ],
+   "size": {
+    "width": 1360,
+    "height_estimate": 3097,
+    "height_basis": "measured on the feasibility proof drawn to this spec (house faces, real logos, real rows); the final may differ by a little"
+   },
+   "alt": "Six small line charts, one per model, of points added against cost as a multiple of the Low setting. Every line climbs steeply at first and flattens at each step. Claude Opus 5.5 adds 15.3 points for 10.9 times the cost; Claude Sonnet 5.5 adds 20.1 for 15.8 times; Claude Haiku 5.5 13.9 for 8.7 times; Claude Fable 5.1 6.6 for 3.2 times, its last step adding 0.2 points for 28% more; GPT-6.1 Sol 9.7 for 5.5 times; GPT-6 Sol 13.4 for 7.9 times.",
+   "after": "It isn't a straight line, though, and that matters for where this is heading. Each step up buys less than the one before. On Artificial Analysis's tests, moving Opus 5.5 from low to medium cost about two and a half times as much per task and brought the biggest jump in its score. Moving it from medium to max cost another four and a half times as much, for a smaller jump. Bottom to top, that's about 11 times the cost for a score just over a third higher. Every current model from Anthropic and OpenAI on those tests works the same way: the top setting costs several times more than the bottom one, and the score goes up by far less. The last step up is the worst deal of all. On Fable 5.1, it costs 28% more and barely moves the score. And the setting can beat the model. Claude Haiku 5.5, the cheapest of Anthropic's current models, on its highest setting edged past Opus 5.5 on its lowest, for less than half the cost per task. Sometimes the top gear even scores lower than the one below it. On Hex's data-analysis test, GPT-6 Sol scored 61.3% on its Xhigh (extra high) setting and 57% on Max, which costs more. Thinking can be pure waste, too: researchers asked reasoning models \"what is the answer of 2 plus 3?\" and found they \"consumed 1,953% more tokens than conventional models to reach the same answer.\" (Tokens are the word pieces an AI reads and writes, and what developers pay for.) One wrote out 13 solutions. And sometimes the new name really is the bigger step. Anthropic says Opus 5.5 on its default setting \"beats Opus 5 at max effort for about a fifth of the cost\" on one test of computer tasks.",
+   "after_paragraph_number": 20,
+   "after_section": "THE SWITCH THAT MATTERS",
+   "post_json_entry": {
+    "kind": "image",
+    "file": "exhibit-3-each-step-buys-less.png",
+    "name": "exhibit-3-each-step-buys-less.png",
+    "logos": [
+     "Anthropic",
+     "OpenAI",
+     "Artificial Analysis"
+    ],
+    "shows": "chart",
+    "data_source": "Artificial Analysis, 17 Oct 2026",
+    "measures": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better; cost per task in US dollars at list prices, lower is cheaper",
+    "purpose": "Is each step up in thinking level worth what it costs?",
+    "after": "It isn't a straight line, though, and that matters for where this is heading. Ea..."
+   },
+   "article_check": {},
+   "feasibility_proof": {
+    "html": ".cache/visual-intel/design/exhibit-3-each-step-buys-less.html",
+    "png": ".cache/visual-intel/design/exhibit-3-each-step-buys-less.png",
+    "phone_png": ".cache/visual-intel/design/exhibit-3-each-step-buys-less-phone.png",
+    "size": [
+     1360,
+     3097
+    ],
+    "card_py": [
+     "every word can be read on a phone"
+    ],
+    "passed": true,
+    "png_sha256": "ffed49584833d38d3e1273de433afc10cc5ef61ec69a54ee47930438b3afeec9"
+   }
+  },
+  {
+   "id": "new-version-or-more-thinking",
+   "order": 4,
+   "question": "Which buys more intelligence for the money: a new model version or a higher thinking level?",
+   "kicker": "EXHIBIT 4 · ARTIFICIAL ANALYSIS · 17 OCT 2026",
+   "heading": "A new Claude Opus or GPT Sol adds fewer points than more thinking, but costs less",
+   "standfirst": "Points each change added on the Intelligence Index (0 to 100), and what it did to the cost per task.",
+   "takeaway": "On Artificial Analysis's 0 to 100 index, more thinking on the newest Claude Opus and GPT Sol added 9.7 to 15.3 points for 5.5 to 10.9 times the cost per task; the new version added 2.9 to 8.0 points at the same level and cost less at 9 of the 10 levels.",
+   "notes": [
+    {
+     "text": "GPT-6 Sol, from thinking off (Non-reasoning) to Max: +19.1 points for 3.1 times the cost. GPT-6.1 Sol has no thinking-off setting.",
+     "placement": "fine print under the OpenAI row"
+    },
+    {
+     "text": "Claude Opus 5 and GPT-6 Sol are now listed as deprecated; results as measured.",
+     "placement": "source block, last sentence"
+    }
+   ],
+   "chart": {
+    "type": "a two by two grid of stat tiles (rows: Claude Opus, GPT Sol; columns: more thinking, new version), each with a big number, a bar on one shared points scale, and its cost",
+    "why": "The question is a straight comparison of two levers on two model lines, so a grid answers it at a glance: the left column's numbers and bars are longer, the right column's costs are lower. A bar chart with six labelled rows ran past 2,500 px at the phone floor.",
+    "encoding": {
+     "grid": "two columns of 600 px with a 32 px gutter; a two-line column head over each, 54 px (\"More thinking\" in mint over \"same model\"; \"A new version\" in cream over \"same thinking level\", second lines Archivo 500 at 70%); a row head with the company logo (56 px) and the model line (60 px Archivo 700) over each row",
+     "tile": "#16221D fill, 12 px corners, 40 px padding; contents top to bottom: big number (Anton 104 px), what it is (54 px Archivo 500, up to 2 lines), bar, cost (54 px Archivo 700, up to 2 lines)",
+     "bar": "one shared scale in every tile: 0 to 20 points over 520 px (26 px a point), 40 px tall, on a cream-at-14% track. More thinking: solid mint to the gain. New version: solid cream to the smallest gain across the five matched levels, then an unfilled 3 px cream outline to the largest, with a 12 px dot at each of the five gains (ink on the solid part, cream on the outline)",
+     "cost_colour": "accent #FF6A4D where the change costs more, mint where it costs less"
+    },
+    "tiles": [
+     {
+      "row": "Anthropic · Claude Opus",
+      "column": "More thinking, same model",
+      "model": "Claude Opus 5.5",
+      "big_number": "+15.3",
+      "big_colour": "mint",
+      "under": "points, Opus 5.5 from Low to Max",
+      "bar": {
+       "kind": "solid",
+       "to": 15.3,
+       "colour": "mint"
+      },
+      "cost": "10.9 times the cost per task",
+      "cost_colour": "accent",
+      "slugs": [
+       "claude-opus-5-5-low",
+       "claude-opus-5-5"
+      ]
+     },
+     {
+      "row": "Anthropic · Claude Opus",
+      "column": "New version, same thinking level",
+      "model": "Claude Opus 5 to Claude Opus 5.5",
+      "big_number": "+2.9 to +6.8",
+      "big_colour": "cream",
+      "under": "points, Opus 5 to Opus 5.5 at each level",
+      "bar": {
+       "kind": "range",
+       "solid_to": 2.9,
+       "outline_to": 6.8,
+       "dots_at": [
+        2.9,
+        6.4,
+        5.5,
+        6.3,
+        6.8
+       ],
+       "colour": "cream"
+      },
+      "cost": "0.50 to 1.02 times the cost: cheaper at 4 of 5 levels",
+      "cost_colour": "mint",
+      "slugs": [
+       "claude-opus-5-low",
+       "claude-opus-5-medium",
+       "claude-opus-5-high",
+       "claude-opus-5-xhigh",
+       "claude-opus-5",
+       "claude-opus-5-5-low",
+       "claude-opus-5-5-medium",
+       "claude-opus-5-5-high",
+       "claude-opus-5-5-xhigh",
+       "claude-opus-5-5"
+      ]
+     },
+     {
+      "row": "OpenAI · GPT Sol",
+      "column": "More thinking, same model",
+      "model": "GPT-6.1 Sol",
+      "big_number": "+9.7",
+      "big_colour": "mint",
+      "under": "points, GPT-6.1 Sol from Low to Max",
+      "bar": {
+       "kind": "solid",
+       "to": 9.7,
+       "colour": "mint"
+      },
+      "cost": "5.5 times the cost per task",
+      "cost_colour": "accent",
+      "slugs": [
+       "gpt-6-1-sol-low",
+       "gpt-6-1-sol"
+      ]
+     },
+     {
+      "row": "OpenAI · GPT Sol",
+      "column": "New version, same thinking level",
+      "model": "GPT-6 Sol to GPT-6.1 Sol",
+      "big_number": "+4.2 to +8.0",
+      "big_colour": "cream",
+      "under": "points, GPT-6 Sol to GPT-6.1 Sol at each level",
+      "bar": {
+       "kind": "range",
+       "solid_to": 4.2,
+       "outline_to": 8.0,
+       "dots_at": [
+        7.9,
+        8.0,
+        7.8,
+        6.8,
+        4.2
+       ],
+       "colour": "cream"
+      },
+      "cost": "0.69 to 0.98 times the cost: cheaper at every level",
+      "cost_colour": "mint",
+      "slugs": [
+       "gpt-6-sol-low",
+       "gpt-6-sol-medium",
+       "gpt-6-sol-high",
+       "gpt-6-sol-xhigh",
+       "gpt-6-sol",
+       "gpt-6-1-sol-low",
+       "gpt-6-1-sol-medium",
+       "gpt-6-1-sol-high",
+       "gpt-6-1-sol-xhigh",
+       "gpt-6-1-sol"
+      ]
+     }
+    ],
+    "axes_text": {
+     "bar_scale": "a 0, 10, 20 tick row (IBM Plex Mono 54 px) under the bottom-left tile only: \"0\", \"10\", \"20 points\""
+    }
+   },
+   "data": {
+    "rows": [
+     {
+      "slug": "claude-opus-5-5-low",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Low",
+      "score": 42.3,
+      "cost_per_task_usd": 0.5512,
+      "cost_usd_full_test_set": 860.33,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-low",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-opus-5-5-medium",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Medium",
+      "score": 51.2,
+      "cost_per_task_usd": 1.336,
+      "cost_usd_full_test_set": 1626.81,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-medium",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5-high",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "High",
+      "score": 53.6,
+      "cost_per_task_usd": 1.8225,
+      "cost_usd_full_test_set": 2172.43,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-high",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Xhigh",
+      "score": 56,
+      "cost_per_task_usd": 3.4591,
+      "cost_usd_full_test_set": 4056.65,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-xhigh",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Max",
+      "score": 57.6,
+      "cost_per_task_usd": 5.982,
+      "cost_usd_full_test_set": 8708.2,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-opus-5-low",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "Low",
+      "score": 39.4,
+      "cost_per_task_usd": 1.0983,
+      "cost_usd_full_test_set": 1560.91,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-low",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-opus-5-medium",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "Medium",
+      "score": 44.8,
+      "cost_per_task_usd": 2.1895,
+      "cost_usd_full_test_set": 2731.91,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-medium",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-high",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "High",
+      "score": 48.1,
+      "cost_per_task_usd": 3.6133,
+      "cost_usd_full_test_set": 4331.68,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-high",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "claude-opus-5-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "Xhigh",
+      "score": 49.7,
+      "cost_per_task_usd": 4.8778,
+      "cost_usd_full_test_set": 5867.76,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-xhigh",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-opus-5",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5",
+      "thinking_level": "Max",
+      "score": 50.8,
+      "cost_per_task_usd": 5.8584,
+      "cost_usd_full_test_set": 7274.74,
+      "release_date": "2026-07-24",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-low",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Low",
+      "score": 42.1,
+      "cost_per_task_usd": 0.1308,
+      "cost_usd_full_test_set": 250.48,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-low",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-medium",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Medium",
+      "score": 47.8,
+      "cost_per_task_usd": 0.2137,
+      "cost_usd_full_test_set": 361.37,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-medium",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-high",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "High",
+      "score": 50.2,
+      "cost_per_task_usd": 0.3191,
+      "cost_usd_full_test_set": 521.32,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-high",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-xhigh",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Xhigh",
+      "score": 51,
+      "cost_per_task_usd": 0.3929,
+      "cost_usd_full_test_set": 662.28,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-xhigh",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-1-sol",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Max",
+      "score": 51.8,
+      "cost_per_task_usd": 0.7242,
+      "cost_usd_full_test_set": 1081.55,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-non-reasoning",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Non-reasoning",
+      "score": 28.5,
+      "cost_per_task_usd": 0.3337,
+      "cost_usd_full_test_set": 449.37,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-non-reasoning",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-low",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Low",
+      "score": 34.2,
+      "cost_per_task_usd": 0.1328,
+      "cost_usd_full_test_set": 268.73,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-low",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-sol-medium",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Medium",
+      "score": 39.8,
+      "cost_per_task_usd": 0.2473,
+      "cost_usd_full_test_set": 416.32,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-medium",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-high",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "High",
+      "score": 42.4,
+      "cost_per_task_usd": 0.3728,
+      "cost_usd_full_test_set": 604.52,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-high",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-sol-xhigh",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Xhigh",
+      "score": 44.2,
+      "cost_per_task_usd": 0.5208,
+      "cost_usd_full_test_set": 854.6,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol-xhigh",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "gpt-6-sol",
+      "creator": "OpenAI",
+      "model": "GPT-6 Sol",
+      "thinking_level": "Max",
+      "score": 47.6,
+      "cost_per_task_usd": 1.0447,
+      "cost_usd_full_test_set": 1535.8,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": true,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-sol",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     }
+    ],
+    "derived": [
+     {
+      "what": "thinking ranges",
+      "value": {
+       "Claude Opus 5.5": {
+        "from": "claude-opus-5-5-low",
+        "to": "claude-opus-5-5",
+        "points": 15.3,
+        "cost_times_per_task": 10.85,
+        "cost_times_full_test_set": 10.12
+       },
+       "Claude Opus 5": {
+        "from": "claude-opus-5-low",
+        "to": "claude-opus-5",
+        "points": 11.4,
+        "cost_times_per_task": 5.33,
+        "cost_times_full_test_set": 4.66
+       },
+       "GPT-6.1 Sol": {
+        "from": "gpt-6-1-sol-low",
+        "to": "gpt-6-1-sol",
+        "points": 9.7,
+        "cost_times_per_task": 5.54,
+        "cost_times_full_test_set": 4.32
+       },
+       "GPT-6 Sol": {
+        "from": "gpt-6-sol-non-reasoning",
+        "to": "gpt-6-sol",
+        "points": 19.1,
+        "cost_times_per_task": 3.13,
+        "cost_times_full_test_set": 3.42
+       }
+      },
+      "formula": "derived.json thinking_range: points_gained and cost_multiple_per_task"
+     },
+     {
+      "what": "new version at each matched level",
+      "value": {
+       "Claude Opus 5 to 5.5": [
+        {
+         "level": "Low",
+         "from": "claude-opus-5-low",
+         "to": "claude-opus-5-5-low",
+         "points": 2.9,
+         "cost_times_per_task": 0.5,
+         "cost_times_full_test_set": 0.55
+        },
+        {
+         "level": "Medium",
+         "from": "claude-opus-5-medium",
+         "to": "claude-opus-5-5-medium",
+         "points": 6.4,
+         "cost_times_per_task": 0.61,
+         "cost_times_full_test_set": 0.6
+        },
+        {
+         "level": "High",
+         "from": "claude-opus-5-high",
+         "to": "claude-opus-5-5-high",
+         "points": 5.5,
+         "cost_times_per_task": 0.5,
+         "cost_times_full_test_set": 0.5
+        },
+        {
+         "level": "Xhigh",
+         "from": "claude-opus-5-xhigh",
+         "to": "claude-opus-5-5-xhigh",
+         "points": 6.3,
+         "cost_times_per_task": 0.71,
+         "cost_times_full_test_set": 0.69
+        },
+        {
+         "level": "Max",
+         "from": "claude-opus-5",
+         "to": "claude-opus-5-5",
+         "points": 6.8,
+         "cost_times_per_task": 1.02,
+         "cost_times_full_test_set": 1.2
+        }
+       ],
+       "GPT-6 Sol to 6.1 Sol": [
+        {
+         "level": "Low",
+         "from": "gpt-6-sol-low",
+         "to": "gpt-6-1-sol-low",
+         "points": 7.9,
+         "cost_times_per_task": 0.98,
+         "cost_times_full_test_set": 0.93
+        },
+        {
+         "level": "Medium",
+         "from": "gpt-6-sol-medium",
+         "to": "gpt-6-1-sol-medium",
+         "points": 8.0,
+         "cost_times_per_task": 0.86,
+         "cost_times_full_test_set": 0.87
+        },
+        {
+         "level": "High",
+         "from": "gpt-6-sol-high",
+         "to": "gpt-6-1-sol-high",
+         "points": 7.8,
+         "cost_times_per_task": 0.86,
+         "cost_times_full_test_set": 0.86
+        },
+        {
+         "level": "Xhigh",
+         "from": "gpt-6-sol-xhigh",
+         "to": "gpt-6-1-sol-xhigh",
+         "points": 6.8,
+         "cost_times_per_task": 0.75,
+         "cost_times_full_test_set": 0.77
+        },
+        {
+         "level": "Max",
+         "from": "gpt-6-sol",
+         "to": "gpt-6-1-sol",
+         "points": 4.2,
+         "cost_times_per_task": 0.69,
+         "cost_times_full_test_set": 0.7
+        }
+       ]
+      },
+      "formula": "derived.json model_upgrades_matched_level: points_gained and cost_multiple_per_task"
+     },
+     {
+      "what": "levels where the newer version cost less per task",
+      "value": "9 of 10 (full test set: 9 of 10)",
+      "formula": "count of cost_times_per_task < 1; the one that did not: Opus 5.5 at Max, 1.02 times per task (1.20 times on the full test set)"
+     }
+    ]
+   },
+   "source_line": "Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026. Cost per task in US dollars at list prices. Points and multiples: our arithmetic.",
+   "logos": [
+    "anthropic",
+    "openai",
+    "aa"
+   ],
+   "size": {
+    "width": 1360,
+    "height_estimate": 3258,
+    "height_basis": "measured on the feasibility proof drawn to this spec (house faces, real logos, real rows); the final may differ by a little"
+   },
+   "alt": "Four tiles. Claude Opus 5.5 from Low to Max adds 15.3 points for 10.9 times the cost; Opus 5 to Opus 5.5 at the same level adds 2.9 to 6.8 points at 0.50 to 1.02 times the cost. GPT-6.1 Sol from Low to Max adds 9.7 points for 5.5 times; GPT-6 Sol to GPT-6.1 Sol at the same level adds 4.2 to 8.0 points at 0.69 to 0.98 times the cost.",
+   "after": "That's also why a higher gear eats into your plan faster. Anthropic's help page for the Claude app says higher effort means responses \"take longer and use more tokens, so you'll reach your usage limits faster.\" Changing model can do the same, but not always. Anthropic charges developers two and a half times as much for the same amount of writing from Fable 5.1, the model it points them to when Opus 5.5 falls short, as from Opus 5.5. A newer version often costs less, as the Opus 5.5 example above shows.",
+   "after_paragraph_number": 24,
+   "after_section": "WHAT THINKING COSTS THEM",
+   "post_json_entry": {
+    "kind": "image",
+    "file": "exhibit-4-new-version-or-more-thinking.png",
+    "name": "exhibit-4-new-version-or-more-thinking.png",
+    "logos": [
+     "Anthropic",
+     "OpenAI",
+     "Artificial Analysis"
+    ],
+    "shows": "chart",
+    "data_source": "Artificial Analysis, 17 Oct 2026",
+    "measures": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better; cost per task in US dollars at list prices, lower is cheaper",
+    "purpose": "Which buys more intelligence for the money: a new model version or a higher thinking level?",
+    "after": "That's also why a higher gear eats into your plan faster. Anthropic's help page ..."
+   },
+   "article_check": {},
+   "feasibility_proof": {
+    "html": ".cache/visual-intel/design/exhibit-4-new-version-or-more-thinking.html",
+    "png": ".cache/visual-intel/design/exhibit-4-new-version-or-more-thinking.png",
+    "phone_png": ".cache/visual-intel/design/exhibit-4-new-version-or-more-thinking-phone.png",
+    "size": [
+     1360,
+     3258
+    ],
+    "card_py": [
+     "every word can be read on a phone"
+    ],
+    "passed": true,
+    "png_sha256": "9d241c00aff48cb096a8cb9356d450c00f2e41f8c0d7ccd16576ee0f96333a03"
+   }
+  },
+  {
+   "id": "cheapest-route-to-each-score",
+   "order": 5,
+   "question": "If I need a given level of intelligence, which model and thinking level gets there cheapest, and where do the defaults land?",
+   "kicker": "EXHIBIT 5 · ARTIFICIAL ANALYSIS · 17 OCT 2026",
+   "heading": "The cheapest route to each score mixes Claude and GPT models and thinking levels",
+   "standfirst": "For each score on the Intelligence Index (0 to 100), the current model and thinking level that reaches it at the lowest cost per task.",
+   "takeaway": "On Artificial Analysis's 0 to 100 index, scores up to 50 cost 12 to 32 cents a task at the cheapest; 55 takes Claude Opus 5.5 at Xhigh for $3.46, about 11 times as much, and Opus 5.5 on Anthropic's default (Medium) scores 51.2 for $1.34.",
+   "notes": [
+    {
+     "text": "* Artificial Analysis says Claude Haiku 5.5's costs are understated: its 5 times higher price for long inputs is left out.",
+     "placement": "fine print directly under the 40 row (the Haiku figures carry the *)"
+    },
+    {
+     "text": "ChatGPT is not placed: OpenAI does not say which of these settings its app's levels match. Your own tasks may rank them differently.",
+     "placement": "fine print under the For comparison rows"
+    }
+   ],
+   "chart": {
+    "type": "ranked table with bars (a price ladder): one row per target score, a bar of cost per task from zero",
+    "encoding": {
+     "rows": "five rows, lowest target at the top, 2 px rules between; left column 210 px: the target as \"40+\", \"45+\", \"50+\", \"55+\", \"Top\" (Anton 80 px). Right: line 1, logo (46 px) + model and thinking level (54 px Archivo 700, no wrap) with its score to one decimal right-aligned (54 px Plex Mono); line 2, the bar with the dollar figure at its end (Anton 64 px). Column heads, 54 px Archivo 500 at 70%: \"Score\" and \"Cheapest way there, and its score\"",
+     "x": "cost per task, US dollars, linear from $0 to $6, bar track 640 px; gridlines at $0, $2, $4, $6",
+     "bars": "cream at 80% up to 50 or more; the 55 and top rows in the accent colour #FF6A4D, the two that cost dollars, not cents",
+     "tie_row": "the 40 row shows both: Claude Haiku 5.5 at Xhigh, 41.2, $0.12, marked *, and under it GPT-6.1 Sol at Low, 42.1, $0.13: a near tie, and Artificial Analysis says Haiku's cost is understated",
+     "jump": "an accent bracket between the 50 and 55 rows: \"11 times the cost for 5.8 more points\"",
+     "reference_band": "under the ladder, a 2 px rule at 40%, then \"For comparison\" (54 px, cream at 75%) and three rows in the same columns, with outlined (unfilled, 3 px cream) bars; the left column says \"Default\" (54 px Archivo 700) for the two Anthropic defaults and \"Google\" for Gemini 4 Argon"
+    },
+    "rows": [
+     {
+      "target": 40,
+      "label": "40 or more",
+      "cheapest": "claude-haiku-5-5-xhigh",
+      "model": "Claude Haiku 5.5",
+      "level": "Xhigh",
+      "score": 41.2,
+      "cost_per_task_usd": 0.1238,
+      "cost_shown": "$0.12",
+      "runner_up": "gpt-6-1-sol-low",
+      "runner_up_cost_per_task_usd": 0.1308
+     },
+     {
+      "target": 45,
+      "label": "45 or more",
+      "cheapest": "gpt-6-1-sol-medium",
+      "model": "GPT-6.1 Sol",
+      "level": "Medium",
+      "score": 47.8,
+      "cost_per_task_usd": 0.2137,
+      "cost_shown": "$0.21",
+      "runner_up": "gpt-6-1-sol-high",
+      "runner_up_cost_per_task_usd": 0.3191
+     },
+     {
+      "target": 50,
+      "label": "50 or more",
+      "cheapest": "gpt-6-1-sol-high",
+      "model": "GPT-6.1 Sol",
+      "level": "High",
+      "score": 50.2,
+      "cost_per_task_usd": 0.3191,
+      "cost_shown": "$0.32",
+      "runner_up": "gpt-6-1-sol-xhigh",
+      "runner_up_cost_per_task_usd": 0.3929
+     },
+     {
+      "target": 55,
+      "label": "55 or more",
+      "cheapest": "claude-opus-5-5-xhigh",
+      "model": "Claude Opus 5.5",
+      "level": "Xhigh",
+      "score": 56,
+      "cost_per_task_usd": 3.4591,
+      "cost_shown": "$3.46",
+      "runner_up": "claude-sonnet-5-5",
+      "runner_up_cost_per_task_usd": 5.4609
+     },
+     {
+      "target": 57.6,
+      "label": "The top score",
+      "cheapest": "claude-opus-5-5",
+      "model": "Claude Opus 5.5",
+      "level": "Max",
+      "score": 57.6,
+      "cost_per_task_usd": 5.982,
+      "cost_shown": "$5.98"
+     }
+    ],
+    "tie_second_line": {
+     "slug": "gpt-6-1-sol-low",
+     "model": "GPT-6.1 Sol",
+     "level": "Low",
+     "score": 42.1,
+     "cost_shown": "$0.13"
+    },
+    "reference_rows": [
+     {
+      "slug": "claude-opus-5-5-medium",
+      "label": "Claude Opus 5.5 at Medium, Anthropic's default",
+      "logo": "anthropic",
+      "source": "Anthropic's effort guide, platform.claude.com/docs/en/build-with-claude/effort, read 15 Oct 2026: \"Claude Opus 5.5 and Claude Haiku 5.5 default to medium\" (evidence-v3 P1-05)",
+      "score": 51.2,
+      "cost_per_task_usd": 1.336,
+      "cost_shown": "$1.34"
+     },
+     {
+      "slug": "claude-haiku-5-5-medium",
+      "label": "Claude Haiku 5.5 at Medium, Anthropic's default",
+      "logo": "anthropic",
+      "source": "the same page and line",
+      "score": 34.5,
+      "cost_per_task_usd": 0.047,
+      "cost_shown": "$0.05"
+     },
+     {
+      "slug": "gemini-4-argon",
+      "label": "Gemini 4 Argon at High, Google's top score here",
+      "logo": "google",
+      "source": "Artificial Analysis Google creator page: \"the top model from Google is Gemini 4 Argon (High) at 53\" (aa-pages.json)",
+      "score": 52.6,
+      "cost_per_task_usd": 1.9903,
+      "cost_shown": "$1.99"
+     }
+    ],
+    "axes_text": {
+     "column_heads": [
+      "Score needed",
+      "Cheapest model and thinking level",
+      "Its score",
+      "Cost per task"
+     ],
+     "x_ticks": [
+      "$0",
+      "$2",
+      "$4",
+      "$6"
+     ]
+    }
+   },
+   "data": {
+    "rows": [
+     {
+      "slug": "claude-haiku-5-5-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Haiku 5.5",
+      "thinking_level": "Xhigh",
+      "score": 41.2,
+      "cost_per_task_usd": 0.1238,
+      "cost_usd_full_test_set": 157.58,
+      "release_date": "2026-10-07",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-xhigh",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-medium",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Medium",
+      "score": 47.8,
+      "cost_per_task_usd": 0.2137,
+      "cost_usd_full_test_set": 361.37,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-medium",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-high",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "High",
+      "score": 50.2,
+      "cost_per_task_usd": 0.3191,
+      "cost_usd_full_test_set": 521.32,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-high",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "claude-opus-5-5-xhigh",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Xhigh",
+      "score": 56,
+      "cost_per_task_usd": 3.4591,
+      "cost_usd_full_test_set": 4056.65,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-xhigh",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Max",
+      "score": 57.6,
+      "cost_per_task_usd": 5.982,
+      "cost_usd_full_test_set": 8708.2,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5",
+      "api_read_at": "2026-10-17T06:57:54Z"
+     },
+     {
+      "slug": "gpt-6-1-sol-low",
+      "creator": "OpenAI",
+      "model": "GPT-6.1 Sol",
+      "thinking_level": "Low",
+      "score": 42.1,
+      "cost_per_task_usd": 0.1308,
+      "cost_usd_full_test_set": 250.48,
+      "release_date": "2026-09-29",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gpt-6-1-sol-low",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-opus-5-5-medium",
+      "creator": "Anthropic",
+      "model": "Claude Opus 5.5",
+      "thinking_level": "Medium",
+      "score": 51.2,
+      "cost_per_task_usd": 1.336,
+      "cost_usd_full_test_set": 1626.81,
+      "release_date": "2026-09-22",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-opus-5-5-medium",
+      "api_read_at": "2026-10-17T06:58:50Z"
+     },
+     {
+      "slug": "claude-haiku-5-5-medium",
+      "creator": "Anthropic",
+      "model": "Claude Haiku 5.5",
+      "thinking_level": "Medium",
+      "score": 34.5,
+      "cost_per_task_usd": 0.047,
+      "cost_usd_full_test_set": 56.36,
+      "release_date": "2026-10-07",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/claude-haiku-5-5-medium",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     },
+     {
+      "slug": "gemini-4-argon",
+      "creator": "Google",
+      "model": "Gemini 4 Argon",
+      "thinking_level": "High",
+      "score": 52.6,
+      "cost_per_task_usd": 1.9903,
+      "cost_usd_full_test_set": 2407.24,
+      "release_date": "2026-09-30",
+      "aa_marks_deprecated": false,
+      "page_url": "https://artificialanalysis.ai/models/gemini-4-argon",
+      "api_read_at": "2026-10-17T06:58:07Z"
+     }
+    ],
+    "derived": [
+     {
+      "what": "cheapest route to each target",
+      "value": [
+       {
+        "target": 40,
+        "label": "40 or more",
+        "cheapest": "claude-haiku-5-5-xhigh",
+        "model": "Claude Haiku 5.5",
+        "level": "Xhigh",
+        "score": 41.2,
+        "cost_per_task_usd": 0.1238,
+        "cost_shown": "$0.12",
+        "runner_up": "gpt-6-1-sol-low",
+        "runner_up_cost_per_task_usd": 0.1308
+       },
+       {
+        "target": 45,
+        "label": "45 or more",
+        "cheapest": "gpt-6-1-sol-medium",
+        "model": "GPT-6.1 Sol",
+        "level": "Medium",
+        "score": 47.8,
+        "cost_per_task_usd": 0.2137,
+        "cost_shown": "$0.21",
+        "runner_up": "gpt-6-1-sol-high",
+        "runner_up_cost_per_task_usd": 0.3191
+       },
+       {
+        "target": 50,
+        "label": "50 or more",
+        "cheapest": "gpt-6-1-sol-high",
+        "model": "GPT-6.1 Sol",
+        "level": "High",
+        "score": 50.2,
+        "cost_per_task_usd": 0.3191,
+        "cost_shown": "$0.32",
+        "runner_up": "gpt-6-1-sol-xhigh",
+        "runner_up_cost_per_task_usd": 0.3929
+       },
+       {
+        "target": 55,
+        "label": "55 or more",
+        "cheapest": "claude-opus-5-5-xhigh",
+        "model": "Claude Opus 5.5",
+        "level": "Xhigh",
+        "score": 56,
+        "cost_per_task_usd": 3.4591,
+        "cost_shown": "$3.46",
+        "runner_up": "claude-sonnet-5-5",
+        "runner_up_cost_per_task_usd": 5.4609
+       },
+       {
+        "target": 57.6,
+        "label": "The top score",
+        "cheapest": "claude-opus-5-5",
+        "model": "Claude Opus 5.5",
+        "level": "Max",
+        "score": 57.6,
+        "cost_per_task_usd": 5.982,
+        "cost_shown": "$5.98"
+       }
+      ],
+      "formula": "among the current rows of data-final.json with a cost (deprecated Claude Opus 5 and GPT-6 Sol left out; neither would change a row): the lowest cost_per_task_usd with score >= target. Checked: the same rows win on the full-test-set cost."
+     },
+     {
+      "what": "the jump from 50 to 55",
+      "value": {
+       "times": 10.84,
+       "points": 5.8
+      },
+      "formula": "cost_per_task_usd(claude-opus-5-5-xhigh) / cost_per_task_usd(gpt-6-1-sol-high); score difference"
+     }
+    ]
+   },
+   "source_line": "Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026; current models only. Cost per task in US dollars at list prices. Defaults: Anthropic's developer guide, read 15 Oct 2026.",
+   "logos": [
+    "anthropic",
+    "openai",
+    "google",
+    "aa"
+   ],
+   "size": {
+    "width": 1360,
+    "height_estimate": 3697,
+    "height_basis": "measured on the feasibility proof drawn to this spec (house faces, real logos, real rows); the final may differ by a little"
+   },
+   "alt": "Price ladder. For a score of 40 or more the cheapest was Claude Haiku 5.5 at Xhigh (41.2, $0.12 a task) or GPT-6.1 Sol at Low (42.1, $0.13); 45 or more, GPT-6.1 Sol at Medium (47.8, $0.21); 50 or more, GPT-6.1 Sol at High (50.2, $0.32); 55 or more, Claude Opus 5.5 at Xhigh (56.0, $3.46); the top score, Claude Opus 5.5 at Max (57.6, $5.98). For comparison: Claude Opus 5.5 at its default, Medium, 51.2 for $1.34; Claude Haiku 5.5 at its default, Medium, 34.5 for $0.05; Gemini 4 Argon at High, 52.6 for $1.99.",
+   "after": "If you build products on AI, don't choose a model by its name or its launch chart. Run your own hard questions through each setting, check the answers, and watch how much thinking you pay for.",
+   "after_paragraph_number": 47,
+   "after_section": "WHAT TO DO ABOUT IT",
+   "post_json_entry": {
+    "kind": "image",
+    "file": "exhibit-5-cheapest-route-to-each-score.png",
+    "name": "exhibit-5-cheapest-route-to-each-score.png",
+    "logos": [
+     "Anthropic",
+     "OpenAI",
+     "Google",
+     "Artificial Analysis"
+    ],
+    "shows": "chart",
+    "data_source": "Artificial Analysis, 17 Oct 2026",
+    "measures": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better; cost per task in US dollars at list prices, lower is cheaper",
+    "purpose": "If I need a given level of intelligence, which model and thinking level gets there cheapest, and where do the defaults land?",
+    "after": "If you build products on AI, don't choose a model by its name or its launch char..."
+   },
+   "article_check": {},
+   "feasibility_proof": {
+    "html": ".cache/visual-intel/design/exhibit-5-cheapest-route-to-each-score.html",
+    "png": ".cache/visual-intel/design/exhibit-5-cheapest-route-to-each-score.png",
+    "phone_png": ".cache/visual-intel/design/exhibit-5-cheapest-route-to-each-score-phone.png",
+    "size": [
+     1360,
+     3697
+    ],
+    "card_py": [
+     "every word can be read on a phone"
+    ],
+    "passed": true,
+    "png_sha256": "ea4c0b191ac884abdfab973d10ca15a7d3c9b1ffc1752617ff61d576b9d7c0b8"
+   }
+  }
+ ],
+ "article_checks": [
+  {
+   "article_says": "more than a third higher",
+   "data": 1.3617,
+   "unit": "Opus 5.5 Max / Low score",
+   "exhibits_agree": true
+  },
+  {
+   "article_says": "older Opus 5 at its hardest beat the new one at its lowest",
+   "data": 8.5,
+   "unit": "points",
+   "exhibits_agree": true
+  },
+  {
+   "article_says": "GPT-6 Sol about two thirds higher, thinking off to top",
+   "data": 1.6702,
+   "unit": "ratio",
+   "exhibits_agree": true
+  },
+  {
+   "article_says": "GPT-6.1 Sol at its top only edged past it",
+   "data": 4.2,
+   "unit": "points",
+   "exhibits_agree": true
+  },
+  {
+   "article_says": "low to medium about two and a half times per task",
+   "data": 2.4238,
+   "unit": "times",
+   "exhibits_agree": true
+  },
+  {
+   "article_says": "medium to max another four and a half times",
+   "data": 4.4775,
+   "unit": "times",
+   "exhibits_agree": true
+  },
+  {
+   "article_says": "bottom to top about 11 times",
+   "data": 10.8527,
+   "unit": "times",
+   "exhibits_agree": true
+  },
+  {
+   "article_says": "Fable 5.1 last step 28% more",
+   "data": 1.2762,
+   "unit": "times",
+   "exhibits_agree": true
+  },
+  {
+   "article_says": "Haiku 5.5 highest edged past Opus 5.5 lowest for less than half the cost per task",
+   "data": 0.3861,
+   "unit": "times",
+   "exhibits_agree": true
+  },
+  {
+   "article_says": "Opus 5.5 hardest-thinking run $5.98 per task against $0.55 on low",
+   "data": [
+    5.982,
+    0.5512
+   ],
+   "unit": "usd",
+   "exhibits_agree": true
+  }
+ ],
+ "flags_for_krish": [
+  {
+   "about": "\"Each step up buys less than the one before.\" (THE SWITCH THAT MATTERS)",
+   "finding": "True on Artificial Analysis's data when \"buys\" means points per extra dollar: it holds at every step for all seven models listed at every setting, on both cost measures and on unrounded scores. In raw points it holds step by step for none of them: Claude Sonnet 5.5's Medium to High step (+6.0) added more than its Low to Medium step (+4.9), Fable 5.1's Medium to High (+2.3) more than Low to Medium (+2.1), Haiku 5.5's High to Xhigh (+3.4) more than Medium to High (+3.3), GPT-6 Sol's Xhigh to Max (+3.4) more than High to Xhigh (+1.8), and Opus 5.5 and GPT-6.1 Sol each have two equal steps (+2.4 and +2.4; +0.8 and +0.8). What does hold in points: the top step adds less than the first for every one of them, and Opus 5.5's Low to Medium step is its biggest, as the article says. Exhibit 3 draws the per-dollar version and makes no step-by-step points claim, so it backs the sentence as written. No change to the article.",
+   "step_points_shrink_every_step": {
+    "Claude Opus 5.5": false,
+    "Claude Sonnet 5.5": false,
+    "Claude Haiku 5.5": false,
+    "Claude Fable 5.1": false,
+    "GPT-6.1 Sol": false,
+    "GPT-6 Sol": false
+   }
+  },
+  {
+   "about": "Cost measure",
+   "finding": "Every Artificial Analysis dollar figure and multiple in the article is cost per task ($5.98 v $0.55; \"about two and a half times as much per task\"; \"another four and a half times\"; \"about 11 times\"; \"28% more\"; \"less than half the cost per task\"), and Friday's video cards use cost per task too. An exhibit printed beside those sentences on the full-test-set cost would show 1.89, 5.35, 10.12, 1.45 and 0.38 times instead, so the reader would see two sets of numbers for one claim. data-final.json allows either, if the exhibit says which."
+  },
+  {
+   "about": "ChatGPT's default",
+   "finding": "No source matches ChatGPT's app settings (Instant, Medium, High, Extra High) to Artificial Analysis's developer settings, and ChatGPT offers no Max, so no exhibit places ChatGPT's default. Exhibit 5 shows Anthropic's documented developer defaults only, and says why ChatGPT is not placed."
+  },
+  {
+   "about": "Claude Haiku 5.5 costs",
+   "finding": "Artificial Analysis stars all five as understated; every exhibit showing a Haiku cost carries the line, and Exhibit 5 shows the 40 row as a near tie with GPT-6.1 Sol at Low."
+  },
+  {
+   "about": "The pack's logo gate (not this step)",
+   "finding": "The article names Meta (Llama 4), which config/logo-registry.json lists; none of these exhibits carries a Meta logo, so another picture in the pack must, or the gate will name it. Artificial Analysis is credited with its logo on Exhibits 2 to 5 but is not in the registry."
+  }
+ ],
+ "checks": {
+  "problems": [],
+  "passed": true
+ },
+ "feasibility_proofs": {
+  "what": "One HTML drawing per exhibit, made by .cache/visual-intel/scripts/proto.py straight from this file and data-final.json, then checked with scripts/pages/card.py (phone floor, nothing cut off) by .cache/visual-intel/scripts/prove.py. They prove the layout works at the 54 px floor and give the renderer a starting point. They are not final art and were not shown to Krish.",
+  "all_passed": true,
+  "rerun": "python3 -I /home/user/content-engine/.cache/visual-intel/scripts/prove.py, then this script again"
+ }
+}

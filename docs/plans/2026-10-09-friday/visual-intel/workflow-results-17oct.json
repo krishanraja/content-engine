@@ -1,0 +1,218 @@
+[
+ {
+  "result": {
+   "variants": 67,
+   "families": [
+    "Claude Opus 5.5 (low, medium, high, xhigh, max)",
+    "Claude Opus 5 (low, medium, high, xhigh, max; previous generation, Artificial Analysis marks it replaced by Opus 5.5)",
+    "Claude Sonnet 5.5 (low, medium, high, xhigh, max)",
+    "Claude Haiku 5.5 (low, medium, high, xhigh, max)",
+    "Claude Fable 5.1 (low, medium, high, xhigh, max)",
+    "GPT-6.1 Sol (low, medium, high, xhigh, max)",
+    "GPT-6 Sol (off, low, medium, high, xhigh, max, plus 'Daybreak Blue, max' with no score)",
+    "GPT-6 Luna (off, low, medium, high, xhigh, max)",
+    "GPT-6 Astra (low, medium, high, xhigh, max)",
+    "GPT-5.6 Sol (off, low, medium, high, xhigh, max; still a ChatGPT option)",
+    "GPT-5.6 Luna (off, low, medium, high, xhigh, max; ChatGPT Free and Go per one OpenAI page, disputed by another)",
+    "Gemini 4 Argon (high only)",
+    "Gemini 3.1 Pro Preview (no level stated)",
+    "Gemini 3.8 Flash (low, medium, high)",
+    "Gemini 3.6 Flash (high)",
+    "Gemini 3.5 Flash-Lite (high, from the page record)"
+   ],
+   "differences_from_evidence": [
+    "Nothing has moved since 15 Oct. Every score, release date, token count and price the evidence cites is the same on 17 Oct. Every difference below comes from rounding, or from cost per task versus the cost of the full test set.",
+    "Opus 5.5 'about 11 times the cost' is a per-task figure: $0.5512 at low against $5.982 at max is 10.85x, which matches. The cost to run the full test set (the figure the charts must use) is $860.33 against $8,708.20, which is 10.12x, so about 10x. Both are reported in the file; neither is chosen.",
+    "Opus 5.5 is 42 at low and 58 at max in the evidence; the API gives 42.3 and 57.6. Medium 51 is 51.2, high 54 is 53.6, xhigh 56 is 56.0. The unrounded page values (42.31, 51.24, 53.58, 55.99, 57.62) match the checker's exactly. The whole numbers are Artificial Analysis's page headlines; the API gives one decimal.",
+    "The evidence's own sums: Opus 5.5 low to max 'worth 16 points' is 15.31 unrounded and 15.3 at one decimal; 16 only comes from the whole-number headlines (58 minus 42). Opus 5 to Opus 5.5 at max 'worth 7' is 6.85, or 6.8 at one decimal.",
+    "Opus 5 at max: the evidence says 51; the API says 50.8 (50.78). The levels match the checker (39.4, 44.8, 48.1, 49.7, 50.8). Cost per task $5.8584 matches $5.86. The full test set cost $7,274.74.",
+    "GPT-6 Sol off 29 and max 48 are 28.5 and 47.6 (28.51 and 47.63 unrounded), a gain of 19.12 points. 'About three times the cost' holds per task: $0.3337 to $1.0447 is 3.13x. On the full test set, $449.37 to $1,535.80 is 3.42x. Off to xhigh is 1.56x per task (evidence 1.6x) but 1.90x on the full set.",
+    "GPT-6.1 Sol low 42 and max 52 are 42.1 and 51.8 (42.08 and 51.83). At max it beats GPT-6 Sol by 4.20 points. Medium to max adds 4.05 points for 3.39x per task (evidence +4.0 at 3.4x, matches) but 2.99x on the full test set.",
+    "Matched-level gaps are unchanged. GPT-6.1 Sol minus GPT-6 Sol: low 7.93, medium 7.97, high 7.84, xhigh 6.79, max 4.20. Opus 5.5 minus Opus 5: low 2.95, medium 6.42, high 5.46, xhigh 6.31, max 6.85.",
+    "Opus 5.5 medium to max adds 6.38 points for 4.48x per task, which matches the evidence's 4.5x, but it is 5.35x on the full test set. Low to medium is 2.42x per task but 1.89x on the full set.",
+    "Haiku 5.5: the evidence's ~17k output tokens per task at low was 'our chart reading'. Artificial Analysis's own data now gives 17,286 (55,388 at high, 162,164 at max, both as in the evidence). 'Xhigh to max adds 2 points for ~1.8x the tokens' holds per task (2.15 points, 1.81x), but on total output tokens it is 2.42x.",
+    "Deprecation flags still hold: GPT-6 Sol is marked replaced by gpt-6-1-sol, and Opus 5 by claude-opus-5-5. The replacement now sits in the record's release.deprecatedTo; the variant-level deprecatedTo is null.",
+    "The article (v5, words not changed) uses per-task figures, and all of them still hold. A chart showing full-test-set cost will show different multiples for the same claims. The article's 2.5x becomes 1.89x, 4.5x becomes 5.35x, and 11x becomes 10.12x. Fable 5.1's last step, which the article puts at 28% more, is +27.6% per task but +44.9% on the full set. Haiku 5.5 max at under half the cost of Opus 5.5 low holds either way (0.39 per task, 0.38 full set).",
+    "Not in the evidence: cost does not always rise with thinking. GPT-6 Sol cost more to run with thinking off ($449.37) than at low ($268.73), and with thinking off it read 3.24 times the input tokens (Artificial Analysis gives no reason). GPT-6 Luna shows the same: $19.16 off against $10.63 at low."
+   ],
+   "gaps": [
+    "The Artificial Analysis key on this connection is free tier. The Pro list endpoint returned 403, so all API values come from /api/v2/language/models/free (4 pages, 704 models). Token counts are a Pro-only API field, so output, input and per-task tokens come from each variant's public page on artificialanalysis.ai (the model record embedded in the page, fetched 07:01 to 07:04 UTC). On those pages the score, total cost, cost per task and release date matched the API for all 67 variants, with 0 mismatches.",
+    "Values Artificial Analysis has not published, left null: cost and tokens for GPT-5.6 Sol with thinking off; cost and tokens for Gemini 3.8 Flash at low; score, cost and tokens for 'GPT-6 Sol (Daybreak Blue, max)'.",
+    "Artificial Analysis lists no thinking-off variant for GPT-6.1 Sol, GPT-6 Astra or any current Claude (Opus 5.5, Opus 5, Sonnet 5.5, Haiku 5.5, Fable 5.1). A chart cannot show 'off' for these.",
+    "Google: Gemini 4 Argon is listed only at High. Artificial Analysis does not call it Pro. Nothing named Pro is newer than Gemini 3.1 Pro Preview (19 Feb 2026), which has no thinking level stated. Gemini 3.5 Flash-Lite's level ('high') comes from the page's effort field, not its name. Artificial Analysis marks Gemini 3.6 Flash as replaced, though the Gemini app reportedly offered it on 3 Oct.",
+    "ChatGPT's GPT-6 Pro is not on Artificial Analysis; GPT-6 Astra stands in, since OpenAI's help page says it powers GPT-6 Pro. No source maps ChatGPT's Instant, Medium, High and Extra High onto Artificial Analysis's API levels. OpenAI's own pages disagree on whether Free and Go use GPT-6 Luna or GPT-5.6 Luna.",
+    "Artificial Analysis's pages never say 'list price'. The API calls the figure the 'cost to run the Intelligence Index evaluation', so 'at list prices' is our gloss and is marked so in the file. 'Default Fallback' in the Claude 5.5 and 5.1 names is not defined by Artificial Analysis.",
+    "Left out as superseded (their data is in the cached raw pages): Claude Sonnet 5, Claude Fable 5, Claude Opus 4.8, GPT-5.6 Terra, Gemini 3.7 Flash, Gemini 3.5 Flash. Opus 5 is kept and flagged as previous generation because the task and evidence name it.",
+    "Files written only in the two allowed folders: /home/user/content-engine/docs/plans/2026-10-09-friday/visual-intel/aa-data.json, plus raw API pages, model pages, scripts and a stage-1 build under /home/user/content-engine/.cache/visual-intel (aa-free-page1..4.raw.json, web-mine/, tools/). Another process's folder, .cache/visual-intel/aa-pages, was left untouched and not used. Nothing was published, sent or committed. MCP quota left: 169 of 200 calls, resetting 2026-10-17T18:34:31Z."
+   ]
+  }
+ },
+ {
+  "result": {
+   "rows": 41,
+   "gaps": [
+    "Gemini 3.8 Flash (Low), https://artificialanalysis.ai/models/gemini-3-8-flash-low: the page gives a score (33) but no cost per task and no cost to run the index.",
+    "Google: Artificial Analysis has no Gemini 4 Pro. Gemini 4 Argon (High) is Google's top model on the site (53, $1.99 per task, $2,407 to run the index) and Gemini 3.1 Pro Preview is the newest model named Pro (30, $1.30, $1,935). Each is listed at one setting only, so neither shows what thinking level does. Gemini 3.8 Flash is the only current Google model shown at more than one setting (High 41, Medium 40, Low 33).",
+    "Claude Haiku 5.5: every cost on its pages carries an asterisk. AA's chart note in the page data reads: '* Claude Haiku 5.5 has 5x higher pricing on longer-context inputs which are not currently reflected; we are working to include this in cost figures across Artificial Analysis.' So Haiku's costs are understated by an amount AA does not give. This bears on the article's line that Haiku 5.5 at its top setting costs 'less than half' of Opus 5.5 at Low ($0.21 v $0.55 per task).",
+    "The cost to run the whole index ($ total) appears on each page only as a bar label on the 'Cost to Run Artificial Analysis Intelligence Index' chart, never in a sentence. All 40 labels were matched to their model by bar position, and the match was accepted only because every bar on each chart equalled the page's embedded total rounded to whole dollars. Cost per task and score each come from a visible sentence and a summary card.",
+    "Claude Opus 5 and GPT-6 Sol pages both say 'This model is deprecated.' Their scores and costs are still shown.",
+    "GPT-6 Sol with thinking off costs more than at Low ($0.33 v $0.13 per task; $449 v $269 to run the index). The page data shows about 1.10 billion v 0.34 billion input tokens. The page does not say why, so 'off' is not the cheapest point.",
+    "AA's own pages disagree on category weights. The index page FAQ says four categories at 25% each; the methodology page says Agents 30%, Coding 20%, Scientific Reasoning 20%, General 30%.",
+    "'Default Fallback' is part of AA's name for Claude Opus 5.5, Sonnet 5.5 and Fable 5.1, and no page defines it.",
+    "No Claude release on AA has a thinking-off row; Low is the lowest Claude setting. Only GPT-6 Sol has a Non-reasoning row.",
+    "The /models list page shows each model at one default setting only (27 of 704 models). The values for each setting come from each model's own page and its release page.",
+    "Unrounded scores and costs come from each page's embedded chart data, which is not visible text. Cite them as 'unrounded figure in the page data' or not at all.",
+    "Pages were read on 17 Oct 2026 between 06:57 and 07:25 UTC with Firecrawl, maxAge 0. Every page returned HTTP 200. Every value matches the 15 Oct figures in evidence-v3.md, so nothing has drifted.",
+    "I did not open /home/user/content-engine/docs/plans/2026-10-09-friday/visual-intel/aa-data.json, which another agent wrote, and I made no comparison against it."
+   ],
+   "urls": [
+    "/home/user/content-engine/docs/plans/2026-10-09-friday/visual-intel/aa-pages.json",
+    "/home/user/content-engine/.cache/visual-intel/aa-pages",
+    "/home/user/content-engine/.cache/visual-intel/scripts/assemble.py",
+    "/home/user/content-engine/.cache/visual-intel/scripts/extract_page.py",
+    "/home/user/content-engine/.cache/visual-intel/scripts/chart_labels.py",
+    "/home/user/content-engine/.cache/visual-intel/scripts/rsc_models.py",
+    "/home/user/content-engine/.cache/visual-intel/scripts/save_scrapes.sh",
+    "https://artificialanalysis.ai/models",
+    "https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index",
+    "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
+    "https://artificialanalysis.ai/models/creators/google",
+    "https://artificialanalysis.ai/models/releases/claude-opus-5-5",
+    "https://artificialanalysis.ai/models/releases/claude-opus-5",
+    "https://artificialanalysis.ai/models/releases/claude-sonnet-5-5",
+    "https://artificialanalysis.ai/models/releases/claude-haiku-5-5",
+    "https://artificialanalysis.ai/models/releases/claude-fable-5-1",
+    "https://artificialanalysis.ai/models/releases/gpt-6-sol",
+    "https://artificialanalysis.ai/models/releases/gpt-6-1-sol",
+    "https://artificialanalysis.ai/models/releases/gemini-3-8-flash",
+    "https://artificialanalysis.ai/models/claude-opus-5-5",
+    "https://artificialanalysis.ai/models/claude-opus-5-5-xhigh",
+    "https://artificialanalysis.ai/models/claude-opus-5-5-high",
+    "https://artificialanalysis.ai/models/claude-opus-5-5-medium",
+    "https://artificialanalysis.ai/models/claude-opus-5-5-low",
+    "https://artificialanalysis.ai/models/claude-opus-5",
+    "https://artificialanalysis.ai/models/claude-opus-5-xhigh",
+    "https://artificialanalysis.ai/models/claude-opus-5-high",
+    "https://artificialanalysis.ai/models/claude-opus-5-medium",
+    "https://artificialanalysis.ai/models/claude-opus-5-low",
+    "https://artificialanalysis.ai/models/claude-sonnet-5-5",
+    "https://artificialanalysis.ai/models/claude-sonnet-5-5-xhigh",
+    "https://artificialanalysis.ai/models/claude-sonnet-5-5-high",
+    "https://artificialanalysis.ai/models/claude-sonnet-5-5-medium",
+    "https://artificialanalysis.ai/models/claude-sonnet-5-5-low",
+    "https://artificialanalysis.ai/models/claude-haiku-5-5",
+    "https://artificialanalysis.ai/models/claude-haiku-5-5-xhigh",
+    "https://artificialanalysis.ai/models/claude-haiku-5-5-high",
+    "https://artificialanalysis.ai/models/claude-haiku-5-5-medium",
+    "https://artificialanalysis.ai/models/claude-haiku-5-5-low",
+    "https://artificialanalysis.ai/models/claude-fable-5-1",
+    "https://artificialanalysis.ai/models/claude-fable-5-1-xhigh",
+    "https://artificialanalysis.ai/models/claude-fable-5-1-high",
+    "https://artificialanalysis.ai/models/claude-fable-5-1-medium",
+    "https://artificialanalysis.ai/models/claude-fable-5-1-low",
+    "https://artificialanalysis.ai/models/gpt-6-sol",
+    "https://artificialanalysis.ai/models/gpt-6-sol-xhigh",
+    "https://artificialanalysis.ai/models/gpt-6-sol-high",
+    "https://artificialanalysis.ai/models/gpt-6-sol-medium",
+    "https://artificialanalysis.ai/models/gpt-6-sol-low",
+    "https://artificialanalysis.ai/models/gpt-6-sol-non-reasoning",
+    "https://artificialanalysis.ai/models/gpt-6-1-sol",
+    "https://artificialanalysis.ai/models/gpt-6-1-sol-xhigh",
+    "https://artificialanalysis.ai/models/gpt-6-1-sol-high",
+    "https://artificialanalysis.ai/models/gpt-6-1-sol-medium",
+    "https://artificialanalysis.ai/models/gpt-6-1-sol-low",
+    "https://artificialanalysis.ai/models/gemini-4-argon",
+    "https://artificialanalysis.ai/models/gemini-3-1-pro-preview",
+    "https://artificialanalysis.ai/models/gemini-3-8-flash",
+    "https://artificialanalysis.ai/models/gemini-3-8-flash-medium",
+    "https://artificialanalysis.ai/models/gemini-3-8-flash-low"
+   ]
+  }
+ },
+ {
+  "result": {
+   "confirmed_rows": 41,
+   "disagreements": [
+    "No value disagreements. The 41 variants in both files agree on score, cost to run the full test set, cost per task, output tokens, release date, list prices, name, maker, thinking level and the deprecated flag, allowing for rounding. Every check passed (check_log in data-final.json).",
+    "Coverage: 26 of the API's 67 variants are not in the page read. They are GPT-6 Luna (6), GPT-6 Astra (5), GPT-5.6 Sol (6), GPT-5.6 Luna (6), Gemini 3.6 Flash (1), Gemini 3.5 Flash-Lite (1) and GPT-6 Sol (Daybreak Blue, max) (1). RESOLVED: left out of the rows and listed under left_out. Their pages exist, so 'the page could not show it' does not apply. Side check: the visible text of the API pull's saved curl copies of those pages agrees with the API on score, cost per task, release date and tokens for all 25 that have a score. Their full-test-set cost is not checked, because the page only draws it as a chart label once it renders. Daybreak Blue has no score or cost. GPT-5.6 Sol (Non-reasoning) has an estimated score and no cost. A rendered page read would let the other 24 in.",
+    "Thinking-level name: GPT-6 Sol's thinking-off setting is 'off' in the API file and 'non-reasoning' in the page file. RESOLVED: same slug and same Artificial Analysis name, 'GPT-6 Sol (Non-reasoning)'. Recorded as thinking_level 'off' with the printed label 'Non-reasoning'.",
+    "Status: the API file labels GPT-6 Sol 'current' and Opus 5 'previous generation', while both pages say 'This model is deprecated.' RESOLVED: not a data conflict. Both files carry Artificial Analysis's deprecated flag. 'Current' is the API file's own label, taken from OpenAI's help page saying GPT-6 Sol still powers ChatGPT. Rows carry aa_marks_deprecated plus a note, and the scores stand.",
+    "Score precision: the API gives one decimal and the pages give whole numbers. All 41 agree within 0.5, and every page number is the unrounded score rounded half up. Three rounding traps, where rounding the one-decimal figure again gives the wrong whole number: Haiku 5.5 Low 29.5 v page 29, Haiku 5.5 Medium 34.5 v page 34, Gemini 3.8 Flash Low 33.5 v page 33. RESOLVED: score = API one-decimal value; score_on_page keeps the page figure; never round the one-decimal figure again.",
+    "Cost precision: the API gives cents and the page's bar labels give whole dollars. All 40 rows with a cost agree within 50 cents, and to the cent with the page data. Gemini 3.8 Flash (Low) has no cost in either file. RESOLVED: cost_usd = API value; kept in with a null cost and chartable_on_cost false.",
+    "Haiku 5.5 costs: the page stars all five ('5x higher pricing on longer-context inputs which are not currently reflected'), and the API value has no warning. RESOLVED: same numbers kept, with the note on every Haiku row. Any exhibit showing a Haiku cost carries the starred line.",
+    "Output tokens are not an API figure: the free tier has no token counts, so the API file took them from each page's embedded data. RESOLVED: the source is named in api_field.output_tokens_source. All 40 agree with the page's own two-significant-figure card and sentence.",
+    "Index version: the API says v4.3 and the pages say v4.3.2. RESOLVED: same index; the API returns only major.minor.",
+    "Index weighting, a conflict inside Artificial Analysis's own pages: 25% each on the index page v 30/20/20/30 on the methodology page. UNRESOLVED at source, so no exhibit should state the weights.",
+    "Cost measure, article v exhibits: the article quotes cost per task, but exhibits use cost to run the full test set, and the multiples differ. Opus 5.5 Low to Medium is 2.42x per task v 1.89x full set; Medium to Max 4.48x v 5.35x; Low to Max 10.85x v 10.12x ('about 11 times' in the article); Fable 5.1 Xhigh to Max 1.28x ('28% more') v 1.45x. RESOLVED: data-final and derived carry both, and derived.article_spans pairs each article sentence with both figures. An exhibit next to those sentences must show cost per task, or say it shows the full test set and why the multiple differs.",
+    "Points basis: gaps on the pages' whole numbers differ from gaps on the one-decimal scores. Opus 5.5 Low to Max is 16 v 15.3; Opus 5 to Opus 5.5 at Max is 7 v 6.8. RESOLVED: derived.json gives both; each exhibit uses one basis throughout."
+   ],
+   "headline_facts": [
+    "Files written: /home/user/content-engine/docs/plans/2026-10-09-friday/visual-intel/data-final.json (41 confirmed rows, with disagreements, left_out and a per-check log) and /home/user/content-engine/docs/plans/2026-10-09-friday/visual-intel/derived.json (our arithmetic, a formula for each figure). Built by /home/user/content-engine/.cache/visual-intel/scripts/reconcile.py. Inputs not modified; nothing published, sent or committed.",
+    "Source for every row: Artificial Analysis Intelligence Index, 0 to 100 (API read 17 Oct 2026 06:57 to 06:58 UTC; public pages read 17 Oct 2026 06:58 to 07:15 UTC). Costs are what it cost Artificial Analysis to run its full test set, in US dollars, at list prices. Everything below is our arithmetic on those rows.",
+    "Thinking level within one model: Claude Opus 5.5 goes from 42.3 at Low to 57.6 at Max, +15.3 points, for 10.12 times the full-test-set cost ($860.33 to $8,708.20; 10.85 times per task).",
+    "Model upgrade at the same thinking level: Opus 5 to Opus 5.5 adds 2.9 (Low) to 6.8 (Max) points. Opus 5.5 costs less to run at four of the five settings (0.50 to 0.69 times); at Max it costs 1.20 times as much.",
+    "GPT-6 Sol goes from 28.5 with thinking off (Non-reasoning) to 47.6 at Max, +19.1 points, for 3.42 times the full-test-set cost. Thinking off cost MORE to run than Low ($449.37 v $268.73), so cost must not be drawn as rising at every step.",
+    "GPT-6 Sol to GPT-6.1 Sol (released 22 and 29 Sep 2026): +7.8 to +8.0 points at Low, Medium and High, +6.8 at Xhigh, only +4.2 at Max. The newer one is cheaper at every matched setting (0.70 to 0.93 times). GPT-6.1 Sol has no thinking-off setting on Artificial Analysis.",
+    "Each step up buys less: the last step is the weakest. Fable 5.1 Xhigh to Max gives +0.2 points for 1.45 times the cost; GPT-6.1 Sol Xhigh to Max +0.8 for 1.63 times; Opus 5.5 Xhigh to Max +1.6 for 2.15 times. Opus 5.5's biggest step is Low to Medium, +8.9 for 1.89 times.",
+    "Widest thinking range: Claude Sonnet 5.5, 35.9 at Low to 56.0 at Max, +20.1 points, for 15.06 times the full-test-set cost.",
+    "Setting can beat model: Haiku 5.5 at Max (43.4) edges past Opus 5.5 at Low (42.3) at 0.38 times the full-test-set cost (0.39 per task). Artificial Analysis stars Haiku's costs as understated.",
+    "Google: only Gemini 3.8 Flash has a thinking range on Artificial Analysis (Low 33.5 to High 40.9, +7.4), and its Low setting has no published cost. Gemini 4 Argon (52.6, High) and Gemini 3.1 Pro Preview (29.7) are each listed at one setting only.",
+    "Every Artificial Analysis cost figure in the article holds on cost per task (all five checked in derived.article_spans). Charts using the full-test-set cost will show different multiples and must say so."
+   ]
+  }
+ },
+ {
+  "result": {
+   "exhibits": [
+    {
+     "id": "launches",
+     "question": "How often are Anthropic and OpenAI putting out new models?",
+     "heading": "Anthropic and OpenAI put out a new model about every two weeks for a year",
+     "after": "Start with why your eyes are on the name at all, because while we watch the names, the setting that decides your answer gets chosen out of sight. Look at how often the names change. Anthropic, which makes Claude, launched Claude Opus 4.8 in May, Claude Opus 5 in July and Claude Opus 5.5 in September, with Sonnet, Fable and Haiku versions alongside. OpenAI's release notes climb from GPT-5.1 last November to GPT-6.1 Sol at the end of September. OpenAI even says a model will \"generally remain available in ChatGPT for 90 days after a successor is released.\" Ninety days, and then the next name takes over.",
+     "takeaway": "Between them the two labs launched new models on at least 26 days in under a year, and six of those launches came in the 16 days from 22 September to 7 October 2026."
+    },
+    {
+     "id": "model-or-thinking-level",
+     "question": "Which changes the score more, a new model version or the thinking level, and what does each cost?",
+     "heading": "Turning up the thinking lifted Claude and GPT more than a new version did",
+     "after": "The size of the gear change surprised me. Artificial Analysis, an independent group that tests these models, ran the same Claude Opus 5.5 through its long set of hard tests at different settings. Thinking as hard as it can, it scored more than a third higher than when thinking a little. The older Opus 5, at its hardest, beat the new one at its lowest. OpenAI's GPT-6 Sol, which OpenAI's help page says powers ChatGPT's thinking settings, scored about two thirds higher at its top developer setting than with thinking off, while the newer GPT-6.1 Sol at its top only edged past it. In both cases the gear moved the score more than the new badge did.",
+     "takeaway": "On Artificial Analysis's 0 to 100 index, each line climbs 9.7 to 19.1 points from its lowest to its highest thinking level, while the newer version sits only 2.9 to 8.0 points above the older one at the same level, and mostly to its left, because it costs less to run."
+    },
+    {
+     "id": "each-step-buys-less",
+     "question": "Is each step up in thinking level worth what it costs?",
+     "heading": "Each step up in thinking buys Claude and GPT less for every extra dollar",
+     "after": "It isn't a straight line, though, and that matters for where this is heading. Each step up buys less than the one before. On Artificial Analysis's tests, moving Opus 5.5 from low to medium cost about two and a half times as much per task and brought the biggest jump in its score. Moving it from medium to max cost another four and a half times as much, for a smaller jump. Bottom to top, that's about 11 times the cost for a score just over a third higher. Every current model from Anthropic and OpenAI on those tests works the same way: the top setting costs several times more than the bottom one, and the score goes up by far less. The last step up is the worst deal of all. On Fable 5.1, it costs 28% more and barely moves the score. And the setting can beat the model. Claude Haiku 5.5, the cheapest of Anthropic's current models, on its highest setting edged past Opus 5.5 on its lowest, for less than half the cost per task. Sometimes the top gear even scores lower than the one below it. On Hex's data-analysis test, GPT-6 Sol scored 61.3% on its Xhigh (extra high) setting and 57% on Max, which costs more. Thinking can be pure waste, too: researchers asked reasoning models \"what is the answer of 2 plus 3?\" and found they \"consumed 1,953% more tokens than conventional models to reach the same answer.\" (Tokens are the word pieces an AI reads and writes, and what developers pay for.) One wrote out 13 solutions. And sometimes the new name really is the bigger step. Anthropic says Opus 5.5 on its default setting \"beats Opus 5 at max effort for about a fifth of the cost\" on one test of computer tasks.",
+     "takeaway": "On Artificial Analysis's 0 to 100 index, in all six, every step up added fewer points per extra dollar than the one before: Claude Opus 5.5's first step added 8.9 points for 2.4 times the cost, its last 1.6 points for 1.7 times."
+    },
+    {
+     "id": "new-version-or-more-thinking",
+     "question": "Which buys more intelligence for the money: a new model version or a higher thinking level?",
+     "heading": "A new Claude Opus or GPT Sol adds fewer points than more thinking, but costs less",
+     "after": "That's also why a higher gear eats into your plan faster. Anthropic's help page for the Claude app says higher effort means responses \"take longer and use more tokens, so you'll reach your usage limits faster.\" Changing model can do the same, but not always. Anthropic charges developers two and a half times as much for the same amount of writing from Fable 5.1, the model it points them to when Opus 5.5 falls short, as from Opus 5.5. A newer version often costs less, as the Opus 5.5 example above shows.",
+     "takeaway": "On Artificial Analysis's 0 to 100 index, more thinking on the newest Claude Opus and GPT Sol added 9.7 to 15.3 points for 5.5 to 10.9 times the cost per task; the new version added 2.9 to 8.0 points at the same level and cost less at 9 of the 10 levels."
+    },
+    {
+     "id": "cheapest-route-to-each-score",
+     "question": "If I need a given level of intelligence, which model and thinking level gets there cheapest, and where do the defaults land?",
+     "heading": "The cheapest route to each score mixes Claude and GPT models and thinking levels",
+     "after": "If you build products on AI, don't choose a model by its name or its launch chart. Run your own hard questions through each setting, check the answers, and watch how much thinking you pay for.",
+     "takeaway": "On Artificial Analysis's 0 to 100 index, scores up to 50 cost 12 to 32 cents a task at the cheapest; 55 takes Claude Opus 5.5 at Xhigh for $3.46, about 11 times as much, and Opus 5.5 on Anthropic's default (Medium) scores 51.2 for $1.34."
+    }
+   ]
+  }
+ },
+ {
+  "result": {
+   "pngs": [
+    "/home/user/content-engine/.cache/visual-intel/launches.png",
+    "/home/user/content-engine/.cache/visual-intel/model-or-thinking-level.png",
+    "/home/user/content-engine/.cache/visual-intel/each-step-buys-less.png",
+    "/home/user/content-engine/.cache/visual-intel/new-version-or-more-thinking.png",
+    "/home/user/content-engine/.cache/visual-intel/cheapest-route-to-each-score.png"
+   ],
+   "all_pass_phone_check": true,
+   "notes": "All five exhibits are drawn at 1360 wide and all five pass scripts/pages/card.py (\"every word can be read on a phone\"). Each also passes two extra checks: no word crosses the 64 px side margins, and no two runs of words overlap. I looked at every PNG at full size and in close crops after each fix.\n\nrender.json is at /home/user/content-engine/docs/plans/2026-10-09-friday/visual-intel/render.json. For each exhibit it gives the HTML, the PNG, the phone PNG, the size, the sha256, the phone check result, the layout checks and its figure entry ({after, image, alt, caption}). There is also a \"figures\" list in story order, ready for the page facts.\n- Each \"after\" paragraph is found exactly once in the article and once in build.py's plain text of it.\n- The alt text and captions are computed from the rows, including dates, release gaps and multiples.\n- Every caption gives the score with its 0 to 100 scale and says what the cost measure is.\n\nSizes: launches 1360x2272, model-or-thinking-level 1360x3614, each-step-buys-less 1360x3712, new-version-or-more-thinking 1360x3706, cheapest-route-to-each-score 1360x4199.\n\nScripts, all in /home/user/content-engine/.cache/visual-intel/scripts/:\n- render.py: I picked up the renderer an earlier attempt left there and fixed it. Every plotted or printed number is computed from data-final.json by Artificial Analysis slug, or from the spec's dated launch rows for Exhibit 1, and checked against derived.json and the spec. The tiles and alt text now draw these computed values, not the spec's typed strings.\n- draw.py: runs card.py on each exhibit with MYMU_BROWSER pointed at the installed headless Chromium, plus the margin and overlap checks.\n- finish.py: scans every visible word, alt text and caption for em or en dashes, car or gear words, American spellings and the times sign, then writes render.json.\n\nFixes made after looking at the renders:\n- Exhibit 2: the GPT callout ran past the right edge; it is now three lines. The callouts and setting labels have an ink outline so gridlines do not run through them.\n- Exhibit 3: panel titles were wrapping and the totals sat on the lines and gridlines. Each panel now has a one-line title with its totals (\"+15.3 points / for 10.9 times the cost\") above a clean plot.\n- Exhibit 4: the five dots on each new version's bar overlapped. They are now thin marks on a lighter band, and the 10-point line is a stub outside the bar so it cannot be read as a mark.\n- Exhibit 5: \"Claude Haiku 5.5 at Medium *\" pushed its score past the right margin. The score now sits at the end of the bar line, the cost track is wider, and the dollar figures have room.\n- All five: model names and dates no longer break across lines in the fine print (it was splitting \"GPT-\" from \"6.1 Sol\").\n\nDecisions for the caller:\n1. Cost measure. The task's hard rule describes the cost as Artificial Analysis's full test set, but exhibits.json deliberately plots cost per task, because every dollar figure and multiple in the unchanged article is per task ($5.98 v $0.55, \"about 11 times\", \"28% more\"). I followed the spec. Every exhibit and caption labels it as \"cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices\". Switching to the full test set would mean redrawing all four Artificial Analysis exhibits, and the multiples would then disagree with the article (10.1 times on the full test set for the article's \"about 11 times\").\n2. Exhibit 2 keeps a two-line key under each panel title rather than labels on the lines, because the key carries the release dates. Every other mark on all five exhibits is labelled directly.\n3. Exhibit 1 is marked optional in the spec; the other four stand alone.\n4. Two items from the spec's flags for Krish are still open. No exhibit carries a Meta logo, which the pack's logo gate may ask for. Artificial Analysis is credited with its logo on Exhibits 2 to 5 but is not in config/logo-registry.json.\n\nNothing was published, sent or committed. All writes stayed inside .cache/visual-intel (with close-up crops in review/) and visual-intel/render.json."
+  }
+ }
+]

@@ -1,0 +1,327 @@
+[
+ {
+  "result": {
+   "cards_updated": 51,
+   "logos": [
+    "/home/user/content-engine/docs/plans/2026-10-09-friday/logos/artificialanalysis-cream.svg (from artificialanalysis.ai itself: the 402x44 symbol-plus-wordmark SVG the site draws on its charts, paths unaltered, fills set to #F4EFE4. Brandfetch only had an old 48x48 'A/' tile, which is not what the company uses now)",
+    "/home/user/content-engine/docs/plans/2026-10-09-friday/logos/wired-cream.svg (Brandfetch wired.com logo.svg, paths unaltered, the one #000 fill set to #F4EFE4)",
+    "/home/user/content-engine/docs/plans/2026-10-09-friday/logos/the-decoder-cream.svg (the masthead SVG from the-decoder.com's own header, paths unaltered, fills set to #F4EFE4. Brandfetch only had a JPEG icon. Each path had two class attributes, which I dropped so the file parses as standalone XML)",
+    "/home/user/content-engine/docs/plans/2026-10-09-friday/logos/SOURCES.md (where each logo came from, what was changed, and SHA-256 hashes of the originals and the outputs. All three parse as XML and look right on the ink background)"
+   ],
+   "plan_warnings": [
+    "make.py --plan (16x9, the kit's own plan line) found every cue: missing_cues is empty, 51 of 51, exit 0. Its top-level warnings are also empty.",
+    "16x9 warning: the intro sting is still a candidate waiting for Krish's approval (config/intro-sting.json), so the cut has no intro.",
+    "16x9 warning: no music folder in this container (MINDMAKE_MUSIC_ROOT is unset), so the plan is voice only. On the runner machines the folder is the 07_Music folder.",
+    "The 9x16 shape, which only runs when --only is left off, also warns that the speech runs 798.3 s against the 90 s cap for the short cut. This is expected: the long cut is 16x9 only.",
+    "Info: 'realize' at 192.5 s is captioned 'realise', per the script's spelling.",
+    "How it was run: the literal command 'python3 -I make.py' fails with ModuleNotFoundError: episode, because -I drops the script's own folder from sys.path, and make.py requires --out. I ran it isolated with python3 -I, using runpy with scripts/quick-edit put on sys.path and --out set to a scratch folder. Nothing was written.",
+    "Divider windows on the cut clock (seconds). ch2: 102.77 to 105.39 (2.62 s on screen). Its own window ends at 105.17, and make.py's 1.5 s bridge holds it until fri-claude-launch-pages starts at 105.39. ch3: 148.01 to 150.39. ch4: 329.09 to 331.59. ch5: 379.43 to 382.03. ch6: 503.55 to 505.63. ch7: 610.52 to 612.64. ch8: 720.43 to 722.79.",
+    "No divider overlaps another cue, so no neighbouring cue's start was moved. To keep the dividers near 2 s I shortened each proposed_cue's end phrase, for example 'the names. Anthropic' instead of 'Anthropic makes Claude,'.",
+    "fri-deep-extended-cut-by-mistake-r3 now ends at 'would even have known': 574.78 to 578.82, 4.04 s instead of 1.48 s.",
+    "The 8 chapter names are in long.json in order, and their starts are unchanged. The plan's chapter list now reads 00:00, 01:42, 02:28, 05:29, 06:19, 08:23, 10:10 and 12:00 with Krish's approved names.",
+    "/home/user/content-engine/docs/plans/2026-10-09-friday/long-cut/long.json and /home/user/content-engine/.cache/produce/2026-10-16-904658db/kit/long.json are byte-identical. Nothing was committed or published."
+   ],
+   "still_not_ready": [
+    "Artificial Analysis logo will not show on its 7 cards (aa-same-claude, -s1, -s2, -s3, cost-vs-score, -cost, -score). These are 'columns' cards, and video_card.py only draws logos inside each column, never the card's own 'logos' list. The JSON carries the logo, but a scratch test draw confirmed it is not drawn. Those cards still show the Anthropic symbol. Fixing this needs a small change to video_card.py, which I did not make. The AA logo does show on the fri-chapter-3 divider.",
+    "WIRED's paywall: its two exact lines (the spokesperson line and the 'In practice...' line) were not captured. -s2 shows WIRED's headline, byline and date, with the ring on the byline and date. -s3 shows WIRED reporter Maxwell Zeff's own X post carrying WIRED's article card, with the ring on 'costly for the company to serve'. On -s3 the ring's lower edge runs through the next line, because the post's lines are closer together than the ring's padding.",
+    "fri-deep-openai-free-dec-2025 uses the capture's crop_line, not the whole-entry crop. The whole entry (1440x1800) would shrink the words to about a third of their size. So the 'December 11, 2025' header is not on the card; the date is in the kicker and the source line. The ring also takes in the next sentence, and its bottom edge sits on the capture's edge.",
+    "fri-deep-altman-same-day-t2 shows only the '$40 billion' sentence. video_card draws one capture per card, so the 'March 31, 2025' date frame (-2.png) is not used. The crop ends right after 'billion', which cuts off the right edge of the ring.",
+    "fri-deep-claude-code-reversal-f2: no recapture exists. It uses the capture as it is, with the ring only on the March 4 sentence. The capture's burned-in yellow on 'This was the wrong tradeoff. We reverted this change on April 7' still shows two lines below, before he says it.",
+    "fri-deep-openai-plus-pro-sep-2026-c2: its second source (help.openai.com/articles/20001354) has still not been captured; the card's to_capture_later note is unchanged.",
+    "Panels are not drawn into the kit's panels folder; this step did not ask for that. I drew all 51 cards from a scratch copy only. All 51 passed the heading check (every heading is recorded as picked in config/title-verdicts.json) and the fit check. In this container, video_card needs MYMU_BROWSER=/opt/pw-browsers/chromium-1194/chrome-linux/chrome, because Playwright looks for Chromium 1243 by default.",
+    "Outside this step, from Krish's request: the old title 'Soon you won't pick your AI' is still in the take's file name (long.json 'source'), in the WhatsApp text in words.json and in the Teleprompter folder name. The heavyweight Substack visual intel on models versus thinking levels against cost was not done here.",
+    "I did not update WORKBENCH.md and made no commit."
+   ]
+  }
+ },
+ {
+  "result": {
+   "drawn": 51,
+   "sheet": "/home/user/content-engine/.cache/produce/2026-10-16-904658db/kit/panels/sheet.png",
+   "problems_left": [
+    "The 7 Artificial Analysis cards (fri-deep-aa-same-claude, -s1, -s2, -s3 and fri-deep-cost-vs-score, -cost, -score) do not show the Artificial Analysis logo. video_card.py only draws logos inside each column on a columns card, so they show the Anthropic symbol and name Artificial Analysis only in the kicker and the note. A real company logo is still on every card. Fixing this needs a small change to video_card.py, and I did not make it because I changed only the spec. These are also text columns ('42 out of 100', '$0.55 a task'), not charts. The scale is on every score. I left them as they are because the request said not to change the clips.",
+    "fri-deep-thinking-settings has no ring. video_card takes one mark box, and one box around both headings ('Choose a thinking level' and 'Choose an effort level') would run through the first line of Claude's paragraph, 17 px below the OpenAI heading. It shows two help pages side by side, so the body text is small on the card. The two headings read clearly. I added this as not_ready.thinking_settings_mark.",
+    "fri-deep-altman-same-day-t2: the ring is fixed and now closes inside the crop. But video_card never enlarges a capture, so the 785x80 crop of the $40 billion sentence sits small in a wide box. The page's 'March 31, 2025' date line is on a separate capture and is not on the card.",
+    "WIRED's own paywalled lines are still not captured. -s2 shows WIRED's header. -s3 is now cropped to Zeff's post text so it reads at full size, which drops WIRED's article card and the post's time line from that card. A signed-in WIRED capture would replace both.",
+    "fri-deep-claude-code-reversal-f2 and -f4: the capture has yellow highlights already burned in on 'This was the wrong tradeoff. We reverted this change on April 7', so they show on f2 before he says them. A recapture is needed.",
+    "fri-deep-openai-plus-pro-sep-2026-c2: its second source (help.openai.com/articles/20001354, 'On Plus and Pro plans, Instant doesn't automatically switch...') is not in the capture.",
+    "fri-deep-openai-free-dec-2025: the 'December 11, 2025' header is not on the card. The capture ends 8 px under the second line, so the ring now takes only the first line, and 'ChatGPT.' sits just under it without a ring.",
+    "Several older captures already have their own marks burned in (orange rings on the GPT-5.1 to 6.1 and January-cut captures, small rings on Medium/High, dark 'captured' header strips on thinking-settings and where-to-turn-it-up). The mint rings drawn by video_card sit alongside them.",
+    "Environment: Playwright's default headless shell (chromium_headless_shell-1243) is not installed in this container. Every draw used MYMU_BROWSER=/opt/pw-browsers/chromium-1194/chrome-linux/chrome.",
+    "Fixed and redrawn, with no approved heading or kicker touched (all 43 headings and 7 chapter cards still match approved-headings.json): rings that cut through words or ran off the crop on 11 cards; fri-gemini-auto-h1 cropped to the plans table so no half-cut line sits under it; fri-deep-claude-code-reversal crop extended so 'Here's what happened' is not clipped; label 'Opus 5 (older)' on aa-same-claude-s2 and -s3 so the four columns line up; no-break spaces so model names and dates in the Claude-names columns never split across lines. The changes are in /home/user/content-engine/docs/plans/2026-10-09-friday/video-pictures/cards-v6.json, recorded under 'review_17_oct' and in updated 'not_ready' notes. The tool rewrote cards.receipt.json beside it. long.json is unchanged and both copies are identical. Nothing was committed, published or sent."
+   ]
+  }
+ },
+ {
+  "result": {
+   "problems": [
+    {
+     "card": "fri-deep-cost-vs-score-score",
+     "problem": "The number on screen does not match the evidence. The approved heading says \"Only about a third higher\" (33%). The take at this cue says \"only goes up by about 30%\" (long.json cue end). Evidence P1-02 gives 42 to 58, which is +38% rounded and +36% unrounded (42.31 to 57.62). The card's own data field says \"+16 points, +38%\". Heading, voice and evidence give three different figures, and both spoken and printed ones understate it.",
+     "fix": "Do not edit the heading: video_card refuses any heading Krish has not picked. Put it back to Krish with the exact figure: 16 points, 42 to 58, about 36 to 38% higher. He can re-pick a line such as 'nearly 40% higher' or accept 'about a third'. Either way, make the note say '16 points higher (42 to 58)' so the true figure is on screen."
+    },
+    {
+     "card": "fri-deep-openai-free-dec-2025-s3",
+     "problem": "The heading says more than the capture shows. The heading is \"WIRED: OpenAI was footing the thinking bill\" with the kicker \"WIRED, 16 DEC 2025\". The capture is Maxwell Zeff's post on X, not a WIRED page. The post says the router was \"costly for the company to serve\" and gives \"hurting engagement\" as the reason for the rollback. It never mentions thinking or reasoning, and it never says more free users were sent to it. That is the claim spoken here (\"seemed to send lots more free users to the slower, thinking answers\"). shots-v6-sources.json says so itself. P4-03 also says cost is WIRED's framing and WIRED wrote \"seemed to\".",
+     "fix": "Get the signed-in WIRED capture of \"In practice, the router seemed to send many more free users to OpenAI's advanced reasoning models, which are more expensive for OpenAI to serve\" (not_ready.wired_lines) and use it here. Until then, tell Krish the heading goes beyond the capture. Ring the whole sentence, including \"was thought to be hurting engagement\", so the post's own reason is not hidden."
+    },
+    {
+     "card": "fri-deep-openai-free-dec-2025-s2",
+     "problem": "The kicker and the capture name different publishers, and the claim spoken at this cue is not on screen. The kicker says \"OPENAI, DEC 2025\" over WIRED's article header. The line spoken here, \"OpenAI said free users liked the normal setting better\", is WIRED's paywalled spokesperson quote, which was not captured. OpenAI's own note gives its reason as \"To maximize choice\" (shots-v6-sources related_fact). The WIRED headline shown says \"for Most Users\", and its standfirst talks about \"last summer's user revolt\". Neither is the point being made.",
+     "fix": "Best: use a signed-in WIRED capture of the spokesperson line (\"Free and Go users preferred staying in the default chat experience\"). Otherwise, show the 11 Dec 2025 release-note paragraph at this cue: it is capture -1, a crop that reaches \"To maximize choice\". Then the OPENAI kicker sits over OpenAI's own words. Tell Krish the spoken line rests on a quote that is not shown."
+    },
+    {
+     "card": "fri-gemini-auto-h2",
+     "problem": "The heading over-claims. \"Gemini decides how much thinking you get\" sits over Google's ringed text, which says Auto sends each prompt to a model (Flash-Lite, Flash or Pro). P4-01's limits say: \"Auto picks between models, not explicitly between thinking levels\". Google only says prompts that \"need deeper reasoning\" may go to Flash or Pro.",
+     "fix": "Raise it with Krish, since the heading is approved. On the card, add a note in Google's terms: 'Auto picks which Gemini model answers; Google says prompts that need deeper reasoning may go to Flash or Pro.' Then the screen does not claim Google sets a thinking level."
+    },
+    {
+     "card": "fri-deep-aa-same-claude, fri-deep-aa-same-claude-s1, fri-deep-aa-same-claude-s2",
+     "problem": "These cards lead with bare index scores. Each column's big line is \"42 out of 100\", \"58 out of 100\" or \"51 out of 100\". These are the exact numbers Krish called not understandable (failures.json bare-score-in-script: \"What does 42 even mean?\"). PLAIN_SCORES says \"never a bare score, on the page or on screen\". \"Out of 100\" invites the reading '42% right', but the index combines 10 evaluations, so it is not a share. None of these three cards gives a share, multiple or gap.",
+     "fix": "Make each column's big line the comparison and move the raw index to the note. For example: Max is '16 points above Low'; on -s2, Opus 5 at Max is '9 points above Opus 5.5 at Low'. Do the same as the -score card's share wording. Keep '42/58/51 on AA's 0-100 index' in small type."
+    },
+    {
+     "card": "fri-deep-aa-same-claude, -s1, -s2, -s3, fri-deep-cost-vs-score, -cost, -score",
+     "problem": "Artificial Analysis supplies every number on these 7 cards, but its logo is never drawn. They are columns cards, and video_card.py's columns branch draws only the logos inside each column. The card-level \"logos\": [\"artificialanalysis-cream.svg\"] is ignored. main()'s trim pass also skips column logos. Today Artificial Analysis is named only in the kicker, and the only logo is Anthropic's (confirmed by running check_spec: it passes, and the card-level logos are dropped).",
+     "fix": "In /home/user/content-engine/scripts/pages/video_card.py, make the columns branch draw card-level \"logos\" in the heading row, the way shot cards do. Add column logos to the TRIMMED pass. Add a test that a columns card's card-level logo appears in the HTML. Then redraw the 7 cards."
+    },
+    {
+     "card": "fri-deep-openai-5-1-to-6-1, -r1, -r2, fri-deep-extended-cut-by-mistake, -r2, -r3, fri-deep-altman-losing-on-pro, fri-deep-claude-code-reversal-f2, -f3, -f4",
+     "problem": "These captures are not the page as published, and the colours added to them are off-brand. Four PNGs have marks burned in by our tools: coral #FF7F50 rings on the dates in fri-deep-openai-5-1-to-6-1.png, coral rings on \"Jan 10, 2026:\", \"unintentionally\" and \"February 4, 2026:\" in fri-deep-extended-cut-by-mistake.png, and a coral underline, drawn frame and dashed rule in fri-deep-altman-losing-on-pro.png. The fourth, fri-deep-claude-code-reversal.png, has yellow #FFE45C highlights. Neither colour is a brand token: the mind.the.gap accent is #FF6A4D, mint is #7EF0C0 and follow.the.money's yellow is #FFD84D. This breaks video_card's rule (\"Only the page's own pixels and the ring: nothing on the page is redrawn\") and the shots-v6 rule (\"No header strip, label or highlight is burned into any PNG\"). The cards then add a mint ring on top, so one picture shows two ring colours. On -r3 the mint ring encloses a coral one.",
+     "fix": "Recapture these pages clean, the way shots-v6 did: a plain viewport, nothing injected. Let video_card's \"mark\" draw the only ring. Where two entries of one page are needed (5.1 and 6.1; the X post and the Pro page), give video_card a way to stack two crops of real captures with its own cut line. Do not bake the join into the PNG."
+    },
+    {
+     "card": "fri-deep-claude-code-reversal-f2",
+     "problem": "The payoff shows before he says it. The burned-in yellow on \"This was the wrong tradeoff. We reverted this change on April 7\" sits two lines under the ring, while he is still on the March 4 change. It is the -f4 beat. not_ready.reversal_f2 knows this, but it is still unfixed. The mint ring's right edge also runs through the \"high\" code chip at the end of the first line.",
+     "fix": "Re-run the postmortem capture with no highlights, as the earlier skeptic asked (plan-v6.checked.json). Ring only the March 4 sentence, with \"mark\" set so the ring clears the code chip."
+    },
+    {
+     "card": "fri-deep-thinking-settings, fri-deep-where-to-turn-it-up, -c2, -c3",
+     "problem": "These composites carry drawn header strips and labels that are not on any real page. fri-deep-thinking-settings.png shows two drawn strips, each reading 'Help Center ... captured 16 Oct 2026'. fri-deep-where-to-turn-it-up.png has numbered strips: 1, 2, 3 and 3 again, so Claude and Gemini share the number 3. It also has mint rings burned around \"Medium\" and \"High\" on OpenAI's page and \"High\" on Claude's. On screen, -c2 shows \"2 OpenAI Help Center \u00b7 same article\" and -c3 shows \"3 Gemini Apps Help\": numbers with no meaning on a single card. The source line under each card already gives the URL and capture date.",
+     "fix": "Recapture each help page on its own, clean, with no strips, numbers or rings. Give each card one page, and draw the ring with \"mark\". The two-page fri-deep-thinking-settings card also has no ring (not_ready.thinking_settings_mark). Splitting it into two crops would let each heading line be ringed."
+    },
+    {
+     "card": "fri-deep-where-to-turn-it-up, -c2, -c3",
+     "problem": "Our advice can read as the vendor's. The headings are Krish's advice (\"For anything you act on, pick Medium or High\"; \"Claude or Gemini? Turn effort up.\"). The kickers \"CHATGPT, OCT 2026\" and \"CLAUDE, GEMINI, OCT 2026\" have the same form as the source kickers elsewhere, and the burned-in mint rings on Medium and High make it look as if OpenAI and Anthropic stressed those levels. On -c3, the Gemini ring stops before \"but will also use more of your limit\". P4-01 also says it is unclear whether free Gemini users on Auto can pick an effort level at all.",
+     "fix": "Keep the approved kickers and headings. Remove the burned-in rings. Add a note on each card, 'Our advice; the page lists the settings.' On -c3, extend the ring to the whole Gemini tip so the cost to your limit is inside it, and note 'paid Gemini plans; free Gemini runs on Auto'."
+    },
+    {
+     "card": "fri-deep-thinking-use-1-to-7, fri-deep-thinking-use-1-to-7-after",
+     "problem": "The dates and the cause are unclear. The first card shows only an undated \"Before: Under 1 in 100\" under the kicker \"ALTMAN, 10 AUG 2025\". It can read as if under 1 in 100 used thinking on 10 Aug 2025, when on that day he reported 7. The -after card's heading and line (\"Once the AI chose\", \"once ChatGPT chose for them\") imply the router caused the rise. Altman gives no cause, and evidence-v2 2.1 and its 'Do not use' list treat even the before/after-GPT-5 framing as our inference from his thread.",
+     "fix": "Date the first column 'Before GPT-5 launched (7 Aug 2025)' and the second 'Three days after (Altman, 10 Aug 2025)'. Add to the note: 'Altman did not give a cause; the automatic picker launched with GPT-5.' Tell Krish the heading's causal reading is ours."
+    },
+    {
+     "card": "fri-deep-extended-cut-by-mistake-r3",
+     "problem": "Nothing on screen supports \"Your screen never showed it.\" The capture is OpenAI's own published disclosure of the change. P4-05's checker said \"users cannot see it happen\" overreaches for this reason, and suggested \"users can't see it in the app\".",
+     "fix": "Raise it with Krish, since the heading is approved. Add a note: 'Disclosed only in these release notes, after the fact; the ChatGPT app showed no change.'"
+    },
+    {
+     "card": "fri-deep-aa-same-claude, -s1, -s2, -s3, fri-deep-cost-vs-score, -cost, -score",
+     "problem": "An Artificial Analysis qualifier is dropped from the labels. AA's Opus 5.5 rows are \"Claude Opus 5.5 (Low, Default Fallback)\" and \"(Max, Default Fallback)\"; Opus 5 is plain \"(Max)\". P1-02's checker says 'Default Fallback' most likely means blocked tasks are finished by older models, so the comparison is not quite like for like. The labels just say \"Opus 5.5 \u00b7 Low effort\".",
+     "fix": "Check the medium page's variant name too. Add to the note: 'Opus 5.5 runs are AA's \"Default Fallback\" variants.'"
+    },
+    {
+     "card": "fri-deep-aa-same-claude-s3, fri-deep-aa-same-claude",
+     "problem": "Two loose words in the headings. \"Middle-gear\" means Medium, but Medium is the second of Opus 5.5's five levels (Low, Medium, High, Extra high, Max); the middle one is High, which AA scores 54. \"Same Claude Opus 5.5, tested in every gear\" sits over a card that shows two of the five levels; Medium 51, High 54 and Extra high 56 are left out.",
+     "fix": "Headings are approved, so raise them with Krish. On -s3, label the column 'Medium (Opus 5.5's default)'. On the first card, add 'AA tested all five levels; lowest and highest shown' to the note."
+    },
+    {
+     "card": "fri-deep-altman-same-day-t2",
+     "problem": "The date that makes \"The same day\" true is not on the card. The capture is cropped to the one sentence, and the page date (\"March 31, 2025\" on capture -2) is left out, so the claim rests on the kicker alone. The sentence is also drawn small in a wide box (not_ready.altman_t2).",
+     "fix": "Use capture -2 (date and title, crop [435,240,2011,487]) with the sentence. Ideally, let video_card stack two crops of one page with a drawn cut line, rather than baking them into one PNG."
+    },
+    {
+     "card": "fri-deep-openai-plus-pro-sep-2026, -c2",
+     "problem": "The capture shows less than the card needs. Neither card shows the date \"September 14, 2026\", which is about 1,100 px above the crop. The rings run line by line across sentence breaks: the first ring ends at \"...to give ChatGPT\", and the -c2 ring starts with \"Pro users globally.\" The heading \"lost automatic too\" leaves out the entry's next line, \"ChatGPT can still switch automatically for safety purposes\", and P4-02 adds that Pro still switches automatically at its weekly limit. -c2's second source (help article 20001354) is still not captured.",
+     "fix": "Add the date header as a second crop with a cut line, as the earlier skeptic asked. Ring whole sentences. Add a note: 'Automatic switching stays for safety, and for Pro at its weekly limit.' Capture the 20001354 sentence for -c2."
+    },
+    {
+     "card": "fri-call-85, fri-call-85-fill",
+     "problem": "The call has no matching public market on file. The only market file, /home/user/content-engine/docs/plans/2026-10-09-manifold-market.md, is for an older call: by 30 Sep 2027, two of OpenAI, Anthropic and Google route API requests by default, at 85%. post.json's channel copy still carries that old call. The card's call (free ChatGPT starts on automatic by 30 June 2027, 85%) has no market, against mind.the.gap's promise \"Every call scored in public\". The kicker says \"OUR CALL\" and the note says \"My call\".",
+     "fix": "Before release, open and record a market for the card's exact call, with its WRONG IF line. Update or retire the old market and the old call in post.json. Make the note's voice match the kicker if Krish agrees."
+    },
+    {
+     "card": "fri-deep-openai-5-1-to-6-1-r2",
+     "problem": "The ringed heading reads \"GPT-6.1 Sol in ChatGPT Work and Codex\". P1-03 has OpenAI saying these models \"are not available in regular ChatGPT conversations\". The take at this cue says \"OpenAI's ChatGPT went from GPT 5.1 to 6.1\". The approved heading (\"GPT went up a whole number\") holds, but the voice-over says more than the ringed line.",
+     "fix": "No card change is needed: the ring shows the honest scope. Tell Krish that regular ChatGPT went from 5.1 to 6, not 6.1."
+    },
+    {
+     "card": "fri-deep-altman-same-day-t2, fri-deep-openai-free-dec-2025-s3, fri-deep-claude-code-reversal-f2, -f4, fri-deep-thinking-settings, fri-deep-where-to-turn-it-up",
+     "problem": "Em dashes appear inside the captured pages' own text: OpenAI's funding sentence, Zeff's post, the postmortem's \"latency\" line, and OpenAI's help bullets. Our own card text has none: a count of the spec found 0 em and en dashes.",
+     "fix": "This cannot be fixed without redrawing the pages, which is not allowed. Tell Krish so it is a known exception. If a crop can end before the dash without losing the claim, use it."
+    },
+    {
+     "card": "fri-gemini-auto, fri-deep-altman-same-day-t3",
+     "problem": "Two crop edges cut text. On fri-gemini-auto the crop's bottom edge (y 1090) clips the last line, \"changes will take effect for you.\" On -t3 the top edge (y 304) cuts through the two page tags above The Decoder's headline.",
+     "fix": "fri-gemini-auto: crop [60,760,1840,345]. -t3: start the crop about 40 px lower, below the tags, keeping the headline whole."
+    },
+    {
+     "card": "(spec) cards-v6.json",
+     "problem": "cards-v6.json has no \"logos_to_add\" section, although the brief says to read one. The open logo gap (Artificial Analysis on 7 cards) is recorded only in not_ready.aa_logo. Everything else checked out. All 44 headings and kickers match approved-headings.json. All 7 chapter dividers match the chapters list. The cue ids match long.json, and the kit copy is byte-identical. Every logo file exists. check_spec passes. The X post times decode to the dates stated, and the shots-v6 captures' pages and dates match their sources.",
+     "fix": "Add a logos_to_add entry for artificialanalysis-cream.svg on the 7 columns cards, pointing at the video_card.py change, so the gap is tracked in the spec."
+    }
+   ]
+  }
+ },
+ {
+  "result": {
+   "problems": [
+    {
+     "card": "fri-deep-aa-same-claude-16x9.png, fri-deep-aa-same-claude-s1-16x9.png, fri-deep-aa-same-claude-s2-16x9.png, fri-deep-aa-same-claude-s3-16x9.png",
+     "problem": "These are the most important cards in the video, and right now they are not a chart. The heading says Opus 5.5 was 'tested in every gear', but the body shows only 2 gears. Each score ('42 out of 100') is plain 34px Archivo, the same weight as its label, so the 16-point gap has no shape. 'hi' only recolours a 4px rule and a 24px mono label, so on a phone s1, s2 and s3 look like the base card. There is no Artificial Analysis logo: video_card never draws card-level logos on columns cards (not_ready.aa_logo), so the only mark is the same Anthropic logo repeated in each column. On s3 the labels break mid-phrase ('OPUS 5.5 \u00b7 LOW / EFFORT', 'OPUS 5 (OLDER) \u00b7 MAX / EFFORT'). Also, the 'logos_to_add' key the brief says to read is not in cards-v6.json.",
+     "fix": "Redraw the four cards as one bar chart on a 0 to 100 axis. video_card 'bars' needs a 'max' field, because today it clamps scores to 10: `max(0, min(10, r[\"score\"])) * 10`. Rows: Opus 5.5 Low 42, Opus 5.5 Medium 51, Opus 5.5 Max 58. Give each row the Anthropic symbol and its score in Anton 64px, and put the AA logo top right. Base: all three rows, Medium dimmed. s1: Max row in the accent colour. s2: add a row 'Opus 5 (older), Max 51' in the accent. s3: Medium and Opus 5 rows in the accent, each with '$1.34 a task' / '$5.86 a task' at 34px or more on the right. Note: 'AA also tests High (54) and Extra high (56)' (evidence P1-02). Keep three gears, not five: with all five shown, s3's approved 'Middle-gear' (Medium is 2nd of 5) would look wrong, so if Krish wants all five he has to re-pick that heading. Put each effort name in a no-break span."
+    },
+    {
+     "card": "fri-deep-cost-vs-score-16x9.png, fri-deep-cost-vs-score-cost-16x9.png, fri-deep-cost-vs-score-score-16x9.png",
+     "problem": "Base: the heading says 'Top gear costs about 11 times the lowest', but the body shows only 'Low effort' and 'Max effort' under two identical 'CLAUDE OPUS 5.5' labels. The dollars appear only in the 24px footnote. -cost: $0.55 and $5.98 are in 22px muted mono. -score: the video's main finding (10.9 times the cost for +16 points, +38%) is two lines of 22px mono. None of the three has a chart or the AA logo. The layout also jumps between cuts 3 to 5 s apart (kicker top at y 237, then 213, then 173), because the body is vertically centred and the notes and headings differ in length.",
+     "fix": "Use one fixed layout and reveal it in three steps. Left panel: 'Cost per task' bars on one dollar axis ($0.55 vs $5.98, Max bar 10.9 times longer, values in Anton 64px). Right panel: 'Score, 0 to 100' bars (42 vs 58 on the full axis). Base: both cost bars, nothing lit. -cost: Max cost bar in the accent with 'x10.9'. -score: Max score bar in the accent with '+16 points (+38%)'. AA logo top right. Say 'Claude Opus 5.5' once, not as two identical column labels. Top-anchor the layout so only the highlight changes between the three cards."
+    },
+    {
+     "card": "ALL non-chapter cards (header system)",
+     "problem": "The video uses three different headers. Shot cards (29): kicker 4px above a 64px heading, pinned at y 69, logos top right. Columns cards: kicker 33px above an 80px heading, block vertically centred, so the kicker lands anywhere from y 160 to y 237, and logos sit in each column. Statement cards: 104px lines with logos under them at left. I measured the gap on every card: 4px on all shot cards against 33 to 39px on the rest, so on shot cards the kicker nearly touches the heading's caps. Cutting shot, then columns, then shot, the heading changes size and position every few seconds. Shot headings also wrap to two lines because the logos take width from them.",
+     "fix": "In scripts/pages/video_card.py, give every non-chapter card one header. Kicker top fixed at y 64 (`body { justify-content:flex-start; padding-top:64px }` everywhere except chapter dividers). Same kicker-to-heading gap on shots (`.shothead > div { display:flex; flex-direction:column; gap:28px }`). One heading size: Anton 72px, and drop the 64/68/80px variants. Card-level logos at 40px tall, right-aligned on the kicker line on every card type (columns and statement included), so the heading gets the full 1408px width. Chapter dividers keep their centred 104px template."
+    },
+    {
+     "card": "ALL shot cards (the mint ring)",
+     "problem": "The mint ring (#7EF0C0) on the cream shot box (#F6F4EE) has a contrast of about 1.3:1. It is drawn in capture pixels (max(4, width/260)) and then scaled down, so it ends up 3 to 5px wide on the card, and about 2.8px on fri-deep-openai-5-1-to-6-1-r1/-r2. At phone size the ringed line, the exact thing Krish is talking about, barely shows.",
+     "fix": "In framed_shot, size the ring in final-card pixels (line = ceil(6 / display_scale)). Lay ink #0C1512 at 35 to 40% opacity over everything outside the mark, so the ringed words are the brightest thing in the box. Keep the ring mint."
+    },
+    {
+     "card": "fri-deep-openai-5-1-to-6-1 (all 3), fri-deep-extended-cut-by-mistake (all 3), fri-deep-claude-code-reversal-f2/-f3/-f4, fri-deep-where-to-turn-it-up (base, -c2, -c3), fri-deep-thinking-settings, fri-deep-altman-losing-on-pro",
+     "problem": "These captures have marks burned in by earlier tools, which breaks shots-v6-sources.json's own rule ('No header strip, label or highlight is burned into any PNG'). The burned-in marks are: coral ovals (#FF7F50, not the series accent #FF6A4D); yellow highlighter (#FFE45C, which reads as follow.the.money's #FFD84D on a mind.the.gap video); thin 2px mint boxes; dark numbered label strips ('2 OpenAI Help Center \u00b7 same article', '3 Gemini Apps Help') that repeat the URL and capture date already in the source line; and a coral underline under '$200 monthly plan'. Cards end up with two or three highlight colours next to video_card's ring. Lines also light up before he says them: extended-cut base already rings 'unintentionally' before r2's 'by mistake', and f2 already highlights 'This was the wrong tradeoff. We reverted this change on April 7' before f4.",
+     "fix": "Recapture these pages clean, the way the v6 launch-page captures were made (Playwright, device scale 2, nothing injected): help.openai.com release notes (the 12 Nov 2025, 29 Sep 2026 and 4 Feb 2026 entries), anthropic.com/engineering/april-23-postmortem (capture_postmortem.py with no highlight phrases), help.openai.com/articles/20001354, support.claude.com/en/articles/8664678, support.google.com/gemini/answer/17004136 and openai.com/index/introducing-chatgpt-pro. Then draw every ring with video_card's mark and nothing else."
+    },
+    {
+     "card": "fri-deep-openai-plus-pro-sep-2026, -c2, fri-gemini-auto-h2, fri-deep-openai-free-dec-2025, fri-deep-claude-code-reversal-f3/-f4, fri-deep-thinking-settings",
+     "problem": "video_card accepts one rectangular 'mark', so any sentence that starts or ends mid-line gets a ring that cuts it or grabs half the next sentence. plus-pro base rings sentence 1 plus half of sentence 2. -c2 rings the tail of sentence 1 plus sentence 2. gemini-h2's ring starts mid-sentence at 'selection'. free-dec stops at 'reasoning in' and leaves 'ChatGPT.' outside. f3 and f4 ring whole extra clauses. thinking-settings has no ring at all (not_ready.thinking_settings_mark).",
+     "fix": "Add 'marks': [[x,y,w,h], ...] to video_card and draw one joined outline per line box (shots-v6-sources.json already records 'mark_lines' per line). Then ring exact sentences: plus-pro base = line 1 plus 'Pro users globally.'; -c2 = 'You can still select ... more time to think or reason.'; free-dec = line 1 plus 'ChatGPT.'; f3 = 'users began reporting that Claude Code felt less intelligent' plus 'most users retained the medium effort default'; f4 = 'This was the wrong tradeoff. We reverted this change on April 7'; thinking-settings = both page headings."
+    },
+    {
+     "card": "fri-deep-altman-same-day-t2 (8% of the box used), fri-deep-openai-free-dec-2025 (19%), fri-gemini-auto-h2 (28%), fri-deep-where-to-turn-it-up-c2 (38%), fri-gemini-auto (42%), fri-claude-launch-pages and -p2 (51 to 54%)",
+     "problem": ".shotbox is flex:1, so it fills all the height under the heading whatever the capture's shape, and video_card never enlarges a capture. Short crops float as a thin strip in a big cream slab. On t2 the one sentence is about 30px tall in a 1368x580 box. The launch pages show a second off-white band: the page's own #FAF9F5 strip sits inside the box's #F6F4EE, a box inside a box.",
+     "fix": "Let captures taken at device scale 2 draw up to 2x their pixel size. That is still at least 1 device pixel per page pixel, so nothing blurs: CSS `width: min(100%, natural*2)` within the height limit. Set the shotbox background to the capture's own corner colour. If enlarging is ruled out, make the box hug the image instead (`.shotbox { flex:0 1 auto; margin:auto 0 }`)."
+    },
+    {
+     "card": "fri-deep-15-claude-names (x4), fri-deep-cost-vs-score-cost/-score, fri-deep-aa-same-claude-s3, fri-deep-thinking-use-1-to-7 (x2), every card's note and source line",
+     "problem": "Secondary text is 22 to 24px IBM Plex Mono in muted #AEAEA5. That is about 5pt on an upright phone (a 1600px frame on a 390pt screen). On several cards this small text carries the number Krish is saying ($0.55, $5.98, 'scores 42/58', the 9 non-Opus Claude names). Each columns card ends in 2 to 3 lines of mono notes. Source lines wrap and leave a lone '16 Oct 2026' or '2026' on line 2 (5-1-to-6-1, thinking-settings, losing-on-pro, free-dec-s3, c3).",
+     "fix": "Put any number he says in a large face (Anton 56px or more, or Archivo 700 at 40px or more). Raise .cf to 30px. Keep .note to one line and move the method text to the description and Substack. Add `.src { text-wrap: balance }`."
+    },
+    {
+     "card": "fri-deep-15-claude-names-16x9.png, -s2, -s3, -s4",
+     "problem": "The claim is 15 names on 13 launch days, about one every four weeks, but only the 6 Opus names are readable. The other 9 (Sonnet 4.6, Mythos Preview, Fable 5, Mythos 5, Sonnet 5, Fable 5.1, Mythos 5.1, Sonnet 5.5, Haiku 5.5) are 22px mono, so the card actually reads as 'one every two months'. Six identical Anthropic marks add nothing. On -s2, -s3 and -s4 only the rule and date label turn coral; 'Opus 4.8', 'Opus 5' and 'Opus 5.5' stay cream, so the build he talks over cannot be seen at phone size.",
+     "fix": "Draw a 12-month timeline (Oct 2025 to Oct 2026) with 13 launch-day ticks and all 15 names labelled: Opus names in cream Archivo 34px above the line, the rest in muted 28px below. One Anthropic logo top right. Note: '15 names, 13 launch days'. On -s2, -s3 and -s4, turn the Opus 4.8, 5 and 5.5 ticks and names to the accent. If it stays a columns card, at minimum: `.col.hi .cn { color: var(--accent) }`, non-hi columns at 50% opacity, .cf at 30px, one card-level logo."
+    },
+    {
+     "card": "fri-deep-thinking-settings-16x9.png",
+     "problem": "Two whole help pages sit side by side at 0.39 scale, so the body text is about 10px and unreadable, and there is no ring. Burned-in dark label strips (URLs plus 'captured 16 Oct 2026') repeat the source line. The two-line heading shrinks the box further. This is the card for 'you pick how hard ChatGPT and Claude think', and only the two page headings can be read.",
+     "fix": "Rebuild the composite clean. Left: OpenAI's 'Choose a thinking level' with its five bullets (Instant, Medium, High, Extra High, Pro). Right: Claude's 'Choose an effort level' with its four bullets (Low and Medium, High, Extra high, Max). Leave out the paragraphs and label strips, so the levels draw at about twice the size. Ring both headings with the new multi-box mark."
+    },
+    {
+     "card": "fri-deep-openai-5-1-to-6-1-16x9.png, -r1, -r2",
+     "problem": "The capture is a composite with burned-in coral ovals around the dates. A 4-line GPT-5.1 paragraph (about 16px on the card) sits between the two facts as noise. The capture draws at 0.46 scale and uses only 835 of the box's 1368px width. On -r2 the ring sits on the crop's bottom edge. The source line wraps and leaves '16 Oct 2026' alone.",
+     "fix": "Rebuild the composite clean: 'November 12, 2025' with 'GPT-5.1 in ChatGPT', then a dashed cut, then 'September 29, 2026' with 'GPT-6.1 Sol in ChatGPT Work and Codex', and 40px of page below. No paragraph, so it draws at close to 1x. Ring both dates on the base card (multi-box mark), 'GPT-5.1 in ChatGPT' on r1 and the GPT-6.1 Sol line on r2. Balance the source line."
+    },
+    {
+     "card": "fri-deep-altman-losing-on-pro-16x9.png",
+     "problem": "The 4:1 strip draws at 0.51 scale. The Pro page's '$200 monthly plan' line, the only evidence for the heading's $200, is about 11px and has a coral underline burned in. The ring hugs 'insane' on the left. The source line wraps and splits '5 / Dec 2024'.",
+     "fix": "Rebuild the composite stacked instead of side by side: the post on top, and below it only the Pro page's line 'Today, we're adding ChatGPT Pro, a $200 monthly plan' (clean, 1440 wide). It then draws at about 0.9 instead of 0.51. Ring the 'insane thing' line and '$200 monthly plan' with the multi-box mark. Balance the source line."
+    },
+    {
+     "card": "fri-deep-claude-code-reversal-f2-16x9.png, -f3, -f4",
+     "problem": "Burned-in yellow highlighter, close to follow.the.money's accent colour, sits next to the mint ring on all three: two marking systems, and the viewer cannot tell which one matters. f2 shows 'This was the wrong tradeoff. We reverted this change on April 7' already highlighted, two lines under the ring, before he says it (not_ready.reversal_f2). On f2 the ring's right edge crosses the 'high' chip. f3's ring takes in 'startup, an inline effort selector, and bringing back ultrathink), but', and leaves 'felt less intelligent' (half of its own heading) outside the ring.",
+     "fix": "Re-run capture_postmortem.py with no highlight phrases and use the same crops. f2: ring 'On March 4 ... from high to medium'. f3: multi-box mark on 'users began reporting that Claude Code felt less intelligent' and 'most users retained the medium effort default'. f4: multi-box mark on 'This was the wrong tradeoff. We reverted this change on April 7'."
+    },
+    {
+     "card": "fri-deep-extended-cut-by-mistake-16x9.png, -r2, -r3",
+     "problem": "Burned-in coral ovals around 'Jan 10, 2026:', 'unintentionally' and 'February 4, 2026:'. The base card ('cut ... for speed') already shows 'unintentionally' ringed in coral before r2's 'by mistake'. On r2 the mint ring runs into the coral ovals. On r3 the ring and the word 'level.' sit on the crop's bottom edge, because the capture ends there: 320 + 600 already uses almost all 938px.",
+     "fix": "Use the clean recapture of the 4 Feb 2026 entry. Base: ring 'Jan 10, 2026: We lowered the Standard and Light thinking time ... faster responses.' r2: ring 'the Extended thinking setting for GPT-5.2 was unintentionally changed to be lower'. r3: have framed_shot add a 32px margin of the page's own background colour round every crop, so a ring is never drawn on an edge."
+    },
+    {
+     "card": "fri-deep-where-to-turn-it-up-16x9.png",
+     "problem": "Medium and High are ringed by thin 2px mint boxes burned into the composite. They hug the words and are a different weight from video_card's ring. The 5-line paragraph above the list is noise; the heading's point ('pick Medium or High') is the bullet list.",
+     "fix": "From the clean recapture of 20001354, crop to 'Choose a thinking level' plus the five bullets, leaving out the paragraph. Ring the Medium and High lines with the multi-box mark."
+    },
+    {
+     "card": "fri-deep-where-to-turn-it-up-c2-16x9.png",
+     "problem": "A burned-in dark strip ('2 OpenAI Help Center \u00b7 same article', URL, 'captured 16 Oct 2026') takes 40% of the capture. A viewer has no idea what '2' or 'same article' refers to, and the strip repeats the source line. Only 38% of the box is used.",
+     "fix": "Crop below the strip so only the sentence remains: crop [0, 1000, 1517, 141]. The existing mark [88, 1032, 1314, 76] still fits. Then apply the shot-box fix so the sentence draws larger."
+    },
+    {
+     "card": "fri-deep-where-to-turn-it-up-c3-16x9.png",
+     "problem": "Two pages are stacked, but the Claude half has no page title, so only the logo says it is Claude's help page. The Gemini half has a burned-in '3' label strip. There is a burned-in 2px ring on 'High' next to video_card's 6px ring on the Gemini tip. The composite's grey divider line runs down the left side. The source line wraps.",
+     "fix": "Rebuild the composite clean: Claude's 'Choose an effort level' heading with the 'High offers the best overall balance' bullet, then Gemini's 'Tips' bullet, with no numbered strips and no divider. Ring 'High' and the Gemini tip line with the multi-box mark. Balance the source line."
+    },
+    {
+     "card": "fri-deep-openai-free-dec-2025-16x9.png",
+     "problem": "Only 19% of the box is used. The crop ends mid-sentence ('...routed to the Thinking model when'), with 'when' at the crop's right edge, because the capture ends 8px under line 2. The ring stops at 'reasoning in', so the end of the ringed sentence ('ChatGPT.') sits outside it.",
+     "fix": "Recapture the 11 Dec 2025 entry with it in the middle of the viewport. Crop to the 'December 11, 2025' header and the entry's first two lines. Ring the whole sentence (line 1 plus 'ChatGPT.') with the multi-box mark, then apply the shot-box fix."
+    },
+    {
+     "card": "fri-deep-openai-free-dec-2025-s2-16x9.png",
+     "problem": "Its heading is word for word the same as the card shown 1.6 s earlier, which fits on one line. Here it wraps to two lines, because the OpenAI and WIRED logos take about 330px. On the cut the heading reflows and the capture drops 64px.",
+     "fix": "Move logos to the kicker line, as in the header fix, so both cards set the heading on one line. If that is not done, force the same line break on both cards."
+    },
+    {
+     "card": "fri-deep-altman-same-day-t2-16x9.png",
+     "problem": "Only 8% of the box is used: one 30px sentence floating in a 1368x580 cream box. The ring's right edge lands exactly on the crop's edge (754 + 757 + 10 = 1521 = 736 + 785), so 'billion' touches the ring.",
+     "fix": "Have framed_shot add a 32px margin of the page's own background colour round the crop, so the ring can close beyond 'billion' without widening the crop into 'at a $300 billion'. Then draw it at about 1.7x (shot-box fix), so the sentence spans the box at about 50px."
+    },
+    {
+     "card": "fri-deep-altman-same-day-t3-16x9.png",
+     "problem": "The top of the crop shows the bottom edges of two cut-off tag pills (blue and grey). The ring's left edge runs between the author's avatar and his name, so the avatar half-touches the ring.",
+     "fix": "Crop [360, 316, 1299, 394] to drop the pill fragments. Ring only the date 'Jan 31, 2025', at about [742, 517, 134, 32], since the date is the point of 'months in the making'. If the byline should stay ringed, extend the ring 60px left to take in the avatar."
+    },
+    {
+     "card": "fri-gemini-auto-16x9.png",
+     "problem": "The ring's edges touch the words on both sides ('subscription' on the left, 'For' on the right), because a 7px line is squeezed into a gap of about 12px. Only 42% of the box is used.",
+     "fix": "Ring the whole clause from the start of the line, mark [100, 924, 1655, 46] ('These changes will start ... on October 9th.'), so only one edge has to sit in a word gap. Use the final-pixel ring width and the shot-box fix."
+    },
+    {
+     "card": "fri-gemini-auto-h2-16x9.png",
+     "problem": "The ring starts mid-sentence at 'selection', and its top edge sits on the descenders of line 1. Only 28% of the box is used.",
+     "fix": "Ring the whole paragraph: mark [100, 1750, 1700, 162]. It stays inside crop [80, 1730, 1840, 217] with its 10px padding. Then apply the shot-box fix."
+    },
+    {
+     "card": "fri-deep-openai-plus-pro-sep-2026-c2-16x9.png",
+     "problem": "It is the same capture as the card before, with the ring moved down, and the ring starts mid-sentence. The second source in the plan for 'you pick the gear' (help.openai.com/articles/20001354: 'On Plus and Pro plans, Instant doesn't automatically switch to a higher thinking level for complex requests.') was never captured ('to_capture_later').",
+     "fix": "Capture that sentence from 20001354 and use it on -c2, ringed. If it stays on the release notes, ring only 'You can still select ... more time to think or reason.' with the multi-box mark."
+    },
+    {
+     "card": "fri-deep-thinking-use-1-to-7-16x9.png, fri-deep-thinking-use-1-to-7-after-16x9.png",
+     "problem": "The base card is one column with the right half of the frame empty. 'Under 1 in 100' and '7 in 100' are 34px, and the after card shows its highlight only in the label and rule. A 7x jump has no picture, though the earlier check (plan-v6.checked.json) asked for a dot grid. The after card also adds a column, so the layout reflows on the reveal.",
+     "fix": "Draw a 10x10 dot grid in each column: before has no full dot lit (one dot partly filled for 'under 1'), after has 7 dots lit in the accent. Put the figure under each grid in Anton 96px. Draw both columns on the base card, with the 'After' column dimmed and its grid empty, so the reveal only lights it."
+    },
+    {
+     "card": "fri-chapter-6-16x9.png, fri-chapter-8-16x9.png",
+     "problem": "One word sits alone on the last line ('YOU?', 'AGAIN?'). Statement lines (.lines div) have no `text-wrap: balance`; only h1 has it, which breaks the docstring's own rule.",
+     "fix": "Add `text-wrap: balance` to `.lines div`. The headings then break as 'WHAT WILL CHATGPT / HIDE FROM YOU?' and 'WILL CHATGPT DECIDE / FOR YOU AGAIN?'."
+    },
+    {
+     "card": "fri-call-85-16x9.png, fri-call-85-fill-16x9.png",
+     "problem": "The fill card's note is one line longer ('Wrong if a new free chat still starts on a setting you pick.'), so the vertically centred block moves up 16px on a cut 1.5 s after the first card. Apart from that shift, the only change is the colour of the 85% line: a 'fill' card with no meter.",
+     "fix": "Use the same note on both cards: put the 'Wrong if...' sentence on both, or on neither. With the header fix (top-anchored), only the 85% line should change. Optionally add an 85-of-100 meter bar that fills in mint on -fill."
+    },
+    {
+     "card": "fri-chapter-3-16x9.png",
+     "problem": "The Artificial Analysis wordmark draws at roughly half the visual height of the Anthropic symbol next to it, because `.logos img { max-width:260px }` caps the wide wordmark.",
+     "fix": "Raise max-width for wordmarks (for example 360px), or use AA's symbol-only mark, so both logos have the same optical height."
+    },
+    {
+     "card": "fri-deep-openai-free-dec-2025-s3-16x9.png",
+     "problem": "The ring's right edge touches 'but'. The source line wraps and leaves '2026' alone on line 2.",
+     "fix": "Pull the mark's right edge in by 8px: [747, 321, 747, 24]. Add `.src { text-wrap: balance }`, or shorten the source to 'x.com/ZeffMax/status/2000984660852310409, Maxwell Zeff of WIRED, 16 Dec 2025, 17:41 UTC; captured 17 Oct 2026' at 20px."
+    },
+    {
+     "card": ".cache/produce/2026-10-16-904658db/kit/panels (folder) and kit.json",
+     "problem": "panels/ holds 14 article panels (belt, decoder, forks, jobs, menu, money, pileup, each in 16x9 and 9x16) that no cue in long.json uses. kit.json still lists only those 14 (no hashes for the 51 fri- panels the cut uses) and still carries 'not cued ... this cut would go out without it' problems for six of them. Any run that trusts kit.json is checking the wrong files.",
+     "fix": "Leave the article panels themselves alone (Krish: do not change the article clips). Rewrite kit.json's 'files' to the 51 cued fri- panels with their sha256 (they already match cards.receipt.json), and record the 7 article pictures as deliberately not in the long cut, or cue them if they are meant to be in it."
+    },
+    {
+     "card": "sheet.png",
+     "problem": "The contact sheet's 51 thumbnails have no labels, so a reviewer cannot tell which tile is which cue, or see where a sequence repeats (base, -s1, -s2), without counting.",
+     "fix": "In the --sheet step, print each card's cue id and 'at' seconds under its 640x360 tile in 18px IBM Plex Mono."
+    }
+   ]
+  }
+ }
+]

@@ -9,268 +9,412 @@
  "about": "Friday 16 Oct, the long cut: one card per picture step in long-cut/long.json (44), plus a divider for each chapter turn after the first (7), each with its own cue in long.json. Every kicker, heading and chapter name is the one Krish picked on 17 Oct 2026 (approved-headings.json; each recorded as picked in config/title-verdicts.json). The captures for the launch pages, the Altman day and last December are filled from shots-v6-sources.json.",
  "draw": "python3 scripts/pages/video_card.py docs/plans/2026-10-09-friday/video-pictures/cards-v6.json --out <kit folder>/panels --sheet",
  "not_ready": {
-  "aa_logo": "The 7 Artificial Analysis cards (fri-deep-aa-same-claude, -s1, -s2, -s3, fri-deep-cost-vs-score, -cost, -score) carry artificialanalysis-cream.svg in the card's \"logos\", but they are \"columns\" cards and video_card.py draws a columns card's logos only per column (and its trim step skips column logos): until video_card draws card-level logos on columns cards, these cards show the Anthropic symbol and name Artificial Analysis only in the kicker.",
-  "wired_lines": "fri-deep-openai-free-dec-2025-s2 and -s3: WIRED's own two lines (the spokesperson's \"preferred staying in the default chat experience\" and \"In practice, the router seemed to send many more free users...\") are behind WIRED's paywall and were not captured. -s2 shows WIRED's headline, byline and date (ringed: the byline and date row); -s3 shows Maxwell Zeff's own post on X, cropped (17 Oct review) to the post's header and words only so they read at full size, ringed on \"The router, which was costly for the company to serve,\" with the ring between the lines. WIRED's article card and the post's time line are off -s3 (WIRED's header is on -s2; the date is in the kicker and the source line). A signed-in WIRED capture of the exact lines would replace both.",
-  "free_dec_2025_1": "fri-deep-openai-free-dec-2025 uses the capture's \"crop_line\" (the free-user line only), not its whole-entry \"crop\" (1440 x 1800), which would shrink the words to about a third on the card; so the \"December 11, 2025\" header is not on it (the date is in the kicker and the source line). The capture ends 8 px under the entry's second line, too close for a ring round both lines, so since the 17 Oct review the ring takes the first line only (\"Update for free and Go users: We're removing automatic model switching for reasoning in\"); \"ChatGPT.\" sits just under it, unringed.",
-  "altman_t2": "fri-deep-altman-same-day-t2 shows only OpenAI's sentence \"Today we're announcing new funding, $40 billion\" (crop stops before the valuation he does not say); the page's date line (shots/fri-deep-altman-same-day-2.png, \"March 31, 2025\") is not on the card, because video_card draws one capture per card. The date is in the kicker and the source line. The capture is drawn at its own size (video_card never enlarges a capture), so the sentence is small in a wide box. Since the 17 Oct review the ring is 10 px narrower and closes inside the crop, in the space after \"billion\".",
-  "reversal_f2": "fri-deep-claude-code-reversal-f2: no recapture exists, so it uses the capture as is, ringed only on the March 4 sentence. The capture's burned-in yellow on \"This was the wrong tradeoff. We reverted this change on April 7\" still shows two lines below the ring, before he says it. A recapture (capture_postmortem.py with only the March 4 sentence highlighted) would clear it.",
-  "plus_pro_c2": "fri-deep-openai-plus-pro-sep-2026-c2: its second source (help.openai.com/articles/20001354, \"On Plus and Pro plans, Instant doesn't automatically switch...\") is not in this capture (\"to_capture_later\" on the card).",
-  "thinking_settings_mark": "fri-deep-thinking-settings has no ring: video_card takes one \"mark\" box, and one box round both page headings (\"Choose a thinking level\", \"Choose an effort level\") would run through the first line of Claude's paragraph, which starts 17 px under the OpenAI heading. The capture is the two help pages side by side, so its body text is small on the card; the two headings read."
+  "wired_lines": "fri-deep-openai-free-dec-2025-s2 and -s3: WIRED's two lines are still behind its paywall. Since the 17 Oct review -s2 shows OpenAI's own 11 Dec 2025 release note, ringed on 'To maximize choice, free users will now use GPT-5.2 Instant by default...' (OpenAI's stated reason), so its OPENAI kicker sits over OpenAI's words; the spoken line ('free users liked the normal setting better') rests on WIRED's spokesperson quote, which is not on screen. -s3 shows Maxwell Zeff's post, ringed on its whole sentence including 'was thought to be hurting engagement'; it never says the router sent more free users to thinking, which the approved heading and the voice say. A signed-in WIRED capture would close both.",
+  "call_market": "fri-call-85 and -fill: no public market is on file for this exact call (free ChatGPT starts on automatic by 30 June 2027, 85%); docs/plans/2026-10-09-manifold-market.md and post.json still carry the older call. Open and record one before release (nothing is published from this step).",
+  "headings_for_krish": "Approved headings are drawn as picked; the 17 Oct skeptics' questions on six of them are in the 17 Oct report (cost-vs-score-score 'about a third' against 42 to 58, which is +36 to +38%; WIRED's 'footing the thinking bill'; gemini-auto-h2 'how much thinking'; r3 'Your screen never showed it'; 'Middle-gear' and 'every gear'; the causal 'Once the AI chose').",
+  "em_dashes_in_pages": "Em dashes inside captured pages' own text (OpenAI's funding sentence, Zeff's post, the postmortem's item 1, OpenAI's levels list) are the pages' own and are not redrawn. Our own card text has none.",
+  "thinking_settings_scale": "fri-deep-thinking-settings sets OpenAI's and Claude's level lists side by side, clean, both headings ringed; the two lists are wide pages, so they draw at about 0.44x (body text about 14px on the card)."
  },
  "cards": [
   {
    "file": "fri-deep-15-claude-names-16x9.png",
-   "kind": "columns",
+   "kind": "timeline",
    "kicker": "ANTHROPIC, SINCE OCT 2025",
    "title": "A new Claude roughly every four weeks",
-   "columns": [
-    {
-     "label": "24 Nov 2025",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.5"
-    },
-    {
-     "label": "5 Feb 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.6",
-     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
-    },
-    {
-     "label": "16 Apr 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.7"
-    },
-    {
-     "label": "28 May 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.8",
-     "line": "then Fable 5 and Mythos 5 (9 Jun) and Sonnet 5 (30 Jun)"
-    },
-    {
-     "label": "24 Jul 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 5",
-     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)"
-    },
-    {
-     "label": "22 Sep 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 5.5",
-     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)"
-    }
-   ],
-   "note": "15 new Claude names on 13 launch days, 16 Oct 2025 to 15 Oct 2026. Source: Anthropic model deprecations table and launch pages, read 15 Oct 2026.",
    "data": {
     "measures": "A count, not a score: every new Claude model name on its launch day, 16 Oct 2025 to 15 Oct 2026.",
     "evidence": "evidence-v3.md P2-03 (deprecations table and the checker's per-page launch dates); there is no Opus 5.1",
     "footnote_option": "Fable 5.1 and Mythos 5.1 are the same model with different safeguards (Anthropic)"
    },
    "cue": "fri-deep-15-claude-names",
-   "at": 18.6
+   "at": 18.6,
+   "logos": [
+    "anthropic-symbol-cream.svg"
+   ],
+   "start": "2025-10-16",
+   "end": "2026-10-15",
+   "events": [
+    {
+     "date": "2025-11-24",
+     "name": "Opus 4.5",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-02-05",
+     "name": "Opus 4.6",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-02-17",
+     "name": "Sonnet 4.6",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-04-07",
+     "name": "Mythos Preview",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-04-16",
+     "name": "Opus 4.7",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-05-28",
+     "name": "Opus 4.8",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-06-09",
+     "name": "Fable 5, Mythos 5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-06-30",
+     "name": "Sonnet 5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-07-24",
+     "name": "Opus 5",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-09-01",
+     "name": "Fable 5.1, Mythos 5.1",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-09-22",
+     "name": "Opus 5.5",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-09-28",
+     "name": "Sonnet 5.5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-10-07",
+     "name": "Haiku 5.5",
+     "major": false,
+     "hi": false
+    }
+   ],
+   "note": "15 new Claude names on 13 launch days: Opus above the line, the rest below.",
+   "source": "Anthropic's model deprecations table and launch pages, 16 Oct 2025 to 15 Oct 2026; read 15 Oct 2026"
   },
   {
    "file": "fri-deep-15-claude-names-s2-16x9.png",
-   "kind": "columns",
+   "kind": "timeline",
    "kicker": "ANTHROPIC, SINCE OCT 2025",
    "title": "A new Claude roughly every four weeks",
-   "columns": [
-    {
-     "label": "24 Nov 2025",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.5"
-    },
-    {
-     "label": "5 Feb 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.6",
-     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
-    },
-    {
-     "label": "16 Apr 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.7"
-    },
-    {
-     "label": "28 May 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.8",
-     "line": "then Fable 5 and Mythos 5 (9 Jun) and Sonnet 5 (30 Jun)",
-     "hi": true
-    },
-    {
-     "label": "24 Jul 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 5",
-     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)"
-    },
-    {
-     "label": "22 Sep 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 5.5",
-     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)"
-    }
-   ],
-   "note": "15 new Claude names on 13 launch days, 16 Oct 2025 to 15 Oct 2026. Source: Anthropic model deprecations table and launch pages, read 15 Oct 2026.",
    "data": {
     "measures": "A count, not a score: every new Claude model name on its launch day, 16 Oct 2025 to 15 Oct 2026.",
     "evidence": "evidence-v3.md P2-03 (deprecations table and the checker's per-page launch dates); there is no Opus 5.1",
     "footnote_option": "Fable 5.1 and Mythos 5.1 are the same model with different safeguards (Anthropic)"
    },
    "cue": "fri-deep-15-claude-names-s2",
-   "at": 21.28
+   "at": 21.28,
+   "logos": [
+    "anthropic-symbol-cream.svg"
+   ],
+   "start": "2025-10-16",
+   "end": "2026-10-15",
+   "events": [
+    {
+     "date": "2025-11-24",
+     "name": "Opus 4.5",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-02-05",
+     "name": "Opus 4.6",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-02-17",
+     "name": "Sonnet 4.6",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-04-07",
+     "name": "Mythos Preview",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-04-16",
+     "name": "Opus 4.7",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-05-28",
+     "name": "Opus 4.8",
+     "major": true,
+     "hi": true
+    },
+    {
+     "date": "2026-06-09",
+     "name": "Fable 5, Mythos 5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-06-30",
+     "name": "Sonnet 5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-07-24",
+     "name": "Opus 5",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-09-01",
+     "name": "Fable 5.1, Mythos 5.1",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-09-22",
+     "name": "Opus 5.5",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-09-28",
+     "name": "Sonnet 5.5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-10-07",
+     "name": "Haiku 5.5",
+     "major": false,
+     "hi": false
+    }
+   ],
+   "note": "15 new Claude names on 13 launch days: Opus above the line, the rest below.",
+   "source": "Anthropic's model deprecations table and launch pages, 16 Oct 2025 to 15 Oct 2026; read 15 Oct 2026"
   },
   {
    "file": "fri-deep-15-claude-names-s3-16x9.png",
-   "kind": "columns",
+   "kind": "timeline",
    "kicker": "ANTHROPIC, SINCE OCT 2025",
    "title": "A new Claude roughly every four weeks",
-   "columns": [
-    {
-     "label": "24 Nov 2025",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.5"
-    },
-    {
-     "label": "5 Feb 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.6",
-     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
-    },
-    {
-     "label": "16 Apr 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.7"
-    },
-    {
-     "label": "28 May 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.8",
-     "line": "then Fable 5 and Mythos 5 (9 Jun) and Sonnet 5 (30 Jun)",
-     "hi": true
-    },
-    {
-     "label": "24 Jul 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 5",
-     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)",
-     "hi": true
-    },
-    {
-     "label": "22 Sep 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 5.5",
-     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)"
-    }
-   ],
-   "note": "15 new Claude names on 13 launch days, 16 Oct 2025 to 15 Oct 2026. Source: Anthropic model deprecations table and launch pages, read 15 Oct 2026.",
    "data": {
     "measures": "A count, not a score: every new Claude model name on its launch day, 16 Oct 2025 to 15 Oct 2026.",
     "evidence": "evidence-v3.md P2-03 (deprecations table and the checker's per-page launch dates); there is no Opus 5.1",
     "footnote_option": "Fable 5.1 and Mythos 5.1 are the same model with different safeguards (Anthropic)"
    },
    "cue": "fri-deep-15-claude-names-s3",
-   "at": 23.02
+   "at": 23.02,
+   "logos": [
+    "anthropic-symbol-cream.svg"
+   ],
+   "start": "2025-10-16",
+   "end": "2026-10-15",
+   "events": [
+    {
+     "date": "2025-11-24",
+     "name": "Opus 4.5",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-02-05",
+     "name": "Opus 4.6",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-02-17",
+     "name": "Sonnet 4.6",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-04-07",
+     "name": "Mythos Preview",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-04-16",
+     "name": "Opus 4.7",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-05-28",
+     "name": "Opus 4.8",
+     "major": true,
+     "hi": true
+    },
+    {
+     "date": "2026-06-09",
+     "name": "Fable 5, Mythos 5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-06-30",
+     "name": "Sonnet 5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-07-24",
+     "name": "Opus 5",
+     "major": true,
+     "hi": true
+    },
+    {
+     "date": "2026-09-01",
+     "name": "Fable 5.1, Mythos 5.1",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-09-22",
+     "name": "Opus 5.5",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-09-28",
+     "name": "Sonnet 5.5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-10-07",
+     "name": "Haiku 5.5",
+     "major": false,
+     "hi": false
+    }
+   ],
+   "note": "15 new Claude names on 13 launch days: Opus above the line, the rest below.",
+   "source": "Anthropic's model deprecations table and launch pages, 16 Oct 2025 to 15 Oct 2026; read 15 Oct 2026"
   },
   {
    "file": "fri-deep-15-claude-names-s4-16x9.png",
-   "kind": "columns",
+   "kind": "timeline",
    "kicker": "ANTHROPIC, SINCE OCT 2025",
    "title": "A new Claude roughly every four weeks",
-   "columns": [
-    {
-     "label": "24 Nov 2025",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.5"
-    },
-    {
-     "label": "5 Feb 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.6",
-     "line": "then Sonnet 4.6 (17 Feb), Mythos Preview (7 Apr)"
-    },
-    {
-     "label": "16 Apr 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.7"
-    },
-    {
-     "label": "28 May 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 4.8",
-     "line": "then Fable 5 and Mythos 5 (9 Jun) and Sonnet 5 (30 Jun)",
-     "hi": true
-    },
-    {
-     "label": "24 Jul 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 5",
-     "line": "then Fable 5.1 and Mythos 5.1 (1 Sep)",
-     "hi": true
-    },
-    {
-     "label": "22 Sep 2026",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Opus 5.5",
-     "line": "then Sonnet 5.5 (28 Sep), Haiku 5.5 (7 Oct)",
-     "hi": true
-    }
-   ],
-   "note": "15 new Claude names on 13 launch days, 16 Oct 2025 to 15 Oct 2026. Source: Anthropic model deprecations table and launch pages, read 15 Oct 2026.",
    "data": {
     "measures": "A count, not a score: every new Claude model name on its launch day, 16 Oct 2025 to 15 Oct 2026.",
     "evidence": "evidence-v3.md P2-03 (deprecations table and the checker's per-page launch dates); there is no Opus 5.1",
     "footnote_option": "Fable 5.1 and Mythos 5.1 are the same model with different safeguards (Anthropic)"
    },
    "cue": "fri-deep-15-claude-names-s4",
-   "at": 23.72
+   "at": 23.72,
+   "logos": [
+    "anthropic-symbol-cream.svg"
+   ],
+   "start": "2025-10-16",
+   "end": "2026-10-15",
+   "events": [
+    {
+     "date": "2025-11-24",
+     "name": "Opus 4.5",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-02-05",
+     "name": "Opus 4.6",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-02-17",
+     "name": "Sonnet 4.6",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-04-07",
+     "name": "Mythos Preview",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-04-16",
+     "name": "Opus 4.7",
+     "major": true,
+     "hi": false
+    },
+    {
+     "date": "2026-05-28",
+     "name": "Opus 4.8",
+     "major": true,
+     "hi": true
+    },
+    {
+     "date": "2026-06-09",
+     "name": "Fable 5, Mythos 5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-06-30",
+     "name": "Sonnet 5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-07-24",
+     "name": "Opus 5",
+     "major": true,
+     "hi": true
+    },
+    {
+     "date": "2026-09-01",
+     "name": "Fable 5.1, Mythos 5.1",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-09-22",
+     "name": "Opus 5.5",
+     "major": true,
+     "hi": true
+    },
+    {
+     "date": "2026-09-28",
+     "name": "Sonnet 5.5",
+     "major": false,
+     "hi": false
+    },
+    {
+     "date": "2026-10-07",
+     "name": "Haiku 5.5",
+     "major": false,
+     "hi": false
+    }
+   ],
+   "note": "15 new Claude names on 13 launch days: Opus above the line, the rest below.",
+   "source": "Anthropic's model deprecations table and launch pages, 16 Oct 2025 to 15 Oct 2026; read 15 Oct 2026"
   },
   {
    "file": "fri-chapter-2-16x9.png",
@@ -296,220 +440,351 @@
    "kind": "shot",
    "kicker": "ANTHROPIC LAUNCH PAGES, 2026",
    "title": "Three Opus models in four months",
-   "image": "shots/fri-claude-launch-pages-1.png",
-   "source": "anthropic.com/news/claude-opus-4-8, 28 May 2026; captured 17 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
+   "cue": "fri-claude-launch-pages",
+   "at": 109.06,
+   "image": "shots/fri-claude-launch-pages-1.png",
    "crop": [
     611,
     362,
     1658,
     362
    ],
-   "mark": [
-    1328,
-    602,
-    224,
-    62
+   "marks": [
+    [
+     1328,
+     602,
+     224,
+     62
+    ]
    ],
-   "cue": "fri-claude-launch-pages",
-   "at": 109.06
+   "source": "anthropic.com/news/claude-opus-4-8, 28 May 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-claude-launch-pages-p2-16x9.png",
    "kind": "shot",
    "kicker": "ANTHROPIC LAUNCH PAGES, 2026",
    "title": "Three Opus models in four months",
-   "image": "shots/fri-claude-launch-pages-2.png",
-   "source": "anthropic.com/news/claude-opus-5, 24 Jul 2026; captured 17 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
+   "cue": "fri-claude-launch-pages-p2",
+   "at": 111.12,
+   "image": "shots/fri-claude-launch-pages-2.png",
    "crop": [
     656,
     362,
     1569,
     362
    ],
-   "mark": [
-    1337,
-    602,
-    206,
-    62
+   "marks": [
+    [
+     1337,
+     602,
+     206,
+     62
+    ]
    ],
-   "cue": "fri-claude-launch-pages-p2",
-   "at": 111.12
+   "source": "anthropic.com/news/claude-opus-5, 24 Jul 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-claude-launch-pages-p3-16x9.png",
    "kind": "shot",
    "kicker": "ANTHROPIC LAUNCH PAGES, 2026",
    "title": "Three Opus models in four months",
-   "image": "shots/fri-claude-launch-pages-3.png",
-   "source": "anthropic.com/claude-opus-5-5, 22 Sep 2026; captured 17 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
+   "cue": "fri-claude-launch-pages-p3",
+   "at": 112.3,
+   "image": "shots/fri-claude-launch-pages-3.png",
    "crop": [
     565,
     556,
     1753,
     530
    ],
-   "mark": [
-    1244,
-    636,
-    388,
-    56
+   "marks": [
+    [
+     1244,
+     636,
+     388,
+     56
+    ]
    ],
-   "cue": "fri-claude-launch-pages-p3",
-   "at": 112.3
+   "source": "anthropic.com/claude-opus-5-5, 22 Sep 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-openai-5-1-to-6-1-16x9.png",
    "kind": "shot",
    "kicker": "CHATGPT RELEASE NOTES, 2025-26",
    "title": "GPT went up a whole number in just 46 weeks",
-   "image": "shots/fri-deep-openai-5-1-to-6-1.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entries 12 Nov 2025 and 29 Sep 2026; captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    0,
-    50,
-    1800,
-    1250
-   ],
    "cue": "fri-deep-openai-5-1-to-6-1",
-   "at": 114.46
+   "at": 114.46,
+   "stacks": [
+    [
+     {
+      "image": "shots/fri-v7-rn-5-1.png",
+      "crop": [
+       380,
+       780,
+       610,
+       240
+      ],
+      "marks": [
+       [
+        413,
+        804,
+        557,
+        72
+       ]
+      ]
+     }
+    ],
+    [
+     {
+      "image": "shots/fri-v7-rn-6-1-date.png",
+      "crop": [
+       380,
+       846,
+       660,
+       120
+      ],
+      "marks": [
+       [
+        410,
+        868,
+        596,
+        75
+       ]
+      ]
+     },
+     {
+      "image": "shots/fri-v7-rn-6-1.png",
+      "crop": [
+       380,
+       853,
+       960,
+       96
+      ]
+     }
+    ]
+   ],
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entries 12 Nov 2025 and 29 Sep 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-openai-5-1-to-6-1-r1-16x9.png",
    "kind": "shot",
    "kicker": "CHATGPT RELEASE NOTES, 2025-26",
    "title": "GPT went up a whole number in just 46 weeks",
-   "image": "shots/fri-deep-openai-5-1-to-6-1.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entries 12 Nov 2025 and 29 Sep 2026; captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    0,
-    50,
-    1800,
-    1250
-   ],
-   "mark": [
-    55,
-    272,
-    555,
-    76
-   ],
    "cue": "fri-deep-openai-5-1-to-6-1-r1",
-   "at": 116.8
+   "at": 116.8,
+   "stacks": [
+    [
+     {
+      "image": "shots/fri-v7-rn-5-1.png",
+      "crop": [
+       380,
+       780,
+       610,
+       240
+      ],
+      "marks": [
+       [
+        410,
+        945,
+        443,
+        56
+       ]
+      ]
+     }
+    ],
+    [
+     {
+      "image": "shots/fri-v7-rn-6-1-date.png",
+      "crop": [
+       380,
+       846,
+       660,
+       120
+      ]
+     },
+     {
+      "image": "shots/fri-v7-rn-6-1.png",
+      "crop": [
+       380,
+       853,
+       960,
+       96
+      ]
+     }
+    ]
+   ],
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entries 12 Nov 2025 and 29 Sep 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-openai-5-1-to-6-1-r2-16x9.png",
    "kind": "shot",
    "kicker": "CHATGPT RELEASE NOTES, 2025-26",
    "title": "GPT went up a whole number in just 46 weeks",
-   "image": "shots/fri-deep-openai-5-1-to-6-1.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entries 12 Nov 2025 and 29 Sep 2026; captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    0,
-    50,
-    1800,
-    1250
-   ],
-   "mark": [
-    55,
-    1208,
-    1110,
-    82
-   ],
    "cue": "fri-deep-openai-5-1-to-6-1-r2",
-   "at": 117.86
+   "at": 117.86,
+   "stacks": [
+    [
+     {
+      "image": "shots/fri-v7-rn-5-1.png",
+      "crop": [
+       380,
+       780,
+       610,
+       240
+      ]
+     }
+    ],
+    [
+     {
+      "image": "shots/fri-v7-rn-6-1-date.png",
+      "crop": [
+       380,
+       846,
+       660,
+       120
+      ]
+     },
+     {
+      "image": "shots/fri-v7-rn-6-1.png",
+      "crop": [
+       380,
+       853,
+       960,
+       96
+      ],
+      "marks": [
+       [
+        410,
+        875,
+        891,
+        52
+       ]
+      ]
+     }
+    ]
+   ],
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entries 12 Nov 2025 and 29 Sep 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-altman-same-day-16x9.png",
    "kind": "shot",
    "kicker": "ALTMAN, 31 MARCH 2025",
    "title": "A million new ChatGPT users in one hour",
-   "image": "shots/fri-deep-altman-same-day-1.png",
-   "source": "x.com/sama/status/1906771292390666325, 31 Mar 2025, 18:11 UTC; captured 17 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
+   "cue": "fri-deep-altman-same-day",
+   "at": 133.24,
+   "image": "shots/fri-deep-altman-same-day-1.png",
    "crop": [
     716,
     102,
     1200,
     490
    ],
-   "mark": [
-    738,
-    348,
-    608,
-    52
+   "marks": [
+    [
+     738,
+     348,
+     608,
+     52
+    ]
    ],
-   "cue": "fri-deep-altman-same-day",
-   "at": 133.24
+   "source": "x.com/sama/status/1906771292390666325, 31 Mar 2025, 18:11 UTC; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-altman-same-day-t2-16x9.png",
    "kind": "shot",
    "kicker": "OPENAI, 31 MARCH 2025",
    "title": "The same day, a $40 billion raise",
-   "image": "shots/fri-deep-altman-same-day-3.png",
-   "source": "openai.com/index/march-funding-updates, 31 Mar 2025; captured 17 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    736,
-    641,
-    785,
-    80
-   ],
-   "mark": [
-    754,
-    653,
-    757,
-    56
-   ],
    "cue": "fri-deep-altman-same-day-t2",
-   "at": 140.64
+   "at": 140.64,
+   "parts": [
+    {
+     "image": "shots/fri-deep-altman-same-day-2.png",
+     "crop": [
+      940,
+      290,
+      1000,
+      380
+     ],
+     "marks": [
+      [
+       1258,
+       304,
+       365,
+       42
+      ]
+     ]
+    },
+    {
+     "image": "shots/fri-deep-altman-same-day-3.png",
+     "crop": [
+      736,
+      641,
+      785,
+      80
+     ],
+     "marks": [
+      [
+       754,
+       653,
+       757,
+       56
+      ]
+     ]
+    }
+   ],
+   "source": "openai.com/index/march-funding-updates, 31 Mar 2025; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-altman-same-day-t3-16x9.png",
    "kind": "shot",
    "kicker": "THE DECODER, JAN 2025",
    "title": "The $40 billion was months in the making",
-   "image": "shots/fri-deep-altman-same-day-4.png",
-   "source": "the-decoder.com, Maximilian Schreiner, 31 Jan 2025; captured 17 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg",
     "the-decoder-cream.svg"
    ],
-   "crop": [
-    360,
-    304,
-    1299,
-    406
-   ],
-   "mark": [
-    448,
-    509,
-    441,
-    50
-   ],
    "cue": "fri-deep-altman-same-day-t3",
-   "at": 145.56
+   "at": 145.56,
+   "image": "shots/fri-deep-altman-same-day-4.png",
+   "crop": [
+    370,
+    325,
+    1280,
+    385
+   ],
+   "marks": [
+    [
+     738,
+     512,
+     140,
+     40
+    ]
+   ],
+   "source": "the-decoder.com, Maximilian Schreiner, 31 Jan 2025; captured 17 Oct 2026"
   },
   {
    "file": "fri-chapter-3-16x9.png",
@@ -535,40 +810,80 @@
    "kind": "shot",
    "kicker": "CHATGPT, CLAUDE, OCT 2026",
    "title": "You pick how hard ChatGPT and Claude think. For now.",
-   "image": "shots/fri-deep-thinking-settings.png",
-   "source": "help.openai.com/en/articles/20001354 (about 9 Oct 2026); support.claude.com/en/articles/8664678 (updated 7 Oct 2026); captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg",
     "anthropic-symbol-cream.svg"
    ],
    "cue": "fri-deep-thinking-settings",
-   "at": 202.6
+   "at": 202.6,
+   "stacks": [
+    [
+     {
+      "image": "shots/fri-v7-oa-levels.png",
+      "crop": [
+       400,
+       570,
+       1300,
+       110
+      ],
+      "marks": [
+       [
+        413,
+        594,
+        665,
+        72
+       ]
+      ]
+     },
+     {
+      "image": "shots/fri-v7-oa-levels.png",
+      "crop": [
+       400,
+       975,
+       1300,
+       300
+      ]
+     }
+    ],
+    [
+     {
+      "image": "shots/fri-v7-claude-effort.png",
+      "crop": [
+       630,
+       385,
+       1640,
+       80
+      ],
+      "marks": [
+       [
+        643,
+        404,
+        463,
+        51
+       ]
+      ]
+     },
+     {
+      "image": "shots/fri-v7-claude-effort.png",
+      "crop": [
+       630,
+       1040,
+       1640,
+       420
+      ]
+     }
+    ]
+   ],
+   "source": "help.openai.com/en/articles/20001354 (updated about 10 Oct 2026); support.claude.com/en/articles/8664678 (updated 7 Oct 2026); captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-aa-same-claude-16x9.png",
-   "kind": "columns",
+   "kind": "bars",
    "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
    "title": "Same Claude Opus 5.5, tested in every gear",
    "logos": [
     "artificialanalysis-cream.svg"
    ],
-   "columns": [
-    {
-     "label": "Opus 5.5 · Low effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "42 out of 100"
-    },
-    {
-     "label": "Opus 5.5 · Max effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "58 out of 100"
-    }
-   ],
-   "note": "Artificial Analysis Intelligence Index v4.3.2: 10 hard tests, scored 0 to 100, higher is better. Read 15 Oct 2026.",
    "data": {
     "measures": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better; cost per task in US dollars, lower is cheaper",
     "rows": [
@@ -600,34 +915,77 @@
     "evidence": "evidence-v3.md P1-02 (sentences for 42, 58 and Opus 5 Max 51; medium page 51 at $1.34; checker: Opus 5 Max 50.8 at $5.86)"
    },
    "cue": "fri-deep-aa-same-claude",
-   "at": 275.82
+   "at": 275.82,
+   "max": 100,
+   "namecol": 430,
+   "axis": "Artificial Analysis Intelligence Index: 0 to 100, higher is better",
+   "rows": [
+    {
+     "name": "Opus 5.5 · Low",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 42.31,
+     "label": "42",
+     "extra": "$0.55 a task",
+     "hi": false,
+     "dim": false,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5.5 · Medium",
+     "sub": "Opus 5.5's default",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 51.24,
+     "label": "51",
+     "extra": "$1.34 a task",
+     "hi": false,
+     "dim": true,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5.5 · Max",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 57.62,
+     "label": "58",
+     "extra": "$5.98 a task",
+     "hi": false,
+     "dim": false,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5 · Max",
+     "sub": "the older model",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 50.8,
+     "label": "51",
+     "extra": "$5.86 a task",
+     "hi": false,
+     "dim": false,
+     "hidden": true
+    }
+   ],
+   "callout": {
+    "big": "3 of its 5 levels",
+    "small": "its lowest, its default and its highest"
+   },
+   "note": "AA tested all five of Opus 5.5's levels: High scores 54, Extra high 56.",
+   "source": "artificialanalysis.ai, Index v4.3.2, read 15 Oct 2026; the Opus 5.5 runs are AA's \"Default Fallback\" ones"
   },
   {
    "file": "fri-deep-aa-same-claude-s1-16x9.png",
-   "kind": "columns",
+   "kind": "bars",
    "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
    "title": "In top gear, Opus 5.5 did far better",
    "logos": [
     "artificialanalysis-cream.svg"
    ],
-   "columns": [
-    {
-     "label": "Opus 5.5 · Low effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "42 out of 100"
-    },
-    {
-     "label": "Opus 5.5 · Max effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "58 out of 100",
-     "hi": true
-    }
-   ],
-   "note": "Artificial Analysis Intelligence Index v4.3.2: 10 hard tests, scored 0 to 100, higher is better. Read 15 Oct 2026.",
    "data": {
     "measures": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better; cost per task in US dollars, lower is cheaper",
     "rows": [
@@ -659,41 +1017,77 @@
     "evidence": "evidence-v3.md P1-02 (sentences for 42, 58 and Opus 5 Max 51; medium page 51 at $1.34; checker: Opus 5 Max 50.8 at $5.86)"
    },
    "cue": "fri-deep-aa-same-claude-s1",
-   "at": 285.58
+   "at": 285.58,
+   "max": 100,
+   "namecol": 430,
+   "axis": "Artificial Analysis Intelligence Index: 0 to 100, higher is better",
+   "rows": [
+    {
+     "name": "Opus 5.5 · Low",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 42.31,
+     "label": "42",
+     "extra": "$0.55 a task",
+     "hi": false,
+     "dim": false,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5.5 · Medium",
+     "sub": "Opus 5.5's default",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 51.24,
+     "label": "51",
+     "extra": "$1.34 a task",
+     "hi": false,
+     "dim": true,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5.5 · Max",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 57.62,
+     "label": "58",
+     "extra": "$5.98 a task",
+     "hi": true,
+     "dim": false,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5 · Max",
+     "sub": "the older model",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 50.8,
+     "label": "51",
+     "extra": "$5.86 a task",
+     "hi": false,
+     "dim": false,
+     "hidden": true
+    }
+   ],
+   "callout": {
+    "big": "+16 points",
+    "small": "from Low to Max, the same model"
+   },
+   "note": "AA tested all five of Opus 5.5's levels: High scores 54, Extra high 56.",
+   "source": "artificialanalysis.ai, Index v4.3.2, read 15 Oct 2026; the Opus 5.5 runs are AA's \"Default Fallback\" ones"
   },
   {
    "file": "fri-deep-aa-same-claude-s2-16x9.png",
-   "kind": "columns",
+   "kind": "bars",
    "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
    "title": "Top-gear Opus 5 beat first-gear Opus 5.5",
    "logos": [
     "artificialanalysis-cream.svg"
    ],
-   "columns": [
-    {
-     "label": "Opus 5.5 · Low effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "42 out of 100"
-    },
-    {
-     "label": "Opus 5.5 · Max effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "58 out of 100"
-    },
-    {
-     "label": "Opus 5 (older) · Max effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "51 out of 100",
-     "hi": true
-    }
-   ],
-   "note": "Artificial Analysis Intelligence Index v4.3.2: 10 hard tests, scored 0 to 100, higher is better. Read 15 Oct 2026.",
    "data": {
     "measures": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better; cost per task in US dollars, lower is cheaper",
     "rows": [
@@ -725,52 +1119,77 @@
     "evidence": "evidence-v3.md P1-02 (sentences for 42, 58 and Opus 5 Max 51; medium page 51 at $1.34; checker: Opus 5 Max 50.8 at $5.86)"
    },
    "cue": "fri-deep-aa-same-claude-s2",
-   "at": 289.38
+   "at": 289.38,
+   "max": 100,
+   "namecol": 430,
+   "axis": "Artificial Analysis Intelligence Index: 0 to 100, higher is better",
+   "rows": [
+    {
+     "name": "Opus 5.5 · Low",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 42.31,
+     "label": "42",
+     "extra": "$0.55 a task",
+     "hi": false,
+     "dim": false,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5.5 · Medium",
+     "sub": "Opus 5.5's default",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 51.24,
+     "label": "51",
+     "extra": "$1.34 a task",
+     "hi": false,
+     "dim": true,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5.5 · Max",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 57.62,
+     "label": "58",
+     "extra": "$5.98 a task",
+     "hi": false,
+     "dim": true,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5 · Max",
+     "sub": "the older model",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 50.8,
+     "label": "51",
+     "extra": "$5.86 a task",
+     "hi": true,
+     "dim": false,
+     "hidden": false
+    }
+   ],
+   "callout": {
+    "big": "+9 points",
+    "small": "the older Opus 5 at Max, over Opus 5.5 at Low"
+   },
+   "note": "AA tested all five of Opus 5.5's levels: High scores 54, Extra high 56.",
+   "source": "artificialanalysis.ai, Index v4.3.2, read 15 Oct 2026; the Opus 5.5 runs are AA's \"Default Fallback\" ones"
   },
   {
    "file": "fri-deep-aa-same-claude-s3-16x9.png",
-   "kind": "columns",
+   "kind": "bars",
    "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
    "title": "Middle-gear Opus 5.5 matched Opus 5, for far less",
    "logos": [
     "artificialanalysis-cream.svg"
    ],
-   "columns": [
-    {
-     "label": "Opus 5.5 · Low effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "42 out of 100",
-     "line": "$0.55 a task"
-    },
-    {
-     "label": "Opus 5.5 · Max effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "58 out of 100",
-     "line": "$5.98 a task"
-    },
-    {
-     "label": "Opus 5 (older) · Max effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "51 out of 100",
-     "line": "$5.86 a task"
-    },
-    {
-     "label": "Opus 5.5 · Medium effort",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "51 out of 100",
-     "hi": true,
-     "line": "$1.34 a task"
-    }
-   ],
-   "note": "Artificial Analysis Intelligence Index v4.3.2: 10 hard tests, scored 0 to 100, higher is better. Read 15 Oct 2026. Dollars are its cost per task to run them, lower is cheaper.",
    "data": {
     "measures": "Artificial Analysis Intelligence Index v4.3.2, 0 to 100, higher is better; cost per task in US dollars, lower is cheaper",
     "rows": [
@@ -802,7 +1221,68 @@
     "evidence": "evidence-v3.md P1-02 (sentences for 42, 58 and Opus 5 Max 51; medium page 51 at $1.34; checker: Opus 5 Max 50.8 at $5.86)"
    },
    "cue": "fri-deep-aa-same-claude-s3",
-   "at": 305.32
+   "at": 305.32,
+   "max": 100,
+   "namecol": 430,
+   "axis": "Artificial Analysis Intelligence Index: 0 to 100, higher is better",
+   "rows": [
+    {
+     "name": "Opus 5.5 · Low",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 42.31,
+     "label": "42",
+     "extra": "$0.55 a task",
+     "hi": false,
+     "dim": true,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5.5 · Medium",
+     "sub": "Opus 5.5's default",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 51.24,
+     "label": "51",
+     "extra": "$1.34 a task",
+     "hi": true,
+     "dim": false,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5.5 · Max",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 57.62,
+     "label": "58",
+     "extra": "$5.98 a task",
+     "hi": false,
+     "dim": true,
+     "hidden": false
+    },
+    {
+     "name": "Opus 5 · Max",
+     "sub": "the older model",
+     "logos": [
+      "anthropic-symbol-cream.svg"
+     ],
+     "score": 50.8,
+     "label": "51",
+     "extra": "$5.86 a task",
+     "hi": true,
+     "dim": false,
+     "hidden": false
+    }
+   ],
+   "callout": {
+    "big": "Under a quarter of the cost",
+    "small": "for the same score"
+   },
+   "note": "AA tested all five of Opus 5.5's levels: High scores 54, Extra high 56.",
+   "source": "artificialanalysis.ai, Index v4.3.2, read 15 Oct 2026; the Opus 5.5 runs are AA's \"Default Fallback\" ones"
   },
   {
    "file": "fri-chapter-4-16x9.png",
@@ -825,30 +1305,12 @@
   },
   {
    "file": "fri-deep-cost-vs-score-16x9.png",
-   "kind": "columns",
+   "kind": "panels",
    "kicker": "ARTIFICIAL ANALYSIS, OPUS 5.5",
    "title": "Top gear costs about 11 times the lowest",
    "logos": [
     "artificialanalysis-cream.svg"
    ],
-   "columns": [
-    {
-     "label": "Claude Opus 5.5",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Low effort"
-    },
-    {
-     "label": "Claude Opus 5.5",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Max effort",
-     "hi": true
-    }
-   ],
-   "note": "Cost: US dollars per task to run Artificial Analysis's 10 tests, lower is cheaper ($5.98 is 10.9 times $0.55). Score: Intelligence Index, 0 to 100, higher is better. Read 15 Oct 2026.",
    "data": {
     "measures": "cost per task (USD, lower is cheaper) and Intelligence Index (0 to 100, higher is better), Claude Opus 5.5 at Low and at Max effort",
     "rows": [
@@ -866,36 +1328,71 @@
     "evidence": "evidence-v3.md P1-02: $0.55 and $5.98 per task (checker: 10.9x); 42 and 58 (+16 points, +38%)"
    },
    "cue": "fri-deep-cost-vs-score",
-   "at": 355.68
+   "at": 355.68,
+   "subject": {
+    "logos": [
+     "anthropic-symbol-cream.svg"
+    ],
+    "text": "Claude Opus 5.5, the same model at its lowest and highest effort"
+   },
+   "panels": [
+    {
+     "title": "Cost per task, US dollars (lower is cheaper)",
+     "max": 6.0,
+     "rows": [
+      {
+       "name": "Low effort",
+       "value": 0.55,
+       "label": "$0.55"
+      },
+      {
+       "name": "Max effort",
+       "value": 5.98,
+       "label": "$5.98",
+       "hi": false
+      }
+     ],
+     "callout": {
+      "big": "10.9x the cost",
+      "small": "$5.98 against $0.55 a task",
+      "hidden": true
+     }
+    },
+    {
+     "title": "Score: AA index, 0 to 100, higher is better",
+     "max": 100,
+     "dim": true,
+     "rows": [
+      {
+       "name": "Low effort",
+       "value": 42.31,
+       "label": "42"
+      },
+      {
+       "name": "Max effort",
+       "value": 57.62,
+       "label": "58",
+       "hi": false
+      }
+     ],
+     "callout": {
+      "big": "+16 points",
+      "small": "16 points higher (42 to 58)",
+      "hidden": true
+     }
+    }
+   ],
+   "note": "Cost: what AA paid, on average, to run each task of its 10 tests.",
+   "source": "artificialanalysis.ai, Index v4.3.2, read 15 Oct 2026; the Opus 5.5 runs are AA's \"Default Fallback\" ones"
   },
   {
    "file": "fri-deep-cost-vs-score-cost-16x9.png",
-   "kind": "columns",
+   "kind": "panels",
    "kicker": "ARTIFICIAL ANALYSIS, OPUS 5.5",
    "title": "Top gear costs about 11 times the lowest",
    "logos": [
     "artificialanalysis-cream.svg"
    ],
-   "columns": [
-    {
-     "label": "Claude Opus 5.5",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Low effort",
-     "line": "$0.55 a task"
-    },
-    {
-     "label": "Claude Opus 5.5",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Max effort",
-     "hi": true,
-     "line": "$5.98 a task: about 11 times as much"
-    }
-   ],
-   "note": "Cost: US dollars per task to run Artificial Analysis's 10 tests, lower is cheaper ($5.98 is 10.9 times $0.55). Score: Intelligence Index, 0 to 100, higher is better. Read 15 Oct 2026.",
    "data": {
     "measures": "cost per task (USD, lower is cheaper) and Intelligence Index (0 to 100, higher is better), Claude Opus 5.5 at Low and at Max effort",
     "rows": [
@@ -913,36 +1410,71 @@
     "evidence": "evidence-v3.md P1-02: $0.55 and $5.98 per task (checker: 10.9x); 42 and 58 (+16 points, +38%)"
    },
    "cue": "fri-deep-cost-vs-score-cost",
-   "at": 358.64
+   "at": 358.64,
+   "subject": {
+    "logos": [
+     "anthropic-symbol-cream.svg"
+    ],
+    "text": "Claude Opus 5.5, the same model at its lowest and highest effort"
+   },
+   "panels": [
+    {
+     "title": "Cost per task, US dollars (lower is cheaper)",
+     "max": 6.0,
+     "rows": [
+      {
+       "name": "Low effort",
+       "value": 0.55,
+       "label": "$0.55"
+      },
+      {
+       "name": "Max effort",
+       "value": 5.98,
+       "label": "$5.98",
+       "hi": true
+      }
+     ],
+     "callout": {
+      "big": "10.9x the cost",
+      "small": "$5.98 against $0.55 a task",
+      "hidden": false
+     }
+    },
+    {
+     "title": "Score: AA index, 0 to 100, higher is better",
+     "max": 100,
+     "dim": true,
+     "rows": [
+      {
+       "name": "Low effort",
+       "value": 42.31,
+       "label": "42"
+      },
+      {
+       "name": "Max effort",
+       "value": 57.62,
+       "label": "58",
+       "hi": false
+      }
+     ],
+     "callout": {
+      "big": "+16 points",
+      "small": "16 points higher (42 to 58)",
+      "hidden": true
+     }
+    }
+   ],
+   "note": "Cost: what AA paid, on average, to run each task of its 10 tests.",
+   "source": "artificialanalysis.ai, Index v4.3.2, read 15 Oct 2026; the Opus 5.5 runs are AA's \"Default Fallback\" ones"
   },
   {
    "file": "fri-deep-cost-vs-score-score-16x9.png",
-   "kind": "columns",
+   "kind": "panels",
    "kicker": "ARTIFICIAL ANALYSIS, OPUS 5.5",
    "title": "Opus 5.5's score? Only about a third higher.",
    "logos": [
     "artificialanalysis-cream.svg"
    ],
-   "columns": [
-    {
-     "label": "Claude Opus 5.5",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Low effort",
-     "line": "$0.55 a task · scores 42 out of 100"
-    },
-    {
-     "label": "Claude Opus 5.5",
-     "logos": [
-      "anthropic-symbol-cream.svg"
-     ],
-     "names": "Max effort",
-     "hi": true,
-     "line": "$5.98 a task · scores 58 out of 100"
-    }
-   ],
-   "note": "Cost: US dollars per task to run Artificial Analysis's 10 tests, lower is cheaper ($5.98 is 10.9 times $0.55). Score: Intelligence Index, 0 to 100, higher is better. Read 15 Oct 2026.",
    "data": {
     "measures": "cost per task (USD, lower is cheaper) and Intelligence Index (0 to 100, higher is better), Claude Opus 5.5 at Low and at Max effort",
     "rows": [
@@ -960,26 +1492,111 @@
     "evidence": "evidence-v3.md P1-02: $0.55 and $5.98 per task (checker: 10.9x); 42 and 58 (+16 points, +38%)"
    },
    "cue": "fri-deep-cost-vs-score-score",
-   "at": 363.52
+   "at": 363.52,
+   "subject": {
+    "logos": [
+     "anthropic-symbol-cream.svg"
+    ],
+    "text": "Claude Opus 5.5, the same model at its lowest and highest effort"
+   },
+   "panels": [
+    {
+     "title": "Cost per task, US dollars (lower is cheaper)",
+     "max": 6.0,
+     "rows": [
+      {
+       "name": "Low effort",
+       "value": 0.55,
+       "label": "$0.55"
+      },
+      {
+       "name": "Max effort",
+       "value": 5.98,
+       "label": "$5.98",
+       "hi": true
+      }
+     ],
+     "callout": {
+      "big": "10.9x the cost",
+      "small": "$5.98 against $0.55 a task",
+      "hidden": false
+     }
+    },
+    {
+     "title": "Score: AA index, 0 to 100, higher is better",
+     "max": 100,
+     "dim": false,
+     "rows": [
+      {
+       "name": "Low effort",
+       "value": 42.31,
+       "label": "42"
+      },
+      {
+       "name": "Max effort",
+       "value": 57.62,
+       "label": "58",
+       "hi": true
+      }
+     ],
+     "callout": {
+      "big": "+16 points",
+      "small": "16 points higher (42 to 58)",
+      "hidden": false
+     }
+    }
+   ],
+   "note": "Cost: what AA paid, on average, to run each task of its 10 tests.",
+   "source": "artificialanalysis.ai, Index v4.3.2, read 15 Oct 2026; the Opus 5.5 runs are AA's \"Default Fallback\" ones"
   },
   {
    "file": "fri-deep-altman-losing-on-pro-16x9.png",
    "kind": "shot",
    "kicker": "ALTMAN, 6 JAN 2025",
    "title": "Even at $200 a month, OpenAI was losing money",
-   "image": "shots/fri-deep-altman-losing-on-pro.png",
-   "source": "x.com/sama/status/1876104315296968813, 6 Jan 2025, 03:11 UTC; openai.com/index/introducing-chatgpt-pro, 5 Dec 2024; captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "mark": [
-    88,
-    214,
-    1250,
-    62
-   ],
    "cue": "fri-deep-altman-losing-on-pro",
-   "at": 387.64
+   "at": 387.64,
+   "parts": [
+    {
+     "image": "shots/fri-v7-altman-pro.png",
+     "crop": [
+      728,
+      120,
+      1150,
+      300
+     ],
+     "marks": [
+      [
+       736,
+       228,
+       1014,
+       52
+      ]
+     ]
+    },
+    {
+     "image": "shots/fri-v7-pro-page.png",
+     "crop": [
+      740,
+      866,
+      1390,
+      68
+     ],
+     "marks": [
+      [
+       752,
+       874,
+       860,
+       50,
+       2
+      ]
+     ]
+    }
+   ],
+   "source": "x.com/sama/status/1876104315296968813, 6 Jan 2025, 03:11 UTC; openai.com/index/introducing-chatgpt-pro, 5 Dec 2024; captured 17 Oct 2026"
   },
   {
    "file": "fri-chapter-5-16x9.png",
@@ -1006,203 +1623,332 @@
    "kind": "shot",
    "kicker": "GOOGLE, 9 OCT 2026",
    "title": "Google's free Gemini has already gone automatic",
-   "image": "shots/fri-gemini-auto.png",
-   "source": "support.google.com/gemini/answer/17004136, page undated, changes from 9 Oct 2026; captured 16 Oct 2026",
    "logos": [
     "google-cream.svg"
    ],
-   "crop": [
-    60,
-    760,
-    1840,
-    330
-   ],
-   "mark": [
-    1465,
-    924,
-    290,
-    46
-   ],
    "cue": "fri-gemini-auto",
-   "at": 425.06
+   "at": 425.06,
+   "image": "shots/fri-v7-gemini-auto.png",
+   "crop": [
+    360,
+    145,
+    1430,
+    285
+   ],
+   "marks": [
+    [
+     376,
+     274,
+     1342,
+     54,
+     2
+    ]
+   ],
+   "source": "support.google.com/gemini/answer/17004136, page undated, changes from 9 Oct 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-gemini-auto-h1-16x9.png",
    "kind": "shot",
    "kicker": "GOOGLE, 9 OCT 2026",
    "title": "Google's free Gemini has already gone automatic",
-   "image": "shots/fri-gemini-auto.png",
-   "source": "support.google.com/gemini/answer/17004136, page undated, changes from 9 Oct 2026; captured 16 Oct 2026",
    "logos": [
     "google-cream.svg"
    ],
-   "crop": [
-    60,
-    1196,
-    900,
-    504
-   ],
-   "mark": [
-    102,
-    1371,
-    800,
-    73
-   ],
    "cue": "fri-gemini-auto-h1",
-   "at": 431.22
+   "at": 431.22,
+   "image": "shots/fri-v7-gemini-auto.png",
+   "crop": [
+    366,
+    500,
+    690,
+    395
+   ],
+   "marks": [
+    [
+     387,
+     637,
+     641,
+     60
+    ]
+   ],
+   "source": "support.google.com/gemini/answer/17004136, page undated, changes from 9 Oct 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-gemini-auto-h2-16x9.png",
    "kind": "shot",
    "kicker": "GOOGLE, 9 OCT 2026",
    "title": "Gemini decides how much thinking you get",
-   "image": "shots/fri-gemini-auto.png",
-   "source": "support.google.com/gemini/answer/17004136, page undated, changes from 9 Oct 2026; captured 16 Oct 2026",
    "logos": [
     "google-cream.svg"
    ],
-   "crop": [
-    80,
-    1730,
-    1840,
-    217
-   ],
-   "mark": [
-    100,
-    1809,
-    1696,
-    105
-   ],
    "cue": "fri-gemini-auto-h2",
-   "at": 435.5
+   "at": 435.5,
+   "image": "shots/fri-v7-gemini-auto-para.png",
+   "crop": [
+    360,
+    815,
+    1430,
+    180
+   ],
+   "marks": [
+    [
+     378,
+     826,
+     1370,
+     52
+    ],
+    [
+     378,
+     875,
+     1368,
+     52
+    ],
+    [
+     378,
+     922,
+     1330,
+     52
+    ]
+   ],
+   "source": "support.google.com/gemini/answer/17004136, page undated, changes from 9 Oct 2026; captured 17 Oct 2026",
+   "note": "Auto picks which model answers; prompts that need deeper reasoning may go to Flash or Pro."
   },
   {
    "file": "fri-deep-openai-free-dec-2025-16x9.png",
    "kind": "shot",
    "kicker": "OPENAI, DEC 2025",
    "title": "OpenAI took ChatGPT's automatic away. Twice.",
-   "image": "shots/fri-deep-openai-free-dec-2025-1.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 11 Dec 2025; captured 17 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    368,
-    1688,
-    1374,
-    112
-   ],
-   "mark": [
-    414,
-    1713,
-    1281,
-    30
-   ],
    "cue": "fri-deep-openai-free-dec-2025",
-   "at": 455.42
+   "at": 455.42,
+   "parts": [
+    {
+     "image": "shots/fri-v7-rn-dec-11-date.png",
+     "crop": [
+      390,
+      846,
+      600,
+      120
+     ]
+    },
+    {
+     "image": "shots/fri-v7-rn-dec-11.png",
+     "crop": [
+      390,
+      770,
+      1340,
+      255
+     ],
+     "marks": [
+      [
+       404,
+       776,
+       1302,
+       54
+      ],
+      [
+       404,
+       824,
+       160,
+       54,
+       2
+      ]
+     ]
+    }
+   ],
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 11 Dec 2025; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-openai-free-dec-2025-s2-16x9.png",
    "kind": "shot",
    "kicker": "OPENAI, DEC 2025",
    "title": "OpenAI took ChatGPT's automatic away. Twice.",
-   "image": "shots/fri-deep-openai-free-dec-2025-2.png",
-   "source": "wired.com/story/openai-router-relaunch-gpt-5-sam-altman, Maxwell Zeff, 16 Dec 2025; captured 17 Oct 2026",
    "logos": [
-    "openai-symbol-cream.svg",
-    "wired-cream.svg"
-   ],
-   "crop": [
-    172,
-    260,
-    1096,
-    712
-   ],
-   "mark": [
-    204,
-    288,
-    758,
-    88
+    "openai-symbol-cream.svg"
    ],
    "cue": "fri-deep-openai-free-dec-2025-s2",
-   "at": 457.06
+   "at": 457.06,
+   "parts": [
+    {
+     "image": "shots/fri-v7-rn-dec-11-date.png",
+     "crop": [
+      390,
+      846,
+      600,
+      120
+     ]
+    },
+    {
+     "image": "shots/fri-v7-rn-dec-11.png",
+     "crop": [
+      390,
+      770,
+      1340,
+      255
+     ],
+     "marks": [
+      [
+       909,
+       872,
+       760,
+       54,
+       2
+      ],
+      [
+       404,
+       920,
+       1328,
+       54
+      ],
+      [
+       404,
+       968,
+       616,
+       54
+      ]
+     ]
+    }
+   ],
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 11 Dec 2025; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-openai-free-dec-2025-s3-16x9.png",
    "kind": "shot",
    "kicker": "WIRED, 16 DEC 2025",
    "title": "WIRED: OpenAI was footing the thinking bill",
-   "image": "shots/fri-deep-openai-free-dec-2025-3.png",
-   "source": "x.com/ZeffMax/status/2000984660852310409, Maxwell Zeff of WIRED, 16 Dec 2025, 17:41 UTC; captured 17 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg",
     "wired-cream.svg"
    ],
+   "cue": "fri-deep-openai-free-dec-2025-s3",
+   "at": 460.8,
+   "image": "shots/fri-deep-openai-free-dec-2025-3.png",
    "crop": [
     716,
     102,
     1200,
     340
    ],
-   "mark": [
-    747,
-    321,
-    755,
-    24
+   "marks": [
+    [
+     740,
+     312,
+     1075,
+     48
+    ],
+    [
+     740,
+     352,
+     1120,
+     48
+    ],
+    [
+     740,
+     392,
+     325,
+     44
+    ]
    ],
-   "cue": "fri-deep-openai-free-dec-2025-s3",
-   "at": 460.8
+   "note": "WIRED's line is paywalled; its reporter's post gives engagement as the reason.",
+   "source": "x.com/ZeffMax/status/2000984660852310409, Maxwell Zeff of WIRED, 16 Dec 2025, 17:41 UTC; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-openai-plus-pro-sep-2026-16x9.png",
    "kind": "shot",
    "kicker": "OPENAI, 14 SEP 2026",
    "title": "Plus and Pro lost automatic too. No reason given.",
-   "image": "shots/fri-deep-openai-plus-pro-sep-2026.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 14 Sep 2026; captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    40,
-    1195,
-    1740,
-    395
-   ],
-   "mark": [
-    55,
-    1400,
-    1680,
-    110
-   ],
    "cue": "fri-deep-openai-plus-pro-sep-2026",
-   "at": 475.08
+   "at": 475.08,
+   "parts": [
+    {
+     "image": "shots/fri-v7-rn-sep-14.png",
+     "crop": [
+      390,
+      214,
+      700,
+      130
+     ]
+    },
+    {
+     "image": "shots/fri-v7-rn-sep-14.png",
+     "crop": [
+      390,
+      1280,
+      1380,
+      295
+     ],
+     "marks": [
+      [
+       404,
+       1286,
+       1356,
+       54
+      ],
+      [
+       404,
+       1334,
+       280,
+       54,
+       2
+      ]
+     ]
+    }
+   ],
+   "note": "Automatic switching stays for safety, and for Pro users at their weekly limit.",
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 14 Sep 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-openai-plus-pro-sep-2026-c2-16x9.png",
    "kind": "shot",
    "kicker": "OPENAI, 14 SEP 2026",
    "title": "Plus and Pro lost automatic too. No reason given.",
-   "image": "shots/fri-deep-openai-plus-pro-sep-2026.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 14 Sep 2026; captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    40,
-    1195,
-    1740,
-    395
-   ],
-   "mark": [
-    55,
-    1460,
-    1670,
-    110
-   ],
-   "to_capture_later": "the plan's second source for this step, help.openai.com/articles/20001354: \"On Plus and Pro plans, Instant doesn't automatically switch to a higher thinking level for complex requests.\" is not in this capture",
    "cue": "fri-deep-openai-plus-pro-sep-2026-c2",
-   "at": 481.82
+   "at": 481.82,
+   "parts": [
+    {
+     "image": "shots/fri-v7-rn-sep-14.png",
+     "crop": [
+      390,
+      214,
+      700,
+      130
+     ]
+    },
+    {
+     "image": "shots/fri-v7-rn-sep-14.png",
+     "crop": [
+      390,
+      1280,
+      1380,
+      295
+     ],
+     "marks": [
+      [
+       666,
+       1334,
+       1082,
+       54,
+       2
+      ],
+      [
+       404,
+       1382,
+       433,
+       54
+      ]
+     ]
+    }
+   ],
+   "note": "Automatic switching stays for safety, and for Pro users at their weekly limit.",
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 14 Sep 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-chapter-6-16x9.png",
@@ -1225,20 +1971,9 @@
   },
   {
    "file": "fri-deep-thinking-use-1-to-7-16x9.png",
-   "kind": "columns",
+   "kind": "dots",
    "kicker": "ALTMAN, 10 AUG 2025",
    "title": "Under 1 free user in 100 used thinking daily",
-   "columns": [
-    {
-     "label": "Before",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "names": "Under 1 in 100",
-     "line": "free users who used thinking each day"
-    }
-   ],
-   "note": "Share of free ChatGPT users using a thinking (reasoning) model each day. Sam Altman on X, 10 Aug 2025: \"for free users we went from <1% to 7%\".",
    "data": {
     "measures": "free ChatGPT users using a reasoning model each day, out of 100; more means more careful answers",
     "before": "<1%",
@@ -1246,33 +1981,34 @@
     "evidence": "evidence-v2.md 2.1, x.com/sama/status/1954603417252532479; do not show the Plus figures or quote \"before GPT-5\" as his"
    },
    "cue": "fri-deep-thinking-use-1-to-7",
-   "at": 562.4
+   "at": 562.4,
+   "logos": [
+    "openai-symbol-cream.svg"
+   ],
+   "columns": [
+    {
+     "label": "Before GPT-5 launched (7 Aug 2025)",
+     "lit": 0.5,
+     "figure": "Under 1 in 100",
+     "line": "free users used thinking each day",
+     "state": "plain"
+    },
+    {
+     "label": "Three days after (Altman, 10 Aug 2025)",
+     "lit": 7,
+     "figure": "7 in 100",
+     "line": "free users used thinking each day",
+     "state": "empty"
+    }
+   ],
+   "note": "Altman gave no cause; ChatGPT's automatic picker launched with GPT-5.",
+   "source": "x.com/sama/status/1954603417252532479, 10 Aug 2025: \"for free users we went from <1% to 7%\". Before and after are our reading of his GPT-5 thread."
   },
   {
    "file": "fri-deep-thinking-use-1-to-7-after-16x9.png",
-   "kind": "columns",
+   "kind": "dots",
    "kicker": "ALTMAN, 10 AUG 2025",
    "title": "Once the AI chose, 7 free users in 100 did",
-   "columns": [
-    {
-     "label": "Before",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "names": "Under 1 in 100",
-     "line": "free users who used thinking each day"
-    },
-    {
-     "label": "After GPT-5 arrived, Aug 2025",
-     "logos": [
-      "openai-symbol-cream.svg"
-     ],
-     "names": "7 in 100",
-     "line": "once ChatGPT chose for them",
-     "hi": true
-    }
-   ],
-   "note": "Share of free ChatGPT users using a thinking (reasoning) model each day. Sam Altman on X, 10 Aug 2025: \"for free users we went from <1% to 7%\".",
    "data": {
     "measures": "free ChatGPT users using a reasoning model each day, out of 100; more means more careful answers",
     "before": "<1%",
@@ -1280,182 +2016,297 @@
     "evidence": "evidence-v2.md 2.1, x.com/sama/status/1954603417252532479; do not show the Plus figures or quote \"before GPT-5\" as his"
    },
    "cue": "fri-deep-thinking-use-1-to-7-after",
-   "at": 567.66
+   "at": 567.66,
+   "logos": [
+    "openai-symbol-cream.svg"
+   ],
+   "columns": [
+    {
+     "label": "Before GPT-5 launched (7 Aug 2025)",
+     "lit": 0.5,
+     "figure": "Under 1 in 100",
+     "line": "free users used thinking each day",
+     "state": "plain"
+    },
+    {
+     "label": "Three days after (Altman, 10 Aug 2025)",
+     "lit": 7,
+     "figure": "7 in 100",
+     "line": "free users used thinking each day",
+     "state": "hi"
+    }
+   ],
+   "note": "Altman gave no cause; ChatGPT's automatic picker launched with GPT-5.",
+   "source": "x.com/sama/status/1954603417252532479, 10 Aug 2025: \"for free users we went from <1% to 7%\". Before and after are our reading of his GPT-5 thread."
   },
   {
    "file": "fri-deep-claude-code-reversal-16x9.png",
    "kind": "shot",
    "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
    "title": "Anthropic turned Claude Code down a gear",
-   "image": "shots/fri-deep-claude-code-reversal.png",
-   "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 16 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
-   "crop": [
-    0,
-    0,
-    2640,
-    905
-   ],
-   "mark": [
-    40,
-    738,
-    385,
-    55
-   ],
    "cue": "fri-deep-claude-code-reversal",
-   "at": 573.04
+   "at": 573.04,
+   "image": "shots/fri-v7-postmortem-top.png",
+   "crop": [
+    140,
+    135,
+    2620,
+    895
+   ],
+   "marks": [
+    [
+     165,
+     870,
+     373,
+     51
+    ]
+   ],
+   "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-claude-code-reversal-f2-16x9.png",
    "kind": "shot",
    "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
    "title": "Anthropic turned Claude Code down a gear",
-   "image": "shots/fri-deep-claude-code-reversal.png",
-   "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 16 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
-   "crop": [
-    660,
-    1815,
-    1340,
-    330
-   ],
-   "mark": [
-    690,
-    1828,
-    1275,
-    97
-   ],
    "cue": "fri-deep-claude-code-reversal-f2",
-   "at": 575.62
+   "at": 575.62,
+   "parts": [
+    {
+     "image": "shots/fri-v7-postmortem-item1.png",
+     "crop": [
+      790,
+      788,
+      1300,
+      327
+     ],
+     "marks": [
+      [
+       830,
+       791,
+       1241,
+       64
+      ],
+      [
+       830,
+       846,
+       203,
+       60,
+       2
+      ]
+     ]
+    }
+   ],
+   "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-claude-code-reversal-f3-16x9.png",
    "kind": "shot",
    "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
    "title": "Most stayed put, though it felt less smart",
-   "image": "shots/fri-deep-claude-code-reversal.png",
-   "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 16 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
-   "crop": [
-    660,
-    6640,
-    1300,
-    300
-   ],
-   "mark": [
-    675,
-    6816,
-    1240,
-    96
-   ],
    "cue": "fri-deep-claude-code-reversal-f3",
-   "at": 579.94
+   "at": 579.94,
+   "image": "shots/fri-v7-postmortem-felt.png",
+   "crop": [
+    780,
+    760,
+    1300,
+    270
+   ],
+   "marks": [
+    [
+     1137,
+     770,
+     782,
+     54,
+     2
+    ],
+    [
+     788,
+     823,
+     188,
+     54,
+     2
+    ],
+    [
+     1841,
+     929,
+     196,
+     54,
+     2
+    ],
+    [
+     788,
+     981,
+     573,
+     54
+    ]
+   ],
+   "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-claude-code-reversal-f4-16x9.png",
    "kind": "shot",
    "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
    "title": "Anthropic admitted the mistake and reversed it",
-   "image": "shots/fri-deep-claude-code-reversal.png",
-   "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 16 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
-   "crop": [
-    660,
-    1815,
-    1340,
-    330
-   ],
-   "mark": [
-    715,
-    1938,
-    1250,
-    94
-   ],
    "cue": "fri-deep-claude-code-reversal-f4",
-   "at": 583.92
+   "at": 583.92,
+   "parts": [
+    {
+     "image": "shots/fri-v7-postmortem-item1.png",
+     "crop": [
+      790,
+      788,
+      1300,
+      327
+     ],
+     "marks": [
+      [
+       1615,
+       899,
+       472,
+       58,
+       2
+      ],
+      [
+       830,
+       951,
+       568,
+       58,
+       2
+      ]
+     ]
+    }
+   ],
+   "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-extended-cut-by-mistake-16x9.png",
    "kind": "shot",
    "kicker": "OPENAI, 10 JAN 2026",
    "title": "OpenAI cut ChatGPT's thinking time for speed",
-   "image": "shots/fri-deep-extended-cut-by-mistake.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 4 Feb 2026; captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    100,
-    20,
-    1400,
-    480
-   ],
-   "mark": [
-    138,
-    338,
-    1307,
-    48
-   ],
    "cue": "fri-deep-extended-cut-by-mistake",
-   "at": 604.16
+   "at": 604.16,
+   "image": "shots/fri-v7-rn-feb-4.png",
+   "crop": [
+    390,
+    480,
+    1380,
+    455
+   ],
+   "marks": [
+    [
+     404,
+     780,
+     1322,
+     54
+    ],
+    [
+     404,
+     828,
+     266,
+     54,
+     2
+    ]
+   ],
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 4 Feb 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-extended-cut-by-mistake-r2-16x9.png",
    "kind": "shot",
    "kicker": "OPENAI, 10 JAN 2026",
    "title": "OpenAI also cut Extended thinking by mistake",
-   "image": "shots/fri-deep-extended-cut-by-mistake.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 4 Feb 2026; captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    100,
-    20,
-    1400,
-    480
-   ],
-   "mark": [
-    140,
-    401,
-    1240,
-    85
-   ],
    "cue": "fri-deep-extended-cut-by-mistake-r2",
-   "at": 614.2
+   "at": 614.2,
+   "image": "shots/fri-v7-rn-feb-4.png",
+   "crop": [
+    390,
+    480,
+    1380,
+    455
+   ],
+   "marks": [
+    [
+     975,
+     828,
+     682,
+     54,
+     2
+    ],
+    [
+     404,
+     876,
+     532,
+     54,
+     2
+    ]
+   ],
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 4 Feb 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-extended-cut-by-mistake-r3-16x9.png",
    "kind": "shot",
    "kicker": "OPENAI, 4 FEB 2026",
    "title": "Weeks to fix. Your screen never showed it.",
-   "image": "shots/fri-deep-extended-cut-by-mistake.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 4 Feb 2026; captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    100,
-    320,
-    1400,
-    600
-   ],
-   "mark": [
-    140,
-    768,
-    1340,
-    135
-   ],
    "cue": "fri-deep-extended-cut-by-mistake-r3",
-   "at": 618.72
+   "at": 618.72,
+   "parts": [
+    {
+     "image": "shots/fri-v7-rn-feb-4.png",
+     "crop": [
+      390,
+      480,
+      1380,
+      270
+     ]
+    },
+    {
+     "image": "shots/fri-v7-rn-feb-4.png",
+     "crop": [
+      390,
+      1205,
+      1380,
+      150
+     ],
+     "marks": [
+      [
+       404,
+       1212,
+       1354,
+       54
+      ],
+      [
+       404,
+       1260,
+       854,
+       54,
+       2
+      ]
+     ]
+    }
+   ],
+   "note": "OpenAI disclosed it only here, in its release notes, after the fact.",
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 4 Feb 2026; captured 17 Oct 2026"
   },
   {
    "file": "fri-chapter-7-16x9.png",
@@ -1482,70 +2333,147 @@
    "kind": "shot",
    "kicker": "CHATGPT, OCT 2026",
    "title": "For anything you act on, pick Medium or High",
-   "image": "shots/fri-deep-where-to-turn-it-up.png",
-   "source": "help.openai.com/en/articles/20001354 (about 9 Oct 2026); captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    0,
-    150,
-    1517,
-    708
-   ],
    "cue": "fri-deep-where-to-turn-it-up",
-   "at": 681.62
+   "at": 681.62,
+   "parts": [
+    {
+     "image": "shots/fri-v7-oa-levels.png",
+     "crop": [
+      400,
+      570,
+      1300,
+      110
+     ]
+    },
+    {
+     "image": "shots/fri-v7-oa-levels.png",
+     "crop": [
+      400,
+      975,
+      1300,
+      300
+     ],
+     "marks": [
+      [
+       468,
+       1026,
+       451,
+       54
+      ],
+      [
+       468,
+       1074,
+       404,
+       54
+      ]
+     ]
+    }
+   ],
+   "note": "Our advice; OpenAI's page lists the levels.",
+   "source": "help.openai.com/en/articles/20001354 (updated about 10 Oct 2026); captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-where-to-turn-it-up-c2-16x9.png",
    "kind": "shot",
    "kicker": "CHATGPT FREE, OCT 2026",
    "title": "Free plan? Pick Think.",
-   "image": "shots/fri-deep-where-to-turn-it-up.png",
-   "source": "help.openai.com/en/articles/20001354 (about 9 Oct 2026); captured 16 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "crop": [
-    0,
-    896,
-    1517,
-    245
-   ],
-   "mark": [
-    88,
-    1032,
-    1314,
-    76
-   ],
    "cue": "fri-deep-where-to-turn-it-up-c2",
-   "at": 684.8
+   "at": 684.8,
+   "image": "shots/fri-v7-oa-free-think.png",
+   "crop": [
+    400,
+    860,
+    1350,
+    120
+   ],
+   "marks": [
+    [
+     404,
+     874,
+     789,
+     54,
+     2
+    ]
+   ],
+   "note": "Our advice; OpenAI's page says what free users can use.",
+   "source": "help.openai.com/en/articles/20001354 (updated about 10 Oct 2026); captured 17 Oct 2026"
   },
   {
    "file": "fri-deep-where-to-turn-it-up-c3-16x9.png",
    "kind": "shot",
    "kicker": "CLAUDE, GEMINI, OCT 2026",
    "title": "Claude or Gemini? Turn effort up.",
-   "image": "shots/fri-deep-where-to-turn-it-up.png",
-   "source": "support.claude.com/en/articles/8664678 (updated 7 Oct 2026); support.google.com/gemini/answer/17004136; captured 16 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg",
     "google-cream.svg"
    ],
-   "crop": [
-    1543,
-    850,
-    1521,
-    862
-   ],
-   "mark": [
-    1632,
-    1542,
-    1343,
-    80
-   ],
    "cue": "fri-deep-where-to-turn-it-up-c3",
-   "at": 687.52
+   "at": 687.52,
+   "parts": [
+    {
+     "image": "shots/fri-v7-claude-effort.png",
+     "crop": [
+      630,
+      385,
+      520,
+      80
+     ]
+    },
+    {
+     "image": "shots/fri-v7-claude-effort.png",
+     "crop": [
+      640,
+      1173,
+      880,
+      78
+     ],
+     "marks": [
+      [
+       676,
+       1187,
+       826,
+       50
+      ]
+     ]
+    },
+    {
+     "image": "shots/fri-v7-gemini-tips.png",
+     "crop": [
+      370,
+      740,
+      1420,
+      240
+     ],
+     "marks": [
+      [
+       406,
+       824,
+       1367,
+       56
+      ],
+      [
+       406,
+       872,
+       1310,
+       56
+      ],
+      [
+       406,
+       920,
+       821,
+       56
+      ]
+     ]
+    }
+   ],
+   "note": "Our advice. Gemini's effort levels are for paid plans; free Gemini runs on Auto.",
+   "source": "support.claude.com/en/articles/8664678; support.google.com/gemini/answer/17004136; captured 17 Oct 2026"
   },
   {
    "file": "fri-chapter-8-16x9.png",
@@ -1583,9 +2511,14 @@
      "tone": "dim"
     }
    ],
-   "note": "My call: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message. How sure: 85 out of 100.",
    "cue": "fri-call-85",
-   "at": 814.02
+   "at": 814.02,
+   "callnote": "My call: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message. Wrong if a new free chat still starts on a setting you pick.",
+   "meter": {
+    "value": 85,
+    "tone": "dim",
+    "label": "how sure, out of 100"
+   }
   },
   {
    "file": "fri-call-85-fill-16x9.png",
@@ -1605,10 +2538,30 @@
      "tone": "answer"
     }
    ],
-   "note": "My call: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message. How sure: 85 out of 100. Wrong if a new free chat still starts on a setting you pick.",
    "cue": "fri-call-85-fill",
-   "at": 815.58
+   "at": 815.58,
+   "callnote": "My call: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message. Wrong if a new free chat still starts on a setting you pick.",
+   "meter": {
+    "value": 85,
+    "tone": "answer",
+    "label": "how sure, out of 100"
+   }
   }
  ],
- "review_17_oct": "Drawn and looked at card by card on 17 Oct 2026. Fixed in the spec, headings untouched: rings that cut through words (fri-gemini-auto, -h2, fri-deep-openai-free-dec-2025, -s3, fri-deep-claude-code-reversal-f2, fri-deep-extended-cut-by-mistake, -r2, fri-deep-where-to-turn-it-up-c2, -c3) or ran off the crop (fri-deep-altman-same-day-t2, fri-deep-openai-free-dec-2025) now sit in the gaps between words and lines; fri-deep-claude-code-reversal-f4 and -f3 rings moved off the line above; fri-gemini-auto-h1 cropped to the plans table alone (no half-cut line under it, table larger) and ringed on the whole \"Without a plan: Auto\" row; fri-deep-openai-free-dec-2025-s3 cropped to the post's words; fri-deep-claude-code-reversal crop taken 25 px lower so \"Here's what happened\" is not clipped; Opus 5 labelled \"Opus 5 (older)\" on -s2 and -s3 so all four labels on -s3 wrap alike and the rows line up; model names and dates in the Claude-names columns kept whole with no-break spaces."
+ "review_17_oct": "Drawn and looked at card by card on 17 Oct 2026. Fixed in the spec, headings untouched: rings that cut through words (fri-gemini-auto, -h2, fri-deep-openai-free-dec-2025, -s3, fri-deep-claude-code-reversal-f2, fri-deep-extended-cut-by-mistake, -r2, fri-deep-where-to-turn-it-up-c2, -c3) or ran off the crop (fri-deep-altman-same-day-t2, fri-deep-openai-free-dec-2025) now sit in the gaps between words and lines; fri-deep-claude-code-reversal-f4 and -f3 rings moved off the line above; fri-gemini-auto-h1 cropped to the plans table alone (no half-cut line under it, table larger) and ringed on the whole \"Without a plan: Auto\" row; fri-deep-openai-free-dec-2025-s3 cropped to the post's words; fri-deep-claude-code-reversal crop taken 25 px lower so \"Here's what happened\" is not clipped; Opus 5 labelled \"Opus 5 (older)\" on -s2 and -s3 so all four labels on -s3 wrap alike and the rows line up; model names and dates in the Claude-names columns kept whole with no-break spaces.",
+ "logos_to_add": {
+  "artificialanalysis-cream.svg": {
+   "cards": [
+    "fri-deep-aa-same-claude",
+    "fri-deep-aa-same-claude-s1",
+    "fri-deep-aa-same-claude-s2",
+    "fri-deep-aa-same-claude-s3",
+    "fri-deep-cost-vs-score",
+    "fri-deep-cost-vs-score-cost",
+    "fri-deep-cost-vs-score-score"
+   ],
+   "status": "drawn since 17 Oct 2026: video_card.py puts every card's own \"logos\" on its kicker line on every kind (columns included; the trim pass takes column, row and subject logos too; self-test). These seven cards are now a bars chart and a panels chart with Artificial Analysis top right and the Anthropic symbol on each row."
+  }
+ },
+ "review_17_oct_2": "Skeptic fixes, 17 Oct 2026, headings and kickers untouched: every capture with marks, strips or labels burned in was replaced by a clean recapture (shots/fri-v7-*.png, shots-v7-sources.json); every ring is drawn by video_card at the card's own size over a 38% ink shade, whole sentences ringed with one box per line; two passages of one page are stacked with video_card's own cut line; captures draw at up to 2x; the Artificial Analysis cards are one bar chart (0 to 100) and one cost-and-score chart with the AA logo; the Claude names are a dated timeline; 1 in 100 to 7 in 100 is two dot grids; the call has a meter."
 }

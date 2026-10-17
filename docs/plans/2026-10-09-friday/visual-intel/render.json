@@ -1,0 +1,266 @@
+{
+ "what_this_is": "Friday's five Substack exhibits (mind.the.gap, \"Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks\"), rendered from exhibits.json with every number computed from data-final.json rows (by Artificial Analysis slug) and the spec's dated launch rows, and checked against derived.json. Each was checked with scripts/pages/card.py at 1360 wide and looked at in full. Nothing published, sent or committed; the article is unchanged.",
+ "built_at": "2026-10-17T09:28:38Z",
+ "article": "docs/plans/2026-10-09-draft-body-v5.md (unchanged; every \"after\" is found once in it, and once in scripts/pages/build.py's plain text of it)",
+ "spec": "/home/user/content-engine/docs/plans/2026-10-09-friday/visual-intel/exhibits.json",
+ "data": [
+  "/home/user/content-engine/docs/plans/2026-10-09-friday/visual-intel/data-final.json",
+  "/home/user/content-engine/docs/plans/2026-10-09-friday/visual-intel/derived.json"
+ ],
+ "how_to_redraw": [
+  "python3 -I /home/user/content-engine/.cache/visual-intel/scripts/render.py",
+  "python3 -I /home/user/content-engine/.cache/visual-intel/scripts/draw.py   (runs scripts/pages/card.py on each)",
+  "python3 -I /home/user/content-engine/.cache/visual-intel/scripts/finish.py"
+ ],
+ "all_pass_phone_check": true,
+ "exhibits": [
+  {
+   "id": "launches",
+   "order": 1,
+   "question": "How often are Anthropic and OpenAI putting out new models?",
+   "heading": "Anthropic and OpenAI put out a new model about every two weeks for a year",
+   "after_section": "THE NAME GAME",
+   "after_paragraph_number": 6,
+   "optional": true,
+   "html": "/home/user/content-engine/.cache/visual-intel/launches.html",
+   "png": "/home/user/content-engine/.cache/visual-intel/launches.png",
+   "phone_png": "/home/user/content-engine/.cache/visual-intel/launches-phone.png",
+   "size": [
+    1360,
+    2272
+   ],
+   "png_sha256": "ca08720454ea445fa0928e64f47ceb583bd7fbc7e0dbaee00de0f6f89ff3f4eb",
+   "phone_check": {
+    "passed": true,
+    "result": [
+     "every word can be read on a phone"
+    ],
+    "runs_of_words": 27,
+    "too_small": 0,
+    "command": "python3 /home/user/content-engine/scripts/pages/card.py /home/user/content-engine/.cache/visual-intel/launches.html --out /home/user/content-engine/.cache/visual-intel"
+   },
+   "layout_checks": {
+    "passed": true,
+    "problems": [],
+    "what": "no word crosses the 64 px side margins; no two runs of words overlap"
+   },
+   "logos": [
+    "Anthropic",
+    "OpenAI"
+   ],
+   "figure": {
+    "after": "Start with why your eyes are on the name at all, because while we watch the names, the setting that decides your answer gets chosen out of sight. Look at how often the names change. Anthropic, which makes Claude, launched Claude Opus 4.8 in May, Claude Opus 5 in July and Claude Opus 5.5 in September, with Sonnet, Fable and Haiku versions alongside. OpenAI's release notes climb from GPT-5.1 last November to GPT-6.1 Sol at the end of September. OpenAI even says a model will \"generally remain available in ChatGPT for 90 days after a successor is released.\" Ninety days, and then the next name takes over.",
+    "image": "/home/user/content-engine/.cache/visual-intel/launches.png",
+    "alt": "Timeline of new model launches by Anthropic and OpenAI, November 2025 to October 2026, one dot per launch day, as dated on the companies' own pages. Anthropic launched 15 new Claude models on 13 days, including Claude Opus 4.8 on 28 May, Claude Opus 5 on 24 July and Claude Opus 5.5 on 22 September 2026. OpenAI launched models on at least 16 days, from GPT-5.1 on 12 November 2025 to GPT-6.1 Sol on 29 September 2026. Between them that is 26 launch days, about one every 1.9 weeks, and 6 launches came in the 16 days from 22 September to 7 October 2026.",
+    "caption": "Anthropic and OpenAI launched new models on 26 days in under a year, 6 of them in 16 days from 22 September to 7 October 2026. Source: Anthropic and OpenAI release pages, read 15 Oct 2026; days counted by us."
+   }
+  },
+  {
+   "id": "model-or-thinking-level",
+   "order": 2,
+   "question": "Which changes the score more, a new model version or the thinking level, and what does each cost?",
+   "heading": "Turning up the thinking lifted Claude and GPT more than a new version did",
+   "after_section": "THE SWITCH THAT MATTERS",
+   "after_paragraph_number": 18,
+   "optional": false,
+   "html": "/home/user/content-engine/.cache/visual-intel/model-or-thinking-level.html",
+   "png": "/home/user/content-engine/.cache/visual-intel/model-or-thinking-level.png",
+   "phone_png": "/home/user/content-engine/.cache/visual-intel/model-or-thinking-level-phone.png",
+   "size": [
+    1360,
+    3614
+   ],
+   "png_sha256": "10118df2723221df9ffd26c388a2b6962f020a4ac55743178bbbbd53c06e1e9b",
+   "phone_check": {
+    "passed": true,
+    "result": [
+     "every word can be read on a phone"
+    ],
+    "runs_of_words": 42,
+    "too_small": 0,
+    "command": "python3 /home/user/content-engine/scripts/pages/card.py /home/user/content-engine/.cache/visual-intel/model-or-thinking-level.html --out /home/user/content-engine/.cache/visual-intel"
+   },
+   "layout_checks": {
+    "passed": true,
+    "problems": [],
+    "what": "no word crosses the 64 px side margins; no two runs of words overlap"
+   },
+   "logos": [
+    "Anthropic",
+    "OpenAI",
+    "Artificial Analysis"
+   ],
+   "figure": {
+    "after": "The size of the gear change surprised me. Artificial Analysis, an independent group that tests these models, ran the same Claude Opus 5.5 through its long set of hard tests at different settings. Thinking as hard as it can, it scored more than a third higher than when thinking a little. The older Opus 5, at its hardest, beat the new one at its lowest. OpenAI's GPT-6 Sol, which OpenAI's help page says powers ChatGPT's thinking settings, scored about two thirds higher at its top developer setting than with thinking off, while the newer GPT-6.1 Sol at its top only edged past it. In both cases the gear moved the score more than the new badge did.",
+    "image": "/home/user/content-engine/.cache/visual-intel/model-or-thinking-level.png",
+    "alt": "Two charts of score on Artificial Analysis's Intelligence Index (0 to 100, higher is better) against cost per task in US dollars at list prices, log scale. Each line is one model, from its lowest thinking level to its highest. Claude Opus 5.5 rises from 42.3 at Low ($0.55 a task) to 57.6 at Max ($5.98); Claude Opus 5, released two months earlier, runs from 39.4 at Low ($1.10) to 50.8 at Max ($5.86) and costs more at 4 of its 5 levels, so Opus 5 at Max beat Opus 5.5 at Low. GPT-6 Sol rises from 28.5 with thinking off ($0.33, more than its Low at $0.13) to 47.6 at Max ($1.04); GPT-6.1 Sol, a week newer, runs from 42.1 at Low ($0.13) to 51.8 at Max ($0.72) and costs less at every level. Turning up the thinking added 9.7 to 19.1 points; the newer version added 2.9 to 8.0 points at the same level.",
+    "caption": "Turning up the thinking lifted each model's score on Artificial Analysis's Intelligence Index (0 to 100) more than moving to its newer version did. Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026; cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices."
+   }
+  },
+  {
+   "id": "each-step-buys-less",
+   "order": 3,
+   "question": "Is each step up in thinking level worth what it costs?",
+   "heading": "Each step up in thinking buys Claude and GPT less for every extra dollar",
+   "after_section": "THE SWITCH THAT MATTERS",
+   "after_paragraph_number": 20,
+   "optional": false,
+   "html": "/home/user/content-engine/.cache/visual-intel/each-step-buys-less.html",
+   "png": "/home/user/content-engine/.cache/visual-intel/each-step-buys-less.png",
+   "phone_png": "/home/user/content-engine/.cache/visual-intel/each-step-buys-less-phone.png",
+   "size": [
+    1360,
+    3712
+   ],
+   "png_sha256": "9198cef2e0ceff2569e821993c8acdb7555ee43d3b3ee00f11a58da191032d99",
+   "phone_check": {
+    "passed": true,
+    "result": [
+     "every word can be read on a phone"
+    ],
+    "runs_of_words": 60,
+    "too_small": 0,
+    "command": "python3 /home/user/content-engine/scripts/pages/card.py /home/user/content-engine/.cache/visual-intel/each-step-buys-less.html --out /home/user/content-engine/.cache/visual-intel"
+   },
+   "layout_checks": {
+    "passed": true,
+    "problems": [],
+    "what": "no word crosses the 64 px side margins; no two runs of words overlap"
+   },
+   "logos": [
+    "Anthropic",
+    "OpenAI",
+    "Artificial Analysis"
+   ],
+   "figure": {
+    "after": "It isn't a straight line, though, and that matters for where this is heading. Each step up buys less than the one before. On Artificial Analysis's tests, moving Opus 5.5 from low to medium cost about two and a half times as much per task and brought the biggest jump in its score. Moving it from medium to max cost another four and a half times as much, for a smaller jump. Bottom to top, that's about 11 times the cost for a score just over a third higher. Every current model from Anthropic and OpenAI on those tests works the same way: the top setting costs several times more than the bottom one, and the score goes up by far less. The last step up is the worst deal of all. On Fable 5.1, it costs 28% more and barely moves the score. And the setting can beat the model. Claude Haiku 5.5, the cheapest of Anthropic's current models, on its highest setting edged past Opus 5.5 on its lowest, for less than half the cost per task. Sometimes the top gear even scores lower than the one below it. On Hex's data-analysis test, GPT-6 Sol scored 61.3% on its Xhigh (extra high) setting and 57% on Max, which costs more. Thinking can be pure waste, too: researchers asked reasoning models \"what is the answer of 2 plus 3?\" and found they \"consumed 1,953% more tokens than conventional models to reach the same answer.\" (Tokens are the word pieces an AI reads and writes, and what developers pay for.) One wrote out 13 solutions. And sometimes the new name really is the bigger step. Anthropic says Opus 5.5 on its default setting \"beats Opus 5 at max effort for about a fifth of the cost\" on one test of computer tasks.",
+    "image": "/home/user/content-engine/.cache/visual-intel/each-step-buys-less.png",
+    "alt": "Six small line charts, one per model, of points added on Artificial Analysis's Intelligence Index (0 to 100) against cost per task as a multiple of the model's own Low setting, as the thinking level rises through Low, Medium, High, Xhigh (extra high) and Max. Every line climbs steeply at first and flattens: each step up added fewer points per extra dollar than the one before. Claude Opus 5.5's first step added 8.9 points for 2.4 times the cost, its last 1.6 points for 1.7 times. From Low to Max, Claude Opus 5.5 added 15.3 points for 10.9 times the cost; Claude Sonnet 5.5 added 20.1 points for 15.8 times the cost; Claude Haiku 5.5 added 13.9 points for 8.7 times the cost; Claude Fable 5.1 added 6.6 points for 3.2 times the cost; GPT-6.1 Sol added 9.7 points for 5.5 times the cost; GPT-6 Sol added 13.4 points for 7.9 times the cost. Claude Fable 5.1's last step added 0.2 points for 28% more.",
+    "caption": "Each step up in thinking level bought fewer points on Artificial Analysis's Intelligence Index (0 to 100) per extra dollar, for all six models. Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026; cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices."
+   }
+  },
+  {
+   "id": "new-version-or-more-thinking",
+   "order": 4,
+   "question": "Which buys more intelligence for the money: a new model version or a higher thinking level?",
+   "heading": "A new Claude Opus or GPT Sol adds fewer points than more thinking, but costs less",
+   "after_section": "WHAT THINKING COSTS THEM",
+   "after_paragraph_number": 24,
+   "optional": false,
+   "html": "/home/user/content-engine/.cache/visual-intel/new-version-or-more-thinking.html",
+   "png": "/home/user/content-engine/.cache/visual-intel/new-version-or-more-thinking.png",
+   "phone_png": "/home/user/content-engine/.cache/visual-intel/new-version-or-more-thinking-phone.png",
+   "size": [
+    1360,
+    3706
+   ],
+   "png_sha256": "4f9b49fbfe9ed490d1ad974fa32cba0e709b5aaae9a4f01cdfe4f7f2126f185d",
+   "phone_check": {
+    "passed": true,
+    "result": [
+     "every word can be read on a phone"
+    ],
+    "runs_of_words": 44,
+    "too_small": 0,
+    "command": "python3 /home/user/content-engine/scripts/pages/card.py /home/user/content-engine/.cache/visual-intel/new-version-or-more-thinking.html --out /home/user/content-engine/.cache/visual-intel"
+   },
+   "layout_checks": {
+    "passed": true,
+    "problems": [],
+    "what": "no word crosses the 64 px side margins; no two runs of words overlap"
+   },
+   "logos": [
+    "Anthropic",
+    "OpenAI",
+    "Artificial Analysis"
+   ],
+   "figure": {
+    "after": "That's also why a higher gear eats into your plan faster. Anthropic's help page for the Claude app says higher effort means responses \"take longer and use more tokens, so you'll reach your usage limits faster.\" Changing model can do the same, but not always. Anthropic charges developers two and a half times as much for the same amount of writing from Fable 5.1, the model it points them to when Opus 5.5 falls short, as from Opus 5.5. A newer version often costs less, as the Opus 5.5 example above shows.",
+    "image": "/home/user/content-engine/.cache/visual-intel/new-version-or-more-thinking.png",
+    "alt": "Four tiles comparing two ways to get a higher score on Artificial Analysis's Intelligence Index (0 to 100), with cost per task in US dollars at list prices. More thinking: Claude Opus 5.5 from Low to Max adds 15.3 points for 10.9 times the cost; GPT-6.1 Sol from Low to Max adds 9.7 points for 5.5 times the cost. A new version at the same thinking level: Claude Opus 5 to Claude Opus 5.5 adds 2.9 to 6.8 points at 0.50 to 1.02 times the cost: cheaper at 4 of 5 levels; GPT-6 Sol to GPT-6.1 Sol adds 4.2 to 8.0 points at 0.69 to 0.98 times the cost: cheaper at every level. GPT-6 Sol from thinking off to Max added 19.1 points for 3.1 times the cost.",
+    "caption": "More thinking added more points on Artificial Analysis's Intelligence Index (0 to 100) than a newer version did, but the newer version usually cost less to run. Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026; cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices."
+   }
+  },
+  {
+   "id": "cheapest-route-to-each-score",
+   "order": 5,
+   "question": "If I need a given level of intelligence, which model and thinking level gets there cheapest, and where do the defaults land?",
+   "heading": "The cheapest route to each score mixes Claude and GPT models and thinking levels",
+   "after_section": "WHAT TO DO ABOUT IT",
+   "after_paragraph_number": 47,
+   "optional": false,
+   "html": "/home/user/content-engine/.cache/visual-intel/cheapest-route-to-each-score.html",
+   "png": "/home/user/content-engine/.cache/visual-intel/cheapest-route-to-each-score.png",
+   "phone_png": "/home/user/content-engine/.cache/visual-intel/cheapest-route-to-each-score-phone.png",
+   "size": [
+    1360,
+    4199
+   ],
+   "png_sha256": "c3ee4ee8490d78b06a1fc941432d68c8637a6e725da3eaf09dd2c96f75153e66",
+   "phone_check": {
+    "passed": true,
+    "result": [
+     "every word can be read on a phone"
+    ],
+    "runs_of_words": 57,
+    "too_small": 0,
+    "command": "python3 /home/user/content-engine/scripts/pages/card.py /home/user/content-engine/.cache/visual-intel/cheapest-route-to-each-score.html --out /home/user/content-engine/.cache/visual-intel"
+   },
+   "layout_checks": {
+    "passed": true,
+    "problems": [],
+    "what": "no word crosses the 64 px side margins; no two runs of words overlap"
+   },
+   "logos": [
+    "Anthropic",
+    "OpenAI",
+    "Google",
+    "Artificial Analysis"
+   ],
+   "figure": {
+    "after": "If you build products on AI, don't choose a model by its name or its launch chart. Run your own hard questions through each setting, check the answers, and watch how much thinking you pay for.",
+    "image": "/home/user/content-engine/.cache/visual-intel/cheapest-route-to-each-score.png",
+    "alt": "Price ladder: for each score on Artificial Analysis's Intelligence Index (0 to 100), the current model and thinking level that reaches it at the lowest cost per task, in US dollars at list prices. 40 or more: Claude Haiku 5.5 at Xhigh (extra high), scoring 41.2 for $0.12 a task, or GPT-6.1 Sol at Low, scoring 42.1 for $0.13 a task (Haiku's costs are understated). 45 or more: GPT-6.1 Sol at Medium, scoring 47.8 for $0.21 a task. 50 or more: GPT-6.1 Sol at High, scoring 50.2 for $0.32 a task. 55 or more: Claude Opus 5.5 at Xhigh, scoring 56.0 for $3.46 a task, 11 times the cost for 5.8 more points. The top score: Claude Opus 5.5 at Max, scoring 57.6 for $5.98 a task. For comparison, Anthropic's defaults: Claude Opus 5.5 at Medium, scoring 51.2 for $1.34 a task and Claude Haiku 5.5 at Medium, scoring 34.5 for $0.05 a task; and Google's best here, Gemini 4 Argon at High, scoring 52.6 for $1.99 a task.",
+    "caption": "The cheapest way to 50 or more on Artificial Analysis's Intelligence Index (0 to 100) cost 12 to 32 cents a task; 55 or more took Claude Opus 5.5 at Xhigh (extra high) at $3.46. Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026; cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices; defaults from Anthropic's developer guide, read 15 Oct 2026."
+   }
+  }
+ ],
+ "figures": [
+  {
+   "after": "Start with why your eyes are on the name at all, because while we watch the names, the setting that decides your answer gets chosen out of sight. Look at how often the names change. Anthropic, which makes Claude, launched Claude Opus 4.8 in May, Claude Opus 5 in July and Claude Opus 5.5 in September, with Sonnet, Fable and Haiku versions alongside. OpenAI's release notes climb from GPT-5.1 last November to GPT-6.1 Sol at the end of September. OpenAI even says a model will \"generally remain available in ChatGPT for 90 days after a successor is released.\" Ninety days, and then the next name takes over.",
+   "image": "/home/user/content-engine/.cache/visual-intel/launches.png",
+   "alt": "Timeline of new model launches by Anthropic and OpenAI, November 2025 to October 2026, one dot per launch day, as dated on the companies' own pages. Anthropic launched 15 new Claude models on 13 days, including Claude Opus 4.8 on 28 May, Claude Opus 5 on 24 July and Claude Opus 5.5 on 22 September 2026. OpenAI launched models on at least 16 days, from GPT-5.1 on 12 November 2025 to GPT-6.1 Sol on 29 September 2026. Between them that is 26 launch days, about one every 1.9 weeks, and 6 launches came in the 16 days from 22 September to 7 October 2026.",
+   "caption": "Anthropic and OpenAI launched new models on 26 days in under a year, 6 of them in 16 days from 22 September to 7 October 2026. Source: Anthropic and OpenAI release pages, read 15 Oct 2026; days counted by us."
+  },
+  {
+   "after": "The size of the gear change surprised me. Artificial Analysis, an independent group that tests these models, ran the same Claude Opus 5.5 through its long set of hard tests at different settings. Thinking as hard as it can, it scored more than a third higher than when thinking a little. The older Opus 5, at its hardest, beat the new one at its lowest. OpenAI's GPT-6 Sol, which OpenAI's help page says powers ChatGPT's thinking settings, scored about two thirds higher at its top developer setting than with thinking off, while the newer GPT-6.1 Sol at its top only edged past it. In both cases the gear moved the score more than the new badge did.",
+   "image": "/home/user/content-engine/.cache/visual-intel/model-or-thinking-level.png",
+   "alt": "Two charts of score on Artificial Analysis's Intelligence Index (0 to 100, higher is better) against cost per task in US dollars at list prices, log scale. Each line is one model, from its lowest thinking level to its highest. Claude Opus 5.5 rises from 42.3 at Low ($0.55 a task) to 57.6 at Max ($5.98); Claude Opus 5, released two months earlier, runs from 39.4 at Low ($1.10) to 50.8 at Max ($5.86) and costs more at 4 of its 5 levels, so Opus 5 at Max beat Opus 5.5 at Low. GPT-6 Sol rises from 28.5 with thinking off ($0.33, more than its Low at $0.13) to 47.6 at Max ($1.04); GPT-6.1 Sol, a week newer, runs from 42.1 at Low ($0.13) to 51.8 at Max ($0.72) and costs less at every level. Turning up the thinking added 9.7 to 19.1 points; the newer version added 2.9 to 8.0 points at the same level.",
+   "caption": "Turning up the thinking lifted each model's score on Artificial Analysis's Intelligence Index (0 to 100) more than moving to its newer version did. Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026; cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices."
+  },
+  {
+   "after": "It isn't a straight line, though, and that matters for where this is heading. Each step up buys less than the one before. On Artificial Analysis's tests, moving Opus 5.5 from low to medium cost about two and a half times as much per task and brought the biggest jump in its score. Moving it from medium to max cost another four and a half times as much, for a smaller jump. Bottom to top, that's about 11 times the cost for a score just over a third higher. Every current model from Anthropic and OpenAI on those tests works the same way: the top setting costs several times more than the bottom one, and the score goes up by far less. The last step up is the worst deal of all. On Fable 5.1, it costs 28% more and barely moves the score. And the setting can beat the model. Claude Haiku 5.5, the cheapest of Anthropic's current models, on its highest setting edged past Opus 5.5 on its lowest, for less than half the cost per task. Sometimes the top gear even scores lower than the one below it. On Hex's data-analysis test, GPT-6 Sol scored 61.3% on its Xhigh (extra high) setting and 57% on Max, which costs more. Thinking can be pure waste, too: researchers asked reasoning models \"what is the answer of 2 plus 3?\" and found they \"consumed 1,953% more tokens than conventional models to reach the same answer.\" (Tokens are the word pieces an AI reads and writes, and what developers pay for.) One wrote out 13 solutions. And sometimes the new name really is the bigger step. Anthropic says Opus 5.5 on its default setting \"beats Opus 5 at max effort for about a fifth of the cost\" on one test of computer tasks.",
+   "image": "/home/user/content-engine/.cache/visual-intel/each-step-buys-less.png",
+   "alt": "Six small line charts, one per model, of points added on Artificial Analysis's Intelligence Index (0 to 100) against cost per task as a multiple of the model's own Low setting, as the thinking level rises through Low, Medium, High, Xhigh (extra high) and Max. Every line climbs steeply at first and flattens: each step up added fewer points per extra dollar than the one before. Claude Opus 5.5's first step added 8.9 points for 2.4 times the cost, its last 1.6 points for 1.7 times. From Low to Max, Claude Opus 5.5 added 15.3 points for 10.9 times the cost; Claude Sonnet 5.5 added 20.1 points for 15.8 times the cost; Claude Haiku 5.5 added 13.9 points for 8.7 times the cost; Claude Fable 5.1 added 6.6 points for 3.2 times the cost; GPT-6.1 Sol added 9.7 points for 5.5 times the cost; GPT-6 Sol added 13.4 points for 7.9 times the cost. Claude Fable 5.1's last step added 0.2 points for 28% more.",
+   "caption": "Each step up in thinking level bought fewer points on Artificial Analysis's Intelligence Index (0 to 100) per extra dollar, for all six models. Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026; cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices."
+  },
+  {
+   "after": "That's also why a higher gear eats into your plan faster. Anthropic's help page for the Claude app says higher effort means responses \"take longer and use more tokens, so you'll reach your usage limits faster.\" Changing model can do the same, but not always. Anthropic charges developers two and a half times as much for the same amount of writing from Fable 5.1, the model it points them to when Opus 5.5 falls short, as from Opus 5.5. A newer version often costs less, as the Opus 5.5 example above shows.",
+   "image": "/home/user/content-engine/.cache/visual-intel/new-version-or-more-thinking.png",
+   "alt": "Four tiles comparing two ways to get a higher score on Artificial Analysis's Intelligence Index (0 to 100), with cost per task in US dollars at list prices. More thinking: Claude Opus 5.5 from Low to Max adds 15.3 points for 10.9 times the cost; GPT-6.1 Sol from Low to Max adds 9.7 points for 5.5 times the cost. A new version at the same thinking level: Claude Opus 5 to Claude Opus 5.5 adds 2.9 to 6.8 points at 0.50 to 1.02 times the cost: cheaper at 4 of 5 levels; GPT-6 Sol to GPT-6.1 Sol adds 4.2 to 8.0 points at 0.69 to 0.98 times the cost: cheaper at every level. GPT-6 Sol from thinking off to Max added 19.1 points for 3.1 times the cost.",
+   "caption": "More thinking added more points on Artificial Analysis's Intelligence Index (0 to 100) than a newer version did, but the newer version usually cost less to run. Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026; cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices."
+  },
+  {
+   "after": "If you build products on AI, don't choose a model by its name or its launch chart. Run your own hard questions through each setting, check the answers, and watch how much thinking you pay for.",
+   "image": "/home/user/content-engine/.cache/visual-intel/cheapest-route-to-each-score.png",
+   "alt": "Price ladder: for each score on Artificial Analysis's Intelligence Index (0 to 100), the current model and thinking level that reaches it at the lowest cost per task, in US dollars at list prices. 40 or more: Claude Haiku 5.5 at Xhigh (extra high), scoring 41.2 for $0.12 a task, or GPT-6.1 Sol at Low, scoring 42.1 for $0.13 a task (Haiku's costs are understated). 45 or more: GPT-6.1 Sol at Medium, scoring 47.8 for $0.21 a task. 50 or more: GPT-6.1 Sol at High, scoring 50.2 for $0.32 a task. 55 or more: Claude Opus 5.5 at Xhigh, scoring 56.0 for $3.46 a task, 11 times the cost for 5.8 more points. The top score: Claude Opus 5.5 at Max, scoring 57.6 for $5.98 a task. For comparison, Anthropic's defaults: Claude Opus 5.5 at Medium, scoring 51.2 for $1.34 a task and Claude Haiku 5.5 at Medium, scoring 34.5 for $0.05 a task; and Google's best here, Gemini 4 Argon at High, scoring 52.6 for $1.99 a task.",
+   "caption": "The cheapest way to 50 or more on Artificial Analysis's Intelligence Index (0 to 100) cost 12 to 32 cents a task; 55 or more took Claude Opus 5.5 at Xhigh (extra high) at $3.46. Source: Artificial Analysis Intelligence Index v4.3.2, read 17 Oct 2026; cost per task: Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices; defaults from Anthropic's developer guide, read 15 Oct 2026."
+  }
+ ],
+ "notes": [
+  "Cost measure: plotted and printed as cost per task (Artificial Analysis's average cost to run one of its test tasks, in US dollars, at list prices), as exhibits.json sets it, because every dollar figure and multiple in the article is per task ($5.98 v $0.55, \"about 11 times\", \"28% more\"). Every exhibit and caption says so. The cost to run the full test set is kept beside each row in exhibits.json; the patterns hold on both.",
+  "Changes from the spec's layout, made after looking at the renders: Exhibit 3 puts each panel's totals (\"+15.3 points / for 10.9 times the cost\") in a header above its plot instead of inside it, where they sat on the lines and gridlines, and keeps every title on one line; Exhibit 4 shows each new version's five levels as thin marks on a lighter band instead of dots, which overlapped; Exhibit 5 puts each row's score at the end of its bar line, because \"Claude Haiku 5.5 at Medium *\" pushed it past the right margin. Exhibit 2 keeps its two-line key under each panel title (it carries the release dates); every other mark is labelled directly.",
+  "Exhibit 1 is optional (exhibits.json: the other four stand alone).",
+  "From exhibits.json flags_for_krish, still open: no exhibit carries a Meta logo, so another picture in the pack must if the logo gate asks for it; Artificial Analysis is credited with its logo on Exhibits 2 to 5 but is not in config/logo-registry.json."
+ ]
+}
