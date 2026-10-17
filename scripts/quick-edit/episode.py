@@ -284,14 +284,14 @@ def end_screen_warnings(wins, intro_s, total_s, seconds):
 
 # ---------------------------------------------------------------- self-test
 
-# Sniffs (Krish, 2026-10-17: "i was sniffing a bit so dampen that out surgically"). A sniff is a short,
-# loud, noisy burst in a gap between his words: no voice in it (flat spectrum), most of its energy high,
-# well above the room. Only those spans are turned down, with soft fades, so no word, no timing and no
-# lip sync changes; every one found is listed in the report to check.
-# Calibrated on Friday's 14-minute take (17 Oct): its room sits near -69 dB with a spectral flatness near 0.05, and its
-# only spikes between words are 20 to 40 ms mouth clicks, which min_s keeps out.
-SNIFF = {'gap_min': 0.12, 'edge': 0.03, 'min_s': 0.08, 'max_s': 0.7, 'over_floor_db': 15.0, 'peak_over_db': 20.0,
-         'flat_min': 0.08, 'hf_min': 0.3, 'duck_db': -20.0, 'fade_s': 0.02}
+# Sniffs (Krish, 2026-10-17: "i was sniffing a bit so dampen that out surgically"). Seen on the spectrogram of his
+# 90-second take: a sniff is a nasal in-breath in the middle of a pause, a sustained unvoiced noise band 0.3 to 0.6 s
+# long, far quieter than speech. The "s" that starts or ends a word sits against the word (the transcriber times
+# fricatives late), so the search keeps clear of both edges; voiced sound (a mumble, an untranscribed word) and
+# anything near speech level are left alone. Only those spans are turned down, with soft fades, never cut, so no
+# word, timing or lip sync changes; every one found is listed in the report to check.
+SNIFF = {'after_word': 0.15, 'before_word': 0.22, 'min_gap': 0.15, 'min_s': 0.12, 'max_s': 1.2, 'over_floor_db': 12.0,
+         'under_speech_db': 42.0, 'voiced_max': 0.35, 'duck_db': -12.0, 'fade_s': 0.04}
 
 
 def read_audio(path, rate=48000):
@@ -314,44 +314,37 @@ def sniffs(path, words, rate=48000, opts=None):
     mono = x.mean(axis=1)
     fl, hop = int(0.02 * rate), int(0.01 * rate)
     n = max(0, (len(mono) - fl) // hop)
-    if n == 0:
+    if n == 0 or not words:
         return []
     idx = np.arange(fl)[None, :] + hop * np.arange(n)[:, None]
     frames = mono[idx] * np.hanning(fl)[None, :]
     spec = np.abs(np.fft.rfft(frames, axis=1)) ** 2 + 1e-12
     freqs = np.fft.rfftfreq(fl, 1 / rate)
-    band = (freqs >= 300) & (freqs <= 10000)
-    hi = (freqs >= 2000) & (freqs <= 10000)
     rms_db = 10 * np.log10(np.mean(frames ** 2, axis=1) + 1e-12)
-    sb = spec[:, band]
-    flat = np.exp(np.mean(np.log(sb), axis=1)) / np.mean(sb, axis=1)
-    hf = spec[:, hi].sum(axis=1) / spec[:, (freqs >= 100) & (freqs <= 10000)].sum(axis=1)
+    voiced = spec[:, (freqs >= 80) & (freqs <= 400)].sum(axis=1) / spec[:, (freqs >= 80) & (freqs <= 12000)].sum(axis=1)
     t = (np.arange(n) * hop + fl / 2) / rate
     ws = sorted((float(w['s']), float(w['e'])) for w in words)
-    gaps = [(0.0, ws[0][0])] if ws else [(0.0, len(mono) / rate)]
-    gaps += [(a[1], b[0]) for a, b in zip(ws, ws[1:])]
-    if ws:
-        gaps.append((ws[-1][1], len(mono) / rate))
-    gaps = [(a + o['edge'], b - o['edge']) for a, b in gaps if b - a >= o['gap_min']]
+    gaps = [(a[1] + o['after_word'], b[0] - o['before_word']) for a, b in zip(ws, ws[1:])]
+    gaps = [(a, b) for a, b in gaps if b - a >= o['min_gap']]
     in_gap = np.zeros(n, bool)
     for a, b in gaps:
         in_gap |= (t >= a) & (t <= b)
     if not in_gap.any():
         return []
     floor = float(np.percentile(rms_db[in_gap], 10))
-    hit = in_gap & (rms_db > floor + o['over_floor_db']) & (flat > o['flat_min']) & (hf > o['hf_min'])
+    hit = in_gap & (rms_db > floor + o['over_floor_db']) & (rms_db < floor + o['under_speech_db']) & (voiced < o['voiced_max'])
     events, i = [], 0
     while i < n:
         if not hit[i]:
             i += 1
             continue
         j = i
-        while j + 1 < n and (hit[j + 1] or (j + 4 < n and hit[j + 2:j + 5].any() and in_gap[j + 1])):
+        while j + 1 < n and in_gap[j + 1] and (hit[j + 1] or (j + 3 < n and hit[j + 2:j + 4].any())):
             j += 1
         s, e = t[i] - fl / 2 / rate, t[j] + fl / 2 / rate
-        peak = float(rms_db[i:j + 1].max())
-        if o['min_s'] <= e - s <= o['max_s'] and peak > floor + o['peak_over_db']:
-            events.append({'s': round(float(s), 3), 'e': round(float(e), 3), 'peak_db': round(peak, 1), 'floor_db': round(floor, 1)})
+        if o['min_s'] <= e - s <= o['max_s']:
+            events.append({'s': round(float(s), 3), 'e': round(float(e), 3), 'peak_db': round(float(rms_db[i:j + 1].max()), 1),
+                           'floor_db': round(floor, 1)})
         i = j + 1
     return events
 
@@ -378,39 +371,40 @@ def duck(src, dst, events, rate=48000, db=SNIFF['duck_db'], fade=SNIFF['fade_s']
 
 
 def _sniff_self_test(checks):
-    """A stand-in take: two voiced words with a noisy burst between them, and a quiet room."""
+    """A stand-in take: two voiced words, a quiet breathy burst mid-pause, an "s" just before the second word."""
     import tempfile
     import numpy as np
     rate = 48000
     rng = np.random.default_rng(7)
     tt = np.arange(int(3.0 * rate)) / rate
-    room = rng.normal(0, 0.0005, len(tt))
+    room = rng.normal(0, 0.0003, len(tt))
     voice = np.zeros(len(tt))
     for a, b in ((0.2, 1.0), (1.9, 2.8)):
         m = (tt >= a) & (tt < b)
         voice[m] = 0.2 * np.sin(2 * np.pi * 180 * tt[m]) + 0.1 * np.sin(2 * np.pi * 360 * tt[m])
-    burst = np.zeros(len(tt))
-    m = (tt >= 1.35) & (tt < 1.6)
-    hp = np.diff(rng.normal(0, 1, m.sum() + 1))
-    burst[m] = 0.08 * hp
-    sig = (room + voice + burst).astype(np.float32)
+    noise = np.zeros(len(tt))
+    m = (tt >= 1.3) & (tt < 1.6)
+    noise[m] = 0.004 * np.diff(rng.normal(0, 1, m.sum() + 1))
+    s = (tt >= 1.78) & (tt < 1.88)
+    noise[s] = 0.05 * np.diff(rng.normal(0, 1, s.sum() + 1))
+    sig = (room + voice + noise).astype(np.float32)
     words = [{'s': 0.2, 'e': 1.0}, {'s': 1.9, 'e': 2.8}]
     with tempfile.TemporaryDirectory() as tmp:
         src, dst = Path(tmp) / 'a.wav', Path(tmp) / 'b.wav'
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(rate), '-ac', '1', '-i', '-', str(src)],
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(rate), '-ac', '1', '-i', '-', '-c:a', 'pcm_f32le', str(src)],
                        input=sig.tobytes(), check=True)
         ev = sniffs(src, words, rate)
-        checks.append(('a noisy burst between two words is found as one sniff, inside its gap',
-                       [(e['s'] > 1.25 and e['e'] < 1.7) for e in ev], [True]))
+        checks.append(('a breathy burst mid-pause is found as one sniff; the "s" before the next word is not',
+                       [(e['s'] > 1.2 and e['e'] < 1.7) for e in ev], [True]))
         duck(src, dst, ev, rate)
         y, _ = read_audio(dst, rate)
-        burst_db = 20 * np.log10(np.sqrt(np.mean(y[int(1.4 * rate):int(1.55 * rate), 0] ** 2)) /
-                                 np.sqrt(np.mean(sig[int(1.4 * rate):int(1.55 * rate)] ** 2)))
         x0, _ = read_audio(src, rate)
-        word_same = bool(np.allclose(y[int(0.3 * rate):int(0.9 * rate), 0], x0[int(0.3 * rate):int(0.9 * rate), 0], atol=1e-6))
-        checks.append(('the sniff is turned down about 20 dB and the words are untouched', (round(burst_db) <= -18, word_same), (True, True)))
-        quiet = sniffs(src, [{'s': 0.2, 'e': 2.8}], rate)
-        checks.append(('a burst inside a word is never touched', quiet, []))
+        burst_db = 20 * np.log10(np.sqrt(np.mean(y[int(1.4 * rate):int(1.5 * rate), 0] ** 2)) /
+                                 np.sqrt(np.mean(x0[int(1.4 * rate):int(1.5 * rate), 0] ** 2)))
+        same = bool(np.allclose(y[int(0.3 * rate):int(0.9 * rate), 0], x0[int(0.3 * rate):int(0.9 * rate), 0], atol=1e-6)
+                    and np.allclose(y[int(1.79 * rate):int(1.87 * rate), 0], x0[int(1.79 * rate):int(1.87 * rate), 0], atol=1e-6))
+        checks.append(('the sniff is turned down about 12 dB; the words and the "s" are untouched', (round(burst_db) <= -11, same), (True, True)))
+        checks.append(('a burst inside a word is never touched', sniffs(src, [{'s': 0.2, 'e': 2.8}], rate), []))
 
 
 def self_test():
