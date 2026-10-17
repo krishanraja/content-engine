@@ -466,6 +466,13 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     on: '2026-10-16', source: 'chat, on the race picture drawn for Friday\'s 90-second cut; checked by scripts/post-pack/visual_gate.py (REAL THINGS), which refuses a picture that does not say what real thing it shows', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass', 'visual'],
   },
+  {
+    id: 'TITLES_AFTER_RECORDING', name: 'Titles, headlines and thumbnail words are signed off after he records',
+    text: `Every line that packages a piece (the Substack headline and cover words, the YouTube title and thumbnail words, the Shorts title, the video's title card, every picture heading and chapter divider) is signed off by Krish only after he has recorded the piece, never before. Reading the script out loud is where he finds his message: he changes or understands more then than while the script is written. So the scripts go to the teleprompter without them; once the takes are in, the options are written from what he actually said on camera (scripts/post-pack/narration_diff.py lists it) and from his hook playbook for each surface (config/hook-playbook.json), put to him together at the right moment, and only then drawn. Never put packaging to him, or draw it, before a take of the piece is on the record.`,
+    said: `I need to approve/sign off on titles and headers and thumbnail headings and whatnot after recording is an important distinction because only after recording do I really feel like I've got a message. Usually I change or understand a fair bit more after reading a script out loud than I do creating a script.`,
+    on: '2026-10-17', source: 'chat, on Friday 16 Oct\'s headings; enforced by scripts/post-pack/title_check.py (a pick on a packaging surface is refused while the piece has no take on the record)', status: 'live',
+    stages: ['final_pass', 'production'],
+  },
 ])
 
 /** The rules a stage enforces, for one subchannel or the house as a whole. */

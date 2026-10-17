@@ -10,7 +10,11 @@ exact media artifacts and execution history.
 
 Run `python3 scripts/check_failures.py` first: every failure Krish has raised
 and the machine that now stops it (`config/failures.json`). A fix is a guard
-there (code that refuses, a test, or a hook), never only a note.
+there (code that refuses, a test, or a hook), never only a note. It also checks
+`config/learnings.json`, "say nothing twice" (AGENTS.md): everything else he
+has said, why, what it means from now on and where it is enforced. Read the
+entries that bear on your work before you start, and add one for anything he
+says that changes how the engine should work.
 
 Krish works from two Claude accounts. Each week's publish board lists all its
 links in `config/boards.json`; every board publish goes to every link there,

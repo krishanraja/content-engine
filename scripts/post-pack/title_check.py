@@ -170,6 +170,50 @@ def record_verdict(title, verdict, why, krish, surface=None, piece=None, on=None
     return entry
 
 
+# The surfaces that package a piece, signed off only after he records it (house rule
+# TITLES_AFTER_RECORDING; Krish, 2026-10-17: "only after recording do I really feel like I've got a message").
+PACKAGING = {'article', 'subtitle', 'cover', 'youtube', 'thumbnail', 'shorts', 'tall_cover', 'title_card', 'card', 'divider'}
+
+
+def takes_on_record(piece, call=None):
+    """How many takes the piece has on its making record (None when the
+    engine cannot be read)."""
+    if call is None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import making
+        call = making._engine_call
+    status, body = call('GET', f'/api/content-ideas/{piece}/making', None)
+    try:
+        data = json.loads(body) if body else {}
+    except ValueError:
+        return None
+    if status != 200 or not isinstance(data, dict):
+        return None
+    m = data.get('making') if isinstance(data.get('making'), dict) else data
+    return len(m.get('recordings') or [])
+
+
+def pick_problem(surface, piece, before_recording=None, call=None):
+    """Why a pick on this surface cannot be recorded yet, or None. A packaging
+    pick needs the piece, and a take of it on the record, unless Krish has said
+    in words that this one is signed off before he records."""
+    if surface not in PACKAGING:
+        return None
+    if before_recording:
+        return None if str(before_recording).strip().startswith('Krish') else \
+            '--before-recording takes Krish\'s own words, starting "Krish, YYYY-MM-DD:"'
+    if not piece:
+        return f'a {surface} pick names its piece (--piece), so it can wait for the take (house rule TITLES_AFTER_RECORDING)'
+    n = takes_on_record(piece, call)
+    if n is None:
+        return 'the piece\'s making record could not be read, so whether it has a take is not known: nothing was recorded; run it again'
+    if n == 0:
+        return (f'the piece has no take on the record yet, and a {surface} line is signed off only after Krish records it (house rule '
+                'TITLES_AFTER_RECORDING; Krish, 2026-10-17: "only after recording do I really feel like I\'ve got a message"). '
+                'Write the options from what he says in the take, then ask him')
+    return None
+
+
 class picked_for_tests:
     """A self-test's own verdicts: the given titles marked picked, in a file of
     their own, so a tool's tests check the tool, never Krish's real picks."""
@@ -280,6 +324,17 @@ def self_test():
             record_verdict('Amazon locked Muse out. Walmart let it in.', 'rejected', 'flat', 'no, boring', 'card')
             check('gate: a later rejection wins, with his words', any('no, boring' in p for p in gate('Amazon locked Muse out. Walmart let it in.')), True)
             check('lessons list his picked and rejected titles', 'Amazon locked Muse out' in lessons_text(), True)
+            none = lambda m, path, b: (200, json.dumps({'ok': True, 'making': {'recordings': []}}))
+            one = lambda m, path, b: (200, json.dumps({'ok': True, 'making': {'recordings': [{'cut': 'long', 'path': 'recordings/x.mp4'}]}}))
+            down = lambda m, path, b: (503, '{}')
+            check('a packaging pick before the piece has a take is refused, naming the rule',
+                  'TITLES_AFTER_RECORDING' in (pick_problem('youtube', 'p', None, none) or ''), True)
+            check('after a take it is allowed', pick_problem('youtube', 'p', None, one), None)
+            check('a packaging pick names its piece', 'names its piece' in (pick_problem('thumbnail', None, None, one) or ''), True)
+            check('an unreadable record refuses rather than guess', 'could not be read' in (pick_problem('card', 'p', None, down) or ''), True)
+            check('his own words let one through before recording; anyone else\'s do not',
+                  (pick_problem('cover', 'p', 'Krish, 2026-10-20: sign this off now', none), bool(pick_problem('cover', 'p', 'sure', none))), (None, True))
+            check('a surface that is not packaging is not held', pick_problem('spotify-show', None, None, none), None)
             pb = {'formula': 'f', 'everywhere': ['name it'], 'surfaces': {'youtube': {'limit_chars': 10, 'formula': 'yt', 'strong': ['s'], 'weak': ['w']},
                                                                         'blog': {'limit_chars': 60, 'formula': 'bl'}}}
             check('playbook: one surface only', ('yt' in playbook_text('youtube', pb), 'bl' in playbook_text('youtube', pb)), (True, False))
@@ -321,7 +376,13 @@ def main(argv=None):
         vp.add_argument('--krish', required=True, help='his own words')
         vp.add_argument('--surface', default='any')
         vp.add_argument('--piece')
+        vp.add_argument('--before-recording', metavar='KRISH_WORDS',
+                        help='only on his words ("Krish, YYYY-MM-DD: ..."): a packaging line he signs off before he records')
         v = vp.parse_args(argv[1:])
+        why_not = pick_problem(v.surface, v.piece, v.before_recording) if v.picked else None
+        if why_not:
+            print(f'title_check: not recorded: {why_not}', file=sys.stderr)
+            return 1
         e = record_verdict(v.title, 'picked' if v.picked else 'rejected', v.why, v.krish, v.surface, v.piece)
         print(f'recorded: {e["verdict"]} "{e["title"]}"')
         return 0

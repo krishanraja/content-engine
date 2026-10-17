@@ -180,6 +180,27 @@ database:
 Control Center (`krishanraja/control-center`) is where Krish works. This
 repository serves it and has no interface of its own.
 
+## Say nothing twice
+
+Krish, 2026-10-17: "everything I say to you, whether it's feedback or ideas,
+you should always be thinking about why I'm saying it and what that means for
+the future. I want a "say nothing twice" policy in this engine, where you
+understand me, how we work, and how we iterate."
+
+So every message from him is read three ways before anything is done with it:
+what he asks for now, why he is saying it (what went wrong, or what he wants
+that he did not get), and what it changes from now on. The last two become one
+entry in `config/learnings.json`: his exact words (an excerpt, never a
+transcript), why, what it means from now on, and every place it is now
+enforced, each with a marker (a house rule, a check that refuses, a skill
+step, a lesson a tool prints). A failure he raised goes in
+`config/failures.json` instead. `python3 scripts/check_failures.py`, run first
+in every session, fails when a marker is gone and lists what is still open.
+Before writing or proposing anything, read the learnings that bear on it, so
+he never has to say it again. His own example, the first entry: titles,
+headlines and thumbnail words are signed off after he records, because "only
+after recording do I really feel like I've got a message".
+
 ## Rules for every agent
 
 - **Krish decides.** Approve, drop, publish, and every choice of taste are

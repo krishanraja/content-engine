@@ -1,0 +1,179 @@
+{
+ "_about": "Say nothing twice. Krish, 2026-10-17: \"Asa, everything I say to you, whether it's feedback or ideas, you should always be thinking about why I'm saying it and what that means for the future. I want a \\\"say nothing twice\\\" policy in this engine, where you understand me, how we work, and how we iterate.\" Every piece of feedback or idea he gives becomes one entry: his exact words (an excerpt, never a transcript), why he said it, what it means from now on, and where it is now enforced, each place with a marker that must stay there. scripts/check_failures.py (run first in every session) fails when a marker is gone, and lists the learnings still open. A failure he raised goes in config/failures.json; everything else he says goes here.",
+ "learnings": [
+  {
+   "id": "titles-after-recording",
+   "on": "2026-10-17",
+   "krish": "the fact that I need to approve/sign off on titles and headers and thumbnail headings and whatnot after recording is an important distinction because only after recording do I really feel like I've got a message. Usually I change or understand a fair bit more after reading a script out loud than I do creating a script.",
+   "why": "Reading the script aloud is where he finds his message, and he ad-libs a third of it (narration ledger). Packaging written before the take is written for a message he has not landed yet, so it gets redone.",
+   "means": "No title, headline, thumbnail word, card heading or chapter divider is put to him or drawn before a take is on the record; after it, the options come from what he said on camera and his playbook, all at once.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "TITLES_AFTER_RECORDING",
+     "how": "the house rule, with his words"
+    },
+    {
+     "file": "scripts/post-pack/title_check.py",
+     "contains": "def pick_problem",
+     "how": "a packaging pick is refused while the piece has no take on the record"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "TITLES_AFTER_RECORDING",
+     "how": "the titles step comes after Record"
+    },
+    {
+     "file": ".claude/skills/produce-video/SKILL.md",
+     "contains": "TITLES_AFTER_RECORDING",
+     "how": "after the takes land, the packaging round"
+    }
+   ]
+  },
+  {
+   "id": "headings-from-his-words",
+   "on": "2026-10-17",
+   "krish": "These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "why": "They were written to pass the title checker (names stuffed in, label strings, bare numbers), not to be read by a viewer in a second.",
+   "means": "A picture heading or chapter divider starts from what he says on camera at that moment, in his words; the checker is a floor, never the writer.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "config/title-verdicts.json",
+     "contains": "Never write a card heading or chapter divider to pass",
+     "how": "the lesson every title round prints"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "his own words in the take",
+     "how": "how headings are written"
+    }
+   ]
+  },
+  {
+   "id": "playbooks-into-the-engine",
+   "on": "2026-10-17",
+   "krish": "I hope you're saving these playbooks to the engine so that you can build and create better formulas for things and present them to me at the right moment before production (so that there's less iteration after you create things).",
+   "why": "Each corpus he sends (post-production, hooks, styles) is meant to make the first draft right, so he iterates less after things are made.",
+   "means": "Every playbook or corpus he sends is kept in the repository and its formulas lead every round for that surface; options reach him at the right moment, before anything is made.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "config/hook-playbook.json",
+     "contains": "krish_playbook",
+     "how": "his hook, title and thumbnail playbook, per surface"
+    },
+    {
+     "file": "scripts/post-pack/title_check.py",
+     "contains": "def krish_playbook_text",
+     "how": "title lessons print his formulas first"
+    },
+    {
+     "file": "docs/production/one-shot-episode-corpus.md",
+     "contains": "Post-Production Corpus",
+     "how": "the long-episode standard"
+    },
+    {
+     "file": "config/style-references.json",
+     "contains": "kinetic-serif-captions",
+     "how": "the style bank"
+    }
+   ]
+  },
+  {
+   "id": "engine-retrieves-its-banks",
+   "on": "2026-10-17",
+   "krish": "make sure the content engine can retrieve learnings and banks of its own formulas on doing stuff.",
+   "why": "The playbooks and lessons live in the repository, where sessions read them; the engine's own writers in Control Center do not yet draw on them.",
+   "means": "The engine can read the learnings, the hook playbook, the style bank and the title lessons when it drafts, not only the house rules.",
+   "status": "open",
+   "encoded": []
+  },
+  {
+   "id": "where-each-line-goes",
+   "on": "2026-10-17",
+   "krish": "I'm also unclear on what would be a Substack headline versus the Substack cover image versus a YouTube thumbnail, etc.",
+   "why": "Options were offered by surface code (Y1, S1, T1) without saying what each surface is or where it shows.",
+   "means": "Every packaging option names its surface and what that surface is and where it shows.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "config/hook-playbook.json",
+     "contains": "surface_map",
+     "how": "what each surface is"
+    },
+    {
+     "file": "scripts/post-pack/title_check.py",
+     "contains": "What {surface} is",
+     "how": "title lessons start with the surface's job"
+    }
+   ]
+  },
+  {
+   "id": "scripts-as-he-talks",
+   "on": "2026-10-17",
+   "krish": "list everything about my narration that deviated from the script, down to the fact that I talk in, let's say, about 30% of that. Thats how script should be written in the future.",
+   "why": "He rewrites the script as he reads it (9% of what he said was his own on 12 Oct, 38% by 16 Oct), so a script that is not how he talks is half rewritten on camera and runs long.",
+   "means": "Scripts are written the way he says them, and their length is budgeted for what he adds; every take is measured against its script.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/narration_diff.py",
+     "contains": "def ledger_add",
+     "how": "every take lined up with its script, kept in the ledger"
+    },
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "def spoken_length_warning",
+     "how": "a script that will run long as he says it is warned"
+    },
+    {
+     "file": "config/narration-ledger.json",
+     "contains": "said_more_pct",
+     "how": "the week's takes"
+    }
+   ]
+  },
+  {
+   "id": "upgrade-the-edit-style",
+   "on": "2026-10-17",
+   "krish": "I think we need to upgrade everything. And like before, have a bank of styles that we can draw from. Then: These words all bounce in and there's a lot more movement on the screen. The background of the person has also been treated when he's talking so it doesn't look too amateur.",
+   "why": "The split-screen edit and house typography read as amateur next to the creators he watches.",
+   "means": "The edit's styles come from a bank of modules he rates; new looks are tried on his own footage before they are used.",
+   "status": "open",
+   "encoded": [
+    {
+     "file": "config/style-references.json",
+     "contains": "treated-background",
+     "how": "the modules from his references"
+    }
+   ]
+  },
+  {
+   "id": "say-nothing-twice",
+   "on": "2026-10-17",
+   "krish": "everything I say to you, whether it's feedback or ideas, you should always be thinking about why I'm saying it and what that means for the future. I want a \"say nothing twice\" policy in this engine",
+   "why": "He wants to be understood once and not repeat himself.",
+   "means": "Every message from him is read for why and for what it changes; each becomes an entry here, enforced where it applies, checked at the start of every session.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "AGENTS.md",
+     "contains": "Say nothing twice",
+     "how": "every agent reads it first"
+    },
+    {
+     "file": "CLAUDE.md",
+     "contains": "config/learnings.json",
+     "how": "the session start"
+    },
+    {
+     "file": "scripts/check_failures.py",
+     "contains": "learnings.json",
+     "how": "the check run first in every session"
+    }
+   ]
+  }
+ ]
+}

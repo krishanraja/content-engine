@@ -252,6 +252,32 @@ by the name the matcher printed. A take over 500 MiB is never in the
 engine: copy it from the Inbox to a local work folder (`Copy-Item`, never a
 move). quick-edit never works on the Inbox itself.
 
+## 2b. After the takes: his narration, then the packaging round
+
+House rule TITLES_AFTER_RECORDING. Krish, 2026-10-17: "the fact that I need to
+approve/sign off on titles and headers and thumbnail headings and whatnot after
+recording is an important distinction because only after recording do I really
+feel like I've got a message. Usually I change or understand a fair bit more
+after reading a script out loud than I do creating a script."
+
+- **Measure every take against its script** and keep it in the ledger (he
+  ad-libs: 9% of what he said was his own on 12 October, 38% by 16 October):
+  `python scripts/post-pack/narration_diff.py SCRIPT WORDS.json --md WORK/narration.md --json WORK/narration.json`
+  (SCRIPT: the cut's current words; WORDS.json: make.py's words file once
+  `--plan` has heard the take; `--fixes LONG.json` folds in the config's
+  verified caption fixes), then
+  `python scripts/post-pack/narration_diff.py ledger WORK/narration.json --cut short|long|deep --date YYYY-MM-DD --piece PIECE_ID`.
+  story_check reads the ledger to warn when the next script will run long.
+- **The packaging round comes now, never earlier**: the Substack headline and
+  cover words, the YouTube title and thumbnail words, the Shorts title, the
+  video's title card, every picture heading and chapter divider, written from
+  what he said on camera and his playbook for each surface, put to him in one
+  round (`make-piece`, "Titles, headlines and headings"). Claude Code runs it;
+  Codex leaves one board item for the next Claude Code session. Nothing with
+  those words on it (a title card, a thumbnail, a card heading) is drawn before
+  he picks; `title_check.py verdict --picked` refuses a packaging pick while
+  the piece has no take on the record.
+
 ## 3. Build the kit, once per cut
 
 Use a local work folder per piece, such as `.cache/produce/DATE-SUBJECT`

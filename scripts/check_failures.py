@@ -3,6 +3,10 @@
 the machine that now stops it. Fails when a guarded failure's guard is gone,
 so a guard cannot be removed quietly; lists the open ones, never as fixed.
 
+And the learnings register (config/learnings.json), "say nothing twice": all
+else he says, why he said it, what it means from now on and where it is now
+enforced. The same check: a place it is enforced must still hold its marker.
+
     python3 scripts/check_failures.py
 """
 import json
@@ -29,6 +33,25 @@ def check(register):
     return broken, open_
 
 
+def check_learnings(register):
+    broken, open_ = [], []
+    for item in register['learnings']:
+        for field in ('id', 'on', 'krish', 'why', 'means', 'status'):
+            if not str(item.get(field) or '').strip():
+                broken.append(f'learning {item.get("id", "?")}: no {field}')
+        if item['status'] == 'open':
+            open_.append(item)
+        elif not item.get('encoded'):
+            broken.append(f'learning {item["id"]}: marked encoded with nowhere it is enforced')
+        for g in item.get('encoded') or []:
+            path = ROOT / g['file']
+            if not path.exists():
+                broken.append(f'learning {item["id"]}: {g["file"]} is gone')
+            elif g['contains'] not in path.read_text(encoding='utf-8', errors='replace'):
+                broken.append(f'learning {item["id"]}: {g["file"]} no longer holds "{g["contains"]}" ({g["how"]})')
+    return broken, open_
+
+
 def main():
     register = json.loads((ROOT / 'config' / 'failures.json').read_text(encoding='utf-8'))
     broken, open_ = check(register)
@@ -36,6 +59,12 @@ def main():
     print(f'failure register: {guarded} guarded, {len(open_)} open')
     for f in open_:
         print(f'  OPEN {f["id"]}: {f["what"]}')
+    learnings = json.loads((ROOT / 'config' / 'learnings.json').read_text(encoding='utf-8'))
+    lb, lo = check_learnings(learnings)
+    broken += lb
+    print(f'learnings register (say nothing twice): {len(learnings["learnings"]) - len(lo)} encoded, {len(lo)} open')
+    for item in lo:
+        print(f'  OPEN {item["id"]}: {item["means"]}')
     if broken:
         print('a guard is missing:\n  ' + '\n  '.join(broken))
         return 1
