@@ -649,6 +649,24 @@ bring takes back, was retired on 12 October.
 
 ## Latest handoff
 
+- 2026-10-17, about 00:40 UTC: **Every cut now runs at the take's own 24 fps, every frame shown once.**
+  - Found while checking Friday's 14-minute take against the corpus ("Frame rate: Same as recorded source"):
+    every teleprompter.com take this week is 24 fps on average, and make.py made every cut at 30 (one frame in
+    four shown twice). Now `render_fps` cuts at the take's rate (`"fps"` overrides; README row).
+  - Two more stutters under it, both fixed and measured with mpdecimate on Wednesday's test take (30 s windows,
+    repeated frames of 720): the first-stage Matroska file keeps times to the millisecond, so the overlays
+    repeated frames (214 in one window; fixed by `setpts=N/(FPS*TB)` at the head of stage two); and the app
+    stamps frames unevenly (30 to 60 ms apart around 41.67), so resampling to 24 dropped and doubled about 40
+    in 30 s (fixed by `conform_filter`: a take within 0.1% of the cut's rate is laid one frame a period). After
+    both: 0 repeated frames in all six windows; 24/1 constant; picture 208.29 s, sound 208.33 s.
+  - Why even spacing is safe: across Friday's take the stamps wander slowly (one-second means +34 ms early to
+    +6 ms late; at most 21 ms of change inside a minute) with about 4 ms of fast jitter, so even if the stamps
+    were true, a one-minute piece is off by at most about 21 ms, under the ~45 ms where lip sync shows. The
+    mouth-sync tool read the source at 0:30 and 13:10 as -41 ms both times (no drift); on a finished wide cut
+    its matches are too weak to read (0.16), so it is not used as proof there.
+  - Failure `caption-splits-names` is guarded: a name the script spells as one word is captioned whole when
+    the transcriber split it (register: 26 guarded, 0 open).
+
 - 2026-10-17, about 00:10 UTC: **The 14-minute take is on the record; the titles went to Krish again.**
   - Krish: "https://drive.google.com/file/d/1Tmz-Z1GDN4VhgbIXqCjW7kfzvumfRj4Z/view?usp=drivesdk it's the long
     video and has audio. This machine also has a video runner. You are right: the 90-second video didn't capture
