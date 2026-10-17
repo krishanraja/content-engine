@@ -1,25 +1,25 @@
 {
  "subchannel": "mind.the.gap",
- "title": "OpenAI tried to pick your AI for you. It broke on day one.",
- "headline": "OpenAI tried to pick your AI for you. It broke on day one.",
+ "title": "Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks",
+ "headline": "Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks",
  "date": "2026-10-16",
  "issue": "The headliner",
  "cover": {
   "headline": [
-   "OpenAI tried to",
-   "pick your AI."
+   "ChatGPT and Claude: faster than ever.",
+   "Does it matter?"
   ],
   "rows": [
    {
     "logo": "logos/openai-symbol-cream.svg",
-    "name": "OpenAI",
-    "tag": "Router",
+    "name": "ChatGPT",
+    "tag": "GPT-6.1",
     "colour": "coral"
    },
    {
     "logo": "logos/anthropic-symbol-cream.svg",
-    "name": "Anthropic",
-    "tag": "12+ models",
+    "name": "Claude",
+    "tag": "Opus 5.5",
     "colour": "mint"
    }
   ],
@@ -27,18 +27,33 @@
   "portrait": true
  },
  "thumbs": {
+  "headline": [
+   "Another",
+   "Claude?"
+  ],
   "strip": [
    {
     "logo": "logos/google-cream.svg",
     "name": "Google"
-   },
+   }
+  ]
+ },
+ "video_title": "ChatGPT and Claude: faster than ever. Does it matter?",
+ "standoff": {
+  "left": {
+   "label": "Claude",
+   "logos": [
+    "logos/anthropic-symbol-cream.svg"
+   ],
+   "tag": "A new Claude every four weeks"
+  },
+  "right": [
    {
-    "logo": "logos/openrouter-cream.svg",
-    "name": "OpenRouter"
-   },
-   {
-    "logo": "logos/semianalysis-cream.svg",
-    "name": "SemiAnalysis"
+    "label": "ChatGPT",
+    "logos": [
+     "logos/openai-symbol-cream.svg"
+    ],
+    "tag": "GPT-5.1 to 6.1 in 46 weeks"
    }
   ]
  }

@@ -88,11 +88,29 @@
  ],
  "verdicts": [
   {
-   "title": "ChatGPT and Claude, faster than ever. Does it matter?",
-   "surface": "tall_cover",
+   "title": "ChatGPT and Claude: faster than ever. Does it matter?",
+   "surface": "title_card",
    "verdict": "picked",
-   "why": "his line cut for the 90-second cover frame",
-   "krish": "Krish, 2026-10-17: \"Fine with everything except for \\\"soon you won't pick your AI.\\\" It could be misinterpreted and it's just vague and confusing. I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
+   "why": "his line cut to fit; a colon, because a comma mid-line dropped into the next line on the tall covers",
+   "krish": "Krish, 2026-10-17: \"I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "ChatGPT and Claude, faster than ever. Does it matter?",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "his line cut to fit every cover shape; the same words as the title card and the 90-second cover",
+   "krish": "Krish, 2026-10-17: \"I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "ChatGPT and Claude, faster than ever. Does it even make a difference?",
+   "surface": "cover",
+   "verdict": "picked",
+   "why": "his line cut to fit the cover's shapes, both names and his question kept",
+   "krish": "Krish, 2026-10-17: \"I would suggest something along the lines of \\\"ChatGPT and Claude are releasing new models faster than ever. But does it even make a difference?\\\"\"",
    "on": "2026-10-17",
    "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
   },
