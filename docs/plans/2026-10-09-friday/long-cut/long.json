@@ -31,12 +31,24 @@
    "after": "thinking each question gets. And"
   },
   {
-   "say": "decades decades",
-   "after": "found a better way"
-  },
-  {
    "say": "it should also follow,",
    "after": "if it must, but"
+  },
+  {
+   "say": "Kind of like a car with a semi -automatic transmission, famously F1 cars.",
+   "after": "how much thinking power."
+  },
+  {
+   "say": "Now, I mentioned",
+   "after": "it is worth it."
+  },
+  {
+   "say": "earlier, and they",
+   "after": "Formula One"
+  },
+  {
+   "say": "because most people who buy that plan are doing heavy thinking tasks",
+   "after": "losing money on its $200 plan,"
   }
  ],
  "replacements": [
@@ -153,8 +165,12 @@
    "And most of us actually"
   ],
   [
-   "way ago",
-   "way decades ago"
+   "plan, And this",
+   "plan. And this"
+  ],
+  [
+   "decades decades",
+   "decades"
   ]
  ],
  "endcard": {
@@ -434,7 +450,16 @@
   "cut": "long",
   "shape": "16x9",
   "plan": "python scripts/quick-edit/make.py \"/home/user/content-engine/.cache/produce/2026-10-16-904658db/kit/long.json\" --out <render folder> --only 16x9 --plan",
-  "note": "Edited by hand on 17 October from the verified edit list (analysis/edit-list.json, workflow wf_f9964bd6-49b): cues, cuts, caption fixes, chapters and push-ins are his words in the take, checked with make.py's own finders. The panels are drawn once Krish picks the headings."
+  "note": "Edited by hand on 17 October from the verified edit list (analysis/edit-list.json, workflow wf_f9964bd6-49b): cues, cuts, caption fixes, chapters and push-ins are his words in the take, checked with make.py's own finders. The panels are drawn once Krish picks the headings. APPROVED (Krish, 2026-10-17: \"Happy with your cuts.\"): the 7:22 semi-automatic line cut and the 11:41 lead-in cut so his F1 point is not contradicted; the 6:33 clause that gave his guess as Altman's reason cut.",
+  "cuts_approved": {
+   "krish": "Krish, 2026-10-17: Happy with your cuts.",
+   "cuts": [
+    "the 7:22 \"semi-automatic, famously F1 cars\" line",
+    "the 11:41 \"Now, I mentioned ... earlier, and they\" lead-in",
+    "the 6:33 \"because most people who buy that plan are doing heavy thinking tasks\" clause",
+    "the seven stumble cuts"
+   ]
+  }
  },
  "words": "../words/long.words.json",
  "series": "mind_the_gap",
@@ -509,6 +534,10 @@
   {
    "start": "You can't see it.",
    "end": "You can't see it."
+  },
+  {
+   "start": "found a better way decades",
+   "end": "it's called a semi automatic."
   }
  ],
  "music_seconds": 120

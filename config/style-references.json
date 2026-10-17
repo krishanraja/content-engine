@@ -120,6 +120,31 @@
     "long-holds",
     "flat-illustration"
    ]
+  },
+  {
+   "file": "5 screenshots of an Instagram Story ad (kept in .cache/style-references/2026-10-17-jack-roberts/, not in git)",
+   "creator": "Jack Roberts (@jackroberts__), a sponsored Story, \"in 10 levels\"",
+   "added": "2026-10-17",
+   "krish_likes": "Krish, 2026-10-17: Also want us to experiment with edit styles like this, with even better subtitles and cuts and images. I don't think that we need to. Just stick to the same split-screen edit or the same typography. I think we need to upgrade everything. And like before, have a bank of styles that we can draw from. Then: These words all bounce in and there's a lot more movement on the screen. The background of the person has also been treated when he's talking so it doesn't look too amateur.",
+   "status": "frames read, video not studied (no file)",
+   "frames": [
+    "Full-frame face, close, warm key light and coloured rim light; caption \"your very first / website with\" centred over his chest: a light geometric sans with \"first\" and \"website\" in bold, a soft white glow, two lines.",
+    "Caption \"And here it is / in 10 levels\": the payoff line in a large italic serif with a warm peach-to-white gradient and glow.",
+    "Caption \"is what I\": three words at a time, the light sans alone between payoff words.",
+    "Full-screen cutaway: a dark, grainy charcoal-to-slate gradient, the words \"but now\" (light then bold) and one big object: the Claude logo tile wearing a 3D gold crown, glowing.",
+    "Full-screen chapter card: \"Level 3\" in a bold italic serif over \"is power\" in a light sans, above a negative-film illustration of two men in suits, one handing the other tools.",
+    "Full-screen chapter card: \"Level 2\" in the italic serif, then \"from\" (light) and \"completely\" (bold) set apart on one line, over a negative-film illustration of men in suits on scaffolding."
+   ],
+   "modules": [
+    "full-face-vertical",
+    "kinetic-serif-captions",
+    "dark-object-card",
+    "numbered-level-chapters",
+    "negative-film-illustration",
+    "word-bounce-in",
+    "constant-motion",
+    "treated-background"
+   ]
   }
  ],
  "bank": [
@@ -247,6 +272,81 @@
    "how": "Wide-angle, moving, first-person shots.",
    "from": "Portugal villa Reel",
    "fits": "b-roll from a place or an event",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "full-face-vertical",
+   "layer": "camerawork",
+   "name": "The face fills the frame",
+   "how": "No split screen: the speaker fills the tall frame, close, with a warm key light and a coloured rim light; pictures cut in full-screen instead of sharing the frame.",
+   "from": "Jack Roberts Story ad, 17 Oct",
+   "fits": "the 90-second cut first; the long cut once tested",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "kinetic-serif-captions",
+   "layer": "graphics",
+   "name": "Captions as typography",
+   "how": "Two to four words at a time, centred low over the chest, never a subtitle bar: a light geometric sans for most words, the word that carries the meaning in bold, and the payoff phrase in a large italic serif with a warm gradient and a soft glow.",
+   "from": "Jack Roberts Story ad, 17 Oct",
+   "fits": "every cut",
+   "krish_verdict": "untested",
+   "note": "Needs faces outside the brand set (Anton, Archivo, IBM Plex Mono): a light sans and an italic serif. Krish asked to upgrade the typography (17 Oct); the faces themselves are his to approve."
+  },
+  {
+   "id": "dark-object-card",
+   "layer": "graphics",
+   "name": "One object on a dark, grainy card",
+   "how": "A full-screen cutaway: a dark charcoal-to-slate gradient with film grain, a two-word line at the top (\"but now\", light then bold) and one large real object in the middle, lit and glowing (a company's real logo tile, a real product screen).",
+   "from": "Jack Roberts Story ad, 17 Oct",
+   "fits": "the turn of an argument, a company or product entering the story",
+   "krish_verdict": "untested",
+   "note": "The crown on the Claude logo is a playful prop, not an analogy acted out; any prop still passes ANALOGY_IN_SCRIPTS_ONLY (no car, gear or race standing for an AI)."
+  },
+  {
+   "id": "numbered-level-chapters",
+   "layer": "structure",
+   "name": "Numbered levels as chapters",
+   "how": "The piece promised as a count (\"in 10 levels\") and each chapter a full-screen card: the number in a bold italic serif (\"Level 3\") over a short plain line in a light sans (\"is power\").",
+   "from": "Jack Roberts Story ad, 17 Oct",
+   "fits": "long episodes with chapters; explainers that build step by step",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "negative-film-illustration",
+   "layer": "graphics",
+   "name": "Negative-film illustration",
+   "how": "An illustration in inverted, negative-film tones on the dark card, under the chapter title.",
+   "from": "Jack Roberts Story ad, 17 Oct",
+   "fits": "chapter cards, when a real screenshot cannot show the idea",
+   "krish_verdict": "untested",
+   "note": "Only where it shows a real thing: a picture acting out an analogy is out (ANALOGY_IN_SCRIPTS_ONLY)."
+  },
+  {
+   "id": "word-bounce-in",
+   "layer": "graphics",
+   "name": "Every word bounces in",
+   "how": "Each caption word arrives on the frame it is said with a quick overshoot (scale up a touch past full, settle) and a fade; the group holds, then clears for the next.",
+   "from": "Jack Roberts Story ad, 17 Oct (Krish: \"These words all bounce in\")",
+   "fits": "every cut, with kinetic-serif-captions",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "constant-motion",
+   "layer": "editing",
+   "name": "Something is always moving",
+   "how": "No still frame: a slow push on the speaker within every shot, cards that drift and scale while they hold, words animating in; a cut or a move every couple of seconds.",
+   "from": "Jack Roberts Story ad, 17 Oct (Krish: \"there's a lot more movement on the screen\")",
+   "fits": "the 90-second cut; the long cut at a calmer rate",
+   "krish_verdict": "untested"
+  },
+  {
+   "id": "treated-background",
+   "layer": "production",
+   "name": "The room behind him is treated",
+   "how": "The speaker is cut from the room (a person mask, feathered and steady from frame to frame) and the room is softened, darkened and graded towards the brand's ink, with a vignette, so it reads as a set, not a spare room.",
+   "from": "Jack Roberts Story ad, 17 Oct (Krish: \"The background of the person has also been treated when he's talking so it doesn't look too amateur\")",
+   "fits": "every cut",
    "krish_verdict": "untested"
   }
  ],

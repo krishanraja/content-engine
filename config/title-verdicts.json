@@ -70,9 +70,284 @@
    "lesson": "His titles run longer than the playbook's 60 characters when the extra words carry the finding; length is a guide, the finding wins.",
    "from": "Krish rewrote the Wednesday titles himself, 14 Oct 2026: article T1 became \"Meta's Muse AI, reviewed. Amazon already locked it out, and Walmart let it right in.\"; YouTube Y2 became \"VIDEO: We unpack Meta's Muse and look at why it's on par with Siri but for OPPOSITE reasons!\"",
    "on": "2026-10-14"
+  },
+  {
+   "lesson": "Never write a card heading or chapter divider to pass title_check's floor. Names stuffed in, label strings and bare numbers read as robotic. Start from what Krish actually says on camera at that moment in the take, and keep his words.",
+   "from": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me. (27 Friday card and divider headings, all rejected)",
+   "on": "2026-10-17"
   }
  ],
  "verdicts": [
+  {
+   "title": "My prediction for 2027",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "When to turn ChatGPT and Claude up yourself",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Why the automatic helps most people, and what you can't see",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Next, ChatGPT and Claude pick how hard they think",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "What thinking costs OpenAI and Anthropic",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "The setting in ChatGPT and Claude that beats the name",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Why Claude and ChatGPT keep launching new names",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "By June 2027, ChatGPT picks how hard it thinks: 85%",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "ChatGPT, Claude, Gemini: where to turn the thinking up",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Eleven times the cost, from 42 to 58",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Newest vs older Claude Opus",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "ChatGPT's thinking setting: you pick it",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Claude's real effort levels, in order",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "The model name and its effort setting",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "ChatGPT free picks its own thinking, 2027",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Where to turn the thinking up",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Extended cut by mistake, fixed weeks later",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Claude Code: medium by default, then reversed",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Free users thinking daily: <1% to 7%",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Plus and Pro lose automatic switching",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "OpenAI's reason, and what WIRED found",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Free Gemini now starts on Auto",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Altman: OpenAI losing money on Pro",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Eleven times the cost, a third higher",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Same Claude, different settings, different scores",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "ChatGPT and Claude: you pick the thinking",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Same day: one million users, $40 billion",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "GPT-5.1 to GPT-6.1, under a year",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "Opus 4.8, Opus 5, Opus 5.5, each dated",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
+  {
+   "title": "15 new Claude names in 12 months",
+   "surface": "card",
+   "verdict": "rejected",
+   "why": "Written to clear the checker, not to be read: label strings (\"Opus 4.8, Opus 5, Opus 5.5, each dated\"), company names stuffed in to pass the floor (\"The setting in ChatGPT and Claude that beats the name\"), bare numbers (\"Eleven times the cost, from 42 to 58\"). A card heading is a line a viewer reads in a second, in his voice.",
+   "krish": "Krish, 2026-10-17: These headings are so stupid it's insane. I can't believe you're putting these to me.",
+   "on": "2026-10-17",
+   "piece": "904658db-4df2-4537-a0ed-ebe93e081db7"
+  },
   {
    "title": "Make Your Mind Up",
    "surface": "spotify-show",

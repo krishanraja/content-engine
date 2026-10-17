@@ -204,11 +204,29 @@ def too_long(title, surface, playbook=None):
     return f'{len(title)} characters; {surface} shows about {limit}' if limit and len(title) > limit else None
 
 
+def krish_playbook_text(surface=None, playbook=None):
+    """What the surface is for, then Krish's own playbook for it (2026-10-17), which wins over the research."""
+    pb = playbook or load_playbook()
+    lines = []
+    where = (pb.get('surface_map') or {}).get(surface) if surface else None
+    if where:
+        lines.append(f'What {surface} is: {where}')
+    mine = (pb.get('krish_playbook') or {}).get('surfaces') or {}
+    for name, s in mine.items():
+        if surface and name != surface:
+            continue
+        lines.append(f'Krish\'s playbook for {name} ({pb["krish_playbook"]["source"]}): {s.get("rule", "")}')
+        for f in s.get('formulas', []):
+            lines.append(f'  - {f["name"]}: {f["structure"]}. E.g. ' + ' / '.join(f'"{x}"' for x in f.get('examples', [])[:2]))
+    return '\n'.join(lines)
+
+
 def playbook_text(surface=None, playbook=None):
     pb = playbook or load_playbook()
     if not pb:
         return ''
-    lines = ['What the hooks research says (config/hook-playbook.json; his picks win where they differ):', '  ' + pb['formula']]
+    mine = krish_playbook_text(surface, pb)
+    lines = ([mine, ''] if mine else []) + ['What the hooks research says (config/hook-playbook.json; his picks win where they differ):', '  ' + pb['formula']]
     lines += [f'  - {r}' for r in pb.get('everywhere', [])]
     for name, s in pb.get('surfaces', {}).items():
         if surface and name != surface:
@@ -265,6 +283,11 @@ def self_test():
             pb = {'formula': 'f', 'everywhere': ['name it'], 'surfaces': {'youtube': {'limit_chars': 10, 'formula': 'yt', 'strong': ['s'], 'weak': ['w']},
                                                                         'blog': {'limit_chars': 60, 'formula': 'bl'}}}
             check('playbook: one surface only', ('yt' in playbook_text('youtube', pb), 'bl' in playbook_text('youtube', pb)), (True, False))
+            mine = dict(pb, surface_map={'youtube': 'the long cut\'s title'}, krish_playbook={'source': 'x.md', 'surfaces': {
+                'youtube': {'rule': 'punchy', 'formulas': [{'name': 'Time Bomb', 'structure': '[When] + [Change]', 'examples': ['AI in 2027']}]},
+                'article': {'rule': 'deep', 'formulas': []}}})
+            got = playbook_text('youtube', mine)
+            check('playbook: what the surface is and his own formulas come first', (got.index('What youtube is') < got.index('Time Bomb') < got.index('hooks research'), 'deep' in got), (True, False))
             check('playbook: too long for the surface', bool(too_long('eleven char', 'youtube', pb)), True)
             check('playbook: fits', too_long('short', 'youtube', pb), None)
             try:
