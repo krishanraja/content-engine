@@ -1,0 +1,234 @@
+{
+ "cards": [
+  {
+   "id": "fri-deep-15-claude-names",
+   "kicker": "ANTHROPIC, SINCE OCT 2025",
+   "heading": "A new Claude roughly every four weeks"
+  },
+  {
+   "id": "fri-deep-15-claude-names-s2",
+   "kicker": "ANTHROPIC, SINCE OCT 2025",
+   "heading": "A new Claude roughly every four weeks"
+  },
+  {
+   "id": "fri-deep-15-claude-names-s3",
+   "kicker": "ANTHROPIC, SINCE OCT 2025",
+   "heading": "A new Claude roughly every four weeks"
+  },
+  {
+   "id": "fri-deep-15-claude-names-s4",
+   "kicker": "ANTHROPIC, SINCE OCT 2025",
+   "heading": "A new Claude roughly every four weeks"
+  },
+  {
+   "id": "fri-claude-launch-pages",
+   "kicker": "ANTHROPIC LAUNCH PAGES, 2026",
+   "heading": "Three Opus models in four months"
+  },
+  {
+   "id": "fri-claude-launch-pages-p2",
+   "kicker": "ANTHROPIC LAUNCH PAGES, 2026",
+   "heading": "Three Opus models in four months"
+  },
+  {
+   "id": "fri-claude-launch-pages-p3",
+   "kicker": "ANTHROPIC LAUNCH PAGES, 2026",
+   "heading": "Three Opus models in four months"
+  },
+  {
+   "id": "fri-deep-openai-5-1-to-6-1",
+   "kicker": "CHATGPT RELEASE NOTES, 2025-26",
+   "heading": "GPT went up a whole number in just 46 weeks"
+  },
+  {
+   "id": "fri-deep-openai-5-1-to-6-1-r1",
+   "kicker": "CHATGPT RELEASE NOTES, 2025-26",
+   "heading": "GPT went up a whole number in just 46 weeks"
+  },
+  {
+   "id": "fri-deep-openai-5-1-to-6-1-r2",
+   "kicker": "CHATGPT RELEASE NOTES, 2025-26",
+   "heading": "GPT went up a whole number in just 46 weeks"
+  },
+  {
+   "id": "fri-deep-altman-same-day",
+   "kicker": "ALTMAN, 31 MARCH 2025",
+   "heading": "A million new ChatGPT users in one hour"
+  },
+  {
+   "id": "fri-deep-altman-same-day-t2",
+   "kicker": "OPENAI, 31 MARCH 2025",
+   "heading": "The same day, a $40 billion raise"
+  },
+  {
+   "id": "fri-deep-altman-same-day-t3",
+   "kicker": "THE DECODER, JAN 2025",
+   "heading": "The $40 billion was months in the making"
+  },
+  {
+   "id": "fri-deep-thinking-settings",
+   "kicker": "CHATGPT, CLAUDE, OCT 2026",
+   "heading": "You pick how hard ChatGPT and Claude think. For now."
+  },
+  {
+   "id": "fri-deep-aa-same-claude",
+   "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
+   "heading": "Same Claude Opus 5.5, tested in every gear"
+  },
+  {
+   "id": "fri-deep-aa-same-claude-s1",
+   "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
+   "heading": "In top gear, Opus 5.5 did far better"
+  },
+  {
+   "id": "fri-deep-aa-same-claude-s2",
+   "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
+   "heading": "Top-gear Opus 5 beat first-gear Opus 5.5"
+  },
+  {
+   "id": "fri-deep-aa-same-claude-s3",
+   "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
+   "heading": "Middle-gear Opus 5.5 matched Opus 5, for far less"
+  },
+  {
+   "id": "fri-deep-cost-vs-score",
+   "kicker": "ARTIFICIAL ANALYSIS, OPUS 5.5",
+   "heading": "Top gear costs about 11 times the lowest"
+  },
+  {
+   "id": "fri-deep-cost-vs-score-cost",
+   "kicker": "ARTIFICIAL ANALYSIS, OPUS 5.5",
+   "heading": "Top gear costs about 11 times the lowest"
+  },
+  {
+   "id": "fri-deep-cost-vs-score-score",
+   "kicker": "ARTIFICIAL ANALYSIS, OPUS 5.5",
+   "heading": "Opus 5.5's score? Only about a third higher."
+  },
+  {
+   "id": "fri-deep-altman-losing-on-pro",
+   "kicker": "ALTMAN, 6 JAN 2025",
+   "heading": "Even at $200 a month, OpenAI was losing money"
+  },
+  {
+   "id": "fri-gemini-auto",
+   "kicker": "GOOGLE, 9 OCT 2026",
+   "heading": "Google's free Gemini has already gone automatic"
+  },
+  {
+   "id": "fri-gemini-auto-h1",
+   "kicker": "GOOGLE, 9 OCT 2026",
+   "heading": "Google's free Gemini has already gone automatic"
+  },
+  {
+   "id": "fri-gemini-auto-h2",
+   "kicker": "GOOGLE, 9 OCT 2026",
+   "heading": "Gemini decides how much thinking you get"
+  },
+  {
+   "id": "fri-deep-openai-free-dec-2025",
+   "kicker": "OPENAI, DEC 2025",
+   "heading": "OpenAI took ChatGPT's automatic away. Twice."
+  },
+  {
+   "id": "fri-deep-openai-free-dec-2025-s2",
+   "kicker": "OPENAI, DEC 2025",
+   "heading": "OpenAI took ChatGPT's automatic away. Twice."
+  },
+  {
+   "id": "fri-deep-openai-free-dec-2025-s3",
+   "kicker": "WIRED, 16 DEC 2025",
+   "heading": "WIRED: OpenAI was footing the thinking bill"
+  },
+  {
+   "id": "fri-deep-openai-plus-pro-sep-2026",
+   "kicker": "OPENAI, 14 SEP 2026",
+   "heading": "Plus and Pro lost automatic too. No reason given."
+  },
+  {
+   "id": "fri-deep-openai-plus-pro-sep-2026-c2",
+   "kicker": "OPENAI, 14 SEP 2026",
+   "heading": "Plus and Pro lost automatic too. No reason given."
+  },
+  {
+   "id": "fri-deep-thinking-use-1-to-7",
+   "kicker": "ALTMAN, 10 AUG 2025",
+   "heading": "Under 1 free user in 100 used thinking daily"
+  },
+  {
+   "id": "fri-deep-thinking-use-1-to-7-after",
+   "kicker": "ALTMAN, 10 AUG 2025",
+   "heading": "Once the AI chose, 7 free users in 100 did"
+  },
+  {
+   "id": "fri-deep-claude-code-reversal",
+   "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
+   "heading": "Anthropic turned Claude Code down a gear"
+  },
+  {
+   "id": "fri-deep-claude-code-reversal-f2",
+   "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
+   "heading": "Anthropic turned Claude Code down a gear"
+  },
+  {
+   "id": "fri-deep-claude-code-reversal-f3",
+   "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
+   "heading": "Most stayed put, though it felt less smart"
+  },
+  {
+   "id": "fri-deep-claude-code-reversal-f4",
+   "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
+   "heading": "Anthropic admitted the mistake and reversed it"
+  },
+  {
+   "id": "fri-deep-extended-cut-by-mistake",
+   "kicker": "OPENAI, 10 JAN 2026",
+   "heading": "OpenAI cut ChatGPT's thinking time for speed"
+  },
+  {
+   "id": "fri-deep-extended-cut-by-mistake-r2",
+   "kicker": "OPENAI, 10 JAN 2026",
+   "heading": "OpenAI also cut Extended thinking by mistake"
+  },
+  {
+   "id": "fri-deep-extended-cut-by-mistake-r3",
+   "kicker": "OPENAI, 4 FEB 2026",
+   "heading": "Weeks to fix. Your screen never showed it."
+  },
+  {
+   "id": "fri-deep-where-to-turn-it-up",
+   "kicker": "CHATGPT, OCT 2026",
+   "heading": "For anything you act on, pick Medium or High"
+  },
+  {
+   "id": "fri-deep-where-to-turn-it-up-c2",
+   "kicker": "CHATGPT FREE, OCT 2026",
+   "heading": "Free plan? Pick Think."
+  },
+  {
+   "id": "fri-deep-where-to-turn-it-up-c3",
+   "kicker": "CLAUDE, GEMINI, OCT 2026",
+   "heading": "Claude or Gemini? Turn effort up."
+  },
+  {
+   "id": "fri-call-85",
+   "kicker": "OUR CALL, OCT 2026",
+   "heading": "By mid-2027, free ChatGPT goes automatic again"
+  },
+  {
+   "id": "fri-call-85-fill",
+   "kicker": "OUR CALL, OCT 2026",
+   "heading": "By mid-2027, free ChatGPT goes automatic again"
+  }
+ ],
+ "chapters": [
+  "Does every new Claude and ChatGPT matter?",
+  "Why are Claude and ChatGPT launches speeding up?",
+  "Can Opus 5 beat Opus 5.5?",
+  "Who pays when ChatGPT thinks?",
+  "Who decides how hard ChatGPT and Claude think?",
+  "What will ChatGPT hide from you?",
+  "What should ChatGPT still let you choose?",
+  "Will ChatGPT decide for you again?"
+ ]
+}
