@@ -6,25 +6,21 @@
   "../../2026-10-09-script-deep-v6.md",
   "../long-cut/long-take.words.json"
  ],
- "about": "Friday 16 Oct, the long cut: one card per picture step in long-cut/long.json (44), plus a divider for each chapter turn after the first (7). Each heading is Krish's own words over that step (headings-from-his-words.json). Not drawn: video_card.py draws a card only once Krish has picked its heading (title_check.gate).",
+ "about": "Friday 16 Oct, the long cut: one card per picture step in long-cut/long.json (44), plus a divider for each chapter turn after the first (7), each with its own cue in long.json. Every kicker, heading and chapter name is the one Krish picked on 17 Oct 2026 (approved-headings.json; each recorded as picked in config/title-verdicts.json). The captures for the launch pages, the Altman day and last December are filled from shots-v6-sources.json.",
  "draw": "python3 scripts/pages/video_card.py docs/plans/2026-10-09-friday/video-pictures/cards-v6.json --out <kit folder>/panels --sheet",
- "logos_to_add": {
-  "artificialanalysis-cream.svg": "the Artificial Analysis logo, from the header of artificialanalysis.ai (or Brandfetch, domain artificialanalysis.ai), recoloured #F4EFE4: for the 7 Artificial Analysis cards",
-  "wired-cream.svg": "the WIRED wordmark, from Wikimedia Commons File:Wired_logo.svg (or Brandfetch, domain wired.com), recoloured #F4EFE4: for fri-deep-openai-free-dec-2025-s2 and -s3",
-  "the-decoder-cream.svg": "The Decoder logo, from the header of the-decoder.com (or Brandfetch, domain the-decoder.com), recoloured #F4EFE4: for fri-deep-altman-same-day-t3"
- },
  "not_ready": {
-  "captures": "fri-claude-launch-pages (3 steps), fri-deep-altman-same-day (3), fri-deep-openai-free-dec-2025 (3): their pages are not captured yet (\"to_capture\" on each card)",
-  "recapture": "fri-deep-claude-code-reversal-f2 shows the reversal highlighted before he says it (\"recapture\" on the card)",
-  "dividers": "fri-chapter-3, -5, -6, -7, -8: his words at the chapter start fail video_card's floor (title_check.problems: a bare topic); the 7 dividers also need cues in long.json (\"proposed_cue\")",
-  "headings": "every card: video_card draws a card only once Krish has picked its heading (title_check.gate)"
+  "aa_logo": "The 7 Artificial Analysis cards (fri-deep-aa-same-claude, -s1, -s2, -s3, fri-deep-cost-vs-score, -cost, -score) carry artificialanalysis-cream.svg in the card's \"logos\", but they are \"columns\" cards and video_card.py draws a columns card's logos only per column (and its trim step skips column logos): until video_card draws card-level logos on columns cards, these cards show the Anthropic symbol and name Artificial Analysis only in the kicker.",
+  "wired_lines": "fri-deep-openai-free-dec-2025-s2 and -s3: WIRED's own two lines (the spokesperson's \"preferred staying in the default chat experience\" and \"In practice, the router seemed to send many more free users...\") are behind WIRED's paywall and were not captured. -s2 shows WIRED's headline, byline and date (ringed: the byline and date row); -s3 shows Maxwell Zeff's own post on X with WIRED's article card, ringed on \"The router, which was costly for the company to serve,\". A signed-in WIRED capture of the exact lines would replace both.",
+  "altman_t2": "fri-deep-altman-same-day-t2 shows only OpenAI's sentence \"Today we're announcing new funding, $40 billion\" (crop stops before the valuation he does not say); the page's date line (shots/fri-deep-altman-same-day-2.png, \"March 31, 2025\") is not on the card, because video_card draws one capture per card. The date is in the kicker and the source line.",
+  "reversal_f2": "fri-deep-claude-code-reversal-f2: no recapture exists, so it uses the capture as is, ringed only on the March 4 sentence. The capture's burned-in yellow on \"This was the wrong tradeoff. We reverted this change on April 7\" still shows two lines below the ring, before he says it. A recapture (capture_postmortem.py with only the March 4 sentence highlighted) would clear it.",
+  "plus_pro_c2": "fri-deep-openai-plus-pro-sep-2026-c2: its second source (help.openai.com/articles/20001354, \"On Plus and Pro plans, Instant doesn't automatically switch...\") is not in this capture (\"to_capture_later\" on the card)."
  },
  "cards": [
   {
    "file": "fri-deep-15-claude-names-16x9.png",
    "kind": "columns",
-   "kicker": "New Claude names, Oct 2025 to Oct 2026",
-   "title": "Claude Opus 4.8, Opus 5, Opus 5.5",
+   "kicker": "ANTHROPIC, SINCE OCT 2025",
+   "title": "A new Claude roughly every four weeks",
    "columns": [
     {
      "label": "24 Nov 2025",
@@ -85,8 +81,8 @@
   {
    "file": "fri-deep-15-claude-names-s2-16x9.png",
    "kind": "columns",
-   "kicker": "New Claude names, Oct 2025 to Oct 2026",
-   "title": "Claude Opus 4.8, Opus 5, Opus 5.5",
+   "kicker": "ANTHROPIC, SINCE OCT 2025",
+   "title": "A new Claude roughly every four weeks",
    "columns": [
     {
      "label": "24 Nov 2025",
@@ -148,8 +144,8 @@
   {
    "file": "fri-deep-15-claude-names-s3-16x9.png",
    "kind": "columns",
-   "kicker": "New Claude names, Oct 2025 to Oct 2026",
-   "title": "Claude Opus 4.8, Opus 5, Opus 5.5",
+   "kicker": "ANTHROPIC, SINCE OCT 2025",
+   "title": "A new Claude roughly every four weeks",
    "columns": [
     {
      "label": "24 Nov 2025",
@@ -212,8 +208,8 @@
   {
    "file": "fri-deep-15-claude-names-s4-16x9.png",
    "kind": "columns",
-   "kicker": "New Claude names, Oct 2025 to Oct 2026",
-   "title": "Claude Opus 4.8, Opus 5, Opus 5.5",
+   "kicker": "ANTHROPIC, SINCE OCT 2025",
+   "title": "A new Claude roughly every four weeks",
    "columns": [
     {
      "label": "24 Nov 2025",
@@ -278,76 +274,101 @@
    "file": "fri-chapter-2-16x9.png",
    "kind": "statement",
    "kicker": "Chapter 2 of 8",
+   "title": "Why are Claude and ChatGPT launches speeding up?",
    "logos": [
     "anthropic-symbol-cream.svg",
     "openai-symbol-cream.svg"
    ],
    "lines": [
     {
-     "text": "Firstly, the names.",
-     "tone": "dim"
-    },
-    {
-     "text": "Anthropic makes Claude",
-     "tone": "answer"
+     "text": "Why are Claude and ChatGPT launches speeding up?",
+     "tone": "plain"
     }
    ],
-   "chapter": "Why the names keep coming",
-   "proposed_cue": {
-    "id": "fri-chapter-2",
-    "panel": "panels/fri-chapter-2-{aspect}.png",
-    "start": "Firstly, the names. Anthropic makes Claude",
-    "end": "Anthropic makes Claude,"
-   },
+   "chapter": "Why are Claude and ChatGPT launches speeding up?",
+   "cue": "fri-chapter-2",
    "at": 106.44
   },
   {
    "file": "fri-claude-launch-pages-16x9.png",
    "kind": "shot",
-   "kicker": "Anthropic launch pages",
-   "title": "It launched Opus 4.8 in May",
+   "kicker": "ANTHROPIC LAUNCH PAGES, 2026",
+   "title": "Three Opus models in four months",
    "image": "shots/fri-claude-launch-pages-1.png",
-   "source": "anthropic.com/news/claude-opus-4-8 (28 May 2026); Anthropic's Opus 5 announcement (24 Jul 2026); anthropic.com/claude-opus-5-5 (22 Sep 2026); captured <date>",
+   "source": "anthropic.com/news/claude-opus-4-8, 28 May 2026; captured 17 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
-   "to_capture": "the Opus 4.8 page, cropped to its title and \"May 28, 2026\". Real pages only, never edited; the capture date on the frame. The Opus 5 page URL is not filed in the evidence: record it at capture, or use the claude-opus-5 row of platform.claude.com/docs/en/about-claude/model-deprecations.",
+   "crop": [
+    611,
+    362,
+    1658,
+    362
+   ],
+   "mark": [
+    1328,
+    602,
+    224,
+    62
+   ],
    "cue": "fri-claude-launch-pages",
    "at": 109.06
   },
   {
    "file": "fri-claude-launch-pages-p2-16x9.png",
    "kind": "shot",
-   "kicker": "Anthropic launch pages",
-   "title": "Opus 5 in July",
+   "kicker": "ANTHROPIC LAUNCH PAGES, 2026",
+   "title": "Three Opus models in four months",
    "image": "shots/fri-claude-launch-pages-2.png",
-   "source": "anthropic.com/news/claude-opus-4-8 (28 May 2026); Anthropic's Opus 5 announcement (24 Jul 2026); anthropic.com/claude-opus-5-5 (22 Sep 2026); captured <date>",
+   "source": "anthropic.com/news/claude-opus-5, 24 Jul 2026; captured 17 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
-   "to_capture": "the Opus 4.8 page with the Opus 5 page (title and 24 Jul 2026 date line) piled on it. Real pages only, never edited; the capture date on the frame. The Opus 5 page URL is not filed in the evidence: record it at capture, or use the claude-opus-5 row of platform.claude.com/docs/en/about-claude/model-deprecations.",
+   "crop": [
+    656,
+    362,
+    1569,
+    362
+   ],
+   "mark": [
+    1337,
+    602,
+    206,
+    62
+   ],
    "cue": "fri-claude-launch-pages-p2",
    "at": 111.12
   },
   {
    "file": "fri-claude-launch-pages-p3-16x9.png",
    "kind": "shot",
-   "kicker": "Anthropic launch pages",
-   "title": "Opus 5.5 in September",
+   "kicker": "ANTHROPIC LAUNCH PAGES, 2026",
+   "title": "Three Opus models in four months",
    "image": "shots/fri-claude-launch-pages-3.png",
-   "source": "anthropic.com/news/claude-opus-4-8 (28 May 2026); Anthropic's Opus 5 announcement (24 Jul 2026); anthropic.com/claude-opus-5-5 (22 Sep 2026); captured <date>",
+   "source": "anthropic.com/claude-opus-5-5, 22 Sep 2026; captured 17 Oct 2026",
    "logos": [
     "anthropic-symbol-cream.svg"
    ],
-   "to_capture": "both, with anthropic.com/claude-opus-5-5 (title and \"September 22, 2026\") piled on top. Real pages only, never edited; the capture date on the frame. The Opus 5 page URL is not filed in the evidence: record it at capture, or use the claude-opus-5 row of platform.claude.com/docs/en/about-claude/model-deprecations.",
+   "crop": [
+    565,
+    556,
+    1753,
+    530
+   ],
+   "mark": [
+    1244,
+    636,
+    388,
+    56
+   ],
    "cue": "fri-claude-launch-pages-p3",
    "at": 112.3
   },
   {
    "file": "fri-deep-openai-5-1-to-6-1-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT release notes",
-   "title": "From GPT-5.1 to 6.1 in under a year",
+   "kicker": "CHATGPT RELEASE NOTES, 2025-26",
+   "title": "GPT went up a whole number in just 46 weeks",
    "image": "shots/fri-deep-openai-5-1-to-6-1.png",
    "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entries 12 Nov 2025 and 29 Sep 2026; captured 16 Oct 2026",
    "logos": [
@@ -365,8 +386,8 @@
   {
    "file": "fri-deep-openai-5-1-to-6-1-r1-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT release notes",
-   "title": "From GPT-5.1 to 6.1 in under a year",
+   "kicker": "CHATGPT RELEASE NOTES, 2025-26",
+   "title": "GPT went up a whole number in just 46 weeks",
    "image": "shots/fri-deep-openai-5-1-to-6-1.png",
    "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entries 12 Nov 2025 and 29 Sep 2026; captured 16 Oct 2026",
    "logos": [
@@ -390,8 +411,8 @@
   {
    "file": "fri-deep-openai-5-1-to-6-1-r2-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT release notes",
-   "title": "From GPT-5.1 to 6.1 in under a year",
+   "kicker": "CHATGPT RELEASE NOTES, 2025-26",
+   "title": "GPT went up a whole number in just 46 weeks",
    "image": "shots/fri-deep-openai-5-1-to-6-1.png",
    "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entries 12 Nov 2025 and 29 Sep 2026; captured 16 Oct 2026",
    "logos": [
@@ -415,46 +436,75 @@
   {
    "file": "fri-deep-altman-same-day-16x9.png",
    "kind": "shot",
-   "kicker": "Sam Altman on X, 31 Mar 2025",
-   "title": "A million new people joined ChatGPT in one hour",
+   "kicker": "ALTMAN, 31 MARCH 2025",
+   "title": "A million new ChatGPT users in one hour",
    "image": "shots/fri-deep-altman-same-day-1.png",
-   "source": "x.com/sama/status/1906771292390666325, 31 Mar 2025, 18:11 UTC; captured <date>",
+   "source": "x.com/sama/status/1906771292390666325, 31 Mar 2025, 18:11 UTC; captured 17 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "to_capture": "Altman's whole post (\"...we added one million users in five days. we added one million users in the last hour.\"), the last sentence highlighted, with its date and time. Captured pages, never redrawn.",
-   "logos_to_add": [],
+   "crop": [
+    716,
+    102,
+    1200,
+    490
+   ],
+   "mark": [
+    738,
+    348,
+    608,
+    52
+   ],
    "cue": "fri-deep-altman-same-day",
    "at": 133.24
   },
   {
    "file": "fri-deep-altman-same-day-t2-16x9.png",
    "kind": "shot",
-   "kicker": "OpenAI, the same day",
-   "title": "OpenAI said investors were putting in $40 billion",
-   "image": "shots/fri-deep-altman-same-day-2.png",
-   "source": "x.com/sama, 31 Mar 2025, 18:11 UTC; openai.com/index/march-funding-updates, 31 Mar 2025; captured <date>",
+   "kicker": "OPENAI, 31 MARCH 2025",
+   "title": "The same day, a $40 billion raise",
+   "image": "shots/fri-deep-altman-same-day-3.png",
+   "source": "openai.com/index/march-funding-updates, 31 Mar 2025; captured 17 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "to_capture": "tile 1, with openai.com/index/march-funding-updates/ added beside it: \"March 31, 2025\" and \"Today we're announcing new funding—$40 billion\" (crop the sentence after the dash only if the valuation is not the line he says; a cut sentence is marked as cut). Captured pages, never redrawn.",
-   "logos_to_add": [],
+   "crop": [
+    736,
+    641,
+    785,
+    80
+   ],
+   "mark": [
+    754,
+    653,
+    767,
+    56
+   ],
    "cue": "fri-deep-altman-same-day-t2",
    "at": 140.64
   },
   {
    "file": "fri-deep-altman-same-day-t3-16x9.png",
    "kind": "shot",
-   "kicker": "The Decoder, 31 Jan 2025",
-   "title": "OpenAI had been lining up that money for months",
-   "image": "shots/fri-deep-altman-same-day-3.png",
-   "source": "x.com/sama and openai.com, 31 Mar 2025; the-decoder.com, 31 Jan 2025; captured <date>",
+   "kicker": "THE DECODER, JAN 2025",
+   "title": "The $40 billion was months in the making",
+   "image": "shots/fri-deep-altman-same-day-4.png",
+   "source": "the-decoder.com, Maximilian Schreiner, 31 Jan 2025; captured 17 Oct 2026",
    "logos": [
-    "openai-symbol-cream.svg"
-   ],
-   "to_capture": "tiles 1 and 2, with The Decoder's headline and date added (the-decoder.com/openai-in-talks-for-massive-40-billion-funding-round-at-300-billion-valuation/), the headline whole. Captured pages, never redrawn.",
-   "logos_to_add": [
+    "openai-symbol-cream.svg",
     "the-decoder-cream.svg"
+   ],
+   "crop": [
+    360,
+    304,
+    1299,
+    406
+   ],
+   "mark": [
+    448,
+    509,
+    441,
+    50
    ],
    "cue": "fri-deep-altman-same-day-t3",
    "at": 145.56
@@ -463,34 +513,26 @@
    "file": "fri-chapter-3-16x9.png",
    "kind": "statement",
    "kicker": "Chapter 3 of 8",
+   "title": "Can Opus 5 beat Opus 5.5?",
    "logos": [
-    "openai-symbol-cream.svg",
-    "anthropic-symbol-cream.svg"
+    "anthropic-symbol-cream.svg",
+    "artificialanalysis-cream.svg"
    ],
    "lines": [
     {
-     "text": "What does matter?",
-     "tone": "dim"
-    },
-    {
-     "text": "The thinking, not the model name.",
-     "tone": "answer"
+     "text": "Can Opus 5 beat Opus 5.5?",
+     "tone": "plain"
     }
    ],
-   "chapter": "The setting that matters",
-   "proposed_cue": {
-    "id": "fri-chapter-3",
-    "panel": "panels/fri-chapter-3-{aspect}.png",
-    "start": "So, what does matter? The thinking of the model",
-    "end": "not the model name."
-   },
+   "chapter": "Can Opus 5 beat Opus 5.5?",
+   "cue": "fri-chapter-3",
    "at": 152.26
   },
   {
    "file": "fri-deep-thinking-settings-16x9.png",
    "kind": "shot",
-   "kicker": "OpenAI and Claude help pages",
-   "title": "ChatGPT and Claude both let you choose, for now",
+   "kicker": "CHATGPT, CLAUDE, OCT 2026",
+   "title": "You pick how hard ChatGPT and Claude think. For now.",
    "image": "shots/fri-deep-thinking-settings.png",
    "source": "help.openai.com/en/articles/20001354 (about 9 Oct 2026); support.claude.com/en/articles/8664678 (updated 7 Oct 2026); captured 16 Oct 2026",
    "logos": [
@@ -503,8 +545,11 @@
   {
    "file": "fri-deep-aa-same-claude-16x9.png",
    "kind": "columns",
-   "kicker": "Artificial Analysis, scored 0 to 100",
-   "title": "Claude Opus 5.5 through a really tough reasoning test",
+   "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
+   "title": "Same Claude Opus 5.5, tested in every gear",
+   "logos": [
+    "artificialanalysis-cream.svg"
+   ],
    "columns": [
     {
      "label": "Opus 5.5 · Low effort",
@@ -552,17 +597,17 @@
     ],
     "evidence": "evidence-v3.md P1-02 (sentences for 42, 58 and Opus 5 Max 51; medium page 51 at $1.34; checker: Opus 5 Max 50.8 at $5.86)"
    },
-   "logos_to_add": [
-    "artificialanalysis-cream.svg"
-   ],
    "cue": "fri-deep-aa-same-claude",
    "at": 275.82
   },
   {
    "file": "fri-deep-aa-same-claude-s1-16x9.png",
    "kind": "columns",
-   "kicker": "Artificial Analysis, scored 0 to 100",
-   "title": "Claude Opus 5.5 through a really tough reasoning test",
+   "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
+   "title": "In top gear, Opus 5.5 did far better",
+   "logos": [
+    "artificialanalysis-cream.svg"
+   ],
    "columns": [
     {
      "label": "Opus 5.5 · Low effort",
@@ -611,17 +656,17 @@
     ],
     "evidence": "evidence-v3.md P1-02 (sentences for 42, 58 and Opus 5 Max 51; medium page 51 at $1.34; checker: Opus 5 Max 50.8 at $5.86)"
    },
-   "logos_to_add": [
-    "artificialanalysis-cream.svg"
-   ],
    "cue": "fri-deep-aa-same-claude-s1",
    "at": 285.58
   },
   {
    "file": "fri-deep-aa-same-claude-s2-16x9.png",
    "kind": "columns",
-   "kicker": "Artificial Analysis, scored 0 to 100",
-   "title": "Claude Opus 5.5 through a really tough reasoning test",
+   "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
+   "title": "Top-gear Opus 5 beat first-gear Opus 5.5",
+   "logos": [
+    "artificialanalysis-cream.svg"
+   ],
    "columns": [
     {
      "label": "Opus 5.5 · Low effort",
@@ -677,17 +722,17 @@
     ],
     "evidence": "evidence-v3.md P1-02 (sentences for 42, 58 and Opus 5 Max 51; medium page 51 at $1.34; checker: Opus 5 Max 50.8 at $5.86)"
    },
-   "logos_to_add": [
-    "artificialanalysis-cream.svg"
-   ],
    "cue": "fri-deep-aa-same-claude-s2",
    "at": 289.38
   },
   {
    "file": "fri-deep-aa-same-claude-s3-16x9.png",
    "kind": "columns",
-   "kicker": "Artificial Analysis, scored 0 to 100",
-   "title": "Claude Opus 5.5 through a really tough reasoning test",
+   "kicker": "ARTIFICIAL ANALYSIS, OCT 2026",
+   "title": "Middle-gear Opus 5.5 matched Opus 5, for far less",
+   "logos": [
+    "artificialanalysis-cream.svg"
+   ],
    "columns": [
     {
      "label": "Opus 5.5 · Low effort",
@@ -754,9 +799,6 @@
     ],
     "evidence": "evidence-v3.md P1-02 (sentences for 42, 58 and Opus 5 Max 51; medium page 51 at $1.34; checker: Opus 5 Max 50.8 at $5.86)"
    },
-   "logos_to_add": [
-    "artificialanalysis-cream.svg"
-   ],
    "cue": "fri-deep-aa-same-claude-s3",
    "at": 305.32
   },
@@ -764,34 +806,29 @@
    "file": "fri-chapter-4-16x9.png",
    "kind": "statement",
    "kicker": "Chapter 4 of 8",
+   "title": "Who pays when ChatGPT thinks?",
    "logos": [
-    "anthropic-symbol-cream.svg",
-    "openai-symbol-cream.svg"
+    "openai-symbol-cream.svg",
+    "anthropic-symbol-cream.svg"
    ],
    "lines": [
     {
-     "text": "Hidden working",
-     "tone": "dim"
-    },
-    {
-     "text": "costs a lot of money to run.",
-     "tone": "answer"
+     "text": "Who pays when ChatGPT thinks?",
+     "tone": "plain"
     }
    ],
-   "chapter": "What thinking costs them",
-   "proposed_cue": {
-    "id": "fri-chapter-4",
-    "panel": "panels/fri-chapter-4-{aspect}.png",
-    "start": "See, all that hidden working runs on huge",
-    "end": "costs a lot of money to run."
-   },
+   "chapter": "Who pays when ChatGPT thinks?",
+   "cue": "fri-chapter-4",
    "at": 344.26
   },
   {
    "file": "fri-deep-cost-vs-score-16x9.png",
    "kind": "columns",
-   "kicker": "Artificial Analysis, Claude Opus 5.5",
-   "title": "If Opus 5.5 thinks as hard as it can",
+   "kicker": "ARTIFICIAL ANALYSIS, OPUS 5.5",
+   "title": "Top gear costs about 11 times the lowest",
+   "logos": [
+    "artificialanalysis-cream.svg"
+   ],
    "columns": [
     {
      "label": "Claude Opus 5.5",
@@ -826,17 +863,17 @@
     ],
     "evidence": "evidence-v3.md P1-02: $0.55 and $5.98 per task (checker: 10.9x); 42 and 58 (+16 points, +38%)"
    },
-   "logos_to_add": [
-    "artificialanalysis-cream.svg"
-   ],
    "cue": "fri-deep-cost-vs-score",
    "at": 355.68
   },
   {
    "file": "fri-deep-cost-vs-score-cost-16x9.png",
    "kind": "columns",
-   "kicker": "Artificial Analysis, Claude Opus 5.5",
-   "title": "It costs about 11 times as much",
+   "kicker": "ARTIFICIAL ANALYSIS, OPUS 5.5",
+   "title": "Top gear costs about 11 times the lowest",
+   "logos": [
+    "artificialanalysis-cream.svg"
+   ],
    "columns": [
     {
      "label": "Claude Opus 5.5",
@@ -873,17 +910,17 @@
     ],
     "evidence": "evidence-v3.md P1-02: $0.55 and $5.98 per task (checker: 10.9x); 42 and 58 (+16 points, +38%)"
    },
-   "logos_to_add": [
-    "artificialanalysis-cream.svg"
-   ],
    "cue": "fri-deep-cost-vs-score-cost",
    "at": 358.64
   },
   {
    "file": "fri-deep-cost-vs-score-score-16x9.png",
    "kind": "columns",
-   "kicker": "Artificial Analysis, Claude Opus 5.5",
-   "title": "It costs about 11 times as much",
+   "kicker": "ARTIFICIAL ANALYSIS, OPUS 5.5",
+   "title": "Opus 5.5's score? Only about a third higher.",
+   "logos": [
+    "artificialanalysis-cream.svg"
+   ],
    "columns": [
     {
      "label": "Claude Opus 5.5",
@@ -920,17 +957,14 @@
     ],
     "evidence": "evidence-v3.md P1-02: $0.55 and $5.98 per task (checker: 10.9x); 42 and 58 (+16 points, +38%)"
    },
-   "logos_to_add": [
-    "artificialanalysis-cream.svg"
-   ],
    "cue": "fri-deep-cost-vs-score-score",
    "at": 363.52
   },
   {
    "file": "fri-deep-altman-losing-on-pro-16x9.png",
    "kind": "shot",
-   "kicker": "Sam Altman on X, 6 Jan 2025",
-   "title": "OpenAI was losing money on its $200 plan",
+   "kicker": "ALTMAN, 6 JAN 2025",
+   "title": "Even at $200 a month, OpenAI was losing money",
    "image": "shots/fri-deep-altman-losing-on-pro.png",
    "source": "x.com/sama/status/1876104315296968813, 6 Jan 2025, 03:11 UTC; openai.com/index/introducing-chatgpt-pro, 5 Dec 2024; captured 16 Oct 2026",
    "logos": [
@@ -949,34 +983,27 @@
    "file": "fri-chapter-5-16x9.png",
    "kind": "statement",
    "kicker": "Chapter 5 of 8",
+   "title": "Who decides how hard ChatGPT and Claude think?",
    "logos": [
-    "google-cream.svg",
-    "openai-symbol-cream.svg"
+    "openai-symbol-cream.svg",
+    "anthropic-symbol-cream.svg",
+    "google-cream.svg"
    ],
    "lines": [
     {
-     "text": "Who decides how hard",
+     "text": "Who decides how hard ChatGPT and Claude think?",
      "tone": "plain"
-    },
-    {
-     "text": "your AI really thinks?",
-     "tone": "moved"
     }
    ],
-   "chapter": "Who decides next",
-   "proposed_cue": {
-    "id": "fri-chapter-5",
-    "panel": "panels/fri-chapter-5-{aspect}.png",
-    "start": "So, who decides how hard your AI really thinks?",
-    "end": "how hard your AI really thinks?"
-   },
+   "chapter": "Who decides how hard ChatGPT and Claude think?",
+   "cue": "fri-chapter-5",
    "at": 403.36
   },
   {
    "file": "fri-gemini-auto-16x9.png",
    "kind": "shot",
-   "kicker": "Google Gemini help",
-   "title": "Google's already started doing this",
+   "kicker": "GOOGLE, 9 OCT 2026",
+   "title": "Google's free Gemini has already gone automatic",
    "image": "shots/fri-gemini-auto.png",
    "source": "support.google.com/gemini/answer/17004136, page undated, changes from 9 Oct 2026; captured 16 Oct 2026",
    "logos": [
@@ -1000,8 +1027,8 @@
   {
    "file": "fri-gemini-auto-h1-16x9.png",
    "kind": "shot",
-   "kicker": "Google Gemini help",
-   "title": "Free Gemini app starts on a setting called Auto",
+   "kicker": "GOOGLE, 9 OCT 2026",
+   "title": "Google's free Gemini has already gone automatic",
    "image": "shots/fri-gemini-auto.png",
    "source": "support.google.com/gemini/answer/17004136, page undated, changes from 9 Oct 2026; captured 16 Oct 2026",
    "logos": [
@@ -1025,8 +1052,8 @@
   {
    "file": "fri-gemini-auto-h2-16x9.png",
    "kind": "shot",
-   "kicker": "Google Gemini help",
-   "title": "Free Gemini app starts on a setting called Auto",
+   "kicker": "GOOGLE, 9 OCT 2026",
+   "title": "Gemini decides how much thinking you get",
    "image": "shots/fri-gemini-auto.png",
    "source": "support.google.com/gemini/answer/17004136, page undated, changes from 9 Oct 2026; captured 16 Oct 2026",
    "logos": [
@@ -1050,31 +1077,50 @@
   {
    "file": "fri-deep-openai-free-dec-2025-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT release notes, 11 Dec 2025",
-   "title": "Last December, free users lost it",
+   "kicker": "OPENAI, DEC 2025",
+   "title": "OpenAI took ChatGPT's automatic away. Twice.",
    "image": "shots/fri-deep-openai-free-dec-2025-1.png",
-   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 11 Dec 2025; captured <date>",
+   "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 11 Dec 2025; captured 17 Oct 2026",
    "logos": [
     "openai-symbol-cream.svg"
    ],
-   "to_capture": "the \"December 11, 2025\" entry with its header: \"We're removing automatic model switching for reasoning in ChatGPT.\". Captured pages, never redrawn.",
-   "logos_to_add": [],
+   "crop": [
+    368,
+    1688,
+    1374,
+    112
+   ],
+   "mark": [
+    406,
+    1700,
+    1294,
+    100
+   ],
    "cue": "fri-deep-openai-free-dec-2025",
    "at": 455.42
   },
   {
    "file": "fri-deep-openai-free-dec-2025-s2-16x9.png",
    "kind": "shot",
-   "kicker": "WIRED, 16 Dec 2025",
-   "title": "OpenAI said free users liked the normal setting better",
+   "kicker": "OPENAI, DEC 2025",
+   "title": "OpenAI took ChatGPT's automatic away. Twice.",
    "image": "shots/fri-deep-openai-free-dec-2025-2.png",
-   "source": "ChatGPT release notes, 11 Dec 2025; wired.com/story/openai-router-relaunch-gpt-5-sam-altman (Maxwell Zeff, 16 Dec 2025); captured <date>",
+   "source": "wired.com/story/openai-router-relaunch-gpt-5-sam-altman, Maxwell Zeff, 16 Dec 2025; captured 17 Oct 2026",
    "logos": [
-    "openai-symbol-cream.svg"
-   ],
-   "to_capture": "the entry, with WIRED's headline, byline and date added and its line \"An OpenAI spokesperson tells WIRED that the company determined, based on user feedback, that Free and Go users preferred staying in the default chat experience\". Captured pages, never redrawn.",
-   "logos_to_add": [
+    "openai-symbol-cream.svg",
     "wired-cream.svg"
+   ],
+   "crop": [
+    172,
+    260,
+    1096,
+    712
+   ],
+   "mark": [
+    204,
+    288,
+    758,
+    88
    ],
    "cue": "fri-deep-openai-free-dec-2025-s2",
    "at": 457.06
@@ -1082,16 +1128,25 @@
   {
    "file": "fri-deep-openai-free-dec-2025-s3-16x9.png",
    "kind": "shot",
-   "kicker": "WIRED, 16 Dec 2025",
-   "title": "WIRED magazine said that costs OpenAI a lot more",
+   "kicker": "WIRED, 16 DEC 2025",
+   "title": "WIRED: OpenAI was footing the thinking bill",
    "image": "shots/fri-deep-openai-free-dec-2025-3.png",
-   "source": "ChatGPT release notes, 11 Dec 2025; wired.com/story/openai-router-relaunch-gpt-5-sam-altman (Maxwell Zeff, 16 Dec 2025); captured <date>",
+   "source": "x.com/ZeffMax/status/2000984660852310409, Maxwell Zeff of WIRED, 16 Dec 2025, 17:41 UTC; captured 17 Oct 2026",
    "logos": [
-    "openai-symbol-cream.svg"
-   ],
-   "to_capture": "both, with WIRED's \"In practice, the router seemed to send many more free users to OpenAI's advanced reasoning models, which are more expensive for OpenAI to serve.\" added. Captured pages, never redrawn.",
-   "logos_to_add": [
+    "openai-symbol-cream.svg",
     "wired-cream.svg"
+   ],
+   "crop": [
+    716,
+    102,
+    1200,
+    1090
+   ],
+   "mark": [
+    738,
+    308,
+    776,
+    52
    ],
    "cue": "fri-deep-openai-free-dec-2025-s3",
    "at": 460.8
@@ -1099,8 +1154,8 @@
   {
    "file": "fri-deep-openai-plus-pro-sep-2026-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT release notes, 14 Sep 2026",
-   "title": "OpenAI didn't say why",
+   "kicker": "OPENAI, 14 SEP 2026",
+   "title": "Plus and Pro lost automatic too. No reason given.",
    "image": "shots/fri-deep-openai-plus-pro-sep-2026.png",
    "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 14 Sep 2026; captured 16 Oct 2026",
    "logos": [
@@ -1124,8 +1179,8 @@
   {
    "file": "fri-deep-openai-plus-pro-sep-2026-c2-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT release notes, 14 Sep 2026",
-   "title": "OpenAI didn't say why",
+   "kicker": "OPENAI, 14 SEP 2026",
+   "title": "Plus and Pro lost automatic too. No reason given.",
    "image": "shots/fri-deep-openai-plus-pro-sep-2026.png",
    "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 14 Sep 2026; captured 16 Oct 2026",
    "logos": [
@@ -1151,34 +1206,26 @@
    "file": "fri-chapter-6-16x9.png",
    "kind": "statement",
    "kicker": "Chapter 6 of 8",
+   "title": "What will ChatGPT hide from you?",
    "logos": [
     "openai-symbol-cream.svg",
     "anthropic-symbol-cream.svg"
    ],
    "lines": [
     {
-     "text": "Is that a good thing though?",
+     "text": "What will ChatGPT hide from you?",
      "tone": "plain"
-    },
-    {
-     "text": "Some of both.",
-     "tone": "answer"
     }
    ],
-   "chapter": "The good and the bad",
-   "proposed_cue": {
-    "id": "fri-chapter-6",
-    "panel": "panels/fri-chapter-6-{aspect}.png",
-    "start": "Is that a good thing though?",
-    "end": "Sort of some of both."
-   },
+   "chapter": "What will ChatGPT hide from you?",
+   "cue": "fri-chapter-6",
    "at": 544.2
   },
   {
    "file": "fri-deep-thinking-use-1-to-7-16x9.png",
    "kind": "columns",
-   "kicker": "Free ChatGPT users, 2025",
-   "title": "Fewer than one free user in 100 used thinking",
+   "kicker": "ALTMAN, 10 AUG 2025",
+   "title": "Under 1 free user in 100 used thinking daily",
    "columns": [
     {
      "label": "Before",
@@ -1202,8 +1249,8 @@
   {
    "file": "fri-deep-thinking-use-1-to-7-after-16x9.png",
    "kind": "columns",
-   "kicker": "Free ChatGPT users, 2025",
-   "title": "Fewer than one free user in 100 used thinking",
+   "kicker": "ALTMAN, 10 AUG 2025",
+   "title": "Once the AI chose, 7 free users in 100 did",
    "columns": [
     {
      "label": "Before",
@@ -1236,8 +1283,8 @@
   {
    "file": "fri-deep-claude-code-reversal-16x9.png",
    "kind": "shot",
-   "kicker": "Anthropic postmortem, 23 Apr 2026",
-   "title": "Anthropic learned its lesson too in March",
+   "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
+   "title": "Anthropic turned Claude Code down a gear",
    "image": "shots/fri-deep-claude-code-reversal.png",
    "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 16 Oct 2026",
    "logos": [
@@ -1261,8 +1308,8 @@
   {
    "file": "fri-deep-claude-code-reversal-f2-16x9.png",
    "kind": "shot",
-   "kicker": "Anthropic postmortem, 23 Apr 2026",
-   "title": "It moved its coding app down, Claude Code",
+   "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
+   "title": "Anthropic turned Claude Code down a gear",
    "image": "shots/fri-deep-claude-code-reversal.png",
    "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 16 Oct 2026",
    "logos": [
@@ -1280,15 +1327,14 @@
     1250,
     100
    ],
-   "recapture": "this crop also shows \"This was the wrong tradeoff. We reverted this change on April 7\" highlighted in yellow, burned into the capture, before he says it: re-run capture_postmortem.py with only \"On March 4, we changed Claude Code's default reasoning effort from high to medium\" highlighted, and point \"image\" at that capture",
    "cue": "fri-deep-claude-code-reversal-f2",
    "at": 575.62
   },
   {
    "file": "fri-deep-claude-code-reversal-f3-16x9.png",
    "kind": "shot",
-   "kicker": "Anthropic postmortem, 23 Apr 2026",
-   "title": "Most people kept it there",
+   "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
+   "title": "Most stayed put, though it felt less smart",
    "image": "shots/fri-deep-claude-code-reversal.png",
    "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 16 Oct 2026",
    "logos": [
@@ -1312,8 +1358,8 @@
   {
    "file": "fri-deep-claude-code-reversal-f4-16x9.png",
    "kind": "shot",
-   "kicker": "Anthropic postmortem, 23 Apr 2026",
-   "title": "Anthropic called that a mistake and undid it",
+   "kicker": "ANTHROPIC POSTMORTEM, APR 2026",
+   "title": "Anthropic admitted the mistake and reversed it",
    "image": "shots/fri-deep-claude-code-reversal.png",
    "source": "anthropic.com/engineering/april-23-postmortem, 23 Apr 2026; captured 16 Oct 2026",
    "logos": [
@@ -1337,8 +1383,8 @@
   {
    "file": "fri-deep-extended-cut-by-mistake-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT release notes, Jan to Feb 2026",
-   "title": "OpenAI made ChatGPT think for less time",
+   "kicker": "OPENAI, 10 JAN 2026",
+   "title": "OpenAI cut ChatGPT's thinking time for speed",
    "image": "shots/fri-deep-extended-cut-by-mistake.png",
    "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 4 Feb 2026; captured 16 Oct 2026",
    "logos": [
@@ -1362,8 +1408,8 @@
   {
    "file": "fri-deep-extended-cut-by-mistake-r2-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT release notes, Jan to Feb 2026",
-   "title": "By mistake, it cut a setting called Extended thinking",
+   "kicker": "OPENAI, 10 JAN 2026",
+   "title": "OpenAI also cut Extended thinking by mistake",
    "image": "shots/fri-deep-extended-cut-by-mistake.png",
    "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 4 Feb 2026; captured 16 Oct 2026",
    "logos": [
@@ -1387,8 +1433,8 @@
   {
    "file": "fri-deep-extended-cut-by-mistake-r3-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT release notes, Jan to Feb 2026",
-   "title": "By mistake, it cut a setting called Extended thinking",
+   "kicker": "OPENAI, 4 FEB 2026",
+   "title": "Weeks to fix. Your screen never showed it.",
    "image": "shots/fri-deep-extended-cut-by-mistake.png",
    "source": "help.openai.com/en/articles/6825453-chatgpt-release-notes, entry 4 Feb 2026; captured 16 Oct 2026",
    "logos": [
@@ -1413,6 +1459,7 @@
    "file": "fri-chapter-7-16x9.png",
    "kind": "statement",
    "kicker": "Chapter 7 of 8",
+   "title": "What should ChatGPT still let you choose?",
    "logos": [
     "openai-symbol-cream.svg",
     "anthropic-symbol-cream.svg",
@@ -1420,28 +1467,19 @@
    ],
    "lines": [
     {
-     "text": "If you're a business owner,",
-     "tone": "dim"
-    },
-    {
-     "text": "what should you do?",
+     "text": "What should ChatGPT still let you choose?",
      "tone": "plain"
     }
    ],
-   "chapter": "What to do about it",
-   "proposed_cue": {
-    "id": "fri-chapter-7",
-    "panel": "panels/fri-chapter-7-{aspect}.png",
-    "start": "So if you're a business owner or someone",
-    "end": "what should you do?"
-   },
+   "chapter": "What should ChatGPT still let you choose?",
+   "cue": "fri-chapter-7",
    "at": 657.34
   },
   {
    "file": "fri-deep-where-to-turn-it-up-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT help",
-   "title": "On ChatGPT, Medium or High",
+   "kicker": "CHATGPT, OCT 2026",
+   "title": "For anything you act on, pick Medium or High",
    "image": "shots/fri-deep-where-to-turn-it-up.png",
    "source": "help.openai.com/en/articles/20001354 (about 9 Oct 2026); captured 16 Oct 2026",
    "logos": [
@@ -1459,8 +1497,8 @@
   {
    "file": "fri-deep-where-to-turn-it-up-c2-16x9.png",
    "kind": "shot",
-   "kicker": "ChatGPT help",
-   "title": "On the free plan, pick Think",
+   "kicker": "CHATGPT FREE, OCT 2026",
+   "title": "Free plan? Pick Think.",
    "image": "shots/fri-deep-where-to-turn-it-up.png",
    "source": "help.openai.com/en/articles/20001354 (about 9 Oct 2026); captured 16 Oct 2026",
    "logos": [
@@ -1484,8 +1522,8 @@
   {
    "file": "fri-deep-where-to-turn-it-up-c3-16x9.png",
    "kind": "shot",
-   "kicker": "Claude and Gemini help",
-   "title": "On Claude and Gemini: effort. So turn that up.",
+   "kicker": "CLAUDE, GEMINI, OCT 2026",
+   "title": "Claude or Gemini? Turn effort up.",
    "image": "shots/fri-deep-where-to-turn-it-up.png",
    "source": "support.claude.com/en/articles/8664678 (updated 7 Oct 2026); support.google.com/gemini/answer/17004136; captured 16 Oct 2026",
    "logos": [
@@ -1511,35 +1549,36 @@
    "file": "fri-chapter-8-16x9.png",
    "kind": "statement",
    "kicker": "Chapter 8 of 8",
+   "title": "Will ChatGPT decide for you again?",
    "logos": [
     "openai-symbol-cream.svg"
    ],
    "lines": [
     {
-     "text": "Where does this go from here?",
+     "text": "Will ChatGPT decide for you again?",
      "tone": "plain"
     }
    ],
-   "chapter": "My prediction for 2027",
-   "proposed_cue": {
-    "id": "fri-chapter-8",
-    "panel": "panels/fri-chapter-8-{aspect}.png",
-    "start": "So where does this go from here?",
-    "end": "So where does this go from here?"
-   },
+   "chapter": "Will ChatGPT decide for you again?",
+   "cue": "fri-chapter-8",
    "at": 776.7
   },
   {
    "file": "fri-call-85-16x9.png",
    "kind": "statement",
-   "kicker": "My prediction for 2027",
+   "kicker": "OUR CALL, OCT 2026",
+   "title": "By mid-2027, free ChatGPT goes automatic again",
    "logos": [
     "openai-symbol-cream.svg"
    ],
    "lines": [
     {
-     "text": "I'll chalk this at about 85%",
+     "text": "By mid-2027, free ChatGPT goes automatic again",
      "tone": "plain"
+    },
+    {
+     "text": "I'll chalk this at about 85%",
+     "tone": "dim"
     }
    ],
    "note": "My call: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message. How sure: 85 out of 100.",
@@ -1549,11 +1588,16 @@
   {
    "file": "fri-call-85-fill-16x9.png",
    "kind": "statement",
-   "kicker": "My prediction for 2027",
+   "kicker": "OUR CALL, OCT 2026",
+   "title": "By mid-2027, free ChatGPT goes automatic again",
    "logos": [
     "openai-symbol-cream.svg"
    ],
    "lines": [
+    {
+     "text": "By mid-2027, free ChatGPT goes automatic again",
+     "tone": "plain"
+    },
     {
      "text": "I'll chalk this at about 85%",
      "tone": "answer"
