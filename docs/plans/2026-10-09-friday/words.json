@@ -11,5 +11,26 @@
  "whatsapp_text": "New on mind.the.gap: I think how hard your AI thinks matters more than the name of the model. ChatGPT and Claude usually start you low. Here's why, and who I think gets to choose next.\n\nThe full article, free: {ARTICLE_URL}",
  "note_text": "I honestly got lost in all the new AI names, so I went looking for what actually changes your answer. I think it's less the name and more how hard the AI thinks. ChatGPT and Claude usually start that low, and on a flat monthly plan every extra thought costs OpenAI or Anthropic money. My bet: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI picks how hard to think. I'm 85% sure.",
  "comment_question": "Do you want to control how hard your AI thinks, or would you rather let it decide?",
- "date": "2026-10-16"
+ "date": "2026-10-16",
+ "long_name": "deep cut",
+ "long_waiting": "the deep cut (about 14 minutes) is not made yet; you render it on your PC (Codex, produce-video, docs/plans/2026-10-09-friday/long-cut/long.json)",
+ "files": {
+  "long_video": "3 Video/the deep cut (wide, 16:9), not made yet",
+  "short_video": "3 Video/Why so many AIs - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+  "cover": "2 Covers and images/substack-cover-1200x630.png",
+  "wide_thumbnail": "3 Video/Why so many AIs - wide 16x9 - thumbnail.jpg",
+  "vertical_cover": "2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png",
+  "share_card": "2 Covers and images/share-card-1200x675.png",
+  "square": "2 Covers and images/square-1080x1080.png",
+  "substack_copy": "1 Article/substack-copy.html"
+ },
+ "links": {
+  "3 Video/Why so many AIs - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4": "https://drive.google.com/file/d/1mIBNeWzeEoUz-yf4anSXNah8xd085Vwo/view",
+  "2 Covers and images/substack-cover-1200x630.png": "https://drive.google.com/file/d/1Lr-6NGqxJDl6XCx1_qkl80RuhhgTYQne/view",
+  "3 Video/Why so many AIs - wide 16x9 - thumbnail.jpg": "https://drive.google.com/file/d/1YVFa2P8jX9t3Om7H4AWLpJCm1bg6OVnR/view",
+  "2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png": "https://drive.google.com/file/d/1AZhbJ0kz4mixm-aH0KWmtwket_vXzEAb/view",
+  "2 Covers and images/share-card-1200x675.png": "https://drive.google.com/file/d/1V0bva1rznVzuHtLdHBKghSw1Qz65pv8K/view",
+  "2 Covers and images/square-1080x1080.png": "https://drive.google.com/file/d/1B9lmtzQkSYSx_7baSnlte_zhvRO2RNbl/view",
+  "1 Article/substack-copy.html": "https://drive.google.com/file/d/1syTJ--d87nM5yfEeur1ruaH91g76OVrB/view"
+ }
 }

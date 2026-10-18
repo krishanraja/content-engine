@@ -67,6 +67,12 @@ def steps(p):
     WhatsApp and Substack Notes were dropped on 2026-10-14 (Krish: "I don't think
     I need Substack notes or WhatsApp to be honest, right now")."""
     f = p.get('files') or {}
+    # The long cut is the 3-minute video, or the week's deep cut (house rule DEEP_CUT). Friday 16 Oct's publish
+    # page said "the 3-minute video" for a 14-minute deep cut that was not made yet (Krish, 18 Oct: "not
+    # downloading or linking the right assets"), so the piece's words name it, and say when it is not ready.
+    long_name = p.get('long_name') or '3-minute video'
+    waiting = p.get('long_waiting')
+    wait = [f'Not ready yet: {waiting}. Everything else in this step is ready.'] if waiting else []
     long_video = f.get('long_video') or '3 Video/ the 3-minute wide (16:9) video'
     short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
     cover = f.get('cover') or '2 Covers and images/substack-cover-1200x630.png'
@@ -80,11 +86,11 @@ def steps(p):
     return [
         {
             'where': 'Substack', 'tag': 'The home: one post, one email',
-            'why': 'One post holds the 3-minute video at the top and the whole article under it, so subscribers get one email '
+            'why': f'One post holds the {long_name} at the top and the whole article under it, so subscribers get one email '
                    'and every other channel points to one link.',
             'files': [long_video, wide_thumb, cover, copy_page],
-            'do': [
-                'Create, then choose Video (not Article). Upload the 3-minute wide video.',
+            'do': wait + [
+                f'Create, then choose Video (not Article). Upload the {long_name} (wide, 16:9).',
                 f'Set the video\'s thumbnail to the wide thumbnail, {wide_thumb}.',
                 'Paste the title and subtitle below.',
                 f'Open {copy_page}, press Copy post, and paste it into the text under the video.',
@@ -96,10 +102,10 @@ def steps(p):
             'copy': [('Title', p.get('title')), ('Subtitle', p.get('subtitle'))],
         },
         {
-            'where': 'YouTube (the 3-minute video)', 'tag': 'Substack uploads it privately; you finish it',
+            'where': f'YouTube (the {long_name})', 'tag': 'Substack uploads it privately; you finish it',
             'why': 'Substack puts the video on YouTube as private. Swap in the YouTube words, then make it public.',
             'files': [wide_thumb],
-            'do': [
+            'do': wait + [
                 'In YouTube Studio, open the private video Substack just uploaded.',
                 'Replace the title and description with the ones below. The article link sits at the end of the description, under the read line.',
                 f'Under Thumbnail, upload the wide thumbnail, {wide_thumb}. Make it public, then pin the comment below.',
@@ -156,7 +162,7 @@ def steps(p):
             'why': 'Spotify plays the same 16:9 video as YouTube as a video podcast episode, and the 90-second cut is its clip. '
                    'Upload in Spotify for Creators (not through Substack), the same day as the Substack post.',
             'files': [long_video, wide_thumb, short_video],
-            'do': ['In Spotify for Creators, New episode: upload the 3-minute wide video.',
+            'do': wait + [f'In Spotify for Creators, New episode: upload the {long_name} (wide, 16:9).',
                    f'Set the episode thumbnail to the wide thumbnail, {wide_thumb}. Leave episode art empty: the show art is used.',
                    'Paste the title and description below, then the chapters into the description.',
                    'Add the 90-second tall video as the episode\'s clip. Publish.'],

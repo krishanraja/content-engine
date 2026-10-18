@@ -154,6 +154,13 @@ open from 18 Oct. Both board links hold the same build (H6qK version 17, RjLH ve
 Wednesday carried over unchanged, Friday made with its publish page; its publish-page link on the record is the
 post's Drive folder (`making.py ... publish-manager`), because Krish's machine had not yet written the new page to
 Drive. No Friday ticks on H6qK; RjLH's tick store cannot be read from this account.
+Then Krish (18 Oct): "there are significant issues with the publish board, not downloading or linking the right
+assets. it's not ready for me to use." Fixed and republished (H6qK version 18, RjLH version 42): the six chart cards
+had no picture (a size trick that needed a script the board does not run; reverted, charts now 256-colour where no
+pixel visibly changes); every file a step names links to its Drive copy (each checked in Friday's folder, same size);
+YouTube, Spotify and Substack name the deep cut and say first that it waits on Krish's PC. Tested in a browser on
+the board itself: 44 of 44 pictures load, 10 of 10 picture downloads are real PNGs, Copy picture works. The board's
+check now refuses a picture with nothing to show (`config/failures.json`, publish-board-empty-pictures).
 
 **Closing session_01YHC9kjnvJEzYDeFDdADLBq (18 Oct).** Three files Krish asked for, all on main and on both board
 links (Friday tab, "Review the words"): `docs/COST_GUARDS.md` (the six standing cost rules and guards G1 to G9 to

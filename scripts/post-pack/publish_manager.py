@@ -54,7 +54,7 @@ def inline(text):
 
 
 def figure(img):
-    return (f'<figure><img id="fig-{img["id"]}" src="{img["data"]}" alt="{E(img.get("alt", ""))}" width="{img.get("w", "")}">'
+    return (f'<figure><img src="{img["data"]}" alt="{E(img.get("alt", ""))}" width="{img.get("w", "")}">'
             + (f'<figcaption>{E(img["caption"])}</figcaption>' if img.get('caption') else '') + '</figure>')
 
 
@@ -131,7 +131,6 @@ ol.do{margin:0;padding-left:20px}.files{font:12px "IBM Plex Mono",ui-monospace,m
 
 JS = r'''
 const $ = s => document.querySelector(s);
-document.querySelectorAll("img[data-same]").forEach(i => { const f = document.getElementById(i.dataset.same); if (f) i.src = f.src });
 const toast = m => { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 2200) };
 const KEY = "publish-manager:" + ($("#pm")?.dataset.post || "");
 const st = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}") } catch { return {} } })();
@@ -230,16 +229,43 @@ COVER_ROLES = {
 }
 
 
+def file_item(name, links):
+    """A file a step names, linked to its Drive copy when the words give one (Krish, 18 Oct: the board was
+    "not downloading or linking the right assets"). Only a copy known to be current is given a link."""
+    url = links.get(name)
+    if url and str(url).startswith('https://'):
+        return f'<li><a href="{E(url)}" target="_blank" rel="noopener">{E(name)}</a></li>'
+    return f'<li>{E(name)}</li>'
+
+
+def compact_png(path):
+    """An article chart as a 256-colour PNG when that looks the same: every pixel within 32 of 255 on each
+    channel, and under 0.01% of them off by more than 24. A chart is embedded twice (in the article and on its
+    own card), and Friday 16 Oct's six took the week board over the 16 MB an artifact page may be. Anything
+    that would change visibly keeps its own bytes."""
+    original = path.read_bytes()
+    try:
+        from PIL import Image, ImageChops
+        import io
+        im = Image.open(io.BytesIO(original)).convert('RGB')
+        q = im.quantize(256, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+        hist = ImageChops.difference(im, q.convert('RGB')).convert('L').histogram()
+        worst = max(i for i, v in enumerate(hist) if v)
+        if worst > 32 or sum(hist[25:]) > 0.0001 * sum(hist):
+            return original
+        out = io.BytesIO()
+        q.save(out, 'PNG', optimize=True)
+        return out.getvalue() if out.tell() < len(original) else original
+    except Exception:
+        return original
+
+
 def pic_card(img, slug):
     name = f'{slug}-{img["id"]}.png'
     return (f'<div class="card pic"><div class="row"><span class="lab">{E(img.get("label") or img["id"])}</span><div class="btns">'
             f'<button data-act="image" data-ref="img-{img["id"]}">Copy picture</button>'
             f'<button class="ghost" data-act="download" data-ref="img-{img["id"]}" data-name="{E(name)}">Download</button></div></div>'
-            # A picture already in the article is embedded once: its card takes the article's copy when the
-            # page opens, which halves a chart-heavy page (Friday 16 Oct's was 8.4 MB, and the week's board,
-            # which holds it, went over the 16 MB an artifact page may be).
-            + (f'<img id="img-{img["id"]}" data-same="fig-{img["id"]}" alt="{E(img.get("alt", ""))}">' if img.get('after_heading')
-               else f'<img id="img-{img["id"]}" src="{img["data"]}" alt="{E(img.get("alt", ""))}">')
+            f'<img id="img-{img["id"]}" src="{img["data"]}" alt="{E(img.get("alt", ""))}">'
             + (f'<div class="files">{E(img["caption"])}</div>' if img.get('caption') else '') +
             '<div class="status" aria-live="polite"></div></div>')
 
@@ -248,11 +274,13 @@ def page(m, base):
     images = []
     for i in m.get('images', []):
         path = (base / i['file'])
-        data = 'data:image/png;base64,' + base64.b64encode(path.read_bytes()).decode()
+        raw = compact_png(path) if i.get('after_heading') else path.read_bytes()
+        data = 'data:image/png;base64,' + base64.b64encode(raw).decode()
         images.append({**i, 'data': data})
     md = (base / m['body']).read_text(encoding='utf-8')
     body_imgs = [i for i in images if i.get('after_heading')]
     words = json.loads((base / m['words']).read_text(encoding='utf-8')) if m.get('words') else {}
+    links = words.get('links') or {}
     # Every title a reader sees first passes the anti-dumb filter, made from the piece's own words.
     source = md + ' ' + ' '.join((base / s['file']).read_text(encoding='utf-8') for s in m.get('scripts', []) if (base / s['file']).exists())
     refused = [(label, t, why) for label, t in (('title', m.get('title')), ('YouTube title', words.get('youtube_title')),
@@ -280,7 +308,11 @@ def page(m, base):
     if cover:
         sub.append(pic_card({**cover, 'label': "Cover and email thumbnail: upload it in the post's settings (1200 x 630)"}, slug))
     sub += [pic_card({**i, 'label': f'Picture {k}: {i.get("label") or i["id"]}'}, slug) for k, i in enumerate(body_imgs, 1)]
-    sections.append(('substack', '1. Substack', 'One Video post: the 3-minute video on top, then this article under it. Copy each piece in turn.', ''.join(sub)))
+    long_name = words.get('long_name') or '3-minute video'
+    waiting = (f' Not ready yet: {words["long_waiting"]}. The words, the article and the cover are ready.'
+               if words.get('long_waiting') else '')
+    sections.append(('substack', '1. Substack', f'One Video post: the {long_name} on top, then this article under it. Copy each piece in turn.'
+                     + waiting, ''.join(sub)))
     # The cover for every other place it is shown, each its own image (Krish,
     # 2026-10-12: "the cover crops need to be all individual images, a
     # vertical cover thumbnail for the shorts/tiktok etc as well").
@@ -290,7 +322,7 @@ def page(m, base):
     # 2 onwards: every other channel, from the same plan as publish_kit.py
     for k, s in enumerate(publish_kit.steps(words)[1:], 2):
         cards = ''.join(text_card(cid(), label, text) for label, text in s['copy'])
-        files = ''.join(f'<li>{E(f)}</li>' for f in s['files'])
+        files = ''.join(file_item(f, links) for f in s['files'])
         do = ''.join(f'<li>{E(d)}</li>' for d in s['do'])
         sections.append((f's{k}', f'{k}. {s["where"]}', s['why'],
                          f'<div class="card"><ol class="do">{do}</ol>' + (f'<div class="files">{files}</div>' if files else '') + f'</div>{cards}'))
@@ -349,10 +381,13 @@ def self_test():
                                                          {'id': 'vertical', 'file': 'a.png', 'alt': 'V', 'role': 'vertical-cover'}],
                                               'scripts': [{'label': 'Script', 'file': 's.md'}]}), encoding='utf-8')
         h = build(t / 'm.json', t / 'out').read_text(encoding='utf-8')
+        kept = compact_png(t / 'a.png')  # a 1-pixel PNG: smaller as itself, so it keeps its bytes
     checks = [
-        ('the article copies with its pictures', 'data-act="article"' in h and '<h2>THE PART</h2>\n<figure><img id="fig-pic" src="data:image/png;base64,' in h),
-        ('a picture in the article is embedded once, its card takes the article\'s copy',
-         h.count('data:image/png;base64,') == 2 and 'data-same="fig-pic"' in h and 'img[data-same]' in h),
+        ('the article copies with its pictures', 'data-act="article"' in h and '<h2>THE PART</h2>\n<figure><img src="data:image/png;base64,' in h),
+        ('a named file links to its Drive copy, and only an https one',
+         file_item('3 Video/a.mp4', {'3 Video/a.mp4': 'https://drive.google.com/file/d/x/view'}).startswith('<li><a href="https://drive')
+         and file_item('3 Video/a.mp4', {'3 Video/a.mp4': 'file:///x'}) == '<li>3 Video/a.mp4</li>'),
+        ('a chart that would change visibly keeps its own bytes', kept == png),
         ('pictures decode in the page, no fetch() on data: URLs', 'function dataBlob(src)' in h and 'Could not read this picture' in h),
         ('every picture has Copy picture and Download', 'data-act="image" data-ref="img-pic"' in h and 'data-act="download" data-ref="img-pic"' in h),
         ('bold stays bold', '<strong>bold</strong>' in h),

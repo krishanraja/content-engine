@@ -651,6 +651,30 @@
      "how": "Friday's story in his words, read by every later round"
     }
    ]
+  },
+  {
+   "id": "publish-board-empty-pictures",
+   "on": "2026-10-18",
+   "krish": "there are significant issues with the publish board, not downloading or linking the right assets. it's not ready for me to use.",
+   "what": "To get the week board under the 16 MB an artifact page may be, a session made the publish page's chart cards borrow the article's picture by a script at load. The board copies the page's markup and runs its own script, so all six of Friday's chart cards were empty, with no picture to copy or download. It was tested on the publish page alone, never on the board as Krish opens it. The same page still called Friday's 14-minute deep cut 'the 3-minute video', and named every file as text with no link.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "picture(s) with nothing to show",
+     "how": "the board's pre-publish check (run by the publish hook) refuses a made day with any picture that has no image data or https link; its self-test empties one and expects the refusal"
+    },
+    {
+     "file": "scripts/post-pack/publish_manager.py",
+     "contains": "def compact_png",
+     "how": "charts are made smaller in place (256 colours, only when no pixel visibly changes), never borrowed by a script; each named file links to its Drive copy"
+    },
+    {
+     "file": "scripts/post-pack/publish_kit.py",
+     "contains": "long_waiting",
+     "how": "the long cut is named by the piece (the deep cut, or the 3-minute video), and a step whose video is not made says so first"
+    }
+   ]
   }
  ]
 }

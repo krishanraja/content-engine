@@ -306,7 +306,7 @@ VIDEO_CUTS = (('long', '3-minute video (wide, 16:9)', 'YouTube and the Substack 
               ('short', '90-second video (tall, 9:16)', 'Shorts, Reels, TikTok and LinkedIn'))
 
 
-def videos_card(day, p, videos):
+def videos_card(day, p, videos, deep=False):
     """The finished videos at the top of a made day: each cut's Drive file,
     to open, to download straight to the computer, and its link to copy.
     Krish, 2026-10-14: "You should always link the Google Drive videos
@@ -321,6 +321,8 @@ def videos_card(day, p, videos):
         return ''
     rows = []
     for cut, label, where in VIDEO_CUTS:
+        if deep and cut == 'long':
+            label = 'deep cut, 8 minutes or more (wide, 16:9)'
         v = by_cut.get(cut)
         if not v:
             rows.append(f'<div class="rec-row"><span class="rec-cut"><span class="rec-name">{E(label)}</span></span>'
@@ -517,7 +519,7 @@ def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=Fa
     def heading(m):
         head = m.group(2)
         where = re.sub(r'^\d+\.\s*', '', html.unescape(re.sub(r'<[^>]+>', '', head))).strip()
-        key = SECTION_STEP.get(where)
+        key = SECTION_STEP.get(where) or ('youtube' if re.fullmatch(r'YouTube \(the .+\)', where) else None)
         if not key:
             return m.group(0)
         found.add(key)
@@ -534,7 +536,7 @@ def made_panel(page, day, name, p, links, hidden, warnings, videos=None, deep=Fa
     anchor = '<div class="card links">'
     if body.count(anchor) != 1:
         raise BoardError(f'{name}: its publish page needs one links card ({anchor}); is it from publish_manager.py?')
-    extra = videos_card(day, p, videos) + record_card(day, p, links) + scripts + checklist(day, p, deep)
+    extra = videos_card(day, p, videos, deep) + record_card(day, p, links) + scripts + checklist(day, p, deep)
     if links_line not in page['body']:
         extra += '<p class="files"><span class="link-state" data-linkstate></span></p>'
     body = body.replace(anchor, extra + anchor, 1)
@@ -1056,6 +1058,14 @@ def verify(page):
         p = (re.search(r'data-prefix="([^"]*)"', tag) or [None, ''])[1]
         if 'data-act="text"' not in panel:
             out.append(f'{name}: a made day with no Copy buttons')
+        # Every picture carries its own bytes or a link. Krish, 2026-10-18, of Friday's six chart cards, empty
+        # because they borrowed the article's picture by a script the board does not run: "there are
+        # significant issues with the publish board, not downloading or linking the right assets".
+        shown = re.sub(r'<script\b.*?</script>', '', panel, flags=re.S)  # a script's own template is not a picture
+        empty = [t for t in re.findall(r'<img\b[^>]*>', shown)
+                 if '${' not in t and not re.search(r'\ssrc="(?:data:image/|https://)', t)]
+        if empty:
+            out.append(f'{name}: {len(empty)} picture(s) with nothing to show, download or copy')
         vid = re.search(r'<div class="rec" id="' + re.escape(p) + r'videos".*?<p class="rec-how">', panel, re.S)
         if vid:
             card = vid.group(0)
@@ -1405,6 +1415,9 @@ def _self_test():
     ids = re.findall(r'\sid="([^"]+)"', page)
     check('unique ids: none used twice across three tabs', len(ids) == len(set(ids)) and len(ids) > 60)
     check('the board passes its own checks', check_page(page) == [] and check_page(plain) == [] and check_page(empty) == [])
+    emptied = re.sub(r'(<img\b[^>]*?)\ssrc="data:image/[^"]*"', r'\1', page, count=1)
+    check('a made day with a picture that has nothing to show is refused (Krish, 2026-10-18)',
+          emptied != page and any('picture(s) with nothing to show' in w for w in verify(emptied)))
     want = {f'{d}-{k}' for d in ('mon', 'wed', 'fri') for k, *_ in STEPS}
     check('tick ids: every picked day has its ten, <day>-<step>, the published board\'s', set(re.findall(r'data-tick="([^"]+)"', page)) == want)
     standing = [k for k, *_, s in STEPS if s]
