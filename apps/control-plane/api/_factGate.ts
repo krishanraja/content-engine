@@ -703,10 +703,135 @@ export function settle(body: string, result: FactCheck, prior: FactLedger | null
       if (mine.every(c => PASSING.has(c.verdict))) out[key] = { status: 'passed', at: result.ran_at, claims: mine }
       continue
     }
-    const aside = result.set_aside.find(a => overlapping(a.sentence, [s]).length > 0)
+    // A line Krish signed off is his word, not the checker's: it is never settled
+    // in the ledger, so his sign-off alone decides it (G9 below).
+    const aside = result.set_aside.find(a => overlapping(a.sentence, [s]).length > 0 && !isSignOffReason(a.reason))
     if (aside) out[key] = { status: 'set_aside', at: result.ran_at, reason: aside.reason }
   }
   return { version: FACT_GATE_VERSION, sources_hash: hash, ...(parts ? { source_parts: parts } : {}), sentences: out }
+}
+
+// ── Krish signs off a named line (cost guard G9) ───────────────────────────
+//
+// Krish, 2026-10-18: the cost guards must stop "huge cost outlays", and only "if
+// you are 110% sure this does not degrade the quality" (2026-10-15). Reruns went
+// round run, fix one number, run again, chasing a line the checker could not
+// match in any filed source. Now Krish can pass such a line in his own words:
+//
+// - Only a line whose claims the checker could not match (`unverified`). A line
+//   with a contradicted claim stays blocking: the evidence says it is wrong.
+// - Only with his words (`said`) relayed by `decided_by: 'Krish'`, kept on the
+//   piece with the line. Nothing passes a line without them.
+// - Keyed on the line's exact words, so a reworded line is checked again.
+// - Set aside with his words as the reason, never settled in the ledger.
+// - A paid rerun skips the line only while the sources it was signed off against
+//   are unchanged: the same input would read the same way. New evidence is
+//   always checked, and a contradiction it finds still blocks.
+
+export interface SignOff {
+  sentence: string
+  /** His words, exactly as relayed. */
+  said: string
+  /** Where his words are kept, e.g. `said:<said_parts id>`, when there is one. */
+  said_ref?: string | null
+  decided_by: 'Krish'
+  at: string
+  /** sourcesHash() when he signed it off. */
+  sources_hash: string
+}
+
+const SIGN_OFF_PREFIX = 'signed off by Krish: '
+
+export function isSignOffReason(reason: string | null | undefined): boolean {
+  return typeof reason === 'string' && reason.startsWith(SIGN_OFF_PREFIX)
+}
+
+function signOffReason(o: SignOff): string {
+  return `${SIGN_OFF_PREFIX}"${o.said}" (${o.at.slice(0, 10)})`
+}
+
+/** The sign-offs still standing: those whose line is in this body, word for word. */
+export function standingSignOffs(meta: Record<string, any> | null | undefined, body: string): Record<string, SignOff> {
+  const all = (meta?.fact_signoffs || {}) as Record<string, SignOff>
+  const keys = new Set(sentences(body).map(sentenceKey))
+  const out: Record<string, SignOff> = {}
+  for (const [k, v] of Object.entries(all)) if (keys.has(k) && v?.decided_by === 'Krish' && typeof v.said === 'string' && v.said.trim()) out[k] = v
+  return out
+}
+
+/** The sign-off covering every body sentence of a claim, or null. */
+function covering(c: { sentence: string }, bodySentences: string[], offs: Record<string, SignOff>): SignOff | null {
+  const over = overlapping(c.sentence, bodySentences)
+  if (!over.length) return null
+  const found = over.map(s => offs[sentenceKey(s)])
+  return found.every(Boolean) ? found[0] : null
+}
+
+/**
+ * A new sign-off, or why it is refused. `fc` is the last stored check: the line
+ * must hold a claim that check could not match, and none it contradicted.
+ */
+export function signOff(
+  meta: Record<string, any>,
+  body: string,
+  req: { sentence: unknown; said: unknown; decided_by: unknown; said_ref?: unknown },
+  at = new Date().toISOString(),
+): { ok: boolean; error: string | null; signoffs?: Record<string, SignOff>; signed?: SignOff } {
+  if (req.decided_by !== 'Krish') return { ok: false, error: 'A line is signed off only by Krish: relay his decision with decided_by "Krish".' }
+  const said = typeof req.said === 'string' ? req.said.trim() : ''
+  if (!said) return { ok: false, error: 'A sign-off needs Krish\'s own words as "said". No line passes without them.' }
+  const asked = typeof req.sentence === 'string' ? req.sentence : ''
+  const line = sentences(body).find(s => norm(s) === norm(asked))
+  if (!asked.trim() || !line) return { ok: false, error: 'That line is not in the piece word for word. Name the exact sentence.' }
+  if (norm(said) === norm(line)) return { ok: false, error: '"said" must be Krish\'s words about the line, not the line itself.' }
+  const fc = meta?.fact_check as FactCheck | undefined
+  const mine = (fc?.claims || []).filter(c => overlapping(c.sentence, [line]).length > 0)
+  if (mine.some(c => c.verdict === 'contradicted')) return { ok: false, error: 'The fact check found evidence against this line, so it cannot be signed off. Fix or cut it.' }
+  if (!mine.some(c => c.verdict === 'unverified')) return { ok: false, error: 'The last fact check holds no claim in this line that it could not match, so there is nothing to sign off.' }
+  const signed: SignOff = {
+    sentence: line, said: said.slice(0, 500), said_ref: typeof req.said_ref === 'string' && req.said_ref.trim() ? req.said_ref.trim() : null,
+    decided_by: 'Krish', at, sources_hash: sourcesHash(meta),
+  }
+  return { ok: true, error: null, signoffs: { ...((meta?.fact_signoffs || {}) as Record<string, SignOff>), [sentenceKey(line)]: signed }, signed }
+}
+
+/**
+ * A check with the standing sign-offs applied: each unverified claim in a
+ * signed-off line moves to the set-asides with his words as the reason. A
+ * contradicted claim stays. `passed` and `blocking` are counted again.
+ */
+export function applySignOffs(result: FactCheck, body: string, offs: Record<string, SignOff>): FactCheck {
+  if (!Object.keys(offs).length) return result
+  const bodySentences = sentences(body)
+  const kept: CheckedClaim[] = []
+  const aside = [...result.set_aside]
+  for (const c of result.claims) {
+    const o = c.verdict === 'unverified' ? covering(c, bodySentences, offs) : null
+    if (!o) { kept.push(c); continue }
+    if (!aside.some(a => norm(a.sentence) === norm(c.sentence))) aside.push({ sentence: c.sentence, reason: signOffReason(o) })
+  }
+  if (kept.length === result.claims.length) return result
+  const blocking = kept.filter(c => !PASSING.has(c.verdict)).length + (result.unchecked || 0)
+  return {
+    ...result, claims: kept, set_aside: aside, blocking,
+    passed: !!result.independent_checker && blocking === 0,
+    single_source: kept.filter(c => c.verdict === 'verified_on_file' || c.verdict === 'verified_web').length,
+  }
+}
+
+/** Before a paid run: claims in lines signed off against these same sources
+ *  are set aside unread, so no paid rerun chases them. The rest are checked. */
+export function signedOffUnread(body: string, claims: Claim[], offs: Record<string, SignOff>, hash: string): { toCheck: Claim[]; setAside: Array<{ sentence: string; reason: string }> } {
+  const bodySentences = sentences(body)
+  const same = Object.fromEntries(Object.entries(offs).filter(([, o]) => o.sources_hash === hash))
+  const toCheck: Claim[] = []
+  const setAside: Array<{ sentence: string; reason: string }> = []
+  for (const c of claims) {
+    const o = covering(c, bodySentences, same)
+    if (!o) { toCheck.push(c); continue }
+    if (!setAside.some(a => norm(a.sentence) === norm(c.sentence))) setAside.push({ sentence: c.sentence, reason: signOffReason(o) })
+  }
+  return { toCheck, setAside }
 }
 
 // ── The prompts ─────────────────────────────────────────────────────────────

@@ -254,10 +254,12 @@ describe('the gate', () => {
     // Through the carry-forward (walk log F52), which only adds to them.
     assert.match(check, /carryForward\(body, all, looked\.setAside, /)
     // Only new claims count toward a run's cap, and what waits is reported (F57).
-    assert.match(check, /const fresh = splitFresh\(carry\.toCheck, MAX_CLAIMS\)/)
+    // Lines Krish signed off against these sources leave first (G9), then the cap.
+    assert.match(check, /const signed = signedOffUnread\(body, carry\.toCheck, offs, hash\)/)
+    assert.match(check, /const fresh = splitFresh\(signed\.toCheck, MAX_CLAIMS\)/)
     assert.match(check, /\[await checkOne\(fresh\.now\[0\]\), \.\.\.await pool\(fresh\.now\.slice\(1\), POOL, checkOne\)\]/)
     assert.match(check, /result\.unchecked = fresh\.later/)
-    assert.match(check, /summarise\(\[\.\.\.carry\.carried, \.\.\.checked\], carry\.setAside, body, checker\)/)
+    assert.match(check, /summarise\(\[\.\.\.carry\.carried, \.\.\.checked\], \[\.\.\.carry\.setAside, \.\.\.signed\.setAside\], body, checker\)/)
   })
   test('the second look numbers each batch from 0 and asks again for what it missed', () => {
     const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')

@@ -26,7 +26,8 @@ import { UTILITY_MODEL } from '../../_models.js'
 import { randomUUID } from 'node:crypto'
 import { lastFactRunCost, meterScope, perplexityCall } from '../../_meter.js'
 import {
-  carryForward, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  bodyHash,
+  applySignOffs, carryForward, combine, countRun, signOff, signedOffUnread, standingSignOffs, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -320,7 +321,10 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   const looked = resolveLeftovers(leftovers.open, second.answers)
   const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims, ...leftovers.settled]
   const carry = carryForward(body, all, looked.setAside, ledger, hash, parts)
-  const fresh = splitFresh(carry.toCheck, MAX_CLAIMS)
+  // A line Krish signed off against these same sources is not read again (G9).
+  const offs = standingSignOffs(meta, body)
+  const signed = signedOffUnread(body, carry.toCheck, offs, hash)
+  const fresh = splitFresh(signed.toCheck, MAX_CLAIMS)
 
   // The first claim runs alone so it writes the cached sources, and every
   // claim after it reads them instead of writing its own copy (warm cache).
@@ -338,11 +342,13 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
     ? [await checkOne(fresh.now[0]), ...await pool(fresh.now.slice(1), POOL, checkOne)]
     : []
   const checker = [...checked, ...carry.carried].find(c => c.independent.checker)?.independent.checker || null
-  const result = summarise([...carry.carried, ...checked], carry.setAside, body, checker)
+  const result = summarise([...carry.carried, ...checked], [...carry.setAside, ...signed.setAside], body, checker)
   result.second_look = { sentences: leftovers.open.length, unanswered: second.unanswered, carried: leftovers.settled.length }
   result.carried = carry.sentences
   if (fresh.later) { result.passed = false; result.blocking += fresh.later; result.unchecked = fresh.later }
-  return { result, ledger: settle(body, result, meta.fact_ledger as FactLedger | undefined, hash, parts) }
+  // An unverified claim in a line he signed off is set aside with his words; a contradicted one still blocks.
+  const signedResult = applySignOffs(result, body, offs)
+  return { result: signedResult, ledger: settle(body, signedResult, meta.fact_ledger as FactLedger | undefined, hash, parts) }
 }
 
 /** A run the provider stopped: revise's typed answer, and nothing written. */
@@ -401,6 +407,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ? req.body as Record<string, unknown>
     : {}
   const said = typeof request.said === 'string' ? request.said : ''
+
+  // Krish passes a line the checker could not match, in his own words (cost guard G9). No model is called.
+  if (request.action === 'sign_off') {
+    const signed = signOff(meta, body, { sentence: request.sentence, said: request.said, decided_by: request.decided_by, said_ref: request.said_ref })
+    if (!signed.ok) return res.status(400).json({ ok: false, reason: 'sign_off_refused', error: signed.error })
+    const latest = await supabase.from('content_ideas').select('body,meta').eq('id', id).single()
+    const nowMeta = (latest.data?.meta || meta) as Record<string, any>
+    if (String(latest.data?.body ?? body) !== body) return res.status(409).json({ ok: false, error: 'The piece changed while this was signed off. Name the line again.' })
+    const nextMeta: Record<string, any> = { ...nowMeta, fact_signoffs: { ...(nowMeta.fact_signoffs || {}), ...signed.signoffs } }
+    const fc = nowMeta.fact_check as FactCheck | undefined
+    if (fc && fc.body_hash === bodyHash(body)) nextMeta.fact_check = applySignOffs(fc, body, standingSignOffs(nextMeta, body))
+    const { error: upErr } = await supabase.from('content_ideas').update({ meta: nextMeta }).eq('id', id)
+    if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
+    return res.status(200).json({ ok: true, signed_off: signed.signed, gate: gateStatus(nextMeta, body), fact_check: nextMeta.fact_check || null })
+  }
   const today = new Date().toISOString().slice(0, 10)
   const ceiling = rerunCeiling(meta, today, said)
   if (ceiling) return res.status(409).json({ ok: false, reason: 'rerun_ceiling', error: ceiling })
