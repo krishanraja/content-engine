@@ -128,7 +128,7 @@ on the record.
 - **Whether the main machine is on.** `python scripts/engine.py GET
   /api/content-engine/health --full`: `runners.active.fresh` is true when the main
   machine was heard in the last two minutes. It says which machine is on;
-  it never by itself means a failover (see "The backup machine").
+  it never by itself means a failover (see "The backup machine", `.agents/skills/produce-video/references/backup-machine.md`).
 - **Whether this machine can render.** `python scripts/quick-edit/make.py
   --doctor` (or `--doctor --json`). It checks ffmpeg and ffprobe and every
   filter, the caption font, `faster-whisper`, Pillow, Playwright, node, the
@@ -421,8 +421,10 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
   `--archive` on either run (that files the two cuts in two folders), and
   never one recording for both shapes.
 - Each cut carries the intro sting once Krish has approved one, and the
-  music bed from the ledger when a licensed, approved track fits (both
-  sections below). Neither ever blocks a render.
+  music bed from the ledger when a licensed, approved track fits (read
+  `.agents/skills/produce-video/references/intro-sting.md` and
+  `.agents/skills/produce-video/references/music.md` before this step).
+  Neither ever blocks a render.
 
 **A long episode** (the week's deep cut, house rule DEEP_CUT) is made to
 `docs/production/one-shot-episode-corpus.md`, the standard Krish gave on 16
@@ -620,133 +622,15 @@ https://controlcenter.krishraja.com/#/home?waiting=1.
 
 ## The backup machine
 
-Quick-edit production needs no switch of any kind. The matcher, the kit,
-the renders, the thumbnails, the archive and the record run on whichever
-home computer Krish is at, the main one or the backup, and nothing in the
-database changes. On the backup:
-
-- Krish turns it on and signs in to Windows as himself, so Google Drive for
-  desktop mounts H:.
-- The work copy is at the latest `main` and `scripts/engine-key.ps1` has been
-  run there once. `make.py --doctor` must say ready; an approved sting
-  renders itself once on a machine that has none.
-- The recordings upload already runs on both machines, and places takes on
-  both: nothing to move. Its `-Check` (`scripts/install-recordings-upload.ps1`
-  runs it) proves that machine has the engine key and a pinned Python that
-  imports faster_whisper.
-- **Library Sync runs only on the machine it is installed on, and does not
-  follow the runner role.** With the main machine off, the cuts sent in
-  step 8 wait in the engine until Krish moves it: install and enable it on
-  the machine in use (`docs/OPERATIONS.md`, "Library sync",
-  `scripts/install-library-sync.ps1` from `library-source`) and
-  `Disable-ScheduledTask -TaskName "Mindmake Library Sync"` on the other.
-  Tell him; he does it.
-
-The Studio failover is a different thing. It is only for work that goes
-through the Studio's queue (production briefs, review decisions and edits
-sent from Control Center), never for these cuts, and only when Krish asks
-for it in words. Never infer that one is needed from a missing heartbeat
-alone: a sleeping laptop, a Windows update or a lost Drive mount all
-silence a healthy main machine. The steps (`docs/OPERATIONS.md`, "Primary
-and cold standby"):
-
-1. **Main machine.** `powershell -NoProfile -ExecutionPolicy Bypass -File
-   scripts/runner.ps1 -Mode status` shows zero pending and zero conflicted
-   receipt and project journals and no active command. Then
-   `Stop-ScheduledTask -TaskName "Mindmake Video Studio Runner"` and
-   `Disable-ScheduledTask -TaskName "Mindmake Video Studio Runner"`, and
-   `scripts/runner.ps1 -Mode stop-preflight` must return exactly
-   `"active": false`. If the main machine cannot be inspected, stop here.
-2. **Cloud, read only.** The health route shows the main machine silent
-   (`runners.active.fresh` false) and nothing waiting: no queued or leased
-   command and no claimable brief (`runners.waiting`).
-3. **Backup.** `Enable-ScheduledTask` and `Start-ScheduledTask` for the same
-   task name. `runner.ps1 -Mode status` must show `active: true`, the
-   expected commit, provenance `verified`, Drive `ready` and zero conflicts.
-4. **Krish switches the active role** in Control Center (OS, Systems, Studio
-   runners, "Switch the active runner", with a reason). An agent cannot and
-   never tries.
-5. Move Library Sync as above. Failing back is the same in reverse; the
-   machine that is not running keeps its task disabled.
+Read `.agents/skills/produce-video/references/backup-machine.md` before running on the backup machine or failing over to it; it holds this section in full.
 
 ## The music
 
-Krish, 2026-10-12: "I am also going to get some licensed audio to put behind
-my videos, so help me prepare to put it somewhere you and codex will always
-know where that is, and use it correctly (high volume during the intro, low
-whilst I am talking, higher during the outro)." (house rule MUSIC_BED)
-
-- **Where it lives.** Drive, `makeyourmindup > 00_Brand-Assets > 07_Music`:
-  on the home computers
-  `H:\My Drive\Ventures\Active\makeyourmindup\00_Brand-Assets\07_Music`,
-  read from `MINDMAKE_MUSIC_ROOT`, else `runtime.music_root` in
-  `config/studio.json`. Each licence certificate sits beside its track, in
-  the same folder. Audio is never committed, and never goes in the Inbox
-  (the lane would send it as a recording).
-- **The ledger** is `config/music-library.json`, committed. A track is used
-  only when it is in the ledger, approved by Krish in his words, its licence
-  in date and covering every place either cut of the piece goes (wide:
-  YouTube and Substack; tall: Shorts, Reels, TikTok and LinkedIn), cleared
-  for YouTube Content ID, long enough for the piece's long cut (its
-  recording as kit.py measured it, plus the most a sting and the end card
-  add; 4 minutes only while the long cut's kit is not made) or loopable,
-  and its file matches its sha256. Both cuts ask for that same length, so
-  they carry the same track. Never browse Drive for audio, and never use a
-  file because it is in the folder. `python scripts/quick-edit/music.py
-  list` and `music.py check` show where things stand; `music.py pick --piece
-  PIECE_ID --both-cuts --seconds LONG_CUT` shows the one track both cuts get
-  and why the others were passed over.
-- **How a track gets in.** Krish licenses it, saves the audio and its
-  certificate side by side in the music folder, and says so. On a home
-  computer:
-
-  ```
-  python scripts/quick-edit/music.py add "MUSIC FOLDER\TRACK.wav" --provider NAME --licence-id ID --licence-file "MUSIC FOLDER\TRACK CERTIFICATE.pdf" --title .. --artist .. --platforms youtube,substack,shorts,tiktok,reels,linkedin --content-id-cleared yes --acquired-on YYYY-MM-DD [--expires-on ..] [--intro-cue S] [--outro-cue S] [--loopable]
-  ```
-
-  It measures the file and writes it as `proposed`; a track already listed
-  by its file name (NO CURVES, today) is completed in place. Let him hear
-  it under a cut; only when he approves it in words, `music.py approve
-  TRACK_ID --words "his exact words"`. Commit and push the ledger (pull
-  first), so both machines and every session read the same one.
-- **The levels**, in the ledger's `levels`, proposed until Krish approves
-  them by ear: about -16 LUFS over the sting, about -31 under his voice
-  (about 17 LU below his -14) and about -18 over the end card; down over
-  0.5 seconds as his face comes in, up over 0.8 seconds after his last word;
-  a set rise and fall over time, never a compressor keyed to his voice.
-  The finished mix is -14 LUFS integrated, plus or minus 1, with true peak
-  at most -1 dBTP, measured after the encode. When he approves them,
-  `music.py approve-levels --words "his exact words"`, then commit and push.
+Read `.agents/skills/produce-video/references/music.md` before you choose or lay the licensed music bed from the ledger (step 4); it holds this section in full. House rules it carries: MUSIC_BED.
 
 ## The intro sting
 
-Krish, 2026-10-12: "I also want the video to have a 1-2 sec animated make
-your mind up intro visual before my face comes in" (house rule
-INTRO_STING). It is a 1.5 second clip per shape (1 to 2 allowed) with a
-silent track, in the colour of the piece's series, joined in front of the
-captioned video, so no word, caption or graphic moves; the music is high
-over it.
-
-- **No design is approved.** On 2026-10-12 Krish turned down the first one
-  he was shown: "it's ok, it's a bit boring and colourless and vanilla - and
-  just what Powerpoint would do in 2008" (`config/intro-sting.json`,
-  `last_decision`). Every cut goes without a sting until he approves
-  another; never hold a render for it.
-- Its design is two Remotion compositions in `apps/renderer`, named in
-  `config/intro-sting.json`, each taking the series as a prop. make.py uses
-  the sting only when that file's `status` is `approved`, with the source
-  hash of the previews he saw. `python scripts/quick-edit/intro.py status`
-  says where it stands (and if the compositions are not in the renderer
-  yet, the design is still being built: carry on without it).
-- To approve one: `intro.py render --preview` (every shape and series),
-  show Krish, and only on his words `intro.py approve --words "his exact
-  words"`. Commit and push, then `intro.py render` on each machine that
-  renders. A sting changed after approval is not used until he approves it
-  again.
-- A clip named in a cut's config (`"intro": {"9x16": file, ...}`) is used
-  only when it is the approved render for that shape and series, or when
-  the config carries Krish's own words in `"intro_override"`. Its own sound
-  is never used.
+Read `.agents/skills/produce-video/references/intro-sting.md` before you place the intro sting (step 4); it holds this section in full. House rules it carries: INTRO_STING.
 
 ## Walls
 
