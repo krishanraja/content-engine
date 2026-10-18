@@ -8,6 +8,12 @@ Read this before changing anything in this repository. Every other document
 here describes a part of the system; this one says what the whole system is
 for, so that a part is never optimised against the whole.
 
+## Horizon
+
+> By the end of 2027, the engine runs as a full creator studio: every piece becomes an essay, a Short and a carousel at 10/10, and Krish spends under an hour a week deciding.
+
+Set by Krish on 18 October 2026, and not reached yet. Everything below serves it, every session in this repository works toward it, and only Krish changes it.
+
 ## The objective, in Krish's words
 
 Stated on 2026-09-24, at the start of the first live walk of the engine
