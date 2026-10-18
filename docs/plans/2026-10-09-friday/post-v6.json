@@ -1,0 +1,180 @@
+{
+ "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+ "date": "2026-10-16",
+ "subchannel": "mind.the.gap",
+ "subject": "Why so many AIs",
+ "headline": "Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks",
+ "links": {},
+ "files": [
+  {
+   "kind": "substack-copy",
+   "file": "page/out/substack.html"
+  },
+  {
+   "kind": "web-page",
+   "file": "page/out/page.html"
+  },
+  {
+   "kind": "email-pictures-off",
+   "file": "page/out/email-pictures-off.html"
+  },
+  {
+   "kind": "phone-check",
+   "file": "page/out/phone-images.png"
+  },
+  {
+   "category": "article",
+   "file": "page/body.md",
+   "name": "article-v6.md",
+   "purpose": "The article, version 6 (2,410 words). Fact check: 9 lines waiting for Krish to sign them off (docs/plans/2026-10-09-friday/HANDOVER.md)."
+  },
+  {
+   "kind": "cover",
+   "file": "covers/cover.png",
+   "logos": [
+    "OpenAI",
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "cover-crops",
+   "file": "covers/cover-crops.png"
+  },
+  {
+   "kind": "image",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/launches.png",
+   "name": "chart-launches.png",
+   "logos": [
+    "Anthropic"
+   ],
+   "purpose": "Substack chart, goes after: Start with why your eyes are on the name at all, because while we watch the names, the set",
+   "shows": "chart",
+   "data_source": "Anthropic and OpenAI launch and release pages, read 15 Oct 2026 (evidence-v3 P2-03, P2-04, P2-10)",
+   "measures": "launch days per company over a year"
+  },
+  {
+   "category": "covers",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/launches-phone.png",
+   "name": "chart-launches-phone.png",
+   "purpose": "the same chart as a phone shows it (check only)"
+  },
+  {
+   "kind": "image",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/model-or-thinking-level.png",
+   "name": "chart-model-or-thinking-level.png",
+   "logos": [
+    "Anthropic"
+   ],
+   "purpose": "Substack chart, goes after: The size of the gear change surprised me.",
+   "shows": "chart",
+   "data_source": "Artificial Analysis Intelligence Index v4.3.2 and its API, read 17 Oct 2026",
+   "measures": "score on the Intelligence Index (0 to 100) and cost per task in US dollars, by model and thinking level"
+  },
+  {
+   "category": "covers",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/model-or-thinking-level-phone.png",
+   "name": "chart-model-or-thinking-level-phone.png",
+   "purpose": "the same chart as a phone shows it (check only)"
+  },
+  {
+   "kind": "image",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/each-step-buys-less.png",
+   "name": "chart-each-step-buys-less.png",
+   "logos": [
+    "Anthropic"
+   ],
+   "purpose": "Substack chart, goes after: It isn't a straight line, though, and that matters for where this is heading.",
+   "shows": "chart",
+   "data_source": "Artificial Analysis Intelligence Index v4.3.2 and its API, read 17 Oct 2026",
+   "measures": "score on the Intelligence Index (0 to 100) and cost per task in US dollars, by model and thinking level"
+  },
+  {
+   "category": "covers",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/each-step-buys-less-phone.png",
+   "name": "chart-each-step-buys-less-phone.png",
+   "purpose": "the same chart as a phone shows it (check only)"
+  },
+  {
+   "kind": "image",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/new-version-or-more-thinking.png",
+   "name": "chart-new-version-or-more-thinking.png",
+   "logos": [
+    "Anthropic"
+   ],
+   "purpose": "Substack chart, goes after: That's also why a higher gear eats into your plan faster.",
+   "shows": "chart",
+   "data_source": "Artificial Analysis Intelligence Index v4.3.2 and its API, read 17 Oct 2026",
+   "measures": "score on the Intelligence Index (0 to 100) and cost per task in US dollars, by model and thinking level"
+  },
+  {
+   "category": "covers",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/new-version-or-more-thinking-phone.png",
+   "name": "chart-new-version-or-more-thinking-phone.png",
+   "purpose": "the same chart as a phone shows it (check only)"
+  },
+  {
+   "kind": "image",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/cheapest-route-to-each-score.png",
+   "name": "chart-cheapest-route-to-each-score.png",
+   "logos": [
+    "Anthropic"
+   ],
+   "purpose": "Substack chart, goes after: If you build products on AI, don't choose a model by its name or its launch chart",
+   "shows": "chart",
+   "data_source": "Artificial Analysis Intelligence Index v4.3.2 and its API, read 17 Oct 2026",
+   "measures": "score on the Intelligence Index (0 to 100) and cost per task in US dollars, by model and thinking level"
+  },
+  {
+   "category": "covers",
+   "file": "lib/2 Covers and images/working 17 Oct/substack exhibits/cheapest-route-to-each-score-phone.png",
+   "name": "chart-cheapest-route-to-each-score-phone.png",
+   "purpose": "the same chart as a phone shows it (check only)"
+  },
+  {
+   "kind": "image",
+   "file": "exhibit6/smaller-claude-turned-up.png",
+   "name": "chart-smaller-claude-turned-up.png",
+   "logos": [
+    "Anthropic"
+   ],
+   "purpose": "Substack chart, goes after: So the gear matters most on hard jobs, like Sally's contract.",
+   "shows": "chart",
+   "data_source": "Artificial Analysis Intelligence Index v4.3.2 and its API, read 17 Oct 2026",
+   "measures": "score on the Intelligence Index (0 to 100) and cost per task in US dollars, by model and thinking level"
+  },
+  {
+   "category": "covers",
+   "file": "exhibit6/smaller-claude-turned-up-phone.png",
+   "name": "chart-smaller-claude-turned-up-phone.png",
+   "purpose": "the same chart as a phone shows it (check only)"
+  },
+  {
+   "kind": "video",
+   "file": "out-short/why-so-many-ais-short-9x16.mp4",
+   "shape": "tall"
+  },
+  {
+   "kind": "captions",
+   "file": "out-short/why-so-many-ais-short-9x16.srt",
+   "name": "90-second-captions.srt"
+  },
+  {
+   "kind": "thumbnail",
+   "shape": "tall",
+   "file": "covers/thumb-tall-1080x1920.jpg",
+   "logos": [
+    "OpenAI",
+    "Anthropic"
+   ]
+  },
+  {
+   "kind": "thumbnail",
+   "shape": "wide",
+   "file": "covers/thumb-wide-1280x720.jpg",
+   "logos": [
+    "OpenAI",
+    "Anthropic"
+   ]
+  }
+ ]
+}

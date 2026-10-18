@@ -212,6 +212,8 @@ def page_text(h):
     t = re.sub(r'<style[\s\S]*?</style>', '', t)
     t = re.sub(r'</?(?:a|span|strong|em|b|i|cite|mark|code|sup|sub)\b[^>]*>', '', t)
     t = re.sub(r'<[^>]+>', ' ', t)
+    # Tags are gone by now, so &lt; and &gt; are text a reader sees ("from <1% to 7%", Friday 16 Oct).
+    t = t.replace('&lt;', '<').replace('&gt;', '>')
     t = t.replace('&amp;', '&').replace('&quot;', '"').replace('&#39;', "'").replace('&#x27;', "'")
     return re.sub(r'\s+', ' ', t)
 
