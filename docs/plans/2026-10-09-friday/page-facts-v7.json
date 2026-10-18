@@ -1,0 +1,280 @@
+{
+ "subchannel": "mind.the.gap",
+ "headline": "Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks",
+ "deck": "A new Claude every four weeks, and ChatGPT from GPT-5.1 to 6.1 in under a year. Does the name matter, why is it speeding up, and why I think the choice of how hard your AI thinks is about to be made for you.",
+ "date": "2026-10-16",
+ "issue": "The headliner",
+ "body": "body.md",
+ "figures": [
+  {
+   "after": "Start with why your eyes are on the name at all, because while we watch the names, the setting that decides your answer gets chosen out of sight.",
+   "image": "img/launches.png",
+   "alt": "Anthropic and OpenAI launched a new model about every two weeks for a year: 6 launches in 16 days at the end."
+  },
+  {
+   "after": "The size of the gear change surprised me.",
+   "image": "img/model-or-thinking-level.png",
+   "alt": "Turning up the thinking level lifted Claude and GPT more than a new version did."
+  },
+  {
+   "after": "It isn't a straight line, though, and that matters for where this is heading.",
+   "image": "img/each-step-buys-less.png",
+   "alt": "Each step up in thinking buys Claude and GPT less for every extra dollar."
+  },
+  {
+   "after": "That's also why a higher gear eats into your plan faster.",
+   "image": "img/new-version-or-more-thinking.png",
+   "alt": "A new Claude Opus or GPT Sol adds fewer points than more thinking, but costs less."
+  },
+  {
+   "after": "If you build products on AI, don't choose a model by its name or its launch chart",
+   "image": "img/cheapest-route-to-each-score.png",
+   "alt": "The cheapest route to each score mixes Claude and GPT models and thinking levels."
+  },
+  {
+   "after": "So the gear matters most on hard jobs, like Sally's contract.",
+   "image": "img/smaller-claude-turned-up.png",
+   "alt": "Claude Sonnet 5.5 at Max, Xhigh and High, and Haiku 5.5 at Max, all outscore Claude Opus 5.5 at Low."
+  }
+ ],
+ "cover": {
+  "headline": [
+   "New Claude. New ChatGPT.",
+   "Does it even matter?"
+  ],
+  "rows": [
+   {
+    "logo": "logos/openai-symbol-cream.svg",
+    "name": "ChatGPT",
+    "tag": "GPT-6.1",
+    "colour": "coral"
+   },
+   {
+    "logo": "logos/anthropic-symbol-cream.svg",
+    "name": "Claude",
+    "tag": "Opus 5.5",
+    "colour": "mint"
+   }
+  ],
+  "label": "the headliner",
+  "portrait": true
+ },
+ "sources": {
+  "s1": [
+   "Anthropic, 22 September 2026",
+   "https://www.anthropic.com/claude-opus-5-5"
+  ],
+  "s2": [
+   "Artificial Analysis, Live page read 15 October 2026",
+   "https://artificialanalysis.ai/models/claude-opus-5-5-low"
+  ],
+  "s3": [
+   "Artificial Analysis, Live page read 15 October 2026",
+   "https://artificialanalysis.ai/models/gpt-6-sol"
+  ],
+  "s4": [
+   "Hex, Last updated 7 October 2026",
+   "https://hex.tech/databench/"
+  ],
+  "s5": [
+   "OpenAI, 7 August 2025",
+   "https://openai.com/index/introducing-gpt-5-for-developers/"
+  ],
+  "s6": [
+   "arXiv",
+   "https://arxiv.org/abs/2408.03314"
+  ],
+  "s7": [
+   "OpenAI, 12 September 2024",
+   "https://openai.com/index/learning-to-reason-with-llms/"
+  ],
+  "s8": [
+   "Anthropic, 24 November 2025",
+   "https://www.anthropic.com/news/claude-opus-4-5"
+  ],
+  "s9": [
+   "arXiv",
+   "https://arxiv.org/abs/2507.14417"
+  ],
+  "s10": [
+   "arXiv",
+   "https://arxiv.org/abs/2412.21187"
+  ],
+  "s11": [
+   "Anthropic, 12 February 2026",
+   "https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation"
+  ],
+  "s12": [
+   "Anthropic",
+   "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+  ],
+  "s13": [
+   "OpenAI",
+   "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+  ],
+  "s14": [
+   "Sam Altman",
+   "https://x.com/sama/status/1906771292390666325"
+  ],
+  "s15": [
+   "Reuters",
+   "https://tech.yahoo.com/ai/chatgpt/articles/openai-launches-gpt-5-2-185713739.html"
+  ],
+  "s16": [
+   "arXiv",
+   "https://arxiv.org/abs/2504.20879"
+  ],
+  "s17": [
+   "LMArena",
+   "https://x.com/arena/status/1909397817434816562"
+  ],
+  "s18": [
+   "OpenAI, July 2026",
+   "https://openai.com/index/gpt-5-6/"
+  ],
+  "s19": [
+   "Dario Amodei",
+   "https://darioamodei.com/post/we-must-pace-the-frontier"
+  ],
+  "s20": [
+   "OpenAI, 11 December 2025",
+   "https://openai.com/index/introducing-gpt-5-2/"
+  ],
+  "s21": [
+   "METR",
+   "https://metr.org/blog/2026-1-29-time-horizon-1-1/"
+  ],
+  "s22": [
+   "OpenAI Help Center",
+   "https://help.openai.com/articles/11481834"
+  ],
+  "s23": [
+   "Artificial Analysis, 7 August 2025",
+   "https://artificialanalysis.ai/articles/gpt-5-benchmarks-and-analysis"
+  ],
+  "s24": [
+   "Sam Altman",
+   "https://x.com/sama/status/1876104315296968813"
+  ],
+  "s25": [
+   "Anthropic",
+   "https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings"
+  ],
+  "s26": [
+   "Anthropic, post on X",
+   "https://x.com/AnthropicAI/status/1949898511287226425"
+  ],
+  "s27": [
+   "SemiAnalysis",
+   "https://newsletter.semianalysis.com/p/anthropic-subscriptions-offer-5x"
+  ],
+  "s28": [
+   "OpenAI",
+   "https://developers.openai.com/api/docs/guides/reasoning"
+  ],
+  "s29": [
+   "OpenAI Help Center",
+   "https://help.openai.com/articles/20001354"
+  ],
+  "s30": [
+   "Fortune",
+   "https://fortune.com/2025/12/21/openai-compute-margins-revenue-chatgpt-earnings-sam-altman/"
+  ],
+  "s31": [
+   "Axios",
+   "https://www.axios.com/2026/03/12/ai-models-costs-ipo-pricing"
+  ],
+  "s32": [
+   "Anthropic",
+   "https://platform.claude.com/docs/en/build-with-claude/effort"
+  ],
+  "s33": [
+   "OpenAI, 7 August 2025",
+   "https://openai.com/index/introducing-gpt-5/"
+  ],
+  "s34": [
+   "Google",
+   "https://support.google.com/gemini/answer/17004136?hl=en"
+  ],
+  "s35": [
+   "WIRED",
+   "https://www.wired.com/story/openai-router-relaunch-gpt-5-sam-altman/"
+  ],
+  "s36": [
+   "Anthropic",
+   "https://www.anthropic.com/engineering/april-23-postmortem"
+  ],
+  "s37": [
+   "Anthropic",
+   "https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost"
+  ],
+  "s38": [
+   "Google",
+   "https://ai.google.dev/gemini-api/docs/thinking"
+  ],
+  "s39": [
+   "arXiv",
+   "https://arxiv.org/html/2412.21187v2"
+  ],
+  "s40": [
+   "Apple Machine Learning Research",
+   "https://machinelearning.apple.com/research/illusion-of-thinking"
+  ],
+  "s41": [
+   "14 April 2025",
+   "https://x.com/sama/status/1911906570835022319"
+  ],
+  "s42": [
+   "12 February 2025",
+   "https://x.com/sama/status/1889755723078443244"
+  ],
+  "s43": [
+   "August 2025",
+   "https://tech.co/news/openai-apologizes-mega-chart-screwup"
+  ],
+  "s44": [
+   "13 October 2026",
+   "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset"
+  ],
+  "s45": [
+   "10 August 2025",
+   "https://x.com/sama/status/1954603417252532479"
+  ],
+  "s46": [
+   "September 2025",
+   "https://www.nber.org/papers/w34255"
+  ],
+  "s47": [
+   "September 2025",
+   "https://www.nber.org/system/files/working_papers/w34255/w34255.pdf"
+  ],
+  "s48": [
+   "24 February 2025",
+   "https://www.anthropic.com/news/claude-3-7-sonnet"
+  ],
+  "s49": [
+   "24 February 2025",
+   "https://www.anthropic.com/news/visible-extended-thinking"
+  ],
+  "s50": [
+   "13 August 2025",
+   "https://cdn.openai.com/gpt-5-system-card.pdf"
+  ],
+  "s51": [
+   "8 August 2025",
+   "https://x.com/sama/status/1953893841381273969"
+  ],
+  "s52": [
+   "29 January 2026",
+   "https://openai.com/index/retiring-gpt-4o-and-older-models/"
+  ],
+  "s53": [
+   "current docs, read 14 October 2026",
+   "https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking"
+  ],
+  "s54": [
+   "Artificial Analysis, Intelligence Index v4.3.2 and its API, read 17 Oct 2026",
+   "https://artificialanalysis.ai/"
+  ]
+ }
+}

@@ -749,7 +749,8 @@ describe('no bare scores in the article (house rule PLAIN_SCORES, Krish 2026-10-
     assert.deepEqual(bareScores(old).map(f => f.number), ['56', '57.6%'])
     const plain = 'Claude Sonnet 5.5 on its highest setting did about a third better than Opus 5.5 on its lowest, at about ten times the cost per task. '
       + 'On Anthropic\'s own chart for one test of computer tasks, Opus 5.5 at its default setting beat Opus 5 at max effort for about a fifth of the cost. '
-      + 'It scored 40% higher. Nearly 80% of the conversations were about three things. GPT-6.1 Sol came out in 2026.'
+      + 'It scored 40% higher. Nearly 80% of the conversations were about three things. GPT-6.1 Sol came out in 2026. '
+      + 'Its test scores are on the release notes, https://help.openai.com/en/articles/6825453-chatgpt-release-notes'
     assert.deepEqual(bareScores(plain), [])
     const check = publishChecks(old, { ok: true, reason: null }).find(c => c.id === 'PLAIN_SCORES')!
     assert.equal(check.blocking, true)

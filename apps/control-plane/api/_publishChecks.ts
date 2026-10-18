@@ -167,7 +167,7 @@ const RELATIVE = /^[\s-]*(?:%|percent|per\s+cent)\s+(?:higher|lower|more|less|be
 export function bareScores(body: string): Array<{ number: string; sentence: string }> {
   const found: Array<{ number: string; sentence: string }> = []
   let afterScore = false
-  const plain = String(body || '').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+  const plain = String(body || '').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/https?:\/\/\S+/g, 'a link')
   for (const line of plain.split(/\n+/)) {
     if (/^\s*#/.test(line)) { afterScore = false; continue }
     for (const raw of line.split(/(?<=[.?!]["')]?)\s+(?=["'(]?[A-Z0-9$£€])/)) {
