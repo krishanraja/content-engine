@@ -91,3 +91,16 @@ story_io renders. Engine scripts: `.cache/py312/bin/python -I` or system `python
 
 Most of the money went on agents re-reading large context. Draw and check things in the main
 session, look at one contact sheet per output, and never re-run a whole workflow to fix one item.
+
+## Found on 18 Oct (the next session): two things this handover assumed
+
+- **The long take is not reachable from a cloud session.** `recordings/ee91ab41...0fd9f.mp4` (1.1 GB) never
+  reached the engine store (too big), and the Drive connector downloads 10 MB at most. Only the short take
+  (`f5401564...`) is in the store. The long cut renders where the take is: Krish's home computer, or the
+  store takes it once its size limit allows.
+- **The page screenshots under `video-pictures/shots/` were never saved.** `tall90-panels.json` needs 9,
+  `cards-v6.json` 27; they lived only in the 17 Oct container (not in git, not in the library, not in the
+  engine store). Recapturing them means new crop and mark boxes wherever a page has moved since 17 Oct.
+- Done on 18 Oct, in `W` only (redo from these steps if the container is gone): the short take fetched,
+  the kit, both configs copied, the story intro and outro in both shapes (every frame checked), covers and
+  thumbnails (checked at phone sizes).
