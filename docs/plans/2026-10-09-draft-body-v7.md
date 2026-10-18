@@ -12,7 +12,7 @@ Nobody at these companies says they name models for the headlines, so read this 
 
 The headline scores are drawn at full power, too. A footnote on Anthropic's Opus 5.5 page says that, unless it notes otherwise, "all Claude Opus 5.5 results use adaptive thinking at max effort." Anthropic's developer guide says Opus 5.5 defaults to medium, well below max. So the headline scores show the model thinking as hard as it can, which isn't what you get unless you ask for it.
 
-My favourite example is a smaller one. In September, Anthropic's boss, Dario Amodei, wrote: "We must slow the pace at which we improve the capabilities of AI models." Over the next few weeks, Anthropic released Opus 5.5, Sonnet 5.5 and Haiku 5.5, and OpenAI released GPT-6.1 Sol. In fairness, he meant how fast AI gets smarter. How often it gets a new name is a separate thing, which is rather my point.
+My favourite example is a smaller one. In September, Anthropic's boss, Dario Amodei, wrote: "We must slow the pace at which we improve the capabilities of AI models." Over the next few weeks, Anthropic released Opus 5.5, Sonnet 5.5 and Haiku 5.5, and OpenAI released GPT-6.1 Sol and put GPT-6 into ChatGPT. In fairness, he meant how fast AI gets smarter. How often it gets a new name is a separate thing, which is rather my point.
 
 The progress underneath is real, but most of what we ask doesn't need the newest model. In OpenAI and Harvard's study of 1.5 million ChatGPT conversations, practical guidance, looking things up and writing made up "nearly 80%" of them. For those, I'd bet the name barely matters. What matters is the setting nobody is looking at, and who sets it.
 
