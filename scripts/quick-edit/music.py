@@ -821,6 +821,12 @@ def cmd_publish(data, out=print):
             planned.append((f'{LIBRARY_MUSIC}/{Path(t["file"]).name}', path, 'licensed music bed under the videos'))
         else:
             out(f'missing        {t["file"]} (not in the music folder)')
+        # Its licence goes too, at the same path under the music folder, so a cloud session passes the
+        # ledger's licence check (18 Oct: tracks only were published, and no cloud render could lay the bed).
+        if t.get('licence_file'):
+            lic = in_root(root, t['licence_file'])
+            if lic.is_file():
+                planned.append((f'{LIBRARY_MUSIC}/{Path(t["licence_file"]).as_posix()}', lic, 'the licence for the music bed'))
     if not planned:
         return {'sent': 0, 'already': 0, 'confirmed_only': 0}
     try:
@@ -870,6 +876,21 @@ def cmd_fetch(data, out_dir=None, out=print):
         partial.replace(target)
         out(f'fetched        {name}  ({target.stat().st_size} bytes)')
         got += 1
+    # Each track's licence, back to the same place under the folder, where the ledger check looks for it.
+    for t in data['tracks']:
+        rel = t.get('licence_file')
+        if t.get('status') == 'retired' or not rel or (folder / rel).is_file():
+            continue
+        status, text = engine.call('GET', '/api/library/file?path=' + urllib.parse.quote(f'{LIBRARY_MUSIC}/{Path(rel).as_posix()}'), None, token, timeout=60)
+        answer = json.loads(text) if text and text.strip().startswith('{') else {}
+        url = ((answer.get('download') or {}).get('url')) if isinstance(answer, dict) else None
+        if status != 200 or not url or not url.startswith('https://'):
+            out(f'not yet        {rel} (its licence: a home computer publishes it on its next pass)')
+            continue
+        (folder / rel).parent.mkdir(parents=True, exist_ok=True)
+        with urllib.request.urlopen(url, timeout=120) as response, open(folder / rel, 'wb') as handle:
+            shutil.copyfileobj(response, handle)
+        out(f'fetched        {rel}')
     return folder, got
 
 
