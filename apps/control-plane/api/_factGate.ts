@@ -69,7 +69,7 @@ export interface FactCheck {
   single_source: number
   /** How many sentences the second look read, and how many it never answered
    *  (each of those stayed a claim). */
-  second_look?: { sentences: number; unanswered: number }
+  second_look?: { sentences: number; unanswered: number; carried?: number }
   /** How many sentences kept the result an earlier run gave them, because
    *  their words and the piece's sources had not changed (carryForward). */
   carried?: number
@@ -624,6 +624,30 @@ export function carryForward(
     }
   }
   return { toCheck, carried, setAside: aside, sentences: done.size }
+}
+
+/** The second look's leftovers, split before it runs (cost guard G4, docs/COST_GUARDS.md). A leftover whose
+ *  every body sentence is already settled in a usable ledger needs no second reading: carryForward would carry
+ *  that sentence's recorded result whatever the second look said, so asking costs money and changes no verdict.
+ *  Krish, 2026-10-18, after four reruns of Friday's piece re-read every leftover each time: the guards must stop
+ *  "huge cost outlays", and (2026-10-15) only "if you are 110% sure this does not degrade the quality". */
+export function settledLeftovers(
+  body: string,
+  leftovers: Claim[],
+  ledger: FactLedger | null | undefined,
+  hash: string,
+  parts?: string[],
+): { settled: Claim[]; open: Claim[] } {
+  if (!usable(ledger, hash, parts)) return { settled: [], open: leftovers }
+  const bodySentences = sentences(body)
+  const settled: Claim[] = []
+  const open: Claim[] = []
+  for (const l of leftovers) {
+    const over = overlapping(l.sentence, bodySentences)
+    if (over.length && over.every(s => !!ledger.sentences[sentenceKey(s)])) settled.push(l)
+    else open.push(l)
+  }
+  return { settled, open }
 }
 
 /** One run checks at most `max` new claims, so a first full pass stays

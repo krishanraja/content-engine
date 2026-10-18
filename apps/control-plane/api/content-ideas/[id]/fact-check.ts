@@ -24,7 +24,7 @@ import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import {
-  carryForward, combine, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  carryForward, combine, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -303,20 +303,25 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   // "Each one, no matter how expensive, will tell you it was Thomas Jefferson"
   // as inference, because of "will". Waving a sentence through now takes two
   // readings that agree.
-  const leftovers = leftoversOf(swept)
-  const second = await secondLook(run, leftovers, body)
-  const looked = resolveLeftovers(leftovers, second.answers)
-  const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims]
   const sources = sourcesText(meta)
   const primary = primaryText(meta)
   // A sentence an earlier run passed or set aside, unchanged since and checked
   // against the same sources, keeps that result (walk log F52).
   const hash = sourcesHash(meta)
   const parts = sourcePartHashes(meta)
-  const carry = carryForward(body, all, looked.setAside, meta.fact_ledger as FactLedger | undefined, hash, parts)
+  const ledger = meta.fact_ledger as FactLedger | undefined
+  // A leftover in a settled sentence is carried whatever a second look says,
+  // so only the open ones are read again (G4).
+  const leftovers = settledLeftovers(body, leftoversOf(swept), ledger, hash, parts)
+  const second = await secondLook(run, leftovers.open, body)
+  const looked = resolveLeftovers(leftovers.open, second.answers)
+  const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims, ...leftovers.settled]
+  const carry = carryForward(body, all, looked.setAside, ledger, hash, parts)
   const fresh = splitFresh(carry.toCheck, MAX_CLAIMS)
 
-  const checked = await pool(fresh.now, POOL, async (c): Promise<CheckedClaim> => {
+  // The first claim runs alone so it writes the cached sources, and every
+  // claim after it reads them instead of writing its own copy (warm cache).
+  const checkOne = async (c: Claim): Promise<CheckedClaim> => {
     // Both checks settle before the claim is done, so a failure in one never
     // leaves the other running after the run has ended.
     const [onFileCheck, webCheck] = await Promise.allSettled([onFile(run, c, sources, primary), independent(run, c, asOf)])
@@ -325,10 +330,13 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
     const f = onFileCheck.value
     const ind = await entail(run, c, webCheck.value)
     return { ...c, on_file: f, independent: ind, verdict: combine(f.verdict, ind.verdict, f.primary === true) }
-  })
+  }
+  const checked = fresh.now.length
+    ? [await checkOne(fresh.now[0]), ...await pool(fresh.now.slice(1), POOL, checkOne)]
+    : []
   const checker = [...checked, ...carry.carried].find(c => c.independent.checker)?.independent.checker || null
   const result = summarise([...carry.carried, ...checked], carry.setAside, body, checker)
-  result.second_look = { sentences: leftovers.length, unanswered: second.unanswered }
+  result.second_look = { sentences: leftovers.open.length, unanswered: second.unanswered, carried: leftovers.settled.length }
   result.carried = carry.sentences
   if (fresh.later) { result.passed = false; result.blocking += fresh.later; result.unchecked = fresh.later }
   return { result, ledger: settle(body, result, meta.fact_ledger as FactLedger | undefined, hash, parts) }
