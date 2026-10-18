@@ -20,6 +20,20 @@ Krish's instruction: "complete phase 2, complete and merge to main".
   (2026-09-24, fast turnaround). With one tick a day an idea takes 4 to 8 days; the saving was about $95 a year.
 - **Live proof**: the next real fact-check run, with his approval for the spend.
 
+## Do first: Krish, 18 October 2026
+
+"remove the 300k context ceiling permanently and stop the cost guard from blocking database calls permanently,
+and then apply"
+
+1. In `scripts/hooks/cost_gate.py` (G1): remove the 300k hard stop permanently. Decide with the code in front of you
+   whether the 200k nudge stays (it only advises, never blocks); his words name the 300k ceiling. Note a bug found
+   on the way out: past 300k the gate also blocked writing `.cache/context-ceiling-said.txt`, its own documented
+   lift, so the lift could never work.
+2. Never block a database call: no rule in the hook may refuse an `mcp__Supabase__*` tool (or any database tool).
+3. Update `docs/COST_GUARDS.md` (G1 row), `AGENTS.md` if it mentions the ceiling, and any test of the hook; commit
+   body: `Ruling (Krish, 2026-10-18): no context ceiling and no cost-guard block on database calls`.
+4. Then apply the migration (below).
+
 ## Krish's answers, 18 October 2026 (after the merge)
 - "apply the meter_events migration": approved, for `supabase/migrations/20261024090000_meter_events.sql` on
   Supabase project `gojpffsrxybbpbdzzrvs` (Mindmaker OS) only. NOT applied yet: the cost gate (300k context
