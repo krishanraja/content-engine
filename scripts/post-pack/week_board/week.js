@@ -353,3 +353,63 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     btn.disabled = false;
   });
 })();
+
+// The Ideas tab (week_board.py ideas_panel). Krish picks one idea a day; the
+// pick is saved at once in picks/<day> and posted as a comment ("PICK <day>",
+// the story), because a board's store can only be read from the account that
+// owns it and its comments from either of his accounts. A session writes the
+// pick onto the pieces through /api/week/options.
+(() => {
+  const radios = [...document.querySelectorAll("input[data-pick]")];
+  if (!radios.length) return;
+  const days = [...new Set(radios.map(r => r.dataset.pick))];
+  const saved = {}, busy = {};
+  let pdb = null, comments = null;
+  const hm = at => { try { return new Date(at).toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" }) } catch { return "" } };
+  const storyOf = r => r.closest(".id-card")?.querySelector(".id-story")?.textContent || "";
+  const say = (day, text, bad) => { const s = document.querySelector(`[data-pickstate="${day}"]`); if (s) { s.textContent = text; s.classList.toggle("bad", !!bad) } };
+  function render(mode){
+    for (const r of radios) {
+      const day = r.dataset.pick, v = saved[day];
+      const on = busy[day] ? busy[day] === r.value : !!v && v.pick === r.value;
+      r.checked = on; r.disabled = mode !== "live" || !!busy[day];
+      const l = r.closest("label.pick"); l.classList.toggle("on", on);
+      l.querySelector(".t-when").textContent = busy[day] === r.value ? "saving" : on && v && v.at ? "picked " + hm(v.at) : "";
+      r.closest(".id-card").classList.toggle("on", on);
+    }
+    const n = days.filter(d => saved[d]).length;
+    const tab = document.querySelector('[data-tabprog="ideas"]');
+    if (tab) tab.textContent = mode === "live" ? `${n} of ${days.length} picked` : `pick ${days.length}`;
+    if (mode === "off") for (const d of days) say(d, "Picks are not saving in this view. Open it in claude.ai.", true);
+    else for (const d of days) if (!busy[d]) say(d, saved[d] ? "Your pick is saved. Claude starts this day's piece from it." : "");
+  }
+  let mode = "loading";
+  render(mode);
+  (async () => {
+    try { pdb = window.claude?.use ? await window.claude.use("db") : null } catch { pdb = null }
+    try { comments = window.claude?.use ? await window.claude.use("comments") : null } catch { comments = null }
+    if (!pdb) { mode = "off"; render(mode); return }
+    try {
+      pdb.collection("picks").onSnapshot(snap => {
+        for (const k of Object.keys(saved)) delete saved[k];
+        for (const d of snap.docs) if (d.exists && days.includes(d.id)) saved[d.id] = d.data() || {};
+        mode = "live"; render(mode);
+      }, () => { mode = "broken"; for (const d of days) say(d, "Saved picks could not load. Reload the page to try again.", true) });
+    } catch { mode = "broken"; render(mode) }
+  })();
+  document.addEventListener("change", async e => {
+    const r = e.target.closest && e.target.closest("input[data-pick]"); if (!r) return;
+    const day = r.dataset.pick;
+    if (mode !== "live" || !pdb || busy[day]) { render(mode); return }
+    const body = { pick: r.value, idea_id: r.dataset.ideaId || null, series: r.dataset.series, story: storyOf(r), day, at: new Date().toISOString() };
+    busy[day] = r.value; say(day, "Saving your pick…"); render(mode);
+    let stored = false;
+    try { await pdb.doc("picks/" + day).set(body); saved[day] = body; stored = true } catch {}
+    if (stored && comments) try {
+      const anchor = await comments.anchorFor(r.closest(".id-card"));
+      await comments.create({ anchor, text: `PICK ${day} · ${body.pick}${body.idea_id ? " · " + body.idea_id : ""} · ${body.at}\n\n${body.story}` });
+    } catch {}
+    delete busy[day]; render(mode);
+    if (!stored) say(day, "Not saved. Tick it again.", true);
+  });
+})();

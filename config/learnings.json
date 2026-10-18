@@ -369,6 +369,26 @@
      "how": "a test that fails if skipping the second look changes any verdict"
     }
    ]
+  },
+  {
+   "id": "ideas-from-every-source",
+   "on": "2026-10-18",
+   "krish": "I trust you are good at coming up with ideas - if not, give me more than 3 from all my suggested sources and the ones I threw at other sessions last week",
+   "why": "The week's options had been researched from web search alone (Drive skipped), left out two ideas he gave other sessions that week, and kept stale filler to reach three; he wants a real choice, drawn from what he already pointed us at.",
+   "means": "The Sunday Ideas tab holds more than three checked ideas a day, drawn from his own words first (every idea he gave any session since the last Sunday, said- items and krish-ideas items), then his inspiration folders and saved posts, the people he follows and the radar; stale or unchecked filler never pads a day.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "MIN_IDEAS = 4",
+     "how": "the board refuses an Ideas tab with fewer than four checked ideas a day (read_ideas, --verify)"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "every idea he gave any session since the last Sunday",
+     "how": "the plan-week step that builds the Ideas tab"
+    }
+   ]
   }
  ]
 }
