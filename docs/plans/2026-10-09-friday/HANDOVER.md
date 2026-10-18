@@ -126,3 +126,15 @@ Run 4 left 9 blocking, all defensible on the filed sources: the car-badge line, 
 "the score rises by a fraction of that". Each run cost more than the one before: a bigger source set makes every
 on-file call dearer, and the second look re-reads every leftover sentence on every run. Do not rerun without
 Krish's yes and a costed estimate from the meter (`meter_daily`, `fact-gate-%`), not from sentence counts.
+
+## Done on 18 Oct (session_01YHC9kjnvJEzYDeFDdADLBq)
+
+- 90-second cut rendered (89.7 s at 1.10x, -14 LUFS, bed 17 LU under the voice, captions fixed, four tall panels
+  redrawn with whole-word rings), packed, sent to the library and recorded on the piece (`making.py video short`).
+- Article v6 (`docs/plans/2026-10-09-draft-body-v6.md`, 2,410 words) saved on the piece; voice check and AI scan
+  pass. Fact check: 9 lines left for Krish to sign off (list above). Krish chose to read them himself (18 Oct: "1").
+- Six Substack charts (exhibit 6 new: `visual-intel/build/exhibit-6-smaller-claude-turned-up.html`), the page
+  (`page-facts-v6.json`, 54 sources listed, not yet linked from phrases), covers and thumbnails: in the pack
+  (`post-v6.json`), sent to the library.
+- Still open: the long cut (the 14-minute take is only on Krish's PC; four cards need tighter rings), the inline
+  source links, and the board, which is rebuilt once with next week's Ideas tab.
