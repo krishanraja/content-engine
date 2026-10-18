@@ -2,3 +2,9 @@
 command = "pwsh"
 args = ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", "scripts/studio-mcp-credential-proxy.ps1"]
 startup_timeout_sec = 20
+
+# Cost guard G8 (docs/COST_GUARDS.md): production work (produce-video, packs, filing, board rebuilds) is mechanical
+# and checked by the engine's own gates, so it runs with less reasoning. Writing and judgment keep the default.
+# Use: codex --profile production
+[profiles.production]
+model_reasoning_effort = "low"

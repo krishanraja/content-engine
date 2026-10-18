@@ -1,4 +1,5 @@
 import { callClaude } from './_content.js'
+import { perplexityCall } from './_meter.js'
 
 // Direct (non-n8n) enrichment. The n8n enrich workflows (Agatha/Nova/Dossier
 // Engine) run rich multi-pass pipelines; this is the fallback that keeps a
@@ -30,6 +31,7 @@ async function perplexity(key: string, system: string, user: string): Promise<{ 
       }),
     })
     const j: any = await r.json().catch(() => ({}))
+    await perplexityCall({ agent: 'enrich', model: 'sonar-pro', usage: j?.usage, failed: !r.ok })
     if (!r.ok) return { text: '', citations: [] }
     return { text: j?.choices?.[0]?.message?.content || '', citations: Array.isArray(j?.citations) ? j.citations : [] }
   } catch {

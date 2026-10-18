@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import { callClaude, loadVoiceBlock, pathId, robustJson, VOICE_GUARDRAILS } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
+import { perplexityCall } from '../../_meter.js'
 
 // POST /api/content-ideas/:id/challenge
 //   body: { mode?: 'challenge' | 'counter' | 'hook' | 'sources', source_text?: string }
@@ -32,6 +33,7 @@ async function perplexity(key: string, system: string, user: string): Promise<{ 
     }),
   })
   const j: any = await r.json().catch(() => ({}))
+  await perplexityCall({ agent: 'challenge', model: 'sonar-pro', usage: j?.usage, failed: !r.ok })
   if (!r.ok) return { text: '', citations: [] }
   return { text: j?.choices?.[0]?.message?.content || '', citations: Array.isArray(j?.citations) ? j.citations : [] }
 }

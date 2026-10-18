@@ -27,6 +27,8 @@ the key, it says which of these is the cause.
 
 --sse   for routes that stream (revise): prints only the last data event.
 --full  prints the whole response instead of the first 1,500 characters.
+--budget=USD        required for a paid fact check: the most the run may cost; it is
+                    refused when the last run's measured cost (meter_daily) is over it (G2)
 --despite-precheck  run a paid fact check although the free pre-check lists
         numbers on no filed source (POST .../fact-check first reads the free
         GET, prints what the run will check, and refuses until then).
@@ -188,6 +190,43 @@ def precheck_refusal(answer: dict, flags: set) -> str:
             'to carry them.\n' + '\n'.join(lines))
 
 
+def budget_refusal(answer: dict, flags: set, body) -> str:
+    """Cost guard G2 (docs/COST_GUARDS.md): a paid fact check states its budget, and the last run's measured cost
+    (from meter_daily, through the free GET) must fit it. Krish, 2026-10-18, after four reruns cost $4.07 against
+    an estimate of 20 cents: no estimate from sentence counts. --despite-precheck also needs his words ("said" in
+    the body). Empty when the run may go."""
+    if '--despite-precheck' in flags and not (isinstance(body, dict) and str(body.get('said') or '').strip()):
+        return ('--despite-precheck needs Krish\'s words: put "said": "<his exact words>" in the body (G2).')
+    budget = next((f.split('=', 1)[1] for f in flags if f.startswith('--budget=')), None)
+    if budget is None:
+        return ('Not running the paid fact check: give --budget=USD, the most this run may cost. '
+                + last_cost_text(answer) + ' (cost guard G2)')
+    try:
+        limit = float(budget)
+    except ValueError:
+        return f'--budget must be a number of dollars, not {budget!r}.'
+    cost = ((answer or {}).get('last_run_cost') or {}).get('usd_per_run')
+    if cost is None:
+        print('No measured cost of an earlier run; the budget stands on its own.', file=sys.stderr)
+        return ''
+    if float(cost) > limit:
+        return (f'Not running the paid fact check: {last_cost_text(answer)} That is over --budget={limit:g}. '
+                'Raise the budget only with Krish\'s approval for the spend.')
+    print(last_cost_text(answer), file=sys.stderr)
+    return ''
+
+
+def last_cost_text(answer: dict) -> str:
+    last = (answer or {}).get('last_run_cost') or {}
+    if last.get('usd_per_run') is None:
+        return 'The meter holds no earlier run.'
+    if last.get('basis') == 'run':
+        return (f'The last run cost ${last["usd_per_run"]:.2f} ({last["day"]}, its own rows in meter_events, '
+                'web checks included).')
+    return (f'The last runs cost about ${last["usd_per_run"]:.2f} each ({last["runs"]} runs on {last["day"]}, '
+            'a day average from meter_daily).')
+
+
 def main() -> int:
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     flags = {a for a in sys.argv[1:] if a.startswith('--')}
@@ -220,7 +259,7 @@ def main() -> int:
         if scope:
             print(f'This run checks {scope.get("fresh_sentences")} fresh sentences; '
                   f'{scope.get("reusable_sentences")} keep their last result.', file=sys.stderr)
-        why = precheck_refusal(answer, flags)
+        why = precheck_refusal(answer, flags) or budget_refusal(answer, flags, body)
         if why:
             print(why, file=sys.stderr)
             return 4
@@ -238,4 +277,6 @@ def main() -> int:
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.path.insert(0, str(__import__('pathlib').Path(__file__).resolve().parents[0]))
+    import quiet_errors  # G7: one line on failure, the traceback to .cache/logs
+    sys.exit(quiet_errors.run(main, 'engine'))

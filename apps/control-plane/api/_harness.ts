@@ -316,7 +316,9 @@ export async function perplexity(query: string, budget: RunBudget, systemHint?: 
       citations?: string[]
       search_results?: { url?: string }[]
       error?: { message?: string }
+      usage?: unknown
     }
+    await meter.perplexityCall({ agent: 'harness-sonar', model: 'sonar', usage: j?.usage, failed: !r.ok })
     if (!r.ok) return { ...base, error: `perplexity_${r.status}:${(j?.error?.message || '').slice(0, 120)}` }
     const cites = Array.isArray(j?.citations) && j.citations.length
       ? j.citations

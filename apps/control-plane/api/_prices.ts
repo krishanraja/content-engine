@@ -146,3 +146,33 @@ export function readUsage(usage: unknown): TokenUsage {
     cacheWrite1h: write1h,
   }
 }
+
+// ---------------------------------------------------------------- other providers
+//
+// Cost guard G12 (docs/COST_GUARDS.md): Perplexity and OpenAI calls were not
+// metered at all, so a fact check's web checks never reached meter_daily.
+//
+// Perplexity reports its own price on the response (usage.cost.total_cost), and
+// that figure always wins. The table is the fallback for a response without it:
+// USD per 1M tokens plus the per-request search fee at the default (low) search
+// context size, from Perplexity's published pricing.
+export const PERPLEXITY_PRICES: Record<string, { in: number; out: number; request: number }> = {
+  'sonar-pro': { in: 3, out: 15, request: 0.006 },
+  'sonar': { in: 1, out: 1, request: 0.005 },
+}
+
+/** USD for one Perplexity response: its own reported cost, else the table. Unknown model => 0. */
+export function perplexityUsd(model: string, usage: unknown): number {
+  const u = (usage || {}) as Record<string, any>
+  const reported = Number(u?.cost?.total_cost)
+  if (Number.isFinite(reported) && reported >= 0 && u?.cost?.total_cost !== undefined) return reported
+  const p = PERPLEXITY_PRICES[model]
+  if (!p) return 0
+  return (Number(u.prompt_tokens) || 0) / 1e6 * p.in + (Number(u.completion_tokens) || 0) / 1e6 * p.out + p.request
+}
+
+/** OpenAI embedding models, USD per 1M input tokens. */
+export const OPENAI_EMBEDDING_PRICES: Record<string, number> = {
+  'text-embedding-3-small': 0.02,
+  'text-embedding-3-large': 0.13,
+}

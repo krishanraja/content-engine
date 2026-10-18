@@ -36,3 +36,11 @@ the tokens of every model call. Other sessions this week (the 17 Oct Friday sess
    look at one contact sheet per output; keep logs quiet.
 5. **Sonnet for production work** (renders, packs, board rebuilds, filing), Opus for writing and judgment.
 6. **Agents and workflows only for work that needs a separate reader**, never to save typing.
+
+## Follow-up, 18 October
+
+- A second transcript Krish named (`session_01Q7Qi1wxgY8jEtZRqezdx7R`) is not readable from this account; it is
+  probably the 17 October Friday session in his other account. Not measured.
+- What was built, what was dropped and why: `docs/COST_GUARDS.md`. Two corrections to the reasons above: images
+  are cheap in tokens (point 3 holds for logs and board reads, not pictures), and a fresh session in this
+  environment starts at 110k, mostly connectors and plugins it does not use.

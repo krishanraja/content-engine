@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { supabase } from '../../_supabase.js'
 import { callClaude, readMaterials, robustJson, withMaterial, type Material } from '../../_content.js'
 import { guardEngine } from '../../_auth.js'
+import { perplexityCall } from '../../_meter.js'
 
 // POST /api/content-ideas/:id/dive-deeper
 //   body: { query: string }            — scoped Perplexity follow-up on a sub-area
@@ -109,6 +110,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }),
     })
     const j: any = await r.json().catch(() => ({}))
+    await perplexityCall({ agent: 'dive-deeper', model: 'sonar-pro', usage: j?.usage, failed: !r.ok })
     if (!r.ok) return res.status(502).json({ ok: false, error: `perplexity_${r.status}` })
 
     const findings = j?.choices?.[0]?.message?.content || ''

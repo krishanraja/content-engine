@@ -7,6 +7,8 @@
 // Single dimension (1536) so the schema is fixed and pgvector ivfflat indexes
 // can be tuned. ~$0.02 per 1k cards at current OpenAI pricing.
 
+import { openaiEmbeddingCall } from './_meter.js'
+
 const EMBEDDING_MODEL = 'text-embedding-3-small'
 const EMBEDDING_DIM = 1536
 
@@ -69,10 +71,12 @@ export async function embed(input: EmbedInput): Promise<number[] | null> {
     body: JSON.stringify({ model: EMBEDDING_MODEL, input: text, dimensions: EMBEDDING_DIM }),
   })
   if (!r.ok) {
+    await openaiEmbeddingCall({ agent: 'embeddings', model: EMBEDDING_MODEL, failed: true })
     const txt = await r.text().catch(() => '')
     throw new Error(`openai_${r.status}:${txt.slice(0, 200)}`)
   }
   const j: any = await r.json().catch(() => null)
+  await openaiEmbeddingCall({ agent: 'embeddings', model: EMBEDDING_MODEL, usage: j?.usage })
   const vec = j?.data?.[0]?.embedding
   if (!Array.isArray(vec) || vec.length !== EMBEDDING_DIM) return null
   return vec
@@ -99,10 +103,12 @@ export async function embedBatch(inputs: EmbedInput[]): Promise<(number[] | null
       body: JSON.stringify({ model: EMBEDDING_MODEL, input: nonEmpty, dimensions: EMBEDDING_DIM }),
     })
     if (!r.ok) {
+      await openaiEmbeddingCall({ agent: 'embeddings', model: EMBEDDING_MODEL, failed: true })
       const txt = await r.text().catch(() => '')
       throw new Error(`openai_${r.status}:${txt.slice(0, 200)}`)
     }
     const j: any = await r.json().catch(() => null)
+    await openaiEmbeddingCall({ agent: 'embeddings', model: EMBEDDING_MODEL, usage: j?.usage })
     const items = Array.isArray(j?.data) ? j.data : []
     items.forEach((it: any, k: number) => {
       const idx = indices[k]

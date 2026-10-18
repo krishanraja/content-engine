@@ -26,8 +26,10 @@ import { publishChecks, publishStatus } from '../../_publishChecks.js'
 import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
+import { randomUUID } from 'node:crypto'
+import { lastFactRunCost, meterScope, perplexityCall } from '../../_meter.js'
 import {
-  bodyHash, carryForward, carrySignOffs, combine, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  bodyHash, carryForward, carrySignOffs, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, signOff, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -177,6 +179,7 @@ async function perplexityOnce(key: string, c: Claim, asOf: string): Promise<Chec
     }),
   })
   const j: any = await r.json().catch(() => ({}))
+  await perplexityCall({ agent: 'fact-gate-web', model: 'sonar-pro', usage: j?.usage, failed: !r.ok })
   if (!r.ok) throw new Error(`perplexity_${r.status}`)
   const out = robustJson(j?.choices?.[0]?.message?.content || '') || {}
   const citations: string[] = Array.isArray(j?.citations) ? j.citations : []
@@ -306,20 +309,25 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   // "Each one, no matter how expensive, will tell you it was Thomas Jefferson"
   // as inference, because of "will". Waving a sentence through now takes two
   // readings that agree.
-  const leftovers = leftoversOf(swept)
-  const second = await secondLook(run, leftovers, body)
-  const looked = resolveLeftovers(leftovers, second.answers)
-  const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims]
   const sources = sourcesText(meta)
   const primary = primaryText(meta)
   // A sentence an earlier run passed or set aside, unchanged since and checked
   // against the same sources, keeps that result (walk log F52).
   const hash = sourcesHash(meta)
   const parts = sourcePartHashes(meta)
-  const carry = carryForward(body, all, looked.setAside, meta.fact_ledger as FactLedger | undefined, hash, parts)
+  const ledger = meta.fact_ledger as FactLedger | undefined
+  // A leftover in a settled sentence is carried whatever a second look says,
+  // so only the open ones are read again (G4).
+  const leftovers = settledLeftovers(body, leftoversOf(swept), ledger, hash, parts)
+  const second = await secondLook(run, leftovers.open, body)
+  const looked = resolveLeftovers(leftovers.open, second.answers)
+  const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims, ...leftovers.settled]
+  const carry = carryForward(body, all, looked.setAside, ledger, hash, parts)
   const fresh = splitFresh(carry.toCheck, MAX_CLAIMS)
 
-  const checked = await pool(fresh.now, POOL, async (c): Promise<CheckedClaim> => {
+  // The first claim runs alone so it writes the cached sources, and every
+  // claim after it reads them instead of writing its own copy (warm cache).
+  const checkOne = async (c: Claim): Promise<CheckedClaim> => {
     // Both checks settle before the claim is done, so a failure in one never
     // leaves the other running after the run has ended.
     const [onFileCheck, webCheck] = await Promise.allSettled([onFile(run, c, sources, primary), independent(run, c, asOf)])
@@ -328,10 +336,13 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
     const f = onFileCheck.value
     const ind = await entail(run, c, webCheck.value)
     return { ...c, on_file: f, independent: ind, verdict: combine(f.verdict, ind.verdict, f.primary === true) }
-  })
+  }
+  const checked = fresh.now.length
+    ? [await checkOne(fresh.now[0]), ...await pool(fresh.now.slice(1), POOL, checkOne)]
+    : []
   const checker = [...checked, ...carry.carried].find(c => c.independent.checker)?.independent.checker || null
   const result = summarise([...carry.carried, ...checked], carry.setAside, body, checker)
-  result.second_look = { sentences: leftovers.length, unanswered: second.unanswered }
+  result.second_look = { sentences: leftovers.open.length, unanswered: second.unanswered, carried: leftovers.settled.length }
   result.carried = carry.sentences
   if (fresh.later) { result.passed = false; result.blocking += fresh.later; result.unchecked = fresh.later }
   return { result, ledger: settle(body, result, meta.fact_ledger as FactLedger | undefined, hash, parts) }
@@ -382,13 +393,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // The free pre-check (api/_factGate.ts numbersNotOnFile): what a paid run
     // would have to lean on the web for, read before anyone pays for one.
     const precheck = { numbers_not_on_file: numbersNotOnFile(body, meta), filed_sources_cut: filedSourcesCut(meta) }
-    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck })
+    // What the last paid run cost, from the meter, for engine.py's --budget (G2).
+    const lastRunCost = await lastFactRunCost().catch(() => null)
+    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck, last_run_cost: lastRunCost })
   }
 
   const request = req.body && typeof req.body === 'object' && !Array.isArray(req.body)
     ? req.body as Record<string, unknown>
     : {}
-
   // Guard G9 (docs/COST_GUARDS.md): Krish's sign-off of named lines. Only his
   // decision, relayed in his words, and only on the check of this exact body.
   if (request.action === 'sign_off') {
@@ -411,6 +423,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (body.trim().length < 200) return res.status(409).json({ ok: false, error: 'There is no draft to check yet.' })
+
+  const said = typeof request.said === 'string' ? request.said : ''
+  const today = new Date().toISOString().slice(0, 10)
+  const ceiling = rerunCeiling(meta, today, said)
+  if (ceiling) return res.status(409).json({ ok: false, reason: 'rerun_ceiling', error: ceiling })
   const rawCap = request.max_fresh_sentences
   if (rawCap !== undefined && (!Number.isInteger(rawCap) || Number(rawCap) < 0 || Number(rawCap) > MAX_CLAIMS)) {
     return res.status(400).json({ ok: false, error: `max_fresh_sentences must be a whole number from 0 to ${MAX_CLAIMS}.` })
@@ -439,7 +456,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let result: FactCheck
   let nextLedger: FactLedger
   try {
-    ({ result, ledger: nextLedger } = await check(run, body, { ...meta, fact_ledger: ledger }))
+    // Every metered call of this run is stamped with the piece and the run (G12).
+    ({ result, ledger: nextLedger } = await meterScope({ pieceId: id, runId: randomUUID() }, () => check(run, body, { ...meta, fact_ledger: ledger })))
   } catch (e) {
     if (!isModelUnavailable(e)) throw e
     return stopped(res, run.failure ?? e.failure)
@@ -454,7 +472,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const fresh = await supabase.from('content_ideas').select('meta').eq('id', id).single()
   const nowMeta = (fresh.data?.meta || meta) as Record<string, any>
   const { error: upErr } = await supabase.from('content_ideas')
-    .update({ meta: { ...nowMeta, fact_check: carrySignOffs(nowMeta.fact_check as FactCheck | undefined, result), fact_ledger: nextLedger } })
+    .update({ meta: { ...nowMeta, fact_check: carrySignOffs(nowMeta.fact_check as FactCheck | undefined, result), fact_ledger: nextLedger, fact_runs: countRun(nowMeta, today, result.ran_at, said) } })
     .eq('id', id)
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
 

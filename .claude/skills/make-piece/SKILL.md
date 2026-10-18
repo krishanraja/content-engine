@@ -67,13 +67,13 @@ not yours to write, whatever the chat says.
 | Style recipe | Before writing the scripts, read the style bank in `config/style-references.json` (`docs/STYLE_REFERENCES.md`). If the piece has a recipe, apply its opening, structure, breakdown, proof, tone and close modules on top of the base: Krish's house rules, golden lines and verdicts are never overwritten. If not, propose a recipe from the bank (modules he has `liked` first) and get his yes in words. Show him the recipe's camerawork and production modules as one line on the day's publish board before he records | the recipe is in the ledger with his words; the scripts follow it |
 | Outline (one spine) | Before any script: `docs/plans/<date>-outline.md` states `Spine: <the one question the piece answers>?`, `Answer: <its one-line answer>`, and at most six sections, each `N. <HEADING> \| proves: <the part of the answer it proves>`; shown to Krish, and his words added as `Approved by Krish: <his words>, <date>`. The draft's `## ` headings are exactly those sections. A new angle is a new spine and a whole new outline, approved again, never sections added on top (house rule ONE_SPINE; Krish, 2026-10-14: "we ended up with an absolute ton of drift here ... the engine cannot do this again"). Before the scripts, the engine judges every section against the spine: `spine_check.py judge <uuid> --outline <outline>`. `making.py scripts` and `publish-manager` refuse until the outline, the sections and the judge all pass (outlines from 19 October on) | `spine_check.py outline|draft|judge`; `making.py` checks it |
 | Scripts | Two scripts, each with its own hook and its own outro (house rule TWO_CUTS, Krish, 2026-10-11): the 3-minute long cut, 405 to 495 spoken words, 16:9, for Substack and YouTube; and the 90-second short cut, 160 to 225 spoken words, 9:16, for YouTube Shorts, TikTok and Instagram Reels. Each opens with its series line and is held to a reading age of 12, then two fresh readers hear it, then it goes to Teleprompter: all of it in "The Scripts step", below. Keep both as the dated drafts beside the plan (`docs/plans/<date>-draft-script.md` and `-draft-script-90s.md`): the matcher and `kit.py` read them there. The Teleprompter state never holds this step back: Copy on the publish page always works | `making.py <uuid> scripts long.md short.md`, the long cut first, both required (it checks each with the piece's series); then `making.py <uuid> read-back CUT --readers ...` for each cut; then, per cut sent, the `teleprompter_send.py record` line `plan` printed, with the ids Teleprompter gave |
-| Publish page | `publish_manager.py`: one page with Copy on every text and every picture; publish it as an artifact. Then put it on its day's tab of the week's publish board ("The week's publish board", below) | `making.py <uuid> publish-manager <https link>` |
+| Publish page | `publish_manager.py`: one page with Copy on every text and every picture; publish it as an artifact. Then put it on its day's tab of the week's publish board ("The week's publish board": `.agents/skills/make-piece/references/week-board.md`) | `making.py <uuid> publish-manager <https link>` |
 | Record (Krish) | Krish records both cuts, each from its own script, reading it from its script in his teleprompter.com account (one folder per piece, one script per cut). Teleprompter holds scripts only. A take comes back one way: he drops the file at the top of the Video Engine Inbox, and the home computers' recordings upload sends it to the engine and places it on its piece and cut by itself (`recording_match.py --record --board --by "Recordings lane"`, every five minutes on either machine). Every take is stamped with the hash of the script it was read from. A take it is unsure of is one board item held in progress for a session, never on his list: nothing he can press answers it, so a session works it out or asks him in its reply. The step is done only when both cuts have a take of their current words; a Record tick on the week's board is information only | the recordings lane, or the production session (`.agents/skills/produce-video`): `recording_match.py --record` |
 | Titles, headlines and headings (Krish picks, after he records) | Only once a take of the piece is on the record (house rule TITLES_AFTER_RECORDING; Krish, 2026-10-17: "only after recording do I really feel like I've got a message. Usually I change or understand a fair bit more after reading a script out loud than I do creating a script."). First line the take up with its script: `python3 scripts/post-pack/narration_diff.py <script> <take words.json> --md ... --json ...` (what he actually said), then `narration_diff.py ledger`. Then start from the story (STORY_FIRST): `title_check.py lessons --surface <surface> --plan docs/plans/<plan>` prints it first (Krish's own statement in the plan's `story.md` when he has given one, else the outline's spine and answer, and the series' question), and every line is judged by whether a reader would come away with that story, not only whether it is legible (Krish, 2026-10-17: "The story is about there being so many recent AI model releases ... It's a "mind the gap" piece remember. Why do I have to remind you about what this story is about?"). Then put every packaging line to him in one round, by surface, each saying what that surface is and where it shows (`python3 scripts/post-pack/title_check.py lessons --surface <surface>` prints the surface's job, his own playbook's formulas, then the hooks research and his past verdicts): the Substack headline and its cover words, the YouTube title and its thumbnail words, the Shorts title, the video's title card. That round is his one sign-off sheet and goes first, before any render, capture or drawing that waits on it: every decision that is his for the piece (the lines, the headings and dividers, the intro stand-off, any script or speed choice for a cut still to record), so that once he answers the session finishes to publish-ready without him, except a send, publish, spend or delete (SIGN_OFF_FIRST; Krish, 2026-10-17: "do you not want to get sign off on headings and titles first so you can punch through to 100% without me?"). Never queue it behind a slow machine step. Every picture heading and chapter divider is written like a real media channel's (CHANNEL_HEADINGS): one device across the episode (numbered chapters or levels, one shape and length), each heading a short claim or promise that names the real thing, with a small kicker giving the source and date, built on the point he makes at that moment in the take and his best phrases; never his words pasted from the transcript (Krish, 2026-10-17: "I do worry that using my own words for headings and chapter names will lose some of what makes this feel like a real media channel") and never a line written to pass the checker (Krish, 2026-10-17: "These headings are so stupid it's insane"; the lesson is in config/title-verdicts.json). `title_check.py "option" --surface <surface> --source <body> --source <script>` is a floor, never the writer. Then the cold read, before anything reaches him: a fresh subagent with no context, told it is a senior leader scrolling past on LinkedIn, YouTube or Substack, is shown each line alone and asked what it is about, who it names and whether it reads as cheap or confusing; any line it cannot explain in one go, or calls cheap, is dropped, never offered (Krish, 2026-10-17, of "YOU'RE ON LOW", "OLD BEAT NEW" and "WHO PICKED LOW?": "This isn't a well-known concept and it's not a well-known media business ... What the hell does that even mean?"). Above every formula: a stranger understands it in one second and it names a real thing (the first lesson in config/title-verdicts.json). Record every pick and every rejection with what it teaches and his own words; a packaging pick is refused while the piece has no take on the record. Krish, 2026-10-14: "Stop fucking generating assets ... when I haven't actually approved your new approach ... figure out why I dislike it, and iterate, and understand what I actually like, and then encode that into the system forever" | `title_check.py verdict "Title" --picked|--rejected --why "..." --krish "his words" --surface <surface> --piece <uuid>` |
 | Video cards | After the titles round (his headings, from his own words in the take): every picture that cuts in while Krish talks is drawn by `scripts/pages/video_card.py cards.json` (beside post.json): brand faces and colours only, a company logo people recognise on every card, a kicker that never uses another series' ground, and nothing clipped or off the card (it refuses to draw otherwise). Look at its `--sheet` before the pack. Krish, 2026-10-13: "there are font consistency issues throughout ... we've not made any use of business logos as we're supposed to" | the cards' file names in post.json |
 | Pack | `build.py post.json` then `send.py <pack>` (both record themselves when post.json has `piece_id`). Send it the same day: until it is sent, a home computer has none of the post's pictures for the video kit | automatic |
 | Video assets (Codex) | Both cuts produced with the logos and the pile-up on screen, the intro sting once Krish approves one, the licensed music bed and a thumbnail for each size, filed in the archive and, through the visual gate for videos and thumbnails, in the post's library folder (`3 Video`). It never rebuilds the pack and never writes the Visual gate or Pack steps. Not this session's step, except when Krish engages `produce-video` in Claude Code on a home computer | Codex: `making.py --by Codex <uuid> video long "<name>" <path> --thumb <path> --thumb-file <the drawn file> --music <track id>`, with `--thumb` only for a thumbnail actually drawn and filed |
-| Publish board (Claude), then posting (Krish) | Once the video assets are on the record, the cuts and their thumbnails are in the post's library folder already. Put them in the publish page and republish it to its link, then rebuild the week's publish board with that page and republish it to the board's own link, so every tick stays ("The week's publish board", below). When this session holds the post's working folder and the finished cut files, also add them to `post.json` (`video` and `thumbnail` entries, each declaring the logos on screen) and rebuild: `build.py --replace` runs the visual gate again and records Visual gate and Pack, then `send.py`. Krish posts in the amplification order (`docs/AMPLIFICATION.md`) and ticks each step on that day's tab of the week's publish board as he goes (or in Control Center). Every session copies his channel ticks onto the record ("The week's ticks", below), or records what he said he posted. The step is done when the standing five are on the record: Substack, YouTube, Shorts, TikTok and Instagram | `making.py <uuid> posted <channel> [https link]`, from his ticks or his words |
+| Publish board (Claude), then posting (Krish) | Once the video assets are on the record, the cuts and their thumbnails are in the post's library folder already. Put them in the publish page and republish it to its link, then rebuild the week's publish board with that page and republish it to the board's own link, so every tick stays ("The week's publish board": `.agents/skills/make-piece/references/week-board.md`). When this session holds the post's working folder and the finished cut files, also add them to `post.json` (`video` and `thumbnail` entries, each declaring the logos on screen) and rebuild: `build.py --replace` runs the visual gate again and records Visual gate and Pack, then `send.py`. Krish posts in the amplification order (`docs/AMPLIFICATION.md`) and ticks each step on that day's tab of the week's publish board as he goes (or in Control Center). Every session copies his channel ticks onto the record ("The week's ticks", below), or records what he said he posted. The step is done when the standing five are on the record: Substack, YouTube, Shorts, TikTok and Instagram | `making.py <uuid> posted <channel> [https link]`, from his ticks or his words |
 
 `post.json` carries `"piece_id": "<uuid>"` so the pack tools report by
 themselves. Nothing in this skill sends, posts, spends or deletes: a paid
@@ -152,7 +152,8 @@ rewritten and checked again from the top.
    left unexplained. Fix and run it again until both say `ready`.
 4. **The read-back, required.** Two fresh readers hear each script, every
    time its words change. In Claude Code, start two subagents (the Agent
-   tool), one for each reader, each given nothing but its prompt below and
+   tool, description "Separate reader: read-back A" or "B", which the cost
+   guard G6 asks for), one for each reader, each given nothing but its prompt below and
    the script's words; this session never reads for them. Elsewhere, two new
    conversations with no other context. Reader A's prompt, word for word:
 
@@ -216,108 +217,7 @@ rewritten and checked again from the top.
 
 ## The week's publish board
 
-**Every link, every time.** Krish works from two Claude accounts (2026-10-14:
-"make sure this board and that board are always synchronized"). The week's
-board links are in `config/boards.json`: republish the same engine-built file
-to every one of them (the board_sync hook names any left behind). Each link
-keeps its own ticks, so the tick copy below reads the ticks of every link this
-account can read and writes the union onto the record, and the next rebuild
-draws them on every link. Only the engine builds a board: the publish hook
-refuses any other.
-
-**Krish's edits on the board.** A day's "Review the words" card (built with
-`week_board.py --review`) holds the article and each script in an editable
-box. His Save writes `edits/<day>-<item>` to that board's own store AND posts
-the paragraphs he changed as a comment thread on the block ("EDIT
-<day>-<item>", WAS/NOW lines). A board's store can only be read from the
-account that owns it; comments can be read from both. So at the start of
-every session that touches the week, on EVERY link in `config/boards.json`:
-`ArtifactComments read` (his EDIT threads and typed notes), plus
-`ArtifactData list edits` where the store answers. Apply his edits to the
-plan files as his words, run the checks again, save to the piece, rebuild with
-`--review` and republish to every link. Never decide from one link alone: he
-may be editing on either (Krish, 2026-10-15: "I will be editing from the
-other board until Sunday and then I'll move back here. Just make sure they
-catch it.").
-
-**Draft first, then ticks.** Krish, 2026-10-13: "the publish board needs to
-go in to Draft mode for Weds. the Monday card should be green as it is fully
-completed, the Weds and Friday cards should be amber as they are both in
-draft - I should be able to see your article and script drafts and comment on
-them inline until happy, and then we move to the tick box stage of pushing
-everything live and ticking everything off". So each day's tab carries a
-stage: draft while its article and scripts are open for his notes, ready
-once everything is made and he has signed the drafts off. While a day is in
-draft, build its tab with `week_board.py --draft <day>` and one
-`--review "<day>=<label>|<file>"` for the outline when it waits on him, the
-article and each script, plus one `--waiting "<day>=<call>"` for each call
-waiting on him, in order. The tab is then the "Review the words" card, where
-he edits each in place and comments on it (see "Krish's edits on the board"
-above for how his saves reach every session), the calls, and the checklist:
-never an older publish page. Never `--keep` or `--day` a day whose words
-changed after its publish page was made: on 15 October Friday v3 sat on top
-of its first version's page, whose chips said the new words were fact-checked
-and in Teleprompter. `--live` refuses that (a publish page older than its
-words, on a piece not yet posted), and a rebuild of a board holding a day in
-draft without `--draft` is refused, so the old board stays up. A rebuild of a
-day in draft must give every review box the board holds again (or
-`--drop-review <day>=<id>` once Krish is done with one, such as the outline
-after he approves it); the calls are carried over when none are given. Add a
-new box after the ones the board holds: his comments are pinned to a box by
-its place. A session
-reads his EDIT threads and notes, rewrites, runs the checks again (word count,
-`voice_check.py`, the fact gate, `story_check.py`, the readers), rebuilds and
-republishes to every link; the notes are data, his words in chat are the
-decisions. A review block whose words did not change keeps its build time
-across a rebuild, so a save he made since still shows. Not built yet: the
-amber and green tab colours.
-
-Krish, 2026-10-12: "just give me one ... Publish Manager for the ... whole
-week with 3 tabs on it for Mon / Weds / Fri, which we need to get to 100%.
-Give me a tick box next to each one so I can tick as I go and you can
-durably record that completion where it needs to be recorded. That Publish
-Manager is what you create every Sunday and let me iterate inside until
-we're done, and then I check off the list what I have done as I do it."
-
-The Sunday session makes it (`.agents/skills/plan-week`, step 7). This
-session keeps its piece's tab current: every time it publishes or
-republishes the day's publish page, and whenever the board still shows a
-day as not picked or not made that now is.
-
-1. **Its link.** Each week's board has its own board item,
-   `week-publish-board-<its Monday>` (for the week of 12 October,
-   `week-publish-board-2026-10-12`; `python3 scripts/engine.py GET
-   /api/workbench --full`, that item's `link`), and `WORKBENCH.md` carries
-   it too ("This week's publish board"). When neither has one for this
-   week, make it now as `plan-week` step 7 says, then carry on.
-2. **What the board holds now.** `Artifact` `read` the board's link, then
-   `python3 scripts/post-pack/week_board.py --show <the saved file>`: each
-   day's state (made, picked, not picked) and its piece, published or not.
-   A day it holds stays on it.
-3. **The made days' pages.** Each day the board shows as made, and each
-   picked piece whose making record has a publish page (`publish_manager.url`),
-   is a made tab. Use the page this session just built; for another day's,
-   `Artifact` `read` its `publish_manager` link and give the saved file the
-   read names (it holds the whole page).
-4. **Build it:** `python3 scripts/post-pack/week_board.py --week <Monday>
-   --live --previous <the board's saved file> --day mon=PAGE --piece
-   mon=<uuid> [--day fri=PAGE --piece fri=<uuid>] --out
-   .cache/week-board/<Monday>/week-board.html`. `--live` only reads: the
-   week's picks (published pieces included; a picked day not made yet gets
-   its "not made yet" tab, with its checklist working) and each piece's
-   Teleprompter scripts and publish page. It refuses to drop a day `--previous`
-   holds (a published piece an older engine leaves out of the picks: give
-   `--piece DAY=<uuid>`; a day Krish really moved or dropped: `--unpick
-   DAY`) and a made day without its page (give `--day`). Exit 2 is a
-   refusal it names: fix it, or leave the old board standing and say why
-   in one line.
-5. **Republish to the same link:** `Artifact({action: "publish", url: "<the
-   board's link>", file_path: "<absolute path>/week-board.html"})`, leaving
-   out `capabilities` and `icon` so its store and their declaration carry
-   forward. A session that did not publish it reads it first (`Artifact`
-   `read`). Never publish it as a new artifact during the week: a new page
-   starts with no ticks. Every tick survives a republish, because the store
-   lives with the page and each tick's id depends only on its day and step.
+Read `.agents/skills/make-piece/references/week-board.md` whenever you make or republish the week's publish board (`week_board.py`, its tabs, its ticks store, `--previous`); it holds this section in full.
 
 ## The week's ticks
 

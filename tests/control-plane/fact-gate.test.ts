@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 import {
   bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, numbersNotOnFile, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   sourcesText, splitFresh, summarise, sweep, signOff, stillBlocking, carrySignOffs,
-  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, factLedgerCoverage, settle, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
+  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, countRun, factLedgerCoverage, rerunCeiling, settle, settledLeftovers, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
 import { readPieceCall } from '../../packages/contracts/src/call.js'
@@ -248,14 +248,14 @@ describe('the gate', () => {
   })
   test('a set-aside takes two readings: the lister\'s set-asides go to the second look too', () => {
     const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
-    assert.match(check, /const leftovers = leftoversOf\(swept\)/)
+    assert.match(check, /const leftovers = settledLeftovers\(body, leftoversOf\(swept\), ledger, hash, parts\)/)
     const wu = { sentence: 'Each one, no matter how expensive, will tell you it was Thomas Jefferson.', reason: 'labelled_inference' }
     assert.deepEqual(leftoversOf({ claims: [], setAside: [wu] }), [{ sentence: wu.sentence, claim: wu.sentence, kind: 'unclassified' }])
     // Through the carry-forward (walk log F52), which only adds to them.
     assert.match(check, /carryForward\(body, all, looked\.setAside, /)
     // Only new claims count toward a run's cap, and what waits is reported (F57).
     assert.match(check, /const fresh = splitFresh\(carry\.toCheck, MAX_CLAIMS\)/)
-    assert.match(check, /await pool\(fresh\.now, POOL,/)
+    assert.match(check, /\[await checkOne\(fresh\.now\[0\]\), \.\.\.await pool\(fresh\.now\.slice\(1\), POOL, checkOne\)\]/)
     assert.match(check, /result\.unchecked = fresh\.later/)
     assert.match(check, /summarise\(\[\.\.\.carry\.carried, \.\.\.checked\], carry\.setAside, body, checker\)/)
   })
@@ -264,7 +264,7 @@ describe('the gate', () => {
     assert.match(check, /ids\.map\(\(id, i\) => \(\{ i, section:/)
     assert.match(check, /a\.i >= 0 && a\.i < ids\.length/)
     assert.match(check, /const retried = \(await pool\(missing, 6, id => ask\(\[id\]\)\)\)\.flat\(\)/)
-    assert.match(check, /result\.second_look = \{ sentences: leftovers\.length, unanswered: second\.unanswered \}/)
+    assert.match(check, /result\.second_look = \{ sentences: leftovers\.open\.length, unanswered: second\.unanswered, carried: leftovers\.settled\.length \}/)
   })
   test('the PATCH that moves a piece asks the gate first', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')
@@ -308,7 +308,7 @@ describe('the confidence line is never a claim', () => {
   test('the route drops it from the claims and sets it aside before any check runs', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
     assert.match(src, /const claims = listed\.filter\(c => !isConfidenceLine\(c\.sentence\)\)/)
-    assert.match(src, /const leftovers = leftoversOf\(swept\)/)
+    assert.match(src, /const leftovers = settledLeftovers\(body, leftoversOf\(swept\), ledger, hash, parts\)/)
     assert.ok(src.indexOf('isConfidenceLine(c.sentence)') < src.indexOf('async function onFile'), 'the filter runs inside extract, before the checks')
   })
 })
@@ -583,6 +583,26 @@ describe('a checked sentence keeps its result until it changes (walk log F52)', 
     expect(next.sentences[sentenceKey(B)]).toMatchObject({ status: 'passed' })
   })
 
+  test('G4: a leftover in a settled sentence skips the second look and is carried exactly as a full run carries it', () => {
+    // Krish, 2026-10-15: "only if you are 110% sure this does not degrade the quality". Whatever the second look
+    // would answer for a settled sentence (claims, or nothing), the full run carries the same result.
+    const leftovers = [A, C, D].map(sentence => ({ sentence, claim: sentence, kind: 'unclassified' as const }))
+    const split = settledLeftovers(BODY, leftovers, ledger, hash)
+    expect(split.settled.map(l => l.sentence)).toEqual([A, D])
+    expect(split.open.map(l => l.sentence)).toEqual([C])
+    const skipped = carryForward(BODY, [...split.settled, ...split.open], [], ledger, hash)
+    for (const answer of [[], [{ sentence: A, claim: 'GPT-5.5 scored 0.90', kind: 'number' as const }]]) {
+      const full = carryForward(BODY, [...answer, ...leftovers.filter(l => l.sentence !== A || !answer.length)], [], ledger, hash)
+      expect(skipped.carried).toEqual(full.carried)
+      expect(skipped.toCheck).toEqual(full.toCheck)
+      expect(skipped.setAside).toEqual(full.setAside)
+    }
+    // No ledger, a changed sentence or changed sources: everything goes to the second look.
+    expect(settledLeftovers(BODY, leftovers, null, hash).open).toHaveLength(3)
+    expect(settledLeftovers(BODY.replace('0.90', '0.91'), [{ sentence: A.replace('0.90', '0.91'), claim: 'x', kind: 'unclassified' }], ledger, hash).settled).toHaveLength(0)
+    expect(settledLeftovers(BODY, leftovers, ledger, 'another-sources-hash').settled).toHaveLength(0)
+  })
+
   test('a claim across two sentences carries only when both are settled', () => {
     const across = { sentence: `${A} ${C}`, claim: 'both', kind: 'other' as const }
     expect(carryForward(BODY, [across], [], ledger, hash).toCheck).toEqual([across])
@@ -698,10 +718,33 @@ describe('numbersNotOnFile', () => {
   })
 })
 
+describe('G3: a ceiling on paid reruns per piece per day', () => {
+  test('two runs a day go; a third needs Krish\'s words, which are kept with the count', () => {
+    const day = '2026-10-18'
+    let meta: Record<string, any> = {}
+    expect(rerunCeiling(meta, day, '')).toBeNull()
+    meta = { fact_runs: countRun(meta, day, `${day}T09:00:00Z`, '') }
+    expect(rerunCeiling(meta, day, '')).toBeNull()
+    meta = { fact_runs: countRun(meta, day, `${day}T10:00:00Z`, '') }
+    expect(rerunCeiling(meta, day, '')).toMatch(/third needs Krish's words/)
+    expect(rerunCeiling(meta, day, 'go ahead, one more')).toBeNull()
+    meta = { fact_runs: countRun(meta, day, `${day}T11:00:00Z`, 'go ahead, one more') }
+    expect(meta.fact_runs).toEqual({ day, count: 3, said: [{ at: `${day}T11:00:00Z`, said: 'go ahead, one more' }] })
+    // A new day starts the count again.
+    expect(rerunCeiling(meta, '2026-10-19', '')).toBeNull()
+    expect(countRun(meta, '2026-10-19', '2026-10-19T08:00:00Z', '')).toEqual({ day: '2026-10-19', count: 1 })
+  })
+  test('the route refuses before any model call and counts each stored run', () => {
+    const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
+    assert.ok(check.indexOf("reason: 'rerun_ceiling'") < check.indexOf('new GateRun()'))
+    assert.match(check, /fact_runs: countRun\(nowMeta, today, result\.ran_at, said\)/)
+  })
+})
+
 describe('Krish signs off a line the checker could not match (guard G9)', () => {
   const body = 'x'.repeat(300)
   const line = (sentence: string, verdict: CheckedClaim['verdict']): CheckedClaim => ({ ...checked(verdict), sentence })
-  const fc = summarise([line('Think of it as a car.', 'unverified'), line('Nearly 80%.', 'contradicted'), line('A fact.', 'verified')], [], body, 'perplexity:sonar-pro')
+  const fc = summarise([line('Think of it as a car.', 'unverified'), line('Nearly 80%.', 'unverified'), line('A fact.', 'verified')], [], body, 'perplexity:sonar-pro')
 
   test('a line he passes in his words stops blocking; the gate opens when every one is passed', () => {
     const one = signOff(fc, [{ sentence: 'Think of it as a car.', said: 'the car is our analogy, fine' }], '2026-10-18T12:00:00Z')
@@ -712,7 +755,7 @@ describe('Krish signs off a line the checker could not match (guard G9)', () => 
     const both = signOff(one.fact_check, [{ sentence: 'Nearly 80%.', said: 'the paper says nearly 80%' }])
     assert.equal(both.ok, true)
     if (!both.ok) return
-    assert.deepEqual(both.fact_check.signed_off!.map(s => [s.decided_by, s.verdict]), [['Krish', 'unverified'], ['Krish', 'contradicted']])
+    assert.deepEqual(both.fact_check.signed_off!.map(s => [s.decided_by, s.verdict]), [['Krish', 'unverified'], ['Krish', 'unverified']])
     assert.equal(gateStatus({ fact_check: both.fact_check }, body).ok, true)
     // A changed word in the body still undoes the whole check.
     assert.equal(gateStatus({ fact_check: both.fact_check }, body + 'y').ok, false)
@@ -723,6 +766,14 @@ describe('Krish signs off a line the checker could not match (guard G9)', () => 
     assert.equal(signOff(fc, [{ sentence: 'A fact.', said: 'fine' }]).ok, false)
     assert.equal(signOff(fc, [{ sentence: 'A line not in the piece.', said: 'fine' }]).ok, false)
     assert.equal(signOff(fc, []).ok, false)
+  })
+
+  test('a line the sources contradict is refused, with his words or without (Krish, 2026-10-18)', () => {
+    const bad = summarise([line('Think of it as a car.', 'unverified'), line('Ten times the cost.', 'contradicted')], [], body, 'perplexity:sonar-pro')
+    const out = signOff(bad, [{ sentence: 'Think of it as a car.', said: 'fine' }, { sentence: 'Ten times the cost.', said: 'I checked, fine' }])
+    assert.equal(out.ok, false)
+    if (!out.ok) assert.match(out.error, /contradict/)
+    assert.equal(bad.signed_off, undefined)
   })
 
   test('claims a run left unchecked keep the gate shut', () => {
