@@ -139,7 +139,17 @@ def cmd_publish(out=print):
 
 
 def _get(engine, token, library_path):
-    status, text = engine.call('GET', '/api/library/file?path=' + urllib.parse.quote(library_path), None, token, timeout=60)
+    # A fetch probes every dated folder name in every part (about 80 small requests); one dropped connection
+    # must not end it, so each request gets three tries.
+    for attempt in range(3):
+        try:
+            status, text = engine.call('GET', '/api/library/file?path=' + urllib.parse.quote(library_path), None, token, timeout=60)
+            break
+        except engine.Unreachable:
+            if attempt == 2:
+                raise
+            import time
+            time.sleep(2 * (attempt + 1))
     answer = json.loads(text) if text and text.strip().startswith('{') else {}
     url = (answer.get('download') or {}).get('url') if isinstance(answer, dict) else None
     return status, url
@@ -150,15 +160,15 @@ def cmd_fetch(post, out_dir=None, out=print):
     token = engine.operator_key()
     base = Path(out_dir or REPO / '.cache' / 'working' / post)
     got = 0
+    # Every dated working folder in every part: a post can have several (Friday 16 Oct had 17 and 18 Oct), and
+    # stopping at the first one found left the 17 Oct cards behind.
+    found = []
     for part in ('1 Article', '2 Covers and images', '3 Video', '4 Social'):
-        # The list names its own folder; try the dated names the folders use.
-        status, url = None, None
         for name in [f'working {d}' for d in _recent_dates()]:
             status, url = _get(engine, token, f'3 Posts/{post}/{part}/{name}/{LIST_NAME}')
             if status == 200 and url:
-                break
-        if not url:
-            continue
+                found.append(url)
+    for url in found:
         with urllib.request.urlopen(url, timeout=120) as r:
             listing = json.loads(r.read().decode())
         prefix = listing['prefix']
