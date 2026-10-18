@@ -334,6 +334,21 @@
      "how": "the next job's prompt carries the rules"
     }
    ]
+  },
+  {
+   "id": "files-as-files",
+   "on": "2026-10-18",
+   "krish": "I don't need these as artefacts. I need them as Markdown. This is a good example of why you waste tokens. The only artefacts I need are the two published boards being fully up to date.",
+   "why": "A request for three Markdown files was also built onto both boards, costing a board read, a rebuild and two publishes he did not ask for.",
+   "means": "Files he asks for are handed over as files. Artifacts are only the week's publish boards, kept up to date.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "AGENTS.md",
+     "contains": "hand him the files themselves",
+     "how": "a rule every agent reads at session start"
+    }
+   ]
   }
  ]
 }
