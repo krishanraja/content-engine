@@ -33,6 +33,8 @@ and then apply"
 3. Update `docs/COST_GUARDS.md` (G1 row), `AGENTS.md` if it mentions the ceiling, and any test of the hook; commit
    body: `Ruling (Krish, 2026-10-18): no context ceiling and no cost-guard block on database calls`.
 4. Then apply the migration (below).
+5. Delete `docs/handovers/lift.patch` and `docs/handovers/lift.sh`: failed attempts to write the lift file from
+   the blocked session, committed only so nothing was left in its container. Neither was ever run.
 
 ## Krish's answers, 18 October 2026 (after the merge)
 - "apply the meter_events migration": approved, for `supabase/migrations/20261024090000_meter_events.sql` on
