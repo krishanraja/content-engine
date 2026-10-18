@@ -120,6 +120,9 @@ export function signOff(
     if (!said) return { ok: false, error: 'Each line needs his words in "said".' }
     const claim = blocking.get(sentenceKey(String(line?.sentence || '')))
     if (!claim) return { ok: false, error: `Not a blocking line of this check: "${String(line?.sentence || '').slice(0, 120)}"` }
+    // Krish, 2026-10-18: a line the evidence contradicts is fixed, never
+    // signed off. Only a line the checker could not match may be passed.
+    if (claim.verdict === 'contradicted') return { ok: false, error: `The sources contradict this line, so it cannot be signed off; change the line: "${claim.sentence.slice(0, 120)}"` }
     kept.set(sentenceKey(claim.sentence), { sentence: claim.sentence, said, at, decided_by: 'Krish', verdict: claim.verdict })
   }
   return { ok: true, fact_check: { ...fc, signed_off: [...kept.values()] } }

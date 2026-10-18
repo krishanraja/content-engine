@@ -771,9 +771,9 @@ Cost guards, 18 October (`docs/COST_GUARDS.md`): G1–G8 and G11 built on branch
 scripts, Sonnet for produce-video, a lean workbench). Phase 2, the same day, merged to main with the rest: G12
 (Perplexity and OpenAI metered; each fact-check run's calls stamped with piece and run), G9 is main's (996544a, kept: `{action:'sign_off', decided_by:'Krish', lines:[{sentence, said}]}`; this branch's
 stricter version, which refused a contradicted line, was withdrawn before the merge) and G14 (make-piece and produce-video split into a core plus
-`references/`, checked by `scripts/check_skill_core.py`). Waiting on Krish: (1) approval to apply
-`supabase/migrations/20261024090000_meter_events.sql` (until then per-run cost is a day average); (2) G13, the
-nightly judge sweep batch-only, conflicts with his 2026-09-24 ruling for fast turnaround (it would take days per
-idea for about $95 a year), so it is not built unless he overrules it; (3) the first real fact-check run after this
+`references/`, checked by `scripts/check_skill_core.py`). Done 18 October on his answers: the
+`meter_events` migration is applied (read back); G13 dropped, the nightly sweep stays; G9 now refuses a contradicted
+line; the cost gate has no context ceiling and never blocks a database tool. Waiting on Krish: (1) three sign-offs on
+piece `904658db` made before the G9 ruling are on contradicted lines, left as they are until he says; (2) the first real fact-check run after this
 (his approval for the spend) is the live proof: `fact-gate-on-file` cache writes about one source set a run.
 

@@ -744,7 +744,7 @@ describe('G3: a ceiling on paid reruns per piece per day', () => {
 describe('Krish signs off a line the checker could not match (guard G9)', () => {
   const body = 'x'.repeat(300)
   const line = (sentence: string, verdict: CheckedClaim['verdict']): CheckedClaim => ({ ...checked(verdict), sentence })
-  const fc = summarise([line('Think of it as a car.', 'unverified'), line('Nearly 80%.', 'contradicted'), line('A fact.', 'verified')], [], body, 'perplexity:sonar-pro')
+  const fc = summarise([line('Think of it as a car.', 'unverified'), line('Nearly 80%.', 'unverified'), line('A fact.', 'verified')], [], body, 'perplexity:sonar-pro')
 
   test('a line he passes in his words stops blocking; the gate opens when every one is passed', () => {
     const one = signOff(fc, [{ sentence: 'Think of it as a car.', said: 'the car is our analogy, fine' }], '2026-10-18T12:00:00Z')
@@ -755,7 +755,7 @@ describe('Krish signs off a line the checker could not match (guard G9)', () => 
     const both = signOff(one.fact_check, [{ sentence: 'Nearly 80%.', said: 'the paper says nearly 80%' }])
     assert.equal(both.ok, true)
     if (!both.ok) return
-    assert.deepEqual(both.fact_check.signed_off!.map(s => [s.decided_by, s.verdict]), [['Krish', 'unverified'], ['Krish', 'contradicted']])
+    assert.deepEqual(both.fact_check.signed_off!.map(s => [s.decided_by, s.verdict]), [['Krish', 'unverified'], ['Krish', 'unverified']])
     assert.equal(gateStatus({ fact_check: both.fact_check }, body).ok, true)
     // A changed word in the body still undoes the whole check.
     assert.equal(gateStatus({ fact_check: both.fact_check }, body + 'y').ok, false)
@@ -766,6 +766,14 @@ describe('Krish signs off a line the checker could not match (guard G9)', () => 
     assert.equal(signOff(fc, [{ sentence: 'A fact.', said: 'fine' }]).ok, false)
     assert.equal(signOff(fc, [{ sentence: 'A line not in the piece.', said: 'fine' }]).ok, false)
     assert.equal(signOff(fc, []).ok, false)
+  })
+
+  test('a line the sources contradict is refused, with his words or without (Krish, 2026-10-18)', () => {
+    const bad = summarise([line('Think of it as a car.', 'unverified'), line('Ten times the cost.', 'contradicted')], [], body, 'perplexity:sonar-pro')
+    const out = signOff(bad, [{ sentence: 'Think of it as a car.', said: 'fine' }, { sentence: 'Ten times the cost.', said: 'I checked, fine' }])
+    assert.equal(out.ok, false)
+    if (!out.ok) assert.match(out.error, /contradict/)
+    assert.equal(bad.signed_off, undefined)
   })
 
   test('claims a run left unchecked keep the gate shut', () => {
