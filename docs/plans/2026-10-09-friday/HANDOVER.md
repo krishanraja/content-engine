@@ -150,3 +150,17 @@ Krish's yes and a costed estimate from the meter (`meter_daily`, `fact-gate-%`),
   himself ("1"); they are in `nine-lines.md`, on both boards' Friday tab.
 - The six cost habits: "They should all become standing rules" (AGENTS.md, `docs/COST_GUARDS.md`).
 - The 90-second cut is sped up 1.10x to fit 90 s, under his 16 Oct word: "just speed the video up a bit in post".
+
+## Done on 18 Oct, afternoon (session_01RY92XqvcV9kwoDWLBnN8fp)
+
+- Article v7, fact gate open (11 lines signed off by Krish in his words, guard G9), every blocking publish check
+  passing, including the new PLAIN_SCORES article check. `nine-lines.md` has his edits and the outcome.
+- Pack rebuilt from the library's 18 Oct files (no container work needed): `post-v7.json`, `manager.json`,
+  `words.json`, `page-facts-v7.json`. To rebuild: fetch the files listed in the post's `READ ME.txt` with
+  `GET /api/library/file?path=...` into `.cache/produce/2026-10-16-904658db/lib/`, redraw covers with
+  `scripts/pages/build.py cover-facts.json --cover --thumbs` (pixel-identical to the 18 Oct set), then
+  `scripts/pages/build.py`, `publish_manager.py`, `post-pack/build.py --replace`, `send.py`.
+- The publish manager now embeds an article picture once (its card reuses the article's copy): Friday's page
+  went from 8.4 to 4.5 MB, and the week board from 17.9 MB (over the 16 MB limit) to 14.3 MB.
+- Both board links republished. Still open: the long cut (Krish renders it on his PC), and the article's
+  inline source links.

@@ -54,7 +54,7 @@ def inline(text):
 
 
 def figure(img):
-    return (f'<figure><img src="{img["data"]}" alt="{E(img.get("alt", ""))}" width="{img.get("w", "")}">'
+    return (f'<figure><img id="fig-{img["id"]}" src="{img["data"]}" alt="{E(img.get("alt", ""))}" width="{img.get("w", "")}">'
             + (f'<figcaption>{E(img["caption"])}</figcaption>' if img.get('caption') else '') + '</figure>')
 
 
@@ -131,6 +131,7 @@ ol.do{margin:0;padding-left:20px}.files{font:12px "IBM Plex Mono",ui-monospace,m
 
 JS = r'''
 const $ = s => document.querySelector(s);
+document.querySelectorAll("img[data-same]").forEach(i => { const f = document.getElementById(i.dataset.same); if (f) i.src = f.src });
 const toast = m => { const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 2200) };
 const KEY = "publish-manager:" + ($("#pm")?.dataset.post || "");
 const st = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}") } catch { return {} } })();
@@ -234,7 +235,11 @@ def pic_card(img, slug):
     return (f'<div class="card pic"><div class="row"><span class="lab">{E(img.get("label") or img["id"])}</span><div class="btns">'
             f'<button data-act="image" data-ref="img-{img["id"]}">Copy picture</button>'
             f'<button class="ghost" data-act="download" data-ref="img-{img["id"]}" data-name="{E(name)}">Download</button></div></div>'
-            f'<img id="img-{img["id"]}" src="{img["data"]}" alt="{E(img.get("alt", ""))}">'
+            # A picture already in the article is embedded once: its card takes the article's copy when the
+            # page opens, which halves a chart-heavy page (Friday 16 Oct's was 8.4 MB, and the week's board,
+            # which holds it, went over the 16 MB an artifact page may be).
+            + (f'<img id="img-{img["id"]}" data-same="fig-{img["id"]}" alt="{E(img.get("alt", ""))}">' if img.get('after_heading')
+               else f'<img id="img-{img["id"]}" src="{img["data"]}" alt="{E(img.get("alt", ""))}">')
             + (f'<div class="files">{E(img["caption"])}</div>' if img.get('caption') else '') +
             '<div class="status" aria-live="polite"></div></div>')
 
@@ -345,7 +350,9 @@ def self_test():
                                               'scripts': [{'label': 'Script', 'file': 's.md'}]}), encoding='utf-8')
         h = build(t / 'm.json', t / 'out').read_text(encoding='utf-8')
     checks = [
-        ('the article copies with its pictures', 'data-act="article"' in h and '<h2>THE PART</h2>\n<figure><img src="data:image/png;base64,' in h),
+        ('the article copies with its pictures', 'data-act="article"' in h and '<h2>THE PART</h2>\n<figure><img id="fig-pic" src="data:image/png;base64,' in h),
+        ('a picture in the article is embedded once, its card takes the article\'s copy',
+         h.count('data:image/png;base64,') == 2 and 'data-same="fig-pic"' in h and 'img[data-same]' in h),
         ('pictures decode in the page, no fetch() on data: URLs', 'function dataBlob(src)' in h and 'Could not read this picture' in h),
         ('every picture has Copy picture and Download', 'data-act="image" data-ref="img-pic"' in h and 'data-act="download" data-ref="img-pic"' in h),
         ('bold stays bold', '<strong>bold</strong>' in h),

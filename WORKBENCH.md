@@ -139,6 +139,22 @@ Not done: both renders and their frame checks, the Substack page, pack, library,
 
 ## This week's publish board
 
+**session_01RY92XqvcV9kwoDWLBnN8fp (18 Oct, afternoon): Friday is publish-ready.** Article v7
+(`docs/plans/2026-10-09-draft-body-v7.md`) carries Krish's edits to the nine lines and says every test result as a
+plain comparison (his words on 7 and 8: "vague scores mean nothing to a reader"). One capped paid rerun (13
+sentences, about $0.80); 11 lines signed off in his words through the new sign-off step (guard G9, on main); the
+fact gate and every blocking publish check pass, including the new PLAIN_SCORES article check. The v7 pack
+(publish manager, Substack copy, web page, covers, six charts, the 90-second cut and its thumbnails) is in the
+library: `3 Posts/2026-10-16 Fri mind.the.gap - Why so many AIs/`, inputs in `docs/plans/2026-10-09-friday/`
+(`post-v7.json`, `manager.json`, `words.json`, `page-facts-v7.json`; the work folder rebuilds from the library
+with the commands in `nine-lines.md` and `HANDOVER.md`). Still waiting: the 14-minute long cut, which Krish
+renders on his PC (Codex, `produce-video`, `docs/plans/2026-10-09-friday/long-cut/long.json`; his pick, 18 Oct:
+"Merge; I render on PC"). The source links inside the article (54 listed, none linked from a phrase) are still
+open from 18 Oct. Both board links hold the same build (H6qK version 17, RjLH version 41, 18 Oct): Monday and
+Wednesday carried over unchanged, Friday made with its publish page; its publish-page link on the record is the
+post's Drive folder (`making.py ... publish-manager`), because Krish's machine had not yet written the new page to
+Drive. No Friday ticks on H6qK; RjLH's tick store cannot be read from this account.
+
 **Closing session_01YHC9kjnvJEzYDeFDdADLBq (18 Oct).** Three files Krish asked for, all on main and on both board
 links (Friday tab, "Review the words"): `docs/COST_GUARDS.md` (the six standing cost rules and guards G1 to G9 to
 build), `docs/plans/2026-10-09-friday/nine-lines.md` (the nine fact-check lines for his sign-off) and
