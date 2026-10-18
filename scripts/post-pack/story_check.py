@@ -442,6 +442,11 @@ MEASURED = re.compile(r'[\s-]*(?:%|percent\b|per\s+cent\b|times\b|x\b|out\s+of\b
                       r'words?|people|users?)\b)', re.I)
 
 
+SCORED = re.compile(r'\bscor(?:e|es|ed|ing)\b', re.I)
+PERCENT = re.compile(r'[\s-]*(?:%|percent\b|per\s+cent\b)', re.I)
+RELATIVE = re.compile(r'[\s-]*(?:%|percent|per\s+cent)\s+(?:higher|lower|more|less|better|worse|cheaper|dearer|up|down)\b', re.I)
+
+
 def score_problems(paragraphs):
     """Scores a 12-year-old cannot weigh, heard once: a number said as a score
     or points, with no share, multiple or scale to tell the ear what it means.
@@ -459,6 +464,13 @@ def score_problems(paragraphs):
                 continue  # a year
             if before and re.match(r'[A-Z]', before[-1]) and not before[-1].endswith((',', '.')):
                 continue  # a name's number: Opus 5, GPT 6.1
+            # A test score given as a percentage is still a score; "40% higher" is a comparison.
+            # Krish, 2026-10-18, of the article's "scored 57.6% for $2.94, against 52.3% for $15.83":
+            # vague scores mean nothing to a reader. Kept in step with bareScores in
+            # apps/control-plane/api/_publishChecks.ts.
+            if SCORED.search(plain) and PERCENT.match(plain[m.end():]) and not RELATIVE.match(plain[m.end():]):
+                bare.append(n + '%')
+                continue
             if MEASURED.match(plain[m.end():]) or re.search(r'\bout\s+of\s*$', plain[:m.start()], re.I):
                 continue  # a share, a multiple, an amount, or the scale itself ("out of 100")
             bare.append(n)
@@ -862,6 +874,9 @@ def self_test():
         'In a tough reasoning test, the newest Claude Opus in its lowest gear lost to the older one in top gear.',
         'So why do these tools start you in 1st gear? How hard it thinks is the gear - 1st, 2nd, 3rd, 21st.']),
         [p.split('"')[1] for p in score_problems(['In 1st gear it scored 42 on their test.'])]), ([], ['42']))
+    check('a test score as a percentage is still a score (Krish, 2026-10-18)',
+          bool(score_problems(['Opus 5.5 at medium scored 57.6% for $2.94, against 52.3% for $15.83.'])), True)
+    check('a percentage that compares is fine', score_problems(['It scored 40% higher in its top gear.']), [])
     check('a score refuses through problems(), for every script', any('PLAIN_SCORES' in p for p in problems(fine + ' ' + old_90s)), True)
 
     # The chapter list beside a deep cut follows the words as they are now.

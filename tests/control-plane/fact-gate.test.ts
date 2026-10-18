@@ -740,3 +740,19 @@ describe('Krish signs off a line the checker could not match (guard G9)', () => 
     assert.equal(carrySignOffs(signed.fact_check, reworded).signed_off, undefined)
   })
 })
+
+describe('no bare scores in the article (house rule PLAIN_SCORES, Krish 2026-10-18)', () => {
+  test("the article's own lines he named are refused, and their plain versions pass", async () => {
+    const { bareScores, publishChecks } = await import('../../apps/control-plane/api/_publishChecks.js')
+    const old = 'Claude Sonnet 5.5 on its highest setting scored 56 against that 42.3, at about ten times the cost per task of Opus 5.5 on its lowest. '
+      + 'On Anthropic\'s own chart for one test of computer tasks, Opus 5.5 at medium scored 57.6% for $2.94, against 52.3% for $15.83 from Opus 5 at max.'
+    assert.deepEqual(bareScores(old).map(f => f.number), ['56', '57.6%'])
+    const plain = 'Claude Sonnet 5.5 on its highest setting did about a third better than Opus 5.5 on its lowest, at about ten times the cost per task. '
+      + 'On Anthropic\'s own chart for one test of computer tasks, Opus 5.5 at its default setting beat Opus 5 at max effort for about a fifth of the cost. '
+      + 'It scored 40% higher. Nearly 80% of the conversations were about three things. GPT-6.1 Sol came out in 2026.'
+    assert.deepEqual(bareScores(plain), [])
+    const check = publishChecks(old, { ok: true, reason: null }).find(c => c.id === 'PLAIN_SCORES')!
+    assert.equal(check.blocking, true)
+    assert.equal(check.ok, false)
+  })
+})

@@ -557,6 +557,25 @@
    ]
   },
   {
+   "id": "bare-score-in-article",
+   "on": "2026-10-18",
+   "krish": "on no7 and no 8, I have said before that vague scores mean nothing to a reader, even I dont know what \"scored 56 against that 42.3\" really even means, and we shouldnt have to explain it. Same for \"scored 57.6% for $2.94, against 52.3% for $15.83 \"",
+   "what": "After 16 Oct's \"What does 42 even mean?\", only the scripts were made to refuse a bare score. Friday's article v6 still printed six (42 to 51, 58, 43.4 against 42.3, 56 against 42.3, 57.6% against 52.3%, HealthBench's 25.5% and 46.2%), and a test score given as a percentage passed even the script check. He had to say it a second time, of the article.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "apps/control-plane/api/_publishChecks.ts",
+     "contains": "id: 'PLAIN_SCORES'",
+     "how": "a blocking publish check: the article cannot be approved or published while it gives a score with nothing to measure it against, a test percentage included"
+    },
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "a test score as a percentage is still a score",
+     "how": "the script check now refuses a test score given as a percentage too, and its self-test holds his two article lines refused"
+    }
+   ]
+  },
+  {
    "id": "analogy-drawn-as-a-picture",
    "on": "2026-10-16",
    "krish": "No that's car visual is not clear. The gear beat the new badge. I don't think the visuals should have analogies in them. The visuals should look like genuine reviews of the actual product, with statistics, rather than having analogies.",
