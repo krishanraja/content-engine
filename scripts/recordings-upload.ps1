@@ -578,6 +578,7 @@ function Invoke-Pass {
     # Krish, 2026-10-14: "a folder where I can put videos that I really like
     # ... so that you can learn from them"). Never a reason to fail a pass.
     try { Publish-References } catch { Write-Log "the style references were not published this pass: $($_.Exception.Message)" }
+    try { Publish-Working } catch { Write-Log "the working files were not published this pass: $($_.Exception.Message)" }
   }
   return ($sent -and $placed)
 }
@@ -596,6 +597,16 @@ function Publish-References {
   $run = Invoke-StudioPython @($references, 'publish')
   if ($run.code -ne 0) { Write-Log "style references publish: $($run.err) $($run.out)"; return }
   if ($run.out -match '"sent":\s*[1-9]') { Write-Log "style references published: $($run.out -replace "`n", ' | ')" }
+}
+
+function Publish-Working {
+  # A post's "working <date>" folders on Drive go to the library, so a cloud
+  # session fetches a session's saved work (scripts/post-pack/working.py).
+  if (-not (Test-Path -LiteralPath $StudioPython -PathType Leaf)) { return }
+  $working = Join-Path $RepoRoot 'scripts\post-pack\working.py'
+  $run = Invoke-StudioPython @($working, 'publish')
+  if ($run.code -ne 0) { Write-Log "working files publish: $($run.err) $($run.out)"; return }
+  if ($run.out -match '"sent":\s*[1-9]') { Write-Log "working files published: $($run.out -replace "`n", ' | ')" }
 }
 
 function Update-Source {

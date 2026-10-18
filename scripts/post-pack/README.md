@@ -703,3 +703,11 @@ The packs, the images, the videos and the pages are media and working files,
 and media are never committed (`scripts/check-no-secrets.ts`). The tools, this
 README and the example facts are committed; everything they make goes to a
 working folder or to `.cache/`.
+
+## Working files: a session's saved work, from Drive to any session
+
+A session's drawn work (screenshots, cards, panels, charts, story clips) lives in its own container until it is
+saved. Save it into the post's folder on Drive as `<part>/working <date>/` (for example
+`3 Video/working 17 Oct/`). Every pass of `recordings-upload.ps1` runs `working.py publish`, which sends those
+folders to the library at the same path, with a `.working.json` list. A cloud session gets them back with
+`python3 scripts/post-pack/working.py fetch "<post folder>"`, sha256 checked, without the Drive connector.

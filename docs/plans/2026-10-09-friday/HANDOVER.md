@@ -111,3 +111,7 @@ session, look at one contact sheet per output, and never re-run a whole workflow
 - Done on 18 Oct, in `W` only (redo from these steps if the container is gone): the short take fetched,
   the kit, both configs copied, the story intro and outro in both shapes (every frame checked), covers and
   thumbnails (checked at phone sizes).
+- **Krish saved the 17 Oct work to Drive** (18 Oct): `2 Covers and images/working 17 Oct/` (every page screenshot,
+  covers, thumbnails, the five Substack charts with their HTML) and `3 Video/working 17 Oct/` (intro and outro in
+  both sizes, the 51 long cards, the 10 tall pictures, frame, end cards, strap, transcripts). Get them with
+  `python3 scripts/post-pack/working.py fetch "2026-10-16 Fri mind.the.gap - Why so many AIs"`; never redraw them.
