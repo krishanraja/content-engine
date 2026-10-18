@@ -532,7 +532,10 @@ def check(data, strict=False):
                 try:
                     resolve(t, data)
                     lic = in_root(root, t['licence_file'])
-                    if not lic.is_file():
+                    # A track Krish approved has had its licence checked once; a session never asks again. Krish,
+                    # 2026-10-18: "the music license issue has been sorted 4 times before, you do not need to keep
+                    # checking that - only if I use a new music track."
+                    if not lic.is_file() and not t.get('approved_on'):
                         errors.append(f'{tid}: its licence file {lic} is missing')
                 except MusicError as e:
                     errors.append(str(e))

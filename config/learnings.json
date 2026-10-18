@@ -369,6 +369,21 @@
      "how": "a test that fails if skipping the second look changes any verdict"
     }
    ]
+  },
+  {
+   "id": "music-licence-checked-once",
+   "on": "2026-10-18",
+   "krish": "the music license issue has been sorted 4 times before, you do not need to keep checking that - only if I use a new music track.",
+   "why": "A cloud session stopped on a missing licence file for a track he approved on 12 October, and raised it again, the fifth time the same licence had come up.",
+   "means": "A track's licence is checked once, when the track is new. A track Krish approved (approved_on in config/music-library.json) is never held up or asked about for its licence again.",
+   "status": "encoded",
+   "enforced": [
+    {
+     "file": "scripts/quick-edit/music.py",
+     "contains": "the music license issue has been sorted 4 times before",
+     "how": "the ledger check skips the licence file for a track with approved_on, so make.py and its doctor never stop on it"
+    }
+   ]
   }
  ]
 }
