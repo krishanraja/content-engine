@@ -3104,3 +3104,9 @@ $9.87; it now runs fortnightly (odd ISO weeks, next 25 October; AEO-Engine
 `6041cb5`). The editorial radars were $3.48, and the eight timer judges
 were about $3. This chat-side work runs on Krish's plan, not on API credits.
 Krish (2026-10-15) asked for "optimizations we can make".
+
+18 October, Friday's article: four fact-check runs cost $4.07 (about $1 a run once 62 sources were filed),
+against an estimate of about 20 cents for the last one. Two causes, for the cost audit: the on-file check sends
+the whole source set with every claim, so filing more sources makes every check dearer; and the second look
+re-reads every leftover sentence on every run, with nothing carried. Estimate a rerun from the meter's last
+run, never from the count of fresh sentences.

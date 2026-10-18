@@ -115,3 +115,14 @@ session, look at one contact sheet per output, and never re-run a whole workflow
   covers, thumbnails, the five Substack charts with their HTML) and `3 Video/working 17 Oct/` (intro and outro in
   both sizes, the 51 long cards, the 10 tall pictures, frame, end cards, strap, transcripts). Get them with
   `python3 scripts/post-pack/working.py fetch "2026-10-16 Fri mind.the.gap - Why so many AIs"`; never redraw them.
+
+## Fact check, 18 Oct: where it stopped (article v6, saved on the piece)
+
+Four runs, $4.07 of model spend that day plus about $1 of web checks (Krish approved about $3.70). 62 checked
+sources from evidence-v2/v3 and the Artificial Analysis API rows were filed first (they had never been filed).
+Run 4 left 9 blocking, all defensible on the filed sources: the car-badge line, "OpenAI has gone the other way",
+"last month" (14 Sep), "the same day" ($40B), GPT-6.1 Sol's release, the Harvard "nearly 80%", Sonnet's
+"about ten times the cost" (5.46 vs 0.55 = 9.9x), Opus 5's 52.3% for $15.83 (Anthropic's chart, P1-01), and
+"the score rises by a fraction of that". Each run cost more than the one before: a bigger source set makes every
+on-file call dearer, and the second look re-reads every leftover sentence on every run. Do not rerun without
+Krish's yes and a costed estimate from the meter (`meter_daily`, `fact-gate-%`), not from sentence counts.
