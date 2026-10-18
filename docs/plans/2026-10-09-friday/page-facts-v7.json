@@ -276,5 +276,143 @@
    "Artificial Analysis, Intelligence Index v4.3.2 and its API, read 17 Oct 2026",
    "https://artificialanalysis.ai/"
   ]
- }
+ },
+ "links": [
+  [
+   "launched Claude Opus 4.8 in May",
+   "s12"
+  ],
+  [
+   "OpenAI's release notes",
+   "s13"
+  ],
+  [
+   "generally remain available in ChatGPT for 90 days after a successor is released",
+   "s13"
+  ],
+  [
+   "we added one million users in the last hour",
+   "s14"
+  ],
+  [
+   "OpenAI announced $40 billion of new funding",
+   "s14"
+  ],
+  [
+   "all Claude Opus 5.5 results use adaptive thinking at max effort",
+   "s1"
+  ],
+  [
+   "Anthropic's developer guide",
+   "s32"
+  ],
+  [
+   "We must slow the pace at which we improve the capabilities of AI models.",
+   "s19"
+  ],
+  [
+   "put GPT-6 into ChatGPT",
+   "s13"
+  ],
+  [
+   "OpenAI and Harvard's study of 1.5 million ChatGPT conversations",
+   "s46"
+  ],
+  [
+   "ChatGPT's Instant, Medium, High and Extra High",
+   "s29"
+  ],
+  [
+   "Claude's low, medium, high, xhigh and max effort",
+   "s25"
+  ],
+  [
+   "at most you see a short summary of it",
+   "s28"
+  ],
+  [
+   "Artificial Analysis, an independent group that tests these models",
+   "s54"
+  ],
+  [
+   "OpenAI's GPT models showed the same",
+   "s3"
+  ],
+  [
+   "HealthBench Hard",
+   "s50"
+  ],
+  [
+   "the cost per task went from $0.55 to $5.98",
+   "s2"
+  ],
+  [
+   "Claude Haiku 5.5, the cheapest of Anthropic's current models",
+   "s54"
+  ],
+  [
+   "Claude Sonnet 5.5 on its highest setting did about a third better",
+   "s54"
+  ],
+  [
+   "On Anthropic's own chart for one test of computer tasks",
+   "s1"
+  ],
+  [
+   "Anthropic's help page for the Claude app",
+   "s25"
+  ],
+  [
+   "insane thing: we are currently losing money on openai pro subscriptions!",
+   "s24"
+  ],
+  [
+   "one user consumed tens of thousands in model usage on a $200 plan",
+   "s26"
+  ],
+  [
+   "SemiAnalysis, a research firm",
+   "s27"
+  ],
+  [
+   "We're profitable on inference",
+   "s31"
+  ],
+  [
+   "reason adaptively across reasoning efforts",
+   "s28"
+  ],
+  [
+   "allocates reasoning where it judges reasoning will help",
+   "s37"
+  ],
+  [
+   "Most prompts will go to Flash-Lite, our fastest model.",
+   "s34"
+  ],
+  [
+   "seemed to send many more free users to OpenAI's advanced reasoning models",
+   "s35"
+  ],
+  [
+   "automatic switching from Instant to Thinking",
+   "s13"
+  ],
+  [
+   "from <1% to 7%",
+   "s45"
+  ],
+  [
+   "most users retained the medium effort default",
+   "s36"
+  ],
+  [
+   "as we observed users prefer faster responses",
+   "s13"
+  ],
+  [
+   "seemed way dumber",
+   "s51"
+  ]
+ ]
 }

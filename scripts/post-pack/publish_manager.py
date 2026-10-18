@@ -46,8 +46,10 @@ E = html.escape
 
 
 def inline(text):
-    """Markdown inline: **bold** and *italic*, everything else escaped."""
+    """Markdown inline: **bold**, *italic* and [a source link](https://...), everything else escaped. The links are
+    the article's sources (Krish, 18 Oct, "linking the right assets"), so Copy article pastes them into Substack."""
     out = E(text)
+    out = re.sub(r'\[([^\]]+)\]\((https://[^)\s]+)\)', r'<a href="\2">\1</a>', out)
     out = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', out)
     out = re.sub(r'(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)', r'<em>\1</em>', out)
     return out
@@ -91,7 +93,7 @@ def article_text(md, images):
             for img in after.get(heading.upper(), []):
                 out.append(f'[Picture: {img.get("alt", img["id"])}]')
         else:
-            out.append(re.sub(r'\*\*(.+?)\*\*', r'\1', ' '.join(block.split())))
+            out.append(re.sub(r'\[([^\]]+)\]\((https://[^)\s]+)\)', r'\1', re.sub(r'\*\*(.+?)\*\*', r'\1', ' '.join(block.split()))))
     return '\n\n'.join(out)
 
 
@@ -391,6 +393,7 @@ def self_test():
         ('pictures decode in the page, no fetch() on data: URLs', 'function dataBlob(src)' in h and 'Could not read this picture' in h),
         ('every picture has Copy picture and Download', 'data-act="image" data-ref="img-pic"' in h and 'data-act="download" data-ref="img-pic"' in h),
         ('bold stays bold', '<strong>bold</strong>' in h),
+        ('a source link stays a link', inline('a [fact](https://x.org/a?b=1&c=2) here') == 'a <a href="https://x.org/a?b=1&amp;c=2">fact</a> here'),
         ('the title is escaped', 'out &lt;x&gt;' in h and 'out <x>' not in h),
         ('the article link fills every copy', '{ARTICLE_URL}' in h and 'id="link-article"' in h),
         ('scripts are copyable', 'Why? Because.' in h),
