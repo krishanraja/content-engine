@@ -180,7 +180,15 @@ run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
-- Week of 19 to 23 October 2026 (board item `week-publish-board-2026-10-19`;
+- Week of 19 to 23 October 2026, **This Week's Publish Board (wC 19 Oct)**,
+  remade 18 Oct evening with a first **Ideas** tab (13 checked ideas: Mon 4,
+  Wed 4, Fri 5; file `docs/plans/2026-10-19-week/ideas.json`), published with
+  Krish's yes, pinned: https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk
+  (its picks and ticks stores answer, both empty). His picks save to
+  `picks/<day>` and post as a `PICK <day>` comment. The same build still has
+  to go to the link below, which only his other account can open. Next
+  step: `docs/handovers/2026-10-18-week-picks.md`.
+  The earlier link (board item `week-publish-board-2026-10-19`;
   made Sunday 18 October, no day picked yet, no ticks yet):
   https://claude.ai/artifact/4SZR5ZrQnG657ezuzvvAML (published pinned from the
   account running the Sunday routine; its store answers, ticks and links both
