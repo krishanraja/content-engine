@@ -152,7 +152,8 @@ rewritten and checked again from the top.
    left unexplained. Fix and run it again until both say `ready`.
 4. **The read-back, required.** Two fresh readers hear each script, every
    time its words change. In Claude Code, start two subagents (the Agent
-   tool), one for each reader, each given nothing but its prompt below and
+   tool, description "Separate reader: read-back A" or "B", which the cost
+   guard G6 asks for), one for each reader, each given nothing but its prompt below and
    the script's words; this session never reads for them. Elsewhere, two new
    conversations with no other context. Reader A's prompt, word for word:
 

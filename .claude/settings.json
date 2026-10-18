@@ -20,6 +20,16 @@
   "hooks": {
     "PreToolUse": [
       {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/cost_gate.py\"",
+            "timeout": 15
+          }
+        ]
+      },
+      {
         "matcher": "Artifact",
         "hooks": [
           {
@@ -38,6 +48,17 @@
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/board_sync.py\"",
             "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/hooks/cost_gate.py\"",
+            "timeout": 15
           }
         ]
       }
