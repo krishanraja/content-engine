@@ -10,7 +10,7 @@ for, so that a part is never optimised against the whole.
 
 ## Horizon
 
-> By the end of 2027, the engine runs as a full creator studio: every piece becomes an essay, a Short and a carousel at 10/10, and Krish spends under an hour a week deciding.
+> By 30 November 2026, the engine runs as a full creator studio: every piece becomes an essay, a Short and a carousel at 10/10, and Krish spends under an hour a week deciding.
 
 Set by Krish on 18 October 2026, and not reached yet. Everything below serves it, every session in this repository works toward it, and only Krish changes it.
 
