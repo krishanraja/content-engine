@@ -36,6 +36,7 @@ import re
 import shutil
 import sys
 import tempfile
+import time
 import urllib.error
 import urllib.request
 import zipfile
@@ -200,6 +201,9 @@ def plan(folder, prefix=None, purpose=None, brand_kit=False):
 
 # ---------------------------------------------------------------- the engine
 
+RETRY_WAITS = (2, 4, 8, None)  # seconds before each retry; None is the last try
+
+
 class Engine:
     """The engine's library routes on the engine key, through scripts/engine.py."""
 
@@ -211,10 +215,20 @@ class Engine:
         self.client = client
 
     def post(self, path, body):
-        try:
-            status, text = engine.call('POST', path, {**body, 'client': self.client}, self.token, timeout=120)
-        except engine.Unreachable as unreachable:
-            raise SendError(str(unreachable))
+        # Retried here so no session writes its own retry loop (G7). Safe: a repeated upload answers 409, which
+        # the send treats as landed, and confirm checks the bytes.
+        for wait in RETRY_WAITS:
+            try:
+                status, text = engine.call('POST', path, {**body, 'client': self.client}, self.token, timeout=120)
+            except engine.Unreachable as unreachable:
+                if wait is None:
+                    raise SendError(str(unreachable))
+                time.sleep(wait)
+                continue
+            if status >= 500 and wait is not None:
+                time.sleep(wait)
+                continue
+            break
         try:
             return status, json.loads(text)
         except json.JSONDecodeError:
@@ -229,13 +243,18 @@ class Engine:
         with open(path, 'rb') as handle:
             request = urllib.request.Request(url, data=handle, method='PUT',
                                              headers={**headers, 'Content-Length': str(size)})
-            try:
-                with urllib.request.urlopen(request, timeout=600) as response:
-                    return response.status
-            except urllib.error.HTTPError as error:
-                return error.code
-            except urllib.error.URLError as error:
-                raise SendError(f'the upload could not reach storage ({error.reason})')
+            for wait in RETRY_WAITS:
+                handle.seek(0)
+                try:
+                    with urllib.request.urlopen(request, timeout=600) as response:
+                        return response.status
+                except urllib.error.HTTPError as error:
+                    if error.code < 500 or wait is None:
+                        return error.code
+                except urllib.error.URLError as error:
+                    if wait is None:
+                        raise SendError(f'the upload could not reach storage ({error.reason})')
+                time.sleep(wait)
 
 
 def refusal_text(status, body):
@@ -494,4 +513,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.path.insert(0, str(__import__('pathlib').Path(__file__).resolve().parents[1]))
+    import quiet_errors  # G7: one line on failure, the traceback to .cache/logs
+    sys.exit(quiet_errors.run(main, 'send'))

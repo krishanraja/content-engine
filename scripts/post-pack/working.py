@@ -234,4 +234,6 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.path.insert(0, str(__import__('pathlib').Path(__file__).resolve().parents[1]))
+    import quiet_errors  # G7: one line on failure, the traceback to .cache/logs
+    sys.exit(quiet_errors.run(main, 'working'))
