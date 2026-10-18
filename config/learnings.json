@@ -349,6 +349,26 @@
      "how": "a rule every agent reads at session start"
     }
    ]
+  },
+  {
+   "id": "cost-never-costs-quality",
+   "on": "2026-10-15",
+   "krish": "yes, if you are 110% sure this does not degrade the quality of the output - this cannot happen.",
+   "why": "He wants the engine cheaper to run (half a 20x Max plan in one week, $45.51 of API in seven days), but a saving that makes the work worse is not a saving to him.",
+   "means": "Every cost change is one of three kinds: the same input read fewer times (caching, carry-forward, fresh sessions, a shorter start), mechanical work on a cheaper model held by deterministic checks, or a refusal before a paid run or a giant read. Fewer judges, smaller source sets, lower effort on writing or anything else that changes what the model reads for a decision is out. A cost change is measured first: one that the meter shows saves nothing is not made.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "docs/COST_GUARDS.md",
+     "contains": "The quality test every guard passes",
+     "how": "the test every cost guard is built against"
+    },
+    {
+     "file": "tests/control-plane/fact-gate.test.ts",
+     "contains": "is carried exactly as a full run carries it",
+     "how": "a test that fails if skipping the second look changes any verdict"
+    }
+   ]
   }
  ]
 }

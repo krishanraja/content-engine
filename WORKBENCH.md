@@ -738,3 +738,8 @@ run, never from the count of fresh sentences.
 
 Plan usage (the sessions themselves), 18 October: `docs/COST_AUDIT_2026-10-18.md`. One six-day session read
 1,086M tokens because every step re-reads a context that sat at a median of 459k; the fix is one fresh session per job.
+
+Cost guards, 18 October (`docs/COST_GUARDS.md`): G1–G8 and G11 built on branch `claude/token-efficiency-content-dfb8q7`
+(context ceiling, budget against the meter, rerun ceiling, second look carried, no board reads, agent gate, quiet
+scripts, Sonnet for produce-video, a lean workbench). What is left is in `docs/handovers/2026-10-18-cost-guards-phase-2.md`.
+
