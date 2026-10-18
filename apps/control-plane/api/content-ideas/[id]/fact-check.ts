@@ -23,7 +23,8 @@ import { publishChecks, publishStatus } from '../../_publishChecks.js'
 import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
-import { lastFactRunCost } from '../../_meter.js'
+import { randomUUID } from 'node:crypto'
+import { lastFactRunCost, meterScope, perplexityCall } from '../../_meter.js'
 import {
   carryForward, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
@@ -175,6 +176,7 @@ async function perplexityOnce(key: string, c: Claim, asOf: string): Promise<Chec
     }),
   })
   const j: any = await r.json().catch(() => ({}))
+  await perplexityCall({ agent: 'fact-gate-web', model: 'sonar-pro', usage: j?.usage, failed: !r.ok })
   if (!r.ok) throw new Error(`perplexity_${r.status}`)
   const out = robustJson(j?.choices?.[0]?.message?.content || '') || {}
   const citations: string[] = Array.isArray(j?.citations) ? j.citations : []
@@ -430,7 +432,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let result: FactCheck
   let nextLedger: FactLedger
   try {
-    ({ result, ledger: nextLedger } = await check(run, body, { ...meta, fact_ledger: ledger }))
+    // Every metered call of this run is stamped with the piece and the run (G12).
+    ({ result, ledger: nextLedger } = await meterScope({ pieceId: id, runId: randomUUID() }, () => check(run, body, { ...meta, fact_ledger: ledger })))
   } catch (e) {
     if (!isModelUnavailable(e)) throw e
     return stopped(res, run.failure ?? e.failure)

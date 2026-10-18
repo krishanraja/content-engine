@@ -220,8 +220,11 @@ def last_cost_text(answer: dict) -> str:
     last = (answer or {}).get('last_run_cost') or {}
     if last.get('usd_per_run') is None:
         return 'The meter holds no earlier run.'
+    if last.get('basis') == 'run':
+        return (f'The last run cost ${last["usd_per_run"]:.2f} ({last["day"]}, its own rows in meter_events, '
+                'web checks included).')
     return (f'The last runs cost about ${last["usd_per_run"]:.2f} each ({last["runs"]} runs on {last["day"]}, '
-            'from meter_daily; web checks are extra).')
+            'a day average from meter_daily).')
 
 
 def main() -> int:

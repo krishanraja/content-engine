@@ -1,4 +1,5 @@
-import { priceUsd, priceUsdDetailed, priceUsdUncached, readUsage, isPriced, type TokenUsage } from './_prices.js'
+import { AsyncLocalStorage } from 'node:async_hooks'
+import { priceUsd, priceUsdDetailed, priceUsdUncached, readUsage, isPriced, perplexityUsd, PERPLEXITY_PRICES, OPENAI_EMBEDDING_PRICES, type TokenUsage } from './_prices.js'
 import { classifyAnthropicFailure, noteAnthropicSuccess, recordAnthropicFailure, type ProviderFailure } from './_modelProvider.js'
 
 /**
@@ -43,8 +44,51 @@ function db(): Promise<Db | null> {
 //                  Accumulates. Never use it for a value the provider can
 //                  restate, or a re-sync will stack on top of what is there.
 
-export type MeterProvider = 'apify' | 'n8n' | 'anthropic'
+export type MeterProvider = 'apify' | 'n8n' | 'anthropic' | 'perplexity' | 'openai'
 export type MeterUnitKind = 'actor' | 'workflow' | 'agent'
+
+// ── Which piece and which run a call was for (cost guard G12) ───────────────
+//
+// meter_daily is one cell per agent per day, so it can say what the fact gate
+// cost on a day but never what one run cost: G2 had to divide a day by its runs.
+// A route that runs paid work for a piece wraps it in `meterScope`, and every
+// self-metered call inside it, however deep, also lands as one row in
+// public.meter_events stamped with the piece and the run. No call site threads
+// ids. Until the migration (20261024090000_meter_events.sql) is applied the
+// insert fails, is said once, and is not tried again by this process: the daily
+// cells are written exactly as before.
+export interface MeterScope { pieceId: string | null; runId: string | null }
+const scopeStore = new AsyncLocalStorage<MeterScope>()
+
+/** Run `fn` with every metered call inside it stamped with this piece and run. */
+export function meterScope<T>(s: MeterScope, fn: () => Promise<T>): Promise<T> {
+  return scopeStore.run(s, fn)
+}
+
+/** The scope a call is in, if any. */
+export function currentMeterScope(): MeterScope | null {
+  return scopeStore.getStore() ?? null
+}
+
+let eventsTableMissing = false
+
+async function addEvent(e: { provider: MeterProvider; unitKey: string; bucket: string; usd: number; units: number; failed: boolean }, s: MeterScope): Promise<void> {
+  if (eventsTableMissing) return
+  const supabase = await db()
+  if (!supabase) return
+  const { error } = await supabase.from('meter_events').insert({
+    provider: e.provider, unit_key: e.unitKey, bucket: e.bucket,
+    piece_id: s.pieceId, run_id: s.runId, usd: e.usd, units: e.units, failed: e.failed,
+  })
+  if (!error) return
+  // 42P01 from Postgres, PGRST205 from PostgREST: the table is not there yet.
+  if (error.code === '42P01' || error.code === 'PGRST205' || /meter_events/.test(error.message || '')) {
+    eventsTableMissing = true
+    console.warn('[meter] meter_events is not in the database yet; per-run rows are off until its migration is applied')
+    return
+  }
+  console.warn(`[meter] event write failed for ${e.provider}/${e.unitKey}: ${error.message || error}`)
+}
 
 export interface MeterRow {
   provider: MeterProvider
@@ -175,6 +219,10 @@ export async function add(e: {
     // the work it was measuring. But it is now SAID, once per failure, so the
     // difference between "no spend" and "no measurement" reaches a log.
     if (error) console.warn(`[meter] write failed for ${e.provider}/${e.unitKey}: ${error.message || error}`)
+    const s = currentMeterScope()
+    if (s && (s.pieceId || s.runId)) {
+      await addEvent({ provider: e.provider, unitKey: e.unitKey, bucket: e.bucket || '', usd: e.usd ?? 0, units: e.units ?? 0, failed: (e.failed ?? 0) > 0 }, s)
+    }
   } catch (e2) {
     console.warn(`[meter] write threw for ${e.provider}/${e.unitKey}: ${(e2 as Error)?.message || e2}`)
   }
@@ -451,16 +499,85 @@ export async function anthropicFailure(e: {
 }
 
 /**
- * What one paid fact check cost, measured: the fact gate's Anthropic spend on the last day it ran, divided by
- * that day's runs (one claim list per run). Cost guard G2 (docs/COST_GUARDS.md): a rerun is estimated from this,
- * never from a count of sentences (18 October: estimated at 20 cents, cost about $1). An average over that day,
- * and Perplexity's web checks are not metered, so the true cost is a little higher.
+ * Record one Perplexity call (cost guard G12). `usage` is the response's own
+ * usage object; its reported cost wins over the price table. A failed call is
+ * a run and a failure with no cost unless the provider reported usage. Never
+ * throws: metering is never load-bearing.
  */
-export async function lastFactRunCost(): Promise<{ day: string; runs: number; usd_per_run: number } | null> {
+export async function perplexityCall(e: { agent: string; model: string; usage?: unknown; failed?: boolean }): Promise<void> {
+  try {
+    const u = (e.usage || {}) as Record<string, unknown>
+    const tokens = (Number(u.prompt_tokens) || 0) + (Number(u.completion_tokens) || 0)
+    if (!tokens && !e.failed) return
+    const usd = tokens ? perplexityUsd(e.model, e.usage) : 0
+    await add({
+      provider: 'perplexity', unitKind: 'agent', unitKey: normalizeAgent(e.agent), bucket: e.model,
+      label: normalizeAgent(e.agent), category: PERPLEXITY_PRICES[e.model] ? 'priced' : 'unpriced-model',
+      usd, runs: 1, failed: e.failed ? 1 : 0, units: tokens, unitName: 'tokens',
+    })
+  } catch { /* metering is never load-bearing */ }
+}
+
+/** Record one OpenAI embeddings call (cost guard G12). Never throws. */
+export async function openaiEmbeddingCall(e: { agent: string; model: string; usage?: unknown; failed?: boolean }): Promise<void> {
+  try {
+    const tokens = Number(((e.usage || {}) as Record<string, unknown>).total_tokens) || 0
+    if (!tokens && !e.failed) return
+    const rate = OPENAI_EMBEDDING_PRICES[e.model]
+    await add({
+      provider: 'openai', unitKind: 'agent', unitKey: normalizeAgent(e.agent), bucket: e.model,
+      label: normalizeAgent(e.agent), category: rate !== undefined ? 'priced' : 'unpriced-model',
+      usd: rate !== undefined ? tokens / 1e6 * rate : 0, runs: 1, failed: e.failed ? 1 : 0, units: tokens, unitName: 'tokens',
+    })
+  } catch { /* metering is never load-bearing */ }
+}
+
+export interface FactRunCost {
+  day: string
+  runs: number
+  usd_per_run: number
+  /** 'run': the newest run's own rows in meter_events. 'day_average': that day's fact-gate spend over its runs. */
+  basis: 'run' | 'day_average'
+  run_id?: string
+  piece_id?: string | null
+}
+
+/** The newest fact-check run's measured cost, from its own rows, or null when there are none to read. */
+export function newestRunCost(rows: Array<{ at: string; run_id: string | null; piece_id: string | null; usd: number | string }>): FactRunCost | null {
+  const runs = new Map<string, { at: string; usd: number; piece_id: string | null }>()
+  for (const r of rows) {
+    if (!r.run_id) continue
+    const cur = runs.get(r.run_id) || { at: r.at, usd: 0, piece_id: r.piece_id }
+    cur.usd += Number(r.usd) || 0
+    if (r.at > cur.at) cur.at = r.at
+    runs.set(r.run_id, cur)
+  }
+  const newest = [...runs.entries()].sort((a, b) => (a[1].at < b[1].at ? 1 : -1))[0]
+  if (!newest) return null
+  return { day: newest[1].at.slice(0, 10), runs: 1, usd_per_run: Math.round(newest[1].usd * 100) / 100, basis: 'run', run_id: newest[0], piece_id: newest[1].piece_id }
+}
+
+/**
+ * What one paid fact check cost, measured. Cost guard G2 (docs/COST_GUARDS.md): a rerun is estimated from this,
+ * never from a count of sentences (18 October: estimated at 20 cents, cost about $1).
+ *
+ * The newest run's own rows in meter_events when that table exists (G12): every Anthropic and Perplexity call
+ * of the run, stamped with its run id. Without it, the older estimate: the fact gate's spend on the last day it
+ * ran, divided by that day's runs (one claim list per run), now with the metered web checks included.
+ */
+export async function lastFactRunCost(): Promise<FactRunCost | null> {
   const supabase = await db()
   if (!supabase) return null
+  if (!eventsTableMissing) {
+    const { data, error } = await supabase.from('meter_events').select('at,run_id,piece_id,usd')
+      .like('unit_key', 'fact-gate-%').not('run_id', 'is', null).order('at', { ascending: false }).limit(2000)
+    if (!error && data) {
+      const run = newestRunCost(data as Array<{ at: string; run_id: string | null; piece_id: string | null; usd: number | string }>)
+      if (run) return run
+    }
+  }
   const { data, error } = await supabase.from('meter_daily').select('day,unit_key,usd,runs')
-    .eq('provider', 'anthropic').like('unit_key', 'fact-gate-%').order('day', { ascending: false }).limit(60)
+    .in('provider', ['anthropic', 'perplexity']).like('unit_key', 'fact-gate-%').order('day', { ascending: false }).limit(120)
   if (error || !data) return null
   const days = new Map<string, { usd: number; runs: number }>()
   for (const r of data as Array<{ day: string; unit_key: string; usd: number | string; runs: number | string }>) {
@@ -470,7 +587,7 @@ export async function lastFactRunCost(): Promise<{ day: string; runs: number; us
     days.set(r.day, d)
   }
   for (const [day, d] of [...days.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1))) {
-    if (d.runs > 0) return { day, runs: d.runs, usd_per_run: Math.round((d.usd / d.runs) * 100) / 100 }
+    if (d.runs > 0) return { day, runs: d.runs, usd_per_run: Math.round((d.usd / d.runs) * 100) / 100, basis: 'day_average' }
   }
   return null
 }
