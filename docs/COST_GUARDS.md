@@ -31,6 +31,6 @@ against an estimate of 20 cents.
 | G6 | Agent and workflow gate | a `PreToolUse` hook on `Agent` and `Workflow` | Starting one without a one-line reason naming what a separate reader is for; a workflow also needs Krish's words. |
 | G7 | Quiet scripts | `scripts/engine.py`, `send.py`, `working.py` | Printing full tracebacks: one line saying what failed, the rest to a log file. |
 | G8 | Model per skill | `produce-video`, the pack and board steps | Running on Opus: their skill files name Sonnet. |
-| G9 | Sign-off of named lines | the fact-check route and Control Center | Lets Krish pass a line the checker cannot match (an analogy, "last month") in his own words, so no paid rerun is spent chasing it. |
+| G9 | Sign-off of named lines | the fact-check route (built 2026-10-18); Control Center's button still to come | Lets Krish pass a line the checker cannot match (an analogy, "last month") in his own words, so no paid rerun is spent chasing it. `POST .../fact-check` with `{ action: 'sign_off', decided_by: 'Krish', lines: [{ sentence, said }] }` stores `meta.fact_check.signed_off`; it refuses a line that is not blocking, a line without his words and a check of an older body, and calls no model. A rerun keeps a sign-off only while its exact sentence still blocks. |
 
 Order to build: G1, G2, G9, G4, then the rest. G1 and G2 stop the two bills measured in the audit.

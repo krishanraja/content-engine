@@ -76,6 +76,60 @@ export interface FactCheck {
   /** How many new claims this run left for the next one, because a run
    *  checks at most a fixed number of new claims (splitFresh). */
   unchecked?: number
+  /** Lines Krish read and passed in his own words (guard G9, signOff below). */
+  signed_off?: SignOff[]
+}
+
+// ── Krish signs off a line the checker could not match (guard G9) ──────────
+//
+// Krish, 2026-10-18, with nine lines of the Friday piece left blocking after
+// four paid runs (an analogy, "last month", a ratio the checker would not
+// divide): stop the paid runs and read them himself. A line he passes in his
+// own words stops blocking, for this exact sentence only: change a word and it
+// blocks again. His words are kept beside it, so the claim table shows who
+// passed it and why. Nothing here calls a model.
+
+export interface SignOff {
+  sentence: string
+  /** His words, as he said or wrote them. */
+  said: string
+  at: string
+  decided_by: 'Krish'
+  /** The checker's verdict he overruled, kept for the record. */
+  verdict: ClaimVerdict
+}
+
+/** The failing claims his sign-offs do not cover. */
+export function stillBlocking(fc: Pick<FactCheck, 'claims' | 'signed_off'>): CheckedClaim[] {
+  const passed = new Set((fc.signed_off || []).map(s => sentenceKey(s.sentence)))
+  return fc.claims.filter(c => !PASSING.has(c.verdict) && !passed.has(sentenceKey(c.sentence)))
+}
+
+/** Adds his sign-off of named lines to a check. Each line must be one this
+ *  check holds as blocking; anything else is refused, with the reason. */
+export function signOff(
+  fc: FactCheck,
+  lines: Array<{ sentence: string; said: string }>,
+  at = new Date().toISOString(),
+): { ok: true; fact_check: FactCheck } | { ok: false; error: string } {
+  if (!lines.length) return { ok: false, error: 'Name at least one line to sign off.' }
+  const blocking = new Map(fc.claims.filter(c => !PASSING.has(c.verdict)).map(c => [sentenceKey(c.sentence), c]))
+  const kept = new Map((fc.signed_off || []).map(s => [sentenceKey(s.sentence), s]))
+  for (const line of lines) {
+    const said = String(line?.said || '').trim()
+    if (!said) return { ok: false, error: 'Each line needs his words in "said".' }
+    const claim = blocking.get(sentenceKey(String(line?.sentence || '')))
+    if (!claim) return { ok: false, error: `Not a blocking line of this check: "${String(line?.sentence || '').slice(0, 120)}"` }
+    kept.set(sentenceKey(claim.sentence), { sentence: claim.sentence, said, at, decided_by: 'Krish', verdict: claim.verdict })
+  }
+  return { ok: true, fact_check: { ...fc, signed_off: [...kept.values()] } }
+}
+
+/** A new run keeps the sign-offs whose exact sentence still blocks in it. */
+export function carrySignOffs(prior: FactCheck | undefined, next: FactCheck): FactCheck {
+  const keys = new Set(next.claims.filter(c => !PASSING.has(c.verdict)).map(c => sentenceKey(c.sentence)))
+  const kept = (prior?.signed_off || []).filter(s => keys.has(sentenceKey(s.sentence)))
+  return kept.length ? { ...next, signed_off: kept } : next
 }
 
 export const FACT_GATE_VERSION = 1 as const
@@ -476,7 +530,10 @@ export function gateStatus(meta: Record<string, any> | null, body: string): { ok
   if (fc.body_hash !== bodyHash(body)) return { ok: false, reason: 'The words changed after the fact check. Run it again on this version.' }
   if (!fc.independent_checker) return { ok: false, reason: 'No independent fact checker was connected, so nothing can pass. Perplexity needs its key.' }
   if (!fc.passed && fc.unchecked && fc.unchecked === fc.blocking) return { ok: false, reason: `${fc.unchecked} claim${fc.unchecked === 1 ? ' is' : 's are'} still to check. Run the fact check again: what passed is kept.` }
-  if (!fc.passed) return { ok: false, reason: `${fc.blocking} claim${fc.blocking === 1 ? '' : 's'} failed the fact check. Fix or cut them, then run it again.` }
+  // Claims a run left unchecked are a count, never in claims, so a sign-off
+  // can never cover one.
+  const left = fc.passed ? 0 : fc.signed_off?.length ? stillBlocking(fc).length + (fc.unchecked || 0) : fc.blocking
+  if (left) return { ok: false, reason: `${left} claim${left === 1 ? '' : 's'} failed the fact check. Fix or cut them, then run it again, or Krish signs them off in his own words.` }
   return { ok: true, reason: null }
 }
 
