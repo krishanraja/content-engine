@@ -139,6 +139,13 @@ Not done: both renders and their frame checks, the Substack page, pack, library,
 
 ## This week's publish board
 
+**18 Oct, evening (same session): Friday's deep cut is being rendered in the cloud.** Krish raised the library cap to
+2 GiB, so the 14-minute take (`recordings/ee91ab41...0fd9f.mp4`, 1.1 GB) reached the engine. The 17 and 18 Oct
+cards and panels now reach any session (`working.py fetch`, fixed three ways on 18 Oct). Work folder:
+`.cache/produce/2026-10-16-904658db` (rebuilds from the engine with the commands in the Friday handover); config
+`kit/long.json` is `docs/plans/2026-10-09-friday/long-cut/long.json` plus the story intro and outro. Plan: 13 min
+41 s, 51 cues found, licensed bed. When it is done it goes to the library, onto the record and onto both boards.
+
 **session_01RY92XqvcV9kwoDWLBnN8fp (18 Oct, afternoon): Friday is publish-ready.** Article v7
 (`docs/plans/2026-10-09-draft-body-v7.md`) carries Krish's edits to the nine lines and says every test result as a
 plain comparison (his words on 7 and 8: "vague scores mean nothing to a reader"). One capped paid rerun (13
