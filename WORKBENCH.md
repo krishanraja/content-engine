@@ -773,7 +773,7 @@ scripts, Sonnet for produce-video, a lean workbench). Phase 2, the same day, mer
 stricter version, which refused a contradicted line, was withdrawn before the merge) and G14 (make-piece and produce-video split into a core plus
 `references/`, checked by `scripts/check_skill_core.py`). Done 18 October on his answers: the
 `meter_events` migration is applied (read back); G13 dropped, the nightly sweep stays; G9 now refuses a contradicted
-line; the cost gate has no context ceiling and never blocks a database tool. Waiting on Krish: (1) three sign-offs on
-piece `904658db` made before the G9 ruling are on contradicted lines, left as they are until he says; (2) the first real fact-check run after this
+line; the cost gate has no context ceiling and never blocks a database tool. Three sign-offs on piece `904658db` made
+before the G9 ruling are on contradicted lines; they stay (Krish, 2026-10-18: "leave it"). Waiting on Krish: the first real fact-check run after this
 (his approval for the spend) is the live proof: `fact-gate-on-file` cache writes about one source set a run.
 
