@@ -7,6 +7,8 @@ everything is.
 
 **Nothing a session makes lives only in its own container.** Krish, 2026-10-18: "in general ensure nothing is ever not accessible by another session, ever". Before you stop, commit what belongs in git (code, configs, specs, transcripts, small data) and send media and captures to the post's library folder (`scripts/post-pack/send.py FOLDER --as "3 Posts/<post folder>"`, files under `2 Covers and images` or `3 Video`), and say in `WORKBENCH.md` where each is. Nothing stays only in `.cache`, a scratchpad or a workflow journal.
 
+**Cost: six standing rules.** Krish, 2026-10-18: "They should all become standing rules" (the six habits in `docs/COST_AUDIT_2026-10-18.md`; one six-day session read 1,086M tokens because every step re-read a 459k-token context). (1) One fresh session per job, started from its handover and stopped when the job is done. (2) Switch topics by writing the handover and starting a new session. (3) Fewer, bigger steps: one script, not five commands. (4) Keep big outputs out of the chat: never read a board into the conversation (the builder reads the saved copy), one contact sheet per output, quiet logs. (5) Sonnet for production work (renders, packs, filing, board rebuilds), Opus for writing and judgment. (6) Agents and workflows only for work that needs a separate reader. Before any paid run, estimate it from `meter_daily`'s last run, never from a count. The guards that will enforce these are in `docs/COST_GUARDS.md`.
+
 **Start every session with `WORKBENCH.md`**: what is waiting on Krish, what is
 in progress and what is next, and how he wants to be worked with (plain words,
 no project shorthand). Update it before you stop, so the next session, in any

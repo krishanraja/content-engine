@@ -139,6 +139,13 @@ Not done: both renders and their frame checks, the Substack page, pack, library,
 
 ## This week's publish board
 
+**Closing session_01YHC9kjnvJEzYDeFDdADLBq (18 Oct).** Three files Krish asked for, all on main and on both board
+links (Friday tab, "Review the words"): `docs/COST_GUARDS.md` (the six standing cost rules and guards G1 to G9 to
+build), `docs/plans/2026-10-09-friday/nine-lines.md` (the nine fact-check lines for his sign-off) and
+`docs/prompts/sunday-ideas-tab.md` (the prompt for the board's Sunday Ideas tab, to run in a fresh session).
+Friday's state: `docs/plans/2026-10-09-friday/HANDOVER.md`. Redrawn panels and cards: the library's
+`3 Posts/2026-10-16 Fri mind.the.gap - Why so many AIs/3 Video/working 18 Oct/`.
+
 One page a week, with a tab for Monday, Wednesday and Friday and a tick for
 every step, made each Sunday by `plan-week` and republished to the same link
 all week by every session that makes a piece (`make-piece`, "The week's

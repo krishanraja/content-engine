@@ -309,6 +309,31 @@
      "how": "this piece's files named in the handover"
     }
    ]
+  },
+  {
+   "id": "cost-six-standing-rules",
+   "on": "2026-10-18",
+   "krish": "They should all become standing rules.",
+   "why": "One six-day session used about half of a 20x Max plan in a week: every step re-read a context that sat at a median of 459k tokens; and four paid fact-check reruns cost about four times the estimate.",
+   "means": "One fresh session per job, handover between topics, few big steps, no big outputs in the chat, Sonnet for production work, agents only where a separate reader is needed, and paid runs estimated from the meter.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "AGENTS.md",
+     "contains": "Cost: six standing rules",
+     "how": "a rule every agent reads at session start"
+    },
+    {
+     "file": "docs/COST_GUARDS.md",
+     "contains": "G1 | Context ceiling",
+     "how": "the guards to build, in order"
+    },
+    {
+     "file": "docs/prompts/sunday-ideas-tab.md",
+     "contains": "keep to the cost rules",
+     "how": "the next job's prompt carries the rules"
+    }
+   ]
   }
  ]
 }
