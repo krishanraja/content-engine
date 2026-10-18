@@ -35,6 +35,13 @@ only what a step needs. Ask Krish nothing he has already answered (below).
 - Story intro on this piece: `intro_override` in both configs.
 - Posting is Krish's. Never post.
 
+## Files already made (in the library, not in git)
+
+Sent 18 Oct to `3 Posts/2026-10-16 Fri mind.the.gap - Why so many AIs/`, written to Drive by the home computer:
+`2 Covers and images/working 17 Oct/` (screenshots: every page capture; covers and thumbnails; substack exhibits: the five charts, wide and phone, with their HTML) and
+`3 Video/working 17 Oct/` (story clips: intro and outro, both sizes; video panels: the 51 long-cut cards and 10 tall panels; kit: frame, end cards, strap; words: both transcripts).
+Fetch them with `GET /api/library/file` or reuse them from Drive instead of redrawing (steps 2 to 5 then shrink to checks).
+
 ## Steps
 
 Work folder `W=.cache/produce/2026-10-16-904658db` (git ignores it). Browser for drawing:

@@ -289,6 +289,26 @@
      "how": "the detector and the duck, self-tested"
     }
    ]
+  },
+  {
+   "id": "nothing-only-in-one-session",
+   "on": "2026-10-18",
+   "krish": "in general ensure nothing is ever not accessible by another session, ever",
+   "why": "A handover lost work because captures, renders and transcripts lived only in one cloud container; the next session, often on his other account, would have had to remake them.",
+   "means": "Before a session stops, everything it made or used that another session may need is either committed (code, configs, specs, transcripts, small data) or sent to the post's library folder with send.py (screenshots, renders, panels, exhibits), and the handover names where each is. Nothing lives only in .cache or a workflow journal.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "AGENTS.md",
+     "contains": "Nothing a session makes lives only in its own container",
+     "how": "a rule every agent reads at session start"
+    },
+    {
+     "file": "docs/plans/2026-10-09-friday/HANDOVER.md",
+     "contains": "working 17 Oct",
+     "how": "this piece's files named in the handover"
+    }
+   ]
   }
  ]
 }

@@ -5,6 +5,8 @@ ChatGPT or anything else. Read `docs/NORTH_STAR.md` first; it says what the
 whole system is for, and every rule below serves it. `README.md` says where
 everything is.
 
+**Nothing a session makes lives only in its own container.** Krish, 2026-10-18: "in general ensure nothing is ever not accessible by another session, ever". Before you stop, commit what belongs in git (code, configs, specs, transcripts, small data) and send media and captures to the post's library folder (`scripts/post-pack/send.py FOLDER --as "3 Posts/<post folder>"`, files under `2 Covers and images` or `3 Video`), and say in `WORKBENCH.md` where each is. Nothing stays only in `.cache`, a scratchpad or a workflow journal.
+
 **Start every session with `WORKBENCH.md`**: what is waiting on Krish, what is
 in progress and what is next, and how he wants to be worked with (plain words,
 no project shorthand). Update it before you stop, so the next session, in any
