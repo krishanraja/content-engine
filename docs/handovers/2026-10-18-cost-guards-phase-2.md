@@ -6,6 +6,14 @@ Read `docs/COST_GUARDS.md` first: its quality test decides what may be built. Br
 
 Session that wrote this: 60+ calls, read about 12M tokens; its three transcript readers read 13.6M more.
 
+## Krish's instruction (18 October 2026)
+
+"complete phase 2, complete and merge to main". So: build items 1 to 4 below, verify, then merge the branch into
+`main` and push. His words cover the merge. They do not name applying the migration to the live database: write
+it, make the code work whether or not its columns exist yet, and ask him before applying it. G9 is built exactly
+as `docs/COST_GUARDS.md` describes it (a line he passes in his own words is set aside with those words on the
+piece); it never passes a line without his words.
+
 ## To build, in this order
 
 1. **G12, meter what is missing.** Perplexity (`fact-check.ts` web check, `challenge.ts`, `_harness.ts` sonar)
