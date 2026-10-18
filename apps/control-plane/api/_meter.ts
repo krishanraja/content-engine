@@ -449,3 +449,28 @@ export async function anthropicFailure(e: {
   } catch { /* metering is never load-bearing */ }
   return failure
 }
+
+/**
+ * What one paid fact check cost, measured: the fact gate's Anthropic spend on the last day it ran, divided by
+ * that day's runs (one claim list per run). Cost guard G2 (docs/COST_GUARDS.md): a rerun is estimated from this,
+ * never from a count of sentences (18 October: estimated at 20 cents, cost about $1). An average over that day,
+ * and Perplexity's web checks are not metered, so the true cost is a little higher.
+ */
+export async function lastFactRunCost(): Promise<{ day: string; runs: number; usd_per_run: number } | null> {
+  const supabase = await db()
+  if (!supabase) return null
+  const { data, error } = await supabase.from('meter_daily').select('day,unit_key,usd,runs')
+    .eq('provider', 'anthropic').like('unit_key', 'fact-gate-%').order('day', { ascending: false }).limit(60)
+  if (error || !data) return null
+  const days = new Map<string, { usd: number; runs: number }>()
+  for (const r of data as Array<{ day: string; unit_key: string; usd: number | string; runs: number | string }>) {
+    const d = days.get(r.day) || { usd: 0, runs: 0 }
+    d.usd += Number(r.usd) || 0
+    if (r.unit_key === 'fact-gate-extract') d.runs += Number(r.runs) || 0
+    days.set(r.day, d)
+  }
+  for (const [day, d] of [...days.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1))) {
+    if (d.runs > 0) return { day, runs: d.runs, usd_per_run: Math.round((d.usd / d.runs) * 100) / 100 }
+  }
+  return null
+}

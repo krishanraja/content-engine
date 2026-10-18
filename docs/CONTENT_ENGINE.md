@@ -778,9 +778,13 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
 10. Before a piece can move on, its facts must pass the gate. File the sources
    you used as verbatim excerpts with `file-verbatim-source.ts` (a summary
    alone never passes a fact), run `POST /api/content-ideas/:id/fact-check`
-   through `scripts/engine.py` (it shows what the run will check and refuses
-   while the free pre-check lists a number on no filed source), and fix or
-   cut everything it lists before running it again. An answer of `model_unavailable` recorded
+   through `scripts/engine.py --budget=USD` (it shows what the run will check,
+   refuses while the free pre-check lists a number on no filed source, and
+   refuses when the last run's measured cost from `meter_daily` is over the
+   budget; cost guard G2), and fix or cut everything it lists before running
+   it again. A piece's third paid run in a day needs Krish's words as `said`
+   (409 `rerun_ceiling`, G3), and so does `--despite-precheck`. A rerun reads
+   again only the sentences that changed or failed (G4). An answer of `model_unavailable` recorded
    nothing: read health, and run it again once the provider is back.
    Where you attribute words, use the source's
    own words; the piece's house translations ("brain" for model) belong in

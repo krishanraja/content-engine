@@ -5,7 +5,7 @@ import { describe, expect, test } from 'vitest'
 import {
   bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, numbersNotOnFile, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   sourcesText, splitFresh, summarise, sweep,
-  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, factLedgerCoverage, settle, settledLeftovers, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
+  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, countRun, factLedgerCoverage, rerunCeiling, settle, settledLeftovers, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
 import { readPieceCall } from '../../packages/contracts/src/call.js'
@@ -715,5 +715,28 @@ describe('numbersNotOnFile', () => {
   })
   test('headings are not sentences', () => {
     expect(numbersNotOnFile('## GPT-5 IN 2031\n\nCisco has 90,000 employees.', meta)).toEqual([])
+  })
+})
+
+describe('G3: a ceiling on paid reruns per piece per day', () => {
+  test('two runs a day go; a third needs Krish\'s words, which are kept with the count', () => {
+    const day = '2026-10-18'
+    let meta: Record<string, any> = {}
+    expect(rerunCeiling(meta, day, '')).toBeNull()
+    meta = { fact_runs: countRun(meta, day, `${day}T09:00:00Z`, '') }
+    expect(rerunCeiling(meta, day, '')).toBeNull()
+    meta = { fact_runs: countRun(meta, day, `${day}T10:00:00Z`, '') }
+    expect(rerunCeiling(meta, day, '')).toMatch(/third needs Krish's words/)
+    expect(rerunCeiling(meta, day, 'go ahead, one more')).toBeNull()
+    meta = { fact_runs: countRun(meta, day, `${day}T11:00:00Z`, 'go ahead, one more') }
+    expect(meta.fact_runs).toEqual({ day, count: 3, said: [{ at: `${day}T11:00:00Z`, said: 'go ahead, one more' }] })
+    // A new day starts the count again.
+    expect(rerunCeiling(meta, '2026-10-19', '')).toBeNull()
+    expect(countRun(meta, '2026-10-19', '2026-10-19T08:00:00Z', '')).toEqual({ day: '2026-10-19', count: 1 })
+  })
+  test('the route refuses before any model call and counts each stored run', () => {
+    const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
+    assert.ok(check.indexOf("reason: 'rerun_ceiling'") < check.indexOf('new GateRun()'))
+    assert.match(check, /fact_runs: countRun\(nowMeta, today, result\.ran_at, said\)/)
   })
 })

@@ -650,6 +650,34 @@ export function settledLeftovers(
   return { settled, open }
 }
 
+// ── Paid reruns: a ceiling per piece per day (cost guard G3) ───────────────
+//
+// Krish, 2026-10-18: "one for the upgrades to the engine that don't let me do things that are going to create
+// huge cost outlays." Four reruns of Friday's piece cost $4.07 against an estimate of 20 cents, and 59 paid runs
+// on 13 and 14 October went round run, fix one number, run again. Two paid runs a piece a day are free to start;
+// a third needs his words (`said`), which are kept with the count.
+
+export const PAID_RUNS_PER_DAY = 2
+
+export interface FactRuns { day: string; count: number; said?: Array<{ at: string; said: string }> }
+
+/** Why this paid run must wait, or null when it may go. */
+export function rerunCeiling(meta: Record<string, any>, today: string, said: string): string | null {
+  const runs = meta?.fact_runs as FactRuns | undefined
+  const count = runs?.day === today ? runs.count : 0
+  if (count < PAID_RUNS_PER_DAY || said.trim()) return null
+  return `This piece has had ${count} paid fact checks today; a third needs Krish's words as "said" (cost guard G3). ` +
+    'Use the free GET first: fix what its precheck lists, or ask him to sign off the lines it cannot match. No model was called.'
+}
+
+/** The count after a stored run. */
+export function countRun(meta: Record<string, any>, today: string, at: string, said: string): FactRuns {
+  const runs = meta?.fact_runs as FactRuns | undefined
+  const same = runs?.day === today
+  const words = [...(same ? runs?.said || [] : []), ...(said.trim() ? [{ at, said: said.trim().slice(0, 500) }] : [])]
+  return { day: today, count: (same ? runs!.count : 0) + 1, ...(words.length ? { said: words } : {}) }
+}
+
 /** One run checks at most `max` new claims, so a first full pass stays
  *  inside the route's time limit. The rest wait for the next run, and every
  *  claim this run passes is carried then, so a long piece is checked in full

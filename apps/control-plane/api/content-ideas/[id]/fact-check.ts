@@ -23,8 +23,9 @@ import { publishChecks, publishStatus } from '../../_publishChecks.js'
 import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
+import { lastFactRunCost } from '../../_meter.js'
 import {
-  carryForward, combine, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  carryForward, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -387,7 +388,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // The free pre-check (api/_factGate.ts numbersNotOnFile): what a paid run
     // would have to lean on the web for, read before anyone pays for one.
     const precheck = { numbers_not_on_file: numbersNotOnFile(body, meta), filed_sources_cut: filedSourcesCut(meta) }
-    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck })
+    // What the last paid run cost, from the meter, for engine.py's --budget (G2).
+    const lastRunCost = await lastFactRunCost().catch(() => null)
+    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck, last_run_cost: lastRunCost })
   }
 
   if (body.trim().length < 200) return res.status(409).json({ ok: false, error: 'There is no draft to check yet.' })
@@ -395,6 +398,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const request = req.body && typeof req.body === 'object' && !Array.isArray(req.body)
     ? req.body as Record<string, unknown>
     : {}
+  const said = typeof request.said === 'string' ? request.said : ''
+  const today = new Date().toISOString().slice(0, 10)
+  const ceiling = rerunCeiling(meta, today, said)
+  if (ceiling) return res.status(409).json({ ok: false, reason: 'rerun_ceiling', error: ceiling })
   const rawCap = request.max_fresh_sentences
   if (rawCap !== undefined && (!Number.isInteger(rawCap) || Number(rawCap) < 0 || Number(rawCap) > MAX_CLAIMS)) {
     return res.status(400).json({ ok: false, error: `max_fresh_sentences must be a whole number from 0 to ${MAX_CLAIMS}.` })
@@ -438,7 +445,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const fresh = await supabase.from('content_ideas').select('meta').eq('id', id).single()
   const nowMeta = (fresh.data?.meta || meta) as Record<string, any>
   const { error: upErr } = await supabase.from('content_ideas')
-    .update({ meta: { ...nowMeta, fact_check: result, fact_ledger: nextLedger } })
+    .update({ meta: { ...nowMeta, fact_check: result, fact_ledger: nextLedger, fact_runs: countRun(nowMeta, today, result.ran_at, said) } })
     .eq('id', id)
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
 
