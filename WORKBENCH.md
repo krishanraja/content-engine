@@ -741,5 +741,14 @@ Plan usage (the sessions themselves), 18 October: `docs/COST_AUDIT_2026-10-18.md
 
 Cost guards, 18 October (`docs/COST_GUARDS.md`): G1–G8 and G11 built on branch `claude/token-efficiency-content-dfb8q7`
 (context ceiling, budget against the meter, rerun ceiling, second look carried, no board reads, agent gate, quiet
-scripts, Sonnet for produce-video, a lean workbench). What is left is in `docs/handovers/2026-10-18-cost-guards-phase-2.md`.
+scripts, Sonnet for produce-video, a lean workbench). Phase 2, the same day, merged to main with the rest: G12
+(Perplexity and OpenAI metered; each fact-check run's calls stamped with piece and run), G9 (Krish signs off a line
+the checker could not match, in his own words: `POST .../fact-check {action:'sign_off', sentence, said,
+decided_by:'Krish'}`; the nine lines in `docs/plans/2026-10-09-friday/nine-lines.md` can be recorded this way once he
+gives his words for each; never a contradicted line) and G14 (make-piece and produce-video split into a core plus
+`references/`, checked by `scripts/check_skill_core.py`). Waiting on Krish: (1) approval to apply
+`supabase/migrations/20261024090000_meter_events.sql` (until then per-run cost is a day average); (2) G13, the
+nightly judge sweep batch-only, conflicts with his 2026-09-24 ruling for fast turnaround (it would take days per
+idea for about $95 a year), so it is not built unless he overrules it; (3) the first real fact-check run after this
+(his approval for the spend) is the live proof: `fact-gate-on-file` cache writes about one source set a run.
 

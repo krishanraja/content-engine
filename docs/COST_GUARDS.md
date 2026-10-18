@@ -37,7 +37,7 @@ meter showed $0.40 of spend in 60 days and no retries, so it would only have add
 5. **Sonnet for production work** (renders, packs, filing, board rebuilds); Opus for writing and judgment.
 6. **Agents and workflows only for work that needs a separate reader.**
 
-## The guards (status 18 October 2026)
+## The guards (status 18 October 2026, phase 2 merged the same day)
 
 | # | Guard | Where | What it does | Status |
 |---|---|---|---|---|
@@ -49,11 +49,12 @@ meter showed $0.40 of spend in 60 days and no retries, so it would only have add
 | G6 | Agent and workflow gate | `scripts/hooks/cost_gate.py` | An Agent call that does not name its separate reader; a Workflow without `said:`. | Built |
 | G7 | Quiet scripts | `scripts/quiet_errors.py` in `engine.py`, `send.py`, `working.py`, `making.py`, `week_board.py` | A traceback in the chat: one line, the rest in `.cache/logs/`. `send.py` retries by itself. | Built |
 | G8 | Model per job | `produce-video` frontmatter `model: sonnet`; `.codex/config.toml` `[profiles.production]` | Production on the strongest model. A one-week trial from 18 October: any rework ends it. | Built, on trial |
-| G9 | Sign-off of named lines | the fact-check route and Control Center | Lets Krish pass a line the checker cannot match in his own words, so no paid rerun chases it. | Not built: it changes the truth gate, so it gets its own session (`docs/handovers/2026-10-18-cost-guards-phase-2.md`) |
+| G9 | Sign-off of named lines | the fact-check route (`action: 'sign_off'`), `signOff`/`applySignOffs`/`signedOffUnread` in `api/_factGate.ts` | Krish passes a line the checker could not match in his own words (`said`, `decided_by: 'Krish'`), kept on the piece in `meta.fact_signoffs`. Never a contradicted line; a reworded line is checked again; never settled in the ledger; a paid rerun skips it only while its sources are unchanged, so new evidence is always read. Control Center's button for it is not built yet. | Built |
 | G10 | Image gate | none | Dropped: an image costs about width × height / 750 tokens, capped by the API's resizing, so a few thousand at most. The 400k-character figures in the transcript were base64 in the log, not tokens. | Dropped (measured) |
 | G11 | Lean start | `scripts/check_workbench.py` in `npm run verify` | `WORKBENCH.md` over 64 KB, or "Latest handoff" holding more than its newest entry. It was 227 KB (181 KB of old handoffs); now 50 KB. | Built |
-| G12 | Meter what is missing | `api/_meter.ts`, a migration | Perplexity and OpenAI calls unmetered, and no piece or run id on a row. | Not built (handover) |
-| G13 | Timer judges at half price | `_judges/batch.ts` | Scheduled sweeps through the Batches API only. | Not built (handover) |
+| G12 | Meter what is missing | `api/_meter.ts` (`perplexityCall`, `openaiEmbeddingCall`, `meterScope`), `api/_prices.ts`, `supabase/migrations/20261024090000_meter_events.sql` | Every Perplexity call (fact check, challenge, enrich, dive-deeper, harness) and OpenAI embedding is in `meter_daily`. A fact-check run's calls also land in `meter_events` with the piece and run, and `lastFactRunCost()` reads that run's own total (`basis: 'run'`). | Built; the migration is written and NOT applied (needs Krish's approval). Until then the per-run rows are off and the estimate is the day average, now with web checks |
+| G13 | Timer judges at half price | `api/judge/sweep.ts`, `_judges/batch.ts` | Would make the nightly judge sweep batch-only. | Not built: it conflicts with a standing ruling in `api/judge/sweep.ts` (Krish, 2026-09-24: "fast turnaround and cost efficiency both, and six to eighteen hours of latency does not buy either"). With one cron tick a day an idea needs 4 to 8 ticks in batch mode, so judging would take days instead of minutes, for about $95 a year measured then. Waiting on Krish's choice; batch stays the explicit catch-up mode |
+| G14 | Lean skill start | `.agents/skills/make-piece`, `.agents/skills/produce-video`, `scripts/check_skill_core.py` in `npm run verify` | Steps and gates in `SKILL.md`, long reference sections in `references/*.md`, each named by the step that needs it. A house rule a reference carries must be named in the core. make-piece 39.9 to 33.4 KB, produce-video 47.2 to 40.2 KB. | Built |
 
 ## The environment is the floor: a setting only Krish can change
 
