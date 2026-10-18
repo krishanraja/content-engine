@@ -47,7 +47,7 @@ POST_README = 'READ ME.txt'
 PATH_MAX = 180  # the library root on Windows is about 62 characters; Windows stops a path at 260
 PART_MAX = 100
 POST_FOLDER_MAX = PART_MAX
-MAX_BYTES = 500 * 1024 * 1024  # 500 MiB a file: room for a long 1080p master
+MAX_BYTES = 2 * 1024 * 1024 * 1024  # 2 GiB a file since 2026-10-18 (Krish: "Yes, raise to 2 GB"): room for a deep-cut take
 WEEKDAYS = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
 
 # The extension decides the type. The engine's bucket allows exactly these.

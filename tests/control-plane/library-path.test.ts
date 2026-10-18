@@ -49,6 +49,8 @@ interface Cases {
 }
 const cases = JSON.parse(readFileSync('config/library-paths.cases.json', 'utf8')) as Cases
 const migration = readFileSync('supabase/migrations/20261006120000_content_library.sql', 'utf8')
+// The cap was raised to 2 GiB on 2026-10-18 (Krish: "Yes, raise to 2 GB"); the first migration keeps its 500 MiB.
+const raised = readFileSync('supabase/migrations/20261018160000_library_files_up_to_2gib.sql', 'utf8')
 
 describe('the library path rule, from the shared cases', () => {
   it('keeps the same constants as the cases', () => {
@@ -152,11 +154,13 @@ describe('the migration matches the code', () => {
     expect(bucket).not.toBeNull()
     expect(bucket![1]).toBe(LIBRARY_BUCKET)
     expect(bucket![3]).toBe('false')
-    expect(Number(bucket![4])).toBe(LIBRARY_MAX_BYTES)
+    expect(Number(bucket![4])).toBe(524288000)
+    expect(raised).toContain(`set file_size_limit = ${LIBRARY_MAX_BYTES} where id = '${LIBRARY_BUCKET}'`)
     const types = [...bucket![5]!.matchAll(/'([^']+)'/g)].map((m) => m[1]).sort()
     expect(types).toEqual(libraryMimeTypes())
     expect(migration).toMatch(/on conflict \(id\) do update set\s+public = false,/)
-    expect(migration).toContain(`bytes bigint not null check (bytes between 1 and ${LIBRARY_MAX_BYTES})`)
+    expect(migration).toContain('bytes bigint not null check (bytes between 1 and 524288000)')
+    expect(raised).toContain(`check (bytes between 1 and ${LIBRARY_MAX_BYTES})`)
     expect(migration).toContain(`char_length(path) between 1 and ${LIBRARY_PATH_MAX}`)
   })
 

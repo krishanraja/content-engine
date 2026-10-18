@@ -28,7 +28,7 @@
   ],
   "path_max": 180,
   "part_max": 100,
-  "max_bytes": 524288000,
+  "max_bytes": 2147483648,
   "content_types": {
     "html": "text/html",
     "md": "text/markdown",

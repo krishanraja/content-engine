@@ -161,7 +161,7 @@ describe('POST /api/library/recordings/upload-url', () => {
     expect(db.uploads).toEqual([])
   })
 
-  it('refuses a recording over 500 MiB, and a bad sha256 or md5', async () => {
+  it('refuses a recording over 2 GiB, and a bad sha256 or md5', async () => {
     const big = await call(uploadUrl, asRunner(recording({ bytes: LIBRARY_MAX_BYTES + 1 })))
     expect(big.statusCode).toBe(413)
     expect(big.body).toEqual({ ok: false, error: { code: 'recording_too_large' } })

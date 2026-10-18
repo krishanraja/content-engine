@@ -56,14 +56,14 @@ describe('the recordings upload on Krish\'s runner machines', () => {
     expect(code(upload)).not.toMatch(/library_root|MINDMAKE_LIBRARY_ROOT|\/api\/library\/(pending|written)/)
   })
 
-  it('takes the recording types up to 500 MiB once they have settled, and logs and skips anything larger', () => {
+  it('takes the recording types up to 2 GiB once they have settled, and logs and skips anything larger', () => {
     expect(upload).toContain("$RecordingExtensions = @('.mp4', '.mov', '.m4a', '.wav', '.mp3', '.mkv', '.webm')")
-    expect(upload).toContain('$RecordingMaxBytes = 524288000')
+    expect(upload).toContain('$RecordingMaxBytes = 2147483648')
     expect(upload).toContain('$RecordingSettleSeconds = 120')
     const lane = fn('Sync-Recordings')
     expect(lane).toContain("$key = '{0}|{1}|{2}' -f $name, $bytes, $ticks")
     expect(lane).toContain('if (-not $steady -and $age -lt $RecordingSettleSeconds) { continue }')
-    expect(lane).toContain('over the 500 MiB the engine takes')
+    expect(lane).toContain('over the 2 GiB the engine takes')
     expect(lane).toContain('changed while it was read')
   })
 

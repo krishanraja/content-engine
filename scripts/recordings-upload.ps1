@@ -78,7 +78,7 @@ $RepoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $SourceFolderName = 'recordings-source'
 $RunnerCredential = 'MindmakeVideoStudio/control-center-runner-token-v3'
 $RecordingExtensions = @('.mp4', '.mov', '.m4a', '.wav', '.mp3', '.mkv', '.webm')
-$RecordingMaxBytes = 524288000  # 500 MiB, the bucket's cap
+$RecordingMaxBytes = 2147483648  # 2 GiB, the bucket's cap since 2026-10-18 (a deep-cut take runs about 1.1 GB)
 $RecordingSettleSeconds = 120
 $PassBudget = [TimeSpan]::FromMinutes(25)
 # Placing takes: the pinned Python scripts\bootstrap-python.ps1 builds (it
@@ -244,7 +244,7 @@ function Invoke-Engine($Client, [string]$Base, [string]$Token, [string]$Path, $B
     'recording_type_not_enabled' { "the engine's bucket does not take this type yet (an .mkv needs the recordings migration)" }
     'recording_object_conflict' { 'the engine holds different bytes under this sha256' }
     'recording_object_missing' { 'the upload did not arrive' }
-    'recording_too_large' { 'the recording is over the 500 MiB the engine takes' }
+    'recording_too_large' { 'the recording is over the 2 GiB the engine takes' }
     'invalid_recording_name' { 'the engine does not take a recording with this name' }
     'rate_limited' { 'the engine asked to slow down' }
     default { "the engine answered $($answer.status)" }
@@ -320,7 +320,7 @@ function Sync-Recordings([string]$Inbox, [string]$Base, [string]$Token) {
       $seen[$name] = [ordered]@{ bytes = $bytes; ticks = $ticks }
       if ($state.sent.ContainsKey($key) -or $bytes -le 0) { continue }
       if ($bytes -gt $RecordingMaxBytes) {
-        if (-not $state.too_large.ContainsKey($key)) { Write-Log "skipped $name : it is $bytes bytes, over the 500 MiB the engine takes" }
+        if (-not $state.too_large.ContainsKey($key)) { Write-Log "skipped $name : it is $bytes bytes, over the 2 GiB the engine takes" }
         $tooLarge[$key] = $now
         continue
       }

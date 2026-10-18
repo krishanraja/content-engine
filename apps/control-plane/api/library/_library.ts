@@ -24,10 +24,11 @@ import { normalizedStorageMd5Etag } from '../video-studio/_previewStorage.js'
 // and in scripts/post-pack/library.py, and both are tested against every case.
 
 export const LIBRARY_BUCKET = 'content-library'
-/** 500 MiB: a two-minute 1080p master runs 35 to 75 MB, so this leaves room
+/** 2 GiB since 2026-10-18 (Krish: "Yes, raise to 2 GB", so a 14-minute deep-cut take of 1.1 GB reaches a cloud
+ *  session; migration 20261018160000). It was 500 MiB: a two-minute 1080p master runs 35 to 75 MB, so this leaves room
  *  for a long master. The bucket's file_size_limit is set to exactly this by
  *  the migration and checked on every request, like the preview bucket's. */
-export const LIBRARY_MAX_BYTES = 500 * 1024 * 1024
+export const LIBRARY_MAX_BYTES = 2 * 1024 * 1024 * 1024
 /** The library root on Windows is about 62 characters, and Windows stops a
  *  whole path at 260 unless long paths are switched on. */
 export const LIBRARY_PATH_MAX = 180
