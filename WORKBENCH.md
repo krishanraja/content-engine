@@ -3110,3 +3110,6 @@ against an estimate of about 20 cents for the last one. Two causes, for the cost
 the whole source set with every claim, so filing more sources makes every check dearer; and the second look
 re-reads every leftover sentence on every run, with nothing carried. Estimate a rerun from the meter's last
 run, never from the count of fresh sentences.
+
+Plan usage (the sessions themselves), 18 October: `docs/COST_AUDIT_2026-10-18.md`. One six-day session read
+1,086M tokens because every step re-reads a context that sat at a median of 459k; the fix is one fresh session per job.
