@@ -20,6 +20,19 @@ Krish's instruction: "complete phase 2, complete and merge to main".
   (2026-09-24, fast turnaround). With one tick a day an idea takes 4 to 8 days; the saving was about $95 a year.
 - **Live proof**: the next real fact-check run, with his approval for the spend.
 
+## Krish's answers, 18 October 2026 (after the merge)
+- "apply the meter_events migration": approved, for `supabase/migrations/20261024090000_meter_events.sql` on
+  Supabase project `gojpffsrxybbpbdzzrvs` (Mindmaker OS) only. NOT applied yet: the cost gate (300k context
+  ceiling) blocked the call. Next session: apply that file, read back `information_schema.columns` for
+  `meter_events`, record it in `docs/COST_GUARDS.md` (G12 status) and the commit body.
+- "keep the judge sweep, and yes":
+  - G13: keep the nightly judge sweep live (his 2026-09-24 ruling stands). Mark G13 "Dropped (Krish, 2026-10-18)".
+  - G9: "yes" answers "should a line the evidence contradicts be refused at sign-off?" Change main's `signOff` in
+    `apps/control-plane/api/_factGate.ts` to refuse a `contradicted` line (only `unverified` may be signed off),
+    with a test; commit body: `Ruling (Krish, 2026-10-18): a contradicted line cannot be signed off`. First list
+    any existing `meta.fact_check.signed_off` entries with verdict `contradicted` and report them; do not rewrite
+    them without his word.
+
 ## Verified on the merged tree
 Typecheck, `npm run test` (139 files pass, including the style-references test, now fixed on main), every other
 check in `npm run verify`, skills:validate, check_failures (29 guarded, 0 open).
