@@ -13,7 +13,7 @@ byte through the chat).
     python working.py publish
         A home computer, every pass of recordings-upload.ps1: sends every file
         under <makeyourmindup>/3 Posts/<post>/<part>/working <...>/ to the
-        library at the same path, with a .working.json list beside them.
+        library at the same path, with a working-files.json list beside them.
         Files the library already holds are skipped.
     python working.py fetch "<post folder>" [--out DIR]
         Any machine: gets them back, checked by sha256, into DIR/<part>/<working ...>/.
@@ -36,7 +36,7 @@ for p in (HERE, REPO / 'scripts'):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-LIST_NAME = '.working.json'
+LIST_NAME = 'working-files.json'  # not '.working.json': the library refuses a hidden name (path_hidden_part), so until 18 Oct no working folder ever reached it
 PURPOSE = "a session's working files for this post (screenshots, cards, panels, charts, clips), saved by Krish"
 
 
@@ -79,7 +79,8 @@ def working_folders(root):
 
 def files_of(folder):
     return sorted((p.relative_to(folder).as_posix(), p) for p in folder.rglob('*')
-                  if p.is_file() and not any(s.startswith('.') for s in p.relative_to(folder).parts))
+                  if p.is_file() and not any(s.startswith('.') for s in p.relative_to(folder).parts)
+                  and p.relative_to(folder).as_posix() != LIST_NAME)
 
 
 def plan_folder(prefix, folder):
@@ -90,7 +91,9 @@ def plan_folder(prefix, folder):
         target = f'{prefix}/{rel}'
         code = library.refusal(target)
         if code:
-            raise WorkingError(f'{target} cannot go into the library: {library.explain(code)}')
+            # One name the library refuses never holds back the rest of the folder.
+            print(f'working: left out {target}: {library.explain(code)}', file=sys.stderr)
+            continue
         if path.stat().st_size > library.MAX_BYTES or path.stat().st_size == 0:
             continue
         planned.append((target, path, PURPOSE))
