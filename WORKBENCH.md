@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-17, about 07:15 UTC, by a Claude Code session (cloud); Friday signed off, finishing it (Latest handoff).
+Last updated: 2026-10-18, by the Sunday plan-the-week routine (Claude Code, cloud): options written and the 19 October board made.
 
 ## Friday 16 Oct: handed over, 17 Oct
 
@@ -157,6 +157,18 @@ run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
+- Week of 19 to 23 October 2026 (board item `week-publish-board-2026-10-19`;
+  made Sunday 18 October, no day picked yet, no ticks yet):
+  https://claude.ai/artifact/4SZR5ZrQnG657ezuzvvAML (published pinned from the
+  account running the Sunday routine; its store answers, ticks and links both
+  empty). The session Krish's Monday pick starts republishes it to this link.
+  The older week's links are under "Last week's publish board". Options for
+  all three days were written on 18 October; sources: Firecrawl web search
+  only (Drive was not read, so the Cold Ideas & Inspo folder was skipped).
+
+Last week's publish board (12 to 16 October; on 18 October Monday's and Wednesday's
+five channels were copied onto their records; Friday has no ticks yet, so its item stays open):
+
 - Week of 12 to 16 October 2026 (board item
   `week-publish-board-2026-10-12`; Monday posted 12 October and Wednesday
   posted 14 October, every standing channel ticked on RjLHJ; Friday v3 in
@@ -187,7 +199,6 @@ day on it is at 100% (Friday's reposts go out at the weekend).
   (and on the pinned one), apply them to the plan files, rerun the gates,
   and republish to both links.
 
-Last week's publish board: none (the first board was made on 12 October).
 
 ### What the 12 October evening session made permanent (read this first)
 
