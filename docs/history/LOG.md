@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-18
+
+- reconciled at `c5578b1`: NOW.md takes the cost audit and its six standing rules and guards, the North Star, the fact-gate sign-off (and its refusal of contradicted lines), the 2 GiB recording limit, the working-files lane, the publish board repair, Friday v5 to v7 and the music licence ruling. No document was moved or archived. The documents stamped 2026-09-25 are still unchecked against the code and still named in NOW.md "Do not trust". No bullet was old enough to roll (the oldest is 2026-09-20).
+
 ## 2026-10-16
 
 - rolled from NOW.md: 2026-09-15 Station artifact handoffs proven (PR #70). Why: the station check proved order but not that every artifact had exactly one producer and a consumer.
