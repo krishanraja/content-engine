@@ -145,6 +145,57 @@ export function predictionCheck(body: string): { ok: boolean; detail: string } {
   return { ok: true, detail: 'Has a date to check by and a confidence.' }
 }
 
+// ── A score with nothing to measure it against (house rule PLAIN_SCORES) ───
+//
+// Krish, 2026-10-16, of Friday's scripts: "What does 42 even mean?". The
+// script check refused bare scores from then, but the article kept printing
+// them, and on 2026-10-18 he said it again of the article's own lines: "even I
+// dont know what "scored 56 against that 42.3" really even means, and we
+// shouldnt have to explain it. Same for "scored 57.6% for $2.94, against 52.3%
+// for $15.83"". So the article is held to it too, and a test score given as a
+// percentage counts: it is a score, not a share. The same reading as
+// scripts/post-pack/story_check.py score_problems; keep the two in step.
+const SCORE_TALK = /\b(?:scor(?:e|es|ed|ing)|points?|rated|rank(?:s|ed)?|index|benchmark|test)\b/i
+const SCORED = /\bscor(?:e|es|ed|ing)\b/i
+const TENS = 'twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety'
+const SCORE_NUMBER = new RegExp(`(?<![\\w$£€.])(?:\\d+(?:\\.\\d+)?(?!(?:st|nd|rd|th)\\b)|(?:${TENS})(?:[- ](?:one|two|three|four|five|six|seven|eight|nine))?)(?![\\w.]*\\d)`, 'gi')
+const MEASURED = /^[\s-]*(?:%|percent\b|per\s+cent\b|times\b|x\b|out\s+of\b|in\s+(?:a|every|each)\s+(?:hundred|ten|thousand)\b|(?:thousand|million|billion|hundred|dollars?|pounds?|euros?|seconds?|minutes?|hours?|days?|weeks?|months?|years?|words?|people|users?)\b)/i
+const PERCENT = /^[\s-]*(?:%|percent\b|per\s+cent\b)/i
+const RELATIVE = /^[\s-]*(?:%|percent|per\s+cent)\s+(?:higher|lower|more|less|better|worse|cheaper|dearer|up|down)\b/i
+
+/** Every sentence that gives a bare score: [the number, the sentence]. */
+export function bareScores(body: string): Array<{ number: string; sentence: string }> {
+  const found: Array<{ number: string; sentence: string }> = []
+  let afterScore = false
+  const plain = String(body || '').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/https?:\/\/\S+/g, 'a link')
+  for (const line of plain.split(/\n+/)) {
+    if (/^\s*#/.test(line)) { afterScore = false; continue }
+    for (const raw of line.split(/(?<=[.?!]["')]?)\s+(?=["'(]?[A-Z0-9$£€])/)) {
+      const s = raw.split(/\s+/).join(' ').trim()
+      if (!s) continue
+      const talk = SCORE_TALK.test(s)
+      const scored = SCORED.test(s)
+      const bare: string[] = []
+      for (const m of s.matchAll(SCORE_NUMBER)) {
+        const n = m[0]
+        const at = m.index ?? 0
+        const before = s.slice(0, at).split(/\s+/).filter(Boolean)
+        const after = s.slice(at + n.length)
+        if (/^(?:19|20)\d\d$/.test(n)) continue // a year
+        const last = before[before.length - 1]
+        if (last && /^[A-Z]/.test(last) && !/[,.]$/.test(last)) continue // a name's number: Opus 5, GPT 6.1
+        // A test score given as a percentage is still a score; "40% higher" is a comparison.
+        if (scored && PERCENT.test(after) && !RELATIVE.test(after)) { bare.push(`${n}%`); continue }
+        if (MEASURED.test(after) || /\bout\s+of\s*$/i.test(s.slice(0, at))) continue
+        bare.push(n)
+      }
+      if (bare.length && (talk || afterScore)) found.push({ number: bare[0], sentence: s })
+      afterScore = talk || (bare.length > 0 && afterScore)
+    }
+  }
+  return found
+}
+
 /** Every mechanical check a piece must pass before it can be approved or
  *  published. `factGate` is the fact gate's own verdict for this exact text. */
 export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }): Check[] {
@@ -159,6 +210,8 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   checks.push({ id: 'NO_EXCLAMATION', name: 'No exclamation marks', blocking: true, ok: bangs.length === 0, detail: bangs.length ? `${bangs.length} found outside quotations.` : 'None found.' })
   const us = americanSpellings(text)
   checks.push({ id: 'BRITISH_SPELLING', name: 'British spelling', blocking: true, ok: us.length === 0, detail: us.length ? `Found: ${us.slice(0, 5).map(w => `${w.found} (write ${w.use})`).join(', ')}${us.length > 5 ? `, and ${us.length - 5} more` : ''}.` : 'None found.' })
+  const scores = bareScores(text)
+  checks.push({ id: 'PLAIN_SCORES', name: 'No bare scores', blocking: true, ok: scores.length === 0, detail: scores.length ? `Say these as a plain comparison, a share or a multiple: ${scores.slice(0, 3).map(f => `"${f.number}" in "${f.sentence.slice(0, 90)}"`).join('; ')}${scores.length > 3 ? `, and ${scores.length - 3} more` : ''}.` : 'None found.' })
   const grade = readingGrade(text)
   const age = Math.max(6, Math.round((grade + 5) * 2) / 2)
   checks.push({

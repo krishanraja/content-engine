@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 import {
   bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, numbersNotOnFile, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
-  sourcesText, splitFresh, summarise, sweep,
+  sourcesText, splitFresh, summarise, sweep, signOff, stillBlocking, carrySignOffs,
   type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, countRun, factLedgerCoverage, rerunCeiling, settle, settledLeftovers, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
 } from '../../apps/control-plane/api/_factGate.js'
 import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
@@ -738,5 +738,65 @@ describe('G3: a ceiling on paid reruns per piece per day', () => {
     const check = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
     assert.ok(check.indexOf("reason: 'rerun_ceiling'") < check.indexOf('new GateRun()'))
     assert.match(check, /fact_runs: countRun\(nowMeta, today, result\.ran_at, said\)/)
+  })
+})
+
+describe('Krish signs off a line the checker could not match (guard G9)', () => {
+  const body = 'x'.repeat(300)
+  const line = (sentence: string, verdict: CheckedClaim['verdict']): CheckedClaim => ({ ...checked(verdict), sentence })
+  const fc = summarise([line('Think of it as a car.', 'unverified'), line('Nearly 80%.', 'contradicted'), line('A fact.', 'verified')], [], body, 'perplexity:sonar-pro')
+
+  test('a line he passes in his words stops blocking; the gate opens when every one is passed', () => {
+    const one = signOff(fc, [{ sentence: 'Think of it as a car.', said: 'the car is our analogy, fine' }], '2026-10-18T12:00:00Z')
+    assert.equal(one.ok, true)
+    if (!one.ok) return
+    assert.equal(stillBlocking(one.fact_check).length, 1)
+    assert.equal(gateStatus({ fact_check: one.fact_check }, body).ok, false)
+    const both = signOff(one.fact_check, [{ sentence: 'Nearly 80%.', said: 'the paper says nearly 80%' }])
+    assert.equal(both.ok, true)
+    if (!both.ok) return
+    assert.deepEqual(both.fact_check.signed_off!.map(s => [s.decided_by, s.verdict]), [['Krish', 'unverified'], ['Krish', 'contradicted']])
+    assert.equal(gateStatus({ fact_check: both.fact_check }, body).ok, true)
+    // A changed word in the body still undoes the whole check.
+    assert.equal(gateStatus({ fact_check: both.fact_check }, body + 'y').ok, false)
+  })
+
+  test('without his words, or for a line that is not blocking, nothing is signed', () => {
+    assert.equal(signOff(fc, [{ sentence: 'Think of it as a car.', said: ' ' }]).ok, false)
+    assert.equal(signOff(fc, [{ sentence: 'A fact.', said: 'fine' }]).ok, false)
+    assert.equal(signOff(fc, [{ sentence: 'A line not in the piece.', said: 'fine' }]).ok, false)
+    assert.equal(signOff(fc, []).ok, false)
+  })
+
+  test('claims a run left unchecked keep the gate shut', () => {
+    const signed = signOff(fc, [{ sentence: 'Think of it as a car.', said: 'fine' }, { sentence: 'Nearly 80%.', said: 'fine' }])
+    if (!signed.ok) throw new Error(signed.error)
+    assert.equal(gateStatus({ fact_check: { ...signed.fact_check, unchecked: 2, blocking: 4 } }, body).ok, false)
+  })
+
+  test('a new run keeps a sign-off only while its exact sentence still blocks', () => {
+    const signed = signOff(fc, [{ sentence: 'Think of it as a car.', said: 'fine' }])
+    if (!signed.ok) throw new Error(signed.error)
+    const rerun = summarise([line('Think of it as a car.', 'unverified')], [], body, 'perplexity:sonar-pro')
+    assert.equal(carrySignOffs(signed.fact_check, rerun).signed_off!.length, 1)
+    const reworded = summarise([line('Think of it as a lorry.', 'unverified')], [], body, 'perplexity:sonar-pro')
+    assert.equal(carrySignOffs(signed.fact_check, reworded).signed_off, undefined)
+  })
+})
+
+describe('no bare scores in the article (house rule PLAIN_SCORES, Krish 2026-10-18)', () => {
+  test("the article's own lines he named are refused, and their plain versions pass", async () => {
+    const { bareScores, publishChecks } = await import('../../apps/control-plane/api/_publishChecks.js')
+    const old = 'Claude Sonnet 5.5 on its highest setting scored 56 against that 42.3, at about ten times the cost per task of Opus 5.5 on its lowest. '
+      + 'On Anthropic\'s own chart for one test of computer tasks, Opus 5.5 at medium scored 57.6% for $2.94, against 52.3% for $15.83 from Opus 5 at max.'
+    assert.deepEqual(bareScores(old).map(f => f.number), ['56', '57.6%'])
+    const plain = 'Claude Sonnet 5.5 on its highest setting did about a third better than Opus 5.5 on its lowest, at about ten times the cost per task. '
+      + 'On Anthropic\'s own chart for one test of computer tasks, Opus 5.5 at its default setting beat Opus 5 at max effort for about a fifth of the cost. '
+      + 'It scored 40% higher. Nearly 80% of the conversations were about three things. GPT-6.1 Sol came out in 2026. '
+      + 'Its test scores are on the release notes, https://help.openai.com/en/articles/6825453-chatgpt-release-notes'
+    assert.deepEqual(bareScores(plain), [])
+    const check = publishChecks(old, { ok: true, reason: null }).find(c => c.id === 'PLAIN_SCORES')!
+    assert.equal(check.blocking, true)
+    assert.equal(check.ok, false)
   })
 })

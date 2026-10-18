@@ -1,36 +1,79 @@
 {
- "title": "OpenAI tried to pick your AI for you. It broke on day one.",
- "subtitle": "ChatGPT and Claude now offer dozens of models. My bet is the menu disappears, and the choosing moves behind the counter. Here's what that does to money, to getting the job done, and to power.",
+ "title": "Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks",
+ "subtitle": "A new Claude every four weeks, and ChatGPT from GPT-5.1 to 6.1 in under a year. Does the name matter, why is it speeding up, and why I think the choice of how hard your AI thinks is about to be made for you.",
  "date": "2026-10-16",
  "kicker": "mind.the.gap",
  "status": [
-  "Fact check passed on this exact text (22 claims)",
-  "Cover redrawn for the new angle",
-  "Both scripts approved and in Teleprompter",
-  "Waiting: recording, then the video cards for the new angle"
+  "Fact check passed on this exact text (article v7): every line checked, 11 signed off by Krish in his words on 18 Oct",
+  "No bare scores: every test result said as a plain comparison",
+  "The 90-second cut is finished (89.7 s), with its tall thumbnail",
+  "Waiting: the 14-minute long cut, rendered on Krish's PC (Codex, produce-video, long-cut/long.json)"
  ],
  "body": "body.md",
  "words": "words.json",
  "images": [
   {
    "id": "cover",
-   "file": "img/cover.png",
+   "file": "img/substack-cover-1200x630.png",
    "role": "cover",
-   "alt": "OpenAI tried to pick your AI. Krish on the mind.the.gap cover, with OpenAI marked Router and Anthropic marked 12+ models",
-   "caption": "Drawn by the house cover drawer. Every word sits inside Substack's crops."
+   "alt": "The mind.the.gap cover: Claude and ChatGPT keep releasing models. Does it even matter?"
   },
   {
-   "id": "vertical",
-   "file": "img/cover-vertical.png",
+   "id": "vertical-cover",
+   "file": "img/vertical-cover-1080x1920-shorts-tiktok-reels.png",
    "role": "vertical-cover",
-   "alt": "The vertical cover: Your AI, picked for you"
+   "alt": "The vertical cover for Shorts, TikTok and Reels"
+  },
+  {
+   "id": "square-cover",
+   "file": "img/square-1080x1080.png",
+   "role": "square-cover",
+   "alt": "The square cover"
+  },
+  {
+   "id": "share-card-cover",
+   "file": "img/share-card-1200x675.png",
+   "role": "share-card-cover",
+   "alt": "The share card"
+  },
+  {
+   "id": "launches",
+   "file": "img/launches.png",
+   "alt": "Anthropic and OpenAI launched a new model about every two weeks for a year: 6 launches in 16 days at the end.",
+   "after_heading": "THE NAME GAME"
+  },
+  {
+   "id": "model-or-thinking-level",
+   "file": "img/model-or-thinking-level.png",
+   "alt": "Turning up the thinking level lifted Claude and GPT more than a new version did.",
+   "after_heading": "THE SWITCH THAT MATTERS"
+  },
+  {
+   "id": "each-step-buys-less",
+   "file": "img/each-step-buys-less.png",
+   "alt": "Each step up in thinking buys Claude and GPT less for every extra dollar.",
+   "after_heading": "THE SWITCH THAT MATTERS"
+  },
+  {
+   "id": "new-version-or-more-thinking",
+   "file": "img/new-version-or-more-thinking.png",
+   "alt": "A new Claude Opus or GPT Sol adds fewer points than more thinking, but costs less.",
+   "after_heading": "WHAT THINKING COSTS THEM"
+  },
+  {
+   "id": "cheapest-route-to-each-score",
+   "file": "img/cheapest-route-to-each-score.png",
+   "alt": "The cheapest route to each score mixes Claude and GPT models and thinking levels.",
+   "after_heading": "WHAT TO DO ABOUT IT"
+  },
+  {
+   "id": "smaller-claude-turned-up",
+   "file": "img/smaller-claude-turned-up.png",
+   "alt": "Claude Sonnet 5.5 at Max, Xhigh and High, and Haiku 5.5 at Max, all outscore Claude Opus 5.5 at Low.",
+   "after_heading": "THE SWITCH THAT MATTERS"
   }
  ],
  "scripts": [
-  {
-   "label": "The 3-minute video",
-   "file": "script-long.md"
-  },
   {
    "label": "The 90-second cut",
    "file": "script-90s.md"

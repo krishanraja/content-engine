@@ -1,4 +1,7 @@
 // POST /api/content-ideas/:id/fact-check   run the fact gate on the current body
+//      { action: 'sign_off', decided_by: 'Krish', lines: [{ sentence, said }] }
+//                                          Krish passes named blocking lines in
+//                                          his own words (guard G9); no model
 // GET  /api/content-ideas/:id/fact-check   the last result, and whether it
 //                                          still applies to the current body
 //
@@ -26,8 +29,8 @@ import { UTILITY_MODEL } from '../../_models.js'
 import { randomUUID } from 'node:crypto'
 import { lastFactRunCost, meterScope, perplexityCall } from '../../_meter.js'
 import {
-  carryForward, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
-  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
+  bodyHash, carryForward, carrySignOffs, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, signOff, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
 
@@ -395,11 +398,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck, last_run_cost: lastRunCost })
   }
 
-  if (body.trim().length < 200) return res.status(409).json({ ok: false, error: 'There is no draft to check yet.' })
-
   const request = req.body && typeof req.body === 'object' && !Array.isArray(req.body)
     ? req.body as Record<string, unknown>
     : {}
+  // Guard G9 (docs/COST_GUARDS.md): Krish's sign-off of named lines. Only his
+  // decision, relayed in his words, and only on the check of this exact body.
+  if (request.action === 'sign_off') {
+    if (request.decided_by !== 'Krish') return res.status(400).json({ ok: false, error: "A sign-off is Krish's decision: send decided_by 'Krish' with his words." })
+    const current = meta.fact_check as FactCheck | undefined
+    if (!current) return res.status(409).json({ ok: false, error: 'There is no fact check to sign off yet.' })
+    const gate = gateStatus(meta, body)
+    if (gate.ok) return res.status(409).json({ ok: false, error: 'The fact check already passes; there is nothing to sign off.' })
+    if (current.body_hash !== bodyHash(body)) return res.status(409).json({ ok: false, error: 'The words changed after the fact check, so its lines cannot be signed off.' })
+    const lines = Array.isArray(request.lines) ? request.lines as Array<{ sentence: string; said: string }> : []
+    const signed = signOff(current, lines)
+    if (signed.ok === false) return res.status(400).json({ ok: false, error: signed.error })
+    const fresh = await supabase.from('content_ideas').select('meta').eq('id', id).single()
+    const nowMeta = (fresh.data?.meta || meta) as Record<string, any>
+    if ((nowMeta.fact_check as FactCheck | undefined)?.ran_at !== current.ran_at) return res.status(409).json({ ok: false, error: 'A new fact check landed meanwhile. Read it and sign off again.' })
+    const nextMeta = { ...nowMeta, fact_check: signed.fact_check }
+    const { error: upErr } = await supabase.from('content_ideas').update({ meta: nextMeta }).eq('id', id)
+    if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
+    return res.status(200).json({ ok: true, signed_off: signed.fact_check.signed_off, gate: gateStatus(nextMeta, body) })
+  }
+
+  if (body.trim().length < 200) return res.status(409).json({ ok: false, error: 'There is no draft to check yet.' })
+
   const said = typeof request.said === 'string' ? request.said : ''
   const today = new Date().toISOString().slice(0, 10)
   const ceiling = rerunCeiling(meta, today, said)
@@ -448,7 +472,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const fresh = await supabase.from('content_ideas').select('meta').eq('id', id).single()
   const nowMeta = (fresh.data?.meta || meta) as Record<string, any>
   const { error: upErr } = await supabase.from('content_ideas')
-    .update({ meta: { ...nowMeta, fact_check: result, fact_ledger: nextLedger, fact_runs: countRun(nowMeta, today, result.ran_at, said) } })
+    .update({ meta: { ...nowMeta, fact_check: carrySignOffs(nowMeta.fact_check as FactCheck | undefined, result), fact_ledger: nextLedger, fact_runs: countRun(nowMeta, today, result.ran_at, said) } })
     .eq('id', id)
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
 

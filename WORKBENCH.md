@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-17, about 07:15 UTC, by a Claude Code session (cloud); Friday signed off, finishing it (Latest handoff).
+Last updated: 2026-10-18, by the Sunday plan-the-week routine (Claude Code, cloud): options written and the 19 October board made.
 
 ## Friday 16 Oct: handed over, 17 Oct
 
@@ -139,6 +139,22 @@ Not done: both renders and their frame checks, the Substack page, pack, library,
 
 ## This week's publish board
 
+**session_01RY92XqvcV9kwoDWLBnN8fp (18 Oct, afternoon): Friday is publish-ready.** Article v7
+(`docs/plans/2026-10-09-draft-body-v7.md`) carries Krish's edits to the nine lines and says every test result as a
+plain comparison (his words on 7 and 8: "vague scores mean nothing to a reader"). One capped paid rerun (13
+sentences, about $0.80); 11 lines signed off in his words through the new sign-off step (guard G9, on main); the
+fact gate and every blocking publish check pass, including the new PLAIN_SCORES article check. The v7 pack
+(publish manager, Substack copy, web page, covers, six charts, the 90-second cut and its thumbnails) is in the
+library: `3 Posts/2026-10-16 Fri mind.the.gap - Why so many AIs/`, inputs in `docs/plans/2026-10-09-friday/`
+(`post-v7.json`, `manager.json`, `words.json`, `page-facts-v7.json`; the work folder rebuilds from the library
+with the commands in `nine-lines.md` and `HANDOVER.md`). Still waiting: the 14-minute long cut, which Krish
+renders on his PC (Codex, `produce-video`, `docs/plans/2026-10-09-friday/long-cut/long.json`; his pick, 18 Oct:
+"Merge; I render on PC"). The source links inside the article (54 listed, none linked from a phrase) are still
+open from 18 Oct. Both board links hold the same build (H6qK version 17, RjLH version 41, 18 Oct): Monday and
+Wednesday carried over unchanged, Friday made with its publish page; its publish-page link on the record is the
+post's Drive folder (`making.py ... publish-manager`), because Krish's machine had not yet written the new page to
+Drive. No Friday ticks on H6qK; RjLH's tick store cannot be read from this account.
+
 **Closing session_01YHC9kjnvJEzYDeFDdADLBq (18 Oct).** Three files Krish asked for, all on main and on both board
 links (Friday tab, "Review the words"): `docs/COST_GUARDS.md` (the six standing cost rules and guards G1 to G9 to
 build), `docs/plans/2026-10-09-friday/nine-lines.md` (the nine fact-check lines for his sign-off) and
@@ -156,6 +172,18 @@ board item, `week-publish-board-<its Monday>`, with the same link. Sunday's
 run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
+
+- Week of 19 to 23 October 2026 (board item `week-publish-board-2026-10-19`;
+  made Sunday 18 October, no day picked yet, no ticks yet):
+  https://claude.ai/artifact/4SZR5ZrQnG657ezuzvvAML (published pinned from the
+  account running the Sunday routine; its store answers, ticks and links both
+  empty). The session Krish's Monday pick starts republishes it to this link.
+  The older week's links are under "Last week's publish board". Options for
+  all three days were written on 18 October; sources: Firecrawl web search
+  only (Drive was not read, so the Cold Ideas & Inspo folder was skipped).
+
+Last week's publish board (12 to 16 October; on 18 October Monday's and Wednesday's
+five channels were copied onto their records; Friday has no ticks yet, so its item stays open):
 
 - Week of 12 to 16 October 2026 (board item
   `week-publish-board-2026-10-12`; Monday posted 12 October and Wednesday
@@ -187,7 +215,6 @@ day on it is at 100% (Friday's reposts go out at the weekend).
   (and on the pinned one), apply them to the plan files, rerun the gates,
   and republish to both links.
 
-Last week's publish board: none (the first board was made on 12 October).
 
 ### What the 12 October evening session made permanent (read this first)
 
@@ -742,10 +769,8 @@ Plan usage (the sessions themselves), 18 October: `docs/COST_AUDIT_2026-10-18.md
 Cost guards, 18 October (`docs/COST_GUARDS.md`): G1–G8 and G11 built on branch `claude/token-efficiency-content-dfb8q7`
 (context ceiling, budget against the meter, rerun ceiling, second look carried, no board reads, agent gate, quiet
 scripts, Sonnet for produce-video, a lean workbench). Phase 2, the same day, merged to main with the rest: G12
-(Perplexity and OpenAI metered; each fact-check run's calls stamped with piece and run), G9 (Krish signs off a line
-the checker could not match, in his own words: `POST .../fact-check {action:'sign_off', sentence, said,
-decided_by:'Krish'}`; the nine lines in `docs/plans/2026-10-09-friday/nine-lines.md` can be recorded this way once he
-gives his words for each; never a contradicted line) and G14 (make-piece and produce-video split into a core plus
+(Perplexity and OpenAI metered; each fact-check run's calls stamped with piece and run), G9 is main's (996544a, kept: `{action:'sign_off', decided_by:'Krish', lines:[{sentence, said}]}`; this branch's
+stricter version, which refused a contradicted line, was withdrawn before the merge) and G14 (make-piece and produce-video split into a core plus
 `references/`, checked by `scripts/check_skill_core.py`). Waiting on Krish: (1) approval to apply
 `supabase/migrations/20261024090000_meter_events.sql` (until then per-run cost is a day average); (2) G13, the
 nightly judge sweep batch-only, conflicts with his 2026-09-24 ruling for fast turnaround (it would take days per
