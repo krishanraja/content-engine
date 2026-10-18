@@ -325,7 +325,7 @@
     },
     {
      "file": "docs/COST_GUARDS.md",
-     "contains": "G1 | Context ceiling",
+     "contains": "G1 | Context nudge",
      "how": "the guards to build, in order"
     },
     {
