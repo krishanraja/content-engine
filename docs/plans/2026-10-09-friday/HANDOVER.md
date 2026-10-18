@@ -138,3 +138,15 @@ Krish's yes and a costed estimate from the meter (`meter_daily`, `fact-gate-%`),
   (`post-v6.json`), sent to the library.
 - Still open: the long cut (the 14-minute take is only on Krish's PC; four cards need tighter rings), the inline
   source links, and the board, which is rebuilt once with next week's Ideas tab.
+
+## Krish's calls on 18 Oct (his words)
+
+- Screenshots: "Recapture them now" (then found saved on Drive and in the library; nothing recaptured).
+- The long video's cost-vs-score card keeps "About a third higher".
+- The fact check: "yes run it", then the length: "decide what the shortest length is for this piece, ensuring no
+  words are wasted and no points are lost", then "Yes, cut to ~2,000"; the Sonnet finding goes "Beside Haiku".
+- Sonnet vs Opus became exhibit 6: "I think that new discovery deserves a visual."
+- The Opus joke: drop the number. Then one more run: "yes". Then: stop the paid runs and read the nine lines
+  himself ("1"); they are in `nine-lines.md`, on both boards' Friday tab.
+- The six cost habits: "They should all become standing rules" (AGENTS.md, `docs/COST_GUARDS.md`).
+- The 90-second cut is sped up 1.10x to fit 90 s, under his 16 Oct word: "just speed the video up a bit in post".
