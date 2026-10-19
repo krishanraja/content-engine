@@ -1,0 +1,56 @@
+import { createHash } from 'node:crypto'
+import type { VercelRequest } from '@vercel/node'
+import { hasEngineAccess, operatorBearerAllowed } from '../_auth.js'
+
+export const collections = ['ticks', 'links', 'edits', 'picks', 'queue', 'comments'] as const
+export type Collection = typeof collections[number]
+export const MAX_HTML = 16 * 1024 * 1024
+export const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex')
+export const canonical = (value: unknown): string => {
+  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`
+  if (value && typeof value === 'object') return `{${Object.keys(value).sort().map(k => `${JSON.stringify(k)}:${canonical((value as Record<string, unknown>)[k])}`).join(',')}}`
+  return JSON.stringify(value)
+}
+export function monday(value: string): boolean {
+  const d = new Date(`${value}T00:00:00Z`)
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) && !isNaN(+d) && d.toISOString().slice(0, 10) === value && d.getUTCDay() === 1
+}
+export const validId = (id: string) => /^[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,159}$/.test(id)
+export const revision = (n: unknown) => Number.isSafeInteger(n) && Number(n) >= 0
+export function actor(req: VercelRequest, operatorOnly = false): string | null {
+  if (operatorBearerAllowed(req)) return 'engine_operator'
+  if (operatorOnly || !hasEngineAccess(req)) return null
+  if (!['GET', 'HEAD'].includes(req.method || '')) {
+    const origins = ['https://content.krishraja.com', 'https://controlcenter.krishraja.com', process.env.APP_ORIGIN].filter(Boolean)
+    if (!origins.includes(String(req.headers.origin || ''))) return null
+  }
+  return 'Krish'
+}
+const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v)
+export function validBody(collection: string, id: string, body: unknown): boolean {
+  if (!validId(id) || !object(body) || Buffer.byteLength(JSON.stringify(body)) > 256 * 1024) return false
+  if ('at' in body && (typeof body.at !== 'string' || !Number.isFinite(Date.parse(body.at)))) return false
+  const day = (v: unknown) => ['mon', 'wed', 'fri'].includes(String(v))
+  const text = (k: string, max = 150000) => typeof body[k] === 'string' && (body[k] as string).length <= max
+  if (collection === 'ticks') return typeof body.done === 'boolean' && day(body.day) && text('piece_id', 100) && text('step', 80) && text('label', 300) && id === `${body.day}-${body.step}`
+  if (collection === 'links') return day(id) && ['article', 'youtube'].every(k => text(k, 2048) && (!body[k] || /^https?:\/\//.test(body[k] as string)))
+  if (collection === 'edits') return text('text') && day(body.day) && text('item', 100) && id === `${body.day}-${body.item}`
+  if (collection === 'picks') return day(id) && day(body.day) && text('pick', 160) && text('story')
+  if (collection === 'queue') return text('pick', 160) && typeof body.queued === 'boolean'
+  if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
+  return false
+}
+export type BoardFile = { sha256: string; bytes: number; type: string; name: string; key: string }
+export type Manifest = { version: 1; week: string; html: BoardFile; assets: Record<string, BoardFile> }
+export function fileSpec(week: string, v: unknown, html = false): v is BoardFile {
+  if (!object(v) || !/^[a-f0-9]{64}$/.test(String(v.sha256)) || !Number.isSafeInteger(v.bytes) || Number(v.bytes) <= 0) return false
+  if (Number(v.bytes) > (html ? MAX_HTML : 2 * 1024 ** 3)) return false
+  if (typeof v.type !== 'string' || !/^[a-z]+\/[a-z0-9.+-]+$/.test(v.type)) return false
+  if (html && v.type !== 'text/html') return false
+  if (typeof v.name !== 'string' || !/^[^/\\\x00-\x1f]{1,200}$/.test(v.name)) return false
+  return v.key === `boards/${week}/${v.sha256}`
+}
+export function validManifest(week: string, v: unknown): v is Manifest {
+  return object(v) && v.version === 1 && v.week === week && fileSpec(week, v.html, true) && object(v.assets)
+    && Object.keys(v.assets).length <= 250 && Object.entries(v.assets).every(([id, f]) => validId(id) && fileSpec(week, f))
+}

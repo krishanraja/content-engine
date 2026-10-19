@@ -168,7 +168,7 @@ function saveLinks(day){
     const body = { article: p.st.article, youtube: p.st.youtube, at: new Date().toISOString() };
     const said = (text, bad) => { if (p.linkState) { p.linkState.textContent = text; p.linkState.className = "link-state" + (bad ? " bad" : "") } };
     p.saving = p.saving.then(() => db.doc("links/" + day).set(body)).then(
-      () => said("Links saved " + hhmm(body.at) + ".", false),
+      () => { for (const [key, el] of Object.entries(p.inputs)) if (el && el.value.trim() === body[key]) el.dataset.unsaved = "false"; said("Links saved " + hhmm(body.at) + ".", false) },
       () => said("Links not saved. Type again to retry.", true));
   }, 700);
 }
@@ -197,7 +197,7 @@ render();
         const v = s.exists ? (s.data() || {}) : {};
         for (const k of ["article", "youtube"]) {
           const el = p.inputs[k]; if (!el) continue;
-          if (p.timer || document.activeElement === el) continue; // never overwrite what is being typed
+          if (p.timer || document.activeElement === el || el.dataset.unsaved === "true") continue; // never overwrite unsaved typing
           const val = typeof v[k] === "string" ? v[k] : "";
           p.st[k] = val; el.value = val;
         }
@@ -286,7 +286,7 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
           return;
         }
         prev[id] = v.text;
-        if (document.activeElement === b) return; // never overwrite what is being typed
+        if (document.activeElement === b || b.dataset.unsaved === "true") return; // never overwrite unsaved typing
         b.value = v.text;
         const n = b.closest(".rv-item")?.querySelector(".rv-n");
         if (n) n.textContent = v.text.split(/\s+/).filter(Boolean).length.toLocaleString("en-US") + " words";
@@ -339,17 +339,18 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     const text = box.value, was = prev[id];
     if (text === was) { say(id, "Nothing changed since your last save."); return }
     btn.disabled = true; say(id, "Saving…");
-    let stored = false, posted = false;
+    let stored = false, posted = false, saveError = null;
     if (rdb) try {
       await rdb.doc("edits/" + id).set({ text, day: box.dataset.day, item: box.dataset.item, at: new Date().toISOString(), words: text.trim().split(/\s+/).length });
       stored = true;
-    } catch {}
-    if (comments) try { posted = await postEdit(id, box, was, text) } catch {}
+      if (box.value === text) box.dataset.unsaved = "false";
+    } catch (e) { saveError = e }
+    if (comments && (stored || !rdb || !window.boardRuntime)) try { posted = await postEdit(id, box, was, text) } catch {}
     if (stored || posted) prev[id] = text;
-    say(id, stored && posted ? "Saved, and your changes are posted as a comment. Claude will pick this up."
+    say(id, window.boardRuntime && stored ? (box.value === text ? "Saved. Your changes are available to the content workflows." : "Saved the earlier wording. Your latest typing still needs saving.") : stored && posted ? "Saved, and your changes are posted as a comment. Claude will pick this up."
       : posted ? "Your changes are posted as a comment. Claude will pick this up."
       : stored ? "Saved. Claude can read it from this account's sessions; the comment copy didn't post."
-      : "Not saved. Press Save again.", !(stored || posted));
+      : saveError?.message || "Not saved. Press Save again.", !(stored || posted));
     btn.disabled = false;
   });
 })();

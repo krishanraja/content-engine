@@ -1,5 +1,8 @@
 # Handover: make Friday's tab on both publish boards publish-ready
 
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+
+
 Paste everything below the line into a fresh Claude Code session on `krishanraja/content-engine` (Sonnet is
 enough for this job).
 

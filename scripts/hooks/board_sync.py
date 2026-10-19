@@ -34,9 +34,14 @@ def main():
         return 0
     result = json.dumps(event.get('tool_response') or '')
     urls = set(re.findall(r'https://claude\.ai/artifact/[A-Za-z0-9]+', (ti.get('url') or '') + ' ' + result))
-    weeks = json.loads((ROOT / 'config' / 'boards.json').read_text(encoding='utf-8'))['weeks']
+    config = json.loads((ROOT / 'config' / 'boards.json').read_text(encoding='utf-8'))
+    weeks = config['weeks']
     week = next((links for links in weeks.values() if urls & set(links)), None)
     if not week:
+        return 0
+    if config.get('web_cutover', {}).get('state') == 'active':
+        sys.stderr.write('Publish boards now live at https://content.krishraja.com. '
+                         'Do not synchronize the preserved Claude copies. Follow docs/PUBLISH_BOARDS.md.\n')
         return 0
     sha = hashlib.sha256(text.encode('utf-8')).hexdigest()
     state = json.loads(STATE.read_text(encoding='utf-8')) if STATE.exists() else {}

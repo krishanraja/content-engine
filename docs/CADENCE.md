@@ -1,5 +1,8 @@
 # The weekly rhythm
 
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+
+
 Krish, 2026-10-11, superseding the Sunday, Tuesday and Thursday slates of 10
 October: "We're going to enable planning for the whole week on a Sunday.
 Every Sunday we're going to decide which of the three pieces are going to go

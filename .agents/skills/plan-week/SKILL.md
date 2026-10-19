@@ -5,6 +5,16 @@ description: Plan the publishing week on Sunday. Research three or four options 
 
 # Plan the week
 
+## Publish-board routing
+
+Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
+current web addresses, all six collection reads, build/download/publication,
+making-record attribution and rollback. Check `config/boards.json.web_cutover`:
+while pending, source migration is unfinished; once active, use only the web
+board for new interactions. Any ArtifactData, ArtifactComments, or dual-account
+publish instructions below apply only before cutover or to explicit legacy
+artifact work. Never synchronize preserved Claude boards after active cutover.
+
 Krish, 2026-10-11: "Every Sunday we're going to decide which of the three
 pieces are going to go out on Monday, Wednesday, and Friday. We're going to
 get Monday's piece all the way to iteration and the publish board, whilst

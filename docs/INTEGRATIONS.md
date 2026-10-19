@@ -1,5 +1,8 @@
 # Integrations: every outside service, how it is reached, and its status
 
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+
+
 Status: living record. Started 2026-10-09 on Krish handing over a set of keys
 and connectors. This file names interfaces and holds **no secret values**, by
 the same rule as the rest of the repository (`scripts/check-no-secrets.ts`).

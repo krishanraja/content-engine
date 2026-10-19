@@ -44,6 +44,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `tests/`
 - `tests/control-plane/`
 - `tests/fixtures/`
+- `tests/integration/`
 
 ## Content engine routes
 
@@ -57,6 +58,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/aeo/run`
 - `/api/aeo/subjects`
 - `/api/arcs/surface`
+- `/api/board`
 - `/api/briefs/[week]`
 - `/api/briefs/[week]/push`
 - `/api/briefs/[week]/revise`
@@ -1703,6 +1705,31 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `async function runSurface(opts: { week?: string; max?: number } = {})`
 - `const config`
 - `export default withContentRun('arcs_surface', handler)`
+
+### `apps/control-plane/api/board/_contracts.ts`
+
+- `const collections`
+- `type Collection = typeof collections[number]`
+- `const MAX_HTML`
+- `const digest = (value: string | Uint8Array) =>`
+- `const canonical = (value: unknown): string =>`
+- `function monday(value: string): boolean`
+- `const validId = (id: string) =>`
+- `const revision = (n: unknown) =>`
+- `function actor(req: VercelRequest, operatorOnly = false): string | null`
+- `function validBody(collection: string, id: string, body: unknown): boolean`
+- `type BoardFile`
+- `type Manifest`
+- `function fileSpec(week: string, v: unknown, html = false): v is BoardFile`
+- `function validManifest(week: string, v: unknown): v is Manifest`
+
+### `apps/control-plane/api/board/_handler.ts`
+
+- `function createBoardHandler(getDb: () => Promise<SupabaseClient>)`
+
+### `apps/control-plane/api/board/index.ts`
+
+- `export default createBoardHandler(async () => (await import('../_supabase.j`
 
 ### `apps/control-plane/api/briefs/[week].ts`
 

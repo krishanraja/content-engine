@@ -5,6 +5,16 @@ description: Make one piece end to end from the piece id Control Center sent, th
 
 # Make a piece
 
+## Publish-board routing
+
+Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
+current web addresses, all six collection reads, build/download/publication,
+making-record attribution and rollback. Check `config/boards.json.web_cutover`:
+while pending, source migration is unfinished; once active, use only the web
+board for new interactions. Any ArtifactData, ArtifactComments, or dual-account
+publish instructions below apply only before cutover or to explicit legacy
+artifact work. Never synchronize preserved Claude boards after active cutover.
+
 Control Center plans and tracks; Claude Code makes. Krish, 2026-10-10: the
 control centre "becomes more of a progress tracker, suggestions compiler, and
 ideas generator, which then saves my choices to the durable system and then a

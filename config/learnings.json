@@ -616,9 +616,20 @@
    "on": "2026-10-19",
    "krish": "yes lets move the board to content.krishraja.com",
    "why": "The board only works inside Claude; he wants Codex and any tool to build it and read his ticks.",
-   "means": "The weekly publish board moves to content.krishraja.com with ticks in the database behind Control Center (docs/handovers/2026-10-19-board-to-content-krishraja.md). Open until built.",
+   "means": "The weekly publish board moves to content.krishraja.com with all interactions behind the existing login. Local implementation is prepared; keep this learning open until the approved deployment, all four exports and authenticated cutover are verified.",
    "status": "open",
-   "encoded": []
+   "encoded": [
+    {
+     "file": "scripts/post-pack/board_web.py",
+     "contains": "def web_page",
+     "how": "Web runtime and explicit operator publisher preserve artifact mode."
+    },
+    {
+     "file": "apps/control-plane/api/board/_handler.ts",
+     "contains": "createBoardHandler",
+     "how": "Private API persists all board collections and immutable builds."
+    }
+   ]
   },
   {
    "id": "send-files-not-links",
