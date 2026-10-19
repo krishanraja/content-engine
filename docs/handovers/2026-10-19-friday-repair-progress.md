@@ -296,3 +296,19 @@ unknown keys and invalid/duplicate models still fail. Skill validation and every
 subsequent verify command passed when resumed; engine-gates then passed 13 tests,
 including the added validator regression. Windows still skips Linux runtime paths.
 No claim that full final video playback has happened. Nothing filed or recorded.
+
+
+Deep v3 encoding is active (renderer session 99227, Python 48328; encoder 34576
+observed at 16:47). Its bed continuity passed all 7331 eligible speech windows,
+normal_fraction 1.0, with no speech silence. A local continuation script
+W/finish-deep-review.ps1 is running in session 54961: after the renderer exits and
+an exact-video receipt exists it runs six calibrated deep sync windows (30,180,
+330,480,630,780; speech span 3.5–797.5), then frame_review with intro 3.5/outro 19.
+Logs: repair-long/sync-v3.log and frames-v3.log. Final job state goes to
+repair-long/review-jobs-v3.json. It cannot approve playback or file anything.
+Read running state before starting duplicate jobs. Review both uncovered hidden
+joins at edited 172.62 and 326.62 seconds in full playback.
+
+Evidence JSON is marked -text in .gitattributes so Git cannot silently rewrite
+bytes on another platform. All 39 indexed deep evidence hashes match the saved
+manifest. Caption repair bytes are also preserved across checkouts.
