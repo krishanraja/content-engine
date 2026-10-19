@@ -49,9 +49,9 @@ Follow the money from your business to Google.
 
 **Squeezed on margin:** anyone selling a fixed-price product built on Argon. Picture a founder who sells a customer-help bot for a flat monthly fee. Their cost doubles on 1 December. Their customers' price doesn't. That gap comes straight out of their margin.
 
-**Safe, maybe:** businesses with a contract that fixes the price. But only if it really says so. Sanchit Vir Gogia, chief analyst at Greyhound Research, told Computerworld that Google Cloud's standard terms allow fee changes unless a price is expressly agreed.
+Safe, maybe: businesses with a contract that fixes the price. But only if it really says so. Sanchit Vir Gogia, chief analyst at Greyhound Research, told Computerworld that Google Cloud's standard terms allow fee changes unless a price is expressly agreed.
 
-And Google? My read, and it is my read: the launch price was there to get people building. Once your rulebook, your prompts and your tools are set up around one AI, moving costs time and money. From 1 December, Argon costs exactly what Anthropic charges for Claude Opus 5.5, $4 in and $20 out. So December is when Argon is priced like its rivals, after people have already moved in.
+And Google? My read, and it is my read: the launch price was there to get people building. Once your rulebook, your instructions and your tools are set up around one AI, moving costs time and money. From 1 December, Argon costs exactly what Anthropic charges for Claude Opus 5.5, $4 in and $20 out. So December is when Argon is priced like its rivals, after people have already moved in.
 
 ## IS A CHEAPER MODEL WORTH IT?
 
@@ -65,9 +65,7 @@ There's a cheaper route inside Google too. Its Batch and Flex options cost half 
 
 Now for my call. If lots of customers start switching down in November, Google has a reason to blink. That's the bold bet.
 
-So my prediction is that Google will keep Argon's $2 and $10 price past 30 November, or will announce a new discount on it, before 1 December. That's a long shot. My guess is Google sticks to its footnote.
-
-How sure we are: 15%.
+**Our prediction.** Google will keep Argon's $2 and $10 price past 30 November, or will announce a new discount on it, before 1 December 2026. That's a long shot, and my guess is Google sticks to its footnote. How sure we are: 15%.
 
 ## YOUR CONTRACT, THEN MONDAY'S TWO QUESTIONS
 
