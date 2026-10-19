@@ -1,5 +1,9 @@
 # Codex: fix and re-render Friday's two cuts (16 Oct, mind.the.gap)
 
+**2 of 3.** It carries out the plan in file 1, `docs/plans/2026-10-09-friday/fix-plan-19-oct.md`. File 3,
+`docs/handovers/2026-10-19-board-to-content-krishraja.md`, moves the publish board and can run at the same time in
+another session.
+
 Paste everything below the line into Codex on Krish's home computer, in `C:\Users\krish\dev\content-engine`, run
 outside the sandbox (it needs the engine key, H: and the internet).
 
@@ -78,5 +82,7 @@ You are working in the Mindmake content engine repository (`krishanraja/content-
 - Before you stop: update `WORKBENCH.md` (what is done, what waits on Krish, where every file is), commit, push, and
   close the `lip-sync-drift-at-joins` and `cut-called-done-unheard` entries in `config\failures.json` only with
   their guards listed (`guards`), and only once the guards exist and pass.
-- The publish board: do not touch it. Updating it is a separate job (see the note at the end of
-  `fix-plan-19-oct.md`).
+- The publish board: do not touch it. It is moving to content.krishraja.com in a separate job
+  (`docs/handovers/2026-10-19-board-to-content-krishraja.md`). When you stop, write in `WORKBENCH.md` the library
+  path and Drive link of each new cut, so the board job (or whoever rebuilds the Friday tab, `fix-plan-19-oct.md`
+  section 5) can pick them up.

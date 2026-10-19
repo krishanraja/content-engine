@@ -1,5 +1,16 @@
 # Friday 16 Oct: the fix plan for both cuts (proposed 19 Oct, not built)
 
+**1 of 3.** The three files that go together:
+
+1. **This plan**: what is wrong with Friday's two cuts and how each fault is fixed.
+2. `docs/handovers/2026-10-19-codex-friday-cuts-fix.md`: the prompt that has Codex on Krish's PC carry out this
+   plan (sections 0 to 3).
+3. `docs/handovers/2026-10-19-board-to-content-krishraja.md`: the prompt that moves the publish board to
+   content.krishraja.com (section 4 here), so any tool, Codex included, can update it.
+
+Jobs 2 and 3 run in separate fresh sessions and can run at the same time. They meet at the end: once Krish has
+watched the fixed cuts and the board lives at content.krishraja.com, the Friday tab is rebuilt with the new cuts.
+
 Krish, 19 Oct: "on the deeper cut, the audio needs to be able to be heard the entire time, but just really low unless
 its intro, outro or chapter card. the 90 second video needs to have visuals nearly the entire way through as when
 things are sped up, we need to 3-5X the visual clarity. Suggest fixes to both, in entire detail".
@@ -173,13 +184,21 @@ That is 22 beats in 77 s, every one at least 1.5 s, coverage about 95%.
    full-size review.
 4. Library, record, boards only after both pass and Krish has watched them.
 
-## 4. The publish board, any tool (asked 19 Oct, not built)
+## 4. The publish board, any tool (decided 19 Oct, not built)
 
-Krish asked for the board on Control Center so any tool (Codex included) can work with it. Today the board is a
+Krish, 19 Oct: "yes lets move the board to content.krishraja.com". The work is in file 3 of 3,
+`docs/handovers/2026-10-19-board-to-content-krishraja.md`; this is the summary. Today the board is a
 claude.ai artifact: its HTML is built by `scripts/post-pack/week_board.py` and its ticks live in that artifact's own
 store, which only a Claude session can read or write. To move it: (1) a Control Center route serves the same built
 HTML behind Krish's login; (2) ticks move to a Supabase table behind a guarded Control Center API, with the existing
 artifact ticks copied across once; (3) `week_board.py` publishes there and the making skills read ticks from there.
 That is work in `krishanraja/control-center`, a new public-facing address and a database change, so each step needs
-Krish's yes. The address he named, content.controlcenter.com, is to be confirmed: Control Center today lives at
-controlcenter.krishraja.com.
+Krish's yes. The address is content.krishraja.com (Krish, 19 Oct), on the Control Center project that already
+serves controlcenter.krishraja.com.
+
+## 5. Where it meets
+
+When both jobs are done: rebuild the Friday tab with `week_board.py --target web`, with the new cuts' library links
+in `docs/plans/2026-10-09-friday/words.json`, check it in a browser as Krish opens it, and publish it with his yes.
+Until the web board exists, the claude.ai boards in `config/boards.json` stay the live ones and only a Claude
+session can update them.
