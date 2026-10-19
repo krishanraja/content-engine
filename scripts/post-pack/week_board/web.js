@@ -148,7 +148,18 @@
     for (const [id, d] of roots) {
       const section = document.createElement("section"); section.style.cssText = "padding:12px 0;border-bottom:1px solid #888";
       const title = document.createElement("strong"); title.textContent = d.body.anchor; section.append(title);
+      const original = d.body.original_metadata || {};
+      const threadState = document.createElement("span");
+      threadState.textContent = original.resolved || original.thread_status?.resolved ? " · Resolved in source" : " · Open";
+      section.append(threadState);
+      if (d.body.anchor === 'board-root' && original.location) {
+        const location = document.createElement('p'); location.textContent = 'Original location: ' + original.location; section.append(location);
+      }
       for (const [, entry] of [ [id,d], ...all.filter(([rid,r]) => rid !== id && r.body.thread_id === id).sort((a,b) => String(a[1].body.at).localeCompare(String(b[1].body.at))) ]) {
+        const metadata = entry.body.original_metadata || {};
+        const byline = document.createElement('small');
+        byline.textContent = [metadata.author_display || metadata.author_label || 'Krish', metadata.at_as_reported || entry.body.at].filter(Boolean).join(' · ');
+        section.append(byline);
         const p = document.createElement("p"); p.style.whiteSpace = "pre-wrap"; p.textContent = entry.body.text; section.append(p);
       }
       const reply = document.createElement("button"); reply.type = "button"; reply.textContent = "Reply";

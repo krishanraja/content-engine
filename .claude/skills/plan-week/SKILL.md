@@ -51,7 +51,8 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    how many have no verdict yet, and offer the queued ideas that fit each
    day before you research anything new. Copy his board marks into the
    engine first: every `QUEUE <pick> <verdict> <reason>` comment and
-   `queue/<pick>` doc on last week's board (either account; `ArtifactData`)
+   `queue/<pick>` doc on last week's board (web `queue` and `comments`
+   collections after active cutover; ArtifactData only for legacy sources)
    goes to `POST /api/idea-queue` (`action: queue` with `verdict`, `reason`,
    `angle`, `decided_by: "Krish"`, the idea's `so_what`, `story` as `idea`,
    `source_url`, `series`, `from_week`, `from_pick`). A mark with no verdict
@@ -162,7 +163,12 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      picked yet says so. It writes `week-board.json` beside the page: the
      week, each day's state and piece, every tick id, and the publish call.
      Exit 2 is a refusal it names: fix it and build again.
-   - **Publish it as a new private artifact**, a new one every Sunday, never
+   - **Active web route:** build with `--target web`, publish the verified
+     manifest through `board_web.py publish-web`, register the dated URL in
+     `config/boards.json.web`, and read it back as `docs/PUBLISH_BOARDS.md`
+     requires. Continue at "Record its link" below. No new Claude board or
+     cross-account copy is created after active cutover.
+   - **Legacy artifact mode only:** publish as a new private artifact, a new one every Sunday, never
      last week's link: `Artifact({action: "publish", file_path: "<absolute
      path>/week-board.html", title: <the manifest's publish.title>, icon:
      "calendar", capabilities: <the manifest's publish.capabilities>, description:

@@ -156,6 +156,11 @@ try{
   const record={source:'https://claude.ai/artifact/Fixture',collection:'ticks',id:'mon-substack',body}
   for(let n=0;n<2;n++)assert.equal((await fetch(origin+week+'/imports',{method:'POST',headers,body:JSON.stringify({records:[record]})})).status,200)
   assert.equal((await get(week+'/imports')).records.length,1)
+  const rawReply={source:record.source,collection:'comments',id:'root#reply-1',body:{thread_id:'root',anchor:null,text:'Original reply',at:'2026-10-16T13:05'}}
+  for(let n=0;n<2;n++)assert.equal((await fetch(origin+week+'/imports',{method:'POST',headers,body:JSON.stringify({records:[rawReply]})})).status,200)
+  const sourceReply=(await get(week+'/imports')).records.find((r:Row)=>r.doc_id==='root#reply-1')
+  assert.deepEqual(sourceReply.body,rawReply.body,'source archive preserves null anchors and source reply IDs')
+  await put(week+'/comments/invalid-source-shape',{body:rawReply.body,revision:0},400)
   const exportBytes=Buffer.from(JSON.stringify({complete:true,source:'https://claude.ai/artifact/Fixture'}))
   const exportedFile=spec(exportBytes,'application/json','source-export.json')
   objects.set(exportedFile.key,{data:exportBytes,type:exportedFile.type})
@@ -167,6 +172,21 @@ try{
   const sources=await get(week+'/sources')
   assert.equal(sources.sources.length,1);assert.deepEqual(sources.sources[0].files,evidencedFiles)
   console.log('PASS: actual handlers over HTTP + PostgreSQL; cookie/operator/CSRF, all collections, conflicts, comments/replies, 6 MB streamed HTML, download hashes/expiry, import replay')
+  if(process.env.BOARD_SOURCE_FIXTURE_FILE) {
+    const plan=JSON.parse(await readFile(process.env.BOARD_SOURCE_FIXTURE_FILE,'utf8'))
+    await pg.exec('reset role; truncate board_documents, board_ticks, board_history, board_imports; set role service_role;')
+    for(let replay=0;replay<2;replay++) {
+      for(const record of plan.records) assert.equal((await fetch(origin+`/api/board/${record.week}/imports`,{method:'POST',headers,body:JSON.stringify({records:[record]})})).status,200)
+      for(const record of plan.winners) {
+        const path=`/api/board/${record.week}/${record.collection}`
+        const existing=(await get(path)).documents.find((d:Row)=>d.id===record.id)
+        await put(path+'/'+record.id,{body:record.body,revision:existing?.revision||0})
+        assert.deepEqual((await get(path)).documents.find((d:Row)=>d.id===record.id).body,record.body)
+      }
+    }
+    for(const date of new Set(plan.records.map((r:Row)=>r.week))) assert.equal((await get(`/api/board/${date}/imports`)).records.length,plan.records.filter((r:Row)=>r.week===date).length)
+    console.log(`PASS: all ${plan.records.length} supplied source records archived twice and all ${plan.winners.length} canonical records read back exactly, including reply anchors and source nulls`)
+  }
   if(process.argv[3] && process.argv[4]) {
     if(process.argv[7]) {
       // Optional private source fixture is read from outside the repository.

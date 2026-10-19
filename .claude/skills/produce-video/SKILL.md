@@ -99,11 +99,12 @@ where things live") and `scripts/quick-edit/README.md`. Read the board
 Studio; if a session touches it, `docs/ENGINE_SESSION.md` applies and a
 cloud session is read-only for it.
 
-In Claude Code, copy Krish's ticks from the week's publish board onto the
+In every tool, copy Krish's ticks from the week's publish board onto the
 records now and again before you stop (`.agents/skills/make-piece/SKILL.md`,
-"The week's ticks"). It needs the ArtifactData tool: Codex has none, so a
-Codex session says in one line that the next Claude Code session copies
-them. A Record tick there is information only; Record is done from the takes
+"The week's ticks"). After active cutover use the authenticated web API in
+`docs/PUBLISH_BOARDS.md`, including edits, picks, queue and comments. Do not
+defer this to Claude Code. Only an explicit legacy-artifact session needs
+ArtifactData. A Record tick is information only; Record is done from the takes
 on the record.
 
 ## 1. Preflight: which tool, which machine
