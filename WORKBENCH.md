@@ -1,5 +1,24 @@
 # Workbench: where we are and what's next
 
+## 19 October: Friday and Monday publishing materials
+
+Codex is adding finished media and Spotify delivery cards to both live weeks.
+Friday's article now passes all blocking checks after PR #110; its accepted
+repaired videos remain the current cuts. Spotify chapters use the repaired
+timings, and its new 1920x1080 thumbnail uses the later approved wording.
+
+Monday's two finished review cuts and approved set-A titles are prepared for
+the board, with channel copy, Spotify thumbnail/chapters and the three short
+caption-listening excerpts. Keep the day in draft: one fact-check entry and
+three listening checks remain unresolved. Krish declined a fifth paid fact
+check. Do not spend, claim publish-ready or record video completion to bypass
+these holds. The source videos remain in the existing archive; the final
+library delivery correctly refuses them without their completed validation.
+
+Source manifests, readiness readback and reproducible preparation are in
+`docs/plans/2026-10-19-board-delivery/`. New materials survive ordinary board
+rebuilds. Public posting and Wednesday production are not part of this turn.
+
 ## 19 October: both publish boards live, web cutover verified
 
 Use https://content.krishraja.com/board/2026-10-19 and

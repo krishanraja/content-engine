@@ -1,0 +1,47 @@
+{
+  "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+  "status": "ready",
+  "note": "Friday's repaired videos are the current files. Article checks pass with your existing sign-offs and approved forecast-date exception. Channel wording, images and publishing checklist remain below. Spotify upload also needs your show and active music subscription.",
+  "copy_updates": {
+    "fri-c13": "00:00 Do new Claude and ChatGPT matter?\n01:46 Why AI launches keep speeding up\n02:31 Can Opus 5 beat Opus 5.5?\n05:30 Who pays when ChatGPT thinks?\n06:19 Who decides how hard AI thinks?\n08:25 What will ChatGPT hide from you?\n10:11 What should ChatGPT let you choose?\n12:00 Will ChatGPT decide for you again?"
+  },
+  "sections": [
+    {
+      "id": "spotify",
+      "title": "Spotify: finished episode and clip",
+      "note": "Use these repaired files and chapter times. The title and description retain your approved wording. The new thumbnail also works for YouTube and replaces the older Another Claude image. Upload directly in Spotify for Creators. These assets have not been posted.",
+      "files": [
+        {
+          "label": "Download episode (13:36)",
+          "url": "https://content.krishraja.com/prepared/friday-long-repaired"
+        },
+        {
+          "label": "Download clip (1:28)",
+          "url": "https://content.krishraja.com/prepared/friday-short-repaired"
+        },
+        {
+          "label": "Download Spotify thumbnail (1920x1080)",
+          "url": "https://content.krishraja.com/prepared/friday-spotify-thumbnail"
+        },
+        {
+          "label": "Download repaired-cut chapters",
+          "url": "https://content.krishraja.com/prepared/friday-spotify-chapters"
+        }
+      ],
+      "copy": [
+        {
+          "label": "Episode title",
+          "text": "So many new AI models from OpenAI and Anthropic. Does it matter, and what are they about to take out of your hands?"
+        },
+        {
+          "label": "Description",
+          "text": "Claude Opus 4.8 in May, Opus 5 in July, Opus 5.5 in September. I got lost in all the new AI names, so I went looking for what changes your answer.\n\nWhat I found is that the name matters less than how hard the AI thinks. Think of a car. The model's name is the badge on the front, and the thinking setting is the gears. ChatGPT and Claude both let you change gear, for now. But the apps usually start it low, and most people leave it there. When Artificial Analysis ran the same Claude Opus 5.5 through its hard tests, the older Opus 5 at its hardest beat the new one at its lowest. More thinking isn't always better, though. Researchers asked thinking AIs what 2 plus 3 is, and one of them wrote out 13 solutions.\n\nPicture Sally, a small business owner. Her AI read a supplier contract and gave her a tidy, confident answer in four seconds. She signed. Six months later a clause bit her that a careful reader would have caught. So why do the apps start you low? I think it comes down to who pays, because on a flat monthly plan every extra thought comes out of OpenAI's or Anthropic's pocket. Sam Altman, who runs OpenAI, even said in January 2025 that it was losing money on its $200 Pro plan, because people used it much more than expected.\n\nSince 9 October, Google's free Gemini app has started on Auto. OpenAI has gone the other way and taken ChatGPT's automatic picker away twice. I don't think that lasts. My prediction: by 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message. I'm 85% sure. What I'd want is what Formula 1 has, a semi-automatic: let the AI pick the gear if it must, but give us the paddles, and show us which gear it picked.\n\nRead the full article, with every source, free at makeyourmindup.ai"
+        },
+        {
+          "label": "Chapters",
+          "text": "00:00 Do new Claude and ChatGPT matter?\n01:46 Why AI launches keep speeding up\n02:31 Can Opus 5 beat Opus 5.5?\n05:30 Who pays when ChatGPT thinks?\n06:19 Who decides how hard AI thinks?\n08:25 What will ChatGPT hide from you?\n10:11 What should ChatGPT let you choose?\n12:00 Will ChatGPT decide for you again?"
+        }
+      ]
+    }
+  ]
+}
