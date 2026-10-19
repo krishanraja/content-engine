@@ -630,8 +630,19 @@
    "krish": "from here moving forward, let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format.",
    "why": "The 3-minute cut could not carry the explanation and the business consequence together; he wants room for the substance.",
    "means": "The long cut is a 5-minute video, 675 to 825 spoken words (house rule TWO_CUTS), for every piece from 19 Oct; the 90-second cut and the weekly deep cut are unchanged.",
-   "status": "open",
-   "encoded": []
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/story_check.py",
+     "contains": "(675, 825, 'a 5-minute video')",
+     "how": "the script check refuses a long cut outside 675 to 825 words"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "A five-minute video and a ninety-second one",
+     "how": "house rule TWO_CUTS"
+    }
+   ]
   },
   {
    "id": "big-ai-firms-short-term-offers",

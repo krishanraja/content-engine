@@ -13,7 +13,7 @@ in any other ideas that we can flesh out?"
 
 ## The standing answers (never asked again)
 
-- **Two cuts, every piece** (house rule TWO_CUTS): a 3-minute video and a
+- **Two cuts, every piece** (house rule TWO_CUTS): a 5-minute video and a
   90-second version, each recorded from its own script with its own hook
   and outro. `story_check.py` holds the lengths.
 - **Every piece goes to** Substack and YouTube, then YouTube Shorts, TikTok
@@ -102,7 +102,7 @@ Where each thing lives, and nowhere else:
 | The runner's bearer | Credential Manager on each runner machine | the recordings and library lanes |
 | Control Center's secrets (access code, cron secret, the routine's id and token) | Control Center's Vercel project | its own routes; the slate cron speaks to the board on the access-code cookie |
 | Recordings | the engine's recordings lane (object store plus manifest), fed only from the top of the Video Engine Inbox | the home computers place each Inbox take on its piece and cut by themselves (`scripts/recordings-upload.ps1`, then `scripts/post-pack/recording_match.py`); `scripts/post-pack/recording.py get` fetches a take by its Inbox name or by the path its piece's record holds (`recordings/<sha256>.<ext>`); never the Drive connector (10 MB cap) |
-| Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 3-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py`; words that change update the same script in place, and nothing there is ever deleted |
+| Scripts for Krish to read while he records | his teleprompter.com account: one folder per piece ("Mon 12 Oct follow.the.money - Who gets paid for AI songs"), one script per cut ("Mon 12 Oct - 5-minute - Who gets paid for AI songs"); and the publish page's Copy | each cut's script title on the piece's making record (`meta.making.teleprompter`), shown on Control Center's Record step ("Read from Teleprompter: <title>") and on the week's publish board. Sent at the Scripts step by `teleprompter_send.py`; words that change update the same script in place, and nothing there is ever deleted |
 | The week's publish board and its ticks | claude.ai, a private artifact made each Sunday; the ticks and links in its own store | each week's board item `week-publish-board-<Monday>` (its link) and `WORKBENCH.md` (this week's and last week's); the ticks are read with the ArtifactData tool, in Claude Code only |
 | Licensed music | Drive, `makeyourmindup > 00_Brand-Assets > 07_Music` (`MINDMAKE_MUSIC_ROOT`), each licence certificate beside its track; the ledger `config/music-library.json` in GitHub | `scripts/quick-edit/music.py` on a home computer; only approved ledger tracks, never browsed |
 | The pack, the publish page, the finished cuts | Krish's Drive library, written by his own machine from the engine's library store | `build.py`, `send.py`; the Drive folder is the canonical copy for every tool and for Krish |

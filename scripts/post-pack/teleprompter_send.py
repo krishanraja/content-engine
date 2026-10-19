@@ -14,7 +14,7 @@ its status is "confirmed".
 
 One folder per piece, named "<Ddd D Mon> <series> - <subject>" ("Mon 12 Oct
 follow.the.money - Who gets paid for AI songs"), holding one script per
-cut, titled "<Ddd D Mon> - <cut> - <subject>" ("Mon 12 Oct - 3-minute - Who
+cut, titled "<Ddd D Mon> - <cut> - <subject>" ("Mon 12 Oct - 5-minute - Who
 gets paid for AI songs"). A script's text is the script file's spoken
 words, any markdown stripped, its paragraphs separated by a blank line; its
 duration is those words at 150 a minute, in whole seconds.
@@ -215,7 +215,7 @@ def folder_name(names):
 
 
 def script_title(names, cut, cfg):
-    """'Mon 12 Oct - 3-minute - Who gets paid for AI songs'."""
+    """'Mon 12 Oct - 5-minute - Who gets paid for AI songs'."""
     return _one_line(f'{names["day"]} - {cfg["cuts"][making._cut(cut)]["name"]} - {names["subject"]}', 'the script title')
 
 
@@ -637,7 +637,7 @@ def self_test():
     names = names_from_post(post)
     check('names: the folder, as made on 12 October', folder_name(names), 'Mon 12 Oct follow.the.money - Who gets paid for AI songs')
     check('names: the titles, as made on 12 October', [script_title(names, c, cfg) for c in CUTS],
-          ['Mon 12 Oct - 3-minute - Who gets paid for AI songs', 'Mon 12 Oct - 90-second - Who gets paid for AI songs'])
+          ['Mon 12 Oct - 5-minute - Who gets paid for AI songs', 'Mon 12 Oct - 90-second - Who gets paid for AI songs'])
     friday = names_from_pack('2026-10-16 Fri mind.the.gap - Why so many AIs')
     check('names: from the pack folder on the record', (folder_name(friday), script_title(friday, 'short', cfg)),
           ('Fri 16 Oct mind.the.gap - Why so many AIs', 'Fri 16 Oct - 90-second - Why so many AIs'))
@@ -674,14 +674,14 @@ def self_test():
         long_plan = first['cuts'][0]
         check('plan: a new script per cut, with exactly title, text, folderId and duration',
               (long_plan['action'], sorted(long_plan['call']['args']), long_plan['call']['args']['title'], long_plan['call']['args']['text']),
-              ('create', ['duration', 'folderId', 'text', 'title'], 'Mon 12 Oct - 3-minute - Who gets paid for AI songs',
+              ('create', ['duration', 'folderId', 'text', 'title'], 'Mon 12 Oct - 5-minute - Who gets paid for AI songs',
                'The long script.\n\nIt has two paragraphs.'))
         check('plan: a title already there is never made twice: list_scripts_in_folder first',
               shown.index('list_scripts_in_folder') < shown.index('create_script'), True)
         check('plan: never his font, speed, alignment or timed speed', any(k in shown for k in ('"fontSize"', '"speed"', '"alignment"', '"timedSpeed"')),
               False)
         check('plan: the record line carries the full hash, the title and the folder name',
-              (f'--sha {long_sha}' in shown, "--title 'Mon 12 Oct - 3-minute - Who gets paid for AI songs'" in shown,
+              (f'--sha {long_sha}' in shown, "--title 'Mon 12 Oct - 5-minute - Who gets paid for AI songs'" in shown,
                "--folder-name 'Mon 12 Oct follow.the.money - Who gets paid for AI songs'" in shown), (True, True, True))
         check('plan: the failure line keeps the folder once it is made', '--folder \'<FOLDER, once create_folder gave it>\' --error' in shown, True)
 
@@ -725,7 +725,7 @@ def self_test():
         holds['script_check']['read_back'].pop('long')
         refused('plan: a cut to send whose words were not read back is refused', go, 'have not been read back')
         holds['script_check']['read_back']['long'] = {**read(long_sha), 'script_sha256': 'c' * 64}
-        refused('plan: a read-back of other words does not count', go, 'the 3-minute script\' current words have not been read back')
+        refused('plan: a read-back of other words does not count', go, 'the 5-minute script\' current words have not been read back')
         holds['script_check']['read_back']['long'] = read(long_sha)
         holds['teleprompter']['cuts']['long']['script_sha256'] = long_sha
         holds['script_check']['read_back'].pop('short')

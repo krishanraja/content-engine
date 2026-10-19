@@ -151,7 +151,7 @@ def deep_cut_piece(monday, path=DEEP_CUTS):
 STANDING = sum(1 for *_, s in STEPS if s)
 # A channel section of the day page, by its heading (publish_kit.steps "where"), and the step it ticks.
 SECTION_STEP = {
-    'Substack': 'substack', 'YouTube (the 3-minute video)': 'youtube', 'YouTube Shorts': 'shorts',
+    'Substack': 'substack', 'YouTube (the 5-minute video)': 'youtube', 'YouTube Shorts': 'shorts',
     'TikTok': 'tiktok', 'Instagram Reels': 'reels', 'LinkedIn': 'linkedin', 'Spotify': 'spotify',
 }
 # The two cuts (house rule TWO_CUTS): the cut, its tick, its name, how it is filmed.

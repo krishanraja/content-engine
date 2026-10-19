@@ -12,7 +12,7 @@ leaving Wednesday and Friday as topic confirmed and waiting on me", and the
 only question he wants asked: "What are we writing about this week? Here are
 your ideas and options. Do you want to drop in any other ideas that we can
 flesh out?" Never ask him anything else on a Sunday: the standing answers are
-in `docs/CADENCE.md` (a 3-minute video and a 90-second cut, every piece; Substack
+in `docs/CADENCE.md` (a 5-minute video and a 90-second cut, every piece; Substack
 and YouTube, then Shorts, TikTok and Instagram).
 
 The week runs Monday to Friday. On Sunday it is the coming week.
@@ -131,7 +131,7 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    piece breaks a tie. Write the pick to `config/deep-cuts.json` under the
    week's Monday, with the scores and the reason, and say it in one line on
    the board. Krish can swap it. That piece records an 8 to 12 minute deep
-   cut instead of its 3-minute cut; every piece keeps its 90-second cut.
+   cut instead of its 5-minute cut; every piece keeps its 90-second cut.
 7. **Make the week's publish board**, last, once the options are written.
    Krish, 2026-10-12: "just give me one ... Publish Manager for the ...
    whole week with 3 tabs on it for Mon / Weds / Fri, which we need to get

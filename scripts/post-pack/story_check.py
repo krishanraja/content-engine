@@ -19,8 +19,9 @@ parts a rule can see, and refuses to pack a script that fails one:
   - nothing in it is still marked NOT YET FACT-CHECKED;
   - when it says which cut it is, it is that long. Krish, 2026-10-11: "I
     always want a 3-minute video and a 90-second version" (house rule
-    TWO_CUTS). At an unhurried 150 spoken words a minute, the long cut is
-    405 to 495 words (about 2:40 to 3:20) and the short cut 160 to 225
+    TWO_CUTS), then, 2026-10-19: "let's make the 3-minute scripts into
+    5-minute scripts and videos". At an unhurried 150 spoken words a minute,
+    the long cut is 675 to 825 words (about 4:30 to 5:30) and the short cut 160 to 225
     words (about 1:05 to 1:30). The series line counts toward it;
   - when its series is known (--series, the piece's lane_slot), it opens
     with that series' line, word for word, as its first two sentences, and
@@ -54,7 +55,7 @@ catches the rest.
     python scripts/post-pack/story_check.py --self-test
 
 Without --cut, a file whose name says "90", "short" or "vertical" is the
-short cut and one whose name says "long", "3min" or "wide" is the long cut;
+short cut and one whose name says "long", "3min", "5min" or "wide" is the long cut;
 any other name is checked for everything but length.
 """
 
@@ -70,7 +71,7 @@ SHORT_WORDS = 160  # under about a minute: no room for an outro
 WORDS_PER_MINUTE = 150
 CUTS = {
     # cut: (fewest words, most words, what Krish asked for)
-    'long': (405, 495, 'a 3-minute video'),
+    'long': (675, 825, 'a 5-minute video'),
     # 195: Wednesday's 222 words ran 99 seconds with the intro and outro, and Reels over 90 s were cut off
     # (Krish, 2026-10-14: "I'm noticing on Instagram that sometimes my reels are getting cut off"). At his pace
     # 195 words keep the finished cut under 89 s, inside every platform's line (docs/research/2026-10-14-platform-length-limits.md).
@@ -80,7 +81,7 @@ CUTS = {
     # only the spoken words (house rule SCRIPT_ONLY), because it goes straight onto the teleprompter.
     'audio': (1200, 1700, 'a Spotify audio edition of about 8 to 12 minutes'),
     # The week's deep cut (house rule DEEP_CUT; config/deep-cuts.json): one piece a week, chosen by its breakout
-    # score, records 8 to 12 minutes in place of its 3-minute cut, for YouTube long-form and Spotify. Krish,
+    # score, records 8 to 12 minutes in place of its 5-minute cut, for YouTube long-form and Spotify. Krish,
     # 2026-10-14: "perhaps the third video length also becomes the Spotify audio track".
     'deep': (1200, 1700, 'the week\'s deep video of about 8 to 12 minutes'),
 }
@@ -362,7 +363,7 @@ def cut_of(name):
         return 'audio'
     if re.search(r'90|short|vertical|tall', n):
         return 'short'
-    if re.search(r'long|3.?min|wide|three', n):
+    if re.search(r'long|[35].?min|wide|three|five', n):
         return 'long'
     return None
 
@@ -385,8 +386,8 @@ def length_problem(words, cut):
 
 
 # How long each cut may run as he says it (seconds): the 90-second cut under 89 s (TWO_CUTS, the platforms' line),
-# the 3-minute cut by about 3:30, the deep cut 8 to 12 minutes (DEEP_CUT).
-SPOKEN_CAP_S = {'short': 89, 'long': 210, 'deep': 720}
+# the 5-minute cut by about 5:30, the deep cut 8 to 12 minutes (DEEP_CUT).
+SPOKEN_CAP_S = {'short': 89, 'long': 330, 'deep': 720}
 
 
 def spoken_length_warning(words, cut, ledger=None):
@@ -789,11 +790,11 @@ def self_test():
         check('one that fits is not', spoken_length_warning(['w'] * 150, 'short', led), None)
         check('no take of the cut, no warning', spoken_length_warning(['w'] * 900, 'deep', led), None)
     filler = lambda n: 'Why does the price matter? ' + ' '.join(['word'] * (n - 5))
-    check('a 3-minute long cut passes the length rule', length_problem(filler(450).split(), 'long'), None)
-    check('a 4-minute long cut is refused', 'cut it to 405 to 495' in (length_problem(filler(617).split(), 'long') or ''), True)
+    check('a 5-minute long cut passes the length rule', length_problem(filler(750).split(), 'long'), None)
+    check('a 7-minute long cut is refused', 'cut it to 675 to 825' in (length_problem(filler(1000).split(), 'long') or ''), True)
     check('a 90-second short cut passes', length_problem(filler(185).split(), 'short'), None)
     check('a two-minute short cut is refused', 'TWO_CUTS' in (length_problem(filler(300).split(), 'short') or ''), True)
-    check('a long cut far too short is refused', 'short of a 3-minute video' in (length_problem(filler(250).split(), 'long') or ''), True)
+    check('a long cut far too short is refused', 'short of a 5-minute video' in (length_problem(filler(250).split(), 'long') or ''), True)
     check('no cut, no length rule', length_problem(filler(900).split(), None), None)
     check('a file named 90s is the short cut', cut_of('script-90s.md'), 'short')
     check('a file named long is the long cut', cut_of('script_long.md'), 'long')
@@ -803,7 +804,7 @@ def self_test():
     check('a 450-word deep cut is refused, naming DEEP_CUT', 'DEEP_CUT' in (length_problem(filler(450).split(), 'deep') or ''), True)
     check('a 1,400-word audio edition passes the length rule', length_problem(filler(1400).split(), 'audio'), None)
     check('a plain name says nothing', cut_of('script.md'), None)
-    check('problems() carries the length rule when the cut is known', any('TWO_CUTS' in p for p in problems(GOOD, 'long')), len(' '.join(spoken_paragraphs(GOOD)).split()) not in range(405, 496))
+    check('problems() carries the length rule when the cut is known', any('TWO_CUTS' in p for p in problems(GOOD, 'long')), len(' '.join(spoken_paragraphs(GOOD)).split()) not in range(675, 826))
 
     # The series line (house rule SERIES_OPENER), read from the house rules.
     lines = series_openers()

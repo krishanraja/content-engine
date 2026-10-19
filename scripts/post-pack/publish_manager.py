@@ -310,7 +310,7 @@ def page(m, base):
     if cover:
         sub.append(pic_card({**cover, 'label': "Cover and email thumbnail: upload it in the post's settings (1200 x 630)"}, slug))
     sub += [pic_card({**i, 'label': f'Picture {k}: {i.get("label") or i["id"]}'}, slug) for k, i in enumerate(body_imgs, 1)]
-    long_name = words.get('long_name') or '3-minute video'
+    long_name = words.get('long_name') or '5-minute video'
     waiting = (f' Not ready yet: {words["long_waiting"]}. The words, the article and the cover are ready.'
                if words.get('long_waiting') else '')
     sections.append(('substack', '1. Substack', f'One Video post: the {long_name} on top, then this article under it. Copy each piece in turn.'

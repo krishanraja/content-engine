@@ -1,5 +1,5 @@
 // Video script formats, 15 seconds to 20 minutes. Every piece uses two of
-// them: 3min (the long cut) and 90s (the short cut), house rule TWO_CUTS.
+// them: 5min (the long cut; 3min until 2026-10-19) and 90s (the short cut), house rule TWO_CUTS.
 //
 // The engine could already produce a "YouTube script" — one length, roughly
 // five to nine minutes, prose in a spoken register with the beats marked. That
@@ -28,8 +28,8 @@ export interface VideoFormat {
 
 /** The most spoken words a script of this format may carry: the ceiling the
  *  writer is told and the line above which it is asked again. For the two
- *  cuts (TWO_CUTS) it is 495 for 3min and 220 for 90s, both inside the
- *  bounds scripts/post-pack/story_check.py holds (405 to 495, 160 to 225). */
+ *  cuts (TWO_CUTS) it is 825 for 5min and 220 for 90s, both inside the
+ *  bounds scripts/post-pack/story_check.py holds (675 to 825, 160 to 225). */
 export function wordCeiling(f: Pick<VideoFormat, 'words'>): number {
   return Math.round(f.words * 1.1)
 }
@@ -79,7 +79,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
     ].join(' '),
   },
   {
-    id: '3min', label: '3 minutes', seconds: 180, words: 450,
+    id: '5min', label: '5 minutes', seconds: 300, words: 750,
     shape: [
       'Hook (one plain question the whole script answers), then three beats, then verdict, then a short spoken outro.',
       'Each beat makes ONE point and carries its own evidence. A beat that restates the one above it is cut.',

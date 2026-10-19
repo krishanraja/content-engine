@@ -64,10 +64,11 @@ SHAPE_PLATFORMS = {'16x9': ('youtube', 'substack'), '9x16': ('shorts', 'reels', 
 # longer cut. make.py gives that length (`longest`): the long cut's
 # recording, which kit.py measures into kit.json, plus the most a sting and
 # the end card add; the same number for both cuts. Only when it is not known
-# does a cut ask for PIECE_SECONDS, the longest a long cut runs (495 words at
-# an unhurried 150 a minute is 198 s, plus a sting of at most 2 s, the 4 s
-# end card and room for a slower pace).
-PIECE_SECONDS = 240.0
+# does a cut ask for PIECE_SECONDS, the longest a long cut runs (825 words at
+# an unhurried 150 a minute is 330 s, plus a sting of at most 2 s, the 4 s
+# end card and room for a slower pace; the 3-minute cut's 240 s, scaled by
+# the same room, Krish 2026-10-19: 5-minute scripts and videos).
+PIECE_SECONDS = 400.0
 PIECE_PLATFORMS = tuple(dict.fromkeys(p for shape in ('16x9', '9x16') for p in SHAPE_PLATFORMS[shape]))
 STATUSES = ('proposed', 'approved', 'retired')
 TRACK_FIELDS = (
@@ -662,7 +663,7 @@ def self_test():
         # both cuts get B.
         mon = 'f328382d-71b3-41a7-a221-d8615826f12e'
         a_track = dict(data['tracks'][0], id='a-short-track', duration_s=120.0, intro_cue_s=0.0, loopable=False)
-        b_track = dict(data['tracks'][0], id='b-long-track', duration_s=300.0, intro_cue_s=0.0, loopable=False)
+        b_track = dict(data['tracks'][0], id='b-long-track', duration_s=500.0, intro_cue_s=0.0, loopable=False)
         ab = {'tracks': [a_track, b_track]}
         checks.append(('the A/B case: its rotation starts on A, the short track', [t['id'] for t in rotation(mon, ab)], ['a-short-track', 'b-long-track']))
         checks.append(('the A/B case: cut by cut, the two cuts land on different tracks',
@@ -671,15 +672,15 @@ def self_test():
         checks.append(('the A/B case: with the piece\'s needs both cuts get the same track',
                        (pick_for_piece(mon, 205.0, ab)[0]['id'], pick_for_piece(mon, 92.0, ab)[0]['id']), ('b-long-track', 'b-long-track')))
         checks.append(('the piece\'s needs: every place either cut goes, and at least PIECE_SECONDS when the long cut is not known',
-                       (piece_needs(92.0), piece_needs(300.0)['seconds']),
-                       ({'seconds': PIECE_SECONDS, 'platforms': ['youtube', 'substack', 'shorts', 'reels', 'tiktok', 'linkedin']}, 300.0)))
+                       (piece_needs(92.0), piece_needs(450.0)['seconds']),
+                       ({'seconds': PIECE_SECONDS, 'platforms': ['youtube', 'substack', 'shorts', 'reels', 'tiktok', 'linkedin']}, 450.0)))
         # The second reviewer's case (2026-10-12): one approved, licensed 200 s
         # track that does not loop. Asked for a fixed 240 s, neither of
         # Monday's cuts (177.8 s and 84.0 s) got it. Asked for the long cut's
         # real length, both do.
         c200 = dict(b_track, id='c-200-track', duration_s=200.0)
         only = {'tracks': [c200]}
-        checks.append(('a 200 s track under a 4-minute floor goes under neither cut',
+        checks.append(('a 200 s track under a 400 s floor goes under neither cut',
                        (pick_for_piece(mon, 177.8, only)[0], pick_for_piece(mon, 84.0, only)[0]), (None, None)))
         checks.append(('with the long cut\'s length both cuts get it, the same track',
                        (pick_for_piece(mon, 177.8, only, longest=183.8)[0]['id'], pick_for_piece(mon, 84.0, only, longest=183.8)[0]['id'],

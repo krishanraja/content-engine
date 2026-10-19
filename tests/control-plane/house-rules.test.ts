@@ -429,7 +429,7 @@ describe('two cuts, each from its own script, inside the lengths story_check hol
       assert.ok(m, cut)
       return [Number(m[1]), Number(m[2])]
     }
-    for (const [id, cut, ceiling] of [['3min', 'long', 495], ['90s', 'short', 195]] as const) {
+    for (const [id, cut, ceiling] of [['5min', 'long', 825], ['90s', 'short', 195]] as const) {
       const f = video.VIDEO_FORMATS.find(x => x.id === id)!
       const [lo, hi] = bounds(cut)
       assert.ok(f.words >= lo && f.words <= hi, `${id} target ${f.words} inside ${lo}-${hi}`)
