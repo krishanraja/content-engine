@@ -288,12 +288,20 @@ def contact_sheet(path, shots, out_file, cols=6, width=320):
     """One frame from the middle of each shot (at most 48), tiled, so a
     session can look at the framing, text and graphics of every shot."""
     picks = shots if len(shots) <= 48 else [shots[round(i * (len(shots) - 1) / 47)] for i in range(48)]
+    from PIL import Image, ImageDraw, ImageFont
+    font = ImageFont.truetype(str(Path(__file__).parent / 'fonts' / 'ArchivoBlack-Regular.ttf'), 18)
     with tempfile.TemporaryDirectory() as tmp:
         for i, s in enumerate(picks):
             mid = (s['start'] + s['end']) / 2
             subprocess.run(['ffmpeg', '-v', 'error', '-ss', f'{mid:.2f}', '-i', str(path), '-frames:v', '1',
-                            '-vf', f'scale={width}:-2,drawtext=text=\'{mid:.1f}s\':x=6:y=6:fontsize=18:fontcolor=white:box=1:boxcolor=black@0.6',
+                            '-vf', f'scale={width}:-2',
                             f'{tmp}/f{i:03d}.jpg'], check=True)
+            frame = Image.open(f'{tmp}/f{i:03d}.jpg').convert('RGB')
+            draw = ImageDraw.Draw(frame)
+            label = f'{mid:.1f}s'
+            draw.rectangle(draw.textbbox((6, 6), label, font=font), fill='black')
+            draw.text((6, 6), label, font=font, fill='white')
+            frame.save(f'{tmp}/f{i:03d}.jpg', quality=95)
         rows = (len(picks) + cols - 1) // cols
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-framerate', '1', '-i', f'{tmp}/f%03d.jpg',
                         '-vf', f'tile={cols}x{rows}:padding=4:color=black', '-frames:v', '1', '-q:v', '3', str(out_file)], check=True)

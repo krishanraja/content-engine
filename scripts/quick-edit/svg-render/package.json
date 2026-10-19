@@ -1,0 +1,7 @@
+{
+  "name": "quick-edit-svg-render",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Pinned local SVG renderer for production cards",
+  "dependencies": { "@resvg/resvg-js": "2.6.2" }
+}

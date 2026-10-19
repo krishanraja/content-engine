@@ -1112,7 +1112,7 @@ def self_test():
             return 400, json.dumps({'ok': False, 'error': 'bad_patch', 'problems': ['workroom needs an https url']})
         return 200, json.dumps({'ok': True, 'steps': [{'key': 'workroom', 'label': 'Workroom', 'state': 'done', 'link': 'https://x'}, {'key': 'draft', 'label': 'Fact-checked draft', 'state': 'now'}]})
 
-    pid = '904658db-4df2-4537-a0ed-ebe93e081db7'
+    pid = '00000000-0000-4000-8000-000000000001'
     out = post(pid, {'workroom': {'url': 'https://claude.ai/artifact/a'}}, fake)
     check('a record is posted to the piece', seen[-1][1], f'/api/content-ideas/{pid}/making')
     check('the engine answer comes back', out.get('ok'), True)
@@ -1294,8 +1294,19 @@ def self_test():
 
     def run(argv, engine=None):
         out, err = io.StringIO(), io.StringIO()
-        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-            code = main(argv, call=engine or fake)
+        with tempfile.TemporaryDirectory() as validation_tmp:
+            if 'video' in argv:
+                vi=argv.index('video')
+                sys.path.insert(0,str(HERE.parent/'quick-edit'))
+                import quality
+                fixture=Path(validation_tmp)/'fixture.mp4';fixture.write_bytes(b'synthetic test media')
+                Path(str(fixture)+'.validation.json').write_text(json.dumps({
+                    'video_sha256':quality.digest(fixture),'piece_id':argv[vi-1],
+                    'library_path':'3 Posts/Test fixture/'+argv[vi+3],
+                    'checks':{k:{'status':'pass'} for k in ('heard','sync','loudness','visuals','full_review')}}))
+                argv=[*argv,'--video-file',str(fixture)]
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+                code = main(argv, call=engine or fake)
         return code, err.getvalue()
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -1708,6 +1719,7 @@ def main(argv=None, call=None):
     ap.add_argument('--thumb-file', metavar='LOCAL_PATH', help='with video and --thumb: the drawn thumbnail on this machine, which must be there')
     ap.add_argument('--thumb-url', metavar='URL', help="with video and --thumb: the thumbnail's https link")
     ap.add_argument('--music', metavar='TRACK_ID', help='with video: the licensed track behind it (config/music-library.json)')
+    ap.add_argument('--video-file', metavar='LOCAL_PATH', help='with video: exact local video whose validation receipt permits this replacement')
     ap.add_argument('--krish-words', metavar='WORDS', help='with read-back: Krish\'s own words signing the cut off. With recorded: Krish\'s own words, starting "Krish" and the date, letting a take '
                     'of older words count as a take of the current script; recorded on the take. With scripts: his words putting scripts he '
                     'wrote himself through although the story check fails; every finding is kept on the record')
@@ -1795,6 +1807,22 @@ def main(argv=None, call=None):
         elif a.what == 'video':
             patch = video_patch(a.args[0], a.args[1], a.args[2], url=a.url, seconds=a.seconds,
                                 thumb=a.thumb, thumb_url=a.thumb_url, music=a.music, thumb_file=a.thumb_file)
+            sys.path.insert(0, str(HERE.parent / 'quick-edit'))
+            import quality
+            guarded = quality.guarded_pieces().get(a.piece_id)
+            if not a.video_file or len(a.args) != 3:
+                raise MakingError('This video needs --video-file and its hash-bound validation receipt')
+            receipt_path=a.video_file+'.validation.json'
+            target=a.args[2] if a.args[2].startswith('3 Posts/') else guarded['library_prefix']+a.args[2] if guarded else None
+            problems=quality.delivery_problems(a.video_file,receipt_path,target)
+            if not problems:
+                receipt=json.loads(Path(receipt_path).read_text(encoding='utf8'))
+                if receipt.get('piece_id')!=a.piece_id:
+                    problems.append('receipt belongs to a different piece')
+                if target is None and not str(receipt.get('library_path','')).endswith('/'+a.args[2]):
+                    problems.append('receipt names a different video path')
+            if problems:
+                raise MakingError('Video recording blocked: '+'; '.join(problems))
         elif a.what == 'posted':
             channel = a.args[0]
             if channel not in CHANNELS:

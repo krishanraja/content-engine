@@ -35,6 +35,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import intro  # noqa: E402
 import music  # noqa: E402
+import quality  # noqa: E402
 
 REPO = HERE.parents[1]
 WORK = REPO / '.cache' / 'quick-edit' / 'mix-test'
@@ -77,6 +78,8 @@ def make_media():
        '-map', '[a]', '-ac', '1', WORK / 'voice.wav')
     ff('-f', 'lavfi', '-i', f'testsrc2=s=720x1280:r=30:d={dur}', '-i', WORK / 'voice.wav', '-c:v', 'libx264', '-preset', 'ultrafast',
        '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-shortest', WORK / 'source.mp4')
+    (WORK / 'words.json').write_text(json.dumps({'duration': dur, 'words': ws,
+        'provenance': quality.transcript_identity(WORK / 'source.mp4', 1, 'small.en')}))
     # The bed: a chord with a slow swell, 12 s, looping cleanly.
     notes = (130.81, 261.63, 329.63, 392.0, 523.25)
     ff(*[x for f in notes for x in ('-f', 'lavfi', '-i', f'sine=f={f}:d=12:r=48000')],
@@ -116,8 +119,16 @@ def make_media():
         'mood': 'steady', 'status': 'approved', 'approved_by': 'Krish', 'approved_on': '2026-10-12',
         'approval_words': 'synthetic mix test track, not a real approval', 'loopable': True}]
     (WORK / 'music-library.json').write_text(json.dumps(ledger, indent=2))
-    cue = {'id': 'panel', 'panel': 'panel-{aspect}.png', 'start': 'then rise again', 'end': 'behind it'}
-    base = {'source': 'source.mp4', 'words': 'words.json', 'crop': [720, 1280, 0, 0], 'cues': [cue], 'frame16': 'frame16.png',
+    cues = []
+    for i in range(0, len(TEXT), 4):
+        phrase = ' '.join(TEXT[i:i+4])
+        for shape, size in (('9x16', (1080, 1000)), ('16x9', (1314, 1080))):
+            panel = Image.new('RGBA', size, LILAC + (255,))
+            ImageDraw.Draw(panel).text((64, 64), phrase, font_size=64, fill=INK)
+            panel.save(WORK / f'panel-{i}-{shape}.png')
+        cues.append({'id': f'panel-{i}', 'panel': f'panel-{i}-{{aspect}}.png',
+                     'start': phrase, 'end': phrase, 'lead': .2, 'tail': .3})
+    base = {'source': 'source.mp4', 'words': 'words.json', 'crop': [720, 1280, 0, 0], 'cues': cues, 'frame16': 'frame16.png',
             'endcard': {'9x16': 'end-9x16.mp4', '16x9': 'end-16x9.mp4'}, 'logo': {'png': 'logo.png'}, 'subject': 'Mix test', 'piece_id': 'mix-test'}
     (WORK / 'full.json').write_text(json.dumps({**base, 'name': 'full', 'intro': {'9x16': 'sting-9x16-loud.mp4', '16x9': 'sting-16x9.mp4'},
                                                 'intro_override': OVERRIDE}))
@@ -126,10 +137,16 @@ def make_media():
 
 
 def render(config, out, shape, env):
-    p = subprocess.run([sys.executable, str(HERE / 'make.py'), str(WORK / config), '--out', str(WORK / out), '--only', shape],
+    # Synthetic tones contain no speech. Stub only ASR inside this test process;
+    # an empty recognition must leave the delivery receipt failed.
+    runner = (f'import sys; sys.path.insert(0, {str(HERE)!r}); import make; '
+              'make.transcribe = lambda *args, **kwargs: []; make.main()')
+    p = subprocess.run([sys.executable, '-c', runner, str(WORK / config), '--out', str(WORK / out), '--only', shape],
                        capture_output=True, text=True, env=env)
     if p.returncode:
         raise SystemExit(f'make.py failed on {config} {shape}:\n{p.stderr[-3000:]}')
+    receipt = json.loads((WORK / out / f'{Path(config).stem}-{shape}.mp4.validation.json').read_text())
+    assert receipt['checks']['heard']['status'] == 'fail', 'Synthetic tones cannot pass speech verification'
     return json.loads((WORK / out / f'{Path(config).stem}.report.json').read_text())
 
 
@@ -168,7 +185,7 @@ def main():
         table.append((f'{shape} with sting and bed', r['total_seconds'], L))
         checks += [
             (f'{shape}: the sting is 1.5 s and the clock adds up', (r['intro_seconds'], round(r['intro_seconds'] + r['main_seconds'] + r['outro_seconds'], 3)),
-             (1.5, r['total_seconds'])),
+             (1.5, round(r['total_seconds'], 3))),
             (f'{shape}: 30 fps, every frame there, 48 kHz stereo', (info['fps'], abs(info['frames'] - round(r['total_seconds'] * 30)) <= 1, info['rate'], info['channels']),
              ('30/1', True, 48000, 2)),
             (f'{shape}: the file is as long as the clock', abs(info['seconds'] - r['total_seconds']) <= 0.05, True),

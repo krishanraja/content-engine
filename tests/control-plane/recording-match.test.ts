@@ -19,7 +19,7 @@ import { alignScriptToTranscript } from '@mindmake/core'
 const ROOT = join(__dirname, '..', '..')
 const PY = process.platform === 'win32' ? 'python' : 'python3'
 // Nothing here may reach the engine: no key, and an address that cannot resolve.
-const env: NodeJS.ProcessEnv = { ...process.env, ENGINE_BASE_URL: 'https://engine.invalid', PYTHONIOENCODING: 'utf-8' }
+const env: NodeJS.ProcessEnv = { ...process.env, ENGINE_BASE_URL: 'https://engine.invalid', ENGINE_CREDENTIALS_ENV_ONLY: '1', PYTHONIOENCODING: 'utf-8' }
 delete env.ENGINE_OPERATOR_TOKEN
 delete env.CLAUDE_CODE_REMOTE
 delete env.MAKING_BY

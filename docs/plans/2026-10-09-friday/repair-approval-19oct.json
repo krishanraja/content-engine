@@ -1,0 +1,10 @@
+{
+  "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+  "approved_by": "Krish",
+  "approved_on": "2026-10-19",
+  "approval_words": "Approve this treatment and music balance",
+  "scope": "The presented authentic two-stage mapping, wide treatment, beat direction and audition balance for producing the remaining visuals and both repaired cuts.",
+  "mapping": ["Mercedes = Claude", "C-Class = Opus 5.5"],
+  "music": {"track": "no-curves-instrumental", "speech_bed_lufs": -31, "chapter_lift_lufs": -22, "rise_s": 0.5, "fall_s": 0.8, "track_crossfade_s": 2},
+  "not_granted": ["finished-video acceptance", "filing approval", "publication clearance", "board migration before video repairs and review"]
+}

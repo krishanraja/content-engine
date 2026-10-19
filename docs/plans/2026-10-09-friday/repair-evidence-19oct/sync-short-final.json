@@ -1,0 +1,169 @@
+{
+  "video_sha256": "2e17c7c53b533f30ae44f0eefa6974cb2985f168a51f605032954d3a3453e939",
+  "starts": [
+    5.0,
+    18.0,
+    31.0,
+    44.0,
+    57.0,
+    71.0
+  ],
+  "seconds": 6.0,
+  "speech_span": [
+    3.5,
+    81.2
+  ],
+  "syncnet_revision": "907c0b579c2e2d83f0eae1b2ac9e720cde4e5623",
+  "model_sha256": "961e8696f888fce4f3f3a6c3d5b3267cf5b343100b238e79b2659bff2c605442",
+  "analysis_resolution_ms": 40,
+  "source_frame_period_ms": 41.666666666666664,
+  "method": "sequential frame-index and decoded sample extraction",
+  "calibrated_this_run": true,
+  "points": [
+    {
+      "at_s": 5.0,
+      "offset_ms": -40,
+      "confidence": 7.1529,
+      "distance": 8.2105,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 160,
+          "confidence": 7.0716,
+          "distance": 8.1999,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -240,
+          "confidence": 7.1002,
+          "distance": 8.2998,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 18.0,
+      "offset_ms": 0,
+      "confidence": 6.0892,
+      "distance": 8.7215,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 6.1678,
+          "distance": 8.7528,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 5.9998,
+          "distance": 8.7512,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 31.0,
+      "offset_ms": 0,
+      "confidence": 7.01,
+      "distance": 7.9801,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 6.8147,
+          "distance": 8.2096,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 6.7838,
+          "distance": 8.2505,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 44.0,
+      "offset_ms": 0,
+      "confidence": 5.998,
+      "distance": 8.5165,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 5.9437,
+          "distance": 8.6965,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 6.0369,
+          "distance": 8.6297,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 57.0,
+      "offset_ms": -40,
+      "confidence": 6.0495,
+      "distance": 8.6661,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 160,
+          "confidence": 6.0256,
+          "distance": 8.6069,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -240,
+          "confidence": 5.7606,
+          "distance": 8.9286,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 71.0,
+      "offset_ms": 0,
+      "confidence": 6.9751,
+      "distance": 8.3112,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 6.7702,
+          "distance": 8.5135,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 6.8422,
+          "distance": 8.4693,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    }
+  ],
+  "status": "pass"
+}

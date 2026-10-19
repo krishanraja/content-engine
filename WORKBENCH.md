@@ -8,6 +8,43 @@ are in `AGENTS.md`; this file is the live state of the work.
 
 Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
 
+## Friday repair in progress — Codex, 19 October
+
+Krish approved the implementation plan: repair and review both Friday videos first;
+then migrate the selected board. Active repair checkout:
+`C:\Users\krish\dev\mindmake\content-engine`, branch `codex/friday-video-repairs`,
+from main `d8c0987`. The incomplete old checkout is preserved.
+
+Source recordings and rejected library outputs have been retrieved through the
+engine and hash-verified. Local calibrated SyncNet measurements reproduce the
+deep-cut drift: rejected output reaches +680 ms near 13 minutes, while the source
+reads 0 to +40 ms across eight checkpoints. Sequential frame and sample extraction,
+40 ms analysis resolution; injected ±200 ms offsets recovered at every checkpoint.
+The old timestamp-hole diagnosis remains withdrawn.
+
+The reconstructed edit's 62 segments contain 668.44 ms less PCM audio than their
+picture-frame durations. A replacement segment encoder drains both filters and
+requires exact frame/sample counts. The repaired diagnostic passes eight sync
+points at 0 to +40 ms; the first short candidate passes six at -40 to 0 ms.
+These measurements apply to those exact files only. The short needs caption and
+visual revisions; the deep intermediate needs rebuilding with the approved
+0.18/0.25-second pads. Neither video is accepted or ready for filing.
+
+Concrete mapping samples, a wide treatment, a 22-beat proposal and a measured music
+audition have been presented to Krish. He approved the treatment and music balance;
+the exact approval is in `docs/plans/2026-10-09-friday/repair-approval-19oct.json`.
+Fresh transcripts are complete on the correct processing clocks, and 32 short
+steps plus 77 deep cues are bound to fresh speech. Authentic Claude/ChatGPT control
+menu screenshots are still missing; archived images show help articles. Krish
+asked for a clearer explanation of that request, which has been supplied.
+Remaining: resolve caption discrepancies, repair remaining deep cards, renders,
+full playback and caption review, exact-hash validation, and explicit filing
+approval. No replacements have been sent or recorded. The article fact gate remains
+failed; video work does not grant publication clearance.
+
+Continuation and evidence locations:
+`docs/handovers/2026-10-19-friday-repair-progress.md`.
+
 ## The idea queue: read it first
 
 Every planning or making session starts with `python3 scripts/engine.py GET /api/idea-queue`: the ideas Krish

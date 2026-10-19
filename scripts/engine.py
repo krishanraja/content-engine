@@ -141,6 +141,9 @@ def operator_key() -> str:
     token = os.environ.get('ENGINE_OPERATOR_TOKEN', '').strip()
     if token:
         return token
+    # Offline tests must not inherit a developer's OS credential store.
+    if os.environ.get('ENGINE_CREDENTIALS_ENV_ONLY') == '1':
+        raise NoKey("No engine key. Set ENGINE_OPERATOR_TOKEN in this tool's environment.")
     # Krish, 2026-10-09: in Claude Code's cloud the key is a network secret
     # (Bearer on the engine's own host, path /api/). The session's proxy adds
     # the real header to every request to that host, and the container never

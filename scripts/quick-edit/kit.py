@@ -810,6 +810,37 @@ def mix(hex_a, hex_b, amount):
     return '#' + ''.join(f'{round(x * (1 - amount) + y * amount):02X}' for x, y in zip(a, b, strict=True))
 
 
+def mapping_card_svg(mercedes_uri, claude_uri, step=2, shape='9x16'):
+    """Two spoken steps: the make, then the model. Actual logo files supplied by caller."""
+    if step not in (1,2) or shape not in PANEL:
+        raise ValueError('Mapping card needs step 1 or 2 and a supported shape')
+    width,height = PANEL[shape]
+    st = style_for('mind_the_gap')
+    left,right = width*.27,width*.73
+    cream,ink,accent = st['cream'],st['ink'],st['accent']
+    wide=shape=='16x9'
+    make_y,model_y,divider=(650,910,720) if wide else (555,770,620)
+    label_size,model_size=(128,128) if wide else (78,94)
+    model = '' if step==1 else f'''
+      <path d="M64 {divider}H{width-64}" stroke="{accent}" stroke-width="3"/>
+      <text x="{left}" y="{model_y}" text-anchor="middle" font-family="Anton" font-size="{model_size}" fill="{cream}">C-CLASS</text>
+      <text x="{width/2}" y="{model_y}" text-anchor="middle" font-family="Anton" font-size="{model_size}" fill="{accent}">=</text>
+      <text x="{right}" y="{model_y}" text-anchor="middle" font-family="Anton" font-size="{model_size}" fill="{cream}">OPUS 5.5</text>'''
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
+      <rect width="{width}" height="{height}" fill="{ink}"/>
+      <rect x="0" y="0" width="{width}" height="12" fill="{accent}"/>
+      <text x="64" y="105" font-family="IBM Plex Mono" font-size="48" fill="{accent}">mind.the.gap</text>
+      <text x="64" y="{250 if wide else 215}" font-family="Anton" font-size="{130 if wide else 82}" fill="{cream}">THE {'MAKE' if step==1 else 'MODEL'}</text>
+      <image x="{left-95}" y="285" width="190" height="190" xlink:href="{mercedes_uri}"/>
+      <image x="{right-95}" y="285" width="190" height="190" xlink:href="{claude_uri}"/>
+      <text x="{left}" y="{make_y}" text-anchor="middle" font-family="Anton" font-size="{label_size}" fill="{cream}">MERCEDES</text>
+      <text x="{width/2}" y="{make_y}" text-anchor="middle" font-family="Anton" font-size="{label_size}" fill="{accent}">=</text>
+      <text x="{right}" y="{make_y}" text-anchor="middle" font-family="Anton" font-size="{label_size}" fill="{cream}">CLAUDE</text>
+      {model}
+      <text x="64" y="{height-35}" font-family="IBM Plex Mono" font-size="64" fill="{cream}">an analogy</text>
+    </svg>'''
+
+
 def style_for(subchannel):
     H = brand.house()
     ch = brand.channel(H, subchannel)

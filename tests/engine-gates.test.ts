@@ -25,6 +25,7 @@ describe('the engine gates', () => {
     ['one spine per piece', ['scripts/post-pack/spine_check.py', '--self-test']],
     ['the style references: cuts, zooms and the ledger', ['scripts/quick-edit/references.py', '--self-test']],
     ['the cover drawer and thumbnails', ['scripts/pages/build.py', '--self-test']],
+    ['video transcript clocks, word cues, continuous music and delivery evidence', ['tests/quick_edit_quality_test.py']],
   ] as const) {
     it(name, () => {
       const r = py([...args])

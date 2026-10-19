@@ -401,6 +401,58 @@ ACCENT_BEFORE_S, ACCENT_AFTER_S = 1.5, 4.0   # a short lift at each chapter turn
 ACCENT_LIFT_DB = 4.0
 
 
+def continuous_episode_bed(track, timeline, levels, chapters, src='0:a', out='bed'):
+    """Continuous bed, with restarts hidden in actual chapter-card windows.
+
+    Kept separate from episode_bed so existing approved episode renders retain
+    their original treatment. Chapter windows use the finished video's clock.
+    """
+    total = float(timeline['total_s'])
+    vs, ve = timeline['voice_start_s'], timeline['voice_end_s']
+    cards = sorted((max(0.,float(a)),min(total,float(b))) for a,b in chapters if b>a)
+    boundaries = [0.] + [a for a,b in cards if 2<a<total-2] + [total]
+    boundaries = sorted(set(boundaries))
+    cue = float(track.get('intro_cue_s') or 0)
+    available = track['duration_s']-cue
+    pieces = []
+    for i,(a,b) in enumerate(zip(boundaries,boundaries[1:])):
+        start = a-1 if i else a
+        end = b+1 if i<len(boundaries)-2 else b
+        if end-start > available:
+            raise MusicError('A chapter exceeds the approved track length; add an explicitly planned restart')
+        pieces.append((start,end))
+    if any(b-a<=2 for a,b in pieces):
+        raise MusicError('Chapter restarts are too close for a two-second crossfade')
+    norm = f'aresample={RATE},aformat=sample_fmts=fltp:sample_rates={RATE}:channel_layouts=stereo'
+    lines = [f'[{src}]{norm},asplit={len(pieces)}'+''.join(f'[{out}_src{i}]' for i in range(len(pieces)))]
+    for i,(a,b) in enumerate(pieces):
+        lines.append(f'[{out}_src{i}]atrim=start={cue}:duration={b-a},asetpts=PTS-STARTPTS[{out}_p{i}]')
+    current = f'{out}_p0'
+    for i in range(1,len(pieces)):
+        label = f'{out}_join{i}'
+        lines.append(f'[{current}][{out}_p{i}]acrossfade=d=2:c1=tri:c2=tri[{label}]')
+        current = label
+    bed = float(levels['bed_lufs'])
+    chapter = float(levels.get('chapter_lufs',-22))
+    def target(t):
+        value = bed
+        if t<vs:
+            value = levels['intro_lufs'] if t<=max(0,vs-.5) else levels['intro_lufs']+(bed-levels['intro_lufs'])*(t-max(0,vs-.5))/min(.5,vs)
+        if t>=ve:
+            value = bed+(levels['outro_lufs']-bed)*min(1,(t-ve)/.8)
+        for a,b in cards:
+            if a-.5<=t<=b+.8:
+                lift = max(0,min(1,(t-(a-.5))/.5,((b+.8)-t)/.8))
+                value = max(value,bed+(chapter-bed)*lift)
+        return value-track['measured_lufs']
+    points = sorted(set([0.,total,max(0,vs-.5),vs,ve,min(total,ve+.8)] +
+                        [max(0,min(total,t)) for a,b in cards for t in (a-.5,a,b,b+.8)]))
+    envelope = [(t,target(t)) for t in points]
+    lines.append(f"[{current}]volume='{gain_expr(envelope)}':eval=frame,atrim=end_sample={round(total*RATE)},asetpts=PTS-STARTPTS[{out}]")
+    return ';'.join(lines), {'mode':'episode_bed','chapter_windows':cards,'restart_windows':pieces,
+                            'envelope':envelope,'crossfade_s':2,'chapter_lufs':chapter}
+
+
 def episode_windows(timeline, accents=(), levels=None):
     """Where the bed plays in a long episode (make.py "music_mode": "episode";
     docs/production/one-shot-episode-corpus.md, "Music and rights": reserve

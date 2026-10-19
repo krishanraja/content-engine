@@ -269,6 +269,14 @@ def refusal_text(status, body):
 
 def send(planned, engine_api, out=print):
     """Sends each planned file. Returns {'sent', 'already', 'confirmed_only'}."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'quick-edit'))
+    import quality
+    planned = list(planned)
+    for target, path, why in planned:
+        if quality.is_delivery_video(target):
+            problems = quality.delivery_problems(path, str(path)+'.validation.json', target)
+            if problems:
+                raise SendError('Video delivery blocked: ' + '; '.join(problems))
     done = {'sent': 0, 'already': 0, 'confirmed_only': 0}
     for target, path, why in planned:
         sha, md5 = hashes(path)
