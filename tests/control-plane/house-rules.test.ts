@@ -344,7 +344,7 @@ describe('the checks before approval, on real text', () => {
   })
   test('the PATCH to approved or published asks the checks', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')
-    assert.match(src, /if \(updates\.state === 'approved' \|\| updates\.state === 'published'\) \{\s*\n\s*const checks = publishChecks\(effective, gate\)/)
+    assert.match(src, /if \(updates\.state === 'approved' \|\| updates\.state === 'published'\) \{\s*\n\s*const checks = publishChecks\(effective, gate, new Date\(\), id\)/)
     assert.match(src, /reason: 'publish_gate'/)
   })
 })
