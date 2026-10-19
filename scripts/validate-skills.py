@@ -204,10 +204,6 @@ NOT_FOR_CLAUDE = {
                       "(docs/ENGINE_SESSION.md), and its stations are loaded by the code, not by a client",
     "video-engine": "the exact-first-message launcher; AGENTS.md: opening this repository must not make unrelated "
                     "video questions invoke the production workflow",
-    "krish-voice": "Krish's account-wide skill of the same name is the one sessions load; this copy stays only "
-                   "because the Studio runner reads it into each production job (packages/core/src/runner.ts)",
-    "content-corpus": "Krish's account-wide skill of the same name is the one sessions load; this copy stays only "
-                      "because the Studio runner reads it into each production job (packages/core/src/runner.ts)",
 }
 # The skill roots a machine with the harness installed loads from. A repository skill that shares a name with one
 # of them is shadowed or doubled; that is printed so the copy can be retired, never failed (CI has no harness).

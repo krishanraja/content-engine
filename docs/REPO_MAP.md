@@ -9,7 +9,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 
 | Directory | Tracked files |
 | --- | --- |
-| `.agents/skills/` | 66 |
+| `.agents/skills/` | 58 |
 | `.claude/` | 12 |
 | `.codex/` | 1 |
 | `.github/` | 4 |
@@ -20,7 +20,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 | `docs/` | 30 |
 | `docs/brandbooknew/` | 1 |
 | `docs/handovers/` | 5 |
-| `docs/history/` | 9 |
+| `docs/history/` | 17 |
 | `docs/narration/` | 24 |
 | `docs/one-offs/` | 24 |
 | `docs/plans/` | 187 |

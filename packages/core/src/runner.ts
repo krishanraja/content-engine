@@ -2230,8 +2230,10 @@ async function receiptForNewAttempt(
   return signRunnerReceipt({ ...priorBody, command_id: command.command_id, ...(resultRefs ? { result_refs: resultRefs } : {}) }, options.signingKey)
 }
 
+// The skills a new job pins. krish-voice and content-corpus were retired from the repository on 2026-10-19 in favour
+// of Krish's account-wide skills; jobs made before keep and verify their own pinned copies (job-store-v2.ts).
 function productionBriefSkillPaths(repoRoot: string): string[] {
-  return ['mindmake-video', 'krish-voice', 'content-corpus', 'video-engine']
+  return ['mindmake-video', 'video-engine']
     .map(name => join(repoRoot, '.agents', 'skills', name))
 }
 
