@@ -61,4 +61,12 @@ Local working assets: `.cache/produce/2026-10-19-5b5bfadc/`; source copies: `.ca
 - The approved music track is 189.768 seconds and not marked loopable. It does not qualify for a continuous 365-second bed. The combined wording sheet proposes existing episode-style music for the long cut and continuous music for the short; Krish's decision is pending.
 - A fresh cold reader reviewed the packaging drafts. Ambiguous and overbroad lines were revised; the title checker correctly refuses use while Krish's pick is absent. No verdict has been invented.
 
-Pending decision: `docs/plans/2026-10-19-monday/video-signoff.md`, presented in chat. Final render, thumbnails, archive/library writes and video-complete records have not happened.
+## Approved production, later on 19 October
+
+Krish: "Approve set A and the listed treatment". Video wording is recorded in the title ledger. Both thumbnails, 26 panels and four story clips are drawn. Layout bounds pass and the picture/intro/outro contact sheets have been inspected. The full renders are still awaiting final verification.
+
+The long take contains 1,014 automatically transcribed words in 5.89 minutes, 24.9% above its 812-word script; 41.7% is additional/rephrased wording. It confirms 95% by the end of December 2026. The source transcripts and narration comparisons are preserved under the Monday plan. A second independent ASR pass over the short's unclear phrase returned "cancelled a price rise"; the caption correction is now explicit in its config.
+
+Krish separately approved the fourth paid v2 fact check. The article was updated only to his corrected prediction, and read back exactly. The run completed at 17:49:56 UTC despite a client connection reset. Recorded cost is $0.35, not the $0.10 last-run estimate. Eleven remaining gate entries require resolution; see the primary-source and arithmetic review in `docs/plans/2026-10-19-monday/fact-review.md`. No further paid call has been made. A human sign-off question is pending; this evidence does not itself change the gate.
+
+Full `npm run verify` completed with 1,743 passing and 36 failing tests, primarily local timeouts, plus Fontconfig and Windows credential-fallback fixtures. A subsequent focused run passed all 91 prediction/narrator/authentication/one-close checks. Skill synchronization and the workbench check pass. Do not label the full local verification green.

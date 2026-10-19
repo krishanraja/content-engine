@@ -2,5 +2,10 @@
  "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
  "date": "2026-10-19",
  "subchannel": "follow_the_money",
- "subject": "Why AI prices keep changing"
+ "subject": "Why AI prices keep changing",
+ "video_title": "Why Google, OpenAI and Anthropic keep changing AI prices",
+ "files": [
+  {"kind":"video-script", "cut":"long", "file":"../2026-10-19-draft-script.md"},
+  {"kind":"video-script", "cut":"short", "file":"../2026-10-19-draft-script-90s.md"}
+ ]
 }

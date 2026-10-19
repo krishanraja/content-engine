@@ -1,6 +1,6 @@
 # Monday video wording and treatment
 
-Draft for Krish's pick. No title, heading or artwork is approved by this sheet.
+Approved by Krish on 19 October 2026: "Approve set A and the listed treatment". This approves the video wording, listed headings, existing branded intro/outro and music treatment below. It does not approve posting or paid work, or certify factual claims.
 Piece: Why AI prices keep changing. The original recorded scripts remain unchanged.
 
 ## Packaging choices
