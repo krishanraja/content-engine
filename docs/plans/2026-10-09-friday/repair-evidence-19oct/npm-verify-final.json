@@ -1,0 +1,9 @@
+{
+  "command": "npm run verify",
+  "exit_code": 0,
+  "tests_passed": 1781,
+  "tests_skipped": 1,
+  "test_files_passed": 142,
+  "windows_linux_path_checks": "explicitly skipped",
+  "revision": "2ab7f15"
+}

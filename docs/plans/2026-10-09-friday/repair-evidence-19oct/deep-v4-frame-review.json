@@ -6,5 +6,13 @@
   "intro_outro_samples": 90,
   "findings": "No black/missing panels, cropped essential headings, caption collisions or unexplained empty card areas observed. Approved title/intro/outro preserved. Transitions show expected crossfades. Source screenshot small print is supporting context; essential instructions are repeated in large headings or magnified controls.",
   "full_playback": "Not claimed; separate exact-file human review records acceptance with sound.",
-  "measurement_pending": "Authored text measurements await completed renderer report."
+  "text_measurement": {
+    "authored_lines": 227,
+    "minimum_px_at_1080_width": 53,
+    "essential_control_minimum_px": 49,
+    "evidence": [
+      "deep-v4-native-text.json",
+      "deep-v4-control-text.json"
+    ]
+  }
 }

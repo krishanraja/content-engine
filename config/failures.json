@@ -681,16 +681,48 @@
    "on": "2026-10-19",
    "krish": "The 90 second video subtitles are still totally garbled, and my words randomly chop out, making the video incomprehensible ... you have published this thinking it is a 10/10, when it is about a 3/10",
    "what": "Friday's 90-second cut was re-rendered, called fixed and published to both boards from proxy checks (caption start and end times, loudness, a 216-pixel contact sheet). Its captions and cut points came from an old 17 Oct words file full of mishearings, so captions were garbled and words were clipped; the badge card showed one pair, not Mercedes = Claude, C-Class = Opus 5.5. docs/plans/2026-10-09-friday/90s-failures-19-oct.md.",
-   "status": "open",
-   "guards": []
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/quality.py",
+     "contains": "Transcript provenance is missing or stale",
+     "how": "Rejects cached words with the wrong source, speed, clock or transcriber."
+    },
+    {
+     "file": "scripts/quick-edit/quality.py",
+     "contains": "required = ('heard','sync','loudness','visuals','full_review')",
+     "how": "Exact video bytes must pass all five checks before delivery; proxy images cannot replace full review."
+    },
+    {
+     "file": "scripts/post-pack/send.py",
+     "contains": "delivery_problems",
+     "how": "Library delivery rejects stale or missing video receipts."
+    },
+    {
+     "file": "scripts/post-pack/making.py",
+     "contains": "Video recording blocked",
+     "how": "Making records reject unvalidated replacement videos."
+    }
+   ]
   },
   {
    "id": "lip-sync-drift",
    "on": "2026-10-19",
    "krish": "in the deep cut, my facial movements start misaligning with the audio as the video progresses, which is unbearable by the end",
-   "what": "His lips and voice drift apart as the deep cut plays. Sequential frame-index/audio-sample measurement now reproduces 680 ms in the rejected output versus 0â€“40 ms in source. The earliest demonstrated defect is stage-one segment encoding: 62 edited parts lose 668.44 ms of audio against their exact video-frame durations. Exact-sample draining repairs the diagnostic at eight calibrated checkpoints (0â€“40 ms). Final replacements still need their own complete review and hash-bound acceptance; the failure remains open. The withdrawn timestamp-hole diagnosis is not reused. Evidence: docs/handovers/2026-10-19-friday-repair-progress.md.",
-   "status": "open",
-   "guards": []
+   "what": "Sequential frame-index/audio-sample measurement reproduced 680 ms drift in the rejected deep output versus 0-40 ms in the source. The earliest demonstrated defect was stage-one encoding: 62 edited parts lost 668.44 ms of audio against their exact video-frame durations. Exact-sample draining repairs this stage. Replacement files require their own calibrated checkpoints and full review; invalid measurements stay inconclusive. The withdrawn timestamp-hole diagnosis is not reused. Evidence: docs/handovers/2026-10-19-friday-repair-progress.md.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "scripts/quick-edit/sync_check.py",
+     "contains": "def result_status",
+     "how": "Requires six well-distributed, individually reliable, calibrated checkpoints; a missing or inconclusive measurement cannot pass."
+    },
+    {
+     "file": "scripts/quick-edit/quality.py",
+     "contains": "required = ('heard','sync','loudness','visuals','full_review')",
+     "how": "Delivery binds sync acceptance to exact video bytes."
+    }
+   ]
   },
   {
    "id": "cause-claimed-unproven",

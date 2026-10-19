@@ -1,0 +1,93 @@
+
+> content-engine@0.1.0 verify
+> npm run typecheck && npm run typecheck:control-plane && npm run test && npm run skills:validate && npm run check:stations && npm run check:video-engine-trigger && npm run check:renderer && npm run check:public-copy && npm run check:no-secrets && npm run check:control-plane && npm run check:one-close && npm run check:workbench && npm run check:skill-core && npm run check:repo-map
+
+
+> content-engine@0.1.0 typecheck
+> tsc --noEmit
+
+
+> content-engine@0.1.0 typecheck:control-plane
+> tsc --noEmit -p apps/control-plane/tsconfig.json && tsc --noEmit -p apps/control-plane/tsconfig.scripts.json
+
+
+> content-engine@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/krish/dev/mindmake/content-engine
+
+
+ Test Files  142 passed (142)
+      Tests  1781 passed | 1 skipped (1782)
+   Start at  18:26:53
+   Duration  505.19s (tests 80%, import 17%, transform 3%)
+
+    Isolate  142 workers spawned · ~309ms startup each (spawn + environment, per file)
+             at least ~43.63s faster with isolate: false — reuses workers across files instead of one per file
+
+
+> content-engine@0.1.0 skills:validate
+> python scripts/validate-skills.py
+
+Skill is valid!
+Skill is valid!
+Skill is valid!
+Skill is valid!
+Skill is valid!
+.claude/skills/make-piece: a copy of .agents/skills/make-piece/SKILL.md
+.claude/skills/plan-week: a copy of .agents/skills/plan-week/SKILL.md
+.claude/skills/produce-video: a copy of .agents/skills/produce-video/SKILL.md
+.agents/skills/mindmake-video: not for Claude Code: the Studio operator; it runs only inside a tracked Studio session through the gateway (docs/ENGINE_SESSION.md), and its stations are loaded by the code, not by a client
+.agents/skills/video-engine: not for Claude Code: the exact-first-message launcher; AGENTS.md: opening this repository must not make unrelated video questions invoke the production workflow
+.agents/skills/video-engine: shares its name with an installed account-wide skill; the account-wide one is current, so retire this copy once nothing reads it
+
+> content-engine@0.1.0 check:stations
+> tsx scripts/check-station-harnesses.ts
+
+{"ok":true,"registry_id":"mindmake-production-stations","registry_version":2,"registry_hash":"9583349b046963a36e941c3e5a0101432fdfbd99183c25b742435fab1d329252","stations":17}
+
+> content-engine@0.1.0 check:video-engine-trigger
+> tsx scripts/check-video-engine-trigger.ts
+
+Video Engine trigger contract passed
+
+> content-engine@0.1.0 check:renderer
+> tsx scripts/check-renderer.ts
+
+renderer bundle passed
+
+> content-engine@0.1.0 check:public-copy
+> tsx scripts/check-public-copy.ts
+
+public copy invariants passed
+
+> content-engine@0.1.0 check:no-secrets
+> tsx scripts/check-no-secrets.ts
+
+secret and media invariants passed
+
+> content-engine@0.1.0 check:control-plane
+> tsx scripts/check-control-plane.ts
+
+control-plane guards: skipped on Windows (Linux-only paths; the routes deploy to Linux)
+
+> content-engine@0.1.0 check:one-close
+> tsx scripts/check-one-close.ts
+
+PASS  one-close guard: only the board route closes a board item, and the kinds and session clients agree with the database
+
+> content-engine@0.1.0 check:workbench
+> python3 scripts/check_workbench.py
+
+workbench: lean
+
+> content-engine@0.1.0 check:skill-core
+> python3 scripts/check_skill_core.py
+
+skill cores: every house rule a reference carries is named in its SKILL.md
+
+> content-engine@0.1.0 check:repo-map
+> node scripts/gen-repo-map.mjs --check
+
+docs/REPO_MAP.md is current
