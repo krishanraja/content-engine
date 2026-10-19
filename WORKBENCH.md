@@ -17,9 +17,17 @@ The final web build and live readback are recorded in `release-receipt.json`.
 Prior hold detail: `docs/history/2026-10-19-monday-prerelease-workbench.md`.
 Monday is live: all 23 downloads verified by hash and size; all 42 stored
 interaction records preserved. Wednesday's brief is now prepared in
-`docs/plans/2026-10-19-week/wednesday-brief.md`, including recovered corpus links,
-narrative, visuals and two batched decisions: scoring and draft-only test scope.
-The 50-record follow-up workbook was read; no comparative tests run yet.
+`docs/plans/2026-10-19-week/wednesday-scorecard.md` is the current research shortlist
+and simple, shareable narrative. Krish approved scoring and draft-only tests, then
+clarified: "Here's a scorecard, so you don't have to go and use them all."
+It is live in Wednesday's review workroom with the identical four-task packet.
+The 50-record follow-up and 41-record peer workbooks plus deep corpus were read;
+their extracted text is in `_corpus/2026-10-21-assistants/`. Counts overlap.
+No own tests run yet: Skyvern has no authenticated sessions and local-browser
+creation is unsupported by its stateless transport. No paid cloud session started.
+Await product access, not another narrative approval. Current Google task docs
+exclude UK and work accounts; dots UK eligibility depends on the plan.
+The live readback preserved all 23 Monday assets and all 12 week/store snapshots.
 Batch decisions and keep
 routine production separate from reusable engine work; Krish flagged throughput.
 

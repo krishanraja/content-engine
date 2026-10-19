@@ -1,0 +1,70 @@
+{
+  "build_id": "5d51fd8074a891a40d71167001a85cd9b0df079905ed8b6fc2555ee7a5eaa700",
+  "previous_build": "c192932692b41cca68eeb3e228dcd15fa610e5d2caa9583a37bb3b529ed18146",
+  "assets_unchanged": 23,
+  "html_readback_sha256": "857fad74105ded8615888e2993507fd7cdac08b280f6584f7e72f48d16e48650",
+  "collections": [
+    {
+      "collection": "2026-10-12/ticks",
+      "records": 18,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-12/links",
+      "records": 0,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-12/edits",
+      "records": 3,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-12/picks",
+      "records": 0,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-12/queue",
+      "records": 0,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-12/comments",
+      "records": 24,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-19/ticks",
+      "records": 0,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-19/links",
+      "records": 0,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-19/edits",
+      "records": 0,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-19/picks",
+      "records": 3,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-19/queue",
+      "records": 11,
+      "preserved": true
+    },
+    {
+      "collection": "2026-10-19/comments",
+      "records": 28,
+      "preserved": true
+    }
+  ],
+  "tests_run": 0,
+  "test_access": "No authenticated Skyvern sessions; local browser unsupported by stateless transport; no paid cloud session created."
+}
