@@ -698,11 +698,12 @@ def not_made_panel(day, name, weekday, when, series_label, pick, hidden, draft=F
             'CHECKLIST': checklist(day, p, deep),
         }
     elif pick:
-        title = pick.get('title') or f'{weekday}\'s piece'
+        # The heading is the weekday, as on a day not picked, and the idea is said once in plain words beneath it. The
+        # engine's own line for a piece can be long and is never a title (Krish, 2026-10-19: "too aggressive").
+        said = pick.get('plain') or pick.get('title') or f'{weekday}\'s piece'
         values = {
-            'STATE': 'picked', 'KICK': E(f'{series_label} · {when} · picked, not made yet'), 'HEADING': E(title),
-            'LINE': E(f'Picked for {weekday} and not made yet. Its publish board appears in this tab once it is made: '
-                      'press Make it in Claude Code on the week page when you are ready.'),
+            'STATE': 'picked', 'KICK': E(f'{series_label} · {when} · picked, not made yet'), 'HEADING': E(weekday),
+            'LINE': E(f'{said} Picked for {weekday} and not made yet. Its publish board appears in this tab once it is made.'),
             'CALLS': '',
             'CHECKLIST': checklist(day, p, deep),
         }
@@ -1067,8 +1068,10 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             state = 'draft' if key in draft else 'picked' if (piece or key in pending or pick) else 'not_picked'
             if state == 'draft' and not piece:
                 raise BoardError(f'{weekday} is in draft but has no piece id: give --piece {key}=<uuid>')
+            plain = next((i['so_what'] for i in (ideas or {}).get(key, [])
+                          if (piece and i.get('id') == piece) or (title and i['story'].strip() == str(title).strip())), None)
             panels.append(not_made_panel(key, name, weekday, short_date(when), series_label,
-                                         {'title': title} if state == 'picked' else None, key != opened,
+                                         {'title': title, 'plain': plain} if state == 'picked' else None, key != opened,
                                          state == 'draft', calls.get(key) or (), bool(piece) and piece == deep_piece))
         if state == 'made' and posted.get(key):
             panels[-1] = posted_kick(panels[-1], posted[key], weekday, warnings)
@@ -1807,6 +1810,11 @@ def _ideas_checks(check):
           and qpage.index('data-queue-day="mon"') < qpage.index('data-pick-card="mon-1"') and verify(qpage) == []
           and len(qman['queue']) == 2)
     check('ideas: no queue, no "From your queue"', 'From your queue' not in page)
+    long_row = 'A long engine line that is never a title. ' * 12
+    picked, _, _ = board(wk, ideas=ideas, picks={'mon': {'id': MON_ID, 'title': long_row}})
+    mon_panel = picked[picked.index('id="panel-monday"'):picked.index('id="panel-wednesday"')]
+    check('ideas: a picked day shows the weekday as its heading and the idea in plain words, never the engine line',
+          '<h1>Monday</h1>' in mon_panel and 'A business person finds out mon1.' in mon_panel and 'never a title' not in mon_panel)
     check('ideas: triage is saved to queue/<pick> and posted as a comment',
           'qdb.doc("queue/" + pid).set(body)' in js and 'QUEUE ${pid}' in js and 'curious' in js)
     for name, bad, want in (

@@ -17,6 +17,8 @@ import { VERDICTS, nextPair, parseMark, parseTriage, present, queueMeta, type Qu
 //                          verdict?, reason?, angle?, decided_by?: 'Krish', said? }
 //   POST /api/idea-queue { action: 'triage', id, verdict, reason?, angle?, decided_by: 'Krish', said? }
 //   POST /api/idea-queue { action: 'unqueue', id, decided_by: 'Krish' }
+//     (a `question` on a queue call adds one clarifying question from the session to the idea; it is shown beside the idea
+//      and is never a decision of his)
 //   POST /api/idea-queue { action: 'prefer', winner, loser, decided_by: 'Krish' }   (the A/B tap: which of two he would run first)
 //
 // A verdict (story, angle, cute, curious, drop) is written only with decided_by 'Krish', from his own tap or words

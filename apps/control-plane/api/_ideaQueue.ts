@@ -27,6 +27,7 @@ export interface QueueMark {
   series: string | null      // follow_the_money | mind_the_gap | under_the_hood, when the idea fits one
   from_week: string | null
   from_pick: string | null   // the board's pick id, e.g. mon-1
+  question: string | null    // a clarifying question from the session, shown beside the idea (never a decision)
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -54,6 +55,7 @@ export function parseMark(body: any): { mark: QueueMark | null; problems: string
       why_now: str(body?.why_now, 600), fact: str(body?.fact, 800),
       source_url: str(body?.source_url, 600), source_label: str(body?.source_label, 200),
       series, from_week: str(body?.from_week, 10), from_pick: str(body?.from_pick, 20),
+      question: str(body?.question, 600),
     },
   }
 }
@@ -88,6 +90,9 @@ export function queueMeta(mark: QueueMark | null, prior: Record<string, any> | u
     from_pick: mark.from_pick ?? base.from_pick ?? null,
     queued_at: base.queued_at || at,
     queued_by: base.queued_by || by,
+    questions: mark.question
+      ? [...(Array.isArray(base.questions) ? base.questions : []), { text: mark.question, at, by }]
+      : (Array.isArray(base.questions) ? base.questions : []),
   }
 }
 
@@ -101,6 +106,7 @@ export function present(row: Record<string, any>) {
     from_week: q.from_week || null, from_pick: q.from_pick || null,
     triage: q.triage || null, triage_history: Array.isArray(q.triage_history) ? q.triage_history : [],
     needs_triage: !q.triage,
+    questions: Array.isArray(q.questions) ? q.questions : [],
     wins: Array.isArray(q.beat) ? q.beat.length : 0,
     compared: [...new Set([...(Array.isArray(q.beat) ? q.beat : []), ...(Array.isArray(q.lost_to) ? q.lost_to : [])].map((x: any) => String(x.id)))],
   }
