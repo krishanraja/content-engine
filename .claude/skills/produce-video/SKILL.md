@@ -6,6 +6,16 @@ model: sonnet
 
 # Produce the video
 
+## Publish-board routing
+
+Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
+current web addresses, all six collection reads, build/download/publication,
+making-record attribution and rollback. Check `config/boards.json.web_cutover`:
+while pending, source migration is unfinished; once active, use only the web
+board for new interactions. Any ArtifactData, ArtifactComments, or dual-account
+publish instructions below apply only before cutover or to explicit legacy
+artifact work. Never synchronize preserved Claude boards after active cutover.
+
 ## Never call a video good without watching it
 
 Krish, 2026-10-13, after Wednesday's runner video went out with a title running
@@ -100,11 +110,12 @@ where things live") and `scripts/quick-edit/README.md`. Read the board
 Studio; if a session touches it, `docs/ENGINE_SESSION.md` applies and a
 cloud session is read-only for it.
 
-In Claude Code, copy Krish's ticks from the week's publish board onto the
+In every tool, copy Krish's ticks from the week's publish board onto the
 records now and again before you stop (`.agents/skills/make-piece/SKILL.md`,
-"The week's ticks"). It needs the ArtifactData tool: Codex has none, so a
-Codex session says in one line that the next Claude Code session copies
-them. A Record tick there is information only; Record is done from the takes
+"The week's ticks"). After active cutover use the authenticated web API in
+`docs/PUBLISH_BOARDS.md`, including edits, picks, queue and comments. Do not
+defer this to Claude Code. Only an explicit legacy-artifact session needs
+ArtifactData. A Record tick is information only; Record is done from the takes
 on the record.
 
 ## 1. Preflight: which tool, which machine

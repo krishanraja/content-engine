@@ -1,5 +1,8 @@
 # post-pack
 
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+
+
 Puts every asset of the publication into Krish's makeyourmindup asset library
 on Drive, sorted and explained: the brand kit, the channel art, and one folder
 for each post with everything it needs.
