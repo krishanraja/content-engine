@@ -90,15 +90,17 @@ function stations() {
   })
 }
 
+// Folders only, no file counts: a count would change with every plan or note a session adds, and the map would go
+// stale for no change in where code lives.
 function directories() {
-  const counts = new Map()
+  const dirs = new Set()
   for (const file of tracked) {
     const parts = file.split('/')
     if (parts.length < 2) continue
-    const dir = parts.length > 2 && ['apps', 'packages', 'docs', 'scripts', 'supabase', 'tests', '.agents', 'config'].includes(parts[0]) ? `${parts[0]}/${parts[1]}` : parts[0]
-    counts.set(dir, (counts.get(dir) ?? 0) + 1)
+    const deep = parts.length > 2 && ['apps', 'packages', 'docs', 'scripts', 'supabase', 'tests', '.agents', 'config'].includes(parts[0])
+    dirs.add(deep ? `${parts[0]}/${parts[1]}` : parts[0])
   }
-  return [...counts.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([dir, n]) => `| \`${dir}/\` | ${n} |`)
+  return [...dirs].sort().map((dir) => `- \`${dir}/\``)
 }
 
 function build() {
@@ -112,8 +114,6 @@ function build() {
     '',
     '## Directories',
     '',
-    '| Directory | Tracked files |',
-    '| --- | --- |',
     ...directories(),
     '',
     '## Content engine routes',

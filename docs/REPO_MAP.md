@@ -7,45 +7,43 @@ Find the file here, then open only that file. Signatures are one line each with 
 
 ## Directories
 
-| Directory | Tracked files |
-| --- | --- |
-| `.agents/skills/` | 58 |
-| `.claude/` | 12 |
-| `.codex/` | 1 |
-| `.github/` | 4 |
-| `apps/control-plane/` | 285 |
-| `apps/renderer/` | 31 |
-| `apps/runner/` | 2 |
-| `config/` | 21 |
-| `docs/` | 30 |
-| `docs/brandbooknew/` | 1 |
-| `docs/handovers/` | 7 |
-| `docs/history/` | 17 |
-| `docs/narration/` | 24 |
-| `docs/one-offs/` | 24 |
-| `docs/plans/` | 188 |
-| `docs/production/` | 1 |
-| `docs/prompts/` | 2 |
-| `docs/research/` | 7 |
-| `docs/walks/` | 1 |
-| `editions/` | 11 |
-| `examples/` | 1 |
-| `fixtures/` | 8 |
-| `inspo/` | 2 |
-| `packages/cli/` | 3 |
-| `packages/contracts/` | 13 |
-| `packages/core/` | 51 |
-| `scripts/` | 42 |
-| `scripts/channel-kit/` | 4 |
-| `scripts/hooks/` | 3 |
-| `scripts/pages/` | 7 |
-| `scripts/post-pack/` | 28 |
-| `scripts/quick-edit/` | 26 |
-| `scripts/signals/` | 3 |
-| `supabase/migrations/` | 37 |
-| `tests/` | 65 |
-| `tests/control-plane/` | 76 |
-| `tests/fixtures/` | 44 |
+- `.agents/skills/`
+- `.claude/`
+- `.codex/`
+- `.github/`
+- `apps/control-plane/`
+- `apps/renderer/`
+- `apps/runner/`
+- `config/`
+- `docs/`
+- `docs/brandbooknew/`
+- `docs/handovers/`
+- `docs/history/`
+- `docs/narration/`
+- `docs/one-offs/`
+- `docs/plans/`
+- `docs/production/`
+- `docs/prompts/`
+- `docs/research/`
+- `docs/walks/`
+- `editions/`
+- `examples/`
+- `fixtures/`
+- `inspo/`
+- `packages/cli/`
+- `packages/contracts/`
+- `packages/core/`
+- `scripts/`
+- `scripts/channel-kit/`
+- `scripts/hooks/`
+- `scripts/pages/`
+- `scripts/post-pack/`
+- `scripts/quick-edit/`
+- `scripts/signals/`
+- `supabase/migrations/`
+- `tests/`
+- `tests/control-plane/`
+- `tests/fixtures/`
 
 ## Content engine routes
 
