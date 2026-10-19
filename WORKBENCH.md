@@ -28,7 +28,8 @@ purchase 3/0; policy 2/1 for falsely claiming a manager referral); one Gemini Pr
 email baseline passed 3/0. Raw outputs and limits: the week's test-results/.
 Gemini Scheduled routed to chat, not a verified Spark agent run. Muse's muso
 new-chat label requires identity reconciliation with the Meta Muse corpus.
-Grok Bot, dots and Poke are not tested. No sends or spending. Purchase fixture
+Grok Bot is open on Windows but its chat screen is not yet reachable by automation.
+Krish has no Poke account and reports dots unavailable in the UK. All three are untested. No sends or spending. Purchase fixture
 now has explicit dates; the ambiguous original trial is retained unscored.
 The live readback preserved all 23 Monday assets and all 12 week/store snapshots.
 Batch decisions and keep

@@ -21,3 +21,7 @@ Raw accessibility readouts beside this file preserve prompts, outputs and conver
 ## Useful narrative evidence
 
 Keep the job-first card. The strongest concrete demonstration so far is the policy reply: highlight the correct policy citation, then the words “I've passed”. The useful lesson is small and actionable: before using a draft, check its dates, promises and claims that something already happened. This single example must not become a blanket verdict on the product.
+
+## Access update from Krish
+
+Krish reports no dots access in the UK and no Poke account. Grok Bot is installed and open on Windows; Windows Computer Use detects its exact app window, but the first capture shows only an empty shell and activation fails. Await a visible chat screen before submitting tests. No product failure score is assigned to this access problem.
