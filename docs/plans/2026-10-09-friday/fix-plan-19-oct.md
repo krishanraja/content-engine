@@ -1,5 +1,16 @@
 # Friday 16 Oct: the fix plan for both cuts (proposed 19 Oct, not built)
 
+**1 of 3.** The three files that go together:
+
+1. **This plan**: what is wrong with Friday's two cuts and how each fault is fixed.
+2. `docs/handovers/2026-10-19-codex-friday-cuts-fix.md`: the prompt that has Codex on Krish's PC carry out this
+   plan (sections 0 to 3).
+3. `docs/handovers/2026-10-19-board-to-content-krishraja.md`: the prompt that moves the publish board to
+   content.krishraja.com (section 4 here), so any tool, Codex included, can update it.
+
+Jobs 2 and 3 run in separate fresh sessions and can run at the same time. They meet at the end: once Krish has
+watched the fixed cuts and the board lives at content.krishraja.com, the Friday tab is rebuilt with the new cuts.
+
 Krish, 19 Oct: "on the deeper cut, the audio needs to be able to be heard the entire time, but just really low unless
 its intro, outro or chapter card. the 90 second video needs to have visuals nearly the entire way through as when
 things are sped up, we need to 3-5X the visual clarity. Suggest fixes to both, in entire detail".
@@ -20,22 +31,18 @@ Read with `90s-failures-19-oct.md`. Nothing here is built; every choice marked *
    caption readable, and the heard-check diff read in full, before anything is called done.
 5. **Lip sync: the voice drifts ahead of the face (found 19 Oct, measured).** Krish: "my facial movements start
    misaligning with the audio as the video progresses, which is unbearable by the end".
-   - *Cause.* `make.py` stage 1 encodes each kept stretch as its own part: the picture is forced to
-     `round(d*24)` frames, the sound is trimmed to `d`, so every part's sound ends a few milliseconds before its
-     picture. The join (`concat -c copy`) leaves those as gaps in the sound's timestamps: 54 gaps, 0.746 s in all, on
-     the deep cut. `build_audio` then reads the sound without honouring timestamps, which closes every gap, and
-     `apad` fills the end. So the voice runs steadily ahead of the lips.
-   - *Measured* (the finished file's sound matched against the edited take): 0.00 s at 1 min, 0.23 s at 6 min,
-     0.43 s at 8 min, 0.68 s at 13 min. Anything over about 0.1 s reads as dubbed. The length checks passed because
-     the totals match; nothing checked sync inside the cut.
-   - *Fix.* In each part, pad and trim the sound to exactly the picture's length (`apad,atrim=end_sample=` the
-     part's frames ÷ 24 × 48000), so sound and picture are the same length per part and the join has no gaps.
-     Belt and braces: read `[0:a]` with `aresample=async=1:first_pts=0` so any gap left becomes silence in place,
-     never a slide.
-   - *Guard (blocking).* After stage 1, sum the sound's timestamp gaps in `edited.mkv`: refuse over 5 ms in all.
-     After the render, measure sync at six points across the cut by matching the finished sound to the edited
-     take: refuse any point more than 40 ms off. Both numbers go in the report. The 90-second cut takes the same
-     path (fewer joins, smaller drift) and gets the same fix.
+   - *Cause: not proven.* On 19 Oct the cloud session first blamed 54 small holes (0.746 s in all) in the
+     timestamps of the joined take (`edited.mkv`). Its own test then showed each part's sound already matches its
+     picture to the sample, and that the holes come from the container. The "0.68 s by the end" figure came from
+     seeking `edited.mkv` by timestamp, so it measured those same holes, not drift. Do not reuse that diagnosis.
+   - *First, measure (no fix before this).* Decode the finished cut and the edited take by frame index and sample
+     position (never by seeking timestamps), and measure the offset between his mouth and his voice at 8 points
+     from 30 s to 13 min. Use a lip-sync measure (SyncNet or similar) or frame-motion against sound onsets. Also
+     check the take itself (`W\takes\...3-minute...mp4`) the same way: the teleprompter.com recording stamps its
+     frames unevenly, and the cut lays them 1/24 s apart (`conform_filter` in `make.py`).
+   - *Then fix the stage the numbers point to,* and add a blocking check to `make.py`: after the render, sync
+     measured at six points, refused if any point is more than 40 ms off, numbers in the report. The 90-second cut
+     takes the same path and gets the same check.
 
 ## 1. The deep cut: the bed heard the whole time
 
@@ -165,7 +172,7 @@ That is 22 beats in 77 s, every one at least 1.5 s, coverage about 95%.
 
 ## 3. Order of work (one fresh session, from `docs/handovers/`)
 
-1. Section 0, items 1 to 3 and 5 (lip sync first: it is a plain bug with a measured fix), as engine changes with
+1. Section 0, items 1 to 3 and 5 (lip sync first: measure it, then fix it), as engine changes with
    self-tests.
 2. The car drawing to Krish; then the deep cut's car beats (1b) and `episode_bed`, then a re-render (about 21 minutes in the cloud since 19 Oct), heard check, full-size
    review.
@@ -173,13 +180,21 @@ That is 22 beats in 77 s, every one at least 1.5 s, coverage about 95%.
    full-size review.
 4. Library, record, boards only after both pass and Krish has watched them.
 
-## 4. The publish board, any tool (asked 19 Oct, not built)
+## 4. The publish board, any tool (decided 19 Oct, not built)
 
-Krish asked for the board on Control Center so any tool (Codex included) can work with it. Today the board is a
+Krish, 19 Oct: "yes lets move the board to content.krishraja.com". The work is in file 3 of 3,
+`docs/handovers/2026-10-19-board-to-content-krishraja.md`; this is the summary. Today the board is a
 claude.ai artifact: its HTML is built by `scripts/post-pack/week_board.py` and its ticks live in that artifact's own
 store, which only a Claude session can read or write. To move it: (1) a Control Center route serves the same built
 HTML behind Krish's login; (2) ticks move to a Supabase table behind a guarded Control Center API, with the existing
 artifact ticks copied across once; (3) `week_board.py` publishes there and the making skills read ticks from there.
 That is work in `krishanraja/control-center`, a new public-facing address and a database change, so each step needs
-Krish's yes. The address he named, content.controlcenter.com, is to be confirmed: Control Center today lives at
-controlcenter.krishraja.com.
+Krish's yes. The address is content.krishraja.com (Krish, 19 Oct), on the Control Center project that already
+serves controlcenter.krishraja.com.
+
+## 5. Where it meets
+
+When both jobs are done: rebuild the Friday tab with `week_board.py --target web`, with the new cuts' library links
+in `docs/plans/2026-10-09-friday/words.json`, check it in a browser as Krish opens it, and publish it with his yes.
+Until the web board exists, the claude.ai boards in `config/boards.json` stay the live ones and only a Claude
+session can update them.

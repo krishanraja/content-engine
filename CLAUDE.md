@@ -89,6 +89,19 @@ separate reader (cost rule 6, guard G6), and pick by the job:
   `npm run typecheck:control-plane`, `npm run check:control-plane`, `npm run skills:validate`.
 - After editing a skill in `.agents/skills`: `python scripts/validate-skills.py --sync-claude`.
 
+## Do what was asked, prove what you claim
+
+Krish, 2026-10-19: "I requested three Markdown files for download, which you've not given me, and now it looks
+like you're just off doing more random shit. I asked you to heal the engine, not to reproduce the videos."
+
+- Deliver the thing asked for first, in the form asked: files he asks for are sent to him as files
+  (`SendUserFile`) in the same turn, before anything else.
+- Work handed to another session or tool is theirs. Do not start it yourself, not even "just to check".
+- Never tell him a cause is found until a test you ran proves it. Write "suspected" until then. A measurement
+  must not share the fault it is measuring (seeking by timestamps cannot measure a timestamp problem).
+- Never call a video done from proxy checks. Watch it at full size and hear it against its script first
+  (`config/failures.json`, `cut-called-done-unheard`).
+
 ## Keep the session cheap
 
 The six cost rules are in AGENTS.md. In Claude Code they come down to: search the map, never open

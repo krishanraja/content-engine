@@ -1,5 +1,9 @@
 # Move the week's publish board to content.krishraja.com
 
+**3 of 3.** File 1, `docs/plans/2026-10-09-friday/fix-plan-19-oct.md`, is the plan for Friday's two cuts (its
+section 4 summarises this move); file 2, `docs/handovers/2026-10-19-codex-friday-cuts-fix.md`, has Codex fix and
+re-render them. This job runs separately and can run at the same time. Do not render or edit video here.
+
 Paste everything below the line into a fresh session (Claude Code or Codex) with both `krishanraja/content-engine`
 and `krishanraja/control-center` checked out. Krish, 19 Oct: "yes lets move the board to content.krishraja.com".
 
@@ -72,3 +76,7 @@ context; everything is named below.
 - `npm run verify` in both repos. Push to branches and open pull requests; never push to main.
 - Nothing is published, deployed, sent or deleted without Krish's yes immediately before that action. The old
   artifact boards stay as they are.
+- Last step, only if file 2's cuts are done (their links are in `WORKBENCH.md`) and Krish has watched them:
+  rebuild the Friday tab with the new cuts and publish it to the web board with his yes (file 1, section 5).
+  Otherwise leave the Friday tab as it is and say so.
+- Before you stop: update `WORKBENCH.md`, commit, push to a branch and open the pull requests.

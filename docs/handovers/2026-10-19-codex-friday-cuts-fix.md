@@ -1,5 +1,9 @@
 # Codex: fix and re-render Friday's two cuts (16 Oct, mind.the.gap)
 
+**2 of 3.** It carries out the plan in file 1, `docs/plans/2026-10-09-friday/fix-plan-19-oct.md`. File 3,
+`docs/handovers/2026-10-19-board-to-content-krishraja.md`, moves the publish board and can run at the same time in
+another session.
+
 Paste everything below the line into Codex on Krish's home computer, in `C:\Users\krish\dev\content-engine`, run
 outside the sandbox (it needs the engine key, H: and the internet).
 
@@ -12,7 +16,7 @@ You are working in the Mindmake content engine repository (`krishanraja/content-
 
 1. `AGENTS.md` (rules for every agent) and `docs/NORTH_STAR.md`. Run `python scripts\check_failures.py` and read
    the entries in `config\failures.json` and `config\learnings.json` named `cut-called-done-unheard`,
-   `lip-sync-drift-at-joins` and anything about music, captions or video.
+   `lip-sync-drift` and anything about music, captions or video.
 2. `git pull --ff-only`. Set `$env:MAKING_BY = "Codex"`.
 3. **The plan you are carrying out:** `docs\plans\2026-10-09-friday\fix-plan-19-oct.md`. Read all of it. It holds
    Krish's exact words, the measured faults, and every change. Then
@@ -25,7 +29,8 @@ You are working in the Mindmake content engine repository (`krishanraja/content-
 - Piece id `904658db-4df2-4537-a0ed-ebe93e081db7`, "Why so many AIs", mind.the.gap, Friday 16 Oct 2026.
 - Two cuts, both already published to Krish's library and both rejected by him on 19 Oct:
   - **Deep cut**, 16:9, 13 min 41 s. Config `docs\plans\2026-10-09-friday\long-cut\long.json`, script
-    `docs\plans\2026-10-09-script-deep-v6.md`. Faults: voice drifts ahead of his lips (0.68 s by the end); music
+    `docs\plans\2026-10-09-script-deep-v6.md`. Faults: his lips and voice drift apart as it plays (cause not yet
+    measured); music
     silent between chapters; almost no car-analogy visuals; captions never heard-checked.
   - **90-second cut**, 9:16, sped 1.1×. Config `docs\plans\2026-10-09-friday\short-cut\short.json` (cards drawn by
     `short-cut\badge90.py`, logos in `docs\plans\2026-10-09-friday\logos\`). Faults: garbled captions, clipped words,
@@ -43,10 +48,9 @@ You are working in the Mindmake content engine repository (`krishanraja/content-
 
 ## 2. The work, in order (stop at each point marked KRISH)
 
-1. **Lip sync** (plan section 0, item 5) in `scripts\quick-edit\make.py`: per-part sound padded and trimmed to the
-   part's frame length; `aresample=async=1:first_pts=0` on the voice; the two blocking checks (gaps over 5 ms in
-   `edited.mkv`, sync more than 40 ms off at six points). Add self-tests; `python scripts\quick-edit\make.py
-   --self-test` must pass.
+1. **Lip sync** (plan section 0, item 5): the cause is NOT known. Measure first, exactly as the plan says, and
+   report the numbers. Then fix the stage they point to in `scripts\quick-edit\make.py` and add the blocking sync
+   check, with self-tests; `python scripts\quick-edit\make.py --self-test` must pass.
 2. **Fresh words and the heard check** (plan section 0, items 1 to 3): transcribe each take on the clock it is cut
    on (faster-whisper, pinned per `requirements.lock.txt`), correct only spellings against the script; wider cut
    pads; after render, transcribe the finished file and refuse on any dropped or clipped word or caption that
@@ -76,7 +80,9 @@ You are working in the Mindmake content engine repository (`krishanraja/content-
 - Never commit media, credentials or job data. Commit code, configs and notes; run `npm run verify` before pushing;
   push to a branch and open a pull request, never straight to main.
 - Before you stop: update `WORKBENCH.md` (what is done, what waits on Krish, where every file is), commit, push, and
-  close the `lip-sync-drift-at-joins` and `cut-called-done-unheard` entries in `config\failures.json` only with
+  close the `lip-sync-drift` and `cut-called-done-unheard` entries in `config\failures.json` only with
   their guards listed (`guards`), and only once the guards exist and pass.
-- The publish board: do not touch it. Updating it is a separate job (see the note at the end of
-  `fix-plan-19-oct.md`).
+- The publish board: do not touch it. It is moving to content.krishraja.com in a separate job
+  (`docs/handovers/2026-10-19-board-to-content-krishraja.md`). When you stop, write in `WORKBENCH.md` the library
+  path and Drive link of each new cut, so the board job (or whoever rebuilds the Friday tab, `fix-plan-19-oct.md`
+  section 5) can pick them up.
