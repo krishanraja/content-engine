@@ -1,0 +1,89 @@
+{
+  "base": "https://content.krishraja.com",
+  "viewports": [
+    {
+      "width": 390,
+      "weeks": [
+        {
+          "week": "2026-10-12",
+          "tabs": [
+            "tab-monday",
+            "tab-wednesday",
+            "tab-friday"
+          ],
+          "images": 44,
+          "counts": {
+            "ticks": 18,
+            "links": 0,
+            "edits": 3,
+            "picks": 0,
+            "queue": 0,
+            "comments": 24
+          },
+          "clipboard_and_inline_download": true,
+          "production_write_checks": "stale conflict, cross-origin rejection, identical-body write and exact readback"
+        },
+        {
+          "week": "2026-10-19",
+          "tabs": [
+            "tab-ideas",
+            "tab-monday",
+            "tab-wednesday",
+            "tab-friday"
+          ],
+          "images": 0,
+          "counts": {
+            "ticks": 0,
+            "links": 0,
+            "edits": 0,
+            "picks": 3,
+            "queue": 11,
+            "comments": 28
+          }
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "weeks": [
+        {
+          "week": "2026-10-12",
+          "tabs": [
+            "tab-monday",
+            "tab-wednesday",
+            "tab-friday"
+          ],
+          "images": 44,
+          "counts": {
+            "ticks": 18,
+            "links": 0,
+            "edits": 3,
+            "picks": 0,
+            "queue": 0,
+            "comments": 24
+          },
+          "clipboard_and_inline_download": true
+        },
+        {
+          "week": "2026-10-19",
+          "tabs": [
+            "tab-ideas",
+            "tab-monday",
+            "tab-wednesday",
+            "tab-friday"
+          ],
+          "images": 0,
+          "counts": {
+            "ticks": 0,
+            "links": 0,
+            "edits": 0,
+            "picks": 3,
+            "queue": 11,
+            "comments": 28
+          }
+        }
+      ]
+    }
+  ],
+  "verified": true
+}

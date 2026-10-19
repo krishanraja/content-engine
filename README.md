@@ -1,5 +1,8 @@
 # Mindmake content engine
 
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+
+
 The engine behind Krish Raja's media business: makeyourmindup, the Mindmake
 publication (hosted on Substack, with its cover page at makeyourmindup.ai), and
 the Shorts and carousels made from it. It finds what is worth saying, judges

@@ -1,0 +1,30 @@
+{
+  "verified": true,
+  "invalid_bearer_denied": true,
+  "results": [
+    {
+      "host": "https://content.krishraja.com",
+      "week": "2026-10-12",
+      "bytes": 14281929,
+      "operator_html": true
+    },
+    {
+      "host": "https://content.krishraja.com",
+      "week": "2026-10-19",
+      "bytes": 134121,
+      "operator_html": true
+    },
+    {
+      "host": "https://content-engine-flame-nu.vercel.app",
+      "week": "2026-10-12",
+      "bytes": 14281929,
+      "operator_html": true
+    },
+    {
+      "host": "https://content-engine-flame-nu.vercel.app",
+      "week": "2026-10-19",
+      "bytes": 134121,
+      "operator_html": true
+    }
+  ]
+}

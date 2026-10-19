@@ -1,5 +1,22 @@
 # Current state
 
+## 19 October: both publish boards live, web cutover verified
+
+Use https://content.krishraja.com/board/2026-10-19 and
+https://content.krishraja.com/board/2026-10-12. The overarching week tabs keep
+both available. All new interactions use this site; the four Claude boards
+are preserved source archives and must not be synchronized or edited.
+
+All 87 available source records, including 10 replies, were imported and read
+back exactly. The final source comparison found no delta. Both production
+boards passed authenticated desktop/phone navigation, image, state and comment
+checks; all 12 downloadable assets matched their type, size and SHA-256.
+Follow `docs/PUBLISH_BOARDS.md` from every tool, reading all six collections.
+Release, source limitations and rollback evidence: `docs/handovers/board-web-release.md`.
+Friday's two replacement videos remain separate work. Monday 19 October's
+signed-off scripts and pending recordings/fact check remain with its editorial
+handover; this migration changes neither scripts nor publishing approval.
+
 Status: Current
 Owner: Krish Raja
 Last verified: 2026-09-25 against `main` at `a5c5ab3`, the Vercel production

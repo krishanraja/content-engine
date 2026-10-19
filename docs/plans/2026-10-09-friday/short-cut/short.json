@@ -38,6 +38,12 @@
    "id": "fri90-badge",
    "panel": "panels/fri90-badge-{aspect}.png",
    "start": "The name of the AI model is the badge.",
+   "end": "is the badge."
+  },
+  {
+   "id": "fri90-mercedes",
+   "panel": "panels/fri90-mercedes-{aspect}.png",
+   "start": "Opus 5 .5 is like Mercedes C -Class.",
    "end": "Mercedes C -Class."
   },
   {

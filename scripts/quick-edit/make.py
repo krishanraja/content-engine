@@ -223,6 +223,11 @@ def restart_cut(words, at, before=25.0, slack=6.0):
     return best[1], best[2] - 1
 
 
+def sped_words(words, factor):
+    """Word times on the clock of a take sped up by `factor`."""
+    return [dict(w, s=w['s'] / factor, e=w['e'] / factor) for w in words]
+
+
 def resolve_removals(words, remove):
     """Word ranges to cut. An entry is the words themselves, {"say": "So, you know,",
     "after": "is coming"}, found in the transcript after the `after` phrase, an
@@ -1198,6 +1203,32 @@ def face_band(cw, ch, fy, fh):
     return 0, by, bw, bh
 
 
+def card_fit(path, w, h):
+    """A card that is not the size of the space it is laid in is fitted inside it, whole and centred, on a clear
+    ground. Friday 16 Oct's deep-cut cards were drawn 1600 x 900 for a 1314 x 1080 space and laid in unscaled, so
+    the right of every card (logos, numbers, sources) ran off the frame (19 Oct). '' when it already fits."""
+    try:
+        from PIL import Image
+        cw, ch = Image.open(path).size
+    except Exception:
+        return ''
+    if (cw, ch) == (w, h) or (cw <= w and ch <= h):
+        return ''
+    return (f"scale={w}:{h}:force_original_aspect_ratio=decrease,"
+            f"pad={w}:{h}:(ow-iw)/2:(oh-ih)/2:color=0x00000000,")
+
+
+def card_input(path, start, stop):
+    """A card fed in only for its own window: the picture repeats from `start` (its clock kept on the main
+    clock by -itsoffset, so every fade and enable time reads the same) to just past `stop`, and the overlay
+    passes the main picture through untouched before and after it. Each card was fed in for the whole cut
+    until 19 October, so a 13-minute deep cut with 51 cards turned about a million frames that were never
+    shown, and took 3.5 hours: longer than a cloud container stays up (Krish: "are you saying we can never
+    produce long videos?"). The pictures come out frame for frame the same."""
+    return ['-loop', '1', '-framerate', str(FPS), '-t', f'{max(0.1, stop - start + 0.5):.3f}',
+            '-itsoffset', f'{start:.3f}', '-i', str(path)]
+
+
 def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix):
     """The ffmpeg inputs and filter graph for one shape: the captioned main
     (graphics, the tall logo, the strap, the captions), joined after the sting
@@ -1262,7 +1293,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             cur = f'c{r_i}_0'
             layers = panel_layers(run)
             for j, (c, f, stop) in enumerate(layers):
-                inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
+                inputs += card_input(P(c['panel'].replace('{aspect}', asp)), c['s'], stop)
                 if j == 0:
                     f = f.split(',', 1)[1] if ',' in f else 'null'   # the layer itself fades in
                 if j == len(layers) - 1:
@@ -1275,8 +1306,9 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             last, k = f's{k}', k + 1
     else:
         for c, f, stop in panel_layers(wins):
-            inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
-            g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
+            card = P(c['panel'].replace('{aspect}', asp))
+            inputs += card_input(card, c['s'], stop)
+            g.append(f"[{n}:v]format=rgba,{card_fit(card, 1920 - px if px else 1920, 1080)}{f}[pp{n}]")
             g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
     if asp == '9x16' and cfg.get('logo', True) is not False:
@@ -1471,6 +1503,8 @@ def self_test():
     # The intro, the bed and the clock (no media needed).
     ws = [{'w': 'Hello', 's': 0.1, 'e': 0.5}, {'w': 'there.', 's': 19.4, 'e': 19.84}]
     tl = timeline(45, 600, 120, ws)
+    checks.append(('a raw words file goes onto the sped clock (Krish, 19 Oct: subtitles lagging)',
+                   sped_words([{'w': 'a', 's': 11.0, 'e': 22.0}], 1.1), [{'w': 'a', 's': 10.0, 'e': 20.0}]))
     checks.append(('the clock: sting, main, end card, first and last word',
                    (tl['intro_s'], tl['main_s'], tl['outro_s'], tl['total_s'], tl['voice_start_s'], tl['voice_end_s']), (1.5, 20.0, 4.0, 25.5, 1.6, 21.34)))
     wins = [{'id': 'a', 's': 4.0, 'e': 6.0}]
@@ -1886,6 +1920,13 @@ def main():
     words = json.loads(wpath.read_text())['words'] if wpath.exists() else transcribe(src, wpath, cfg.get('model', 'small.en'), cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''))
 
     cuts = resolve_removals(words, cfg.get('remove', []) + cfg.get('remove_words', []))
+    if speed and cfg.get('words'):
+        # A words file named in the config was heard from the take before it was sped up, so its times are on
+        # the raw clock: put them on the sped clock, or the cut points, captions and cards all land late, more
+        # so as it goes. Friday 16 Oct's 90-second cut at 1.10x (Krish, 19 Oct: "the subtitles are lagging
+        # severely", "the video lingers after I've finished my script"). After resolve_removals, whose
+        # restart_near reads the raw clock; a transcript made here is already on the sped clock.
+        words = sped_words(words, speed[0])
     segs, total = segments(words, cuts, cfg.get('max_gap', 0.35), cfg.get('pad_before', 0.10), cfg.get('pad_after', 0.16), dur)
     ws = retime(words, segs)
     wins, missing = cue_windows(ws, cfg.get('cues') or [], total)
@@ -2090,7 +2131,13 @@ def main():
             'music': cut_audio['music'], 'voice_gain_db': round(voice_gain, 2), 'loudness': loudness, 'episode': said,
             'srt': f"{cfg['name']}-{asp}.srt", 'warnings': warnings}
         if args.share_mib:
-            report[f'{asp}_share'] = share_copy(final, out / 'share' / final.name, args.share_mib)
+            # A cut too long for a chat-size copy (Friday 16 Oct's 14-minute deep cut, 19 Oct) goes without one;
+            # the cut itself is finished, so the report is still written.
+            try:
+                report[f'{asp}_share'] = share_copy(final, out / 'share' / final.name, args.share_mib)
+            except SystemExit as e:
+                report[f'{asp}_share'] = None
+                report.setdefault('notes', []).append(f'no chat-size copy: {e}')
         # Preview: a frame in the sting, the opening, inside every graphic,
         # and the end card, all moved on by the sting's length.
         for label, t in preview_shots(tl, wins):

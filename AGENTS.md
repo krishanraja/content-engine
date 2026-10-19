@@ -1,5 +1,8 @@
 # AGENTS.md
 
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+
+
 <!-- north-star:start -->
 ## North Star: read it first, every session
 
@@ -118,6 +121,17 @@ is updated in place. Nothing is ever deleted." The exact scope
 Descript was retired on 2026-10-12, the day it was set up, in his words
 above; no session calls it. Records written before then keep a `descript`
 field that nothing reads.
+
+**Web publish board migration (19 October 2026).** Full parity is implemented
+behind the existing access code at `content.krishraja.com/board/<Monday>`.
+Release is pending, not live: `config/boards.json` carries the web URLs and an
+explicit `web_cutover` marker. Only after all four source exports, final delta
+and authenticated acceptance pass does that marker become `active`. Then every
+making session reads ticks, links, edits, picks, queue and comments through
+`board_web.py read`; only the web board takes new interactions. Preserve the
+Claude artifacts and artifact generator; no ongoing two-way sync. See
+`docs/handovers/board-web-release.md` for approval gates and exact commands.
+The artifact workflow below applies before cutover and to explicit legacy builds.
 
 **The week's publish board is where Krish ticks; the piece's making record
 is where it counts.** Krish, 2026-10-12: "Give me a tick box next to each

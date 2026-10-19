@@ -1428,6 +1428,9 @@ def build(args, get=None):
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
+    if getattr(args, 'target', 'artifact') == 'web':
+        from board_web import web_page
+        page, manifest = web_page(page, manifest)
     return page, manifest
 
 
@@ -1999,6 +2002,7 @@ def parser():
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')
     ap.add_argument('--out', default='week-board.html', help='the page; the manifest is written beside it as .json')
     ap.add_argument('--self-test', action='store_true')
+    ap.add_argument('--target', choices=['artifact', 'web'], default='artifact', help='runtime for the same board; artifact stays the default')
     return ap
 
 
