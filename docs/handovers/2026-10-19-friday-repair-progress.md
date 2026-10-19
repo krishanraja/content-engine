@@ -371,3 +371,21 @@ The local receipt now has heard/full_review/loudness pass; sync and visuals stil
 await current checks. This records human review, not assistant playback.
 Six short sync windows have been extracted, model measurements pending.
 Deep v4 encoding remains active. Nothing filed and no deep acceptance inferred.
+
+## Short gates complete — 19 Oct, 17:58 London
+
+Short v8: all five required gates pass. New exact-hash evidence is committed as
+sync-short-v8.json, short-v8-native-text.json, short-v8-frame-samples.json and
+short-v8-validation.json. All 88 one-second and 38 quarter-second samples inspected.
+66 authored text lines measured in final frames at 1080 width: minimum 67 pixels.
+Six enlarged authentic screenshot labels: 70-92 pixels. Human complete acceptance
+is separate from this frame audit; no assistant full playback claimed.
+
+234 approved production inputs (including the ignored Sally PNGs) were archived
+with an exact manifest and sent through send.py to 3 Video/working repair 19 Oct.
+Archive af91e8b53061a5d8059c7694381a6a7f4c780b61566f19801998249643e70bc9,
+271069485 bytes. Engine upload confirmed; Drive copy still needs verification.
+The old library loop (PID 9020) retained its mutex but had not delivered the inputs.
+It was stopped for a reversible restart; current one-pass sync is session 51334,
+log W/repair-library-sync-restart.log. Restore scheduled task Mindmake Library Sync
+after that pass. No final replacement sent. Deep v4 still encoding in session 7726.

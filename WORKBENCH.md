@@ -54,8 +54,13 @@ Krish then approved the presented Sally and revised compositions: "Looks good".
 This approves the visuals, not full finished-video playback or acceptance.
 Krish accepted the complete short v8 after the full-video sound-review question:
 "Looks good". This is bound to its exact SHA in short-v8-human-review.json.
-Decoded audio exactly matches v6. Loudness passes; fresh sync and final-frame
-checks remain pending. Deep v4 is encoding and has not been accepted.
+Short v8 now passes heard, six calibrated sync points (-40 to 0 ms), loudness,
+visuals and human full review. All 88 one-second and 38 quarter-second samples
+were inspected; all 66 authored text lines measure at least 67 pixels at 1080
+width, and essential actual-control labels measure 70-92 pixels. Deep v4 is
+encoding and has not been accepted. The 234 production inputs are preserved in
+a 271 MB archive in the engine library under 3 Video/working repair 19 Oct;
+Drive-copy verification is pending. The library sync worker is being recovered.
 Superseded short v7 and deep v3 renders were stopped, not filed.
 Thirty-three
 bounded independent transcription checks and the full medium-model transcript

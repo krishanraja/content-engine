@@ -1,0 +1,938 @@
+{
+  "video_sha256": "93a10b5bcb6af642878c3bd1d100bfec659f93ccd790b8850cd5c49ffbdd6eec",
+  "output_width": 1080,
+  "method": "Colour-matched glyph extent in decoded final frames, using authored text bounds; source font size alone is not a pass.",
+  "scope": "Authored text only; screenshot crop labels and layout reviewed separately. A short punctuation symbol is not treated as a capital-height glyph.",
+  "rows": [
+    {
+      "card": "repair-short-01",
+      "text": "CHOOSE THE MODEL",
+      "at_s": 5,
+      "crop_at_1080_width": [
+        61,
+        275,
+        778,
+        369
+      ],
+      "foreground_height_px": 86,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-02",
+      "text": "ANOTHER",
+      "at_s": 7,
+      "crop_at_1080_width": [
+        61,
+        257,
+        389,
+        349
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-02",
+      "text": "MODEL LAUNCH",
+      "at_s": 7,
+      "crop_at_1080_width": [
+        61,
+        367,
+        618,
+        459
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-03",
+      "text": "A NEW NAME.",
+      "at_s": 10,
+      "crop_at_1080_width": [
+        61,
+        300,
+        758,
+        428
+      ],
+      "foreground_height_px": 120,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-03",
+      "text": "EVERY DAY?",
+      "at_s": 10,
+      "crop_at_1080_width": [
+        61,
+        451,
+        679,
+        580
+      ],
+      "foreground_height_px": 121,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-04",
+      "text": "DOES THE NAME",
+      "at_s": 13,
+      "crop_at_1080_width": [
+        61,
+        299,
+        870,
+        428
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-04",
+      "text": "EVEN MATTER?",
+      "at_s": 13,
+      "crop_at_1080_width": [
+        61,
+        451,
+        824,
+        580
+      ],
+      "foreground_height_px": 121,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-05",
+      "text": "CHOOSE THE EFFORT",
+      "at_s": 16,
+      "crop_at_1080_width": [
+        61,
+        150,
+        781,
+        244
+      ],
+      "foreground_height_px": 86,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-06",
+      "text": "THINK OF",
+      "at_s": 18,
+      "crop_at_1080_width": [
+        61,
+        130,
+        384,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-06",
+      "text": "A CAR",
+      "at_s": 18,
+      "crop_at_1080_width": [
+        61,
+        240,
+        279,
+        332
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-07",
+      "text": "THE MAKE",
+      "at_s": 20,
+      "crop_at_1080_width": [
+        61,
+        141,
+        368,
+        218
+      ],
+      "foreground_height_px": 70,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-07",
+      "text": "MERCEDES",
+      "at_s": 20,
+      "crop_at_1080_width": [
+        137,
+        484,
+        446,
+        559
+      ],
+      "foreground_height_px": 67,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-07",
+      "text": "CLAUDE",
+      "at_s": 20,
+      "crop_at_1080_width": [
+        678,
+        484,
+        898,
+        559
+      ],
+      "foreground_height_px": 67,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-08",
+      "text": "THE MODEL",
+      "at_s": 23,
+      "crop_at_1080_width": [
+        61,
+        140,
+        403,
+        219
+      ],
+      "foreground_height_px": 71,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-08",
+      "text": "MERCEDES",
+      "at_s": 23,
+      "crop_at_1080_width": [
+        137,
+        484,
+        446,
+        559
+      ],
+      "foreground_height_px": 67,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-08",
+      "text": "CLAUDE",
+      "at_s": 23,
+      "crop_at_1080_width": [
+        678,
+        484,
+        898,
+        559
+      ],
+      "foreground_height_px": 67,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-08",
+      "text": "C-CLASS",
+      "at_s": 23,
+      "crop_at_1080_width": [
+        143,
+        685,
+        441,
+        774
+      ],
+      "foreground_height_px": 81,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-08",
+      "text": "OPUS 5.5",
+      "at_s": 23,
+      "crop_at_1080_width": [
+        626,
+        685,
+        950,
+        774
+      ],
+      "foreground_height_px": 82,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-09",
+      "text": "THINKING",
+      "at_s": 25,
+      "crop_at_1080_width": [
+        61,
+        130,
+        393,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-09",
+      "text": "IS THE GEAR",
+      "at_s": 25,
+      "crop_at_1080_width": [
+        61,
+        240,
+        495,
+        332
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-10",
+      "text": "YOU PICK",
+      "at_s": 27,
+      "crop_at_1080_width": [
+        61,
+        130,
+        392,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-10",
+      "text": "THE GEAR",
+      "at_s": 27,
+      "crop_at_1080_width": [
+        61,
+        240,
+        404,
+        332
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-11",
+      "text": "TODAY:",
+      "at_s": 29,
+      "crop_at_1080_width": [
+        61,
+        130,
+        318,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-11",
+      "text": "MANUAL",
+      "at_s": 29,
+      "crop_at_1080_width": [
+        61,
+        240,
+        371,
+        332
+      ],
+      "foreground_height_px": 84,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-12",
+      "text": "MEET SALLY",
+      "at_s": 31,
+      "crop_at_1080_width": [
+        61,
+        130,
+        500,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-12",
+      "text": "A business owner",
+      "at_s": 31,
+      "crop_at_1080_width": [
+        61,
+        777,
+        652,
+        860
+      ],
+      "foreground_height_px": 75,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-13",
+      "text": "CHECK THIS",
+      "at_s": 34,
+      "crop_at_1080_width": [
+        61,
+        299,
+        644,
+        428
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-13",
+      "text": "SUPPLIER DEAL",
+      "at_s": 34,
+      "crop_at_1080_width": [
+        61,
+        451,
+        824,
+        580
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-14",
+      "text": "SOUNDS SURE",
+      "at_s": 36,
+      "crop_at_1080_width": [
+        61,
+        312,
+        555,
+        404
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-15",
+      "text": "MISSES A",
+      "at_s": 37,
+      "crop_at_1080_width": [
+        61,
+        299,
+        555,
+        428
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-15",
+      "text": "COSTLY RULE",
+      "at_s": 37,
+      "crop_at_1080_width": [
+        61,
+        451,
+        718,
+        580
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-16",
+      "text": "TOO LITTLE",
+      "at_s": 40,
+      "crop_at_1080_width": [
+        61,
+        299,
+        599,
+        428
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-16",
+      "text": "THINKING",
+      "at_s": 40,
+      "crop_at_1080_width": [
+        61,
+        451,
+        525,
+        580
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-17",
+      "text": "SAME GEAR.",
+      "at_s": 42,
+      "crop_at_1080_width": [
+        61,
+        130,
+        505,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-17",
+      "text": "HIDDEN RISK.",
+      "at_s": 42,
+      "crop_at_1080_width": [
+        61,
+        240,
+        533,
+        332
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-18",
+      "text": "PUT THINKING",
+      "at_s": 43,
+      "crop_at_1080_width": [
+        61,
+        299,
+        745,
+        428
+      ],
+      "foreground_height_px": 121,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-18",
+      "text": "TO THE TEST",
+      "at_s": 43,
+      "crop_at_1080_width": [
+        61,
+        451,
+        668,
+        580
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-19",
+      "text": "NEWER MODEL.",
+      "at_s": 45,
+      "crop_at_1080_width": [
+        61,
+        229,
+        836,
+        358
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-19",
+      "text": "LOW EFFORT.",
+      "at_s": 45,
+      "crop_at_1080_width": [
+        61,
+        381,
+        712,
+        510
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-19",
+      "text": "Opus 5.5 \u00b7 low",
+      "at_s": 45,
+      "crop_at_1080_width": [
+        61,
+        571,
+        521,
+        659
+      ],
+      "foreground_height_px": 81,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-20",
+      "text": "OLDER MODEL.",
+      "at_s": 48,
+      "crop_at_1080_width": [
+        61,
+        229,
+        802,
+        358
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-20",
+      "text": "HIGHER SCORE.",
+      "at_s": 48,
+      "crop_at_1080_width": [
+        61,
+        381,
+        816,
+        510
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-20",
+      "text": "Opus 5 \u00b7 max",
+      "at_s": 48,
+      "crop_at_1080_width": [
+        61,
+        571,
+        485,
+        659
+      ],
+      "foreground_height_px": 81,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-21",
+      "text": "WHY START",
+      "at_s": 51,
+      "crop_at_1080_width": [
+        61,
+        130,
+        473,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-21",
+      "text": "IN LOW GEAR?",
+      "at_s": 51,
+      "crop_at_1080_width": [
+        61,
+        240,
+        572,
+        332
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-22",
+      "text": "MY GUESS",
+      "at_s": 53,
+      "crop_at_1080_width": [
+        61,
+        375,
+        588,
+        504
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-23",
+      "text": "THINKING",
+      "at_s": 55,
+      "crop_at_1080_width": [
+        61,
+        257,
+        393,
+        349
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-23",
+      "text": "COSTS MONEY",
+      "at_s": 55,
+      "crop_at_1080_width": [
+        61,
+        367,
+        570,
+        459
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-24",
+      "text": "YOU PAY",
+      "at_s": 57,
+      "crop_at_1080_width": [
+        61,
+        299,
+        493,
+        428
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-24",
+      "text": "THE SAME PLAN",
+      "at_s": 57,
+      "crop_at_1080_width": [
+        61,
+        451,
+        867,
+        580
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-25",
+      "text": "WHAT",
+      "at_s": 59,
+      "crop_at_1080_width": [
+        61,
+        300,
+        359,
+        428
+      ],
+      "foreground_height_px": 120,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-25",
+      "text": "COMES NEXT?",
+      "at_s": 59,
+      "crop_at_1080_width": [
+        61,
+        451,
+        777,
+        580
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-26",
+      "text": "MID-2027:",
+      "at_s": 62,
+      "crop_at_1080_width": [
+        61,
+        130,
+        459,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-26",
+      "text": "AUTOMATIC?",
+      "at_s": 62,
+      "crop_at_1080_width": [
+        61,
+        240,
+        524,
+        332
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-27",
+      "text": "AI PICKS",
+      "at_s": 66,
+      "crop_at_1080_width": [
+        61,
+        130,
+        368,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-27",
+      "text": "ITS OWN GEAR",
+      "at_s": 66,
+      "crop_at_1080_width": [
+        61,
+        240,
+        571,
+        332
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-28",
+      "text": "EASY BEATS",
+      "at_s": 70,
+      "crop_at_1080_width": [
+        61,
+        130,
+        491,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-28",
+      "text": "MANUAL",
+      "at_s": 70,
+      "crop_at_1080_width": [
+        61,
+        240,
+        371,
+        332
+      ],
+      "foreground_height_px": 84,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-29",
+      "text": "85% SURE",
+      "at_s": 72,
+      "crop_at_1080_width": [
+        61,
+        375,
+        641,
+        505
+      ],
+      "foreground_height_px": 118,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-30",
+      "text": "READ THE",
+      "at_s": 75,
+      "crop_at_1080_width": [
+        61,
+        230,
+        542,
+        358
+      ],
+      "foreground_height_px": 120,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-30",
+      "text": "FULL ARTICLE",
+      "at_s": 75,
+      "crop_at_1080_width": [
+        61,
+        381,
+        733,
+        510
+      ],
+      "foreground_height_px": 122,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-30",
+      "text": "makeyourmindup.ai",
+      "at_s": 75,
+      "crop_at_1080_width": [
+        61,
+        567,
+        722,
+        659
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-31",
+      "text": "WOULD YOU",
+      "at_s": 79,
+      "crop_at_1080_width": [
+        61,
+        130,
+        481,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-31",
+      "text": "PICK THE GEAR?",
+      "at_s": 79,
+      "crop_at_1080_width": [
+        61,
+        240,
+        636,
+        332
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-32",
+      "text": "OR LET",
+      "at_s": 81,
+      "crop_at_1080_width": [
+        61,
+        130,
+        304,
+        222
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    },
+    {
+      "card": "repair-short-32",
+      "text": "AI CHOOSE?",
+      "at_s": 81,
+      "crop_at_1080_width": [
+        61,
+        240,
+        486,
+        332
+      ],
+      "foreground_height_px": 85,
+      "status": "pass"
+    }
+  ],
+  "requires_inspection": [],
+  "screenshot_labels": {
+    "method": "Dark glyph rows within isolated white label crops from final 1080-wide frames",
+    "samples": [
+      {
+        "label": "Opus 5.5",
+        "at_s": 4,
+        "crop": [
+          590,
+          495,
+          1000,
+          596
+        ],
+        "foreground_height_px": 70
+      },
+      {
+        "label": "Low",
+        "at_s": 15,
+        "crop": [
+          592,
+          300,
+          830,
+          385
+        ],
+        "foreground_height_px": 71
+      },
+      {
+        "label": "Medium",
+        "at_s": 15,
+        "crop": [
+          592,
+          420,
+          995,
+          507
+        ],
+        "foreground_height_px": 74
+      },
+      {
+        "label": "High",
+        "at_s": 15,
+        "crop": [
+          625,
+          529,
+          880,
+          630
+        ],
+        "foreground_height_px": 92
+      },
+      {
+        "label": "Extra",
+        "at_s": 15,
+        "crop": [
+          595,
+          650,
+          970,
+          748
+        ],
+        "foreground_height_px": 84
+      },
+      {
+        "label": "Max",
+        "at_s": 15,
+        "crop": [
+          636,
+          775,
+          938,
+          868
+        ],
+        "foreground_height_px": 86
+      }
+    ]
+  }
+}
