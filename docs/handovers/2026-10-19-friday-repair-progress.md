@@ -350,3 +350,12 @@ Krish replied "Looks good" to the displayed Sally card and cross-cut composition
 audit. Recorded in repair-approval-19oct.json as approval of that illustration and
 composition direction. Neither complete new cut was presented at this point; this
 does not certify full playback, finished-video acceptance or publication clearance.
+
+Short v8 picture/audio export completed, SHA256
+93a10b5bcb6af642878c3bd1d100bfec659f93ccd790b8850cd5c49ffbdd6eec.
+Decoded PCM matches v6 exactly; evidence in short-v8-audio-identity.json.
+Native final frame at 31 s inspected: Sally illustration is present, caption
+clears artwork. A hash-verified preview was copied early to the chat outputs
+why-so-many-ais-short-review-v8.mp4 for human review while automated checks run.
+This is not delivery certification. Short render session 99204 is transcribing
+the final; deep session 7726 is now encoding; checker 61229 remains active.
