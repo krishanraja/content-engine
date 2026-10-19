@@ -1,0 +1,2845 @@
+{
+  "video_sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9",
+  "raw_comparison": {
+    "status": "fail",
+    "expected_words": 2366,
+    "heard_words": 2395,
+    "changes": [
+      {
+        "kind": "delete",
+        "expected": [
+          "so"
+        ],
+        "heard": [],
+        "expected_index": 0,
+        "heard_index": 0
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "and"
+        ],
+        "heard": [
+          "now"
+        ],
+        "expected_index": 144,
+        "heard_index": 143
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "ai"
+        ],
+        "heard": [
+          "ai's"
+        ],
+        "expected_index": 218,
+        "heard_index": 217
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "saying"
+        ],
+        "heard": [
+          "seeing"
+        ],
+        "expected_index": 244,
+        "heard_index": 243
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "that"
+        ],
+        "expected_index": 258,
+        "heard_index": 257
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gp2"
+        ],
+        "expected_index": 304,
+        "heard_index": 304
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 371,
+        "heard_index": 372
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "a"
+        ],
+        "heard": [],
+        "expected_index": 402,
+        "heard_index": 404
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "and"
+        ],
+        "heard": [
+          "them"
+        ],
+        "expected_index": 409,
+        "heard_index": 410
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 425,
+        "heard_index": 426
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 438,
+        "heard_index": 440
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "now"
+        ],
+        "heard": [
+          "a"
+        ],
+        "expected_index": 489,
+        "heard_index": 492
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "of"
+        ],
+        "expected_index": 491,
+        "heard_index": 494
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "pastes"
+        ],
+        "heard": [
+          "pays"
+        ],
+        "expected_index": 519,
+        "heard_index": 523
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "the"
+        ],
+        "heard": [
+          "that"
+        ],
+        "expected_index": 593,
+        "heard_index": 597
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "realise"
+        ],
+        "heard": [
+          "realize"
+        ],
+        "expected_index": 606,
+        "heard_index": 610
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "the"
+        ],
+        "heard": [],
+        "expected_index": 612,
+        "heard_index": 616
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 619,
+        "heard_index": 622
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "its"
+        ],
+        "heard": [
+          "it's"
+        ],
+        "expected_index": 644,
+        "heard_index": 648
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "is"
+        ],
+        "heard": [
+          "it's"
+        ],
+        "expected_index": 707,
+        "heard_index": 711
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "1"
+        ],
+        "heard": [
+          "one"
+        ],
+        "expected_index": 885,
+        "heard_index": 889
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "one's"
+        ],
+        "heard": [
+          "ones"
+        ],
+        "expected_index": 908,
+        "heard_index": 912
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "matched"
+        ],
+        "heard": [
+          "match"
+        ],
+        "expected_index": 911,
+        "heard_index": 915
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "one's"
+        ],
+        "heard": [
+          "ones"
+        ],
+        "expected_index": 914,
+        "heard_index": 918
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "2"
+        ],
+        "heard": [
+          "two"
+        ],
+        "expected_index": 946,
+        "heard_index": 950
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "3"
+        ],
+        "heard": [
+          "three"
+        ],
+        "expected_index": 948,
+        "heard_index": 952
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "centres"
+        ],
+        "heard": [
+          "centers"
+        ],
+        "expected_index": 1012,
+        "heard_index": 1016
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "centres"
+        ],
+        "heard": [
+          "centers"
+        ],
+        "expected_index": 1027,
+        "heard_index": 1031
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "output",
+          "only",
+          "goes",
+          "up",
+          "by",
+          "about",
+          "30",
+          "businesses",
+          "that",
+          "put",
+          "ai",
+          "inside",
+          "their",
+          "own"
+        ],
+        "heard": [],
+        "expected_index": 1064,
+        "heard_index": 1068
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "of"
+        ],
+        "heard": [],
+        "expected_index": 1222,
+        "heard_index": 1212
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "see",
+          "openai"
+        ],
+        "heard": [
+          "so",
+          "you",
+          "open",
+          "ai"
+        ],
+        "expected_index": 1260,
+        "heard_index": 1249
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt's"
+        ],
+        "heard": [
+          "chat",
+          "gpt's"
+        ],
+        "expected_index": 1269,
+        "heard_index": 1260
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "sent"
+        ],
+        "expected_index": 1298,
+        "heard_index": 1290
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "answers"
+        ],
+        "heard": [
+          "arts"
+        ],
+        "expected_index": 1309,
+        "heard_index": 1302
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "when"
+        ],
+        "expected_index": 1311,
+        "heard_index": 1304
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "openai"
+        ],
+        "heard": [
+          "open",
+          "ai"
+        ],
+        "expected_index": 1321,
+        "heard_index": 1315
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "anyway"
+        ],
+        "heard": [
+          "anywhere"
+        ],
+        "expected_index": 1369,
+        "heard_index": 1364
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "you"
+        ],
+        "expected_index": 1375,
+        "heard_index": 1370
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "openai"
+        ],
+        "heard": [
+          "open",
+          "ai"
+        ],
+        "expected_index": 1385,
+        "heard_index": 1381
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "for"
+        ],
+        "heard": [],
+        "expected_index": 1429,
+        "heard_index": 1426
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "were"
+        ],
+        "heard": [
+          "we're"
+        ],
+        "expected_index": 1433,
+        "heard_index": 1429
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "and"
+        ],
+        "expected_index": 1437,
+        "heard_index": 1433
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "most",
+          "of",
+          "us"
+        ],
+        "expected_index": 1488,
+        "heard_index": 1485
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "the"
+        ],
+        "expected_index": 1525,
+        "heard_index": 1525
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt's"
+        ],
+        "heard": [
+          "chat",
+          "gpt's"
+        ],
+        "expected_index": 1541,
+        "heard_index": 1542
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "like"
+        ],
+        "expected_index": 1547,
+        "heard_index": 1549
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "and"
+        ],
+        "expected_index": 1560,
+        "heard_index": 1563
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "like"
+        ],
+        "expected_index": 1565,
+        "heard_index": 1569
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "in"
+        ],
+        "heard": [
+          "and"
+        ],
+        "expected_index": 1568,
+        "heard_index": 1573
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "the"
+        ],
+        "expected_index": 1584,
+        "heard_index": 1589
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "its"
+        ],
+        "heard": [
+          "it's"
+        ],
+        "expected_index": 1592,
+        "heard_index": 1598
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "of"
+        ],
+        "expected_index": 1606,
+        "heard_index": 1612
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "claude"
+        ],
+        "heard": [
+          "clawed"
+        ],
+        "expected_index": 1607,
+        "heard_index": 1614
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "openai"
+        ],
+        "heard": [
+          "open",
+          "ai"
+        ],
+        "expected_index": 1669,
+        "heard_index": 1676
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 1671,
+        "heard_index": 1679
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "openai"
+        ],
+        "heard": [
+          "open",
+          "ai"
+        ],
+        "expected_index": 1676,
+        "heard_index": 1685
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "answers"
+        ],
+        "heard": [],
+        "expected_index": 1687,
+        "heard_index": 1697
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "openai's"
+        ],
+        "heard": [
+          "open",
+          "ai's"
+        ],
+        "expected_index": 1737,
+        "heard_index": 1746
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "see"
+        ],
+        "heard": [
+          "so"
+        ],
+        "expected_index": 1745,
+        "heard_index": 1755
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "openai's"
+        ],
+        "heard": [
+          "open",
+          "ai's"
+        ],
+        "expected_index": 1765,
+        "heard_index": 1775
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "have"
+        ],
+        "heard": [
+          "get"
+        ],
+        "expected_index": 1790,
+        "heard_index": 1801
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 1883,
+        "heard_index": 1894
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "claude",
+          "and"
+        ],
+        "heard": [
+          "the",
+          "clawden"
+        ],
+        "expected_index": 1896,
+        "heard_index": 1908
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "plan's"
+        ],
+        "heard": [
+          "plans"
+        ],
+        "expected_index": 1918,
+        "heard_index": 1930
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "decades"
+        ],
+        "expected_index": 1937,
+        "heard_index": 1949
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "should",
+          "we"
+        ],
+        "expected_index": 2009,
+        "heard_index": 2022
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 2017,
+        "heard_index": 2032
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "claude"
+        ],
+        "heard": [
+          "clawed"
+        ],
+        "expected_index": 2019,
+        "heard_index": 2035
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "paddle",
+          "car"
+        ],
+        "expected_index": 2101,
+        "heard_index": 2117
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt's"
+        ],
+        "heard": [
+          "chat",
+          "gpt's"
+        ],
+        "expected_index": 2162,
+        "heard_index": 2180
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "you'll",
+          "just"
+        ],
+        "expected_index": 2171,
+        "heard_index": 2190
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "transparent",
+          "products",
+          "always"
+        ],
+        "expected_index": 2197,
+        "heard_index": 2218
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chalk"
+        ],
+        "heard": [
+          "talk"
+        ],
+        "expected_index": 2239,
+        "heard_index": 2263
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "at"
+        ],
+        "heard": [],
+        "expected_index": 2241,
+        "heard_index": 2265
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "so"
+        ],
+        "heard": [
+          "are"
+        ],
+        "expected_index": 2244,
+        "heard_index": 2267
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "has"
+        ],
+        "heard": [
+          "is"
+        ],
+        "expected_index": 2252,
+        "heard_index": 2275
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "makeyourmindup"
+        ],
+        "heard": [
+          "make",
+          "your",
+          "mind",
+          "up"
+        ],
+        "expected_index": 2273,
+        "heard_index": 2296
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "in",
+          "in"
+        ],
+        "expected_index": 2306,
+        "heard_index": 2332
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "dumber"
+        ],
+        "heard": [
+          "done",
+          "up"
+        ],
+        "expected_index": 2318,
+        "heard_index": 2346
+      }
+    ]
+  },
+  "independent_final_comparison": {
+    "status": "fail",
+    "expected_words": 2366,
+    "heard_words": 2368,
+    "changes": [
+      {
+        "kind": "delete",
+        "expected": [
+          "so"
+        ],
+        "heard": [],
+        "expected_index": 0,
+        "heard_index": 0
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "i'm"
+        ],
+        "heard": [
+          "i"
+        ],
+        "expected_index": 242,
+        "heard_index": 241
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "saying",
+          "that",
+          "the"
+        ],
+        "heard": [
+          "think",
+          "a"
+        ],
+        "expected_index": 244,
+        "heard_index": 243
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 304,
+        "heard_index": 302
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 371,
+        "heard_index": 370
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "and",
+          "it",
+          "gets"
+        ],
+        "heard": [],
+        "expected_index": 409,
+        "heard_index": 409
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 425,
+        "heard_index": 422
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 438,
+        "heard_index": 436
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "dollars"
+        ],
+        "heard": [],
+        "expected_index": 453,
+        "heard_index": 452
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "it"
+        ],
+        "heard": [
+          "she"
+        ],
+        "expected_index": 538,
+        "heard_index": 536
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "realise"
+        ],
+        "heard": [
+          "realize"
+        ],
+        "expected_index": 606,
+        "heard_index": 604
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "the"
+        ],
+        "heard": [],
+        "expected_index": 612,
+        "heard_index": 610
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "its"
+        ],
+        "heard": [
+          "it's"
+        ],
+        "expected_index": 644,
+        "heard_index": 641
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "the"
+        ],
+        "heard": [
+          "a"
+        ],
+        "expected_index": 659,
+        "heard_index": 656
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "sonnet",
+          "5",
+          "5",
+          "is"
+        ],
+        "heard": [
+          "it's"
+        ],
+        "expected_index": 704,
+        "heard_index": 701
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "and"
+        ],
+        "heard": [],
+        "expected_index": 775,
+        "heard_index": 769
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "1"
+        ],
+        "heard": [
+          "one"
+        ],
+        "expected_index": 885,
+        "heard_index": 878
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "matched"
+        ],
+        "heard": [
+          "match"
+        ],
+        "expected_index": 911,
+        "heard_index": 904
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "centres"
+        ],
+        "heard": [
+          "centers"
+        ],
+        "expected_index": 1012,
+        "heard_index": 1005
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "centres"
+        ],
+        "heard": [
+          "centers"
+        ],
+        "expected_index": 1027,
+        "heard_index": 1020
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "of"
+        ],
+        "heard": [],
+        "expected_index": 1062,
+        "heard_index": 1055
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "you",
+          "know"
+        ],
+        "heard": [],
+        "expected_index": 1229,
+        "heard_index": 1221
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "see"
+        ],
+        "heard": [
+          "so"
+        ],
+        "expected_index": 1260,
+        "heard_index": 1250
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "answers"
+        ],
+        "heard": [
+          "arts"
+        ],
+        "expected_index": 1309,
+        "heard_index": 1299
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "see"
+        ],
+        "heard": [
+          "so"
+        ],
+        "expected_index": 1325,
+        "heard_index": 1315
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "you"
+        ],
+        "expected_index": 1375,
+        "heard_index": 1365
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "the"
+        ],
+        "expected_index": 1525,
+        "heard_index": 1516
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt's"
+        ],
+        "heard": [
+          "chachi",
+          "beauty's"
+        ],
+        "expected_index": 1541,
+        "heard_index": 1533
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "like"
+        ],
+        "expected_index": 1547,
+        "heard_index": 1540
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "like"
+        ],
+        "expected_index": 1565,
+        "heard_index": 1559
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "in",
+          "a",
+          "hundred"
+        ],
+        "heard": [
+          "and",
+          "100"
+        ],
+        "expected_index": 1568,
+        "heard_index": 1563
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "two"
+        ],
+        "heard": [
+          "too"
+        ],
+        "expected_index": 1594,
+        "heard_index": 1588
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "code"
+        ],
+        "heard": [
+          "cote"
+        ],
+        "expected_index": 1608,
+        "heard_index": 1602
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "see"
+        ],
+        "heard": [
+          "so"
+        ],
+        "expected_index": 1657,
+        "heard_index": 1651
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chachi",
+          "beauty"
+        ],
+        "expected_index": 1671,
+        "heard_index": 1665
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "see"
+        ],
+        "heard": [
+          "so"
+        ],
+        "expected_index": 1745,
+        "heard_index": 1740
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "it's"
+        ],
+        "heard": [
+          "so"
+        ],
+        "expected_index": 1774,
+        "heard_index": 1769
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "have"
+        ],
+        "heard": [
+          "get"
+        ],
+        "expected_index": 1790,
+        "heard_index": 1785
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gbt"
+        ],
+        "expected_index": 1883,
+        "heard_index": 1878
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "claude"
+        ],
+        "heard": [
+          "crawl"
+        ],
+        "expected_index": 1896,
+        "heard_index": 1892
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "plan's"
+        ],
+        "heard": [
+          "plans"
+        ],
+        "expected_index": 1918,
+        "heard_index": 1914
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gbt"
+        ],
+        "expected_index": 2017,
+        "heard_index": 2013
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "and"
+        ],
+        "heard": [],
+        "expected_index": 2074,
+        "heard_index": 2071
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "i",
+          "what"
+        ],
+        "heard": [],
+        "expected_index": 2134,
+        "heard_index": 2130
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt's"
+        ],
+        "heard": [
+          "chat",
+          "gbt's"
+        ],
+        "expected_index": 2162,
+        "heard_index": 2156
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "transparent",
+          "products",
+          "always"
+        ],
+        "expected_index": 2197,
+        "heard_index": 2192
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "sorry"
+        ],
+        "expected_index": 2200,
+        "heard_index": 2198
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "so"
+        ],
+        "heard": [
+          "i'm"
+        ],
+        "expected_index": 2244,
+        "heard_index": 2243
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "makeyourmindup"
+        ],
+        "heard": [
+          "make",
+          "your",
+          "mind",
+          "up"
+        ],
+        "expected_index": 2273,
+        "heard_index": 2272
+      }
+    ]
+  },
+  "observations": [
+    {
+      "difference_index": 0,
+      "raw_difference": {
+        "kind": "delete",
+        "expected": [
+          "so"
+        ],
+        "heard": [],
+        "expected_index": 0,
+        "heard_index": 0
+      },
+      "expected_context": "so i've been using all",
+      "independent_final_context": "i've been using all",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 1,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "and"
+        ],
+        "heard": [
+          "now"
+        ],
+        "expected_index": 144,
+        "heard_index": 143
+      },
+      "expected_context": "to know this stuff and does the name of",
+      "independent_final_context": "to know this stuff and does the name of",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 2,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "ai"
+        ],
+        "heard": [
+          "ai's"
+        ],
+        "expected_index": 218,
+        "heard_index": 217
+      },
+      "expected_context": "wrong some of the ai models out recently are",
+      "independent_final_context": "wrong some of the ai models out recently are",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 3,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "saying"
+        ],
+        "heard": [
+          "seeing"
+        ],
+        "expected_index": 244,
+        "heard_index": 243
+      },
+      "expected_context": "to you i'm just saying that the name is",
+      "independent_final_context": "to you i just think a name is not as",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 4,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "that"
+        ],
+        "expected_index": 258,
+        "heard_index": 257
+      },
+      "expected_context": "hype of the name in the pr releases",
+      "independent_final_context": "hype of the name in the pr releases",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 5,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gp2"
+        ],
+        "expected_index": 304,
+        "heard_index": 304
+      },
+      "expected_context": "the funny thing is chatgpt and claude often start",
+      "independent_final_context": "the funny thing is chat gpt and claude often start",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 6,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 371,
+        "heard_index": 372
+      },
+      "expected_context": "in september and openai's chatgpt went from gpt 5",
+      "independent_final_context": "in september and openai's chat gpt went from gpt 5",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 7,
+      "raw_difference": {
+        "kind": "delete",
+        "expected": [
+          "a"
+        ],
+        "heard": [],
+        "expected_index": 402,
+        "heard_index": 404
+      },
+      "expected_context": "right look at what a launch of a new",
+      "independent_final_context": "right look at what a launch of a new",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 8,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "and"
+        ],
+        "heard": [
+          "them"
+        ],
+        "expected_index": 409,
+        "heard_index": 410
+      },
+      "expected_context": "a new model gets and it gets them new",
+      "independent_final_context": "a new model gets them new pr in",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 9,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 425,
+        "heard_index": 426
+      },
+      "expected_context": "new picture maker to chatgpt sam altman who runs",
+      "independent_final_context": "new picture maker to chat gpt sam altman who runs",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 10,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 438,
+        "heard_index": 440
+      },
+      "expected_context": "million new people joined chatgpt in one hour that",
+      "independent_final_context": "million new people joined chat gpt in one hour that",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 11,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "now"
+        ],
+        "heard": [
+          "a"
+        ],
+        "expected_index": 489,
+        "heard_index": 492
+      },
+      "expected_context": "not the model name now picture a small business",
+      "independent_final_context": "not the model name now picture a small business",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 12,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "of"
+        ],
+        "expected_index": 491,
+        "heard_index": 494
+      },
+      "expected_context": "model name now picture a small business owner",
+      "independent_final_context": "model name now picture a small business owner",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 13,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "pastes"
+        ],
+        "heard": [
+          "pays"
+        ],
+        "expected_index": 519,
+        "heard_index": 523
+      },
+      "expected_context": "sells her stock she pastes the deal into her",
+      "independent_final_context": "sells her stock she pastes the deal into her",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 14,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "the"
+        ],
+        "heard": [
+          "that"
+        ],
+        "expected_index": 593,
+        "heard_index": 597
+      },
+      "expected_context": "name on her screen the ai just never really",
+      "independent_final_context": "name on her screen the ai just never really",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 15,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "realise"
+        ],
+        "heard": [
+          "realize"
+        ],
+        "expected_index": 606,
+        "heard_index": 610
+      },
+      "expected_context": "sally didn't think to realise that she should be",
+      "independent_final_context": "sally didn't think to realize that she should be",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 16,
+      "raw_difference": {
+        "kind": "delete",
+        "expected": [
+          "the"
+        ],
+        "heard": [],
+        "expected_index": 612,
+        "heard_index": 616
+      },
+      "expected_context": "she should be controlling the thinking levels of her",
+      "independent_final_context": "she should be controlling thinking levels of her",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 17,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 619,
+        "heard_index": 622
+      },
+      "expected_context": "of her ai see chatgpt and claude both let",
+      "independent_final_context": "of her ai see chatgpt and claude both let",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 18,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "its"
+        ],
+        "heard": [
+          "it's"
+        ],
+        "expected_index": 644,
+        "heard_index": 648
+      },
+      "expected_context": "the ai writes out its working first and at",
+      "independent_final_context": "the ai writes out it's working first and at",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 19,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "is"
+        ],
+        "heard": [
+          "it's"
+        ],
+        "expected_index": 707,
+        "heard_index": 711
+      },
+      "expected_context": "5 sonnet 5 5 is like the badge on",
+      "independent_final_context": "ai model sonnet 5 it's like the badge on",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 20,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "1"
+        ],
+        "heard": [
+          "one"
+        ],
+        "expected_index": 885,
+        "heard_index": 889
+      },
+      "expected_context": "lowest gear in gear 1 so changing gears definitely",
+      "independent_final_context": "lowest gear in gear one so changing gears definitely",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 21,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "one's"
+        ],
+        "heard": [
+          "ones"
+        ],
+        "expected_index": 908,
+        "heard_index": 912
+      },
+      "expected_context": "be fair the new one's middle gear matched the",
+      "independent_final_context": "be fair the new one's middle gear match the",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 22,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "matched"
+        ],
+        "heard": [
+          "match"
+        ],
+        "expected_index": 911,
+        "heard_index": 915
+      },
+      "expected_context": "new one's middle gear matched the old one's top",
+      "independent_final_context": "new one's middle gear match the old one's top",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 23,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "one's"
+        ],
+        "heard": [
+          "ones"
+        ],
+        "expected_index": 914,
+        "heard_index": 918
+      },
+      "expected_context": "gear matched the old one's top gear for much",
+      "independent_final_context": "gear match the old one's top gear for much",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 24,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "2"
+        ],
+        "heard": [
+          "two"
+        ],
+        "expected_index": 946,
+        "heard_index": 950
+      },
+      "expected_context": "simple question what is 2 plus 3 one of",
+      "independent_final_context": "simple question what is 2 plus 3 one of",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 25,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "3"
+        ],
+        "heard": [
+          "three"
+        ],
+        "expected_index": 948,
+        "heard_index": 952
+      },
+      "expected_context": "what is 2 plus 3 one of the ais",
+      "independent_final_context": "what is 2 plus 3 one of the ais",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 26,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "centres"
+        ],
+        "heard": [
+          "centers"
+        ],
+        "expected_index": 1012,
+        "heard_index": 1016
+      },
+      "expected_context": "computer servers and data centres which costs a lot",
+      "independent_final_context": "computer servers and data centers which costs a lot",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 27,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "centres"
+        ],
+        "heard": [
+          "centers"
+        ],
+        "expected_index": 1027,
+        "heard_index": 1031
+      },
+      "expected_context": "hear about how data centres gobble up all the",
+      "independent_final_context": "hear about how data centers gobble up all the",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 28,
+      "raw_difference": {
+        "kind": "delete",
+        "expected": [
+          "output",
+          "only",
+          "goes",
+          "up",
+          "by",
+          "about",
+          "30",
+          "businesses",
+          "that",
+          "put",
+          "ai",
+          "inside",
+          "their",
+          "own"
+        ],
+        "heard": [],
+        "expected_index": 1064,
+        "heard_index": 1068
+      },
+      "expected_context": "the quality of the output only goes up by about 30 businesses that put ai inside their own apps pay for every",
+      "independent_final_context": "score the quality the output only goes up by about 30 businesses that put ai inside their own apps pay for every",
+      "independent_final_matches_expected_span": true,
+      "resolution": "The apparent 14-word omission at approximately 5:49-5:57 is a small.en recognition failure: independently transcribing the finished mix with medium.en recovers the full clause, matching the independently transcribed retained source."
+    },
+    {
+      "difference_index": 29,
+      "raw_difference": {
+        "kind": "delete",
+        "expected": [
+          "of"
+        ],
+        "heard": [],
+        "expected_index": 1222,
+        "heard_index": 1212
+      },
+      "expected_context": "this since the 9th of october of this year",
+      "independent_final_context": "this since the 9th of october of this year",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 30,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "see",
+          "openai"
+        ],
+        "heard": [
+          "so",
+          "you",
+          "open",
+          "ai"
+        ],
+        "expected_index": 1260,
+        "heard_index": 1249
+      },
+      "expected_context": "how much thinking power see openai has gone the other",
+      "independent_final_context": "how much thinking power so openai has gone the other",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 31,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt's"
+        ],
+        "heard": [
+          "chat",
+          "gpt's"
+        ],
+        "expected_index": 1269,
+        "heard_index": 1260
+      },
+      "expected_context": "other way and taken chatgpt's automatic gear picker away",
+      "independent_final_context": "other way and taken chatgpt's automatic gear picker away",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 32,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "sent"
+        ],
+        "expected_index": 1298,
+        "heard_index": 1290
+      },
+      "expected_context": "said the automatic picker seemed to send lots",
+      "independent_final_context": "said the automatic picker seemed to send lots",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 33,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "answers"
+        ],
+        "heard": [
+          "arts"
+        ],
+        "expected_index": 1309,
+        "heard_index": 1302
+      },
+      "expected_context": "to slower higher thinking answers which when no one's",
+      "independent_final_context": "to slower higher thinking arts which when no one's",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 34,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "when"
+        ],
+        "expected_index": 1311,
+        "heard_index": 1304
+      },
+      "expected_context": "higher thinking answers which when no one's paying",
+      "independent_final_context": "higher thinking arts which when no one's paying",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 35,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "openai"
+        ],
+        "heard": [
+          "open",
+          "ai"
+        ],
+        "expected_index": 1321,
+        "heard_index": 1315
+      },
+      "expected_context": "it's free that costs openai a lot more see",
+      "independent_final_context": "it's free that costs openai a lot more so",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 36,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "anyway"
+        ],
+        "heard": [
+          "anywhere"
+        ],
+        "expected_index": 1369,
+        "heard_index": 1364
+      },
+      "expected_context": "not for the masses anyway and here's my guess",
+      "independent_final_context": "not for the masses anyway and here's my guess",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 37,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "you"
+        ],
+        "expected_index": 1375,
+        "heard_index": 1370
+      },
+      "expected_context": "here's my guess why think what each part",
+      "independent_final_context": "here's my guess why you think what each part",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 38,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "openai"
+        ],
+        "heard": [
+          "open",
+          "ai"
+        ],
+        "expected_index": 1385,
+        "heard_index": 1381
+      },
+      "expected_context": "car is worth to openai or anthropic see the",
+      "independent_final_context": "car is worth to openai or anthropic see the",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 39,
+      "raw_difference": {
+        "kind": "delete",
+        "expected": [
+          "for"
+        ],
+        "heard": [],
+        "expected_index": 1429,
+        "heard_index": 1426
+      },
+      "expected_context": "scores anthropic shows off for opus 5 5 were",
+      "independent_final_context": "scores anthropic shows off for opus 5 5 were",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 40,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "were"
+        ],
+        "heard": [
+          "we're"
+        ],
+        "expected_index": 1433,
+        "heard_index": 1429
+      },
+      "expected_context": "for opus 5 5 were in top gear but",
+      "independent_final_context": "for opus 5 5 were in top gear but",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 41,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "and"
+        ],
+        "expected_index": 1437,
+        "heard_index": 1433
+      },
+      "expected_context": "were in top gear but out of the",
+      "independent_final_context": "were in top gear but out of the",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 42,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "most",
+          "of",
+          "us"
+        ],
+        "expected_index": 1488,
+        "heard_index": 1485
+      },
+      "expected_context": "and most of us actually can't be bothered",
+      "independent_final_context": "and most of us actually can't be bothered",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 43,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "the"
+        ],
+        "expected_index": 1525,
+        "heard_index": 1525
+      },
+      "expected_context": "not to change setting most of us anyway",
+      "independent_final_context": "not to change setting the most of us anyway",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 44,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt's"
+        ],
+        "heard": [
+          "chat",
+          "gpt's"
+        ],
+        "expected_index": 1541,
+        "heard_index": 1542
+      },
+      "expected_context": "and in 2025 when chatgpt's automatic gear picker first",
+      "independent_final_context": "and in 2025 when chachi beauty's automatic gear picker first",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 45,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "like"
+        ],
+        "expected_index": 1547,
+        "heard_index": 1549
+      },
+      "expected_context": "gear picker first arrived a lot more people",
+      "independent_final_context": "gear picker first arrived like a lot more people",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 46,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "and"
+        ],
+        "expected_index": 1560,
+        "heard_index": 1563
+      },
+      "expected_context": "said careful thinking answers but before that fewer",
+      "independent_final_context": "said careful thinking answers but before that fewer",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 47,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "like"
+        ],
+        "expected_index": 1565,
+        "heard_index": 1569
+      },
+      "expected_context": "before that fewer than one free user in",
+      "independent_final_context": "before that fewer than like one free user and",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 48,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "in"
+        ],
+        "heard": [
+          "and"
+        ],
+        "expected_index": 1568,
+        "heard_index": 1573
+      },
+      "expected_context": "than one free user in a hundred used thinking",
+      "independent_final_context": "like one free user and 100 used thinking every day",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 49,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "the"
+        ],
+        "expected_index": 1584,
+        "heard_index": 1589
+      },
+      "expected_context": "using it because the ai was choosing for",
+      "independent_final_context": "using it because the ai was choosing for",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 50,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "its"
+        ],
+        "heard": [
+          "it's"
+        ],
+        "expected_index": 1592,
+        "heard_index": 1598
+      },
+      "expected_context": "them so anthropic learned its lesson two in march",
+      "independent_final_context": "them so anthropic learned its lesson too in march",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 51,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "of"
+        ],
+        "expected_index": 1606,
+        "heard_index": 1612
+      },
+      "expected_context": "down to the middle gear claude code most",
+      "independent_final_context": "down to the middle gear claude cote most",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 52,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "claude"
+        ],
+        "heard": [
+          "clawed"
+        ],
+        "expected_index": 1607,
+        "heard_index": 1614
+      },
+      "expected_context": "to the middle gear claude code most people kept",
+      "independent_final_context": "to the middle gear claude cote most people kept it",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 53,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "openai"
+        ],
+        "heard": [
+          "open",
+          "ai"
+        ],
+        "expected_index": 1669,
+        "heard_index": 1676
+      },
+      "expected_context": "it and this january openai made chatgpt think for",
+      "independent_final_context": "it and this january openai made chachi beauty think",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 54,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 1671,
+        "heard_index": 1679
+      },
+      "expected_context": "this january openai made chatgpt think for less time",
+      "independent_final_context": "this january openai made chachi beauty think for less time",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 55,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "openai"
+        ],
+        "heard": [
+          "open",
+          "ai"
+        ],
+        "expected_index": 1676,
+        "heard_index": 1685
+      },
+      "expected_context": "think for less time openai said people like faster",
+      "independent_final_context": "think for less time openai said people like faster",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 56,
+      "raw_difference": {
+        "kind": "delete",
+        "expected": [
+          "answers"
+        ],
+        "heard": [],
+        "expected_index": 1687,
+        "heard_index": 1697
+      },
+      "expected_context": "enough i like faster answers by mistake it also",
+      "independent_final_context": "enough i like faster answers by mistake it also",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 57,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "openai's"
+        ],
+        "heard": [
+          "open",
+          "ai's"
+        ],
+        "expected_index": 1737,
+        "heard_index": 1746
+      },
+      "expected_context": "good answer and keep openai's costs down those two",
+      "independent_final_context": "good answer and keep openai's costs down those two",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 58,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "see"
+        ],
+        "heard": [
+          "so"
+        ],
+        "expected_index": 1745,
+        "heard_index": 1755
+      },
+      "expected_context": "two don't always agree see when the ai picks",
+      "independent_final_context": "two don't always agree so when the ai picks",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 59,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "openai's"
+        ],
+        "heard": [
+          "open",
+          "ai's"
+        ],
+        "expected_index": 1765,
+        "heard_index": 1775
+      },
+      "expected_context": "is it thinking about openai's profit and can you",
+      "independent_final_context": "is it thinking about openai's profit and can you",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 60,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "have"
+        ],
+        "heard": [
+          "get"
+        ],
+        "expected_index": 1790,
+        "heard_index": 1801
+      },
+      "expected_context": "the product you actually have and when the product",
+      "independent_final_context": "the product you actually get and when the product",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 61,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 1883,
+        "heard_index": 1894
+      },
+      "expected_context": "take back so on chatgpt medium or high and",
+      "independent_final_context": "take back so on chat gbt medium or high and",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 62,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "claude",
+          "and"
+        ],
+        "heard": [
+          "the",
+          "clawden"
+        ],
+        "expected_index": 1896,
+        "heard_index": 1908
+      },
+      "expected_context": "pick think and on claude and gemini the gear is",
+      "independent_final_context": "pick think and on crawl and gemini the gear is",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 63,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "plan's"
+        ],
+        "heard": [
+          "plans"
+        ],
+        "expected_index": 1918,
+        "heard_index": 1930
+      },
+      "expected_context": "sometimes uses up your plan's limit faster but for",
+      "independent_final_context": "sometimes uses up your plans limit faster but for",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 64,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "decades"
+        ],
+        "expected_index": 1937,
+        "heard_index": 1949
+      },
+      "expected_context": "found a better way decades ago it's called",
+      "independent_final_context": "found a better way decades ago it's called",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 65,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "should",
+          "we"
+        ],
+        "expected_index": 2009,
+        "heard_index": 2022
+      },
+      "expected_context": "paddles so that we can take over when",
+      "independent_final_context": "paddles so that we can take over when",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 66,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 2017,
+        "heard_index": 2032
+      },
+      "expected_context": "we want and the chatgpt and claude toggles should",
+      "independent_final_context": "we want and the chat gbt and claude toggles should",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 67,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "claude"
+        ],
+        "heard": [
+          "clawed"
+        ],
+        "expected_index": 2019,
+        "heard_index": 2035
+      },
+      "expected_context": "and the chatgpt and claude toggles should also show",
+      "independent_final_context": "the chat gbt and claude toggles should also show",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 68,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "paddle",
+          "car"
+        ],
+        "expected_index": 2101,
+        "heard_index": 2117
+      },
+      "expected_context": "is still keep the paddles in the driver's",
+      "independent_final_context": "is still keep the paddles in the driver's",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 69,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chatgpt's"
+        ],
+        "heard": [
+          "chat",
+          "gpt's"
+        ],
+        "expected_index": 2162,
+        "heard_index": 2180
+      },
+      "expected_context": "end of mid 2027 chatgpt's free plan will start",
+      "independent_final_context": "end of mid 2027 chat gbt's free plan will start",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 70,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "you'll",
+          "just"
+        ],
+        "expected_index": 2171,
+        "heard_index": 2190
+      },
+      "expected_context": "in automatic again and you'll be able to",
+      "independent_final_context": "in automatic again and you'll be able to",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 71,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "transparent",
+          "products",
+          "always"
+        ],
+        "expected_index": 2197,
+        "heard_index": 2218
+      },
+      "expected_context": "because like i said less transparent products always",
+      "independent_final_context": "because like i said transparent products always less transparent products sorry",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Both retained-source and finished medium.en recognize the spoken false start and correction: transparent products always, less transparent products, sorry, always. The audio preserves this ad-lib. The existing simplified caption treatment was part of the complete file Krish accepted; no claim is made that every stutter is captioned verbatim."
+    },
+    {
+      "difference_index": 72,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "chalk"
+        ],
+        "heard": [
+          "talk"
+        ],
+        "expected_index": 2239,
+        "heard_index": 2263
+      },
+      "expected_context": "of this one i'll chalk this at about 85",
+      "independent_final_context": "of this one i'll chalk this at about 85",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 73,
+      "raw_difference": {
+        "kind": "delete",
+        "expected": [
+          "at"
+        ],
+        "heard": [],
+        "expected_index": 2241,
+        "heard_index": 2265
+      },
+      "expected_context": "one i'll chalk this at about 85 so pretty",
+      "independent_final_context": "one i'll chalk this at about 85 i'm pretty",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 74,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "so"
+        ],
+        "heard": [
+          "are"
+        ],
+        "expected_index": 2244,
+        "heard_index": 2267
+      },
+      "expected_context": "this at about 85 so pretty certain this will",
+      "independent_final_context": "this at about 85 i'm pretty certain this will",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 75,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "has"
+        ],
+        "heard": [
+          "is"
+        ],
+        "expected_index": 2252,
+        "heard_index": 2275
+      },
+      "expected_context": "will happen if this has resonated with you it's",
+      "independent_final_context": "will happen if this has resonated with you it's",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    },
+    {
+      "difference_index": 76,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "makeyourmindup"
+        ],
+        "heard": [
+          "make",
+          "your",
+          "mind",
+          "up"
+        ],
+        "expected_index": 2273,
+        "heard_index": 2296
+      },
+      "expected_context": "every source is at makeyourmindup and it's free and",
+      "independent_final_context": "every source is at make your mind up and it's free and",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 77,
+      "raw_difference": {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "in",
+          "in"
+        ],
+        "expected_index": 2306,
+        "heard_index": 2332
+      },
+      "expected_context": "your ai thinks in this kind of world",
+      "independent_final_context": "your ai thinks in this kind of world",
+      "independent_final_matches_expected_span": false,
+      "resolution": "Retained in the recognition difference record. Cross-model spelling, filler and repetition differences are considered alongside independent source recognition and the accepted complete human speech/caption review; no audio was removed or rewritten to conform to a recognizer or script."
+    },
+    {
+      "difference_index": 78,
+      "raw_difference": {
+        "kind": "replace",
+        "expected": [
+          "dumber"
+        ],
+        "heard": [
+          "done",
+          "up"
+        ],
+        "expected_index": 2318,
+        "heard_index": 2346
+      },
+      "expected_context": "to get a lot dumber check out next week's",
+      "independent_final_context": "to get a lot dumber check out next week's",
+      "independent_final_matches_expected_span": true,
+      "resolution": "Independent finished-file medium.en recognition retains the expected span; the small.en difference does not establish a speech omission or substitution."
+    }
+  ],
+  "status": "resolved_by_independent_evidence_and_human_finished_review",
+  "unresolved_changes": [],
+  "resolution": "The raw 79 recognizer differences remain visible. The largest suspected omission is disproved by independent recognition of the exact final file. Independent source/final transcripts preserve evidence of fillers, repetitions and self-corrections. Krish accepted the complete final speech, captions and joins with sound; this is human acceptance of the finished treatment, not individual word-by-word adjudication and not a claim of zero ASR differences. No further audio or captions were changed after that acceptance.",
+  "evidence": [
+    "deep-v4-finished-medium.json",
+    "deep-v4-source-final-medium-comparison.json",
+    "deep-independent-transcript/retained.medium.json",
+    "deep-independent-transcript/review-differences.json",
+    "deep-v4-human-review.json",
+    "deep-caption-repairs.json"
+  ]
+}
