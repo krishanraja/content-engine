@@ -36,9 +36,9 @@ My read, and it is my read: these firms are in a fight for the same customers, a
 
 Look where the top models have landed. From 1 December, Argon is $4 in and $20 out. GPT-5.6 Sol is $4 and $20, on a promotion. Claude Opus 5.5 is $4 and $20. Three rivals, one price, and every one of those numbers has moved this year. So the durable lesson is simple: treat every AI price as temporary, and plan as if it will change.
 
-## WHAT REUSE AND A CHEAPER MODEL REALLY SAVE
+## EVEN THE DISCOUNTS DON'T LAST
 
-There are two ways to cut the bill, and I'd take both. Neither is permanent.
+The obvious answer to moving prices is to chase the savings. The catch is that the same firms set the savings, so they move too. Here are the two big ones, and why neither is something to plan on.
 
 The first is reuse. Most business AI repeats itself. Your customer-service assistant sends the same long policy document with every question, and the question is the only part that changes. Google's AI notices when a request starts the same way as one it saw a moment ago, and its launch post says those tokens are "95% off". Google calls this context caching. I'll call it reuse.
 
