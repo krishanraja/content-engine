@@ -94,3 +94,21 @@ Prior builds before this delivery (available through build-history API):
 - 19 October: `bc013294b8930a694bf3aee32813894356a8482c8368f01021d95b826e3c4766`
 
 Rollback changes only the selected build manifest, never interaction records.
+
+## Monday caption confirmation, 19 October (later update)
+
+Krish resolved the three listening questions. The approved SRT and transcript
+are now in Monday's video downloads, the Drive post folder and the archive.
+All three copies match their SHA-256 receipts. The MP4 bytes are unchanged;
+the long cut uses external captions. The three source audio excerpts remain
+as reference, and the board no longer presents them as unanswered questions.
+
+Monday's active build is now
+`b7ffc6e47f2bdd71619507308afb7f9fbfda21a4e54b9f3db82ff6ff3f01e62b`
+with eleven assets. `../2026-10-19-monday/caption-live-receipt.json` records
+both new downloads and exact preservation of all 42 interaction records.
+The prior Monday build remains available for rollback. Friday is unchanged.
+
+This is not a publication-ready sign-off. The article still has one blocking
+fact verdict, and the video delivery validator still requires its completed
+review receipt. No fifth paid fact check, public post or gate override ran.
