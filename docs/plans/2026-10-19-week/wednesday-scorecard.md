@@ -4,6 +4,14 @@
 
 The simple message: **Find your job. Pick the assistant. Know what to check.**
 
+## Where you use it
+
+Add a small access line to each row: browser, desktop app or messaging, with plan or region restrictions only where they change the choice. This is separate from where the agent runs its work.
+
+Krish reports Muse and Gemini are signed into his browser, and that he is downloading Grok's Windows app. Product access is therefore user-reported, not yet inspected by this session: the Skyvern connection still returns NO_ACTIVE_BROWSER. Confirm Gemini's task/agent mode rather than testing ordinary Gemini chat as its substitute.
+
+**Grok is not universally desktop-only.** Its [3 October release notes](https://grok.com/release-notes/oct-03-2026) say browser Bot access is available to SuperGrok Plus and Heavy subscribers. Its [desktop download page](https://cursor.com/download/bot) lists Windows, macOS and Linux. Checked 19 October. The useful distinction for the card is access by surface and plan, not a blanket Windows requirement. An installed interface also does not mean local execution: the [official computer guide](https://docs.x.ai/grok-bot/computer-and-apps) says Bot work runs on a separate cloud computer.
+
 | Assistant | Most useful starting point in the evidence | What to check | Evidence behind the call |
 |---|---|---|---|
 | **Grok Bot** | Repeated business tasks with clear instructions | That every promised action actually happened | Strongest of three in one published simulated-business comparison; operator reports also describe forgotten tasks. A useful shortlist, not a reliability guarantee. [1, corpus R012–R019] |
