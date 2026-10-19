@@ -32,7 +32,21 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    connector, named in one line on the week's board item. A cut sent by hand
    gets its record line instead, and one held back after a failed send is
    only named.
-1. Read `docs/CADENCE.md` and each series' mandate and the material on hand:
+1. **Read the idea queue first**, before anything else and before any
+   research (Krish, 2026-10-19: ideas he likes that are not time-sensitive
+   are queued, and the queue "needs to survive everything and be the first
+   thing in chat"): `python3 scripts/engine.py GET /api/idea-queue --full`.
+   Save the answer to `.cache/week-board/<Monday>/queue.json` (the board
+   reads that file, never your memory of it). Tell him how many wait and
+   how many have no verdict yet, and offer the queued ideas that fit each
+   day before you research anything new. Copy his board marks into the
+   engine first: every `QUEUE <pick> <verdict> <reason>` comment and
+   `queue/<pick>` doc on last week's board (either account; `ArtifactData`)
+   goes to `POST /api/idea-queue` (`action: queue` with `verdict`, `reason`,
+   `angle`, `decided_by: "Krish"`, the idea's `so_what`, `story` as `idea`,
+   `source_url`, `series`, `from_week`, `from_pick`). A mark with no verdict
+   is only queued. Never write a verdict he did not give.
+   Then read `docs/CADENCE.md` and each series' mandate and the material on hand:
    `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>" --full`
    (mandates, options already written, what is in flight or scheduled, the
    judges' best, and the ideas Krish dropped in during the last fortnight).
@@ -47,6 +61,29 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    with the other days; and whether its numbers can be sourced verbatim for
    the fact gate. Run an adversarial pass that tries to refute each option
    before you rank them; say plainly when only one survives.
+3b. **The Ideas tab** (Krish, 2026-10-18: "adding a 4th tab at the front:
+   Ideas. Cementing Ideas and basic narrative is Sunday's job", then "give
+   me more than 3 from all my suggested sources and the ones I threw at
+   other sessions last week"). Draw the ideas from his own words first:
+   every idea he gave any session since the last Sunday (`krish-ideas-*`
+   and `said-` items on `GET /api/workbench`, `dropped_by_krish`, his cold
+   ideas in the Inspo folder), then the sources `docs/prompts/sunday-ideas-tab.md`
+   lists (his saved inspiration posts, the people he follows, the radar).
+   Write at least four a day to `docs/plans/<Monday>-week/ideas.json`, each
+   with `so_what` first (what a business person finds out, in one plain
+   sentence, the consequence before any mechanism; Krish, 2026-10-19: "In
+   plain English what would be so interesting to a business person?"; the
+   board refuses an idea without it), then its one-line story, why now with its date, its strongest fact and
+   the source it came from, linked; check every fact against that source
+   the same day (a company's own claim says so) and leave out any you
+   cannot; no titles, which are his after he records. Stale or unchecked
+   filler never pads a day. The board builds it as its first tab with
+   `--ideas` and refuses a day with fewer than four checked ideas. His pick
+   is saved in the board's store (`picks/<day>`) and posted as a comment
+   (`PICK <day>`): read it from the comments (either account) or with
+   `ArtifactData`, then write the picked idea onto its piece as the day's
+   rank 1 option through `/api/week/options` (creating its row first if it
+   has none).
 4. Write each day's options, best first, one recommended:
    `python3 scripts/engine.py POST /api/week/options @options.json` with
    `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true}]}`.
@@ -82,8 +119,10 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    inside until we're done, and then I check off the list what I have done
    as I do it."
    - **Build it** with all three tabs, from the week's picks as they stand:
-     `python3 scripts/post-pack/week_board.py --week <Monday> --live --out
-     .cache/week-board/<Monday>/week-board.html`. A day whose piece already
+     `python3 scripts/post-pack/week_board.py --week <Monday> --live --ideas
+     docs/plans/<Monday>-week/ideas.json --queue .cache/week-board/<Monday>/queue.json --out
+     .cache/week-board/<Monday>/week-board.html`. Its title names the week,
+     "This Week's Publish Board (wC 19 Oct)". A day whose piece already
      has a publish page (a pick carried over) is a made tab: `Artifact`
      `read` its `publish_manager` link (in its making record) and add
      `--day DAY=<the saved file> --piece DAY=<uuid>`. A picked day not made
@@ -93,7 +132,7 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      Exit 2 is a refusal it names: fix it and build again.
    - **Publish it as a new private artifact**, a new one every Sunday, never
      last week's link: `Artifact({action: "publish", file_path: "<absolute
-     path>/week-board.html", title: "This Week's Publish Board", icon:
+     path>/week-board.html", title: <the manifest's publish.title>, icon:
      "calendar", capabilities: <the manifest's publish.capabilities>, description:
      "<the manifest's publish.description>", pin: true})`, from a session
      signed in as Krish's own account, so it lands pinned in his sidebar
