@@ -34,7 +34,7 @@ Count them with Google's and that's at least six moves in about ten weeks. And n
 
 My read, and it is my read: these firms are in a fight for the same customers, and price is the fastest weapon they have. A low launch price gets your team building on one AI. Once your instructions, your tools and your staff habits are set up around it, moving costs time and money. That's when the full price arrives.
 
-Look where the top models have landed. From 1 December, Argon is $4 in and $20 out. GPT-5.6 Sol is $4 and $20, on a promotion. Claude Opus 5.5 is $4 and $20. Three rivals, one price, and every one of those numbers has moved this year.
+Look where the top models have landed. From 1 December, Argon is $4 in and $20 out. GPT-5.6 Sol is $4 and $20, on a promotion. Claude Opus 5.5 is $4 and $20. Three rivals, one price, and every one of those numbers has moved this year. So the durable lesson is simple: treat every AI price as temporary, and plan as if it will change.
 
 ## WHAT REUSE AND A CHEAPER MODEL REALLY SAVE
 
@@ -50,6 +50,8 @@ Here's a made-up month for a customer-service team. Say it sends 100,000 request
 Reuse saves about 60%. The reused price doubles as well, so the bill still doubles. And Anthropic has changed its reuse prices twice since the start of September, so the discount itself moves.
 
 The second is a cheaper model. Sometimes that's smart. Sanchit Vir Gogia, chief analyst at Greyhound Research, put the catch well in Computerworld: "Cheap per token and cheap per task are different claims, and only the second one reaches the budget." A cheaper AI that needs three tries, or gets it wrong and needs a person to fix it, can cost you more for the same job. So test it on ten real jobs your team does every week, and count the cost of each finished job, fixes included.
+
+Both savings are worth taking. Neither is something to build next year's plan on, because the firm that sets the discount can change it. That's why the rules below matter more than any one saving.
 
 ## THREE RULES THAT OUTLAST THE NEXT OFFER
 
