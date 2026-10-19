@@ -65,7 +65,7 @@ def main():
     # Versioned caption sources travel with the code; originals remain in place.
     captions = PLAN / 'captions'
     captions.mkdir(exist_ok=True)
-    (captions / 'long-approved.srt').write_text(final, encoding='utf8')
+    (captions / 'long-approved.srt.txt').write_text(final, encoding='utf8')
     (captions / 'long-approved.txt').write_text(transcript, encoding='utf8')
     report = {
         'approved_by': 'Krish', 'date': '2026-10-19',

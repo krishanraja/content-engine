@@ -54,7 +54,7 @@ Wording approval does not certify the pricing claims. The article's fact gate re
 Krish supplied the three requested corrections: "$4 a batch to read tokens,
 and $20 a batch to write tokens", "two ways to bring the bill down", and
 "where you work". `caption-final-receipt.json` records the exact authorised
-text and hashes; `captions/long-approved.srt` and `long-approved.txt` are the
+text and hashes; `captions/long-approved.srt.txt` and `long-approved.txt` are the
 versioned deliverables. The long cut has external captions, so video and audio
 are unchanged. The original ASR and recorded scripts remain provenance.
 This resolves the caption questions only; the existing article fact hold remains.
