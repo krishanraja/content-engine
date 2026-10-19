@@ -58,6 +58,13 @@ private storage; activation verifies hashes and sizes. Read the active build and
 the rendered page back. A board update does not authorize social publication,
 a paid fact check, video production, or replacement of signed-off content.
 
+For a kept download already in the active manifest, a mapping may use
+`{"id":"drive-ID","source_url":"the exact generated URL","existing_sha256":"the verified SHA-256"}`
+instead of `path`. The publisher checks the current manifest before reusing it,
+retains the revision for activation, and uploads only changed files. A missing or
+changed digest stops the update. This preserves other days' verified media while
+replacing one cut; it does not infer that an unverified Drive file is safe to use.
+
 Register each new Monday under `config/boards.json.web`. The authenticated weeks
 endpoint supplies navigation from activated builds. `/` and `/board` open the
 latest week; dated links preserve login return paths. Earlier builds remain

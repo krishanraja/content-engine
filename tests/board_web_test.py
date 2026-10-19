@@ -14,6 +14,44 @@ import board_web
 import week_board
 
 class BoardWebTests(unittest.TestCase):
+    def test_replacement_reuses_only_exact_existing_asset_and_keeps_revision(self):
+        page, meta, _ = week_board.board(week_board.monday_of('2026-10-12'))
+        page, meta = board_web.web_page(page, meta)
+        source = 'https://drive.usercontent.google.com/download?id=example&amp;export=download'
+        page = week_board.engine_stamp.stamp(page.replace('</main>', f'<a href="{source}">Download</a></main>'), 'week_board')
+        asset = dict(key='boards/2026-10-12/'+'a'*64, sha256='a'*64, bytes=123, type='video/mp4', name='kept.mp4')
+        state = dict(revision=9, manifest=dict(assets={'drive-example':asset}))
+        sent, uploads = [], []
+        def api(method, path, body=None):
+            if method == 'PUT':
+                sent.append(body)
+                return {'build_id':'new'}
+            if sent: return dict(build_id='new',manifest=sent[-1]['manifest'])
+            return state
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'board.html'; mapping = Path(directory)/'assets.json'
+            path.write_text(page,encoding='utf-8');path.with_suffix('.json').write_text(json.dumps(meta))
+            args = SimpleNamespace(page=str(path),assets=str(mapping),apply=True)
+            mapping.write_text(json.dumps([dict(id='drive-example',source_url=source,existing_sha256='b'*64)]))
+            with patch.object(board_web,'call',api), patch.object(board_web,'upload',lambda *a: uploads.append(a)):
+                with self.assertRaisesRegex(ValueError,'changed or is missing'): board_web.publish(args)
+                self.assertEqual(uploads,[])
+                mapping.write_text(json.dumps([dict(id='drive-example',source_url=source,existing_sha256='a'*64)]))
+                board_web.publish(args)
+            self.assertEqual(sent[0]['revision'],9)
+            self.assertEqual(sent[0]['manifest']['assets']['drive-example'],asset)
+            self.assertEqual(len(uploads),1)  # Only new HTML; preserved media is not retransmitted.
+
+    def test_kept_friday_video_stays_a_deep_cut(self):
+        monday=week_board.monday_of('2026-10-12');piece=week_board.deep_cut_piece(monday)
+        self.assertTrue(piece)
+        page, _, _ = week_board.board(monday,pieces={'fri':piece},
+            kept={'fri':'<div class="pm" id="panel-friday"><div class="rec">Original content</div></div>'},
+            videos={'fri':[dict(cut='long',seconds=817,url='https://drive.google.com/file/d/example/view')]})
+        self.assertIn('deep cut, 8 minutes or more (wide, 16:9)',page)
+        self.assertIn('13 min 37 s',page)
+        self.assertIn('Original content',page)
+
     def exports(self):
         expected = json.loads((ROOT/'config/boards.json').read_text())['weeks']
         exports = [dict(version=1, complete=True, week=w, source=s, collections={c: [] for c in board_import.COLLECTIONS}) for w, urls in expected.items() for s in urls]

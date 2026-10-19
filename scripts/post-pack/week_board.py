@@ -1044,7 +1044,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 raise BoardError(f'{weekday} is kept from the previous board but has no piece id: give --piece {key}=<uuid>')
             state = 'made'
             panel = re.sub(r'^(<div class="pm"[^>]*?)( hidden)?>', lambda m: m.group(1) + (' hidden' if key != opened else '') + '>', kept[key], count=1)
-            card = videos_card(key, f'{key}-', (videos or {}).get(key))
+            card = videos_card(key, f'{key}-', (videos or {}).get(key), bool(piece) and piece == deep_piece)
             if card:
                 # The kept day's finished videos come from the record, as every other day's do.
                 at = panel.find(f'<div class="rec" id="{key}-videos"')
