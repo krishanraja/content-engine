@@ -1,3 +1,7 @@
+> **Historical.** Retired 2026-10-19 at Krish's request (`ffa9829`); banner added by the docs steward. Not current guidance.
+> Replaced by: Krish's account-wide `krish-voice` skill from `krishanraja/ai-harness`.
+> Reason: two copies drift; this repository copy was older.
+
 # Voice doctrine
 
 Krish sounds like a founder-practitioner who has done the work and is willing to say what did not work.

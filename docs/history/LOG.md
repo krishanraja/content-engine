@@ -5,6 +5,12 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-10-19
+
+- reconciled at `a3a55df`: NOW.md takes the move of the publish boards to content.krishraja.com and the retired Claude artifact, auto-merge to main, near-term predictions (CALL_HORIZON, CLEAR_STANCE at 80%), the 5-minute long cut, the new read-back readers, the source-bound manual fact review, Friday's repaired cuts and Monday's release pack, the idea queue, narrative before making, and Claude Code parity. Five current-state bullets were merged to keep the file under 200 lines. No bullet was old enough to roll (the oldest is 2026-09-20). The documents stamped 2026-09-25 are still unchecked and still named in NOW.md "Do not trust", which now also names the stale web-migration paragraph in `AGENTS.md`.
+- archived (by the session, `ffa9829`, recorded here by the steward): the repository copies of the `krish-voice` and `content-corpus` skills moved to `docs/history/2026-10-19-skill-krish-voice/` and `docs/history/2026-10-19-skill-content-corpus/`, replaced by Krish's account-wide skills.
+- archived (by the sessions, `caa489c` and `d8226fe`): `docs/history/2026-10-19-friday-delivery-workbench.md` and `docs/history/2026-10-19-monday-prerelease-workbench.md`, older `WORKBENCH.md` detail moved out to keep it under its size limit. Both, and the three skill reference files above, arrived without a Historical banner; the steward added one to each and changed nothing else.
+
 ## 2026-10-18
 
 - reconciled at `c5578b1`: NOW.md takes the cost audit and its six standing rules and guards, the North Star, the fact-gate sign-off (and its refusal of contradicted lines), the 2 GiB recording limit, the working-files lane, the publish board repair, Friday v5 to v7 and the music licence ruling. No document was moved or archived. The documents stamped 2026-09-25 are still unchecked against the code and still named in NOW.md "Do not trust". No bullet was old enough to roll (the oldest is 2026-09-20).

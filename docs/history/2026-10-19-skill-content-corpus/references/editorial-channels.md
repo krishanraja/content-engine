@@ -1,3 +1,7 @@
+> **Historical.** Retired 2026-10-19 at Krish's request (`ffa9829`); banner added by the docs steward. Not current guidance.
+> Replaced by: Krish's account-wide `content-corpus` skill from `krishanraja/ai-harness`.
+> Reason: two copies drift; this repository copy was older and still named the retired subchannels.
+
 # Editorial channels
 
 ## Shared audience

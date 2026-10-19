@@ -1,3 +1,7 @@
+> **Historical.** Archived 2026-10-19 by the session that wrote PR #113; banner added by the docs steward. Not current guidance.
+> Replaced by: `WORKBENCH.md` and `docs/handovers/2026-10-19-friday-repair-complete.md`
+> Reason: completed Friday detail moved out of `WORKBENCH.md` to keep it under its size limit.
+
 ## Friday repairs delivered — Codex, 19 October
 
 Both complete files were accepted by Krish with sound, then passed their exact-file

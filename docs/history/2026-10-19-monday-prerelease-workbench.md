@@ -1,3 +1,7 @@
+> **Historical.** Archived 2026-10-19 by the session that wrote PR #114; banner added by the docs steward. Not current guidance.
+> Replaced by: `WORKBENCH.md` and `docs/plans/2026-10-19-monday/`
+> Reason: Monday's pre-release hold detail, superseded by Krish's full-playback acceptance and the release receipts.
+
 ## 19 October: Friday and Monday publishing materials
 
 Finished media and Spotify delivery cards are live on both publishing weeks.
