@@ -1198,6 +1198,17 @@ def face_band(cw, ch, fy, fh):
     return 0, by, bw, bh
 
 
+def card_input(path, start, stop):
+    """A card fed in only for its own window: the picture repeats from `start` (its clock kept on the main
+    clock by -itsoffset, so every fade and enable time reads the same) to just past `stop`, and the overlay
+    passes the main picture through untouched before and after it. Each card was fed in for the whole cut
+    until 19 October, so a 13-minute deep cut with 51 cards turned about a million frames that were never
+    shown, and took 3.5 hours: longer than a cloud container stays up (Krish: "are you saying we can never
+    produce long videos?"). The pictures come out frame for frame the same."""
+    return ['-loop', '1', '-framerate', str(FPS), '-t', f'{max(0.1, stop - start + 0.5):.3f}',
+            '-itsoffset', f'{start:.3f}', '-i', str(path)]
+
+
 def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix):
     """The ffmpeg inputs and filter graph for one shape: the captioned main
     (graphics, the tall logo, the strap, the captions), joined after the sting
@@ -1262,7 +1273,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             cur = f'c{r_i}_0'
             layers = panel_layers(run)
             for j, (c, f, stop) in enumerate(layers):
-                inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
+                inputs += card_input(P(c['panel'].replace('{aspect}', asp)), c['s'], stop)
                 if j == 0:
                     f = f.split(',', 1)[1] if ',' in f else 'null'   # the layer itself fades in
                 if j == len(layers) - 1:
@@ -1275,7 +1286,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             last, k = f's{k}', k + 1
     else:
         for c, f, stop in panel_layers(wins):
-            inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(c['panel'].replace('{aspect}', asp)))]
+            inputs += card_input(P(c['panel'].replace('{aspect}', asp)), c['s'], stop)
             g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
             g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
