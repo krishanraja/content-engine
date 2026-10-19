@@ -453,7 +453,9 @@ MIN_IDEAS = 4  # Krish, 2026-10-18: "at least three content ideas for each day",
 
 def read_ideas(data, monday, where='--ideas'):
     """{day: [idea]} from an ideas file (docs/plans/<week>/ideas.json). Every
-    idea is checked before it reaches him: its one-line story, why now with
+    idea is checked before it reaches him: what a business person finds out
+    (so_what, in plain English, first: Krish, 2026-10-19, "Would I consider
+    this story or angle?" needs the consequence, not the mechanism), its one-line story, why now with
     its date, its strongest fact, and the source that fact came from, linked.
     No titles: those are his, after he records (TITLES_AFTER_RECORDING)."""
     if not isinstance(data, dict) or not isinstance(data.get('days'), dict):
@@ -469,7 +471,7 @@ def read_ideas(data, monday, where='--ideas'):
         for n, idea in enumerate(ideas, 1):
             idea = idea if isinstance(idea, dict) else {}
             src = idea.get('source') if isinstance(idea.get('source'), dict) else {}
-            missing = [f for f in ('story', 'why_now', 'fact') if not str(idea.get(f) or '').strip()]
+            missing = [f for f in ('so_what', 'story', 'why_now', 'fact') if not str(idea.get(f) or '').strip()]
             if not str(src.get('url') or '').startswith('https://'):
                 missing.append('source.url (https)')
             if missing:
@@ -490,7 +492,46 @@ def read_ideas(data, monday, where='--ideas'):
     return out
 
 
-def ideas_panel(monday, ideas, hidden):
+TRIAGE = (('story', 'Story', 'I would run it'), ('angle', 'Angle', 'I would run it from this angle'),
+          ('cute', 'Cute', 'I like it, I would not run it'), ('curious', 'Curious', 'curious but not convinced'),
+          ('drop', 'Drop', 'not for me'))
+
+
+def queue_for(queue, slug):
+    """The queued ideas (GET /api/idea-queue's `queue`) that fit a series: the series they carry, or none."""
+    return [q for q in queue or [] if (q.get('series') or '').replace('.', '_').replace('-', '_') in ('', slug)]
+
+
+def queue_block(queue, key, slug):
+    """"From your queue", first in a day's ideas: what he queued earlier that fits the day. Read-only here;
+    he triages it in Control Center's Queue page."""
+    fit = queue_for(queue, slug)
+    if not fit:
+        return ''
+    items = ''.join(
+        f'<li class="qd-item" data-queued-id="{E(q.get("id") or "")}"><span class="qd-sowhat">{E(q.get("so_what") or q.get("idea") or "")}</span>'
+        + (f'<span class="qd-triage">{E(((q.get("triage") or {}).get("verdict") or "").title())}</span>' if (q.get('triage') or {}).get('verdict') else '')
+        + '</li>' for q in fit[:12])
+    return (f'<div class="qd" data-queue-day="{key}"><h3>From your queue</h3>'
+            f'<p class="qd-how">Ideas you queued earlier that fit this day. Ask Claude to start one, or pick from the new ideas below.</p>'
+            f'<ul>{items}</ul></div>')
+
+
+def triage_row(pid):
+    """The four triage buttons, Drop, and the Queue mark, beside an idea's Pick box. Krish, 2026-10-19: "Would I
+    consider this story or angle? If not would I consider it cute or am I curious but not convinced for some
+    specific reason". Saved at once in queue/<pick>, posted as a comment ("QUEUE <pick> <verdict> <reason>")."""
+    buttons = ''.join(f'<button type="button" class="tri" data-triage="{v}" data-for="{pid}" aria-pressed="false" title="{E(t)}">{E(l)}</button>'
+                      for v, l, t in TRIAGE)
+    return (f'<div class="tri-row" data-tri-for="{pid}" role="group" aria-label="Triage this idea">{buttons}</div>'
+            f'<label class="qmark"><input type="checkbox" data-queue-mark="{pid}" disabled><span class="box sq" aria-hidden="true"></span>'
+            f'<span class="t-label">Queue it for later</span><span class="t-when"></span></label>'
+            f'<div class="tri-why" data-why-for="{pid}" hidden><input type="text" data-why-input="{pid}" maxlength="500" '
+            f'aria-label="Your reason or angle"><button type="button" class="btn-s" data-act="save-why" data-for="{pid}">Save</button></div>'
+            f'<p class="tri-state" data-tristate="{pid}" aria-live="polite"></p>')
+
+
+def ideas_panel(monday, ideas, hidden, queue=None):
     """The Ideas tab, first: each day's ideas with a pick box. Krish,
     2026-10-18: "refresh This Week's Publish Board by adding a 4th tab at the
     front: Ideas. Cementing Ideas and basic narrative is Sunday's job." A pick
@@ -508,24 +549,25 @@ def ideas_panel(monday, ideas, hidden):
         parts.append(f'<section class="id-day" id="ideas-{key}" data-ideas-day="{key}">'
                      f'<div class="sec-head"><h2>{weekday} {when.day} {when.strftime("%B")}</h2>'
                      f'<span class="id-series">{E(series_label)}</span></div>'
-                     f'<p class="id-state" data-pickstate="{key}" aria-live="polite"></p>')
+                     f'<p class="id-state" data-pickstate="{key}" aria-live="polite"></p>' + queue_block(queue, key, slug))
         for idea in ideas.get(key, []):
             pid, src = idea['pick'], idea['source']
             flags = ''.join(f'<span class="id-flag{c}">{t}</span>' for c, t, on in (
                 (' his', 'Your idea', idea.get('his')), ('', 'Recommended', idea.get('recommended'))) if on)
             parts.append(
-                f'<article class="id-card" id="idea-{pid}" data-pick-card="{pid}">'
+                f'<article class="id-card" id="idea-{pid}" data-pick-card="{pid}" data-series="{slug}" data-week="{monday.isoformat()}">'
                 f'<label class="pick"><input type="radio" name="pick-{key}" data-pick="{key}" value="{pid}" '
                 f'data-idea-id="{E(idea.get("id") or "")}" data-series="{slug}" disabled>'
                 f'<span class="box" aria-hidden="true"></span><span class="t-label">Pick this for {weekday}</span>'
                 f'<span class="t-when"></span><span class="t-err"></span></label>'
                 + (f'<div class="id-flags">{flags}</div>' if flags else '') +
+                f'<p class="id-sowhat">{E(idea["so_what"])}</p>'
                 f'<p class="id-story">{E(idea["story"])}</p>'
                 f'<dl class="id-facts"><dt>Why now</dt><dd>{E(idea["why_now"])}</dd>'
                 f'<dt>Strongest checked fact</dt><dd>{E(idea["fact"])}</dd>'
                 f'<dt>Source</dt><dd><a href="{E(src["url"])}" target="_blank" rel="noopener">{E(src.get("label") or src["url"])}</a></dd>'
                 + (f'<dt>Where it came from</dt><dd>{E(idea["from"])}</dd>' if idea.get('from') else '') +
-                '</dl></article>')
+                '</dl>' + triage_row(pid) + '</article>')
         parts.append('</section>')
     parts.append('</div>')
     return ''.join(parts)
@@ -959,7 +1001,7 @@ def parse_time(value):
 
 
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
-          draft=(), calls=None, posted=None, kept_at=None, ideas=None):
+          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None):
     """(page, manifest, warnings). ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
@@ -978,7 +1020,7 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
     if not opened:
         opened = 'ideas' if ideas else 'mon'
     if ideas:
-        panels.append(ideas_panel(monday, ideas, opened != 'ideas'))
+        panels.append(ideas_panel(monday, ideas, opened != 'ideas', queue))
         n = len([k for k in order if ideas.get(k)])
         tabs.append(
             f'<button type="button" role="tab" id="tab-ideas" aria-controls="panel-ideas" '
@@ -1097,8 +1139,11 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
             'links': {'doc_id': '<day>', 'fields': ['article', 'youtube', 'at']},
             'edits': {'doc_id': '<day>-<item>', 'fields': ['text', 'day', 'item', 'base_sha256', 'at']},
             'picks': {'doc_id': '<day>', 'fields': ['pick', 'idea_id', 'series', 'story', 'day', 'at']},
+            'queue': {'doc_id': '<pick>', 'fields': ['pick', 'queued', 'verdict', 'reason', 'angle', 'so_what', 'story', 'idea_id', 'series', 'week', 'at']},
         },
-        'ideas': {k: [{'pick': i['pick'], 'idea_id': i.get('id'), 'his': bool(i.get('his')), 'story': i['story'],
+        'queue': [{'id': q.get('id'), 'so_what': q.get('so_what'), 'series': q.get('series'), 'triage': (q.get('triage') or {}).get('verdict')}
+                  for q in (queue or [])],
+        'ideas': {k: [{'pick': i['pick'], 'idea_id': i.get('id'), 'his': bool(i.get('his')), 'so_what': i['so_what'], 'story': i['story'],
                        'why_now': i['why_now'], 'fact': i['fact'], 'source': i['source']} for i in v]
                   for k, v in (ideas or {}).items()},
         'review': {k: [{'item': slug, 'label': label, 'words': len(t.split()),
@@ -1162,9 +1207,10 @@ def verify(page):
             day = re.search(rf'<section class="id-day" id="ideas-{key}".*?</section>', tab, re.S)
             cards = re.findall(r'<article class="id-card".*?</article>', day.group(0), re.S) if day else []
             checked = [c for c in cards if 'data-pick="' in c and re.search(r'<dt>Source</dt><dd><a href="https://', c)
-                       and '<dt>Strongest checked fact</dt><dd>' in c]
+                       and '<dt>Strongest checked fact</dt><dd>' in c and 'class="id-sowhat"' in c and 'data-triage="story"' in c
+                       and 'data-queue-mark="' in c]
             if len(checked) < MIN_IDEAS:
-                out.append(f'ideas: {weekday} has {len(checked)} checked idea(s) with a pick box; it needs {MIN_IDEAS}')
+                out.append(f'ideas: {weekday} has {len(checked)} checked idea(s) with a pick box; it needs {MIN_IDEAS}, each with what a business person finds out, a pick box, the triage buttons and a Queue mark')
     for a, b in zip(starts, starts[1:]):
         panel = page[a:b]
         head = re.match(r'<div class="pm" id="panel-(\w+)"[^>]*>', panel)
@@ -1368,8 +1414,14 @@ def build(args, get=None):
         raise BoardError(f'--waiting {key}: only a day in draft shows what waits on Krish; give --draft {key}')
     kept_at = previous_review_times(Path(args.previous).read_text(encoding='utf-8-sig'), review) if args.previous else {}
     ideas = read_ideas(read_json(args.ideas, '--ideas'), monday) if getattr(args, 'ideas', None) else None
+    queue = None
+    if getattr(args, 'queue', None):
+        saved = read_json(args.queue, '--queue')
+        queue = saved.get('queue') if isinstance(saved, dict) else saved
+        if not isinstance(queue, list):
+            raise BoardError('--queue: give the saved answer of GET /api/idea-queue ({"queue": [...]})')
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
-                                 ideas)
+                                 ideas, queue)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -1712,7 +1764,7 @@ def _self_test():
 def _ideas_checks(check):
     """The Sunday Ideas tab (Krish, 2026-10-18): first, at least three checked ideas a day, a pick box each."""
     wk = date(2026, 10, 19)
-    one = lambda n, **kw: dict({'story': f'Story {n}.', 'why_now': 'On 12 October 2026.', 'fact': 'A fact.',
+    one = lambda n, **kw: dict({'so_what': f'A business person finds out {n}.', 'story': f'Story {n}.', 'why_now': 'On 12 October 2026.', 'fact': 'A fact.',
                                  'source': {'label': 'Src', 'url': f'https://example.com/{n}'}}, **kw)
     data = {'week_start': '2026-10-19', 'days': {k: [one(f'{k}{n}', his=n == 1, id=MON_ID if (k, n) == ('mon', 1) else None)
                                                      for n in (1, 2, 3, 4)] for k, *_ in DAYS}}
@@ -1738,7 +1790,27 @@ def _ideas_checks(check):
     js = template('week.js')
     check('ideas: a pick is saved to picks/<day> and posted as a comment',
           'pdb.doc("picks/" + day).set(body)' in js and 'PICK ${day}' in js)
+    check('ideas: every card says what a business person finds out, first', page.count('class="id-sowhat"') == 12
+          and page.index('class="id-sowhat"') < page.index('class="id-story"'))
+    check('ideas: every card has the four triage buttons, Drop and a Queue mark',
+          page.count('data-triage="story"') == 12 and page.count('data-triage="curious"') == 12 and page.count('data-triage="drop"') == 12
+          and page.count('data-queue-mark="') == 12)
+    check('ideas: --verify refuses a card with no triage buttons',
+          any('Friday has 3 checked' in w for w in verify(page.replace('data-triage="story" data-for="fri-4"', 'data-x="story" data-for="fri-4"', 1))))
+    check('ideas: the manifest says where triage is saved', manifest['db']['queue']['doc_id'] == '<pick>'
+          and manifest['ideas']['mon'][0]['so_what'] == 'A business person finds out mon1.')
+    queued = [{'id': MON_ID, 'so_what': 'Queued so-what.', 'series': 'follow_the_money', 'triage': {'verdict': 'story'}},
+              {'id': None, 'so_what': 'Any-series so-what.', 'series': None}]
+    qpage, qman, _ = board(wk, ideas=ideas, queue=queued)
+    check('ideas: "From your queue" comes first on the day the queued ideas fit',
+          qpage.count('From your queue') == 3 and qpage.count('Queued so-what.') == 1 and qpage.count('Any-series so-what.') == 3
+          and qpage.index('data-queue-day="mon"') < qpage.index('data-pick-card="mon-1"') and verify(qpage) == []
+          and len(qman['queue']) == 2)
+    check('ideas: no queue, no "From your queue"', 'From your queue' not in page)
+    check('ideas: triage is saved to queue/<pick> and posted as a comment',
+          'qdb.doc("queue/" + pid).set(body)' in js and 'QUEUE ${pid}' in js and 'curious' in js)
     for name, bad, want in (
+            ('an idea with no so_what', dict(data, days=dict(data['days'], mon=data['days']['mon'][:3] + [dict(one('n'), so_what='')])), 'so_what'),
             ('too few ideas', dict(data, days=dict(data['days'], wed=data['days']['wed'][:3])), 'Wednesday: 3 idea(s)'),
             ('an idea with a title', dict(data, days=dict(data['days'], fri=data['days']['fri'][:3] + [one('t', title='T')])), 'a title'),
             ('an idea with no source', dict(data, days=dict(data['days'], mon=data['days']['mon'][:3] + [dict(one('s'), source={})])), 'source.url'),
@@ -1912,6 +1984,8 @@ def parser():
                     'replaced holds that this build leaves out on purpose (Krish is done with it)')
     ap.add_argument('--ideas', metavar='PATH', help='the week\'s checked ideas (docs/plans/<week>/ideas.json): a first tab, Ideas, '
                     'with at least three per day and a pick box for each')
+    ap.add_argument('--queue', metavar='PATH', help='the saved answer of GET /api/idea-queue: the Ideas tab shows "From your queue" '
+                    'first on each day the queued ideas fit; read it fresh at the start of the build, never from memory')
     ap.add_argument('--verify', metavar='PAGE', help='say why this built board may not be published (the publish hook runs it); exit 1 if it may not')
     ap.add_argument('--show', metavar='BOARD', help='print the days a board holds: its week-board.json, or its page as Artifact read saved it')
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')

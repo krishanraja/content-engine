@@ -116,3 +116,27 @@ label.pick input:focus-visible + .box{outline:3px solid var(--ok);outline-offset
 label.pick input:disabled{cursor:not-allowed}label.pick input:disabled + .box{opacity:.4}
 label.pick.on .t-label{font-weight:700}
 @media (max-width:640px){.wk-in:has(#tab-ideas) button[role=tab] .t-ch{display:none}}
+/* Triage and the Queue mark (week_board.py triage_row), and the queued-ideas block. */
+.id-sowhat{margin:0;font-size:18px;line-height:1.4;font-weight:800}
+.tri-row{display:flex;gap:6px;flex-wrap:wrap}
+.tri{min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 14px Archivo,system-ui,sans-serif;cursor:pointer}
+.tri.on,.tri[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:var(--card)}
+.tri:disabled{opacity:.5;cursor:not-allowed}
+.tri:focus-visible{outline:3px solid var(--ok);outline-offset:2px}
+label.qmark{position:relative;display:flex;align-items:center;gap:4px 12px;min-height:48px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+label.qmark input{position:absolute;left:-8px;top:50%;width:44px;height:44px;margin:-22px 0 0;opacity:0;cursor:pointer}
+label.qmark .box.sq{flex:none;width:28px;height:28px;border:2px solid var(--ink);border-radius:6px;background:var(--bg);display:grid;place-items:center}
+label.qmark .box.sq::after{content:"";width:7px;height:13px;margin-top:-3px;border:solid var(--card);border-width:0 3px 3px 0;transform:rotate(45deg);opacity:0}
+label.qmark input:checked + .box{background:var(--ok);border-color:var(--ok)}
+label.qmark input:checked + .box::after{opacity:1}
+label.qmark input:focus-visible + .box{outline:3px solid var(--ok);outline-offset:3px}
+label.qmark input:disabled + .box{opacity:.4}
+.tri-why{display:flex;gap:8px}.tri-why[hidden]{display:none}
+.tri-why input{flex:1;min-width:0;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:15px Archivo,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+.tri-state{margin:0;font-size:14px;font-weight:700;color:var(--ok)}.tri-state:empty{display:none}.tri-state.bad{color:var(--bad)}
+.id-card.queued{border-left:6px solid var(--ok)}
+.qd{border:1px dashed var(--ink);border-radius:12px;padding:10px 14px;background:var(--card)}
+.qd h3{margin:0 0 4px;font-size:16px}.qd-how{margin:0 0 6px;color:var(--muted);font-size:14px}
+.qd ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.qd-item{display:flex;gap:8px;justify-content:space-between;font-size:15px;line-height:1.4}
+.qd-triage{flex:none;font:600 11.5px "IBM Plex Mono",ui-monospace,monospace;padding:3px 8px;border-radius:999px;border:1px solid var(--line)}

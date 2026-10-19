@@ -32,7 +32,21 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    connector, named in one line on the week's board item. A cut sent by hand
    gets its record line instead, and one held back after a failed send is
    only named.
-1. Read `docs/CADENCE.md` and each series' mandate and the material on hand:
+1. **Read the idea queue first**, before anything else and before any
+   research (Krish, 2026-10-19: ideas he likes that are not time-sensitive
+   are queued, and the queue "needs to survive everything and be the first
+   thing in chat"): `python3 scripts/engine.py GET /api/idea-queue --full`.
+   Save the answer to `.cache/week-board/<Monday>/queue.json` (the board
+   reads that file, never your memory of it). Tell him how many wait and
+   how many have no verdict yet, and offer the queued ideas that fit each
+   day before you research anything new. Copy his board marks into the
+   engine first: every `QUEUE <pick> <verdict> <reason>` comment and
+   `queue/<pick>` doc on last week's board (either account; `ArtifactData`)
+   goes to `POST /api/idea-queue` (`action: queue` with `verdict`, `reason`,
+   `angle`, `decided_by: "Krish"`, the idea's `so_what`, `story` as `idea`,
+   `source_url`, `series`, `from_week`, `from_pick`). A mark with no verdict
+   is only queued. Never write a verdict he did not give.
+   Then read `docs/CADENCE.md` and each series' mandate and the material on hand:
    `python3 scripts/engine.py GET "/api/week/options?week_start=<Monday>" --full`
    (mandates, options already written, what is in flight or scheduled, the
    judges' best, and the ideas Krish dropped in during the last fortnight).
@@ -56,7 +70,10 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    ideas in the Inspo folder), then the sources `docs/prompts/sunday-ideas-tab.md`
    lists (his saved inspiration posts, the people he follows, the radar).
    Write at least four a day to `docs/plans/<Monday>-week/ideas.json`, each
-   with its one-line story, why now with its date, its strongest fact and
+   with `so_what` first (what a business person finds out, in one plain
+   sentence, the consequence before any mechanism; Krish, 2026-10-19: "In
+   plain English what would be so interesting to a business person?"; the
+   board refuses an idea without it), then its one-line story, why now with its date, its strongest fact and
    the source it came from, linked; check every fact against that source
    the same day (a company's own claim says so) and leave out any you
    cannot; no titles, which are his after he records. Stale or unchecked
@@ -103,7 +120,7 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    as I do it."
    - **Build it** with all three tabs, from the week's picks as they stand:
      `python3 scripts/post-pack/week_board.py --week <Monday> --live --ideas
-     docs/plans/<Monday>-week/ideas.json --out
+     docs/plans/<Monday>-week/ideas.json --queue .cache/week-board/<Monday>/queue.json --out
      .cache/week-board/<Monday>/week-board.html`. Its title names the week,
      "This Week's Publish Board (wC 19 Oct)". A day whose piece already
      has a publish page (a pick carried over) is a made tab: `Artifact`

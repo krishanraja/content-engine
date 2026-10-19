@@ -413,3 +413,92 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     if (!stored) say(day, "Not saved. Tick it again.", true);
   });
 })();
+
+// Triage and the Queue mark on the Ideas tab (week_board.py triage_row). Krish, 2026-10-19: some ideas are good but not
+// for this week, so mark them for a queue; "Would I consider this story or angle? If not would I consider it cute or am I
+// curious but not convinced for some specific reason". A verdict (story, angle, cute, curious, drop) and the Queue mark
+// are saved at once in queue/<pick> and posted as a comment ("QUEUE <pick> <verdict> <reason>"), which either of his
+// accounts can read. The next session copies them into the engine's one queue (POST /api/idea-queue with
+// decided_by "Krish"); nothing here writes to the engine.
+(() => {
+  const cards = [...document.querySelectorAll(".id-card[data-pick-card]")];
+  if (!cards.length) return;
+  const saved = {}, busy = {};
+  let qdb = null, comments = null, mode = "loading";
+  const card = pid => document.getElementById("idea-" + pid);
+  const text = (c, sel) => c.querySelector(sel)?.textContent || "";
+  const say = (pid, msg, bad) => { const s = document.querySelector(`[data-tristate="${pid}"]`); if (s) { s.textContent = msg; s.classList.toggle("bad", !!bad) } };
+  const label = { story: "Story", angle: "Angle", cute: "Cute", curious: "Curious, not convinced", drop: "Drop" };
+  function render(){
+    for (const c of cards) {
+      const pid = c.dataset.pickCard, v = saved[pid] || {};
+      for (const b of c.querySelectorAll("[data-triage]")) {
+        const on = v.verdict === b.dataset.triage;
+        b.setAttribute("aria-pressed", on ? "true" : "false"); b.classList.toggle("on", on);
+        b.disabled = mode !== "live" || !!busy[pid];
+      }
+      const m = c.querySelector("[data-queue-mark]");
+      if (m) { m.checked = !!v.queued; m.disabled = mode !== "live" || !!busy[pid]; m.closest("label").classList.toggle("on", !!v.queued) }
+      c.classList.toggle("queued", !!v.queued);
+      if (!busy[pid]) say(pid, mode === "off" ? "Triage is not saving in this view. Open it in claude.ai." : v.verdict || v.queued
+        ? [v.verdict ? label[v.verdict] : "", v.queued ? "queued" : "", v.reason || v.angle || ""].filter(Boolean).join(" · ") + ". Saved." : "", mode === "off");
+    }
+  }
+  render();
+  (async () => {
+    try { qdb = window.claude?.use ? await window.claude.use("db") : null } catch { qdb = null }
+    try { comments = window.claude?.use ? await window.claude.use("comments") : null } catch { comments = null }
+    if (!qdb) { mode = "off"; render(); return }
+    try {
+      qdb.collection("queue").onSnapshot(snap => {
+        for (const k of Object.keys(saved)) delete saved[k];
+        for (const d of snap.docs) if (d.exists) saved[d.id] = d.data() || {};
+        mode = "live"; render();
+      }, () => { mode = "broken"; for (const c of cards) say(c.dataset.pickCard, "Saved triage could not load. Reload the page to try again.", true) });
+    } catch { mode = "broken"; render() }
+  })();
+  async function save(pid, patch){
+    if (mode !== "live" || !qdb || busy[pid]) { render(); return }
+    const c = card(pid), prev = saved[pid] || {};
+    const body = Object.assign({ pick: pid, queued: false, verdict: null, reason: null, angle: null }, prev, patch, {
+      so_what: text(c, ".id-sowhat"), story: text(c, ".id-story"), idea_id: c.querySelector("[data-idea-id]")?.dataset.ideaId || null,
+      series: c.dataset.series, week: c.dataset.week, day: pid.split("-")[0], at: new Date().toISOString() });
+    busy[pid] = true; say(pid, "Saving…"); render();
+    let stored = false;
+    try { await qdb.doc("queue/" + pid).set(body); saved[pid] = body; stored = true } catch {}
+    if (stored && comments) try {
+      const anchor = await comments.anchorFor(c);
+      await comments.create({ anchor, text: `QUEUE ${pid} ${body.verdict || "none"} ${body.reason || body.angle || ""}`.trim()
+        + `\nqueued: ${body.queued ? "yes" : "no"} · series ${body.series} · week ${body.week}${body.idea_id ? " · " + body.idea_id : ""} · ${body.at}\n\n${body.so_what}` });
+    } catch {}
+    delete busy[pid]; render();
+    if (!stored) say(pid, "Not saved. Tap it again.", true);
+  }
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-triage]");
+    if (b) {
+      const pid = b.dataset.for, v = b.dataset.triage, why = document.querySelector(`[data-why-for="${pid}"]`);
+      if (v === "curious" || v === "angle") {
+        if (!why) return;
+        why.hidden = false; why.dataset.verdict = v;
+        const i = why.querySelector("input"); i.placeholder = v === "curious" ? "Why are you not convinced? (for example: it is safer)" : "From which angle would you run it?";
+        i.value = ((saved[pid] || {}).verdict === v ? (saved[pid].reason || saved[pid].angle || "") : ""); i.focus();
+        return;
+      }
+      const w = document.querySelector(`[data-why-for="${pid}"]`); if (w) w.hidden = true;
+      save(pid, { verdict: v, reason: null, angle: null }); return;
+    }
+    const s = e.target.closest && e.target.closest('[data-act="save-why"]');
+    if (s) {
+      const pid = s.dataset.for, why = document.querySelector(`[data-why-for="${pid}"]`), v = why?.dataset.verdict;
+      const t = (why?.querySelector("input").value || "").trim();
+      if (!t) { say(pid, v === "curious" ? "Say why you are not convinced: that reason is what the engine learns from." : "Say which angle.", true); return }
+      why.hidden = true;
+      save(pid, v === "curious" ? { verdict: v, reason: t, angle: null } : { verdict: v, angle: t, reason: null });
+    }
+  });
+  document.addEventListener("change", e => {
+    const m = e.target.closest && e.target.closest("[data-queue-mark]"); if (!m) return;
+    save(m.dataset.queueMark, { queued: m.checked });
+  });
+})();

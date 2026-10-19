@@ -8,6 +8,13 @@ are in `AGENTS.md`; this file is the live state of the work.
 
 Last updated: 2026-10-18, by the Sunday plan-the-week routine (Claude Code, cloud): options written and the 19 October board made.
 
+## The idea queue: read it first
+
+Every planning or making session starts with `python3 scripts/engine.py GET /api/idea-queue`: the ideas Krish
+queued from any Ideas tab, with his triage (story, angle, cute, curious but not convinced, with his reason). One
+queue, in the engine (`content_ideas.queued_at`); Control Center's Queue page triages it A/B; nothing purges it.
+Offer from it before new research. Handover: `docs/handovers/2026-10-19-idea-queue.md`.
+
 ## Friday 16 Oct: handed over, 17 Oct
 
 Krish ran out of usage on this account and asked for a handover. Everything the next session
