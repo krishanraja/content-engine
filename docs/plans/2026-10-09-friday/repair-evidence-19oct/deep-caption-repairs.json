@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "status": "evidence-backed caption corrections; finished playback pending",
+  "provenance": {
+    "schema": 1,
+    "clock": "edited",
+    "source_provenance": {
+      "schema": 1,
+      "source_sha256": "ee91ab41bc6ff0e25c2d7c2039c0bd55131ce7630110668c826e191605f0fd9f",
+      "speed": 1.0,
+      "clock": "processing_source",
+      "model": "small.en",
+      "transcriber": "faster-whisper",
+      "version": "1.2.0"
+    },
+    "edited_sha256": "d816e518dfef96b1097d79c98c3328ab9dbb774a6a50c2d6a1b38d7a3d100928",
+    "base_tokens_sha256": "12e861693b39e0472a0903d8f7214c39621230dd2acae296be659921f1ca1aa8"
+  },
+  "edits": [
+    {
+      "start_index": 297,
+      "end_index": 299,
+      "before": [
+        {
+          "w": "chat,",
+          "s": 90.312,
+          "e": 90.412
+        },
+        {
+          "w": "GP2,",
+          "s": 90.512,
+          "e": 90.932
+        }
+      ],
+      "after": [
+        {
+          "w": "ChatGPT,",
+          "s": 90.312,
+          "e": 90.932
+        }
+      ],
+      "evidence": [
+        "retained.medium.json",
+        "clip-05.large-v3.json",
+        "approved deep script"
+      ],
+      "reason": "Correct verified product spelling; both independent recognizers identify GPT, not GP2."
+    },
+    {
+      "start_index": 1232,
+      "end_index": 1233,
+      "before": [
+        {
+          "w": "So,",
+          "s": 413.888,
+          "e": 414.008
+        }
+      ],
+      "after": [
+        {
+          "w": "See,",
+          "s": 413.888,
+          "e": 414.008
+        }
+      ],
+      "evidence": [
+        "retained.medium.json",
+        "clip-18.large-v3.json"
+      ],
+      "reason": "Both independent recognizers agree on See OpenAI; retain the existing word clock."
+    },
+    {
+      "start_index": 1988,
+      "end_index": 1990,
+      "before": [
+        {
+          "w": "arm.",
+          "s": 685.295,
+          "e": 685.455
+        },
+        {
+          "w": "So,",
+          "s": 685.555,
+          "e": 685.635
+        }
+      ],
+      "after": [
+        {
+          "w": "answer.",
+          "s": 685.295,
+          "e": 685.635
+        }
+      ],
+      "evidence": [
+        "retained.medium.json",
+        "clip-27.large-v3.json"
+      ],
+      "reason": "Both independent recognizers identify one word answer, incorrectly split into arm and So in the baseline."
+    },
+    {
+      "start_index": 2091,
+      "end_index": 2092,
+      "before": [
+        {
+          "w": "And",
+          "s": 719.21,
+          "e": 719.65
+        }
+      ],
+      "after": [
+        {
+          "w": "I\u2014",
+          "s": 718.65,
+          "e": 718.89
+        },
+        {
+          "w": "what\u2014",
+          "s": 718.89,
+          "e": 719.21
+        },
+        {
+          "w": "and",
+          "s": 719.21,
+          "e": 719.65
+        }
+      ],
+      "evidence": [
+        "retained.medium.json",
+        "clip-29.large-v3.json"
+      ],
+      "reason": "Restore the recorded false start recognised by both independent checks, without changing speech or cuts. New timings stay between neighbouring baseline words."
+    }
+  ]
+}

@@ -761,6 +761,16 @@ def tokens(ws, replacements, spell=None, names=()):
     return out
 
 
+def reviewed_caption_tokens(cfg, resolve, tokens, identity, edited, duration):
+    if not cfg.get('caption_repairs'):
+        return tokens, None
+    path=resolve(cfg['caption_repairs'])
+    if not cfg.get('caption_repairs_sha256') or quality.digest(path)!=cfg['caption_repairs_sha256']:
+        raise ValueError('Caption repair document differs from the reviewed evidence')
+    document=json.loads(path.read_text(encoding='utf8'))
+    return quality.repaired_caption_words(document,tokens,identity,quality.digest(edited),duration),document
+
+
 def chunks(toks, bounds, max_words=5, max_dur=2.2, gap=0.35):
     res, cur = [], []
     for j, t in enumerate(toks):
@@ -2078,6 +2088,7 @@ def main():
     main_frames = sum(max(1, round((g['b'] - g['a']) * FPS)) for g in segs)
     if args.plan:
         toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names)
+        toks,_=reviewed_caption_tokens(cfg,P,toks,identity,out/f"{cfg['name']}.edited.mkv",total)
         early += spelling_warnings(toks)
         groups = chunks(toks, sorted({c['s'] for c in wins} | {c['e'] for c in wins}))
         shapes = {}
@@ -2176,6 +2187,8 @@ def main():
             voice_src = dst
     voice_in = float(loud['input_i'])
     toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names)
+    retained_source_tokens = list(toks)
+    toks,caption_repairs=reviewed_caption_tokens(cfg,P,toks,identity,edited,total)
     early += spelling_warnings(toks)
     bounds = sorted({c['s'] for c in wins} | {c['e'] for c in wins})
     groups = chunks(toks, bounds)
@@ -2258,6 +2271,10 @@ def main():
             heard = transcribe(final, out/f'{final.stem}.heard.json', transcript_model, provenance=final_identity)
             speech_check = quality.word_diff(toks, heard)
             receipt = {'video_sha256':quality.digest(final), 'piece_id':cfg.get('piece_id'),
+                       'caption_repairs':None if caption_repairs is None else {
+                           'document_sha256':cfg['caption_repairs_sha256'],
+                           'provenance':caption_repairs['provenance'],
+                           'retained_source_word_changes':quality.word_diff(retained_source_tokens,toks)},
                        'source_provenance':identity,
                        'transcript_document':{'sha256':quality.digest(wpath),'derivation':(document or {}).get('derivation')},'checks': {
                 'heard':speech_check,

@@ -1,6 +1,6 @@
 ---
 name: produce-video
-description: "Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session, GitHub's machine (the midday run, produce-day) or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing."
+description: "Produce Krish's videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session, GitHub's machine (the midday run, produce-day) or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing."
 model: sonnet
 ---
 
@@ -18,6 +18,12 @@ the frame at every moment of every animation, the brand faces only (Anton,
 Archivo, IBM Plex Mono), logos people recognise, badges and labels drawn the
 same way, nothing half-built in the 9:16 layout, no kicker that uses another
 series' ground. If anything fails, say so and fix the engine, not just the file.
+
+Krish, 2026-10-19: "these eyebrows and source citations are prohibited".
+Video cards must not carry small eyebrow labels, source-credit lines or metadata
+footers such as "Car analogy". Keep source evidence, photographer attribution and
+licences in the accompanying records. Meaning-bearing qualifications belong in
+the main message or spoken wording. Preserve explicitly approved story clips.
 
 Krish, 2026-10-12: "give me a skill (or the codex equivalent) that
 understands everything going on here that invokes properly when I engage it

@@ -15,7 +15,8 @@
     "shape": "9x16",
     "point": "ANOTHER MODEL LAUNCH",
     "photo": null,
-    "logo": "openai-symbol"
+    "logo": "openai-symbol",
+    "off_screen_context": ""
   },
   {
     "file": "repair-short-03-9x16.svg",
@@ -26,7 +27,8 @@
     "shape": "9x16",
     "point": "A NEW NAME. EVERY DAY?",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Krish\u2019s experience"
   },
   {
     "file": "repair-short-04-9x16.svg",
@@ -37,7 +39,8 @@
     "shape": "9x16",
     "point": "DOES THE NAME EVEN MATTER?",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": ""
   },
   {
     "file": "repair-short-05-9x16.svg",
@@ -55,7 +58,8 @@
     "shape": "9x16",
     "point": "THINK OF A CAR",
     "photo": "c-class",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Car analogy"
   },
   {
     "file": "repair-short-07-9x16.svg",
@@ -78,7 +82,8 @@
     "shape": "9x16",
     "point": "THINKING IS THE GEAR",
     "photo": "manual",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Photo: Nenad Stojkovic \u00b7 CC BY 2.0"
   },
   {
     "file": "repair-short-10-9x16.svg",
@@ -89,7 +94,8 @@
     "shape": "9x16",
     "point": "YOU PICK THE GEAR",
     "photo": "manual",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Car analogy"
   },
   {
     "file": "repair-short-11-9x16.svg",
@@ -100,7 +106,8 @@
     "shape": "9x16",
     "point": "TODAY: MANUAL",
     "photo": "manual",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Car analogy"
   },
   {
     "file": "repair-short-12-9x16.svg",
@@ -111,7 +118,8 @@
     "shape": "9x16",
     "point": "MEET SALLY",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Illustrative example"
   },
   {
     "file": "repair-short-13-9x16.svg",
@@ -122,7 +130,8 @@
     "shape": "9x16",
     "point": "CHECK THIS SUPPLIER DEAL",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Sally\u2019s example"
   },
   {
     "file": "repair-short-14-9x16.svg",
@@ -133,7 +142,8 @@
     "shape": "9x16",
     "point": "SOUNDS SURE",
     "photo": null,
-    "logo": "claude"
+    "logo": "claude",
+    "off_screen_context": "Sally\u2019s example"
   },
   {
     "file": "repair-short-15-9x16.svg",
@@ -144,7 +154,8 @@
     "shape": "9x16",
     "point": "MISSES A COSTLY RULE",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Sally\u2019s example"
   },
   {
     "file": "repair-short-16-9x16.svg",
@@ -155,7 +166,8 @@
     "shape": "9x16",
     "point": "TOO LITTLE THINKING",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Sally\u2019s example"
   },
   {
     "file": "repair-short-17-9x16.svg",
@@ -166,7 +178,8 @@
     "shape": "9x16",
     "point": "SAME GEAR. HIDDEN RISK.",
     "photo": "manual",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Sally\u2019s example"
   },
   {
     "file": "repair-short-18-9x16.svg",
@@ -177,7 +190,8 @@
     "shape": "9x16",
     "point": "PUT THINKING TO THE TEST",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Artificial Analysis Intelligence Index"
   },
   {
     "file": "repair-short-19-9x16.svg",
@@ -188,7 +202,8 @@
     "shape": "9x16",
     "point": "NEWER MODEL. LOW EFFORT.",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Artificial Analysis \u00b7 comparison"
   },
   {
     "file": "repair-short-20-9x16.svg",
@@ -199,7 +214,8 @@
     "shape": "9x16",
     "point": "OLDER MODEL. HIGHER SCORE.",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Artificial Analysis \u00b7 comparison"
   },
   {
     "file": "repair-short-21-9x16.svg",
@@ -210,7 +226,8 @@
     "shape": "9x16",
     "point": "WHY START IN LOW GEAR?",
     "photo": "manual",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Car analogy"
   },
   {
     "file": "repair-short-22-9x16.svg",
@@ -221,7 +238,8 @@
     "shape": "9x16",
     "point": "MY GUESS",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Krish\u2019s interpretation"
   },
   {
     "file": "repair-short-23-9x16.svg",
@@ -232,7 +250,8 @@
     "shape": "9x16",
     "point": "THINKING COSTS MONEY",
     "photo": null,
-    "logo": "openai-symbol"
+    "logo": "openai-symbol",
+    "off_screen_context": "Provider cost"
   },
   {
     "file": "repair-short-24-9x16.svg",
@@ -243,7 +262,8 @@
     "shape": "9x16",
     "point": "YOU PAY THE SAME PLAN",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Monthly subscription"
   },
   {
     "file": "repair-short-25-9x16.svg",
@@ -254,7 +274,8 @@
     "shape": "9x16",
     "point": "WHAT COMES NEXT?",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Krish\u2019s forecast"
   },
   {
     "file": "repair-short-26-9x16.svg",
@@ -265,7 +286,8 @@
     "shape": "9x16",
     "point": "MID-2027: AUTOMATIC?",
     "photo": "automatic",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Forecast \u00b7 photo: Ralf Pfeifer \u00b7 CC BY-SA 3.0"
   },
   {
     "file": "repair-short-27-9x16.svg",
@@ -276,7 +298,8 @@
     "shape": "9x16",
     "point": "AI PICKS ITS OWN GEAR",
     "photo": "automatic",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Krish\u2019s forecast"
   },
   {
     "file": "repair-short-28-9x16.svg",
@@ -287,7 +310,8 @@
     "shape": "9x16",
     "point": "EASY BEATS MANUAL",
     "photo": "automatic",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Krish\u2019s view"
   },
   {
     "file": "repair-short-29-9x16.svg",
@@ -298,7 +322,8 @@
     "shape": "9x16",
     "point": "85% SURE",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Krish\u2019s confidence in his forecast"
   },
   {
     "file": "repair-short-30-9x16.svg",
@@ -309,7 +334,8 @@
     "shape": "9x16",
     "point": "READ THE FULL ARTICLE",
     "photo": null,
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Sources included"
   },
   {
     "file": "repair-short-31-9x16.svg",
@@ -320,7 +346,8 @@
     "shape": "9x16",
     "point": "WOULD YOU PICK THE GEAR?",
     "photo": "manual",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Your choice"
   },
   {
     "file": "repair-short-32-9x16.svg",
@@ -331,6 +358,7 @@
     "shape": "9x16",
     "point": "OR LET AI CHOOSE?",
     "photo": "automatic",
-    "logo": null
+    "logo": null,
+    "off_screen_context": "Your choice"
   }
 ]

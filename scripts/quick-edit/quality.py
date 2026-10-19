@@ -50,6 +50,39 @@ def word_diff(expected, heard):
             'expected_words':len(a),'heard_words':len(b),'changes':changes}
 
 
+def caption_token_digest(words):
+    payload=[{k:w[k] for k in ('w','s','e')} for w in words]
+    return hashlib.sha256(json.dumps(payload,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+
+
+def repaired_caption_words(document, words, source_identity, edited_sha256, duration):
+    """Apply evidence-backed word repairs on the edited clock, never retime again."""
+    expected={'schema':1,'clock':'edited','source_provenance':source_identity,
+              'edited_sha256':edited_sha256,'base_tokens_sha256':caption_token_digest(words)}
+    if document.get('provenance')!=expected:
+        raise ValueError('Caption repair provenance is missing or stale')
+    out=[];cursor=0
+    for edit in document.get('edits',[]):
+        a,b=edit['start_index'],edit['end_index']
+        if not isinstance(a,int) or not isinstance(b,int) or not cursor<=a<b<=len(words):
+            raise ValueError('Caption repair ranges overlap or lie outside the retained words')
+        if edit.get('before')!=[{k:w[k] for k in ('w','s','e')} for w in words[a:b]]:
+            raise ValueError('Caption repair does not match its exact original words')
+        if not edit.get('evidence') or not edit.get('reason') or not edit.get('after'):
+            raise ValueError('Caption repair needs evidence, a reason and replacement words')
+        out.extend(words[cursor:a]);out.extend(edit['after']);cursor=b
+    out.extend(words[cursor:])
+    prior=-1
+    for word in out:
+        if not isinstance(word.get('w'),str) or not word['w'].strip():
+            raise ValueError('Caption repair contains an empty word')
+        a,b=word['s'],word['e']
+        if not all(isinstance(x,(int,float)) and math.isfinite(x) for x in (a,b)) or not 0<=a<=b<=duration or a<prior:
+            raise ValueError('Caption repair times must stay ordered inside the edited speech')
+        prior=a
+    return out
+
+
 def cut_problems(words, segments, removals):
     removed = {i for a,b in removals for i in range(a,b+1)}
     problems = []

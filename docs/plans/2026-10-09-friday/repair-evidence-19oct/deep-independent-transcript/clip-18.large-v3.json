@@ -1,0 +1,156 @@
+{
+ "identity": {
+  "audio_sha256": "733e7fb546747bdd3922d5b54161e7afdb609ed45ca7c8c27980d9c904b9b4bb",
+  "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+  "start_sample": 6553440,
+  "end_sample": 6745440,
+  "sample_rate": 16000,
+  "stage": "retained edited voice, before final mix"
+ },
+ "duration": 12.0,
+ "model": "large-v3",
+ "beam_size": 1,
+ "max_new_tokens": 160,
+ "transcriber": "faster-whisper",
+ "version": "1.2.0",
+ "words": [
+  {
+   "w": " power",
+   "s": 0.0,
+   "e": 0.3,
+   "probability": 0.339729368686676
+  },
+  {
+   "w": " each",
+   "s": 0.3,
+   "e": 0.82,
+   "probability": 0.99333655834198
+  },
+  {
+   "w": " question",
+   "s": 0.82,
+   "e": 1.24,
+   "probability": 0.9983938336372375
+  },
+  {
+   "w": " gets.",
+   "s": 1.24,
+   "e": 1.64,
+   "probability": 0.993020236492157
+  },
+  {
+   "w": " How",
+   "s": 1.8,
+   "e": 2.46,
+   "probability": 0.9869617223739624
+  },
+  {
+   "w": " much",
+   "s": 2.46,
+   "e": 2.7,
+   "probability": 0.9989296793937683
+  },
+  {
+   "w": " thinking",
+   "s": 2.7,
+   "e": 3.22,
+   "probability": 0.9922114610671997
+  },
+  {
+   "w": " power.",
+   "s": 3.22,
+   "e": 3.64,
+   "probability": 0.9994381070137024
+  },
+  {
+   "w": " See,",
+   "s": 3.88,
+   "e": 4.38,
+   "probability": 0.6852483749389648
+  },
+  {
+   "w": " OpenAI",
+   "s": 4.4,
+   "e": 4.78,
+   "probability": 0.834967851638794
+  },
+  {
+   "w": " has",
+   "s": 4.78,
+   "e": 5.28,
+   "probability": 0.9991738200187683
+  },
+  {
+   "w": " gone",
+   "s": 5.28,
+   "e": 5.44,
+   "probability": 0.9996702671051025
+  },
+  {
+   "w": " the",
+   "s": 5.44,
+   "e": 5.58,
+   "probability": 0.9995192289352417
+  },
+  {
+   "w": " other",
+   "s": 5.58,
+   "e": 5.74,
+   "probability": 0.9997852444648743
+  },
+  {
+   "w": " way",
+   "s": 5.74,
+   "e": 5.9,
+   "probability": 0.999687671661377
+  },
+  {
+   "w": " and",
+   "s": 5.9,
+   "e": 6.08,
+   "probability": 0.9744487404823303
+  },
+  {
+   "w": " taken",
+   "s": 6.08,
+   "e": 6.54,
+   "probability": 0.9993840456008911
+  },
+  {
+   "w": " ChatGPT's",
+   "s": 6.54,
+   "e": 7.7,
+   "probability": 0.973219347000122
+  },
+  {
+   "w": " automatic",
+   "s": 7.7,
+   "e": 8.2,
+   "probability": 0.985765278339386
+  },
+  {
+   "w": " gear",
+   "s": 8.2,
+   "e": 8.9,
+   "probability": 0.9955756664276123
+  },
+  {
+   "w": " picker",
+   "s": 8.9,
+   "e": 9.34,
+   "probability": 0.9960326254367828
+  },
+  {
+   "w": " away",
+   "s": 9.34,
+   "e": 9.54,
+   "probability": 0.9994514584541321
+  },
+  {
+   "w": " twice.",
+   "s": 9.54,
+   "e": 10.52,
+   "probability": 0.9668921232223511
+  }
+ ]
+}

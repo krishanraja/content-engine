@@ -26,6 +26,7 @@ describe('the engine gates', () => {
     ['the style references: cuts, zooms and the ledger', ['scripts/quick-edit/references.py', '--self-test']],
     ['the cover drawer and thumbnails', ['scripts/pages/build.py', '--self-test']],
     ['video transcript clocks, word cues, continuous music and delivery evidence', ['tests/quick_edit_quality_test.py']],
+    ['Claude model routing preserves strict skill validation', ['tests/validate_skills_test.py']],
   ] as const) {
     it(name, () => {
       const r = py([...args])

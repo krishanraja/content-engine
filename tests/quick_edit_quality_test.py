@@ -15,6 +15,33 @@ import sync_check
 
 
 class QualityTests(unittest.TestCase):
+    def test_caption_adlibs_are_bound_to_exact_edited_clock_and_original_words(self):
+        words=[{'w':'Most','s':1.,'e':1.2},{'w':'of','s':1.2,'e':1.3},{'w':'us','s':1.3,'e':1.5}]
+        identity={'source_sha256':'original','speed':1.1,'clock':'processing_source'}
+        after=[{'w':'Most','s':.2,'e':.4},{'w':'of','s':.4,'e':.5},{'w':'us,','s':.5,'e':.6},*words]
+        doc={'provenance':{'schema':1,'clock':'edited','source_provenance':identity,
+             'edited_sha256':'edited','base_tokens_sha256':quality.caption_token_digest(words)},
+             'edits':[{'start_index':0,'end_index':3,'before':words,'after':after,
+                       'evidence':['bounded source recognition'],'reason':'Preserve a spoken repetition'}]}
+        fixed=quality.repaired_caption_words(doc,words,identity,'edited',2.)
+        self.assertEqual(fixed,after)
+        self.assertEqual(fixed[0]['s'],.2)  # The 1.1x speed is not applied twice.
+        for source,edited in [({**identity,'speed':1.},'edited'),(identity,'changed')]:
+            with self.assertRaises(ValueError):quality.repaired_caption_words(doc,words,source,edited,2.)
+        with self.assertRaises(ValueError):quality.repaired_caption_words(doc,[{**words[0],'w':'All'},*words[1:]],identity,'edited',2.)
+        doc['edits'][0]['after'][0]['s']=-.1
+        with self.assertRaises(ValueError):quality.repaired_caption_words(doc,words,identity,'edited',2.)
+
+    def test_caption_repairs_refuse_overlapping_or_unsupported_adjudications(self):
+        words=[{'w':'a','s':0.,'e':.5},{'w':'word','s':.5,'e':1.}]
+        doc={'provenance':{'schema':1,'clock':'edited','source_provenance':{},'edited_sha256':'x',
+                          'base_tokens_sha256':quality.caption_token_digest(words)},
+             'edits':[{'start_index':0,'end_index':2,'before':words,'after':words,
+                       'evidence':[],'reason':'Spelling'}]}
+        with self.assertRaises(ValueError):quality.repaired_caption_words(doc,words,{},'x',1.)
+        doc['edits'][0]['evidence']=['source'];doc['edits'].append(dict(doc['edits'][0]))
+        with self.assertRaises(ValueError):quality.repaired_caption_words(doc,words,{},'x',1.)
+
     def test_short_phrase_between_removals_keeps_complete_audio(self):
         words=[{'w':'remove','s':0.,'e':.15},{'w':'Formula','s':.15,'e':.47},
                {'w':'One','s':.47,'e':.77},{'w':'remove','s':.77,'e':1.}]

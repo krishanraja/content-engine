@@ -13,7 +13,7 @@ from faster_whisper import WhisperModel
 ap=argparse.ArgumentParser(description=__doc__)
 ap.add_argument('--model',default='medium.en')
 ap.add_argument('--beam-size',type=int,default=5)
-ap.add_argument('--max-new-tokens',type=int,default=448)
+ap.add_argument('--max-new-tokens',type=int,default=None)
 args=ap.parse_args()
 jobs=json.loads(Path('job.json').read_text())
 model=WhisperModel(args.model,device='cpu',compute_type='int8',cpu_threads=2)

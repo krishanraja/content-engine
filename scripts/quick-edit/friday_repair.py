@@ -36,10 +36,10 @@ def control_card(name, kind, shape='9x16'):
     image_uri=uri(source)
     iw,ih=(992,658) if kind=='models' else (1244,604)
     head='CHOOSE THE MODEL' if kind=='models' else 'CHOOSE THE EFFORT'
+    headline_y=365 if kind=='models' and shape=='9x16' else 240
     body=[f'<rect width="{width}" height="{height}" fill="{st["ink"]}"/>',
           f'<rect width="{width}" height="12" fill="{st["accent"]}"/>',
-          f'<text x="64" y="100" font-family="IBM Plex Mono" font-size="40" fill="{st["accent"]}">mind.the.gap</text>',
-          f'<text x="64" y="240" font-family="Anton" font-size="{100 if shape=="9x16" else 125}" fill="{st["cream"]}">{head}</text>']
+          f'<text x="64" y="{headline_y}" font-family="Anton" font-size="{100 if shape=="9x16" else 125}" fill="{st["cream"]}">{head}</text>']
     def viewport(x,y,w,h,crop):
         cx,cy,cw,ch=map(float,crop.split())
         scale=min(w/cw,h/ch)
@@ -58,7 +58,6 @@ def control_card(name, kind, shape='9x16'):
         step=150 if shape=='16x9' else 120
         for i,crop in enumerate(('620 200 125 28','620 263 125 29','620 327 105 36','620 392 105 28','620 456 80 28')):
             body.append(viewport(128+col,280+i*step,col,step,crop))
-    body.append(f'<text x="64" y="{height-18}" font-family="IBM Plex Mono" font-size="32" fill="{st["cream"]}">Claude menu · supplied by Krish · 19 Oct 2026</text>')
     svg=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">'+''.join(body)+'</svg>'
     path=DEST/'panels'/f'{name}-{shape}.svg';path.write_text(svg,encoding='utf8')
     return {'file':path.name,'point':head,'shape':shape,'original_sha256':sha,
@@ -72,8 +71,7 @@ def card(name,head,detail='',photo=None,logo=None,shape='9x16',label=''):
     # Short headlines, ample type and explicit context carry the spoken idea.
     lines=head.split('|');size=98 if shape=='9x16' else 130
     body=[f'<rect width="{width}" height="{height}" fill="{ink}"/>',
-          f'<rect width="{width}" height="12" fill="{accent}"/>',
-          f'<text x="64" y="94" font-family="IBM Plex Mono" font-size="40" fill="{accent}">mind.the.gap</text>']
+          f'<rect width="{width}" height="12" fill="{accent}"/>']
     for i,line in enumerate(lines):
         body.append(f'<text x="64" y="{218+i*(size+12)}" font-family="Anton" font-size="{size}" fill="{cream}">{html.escape(line.upper())}</text>')
     top=240+(len(lines)-1)*(size+12)
@@ -85,20 +83,13 @@ def card(name,head,detail='',photo=None,logo=None,shape='9x16',label=''):
         body.append(f'<image x="{width/2-120}" y="{top}" width="240" height="240" href="{uri(p)}"/>')
     if detail:
         body.append(f'<text x="64" y="{height-144}" font-family="Anton" font-size="{82 if shape=="9x16" else 124}" fill="{accent}">{html.escape(detail)}</text>')
-    if label:
-        if label=='Krish’s confidence in his forecast':label='Krish’s forecast'
-        annotation=32 if len(label)>24 or 'Photo:' in label or 'photo:' in label or 'CC BY' in label else 64
-        if shape=='16x9' and label.startswith(('Car analogy','Krish’s forecast')):
-            context,*credit=label.split(' · ',1)
-            body.append(f'<text x="64" y="{height-44}" font-family="Anton" font-size="104" fill="{cream}">{html.escape(context)}</text>')
-            if credit:body.append(f'<text x="64" y="{height-8}" font-family="IBM Plex Mono" font-size="26" fill="{cream}">{html.escape(credit[0])}</text>')
-        else:
-            body.append(f'<text x="64" y="{height-52}" font-family="IBM Plex Mono" font-size="{annotation}" fill="{cream}">{html.escape(label)}</text>')
+    # Krish, 19 October: no eyebrows or source-credit overlays in either cut.
+    # Preserve attribution and editorial context in the manifest, off screen.
     svg=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">'+''.join(body)+'</svg>'
     path=DEST/'panels'/f'{name}-{shape}.svg';path.write_text(svg,encoding='utf8')
     return {'file':path.name,'headline':head.replace('|',' '),'headline_words':len(head.replace('|',' ').split()),
             'essential_font_px':size,'detail_font_px':82 if shape=='9x16' else 124,'shape':shape,
-            'point':head.replace('|',' '),'photo':photo,'logo':logo}
+            'point':head.replace('|',' '),'photo':photo,'logo':logo,'off_screen_context':label}
 
 
 def anchor(words,index,end=False):
@@ -118,7 +109,7 @@ def readable_long_card(spec):
     """Reflow the existing approved headline; source captures remain references.
 
     Essential headlines and comparison labels are measured for a 1080-wide
-    playback of the 1920-wide cut. Small source credits are not essential copy.
+    playback of the 1920-wide cut. Source credits stay in accompanying records.
     """
     from PIL import Image, ImageFont
     width,height=1314,1080
@@ -239,12 +230,10 @@ def readable_long_card(spec):
                 f'<g clip-path="url(#{clip})"><image x="{left-cx*scale}" y="{top-cy*scale}" width="{iw*scale}" height="{ih*scale}" href="{uri(source)}"/></g>')
     else:raise ValueError('Unsupported long card: '+kind)
     # The original evidence and full source line remain in the review manifest.
-    credit=spec.get('kicker','mind.the.gap')
-    body.append(f'<text x="64" y="1055" font-family="IBM Plex Mono" font-size="30" fill="{st["accent"]}">{html.escape(credit)}</text>')
     name='repair-readable-'+spec['cue']+'-16x9.svg'
     (DEST/'panels'/name).write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="1314" height="1080">'+''.join(body)+'</svg>',encoding='utf8')
     return {'file':name,'original_title':spec['title'],'title':title,'essential_text':essential,
-            'source':spec.get('source'),'data':spec.get('data'),'source_captures_are_reference_only':kind=='shot',
+            'source':spec.get('source'),'data':spec.get('data'),'off_screen_context':spec.get('kicker'),'source_captures_are_reference_only':kind=='shot',
             'title_changed':title!=spec['title']}
 
 
@@ -286,7 +275,7 @@ def main():
       (125,'MISSES A|COSTLY RULE','',None,None,'Sally’s example'),
       (133,'TOO LITTLE|THINKING','',None,None,'Sally’s example'),
       (142,'SAME GEAR.|HIDDEN RISK.','', 'manual',None,'Sally’s example'),
-      (148,'PUT THINKING|TO THE TEST','Artificial Analysis',None,None,'Intelligence Index'),
+      (148,'PUT THINKING|TO THE TEST','',None,None,'Artificial Analysis Intelligence Index'),
       (154,'NEWER MODEL.|LOW EFFORT.','Opus 5.5 · low',None,None,'Artificial Analysis · comparison'),
       (164,'OLDER MODEL.|HIGHER SCORE.','Opus 5 · max',None,None,'Artificial Analysis · comparison'),
       (173,'WHY START|IN LOW GEAR?','', 'manual',None,'Car analogy'),
@@ -315,11 +304,12 @@ def main():
         end=(rows[i+1][0]-1) if i+1<len(rows) else len(words)-1
         cues.append({'id':name,'panel':f'panels/{name}-9x16.png','start':anchor(words,start),
                      'end':anchor(words,end,True),'lead':.18,'tail':.25,'source_words':[start,end]})
-    cfg.update(name='why-so-many-ais-short-repair-19oct-v3',source='../'+str(Path(cfg['source']).relative_to('..')).replace('\\','/'),
+    cfg.update(name='why-so-many-ais-short-repair-19oct-v6',source='../'+str(Path(cfg['source']).relative_to('..')).replace('\\','/'),
                words='../words-fresh/short.adjudicated.words.json',words_sha256=quality.digest(adjudicated),script=str(ROOT/'docs/plans/2026-10-09-script-90s-v7.md'),
                pad_before=.18,pad_after=.25,cues=cues,music='no-curves-instrumental',music_mode='episode_bed',
                episode_bed_levels={'bed_lufs':-31,'chapter_lufs':-22},quality_required=True,
                intro={'9x16':'../working/3 Video/working 17 Oct/story clips/intro-9x16.mp4'},
+               intro_override='Krish, 2026-10-19: Retain approved titles, thumbnails and story intro/outro.',
                endcard={'9x16':'../working/3 Video/working 17 Oct/story clips/outro-9x16.mp4'})
     cfg['strap']['png']='../working/3 Video/working 17 Oct/kit/strap-9x16.png'
     cfg['replacements']=[['got to be in my bonnet','got a bee in my bonnet'],['Maybe 5%','I’m 85%'],['C -Class','C-Class'],
@@ -430,7 +420,7 @@ def build_long():
             card(name,headline,photo=photo,shape='16x9',label=label)
         cues.append({'id':name,'start':start_phrase,'end':end_phrase,'panel':f'panels/{name}-16x9.png','lead':.18,'tail':.3})
         added.append({'id':name,'source_words':[a,b],'point':headline.replace('|',' '),'real_visual':photo})
-    cfg.update(name='why-so-many-ais-deep-repair-19oct',source='../takes/Fri 16 Oct - 3-minute - Soon you won\'t pick your AI.mp4',
+    cfg.update(name='why-so-many-ais-deep-repair-19oct-v3',source='../takes/Fri 16 Oct - 3-minute - Soon you won\'t pick your AI.mp4',
                words='../words-fresh/long.words.json',script=str(ROOT/'docs/plans/2026-10-09-script-deep-v6.md'),
                pad_before=.18,pad_after=.25,
                intro={'16x9':'../working/3 Video/working 17 Oct/story clips/intro-16x9.mp4'},
@@ -439,6 +429,9 @@ def build_long():
                frame16='../working/3 Video/working 17 Oct/kit/frame-16x9.png',cues=cues,
                music='no-curves-instrumental',music_mode='episode_bed',episode_bed_levels={'bed_lufs':-31,'chapter_lufs':-22},quality_required=True)
     cfg['replacements'].append(['C -Class','C-Class'])
+    repairs=PLAN/'repair-evidence-19oct/deep-caption-repairs.json'
+    cfg['caption_repairs']=str(repairs)
+    cfg['caption_repairs_sha256']=quality.digest(repairs)
     (DEST/'long.json').write_text(json.dumps(cfg,indent=2),encoding='utf8')
     (DEST/'long-cue-reconciliation.json').write_text(json.dumps({'existing':review,'real_car_visuals':added,'cuts':removed},indent=2),encoding='utf8')
     (DEST/'long-visual-manifest.json').write_text(json.dumps(visuals,indent=2),encoding='utf8')

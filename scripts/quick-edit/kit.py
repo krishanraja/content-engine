@@ -829,7 +829,6 @@ def mapping_card_svg(mercedes_uri, claude_uri, step=2, shape='9x16'):
     return f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
       <rect width="{width}" height="{height}" fill="{ink}"/>
       <rect x="0" y="0" width="{width}" height="12" fill="{accent}"/>
-      <text x="64" y="105" font-family="IBM Plex Mono" font-size="48" fill="{accent}">mind.the.gap</text>
       <text x="64" y="{250 if wide else 215}" font-family="Anton" font-size="{130 if wide else 82}" fill="{cream}">THE {'MAKE' if step==1 else 'MODEL'}</text>
       <image x="{left-95}" y="285" width="190" height="190" xlink:href="{mercedes_uri}"/>
       <image x="{right-95}" y="285" width="190" height="190" xlink:href="{claude_uri}"/>
@@ -837,7 +836,6 @@ def mapping_card_svg(mercedes_uri, claude_uri, step=2, shape='9x16'):
       <text x="{width/2}" y="{make_y}" text-anchor="middle" font-family="Anton" font-size="{label_size}" fill="{accent}">=</text>
       <text x="{right}" y="{make_y}" text-anchor="middle" font-family="Anton" font-size="{label_size}" fill="{cream}">CLAUDE</text>
       {model}
-      <text x="64" y="{height-35}" font-family="IBM Plex Mono" font-size="64" fill="{cream}">an analogy</text>
     </svg>'''
 
 

@@ -39,12 +39,22 @@ model and effort screenshots; unchanged pixels now supply the control cards. The
 remaining deep cards have been reflowed for readable type. Krish confirmed the
 short phrase, "I’m 85% sure of this"; exact evidence is in caption-adjudications.json.
 Independent source recognition also resolves missing "like" and the Sally opening.
-Card inspection is complete. The short v2 sound/music checks pass, but it is
-superseded: source rechecks preserve earlier starts for Her and I’m 85%, and the
-spoken The. Candidate v3 and the deep cut are rendering. The deep also restores
-sounds and most of us, which earlier cuts removed incorrectly. Remaining: complete
-renders, full playback and caption review, and exact-hash validation. The pinned
-test run passed 1,775 tests; remaining verify checks passed after a skill YAML fix. Krish has now authorized filing once repaired: put both replacements in
+The completed short v4 has matching decoded audio to v3 and passing loudness/music
+measurements, but Krish rejected its small eyebrow labels and source-credit lines.
+Those overlays are now removed from all 109 generated card assets, including the
+mapping and control cards; source/attribution records remain separate. Short v6 is
+rendered and presented for review, without eyebrows or source credits. Its six
+calibrated sync checks pass (-40 to 0 ms); loudness/music/coverage pass. Native
+representative essential text measures 70–87 pixels. Finished acceptance is pending.
+Deep v3 is rendering with four evidence-backed caption corrections and unchanged
+speech; v1/v2 partial renders are superseded and not deliverable. Thirty-three
+bounded independent transcription checks and the full medium-model transcript
+are preserved with exact hashes in the repair evidence folder. Full playback,
+exact-file deep sync and final deep frame review remain outstanding. The deep
+retains restored sounds and most of us. The pinned verification run passed 1,775
+tests and both typechecks; after correcting skill-validator compatibility, all
+remaining verify commands passed. The changed engine gates also pass (13 tests).
+Krish has authorized filing once repaired: put both replacements in
 the existing Google Drive post folder in place of the current rejected cuts and
 return the two links here. Preserve rejected bytes as superseded copies; verify
 the actual Drive copies before returning links. This is not finished-video

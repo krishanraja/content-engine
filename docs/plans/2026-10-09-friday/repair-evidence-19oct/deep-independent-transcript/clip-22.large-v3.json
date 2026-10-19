@@ -1,0 +1,198 @@
+{
+ "identity": {
+  "audio_sha256": "b42cc23af9873db19905092ff22b757ee588fa3160ae981f733620f829df8ce2",
+  "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+  "start_sample": 7809760,
+  "end_sample": 8001760,
+  "sample_rate": 16000,
+  "stage": "retained edited voice, before final mix"
+ },
+ "duration": 12.0,
+ "model": "large-v3",
+ "beam_size": 1,
+ "max_new_tokens": 160,
+ "transcriber": "faster-whisper",
+ "version": "1.2.0",
+ "words": [
+  {
+   "w": " so",
+   "s": 0.0,
+   "e": 0.3,
+   "probability": 0.5331051349639893
+  },
+  {
+   "w": " they",
+   "s": 0.3,
+   "e": 0.44,
+   "probability": 0.9598559141159058
+  },
+  {
+   "w": " can",
+   "s": 0.44,
+   "e": 0.6,
+   "probability": 0.9977619647979736
+  },
+  {
+   "w": " decide",
+   "s": 0.6,
+   "e": 0.88,
+   "probability": 0.9988067150115967
+  },
+  {
+   "w": " how",
+   "s": 0.88,
+   "e": 1.06,
+   "probability": 0.9989055395126343
+  },
+  {
+   "w": " much",
+   "s": 1.06,
+   "e": 1.26,
+   "probability": 0.99826979637146
+  },
+  {
+   "w": " thinking",
+   "s": 1.26,
+   "e": 1.62,
+   "probability": 0.9943430423736572
+  },
+  {
+   "w": " each",
+   "s": 1.62,
+   "e": 1.94,
+   "probability": 0.9983404874801636
+  },
+  {
+   "w": " question",
+   "s": 1.94,
+   "e": 2.26,
+   "probability": 0.9966992735862732
+  },
+  {
+   "w": " gets.",
+   "s": 2.26,
+   "e": 2.62,
+   "probability": 0.9922381043434143
+  },
+  {
+   "w": " And",
+   "s": 2.88,
+   "e": 3.44,
+   "probability": 0.7928262948989868
+  },
+  {
+   "w": " most",
+   "s": 3.44,
+   "e": 3.66,
+   "probability": 0.998429000377655
+  },
+  {
+   "w": " of",
+   "s": 3.66,
+   "e": 3.76,
+   "probability": 0.999054491519928
+  },
+  {
+   "w": " us",
+   "s": 3.76,
+   "e": 3.9,
+   "probability": 0.9944302439689636
+  },
+  {
+   "w": " actually",
+   "s": 3.9,
+   "e": 4.98,
+   "probability": 0.937279462814331
+  },
+  {
+   "w": " can't",
+   "s": 4.98,
+   "e": 5.5,
+   "probability": 0.9989083111286163
+  },
+  {
+   "w": " be",
+   "s": 5.5,
+   "e": 5.56,
+   "probability": 0.9979122281074524
+  },
+  {
+   "w": " bothered",
+   "s": 5.56,
+   "e": 5.82,
+   "probability": 0.9999257326126099
+  },
+  {
+   "w": " to",
+   "s": 5.82,
+   "e": 5.98,
+   "probability": 0.9996935129165649
+  },
+  {
+   "w": " change",
+   "s": 5.98,
+   "e": 6.24,
+   "probability": 0.9997484087944031
+  },
+  {
+   "w": " gear",
+   "s": 6.24,
+   "e": 6.52,
+   "probability": 0.9990087151527405
+  },
+  {
+   "w": " at",
+   "s": 6.52,
+   "e": 6.66,
+   "probability": 0.9994344115257263
+  },
+  {
+   "w": " all.",
+   "s": 6.66,
+   "e": 6.84,
+   "probability": 0.999869704246521
+  },
+  {
+   "w": " So",
+   "s": 7.1,
+   "e": 7.66,
+   "probability": 0.9952697157859802
+  },
+  {
+   "w": " when",
+   "s": 7.66,
+   "e": 8.58,
+   "probability": 0.9085890054702759
+  },
+  {
+   "w": " ease",
+   "s": 8.58,
+   "e": 8.88,
+   "probability": 0.9460208415985107
+  },
+  {
+   "w": " trumps",
+   "s": 8.88,
+   "e": 9.62,
+   "probability": 0.9958973228931427
+  },
+  {
+   "w": " quality,",
+   "s": 9.62,
+   "e": 10.94,
+   "probability": 0.998278021812439
+  },
+  {
+   "w": " the",
+   "s": 11.24,
+   "e": 11.66,
+   "probability": 0.9947826266288757
+  },
+  {
+   "w": " automation...",
+   "s": 11.66,
+   "e": 11.96,
+   "probability": 0.47939054667949677
+  }
+ ]
+}

@@ -200,3 +200,99 @@ Then prepare the reviewed branch/PR and resume the selected board migration.
   Re-run the relevant checks after any further code edits.
 - Revised numerical evidence and preserved article findings are in
   repair-evidence-19oct/revised-card-evidence.json. These do not clear publication.
+
+
+## 19 October, no-label correction
+
+Krish reviewed short v4 and rejected its eyebrows and source-credit overlays:
+"these eyebrows and source citations are prohibited, they are awful". This applies
+to both cuts. Removed the added series eyebrow, Car analogy/an analogy, source,
+photo/licence and control-origin footers. Source records remain in accompanying
+documentation. All 109 generated SVGs have no remaining added metadata text nodes;
+representative PNGs were inspected. The produce-video rule and its Claude copy now
+carry his ruling. The observation service recorded the correction as inbox 70.
+
+Short v4 SHA 7c2d20562ba99298aac6e41bac573deb5e9bf34c47f83e7f0bee67aad1775925
+is rejected. Voice -13.9 LUFS, mix -14.5 LUFS, TP -1.8 dBTP, coverage 99.96166%,
+max gap .030 s, 24.53674 changes/min. Its 88 one-second and 38 quarter-second
+intro/outro samples were inspected, with native control and caption frames. Audio
+is decoded-sample identical to v3, which has independent medium.en recognition.
+Raw ASR differences and source adjudications are preserved; full heard gate has
+not passed. Native representative glyph heights were 70–86 px at 1080 output.
+Only two of its six sync windows completed before supersession; never call that
+a final sync pass. Human review record explicitly fails v4.
+
+Current renders reuse unchanged exact-clock intermediates under new filenames:
+- W/repair-short/why-so-many-ais-short-repair-19oct-v6-9x16.mp4;
+  log repair-short/render-v6.log.
+- W/repair-long/why-so-many-ais-deep-repair-19oct-v2-16x9.mp4;
+  log repair-long/render-v2-no-labels.log.
+
+The earlier deep encoder was stopped at the user's correction; its partial output
+is preserved but not playable/deliverable. No replacement was filed. Independent
+medium.en checking of the deep retained voice is running in the existing private
+transcription runtime under deep-voice-check. It is before the final mix and must
+not be described as finished-video listening. Source voice and transport audio
+hashes are in .cache/native-transcription/deep-voice-check/job.json.
+
+frame_review.py extracts all requested samples by sequential frame index and binds
+them to the exact video hash. It cannot certify playback. independent_transcript.py
+now leaves max_new_tokens unset for full medium runs (448 plus prompt overflows the
+model limit); bounded source clips still use an explicit small limit.
+
+
+## Deep caption investigation; short v6 review
+
+Short v6 is complete, SHA 373194ee309a9e531fc83bf89408d97e0dbcf536cae4c90e278a9b34debc2fef.
+It removes all added eyebrows/source credits, including the standalone Artificial
+Analysis detail. All 88 one-second samples and 38 intro/outro samples inspected.
+Its decoded audio is identical to v3/v4. Presented locally in this chat as
+outputs/why-so-many-ais-short-review-v6.mp4; awaiting Krish's finished acceptance.
+Six-point calibrated sync is running in W/sync-short-v6. Do not count partial
+checkpoint results as a pass.
+
+The deep medium.en retained-voice recognition has completed. Comparing with its
+captions raises possible omissions of spoken repetitions and ad-libs, plus many
+recognizer-only differences. Deep v2's render was stopped before completion to
+resolve these first. Original audio is preserved. Thirty-three bounded passages
+(total 564 seconds) are undergoing independent large-v3 recognition with beam 1
+and max_new_tokens 160 on the same private runtime. Outputs: remote deep-bounded;
+local .cache/native-transcription/deep-bounded. Use agreement and exact timing,
+not blind replacement: overlapping large-model clips already disagree near edges.
+
+quality.repaired_caption_words and make.py now support an exact-hash caption
+repair document on the edited clock. It binds source provenance, edited bytes,
+base-token digest, original words, each new timed word and evidence. It changes no
+media and never reapplies speed. Fifteen quality tests and 78 renderer self-tests
+pass. No deep caption repair document has yet been applied. The original source
+words and 794-second sample-exact intermediate remain unchanged.
+
+
+## Current checkpoint — 19 Oct, 16:45 London
+
+Short v6 calibrated sync is complete: six reliable checkpoints, offsets
+[-40,0,0,0,-40,-40] ms at 40 ms resolution, calibrated with injected offsets.
+Native decoded representative essential text measures 70–87 px. Reports are
+sync-short-v6.json and short-v6-native-text.json. Finished human acceptance remains
+pending in this chat. No new filing or publication authority is needed beyond the
+conditional instruction already recorded; acceptance and technical gates remain.
+
+Deep v3 is rendering in repair-long (render-v3.log), session 99227. It uses the
+same exact edited MKV (d816e518dfef96b1097d79c98c3328ab9dbb774a6a50c2d6a1b38d7a3d100928).
+Four explicit caption corrections are in deep-caption-repairs.json: ChatGPT
+spelling, See OpenAI, answer (previously arm/So), and an I/what false start. They
+have exact baseline provenance and do not alter source media or recut audio.
+A full medium transcript plus all 33 bounded large-v3 transcripts are stored in
+repair-evidence-19oct/deep-independent-transcript, with manifest hashes. Several
+medium-model repetitions are contradicted by the bounded checks; do not blindly
+restore them. Remaining recognition disagreements require finished review.
+
+Verification: the full npm run verify reached skills validation after both
+TypeScript checks and 141 test files (1775 pass, 1 skip). Skills failed on Claude's
+model key and a 1026-character description. The description is shortened and the
+validator now validates the explicit Claude model extension separately, preserving
+it in source and passing all other keys to strict Codex validation. Tests prove
+unknown keys and invalid/duplicate models still fail. Skill validation and every
+subsequent verify command passed when resumed; engine-gates then passed 13 tests,
+including the added validator regression. Windows still skips Linux runtime paths.
+No claim that full final video playback has happened. Nothing filed or recorded.

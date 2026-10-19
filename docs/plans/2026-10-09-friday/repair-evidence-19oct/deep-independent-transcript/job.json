@@ -1,0 +1,266 @@
+{
+  "clip-00": {
+    "audio_sha256": "2d3acbd20519e4ade0071fe9f9ed2148839947d6e452a9038829d4ddcbe8088d",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 0,
+    "end_sample": 129760,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-01": {
+    "audio_sha256": "da89836974022fbc40e8698ea57d7ef7f840919883ba1fb65dc3f641f73662d9",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 239520,
+    "end_sample": 594720,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-02": {
+    "audio_sha256": "6fb2539e8ee48d62532ef47e758ab0822db241e6e914e83e0a333928e85fe910",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 459680,
+    "end_sample": 651680,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-03": {
+    "audio_sha256": "9dd273fcb58d0f1cb2fec5de7200dbd3aa4800450792f69168bc7cbff7427c7e",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 940640,
+    "end_sample": 1245920,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-04": {
+    "audio_sha256": "a60050d2d51d988eb5c24ba68b67def7baff431f358dcfae92987efc19311b2f",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 1132960,
+    "end_sample": 1324960,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-05": {
+    "audio_sha256": "bf3f875d3cb7b44091339f2460229f460c9f53890a3b74a32c48c752cc6ad058",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 1383520,
+    "end_sample": 1737440,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-06": {
+    "audio_sha256": "bc217fd2c139b6462ea145c97daadb48b0a3bb2d710ebb016c4db03d6a260c7e",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 1596320,
+    "end_sample": 1900000,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-07": {
+    "audio_sha256": "5957e5c5582ba9d0ecd3a1953bc3f9f89cc337798999ef850d2753953fde00c0",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 1871520,
+    "end_sample": 2179680,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-08": {
+    "audio_sha256": "aa772d80686b1e255e24ed97d344947cbda01f08119e30322780b0b6ef16c6fe",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 2253600,
+    "end_sample": 2608160,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-09": {
+    "audio_sha256": "c91a258bb4269ce0dbcef3751c06698ebadfc620d690d511263f8a8333403987",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 2476960,
+    "end_sample": 2813600,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-10": {
+    "audio_sha256": "15ec98d4b1b767c130ba54dc7516fc14976fe713e78260da201f110a6a8ea7c3",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 2770400,
+    "end_sample": 3116320,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-11": {
+    "audio_sha256": "1664a7ea89d0c58eb7e1490779b1d0eaaf9cfe221ac852e4d4f3d9589605a79a",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 3053600,
+    "end_sample": 3245600,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-12": {
+    "audio_sha256": "61fc907a978c751d0b7fad937472fc27d9ac9face1ddb4c0cdb817d998cb97e9",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 3450400,
+    "end_sample": 3771360,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-13": {
+    "audio_sha256": "bedb19b35de13fc13a129e5520baf106577d121e9d3f0c874981592f1b21f5e6",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 4209120,
+    "end_sample": 4401120,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-14": {
+    "audio_sha256": "0ff7229280629a46dc96439318446ea585152c8007630a9c87b90c0e13f43fa7",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 4654560,
+    "end_sample": 5011040,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-15": {
+    "audio_sha256": "f5c7b264a1f0177f0a054feced23c6da56525248d87cdb58e3b49dbe8585c0c3",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 4892640,
+    "end_sample": 5084640,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-16": {
+    "audio_sha256": "ac18ef31bb24df5b936929fab852344c802b19fce4ba4d6047e327fb0b5fc100",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 5257120,
+    "end_sample": 5449120,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-17": {
+    "audio_sha256": "c68b8ccd6636b9c3824937a438d22661543d7a0395eef7facc8590eb1b935ac5",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 5493280,
+    "end_sample": 5685280,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-18": {
+    "audio_sha256": "733e7fb546747bdd3922d5b54161e7afdb609ed45ca7c8c27980d9c904b9b4bb",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 6553440,
+    "end_sample": 6745440,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-19": {
+    "audio_sha256": "fc225dcc8bf2b86e48602d24e533ffef366ad339bf0a60d088e814fe455d432e",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 6796000,
+    "end_sample": 7172960,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-20": {
+    "audio_sha256": "86acaf445782279fd3fa3cfe3eed6d9b6fc7356439908808182e41d742a24fec",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 7069600,
+    "end_sample": 7401120,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-21": {
+    "audio_sha256": "6b30a70e3e7b2923090398f3c0aeb59f74dda2b6c151d2098452ffb27db9e818",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 7486560,
+    "end_sample": 7744800,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-22": {
+    "audio_sha256": "b42cc23af9873db19905092ff22b757ee588fa3160ae981f733620f829df8ce2",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 7809760,
+    "end_sample": 8001760,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-23": {
+    "audio_sha256": "7d5c3a07a3b2bc9ec1d8e73b0c6328829d1c7ce25a1064d3e867251391b21ee7",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 8068000,
+    "end_sample": 8432480,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-24": {
+    "audio_sha256": "047c1293a2e85062edc2d30166d7add01fa111cb2d9a1bb0188b34117d5dcfb3",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 8274400,
+    "end_sample": 8575840,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-25": {
+    "audio_sha256": "8d3b6eb9c7f01de9403da4a557ba81c7e2ef17ae79b6bfc210f919d99a105f60",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 9466080,
+    "end_sample": 9785120,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-26": {
+    "audio_sha256": "694604e070a6b794fab2bc5b8cb5f2adcf3bffc02b1485e76312db1754b1bc8b",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 10366240,
+    "end_sample": 10558240,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-27": {
+    "audio_sha256": "6d596c77a96c15ef4496a63782eef3059d901816bbc1be05cdb3dbec6c479c12",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 10748000,
+    "end_sample": 11092960,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-28": {
+    "audio_sha256": "7ad6eb7748abfbbd1b7695104434ffe090564cc92e535f661d102e2e0b971767",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 11220960,
+    "end_sample": 11452320,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-29": {
+    "audio_sha256": "f546597f851fd02c331f87a2317034bb4310701fe9d58c4b3b615cf5b0f8730d",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 11440160,
+    "end_sample": 11632160,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-30": {
+    "audio_sha256": "4206da9c256b657142610c0f12c6a097e68e961e9acd90f31cc79ff2aff726ca",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 11657760,
+    "end_sample": 12017120,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-31": {
+    "audio_sha256": "5cd71db99ecac726aad7471171d040e41e032ee135624be023d750478280a1e3",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 11914400,
+    "end_sample": 12284000,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  },
+  "clip-32": {
+    "audio_sha256": "5cf8271eeb3c7dce3cc882cc91901aa357b9d0883722b19c03f93d54f7dda507",
+    "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+    "start_sample": 12354400,
+    "end_sample": 12546400,
+    "sample_rate": 16000,
+    "stage": "retained edited voice, before final mix"
+  }
+}
