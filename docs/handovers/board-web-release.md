@@ -57,6 +57,9 @@ All original ZIP bundles, raw readouts, JSON/HTML exports and the final freeze
 receipt are retained in private `content-library` storage. The archive inventory
 below gives immutable object keys, sizes and SHA-256 digests. Original source
 addresses remain in `config/boards.json.weeks` and each archived record.
+The live screenshots and acceptance report are also archived as
+`live-board-acceptance.zip` in that inventory. Its initial QA contract names the
+starting releases; the final Control Center follow-up identity is recorded above.
 
 Source limitations approved by Krish: generation manifests were not exposed;
 comments supplied thread IDs and displayed author/time/status, but no native

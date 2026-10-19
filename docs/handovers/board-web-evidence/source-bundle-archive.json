@@ -54,6 +54,15 @@
       "bytes": 1930,
       "sha256": "7c9c6f23831d58f44ab8cc8159e32d81a4852566c20d784ba2c8d3a020cea26f",
       "type": "application/json"
+    },
+    {
+      "name": "live-board-acceptance.zip",
+      "week": "2026-10-19",
+      "bucket": "content-library",
+      "key": "boards/2026-10-19/d28f99d2ac099bd54654fdaf92aa7a033b5bb00c427af99768f2a0094b120b05",
+      "bytes": 1485425,
+      "sha256": "d28f99d2ac099bd54654fdaf92aa7a033b5bb00c427af99768f2a0094b120b05",
+      "type": "application/zip"
     }
   ]
 }
