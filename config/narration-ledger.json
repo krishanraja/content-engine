@@ -219,6 +219,37 @@
     "restart": 0.07,
     "contraction": 0.07
    }
+  },
+  {
+   "take": "short.words",
+   "cut": "short",
+   "date": "2026-10-19",
+   "piece": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+   "script_words": 198,
+   "said_words": 235,
+   "said_more_pct": 18.7,
+   "own_words_pct": 44.3,
+   "script_kept_pct": 66.2,
+   "minutes": 1.29,
+   "words_a_minute": 182.8,
+   "words_a_minute_talking": 184.8,
+   "sentence_words_said": 15.7,
+   "sentence_words_script": 9.0,
+   "sentences_starting_with_a_joiner_pct": {
+    "said": 60.0,
+    "script": 36.4
+   },
+   "tags_a_minute": {
+    "rephrase": 7.0,
+    "aside": 3.89,
+    "to the viewer": 3.11,
+    "number": 3.11,
+    "skip": 2.33,
+    "addition": 1.56,
+    "hedge": 1.56,
+    "filler": 1.56,
+    "signpost": 0.78
+   }
   }
  ]
 }

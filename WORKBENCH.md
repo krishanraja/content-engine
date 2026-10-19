@@ -10,6 +10,12 @@ Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
 
 ## The idea queue: read it first
 
+### Monday 19 October: Codex video preparation
+
+Both Monday takes are recorded against the current signed-off scripts and downloaded with verified hashes. Production is isolated from Friday's repair checkout. See `docs/production/2026-10-19-monday-video.md` for source measurements, stabilisation judgment and the explicit visual quality requirements. The current publish board is https://content.krishraja.com/board/2026-10-19; the completed web cutover on main supersedes historical artifact routing elsewhere on this editorial branch.
+
+Waiting on Krish: the combined wording/treatment pick in `docs/plans/2026-10-19-monday/video-signoff.md`, presented in chat. The article fact gate remains open and no paid check has been run. No finished video, thumbnail, archive/library delivery or video-complete record is claimed. Original scripts are unchanged. The short is under 90 seconds without speed-up. No blanket stabilisation is planned after sample comparisons; individual jolts remain an edit review item.
+
 Every planning or making session starts with `python3 scripts/engine.py GET /api/idea-queue`: the ideas Krish
 queued from any Ideas tab, with his triage (story, angle, cute, curious but not convinced, with his reason). One
 queue, in the engine (`content_ideas.queued_at`); Control Center's Queue page triages it A/B; nothing purges it.
