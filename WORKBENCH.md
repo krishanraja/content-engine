@@ -52,13 +52,19 @@ The report, captions, exact-file receipts and image credits accompany the videos
 `working repair 19 Oct` contains `repair-inputs-v8.zip` (all production images and
 configs), `final-review-samples-19oct.zip` (sampled frames and sync captures), and
 `final-qa-evidence-19oct.zip` (transcripts, measurements and reviews). Code and small
-evidence live on `codex/friday-video-repairs`, [draft PR #108](https://github.com/krishanraja/content-engine/pull/108).
+evidence live on `codex/friday-video-repairs`, [merged PR #108](https://github.com/krishanraja/content-engine/pull/108).
 Full local `npm run verify` passed. The minimal-CI fixture correction passed 40
 mix checks without ASR installed; the nine-scenario Windows authentication test
 passes with the same 15-second budget as its adjacent disk-heavy test. Current
-full CI results are on PR #108. No merge or deployment is authorized.
+full CI results are on PR #108, merged with Krish's approval at `e2a7b6b`.
 
-The article fact gate remains **failed**. Video repair is not publication clearance.
+Correction, 19 October: the effective article fact gate **passes** with Krish's
+11 recorded sign-offs. The earlier failed label read only the raw automated
+verdict. The only blocking check was the new 92-day prediction horizon; Krish
+approved retaining this piece's existing forecast as an exception, bound to its
+identity and exact prediction text. Implementation
+and evidence: `docs/plans/2026-10-09-friday/article-fact-reconciliation-19oct/README.md`.
+Publication remains separate; the archived video receipts are unchanged.
 Detailed handover: `docs/handovers/2026-10-19-friday-repair-complete.md`.
 
 ## The idea queue: read it first

@@ -1,0 +1,1650 @@
+{
+  "ok": true,
+  "fact_check": {
+    "claims": [
+      {
+        "kind": "event",
+        "claim": "Anthropic launched Claude Opus 4.8 in May, Claude Opus 5 in July, and Claude Opus 5.5 in September, alongside Sonnet, Fable and Haiku versions.",
+        "on_file": {
+          "note": "Opus 4.8 release 2026-05-28 (May), Opus 5 release 2026-07-24 (July), Opus 5.5 release 2026-09-22 (September) all confirmed; Sonnet 5.5, Fable 5.1, and Haiku 5.5 versions also confirmed in sources, though Haiku 5.5 released Oct 7 and Fable 5.1 Sept 1, both still 'alongside' the Opus line per the clai",
+          "quote": "Title: Introducing Claude Opus 4.8\n\nPublished Time: 2026-05-28T17:00:00.000Z | {\"name\": \"Claude Opus 5 (Max)\", \"slug\": \"claude-opus-5\", \"release_date\": \"2026-07-24\", \"intelligence_index\": 50.8, \"cost_per_task_usd\": 5.8584} | {\"name\": \"Claude Opus 5.5 (Max, Default Fallback)\", \"slug\": \"claude-opus-5-5\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 57.6, \"cost_per_task_usd\": 5.982, \"cost_to_run_index_usd\": 8708.2}",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "Anthropic, which makes Claude, launched Claude Opus 4.8 in May, Claude Opus 5 in July and Claude Opus 5.5 in September, with Sonnet, Fable and Haiku versions alongside.",
+        "independent": {
+          "url": "https://www.anthropic.com/claude-opus-5-5",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Claude Opus 5.5 is now available on all platforms, including Amazon Web Services, Google Cloud, and Microsoft Azure.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T10:07:40.993Z"
+      },
+      {
+        "kind": "event",
+        "claim": "OpenAI's release notes show models progressing from GPT-5.1 in November to GPT-6.1 Sol at the end of September.",
+        "on_file": {
+          "note": "November GPT-5.1 release and Sept 29, 2026 GPT-6.1 Sol release together support the claim; entries span 12 Nov 2025–7 Oct 2026 per the release notes source.",
+          "quote": "We’re updating GPT-5 to GPT-5.1 Instant and GPT-5.1 Thinking, making answers both smarter and more conversational. | GPT-6.1 Sol (Max) was released on September 29, 2026.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "OpenAI's release notes climb from GPT-5.1 last November to GPT-6.1 Sol at the end of September.",
+        "independent": {
+          "url": "https://help.openai.com/en/articles/6825453-release-notes-0",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "### Nov 13\nFeature · Model: gpt-5.1 · Model: gpt-5.1-codex · Model: gpt-5.1-chat-latest · Model: gpt-5.1-codex-mini · API: v1/responses · API: v1/chat/completions\n\n# September 29, 2026\n## GPT-6.1 Sol in ChatGPT Work and Codex [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:52:11.170Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "OpenAI states a model will generally remain available in ChatGPT for 90 days after a successor is released.",
+        "on_file": {
+          "note": "No source in the provided material mentions a 90-day availability policy for ChatGPT models after a successor's release.",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "OpenAI even says a model will \"generally remain available in ChatGPT for 90 days after a successor is released.\"",
+        "independent": {
+          "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes?orderBy=name00",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Models will generally remain available in ChatGPT for 90 days after a successor is released.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Sam Altman posted in March 2025 that OpenAI added one million users in the last hour after adding image making to ChatGPT.",
+        "on_file": {
+          "note": "The post date (March 31, 2025) and exact quote are confirmed; the source doesn't mention image-making specifically, but the quote and date match the claim's core assertion.",
+          "quote": "the chatgpt launch 26 months ago was one of the craziest viral moments i'd ever seen, and we added one million users in five days. we added one million users in the last hour. | Published Time: 2025-03-31T18:11:16.000Z",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "In March 2025, after OpenAI added image making to ChatGPT, Sam Altman, who runs OpenAI, posted: \"we added one million users in the last hour.\"",
+        "independent": {
+          "url": "https://www.engadget.com/ai/chatgpt-gained-one-million-new-users-in-an-hour-today-201314746.html",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Today, CEO Sam Altman posted to X that the service \"added one million users in the last hour,\" calling it a \"biblical demand\" for the image generation. [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "A footnote on Anthropic's Opus 5.5 page states that unless noted otherwise, all Claude Opus 5.5 results use adaptive thinking at max effort.",
+        "on_file": {
+          "note": "The sources contain Artificial Analysis pages about Claude Opus 5.5 variants (Max and Low effort) with scores and pricing, but no footnote stating that all Opus 5.5 results use 'adaptive thinking at max effort' unless noted otherwise.",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "A footnote on Anthropic's Opus 5.5 page says that, unless it notes otherwise, \"all Claude Opus 5.5 results use adaptive thinking at max effort.\"",
+        "independent": {
+          "url": "https://www.anthropic.com/claude/opus",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Unless otherwise noted, all Claude Opus 5.5 results use adaptive thinking at max effort.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "other",
+        "claim": "Anthropic's developer guide states Opus 5.5 defaults to medium effort.",
+        "on_file": {
+          "note": "The effort docs explicitly state Opus 5.5 defaults to medium effort.",
+          "quote": "Most Claude models default to high effort, spending as many tokens as needed for excellent results; Claude Opus 5.5 and Claude Haiku 5.5 default to medium.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "Anthropic's developer guide says Opus 5.5 defaults to medium, well below max.",
+        "independent": {
+          "url": "https://docs.anthropic.com/en/docs/about-claude/models/whats-new-claude-4-8",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "The default effort is `medium`. [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T10:07:40.993Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Dario Amodei wrote in September that AI capability improvement pace must slow.",
+        "on_file": {
+          "note": "a contradiction the passage does not bear out; model said: The source's published time is October, not September, so the claim's month attribution is contradicted.",
+          "quote": "Published Time: Thu, 15 Oct 2026 09:13:10 GMT",
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "In September, Anthropic's boss, Dario Amodei, wrote: \"We must slow the pace at which we improve the capabilities of AI models.\"",
+        "independent": {
+          "url": "https://www.politico.com/news/2026/09/12/anthropic-ceo-dario-amodei-seeks-immediate-slowdown-artificial-intelligence-01073519",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "“We must slow the pace at which we improve the capabilities of AI models,” Amodei wrote.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "other",
+        "claim": "ChatGPT and Claude both let users choose how hard the AI thinks.",
+        "on_file": {
+          "note": "OpenAI's reasoning effort parameter and Claude's effort/thinking controls both let users set how much the model thinks.",
+          "quote": "Supported values are model-dependent and can include `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`. Lower effort favors speed and lower token usage, while at higher effort the model thinks more completely to provide higher quality responses. The models also reason adaptively across reasoning efforts, using fewer tokens for simpler tasks and thinking harder for complex tasks. | Claude's thinking is adaptive: the model evaluates each request and determines whether to think and how much. You set an intent, optionally specify the effort, and the model allocates reasoning where it judges reasoning will help.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "ChatGPT and Claude both let you choose how hard the AI thinks.",
+        "independent": {
+          "url": "https://www.pcmag.com/comparisons/chatgpt-vs-claude-after-testing-both-ai-chatbots-i-have-a-clear-favorite",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "You can adjust each model's intelligence up or down to suit your specific prompt. [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "event",
+        "claim": "Artificial Analysis ran Claude Opus 5.5 through its test suite at different thinking settings.",
+        "on_file": {
+          "note": "Shows Artificial Analysis evaluated Claude Opus 5.5 at both Max and Low settings on its Intelligence Index.",
+          "quote": "Claude Opus 5.5 (Max, Default Fallback) scores 58 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27). When evaluating the Intelligence Index, it generated 260M tokens, which is very verbose in comparison to the median of 85M. | Claude Opus 5.5 (Low, Default Fallback) scores 42 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27). When evaluating the Intelligence Index, it generated 20M tokens, which is very concise in comparison to the median of 85M.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "Artificial Analysis, an independent group that tests these models, ran the same Claude Opus 5.5 through its long set of hard tests at different settings.",
+        "independent": {
+          "url": "https://tosea.ai/blog/claude-opus-5-5-complete-guide",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Artificial Analysis ran its own evaluation suite on launch day [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "number",
+        "claim": "Claude Opus 5.5 scored more than a third higher on Artificial Analysis's tests at max effort than at low effort.",
+        "on_file": {
+          "note": "57.6 vs 42.3 is an increase of about 36.2%, which is more than a third higher.",
+          "quote": "{\"name\": \"Claude Opus 5.5 (Low, Default Fallback)\", \"slug\": \"claude-opus-5-5-low\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 42.3, \"cost_per_task_usd\": 0.5512, \"cost_to_run_index_usd\": 860.33} | {\"name\": \"Claude Opus 5.5 (Max, Default Fallback)\", \"slug\": \"claude-opus-5-5\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 57.6, \"cost_per_task_usd\": 5.982, \"cost_to_run_index_usd\": 8708.2}",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "Thinking as hard as it can, it scored more than a third higher than when thinking a little.",
+        "independent": {
+          "url": "https://www.trendingtopics.eu/claude-opus-5-5-anthropic-launches-new-top-model-despite-calling-for-ai-slowdown/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "At max effort, Opus 5.5 scores 58 on the Artificial Analysis Intelligence Index.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:52:11.170Z"
+      },
+      {
+        "kind": "number",
+        "claim": "Claude Opus 5 at its highest thinking setting scored higher than Opus 5.5 at its lowest setting.",
+        "on_file": {
+          "note": "Opus 5 Max (50.8) and even Xhigh (49.7) exceed Opus 5.5 Low (42.3) on intelligence_index.",
+          "quote": "{\"name\": \"Claude Opus 5 (Xhigh)\", \"slug\": \"claude-opus-5-xhigh\", \"release_date\": \"2026-07-24\", \"intelligence_index\": 49.7, \"cost_per_task_usd\": 4.8778} | {\"name\": \"Claude Opus 5 (Max)\", \"slug\": \"claude-opus-5\", \"release_date\": \"2026-07-24\", \"intelligence_index\": 50.8, \"cost_per_task_usd\": 5.8584} | {\"name\": \"Claude Opus 5.5 (Low, Default Fallback)\", \"slug\": \"claude-opus-5-5-low\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 42.3, \"cost_per_task_usd\": 0.5512, \"cost_to_run_index_usd\": 860.33}",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "The older Opus 5, at its hardest, beat the new one at its lowest.",
+        "independent": {
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "“At its lowest effort setting, Opus 5.5 read values off dense charts more accurately than Claude Opus 5 did at its highest”",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T10:07:40.993Z"
+      },
+      {
+        "kind": "number",
+        "claim": "Claude Opus 5.5 on max effort cost $5.98 per task on Artificial Analysis's tests.",
+        "on_file": {
+          "note": "Matches the $5.98 per task figure for Opus 5.5 Max from Artificial Analysis model page, consistent also with cost_per_task_usd: 5.982 in the API data.",
+          "quote": "Claude Opus 5.5 (Max, Default Fallback) scores 58 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27). When evaluating the Intelligence Index, it generated 260M tokens, which is very verbose in comparison to the median of 85M.\nPricing for Claude Opus 5.5 (Max, Default Fallback) is $4.00 per 1M input tokens (somewhat expensive, median: $2.00) and $20.00 per 1M output tokens (expensive, median: $10.00). On average, it costs $5.98 per task to evaluate Claude Opus 5.5 (Max, Default Fallback) on the Intelligence Index.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "That's why, on Artificial Analysis's tests, Opus 5.5 on max cost $5.98 per task.",
+        "independent": {
+          "url": "https://artificialanalysis.ai/models/claude-opus-5-5",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "On average, it costs $5.98 per task to evaluate Claude Opus 5.5 (Max, Default Fallback) on the Intelligence Index.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T10:07:40.993Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Anthropic's help page states higher effort responses take longer and use more tokens, causing users to reach usage limits faster.",
+        "on_file": {
+          "note": "No Anthropic help page content about effort/usage limits phrasing appears in the provided sources; only platform docs on 'effort' and 'thinking-steering-and-cost' are present, neither containing this quoted sentence.",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "Anthropic's help page for the Claude app says higher effort means responses \"take longer and use more tokens, so you'll reach your usage limits faster.\"",
+        "independent": {
+          "url": "https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Higher effort means more thorough responses, but they take longer and use more tokens, so you'll reach your usage limits faster.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Sam Altman posted in January 2025 that OpenAI was losing money on OpenAI Pro subscriptions because usage exceeded expectations.",
+        "on_file": {
+          "note": "Date (Jan 2025) and exact quote both confirmed in the source.",
+          "quote": "Sam Altman on X: \"insane thing: we are currently losing money on openai pro subscriptions! people use it much more than we expected.\" | Published Time: 2025-01-06T03:11:39.000Z",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "In January 2025 Altman posted: \"insane thing: we are currently losing money on openai pro subscriptions! people use it much more than we expected.\"",
+        "independent": {
+          "url": "https://techcrunch.com/2025/01/05/openai-is-losing-money-on-its-pricey-chatgpt-pro-plan-ceo-sam-altman-says/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "“insane thing: we are currently losing money on openai pro subscriptions! people use it much more than we expected.”",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "OpenAI's $200 Pro plan was sold on o1 pro mode, which OpenAI said used more compute to think harder.",
+        "on_file": {
+          "note": "Matches plan price, name (o1 pro mode), and exact phrase 'more compute to think harder'.",
+          "quote": "Today, we’re adding ChatGPT Pro, a $200 monthly plan that enables scaled access to the best of OpenAI’s models and tools. This plan includes unlimited access to our smartest model, OpenAI o1, as well as to o1‑mini, GPT‑4o, and Advanced Voice. It also includes o1 pro mode, a version of o1 that uses more compute to think harder and provide even better answers to the hardest problems.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "That was the $200 Pro plan, sold on o1 pro mode, which OpenAI said used \"more compute to think harder\".",
+        "independent": {
+          "url": "https://openai.com/index/introducing-chatgpt-pro/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Today, we’re adding ChatGPT Pro, a $200 monthly plan... It also includes o1 pro mode, a version of o1 that uses more compute to think harder",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:52:11.170Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Anthropic announced weekly limits in July 2025, stating one user consumed tens of thousands of dollars in model usage on a $200 plan.",
+        "on_file": {
+          "note": "Both tweets dated 2025-07-28 (July 2025); second quote matches exactly, first establishes the weekly limits announcement.",
+          "quote": "We’re rolling out new weekly rate limits for Claude Pro and Max in late August. We estimate they’ll apply to less than 5% of subscribers based on current usage. | Some of the biggest Claude Code fans are running it continuously in the background, 24/7. These uses are remarkable and we want to enable them. But a few outlying cases are very costly to support. For example, one user consumed tens of thousands in model usage on a $200 plan.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "In July 2025 Anthropic announced weekly limits, saying \"one user consumed tens of thousands in model usage on a $200 plan.\"",
+        "independent": {
+          "url": "https://x.com/AnthropicAI/status/1949898513019466140",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "We’re rolling out new weekly rate limits for Claude Pro and Max in late August. ... For example, one user consumed tens of thousands in model usage on a $200 plan. [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "number",
+        "claim": "SemiAnalysis estimated subscriptions are just 10% of Anthropic's overall revenue but take over 40% of its inference computing spend.",
+        "on_file": {
+          "note": "The source does not attribute this 10%/40% figure specifically to Anthropic; it appears as a general statement with OpenAI noted as having subscriptions make up an even larger share, implying the 10%/40% figures may not even be Anthropic's.",
+          "quote": "**Despite being just 10% of overall revenue, subscriptions can take up over 40% of inference compute and lower blended revenue per MW by ~$36M.** Subscriptions are even more important for OpenAI, as they make up a larger portion of their total revenue. For specific numbers, see our Tokenomics Model.",
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "This month SemiAnalysis, a research firm, estimated that subscriptions are \"just 10% of overall revenue\" at Anthropic but take over 40% of the computing it spends answering people.",
+        "independent": {
+          "url": "https://newsletter.semianalysis.com/p/anthropic-subscriptions-offer-5x",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Despite being just 10% of overall revenue, subscriptions can take up over 40% of inference compute and lower blended revenue per MW by ~$36M.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Sam Altman said OpenAI is profitable on inference.",
+        "on_file": {
+          "note": "Direct quote matches claim; 'inference' refers to compute used to answer queries.",
+          "quote": "Yes, but:It's the cost of training new models that is keeping OpenAI from turning a profit, he said. \"We're profitable on inference. If we didn't pay for training, we'd be a very profitable company.\"",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "Altman says \"We're profitable on inference,\" meaning on the computing it takes to answer you.",
+        "independent": {
+          "url": "https://simonwillison.net/2025/Aug/17/sam-altman/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "We're profitable on inference.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T10:13:13.053Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "OpenAI's developer guide states its models reason adaptively, using fewer tokens for simple tasks and more for complex tasks.",
+        "on_file": {
+          "note": "Exact phrase found in OpenAI's developer reasoning guide.",
+          "quote": "The models also reason adaptively across reasoning efforts, using fewer tokens for simpler tasks and thinking harder for complex tasks.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "OpenAI's developer guide says its models \"reason adaptively across reasoning efforts, using fewer tokens for simpler tasks and thinking harder for complex tasks.\"",
+        "independent": {
+          "url": "https://developers.openai.com/api/docs/guides/reasoning.md",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "The models also reason adaptively across reasoning efforts, using fewer tokens for simpler tasks and thinking harder for complex tasks.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Anthropic states its model allocates reasoning where it judges reasoning will help.",
+        "on_file": {
+          "note": "Exact phrase found in the 'Steering thinking' source.",
+          "quote": "Claude's thinking is adaptive: the model evaluates each request and determines whether to think and how much. You set an intent, optionally specify the effort, and the model allocates reasoning where it judges reasoning will help.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "Anthropic's says the model \"allocates reasoning where it judges reasoning will help.\"",
+        "independent": {
+          "url": "https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost.md",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "the model allocates reasoning where it judges reasoning will help.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "date",
+        "claim": "Since October 9, the free Gemini app has defaulted to an 'Auto' setting.",
+        "on_file": {
+          "note": "Confirms Auto became default for free (no AI subscription) users starting Oct 9.",
+          "quote": "These changes will start to take effect for users without an AI subscription on October 9th. For users with an AI Plus subscription, you should receive an email that explains when these changes will take effect for you. | Auto will be the default setting for users without a Google AI plan. Gemini will use auto model selection to send each prompt to the Gemini model that suits it best. Most prompts will go to Flash-Lite, our fastest model. Prompts that need deeper reasoning may go to Flash or Pro.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "Since 9 October, the free Gemini app has started on \"Auto\".",
+        "independent": {
+          "url": "https://support.google.com/gemini/thread/472706487/understanding-auto-in-the-gemini-model-picker?hl=en",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "As part of our recent updates to Gemini Apps, users without a Google AI subscription will now see Auto as their default setting in the model picker.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Google states most prompts go to Flash-Lite while prompts needing deeper reasoning may go to Flash or Pro.",
+        "on_file": {
+          "note": "Matches claim verbatim.",
+          "quote": "Auto will be the default setting for users without a Google AI plan. Gemini will use auto model selection to send each prompt to the Gemini model that suits it best. Most prompts will go to Flash-Lite, our fastest model. Prompts that need deeper reasoning may go to Flash or Pro.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "In Google's words: \"Most prompts will go to Flash-Lite, our fastest model. Prompts that need deeper reasoning may go to Flash or Pro.\"",
+        "independent": {
+          "url": "https://support.google.com/gemini/answer/17004136",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Most prompts will go to Flash-Lite, our fastest model. Prompts that need deeper reasoning may go to Flash or Pro.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "event",
+        "claim": "ChatGPT's router feature was removed for free users in December 2025.",
+        "on_file": {
+          "note": "No source mentions a ChatGPT router feature or its removal for free users in December 2025.",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "Its router, the hidden part of ChatGPT that changed gear for you, was pulled for free users in December 2025.",
+        "independent": {
+          "url": "https://www.wired.com/story/openai-router-relaunch-gpt-5-sam-altman/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "On December 16, 2025, OpenAI had quietly reversed a major change ... rolled back ChatGPT’s model router ... for users on its Free and $5-a-month Go tiers.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "WIRED reported the router seemed to send many more free users to OpenAI's more expensive advanced reasoning models.",
+        "on_file": {
+          "note": "No WIRED source or quote about the router sending free users to OpenAI's advanced reasoning models appears in the provided sources.",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "WIRED reported it \"seemed to send many more free users to OpenAI's advanced reasoning models, which are more expensive for OpenAI to serve.\"",
+        "independent": {
+          "url": "https://www.wired.com/story/openai-router-relaunch-gpt-5-sam-altman/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "In practice, the router seemed to send many more free users to OpenAI’s advanced reasoning models, which are more expensive for OpenAI to serve.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "number",
+        "claim": "Sam Altman wrote that after GPT-5's automatic routing launched in August 2025, daily thinking-model usage rose from under 1% to 7% for free users and from 7% to 24% for Plus users.",
+        "on_file": {
+          "note": "the passages do not carry 5, 2025; model said: Matches the Sam Altman X post (10 Aug 2025), shortly after GPT-5's August 7, 2025 launch with automatic routing.",
+          "quote": "the percentage of users using reasoning models each day is significantly increasing; for example, for free users we went from <1% to 7%, and for plus users from 7% to 24%.",
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "When GPT-5 started choosing for people in August 2025, Altman wrote that the share of free users using a thinking model each day went \"from <1% to 7%\", and for paying Plus users \"from 7% to 24%\".",
+        "independent": {
+          "url": "https://x.com/sama/status/1954603417252532479",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "the percentage of users using reasoning models each day is significantly increasing; for example, for free users we went from <1% to 7%, and for plus users from 7% to 24%.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:52:11.170Z"
+      },
+      {
+        "kind": "event",
+        "claim": "Anthropic moved Claude Code to a medium effort default in March 2026, and most users retained that default.",
+        "on_file": {
+          "note": "the passages do not carry 2026; model said: Date, effort change, and the 'most users retained the medium effort default' quote are all directly supported.",
+          "quote": "On March 4, we changed Claude Code's default reasoning effort from `high` to `medium` to reduce the very long latency—enough to make the UI appear frozen—some users were seeing in `high` mode. | We shipped a number of design iterations to make the current effort setting clearer in order to alert people they could change the default (notices on startup, an inline effort selector, and bringing back ultrathink), but most users retained the medium effort default.",
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "In March 2026 Anthropic moved Claude Code, its coding app, down to medium effort by default, and \"most users retained the medium effort default.\"",
+        "independent": {
+          "url": "https://www.anthropic.com/engineering/april-23-postmortem",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "On March 4, we changed Claude Code's default reasoning effort from `high` to `medium`... but most users retained the medium effort default.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T10:07:40.993Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Anthropic called the medium-effort default change the wrong tradeoff and reversed it.",
+        "on_file": {
+          "note": "Anthropic's postmortem states both the 'wrong tradeoff' characterization and the reversal.",
+          "quote": "On March 4, we changed Claude Code's default reasoning effort from `high` to `medium` to reduce the very long latency—enough to make the UI appear frozen—some users were seeing in `high` mode. This was the wrong tradeoff. We reverted this change on April 7 after users told us they'd prefer to default to higher intelligence and opt into lower effort for simple tasks. This impacted Sonnet 4.6 and Opus 4.6.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "Anthropic called it \"the wrong tradeoff\" and changed it back.",
+        "independent": {
+          "url": "https://www.theregister.com/software/2026/04/24/anthropic-admits-it-dumbed-down-claude-with-upgrades/5228105",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "\"This was the wrong tradeoff,\" the company said. \"We reverted this change on April 7 after users told us they'd prefer to default to higher intelligence and opt into lower effort for simple tasks.\"",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "OpenAI lowered ChatGPT's thinking time in January 2026, citing observed user preference for faster responses, and inadvertently reduced the extended setting too.",
+        "on_file": {
+          "note": "Matches date, reason, and the unintended reduction of the extended setting.",
+          "quote": "Jan 10, 2026: We lowered the Standard and Light thinking time as we observed users prefer faster responses. As part of this update, the Extended thinking setting for GPT-5.2 was unintentionally changed to be lower which we have now fixed.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "In January 2026 OpenAI lowered ChatGPT's thinking time \"as we observed users prefer faster responses\", and by mistake turned down the extended setting as well.",
+        "independent": {
+          "url": "https://help.openai.com/articles/9624314",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Jan 10, 2026: We lowered the Standard and Light thinking time as we observed users prefer faster responses. As part of this update, the Extended thinking setting for GPT-5.2 was unintentionally changed to be lower which we have now fixed.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "event",
+        "claim": "The extended thinking setting was restored weeks after being mistakenly lowered.",
+        "on_file": {
+          "note": "Lowered Jan 10, 2026; restored Feb 4, 2026 — about 3.5 weeks later, consistent with 'weeks later.'",
+          "quote": "Jan 10, 2026: We lowered the Standard and Light thinking time as we observed users prefer faster responses. As part of this update, the Extended thinking setting for GPT-5.2 was unintentionally changed to be lower which we have now fixed. | February 4, 2026: We’re restoring the Extended thinking level for GPT-5.2 Thinking to its prior setting, correcting the inadvertent reduction from January. Extended is now back to its prior level.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "It was put back weeks later.",
+        "independent": {
+          "url": "https://help.openai.com/en/articles/6825453",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "February 4, 2026: We’re restoring the Extended thinking level for GPT-5.2 Thinking to its prior setting, correcting the inadvertent reduction from January.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "quote",
+        "claim": "Sam Altman said GPT-5 seemed way dumber when it broke shortly after launch.",
+        "on_file": {
+          "note": "No source discusses GPT-5 breaking after launch or Altman describing it as 'way dumber'.",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "And when it broke just after launch, Altman said GPT-5 \"seemed way dumber\".",
+        "independent": {
+          "url": "https://simonwillison.net/2025/Aug/8/sam-altman/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Yesterday, the autoswitcher broke and was out of commission for a chunk of the day, and the result was GPT-5 seemed way dumber.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "date",
+        "claim": "Ferrari introduced the paddle gearshift on its 640 car in 1989.",
+        "on_file": {
+          "note": "States Ferrari introduced the paddle-shift gearbox on the 640 in 1989.",
+          "quote": "Perhaps the biggest gearbox innovation in F1 history took place in 1989, when Ferrari introduced F1’s first-ever semi-automatic, paddle-shift sequential gearbox on its 640 chassis.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "Ferrari brought in the paddle on its 640 in 1989.",
+        "independent": {
+          "url": "https://www.ferrari.com/en-EN/magazine/articles/the-ferrari-automated-gearbox-from-f1-to-ferrari-roma",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "The Ferrari Tipo 640 F1 car of 1989 pioneered wheel-mounted ‘paddles’ to shift gears without the need for a clutch pedal.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "date",
+        "claim": "The FIA banned automatic gear-changing software in Formula 1 for good in 2004.",
+        "on_file": {
+          "note": "Confirms FIA banned the automatic gear-changing software for good in 2004.",
+          "quote": "While not a true automatic gearbox, this still served to take much of the finesse out of changing gears out of the driver’s hands, and was swiftly banned by the FIA in 1994. While they briefly returned in 2001, they were then banned again by the governing body for good in 2004.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "Software that changed gear by itself was tried, and the FIA, which runs the sport, banned it for good in 2004, so the driver still picks the gear.",
+        "independent": {
+          "url": "https://www.autosport.com/f1/news/the-full-fia-announcement-on-the-2004-rules-5062829/5062829/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "The teams unanimously agreed to a complete ban on automatic gearboxes and launch control for 2004. [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "name",
+        "claim": "Models named Opus 4.8, Opus 5, and Opus 5.5 exist or were launched",
+        "on_file": {
+          "note": "All three model names appear as real launched/scored models across Anthropic's own announcement and Artificial Analysis records.",
+          "quote": "Title: Introducing Claude Opus 4.8\n\nPublished Time: 2026-05-28T17:00:00.000Z | Claude Opus 5 (Max) scores 51 on the Artificial Analysis Intelligence Index, placing it well above average among comparable models (median: 27). | We’re introducing Claude Opus 5.5, the first model in our new Claude 5.5 family.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "A new model, a new number, a livestream, a chart: Opus 4.8, Opus 5, Opus 5.5, and on it goes.",
+        "independent": {
+          "url": "https://www.anthropic.com/claude/opus",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Claude Opus 4.8; We’re introducing Claude Opus 5.5. [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T10:13:13.053Z"
+      },
+      {
+        "kind": "other",
+        "claim": "ChatGPT has thinking levels called Instant, Medium, High and Extra High",
+        "on_file": {
+          "note": "Help Center confirms ChatGPT's thinking levels are named Instant, Medium, High, and Extra High.",
+          "quote": "**GPT-6** in Chat lets you choose how much ChatGPT thinks. | Use the **Thinking** slider to choose your effort. When **GPT-6** is selected, **GPT-6 Sol** powers **Instant**, **Medium**, **High**, and **Extra High**; **Pro** uses GPT-6 Pro, powered by **GPT-6 Astra**.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "The thinking levels, such as ChatGPT's Instant, Medium, High and Extra High, or Claude's low, medium, high, xhigh and max effort, are the gears, and the setting in the app is the gearstick.",
+        "independent": {
+          "url": "https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "When GPT-6 is selected, GPT-6 Sol powers Instant, Medium, High, and Extra High",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T10:07:40.993Z"
+      },
+      {
+        "kind": "other",
+        "claim": "Claude has thinking levels called low, medium, high, xhigh and max effort",
+        "on_file": {
+          "note": "Multiple sources list Claude's effort levels as low, medium, high, xhigh (extra high) and max.",
+          "quote": "Most Claude models default to high effort, spending as many tokens as needed for excellent results; Claude Opus 5.5 and Claude Haiku 5.5 default to medium. | Thinking cannot be turned off in Claude when using Claude Haiku 5.5, Claude Sonnet 5.5, Claude Opus 5.5, Claude Fable 5.1, or Claude Opus 5. On Opus 5.5 and Fable 5.1, thinking is always on at every effort level, including on the Claude API. | Each model has a recommended effort level, marked as \"Default\" in the menu: Low and Medium work well for routine tasks and stretch your usage further. High offers the best overall balance of quality and speed. Extra high (xhigh) is designed for long-running coding and agentic tasks [...] Available on Opus 4.7 and newer models. Max is the most thorough option",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "The thinking levels, such as ChatGPT's Instant, Medium, High and Extra High, or Claude's low, medium, high, xhigh and max effort, are the gears, and the setting in the app is the gearstick.",
+        "independent": {
+          "url": "https://claude.com/docs/third-party/claude-desktop/models",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Set it to `low`, `medium`, `high`, `xhigh`, or `max`. [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T10:07:40.993Z"
+      },
+      {
+        "kind": "other",
+        "claim": "AI models write out their working before answering",
+        "on_file": {
+          "note": "OpenAI docs confirm reasoning models produce internal reasoning tokens before the response, and only a summary of that reasoning is visible, not the raw working.",
+          "quote": "**Reasoning models** use internal reasoning tokens before producing a response. This helps the model plan, use tools effectively, inspect alternatives, recover from ambiguity, and solve harder multi-step tasks. | While we don’t expose the raw reasoning tokens emitted by the model, you can view a summary of the model’s reasoning using the `summary` parameter.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "Before it answers, the AI writes out its working, and at most you see a short summary of it.",
+        "independent": {
+          "url": "https://www.primointeractive.com/blog/chain-of-thought-ai-reasoning-trust",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "A reasoning model is a large language model trained to write out intermediate text before it commits to an answer.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "other",
+        "claim": "Users at most see a short summary of that working",
+        "on_file": {
+          "note": "OpenAI docs confirm raw reasoning tokens are hidden and only a summary is viewable.",
+          "quote": "While we don’t expose the raw reasoning tokens emitted by the model, you can view a summary of the model’s reasoning using the `summary` parameter.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "Before it answers, the AI writes out its working, and at most you see a short summary of it.",
+        "independent": {
+          "url": "https://www.readaboutai.com/october-18-2026/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "No reliable published source found stating that “before it answers, the AI writes out its working, and at most you see a short summary of it.”",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "other",
+        "claim": "The AI breaks the question into steps, tries more than one approach and checks its own answer",
+        "on_file": {
+          "note": "Sources describe reasoning models planning, using tools, and inspecting alternatives in general, and separately describe one model generating multiple redundant solutions to '2+3', but no source states that the AI breaks a question into steps, tries more than one approach, AND checks its own answer ",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "It breaks the question into steps, tries more than one approach and checks its own answer.",
+        "independent": {
+          "url": "https://freeacademy.ai/pt/blog/reasoning-models-vs-regular-models",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "It writes out working notes to itself: it breaks the problem into parts, tries an approach, checks it, notices a mistake, and tries again.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "event",
+        "claim": "Google introduced a feature where the AI chooses the gear (level of thinking) itself",
+        "on_file": {
+          "note": "Sources describe Google's Gemini auto model/effort selection (choosing which model and effort level), but no source attributes this to Google 'just' launching an automatic gear-choosing feature in these words, nor frames it as 'the next step' after manual gear selection.",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "The next step is the AI choosing the gear itself, like a car with an automatic transmission, and Google just took it.",
+        "independent": {
+          "url": "https://9to5google.com/2026/10/09/gemini-auto-free-users/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Google says: “Gemini will use auto model selection to send each prompt to the Gemini model that suits it best.”",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:46:29.161Z"
+      },
+      {
+        "kind": "other",
+        "claim": "ChatGPT has a setting with options including Medium and High",
+        "on_file": {
+          "note": "Confirms ChatGPT has a setting with Medium and High options (plus others).",
+          "quote": "Manually choosing **Medium**, **High**, or **Extra High** uses **GPT-6 Sol** when **GPT-6** is selected, or **GPT-5.6 Sol** when you explicitly select GPT-5.6.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified",
+        "sentence": "On ChatGPT, pick Medium or High.",
+        "independent": {
+          "url": "https://help.openai.com/en/articles/6825453-how-to-use-chatgpt",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "The model picker now has the following simplified options: - Instant - Medium - High",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:52:11.170Z"
+      },
+      {
+        "kind": "event",
+        "claim": "Formula 1 developed/used the semi-automatic transmission decades ago",
+        "on_file": {
+          "note": "Confirms F1 introduced the semi-automatic transmission in 1989, decades before the present (2025/2026 sources).",
+          "quote": "Perhaps the biggest gearbox innovation in F1 history took place in 1989, when Ferrari introduced F1’s first-ever semi-automatic, paddle-shift sequential gearbox on its 640 chassis.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "There's a better way the apps could do this, and Formula 1 found it decades ago: the semi-automatic transmission.",
+        "independent": {
+          "url": "https://www.ferrari.com/en-EN/magazine/articles/mythbusters-paddleshift-gearbox",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "When Ferrari introduced an automated gearbox in 1989’s 640 F1 car [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:52:11.170Z"
+      },
+      {
+        "kind": "other",
+        "claim": "Formula 1 keeps the gear-shift paddles in the driver's hands (drivers control gear shifting via paddles)",
+        "on_file": {
+          "note": "Sources describe the history of F1 gearboxes (semi-automatic, seamless-shift) but contain no statement that drivers currently control gear shifting via paddles or that F1 'keeps the paddles in the driver's hands.'",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "verified_web",
+        "sentence": "But Formula 1 still keeps the paddles in the driver's hands, and some people who love driving still choose a manual transmission.",
+        "independent": {
+          "url": "https://motorsport.tech/formula-1/monaco-gp-special-the-ultimate-test-of-the-f1-gearbox",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "Unlike in your own car, ... the F1 gears are operated by the driver by way of a paddle shift system behind the steering wheel.",
+          "correct_value": null
+        },
+        "carried_from": "2026-10-18T09:52:11.170Z"
+      },
+      {
+        "kind": "number",
+        "claim": "OpenAI announced $40 billion of new funding on the same day, a raise reported as in the works since January.",
+        "on_file": {
+          "note": "Sources give dates for the $40B OpenAI funding (reported in talks 31 Jan 2025; announced 31 Mar 2025) but nothing ties this to 'the same day' as another event in the claim's context, nor do sources state these two things happened on the same day.",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "unverified",
+        "sentence": "The same day, OpenAI announced $40 billion of new funding, a raise reported as in the works since January.",
+        "independent": {
+          "url": "https://openai.com/index/march-funding-updates/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Today we’re announcing new funding—$40 billion at a $300 billion post-money valuation [contradicted not borne out by the quoted evidence]",
+          "correct_value": "OpenAI announced the $40 billion funding on March 31, 2025, not October 18, 2026."
+        }
+      },
+      {
+        "kind": "event",
+        "claim": "In the weeks after, Anthropic released Opus 5.5, Sonnet 5.5 and Haiku 5.5, and OpenAI released GPT-6.1 Sol and added GPT-6 to ChatGPT.",
+        "on_file": {
+          "note": "the passages do not carry 6.1, 6; model said: Release dates for Opus 5.5 (9/22), Sonnet 5.5 (9/28), Haiku 5.5 (10/7), and GPT-6.1 Sol (9/29, from the other source list) are all supported; GPT-6 Sol appears in ChatGPT per the OpenAI help center quotes.",
+          "quote": "{\"name\": \"Claude Opus 5.5 (Low, Default Fallback)\", \"slug\": \"claude-opus-5-5-low\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 42.3, \"cost_per_task_usd\": 0.5512, \"cost_to_run_index_usd\": 860.33} | {\"name\": \"Claude Sonnet 5.5 (Low, Default Fallback)\", \"slug\": \"claude-sonnet-5-5-low\", \"release_date\": \"2026-09-28\", \"intelligence_index\": 35.9, \"cost_per_task_usd\": 0.3452, \"cost_to_run_index_usd\": 482.13} | {\"name\": \"Claude Haiku 5.5 (Low)\", \"slug\": \"claude-haiku-5-5-low\", \"release_date\": \"2026-10-07\", \"intelligence_index\": 29.5, \"cost_per_task_usd\": 0.0245, \"cost_to_run_index_usd\": 34.31}",
+          "verdict": "not_found"
+        },
+        "verdict": "unverified",
+        "sentence": "Over the next few weeks, Anthropic released Opus 5.5, Sonnet 5.5 and Haiku 5.5, and OpenAI released GPT-6.1 Sol and put GPT-6 into ChatGPT.",
+        "independent": {
+          "url": "https://openai.com/index/introducing-gpt-6-1-sol/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "GPT-6.1 Sol is available starting today to all Plus, Pro, Business, Enterprise, and Edu users in ChatGPT Work and Codex. GPT-6.1 Sol is not yet available in Chat. [contradicted not borne out by the quoted evidence]",
+          "correct_value": "OpenAI released GPT-6.1 Sol, but it was not yet available in Chat; GPT-6 was rolling out in Chat to eligible Business workspaces."
+        }
+      },
+      {
+        "kind": "number",
+        "claim": "An OpenAI and Harvard study of 1.5 million ChatGPT conversations found practical guidance, looking things up and writing made up nearly 80% of them.",
+        "on_file": {
+          "note": "passage not found word for word in the sources: \"We find that “Practical Guidance,” “Seeking Information,” and “Writing” are the \"; model said: NBER paper (OpenAI + Harvard's David Deming) states both the 1.5 million conversation sample and the 'nearly 80%' figure for these three topics.",
+          "quote": "We find that “Practical Guidance,” “Seeking Information,” and “Writing” are the three most common topics and collectively account for nearly 80% of all conversations. | draws on a large-scale, privacy-preserving analysis of 1.5 million conversations to track how consumer usage has evolved since ChatGPT’s launch three years ago",
+          "verdict": "not_found"
+        },
+        "verdict": "contradicted",
+        "sentence": "In OpenAI and Harvard's study of 1.5 million ChatGPT conversations, practical guidance, looking things up and writing made up \"nearly 80%\" of them.",
+        "independent": {
+          "url": "https://openai.com/index/how-people-use-chatgpt/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "contradicted",
+          "evidence": "The study, a National Bureau of Economic Research (NBER) working paper by OpenAI’s Economic Research team and Harvard economist David Deming, draws on a large-scale, privacy-preserving analysis of 1.5 million conversations. Three-quarters of conversations focus on practical guidance, seeking information, and writing",
+          "correct_value": "Three-quarters of conversations, not nearly 80%, focused on practical guidance, seeking information, and writing."
+        }
+      },
+      {
+        "kind": "number",
+        "claim": "On OpenAI's HealthBench Hard test, GPT-5's thinking version scored nearly twice as well as its fast version.",
+        "on_file": {
+          "note": "gpt-5-thinking (46.2%) vs gpt-5-main (25.5%) on HealthBench Hard is roughly 1.8x, i.e. nearly twice as well.",
+          "quote": "State of the art on HealthBench Hard improves from 31.6% for OpenAI o3 to 46.2% for gpt-5-thinking. | gpt-5-main outperforms previous non-thinking models by a large margin, achieving a score of 25.5% on HealthBench Hard, where GPT-4o gets 0.0%.",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "OpenAI's own tests agree: on HealthBench Hard, a tough set of medical questions, GPT-5's thinking version did nearly twice as well as its fast version.",
+        "independent": {
+          "url": "https://deploymentsafety.openai.com/gpt-5/opqa",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "gpt-5-thinking outperforms previous non-thinking models by a large margin, achieving a score of 25.5% on HealthBench Hard [contradicted not borne out by the quoted evidence]",
+          "correct_value": "GPT-5-thinking scored 25.5% on HealthBench Hard, while GPT-5-main scored 25.5%; the source does not support a nearly twofold difference."
+        }
+      },
+      {
+        "kind": "number",
+        "claim": "Moving Claude Opus 5.5 from low to medium thinking effort produced its biggest score jump on Artificial Analysis's tests.",
+        "on_file": {
+          "note": "Low→medium jump is 42.3→51.2 (+8.9); medium→high is only +2.4; but high→xhigh is 53.6→56 (+2.4) and xhigh→max is 56→57.6 (+1.6), so low→medium is indeed the largest jump in this data, but the sources never state or rank this comparison themselves—it's an inference from raw numbers, not an asserted c",
+          "quote": "{\"name\": \"Claude Opus 5.5 (Low, Default Fallback)\", \"slug\": \"claude-opus-5-5-low\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 42.3, \"cost_per_task_usd\": 0.5512, \"cost_to_run_index_usd\": 860.33} | {\"name\": \"Claude Opus 5.5 (Medium, Default Fallback)\", \"slug\": \"claude-opus-5-5-medium\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 51.2, \"cost_per_task_usd\": 1.336, \"cost_to_run_index_usd\": 1626.81} | {\"name\": \"Claude Opus 5.5 (High, Default Fallback)\", \"slug\": \"claude-opus-5-5-high\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 53.6, \"cost_per_task_usd\": 1.8225, \"cost_to_run_index_usd\": 2172.43}",
+          "verdict": "not_found"
+        },
+        "verdict": "unverified",
+        "sentence": "On Artificial Analysis's tests, moving Opus 5.5 from low to medium brought its biggest jump.",
+        "independent": {
+          "url": "https://artificialanalysis.ai/models/releases/claude-opus-5-5",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Claude Opus 5.5 (Medium, Default Fallback) ... 51 ... Claude Opus 5.5 (Low, Default Fallback) ... 42 [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        }
+      },
+      {
+        "kind": "number",
+        "claim": "Raising Claude Opus 5.5 to max effort lifted its score by more than a third while cost per task rose from $0.55 to $5.98.",
+        "on_file": {
+          "note": "a contradiction the passage does not bear out; model said: Intelligence index rises from 42.3 (low) to 57.6 (max), a 36% increase (more than a third), consistent with the claim; but cost_per_task_usd is 0.5512 at low, not 0.55, and 5.982 at max, not 5.98 — the claim's rounding to $0.55 and $5.98 doesn't exactly match the source figures of 0.5512 and 5.982.",
+          "quote": "\"name\": \"Claude Opus 5.5 (Low, Default Fallback)\", \"slug\": \"claude-opus-5-5-low\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 42.3, \"cost_per_task_usd\": 0.5512, \"cost_to_run_index_usd\": 860.33 | \"name\": \"Claude Opus 5.5 (Max, Default Fallback)\", \"slug\": \"claude-opus-5-5\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 57.6, \"cost_per_task_usd\": 5.982, \"cost_to_run_index_usd\": 8708.2",
+          "verdict": "not_found"
+        },
+        "verdict": "unverified",
+        "sentence": "Going all the way to max lifted its score by more than a third, while the cost per task went from $0.55 to $5.98, about eleven times as much.",
+        "independent": {
+          "url": "https://www.eesel.ai/blog/claude-opus-5-5-review",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "The low-effort run scores 42 on the Intelligence Index, medium hits 51, and only at max does it reach the headline 58.",
+          "correct_value": null
+        }
+      },
+      {
+        "kind": "other",
+        "claim": "Across current Anthropic and OpenAI models on those tests, the top thinking setting costs several times more than the lowest, with a smaller proportional score increase.",
+        "on_file": {
+          "note": null,
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "unverified",
+        "sentence": "On every current model from Anthropic and OpenAI on those tests, the top thinking setting costs several times more than the bottom one, and the score rises by a fraction of that.",
+        "independent": {
+          "url": "https://massai.ro/en/news/reasoning-effort-cost-ai-models.html",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "The higher the effort, the more \"thinking\" tokens the model produces before it answers, and those tokens are billed.",
+          "correct_value": null
+        }
+      },
+      {
+        "kind": "number",
+        "claim": "Claude Haiku 5.5 at its highest setting scored slightly higher than Opus 5.5 at its lowest setting, at less than half the cost per task.",
+        "on_file": {
+          "note": "Haiku 5.5 Max: 43.4 index, $0.2128/task vs Opus 5.5 Low: 42.3 index, $0.5512/task — Haiku score is slightly higher, and its cost ($0.2128) is less than half of Opus Low's cost ($0.5512/2=$0.2756).",
+          "quote": "{\"name\": \"Claude Haiku 5.5 (Max)\", \"slug\": \"claude-haiku-5-5\", \"release_date\": \"2026-10-07\", \"intelligence_index\": 43.4, \"cost_per_task_usd\": 0.2128, \"cost_to_run_index_usd\": 330.25} | {\"name\": \"Claude Opus 5.5 (Low, Default Fallback)\", \"slug\": \"claude-opus-5-5-low\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 42.3, \"cost_per_task_usd\": 0.5512, \"cost_to_run_index_usd\": 860.33}",
+          "primary": true,
+          "verdict": "supported"
+        },
+        "verdict": "verified_on_file",
+        "sentence": "Claude Haiku 5.5, the cheapest of Anthropic's current models, on its highest setting edged past Opus 5.5 on its lowest, for less than half the cost per task.",
+        "independent": {
+          "url": "https://www.anthropic.com/claude-haiku-5-5",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Haiku 5.5 is our first Haiku-class model to come with an adjustable effort setting.",
+          "correct_value": null
+        }
+      },
+      {
+        "kind": "number",
+        "claim": "Claude Sonnet 5.5 at its highest setting scored about a third better than Opus 5.5 at its lowest setting, at about ten times the cost per task.",
+        "on_file": {
+          "note": "Sonnet 5.5 Max (56) vs Opus 5.5 Low (42.3) is about 32% higher intelligence index, roughly matching 'a third better', but cost ratio is 5.4609/0.5512 ≈ 9.9x which rounds to 'about ten times' -- actually this matches. Re-check: 56/42.3=1.324 (~32%, close to a third); cost ratio ~9.91x (~ten times). T",
+          "quote": "{\"name\": \"Claude Sonnet 5.5 (Max, Default Fallback)\", \"slug\": \"claude-sonnet-5-5\", \"release_date\": \"2026-09-28\", \"intelligence_index\": 56, \"cost_per_task_usd\": 5.4609, \"cost_to_run_index_usd\": 7259.5} | {\"name\": \"Claude Opus 5.5 (Low, Default Fallback)\", \"slug\": \"claude-opus-5-5-low\", \"release_date\": \"2026-09-22\", \"intelligence_index\": 42.3, \"cost_per_task_usd\": 0.5512, \"cost_to_run_index_usd\": 860.33}",
+          "verdict": "contradicted"
+        },
+        "verdict": "contradicted",
+        "sentence": "Claude Sonnet 5.5 on its highest setting did about a third better than Opus 5.5 on its lowest, at about ten times the cost per task.",
+        "independent": {
+          "url": "https://kingy.ai/blog/claude-sonnet-5-5-vs-opus-5-5/",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "contradicted",
+          "evidence": "At the same Xhigh setting in that chart, Sonnet scores 61.5% and Opus scores 66.4%. Sonnet’s Max run costs $12.54 per attempt; Opus’s Xhigh run costs $7.35.",
+          "correct_value": "At Xhigh, Sonnet scored 61.5% versus Opus at 66.4%; Sonnet’s Max run cost $12.54 per attempt versus $7.35 for Opus’s Xhigh run."
+        }
+      },
+      {
+        "kind": "number",
+        "claim": "On Anthropic's chart for one computer-task test, Opus 5.5 at default setting outperformed Opus 5 at max effort at about one-fifth the cost.",
+        "on_file": {
+          "note": "The chart compares Opus 5.5 medium to GPT-6 Astra's top score at about a fifth of the cost, not to Opus 5 at max effort; Opus 5 does not appear in this FrontierCode chart at all, and the Terminal-Bench chart (which does include Opus 5) does not make this fifth-of-cost comparison.",
+          "quote": "\"Opus 5.5 · Med: 54.6% $0.80\" | \"Opus 5.5 · High: 54.0% $1.09\" | \"Opus 5.5 · Xhigh: 51.4% $2.25\" | \"Opus 5.5 · Max: 54.4% $6.19\" | [caption] \"FrontierCode measures whether an agent’s code changes would be merged. At default effort (medium), Opus 5.5 scores 54.6%, higher than all other models, beating GPT-6 Astra’s top score (53.3%) for about a fifth of the cost per task.\"",
+          "verdict": "not_found"
+        },
+        "verdict": "unverified",
+        "sentence": "On Anthropic's own chart for one test of computer tasks, Opus 5.5 at its default setting beat Opus 5 at max effort for about a fifth of the cost.",
+        "independent": {
+          "url": "https://www.anthropic.com/claude-opus-5-5",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Opus 5.5 at default effort beats Opus 5 at max effort for about a fifth of the cost. [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        }
+      },
+      {
+        "kind": "event",
+        "claim": "OpenAI retired automatic switching from Instant to Thinking for Plus and Pro users last month.",
+        "on_file": {
+          "note": "Source dates this entry 14 September 2026 (per citation), but no source states this happened 'last month' relative to the article; without knowing the article's publication date, 'last month' cannot be verified as supported.",
+          "quote": "We’re retiring automatic switching from Instant to Thinking (reasoning) for ChatGPT Plus and Pro users globally. You can still select an available option in the model picker to give ChatGPT more time to think or reason. We’re also removing the Higher intelligence setting from ChatGPT on the web for these plans. ChatGPT can still switch automatically for safety purposes.",
+          "verdict": "not_found"
+        },
+        "verdict": "unverified",
+        "sentence": "Then last month, OpenAI retired \"automatic switching from Instant to Thinking\" for Plus and Pro users, so on those plans you pick the thinking gear.",
+        "independent": {
+          "url": "https://help.openai.com/en/articles/6825453",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "We’re retiring automatic switching from Instant to Thinking (reasoning) for ChatGPT Plus and Pro users globally. [supported not borne out by the quoted evidence]",
+          "correct_value": null
+        }
+      },
+      {
+        "kind": "unclassified",
+        "claim": "Think of it as a car, where the name of the AI model, such as Claude Opus 5.5 or GPT-6.1 Sol, is the badge on the front, like the Audi A3 or Mercedes C-Class.",
+        "on_file": {
+          "note": "No source contains this car/badge analogy or any comparison of AI model names to Audi A3 or Mercedes C-Class; it appears to be the writer's own illustrative framing, not stated in any source.",
+          "quote": null,
+          "verdict": "not_found"
+        },
+        "verdict": "unverified",
+        "sentence": "Think of it as a car, where the name of the AI model, such as Claude Opus 5.5 or GPT-6.1 Sol, is the badge on the front, like the Audi A3 or Mercedes C-Class.",
+        "independent": {
+          "url": "https://openrouter.ai/compare/anthropic/claude-opus-5.5/openai/gpt-6.1-sol",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "unclear",
+          "evidence": "Claude Opus 5.5, from Anthropic, has a 1,000,000-token context window and is priced at $4/M tokens input, $20/M tokens output on OpenRouter.",
+          "correct_value": null
+        }
+      },
+      {
+        "kind": "event",
+        "claim": "OpenAI requires users to manually choose the reasoning/thinking mode rather than having the AI choose automatically",
+        "on_file": {
+          "note": "OpenAI's router automatically selects reasoning mode; manual selection is only an optional override, not a requirement.",
+          "quote": "a **real‑time router** that quickly decides which to use based on conversation type, complexity, tool needs, and your explicit intent (for example, if you say “think hard about this” in the prompt). The router is continuously trained on real signals, including when users switch models, preference rates for responses, and measured correctness",
+          "verdict": "contradicted"
+        },
+        "verdict": "contradicted",
+        "sentence": "OpenAI has gone the other way, choosing to make people choose.",
+        "independent": {
+          "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes?orderBy=name00",
+          "checker": "perplexity:sonar-pro",
+          "verdict": "supported",
+          "evidence": "We’re retiring automatic switching from Instant to Thinking (reasoning) for ChatGPT Plus and Pro users globally. You can still select an available option in the model picker to give ChatGPT more time to think or reason.",
+          "correct_value": null
+        }
+      }
+    ],
+    "passed": false,
+    "ran_at": "2026-10-18T14:43:11.671Z",
+    "carried": 44,
+    "version": 1,
+    "blocking": 11,
+    "body_hash": "601d8558668e496a89c43ce62232c60b8c25d49218645186f81189aa65549a72",
+    "set_aside": [
+      {
+        "reason": "second look: personal experience, not checkable claim",
+        "sentence": "I've been using AI apps every day for years now, and I've started to notice something odd about how they're sold."
+      },
+      {
+        "reason": "second look: opinion/generalization",
+        "sentence": "Every launch is about a name."
+      },
+      {
+        "reason": "second look: states writer's intent, not a factual claim",
+        "sentence": "So I wanted to break down whether the name you pick actually changes the answer you get, and what happens when companies like OpenAI make more money by making products easier and less transparent."
+      },
+      {
+        "reason": "second look: rhetorical question/opinion",
+        "sentence": "Isn't a lack of control over what you're getting a bit scarier when the product is general intelligence?"
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "Some of the new models really are better, and the people building them aren't lying to you."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "But I think the name is the least important thing on the screen."
+      },
+      {
+        "reason": "second look: vague generalization, not a checkable specific claim",
+        "sentence": "The setting that changes your answer most has a boring label, the app usually starts it low, and most people leave it there."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "That's good news for people who want an easier experience, and good news for OpenAI and Anthropic."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "It's bad news in other ways."
+      },
+      {
+        "reason": "second look: opinion/framing statement",
+        "sentence": "Start with why your eyes are on the name at all, because while we watch the names, the setting that decides your answer gets chosen out of sight."
+      },
+      {
+        "reason": "second look: vague unattributed claim, not specific enough to verify",
+        "sentence": "Ninety days, and then the next name takes over."
+      },
+      {
+        "reason": "second look: opinion/framing statement, no checkable fact",
+        "sentence": "Nobody at these companies says they name models for the headlines, so read this part as my take on the evidence."
+      },
+      {
+        "reason": "second look: opinion/instruction, not checkable claim",
+        "sentence": "Look at what a launch buys."
+      },
+      {
+        "reason": "second look: vague opinion, not a checkable factual claim",
+        "sentence": "The launch gave it a very good backdrop."
+      },
+      {
+        "reason": "second look: vague/opinion statement, no checkable fact",
+        "sentence": "The headline scores are drawn at full power, too."
+      },
+      {
+        "reason": "second look: opinion/description, not a checkable fact",
+        "sentence": "So the headline scores show the model thinking as hard as it can, which isn't what you get unless you ask for it."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "My favourite example is a smaller one."
+      },
+      {
+        "reason": "second look: interpretive opinion about what someone meant, not a checkable fact",
+        "sentence": "In fairness, he meant how fast AI gets smarter."
+      },
+      {
+        "reason": "second look: opinion/commentary, no checkable fact",
+        "sentence": "How often it gets a new name is a separate thing, which is rather my point."
+      },
+      {
+        "reason": "second look: opinion/general assertion, not a checkable fact",
+        "sentence": "The progress underneath is real, but most of what we ask doesn't need the newest model."
+      },
+      {
+        "reason": "second look: opinion/commentary, no checkable fact",
+        "sentence": "What matters is the setting nobody is looking at, and who sets it."
+      },
+      {
+        "reason": "second look: hypothetical example, not a checkable claim",
+        "sentence": "Picture a small business owner."
+      },
+      {
+        "reason": "second look: made-up example line (naming a hypothetical person)",
+        "sentence": "Call her Sally."
+      },
+      {
+        "reason": "second look: hypothetical/illustrative example, not a checkable claim",
+        "sentence": "She pastes a supplier contract into her AI app and asks what she should worry about."
+      },
+      {
+        "reason": "second look: hypothetical/illustrative example, not a checkable factual claim",
+        "sentence": "It gives her a tidy, confident answer in four seconds."
+      },
+      {
+        "reason": "second look: hypothetical/example scenario, not a checkable factual claim",
+        "sentence": "She signs."
+      },
+      {
+        "reason": "second look: hypothetical/illustrative example, not a factual claim",
+        "sentence": "Six months later a clause bites her that a careful reader would have caught."
+      },
+      {
+        "reason": "second look: hypothetical/fictional example scenario",
+        "sentence": "Nothing was wrong with the name at the top of her screen."
+      },
+      {
+        "reason": "second look: hypothetical/illustrative example, not a checkable claim",
+        "sentence": "What was missing is that the AI never stopped to think, and Sally didn't realise she should be controlling how hard it thought."
+      },
+      {
+        "reason": "second look: Not a checkable claim; incomplete phrase about future",
+        "sentence": "For now."
+      },
+      {
+        "reason": "second look: describes a hypothetical/possible scenario, not a checkable fact",
+        "sentence": "At the low end it answers straight away."
+      },
+      {
+        "reason": "second look: Describes a hypothetical/general behavior, not a checkable factual claim",
+        "sentence": "Higher up, it works through the problem first, checking itself before it replies."
+      },
+      {
+        "reason": "second look: analogy",
+        "sentence": "Right now these apps are like cars with a manual transmission: you move the gearstick yourself, and the car stays in whatever gear you leave it in."
+      },
+      {
+        "reason": "second look: general definition/analogy, not checkable claim",
+        "sentence": "A car with an automatic transmission changes gear for you."
+      },
+      {
+        "reason": "second look: opinion/analogy",
+        "sentence": "With AI, most of us argue about badges and drive everywhere in first."
+      },
+      {
+        "reason": "second look: rhetorical question",
+        "sentence": "What does \"thinking\" mean here?"
+      },
+      {
+        "reason": "second look: general explanatory claim about behavior, not a specific checkable fact",
+        "sentence": "Without a web search, all that checking happens in its own working, so it can still be confidently wrong about a fact."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "The size of the gear change surprised me."
+      },
+      {
+        "reason": "second look: opinion/interpretation",
+        "sentence": "It isn't a straight line, though, and that matters for where this is heading."
+      },
+      {
+        "reason": "second look: general trend claim, not a specific checkable fact",
+        "sentence": "Each step up buys less than the one before."
+      },
+      {
+        "reason": "second look: general claim, not specific checkable fact",
+        "sentence": "And the setting can beat the model."
+      },
+      {
+        "reason": "second look: hypothetical/general statement",
+        "sentence": "Sometimes the new name really is the bigger step."
+      },
+      {
+        "reason": "second look: opinion/hypothetical example",
+        "sentence": "So the gear matters most on hard jobs, like Sally's contract."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "On easy ones, extra thinking is money set on fire."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "The interesting part is whose money."
+      },
+      {
+        "reason": "second look: general claim presented as fact, but not specifically checkable; opinion/technic",
+        "sentence": "Every word of that hidden working costs computer time."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "That's also why a higher gear eats into your plan faster."
+      },
+      {
+        "reason": "second look: transition phrase, no claim",
+        "sentence": "Here's the twist."
+      },
+      {
+        "reason": "second look: opinion/speculation",
+        "sentence": "Whether that thinking makes OpenAI and Anthropic money or loses it depends on how you pay."
+      },
+      {
+        "reason": "second look: hypothetical example",
+        "sentence": "If you're a developer paying by the word, thinking is a sale."
+      },
+      {
+        "reason": "second look: hypothetical example",
+        "sentence": "If you pay a flat monthly fee, every extra thought comes out of their pocket."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "On a flat-fee plan, though, the hard-thinking answer is the expensive one."
+      },
+      {
+        "reason": "second look: opinion, hedged with 'I think'",
+        "sentence": "That, I think, is why the app starts you in a low gear."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "That's my read."
+      },
+      {
+        "reason": "second look: vague opinion/assertion, not checkable",
+        "sentence": "Nobody has said it out loud."
+      },
+      {
+        "reason": "second look: opinion/vague claim",
+        "sentence": "The AI already decides more than you'd guess."
+      },
+      {
+        "reason": "second look: general description, not a specific checkable claim",
+        "sentence": "Inside every gear, the model chooses how much to think."
+      },
+      {
+        "reason": "second look: writer's own prediction",
+        "sentence": "I don't think that lasts."
+      },
+      {
+        "reason": "second look: opinion/generalization, not a specific checkable claim",
+        "sentence": "The badge sells: a new name buys headlines, sign-ups and a good backdrop for raising money, so they make sure you know it."
+      },
+      {
+        "reason": "second look: hypothetical/generalized scenario",
+        "sentence": "The gears cost: on a flat fee, leave the gearstick with you and anyone can sit in top gear on every question, up to their plan's limit."
+      },
+      {
+        "reason": "second look: writer's own interpretation/opinion",
+        "sentence": "So, as I read it, OpenAI and Anthropic want your eyes on the badge and their own hand on the gearstick."
+      },
+      {
+        "reason": "second look: writer's own prediction/opinion",
+        "sentence": "That's why I think the automatic wins."
+      },
+      {
+        "reason": "second look: opinion/unverifiable generalization",
+        "sentence": "The case for the automatic is strong, because most people leave the gear where the app puts it."
+      },
+      {
+        "reason": "second look: opinion/generalization, not checkable",
+        "sentence": "Whoever sets the default sets how hard most people's AI thinks."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "The case against is about what you can't see."
+      },
+      {
+        "reason": "second look: hypothetical generalization",
+        "sentence": "Nobody looking at their screen would have known."
+      },
+      {
+        "reason": "second look: opinion/analogy",
+        "sentence": "An automatic built by OpenAI or Anthropic also answers to two bosses: your answer and their bill."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "So the real argument is about whose interest the decision serves, and whether you get to see it."
+      },
+      {
+        "reason": "second look: opinion/generalization",
+        "sentence": "In general, the incentive lies with the business to give you less control over what product you actually get."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "And when the product is intelligence, that's got some big impacts to consider."
+      },
+      {
+        "reason": "second look: advice/opinion",
+        "sentence": "For quick, everyday stuff, leave it alone."
+      },
+      {
+        "reason": "second look: advice/opinion",
+        "sentence": "A recipe or a summary of an email is fine in a low gear, and the name really doesn't matter."
+      },
+      {
+        "reason": "second look: advice/opinion",
+        "sentence": "For anything you'll act on, change the gear yourself."
+      },
+      {
+        "reason": "second look: example list, not a claim",
+        "sentence": "A contract, a medical question, money, a decision you can't take back."
+      },
+      {
+        "reason": "second look: instruction/advice, not a checkable claim",
+        "sentence": "On Claude, turn the effort up."
+      },
+      {
+        "reason": "second look: instruction/advice, not a checkable claim",
+        "sentence": "On ChatGPT's free plan, use Think."
+      },
+      {
+        "reason": "second look: instruction/advice, not a checkable claim",
+        "sentence": "On Gemini, set the effort to high."
+      },
+      {
+        "reason": "second look: vague generalization, not a specific checkable claim",
+        "sentence": "It can take longer, sometimes minutes, and you'll hit your limit sooner."
+      },
+      {
+        "reason": "second look: opinion",
+        "sentence": "For the questions that matter, it's worth it."
+      },
+      {
+        "reason": "second look: instruction/advice, not a checkable claim",
+        "sentence": "If you build products on AI, don't choose a model by its name or its launch chart."
+      },
+      {
+        "reason": "second look: instruction/advice, not a checkable claim",
+        "sentence": "Run your own hard questions through each setting, check the answers, and watch how much thinking you pay for."
+      },
+      {
+        "reason": "second look: opinion/recommendation",
+        "sentence": "Let the AI pick the gear, if it must, but give us the paddles, and a dashboard that shows which gear it picked and how hard it thought."
+      },
+      {
+        "reason": "second look: writer's prediction about the future",
+        "sentence": "I think that's where the paid plans end up: starting in automatic, with a semi-automatic setting for the people who want control."
+      },
+      {
+        "reason": "second look: analogy/metaphor",
+        "sentence": "We've just learned to drive the manual."
+      },
+      {
+        "reason": "second look: opinion/prediction about the future",
+        "sentence": "I think the car is going automatic next, and for most people that's easier."
+      },
+      {
+        "reason": "second look: opinion/personal intention, not checkable fact",
+        "sentence": "For anything that matters, I'll be one of them."
+      },
+      {
+        "reason": "second look: writer's own prediction/opinion about future",
+        "sentence": "I also think I can see where this ends up: the AI itself will decide how hard it thinks."
+      },
+      {
+        "reason": "second look: opinion/prediction (writer's bet)",
+        "sentence": "For those, I'd bet the name barely matters."
+      },
+      {
+        "reason": "second look: general opinion/claim about preferences, not checkable fact",
+        "sentence": "And most people would rather not change gear at all."
+      },
+      {
+        "reason": "second look: opinion/hedge, no checkable claim",
+        "sentence": "If I'm right, it's good news and bad news."
+      },
+      {
+        "reason": "second look: Describes a hypothetical/possible design, not a factual claim",
+        "sentence": "An AI that sets it question by question would at least think hard when the question is hard, and skip the waste on easy ones."
+      },
+      {
+        "reason": "second look: prediction/forecast, not checkable yet",
+        "sentence": "By 30 June 2027, ChatGPT will once again start free users on a setting where the AI chooses how hard to think for each message."
+      },
+      {
+        "reason": "second look: describes the piece's own prediction/bet, not a checkable claim",
+        "sentence": "We'd be wrong if, on that date, a new chat on ChatGPT's free plan still starts on a setting where you pick how hard it thinks, or the automatic option exists but you have to switch it on."
+      },
+      {
+        "reason": "kept from 2026-10-18T09:52:11.170Z: second look: vague characterization/analogy without checkable specifics",
+        "sentence": "OpenAI's GPT models showed the same: the gear moved the score more than the new badge did."
+      },
+      {
+        "reason": "kept from 2026-10-18T09:52:11.170Z: second look: Hypothetical/possible future scenario, no checkable claim",
+        "sentence": "Hand it to the AI, and OpenAI and Anthropic write the rules for how much thinking each question gets."
+      },
+      {
+        "reason": "kept from 2026-10-18T09:46:29.161Z: second look: hypothetical/illustrative example, not a checkable claim",
+        "sentence": "The driver changes gear with a paddle behind the steering wheel."
+      }
+    ],
+    "signed_off": [
+      {
+        "at": "2026-10-18T14:57:07.198Z",
+        "said": "Krish, 2026-10-18, asked \"Lines 4 and 6 are unchanged and you didn't comment on them. Do they read right, along with your edited versions of 1, 2, 3 and 9?\", picked: \"Yes, sign all of those off\". His edits to 1, 2, 3 and 9 are his own words in nine-lines.md.",
+        "verdict": "unverified",
+        "sentence": "The same day, OpenAI announced $40 billion of new funding, a raise reported as in the works since January.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T14:57:07.198Z",
+        "said": "Krish, 2026-10-18, asked \"Lines 4 and 6 are unchanged and you didn't comment on them. Do they read right, along with your edited versions of 1, 2, 3 and 9?\", picked: \"Yes, sign all of those off\". His edits to 1, 2, 3 and 9 are his own words in nine-lines.md.",
+        "verdict": "contradicted",
+        "sentence": "In OpenAI and Harvard's study of 1.5 million ChatGPT conversations, practical guidance, looking things up and writing made up \"nearly 80%\" of them.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T14:57:07.198Z",
+        "said": "Krish, 2026-10-18, asked \"Lines 4 and 6 are unchanged and you didn't comment on them. Do they read right, along with your edited versions of 1, 2, 3 and 9?\", picked: \"Yes, sign all of those off\". His edits to 1, 2, 3 and 9 are his own words in nine-lines.md.",
+        "verdict": "unverified",
+        "sentence": "On every current model from Anthropic and OpenAI on those tests, the top thinking setting costs several times more than the bottom one, and the score rises by a fraction of that.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T14:57:07.198Z",
+        "said": "Krish, 2026-10-18, asked \"Lines 4 and 6 are unchanged and you didn't comment on them. Do they read right, along with your edited versions of 1, 2, 3 and 9?\", picked: \"Yes, sign all of those off\". His edits to 1, 2, 3 and 9 are his own words in nine-lines.md.",
+        "verdict": "unverified",
+        "sentence": "Then last month, OpenAI retired \"automatic switching from Instant to Thinking\" for Plus and Pro users, so on those plans you pick the thinking gear.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T14:57:07.198Z",
+        "said": "Krish, 2026-10-18, asked \"Lines 4 and 6 are unchanged and you didn't comment on them. Do they read right, along with your edited versions of 1, 2, 3 and 9?\", picked: \"Yes, sign all of those off\". His edits to 1, 2, 3 and 9 are his own words in nine-lines.md.",
+        "verdict": "unverified",
+        "sentence": "Think of it as a car, where the name of the AI model, such as Claude Opus 5.5 or GPT-6.1 Sol, is the badge on the front, like the Audi A3 or Mercedes C-Class.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T14:57:07.198Z",
+        "said": "Krish, 2026-10-18, asked \"Lines 4 and 6 are unchanged and you didn't comment on them. Do they read right, along with your edited versions of 1, 2, 3 and 9?\", picked: \"Yes, sign all of those off\". His edits to 1, 2, 3 and 9 are his own words in nine-lines.md.",
+        "verdict": "contradicted",
+        "sentence": "OpenAI has gone the other way, choosing to make people choose.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T15:04:29.990Z",
+        "said": "Krish, 2026-10-18, shown these five lines word for word with what the filed sources say, and asked \"Sign them off as written?\", picked: \"Sign all five off\".",
+        "verdict": "unverified",
+        "sentence": "Over the next few weeks, Anthropic released Opus 5.5, Sonnet 5.5 and Haiku 5.5, and OpenAI released GPT-6.1 Sol and put GPT-6 into ChatGPT.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T15:04:29.990Z",
+        "said": "Krish, 2026-10-18, shown these five lines word for word with what the filed sources say, and asked \"Sign them off as written?\", picked: \"Sign all five off\".",
+        "verdict": "unverified",
+        "sentence": "On Artificial Analysis's tests, moving Opus 5.5 from low to medium brought its biggest jump.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T15:04:29.990Z",
+        "said": "Krish, 2026-10-18, shown these five lines word for word with what the filed sources say, and asked \"Sign them off as written?\", picked: \"Sign all five off\".",
+        "verdict": "unverified",
+        "sentence": "Going all the way to max lifted its score by more than a third, while the cost per task went from $0.55 to $5.98, about eleven times as much.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T15:04:29.990Z",
+        "said": "Krish, 2026-10-18, shown these five lines word for word with what the filed sources say, and asked \"Sign them off as written?\", picked: \"Sign all five off\".",
+        "verdict": "contradicted",
+        "sentence": "Claude Sonnet 5.5 on its highest setting did about a third better than Opus 5.5 on its lowest, at about ten times the cost per task.",
+        "decided_by": "Krish"
+      },
+      {
+        "at": "2026-10-18T15:04:29.990Z",
+        "said": "Krish, 2026-10-18, shown these five lines word for word with what the filed sources say, and asked \"Sign them off as written?\", picked: \"Sign all five off\".",
+        "verdict": "unverified",
+        "sentence": "On Anthropic's own chart for one test of computer tasks, Opus 5.5 at its default setting beat Opus 5 at max effort for about a fifth of the cost.",
+        "decided_by": "Krish"
+      }
+    ],
+    "second_look": {
+      "sentences": 106,
+      "unanswered": 1
+    },
+    "single_source": 31,
+    "independent_checker": "perplexity:sonar-pro"
+  },
+  "gate": {
+    "ok": true,
+    "reason": null
+  },
+  "checks": [
+    {
+      "id": "FACTS",
+      "name": "Every fact checked twice",
+      "blocking": true,
+      "ok": true,
+      "detail": "This exact version passed the fact check."
+    },
+    {
+      "id": "R2",
+      "name": "No \"Not X, Y\"",
+      "blocking": true,
+      "ok": true,
+      "detail": "None found."
+    },
+    {
+      "id": "NO_EM_DASH",
+      "name": "No em dashes",
+      "blocking": true,
+      "ok": true,
+      "detail": "None found."
+    },
+    {
+      "id": "NO_EXCLAMATION",
+      "name": "No exclamation marks",
+      "blocking": true,
+      "ok": true,
+      "detail": "None found."
+    },
+    {
+      "id": "BRITISH_SPELLING",
+      "name": "British spelling",
+      "blocking": true,
+      "ok": true,
+      "detail": "None found."
+    },
+    {
+      "id": "PLAIN_SCORES",
+      "name": "No bare scores",
+      "blocking": true,
+      "ok": true,
+      "detail": "None found."
+    },
+    {
+      "id": "R7",
+      "name": "Reading age 12",
+      "blocking": false,
+      "ok": true,
+      "detail": "Reads at about age 12."
+    },
+    {
+      "id": "CALL",
+      "name": "A dated prediction with a confidence",
+      "blocking": true,
+      "ok": true,
+      "detail": "Has a date to check by and a confidence."
+    },
+    {
+      "id": "CALL_HORIZON",
+      "name": "A prediction due within about three months",
+      "blocking": true,
+      "ok": false,
+      "detail": "The prediction is due 2027-06-30, 254 days away. Name what you believe happens within about three months (92 days at most), not a year away."
+    },
+    {
+      "id": "CLEAR_STANCE",
+      "name": "Take a clear stance",
+      "blocking": true,
+      "ok": true,
+      "detail": "85% is a clear stance."
+    },
+    {
+      "id": "R6",
+      "name": "Plain words",
+      "blocking": false,
+      "ok": false,
+      "detail": "Make sure each is explained where it first appears: token, inference, prompt."
+    }
+  ],
+  "ready": false,
+  "receipts": [],
+  "next_run": {
+    "ledger_usable": true,
+    "total_sentences": 150,
+    "reusable_sentences": 139,
+    "fresh_sentences": 11
+  },
+  "precheck": {
+    "numbers_not_on_file": [],
+    "filed_sources_cut": []
+  },
+  "last_run_cost": {
+    "day": "2026-10-19",
+    "runs": 1,
+    "usd_per_run": 0.35,
+    "basis": "run",
+    "run_id": "f05e0409-04cd-40b1-8cf7-7456fe1b8883",
+    "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092"
+  }
+}

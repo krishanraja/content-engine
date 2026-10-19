@@ -4,11 +4,12 @@
 // published refuses until every blocking check passes; Control Center shows
 // the list as a checklist. Pure: no database, no network.
 
+import { createHash } from 'node:crypto'
 import { notXYConstructions } from './_judges/deterministic.js'
 // The one reader of a piece's call, shared with the Studio. Imported by its
 // relative path, as video-studio/_runnerContracts.ts explains; the file has no
 // dependencies of its own.
-import { labelledConfidences, readPieceCall } from '../../../packages/contracts/src/call.js'
+import { callSectionOf, labelledConfidences, readPieceCall } from '../../../packages/contracts/src/call.js'
 
 // ── Mechanical checks before approval or publication ────────────────────────
 
@@ -126,15 +127,32 @@ export const CLEAR_STANCE_AT = 80
  *  (about three months; Krish, 2026-10-19, same words). */
 export const CALL_HORIZON_DAYS = 92
 
+// Ruling (Krish, 2026-10-19): "Keep the approved forecast; allow an exception
+// for this piece". Friday's approved call predates the 92-day rule. Match the
+// piece and the complete prediction (including confidence and falsifier), not
+// its date alone. This cannot waive an expired call or any other publish check.
+const FRIDAY_HORIZON_EXCEPTION = {
+  pieceId: '904658db-4df2-4537-a0ed-ebe93e081db7',
+  predictionSha256: 'cb74e0e6ec1e99739ae57c03c9d998313278d9a364025e550f0ec66b5367f744',
+  detail: 'Krish approved an exception on 19 October 2026 for this unchanged prediction, due 2027-06-30 at 85% confidence.',
+} as const
+
+function approvedHorizonException(body: string, pieceId?: string): boolean {
+  if (pieceId !== FRIDAY_HORIZON_EXCEPTION.pieceId) return false
+  const section = callSectionOf(body)
+  return section !== null && createHash('sha256').update(section.trim()).digest('hex') === FRIDAY_HORIZON_EXCEPTION.predictionSha256
+}
+
 /** Whether the call's date falls inside the horizon: after today, and no more
  *  than CALL_HORIZON_DAYS away. Null when the piece has no readable call. */
-export function callHorizon(body: string, now: Date = new Date()): { ok: boolean; detail: string } | null {
+export function callHorizon(body: string, now: Date = new Date(), pieceId?: string): { ok: boolean; detail: string } | null {
   const reading = readPieceCall(String(body || ''))
   if ('reason' in reading) return null
   const due = new Date(`${reading.call.due}T00:00:00Z`)
   const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
   const days = Math.round((due.getTime() - today.getTime()) / 86_400_000)
   if (days < 1) return { ok: false, detail: `The prediction's date, ${reading.call.due}, has already passed. Name an event still to come.` }
+  if (days > CALL_HORIZON_DAYS && approvedHorizonException(body, pieceId)) return { ok: true, detail: FRIDAY_HORIZON_EXCEPTION.detail }
   if (days > CALL_HORIZON_DAYS) return { ok: false, detail: `The prediction is due ${reading.call.due}, ${days} days away. Name what you believe happens within about three months (${CALL_HORIZON_DAYS} days at most), not a year away.` }
   return { ok: true, detail: `Due ${reading.call.due}, ${days} days away.` }
 }
@@ -218,7 +236,7 @@ export function bareScores(body: string): Array<{ number: string; sentence: stri
 
 /** Every mechanical check a piece must pass before it can be approved or
  *  published. `factGate` is the fact gate's own verdict for this exact text. */
-export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date()): Check[] {
+export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?: string): Check[] {
   const text = String(body || '')
   const checks: Check[] = []
   checks.push({ id: 'FACTS', name: 'Every fact checked twice', blocking: true, ok: factGate.ok, detail: factGate.ok ? 'This exact version passed the fact check.' : (factGate.reason || 'The facts have not passed yet.') })
@@ -249,7 +267,7 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   })
   const call = predictionCheck(text)
   checks.push({ id: 'CALL', name: 'A dated prediction with a confidence', blocking: true, ok: call.ok, detail: call.detail })
-  const horizon = callHorizon(text, now)
+  const horizon = callHorizon(text, now, pieceId)
   checks.push({ id: 'CALL_HORIZON', name: 'A prediction due within about three months', blocking: true, ok: horizon?.ok ?? false, detail: horizon?.detail ?? 'No readable prediction date yet.' })
   // A block since 2026-10-19 (Krish: "I'm done with sitting on the fence"):
   // the call is what we believe will happen, backed at 80% or more.
