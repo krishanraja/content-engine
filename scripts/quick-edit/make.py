@@ -223,6 +223,11 @@ def restart_cut(words, at, before=25.0, slack=6.0):
     return best[1], best[2] - 1
 
 
+def sped_words(words, factor):
+    """Word times on the clock of a take sped up by `factor`."""
+    return [dict(w, s=w['s'] / factor, e=w['e'] / factor) for w in words]
+
+
 def resolve_removals(words, remove):
     """Word ranges to cut. An entry is the words themselves, {"say": "So, you know,",
     "after": "is coming"}, found in the transcript after the `after` phrase, an
@@ -1482,6 +1487,8 @@ def self_test():
     # The intro, the bed and the clock (no media needed).
     ws = [{'w': 'Hello', 's': 0.1, 'e': 0.5}, {'w': 'there.', 's': 19.4, 'e': 19.84}]
     tl = timeline(45, 600, 120, ws)
+    checks.append(('a raw words file goes onto the sped clock (Krish, 19 Oct: subtitles lagging)',
+                   sped_words([{'w': 'a', 's': 11.0, 'e': 22.0}], 1.1), [{'w': 'a', 's': 10.0, 'e': 20.0}]))
     checks.append(('the clock: sting, main, end card, first and last word',
                    (tl['intro_s'], tl['main_s'], tl['outro_s'], tl['total_s'], tl['voice_start_s'], tl['voice_end_s']), (1.5, 20.0, 4.0, 25.5, 1.6, 21.34)))
     wins = [{'id': 'a', 's': 4.0, 'e': 6.0}]
@@ -1897,6 +1904,13 @@ def main():
     words = json.loads(wpath.read_text())['words'] if wpath.exists() else transcribe(src, wpath, cfg.get('model', 'small.en'), cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''))
 
     cuts = resolve_removals(words, cfg.get('remove', []) + cfg.get('remove_words', []))
+    if speed and cfg.get('words'):
+        # A words file named in the config was heard from the take before it was sped up, so its times are on
+        # the raw clock: put them on the sped clock, or the cut points, captions and cards all land late, more
+        # so as it goes. Friday 16 Oct's 90-second cut at 1.10x (Krish, 19 Oct: "the subtitles are lagging
+        # severely", "the video lingers after I've finished my script"). After resolve_removals, whose
+        # restart_near reads the raw clock; a transcript made here is already on the sped clock.
+        words = sped_words(words, speed[0])
     segs, total = segments(words, cuts, cfg.get('max_gap', 0.35), cfg.get('pad_before', 0.10), cfg.get('pad_after', 0.16), dur)
     ws = retime(words, segs)
     wins, missing = cue_windows(ws, cfg.get('cues') or [], total)
