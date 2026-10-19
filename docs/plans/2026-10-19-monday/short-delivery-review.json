@@ -1,0 +1,231 @@
+{
+  "video_sha256": "ddd7c60efc5d3062179b17716d423da12f2be7f81ffa01015cbfba9f7a78e087",
+  "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+  "checks": {
+    "heard": {
+      "status": "pass",
+      "basis": "Krish watched the complete current cut with sound and accepted playback; long external captions corrected in three approved passages.",
+      "human_acceptance": {
+        "by": "Krish",
+        "said": "I watched both; accept playback",
+        "date": "2026-10-19",
+        "scope": "Both current Monday final cuts, watched all the way through with sound; picture/audio unchanged by the three approved external-caption corrections."
+      }
+    },
+    "sync": {
+      "status": "pass",
+      "basis": "Human playback acceptance of this exact file, not an automated sync certification.",
+      "automated_screen_status": "fail",
+      "automated_screen": {
+        "video_sha256": "ddd7c60efc5d3062179b17716d423da12f2be7f81ffa01015cbfba9f7a78e087",
+        "starts": [
+          8.0,
+          20.0,
+          32.0,
+          44.0,
+          58.0,
+          72.0
+        ],
+        "seconds": 6,
+        "speech_span": [
+          4.0,
+          80.0
+        ],
+        "syncnet_revision": "907c0b579c2e2d83f0eae1b2ac9e720cde4e5623",
+        "model_sha256": "961e8696f888fce4f3f3a6c3d5b3267cf5b343100b238e79b2659bff2c605442",
+        "analysis_resolution_ms": 40,
+        "source_frame_period_ms": 41.666666666666664,
+        "method": "sequential frame-index and decoded sample extraction",
+        "calibrated_this_run": true,
+        "points": [
+          {
+            "at_s": 8.0,
+            "offset_ms": -80,
+            "confidence": 3.3837,
+            "distance": 10.2873,
+            "face_detection_rate": 0.9722222222222222,
+            "calibration": [
+              {
+                "injected_audio_delay_ms": -200,
+                "offset_ms": 120,
+                "confidence": 3.1533,
+                "distance": 10.3921,
+                "error_ms": 0
+              },
+              {
+                "injected_audio_delay_ms": 200,
+                "offset_ms": -280,
+                "confidence": 3.5737,
+                "distance": 10.1316,
+                "error_ms": 0
+              }
+            ],
+            "status": "fail"
+          },
+          {
+            "at_s": 20.0,
+            "offset_ms": -40,
+            "confidence": 4.4454,
+            "distance": 9.0098,
+            "face_detection_rate": 0.8958333333333334,
+            "calibration": [
+              {
+                "injected_audio_delay_ms": -200,
+                "offset_ms": 160,
+                "confidence": 4.5565,
+                "distance": 8.9609,
+                "error_ms": 0
+              },
+              {
+                "injected_audio_delay_ms": 200,
+                "offset_ms": -240,
+                "confidence": 4.5576,
+                "distance": 9.0134,
+                "error_ms": 0
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "at_s": 32.0,
+            "offset_ms": -40,
+            "confidence": 3.623,
+            "distance": 9.916,
+            "face_detection_rate": 0.9097222222222222,
+            "calibration": [
+              {
+                "injected_audio_delay_ms": -200,
+                "offset_ms": 160,
+                "confidence": 3.6095,
+                "distance": 9.9521,
+                "error_ms": 0
+              },
+              {
+                "injected_audio_delay_ms": 200,
+                "offset_ms": -240,
+                "confidence": 3.5733,
+                "distance": 9.9284,
+                "error_ms": 0
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "at_s": 44.0,
+            "offset_ms": -40,
+            "confidence": 4.565,
+            "distance": 9.7519,
+            "face_detection_rate": 0.6805555555555556,
+            "calibration": [
+              {
+                "injected_audio_delay_ms": -200,
+                "offset_ms": 160,
+                "confidence": 4.8193,
+                "distance": 9.6193,
+                "error_ms": 0
+              },
+              {
+                "injected_audio_delay_ms": 200,
+                "offset_ms": -240,
+                "confidence": 4.3815,
+                "distance": 9.7968,
+                "error_ms": 0
+              }
+            ],
+            "status": "inconclusive"
+          },
+          {
+            "at_s": 58.0,
+            "offset_ms": -40,
+            "confidence": 3.1068,
+            "distance": 9.7102,
+            "face_detection_rate": 0.5763888888888888,
+            "calibration": [
+              {
+                "injected_audio_delay_ms": -200,
+                "offset_ms": 160,
+                "confidence": 3.1236,
+                "distance": 9.7252,
+                "error_ms": 0
+              },
+              {
+                "injected_audio_delay_ms": 200,
+                "offset_ms": -240,
+                "confidence": 3.3838,
+                "distance": 9.4549,
+                "error_ms": 0
+              }
+            ],
+            "status": "inconclusive"
+          },
+          {
+            "at_s": 72.0,
+            "offset_ms": -40,
+            "confidence": 4.3589,
+            "distance": 9.3746,
+            "face_detection_rate": 0.6180555555555556,
+            "calibration": [
+              {
+                "injected_audio_delay_ms": -200,
+                "offset_ms": 160,
+                "confidence": 4.3668,
+                "distance": 9.2962,
+                "error_ms": 0
+              },
+              {
+                "injected_audio_delay_ms": 200,
+                "offset_ms": -240,
+                "confidence": 4.4159,
+                "distance": 9.3379,
+                "error_ms": 0
+              }
+            ],
+            "status": "inconclusive"
+          }
+        ],
+        "status": "fail"
+      },
+      "limitation": "The short has one 80 ms estimate; other estimates are 0 to 40 ms. Some face-detection/confidence checks are inconclusive. No progressive drift observed; accepted media preserved."
+    },
+    "loudness": {
+      "status": "pass",
+      "basis": "Encoded final-file measurement in render evidence and human acceptance of the sound mix.",
+      "evidence_file": "short-render-evidence.json"
+    },
+    "visuals": {
+      "status": "pass",
+      "basis": "All one-second frames and quarter-second bookend frames inspected, followed by Krish full-playback acceptance.",
+      "evidence": {
+        "reviewer": "Codex",
+        "cadence_seconds": 1,
+        "story_cadence_seconds": 0.25,
+        "inspected_sheets": 8,
+        "findings": [
+          "All 85 sampled seconds and 38 intro/outro samples inspected.",
+          "Lowered face-band crop keeps eyes, mouth and chin visible in sampled card frames.",
+          "Argon capitalization corrected in final burned captions.",
+          "All three cards and branded story sequence remain within frame.",
+          "Brief ghosting during 0.35-second crossfades is the current house transition, not persistent doubling."
+        ],
+        "limitations": [
+          "No real-time listening capability in this interface.",
+          "Natural walking motion judged from source comparisons and sampled final frames, not continuous playback."
+        ]
+      },
+      "evidence_is_prior_render_review": true
+    },
+    "full_review": {
+      "status": "pass",
+      "by": "Krish",
+      "said": "I watched both; accept playback",
+      "video_sha256": "ddd7c60efc5d3062179b17716d423da12f2be7f81ffa01015cbfba9f7a78e087"
+    },
+    "decode": {
+      "status": "pass",
+      "basis": "Full ffmpeg video/audio decode, no error output."
+    }
+  },
+  "paid_calls": 0,
+  "library_path": "3 Posts/2026-10-19 Mon follow.the.money - Why AI prices keep changing/3 Video/Why AI prices keep changing - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+  "caption_resolution": "All three previously flagged passages were resolved by Krish; approved external SRT/transcript are included. The original render review is retained as historical evidence."
+}

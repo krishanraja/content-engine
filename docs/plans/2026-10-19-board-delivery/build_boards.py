@@ -14,6 +14,8 @@ import week_board as board
 from prepare import CACHE, PLAN, save
 
 def main():
+    if (ROOT/'docs/plans/2026-10-19-monday/release-receipt.json').exists():
+        raise RuntimeError('Monday is released. This historical two-board draft builder must not restore its old hold. Use the current web board as --previous and preserve the released day.')
     queue = board.live_reader()('/api/idea-queue')
     save(CACHE/'queue-live.json',queue)
     receipts=[]

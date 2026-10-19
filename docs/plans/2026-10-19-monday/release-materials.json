@@ -1,0 +1,171 @@
+{
+  "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+  "status": "ready",
+  "note": "Ready for your publishing steps. Both final cuts are accepted after your full playback with sound, and the three caption corrections are included. Your source-backed manual fact review is recorded separately from the original automated result. No further paid check was run. The article uses your prediction: 95% by 31 December 2026.",
+  "sections": [
+    {
+      "id": "article-files",
+      "title": "Article and final cover files",
+      "note": "Use the article Copy control below for Substack, or download the complete HTML. Each cover is named for its intended size and channel.",
+      "files": [
+        {
+          "label": "Download text-that-passed-the-fact-check.md",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-985869ee101d?sha=e2f25a52ed2b494482e7d8d98cb675679951881ef99854ed464f9ae8e81a6242"
+        },
+        {
+          "label": "Download substack-copy.html",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-09a6d111ce2b?sha=b1a7452c3635da16bddfce95803c0f13dd29b3e8367eab294e631552b20ca6b6"
+        },
+        {
+          "label": "Download web-page.html",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-a8982a5b5c65?sha=f08bfe6b8cd65b4167efe837cd4b8e37085110c291e0727f7cce2a46b8129b67"
+        },
+        {
+          "label": "Download email-pictures-off.html",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-128ca87b261f?sha=6cfbaf3326a7318029cbbc0ebf1d3002f6f1a20badc7ad96999d2049586ff863"
+        },
+        {
+          "label": "Download substack-feed-1200x800.png",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-4bb2b8939704?sha=8b1706aace94d159c3b7ea0bec5d6da0a8270f52b56e74665abf290a2862da5e"
+        },
+        {
+          "label": "Download substack-cover-1200x630.png",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-70f0f1f7bf58?sha=aff6b8ca99751dbfcf53719424100db3d0c7b64aeae841701417a532e074ba56"
+        },
+        {
+          "label": "Download share-card-1200x675.png",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-5a3cd32e9699?sha=a02a72412f496e56dc9bf35d440afce5bba68ede56300425f3dcf881fa652e97"
+        },
+        {
+          "label": "Download square-1080x1080.png",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-c4d2b2b06c60?sha=51fff1d6ddc01b47b9006686bd0b6d74e5adfcfd553ba2215e3d8df51e5071f3"
+        },
+        {
+          "label": "Download vertical-cover-1080x1920-shorts-tiktok-reels.png",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-7bdf60d64472?sha=98937d394634c1f699d6ede2d08e7c38d00024b9689dc143277a358245dc5594"
+        },
+        {
+          "label": "Download google.png",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-ae549fb322e9?sha=8df12aabe5c0134a143c16a26a61aa348d785e4b301d9b2d1aeb0c03c9ecaac7"
+        },
+        {
+          "label": "Download same.png",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-3d928e6f62b2?sha=51e8ab0cd24cd7fcf06efe257d7421716294bb6c06f41f0aadf259080097d62c"
+        },
+        {
+          "label": "Download bill.png",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-final-de2c6f47c438?sha=d57eb07df9b00d61ef991f5b904c637460c0b73875dc6c0321847a045befcf9c"
+        }
+      ]
+    },
+    {
+      "id": "video",
+      "title": "Monday: finished video files",
+      "note": "The long cut is for Substack, YouTube and Spotify. The short is for Shorts, Reels, TikTok, LinkedIn and the Spotify clip. Use these finished cuts, not the original recordings in the Inbox.",
+      "files": [
+        {
+          "label": "Download long video (5:51)",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-long-review?sha=90392c47fcec934f3507cf2d7dd5e26a7ddd3fd26c5c70a9988e9cb11c4f0c19"
+        },
+        {
+          "label": "Download short video (1:26)",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-short-review?sha=ddd7c60efc5d3062179b17716d423da12f2be7f81ffa01015cbfba9f7a78e087"
+        },
+        {
+          "label": "Download YouTube thumbnail",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-wide-thumbnail?sha=60ae467142bdd46454698759ede576a15c8cbdbab48ec94bc205ba162c4fe927"
+        },
+        {
+          "label": "Download vertical thumbnail",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-tall-thumbnail?sha=9566ee431745280d136cee4c693e1268e3ccfb010806019b757bd925bb044f01"
+        },
+        {
+          "label": "Download approved long-video captions (SRT)",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-approved-captions?sha=933d38361ca97745d45cc63ce921514b6e9bb389e9bf5fe1cef575361bd100c9"
+        },
+        {
+          "label": "Download approved long-video transcript",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-approved-transcript?sha=f8d47b365059c5381e795ff236e259fd282cb726d33f941ca4f481ec9ae7fd6d"
+        }
+      ]
+    },
+    {
+      "id": "youtube",
+      "title": "YouTube and Substack video",
+      "note": "Video title approved as set A. Description prepared from the signed-off treatment and recorded script; Ready for your publishing steps.",
+      "copy": [
+        {
+          "label": "Video title",
+          "text": "Why Google, OpenAI and Anthropic keep changing AI prices"
+        },
+        {
+          "label": "Description",
+          "text": "Google, OpenAI and Anthropic keep changing their AI prices. How do you budget when the offer you sign up for can end?\n\nThree rules for your next AI budget: budget at the full price, agree a price and an end date, and keep the freedom to switch.\n\nWatch the explanation, then ask whoever owns your AI budget what each completed task costs.\n\nMore at makeyourmindup.ai"
+        }
+      ]
+    },
+    {
+      "id": "shorts",
+      "title": "Shorts, Reels, TikTok and LinkedIn",
+      "note": "Short title approved as set A. Caption prepared from the recorded message; Ready for your publishing steps.",
+      "copy": [
+        {
+          "label": "Short title",
+          "text": "Google, OpenAI and Anthropic: three rules for your AI budget"
+        },
+        {
+          "label": "Caption",
+          "text": "Google, OpenAI and Anthropic keep changing AI prices. Three rules for your next budget: budget at the full price, agree a price and an end date, and keep the freedom to switch.\n\nThe full explanation is at makeyourmindup.ai."
+        }
+      ]
+    },
+    {
+      "id": "spotify",
+      "title": "Spotify: episode, thumbnail and chapters",
+      "note": "Use the long video as the episode and the short as its clip. Add the chapters to the description. Leave episode art empty to use the show art. Your Make Your Mind Up show and active Epidemic Sound subscription are confirmed. Ready to upload when you publish.",
+      "files": [
+        {
+          "label": "Download Spotify thumbnail (1920x1080)",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-spotify-thumbnail?sha=83262c87cd5e638fcebd0771ee2547437d1699c9be38ce93c0b037622df97e4b"
+        },
+        {
+          "label": "Download chapters",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-spotify-chapters?sha=5b00700b2716f2e587613cc2bfe2c103eb3a730c1400122c5236abd051d1f99b"
+        }
+      ],
+      "copy": [
+        {
+          "label": "Episode title",
+          "text": "Why Google, OpenAI and Anthropic keep changing AI prices"
+        },
+        {
+          "label": "Description",
+          "text": "Google, OpenAI and Anthropic keep changing their AI prices. How do you budget when the offer you sign up for can end?\n\nThree rules for your next AI budget: budget at the full price, agree a price and an end date, and keep the freedom to switch.\n\nWatch the explanation, then ask whoever owns your AI budget what each completed task costs.\n\nMore at makeyourmindup.ai"
+        },
+        {
+          "label": "Chapters",
+          "text": "00:00 Why AI prices keep changing\n01:17 Three AI firms keep changing prices\n02:12 Why a cheap AI tool is costly to leave\n02:45 AI discounts can change too\n03:56 Three rules for your AI budget\n04:55 My AI price prediction for 2026"
+        }
+      ]
+    },
+    {
+      "id": "caption-review",
+      "title": "Caption corrections confirmed",
+      "note": "Krish confirmed all three passages on 19 October: $4 a batch to read tokens, and $20 a batch to write tokens; two ways to bring the bill down; where you work. The source excerpts are retained for reference. The approved SRT and transcript are in the video files above.",
+      "files": [
+        {
+          "label": "Listen: four batch / twenty batch",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-caption-82?sha=6791db84783962308ea103071b91ef3daa5dd8dc71e3c3eb6cdba9de3e3826eb"
+        },
+        {
+          "label": "Listen: bill / build and correction",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-caption-157?sha=8702ca20e862ff4118e00cb641063208609d7cbe0390715034731c335f147648"
+        },
+        {
+          "label": "Listen: where you work / way work",
+          "url": "https://content.krishraja.com/api/board/2026-10-19/assets/monday-caption-331?sha=e38eb964bc28730ed9fbff8f993aa43fa803841c779d14a94497945ad992d1b4"
+        }
+      ]
+    }
+  ]
+}

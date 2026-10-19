@@ -1,0 +1,199 @@
+{
+  "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+  "date": "2026-10-19",
+  "subchannel": "follow.the.money",
+  "subject": "Why AI prices keep changing",
+  "headline": "Why Google, OpenAI and Anthropic keep changing AI prices",
+  "files": [
+    {
+      "kind": "fact-checked-text",
+      "file": "publish-body.md"
+    },
+    {
+      "kind": "substack-copy",
+      "file": "../../../.cache/monday-release-gates/pages/substack.html",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "web-page",
+      "file": "../../../.cache/monday-release-gates/pages/page.html",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "email-pictures-off",
+      "file": "../../../.cache/monday-release-gates/pages/email-pictures-off.html",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "cover",
+      "file": "../../../.cache/monday-release-gates/pages/cover.png",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "substack-cover",
+      "file": "../../../.cache/monday-release-gates/pages/cover-1200x630.png",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "share-card-cover",
+      "file": "../../../.cache/monday-release-gates/pages/cover-1200x675.png",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "square-cover",
+      "file": "../../../.cache/monday-release-gates/pages/cover-1080x1080.png",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "vertical-cover",
+      "file": "../../../.cache/monday-release-gates/pages/cover-1080x1920.png",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "phone-check",
+      "file": "../../../.cache/monday-release-gates/pages/phone-images.png",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "image",
+      "file": "../../../.cache/monday-release-gates/article-cards/google.png",
+      "purpose": "Google public pricing before and after 1 December.",
+      "logos": [],
+      "shows": "chart",
+      "data_source": "The dated provider sources and illustrative calculation in the checked article.",
+      "measures": "US dollars per million tokens"
+    },
+    {
+      "kind": "image",
+      "file": "../../../.cache/monday-release-gates/article-cards/same.png",
+      "purpose": "The selected offers compared, including their time limits.",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ],
+      "shows": "chart",
+      "data_source": "The dated provider sources and illustrative calculation in the checked article.",
+      "measures": "US dollars per million tokens"
+    },
+    {
+      "kind": "image",
+      "file": "../../../.cache/monday-release-gates/article-cards/bill.png",
+      "purpose": "The article\u2019s illustrative monthly bill, with reuse discounts.",
+      "logos": [],
+      "shows": "chart",
+      "data_source": "The dated provider sources and illustrative calculation in the checked article.",
+      "measures": "Illustrative total monthly US dollars for the same workload"
+    },
+    {
+      "kind": "video",
+      "shape": "wide",
+      "file": "../../../.cache/produce/2026-10-19-5b5bfadc/long/why-ai-prices-keep-changing-long-16x9.mp4",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "thumbnail",
+      "shape": "wide",
+      "file": "../../../.cache/produce/2026-10-19-5b5bfadc/thumbs/thumb-wide-1280x720.jpg",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "video",
+      "shape": "tall",
+      "file": "../../../.cache/produce/2026-10-19-5b5bfadc/short/why-ai-prices-keep-changing-short-9x16.mp4",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "thumbnail",
+      "shape": "tall",
+      "file": "../../../.cache/produce/2026-10-19-5b5bfadc/thumbs/thumb-tall-1080x1920.jpg",
+      "logos": [
+        "Google",
+        "OpenAI",
+        "Anthropic"
+      ]
+    },
+    {
+      "kind": "captions",
+      "file": "../../../.cache/monday-final-captions/files/Why AI prices keep changing - long - approved captions.srt"
+    },
+    {
+      "category": "video",
+      "file": "captions/long-approved.txt",
+      "name": "Approved long-cut transcript.txt",
+      "purpose": "The recorded long cut, with Krish\u2019s three confirmed caption corrections."
+    },
+    {
+      "category": "video",
+      "file": "../../../.cache/produce/2026-10-19-5b5bfadc/short/why-ai-prices-keep-changing-short.cut.txt",
+      "name": "Short-cut transcript.txt",
+      "purpose": "Transcript of the accepted short cut."
+    },
+    {
+      "category": "video",
+      "file": "../../../.cache/publish-ready-2026-10-19/monday-spotify-1920x1080.jpg",
+      "name": "Spotify thumbnail 1920x1080.jpg",
+      "purpose": "The 1920 x 1080 thumbnail for the Spotify video episode."
+    },
+    {
+      "kind": "video-words",
+      "file": "publish-words.json"
+    },
+    {
+      "kind": "publish-manager",
+      "file": "../../../.cache/monday-release-gates/manager/publish-manager.html"
+    },
+    {
+      "kind": "publish-kit",
+      "file": "../../../.cache/monday-release-gates/kit/publish.html"
+    }
+  ]
+}
