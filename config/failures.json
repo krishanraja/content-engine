@@ -140,7 +140,7 @@
     {
      "file": "scripts/post-pack/making.py",
      "contains": "def drive_link_patch",
-     "how": "drive-link records it; the 13:25 routine runs it"
+     "how": "drive-link records it; a session runs it (the scheduled board-videos task was retired, Krish 2026-10-19)"
     }
    ]
   },

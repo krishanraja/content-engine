@@ -795,6 +795,26 @@
      "how": "rule read at the start of every Claude Code session"
     }
    ]
+  },
+  {
+   "id": "no-scheduled-board-updates",
+   "on": "2026-10-19",
+   "krish": "I am deleting the publish board Claude schedules from both accounts FYI, scrub them from everywhere. We are not ready for this yet",
+   "why": "The scheduled board-videos task ran on its own on both accounts while the board moved to content.krishraja.com; he wants board updates to come only from sessions he starts.",
+   "means": "No session creates or relies on a scheduled task that builds, updates or publishes a publish board, and no current document names one, until he says he is ready.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "AGENTS.md",
+     "contains": "No session creates a scheduled task (a routine, a trigger, a cron) that builds, updates or publishes a publish board",
+     "how": "the standing rule every agent reads"
+    },
+    {
+     "file": "WORKBENCH.md",
+     "contains": "No schedule puts the videos on the board",
+     "how": "the handover no longer points sessions at the deleted schedule"
+    }
+   ]
   }
  ]
 }
