@@ -469,6 +469,36 @@
      "how": "the four verdicts plus drop, recorded only with decided_by Krish (parseTriage)"
     }
    ]
+  },
+  {
+   "id": "no-stale-skill-copies",
+   "on": "2026-10-19",
+   "krish": "I think we need to not have skills inside repos, surely? that seems dangerous if they are already out of date",
+   "why": "The repository kept its own older copies of krish-voice and content-corpus (content-corpus still named the retired subchannels) beside his newer account-wide skills, so a session could load the stale one.",
+   "means": "A skill that exists account-wide is never also kept in a repository; the repository holds only the engine's own workflows (make-piece, plan-week, produce-video, mindmake-video, video-engine), each either copied for Claude Code or named with its reason, and the Studio pins only those into new jobs.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "tests/repository-contracts.test.ts",
+     "contains": "expect(skillNames).not.toContain('krish-voice')",
+     "how": "a test fails if either retired copy comes back"
+    },
+    {
+     "file": "packages/core/src/runner.ts",
+     "contains": "return ['mindmake-video', 'video-engine']",
+     "how": "new Studio jobs pin only the engine's own skills"
+    },
+    {
+     "file": "scripts/validate-skills.py",
+     "contains": "shares its name with an installed account-wide skill",
+     "how": "skills:validate names any repo skill that doubles an account-wide one"
+    },
+    {
+     "file": "scripts/validate-skills.py",
+     "contains": "NOT_FOR_CLAUDE = {",
+     "how": "every repo skill is copied for Claude Code or named with its reason, or verify fails"
+    }
+   ]
   }
  ]
 }

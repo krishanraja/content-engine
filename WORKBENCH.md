@@ -684,7 +684,8 @@ models (Opus, with `repo-scout`, `executor` and `reviewer` subagents in `.claude
 hooks that refuse secrets and North Star edits and put every publish, send or taste-rule edit to
 Krish in person (`.claude/hooks/`), and the checks. To find code, search `docs/REPO_MAP.md`
 (`npm run repo-map` keeps it current) rather than opening files. `docs/ENGINE_SESSION.md`,
-"Running from Claude Code", has the session loop.
+"Running from Claude Code", has the session loop. The handover for the job that set this up is
+`docs/handovers/2026-10-19-claude-code-parity.md`.
 
 Krish starts a session by pasting this:
 
