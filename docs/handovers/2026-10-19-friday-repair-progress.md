@@ -343,3 +343,10 @@ No audio/cut/transcript changes in this composition revision. The four deep capt
 repairs from the prior checkpoint remain. Fresh reports must bind the new hashes;
 never relabel v6's sync pass as v8's. Article fact gate remains failed. Review both
 finished cuts with sound before conditional replacement filing and the two links.
+
+## Composition approval — 19 Oct
+
+Krish replied "Looks good" to the displayed Sally card and cross-cut composition
+audit. Recorded in repair-approval-19oct.json as approval of that illustration and
+composition direction. Neither complete new cut was presented at this point; this
+does not certify full playback, finished-video acceptance or publication clearance.

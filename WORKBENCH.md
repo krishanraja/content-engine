@@ -50,6 +50,8 @@ deep v4 are now rendering from isolated repair-kit-v8 inputs: Sally has a genera
 fictional business-owner illustration, plain text is compact, evidence crops are
 stacked at full width, corner source logos are removed, and deep text clears the
 caption band. All 109 card previews were inspected; final-file review is pending.
+Krish then approved the presented Sally and revised compositions: "Looks good".
+This approves the visuals, not full finished-video playback or acceptance.
 Superseded short v7 and deep v3 renders were stopped, not filed.
 Thirty-three
 bounded independent transcription checks and the full medium-model transcript

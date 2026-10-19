@@ -4,8 +4,18 @@
   "approved_on": "2026-10-19",
   "approval_words": "Approve this treatment and music balance",
   "scope": "The presented authentic two-stage mapping, wide treatment, beat direction and audition balance for producing the remaining visuals and both repaired cuts.",
-  "mapping": ["Mercedes = Claude", "C-Class = Opus 5.5"],
-  "music": {"track": "no-curves-instrumental", "speech_bed_lufs": -31, "chapter_lift_lufs": -22, "rise_s": 0.5, "fall_s": 0.8, "track_crossfade_s": 2},
+  "mapping": [
+    "Mercedes = Claude",
+    "C-Class = Opus 5.5"
+  ],
+  "music": {
+    "track": "no-curves-instrumental",
+    "speech_bed_lufs": -31,
+    "chapter_lift_lufs": -22,
+    "rise_s": 0.5,
+    "fall_s": 0.8,
+    "track_crossfade_s": 2
+  },
   "filing_instruction": {
     "by": "Krish",
     "on": "2026-10-19",
@@ -14,5 +24,18 @@
     "preservation": "Preserve rejected files as superseded copies, consistent with the approved repair plan. Do not destroy the originals.",
     "status": "authorized_conditionally_on_completed_repairs_and_review"
   },
-  "not_granted": ["finished-video acceptance", "publication clearance", "board migration before video repairs and review"]
+  "not_granted": [
+    "finished-video acceptance",
+    "publication clearance",
+    "board migration before video repairs and review"
+  ],
+  "composition_approval": {
+    "by": "Krish",
+    "on": "2026-10-19",
+    "words": "Looks good",
+    "scope": "The presented Sally illustration and revised card composition following the cross-cut sparse-layout audit, used by short v8 and deep v4.",
+    "preview": "illustrations/sally-card-v8.png",
+    "audit": "repair-evidence-19oct/composition-audit-v8-v4.json",
+    "finished_video_acceptance": false
+  }
 }
