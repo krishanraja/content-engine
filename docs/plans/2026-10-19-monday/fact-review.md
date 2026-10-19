@@ -5,7 +5,7 @@ The initial request with a 90-sentence cap was rejected before any model call be
 
 The saved result ran at 2026-10-19T17:49:56.602Z. Recorded cost: $0.35, versus the disclosed $0.10 last-run estimate. The CLI budget checks the previous run's cost; it is not a hard in-flight spending cap. No further paid run is authorised by this approval.
 
-The fact gate remains closed: 14 blocking claim entries, with three existing signed-off entries leaving 11 unresolved. This document is evidence for resolution, not a gate override or a claimed pass.
+Initial result: 14 blocking claim entries, with three prior sign-offs leaving 11 unresolved. See the later approval/readback below for current state.
 
 ## Primary-source review
 
@@ -32,7 +32,7 @@ The gate also treats the standalone list markers "1." and "3." as factual claims
 
 The video files are review outputs until the unresolved editorial and visual gates are complete. Their source recordings and signed-off scripts remain unchanged.
 
-## Exact entries still requiring resolution
+## Exact entries put to Krish for resolution
 
 1. OpenAI, 21 August: "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens."
 
@@ -56,3 +56,21 @@ The video files are review outputs until the unresolved editorial and visual gat
 
 11. 3.
 
+
+## Krish approval and authenticated readback
+
+Krish approved the exact listed entries: "Sign off the listed entries on that basis". The authenticated API saved nine new distinct sign-offs covering ten claim entries, preserving the three prior sign-offs. A fresh GET confirms one remaining blocking claim: the OpenAI 21 August $4/$20 sentence is labelled contradicted, which signOff refuses by design. The live OpenAI changelog explicitly supplies that date and those promotional prices; the independent checker cited older launch prices. No fifth paid run, article edit, or gate override was made. Evidence and the exact receipt: `fact-signoff-receipt.json` and `fact-review.md` in the Monday plan.
+
+The signed-off basis remains the one disclosed in the question: illustrative arithmetic; two list markers; the first-person reading statement; the six-event count; and the selected offers/successor models, not all products. Approval is not recorded as an automated verification.
+
+## Remaining source mismatch
+
+Fresh source read: [OpenAI API changelog](https://developers.openai.com/api/docs/changelog), 19 October 2026, August 2026 section, Aug 21 update for gpt-5.6-sol. It gives input $4/million and output $20/million and identifies promotional pricing through at least 21 November. The independent checker instead cites the launch page with $5/$30 and itself acknowledges the August 21 temporary reduction. Its evidence does not refute the promotional prices. The on-file checker also omitted the day heading.
+
+No free verdict-correction action exists in the current fact-check API: GET reads, sign_off excludes contradicted claims, and the remaining POST path runs a paid check. Do not silently patch fact_check metadata or weaken the contradiction guard. Prepare a dated primary-source excerpt and obtain explicit approval before any further paid run. Last measured run: $0.35, an estimate for comparison, not a hard cap or guaranteed price.
+
+The dated source excerpt has now been filed as material `c5ac2492-10cc-4448-88df-af86bd102bdb`, with all earlier materials retained and exact content read back. Free precheck: 72 reusable sentences, 14 fresh. `dated-source-receipt.json` holds the source, digest and readback. Krish declined that fifth run: "Keep the videos in review; do not spend more". None has started.
+
+## Final review decision
+
+Krish declined a fifth paid run: "Keep the videos in review; do not spend more". Both cuts remain review copies. No additional paid fact check, posting, gate override, or Video-complete record is authorised. Ten of the eleven listed claim entries have recorded sign-off; one contradicted-category entry remains blocked despite the dated primary-source evidence. Next work is unpaid diagnosis or review, with any new paid action requiring fresh explicit approval.

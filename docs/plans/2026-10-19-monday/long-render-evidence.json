@@ -1,0 +1,792 @@
+{
+  "cut": "long",
+  "file": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\long\\why-ai-prices-keep-changing-long-16x9.mp4",
+  "sha256": "90392c47fcec934f3507cf2d7dd5e26a7ddd3fd26c5c70a9988e9cb11c4f0c19",
+  "size": 211951035,
+  "frames_sampled": 351,
+  "contact_sheets": [
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-01.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-02.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-03.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-04.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-05.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-06.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-07.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-08.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-09.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-10.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-11.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\contact-12.jpg"
+  ],
+  "story_contact_sheets": [
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\intro-01.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\long\\outro-01.jpg"
+  ],
+  "status": "Frame-sampling review and encoded audio measurements passed; real-time audiovisual review and editorial/pack gates remain open",
+  "report": {
+    "name": "why-ai-prices-keep-changing-long",
+    "source_seconds": 354.89,
+    "cut_seconds": 341.458,
+    "segments": 15,
+    "cues": [
+      {
+        "id": "google",
+        "s": 31.71,
+        "e": 70.11
+      },
+      {
+        "id": "rivals",
+        "s": 73.53,
+        "e": 109.99
+      },
+      {
+        "id": "same",
+        "s": 109.99,
+        "e": 128.44
+      },
+      {
+        "id": "lockin",
+        "s": 134.725,
+        "e": 156.485
+      },
+      {
+        "id": "reuse",
+        "s": 161.785,
+        "e": 179.092
+      },
+      {
+        "id": "bill",
+        "s": 179.092,
+        "e": 198.488
+      },
+      {
+        "id": "jobs",
+        "s": 198.488,
+        "e": 228.967
+      },
+      {
+        "id": "budget",
+        "s": 233.647,
+        "e": 243.727
+      },
+      {
+        "id": "contract",
+        "s": 243.727,
+        "e": 255.275
+      },
+      {
+        "id": "switch",
+        "s": 255.275,
+        "e": 292.072
+      },
+      {
+        "id": "prediction",
+        "s": 292.072,
+        "e": 319.81
+      },
+      {
+        "id": "questions",
+        "s": 319.81,
+        "e": 334.993
+      }
+    ],
+    "missing_cues": [],
+    "captions": 250,
+    "spellings": [
+      {
+        "heard": "canceled",
+        "script": "cancelled",
+        "at": 102.62
+      }
+    ],
+    "loudness_in": "-24.66",
+    "voice_repair": {
+      "chain": "highpass=f=80,afftdn=nr=10:nf=-50:tn=1,equalizer=f=250:t=q:w=1.0:g=-2,equalizer=f=4000:t=q:w=1.2:g=1.5,deesser=i=0.35:m=0.5:f=0.5:s=o,acompressor=threshold=0.1:ratio=2.5:attack=12:release=180:knee=3:makeup=1.6",
+      "before_lufs": "-27.30",
+      "before_lra": "5.30",
+      "after_lufs": "-24.66",
+      "after_lra": "4.60"
+    },
+    "sniffs": [
+      {
+        "at": "0:04.41",
+        "s": 4.41,
+        "e": 4.55,
+        "peak_db": -78.5,
+        "floor_db": -97.6
+      },
+      {
+        "at": "0:14.87",
+        "s": 14.87,
+        "e": 15.1,
+        "peak_db": -63.7,
+        "floor_db": -97.6
+      },
+      {
+        "at": "0:23.73",
+        "s": 23.73,
+        "e": 24.05,
+        "peak_db": -61.9,
+        "floor_db": -97.6
+      },
+      {
+        "at": "0:31.35",
+        "s": 31.35,
+        "e": 31.5,
+        "peak_db": -56.0,
+        "floor_db": -97.6
+      },
+      {
+        "at": "0:31.52",
+        "s": 31.52,
+        "e": 31.65,
+        "peak_db": -58.9,
+        "floor_db": -97.6
+      },
+      {
+        "at": "0:46.28",
+        "s": 46.28,
+        "e": 46.44,
+        "peak_db": -68.6,
+        "floor_db": -97.6
+      },
+      {
+        "at": "0:46.50",
+        "s": 46.5,
+        "e": 46.63,
+        "peak_db": -60.8,
+        "floor_db": -97.6
+      },
+      {
+        "at": "0:48.33",
+        "s": 48.33,
+        "e": 48.51,
+        "peak_db": -63.8,
+        "floor_db": -97.6
+      },
+      {
+        "at": "0:59.65",
+        "s": 59.65,
+        "e": 59.96,
+        "peak_db": -57.8,
+        "floor_db": -97.6
+      },
+      {
+        "at": "1:10.10",
+        "s": 70.1,
+        "e": 70.41,
+        "peak_db": -70.6,
+        "floor_db": -97.6
+      },
+      {
+        "at": "1:14.91",
+        "s": 74.91,
+        "e": 75.09,
+        "peak_db": -68.7,
+        "floor_db": -97.6
+      },
+      {
+        "at": "1:19.98",
+        "s": 79.98,
+        "e": 80.23,
+        "peak_db": -60.5,
+        "floor_db": -97.6
+      },
+      {
+        "at": "1:49.58",
+        "s": 109.58,
+        "e": 109.71,
+        "peak_db": -57.6,
+        "floor_db": -97.6
+      },
+      {
+        "at": "2:04.87",
+        "s": 124.87,
+        "e": 125.2,
+        "peak_db": -60.1,
+        "floor_db": -97.6
+      },
+      {
+        "at": "2:17.23",
+        "s": 137.23,
+        "e": 137.38,
+        "peak_db": -58.6,
+        "floor_db": -97.6
+      },
+      {
+        "at": "2:36.39",
+        "s": 156.39,
+        "e": 156.7,
+        "peak_db": -56.4,
+        "floor_db": -97.6
+      },
+      {
+        "at": "2:48.13",
+        "s": 168.13,
+        "e": 168.25,
+        "peak_db": -54.3,
+        "floor_db": -97.6
+      },
+      {
+        "at": "3:07.77",
+        "s": 187.77,
+        "e": 188.02,
+        "peak_db": -55.0,
+        "floor_db": -97.6
+      },
+      {
+        "at": "3:10.36",
+        "s": 190.36,
+        "e": 190.57,
+        "peak_db": -69.7,
+        "floor_db": -97.6
+      },
+      {
+        "at": "3:35.30",
+        "s": 215.3,
+        "e": 215.58,
+        "peak_db": -54.7,
+        "floor_db": -97.6
+      },
+      {
+        "at": "4:03.18",
+        "s": 243.18,
+        "e": 243.65,
+        "peak_db": -57.8,
+        "floor_db": -97.6
+      },
+      {
+        "at": "4:06.49",
+        "s": 246.49,
+        "e": 246.71,
+        "peak_db": -64.5,
+        "floor_db": -97.6
+      },
+      {
+        "at": "4:11.12",
+        "s": 251.12,
+        "e": 251.3,
+        "peak_db": -61.7,
+        "floor_db": -97.6
+      },
+      {
+        "at": "4:39.69",
+        "s": 279.69,
+        "e": 279.89,
+        "peak_db": -57.5,
+        "floor_db": -97.6
+      },
+      {
+        "at": "4:47.49",
+        "s": 287.49,
+        "e": 287.87,
+        "peak_db": -58.8,
+        "floor_db": -97.6
+      },
+      {
+        "at": "4:51.88",
+        "s": 291.88,
+        "e": 292.01,
+        "peak_db": -55.6,
+        "floor_db": -97.6
+      },
+      {
+        "at": "5:23.91",
+        "s": 323.91,
+        "e": 324.24,
+        "peak_db": -60.8,
+        "floor_db": -97.6
+      },
+      {
+        "at": "5:34.79",
+        "s": 334.79,
+        "e": 334.96,
+        "peak_db": -56.1,
+        "floor_db": -97.6
+      },
+      {
+        "at": "5:35.14",
+        "s": 335.14,
+        "e": 335.31,
+        "peak_db": -58.0,
+        "floor_db": -97.6
+      }
+    ],
+    "fps": 24,
+    "16x9_file": "why-ai-prices-keep-changing-long-16x9.mp4",
+    "shapes": {
+      "16x9": {
+        "file": "why-ai-prices-keep-changing-long-16x9.mp4",
+        "intro_seconds": 3.5,
+        "main_seconds": 341.4583,
+        "outro_seconds": 6.0,
+        "total_seconds": 350.9583,
+        "voice_start_seconds": 3.7,
+        "voice_end_seconds": 344.658,
+        "intro": {
+          "source": "override",
+          "series": null,
+          "file": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\story\\intro-16x9.mp4",
+          "sha256": "caec721134ec3655cd6a20f15e0e707fb66cccf5d2e2f7b33ec26ef8ce2b28b3",
+          "seconds": 3.5,
+          "own_sound_replaced": false
+        },
+        "music": {
+          "track_id": "no-curves-instrumental",
+          "title": "NO CURVES (Instrumental Version)",
+          "artist": "Superintendent McCupcakes",
+          "sha256": "291f2fa0d9b1c363bdc1f01935d30de57ca365314115ef5e0c51e39e9a1091e2",
+          "file": "ES_NO CURVES (Instrumental Version) - Superintendent McCupcakes.mp3",
+          "ledger": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\config\\music-library.json",
+          "levels": {
+            "status": "approved",
+            "intro_lufs": -16,
+            "bed_lufs": -31,
+            "outro_lufs": -18,
+            "ramp_down_s": 0.5,
+            "ramp_up_s": 0.8,
+            "final_integrated_lufs": -14,
+            "tolerance_lu": 1,
+            "max_true_peak_dbtp": -1.0,
+            "approved_by": "Krish",
+            "approved_on": "2026-10-12",
+            "approval_words": "Feel free to tighten it if I stumbled. For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos."
+          },
+          "gains_db": {
+            "intro": -5.0,
+            "bed": -20.0,
+            "outro": -7.0
+          },
+          "windows": {
+            "intro": [
+              0.0,
+              3.2
+            ],
+            "voice": [
+              3.7,
+              30.7
+            ],
+            "outro": [
+              345.458,
+              349.9583
+            ]
+          },
+          "mode": "episode",
+          "pieces": [
+            {
+              "kind": "open",
+              "at": [
+                0.0,
+                33.7
+              ],
+              "from_track_s": 0.0,
+              "core": [
+                3.7,
+                30.7
+              ],
+              "gain_db": -17.9
+            },
+            {
+              "kind": "accent",
+              "at": [
+                75.68,
+                81.18
+              ],
+              "from_track_s": 33.7,
+              "core": [
+                76.68,
+                79.68
+              ],
+              "gain_db": -15.5
+            },
+            {
+              "kind": "accent",
+              "at": [
+                130.575,
+                136.075
+              ],
+              "from_track_s": 39.2,
+              "core": [
+                131.575,
+                134.575
+              ],
+              "gain_db": -16.8
+            },
+            {
+              "kind": "accent",
+              "at": [
+                163.935,
+                169.435
+              ],
+              "from_track_s": 44.7,
+              "core": [
+                164.935,
+                167.935
+              ],
+              "gain_db": -14.2
+            },
+            {
+              "kind": "accent",
+              "at": [
+                234.757,
+                240.257
+              ],
+              "from_track_s": 50.2,
+              "core": [
+                235.757,
+                238.757
+              ],
+              "gain_db": -16.6
+            },
+            {
+              "kind": "accent",
+              "at": [
+                294.222,
+                299.722
+              ],
+              "from_track_s": 55.7,
+              "core": [
+                295.222,
+                298.222
+              ],
+              "gain_db": -16.9
+            },
+            {
+              "kind": "close",
+              "at": [
+                336.658,
+                350.958
+              ],
+              "from_track_s": 61.2,
+              "core": [
+                337.658,
+                344.658
+              ],
+              "gain_db": -20.2
+            }
+          ],
+          "chosen_for": {
+            "seconds": 100.0,
+            "platforms": [
+              "youtube",
+              "substack"
+            ]
+          },
+          "chosen_for_from": "the track the config names, for this cut alone"
+        },
+        "voice_gain_db": 10.66,
+        "loudness": {
+          "integrated": -14.7,
+          "true_peak": -1.4,
+          "lra": 4.1,
+          "intro_short_term": -17.3,
+          "voice_short_term": -15.4,
+          "outro_short_term": -18.0,
+          "bed_to_voice_lu": 16.0,
+          "windows": {
+            "intro": [
+              0.0,
+              3.2
+            ],
+            "voice": [
+              3.7,
+              30.7
+            ],
+            "outro": [
+              345.458,
+              349.9583
+            ]
+          },
+          "normalisation": "linear",
+          "target": -14,
+          "peak_limited": true
+        },
+        "episode": {
+          "captions_burned": false,
+          "caption_lines": 109,
+          "chapters": [
+            "00:00 Why AI prices keep changing",
+            "01:17 Google, OpenAI and Anthropic keep changing prices",
+            "02:12 Why a cheap AI tool can be costly to leave",
+            "02:45 AI discounts can change too",
+            "03:56 Three rules for your AI budget",
+            "04:55 My AI price prediction for the end of 2026"
+          ],
+          "voice": "repair",
+          "framings": {
+            "push": 0,
+            "close": 0
+          },
+          "end_screen_from_s": null
+        },
+        "srt": "why-ai-prices-keep-changing-long-16x9.srt",
+        "warnings": [
+          "the intro is a file named in the config, not the approved house sting, used on Krish's words in \"intro_override\": \"Krish, 2026-10-19: Approve set A and the listed treatment\"",
+          "a long episode: the bed plays under the open, a lift at each chapter turn and the close, not under the whole talk"
+        ]
+      }
+    },
+    "intro_seconds": 3.5,
+    "main_seconds": 341.4583,
+    "outro_seconds": 6.0,
+    "total_seconds": 350.9583,
+    "intro": {
+      "source": "override",
+      "series": null,
+      "file": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\story\\intro-16x9.mp4",
+      "sha256": "caec721134ec3655cd6a20f15e0e707fb66cccf5d2e2f7b33ec26ef8ce2b28b3",
+      "seconds": 3.5,
+      "own_sound_replaced": false
+    },
+    "music": {
+      "track_id": "no-curves-instrumental",
+      "title": "NO CURVES (Instrumental Version)",
+      "artist": "Superintendent McCupcakes",
+      "sha256": "291f2fa0d9b1c363bdc1f01935d30de57ca365314115ef5e0c51e39e9a1091e2",
+      "file": "ES_NO CURVES (Instrumental Version) - Superintendent McCupcakes.mp3",
+      "ledger": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\config\\music-library.json",
+      "levels": {
+        "status": "approved",
+        "intro_lufs": -16,
+        "bed_lufs": -31,
+        "outro_lufs": -18,
+        "ramp_down_s": 0.5,
+        "ramp_up_s": 0.8,
+        "final_integrated_lufs": -14,
+        "tolerance_lu": 1,
+        "max_true_peak_dbtp": -1.0,
+        "approved_by": "Krish",
+        "approved_on": "2026-10-12",
+        "approval_words": "Feel free to tighten it if I stumbled. For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos."
+      },
+      "gains_db": {
+        "intro": -5.0,
+        "bed": -20.0,
+        "outro": -7.0
+      },
+      "windows": {
+        "intro": [
+          0.0,
+          3.2
+        ],
+        "voice": [
+          3.7,
+          30.7
+        ],
+        "outro": [
+          345.458,
+          349.9583
+        ]
+      },
+      "mode": "episode",
+      "pieces": [
+        {
+          "kind": "open",
+          "at": [
+            0.0,
+            33.7
+          ],
+          "from_track_s": 0.0,
+          "core": [
+            3.7,
+            30.7
+          ],
+          "gain_db": -17.9
+        },
+        {
+          "kind": "accent",
+          "at": [
+            75.68,
+            81.18
+          ],
+          "from_track_s": 33.7,
+          "core": [
+            76.68,
+            79.68
+          ],
+          "gain_db": -15.5
+        },
+        {
+          "kind": "accent",
+          "at": [
+            130.575,
+            136.075
+          ],
+          "from_track_s": 39.2,
+          "core": [
+            131.575,
+            134.575
+          ],
+          "gain_db": -16.8
+        },
+        {
+          "kind": "accent",
+          "at": [
+            163.935,
+            169.435
+          ],
+          "from_track_s": 44.7,
+          "core": [
+            164.935,
+            167.935
+          ],
+          "gain_db": -14.2
+        },
+        {
+          "kind": "accent",
+          "at": [
+            234.757,
+            240.257
+          ],
+          "from_track_s": 50.2,
+          "core": [
+            235.757,
+            238.757
+          ],
+          "gain_db": -16.6
+        },
+        {
+          "kind": "accent",
+          "at": [
+            294.222,
+            299.722
+          ],
+          "from_track_s": 55.7,
+          "core": [
+            295.222,
+            298.222
+          ],
+          "gain_db": -16.9
+        },
+        {
+          "kind": "close",
+          "at": [
+            336.658,
+            350.958
+          ],
+          "from_track_s": 61.2,
+          "core": [
+            337.658,
+            344.658
+          ],
+          "gain_db": -20.2
+        }
+      ],
+      "chosen_for": {
+        "seconds": 100.0,
+        "platforms": [
+          "youtube",
+          "substack"
+        ]
+      },
+      "chosen_for_from": "the track the config names, for this cut alone"
+    },
+    "loudness": {
+      "integrated": -14.7,
+      "true_peak": -1.4,
+      "lra": 4.1,
+      "intro_short_term": -17.3,
+      "voice_short_term": -15.4,
+      "outro_short_term": -18.0,
+      "bed_to_voice_lu": 16.0,
+      "windows": {
+        "intro": [
+          0.0,
+          3.2
+        ],
+        "voice": [
+          3.7,
+          30.7
+        ],
+        "outro": [
+          345.458,
+          349.9583
+        ]
+      },
+      "normalisation": "linear",
+      "target": -14,
+      "peak_limited": true
+    },
+    "warnings": [
+      "the intro is a file named in the config, not the approved house sting, used on Krish's words in \"intro_override\": \"Krish, 2026-10-19: Approve set A and the listed treatment\"",
+      "a long episode: the bed plays under the open, a lift at each chapter turn and the close, not under the whole talk"
+    ],
+    "bookend_balance": {
+      "intro_gain_db": 5.899999999999999,
+      "outro_gain_db": 1.5,
+      "video_stream_copied": true,
+      "before_loudness": {
+        "integrated": -14.2,
+        "true_peak": -1.6,
+        "lra": 4.3,
+        "intro_short_term": -21.9,
+        "voice_short_term": -14.9,
+        "outro_short_term": -19.5,
+        "bed_to_voice_lu": 16.0,
+        "windows": {
+          "intro": [
+            0.0,
+            3.2
+          ],
+          "voice": [
+            3.7,
+            30.7
+          ],
+          "outro": [
+            345.458,
+            349.9583
+          ]
+        },
+        "normalisation": "linear",
+        "target": -14,
+        "peak_limited": true
+      },
+      "after_loudness": {
+        "integrated": -14.7,
+        "true_peak": -1.4,
+        "lra": 4.1,
+        "intro_short_term": -17.3,
+        "voice_short_term": -15.4,
+        "outro_short_term": -18.0,
+        "bed_to_voice_lu": 16.0,
+        "windows": {
+          "intro": [
+            0.0,
+            3.2
+          ],
+          "voice": [
+            3.7,
+            30.7
+          ],
+          "outro": [
+            345.458,
+            349.9583
+          ]
+        },
+        "normalisation": "linear",
+        "target": -14,
+        "peak_limited": true
+      }
+    }
+  },
+  "visual_review": {
+    "reviewer": "Codex",
+    "cadence_seconds": 1,
+    "story_cadence_seconds": 0.25,
+    "inspected_sheets": 14,
+    "findings": [
+      "All 351 sampled seconds and 38 intro/outro samples inspected.",
+      "All 12 explanatory cards stay within the wide panel and preserve complete headings and figures.",
+      "The prediction card correctly shows 95% by 31 December 2026 as personal judgment.",
+      "Portrait footage is composed in the wide frame without stretching.",
+      "Changing outdoor exposure and occasional lens flare remain in the source."
+    ],
+    "limitations": [
+      "No real-time listening capability in this interface.",
+      "Three caption passages still need listening; see caption-review.json.",
+      "Natural walking motion judged from source comparisons and sampled final frames, not continuous playback."
+    ]
+  },
+  "bookend_balance_video_stream_hash": "SHA256=3e07a2b70e54dd5b162fa5a59e1d7e91a727fcfa23de5e538dc0d9f635e1d2f9",
+  "picture_unchanged_after_audio_balance": true
+}

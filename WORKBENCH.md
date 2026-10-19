@@ -63,13 +63,11 @@ Detailed handover: `docs/handovers/2026-10-19-friday-repair-complete.md`.
 
 ## The idea queue: read it first
 
-### Monday 19 October: Codex video preparation
+### Monday 19 October: videos retained in review
 
-Both Monday takes are recorded against the current signed-off scripts and downloaded with verified hashes. Production is isolated from Friday's repair checkout. See `docs/production/2026-10-19-monday-video.md` for source measurements, stabilisation judgment and the explicit visual quality requirements. The current publish board is https://content.krishraja.com/board/2026-10-19; the completed web cutover on main supersedes historical artifact routing elsewhere on this editorial branch.
+Krish: "Keep the videos in review; do not spend more". Both cuts and thumbnails are in the [Monday archive](https://drive.google.com/drive/folders/1wXlFsY7iFyng_TNzO9fvJZUEoC2FwaHD): long 5:51, short 1:25.5. Frame samples and encoded audio were checked; real-time listening remains unverified and three caption passages are flagged. No blanket stabilisation. Sources and recorded scripts are unchanged; the article prediction follows his 95% by end-2026 correction.
 
-Krish approved set A and its listed treatment, then the fourth paid v2 fact-check run. Both takes are transcribed; the long confirms 95% by the end of 2026. The live article's prediction was corrected and read back. The paid gate completed despite a dropped client connection, cost $0.35 against a $0.10 last-run estimate, and left 11 unresolved entries (10 distinct sentences). Source review and exact entries are in `docs/plans/2026-10-19-monday/fact-review.md`; his manual-sign-off question is pending. Do not launch another paid run on the fourth-run approval.
-
-Both thumbnails, all 26 explanatory panels, and four story intro/outro clips are drawn. Their automated layout checks pass; contact sheets have been reviewed. Full video renders are running in the Monday worktree. `docs/plans/2026-10-19-monday/render_video.py` bounds FFmpeg threads and uses an ultrafast CRF-10 intermediate; final encoding and guards are unchanged. Original scripts are unchanged. The short is planned at 85.5 seconds including intro/outro without speed-up. No blanket stabilisation is planned after sample comparisons; individual jolts remain an edit review item. No final archive/library delivery or video-complete record is claimed yet.
+His approval of the 11 listed fact entries is recorded for ten; the API refuses the remaining contradicted-category OpenAI price sentence. Its dated primary-source excerpt is filed and read back. Fourth run cost $0.35; no fifth run or posting. Fact, pack Visual gate and Pack remain open; Video is not marked done. See `docs/production/2026-10-19-monday-video.md` and `docs/plans/2026-10-19-monday/fact-signoff-receipt.json` for approvals, exact readbacks, archive hashes and remaining work. Friday repairs are separate. Board: https://content.krishraja.com/board/2026-10-19.
 
 Every planning or making session starts with `python3 scripts/engine.py GET /api/idea-queue`: the ideas Krish
 queued from any Ideas tab, with his triage (story, angle, cute, curious but not convinced, with his reason). One
