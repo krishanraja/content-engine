@@ -45,9 +45,10 @@ function ids(page: string) {
 }
 
 function boardScript(page: string) {
-  const m = /<script>\n([\s\S]*)\n<\/script>\s*$/.exec(page)
-  expect(m, 'the board ends with its own script').not.toBeNull()
-  return m![1]!
+  // the web board (the default since artifacts were retired) carries its runtime as a second inline script
+  const blocks = [...page.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map(m => m[1]!)
+  expect(blocks.length, 'the board carries its own script').toBeGreaterThan(0)
+  return blocks.join('\n;\n')
 }
 
 function conf(page: string) {
@@ -238,8 +239,8 @@ describe('week_board.py builds the week\'s one publish board', () => {
     expect(manifest.week_start).toBe('2026-10-19')
     expect(manifest.made).toEqual([])
     expect(manifest.picked).toEqual(['wed'])
-    // The artifact contract declares the downloads capability as true.
-    expect(manifest.publish).toMatchObject({ title: "This Week's Publish Board (wC 19 Oct)", icon: 'calendar', capabilities: { db: {}, downloads: true } })
+    // The web board is the default and is published only through board_web.py, after Krish's word.
+    expect(manifest.publish).toMatchObject({ command: 'board_web.py publish-web', approval_required: true })
   }, 60_000)
 
   it('refuses a week that does not start on a Monday', () => {

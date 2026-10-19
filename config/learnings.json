@@ -700,8 +700,34 @@
    "krish": "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically.",
    "why": "Two Claude accounts, two artifact links that drift apart, comments that cannot be sent to Claude, and builds a session must republish by hand; one site he owns removes all of that.",
    "means": "No session or tool publishes a Claude artifact again. Every board update (the week's board, a day's tab in draft, publish pages) goes to content.krishraja.com, and engine work merges to main automatically once its checks pass.",
-   "status": "open",
-   "encoded": []
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/hooks/artifact_gate.py",
+     "contains": "Claude artifacts are retired",
+     "how": "the PreToolUse hook refuses every Artifact publish and every ArtifactData write; reads pass"
+    },
+    {
+     "file": ".claude/settings.json",
+     "contains": "\"matcher\": \"Artifact|ArtifactData\"",
+     "how": "the hook is wired on both tools"
+    },
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "default='web'",
+     "how": "the board builds for content.krishraja.com unless told otherwise"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Claude artifacts are retired for good",
+     "how": "make-piece, plan-week, produce-video and the week-board reference say no step makes one"
+    },
+    {
+     "file": "AGENTS.md",
+     "contains": "turn on auto-merge, so GitHub merges it to main once CI passes",
+     "how": "the standing rule every agent reads: verify, push, PR, auto-merge"
+    }
+   ]
   },
   {
    "id": "deep-cut-music-always-under",

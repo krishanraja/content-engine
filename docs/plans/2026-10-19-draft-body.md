@@ -63,7 +63,7 @@ Here's what I'd hold on to, whatever the next price change is.
 
 3. Keep the freedom to switch. Keep your instructions and your test jobs in a form you could run on another AI next month. When the next promotion lands, you want to be able to take it, and when one ends, you want to be able to leave.
 
-**Our prediction.** By 31 March 2027, Google, OpenAI or Anthropic will list its top model below $4 in and $20 out. Three rivals sitting on one price is exactly when one of them moves to win the switch. How sure we are: 55%.
+**Our prediction.** By 31 December 2026, Google, OpenAI or Anthropic will list its top model below $4 in and $20 out. Three rivals sitting on one price is exactly when one of them moves to win the switch. How sure we are: 95%.
 
 ## MONDAY'S THREE QUESTIONS
 

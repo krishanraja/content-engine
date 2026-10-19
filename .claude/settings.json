@@ -83,7 +83,7 @@
         ]
       },
       {
-        "matcher": "Artifact",
+        "matcher": "Artifact|ArtifactData",
         "hooks": [
           {
             "type": "command",

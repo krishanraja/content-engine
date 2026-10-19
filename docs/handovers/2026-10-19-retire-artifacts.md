@@ -45,3 +45,19 @@ Learning `boards-live-on-content-site` is open in `config/learnings.json` until 
    record `Ruling (Krish, 2026-10-19): ...` in the commit. This branch's work (prediction gates, narrator reader,
    5-minute cut, readers for mid-sized firms) is the first thing to merge.
 5. `npm run verify`, commit, push, update WORKBENCH.md, and tell him in plain words what changed.
+
+## Done (19 Oct, same session)
+
+- Codex had already built the site: `docs/PUBLISH_BOARDS.md`, `board_web.py`, `config/boards.json` `web_cutover`
+  `active`, both weeks at https://content.krishraja.com/board/2026-10-12 and `/board/2026-10-19`, all 28 comments and
+  every store imported. This branch merged main in (two conflicts kept both sides).
+- This week's board rebuilt for the web with Monday's latest (article prediction now his recorded "95% by 31 December
+  2026"; both scripts signed off and recorded; waiting: his yes to the fact check, and Codex's cut) and published:
+  build `bc013294...`, read back, `verified: true`. Monday's workroom link on the piece now points there.
+- Never another artifact: `artifact_gate.py` refuses every Artifact publish and ArtifactData write (reads pass),
+  wired on `Artifact|ArtifactData`; `week_board.py --target` defaults to `web`; the skills' notices say no step makes
+  one; tests updated. Learning `boards-live-on-content-site` encoded.
+- Merge to main: AGENTS.md rule (verify, push, PR, auto-merge). No guard was turned off: the direct push to main stays
+  denied, GitHub merges once CI passes.
+- Still open on Monday: the piece's saved body still holds the 55% prediction; save the updated
+  `docs/plans/2026-10-19-draft-body.md` to the piece with the fact check run, after his yes.
