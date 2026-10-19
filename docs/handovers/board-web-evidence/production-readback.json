@@ -1,0 +1,107 @@
+{
+  "base": "https://content.krishraja.com",
+  "weeks": [
+    {
+      "week": "2026-10-12",
+      "build_id": "197574d279893a8b9fc2297b1392afb6f9b7b46ef525a87963ee5c77ec6b5439",
+      "counts": {
+        "ticks": 18,
+        "links": 0,
+        "edits": 3,
+        "picks": 0,
+        "queue": 0,
+        "comments": 24
+      },
+      "assets": [
+        {
+          "id": "drive-12BfoG1GQ_wQQFMi1h9NLZyo72g4uEcgQ",
+          "bytes": 65261485,
+          "sha256": "f08d751b07445602aba8603869dda2338bcd04ebf76494ecb96a447df0375a00",
+          "type": "video/mp4"
+        },
+        {
+          "id": "drive-1QJWj-ACyklbLZ25XMMFNXqt-87jTxAwn",
+          "bytes": 135346,
+          "sha256": "0a6376c5ba723a508c469701219a293d3a0b58e783f284be1b1fcd87930e11e0",
+          "type": "image/jpeg"
+        },
+        {
+          "id": "drive-1YVFa2P8jX9t3Om7H4AWLpJCm1bg6OVnR",
+          "bytes": 88558,
+          "sha256": "1034a4b07b36de9b3bdc6428a27b9206f586bcd138b49a9f23c084fca3370ef8",
+          "type": "image/jpeg"
+        },
+        {
+          "id": "drive-1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ",
+          "bytes": 138866,
+          "sha256": "2cb201e2e27b6574170d9be8dc62932806d26a700fc69d1672d51f1fb5371f7c",
+          "type": "image/jpeg"
+        },
+        {
+          "id": "drive-1mIBNeWzeEoUz-yf4anSXNah8xd085Vwo",
+          "bytes": 77145094,
+          "sha256": "bcc51515b63ef4b0987cfd048225b2ef994a1c19e48e1f39edd4f296644f1590",
+          "type": "video/mp4"
+        },
+        {
+          "id": "drive-1nQl3iHzUtXBgHXBzyLWl-igdp1lfonAL",
+          "bytes": 321051435,
+          "sha256": "c4996a001c07698c484697b9b300d9567bc710b75b917f4da894cfe9839cc402",
+          "type": "video/mp4"
+        },
+        {
+          "id": "drive-1peo-998IcpSBoMDThI2DD9uBwnEfTlC8",
+          "bytes": 160190,
+          "sha256": "93d7ceded68c1f13c9a3cda2ef995ccb2eacbfd46f3b8f764e859ebb1687a4de",
+          "type": "image/jpeg"
+        },
+        {
+          "id": "drive-1q9xic-9v3dOVjPXjVnbQABmHWKGwJ9Tg",
+          "bytes": 64769782,
+          "sha256": "cb5d66a2f5f46cb92c2bfb2bf7c53f1a4812b271496f756c3f9b0cd272e33678",
+          "type": "video/mp4"
+        },
+        {
+          "id": "drive-1t2vYb1vMFSV5cj94wCuFmzEt96LAhb1J",
+          "bytes": 79218006,
+          "sha256": "9bf2d78ae05f6717f0d5f0024a475409ceeddfe5a3f4b3125eee2cc5bd984877",
+          "type": "video/mp4"
+        },
+        {
+          "id": "drive-1y6qyu40p0dcmhiq2UJ1FXIePbDdGABBY",
+          "bytes": 108017,
+          "sha256": "9837a86fcb656023534def20a965c7f5620051d27c2ec7bb343a726e77de1e49",
+          "type": "image/jpeg"
+        },
+        {
+          "id": "drive-1zDGyWx4xDztILCLj3q6rOeAze3l8NL2k",
+          "bytes": 203142,
+          "sha256": "a6420628263f7bf7f4d74acfde5aa64527b85f24940b322b662fd2ccbc2da95b",
+          "type": "image/jpeg"
+        },
+        {
+          "id": "drive-1zSxJUNIzeM_7YvS_-vdLftSN0zOrhbgQ",
+          "bytes": 81075817,
+          "sha256": "7ab5da85b4b5489d0e1b6acc8fa44a52685bb571215f10f77b766abf008d2970",
+          "type": "video/mp4"
+        }
+      ],
+      "html_bytes": 14281929
+    },
+    {
+      "week": "2026-10-19",
+      "build_id": "ecaa9a8ab2dbb9fa7bac65d0683da9d75c0b66122f79dc602087649b3c3e87c6",
+      "counts": {
+        "ticks": 0,
+        "links": 0,
+        "edits": 0,
+        "picks": 3,
+        "queue": 11,
+        "comments": 28
+      },
+      "assets": [],
+      "html_bytes": 134121
+    }
+  ],
+  "verified": true
+}

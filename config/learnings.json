@@ -616,8 +616,8 @@
    "on": "2026-10-19",
    "krish": "yes lets move the board to content.krishraja.com",
    "why": "The board only works inside Claude; he wants Codex and any tool to build it and read his ticks.",
-   "means": "The weekly publish board moves to content.krishraja.com with all interactions behind the existing login. Local implementation is prepared; keep this learning open until the approved deployment, all four exports and authenticated cutover are verified.",
-   "status": "open",
+   "means": "Both weeks are live at content.krishraja.com behind the existing login. All new ticks, links, wording edits, picks, queue decisions and comments use the authenticated web API from every tool. All four sources are preserved and all 87 available records verified; no ongoing Claude artifact synchronization. Production acceptance and rollback evidence are in docs/handovers/board-web-release.md.",
+   "status": "encoded",
    "encoded": [
     {
      "file": "scripts/post-pack/board_web.py",
@@ -628,6 +628,11 @@
      "file": "apps/control-plane/api/board/_handler.ts",
      "contains": "createBoardHandler",
      "how": "Private API persists all board collections and immutable builds."
+    },
+    {
+     "file": "config/boards.json",
+     "contains": "\"interaction_source\": \"web\"",
+     "how": "Verified active cutover routes every workflow to the web; original artifact addresses remain provenance."
     }
    ]
   },

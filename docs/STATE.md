@@ -1,18 +1,21 @@
 # Current state
 
-## 19 October: web publish board prepared locally, release pending
+## 19 October: both publish boards live, web cutover verified
 
-Full-parity board migration is on `codex/publish-board-web`, with a coordinated
-Control Center branch of the same name. Ticks, links, saved edits, picks, queue,
-comments, immutable builds and private downloads use the engine's guarded API.
-The old boards remain the interaction source until the verified cutover marker
-changes. No video assets were changed. No source exports have been obtained,
-and no migration, cloud upload, branch push, deployment or DNS change has been
-performed by this implementation. Commands, test evidence and release gates:
-`docs/handovers/board-web-release.md`. Do not call this production-ready from
-local checks alone. Next: finish acceptance, obtain all four exports, approve
-the paired branch pushes and release actions in the documented order.
+Use https://content.krishraja.com/board/2026-10-19 and
+https://content.krishraja.com/board/2026-10-12. The overarching week tabs keep
+both available. All new interactions use this site; the four Claude boards
+are preserved source archives and must not be synchronized or edited.
 
+All 87 available source records, including 10 replies, were imported and read
+back exactly. The final source comparison found no delta. Both production
+boards passed authenticated desktop/phone navigation, image, state and comment
+checks; all 12 downloadable assets matched their type, size and SHA-256.
+Follow `docs/PUBLISH_BOARDS.md` from every tool, reading all six collections.
+Release, source limitations and rollback evidence: `docs/handovers/board-web-release.md`.
+Friday's two replacement videos remain separate work. Monday 19 October's
+signed-off scripts and pending recordings/fact check remain with its editorial
+handover; this migration changes neither scripts nor publishing approval.
 
 Status: Current
 Owner: Krish Raja

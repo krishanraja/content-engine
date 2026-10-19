@@ -1,257 +1,148 @@
-# Private weekly board web release
+# Private weekly board: verified production release
 
-Status: Content Engine PR #104 and Control Center PR #499 are merged and their
-production deployments are ready. The seven-table schema is applied; RLS and
-service-only grants were read back. The content hostname is attached and verified
-on Control Center using the existing Vercel wildcard DNS. Assets are staged
-privately. Source import and board activation remain pending final comparison.
+Both weeks are live behind the existing access-code login:
+- https://content.krishraja.com/board/2026-10-12
+- https://content.krishraja.com/board/2026-10-19
 
-Approved scope (Krish, 19 October 2026): full parity, then web-only interaction.
-Preserve all four Claude boards and artifact generation. No video work here.
-Krish subsequently explicitly authorized merging both repositories and making
-both weeks live. On 19 October he confirmed: "Paused; no changes since those
-exports" for the final source freeze and the newer-account exports.
+The overarching week tabs keep both available. `/` and `/board` open 19 October.
+The web board is the sole place for new interactions. All four Claude artifacts
+and artifact-generation support remain preserved; there is no ongoing sync.
+`docs/PUBLISH_BOARDS.md` governs every board-reading/building workflow.
 
-## Targets and ownership
+## Authority and source freeze
 
-Content Engine owns the API, schema, builder and operator tools. Control Center
-owns the hostname, access curtain and rewrites (ADR-019). The board uses the
-existing access-code cookie or engine operator token; it does not invent a
-Supabase user identity. New tables have RLS and no anon/authenticated grants.
+Krish explicitly requested both repositories merged to main and both weeks live.
+He paused edits on all four Claude boards and confirmed no newer-account changes
+since their exports. The older-account final comparison, 19 October 2026 at
+14:18:41–14:21:31 UTC, found zero changes. He explicitly approved preservation of
+all available data with the source metadata limitations below. These approvals
+cover this private migration; they do not authorize social posts, video changes,
+paid fact checks, or new editorial decisions.
 
-## Verification journal
+## Exact release targets and order
 
-- Final implementation CI passes full `npm run verify` on Ubuntu and Windows,
-  plus all board-web, browser-button, SQL, dependency and operating-context jobs.
-- Production engine merge `c34fdd5422f8aec678d8f2ad2784fa65074bb7da`, deployment
-  `dpl_71meHR3H4yQBwBPieYqEp1opsbuz`; authenticated empty-state read succeeds and
-  unauthenticated direct board read returns 401 with private/no-store headers.
-- Production Control Center merge `0fba42d1eae1b4b5584d94491f3b1e0cae6df48c`,
-  deployment `dpl_AoCrd4H16otnjV8RcDXuFdFHceZ3`.
-- All four source bundles are captured and audited: older 12 October has 18
-  ticks, 3 edits and 24 comments (14 roots, 10 replies); older 19 October and
-  newer 12 October are empty; newer 19 October has 3 picks, 11 queue documents
-  and 28 comment roots. All 87 records reconcile without conflicting values.
-  Replaying every raw record and canonical value twice through actual handlers
-  and disposable PostgreSQL passes exact JSON readback.
-- Krish explicitly approved preserving all available data despite unavailable
-  source manifests, native reply/account IDs and precise comment timestamps.
-  Raw records remain byte-faithful JSON; canonical comments get deterministic
-  IDs and valid anchors with original IDs/locations retained in metadata.
-  Resolved/open status, displayed authors and displayed times remain visible.
+1. Applied the additive board migration to Supabase `gojpffsrxybbpbdzzrvs`
+   (Mindmaker OS). All seven tables have RLS; anon and general authenticated
+   roles have no table reads; server service-role access is enabled.
+2. Content Engine PR104 merged as `c34fdd5422f8aec678d8f2ad2784fa65074bb7da`.
+   Source comment compatibility and workflow routing followed in PR105,
+   main `5c8330deac8ab8d6ed8f03ee19b570a7cc70ea07`, production deployment
+   `dpl_Atzdg4fP6sazefCBPtKtVTTwgJTB`, project `prj_fDRrOHcBrGTdrdrwS7W6OBzLuelX`.
+3. Control Center PR499 merged as `0fba42d1eae1b4b5584d94491f3b1e0cae6df48c`,
+   followed by PR504 fixing root/operator forwarding, main
+   `a341cf42d39ded0300a54551f41ad9ed7cf9e037`, production
+   `dpl_uD3aGcx7cP7vW81TpjrcAHs287CF`, project
+   `prj_ymGIPNZzWx5gSuxv1kqppexR60Ac`. Team: `team_iXZBozK4Ss7NHuyNk8L9wmO6`.
+4. Attached and verified content.krishraja.com on Control Center. The live provider
+   recommendation was `63597985a263e155.vercel-dns-016.com.`; existing Vercel
+   wildcard DNS already routed correctly. No zone record change was needed.
+5. Archived four exports and original HTMLs, imported all records, activated both
+   verified builds, and completed authenticated production API/browser readback.
+   The final routing/config commit records active cutover after this evidence.
 
-- Final browser regression now delays a save response while typing continues,
-  then introduces a concurrent remote edit. This exposed and fixed loss of the
-  unsaved text's revision baseline. Cancel preserves unsaved words; replacement
-  still requires explicit confirmation. Both phone and desktop runs pass.
-- Current Content Engine head `1281a48` passes the new board-web CI job on push
-  and pull-request runs, plus existing browser-button and SQL jobs. Full verify
-  remains running. The previous implementation passed full Ubuntu verify.
-- Control Center head `4f491e4` passes its actual verify, operating-context,
-  Vercel and full 18-minute E2E checks, including desktop and phone projects.
-- Twelve existing Drive assets are captured locally: 689,355,738 bytes, each
-  matched to source metadata and SHA-256 inventoried. These are the existing
-  Friday files too; replacement cuts are outside this release.
+## Migration coverage
 
-- Baseline: 106 artifact self-checks pass.
-- First web fixture exposed the renderer's integrity seal: injecting an adapter
-  after sealing invalidated the page. The adapter must reseal its generated output
-  and publication must reverify after deterministic asset-link substitution.
-- Auth/contract tests: five passing; Control Center middleware/return-path tests: four passing.
-- Docker is installed but its daemon is unavailable. SQL behavior will be checked
-  in a disposable local PostgreSQL runtime, not against production.
-- PostgreSQL migration/RPC tests pass, including CAS, RLS role denial, immutable
-  builds and rollback without loss of current state. The first HTTP fixture failed
-  on an overly strict test-double column-name regex (`source_sha256`); corrected
-  the fixture, then rerun import replay and the full HTTP suite.
-- The repository's Chromium acceptance harness passes 34 tasks at 390px and
-  1440px against the actual HTTP handlers and disposable SQL database. It covers
-  all tabs, images, persisted ticks/links/edits, comments/replies, picks/queue,
-  unsaved typing across polls, stale-write rejection/explicit replacement, and
-  failed-save retry, text/image clipboard reads, inline download byte hashes and
-  API-to-browser tick refresh. Screenshots inspected. This is local evidence, not production.
-- Source HTML checks: the 14,267,519-byte historical board renders all six tab
-  views and 88 image instances at phone/desktop widths without overflow or runtime
-  exceptions. The current board renders eight tab views. Its 42 exported records
-  pass the real API validators and exact JSON readback in disposable PostgreSQL.
-- Seven Python conversion/import tests pass. Source conversion rejects a changed
-  input digest and preserves existing panels; missing manifests need explicit
-  evidence. Multi-page reads and source-archive replay are exercised over HTTP.
-- Full `npm run verify` is not green locally. Recording-match's two missing-key
-  assertions also fail on untouched main because Windows Credential Manager
-  supplies a key (the test points to engine.invalid). Other broad-suite failures
-  include timeouts under this machine's load. Targeted board tests pass.
-  The final broad run stopped after reporting failures and then making no visible
-  progress for several minutes; it has no passing aggregate result. This remains
-  a release check to run in the repository's clean CI environment.
-- Skill copy synchronization passes. The locally installed Codex skill validator
-  rejects produce-video's existing Claude `model: sonnet` field. Its description's
-  existing unquoted colon was made valid YAML without changing its wording or
-  model setting. All other repository verification gates pass independently.
-- Control Center lint, four TypeScript checks and production build pass. Its
-  complete local API suite reports 1524 pass, 44 fail, one skip (new board tests
-  all pass). Untouched-base reproduction confirms the logo hashes, missing
-  model-price entry and slate assertion; several API failures are Windows path
-  handling. The steward validation requires CI's separate steward checkout.
+| Source | Ticks | Links | Edits | Picks | Queue | Comment roots | Replies |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Older account, 12 Oct | 18 | 0 | 3 | 0 | 0 | 14 | 10 |
+| Older account, 19 Oct | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Newer account, 12 Oct | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Newer account, 19 Oct | 0 | 0 | 0 | 3 | 11 | 28 | 0 |
 
-## Export contract and cutover prerequisite
+All six stores were authenticated and fully read in each source; zero means a
+verified empty collection. All 87 source versions and 87 canonical records were
+compared independently by ID, body and digest after import. No conflicts remained.
+A repeated import applied zero changes. Unticks remain explicit `done: false`.
+All original ZIP bundles, raw readouts, JSON/HTML exports and the final freeze
+receipt are retained in private `content-library` storage. The archive inventory
+below gives immutable object keys, sizes and SHA-256 digests. Original source
+addresses remain in `config/boards.json.weeks` and each archived record.
+The live screenshots and acceptance report are also archived as
+`live-board-acceptance.zip` in that inventory. Its initial QA contract names the
+starting releases; the final Control Center follow-up identity is recorded above.
 
-An authenticated Claude session for EACH account must export its two artifacts.
-Use every page of ArtifactData, not just the first page. Include all records,
-including false ticks. A read failure is a blocker, never an empty collection.
-Read all comment threads and all replies. Save the current HTML and manifest too.
-Initial native HTML exports for RjLHJQi469BAKcvTCgneHV and
-4SZR5ZrQnG657ezuzvvAML were downloaded and hash-inventoried locally. Their account
-is out of Claude usage credits, so the authenticated database export did not run.
-Its collections/comments remain incomplete, never empty. Krish confirmed that
-the newer board is in the other account; do not choose these older HTML copies
-as the release content without comparison.
+Source limitations approved by Krish: generation manifests were not exposed;
+comments supplied thread IDs and displayed author/time/status, but no native
+reply/account IDs or precise older timestamps/timezones. Ten reply IDs are
+deterministic; comments are namespaced by source. The 24 older comments whose
+anchors are missing/obsolete appear at board level, with their original location
+metadata retained. No timestamp precision or original manifest was invented.
+Raw comment tool readouts are preserved as supplied transcriptions, not claimed
+as native comment JSON. Existing source revision numbers are preserved where
+available; earlier unexposed source revisions cannot be reconstructed.
 
-The second account's initial exports are captured and independently checked:
-H6qKiPdmSWETVQftpHBS5E (12 October) has zero records in every collection, confirmed
-by authenticated reads; CDgS3JDULpzvRnxkHwLkVk (19 October) has 0 ticks, 0 links,
-0 edits, 3 picks, 11 queue documents and 28 open comment roots with no replies.
-All 14 raw database JSON files match the exported bodies. HTML SHA-256 values
-match both server-reported values and Krish's supplied downloads. Comment IDs,
-thread references and all 28 HTML anchors validate. Native source bundles are
-kept outside Git. The 19 October HTML digest is
-`9624beb8c1aa1ab4ffbad81a523901f4314159631d4271de44b4e49c09570df0`.
+## Activated immutable builds
 
-The other account's shared 12 October HTML is readable, but ArtifactData explicitly
-denies this account database access; its 19 October board is not shared here.
-No partial export was fabricated. Both still require the owning account's export.
-Original generation manifests are not exposed by either captured artifact.
-Comments expose thread IDs, minute-resolution timestamps and author labels, not
-separate comment/account IDs; preserve the raw readout and these fidelity limits.
-These are initial snapshots, and do not satisfy the final delta/cutover gate.
+| Week | Build ID | HTML bytes | Download assets |
+|---|---|---:|---:|
+| 2026-10-12 | `197574d279893a8b9fc2297b1392afb6f9b7b46ef525a87963ee5c77ec6b5439` | 14,281,929 | 12 |
+| 2026-10-19 | `ecaa9a8ab2dbb9fa7bac65d0683da9d75c0b66122f79dc602087649b3c3e87c6` | 134,121 | 0 |
 
-One UTF-8 JSON file per artifact, with this shape:
+Twelve source assets total 689,355,738 bytes. All downloaded content types, sizes
+and SHA-256 digests matched the manifests. The 14 MB historical board streams
+through the authenticated hostname successfully, exceeding the buffered 4.5 MB
+limit. Both builds preserve their current source layout/content; 19 October uses
+the newer account's Monday draft. Friday's existing files are retained while its
+two replacement videos remain separate work awaiting completion and approval.
 
-```json
-{
-  "version": 1,
-  "complete": true,
-  "week": "2026-10-19",
-  "source": "https://claude.ai/artifact/ARTIFACT_ID",
-  "html_file": "board-original.html",
-  "manifest_file": "board-original.json",
-  "collections": {
-    "ticks": [{"id":"mon-substack","body":{"done":false,"at":"2026-10-19T12:00:00Z","day":"mon","piece_id":"PIECE_ID","step":"substack","channel":"substack","label":"Substack"}}],
-    "links": [], "edits": [], "picks": [], "queue": [], "comments": []
-  }
-}
-```
+## Verification and limits
 
-Keep collection document bodies unchanged. Normalize each comment/reply to a
-document with `id` and `body: {thread_id, anchor, text, at}`; retain original
-comment metadata as additional body fields. The root's `thread_id` equals its
-`id`; replies name that root. Use stable HTML element IDs as anchors and
-`board-root` for unanchored/orphaned historical comments, preserving the original
-anchor in metadata. Record whether each collection and comment pagination finished.
-The exporter must only set `complete: true` after all reads succeed.
-The HTML and manifest paths must be inside the same export directory. An approved
-apply archives their original bytes and the export itself to private storage,
-verifies every hash, and records the archive before importing any canonical state.
-If no original manifest is exposed, `manifest_file: null` is accepted only with
-`export_evidence.manifest: {accessible:false, reason:"..."}`. No replacement
-manifest is fabricated. The dry run reports source limitations. Applying such
-an export additionally requires `--accept-source-limitations`, only after Krish
-has approved those exact missing metadata limitations. The archive retains that
-receipt beside the immutable export and HTML. This never waives missing records
-or a missing account, and it does not authorize cutover.
+- Original 106 board self-checks retained. Full Content Engine `npm run verify`
+  passed clean Ubuntu and Windows CI on the final implementation, with board-web,
+  browser-buttons, SQL, dependency and operating-context checks. Control Center's
+  actual CI verify/build and full desktop/phone E2E passed. Skill synchronization
+  and skill-core checks passed. Local Windows broad-suite credential-dependent
+  baseline failures were superseded by those clean CI runs.
+- Disposable PostgreSQL plus real handlers verified RLS, revisions/CAS, source
+  replay, week isolation, immutable builds, rollback without state reversion,
+  missing credentials, direct access denial and large streamed responses.
+- Browser fixture acceptance covered saved edits, comments/replies, clipboard,
+  downloads, failed requests/retry, expired links, five-second/focus refresh and
+  dirty typing. A delayed-save/concurrent-edit race was reproduced and fixed;
+  cancelled conflict replacement preserves unsaved words.
+- Actual production login preserved dated URLs with a secure HttpOnly host-local
+  cookie. Live Chromium at 390×900 and 1440×900 visited every day/ideas tab in both
+  weeks, loaded every image, checked no horizontal overflow/runtime exceptions,
+  compared visible ticks to API state, read historical comments/replies and
+  reloaded. Screenshots were inspected. Root/latest routing and operator-only
+  publication denial passed. Production stale and cross-origin writes rejected;
+  an identical-body edit write persisted unchanged. No publication ticks were
+  toggled and no synthetic comments were added to the live weeks.
+- Production files and every source/canonical record have independent readback.
+  A real signed link expired and a fresh link succeeded. An earlier 19 October
+  build was selected and hash-read, then the current build restored; all 42
+  interaction documents stayed identical. Re-activation kept the pointer revision.
+  Live operator HTML hashes and invalid-bearer rejection passed on both hosts.
+  Destructive/failure scenarios use disposable data rather than
+  changing Krish's live publishing history. This is Chromium viewport coverage,
+  not a claim of physical-device or every-browser testing.
 
-Run `python scripts/post-pack/board_import.py EXPORT1 EXPORT2 EXPORT3 EXPORT4`
-for counts and conflicts without writes. All four registered artifacts are
-required. Missing or equal timestamps with different bodies block import.
-Explicit resolutions are a JSON map from `week/collection/id` to a reported
-source-record SHA-256, supplied with `--resolutions`. Every raw version is archived
-before canonical state is written. Comment IDs are namespaced by source to avoid
-merging unrelated threads. `--apply` is a separately approved database write.
+Machine-readable evidence: [API and files](board-web-evidence/production-readback.json),
+[live browser](board-web-evidence/browser-readback.json),
+[exact source coverage](board-web-evidence/source-coverage.json),
+[private source archive](board-web-evidence/source-bundle-archive.json),
+[operator access](board-web-evidence/production-operator-readback.json),
+[real link expiry](board-web-evidence/production-link-expiry.json),
+[production rollback](board-web-evidence/production-rollback.json).
 
-After stopping Claude edits, export again and import the final delta. Compare
-source hashes/counts to the destination archive and read back every selected
-canonical value. A newer web value is preserved. No cutover with inaccessible
-records or unresolved conflicts.
+## Operating commands and rollback
 
-## Operator commands
+Use the existing operator credential through the approved runtime; never paste
+it into HTML, command lines, logs or files. `board_web.py read WEEK COLLECTION`
+reads all pages. `board_web.py download WEEK --output FILE` supplies `--previous`.
+Build with `week_board.py --target web`; artifact mode remains the default only
+for compatibility. `board_web.py publish-web FILE --assets MAPPING` is dry-run;
+`--apply` uploads immutable bytes and activates only after verification.
 
-Build with the existing inputs plus `--target web`. Artifact remains the default.
-Use `python scripts/post-pack/board_web.py publish-web PAGE.html` to validate and
-print a dry-run manifest summary. Add `--assets FILE.json` for downloads:
-`[{"id":"fri-short","source_url":"EXACT_EXISTING_URL","path":"LOCAL_FILE","type":"video/mp4"}]`.
-Every direct Drive download link must be mapped. Existing Open in Drive/reference
-links remain references. Existing data-image downloads stay inline.
-Add `--apply` only after approval for those exact uploaded bytes and activation.
+`board_web.py rollback WEEK BUILD_ID` previews; `--apply` selects a prior verified
+manifest and reads the pointer back. It never reverses interaction data. Keep all
+prior builds and source archives. If a code rollback is necessary, prefer a known
+good board-capable release. Pre-migration deployments were CE
+`dpl_YcVYDd84ugrmat4is8PtXkLG3LUE` and CC `dpl_GyMZVCy1NkJU12JtBLk6TNVK7wVm`;
+restoring them would remove the new board routes and needs an explicit maintenance
+decision. Do not drop tables, delete archives, overwrite assets or reopen Claude
+as an interaction source automatically. Diagnose and preserve current web state.
 
-For a native HTML export, `board_web.py convert-export ORIGINAL.html --week WEEK
---source ARTIFACT_URL --expected-sha256 REVIEWED_DIGEST --output WEB.html` keeps
-the original panels, wording, images and build-time edit guards and upgrades only
-the recognized shared runtime. The source must be registered for that week and
-match its reviewed digest. This local conversion has no external side effects;
-the sidecar records source provenance. Select the newer account's current content
-after comparison, then map downloadable assets and use the normal publish dry run.
-
-Collection/import GET responses have `next_offset`; follow it until null. The
-web adapter and operator CLI collect every page before exposing a snapshot.
-
-`board_web.py read WEEK COLLECTION` reads ticks, links, edits, picks, queue or
-comments through the authenticated API. Operators retain their own attribution;
-reading a board does not authorize publishing content or pretending an agent's
-decision was Krish's. Ticks still reach making records through the existing
-`making.py PIECE posted CHANNEL [url]` workflow. Unticks never delete that record.
-
-`board_web.py rollback WEEK BUILD_ID` previews a rollback; `--apply` selects that
-previous immutable manifest without changing interaction state. It verifies the
-restored build's files and reads the active pointer back.
-
-## Release gates
-
-1. Review both local diffs and checks; approve branch pushes and coordinated PRs.
-2. Verify exact Vercel/Supabase targets and current production revisions; approve
-   the content migration and deploy the engine before Control Center forwarding.
-3. Confirm both deployments have the existing access code; no secrets in HTML.
-4. Approve attaching content.krishraja.com to Control Center. Recheck DNS immediately
-   before changing it; the last recommendation was CNAME content to
-   63597985a263e155.vercel-dns-016.com. Existing DNS is Vercel-hosted.
-5. Approve private uploads and initial activation for the two weeks; complete
-   source exports, final import, user-session browser QA and API readback.
-6. Mark web authoritative only after the source inventory and behavior pass.
-
-Rollback readiness must name the known-good deployment before release. Restore
-the prior deployment/board pointer without deleting tables, builds, imports or
-Claude artifacts. Preserve Friday content until its separate cuts are watched
-and approved by Krish. Production completion remains unverified until cutover.
-
-## Release continuation, 19 October 2026
-
-Krish explicitly requested both branches merged to main and the site live, with
-12 October and 19 October as overarching week tabs. This authorizes the scoped
-pushes, coordinated PRs/merges, schema, deployment, domain and private board
-publication described here; do not ask the same generic release permission again.
-Historical export completeness and explicit conflict resolution still apply.
-
-The seven-table additive migration has now been applied to the verified
-Mindmaker OS project `gojpffsrxybbpbdzzrvs`. Production readback confirms RLS on
-all seven tables, no SELECT grants for anon/authenticated, and service-role
-access. No historical records or builds have been imported/activated yet.
-Engine rollback deployment before release: `dpl_YcVYDd84ugrmat4is8PtXkLG3LUE`,
-main `d8c098768e18f98f6b38c1d8369889b7a87d03f3`.
-
-Added authenticated published-week discovery and responsive top-level navigation.
-Local PostgreSQL/API + browser acceptance passes, including cancelling a week
-switch with unsaved words. The new navigation test initially compared the full
-URL without accounting for the existing daily-tab hash; corrected to compare its
-pathname. PostgreSQL date values are normalized to YYYY-MM-DD at the boundary.
-Save acknowledgements clear dirty flags only when the field still matches the
-submitted text. The original 106 board self-checks still pass.
-
-`docs/PUBLISH_BOARDS.md` now governs all board consumers. Active skill entry
-points, the make-piece reference, cadence/integrations, Friday prompt, pack docs,
-README/AGENTS and the synchronization hook point to it. Legacy artifact generation
-and original addresses remain available. The config stays pending until readback.
-
-The older Claude account's usage was exhausted; Krish topped it up and its
-read-only exports are now running in the owning account. Reconcile those bundles
-before import. Monday's editorial branch handover was read from FETCH_HEAD:
-scripts signed off, board v8 in draft, awaiting recordings and paid fact check.
-Those production tasks are outside this migration.
+Monday's editorial/video branch and Friday repairs were not merged or modified by
+this migration. Apply future replacements only after their separate review and
+publication authority.

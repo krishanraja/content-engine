@@ -91,8 +91,8 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    filler never pads a day. The board builds it as its first tab with
    `--ideas` and refuses a day with fewer than four checked ideas. His pick
    is saved in the board's store (`picks/<day>`) and posted as a comment
-   (`PICK <day>`): read it from the comments (either account) or with
-   `ArtifactData`, then write the picked idea onto its piece as the day's
+   (`PICK <day>`): read both `picks` and `comments` through
+   `board_web.py read WEEK COLLECTION` on the active web board, then write the picked idea onto its piece as the day's
    rank 1 option through `/api/week/options` (creating its row first if it
    has none).
    **What his 19 Oct triage taught** (`config/learnings.json`, entries
@@ -238,9 +238,9 @@ item's text each morning.
 Without the Teleprompter connector, nothing is sent to Teleprompter (step 0
 names what waits). Descript was retired on 12 October (Krish: "Descript is
 permanently gone, teleprompter.com is permanently in, connected via MCP
-here"): nothing is sent there. Without the Artifact or ArtifactData tools, the week's board
-cannot be made or read: say so on the week's board item and in
-`WORKBENCH.md`, and the session his Monday pick starts makes it.
+here"): nothing is sent there. The active web board needs the existing engine
+operator credential, not an Artifact connector. If authenticated board reads
+fail, record that specific blocker; never treat inaccessible feedback as empty.
 
 ## Before you stop
 

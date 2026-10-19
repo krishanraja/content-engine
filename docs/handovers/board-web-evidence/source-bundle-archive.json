@@ -1,0 +1,68 @@
+{
+  "verified": true,
+  "records": [
+    {
+      "name": "older-account-2026-10-12-source.zip",
+      "week": "2026-10-12",
+      "bucket": "content-library",
+      "key": "boards/2026-10-12/0bb7580c9171247604ff2342edfcb1ae35177ae0184111b1eed50611c31cf163",
+      "bytes": 20871996,
+      "sha256": "0bb7580c9171247604ff2342edfcb1ae35177ae0184111b1eed50611c31cf163",
+      "type": "application/zip"
+    },
+    {
+      "name": "older-account-2026-10-19-source.zip",
+      "week": "2026-10-19",
+      "bucket": "content-library",
+      "key": "boards/2026-10-19/c2c4d8afe79c95f9050630fea8cbeccf6c777bef854c49d9d035c97da7ff9618",
+      "bytes": 26653,
+      "sha256": "c2c4d8afe79c95f9050630fea8cbeccf6c777bef854c49d9d035c97da7ff9618",
+      "type": "application/zip"
+    },
+    {
+      "name": "publish-board-2026-10-12-source.zip",
+      "week": "2026-10-12",
+      "bucket": "content-library",
+      "key": "boards/2026-10-12/e448a0c32de4233429e4a6a9c99e621a7dadafecc96f57f98427bdff043cc49f",
+      "bytes": 10411367,
+      "sha256": "e448a0c32de4233429e4a6a9c99e621a7dadafecc96f57f98427bdff043cc49f",
+      "type": "application/zip"
+    },
+    {
+      "name": "publish-board-2026-10-19-source.zip",
+      "week": "2026-10-19",
+      "bucket": "content-library",
+      "key": "boards/2026-10-19/494e1127da30153a6b1340d286c5924b347776d78785a176565793e70dc3582e",
+      "bytes": 49004,
+      "sha256": "494e1127da30153a6b1340d286c5924b347776d78785a176565793e70dc3582e",
+      "type": "application/zip"
+    },
+    {
+      "name": "frozen-state-receipt.json",
+      "week": "2026-10-19",
+      "bucket": "content-library",
+      "key": "boards/2026-10-19/415dcbbe4a079b345361414829cf23d7ab4e8442ed49fecb348be725cf511f8c",
+      "bytes": 10283,
+      "sha256": "415dcbbe4a079b345361414829cf23d7ab4e8442ed49fecb348be725cf511f8c",
+      "type": "application/json"
+    },
+    {
+      "name": "source-export-audit.json",
+      "week": "2026-10-19",
+      "bucket": "content-library",
+      "key": "boards/2026-10-19/7c9c6f23831d58f44ab8cc8159e32d81a4852566c20d784ba2c8d3a020cea26f",
+      "bytes": 1930,
+      "sha256": "7c9c6f23831d58f44ab8cc8159e32d81a4852566c20d784ba2c8d3a020cea26f",
+      "type": "application/json"
+    },
+    {
+      "name": "live-board-acceptance.zip",
+      "week": "2026-10-19",
+      "bucket": "content-library",
+      "key": "boards/2026-10-19/d28f99d2ac099bd54654fdaf92aa7a033b5bb00c427af99768f2a0094b120b05",
+      "bytes": 1485425,
+      "sha256": "d28f99d2ac099bd54654fdaf92aa7a033b5bb00c427af99768f2a0094b120b05",
+      "type": "application/zip"
+    }
+  ]
+}
