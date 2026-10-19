@@ -1,0 +1,168 @@
+{
+  "subchannel": "follow.the.money",
+  "date": "2026-10-19",
+  "headline": "Why Google, OpenAI and Anthropic keep changing AI prices",
+  "video_title": "Why Google, OpenAI and Anthropic keep changing AI prices",
+  "video_title_emphasis": "AI prices",
+  "comment_question": "WHAT WILL AI COST NEXT?",
+  "cover": {
+    "headline": [
+      "WHAT WILL AI",
+      "COST NEXT?"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Google",
+        "logo": "logos/google-cream.svg",
+        "tag": "Gemini",
+        "colour": "butter"
+      },
+      {
+        "name": "OpenAI",
+        "logo": "logos/openai-symbol-cream.svg",
+        "tag": "ChatGPT",
+        "colour": "mint"
+      },
+      {
+        "name": "Anthropic",
+        "logo": "logos/anthropic-symbol-cream.svg",
+        "tag": "Claude",
+        "colour": "lilac"
+      }
+    ]
+  },
+  "thumbs": {
+    "headline": [
+      "WHAT WILL AI",
+      "COST NEXT?"
+    ],
+    "portrait": true,
+    "rows": [
+      {
+        "name": "Google",
+        "logo": "logos/google-cream.svg",
+        "tag": "Gemini",
+        "colour": "butter"
+      },
+      {
+        "name": "OpenAI",
+        "logo": "logos/openai-symbol-cream.svg",
+        "tag": "ChatGPT",
+        "colour": "mint"
+      },
+      {
+        "name": "Anthropic",
+        "logo": "logos/anthropic-symbol-cream.svg",
+        "tag": "Claude",
+        "colour": "lilac"
+      }
+    ]
+  },
+  "standoff": {
+    "left": {
+      "label": "Google",
+      "logos": [
+        "logos/google-cream.svg"
+      ]
+    },
+    "right": [
+      {
+        "label": "OpenAI",
+        "logos": [
+          "logos/openai-symbol-cream.svg"
+        ]
+      },
+      {
+        "label": "Anthropic",
+        "logos": [
+          "logos/anthropic-symbol-cream.svg"
+        ]
+      }
+    ]
+  },
+  "body": "publish-body.md",
+  "deck": "Google, OpenAI and Anthropic keep changing their AI prices. How do you budget when the offer you sign up for can end?",
+  "endnote": "Prices and promotional terms checked on 19 October 2026.",
+  "figures": [
+    {
+      "after": "Every line doubles.",
+      "image": "../../../.cache/monday-release-gates/article-cards/google.png",
+      "alt": "Google public pricing doubles on 1 December 2026: input tokens rise from $2 to $4 per million and output tokens from $10 to $20."
+    },
+    {
+      "after": "Three rivals, one price",
+      "image": "../../../.cache/monday-release-gates/article-cards/same.png",
+      "alt": "Selected AI offers compared in US dollars per million tokens: $4 input and $20 output; Google from December and OpenAI promotional."
+    },
+    {
+      "after": "Reuse saves about 60%",
+      "image": "../../../.cache/monday-release-gates/article-cards/bill.png",
+      "alt": "The article\u2019s illustrative workload costs $980 before December and $1,960 afterwards, with the reuse discount included in both."
+    }
+  ],
+  "sources": {
+    "s1": [
+      "OpenAI Aug 21 2026 promotional pricing with visible date",
+      "https://developers.openai.com/api/docs/changelog"
+    ],
+    "s2": [
+      "Computerworld: Gogia on budgeting and contracts, 14 Oct 2026",
+      "https://www.computerworld.com/article/4235123/google-positions-gemini-4-argon-for-long-horizon-agentic-work-2.html"
+    ],
+    "s3": [
+      "Anthropic: Claude Platform release notes (Aug to Oct 2026)",
+      "https://platform.claude.com/docs/en/release-notes/api"
+    ],
+    "s4": [
+      "Google: Context caching (Gemini API docs), 13 Oct 2026",
+      "https://ai.google.dev/gemini-api/docs/caching"
+    ],
+    "s5": [
+      "Google: Understand and count tokens (Gemini API docs)",
+      "https://ai.google.dev/gemini-api/docs/tokens"
+    ],
+    "s6": [
+      "Google: Gemini 4 Argon launch post with its pricing footnote, 13 Oct 2026",
+      "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/"
+    ],
+    "s7": [
+      "Google Cloud blog: Gemini 4 Argon available on Google Cloud",
+      "https://cloud.google.com/blog/products/ai-machine-learning/gemini-4-argon-available-on-google-cloud"
+    ],
+    "s8": [
+      "Anthropic: Claude pricing page, Claude Opus 5.5 row (read 19 Oct 2026)",
+      "https://platform.claude.com/docs/en/docs/about-claude/pricing"
+    ],
+    "s9": [
+      "Google: Gemini Developer API pricing, Gemini 4 Argon rows (updated 16 Oct 2026)",
+      "https://ai.google.dev/gemini-api/docs/pricing"
+    ]
+  },
+  "links": [
+    [
+      "Gemini 4 Argon",
+      "s6"
+    ],
+    [
+      "four characters",
+      "s5"
+    ],
+    [
+      "Google's own price list",
+      "s9"
+    ],
+    [
+      "OpenAI, 21 August",
+      "s1"
+    ],
+    [
+      "Anthropic",
+      "s3"
+    ],
+    [
+      "Computerworld",
+      "s2"
+    ]
+  ]
+}

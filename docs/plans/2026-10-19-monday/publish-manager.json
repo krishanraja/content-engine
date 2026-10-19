@@ -1,0 +1,66 @@
+{
+  "title": "Why Google, OpenAI and Anthropic keep changing AI prices",
+  "subtitle": "Google, OpenAI and Anthropic keep changing their AI prices. How do you budget when the offer you sign up for can end?",
+  "date": "2026-10-19",
+  "kicker": "follow.the.money",
+  "body": "publish-body-linked.md",
+  "words": "publish-words.json",
+  "images": [
+    {
+      "id": "cover",
+      "role": "cover",
+      "file": "../../../.cache/monday-release-gates/pages/cover-1200x630.png",
+      "alt": "What will AI cost next? Google, OpenAI and Anthropic, with Krish."
+    },
+    {
+      "id": "vertical-cover",
+      "role": "vertical-cover",
+      "file": "../../../.cache/monday-release-gates/pages/cover-1080x1920.png",
+      "alt": "What will AI cost next? Google, OpenAI and Anthropic, with Krish."
+    },
+    {
+      "id": "square-cover",
+      "role": "square-cover",
+      "file": "../../../.cache/monday-release-gates/pages/cover-1080x1080.png",
+      "alt": "What will AI cost next? Google, OpenAI and Anthropic, with Krish."
+    },
+    {
+      "id": "share-card-cover",
+      "role": "share-card-cover",
+      "file": "../../../.cache/monday-release-gates/pages/cover-1200x675.png",
+      "alt": "What will AI cost next? Google, OpenAI and Anthropic, with Krish."
+    },
+    {
+      "id": "google",
+      "file": "../../../.cache/monday-release-gates/article-cards/google.png",
+      "alt": "Google public pricing doubles on 1 December 2026: input tokens rise from $2 to $4 per million and output tokens from $10 to $20.",
+      "after_heading": "WHAT CHANGES ON 1 DECEMBER"
+    },
+    {
+      "id": "same",
+      "file": "../../../.cache/monday-release-gates/article-cards/same.png",
+      "alt": "Selected AI offers compared in US dollars per million tokens: $4 input and $20 output; Google from December and OpenAI promotional.",
+      "after_heading": "IT ISN'T JUST GOOGLE"
+    },
+    {
+      "id": "bill",
+      "file": "../../../.cache/monday-release-gates/article-cards/bill.png",
+      "alt": "The article\u2019s illustrative workload costs $980 before December and $1,960 afterwards, with the reuse discount included in both.",
+      "after_heading": "EVEN THE DISCOUNTS DON'T LAST"
+    }
+  ],
+  "scripts": [
+    {
+      "label": "Approved long-cut transcript",
+      "file": "captions/long-approved.txt"
+    },
+    {
+      "label": "Short-cut transcript",
+      "file": "../../../.cache/produce/2026-10-19-5b5bfadc/short/why-ai-prices-keep-changing-short.cut.txt"
+    }
+  ],
+  "status": [
+    "Publication readiness is confirmed by the live fact and making records.",
+    "Both current cuts accepted by Krish after full playback with sound."
+  ]
+}

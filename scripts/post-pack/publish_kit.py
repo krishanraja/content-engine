@@ -78,6 +78,7 @@ def steps(p):
     short_video = f.get('short_video') or '3 Video/ the 90-second tall (9:16) video'
     cover = f.get('cover') or '2 Covers and images/substack-cover-1200x630.png'
     wide_thumb = f.get('wide_thumbnail') or '3 Video/ the wide (16:9) thumbnail'
+    spotify_thumb = f.get('spotify_thumbnail') or wide_thumb
     vertical = f.get('vertical_cover') or '2 Covers and images/vertical-cover-1080x1920-shorts-tiktok-reels.png'
     share_card = f.get('share_card') or '2 Covers and images/share-card-1200x675.png'
     square = f.get('square') or '2 Covers and images/square-1080x1080.png'
@@ -162,9 +163,9 @@ def steps(p):
             'where': 'Spotify', 'tag': 'The video episode, with its clip and chapters',
             'why': 'Spotify plays the same 16:9 video as YouTube as a video podcast episode, and the 90-second cut is its clip. '
                    'Upload in Spotify for Creators (not through Substack), the same day as the Substack post.',
-            'files': [long_video, wide_thumb, short_video],
+            'files': [long_video, spotify_thumb, short_video],
             'do': wait + [f'In Spotify for Creators, New episode: upload the {long_name} (wide, 16:9).',
-                   f'Set the episode thumbnail to the wide thumbnail, {wide_thumb}. Leave episode art empty: the show art is used.',
+                   f'Set the episode thumbnail to {spotify_thumb}. Leave episode art empty: the show art is used.',
                    'Paste the title and description below, then the chapters into the description.',
                    'Add the 90-second tall video as the episode\'s clip. Publish.'],
             'copy': [('Episode title', p.get('spotify_title') or p.get('youtube_title')),
@@ -311,7 +312,13 @@ def self_test():
         failures.append('the cover stays the Substack post\'s cover image')
     if 'substack-cover-1200x630.png' not in ' '.join(steps({'title': 'T'})[0]['do']) or 'substack-cover-3x2' in ' '.join(steps({'title': 'T'})[0]['do']):
         failures.append('the Substack cover to upload is the 1200 x 630 one its upload box asks for, never the 3:2 one')
-    checks = 18
+    spotify_named = dict(named, files=dict(named['files'], spotify_thumbnail='3 Video/Spotify 1920x1080.jpg'))
+    spotify = next(x for x in steps(spotify_named) if x['where'] == 'Spotify')
+    if '3 Video/Spotify 1920x1080.jpg' not in spotify['files'] or not any('3 Video/Spotify 1920x1080.jpg' in d for d in spotify['do']):
+        failures.append('Spotify must use its dedicated thumbnail in both files and instructions')
+    if named['files']['wide_thumbnail'] not in by_where['Spotify']['files']:
+        failures.append('Spotify must retain the existing wide-thumbnail fallback')
+    checks = 20
     if failures:
         print('publish kit self-test FAILED:\n  ' + '\n  '.join(failures))
         return 1
