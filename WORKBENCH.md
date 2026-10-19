@@ -650,6 +650,14 @@ only in a chat.
 To start a session in any of them: read `AGENTS.md`, then this file, then do
 the top item that is not waiting on Krish. Before you stop, update this file.
 
+Claude Code works from the same rules and skills as Codex. `CLAUDE.md` imports `AGENTS.md`
+and adds only what is particular to Claude Code: which doc to read for which task, the
+models (Opus, with `repo-scout`, `executor` and `reviewer` subagents in `.claude/agents/`), the
+hooks that refuse secrets and North Star edits and put every publish, send or taste-rule edit to
+Krish in person (`.claude/hooks/`), and the checks. To find code, search `docs/REPO_MAP.md`
+(`npm run repo-map` keeps it current) rather than opening files. `docs/ENGINE_SESSION.md`,
+"Running from Claude Code", has the session loop.
+
 Krish starts a session by pasting this:
 
 > Continue the Mindmake content engine. Read AGENTS.md and WORKBENCH.md, then
