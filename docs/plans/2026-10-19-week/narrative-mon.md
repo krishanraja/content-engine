@@ -1,7 +1,6 @@
 # Narrative: Monday 19 October, follow.the.money
 
-Piece `5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092`. Status: **awaiting Krish's sign-off on the end message**
-(the research changed it; see "Why the end message changed"). Nothing is made until he signs.
+Piece `5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092`. Status: **signed by Krish, 19 Oct**. The research changed the end message before he signed (see "Why the end message changed").
 
 ## His answers that fix this narrative (19 Oct, his words)
 
@@ -21,7 +20,7 @@ prices double, and a negotiated contract can differ) and "almost nobody has pric
 
 ## 1. End message
 
-**Proposed:** "On 1 December the price of Google's newest AI doubles for everyone paying the public rate,
+"On 1 December the price of Google's newest AI doubles for everyone paying the public rate,
 and the businesses that set it up to reuse what it has already read still pay about 95% less on that part
 of the bill, so find out which kind you are, and what your contract says, before December."
 
@@ -56,3 +55,5 @@ shows a named company on Argon at the public rate); how the reuse works inside; 
 ## 6. Drift rule
 
 Any change to the end message, the action or a checkpoint goes back to Krish before work continues.
+
+Signed by Krish: "sign Monday", 2026-10-19
