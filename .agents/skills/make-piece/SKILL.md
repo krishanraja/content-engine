@@ -144,7 +144,7 @@ rewritten and checked again from the top.
    it was made with AI or with Claude (house rule NO_AI_DISCLOSURE_LINE;
    Krish, 2026-10-12: "Eliminate the "I made this with AI" entirely").
 1b. **Write it the way he says it** (house rule SCRIPT_AS_HE_TALKS; Krish, 2026-10-17: "Thats how script should be written in the future"). Measured from his takes (`docs/narration/week-of-12-oct`, the rules in `habits-and-rules.json`): about one sentence in three opens with So, And, But, Now or See; the prediction runs straight into the claim ("So my prediction is that...") with its deadline as a period; "no one" and "I reckon"; every fact in one short fixed line; and about 200 script words for the 90-second cut, 400 for the 3-minute cut. The `spoken-line` entries in `config/golden-examples.json` are his own lines from the takes. `story_check.py` warns on each of these, and on a script that will run long as he says it, from his ledger.
-2. **Write it for a 12-year-old.** Krish, 2026-10-12: "I also feel like
+2. **Write it plainly, for a non-technical manager at a medium-sized company** (Krish, 2026-10-19: "My customers are medium sized enterprises. This script is 20% too \"Dumbed down\""; the readers below changed that day, with his "agree on all 4"; the reading gate in `story_check.py` is unchanged). Before that: Krish, 2026-10-12: "I also feel like
    these scripts are too complicated for a layman to understand. Every
    single script should be understandable by a 12-year-old. I can't even
    understand what I'm reading off the teleprompter. I thought we had hard
@@ -169,13 +169,13 @@ rewritten and checked again from the top.
    conversations with no other context. Reader A's prompt, word for word:
 
    ```
-   You are a sharp but ordinary 12-year-old in the UK. You know what an app, AI, a company, a court and a deal are, but you have never studied law, business, money or technology. You hear this video script read aloud once (no rewinding). List every word, phrase or sentence that would genuinely lose you: one you would not understand, or that would make you stop following. Say "nothing" if nothing lost you. Then retell the whole video in three sentences.
+   You are a smart, busy manager at a 200-person company in the UK. You run a team and sign off budgets, but you are not technical and have never worked in tech or AI. You hear this video script read aloud once (no rewinding). List every word, phrase or sentence that would genuinely lose you: one you would not understand, that would make you stop following, or that talks down to you. Say "nothing" if nothing lost you. Then retell the whole video in three sentences.
    ```
 
    Reader B's prompt, word for word:
 
    ```
-   Pretend you are 12 years old, in Year 7. You use apps and have heard of AI, but you know nothing about how lawsuits, contracts, companies or money work. Someone reads you this video script out loud, once. Which words or sentences would you not understand, or would make you lose the thread? List each one exactly as it is said, or say "nothing" if you followed all of it. Then tell the whole video back in three sentences.
+   Pretend you run the finance or operations team at a 200-person company. You use AI tools at work but know nothing about how they are built or priced. Someone reads you this video script out loud, once. Which words or sentences would you not understand, would make you lose the thread, or would feel like they talk down to you? List each one exactly as it is said, or say "nothing" if you followed all of it. Then tell the whole video back in three sentences.
    ```
 
    Give each the script's spoken words after its prompt. The script passes

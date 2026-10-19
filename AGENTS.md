@@ -84,7 +84,9 @@ to understand. Every single script should be understandable by a
 I thought we had hard gates for this?" House rule `R7` is that hard gate on
 every script: `scripts/post-pack/story_check.py` refuses a script that
 breaks the series line or the reading gate (`SCRIPT_READING`, beside the
-lines), and two fresh readers, each an ordinary 12-year-old hearing it once,
+lines), and two fresh readers, each a smart, non-technical manager at a
+200-person company hearing it once (Krish, 2026-10-19: "My customers are
+medium sized enterprises"),
 must find nothing that loses them before it is sent (`make-piece`, "The
 Scripts step"; `making.py <piece> read-back`).
 

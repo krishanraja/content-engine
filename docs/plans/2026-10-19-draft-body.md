@@ -1,14 +1,14 @@
 Google told everyone, in a footnote.
 
-When Google launched its newest AI, Gemini 4 Argon, on 13 October, it called the price "introductory". Then came the footnote: "After the introductory period expires on November 30, 2026, the price of $4 per 1M input tokens and $20 per 1M output tokens will apply." That's double.
+When Google launched its newest AI, Gemini 4 Argon, on 13 October, it called the price "introductory". Then the footnote: "After the introductory period expires on November 30, 2026, the price of $4 per 1M input tokens and $20 per 1M output tokens will apply." That's double.
 
-So nobody's hiding anything. But I've been reading the small print, and there's a twist most people will miss. Google has a feature that makes the repeated part of your AI bill 95% cheaper. Lots of businesses are counting on it to protect them. It won't stop the doubling.
+On its own, that's a pricing story about one company. But I've spent the last week reading the price pages and release notes of the three big AI firms, and it's part of a pattern. They keep changing their short-term offers, because each one is trying to pull customers off the other two. If you run a company of a few hundred people, the price you pay for AI next year will move several times before you've finished budgeting for it.
 
-So what does a doubling really do to your bill, and what should you check now?
+So what's durable thinking for a business owner, when every price has a shelf life?
 
 ## WHAT CHANGES ON 1 DECEMBER
 
-AI companies charge by the token. Google says a token is about four characters, so think of it as a short word. You pay for the tokens you send in, and for the tokens the AI sends back. Google counts the AI's "thinking" as tokens sent back, even though you never see it.
+Google charges by the token, which it says is about four characters. You pay for the tokens you send in and the tokens the AI sends back, and Google counts the AI's "thinking" as tokens sent back.
 
 Here's Google's own price list for Argon, per million tokens:
 
@@ -16,63 +16,57 @@ Here's Google's own price list for Argon, per million tokens:
 - Tokens in that it has already read: $0.10 now, $0.20 from 1 December.
 - Tokens out, thinking included: $10.00 now, $20.00 from 1 December.
 
-Every line doubles. Google's launch post says the new price "applies to the Argon model intended for public access only". So if you pay the public rate, this is your price. If you signed a deal with Google, your contract decides. More on that at the end.
+Every line doubles. Google's launch post says this "applies to the Argon model intended for public access only". If your company pays the public rate, this is your price. If you signed your own deal, your contract decides.
 
-## THE PART THAT IS 95% CHEAPER
+## IT ISN'T JUST GOOGLE
 
-Most business AI repeats itself. A customer-help bot sends the same long rulebook with every single question. A contract tool sends the same contract each time someone asks about it. The question changes. The big block in front of it doesn't.
+Here's what the other two have done in roughly ten weeks, from their own pages.
 
-Picture a photocopier where every customer gets the same 40 pages before their one-line question. That's an analogy, but it's close. Google's AI notices when a request starts the same way as one it saw a moment ago, and it charges you far less for that repeated part. Google calls this context caching. I'll just call it reuse.
+OpenAI, 21 August: "GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens." Same changelog, same day: "GPT-5.6 Sol's promotional pricing is available at least through November 21, 2026." So that's a cut with an end date on it.
 
-The fraction is small. Google's launch post calls it "95% off". The price list backs that up: $0.10 against $2.00 today, $0.20 against $4.00 from December. By my maths, that's a twentieth of the normal price.
+Anthropic, 10 August: "The introductory pricing for Claude Sonnet 5 ($2 / $10 per MTok) is now the standard price: the previously scheduled increase to $3 / $15 per MTok on September 1, 2026 will not occur." A planned rise, cancelled.
 
-Two catches. It's automatic, but only when it works: the repeated part has to come first, the request has to be long enough, and the copies have to arrive close together. And you only know it's working if someone checks the usage figures Google sends back.
+Anthropic again, 22 September: Claude Opus 5.5 launched "at $4 / $20 USD per MTok (Claude Opus 5 is $5 / $25)". And on 7 October it cut the price of reused tokens on Claude Sonnet 5.5 from $0.20 to $0.10 per million.
 
-## WHY REUSE DOES NOT STOP THE DOUBLING
+Count them with Google's and that's at least six moves in about ten weeks. And none of this covers what big customers pay. Enterprise deals are negotiated in private, so the public price lists are the only fair comparison. And honestly, I find the pattern more telling than any single price.
 
-Here's where people get caught out. Reuse makes your bill much smaller. Then the smaller bill doubles too.
+## WHY THEY KEEP DOING IT
 
-Let me show you with one made-up month. Say a business sends 100,000 requests. Each one carries 10,000 tokens in, 8,000 of them the same reused block, and gets 500 tokens back.
+My read, and it is my read: these firms are in a fight for the same customers, and price is the fastest weapon they have. A low launch price gets your team building on one AI. Once your instructions, your tools and your staff habits are set up around it, moving costs time and money. That's when the full price arrives.
+
+Look where the top models have landed. From 1 December, Argon is $4 in and $20 out. GPT-5.6 Sol is $4 and $20, on a promotion. Claude Opus 5.5 is $4 and $20. Three rivals, one price, and every one of those numbers has moved this year.
+
+## WHAT REUSE AND A CHEAPER MODEL REALLY SAVE
+
+There are two ways to cut the bill, and I'd take both. Neither is permanent.
+
+The first is reuse. Most business AI repeats itself. Your customer-service assistant sends the same long policy document with every question, and the question is the only part that changes. Google's AI notices when a request starts the same way as one it saw a moment ago, and its launch post says those tokens are "95% off". Google calls this context caching. I'll call it reuse.
+
+Here's a made-up month for a customer-service team. Say it sends 100,000 requests. Each one carries 10,000 tokens in, 8,000 of them the same reused policy, and gets 500 tokens back.
 
 - Without reuse: $2,500 a month now. $5,000 from December.
 - With reuse: $980 a month now. $1,960 from December.
 
-Reuse saves you about 60% either way. That's a big deal. But look at the jump. $980 becomes $1,960. If your budget for next year was built on the launch price, it's wrong by half, whichever side of the line you're on.
+Reuse saves about 60%. The reused price doubles as well, so the bill still doubles. And Anthropic changed its reuse prices twice in a month, so the discount itself moves.
 
-And notice what's left once the reuse is working. In that example, the tokens coming back cost more than everything going in. Tokens out cost five times tokens in, $10.00 against $2.00. So a business that thinks it's safe because it reuses is now mostly paying for answers and thinking, and those double as well.
+The second is a cheaper model. Sometimes that's smart. Sanchit Vir Gogia, chief analyst at Greyhound Research, put the catch well in Computerworld: "Cheap per token and cheap per task are different claims, and only the second one reaches the budget." A cheaper AI that needs three tries, or gets it wrong and needs a person to fix it, can cost you more for the same job. So test it on ten real jobs your team does every week, and count the cost of each finished job, fixes included.
 
-## WHERE THE MONEY MOVES
+## THREE RULES THAT OUTLAST THE NEXT OFFER
 
-Follow the money from your business to Google.
+Here's what I'd hold on to, whatever the next price change is.
 
-**Squeezed hardest:** anyone on the public rate who reuses very little. Short one-off questions, different every time. They get the full doubling on the full bill.
+1. Budget at the full price. Gogia told Computerworld that CIOs should budget at the higher rate from day one, and that "a business case built on the launch rate is a business case built to be rewritten in seven weeks". If the launch price lasts, enjoy it.
 
-**Squeezed on margin:** anyone selling a fixed-price product built on Argon. Picture a founder who sells a customer-help bot for a flat monthly fee. Their cost doubles on 1 December. Their customers' price doesn't. That gap comes straight out of their margin.
+2. Put the price in the contract. Gogia also pointed out that Google Cloud's standard terms allow fee changes unless a price is expressly agreed. If you want a price to hold, it has to be written down, with the date it holds until.
 
-Safe, maybe: businesses with a contract that fixes the price. But only if it really says so. Sanchit Vir Gogia, chief analyst at Greyhound Research, told Computerworld that Google Cloud's standard terms allow fee changes unless a price is expressly agreed.
+3. Keep the freedom to switch. Keep your instructions and your test jobs in a form you could run on another AI next month. When the next promotion lands, you want to be able to take it, and when one ends, you want to be able to leave.
 
-And Google? My read, and it is my read: the launch price was there to get people building. Once your rulebook, your instructions and your tools are set up around one AI, moving costs time and money. From 1 December, Argon costs exactly what Anthropic charges for Claude Opus 5.5, $4 in and $20 out. So December is when Argon is priced like its rivals, after people have already moved in.
+**Our prediction.** By 31 March 2027, Google, OpenAI or Anthropic will list its top model below $4 in and $20 out. Three rivals sitting on one price is exactly when one of them moves to win the switch. How sure we are: 55%.
 
-## IS A CHEAPER MODEL WORTH IT?
+## MONDAY'S THREE QUESTIONS
 
-The obvious move is to drop down to something cheaper. Sometimes that's smart. Often it isn't.
+On Monday, find whoever runs AI where you work, inside the company or at a supplier. I'd start by asking how much of what you send is reused. Then I'd ask whether your contract fixes the price or follows the public price list from 1 December, and whether next year's budget was built at the full price or the launch price.
 
-Gogia put it better than I can: "Cheap per token and cheap per task are different claims, and only the second one reaches the budget." A cheaper AI that needs three tries, or thinks for twice as long, or gets the answer wrong and needs a person to fix it, can cost you more for the same job.
+Don't renegotiate yet. Get the three answers first, and you'll know where you stand before the next offer changes it.
 
-So test it on your real work first. Take ten jobs your AI does every week, run them on the cheaper option, and count the cost per finished job, including the fixes.
-
-There's a cheaper route inside Google too. Its Batch and Flex options cost half the standard price, both now and after December. They suit work that can wait, like overnight reports, and they don't suit a customer waiting on a reply.
-
-Now for my call. If lots of customers start switching down in November, Google has a reason to blink. That's the bold bet.
-
-**Our prediction.** Google will keep Argon's $2 and $10 price past 30 November, or will announce a new discount on it, before 1 December 2026. That's a long shot, and my guess is Google sticks to its footnote. How sure we are: 15%.
-
-## YOUR CONTRACT, THEN MONDAY'S TWO QUESTIONS
-
-If you signed a deal with Google, dig it out and find the bit about price. It'll either fix the price or point at Google's public price list, and it'll say from when. While you're in there, find which email address gets Google's notices about changes. I'd bet someone left the company and nobody reads it.
-
-Then on Monday, find whoever runs your AI, inside your company or at a supplier. Ask them how much of what you send to Google's AI is reused. Then ask whether your contract fixes the price, or follows Google's public rate from 1 December.
-
-That's it. Don't renegotiate yet. Get the two answers first, and you'll know which side of the line you're on before the bill tells you.
-
-If someone you work with runs on Google's AI, send them this before December does.
+If someone you work with signs off an AI budget, send them this before December does.

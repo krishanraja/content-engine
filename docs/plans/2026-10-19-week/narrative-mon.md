@@ -80,4 +80,4 @@ all this." Research: `research-mon-rivals.md`.
    once"; examples are a medium-sized company's finance team, customer-service team and supplier contract, never a
    shop. This changes house rule R7: his yes is in his words above.
 
-Signed by Krish (v2): "agree on all 4", 2026-10-19 (the prediction still open).
+Signed by Krish (v2): "agree on all 4", 2026-10-19; prediction A, "A is fine", 2026-10-19.

@@ -618,11 +618,27 @@
   {
    "id": "readers-are-mid-sized-firms",
    "on": "2026-10-19",
-   "krish": "We need to stop referring to businesses as shops and talking about a mum and dad shop. My customers are medium sized enterprises. This script is 20% too \"Dumbed down\"",
+   "krish": "We need to stop referring to businesses as shops and talking about a mum and dad shop. My customers are medium sized enterprises. This script is 20% too \"Dumbed down\" / [19 Oct, to the proposal] \"agree on all 4\"",
    "why": "Four rounds of 12-year-old read-backs pushed the 90-second script to a corner-shop example and over-explained words; his audience runs medium-sized companies and felt talked down to.",
-   "means": "Examples and framing are pitched at the leader of a medium-sized company (a finance team, a customer-service team, a contract with a supplier), never a shop or a family business. Plain words stay; explanations that a manager would find patronising go. Whether the read-back persona changes from a 12-year-old is his decision (house rule R7), proposed to him on 19 Oct.",
-   "status": "open",
-   "encoded": []
+   "means": "Examples and framing are pitched at the leader of a medium-sized company (a finance team, a customer-service team, a contract with a supplier), never a shop or a family business. The two read-back readers are a smart, non-technical manager at a 200-person company, hearing it once, who also lists anything that talks down to them. Plain words and the reading gate stay.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "You are a smart, busy manager at a 200-person company",
+     "how": "read-back reader A"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "Pretend you run the finance or operations team at a 200-person company",
+     "how": "read-back reader B, the Claude Code copy"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "a smart, non-technical manager at a 200-person company hearing it once",
+     "how": "house rule R7"
+    }
+   ]
   },
   {
    "id": "five-minute-long-cut",
