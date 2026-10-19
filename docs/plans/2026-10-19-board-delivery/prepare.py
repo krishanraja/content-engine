@@ -92,19 +92,21 @@ def main():
     short = 'Google, OpenAI and Anthropic: three rules for your AI budget'
     description = 'Google, OpenAI and Anthropic keep changing their AI prices. How do you budget when the offer you sign up for can end?\n\nThree rules for your next AI budget: budget at the full price, agree a price and an end date, and keep the freedom to switch.\n\nWatch the explanation, then ask whoever owns your AI budget what each completed task costs.\n\nMore at makeyourmindup.ai'
     caption = 'Google, OpenAI and Anthropic keep changing AI prices. Three rules for your next budget: budget at the full price, agree a price and an end date, and keep the freedom to switch.\n\nThe full explanation is at makeyourmindup.ai.'
-    monday = {'piece_id':mon_id,'status':'review','note':'Finished video files and approved titles are here for review. Hold all Monday publication: one article fact-check entry is unresolved, and three long-cut caption passages still need listening review. No further paid fact check is authorised. The article uses your updated prediction: 95% by 31 December 2026. The original outline and script boxes below retain their earlier wording for provenance; use the finished takes as the recording reference. These files do not mark the piece publish-ready.',
+    monday = {'piece_id':mon_id,'status':'review','note':'Finished video files and approved titles are here for review. Hold all Monday publication: one article fact-check entry is unresolved. Your three caption corrections are approved and the corrected subtitle file is available below. No further paid fact check is authorised. The article uses your updated prediction: 95% by 31 December 2026. The original outline and script boxes below retain their earlier wording for provenance; use the finished takes as the recording reference. These files do not mark the piece publish-ready.',
       'sections':[
         {'id':'video','title':'Monday: finished video files','note':'The long cut is for Substack, YouTube and Spotify. The short is for Shorts, Reels, TikTok, LinkedIn and the Spotify clip. Use these finished cuts, not the original recordings in the Inbox.','files':[mon_long,mon_short,mon_wide,mon_tall]},
         {'id':'youtube','title':'YouTube and Substack video','note':'Video title approved as set A. Description prepared from the signed-off treatment and recorded script; publication remains on hold.','copy':[cp('Video title',title),cp('Description',description)]},
         {'id':'shorts','title':'Shorts, Reels, TikTok and LinkedIn','note':'Short title approved as set A. Caption prepared from the recorded message; publication remains on hold.','copy':[cp('Short title',short),cp('Caption',caption)]},
         {'id':'spotify','title':'Spotify: episode, thumbnail and chapters','note':'Use the long video as the episode and the short as its clip. Add the chapters to the description. Leave episode art empty to use the show art. Your Make Your Mind Up show and active Epidemic Sound subscription are confirmed. Hold upload until Monday\'s review is cleared.','files':[mon_sp,mon_ch],'copy':[cp('Episode title',title),cp('Description',description),cp('Chapters',chapters['monday'])]}
       ]}
+    corrected = ROOT / '.cache/monday-final-captions/files'
+    monday['sections'][0]['files'] += [asset('monday','approved-captions',corrected/'Why AI prices keep changing - long - approved captions.srt','Download approved long-video captions (SRT)'), asset('monday','approved-transcript',corrected/'Why AI prices keep changing - long - approved transcript.txt','Download approved long-video transcript')]
     archive = LIBRARY.parent / 'Video Engine/Archive/2026-10-19 Why AI prices keep changing (post to YouTube, Substack, Shorts, Reels, TikTok, LinkedIn)'
     clips = [asset('monday', f'caption-{n}', archive/f'caption-check-{n}.wav', label) for n,label in [
         (82,'Listen: four batch / twenty batch'), (157,'Listen: bill / build and correction'),
         (331,'Listen: where you work / way work')]]
-    monday['sections'].append({'id':'caption-review','title':'Three short listening checks',
-        'note':'These original-audio excerpts are the remaining caption checks. Their source positions are 1:22, 2:37 and 5:31; the finished edit has different timings.', 'files':clips})
+    monday['sections'].append({'id':'caption-review','title':'Caption corrections confirmed',
+        'note':'Krish confirmed all three passages on 19 October: $4 a batch to read tokens, and $20 a batch to write tokens; two ways to bring the bill down; where you work. The source excerpts are retained for reference. The approved SRT and transcript are in the video files above.', 'files':clips})
     for day,data in [('friday',friday),('monday',monday)]:
         save(PLAN/f'{day}-materials.json',data)
         save(CACHE/f'{day}-new-assets.json',mappings[day])

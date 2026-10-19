@@ -17,7 +17,7 @@
       "sha256": "cb30b56007fbf68e33ca0a995145c44061f7d11f5827ae29e997b5199a8c1b2f"
     }
   ],
-  "listening_still_required": [
+  "previous_listening_questions": [
     {
       "source_seconds": [
         82,
@@ -39,5 +39,8 @@
       ],
       "issue": "where you work / way work phrase"
     }
-  ]
+  ],
+  "listening_still_required": [],
+  "resolved_by": "Krish",
+  "resolution_receipt": "caption-final-receipt.json"
 }

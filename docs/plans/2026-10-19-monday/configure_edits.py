@@ -36,6 +36,8 @@ for cut, cues, shape in [('long',LONG,'16x9'),('short',SHORT,'9x16')]:
                 'replacements':[['can sort of price rise','cancelled a price rise'],['And thropics','Anthropic\'s'],['And a thropic','Anthropic'],['and anthropic','and Anthropic'],['clawed AIs','Claude AIs'],['Re -rival','Three rivals'],['canceled','cancelled'],['argon','Argon']]})
     if cut=='long':
         cfg['replacements'].append(['and lesser price','unless a price'])
+        from finalize_captions import DECISIONS
+        cfg['replacements'].extend([list(pair) for pair in DECISIONS])
         cfg['music_mode']='episode'
         cfg['chapters']=[{'title':'Why AI prices keep changing','starts':'So I follow'},
                          {'title':'Google, OpenAI and Anthropic keep changing prices','starts':'Google isn\'t alone'},

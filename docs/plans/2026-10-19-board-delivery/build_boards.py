@@ -28,8 +28,7 @@ def main():
             args += ['--keep','mon','--keep','wed','--keep','fri']
         else:
             args += ['--draft','mon','--ideas',str(ROOT/'docs/plans/2026-10-19-week/ideas.json'),'--queue',str(CACHE/'queue-live.json'),
-                     '--waiting','mon=Publication is held on one fact-check entry. No further paid check is authorised.',
-                     '--waiting','mon=Listen to the three flagged long-cut caption passages before approving the video for publication.']
+                     '--waiting','mon=Publication is held on one fact-check entry. No further paid check is authorised.']
             for review in json.loads((CACHE/'monday-review-args.json').read_text()): args += ['--review',review]
         page,meta=board.build(board.parser().parse_args(args))
         # Correct inherited duration badges to the accepted repaired cuts.

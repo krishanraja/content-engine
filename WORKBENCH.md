@@ -9,8 +9,9 @@ timings, and its new 1920x1080 thumbnail uses the later approved wording.
 
 Monday's two finished review cuts and approved set-A titles are live on
 the board, with channel copy, Spotify thumbnail/chapters and the three short
-caption-listening excerpts. Keep the day in draft: one fact-check entry and
-three listening checks remain unresolved. Krish declined a fifth paid fact
+caption reference excerpts. Krish resolved all three caption questions on 19 October.
+Approved SRT/transcript downloads are on the board, in the archive and sent to
+the post library. Keep the day in draft: one fact-check entry remains unresolved. Krish declined a fifth paid fact
 check. Do not spend, claim publish-ready or record video completion to bypass
 these holds. The source videos remain in the existing archive; the final
 library delivery correctly refuses them without their completed validation.

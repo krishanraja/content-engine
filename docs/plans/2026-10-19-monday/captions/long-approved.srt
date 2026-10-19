@@ -1,0 +1,488 @@
+1
+00:00:03,700 --> 00:00:07,520
+So I follow how money is changing because
+of AI.
+
+2
+00:00:08,300 --> 00:00:14,020
+So I've been reading the price of AI and
+the price pages of all the three big AI
+
+3
+00:00:14,060 --> 00:00:15,240
+firms this week, actually.
+
+4
+00:00:15,340 --> 00:00:18,220
+It's Google, OpenAI, and Anthropic, which
+makes Claude.
+
+5
+00:00:18,900 --> 00:00:20,040
+And I wanted to break it down for you.
+
+6
+00:00:20,200 --> 00:00:21,780
+The prices just keep moving around.
+
+7
+00:00:21,900 --> 00:00:25,060
+And if that, you know, it kind of matters
+if your firm runs on any of them,
+
+8
+00:00:25,400 --> 00:00:26,960
+especially if it runs on just one of them.
+
+9
+00:00:27,760 --> 00:00:33,240
+So what does a sensible business do when
+every AI price is prone to moving and as a
+
+10
+00:00:33,280 --> 00:00:33,820
+shelf life?
+
+11
+00:00:33,860 --> 00:00:34,860
+Let's start with the news.
+
+12
+00:00:35,360 --> 00:00:39,460
+On 1st of December, the price of Google's
+newest AI, Gemini 4, Argon,
+
+13
+00:00:40,060 --> 00:00:40,660
+doubles.
+
+14
+00:00:40,700 --> 00:00:41,700
+It's going to double.
+
+15
+00:00:42,340 --> 00:00:43,540
+And to be fair, Google warned everyone.
+
+16
+00:00:43,700 --> 00:00:47,800
+It's called the launch price introductory
+and it put the new price in a note in
+
+17
+00:00:47,840 --> 00:00:49,440
+small print at the bottom of its
+announcement.
+
+18
+00:00:50,340 --> 00:00:51,620
+Now here's how that bill works.
+
+19
+00:00:52,220 --> 00:00:56,200
+Your company pays for every word the AI
+reads and every word it writes.
+
+20
+00:00:57,080 --> 00:01:01,680
+Prices come per batch of around like
+700,000 words and reading a batch costs
+
+21
+00:01:01,720 --> 00:01:02,940
+two bucks today.
+
+22
+00:01:03,680 --> 00:01:05,400
+And from December, it's four bucks.
+
+23
+00:01:05,980 --> 00:01:06,980
+It's quite a big increase.
+
+24
+00:01:07,040 --> 00:01:11,780
+So writing a batch costs five times as
+much as that instead of reading it.
+
+25
+00:01:11,820 --> 00:01:13,260
+And that's going to double too.
+
+26
+00:01:14,120 --> 00:01:16,300
+But here's the bit I find interesting.
+
+27
+00:01:17,180 --> 00:01:18,180
+Google isn't alone.
+
+28
+00:01:18,860 --> 00:01:23,320
+In about 10 weeks, I counted at least six
+price moves across the three firms.
+
+29
+00:01:23,940 --> 00:01:27,420
+Now OpenAI cut the price of one of its top
+AIs in August.
+
+30
+00:01:27,460 --> 00:01:34,220
+It's now $4 a batch to read tokens,
+and $20 a batch to write tokens.
+
+31
+00:01:34,260 --> 00:01:37,740
+And it says that's a promotion running at
+least until the 21st of November.
+
+32
+00:01:37,780 --> 00:01:41,020
+So that's a cut, but the cut has an end
+date on it.
+
+33
+00:01:41,100 --> 00:01:42,320
+Anthropic went the other way.
+
+34
+00:01:42,880 --> 00:01:46,680
+It planned a price rise for one of its
+Claude AIs and then cancelled it.
+
+35
+00:01:47,200 --> 00:01:52,440
+Then it launched its newest top AI at four
+bucks at 20 bucks cheaper than the one
+
+36
+00:01:52,480 --> 00:01:53,380
+before.
+
+37
+00:01:53,420 --> 00:01:54,900
+So look where they've all landed.
+
+38
+00:01:54,940 --> 00:01:58,110
+From December, Google's top AI is four and
+20.
+
+39
+00:01:58,450 --> 00:02:00,010
+OpenAI is four and 20.
+
+40
+00:02:00,430 --> 00:02:01,810
+Anthropic's is four and 20.
+
+41
+00:02:02,450 --> 00:02:08,170
+Three rivals with one same price for
+reading AI tokens and writing AI tokens.
+
+42
+00:02:08,910 --> 00:02:11,590
+And every one of those numbers has moved
+this year.
+
+43
+00:02:12,075 --> 00:02:13,835
+So why do they keep doing it?
+
+44
+00:02:14,255 --> 00:02:16,695
+Obviously, the big one is it's a fight for
+customers.
+
+45
+00:02:16,835 --> 00:02:17,935
+It's a cutthroat world.
+
+46
+00:02:18,375 --> 00:02:20,575
+A low price gets your team building on one
+AI.
+
+47
+00:02:21,095 --> 00:02:25,395
+Then your instructions, your tools and
+most importantly, all your people's habits
+
+48
+00:02:25,435 --> 00:02:28,815
+get set up around that big AI model.
+
+49
+00:02:29,275 --> 00:02:31,475
+And once that happens, switching is slow
+and costly.
+
+50
+00:02:31,595 --> 00:02:36,115
+Everyone knows that switching is an
+absolute pain for the larger the company
+
+51
+00:02:36,155 --> 00:02:36,955
+gets.
+
+52
+00:02:36,995 --> 00:02:39,635
+And that's when the full price can arrive
+on your doorstep.
+
+53
+00:02:40,415 --> 00:02:43,875
+Two ways to bring the bill down.
+
+54
+00:02:44,015 --> 00:02:45,015
+And I would use both.
+
+55
+00:02:45,435 --> 00:02:48,215
+The first is reusing.
+
+56
+00:02:48,875 --> 00:02:51,435
+So picture your customer service team's AI
+system.
+
+57
+00:02:52,155 --> 00:02:57,755
+Before it answers each customer, it
+rereads the same long policy
+
+58
+00:02:57,795 --> 00:02:58,702
+document.
+
+59
+00:02:58,742 --> 00:03:02,442
+Google spots that repeat and charges 95%
+less for it.
+
+60
+00:03:02,742 --> 00:03:08,602
+So say that whole, that team's whole bill
+from Google is 980 bucks per
+
+61
+00:03:08,642 --> 00:03:09,502
+discount included.
+
+62
+00:03:09,542 --> 00:03:11,122
+From December, it's almost two grand.
+
+63
+00:03:11,862 --> 00:03:13,502
+But the discount price doubles too.
+
+64
+00:03:14,282 --> 00:03:18,402
+And Anthropic has changed its own prices
+twice since September.
+
+65
+00:03:18,562 --> 00:03:21,142
+So even the discounts are moving, not just
+the price.
+
+66
+00:03:21,658 --> 00:03:24,378
+And the second tactic is a cheaper AI.
+
+67
+00:03:24,538 --> 00:03:27,978
+Sometimes that's smart, but one analyst
+put it well, cheap per word and cheap per
+
+68
+00:03:28,018 --> 00:03:29,878
+job are kind of different things.
+
+69
+00:03:30,038 --> 00:03:35,418
+So cheaper AI that gets it wrong and then
+someone has to fix it can actually cost
+
+70
+00:03:35,458 --> 00:03:36,458
+you more.
+
+71
+00:03:36,617 --> 00:03:38,657
+Sometimes paying more is worth it.
+
+72
+00:03:39,317 --> 00:03:41,897
+So test it on 10 real jobs your team does
+every week.
+
+73
+00:03:42,017 --> 00:03:44,797
+I run these tests all the time with
+companies I work with.
+
+74
+00:03:45,517 --> 00:03:50,097
+10 real jobs, just short ones end to end
+and then count what each one finished,
+
+75
+00:03:50,497 --> 00:03:52,117
+what each finished job really costs.
+
+76
+00:03:52,617 --> 00:03:55,477
+And so here's what I would hold on to
+whatever the next offer is.
+
+77
+00:03:56,257 --> 00:03:57,257
+There are three rules.
+
+78
+00:03:57,297 --> 00:04:01,917
+Number one, set your budget at the full
+price, not the discount price that you're
+
+79
+00:04:01,957 --> 00:04:02,957
+getting for your AI.
+
+80
+00:04:03,157 --> 00:04:06,537
+If the launch price does last, great, but
+it's probably not going to.
+
+81
+00:04:07,377 --> 00:04:09,797
+Secondly, put the price in your contract.
+
+82
+00:04:10,617 --> 00:04:14,477
+Google standard terms let it change prices
+unless a price is agreed.
+
+83
+00:04:15,017 --> 00:04:18,337
+So if you want a price to hold, put it in
+your contract that it's going to hold.
+
+84
+00:04:18,825 --> 00:04:20,765
+And number three is keep the freedom to
+switch.
+
+85
+00:04:20,925 --> 00:04:21,925
+This is a really important one.
+
+86
+00:04:22,305 --> 00:04:26,985
+Don't build your entire empire just on one
+AI model.
+
+87
+00:04:27,305 --> 00:04:33,185
+This is as risky as businesses who built
+their entire business on
+
+88
+00:04:33,225 --> 00:04:34,685
+Google 10 years ago.
+
+89
+00:04:34,725 --> 00:04:38,725
+Ask your team to keep the instructions
+that they give the AI, build a data layer,
+
+90
+00:04:39,242 --> 00:04:42,982
+and test and learn against test jobs.
+
+91
+00:04:43,782 --> 00:04:47,522
+And then you could try another AI next
+month if you know what each job costs.
+
+92
+00:04:47,922 --> 00:04:50,842
+So when the next discount, the next
+promotion lands,
+
+93
+00:04:51,582 --> 00:04:55,082
+you can take it because you've got your
+data layer and one ends, you can leave.
+
+94
+00:04:55,722 --> 00:05:00,162
+So my prediction is that one of these
+three firms or these three big AI
+
+95
+00:05:00,202 --> 00:05:04,002
+businesses is gonna cut its top price
+below four and 20,
+
+96
+00:05:04,822 --> 00:05:10,402
+literally by the end of this year, by the
+end of December, 2026.
+
+97
+00:05:11,082 --> 00:05:12,102
+And why do I think that?
+
+98
+00:05:12,202 --> 00:05:14,262
+It's because they're all the same price
+right now.
+
+99
+00:05:14,402 --> 00:05:15,402
+Someone's gonna move.
+
+100
+00:05:15,700 --> 00:05:19,460
+Three rivals signal on price is exactly
+when someone tries to win the customer.
+
+101
+00:05:19,640 --> 00:05:22,840
+So I'm gonna put this at 95%.
+
+102
+00:05:22,880 --> 00:05:24,800
+So here's what to do on Monday.
+
+103
+00:05:25,283 --> 00:05:27,263
+Find whoever runs AI where you work.
+
+104
+00:05:28,003 --> 00:05:31,703
+Ask how much of your bill gets a discount.
+
+105
+00:05:32,163 --> 00:05:36,863
+Ask whether your contract fixes the price
+or follows the public price and get those
+
+106
+00:05:36,903 --> 00:05:38,143
+answers before you change anything.
+
+107
+00:05:39,023 --> 00:05:43,143
+The full story with every number and every
+source is free at makeyourmindup.ai.
+
+108
+00:05:43,658 --> 00:05:44,658
+See you next time.

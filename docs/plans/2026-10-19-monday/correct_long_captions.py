@@ -34,3 +34,14 @@ for suffix in ['-16x9.srt','.cut.txt']:
         {'source_seconds':[331,340],'issue':'where you work / way work phrase'}],
 },indent=2)+'\n',encoding='utf-8')
 print(json.dumps(receipts,indent=2))
+
+# This earlier ASR pass must not reopen questions Krish has since answered.
+final_receipt = PLAN/'caption-final-receipt.json'
+if final_receipt.exists():
+    review_path = PLAN/'caption-review.json'
+    review = json.loads(review_path.read_text(encoding='utf-8'))
+    review['previous_listening_questions'] = review['listening_still_required']
+    review['listening_still_required'] = []
+    review['resolved_by'] = 'Krish'
+    review['resolution_receipt'] = final_receipt.name
+    review_path.write_text(json.dumps(review,indent=2)+'\n',encoding='utf-8')

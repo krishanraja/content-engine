@@ -50,6 +50,16 @@
     "sha256": "5b00700b2716f2e587613cc2bfe2c103eb3a730c1400122c5236abd051d1f99b"
   },
   {
+    "id": "monday-approved-captions",
+    "bytes": 9431,
+    "sha256": "933d38361ca97745d45cc63ce921514b6e9bb389e9bf5fe1cef575361bd100c9"
+  },
+  {
+    "id": "monday-approved-transcript",
+    "bytes": 5271,
+    "sha256": "f8d47b365059c5381e795ff236e259fd282cb726d33f941ca4f481ec9ae7fd6d"
+  },
+  {
     "id": "monday-caption-82",
     "bytes": 384078,
     "sha256": "6791db84783962308ea103071b91ef3daa5dd8dc71e3c3eb6cdba9de3e3826eb"
