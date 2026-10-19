@@ -683,6 +683,14 @@
    "what": "Friday's 90-second cut was re-rendered, called fixed and published to both boards from proxy checks (caption start and end times, loudness, a 216-pixel contact sheet). Its captions and cut points came from an old 17 Oct words file full of mishearings, so captions were garbled and words were clipped; the badge card showed one pair, not Mercedes = Claude, C-Class = Opus 5.5. docs/plans/2026-10-09-friday/90s-failures-19-oct.md.",
    "status": "open",
    "guards": []
+  },
+  {
+   "id": "lip-sync-drift-at-joins",
+   "on": "2026-10-19",
+   "krish": "in the deep cut, my facial movements start misaligning with the audio as the video progresses, which is unbearable by the end",
+   "what": "make.py stage 1 cuts each kept stretch as its own part: video forced to round(d*24) frames, audio trimmed to d, so each part's audio ends a few ms before its video. The concat join leaves 54 audio timestamp gaps (0.746 s in all on the deep cut's edited.mkv); build_audio reads [0:a] through aresample without async, which closes the gaps, and apad fills the end. His voice therefore runs progressively ahead of his lips: measured by matching the finished file's audio to edited.mkv, 0 s at 1 min, 0.23 s at 6 min, 0.68 s at 13 min. Length checks passed because the totals match. Fix and guard proposed in docs/plans/2026-10-09-friday/fix-plan-19-oct.md section 0, item 5.",
+   "status": "open",
+   "guards": []
   }
  ]
 }
