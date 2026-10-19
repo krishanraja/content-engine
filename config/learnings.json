@@ -499,6 +499,90 @@
      "how": "every repo skill is copied for Claude Code or named with its reason, or verify fails"
     }
    ]
+  },
+  {
+   "id": "ideas-pass-the-business-leader-test",
+   "on": "2026-10-19",
+   "krish": "I just can't figure out how general business leaders would be helped immediately by knowing this. ... I'm not sure what this means for a layperson running a business.",
+   "why": "Three Friday ideas (face and voice ownership, proving a video call is human, AI on $55 TV boxes) described a trend or a mechanism but gave a business leader nothing to do or decide, so he marked each curious but not convinced and queued none.",
+   "means": "Every idea carries, in one plain sentence, what a general business leader can do or decide differently right away. An idea that cannot say it is not offered. The so_what says what they find out; this test says what they do.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "The business-leader test.",
+     "how": "the plan-week step that screens each idea before it reaches the Ideas tab"
+    }
+   ]
+  },
+  {
+   "id": "simplify-and-unpack-the-concept",
+   "on": "2026-10-19",
+   "krish": "the idea of aggressive vertical integration is a great one, but it just needs to be really simplified and unpacked. / I want this to be super simple: a bake-off that anyone can understand. / Why is Disney going after it, and why is Google going after it? They're two totally different companies. Unpack both.",
+   "why": "He likes the concept in three ideas but the line named the mechanism in insider terms; what he wants first is the plain version, then each party's own motive taken apart.",
+   "means": "A concept idea opens with its plain version and then unpacks each party's motive separately. His own angle on a picked idea is its brief for the piece.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Simple first, then unpacked.",
+     "how": "the plan-week step that words each idea"
+    }
+   ]
+  },
+  {
+   "id": "follow-the-money-traces-the-money",
+   "on": "2026-10-19",
+   "krish": "I am passionate about the message which is if you are not paying, you are the product. But I think this needs a bit more substance as to how this intersects with content IP in terms of a monetization play. I think we need to really clearly visualize and unpick where the money goes",
+   "why": "The free-image-ads idea had a message he loves but no money trail, and follow.the.money is the series about exactly that.",
+   "means": "A follow.the.money idea names every party, where the money moves and how it meets content IP or monetisation, so the flow can be drawn. An idea with a message but no money trail waits in the queue until it has one.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "follow.the.money shows the money.",
+     "how": "the plan-week step for the money series"
+    }
+   ]
+  },
+  {
+   "id": "no-repeat-topic-within-weeks",
+   "on": "2026-10-19",
+   "krish": "I think we need to figure out down the line what the new story is. We did an intro to this topic last week, and I think it's too soon to do it again.",
+   "why": "The AI-shopper rulebook idea was a sequel to last Wednesday's Muse piece with no new story, offered a week later.",
+   "means": "Before an idea is offered, check the last three weeks of published and in-flight pieces for the same topic. A sequel says what is new, or it waits.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "No topic again within three weeks.",
+     "how": "the plan-week step that checks recent pieces"
+    }
+   ]
+  },
+  {
+   "id": "reading-his-board-marks",
+   "on": "2026-10-19",
+   "krish": "(his taps on the Ideas tab, 19 Oct: Queue marks, Story, Angle, Cute, Curious with a reason, Drop)",
+   "why": "He taps through verdicts to see them (one idea went none, story, cute, story, angle, 'curious') and the board posts a comment for every tap, so reading the history as opinion would invent feedback he never gave.",
+   "means": "Only the final state of a card counts. Queued plus a verdict is develop-later with his words as the brief; curious and not queued is pass-for-now with his reason; drop is never offered again and is recorded as a dropped row; a pick with his angle makes the angle its brief.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Reading his marks.",
+     "how": "the plan-week step that reads the board and relays it into the queue"
+    }
+   ]
+  },
+  {
+   "id": "narrative-before-making",
+   "on": "2026-10-19",
+   "krish": "I want to be crystal clear on the overarching end message and checkpoints of the piece so that we can't randomly go off track and take ages to iterate",
+   "why": "Pieces drift while being made and each correction costs a long iteration; he wants the end message and the checkpoints fixed before anything is made.",
+   "means": "Proposed, awaiting his word on making it standing: a piece starts from a one-page editorial narrative (the end message in one sentence, who it is for, what they do differently, named checkpoints each with a test, and what is out of scope), and every making session's prompt carries it. Trialled on 19 Oct (docs/handovers/2026-10-19-editorial-narrative.md).",
+   "status": "open",
+   "encoded": []
   }
  ]
 }

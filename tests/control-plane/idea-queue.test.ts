@@ -53,6 +53,15 @@ describe('a mark', () => {
     expect(parseMark({ id: '5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092' }).mark?.id).toBeTruthy()
     expect(parseMark({ id: 'nope', so_what: 'x', idea: 'y' }).mark).toBeNull()
   })
+  it('keeps a clarifying question beside the idea and never counts it as a decision', () => {
+    const m = parseMark({ idea: 'A', so_what: 'B', question: 'Run it before or after the hearing?' }).mark!
+    const meta = queueMeta(m, undefined, '2026-10-19T00:00:00Z', 'Claude Code')
+    expect(meta.questions).toEqual([{ text: 'Run it before or after the hearing?', at: '2026-10-19T00:00:00Z', by: 'Claude Code' }])
+    expect(queueMeta(parseMark({ idea: 'A', so_what: 'B' }).mark!, meta, '2026-10-20T00:00:00Z', 'x').questions).toHaveLength(1)
+    const row = present({ id: 'a', idea: 'a', queued_at: '1', meta: { queue: meta } })
+    expect(row.questions).toHaveLength(1)
+    expect(row.needs_triage).toBe(true)
+  })
   it('keeps what was first queued when marked again', () => {
     const mark = parseMark({ idea: 'A', so_what: 'B' }).mark!
     const first = queueMeta(mark, undefined, '2026-10-19T00:00:00Z', 'a')

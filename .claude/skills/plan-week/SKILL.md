@@ -84,6 +84,28 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    `ArtifactData`, then write the picked idea onto its piece as the day's
    rank 1 option through `/api/week/options` (creating its row first if it
    has none).
+   **What his 19 Oct triage taught** (`config/learnings.json`, entries
+   `ideas-pass-the-business-leader-test`, `simplify-and-unpack-the-concept`,
+   `follow-the-money-traces-the-money`, `no-repeat-topic-within-weeks` and
+   `reading-his-board-marks`). Apply these before an idea reaches the tab:
+   - *The business-leader test.* Say, in one plain sentence, what a general
+     business leader can do or decide differently right away because of the
+     idea. If you cannot, he will mark it curious-not-convinced ("I just
+     can't figure out how general business leaders would be helped
+     immediately by knowing this"), so do not offer it.
+   - *Simple first, then unpacked.* A concept idea opens with its plain
+     version ("a bake-off that anyone can understand") and then unpacks each
+     party's own motive ("Why is Disney going after it, and why is Google
+     going after it? ... Unpack both").
+   - *follow.the.money shows the money.* Name every party, where the money
+     moves, and how it meets content IP or monetisation, so it can be drawn.
+   - *No topic again within three weeks.* Check the last three weeks of
+     published and in-flight pieces first; a sequel says what is new.
+   - *Reading his marks.* Only the final state of a card counts (he taps
+     through verdicts). Queued plus a verdict is "develop this later" with
+     his words as the brief; curious and not queued is "pass for now" with
+     his reason; drop is never offered again; his own angle on a picked
+     idea is its brief.
 4. Write each day's options, best first, one recommended:
    `python3 scripts/engine.py POST /api/week/options @options.json` with
    `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true}]}`.
