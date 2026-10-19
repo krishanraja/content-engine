@@ -5,6 +5,10 @@ editions/**/*.md text eol=lf
 # Stored piece bodies are LF; the writer tests use real ones as fixtures.
 tests/fixtures/control-plane/*.md text eol=lf
 
+# Repair evidence includes hashes of the exact JSON bytes. Preserve those bytes
+# across Windows and Linux, including transcript and caption-repair documents.
+docs/plans/2026-10-09-friday/repair-evidence-19oct/**/*.json -text
+
 # The renderer's source is LF on every checkout, Windows included, so the
 # intro sting's approval hash (scripts/quick-edit/intro.py) and every render
 # read the same bytes. text=auto lets git's own check leave any binary file
