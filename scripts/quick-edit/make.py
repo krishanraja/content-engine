@@ -1203,6 +1203,21 @@ def face_band(cw, ch, fy, fh):
     return 0, by, bw, bh
 
 
+def card_fit(path, w, h):
+    """A card that is not the size of the space it is laid in is fitted inside it, whole and centred, on a clear
+    ground. Friday 16 Oct's deep-cut cards were drawn 1600 x 900 for a 1314 x 1080 space and laid in unscaled, so
+    the right of every card (logos, numbers, sources) ran off the frame (19 Oct). '' when it already fits."""
+    try:
+        from PIL import Image
+        cw, ch = Image.open(path).size
+    except Exception:
+        return ''
+    if (cw, ch) == (w, h) or (cw <= w and ch <= h):
+        return ''
+    return (f"scale={w}:{h}:force_original_aspect_ratio=decrease,"
+            f"pad={w}:{h}:(ow-iw)/2:(oh-ih)/2:color=0x00000000,")
+
+
 def card_input(path, start, stop):
     """A card fed in only for its own window: the picture repeats from `start` (its clock kept on the main
     clock by -itsoffset, so every fade and enable time reads the same) to just past `stop`, and the overlay
@@ -1291,8 +1306,9 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
             last, k = f's{k}', k + 1
     else:
         for c, f, stop in panel_layers(wins):
-            inputs += card_input(P(c['panel'].replace('{aspect}', asp)), c['s'], stop)
-            g.append(f"[{n}:v]format=rgba,{f}[pp{n}]")
+            card = P(c['panel'].replace('{aspect}', asp))
+            inputs += card_input(card, c['s'], stop)
+            g.append(f"[{n}:v]format=rgba,{card_fit(card, 1920 - px if px else 1920, 1080)}{f}[pp{n}]")
             g.append(f"[{last}][pp{n}]overlay=x={px}:y={py}:enable='between(t,{c['s']},{stop})'[s{k}]")
             last, n, k = f's{k}', n + 1, k + 1
     if asp == '9x16' and cfg.get('logo', True) is not False:
@@ -2115,7 +2131,13 @@ def main():
             'music': cut_audio['music'], 'voice_gain_db': round(voice_gain, 2), 'loudness': loudness, 'episode': said,
             'srt': f"{cfg['name']}-{asp}.srt", 'warnings': warnings}
         if args.share_mib:
-            report[f'{asp}_share'] = share_copy(final, out / 'share' / final.name, args.share_mib)
+            # A cut too long for a chat-size copy (Friday 16 Oct's 14-minute deep cut, 19 Oct) goes without one;
+            # the cut itself is finished, so the report is still written.
+            try:
+                report[f'{asp}_share'] = share_copy(final, out / 'share' / final.name, args.share_mib)
+            except SystemExit as e:
+                report[f'{asp}_share'] = None
+                report.setdefault('notes', []).append(f'no chat-size copy: {e}')
         # Preview: a frame in the sting, the opening, inside every graphic,
         # and the end card, all moved on by the sting's length.
         for label, t in preview_shots(tl, wins):
