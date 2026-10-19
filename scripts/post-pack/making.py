@@ -533,7 +533,7 @@ def spine_gate(paths, piece_id, call):
 
 def spine_problem(piece_id, call):
     """The engine's judge on the body it holds now, or why it has not passed."""
-    status, text = call('GET', f'/api/content-ideas/{piece_id}/spine-check', None)
+    status, text = (call or _engine_call)('GET', f'/api/content-ideas/{piece_id}/spine-check', None)
     try:
         data = json.loads(text) if text else {}
     except ValueError:
