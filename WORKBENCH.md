@@ -52,8 +52,10 @@ stacked at full width, corner source logos are removed, and deep text clears the
 caption band. All 109 card previews were inspected; final-file review is pending.
 Krish then approved the presented Sally and revised compositions: "Looks good".
 This approves the visuals, not full finished-video playback or acceptance.
-The short v8 export is now available for review in this chat; its decoded audio
-exactly matches v6. Fresh final-file checks remain pending; deep v4 is encoding.
+Krish accepted the complete short v8 after the full-video sound-review question:
+"Looks good". This is bound to its exact SHA in short-v8-human-review.json.
+Decoded audio exactly matches v6. Loudness passes; fresh sync and final-frame
+checks remain pending. Deep v4 is encoding and has not been accepted.
 Superseded short v7 and deep v3 renders were stopped, not filed.
 Thirty-three
 bounded independent transcription checks and the full medium-model transcript

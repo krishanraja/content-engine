@@ -359,3 +359,15 @@ clears artwork. A hash-verified preview was copied early to the chat outputs
 why-so-many-ais-short-review-v8.mp4 for human review while automated checks run.
 This is not delivery certification. Short render session 99204 is transcribing
 the final; deep session 7726 is now encoding; checker 61229 remains active.
+
+## Complete short accepted — 19 Oct, 17:35 London
+
+Krish answered "Looks good" to the complete short v8 and the explicit question
+asking whether its speech, captions, cuts, visuals and music work after watching
+with sound. Exact-file approval: short-v8-human-review.json. Raw ASR differences
+are preserved in short-v8-caption-comparison.json, resolved using independent
+source/final recognition, verified decoded-audio identity and this human review.
+The local receipt now has heard/full_review/loudness pass; sync and visuals still
+await current checks. This records human review, not assistant playback.
+Six short sync windows have been extracted, model measurements pending.
+Deep v4 encoding remains active. Nothing filed and no deep acceptance inferred.
