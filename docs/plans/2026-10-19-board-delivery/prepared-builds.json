@@ -1,14 +1,14 @@
 [
   {
     "week": "2026-10-12",
-    "expected_build": "429daefd5682ff749159652127465ce06825ae36f98742799b5766f87f5228dc",
-    "page": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\publish-ready-2026-10-19\\2026-10-12-prepared.html",
-    "assets": 8
+    "expected_build": "938008f486386611efb3cf2605f942728b894db10e564771fdfeac8a25fa6faf",
+    "page": ".cache\\publish-ready-2026-10-19\\2026-10-12-prepared.html",
+    "assets": 16
   },
   {
     "week": "2026-10-19",
-    "expected_build": "bc013294b8930a694bf3aee32813894356a8482c8368f01021d95b826e3c4766",
-    "page": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\publish-ready-2026-10-19\\2026-10-19-prepared.html",
+    "expected_build": "35b3a83646fd03137ed587ba2369e42fa851221b8c090b6fbdecbb1f2980ae27",
+    "page": ".cache\\publish-ready-2026-10-19\\2026-10-19-prepared.html",
     "assets": 9
   }
 ]

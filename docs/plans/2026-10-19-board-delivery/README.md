@@ -35,9 +35,8 @@ for rollback; interaction state is not touched by publishing or rollback.
 
 The recorded music licence is an approved Epidemic Sound subscription. The
 provider's [podcast guidance](https://help.epidemicsound.com/hc/en-us/articles/26247417186706-Podcast-Information)
-says an active Creator or Pro subscription covers podcast use. The board keeps
-show availability and active-subscription confirmation visible until Krish
-confirms them. No show is created and no episode is uploaded publicly here.
+says an active Creator or Pro subscription covers podcast use. Krish confirmed on 19 October: "Show created; music subscription active".
+Both boards record that confirmation; Monday retains its editorial hold. No show is created and no episode is uploaded publicly here.
 
 ## Build and release
 
@@ -65,3 +64,33 @@ Activate the prior verified manifest from the matching cached
 `WEEK-active-before.json` with the current revision through the board API.
 Do not restore old ticks, comments, wording edits, links, picks or queue values.
 Earlier asset objects are immutable and remain retrievable.
+
+## Verification on 19 October
+
+- `npm run verify`: passed (142 test files; 1,786 tests passed, one skipped),
+  including skill validation and synchronization guards. The Linux-only control
+  plane guard is exercised by CI rather than the Windows local run.
+- Board self-check: 110 passed, retaining the original 106.
+- Authenticated live browser: both week tabs and all day tabs work; saved
+  progress and comments load. Friday has 44 loaded images and no broken image.
+  Both materials cards were visually inspected at actual 390x844 and 1280-wide
+  viewports, with no horizontal overflow. The visible Codex side panel ignores
+  viewport overrides; a separate hidden browser tab supplied actual dimensions.
+- Copy buttons report successful clipboard writes. The automation's separate
+  virtual clipboard does not expose those native writes, so an exact pasted-text
+  comparison was not established in this browser. Existing browser-button CI
+  checks cover copy payloads. Native download events were also not exposed to
+  browser automation; authenticated asset retrieval is verified independently.
+- Screenshots: `C:/Users/krish/.scratch/board-delivery-20261019/`.
+- Friday's new Spotify thumbnail and chapters arrived in its existing Drive
+  library. Monday's final library gate is still held, as described above.
+
+`live-readback.json` records the final builds, streamed HTML hashes, every
+asset's content type/size/hash, and exact before/after interaction comparison.
+No public post, additional paid fact check or Wednesday production occurred.
+
+Prior builds before this delivery (available through build-history API):
+- 12 October: `429daefd5682ff749159652127465ce06825ae36f98742799b5766f87f5228dc`
+- 19 October: `bc013294b8930a694bf3aee32813894356a8482c8368f01021d95b826e3c4766`
+
+Rollback changes only the selected build manifest, never interaction records.

@@ -1,7 +1,7 @@
 {
   "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
   "status": "review",
-  "note": "Finished video files and approved titles are here for review. Hold all Monday publication: one article fact-check entry is unresolved, and three long-cut caption passages still need listening review. No further paid fact check is authorised. The article and recorded scripts below remain editable; these files do not mark the piece publish-ready.",
+  "note": "Finished video files and approved titles are here for review. Hold all Monday publication: one article fact-check entry is unresolved, and three long-cut caption passages still need listening review. No further paid fact check is authorised. The article uses your updated prediction: 95% by 31 December 2026. The original outline and script boxes below retain their earlier wording for provenance; use the finished takes as the recording reference. These files do not mark the piece publish-ready.",
   "sections": [
     {
       "id": "video",
@@ -59,7 +59,7 @@
     {
       "id": "spotify",
       "title": "Spotify: episode, thumbnail and chapters",
-      "note": "Use the long video as the episode and the short as its clip. Add the chapters to the description. Leave episode art empty to use the show art. Hold upload until Monday's review is cleared and your show and music subscription are confirmed.",
+      "note": "Use the long video as the episode and the short as its clip. Add the chapters to the description. Leave episode art empty to use the show art. Your Make Your Mind Up show and active Epidemic Sound subscription are confirmed. Hold upload until Monday's review is cleared.",
       "files": [
         {
           "label": "Download Spotify thumbnail (1920x1080)",
