@@ -1,0 +1,11 @@
+{
+  "run_id": 39297664028,
+  "head": "46e5360fc5aa512ad2eb574bd4b98931c5591a40",
+  "failed_jobs": [
+    "verify (windows-latest)",
+    "verify (ubuntu-latest)"
+  ],
+  "failure": "Synthetic mix fixture queried faster-whisper package metadata, which is intentionally absent from minimal CI. Production environment had it, so local verify passed.",
+  "correction": "Scope an explicit synthetic ASR version stub to the fixture and its existing ASR-stub child. Production provenance and delivery gates are unchanged.",
+  "verification": "Clean minimal environment and CI rerun pending."
+}

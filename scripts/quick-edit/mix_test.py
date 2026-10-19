@@ -30,6 +30,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -78,8 +79,12 @@ def make_media():
        '-map', '[a]', '-ac', '1', WORK / 'voice.wav')
     ff('-f', 'lavfi', '-i', f'testsrc2=s=720x1280:r=30:d={dur}', '-i', WORK / 'voice.wav', '-c:v', 'libx264', '-preset', 'ultrafast',
        '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-shortest', WORK / 'source.mp4')
+    # This fixture synthesizes words instead of running Whisper. Keep that
+    # identity explicit and identical in the child; CI needs no ASR install.
+    with patch.object(quality.importlib.metadata, 'version', return_value='synthetic-asr-test'):
+        identity = quality.transcript_identity(WORK / 'source.mp4', 1, 'small.en')
     (WORK / 'words.json').write_text(json.dumps({'duration': dur, 'words': ws,
-        'provenance': quality.transcript_identity(WORK / 'source.mp4', 1, 'small.en')}))
+        'provenance': identity}))
     # The bed: a chord with a slow swell, 12 s, looping cleanly.
     notes = (130.81, 261.63, 329.63, 392.0, 523.25)
     ff(*[x for f in notes for x in ('-f', 'lavfi', '-i', f'sine=f={f}:d=12:r=48000')],
@@ -139,8 +144,11 @@ def make_media():
 def render(config, out, shape, env):
     # Synthetic tones contain no speech. Stub only ASR inside this test process;
     # an empty recognition must leave the delivery receipt failed.
-    runner = (f'import sys; sys.path.insert(0, {str(HERE)!r}); import make; '
-              'make.transcribe = lambda *args, **kwargs: []; make.main()')
+    runner = (f'import sys; sys.path.insert(0, {str(HERE)!r}); import make\n'
+              'from unittest.mock import patch\n'
+              'make.transcribe = lambda *args, **kwargs: []\n'
+              "with patch.object(make.quality.importlib.metadata, 'version', return_value='synthetic-asr-test'):\n"
+              '    make.main()\n')
     p = subprocess.run([sys.executable, '-c', runner, str(WORK / config), '--out', str(WORK / out), '--only', shape],
                        capture_output=True, text=True, env=env)
     if p.returncode:
