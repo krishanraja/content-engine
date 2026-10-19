@@ -102,7 +102,11 @@ Measured bed −30.99 LUFS, chapter −22.00, post-transition bed −30.17, spee
 mix −14.46 and true peak −1.17 dBTP. Actual playback has not been certified.
 
 Krish approved: "Approve this treatment and music balance". This permits the
-remaining treatment and production, not finished acceptance or filing. Keep approved titles,
+remaining treatment and production. He subsequently authorized Drive filing once
+the repairs are complete: "After these videos are repaired, make sure they go in
+the right place in my Google Drive, in place of the old videos, and then give me
+the two links here." The exact instruction is appended to the approval JSON.
+Keep approved titles,
 thumbnails and story clips. Mercedes = Claude and C-Class = Opus 5.5 are two
 separate comparisons. Approved track is no-curves-instrumental; do not reopen its
 licence approval.
@@ -148,6 +152,10 @@ must be rebuilt. Its exact sample/frame check passed, but it is not current.
 Delivery remains blocked until both complete files have been watched/heard,
 native captions inspected, frame sheets checked, six reliable sync checkpoints
 per replacement are within 40 ms, loudness/music/visual requirements pass and the
-reports bind exact bytes. Only after Krish's final review and explicit filing
-approval: use new library filenames, hash-verify copies and update making records.
+reports bind exact bytes. Filing is now conditionally authorized by Krish's latest
+instruction; finished review remains outstanding. File both as the current cuts
+under the existing post's `3 Video` folder, preserve the rejected bytes as
+superseded copies, hash-verify the actual library copies and update making records.
+Return the two verified Google Drive video links in this chat. Do not re-ask the
+routine filing permission already granted, and do not treat it as video acceptance.
 Then prepare the reviewed branch/PR and resume the selected board migration.

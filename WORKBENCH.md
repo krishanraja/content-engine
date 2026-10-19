@@ -39,7 +39,11 @@ menu screenshots are still missing; archived images show help articles. Krish
 asked for a clearer explanation of that request, which has been supplied.
 Remaining: resolve caption discrepancies, repair remaining deep cards, renders,
 full playback and caption review, exact-hash validation, and explicit filing
-approval. No replacements have been sent or recorded. The article fact gate remains
+approval. Krish has now authorized filing once repaired: put both replacements in
+the existing Google Drive post folder in place of the current rejected cuts and
+return the two links here. Preserve rejected bytes as superseded copies; verify
+the actual Drive copies before returning links. This is not finished-video
+acceptance. No replacements have been sent or recorded. The article fact gate remains
 failed; video work does not grant publication clearance.
 
 Continuation and evidence locations:

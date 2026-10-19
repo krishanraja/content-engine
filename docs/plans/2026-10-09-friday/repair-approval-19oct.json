@@ -6,5 +6,13 @@
   "scope": "The presented authentic two-stage mapping, wide treatment, beat direction and audition balance for producing the remaining visuals and both repaired cuts.",
   "mapping": ["Mercedes = Claude", "C-Class = Opus 5.5"],
   "music": {"track": "no-curves-instrumental", "speech_bed_lufs": -31, "chapter_lift_lufs": -22, "rise_s": 0.5, "fall_s": 0.8, "track_crossfade_s": 2},
-  "not_granted": ["finished-video acceptance", "filing approval", "publication clearance", "board migration before video repairs and review"]
+  "filing_instruction": {
+    "by": "Krish",
+    "on": "2026-10-19",
+    "words": "After these videos are repaired, make sure they go in the right place in my Google Drive, in place of the old videos, and then give me the two links here.",
+    "scope": "Once repairs and required review checks are complete, file both replacements in the existing post library folder, make them the current cuts, verify the Drive copies and return their two Drive links in this chat.",
+    "preservation": "Preserve rejected files as superseded copies, consistent with the approved repair plan. Do not destroy the originals.",
+    "status": "authorized_conditionally_on_completed_repairs_and_review"
+  },
+  "not_granted": ["finished-video acceptance", "publication clearance", "board migration before video repairs and review"]
 }
