@@ -2,24 +2,24 @@ I've been following how money is changing because of AI. I'm Krish.
 
 So I've been reading the details on Gemini 4 Argon, Google's newest AI. Its price doubles on 1 December. That matters if your business uses it, so I wanted to break it down for you. What does that do to your AI bill, and what should you check?
 
-To be fair, Google warned everyone. It put the new price in a note at the bottom of its launch post.
+To be fair, Google warned everyone. It put the new price in a note at the bottom of the post that announced it.
 
-Now, here's how the bill works. Businesses pay Google every time its AI reads or writes words. Reading about 700,000 words costs $2 today. From December, it's $4. Writing that many words goes from $10 to $20.
+Now, here's how the bill works. Businesses pay Google for every word its AI reads and writes. For about 700,000 words read, Google charges $2 today, and $4 from December. Words it writes cost five times as much, and they double too.
 
-Now, there's a discount. Picture a help bot on a shop's website. Before it answers each customer, it rereads the same long list of rules the shop wrote for it. And Google spots the repeat. So it charges 95% less for rereading that list. I call that reuse.
+Now, there's a discount. Picture a help bot on a shop's website. Before it answers each customer, it rereads the same long list of rules the shop wrote for it. And Google spots the repeat. So it charges 95% less for rereading that list.
 
 But here's the catch. Lots of businesses think that discount keeps them safe from the price rise. It won't. The discount price doubles too.
 
-Picture someone who started a small business selling help bots. Their customers pay the same price every month. Say Google charges them $980 a month, and that's already with the discount. From December, it's $1,960. And their customers still pay the same. So they lose the difference.
+Picture a small business selling help bots. Its customers pay the same price every month. Say Google charges it $980 a month, with the discount. From December, it's $1,960. And its customers still pay the same. So the extra cost comes out of its own pocket.
 
-So who loses most? Businesses paying the full price, with little discount. Businesses selling AI for the same price every month. And businesses whose deal with Google doesn't lock the price.
+So who loses most? Businesses paying the full price, with little discount. Businesses selling AI for the same price every month. And businesses whose deal with Google doesn't keep the price the same.
 
-What about Google? I think the low price got people to set up their systems on its AI. And once you've set up on one AI, switching is slow and costly. And from December, it costs the same as Claude Opus, a rival AI.
+What about Google? I think the low price got people to start using its AI for their work. And once you're using one AI for everything, switching is slow and costly. From December, it costs the same as Claude Opus, a rival AI. So the cheap start won Google customers.
 
-So should you switch to a cheaper AI? Maybe. But a cheaper one that needs three tries can cost you more. So test it on ten real tasks first. Then add up what each finished task costs.
+So should you switch to a cheaper AI? Maybe. But a cheaper one that gets things wrong, so you ask three times, can cost you more. So test it on ten real tasks first. Then add up what each finished task costs.
 
-So my prediction is a long shot. There's a 15% chance Google keeps the low price, or offers a new discount, before 1 December. My best guess is it sticks to its plan.
+So here's my prediction, and it's a bold one. Google might keep the low price, or offer a new discount, before 1 December. I think there's a 15% chance of that. So it's a small chance, but worth watching.
 
-So here's what to do on Monday. Find whoever runs AI where you work. Ask how much of your bill gets that 95% discount. Then ask if your deal with Google locks the price, so it can't go up on 1 December. Get both answers before you change anything.
+So here's what to do on Monday. Find whoever runs AI where you work. Ask how much of your bill gets that 95% discount. Then ask if your deal with Google keeps the price the same, even after 1 December. Get both answers before you change anything.
 
 The full story, with every number, is free at makeyourmindup.ai. Tell me in the comments: does your business know what it pays for AI? And send this to a friend whose business runs on Google's AI, before December comes. Make your mind up.
