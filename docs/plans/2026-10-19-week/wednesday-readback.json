@@ -1,8 +1,8 @@
 {
-  "build_id": "5d51fd8074a891a40d71167001a85cd9b0df079905ed8b6fc2555ee7a5eaa700",
-  "previous_build": "c192932692b41cca68eeb3e228dcd15fa610e5d2caa9583a37bb3b529ed18146",
+  "build_id": "d623dc75d5ad3f131d268941dda9ac470be4536f429253930fd477fff99cbb42",
+  "previous_build": "77f60eb44b586dd9c64293c642bf66636449199b8b4fd9d1b6e9ca35f5fe5f24",
   "assets_unchanged": 23,
-  "html_readback_sha256": "857fad74105ded8615888e2993507fd7cdac08b280f6584f7e72f48d16e48650",
+  "html_readback_sha256": "d21e2ead5ea6f36651e4b2af1a261a9363a601c89f10aa98d88c4ca4da6ecaf7",
   "collections": [
     {
       "collection": "2026-10-12/ticks",
@@ -65,6 +65,8 @@
       "preserved": true
     }
   ],
-  "tests_run": 0,
-  "test_access": "No authenticated Skyvern sessions; local browser unsupported by stateless transport; no paid cloud session created."
+  "completed_draft_outputs": 5,
+  "spark_agent_tested": false,
+  "public_posts": 0,
+  "paid_calls": 0
 }

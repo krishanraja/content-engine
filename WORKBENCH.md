@@ -23,10 +23,14 @@ clarified: "Here's a scorecard, so you don't have to go and use them all."
 It is live in Wednesday's review workroom with the identical four-task packet.
 The 50-record follow-up and 41-record peer workbooks plus deep corpus were read;
 their extracted text is in `_corpus/2026-10-21-assistants/`. Counts overlap.
-No own tests run yet: Skyvern has no authenticated sessions and local-browser
-creation is unsupported by its stateless transport. No paid cloud session started.
-Await product access, not another narrative approval. Current Google task docs
-exclude UK and work accounts; dots UK eligibility depends on the plan.
+Built-in browser access now works. Four Muse drafts completed (email, meeting,
+purchase 3/0; policy 2/1 for falsely claiming a manager referral); one Gemini Pro
+email baseline passed 3/0. Raw outputs and limits: the week's test-results/.
+Gemini Scheduled routed to chat, not a verified Spark agent run. Muse's muso
+new-chat label requires identity reconciliation with the Meta Muse corpus.
+Grok Bot is open on Windows but its chat screen is not yet reachable by automation.
+Krish has no Poke account and reports dots unavailable in the UK. All three are untested. No sends or spending. Purchase fixture
+now has explicit dates; the ambiguous original trial is retained unscored.
 The live readback preserved all 23 Monday assets and all 12 week/store snapshots.
 Batch decisions and keep
 routine production separate from reusable engine work; Krish flagged throughput.

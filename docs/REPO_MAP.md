@@ -11,6 +11,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `.claude/`
 - `.codex/`
 - `.github/`
+- `_corpus/`
 - `apps/control-plane/`
 - `apps/renderer/`
 - `apps/runner/`

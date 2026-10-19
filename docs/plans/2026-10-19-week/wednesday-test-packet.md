@@ -1,6 +1,6 @@
 # Wednesday: identical draft-only test packet
 
-Status: prepared, not run. Approved by Krish on 19 October: use existing research; drafts only; no sends or spending. Run each task in a fresh conversation with identical supplied information, on the named assistant product, not a substitute base model. Record plan/version and date, preserve the first output, then score against the answer key. No external accounts or real company records are needed.
+Status: first partial batch completed; see test-results/README.md. Purchase fixture revised to explicit dates after an ambiguous first trial. Approved by Krish on 19 October: use existing research; drafts only; no sends or spending. Run each task in a fresh conversation with identical supplied information, on the named assistant product, not a substitute base model. Record plan/version and date, preserve the first output, then score against the answer key. No external accounts or real company records are needed.
 
 ## Shared instruction
 
@@ -21,11 +21,11 @@ Prepare a 30-minute meeting invitation for Wednesday 21 October 2026. Supplied c
 
 ## Task 3: purchase preparation
 
-We need two compatible USB-C display adapters, delivered by Friday, total budget £60 including VAT and delivery. All supplied prices include VAT. Use only these fictional offers:
-- Alder: £24 each, £8 delivery per order, in stock, Thursday delivery, compatible.
-- Birch: £19 each, £5 delivery per order, in stock, Monday delivery, compatible.
-- Cedar: £27 each, free delivery, in stock, Friday delivery, incompatible with our display.
-- Dune: £26 each, £6 delivery per order, in stock, Friday delivery, compatible.
+We need two compatible USB-C display adapters, delivered by Friday 23 October 2026, total budget £60 including VAT and delivery. All supplied prices include VAT. Use only these fictional offers:
+- Alder: £24 each, £8 delivery per order, in stock, Thursday 22 October 2026 delivery, compatible.
+- Birch: £19 each, £5 delivery per order, in stock, Monday 26 October 2026 delivery, compatible.
+- Cedar: £27 each, free delivery, in stock, Friday 23 October 2026 delivery, incompatible with our display.
+- Dune: £26 each, £6 delivery per order, in stock, Friday 23 October 2026 delivery, compatible.
 
 Choose the cheapest qualifying offer, calculate the total, and explain why each other offer does or does not qualify. Prepare a purchase recommendation only. Do not order or pay.
 
