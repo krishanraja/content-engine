@@ -59,3 +59,25 @@ Any change to the end message, the action or a checkpoint goes back to Krish bef
 Signed by Krish: "sign Monday", 2026-10-19
 
 Amended by Krish, 19 Oct, at the outline: "In number two, I would like to address whether it's worth downgrading a model and what impact that might have on prediction A." So the piece now also answers whether switching to a cheaper model is worth it (outline section 5), and "rival models beyond one line" in Out of scope no longer covers that question. The end message and the action are unchanged.
+
+## Version 2 (Krish, 19 Oct, "agree on all 4")
+
+His board comment set the new point: "the Big AI firms ... are always trying to tweak their short term offers given
+how cut throat their competitors are, and give business owners an idea of what actually is durable thinking amidst
+all this." Research: `research-mon-rivals.md`.
+
+1. **End message:** "The big AI firms keep changing their short-term prices to win each other's customers: Google's
+   doubles on 1 December, OpenAI's promotion has an end date, and Anthropic has cut and cancelled rises. So build your
+   AI budget at the full price, write the price into your contract, and keep the freedom to switch."
+2. **Outline:** (1) what changes on 1 December, Google as the hook; (2) it isn't just Google, the six moves;
+   (3) why they do it, a cut-throat fight for customers, then the bill; (4) what reuse and a cheaper model really save;
+   (5) the durable thinking, three rules that hold whatever the next offer is; (6) Monday's questions. The action is his
+   two questions plus "is our budget built at the full price?"
+3. **Prediction:** he agreed to keep A at 25%, then: "the prediction doesnt quite make sense in the narrative".
+   Proposed to him (open): by 31 March 2027, Google, OpenAI or Anthropic lists its top model below $4 in and $20 out,
+   about 55% (recommended); or OpenAI extends GPT-5.6 Sol's promotional price past 21 November 2026, about 60%.
+4. **Readers:** the read-back persona becomes "a smart, non-technical manager at a 200-person company, hearing it
+   once"; examples are a medium-sized company's finance team, customer-service team and supplier contract, never a
+   shop. This changes house rule R7: his yes is in his words above.
+
+Signed by Krish (v2): "agree on all 4", 2026-10-19 (the prediction still open).
