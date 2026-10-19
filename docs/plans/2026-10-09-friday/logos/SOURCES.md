@@ -33,3 +33,5 @@ OpenAI, Google, OpenRouter, SemiAnalysis) were added before this note and are no
   - Artificial Analysis lockup `0352fe6d8b3dfa1ed54692641588e85304a5b0f6b4a00a723697fb6a4eb16d96`
   - WIRED (Brandfetch) `d05df37bc8f04d7ee562d6686df3976e15fc345bd05991d13e26fbdd389d6b2f`
   - THE DECODER masthead `f00224dc30d4cafde38e5274edf8f6383bd3b2d7390d8db6a8ae7b2fd55ab240`
+
+- mercedes-cream.svg: the Mercedes-Benz star, Simple Icons 13.21.0 (cdn.jsdelivr.net/npm/simple-icons@13.21.0/icons/mercedes.svg), filled cream. For the 90-second cut, where Krish says "Opus 5.5 is like Mercedes C-Class" (Krish, 19 Oct: "add the real car badges").
