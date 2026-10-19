@@ -27,7 +27,7 @@ Spark and Poke scored, OpenClaw as the origin only, Viktor out. "Narrative befor
 the first step of `make-piece` (learning `narrative-before-making`, encoded). Parked ideas: `parked.md`
 (the AI-shopper rulebook parked, three let go; none was in the queue, so nothing was written). Other board
 link (`4SZR…`): per his 14 Oct ruling, a session on his other account rebuilds and republishes it; that link
-returns 404 from this account. **Next:** his sign-off on each narrative, then `make-piece` for Monday.
+returns 404 from this account. Monday's narrative is signed and its outline approved (`docs/plans/2026-10-19-outline.md`, with his downgrade section). **Next:** `docs/handovers/2026-10-19-monday-argon-make.md` in a fresh session; Wednesday and Friday still wait on his sign-off.
 
 ### 19 Oct: queue live, picks saved, next is the editorial narrative
 

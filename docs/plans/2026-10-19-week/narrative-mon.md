@@ -57,3 +57,5 @@ shows a named company on Argon at the public rate); how the reuse works inside; 
 Any change to the end message, the action or a checkpoint goes back to Krish before work continues.
 
 Signed by Krish: "sign Monday", 2026-10-19
+
+Amended by Krish, 19 Oct, at the outline: "In number two, I would like to address whether it's worth downgrading a model and what impact that might have on prediction A." So the piece now also answers whether switching to a cheaper model is worth it (outline section 5), and "rival models beyond one line" in Out of scope no longer covers that question. The end message and the action are unchanged.
