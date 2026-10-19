@@ -578,11 +578,22 @@
   {
    "id": "narrative-before-making",
    "on": "2026-10-19",
-   "krish": "I want to be crystal clear on the overarching end message and checkpoints of the piece so that we can't randomly go off track and take ages to iterate",
+   "krish": "I want to be crystal clear on the overarching end message and checkpoints of the piece so that we can't randomly go off track and take ages to iterate / [made standing, 19 Oct] \"Narrative-before-making rule: make it standing as a step in `make-piece`.\"",
    "why": "Pieces drift while being made and each correction costs a long iteration; he wants the end message and the checkpoints fixed before anything is made.",
-   "means": "Proposed, awaiting his word on making it standing: a piece starts from a one-page editorial narrative (the end message in one sentence, who it is for, what they do differently, named checkpoints each with a test, and what is out of scope), and every making session's prompt carries it. Trialled on 19 Oct (docs/handovers/2026-10-19-editorial-narrative.md).",
-   "status": "open",
-   "encoded": []
+   "means": "A piece starts from a one-page editorial narrative (the end message in one sentence, who it is for and what they do differently on Monday, four or five checkpoints each with a pass test and what he signs, the one picture, what is out of scope, the drift rule), signed by him in words before anything is made; any change to the end message or a checkpoint goes back to him first. Made standing by Krish on 19 Oct.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "| Narrative (before anything is made) |",
+     "how": "the first step of make-piece: no workroom, draft, script or visual until the narrative is signed"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "**Drift rule:** any change to the end message",
+     "how": "the Claude Code copy of the same step"
+    }
+   ]
   }
  ]
 }

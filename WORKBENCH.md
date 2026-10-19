@@ -15,6 +15,20 @@ queued from any Ideas tab, with his triage (story, angle, cute, curious but not 
 queue, in the engine (`content_ideas.queued_at`); Control Center's Queue page triages it A/B; nothing purges it.
 Offer from it before new research. Handover: `docs/handovers/2026-10-19-idea-queue.md`.
 
+### 19 Oct, later: three narratives written, waiting on his sign-off
+
+He answered the seven questions (his words are in each narrative file). The three narratives are in
+`docs/plans/2026-10-19-week/narrative-mon.md`, `-wed.md` and `-fri.md`; nothing is made until he signs each.
+Monday's end message changed: Google's pricing page (read 19 Oct, updated 16 Oct) shows the reused-input rate
+doubles too ($0.10 to $0.20), so reuse makes the bill smaller but does not stop it doubling; the figure is
+"about 95% cheaper", never "a tenth". The research he pasted is in `research-mon-argon.md` (unchecked leads
+except the Standard rows read at Google's page). Wednesday's line-up is his: Muse, Grok Bot, dots, Gemini
+Spark and Poke scored, OpenClaw as the origin only, Viktor out. "Narrative before making" is now standing:
+the first step of `make-piece` (learning `narrative-before-making`, encoded). Parked ideas: `parked.md`
+(the AI-shopper rulebook parked, three let go; none was in the queue, so nothing was written). Other board
+link (`4SZR…`): per his 14 Oct ruling, a session on his other account rebuilds and republishes it; that link
+returns 404 from this account. **Next:** his sign-off on each narrative, then `make-piece` for Monday.
+
 ### 19 Oct: queue live, picks saved, next is the editorial narrative
 
 Live: the idea queue (migration applied, PRs content-engine #94 and control-center #481 merged). His picks (Mon
