@@ -197,6 +197,56 @@ def claude_copy_problems() -> list[str]:
     return problems
 
 
+# Every .agents skill is either copied to .claude/skills or named here with the reason Claude Code does not
+# load it, so a new skill cannot be left out of Claude Code by accident (Claude Code parity, 2026-10-19).
+NOT_FOR_CLAUDE = {
+    "mindmake-video": "the Studio operator; it runs only inside a tracked Studio session through the gateway "
+                      "(docs/ENGINE_SESSION.md), and its stations are loaded by the code, not by a client",
+    "video-engine": "the exact-first-message launcher; AGENTS.md: opening this repository must not make unrelated "
+                    "video questions invoke the production workflow",
+}
+# The skill roots a machine with the harness installed loads from. A repository skill that shares a name with one
+# of them is shadowed or doubled; that is printed so the copy can be retired, never failed (CI has no harness).
+USER_SKILL_ROOTS = (Path.home() / ".claude" / "skills", Path.home() / ".codex" / "skills")
+
+
+def coverage_problems() -> list[str]:
+    problems: list[str] = []
+    copied = {entry.name for entry in CLAUDE_SKILLS.iterdir()} if CLAUDE_SKILLS.is_dir() else set()
+    for skill in sorted(path.name for path in SKILLS.iterdir() if path.is_dir()):
+        if skill in copied and skill in NOT_FOR_CLAUDE:
+            problems.append(f".claude/skills/{skill}: copied, but NOT_FOR_CLAUDE in scripts/validate-skills.py says "
+                            f"Claude Code must not load it ({NOT_FOR_CLAUDE[skill]})")
+        elif skill not in copied and skill not in NOT_FOR_CLAUDE:
+            problems.append(f".agents/skills/{skill}: neither copied to .claude/skills nor named in NOT_FOR_CLAUDE in "
+                            f"scripts/validate-skills.py; copy it (make the folder, then --sync-claude) or name why not")
+        elif skill in NOT_FOR_CLAUDE:
+            print(f".agents/skills/{skill}: not for Claude Code: {NOT_FOR_CLAUDE[skill]}")
+    for name in sorted(NOT_FOR_CLAUDE):
+        if not (SKILLS / name).is_dir():
+            problems.append(f"NOT_FOR_CLAUDE names {name}, which is no longer in .agents/skills; remove the entry")
+    return problems
+
+
+def user_skill_names() -> set[str]:
+    names: set[str] = set()
+    for root in USER_SKILL_ROOTS:
+        if root.is_dir():
+            names.update(path.parent.name for path in root.glob("**/SKILL.md") if len(path.relative_to(root).parts) <= 4)
+    return names
+
+
+def report_shadowed() -> None:
+    installed = user_skill_names()
+    if not installed:
+        print("no harness skill root on this machine: the shadowed-name report is skipped")
+        return
+    for skill in sorted(path.name for path in SKILLS.iterdir() if path.is_dir()):
+        if skill in installed:
+            print(f".agents/skills/{skill}: shares its name with an installed account-wide skill; the account-wide one "
+                  f"is current, so retire this copy once nothing reads it")
+
+
 def sync_claude() -> int:
     """Writes each .claude/skills entry's SKILL.md from its .agents source,
     byte for byte, turning a link or a plain file into a real folder. Only
@@ -246,9 +296,10 @@ def main() -> int:
         for problem in description_problems(skill) + board_item_problems(skill):
             print(f"{skill.name}: {problem}", file=sys.stderr)
             failed = True
-    for problem in claude_copy_problems():
+    for problem in claude_copy_problems() + coverage_problems():
         print(problem, file=sys.stderr)
         failed = True
+    report_shadowed()
     return 1 if failed else 0
 
 

@@ -6,7 +6,28 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-18, by the Sunday plan-the-week routine (Claude Code, cloud): options written and the 19 October board made.
+Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
+
+## The idea queue: read it first
+
+Every planning or making session starts with `python3 scripts/engine.py GET /api/idea-queue`: the ideas Krish
+queued from any Ideas tab, with his triage (story, angle, cute, curious but not convinced, with his reason). One
+queue, in the engine (`content_ideas.queued_at`); Control Center's Queue page triages it A/B; nothing purges it.
+Offer from it before new research. Handover: `docs/handovers/2026-10-19-idea-queue.md`.
+
+### 19 Oct: queue live, picks saved, next is the editorial narrative
+
+Live: the idea queue (migration applied, PRs content-engine #94 and control-center #481 merged). His picks (Mon
+`5b5bfadc`, Wed `d7a20885`, Fri `7083d6ad`) are `drafting`, scheduled for their days and on the day tabs of
+https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk (version 4). No making session was started. The queue holds
+his four marked ideas, all triaged; his two Drops are recorded as dropped. His feedback is five entries in
+`config/learnings.json` (business-leader test, simple then unpacked, show the money, no repeat within three
+weeks, reading his marks) plus `narrative-before-making`, open until he says whether it is standing.
+**Next:** a fresh session runs `docs/handovers/2026-10-19-editorial-narrative.md`: one signed-off narrative
+(end message, checkpoints, drift rule) per day before anything is made.
+Waiting on him: the seven questions at the end of that handover, and the merge of two small PRs (engine
+`question` field; Control Center shows it). Still open: the other board link (`4SZR…`, his other account), and
+the Argon "a tenth" figure (the row's numbers give a twentieth).
 
 ## Friday 16 Oct: handed over, 17 Oct
 
@@ -187,7 +208,15 @@ run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
-- Week of 19 to 23 October 2026 (board item `week-publish-board-2026-10-19`;
+- Week of 19 to 23 October 2026, **This Week's Publish Board (wC 19 Oct)**,
+  remade 18 Oct evening with a first **Ideas** tab (13 checked ideas: Mon 4,
+  Wed 4, Fri 5; file `docs/plans/2026-10-19-week/ideas.json`), published with
+  Krish's yes, pinned: https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk
+  (its picks and ticks stores answer, both empty). His picks save to
+  `picks/<day>` and post as a `PICK <day>` comment. The same build still has
+  to go to the link below, which only his other account can open. Next
+  step: `docs/handovers/2026-10-18-week-picks.md`.
+  The earlier link (board item `week-publish-board-2026-10-19`;
   made Sunday 18 October, no day picked yet, no ticks yet):
   https://claude.ai/artifact/4SZR5ZrQnG657ezuzvvAML (published pinned from the
   account running the Sunday routine; its store answers, ticks and links both
@@ -649,6 +678,15 @@ only in a chat.
 
 To start a session in any of them: read `AGENTS.md`, then this file, then do
 the top item that is not waiting on Krish. Before you stop, update this file.
+
+Claude Code works from the same rules and skills as Codex. `CLAUDE.md` imports `AGENTS.md`
+and adds only what is particular to Claude Code: which doc to read for which task, the
+models (Opus, with `repo-scout`, `executor` and `reviewer` subagents in `.claude/agents/`), the
+hooks that refuse secrets and North Star edits and put every publish, send or taste-rule edit to
+Krish in person (`.claude/hooks/`), and the checks. To find code, search `docs/REPO_MAP.md`
+(`npm run repo-map` keeps it current) rather than opening files. `docs/ENGINE_SESSION.md`,
+"Running from Claude Code", has the session loop. The handover for the job that set this up is
+`docs/handovers/2026-10-19-claude-code-parity.md`.
 
 Krish starts a session by pasting this:
 

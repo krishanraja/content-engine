@@ -1,0 +1,185 @@
+{
+ "_about": "The Ideas tab of This Week's Publish Board (wC 19 Oct): the ideas Krish picks from, one per day. Each fact was checked on 18 Oct 2026 against the source linked beside it; a company's own claim is labelled as one. No titles here: titles, headlines and thumbnail words are Krish's, after he records (TITLES_AFTER_RECORDING). Built into the board by scripts/post-pack/week_board.py --ideas.",
+ "week_start": "2026-10-19",
+ "checked_on": "2026-10-18",
+ "days": {
+  "mon": [
+   {
+    "id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+    "from": "Engine's Sunday research (already on the week page)",
+    "recommended": true,
+    "story": "If your business is building on Google's AI, your bill doubles on 1 December, and almost nobody has priced that in. The companies that set up their AI to reuse what it has already read pay a tenth of the price for most of it; the ones that did not will see their AI costs jump overnight. Who wins, who gets squeezed, and what to check in your own contracts before December.",
+    "why_now": "Gemini 4 Argon went generally available on 13 October 2026; the launch price ends on 30 November.",
+    "fact": "$2 in and $10 out per million tokens until 30 November 2026, then $4 and $20 from 1 December; cached input goes from $0.10 to $0.20 the same day. Recheck at the fact gate on Google's own pricing page: \"a tenth\" is cached input against normal input ($0.20 against $2 before December); on the figures above, cached input is a twentieth of normal input on either side of 1 December ($0.10 against $2, then $0.20 against $4).",
+    "source": {
+     "label": "eesel.ai, Gemini 4 Argon pricing (Google's own pricing page to be read at the fact gate)",
+     "url": "https://www.eesel.ai/blog/gemini-4-argon-pricing"
+    },
+    "so_what": "If your business is building on Google's AI, your bill doubles on 1 December, and almost nobody has priced that in."
+   },
+   {
+    "id": null,
+    "from": "Your Instagram inspo (@therundownai saved it) and the 14 Oct ideas research",
+    "recommended": false,
+    "story": "When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding millions for what is left; the users get nothing.",
+    "why_now": "Character.AI filed for Chapter 11 in Delaware on 12 October 2026; objections are due 23 October and the bidding hearing is 30 October.",
+    "fact": "Disney is the lead bidder at $20 million for a non-exclusive, perpetual licence to Character.AI's technology; in August 2024 Google struck a $2.7 billion deal to license its models.",
+    "source": {
+     "label": "TechCrunch, 13 Oct 2026",
+     "url": "https://techcrunch.com/2026/10/13/just-5-years-in-interactive-chatbot-platform-character-ai-files-for-bankruptcy/"
+    },
+    "so_what": "If an AI company you rely on goes bust, its technology is sold to the highest bidder and the people who used it get nothing from the sale."
+   },
+   {
+    "id": null,
+    "from": "14 Oct ideas research (radar)",
+    "recommended": false,
+    "story": "Who pays for a free AI picture: you, or the brand in the progress bar? ChatGPT starts showing ads while your image draws, and only to people who do not pay.",
+    "why_now": "OpenAI announced the test on 5 October 2026; it starts in the US later in October.",
+    "fact": "A sponsored banner appears below the progress bar while an image renders, for free users only; paid subscribers stay ad-free, and DoubleVerify and Integral Ad Science police where ads may appear.",
+    "source": {
+     "label": "Android Headlines, 5 Oct 2026",
+     "url": "https://www.androidheadlines.com/2026/10/chatgpt-visual-ads-image-generation.html"
+    },
+    "so_what": "If you are not paying for the AI tool, you are the one being sold to: free users now see ads in the middle of the work, and paying removes them."
+   },
+   {
+    "id": null,
+    "from": "Your Instagram inspo (saved) and the 14 Oct ideas research",
+    "recommended": false,
+    "story": "Nvidia's biggest customer is building its way out: Microsoft will run most of its own AI on its own chip, so who keeps the margin, and does anyone's AI bill go down?",
+    "why_now": "Microsoft announced Maia 300 on 12 October 2026; it becomes the main system behind Microsoft's own products from 2027.",
+    "fact": "Microsoft says Maia 300 gets 40% more tokens per megawatt than leading GPU systems (its own estimate, not independently checked).",
+    "source": {
+     "label": "SiliconANGLE, 12 Oct 2026",
+     "url": "https://siliconangle.com/2026/10/12/microsoft-debuts-multichiplet-maia-300-inference-accelerator/"
+    },
+    "so_what": "The biggest buyer of Nvidia's chips is building its own, so the price you pay for AI could start to fall, or the saving could stay with Microsoft."
+   }
+  ],
+  "wed": [
+   {
+    "id": "d7a20885-7001-4661-b444-9d7ca1043416",
+    "from": "Your words, 14 and 17 Oct (\"deep dive into grok versus Muse bots for medium businesses and do a bake-off\"; \"Add Viktor\")",
+    "recommended": true,
+    "his": true,
+    "story": "The bake-off: Grok Bot, Muse and Viktor, with OpenClaw as where it started, put to work for a business of 50 to 1,000 people, rated separately on what each is useful for and what each could break.",
+    "why_now": "Your ask for this week; Grok Bot's public LEGO order (11 to 13 Oct) shows what goes wrong when an assistant spends for you.",
+    "fact": "Musk told Grok to find and order LEGO Star Wars kits; his own screenshot showed his order number, his email and the last four digits of his card, and a stranger then said he got LEGO's support bot to cancel it.",
+    "source": {
+     "label": "Futurism, 13 Oct 2026 (the framework: docs/research/2026-10-17-ai-utility-and-risk-framework.md)",
+     "url": "https://futurism.com/artificial-intelligence/elon-musk-grok-control-credit-cards-backfires"
+    },
+    "so_what": "Before you give an AI assistant a job in a business of 50 to 1,000 people, you can see what each one is good for and what each could break, tested side by side."
+   },
+   {
+    "id": null,
+    "from": "Your words, 17 Oct (\"what happens when you just keep adding all of your tools and connectors into your AI tools\")",
+    "recommended": false,
+    "his": true,
+    "story": "Plug Gmail and Drive into your AI and what does it really get: what it can read, what it keeps, what it learns from, and whether the convenience is worth what the company gets.",
+    "why_now": "Your ask on 17 October; Meta and Sierra's agent standard (6 Oct) is built around what agents may see and do for you.",
+    "fact": "ChatGPT may keep an indexed copy of what it syncs from a connected Google app, deleted within 30 days of disconnecting; OpenAI says that data does not train its general models, but Memory may use it.",
+    "source": {
+     "label": "Knightli summary of OpenAI's data-controls FAQ, 20 Jun 2026 (OpenAI's own page to be read at the fact gate)",
+     "url": "https://knightli.com/en/2026/06/20/chatgpt-google-app-data-controls-oauth-scopes/"
+    },
+    "so_what": "When you connect Gmail and Drive to an AI tool, it may keep its own indexed copy of what it reads until 30 days after you disconnect, and you can check what that means for your business."
+   },
+   {
+    "id": null,
+    "from": "14 Oct ideas research (radar), sequel to last Wednesday's Muse piece",
+    "recommended": false,
+    "story": "Take apart the new rulebook for AI shoppers that Meta and Walmart signed and Amazon did not, and see whether it fixes what Amazon said was wrong with Muse.",
+    "why_now": "Announced 6 October 2026; the first draft followed that week.",
+    "fact": "Sierra's Bret Taylor announced the Personal Agent Protocol with Meta, Walmart and Stripe; Amazon, which blocked Meta's Muse from shopping on its site, is not a partner, and Anthropic is not named.",
+    "source": {
+     "label": "SiliconANGLE, 6 Oct 2026",
+     "url": "https://siliconangle.com/2026/10/06/meta-teams-up-with-bret-taylors-sierra-technologies-on-new-standards-for-ai-agent-commerce/"
+    },
+    "so_what": "When AI shops for your customers, the rules for what it may buy and from whom are being written now, and the biggest seller has not signed them."
+   },
+   {
+    "id": null,
+    "from": "Your Instagram inspo (saved) and the 14 Oct ideas research",
+    "recommended": false,
+    "story": "Apple's first home AI screen, taken apart before it ships: what recognising your face actually unlocks, what is still in beta, and why Europe cannot buy it.",
+    "why_now": "Announced 13 October 2026; ships 13 November.",
+    "fact": "HomeView is $299 in the US, recognises up to six people in a household, and is not sold in the EU at launch because Siri AI is not available there.",
+    "source": {
+     "label": "Thurrott, 13 Oct 2026",
+     "url": "https://www.thurrott.com/?p=342756"
+    },
+    "so_what": "A home screen that knows your family by face is about to ship, and what it unlocks, and where it is not sold, decides whether it is worth $299."
+   }
+  ],
+  "fri": [
+   {
+    "id": "ea18db0c-60da-46ab-b4d4-114741585797",
+    "from": "Engine's Sunday research (already on the week page)",
+    "recommended": true,
+    "story": "The people who check the labs from outside depend on insiders who work for the lab; when OpenAI fired three of its safety staff, one says over how he talked to the outside checkers, the gap showed.",
+    "why_now": "OpenAI fired the three on 9 October 2026.",
+    "fact": "OpenAI fired Tomek Korbak, Jasmine Wang and Mikita Balesni citing broken rules on sensitive information; Korbak says he was told it was over how he communicated with METR; OpenAI says it was not about safety concerns.",
+    "source": {
+     "label": "AP via ABC News, 9 Oct 2026",
+     "url": "https://abcnews.com/Technology/wireStory/openai-fires-3-safety-researchers-dispute-ai-risks-137123277"
+    },
+    "so_what": "The outside experts who warn the world about AI risks depend on people inside the labs, and those people can lose their jobs for talking to them."
+   },
+   {
+    "id": null,
+    "from": "Your cold idea in the Inspo folder, 9 Oct (\"unpacking models by country\")",
+    "recommended": false,
+    "his": true,
+    "story": "Where an AI was built is starting to decide what it says no to: ask Claude, then a Chinese model, the same thing, and the answers split by where the model was built.",
+    "why_now": "The @evolving.ai post you saved (about 11 Oct); the piece runs its own dated side-by-side test before it says anything.",
+    "fact": "In a Christian Science Monitor test of 200 prompts, Chinese-owned chatbots refused, repeated government lines or got it wrong about a third of the time, DeepSeek nearly two times in three (reported second hand; the original to be read at the fact gate).",
+    "source": {
+     "label": "Let's Data Science, on the Monitor's September 2026 test",
+     "url": "https://letsdatascience.com/news/chinese-chatbots-filter-politically-sensitive-queries-d94528ce"
+    },
+    "so_what": "The AI you use may refuse, or repeat official lines, depending on which country built it, so the answer you rely on can change with the model you picked."
+   },
+   {
+    "id": null,
+    "from": "Your Instagram inspo (the Danish bill was saved) and the 14 Oct ideas research",
+    "recommended": false,
+    "story": "As AI makes copying anyone free, owning a face, a voice or a character is becoming the part that keeps its value: Denmark, Disney and Character.AI in the same fortnight.",
+    "why_now": "Denmark's bill was introduced on 8 October 2026; Disney's bid for Character.AI's licence followed on 12 October.",
+    "fact": "Denmark's bill L 49 would make it unlawful to publish a realistic AI imitation of someone's face, voice or movements without consent, with the publisher having to prove consent; it is meant to apply from 1 January 2027 if passed.",
+    "source": {
+     "label": "Euronews, 8 Oct 2026",
+     "url": "https://www.euronews.com/2026/10/08/denmark-introduces-a-bill-protecting-peoples-faces-and-voices-from-deepfakes"
+    },
+    "so_what": "Your face and your voice may become the one thing about you that AI cannot copy for free, and countries are starting to write that into law."
+   },
+   {
+    "id": "1d45716f-bc15-4fe6-af84-b2a09ff9c856",
+    "from": "Engine's Sunday research (already on the week page)",
+    "recommended": false,
+    "story": "A video call no longer proves there is a person on the other end, and most companies using video agents have not written down when they will say so.",
+    "why_now": "Tavus showed Griffin on 1 October 2026, three weeks before Friday.",
+    "fact": "In Tavus's own one-minute test, 26 of 54 people took Griffin-Lite for a human, against 1 of 41 for its previous system; they had been told they would talk to another participant.",
+    "source": {
+     "label": "Decrypt, Oct 2026",
+     "url": "https://decrypt.co/379975/tavus-griffin-ai-fools-people-video-thinking-human"
+    },
+    "so_what": "You can no longer assume a video call has a person on the other end, and most companies using video agents have not written down when they will say so."
+   },
+   {
+    "id": null,
+    "from": "14 Oct ideas research (radar)",
+    "recommended": false,
+    "story": "AI is moving out of data centres into the cheap boxes in our homes; Anthropic's own test shows how far that has got, and how far it has not.",
+    "why_now": "Anthropic's red team published on 12 October 2026.",
+    "fact": "Anthropic ran a large open model across 15 Android TV boxes costing about $55 each, slowly; no model reliably copied itself onto the real TV it was tested on, and the move to smaller models is the team's estimate.",
+    "source": {
+     "label": "Al Jazeera, 13 Oct 2026",
+     "url": "https://www.aljazeera.com/economy/2026/10/13/ai-could-self-replicate-on-home-devices-within-months-anthropic-says"
+    },
+    "so_what": "AI that runs on a $55 box at home needs no data centre and no monthly bill, and a test shows how far that has really got."
+   }
+  ]
+ }
+}

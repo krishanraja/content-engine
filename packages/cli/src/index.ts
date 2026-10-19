@@ -87,7 +87,8 @@ import { registerV2Commands } from './v2.js'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 const configPath = join(repoRoot, 'config', 'studio.json')
-const skillPaths = ['mindmake-video', 'krish-voice', 'content-corpus', 'video-engine'].map((name) => join(repoRoot, '.agents', 'skills', name))
+// krish-voice and content-corpus are Krish's account-wide skills since 2026-10-19; see productionBriefSkillPaths in runner.ts.
+const skillPaths = ['mindmake-video', 'video-engine'].map((name) => join(repoRoot, '.agents', 'skills', name))
 
 export interface StudioCliOutput {
   stdout: (value: string) => void

@@ -1,3 +1,7 @@
+> **Historical.** Retired 2026-10-19 at Krish's request (Claude Code parity, krishanraja/content-engine#95). Not current guidance.
+> Replaced by: Krish's account-wide `krish-voice` skill from `krishanraja/ai-harness`, which is newer.
+> Reason: two copies drift; this one was older (and, for content-corpus, still named the retired subchannels). The Studio no longer pins it into new jobs; jobs made before keep their own pinned copy.
+
 ---
 name: krish-voice
 description: Apply Krish's established voice to public scripts, captions, titles, posts, and narration. Use for Mindmaker editorial wording after strategy and evidence are settled; do not use it to invent facts or choose the content strategy.

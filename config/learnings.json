@@ -384,6 +384,205 @@
      "how": "the ledger check skips the licence file for a track with approved_on, so make.py and its doctor never stop on it"
     }
    ]
+  },
+  {
+   "id": "ideas-from-every-source",
+   "on": "2026-10-18",
+   "krish": "I trust you are good at coming up with ideas - if not, give me more than 3 from all my suggested sources and the ones I threw at other sessions last week",
+   "why": "The week's options had been researched from web search alone (Drive skipped), left out two ideas he gave other sessions that week, and kept stale filler to reach three; he wants a real choice, drawn from what he already pointed us at.",
+   "means": "The Sunday Ideas tab holds more than three checked ideas a day, drawn from his own words first (every idea he gave any session since the last Sunday, said- items and krish-ideas items), then his inspiration folders and saved posts, the people he follows and the radar; stale or unchecked filler never pads a day.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "MIN_IDEAS = 4",
+     "how": "the board refuses an Ideas tab with fewer than four checked ideas a day (read_ideas, --verify)"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "every idea he gave any session since the last Sunday",
+     "how": "the plan-week step that builds the Ideas tab"
+    }
+   ]
+  },
+  {
+   "id": "one-idea-queue",
+   "on": "2026-10-19",
+   "krish": "Can you let me mark ideas for a queue instead of selecting them for this week because I like multiple ideas and some of them aren't time-sensitive? ... every ideas tab can start to build a queue of stuff that should be published at some point. That becomes a pretty powerful canon but it needs to survive everything and be the first thing in chat. That queue needs to be A/B triage in Control Centre ... there just being one cue.",
+   "why": "A pick-one-per-day tab throws away the ideas he likes but cannot use this week, and evergreen ideas have no home; he wants the good ones kept, ranked and reused, not regenerated every Sunday.",
+   "means": "There is one idea queue, stored in the engine (never only in a board's store or a session), that every Ideas tab adds to with a Queue mark beside each idea's pick box; Control Center triages it A/B; every planning session reads it first and offers from it before new research; nothing purges a queued idea.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/idea-queue.ts",
+     "contains": "queued_at: now, protected_at: now",
+     "how": "the one guarded route queues a row and protects it from every sweep"
+    },
+    {
+     "file": "apps/control-plane/api/purge/run.ts",
+     "contains": "his queue survives every purge",
+     "how": "the Monday purge never deletes a queued row"
+    },
+    {
+     "file": "tests/control-plane/idea-queue.test.ts",
+     "contains": "the queue survives every sweep",
+     "how": "a test names every sweep's guard"
+    },
+    {
+     "file": "scripts/post-pack/week_board/week.js",
+     "contains": "qdb.doc(\"queue/\" + pid).set(body)",
+     "how": "the Ideas tab saves a Queue mark and a verdict, and posts a comment"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Read the idea queue first",
+     "how": "plan-week step 1 reads the queue before any research"
+    },
+    {
+     "file": "docs/ENGINE_SESSION.md",
+     "contains": "read the idea queue, first in the chat",
+     "how": "every session start reads the queue"
+    }
+   ]
+  },
+  {
+   "id": "story-a-business-person-gets",
+   "on": "2026-10-19",
+   "krish": "Would I consider this story or angle? If not would I consider it cute or am I curious but not convinced for some specific reason because it's safer? For the \"Google's newest model is on a teaser rate\" article, I actually like the sound of it but I can't understand what the story is. In plain English what would be so interesting to a business person?",
+   "why": "The idea line named the mechanism (a price that doubles) without the consequence for the reader, so he could not tell what the piece would say; and he wants to triage each idea by how it lands with him, not just yes or no.",
+   "means": "Every idea shown to him says, in one plain sentence, what a business person would find out and why it matters to them, before any mechanism; and his triage of an idea records which of four it is: a story he would run, an angle he would run, cute, or curious but not convinced (with the reason).",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/post-pack/week_board.py",
+     "contains": "('so_what', 'story', 'why_now', 'fact')",
+     "how": "read_ideas refuses an idea with no so_what"
+    },
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "with `so_what` first",
+     "how": "plan-week step 3b writes so_what first"
+    },
+    {
+     "file": "apps/control-plane/api/_ideaQueue.ts",
+     "contains": "export const VERDICTS",
+     "how": "the four verdicts plus drop, recorded only with decided_by Krish (parseTriage)"
+    }
+   ]
+  },
+  {
+   "id": "no-stale-skill-copies",
+   "on": "2026-10-19",
+   "krish": "I think we need to not have skills inside repos, surely? that seems dangerous if they are already out of date",
+   "why": "The repository kept its own older copies of krish-voice and content-corpus (content-corpus still named the retired subchannels) beside his newer account-wide skills, so a session could load the stale one.",
+   "means": "A skill that exists account-wide is never also kept in a repository; the repository holds only the engine's own workflows (make-piece, plan-week, produce-video, mindmake-video, video-engine), each either copied for Claude Code or named with its reason, and the Studio pins only those into new jobs.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "tests/repository-contracts.test.ts",
+     "contains": "expect(skillNames).not.toContain('krish-voice')",
+     "how": "a test fails if either retired copy comes back"
+    },
+    {
+     "file": "packages/core/src/runner.ts",
+     "contains": "return ['mindmake-video', 'video-engine']",
+     "how": "new Studio jobs pin only the engine's own skills"
+    },
+    {
+     "file": "scripts/validate-skills.py",
+     "contains": "shares its name with an installed account-wide skill",
+     "how": "skills:validate names any repo skill that doubles an account-wide one"
+    },
+    {
+     "file": "scripts/validate-skills.py",
+     "contains": "NOT_FOR_CLAUDE = {",
+     "how": "every repo skill is copied for Claude Code or named with its reason, or verify fails"
+    }
+   ]
+  },
+  {
+   "id": "ideas-pass-the-business-leader-test",
+   "on": "2026-10-19",
+   "krish": "I just can't figure out how general business leaders would be helped immediately by knowing this. ... I'm not sure what this means for a layperson running a business.",
+   "why": "Three Friday ideas (face and voice ownership, proving a video call is human, AI on $55 TV boxes) described a trend or a mechanism but gave a business leader nothing to do or decide, so he marked each curious but not convinced and queued none.",
+   "means": "Every idea carries, in one plain sentence, what a general business leader can do or decide differently right away. An idea that cannot say it is not offered. The so_what says what they find out; this test says what they do.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "The business-leader test.",
+     "how": "the plan-week step that screens each idea before it reaches the Ideas tab"
+    }
+   ]
+  },
+  {
+   "id": "simplify-and-unpack-the-concept",
+   "on": "2026-10-19",
+   "krish": "the idea of aggressive vertical integration is a great one, but it just needs to be really simplified and unpacked. / I want this to be super simple: a bake-off that anyone can understand. / Why is Disney going after it, and why is Google going after it? They're two totally different companies. Unpack both.",
+   "why": "He likes the concept in three ideas but the line named the mechanism in insider terms; what he wants first is the plain version, then each party's own motive taken apart.",
+   "means": "A concept idea opens with its plain version and then unpacks each party's motive separately. His own angle on a picked idea is its brief for the piece.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Simple first, then unpacked.",
+     "how": "the plan-week step that words each idea"
+    }
+   ]
+  },
+  {
+   "id": "follow-the-money-traces-the-money",
+   "on": "2026-10-19",
+   "krish": "I am passionate about the message which is if you are not paying, you are the product. But I think this needs a bit more substance as to how this intersects with content IP in terms of a monetization play. I think we need to really clearly visualize and unpick where the money goes",
+   "why": "The free-image-ads idea had a message he loves but no money trail, and follow.the.money is the series about exactly that.",
+   "means": "A follow.the.money idea names every party, where the money moves and how it meets content IP or monetisation, so the flow can be drawn. An idea with a message but no money trail waits in the queue until it has one.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "follow.the.money shows the money.",
+     "how": "the plan-week step for the money series"
+    }
+   ]
+  },
+  {
+   "id": "no-repeat-topic-within-weeks",
+   "on": "2026-10-19",
+   "krish": "I think we need to figure out down the line what the new story is. We did an intro to this topic last week, and I think it's too soon to do it again.",
+   "why": "The AI-shopper rulebook idea was a sequel to last Wednesday's Muse piece with no new story, offered a week later.",
+   "means": "Before an idea is offered, check the last three weeks of published and in-flight pieces for the same topic. A sequel says what is new, or it waits.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "No topic again within three weeks.",
+     "how": "the plan-week step that checks recent pieces"
+    }
+   ]
+  },
+  {
+   "id": "reading-his-board-marks",
+   "on": "2026-10-19",
+   "krish": "(his taps on the Ideas tab, 19 Oct: Queue marks, Story, Angle, Cute, Curious with a reason, Drop)",
+   "why": "He taps through verdicts to see them (one idea went none, story, cute, story, angle, 'curious') and the board posts a comment for every tap, so reading the history as opinion would invent feedback he never gave.",
+   "means": "Only the final state of a card counts. Queued plus a verdict is develop-later with his words as the brief; curious and not queued is pass-for-now with his reason; drop is never offered again and is recorded as a dropped row; a pick with his angle makes the angle its brief.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/plan-week/SKILL.md",
+     "contains": "Reading his marks.",
+     "how": "the plan-week step that reads the board and relays it into the queue"
+    }
+   ]
+  },
+  {
+   "id": "narrative-before-making",
+   "on": "2026-10-19",
+   "krish": "I want to be crystal clear on the overarching end message and checkpoints of the piece so that we can't randomly go off track and take ages to iterate",
+   "why": "Pieces drift while being made and each correction costs a long iteration; he wants the end message and the checkpoints fixed before anything is made.",
+   "means": "Proposed, awaiting his word on making it standing: a piece starts from a one-page editorial narrative (the end message in one sentence, who it is for, what they do differently, named checkpoints each with a test, and what is out of scope), and every making session's prompt carries it. Trialled on 19 Oct (docs/handovers/2026-10-19-editorial-narrative.md).",
+   "status": "open",
+   "encoded": []
   }
  ]
 }

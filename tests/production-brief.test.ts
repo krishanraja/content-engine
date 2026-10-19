@@ -100,7 +100,7 @@ describe('Control Center production brief intake', () => {
     await mkdir(join(repoRoot, 'config'), { recursive: true })
     await writeFile(join(repoRoot, 'config', 'studio.json'), '{"schema_version":1}\n')
     await writeFile(join(repoRoot, 'config', 'techniques.json'), '{"schema_version":1,"techniques":[]}\n')
-    for (const name of ['mindmake-video', 'krish-voice', 'content-corpus', 'video-engine']) {
+    for (const name of ['mindmake-video', 'video-engine']) {
       await mkdir(join(repoRoot, '.agents', 'skills', name), { recursive: true })
     }
     const acknowledgements: unknown[] = []

@@ -20,7 +20,7 @@ sys.path.insert(0, str(HERE))
 
 def kind_of(path, text):
     head = text[:400]
-    if 'content="week_board ' in head or "<title>This Week's Publish Board</title>" in text[:2000] or 'week-board' in path.name:
+    if 'content="week_board ' in head or "<title>This Week's Publish Board" in text[:2000] or 'week-board' in path.name:
         return 'week_board'
     if 'content="publish_page ' in head or path.name.startswith('publish-manager'):
         return 'publish_page'
