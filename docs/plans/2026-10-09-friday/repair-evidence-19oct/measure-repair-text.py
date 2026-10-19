@@ -30,7 +30,7 @@ for cue in report['cues']:
     at=round(report['intro_seconds']+(cue['s']+cue['e'])/2)
     frame=frames/'seconds'/f'frame-{at+1:05d}.jpg';im=Image.open(frame).convert('RGB')
     ow,oh=im.size;scale=1080/ow;im=im.resize((1080,round(oh*scale)),Image.Resampling.LANCZOS)
-    px=0 if short else round(cfg['crop'][0]*1080/cfg['crop'][1])
+    px=0 if short else int(re.search(r'overlay=x=(\d+):y=0:enable', (folder/f'stage2-{shape}.graph').read_text())[1])
     fit=min((ow-px)/cw,oh/ch,1);padx=((ow-px)-cw*fit)/2 if fit<1 else 0;pady=(oh-ch*fit)/2 if fit<1 else 0
     for el,dx,dy in texts(root):
         text=''.join(el.itertext());size=float(el.get('font-size','0'))

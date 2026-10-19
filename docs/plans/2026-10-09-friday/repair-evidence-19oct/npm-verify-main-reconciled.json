@@ -1,0 +1,12 @@
+{
+  "commit": "78e0175",
+  "merged_main": "ddcfd2a",
+  "exit_code": 0,
+  "test_files_passed": 142,
+  "tests_passed": 1781,
+  "tests_skipped": 1,
+  "command": "npm run verify",
+  "platform": "Windows",
+  "limitations": "Linux-only path checks explicitly skipped by repository scripts.",
+  "log_sha256": "45522ab6b0c3759ef217c8b27a813a70bb780bead92c0edb2ba2a781c2e11660"
+}

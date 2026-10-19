@@ -1,0 +1,7 @@
+{
+  "video_sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9",
+  "inconclusive_at_s": 330,
+  "observation": "The six-second window crosses a center-to-left-to-center picture layout change. Its fixed median face crop at the midpoint contains the chapter-card text instead of the mouth. Low confidence and failed calibration correctly prevent a pass.",
+  "resolution": "Retain the inconclusive observation. Measure additional stable-layout speech windows at 320 and 342 seconds, before and after this join; neither a time shift nor video edit is applied.",
+  "crop_sha256": "b84520db280f47bf74ef9b712c762d51ab9eb33f6adbbccd50ac772716e92c68"
+}

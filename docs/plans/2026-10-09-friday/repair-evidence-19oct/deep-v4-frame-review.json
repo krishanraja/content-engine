@@ -1,0 +1,10 @@
+{
+  "video_sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9",
+  "reviewer": "Codex",
+  "method": "Visual inspection of every sampled frame across all 28 one-second sheets and all three quarter-second intro/outro sheets. Native 1920x1080 frames additionally inspected at 27,201,330,636 seconds.",
+  "seconds_samples": 817,
+  "intro_outro_samples": 90,
+  "findings": "No black/missing panels, cropped essential headings, caption collisions or unexplained empty card areas observed. Approved title/intro/outro preserved. Transitions show expected crossfades. Source screenshot small print is supporting context; essential instructions are repeated in large headings or magnified controls.",
+  "full_playback": "Not claimed; separate exact-file human review records acceptance with sound.",
+  "measurement_pending": "Authored text measurements await completed renderer report."
+}

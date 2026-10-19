@@ -1,0 +1,13 @@
+{
+  "video_sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9",
+  "cut": "long",
+  "version": "v4",
+  "reviewer": "Krish",
+  "reviewed_on": "2026-10-19",
+  "question": "After watching the complete 13:36 deep cut above with sound, do you accept its speech, captions, cuts, visuals and music? Please pay particular attention to the joins around 2:56 and 5:30. Your plan requires finished-video review before filing; I\u2019m completing the technical checks meanwhile.",
+  "answer": "Accept the complete deep cut",
+  "status": "accepted",
+  "method": "Explicit human response to complete video with sound review question.",
+  "scope": "Finished deep cut. Technical gates independently required. Does not clear article publication.",
+  "assistant_full_playback": "not claimed"
+}
