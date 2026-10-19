@@ -583,6 +583,57 @@
    "means": "Proposed, awaiting his word on making it standing: a piece starts from a one-page editorial narrative (the end message in one sentence, who it is for, what they do differently, named checkpoints each with a test, and what is out of scope), and every making session's prompt carries it. Trialled on 19 Oct (docs/handovers/2026-10-19-editorial-narrative.md).",
    "status": "open",
    "encoded": []
+  },
+  {
+   "id": "deep-cut-music-always-under",
+   "on": "2026-10-19",
+   "krish": "on the deeper cut, the audio needs to be able to be heard the entire time, but just really low unless its intro, outro or or chapter card",
+   "why": "Long stretches of bare voice felt empty; music should hold the whole piece together without competing with him.",
+   "means": "Every deep cut: the bed plays under all the talk at a very low level and rises for the intro, the outro and each chapter card. Proposed as music_mode 'episode_bed' (fix-plan-19-oct.md section 1); levels are his to confirm. Open until built in music.py.",
+   "status": "open",
+   "encoded": []
+  },
+  {
+   "id": "sped-cut-visual-density",
+   "on": "2026-10-19",
+   "krish": "the 90 second video needs to have visuals nearly the entire way through as when things are sped up, we need to 3-5X the visual clarity",
+   "why": "A sped-up short gives the viewer less time per idea, so pictures must carry more, and be clearer, than in a normal cut.",
+   "means": "Short cuts: a visual on 90% or more of the talk, no bare stretch over 1.5 s, one idea per card, large text. Proposed as a coverage gate in make.py --plan (fix-plan-19-oct.md section 2). Open until built.",
+   "status": "open",
+   "encoded": []
+  },
+  {
+   "id": "show-the-analogy",
+   "on": "2026-10-19",
+   "krish": "There are also nowhere near enough visuals in the deep cut either of the car analogy",
+   "why": "The analogy is how the viewer understands the piece; when it is only spoken and never shown, the main idea does not land.",
+   "means": "When a script carries an analogy, every cut shows it each time it is said, from one shared drawing, with the real evidence after it (fix-plan-19-oct.md section 1b). Open until a check maps analogy lines to cues.",
+   "status": "open",
+   "encoded": []
+  },
+  {
+   "id": "board-any-tool",
+   "on": "2026-10-19",
+   "krish": "yes lets move the board to content.krishraja.com",
+   "why": "The board only works inside Claude; he wants Codex and any tool to build it and read his ticks.",
+   "means": "The weekly publish board moves to content.krishraja.com with ticks in the database behind Control Center (docs/handovers/2026-10-19-board-to-content-krishraja.md). Open until built.",
+   "status": "open",
+   "encoded": []
+  },
+  {
+   "id": "send-files-not-links",
+   "on": "2026-10-19",
+   "krish": "I requested three Markdown files for download, which you've not given me",
+   "why": "He asked for the files themselves and got paths in a chat reply.",
+   "means": "Files he asks for are sent with SendUserFile in the same turn, before any other work.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "CLAUDE.md",
+     "contains": "files he asks for are sent to him as files",
+     "how": "rule read at the start of every Claude Code session"
+    }
+   ]
   }
  ]
 }

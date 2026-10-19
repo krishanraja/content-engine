@@ -31,22 +31,18 @@ Read with `90s-failures-19-oct.md`. Nothing here is built; every choice marked *
    caption readable, and the heard-check diff read in full, before anything is called done.
 5. **Lip sync: the voice drifts ahead of the face (found 19 Oct, measured).** Krish: "my facial movements start
    misaligning with the audio as the video progresses, which is unbearable by the end".
-   - *Cause.* `make.py` stage 1 encodes each kept stretch as its own part: the picture is forced to
-     `round(d*24)` frames, the sound is trimmed to `d`, so every part's sound ends a few milliseconds before its
-     picture. The join (`concat -c copy`) leaves those as gaps in the sound's timestamps: 54 gaps, 0.746 s in all, on
-     the deep cut. `build_audio` then reads the sound without honouring timestamps, which closes every gap, and
-     `apad` fills the end. So the voice runs steadily ahead of the lips.
-   - *Measured* (the finished file's sound matched against the edited take): 0.00 s at 1 min, 0.23 s at 6 min,
-     0.43 s at 8 min, 0.68 s at 13 min. Anything over about 0.1 s reads as dubbed. The length checks passed because
-     the totals match; nothing checked sync inside the cut.
-   - *Fix.* In each part, pad and trim the sound to exactly the picture's length (`apad,atrim=end_sample=` the
-     part's frames ÷ 24 × 48000), so sound and picture are the same length per part and the join has no gaps.
-     Belt and braces: read `[0:a]` with `aresample=async=1:first_pts=0` so any gap left becomes silence in place,
-     never a slide.
-   - *Guard (blocking).* After stage 1, sum the sound's timestamp gaps in `edited.mkv`: refuse over 5 ms in all.
-     After the render, measure sync at six points across the cut by matching the finished sound to the edited
-     take: refuse any point more than 40 ms off. Both numbers go in the report. The 90-second cut takes the same
-     path (fewer joins, smaller drift) and gets the same fix.
+   - *Cause: not proven.* On 19 Oct the cloud session first blamed 54 small holes (0.746 s in all) in the
+     timestamps of the joined take (`edited.mkv`). Its own test then showed each part's sound already matches its
+     picture to the sample, and that the holes come from the container. The "0.68 s by the end" figure came from
+     seeking `edited.mkv` by timestamp, so it measured those same holes, not drift. Do not reuse that diagnosis.
+   - *First, measure (no fix before this).* Decode the finished cut and the edited take by frame index and sample
+     position (never by seeking timestamps), and measure the offset between his mouth and his voice at 8 points
+     from 30 s to 13 min. Use a lip-sync measure (SyncNet or similar) or frame-motion against sound onsets. Also
+     check the take itself (`W\takes\...3-minute...mp4`) the same way: the teleprompter.com recording stamps its
+     frames unevenly, and the cut lays them 1/24 s apart (`conform_filter` in `make.py`).
+   - *Then fix the stage the numbers point to,* and add a blocking check to `make.py`: after the render, sync
+     measured at six points, refused if any point is more than 40 ms off, numbers in the report. The 90-second cut
+     takes the same path and gets the same check.
 
 ## 1. The deep cut: the bed heard the whole time
 
@@ -176,7 +172,7 @@ That is 22 beats in 77 s, every one at least 1.5 s, coverage about 95%.
 
 ## 3. Order of work (one fresh session, from `docs/handovers/`)
 
-1. Section 0, items 1 to 3 and 5 (lip sync first: it is a plain bug with a measured fix), as engine changes with
+1. Section 0, items 1 to 3 and 5 (lip sync first: measure it, then fix it), as engine changes with
    self-tests.
 2. The car drawing to Krish; then the deep cut's car beats (1b) and `episode_bed`, then a re-render (about 21 minutes in the cloud since 19 Oct), heard check, full-size
    review.
