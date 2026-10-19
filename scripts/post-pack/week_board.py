@@ -101,6 +101,7 @@ sys.path.insert(0, str(HERE))
 import engine_stamp  # noqa: E402  the engine's stamp on a page it built
 import publish_kit  # noqa: E402
 import publish_manager  # noqa: E402
+import board_materials  # noqa: E402
 
 TEMPLATES = HERE / 'week_board'
 TITLE = "This Week's Publish Board"
@@ -307,7 +308,7 @@ def checklist(day, p, deep=False):
 INBOX = 'makeyourmindup > Video Engine > Inbox'
 
 DRIVE_ID = re.compile(r'drive\.google\.com/(?:file/d/|open\?id=|uc\?(?:export=download&)?id=)([A-Za-z0-9_-]{20,})')
-VIDEO_CUTS = (('long', '3-minute video (wide, 16:9)', 'YouTube and the Substack video post'),
+VIDEO_CUTS = (('long', 'Long video (wide, 16:9)', 'YouTube, Substack and Spotify'),
               ('short', '90-second video (tall, 9:16)', 'Shorts, Reels, TikTok and LinkedIn'))
 
 
@@ -842,7 +843,8 @@ def board_days(text, where='the board'):
         raise BoardError(f'{where}: its CONF names no days')
     for key in days:
         # A made tab is a whole publish page: its panel carries the day's id prefix.
-        if re.search(rf'<div class="pm" id="panel-[a-z]+"[^>]*\sdata-prefix="{key}-"', text):
+        tag = re.search(rf'<div class="pm" id="panel-[a-z]+"[^>]*\sdata-prefix="{key}-"[^>]*>', text)
+        if tag and ('data-state=' not in tag[0] or 'data-state="made"' in tag[0]):
             days[key]['state'] = 'made'
     return {'week': conf.get('week'), 'days': days}
 
@@ -1002,7 +1004,7 @@ def parse_time(value):
 
 
 def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pending=None, kept=None, videos=None, review=None,
-          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None):
+          draft=(), calls=None, posted=None, kept_at=None, ideas=None, queue=None, materials=None):
     """(page, manifest, warnings). ideas: {day: [idea]} from read_ideas(),
     shown as a first tab, Ideas, opened while no day is made. pages: {day: publish page text};
     pieces: {day: uuid}; teleprompter: {day: teleprompter_info}; picks:
@@ -1083,6 +1085,32 @@ def board(monday, pages=None, pieces=None, teleprompter=None, picks=None, pendin
                 raise BoardError(f'--review {key}: {weekday} is {state.replace("_", " ")}, so its words would not show; '
                                  f'give --draft {key} while they are in review')
             panels[-1] = with_review(panels[-1], review_card(key, review[key], built_at, kept_at), after_heading=state == 'draft')
+        if (materials or {}).get(key):
+            try:
+                delivery = board_materials.validate(materials[key], piece)
+                panels[-1] = board_materials.update_copy(panels[-1], key, delivery)
+            except ValueError as error:
+                raise BoardError(str(error)) from error
+            if state not in ('made', 'draft'):
+                raise BoardError('Publishing materials need a made or draft day')
+            if 'data-prefix=' not in panels[-1].split('>', 1)[0]:
+                panels[-1] = panels[-1].replace('>', f' data-prefix="{key}-">', 1)
+            if state == 'draft':
+                panels[-1] = re.sub(r'<p class="empty-line">.*?</p>',
+                    '<p class="empty-line">This piece remains in review. Use the finished files and channel copy above; clear the stated holds before publishing.</p>',
+                    panels[-1], count=1, flags=re.S)
+                panels[-1] = panels[-1].replace('<h2>Waiting on you</h2>', '<h2>Before publishing</h2>')
+                for step, wording in [('record-long', 'Record the long cut (Teleprompter)'), ('youtube', 'YouTube: the long video')]:
+                    panels[-1] = panels[-1].replace(E(LABEL[step]), E(wording))
+            card = board_materials.render(key, delivery)
+            at = panels[-1].find(f'<div class="rec" id="{key}-materials"')
+            if at >= 0:
+                panels[-1] = panels[-1].replace(div_at(panels[-1], at), card, 1)
+            else:
+                at = panels[-1].find('<div class="rec')
+                if at < 0:
+                    raise BoardError('Cannot place publishing materials in this day')
+                panels[-1] = panels[-1][:at] + card + panels[-1][at:]
         picked = state != 'not_picked'
         tabs.append(
             f'<button type="button" role="tab" id="tab-{name}" aria-controls="panel-{name}" '
@@ -1423,8 +1451,13 @@ def build(args, get=None):
         queue = saved.get('queue') if isinstance(saved, dict) else saved
         if not isinstance(queue, list):
             raise BoardError('--queue: give the saved answer of GET /api/idea-queue ({"queue": [...]})')
+    materials = board_materials.previous(Path(args.previous).read_text(encoding='utf-8-sig')) if args.previous else {}
+    for key, path in by_day(getattr(args, 'materials', None), '--materials').items():
+        materials[key] = read_json(path, '--materials')
+    for key in unpick:
+        materials.pop(key, None)
     page, manifest, more = board(monday, pages, pieces, scripts, picks, pending, kept, videos, review, draft, calls, posted, kept_at,
-                                 ideas, queue)
+                                 ideas, queue, materials)
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
@@ -1760,6 +1793,24 @@ def _self_test():
           'download?id=1dK3QdzIkQi-SO1JsR9_SR2LdYoxGZnSQ' in tcard and 'Download thumbnail' in tcard and 'x - tall.jpg' in tcard)
     _draft_checks(check, page, fri)
     _ideas_checks(check)
+    delivery = {'piece_id': MON_ID, 'status': 'review', 'note': 'Fact review is still open.', 'sections': [
+        {'id': 'spotify', 'title': 'Spotify', 'files': [{'label': 'Video', 'url': 'https://example.com/video.mp4'}],
+         'copy': [{'label': 'Description', 'text': 'Quoted "words" & <safe text>'}]}]}
+    held, held_manifest, _ = board(date(2026, 10, 19), pieces={'mon': MON_ID}, draft={'mon'},
+        review={'mon': [('article', 'Article', 'Words in review')]}, materials={'mon': delivery})
+    check('finished materials never mark a draft piece made or remove its review hold',
+          held_manifest['days'][0]['state'] == 'draft' and board_days(held)['days']['mon']['state'] == 'draft' and 'Fact review is still open.' in held and
+          'id="rvs-mon-article"' in held and 'data-prefix="mon-"' in held and verify(held) == [])
+    check('material metadata round trips escaped wording and stable anchors',
+          board_materials.previous(held) == {'mon': delivery} and 'id="mon-materials-spotify-copy-0"' in held)
+    for bad, label in [(dict(delivery, piece_id=FRI_ID), 'another piece'),
+                       (dict(delivery, sections=[{'id':'x','title':'X','files':[{'label':'bad','url':'javascript:alert(1)'}]}]), 'unsafe URL')]:
+        try:
+            board_materials.validate(bad, MON_ID)
+            rejected = False
+        except ValueError:
+            rejected = True
+        check('publishing materials refuse ' + label, rejected)
     if fails:
         print('week board self-test FAILED:\n  ' + '\n  '.join(fails))
         return 1
@@ -1984,6 +2035,7 @@ def parser():
                     'a day it held is never lost')
     ap.add_argument('--keep', action='append', metavar='DAY', help='with --previous (its page): carry a made day over exactly as the board holds it, '
                     'when its publish page cannot be read any more')
+    ap.add_argument('--materials', action='append', metavar='DAY=JSON', help='finished downloads and channel copy, with an explicit readiness note; never changes the day state; preserved on rebuild')
     ap.add_argument('--unpick', action='append', metavar='DAY', help='with --previous: a day Krish moved or dropped, which really has no piece now')
     ap.add_argument('--review', action='append', metavar='DAY=LABEL|PATH', help='words for Krish to edit or comment on in that day\'s tab '
                     '(the article, each script); his saves land in the board\'s store as edits/<day>-<item>')

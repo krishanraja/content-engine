@@ -121,6 +121,8 @@ def publish(args):
     week = meta['week_start']
     assets, payloads = {}, []
     state = call('GET', f'/api/board/{week}')
+    if getattr(args, 'expected_build', None) and state.get('build_id') != args.expected_build:
+        raise ValueError('Active board changed since preparation; download it and rebuild before publishing')
     mappings = json.loads(Path(args.assets).read_text(encoding='utf-8')) if args.assets else []
     for item in mappings:
         asset_id = item['id']
@@ -192,6 +194,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     sub = p.add_subparsers(dest='command', required=True)
     pub = sub.add_parser('publish-web'); pub.add_argument('page'); pub.add_argument('--assets'); pub.add_argument('--apply', action='store_true')
+    pub.add_argument('--expected-build', help='refuse to replace a build other than the one used for preparation')
     convert = sub.add_parser('convert-export'); convert.add_argument('page'); convert.add_argument('--week',required=True); convert.add_argument('--source',required=True); convert.add_argument('--expected-sha256',required=True); convert.add_argument('--output',required=True)
     read = sub.add_parser('read'); read.add_argument('week'); read.add_argument('collection', choices=['ticks','links','edits','picks','queue','comments'])
     download = sub.add_parser('download'); download.add_argument('week'); download.add_argument('--output', required=True)

@@ -6,6 +6,21 @@ board becomes the sole place for new interactions after verified migration.
 The four Claude artifacts and the default artifact generator remain preserved;
 there is no ongoing synchronization with them after cutover.
 
+## Finished files while editorial review remains open
+
+Use `week_board.py --materials DAY=materials.json` for finished downloads and
+channel copy. The JSON names the exact piece, an explicit `review` or `ready`
+status, its readiness note, and sections containing labelled files and copy.
+This does not mark a draft day made, complete a making step, or clear a fact
+gate. A normal rebuild carries these materials from `--previous`; do not lose
+them when refreshing the article. Existing copy boxes can be refreshed by
+stable ID with `copy_updates`, retaining their comment anchors.
+
+Resolve every download into the immutable web manifest. Activate with
+`board_web.py publish-web PAGE --assets MAP --expected-build BUILD_ID --apply`
+so a concurrent board publication causes a refusal instead of overwriting it.
+Material availability is distinct from permission to publish on a channel.
+
 ## Read before every session that touches a week
 
 Check `config/boards.json` → `web_cutover.state`. `pending` means the historical
