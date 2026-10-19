@@ -5,6 +5,18 @@ docs/handovers/2026-10-19-editorial-narrative.md and do what it says." Opus, no 
 Run `python3 scripts/check_failures.py` first, then read this file and `config/learnings.json`
 (`narrative-before-making` and the five 19 Oct triage entries).
 
+## Start here: ask him the questions, each with a recommendation
+
+Before any narrative, send Krish **one plain message** with the questions below, numbered, each with its
+recommendation, so he can reply "agree" or give a number and a change. Do not start a narrative until he has
+answered 1 to 4 (they fix the end messages). Record his answers in the narrative files and, where an answer is a
+lasting rule, in `config/learnings.json`. A question his earlier words already answer is not asked (AGENTS.md,
+"Check before you ask"): question 7 below is already answered by his 14 Oct ruling, so it is an action, not a
+question.
+
+If he pastes Perplexity's research for Monday (`docs/handovers/2026-10-19-perplexity-argon-prompt.md`), treat it
+as unchecked leads: every number is read again at Google's own pricing page at the fact gate.
+
 ## The job, and the rule that keeps it short
 
 Krish, 19 Oct: "I want to be crystal clear on the overarching end message and checkpoints of the piece so
@@ -72,14 +84,50 @@ wed-2 connectors (story). Dropped: Apple HomeView, the OpenAI safety firings. Pa
 Wednesday's AI-shopper rulebook (too soon after last week), Friday's face-and-voice law, video-call proof and
 $55 boxes (no immediate use for a business leader).
 
-## Questions waiting for him (also in chat)
+## The questions, with recommendations (send these as one message)
 
-1. Argon: use the checked figure ("about 95% cheaper", a twentieth) instead of "a tenth" unless Google's page
-   supports "a tenth"?
-2. Monday: is the one action "find out whether your AI reuses what it has read", or "renegotiate before
-   December"? Which do you want a founder to do first?
-3. Wednesday: who is in the bake-off (Grok Bot, Muse, Viktor, OpenClaw?) and which four business tasks?
-4. Friday: what should a business leader do after reading it? (The only idea of the three with no angle from you.)
-5. Make the narrative-before-making rule standing (a step in `make-piece`), or only for this week?
-6. Keep the "curious, not queued" ideas anywhere, or let them go?
-7. The second board link: drop it from `config/boards.json`, or will a session on the other account refresh it?
+**About the three pieces**
+
+1. **Argon: which figure?** His text says cached input costs "a tenth". The row's figures give a twentieth
+   ($0.10 against $2 now, then $0.20 against $4), and the row's older text said 95%.
+   *Recommend:* use whatever Google's own pricing page shows, worded as "about 95% cheaper" if it confirms the
+   twentieth. Never print "a tenth" unless the page supports it (hard gate: never invent a number).
+2. **Monday: what is the one action?** "Find out whether your AI reuses what it has already read, and what your
+   contract says about the 1 December price", or "renegotiate before December".
+   *Recommend:* the first. It is something a general business leader can do this week with a question to their
+   vendor; renegotiating comes after they know where they stand.
+3. **Wednesday: who is in the bake-off, and which tasks?**
+   *Recommend:* Grok Bot, Muse and Viktor scored; OpenClaw told as where it started, not scored. Four plain
+   tasks the same for all: summarise an email thread and draft the reply, set up a meeting, find and buy a small
+   item inside a spending limit, answer a customer question from the company's own documents. Two scores each:
+   what it is useful for, what it could break. One piece, kept super simple.
+4. **Friday: what should a business leader do after reading it?** (The only pick with no angle from him.)
+   *Recommend:* "Ask the AI you rely on, and one built in another country, the same three questions your
+   business depends on, and see where the answers differ." End message as proposed above.
+
+**About the rules and the loose ends**
+
+5. **Make "narrative before making" standing?** (A step in `make-piece`, with the drift rule.)
+   *Recommend:* yes. It costs one page per piece and it is the cheapest guard against the long iterations he
+   described. If yes, add it to `.agents/skills/make-piece/SKILL.md`, sync, and mark the learning encoded.
+6. **Which "curious, not queued" ideas stay?** *Recommend:* keep only Wednesday's AI-shopper rulebook (parked,
+   with his reason, until there is a new story); let go of the face-and-voice law, video-call proof and $55-box
+   ideas, which failed the business-leader test and have no obvious way to pass it.
+7. **The second board link** (`4SZR…`, his other account). *Not a question:* on 14 Oct he ruled that both boards
+   stay synchronised ("make sure this board and that board are always synchronized"). So it stays in
+   `config/boards.json`, and a session on that account rebuilds with `week_board.py --week 2026-10-19 --live
+   --ideas docs/plans/2026-10-19-week/ideas.json --queue <saved GET /api/idea-queue> --previous <that board>`
+   and republishes to that link. Remind him once.
+
+**About the four ideas in his queue** (each also carries its question on Control Center's Queue page)
+
+- **Character.AI:** run it after the 30 October bidding hearing, when there is an outcome; the business action is
+  to check what your contract says if your AI vendor fails or is sold (can you get your data back, who owns it).
+- **Free-image ads:** the end message is "if you are not paying, you are the product", with the money trail
+  (advertiser, OpenAI, the creators whose work trained the image models) as the proof. Earliest slot Monday 26
+  October, once the ads are live in the US.
+- **Microsoft's own chip:** the plain pattern, "the biggest buyer builds its own supply", with Microsoft as the
+  one example; the question to take away is "whose chips run my workload, and does the price I pay follow their
+  cost?"
+- **Gmail and Drive connectors:** a standalone piece, not part of the bake-off, so the bake-off stays simple;
+  name a tool only where its claim is sourced.
