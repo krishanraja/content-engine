@@ -239,7 +239,7 @@ describe('week_board.py builds the week\'s one publish board', () => {
     expect(manifest.made).toEqual([])
     expect(manifest.picked).toEqual(['wed'])
     // The artifact contract declares the downloads capability as true.
-    expect(manifest.publish).toMatchObject({ title: "This Week's Publish Board", icon: 'calendar', capabilities: { db: {}, downloads: true } })
+    expect(manifest.publish).toMatchObject({ title: "This Week's Publish Board (wC 19 Oct)", icon: 'calendar', capabilities: { db: {}, downloads: true } })
   }, 60_000)
 
   it('refuses a week that does not start on a Monday', () => {

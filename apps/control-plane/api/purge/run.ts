@@ -18,6 +18,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 //   2. FEEDS A SHIFT — rows with shift_id are kept (their evidence already
 //                 lives in the dossier; the row keeps the Feed history light).
 //   3. GRADUATES — rows with library_at are kept forever.
+//   Also kept forever: a row in his idea queue (queued_at, api/idea-queue.ts).
 // Also ages out the weekly surfaces so the Content tab stays a week's worth of
 // work rather than a growing pile: every brief past its week is archived
 // (whatever state it reached), and every decision card past its week is swept
@@ -120,6 +121,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       .lte('expires_at', nowIso)
       .is('shift_id', null)
       .is('library_at', null)
+      .is('queued_at', null) // his queue survives every purge
+      .is('protected_at', null)
       .not('state', 'in', '("drafting","review","approved","published")')
       .or(`scheduled_for.is.null,scheduled_for.lt.${today}`)
     const doomedOnly = <Q extends { not: Function; lte: Function; is: Function; or: Function }>(q: Q): Q =>

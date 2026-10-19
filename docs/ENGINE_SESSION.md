@@ -20,7 +20,7 @@ GitHub owns code and versioned configuration. Control Center and Supabase own sa
 
 ## Session start
 
-1. Read `AGENTS.md` and this file.
+1. Read `AGENTS.md` and this file. Then read the idea queue, first in the chat: `python3 scripts/engine.py GET /api/idea-queue` (Krish, 2026-10-19: the queue "needs to survive everything and be the first thing in chat"). Say how many ideas wait and how many have no verdict yet; offer from it before any new research.
 2. Call `studio.capabilities` if the client exposes it.
 3. Call `studio.session.open` with the client name and current repository revision.
 4. Display the tracking state and capability limitations before the first mutation.
