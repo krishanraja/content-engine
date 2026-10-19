@@ -88,3 +88,7 @@ Krish approved the exact listed entries: "Sign off the listed entries on that ba
 ## Current delivery status
 
 Krish declined a fifth paid run: "Keep the videos in review; do not spend more". Both cuts remain review copies. No additional paid fact check, posting, gate override, or Video-complete record is authorised. Ten of the eleven listed claim entries have recorded sign-off; one contradicted-category entry remains blocked despite the dated primary-source evidence. Next work is unpaid diagnosis or review, with any new paid action requiring fresh explicit approval.
+
+## Review PR verification correction
+
+At commit 8956d09, Windows CI passed all 1,786 tests (one skipped) and skill checks, then rejected the merged workbench at 64,404 bytes. The branch alone was under the limit; concurrent main content raised the merged size. The Monday workbench section was shortened, retaining detail in this production report and the plan receipts. Recheck the actual merge result before merging PR #109.
