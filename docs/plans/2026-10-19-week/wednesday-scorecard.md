@@ -1,6 +1,17 @@
 # Which AI assistant should you try first?
 
-**Working scorecard — 19 October 2026.** Research-backed shortlist, not our own completed five-way test. The identical draft-only tests have not run: no authenticated product sessions are connected through the available browser test tool. No sends, purchases or paid calls have been made.
+**Working scorecard — 19 October 2026.** Research-backed shortlist with a first live draft-test batch. Four Muse drafts and one Gemini Pro chat baseline are complete; this is not a completed five-agent comparison. No sends, purchases or paid calls were made.
+
+## First live results
+
+| Observed surface | Email | Meeting | Purchase | Policy |
+|---|---|---|---|---|
+| Muse at muse.ai | 3 / 0 | 3 / 0 | 3 / 0 | 2 / 1 |
+| Gemini Pro chat baseline | 3 / 0 | Not tested | Not tested | Not tested |
+
+Cells show USEFUL / COULD BREAK, each out of 3; lower is better only for the second score. One output per job, not reliability rates or integration-safety proof. Muse got the policy right but wrote “I've passed your request to the support manager” without doing so. A small correction is required before using that reply. The original ambiguous purchase prompt was excluded; the dated replacement passed.
+
+Exact prompts, responses and scoring limits are in the Live draft-test results review. Muse's new-chat title also says muso; its relationship to the corpus's Meta Muse needs confirmation before combining those evidence sets. Gemini's Scheduled surface routed to Gemini Pro chat, so no Spark agent score is claimed. Grok Bot, dots and Poke remain untested.
 
 The simple message: **Find your job. Pick the assistant. Know what to check.**
 
@@ -8,7 +19,7 @@ The simple message: **Find your job. Pick the assistant. Know what to check.**
 
 Add a small access line to each row: browser, desktop app or messaging, with plan or region restrictions only where they change the choice. This is separate from where the agent runs its work.
 
-Krish reports Muse and Gemini are signed into his browser, and that he is downloading Grok's Windows app. Product access is therefore user-reported, not yet inspected by this session: the Skyvern connection still returns NO_ACTIVE_BROWSER. Confirm Gemini's task/agent mode rather than testing ordinary Gemini chat as its substitute.
+The built-in browser reaches the signed-in Muse and Gemini sessions. The earlier Skyvern error was a tool-route failure. Gemini's Scheduled page is visible, but the test ran in Gemini Pro chat. Grok's Windows installation is user-reported; its test surface has not yet been inspected.
 
 **Grok is not universally desktop-only.** Its [3 October release notes](https://grok.com/release-notes/oct-03-2026) say browser Bot access is available to SuperGrok Plus and Heavy subscribers. Its [desktop download page](https://cursor.com/download/bot) lists Windows, macOS and Linux. Checked 19 October. The useful distinction for the card is access by surface and plan, not a blanket Windows requirement. An installed interface also does not mean local execution: the [official computer guide](https://docs.x.ai/grok-bot/computer-and-apps) says Bot work runs on a separate cloud computer.
 
@@ -31,7 +42,7 @@ Krish reports Muse and Gemini are signed into his browser, and that he is downlo
 | Prepare a purchase | The peer corpus contains same-prompt travel shortlisting; this is useful background. | Our specified item, full delivered price and budget adherence. Travel results are not an office-purchase score. |
 | Answer from company documents | The simulated-business comparison is relevant but includes tools and actions beyond a draft. | Our shared policy question, supporting paragraph and resistance to inventing a policy. |
 
-No 0–3 scores are assigned until an actual output exists for the approved packet. The numeric scoring definitions in wednesday-brief.md remain approved for those tests. Missing access is NOT TESTED, never zero.
+Only the completed outputs above receive 0–3 scores; all other cells remain untested. The numeric scoring definitions in wednesday-brief.md remain approved for those tests. Missing access is NOT TESTED, never zero.
 
 ## The narrative
 
@@ -47,7 +58,7 @@ For the long version, use the four jobs to explain the evidence behind the card.
 
 ## Proposed visual treatment
 
-- One readable card: assistant / start here / check this. Product names are large; checks are concrete. A small visible line says RESEARCH SHORTLIST — OWN TESTS PENDING.
+- One readable card: assistant / start here / check this. Product names are large; checks are concrete. A small visible line says RESEARCH SHORTLIST — PARTIAL DRAFT TESTS.
 - During narration, isolate one row at a time. Keep the same column order and wording so the viewer learns the card once.
 - The eventual four-job test panel uses two short labels: USEFUL and CHECK NEEDED, with plain-language score keys. No decimals, invented averages or league-table winner.
 - Keep the eligibility note beside Gemini and dots. It changes the reader's choice.

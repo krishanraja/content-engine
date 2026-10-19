@@ -36,7 +36,8 @@ def build():
           '--piece','wed=d7a20885-7001-4661-b444-9d7ca1043416','--draft','wed',
           '--review',f'wed=Scorecard and narrative|{PLAN}/wednesday-scorecard.md',
           '--review',f'wed=Four draft-only tests|{PLAN}/wednesday-test-packet.md',
-          '--waiting','wed=Research shortlist ready. Identical draft tests need authenticated product access; no new approval of the narrative is needed.',
+          '--review',f'wed=Live draft-test results|{PLAN}/test-results/README.md',
+          '--waiting','wed=First live draft results ready: four Muse tasks and one Gemini Pro baseline. Remaining agent surfaces need confirmation; no sends or spending.',
           '--ideas',str(PLAN/'ideas.json'),'--queue',str(CACHE/'queue.json')]
     page,meta=board.build(board.parser().parse_args(args))
     mappings=[]

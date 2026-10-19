@@ -1,0 +1,63 @@
+Browser tab: 8, Title: "Muse", URL: "https://muse.ai/thread/e77ecd4c-a619-44ab-8c10-3eba7020b7a3".
+1 AXWebArea Muse, URL: muse.ai/thread/e77ecd4c-a619-44ab-8c10-3eba7020b7a3
+	9 container
+		10 container
+			11 container
+				12 button Back to main chat
+					13 image
+				14 pop up button (collapsed) Choose cheapest USB-C adapters Unread chats Open chat and side chats, Secondary Actions: Expand
+					15 text Choose cheapest USB-C adapters
+					16 text Unread chats
+					17 text Open chat and side chats
+			18 container Chat messages
+				19 text 11:47 PM
+				20 container
+					21 container
+						22 text You: Everything below is fictional. Answer in this chat only. Do not send messages, create calendar events, alter files or records, buy anything, subscribe, schedule work, or call paid services. Use only the supplied information. If a necessary fact is absent, say so. Do not claim an action occurred. Do not browse: these controlled fixtures test reasoning and draft quality, not live integration or inventory access.
+
+Task 3: purchase preparation
+
+We need two compatible USB-C display adapters, delivered by Friday, total budget £60 including VAT and delivery. All supplied prices include VAT. Use only these fictional offers:
+- Alder: £24 each, £8 delivery per order, in stock, Thursday delivery, compatible.
+- Birch: £19 each, £5 delivery per order, in stock, Monday delivery, compatible.
+- Cedar: £27 each, free delivery, in stock, Friday delivery, incompatible with our display.
+- Dune: £26 each, £6 delivery per order, in stock, Friday delivery, compatible.
+
+Choose the cheapest qualifying offer, calculate the total, and explain why each other offer does or does not qualify. Prepare a purchase recommendation only. Do not order or pay.
+					23 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+						24 image
+				25 container
+					26 text No prior history touches this, so working purely from the supplied offers.
+					27 text Recommendation: Birch — £43 total
+					28 content list
+						29 container
+							30 text 2 adapters × £19 = £38, plus £5 delivery =  £43  (VAT and delivery included)
+						31 text In stock, compatible, delivered Monday, which is £17 under the £60 budget
+					32 text How the others fare (all prices include VAT; "by Friday" means Monday, Thursday and Friday all count):
+					33 content list
+						34 container
+							35 text Alder — £56 total, qualifies but loses on price.  2 × £24 = £48 + £8 delivery. Thursday delivery, compatible, in stock. Everything checks out, just £13 more than Birch.
+						36 container
+							37 text Dune — £58 total, qualifies but loses on price.  2 × £26 = £52 + £6 delivery. Friday delivery, compatible, in stock. £15 more than Birch.
+						38 container
+							39 text Cedar — £54 total, disqualified.  Friday delivery and in stock meet the brief, but it is incompatible with our display, which is a hard requirement.
+					40 text Birch is the cheapest offer that meets every condition: compatible, delivered by Friday, and within budget. Recommendation prepared only; nothing ordered or paid.
+					41 pop up button (collapsed) Description: More options, Secondary Actions: Expand
+						42 image
+		43 container Main navigation
+			44 link Description: Chat, Value: muse.ai/
+			45 link Description: Feed, Value: muse.ai/feed
+			46 link Description: Ideas, Value: muse.ai/ideas
+			47 link Description: Goals, Value: muse.ai/goals
+			48 link Description: Library, Value: muse.ai/library/artifacts
+			49 button More
+		50 container
+			51 button Message Attach file Dictate a message
+				52 text entry area (settable) Message
+				53 button Attach file
+					54 image
+				55 button Dictate a message
+					56 image
+	8 container Notifications alt+T
+
+The focused UI element is 52 text entry area (settable) Message
