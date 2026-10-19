@@ -26,3 +26,18 @@ first." Opus. Run `python3 scripts/check_failures.py` first.
    account and returns 404 here). Krish asked that the board is built only after these decisions, which are now made.
 
 Wednesday's and Friday's narratives (`narrative-wed.md`, `narrative-fri.md`) still wait on his sign-off.
+
+## Done in the first session, 19 Oct (later)
+
+- Workroom: https://claude.ai/artifact/DdBDf3JPCAdjkmDj7ss6na (copy in `docs/plans/2026-10-19-week/workroom-mon.html`), recorded.
+- Draft: `docs/plans/2026-10-19-draft-body.md`, 1,177 words, saved on the piece. voice_check 2.0 (passes), ai_scan
+  passes, spine_check outline and draft pass.
+- Sources filed as verbatim excerpts on the piece: Google pricing page (Argon rows), Google launch post with its
+  footnote (copied from the page's HTML, which the reader drops), Google Cloud blog, Computerworld (14 Oct, Gogia),
+  Anthropic pricing (Opus 5.5 row). Plus our own worked-example note (not verbatim). Node cannot reach the engine
+  through the proxy here: file through `scripts/engine.py` (`engine.call`), with the filer's `--dry-run` excerpt.
+- Corrections found at the sources: Computerworld ran on 14 Oct (not 13); the launch post is dated 13 Oct; Opus 5.5
+  is $4/$20 but is not Anthropic's top model.
+- Waiting on Krish: the paid fact-gate run (last measured $1.01 a run) and his words to pass the free pre-check's
+  seven example-month sentences (`--despite-precheck` with his `said`); they are our labelled arithmetic, on no
+  outside source. Then the spine judge, visual gate, scripts.
