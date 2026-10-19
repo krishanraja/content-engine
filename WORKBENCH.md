@@ -6,7 +6,7 @@ desktop), or anything else that can open this repository. It is how work moves
 from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
-Last updated: 2026-10-18, by the Sunday plan-the-week routine (Claude Code, cloud): options written and the 19 October board made.
+Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
 
 ## The idea queue: read it first
 
@@ -14,6 +14,19 @@ Every planning or making session starts with `python3 scripts/engine.py GET /api
 queued from any Ideas tab, with his triage (story, angle, cute, curious but not convinced, with his reason). One
 queue, in the engine (`content_ideas.queued_at`); Control Center's Queue page triages it A/B; nothing purges it.
 Offer from it before new research. Handover: `docs/handovers/2026-10-19-idea-queue.md`.
+
+### Idea queue: built 19 Oct, three things wait on Krish's yes
+
+Built and tested: the engine route and `queued_at` migration (`supabase/migrations/20261025090000_idea_queue.sql`), the
+board's triage buttons and Queue mark, `so_what` on every idea, the session-start reads, and Control Center's Queue page
+(branch `ccr-792c3e40-osbgu5` in both repos). Not done, each needs his yes immediately before:
+1. Apply the migration to the live database (it adds one column; until then `/api/idea-queue` fails).
+2. Merge both branches and deploy; Control Center also needs its `vercel.json` rewrite live.
+3. Republish the 19 Oct board with the new Ideas tab to every link in `config/boards.json`
+   (`python3 scripts/post-pack/week_board.py --week 2026-10-19 --live --ideas docs/plans/2026-10-19-week/ideas.json
+   --queue <saved GET /api/idea-queue> --previous <current board> --out ...`; his picks and ticks must survive, so read
+   the current board first). The Argon idea is rewritten in plain English in `ideas.json`; its "a tenth" line is
+   rechecked at the fact gate (the figures in `fact` give a twentieth, not a tenth).
 
 ## Friday 16 Oct: handed over, 17 Oct
 
