@@ -533,6 +533,10 @@ The fact gate.
 - `function signOff( fc: FactCheck, lines: Array<{ sentence: string; said: string }>, at = new Date().toISOString(), ): { …`
 - `function carrySignOffs(prior: FactCheck | undefined, next: FactCheck): FactCheck`
 - `const FACT_GATE_VERSION`
+- `interface ManualFactReview`
+- `function reviewContradiction(meta: Record<string, any>, body: string, input: Record<string, unknown>, at = new Date().t…`
+- `function activeManualReviews(meta: Record<string, any>): ManualFactReview[]`
+- `function effectiveBlocking(meta: Record<string, any>): CheckedClaim[]`
 - `const PASSING: ReadonlySet<ClaimVerdict>`
 - `const UNSET`
 - `function withoutConfidence(text: string): string`
@@ -1069,7 +1073,7 @@ The making record: where one piece is on its way from the workroom to
 - `function teleprompterStates(m: Partial<Making>): Partial<Record<MakingCut, TeleprompterState>>`
 - `function teleprompterNote(m: Partial<Making>): string`
 - `const MAKING_OWNERS: Record<string, MakingOwner>`
-- `function makingSteps(row: { state?: string | null; meta?: Record<string, any> | null }): MakingStep[]`
+- `function makingSteps(row: { state?: string | null; body?: string | null; meta?: Record<string, any> | null }): MakingSt…`
 - `interface PieceState`
 - `function pieceVerdict(piece: PieceState, closesOn: string, steps: MakingStep[] = makingSteps(piece)): 'done' | 'moot' |…`
 

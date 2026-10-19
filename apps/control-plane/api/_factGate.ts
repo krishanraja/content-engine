@@ -136,6 +136,58 @@ export function carrySignOffs(prior: FactCheck | undefined, next: FactCheck): Fa
 }
 
 export const FACT_GATE_VERSION = 1 as const
+
+/** Explicit human adjudication of a disputed verdict. Never changes the
+ * automated check or carries across a new body, source set or checker run. */
+export interface ManualFactReview {
+  id: string
+  sentence: string
+  decided_by: 'Krish'
+  said: string
+  reason: string
+  at: string
+  body_hash: string
+  run_at: string
+  sources_hash: string
+  original_claim: CheckedClaim
+  evidence: { material_id: string; url: string; quote: string; content_hash: string }
+}
+
+export function reviewContradiction(meta: Record<string, any>, body: string, input: Record<string, unknown>, at = new Date().toISOString()):
+  { ok: true; review: ManualFactReview } | { ok: false; error: string } {
+  const fc = meta.fact_check as FactCheck | undefined
+  if (!fc || fc.body_hash !== bodyHash(body) || input.expected_body_hash !== fc.body_hash || input.expected_run_at !== fc.ran_at || input.expected_sources_hash !== sourcesHash(meta))
+    return { ok: false, error: 'The article, sources or checker run changed. Read the current evidence before reviewing.' }
+  if (input.decided_by !== 'Krish' || typeof input.said !== 'string' || !input.said.trim() || typeof input.reason !== 'string' || !input.reason.trim())
+    return { ok: false, error: 'Manual review requires Krish, his exact approval words, and the evidence-based reason.' }
+  const claim = fc.claims.find(c => c.sentence === input.sentence && c.verdict === 'contradicted')
+  if (!claim) return { ok: false, error: 'Name one exact contradicted sentence from this checker run.' }
+  const material = readMaterials(meta).find(m => m.id === input.material_id)
+  const quote = typeof input.quote === 'string' ? input.quote.trim() : ''
+  if (!material?.verbatim || !material.url?.startsWith('https://') || !quote || !material.content?.includes(quote))
+    return { ok: false, error: 'Evidence must quote an existing verbatim filed source with its HTTPS source URL.' }
+  const values = { sentence: claim.sentence, decided_by: 'Krish' as const, said: input.said.trim(), reason: input.reason.trim(), body_hash: fc.body_hash,
+    run_at: fc.ran_at, sources_hash: sourcesHash(meta), original_claim: structuredClone(claim),
+    evidence: { material_id: material.id, url: material.url, quote, content_hash: bodyHash(material.content) } }
+  return { ok: true, review: { ...values, at, id: bodyHash(JSON.stringify(values)) } }
+}
+
+export function activeManualReviews(meta: Record<string, any>): ManualFactReview[] {
+  const fc = meta.fact_check as FactCheck | undefined
+  if (!fc || !Array.isArray(meta.fact_manual_reviews)) return []
+  return meta.fact_manual_reviews.filter((r: ManualFactReview) => {
+    if (!r || r.decided_by !== 'Krish' || !r.said || !r.reason || !r.evidence || r.body_hash !== fc.body_hash || r.run_at !== fc.ran_at || r.sources_hash !== sourcesHash(meta)) return false
+    const claim = fc.claims.find(c => c.sentence === r.sentence && c.verdict === 'contradicted')
+    const material = readMaterials(meta).find(m => m.id === r.evidence.material_id)
+    return !!claim && JSON.stringify(claim) === JSON.stringify(r.original_claim) && material?.verbatim === true && material.url === r.evidence.url
+      && !!r.evidence.quote && !!material.content?.includes(r.evidence.quote) && bodyHash(material.content) === r.evidence.content_hash
+  })
+}
+
+export function effectiveBlocking(meta: Record<string, any>): CheckedClaim[] {
+  const reviewed = new Set(activeManualReviews(meta).map(r => r.sentence))
+  return stillBlocking(meta.fact_check).filter(c => !reviewed.has(c.sentence))
+}
 export const PASSING: ReadonlySet<ClaimVerdict> = new Set(['verified', 'verified_on_file', 'verified_web'])
 
 /** Krish's confidence in the piece's own prediction is his judgement, never a
@@ -535,7 +587,7 @@ export function gateStatus(meta: Record<string, any> | null, body: string): { ok
   if (!fc.passed && fc.unchecked && fc.unchecked === fc.blocking) return { ok: false, reason: `${fc.unchecked} claim${fc.unchecked === 1 ? ' is' : 's are'} still to check. Run the fact check again: what passed is kept.` }
   // Claims a run left unchecked are a count, never in claims, so a sign-off
   // can never cover one.
-  const left = fc.passed ? 0 : fc.signed_off?.length ? stillBlocking(fc).length + (fc.unchecked || 0) : fc.blocking
+  const left = fc.passed ? 0 : fc.signed_off?.length || activeManualReviews(meta || {}).length ? effectiveBlocking(meta || {}).length + (fc.unchecked || 0) : fc.blocking
   if (left) return { ok: false, reason: `${left} claim${left === 1 ? '' : 's'} failed the fact check. Fix or cut them, then run it again, or Krish signs them off in his own words.` }
   return { ok: true, reason: null }
 }
