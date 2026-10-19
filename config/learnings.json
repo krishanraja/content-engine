@@ -377,7 +377,7 @@
    "why": "A cloud session stopped on a missing licence file for a track he approved on 12 October, and raised it again, the fifth time the same licence had come up.",
    "means": "A track's licence is checked once, when the track is new. A track Krish approved (approved_on in config/music-library.json) is never held up or asked about for its licence again.",
    "status": "encoded",
-   "enforced": [
+   "encoded": [
     {
      "file": "scripts/quick-edit/music.py",
      "contains": "the music license issue has been sorted 4 times before",
