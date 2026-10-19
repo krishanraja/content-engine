@@ -69,4 +69,8 @@ Fresh source read: [OpenAI API changelog](https://developers.openai.com/api/docs
 
 No free verdict-correction action exists in the current fact-check API: GET reads, sign_off excludes contradicted claims, and the remaining POST path runs a paid check. Do not silently patch fact_check metadata or weaken the contradiction guard. Prepare a dated primary-source excerpt and obtain explicit approval before any further paid run. Last measured run: $0.35, an estimate for comparison, not a hard cap or guaranteed price.
 
-The dated source excerpt has now been filed as material `c5ac2492-10cc-4448-88df-af86bd102bdb`, with all earlier materials retained and exact content read back. Free precheck: 72 reusable sentences, 14 fresh. `dated-source-receipt.json` holds the source, digest and readback. A request for one fifth paid run capped at 14 fresh sentences is pending; none has started.
+The dated source excerpt has now been filed as material `c5ac2492-10cc-4448-88df-af86bd102bdb`, with all earlier materials retained and exact content read back. Free precheck: 72 reusable sentences, 14 fresh. `dated-source-receipt.json` holds the source, digest and readback. Krish declined that fifth run: "Keep the videos in review; do not spend more". None has started.
+
+## Final review decision
+
+Krish declined a fifth paid run: "Keep the videos in review; do not spend more". Both cuts remain review copies. No additional paid fact check, posting, gate override, or Video-complete record is authorised. Ten of the eleven listed claim entries have recorded sign-off; one contradicted-category entry remains blocked despite the dated primary-source evidence. Next work is unpaid diagnosis or review, with any new paid action requiring fresh explicit approval.

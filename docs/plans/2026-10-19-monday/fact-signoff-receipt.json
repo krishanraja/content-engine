@@ -96,5 +96,7 @@
     "ok": false,
     "reason": "1 claim failed the fact check. Fix or cut them, then run it again, or Krish signs them off in his own words."
   },
-  "remaining_api_refusal": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\""
+  "remaining_api_refusal": "OpenAI, 21 August: \"GPT-5.6 Sol now costs $4 per million input tokens and $20 per million output tokens.\"",
+  "subsequent_decision": "Keep the videos in review; do not spend more",
+  "fifth_run_started": false
 }

@@ -29,6 +29,8 @@ Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
 
 ### Monday 19 October: Codex video preparation
 
+Krish declined a fifth paid run: "Keep the videos in review; do not spend more". Both cuts remain review copies. No additional paid fact check, posting, gate override, or Video-complete record is authorised. Ten of the eleven listed claim entries have recorded sign-off; one contradicted-category entry remains blocked despite the dated primary-source evidence. Next work is unpaid diagnosis or review, with any new paid action requiring fresh explicit approval.
+
 Krish approved the exact listed entries: "Sign off the listed entries on that basis". The authenticated API saved nine new distinct sign-offs covering ten claim entries, preserving the three prior sign-offs. A fresh GET confirms one remaining blocking claim: the OpenAI 21 August $4/$20 sentence is labelled contradicted, which signOff refuses by design. The live OpenAI changelog explicitly supplies that date and those promotional prices; the independent checker cited older launch prices. No fifth paid run, article edit, or gate override was made. Evidence and the exact receipt: `fact-signoff-receipt.json` and `fact-review.md` in the Monday plan.
 
 Both Monday takes are recorded against the current signed-off scripts and downloaded with verified hashes. Production is isolated from Friday's repair checkout. See `docs/production/2026-10-19-monday-video.md` for source measurements, stabilisation judgment and the explicit visual quality requirements. The current publish board is https://content.krishraja.com/board/2026-10-19; the completed web cutover on main supersedes historical artifact routing elsewhere on this editorial branch.
