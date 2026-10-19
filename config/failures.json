@@ -694,6 +694,25 @@
      "how": "the Claude Code copy"
     }
    ]
+  },
+  {
+   "id": "script-line-he-could-not-narrate",
+   "on": "2026-10-19",
+   "krish": "I also found that the first reuse is really difficult to narrate. I felt like I couldn't explain what that meant. ... What does that even mean? How do we gate that for the next time?",
+   "what": "The 5-minute script explained a mechanism (Google charging less for a reread policy document) that passed the script check and two listener read-backs, because listeners only report what loses them. Nobody checked whether the presenter could explain each line if stopped, and narrative v1 had put how reuse works out of scope before v2 brought it back.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "apps/control-plane/api/_video.ts",
+     "contains": "You are the presenter. You will read this video script aloud to camera",
+     "how": "reader C, the narrator, runs on every script the engine writes; the read-back passes only when C can explain every sentence"
+    },
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "Reader C, the narrator, word for word",
+     "how": "the Scripts step requires the narrator reader for every script a session sends"
+    }
+   ]
   }
  ]
 }

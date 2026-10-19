@@ -668,6 +668,31 @@
    "means": "A follow.the.money piece about one firm's price puts it beside the other big AI firms' moves from their own pages, and ends on the durable rule a business owner can apply whatever the next offer is.",
    "status": "open",
    "encoded": []
+  },
+  {
+   "id": "near-term-backed-predictions",
+   "on": "2026-10-19",
+   "krish": "I changed the prediction to 95% by the end of this year, 2026 ... I'm done with sitting on the fence and putting predictions a year away: 55%. There's no point in that. Given how this article reads it's pretty obvious someone's going to shift their price again in the next month.",
+   "why": "House rule SHARP_PREDICTION told writers to avoid the obvious outcome and give a bolder call a lower number, so calls drifted to long shots a year out at 15 to 55%, which read as fence-sitting and help no reader decide anything.",
+   "means": "Every prediction is what we believe happens next, due within about three months (92 days) and backed at 80% or more. Both are blocking publish checks.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "apps/control-plane/api/_publishChecks.ts",
+     "contains": "export const CALL_HORIZON_DAYS = 92",
+     "how": "CALL_HORIZON blocks a call due more than 92 days out or already past"
+    },
+    {
+     "file": "apps/control-plane/api/_publishChecks.ts",
+     "contains": "export const CLEAR_STANCE_AT = 80",
+     "how": "CLEAR_STANCE now blocks below 80%"
+    },
+    {
+     "file": "apps/control-plane/api/_houseRules.ts",
+     "contains": "A near-term prediction we back, that a reader can check",
+     "how": "house rule SHARP_PREDICTION, read by the writers"
+    }
+   ]
   }
  ]
 }

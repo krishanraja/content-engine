@@ -81,3 +81,14 @@ all this." Research: `research-mon-rivals.md`.
    shop. This changes house rule R7: his yes is in his words above.
 
 Signed by Krish (v2): "agree on all 4", 2026-10-19; prediction A, "A is fine", 2026-10-19.
+
+## Changed by Krish while recording (19 Oct, ~16:30 his time)
+
+1. **Prediction:** he said it as 95%, by the end of this year, 2026 (the script and Teleprompter say "by the end of
+   March 2027 ... 55%"). His words: "I changed the prediction to 95% by the end of this year, 2026, in my scripts."
+   The article's prediction paragraph, the fact gate and the titles round follow his take, not the script.
+2. **The reuse passage** ("The first is reuse. Picture your customer service team's AI assistant. Before it answers
+   each customer, it rereads the same long policy document. Google spots that repeat, and charges 95% less for
+   it."): "really difficult to narrate. I felt like I couldn't explain what that meant." His take of that passage
+   is whatever he said; the edit and the article follow the take (`narration_diff.py`). Narrative v1 had "how the
+   reuse works inside" out of scope; v2 brought it back without a narrator test. The engine now has one (reader C).

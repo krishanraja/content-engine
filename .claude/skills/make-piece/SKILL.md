@@ -178,8 +178,14 @@ rewritten and checked again from the top.
    Pretend you run the finance or operations team at a 200-person company. You use AI tools at work but know nothing about how they are built or priced. Someone reads you this video script out loud, once. Which words or sentences would you not understand, would make you lose the thread, or would feel like they talk down to you? List each one exactly as it is said, or say "nothing" if you followed all of it. Then tell the whole video back in three sentences.
    ```
 
+   Reader C, the narrator, word for word (Krish, 2026-10-19, of a line he could not say on camera: "I felt like I couldn't explain what that meant. ... How do we gate that for the next time?"):
+
+   ```
+   You are the presenter. You will read this video script aloud to camera, to leaders of medium-sized companies, and a viewer may stop you after any sentence and ask "what does that mean, and why does it matter to me?" Go through it sentence by sentence. List every sentence you could not answer that for in one plain sentence of your own, exactly as it is written, with what is missing: the thing it refers to, the step it skips, or why it matters to the viewer. Say "nothing" if you could explain every sentence. Then retell the whole video in three sentences.
+   ```
+
    Give each the script's spoken words after its prompt. The script passes
-   only when both say "nothing" lost them, and both retellings match the
+   only when all three say "nothing" (A and B lost nothing; C could explain every sentence), and both retellings match the
    script's point: its one question and the answer it gives. Anything
    either lists is rewritten in plainer words, then steps 3 and 4 again with
    two new readers. A script the engine wrote carries its own two readers'

@@ -162,7 +162,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'CLEAR_STANCE', name: 'Take a clear stance',
-    text: 'Our prediction takes a clear stance. Back the outcome we believe with a confident number; a confidence of 60% or so reads as sitting on the fence.',
+    text: 'Our prediction takes a clear stance. Back the outcome we believe with a confident number, 80% or more; anything lower reads as sitting on the fence, and the publish check refuses it (Krish, 2026-10-19).',
     said: "In general I think I'd rather take a clearer stance than sit on the fence all the time and say 60%.",
     on: '2026-09-26', source: 'setting piece 2 at 75% instead of the 60% proposed', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass', 'publish_check'],
@@ -404,10 +404,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
-    id: 'SHARP_PREDICTION', name: 'A prediction a reader can check, and that is not already happening',
-    text: 'Every prediction names one specific event that a reader can check on a stated date. It must not be under way already in the piece\'s own evidence, and it must not be the safe, obvious outcome. Its confidence is honest: a bolder call carries a lower number. A vague trend ("more deals", "more options") is never a prediction.',
-    said: 'The current one feels pretty obvious that its going to happen in hindsight. (Asked which prediction Monday\'s piece should make, he chose: "Keep the current one. Leave the article and videos as they are, so they match, and post today. Use the sharper style of prediction from Wednesday.")',
-    on: '2026-10-12', source: 'chat, on Monday\'s prediction (Universal or Sony make a deal with Suno by 31 December 2027, 70%)', status: 'live',
+    id: 'SHARP_PREDICTION', name: 'A near-term prediction we back, that a reader can check',
+    text: 'Every prediction names one specific event that a reader can check on a stated date no more than about three months away (92 days; the publish check CALL_HORIZON refuses a later one). It is what we believe will happen next, given the piece\'s own evidence, backed at 80% or more (CLEAR_STANCE refuses less). It must not already have happened. Never a long shot pushed a year out to look bold, and never a middling number. A vague trend ("more deals", "more options") is never a prediction.',
+    said: 'The current one feels pretty obvious that its going to happen in hindsight. (2026-10-12.) Then, 2026-10-19, after changing Monday\'s call to 95% by the end of 2026 as he recorded it: "I\'m done with sitting on the fence and putting predictions a year away: 55%. There\'s no point in that. Given how this article reads it\'s pretty obvious someone\'s going to shift their price again in the next month."',
+    on: '2026-10-19', source: 'chat, on Monday\'s prediction (Universal or Sony make a deal with Suno by 31 December 2027, 70%)', status: 'live',
     stages: ['write', 'judge_draft', 'final_pass'],
   },
   {
