@@ -1,0 +1,14 @@
+{
+  "method": "Decode both final AAC tracks sequentially to signed 16-bit PCM and hash all samples",
+  "reference": {
+    "name": "why-so-many-ais-short-repair-19oct-v3-9x16.mp4",
+    "sha256": "6f72949f762bafba6b999683800254767662ece87a24a0550d047db19d67dc6c",
+    "decoded_audio": "SHA256=ee1cad6abeb25901a82fac93d4d82ffd9967a6f54840fa23b93e19d4dcf17605"
+  },
+  "video": {
+    "name": "why-so-many-ais-short-repair-19oct-v6-9x16.mp4",
+    "sha256": "373194ee309a9e531fc83bf89408d97e0dbcf536cae4c90e278a9b34debc2fef",
+    "decoded_audio": "SHA256=ee1cad6abeb25901a82fac93d4d82ffd9967a6f54840fa23b93e19d4dcf17605"
+  },
+  "identical": true
+}

@@ -436,6 +436,8 @@ describe('Codex-independent runner', () => {
     await expect(readFile(conflictPath, 'utf8')).resolves.toContain('legacy_receipt_missing_source_cursor')
   })
 
+  // Nine isolated on-disk authentication scenarios, including Windows junctions.
+  // Match the adjacent crash-phase test's budget; keep every fail-closed assertion.
   it('strictly authenticates every retained claim and acknowledged receipt before network work', async () => {
     const scenarios = ['unexpected_claim', 'renamed_claim', 'tampered_claim', 'unexpected_acknowledged', 'renamed_acknowledged_directory', 'linked_acknowledged_directory', 'renamed_acknowledged_receipt', 'tampered_acknowledged_receipt', 'mismatched_idempotency'] as const
     for (const scenario of scenarios) {
@@ -481,7 +483,7 @@ describe('Codex-independent runner', () => {
       await rm(runtimeRoot, { recursive: true, force: true })
       runtimeRoot = ''
     }
-  })
+  }, 15_000)
 
   // Seven crash phases, each with its own temporary runtime on disk. It takes
   // about 130ms on Linux; on the Windows CI runner, with the whole suite running

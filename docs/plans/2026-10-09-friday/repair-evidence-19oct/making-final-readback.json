@@ -1,0 +1,278 @@
+{
+  "ok": true,
+  "idea_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+  "state": "review",
+  "lane_slot": "mind_the_gap",
+  "making": {
+    "by": "Codex",
+    "pack": {
+      "files": 29,
+      "folder": "2026-10-16 Fri mind.the.gap - Why so many AIs",
+      "sent_at": "2026-10-19T11:06:10.695253Z",
+      "headline": "Why Claude and ChatGPT launches keep speeding up, and who will decide how hard your AI thinks",
+      "packed_at": "2026-10-19T11:06:10.695219Z"
+    },
+    "session": {
+      "by": "Claude Code",
+      "url": "https://claude.ai/code/session_01Q7Qi1wxgY8jEtZRqezdx7R",
+      "started_at": "2026-10-10T20:38:10.969Z"
+    },
+    "descript": {
+      "cuts": {
+        "long": {
+          "by": "Claude Code",
+          "media": "Script 2026-10-12 c767efb.mp4",
+          "sent_at": "2026-10-12T10:31:16Z",
+          "project_id": "36040413-966a-417c-90a2-b2667f5ca4ef",
+          "known_media": [
+            "Script 2026-10-12 c767efb.mp4",
+            "Record here 3-minute slate.mp4"
+          ],
+          "record_link": "https://web.descript.com/36040413-966a-417c-90a2-b2667f5ca4ef/d3f1e",
+          "script_link": "https://web.descript.com/36040413-966a-417c-90a2-b2667f5ca4ef/a1b03",
+          "script_sha256": "c767efbecea962549dfa8a45b2ad869b68d152fd62422fde3ec0907f06aa03b3",
+          "record_composition": "d3f1eeaf-35ed-4ed7-a607-62f509ee253d",
+          "script_composition": "a1b03023-61ee-4c1a-bf66-352b11f13f81"
+        },
+        "short": {
+          "by": "Claude Code",
+          "media": "Script 2026-10-12 de706a8.mp4",
+          "sent_at": "2026-10-12T10:31:16Z",
+          "project_id": "a8be9a54-1247-41ad-ae9a-aebe3ef22fa1",
+          "known_media": [
+            "Script 2026-10-12 de706a8.mp4",
+            "Record here 90-second slate.mp4"
+          ],
+          "record_link": "https://web.descript.com/a8be9a54-1247-41ad-ae9a-aebe3ef22fa1/c9778",
+          "script_link": "https://web.descript.com/a8be9a54-1247-41ad-ae9a-aebe3ef22fa1/7b38e",
+          "script_sha256": "de706a85f14fb3fe410737055acf46a594ef85b807af09a84ff77de1f997b289",
+          "record_composition": "c9778206-cc1e-4e45-b9c6-f161d34c707c",
+          "script_composition": "7b38e479-2bf0-4b65-a328-c686f746a5a2"
+        }
+      },
+      "drive_id": "d8b77ba9-0c95-4b7b-8964-2f5b888c0b78"
+    },
+    "workroom": {
+      "at": "2026-10-10T20:38:12.285Z",
+      "url": "https://claude.ai/artifact/MmaKvtHTHUYbSY9JEiCBAn"
+    },
+    "recordings": [
+      {
+        "at": "2026-10-16T23:48:42.614Z",
+        "cut": "long",
+        "path": "recordings/ee91ab41bc6ff0e25c2d7c2039c0bd55131ce7630110668c826e191605f0fd9f.mp4",
+        "seconds": 858,
+        "script_sha256": "954547083d0c0c83231fefc23f3a51920e47a95d61fc9e69202f1728f65e102d"
+      },
+      {
+        "at": "2026-10-17T08:13:08.341Z",
+        "cut": "short",
+        "path": "recordings/f5401564f492d7f8299335dec4a8499af15a4977e3d0a82419704d34895a4e7f.mp4",
+        "seconds": 92,
+        "script_sha256": "0ed4a41089975ac391539026302bc94e7cc7954b2f7903eecd23827db4db9818"
+      }
+    ],
+    "started_at": "2026-10-10T20:38:10.969Z",
+    "updated_at": "2026-10-19T18:00:06.284Z",
+    "visual_gate": {
+      "passed": true,
+      "problems": [],
+      "checked_at": "2026-10-19T11:05:44.282467Z"
+    },
+    "script_check": {
+      "cuts": [
+        "long",
+        "short"
+      ],
+      "hashes": {
+        "long": "954547083d0c0c83231fefc23f3a51920e47a95d61fc9e69202f1728f65e102d",
+        "short": "0ed4a41089975ac391539026302bc94e7cc7954b2f7903eecd23827db4db9818"
+      },
+      "passed": true,
+      "problems": [
+        "Waived on Krish's own words (Krish, 2026-10-17, to the sign-off sheet whose 90-second choice A was \"Record the shorter version: only your words, about 1:22\" and which said \"Reply all yes to take my first pick everywhere, which means ... 90-second A\": \"Fine with everything except for 'soon you won't pick your AI.'\"): the story check below found these, and he put the words through as they are",
+        "2026-10-09-script-deep-v6.md: NOT READY  docs/plans/2026-10-09-script-deep-v6.md",
+        "2026-10-09-script-deep-v6.md: - it does not open with its series line, word for word, said first and before the hook: \"I've been keeping a beady eye on what's coming with AI, before everyone notices. I'm Krish.\" (house rule SERIES_OPENER, Krish, 2026-10-12). It opens: \"I've been using all the well-known AI apps every day for years now. And I don't know about you, but I feel like the amou\"",
+        "2026-10-09-script-deep-v6.md: - it does not open on a question: say, in the first beat, the one question the script answers",
+        "2026-10-09-script-deep-v6.md: - the deep cut runs 1810 spoken words, about 12:04 at an unhurried pace, and Krish asked for the week's deep video of about 8 to 12 minutes: cut it to 1200 to 1700 words (house rule DEEP_CUT)",
+        "2026-10-09-script-deep-v6.md: - 5 spoken sentences over 20 words, the longest 42 (\"Check out next week's episodes where we deep dive under the hood of the emerging AI produc\"): split each into two (house rule R7, reading age 12)",
+        "2026-10-09-script-deep-v6.md: WARN the beat after the series line does not open the way Krish would: say what you have been doing with the thing, why it matters, and that you wanted to break it down (house rule PERSONAL_INTRO; his line is in config/golden-examples.json; a warning, not a refusal)",
+        "2026-10-09-script-deep-v6.md: WARN only 18% of its sentences open with So, And, But, Now or See; he opens about one in three that way in every take (So before a result or the prediction, \"Now,\" before a new step or a question): say the link in the opening word (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)",
+        "2026-10-09-script-deep-v6.md: WARN \"Here's my bet.\" stands alone; he never says a prediction label on its own: run it into the claim, \"So my prediction is that...\" (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)",
+        "2026-10-09-script-deep-v6.md: WARN write his words: \"no one\", not \"nobody\" (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)",
+        "2026-10-09-script-deep-v6.md: WARN write his words: \"I reckon\", not \"my bet\" or \"I bet\" (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)",
+        "2026-10-09-script-90s-v7.md: NOT READY  docs/plans/2026-10-09-script-90s-v7.md",
+        "2026-10-09-script-90s-v7.md: - it does not open with its series line, word for word, said first and before the hook: \"I've been keeping a beady eye on what's coming with AI, before everyone notices. I'm Krish.\" (house rule SERIES_OPENER, Krish, 2026-10-12). It opens: \"Something weird is happening with ChatGPT and Claude. It feels like there's a new model release EVERY DAY.\"",
+        "2026-10-09-script-90s-v7.md: - it does not open on a question: say, in the first beat, the one question the script answers",
+        "2026-10-09-script-90s-v7.md: - 1 spoken sentence over 20 words, the longest 21 (\"In a tough reasoning test, the newest Claude Opus in its lowest gear lost to the older one\"): split each into two (house rule R7, reading age 12)",
+        "2026-10-09-script-90s-v7.md: - it uses words a 12-year-old does not know, with no plain words for them in the same sentence: \"model\" in \"It feels like there's a new model release EVERY DAY.\". Use an everyday word, or say what it means right there (house rule R7)",
+        "2026-10-09-script-90s-v7.md: WARN the beat after the series line does not open the way Krish would: say what you have been doing with the thing, why it matters, and that you wanted to break it down (house rule PERSONAL_INTRO; his line is in config/golden-examples.json; a warning, not a refusal)",
+        "2026-10-09-script-90s-v7.md: WARN only 14% of its sentences open with So, And, But, Now or See; he opens about one in three that way in every take (So before a result or the prediction, \"Now,\" before a new step or a question): say the link in the opening word (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)",
+        "2026-10-09-script-90s-v7.md: WARN write his words: \"I reckon\", not \"my bet\" or \"I bet\" (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)"
+      ],
+      "read_back": {
+        "long": {
+          "at": "2026-10-16T21:43:56.038713Z",
+          "by": "Claude Code",
+          "found": "approved by Krish",
+          "readers": [],
+          "krish_words": "Krish, 2026-10-16: edited the scripts again ... push these to teleprompter. Then: just put them in teleprompter, and then if I go over 90sec, just speed the video up a bit in post",
+          "script_sha256": "954547083d0c0c83231fefc23f3a51920e47a95d61fc9e69202f1728f65e102d"
+        },
+        "short": {
+          "at": "2026-10-17T06:57:11.611546Z",
+          "by": "Claude Code",
+          "found": "approved by Krish",
+          "readers": [],
+          "krish_words": "Krish, 2026-10-17, to the sign-off sheet whose 90-second choice A was \"Record the shorter version: only your words, about 1:22\": \"Fine with everything except for 'soon you won't pick your AI.'\"",
+          "script_sha256": "0ed4a41089975ac391539026302bc94e7cc7954b2f7903eecd23827db4db9818"
+        }
+      },
+      "changed_at": {
+        "long": "2026-10-16T21:43:40.654834Z",
+        "short": "2026-10-17T06:57:03.767821Z"
+      },
+      "checked_at": "2026-10-17T06:57:03.767821Z"
+    },
+    "teleprompter": {
+      "cuts": {
+        "long": {
+          "by": "Claude Code",
+          "title": "Fri 16 Oct - 3-minute - Soon you won't pick your AI",
+          "sent_at": "2026-10-16T21:44:22.148986Z",
+          "script_id": "185F739E-733F-43B9-B5B2-66846CB5EC44",
+          "script_sha256": "954547083d0c0c83231fefc23f3a51920e47a95d61fc9e69202f1728f65e102d"
+        },
+        "short": {
+          "by": "Claude Code",
+          "title": "Fri 16 Oct - 90-second - Soon you won't pick your AI",
+          "sent_at": "2026-10-17T06:57:35.519445Z",
+          "script_id": "1165370C-68A6-444E-88D5-A326A131E58C",
+          "script_sha256": "0ed4a41089975ac391539026302bc94e7cc7954b2f7903eecd23827db4db9818"
+        }
+      },
+      "folder_id": "DD28154B-B6D1-47DB-803A-79410D83196D",
+      "folder_name": "Fri 16 Oct mind.the.gap - Soon you won't pick your AI"
+    },
+    "video_assets": [
+      {
+        "at": "2026-10-19T11:05:23.427Z",
+        "cut": "short",
+        "url": "https://drive.google.com/file/d/1mIBNeWzeEoUz-yf4anSXNah8xd085Vwo/view",
+        "name": "Short cut, 9:16",
+        "path": "3 Video/Why so many AIs - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+        "music": "no-curves-instrumental",
+        "seconds": 87,
+        "thumbnail": {
+          "url": "https://drive.google.com/file/d/1QJWj-ACyklbLZ25XMMFNXqt-87jTxAwn/view",
+          "path": "3 Video/Why so many AIs - tall 9x16 - thumbnail.jpg"
+        }
+      },
+      {
+        "at": "2026-10-19T11:03:58.286Z",
+        "cut": "long",
+        "url": "https://drive.google.com/file/d/1nQl3iHzUtXBgHXBzyLWl-igdp1lfonAL/view",
+        "name": "Deep cut, 16:9",
+        "path": "3 Video/Why so many AIs - wide 16x9 - YouTube, Substack.mp4",
+        "music": "no-curves-instrumental",
+        "seconds": 821,
+        "thumbnail": {
+          "url": "https://drive.google.com/file/d/1YVFa2P8jX9t3Om7H4AWLpJCm1bg6OVnR/view",
+          "path": "3 Video/Why so many AIs - wide 16x9 - thumbnail.jpg"
+        }
+      },
+      {
+        "at": "2026-10-19T17:37:46.997Z",
+        "cut": "short",
+        "url": "https://drive.google.com/file/d/18R8c4y2HfmFHpccaAlG7PAJS02IbtDzo/view",
+        "name": "Short cut 9:16",
+        "path": "3 Posts/2026-10-16 Fri mind.the.gap - Why so many AIs/3 Video/Why so many AIs - short 9x16 - repaired 19 Oct.mp4",
+        "music": "no-curves-instrumental",
+        "seconds": 88,
+        "thumbnail": {
+          "url": "https://drive.google.com/file/d/1QJWj-ACyklbLZ25XMMFNXqt-87jTxAwn/view",
+          "path": "3 Video/Why so many AIs - tall 9x16 - thumbnail.jpg"
+        }
+      },
+      {
+        "at": "2026-10-19T18:00:06.284Z",
+        "cut": "long",
+        "url": "https://drive.google.com/file/d/1cfQ5LO8NsOoRNlmwv_Ac_hsxs0yElB52/view",
+        "name": "Deep cut, 16:9",
+        "path": "3 Posts/2026-10-16 Fri mind.the.gap - Why so many AIs/3 Video/Why so many AIs - deep 16x9 - repaired 19 Oct.mp4",
+        "music": "no-curves-instrumental",
+        "seconds": 817,
+        "thumbnail": {
+          "url": "https://drive.google.com/file/d/1YVFa2P8jX9t3Om7H4AWLpJCm1bg6OVnR/view",
+          "path": "3 Video/Why so many AIs - wide 16x9 - thumbnail.jpg"
+        }
+      }
+    ],
+    "publish_manager": {
+      "at": "2026-10-18T16:58:16.640Z",
+      "url": "https://drive.google.com/file/d/1UruvYHRnxfw-OcTWzUy1i8embMQ4Xj_m/view"
+    }
+  },
+  "steps": [
+    {
+      "key": "workroom",
+      "label": "Workroom",
+      "state": "done",
+      "at": "2026-10-10T20:38:12.285Z",
+      "link": "https://claude.ai/artifact/MmaKvtHTHUYbSY9JEiCBAn",
+      "owner": "Claude"
+    },
+    {
+      "key": "draft",
+      "label": "Fact-checked draft",
+      "state": "failed",
+      "at": "2026-10-18T14:43:11.671Z",
+      "note": "the fact gate did not pass",
+      "owner": "Claude"
+    },
+    {
+      "key": "visual_gate",
+      "label": "Visual gate",
+      "state": "done",
+      "at": "2026-10-19T11:05:44.282467Z",
+      "owner": "Claude"
+    },
+    {
+      "key": "scripts",
+      "label": "Scripts",
+      "state": "done",
+      "at": "2026-10-17T06:57:03.767821Z",
+      "note": "long and short; in Teleprompter",
+      "owner": "Claude"
+    },
+    {
+      "key": "pack",
+      "label": "Pack in Drive",
+      "state": "done",
+      "at": "2026-10-19T11:06:10.695253Z",
+      "note": "2026-10-16 Fri mind.the.gap - Why so many AIs",
+      "owner": "Claude"
+    },
+    {
+      "key": "record",
+      "label": "Recorded",
+      "state": "done",
+      "at": "2026-10-17T08:13:08.341Z",
+      "owner": "Krish"
+    },
+    {
+      "key": "video",
+      "label": "Video assets",
+      "state": "done",
+      "at": "2026-10-19T18:00:06.284Z",
+      "note": "4 files",
+      "owner": "Codex"
+    },
+    {
+      "key": "publish",
+      "label": "Publish",
+      "state": "todo",
+      "owner": "Krish"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "video_sha256": "7c2d20562ba99298aac6e41bac573deb5e9bf34c47f83e7f0bee67aad1775925",
+  "output_width": 1080,
+  "method": "Foreground pixel row extent inside isolated essential text crops in decoded final native frames; minimum three matching pixels per row",
+  "samples": [
+    {
+      "label": "opening heading",
+      "at_seconds": 4,
+      "crop": [
+        50,
+        265,
+        1015,
+        400
+      ],
+      "foreground_height_px": 86
+    },
+    {
+      "label": "actual Opus label",
+      "at_seconds": 4,
+      "crop": [
+        590,
+        495,
+        1000,
+        596
+      ],
+      "foreground_height_px": 70
+    },
+    {
+      "label": "Sally detail",
+      "at_seconds": 31,
+      "crop": [
+        50,
+        750,
+        1010,
+        865
+      ],
+      "foreground_height_px": 76
+    },
+    {
+      "label": "model comparison detail",
+      "at_seconds": 45,
+      "crop": [
+        50,
+        750,
+        1010,
+        865
+      ],
+      "foreground_height_px": 80
+    },
+    {
+      "label": "forecast heading line 1",
+      "at_seconds": 61,
+      "crop": [
+        50,
+        130,
+        1000,
+        225
+      ],
+      "foreground_height_px": 85
+    },
+    {
+      "label": "confidence heading",
+      "at_seconds": 73,
+      "crop": [
+        50,
+        130,
+        1000,
+        230
+      ],
+      "foreground_height_px": 86
+    }
+  ],
+  "scope": "Representative native text measurements; complete frame samples reviewed separately"
+}

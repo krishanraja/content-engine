@@ -1,0 +1,70 @@
+{
+  "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+  "cut": "short",
+  "processing_source_sha256": "6a43e6410fdc5d565f3e9c6e3433441817bf8664eec018d981eff6c84c4a244e",
+  "adjudications": [
+    {
+      "source_window_seconds": [
+        65,
+        74
+      ],
+      "source_phrase_seconds": [
+        70.32,
+        71.64
+      ],
+      "recognizer_text": "Maybe 5% sure of this",
+      "resolved_text": "I'm 85% sure of this",
+      "resolved_by": "Krish",
+      "resolved_on": "2026-10-19",
+      "method": "Human listening check of the presented nine-second processing-source audio clip",
+      "question": "In the nine-second source clip above, what do you hear immediately before sure of this?",
+      "answer": "I'm 85% sure of this",
+      "scope": "Caption and confidence-card wording only; this is not whole-video listening or acceptance."
+    },
+    {
+      "source_window_seconds": [
+        24,
+        34
+      ],
+      "recognizer_text": "tools are a manual car",
+      "resolved_text": "tools are like a manual car",
+      "resolved_by": "Codex",
+      "method": "Independent medium.en source and first-final recognition plus bounded large-v3 source recognition agree on like.",
+      "evidence": "short-sally-source-large-v3.json",
+      "scope": "Caption correction; source audio retained."
+    },
+    {
+      "source_window_seconds": [
+        24,
+        34
+      ],
+      "recognizer_text": "It\u2019s a picture of a business owner",
+      "resolved_text": "So picture a business owner",
+      "resolved_by": "Codex",
+      "method": "Bounded large-v3 source recognition; medium.en independently supports So picture but has uncertain filler. Larger source result supplies the complete phrase.",
+      "evidence": "short-sally-source-large-v3.json",
+      "scope": "Caption correction, pending finished review; does not assert full listening."
+    }
+  ],
+  "timing_review": {
+    "evidence": "short.adjudicated.words.json",
+    "restored_earlier_boundaries": [
+      {
+        "word": "Her",
+        "start": 29.98
+      },
+      {
+        "word": "I'm 85% (raw recognition: Maybe)",
+        "start": 70.32
+      }
+    ],
+    "reason": "Independent source recognition marks earlier speech than the first transcript; preserve full possible word spans. Candidate v2 is superseded and must not be filed."
+  },
+  "deep_cut_removal_review": {
+    "restored": [
+      "sounds after and she",
+      "most of us after And"
+    ],
+    "reason": "These are spoken meaning-bearing words; removing them deletes a verb or subject. Other removals remain explicit and re-resolved."
+  }
+}

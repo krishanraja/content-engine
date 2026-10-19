@@ -1,0 +1,169 @@
+{
+  "video_sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9",
+  "starts": [
+    30.0,
+    180.0,
+    330.0,
+    480.0,
+    630.0,
+    780.0
+  ],
+  "seconds": 6.0,
+  "speech_span": [
+    3.5,
+    797.5
+  ],
+  "syncnet_revision": "907c0b579c2e2d83f0eae1b2ac9e720cde4e5623",
+  "model_sha256": "961e8696f888fce4f3f3a6c3d5b3267cf5b343100b238e79b2659bff2c605442",
+  "analysis_resolution_ms": 40,
+  "source_frame_period_ms": 41.666666666666664,
+  "method": "sequential frame-index and decoded sample extraction",
+  "calibrated_this_run": true,
+  "points": [
+    {
+      "at_s": 30.0,
+      "offset_ms": -40,
+      "confidence": 7.3552,
+      "distance": 7.7573,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 160,
+          "confidence": 7.2432,
+          "distance": 7.7935,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -240,
+          "confidence": 7.1796,
+          "distance": 7.9676,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 180.0,
+      "offset_ms": 0,
+      "confidence": 5.047,
+      "distance": 8.6337,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 4.8341,
+          "distance": 8.7084,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -160,
+          "confidence": 4.6963,
+          "distance": 8.899,
+          "error_ms": 40
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 330.0,
+      "offset_ms": 920,
+      "confidence": 0.7492,
+      "distance": 11.1865,
+      "face_detection_rate": 0.9930555555555556,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 0.8086,
+          "distance": 11.0897,
+          "error_ms": 920
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": 960,
+          "confidence": 1.4244,
+          "distance": 10.423,
+          "error_ms": 240
+        }
+      ],
+      "status": "inconclusive"
+    },
+    {
+      "at_s": 480.0,
+      "offset_ms": 0,
+      "confidence": 6.3137,
+      "distance": 8.2431,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 6.1574,
+          "distance": 8.409,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 6.1407,
+          "distance": 8.5082,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 630.0,
+      "offset_ms": 0,
+      "confidence": 4.7786,
+      "distance": 9.4395,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 4.7302,
+          "distance": 9.4729,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 4.8785,
+          "distance": 9.3716,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 780.0,
+      "offset_ms": 0,
+      "confidence": 6.7097,
+      "distance": 8.0523,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 6.8903,
+          "distance": 8.06,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 6.9554,
+          "distance": 8.1833,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    }
+  ],
+  "status": "inconclusive"
+}

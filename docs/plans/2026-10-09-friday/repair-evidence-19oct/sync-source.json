@@ -1,0 +1,215 @@
+{
+  "video_sha256": "ee91ab41bc6ff0e25c2d7c2039c0bd55131ce7630110668c826e191605f0fd9f",
+  "starts": [
+    30.0,
+    120.0,
+    240.0,
+    360.0,
+    480.0,
+    600.0,
+    720.0,
+    780.0
+  ],
+  "seconds": 6,
+  "syncnet_revision": "907c0b579c2e2d83f0eae1b2ac9e720cde4e5623",
+  "model_sha256": "961e8696f888fce4f3f3a6c3d5b3267cf5b343100b238e79b2659bff2c605442",
+  "analysis_resolution_ms": 40,
+  "source_frame_period_ms": 41.666666666666664,
+  "method": "sequential frame-index and decoded sample extraction",
+  "calibrated_this_run": true,
+  "points": [
+    {
+      "at_s": 30.0,
+      "offset_ms": 0,
+      "confidence": 7.0105,
+      "distance": 7.7139,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 6.8427,
+          "distance": 7.8929,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 6.8633,
+          "distance": 7.8508,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 120.0,
+      "offset_ms": 0,
+      "confidence": 6.9415,
+      "distance": 7.5803,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 7.0474,
+          "distance": 7.5768,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 6.8888,
+          "distance": 7.7054,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 240.0,
+      "offset_ms": 0,
+      "confidence": 5.7719,
+      "distance": 8.0384,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 6.06,
+          "distance": 7.8918,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 5.373,
+          "distance": 8.2931,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 360.0,
+      "offset_ms": 0,
+      "confidence": 7.7685,
+      "distance": 7.0738,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 7.6466,
+          "distance": 7.1475,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 7.5763,
+          "distance": 7.1942,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 480.0,
+      "offset_ms": 0,
+      "confidence": 7.8001,
+      "distance": 7.4713,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 7.8357,
+          "distance": 7.4955,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 7.8021,
+          "distance": 7.426,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 600.0,
+      "offset_ms": 0,
+      "confidence": 5.7882,
+      "distance": 8.1623,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 200,
+          "confidence": 5.6947,
+          "distance": 8.2038,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -200,
+          "confidence": 5.6238,
+          "distance": 8.2492,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 720.0,
+      "offset_ms": 40,
+      "confidence": 7.4302,
+      "distance": 7.1747,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 240,
+          "confidence": 6.8811,
+          "distance": 7.4269,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -160,
+          "confidence": 7.2633,
+          "distance": 7.3091,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "at_s": 780.0,
+      "offset_ms": 40,
+      "confidence": 7.3408,
+      "distance": 7.1954,
+      "face_detection_rate": 1.0,
+      "calibration": [
+        {
+          "injected_audio_delay_ms": -200,
+          "offset_ms": 240,
+          "confidence": 7.3935,
+          "distance": 7.3019,
+          "error_ms": 0
+        },
+        {
+          "injected_audio_delay_ms": 200,
+          "offset_ms": -160,
+          "confidence": 7.2395,
+          "distance": 7.2913,
+          "error_ms": 0
+        }
+      ],
+      "status": "pass"
+    }
+  ],
+  "status": "pass"
+}

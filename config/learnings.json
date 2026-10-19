@@ -734,25 +734,52 @@
    "on": "2026-10-19",
    "krish": "on the deeper cut, the audio needs to be able to be heard the entire time, but just really low unless its intro, outro or or chapter card",
    "why": "Long stretches of bare voice felt empty; music should hold the whole piece together without competing with him.",
-   "means": "Every deep cut: the bed plays under all the talk at a very low level and rises for the intro, the outro and each chapter card. Proposed as music_mode 'episode_bed' (fix-plan-19-oct.md section 1); levels are his to confirm. Open until built in music.py.",
-   "status": "open",
-   "encoded": []
+   "means": "Deep cuts can use music_mode episode_bed: continuous low music under speech, lifts at actual chapter-card windows, 0.5-second rise, 0.8-second fall and two-second track crossfades. Krish approved the audition at -31 LUFS under speech and -22 LUFS lifts. Measured music continuity and loudness are delivery gates.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/quick-edit/music.py",
+     "contains": "def continuous_episode_bed",
+     "how": "Builds continuous speech bed with chapter lifts and track crossfades."
+    },
+    {
+     "file": "scripts/quick-edit/make.py",
+     "contains": "if loud.get('music_mode')=='episode_bed':",
+     "how": "Measures and checks the speech bed before receipt approval."
+    }
+   ]
   },
   {
    "id": "sped-cut-visual-density",
    "on": "2026-10-19",
    "krish": "the 90 second video needs to have visuals nearly the entire way through as when things are sped up, we need to 3-5X the visual clarity",
    "why": "A sped-up short gives the viewer less time per idea, so pictures must carry more, and be clearer, than in a normal cut.",
-   "means": "Short cuts: a visual on 90% or more of the talk, no bare stretch over 1.5 s, one idea per card, large text. Proposed as a coverage gate in make.py --plan (fix-plan-19-oct.md section 2). Open until built.",
-   "status": "open",
-   "encoded": []
+   "means": "Short cuts require at least 90% speech visual coverage, no uncovered stretch above 1.5 seconds and at least 20 meaningful changes per minute. Each displayed step carries one idea and at most seven headline words; essential text is measured at final 1080 width and must be at least 48 pixels high.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": "scripts/quick-edit/quality.py",
+     "contains": "def coverage_problems",
+     "how": "Rejects low coverage, long gaps and sparse visual changes."
+    },
+    {
+     "file": "scripts/quick-edit/make.py",
+     "contains": "quality.coverage_problems(visual_checks)",
+     "how": "Renderer applies the coverage gate."
+    },
+    {
+     "file": "tests/quick_edit_quality_test.py",
+     "contains": "a visual gap exceeds 1.5 seconds",
+     "how": "Regression test exercises missing visuals."
+    }
+   ]
   },
   {
    "id": "show-the-analogy",
    "on": "2026-10-19",
    "krish": "There are also nowhere near enough visuals in the deep cut either of the car analogy",
    "why": "The analogy is how the viewer understands the piece; when it is only spoken and never shown, the main idea does not land.",
-   "means": "When a script carries an analogy, every cut shows it each time it is said, from one shared drawing, with the real evidence after it (fix-plan-19-oct.md section 1b). Open until a check maps analogy lines to cues.",
+   "means": "When a script uses a car analogy, cover each spoken passage with relevant real badges, photos or controls. Keep Mercedes = Claude and C-Class = Opus 5.5 distinct. Friday replacement cues are reviewed, but a general automated analogy-to-cue coverage check is still open; the older drawn-car proposal is superseded by Krish.",
    "status": "open",
    "encoded": []
   },

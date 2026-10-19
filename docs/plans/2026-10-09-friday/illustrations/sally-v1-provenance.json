@@ -1,0 +1,9 @@
+{
+  "tool": "built-in image_gen",
+  "prompt": "Use case: illustration-story. Create one polished editorial cartoon cutout for an existing short-video card headed MEET SALLY, with A business owner underneath. Generate ONLY the illustration, no card, no lettering, no words, no logo. Sally is a fictional approachable middle-aged female small-business owner, waist-up at her laptop, a dry slightly bemused expression with one raised eyebrow, coffee mug and a modest untidy stack of supplier paperwork beside her. The understated joke is a capable owner with too much admin, not a caricature of incompetence. Large expressive face, clean bold outlines, sophisticated magazine illustration, warm cream and coral-orange clothing accents, muted mint laptop, dark forest-green outlines. Strong compact horizontal composition with the person and laptop filling the canvas, no large internal gaps. It will sit on a very dark forest-green (#071811) video card at phone size between a heading and subheading. No background scenery, actual transparent alpha background. Avoid tiny details, gradients, pseudo-text, credit labels, decorative icons, and extra characters.",
+  "transparent_background": true,
+  "file": "sally-v1.png",
+  "sha256": "397c0cdcb9c04bc102f705f5685981c339cbf09020306b5e9585326290ee08a3",
+  "fictional_character": true,
+  "purpose": "Introduce the business owner in the spoken Sally example; replace an empty image slot with a relevant mildly amusing scene."
+}

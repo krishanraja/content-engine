@@ -1,0 +1,42 @@
+[
+  {
+    "file": "c-class.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_C200_AVANTGARDE_(W206)_front.jpg",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Mercedes-Benz_C200_AVANTGARDE_%28W206%29_front.jpg",
+    "author": "Tokumeigakarinoaoshima",
+    "licence": "CC BY-SA 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sha256": "71ff76f1e00394a00bdcf05ed69600b7c4d16db8b926baa1a0e251295e65d82b",
+    "transformation": "Original preserved; future card uses cropped/scaled reproduction with credit"
+  },
+  {
+    "file": "manual.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:A_close-up_of_a_manual_gear_shift.jpg",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/A_close-up_of_a_manual_gear_shift.jpg",
+    "author": "Nenad Stojkovic / Shixart1985",
+    "licence": "CC BY 2.0",
+    "licence_url": "https://creativecommons.org/licenses/by/2.0/",
+    "sha256": "011e0af62126d0175c762c36515a3cc534508bae9e14799069770c48bec22bd9",
+    "transformation": "Original preserved; future card uses cropped/scaled reproduction with credit"
+  },
+  {
+    "file": "automatic.jpg",
+    "source_page": "https://commons.wikimedia.org/wiki/File:AutomatikW116.JPG",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/e/e6/AutomatikW116.JPG",
+    "author": "Ralf Pfeifer",
+    "licence": "CC BY-SA 3.0",
+    "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "sha256": "28b20219f737473303a0b8a95a4835ae1bd3fc34d9f1e8f3df3c64d91235404b",
+    "transformation": "Original preserved; future card uses cropped/scaled reproduction with credit"
+  },
+  {
+    "file": "f1.jpg",
+    "author": "Hullian111",
+    "source_page": "https://commons.wikimedia.org/wiki/File:McLaren_MP4-23_Steering_Wheel_at_Formula_1_Exhibition,_London.jpg",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/9/9e/McLaren_MP4-23_Steering_Wheel_at_Formula_1_Exhibition%2C_London.jpg",
+    "licence": "CC BY-SA 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sha256": "954cd6e94c2b22412fb144a2feacfd714a8aca7809dc5d73fc6ea66236f1151c",
+    "transformation": "Scaled reproduction; original preserved"
+  }
+]

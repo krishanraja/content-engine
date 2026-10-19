@@ -1,0 +1,36 @@
+[
+  {
+    "file": "Why so many AIs - short 9x16 - repaired 19 Oct.mp4",
+    "sha256": "93a10b5bcb6af642878c3bd1d100bfec659f93ccd790b8850cd5c49ffbdd6eec",
+    "bytes": 45094465,
+    "id": "18R8c4y2HfmFHpccaAlG7PAJS02IbtDzo",
+    "url": "https://drive.google.com/file/d/18R8c4y2HfmFHpccaAlG7PAJS02IbtDzo/view",
+    "verified_at": "2026-10-19",
+    "method": "SHA-256 of actual library-mounted copy matches accepted/rendered bytes; connector listed file in target folder."
+  },
+  {
+    "file": "working repair 19 Oct/final-review-samples-19oct.zip",
+    "sha256": "d5ee1831005bfb38a6b1278264537a88deaa0f6e30ebf1220ed0e87bafa63dd1",
+    "bytes": 394043247,
+    "id": "1re181OGJsZj2vxzUOLq2wXtRr9kIC3Fs",
+    "url": "https://drive.google.com/file/d/1re181OGJsZj2vxzUOLq2wXtRr9kIC3Fs/view",
+    "verified_at": "2026-10-19",
+    "method": "SHA-256 of actual library-mounted copy matches uploaded archive."
+  },
+  {
+    "file": "Why so many AIs - deep 16x9 - repaired 19 Oct.mp4",
+    "sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9",
+    "bytes": 334051179,
+    "verified_at": "2026-10-19",
+    "method": "Actual library copy SHA-256 matched delivered bytes.",
+    "id": "1cfQ5LO8NsOoRNlmwv_Ac_hsxs0yElB52",
+    "url": "https://drive.google.com/file/d/1cfQ5LO8NsOoRNlmwv_Ac_hsxs0yElB52/view"
+  },
+  {
+    "file": "working repair 19 Oct/final-qa-evidence-19oct.zip",
+    "sha256": "b8b8ea077929e8d9854bfd33151678d02c03794b5fa7f6b28910d76d83ba9d88",
+    "bytes": 419721,
+    "verified_at": "2026-10-19",
+    "method": "Actual library copy SHA-256 matched delivered bytes."
+  }
+]

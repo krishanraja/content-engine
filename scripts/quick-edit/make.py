@@ -63,6 +63,7 @@ stretches are silence, with the music bed over them.
 import argparse
 import hashlib
 import json
+import math
 import os
 import platform
 import re
@@ -76,6 +77,7 @@ import intro as sting
 import music
 import spelling
 import transcriber
+import quality
 from archive import ArchiveError, archive_root, archive_videos, plan as archive_plan, read_package
 from share import share_copy
 
@@ -170,12 +172,19 @@ def norm(t):
     return spelling.fold(re.sub(r"[^a-z0-9%$]", '', t.lower()))
 
 
-def transcribe(src, out, model='small.en', prompt=''):
+def transcribe(src, out, model='small.en', prompt='', provenance=None):
     from faster_whisper import WhisperModel
-    m = WhisperModel(model, device='cpu', compute_type='int8')
+    m = WhisperModel(model, device='cpu', compute_type='int8',cpu_threads=4)
     segs, info = m.transcribe(str(src), word_timestamps=True, vad_filter=True, beam_size=5, initial_prompt=prompt or None)
-    words = [{'w': w.word, 's': round(w.start, 3), 'e': round(w.end, 3)} for s in segs for w in s.words]
-    Path(out).write_text(json.dumps({'duration': info.duration, 'words': words}, indent=0))
+    words, last_progress = [], -30
+    for segment in segs:
+        words.extend({'w':w.word,'s':round(w.start,3),'e':round(w.end,3)} for w in segment.words)
+        if segment.end-last_progress>=30:
+            print(f'Transcribed {segment.end:.0f}/{info.duration:.0f}s: {Path(src).name}',file=sys.stderr,flush=True)
+            last_progress=segment.end
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
+    Path(out).write_text(json.dumps({'duration': info.duration, 'words': words,
+                                  **({'provenance': provenance} if provenance else {})}, indent=0), encoding='utf-8')
     return words
 
 
@@ -324,7 +333,7 @@ def bare_joins(segs, framing, wins, frame=1 / 24):
     return out
 
 
-def segments(words, remove, max_gap, pad_before, pad_after, src_dur):
+def segments(words, remove, max_gap, pad_before, pad_after, src_dur, protect_removals=False):
     """Source windows to keep. A removed word, or a pause over max_gap, ends a window."""
     gone = set()
     for a, b in remove:
@@ -349,15 +358,38 @@ def segments(words, remove, max_gap, pad_before, pad_after, src_dur):
     for g in segs:
         a = max(0.0, words[g['first']]['s'] - pad_before)
         b = min(src_dur, words[g['last']]['e'] + pad_after)
-        if out and a <= out[-1]['b']:
+        left = words[g['first']-1]['e'] if protect_removals and g['first']-1 in gone else 0.0
+        right = words[g['last']+1]['s'] if protect_removals and g['last']+1 in gone else None
+        a = max(a, left)
+        if right is not None:
+            b = min(b, right)
+        if out and a <= out[-1]['b'] and not (protect_removals and g['first']-1 in gone):
             out[-1]['b'] = b
             out[-1]['idx'] += g['idx']
         else:
-            out.append({'a': round(a, 3), 'b': round(b, 3), 'idx': g['idx']})
+            out.append({'a': round(a, 3), 'b': round(b, 3), 'idx': g['idx'],
+                        **({'left_limit':left,'right_limit':right} if protect_removals else {})})
     # Each window is a whole number of frames at the cut's rate, so its picture
     # and sound are the same length and the joined cut never drifts out of sync.
     for g in out:
-        g['b'] = round(g['a'] + max(1, round((g['b'] - g['a']) * FPS)) / FPS, 4)
+        # Round outwards: rounding down can remove the end of a word when the
+        # take itself ends immediately after it. End padding is safe to extend.
+        frames = max(1, math.ceil((g['b'] - g['a']) * FPS-1e-8))
+        end = g['a'] + frames / FPS
+        if g.get('right_limit') is not None and end > g['right_limit']:
+            # Keep complete words while keeping removed speech outside the cut.
+            # Recover the fractional frame from available leading silence first.
+            start = g['b'] - frames / FPS
+            if start >= g.get('left_limit',0):
+                g['a'] = start
+            else:
+                # A short retained phrase between removals may not have a whole
+                # frame of spare silence. Pad its final fractional frame with
+                # silence instead of truncating the word or restoring a removal.
+                g['source_end'] = g['b']
+                g['b'] = end
+        else:
+            g['b'] = end
     t = 0.0
     for g in out:
         g['off'] = round(t, 3)
@@ -487,11 +519,17 @@ def find_loose(ws, phrase, after=0.0, need=0.6):
     return (best[1], best[2]) if best else None
 
 
-def cue_windows(ws, cues, total):
+def cue_windows(ws, cues, total, strict=False):
     found, missing = [], []
     for c in cues:
-        a = find(ws, c['start']) or find_loose(ws, c['start'])
-        b = (find(ws, c['end'], after=ws[a[0]]['s']) or find_loose(ws, c['end'], after=ws[a[0]]['s'])) if a else None
+        if strict:
+            a = quality.unique_anchor(ws,c['start'],norm)
+            b = quality.unique_anchor(ws,c['end'],norm,after=ws[a[0]]['s'],end_after=True) if a else None
+            if c.get('pages') and not c.get('on'):
+                raise ValueError(f"{c['id']}: every page needs a spoken-word anchor")
+        else:
+            a = find(ws, c['start']) or find_loose(ws, c['start'])
+            b = (find(ws, c['end'], after=ws[a[0]]['s']) or find_loose(ws, c['end'], after=ws[a[0]]['s'])) if a else None
         if not a or not b:
             missing.append(c['id'])
             continue
@@ -721,6 +759,16 @@ def tokens(ws, replacements, spell=None, names=()):
         if j == 0 or re.search(r'[.!?]$', out[j - 1]['w']):
             t['w'] = t['w'][:1].upper() + t['w'][1:]
     return out
+
+
+def reviewed_caption_tokens(cfg, resolve, tokens, identity, edited, duration):
+    if not cfg.get('caption_repairs'):
+        return tokens, None
+    path=resolve(cfg['caption_repairs'])
+    if not cfg.get('caption_repairs_sha256') or quality.digest(path)!=cfg['caption_repairs_sha256']:
+        raise ValueError('Caption repair document differs from the reviewed evidence')
+    document=json.loads(path.read_text(encoding='utf8'))
+    return quality.repaired_caption_words(document,tokens,identity,quality.digest(edited),duration),document
 
 
 def chunks(toks, bounds, max_words=5, max_dur=2.2, gap=0.35):
@@ -963,6 +1011,8 @@ def resolve_music(cfg, asp, seconds, base='.'):
     if cfg.get('music_mode') == 'episode':
         # A long episode's bed plays only in its open, lifts and close, so it needs that much music, not the whole cut.
         seconds = float(cfg.get('music_seconds') or music.episode_seconds(seconds, range(8)))
+    elif cfg.get('music_mode') == 'episode_bed':
+        seconds = 0  # Chapter restarts are validated against the actual cue windows.
     try:
         data = music.load()
         platforms = music.SHAPE_PLATFORMS[asp]
@@ -991,13 +1041,15 @@ def resolve_music(cfg, asp, seconds, base='.'):
             return None, '"music" in the config is "auto", false or a track id; this cut has voice only'
         path = music.resolve(track, data)
         levels = dict(music.levels_of(data))
+        if cfg.get('music_mode') == 'episode_bed':
+            levels.update(cfg.get('episode_bed_levels') or {})
     except music.MusicError as e:
         return None, f'the music could not be used ({e}), so this cut has voice only'
     ledger = music.ledger_path()
     if ledger.resolve() != music.LEDGER.resolve():
         notes.append(f'the music came from {ledger}, not config/music-library.json')
-    mode = 'episode' if cfg.get('music_mode') == 'episode' else None
-    if mode:
+    mode = cfg.get('music_mode') if cfg.get('music_mode') in ('episode','episode_bed') else None
+    if mode == 'episode':
         notes.append('a long episode: the bed plays under the open, a lift at each chapter turn and the close, not under the whole talk')
     return ({'track': track, 'file': path, 'levels': levels, 'ledger': str(ledger), 'needs': needs, 'needs_from': needs_from, 'mode': mode},
             '; '.join(notes) or None)
@@ -1099,7 +1151,27 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
     result = {'dialog': dialog, 'bed': None, 'music': None}
     mix_in = ['-i', str(dialog)]
     mix = '[0:a]anull[m]'
-    if bed and bed.get('mode') == 'episode':
+    if bed and bed.get('mode') == 'episode_bed':
+        import audio_quality
+        track, levels = bed['track'], bed['levels']
+        cards=tl.get('chapter_cards') or ()
+        baseline={**levels,'bed_lufs':-31,'chapter_lufs':-31,'intro_lufs':-31,'outro_lufs':-31}
+        chain, placed = music.continuous_episode_bed(track, tl, baseline, cards)
+        raw=work/'bed-reference.wav'
+        ffmpeg('-i', str(bed['file']), '-filter_complex', chain, '-map', '[bed]', '-c:a', 'pcm_s16le', str(raw))
+        stem = work / 'bed.wav'
+        correction=audio_quality.level_bed(raw,stem,tl,levels,cards)
+        measured=audio_quality.measure(stem)
+        continuity=audio_quality.continuity_report(measured,tl['voice_start_s'],tl['voice_end_s'],cards)
+        (work/'music-continuity.json').write_text(json.dumps(continuity,indent=2))
+        if continuity['status']!='pass':
+            raise ValueError('Music continuity gate: '+'; '.join(continuity['problems']))
+        result.update(bed=stem, music={**placed, 'track_id':track['id'], 'sha256':track['sha256'],
+                                     'levels':levels, 'file':track['file'], 'ledger':bed['ledger'],
+                                     'local_level_correction':correction,'continuity':continuity})
+        mix_in += ['-i', str(stem)]
+        mix = '[0:a][1:a]amix=inputs=2:duration=first:normalize=0[m]'
+    elif bed and bed.get('mode') == 'episode':
         # A long episode: the bed under the open, a lift at each chapter turn and
         # the close, not under the whole talk (music.episode_bed; the corpus).
         track, levels = bed['track'], bed['levels']
@@ -1150,6 +1222,16 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
     ffmpeg(*mix_in, '-filter_complex', f'{mix};[m]anull[o]', '-map', '[o]', '-c:a', 'pcm_f32le', str(summed))
     # Pass 1: the summed mix's loudness, to set the limiter's working level.
     pre = music.ebur128(summed)['I'] or target
+    if bed and bed.get('mode') == 'episode_bed':
+        # The voice and continuous bed already have separately measured levels.
+        # A second global normaliser would silently undo the approved bed balance.
+        mixed=work/'mix.wav'
+        ffmpeg('-i',str(summed),'-af',
+               f'aresample={RATE*4},alimiter=limit={10**(LIMIT_DBTP/20):.4f}:attack=1:release=60:level=disabled:latency=1,{NORM},atrim=end_sample={smp["total_s"]}',
+               '-c:a','pcm_f32le',str(mixed))
+        result.update(mix=mixed,normalisation='separately levelled stems; peak limiter only',pre_mix_lufs=pre,target=target)
+        summed.unlink()
+        return result
     limited = (f'volume={target - pre:.3f}dB,aresample={RATE * 4},'
                f'alimiter=limit={10 ** (LIMIT_DBTP / 20):.4f}:attack=1:release=60:level=disabled:latency=1,{NORM}')
     # Pass 2 and 3: the two-pass loudness normalisation on the final mix,
@@ -1173,7 +1255,7 @@ def build_audio(work, edited, voice_gain, intro, end, tl, bed):
     return result
 
 
-def expand_pages(wins, asp):
+def expand_pages(wins, asp, words=None):
     """A picture shown a part at a time in this shape (kit.py "pages") as
     one window per part, splitting its time evenly; the parts touch, so
     each crossfades into the next."""
@@ -1183,10 +1265,11 @@ def expand_pages(wins, asp):
         if not pages:
             out.append(c)
             continue
+        anchored = quality.word_pages(c, pages, words or [], norm)
         step = (c['e'] - c['s']) / len(pages)
         for k, page in enumerate(pages):
-            s = round(c['s'] + k * step, 3)
-            e = c['e'] if k == len(pages) - 1 else round(c['s'] + (k + 1) * step, 3)
+            s = anchored[k] if anchored else round(c['s'] + k * step, 3)
+            e = anchored[k+1] if anchored else c['e'] if k == len(pages) - 1 else round(c['s'] + (k + 1) * step, 3)
             out.append({**c, 'id': f"{c['id']}-p{k + 1}", 'panel': page, 's': s, 'e': e})
     return out
 
@@ -1235,7 +1318,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
     and before the end card, with the finished mix as its sound."""
     cw, ch, cx, cy = crop
     W, H = SIZE[asp]
-    wins = expand_pages(wins, asp)
+    wins = expand_pages(wins, asp, ws)
     inputs = ['-i', str(edited)]
     n = 1
     g = []
@@ -1331,11 +1414,14 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         inputs += ['-loop', '1', '-framerate', str(FPS), '-t', f'{total:.3f}', '-i', str(P(st['png']))]
         g.append(f"[{last}][{n}:v]overlay=0:0:enable='between(t,{t0:.2f},{t0 + st.get('seconds', 3.5):.2f})'[s{k}]")
         last, n, k = f's{k}', n + 1, k + 1
+    # Overlay inputs include a fade tail. Bound the composed main picture to
+    # its exact frame count before concat, so that tail cannot delay the outro.
+    main_clock = f'fps={FPS},trim=end_frame={round(total*FPS)},setpts=N/({FPS}*TB),setsar=1,format=yuv420p'
     if cfg.get('captions', True) is False:
         # No captions in the picture: the caption file goes to the platform instead (episode.py).
-        g.append(f"[{last}]fps={FPS},setsar=1,format=yuv420p[vm]")
+        g.append(f"[{last}]{main_clock}[vm]")
     else:
-        g.append(f"[{last}]ass={cfg['name']}-{asp}.ass:fontsdir=fonts,fps={FPS},setsar=1,format=yuv420p[vm]")
+        g.append(f"[{last}]ass={cfg['name']}-{asp}.ass:fontsdir=fonts,{main_clock}[vm]")
     inputs += ['-i', str(end['file'])]
     held = f",tpad=stop_mode=clone:stop_duration={end['held_s']:.3f}" if end.get('held_s') else ''
     g.append(f"[{n}:v]fps={FPS},setsar=1,format=yuv420p{held},trim=end_frame={end['frames']},setpts=PTS-STARTPTS[ev]")
@@ -1424,6 +1510,9 @@ def measure_cut(final, tl, cut_audio):
             'intro_short_term': at(final, intro), 'voice_short_term': at(final, voice), 'outro_short_term': at(final, outro),
             'bed_to_voice_lu': None, 'windows': {'intro': intro, 'voice': voice, 'outro': outro},
             'normalisation': cut_audio['normalisation'], 'target': cut_audio['target']}
+    loud['music_mode']=(cut_audio['music'] or {}).get('mode')
+    loud['voice_stem_lufs']=at(cut_audio['dialog'],voice)
+    loud['music_continuity']=(cut_audio['music'] or {}).get('continuity')
     if cut_audio['bed'] and voice:
         v, b = at(cut_audio['dialog'], voice), at(cut_audio['bed'], voice)
         if v is not None and b is not None:
@@ -1436,13 +1525,19 @@ def loudness_warnings(loud, levels):
     target, tol = levels['final_integrated_lufs'], levels['tolerance_lu']
     if loud['integrated'] is None or abs(loud['integrated'] - target) > tol:
         out.append(f'integrated loudness {loud["integrated"]} LUFS is outside {target} +-{tol} LU')
-    if loud['true_peak'] is not None and loud['true_peak'] > levels['max_true_peak_dbtp']:
+    if loud['true_peak'] is None or loud['true_peak'] > levels['max_true_peak_dbtp']:
         out.append(f'true peak {loud["true_peak"]} dBTP is over {levels["max_true_peak_dbtp"]} dBTP')
-    if loud['bed_to_voice_lu'] is not None:
+    if loud.get('music_mode')=='episode_bed':
+        voice=loud.get('voice_stem_lufs')
+        if voice is None or abs(voice-target)>tol:
+            out.append(f'voice stem {voice} LUFS is outside {target} +-{tol} LU')
+        if (loud.get('music_continuity') or {}).get('status')!='pass':
+            out.append('continuous music measurement has not passed')
+    elif loud['bed_to_voice_lu'] is not None:
         want = target - levels['bed_lufs']
         if abs(loud['bed_to_voice_lu'] - want) > 2:
             out.append(f'the bed sits {loud["bed_to_voice_lu"]} LU under his voice, not about {want:g} LU')
-    if loud['normalisation'] != 'linear':
+    if loud['normalisation'] not in ('linear','separately levelled stems; peak limiter only'):
         out.append('the final loudness pass could not be a plain gain, so the limited mix was kept without it')
     return out
 
@@ -1887,6 +1982,7 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--only', choices=['9x16', '16x9'])
     ap.add_argument('--plan', action='store_true', help='print the cuts, graphic windows, intro and music, render nothing')
+    ap.add_argument('--prepare-only',action='store_true',help='build and verify the edited intermediate, then stop before graphics and mixing')
     ap.add_argument('--share-mib', type=float, help='also write a copy of each video under this size')
     ap.add_argument('--archive', nargs='?', const='', metavar='ROOT',
                     help='file the finished videos in the archive (default ROOT: MINDMAKE_ARCHIVE_ROOT, else on Windows runtime.archive_root in config/studio.json)')
@@ -1897,6 +1993,7 @@ def main():
     cfg_path = Path(args.config).resolve()
     base = cfg_path.parent
     cfg = json.loads(cfg_path.read_text())
+    cfg['quality_required'] = True
     archiving = archive_settings(args, cfg)
     P = lambda p: (base / p).resolve()
     out = Path(args.out).resolve()
@@ -1917,19 +2014,36 @@ def main():
     conform = conform_filter(source_rate(src), FPS)
     dur = float(json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'json', str(src)], capture_output=True, text=True).stdout)['format']['duration'])
     wpath = P(cfg['words']) if cfg.get('words') else out / f"{cfg['name']}{tag}.words.json"
-    words = json.loads(wpath.read_text())['words'] if wpath.exists() else transcribe(src, wpath, cfg.get('model', 'small.en'), cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''))
+    if cfg.get('words_sha256') and (not wpath.exists() or quality.digest(wpath)!=cfg['words_sha256']):
+        sys.exit('Transcript document differs from the reviewed word and timing adjudications')
+    transcript_model = cfg.get('model', 'small.en')
+    identity = quality.transcript_identity(src, speed[0] if speed else 1, transcript_model)
+    document = json.loads(wpath.read_text(encoding='utf-8')) if wpath.exists() else None
+    if document is not None and (document.get('provenance') or cfg.get('quality_required')):
+        words = quality.checked_words(document, identity)
+    elif document is not None:
+        words = document['words']
+    else:
+        words = transcribe(src, wpath, transcript_model,
+                           cfg.get('prompt') or (script_prompt(P(cfg['script'])) if cfg.get('script') else ''), identity)
 
     cuts = resolve_removals(words, cfg.get('remove', []) + cfg.get('remove_words', []))
-    if speed and cfg.get('words'):
+    if speed and cfg.get('words') and document and not document.get('provenance'):
         # A words file named in the config was heard from the take before it was sped up, so its times are on
         # the raw clock: put them on the sped clock, or the cut points, captions and cards all land late, more
         # so as it goes. Friday 16 Oct's 90-second cut at 1.10x (Krish, 19 Oct: "the subtitles are lagging
         # severely", "the video lingers after I've finished my script"). After resolve_removals, whose
         # restart_near reads the raw clock; a transcript made here is already on the sped clock.
         words = sped_words(words, speed[0])
-    segs, total = segments(words, cuts, cfg.get('max_gap', 0.35), cfg.get('pad_before', 0.10), cfg.get('pad_after', 0.16), dur)
+    segs, total = segments(words, cuts, cfg.get('max_gap', 0.35), cfg.get('pad_before', 0.18), cfg.get('pad_after', 0.25), dur,protect_removals=cfg.get('quality_required',False))
+    if cfg.get('quality_required'):
+        cut_errors = quality.cut_problems(words,segs,cuts)
+        if cut_errors:
+            sys.exit('Word boundary gate: '+ '; '.join(cut_errors))
     ws = retime(words, segs)
-    wins, missing = cue_windows(ws, cfg.get('cues') or [], total)
+    wins, missing = cue_windows(ws, cfg.get('cues') or [], total,strict=cfg.get('quality_required',False))
+    if cfg.get('quality_required') and missing:
+        sys.exit('Missing spoken cue anchors: '+', '.join(missing))
     early = picture_warnings(cfg, base)
     # The episode framings: a push under each hidden cut, closer on a pivotal line (episode.py).
     emphasis = []
@@ -1964,10 +2078,17 @@ def main():
     # kept the eyes in frame for the launch videos, so scale that by default.
     cfg.setdefault('face', [round(ch * 100 / 720), round(ch * 450 / 720)])
     aspects = [args.only] if args.only else ['9x16', '16x9']
+    visual_checks = {}
+    if cfg.get('quality_required') and '9x16' in aspects:
+        visual_checks = quality.coverage(expand_pages(wins, '9x16', ws), 0, total)
+        problems = quality.coverage_problems(visual_checks)
+        if problems:
+            sys.exit('Visual gate: ' + '; '.join(problems) + '\n' + json.dumps(visual_checks))
     # The main's length in whole frames: every window is whole frames already.
     main_frames = sum(max(1, round((g['b'] - g['a']) * FPS)) for g in segs)
     if args.plan:
         toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names)
+        toks,_=reviewed_caption_tokens(cfg,P,toks,identity,out/f"{cfg['name']}.edited.mkv",total)
         early += spelling_warnings(toks)
         groups = chunks(toks, sorted({c['s'] for c in wins} | {c['e'] for c in wins}))
         shapes = {}
@@ -1998,27 +2119,43 @@ def main():
     # filter graph over every window held each window's frames in memory at
     # once, and a 3:38 upright 1080x1920 recording with 57 windows was killed
     # for running out of it (2026-10-06).
-    plan_lines = [f"fps {FPS} {conform}"] + [f"{g['a']:.4f} {g['b']:.4f} crop={cw}:{ch}:{cx}:{cy}" for g in segs]
+    import segment_clock
+    plan_lines = [f"sample-exact-v2 fps {FPS} {conform} source {sha256_file(src)}"] + [f"{g['a']:.8f} {g['b']:.8f} source_end={g.get('source_end')} crop={cw}:{ch}:{cx}:{cy}" for g in segs]
     g1 = out / 'stage1.plan'
     # The cut only changes when the words to remove or the pause rule change, so reuse it otherwise.
     if not (edited.exists() and g1.exists() and g1.read_text() == '\n'.join(plan_lines)):
         parts = out / 'parts'
         parts.mkdir(exist_ok=True)
-        for old in parts.glob('*.mkv'):
-            old.unlink()
+        cached_parts = {}
+        for stamp in parts.glob('*.mkv.clock.json'):
+            try:
+                recipe_data = json.loads(stamp.read_text())['recipe']
+                cached_parts[json.dumps(recipe_data, sort_keys=True)] = Path(str(stamp).removesuffix('.clock.json'))
+            except (OSError, ValueError, KeyError):
+                continue
         names = []
+        source_hash=sha256_file(src)
         for i, g in enumerate(segs):
             d = g['b'] - g['a']
-            part = parts / f'{i:04d}.mkv'
-            run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', f"{g['a']:.4f}", '-i', src, '-t', f'{d:.4f}',
-                 '-vf', f'crop={cw}:{ch}:{cx}:{cy},{conform}',
-                 '-af', f'aresample=48000,asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.012,afade=t=out:st={max(0, d - 0.012):.4f}:d=0.012',
-                 '-frames:v', str(round(d * FPS)), '-c:v', 'libx264', '-preset', 'fast', '-crf', '10', '-c:a', 'pcm_s16le', part], quiet=True)
+            frames = round(d * FPS)
+            vf=f'crop={cw}:{ch}:{cx}:{cy},{conform}'
+            recipe={'version':2,'source_sha256':source_hash,'start':g['a'],'frames':frames,
+                    'fps':FPS,'video_filter':vf,'source_end':g.get('source_end')}
+            key = json.dumps(recipe, sort_keys=True)
+            part = cached_parts.get(key, parts / (hashlib.sha256(key.encode()).hexdigest()[:24] + '.mkv'))
+            if not segment_clock.reusable(part,recipe):
+                run(segment_clock.encode_args(src,part,g['a'],frames,FPS,vf,source_end=g.get('source_end')),quiet=True)
+                segment_clock.save_stamp(part,recipe)
             names.append(f"file '{part.as_posix()}'")
         listing = parts / 'list.txt'
         listing.write_text('\n'.join(names) + '\n')
         run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', listing, '-c', 'copy', edited])
+        segment_clock.require(edited,sum(round((g['b']-g['a'])*FPS) for g in segs),FPS)
         g1.write_text('\n'.join(plan_lines))
+    if args.prepare_only:
+        print(json.dumps({'edited':str(edited),'clock':segment_clock.require(edited,main_frames,FPS),
+                          'source_provenance':identity,'status':'prepared_not_deliverable'},indent=2))
+        return
         # The join holds every frame, so the parts only double the disk a long take needs
         # (a 14-minute take filled a cloud session's allowance on 2026-10-17).
         for part in parts.glob('*.mkv'):
@@ -2050,6 +2187,8 @@ def main():
             voice_src = dst
     voice_in = float(loud['input_i'])
     toks = tokens(ws, DEFAULT_FIXES + cfg.get('replacements', []), spell, names)
+    retained_source_tokens = list(toks)
+    toks,caption_repairs=reviewed_caption_tokens(cfg,P,toks,identity,edited,total)
     early += spelling_warnings(toks)
     bounds = sorted({c['s'] for c in wins} | {c['e'] for c in wins})
     groups = chunks(toks, bounds)
@@ -2068,6 +2207,8 @@ def main():
         # The chapter turns on the video's clock, for an episode bed's lifts.
         tl['accents'] = [ws[h[0]]['s'] + tl['intro_s'] for c in episode.chapters_of(cfg, P)[1:]
                          for h in [find_loose(ws, c['starts'])] if h]
+        tl['chapter_cards'] = [(c['s']+tl['intro_s'],c['e']+tl['intro_s'])
+                               for c in wins if c.get('chapter') or c['id'].startswith('fri-chapter-')]
         target = (bed['levels'] if bed else default_levels())['final_integrated_lufs']
         if voice_in <= -69.9:
             warnings.append('the recording measured as silence, so its level was left alone')
@@ -2112,6 +2253,8 @@ def main():
         # same oversampled limiter, measured again, at most twice. Wednesday's long cut went out at -15.2 LUFS
         # because the peak pass lowered it and nothing put it back (Krish, 2026-10-14).
         for _ in range(2):
+            if bed and bed.get('mode')=='episode_bed':
+                break  # Preserve the approved, separately measured stem levels.
             off = None if loudness.get('integrated') is None else levels['final_integrated_lufs'] - loudness['integrated']
             if off is None or abs(off) <= levels['tolerance_lu'] / 2:
                 break
@@ -2123,6 +2266,24 @@ def main():
             fixed.replace(final)
             loudness = {**measure_cut(final, tl, cut_audio), 'level_corrected_db': round(off, 2)}
         warnings += loudness_warnings(loudness, levels)
+        if cfg.get('quality_required'):
+            final_identity = quality.transcript_identity(final, 1, transcript_model)
+            heard = transcribe(final, out/f'{final.stem}.heard.json', transcript_model, provenance=final_identity)
+            speech_check = quality.word_diff(toks, heard)
+            receipt = {'video_sha256':quality.digest(final), 'piece_id':cfg.get('piece_id'),
+                       'caption_repairs':None if caption_repairs is None else {
+                           'document_sha256':cfg['caption_repairs_sha256'],
+                           'provenance':caption_repairs['provenance'],
+                           'retained_source_word_changes':quality.word_diff(retained_source_tokens,toks)},
+                       'source_provenance':identity,
+                       'transcript_document':{'sha256':quality.digest(wpath),'derivation':(document or {}).get('derivation')},'checks': {
+                'heard':speech_check,
+                'sync':{'status':'not_run'},
+                'loudness':{'status':'fail' if loudness_warnings(loudness, levels) else 'pass', 'measurements':loudness},
+                'visuals':{'status':'inconclusive','coverage':visual_checks,'reason':'Full-size card and font review required'},
+                'full_review':{'status':'not_run'}},
+                'script_diff':quality.word_diff(script_words(cfg,P), heard)}
+            Path(str(final)+'.validation.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')
         shapes[asp] = {
             'file': final.name, 'intro_seconds': tl['intro_s'], 'main_seconds': tl['main_s'], 'outro_seconds': tl['outro_s'],
             'total_seconds': tl['total_s'], 'voice_start_seconds': tl['voice_start_s'], 'voice_end_seconds': tl['voice_end_s'],
@@ -2153,11 +2314,19 @@ def main():
     else:
         report['warnings'] = early + [f'{asp}: {w}' for asp, cut in shapes.items() for w in cut['warnings']]
     archive_failed = None
+    if cfg.get('quality_required'):
+        report['validation'] = {}
+        for aspect in aspects:
+            video = out / report[f'{aspect}_file']
+            problems = quality.delivery_problems(video,str(video)+'.validation.json')
+            report['validation'][aspect] = {'ready_for_delivery':not problems,'problems':problems}
     if archiving:
         # Copies only what this run made: a share copy left from an earlier
         # run is never picked up in place of a fresh one.
         made = {asp: out / report[f'{asp}_file'] for asp in aspects}
         try:
+            if any(not v['ready_for_delivery'] for v in report.get('validation',{}).values()):
+                raise ArchiveError('Archive blocked: video validation is failed, missing or incomplete')
             report['archive'] = archive_videos(
                 archiving['root'], archiving['subject'], tall=made.get('9x16'), wide=made.get('16x9'), day=archiving['day'],
                 tall_share=report.get('9x16_share', {}).get('file'), wide_share=report.get('16x9_share', {}).get('file'),

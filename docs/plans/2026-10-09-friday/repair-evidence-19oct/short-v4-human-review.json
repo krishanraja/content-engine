@@ -1,0 +1,11 @@
+{
+  "video_sha256": "7c2d20562ba99298aac6e41bac573deb5e9bf34c47f83e7f0bee67aad1775925",
+  "status": "fail",
+  "reviewer": "Krish",
+  "date": "2026-10-19",
+  "response": "I found an issue \u2014 I will describe it",
+  "scope": "Short v4 finished review",
+  "finding": "Small eyebrow labels and source-credit overlays are prohibited.",
+  "user_words": "these eyebrows and source citations are prohibited, they are awful",
+  "applies_to": "Both replacement cuts"
+}

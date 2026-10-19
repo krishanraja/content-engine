@@ -1,0 +1,16 @@
+{
+  "verified_on": "2026-10-19",
+  "scope": "Read-only hash verification of the two original Drive library copies before any replacement; both match retrieved rejected outputs.",
+  "files": [
+    {
+      "name": "Why so many AIs - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+      "bytes": 77145094,
+      "sha256": "bcc51515b63ef4b0987cfd048225b2ef994a1c19e48e1f39edd4f296644f1590"
+    },
+    {
+      "name": "Why so many AIs - wide 16x9 - YouTube, Substack.mp4",
+      "bytes": 321051435,
+      "sha256": "c4996a001c07698c484697b9b300d9567bc710b75b917f4da894cfe9839cc402"
+    }
+  ]
+}

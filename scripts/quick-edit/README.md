@@ -451,3 +451,21 @@ never committed (`scripts/check-no-secrets.ts`). The configs, the music
 ledger, the sting's settings and this tool are committed; the files they
 point at live in a local working folder, the music folder in Drive, or
 `.cache/`.
+
+
+## Evidence-backed caption repairs
+
+When independent recognition or human listening finds a spoken word missing from
+captions, preserve the original transcript. An optional `caption_repairs` JSON
+and its required `caption_repairs_sha256` can restore timed caption words without
+altering the sound or picture. Each repair binds the original source provenance,
+the exact edited intermediate hash and the original caption-token digest. Its
+clock is explicitly `edited`; speed and edit mapping must never be applied again.
+Every replacement range carries its original words, new timed words, reason and
+evidence reference. Stale identities, overlapping ranges, absent evidence or
+out-of-order/out-of-duration times fail closed. The final receipt retains these
+word changes separately from the script comparison. This does not certify the
+speech: post-render comparison and whole-video review are still required.
+
+Video cards have no eyebrow labels or source-credit overlays (Krish, 19 October
+2026). Attribution and source evidence accompany the video as separate records.

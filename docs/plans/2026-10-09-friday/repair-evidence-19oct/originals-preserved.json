@@ -1,0 +1,16 @@
+{
+  "rejected_folder_id": "1e8fWHU1iwccM-F8slZBki6bb3RuoU-r9",
+  "rejected_folder_url": "https://drive.google.com/drive/folders/1e8fWHU1iwccM-F8slZBki6bb3RuoU-r9",
+  "short": {
+    "file_id": "1mIBNeWzeEoUz-yf4anSXNah8xd085Vwo",
+    "sha256": "bcc51515b63ef4b0987cfd048225b2ef994a1c19e48e1f39edd4f296644f1590",
+    "action": "Moved to rejected originals without changing file ID or bytes",
+    "replaced_by": "18R8c4y2HfmFHpccaAlG7PAJS02IbtDzo"
+  },
+  "long": {
+    "file_id": "1nQl3iHzUtXBgHXBzyLWl-igdp1lfonAL",
+    "sha256": "c4996a001c07698c484697b9b300d9567bc710b75b917f4da894cfe9839cc402",
+    "action": "Moved to rejected originals without changing file ID or bytes; parent and size verified by Drive metadata",
+    "replaced_by": "1cfQ5LO8NsOoRNlmwv_Ac_hsxs0yElB52"
+  }
+}

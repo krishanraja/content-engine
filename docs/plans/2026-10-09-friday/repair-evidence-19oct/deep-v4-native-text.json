@@ -1,0 +1,2960 @@
+{
+  "video_sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9",
+  "output_width": 1080,
+  "method": "Colour-matched glyph extent in decoded final frames, using authored text bounds; source font size alone is not a pass.",
+  "scope": "Authored text only; screenshot crop labels and layout reviewed separately. A short punctuation symbol is not treated as a capital-height glyph.",
+  "rows": [
+    {
+      "card": "fri-deep-15-claude-names",
+      "text": "A NEW CLAUDE ROUGHLY",
+      "at_s": 22,
+      "crop_at_1080_width": [
+        376,
+        71,
+        993,
+        135
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names",
+      "text": "EVERY FOUR WEEKS",
+      "at_s": 22,
+      "crop_at_1080_width": [
+        376,
+        149,
+        866,
+        214
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names",
+      "text": "OPUS 4.5",
+      "at_s": 22,
+      "crop_at_1080_width": [
+        376,
+        253,
+        612,
+        318
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names",
+      "text": "2025-11-24",
+      "at_s": 22,
+      "crop_at_1080_width": [
+        746,
+        253,
+        1046,
+        318
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names",
+      "text": "HAIKU 5.5",
+      "at_s": 22,
+      "crop_at_1080_width": [
+        376,
+        358,
+        631,
+        422
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names",
+      "text": "2026-10-07",
+      "at_s": 22,
+      "crop_at_1080_width": [
+        737,
+        357,
+        1046,
+        422
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s2",
+      "text": "A NEW CLAUDE ROUGHLY",
+      "at_s": 24,
+      "crop_at_1080_width": [
+        376,
+        123,
+        993,
+        187
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s2",
+      "text": "EVERY FOUR WEEKS",
+      "at_s": 24,
+      "crop_at_1080_width": [
+        376,
+        201,
+        866,
+        266
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s2",
+      "text": "OPUS 4.8",
+      "at_s": 24,
+      "crop_at_1080_width": [
+        376,
+        305,
+        612,
+        370
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s2",
+      "text": "2026-05-28",
+      "at_s": 24,
+      "crop_at_1080_width": [
+        724,
+        305,
+        1046,
+        370
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s3",
+      "text": "A NEW CLAUDE ROUGHLY",
+      "at_s": 26,
+      "crop_at_1080_width": [
+        376,
+        71,
+        993,
+        135
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s3",
+      "text": "EVERY FOUR WEEKS",
+      "at_s": 26,
+      "crop_at_1080_width": [
+        376,
+        149,
+        866,
+        214
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s3",
+      "text": "OPUS 4.8",
+      "at_s": 26,
+      "crop_at_1080_width": [
+        376,
+        253,
+        612,
+        318
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s3",
+      "text": "2026-05-28",
+      "at_s": 26,
+      "crop_at_1080_width": [
+        724,
+        253,
+        1046,
+        318
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s3",
+      "text": "OPUS 5",
+      "at_s": 26,
+      "crop_at_1080_width": [
+        376,
+        357,
+        562,
+        422
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s3",
+      "text": "2026-07-24",
+      "at_s": 26,
+      "crop_at_1080_width": [
+        724,
+        357,
+        1046,
+        422
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-15-claude-names-s4",
+      "text": "CHOOSE THE MODEL",
+      "at_s": 27,
+      "crop_at_1080_width": [
+        376,
+        72,
+        883,
+        138
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-2",
+      "text": "WHY ARE AI",
+      "at_s": 107,
+      "crop_at_1080_width": [
+        376,
+        103,
+        759,
+        184
+      ],
+      "foreground_height_px": 76,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-2",
+      "text": "LAUNCHES SPEEDING",
+      "at_s": 107,
+      "crop_at_1080_width": [
+        376,
+        201,
+        1044,
+        283
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-2",
+      "text": "UP?",
+      "at_s": 107,
+      "crop_at_1080_width": [
+        376,
+        300,
+        508,
+        382
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-claude-launch-pages",
+      "text": "THREE OPUS MODELS IN",
+      "at_s": 110,
+      "crop_at_1080_width": [
+        376,
+        90,
+        973,
+        155
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-claude-launch-pages",
+      "text": "FOUR MONTHS",
+      "at_s": 110,
+      "crop_at_1080_width": [
+        376,
+        169,
+        739,
+        234
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-claude-launch-pages-p2",
+      "text": "THREE OPUS MODELS IN",
+      "at_s": 111,
+      "crop_at_1080_width": [
+        376,
+        86,
+        973,
+        151
+      ],
+      "foreground_height_px": 57,
+      "status": "pass"
+    },
+    {
+      "card": "fri-claude-launch-pages-p2",
+      "text": "FOUR MONTHS",
+      "at_s": 111,
+      "crop_at_1080_width": [
+        376,
+        165,
+        739,
+        229
+      ],
+      "foreground_height_px": 57,
+      "status": "pass"
+    },
+    {
+      "card": "fri-claude-launch-pages-p3",
+      "text": "THREE OPUS MODELS IN",
+      "at_s": 113,
+      "crop_at_1080_width": [
+        376,
+        62,
+        973,
+        127
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-claude-launch-pages-p3",
+      "text": "FOUR MONTHS",
+      "at_s": 113,
+      "crop_at_1080_width": [
+        376,
+        141,
+        739,
+        206
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-5-1-to-6-1",
+      "text": "GPT GAINED A NUMBER IN",
+      "at_s": 115,
+      "crop_at_1080_width": [
+        376,
+        35,
+        1022,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-5-1-to-6-1",
+      "text": "46 WEEKS",
+      "at_s": 115,
+      "crop_at_1080_width": [
+        376,
+        114,
+        636,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-5-1-to-6-1-r1",
+      "text": "GPT GAINED A NUMBER IN",
+      "at_s": 117,
+      "crop_at_1080_width": [
+        376,
+        35,
+        1022,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-5-1-to-6-1-r1",
+      "text": "46 WEEKS",
+      "at_s": 117,
+      "crop_at_1080_width": [
+        376,
+        114,
+        636,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-5-1-to-6-1-r2",
+      "text": "GPT GAINED A NUMBER IN",
+      "at_s": 119,
+      "crop_at_1080_width": [
+        376,
+        35,
+        1022,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-5-1-to-6-1-r2",
+      "text": "46 WEEKS",
+      "at_s": 119,
+      "crop_at_1080_width": [
+        376,
+        114,
+        636,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-altman-same-day",
+      "text": "ONE MILLION CHATGPT",
+      "at_s": 137,
+      "crop_at_1080_width": [
+        376,
+        35,
+        942,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-altman-same-day",
+      "text": "USERS IN ONE HOUR",
+      "at_s": 137,
+      "crop_at_1080_width": [
+        376,
+        114,
+        871,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-altman-same-day-t2",
+      "text": "THE SAME DAY, A $40",
+      "at_s": 143,
+      "crop_at_1080_width": [
+        376,
+        35,
+        932,
+        108
+      ],
+      "foreground_height_px": 68,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-altman-same-day-t2",
+      "text": "BILLION RAISE",
+      "at_s": 143,
+      "crop_at_1080_width": [
+        376,
+        114,
+        730,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-altman-same-day-t3",
+      "text": "$40 BILLION TOOK",
+      "at_s": 147,
+      "crop_at_1080_width": [
+        376,
+        63,
+        831,
+        131
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-altman-same-day-t3",
+      "text": "MONTHS TO ARRANGE",
+      "at_s": 147,
+      "crop_at_1080_width": [
+        376,
+        142,
+        920,
+        206
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-3",
+      "text": "CAN OPUS 5 BEAT",
+      "at_s": 153,
+      "crop_at_1080_width": [
+        376,
+        152,
+        949,
+        234
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-3",
+      "text": "OPUS 5.5?",
+      "at_s": 153,
+      "crop_at_1080_width": [
+        376,
+        251,
+        725,
+        333
+      ],
+      "foreground_height_px": 79,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-settings",
+      "text": "CHOOSE THE EFFORT",
+      "at_s": 203,
+      "crop_at_1080_width": [
+        376,
+        72,
+        885,
+        138
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-01",
+      "text": "THINK OF",
+      "at_s": 225,
+      "crop_at_1080_width": [
+        376,
+        58,
+        614,
+        125
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-01",
+      "text": "A CAR",
+      "at_s": 225,
+      "crop_at_1080_width": [
+        376,
+        138,
+        536,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-02",
+      "text": "THE MAKE",
+      "at_s": 229,
+      "crop_at_1080_width": [
+        376,
+        76,
+        645,
+        143
+      ],
+      "foreground_height_px": 62,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-02",
+      "text": "MERCEDES",
+      "at_s": 229,
+      "crop_at_1080_width": [
+        400,
+        302,
+        683,
+        368
+      ],
+      "foreground_height_px": 62,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-02",
+      "text": "CLAUDE",
+      "at_s": 229,
+      "crop_at_1080_width": [
+        781,
+        302,
+        981,
+        368
+      ],
+      "foreground_height_px": 62,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-03",
+      "text": "THE MODEL",
+      "at_s": 234,
+      "crop_at_1080_width": [
+        376,
+        76,
+        676,
+        143
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-03",
+      "text": "MERCEDES",
+      "at_s": 234,
+      "crop_at_1080_width": [
+        400,
+        302,
+        683,
+        368
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-03",
+      "text": "CLAUDE",
+      "at_s": 234,
+      "crop_at_1080_width": [
+        781,
+        302,
+        981,
+        368
+      ],
+      "foreground_height_px": 62,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-03",
+      "text": "C-CLASS",
+      "at_s": 234,
+      "crop_at_1080_width": [
+        430,
+        448,
+        653,
+        514
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-03",
+      "text": "OPUS 5.5",
+      "at_s": 234,
+      "crop_at_1080_width": [
+        759,
+        448,
+        1003,
+        514
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-04",
+      "text": "THINKING",
+      "at_s": 237,
+      "crop_at_1080_width": [
+        376,
+        58,
+        621,
+        125
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-04",
+      "text": "IS THE GEAR",
+      "at_s": 237,
+      "crop_at_1080_width": [
+        376,
+        138,
+        694,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-05",
+      "text": "YOU CHANGE",
+      "at_s": 241,
+      "crop_at_1080_width": [
+        376,
+        58,
+        707,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-05",
+      "text": "THE GEAR",
+      "at_s": 241,
+      "crop_at_1080_width": [
+        376,
+        138,
+        627,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-06",
+      "text": "LOW TO HIGH",
+      "at_s": 246,
+      "crop_at_1080_width": [
+        376,
+        58,
+        719,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-06",
+      "text": "THINKING",
+      "at_s": 246,
+      "crop_at_1080_width": [
+        376,
+        138,
+        621,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-07",
+      "text": "LOOK BEYOND",
+      "at_s": 253,
+      "crop_at_1080_width": [
+        376,
+        58,
+        735,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-07",
+      "text": "THE BADGE",
+      "at_s": 253,
+      "crop_at_1080_width": [
+        376,
+        138,
+        663,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-08",
+      "text": "WHICH GEAR",
+      "at_s": 263,
+      "crop_at_1080_width": [
+        376,
+        58,
+        708,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-08",
+      "text": "ARE YOU USING?",
+      "at_s": 263,
+      "crop_at_1080_width": [
+        376,
+        138,
+        809,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude",
+      "text": "SAME OPUS 5.5.",
+      "at_s": 274,
+      "crop_at_1080_width": [
+        376,
+        22,
+        790,
+        87
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude",
+      "text": "DIFFERENT THINKING",
+      "at_s": 274,
+      "crop_at_1080_width": [
+        376,
+        100,
+        889,
+        165
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude",
+      "text": "EFFORT.",
+      "at_s": 274,
+      "crop_at_1080_width": [
+        376,
+        179,
+        575,
+        243
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude",
+      "text": "AA INTELLIGENCE INDEX",
+      "at_s": 274,
+      "crop_at_1080_width": [
+        376,
+        255,
+        903,
+        314
+      ],
+      "foreground_height_px": 54,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude",
+      "text": "OPUS 5.5 / LOW",
+      "at_s": 274,
+      "crop_at_1080_width": [
+        376,
+        322,
+        783,
+        387
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude",
+      "text": "42",
+      "at_s": 274,
+      "crop_at_1080_width": [
+        960,
+        310,
+        1046,
+        387
+      ],
+      "foreground_height_px": 72,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude",
+      "text": "OPUS 5.5 / MAX",
+      "at_s": 274,
+      "crop_at_1080_width": [
+        376,
+        403,
+        792,
+        469
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude",
+      "text": "58",
+      "at_s": 274,
+      "crop_at_1080_width": [
+        959,
+        391,
+        1046,
+        469
+      ],
+      "foreground_height_px": 73,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s1",
+      "text": "OPUS 5.5 SCORED HIGHER",
+      "at_s": 280,
+      "crop_at_1080_width": [
+        376,
+        61,
+        1021,
+        126
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s1",
+      "text": "AT MAXIMUM EFFORT",
+      "at_s": 280,
+      "crop_at_1080_width": [
+        376,
+        139,
+        926,
+        204
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s1",
+      "text": "AA INTELLIGENCE INDEX",
+      "at_s": 280,
+      "crop_at_1080_width": [
+        376,
+        216,
+        903,
+        274
+      ],
+      "foreground_height_px": 54,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s1",
+      "text": "OPUS 5.5 / LOW",
+      "at_s": 280,
+      "crop_at_1080_width": [
+        376,
+        283,
+        783,
+        348
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s1",
+      "text": "42",
+      "at_s": 280,
+      "crop_at_1080_width": [
+        960,
+        271,
+        1046,
+        347
+      ],
+      "foreground_height_px": 71,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s1",
+      "text": "OPUS 5.5 / MAX",
+      "at_s": 280,
+      "crop_at_1080_width": [
+        376,
+        364,
+        792,
+        429
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s1",
+      "text": "58",
+      "at_s": 280,
+      "crop_at_1080_width": [
+        959,
+        351,
+        1046,
+        429
+      ],
+      "foreground_height_px": 74,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s2",
+      "text": "TOP-GEAR OPUS 5 BEAT",
+      "at_s": 289,
+      "crop_at_1080_width": [
+        376,
+        61,
+        963,
+        126
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s2",
+      "text": "FIRST-GEAR OPUS 5.5",
+      "at_s": 289,
+      "crop_at_1080_width": [
+        376,
+        139,
+        916,
+        205
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s2",
+      "text": "AA INTELLIGENCE INDEX",
+      "at_s": 289,
+      "crop_at_1080_width": [
+        376,
+        216,
+        903,
+        274
+      ],
+      "foreground_height_px": 54,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s2",
+      "text": "OPUS 5.5 / LOW",
+      "at_s": 289,
+      "crop_at_1080_width": [
+        376,
+        283,
+        783,
+        348
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s2",
+      "text": "42",
+      "at_s": 289,
+      "crop_at_1080_width": [
+        960,
+        271,
+        1046,
+        347
+      ],
+      "foreground_height_px": 72,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s2",
+      "text": "OPUS 5 / MAX",
+      "at_s": 289,
+      "crop_at_1080_width": [
+        376,
+        364,
+        742,
+        429
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s2",
+      "text": "51",
+      "at_s": 289,
+      "crop_at_1080_width": [
+        973,
+        352,
+        1046,
+        429
+      ],
+      "foreground_height_px": 73,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s3",
+      "text": "SAME SCORE. LOWER",
+      "at_s": 299,
+      "crop_at_1080_width": [
+        376,
+        61,
+        908,
+        125
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s3",
+      "text": "COST AT MEDIUM EFFORT.",
+      "at_s": 299,
+      "crop_at_1080_width": [
+        376,
+        139,
+        1028,
+        204
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s3",
+      "text": "AA INTELLIGENCE INDEX",
+      "at_s": 299,
+      "crop_at_1080_width": [
+        376,
+        216,
+        903,
+        274
+      ],
+      "foreground_height_px": 54,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s3",
+      "text": "OPUS 5.5 / MEDIUM",
+      "at_s": 299,
+      "crop_at_1080_width": [
+        376,
+        283,
+        889,
+        348
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s3",
+      "text": "51",
+      "at_s": 299,
+      "crop_at_1080_width": [
+        973,
+        271,
+        1046,
+        348
+      ],
+      "foreground_height_px": 72,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s3",
+      "text": "OPUS 5 / MAX",
+      "at_s": 299,
+      "crop_at_1080_width": [
+        376,
+        364,
+        742,
+        429
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-aa-same-claude-s3",
+      "text": "51",
+      "at_s": 299,
+      "crop_at_1080_width": [
+        973,
+        352,
+        1046,
+        429
+      ],
+      "foreground_height_px": 73,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-4",
+      "text": "WHO PAYS WHEN",
+      "at_s": 332,
+      "crop_at_1080_width": [
+        376,
+        152,
+        933,
+        234
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-4",
+      "text": "CHATGPT THINKS?",
+      "at_s": 332,
+      "crop_at_1080_width": [
+        376,
+        251,
+        963,
+        333
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score",
+      "text": "MAXIMUM EFFORT:",
+      "at_s": 342,
+      "crop_at_1080_width": [
+        376,
+        20,
+        865,
+        84
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score",
+      "text": "ROUGHLY 11 TIMES THE",
+      "at_s": 342,
+      "crop_at_1080_width": [
+        376,
+        98,
+        949,
+        163
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score",
+      "text": "COST",
+      "at_s": 342,
+      "crop_at_1080_width": [
+        376,
+        177,
+        506,
+        242
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score",
+      "text": "US DOLLARS PER TASK",
+      "at_s": 342,
+      "crop_at_1080_width": [
+        376,
+        253,
+        881,
+        312
+      ],
+      "foreground_height_px": 54,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score",
+      "text": "LOW",
+      "at_s": 342,
+      "crop_at_1080_width": [
+        376,
+        320,
+        490,
+        385
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score",
+      "text": "$0.55",
+      "at_s": 342,
+      "crop_at_1080_width": [
+        859,
+        308,
+        1046,
+        389
+      ],
+      "foreground_height_px": 79,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score",
+      "text": "MAX",
+      "at_s": 342,
+      "crop_at_1080_width": [
+        376,
+        402,
+        499,
+        466
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score",
+      "text": "$5.98",
+      "at_s": 342,
+      "crop_at_1080_width": [
+        859,
+        389,
+        1046,
+        470
+      ],
+      "foreground_height_px": 77,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-cost",
+      "text": "MAXIMUM EFFORT:",
+      "at_s": 346,
+      "crop_at_1080_width": [
+        376,
+        20,
+        865,
+        84
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-cost",
+      "text": "ROUGHLY 11 TIMES THE",
+      "at_s": 346,
+      "crop_at_1080_width": [
+        376,
+        98,
+        949,
+        163
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-cost",
+      "text": "COST",
+      "at_s": 346,
+      "crop_at_1080_width": [
+        376,
+        177,
+        506,
+        242
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-cost",
+      "text": "US DOLLARS PER TASK",
+      "at_s": 346,
+      "crop_at_1080_width": [
+        376,
+        253,
+        881,
+        312
+      ],
+      "foreground_height_px": 54,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-cost",
+      "text": "LOW",
+      "at_s": 346,
+      "crop_at_1080_width": [
+        376,
+        320,
+        490,
+        385
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-cost",
+      "text": "$0.55",
+      "at_s": 346,
+      "crop_at_1080_width": [
+        859,
+        308,
+        1046,
+        389
+      ],
+      "foreground_height_px": 79,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-cost",
+      "text": "MAX",
+      "at_s": 346,
+      "crop_at_1080_width": [
+        376,
+        402,
+        499,
+        466
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-cost",
+      "text": "$5.98",
+      "at_s": 346,
+      "crop_at_1080_width": [
+        859,
+        389,
+        1046,
+        470
+      ],
+      "foreground_height_px": 77,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-score",
+      "text": "OPUS 5.5: UP 16 INDEX",
+      "at_s": 351,
+      "crop_at_1080_width": [
+        376,
+        61,
+        949,
+        126
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-score",
+      "text": "POINTS",
+      "at_s": 351,
+      "crop_at_1080_width": [
+        376,
+        139,
+        558,
+        204
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-score",
+      "text": "AA INDEX",
+      "at_s": 351,
+      "crop_at_1080_width": [
+        376,
+        216,
+        587,
+        274
+      ],
+      "foreground_height_px": 53,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-score",
+      "text": "LOW",
+      "at_s": 351,
+      "crop_at_1080_width": [
+        376,
+        283,
+        490,
+        347
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-score",
+      "text": "42",
+      "at_s": 351,
+      "crop_at_1080_width": [
+        960,
+        271,
+        1046,
+        347
+      ],
+      "foreground_height_px": 72,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-score",
+      "text": "MAX",
+      "at_s": 351,
+      "crop_at_1080_width": [
+        376,
+        365,
+        499,
+        428
+      ],
+      "foreground_height_px": 59,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-cost-vs-score-score",
+      "text": "58",
+      "at_s": 351,
+      "crop_at_1080_width": [
+        959,
+        351,
+        1046,
+        429
+      ],
+      "foreground_height_px": 74,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-altman-losing-on-pro",
+      "text": "OPENAI LOST MONEY ON",
+      "at_s": 372,
+      "crop_at_1080_width": [
+        376,
+        51,
+        981,
+        115
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-altman-losing-on-pro",
+      "text": "$200 PRO PLANS",
+      "at_s": 372,
+      "crop_at_1080_width": [
+        376,
+        130,
+        808,
+        197
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-5",
+      "text": "WHO DECIDES HOW",
+      "at_s": 382,
+      "crop_at_1080_width": [
+        376,
+        103,
+        994,
+        185
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-5",
+      "text": "HARD YOUR AI",
+      "at_s": 382,
+      "crop_at_1080_width": [
+        376,
+        202,
+        831,
+        284
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-5",
+      "text": "THINKS?",
+      "at_s": 382,
+      "crop_at_1080_width": [
+        376,
+        300,
+        653,
+        382
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-09",
+      "text": "YOU CHOOSE",
+      "at_s": 387,
+      "crop_at_1080_width": [
+        376,
+        58,
+        704,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-09",
+      "text": "THE GEAR",
+      "at_s": 387,
+      "crop_at_1080_width": [
+        376,
+        138,
+        627,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-10",
+      "text": "AI CHOOSES",
+      "at_s": 395,
+      "crop_at_1080_width": [
+        376,
+        58,
+        687,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-10",
+      "text": "FOR YOU",
+      "at_s": 395,
+      "crop_at_1080_width": [
+        376,
+        138,
+        598,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "fri-gemini-auto",
+      "text": "GOOGLE'S FREE GEMINI",
+      "at_s": 403,
+      "crop_at_1080_width": [
+        376,
+        57,
+        951,
+        122
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-gemini-auto",
+      "text": "HAS ALREADY GONE",
+      "at_s": 403,
+      "crop_at_1080_width": [
+        376,
+        136,
+        867,
+        201
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-gemini-auto",
+      "text": "AUTOMATIC",
+      "at_s": 403,
+      "crop_at_1080_width": [
+        376,
+        215,
+        670,
+        279
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-gemini-auto-h1",
+      "text": "GOOGLE'S FREE GEMINI",
+      "at_s": 409,
+      "crop_at_1080_width": [
+        376,
+        35,
+        951,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-gemini-auto-h1",
+      "text": "HAS ALREADY GONE",
+      "at_s": 409,
+      "crop_at_1080_width": [
+        376,
+        114,
+        867,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-gemini-auto-h1",
+      "text": "AUTOMATIC",
+      "at_s": 409,
+      "crop_at_1080_width": [
+        376,
+        193,
+        670,
+        257
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-gemini-auto-h2",
+      "text": "GEMINI DECIDES HOW",
+      "at_s": 414,
+      "crop_at_1080_width": [
+        376,
+        121,
+        921,
+        186
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-gemini-auto-h2",
+      "text": "MUCH THINKING YOU GET",
+      "at_s": 414,
+      "crop_at_1080_width": [
+        376,
+        200,
+        1001,
+        264
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-free-dec-2025",
+      "text": "OPENAI TOOK CHATGPT'S",
+      "at_s": 425,
+      "crop_at_1080_width": [
+        376,
+        35,
+        992,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-free-dec-2025",
+      "text": "AUTOMATIC AWAY. TWICE.",
+      "at_s": 425,
+      "crop_at_1080_width": [
+        376,
+        114,
+        1037,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-free-dec-2025-s2",
+      "text": "OPENAI TOOK CHATGPT'S",
+      "at_s": 428,
+      "crop_at_1080_width": [
+        376,
+        35,
+        992,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-free-dec-2025-s2",
+      "text": "AUTOMATIC AWAY. TWICE.",
+      "at_s": 428,
+      "crop_at_1080_width": [
+        376,
+        114,
+        1037,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-free-dec-2025-s3",
+      "text": "WIRED: OPENAI WAS",
+      "at_s": 437,
+      "crop_at_1080_width": [
+        376,
+        35,
+        887,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-free-dec-2025-s3",
+      "text": "FOOTING THE THINKING",
+      "at_s": 437,
+      "crop_at_1080_width": [
+        376,
+        114,
+        944,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-free-dec-2025-s3",
+      "text": "BILL",
+      "at_s": 437,
+      "crop_at_1080_width": [
+        376,
+        193,
+        484,
+        257
+      ],
+      "foreground_height_px": 59,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-plus-pro-sep-2026",
+      "text": "PLUS AND PRO ALSO LOST",
+      "at_s": 447,
+      "crop_at_1080_width": [
+        376,
+        35,
+        1022,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-plus-pro-sep-2026",
+      "text": "AUTOMATIC THINKING",
+      "at_s": 447,
+      "crop_at_1080_width": [
+        376,
+        114,
+        919,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-plus-pro-sep-2026-c2",
+      "text": "PLUS AND PRO ALSO LOST",
+      "at_s": 452,
+      "crop_at_1080_width": [
+        376,
+        35,
+        1022,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-openai-plus-pro-sep-2026-c2",
+      "text": "AUTOMATIC THINKING",
+      "at_s": 452,
+      "crop_at_1080_width": [
+        376,
+        114,
+        919,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-11",
+      "text": "THE BADGE",
+      "at_s": 463,
+      "crop_at_1080_width": [
+        376,
+        58,
+        663,
+        125
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-11",
+      "text": "GETS ATTENTION",
+      "at_s": 463,
+      "crop_at_1080_width": [
+        376,
+        138,
+        800,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-12",
+      "text": "THE GEAR",
+      "at_s": 476,
+      "crop_at_1080_width": [
+        376,
+        58,
+        627,
+        125
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-12",
+      "text": "CHANGES THINKING",
+      "at_s": 476,
+      "crop_at_1080_width": [
+        376,
+        138,
+        879,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-13",
+      "text": "WHO CHOOSES",
+      "at_s": 490,
+      "crop_at_1080_width": [
+        376,
+        58,
+        759,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-13",
+      "text": "THE GEAR?",
+      "at_s": 490,
+      "crop_at_1080_width": [
+        376,
+        138,
+        663,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-14",
+      "text": "WHEN EASY",
+      "at_s": 501,
+      "crop_at_1080_width": [
+        376,
+        58,
+        682,
+        125
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-14",
+      "text": "WINS",
+      "at_s": 501,
+      "crop_at_1080_width": [
+        376,
+        138,
+        519,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-6",
+      "text": "WHAT WILL",
+      "at_s": 507,
+      "crop_at_1080_width": [
+        376,
+        103,
+        746,
+        185
+      ],
+      "foreground_height_px": 77,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-6",
+      "text": "CHATGPT HIDE",
+      "at_s": 507,
+      "crop_at_1080_width": [
+        376,
+        202,
+        836,
+        284
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-6",
+      "text": "FROM YOU?",
+      "at_s": 507,
+      "crop_at_1080_width": [
+        376,
+        300,
+        760,
+        382
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7",
+      "text": "UNDER 1% USED",
+      "at_s": 526,
+      "crop_at_1080_width": [
+        376,
+        29,
+        802,
+        93
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7",
+      "text": "THINKING DAILY BEFORE",
+      "at_s": 526,
+      "crop_at_1080_width": [
+        376,
+        107,
+        974,
+        172
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7",
+      "text": "GPT-5",
+      "at_s": 526,
+      "crop_at_1080_width": [
+        376,
+        186,
+        530,
+        251
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7",
+      "text": "BEFORE",
+      "at_s": 526,
+      "crop_at_1080_width": [
+        376,
+        293,
+        565,
+        357
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7",
+      "text": "<1%",
+      "at_s": 526,
+      "crop_at_1080_width": [
+        899,
+        280,
+        1046,
+        357
+      ],
+      "foreground_height_px": 73,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7",
+      "text": "AFTER GPT-5",
+      "at_s": 526,
+      "crop_at_1080_width": [
+        376,
+        397,
+        698,
+        462
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7",
+      "text": "7%",
+      "at_s": 526,
+      "crop_at_1080_width": [
+        912,
+        384,
+        1046,
+        461
+      ],
+      "foreground_height_px": 73,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7-after",
+      "text": "7% USED THINKING DAILY",
+      "at_s": 531,
+      "crop_at_1080_width": [
+        376,
+        68,
+        1041,
+        133
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7-after",
+      "text": "AFTER GPT-5",
+      "at_s": 531,
+      "crop_at_1080_width": [
+        376,
+        147,
+        698,
+        212
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7-after",
+      "text": "BEFORE",
+      "at_s": 531,
+      "crop_at_1080_width": [
+        376,
+        253,
+        565,
+        318
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7-after",
+      "text": "<1%",
+      "at_s": 531,
+      "crop_at_1080_width": [
+        899,
+        241,
+        1046,
+        318
+      ],
+      "foreground_height_px": 73,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7-after",
+      "text": "AFTER GPT-5",
+      "at_s": 531,
+      "crop_at_1080_width": [
+        376,
+        357,
+        698,
+        423
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-thinking-use-1-to-7-after",
+      "text": "7%",
+      "at_s": 531,
+      "crop_at_1080_width": [
+        912,
+        345,
+        1046,
+        422
+      ],
+      "foreground_height_px": 73,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal",
+      "text": "ANTHROPIC TURNED",
+      "at_s": 535,
+      "crop_at_1080_width": [
+        376,
+        35,
+        869,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal",
+      "text": "CLAUDE CODE DOWN A",
+      "at_s": 535,
+      "crop_at_1080_width": [
+        376,
+        114,
+        936,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal",
+      "text": "GEAR",
+      "at_s": 535,
+      "crop_at_1080_width": [
+        376,
+        193,
+        509,
+        257
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal-f2",
+      "text": "ANTHROPIC TURNED",
+      "at_s": 538,
+      "crop_at_1080_width": [
+        376,
+        40,
+        869,
+        105
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal-f2",
+      "text": "CLAUDE CODE DOWN A",
+      "at_s": 538,
+      "crop_at_1080_width": [
+        376,
+        119,
+        936,
+        183
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal-f2",
+      "text": "GEAR",
+      "at_s": 538,
+      "crop_at_1080_width": [
+        376,
+        197,
+        509,
+        262
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal-f3",
+      "text": "MOST STAYED. IT FELT",
+      "at_s": 542,
+      "crop_at_1080_width": [
+        376,
+        94,
+        933,
+        158
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal-f3",
+      "text": "LESS SMART.",
+      "at_s": 542,
+      "crop_at_1080_width": [
+        376,
+        173,
+        710,
+        237
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal-f4",
+      "text": "ANTHROPIC ADMITTED THE",
+      "at_s": 546,
+      "crop_at_1080_width": [
+        376,
+        40,
+        1040,
+        105
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal-f4",
+      "text": "MISTAKE AND REVERSED",
+      "at_s": 546,
+      "crop_at_1080_width": [
+        376,
+        119,
+        991,
+        183
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-claude-code-reversal-f4",
+      "text": "IT",
+      "at_s": 546,
+      "crop_at_1080_width": [
+        376,
+        198,
+        423,
+        262
+      ],
+      "foreground_height_px": 59,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-extended-cut-by-mistake",
+      "text": "OPENAI CUT CHATGPT'S",
+      "at_s": 568,
+      "crop_at_1080_width": [
+        376,
+        53,
+        957,
+        118
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-extended-cut-by-mistake",
+      "text": "THINKING TIME FOR SPEED",
+      "at_s": 568,
+      "crop_at_1080_width": [
+        376,
+        132,
+        1038,
+        196
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-extended-cut-by-mistake-r2",
+      "text": "OPENAI ALSO CUT",
+      "at_s": 575,
+      "crop_at_1080_width": [
+        376,
+        35,
+        813,
+        100
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-extended-cut-by-mistake-r2",
+      "text": "EXTENDED THINKING BY",
+      "at_s": 575,
+      "crop_at_1080_width": [
+        376,
+        114,
+        961,
+        179
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-extended-cut-by-mistake-r2",
+      "text": "MISTAKE",
+      "at_s": 575,
+      "crop_at_1080_width": [
+        376,
+        193,
+        603,
+        257
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-extended-cut-by-mistake-r3",
+      "text": "WEEKS TO FIX. INVISIBLE",
+      "at_s": 579,
+      "crop_at_1080_width": [
+        376,
+        53,
+        994,
+        117
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-extended-cut-by-mistake-r3",
+      "text": "ON YOUR SCREEN.",
+      "at_s": 579,
+      "crop_at_1080_width": [
+        376,
+        131,
+        819,
+        196
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-15",
+      "text": "WHO DOES",
+      "at_s": 596,
+      "crop_at_1080_width": [
+        376,
+        58,
+        655,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-15",
+      "text": "AUTO SERVE?",
+      "at_s": 596,
+      "crop_at_1080_width": [
+        376,
+        138,
+        729,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-7",
+      "text": "WHAT SHOULD",
+      "at_s": 612,
+      "crop_at_1080_width": [
+        376,
+        103,
+        841,
+        185
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-7",
+      "text": "CHATGPT STILL LET",
+      "at_s": 612,
+      "crop_at_1080_width": [
+        376,
+        202,
+        990,
+        284
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-7",
+      "text": "YOU CHOOSE?",
+      "at_s": 612,
+      "crop_at_1080_width": [
+        376,
+        300,
+        824,
+        382
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-16",
+      "text": "MATCH THE GEAR",
+      "at_s": 620,
+      "crop_at_1080_width": [
+        376,
+        58,
+        833,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-16",
+      "text": "TO THE JOB",
+      "at_s": 620,
+      "crop_at_1080_width": [
+        376,
+        138,
+        677,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-17",
+      "text": "FOR BIG CHOICES:",
+      "at_s": 631,
+      "crop_at_1080_width": [
+        376,
+        58,
+        838,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-17",
+      "text": "TURN IT UP",
+      "at_s": 631,
+      "crop_at_1080_width": [
+        376,
+        138,
+        663,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-where-to-turn-it-up",
+      "text": "ACTING ON IT? CHOOSE",
+      "at_s": 637,
+      "crop_at_1080_width": [
+        376,
+        49,
+        951,
+        114
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-where-to-turn-it-up",
+      "text": "MEDIUM OR HIGH",
+      "at_s": 637,
+      "crop_at_1080_width": [
+        376,
+        128,
+        815,
+        192
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-where-to-turn-it-up-c2",
+      "text": "FREE PLAN? PICK THINK.",
+      "at_s": 640,
+      "crop_at_1080_width": [
+        376,
+        173,
+        990,
+        237
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-deep-where-to-turn-it-up-c3",
+      "text": "CHOOSE THE EFFORT",
+      "at_s": 644,
+      "crop_at_1080_width": [
+        376,
+        72,
+        885,
+        138
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-18",
+      "text": "THE DRIVER",
+      "at_s": 663,
+      "crop_at_1080_width": [
+        376,
+        58,
+        678,
+        125
+      ],
+      "foreground_height_px": 62,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-18",
+      "text": "STILL CHOOSES",
+      "at_s": 663,
+      "crop_at_1080_width": [
+        376,
+        138,
+        773,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-19",
+      "text": "KEEP THE",
+      "at_s": 677,
+      "crop_at_1080_width": [
+        376,
+        58,
+        619,
+        125
+      ],
+      "foreground_height_px": 62,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-19",
+      "text": "OVERRIDE",
+      "at_s": 677,
+      "crop_at_1080_width": [
+        376,
+        138,
+        631,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-20",
+      "text": "SHOW THE GEAR",
+      "at_s": 687,
+      "crop_at_1080_width": [
+        376,
+        58,
+        801,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-20",
+      "text": "IT PICKED",
+      "at_s": 687,
+      "crop_at_1080_width": [
+        376,
+        138,
+        627,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-21",
+      "text": "FROM MANUAL",
+      "at_s": 697,
+      "crop_at_1080_width": [
+        376,
+        58,
+        776,
+        125
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-21",
+      "text": "TO AUTOMATIC",
+      "at_s": 697,
+      "crop_at_1080_width": [
+        376,
+        138,
+        764,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-22",
+      "text": "KEEP CONTROL",
+      "at_s": 708,
+      "crop_at_1080_width": [
+        376,
+        58,
+        759,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-22",
+      "text": "WHEN IT MATTERS",
+      "at_s": 708,
+      "crop_at_1080_width": [
+        376,
+        138,
+        859,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-23",
+      "text": "I STILL",
+      "at_s": 717,
+      "crop_at_1080_width": [
+        376,
+        58,
+        551,
+        125
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-23",
+      "text": "CHOOSE MANUAL",
+      "at_s": 717,
+      "crop_at_1080_width": [
+        376,
+        138,
+        827,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-8",
+      "text": "WILL CHATGPT",
+      "at_s": 721,
+      "crop_at_1080_width": [
+        376,
+        103,
+        846,
+        185
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-8",
+      "text": "DECIDE FOR YOU",
+      "at_s": 721,
+      "crop_at_1080_width": [
+        376,
+        202,
+        897,
+        284
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "fri-chapter-8",
+      "text": "AGAIN?",
+      "at_s": 721,
+      "crop_at_1080_width": [
+        376,
+        300,
+        620,
+        382
+      ],
+      "foreground_height_px": 78,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-24",
+      "text": "AUTOMATIC",
+      "at_s": 731,
+      "crop_at_1080_width": [
+        376,
+        58,
+        683,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-24",
+      "text": "BY MID-2027?",
+      "at_s": 731,
+      "crop_at_1080_width": [
+        376,
+        138,
+        773,
+        205
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-25",
+      "text": "PAID PLANS",
+      "at_s": 744,
+      "crop_at_1080_width": [
+        376,
+        58,
+        688,
+        125
+      ],
+      "foreground_height_px": 63,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-25",
+      "text": "GO AUTO TOO?",
+      "at_s": 744,
+      "crop_at_1080_width": [
+        376,
+        138,
+        754,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-26",
+      "text": "PAID USERS",
+      "at_s": 753,
+      "crop_at_1080_width": [
+        376,
+        58,
+        686,
+        125
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "repair-long-car-26",
+      "text": "KEEP CONTROL?",
+      "at_s": 753,
+      "crop_at_1080_width": [
+        376,
+        138,
+        795,
+        205
+      ],
+      "foreground_height_px": 64,
+      "status": "pass"
+    },
+    {
+      "card": "fri-call-85",
+      "text": "BY MID-2027, FREE",
+      "at_s": 758,
+      "crop_at_1080_width": [
+        376,
+        78,
+        874,
+        150
+      ],
+      "foreground_height_px": 67,
+      "status": "pass"
+    },
+    {
+      "card": "fri-call-85",
+      "text": "CHATGPT GOES",
+      "at_s": 758,
+      "crop_at_1080_width": [
+        376,
+        156,
+        748,
+        221
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-call-85",
+      "text": "AUTOMATIC AGAIN",
+      "at_s": 758,
+      "crop_at_1080_width": [
+        376,
+        235,
+        839,
+        300
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-call-85",
+      "text": "85% CONFIDENT",
+      "at_s": 758,
+      "crop_at_1080_width": [
+        376,
+        334,
+        899,
+        412
+      ],
+      "foreground_height_px": 74,
+      "status": "pass"
+    },
+    {
+      "card": "fri-call-85-fill",
+      "text": "BY MID-2027, FREE",
+      "at_s": 760,
+      "crop_at_1080_width": [
+        376,
+        78,
+        874,
+        150
+      ],
+      "foreground_height_px": 67,
+      "status": "pass"
+    },
+    {
+      "card": "fri-call-85-fill",
+      "text": "CHATGPT GOES",
+      "at_s": 760,
+      "crop_at_1080_width": [
+        376,
+        156,
+        748,
+        221
+      ],
+      "foreground_height_px": 61,
+      "status": "pass"
+    },
+    {
+      "card": "fri-call-85-fill",
+      "text": "AUTOMATIC AGAIN",
+      "at_s": 760,
+      "crop_at_1080_width": [
+        376,
+        235,
+        839,
+        300
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    },
+    {
+      "card": "fri-call-85-fill",
+      "text": "85% CONFIDENT",
+      "at_s": 760,
+      "crop_at_1080_width": [
+        376,
+        334,
+        899,
+        412
+      ],
+      "foreground_height_px": 74,
+      "status": "pass"
+    }
+  ],
+  "requires_inspection": []
+}

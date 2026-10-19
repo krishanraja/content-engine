@@ -1,0 +1,8 @@
+{
+  "video_sha256": "93a10b5bcb6af642878c3bd1d100bfec659f93ccd790b8850cd5c49ffbdd6eec",
+  "decoded_pcm_sha256": "ee1cad6abeb25901a82fac93d4d82ffd9967a6f54840fa23b93e19d4dcf17605",
+  "pcm_matches_short_v6": true,
+  "method": "ffmpeg -v error -i VIDEO -map 0:a:0 -f hash -hash sha256 -",
+  "scope": "Decoded audio identity only. This does not certify visual timing, full playback, or delivery readiness.",
+  "review_copy_sha256": "93a10b5bcb6af642878c3bd1d100bfec659f93ccd790b8850cd5c49ffbdd6eec"
+}

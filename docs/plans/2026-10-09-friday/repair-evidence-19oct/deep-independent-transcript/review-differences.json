@@ -1,0 +1,527 @@
+[
+  {
+    "id": 0,
+    "at_edited": 0.11,
+    "expected": "so",
+    "recognized": "",
+    "context": "i've been using all"
+  },
+  {
+    "id": 1,
+    "at_edited": 18.97,
+    "expected": "pegged",
+    "recognized": "peg",
+    "context": "a new intelligence number peg to a new model"
+  },
+  {
+    "id": 2,
+    "at_edited": 29.17,
+    "expected": "",
+    "recognized": "what",
+    "context": "where we've come from what what's happening here and"
+  },
+  {
+    "id": 3,
+    "at_edited": 32.73,
+    "expected": "mind the",
+    "recognized": "minor",
+    "context": "so today's edition of minor gap is a bit"
+  },
+  {
+    "id": 6,
+    "at_edited": 62.79,
+    "expected": "",
+    "recognized": "is",
+    "context": "some of the ai is models out recently are"
+  },
+  {
+    "id": 7,
+    "at_edited": 66.33,
+    "expected": "at",
+    "recognized": "",
+    "context": "really good they're improving a huge rate and"
+  },
+  {
+    "id": 8,
+    "at_edited": 69.49,
+    "expected": "i'm",
+    "recognized": "i",
+    "context": "not lying to you i just seeing a name"
+  },
+  {
+    "id": 9,
+    "at_edited": 69.87,
+    "expected": "saying that the",
+    "recognized": "seeing a",
+    "context": "to you i just seeing a name is not as"
+  },
+  {
+    "id": 10,
+    "at_edited": 74.81,
+    "expected": "",
+    "recognized": "that",
+    "context": "hype of the name that in the pr releases"
+  },
+  {
+    "id": 11,
+    "at_edited": 90.47,
+    "expected": "gp2",
+    "recognized": "gpt",
+    "context": "funny thing is chat gpt and claude often start"
+  },
+  {
+    "id": 13,
+    "at_edited": 100.59,
+    "expected": "and",
+    "recognized": "",
+    "context": "rather than the thinking let's unpack that a"
+  },
+  {
+    "id": 14,
+    "at_edited": 103.77,
+    "expected": "anthropic",
+    "recognized": "and thropic",
+    "context": "bit firstly the names and thropic makes claude it launched"
+  },
+  {
+    "id": 15,
+    "at_edited": 106.87,
+    "expected": "in",
+    "recognized": "",
+    "context": "launched opus 4 8 may opus 5 in"
+  },
+  {
+    "id": 16,
+    "at_edited": 110.75,
+    "expected": "openai's chatgpt",
+    "recognized": "open ai is chat gpt",
+    "context": "5 in september and open ai is chat gpt went from gpt 5"
+  },
+  {
+    "id": 17,
+    "at_edited": 120.97,
+    "expected": "a",
+    "recognized": "",
+    "context": "right look at what launch of a new"
+  },
+  {
+    "id": 18,
+    "at_edited": 126.01,
+    "expected": "openai",
+    "recognized": "open i",
+    "context": "pr in march 2025 open i added a new picture"
+  },
+  {
+    "id": 19,
+    "at_edited": 128.23,
+    "expected": "chatgpt",
+    "recognized": "sat to chat gpt",
+    "context": "new picture maker to sat to chat gpt sam altman who runs"
+  },
+  {
+    "id": 24,
+    "at_edited": 144.85,
+    "expected": "it",
+    "recognized": "",
+    "context": "for months and announcing on such a big"
+  },
+  {
+    "id": 26,
+    "at_edited": 154.09,
+    "expected": "now",
+    "recognized": "a",
+    "context": "not the model name a picture of small business"
+  },
+  {
+    "id": 27,
+    "at_edited": 155.01,
+    "expected": "a",
+    "recognized": "of",
+    "context": "model name a picture of small business owner let's"
+  },
+  {
+    "id": 28,
+    "at_edited": 158.81,
+    "expected": "she's",
+    "recognized": "she was",
+    "context": "runs a small shop she was about to sign a"
+  },
+  {
+    "id": 29,
+    "at_edited": 163.09,
+    "expected": "pastes",
+    "recognized": "pays",
+    "context": "sells her stock she pays the deal into her"
+  },
+  {
+    "id": 30,
+    "at_edited": 164.89,
+    "expected": "asks",
+    "recognized": "asked",
+    "context": "ai app and then asked what she should worry"
+  },
+  {
+    "id": 31,
+    "at_edited": 167.85,
+    "expected": "it",
+    "recognized": "",
+    "context": "in about four seconds gives her a pretty"
+  },
+  {
+    "id": 32,
+    "at_edited": 177.15,
+    "expected": "costs",
+    "recognized": "cost",
+    "context": "in the deal which cost her a lot of"
+  },
+  {
+    "id": 33,
+    "at_edited": 186.77,
+    "expected": "the",
+    "recognized": "that",
+    "context": "name on her screen that ai just never really"
+  },
+  {
+    "id": 34,
+    "at_edited": 191.93,
+    "expected": "realise",
+    "recognized": "realize",
+    "context": "sally didn't think to realize that she should be"
+  },
+  {
+    "id": 35,
+    "at_edited": 194.85,
+    "expected": "her",
+    "recognized": "",
+    "context": "the thinking levels of ai see chat gpt"
+  },
+  {
+    "id": 37,
+    "at_edited": 206.39,
+    "expected": "its",
+    "recognized": "it's",
+    "context": "the ai writes out it's working first and at"
+  },
+  {
+    "id": 38,
+    "at_edited": 219.65,
+    "expected": "for that",
+    "recognized": "",
+    "context": "and more websites checked response think of a"
+  },
+  {
+    "id": 39,
+    "at_edited": 227.71,
+    "expected": "is",
+    "recognized": "it's",
+    "context": "5 sonnet 5 5 it's like the badge on"
+  },
+  {
+    "id": 41,
+    "at_edited": 267.07,
+    "expected": "found",
+    "recognized": "from",
+    "context": "group called artificial analysis from the very same claude"
+  },
+  {
+    "id": 42,
+    "at_edited": 285.11,
+    "expected": "1",
+    "recognized": "one",
+    "context": "lowest gear in gear one so changing gears definitely"
+  },
+  {
+    "id": 43,
+    "at_edited": 293.89,
+    "expected": "one's",
+    "recognized": "ones",
+    "context": "be fair the new ones middle gear matched old"
+  },
+  {
+    "id": 44,
+    "at_edited": 294.91,
+    "expected": "the",
+    "recognized": "",
+    "context": "ones middle gear matched old ones top gear"
+  },
+  {
+    "id": 45,
+    "at_edited": 295.11,
+    "expected": "one's",
+    "recognized": "ones",
+    "context": "middle gear matched old ones top gear for much"
+  },
+  {
+    "id": 46,
+    "at_edited": 305.19,
+    "expected": "ais",
+    "recognized": "ai is",
+    "context": "the researchers asked thinking ai is a simple question what"
+  },
+  {
+    "id": 47,
+    "at_edited": 309.79,
+    "expected": "ais",
+    "recognized": "ai is",
+    "context": "3 one of the ai is worked out the answer"
+  },
+  {
+    "id": 48,
+    "at_edited": 331.17,
+    "expected": "centres",
+    "recognized": "centers",
+    "context": "computer servers and data centers which costs a lot"
+  },
+  {
+    "id": 49,
+    "at_edited": 332.57,
+    "expected": "of",
+    "recognized": "",
+    "context": "which costs a lot money to run we"
+  },
+  {
+    "id": 50,
+    "at_edited": 335.51,
+    "expected": "centres",
+    "recognized": "centers",
+    "context": "hear about how data centers gobble up all the"
+  },
+  {
+    "id": 51,
+    "at_edited": 347.33,
+    "expected": "of",
+    "recognized": "",
+    "context": "its score the quality the output only goes"
+  },
+  {
+    "id": 54,
+    "at_edited": 413.59,
+    "expected": "so openai",
+    "recognized": "see open ai",
+    "context": "how much thinking power see open ai has gone the other"
+  },
+  {
+    "id": 57,
+    "at_edited": 428.75,
+    "expected": "",
+    "recognized": "sent",
+    "context": "said the automatic picker sent seemed to send lots"
+  },
+  {
+    "id": 58,
+    "at_edited": 434.31,
+    "expected": "answers which",
+    "recognized": "arts and switch when",
+    "context": "to slower higher thinking arts and switch when when no one's paying"
+  },
+  {
+    "id": 60,
+    "at_edited": 440.31,
+    "expected": "see",
+    "recognized": "so",
+    "context": "ai a lot more so then in september people"
+  },
+  {
+    "id": 61,
+    "at_edited": 445.85,
+    "expected": "openai",
+    "recognized": "opening i",
+    "context": "lost that too and opening i didn't say why and"
+  },
+  {
+    "id": 63,
+    "at_edited": 454.57,
+    "expected": "",
+    "recognized": "you",
+    "context": "here's my guess why you think what each part"
+  },
+  {
+    "id": 65,
+    "at_edited": 471.91,
+    "expected": "anthropic",
+    "recognized": "and tropic",
+    "context": "level even the scores and tropic shows off for opus"
+  },
+  {
+    "id": 66,
+    "at_edited": 473.69,
+    "expected": "5 5 were",
+    "recognized": "five points five we're",
+    "context": "shows off for opus five points five we're in top gear and"
+  },
+  {
+    "id": 67,
+    "at_edited": 476.05,
+    "expected": "",
+    "recognized": "and",
+    "context": "we're in top gear and but out of the"
+  },
+  {
+    "id": 68,
+    "at_edited": 492.11,
+    "expected": "",
+    "recognized": "most of us",
+    "context": "and most of us most of us actually can't be bothered"
+  },
+  {
+    "id": 69,
+    "at_edited": 508.25,
+    "expected": "",
+    "recognized": "the",
+    "context": "not to change setting the most of us anyway"
+  },
+  {
+    "id": 71,
+    "at_edited": 514.29,
+    "expected": "arrived",
+    "recognized": "right like",
+    "context": "automatic gear picker first right like a lot more people"
+  },
+  {
+    "id": 72,
+    "at_edited": 519.03,
+    "expected": "",
+    "recognized": "and",
+    "context": "said careful thinking answers and but before that fewer"
+  },
+  {
+    "id": 73,
+    "at_edited": 521.15,
+    "expected": "",
+    "recognized": "like",
+    "context": "before that fewer than like one free user and"
+  },
+  {
+    "id": 74,
+    "at_edited": 522.57,
+    "expected": "in",
+    "recognized": "and",
+    "context": "like one free user and a hundred used thinking"
+  },
+  {
+    "id": 75,
+    "at_edited": 527.99,
+    "expected": "",
+    "recognized": "the",
+    "context": "using it because the the ai was choosing for"
+  },
+  {
+    "id": 76,
+    "at_edited": 531.45,
+    "expected": "two",
+    "recognized": "to",
+    "context": "anthropic learned its lesson to in march it moved"
+  },
+  {
+    "id": 81,
+    "at_edited": 595.63,
+    "expected": "openai's",
+    "recognized": "opening eyes",
+    "context": "is it thinking about opening eyes profit and can you"
+  },
+  {
+    "id": 82,
+    "at_edited": 603.57,
+    "expected": "have",
+    "recognized": "get",
+    "context": "the product you actually get and when the product"
+  },
+  {
+    "id": 85,
+    "at_edited": 651.89,
+    "expected": "",
+    "recognized": "decades",
+    "context": "found a better way decades decades ago it's called"
+  },
+  {
+    "id": 86,
+    "at_edited": 675.75,
+    "expected": "",
+    "recognized": "should we",
+    "context": "paddles so that we should we can take over when"
+  },
+  {
+    "id": 88,
+    "at_edited": 685.31,
+    "expected": "arm so",
+    "recognized": "answer",
+    "context": "it picked under every answer those are the things"
+  },
+  {
+    "id": 90,
+    "at_edited": 705.31,
+    "expected": "",
+    "recognized": "paddle car",
+    "context": "is still keep the paddle car paddles in the driver's"
+  },
+  {
+    "id": 91,
+    "at_edited": 707.77,
+    "expected": "",
+    "recognized": "whilst",
+    "context": "in the driver's hands whilst whilst changing semi automatically"
+  },
+  {
+    "id": 92,
+    "at_edited": 719.01,
+    "expected": "",
+    "recognized": "i what",
+    "context": "this go from here i what and what big prediction"
+  },
+  {
+    "id": 94,
+    "at_edited": 732.61,
+    "expected": "",
+    "recognized": "you just",
+    "context": "in automatic again and you just you'll be able to"
+  },
+  {
+    "id": 95,
+    "at_edited": 739.63,
+    "expected": "",
+    "recognized": "transparent products always",
+    "context": "because like i said transparent products always less transparent products sorry"
+  },
+  {
+    "id": 96,
+    "at_edited": 743.07,
+    "expected": "",
+    "recognized": "sorry",
+    "context": "always less transparent products sorry always make the ai"
+  },
+  {
+    "id": 97,
+    "at_edited": 748.65,
+    "expected": "setting",
+    "recognized": "saying",
+    "context": "have that semi automatic saying kind of like an"
+  },
+  {
+    "id": 98,
+    "at_edited": 755.65,
+    "expected": "at",
+    "recognized": "",
+    "context": "one i'll chalk this about eighty five percent"
+  },
+  {
+    "id": 100,
+    "at_edited": 759.05,
+    "expected": "has",
+    "recognized": "is",
+    "context": "will happen if this is resonated with yours made"
+  },
+  {
+    "id": 101,
+    "at_edited": 759.75,
+    "expected": "you it's",
+    "recognized": "yours",
+    "context": "this is resonated with yours made you think about"
+  },
+  {
+    "id": 103,
+    "at_edited": 776.15,
+    "expected": "",
+    "recognized": "in",
+    "context": "hard your ai thinks in in this kind of"
+  }
+]

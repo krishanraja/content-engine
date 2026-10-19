@@ -1,0 +1,57 @@
+{
+  "checked_on": "2026-10-19",
+  "scope": "Revised card evidence, not publication clearance",
+  "article_fact_gate": "failed",
+  "claims": [
+    {
+      "source": "https://artificialanalysis.ai/models/claude-opus-5-5",
+      "method": "Live primary page via web tool",
+      "effort": "max with default fallback",
+      "intelligence_index": 58,
+      "cost_per_index_task_usd": 5.98
+    },
+    {
+      "source": "https://artificialanalysis.ai/models/claude-opus-5-5-low",
+      "method": "Live primary page via web tool",
+      "effort": "low with default fallback",
+      "intelligence_index": 42,
+      "cost_per_index_task_usd": 0.55
+    },
+    {
+      "source": "https://artificialanalysis.ai/models/claude-opus-5-5-medium",
+      "method": "Live primary page via web tool",
+      "effort": "medium with default fallback",
+      "intelligence_index": 51,
+      "cost_per_index_task_usd": 1.34
+    },
+    {
+      "source": "https://artificialanalysis.ai/models/claude-opus-5",
+      "method": "Previously retrieved primary HTML; live web retry failed. Re-inspected stored model summary.",
+      "capture_sha256": "9e9ab5ba344ee912f6d16e238bc41d34b6a1df3b6e1b55bdc72ddaed2e059463",
+      "effort": "max",
+      "intelligence_index": 51,
+      "cost_per_index_task_usd": 5.86
+    },
+    {
+      "source": "https://support.google.com/gemini/answer/17004136",
+      "method": "Live Google help page",
+      "finding": "Free personal accounts begin moving to Auto on 9 October 2026. Most prompts route to Flash-Lite; deeper reasoning may route to Flash or Pro. Disabling smart selection uses Flash-Lite."
+    }
+  ],
+  "calculated": {
+    "index_point_increase": 16,
+    "cost_ratio": 10.872727272727273
+  },
+  "preserved_editorial_findings": {
+    "wired_lines": "fri-deep-openai-free-dec-2025-s2 and -s3: WIRED's two lines are still behind its paywall. Since the 17 Oct review -s2 shows OpenAI's own 11 Dec 2025 release note, ringed on 'To maximize choice, free users will now use GPT-5.2 Instant by default...' (OpenAI's stated reason), so its OPENAI kicker sits over OpenAI's words; the spoken line ('free users liked the normal setting better') rests on WIRED's spokesperson quote, which is not on screen. -s3 shows Maxwell Zeff's post, ringed on its whole sentence including 'was thought to be hurting engagement'; it never says the router sent more free users to thinking, which the approved heading and the voice say. A signed-in WIRED capture would close both.",
+    "call_market": "fri-call-85 and -fill: no public market is on file for this exact call (free ChatGPT starts on automatic by 30 June 2027, 85%); docs/plans/2026-10-09-manifold-market.md and post.json still carry the older call. Open and record one before release (nothing is published from this step).",
+    "headings_for_krish": "Approved headings are drawn as picked; the 17 Oct skeptics' questions on six of them are in the 17 Oct report (cost-vs-score-score 'about a third' against 42 to 58, which is +36 to +38%; WIRED's 'footing the thinking bill'; gemini-auto-h2 'how much thinking'; r3 'Your screen never showed it'; 'Middle-gear' and 'every gear'; the causal 'Once the AI chose').",
+    "em_dashes_in_pages": "Em dashes inside captured pages' own text (OpenAI's funding sentence, Zeff's post, the postmortem's item 1, OpenAI's levels list) are the pages' own and are not redrawn. Our own card text has none.",
+    "thinking_settings_scale": "fri-deep-thinking-settings sets OpenAI's and Claude's level lists side by side, clean, both headings ringed; the two lists are wide pages, so they draw at about 0.44x (body text about 14px on the card)."
+  },
+  "limits": [
+    "Benchmark cost is the weighted average cost per Intelligence Index task, not the price of any arbitrary user task.",
+    "Forecast percentages are the speaker\u2019s confidence, not an externally validated probability.",
+    "Shortened headlines remain review candidates. Approved video titles, thumbnails, intro and outro remain unchanged."
+  ]
+}

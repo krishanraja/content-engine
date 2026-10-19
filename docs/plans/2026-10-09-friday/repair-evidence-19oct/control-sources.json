@@ -1,0 +1,14 @@
+{
+  "supplied_by": "Krish",
+  "supplied_on": "2026-10-19",
+  "purpose": "Real Claude model and effort controls for the Friday video repair",
+  "originals": [
+    {"file": "claude-models-original.png", "sha256": "c6cec3058d4c3e9235931f53d30e9122549b839fcada58eebaffc5e0099b5ebc", "width": 992, "height": 658},
+    {"file": "claude-effort-original.png", "sha256": "6dd5abe207406c27e3709271a7e11f42f983593ae621a5043caadba838f60867", "width": 1244, "height": 604}
+  ],
+  "local_preservation": ".cache/produce/2026-10-16-904658db/repair-assets/controls",
+  "visible_selection": {"model": "Opus 5.5", "effort": "Extra"},
+  "visible_effort_options": ["Low", "Medium", "High", "Extra", "Max"],
+  "treatment": "Keep original bytes. Enlarge original pixels through SVG viewports, with no generated or retyped control labels. Check essential glyph height at final output scale.",
+  "filing": "File the originals and derived production assets with the finished repair package in the post library; currently preserved locally pending completed repairs and review."
+}

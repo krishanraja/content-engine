@@ -1,0 +1,54 @@
+{
+  "piece_id": "904658db-4df2-4537-a0ed-ebe93e081db7",
+  "approved_by": "Krish",
+  "approved_on": "2026-10-19",
+  "approval_words": "Approve this treatment and music balance",
+  "scope": "The presented authentic two-stage mapping, wide treatment, beat direction and audition balance for producing the remaining visuals and both repaired cuts.",
+  "mapping": [
+    "Mercedes = Claude",
+    "C-Class = Opus 5.5"
+  ],
+  "music": {
+    "track": "no-curves-instrumental",
+    "speech_bed_lufs": -31,
+    "chapter_lift_lufs": -22,
+    "rise_s": 0.5,
+    "fall_s": 0.8,
+    "track_crossfade_s": 2
+  },
+  "filing_instruction": {
+    "by": "Krish",
+    "on": "2026-10-19",
+    "words": "After these videos are repaired, make sure they go in the right place in my Google Drive, in place of the old videos, and then give me the two links here.",
+    "scope": "Once repairs and required review checks are complete, file both replacements in the existing post library folder, make them the current cuts, verify the Drive copies and return their two Drive links in this chat.",
+    "preservation": "Preserve rejected files as superseded copies, consistent with the approved repair plan. Do not destroy the originals.",
+    "status": "authorized_conditionally_on_completed_repairs_and_review"
+  },
+  "not_granted": [
+    "finished-video acceptance",
+    "publication clearance",
+    "board migration before video repairs and review"
+  ],
+  "composition_approval": {
+    "by": "Krish",
+    "on": "2026-10-19",
+    "words": "Looks good",
+    "scope": "The presented Sally illustration and revised card composition following the cross-cut sparse-layout audit, used by short v8 and deep v4.",
+    "preview": "illustrations/sally-card-v8.png",
+    "audit": "repair-evidence-19oct/composition-audit-v8-v4.json",
+    "finished_video_acceptance": false
+  },
+  "short_finished_review": {
+    "video_sha256": "93a10b5bcb6af642878c3bd1d100bfec659f93ccd790b8850cd5c49ffbdd6eec",
+    "cut": "short",
+    "version": "v8",
+    "reviewer": "Krish",
+    "reviewed_on": "2026-10-19",
+    "question": "After watching this short with sound, do the speech, captions, cuts, visuals and music now work for you?",
+    "answer": "Looks good",
+    "status": "accepted",
+    "method": "Explicit human response to the complete 88-second review video and sound-review question.",
+    "scope": "Finished short only. Technical gates remain independently required. Does not accept the deep cut or clear article publication.",
+    "assistant_full_playback": "not claimed"
+  }
+}

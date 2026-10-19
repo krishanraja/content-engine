@@ -1,0 +1,1172 @@
+{
+  "status": "fail",
+  "expected_words": 2366,
+  "heard_words": 2419,
+  "changes": [
+    {
+      "kind": "delete",
+      "expected": [
+        "so"
+      ],
+      "heard": [],
+      "expected_index": 0,
+      "heard_index": 0
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "pegged"
+      ],
+      "heard": [
+        "peg"
+      ],
+      "expected_index": 68,
+      "heard_index": 67
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "what"
+      ],
+      "expected_index": 104,
+      "heard_index": 103
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "mind",
+        "the"
+      ],
+      "heard": [
+        "minor"
+      ],
+      "expected_index": 117,
+      "heard_index": 117
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 164,
+      "heard_index": 163
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "going",
+        "to"
+      ],
+      "heard": [
+        "gonna"
+      ],
+      "expected_index": 195,
+      "heard_index": 195
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "is"
+      ],
+      "expected_index": 219,
+      "heard_index": 218
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "at"
+      ],
+      "heard": [],
+      "expected_index": 228,
+      "heard_index": 228
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "i'm"
+      ],
+      "heard": [
+        "i"
+      ],
+      "expected_index": 242,
+      "heard_index": 241
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "saying",
+        "that",
+        "the"
+      ],
+      "heard": [
+        "seeing",
+        "a"
+      ],
+      "expected_index": 244,
+      "heard_index": 243
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "that"
+      ],
+      "expected_index": 258,
+      "heard_index": 256
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "gp2"
+      ],
+      "heard": [
+        "gpt"
+      ],
+      "expected_index": 305,
+      "heard_index": 304
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 326,
+      "heard_index": 325
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "and"
+      ],
+      "heard": [],
+      "expected_index": 341,
+      "heard_index": 341
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "anthropic"
+      ],
+      "heard": [
+        "and",
+        "thropic"
+      ],
+      "expected_index": 351,
+      "heard_index": 350
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "in"
+      ],
+      "heard": [],
+      "expected_index": 359,
+      "heard_index": 359
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai's",
+        "chatgpt"
+      ],
+      "heard": [
+        "open",
+        "ai",
+        "is",
+        "chat",
+        "gpt"
+      ],
+      "expected_index": 371,
+      "heard_index": 370
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "a"
+      ],
+      "heard": [],
+      "expected_index": 403,
+      "heard_index": 405
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "i"
+      ],
+      "expected_index": 419,
+      "heard_index": 420
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "chatgpt"
+      ],
+      "heard": [
+        "sat",
+        "to",
+        "chat",
+        "gpt"
+      ],
+      "expected_index": 426,
+      "heard_index": 428
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 431,
+      "heard_index": 436
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "chatgpt"
+      ],
+      "heard": [
+        "chat",
+        "gpt"
+      ],
+      "expected_index": 439,
+      "heard_index": 445
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 446,
+      "heard_index": 453
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 455,
+      "heard_index": 463
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "it"
+      ],
+      "heard": [],
+      "expected_index": 466,
+      "heard_index": 475
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 473,
+      "heard_index": 481
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "now"
+      ],
+      "heard": [
+        "a"
+      ],
+      "expected_index": 490,
+      "heard_index": 499
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "a"
+      ],
+      "heard": [
+        "of"
+      ],
+      "expected_index": 492,
+      "heard_index": 501
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "she's"
+      ],
+      "heard": [
+        "she",
+        "was"
+      ],
+      "expected_index": 505,
+      "heard_index": 514
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "pastes"
+      ],
+      "heard": [
+        "pays"
+      ],
+      "expected_index": 520,
+      "heard_index": 530
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "asks"
+      ],
+      "heard": [
+        "asked"
+      ],
+      "expected_index": 529,
+      "heard_index": 539
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "it"
+      ],
+      "heard": [],
+      "expected_index": 539,
+      "heard_index": 549
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "costs"
+      ],
+      "heard": [
+        "cost"
+      ],
+      "expected_index": 567,
+      "heard_index": 576
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "the"
+      ],
+      "heard": [
+        "that"
+      ],
+      "expected_index": 594,
+      "heard_index": 603
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "realise"
+      ],
+      "heard": [
+        "realize"
+      ],
+      "expected_index": 607,
+      "heard_index": 616
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "her"
+      ],
+      "heard": [],
+      "expected_index": 617,
+      "heard_index": 626
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "chatgpt"
+      ],
+      "heard": [
+        "chat",
+        "gpt"
+      ],
+      "expected_index": 620,
+      "heard_index": 628
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "its"
+      ],
+      "heard": [
+        "it's"
+      ],
+      "expected_index": 645,
+      "heard_index": 654
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "for",
+        "that"
+      ],
+      "heard": [],
+      "expected_index": 688,
+      "heard_index": 697
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "is"
+      ],
+      "heard": [
+        "it's"
+      ],
+      "expected_index": 708,
+      "heard_index": 715
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "everyone"
+      ],
+      "heard": [
+        "every",
+        "one"
+      ],
+      "expected_index": 802,
+      "heard_index": 809
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "found"
+      ],
+      "heard": [
+        "from"
+      ],
+      "expected_index": 833,
+      "heard_index": 841
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "1"
+      ],
+      "heard": [
+        "one"
+      ],
+      "expected_index": 886,
+      "heard_index": 894
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "one's"
+      ],
+      "heard": [
+        "ones"
+      ],
+      "expected_index": 909,
+      "heard_index": 917
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "the"
+      ],
+      "heard": [],
+      "expected_index": 913,
+      "heard_index": 921
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "one's"
+      ],
+      "heard": [
+        "ones"
+      ],
+      "expected_index": 915,
+      "heard_index": 922
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "ais"
+      ],
+      "heard": [
+        "ai",
+        "is"
+      ],
+      "expected_index": 941,
+      "heard_index": 948
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "ais"
+      ],
+      "heard": [
+        "ai",
+        "is"
+      ],
+      "expected_index": 953,
+      "heard_index": 961
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "centres"
+      ],
+      "heard": [
+        "centers"
+      ],
+      "expected_index": 1013,
+      "heard_index": 1022
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "of"
+      ],
+      "heard": [],
+      "expected_index": 1018,
+      "heard_index": 1027
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "centres"
+      ],
+      "heard": [
+        "centers"
+      ],
+      "expected_index": 1028,
+      "heard_index": 1036
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "of"
+      ],
+      "heard": [],
+      "expected_index": 1063,
+      "heard_index": 1071
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 1111,
+      "heard_index": 1118
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 1129,
+      "heard_index": 1137
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "so",
+        "openai"
+      ],
+      "heard": [
+        "see",
+        "open",
+        "ai"
+      ],
+      "expected_index": 1261,
+      "heard_index": 1270
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "chatgpt's"
+      ],
+      "heard": [
+        "chat",
+        "gpt's"
+      ],
+      "expected_index": 1270,
+      "heard_index": 1280
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 1283,
+      "heard_index": 1294
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "sent"
+      ],
+      "expected_index": 1299,
+      "heard_index": 1311
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "answers",
+        "which"
+      ],
+      "heard": [
+        "arts",
+        "and",
+        "switch",
+        "when"
+      ],
+      "expected_index": 1310,
+      "heard_index": 1323
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 1322,
+      "heard_index": 1337
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "see"
+      ],
+      "heard": [
+        "so"
+      ],
+      "expected_index": 1326,
+      "heard_index": 1342
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "opening",
+        "i"
+      ],
+      "expected_index": 1343,
+      "heard_index": 1359
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "going",
+        "to"
+      ],
+      "heard": [
+        "gonna"
+      ],
+      "expected_index": 1362,
+      "heard_index": 1379
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "you"
+      ],
+      "expected_index": 1376,
+      "heard_index": 1392
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 1386,
+      "heard_index": 1403
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "anthropic"
+      ],
+      "heard": [
+        "and",
+        "tropic"
+      ],
+      "expected_index": 1427,
+      "heard_index": 1445
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "5",
+        "5",
+        "were"
+      ],
+      "heard": [
+        "five",
+        "points",
+        "five",
+        "we're"
+      ],
+      "expected_index": 1432,
+      "heard_index": 1451
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "and"
+      ],
+      "expected_index": 1438,
+      "heard_index": 1458
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "most",
+        "of",
+        "us"
+      ],
+      "expected_index": 1489,
+      "heard_index": 1510
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "the"
+      ],
+      "expected_index": 1526,
+      "heard_index": 1550
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "chatgpt's"
+      ],
+      "heard": [
+        "chat",
+        "gpt's"
+      ],
+      "expected_index": 1542,
+      "heard_index": 1567
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "arrived"
+      ],
+      "heard": [
+        "right",
+        "like"
+      ],
+      "expected_index": 1547,
+      "heard_index": 1573
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "and"
+      ],
+      "expected_index": 1561,
+      "heard_index": 1588
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "like"
+      ],
+      "expected_index": 1566,
+      "heard_index": 1594
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "in"
+      ],
+      "heard": [
+        "and"
+      ],
+      "expected_index": 1569,
+      "heard_index": 1598
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "the"
+      ],
+      "expected_index": 1585,
+      "heard_index": 1614
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "two"
+      ],
+      "heard": [
+        "to"
+      ],
+      "expected_index": 1595,
+      "heard_index": 1625
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 1670,
+      "heard_index": 1700
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "chatgpt"
+      ],
+      "heard": [
+        "chat",
+        "gpt"
+      ],
+      "expected_index": 1672,
+      "heard_index": 1703
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai"
+      ],
+      "heard": [
+        "open",
+        "ai"
+      ],
+      "expected_index": 1677,
+      "heard_index": 1709
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai's"
+      ],
+      "heard": [
+        "open",
+        "ai's"
+      ],
+      "expected_index": 1738,
+      "heard_index": 1771
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "openai's"
+      ],
+      "heard": [
+        "opening",
+        "eyes"
+      ],
+      "expected_index": 1766,
+      "heard_index": 1800
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "have"
+      ],
+      "heard": [
+        "get"
+      ],
+      "expected_index": 1791,
+      "heard_index": 1826
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "chatgpt"
+      ],
+      "heard": [
+        "chat",
+        "gpt"
+      ],
+      "expected_index": 1884,
+      "heard_index": 1919
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "plan's"
+      ],
+      "heard": [
+        "plans"
+      ],
+      "expected_index": 1919,
+      "heard_index": 1955
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "decades"
+      ],
+      "expected_index": 1938,
+      "heard_index": 1974
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "should",
+        "we"
+      ],
+      "expected_index": 2010,
+      "heard_index": 2047
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "chatgpt"
+      ],
+      "heard": [
+        "chat",
+        "gpt"
+      ],
+      "expected_index": 2018,
+      "heard_index": 2057
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "arm",
+        "so"
+      ],
+      "heard": [
+        "answer"
+      ],
+      "expected_index": 2032,
+      "heard_index": 2072
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "going",
+        "to"
+      ],
+      "heard": [
+        "gonna"
+      ],
+      "expected_index": 2071,
+      "heard_index": 2110
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "paddle",
+        "car"
+      ],
+      "expected_index": 2103,
+      "heard_index": 2141
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "whilst"
+      ],
+      "expected_index": 2108,
+      "heard_index": 2148
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "i",
+        "what"
+      ],
+      "expected_index": 2136,
+      "heard_index": 2177
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "chatgpt's"
+      ],
+      "heard": [
+        "chat",
+        "gpt's"
+      ],
+      "expected_index": 2162,
+      "heard_index": 2205
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "you",
+        "just"
+      ],
+      "expected_index": 2171,
+      "heard_index": 2215
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "transparent",
+        "products",
+        "always"
+      ],
+      "expected_index": 2197,
+      "heard_index": 2243
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "sorry"
+      ],
+      "expected_index": 2200,
+      "heard_index": 2249
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "setting"
+      ],
+      "heard": [
+        "saying"
+      ],
+      "expected_index": 2215,
+      "heard_index": 2265
+    },
+    {
+      "kind": "delete",
+      "expected": [
+        "at"
+      ],
+      "heard": [],
+      "expected_index": 2241,
+      "heard_index": 2291
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "85"
+      ],
+      "heard": [
+        "eighty",
+        "five",
+        "percent"
+      ],
+      "expected_index": 2243,
+      "heard_index": 2292
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "has"
+      ],
+      "heard": [
+        "is"
+      ],
+      "expected_index": 2252,
+      "heard_index": 2303
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "you",
+        "it's"
+      ],
+      "heard": [
+        "yours"
+      ],
+      "expected_index": 2255,
+      "heard_index": 2306
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "makeyourmindup"
+      ],
+      "heard": [
+        "make",
+        "your",
+        "mind",
+        "up"
+      ],
+      "expected_index": 2273,
+      "heard_index": 2323
+    },
+    {
+      "kind": "insert",
+      "expected": [],
+      "heard": [
+        "in"
+      ],
+      "expected_index": 2305,
+      "heard_index": 2358
+    },
+    {
+      "kind": "replace",
+      "expected": [
+        "going",
+        "to"
+      ],
+      "heard": [
+        "gonna"
+      ],
+      "expected_index": 2357,
+      "heard_index": 2411
+    }
+  ]
+}

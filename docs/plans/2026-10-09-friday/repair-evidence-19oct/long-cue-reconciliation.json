@@ -1,0 +1,631 @@
+{
+  "existing": [
+    {
+      "id": "fri-deep-15-claude-names",
+      "old_start": "And it's always a new intelligence number",
+      "fresh_start": "And it's always",
+      "fresh_end": "5, Opus 5 .5.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-15-claude-names-s2",
+      "old_start": "Claude Opus 4 .8,",
+      "fresh_start": "Claude Opus 4",
+      "fresh_end": "5, Opus 5 .5.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-15-claude-names-s3",
+      "old_start": "Opus 5, Opus 5 .5.",
+      "fresh_start": "Opus 5, Opus",
+      "fresh_end": "5, Opus 5 .5.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-15-claude-names-s4",
+      "old_start": "Opus 5 .5. I honestly",
+      "fresh_start": "Opus 5 .5. I",
+      "fresh_end": "5, Opus 5 .5.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-chapter-2",
+      "old_start": "Firstly, the names.",
+      "fresh_start": "Firstly, the names,",
+      "fresh_end": "the names, Anthropic",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-claude-launch-pages",
+      "old_start": "it launched Opus 4 .8 in May,",
+      "fresh_start": "it launched Opus",
+      "fresh_end": ".5 in September.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-claude-launch-pages-p2",
+      "old_start": "Opus 5 in July,",
+      "fresh_start": "Opus 5 in July,",
+      "fresh_end": ".5 in September.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-claude-launch-pages-p3",
+      "old_start": "Opus 5 .5 in September.",
+      "fresh_start": "Opus 5 .5 in",
+      "fresh_end": ".5 in September.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-openai-5-1-to-6-1",
+      "old_start": "OpenAI's chat GPT went from GPT 5 .1",
+      "fresh_start": "OpenAI's chat GPT",
+      "fresh_end": "lot in between.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-openai-5-1-to-6-1-r1",
+      "old_start": "5 .1 to 6 .1",
+      "fresh_start": "5 .1 to",
+      "fresh_end": "lot in between.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-openai-5-1-to-6-1-r2",
+      "old_start": "6 .1 in under a year,",
+      "fresh_start": "6 .1 in",
+      "fresh_end": "lot in between.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-altman-same-day",
+      "old_start": "Sam Altman, who runs OpenAI. Then said",
+      "fresh_start": "Sam Altman, who",
+      "fresh_end": "money for months,",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-altman-same-day-t2",
+      "old_start": "That same day, OpenAI said investors were",
+      "fresh_start": "That same day,",
+      "fresh_end": "money for months,",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-altman-same-day-t3",
+      "old_start": "OpenAI had been lining up that money",
+      "fresh_start": "OpenAI had been",
+      "fresh_end": "money for months,",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-chapter-3",
+      "old_start": "So, what does matter?",
+      "fresh_start": "So, what does",
+      "fresh_end": "what does matter?",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-thinking-settings",
+      "old_start": "See, chat GPT and Claude both let you choose",
+      "fresh_start": "See, chat GPT",
+      "fresh_end": "thinks for now.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-aa-same-claude",
+      "old_start": "A group called Artificial Analysis found the very",
+      "fresh_start": "A group called",
+      "fresh_end": "much less money.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-aa-same-claude-s1",
+      "old_start": "in its top gear, it did obviously",
+      "fresh_start": "in its top gear, it",
+      "fresh_end": "much less money.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-aa-same-claude-s2",
+      "old_start": "the older Opus 5 in its top gear,",
+      "fresh_start": "the older Opus",
+      "fresh_end": "much less money.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-aa-same-claude-s3",
+      "old_start": "To be fair, the new one's middle gear",
+      "fresh_start": "To be fair,",
+      "fresh_end": "much less money.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-chapter-4",
+      "old_start": "See, all that hidden working",
+      "fresh_start": "See, all that",
+      "fresh_end": "that hidden working",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-cost-vs-score",
+      "old_start": "if Opus 5 .5 thinks as hard as",
+      "fresh_start": "if Opus 5",
+      "fresh_end": "by about 30%.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-cost-vs-score-cost",
+      "old_start": "it costs about 11 times as much",
+      "fresh_start": "it costs about",
+      "fresh_end": "by about 30%.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-cost-vs-score-score",
+      "old_start": "But its score,",
+      "fresh_start": "But its score,",
+      "fresh_end": "by about 30%.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-altman-losing-on-pro",
+      "old_start": "In January 2025, Sam Altman said OpenAI",
+      "fresh_start": "In January 2025,",
+      "fresh_end": "its $200 plan,",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-chapter-5",
+      "old_start": "So, who decides how hard",
+      "fresh_start": "So, who decides",
+      "fresh_end": "who decides how hard",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-gemini-auto",
+      "old_start": "Google's already started doing this since the 9th",
+      "fresh_start": "Google's already started",
+      "fresh_end": "much thinking power?",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-gemini-auto-h1",
+      "old_start": "The free Gemini app already actually starts",
+      "fresh_start": "The free Gemini",
+      "fresh_end": "much thinking power?",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-gemini-auto-h2",
+      "old_start": "It decides for you how much power",
+      "fresh_start": "It decides for",
+      "fresh_end": "much thinking power?",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-openai-free-dec-2025",
+      "old_start": "Last December, free users lost it, and OpenAI",
+      "fresh_start": "Last December free",
+      "fresh_end": "OpenAI a lot more.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-openai-free-dec-2025-s2",
+      "old_start": "and OpenAI said free users liked the",
+      "fresh_start": "and OpenAI said",
+      "fresh_end": "OpenAI a lot more.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-openai-free-dec-2025-s3",
+      "old_start": "But Wired magazine said the automatic picker",
+      "fresh_start": "But Wired magazine",
+      "fresh_end": "OpenAI a lot more.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-openai-plus-pro-sep-2026",
+      "old_start": "See, then in September people",
+      "fresh_start": "See, then in",
+      "fresh_end": "pick the gear.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-openai-plus-pro-sep-2026-c2",
+      "old_start": "And now on those plans, you pick the gear.",
+      "fresh_start": "And now on",
+      "fresh_end": "pick the gear.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-chapter-6",
+      "old_start": "Is that a good thing though?",
+      "fresh_start": "Is that a",
+      "fresh_end": "good thing though?",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-thinking-use-1-to-7",
+      "old_start": "But before that, fewer than one free user",
+      "fresh_start": "But before that,",
+      "fresh_end": "choosing for them.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-thinking-use-1-to-7-after",
+      "old_start": "they ended up using it because the",
+      "fresh_start": "they ended up",
+      "fresh_end": "choosing for them.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-claude-code-reversal",
+      "old_start": "So Anthropik learned it's less than two in March.",
+      "fresh_start": "So Anthropic learned",
+      "fresh_end": "and undid it.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-claude-code-reversal-f2",
+      "old_start": "It moved its coding app down to",
+      "fresh_start": "It moved its",
+      "fresh_end": "and undid it.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-claude-code-reversal-f3",
+      "old_start": "Most people kept it there. Although it",
+      "fresh_start": "Most people kept",
+      "fresh_end": "and undid it.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-claude-code-reversal-f4",
+      "old_start": "And Anthropik themselves called that a mistake",
+      "fresh_start": "And Anthropic themselves",
+      "fresh_end": "and undid it.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-extended-cut-by-mistake",
+      "old_start": "And this January, OpenAI made chat GPT think",
+      "fresh_start": "And this January,",
+      "fresh_end": "weeks to fix,",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-extended-cut-by-mistake-r2",
+      "old_start": "By mistake, it also cut a longer",
+      "fresh_start": "By mistake, it",
+      "fresh_end": "weeks to fix,",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-extended-cut-by-mistake-r3",
+      "old_start": "This took weeks to fix",
+      "fresh_start": "This took weeks",
+      "fresh_end": "even have known.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-chapter-7",
+      "old_start": "So if you're a business owner",
+      "fresh_start": "So, if you're",
+      "fresh_end": "a business owner",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-where-to-turn-it-up",
+      "old_start": "So on chat GPT, medium or high.",
+      "fresh_start": "So, on chat",
+      "fresh_end": "turn that up.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-where-to-turn-it-up-c2",
+      "old_start": "And on the free plan, pick think.",
+      "fresh_start": "And on the",
+      "fresh_end": "turn that up.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-deep-where-to-turn-it-up-c3",
+      "old_start": "And on Claude and Gemini, the gear",
+      "fresh_start": "And on Claude",
+      "fresh_end": "turn that up.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-chapter-8",
+      "old_start": "So where does this go from here?",
+      "fresh_start": "So, where does",
+      "fresh_end": "go from here?",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-call-85",
+      "old_start": "I'm actually pretty confident of this one.",
+      "fresh_start": "I'm actually pretty",
+      "fresh_end": "this will happen.",
+      "retained_existing_visual": false
+    },
+    {
+      "id": "fri-call-85-fill",
+      "old_start": "I'll chalk this at about 85%.",
+      "fresh_start": "I'll chalk this",
+      "fresh_end": "this will happen.",
+      "retained_existing_visual": false
+    }
+  ],
+  "real_car_visuals": [
+    {
+      "id": "repair-long-car-01",
+      "source_words": [
+        693,
+        701
+      ],
+      "point": "THINK OF A CAR",
+      "real_visual": "c-class"
+    },
+    {
+      "id": "repair-long-car-02",
+      "source_words": [
+        702,
+        719
+      ],
+      "point": "THE MAKE",
+      "real_visual": "mapping1"
+    },
+    {
+      "id": "repair-long-car-03",
+      "source_words": [
+        720,
+        727
+      ],
+      "point": "THE MODEL",
+      "real_visual": "mapping2"
+    },
+    {
+      "id": "repair-long-car-04",
+      "source_words": [
+        728,
+        746
+      ],
+      "point": "THINKING IS THE GEAR",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-05",
+      "source_words": [
+        747,
+        759
+      ],
+      "point": "YOU CHANGE THE GEAR",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-06",
+      "source_words": [
+        760,
+        777
+      ],
+      "point": "LOW TO HIGH THINKING",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-07",
+      "source_words": [
+        778,
+        797
+      ],
+      "point": "LOOK BEYOND THE BADGE",
+      "real_visual": "c-class"
+    },
+    {
+      "id": "repair-long-car-08",
+      "source_words": [
+        798,
+        831
+      ],
+      "point": "WHICH GEAR ARE YOU USING?",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-09",
+      "source_words": [
+        1187,
+        1208
+      ],
+      "point": "YOU CHOOSE THE GEAR",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-10",
+      "source_words": [
+        1209,
+        1236
+      ],
+      "point": "AI CHOOSES FOR YOU",
+      "real_visual": "automatic"
+    },
+    {
+      "id": "repair-long-car-11",
+      "source_words": [
+        1424,
+        1455
+      ],
+      "point": "THE BADGE GETS ATTENTION",
+      "real_visual": "c-class"
+    },
+    {
+      "id": "repair-long-car-12",
+      "source_words": [
+        1456,
+        1498
+      ],
+      "point": "THE GEAR CHANGES THINKING",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-13",
+      "source_words": [
+        1499,
+        1532
+      ],
+      "point": "WHO CHOOSES THE GEAR?",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-14",
+      "source_words": [
+        1536,
+        1555
+      ],
+      "point": "WHEN EASY WINS",
+      "real_visual": "automatic"
+    },
+    {
+      "id": "repair-long-car-15",
+      "source_words": [
+        1789,
+        1816
+      ],
+      "point": "WHO DOES AUTO SERVE?",
+      "real_visual": "automatic"
+    },
+    {
+      "id": "repair-long-car-16",
+      "source_words": [
+        1861,
+        1900
+      ],
+      "point": "MATCH THE GEAR TO THE JOB",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-17",
+      "source_words": [
+        1901,
+        1930
+      ],
+      "point": "FOR BIG CHOICES: TURN IT UP",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-18",
+      "source_words": [
+        1985,
+        2038
+      ],
+      "point": "THE DRIVER STILL CHOOSES",
+      "real_visual": "f1"
+    },
+    {
+      "id": "repair-long-car-19",
+      "source_words": [
+        2039,
+        2076
+      ],
+      "point": "KEEP THE OVERRIDE",
+      "real_visual": "f1"
+    },
+    {
+      "id": "repair-long-car-20",
+      "source_words": [
+        2077,
+        2105
+      ],
+      "point": "SHOW THE GEAR IT PICKED",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-21",
+      "source_words": [
+        2106,
+        2141
+      ],
+      "point": "FROM MANUAL TO AUTOMATIC",
+      "real_visual": "automatic"
+    },
+    {
+      "id": "repair-long-car-22",
+      "source_words": [
+        2142,
+        2173
+      ],
+      "point": "KEEP CONTROL WHEN IT MATTERS",
+      "real_visual": "f1"
+    },
+    {
+      "id": "repair-long-car-23",
+      "source_words": [
+        2174,
+        2189
+      ],
+      "point": "I STILL CHOOSE MANUAL",
+      "real_visual": "manual"
+    },
+    {
+      "id": "repair-long-car-24",
+      "source_words": [
+        2197,
+        2243
+      ],
+      "point": "AUTOMATIC BY MID-2027?",
+      "real_visual": "automatic"
+    },
+    {
+      "id": "repair-long-car-25",
+      "source_words": [
+        2244,
+        2268
+      ],
+      "point": "PAID PLANS GO AUTO TOO?",
+      "real_visual": "automatic"
+    },
+    {
+      "id": "repair-long-car-26",
+      "source_words": [
+        2269,
+        2292
+      ],
+      "point": "PAID USERS KEEP CONTROL?",
+      "real_visual": "f1"
+    }
+  ],
+  "cuts": [
+    [
+      917,
+      921
+    ],
+    [
+      1069,
+      1070
+    ],
+    [
+      1412,
+      1423
+    ],
+    [
+      2049,
+      2052
+    ],
+    [
+      1283,
+      1295
+    ],
+    [
+      1982,
+      1984
+    ],
+    [
+      1987,
+      1989
+    ],
+    [
+      1147,
+      1158
+    ]
+  ]
+}

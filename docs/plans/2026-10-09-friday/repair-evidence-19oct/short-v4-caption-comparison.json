@@ -1,0 +1,143 @@
+{
+  "video_sha256": "7c2d20562ba99298aac6e41bac573deb5e9bf34c47f83e7f0bee67aad1775925",
+  "raw_comparison": {
+    "status": "fail",
+    "expected_words": 278,
+    "heard_words": 285,
+    "changes": [
+      {
+        "kind": "replace",
+        "expected": [
+          "a",
+          "bee"
+        ],
+        "heard": [
+          "to",
+          "be"
+        ],
+        "expected_index": 29,
+        "heard_index": 29
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "a"
+        ],
+        "expected_index": 105,
+        "heard_index": 105
+      },
+      {
+        "kind": "insert",
+        "expected": [],
+        "heard": [
+          "is"
+        ],
+        "expected_index": 106,
+        "heard_index": 107
+      },
+      {
+        "kind": "delete",
+        "expected": [
+          "her"
+        ],
+        "heard": [],
+        "expected_index": 111,
+        "heard_index": 113
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt's"
+        ],
+        "heard": [
+          "chat",
+          "gpt's"
+        ],
+        "expected_index": 212,
+        "heard_index": 213
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "chatgpt"
+        ],
+        "heard": [
+          "chat",
+          "gpt"
+        ],
+        "expected_index": 221,
+        "heard_index": 223
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "are"
+        ],
+        "heard": [
+          "of"
+        ],
+        "expected_index": 249,
+        "heard_index": 252
+      },
+      {
+        "kind": "replace",
+        "expected": [
+          "at",
+          "makeyourmindup"
+        ],
+        "heard": [
+          "that",
+          "make",
+          "your",
+          "mind",
+          "up",
+          "on"
+        ],
+        "expected_index": 254,
+        "heard_index": 257
+      }
+    ]
+  },
+  "observations": [
+    {
+      "difference": "a bee / to be",
+      "evidence": "Homophone difference in the spoken idiom; original wording retained."
+    },
+    {
+      "difference": "Sally opening extra a",
+      "evidence": "Bounded large-v3 source supports So picture a business owner; medium and small disagree on filler. Finished listening review required."
+    },
+    {
+      "difference": "Sally opening extra is",
+      "evidence": "Bounded source lacks is; independent medium has as. Finished listening review required."
+    },
+    {
+      "difference": "Her omitted by small.en",
+      "evidence": "Independent medium recognizes Her in final v3; decoded audio is byte-identical to v4. Earlier source boundary restored."
+    },
+    {
+      "difference": "ChatGPT possessive tokenization",
+      "evidence": "Recognizer splits the product name into chat and GPT; spelling normalization only."
+    },
+    {
+      "difference": "ChatGPT tokenization",
+      "evidence": "Recognizer splits the product name into chat and GPT; spelling normalization only."
+    },
+    {
+      "difference": "sources are / of",
+      "evidence": "Independent medium recognizes sources are in the exact same final audio; retain spoken are."
+    },
+    {
+      "difference": "website attribution",
+      "evidence": "Recognizers expand or confuse the website spelling. Keep verified URL; finished listening review required for preposition."
+    }
+  ],
+  "independent_final_audio_evidence": {
+    "transcript": "short-v3-finished-medium.json",
+    "audio_identity_proof": "short-v3-v4-audio-identity.json"
+  },
+  "confidence_phrase": "Human source adjudication and final small.en recognize I am 85 percent; captions retain the contracted spoken form.",
+  "status": "pending_finished_listening",
+  "scope": "This comparison does not establish complete watch or listen and does not clear the heard delivery gate."
+}

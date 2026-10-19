@@ -63,6 +63,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -603,9 +604,11 @@ def self_test():
     alike, shared imports followed, ignored and untracked files refused); and
     the approval gate per series. All under .cache."""
     checks = []
-    work = REPO / '.cache' / 'quick-edit' / 'self-test' / 'intro'
-    shutil.rmtree(work, ignore_errors=True)
-    work.mkdir(parents=True)
+    parent = REPO / '.cache' / 'quick-edit' / 'self-test'
+    parent.mkdir(parents=True, exist_ok=True)
+    # Git's read-only objects can survive rmtree on Windows. Each run gets an
+    # isolated fixture checkout instead of depending on deletion succeeding.
+    work = Path(tempfile.mkdtemp(prefix='intro-', dir=parent))
     cfg = load()
     checks.append(('the committed config waits for Krish', (cfg['status'], cfg['approved_by'], cfg['source_sha256']), ('candidate', None, None)))
     decision = cfg.get('last_decision') or {}

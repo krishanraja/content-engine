@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -18,6 +19,32 @@ CLAUDE_SKILLS = ROOT / ".claude" / "skills"
 VALIDATOR = Path.home() / ".codex" / "skills" / ".system" / "skill-creator" / "scripts" / "quick_validate.py"
 MAX_DESCRIPTION = 1024
 BLOCK_SCALAR = re.compile(r"[>|](?:[1-9][+-]?|[+-][1-9]?)?")  # description: > or | and its indicators
+
+
+def validate_with_codex(skill: Path) -> bool:
+    """Keep the shared Claude model route while validating Codex frontmatter.
+
+    Only the explicitly checked host extension is removed from a temporary
+    validation copy. Unknown keys still reach the strict external validator.
+    """
+    source = (skill / "SKILL.md").read_text(encoding="utf-8")
+    if source.startswith("---\n") and "\n---" in source[4:]:
+        front, body = source[4:].split("\n---", 1)
+        routes = [line for line in front.splitlines() if line.startswith("model:")]
+        if routes:
+            if len(routes) != 1 or routes[0].strip() not in {
+                "model: sonnet", "model: opus", "model: haiku", "model: inherit"
+            }:
+                print(f"{skill.name}: unsupported Claude model route", file=sys.stderr)
+                return False
+            source = "---\n" + "\n".join(
+                line for line in front.splitlines() if not line.startswith("model:")
+            ) + "\n---" + body
+    with tempfile.TemporaryDirectory(prefix="skill-validation-") as scratch:
+        target = Path(scratch) / skill.name
+        target.mkdir()
+        (target / "SKILL.md").write_text(source, encoding="utf-8")
+        return subprocess.run([sys.executable, str(VALIDATOR), str(target)], check=False).returncode == 0
 
 
 def description_of(source: str) -> str:
@@ -289,8 +316,8 @@ def main() -> int:
         if not skill.is_dir():
             continue
         if VALIDATOR.exists():
-            result = subprocess.run([sys.executable, str(VALIDATOR), str(skill)], check=False)
-            failed = failed or result.returncode != 0
+            valid = validate_with_codex(skill)
+            failed = failed or not valid
         else:
             failed = failed or not local_validate(skill)
         for problem in description_problems(skill) + board_item_problems(skill):

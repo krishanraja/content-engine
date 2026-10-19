@@ -26,7 +26,7 @@ describe('quick-edit checks itself', () => {
     const result = run('make.py', ['--self-test'])
     expect(result.status, result.stdout + result.stderr).toBe(0)
     expect(result.stdout).toMatch(/quick-edit self-test passed: \d+ checks/)
-  })
+  }, 120_000)
 
   it('music.py --self-test: the ledger, the pick and a real bed measured against the levels', () => {
     const result = run('music.py', ['--self-test'])

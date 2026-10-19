@@ -120,13 +120,20 @@ def publish(args):
         raise ValueError('; '.join(issues))
     week = meta['week_start']
     assets, payloads = {}, []
+    state = call('GET', f'/api/board/{week}')
     mappings = json.loads(Path(args.assets).read_text(encoding='utf-8')) if args.assets else []
     for item in mappings:
         asset_id = item['id']
         if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}', asset_id) or asset_id in assets:
             raise ValueError('Invalid or duplicate asset id')
-        file, data = spec(week, item['path'], item.get('type'))
-        assets[asset_id] = file; payloads.append((file, data))
+        if item.get('existing_sha256'):
+            file = ((state.get('manifest') or {}).get('assets') or {}).get(asset_id)
+            if not file or file.get('sha256') != item['existing_sha256']:
+                raise ValueError(f'Existing asset {asset_id} changed or is missing; refresh the mapping')
+        else:
+            file, data = spec(week, item['path'], item.get('type'))
+            payloads.append((file, data))
+        assets[asset_id] = file
         source = item['source_url']
         if source not in page:
             raise ValueError(f'Asset {asset_id} has no matching link in the board')
@@ -144,7 +151,6 @@ def publish(args):
     if not args.apply:
         print(canonical({'dry_run': True, 'week': week, 'build_id': sha(canonical(manifest).encode()), 'html_bytes': len(data), 'assets': len(assets)}))
         return
-    state = call('GET', f'/api/board/{week}')
     for file, content in payloads + [(html, data)]:
         upload(week, file, content)
     result = call('PUT', f'/api/board/{week}', {'manifest': manifest, 'revision': state['revision']})

@@ -1,0 +1,198 @@
+{
+ "identity": {
+  "audio_sha256": "f5c7b264a1f0177f0a054feced23c6da56525248d87cdb58e3b49dbe8585c0c3",
+  "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+  "start_sample": 4892640,
+  "end_sample": 5084640,
+  "sample_rate": 16000,
+  "stage": "retained edited voice, before final mix"
+ },
+ "duration": 12.0,
+ "model": "large-v3",
+ "beam_size": 1,
+ "max_new_tokens": 160,
+ "transcriber": "faster-whisper",
+ "version": "1.2.0",
+ "words": [
+  {
+   "w": " simple",
+   "s": 0.0,
+   "e": 0.2,
+   "probability": 0.9359352588653564
+  },
+  {
+   "w": " question",
+   "s": 0.2,
+   "e": 0.56,
+   "probability": 0.998467743396759
+  },
+  {
+   "w": " what",
+   "s": 0.56,
+   "e": 0.9,
+   "probability": 0.3490931987762451
+  },
+  {
+   "w": " is",
+   "s": 0.9,
+   "e": 1.24,
+   "probability": 0.9997523427009583
+  },
+  {
+   "w": " two",
+   "s": 1.24,
+   "e": 1.98,
+   "probability": 0.7213417887687683
+  },
+  {
+   "w": " plus",
+   "s": 1.98,
+   "e": 2.32,
+   "probability": 0.9994989633560181
+  },
+  {
+   "w": " three",
+   "s": 2.32,
+   "e": 2.62,
+   "probability": 0.9997135996818542
+  },
+  {
+   "w": " one",
+   "s": 2.62,
+   "e": 3.48,
+   "probability": 0.8854392170906067
+  },
+  {
+   "w": " of",
+   "s": 3.48,
+   "e": 3.68,
+   "probability": 0.9999299049377441
+  },
+  {
+   "w": " the",
+   "s": 3.68,
+   "e": 3.86,
+   "probability": 0.9999374151229858
+  },
+  {
+   "w": " ai's",
+   "s": 3.86,
+   "e": 4.26,
+   "probability": 0.8027611672878265
+  },
+  {
+   "w": " worked",
+   "s": 4.26,
+   "e": 4.52,
+   "probability": 0.9998682737350464
+  },
+  {
+   "w": " out",
+   "s": 4.52,
+   "e": 4.78,
+   "probability": 0.9999929666519165
+  },
+  {
+   "w": " the",
+   "s": 4.78,
+   "e": 4.92,
+   "probability": 0.9999338388442993
+  },
+  {
+   "w": " answer",
+   "s": 4.92,
+   "e": 5.12,
+   "probability": 0.9999406337738037
+  },
+  {
+   "w": " 13",
+   "s": 5.12,
+   "e": 5.62,
+   "probability": 0.9981605410575867
+  },
+  {
+   "w": " times",
+   "s": 5.62,
+   "e": 6.18,
+   "probability": 0.999790608882904
+  },
+  {
+   "w": " the",
+   "s": 6.18,
+   "e": 6.94,
+   "probability": 0.9972942471504211
+  },
+  {
+   "w": " thinking",
+   "s": 6.94,
+   "e": 7.26,
+   "probability": 0.999180018901825
+  },
+  {
+   "w": " that's",
+   "s": 7.26,
+   "e": 7.94,
+   "probability": 0.9987282454967499
+  },
+  {
+   "w": " not",
+   "s": 7.94,
+   "e": 8.04,
+   "probability": 0.9999582767486572
+  },
+  {
+   "w": " really",
+   "s": 8.04,
+   "e": 8.24,
+   "probability": 0.9998350143432617
+  },
+  {
+   "w": " necessary",
+   "s": 8.24,
+   "e": 8.62,
+   "probability": 0.9997841715812683
+  },
+  {
+   "w": " right",
+   "s": 8.62,
+   "e": 9.04,
+   "probability": 0.9998968839645386
+  },
+  {
+   "w": " the",
+   "s": 9.04,
+   "e": 9.48,
+   "probability": 0.9926939010620117
+  },
+  {
+   "w": " thinking",
+   "s": 9.48,
+   "e": 9.72,
+   "probability": 0.9998056292533875
+  },
+  {
+   "w": " gear",
+   "s": 9.72,
+   "e": 10.02,
+   "probability": 0.996860146522522
+  },
+  {
+   "w": " matters",
+   "s": 10.02,
+   "e": 10.58,
+   "probability": 0.9999384880065918
+  },
+  {
+   "w": " more",
+   "s": 10.58,
+   "e": 11.22,
+   "probability": 0.9999719858169556
+  },
+  {
+   "w": " on",
+   "s": 11.22,
+   "e": 11.6,
+   "probability": 0.9999017715454102
+  }
+ ]
+}

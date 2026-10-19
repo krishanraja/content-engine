@@ -13,7 +13,7 @@ boards passed authenticated desktop/phone navigation, image, state and comment
 checks; all 12 downloadable assets matched their type, size and SHA-256.
 Follow `docs/PUBLISH_BOARDS.md` from every tool, reading all six collections.
 Release, source limitations and rollback evidence: `docs/handovers/board-web-release.md`.
-Friday's two replacement videos remain separate work. Monday 19 October's
+Friday's two replacement videos are now repaired and filed; see the delivery section below. Monday 19 October's
 signed-off scripts and pending recordings/fact check remain with its editorial
 handover; this migration changes neither scripts nor publishing approval.
 
@@ -24,6 +24,42 @@ from one tool to another without anything getting lost. The rules for agents
 are in `AGENTS.md`; this file is the live state of the work.
 
 Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
+
+## Friday repairs delivered — Codex, 19 October
+
+Both complete files were accepted by Krish with sound, then passed their exact-file
+checks and were copied into the existing Friday post's `3 Video` folder. The actual
+Drive library copies match the accepted SHA-256 hashes. Current downloads:
+
+- [Deep cut, 16:9, 13:36.5](https://drive.google.com/file/d/1cfQ5LO8NsOoRNlmwv_Ac_hsxs0yElB52/view)
+- [Short cut, 9:16, 87.75 seconds](https://drive.google.com/file/d/18R8c4y2HfmFHpccaAlG7PAJS02IbtDzo/view)
+
+Rejected originals retain their file IDs and bytes in `3 Video/working repair 19 Oct/rejected originals`.
+Both replacements are the latest entries for their cuts in the making record;
+older entries remain history. Existing thumbnails are retained. The week of
+12 October now points at the replacements, with its other days and interactions
+preserved. Board migration was already completed on main; it was not repeated.
+
+Both cuts measure within 40 ms at six calibrated checkpoints. Voice is about
+-14 LUFS, final true peaks are -1.8/-1.3 dBTP, and the speech bed has no silence
+longer than 0.5 seconds. Short visual coverage is 99.962%, with 24.54 changes per
+minute. Native-size text, all one-second frames and quarter-second intro/outro
+samples were checked. Full playback acceptance is Krish's; Codex does not claim
+full audio/video playback. Raw ASR differences and human acceptance are preserved,
+including independent evidence disproving the deep cut's apparent 14-word omission.
+
+The report, captions, exact-file receipts and image credits accompany the videos.
+`working repair 19 Oct` contains `repair-inputs-v8.zip` (all production images and
+configs), `final-review-samples-19oct.zip` (sampled frames and sync captures), and
+`final-qa-evidence-19oct.zip` (transcripts, measurements and reviews). Code and small
+evidence live on `codex/friday-video-repairs`, [draft PR #108](https://github.com/krishanraja/content-engine/pull/108).
+Full local `npm run verify` passed. The minimal-CI fixture correction passed 40
+mix checks without ASR installed; the nine-scenario Windows authentication test
+passes with the same 15-second budget as its adjacent disk-heavy test. Current
+full CI results are on PR #108. No merge or deployment is authorized.
+
+The article fact gate remains **failed**. Video repair is not publication clearance.
+Detailed handover: `docs/handovers/2026-10-19-friday-repair-complete.md`.
 
 ## The idea queue: read it first
 

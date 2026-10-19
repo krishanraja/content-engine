@@ -1,0 +1,186 @@
+{
+ "identity": {
+  "audio_sha256": "1664a7ea89d0c58eb7e1490779b1d0eaaf9cfe221ac852e4d4f3d9589605a79a",
+  "parent_audio_sha256": "c99bab76199a54b7a68dd5c1f06c591bb6d8efb15bc98351d38c30b0651ee414",
+  "start_sample": 3053600,
+  "end_sample": 3245600,
+  "sample_rate": 16000,
+  "stage": "retained edited voice, before final mix"
+ },
+ "duration": 12.0,
+ "model": "large-v3",
+ "beam_size": 1,
+ "max_new_tokens": 160,
+ "transcriber": "faster-whisper",
+ "version": "1.2.0",
+ "words": [
+  {
+   "w": " to",
+   "s": 0.0,
+   "e": 0.4,
+   "probability": 0.5464242696762085
+  },
+  {
+   "w": " realize",
+   "s": 0.4,
+   "e": 1.28,
+   "probability": 0.7386187314987183
+  },
+  {
+   "w": " that",
+   "s": 1.28,
+   "e": 1.56,
+   "probability": 0.996991753578186
+  },
+  {
+   "w": " she",
+   "s": 1.56,
+   "e": 1.74,
+   "probability": 0.9992972612380981
+  },
+  {
+   "w": " should",
+   "s": 1.74,
+   "e": 1.92,
+   "probability": 0.9995319843292236
+  },
+  {
+   "w": " be",
+   "s": 1.92,
+   "e": 2.1,
+   "probability": 0.9998643398284912
+  },
+  {
+   "w": " controlling",
+   "s": 2.1,
+   "e": 2.52,
+   "probability": 0.9994220733642578
+  },
+  {
+   "w": " the",
+   "s": 2.52,
+   "e": 2.86,
+   "probability": 0.9533013701438904
+  },
+  {
+   "w": " thinking",
+   "s": 2.86,
+   "e": 3.18,
+   "probability": 0.9991718530654907
+  },
+  {
+   "w": " levels",
+   "s": 3.18,
+   "e": 3.56,
+   "probability": 0.9993413090705872
+  },
+  {
+   "w": " of",
+   "s": 3.56,
+   "e": 3.92,
+   "probability": 0.9982966780662537
+  },
+  {
+   "w": " her",
+   "s": 3.92,
+   "e": 4.0,
+   "probability": 0.9451828002929688
+  },
+  {
+   "w": " AI.",
+   "s": 4.0,
+   "e": 4.28,
+   "probability": 0.9845402836799622
+  },
+  {
+   "w": " See,",
+   "s": 4.7,
+   "e": 5.04,
+   "probability": 0.8539606928825378
+  },
+  {
+   "w": " ChatGPT",
+   "s": 5.1,
+   "e": 5.66,
+   "probability": 0.9459894746541977
+  },
+  {
+   "w": " and",
+   "s": 5.66,
+   "e": 6.56,
+   "probability": 0.9982753992080688
+  },
+  {
+   "w": " Claude",
+   "s": 6.56,
+   "e": 6.92,
+   "probability": 0.9535912573337555
+  },
+  {
+   "w": " both",
+   "s": 6.92,
+   "e": 7.2,
+   "probability": 0.9921305775642395
+  },
+  {
+   "w": " let",
+   "s": 7.2,
+   "e": 7.44,
+   "probability": 0.9996040463447571
+  },
+  {
+   "w": " you",
+   "s": 7.44,
+   "e": 7.56,
+   "probability": 0.9999408721923828
+  },
+  {
+   "w": " choose",
+   "s": 7.56,
+   "e": 8.0,
+   "probability": 0.9996997117996216
+  },
+  {
+   "w": " how",
+   "s": 8.0,
+   "e": 8.64,
+   "probability": 0.9991881251335144
+  },
+  {
+   "w": " hard",
+   "s": 8.64,
+   "e": 9.02,
+   "probability": 0.9996044039726257
+  },
+  {
+   "w": " the",
+   "s": 9.02,
+   "e": 9.14,
+   "probability": 0.992289125919342
+  },
+  {
+   "w": " AI",
+   "s": 9.14,
+   "e": 9.36,
+   "probability": 0.9997201561927795
+  },
+  {
+   "w": " thinks",
+   "s": 9.36,
+   "e": 9.74,
+   "probability": 0.9995056390762329
+  },
+  {
+   "w": " for",
+   "s": 9.74,
+   "e": 10.84,
+   "probability": 0.9633604884147644
+  },
+  {
+   "w": " now.",
+   "s": 10.84,
+   "e": 11.18,
+   "probability": 0.9987486600875854
+  }
+ ]
+}

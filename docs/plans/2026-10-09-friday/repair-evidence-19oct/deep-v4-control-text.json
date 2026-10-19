@@ -1,0 +1,78 @@
+{
+  "video_sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9",
+  "method": "Black glyph row extent inside the magnified authentic screenshot label in final decoded output scaled to 1080 pixels wide.",
+  "rows": [
+    {
+      "at_s": 27,
+      "label": "Opus 5.5",
+      "crop_at_1080_width": [
+        737,
+        270,
+        1038,
+        340
+      ],
+      "foreground_height_px": 49,
+      "status": "pass"
+    },
+    {
+      "at_s": 201,
+      "label": "Low",
+      "crop_at_1080_width": [
+        734,
+        169,
+        1038,
+        231
+      ],
+      "foreground_height_px": 50,
+      "status": "pass"
+    },
+    {
+      "at_s": 201,
+      "label": "Medium",
+      "crop_at_1080_width": [
+        734,
+        250,
+        1038,
+        318
+      ],
+      "foreground_height_px": 52,
+      "status": "pass"
+    },
+    {
+      "at_s": 201,
+      "label": "High",
+      "crop_at_1080_width": [
+        768,
+        329,
+        1004,
+        406
+      ],
+      "foreground_height_px": 65,
+      "status": "pass"
+    },
+    {
+      "at_s": 201,
+      "label": "Extra",
+      "crop_at_1080_width": [
+        734,
+        413,
+        1038,
+        489
+      ],
+      "foreground_height_px": 59,
+      "status": "pass"
+    },
+    {
+      "at_s": 201,
+      "label": "Max",
+      "crop_at_1080_width": [
+        771,
+        498,
+        1004,
+        575
+      ],
+      "foreground_height_px": 60,
+      "status": "pass"
+    }
+  ]
+}

@@ -35,3 +35,4 @@ OpenAI, Google, OpenRouter, SemiAnalysis) were added before this note and are no
   - THE DECODER masthead `f00224dc30d4cafde38e5274edf8f6383bd3b2d7390d8db6a8ae7b2fd55ab240`
 
 - mercedes-cream.svg: the Mercedes-Benz star, Simple Icons 13.21.0 (cdn.jsdelivr.net/npm/simple-icons@13.21.0/icons/mercedes.svg), filled cream. For the 90-second cut, where Krish says "Opus 5.5 is like Mercedes C-Class" (Krish, 19 Oct: "add the real car badges").
+- claude-cream.svg: the Claude sun mark from the pinned Simple Icons 13.21.0 package (`https://cdn.jsdelivr.net/npm/simple-icons@13.21.0/icons/claude.svg`), fetched 19 October. Path unchanged, cream fill added. This is the Claude product mark; the older Anthropic A is not used as the Claude mark in the repair samples. The mapping has two separate stages: Mercedes = Claude; C-Class = Opus 5.5.
