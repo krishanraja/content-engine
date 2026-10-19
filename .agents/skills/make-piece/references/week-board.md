@@ -1,5 +1,17 @@
 # The week's publish board
 
+## Publish-board routing
+
+Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
+current web addresses, all six collection reads, build/download/publication,
+making-record attribution and rollback. Check `config/boards.json.web_cutover`:
+while pending, source migration is unfinished; once active, use only the web
+board for new interactions. Any ArtifactData, ArtifactComments, or dual-account
+publish instructions below apply only before cutover or to explicit legacy
+artifact work. Never synchronize preserved Claude boards after active cutover.
+
+## Preserved artifact procedure
+
 Reference for the `make-piece` skill, read at the step that names it (`.agents/skills/make-piece/SKILL.md`). Moved out of the core unchanged on 18 October 2026 so a session starts lean (docs/COST_GUARDS.md).
 
 **Every link, every time.** Krish works from two Claude accounts (2026-10-14:

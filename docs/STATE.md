@@ -1,5 +1,19 @@
 # Current state
 
+## 19 October: web publish board prepared locally, release pending
+
+Full-parity board migration is on `codex/publish-board-web`, with a coordinated
+Control Center branch of the same name. Ticks, links, saved edits, picks, queue,
+comments, immutable builds and private downloads use the engine's guarded API.
+The old boards remain the interaction source until the verified cutover marker
+changes. No video assets were changed. No source exports have been obtained,
+and no migration, cloud upload, branch push, deployment or DNS change has been
+performed by this implementation. Commands, test evidence and release gates:
+`docs/handovers/board-web-release.md`. Do not call this production-ready from
+local checks alone. Next: finish acceptance, obtain all four exports, approve
+the paired branch pushes and release actions in the documented order.
+
+
 Status: Current
 Owner: Krish Raja
 Last verified: 2026-09-25 against `main` at `a5c5ab3`, the Vercel production
