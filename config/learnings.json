@@ -389,6 +389,24 @@
      "how": "the plan-week step that builds the Ideas tab"
     }
    ]
+  },
+  {
+   "id": "one-idea-queue",
+   "on": "2026-10-19",
+   "krish": "Can you let me mark ideas for a queue instead of selecting them for this week because I like multiple ideas and some of them aren't time-sensitive? ... every ideas tab can start to build a queue of stuff that should be published at some point. That becomes a pretty powerful canon but it needs to survive everything and be the first thing in chat. That queue needs to be A/B triage in Control Centre ... there just being one cue.",
+   "why": "A pick-one-per-day tab throws away the ideas he likes but cannot use this week, and evergreen ideas have no home; he wants the good ones kept, ranked and reused, not regenerated every Sunday.",
+   "means": "There is one idea queue, stored in the engine (never only in a board's store or a session), that every Ideas tab adds to with a Queue mark beside each idea's pick box; Control Center triages it A/B; every planning session reads it first and offers from it before new research; nothing purges a queued idea.",
+   "status": "open",
+   "encoded": []
+  },
+  {
+   "id": "story-a-business-person-gets",
+   "on": "2026-10-19",
+   "krish": "Would I consider this story or angle? If not would I consider it cute or am I curious but not convinced for some specific reason because it's safer? For the \"Google's newest model is on a teaser rate\" article, I actually like the sound of it but I can't understand what the story is. In plain English what would be so interesting to a business person?",
+   "why": "The idea line named the mechanism (a price that doubles) without the consequence for the reader, so he could not tell what the piece would say; and he wants to triage each idea by how it lands with him, not just yes or no.",
+   "means": "Every idea shown to him says, in one plain sentence, what a business person would find out and why it matters to them, before any mechanism; and his triage of an idea records which of four it is: a story he would run, an angle he would run, cute, or curious but not convinced (with the reason).",
+   "status": "open",
+   "encoded": []
   }
  ]
 }
