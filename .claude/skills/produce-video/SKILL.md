@@ -25,6 +25,12 @@ footers such as "Car analogy". Keep source evidence, photographer attribution an
 licences in the accompanying records. Meaning-bearing qualifications belong in
 the main message or spoken wording. Preserve explicitly approved story clips.
 
+Krish, 2026-10-19: "don't just leave random big spaces". A card introducing a
+person should show the person or a useful illustrative scene. Text-only beats
+need a deliberate, compact type composition; never reserve an empty image slot.
+Inspect the whole held beat at phone size, not just its transition. Space may
+support emphasis, but unrelated decoration is not a fix for a missing composition.
+
 Krish, 2026-10-12: "give me a skill (or the codex equivalent) that
 understands everything going on here that invokes properly when I engage it
 for video production - i.e I will need to have dropped a video in the exact

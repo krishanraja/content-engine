@@ -1,0 +1,776 @@
+{
+  "review_scope": "All 109 card compositions across both cuts; final-video composition and full playback remain pending",
+  "user_ruling": "don't just leave random big spaces",
+  "short_version": "v8",
+  "deep_version": "v4",
+  "findings": [
+    {
+      "area": "Meet Sally",
+      "problem": "Empty illustration slot throughout the held card",
+      "repair": "Added fictional generated business-owner illustration with a laptop, mug and supplier paperwork"
+    },
+    {
+      "area": "13 text-only short cards",
+      "problem": "Heading and detail separated by an unused image area",
+      "repair": "Larger compact type block; detail follows heading"
+    },
+    {
+      "area": "3 short logo cards",
+      "problem": "Small logo and heading left an unbalanced empty lower field",
+      "repair": "Enlarged logos and grouped them with the heading"
+    },
+    {
+      "area": "7 deep chapter cards",
+      "problem": "Heading stranded at top of empty card",
+      "repair": "Larger heading, centred within the visible content area"
+    },
+    {
+      "area": "27 deep evidence screenshot cards",
+      "problem": "Small images or strips stranded far from heading; side-by-side placement made narrow excerpts unnecessarily small",
+      "repair": "Full-width stacked crops grouped below the heading, with original pixels preserved"
+    },
+    {
+      "area": "Remaining deep tables and statement cards",
+      "problem": "Fixed coordinates created unnecessary gaps and could push labels into caption area",
+      "repair": "Content-sized vertical spacing with a reserved two-line caption band"
+    },
+    {
+      "area": "Deep card corners",
+      "problem": "Miniature source/provider logos survived the earlier footer cleanup",
+      "repair": "Removed corner metadata logos; substantive mapping badges and actual controls retained"
+    }
+  ],
+  "changed_cards": [
+    "repair-readable-fri-call-85-16x9.png",
+    "repair-readable-fri-call-85-fill-16x9.png",
+    "repair-readable-fri-chapter-2-16x9.png",
+    "repair-readable-fri-chapter-3-16x9.png",
+    "repair-readable-fri-chapter-4-16x9.png",
+    "repair-readable-fri-chapter-5-16x9.png",
+    "repair-readable-fri-chapter-6-16x9.png",
+    "repair-readable-fri-chapter-7-16x9.png",
+    "repair-readable-fri-chapter-8-16x9.png",
+    "repair-readable-fri-claude-launch-pages-16x9.png",
+    "repair-readable-fri-claude-launch-pages-p2-16x9.png",
+    "repair-readable-fri-claude-launch-pages-p3-16x9.png",
+    "repair-readable-fri-deep-15-claude-names-16x9.png",
+    "repair-readable-fri-deep-15-claude-names-s2-16x9.png",
+    "repair-readable-fri-deep-15-claude-names-s3-16x9.png",
+    "repair-readable-fri-deep-aa-same-claude-16x9.png",
+    "repair-readable-fri-deep-aa-same-claude-s1-16x9.png",
+    "repair-readable-fri-deep-aa-same-claude-s2-16x9.png",
+    "repair-readable-fri-deep-aa-same-claude-s3-16x9.png",
+    "repair-readable-fri-deep-altman-losing-on-pro-16x9.png",
+    "repair-readable-fri-deep-altman-same-day-16x9.png",
+    "repair-readable-fri-deep-altman-same-day-t2-16x9.png",
+    "repair-readable-fri-deep-altman-same-day-t3-16x9.png",
+    "repair-readable-fri-deep-claude-code-reversal-16x9.png",
+    "repair-readable-fri-deep-claude-code-reversal-f2-16x9.png",
+    "repair-readable-fri-deep-claude-code-reversal-f3-16x9.png",
+    "repair-readable-fri-deep-claude-code-reversal-f4-16x9.png",
+    "repair-readable-fri-deep-cost-vs-score-16x9.png",
+    "repair-readable-fri-deep-cost-vs-score-cost-16x9.png",
+    "repair-readable-fri-deep-cost-vs-score-score-16x9.png",
+    "repair-readable-fri-deep-extended-cut-by-mistake-16x9.png",
+    "repair-readable-fri-deep-extended-cut-by-mistake-r2-16x9.png",
+    "repair-readable-fri-deep-extended-cut-by-mistake-r3-16x9.png",
+    "repair-readable-fri-deep-openai-5-1-to-6-1-16x9.png",
+    "repair-readable-fri-deep-openai-5-1-to-6-1-r1-16x9.png",
+    "repair-readable-fri-deep-openai-5-1-to-6-1-r2-16x9.png",
+    "repair-readable-fri-deep-openai-free-dec-2025-16x9.png",
+    "repair-readable-fri-deep-openai-free-dec-2025-s2-16x9.png",
+    "repair-readable-fri-deep-openai-free-dec-2025-s3-16x9.png",
+    "repair-readable-fri-deep-openai-plus-pro-sep-2026-16x9.png",
+    "repair-readable-fri-deep-openai-plus-pro-sep-2026-c2-16x9.png",
+    "repair-readable-fri-deep-thinking-use-1-to-7-16x9.png",
+    "repair-readable-fri-deep-thinking-use-1-to-7-after-16x9.png",
+    "repair-readable-fri-deep-where-to-turn-it-up-16x9.png",
+    "repair-readable-fri-deep-where-to-turn-it-up-c2-16x9.png",
+    "repair-readable-fri-gemini-auto-16x9.png",
+    "repair-readable-fri-gemini-auto-h1-16x9.png",
+    "repair-readable-fri-gemini-auto-h2-16x9.png",
+    "repair-short-02-9x16.png",
+    "repair-short-03-9x16.png",
+    "repair-short-04-9x16.png",
+    "repair-short-12-9x16.png",
+    "repair-short-13-9x16.png",
+    "repair-short-14-9x16.png",
+    "repair-short-15-9x16.png",
+    "repair-short-16-9x16.png",
+    "repair-short-18-9x16.png",
+    "repair-short-19-9x16.png",
+    "repair-short-20-9x16.png",
+    "repair-short-22-9x16.png",
+    "repair-short-23-9x16.png",
+    "repair-short-24-9x16.png",
+    "repair-short-25-9x16.png",
+    "repair-short-29-9x16.png",
+    "repair-short-30-9x16.png"
+  ],
+  "changed_count": 65,
+  "card_count": 109,
+  "render_manifest": {
+    "renderer": "@resvg/resvg-js@2.6.2",
+    "fonts": {
+      "Anton.ttf": "a31de1345beb8c04b3102799a448b247e82a9371bb846dd59ef1be46e4cd41ab",
+      "Mono.ttf": "b4d733d962ec09e525453ff7e04d0bab6f91eb016839076d6ab889c3c3bf167c"
+    },
+    "cards": [
+      {
+        "source": "repair-control-fri-deep-15-claude-names-s4-16x9.svg",
+        "source_sha256": "9fcb275b3ff602b34cecff5260ec9d2d26e5f870aaa07b4e19fadb5536b29e0d",
+        "output": "repair-control-fri-deep-15-claude-names-s4-16x9.png",
+        "sha256": "5d23314c81c55e7569eb630512e20e86fc65b55f59e3b487c3d5a41f477712ba"
+      },
+      {
+        "source": "repair-control-fri-deep-thinking-settings-16x9.svg",
+        "source_sha256": "9062ed497bcec0e4e9204a0a4688309b266beda0b62396188d1976682e94ca46",
+        "output": "repair-control-fri-deep-thinking-settings-16x9.png",
+        "sha256": "c4d201c8f80732c5fade1c9f02324edf3940ea60f1b428903a7762c86694d080"
+      },
+      {
+        "source": "repair-control-fri-deep-where-to-turn-it-up-c3-16x9.svg",
+        "source_sha256": "9062ed497bcec0e4e9204a0a4688309b266beda0b62396188d1976682e94ca46",
+        "output": "repair-control-fri-deep-where-to-turn-it-up-c3-16x9.png",
+        "sha256": "c4d201c8f80732c5fade1c9f02324edf3940ea60f1b428903a7762c86694d080"
+      },
+      {
+        "source": "repair-long-car-01-16x9.svg",
+        "source_sha256": "1486291ddda630e3331e89796ce32f5d3eedb7573ec2cbf948f91e55d809628f",
+        "output": "repair-long-car-01-16x9.png",
+        "sha256": "a38d9b8017fc9e81383ce9c8a982905f83c7dc97715ac861637c61e53f6c8f86"
+      },
+      {
+        "source": "repair-long-car-02-16x9.svg",
+        "source_sha256": "30f39dd7d82e23dcb72f0f05000eef756cb63261bb84f076393941580cc1435d",
+        "output": "repair-long-car-02-16x9.png",
+        "sha256": "c0a278b5253cd66ddf03013c49daaf538d097e0122840ab195bfe0c2f5b1ccd4"
+      },
+      {
+        "source": "repair-long-car-03-16x9.svg",
+        "source_sha256": "b438da01a59c328e22890f778168d1586f15f9a0cf3c190ee472b7e23cdcfd9f",
+        "output": "repair-long-car-03-16x9.png",
+        "sha256": "4daf6e640918cd91b43c4ba0915337773d572039b41158d0c8da398b85a22415"
+      },
+      {
+        "source": "repair-long-car-04-16x9.svg",
+        "source_sha256": "8053c9f99c898ddc294453e8483e8fd3f4fbe9f10f15c0eb4bb7031b07aaa14c",
+        "output": "repair-long-car-04-16x9.png",
+        "sha256": "e9e7095d55a3eca82a7d35ed54e5e859c35ecf1ab79e9eaf4139bfd8986aa271"
+      },
+      {
+        "source": "repair-long-car-05-16x9.svg",
+        "source_sha256": "08aec7f444bea793b7f88e42646895dd18b9cc72c5f27173600f92bd7dc763e5",
+        "output": "repair-long-car-05-16x9.png",
+        "sha256": "5f062296522f440620f6d4883337d5c5c06cb53b904cec1eb7cce163a74a6822"
+      },
+      {
+        "source": "repair-long-car-06-16x9.svg",
+        "source_sha256": "c983d95bf4addfc6818565fbe06187241df7de712a556c018a667452d5add002",
+        "output": "repair-long-car-06-16x9.png",
+        "sha256": "d66c576b794079c3ee93d1ef0f888151cea0a2f0859ec3aa5aaba088c269977b"
+      },
+      {
+        "source": "repair-long-car-07-16x9.svg",
+        "source_sha256": "fe71afd2b268009c004c8ba619de5b20574ec01aeebfbcd083af996451c1a431",
+        "output": "repair-long-car-07-16x9.png",
+        "sha256": "063e5f579637dd17880a9ac1649afb3fe21fe84f8453202b0e84db8b9a53e228"
+      },
+      {
+        "source": "repair-long-car-08-16x9.svg",
+        "source_sha256": "5fd522261a36cbf8df3c140ac400eee9ff6a5659250362eaa76babd521ca2f87",
+        "output": "repair-long-car-08-16x9.png",
+        "sha256": "0a2dcea025ed0c4f5a9b59f9ec22ce2240a08355e8e53806135f859cb0830a48"
+      },
+      {
+        "source": "repair-long-car-09-16x9.svg",
+        "source_sha256": "bb629fcda4b389b8d3875f0fc9408eec8b6d1ecb15edaf9e46847bc1d53cea38",
+        "output": "repair-long-car-09-16x9.png",
+        "sha256": "187abfe996baf7a302181efe5234d06874abb4f43bac7bfd4c40d53f3ebf9a5f"
+      },
+      {
+        "source": "repair-long-car-10-16x9.svg",
+        "source_sha256": "3467d2739717058a9832e8b5b17d305e124d9a63a0f2e88d3e2073797a39e21a",
+        "output": "repair-long-car-10-16x9.png",
+        "sha256": "2d756471325f853d74c74816fe6cf00121b1cdf3a1cb50fa977a15207ef3fc9d"
+      },
+      {
+        "source": "repair-long-car-11-16x9.svg",
+        "source_sha256": "e089c67d323318ebb67d6b27f785a38e4b4200b27f5fa93da40b77c5b3d9a2c2",
+        "output": "repair-long-car-11-16x9.png",
+        "sha256": "42cb1b87233a55f9606ad922ecb0969cb2edf41dedcf6ba53890ba82162d30bb"
+      },
+      {
+        "source": "repair-long-car-12-16x9.svg",
+        "source_sha256": "eca19b2324a063bdf42e66e75830033e861e3c5831738cb5528962522bf8b1bf",
+        "output": "repair-long-car-12-16x9.png",
+        "sha256": "5bd161ffef8a287fa658c39a30fa635eae88f9013383d1cbbcaa86ecc567386a"
+      },
+      {
+        "source": "repair-long-car-13-16x9.svg",
+        "source_sha256": "531cbc70801353c8d1227b57b16ffa656178f071b4d7bd560b8274e929e8efc2",
+        "output": "repair-long-car-13-16x9.png",
+        "sha256": "90b39aa1c822c7d212ac46dd5c9516bb9ec7921769b2186e1a7bb7382c14d4fd"
+      },
+      {
+        "source": "repair-long-car-14-16x9.svg",
+        "source_sha256": "83cbd95294b90f34c6779c01a8d85ac0e2611cf88978192a386700834186a8ad",
+        "output": "repair-long-car-14-16x9.png",
+        "sha256": "7157af882ab045bfaa5f0356e8a656d744aad5f89a741f0cebad8d2f1915760c"
+      },
+      {
+        "source": "repair-long-car-15-16x9.svg",
+        "source_sha256": "e052e5e3182b623f996e19f61882936c9895b3a840e52b110e50ccc1f60cf328",
+        "output": "repair-long-car-15-16x9.png",
+        "sha256": "3ab7272af075406be1e91d3818c7604a4c2b009dc26a92f65df04160fa6abdc8"
+      },
+      {
+        "source": "repair-long-car-16-16x9.svg",
+        "source_sha256": "7929d42894bf7e0a7c6698a5240b2489fd0a51faa2dccbc16aef7f451e852265",
+        "output": "repair-long-car-16-16x9.png",
+        "sha256": "562cfff90250d4ecd7e8a24b8ac5f127142837901984c69ec48905dc3aa61443"
+      },
+      {
+        "source": "repair-long-car-17-16x9.svg",
+        "source_sha256": "6e470b99b4404a754f02a62ed8f0ec9b0a1df6216f897d1791295cabde9c3a6c",
+        "output": "repair-long-car-17-16x9.png",
+        "sha256": "d6412f32b1279056373b6750ef70afe68c278ca2f99fe93515a8ea856312ddb5"
+      },
+      {
+        "source": "repair-long-car-18-16x9.svg",
+        "source_sha256": "9f77fa821d503c61f6ed0f12be54a48bf5a56d9a90721b230c9c10f694e663ef",
+        "output": "repair-long-car-18-16x9.png",
+        "sha256": "dac71509d09625786b3f91d9b16f13b093f751e27a4fc01f3be0847b2ee7c6dd"
+      },
+      {
+        "source": "repair-long-car-19-16x9.svg",
+        "source_sha256": "4e645a24463a69c9ebb90d1541701ec1430f3cafc4d3576e0e40fc8fe1b571c3",
+        "output": "repair-long-car-19-16x9.png",
+        "sha256": "3ba8f36c276d62bb38e53156c85415b2273d244e7cd384d7fc77b2bf0eaccfae"
+      },
+      {
+        "source": "repair-long-car-20-16x9.svg",
+        "source_sha256": "e53a31b12554b139b6c4e7ab347ea7663028e4716caea2e25256b2345885974c",
+        "output": "repair-long-car-20-16x9.png",
+        "sha256": "95c0ba42eac30c11db83f071a4631944b55eb868bb522337695ab85e18b1a9f9"
+      },
+      {
+        "source": "repair-long-car-21-16x9.svg",
+        "source_sha256": "904626f74a57efe357ee23d151e1023d15507becf3cb7af152421addcd66e53a",
+        "output": "repair-long-car-21-16x9.png",
+        "sha256": "ab2d7dd0f4dc47ed666d971546886cfc21ad4fe79ad77e724c840754835631b4"
+      },
+      {
+        "source": "repair-long-car-22-16x9.svg",
+        "source_sha256": "8cb16e9a377a20bce3b95d23677703f96e62352976495c2ac7a2819bdec8b2c9",
+        "output": "repair-long-car-22-16x9.png",
+        "sha256": "64432611a7e2b065b3515f2f3cb7d689dcc511ae58a1393df936c58bd2da49ca"
+      },
+      {
+        "source": "repair-long-car-23-16x9.svg",
+        "source_sha256": "373ff969811ee88611a419f746c7ad5e335bc1907d0525d9c24c18d99135d7ee",
+        "output": "repair-long-car-23-16x9.png",
+        "sha256": "c42f38706ff2f2a1610edbf782cc77ee315b6010fbc1b35142b82ba4e9684650"
+      },
+      {
+        "source": "repair-long-car-24-16x9.svg",
+        "source_sha256": "6715b72ccf93c0cb1e4df1f470007554fedbee1fb2547dae2d29bf84aa3328ee",
+        "output": "repair-long-car-24-16x9.png",
+        "sha256": "fd63fcb7d79960381dc455e80e7147ff672dcf8d5ba22af0ccc4ae8f1f9ba7fe"
+      },
+      {
+        "source": "repair-long-car-25-16x9.svg",
+        "source_sha256": "d846f18e4fcfa304c78321c5e39841b9192be20ed73c88e3dda075da6b9d18ab",
+        "output": "repair-long-car-25-16x9.png",
+        "sha256": "16f3985c2ca647ac977dabcc031594b6838dadbbb9f0f1c7fbffaba1ededda85"
+      },
+      {
+        "source": "repair-long-car-26-16x9.svg",
+        "source_sha256": "b56cadbd2723f26975eef99a87383f1ba1af96877fb6e6bc6cb8edb5cf14bbd3",
+        "output": "repair-long-car-26-16x9.png",
+        "sha256": "04e204df4933b68dbf7e399d282639ba210d17be71c128530f452db57b7a2128"
+      },
+      {
+        "source": "repair-readable-fri-call-85-16x9.svg",
+        "source_sha256": "96745489df502de2c1d8341afda0bed9ad6c6387394742ffb550e075c3d1b60e",
+        "output": "repair-readable-fri-call-85-16x9.png",
+        "sha256": "674e7ffddf2a4aa2f538d57cf225809af37547e805c12dd05c50a3eb4755abdd"
+      },
+      {
+        "source": "repair-readable-fri-call-85-fill-16x9.svg",
+        "source_sha256": "96745489df502de2c1d8341afda0bed9ad6c6387394742ffb550e075c3d1b60e",
+        "output": "repair-readable-fri-call-85-fill-16x9.png",
+        "sha256": "674e7ffddf2a4aa2f538d57cf225809af37547e805c12dd05c50a3eb4755abdd"
+      },
+      {
+        "source": "repair-readable-fri-chapter-2-16x9.svg",
+        "source_sha256": "29b50b726a7119dff6f060991704fe1662217a5623bf1d025a85588449ad2117",
+        "output": "repair-readable-fri-chapter-2-16x9.png",
+        "sha256": "09a9f2c3bacb4a974e0381b264400789a73452629c932a81ac5e0dc91cf93a0a"
+      },
+      {
+        "source": "repair-readable-fri-chapter-3-16x9.svg",
+        "source_sha256": "0f293c3d34e915b05cbc8bbc9a447df9c67037922233eae9c50c3379372aa124",
+        "output": "repair-readable-fri-chapter-3-16x9.png",
+        "sha256": "5cb72a725fd21c2de59a538d2c6cfa245e171c6a4ee8caf7d69672c4ee8b7825"
+      },
+      {
+        "source": "repair-readable-fri-chapter-4-16x9.svg",
+        "source_sha256": "74bb8882189c4635ab8968d1a6735f3d803abbdca36d4048d98f614ef9fc4f7f",
+        "output": "repair-readable-fri-chapter-4-16x9.png",
+        "sha256": "d6a5b0b10109ccbc870c77aa3ed4ce4ce074d1b0fff938e32ea002bd6cf08f4d"
+      },
+      {
+        "source": "repair-readable-fri-chapter-5-16x9.svg",
+        "source_sha256": "f23b6423f30abf8a4db91e4643427b57c5025dca1d5a046d2ae99cfbff60ff6e",
+        "output": "repair-readable-fri-chapter-5-16x9.png",
+        "sha256": "a9bb45eb9ec1c690a1ed3904fcdb5f8be7e0d0dd9fe39a04c9890039b2c9683c"
+      },
+      {
+        "source": "repair-readable-fri-chapter-6-16x9.svg",
+        "source_sha256": "0e54e42f081b48a2286706194a494b62b1b46ada6eab541dd92bfa4be270b215",
+        "output": "repair-readable-fri-chapter-6-16x9.png",
+        "sha256": "8364954dc72c74ab342c5e8c56b0e0ed68ad49391c2e1b0336cef6c300515e33"
+      },
+      {
+        "source": "repair-readable-fri-chapter-7-16x9.svg",
+        "source_sha256": "4ff7fa2577e6d64ae521ae6915dd70779b009d550cb21d8256479275f1cb6fe6",
+        "output": "repair-readable-fri-chapter-7-16x9.png",
+        "sha256": "4b4e8f2ee249dc46e24d4b720c1f8d2de4d5e9af49442e5892de19a322521ef1"
+      },
+      {
+        "source": "repair-readable-fri-chapter-8-16x9.svg",
+        "source_sha256": "c8a6d496930e50792bc233b9789fbb9f0817d8cca8ea49b8241858b0108d0469",
+        "output": "repair-readable-fri-chapter-8-16x9.png",
+        "sha256": "0505ea3c61b532d1854e557c70d53998eb23578aeb1bc0e027d98038b8285570"
+      },
+      {
+        "source": "repair-readable-fri-claude-launch-pages-16x9.svg",
+        "source_sha256": "d21147cc864947f493e0b2c320ac65e5ab4da8b29d33616698b7052557f9d3ad",
+        "output": "repair-readable-fri-claude-launch-pages-16x9.png",
+        "sha256": "6ea757cffa781b8d1d76116cab3f7971800162970258a1d1cd650255f29eb499"
+      },
+      {
+        "source": "repair-readable-fri-claude-launch-pages-p2-16x9.svg",
+        "source_sha256": "2088f8fa4af58e2e8a95371447d88471503d8b392955c3db466669174a8f1e4c",
+        "output": "repair-readable-fri-claude-launch-pages-p2-16x9.png",
+        "sha256": "5a2a5c721b9fd52524a90cb0e400134eb171d2b9863e6a3e6b3da732d63c9d53"
+      },
+      {
+        "source": "repair-readable-fri-claude-launch-pages-p3-16x9.svg",
+        "source_sha256": "5e5b7bc51df976b355a712c7b7d2c6769ec2e5ada2b5d15bdfa4189df223a898",
+        "output": "repair-readable-fri-claude-launch-pages-p3-16x9.png",
+        "sha256": "724ca171aac9b012c98c568f1567a696d53b2ab1d5850dfeb3d20e9ba66f27c2"
+      },
+      {
+        "source": "repair-readable-fri-deep-15-claude-names-16x9.svg",
+        "source_sha256": "4411fe3323c15dd1474e45b7ed2b5545d42190f11f0977a7bf56db769813cde3",
+        "output": "repair-readable-fri-deep-15-claude-names-16x9.png",
+        "sha256": "57e4bc41665bc30a29d32578205231020d6e18f72cf5d1faa2fcfa07b9a4c4bf"
+      },
+      {
+        "source": "repair-readable-fri-deep-15-claude-names-s2-16x9.svg",
+        "source_sha256": "449eb38504fb3869cea592ad93e271a94deda767a091ec767fec6359e61cbf89",
+        "output": "repair-readable-fri-deep-15-claude-names-s2-16x9.png",
+        "sha256": "4248b9e5da930a5fe82702fd84b1e5962b96c82cfd5cc534fd86a9a35d3e12c4"
+      },
+      {
+        "source": "repair-readable-fri-deep-15-claude-names-s3-16x9.svg",
+        "source_sha256": "74ae0c2ae2d3bb59277f59545339bcc4d4965bf2cafb984a03d35c6ad6ff9242",
+        "output": "repair-readable-fri-deep-15-claude-names-s3-16x9.png",
+        "sha256": "f302f0baa20efcd8e5b128ac33e2658ed16bafb23fff724f7bb6bb1b9f939708"
+      },
+      {
+        "source": "repair-readable-fri-deep-aa-same-claude-16x9.svg",
+        "source_sha256": "b6d4e9cc3555c86e883bd70859799304d00005729e9662a64ecc269e4a2639ff",
+        "output": "repair-readable-fri-deep-aa-same-claude-16x9.png",
+        "sha256": "15d2cb7b7a130fd0ed22a89d9a37dfe348a766975c49340edd7074675b00d5a0"
+      },
+      {
+        "source": "repair-readable-fri-deep-aa-same-claude-s1-16x9.svg",
+        "source_sha256": "58a31fd1501866ab052ec64a34649fd0bf9aed245f346f559144cf1048794756",
+        "output": "repair-readable-fri-deep-aa-same-claude-s1-16x9.png",
+        "sha256": "03765c51d90d8cd33f1f4585995e9bf538b513758352483cd192662c3351d691"
+      },
+      {
+        "source": "repair-readable-fri-deep-aa-same-claude-s2-16x9.svg",
+        "source_sha256": "84ab57c2f5ac54d13011737ef9250a6e3d9b3df7369d0d02739f3980cbf6e97f",
+        "output": "repair-readable-fri-deep-aa-same-claude-s2-16x9.png",
+        "sha256": "908328e0f8b41bf17611049e6fedeab2712c50cd685b1ace99e169530804ed4c"
+      },
+      {
+        "source": "repair-readable-fri-deep-aa-same-claude-s3-16x9.svg",
+        "source_sha256": "1e6f5e220b4a97a59affd881d8168ade3cbf97fcd6e7a581129c01a2c24e1a8c",
+        "output": "repair-readable-fri-deep-aa-same-claude-s3-16x9.png",
+        "sha256": "e89cc5a6f76a4869e47711a1dd0356841258d52c6a0f2688addbd234eac9beee"
+      },
+      {
+        "source": "repair-readable-fri-deep-altman-losing-on-pro-16x9.svg",
+        "source_sha256": "fc93498ff353e93b56a59f6a97b2eeafaa144f4d9ef913844f4df6a7b06a5e6e",
+        "output": "repair-readable-fri-deep-altman-losing-on-pro-16x9.png",
+        "sha256": "f5484d652333b5c614e40cf0ccc075af45fcd090058dc9031b86a724a5033d64"
+      },
+      {
+        "source": "repair-readable-fri-deep-altman-same-day-16x9.svg",
+        "source_sha256": "9f47a4e43e17a1b2d7d50d3ea24501af9e2d557309c4311461a2dee52c0c950b",
+        "output": "repair-readable-fri-deep-altman-same-day-16x9.png",
+        "sha256": "9594ba023ebda0237cd31bd4adc646ac68966041cef30260cf067448a83bce06"
+      },
+      {
+        "source": "repair-readable-fri-deep-altman-same-day-t2-16x9.svg",
+        "source_sha256": "4d067df63a1cef7c09cd7f0b73803a915b5b62995021149eb4ba197af0115edc",
+        "output": "repair-readable-fri-deep-altman-same-day-t2-16x9.png",
+        "sha256": "18bcec4916cab6b5aa7d873dbd666dea06e2c39ef91c99e363275d160d186b7d"
+      },
+      {
+        "source": "repair-readable-fri-deep-altman-same-day-t3-16x9.svg",
+        "source_sha256": "97c6270cc22e9e91ba5855e7c1dfb25bef157ecc78432ea2d39b11e6757a7d9c",
+        "output": "repair-readable-fri-deep-altman-same-day-t3-16x9.png",
+        "sha256": "6917791adf6aaae128f0eea4fffb068670f0393b77857af0756ae1402029e057"
+      },
+      {
+        "source": "repair-readable-fri-deep-claude-code-reversal-16x9.svg",
+        "source_sha256": "eb84f910359afbeb2990c57fc4dee35e27fe9717782740821cefbfc852a64bed",
+        "output": "repair-readable-fri-deep-claude-code-reversal-16x9.png",
+        "sha256": "f198899251b8ed83fc545f6c9d633e32ed5c3d68cdb71176f7a2aae7b337b450"
+      },
+      {
+        "source": "repair-readable-fri-deep-claude-code-reversal-f2-16x9.svg",
+        "source_sha256": "1fc85300fe0dcc839b923c73ef5892dfb147905f290bd0a7584898b2a8d37cfb",
+        "output": "repair-readable-fri-deep-claude-code-reversal-f2-16x9.png",
+        "sha256": "7b6c1bf81265f24f3002d76e9ef5b7041e42bc8e0e90cc944b4b629fa70c212e"
+      },
+      {
+        "source": "repair-readable-fri-deep-claude-code-reversal-f3-16x9.svg",
+        "source_sha256": "200eceb4e7623d7b013cbc7363544a50ae183ae9700a0d3974ac835eee9eb293",
+        "output": "repair-readable-fri-deep-claude-code-reversal-f3-16x9.png",
+        "sha256": "0c51200c15b76f002883164e966fa868322b7d74d6d9badf7bca3fb445a97b4e"
+      },
+      {
+        "source": "repair-readable-fri-deep-claude-code-reversal-f4-16x9.svg",
+        "source_sha256": "fac05237d037762e66d9c003e31a40dd1a3de8ac522242b7ff9e548872413bae",
+        "output": "repair-readable-fri-deep-claude-code-reversal-f4-16x9.png",
+        "sha256": "df6476958aa2a715ac83327486ecad33405624692aae910b3d660d3a8297164e"
+      },
+      {
+        "source": "repair-readable-fri-deep-cost-vs-score-16x9.svg",
+        "source_sha256": "04162120d008f0654e48acb04261d30198dec6c02be32d083ae88c3070ac1ffa",
+        "output": "repair-readable-fri-deep-cost-vs-score-16x9.png",
+        "sha256": "f7ef435a883d892f47e3dd5cd277759fbdcf2a58935176e512e7f83eb8515d7b"
+      },
+      {
+        "source": "repair-readable-fri-deep-cost-vs-score-cost-16x9.svg",
+        "source_sha256": "04162120d008f0654e48acb04261d30198dec6c02be32d083ae88c3070ac1ffa",
+        "output": "repair-readable-fri-deep-cost-vs-score-cost-16x9.png",
+        "sha256": "f7ef435a883d892f47e3dd5cd277759fbdcf2a58935176e512e7f83eb8515d7b"
+      },
+      {
+        "source": "repair-readable-fri-deep-cost-vs-score-score-16x9.svg",
+        "source_sha256": "aaf210721feb3393c72b16cdba20e7e77441e0a4563e424702665639b493558e",
+        "output": "repair-readable-fri-deep-cost-vs-score-score-16x9.png",
+        "sha256": "719fba46db4cfd36e5494d7da372741cdded056d3470d1ade5996cfb086b69e3"
+      },
+      {
+        "source": "repair-readable-fri-deep-extended-cut-by-mistake-16x9.svg",
+        "source_sha256": "8d9de712c380b3b0ef8b59602214519944514ae7044d82e817d6ce00b7052ff4",
+        "output": "repair-readable-fri-deep-extended-cut-by-mistake-16x9.png",
+        "sha256": "399aa5ea0feee3cbb012038b95a64d35646bf22eef070d39e453e57fccbcfb73"
+      },
+      {
+        "source": "repair-readable-fri-deep-extended-cut-by-mistake-r2-16x9.svg",
+        "source_sha256": "59bc3f5d9e5335dc3b55bddeea9361f39cb079f5fb80a7332f5fec0ca67cc0b5",
+        "output": "repair-readable-fri-deep-extended-cut-by-mistake-r2-16x9.png",
+        "sha256": "543c8a4770930bcfa31015ff640f2b623d2898a50bc617005a5c009057706b6c"
+      },
+      {
+        "source": "repair-readable-fri-deep-extended-cut-by-mistake-r3-16x9.svg",
+        "source_sha256": "2cad4178bf4387b45276302772e7aaba69cd603334c4aff69ea2eb20785d1a03",
+        "output": "repair-readable-fri-deep-extended-cut-by-mistake-r3-16x9.png",
+        "sha256": "2cf568940c7a10a2cd59a9d11321557bbdc10d0227b80df771ad00753a19cd4e"
+      },
+      {
+        "source": "repair-readable-fri-deep-openai-5-1-to-6-1-16x9.svg",
+        "source_sha256": "2b85bd3210320838ed1c5a47be639d2399619cfd19f3cb4b96f12fc5cef41e8c",
+        "output": "repair-readable-fri-deep-openai-5-1-to-6-1-16x9.png",
+        "sha256": "21e4dd99d73593b7e8c2cbb52f1b986a26ed7898014339b0ee10c4d81b5f0a54"
+      },
+      {
+        "source": "repair-readable-fri-deep-openai-5-1-to-6-1-r1-16x9.svg",
+        "source_sha256": "2b85bd3210320838ed1c5a47be639d2399619cfd19f3cb4b96f12fc5cef41e8c",
+        "output": "repair-readable-fri-deep-openai-5-1-to-6-1-r1-16x9.png",
+        "sha256": "21e4dd99d73593b7e8c2cbb52f1b986a26ed7898014339b0ee10c4d81b5f0a54"
+      },
+      {
+        "source": "repair-readable-fri-deep-openai-5-1-to-6-1-r2-16x9.svg",
+        "source_sha256": "2b85bd3210320838ed1c5a47be639d2399619cfd19f3cb4b96f12fc5cef41e8c",
+        "output": "repair-readable-fri-deep-openai-5-1-to-6-1-r2-16x9.png",
+        "sha256": "21e4dd99d73593b7e8c2cbb52f1b986a26ed7898014339b0ee10c4d81b5f0a54"
+      },
+      {
+        "source": "repair-readable-fri-deep-openai-free-dec-2025-16x9.svg",
+        "source_sha256": "87ac3f3128526e3dc3c135d095f5049f787888c52e3e1dd341c1a9e16c9a3b77",
+        "output": "repair-readable-fri-deep-openai-free-dec-2025-16x9.png",
+        "sha256": "243e144d8f8bbbf13d72f5d793b7427a4b08156583d5661f04441cb6d0387cad"
+      },
+      {
+        "source": "repair-readable-fri-deep-openai-free-dec-2025-s2-16x9.svg",
+        "source_sha256": "87ac3f3128526e3dc3c135d095f5049f787888c52e3e1dd341c1a9e16c9a3b77",
+        "output": "repair-readable-fri-deep-openai-free-dec-2025-s2-16x9.png",
+        "sha256": "243e144d8f8bbbf13d72f5d793b7427a4b08156583d5661f04441cb6d0387cad"
+      },
+      {
+        "source": "repair-readable-fri-deep-openai-free-dec-2025-s3-16x9.svg",
+        "source_sha256": "e3ef0dbd05d24493502581312dd3a93ae675eb972c9c2578580f573c56034afc",
+        "output": "repair-readable-fri-deep-openai-free-dec-2025-s3-16x9.png",
+        "sha256": "57a76d00169b3d3ae3d4aaa576d8fe86e76f28c05f865eaa6953c304d0694236"
+      },
+      {
+        "source": "repair-readable-fri-deep-openai-plus-pro-sep-2026-16x9.svg",
+        "source_sha256": "14e2f44598aeb3149470007c90c10a025ce319a0302f5ca156979b2fa2bb3bdb",
+        "output": "repair-readable-fri-deep-openai-plus-pro-sep-2026-16x9.png",
+        "sha256": "1d0d04792f828cc14f38cc0fae011423ea94ae85347877dd4f55ccaaf3cc5cb0"
+      },
+      {
+        "source": "repair-readable-fri-deep-openai-plus-pro-sep-2026-c2-16x9.svg",
+        "source_sha256": "14e2f44598aeb3149470007c90c10a025ce319a0302f5ca156979b2fa2bb3bdb",
+        "output": "repair-readable-fri-deep-openai-plus-pro-sep-2026-c2-16x9.png",
+        "sha256": "1d0d04792f828cc14f38cc0fae011423ea94ae85347877dd4f55ccaaf3cc5cb0"
+      },
+      {
+        "source": "repair-readable-fri-deep-thinking-use-1-to-7-16x9.svg",
+        "source_sha256": "71d57940d390074ad4ae9d3cde0a409bd8a2700308c50d6fc738b7e89e8a444d",
+        "output": "repair-readable-fri-deep-thinking-use-1-to-7-16x9.png",
+        "sha256": "899ff52b0df28d9f358fd41e39955f91d359f48e471dbb0596a140374c4fa1b1"
+      },
+      {
+        "source": "repair-readable-fri-deep-thinking-use-1-to-7-after-16x9.svg",
+        "source_sha256": "26376fbae029ccc88c89da47734c36424267cecf0399a15c28a9e207818d3b19",
+        "output": "repair-readable-fri-deep-thinking-use-1-to-7-after-16x9.png",
+        "sha256": "801e92230d1373d5e6d9364620697ed778da946348f969016836822bd1035772"
+      },
+      {
+        "source": "repair-readable-fri-deep-where-to-turn-it-up-16x9.svg",
+        "source_sha256": "60b9c964318d22865b523b91719a2920c54892b10d432a5957d3099c20d9323f",
+        "output": "repair-readable-fri-deep-where-to-turn-it-up-16x9.png",
+        "sha256": "21e38d3e32e7184af1f7d3a95a4968cf6461b7d629b0a8b263ab3ff739bb8e87"
+      },
+      {
+        "source": "repair-readable-fri-deep-where-to-turn-it-up-c2-16x9.svg",
+        "source_sha256": "12e310f354948c6146600eaba06115dcb7498adc56c72700b7bd17b23a03f3f5",
+        "output": "repair-readable-fri-deep-where-to-turn-it-up-c2-16x9.png",
+        "sha256": "74c9a23e35883eb44eb5537914b798f5c324e195b2efb4f58132426ec3256f91"
+      },
+      {
+        "source": "repair-readable-fri-gemini-auto-16x9.svg",
+        "source_sha256": "80080fab5a500fdf1ea6d52b4557f228e5f9416740685935bbf3d4bdf2392cb6",
+        "output": "repair-readable-fri-gemini-auto-16x9.png",
+        "sha256": "66ed9b2064ded75ade7b3b3b992e9ec83699880a1b9c569ab1bcb900f5654454"
+      },
+      {
+        "source": "repair-readable-fri-gemini-auto-h1-16x9.svg",
+        "source_sha256": "de5cf5034728c2fc6b8a489210a260150ec2d159a347f4553bd9490ef9599f94",
+        "output": "repair-readable-fri-gemini-auto-h1-16x9.png",
+        "sha256": "35489893755a1ce6f08e0a9cf238674ae54b7a2066a963f5402f554b2b845c35"
+      },
+      {
+        "source": "repair-readable-fri-gemini-auto-h2-16x9.svg",
+        "source_sha256": "d1d7aa3930ab4a98e666de612009f46f39eda661c183831a5ffe807f2a2305fd",
+        "output": "repair-readable-fri-gemini-auto-h2-16x9.png",
+        "sha256": "2f5519cb64515ccdd4b20a543baa30bf3fcae7fbc34b1c2fdd7e6e9cd2c76003"
+      },
+      {
+        "source": "repair-short-01-9x16.svg",
+        "source_sha256": "f852b0abad6b7ae5b743a71cee3634490046f1e81fa266131f37194ea0c5f35d",
+        "output": "repair-short-01-9x16.png",
+        "sha256": "0ab2be1f85d964f8aac45240c21d6cffc07dc1cd05044d6edf446e234f246892"
+      },
+      {
+        "source": "repair-short-02-9x16.svg",
+        "source_sha256": "a381580254f846a1ab130a40e9aa25190c93772782d106ecf20907faddb9c489",
+        "output": "repair-short-02-9x16.png",
+        "sha256": "7af27a9276f00c11f647aa7cddb1016f0e0538a973056362d11679128678c235"
+      },
+      {
+        "source": "repair-short-03-9x16.svg",
+        "source_sha256": "a8a806a4353574d826425a699bd2633f24ddb5cecbfe8518aad86f813d296047",
+        "output": "repair-short-03-9x16.png",
+        "sha256": "eda1e90bf9b90bcbc8d12b453afe40ce23713adfa551a487f905727440372d3b"
+      },
+      {
+        "source": "repair-short-04-9x16.svg",
+        "source_sha256": "fc3076152b732bf1a5f731595c2ca5861ba42a2f94c3d73a73d7349f696d23d0",
+        "output": "repair-short-04-9x16.png",
+        "sha256": "2170598022997215632789412167bf8354d6e26d8ad98b310415efd9ae61ad13"
+      },
+      {
+        "source": "repair-short-05-9x16.svg",
+        "source_sha256": "d6cb0c3e82be66bc99ebdd278c25342e47b819262b1db124a1c0da06eab443d9",
+        "output": "repair-short-05-9x16.png",
+        "sha256": "cea76728bc596a65b387e3eeb2c371b27d96afc534bd047c4ad877cb014246d4"
+      },
+      {
+        "source": "repair-short-06-9x16.svg",
+        "source_sha256": "354496b873ed9eac532bb2fd4aaf5a57ba6d7efb56c44533fe8f0c17ef3bc302",
+        "output": "repair-short-06-9x16.png",
+        "sha256": "5efdf94ff65afbe999c471a27b0b18ce914d12e76c578f57ab5c0345dc653be3"
+      },
+      {
+        "source": "repair-short-07-9x16.svg",
+        "source_sha256": "a8189c0fcf9eccf68cfee7901f3323bb956f427227df3d03985f5877ce30778a",
+        "output": "repair-short-07-9x16.png",
+        "sha256": "02d037be4c304587f4bf8bf8ffa08e6c7640d355bac945e528575e09e47d9be4"
+      },
+      {
+        "source": "repair-short-08-9x16.svg",
+        "source_sha256": "d05044d3e76788488d193fa658d7b719d911dae1f578e665624a28d1ea67aed3",
+        "output": "repair-short-08-9x16.png",
+        "sha256": "6551bb47d8c857cec52012597d5078dace265b09fc414634fd8a4a7a79b3d8d4"
+      },
+      {
+        "source": "repair-short-09-9x16.svg",
+        "source_sha256": "8fa342d565e96179d4b28cb2de3338e8016dc0e71ac7c756f74c40c4058dcec1",
+        "output": "repair-short-09-9x16.png",
+        "sha256": "e5182abf3627860699d4f25a1065d1ea72be91c3b606dea28d91f8ff2a032235"
+      },
+      {
+        "source": "repair-short-10-9x16.svg",
+        "source_sha256": "f0808d0bd1e4dd663f2adeccfd8f574ac7b835b3bcddfb6a77efc844f5ce085c",
+        "output": "repair-short-10-9x16.png",
+        "sha256": "6238cba4b7de1f8001b0f707c6ad01dbf9fb9bba9aa69c733e7657835a2b2758"
+      },
+      {
+        "source": "repair-short-11-9x16.svg",
+        "source_sha256": "547a915b11327fe76742135834bbed732da29ef9c4a4e41434a59a8fff60999e",
+        "output": "repair-short-11-9x16.png",
+        "sha256": "43a412ed915a0111a8d6ae1b906c8079b318603161ab5657d16eae5f5fca1973"
+      },
+      {
+        "source": "repair-short-12-9x16.svg",
+        "source_sha256": "b303bf232c8f59e8d2077a0e35e4006604df4acdaf0415b79f60bc48d5eb8eca",
+        "output": "repair-short-12-9x16.png",
+        "sha256": "a9e20692b7f94758ea101c33cd418cdc898cb92a74427c631b8864e6b83a0f59"
+      },
+      {
+        "source": "repair-short-13-9x16.svg",
+        "source_sha256": "49c20155ae5c0140797744ff3dc8cf62498da16e6f27c977036bb03f7d3c6fce",
+        "output": "repair-short-13-9x16.png",
+        "sha256": "f4d8df3f24c720ac9b224ebc80a97a30ee20f984b44887e2662035695a2d8107"
+      },
+      {
+        "source": "repair-short-14-9x16.svg",
+        "source_sha256": "441d12b662b2f1f04b421fb1c6216d4c3ad55b3aabf0611a0428a70ffecb54fe",
+        "output": "repair-short-14-9x16.png",
+        "sha256": "191a500b9c8dabff8a5dccff8b87651937ab71028042e44782cb807a69b7facc"
+      },
+      {
+        "source": "repair-short-15-9x16.svg",
+        "source_sha256": "27ea93a2080fd23f9decd06c8e7e36b72e71a309874d03297b6f74383e41c79a",
+        "output": "repair-short-15-9x16.png",
+        "sha256": "4dd388c906931df72572aa75c2ad0de3053c6055037d5242c6c6ed3a00681517"
+      },
+      {
+        "source": "repair-short-16-9x16.svg",
+        "source_sha256": "fc0658a49c867df6942d2309f3eb514aec1bb20a46e6dacd1e04a741f81bb892",
+        "output": "repair-short-16-9x16.png",
+        "sha256": "0732c120b694a7ca74eb4058d0ba4c76f6e6e293fcff2a8e917ff5aa78efa296"
+      },
+      {
+        "source": "repair-short-17-9x16.svg",
+        "source_sha256": "44eacc214783c1679ef1cd3390aaf1bbcff58b36e0434f7c19a9ef7645bcc8aa",
+        "output": "repair-short-17-9x16.png",
+        "sha256": "2c07c4757601eba97ce419d8e38c7e93509b754eb17f6a3d2183f0b3e1179af3"
+      },
+      {
+        "source": "repair-short-18-9x16.svg",
+        "source_sha256": "a0b27199471e5864fc88186dcdb823a84e8995aa4c1ed9d4c851f65bd3470150",
+        "output": "repair-short-18-9x16.png",
+        "sha256": "361648a79adbc9f14ac75a293588df63b660bb2ab5fb641813e80cbfafe1467e"
+      },
+      {
+        "source": "repair-short-19-9x16.svg",
+        "source_sha256": "1d673bc60a2b3ef431d0564bd1b3f8ac31c5915fad4207caf8f466001e758be4",
+        "output": "repair-short-19-9x16.png",
+        "sha256": "b26f896ab220a3672c6a0297e72bcb4e64aa01eedfc9770d7dee0afd82f04451"
+      },
+      {
+        "source": "repair-short-20-9x16.svg",
+        "source_sha256": "6ff498c2aa50816c671f8caa147d19d642e50932473d82c32cd63a822b140d24",
+        "output": "repair-short-20-9x16.png",
+        "sha256": "cec65d1bf5ee709b2ffb7148292161154348f0ae88979adeb547ebac7efff350"
+      },
+      {
+        "source": "repair-short-21-9x16.svg",
+        "source_sha256": "d065b116d5f4f208e8095394418e7c2935302801f298fcb409e9714425d6de4a",
+        "output": "repair-short-21-9x16.png",
+        "sha256": "b2389dee1ad86a8bc1be1b2316167462d2746c6fbb78d3c57f0eb4535e642ee9"
+      },
+      {
+        "source": "repair-short-22-9x16.svg",
+        "source_sha256": "b3d4ace35b00df52736aa49f60fb2b641f10437a46e18128320522eb9b7b8f63",
+        "output": "repair-short-22-9x16.png",
+        "sha256": "ae3efc9c11dfbcdd0b8ce27279a22d85cb2f20d8b9f32ee0451ec14c6e22170c"
+      },
+      {
+        "source": "repair-short-23-9x16.svg",
+        "source_sha256": "18abb6ac83acff0610c7809353ce97fe7bdd95e5c479091066c3155a081a8e04",
+        "output": "repair-short-23-9x16.png",
+        "sha256": "c5b921e7500cc865c6e088f479f51ceed90cf58483b6121e8b8327256df9f891"
+      },
+      {
+        "source": "repair-short-24-9x16.svg",
+        "source_sha256": "6cc3ad6fc62b558823a417a6da7e45da495a5d3e136e64b71c07bddfd77d2f24",
+        "output": "repair-short-24-9x16.png",
+        "sha256": "9665d33c3af04d45ea23db30702d8f974ae4457e2dbcc50d985daa98c3fc11e7"
+      },
+      {
+        "source": "repair-short-25-9x16.svg",
+        "source_sha256": "7f4a79da2d4d1590fd16c5ad8ae761990721dbffc058b71dd8745f1b29cbd56b",
+        "output": "repair-short-25-9x16.png",
+        "sha256": "807bc0f85343bddf5a79f066f3a4a35fc65d339dca84a38c03372917b9aaec58"
+      },
+      {
+        "source": "repair-short-26-9x16.svg",
+        "source_sha256": "1a89d7f42fddcf4d775b8c69b7b260b750565b2d7f854dfed1b6d1c1425d60a0",
+        "output": "repair-short-26-9x16.png",
+        "sha256": "8cff985798c8e545cf96577f463f628b168f3fbe2e6e39c631dfcbd9d67103b5"
+      },
+      {
+        "source": "repair-short-27-9x16.svg",
+        "source_sha256": "0ff8aa8b2a9575bc0f44939e2defa696758b5b91b3a5b82a56e3fc755dca2d5b",
+        "output": "repair-short-27-9x16.png",
+        "sha256": "c5c9fa0f0aa1ad9a0fe4fc5143b78194e5618c7730fbc9f5326082e81c9ae3aa"
+      },
+      {
+        "source": "repair-short-28-9x16.svg",
+        "source_sha256": "32df378a2a488572319194ea1cfd48dd5c50cc09880984af905c4b37b83797b8",
+        "output": "repair-short-28-9x16.png",
+        "sha256": "bdf77e5409c8de8e4b50b29a23c9f40e35056485a61236d27702c2e6efa6ab09"
+      },
+      {
+        "source": "repair-short-29-9x16.svg",
+        "source_sha256": "9d3849eb7c8e9dd7e13d59203760e1fd90ad313f3aa6426d4b03c4163a31261f",
+        "output": "repair-short-29-9x16.png",
+        "sha256": "cfbf8549b41a855229f6ce519e86fe5d1b589691248c2ed16ad1425ad1075c7c"
+      },
+      {
+        "source": "repair-short-30-9x16.svg",
+        "source_sha256": "b2cec2d7c3a1bcc445070de9dd141151b3967a5ced853c486fc9006d4dbd1bf3",
+        "output": "repair-short-30-9x16.png",
+        "sha256": "6066d857088b69ff1d0c1ff2e1c565c2a405adc34ceb096bc78333dcc30e2c81"
+      },
+      {
+        "source": "repair-short-31-9x16.svg",
+        "source_sha256": "4391ecdbd8d5cb71146eae72248f06d5bcb39adcd15c92714ad0b76716578879",
+        "output": "repair-short-31-9x16.png",
+        "sha256": "f8bba804bb20ce544c6053ff661d2fd9f292bdf51a786d55d08e1b0753fcf352"
+      },
+      {
+        "source": "repair-short-32-9x16.svg",
+        "source_sha256": "8937d52694f68f5977b5d88cd4a6a185c6b84b282db4e95529110a5b9b5bc9d3",
+        "output": "repair-short-32-9x16.png",
+        "sha256": "8b59a36a36d635940db0c570cbfd20afd0a549e34ede722badb944267ddc0dfc"
+      }
+    ]
+  },
+  "acceptance": "Card-level inspection only; not final video approval"
+}

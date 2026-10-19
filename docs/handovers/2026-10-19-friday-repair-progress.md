@@ -312,3 +312,34 @@ joins at edited 172.62 and 326.62 seconds in full playback.
 Evidence JSON is marked -text in .gitattributes so Git cannot silently rewrite
 bytes on another platform. All 39 indexed deep evidence hashes match the saved
 manifest. Caption repair bytes are also preserved across checkouts.
+
+
+## Composition ruling and current jobs — 19 Oct, 17:15 London
+
+Krish rejected Meet Sally's empty image slot, requested an amusing character and
+said not to leave random big spaces. Then asked whether other areas were similarly
+sparse. All 109 card inputs were audited. The exact findings, 65 changed-card hashes
+and full renderer manifest are in composition-audit-v8-v4.json (use its count as
+truth if it differs). The generated fictional Sally and exact image_gen prompt are
+in illustrations/sally-v1.png and sally-v1-provenance.json. The composed preview is
+illustrations/sally-card-v8.png. This is a routine repair inside the approved look.
+
+The earlier short v7 and deep v3 render trees were stopped deliberately. Their
+partial files are preserved and not deliverable. Old waiting checker jobs cannot
+pass them because completed receipts do not exist. Current renders:
+- short v8: session 99204, repair-short/render-v8.log;
+- deep v4: session 7726, repair-long/render-v4.log.
+Both read repair-kit-v8, immutable after its 109-card render and inspection.
+A new sequential checker is running in session 61229 via
+W/finish-composition-review.ps1. It waits for each exact render's receipt, runs
+six calibrated sync checkpoints, extracts every-second and quarter-intro/outro
+frames, and hash-verifies a local preview copy in this chat's outputs directory.
+Outputs: W/sync-short-v8, W/review-short-v8, W/sync-deep-v4, W/review-deep-v4;
+review-jobs-v8.json / review-jobs-v4.json inside each render folder. The checker
+never certifies full playback, changes making records or files to Drive. It leaves
+visual/human acceptance pending. Inspect running state before restarting anything.
+
+No audio/cut/transcript changes in this composition revision. The four deep caption
+repairs from the prior checkpoint remain. Fresh reports must bind the new hashes;
+never relabel v6's sync pass as v8's. Article fact gate remains failed. Review both
+finished cuts with sound before conditional replacement filing and the two links.

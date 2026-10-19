@@ -42,12 +42,16 @@ Independent source recognition also resolves missing "like" and the Sally openin
 The completed short v4 has matching decoded audio to v3 and passing loudness/music
 measurements, but Krish rejected its small eyebrow labels and source-credit lines.
 Those overlays are now removed from all 109 generated card assets, including the
-mapping and control cards; source/attribution records remain separate. Short v6 is
-rendered and presented for review, without eyebrows or source credits. Its six
-calibrated sync checks pass (-40 to 0 ms); loudness/music/coverage pass. Native
-representative essential text measures 70–87 pixels. Finished acceptance is pending.
-Deep v3 is rendering with four evidence-backed caption corrections and unchanged
-speech; v1/v2 partial renders are superseded and not deliverable. Thirty-three
+mapping and control cards; source/attribution records remain separate. Short v6's technical checks passed, but Krish then rejected the empty centre of
+Meet Sally and asked for the principle to be checked across both cuts. The audit
+found 13 sparse short text cards, three undersized short logo cards, seven deep
+chapter headings, and 27 deep screenshot cards with excess gaps. Short v8 and
+deep v4 are now rendering from isolated repair-kit-v8 inputs: Sally has a generated
+fictional business-owner illustration, plain text is compact, evidence crops are
+stacked at full width, corner source logos are removed, and deep text clears the
+caption band. All 109 card previews were inspected; final-file review is pending.
+Superseded short v7 and deep v3 renders were stopped, not filed.
+Thirty-three
 bounded independent transcription checks and the full medium-model transcript
 are preserved with exact hashes in the repair evidence folder. Full playback,
 exact-file deep sync and final deep frame review remain outstanding. The deep

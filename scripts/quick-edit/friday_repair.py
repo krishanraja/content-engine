@@ -17,7 +17,8 @@ import kit
 ROOT=Path(__file__).resolve().parents[2]
 W=ROOT/'.cache/produce/2026-10-16-904658db'
 PLAN=ROOT/'docs/plans/2026-10-09-friday'
-DEST=W/'repair-kit'
+# Versioned input folders keep an in-flight render's images immutable.
+DEST=W/'repair-kit-v8'
 
 
 def uri(path):
@@ -64,32 +65,46 @@ def control_card(name, kind, shape='9x16'):
             'treatment':'Unchanged original pixels, enlarged through SVG viewports; verify final glyph height'}
 
 
-def card(name,head,detail='',photo=None,logo=None,shape='9x16',label=''):
+def card(name,head,detail='',photo=None,logo=None,shape='9x16',label='',illustration=None):
     width,height=(1080,1000) if shape=='9x16' else (1314,1080)
     style=kit.style_for('mind_the_gap')
     ink,cream,accent=style['ink'],style['cream'],style['accent']
-    # Short headlines, ample type and explicit context carry the spoken idea.
+    # A text-only card has its own compact composition, not an empty image slot.
     lines=head.split('|');size=98 if shape=='9x16' else 130
+    text_only=not (photo or logo or illustration)
+    if text_only and shape=='9x16':
+        from PIL import ImageFont
+        size=140
+        while max(ImageFont.truetype(str(ROOT/'scripts/quick-edit/fonts/Anton.ttf'),size).getlength(line.upper()) for line in lines)>width-128:
+            size-=1
+    first_baseline=(height/2-(len(lines)-1)*(size+12)/2- (70 if detail else 0)) if text_only else 218
+    if logo:
+        first_baseline=400-(len(lines)-1)*(size+12)/2
     body=[f'<rect width="{width}" height="{height}" fill="{ink}"/>',
           f'<rect width="{width}" height="12" fill="{accent}"/>']
     for i,line in enumerate(lines):
-        body.append(f'<text x="64" y="{218+i*(size+12)}" font-family="Anton" font-size="{size}" fill="{cream}">{html.escape(line.upper())}</text>')
-    top=240+(len(lines)-1)*(size+12)
-    if photo:
+        body.append(f'<text x="64" y="{first_baseline+i*(size+12)}" font-family="Anton" font-size="{size}" fill="{cream}">{html.escape(line.upper())}</text>')
+    top=first_baseline+22+(len(lines)-1)*(size+12)
+    if illustration:
+        body.append(f'<image x="64" y="248" width="{width-128}" height="500" preserveAspectRatio="xMidYMid meet" href="{uri(illustration)}"/>')
+    elif photo:
         p=W/'repair-assets/photos'/f'{photo}.jpg'
         body.append(f'<image x="64" y="{top}" width="{width-128}" height="{height-top-140}" preserveAspectRatio="xMidYMid meet" href="{uri(p)}"/>')
     elif logo:
         p=PLAN/'logos'/f'{logo}-cream.svg'
-        body.append(f'<image x="{width/2-120}" y="{top}" width="240" height="240" href="{uri(p)}"/>')
+        body.append(f'<image x="{width/2-170}" y="{top}" width="340" height="340" href="{uri(p)}"/>')
     if detail:
-        body.append(f'<text x="64" y="{height-144}" font-family="Anton" font-size="{82 if shape=="9x16" else 124}" fill="{accent}">{html.escape(detail)}</text>')
+        detail_y=first_baseline+(len(lines)-1)*(size+12)+140 if text_only else height-144
+        body.append(f'<text x="64" y="{detail_y}" font-family="Anton" font-size="{82 if shape=="9x16" else 124}" fill="{accent}">{html.escape(detail)}</text>')
     # Krish, 19 October: no eyebrows or source-credit overlays in either cut.
     # Preserve attribution and editorial context in the manifest, off screen.
     svg=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">'+''.join(body)+'</svg>'
     path=DEST/'panels'/f'{name}-{shape}.svg';path.write_text(svg,encoding='utf8')
     return {'file':path.name,'headline':head.replace('|',' '),'headline_words':len(head.replace('|',' ').split()),
             'essential_font_px':size,'detail_font_px':82 if shape=='9x16' else 124,'shape':shape,
-            'point':head.replace('|',' '),'photo':photo,'logo':logo,'off_screen_context':label}
+            'point':head.replace('|',' '),'photo':photo,'logo':logo,'off_screen_context':label,
+            'composition':'compact typography' if text_only else 'meaningful image',
+            'illustration':str(illustration.relative_to(ROOT)) if illustration else None}
 
 
 def anchor(words,index,end=False):
@@ -150,59 +165,60 @@ def readable_long_card(spec):
             else:line=candidate
         if line:lines.append(line)
         return lines
-    lines=wrap(title,124)
-    if len(lines)>3:raise ValueError('Headline needs a new step: '+title)
+    kind=spec['kind']
+    title_size=160 if kind=='statement' and spec.get('chapter') else 124
+    lines=wrap(title,title_size)
+    if len(lines)>4:raise ValueError('Headline needs a new step: '+title)
     body=[f'<rect width="{width}" height="{height}" fill="{st["ink"]}"/>',
           f'<rect width="{width}" height="12" fill="{st["accent"]}"/>']
-    for i,logo in enumerate(spec.get('logos',[])):
-        logo=logo.replace('anthropic-symbol-cream.svg','claude-cream.svg')
-        source=PLAN/'logos'/logo
-        if not source.exists():raise FileNotFoundError(source)
-        body.append(f'<image x="{width-144-i*130}" y="35" width="90" height="90" href="{uri(source)}"/>')
+    # No corner source logos: evidence stays in the accompanying records.
+    body.append('<g id="composition">')
+    extents=[]
     essential=[]
     def text(value,x,y,size=124,colour=None,anchor='start'):
         font=ImageFont.truetype(str(font_path),size)
         if font.getlength(value)>1186:raise ValueError('Essential line overflows: '+value)
         box=font.getbbox(value)
+        extents.append((y+box[1]-size,y+box[3]-size))
         rendered=(box[3]-box[1])*1080/1920
         if rendered<48:raise ValueError(f'Essential glyphs too small: {value}: {rendered}')
         essential.append({'text':value,'font_size':size,'glyph_height_at_1080_wide':round(rendered,2)})
         body.append(f'<text x="{x}" y="{y}" text-anchor="{anchor}" font-family="Anton" font-size="{size}" fill="{colour or st["cream"]}">{html.escape(value)}</text>')
     # Same approved heading, made readable at the final scaled output.
-    for i,line in enumerate(lines):text(line,64,240+i*140)
-    y=240+(len(lines)-1)*140
-    kind=spec['kind']
+    step=title_size+16
+    for i,line in enumerate(lines):text(line,64,240+i*step,title_size)
+    y=240+(len(lines)-1)*step
     if kind=='timeline':
         events=[e for e in spec['events'] if e.get('hi')]
         if not events:events=[spec['events'][0],spec['events'][-1]]
         for i,event in enumerate(events[:2]):
-            text(event['name'].upper(),64,740+i*185)
-            text(event['date'],1250,740+i*185,124,st['accent'],'end')
+            text(event['name'].upper(),64,y+185+i*185)
+            text(event['date'],1250,y+185+i*185,124,st['accent'],'end')
     elif kind=='bars':
         rows=[r for r in spec['rows'] if not r.get('hidden') and not r.get('dim')]
         if len(rows)>2:rows=[rows[0],next((r for r in rows if r.get('hi')),rows[-1])]
-        text('AA INTELLIGENCE INDEX',64,max(y+145,620),112,st['accent'])
+        text('AA INTELLIGENCE INDEX',64,y+125,112,st['accent'])
         for i,row in enumerate(rows[:2]):
             label=row['name'].replace('Â·','/').replace('·','/').upper()
-            text(label,64,800+i*170)
-            text(row.get('label',str(row['score'])),1250,800+i*170,150,st['accent'],'end')
+            text(label,64,y+255+i*145)
+            text(row.get('label',str(row['score'])),1250,y+255+i*145,150,st['accent'],'end')
     elif kind=='panels':
         score=spec['cue']=='fri-deep-cost-vs-score-score'
-        text('AA INDEX' if score else 'US DOLLARS PER TASK',64,max(y+145,620),112,st['accent'])
+        text('AA INDEX' if score else 'US DOLLARS PER TASK',64,y+125,112,st['accent'])
         for i,(label,value) in enumerate((('LOW','42' if score else '$0.55'),('MAX','58' if score else '$5.98'))):
-            text(label,64,800+i*170)
-            text(value,1250,800+i*170,150,st['accent'],'end')
+            text(label,64,y+255+i*145)
+            text(value,1250,y+255+i*145,150,st['accent'],'end')
     elif kind=='dots':
         for i,col in enumerate(spec['columns']):
-            text('BEFORE' if i==0 else 'AFTER GPT-5',64,760+i*185)
-            text('<1%' if i==0 else '7%',1250,760+i*185,150,st['accent'],'end')
+            text('BEFORE' if i==0 else 'AFTER GPT-5',64,y+190+i*185)
+            text('<1%' if i==0 else '7%',1250,y+190+i*185,150,st['accent'],'end')
     elif kind=='statement':
-        if 'meter' in spec:text('85% CONFIDENT',64,850,150,st['accent'])
+        if 'meter' in spec:text('85% CONFIDENT',64,y+200,150,st['accent'])
         elif not spec.get('chapter'):
             for line in spec.get('lines',[]):
                 if line['text']!=spec['title']:
                     for i,value in enumerate(wrap(line['text'],124)):
-                        text(value,64,750+i*140,124,st['accent'])
+                        text(value,64,y+180+i*140,124,st['accent'])
     elif kind=='shot':
         captures=[]
         def collect(item):
@@ -212,7 +228,8 @@ def readable_long_card(spec):
             elif isinstance(item,list):
                 for child in item:collect(child)
         collect(spec)
-        for i,capture in enumerate(captures[:2]):
+        prepared=[]
+        for capture in captures[:2]:
             source=PLAN/'video-pictures'/capture['image']
             if not source.exists():
                 matches=list((W/'working').rglob(Path(capture['image']).name))
@@ -221,14 +238,28 @@ def readable_long_card(spec):
                 source=matches[0]
             iw,ih=Image.open(source).size
             cx,cy,cw,ch=capture.get('crop',[0,0,iw,ih])
-            count=min(len(captures),2);cell=(1186-(count-1)*30)/count
-            top=y+75;hh=1000-top
+            prepared.append((source,iw,ih,cx,cy,cw,ch))
+        available=900-(y+65)-32*max(0,len(prepared)-1)
+        natural=sum(1186*item[-1]/item[-2] for item in prepared)
+        factor=min(1,available/natural) if natural else 1
+        top=y+65
+        for i,(source,iw,ih,cx,cy,cw,ch) in enumerate(prepared):
             clip=f'reference-{i}'
-            scale=min(cell/cw,hh/ch)
-            left=64+i*(cell+30)+(cell-cw*scale)/2;top+=(hh-ch*scale)/2
+            scale=1186/cw*factor
+            left=(width-cw*scale)/2
+            extents.append((top,top+ch*scale))
             body.append(f'<defs><clipPath id="{clip}" clipPathUnits="userSpaceOnUse"><rect x="{left}" y="{top}" width="{cw*scale}" height="{ch*scale}"/></clipPath></defs>'
                 f'<g clip-path="url(#{clip})"><image x="{left-cx*scale}" y="{top-cy*scale}" width="{iw*scale}" height="{ih*scale}" href="{uri(source)}"/></g>')
+            top+=ch*scale+32
     else:raise ValueError('Unsupported long card: '+kind)
+    lo=min(a for a,b in extents);hi=max(b for a,b in extents)
+    # Wide captions can use two lines above y=1040. Keep essential card content
+    # out of that band instead of treating it as spare room for labels.
+    safe_height=920
+    shift=round((safe_height-lo-hi)/2,2)
+    if hi-lo>safe_height-80:raise ValueError('Composition exceeds safe card height: '+title)
+    body[2]=f'<g id="composition" transform="translate(0 {shift})">'
+    body.append('</g>')
     # The original evidence and full source line remain in the review manifest.
     name='repair-readable-'+spec['cue']+'-16x9.svg'
     (DEST/'panels'/name).write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="1314" height="1080">'+''.join(body)+'</svg>',encoding='utf8')
@@ -300,11 +331,12 @@ def main():
             svg=kit.mapping_card_svg(uri(PLAN/'logos/mercedes-cream.svg'),uri(PLAN/'logos/claude-cream.svg'),int(head[-1]))
             (DEST/'panels'/f'{name}-9x16.svg').write_text(svg,encoding='utf8')
             manifest.append({'file':f'{name}-9x16.svg','point':'Mercedes = Claude' if head=='MAP1' else 'C-Class = Opus 5.5','shape':'9x16','essential_font_px':78})
-        else:manifest.append(card(name,head,detail,photo,logo,label=label))
+        else:manifest.append(card(name,head,detail,photo,logo,label=label,
+                                  illustration=PLAN/'illustrations/sally-v1.png' if head=='MEET SALLY' else None))
         end=(rows[i+1][0]-1) if i+1<len(rows) else len(words)-1
         cues.append({'id':name,'panel':f'panels/{name}-9x16.png','start':anchor(words,start),
                      'end':anchor(words,end,True),'lead':.18,'tail':.25,'source_words':[start,end]})
-    cfg.update(name='why-so-many-ais-short-repair-19oct-v6',source='../'+str(Path(cfg['source']).relative_to('..')).replace('\\','/'),
+    cfg.update(name='why-so-many-ais-short-repair-19oct-v8',source='../'+str(Path(cfg['source']).relative_to('..')).replace('\\','/'),
                words='../words-fresh/short.adjudicated.words.json',words_sha256=quality.digest(adjudicated),script=str(ROOT/'docs/plans/2026-10-09-script-90s-v7.md'),
                pad_before=.18,pad_after=.25,cues=cues,music='no-curves-instrumental',music_mode='episode_bed',
                episode_bed_levels={'bed_lufs':-31,'chapter_lufs':-22},quality_required=True,
@@ -321,7 +353,8 @@ def main():
         dest=out/source.name
         if not dest.exists():shutil.copy2(source,dest)
     print(f'Built {len(cues)} short steps in {DEST}')
-    build_long()
+    if '--short-only' not in sys.argv:
+        build_long()
 
 
 def build_long():
@@ -420,7 +453,7 @@ def build_long():
             card(name,headline,photo=photo,shape='16x9',label=label)
         cues.append({'id':name,'start':start_phrase,'end':end_phrase,'panel':f'panels/{name}-16x9.png','lead':.18,'tail':.3})
         added.append({'id':name,'source_words':[a,b],'point':headline.replace('|',' '),'real_visual':photo})
-    cfg.update(name='why-so-many-ais-deep-repair-19oct-v3',source='../takes/Fri 16 Oct - 3-minute - Soon you won\'t pick your AI.mp4',
+    cfg.update(name='why-so-many-ais-deep-repair-19oct-v4',source='../takes/Fri 16 Oct - 3-minute - Soon you won\'t pick your AI.mp4',
                words='../words-fresh/long.words.json',script=str(ROOT/'docs/plans/2026-10-09-script-deep-v6.md'),
                pad_before=.18,pad_after=.25,
                intro={'16x9':'../working/3 Video/working 17 Oct/story clips/intro-16x9.mp4'},

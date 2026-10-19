@@ -1,0 +1,18 @@
+{
+  "revision": "short-v7",
+  "user_correction": "don't just leave random big spaces",
+  "classification": "routine frame composition repair within approved treatment",
+  "state_of_use": "short video at phone size, brief spoken beats",
+  "point": "Sally is a business owner reviewing a supplier deal",
+  "changes": [
+    "Added a fictional editorial Sally illustration with laptop, mug and supplier paperwork",
+    "Text-only short cards use larger type grouped around the centre; detail stays with its heading",
+    "Versioned asset folder prevents mutation of inputs used by an active render"
+  ],
+  "preview_review": "All 32 rendered card previews inspected, including Sally and compact type at full resolution",
+  "finished_video_review": "pending",
+  "source_asset": "../illustrations/sally-v1.png",
+  "image_generation": "built-in image_gen; full prompt and asset hash in ../illustrations/sally-v1-provenance.json",
+  "no_eyebrows_or_source_credits": true,
+  "status": "superseded by short v8 during the cross-cut composition audit; no completed v7 delivery"
+}
