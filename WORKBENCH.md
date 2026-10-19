@@ -15,18 +15,19 @@ queued from any Ideas tab, with his triage (story, angle, cute, curious but not 
 queue, in the engine (`content_ideas.queued_at`); Control Center's Queue page triages it A/B; nothing purges it.
 Offer from it before new research. Handover: `docs/handovers/2026-10-19-idea-queue.md`.
 
-### Idea queue: built 19 Oct, three things wait on Krish's yes
+### 19 Oct: queue live, picks saved, next is the editorial narrative
 
-Built and tested: the engine route and `queued_at` migration (`supabase/migrations/20261025090000_idea_queue.sql`), the
-board's triage buttons and Queue mark, `so_what` on every idea, the session-start reads, and Control Center's Queue page
-(branch `ccr-792c3e40-osbgu5` in both repos). Not done, each needs his yes immediately before:
-1. Apply the migration to the live database (it adds one column; until then `/api/idea-queue` fails).
-2. Merge both branches and deploy; Control Center also needs its `vercel.json` rewrite live.
-3. Republish the 19 Oct board with the new Ideas tab to every link in `config/boards.json`
-   (`python3 scripts/post-pack/week_board.py --week 2026-10-19 --live --ideas docs/plans/2026-10-19-week/ideas.json
-   --queue <saved GET /api/idea-queue> --previous <current board> --out ...`; his picks and ticks must survive, so read
-   the current board first). The Argon idea is rewritten in plain English in `ideas.json`; its "a tenth" line is
-   rechecked at the fact gate (the figures in `fact` give a twentieth, not a tenth).
+Live: the idea queue (migration applied, PRs content-engine #94 and control-center #481 merged). His picks (Mon
+`5b5bfadc`, Wed `d7a20885`, Fri `7083d6ad`) are `drafting`, scheduled for their days and on the day tabs of
+https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk (version 4). No making session was started. The queue holds
+his four marked ideas, all triaged; his two Drops are recorded as dropped. His feedback is five entries in
+`config/learnings.json` (business-leader test, simple then unpacked, show the money, no repeat within three
+weeks, reading his marks) plus `narrative-before-making`, open until he says whether it is standing.
+**Next:** a fresh session runs `docs/handovers/2026-10-19-editorial-narrative.md`: one signed-off narrative
+(end message, checkpoints, drift rule) per day before anything is made.
+Waiting on him: the seven questions at the end of that handover, and the merge of two small PRs (engine
+`question` field; Control Center shows it). Still open: the other board link (`4SZR…`, his other account), and
+the Argon "a tenth" figure (the row's numbers give a twentieth).
 
 ## Friday 16 Oct: handed over, 17 Oct
 
