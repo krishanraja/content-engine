@@ -42,6 +42,16 @@ chat that started it.
    less than six hours ago is held back and said; send it again only on
    Krish's go (`pending --retry`) or once its words change.
 
+6. **The board is where the piece is worked, from the first draft.** Put the
+   day on its tab of the week's publish board in draft
+   (`week_board.py --draft <day>` with a `--review` box for the outline, the
+   article and each script, and a `--waiting` line for each call on Krish),
+   and republish to every link in `config/boards.json` each time the words
+   change, so he reads, edits and comments there. A workroom holds the
+   decisions beside it; it never replaces the day's tab (Krish, 2026-10-19:
+   "Why have you stopped working in [the board] even though this is the
+   third time I've asked you ? We have a protocol.").
+
 Then do the first step that is not done.
 
 ## Who owns what

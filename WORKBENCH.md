@@ -15,6 +15,10 @@ queued from any Ideas tab, with his triage (story, angle, cute, curious but not 
 queue, in the engine (`content_ideas.queued_at`); Control Center's Queue page triages it A/B; nothing purges it.
 Offer from it before new research. Handover: `docs/handovers/2026-10-19-idea-queue.md`.
 
+### 19 Oct, Monday in review on the board
+
+Monday is on its tab of https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk in draft (version 5): outline, article and both scripts in review boxes, and one call waiting on him (sign off both scripts). Fact gate open (three runs, $0.43 then less, his sign-offs on the example month and three framing lines); spine judge passed; scripts pass story_check and four read-back rounds, waiting on his words, then Teleprompter. The other board link (4SZR…) is his other account: a session there republishes the same file. Workroom: https://claude.ai/artifact/DdBDf3JPCAdjkmDj7ss6na. Still to do: cover and thumbnails, publish page, pack.
+
 ### 19 Oct, later: three narratives written, waiting on his sign-off
 
 He answered the seven questions (his words are in each narrative file). The three narratives are in
