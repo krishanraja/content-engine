@@ -13,17 +13,17 @@ Find the file here, then open only that file. Signatures are one line each with 
 | `.claude/` | 12 |
 | `.codex/` | 1 |
 | `.github/` | 4 |
-| `apps/control-plane/` | 283 |
+| `apps/control-plane/` | 285 |
 | `apps/renderer/` | 31 |
 | `apps/runner/` | 2 |
 | `config/` | 21 |
 | `docs/` | 30 |
 | `docs/brandbooknew/` | 1 |
-| `docs/handovers/` | 5 |
+| `docs/handovers/` | 7 |
 | `docs/history/` | 17 |
 | `docs/narration/` | 24 |
 | `docs/one-offs/` | 24 |
-| `docs/plans/` | 187 |
+| `docs/plans/` | 188 |
 | `docs/production/` | 1 |
 | `docs/prompts/` | 2 |
 | `docs/research/` | 7 |
@@ -42,9 +42,9 @@ Find the file here, then open only that file. Signatures are one line each with 
 | `scripts/post-pack/` | 28 |
 | `scripts/quick-edit/` | 26 |
 | `scripts/signals/` | 3 |
-| `supabase/migrations/` | 36 |
+| `supabase/migrations/` | 37 |
 | `tests/` | 65 |
-| `tests/control-plane/` | 75 |
+| `tests/control-plane/` | 76 |
 | `tests/fixtures/` | 44 |
 
 ## Content engine routes
@@ -107,6 +107,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/discover-creator-posts`
 - `/api/discover-lens-radar`
 - `/api/feed/ingest`
+- `/api/idea-queue`
 - `/api/inspiration/drive-scan`
 - `/api/investigations/[run_id]/draft-check`
 - `/api/investigations/[run_id]/trace`
@@ -858,6 +859,22 @@ _humor — the humour engine for the Content composer's "Humor" adjust chips.
 - `interface HumourEntry`
 - `const HUMOUR_GUIDE: Record<HumourRegister, HumourEntry>`
 - `function buildHumourSystem(o: { register: string voice: string channelCorpus: string materialsBlock: string }): string`
+
+### `apps/control-plane/api/_ideaQueue.ts`
+
+The one idea queue (Krish, 2026-10-19: "mark ideas for a queue instead of selecting them for this week ... it
+
+- `const VERDICTS`
+- `type Verdict = (typeof VERDICTS)[number]`
+- `const VERDICT_LABEL: Record<Verdict, string>`
+- `interface QueueMark`
+- `const SERIES`
+- `function parseMark(body: any): { mark: QueueMark | null; problems: string[] }`
+- `interface TriageInput`
+- `function parseTriage(body: any): { triage: TriageInput | null; problems: string[] }`
+- `function queueMeta(mark: QueueMark | null, prior: Record<string, any> | undefined, at: string, by: string): Record<stri…`
+- `function present(row: Record<string, any>)`
+- `function nextPair(rows: Array<ReturnType<typeof present>>): [typeof rows[number], typeof rows[number]] | null`
 
 ### `apps/control-plane/api/_investigation.ts`
 
@@ -1931,6 +1948,10 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 ### `apps/control-plane/api/feed/ingest.ts`
 
 - `export default withContentRun('feed_ingest', handler)`
+
+### `apps/control-plane/api/idea-queue.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/inspiration/_prompt.ts`
 
