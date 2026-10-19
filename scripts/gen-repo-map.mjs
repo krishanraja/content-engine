@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Writes docs/REPO_MAP.md: the directories, the exported signatures of every TypeScript module (no bodies), the
 // content engine's routes and the Studio's stations. A session reads this map instead of opening files to find
-// where something lives. `--check` fails when the committed map is stale; `npm run verify` runs it.
+// where something lives. It reads committed (indexed) files only, so files a run leaves behind never change it. `--check` fails when the committed map is stale; `npm run verify` runs it.
 //
 // Usage: node scripts/gen-repo-map.mjs [--check]
 import { execFileSync } from 'node:child_process'
@@ -14,7 +14,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const OUT = join(ROOT, 'docs', 'REPO_MAP.md')
 const MAX = 120
 
-const tracked = execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard'], { cwd: ROOT, encoding: 'utf8' })
+const tracked = execFileSync('git', ['ls-files', '--cached'], { cwd: ROOT, encoding: 'utf8' })
   .split(/\r?\n/).filter((file) => file && file !== 'docs/REPO_MAP.md').sort()
 
 const oneLine = (text) => {
@@ -152,7 +152,10 @@ if (process.argv.includes('--check')) {
   let current = ''
   try { current = readFileSync(OUT, 'utf8').replace(/\r\n/g, '\n') } catch {}
   if (current !== next) {
-    process.stderr.write('docs/REPO_MAP.md is stale: run `npm run repo-map` and commit it\n')
+    const was = current.split('\n')
+    const now = next.split('\n')
+    const at = now.findIndex((line, i) => line !== was[i])
+    process.stderr.write(`docs/REPO_MAP.md is stale: run \`npm run repo-map\` and commit it (first difference, line ${at + 1}: committed ${JSON.stringify(was[at] ?? '')}, now ${JSON.stringify(now[at] ?? '')})\n`)
     process.exit(1)
   }
   process.stdout.write('docs/REPO_MAP.md is current\n')
