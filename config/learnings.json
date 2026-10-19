@@ -614,6 +614,33 @@
      "how": "the Claude Code copy"
     }
    ]
+  },
+  {
+   "id": "readers-are-mid-sized-firms",
+   "on": "2026-10-19",
+   "krish": "We need to stop referring to businesses as shops and talking about a mum and dad shop. My customers are medium sized enterprises. This script is 20% too \"Dumbed down\"",
+   "why": "Four rounds of 12-year-old read-backs pushed the 90-second script to a corner-shop example and over-explained words; his audience runs medium-sized companies and felt talked down to.",
+   "means": "Examples and framing are pitched at the leader of a medium-sized company (a finance team, a customer-service team, a contract with a supplier), never a shop or a family business. Plain words stay; explanations that a manager would find patronising go. Whether the read-back persona changes from a 12-year-old is his decision (house rule R7), proposed to him on 19 Oct.",
+   "status": "open",
+   "encoded": []
+  },
+  {
+   "id": "five-minute-long-cut",
+   "on": "2026-10-19",
+   "krish": "from here moving forward, let's make the 3-minute scripts into 5-minute scripts and videos. Scrap the 3-minute format in favor of the 5-minute format.",
+   "why": "The 3-minute cut could not carry the explanation and the business consequence together; he wants room for the substance.",
+   "means": "The long cut is a 5-minute video, 675 to 825 spoken words (house rule TWO_CUTS), for every piece from 19 Oct; the 90-second cut and the weekly deep cut are unchanged.",
+   "status": "open",
+   "encoded": []
+  },
+  {
+   "id": "big-ai-firms-short-term-offers",
+   "on": "2026-10-19",
+   "krish": "I think the point of this article is to get the message across that the Big AI firms (call it that) are always trying to tweak their short term offers given how cut throat their competitors are, and give business owners an idea of what actually is durable thinking amidst all this.",
+   "why": "A single-vendor price story leaves the reader with one fact that dates; what he wants them to keep is how to think about AI prices that keep moving.",
+   "means": "A follow.the.money piece about one firm's price puts it beside the other big AI firms' moves from their own pages, and ends on the durable rule a business owner can apply whatever the next offer is.",
+   "status": "open",
+   "encoded": []
   }
  ]
 }
