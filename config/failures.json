@@ -688,7 +688,7 @@
    "id": "lip-sync-drift",
    "on": "2026-10-19",
    "krish": "in the deep cut, my facial movements start misaligning with the audio as the video progresses, which is unbearable by the end",
-   "what": "His lips and voice drift apart as the deep cut plays. Cause not yet measured: the cloud session's first diagnosis (54 timestamp holes at the joins) was disproved by its own test, and its 0.68 s figure came from a measurement that seeks by timestamp, which shares the fault. Codex measures by frame index and sample first (fix-plan-19-oct.md, section 0, item 5), then fixes, then adds a blocking sync check to make.py.",
+   "what": "His lips and voice drift apart as the deep cut plays. Sequential frame-index/audio-sample measurement now reproduces 680 ms in the rejected output versus 0â€“40 ms in source. The earliest demonstrated defect is stage-one segment encoding: 62 edited parts lose 668.44 ms of audio against their exact video-frame durations. Exact-sample draining repairs the diagnostic at eight calibrated checkpoints (0â€“40 ms). Final replacements still need their own complete review and hash-bound acceptance; the failure remains open. The withdrawn timestamp-hole diagnosis is not reused. Evidence: docs/handovers/2026-10-19-friday-repair-progress.md.",
    "status": "open",
    "guards": []
   },

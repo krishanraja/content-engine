@@ -179,38 +179,13 @@ def pace(shots, duration):
 
 
 def zoom_moves(path, duration, step=0.5):
-    """Push-ins and pull-outs: the scale change between frames half a second
-    apart inside one shot, estimated with OpenCV's ECC affine fit when OpenCV
-    is present. Returns None without OpenCV (the study says so)."""
-    try:
-        import cv2  # noqa: F401
-        import numpy as np
-    except ImportError:
-        return zoom_moves_pillow(path, duration, step)
-    import cv2
-    cap = cv2.VideoCapture(str(path))
-    fps = cap.get(cv2.CAP_PROP_FPS) or 30
-    moves, prev, t = [], None, 0.0
-    while t < duration:
-        cap.set(cv2.CAP_PROP_POS_FRAMES, int(t * fps))
-        ok, frame = cap.read()
-        if not ok:
-            break
-        g = cv2.cvtColor(cv2.resize(frame, (320, int(320 * frame.shape[0] / frame.shape[1]))), cv2.COLOR_BGR2GRAY)
-        if prev is not None:
-            warp = np.eye(2, 3, dtype=np.float32)
-            try:
-                _, warp = cv2.findTransformECC(prev, g, warp, cv2.MOTION_AFFINE,
-                                               (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 50, 1e-4))
-                scale = float(np.sqrt(abs(np.linalg.det(warp[:, :2]))))
-                if abs(scale - 1) > 0.02:
-                    moves.append({'t': round(t, 2), 'scale_per_half_second': round(scale, 3),
-                                  'kind': 'push in' if scale < 1 else 'pull out'})
-            except cv2.error:
-                pass  # a cut or a frame ECC cannot fit: not a zoom
-        prev = g
-        t += step
-    return moves
+    """Use the same bounded scale fit on every machine.
+
+    An unconstrained affine ECC fit could trade expansion for shear and report
+    no zoom on a known push-in. Installing optional OpenCV must not change the
+    result, so use the existing scale-only estimator consistently.
+    """
+    return zoom_moves_pillow(path, duration, step)
 
 
 def zoom_moves_pillow(path, duration, step=0.5, cuts=None):
@@ -236,14 +211,15 @@ def zoom_moves_pillow(path, duration, step=0.5, cuts=None):
             if prev is not None and not any(t - step < c <= t for c in cuts):
                 w, h = prev.size
                 b = np.asarray(img, dtype=np.float32)[h // 6: h - h // 6, w // 6: w - w // 6]
-                best, best_err = 1.0, None
+                unchanged = np.asarray(prev, dtype=np.float32)[h // 6: h - h // 6, w // 6: w - w // 6]
+                best, best_err = 1.0, float(((unchanged - b) ** 2).mean())
                 for s in scales:
                     sw, sh = round(w * s), round(h * s)
                     a = prev.resize((sw, sh), Image.BILINEAR)
                     left, top = (sw - w) // 2, (sh - h) // 2
                     a = np.asarray(a.crop((left, top, left + w, top + h)), dtype=np.float32)[h // 6: h - h // 6, w // 6: w - w // 6]
                     err = float(((a - b) ** 2).mean())
-                    if best_err is None or err < best_err:
+                    if err < best_err:
                         best, best_err = s, err
                 if abs(best - 1) >= 0.01:
                     moves.append({'t': t, 'scale_per_half_second': round(best, 3), 'kind': 'push in' if best > 1 else 'pull out'})
@@ -329,7 +305,7 @@ def cmd_study(file, out_dir=None, words=True, out=print):
         'shots': shots,
         'zoom': ({'moves': len(zooms), 'push_ins': sum(1 for z in zooms if z['kind'] == 'push in'),
                   'pull_outs': sum(1 for z in zooms if z['kind'] == 'pull out'), 'at': zooms[:60]}
-                 if zooms is not None else 'not measured: OpenCV is not installed here'),
+                 if zooms is not None else 'not measured: Pillow or NumPy is unavailable'),
         'speech': speech_summary(segments, meta['duration_s']) if segments else 'not measured: no audio or no transcriber here',
         'transcript': segments,
         'loudness_lufs': loudness(path) if meta['has_audio'] else None,
@@ -421,18 +397,23 @@ def self_test():
             study, folder = cmd_study(clip, Path(tmp) / 'out', words=False, out=lambda *_: None)
             t('a two-shot clip studies as two shots', study['pace']['shots'] == 2 and abs(study['shots'][1]['start'] - 2.0) < 0.1)
             t('the contact sheet is drawn', (folder / 'contact.jpg').stat().st_size > 0)
+            t('flat colours do not invent zoom after a cut', study['zoom']['moves'] == 0)
             t('a vertical clip is called vertical', study['shape'] == 'vertical')
             push = Path(tmp) / 'push.mp4'
             subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i', 'testsrc2=s=1280x720:d=0.04', '-frames:v', '1', str(Path(tmp) / 'p.png')], check=True)
-            subprocess.run(['ffmpeg', '-v', 'error', '-loop', '1', '-i', str(Path(tmp) / 'p.png'), '-vf', "zoompan=z='1+0.004*on':d=1:s=640x360:fps=25",
+            subprocess.run(['ffmpeg', '-v', 'error', '-loop', '1', '-i', str(Path(tmp) / 'p.png'), '-vf', "zoompan=z='1+0.004*on':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s=640x360:fps=25",
                             '-t', '3', str(push)], check=True)
             still = Path(tmp) / 'still.mp4'
             subprocess.run(['ffmpeg', '-v', 'error', '-loop', '1', '-i', str(Path(tmp) / 'p.png'), '-t', '3', '-r', '25', str(still)], check=True)
             z_push = zoom_moves(push, 3.0)
             z_still = zoom_moves(still, 3.0)
+            pull = Path(tmp) / 'pull.mp4'
+            subprocess.run(['ffmpeg', '-v', 'error', '-i', str(push), '-vf', 'reverse', str(pull)], check=True)
+            z_pull = zoom_moves(pull, 3.0)
             if z_push is not None:
                 t('a slow push-in is measured as push-ins', len(z_push) >= 3 and all(m['kind'] == 'push in' for m in z_push))
                 t('a locked-off shot has no zoom', z_still == [])
+                t('a reversed push-in is measured as pull-outs', len(z_pull) >= 3 and all(m['kind'] == 'pull out' for m in z_pull))
     print(f'references self-test passed: {n} checks')
 
 

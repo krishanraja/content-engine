@@ -27,19 +27,24 @@ picture-frame durations. A replacement segment encoder drains both filters and
 requires exact frame/sample counts. The repaired diagnostic passes eight sync
 points at 0 to +40 ms; the first short candidate passes six at -40 to 0 ms.
 These measurements apply to those exact files only. The short needs caption and
-visual revisions; the deep intermediate needs rebuilding with the approved
-0.18/0.25-second pads. Neither video is accepted or ready for filing.
+visual revisions. The deep intermediate has now been rebuilt and clock-checked
+with the approved 0.18/0.25-second pads. Neither video is accepted or ready for filing.
 
 Concrete mapping samples, a wide treatment, a 22-beat proposal and a measured music
 audition have been presented to Krish. He approved the treatment and music balance;
 the exact approval is in `docs/plans/2026-10-09-friday/repair-approval-19oct.json`.
 Fresh transcripts are complete on the correct processing clocks, and 32 short
-steps plus 77 deep cues are bound to fresh speech. Authentic Claude/ChatGPT control
-menu screenshots are still missing; archived images show help articles. Krish
-asked for a clearer explanation of that request, which has been supplied.
-Remaining: resolve caption discrepancies, repair remaining deep cards, renders,
-full playback and caption review, exact-hash validation, and explicit filing
-approval. Krish has now authorized filing once repaired: put both replacements in
+steps plus 77 deep cues are bound to fresh speech. Krish supplied authentic Claude
+model and effort screenshots; unchanged pixels now supply the control cards. The
+remaining deep cards have been reflowed for readable type. Krish confirmed the
+short phrase, "I’m 85% sure of this"; exact evidence is in caption-adjudications.json.
+Independent source recognition also resolves missing "like" and the Sally opening.
+Card inspection is complete. The short v2 sound/music checks pass, but it is
+superseded: source rechecks preserve earlier starts for Her and I’m 85%, and the
+spoken The. Candidate v3 and the deep cut are rendering. The deep also restores
+sounds and most of us, which earlier cuts removed incorrectly. Remaining: complete
+renders, full playback and caption review, and exact-hash validation. The pinned
+test run passed 1,775 tests; remaining verify checks passed after a skill YAML fix. Krish has now authorized filing once repaired: put both replacements in
 the existing Google Drive post folder in place of the current rejected cuts and
 return the two links here. Preserve rejected bytes as superseded copies; verify
 the actual Drive copies before returning links. This is not finished-video

@@ -87,8 +87,11 @@ diagnostic, not either finished replacement.
   fixture exposed a real overlay-tail overrun; the composed main picture now
   trims to its exact frame count before concat. Latest verification log is
   `.cache/verify-friday-final.log`; do not infer it passed from an earlier run.
-  The zoom-analysis self-test also fails on base d8c0987 with the font-only
-  contact-sheet workaround (`.cache/references-baseline.log`); it is unresolved.
+  The zoom-analysis baseline failure is repaired using the bounded Pillow estimator
+  consistently on all machines; known push/pull, static and flat-colour fixtures
+  pass (16 self-tests). A loaded verify run hit eight 5-second timeouts, with
+  1,767 tests passing. Unloaded rerun: `.cache/verify-friday-unloaded.log`; read its
+  result before claiming success.
 - Do not mark either failure closed, commit a success claim or publish this branch
   until complete output verification. No push, PR, merge or deployment performed.
 
@@ -115,8 +118,9 @@ Fresh transcripts are complete in `W/words-fresh/long.words.json` and short.word
 The short must use the processed 1.1x source in `W/short-processing`; never divide
 those word times by 1.1 again. Resolve removals and cue phrases afresh, then rebuild
 both cut configs. Both now explicitly use the approved 0.18/0.25-second pads.
-The completed 63-segment deep intermediate used the former 0.2/0.3 values and
-must be rebuilt. Its exact sample/frame check passed, but it is not current.
+The deep intermediate has been rebuilt with 0.18/0.25 pads and passes exact
+sample/frame checks (`W/repair-long/prepare-approved-padding.log`). The previous
+intermediate is preserved as `why-so-many-ais-deep-repair-19oct.old-padding.edited.mkv`.
 
 ## Current production checkpoint
 
@@ -127,8 +131,10 @@ must be rebuilt. Its exact sample/frame check passed, but it is not current.
   longest gap 0.036 seconds, 24.71 changes/minute. These are candidate-specific.
 - First-candidate measured mix -14.5 LUFS, true peak -1.8 dBTP, speech window
   -14.2 LUFS. Its receipt remains failed/inconclusive; do not hand-edit it to pass.
-- Caption issues include the Sally opening, missing "like", and "Maybe 5%"
-  versus intended "I'm 85%". Medium recognition on both source and final is in
+- Krish confirmed "I'm 85% sure of this" after listening to the nine-second source
+  clip. `repair-evidence-19oct/caption-adjudications.json` records this scoped ruling.
+  Bounded large-v3 recognition resolves missing "like" and "So picture a business
+  owner"; those caption replacements are in the builder. Medium recognition on both source and final is in
   `.cache/native-transcription/short-check`; it does not resolve every ambiguity.
   A large-v3 attempt on the existing server was killed before completing and
   produced no usable final report. Do not repeatedly rerun that resource-heavy job.
@@ -138,14 +144,17 @@ must be rebuilt. Its exact sample/frame check passed, but it is not current.
   candidate one and use a new candidate filename. Revalidate the new hash.
 - `scripts/quick-edit/friday_repair.py` produces 32 short steps and 77 deep cues.
   Real car photographs and licence/source records are in `W/repair-assets/photos`.
-  Existing deep non-car cards still need font/claim/Claude-logo corrections.
+  Forty-eight deep cards now use readable type, concise headlines, correct Claude
+  logos and source-reference captures; three use actual Claude controls. The index
+  comparison is 42 to 58, up 16 points. Inspect the regenerated PNGs before rendering.
 - Renderer: `npm ci --prefix scripts/quick-edit/svg-render`, then
   `node scripts/quick-edit/svg-render/render.cjs <SVG folder>`. Font files and
   licences are committed inputs; each rendering emits exact source/output hashes.
-- Actual Claude model/effort and ChatGPT thinking-control screenshots are absent.
-  Archived assets show help text. The available browser route cannot attach to
-  the local logged-in browser. Ask for a screenshot attachment in plain language,
-  not a filesystem path. Never manufacture an authentic control screenshot.
+- Krish supplied actual Claude model/effort captures. Byte-preserved originals are
+  `W/repair-assets/controls/claude-models-original.png` and `claude-effort-original.png`.
+  Provenance: `repair-evidence-19oct/control-sources.json`. Viewports magnify original
+  control text; no UI labels are generated. ChatGPT controls remain unavailable;
+  archived OpenAI help captures remain source references, not controls.
 - Frame samples exist in `W/review-short`; partial native-frame/contact-sheet
   inspection is not full playback with sound. No completed watch/listen is claimed.
 
@@ -159,3 +168,35 @@ superseded copies, hash-verify the actual library copies and update making recor
 Return the two verified Google Drive video links in this chat. Do not re-ask the
 routine filing permission already granted, and do not treat it as video acceptance.
 Then prepare the reviewed branch/PR and resume the selected board migration.
+
+## Latest continuation, 19 October afternoon
+
+- The pinned Python 3.12 test run passed all 141 files: 1,775 tests, one skipped.
+  `npm run verify` then found invalid YAML in produce-video's unquoted description.
+  Quoting it and syncing the Claude copy passes skill validation. All remaining
+  verify checks passed individually (`.cache/verify-friday-remaining.log`); the
+  control-plane guards explicitly skip Linux-only paths on Windows. Initial
+  unloaded attempt used system Python 3.14 and was interrupted; do not cite it.
+- Native inspection caught and fixed nested screenshot clipping, a cost card
+  mistakenly showing index scores, and small wide forecast qualifiers. Renderer
+  now reuses only exact source/output/font hashes; a corrupt-output rebuild check
+  passed. These are asset checks, not complete finished playback.
+- Candidate v2 rendered: short SHA
+  `ab54fb9d81d6b45a4358a47e1024d9dcb2a5b652964b3e53740336614ce34abe`.
+  Voice -13.9 LUFS, mix -14.5, true peak -1.8; all 743 eligible music windows pass.
+  It is superseded: source rechecks suggest the original word timestamps clipped
+  the start of Her and I'm 85%. Retain the spoken The in the how it thinks too.
+- Builder now creates short.adjudicated.words.json with immutable original-doc
+  identity and individual timing adjustments from bounded large-v3 recognition.
+  Her starts at source 29.98 s and the confidence phrase at 70.32 s. Config pins
+  the complete revised transcript hash. Source speed remains 1.1x, not applied twice.
+- Candidate v3 is rendering (`W/repair-short/render-v3.log`). Its final checks must
+  use its own hash. The v2 sync job was stopped because those bytes are superseded.
+- Fresh review restores deep-cut sounds and most of us: former removals dropped
+  a verb and subject. The deep render uses the restored phrases and approved pads
+  (`W/repair-long/render-restored-words.log`). Part reuse now keys by complete recipe
+  rather than sequence number, with byte and frame/sample validation unchanged.
+- After that cache change, 13 quality regressions and 78 make self-tests passed.
+  Re-run the relevant checks after any further code edits.
+- Revised numerical evidence and preserved article findings are in
+  repair-evidence-19oct/revised-card-evidence.json. These do not clear publication.

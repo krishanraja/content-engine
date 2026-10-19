@@ -2004,6 +2004,8 @@ def main():
     conform = conform_filter(source_rate(src), FPS)
     dur = float(json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'json', str(src)], capture_output=True, text=True).stdout)['format']['duration'])
     wpath = P(cfg['words']) if cfg.get('words') else out / f"{cfg['name']}{tag}.words.json"
+    if cfg.get('words_sha256') and (not wpath.exists() or quality.digest(wpath)!=cfg['words_sha256']):
+        sys.exit('Transcript document differs from the reviewed word and timing adjudications')
     transcript_model = cfg.get('model', 'small.en')
     identity = quality.transcript_identity(src, speed[0] if speed else 1, transcript_model)
     document = json.loads(wpath.read_text(encoding='utf-8')) if wpath.exists() else None
@@ -2113,15 +2115,23 @@ def main():
     if not (edited.exists() and g1.exists() and g1.read_text() == '\n'.join(plan_lines)):
         parts = out / 'parts'
         parts.mkdir(exist_ok=True)
+        cached_parts = {}
+        for stamp in parts.glob('*.mkv.clock.json'):
+            try:
+                recipe_data = json.loads(stamp.read_text())['recipe']
+                cached_parts[json.dumps(recipe_data, sort_keys=True)] = Path(str(stamp).removesuffix('.clock.json'))
+            except (OSError, ValueError, KeyError):
+                continue
         names = []
         source_hash=sha256_file(src)
         for i, g in enumerate(segs):
             d = g['b'] - g['a']
-            part = parts / f'{i:04d}.mkv'
             frames = round(d * FPS)
             vf=f'crop={cw}:{ch}:{cx}:{cy},{conform}'
             recipe={'version':2,'source_sha256':source_hash,'start':g['a'],'frames':frames,
                     'fps':FPS,'video_filter':vf,'source_end':g.get('source_end')}
+            key = json.dumps(recipe, sort_keys=True)
+            part = cached_parts.get(key, parts / (hashlib.sha256(key.encode()).hexdigest()[:24] + '.mkv'))
             if not segment_clock.reusable(part,recipe):
                 run(segment_clock.encode_args(src,part,g['a'],frames,FPS,vf,source_end=g.get('source_end')),quiet=True)
                 segment_clock.save_stamp(part,recipe)
@@ -2248,7 +2258,8 @@ def main():
             heard = transcribe(final, out/f'{final.stem}.heard.json', transcript_model, provenance=final_identity)
             speech_check = quality.word_diff(toks, heard)
             receipt = {'video_sha256':quality.digest(final), 'piece_id':cfg.get('piece_id'),
-                       'source_provenance':identity,'checks': {
+                       'source_provenance':identity,
+                       'transcript_document':{'sha256':quality.digest(wpath),'derivation':(document or {}).get('derivation')},'checks': {
                 'heard':speech_check,
                 'sync':{'status':'not_run'},
                 'loudness':{'status':'fail' if loudness_warnings(loudness, levels) else 'pass', 'measurements':loudness},
