@@ -1428,6 +1428,9 @@ def build(args, get=None):
     if previous is not None:
         keep_previous(previous, manifest['days'], unpick, monday, fresh)
     manifest['warnings'] = warnings + more
+    if getattr(args, 'target', 'web') == 'web':
+        from board_web import web_page
+        page, manifest = web_page(page, manifest)
     return page, manifest
 
 
@@ -1999,6 +2002,7 @@ def parser():
     ap.add_argument('--json', action='store_true', help='with --show: as JSON')
     ap.add_argument('--out', default='week-board.html', help='the page; the manifest is written beside it as .json')
     ap.add_argument('--self-test', action='store_true')
+    ap.add_argument('--target', choices=['artifact', 'web'], default='web', help='web (content.krishraja.com) is the default and the only one that is published; artifact builds a legacy copy for comparison only (Claude artifacts are retired, Krish 2026-10-19)')
     return ap
 
 

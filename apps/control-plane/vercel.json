@@ -132,6 +132,51 @@
     },
     "api/content-ideas/[id]/spine-check.ts": {
       "maxDuration": 120
+    },
+    "api/board/index.ts": {
+      "maxDuration": 300
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/api/board/weeks",
+      "destination": "/api/board?op=weeks"
+    },
+    {
+      "source": "/api/board/:week/sources",
+      "destination": "/api/board?week=:week&op=sources"
+    },
+    {
+      "source": "/api/board/:week/assets/:id",
+      "destination": "/api/board?week=:week&op=assets&id=:id"
+    },
+    {
+      "source": "/api/board/:week/uploads",
+      "destination": "/api/board?week=:week&op=uploads"
+    },
+    {
+      "source": "/api/board/:week/imports",
+      "destination": "/api/board?week=:week&op=imports"
+    },
+    {
+      "source": "/api/board/:week/:collection/:id",
+      "destination": "/api/board?week=:week&collection=:collection&id=:id"
+    },
+    {
+      "source": "/api/board/:week/:collection",
+      "destination": "/api/board?week=:week&collection=:collection"
+    },
+    {
+      "source": "/api/board/:week",
+      "destination": "/api/board?week=:week"
+    },
+    {
+      "source": "/board/:week",
+      "destination": "/api/board?week=:week&op=html"
+    },
+    {
+      "source": "/board",
+      "destination": "/api/board?op=latest"
+    }
+  ]
 }

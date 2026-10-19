@@ -713,6 +713,36 @@
      "how": "the Scripts step requires the narrator reader for every script a session sends"
     }
    ]
+  },
+  {
+   "id": "cut-called-done-unheard",
+   "on": "2026-10-19",
+   "krish": "The 90 second video subtitles are still totally garbled, and my words randomly chop out, making the video incomprehensible ... you have published this thinking it is a 10/10, when it is about a 3/10",
+   "what": "Friday's 90-second cut was re-rendered, called fixed and published to both boards from proxy checks (caption start and end times, loudness, a 216-pixel contact sheet). Its captions and cut points came from an old 17 Oct words file full of mishearings, so captions were garbled and words were clipped; the badge card showed one pair, not Mercedes = Claude, C-Class = Opus 5.5. docs/plans/2026-10-09-friday/90s-failures-19-oct.md.",
+   "status": "open",
+   "guards": []
+  },
+  {
+   "id": "lip-sync-drift",
+   "on": "2026-10-19",
+   "krish": "in the deep cut, my facial movements start misaligning with the audio as the video progresses, which is unbearable by the end",
+   "what": "His lips and voice drift apart as the deep cut plays. Cause not yet measured: the cloud session's first diagnosis (54 timestamp holes at the joins) was disproved by its own test, and its 0.68 s figure came from a measurement that seeks by timestamp, which shares the fault. Codex measures by frame index and sample first (fix-plan-19-oct.md, section 0, item 5), then fixes, then adds a blocking sync check to make.py.",
+   "status": "open",
+   "guards": []
+  },
+  {
+   "id": "cause-claimed-unproven",
+   "on": "2026-10-19",
+   "krish": "I asked you to heal the engine, not to reproduce the videos.",
+   "what": "The cloud session told Krish the lip-sync cause was 'confirmed' and 'measured' from a flawed measurement, wrote it into the plan and the Codex prompt, then started changing make.py and re-measuring after it had handed the videos to Codex, instead of sending the three Markdown files he asked for.",
+   "status": "guarded",
+   "guards": [
+    {
+     "file": "CLAUDE.md",
+     "contains": "Never tell him a cause is found until a test you ran proves it",
+     "how": "read at the start of every Claude Code session, with the rules to send asked-for files first and leave handed-off work alone"
+    }
+   ]
   }
  ]
 }

@@ -1,10 +1,27 @@
 ---
 name: produce-video
-description: Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session, GitHub's machine (the midday run, produce-day) or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
+description: >-
+  Produce Krish's finished videos once he has recorded them. Use when he says he has dropped, recorded or uploaded his video or recordings, or asks to produce, cut or make the video or videos for a piece or a day, such as 'I've dropped the video', 'the recordings are in the Inbox', 'produce Monday's video' or 'make the videos for this week'. It works out by itself which new recording is which piece's long or short cut, with no file name or piece id, then makes the 16:9 long cut and the 9:16 short cut, each with the approved intro sting, the licensed music bed from the ledger and a thumbnail for its size, files them in the archive and the post's library folder and records them on the piece. Runs end to end on any machine: a cloud session, GitHub's machine (the midday run, produce-day) or either home computer; takes, music and pictures all come from the engine. It is not the one-line launcher of the video-engine skill, not a Studio job from a production brief, and not for general questions about video or editing.
 model: sonnet
 ---
 
 # Produce the video
+
+## Publish-board routing
+
+Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
+current web addresses, all six collection reads, build/download/publication,
+making-record attribution and rollback. Check `config/boards.json.web_cutover`:
+while pending, source migration is unfinished; once active, use only the web
+board for new interactions. Claude artifacts are retired for good (Krish,
+2026-10-19: "we are now retiring the Claude artefact permanently and we are
+working in content.krishraja.com for all published board updates"): no step
+makes or publishes one. The week's board, a day's tab in draft, the workroom and
+the publish page all go to content.krishraja.com (`week_board.py --target web`,
+then `board_web.py publish-web`), and `scripts/hooks/artifact_gate.py` refuses
+every Artifact publish and every ArtifactData write. Any Artifact, ArtifactData,
+ArtifactComments or dual-account step below is history: read an old artifact
+only to recover what it holds.
 
 ## Never call a video good without watching it
 
@@ -88,11 +105,12 @@ where things live") and `scripts/quick-edit/README.md`. Read the board
 Studio; if a session touches it, `docs/ENGINE_SESSION.md` applies and a
 cloud session is read-only for it.
 
-In Claude Code, copy Krish's ticks from the week's publish board onto the
+In every tool, copy Krish's ticks from the week's publish board onto the
 records now and again before you stop (`.agents/skills/make-piece/SKILL.md`,
-"The week's ticks"). It needs the ArtifactData tool: Codex has none, so a
-Codex session says in one line that the next Claude Code session copies
-them. A Record tick there is information only; Record is done from the takes
+"The week's ticks"). After active cutover use the authenticated web API in
+`docs/PUBLISH_BOARDS.md`, including edits, picks, queue and comments. Do not
+defer this to Claude Code. Only an explicit legacy-artifact session needs
+ArtifactData. A Record tick is information only; Record is done from the takes
 on the record.
 
 ## 1. Preflight: which tool, which machine

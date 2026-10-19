@@ -1,5 +1,8 @@
 # AGENTS.md
 
+**Publish boards:** follow `docs/PUBLISH_BOARDS.md` and `config/boards.json.web_cutover`. After verified active cutover, both weeks live at content.krishraja.com and all new board interactions use the authenticated web API. Older Claude board instructions in this document are preserved compatibility/history, not directions to synchronize artifacts.
+
+
 <!-- north-star:start -->
 ## North Star: read it first, every session
 
@@ -17,6 +20,8 @@ whole system is for, and every rule below serves it. `README.md` says where
 everything is.
 
 **Nothing a session makes lives only in its own container.** Krish, 2026-10-18: "in general ensure nothing is ever not accessible by another session, ever". Before you stop, commit what belongs in git (code, configs, specs, transcripts, small data) and send media and captures to the post's library folder (`scripts/post-pack/send.py FOLDER --as "3 Posts/<post folder>"`, files under `2 Covers and images` or `3 Video`), and say in `WORKBENCH.md` where each is. Nothing stays only in `.cache`, a scratchpad or a workflow journal.
+
+**No Claude artifact, ever; engine work merges to main by itself.** Krish, 2026-10-19: "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically." Every board update (the week's board, a day's tab in draft, the workroom, a publish page) is built with `week_board.py --target web` (the default) and published with `board_web.py publish-web --apply` (`docs/PUBLISH_BOARDS.md`); `scripts/hooks/artifact_gate.py` refuses every Artifact publish and every ArtifactData write. Engine work never waits on a hand merge: run `npm run verify`, push the session branch, open a pull request and turn on auto-merge, so GitHub merges it to main once CI passes. Never push to main directly; a red CI is fixed on the branch.
 
 **Cost: six standing rules.** Krish, 2026-10-18: "They should all become standing rules" (the six habits in `docs/COST_AUDIT_2026-10-18.md`; one six-day session read 1,086M tokens because every step re-read a 459k-token context). (1) One fresh session per job, started from its handover and stopped when the job is done. (2) Switch topics by writing the handover and starting a new session. (3) Fewer, bigger steps: one script, not five commands. (4) Keep big outputs out of the chat: never read a board into the conversation (the builder reads the saved copy), one contact sheet per output, quiet logs. (5) Sonnet for production work (renders, packs, filing, board rebuilds), Opus for writing and judgment. (6) Agents and workflows only for work that needs a separate reader. Before any paid run, estimate it from `meter_daily`'s last run, never from a count. The guards that will enforce these are in `docs/COST_GUARDS.md`. When Krish asks for files (Markdown, an export), hand him the files themselves; never also put them on a board or make an artifact (Krish, 2026-10-18: "I don't need these as artefacts. I need them as Markdown.").
 
@@ -118,6 +123,17 @@ is updated in place. Nothing is ever deleted." The exact scope
 Descript was retired on 2026-10-12, the day it was set up, in his words
 above; no session calls it. Records written before then keep a `descript`
 field that nothing reads.
+
+**Web publish board migration (19 October 2026).** Full parity is implemented
+behind the existing access code at `content.krishraja.com/board/<Monday>`.
+Release is pending, not live: `config/boards.json` carries the web URLs and an
+explicit `web_cutover` marker. Only after all four source exports, final delta
+and authenticated acceptance pass does that marker become `active`. Then every
+making session reads ticks, links, edits, picks, queue and comments through
+`board_web.py read`; only the web board takes new interactions. Preserve the
+Claude artifacts and artifact generator; no ongoing two-way sync. See
+`docs/handovers/board-web-release.md` for approval gates and exact commands.
+The artifact workflow below applies before cutover and to explicit legacy builds.
 
 **The week's publish board is where Krish ticks; the piece's making record
 is where it counts.** Krish, 2026-10-12: "Give me a tick box next to each

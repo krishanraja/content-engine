@@ -48,14 +48,34 @@ def problems(tool_input):
     return []
 
 
+RETIRED = ('Claude artifacts are retired (Krish, 2026-10-19: "we are now retiring the Claude artefact permanently '
+           'and we are working in content.krishraja.com for all published board updates"). Build the board with '
+           '`week_board.py --target web` and publish it with `board_web.py publish-web` (docs/PUBLISH_BOARDS.md). '
+           'Reading an old artifact is still allowed.\n')
+
+
+def retired_write(name, ti):
+    """Every Artifact publish, and every write to an artifact's store, is refused; reads and listings pass."""
+    if name == 'Artifact' and ti.get('action') in (None, 'publish', 'pin'):
+        return RETIRED
+    if name == 'ArtifactData' and ti.get('action') not in ('get', 'list', 'query'):
+        return RETIRED
+    return None
+
+
 def main():
     try:
         event = json.load(sys.stdin)
     except ValueError:
         return 0
-    if event.get('tool_name') != 'Artifact':
+    name, ti = event.get('tool_name'), event.get('tool_input') or {}
+    retired = retired_write(name, ti)
+    if retired:
+        sys.stderr.write(retired)
+        return 2
+    if name != 'Artifact':
         return 0
-    why = problems(event.get('tool_input') or {})
+    why = problems(ti)
     if why:
         sys.stderr.write('Blocked by the publish gate (scripts/hooks/artifact_gate.py): this page may not be published.\n  '
                          + '\n  '.join(why) + '\nFix it through the engine and rebuild; never edit the page by hand.\n')

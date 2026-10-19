@@ -1,5 +1,22 @@
 # Workbench: where we are and what's next
 
+## 19 October: both publish boards live, web cutover verified
+
+Use https://content.krishraja.com/board/2026-10-19 and
+https://content.krishraja.com/board/2026-10-12. The overarching week tabs keep
+both available. All new interactions use this site; the four Claude boards
+are preserved source archives and must not be synchronized or edited.
+
+All 87 available source records, including 10 replies, were imported and read
+back exactly. The final source comparison found no delta. Both production
+boards passed authenticated desktop/phone navigation, image, state and comment
+checks; all 12 downloadable assets matched their type, size and SHA-256.
+Follow `docs/PUBLISH_BOARDS.md` from every tool, reading all six collections.
+Release, source limitations and rollback evidence: `docs/handovers/board-web-release.md`.
+Friday's two replacement videos remain separate work. Monday 19 October's
+signed-off scripts and pending recordings/fact check remain with its editorial
+handover; this migration changes neither scripts nor publishing approval.
+
 This is the one file every working session reads first and updates last,
 whatever tool it runs in: Claude Code (web, desktop or phone), Codex (cloud or
 desktop), or anything else that can open this repository. It is how work moves
@@ -50,8 +67,8 @@ weeks, reading his marks) plus `narrative-before-making`, open until he says whe
 **Next:** a fresh session runs `docs/handovers/2026-10-19-editorial-narrative.md`: one signed-off narrative
 (end message, checkpoints, drift rule) per day before anything is made.
 Waiting on him: the seven questions at the end of that handover, and the merge of two small PRs (engine
-`question` field; Control Center shows it). Still open: the other board link (`4SZR…`, his other account), and
-the Argon "a tenth" figure (the row's numbers give a twentieth).
+`question` field; Control Center shows it). The other account's board is now
+migrated. The Argon "a tenth" figure remains with the editorial work (the row's numbers give a twentieth).
 
 ## Friday 16 Oct: handed over, 17 Oct
 
@@ -225,63 +242,31 @@ One page a week, with a tab for Monday, Wednesday and Friday and a tick for
 every step, made each Sunday by `plan-week` and republished to the same link
 all week by every session that makes a piece (`make-piece`, "The week's
 publish board"). Krish ticks there as he goes; every making session in
-Claude Code copies his channel ticks onto the pieces at its start and before
+any tool copies his channel ticks onto the pieces at its start and before
 it stops (`make-piece`, "The week's ticks"). Each week's board has its own
 board item, `week-publish-board-<its Monday>`, with the same link. Sunday's
 run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
-- Week of 19 to 23 October 2026, **This Week's Publish Board (wC 19 Oct)**,
-  remade 18 Oct evening with a first **Ideas** tab (13 checked ideas: Mon 4,
-  Wed 4, Fri 5; file `docs/plans/2026-10-19-week/ideas.json`), published with
-  Krish's yes, pinned: https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk
-  (its picks and ticks stores answer, both empty). His picks save to
-  `picks/<day>` and post as a `PICK <day>` comment. The same build still has
-  to go to the link below, which only his other account can open. Next
-  step: `docs/handovers/2026-10-18-week-picks.md`.
-  The earlier link (board item `week-publish-board-2026-10-19`;
-  made Sunday 18 October, no day picked yet, no ticks yet):
-  https://claude.ai/artifact/4SZR5ZrQnG657ezuzvvAML (published pinned from the
-  account running the Sunday routine; its store answers, ticks and links both
-  empty). The session Krish's Monday pick starts republishes it to this link.
-  The older week's links are under "Last week's publish board". Options for
-  all three days were written on 18 October; sources: Firecrawl web search
-  only (Drive was not read, so the Cold Ideas & Inspo folder was skipped).
+- Week of 19 to 23 October: https://content.krishraja.com/board/2026-10-19.
+  The newer source's Ideas and draft day tabs are preserved. Its three picks,
+  eleven queue decisions and 28 comments are available to every authenticated
+  workflow. Monday is in review. Its editorial/video handover owns the next
+  production steps; this migration does not approve those steps.
 
-Last week's publish board (12 to 16 October; on 18 October Monday's and Wednesday's
-five channels were copied onto their records; Friday has no ticks yet, so its item stays open):
+Last week's publish board (12 to 16 October):
 
-- Week of 12 to 16 October 2026 (board item
-  `week-publish-board-2026-10-12`; Monday posted 12 October and Wednesday
-  posted 14 October, every standing channel ticked on RjLHJ; Friday v3 in
-  review, its words and his calls on its tab):
-  https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E (pinned in Krish's
-  sidebar, published under one of his two accounts on 14 October) and
-  https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV (the older copy). Each
-  link is owned by one of his two accounts and shared with the other: from
-  the owning account its store (ticks, edits) can be read; from the other,
-  only its comments. On 15 October the cloud sessions ran under the account
-  that owns RjLHJ (its store read fine; H6q's refused). Krish, 15 October: "make sure publish boards on both claude
-  accounts are syncd, always": every publish goes to BOTH links in
-  `config/boards.json`, from the same built file (board_sync hook). For next
-  week, plan-week makes a new board from the same builder and publishes it
-  with `pin: true`.)
-- Friday's words are editable on the board (build `0aa49ec`, published to
-  both links 15 October): the "Review the words" card on Friday's tab holds
-  the article, the deep cut script and the 90-second script. Krish's saves
-  land in the board's store as `edits/fri-<item>`, and Comment opens the
-  comment composer. Read them with ArtifactData `list edits` and
-  ArtifactComments. The other copy's store cannot be read from this account
-  (another organisation), but its comments can, so (build `1be8fff`) every
-  Save also posts the changed paragraphs as a comment thread on its block
-  ("EDIT fri-<item>", WAS/NOW lines). Krish, 15 October: "I will be editing
-  from the other board until Sunday and then I'll move back here. Just make
-  sure they catch it." Until Sunday, read his edits and comments with
-  `ArtifactComments read` on https://claude.ai/artifact/RjLHJQi469BAKcvTCgneHV
-  (and on the pinned one), apply them to the plan files, rerun the gates,
-  and republish to both links.
-
+- https://content.krishraja.com/board/2026-10-12 remains open alongside this week.
+  Monday and Wednesday show 7 of 7; Friday remains unfinished. Eighteen stored
+  ticks (including recording ticks and false values), three saved edits and
+  24 comments/replies were retained. The existing Friday files stay until its
+  separately repaired cuts are watched and approved.
+- Read edits and full comment threads through `board_web.py read WEEK COLLECTION`
+  along with ticks, links, picks and queue. Apply Krish's words to source drafts
+  with the existing script-change and making-record attribution rules, then
+  rebuild with `--target web`. Original Claude addresses remain in
+  `config/boards.json.weeks` for provenance, not for ongoing synchronization.
 
 ### What the 12 October evening session made permanent (read this first)
 
@@ -382,8 +367,7 @@ https://controlcenter.krishraja.com/#/board:
    scripts/post-pack/making.py <piece> show` for Monday
    f328382d-71b3-41a7-a221-d8615826f12e, Wednesday
    7554ed4a-560b-4365-b266-ea72abeed7ef and Friday
-   904658db-4df2-4537-a0ed-ebe93e081db7. The board: `Artifact` read
-   https://claude.ai/artifact/H6qKiPdmSWETVQftpHBS5E, then `week_board.py
+   904658db-4df2-4537-a0ed-ebe93e081db7. The board: `board_web.py download 2026-10-12 --output FILE`, then `week_board.py
    --show <the saved file>`, then copy his ticks ("The week's ticks" in
    `make-piece`; Monday's two Record ticks are in its store already, written
    on 12 October from his words "the two Monday videos are now in Inbox").

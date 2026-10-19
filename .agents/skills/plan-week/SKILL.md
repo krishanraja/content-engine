@@ -5,6 +5,22 @@ description: Plan the publishing week on Sunday. Research three or four options 
 
 # Plan the week
 
+## Publish-board routing
+
+Follow `docs/PUBLISH_BOARDS.md` before touching a weekly publish board. It owns
+current web addresses, all six collection reads, build/download/publication,
+making-record attribution and rollback. Check `config/boards.json.web_cutover`:
+while pending, source migration is unfinished; once active, use only the web
+board for new interactions. Claude artifacts are retired for good (Krish,
+2026-10-19: "we are now retiring the Claude artefact permanently and we are
+working in content.krishraja.com for all published board updates"): no step
+makes or publishes one. The week's board, a day's tab in draft, the workroom and
+the publish page all go to content.krishraja.com (`week_board.py --target web`,
+then `board_web.py publish-web`), and `scripts/hooks/artifact_gate.py` refuses
+every Artifact publish and every ArtifactData write. Any Artifact, ArtifactData,
+ArtifactComments or dual-account step below is history: read an old artifact
+only to recover what it holds.
+
 Krish, 2026-10-11: "Every Sunday we're going to decide which of the three
 pieces are going to go out on Monday, Wednesday, and Friday. We're going to
 get Monday's piece all the way to iteration and the publish board, whilst
@@ -41,7 +57,8 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    how many have no verdict yet, and offer the queued ideas that fit each
    day before you research anything new. Copy his board marks into the
    engine first: every `QUEUE <pick> <verdict> <reason>` comment and
-   `queue/<pick>` doc on last week's board (either account; `ArtifactData`)
+   `queue/<pick>` doc on last week's board (web `queue` and `comments`
+   collections after active cutover; ArtifactData only for legacy sources)
    goes to `POST /api/idea-queue` (`action: queue` with `verdict`, `reason`,
    `angle`, `decided_by: "Krish"`, the idea's `so_what`, `story` as `idea`,
    `source_url`, `series`, `from_week`, `from_pick`). A mark with no verdict
@@ -80,8 +97,8 @@ The week runs Monday to Friday. On Sunday it is the coming week.
    filler never pads a day. The board builds it as its first tab with
    `--ideas` and refuses a day with fewer than four checked ideas. His pick
    is saved in the board's store (`picks/<day>`) and posted as a comment
-   (`PICK <day>`): read it from the comments (either account) or with
-   `ArtifactData`, then write the picked idea onto its piece as the day's
+   (`PICK <day>`): read both `picks` and `comments` through
+   `board_web.py read WEEK COLLECTION` on the active web board, then write the picked idea onto its piece as the day's
    rank 1 option through `/api/week/options` (creating its row first if it
    has none).
    **What his 19 Oct triage taught** (`config/learnings.json`, entries
@@ -152,7 +169,12 @@ The week runs Monday to Friday. On Sunday it is the coming week.
      picked yet says so. It writes `week-board.json` beside the page: the
      week, each day's state and piece, every tick id, and the publish call.
      Exit 2 is a refusal it names: fix it and build again.
-   - **Publish it as a new private artifact**, a new one every Sunday, never
+   - **Active web route:** build with `--target web`, publish the verified
+     manifest through `board_web.py publish-web`, register the dated URL in
+     `config/boards.json.web`, and read it back as `docs/PUBLISH_BOARDS.md`
+     requires. Continue at "Record its link" below. No new Claude board or
+     cross-account copy is created after active cutover.
+   - **Legacy artifact mode only:** publish as a new private artifact, a new one every Sunday, never
      last week's link: `Artifact({action: "publish", file_path: "<absolute
      path>/week-board.html", title: <the manifest's publish.title>, icon:
      "calendar", capabilities: <the manifest's publish.capabilities>, description:
@@ -222,9 +244,9 @@ item's text each morning.
 Without the Teleprompter connector, nothing is sent to Teleprompter (step 0
 names what waits). Descript was retired on 12 October (Krish: "Descript is
 permanently gone, teleprompter.com is permanently in, connected via MCP
-here"): nothing is sent there. Without the Artifact or ArtifactData tools, the week's board
-cannot be made or read: say so on the week's board item and in
-`WORKBENCH.md`, and the session his Monday pick starts makes it.
+here"): nothing is sent there. The active web board needs the existing engine
+operator credential, not an Artifact connector. If authenticated board reads
+fail, record that specific blocker; never treat inaccessible feedback as empty.
 
 ## Before you stop
 
