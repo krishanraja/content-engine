@@ -1,0 +1,30 @@
+{
+  "piece_id": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+  "files": [
+    {
+      "cut": "long",
+      "video_sha256": "90392c47fcec934f3507cf2d7dd5e26a7ddd3fd26c5c70a9988e9cb11c4f0c19",
+      "bytes": 211951035,
+      "duration": "350.976000",
+      "acceptance": {
+        "by": "Krish",
+        "said": "I watched both; accept playback",
+        "date": "2026-10-19",
+        "scope": "Both current Monday final cuts, watched all the way through with sound; picture/audio unchanged by the three approved external-caption corrections."
+      }
+    },
+    {
+      "cut": "short",
+      "video_sha256": "ddd7c60efc5d3062179b17716d423da12f2be7f81ffa01015cbfba9f7a78e087",
+      "bytes": 55520212,
+      "duration": "85.504000",
+      "acceptance": {
+        "by": "Krish",
+        "said": "I watched both; accept playback",
+        "date": "2026-10-19",
+        "scope": "Both current Monday final cuts, watched all the way through with sound; picture/audio unchanged by the three approved external-caption corrections."
+      }
+    }
+  ],
+  "agent_limit": "Codex records human playback acceptance and separate technical evidence; it does not claim continuous audiovisual listening."
+}

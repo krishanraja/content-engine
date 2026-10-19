@@ -17,7 +17,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from '../../_supabase.js'
 import { callClaude, pathId, readMaterials, robustJson, type ClaudeOpts } from '../../_content.js'
-import { guardEngine } from '../../_auth.js'
+import { guardEngine, operatorBearerAllowed } from '../../_auth.js'
 import { webResearch } from '../../_enrich.js'
 import {
   classifyAnthropicFailure, isModelUnavailable, ModelUnavailableError, recordAnthropicFailure, refusesEveryCall, type ProviderFailure,
@@ -29,7 +29,7 @@ import { UTILITY_MODEL } from '../../_models.js'
 import { randomUUID } from 'node:crypto'
 import { lastFactRunCost, meterScope, perplexityCall } from '../../_meter.js'
 import {
-  bodyHash, carryForward, carrySignOffs, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  activeManualReviews, reviewContradiction, bodyHash, carryForward, carrySignOffs, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, signOff, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -373,7 +373,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const id = pathId(req)
   if (!id) return res.status(400).json({ ok: false, error: 'id required' })
 
-  const { data: row, error } = await supabase.from('content_ideas').select('id,body,meta').eq('id', id).single()
+  const { data: row, error } = await supabase.from('content_ideas').select('id,body,meta,updated_at').eq('id', id).single()
   if (error || !row) return res.status(404).json({ ok: false, error: 'idea not found' })
   const meta = (row.meta || {}) as Record<string, any>
   const body = String(row.body || '')
@@ -395,12 +395,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const precheck = { numbers_not_on_file: numbersNotOnFile(body, meta), filed_sources_cut: filedSourcesCut(meta) }
     // What the last paid run cost, from the meter, for engine.py's --budget (G2).
     const lastRunCost = await lastFactRunCost().catch(() => null)
-    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck, last_run_cost: lastRunCost })
+    return res.status(200).json({ ok: true, fact_check: meta.fact_check || null, manual_reviews: meta.fact_manual_reviews || [], active_manual_reviews: activeManualReviews(meta), sources_hash: sourceHash, gate, checks, ready: publishStatus(checks).ok, receipts: proof, next_run: nextRun, precheck, last_run_cost: lastRunCost })
   }
 
   const request = req.body && typeof req.body === 'object' && !Array.isArray(req.body)
     ? req.body as Record<string, unknown>
     : {}
+  if (request.action === 'manual_review') {
+    if (!operatorBearerAllowed(req)) return res.status(403).json({ ok: false, error: 'Manual fact review requires the operator bearer.' })
+    const reviewed = reviewContradiction(meta, body, request)
+    if (!reviewed.ok) return res.status(409).json(reviewed)
+    const history = Array.isArray(meta.fact_manual_reviews) ? meta.fact_manual_reviews : []
+    const existing = history.find(r => r.id === reviewed.review.id)
+    if (existing) return res.status(200).json({ ok: true, review: existing, already: true, gate: gateStatus(meta, body) })
+    const nextMeta = { ...meta, fact_manual_reviews: [...history, reviewed.review] }
+    if (!row.updated_at) return res.status(409).json({ ok: false, error: 'The piece has no revision timestamp.' })
+    // Use the repository's row-revision lease; never put private, potentially
+    // large source text in a PostgREST URL filter.
+    const saved = await supabase.from('content_ideas').update({ meta: nextMeta, updated_at: new Date().toISOString() }).eq('id', id)
+      .eq('updated_at', row.updated_at).select('id').maybeSingle()
+    if (saved.error) return res.status(500).json({ ok: false, error: saved.error.message })
+    if (!saved.data) return res.status(409).json({ ok: false, error: 'The piece changed during review. Read it again.' })
+    return res.status(200).json({ ok: true, review: reviewed.review, gate: gateStatus(nextMeta, body) })
+  }
   // Guard G9 (docs/COST_GUARDS.md): Krish's sign-off of named lines. Only his
   // decision, relayed in his words, and only on the check of this exact body.
   if (request.action === 'sign_off') {
@@ -417,7 +434,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const nowMeta = (fresh.data?.meta || meta) as Record<string, any>
     if ((nowMeta.fact_check as FactCheck | undefined)?.ran_at !== current.ran_at) return res.status(409).json({ ok: false, error: 'A new fact check landed meanwhile. Read it and sign off again.' })
     const nextMeta = { ...nowMeta, fact_check: signed.fact_check }
-    const { error: upErr } = await supabase.from('content_ideas').update({ meta: nextMeta }).eq('id', id)
+    const { error: upErr } = await supabase.from('content_ideas').update({ meta: nextMeta, updated_at: new Date().toISOString() }).eq('id', id)
     if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
     return res.status(200).json({ ok: true, signed_off: signed.fact_check.signed_off, gate: gateStatus(nextMeta, body) })
   }
@@ -472,7 +489,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const fresh = await supabase.from('content_ideas').select('meta').eq('id', id).single()
   const nowMeta = (fresh.data?.meta || meta) as Record<string, any>
   const { error: upErr } = await supabase.from('content_ideas')
-    .update({ meta: { ...nowMeta, fact_check: carrySignOffs(nowMeta.fact_check as FactCheck | undefined, result), fact_ledger: nextLedger, fact_runs: countRun(nowMeta, today, result.ran_at, said) } })
+    .update({ meta: { ...nowMeta, fact_check: carrySignOffs(nowMeta.fact_check as FactCheck | undefined, result), fact_ledger: nextLedger, fact_runs: countRun(nowMeta, today, result.ran_at, said) }, updated_at: new Date().toISOString() })
     .eq('id', id)
   if (upErr) return res.status(500).json({ ok: false, error: upErr.message })
 

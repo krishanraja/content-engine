@@ -19,7 +19,7 @@
 // The same shape is mirrored in control-center/src/lib/making.ts. Change one,
 // change the other (docs/CONTENT_ENGINE.md, "The split").
 
-import { stillBlocking } from './_factGate.js'
+import { activeManualReviews, bodyHash, effectiveBlocking } from './_factGate.js'
 
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
@@ -466,7 +466,7 @@ export const MAKING_OWNERS: Record<string, MakingOwner> = {
 /** The row of steps a reader sees, from the piece's row. `meta.fact_check`
  *  is the fact gate written by content-ideas/[id]/fact-check.ts. Mirrored in
  *  control-center/src/lib/making.ts. */
-export function makingSteps(row: { state?: string | null; meta?: Record<string, any> | null }): MakingStep[] {
+export function makingSteps(row: { state?: string | null; body?: string | null; meta?: Record<string, any> | null }): MakingStep[] {
   const meta = isObj(row.meta) ? row.meta : {}
   const m = (isObj(meta.making) ? meta.making : {}) as Partial<Making>
   const factGate = isObj(meta.fact_check) ? meta.fact_check : null
@@ -474,8 +474,10 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   steps.push(m.workroom ? { key: 'workroom', label: 'Workroom', state: 'done', at: m.workroom.at, link: m.workroom.url } : { key: 'workroom', label: 'Workroom', state: 'todo' })
   // A run that left blocking lines passes once Krish has signed every one off
   // in his own words, as the gate itself counts it (gateStatus).
-  const signedThrough = !!factGate && Array.isArray(factGate.signed_off) && factGate.signed_off.length > 0 && Array.isArray(factGate.claims)
-    && stillBlocking(factGate as any).length + (Number(factGate.unchecked) || 0) === 0
+  const hasManualReview = activeManualReviews(meta).length > 0
+  const manualBodyCurrent = !hasManualReview || typeof row.body === 'string' && bodyHash(row.body) === factGate?.body_hash
+  const signedThrough = !!factGate && manualBodyCurrent && (Array.isArray(factGate.signed_off) && factGate.signed_off.length > 0 || hasManualReview) && Array.isArray(factGate.claims)
+    && effectiveBlocking(meta).length + (Number(factGate.unchecked) || 0) === 0
   const factPassed = factGate ? factGate.passed === true || factGate.status === 'passed' || factGate.ok === true || signedThrough : false
   steps.push(factGate
     ? { key: 'draft', label: 'Fact-checked draft', state: factPassed ? 'done' : 'failed', at: str(factGate.ran_at) || undefined, note: factPassed ? undefined : 'the fact gate did not pass' }

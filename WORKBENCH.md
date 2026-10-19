@@ -902,3 +902,12 @@ line; the cost gate has no context ceiling and never blocks a database tool. Wai
 piece `904658db` made before the G9 ruling are on contradicted lines, left as they are until he says; (2) the first real fact-check run after this
 (his approval for the spend) is the live proof: `fact-gate-on-file` cache writes about one source set a run.
 
+
+## Monday release-gate continuation, 19 October
+
+Wednesday is paused until Monday is publish-ready. Krish approved an auditable,
+free manual fact-review route and accepted both current final cuts after full
+playback with sound. Implementation and exact-file acceptance are in
+`docs/plans/2026-10-19-monday/release-gates.md` and `playback-acceptance.json`.
+The paid-run hold remains. Do not infer release completion from this note;
+require authenticated fact/making readback and final library/board delivery.
