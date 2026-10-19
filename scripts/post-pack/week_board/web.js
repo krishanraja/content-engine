@@ -147,7 +147,7 @@
     roots.sort((a,b) => String(a[1].body.at).localeCompare(String(b[1].body.at)));
     for (const [id, d] of roots) {
       const section = document.createElement("section"); section.style.cssText = "padding:12px 0;border-bottom:1px solid #888";
-      const title = document.createElement("strong"); title.textContent = d.body.anchor; section.append(title);
+      const title = document.createElement("strong"); title.textContent = d.body.anchor === "board-root" ? "Whole board" : d.body.anchor; section.append(title);
       const original = d.body.original_metadata || {};
       const threadState = document.createElement("span");
       threadState.textContent = original.resolved || original.thread_status?.resolved ? " · Resolved in source" : " · Open";
@@ -158,6 +158,7 @@
       for (const [, entry] of [ [id,d], ...all.filter(([rid,r]) => rid !== id && r.body.thread_id === id).sort((a,b) => String(a[1].body.at).localeCompare(String(b[1].body.at))) ]) {
         const metadata = entry.body.original_metadata || {};
         const byline = document.createElement('small');
+        byline.style.cssText = 'display:block;margin-top:6px';
         byline.textContent = [metadata.author_display || metadata.author_label || 'Krish', metadata.at_as_reported || entry.body.at].filter(Boolean).join(' · ');
         section.append(byline);
         const p = document.createElement("p"); p.style.whiteSpace = "pre-wrap"; p.textContent = entry.body.text; section.append(p);

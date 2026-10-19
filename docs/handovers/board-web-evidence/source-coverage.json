@@ -1,0 +1,17 @@
+{
+  "verified": true,
+  "weeks": [
+    {
+      "week": "2026-10-12",
+      "source_records": 45,
+      "canonical_records": 45,
+      "exact_body_match": true
+    },
+    {
+      "week": "2026-10-19",
+      "source_records": 42,
+      "canonical_records": 42,
+      "exact_body_match": true
+    }
+  ]
+}

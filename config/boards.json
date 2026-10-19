@@ -15,8 +15,10 @@
   "2026-10-19": "https://content.krishraja.com/board/2026-10-19"
  },
  "web_cutover": {
-  "state": "pending",
-  "interaction_source": "claude",
-  "requires": "All four exports, final delta, deployment and authenticated acceptance readback"
+  "state": "active",
+  "interaction_source": "web",
+  "verified_on": "2026-10-19",
+  "evidence": "docs/handovers/board-web-release.md",
+  "source_freeze": "All four Claude boards paused; final older-account comparison unchanged, newer-account exports confirmed unchanged by Krish."
  }
 }
