@@ -594,6 +594,26 @@
      "how": "the Claude Code copy of the same step"
     }
    ]
+  },
+  {
+   "id": "workroom-on-brand",
+   "on": "2026-10-19",
+   "krish": "Are you just using this workroom as the iteration tool before we get this in to https://claude.ai/artifact/CDgS3JDULpzvRnxkHwLkVk? If so it needs to be on brand.",
+   "why": "The first workroom for Monday's piece used a palette and fonts of its own; what he iterates on should look like what ships, so his judgement of it carries onto the board.",
+   "means": "Every workroom (and any page he iterates a piece on before the week's publish board) uses the publish page's own tokens and fonts from its first version: cream, ink and mint, Anton uppercase headings, Archivo body, IBM Plex Mono labels.",
+   "status": "encoded",
+   "encoded": [
+    {
+     "file": ".agents/skills/make-piece/SKILL.md",
+     "contains": "so it is on brand from its first version",
+     "how": "the make-piece Workroom step"
+    },
+    {
+     "file": ".claude/skills/make-piece/SKILL.md",
+     "contains": "so it is on brand from its first version",
+     "how": "the Claude Code copy"
+    }
+   ]
   }
  ]
 }
