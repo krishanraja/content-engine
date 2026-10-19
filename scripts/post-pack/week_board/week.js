@@ -382,7 +382,7 @@ try { new ResizeObserver(setH).observe(bar) } catch { window.addEventListener("r
     const tab = document.querySelector('[data-tabprog="ideas"]');
     if (tab) tab.textContent = mode === "live" ? `${n} of ${days.length} picked` : `pick ${days.length}`;
     if (mode === "off") for (const d of days) say(d, "Picks are not saving in this view. Open it in claude.ai.", true);
-    else for (const d of days) if (!busy[d]) say(d, saved[d] ? "Your pick is saved. Claude starts this day's piece from it." : "");
+    else for (const d of days) if (!busy[d]) say(d, saved[d] ? (window.boardRuntime ? "Your pick is saved for this day's content workflow." : "Your pick is saved. Claude starts this day's piece from it.") : "");
   }
   let mode = "loading";
   render(mode);

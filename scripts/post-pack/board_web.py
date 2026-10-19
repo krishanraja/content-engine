@@ -29,6 +29,13 @@ def web_page(page, manifest):
     # Substitute runtime calls only, never a matching phrase in saved wording.
     page = re.sub(r'<script\b[^>]*>.*?</script>',
                   lambda match: match.group(0).replace('window.claude', 'window.boardRuntime'), page, flags=re.S)
+    # Update generated help only; editorial wording and saved drafts stay verbatim.
+    page = page.replace(
+        '<p class="rv-how">Change any word below and press Save, or press Comment to say what to change. Claude reads your saved words and your comments and comes back with the next version.</p>',
+        '<p class="rv-how">Change any word below and press Save, or press Comment to say what to change. Your saved words and comments guide the next version through the content workflows.</p>')
+    page = page.replace(
+        '<p class="qd-how">Ideas you queued earlier that fit this day. Ask Claude to start one, or pick from the new ideas below.</p>',
+        '<p class="qd-how">Ideas you queued earlier that fit this day. Ask your content workflow to start one, or pick from the new ideas below.</p>')
     first = page.find('<script')
     if first < 0:
         raise ValueError('board has no runtime')

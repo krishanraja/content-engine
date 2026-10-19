@@ -102,6 +102,11 @@ export async function checkBrowser({modulePath, origin, cookie, api, write, scre
       assert.equal((await api('links')).documents.find(d=>d.id==='mon').body.article,'https://example.com/browser-story')
       await page.locator('#tab-friday').click()
       const edit=page.locator('textarea[data-review-id="fri-article"]')
+      // Prove that typing while a successful response is delayed keeps its CAS
+      // base, even after a later refresh sees another session's newer write.
+      await page.route('**/edits/fri-article',async route=>{
+        const response=await route.fetch();await new Promise(resolve=>setTimeout(resolve,700));await route.fulfill({response})
+      })
       await edit.fill(`Browser words ${width}`);await page.locator('[data-act="save-review"]').first().click()
       await saved('edits',docs=>docs.find(d=>d.id==='fri-article')?.body.text===`Browser words ${width}`)
       assert.equal((await api('edits')).documents.find(d=>d.id==='fri-article').body.text,`Browser words ${width}`)
@@ -116,6 +121,7 @@ export async function checkBrowser({modulePath, origin, cookie, api, write, scre
       const tickBefore=(await api('ticks')).documents.find(d=>d.id==='mon-substack')
       await write('ticks','mon-substack',{...tickBefore.body,done:false},tickBefore.revision)
       await page.waitForTimeout(5500)
+      await page.unroute('**/edits/fri-article')
       assert.equal(await edit.inputValue(),`Unsaved words ${width}`)
       assert.equal(await tick.isChecked(),false,'remote API change refreshes the visible tick')
       page.once('dialog',d=>d.dismiss())

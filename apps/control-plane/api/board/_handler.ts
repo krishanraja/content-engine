@@ -179,7 +179,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>) {
         if (!upstream.ok || !upstream.body) throw new BoardError(503, 'board_html_unavailable')
         res.setHeader('Content-Type', 'text/html; charset=utf-8')
         res.setHeader('X-Frame-Options', 'DENY')
-        res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'")
+        res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'")
         res.setHeader('X-Board-Build', state.build_id)
         res.status(200)
         await pipeline(Readable.fromWeb(upstream.body as Parameters<typeof Readable.fromWeb>[0]), res)

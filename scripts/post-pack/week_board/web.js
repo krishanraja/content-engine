@@ -6,12 +6,13 @@
   const subscribers = new Map();
   const pending = new Map();
   const editing = new Map();
+  const inputVersions = new Map();
   const unsaved = () => !!document.querySelector('[data-unsaved="true"]') || !!editor?.value.trim();
   let leavingConfirmed = false;
   window.addEventListener('beforeunload', e => { if (!leavingConfirmed && unsaved()) { e.preventDefault(); e.returnValue = ''; } });
   const navigation = document.createElement('nav');
   navigation.setAttribute('aria-label', 'Publishing weeks');
-  navigation.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;padding:0 0 16px;border-bottom:1px solid #b5b4aa';
+  navigation.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin:0 auto;padding:16px 16px 12px;max-width:820px;border-bottom:1px solid #b5b4aa';
   function showWeeks(weeks) {
     navigation.replaceChildren();
     for (const date of [...new Set([week, ...weeks])].sort()) {
@@ -31,7 +32,8 @@
     }
   }
   showWeeks([]);
-  (document.querySelector('.wk-wrap') || document.querySelector('main') || document.body).prepend(navigation);
+  const heading = document.querySelector('.wk-top');
+  if (heading) heading.before(navigation); else document.body.prepend(navigation);
   fetch('/api/board/weeks', {credentials:'same-origin',cache:'no-store'}).then(async response => {
     const data = await response.json();
     if (!response.ok || !data.ok || !Array.isArray(data.weeks)) throw new Error('weeks_unavailable');
@@ -92,9 +94,13 @@
         if (!states.has(collection)) await refresh(collection);
         const current = states.get(collection).get(id);
         const key = `${collection}/${id}`;
+        const inputVersion = inputVersions.get(key) || 0;
         try {
           const result = await request(`/${collection}/${encodeURIComponent(id)}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ body, revision: editing.get(key) ?? current?.revision ?? 0 }) });
-          editing.delete(key);
+          // Typing may continue while a save response is in flight. Its new
+          // words are based on our successful save, not a later poll result.
+          if ((inputVersions.get(key) || 0) === inputVersion) editing.delete(key);
+          else editing.set(key, result.revision);
           states.get(collection).set(id, { body: result.body, revision: result.revision }); emit(collection);
         } catch (e) {
           if (e.status === 409) {
@@ -122,7 +128,10 @@
     let key;
     if (field.matches("textarea[data-review-id]")) { field.dataset.unsaved = "true"; key = `edits/${field.dataset.reviewId}` }
     else if (field.id?.endsWith("link-article") || field.id?.endsWith("link-youtube")) { field.dataset.unsaved = "true"; key = `links/${field.closest('[data-day]')?.dataset.day}` }
-    if (key && !editing.has(key)) { const [c,id] = key.split('/'); editing.set(key, states.get(c)?.get(id)?.revision || 0) }
+    if (key) {
+      inputVersions.set(key, (inputVersions.get(key) || 0) + 1);
+      if (!editing.has(key)) { const [c,id] = key.split('/'); editing.set(key, states.get(c)?.get(id)?.revision || 0) }
+    }
   });
 
   const anchorFor = async element => {
