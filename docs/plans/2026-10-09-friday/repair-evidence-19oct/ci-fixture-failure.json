@@ -7,5 +7,5 @@
   ],
   "failure": "Synthetic mix fixture queried faster-whisper package metadata, which is intentionally absent from minimal CI. Production environment had it, so local verify passed.",
   "correction": "Scope an explicit synthetic ASR version stub to the fixture and its existing ASR-stub child. Production provenance and delivery gates are unchanged.",
-  "verification": "Clean minimal environment and CI rerun pending."
+  "verification": "Clean minimal Python 3.12 environment: three synthetic renders and 40 checks pass. Linux CI run 39298831637 passed. Windows CI passed the mix fixture but timed out in an existing nine-scenario disk-authentication test at 5 seconds; this timeout reproduced locally. Its budget now matches the adjacent disk-heavy test at 15 seconds, and the unchanged assertions pass locally. Final CI is on PR #108."
 }

@@ -1,8 +1,9 @@
 # Friday video repair: execution checkpoint
 
-Status: in progress; neither replacement is ready. Krish's approved plan is the
-authority, including the sample-approval and final-filing gates. Board migration
-is deferred until the repairs and review are complete.
+Status: historical investigation. Both media repairs are accepted and delivered.
+Current results and links: [delivery handover](2026-10-19-friday-repair-complete.md).
+The checkpoints below retain what was known at each stage; their pending steps
+are superseded by that handover.
 
 ## Reproducible environment and source identity
 

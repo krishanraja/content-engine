@@ -1,0 +1,102 @@
+{
+  "build_id": "429daefd5682ff749159652127465ce06825ae36f98742799b5766f87f5228dc",
+  "html_sha256": "efbbf44b771001d98e2bec28d700a4895d234f4ff0076838afd52f3944ba543b",
+  "new_assets": [
+    {
+      "id": "drive-1cfQ5LO8NsOoRNlmwv_Ac_hsxs0yElB52",
+      "sha256": "4b908e3a93083be29fa538a13e790e9304151b237170f44f90102a4d3fdf63b9",
+      "bytes": 334051179,
+      "content_type": "video/mp4",
+      "verified": true
+    },
+    {
+      "id": "drive-18R8c4y2HfmFHpccaAlG7PAJS02IbtDzo",
+      "sha256": "93a10b5bcb6af642878c3bd1d100bfec659f93ccd790b8850cd5c49ffbdd6eec",
+      "bytes": 45094465,
+      "content_type": "video/mp4",
+      "verified": true
+    }
+  ],
+  "unchanged_assets": 10,
+  "interaction_collections": [
+    {
+      "week": "2026-10-12",
+      "collection": "ticks",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-12",
+      "collection": "links",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-12",
+      "collection": "edits",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-12",
+      "collection": "picks",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-12",
+      "collection": "queue",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-12",
+      "collection": "comments",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-19",
+      "collection": "ticks",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-19",
+      "collection": "links",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-19",
+      "collection": "edits",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-19",
+      "collection": "picks",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-19",
+      "collection": "queue",
+      "unchanged": true
+    },
+    {
+      "week": "2026-10-19",
+      "collection": "comments",
+      "unchanged": true
+    }
+  ],
+  "content_check": {
+    "panels": {
+      "mon": {
+        "unchanged_outside_video_card": true,
+        "sha256": "e1bc1b5f42d83f217c9cec2b796ec8ad14bbd26c7db9c76c7b103ea8c73060c8"
+      },
+      "wed": {
+        "unchanged_outside_video_card": true,
+        "sha256": "88f467dfab299cdd83df0462687ecbff975ded6d6bfd5b96b7e6f1343a9c374d"
+      },
+      "fri": {
+        "unchanged_outside_video_card": true,
+        "sha256": "0d829aff0c5e934c204542d44b4f56322032dacf0a445e3d5808c1aed6b639bb"
+      }
+    },
+    "assets": 12,
+    "new_videos": 2,
+    "unchanged_assets": 10
+  }
+}

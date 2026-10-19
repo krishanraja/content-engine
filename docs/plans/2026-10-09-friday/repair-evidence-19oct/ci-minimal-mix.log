@@ -1,0 +1,5 @@
+cut                            secs  integ   peak  intro  voice  outro   gap
+9x16 with sting and bed       28.87  -14.0   -3.0  -15.7  -13.5  -17.6   17.1
+16x9 with sting and bed       28.87  -14.0   -3.0  -15.7  -13.5  -17.6   17.1
+9x16 as today, voice only     27.37  -14.0   -3.7      -  -13.9      -      -
+mix test passed: 40 checks

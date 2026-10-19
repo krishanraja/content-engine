@@ -13,7 +13,7 @@ boards passed authenticated desktop/phone navigation, image, state and comment
 checks; all 12 downloadable assets matched their type, size and SHA-256.
 Follow `docs/PUBLISH_BOARDS.md` from every tool, reading all six collections.
 Release, source limitations and rollback evidence: `docs/handovers/board-web-release.md`.
-Friday's two replacement videos remain separate work. Monday 19 October's
+Friday's two replacement videos are now repaired and filed; see the delivery section below. Monday 19 October's
 signed-off scripts and pending recordings/fact check remain with its editorial
 handover; this migration changes neither scripts nor publishing approval.
 
@@ -25,76 +25,41 @@ are in `AGENTS.md`; this file is the live state of the work.
 
 Last updated: 2026-10-19, by the idea-queue build session (Claude Code, cloud).
 
-## Friday repair in progress — Codex, 19 October
+## Friday repairs delivered — Codex, 19 October
 
-Krish approved the implementation plan: repair and review both Friday videos first;
-then migrate the selected board. Active repair checkout:
-`C:\Users\krish\dev\mindmake\content-engine`, branch `codex/friday-video-repairs`,
-from main `d8c0987`. The incomplete old checkout is preserved.
+Both complete files were accepted by Krish with sound, then passed their exact-file
+checks and were copied into the existing Friday post's `3 Video` folder. The actual
+Drive library copies match the accepted SHA-256 hashes. Current downloads:
 
-Source recordings and rejected library outputs have been retrieved through the
-engine and hash-verified. Local calibrated SyncNet measurements reproduce the
-deep-cut drift: rejected output reaches +680 ms near 13 minutes, while the source
-reads 0 to +40 ms across eight checkpoints. Sequential frame and sample extraction,
-40 ms analysis resolution; injected ±200 ms offsets recovered at every checkpoint.
-The old timestamp-hole diagnosis remains withdrawn.
+- [Deep cut, 16:9, 13:36.5](https://drive.google.com/file/d/1cfQ5LO8NsOoRNlmwv_Ac_hsxs0yElB52/view)
+- [Short cut, 9:16, 87.75 seconds](https://drive.google.com/file/d/18R8c4y2HfmFHpccaAlG7PAJS02IbtDzo/view)
 
-The reconstructed edit's 62 segments contain 668.44 ms less PCM audio than their
-picture-frame durations. A replacement segment encoder drains both filters and
-requires exact frame/sample counts. The repaired diagnostic passes eight sync
-points at 0 to +40 ms; the first short candidate passes six at -40 to 0 ms.
-These measurements apply to those exact files only. The short needs caption and
-visual revisions. The deep intermediate has now been rebuilt and clock-checked
-with the approved 0.18/0.25-second pads. Neither video is accepted or ready for filing.
+Rejected originals retain their file IDs and bytes in `3 Video/working repair 19 Oct/rejected originals`.
+Both replacements are the latest entries for their cuts in the making record;
+older entries remain history. Existing thumbnails are retained. The week of
+12 October now points at the replacements, with its other days and interactions
+preserved. Board migration was already completed on main; it was not repeated.
 
-Concrete mapping samples, a wide treatment, a 22-beat proposal and a measured music
-audition have been presented to Krish. He approved the treatment and music balance;
-the exact approval is in `docs/plans/2026-10-09-friday/repair-approval-19oct.json`.
-Fresh transcripts are complete on the correct processing clocks, and 32 short
-steps plus 77 deep cues are bound to fresh speech. Krish supplied authentic Claude
-model and effort screenshots; unchanged pixels now supply the control cards. The
-remaining deep cards have been reflowed for readable type. Krish confirmed the
-short phrase, "I’m 85% sure of this"; exact evidence is in caption-adjudications.json.
-Independent source recognition also resolves missing "like" and the Sally opening.
-The completed short v4 has matching decoded audio to v3 and passing loudness/music
-measurements, but Krish rejected its small eyebrow labels and source-credit lines.
-Those overlays are now removed from all 109 generated card assets, including the
-mapping and control cards; source/attribution records remain separate. Short v6's technical checks passed, but Krish then rejected the empty centre of
-Meet Sally and asked for the principle to be checked across both cuts. The audit
-found 13 sparse short text cards, three undersized short logo cards, seven deep
-chapter headings, and 27 deep screenshot cards with excess gaps. Short v8 and
-deep v4 are now rendering from isolated repair-kit-v8 inputs: Sally has a generated
-fictional business-owner illustration, plain text is compact, evidence crops are
-stacked at full width, corner source logos are removed, and deep text clears the
-caption band. All 109 card previews were inspected; final-file review is pending.
-Krish then approved the presented Sally and revised compositions: "Looks good".
-This approves the visuals, not full finished-video playback or acceptance.
-Krish accepted the complete short v8 after the full-video sound-review question:
-"Looks good". This is bound to its exact SHA in short-v8-human-review.json.
-Short v8 now passes heard, six calibrated sync points (-40 to 0 ms), loudness,
-visuals and human full review. All 88 one-second and 38 quarter-second samples
-were inspected; all 66 authored text lines measure at least 67 pixels at 1080
-width, and essential actual-control labels measure 70-92 pixels. Deep v4 is
-encoding and has not been accepted. The 234 production inputs are preserved in
-a 271 MB archive in the engine library under 3 Video/working repair 19 Oct;
-Drive-copy verification is pending. The library sync worker is being recovered.
-Superseded short v7 and deep v3 renders were stopped, not filed.
-Thirty-three
-bounded independent transcription checks and the full medium-model transcript
-are preserved with exact hashes in the repair evidence folder. Full playback,
-exact-file deep sync and final deep frame review remain outstanding. The deep
-retains restored sounds and most of us. The pinned verification run passed 1,775
-tests and both typechecks; after correcting skill-validator compatibility, all
-remaining verify commands passed. The changed engine gates also pass (13 tests).
-Krish has authorized filing once repaired: put both replacements in
-the existing Google Drive post folder in place of the current rejected cuts and
-return the two links here. Preserve rejected bytes as superseded copies; verify
-the actual Drive copies before returning links. This is not finished-video
-acceptance. No replacements have been sent or recorded. The article fact gate remains
-failed; video work does not grant publication clearance.
+Both cuts measure within 40 ms at six calibrated checkpoints. Voice is about
+-14 LUFS, final true peaks are -1.8/-1.3 dBTP, and the speech bed has no silence
+longer than 0.5 seconds. Short visual coverage is 99.962%, with 24.54 changes per
+minute. Native-size text, all one-second frames and quarter-second intro/outro
+samples were checked. Full playback acceptance is Krish's; Codex does not claim
+full audio/video playback. Raw ASR differences and human acceptance are preserved,
+including independent evidence disproving the deep cut's apparent 14-word omission.
 
-Continuation and evidence locations:
-`docs/handovers/2026-10-19-friday-repair-progress.md`.
+The report, captions, exact-file receipts and image credits accompany the videos.
+`working repair 19 Oct` contains `repair-inputs-v8.zip` (all production images and
+configs), `final-review-samples-19oct.zip` (sampled frames and sync captures), and
+`final-qa-evidence-19oct.zip` (transcripts, measurements and reviews). Code and small
+evidence live on `codex/friday-video-repairs`, [draft PR #108](https://github.com/krishanraja/content-engine/pull/108).
+Full local `npm run verify` passed. The minimal-CI fixture correction passed 40
+mix checks without ASR installed; the nine-scenario Windows authentication test
+passes with the same 15-second budget as its adjacent disk-heavy test. Current
+full CI results are on PR #108. No merge or deployment is authorized.
+
+The article fact gate remains **failed**. Video repair is not publication clearance.
+Detailed handover: `docs/handovers/2026-10-19-friday-repair-complete.md`.
 
 ## The idea queue: read it first
 
