@@ -65,6 +65,21 @@ class BoardWebTests(unittest.TestCase):
             self.assertEqual(board_import.import_plan(plan), 0)
             self.assertTrue(docs['mon-substack']['body']['done'])
 
+    def test_source_comment_selectors_missing_anchors_and_reply_ids(self):
+        expected, exports = self.exports()
+        comments = [dict(id='root',body=dict(thread_id='root',anchor='#mon-review',text='Root')),
+                    dict(id='root#reply-1',body=dict(thread_id='root',anchor=None,text='Reply',at='2026-10-16T13:05'))]
+        exports[0]['collections']['comments'] = comments
+        plan = board_import.reconcile(exports, expected)
+        root, reply = plan['winners']
+        self.assertEqual(root['body']['anchor'],'mon-review')
+        self.assertEqual(reply['body']['anchor'],'mon-review')
+        self.assertEqual(reply['body']['thread_id'],root['id'])
+        self.assertNotIn('#',reply['id'])
+        self.assertEqual(plan['records'][1]['id'],'root#reply-1')
+        self.assertIsNone(plan['records'][1]['body']['anchor'])
+        self.assertEqual(reply['body']['original_metadata']['source_comment_id'],'root#reply-1')
+
     def test_web_adapter_preserves_layout_and_digest(self):
         page, meta, _ = week_board.board(week_board.monday_of('2026-10-19'))
         web, changed = board_web.web_page(page, meta)

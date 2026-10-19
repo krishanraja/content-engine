@@ -232,11 +232,16 @@ Read `.agents/skills/make-piece/references/week-board.md` whenever you make or r
 ## The week's ticks
 
 Do this at the start of every session and again before it stops: in this
-skill, in `plan-week` and in `produce-video`. It needs the ArtifactData
-tool, which Claude Code has; Codex has none, so a Codex session says in one
-line that the next Claude Code session copies the ticks. Krish's tick is
-saved at once in the board's own store; this copies it onto the piece's
-making record, which the engine, the board items and Control Center read.
+skill, in `plan-week` and in `produce-video`. After active cutover, every
+tool reads the authenticated web API through `board_web.py`; Codex must not
+defer board reads to Claude. Follow `docs/PUBLISH_BOARDS.md` for all six
+collections. In steps 2 and 3 below, substitute `board_web.py read WEEK
+COLLECTION` and `board_web.py download WEEK --output FILE` for the legacy
+ArtifactData/Artifact reads. Use `making.py --by "Codex"` from Codex and
+`--by "Claude Code"` from Claude Code. The attribution and completion rules
+below apply to both sources. Krish's tick is saved at once in the board's
+own store; this copies it onto the piece's making record, which the engine,
+the board items and Control Center read.
 
 1. Find the boards: this week's (its item `week-publish-board-<Monday>`, as
    above) and last week's (`week-publish-board-<last Monday>`, and

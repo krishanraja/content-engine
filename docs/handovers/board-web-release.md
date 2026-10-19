@@ -1,10 +1,16 @@
 # Private weekly board web release
 
-Status: local implementation in progress. No migration, upload, push, deployment,
-domain change or historical import has been performed by this work.
+Status: Content Engine PR #104 and Control Center PR #499 are merged and their
+production deployments are ready. The seven-table schema is applied; RLS and
+service-only grants were read back. The content hostname is attached and verified
+on Control Center using the existing Vercel wildcard DNS. Assets are staged
+privately. Source import and board activation remain pending final comparison.
 
 Approved scope (Krish, 19 October 2026): full parity, then web-only interaction.
 Preserve all four Claude boards and artifact generation. No video work here.
+Krish subsequently explicitly authorized merging both repositories and making
+both weeks live. On 19 October he confirmed: "Paused; no changes since those
+exports" for the final source freeze and the newer-account exports.
 
 ## Targets and ownership
 
@@ -14,6 +20,38 @@ existing access-code cookie or engine operator token; it does not invent a
 Supabase user identity. New tables have RLS and no anon/authenticated grants.
 
 ## Verification journal
+
+- Final implementation CI passes full `npm run verify` on Ubuntu and Windows,
+  plus all board-web, browser-button, SQL, dependency and operating-context jobs.
+- Production engine merge `c34fdd5422f8aec678d8f2ad2784fa65074bb7da`, deployment
+  `dpl_71meHR3H4yQBwBPieYqEp1opsbuz`; authenticated empty-state read succeeds and
+  unauthenticated direct board read returns 401 with private/no-store headers.
+- Production Control Center merge `0fba42d1eae1b4b5584d94491f3b1e0cae6df48c`,
+  deployment `dpl_AoCrd4H16otnjV8RcDXuFdFHceZ3`.
+- All four source bundles are captured and audited: older 12 October has 18
+  ticks, 3 edits and 24 comments (14 roots, 10 replies); older 19 October and
+  newer 12 October are empty; newer 19 October has 3 picks, 11 queue documents
+  and 28 comment roots. All 87 records reconcile without conflicting values.
+  Replaying every raw record and canonical value twice through actual handlers
+  and disposable PostgreSQL passes exact JSON readback.
+- Krish explicitly approved preserving all available data despite unavailable
+  source manifests, native reply/account IDs and precise comment timestamps.
+  Raw records remain byte-faithful JSON; canonical comments get deterministic
+  IDs and valid anchors with original IDs/locations retained in metadata.
+  Resolved/open status, displayed authors and displayed times remain visible.
+
+- Final browser regression now delays a save response while typing continues,
+  then introduces a concurrent remote edit. This exposed and fixed loss of the
+  unsaved text's revision baseline. Cancel preserves unsaved words; replacement
+  still requires explicit confirmation. Both phone and desktop runs pass.
+- Current Content Engine head `1281a48` passes the new board-web CI job on push
+  and pull-request runs, plus existing browser-button and SQL jobs. Full verify
+  remains running. The previous implementation passed full Ubuntu verify.
+- Control Center head `4f491e4` passes its actual verify, operating-context,
+  Vercel and full 18-minute E2E checks, including desktop and phone projects.
+- Twelve existing Drive assets are captured locally: 689,355,738 bytes, each
+  matched to source metadata and SHA-256 inventoried. These are the existing
+  Friday files too; replacement cuts are outside this release.
 
 - Baseline: 106 artifact self-checks pass.
 - First web fixture exposed the renderer's integrity seal: injecting an adapter

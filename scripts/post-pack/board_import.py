@@ -8,6 +8,7 @@ import argparse
 from datetime import datetime
 import json
 from pathlib import Path
+import re
 import sys
 from board_web import canonical, sha, call, spec, upload
 
@@ -36,6 +37,7 @@ def reconcile(exports, expected, resolutions=None):
         for collection in COLLECTIONS:
             values = export['collections'][collection]
             if not isinstance(values, list): raise ValueError('A collection must be an array')
+            comment_roots = {v['id']: v['body'] for v in values} if collection == 'comments' else {}
             counts.append({'week': week, 'source': source, 'collection': collection, 'count': len(values)})
             ids = set()
             for value in values:
@@ -50,8 +52,20 @@ def reconcile(exports, expected, resolutions=None):
                 chosen = dict(raw)
                 if collection == 'comments':
                     prefix = sha(source.encode())[:12] + '-'
-                    chosen['id'] = prefix + value['id']
-                    chosen['body'] = dict(value['body'], thread_id=prefix + value['body']['thread_id'])
+                    def comment_id(original):
+                        return prefix + (original if re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,139}', original) else sha(original.encode()))
+                    chosen['id'] = comment_id(value['id'])
+                    original_anchor = value['body'].get('anchor')
+                    parent = comment_roots.get(value['body']['thread_id'])
+                    if not parent or parent.get('thread_id') != value['body']['thread_id']:
+                        raise ValueError('Source comment reply has no root')
+                    parent_anchor = parent.get('anchor')
+                    anchor = parent_anchor.removeprefix('#') if isinstance(parent_anchor, str) else ''
+                    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}', anchor): anchor = 'board-root'
+                    if '_html_ids' in export and anchor not in export['_html_ids']: anchor = 'board-root'
+                    metadata = dict(value['body'].get('original_metadata') or {})
+                    metadata.update(source_comment_id=value['id'], source_anchor=original_anchor)
+                    chosen['body'] = dict(value['body'], thread_id=comment_id(value['body']['thread_id']), anchor=anchor, original_metadata=metadata)
                 groups.setdefault((week, collection, chosen['id']), []).append(chosen)
     required = {(week, source) for week, urls in expected.items() for source in urls}
     if sources != required: raise ValueError('Missing source artifacts; refuse partial migration')
@@ -138,6 +152,10 @@ def main():
     expected = json.loads((ROOT/'config/boards.json').read_text(encoding='utf-8'))['weeks']
     expected = {w: expected[w] for w in ('2026-10-12', '2026-10-19')}
     exports = [json.loads(Path(p).read_text(encoding='utf-8')) for p in args.exports]
+    for path, export in zip(args.exports, exports):
+        export_files(path, export)
+        html = (Path(path).parent / export['html_file']).read_text(encoding='utf-8')
+        export['_html_ids'] = set(re.findall(r'\bid=["\x27]([^"\x27]+)["\x27]', html))
     resolutions = json.loads(Path(args.resolutions).read_text()) if args.resolutions else None
     plan = reconcile(exports, expected, resolutions)
     # Validate all source bytes before even the first approved upload.
@@ -148,7 +166,7 @@ def main():
         evidence = export.get('export_evidence', {})
         if export.get('manifest_file') is None:
             limitations.append({'source': export['source'], 'missing_original_manifest': evidence['manifest']})
-        fidelity = evidence.get('comments_source', {}).get('fidelity_limits', [])
+        fidelity = evidence.get('comments_source', {}).get('fidelity_limits', []) or evidence.get('collections', {}).get('comments', {}).get('limitations', [])
         if fidelity: limitations.append({'source': export['source'], 'comment_fidelity_limits': fidelity})
     report['source_limitations'] = limitations
     report.update(source_records=len(plan['records']), canonical_records=len(plan['winners']), dry_run=not args.apply,

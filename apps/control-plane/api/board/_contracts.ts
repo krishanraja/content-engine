@@ -40,6 +40,16 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'comments') return text('text', 30000) && text('thread_id', 160) && validId(String(body.thread_id)) && text('anchor', 160) && validId(String(body.anchor))
   return false
 }
+// Source archives retain the export's selectors, missing anchors and synthesized
+// reply identifiers verbatim. Canonical comments still use validBody above.
+export function validSourceBody(collection: string, id: unknown, body: unknown): boolean {
+  if (collection !== 'comments') return typeof id === 'string' && validBody(collection, id, body)
+  const sourceId = (value: unknown) => typeof value === 'string' && value.length > 0 && value.length <= 300 && !/[\x00-\x1f]/.test(value)
+  return sourceId(id) && object(body) && Buffer.byteLength(JSON.stringify(body)) <= 256 * 1024
+    && sourceId(body.thread_id) && (body.anchor === null || typeof body.anchor === 'string' && body.anchor.length <= 1000)
+    && typeof body.text === 'string' && body.text.length <= 30000
+    && (!('at' in body) || typeof body.at === 'string' && Number.isFinite(Date.parse(body.at)))
+}
 export type BoardFile = { sha256: string; bytes: number; type: string; name: string; key: string }
 export type Manifest = { version: 1; week: string; html: BoardFile; assets: Record<string, BoardFile> }
 export function fileSpec(week: string, v: unknown, html = false): v is BoardFile {

@@ -3,7 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
-import { actor, canonical, collections, digest, fileSpec, monday, revision, validBody, validId, validManifest, type BoardFile, type Manifest } from './_contracts.js'
+import { actor, canonical, collections, digest, fileSpec, monday, revision, validBody, validSourceBody, validId, validManifest, type BoardFile, type Manifest } from './_contracts.js'
 
 const BUCKET = 'content-library'
 const TTL = 300
@@ -121,7 +121,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>) {
         const records = req.body?.records
         if (method !== 'POST' || !Array.isArray(records) || records.length > 100 || Buffer.byteLength(JSON.stringify(records)) > 1024 * 1024) throw new BoardError(400, 'invalid_import')
         const values = records.map(r => {
-          if (!r || !/^https:\/\/claude\.ai\/artifact\/[a-zA-Z0-9]+$/.test(r.source || '') || !validBody(r.collection, r.id, r.body)) throw new BoardError(400, 'invalid_import_record')
+          if (!r || !/^https:\/\/claude\.ai\/artifact\/[a-zA-Z0-9]+$/.test(r.source || '') || !validSourceBody(r.collection, r.id, r.body)) throw new BoardError(400, 'invalid_import_record')
           const raw = { week, source: r.source, collection: r.collection, id: r.id, body: r.body }
           return { week, source: r.source, collection: r.collection, doc_id: r.id, body: r.body, source_sha256: digest(canonical(raw)) }
         })
