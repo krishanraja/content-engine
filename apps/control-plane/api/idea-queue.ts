@@ -17,6 +17,7 @@ import { VERDICTS, nextPair, parseMark, parseTriage, present, queueMeta, type Qu
 //                          verdict?, reason?, angle?, decided_by?: 'Krish', said? }
 //   POST /api/idea-queue { action: 'triage', id, verdict, reason?, angle?, decided_by: 'Krish', said? }
 //   POST /api/idea-queue { action: 'unqueue', id, decided_by: 'Krish' }
+//   POST /api/idea-queue { action: 'prefer', winner, loser, decided_by: 'Krish' }   (the A/B tap: which of two he would run first)
 //
 // A verdict (story, angle, cute, curious, drop) is written only with decided_by 'Krish', from his own tap or words
 // (AGENTS.md: your own actions are observations). 'drop' takes the idea out of the queue and marks it dropped.
@@ -59,6 +60,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return await queueOne(res, mark, triage, now)
     }
 
+    if (action === 'prefer') {
+      if (b.decided_by !== 'Krish') return res.status(400).json({ ok: false, error: 'decided_by_krish_only', problems: ["decided_by must be 'Krish'"] })
+      const winner = String(b.winner || ''), loser = String(b.loser || '')
+      if (!winner || !loser || winner === loser) return res.status(400).json({ ok: false, error: 'bad_pair', problems: ['winner and loser must be two different queued ideas'] })
+      const { data, error } = await supabase.from('content_ideas').select(COLS).in('id', [winner, loser]).not('queued_at', 'is', null)
+      if (error) return res.status(500).json({ ok: false, error: error.message })
+      const rows = (data || []) as Array<Record<string, any>>
+      if (rows.length !== 2) return res.status(404).json({ ok: false, error: 'not_in_queue' })
+      for (const r of rows) {
+        const meta = r.meta || {}, q = { ...(meta.queue || {}) }
+        const win = String(r.id) === winner
+        const key = win ? 'beat' : 'lost_to'
+        q[key] = [...(Array.isArray(q[key]) ? q[key] : []), { id: win ? loser : winner, at: now }]
+        const upd = await supabase.from('content_ideas').update({ meta: { ...meta, queue: q } }).eq('id', r.id).eq('updated_at', r.updated_at).select('id').maybeSingle()
+        if (upd.error) return res.status(500).json({ ok: false, error: upd.error.message })
+        if (!upd.data) return res.status(409).json({ ok: false, error: 'changed_under_you', note: 'the row changed; read the queue and try again' })
+      }
+      return res.status(200).json({ ok: true })
+    }
+
     if (action === 'triage' || action === 'unqueue') {
       const id = String(b.id || '')
       if (b.decided_by !== 'Krish') return res.status(400).json({ ok: false, error: 'decided_by_krish_only', problems: ["decided_by must be 'Krish'"] })
@@ -84,7 +105,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ ok: true, idea: present(upd.data as any) })
     }
 
-    return res.status(400).json({ ok: false, error: 'unknown_action', note: "action is 'queue', 'triage' or 'unqueue'" })
+    return res.status(400).json({ ok: false, error: 'unknown_action', note: "action is 'queue', 'triage', 'unqueue' or 'prefer'" })
   } catch (e) {
     return res.status(500).json({ ok: false, error: (e as Error).message })
   }

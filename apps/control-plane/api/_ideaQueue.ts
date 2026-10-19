@@ -101,11 +101,16 @@ export function present(row: Record<string, any>) {
     from_week: q.from_week || null, from_pick: q.from_pick || null,
     triage: q.triage || null, triage_history: Array.isArray(q.triage_history) ? q.triage_history : [],
     needs_triage: !q.triage,
+    wins: Array.isArray(q.beat) ? q.beat.length : 0,
+    compared: [...new Set([...(Array.isArray(q.beat) ? q.beat : []), ...(Array.isArray(q.lost_to) ? q.lost_to : [])].map((x: any) => String(x.id)))],
   }
 }
 
-/** Two ideas for the A/B page: the queue's untriaged first, the longest-waiting pair. */
+/** Two ideas for the A/B page: untriaged ideas, fewest comparisons first then longest waiting, never a pair he already compared. */
 export function nextPair(rows: Array<ReturnType<typeof present>>): [typeof rows[number], typeof rows[number]] | null {
-  const open = rows.filter(r => r.needs_triage).sort((a, b) => String(a.queued_at).localeCompare(String(b.queued_at)))
-  return open.length >= 2 ? [open[0], open[1]] : null
+  const open = rows.filter(r => r.needs_triage).sort((a, b) => a.compared.length - b.compared.length || String(a.queued_at).localeCompare(String(b.queued_at)))
+  for (let i = 0; i < open.length; i++) for (let j = i + 1; j < open.length; j++) {
+    if (!open[i].compared.includes(String(open[j].id))) return [open[i], open[j]]
+  }
+  return null
 }

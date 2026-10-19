@@ -66,6 +66,13 @@ describe('the A/B pair', () => {
     const pair = nextPair([row('c', '3'), row('a', '1'), row('b', '2', { verdict: 'story' }), row('d', '4')])!
     expect(pair.map(p => p.id)).toEqual(['a', 'c'])
   })
+  it('never offers a pair he has already compared', () => {
+    const a = present({ id: 'a', idea: 'a', queued_at: '1', meta: { queue: { beat: [{ id: 'b' }] } } })
+    const b = present({ id: 'b', idea: 'b', queued_at: '2', meta: { queue: { lost_to: [{ id: 'a' }] } } })
+    const c = present({ id: 'c', idea: 'c', queued_at: '3', meta: {} })
+    expect(nextPair([a, b, c])!.map(p => p.id)).toEqual(['c', 'a'])
+    expect(nextPair([a, b])).toBeNull()
+  })
   it('is empty with fewer than two untriaged', () => {
     expect(nextPair([row('a', '1')])).toBeNull()
   })
