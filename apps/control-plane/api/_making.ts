@@ -19,6 +19,8 @@
 // The same shape is mirrored in control-center/src/lib/making.ts. Change one,
 // change the other (docs/CONTENT_ENGINE.md, "The split").
 
+import { stillBlocking } from './_factGate.js'
+
 /** Every channel a piece can go to, in the order Krish posts them
  *  (docs/AMPLIFICATION.md). Krish, 2026-10-11: "I always want to repost to
  *  YouTube and then Shorts, TikTok, and Instagram." The first five are the
@@ -470,7 +472,11 @@ export function makingSteps(row: { state?: string | null; meta?: Record<string, 
   const factGate = isObj(meta.fact_check) ? meta.fact_check : null
   const steps: Array<Omit<MakingStep, 'owner'>> = []
   steps.push(m.workroom ? { key: 'workroom', label: 'Workroom', state: 'done', at: m.workroom.at, link: m.workroom.url } : { key: 'workroom', label: 'Workroom', state: 'todo' })
-  const factPassed = factGate ? factGate.passed === true || factGate.status === 'passed' || factGate.ok === true : false
+  // A run that left blocking lines passes once Krish has signed every one off
+  // in his own words, as the gate itself counts it (gateStatus).
+  const signedThrough = !!factGate && Array.isArray(factGate.signed_off) && factGate.signed_off.length > 0 && Array.isArray(factGate.claims)
+    && stillBlocking(factGate as any).length + (Number(factGate.unchecked) || 0) === 0
+  const factPassed = factGate ? factGate.passed === true || factGate.status === 'passed' || factGate.ok === true || signedThrough : false
   steps.push(factGate
     ? { key: 'draft', label: 'Fact-checked draft', state: factPassed ? 'done' : 'failed', at: str(factGate.ran_at) || undefined, note: factPassed ? undefined : 'the fact gate did not pass' }
     : { key: 'draft', label: 'Fact-checked draft', state: 'todo' })
