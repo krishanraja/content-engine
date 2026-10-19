@@ -1,0 +1,86 @@
+{
+  "archive": {
+    "folder": "2026-10-19 Why AI prices keep changing (post to YouTube, Substack, Shorts, Reels, TikTok, LinkedIn)",
+    "path": "H:\\My Drive\\Ventures\\Active\\makeyourmindup\\Video Engine\\Archive\\2026-10-19 Why AI prices keep changing (post to YouTube, Substack, Shorts, Reels, TikTok, LinkedIn)",
+    "subject": "Why AI prices keep changing",
+    "date": "2026-10-19",
+    "date_from": "publish_date",
+    "post_to": [
+      "YouTube",
+      "Substack",
+      "Shorts",
+      "Reels",
+      "TikTok",
+      "LinkedIn"
+    ],
+    "files": [
+      {
+        "file": "Why AI prices keep changing - wide 16x9 - YouTube, Substack.mp4",
+        "shape": "wide",
+        "post_to": [
+          "YouTube",
+          "Substack"
+        ],
+        "from": ".cache\\produce\\2026-10-19-5b5bfadc\\long\\why-ai-prices-keep-changing-long-16x9.mp4",
+        "thumbnail": "Why AI prices keep changing - wide 16x9 - thumbnail.jpg"
+      },
+      {
+        "file": "Why AI prices keep changing - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+        "shape": "tall",
+        "post_to": [
+          "Shorts",
+          "Reels",
+          "TikTok",
+          "LinkedIn"
+        ],
+        "from": ".cache\\produce\\2026-10-19-5b5bfadc\\short\\why-ai-prices-keep-changing-short-9x16.mp4",
+        "thumbnail": "Why AI prices keep changing - tall 9x16 - thumbnail.jpg"
+      }
+    ]
+  },
+  "verified_assets": [
+    {
+      "file": "Why AI prices keep changing - wide 16x9 - YouTube, Substack.mp4",
+      "sha256": "90392c47fcec934f3507cf2d7dd5e26a7ddd3fd26c5c70a9988e9cb11c4f0c19",
+      "size": 211951035
+    },
+    {
+      "file": "Why AI prices keep changing - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+      "sha256": "ddd7c60efc5d3062179b17716d423da12f2be7f81ffa01015cbfba9f7a78e087",
+      "size": 55520212
+    },
+    {
+      "file": "Why AI prices keep changing - wide 16x9 - thumbnail.jpg",
+      "sha256": "60ae467142bdd46454698759ede576a15c8cbdbab48ec94bc205ba162c4fe927",
+      "size": 119734
+    },
+    {
+      "file": "Why AI prices keep changing - tall 9x16 - thumbnail.jpg",
+      "sha256": "9566ee431745280d136cee4c693e1268e3ccfb010806019b757bd925bb044f01",
+      "size": 185705
+    }
+  ],
+  "review_files": [
+    "REVIEW-STATUS.txt",
+    "caption-review.json",
+    "fact-review.md",
+    "video-signoff.md",
+    "long-render-evidence.json",
+    "short-render-evidence.json",
+    "thumbs.json",
+    "thumbs-check.png",
+    "why-ai-prices-keep-changing-long-16x9.srt",
+    "why-ai-prices-keep-changing-long.report.json",
+    "why-ai-prices-keep-changing-short-9x16.srt",
+    "why-ai-prices-keep-changing-short.report.json",
+    "why-ai-prices-keep-changing-long-16x9.chapters.txt",
+    "caption-check-82.wav",
+    "caption-check-157.wav",
+    "caption-check-331.wav",
+    "production-and-frame-review.zip"
+  ],
+  "status": "Archived review copies; not publish-ready; library/making completion withheld pending gates",
+  "drive_sync_verified": true,
+  "drive_verification": "Cloud existence, parent and size readback; archive copy SHA-256 matches local output; cloud checksum unavailable from connector",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1wXlFsY7iFyng_TNzO9fvJZUEoC2FwaHD"
+}

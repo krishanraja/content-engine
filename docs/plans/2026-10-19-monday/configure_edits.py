@@ -25,7 +25,7 @@ SHORT=[
 
 for cut, cues, shape in [('long',LONG,'16x9'),('short',SHORT,'9x16')]:
     f=WORK/'kit'/f'{cut}.json'; cfg=json.loads(f.read_text())
-    cfg.update({'crop':[1080,1920,0,0], 'face':[210,920], 'voice':'repair', 'reframe':False,
+    cfg.update({'crop':[1080,1920,0,0], 'face':[400,920] if cut=='short' else [210,920], 'voice':'repair', 'reframe':False,
                 'max_gap':0.9,'pad_before':0.2,'pad_after':0.3,
                 'intro':{s:f'../story/intro-{s}.mp4' for s in ['16x9','9x16']},
                 'intro_override':f'Krish, 2026-10-19: {SAID}',
@@ -33,8 +33,9 @@ for cut, cues, shape in [('long',LONG,'16x9'),('short',SHORT,'9x16')]:
                 'music':'no-curves-instrumental','music_seconds':100 if cut=='long' else 90,
                 'series':'follow_the_money','captions':cut=='short','strap':False,
                 'cues':[{'id':key,'panel':f'panels/{key}-{{aspect}}.png','start':start,'end':end} for key,start,end in cues],
-                'replacements':[['can sort of price rise','cancelled a price rise'],['And thropics','Anthropic\'s'],['And a thropic','Anthropic'],['and anthropic','and Anthropic'],['clawed AIs','Claude AIs'],['Re -rival','Three rivals'],['canceled','cancelled']]})
+                'replacements':[['can sort of price rise','cancelled a price rise'],['And thropics','Anthropic\'s'],['And a thropic','Anthropic'],['and anthropic','and Anthropic'],['clawed AIs','Claude AIs'],['Re -rival','Three rivals'],['canceled','cancelled'],['argon','Argon']]})
     if cut=='long':
+        cfg['replacements'].append(['and lesser price','unless a price'])
         cfg['music_mode']='episode'
         cfg['chapters']=[{'title':'Why AI prices keep changing','starts':'So I follow'},
                          {'title':'Google, OpenAI and Anthropic keep changing prices','starts':'Google isn\'t alone'},

@@ -1,0 +1,43 @@
+{
+  "method": "Second local small.en ASR pass on source excerpts; not manual listening",
+  "correction": "and lesser price -> unless a price",
+  "source_excerpt_seconds": [
+    252,
+    262
+  ],
+  "files": [
+    {
+      "file": "why-ai-prices-keep-changing-long-16x9.srt",
+      "changes": 1,
+      "sha256": "7ff994ed5a0a718d529106e3988672ed33aa430621bed3f282a760ee568c938d"
+    },
+    {
+      "file": "why-ai-prices-keep-changing-long.cut.txt",
+      "changes": 1,
+      "sha256": "cb30b56007fbf68e33ca0a995145c44061f7d11f5827ae29e997b5199a8c1b2f"
+    }
+  ],
+  "listening_still_required": [
+    {
+      "source_seconds": [
+        82,
+        94
+      ],
+      "issue": "four batch / twenty batch phrasing"
+    },
+    {
+      "source_seconds": [
+        157,
+        167
+      ],
+      "issue": "bill/build down and spoken self-correction"
+    },
+    {
+      "source_seconds": [
+        331,
+        340
+      ],
+      "issue": "where you work / way work phrase"
+    }
+  ]
+}

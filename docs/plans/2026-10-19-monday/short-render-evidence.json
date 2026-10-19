@@ -1,0 +1,321 @@
+{
+  "cut": "short",
+  "file": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\short\\why-ai-prices-keep-changing-short-9x16.mp4",
+  "sha256": "ddd7c60efc5d3062179b17716d423da12f2be7f81ffa01015cbfba9f7a78e087",
+  "size": 55520212,
+  "frames_sampled": 85,
+  "contact_sheets": [
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\short\\contact-01.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\short\\contact-02.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\short\\contact-03.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\short\\contact-04.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\short\\contact-05.jpg"
+  ],
+  "story_contact_sheets": [
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\short\\intro-01.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\short\\outro-01.jpg",
+    "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\review\\short\\outro-02.jpg"
+  ],
+  "status": "Frame-sampling review passed; real-time audiovisual review and editorial/pack gates remain open",
+  "report": {
+    "name": "why-ai-prices-keep-changing-short",
+    "source_seconds": 79.65,
+    "cut_seconds": 76.0,
+    "segments": 3,
+    "cues": [
+      {
+        "id": "google",
+        "s": 9.568,
+        "e": 35.825
+      },
+      {
+        "id": "rivals",
+        "s": 35.825,
+        "e": 50.365
+      },
+      {
+        "id": "rules",
+        "s": 50.365,
+        "e": 60.025
+      }
+    ],
+    "missing_cues": [],
+    "captions": 59,
+    "spellings": [],
+    "loudness_in": "-24.49",
+    "voice_repair": {
+      "chain": "highpass=f=80,afftdn=nr=10:nf=-50:tn=1,equalizer=f=250:t=q:w=1.0:g=-2,equalizer=f=4000:t=q:w=1.2:g=1.5,deesser=i=0.35:m=0.5:f=0.5:s=o,acompressor=threshold=0.1:ratio=2.5:attack=12:release=180:knee=3:makeup=1.6",
+      "before_lufs": "-27.39",
+      "before_lra": "3.40",
+      "after_lufs": "-24.49",
+      "after_lra": "3.10"
+    },
+    "sniffs": [
+      {
+        "at": "0:08.50",
+        "s": 8.5,
+        "e": 8.85,
+        "peak_db": -55.1,
+        "floor_db": -89.4
+      },
+      {
+        "at": "0:15.68",
+        "s": 15.68,
+        "e": 16.04,
+        "peak_db": -50.3,
+        "floor_db": -89.4
+      },
+      {
+        "at": "0:30.72",
+        "s": 30.72,
+        "e": 30.92,
+        "peak_db": -48.9,
+        "floor_db": -89.4
+      },
+      {
+        "at": "0:44.06",
+        "s": 44.06,
+        "e": 44.2,
+        "peak_db": -63.0,
+        "floor_db": -89.4
+      }
+    ],
+    "fps": 24,
+    "9x16_file": "why-ai-prices-keep-changing-short-9x16.mp4",
+    "shapes": {
+      "9x16": {
+        "file": "why-ai-prices-keep-changing-short-9x16.mp4",
+        "intro_seconds": 3.5,
+        "main_seconds": 76.0,
+        "outro_seconds": 6.0,
+        "total_seconds": 85.5,
+        "voice_start_seconds": 3.7,
+        "voice_end_seconds": 79.195,
+        "intro": {
+          "source": "override",
+          "series": null,
+          "file": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\story\\intro-9x16.mp4",
+          "sha256": "02fea555e32c70761e2c75dcb9dd487a8a7d3df3392f388ab4c00f44bdb0c26f",
+          "seconds": 3.5,
+          "own_sound_replaced": false
+        },
+        "music": {
+          "track_id": "no-curves-instrumental",
+          "title": "NO CURVES (Instrumental Version)",
+          "artist": "Superintendent McCupcakes",
+          "sha256": "291f2fa0d9b1c363bdc1f01935d30de57ca365314115ef5e0c51e39e9a1091e2",
+          "file": "ES_NO CURVES (Instrumental Version) - Superintendent McCupcakes.mp3",
+          "ledger": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\config\\music-library.json",
+          "levels": {
+            "status": "approved",
+            "intro_lufs": -16,
+            "bed_lufs": -31,
+            "outro_lufs": -18,
+            "ramp_down_s": 0.5,
+            "ramp_up_s": 0.8,
+            "final_integrated_lufs": -14,
+            "tolerance_lu": 1,
+            "max_true_peak_dbtp": -1.0,
+            "approved_by": "Krish",
+            "approved_on": "2026-10-12",
+            "approval_words": "Feel free to tighten it if I stumbled. For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos."
+          },
+          "gains_db": {
+            "intro": 3.5,
+            "bed": -19.5,
+            "outro": -6.5
+          },
+          "placed_lufs": {
+            "intro": -19.5,
+            "voice": -11.5,
+            "outro": -11.5
+          },
+          "windows": {
+            "intro": [
+              0.0,
+              3.2
+            ],
+            "voice": [
+              3.7,
+              79.195
+            ],
+            "outro": [
+              79.995,
+              84.5
+            ]
+          },
+          "placement": "straight",
+          "start_s": 0.0,
+          "chosen_for": {
+            "seconds": 85.5,
+            "platforms": [
+              "shorts",
+              "reels",
+              "tiktok",
+              "linkedin"
+            ]
+          },
+          "chosen_for_from": "the track the config names, for this cut alone"
+        },
+        "voice_gain_db": 10.49,
+        "loudness": {
+          "integrated": -14.2,
+          "true_peak": -1.4,
+          "lra": 3.6,
+          "intro_short_term": -16.7,
+          "voice_short_term": -13.9,
+          "outro_short_term": -17.4,
+          "bed_to_voice_lu": 17.0,
+          "windows": {
+            "intro": [
+              0.0,
+              3.2
+            ],
+            "voice": [
+              3.7,
+              79.195
+            ],
+            "outro": [
+              79.995,
+              84.5
+            ]
+          },
+          "normalisation": "linear",
+          "target": -14,
+          "peak_limited": true
+        },
+        "episode": {
+          "captions_burned": true,
+          "caption_lines": 25,
+          "chapters": [],
+          "voice": "repair",
+          "framings": {
+            "push": 0,
+            "close": 0
+          },
+          "end_screen_from_s": null
+        },
+        "srt": "why-ai-prices-keep-changing-short-9x16.srt",
+        "warnings": [
+          "the intro is a file named in the config, not the approved house sting, used on Krish's words in \"intro_override\": \"Krish, 2026-10-19: Approve set A and the listed treatment\""
+        ]
+      }
+    },
+    "intro_seconds": 3.5,
+    "main_seconds": 76.0,
+    "outro_seconds": 6.0,
+    "total_seconds": 85.5,
+    "intro": {
+      "source": "override",
+      "series": null,
+      "file": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\.cache\\produce\\2026-10-19-5b5bfadc\\story\\intro-9x16.mp4",
+      "sha256": "02fea555e32c70761e2c75dcb9dd487a8a7d3df3392f388ab4c00f44bdb0c26f",
+      "seconds": 3.5,
+      "own_sound_replaced": false
+    },
+    "music": {
+      "track_id": "no-curves-instrumental",
+      "title": "NO CURVES (Instrumental Version)",
+      "artist": "Superintendent McCupcakes",
+      "sha256": "291f2fa0d9b1c363bdc1f01935d30de57ca365314115ef5e0c51e39e9a1091e2",
+      "file": "ES_NO CURVES (Instrumental Version) - Superintendent McCupcakes.mp3",
+      "ledger": "C:\\Users\\krish\\dev\\mindmake\\content-engine-monday-video\\config\\music-library.json",
+      "levels": {
+        "status": "approved",
+        "intro_lufs": -16,
+        "bed_lufs": -31,
+        "outro_lufs": -18,
+        "ramp_down_s": 0.5,
+        "ramp_up_s": 0.8,
+        "final_integrated_lufs": -14,
+        "tolerance_lu": 1,
+        "max_true_peak_dbtp": -1.0,
+        "approved_by": "Krish",
+        "approved_on": "2026-10-12",
+        "approval_words": "Feel free to tighten it if I stumbled. For now you just take control of this entire thing, get the videos produced, and have the publish board ready for me to publish absolutely everything, including the videos."
+      },
+      "gains_db": {
+        "intro": 3.5,
+        "bed": -19.5,
+        "outro": -6.5
+      },
+      "placed_lufs": {
+        "intro": -19.5,
+        "voice": -11.5,
+        "outro": -11.5
+      },
+      "windows": {
+        "intro": [
+          0.0,
+          3.2
+        ],
+        "voice": [
+          3.7,
+          79.195
+        ],
+        "outro": [
+          79.995,
+          84.5
+        ]
+      },
+      "placement": "straight",
+      "start_s": 0.0,
+      "chosen_for": {
+        "seconds": 85.5,
+        "platforms": [
+          "shorts",
+          "reels",
+          "tiktok",
+          "linkedin"
+        ]
+      },
+      "chosen_for_from": "the track the config names, for this cut alone"
+    },
+    "loudness": {
+      "integrated": -14.2,
+      "true_peak": -1.4,
+      "lra": 3.6,
+      "intro_short_term": -16.7,
+      "voice_short_term": -13.9,
+      "outro_short_term": -17.4,
+      "bed_to_voice_lu": 17.0,
+      "windows": {
+        "intro": [
+          0.0,
+          3.2
+        ],
+        "voice": [
+          3.7,
+          79.195
+        ],
+        "outro": [
+          79.995,
+          84.5
+        ]
+      },
+      "normalisation": "linear",
+      "target": -14,
+      "peak_limited": true
+    },
+    "warnings": [
+      "the intro is a file named in the config, not the approved house sting, used on Krish's words in \"intro_override\": \"Krish, 2026-10-19: Approve set A and the listed treatment\""
+    ]
+  },
+  "visual_review": {
+    "reviewer": "Codex",
+    "cadence_seconds": 1,
+    "story_cadence_seconds": 0.25,
+    "inspected_sheets": 8,
+    "findings": [
+      "All 85 sampled seconds and 38 intro/outro samples inspected.",
+      "Lowered face-band crop keeps eyes, mouth and chin visible in sampled card frames.",
+      "Argon capitalization corrected in final burned captions.",
+      "All three cards and branded story sequence remain within frame.",
+      "Brief ghosting during 0.35-second crossfades is the current house transition, not persistent doubling."
+    ],
+    "limitations": [
+      "No real-time listening capability in this interface.",
+      "Natural walking motion judged from source comparisons and sampled final frames, not continuous playback."
+    ]
+  }
+}
