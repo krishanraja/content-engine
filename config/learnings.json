@@ -693,6 +693,15 @@
      "how": "house rule SHARP_PREDICTION, read by the writers"
     }
    ]
+  },
+  {
+   "id": "boards-live-on-content-site",
+   "on": "2026-10-19",
+   "krish": "we are now retiring the Claude artefact permanently and we are working in content.krishraja.com for all published board updates ... Make sure the entire engine never ever Produces another artefact in the future and always pushes to that URL and merges to main automatically.",
+   "why": "Two Claude accounts, two artifact links that drift apart, comments that cannot be sent to Claude, and builds a session must republish by hand; one site he owns removes all of that.",
+   "means": "No session or tool publishes a Claude artifact again. Every board update (the week's board, a day's tab in draft, publish pages) goes to content.krishraja.com, and engine work merges to main automatically once its checks pass.",
+   "status": "open",
+   "encoded": []
   }
  ]
 }
